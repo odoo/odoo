@@ -412,15 +412,12 @@ class StockMove(models.Model):
             return
         # compute
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
-        consu_moves = self.filtered(lambda move: move.product_id.type == 'consu')
-        for move in consu_moves:
+        not_product_moves = self.filtered(lambda move: move.product_id.type == 'product')
+        for move in not_product_moves:
             reserved_availability = float_repr(move.reserved_availability, precision)
-            move.json_forecast = json.dumps({
-                'reservedAvailability': reserved_availability,
-                'hideReportButton': True,
-            })
+            move.json_forecast = json.dumps({'reservedAvailability': reserved_availability})
         outgoing_unreserved_moves_per_warehouse = defaultdict(lambda: self.env['stock.move'])
-        for move in (self - consu_moves):
+        for move in (self - not_product_moves):
             picking_type = move.picking_type_id or move.picking_id.picking_type_id
             is_unreserved = float_is_zero(move.reserved_availability, precision_rounding=move.product_uom.rounding)
             if picking_type.code in self._consuming_picking_types():
