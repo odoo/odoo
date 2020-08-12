@@ -820,7 +820,6 @@ class MrpProduction(models.Model):
 
         # Initial qty producing
         quantity = max(self.product_qty - sum(self.move_finished_ids.filtered(lambda move: move.product_id == self.product_id).mapped('quantity_done')), 0)
-        quantity = self.product_id.uom_id._compute_quantity(quantity, self.product_uom_id)
         if self.product_id.tracking == 'serial':
             quantity = 1.0
 
@@ -1087,11 +1086,14 @@ class MrpProduction(models.Model):
 
     def _prepare_workorder_vals(self, operation, workorders, quantity):
         self.ensure_one()
+        todo_uom = self.product_uom_id.id
+        if self.product_id.tracking == 'serial' and self.product_uom_id.uom_type != 'reference':
+            todo_uom = self.env['uom.uom'].search([('category_id', '=', self.product_uom_id.category_id.id), ('uom_type', '=', 'reference')]).id
         return {
             'name': operation.name,
             'production_id': self.id,
             'workcenter_id': operation.workcenter_id.id,
-            'product_uom_id': self.product_id.uom_id.id,
+            'product_uom_id': todo_uom,
             'operation_id': operation.id,
             'state': len(workorders) == 0 and 'ready' or 'pending',
             'qty_producing': quantity,
