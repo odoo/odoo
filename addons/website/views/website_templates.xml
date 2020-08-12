@@ -814,6 +814,87 @@
     </xpath>
 </template>
 
+<template id="template_header_boxed" inherit_id="website.layout" name="Template Header Boxed" active="False">
+    <xpath expr="//header//nav" position="replace">
+        <div class="o_header_boxed_background o_colored_level o_cc pt8 pb8">
+            <div class="container d-flex align-items-center pb-4">
+                <!-- Social Icons -->
+                <div class="flex-grow-1">
+                    <div class="oe_structure" id="oe_structure_header_boxed_1"/>
+                </div>
+                <ul class="nav ml-auto" contenteditable="false">
+                    <!-- Sign In -->
+                    <t t-call="portal.placeholder_user_sign_in">
+                        <t t-set="_item_class" t-value="'nav-item ml-lg-3'"/>
+                        <t t-set="_link_class" t-value="'nav-link font-weight-bold'"/>
+                    </t>
+                    <!-- User Dropdown -->
+                    <t t-call="portal.user_dropdown">
+                        <t t-set="_avatar" t-value="true"/>
+                        <t t-set="_item_class" t-value="'nav-item dropdown ml-lg-3'"/>
+                        <t t-set="_link_class" t-value="'nav-link'"/>
+                        <t t-set="_dropdown_menu_class" t-value="'dropdown-menu-right'"/>
+                    </t>
+                </ul>
+            </div>
+        </div>
+        <div id="top_menu_container" class="container mt-n4">
+            <nav class="navbar navbar-light navbar-expand-md o_colored_level o_cc shadow-sm rounded pr-2">
+                <!-- Brand -->
+                <t t-call="website.placeholder_header_brand"/>
+                <!-- Navbar Collapse -->
+                <div id="top_menu_collapse" class="collapse navbar-collapse">
+                    <t t-call="website.navbar_nav">
+                        <t t-set="_nav_class" t-value="'mx-auto'"/>
+                        <t t-foreach="website.menu_id.child_id" t-as="submenu">
+                            <t t-call="website.submenu">
+                                <t t-set="item_class" t-value="'nav-item'"/>
+                                <t t-set="link_class" t-value="'nav-link'"/>
+                            </t>
+                        </t>
+                    </t>
+                    <!-- Button -->
+                    <div class="oe_structure" id="oe_structure_header_boxed_2"/>
+                </div>
+            </nav>
+        </div>
+    </xpath>
+</template>
+
+<template id="template_header_boxed_oe_structure_header_boxed_1" inherit_id="website.template_header_boxed" name="Template Header Boxed (oe_structure_header_boxed_1)">
+    <xpath expr="//*[hasclass('oe_structure')][@id='oe_structure_header_boxed_1']" position="replace">
+        <div class="oe_structure" id="oe_structure_header_boxed_1">
+            <section class="s_text_block" data-snippet="s_text_block" name="Text">
+                <div class="container">
+                    <div class="s_share text-left" data-name="Social Media">
+                        <a href="/website/social/facebook" class="s_share_facebook" target="_blank">
+                            <i class="fa fa-fw fa-1x fa-facebook"/>
+                        </a>
+                        <a href="/website/social/twitter" class="s_share_twitter" target="_blank">
+                            <i class="fa fa-fw fa-1x fa-twitter"/>
+                        </a>
+                        <a href="/website/social/instagram" class="s_share_linkedin" target="_blank">
+                            <i class="fa fa-fw fa-1x fa-instagram"/>
+                        </a>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </xpath>
+</template>
+
+<template id="template_header_boxed_oe_structure_header_boxed_2" inherit_id="website.template_header_boxed" name="Template Header Boxed (oe_structure_header_boxed_2)">
+    <xpath expr="//*[hasclass('oe_structure')][@id='oe_structure_header_boxed_2']" position="replace">
+        <div class="oe_structure" id="oe_structure_header_boxed_2">
+            <section class="s_text_block" data-snippet="s_text_block" name="Text">
+                <div class="container">
+                    <a href="#" class="btn btn-primary">Button</a>
+                </div>
+            </section>
+        </div>
+    </xpath>
+</template>
+
 <!-- Navbar Hamburger Options -->
 <template id="option_header_off_canvas" inherit_id="website.navbar_nav" name="Off-Canvas Header" active="False">
     <xpath expr="//ul[@id='top_menu']" position="attributes">
