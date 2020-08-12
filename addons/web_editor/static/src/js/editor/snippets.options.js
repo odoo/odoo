@@ -3087,7 +3087,8 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
         const dataURL = await applyModifications(img);
         const weight = dataURL.split(',')[1].length / 4 * 3;
         const $weight = this.$el.find('.o_we_image_weight');
-        $weight.find('> span').text(`${(weight / 1024).toFixed(1)}kb`);
+        $weight.find('> small').text(_t("New size"));
+        $weight.find('b').text(`${(weight / 1024).toFixed(1)} kb`);
         $weight.removeClass('d-none');
         img.classList.add('o_modified_image_to_save');
         return loadImage(dataURL, img);
