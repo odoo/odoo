@@ -18,12 +18,16 @@ class AccountAnalyticLine(models.Model):
         ('billable_time', 'Billed on Timesheets'),
         ('billable_fixed', 'Billed at a Fixed price'),
         ('non_billable', 'Non Billable Tasks'),
+        ('non_billable_timesheet', 'Non Billable Timesheet'),
         ('non_billable_project', 'No task found')], string="Billable Type", compute='_compute_timesheet_invoice_type', compute_sudo=True, store=True, readonly=True)
     timesheet_invoice_id = fields.Many2one('account.move', string="Invoice", readonly=True, copy=False, help="Invoice created from the timesheet")
+    non_allow_billable = fields.Boolean("Non-Billable", help="Your timesheet will not be billed.")
 
-    @api.depends('so_line.product_id', 'project_id', 'task_id')
+    @api.depends('so_line.product_id', 'project_id', 'task_id', 'non_allow_billable')
     def _compute_timesheet_invoice_type(self):
-        for timesheet in self:
+        non_allowed_billable = self.filtered('non_allow_billable')
+        non_allowed_billable.timesheet_invoice_type = 'non_billable_timesheet'
+        for timesheet in self - non_allowed_billable:
             if timesheet.project_id:  # AAL will be set to False
                 invoice_type = 'non_billable_project' if not timesheet.task_id else 'non_billable'
                 if timesheet.task_id and timesheet.so_line.product_id.type == 'service':
@@ -40,10 +44,10 @@ class AccountAnalyticLine(models.Model):
 
     @api.onchange('employee_id')
     def _onchange_task_id_employee_id(self):
-        if self.project_id:  # timesheet only
-            if self.task_id.billable_type == 'task_rate':
+        if self.project_id and self.task_id.allow_billable:  # timesheet only
+            if self.task_id.bill_type == 'customer_task' or self.task_id.pricing_type == 'fixed_rate':
                 self.so_line = self.task_id.sale_line_id
-            elif self.task_id.billable_type == 'employee_rate':
+            elif self.task_id.pricing_type == 'employee_rate':
                 self.so_line = self._timesheet_determine_sale_line(self.task_id, self.employee_id, self.project_id)
             else:
                 self.so_line = False
@@ -100,24 +104,22 @@ class AccountAnalyticLine(models.Model):
             1/ timesheet on task rate: the so line will be the one from the task
             2/ timesheet on employee rate task: find the SO line in the map of the project (even for subtask), or fallback on the SO line of the task, or fallback
                 on the one on the project
-            NOTE: this have to be consistent with `_compute_billable_type` on project.task.
         """
-        if not project.allow_billable and project.sale_line_id and not task:
-            if project.billable_type == 'employee_rate':
+        if project.sale_line_id and not task:
+            if project.bill_type == 'customer_project' and project.pricing_type == 'employee_rate':
                 map_entry = self.env['project.sale.line.employee.map'].search([('project_id', '=', project.id), ('employee_id', '=', employee.id)])
                 if map_entry:
                     return map_entry.sale_line_id
             return project.sale_line_id
-        elif task.billable_type != 'no':
-            if task.billable_type == 'employee_rate':
+        if task.allow_billable:
+            if task.bill_type == 'customer_task':
+                return task.sale_line_id
+            if task.pricing_type == 'fixed_rate':
+                return task.sale_line_id
+            elif task.pricing_type == 'employee_rate':
                 map_entry = self.env['project.sale.line.employee.map'].search([('project_id', '=', task.project_id.id), ('employee_id', '=', employee.id)])
                 if map_entry:
                     return map_entry.sale_line_id
-                if task.sale_line_id:
-                    return task.sale_line_id
-                return task.project_id.sale_line_id
-            elif task.billable_type == 'task_rate':
-                return task.sale_line_id
         return self.env['sale.order.line']
 
     def _timesheet_get_portal_domain(self):

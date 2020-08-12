@@ -70,6 +70,7 @@ class TestCommonSaleTimesheet(TestSaleCommon):
             'name': 'Project for selling timesheets',
             'allow_timesheets': True,
             'analytic_account_id': cls.analytic_account_sale.id,
+            'allow_billable': True,
         })
         cls.project_template = cls.env['project.project'].create({
             'name': 'Project TEMPLATE for services',

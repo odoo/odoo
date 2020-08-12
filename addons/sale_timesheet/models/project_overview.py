@@ -33,7 +33,7 @@ class Project(models.Model):
         company_uom = self.env.company.timesheet_encode_uom_id
         is_uom_day = company_uom == self.env.ref('uom.product_uom_day')
         hour_rounding = uom_hour.rounding
-        billable_types = ['non_billable', 'non_billable_project', 'billable_time', 'billable_fixed']
+        billable_types = ['non_billable', 'non_billable_project', 'billable_time', 'non_billable_timesheet', 'billable_fixed']
 
         values = {
             'projects': self,
@@ -140,6 +140,7 @@ class Project(models.Model):
                 non_billable_project=0.0,
                 non_billable=0.0,
                 billable_time=0.0,
+                non_billable_timesheet=0.0,
                 billable_fixed=0.0,
                 canceled=0.0,
                 total=0.0,
@@ -152,6 +153,7 @@ class Project(models.Model):
                 non_billable_project=0.0,
                 non_billable=0.0,
                 billable_time=0.0,
+                non_billable_timesheet=0.0,
                 billable_fixed=0.0,
                 canceled=0.0,
                 total=0.0,
@@ -162,7 +164,7 @@ class Project(models.Model):
             repartition_employee[employee_id]['total'] = sum([vals[inv_type] for inv_type in [*billable_types, 'canceled']])
             if is_uom_day:
                 # convert all times from hours to days
-                for time_type in ['non_billable_project', 'non_billable', 'billable_time', 'billable_fixed', 'canceled', 'total']:
+                for time_type in ['non_billable_project', 'non_billable', 'billable_time', 'non_billable_timesheet', 'billable_fixed', 'canceled', 'total']:
                     if repartition_employee[employee_id][time_type]:
                         repartition_employee[employee_id][time_type] = round(uom_hour._compute_quantity(repartition_employee[employee_id][time_type], company_uom, raise_if_failure=False), 2)
         hours_per_employee = [repartition_employee[employee_id]['total'] for employee_id in repartition_employee]
@@ -388,7 +390,7 @@ class Project(models.Model):
                 task_order_line_ids = [ol['sale_line_id'][0] for ol in task_order_line_ids]
 
             if self.env.user.has_group('sales_team.group_sale_salesman'):
-                if not self.sale_line_id and not task_order_line_ids:
+                if self.bill_type == 'customer_project' and self.allow_billable and not self.sale_order_id:
                     actions.append({
                         'label': _("Create a Sales Order"),
                         'type': 'action',
@@ -439,7 +441,8 @@ class Project(models.Model):
 
         # if only one project, add it in the context as default value
         tasks_domain = [('project_id', 'in', self.ids)]
-        tasks_context = self.env.context
+        tasks_context = self.env.context.copy()
+        tasks_context.pop('search_default_name', False)
         late_tasks_domain = [('project_id', 'in', self.ids), ('date_deadline', '<', fields.Date.to_string(fields.Date.today())), ('date_end', '=', False)]
         overtime_tasks_domain = [('project_id', 'in', self.ids), ('overtime', '>', 0), ('planned_hours', '>', 0)]
 

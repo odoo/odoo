@@ -20,10 +20,10 @@ class ProductTemplate(models.Model):
         creating a new project based on the selected template.")
     project_id = fields.Many2one(
         'project.project', 'Project', company_dependent=True,
-        help='Select a non billable project on which tasks can be created. This setting must be set for each company.')
+        help='Select a billable project on which tasks can be created. This setting must be set for each company.')
     project_template_id = fields.Many2one(
         'project.project', 'Project Template', company_dependent=True, copy=True,
-        help='Select a non billable project to be the skeleton of the new created project when selling the current product. Its stages and tasks will be duplicated.')
+        help='Select a billable project to be the skeleton of the new created project when selling the current product. Its stages and tasks will be duplicated.')
 
     @api.constrains('project_id', 'project_template_id')
     def _check_project_and_template(self):
