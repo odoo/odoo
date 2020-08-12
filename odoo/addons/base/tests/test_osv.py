@@ -80,3 +80,22 @@ class QueryTestCase(BaseCase):
         self.assertEqual(tmp_cat_cmp_par, 'product_product__product_tmpl_id__product_category_id__56d55687')
         tmp_cat_stm_par = query.join(tmp_cat_stm, 'partner_id', 'res_partner', 'id', 'partner_id')
         self.assertEqual(tmp_cat_stm_par, 'product_product__product_tmpl_id__product_category_id__9_363fdd')
+
+    def test_table_expression(self):
+        query = Query(None, 'foo')
+        from_clause, where_clause, where_params = query.get_sql()
+        self.assertEqual(from_clause, '"foo"')
+
+        query = Query(None, 'bar', 'SELECT id FROM foo')
+        from_clause, where_clause, where_params = query.get_sql()
+        self.assertEqual(from_clause, '(SELECT id FROM foo) AS "bar"')
+
+        query = Query(None, 'foo')
+        query.add_table('bar', 'SELECT id FROM foo')
+        from_clause, where_clause, where_params = query.get_sql()
+        self.assertEqual(from_clause, '"foo", (SELECT id FROM foo) AS "bar"')
+
+        query = Query(None, 'foo')
+        query.join('foo', 'bar_id', 'SELECT id FROM foo', 'id', 'bar')
+        from_clause, where_clause, where_params = query.get_sql()
+        self.assertEqual(from_clause, '"foo" JOIN (SELECT id FROM foo) AS "foo__bar" ON ("foo"."bar_id" = "foo__bar"."id")')
