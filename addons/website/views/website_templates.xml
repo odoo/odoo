@@ -695,6 +695,88 @@
     </xpath>
 </template>
 
+<template id="template_header_contact" inherit_id="website.layout" name="Template Header Contact" active="False">
+    <xpath expr="//header//nav" position="replace">
+        <div class="oe_structure" id="oe_structure_header_contact_1"/>
+        <nav class="navbar navbar-light navbar-expand-lg o_colored_level o_cc shadow-sm">
+            <div id="top_menu_container" class="container">
+                <!-- Brand -->
+                <t t-call="website.placeholder_header_brand"/>
+                <!-- Navbar Toggler -->
+                <t t-call="website.navbar_toggler"/>
+                <!-- Navbar Collapse -->
+                <div id="top_menu_collapse" class="collapse navbar-collapse ml-lg-3">
+                    <t t-call="website.navbar_nav">
+                        <t t-set="_nav_class" t-value="'flex-grow-1'"/>
+                        <!-- Menu -->
+                        <t t-foreach="website.menu_id.child_id" t-as="submenu">
+                            <t t-call="website.submenu">
+                                <t t-set="item_class" t-value="'nav-item'"/>
+                                <t t-set="link_class" t-value="'nav-link'"/>
+                            </t>
+                        </t>
+                        <!-- Sign In -->
+                        <t t-call="portal.placeholder_user_sign_in">
+                            <t t-set="_item_class" t-value="'nav-item ml-lg-auto'"/>
+                            <t t-set="_link_class" t-value="'nav-link'"/>
+                        </t>
+                        <!-- User Dropdown -->
+                        <t t-call="portal.user_dropdown">
+                            <t t-set="_user_name" t-value="True"/>
+                            <t t-set="_user_name_class" t-value="'font-weight-bold'"/>
+                            <t t-set="_item_class" t-value="'nav-item dropdown ml-lg-auto'"/>
+                            <t t-set="_link_class" t-value="'nav-link'"/>
+                        </t>
+                    </t>
+                </div>
+            </div>
+        </nav>
+    </xpath>
+</template>
+
+<template id="template_header_contact_oe_structure_header_contact_1" inherit_id="website.template_header_contact" name="Template Header Contact (oe_structure_header_contact_1)">
+    <xpath expr="//*[hasclass('oe_structure')][@id='oe_structure_header_contact_1']" position="replace">
+        <div class="oe_structure" id="oe_structure_header_contact_1">
+            <section class="s_text_block pt8 pb8 o_cc o_cc2" data-snippet="s_text_block" data-name="Text">
+                <div class="container">
+                    <div class="row align-items-center">
+                        <div class="col-lg-8">
+                            <small>
+                                <span class="text-muted"><b>Contact us</b></span>
+                                <i class="fa fa-1x fa-fw fa-phone ml-3 mr-2"/><a href="tel:1 (650) 691-3277">1 (650) 691-3277</a>
+                                <i class="fa fa-1x fa-fw fa-envelope ml-3 mr-2"/><span><a href="mailto:info@yourcompany.example.com">info@yourcompany.example.com</a></span>
+                            </small>
+                        </div>
+                        <div class="col-lg-4 text-lg-right">
+                            <div class="s_share no_icon_color" data-name="Social Media">
+                                <small class="s_share_title text-muted"><b>Follow us</b></small>
+                                <a href="/website/social/facebook" class="s_share_facebook" target="_blank">
+                                    <i class="fa fa-1x fa-fw fa-facebook"/>
+                                </a>
+                                <a href="/website/social/twitter" class="s_share_twitter" target="_blank">
+                                    <i class="fa fa-1x fa-fw fa-twitter"/>
+                                </a>
+                                <a href="/website/social/linkedin" class="s_share_linkedin" target="_blank">
+                                    <i class="fa fa-1x fa-fw fa-linkedin"/>
+                                </a>
+                                <a href="/website/social/github" class="s_share_github" target="_blank">
+                                    <i class="fa fa-1x fa-fw fa-github"/>
+                                </a>
+                                <a href="/website/social/youtube" class="s_share_youtube" target="_blank">
+                                    <i class="fa fa-1x fa-fw fa-youtube"/>
+                                </a>
+                                <a href="/website/social/instagram" class="s_share_instagram" target="_blank">
+                                    <i class="fa fa-1x fa-fw fa-instagram"/>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </xpath>
+</template>
+
 <!-- Navbar Hamburger Options -->
 <template id="option_header_off_canvas" inherit_id="website.navbar_nav" name="Off-Canvas Header" active="False">
     <xpath expr="//ul[@id='top_menu']" position="attributes">
