@@ -282,7 +282,7 @@ class Http(models.AbstractModel):
     @classmethod
     def _get_exception_code_values(cls, exception):
         code, values = super(Http, cls)._get_exception_code_values(exception)
-        if request.website.is_publisher() and isinstance(exception, werkzeug.exceptions.NotFound):
+        if isinstance(exception, werkzeug.exceptions.NotFound) and request.website.is_publisher():
             code = 'page_404'
             values['path'] = request.httprequest.path[1:]
         if isinstance(exception, werkzeug.exceptions.Forbidden) and \
