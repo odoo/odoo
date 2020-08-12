@@ -18,7 +18,7 @@
             <field name="name">report.pos.order.graph</field>
             <field name="model">report.pos.order</field>
             <field name="arch" type="xml">
-                <graph string="Point of Sale Analysis">
+                <graph string="Point of Sale Analysis" sample="1">
                     <field name="product_categ_id" type="row"/>
                     <field name="price_total" type="measure"/>
                 </graph>
@@ -65,6 +65,13 @@
             <field name="view_mode">graph,pivot</field>
             <field name="search_view_id" ref="view_report_pos_order_search"/>
             <field name="context">{'group_by_no_leaf':1,'group_by':[]}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No data yet!
+                </p><p>
+                    Create a new POS order
+                </p>
+            </field>
         </record>
 
 

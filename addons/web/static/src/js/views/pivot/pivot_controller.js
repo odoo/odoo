@@ -170,12 +170,13 @@ odoo.define('web.PivotController', function (require) {
                 await this.model.expandAll();
                 this.update({}, { reload: false });
             }
-            if ($target.parents('.o_pivot_measures_list').length) {
+            if (ev.target.closest('.o_pivot_measures_list')) {
                 ev.preventDefault();
                 ev.stopPropagation();
                 const field = $target.data('field');
-                await this.model.toggleMeasure(field);
-                this.update({}, { reload: false });
+                if (field) {
+                    this.update({ measure: field });
+                }
             }
             if ($target.hasClass('o_pivot_download')) {
                 this._downloadTable();

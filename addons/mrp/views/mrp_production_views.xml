@@ -426,7 +426,7 @@
             <field name="name">mrp.production.graph</field>
             <field name="model">mrp.production</field>
             <field name="arch" type="xml">
-                <graph string="Manufacturing Orders" type="line">
+                <graph string="Manufacturing Orders" type="line" sample="1">
                     <field name="date_planned_finished"/>
                 </graph>
             </field>
@@ -532,6 +532,13 @@
             <field name="res_model">mrp.production</field>
             <field name="view_mode">graph,pivot,form</field>
             <field name="target">current</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No data yet!
+                </p><p>
+                    Create a new manufacturing order
+                </p>
+            </field>
         </record>
 
         <menuitem id="menu_mrp_workorder_todo"

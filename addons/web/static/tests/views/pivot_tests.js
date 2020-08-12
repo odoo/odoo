@@ -2869,5 +2869,103 @@ QUnit.module('Views', {
         _testButtons = () => true;
         pivot.destroy();
     });
+
+    QUnit.test('empty pivot view with action helper', async function (assert) {
+        assert.expect(4);
+
+        const pivot = await createView({
+            View: PivotView,
+            model: "partner",
+            data: this.data,
+            arch: `
+                <pivot>
+                    <field name="product_id" type="measure"/>
+                    <field name="date" interval="month" type="col"/>
+                </pivot>`,
+            domain: [['id', '<', 0]],
+            viewOptions: {
+                action: {
+                    help: '<p class="abc">click to add a foo</p>'
+                }
+            },
+        });
+
+        assert.containsOnce(pivot, '.o_view_nocontent .abc');
+        assert.containsNone(pivot, 'table');
+
+        await pivot.reload({ domain: [] });
+
+        assert.containsNone(pivot, '.o_view_nocontent .abc');
+        assert.containsOnce(pivot, 'table');
+
+        pivot.destroy();
+    });
+
+    QUnit.test('empty pivot view with sample data', async function (assert) {
+        assert.expect(7);
+
+        const pivot = await createView({
+            View: PivotView,
+            model: "partner",
+            data: this.data,
+            arch: `
+                <pivot sample="1">
+                    <field name="product_id" type="measure"/>
+                    <field name="date" interval="month" type="col"/>
+                </pivot>`,
+            domain: [['id', '<', 0]],
+            viewOptions: {
+                action: {
+                    help: '<p class="abc">click to add a foo</p>'
+                }
+            },
+        });
+
+        assert.hasClass(pivot.el, 'o_view_sample_data');
+        assert.containsOnce(pivot, '.o_view_nocontent .abc');
+        assert.containsOnce(pivot, 'table.o_sample_data_disabled');
+
+        await pivot.reload({ domain: [] });
+
+        assert.doesNotHaveClass(pivot.el, 'o_view_sample_data');
+        assert.containsNone(pivot, '.o_view_nocontent .abc');
+        assert.containsOnce(pivot, 'table');
+        assert.doesNotHaveClass(pivot.$('table'), 'o_sample_data_disabled');
+
+        pivot.destroy();
+    });
+
+    QUnit.test('non empty pivot view with sample data', async function (assert) {
+        assert.expect(7);
+
+        const pivot = await createView({
+            View: PivotView,
+            model: "partner",
+            data: this.data,
+            arch: `
+                <pivot sample="1">
+                    <field name="product_id" type="measure"/>
+                    <field name="date" interval="month" type="col"/>
+                </pivot>`,
+            viewOptions: {
+                action: {
+                    help: '<p class="abc">click to add a foo</p>'
+                }
+            },
+        });
+
+        assert.doesNotHaveClass(pivot.el, 'o_view_sample_data');
+        assert.containsNone(pivot, '.o_view_nocontent .abc');
+        assert.containsOnce(pivot, 'table');
+        assert.doesNotHaveClass(pivot.$('table'), 'o_sample_data_disabled');
+
+        await pivot.reload({ domain: [['id', '<', 0]] });
+
+        assert.doesNotHaveClass(pivot.el, 'o_view_sample_data');
+        assert.containsOnce(pivot, '.o_view_nocontent .abc');
+        assert.containsNone(pivot, 'table');
+
+        pivot.destroy();
+    });
 });
 });
