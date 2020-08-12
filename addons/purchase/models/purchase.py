@@ -353,7 +353,6 @@ class PurchaseOrder(models.Model):
     def button_done(self):
         self.write({'state': 'done'})
     
-    @api.multi
     def _prepare_supplierinfo(self, partner, line, price, currency):
         # Prepare supplierinfo data, to allow override values with model inheritance
         return {
