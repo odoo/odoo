@@ -4,18 +4,21 @@ import io
 import logging
 import re
 import time
+import requests
 import werkzeug.wrappers
 from PIL import Image, ImageFont, ImageDraw
 from lxml import etree
-from base64 import b64decode
+from base64 import b64decode, b64encode
 
 from odoo.http import request
-from odoo import http, tools, _
+from odoo import http, tools, _, SUPERUSER_ID
+from odoo.addons.http_routing.models.ir_http import slug
 from odoo.exceptions import UserError
-from odoo.modules.module import get_resource_path
+from odoo.modules.module import get_module_path, get_resource_path
+from odoo.tools.misc import file_open
 
 logger = logging.getLogger(__name__)
-
+DEFAULT_LIBRARY_ENDPOINT = 'https://media-api.odoo.com'
 
 class Web_Editor(http.Controller):
     #------------------------------------------------------
@@ -505,24 +508,30 @@ class Web_Editor(http.Controller):
         return '%s?access_token=%s' % (attachment.image_src, attachment.access_token)
 
     @http.route(['/web_editor/shape/<module>/<path:filename>'], type='http', auth="public", website=True)
-    def background_shape(self, module, filename, **kwargs):
+    def shape(self, module, filename, **kwargs):
         """
-        Returns a color-customized background-shape.
+        Returns a color-customized svg (background shape or illustration).
         """
-        shape_path = get_resource_path(module, 'static', 'shapes', filename)
-        if shape_path:
-            svg = open(shape_path, 'r').read()
-        else:
-            # Fallback to attachments for future migrations
-            attachment = request.env['ir.attachment'].search([('url', '=like', request.httprequest.path)], limit=1)
+        svg = None
+        if module == 'illustration':
+            attachment = request.env['ir.attachment'].sudo().search([('url', '=like', request.httprequest.path), ('public', '=', True)], limit=1)
             if not attachment:
                 raise werkzeug.exceptions.NotFound()
             svg = b64decode(attachment.datas).decode('utf-8')
+        else:
+            shape_path = get_resource_path(module, 'static', 'shapes', filename)
+            if not shape_path:
+                raise werkzeug.exceptions.NotFound()
+            with tools.file_open(shape_path, 'r') as file:
+                svg = file.read()
 
         user_colors = []
         for key, color in kwargs.items():
-            match = re.match('^c([12345])$', key)
+            match = re.match('^c([1-5])$', key)
             if match:
+                # Check that color is hex or rgb(a) to prevent arbitrary injection
+                if not re.match(r'(?i)^#[0-9A-F]{6,8}$|^rgba?\(\d{1,3},\d{1,3},\d{1,3}(?:,[0-9.]{1,4})?\)$', color.replace(' ', '')):
+                    raise werkzeug.exceptions.BadRequest()
                 user_colors.append([tools.html_escape(color), match.group(1)])
 
         default_palette = {
@@ -545,3 +554,59 @@ class Web_Editor(http.Controller):
             ('Content-type', 'image/svg+xml'),
             ('Cache-control', 'max-age=%s' % http.STATIC_CACHE_LONG),
         ])
+
+    @http.route(['/web_editor/media_library_search'], type='json', auth="user", website=True)
+    def media_library_search(self, **params):
+        ICP = request.env['ir.config_parameter'].sudo()
+        endpoint = ICP.get_param('web_editor.media_library_endpoint', DEFAULT_LIBRARY_ENDPOINT)
+        params['dbuuid'] = ICP.get_param('database.uuid')
+        response = requests.post('%s/media-library/1/search' % endpoint, data=params)
+        if response.status_code == requests.codes.ok and response.headers['content-type'] == 'application/json':
+            return response.json()
+        else:
+            return {'error': response.status_code}
+
+    @http.route('/web_editor/save_library_media', type='json', auth='user', methods=['POST'])
+    def save_library_media(self, media):
+        """
+        Saves images from the media library as new attachments, making them
+        dynamic SVGs if needed.
+            media = {
+                <media_id>: {
+                    'query': 'space separated search terms',
+                    'is_dynamic_svg': True/False,
+                }, ...
+            }
+        """
+        attachments = []
+        ICP = request.env['ir.config_parameter'].sudo()
+        library_endpoint = ICP.get_param('web_editor.media_library_endpoint', DEFAULT_LIBRARY_ENDPOINT)
+
+        media_ids = ','.join(media.keys())
+        params = {
+            'dbuuid': ICP.get_param('database.uuid'),
+            'media_ids': media_ids,
+        }
+        response = requests.post('%s/media-library/1/download_urls' % library_endpoint, data=params)
+        if response.status_code != requests.codes.ok:
+            raise Exception(_("ERROR: couldn't get download urls from media library."))
+
+        for id, url in response.json().items():
+            req = requests.get(url)
+            name = '_'.join([media[id]['query'], url.split('/')[-1]])
+            # Need to bypass security check to write image with mimetype image/svg+xml
+            # ok because svgs come from whitelisted origin
+            context = {'binary_field_real_user': request.env['res.users'].sudo().browse([SUPERUSER_ID])}
+            attachment = request.env['ir.attachment'].sudo().with_context(context).create({
+                'name': name,
+                'mimetype': req.headers['content-type'],
+                'datas': b64encode(req.content),
+                'public': True,
+                'res_model': 'ir.ui.view',
+                'res_id': 0,
+            })
+            if media[id]['is_dynamic_svg']:
+                attachment['url'] = '/web_editor/shape/illustration/%s' % slug(attachment)
+            attachments.append(attachment._get_media_info())
+
+        return attachments

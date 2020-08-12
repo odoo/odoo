@@ -261,10 +261,13 @@ QUnit.module('web_editor', {}, function () {
                             return Promise.resolve();
                         }
                     }
-                    if (route.indexOf('/web/static/src/img/transparent.png') === 0) {
+                    if (route.indexOf('/web/image/123/transparent.png') === 0) {
                         return Promise.resolve();
                     }
                     if (route.indexOf('/web_unsplash/fetch_images') === 0) {
+                        return Promise.resolve();
+                    }
+                    if (route.indexOf('/web_editor/media_library_search') === 0) {
                         return Promise.resolve();
                     }
                     return this._super(route, args);
@@ -289,10 +292,11 @@ QUnit.module('web_editor', {}, function () {
 
             // load static xml file (dialog, media dialog, unsplash image widget)
             await defMediaDialog;
+
             await testUtils.dom.click($('.modal #editor-media-image .o_existing_attachment_cell:first').removeClass('d-none'));
 
             var $editable = form.$('.oe_form_field[name="body"] .note-editable');
-            assert.ok($editable.find('img')[0].dataset.src.includes('/web/static/src/img/transparent.png'),
+            assert.ok($editable.find('img')[0].dataset.src.includes('/web/image/123/transparent.png'),
                 "should have the image in the dom");
 
             testUtils.mock.unpatch(MediaDialog);
