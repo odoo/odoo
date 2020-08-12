@@ -1200,6 +1200,7 @@ class MrpProduction(models.Model):
         action['context'] = ctx
         return action
 
+<<<<<<< HEAD
     def _get_quantity_produced_issues(self):
         quantity_issues = []
         if self.env.context.get('skip_backorder', False):
@@ -1221,6 +1222,73 @@ class MrpProduction(models.Model):
         action = self.env.ref('mrp.action_mrp_production_backorder').read()[0]
         action['context'] = ctx
         return action
+=======
+        # Initial qty producing
+        quantity = max(self.product_qty - sum(self.move_finished_ids.filtered(lambda move: move.product_id == self.product_id).mapped('quantity_done')), 0)
+        if self.product_id.tracking == 'serial':
+            quantity = 1.0
+        todo_uom = self.product_uom_id
+        if self.product_id.tracking == 'serial' and self.product_uom_id.uom_type != 'reference':
+            todo_uom = self.env['uom.uom'].search([('category_id', '=', self.product_uom_id.category_id.id), ('uom_type', '=', 'reference')])
+
+        for operation in bom.routing_id.operation_ids:
+            workorder = workorders.create({
+                'name': operation.name,
+                'production_id': self.id,
+                'workcenter_id': operation.workcenter_id.id,
+                'product_uom_id': todo_uom.id,
+                'operation_id': operation.id,
+                'state': len(workorders) == 0 and 'ready' or 'pending',
+                'qty_producing': quantity,
+                'consumption': self.bom_id.consumption,
+            })
+            if workorders:
+                workorders[-1].next_work_order_id = workorder.id
+                workorders[-1]._start_nextworkorder()
+            workorders += workorder
+
+            # get the raw moves to attach to this operation
+            moves_raw = self.env['stock.move']
+            for move in self.move_raw_ids:
+                if move.operation_id == operation and move.bom_line_id.bom_id.routing_id == bom.routing_id:
+                    moves_raw |= move
+                if move.operation_id == operation and not move.bom_line_id:
+                    moves_raw |= move
+            moves_finished = self.move_finished_ids.filtered(lambda move: move.operation_id == operation)
+
+            # - Raw moves from a BoM where a routing was set but no operation was precised should
+            #   be consumed at the last workorder of the linked routing.
+            # - Raw moves from a BoM where no rounting was set should be consumed at the last
+            #   workorder of the main routing.
+            if len(workorders) == len(bom.routing_id.operation_ids):
+                moves_raw |= self.move_raw_ids.filtered(lambda move: not move.operation_id and move.bom_line_id.bom_id.routing_id == bom.routing_id)
+                moves_raw |= self.move_raw_ids.filtered(lambda move: not move.workorder_id and not move.bom_line_id.bom_id.routing_id)
+
+                moves_finished |= self.move_finished_ids.filtered(lambda move: move.product_id != self.product_id and not move.operation_id)
+
+            moves_raw.mapped('move_line_ids').write({'workorder_id': workorder.id})
+            (moves_finished | moves_raw).write({'workorder_id': workorder.id})
+
+            workorder._generate_wo_lines()
+        return workorders
+
+    def _check_lots(self):
+        # Check that the components were consumed for lots that we have produced.
+        if self.product_id.tracking != 'none':
+            finished_lots = self.finished_move_line_ids.mapped('lot_id')
+            raw_finished_lots = self.move_raw_ids.mapped('move_line_ids.lot_produced_ids')
+            if (raw_finished_lots - finished_lots):
+                lots_short = raw_finished_lots - finished_lots
+                error_msg = _(
+                    'Some components have been consumed for a lot/serial number that has not been produced. '
+                    'Unlock the MO and click on the components lines to correct it.\n'
+                    'List of the components:\n'
+                )
+                move_lines = self.move_raw_ids.mapped('move_line_ids').filtered(lambda ml: lots_short & ml.lot_produced_ids)
+                for ml in move_lines:
+                    error_msg += ml.product_id.display_name + ' (' + ', '.join((lots_short & ml.lot_produced_ids).mapped('name')) + ')\n'
+                raise UserError(error_msg)
+>>>>>>> fd2380409fc... temp
 
     def action_cancel(self):
         """ Cancels production order, unfinished stock moves and set procurement
