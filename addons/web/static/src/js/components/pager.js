@@ -42,15 +42,9 @@ odoo.define('web.Pager', function (require) {
             useAutofocus();
         }
 
-        async willUpdateProps(nextProps) {
+        async willUpdateProps() {
             this.state.editing = false;
-            if (
-                this.props.currentMinimum !== nextProps.currentMinimum ||
-                this.props.limit !== nextProps.limit ||
-                this.props.size !== nextProps.size
-            ) {
-                this.state.disabled = false;
-            }
+            this.state.disabled = false;
         }
 
         //---------------------------------------------------------------------
@@ -68,8 +62,7 @@ odoo.define('web.Pager', function (require) {
          * @returns {boolean} true iff there is only one page
          */
         get singlePage() {
-            const { currentMinimum, size } = this.props;
-            return (1 === currentMinimum) && (this.maximum === size);
+            return (1 === this.props.currentMinimum) && (this.maximum === this.props.size);
         }
 
         /**
@@ -141,8 +134,14 @@ odoo.define('web.Pager', function (require) {
         }
 
         /**
+         * Commits the current input value. There are two scenarios:
+         * - the value is the same: the pager toggles back to readonly
+         * - the value changed: the pager is disabled to prevent furtherchanges
+         * Either way the "pager-changed" event is triggered to reload the
+         * view.
          * @private
-         * @param {Object} payload
+         * @param {number} currentMinimum
+         * @param {number} limit
          */
         _updateAndDisable(currentMinimum, limit) {
             if (
@@ -150,8 +149,13 @@ odoo.define('web.Pager', function (require) {
                 limit !== this.props.limit
             ) {
                 this.state.disabled = true;
-                this.trigger('pager-changed', { currentMinimum, limit });
+            } else {
+                // In this case we want to trigger an update, but since it will
+                // not re-render the pager (current props === next props) we
+                // have to disable the edition manually here.
+                this.state.editing = false;
             }
+            this.trigger('pager-changed', { currentMinimum, limit });
         }
 
         //---------------------------------------------------------------------
