@@ -15,8 +15,8 @@ class ResConfigSettings(models.TransientModel):
     def _get_subtasks_projects_domain(self):
         return []
 
-    def execute(self):
-        res = super(ResConfigSettings, self).execute()
+    def set_values(self):
+        super().set_values()
         if self.group_project_rating:
             # Change the rating status on existing projects from 'no' to 'stage'
             self.env['project.project'].search([('rating_status', '=', 'no')]).write({
@@ -24,4 +24,3 @@ class ResConfigSettings(models.TransientModel):
         if self.group_subtask_project:
             domain = self._get_subtasks_projects_domain()
             self.env['project.project'].search(domain).write({'allow_subtasks': True})
-        return res
