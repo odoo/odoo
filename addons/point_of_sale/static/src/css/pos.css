@@ -1690,82 +1690,26 @@ td {
 }
 
 @media print {
-    * {
+    body * {
+        visibility: hidden;
+    }
+    .pos .receipt-screen .pos-receipt-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+    }
+    .pos .receipt-screen .pos-receipt-container * {
+        visibility: visible;
+        background: white !important;
         color: black !important;
     }
-    body {
-        margin: 0;
-        color: white !important;
-        /* avoid black background if backgrounds are printed */
-        background: initial;
-    }
-    .o_notification_manager,
-    .oe_leftbar,
-    .oe_loading,
-    .pos .pos-topheader,
-    .pos .pos-leftpane,
-    .pos .keyboard_frame,
-    .pos .receipt-screen header,
-    .pos .receipt-screen .top-content,
-    .pos .receipt-screen .centered-content .button,
-    .pos .receipt-screen .centered-content .print_invoice {
-        display: none !important;
-    }
-    .pos,
-    .pos .pos-content,
-    .pos .rightpane,
-    .pos .screen,
-    .pos .window,
-    .pos .window .subwindow,
-    .pos .subwindow .subwindow-container{
-        display: block;
-        position: static;
-        height: auto;
-    }
-    .pos{
-        background: white !important;
-    }
-    .pos .rightpane {
-        left: 0px !important;
-        background-color: white;
-    }
-    .pos .receipt-screen {
-        text-align: left;
-    }
-    .pos .receipt-screen .centered-content{
-        position: static;
-        border: none;
-    }
-    .pos .pos-receipt-container {
-        text-align: left;
-    }
-    .pos-actionbar {
-        display: none !important;
-    }
-    .debug-widget{
-        display: none !important;
-    }
-    .pos *{
-        text-shadow: none !important;
-        box-shadow: none !important;
-        background: transparent !important;
-    }
-    .pos .pos-receipt{
+    .pos .pos-receipt {
         margin: 0;
         margin-left: auto !important;
         margin-right: auto !important;
         border: none !important;
         font-size: 13px !important;
         width: 266px !important;
-    }
-    .o_debug_manager {
-        display: none !important;
-    }
-    .o_chat_window {
-        display: none !important;
-    }
-    .blockUI {
-        display: none !important;
     }
 }
 
