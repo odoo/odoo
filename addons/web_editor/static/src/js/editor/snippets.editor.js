@@ -1532,12 +1532,6 @@ var SnippetsMenu = Widget.extend({
         var $html = $(html);
         var $scroll = $html.siblings('#o_scroll');
 
-        $html.find('[data-oe-type="snippet"]').each(function () {
-            $(this).children()
-                .attr('data-oe-type', 'snippet')
-                .attr('data-oe-thumbnail', $(this).data('oe-thumbnail'));
-        });
-
         this.templateOptions = [];
         var selectors = [];
         var $styles = $html.find('[data-selector]');
@@ -1593,40 +1587,35 @@ var SnippetsMenu = Widget.extend({
 
         this.$snippets = $scroll.find('.o_panel_body').children()
             .addClass('oe_snippet')
-            .each(function () {
-                var $snippet = $(this);
-                var name = $snippet.attr('name');
-                var $sbody = $snippet.children(':not(.oe_snippet_thumbnail)').addClass('oe_snippet_body');
-                const isCustomSnippet = !!$snippet.parents('#snippet_custom').length;
+            .each((i, el) => {
+                const $snippet = $(el);
+                const name = el.getAttribute('name');
+                const $sbody = $snippet.children().addClass('oe_snippet_body');
+                const isCustomSnippet = !!el.closest('#snippet_custom');
 
                 // Associate in-page snippets to their name
-                if ($sbody.length) {
-                    var snippetClasses = $sbody.attr('class').match(/s_[^ ]+/g);
-                    if (snippetClasses && snippetClasses.length) {
-                        snippetClasses = '.' + snippetClasses.join('.');
-                    }
-                    var $els = $(snippetClasses).not('[data-name]').add($sbody);
-                    $els.attr('data-name', name).data('name', name);
+                // TODO I am not sure this is useful anymore and it should at
+                // least be made more robust using data-snippet
+                let snippetClasses = $sbody.attr('class').match(/s_[^ ]+/g);
+                if (snippetClasses && snippetClasses.length) {
+                    snippetClasses = '.' + snippetClasses.join('.');
                 }
+                const $els = $(snippetClasses).not('[data-name]').add($sbody);
+                $els.attr('data-name', name).data('name', name);
 
                 // Create the thumbnail
-                if ($snippet.find('.oe_snippet_thumbnail').length) {
-                    return; // Compatibility with elements which do not use 't-snippet'
-                }
-                var $thumbnail = $(_.str.sprintf(
-                    '<div class="oe_snippet_thumbnail">' +
-                        '<div class="oe_snippet_thumbnail_img" style="background-image: url(%s);"/>' +
-                        '<span class="oe_snippet_thumbnail_title">%s</span>' +
-                    '</div>',
-                    $snippet.find('[data-oe-thumbnail]').data('oeThumbnail'),
-                    name
-                ));
+                const $thumbnail = $(`
+                    <div class="oe_snippet_thumbnail">
+                        <div class="oe_snippet_thumbnail_img" style="background-image: url(${el.dataset.oeThumbnail});"/>
+                        <span class="oe_snippet_thumbnail_title">${name}</span>
+                    </div>
+                `);
                 $snippet.prepend($thumbnail);
 
                 // Create the install button (t-install feature) if necessary
-                var moduleID = $snippet.data('moduleId');
+                const moduleID = $snippet.data('moduleId');
                 if (moduleID) {
-                    $snippet.addClass('o_snippet_install');
+                    el.classList.add('o_snippet_install');
                     $thumbnail.append($('<button/>', {
                         class: 'btn btn-primary o_install_btn w-100',
                         type: 'button',
@@ -1652,16 +1641,6 @@ var SnippetsMenu = Widget.extend({
 
         // Register the text nodes that needs to be auto-selected on click
         this._registerDefaultTexts();
-
-        // Remove branding from template
-        _.each($html.find('[data-oe-model], [data-oe-type]'), function (el) {
-            for (var k = 0; k < el.attributes.length; k++) {
-                if (el.attributes[k].name.indexOf('data-oe-') === 0) {
-                    $(el).removeAttr(el.attributes[k].name);
-                    k--;
-                }
-            }
-        });
 
         // Force non editable part to contentEditable=false
         $html.find('.o_not_editable').attr('contentEditable', false);
