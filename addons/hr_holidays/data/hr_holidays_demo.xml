@@ -513,5 +513,19 @@
                 ref('hr_accrual_US_third_year'),
                 ])]"/>
     </record>
+    <record id="hr_accrual_BE" model="hr.accrual">
+        <field name="name">20 days by year</field>
+        <field name="start_count">0</field>
+        <field name="start_type">years</field>
+        <field name="added_hours">0.44</field>
+        <field name="frequency">yearly</field>
+    </record>
+    <record id="hr_accrual_plan_BE" model="hr.accrual.plan">
+        <field name="name">BE market</field>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="accrual_ids" eval="[(6, 0, [
+                ref('hr_accrual_BE'),
+                ])]"/>
+    </record>
 </data>
 </odoo>
