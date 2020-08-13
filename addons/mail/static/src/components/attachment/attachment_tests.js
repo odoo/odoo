@@ -5,10 +5,11 @@ const components = {
     Attachment: require('mail/static/src/components/attachment/attachment.js'),
 };
 const {
-    afterEach: utilsAfterEach,
+    afterEach,
     afterNextRender,
-    beforeEach: utilsBeforeEach,
-    start: utilsStart,
+    beforeEach,
+    createRootComponent,
+    start,
 } = require('mail/static/src/utils/test_utils.js');
 
 QUnit.module('mail', {}, function () {
@@ -16,22 +17,18 @@ QUnit.module('components', {}, function () {
 QUnit.module('attachment', {}, function () {
 QUnit.module('attachment_tests.js', {
     beforeEach() {
-        utilsBeforeEach(this);
+        beforeEach(this);
 
         this.createAttachmentComponent = async (attachment, otherProps) => {
-            const AttachmentComponent = components.Attachment;
-            AttachmentComponent.env = this.env;
-            this.component = new AttachmentComponent(null, Object.assign({
-                attachmentLocalId: attachment.localId,
-            }, otherProps));
-            await this.component.mount(this.widget.el);
+            const props = Object.assign({ attachmentLocalId: attachment.localId }, otherProps);
+            await createRootComponent(this, components.Attachment, {
+                props,
+                target: this.widget.el,
+            });
         };
 
         this.start = async params => {
-            if (this.widget) {
-                this.widget.destroy();
-            }
-            let { env, widget } = await utilsStart(Object.assign({}, params, {
+            const { env, widget } = await start(Object.assign({}, params, {
                 data: this.data,
             }));
             this.env = env;
@@ -39,15 +36,7 @@ QUnit.module('attachment_tests.js', {
         };
     },
     afterEach() {
-        utilsAfterEach(this);
-        if (this.component) {
-            this.component.destroy();
-        }
-        if (this.widget) {
-            this.widget.destroy();
-        }
-        this.env = undefined;
-        delete components.Attachment.env;
+        afterEach(this);
     },
 });
 
@@ -121,7 +110,6 @@ QUnit.test('simplest layout + deletable', async function (assert) {
                     route.includes('/160x160'),
                     "should fetch image with 160x160 pixels ratio");
                 assert.step('fetch_image');
-                return;
             }
             return this._super(...arguments);
         },
@@ -478,14 +466,7 @@ QUnit.test('simplest layout with hover details and filename and extension', asyn
 QUnit.test('auto layout with image', async function (assert) {
     assert.expect(7);
 
-    await this.start({
-        async mockRPC(route, args) {
-            if (route.includes('web/image/750')) {
-                return;
-            }
-            return this._super(...arguments);
-        },
-    });
+    await this.start();
     const attachment = this.env.models['mail.attachment'].create({
         filename: "test.png",
         id: 750,
@@ -544,12 +525,6 @@ QUnit.test('view attachment', async function (assert) {
 
     await this.start({
         hasDialog: true,
-        async mockRPC(route, args) {
-            if (route.includes('web/image/750')) {
-                return;
-            }
-            return this._super(...arguments);
-        },
     });
     const attachment = this.env.models['mail.attachment'].create({
         filename: "test.png",

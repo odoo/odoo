@@ -5,10 +5,11 @@ const components = {
     ChatterTopBar: require('mail/static/src/components/chatter_topbar/chatter_topbar.js'),
 };
 const {
-    afterEach: utilsAfterEach,
+    afterEach,
     afterNextRender,
-    beforeEach: utilsBeforeEach,
-    start: utilsStart,
+    beforeEach,
+    createRootComponent,
+    start,
 } = require('mail/static/src/utils/test_utils.js');
 
 const { makeTestPromise } = require('web.test_utils');
@@ -18,23 +19,18 @@ QUnit.module('components', {}, function () {
 QUnit.module('chatter_topbar', {}, function () {
 QUnit.module('chatter_topbar_tests.js', {
     beforeEach() {
-        utilsBeforeEach(this);
+        beforeEach(this);
 
         this.createChatterTopbarComponent = async (chatter, otherProps) => {
-            const ChatterTopBarComponent = components.ChatterTopBar;
-            ChatterTopBarComponent.env = this.env;
-            this.component = new ChatterTopBarComponent(
-                null,
-                Object.assign({ chatterLocalId: chatter.localId }, otherProps)
-            );
-            await afterNextRender(() => this.component.mount(this.widget.el));
+            const props = Object.assign({ chatterLocalId: chatter.localId }, otherProps);
+            await createRootComponent(this, components.ChatterTopBar, {
+                props,
+                target: this.widget.el,
+            });
         };
 
         this.start = async params => {
-            if (this.widget) {
-                this.widget.destroy();
-            }
-            let { env, widget } = await utilsStart(Object.assign({}, params, {
+            const { env, widget } = await start(Object.assign({}, params, {
                 data: this.data,
             }));
             this.env = env;
@@ -42,15 +38,7 @@ QUnit.module('chatter_topbar_tests.js', {
         };
     },
     afterEach() {
-        utilsAfterEach(this);
-        if (this.component) {
-            this.component.destroy();
-        }
-        if (this.widget) {
-            this.widget.destroy();
-        }
-        delete components.ChatterTopBar.env;
-        this.env = undefined;
+        afterEach(this);
     },
 });
 
@@ -162,7 +150,7 @@ QUnit.test('attachment loading is delayed', async function (assert) {
         loadingBaseDelayDuration: 100,
         async mockRPC(route) {
             if (route.includes('ir.attachment/search_read')) {
-                return new Promise(() => {}); // simulate long loading
+                await makeTestPromise(); // simulate long loading
             }
             return this._super(...arguments);
         }
@@ -204,7 +192,7 @@ QUnit.test('attachment counter while loading attachments', async function (asser
     await this.start({
         async mockRPC(route) {
             if (route.includes('ir.attachment/search_read')) {
-                return new Promise(() => {}); // simulate long loading
+                await makeTestPromise(); // simulate long loading
             }
             return this._super(...arguments);
         }
@@ -244,12 +232,12 @@ QUnit.test('attachment counter transition when attachments become loaded)', asyn
     const attachmentPromise = makeTestPromise();
     await this.start({
         async mockRPC(route) {
+            const _super = this._super.bind(this, ...arguments); // limitation of class.js
             if (route.includes('ir.attachment/search_read')) {
                 await attachmentPromise;
-                return [];
             }
-            return this._super(...arguments);
-        }
+            return _super();
+        },
     });
     const chatter = this.env.models['mail.chatter'].create({
         threadId: 100,
@@ -333,24 +321,21 @@ QUnit.test('attachment counter with attachments', async function (assert) {
     assert.expect(4);
 
     this.data['res.partner'].records.push({ id: 100 });
-    await this.start({
-        async mockRPC(route) {
-            if (route.includes('ir.attachment/search_read')) {
-                return [{
-                    id: 143,
-                    filename: 'Blah.txt',
-                    mimetype: 'text/plain',
-                    name: 'Blah.txt'
-                }, {
-                    id: 144,
-                    filename: 'Blu.txt',
-                    mimetype: 'text/plain',
-                    name: 'Blu.txt'
-                }];
-            }
-            return this._super(...arguments);
+    this.data['ir.attachment'].records.push(
+        {
+            mimetype: 'text/plain',
+            name: 'Blah.txt',
+            res_id: 100,
+            res_model: 'res.partner',
+        },
+        {
+            mimetype: 'text/plain',
+            name: 'Blu.txt',
+            res_id: 100,
+            res_model: 'res.partner',
         }
-    });
+    );
+    await this.start();
     const chatter = this.env.models['mail.chatter'].create({
         threadId: 100,
         threadModel: 'res.partner',
@@ -444,11 +429,11 @@ QUnit.test('rendering with multiple partner followers', async function (assert) 
     assert.expect(7);
 
     await this.start();
-    this.data['res.partner'].records = [{
+    this.data['res.partner'].records.push({
         id: 100,
         message_follower_ids: [1, 2],
-    }];
-    this.data['mail.followers'].records = [
+    });
+    this.data['mail.followers'].records.push(
         {
             // simulate real return from RPC
             // (the presence of the key and the falsy value need to be handled correctly)
@@ -456,15 +441,16 @@ QUnit.test('rendering with multiple partner followers', async function (assert) 
             id: 1,
             name: "Jean Michang",
             partner_id: 12,
-        }, {
+        },
+        {
             // simulate real return from RPC
             // (the presence of the key and the falsy value need to be handled correctly)
             channel_id: false,
             id: 2,
             name: "Eden Hazard",
             partner_id: 11,
-        },
-    ];
+        }
+    );
     const chatter = this.env.models['mail.chatter'].create({
         followerIds: [1, 2],
         threadId: 100,
@@ -518,12 +504,12 @@ QUnit.test('rendering with multiple partner followers', async function (assert) 
 QUnit.test('rendering with multiple channel followers', async function (assert) {
     assert.expect(7);
 
-    this.data['res.partner'].records = [{
+    this.data['res.partner'].records.push({
         id: 100,
         message_follower_ids: [1, 2],
-    }];
+    });
     await this.start();
-    this.data['mail.followers'].records = [
+    this.data['mail.followers'].records.push(
         {
             channel_id: 11,
             id: 1,
@@ -531,15 +517,16 @@ QUnit.test('rendering with multiple channel followers', async function (assert) 
             // simulate real return from RPC
             // (the presence of the key and the falsy value need to be handled correctly)
             partner_id: false,
-        }, {
+        },
+        {
             channel_id: 12,
             id: 2,
             name: "channel armstrong",
             // simulate real return from RPC
             // (the presence of the key and the falsy value need to be handled correctly)
             partner_id: false,
-        },
-    ];
+        }
+    );
     const chatter = this.env.models['mail.chatter'].create({
         followerIds: [1, 2],
         threadId: 100,

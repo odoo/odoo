@@ -12,21 +12,7 @@ const { EventBus } = owl.core;
  * @returns {Object}
  */
 function addMessagingToEnv(providedEnv = {}) {
-
-    const defaultEnv = Object.assign({}, providedEnv, {
-        session: Object.assign({
-            is_bound: Promise.resolve(),
-            name: 'Admin',
-            partner_display_name: 'Your Company, Admin',
-            partner_id: 3,
-            uid: 2,
-            url: s => s,
-        }, providedEnv.session)
-    });
-
-    let env = Object.assign({
-        loadingBaseDelayDuration: defaultEnv.loadingBaseDelayDuration || 0,
-    }, defaultEnv);
+    const env = Object.assign(providedEnv);
 
     /**
      * Messaging store
@@ -70,6 +56,7 @@ function addMessagingToEnv(providedEnv = {}) {
             }
             return this.messaging.isInitialized;
         },
+        loadingBaseDelayDuration: providedEnv.loadingBaseDelayDuration || 0,
         messaging: undefined,
         messagingInitializedDeferred: makeDeferred(),
         messagingBus: new EventBus(),

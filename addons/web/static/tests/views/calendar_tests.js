@@ -154,7 +154,7 @@ QUnit.module('Views', {
         assert.expect(24);
 
         this.data.event.records.push({
-            id: 7,
+            id: 8,
             user_id: session.uid,
             partner_id: false,
             name: "event 7",
@@ -2036,8 +2036,8 @@ QUnit.module('Views', {
         assert.expect(5);
 
         this.data.event.records.push(
-            {id: 7, user_id: 4, partner_id: 1, name: "event 7", start: "2016-12-11 09:00:00", stop: "2016-12-11 10:00:00", allday: false, partner_ids: [1,2,3], event_type_id: 3, color: 4},
-            {id: 8, user_id: 4, partner_id: 1, name: "event 8", start: "2016-12-11 19:00:00", stop: "2016-12-11 20:00:00", allday: false, partner_ids: [1,2,3], event_type_id: 1, color: 1},
+            {id: 8, user_id: 4, partner_id: 1, name: "event 8", start: "2016-12-11 09:00:00", stop: "2016-12-11 10:00:00", allday: false, partner_ids: [1,2,3], event_type_id: 3, color: 4},
+            {id: 9, user_id: 4, partner_id: 1, name: "event 9", start: "2016-12-11 19:00:00", stop: "2016-12-11 20:00:00", allday: false, partner_ids: [1,2,3], event_type_id: 1, color: 1},
         );
 
         var calendar = await createCalendarView({
@@ -2068,7 +2068,7 @@ QUnit.module('Views', {
 
         assert.containsOnce($typeFilter, '.o_calendar_filter_item[data-value=3].o_cw_filter_color_4', "Filter for event type 3 must have the color 4");
 
-        assert.containsOnce(calendar, '.fc-event[data-event-id=7].o_calendar_color_4', "Event of event type 3 must have the color 4");
+        assert.containsOnce(calendar, '.fc-event[data-event-id=8].o_calendar_color_4', "Event of event type 3 must have the color 4");
 
         calendar.destroy();
     });
@@ -2305,30 +2305,30 @@ QUnit.module('Views', {
             partner_id: 3
         });
         this.data.event.records.push({
-            id: 7,
+            id: 8,
             user_id: 5,
             partner_id: 3,
-            name: "event 7",
+            name: "event 8",
             start: "2016-12-06 04:00:00",
             stop: "2016-12-06 08:00:00",
             allday: false,
             partner_ids: [1,2,3],
             type: 1
         }, {
-            id: 8,
+            id: 9,
             user_id: session.uid,
             partner_id: 1,
-            name: "event 8",
+            name: "event 9",
             start: "2016-12-07 04:00:00",
             stop: "2016-12-07 08:00:00",
             allday: false,
             partner_ids: [1,2,3],
             type: 1
         },{
-            id: 9,
+            id: 10,
             user_id: 4,
             partner_id: 4,
-            name: "event 9",
+            name: "event 10",
             start: "2016-12-08 04:00:00",
             stop: "2016-12-08 08:00:00",
             allday: false,
@@ -2363,7 +2363,7 @@ QUnit.module('Views', {
 
         assert.containsN(calendar, '.o_calendar_filter_item', 6, "should display 6 filter items");
         assert.containsN(calendar, '.fc-event', 2, "should display 2 events");
-        assert.strictEqual(calendar.$('.fc-event .o_event_title').text().replace(/\s/g, ''), "event7event8",
+        assert.strictEqual(calendar.$('.fc-event .o_event_title').text().replace(/\s/g, ''), "event8event9",
             "should display 2 events");
 
         calendar.destroy();

@@ -5,10 +5,11 @@ const components = {
     FollowerListMenu: require('mail/static/src/components/follower_list_menu/follower_list_menu.js'),
 };
 const {
-    afterEach: utilsAfterEach,
+    afterEach,
     afterNextRender,
-    beforeEach: utilsBeforeEach,
-    start: utilsStart,
+    beforeEach,
+    createRootComponent,
+    start,
 } = require('mail/static/src/utils/test_utils.js');
 
 const Bus = require('web.Bus');
@@ -18,19 +19,18 @@ QUnit.module('components', {}, function () {
 QUnit.module('follower_list_menu', {}, function () {
 QUnit.module('follower_list_menu_tests.js', {
     beforeEach() {
-        utilsBeforeEach(this);
+        beforeEach(this);
 
         this.createFollowerListMenuComponent = async (thread, otherProps = {}) => {
-            const FollowerListMenuComponent = components.FollowerListMenu;
-            FollowerListMenuComponent.env = this.env;
-            this.component = new FollowerListMenuComponent(null,
-                Object.assign(otherProps, { threadLocalId: thread.localId })
-            );
-            await this.component.mount(this.widget.el);
+            const props = Object.assign({ threadLocalId: thread.localId }, otherProps);
+            await createRootComponent(this, components.FollowerListMenu, {
+                props,
+                target: this.widget.el,
+            });
         };
 
         this.start = async params => {
-            let { env, widget } = await utilsStart(Object.assign({}, params, {
+            const { env, widget } = await start(Object.assign({}, params, {
                 data: this.data,
             }));
             this.env = env;
@@ -38,17 +38,7 @@ QUnit.module('follower_list_menu_tests.js', {
         };
     },
     afterEach() {
-        utilsAfterEach(this);
-        if (this.component) {
-            this.component.destroy();
-            this.component = undefined;
-        }
-        if (this.widget) {
-            this.widget.destroy();
-            this.widget = undefined;
-        }
-        this.env = undefined;
-        delete components.FollowerListMenu.env;
+        afterEach(this);
     },
 });
 
@@ -130,9 +120,8 @@ QUnit.test('base rendering editable', async function (assert) {
 });
 
 QUnit.test('click on "add followers" button', async function (assert) {
-    assert.expect(18);
+    assert.expect(16);
 
-    const followerIds = [];
     const bus = new Bus();
     bus.on('do-action', null, payload => {
         assert.step('action:open_view');
@@ -160,36 +149,23 @@ QUnit.test('click on "add followers" button', async function (assert) {
             "ir.actions.act_window",
             "The 'add followers' action should be of type 'ir.actions.act_window'"
         );
-        followerIds.push(1);
+        const partner = this.data['res.partner'].records.find(
+            partner => partner.id === payload.action.context.default_res_id
+        );
+        partner.message_follower_ids.push(1);
         payload.options.on_close();
     });
-
+    this.data['res.partner'].records.push({ id: 100 });
+    this.data['mail.followers'].records.push({
+        partner_id: 42,
+        email: "bla@bla.bla",
+        id: 1,
+        is_active: true,
+        is_editable: true,
+        name: "François Perusse",
+    });
     await this.start({
         env: { bus },
-        async mockRPC(route, args) {
-            if (route.includes('web/image/')) {
-                return;
-            } else if (route.includes('res.partner/read')) {
-                assert.step('rpc:read_follower_ids');
-                return [{
-                    id: 100,
-                    message_follower_ids: followerIds,
-                }];
-            } else if (route.includes('mail/read_followers')) {
-                assert.step('rpc:read_followers_details');
-                return {
-                    followers: [{
-                        partner_id: 42,
-                        email: "bla@bla.bla",
-                        id: 1,
-                        is_active: true,
-                        is_editable: true,
-                        name: "François Perusse",
-                    }]
-                };
-            }
-            return this._super(...arguments);
-        },
     });
     const thread = this.env.models['mail.thread'].create({
         id: 100,
@@ -237,8 +213,6 @@ QUnit.test('click on "add followers" button', async function (assert) {
     );
     assert.verifySteps([
         'action:open_view',
-        'rpc:read_follower_ids',
-        'rpc:read_followers_details',
     ]);
     assert.strictEqual(
         document.querySelector('.o_FollowerListMenu_buttonFollowersCount').textContent,
@@ -262,9 +236,8 @@ QUnit.test('click on "add followers" button', async function (assert) {
 });
 
 QUnit.test('click on "add channels" button', async function (assert) {
-    assert.expect(18);
+    assert.expect(16);
 
-    const followerIds = [];
     const bus = new Bus();
     bus.on('do-action', null, payload => {
         assert.step('action:open_view');
@@ -292,35 +265,23 @@ QUnit.test('click on "add channels" button', async function (assert) {
             "ir.actions.act_window",
             "The 'add channels' action should be of type 'ir.actions.act_window'"
         );
-        followerIds.push(1);
+        const partner = this.data['res.partner'].records.find(
+            partner => partner.id === payload.action.context.default_res_id
+        );
+        partner.message_follower_ids.push(1);
         payload.options.on_close();
+    });
+    this.data['res.partner'].records.push({ id: 100 });
+    this.data['mail.followers'].records.push({
+        channel_id: 42,
+        email: "bla@bla.bla",
+        id: 1,
+        is_active: true,
+        is_editable: true,
+        name: "Supa channel",
     });
     await this.start({
         env: { bus },
-        async mockRPC(route, args) {
-            if (route.includes('web/image/')) {
-                return;
-            } else if (route.includes('res.partner/read')) {
-                assert.step('rpc:read_follower_ids');
-                return [{
-                    id: 100,
-                    message_follower_ids: followerIds,
-                }];
-            } else if (route.includes('mail/read_followers')) {
-                assert.step('rpc:read_followers_details');
-                return {
-                    followers: [{
-                        channel_id: 42,
-                        email: "bla@bla.bla",
-                        id: 1,
-                        is_active: true,
-                        is_editable: true,
-                        name: "Supa channel",
-                    }]
-                };
-            }
-            return this._super(...arguments);
-        },
     });
     const thread = this.env.models['mail.thread'].create({
         id: 100,
@@ -368,8 +329,6 @@ QUnit.test('click on "add channels" button', async function (assert) {
     );
     assert.verifySteps([
         'action:open_view',
-        'rpc:read_follower_ids',
-        'rpc:read_followers_details',
     ]);
     assert.strictEqual(
         document.querySelector('.o_FollowerListMenu_buttonFollowersCount').textContent,
@@ -398,17 +357,13 @@ QUnit.test('click on remove follower', async function (assert) {
     const self = this;
     await this.start({
         async mockRPC(route, args) {
-            if (route.includes('web/image/')) {
-                return;
-            } else if (route.includes('message_unsubscribe')) {
+            if (route.includes('message_unsubscribe')) {
                 assert.step('message_unsubscribe');
-                // FIXME "integration" test, should be replaced ... maybe by a tour.
                 assert.deepEqual(
                     args.args,
-                    [[100],[self.env.session.partner_id]],
-                    "message unsubscribe should be called with right argument"
+                    [[100], [self.env.messaging.currentPartner.id]],
+                    "message_unsubscribe should be called with right argument"
                 );
-                return;
             }
             return this._super(...arguments);
         },
@@ -424,7 +379,7 @@ QUnit.test('click on remove follower', async function (assert) {
         isEditable: true,
         partner: [['insert', {
             email: "bla@bla.bla",
-            id: this.env.session.partner_id,
+            id: this.env.messaging.currentPartner.id,
             name: "François Perusse",
         }]],
     });
@@ -454,7 +409,7 @@ QUnit.test('click on remove follower', async function (assert) {
     assert.containsNone(
         document.body,
         '.o_Follower',
-        "should no more have follower component"
+        "should no longer have follower component"
     );
 });
 

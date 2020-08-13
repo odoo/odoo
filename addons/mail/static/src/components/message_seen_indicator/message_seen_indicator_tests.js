@@ -5,9 +5,10 @@ const components = {
     MessageSendIndicator: require('mail/static/src/components/message_seen_indicator/message_seen_indicator.js'),
 };
 const {
-    afterEach: utilsAfterEach,
-    beforeEach: utilsBeforeEach,
-    start: utilsStart,
+    afterEach,
+    beforeEach,
+    createRootComponent,
+    start,
 } = require('mail/static/src/utils/test_utils.js');
 
 QUnit.module('mail', {}, function () {
@@ -15,23 +16,21 @@ QUnit.module('components', {}, function () {
 QUnit.module('message_seen_indicator', {}, function () {
 QUnit.module('message_seen_indicator_tests.js', {
     beforeEach() {
-        utilsBeforeEach(this);
+        beforeEach(this);
 
         this.createMessageSeenIndicatorComponent = async ({ message, thread }, otherProps) => {
-            const MessageSeenIndicatorComponent = components.MessageSendIndicator;
-            MessageSeenIndicatorComponent.env = this.env;
-            this.component = new MessageSeenIndicatorComponent(null, Object.assign({
-                messageLocalId: message.localId,
-                threadLocalId: thread.localId,
-            }, otherProps));
-            await this.component.mount(this.widget.el);
+            const props = Object.assign(
+                { messageLocalId: message.localId, threadLocalId: thread.localId },
+                otherProps
+            );
+            await createRootComponent(this, components.MessageSendIndicator, {
+                props,
+                target: this.widget.el,
+            });
         };
 
         this.start = async params => {
-            if (this.widget) {
-                this.widget.destroy();
-            }
-            let { env, widget } = await utilsStart(Object.assign({}, params, {
+            const { env, widget } = await start(Object.assign({}, params, {
                 data: this.data,
             }));
             this.env = env;
@@ -39,15 +38,7 @@ QUnit.module('message_seen_indicator_tests.js', {
         };
     },
     afterEach() {
-        utilsAfterEach(this);
-        if (this.component) {
-            this.component.destroy();
-        }
-        if (this.widget) {
-            this.widget.destroy();
-        }
-        this.env = undefined;
-        delete components.MessageSendIndicator.env;
+        afterEach(this);
     },
 });
 
@@ -61,21 +52,21 @@ QUnit.test('rendering when just one has received the message', async function (a
         partnerSeenInfos: [['create', [
             {
                 id: 10,
-                partner: [['create', {id: 10}]],
-                lastFetchedMessage: [['insert', {id: 100}]]
+                partner: [['create', { id: 10 }]],
+                lastFetchedMessage: [['insert', { id: 100 }]]
             },
             {
                 id: 100,
-                partner: [['create', {id: 100}]],
+                partner: [['create', { id: 100 }]],
             },
         ]]],
         messageSeenIndicators: [['insert', {
             id: this.env.models['mail.message_seen_indicator'].computeId(100, 1000),
-            message: [['insert', {id: 100}]],
+            message: [['insert', { id: 100 }]],
         }]],
     });
     const message = this.env.models['mail.message'].insert({
-        author: [['insert', { id: this.env.session.partner_id, display_name: "Demo User" }]],
+        author: [['insert', { id: this.env.messaging.currentPartner.id, display_name: "Demo User" }]],
         body: "<p>Test</p>",
         id: 100,
         originThread: [['link', thread]],
@@ -108,22 +99,22 @@ QUnit.test('rendering when everyone have received the message', async function (
         partnerSeenInfos: [['create', [
             {
                 id: 10,
-                partner: [['create', {id: 10}]],
-                lastFetchedMessage: [['insert', {id: 100}]],
+                partner: [['create', { id: 10 }]],
+                lastFetchedMessage: [['insert', { id: 100 }]],
             },
             {
                 id: 100,
-                partner: [['create', {id: 100}]],
-                lastFetchedMessage: [['insert', {id: 99}]],
+                partner: [['create', { id: 100 }]],
+                lastFetchedMessage: [['insert', { id: 99 }]],
             },
         ]]],
         messageSeenIndicators: [['insert', {
             id: this.env.models['mail.message_seen_indicator'].computeId(100, 1000),
-            message: [['insert', {id: 100}]],
+            message: [['insert', { id: 100 }]],
         }]],
     });
     const message = this.env.models['mail.message'].insert({
-        author: [['insert', { id: this.env.session.partner_id, display_name: "Demo User" }]],
+        author: [['insert', { id: this.env.messaging.currentPartner.id, display_name: "Demo User" }]],
         body: "<p>Test</p>",
         id: 100,
         originThread: [['link', thread]],
@@ -156,23 +147,23 @@ QUnit.test('rendering when just one has seen the message', async function (asser
         partnerSeenInfos: [['create', [
             {
                 id: 10,
-                partner: [['create', {id: 10}]],
-                lastFetchedMessage: [['insert', {id: 100}]],
-                lastSeenMessage: [['insert', {id: 100}]],
+                partner: [['create', { id: 10 }]],
+                lastFetchedMessage: [['insert', { id: 100 }]],
+                lastSeenMessage: [['insert', { id: 100 }]],
             },
             {
                 id: 100,
-                partner: [['create', {id: 100}]],
-                lastFetchedMessage: [['insert', {id: 99}]],
+                partner: [['create', { id: 100 }]],
+                lastFetchedMessage: [['insert', { id: 99 }]],
             },
         ]]],
         messageSeenIndicators: [['insert', {
             id: this.env.models['mail.message_seen_indicator'].computeId(100, 1000),
-            message: [['insert', {id: 100}]],
+            message: [['insert', { id: 100 }]],
         }]],
     });
     const message = this.env.models['mail.message'].insert({
-        author: [['insert', { id: this.env.session.partner_id, display_name: "Demo User" }]],
+        author: [['insert', { id: this.env.messaging.currentPartner.id, display_name: "Demo User" }]],
         body: "<p>Test</p>",
         id: 100,
         originThread: [['link', thread]],
@@ -206,22 +197,22 @@ QUnit.test('rendering when just one has seen & received the message', async func
         partnerSeenInfos: [['create', [
             {
                 id: 10,
-                partner: [['create', {id: 10}]],
-                lastFetchedMessage: [['insert', {id: 100}]],
-                lastSeenMessage: [['insert', {id: 100}]],
+                partner: [['create', { id: 10 }]],
+                lastFetchedMessage: [['insert', { id: 100 }]],
+                lastSeenMessage: [['insert', { id: 100 }]],
             },
             {
                 id: 100,
-                partner: [['create', {id: 100}]],
+                partner: [['create', { id: 100 }]],
             },
         ]]],
         messageSeenIndicators: [['insert', {
             id: this.env.models['mail.message_seen_indicator'].computeId(100, 1000),
-            message: [['insert', {id: 100}]],
+            message: [['insert', { id: 100 }]],
         }]],
     });
     const message = this.env.models['mail.message'].insert({
-        author: [['insert', { id: this.env.session.partner_id, display_name: "Demo User" }]],
+        author: [['insert', { id: this.env.messaging.currentPartner.id, display_name: "Demo User" }]],
         body: "<p>Test</p>",
         id: 100,
         originThread: [['link', thread]],
@@ -255,24 +246,24 @@ QUnit.test('rendering when just everyone has seen the message', async function (
         partnerSeenInfos: [['create', [
             {
                 id: 10,
-                partner: [['create', {id: 10}]],
-                lastFetchedMessage: [['insert', {id: 100}]],
-                lastSeenMessage: [['insert', {id: 100}]],
+                partner: [['create', { id: 10 }]],
+                lastFetchedMessage: [['insert', { id: 100 }]],
+                lastSeenMessage: [['insert', { id: 100 }]],
             },
             {
                 id: 100,
-                partner: [['create', {id: 100}]],
-                lastFetchedMessage: [['insert', {id: 100}]],
-                lastSeenMessage: [['insert', {id: 100}]],
+                partner: [['create', { id: 100 }]],
+                lastFetchedMessage: [['insert', { id: 100 }]],
+                lastSeenMessage: [['insert', { id: 100 }]],
             },
         ]]],
         messageSeenIndicators: [['insert', {
             id: this.env.models['mail.message_seen_indicator'].computeId(100, 1000),
-            message: [['insert', {id: 100}]],
+            message: [['insert', { id: 100 }]],
         }]],
     });
     const message = this.env.models['mail.message'].insert({
-        author: [['insert', { id: this.env.session.partner_id, display_name: "Demo User" }]],
+        author: [['insert', { id: this.env.messaging.currentPartner.id, display_name: "Demo User" }]],
         body: "<p>Test</p>",
         id: 100,
         originThread: [['link', thread]],

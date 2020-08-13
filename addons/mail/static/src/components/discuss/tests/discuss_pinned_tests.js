@@ -2,10 +2,10 @@ odoo.define('mail/static/src/components/discuss/tests/discuss_pinned_tests.js', 
 'use strict';
 
 const {
-    afterEach: utilsAfterEach,
+    afterEach,
     afterNextRender,
-    beforeEach: utilsBeforeEach,
-    start: utilsStart,
+    beforeEach,
+    start,
 } = require('mail/static/src/utils/test_utils.js');
 
 QUnit.module('mail', {}, function () {
@@ -13,10 +13,10 @@ QUnit.module('components', {}, function () {
 QUnit.module('discuss', {}, function () {
 QUnit.module('discuss_pinned_tests.js', {
     beforeEach() {
-        utilsBeforeEach(this);
+        beforeEach(this);
 
         this.start = async params => {
-            let { env, widget } = await utilsStart(Object.assign({}, params, {
+            const { env, widget } = await start(Object.assign({}, params, {
                 autoOpenDiscuss: true,
                 data: this.data,
                 hasDiscuss: true,
@@ -26,26 +26,16 @@ QUnit.module('discuss_pinned_tests.js', {
         };
     },
     afterEach() {
-        if (this.widget) {
-            this.widget.destroy();
-        }
-        utilsAfterEach(this);
+        afterEach(this);
     },
 });
 
 QUnit.test('sidebar: pinned channel 1: init with one pinned channel', async function (assert) {
     assert.expect(2);
 
-    Object.assign(this.data.initMessaging, {
-        channel_slots: {
-            channel_channel: [{
-                channel_type: "channel",
-                id: 20,
-                is_pinned: true,
-                name: "General",
-            }],
-        },
-    });
+    // channel that is expected to be found in the sidebar
+    // with a random unique id that will be referenced in the test
+    this.data['mail.channel'].records.push({ id: 20 });
     await this.start();
     assert.containsOnce(
         document.body,
@@ -59,23 +49,16 @@ QUnit.test('sidebar: pinned channel 1: init with one pinned channel', async func
                 thread.id === 20 && thread.model === 'mail.channel'
             ).localId
         }"]`,
-        "1 channel is present in discuss sidebar and it is 'general'"
+        "should have the only channel of which user is member in discuss sidebar"
     );
 });
 
 QUnit.test('sidebar: pinned channel 2: open pinned channel', async function (assert) {
     assert.expect(1);
 
-    Object.assign(this.data.initMessaging, {
-        channel_slots: {
-            channel_channel: [{
-                channel_type: "channel",
-                id: 20,
-                is_pinned: true,
-                name: "General",
-            }],
-        },
-    });
+    // channel that is expected to be found in the sidebar
+    // with a random unique id that will be referenced in the test
+    this.data['mail.channel'].records.push({ id: 20 });
     await this.start();
 
     const threadGeneral = this.env.models['mail.thread'].find(thread =>
@@ -96,24 +79,9 @@ QUnit.test('sidebar: pinned channel 2: open pinned channel', async function (ass
 QUnit.test('sidebar: pinned channel 3: open pinned channel and unpin it', async function (assert) {
     assert.expect(8);
 
-    const channel = {
-        channel_type: "channel",
-        id: 20,
-        is_minimized: false,
-        is_pinned: true,
-        name: "General",
-        uuid: 'general',
-        state: 'closed',
-    };
-
-    this.data['mail.channel'].records = [channel];
-    Object.assign(this.data.initMessaging, {
-        channel_slots: {
-            channel_channel: [channel],
-        },
-    });
-
-    const self = this;
+    // channel that is expected to be found in the sidebar
+    // with a random unique id that will be referenced in the test
+    this.data['mail.channel'].records.push({ id: 20 });
     await this.start({
         async mockRPC(route, args) {
             if (args.method === 'execute_command') {
@@ -166,17 +134,9 @@ QUnit.test('sidebar: pinned channel 3: open pinned channel and unpin it', async 
 QUnit.test('sidebar: unpin channel from bus', async function (assert) {
     assert.expect(5);
 
-    Object.assign(this.data.initMessaging, {
-        channel_slots: {
-            channel_channel: [{
-                channel_type: "channel",
-                id: 20,
-                is_pinned: true,
-                name: "General",
-            }],
-        },
-    });
-
+    // channel that is expected to be found in the sidebar
+    // with a random unique id that will be referenced in the test
+    this.data['mail.channel'].records.push({ id: 20 });
     await this.start();
     const threadGeneral = this.env.models['mail.thread'].find(thread =>
         thread.id === 20 && thread.model === 'mail.channel'
@@ -232,7 +192,7 @@ QUnit.test('sidebar: unpin channel from bus', async function (assert) {
     );
 });
 
-QUnit.test('sidebar: channel group_based_subscription: mandatorily pinned', async function (assert) {
+QUnit.test('[technical] sidebar: channel group_based_subscription: mandatorily pinned', async function (assert) {
     assert.expect(2);
 
     // FIXME: The following is admittedly odd.
@@ -240,16 +200,11 @@ QUnit.test('sidebar: channel group_based_subscription: mandatorily pinned', asyn
     // and is_pinned functionalities, especially in python.
     // task-2284357
 
-    Object.assign(this.data.initMessaging, {
-        channel_slots: {
-            channel_channel: [{
-                channel_type: "channel",
-                group_based_subscription: true,
-                id: 20,
-                is_pinned: false,
-                name: "General",
-            }],
-        },
+    // channel that is expected to be found in the sidebar
+    this.data['mail.channel'].records.push({
+        group_based_subscription: true, // expected value for this test
+        id: 20, // random unique id, will be referenced in the test
+        is_pinned: false, // expected value for this test
     });
     await this.start();
     const threadGeneral = this.env.models['mail.thread'].find(thread =>
