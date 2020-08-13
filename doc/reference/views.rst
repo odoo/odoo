@@ -1647,6 +1647,8 @@ The ``<map>`` element can contain multiple ``<field>`` elements. Each ``<field>`
     The field to display.
 ``string``
     This string will be displayed before the field's content. It Can be used as a description.
+``limit``
+    The size of a page (default: 80). It must be a positive integer.
 
 No attribute or element is mandatory but as stated above if no res.partner many2one is provided the view won't be able to locate records.
 
