@@ -190,8 +190,7 @@ class HolidaysAllocation(models.Model):
                             maximum = maximum * (holiday.employee_id.resource_calendar_id.hours_per_day or HOURS_PER_DAY)
 
                         if line.maximum_period == 'period':
-                            if added_hours > maximum:
-                                added_hours = maximum
+                            added_hours = min(maximum, added_hours)
                         elif line.maximum_period == 'years':
                             actual_hours = holiday.number_of_days * (
                                         holiday.employee_id.resource_calendar_id.hours_per_day or HOURS_PER_DAY)
