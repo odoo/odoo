@@ -331,7 +331,7 @@
             <field name="model">event.track.stage</field>
             <field name="arch" type="xml">
                 <tree string="Track Stage">
-                    <field name="sequence" widget="handle"/>
+                    <field name="sequence" widget="handle" groups="event.group_event_manager"/>
                     <field name="name"/>
                     <field name="fold"/>
                 </tree>
