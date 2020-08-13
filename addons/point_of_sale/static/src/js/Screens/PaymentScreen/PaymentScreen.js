@@ -2,13 +2,10 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
     'use strict';
 
     const { parse } = require('web.field_utils');
-    const { is_email } = require('web.utils');
     const PosComponent = require('point_of_sale.PosComponent');
     const { useErrorHandlers } = require('point_of_sale.custom_hooks');
     const NumberBuffer = require('point_of_sale.NumberBuffer');
     const { useListener } = require('web.custom_hooks');
-    const OrderReceipt = require('point_of_sale.OrderReceipt');
-    const { Printer } = require('point_of_sale.Printer');
     const Registries = require('point_of_sale.Registries');
     const { onChangeOrder } = require('point_of_sale.custom_hooks');
 
@@ -98,11 +95,6 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
             this.currentOrder.set_to_invoice(!this.currentOrder.is_to_invoice());
             this.render();
         }
-        toggleIsToEmail() {
-            // click_email
-            this.currentOrder.set_to_email(!this.currentOrder.is_to_email());
-            this.render();
-        }
         openCashbox() {
             this.env.pos.proxy.printer.open_cashbox();
         }
@@ -165,7 +157,6 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
             this.currentOrder.finalized = true;
 
             let syncedOrderBackendIds = [];
-            let errorCode;
 
             try {
                 if (this.currentOrder.is_to_invoice()) {
@@ -179,7 +170,6 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
                 if (error instanceof Error) {
                     throw error;
                 } else {
-                    errorCode = error.code;
                     await this._handlePushOrderError(error);
                 }
             }
@@ -196,10 +186,7 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
                 }
             }
 
-            const shouldShowPrintInvoice = errorCode
-                ? this.currentOrder.is_to_invoice() && errorCode < 0
-                : false;
-            this.showScreen(this.nextScreen, { printInvoiceIsShown: shouldShowPrintInvoice });
+            this.showScreen(this.nextScreen);
 
             // If we succeeded in syncing the current order, and
             // there are still other orders that are left unsynced,
@@ -282,26 +269,6 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
                 }
             }
 
-            var client = this.currentOrder.get_client();
-            if (
-                this.currentOrder.is_to_email() &&
-                (!client || (client && !is_email(client.email)))
-            ) {
-                var title = !client ? 'Please select the customer' : 'Please provide valid email';
-                var body = !client
-                    ? 'You need to select the customer before you can send the receipt via email.'
-                    : 'This customer does not have a valid email address, define one or do not send an email.';
-
-                const { confirmed } = await this.showPopup('ConfirmPopup', {
-                    title: this.env._t(title),
-                    body: this.env._t(body),
-                });
-                if (confirmed) {
-                    this.selectClient();
-                }
-                return false;
-            }
-
             // if the change is too large, it's probably an input error, make the user confirm.
             if (
                 !isForceValidate &&
@@ -329,36 +296,6 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
             return true;
         }
         async _postPushOrderResolve(order, order_server_ids) {
-            if (order.is_to_email()) {
-                return await this._sendReceiptToCustomer(order_server_ids);
-            } else {
-                return true;
-            }
-        }
-        async _sendReceiptToCustomer(order_server_ids) {
-            const order = this.currentOrder;
-            const fixture = document.createElement('div');
-            const orderReceipt = new OrderReceipt(this, { order });
-            // Important to mount the component to a HTMLElement.
-            // If not properly mounted, HTMLElement (el) corresponding
-            // the component is not created.
-            await orderReceipt.mount(fixture);
-            const receiptString = orderReceipt.el.outerHTML;
-            fixture.remove();
-            const printer = new Printer();
-            const ticketImage = await printer.htmlToImg(receiptString);
-            const orderName = order.get_name();
-            const orderClient = order.get_client();
-            try {
-                await this.rpc({
-                    model: 'pos.order',
-                    method: 'action_receipt_to_customer',
-                    args: [order_server_ids, orderName, orderClient, ticketImage],
-                });
-            } catch (error) {
-                order.set_to_email(false);
-                return false;
-            }
             return true;
         }
         async _sendPaymentRequest({ detail: line }) {

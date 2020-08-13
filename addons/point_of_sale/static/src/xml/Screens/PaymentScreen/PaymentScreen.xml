@@ -69,11 +69,6 @@
                                         t-on-click="toggleIsToInvoice">
                                         <i class="fa fa-file-text-o" /> Invoice
                                     </div>
-                                    <div class="button js_email"
-                                        t-att-class="{ highlight: currentOrder.is_to_email() }"
-                                        t-on-click="toggleIsToEmail">
-                                        <i class="fa fa-inbox" /> Email
-                                    </div>
                                     <div t-if="env.pos.config.tip_product_id" class="button js_tip"
                                         t-on-click="addTip">
                                         <i class="fa fa-heart" /> Tip

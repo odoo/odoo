@@ -89,6 +89,14 @@ odoo.define('point_of_sale.tour.PaymentScreenTourMethods', function (require) {
                 },
             ];
         }
+
+        clickTipButton() {
+            return [
+                {
+                    trigger: '.payment-screen .button.js_tip',
+                },
+            ]
+        }
     }
 
     class Check {
@@ -124,18 +132,6 @@ odoo.define('point_of_sale.tour.PaymentScreenTourMethods', function (require) {
                 {
                     content: `remaining amount is ${amount}`,
                     trigger: `.payment-status-remaining .amount:contains("${amount}")`,
-                    run: () => {},
-                },
-            ];
-        }
-
-        emailButtonIsHighligted(isHighlighted) {
-            return [
-                {
-                    content: `check email button`,
-                    trigger: isHighlighted
-                        ? `.payment-buttons .js_email.highlight`
-                        : `.payment-buttons .js_email:not(:has(.highlight))`,
                     run: () => {},
                 },
             ];

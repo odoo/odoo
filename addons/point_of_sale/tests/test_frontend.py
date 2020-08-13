@@ -43,8 +43,8 @@ class TestPointOfSaleHttpCommon(odoo.tests.HttpCase):
         # Archive all existing product to avoid noise during the tours
         all_pos_product = self.env['product.product'].search([('available_in_pos', '=', True)])
         discount = self.env.ref('point_of_sale.product_product_consumable')
-        tip = self.env.ref('point_of_sale.product_product_tip')
-        (all_pos_product - discount - tip)._write({'active': False})
+        self.tip = self.env.ref('point_of_sale.product_product_tip')
+        (all_pos_product - discount - self.tip)._write({'active': False})
 
         # In DESKS categ: Desk Pad
         pos_categ_desks = env.ref('point_of_sale.pos_category_desks')
@@ -475,6 +475,11 @@ class TestPointOfSaleHttpCommon(odoo.tests.HttpCase):
 class TestUi(TestPointOfSaleHttpCommon):
     def test_01_pos_basic_order(self):
 
+        self.main_pos_config.write({
+            'iface_tipproduct': True,
+            'tip_product_id': self.tip.id,
+        })
+
         # open a session, the /pos/web controller will redirect to it
         self.main_pos_config.open_session_cb(check_coa=False)
 
@@ -492,6 +497,10 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         for order in self.env['pos.order'].search([]):
             self.assertEqual(order.state, 'paid', "Validated order has payment of " + str(order.amount_paid) + " and total of " + str(order.amount_total))
+
+        # check if email from ReceiptScreenTour is properly sent
+        email_count = self.env['mail.mail'].search_count([('email_to', '=', 'test@receiptscreen.com')])
+        self.assertEqual(email_count, 1)
 
     def test_02_pos_with_invoiced(self):
         self.main_pos_config.open_session_cb(check_coa=False)

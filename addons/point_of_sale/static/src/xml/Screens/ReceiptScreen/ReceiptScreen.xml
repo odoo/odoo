@@ -7,25 +7,37 @@
                 <div class="top-content">
                     <div class="top-content-center">
                         <h1 t-if="!env.isMobile">
-                            Change: <span class="change-value">
-                                <t t-esc="change" /></span>
+                            <t t-esc="orderAmountPlusTip" />
                         </h1>
                     </div>
                     <div class="button next" t-att-class="{ highlight: !locked }"
-                          t-on-click="orderDone">
-                        Next Order <i class="fa fa-angle-double-right"></i>
+                        t-on-click="orderDone">
+                        New Order <i class="fa fa-angle-double-right"></i>
                     </div>
                 </div>
-                <div class="centered-content">
-                    <div t-if="state.printInvoiceIsShown" class="button print_invoice"
-                         t-on-click="onPrintInvoice">
-                        <i class="fa fa-print"></i> Print Invoice
-                    </div>
-                    <div class="button print" t-on-click="printReceipt">
-                        <i class="fa fa-print"></i> Print Receipt
-                    </div>
+                <div class="default-view">
                     <div class="pos-receipt-container">
                         <OrderReceipt order="currentOrder" t-ref="order-receipt" />
+                    </div>
+                    <div class="actions">
+                        <h1>How would you like to receive your receipt?</h1>
+                        <div class="buttons">
+                            <div class="button print" t-on-click="printReceipt">
+                                <i class="fa fa-print"></i> Print Receipt
+                            </div>
+                        </div>
+                        <form t-on-submit.prevent="onSendEmail" class="send-email">
+                            <div class="email-icon"><i class="fa fa-envelope-o" aria-hidden="true"></i></div>
+                            <div class="input-email">
+                                <input type="email" placeholder="Email Receipt" t-model="orderUiState.inputEmail" />
+                                <button class="send" t-att-class="{ highlight: is_email(orderUiState.inputEmail) }" type="submit">Send</button>
+                            </div>
+                        </form>
+                        <t t-if="orderUiState.emailSuccessful !== null">
+                            <div class="notice" t-attf-class="{{ orderUiState.emailSuccessful ? 'successful' : 'failed' }}">
+                                <t t-esc="orderUiState.emailNotice"></t>
+                            </div>
+                        </t>
                     </div>
                 </div>
             </div>

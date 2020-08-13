@@ -1,22 +1,25 @@
 odoo.define('point_of_sale.ReceiptScreen', function (require) {
     'use strict';
 
-    const { useState } = owl.hooks;
+    const { Printer } = require('point_of_sale.Printer');
+    const { is_email } = require('web.utils');
+    const { useRef, useContext } = owl.hooks;
     const { useErrorHandlers, onChangeOrder } = require('point_of_sale.custom_hooks');
     const Registries = require('point_of_sale.Registries');
     const AbstractReceiptScreen = require('point_of_sale.AbstractReceiptScreen');
 
     const ReceiptScreen = (AbstractReceiptScreen) => {
         class ReceiptScreen extends AbstractReceiptScreen {
-            /**
-             * Optional props:
-             *     printInvoiceIsShown: Boolean
-             */
             constructor() {
                 super(...arguments);
                 useErrorHandlers();
                 onChangeOrder(null, (newOrder) => newOrder && this.render());
-                this.state = useState({ printInvoiceIsShown: this.props.printInvoiceIsShown });
+                this.orderReceipt = useRef('order-receipt');
+                const order = this.currentOrder;
+                const client = order.get_client();
+                this.orderUiState = useContext(order.uiState.ReceiptScreen);
+                this.orderUiState.inputEmail = this.orderUiState.inputEmail || (client && client.email) || '';
+                this.is_email = is_email;
             }
             mounted() {
                 // Here, we send a task to the event loop that handles
@@ -26,8 +29,33 @@ odoo.define('point_of_sale.ReceiptScreen', function (require) {
                 // call.
                 setTimeout(async () => await this.handleAutoPrint(), 0);
             }
-            get change() {
-                return this.env.pos.format_currency(this.currentOrder.get_change());
+            async onSendEmail() {
+                if (!is_email(this.orderUiState.inputEmail)) {
+                    this.orderUiState.emailSuccessful = false;
+                    this.orderUiState.emailNotice = 'Invalid email.';
+                    return;
+                }
+                try {
+                    await this._sendReceiptToCustomer();
+                    this.orderUiState.emailSuccessful = true;
+                    this.orderUiState.emailNotice = 'Email sent.'
+                } catch (error) {
+                    this.orderUiState.emailSuccessful = false;
+                    this.orderUiState.emailNotice = 'Sending email failed. Please try again.'
+                }
+            }
+            get orderAmountPlusTip() {
+                const order = this.currentOrder;
+                const orderTotalAmount = order.get_total_with_tax();
+                const tip_product_id = this.env.pos.config.tip_product_id && this.env.pos.config.tip_product_id[0];
+                const tipLine = order
+                    .get_orderlines()
+                    .find((line) => tip_product_id && line.product.id === tip_product_id);
+                const tipAmount = tipLine ? tipLine.get_all_prices().priceWithTax : 0;
+                const orderAmountStr = this.env.pos.format_currency(orderTotalAmount - tipAmount);
+                if (!tipAmount) return orderAmountStr;
+                const tipAmountStr = this.env.pos.format_currency(tipAmount);
+                return `${orderAmountStr} + ${tipAmountStr} tip`;
             }
             get currentOrder() {
                 return this.env.pos.get_order();
@@ -41,7 +69,7 @@ odoo.define('point_of_sale.ReceiptScreen', function (require) {
              * any error that can happen during the printing does not affect the rendering.
              */
             async handleAutoPrint() {
-                if (this._shouldAutoPrint() && !this.currentOrder.is_to_email()) {
+                if (this._shouldAutoPrint()) {
                     await this.printReceipt();
                     if (this.currentOrder._printed && this._shouldCloseImmediately()) {
                         this.orderDone();
@@ -59,27 +87,27 @@ odoo.define('point_of_sale.ReceiptScreen', function (require) {
                     this.currentOrder._printed = true;
                 }
             }
-            async onPrintInvoice() {
-                // The button element of this event handler appears when the order
-                // failed to sync and is to be invoiced. What we do here is to try
-                // to sync again to eventually print the invoice.
-                try {
-                    await this.env.pos.push_and_invoice_order(this.currentOrder);
-                    this.state.printInvoiceIsShown = false;
-                } catch (error) {
-                    if (error instanceof Error) {
-                        throw error;
-                    } else {
-                        await this._handlePushOrderError(error);
-                    }
-                }
-            }
             _shouldAutoPrint() {
                 return this.env.pos.config.iface_print_auto && !this.currentOrder._printed;
             }
             _shouldCloseImmediately() {
                 var invoiced_finalized = this.currentOrder.is_to_invoice() ? this.currentOrder.finalized : true;
                 return this.env.pos.proxy.printer && this.env.pos.config.iface_print_skip_screen && invoiced_finalized;
+            }
+            async _sendReceiptToCustomer() {
+                const printer = new Printer();
+                const receiptString = this.orderReceipt.comp.el.outerHTML;
+                const ticketImage = await printer.htmlToImg(receiptString);
+                const order = this.currentOrder;
+                const client = order.get_client();
+                const orderName = order.get_name();
+                const orderClient = { email: this.orderUiState.inputEmail, name: client ? client.name : this.orderUiState.inputEmail };
+                const order_server_id = this.env.pos.validated_orders_name_server_id_map[orderName];
+                await this.rpc({
+                    model: 'pos.order',
+                    method: 'action_receipt_to_customer',
+                    args: [[order_server_id], orderName, orderClient, ticketImage],
+                });
             }
         }
         ReceiptScreen.template = 'ReceiptScreen';
