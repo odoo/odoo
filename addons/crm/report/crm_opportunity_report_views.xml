@@ -36,6 +36,7 @@
                     <field name="stage_id" type="row"/>
                     <field name="date_deadline" type="row" interval="month"/>
                     <field name="prorated_revenue" type="measure"/>
+                    <field name="color" invisible="1"/>
                 </graph>
             </field>
         </record>
@@ -48,6 +49,7 @@
                 <graph string="Leads Analysis" stacked="True" sample="1">
                     <field name="create_date" interval="month" type="col"/>
                     <field name="team_id" type="col"/>
+                    <field name="color" invisible="1"/>
                 </graph>
             </field>
         </record>
