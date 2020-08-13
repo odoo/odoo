@@ -10,6 +10,7 @@
     'version': '1.0',
     'description': "",
     'depends': [
+        'digest',
         'web',
         'web_editor',
         'http_routing',
