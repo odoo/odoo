@@ -99,6 +99,7 @@ odoo.define('hr_expense.expenses.tree', function (require) {
     var ExpensesListViewDashboard = ListView.extend({
         config: _.extend({}, ListView.prototype.config, {
             Renderer: ExpenseListRenderer,
+            Controller: ExpensesListController,
         }),
     });
 
