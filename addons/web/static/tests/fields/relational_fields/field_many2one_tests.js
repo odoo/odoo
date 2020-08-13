@@ -3518,7 +3518,7 @@ QUnit.module('fields', {}, function () {
                 { id: 1, user_id: 17, },
                 { id: 2, user_id: 19, },
                 { id: 3, user_id: 17, },
-                { id: 3, user_id: false, },
+                { id: 4, user_id: false, },
             ];
             const list = await createView({
                 View: ListView,

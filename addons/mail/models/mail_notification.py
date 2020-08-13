@@ -100,5 +100,5 @@ class MailNotification(models.Model):
             'notification_type': notif.notification_type,
             'notification_status': notif.notification_status,
             'failure_type': notif.failure_type,
-            'partner_id': [notif.res_partner_id.id, notif.res_partner_id.display_name],
+            'res_partner_id': [notif.res_partner_id.id, notif.res_partner_id.display_name],
         } for notif in self]

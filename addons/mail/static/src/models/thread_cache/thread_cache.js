@@ -227,11 +227,13 @@ function factory(dependencies) {
             } else if (thread === this.env.messaging.inbox) {
                 return domain.concat([['needaction', '=', true]]);
             } else if (thread === this.env.messaging.starred) {
-                return domain.concat([['starred', '=', true]]);
+                return domain.concat([
+                    ['starred_partner_ids', 'in', [this.env.messaging.currentPartner.id]],
+                ]);
             } else if (thread === this.env.messaging.history) {
                 return domain.concat([['needaction', '=', false]]);
             } else if (thread === this.env.messaging.moderation) {
-                return domain.concat([['need_moderation', '=', true]]);
+                return domain.concat([['moderation_status', '=', 'pending_moderation']]);
             } else {
                 // Avoid to load user_notification as these messages are not
                 // meant to be shown on chatters.

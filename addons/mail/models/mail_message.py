@@ -1024,11 +1024,13 @@ class Message(models.Model):
         if moderated_channel_ids:
             # Split load moderated and regular messages, as the ORed domain can
             # cause performance issues on large databases.
-            moderated_messages_dom = [('model', '=', 'mail.channel'),
-                                      ('res_id', 'in', moderated_channel_ids),
-                                      '|',
-                                      ('author_id', '=', self.env.user.partner_id.id),
-                                      ('need_moderation', '=', True)]
+            moderated_messages_dom = [
+                ('model', '=', 'mail.channel'),
+                ('res_id', 'in', moderated_channel_ids),
+                '|',
+                ('author_id', '=', self.env.user.partner_id.id),
+                ('moderation_status', '=', 'pending_moderation'),
+            ]
             messages |= self.search(moderated_messages_dom, limit=limit)
             # Truncate the results to `limit`
             messages = messages.sorted(key='id', reverse=True)[:limit]

@@ -5,9 +5,10 @@ const components = {
     PartnerMentionSuggestion: require('mail/static/src/components/partner_mention_suggestion/partner_mention_suggestion.js'),
 };
 const {
-    afterEach: utilsAfterEach,
-    beforeEach: utilsBeforeEach,
-    start: utilsStart,
+    afterEach,
+    beforeEach,
+    createRootComponent,
+    start,
 } = require('mail/static/src/utils/test_utils.js');
 
 QUnit.module('mail', {}, function () {
@@ -15,20 +16,17 @@ QUnit.module('components', {}, function () {
 QUnit.module('partner_mention_suggestion', {}, function () {
 QUnit.module('partner_mention_suggestion_tests.js', {
     beforeEach() {
-        utilsBeforeEach(this);
+        beforeEach(this);
+
         this.createPartnerMentionSuggestion = async partner => {
-            const PartnerMentionSuggestionComponent = components.PartnerMentionSuggestion;
-            PartnerMentionSuggestionComponent.env = this.env;
-            this.component = new PartnerMentionSuggestionComponent(
-                null,
-                {
-                    isActive: true,
-                    partnerLocalId: partner.localId,
-                });
-            await this.component.mount(this.widget.el);
+            await createRootComponent(this, components.PartnerMentionSuggestion, {
+                props: { isActive: true, partnerLocalId: partner.localId },
+                target: this.widget.el,
+            });
         };
+
         this.start = async params => {
-            let { env, widget } = await utilsStart(Object.assign({}, params, {
+            const { env, widget } = await start(Object.assign({}, params, {
                 data: this.data,
             }));
             this.env = env;
@@ -36,15 +34,7 @@ QUnit.module('partner_mention_suggestion_tests.js', {
         };
     },
     afterEach() {
-        utilsAfterEach(this);
-        if (this.component) {
-            this.component.destroy();
-        }
-        if (this.widget) {
-            this.widget.destroy();
-        }
-        this.env = undefined;
-        delete components.PartnerMentionSuggestion.env;
+        afterEach(this);
     },
 });
 

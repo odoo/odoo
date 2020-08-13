@@ -5,14 +5,15 @@ const components = {
     Composer: require('mail/static/src/components/composer/composer.js'),
 };
 const {
-    afterEach: utilsAfterEach,
+    afterEach,
     afterNextRender,
-    beforeEach: utilsBeforeEach,
+    beforeEach,
+    createRootComponent,
     dragenterFiles,
     dropFiles,
     nextAnimationFrame,
     pasteFiles,
-    start: utilsStart,
+    start,
 } = require('mail/static/src/utils/test_utils.js');
 
 const {
@@ -27,38 +28,26 @@ QUnit.module('components', {}, function () {
 QUnit.module('composer', {}, function () {
 QUnit.module('composer_tests.js', {
     beforeEach() {
-        utilsBeforeEach(this);
+        beforeEach(this);
 
         this.createComposerComponent = async (composer, otherProps) => {
-            const ComposerComponent = components.Composer;
-            ComposerComponent.env = this.env;
-            this.component = new ComposerComponent(null, Object.assign({
-                composerLocalId: composer.localId,
-            }, otherProps));
-            await afterNextRender(() => this.component.mount(this.widget.el));
+            const props = Object.assign({ composerLocalId: composer.localId }, otherProps);
+            await createRootComponent(this, components.Composer, {
+                props,
+                target: this.widget.el,
+            });
         };
 
         this.start = async params => {
-            if (this.widget) {
-                this.widget.destroy();
-            }
-            let { env, widget } = await utilsStart(Object.assign({}, params, {
+            const { env, widget } = await start(Object.assign({}, params, {
                 data: this.data,
             }));
             this.env = env;
             this.widget = widget;
         };
     },
-    async afterEach() {
-        utilsAfterEach(this);
-        if (this.component) {
-            this.component.destroy();
-        }
-        if (this.widget) {
-            this.widget.destroy();
-        }
-        this.env = undefined;
-        delete components.Composer.env;
+    afterEach() {
+        afterEach(this);
     },
 });
 
@@ -172,17 +161,9 @@ QUnit.test('composer text input: basic rendering when linked thread is a mail.ch
 QUnit.test('mailing channel composer: basic rendering', async function (assert) {
     assert.expect(2);
 
-    Object.assign(this.data.initMessaging, {
-        channel_slots: {
-            channel_channel: [{
-                channel_type: 'channel',
-                id: 20,
-                is_pinned: true,
-                mass_mailing: true,
-                name: "General",
-            }],
-        },
-    });
+    // channel that is expected to be rendered, with proper mass_mailing
+    // value and a random unique id that will be referenced in the test
+    this.data['mail.channel'].records.push({ id: 20, mass_mailing: true });
     await this.start();
     const thread = this.env.models['mail.thread'].find(thread =>
         thread.id === 20 &&
@@ -294,14 +275,12 @@ QUnit.test('add emoji replaces (keyboard) text selection', async function (asser
 QUnit.test('display partner mention suggestions on typing "@"', async function (assert) {
     assert.expect(2);
 
-    this.data['res.partner'].records = [{
+    this.data['res.partner'].records.push({
         email: "testpartnert@odoo.com",
         id: 11,
         name: "TestPartner",
-    }];
-    this.data['res.users'].records = [{
-        partner_id: 11,
-    }];
+    });
+    this.data['res.users'].records.push({ partner_id: 11 });
     await this.start();
     const composer = this.env.models['mail.composer'].create();
     await this.createComposerComponent(composer);
@@ -329,14 +308,12 @@ QUnit.test('display partner mention suggestions on typing "@"', async function (
 QUnit.test('mention a partner', async function (assert) {
     assert.expect(4);
 
-    this.data['res.partner'].records = [{
+    this.data['res.partner'].records.push({
         email: "testpartnert@odoo.com",
         id: 11,
         name: "TestPartner",
-    }];
-    this.data['res.users'].records = [{
-        partner_id: 11,
-    }];
+    });
+    this.data['res.users'].records.push({ partner_id: 11 });
     await this.start();
     const composer = this.env.models['mail.composer'].create();
     await this.createComposerComponent(composer);
@@ -353,7 +330,7 @@ QUnit.test('mention a partner', async function (assert) {
     );
     await afterNextRender(() => {
         document.querySelector(`.o_ComposerTextInput_textarea`).focus();
-        document.execCommand('insertText', false, "@");
+        document.execCommand('insertText', false, "@Test");
     });
     await afterNextRender(() => {
         document.querySelector(`.o_ComposerTextInput_textarea`)
@@ -379,14 +356,12 @@ QUnit.test('mention a partner', async function (assert) {
 QUnit.test('mention a partner after some text', async function (assert) {
     assert.expect(5);
 
-    this.data['res.partner'].records = [{
+    this.data['res.partner'].records.push({
         email: "testpartnert@odoo.com",
         id: 11,
         name: "TestPartner",
-    }];
-    this.data['res.users'].records = [{
-        partner_id: 11,
-    }];
+    });
+    this.data['res.users'].records.push({ partner_id: 11 });
     await this.start();
     const composer = this.env.models['mail.composer'].create();
     await this.createComposerComponent(composer);
@@ -411,7 +386,7 @@ QUnit.test('mention a partner after some text', async function (assert) {
         "text content of composer should have content"
     );
     await afterNextRender(() =>
-        document.execCommand('insertText', false, "@")
+        document.execCommand('insertText', false, "@Test")
     );
     await afterNextRender(() => {
         document.querySelector(`.o_ComposerTextInput_textarea`)
@@ -437,14 +412,12 @@ QUnit.test('mention a partner after some text', async function (assert) {
 QUnit.test('add an emoji after a partner mention', async function (assert) {
     assert.expect(5);
 
-    this.data['res.partner'].records = [{
+    this.data['res.partner'].records.push({
         email: "testpartnert@odoo.com",
         id: 11,
         name: "TestPartner",
-    }];
-    this.data['res.users'].records = [{
-        partner_id: 11,
-    }];
+    });
+    this.data['res.users'].records.push({ partner_id: 11 });
     await this.start();
     const composer = this.env.models['mail.composer'].create();
     await this.createComposerComponent(composer);
@@ -461,7 +434,7 @@ QUnit.test('add an emoji after a partner mention', async function (assert) {
     );
     await afterNextRender(() => {
         document.querySelector(`.o_ComposerTextInput_textarea`).focus();
-        document.execCommand('insertText', false, "@");
+        document.execCommand('insertText', false, "@Test");
     });
     await afterNextRender(() => {
         document.querySelector(`.o_ComposerTextInput_textarea`)
@@ -619,21 +592,13 @@ QUnit.test('composer: paste attachments', async function (assert) {
 QUnit.test('composer text input cleared on message post', async function (assert) {
     assert.expect(4);
 
-    Object.assign(this.data.initMessaging, {
-        channel_slots: {
-            channel_channel: [{
-                channel_type: 'channel',
-                id: 20,
-                is_pinned: true,
-                name: "General",
-            }],
-        },
-    });
+    // channel that is expected to be rendered
+    // with a random unique id that will be referenced in the test
+    this.data['mail.channel'].records.push({ id: 20 });
     await this.start({
         async mockRPC(route, args) {
             if (args.method === 'message_post') {
                 assert.step('message_post');
-                return;
             }
             return this._super(...arguments);
         },
@@ -668,17 +633,9 @@ QUnit.test('composer text input cleared on message post', async function (assert
 QUnit.test('composer inputs cleared on message post in composer of a mailing channel', async function (assert) {
     assert.expect(10);
 
-    Object.assign(this.data.initMessaging, {
-        channel_slots: {
-            channel_channel: [{
-                channel_type: 'channel',
-                id: 20,
-                is_pinned: true,
-                mass_mailing: true,
-                name: "General",
-            }],
-        },
-    });
+    // channel that is expected to be rendered, with proper mass_mailing
+    // value and a random unique id that will be referenced in the test
+    this.data['mail.channel'].records.push({ id: 20, mass_mailing: true });
     await this.start({
         async mockRPC(route, args) {
             if (args.method === 'message_post') {
@@ -752,16 +709,9 @@ QUnit.test('composer inputs cleared on message post in composer of a mailing cha
 QUnit.test('composer with thread typing notification status', async function (assert) {
     assert.expect(2);
 
-    Object.assign(this.data.initMessaging, {
-        channel_slots: {
-            channel_channel: [{
-                channel_type: 'channel',
-                id: 20,
-                is_pinned: true,
-                name: "General",
-            }],
-        },
-    });
+    // channel that is expected to be rendered
+    // with a random unique id that will be referenced in the test
+    this.data['mail.channel'].records.push({ id: 20 });
     await this.start();
     const thread = this.env.models['mail.thread'].find(thread =>
         thread.id === 20 &&
@@ -784,38 +734,13 @@ QUnit.test('composer with thread typing notification status', async function (as
 QUnit.test('current partner notify is typing to other thread members', async function (assert) {
     assert.expect(2);
 
-    Object.assign(this.data.initMessaging, {
-        channel_slots: {
-            channel_channel: [{
-                channel_type: 'channel',
-                id: 20,
-                is_pinned: true,
-                members: [{
-                    email: 'admin@odoo.com',
-                    id: 3,
-                    name: 'Admin',
-                }, {
-                    email: 'demo@odoo.com',
-                    id: 7,
-                    name: 'Demo',
-                }],
-                name: "General",
-            }],
-        },
-    });
+    // channel that is expected to be rendered
+    // with a random unique id that will be referenced in the test
+    this.data['mail.channel'].records.push({ id: 20 });
     await this.start({
-        env: {
-            session: {
-                name: 'Admin',
-                partner_display_name: 'Your Company, Admin',
-                partner_id: 3,
-                uid: 2,
-            },
-        },
         async mockRPC(route, args) {
             if (args.method === 'notify_typing') {
                 assert.step(`notify_typing:${args.kwargs.is_typing}`);
-                return;
             }
             return this._super(...arguments);
         },
@@ -840,39 +765,14 @@ QUnit.test('current partner notify is typing to other thread members', async fun
 QUnit.test('current partner is typing should not translate on textual typing status', async function (assert) {
     assert.expect(3);
 
-    Object.assign(this.data.initMessaging, {
-        channel_slots: {
-            channel_channel: [{
-                channel_type: 'channel',
-                id: 20,
-                is_pinned: true,
-                members: [{
-                    email: 'admin@odoo.com',
-                    id: 3,
-                    name: 'Admin',
-                }, {
-                    email: 'demo@odoo.com',
-                    id: 7,
-                    name: 'Demo',
-                }],
-                name: "General",
-            }],
-        },
-    });
+    // channel that is expected to be rendered
+    // with a random unique id that will be referenced in the test
+    this.data['mail.channel'].records.push({ id: 20 });
     await this.start({
-        env: {
-            session: {
-                name: 'Admin',
-                partner_display_name: 'Your Company, Admin',
-                partner_id: 3,
-                uid: 2,
-            },
-        },
         hasTimeControl: true,
         async mockRPC(route, args) {
             if (args.method === 'notify_typing') {
                 assert.step(`notify_typing:${args.kwargs.is_typing}`);
-                return;
             }
             return this._super(...arguments);
         },
@@ -904,39 +804,14 @@ QUnit.test('current partner is typing should not translate on textual typing sta
 QUnit.test('current partner notify no longer is typing to thread members after 5 seconds inactivity', async function (assert) {
     assert.expect(4);
 
-    Object.assign(this.data.initMessaging, {
-        channel_slots: {
-            channel_channel: [{
-                channel_type: 'channel',
-                id: 20,
-                is_pinned: true,
-                members: [{
-                    email: 'admin@odoo.com',
-                    id: 3,
-                    name: 'Admin',
-                }, {
-                    email: 'demo@odoo.com',
-                    id: 7,
-                    name: 'Demo',
-                }],
-                name: "General",
-            }],
-        },
-    });
+    // channel that is expected to be rendered
+    // with a random unique id that will be referenced in the test
+    this.data['mail.channel'].records.push({ id: 20 });
     await this.start({
-        env: {
-            session: {
-                name: 'Admin',
-                partner_display_name: 'Your Company, Admin',
-                partner_id: 3,
-                uid: 2,
-            },
-        },
         hasTimeControl: true,
         async mockRPC(route, args) {
             if (args.method === 'notify_typing') {
                 assert.step(`notify_typing:${args.kwargs.is_typing}`);
-                return;
             }
             return this._super(...arguments);
         },
@@ -967,39 +842,14 @@ QUnit.test('current partner notify no longer is typing to thread members after 5
 QUnit.test('current partner notify is typing again to other members every 50s of long continuous typing', async function (assert) {
     assert.expect(4);
 
-    Object.assign(this.data.initMessaging, {
-        channel_slots: {
-            channel_channel: [{
-                channel_type: 'channel',
-                id: 20,
-                is_pinned: true,
-                members: [{
-                    email: 'admin@odoo.com',
-                    id: 3,
-                    name: 'Admin',
-                }, {
-                    email: 'demo@odoo.com',
-                    id: 7,
-                    name: 'Demo',
-                }],
-                name: "General",
-            }],
-        },
-    });
+    // channel that is expected to be rendered
+    // with a random unique id that will be referenced in the test
+    this.data['mail.channel'].records.push({ id: 20 });
     await this.start({
-        env: {
-            session: {
-                name: 'Admin',
-                partner_display_name: 'Your Company, Admin',
-                partner_id: 3,
-                uid: 2,
-            },
-        },
         hasTimeControl: true,
         async mockRPC(route, args) {
             if (args.method === 'notify_typing') {
                 assert.step(`notify_typing:${args.kwargs.is_typing}`);
-                return;
             }
             return this._super(...arguments);
         },

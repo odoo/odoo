@@ -2638,8 +2638,6 @@ QUnit.module('Views', {
     QUnit.test('group bys added via control panel and expand Header do not stack', async function (assert) {
         assert.expect(8);
 
-        delete this.data.partner.fields.date;
-
         var pivot = await createView({
             View: PivotView,
             model: 'partner',

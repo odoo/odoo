@@ -68,20 +68,23 @@ function factory(dependencies) {
          * @param {Object} param0
          * @param {Object} param0.channel_slots
          * @param {Array} [param0.commands=[]]
-         * @param {boolean} [param0.is_moderator=false]
+         * @param {Object} param0.current_partner
+         * @param {integer} param0.current_user_id
          * @param {Object} [param0.mail_failures={}]
          * @param {Object[]} [param0.mention_partner_suggestions=[]]
          * @param {Object[]} [param0.moderation_channel_ids=[]]
          * @param {integer} [param0.moderation_counter=0]
          * @param {integer} [param0.needaction_inbox_counter=0]
-         * @param {Array} param0.partner_root
+         * @param {Object} param0.partner_root
+         * @param {Object} param0.public_partner
          * @param {Object[]} [param0.shortcodes=[]]
          * @param {integer} [param0.starred_counter=0]
          */
         async _init({
             channel_slots,
             commands = [],
-            is_moderator = false,
+            current_partner,
+            current_user_id,
             mail_failures = {},
             mention_partner_suggestions = [],
             menu_id,
@@ -96,6 +99,8 @@ function factory(dependencies) {
             const discuss = this.messaging.discuss;
             // partners first because the rest of the code relies on them
             this._initPartners({
+                current_partner,
+                current_user_id,
                 moderation_channel_ids,
                 partner_root,
                 public_partner,
@@ -103,7 +108,7 @@ function factory(dependencies) {
             // mailboxes after partners and before other initializers that might
             // manipulate threads or messages
             this._initMailboxes({
-                is_moderator,
+                moderation_channel_ids,
                 moderation_counter,
                 needaction_inbox_counter,
                 starred_counter,
@@ -182,20 +187,20 @@ function factory(dependencies) {
         /**
          * @private
          * @param {Object} param0
-         * @param {boolean} param0.is_moderator
+         * @param {Object[]} [param0.moderation_channel_ids=[]]
          * @param {integer} param0.moderation_counter
          * @param {integer} param0.needaction_inbox_counter
          * @param {integer} param0.starred_counter
          */
         _initMailboxes({
-            is_moderator,
+            moderation_channel_ids,
             moderation_counter,
             needaction_inbox_counter,
             starred_counter,
         }) {
             this.env.messaging.inbox.update({ counter: needaction_inbox_counter });
             this.env.messaging.starred.update({ counter: starred_counter });
-            if (is_moderator) {
+            if (moderation_channel_ids.length > 0) {
                 this.messaging.update({
                     moderation: [['create', {
                         counter: moderation_counter,
@@ -246,41 +251,74 @@ function factory(dependencies) {
 
         /**
          * @private
-         * @param {Array} param0 partner root name get
-         * @param {integer} param0[0] partner root id
-         * @param {string} param0[1] partner root display_name
+         * @param {Object} current_partner
+         * @param {boolean} current_partner.active
+         * @param {string} current_partner.display_name
+         * @param {integer} current_partner.id
+         * @param {string} current_partner.name
+         * @param {integer} current_user_id
+         * @param {integer[]} moderation_channel_ids
+         * @param {Object} partner_root
+         * @param {boolean} partner_root.active
+         * @param {string} partner_root.display_name
+         * @param {integer} partner_root.id
+         * @param {string} partner_root.name
+         * @param {Object} public_partner
+         * @param {boolean} public_partner.active
+         * @param {string} public_partner.display_name
+         * @param {integer} public_partner.id
+         * @param {string} public_partner.name
          */
         _initPartners({
+            current_partner: {
+                active: currentPartnerIsActive,
+                display_name: currentPartnerDisplayName,
+                id: currentPartnerId,
+                name: currentPartnerName,
+            },
+            current_user_id: currentUserId,
             moderation_channel_ids = [],
             partner_root: {
                 active: partnerRootIsActive,
                 display_name: partnerRootDisplayName,
                 id: partnerRootId,
+                name: partnerRootName,
             },
             public_partner: {
                 active: publicPartnerIsActive,
                 display_name: publicPartnerDisplayName,
                 id: publicPartnerId,
+                name: publicPartnerName,
             },
         }) {
             this.messaging.update({
                 currentPartner: [['insert', {
-                    display_name: this.env.session.partner_display_name,
-                    id: this.env.session.partner_id,
-                    moderatedChannelIds: moderation_channel_ids,
-                    name: this.env.session.name,
-                    user: [['insert', { id: this.env.session.uid }]],
+                    active: currentPartnerIsActive,
+                    display_name: currentPartnerDisplayName,
+                    id: currentPartnerId,
+                    moderatedChannels: [
+                        ['insert', moderation_channel_ids.map(id => {
+                            return {
+                                id,
+                                model: 'mail.channel',
+                            };
+                        })],
+                    ],
+                    name: currentPartnerName,
+                    user: [['insert', { id: currentUserId }]],
                 }]],
-                currentUser: [['insert', { id: this.env.session.uid }]],
+                currentUser: [['insert', { id: currentUserId }]],
                 partnerRoot: [['insert', {
                     active: partnerRootIsActive,
                     display_name: partnerRootDisplayName,
                     id: partnerRootId,
+                    name: partnerRootName,
                 }]],
                 publicPartner: [['insert', {
                     active: publicPartnerIsActive,
                     display_name: publicPartnerDisplayName,
                     id: publicPartnerId,
+                    name: publicPartnerName,
                 }]],
             });
         }

@@ -1,11 +1,7 @@
 odoo.define('mail/static/src/models/message/message_tests.js', function (require) {
 'use strict';
 
-const {
-    afterEach: utilsAfterEach,
-    beforeEach: utilsBeforeEach,
-    start: utilsStart,
-} = require('mail/static/src/utils/test_utils.js');
+const { afterEach, beforeEach, start } = require('mail/static/src/utils/test_utils.js');
 
 const { str_to_datetime } = require('web.time');
 
@@ -14,13 +10,10 @@ QUnit.module('models', {}, function () {
 QUnit.module('message', {}, function () {
 QUnit.module('message_tests.js', {
     beforeEach() {
-        utilsBeforeEach(this);
+        beforeEach(this);
 
         this.start = async params => {
-            if (this.widget) {
-                this.widget.destroy();
-            }
-            let { env, widget } = await utilsStart(Object.assign({}, params, {
+            const { env, widget } = await start(Object.assign({}, params, {
                 data: this.data,
             }));
             this.env = env;
@@ -28,12 +21,7 @@ QUnit.module('message_tests.js', {
         };
     },
     afterEach() {
-        utilsAfterEach(this);
-        this.env = undefined;
-        if (this.widget) {
-            this.widget.destroy();
-            this.widget = undefined;
-        }
+        afterEach(this);
     },
 });
 

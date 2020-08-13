@@ -189,12 +189,11 @@ QUnit.test('activity view: simple activity rendering', async function (assert) {
 QUnit.test('activity view: no content rendering', async function (assert) {
     assert.expect(2);
 
-    // remove activities from tasks
+    // reset incompatible setup
+    this.data['mail.activity'].records = [];
     this.data.task.records.forEach(function (task) {
         task.activity_ids = false;
     });
-
-    // remove activity types
     this.data['mail.activity.type'].records = [];
 
     var activity = await createView({

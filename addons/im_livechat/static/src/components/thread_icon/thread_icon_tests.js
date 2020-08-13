@@ -5,10 +5,11 @@ const components = {
     ThreadIcon: require('mail/static/src/components/thread_icon/thread_icon.js'),
 };
 const {
-    afterEach: utilsAfterEach,
+    afterEach,
     afterNextRender,
-    beforeEach: utilsBeforeEach,
-    start: utilsStart,
+    beforeEach,
+    createRootComponent,
+    start,
 } = require('mail/static/src/utils/test_utils.js');
 
 QUnit.module('im_livechat', {}, function () {
@@ -16,74 +17,40 @@ QUnit.module('components', {}, function () {
 QUnit.module('thread_icon', {}, function () {
 QUnit.module('thread_icon_tests.js', {
     beforeEach() {
-        utilsBeforeEach(this);
+        beforeEach(this);
 
         this.createThreadIcon = async thread => {
-            const ThreadIconComponent = components.ThreadIcon;
-            ThreadIconComponent.env = this.env;
-            this.component = new ThreadIconComponent(null, { threadLocalId: thread.localId });
-            await this.component.mount(this.widget.el);
+            await createRootComponent(this, components.ThreadIcon, {
+                props: { threadLocalId: thread.localId },
+                target: this.widget.el,
+            });
         };
 
         this.start = async params => {
-            let { env, widget } = await utilsStart(Object.assign({}, params, {
+            const { env, widget } = await start(Object.assign({}, params, {
                 data: this.data,
             }));
             this.env = env;
             this.widget = widget;
         };
-
     },
     afterEach() {
-        utilsAfterEach(this);
-        if (this.component) {
-            this.component.destroy();
-        }
-        if (this.widget) {
-            this.widget.destroy();
-        }
-        this.env = undefined;
-        delete components.ThreadIcon.env;
+        afterEach(this);
     },
 });
 
 QUnit.test('livechat: public website visitor is typing', async function (assert) {
     assert.expect(4);
 
-    Object.assign(this.data.initMessaging, {
-        channel_slots: {
-            channel_livechat: [{
-                channel_type: 'livechat',
-                id: 20,
-                is_pinned: true,
-                livechat_visitor: {
-                    country: false,
-                    id: false,
-                    name: "Visitor",
-                },
-                members: [{
-                    email: 'admin@odoo.com',
-                    id: 3,
-                    name: 'Admin',
-                }],
-            }],
-        },
-        public_partner: {
-            active: false,
-            display_name: "Public Partner",
-            id: 7,
+    // channel that will be used for testing the typing feature
+    this.data['mail.channel'].records.push({
+        channel_type: 'livechat', // channel is expected to be livechat
+        id: 20, // random unique id, will be referenced in the test
+        livechat_visitor: {
+            name: "Visitor 20", // random name, will be asserted during the test
         },
     });
-    await this.start({
-        env: {
-            session: {
-                name: 'Admin',
-                partner_display_name: 'Your Company, Admin',
-                partner_id: 3,
-                uid: 2,
-            },
-        },
-    });
+    await this.start();
     const thread = this.env.models['mail.thread'].find(thread =>
         thread.id === 20 &&
         thread.model === 'mail.channel'
@@ -100,11 +67,11 @@ QUnit.test('livechat: public website visitor is typing', async function (assert)
         "should have default livechat icon"
     );
 
-    // simulate receive typing notification from website visitor "is typing"
+    // simulate receive typing notification from livechat visitor "is typing"
     await afterNextRender(() => {
         const typingData = {
             info: 'typing_status',
-            partner_id: 7, // public partner_id
+            partner_id: this.env.messaging.publicPartner.id,
             is_typing: true,
         };
         const notification = [[false, 'mail.channel', 20], typingData];
@@ -117,7 +84,7 @@ QUnit.test('livechat: public website visitor is typing', async function (assert)
     );
     assert.strictEqual(
         document.querySelector('.o_ThreadIcon_typing').title,
-        "Visitor is typing...",
+        "Visitor 20 is typing...",
         "title of icon should tell visitor is currently typing"
     );
 });

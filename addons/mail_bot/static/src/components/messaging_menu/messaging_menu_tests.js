@@ -2,10 +2,10 @@ odoo.define('mail_bot/static/src/components/messaging_menu/messaging_menu_tests.
 "use strict";
 
 const {
-    afterEach: utilsAfterEach,
+    afterEach,
     afterNextRender,
-    beforeEach: utilsBeforeEach,
-    start: utilsStart,
+    beforeEach,
+    start,
 } = require('mail/static/src/utils/test_utils.js');
 
 QUnit.module('mail_bot', {}, function () {
@@ -13,10 +13,10 @@ QUnit.module('components', {}, function () {
 QUnit.module('messaging_menu', {}, function () {
 QUnit.module('messaging_menu_tests.js', {
     beforeEach() {
-        utilsBeforeEach(this);
+        beforeEach(this);
 
         this.start = async params => {
-            let { widget } = await utilsStart(Object.assign({}, params, {
+            let { widget } = await start(Object.assign({}, params, {
                 data: this.data,
                 hasMessagingMenu: true,
             }));
@@ -24,10 +24,7 @@ QUnit.module('messaging_menu_tests.js', {
         };
     },
     afterEach() {
-        utilsAfterEach(this);
-        if (this.widget) {
-            this.widget.destroy();
-        }
+        afterEach(this);
     },
 });
 
@@ -41,12 +38,6 @@ QUnit.test('rendering with OdooBot has a request (default)', async function (ass
                     permission: 'default',
                 },
             },
-        },
-        async mockRPC(route, args) {
-            if (args.method === 'channel_fetch_preview') {
-                return [];
-            }
-            return this._super(...arguments);
         },
     });
 
@@ -86,12 +77,6 @@ QUnit.test('rendering without OdooBot has a request (denied)', async function (a
                 },
             },
         },
-        async mockRPC(route, args) {
-            if (args.method === 'channel_fetch_preview') {
-                return [];
-            }
-            return this._super(...arguments);
-        },
     });
 
     assert.containsNone(
@@ -120,12 +105,6 @@ QUnit.test('rendering without OdooBot has a request (accepted)', async function 
                     permission: 'granted',
                 },
             },
-        },
-        async mockRPC(route, args) {
-            if (args.method === 'channel_fetch_preview') {
-                return [];
-            }
-            return this._super(...arguments);
         },
     });
 
@@ -159,12 +138,6 @@ QUnit.test('respond to notification prompt (denied)', async function (assert) {
                     },
                 },
             },
-        },
-        async mockRPC(route, args) {
-            if (args.method === 'channel_fetch_preview') {
-                return [];
-            }
-            return this._super(...arguments);
         },
     });
 

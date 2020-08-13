@@ -17,7 +17,7 @@ registerClassPatchModel('mail.thread', 'im_livechat/static/src/models/thread/thr
      */
     convertData(data) {
         const data2 = this._super(data);
-        if ('livechat_visitor' in data) {
+        if ('livechat_visitor' in data && data.livechat_visitor) {
             if (!data2.members) {
                 data2.members = [];
             }
@@ -29,11 +29,9 @@ registerClassPatchModel('mail.thread', 'im_livechat/static/src/models/thread/thr
                         { id: this.env.models['mail.partner'].getNextPublicId() }
                     )
                 );
-                data2.correspondent = [['link', partner]];
                 data2.members.push(['link', partner]);
             } else {
                 const partnerData = this.env.models['mail.partner'].convertData(data.livechat_visitor);
-                data2.correspondent = [['insert', partnerData]];
                 data2.members.push(['insert', partnerData]);
             }
         }

@@ -6,9 +6,10 @@ const components = {
 };
 
 const {
-    afterEach: utilsAfterEach,
-    beforeEach: utilsBeforeEach,
-    start: utilsStart,
+    afterEach,
+    beforeEach,
+    createRootComponent,
+    start,
 } = require('mail/static/src/utils/test_utils.js');
 
 QUnit.module('mail', {}, function () {
@@ -16,19 +17,17 @@ QUnit.module('components', {}, function () {
 QUnit.module('activity_mark_done_popover', {}, function () {
 QUnit.module('activity_mark_done_popover_tests.js', {
     beforeEach() {
-        utilsBeforeEach(this);
+        beforeEach(this);
 
         this.createActivityMarkDonePopoverComponent = async activity => {
-            const ActivityMarkDonePopoverComponent = components.ActivityMarkDonePopover;
-            ActivityMarkDonePopoverComponent.env = this.env;
-            this.component = new ActivityMarkDonePopoverComponent(null, {
-                activityLocalId: activity.localId,
+            await createRootComponent(this, components.ActivityMarkDonePopover, {
+                props: { activityLocalId: activity.localId },
+                target: this.widget.el,
             });
-            await this.component.mount(this.widget.el);
         };
 
         this.start = async params => {
-            let { env, widget } = await utilsStart(Object.assign({}, params, {
+            const { env, widget } = await start(Object.assign({}, params, {
                 data: this.data,
             }));
             this.env = env;
@@ -36,14 +35,7 @@ QUnit.module('activity_mark_done_popover_tests.js', {
         };
     },
     afterEach() {
-        utilsAfterEach(this);
-        if (this.component) {
-            this.component.destroy();
-        }
-        if (this.widget) {
-            this.widget.destroy();
-        }
-        this.env = undefined;
+        afterEach(this);
     },
 });
 

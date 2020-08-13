@@ -5,11 +5,12 @@ const components = {
     ThreadViewer: require('mail/static/src/components/thread_viewer/thread_viewer.js'),
 };
 const {
-    afterEach: utilsAfterEach,
+    afterEach,
     afterNextRender,
-    beforeEach: utilsBeforeEach,
+    beforeEach,
+    createRootComponent,
     dragenterFiles,
-    start: utilsStart,
+    start,
 } = require('mail/static/src/utils/test_utils.js');
 
 QUnit.module('mail', {}, function () {
@@ -17,7 +18,7 @@ QUnit.module('components', {}, function () {
 QUnit.module('thread_viewer', {}, function () {
 QUnit.module('thread_viewer_tests.js', {
     beforeEach() {
-        utilsBeforeEach(this);
+        beforeEach(this);
 
         /**
          * @param {mail.thread_viewer} threadViewer
@@ -26,12 +27,6 @@ QUnit.module('thread_viewer_tests.js', {
          * @param {boolean} [param2.isFixedSize=false]
          */
         this.createThreadViewerComponent = async (threadViewer, otherProps = {}, { isFixedSize = false } = {}) => {
-            const ThreadViewerComponent = components.ThreadViewer;
-            ThreadViewerComponent.env = this.env;
-            this.component = new ThreadViewerComponent(
-                null,
-                Object.assign({ threadViewerLocalId: threadViewer.localId }, otherProps)
-            );
             let target;
             if (isFixedSize) {
                 // needed to allow scrolling in some tests
@@ -46,14 +41,12 @@ QUnit.module('thread_viewer_tests.js', {
             } else {
                 target = this.widget.el;
             }
-            await afterNextRender(() => this.component.mount(target));
+            const props = Object.assign({ threadViewerLocalId: threadViewer.localId }, otherProps);
+            await createRootComponent(this, components.ThreadViewer, { props, target });
         };
 
         this.start = async params => {
-            if (this.widget) {
-                this.widget.destroy();
-            }
-            let { env, widget } = await utilsStart(Object.assign({}, params, {
+            const { env, widget } = await start(Object.assign({}, params, {
                 data: this.data,
             }));
             this.env = env;
@@ -61,15 +54,7 @@ QUnit.module('thread_viewer_tests.js', {
         };
     },
     afterEach() {
-        utilsAfterEach(this);
-        if (this.component) {
-            this.component.destroy();
-        }
-        if (this.widget) {
-            this.widget.destroy();
-        }
-        this.env = undefined;
-        delete components.ThreadViewer.env;
+        afterEach(this);
     },
 });
 
@@ -108,36 +93,16 @@ QUnit.test('dragover files on thread with composer', async function (assert) {
 });
 
 QUnit.test('message list desc order', async function (assert) {
-    assert.expect(8);
+    assert.expect(5);
 
-    let lastId = 10000;
-    let amountOfCalls = 0;
-    await this.start({
-        async mockRPC(route, args) {
-            if (args.method === 'message_fetch') {
-                amountOfCalls ++;
-                assert.step(`message_fetch_${amountOfCalls}`);
-                // Just return 30 different messages
-                const messagesData = [...Array(30).keys()].reduce(function (acc, i) {
-                    acc.push({
-                        author_id: [i + 1, `Author #${i}`],
-                        body: `<p>The message</p>`,
-                        channel_ids: [20],
-                        date: "2019-04-20 10:00:00",
-                        id: lastId - i,
-                        message_type: 'comment',
-                        model: 'mail.channel',
-                        record_name: 'General',
-                        res_id: 20,
-                    });
-                    return acc;
-                }, []);
-                lastId -= 30;
-                return messagesData;
-            }
-            return this._super(...arguments);
-        },
-    });
+    for (let i = 0; i <= 60; i++) {
+        this.data['mail.message'].records.push({
+            channel_ids: [100],
+            model: 'mail.channel',
+            res_id: 100,
+        });
+    }
+    await this.start();
     const thread = this.env.models['mail.thread'].create({
         channel_type: 'channel',
         id: 100,
@@ -193,40 +158,19 @@ QUnit.test('message list desc order', async function (assert) {
         60,
         "scrolling to top should not trigger any message fetching"
     );
-    assert.verifySteps(['message_fetch_1', 'message_fetch_2']);
 });
 
 QUnit.test('message list asc order', async function (assert) {
-    assert.expect(8);
+    assert.expect(5);
 
-    let lastId = 10000;
-    let amountOfCalls = 0;
-    await this.start({
-        async mockRPC(route, args) {
-            if (args.method === 'message_fetch') {
-                amountOfCalls ++;
-                assert.step(`message_fetch_${amountOfCalls}`);
-                // Just return 30 different messages
-                const messagesData = [...Array(30).keys()].reduce(function (acc, i) {
-                    acc.push({
-                        author_id: [i + 1, `Author #${i}`],
-                        body: `<p>The message</p>`,
-                        channel_ids: [20],
-                        date: "2019-04-20 10:00:00",
-                        id: lastId - i,
-                        message_type: 'comment',
-                        model: 'mail.channel',
-                        record_name: 'General',
-                        res_id: 20,
-                    });
-                    return acc;
-                }, []);
-                lastId -= 30;
-                return messagesData;
-            }
-            return this._super(...arguments);
-        },
-    });
+    for (let i = 0; i <= 60; i++) {
+        this.data['mail.message'].records.push({
+            channel_ids: [100],
+            model: 'mail.channel',
+            res_id: 100,
+        });
+    }
+    await this.start();
     const thread = this.env.models['mail.thread'].create({
         channel_type: 'channel',
         id: 100,
@@ -283,10 +227,9 @@ QUnit.test('message list asc order', async function (assert) {
         60,
         "scrolling to bottom should not trigger any message fetching"
     );
-    assert.verifySteps(['message_fetch_1', 'message_fetch_2']);
 });
 
-QUnit.test('mark channel as fetched when a new message is loaded and as seen when focusing composer', async function (assert) {
+QUnit.test('mark channel as fetched when a new message is loaded and as seen when focusing composer [REQUIRE FOCUS]', async function (assert) {
     assert.expect(8);
 
     await this.start({
@@ -327,7 +270,7 @@ QUnit.test('mark channel as fetched when a new message is loaded and as seen whe
         members: [['insert', [
             {
                 email: "john@example.com",
-                id: this.env.session.partner_id,
+                id: this.env.messaging.currentPartner.id,
                 name: "John",
             },
             {
@@ -368,7 +311,7 @@ QUnit.test('mark channel as fetched when a new message is loaded and as seen whe
     );
 });
 
-QUnit.test('mark channel as fetched and seen when a new message is loaded if composer is focused', async function (assert) {
+QUnit.test('mark channel as fetched and seen when a new message is loaded if composer is focused [REQUIRE FOCUS]', async function (assert) {
     assert.expect(4);
 
     await this.start({
@@ -397,7 +340,7 @@ QUnit.test('mark channel as fetched and seen when a new message is loaded if com
         members: [['insert', [
             {
                 email: "john@example.com",
-                id: this.env.session.partner_id,
+                id: this.env.messaging.currentPartner.id,
                 name: "John",
             },
             {
@@ -434,19 +377,12 @@ QUnit.test('mark channel as fetched and seen when a new message is loaded if com
 QUnit.test('show message subject if thread is mailing channel', async function (assert) {
     assert.expect(3);
 
-    this.data['mail.message'].records = [{
-        author_id: [7, "Demo"],
-        body: "<p>Test</p>",
+    this.data['mail.message'].records.push({
         channel_ids: [100],
-        date: "2019-04-20 11:00:00",
-        id: 100,
-        is_discussion: false,
-        is_notification: false,
-        message_type: 'comment',
         model: 'mail.channel',
-        res_id: 20,
+        res_id: 100,
         subject: "Salutations, voyageur",
-    }];
+    });
     await this.start();
     const thread = this.env.models['mail.thread'].create({
         channel_type: 'channel',
@@ -473,7 +409,7 @@ QUnit.test('show message subject if thread is mailing channel', async function (
         document.querySelector('.o_Message_subject').textContent,
         "Subject: Salutations, voyageur",
         "Subject of the message should be 'Salutations, voyageur'"
-    )
+    );
 });
 
 });

@@ -36,6 +36,7 @@ odoo.define('web.basic_model_tests', function (require) {
                 },
                 product: {
                     fields: {
+                        display_name: { string: "Product Display Name", type: "char" },
                         name: { string: "Product Name", type: "char" },
                         category: { string: "Category M2M", type: 'many2many', relation: 'partner_type' },
                         active: {string: "Active", type: 'boolean', default: true},
@@ -1403,14 +1404,17 @@ odoo.define('web.basic_model_tests', function (require) {
         QUnit.test('default_get: fetch many2one with default (empty & not) inside x2manys', async function (assert) {
             assert.expect(4);
 
+            this.data.partner.fields.category_m2o = {
+                type: 'many2one',
+                relation: 'partner_type',
+            };
             this.data.partner.fields.o2m = {
                 string: "O2M", type: 'one2many', relation: 'partner', default: [
                     [6, 0, []],
-                    [0, 0, { category: false }],
-                    [0, 0, { category: 12 }],
+                    [0, 0, { category_m2o: false, o2m: [] }],
+                    [0, 0, { category_m2o: 12, o2m: [] }],
                 ],
             };
-            this.data.partner.fields.category.type = 'many2one';
 
             var model = await createModel({
                 Model: BasicModel,
@@ -1432,7 +1436,7 @@ odoo.define('web.basic_model_tests', function (require) {
                             relatedFields: this.data.partner.fields,
                             fieldsInfo: {
                                 list: {
-                                    category: {
+                                    category_m2o: {
                                         relatedFields: { display_name: {} },
                                     },
                                 },
@@ -1449,9 +1453,9 @@ odoo.define('web.basic_model_tests', function (require) {
             var resultID = await model.load(params);
             var record = model.get(resultID);
             assert.strictEqual(record.data.o2m.count, 2, "o2m field should contain 2 records");
-            assert.strictEqual(record.data.o2m.data[0].data.category, false,
+            assert.strictEqual(record.data.o2m.data[0].data.category_m2o, false,
                 "first category field should be empty");
-            assert.strictEqual(record.data.o2m.data[1].data.category.data.display_name, "gold",
+            assert.strictEqual(record.data.o2m.data[1].data.category_m2o.data.display_name, "gold",
                 "second category field should have been correctly fetched");
 
             model.destroy();

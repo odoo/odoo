@@ -1,21 +1,17 @@
 odoo.define('mail_bot/static/src/models/messaging_initializer/messaging_initializer_tests.js', function (require) {
 "use strict";
 
-const {
-    afterEach: utilsAfterEach,
-    beforeEach: utilsBeforeEach,
-    start: utilsStart,
-} = require('mail/static/src/utils/test_utils.js');
+const { afterEach, beforeEach, start } = require('mail/static/src/utils/test_utils.js');
 
 QUnit.module('mail_bot', {}, function () {
 QUnit.module('models', {}, function () {
 QUnit.module('messaging_initializer', {}, function () {
 QUnit.module('messaging_initializer_tests.js', {
     beforeEach() {
-        utilsBeforeEach(this);
+        beforeEach(this);
 
         this.start = async params => {
-            let { env, widget } = await utilsStart(Object.assign({}, params, {
+            const { env, widget } = await start(Object.assign({}, params, {
                 data: this.data,
             }));
             this.env = env;
@@ -23,16 +19,14 @@ QUnit.module('messaging_initializer_tests.js', {
         };
     },
     afterEach() {
-        if (this.widget) {
-            this.widget.destroy();
-        }
-        this.env = undefined;
-        utilsAfterEach(this);
+        afterEach(this);
     },
 });
 
 
 QUnit.test('OdooBot initialized after 2 minutes', async function (assert) {
+    // TODO this test should be completed in combination with
+    // implementing _mockMailChannelInitOdooBot task-2300480
     assert.expect(3);
 
     await this.start({
@@ -45,7 +39,6 @@ QUnit.test('OdooBot initialized after 2 minutes', async function (assert) {
         async mockRPC(route, args) {
             if (args.method === 'init_odoobot') {
                 assert.step('init_odoobot');
-                return;
             }
             return this._super(...arguments);
         },

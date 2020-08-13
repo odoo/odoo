@@ -1,238 +1,146 @@
 odoo.define('mail.chatter_tests', function (require) {
 "use strict";
 
+const { afterEach, beforeEach, start } = require('mail/static/src/utils/test_utils.js');
+
 var FormView = require('web.FormView');
 var ListView = require('web.ListView');
 var testUtils = require('web.test_utils');
 
-var createView = testUtils.createView;
-
-
 QUnit.module('mail', {}, function () {
-
 QUnit.module('Chatter', {
     beforeEach: function () {
-        // patch _.debounce and _.throttle to be fast and synchronous
-        this.underscoreDebounce = _.debounce;
-        this.underscoreThrottle = _.throttle;
-        _.debounce = _.identity;
-        _.throttle = _.identity;
+        beforeEach(this);
 
-        this.data = {
-            'res.partner': {
-                fields: {
-                    im_status: {
-                        string: "im_status",
-                        type: "char",
-                    }
-                },
-                records: [{
-                    id: 1,
-                    im_status: 'online',
-                }]
+        this.data['res.partner'].records.push({ id: 11, im_status: 'online' });
+        this.data['mail.activity.type'].records.push(
+            { id: 1, name: "Type 1" },
+            { id: 2, name: "Type 2" },
+            { id: 3, name: "Type 3", category: 'upload_file' },
+            { id: 4, name: "Exception", decoration_type: "warning", icon: "fa-warning" }
+        );
+        this.data['ir.attachment'].records.push(
+            {
+                id: 1,
+                mimetype: 'image/png',
+                name: 'filename.jpg',
+                res_id: 7,
+                res_model: 'res.users',
+                type: 'url',
             },
-            'partner': {
-                fields: {
-                    display_name: { string: "Displayed name", type: "char" },
-                    foo: {string: "Foo", type: "char", default: "My little Foo Value"},
-                    message_follower_ids: {
-                        string: "Followers",
-                        type: "one2many",
-                        relation: 'mail.followers',
-                        relation_field: "res_id",
-                    },
-                    message_ids: {
-                        string: "messages",
-                        type: "one2many",
-                        relation: 'mail.message',
-                        relation_field: "res_id",
-                    },
-                    activity_ids: {
-                        string: 'Activities',
-                        type: 'one2many',
-                        relation: 'mail.activity',
-                        relation_field: 'res_id',
-                    },
-                    activity_type_id: {
-                        string: "Activity type",
-                        type: "many2one",
-                        relation: "mail.activity.type",
-                    },
-                    activity_exception_decoration: {
-                        string: 'Decoration',
-                        type: 'selection',
-                        selection: [['warning', 'Alert'], ['danger', 'Error']],
-                    },
-                    activity_exception_icon: {
-                        string: 'icon',
-                        type: 'char',
-                    },
-                    activity_state: {
-                        string: 'State',
-                        type: 'selection',
-                        selection: [['overdue', 'Overdue'], ['today', 'Today'], ['planned', 'Planned']],
-                    },
-                    message_attachment_count: {
-                        string: 'Attachment count',
-                        type: 'integer',
-                    },
-                },
-                records: [{
-                    id: 2,
-                    message_attachment_count: 3,
-                    display_name: "first partner",
-                    foo: "HELLO",
-                    message_follower_ids: [],
-                    message_ids: [],
-                    activity_ids: [],
-                }]
+            {
+                id: 2,
+                mimetype: "application/x-msdos-program",
+                name: "file2.txt",
+                res_id: 7,
+                res_model: 'res.users',
+                type: 'binary',
             },
-            'mail.activity': {
-                fields: {
-                    activity_type_id: { string: "Activity type", type: "many2one", relation: "mail.activity.type" },
-                    create_uid: { string: "Created By", type: "many2one", relation: 'partner' },
-                    can_write: { string: "Can write", type: "boolean" },
-                    display_name: { string: "Display name", type: "char" },
-                    date_deadline: { string: "Due Date", type: "date" },
-                    user_id: { string: "Assigned to", type: "many2one", relation: 'partner' },
-                    state: {
-                        string: 'State',
-                        type: 'selection',
-                        selection: [['overdue', 'Overdue'], ['today', 'Today'], ['planned', 'Planned']],
-                    },
-                    activity_category: {
-                        string: 'Category',
-                        type: 'selection',
-                        selection: [['default', 'Other'], ['upload_file', 'Upload File']],
-                    },
-                    note : { string: "Note", type: "char" },
-                },
+            {
+                id: 3,
+                mimetype: "application/x-msdos-program",
+                name: "file3.txt",
+                res_id: 5,
+                res_model: 'res.users',
+                type: 'binary',
             },
-            'mail.activity.type': {
-                fields: {
-                    name: { string: "Name", type: "char" },
-                    category: {
-                        string: 'Category',
-                        type: 'selection',
-                        selection: [['default', 'Other'], ['upload_file', 'Upload File']],
-                    },
-                    decoration_type: { string: "Decoration Type", type: "selection", selection: [['warning', 'Alert'], ['danger', 'Error']]},
-                    icon: {string: 'icon', type:"char"},
-                },
-                records: [
-                    { id: 1, name: "Type 1" },
-                    { id: 2, name: "Type 2" },
-                    { id: 3, name: "Type 3", category: 'upload_file' },
-                    { id: 4, name: "Exception", decoration_type: "warning", icon: "fa-warning"}
-                ],
+        );
+        Object.assign(this.data['res.users'].fields, {
+            activity_exception_decoration: {
+                string: 'Decoration',
+                type: 'selection',
+                selection: [['warning', 'Alert'], ['danger', 'Error']],
             },
-            'mail.message': {
-                fields: {
-                    attachment_ids: {
-                        string: "Attachments",
-                        type: 'many2many',
-                        relation: 'ir.attachment',
-                        default: [],
-                    },
-                    author_id: {
-                        string: "Author",
-                        relation: 'res.partner',
-                    },
-                    body: {
-                        string: "Contents",
-                        type: 'html',
-                    },
-                    date: {
-                        string: "Date",
-                        type: 'datetime',
-                    },
-                    is_note: {
-                        string: "Note",
-                        type: 'boolean',
-                    },
-                    is_discussion: {
-                        string: "Discussion",
-                        type: 'boolean',
-                    },
-                    is_notification: {
-                        string: "Notification",
-                        type: 'boolean',
-                    },
-                    is_starred: {
-                        string: "Starred",
-                        type: 'boolean',
-                    },
-                    model: {
-                        string: "Related Document Model",
-                        type: 'char',
-                    },
-                    res_id: {
-                        string: "Related Document ID",
-                        type: 'integer',
-                    }
-                },
-                records: [],
+            activity_exception_icon: {
+                string: 'icon',
+                type: 'char',
             },
-            'ir.attachment': {
-                fields:{
-                    name:{type:'char', string:"attachment name", required:true},
-                    res_model:{type:'char', string:"res model"},
-                    res_id:{type:'integer', string:"res id"},
-                    url:{type:'char', string:'url'},
-                    type:{ type:'selection', selection:[['url',"URL"],['binary',"BINARY"]]},
-                    mimetype:{type:'char', string:"mimetype"},
-                },
-                records:[
-                    {id:1, type:'url', mimetype:'image/png', name:'filename.jpg',
-                     res_id: 7, res_model: 'partner'},
-                    {id:2, type:'binary', mimetype:"application/x-msdos-program",
-                     name:"file2.txt", res_id: 7, res_model: 'partner'},
-                    {id:3, type:'binary', mimetype:"application/x-msdos-program",
-                     name:"file3.txt", res_id: 5, res_model: 'partner'},
-                ],
+            activity_ids: {
+                string: 'Activities',
+                type: 'one2many',
+                relation: 'mail.activity',
+                relation_field: 'res_id',
             },
-        };
+            activity_state: {
+                string: 'State',
+                type: 'selection',
+                selection: [['overdue', 'Overdue'], ['today', 'Today'], ['planned', 'Planned']],
+            },
+            activity_summary: {
+                string: "Next Activity Summary",
+                type: 'char',
+            },
+            activity_type_icon: {
+                string: "Activity Type Icon",
+                type: 'char',
+            },
+            activity_type_id: {
+                string: "Activity type",
+                type: "many2one",
+                relation: "mail.activity.type",
+            },
+            foo: { string: "Foo", type: "char", default: "My little Foo Value" },
+            message_attachment_count: {
+                string: 'Attachment count',
+                type: 'integer',
+            },
+            message_follower_ids: {
+                string: "Followers",
+                type: "one2many",
+                relation: 'mail.followers',
+                relation_field: "res_id",
+            },
+            message_ids: {
+                string: "messages",
+                type: "one2many",
+                relation: 'mail.message',
+                relation_field: "res_id",
+            },
+        });
     },
-    afterEach: function () {
-        // unpatch _.debounce and _.throttle
-        _.debounce = this.underscoreDebounce;
-        _.throttle = this.underscoreThrottle;
-    }
+    afterEach() {
+        afterEach(this);
+    },
 });
 
 QUnit.test('list activity widget with no activity', async function (assert) {
-    assert.expect(4);
+    assert.expect(5);
 
-    const list = await createView({
+    const { widget: list } = await start({
+        hasView: true,
         View: ListView,
-        model: 'partner',
+        model: 'res.users',
         data: this.data,
         arch: '<list><field name="activity_ids" widget="list_activity"/></list>',
         mockRPC: function (route) {
             assert.step(route);
             return this._super(...arguments);
         },
-        session: {uid: 2},
+        session: { uid: 2 },
     });
 
     assert.containsOnce(list, '.o_mail_activity .o_activity_color_default');
     assert.strictEqual(list.$('.o_activity_summary').text(), '');
 
-    assert.verifySteps(['/web/dataset/search_read']);
+    assert.verifySteps([
+        '/web/dataset/search_read',
+        '/mail/init_messaging',
+    ]);
 
     list.destroy();
 });
 
 QUnit.test('list activity widget with activities', async function (assert) {
-    assert.expect(6);
+    assert.expect(7);
 
-    this.data.partner.records[0].activity_ids = [1, 4];
-    this.data.partner.records[0].activity_state = 'today';
-    this.data.partner.records[0].activity_summary = 'Call with Al';
-    this.data.partner.records[0].activity_type_id = 3;
-    this.data.partner.records[0].activity_type_icon = 'fa-phone';
+    const lastUserIndex = this.data['res.users'].records.length - 1;
+    this.data['res.users'].records[lastUserIndex].activity_ids = [1, 4];
+    this.data['res.users'].records[lastUserIndex].activity_state = 'today';
+    this.data['res.users'].records[lastUserIndex].activity_summary = 'Call with Al';
+    this.data['res.users'].records[lastUserIndex].activity_type_id = 3;
+    this.data['res.users'].records[lastUserIndex].activity_type_icon = 'fa-phone';
 
-    this.data.partner.records.push({
+    this.data['res.users'].records.push({
         id: 44,
         activity_ids: [2],
         activity_state: 'planned',
@@ -240,9 +148,10 @@ QUnit.test('list activity widget with activities', async function (assert) {
         activity_type_id: 2,
     });
 
-    const list = await createView({
+    const { widget: list } = await start({
+        hasView: true,
         View: ListView,
-        model: 'partner',
+        model: 'res.users',
         data: this.data,
         arch: '<list><field name="activity_ids" widget="list_activity"/></list>',
         mockRPC: function (route) {
@@ -259,24 +168,29 @@ QUnit.test('list activity widget with activities', async function (assert) {
     assert.containsOnce($secondRow, '.o_mail_activity .o_activity_color_planned.fa-clock-o');
     assert.strictEqual($secondRow.find('.o_activity_summary').text(), 'Type 2');
 
-    assert.verifySteps(['/web/dataset/search_read']);
+    assert.verifySteps([
+        '/web/dataset/search_read',
+        '/mail/init_messaging',
+    ]);
 
     list.destroy();
 });
 
 QUnit.test('list activity widget with exception', async function (assert) {
-    assert.expect(4);
+    assert.expect(5);
 
-    this.data.partner.records[0].activity_ids = [1];
-    this.data.partner.records[0].activity_state = 'today';
-    this.data.partner.records[0].activity_summary = 'Call with Al';
-    this.data.partner.records[0].activity_type_id = 3;
-    this.data.partner.records[0].activity_exception_decoration = 'warning';
-    this.data.partner.records[0].activity_exception_icon = 'fa-warning';
+    const lastUserIndex = this.data['res.users'].records.length - 1;
+    this.data['res.users'].records[lastUserIndex].activity_ids = [1];
+    this.data['res.users'].records[lastUserIndex].activity_state = 'today';
+    this.data['res.users'].records[lastUserIndex].activity_summary = 'Call with Al';
+    this.data['res.users'].records[lastUserIndex].activity_type_id = 3;
+    this.data['res.users'].records[lastUserIndex].activity_exception_decoration = 'warning';
+    this.data['res.users'].records[lastUserIndex].activity_exception_icon = 'fa-warning';
 
-    const list = await createView({
+    const { widget: list } = await start({
+        hasView: true,
         View: ListView,
-        model: 'partner',
+        model: 'res.users',
         data: this.data,
         arch: '<list><field name="activity_ids" widget="list_activity"/></list>',
         mockRPC: function (route) {
@@ -288,41 +202,49 @@ QUnit.test('list activity widget with exception', async function (assert) {
     assert.containsOnce(list, '.o_activity_color_today.text-warning.fa-warning');
     assert.strictEqual(list.$('.o_activity_summary').text(), 'Warning');
 
-    assert.verifySteps(['/web/dataset/search_read']);
+    assert.verifySteps([
+        '/web/dataset/search_read',
+        '/mail/init_messaging',
+    ]);
 
     list.destroy();
 });
 
 QUnit.test('list activity widget: open dropdown', async function (assert) {
-    assert.expect(9);
+    assert.expect(10);
 
-    this.data.partner.records[0].activity_ids = [1, 4];
-    this.data.partner.records[0].activity_state = 'today';
-    this.data.partner.records[0].activity_summary = 'Call with Al';
-    this.data.partner.records[0].activity_type_id = 3;
-    this.data['mail.activity'].records = [{
-        id: 1,
-        display_name: "Call with Al",
-        date_deadline: moment().format("YYYY-MM-DD"), // now
-        can_write: true,
-        state: "today",
-        user_id: 2,
-        create_uid: 2,
-        activity_type_id: 3,
-    }, {
-        id: 4,
-        display_name: "Meet FP",
-        date_deadline: moment().add(1, 'day').format("YYYY-MM-DD"), // tomorrow
-        can_write: true,
-        state: "planned",
-        user_id: 2,
-        create_uid: 2,
-        activity_type_id: 1,
-    }];
+    const lastUserIndex = this.data['res.users'].records.length - 1;
+    this.data['res.users'].records[lastUserIndex].activity_ids = [1, 4];
+    this.data['res.users'].records[lastUserIndex].activity_state = 'today';
+    this.data['res.users'].records[lastUserIndex].activity_summary = 'Call with Al';
+    this.data['res.users'].records[lastUserIndex].activity_type_id = 3;
+    this.data['mail.activity'].records.push(
+        {
+            id: 1,
+            display_name: "Call with Al",
+            date_deadline: moment().format("YYYY-MM-DD"), // now
+            can_write: true,
+            state: "today",
+            user_id: 2,
+            create_uid: 2,
+            activity_type_id: 3,
+        },
+        {
+            id: 4,
+            display_name: "Meet FP",
+            date_deadline: moment().add(1, 'day').format("YYYY-MM-DD"), // tomorrow
+            can_write: true,
+            state: "planned",
+            user_id: 2,
+            create_uid: 2,
+            activity_type_id: 1,
+        }
+    );
 
-    const list = await createView({
+    const { widget: list } = await start({
+        hasView: true,
         View: ListView,
-        model: 'partner',
+        model: 'res.users',
         data: this.data,
         arch: `
             <list>
@@ -332,10 +254,10 @@ QUnit.test('list activity widget: open dropdown', async function (assert) {
         mockRPC: function (route, args) {
             assert.step(args.method || route);
             if (args.method === 'action_feedback') {
-                this.data.partner.records[0].activity_ids = [4];
-                this.data.partner.records[0].activity_state = 'planned';
-                this.data.partner.records[0].activity_summary = 'Meet FP';
-                this.data.partner.records[0].activity_type_id = 1;
+                this.data['res.users'].records[lastUserIndex].activity_ids = [4];
+                this.data['res.users'].records[lastUserIndex].activity_state = 'planned';
+                this.data['res.users'].records[lastUserIndex].activity_summary = 'Meet FP';
+                this.data['res.users'].records[lastUserIndex].activity_type_id = 1;
                 return Promise.resolve();
             }
             return this._super(route, args);
@@ -363,6 +285,7 @@ QUnit.test('list activity widget: open dropdown', async function (assert) {
 
     assert.verifySteps([
         '/web/dataset/search_read',
+        '/mail/init_messaging',
         'switch_view',
         'open dropdown',
         'activity_format',
@@ -376,9 +299,10 @@ QUnit.test('list activity widget: open dropdown', async function (assert) {
 QUnit.test('list activity exception widget with activity', async function (assert) {
     assert.expect(3);
 
-    this.data.partner.records[0].activity_ids = [1];
-    this.data.partner.records.push({
-        id: 3,
+    const lastUserIndex = this.data['res.users'].records.length - 1;
+    this.data['res.users'].records[lastUserIndex].activity_ids = [1];
+    this.data['res.users'].records.push({
+        id: 13,
         message_attachment_count: 3,
         display_name: "second partner",
         foo: "Tommy",
@@ -388,32 +312,36 @@ QUnit.test('list activity exception widget with activity', async function (asser
         activity_exception_decoration: 'warning',
         activity_exception_icon: 'fa-warning',
     });
-    this.data['mail.activity'].records = [{
-        id: 1,
-        display_name: "An activity",
-        date_deadline: moment().format("YYYY-MM-DD"), // now
-        can_write: true,
-        state: "today",
-        user_id: 2,
-        create_uid: 2,
-        activity_type_id: 1,
-    },{
-        id: 2,
-        display_name: "An exception activity",
-        date_deadline: moment().format("YYYY-MM-DD"), // now
-        can_write: true,
-        state: "today",
-        user_id: 2,
-        create_uid: 2,
-        activity_type_id: 4,
-    }];
+    this.data['mail.activity'].records.push(
+        {
+            id: 1,
+            display_name: "An activity",
+            date_deadline: moment().format("YYYY-MM-DD"), // now
+            can_write: true,
+            state: "today",
+            user_id: 2,
+            create_uid: 2,
+            activity_type_id: 1,
+        },
+        {
+            id: 2,
+            display_name: "An exception activity",
+            date_deadline: moment().format("YYYY-MM-DD"), // now
+            can_write: true,
+            state: "today",
+            user_id: 2,
+            create_uid: 2,
+            activity_type_id: 4,
+        }
+    );
 
-    var list = await createView({
+    const { widget: list } = await start({
+        hasView: true,
         View: ListView,
-        model: 'partner',
+        model: 'res.users',
         data: this.data,
         arch: '<tree>' +
-                '<field name="foo"/>'+
+                '<field name="foo"/>' +
                 '<field name="activity_exception_decoration" widget="activity_exception"/> ' +
             '</tree>',
     });
@@ -428,30 +356,33 @@ QUnit.test('list activity exception widget with activity', async function (asser
 });
 
 QUnit.module('FieldMany2ManyTagsEmail', {
-    beforeEach: function () {
-        this.data = {
-            partner: {
-                fields: {
-                    display_name: { string: "Displayed name", type: "char" },
-                    timmy: { string: "pokemon", type: "many2many", relation: 'partner_type'},
-                },
-                records: [{
-                    id: 1,
-                    display_name: "first record",
-                    timmy: [],
-                }],
-            },
+    beforeEach() {
+        beforeEach(this);
+
+        Object.assign(this.data['res.users'].fields, {
+            timmy: { string: "pokemon", type: "many2many", relation: 'partner_type' },
+        });
+        this.data['res.users'].records.push({
+            id: 11,
+            display_name: "first record",
+            timmy: [],
+        });
+        Object.assign(this.data, {
             partner_type: {
                 fields: {
-                    name: {string: "Partner Type", type: "char"},
-                    email: {string: "Email", type: "char"},
+                    name: { string: "Partner Type", type: "char" },
+                    email: { string: "Email", type: "char" },
                 },
-                records: [
-                    {id: 12, display_name: "gold", email: 'coucou@petite.perruche'},
-                    {id: 14, display_name: "silver", email: ''},
-                ]
+                records: [],
             },
-        };
+        });
+        this.data['partner_type'].records.push(
+            { id: 12, display_name: "gold", email: 'coucou@petite.perruche' },
+            { id: 14, display_name: "silver", email: '' }
+        );
+    },
+    afterEach() {
+        afterEach(this);
     },
 });
 
@@ -459,15 +390,17 @@ QUnit.test('fieldmany2many tags email', function (assert) {
     assert.expect(13);
     var done = assert.async();
 
-    this.data.partner.records[0].timmy = [12, 14];
+    const lastUserIndex = this.data['res.users'].records.length - 1;
+    this.data['res.users'].records[lastUserIndex].timmy = [12, 14];
 
     // the modals need to be closed before the form view rendering
-    createView({
+    start({
+        hasView: true,
         View: FormView,
-        model: 'partner',
+        model: 'res.users',
         data: this.data,
-        res_id: 1,
-        arch:'<form string="Partners">' +
+        res_id: 11,
+        arch: '<form string="Partners">' +
                 '<sheet>' +
                     '<field name="display_name"/>' +
                     '<field name="timmy" widget="many2many_tags_email"/>' +
@@ -477,16 +410,16 @@ QUnit.test('fieldmany2many tags email', function (assert) {
             mode: 'edit',
         },
         mockRPC: function (route, args) {
-            if (args.method ==='read' && args.model === 'partner_type') {
+            if (args.method === 'read' && args.model === 'partner_type') {
                 assert.step(JSON.stringify(args.args[0]));
-                assert.deepEqual(args.args[1] , ['display_name', 'email'], "should read the email");
+                assert.deepEqual(args.args[1], ['display_name', 'email'], "should read the email");
             }
             return this._super.apply(this, arguments);
         },
         archs: {
             'partner_type,false,form': '<form string="Types"><field name="display_name"/><field name="email"/></form>',
         },
-    }).then(async function (form) {
+    }).then(async function ({ widget: form }) {
         // should read it 3 times (1 with the form view, one with the form dialog and one after save)
         assert.verifySteps(['[12,14]', '[14]', '[14]']);
         await testUtils.nextTick();
@@ -500,7 +433,7 @@ QUnit.test('fieldmany2many tags email', function (assert) {
         form.destroy();
         done();
     });
-    testUtils.nextTick().then(function() {
+    testUtils.nextTick().then(function () {
         assert.strictEqual($('.modal-body.o_act_window').length, 1,
             "there should be one modal opened to edit the empty email");
         assert.strictEqual($('.modal-body.o_act_window input[name="display_name"]').val(), "silver",
@@ -518,14 +451,16 @@ QUnit.test('fieldmany2many tags email', function (assert) {
 QUnit.test('fieldmany2many tags email (edition)', async function (assert) {
     assert.expect(15);
 
-    this.data.partner.records[0].timmy = [12];
+    const lastUserIndex = this.data['res.users'].records.length - 1;
+    this.data['res.users'].records[lastUserIndex].timmy = [12];
 
-    var form = await createView({
+    var { widget: form } = await start({
+        hasView: true,
         View: FormView,
-        model: 'partner',
+        model: 'res.users',
         data: this.data,
-        res_id: 1,
-        arch:'<form string="Partners">' +
+        res_id: 11,
+        arch: '<form string="Partners">' +
                 '<sheet>' +
                     '<field name="display_name"/>' +
                     '<field name="timmy" widget="many2many_tags_email"/>' +
@@ -535,9 +470,9 @@ QUnit.test('fieldmany2many tags email (edition)', async function (assert) {
             mode: 'edit',
         },
         mockRPC: function (route, args) {
-            if (args.method ==='read' && args.model === 'partner_type') {
+            if (args.method === 'read' && args.model === 'partner_type') {
                 assert.step(JSON.stringify(args.args[0]));
-                assert.deepEqual(args.args[1] , ['display_name', 'email'], "should read the email");
+                assert.deepEqual(args.args[1], ['display_name', 'email'], "should read the email");
             }
             return this._super.apply(this, arguments);
         },
@@ -577,19 +512,21 @@ QUnit.test('fieldmany2many tags email (edition)', async function (assert) {
 QUnit.test('many2many_tags_email widget can load more than 40 records', async function (assert) {
     assert.expect(3);
 
-    this.data.partner.fields.partner_ids = {string: "Partner", type: "many2many", relation: 'partner'};
-    this.data.partner.records[0].partner_ids = [];
+    const lastUserIndex = this.data['res.users'].records.length - 1;
+    this.data['res.users'].fields.partner_ids = { string: "Partner", type: "many2many", relation: 'res.users' };
+    this.data['res.users'].records[lastUserIndex].partner_ids = [];
     for (let i = 100; i < 200; i++) {
-        this.data.partner.records.push({id: i, display_name: `partner${i}`});
-        this.data.partner.records[0].partner_ids.push(i);
+        this.data['res.users'].records.push({ id: i, display_name: `partner${i}` });
+        this.data['res.users'].records[lastUserIndex].partner_ids.push(i);
     }
 
-    const form = await createView({
+    const { widget: form } = await start({
+        hasView: true,
         View: FormView,
-        model: 'partner',
+        model: 'res.users',
         data: this.data,
         arch: '<form><field name="partner_ids" widget="many2many_tags"/></form>',
-        res_id: 1,
+        res_id: 11,
     });
 
     assert.strictEqual(form.$('.o_field_widget[name="partner_ids"] .badge').length, 100);
@@ -608,4 +545,5 @@ QUnit.test('many2many_tags_email widget can load more than 40 records', async fu
 });
 
 });
+
 });

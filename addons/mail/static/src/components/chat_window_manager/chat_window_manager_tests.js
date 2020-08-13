@@ -2,17 +2,14 @@ odoo.define('mail/static/src/components/chat_window_manager/chat_window_manager_
 'use strict';
 
 const {
-    afterEach: utilsAfterEach,
+    afterEach,
     afterNextRender,
-    beforeEach: utilsBeforeEach,
-    start: utilsStart,
+    beforeEach,
+    start,
 } = require('mail/static/src/utils/test_utils.js');
 
 const {
-    file: {
-        createFile,
-        inputFiles,
-    },
+    file: { createFile, inputFiles },
     dom: { triggerEvent },
 } = require('web.test_utils');
 
@@ -21,15 +18,14 @@ QUnit.module('components', {}, function () {
 QUnit.module('chat_window_manager', {}, function () {
 QUnit.module('chat_window_manager_tests.js', {
     beforeEach() {
-        utilsBeforeEach(this);
+        beforeEach(this);
 
         this.start = async params => {
-            let { env, widget } = await utilsStart(Object.assign({
-                hasChatWindow: true,
-                hasMessagingMenu: true,
-            }, params, {
-                data: this.data,
-            }));
+            const { env, widget } = await start(Object.assign(
+                { hasChatWindow: true, hasMessagingMenu: true },
+                params,
+                { data: this.data }
+            ));
             this.debug = params && params.debug;
             this.env = env;
             this.widget = widget;
@@ -62,10 +58,7 @@ QUnit.module('chat_window_manager_tests.js', {
         };
     },
     afterEach() {
-        utilsAfterEach(this);
-        if (this.widget) {
-            this.widget.destroy();
-        }
+        afterEach(this);
     },
 });
 
@@ -73,22 +66,17 @@ QUnit.test('initial mount', async function (assert) {
     assert.expect(1);
 
     await this.start();
-    assert.strictEqual(document.querySelectorAll('.o_ChatWindowManager').length,
-        1,
-        "should have chat window manager");
+    assert.containsOnce(
+        document.body,
+        '.o_ChatWindowManager',
+        "should have chat window manager"
+    );
 });
 
 QUnit.test('chat window new message: basic rendering', async function (assert) {
     assert.expect(10);
 
-    await this.start({
-        async mockRPC(route, args) {
-            if (args.method === 'channel_fetch_preview') {
-                return [];
-            }
-            return this._super(...arguments);
-        },
-    });
+    await this.start();
     await afterNextRender(() =>
         document.querySelector(`.o_MessagingMenu_toggler`).click()
     );
@@ -150,14 +138,7 @@ QUnit.test('chat window new message: basic rendering', async function (assert) {
 QUnit.test('chat window new message: focused on open', async function (assert) {
     assert.expect(2);
 
-    await this.start({
-        async mockRPC(route, args) {
-            if (args.method === 'channel_fetch_preview') {
-                return [];
-            }
-            return this._super(...arguments);
-        },
-    });
+    await this.start();
     await afterNextRender(() =>
         document.querySelector(`.o_MessagingMenu_toggler`).click()
     );
@@ -178,14 +159,7 @@ QUnit.test('chat window new message: focused on open', async function (assert) {
 QUnit.test('chat window new message: close', async function (assert) {
     assert.expect(1);
 
-    await this.start({
-        async mockRPC(route, args) {
-            if (args.method === 'channel_fetch_preview') {
-                return [];
-            }
-            return this._super(...arguments);
-        },
-    });
+    await this.start();
     await afterNextRender(() =>
         document.querySelector(`.o_MessagingMenu_toggler`).click()
     );
@@ -205,14 +179,7 @@ QUnit.test('chat window new message: close', async function (assert) {
 QUnit.test('chat window new message: fold', async function (assert) {
     assert.expect(6);
 
-    await this.start({
-        async mockRPC(route, args) {
-            if (args.method === 'channel_fetch_preview') {
-                return [];
-            }
-            return this._super(...arguments);
-        },
-    });
+    await this.start();
     await afterNextRender(() => document.querySelector(`.o_MessagingMenu_toggler`).click());
     await afterNextRender(() =>
         document.querySelector(`.o_MessagingMenu_newMessageButton`).click()
@@ -256,35 +223,11 @@ QUnit.test('chat window new message: fold', async function (assert) {
 QUnit.test('chat window: basic rendering', async function (assert) {
     assert.expect(11);
 
-    Object.assign(this.data.initMessaging, {
-        channel_slots: {
-            channel_channel: [{
-                channel_type: "channel",
-                id: 20,
-                is_pinned: true,
-                name: "General",
-            }],
-        },
-    });
-    await this.start({
-        async mockRPC(route, args) {
-            if (args.method === 'channel_fetch_preview') {
-                return [{
-                    id: 20,
-                    last_message: {
-                        author_id: [7, "Demo"],
-                        body: "<p>test</p>",
-                        channel_ids: [20],
-                        id: 100,
-                        message_type: 'comment',
-                        model: 'mail.channel',
-                        res_id: 20,
-                    },
-                }];
-            }
-            return this._super(...arguments);
-        },
-    });
+    // channel that is expected to be found in the messaging menu
+    // with random unique id and name that will be asserted during the test
+    this.data['mail.channel'].records.push({ id: 20, name: "General" });
+    await this.start();
+
     await afterNextRender(() =>
         document.querySelector(`.o_MessagingMenu_toggler`).click()
     );
@@ -356,35 +299,12 @@ QUnit.test('chat window: fold', async function (assert) {
     assert.expect(27);
 
     let foldCall = 0;
-    Object.assign(this.data.initMessaging, {
-        channel_slots: {
-            channel_channel: [{
-                channel_type: 'channel',
-                id: 20,
-                is_minimized: false,
-                is_pinned: true,
-                name: "General",
-                state: 'open',
-                uuid: 'channel-20-uuid',
-            }],
-        },
-    });
+    // channel that is expected to be found in the messaging menu
+    // with random UUID, will be asserted during the test
+    this.data['mail.channel'].records.push({ uuid: 'channel-uuid' });
     await this.start({
-        async mockRPC(route, args) {
-            if (args.method === 'channel_fetch_preview') {
-                return [{
-                    id: 20,
-                    last_message: {
-                        author_id: [7, "Demo"],
-                        body: "<p>test</p>",
-                        channel_ids: [20],
-                        id: 100,
-                        message_type: 'comment',
-                        model: 'mail.channel',
-                        res_id: 20,
-                    },
-                }];
-            } else if (args.method === 'channel_fold') {
+        mockRPC(route, args) {
+            if (args.method === 'channel_fold') {
                 assert.step(`rpc:${args.method}/${args.kwargs.state}`);
                 foldCall++;
                 const kwargsKeys = Object.keys(args.kwargs);
@@ -408,7 +328,7 @@ QUnit.test('chat window: fold', async function (assert) {
                 );
                 assert.strictEqual(
                     args.kwargs.uuid,
-                    'channel-20-uuid',
+                    'channel-uuid',
                     "channel_fold call uuid is from channel 20"
                 );
                 if (foldCall % 2 === 0) {
@@ -424,7 +344,6 @@ QUnit.test('chat window: fold', async function (assert) {
                         "channel_fold call state is 'open'"
                     );
                 }
-                return [];
             }
             return this._super(...arguments);
         },
@@ -464,35 +383,12 @@ QUnit.test('chat window: open / close', async function (assert) {
     assert.expect(24);
 
     let foldCall = 0;
-    Object.assign(this.data.initMessaging, {
-        channel_slots: {
-            channel_channel: [{
-                channel_type: 'channel',
-                id: 20,
-                is_minimized: false,
-                is_pinned: true,
-                name: "General",
-                state: 'open',
-                uuid: 'channel-20-uuid',
-            }],
-        },
-    });
+    // channel that is expected to be found in the messaging menu
+    // with random UUID, will be asserted during the test
+    this.data['mail.channel'].records.push({ uuid: 'channel-uuid' });
     await this.start({
-        async mockRPC(route, args) {
-            if (args.method === 'channel_fetch_preview') {
-                return [{
-                    id: 20,
-                    last_message: {
-                        author_id: [7, "Demo"],
-                        body: "<p>test</p>",
-                        channel_ids: [20],
-                        id: 100,
-                        message_type: 'comment',
-                        model: 'mail.channel',
-                        res_id: 20,
-                    },
-                }];
-            } else if (args.method === 'channel_fold') {
+        mockRPC(route, args) {
+            if (args.method === 'channel_fold') {
                 assert.step(`rpc:channel_fold/${args.kwargs.state}`);
                 foldCall++;
                 const kwargsKeys = Object.keys(args.kwargs);
@@ -516,7 +412,7 @@ QUnit.test('chat window: open / close', async function (assert) {
                 );
                 assert.strictEqual(
                     args.kwargs.uuid,
-                    'channel-20-uuid',
+                    'channel-uuid',
                     "channel_fold call uuid should be correct"
                 );
                 if (foldCall % 2 === 0) {
@@ -532,7 +428,6 @@ QUnit.test('chat window: open / close', async function (assert) {
                         "channel_fold call state is 'open'"
                     );
                 }
-                return [];
             }
             return this._super(...arguments);
         },
@@ -556,57 +451,24 @@ QUnit.test('chat window: open / close', async function (assert) {
 });
 
 QUnit.test('chat window: close on ESCAPE', async function (assert) {
-    assert.expect(12);
+    assert.expect(10);
 
-    this.data['res.partner'].records = [{
-        email: "testpartnert@odoo.com",
-        id: 11,
-        name: "TestPartner",
-    }];
-    Object.assign(this.data.initMessaging, {
-        channel_slots: {
-            channel_channel: [{
-                channel_type: 'channel',
-                id: 20,
-                is_minimized: false,
-                is_pinned: true,
-                name: "General",
-                state: 'open',
-                uuid: 'channel-20-uuid',
-            }],
-        },
-    });
+    // expected partner to be found by mention during the test
+    this.data['res.partner'].records.push({ name: "TestPartner" });
+    // a chat window with thread is expected to be initially open for this test
+    this.data['mail.channel'].records.push({ is_minimized: true });
     await this.start({
-        async mockRPC(route, args) {
-            if (args.method === 'channel_fetch_preview') {
-                return [{
-                    id: 20,
-                    last_message: {
-                        author_id: [7, "Demo"],
-                        body: "<p>test</p>",
-                        channel_ids: [20],
-                        id: 100,
-                        message_type: 'comment',
-                        model: 'mail.channel',
-                        res_id: 20,
-                    },
-                }];
-            } else if (args.method === 'channel_fold') {
+        mockRPC(route, args) {
+            if (args.method === 'channel_fold') {
                 assert.step(`rpc:channel_fold/${args.kwargs.state}`);
-                return [];
             }
             return this._super(...arguments);
         },
     });
-    await afterNextRender(() => document.querySelector(`.o_MessagingMenu_toggler`).click());
-    await afterNextRender(() =>
-        document.querySelector(`.o_MessagingMenu_dropdownMenu .o_NotificationList_preview`).click()
-    );
-    assert.verifySteps(['rpc:channel_fold/open']);
     assert.containsOnce(
         document.body,
         '.o_ChatWindow',
-        "chat window should be opened after click on preview"
+        "chat window should be opened initially"
     );
 
     await afterNextRender(() =>
@@ -634,7 +496,7 @@ QUnit.test('chat window: close on ESCAPE', async function (assert) {
     );
 
     await afterNextRender(() => {
-        document.execCommand('insertText', false, "@");
+        document.execCommand('insertText', false, "@test");
         document.querySelector(`.o_ComposerTextInput_textarea`)
             .dispatchEvent(new window.KeyboardEvent('keydown'));
         document.querySelector(`.o_ComposerTextInput_textarea`)
@@ -643,7 +505,7 @@ QUnit.test('chat window: close on ESCAPE', async function (assert) {
     assert.containsOnce(
         document.body,
         '.o_ComposerTextInput_mentionDropdownPropositionList',
-        "mention suggestion should be opened after typing @"
+        "mention suggestion should be opened after typing @test"
     );
 
     await afterNextRender(() => {
@@ -689,30 +551,11 @@ QUnit.test('focus next visible chat window when closing current chat window with
      */
     assert.expect(4);
 
-    Object.assign(this.data.initMessaging, {
-        channel_slots: {
-            channel_channel: [
-                {
-                    channel_type: 'channel',
-                    id: 20,
-                    is_minimized: true,
-                    is_pinned: true,
-                    name: "General",
-                    state: 'open',
-                    uuid: 'channel-20-uuid',
-                },
-                {
-                    channel_type: 'channel',
-                    id: 21,
-                    is_minimized: true,
-                    is_pinned: true,
-                    name: "other chat",
-                    state: 'open',
-                    uuid: 'channel-21-uuid',
-                },
-            ],
-        },
-    });
+    // 2 chat windows with thread are expected to be initially open for this test
+    this.data['mail.channel'].records.push(
+        { is_minimized: true, state: 'open' },
+        { is_minimized: true, state: 'open' }
+    );
     await this.start({
         env: {
             browser: {
@@ -724,7 +567,7 @@ QUnit.test('focus next visible chat window when closing current chat window with
         document.body,
         '.o_ChatWindow .o_ComposerTextInput_textarea',
         2,
-        "initialy, 2 chat windows should be present"
+        "2 chat windows should be present initially"
     );
     assert.containsNone(
         document.body,
@@ -753,19 +596,9 @@ QUnit.test('[technical] chat window: composer state conservation on toggle home 
     // have side-effects on DOM that may make chat window components not work
     assert.expect(7);
 
-    Object.assign(this.data.initMessaging, {
-        channel_slots: {
-            channel_channel: [{
-                channel_type: 'channel',
-                id: 20,
-                is_minimized: false,
-                is_pinned: true,
-                name: "General",
-                state: 'open',
-                uuid: 'channel-20-uuid',
-            }],
-        },
-    });
+    // channel that is expected to be found in the messaging menu
+    // with random unique id that is needed to link messages
+    this.data['mail.channel'].records.push({ id: 20 });
     await this.start();
     await afterNextRender(() => document.querySelector(`.o_MessagingMenu_toggler`).click());
     await afterNextRender(() =>
@@ -845,30 +678,14 @@ QUnit.test('[technical] chat window: scroll conservation on toggle home menu', a
     // have side-effects on DOM that may make chat window components not work
     assert.expect(3);
 
-    Object.assign(this.data.initMessaging, {
-        channel_slots: {
-            channel_channel: [{
-                channel_type: 'channel',
-                id: 20,
-                is_minimized: false,
-                is_pinned: true,
-                name: "General",
-                state: 'open',
-                uuid: 'channel-20-uuid',
-            }],
-        },
-    });
-    this.data['mail.message'].records = [];
-    for (const i of Array(20).keys()) {
+
+    // channel that is expected to be found in the messaging menu
+    // with random unique id that is needed to link messages
+    this.data['mail.channel'].records.push({ id: 20 });
+    for (let i = 0; i < 10; i++) {
         this.data['mail.message'].records.push({
-            author_id: [7, "Demo"],
-            body: "<p>body</p>",
             channel_ids: [20],
-            date: "2019-04-20 10:00:00",
-            id: i + 10,
-            message_type: 'comment',
             model: 'mail.channel',
-            record_name: "General",
             res_id: 20,
         });
     }
@@ -916,59 +733,14 @@ QUnit.test('open 2 different chat windows: enough screen width [REQUIRE FOCUS]',
      */
     assert.expect(8);
 
-    Object.assign(this.data.initMessaging, {
-        channel_slots: {
-            channel_channel: [{
-                channel_type: "channel",
-                id: 20,
-                is_pinned: true,
-                name: "General",
-            }],
-            channel_direct_message: [{
-                channel_type: "chat",
-                direct_partner: [{
-                    id: 7,
-                    name: "Demo",
-                }],
-                id: 10,
-                is_pinned: true,
-            }],
-        },
-    });
+    // 2 channels are expected to be found in the messaging menu, each with a
+    // random unique id that will be referenced in the test
+    this.data['mail.channel'].records.push({ id: 10 }, { id: 20 });
     await this.start({
         env: {
             browser: {
-                innerHeight: 1080,
-                innerWidth: 1920,
+                innerWidth: 1920, // enough to fit at least 2 chat windows
             },
-        },
-        async mockRPC(route, args) {
-            if (args.method === 'channel_fetch_preview') {
-                return [{
-                    id: 20,
-                    last_message: {
-                        author_id: [7, "Demo"],
-                        body: "<p>test</p>",
-                        channel_ids: [20],
-                        id: 100,
-                        message_type: 'comment',
-                        model: 'mail.channel',
-                        res_id: 20,
-                    },
-                }, {
-                    id: 10,
-                    last_message: {
-                        author_id: [7, "Demo"],
-                        body: "<p>test2</p>",
-                        channel_ids: [10],
-                        id: 101,
-                        message_type: 'comment',
-                        model: 'mail.channel',
-                        res_id: 10,
-                    },
-                }];
-            }
-            return this._super(...arguments);
         },
     });
     await afterNextRender(() => document.querySelector(`.o_MessagingMenu_toggler`).click());
@@ -1080,29 +852,11 @@ QUnit.test('open 2 different chat windows: enough screen width [REQUIRE FOCUS]',
 QUnit.test('open 2 chat windows: check shift operations are available', async function (assert) {
     assert.expect(9);
 
-    const channel = {
-        channel_type: "channel",
-        id: 20,
-        is_pinned: true,
-        name: "General",
-    };
-    const chat = {
-        channel_type: "chat",
-        direct_partner: [{
-            id: 7,
-            name: "Demo",
-        }],
-        id: 10,
-        is_pinned: true,
-    };
-    this.data['mail.channel'].records = [channel, chat];
-    Object.assign(this.data.initMessaging, {
-        channel_slots: {
-            channel_channel: [channel],
-            channel_direct_message: [chat],
-        },
-    });
+    // 2 channels are expected to be found in the messaging menu
+    // only their existence matters, data are irrelevant
+    this.data['mail.channel'].records.push({}, {});
     await this.start();
+
     await afterNextRender(() => {
         document.querySelector('.o_MessagingMenu_toggler').click();
     });
@@ -1115,7 +869,6 @@ QUnit.test('open 2 chat windows: check shift operations are available', async fu
     await afterNextRender(() => {
         document.querySelectorAll('.o_MessagingMenu_dropdownMenu .o_NotificationList_preview')[1].click();
     });
-
     assert.containsN(
         document.body,
         '.o_ChatWindow',
@@ -1195,32 +948,21 @@ QUnit.test('open 2 folded chat windows: check shift operations are available', a
      */
     assert.expect(13);
 
+    this.data['res.partner'].records.push({ id: 7, name: "Demo" });
     const channel = {
         channel_type: "channel",
-        id: 20,
         is_minimized: true,
         is_pinned: true,
-        name: "General",
         state: 'folded',
     };
     const chat = {
         channel_type: "chat",
-        direct_partner: [{
-            id: 7,
-            name: "Demo",
-        }],
-        id: 10,
         is_minimized: true,
         is_pinned: true,
+        members: [this.data.currentPartnerId, 7],
         state: 'folded',
     };
-    this.data['mail.channel'].records = [channel, chat];
-    Object.assign(this.data.initMessaging, {
-        channel_slots: {
-            channel_channel: [channel],
-            channel_direct_message: [chat],
-        },
-    });
+    this.data['mail.channel'].records.push(channel, chat);
     await this.start({
         env: {
             browser: {
@@ -1336,38 +1078,14 @@ QUnit.test('open 3 different chat windows: not enough screen width', async funct
      */
     assert.expect(12);
 
-    Object.assign(this.data.initMessaging, {
-        channel_slots: {
-            channel_channel: [{
-                channel_type: "channel",
-                id: 1,
-                is_pinned: true,
-                name: "channel1",
-            }, {
-                channel_type: "channel",
-                id: 2,
-                is_pinned: true,
-                name: "channel2",
-            }, {
-                channel_type: "channel",
-                id: 3,
-                is_pinned: true,
-                name: "channel3",
-            }],
-        },
-    });
+    // 3 channels are expected to be found in the messaging menu, each with a
+    // random unique id that will be referenced in the test
+    this.data['mail.channel'].records.push({ id: 1 }, { id: 2 }, { id: 3 });
     await this.start({
         env: {
             browser: {
-                innerHeight: 900,
-                innerWidth: 900,
+                innerWidth: 900, // enough to fit 2 chat windows but not 3
             },
-        },
-        async mockRPC(route, args) {
-            if (args.method === 'channel_fetch_preview') {
-                return [];
-            }
-            return this._super(...arguments);
         },
     });
 
@@ -1501,21 +1219,12 @@ QUnit.test('open 3 different chat windows: not enough screen width', async funct
 QUnit.test('chat window: switch on TAB', async function (assert) {
     assert.expect(10);
 
-    Object.assign(this.data.initMessaging, {
-        channel_slots: {
-            channel_channel: [{
-                channel_type: "channel",
-                id: 1,
-                is_pinned: true,
-                name: "channel1",
-            }, {
-                channel_type: "channel",
-                id: 2,
-                is_pinned: true,
-                name: "channel2",
-            }],
-        },
-    });
+    // 2 channels are expected to be found in the messaging menu
+    // with random unique id and name that will be asserted during the test
+    this.data['mail.channel'].records.push(
+        { id: 1, name: "channel1" },
+        { id: 2, name: "channel2" }
+    );
     await this.start();
 
     await afterNextRender(() =>
@@ -1623,32 +1332,23 @@ QUnit.test('chat window: TAB cycle with 3 open chat windows', async function (as
      */
     assert.expect(6);
 
-    Object.assign(this.data.initMessaging, {
-        channel_slots: {
-            channel_channel: [{
-                channel_type: 'channel',
-                id: 1,
-                is_minimized: true,
-                is_pinned: true,
-                name: "channel1",
-                state: 'open',
-            }, {
-                channel_type: 'channel',
-                id: 2,
-                is_minimized: true,
-                is_pinned: true,
-                name: "channel2",
-                state: 'open',
-            }, {
-                channel_type: 'channel',
-                id: 3,
-                is_minimized: true,
-                is_pinned: true,
-                name: "channel3",
-                state: 'open',
-            }],
+    this.data['mail.channel'].records.push(
+        {
+            is_minimized: true,
+            is_pinned: true,
+            state: 'open',
         },
-    });
+        {
+            is_minimized: true,
+            is_pinned: true,
+            state: 'open',
+        },
+        {
+            is_minimized: true,
+            is_pinned: true,
+            state: 'open',
+        }
+    );
     await this.start({
         env: {
             browser: {
@@ -1720,30 +1420,13 @@ QUnit.test('chat window: TAB cycle with 3 open chat windows', async function (as
 QUnit.test('chat window with a thread: keep scroll position in message list on folded', async function (assert) {
     assert.expect(3);
 
-    Object.assign(this.data.initMessaging, {
-        channel_slots: {
-            channel_channel: [{
-                channel_type: 'channel',
-                id: 20,
-                is_minimized: false,
-                is_pinned: true,
-                name: "General",
-                state: 'open',
-                uuid: 'channel-20-uuid',
-            }],
-        },
-    });
-    this.data['mail.message'].records = [];
-    for(const i of Array(20).keys()) {
+    // channel that is expected to be found in the messaging menu
+    // with a random unique id, needed to link messages
+    this.data['mail.channel'].records.push({ id: 20 });
+    for (let i = 0; i < 10; i++) {
         this.data['mail.message'].records.push({
-            author_id: [7, "Demo"],
-            body: "<p>body</p>",
             channel_ids: [20],
-            date: "2019-04-20 10:00:00",
-            id: i,
-            message_type: 'comment',
             model: 'mail.channel',
-            record_name: "General",
             res_id: 20,
         });
     }
@@ -1782,19 +1465,9 @@ QUnit.test('[technical] chat window: composer state conservation on toggle home 
     // have side-effects on DOM that may make chat window components not work
     assert.expect(6);
 
-    Object.assign(this.data.initMessaging, {
-        channel_slots: {
-            channel_channel: [{
-                channel_type: 'channel',
-                id: 20,
-                is_minimized: false,
-                is_pinned: true,
-                name: "General",
-                state: 'open',
-                uuid: 'channel-20-uuid',
-            }],
-        },
-    });
+    // channel that is expected to be found in the messaging menu
+    // only its existence matters, data are irrelevant
+    this.data['mail.channel'].records.push({});
     await this.start();
     await afterNextRender(() => document.querySelector(`.o_MessagingMenu_toggler`).click());
     await afterNextRender(() =>
@@ -1876,30 +1549,13 @@ QUnit.test('[technical] chat window with a thread: keep scroll position in messa
     // have side-effects on DOM that may make chat window components not work
     assert.expect(3);
 
-    Object.assign(this.data.initMessaging, {
-        channel_slots: {
-            channel_channel: [{
-                channel_type: 'channel',
-                id: 20,
-                is_minimized: false,
-                is_pinned: true,
-                name: "General",
-                state: 'open',
-                uuid: 'channel-20-uuid',
-            }],
-        },
-    });
-    this.data['mail.message'].records = [];
-    for (const i of Array(20).keys()) {
+    // channel that is expected to be found in the messaging menu
+    // with random unique id, needed to link messages
+    this.data['mail.channel'].records.push({ id: 20 });
+    for (let i = 0; i < 10; i++) {
         this.data['mail.message'].records.push({
-            author_id: [7, "Demo"],
-            body: "<p>body</p>",
             channel_ids: [20],
-            date: "2019-04-20 10:00:00",
-            id: i + 10,
-            message_type: 'comment',
             model: 'mail.channel',
-            record_name: "General",
             res_id: 20,
         });
     }

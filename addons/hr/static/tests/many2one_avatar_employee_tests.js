@@ -1,22 +1,23 @@
 odoo.define('hr.Many2OneAvatarEmployeeTests', function (require) {
 "use strict";
 
-const { start } = require('mail/static/src/utils/test_utils.js');
+const { afterEach, beforeEach, start } = require('mail/static/src/utils/test_utils.js');
 
 const FormView = require('web.FormView');
 const KanbanView = require('web.KanbanView');
 const ListView = require('web.ListView');
 const { Many2OneAvatarEmployee } = require('hr.Many2OneAvatarEmployee');
-const { createView, dom, mock } = require('web.test_utils');
-
+const { dom, mock } = require('web.test_utils');
 
 QUnit.module('hr', {}, function () {
     QUnit.module('Many2OneAvatarEmployee', {
-        beforeEach: function () {
+        beforeEach() {
+            beforeEach(this);
+
             // reset the cache before each test
             Many2OneAvatarEmployee.prototype.partnerIds = {};
 
-            this.data = {
+            Object.assign(this.data, {
                 'foo': {
                     fields: {
                         employee_id: { string: "Employee", type: 'many2one', relation: 'hr.employee' },
@@ -36,33 +37,26 @@ QUnit.module('hr', {}, function () {
                     records: [{
                         id: 11,
                         name: "Mario",
-                        user_partner_id: 1,
+                        user_partner_id: 11,
                     }, {
                         id: 7,
                         name: "Luigi",
-                        user_partner_id: 2,
+                        user_partner_id: 12,
                     }, {
                         id: 23,
                         name: "Yoshi",
-                        user_partner_id: 3,
+                        user_partner_id: 13,
                     }],
                 },
-                'res.partner': {
-                    fields: {
-                        display_name: { string: "Name", type: "char" },
-                    },
-                    records: [{
-                        id: 1,
-                        display_name: "Partner 1",
-                    }, {
-                        id: 2,
-                        display_name: "Partner 2",
-                    }, {
-                        id: 3,
-                        display_name: "Partner 3",
-                    }],
-                },
-            };
+            });
+            this.data['res.partner'].records.push(
+                { id: 11, display_name: "Mario" },
+                { id: 12, display_name: "Luigi" },
+                { id: 13, display_name: "Yoshi" }
+            );
+        },
+        afterEach() {
+            afterEach(this);
         },
     });
 
@@ -172,6 +166,7 @@ QUnit.module('hr', {}, function () {
     QUnit.test('many2one_avatar_employee: click on self', async function (assert) {
         assert.expect(5);
 
+        this.data.currentPartnerId = 11;
         const { widget: form } = await start({
             hasView: true,
             View: FormView,
@@ -185,7 +180,7 @@ QUnit.module('hr', {}, function () {
                 return this._super(...arguments);
             },
             session: {
-                partner_id: 1,
+                partner_id: this.data.currentPartnerId,
             },
             res_id: 1,
         });

@@ -5,10 +5,11 @@ const components = {
     Message: require('mail/static/src/components/message/message.js'),
 };
 const {
-    afterEach: utilsAfterEach,
+    afterEach,
     afterNextRender,
-    beforeEach: utilsBeforeEach,
-    start: utilsStart,
+    beforeEach,
+    createRootComponent,
+    start,
 } = require('mail/static/src/utils/test_utils.js');
 
 const Bus = require('web.Bus');
@@ -18,22 +19,18 @@ QUnit.module('components', {}, function () {
 QUnit.module('message', {}, function () {
 QUnit.module('message_tests.js', {
     beforeEach() {
-        utilsBeforeEach(this);
+        beforeEach(this);
 
         this.createMessageComponent = async (message, otherProps) => {
-            const MessageComponent = components.Message;
-            MessageComponent.env = this.env;
-            this.component = new MessageComponent(null, Object.assign({
-                messageLocalId: message.localId,
-            }, otherProps));
-            await afterNextRender(() => this.component.mount(this.widget.el));
+            const props = Object.assign({ messageLocalId: message.localId }, otherProps);
+            await createRootComponent(this, components.Message, {
+                props,
+                target: this.widget.el,
+            });
         };
 
         this.start = async params => {
-            if (this.widget) {
-                this.widget.destroy();
-            }
-            let { env, widget } = await utilsStart(Object.assign({}, params, {
+            const { env, widget } = await start(Object.assign({}, params, {
                 data: this.data,
             }));
             this.env = env;
@@ -41,15 +38,7 @@ QUnit.module('message_tests.js', {
         };
     },
     afterEach() {
-        utilsAfterEach(this);
-        if (this.component) {
-            this.component.destroy();
-        }
-        if (this.widget) {
-            this.widget.destroy();
-        }
-        this.env = undefined;
-        delete components.Message.env;
+        afterEach(this);
     },
 });
 
@@ -125,7 +114,7 @@ QUnit.test('basic rendering', async function (assert) {
     );
 });
 
-QUnit.test('moderation: moderated channel with pending moderation message (author)', async function (assert) {
+QUnit.test('moderation: as author, moderated channel with pending moderation message', async function (assert) {
     assert.expect(1);
 
     await this.start();
@@ -149,16 +138,14 @@ QUnit.test('moderation: moderated channel with pending moderation message (autho
     );
 });
 
-QUnit.test('moderation: moderated channel with pending moderation message (moderator)', async function (assert) {
+QUnit.test('moderation: as moderator, moderated channel with pending moderation message', async function (assert) {
     assert.expect(9);
 
-    Object.assign(this.data.initMessaging, {
-        moderation_channel_ids: [20],
-    });
     await this.start();
     const thread = this.env.models['mail.thread'].create({
         id: 20,
         model: 'mail.channel',
+        moderators: [['link', this.env.messaging.currentPartner]],
     });
     const message = this.env.models['mail.message'].create({
         author: [['insert', { id: 7, display_name: "Demo User" }]],
@@ -347,7 +334,7 @@ QUnit.test("'channel_fetch' notification received is correctly handled", async f
 
     await this.start();
     const currentPartner = this.env.models['mail.partner'].insert({
-        id: this.env.session.partner_id,
+        id: this.env.messaging.currentPartner.id,
         display_name: "Demo User",
     });
     const thread = this.env.models['mail.thread'].create({
@@ -403,7 +390,7 @@ QUnit.test("'channel_seen' notification received is correctly handled", async fu
 
     await this.start();
     const currentPartner = this.env.models['mail.partner'].insert({
-        id: this.env.session.partner_id,
+        id: this.env.messaging.currentPartner.id,
         display_name: "Demo User",
     });
     const thread = this.env.models['mail.thread'].create({
@@ -458,7 +445,7 @@ QUnit.test("'channel_fetch' notification then 'channel_seen' received  are corre
 
     await this.start();
     const currentPartner = this.env.models['mail.partner'].insert({
-        id: this.env.session.partner_id,
+        id: this.env.messaging.currentPartner.id,
         display_name: "Demo User",
     });
     const thread = this.env.models['mail.thread'].create({
@@ -539,7 +526,7 @@ QUnit.test('do not show messaging seen indicator if not authored by me', async f
             {
                 id: this.env.session.partner_id,
                 lastFetchedMessage: [['insert', {id: 100}]],
-                partner: [['insert', {id: this.env.session.partner_id}]],
+                partner: [['insert', {id: this.env.messaging.currentPartner.id}]],
             },
             {
                 id: 100,
@@ -575,7 +562,7 @@ QUnit.test('do not show messaging seen indicator if before last seen by all mess
 
     await this.start();
     const currentPartner = this.env.models['mail.partner'].insert({
-        id: this.env.session.partner_id,
+        id: this.env.messaging.currentPartner.id,
         display_name: "Demo User",
     });
     const thread = this.env.models['mail.thread'].create({
@@ -637,7 +624,8 @@ QUnit.test('only show messaging seen indicator if authored by me, after last see
 
     await this.start();
     const currentPartner = this.env.models['mail.partner'].insert({
-        id: this.env.session.partner_id,
+        id: this.env.messaging.currentPartner.id,
+        display_name: "Demo User"
     });
     const thread = this.env.models['mail.thread'].create({
         id: 11,
@@ -697,7 +685,7 @@ QUnit.test('allow attachment delete on authored message', async function (assert
             id: 10,
             name: "BLAH",
         }]],
-        author: [['insert', { id: this.env.session.partner_id, display_name: "Me" }]],
+        author: [['link', this.env.messaging.currentPartner]],
         body: "<p>Test</p>",
         id: 100,
     });
@@ -721,6 +709,7 @@ QUnit.test('allow attachment delete on authored message', async function (assert
         "should no longer have an attachment",
     );
 });
+
 QUnit.test('prevent attachment delete on non-authored message', async function (assert) {
     assert.expect(2);
 

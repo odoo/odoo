@@ -5,10 +5,11 @@ const components = {
     Follower: require('mail/static/src/components/follower/follower.js'),
 };
 const {
-    afterEach: utilsAfterEach,
+    afterEach,
     afterNextRender,
-    beforeEach: utilsBeforeEach,
-    start: utilsStart,
+    beforeEach,
+    createRootComponent,
+    start,
 } = require('mail/static/src/utils/test_utils.js');
 
 const Bus = require('web.Bus');
@@ -18,17 +19,17 @@ QUnit.module('components', {}, function () {
 QUnit.module('follower', {}, function () {
 QUnit.module('follower_tests.js', {
     beforeEach() {
-        utilsBeforeEach(this);
+        beforeEach(this);
 
         this.createFollowerComponent = async (follower) => {
-            const FollowerComponent = components.Follower;
-            FollowerComponent.env = this.env;
-            this.component = new FollowerComponent(null, { followerLocalId: follower.localId });
-            await this.component.mount(this.widget.el);
+            await createRootComponent(this, components.Follower, {
+                props: { followerLocalId: follower.localId },
+                target: this.widget.el,
+            });
         };
 
         this.start = async params => {
-            let { env, widget } = await utilsStart(Object.assign({}, params, {
+            const { env, widget } = await start(Object.assign({}, params, {
                 data: this.data,
             }));
             this.env = env;
@@ -36,31 +37,14 @@ QUnit.module('follower_tests.js', {
         };
     },
     afterEach() {
-        utilsAfterEach(this);
-        if (this.component) {
-            this.component.destroy();
-            this.component = undefined;
-        }
-        if (this.widget) {
-            this.widget.destroy();
-            this.widget = undefined;
-        }
-        this.env = undefined;
-        delete components.Follower.env;
+        afterEach(this);
     },
 });
 
 QUnit.test('base rendering not editable', async function (assert) {
     assert.expect(5);
 
-    await this.start({
-        async mockRPC(route, args) {
-            if (route === '/web/image/mail.channel/1/image_128') {
-                return;
-            }
-            return this._super(...arguments);
-        },
-    });
+    await this.start();
 
     const thread = this.env.models['mail.thread'].create({
         id: 100,
@@ -104,14 +88,7 @@ QUnit.test('base rendering not editable', async function (assert) {
 QUnit.test('base rendering editable', async function (assert) {
     assert.expect(6);
 
-    await this.start({
-        async mockRPC(route, args) {
-            if (route === 'web/image/mail.channel/1/image_128') {
-                return;
-            }
-            return this._super(...arguments);
-        },
-    });
+    await this.start();
     const thread = this.env.models['mail.thread'].create({
         id: 100,
         model: 'res.partner',
@@ -181,12 +158,6 @@ QUnit.test('click on channel follower details', async function (assert) {
 
     await this.start({
         env: { bus },
-        async mockRPC(route, args) {
-            if (route === 'web/image/mail.channel/1/image_128') {
-                return;
-            }
-            return this._super(...arguments);
-        },
     });
     const thread = this.env.models['mail.thread'].create({
         id: 100,
@@ -243,12 +214,6 @@ QUnit.test('click on partner follower details', async function (assert) {
 
     await this.start({
         env: { bus },
-        async mockRPC(route, args) {
-            if (route === 'web/image/res.partner/3/image_128') {
-                return;
-            }
-            return this._super(...arguments);
-        },
     });
     const thread = this.env.models['mail.thread'].create({
         id: 100,
@@ -261,7 +226,7 @@ QUnit.test('click on partner follower details', async function (assert) {
         isEditable: true,
         partner: [['insert', {
             email: "bla@bla.bla",
-            id: this.env.session.partner_id,
+            id: this.env.messaging.currentPartner.id,
             name: "François Perusse",
         }]],
     });
@@ -287,22 +252,20 @@ QUnit.test('click on partner follower details', async function (assert) {
 QUnit.test('click on edit follower', async function (assert) {
     assert.expect(5);
 
+    this.data['res.partner'].records.push({ id: 100, message_follower_ids: [2] });
+    this.data['mail.followers'].records.push({
+        id: 2,
+        is_active: true,
+        is_editable: true,
+        partner_id: this.data.currentPartnerId,
+        res_id: 100,
+        res_model: 'res.partner',
+    });
     await this.start({
         hasDialog: true,
         async mockRPC(route, args) {
-            if (route === 'web/image/res.partner/3/image_128') {
-                return;
-            }
             if (route.includes('/mail/read_subscription_data')) {
                 assert.step('fetch_subtypes');
-                return [{
-                    default: true,
-                    followed: true,
-                    internal: false,
-                    id: 1,
-                    name: "Dummy test",
-                    res_model: 'res.partner'
-                }];
             }
             return this._super(...arguments);
         },
@@ -311,18 +274,8 @@ QUnit.test('click on edit follower', async function (assert) {
         id: 100,
         model: 'res.partner',
     });
-    const follower = await this.env.models['mail.follower'].create({
-        followedThread: [['link', thread]],
-        id: 2,
-        isActive: true,
-        isEditable: true,
-        partner: [['insert', {
-            email: "bla@bla.bla",
-            id: this.env.session.partner_id,
-            name: "François Perusse",
-        }]],
-    });
-    await this.createFollowerComponent(follower);
+    await thread.refreshFollowers();
+    await this.createFollowerComponent(thread.followers[0]);
     assert.containsOnce(
         document.body,
         '.o_Follower',
