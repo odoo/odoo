@@ -247,6 +247,11 @@ class CustomerPortal(Controller):
             if msg == AccessDenied().args[0]:
                 msg = _('The old password you provided is incorrect, your password was not changed.')
             return {'errors': {'password': {'old': msg}}}
+
+        # update session token so the user does not get logged out (cache cleared by passwd change)
+        new_token = request.env.user._compute_session_token(request.session.sid)
+        request.session.session_token = new_token
+
         return {'success': {'password': True}}
 
     @http.route('/portal/attachment/add', type='http', auth='public', methods=['POST'], website=True)
