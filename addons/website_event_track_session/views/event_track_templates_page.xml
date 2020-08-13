@@ -100,6 +100,12 @@
                         t-options="{'widget': 'image', 'class': 'rounded-circle', 'max_width': '96'}"/>
                     <div class="px-3 d-flex flex-column">
                         <span t-field="track.partner_name" class="font-weight-bold mb-2"/>
+                        <span class="mb-1 d-flex align-items-baseline text-break" t-if="track.partner_function">
+                            <i class="fa fa-briefcase mr-2"/><span t-esc="track.partner_function"/>
+                            <t t-if="track.partner_company_name">
+                                <span>&amp;nbsp;at&amp;nbsp;</span><span t-esc="track.partner_company_name"/>
+                            </t>
+                        </span>
                         <span class="mb-1 d-flex align-items-baseline text-break" t-if="track.partner_id.website">
                             <i class="fa fa-home mr-2"/><a t-att-href="track.partner_id.website"><span t-field="track.partner_id.website"/></a>
                         </span>
@@ -183,7 +189,7 @@
 <template id="event_track_aside_other_track">
     <span t-esc="track_other.name" class="w-100"/>
     <div class="d-flex align-items-center">
-        <small class="text-muted" t-esc="track_other.partner_id.name"/>
+        <small class="text-muted" t-esc="track_other.partner_name"/>
         <div class="d-inline-block ml-auto o_wesession_track_aside_info text-truncate">
             <small t-if="track_other.is_track_live and not track_other.is_track_done"
                 class="badge badge-danger">Live</small>
