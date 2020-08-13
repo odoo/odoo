@@ -101,7 +101,7 @@ class AccountEdiFormat(models.Model):
     def _create_invoice_from_xml_tree(self, filename, tree):
         self.ensure_one()
         if self._is_facturx(filename, tree):
-            return self._import_facturx(tree, self.env['account_move'])
+            return self._import_facturx(tree, self.env['account.move'])
         return super()._create_invoice_from_xml_tree(filename, tree)
 
     def _update_invoice_from_xml_tree(self, filename, tree, invoice):
