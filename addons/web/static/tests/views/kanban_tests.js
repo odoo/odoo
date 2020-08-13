@@ -4,6 +4,7 @@ odoo.define('web.kanban_tests', function (require) {
 var AbstractField = require('web.AbstractField');
 const Domain = require('web.Domain');
 var fieldRegistry = require('web.field_registry');
+const FormRenderer = require("web.FormRenderer");
 var KanbanColumnProgressBar = require('web.KanbanColumnProgressBar');
 var kanbanExamplesRegistry = require('web.kanban_examples_registry');
 var KanbanRenderer = require('web.KanbanRenderer');
@@ -896,6 +897,42 @@ QUnit.module('Views', {
         assert.hasClass(kanban.$('.o_status').first(),'o_status_green',
             "Kanban state should be done (Green)");
         kanban.destroy();
+    });
+
+    QUnit.test('window resize should not change quick create form size', async function (assert) {
+        assert.expect(2);
+
+        testUtils.mock.patch(FormRenderer, {
+            start: function () {
+                this._super.apply(this, arguments);
+                window.addEventListener("resize", this._applyFormSizeClass.bind(this));
+            },
+
+        });
+        const kanban = await createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban on_create="quick_create">' +
+                        '<field name="bar"/>' +
+                        '<templates><t t-name="kanban-box">' +
+                        '<div><field name="foo"/></div>' +
+                    '</t></templates></kanban>',
+            groupBy: ['bar'],
+        });
+
+        // click to add an element and cancel the quick creation by pressing ESC
+        await testUtils.dom.click(kanban.el.querySelector('.o_kanban_header .o_kanban_quick_add i'));
+
+        const quickCreate = kanban.el.querySelector('.o_kanban_quick_create');
+        assert.hasClass(quickCreate.querySelector('.o_form_view'), "o_xxs_form_view");
+
+        // trigger window resize explicitly to call _applyFormSizeClass
+        window.dispatchEvent(new Event('resize'));
+        assert.hasClass(quickCreate.querySelector('.o_form_view'), 'o_xxs_form_view');
+
+        kanban.destroy();
+        testUtils.mock.unpatch(FormRenderer);
     });
 
     QUnit.test('quick create record: cancel and validate without using the buttons', async function (assert) {
