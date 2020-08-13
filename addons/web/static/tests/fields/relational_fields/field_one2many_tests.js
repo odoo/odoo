@@ -123,7 +123,6 @@ QUnit.module('fields', {}, function () {
                         display_name: "leonardo",
                         turtle_bar: true,
                         turtle_foo: "yop",
-                        turle_int: 1,
                         partner_ids: [],
                     }, {
                         id: 2,
@@ -3438,7 +3437,7 @@ QUnit.module('fields', {}, function () {
             assert.expect(1);
 
             this.data.partner.fields.p.default = [
-                [0, false, { date: '2017-10-08' }],
+                [0, false, { date: '2017-10-08', p: [] }],
             ];
 
             var form = await createView({
@@ -5776,8 +5775,8 @@ QUnit.module('fields', {}, function () {
 
                 "button_disabled_partner_4",
                 "button_warn_partner_4",
-                "button_disabled_partner_8",
-                "button_warn_partner_8"
+                "button_disabled_partner_5",
+                "button_warn_partner_5"
             ], "should have triggered theses 11 clicks event");
 
             testUtils.mock.unpatch(KanbanRecord);
@@ -6905,7 +6904,7 @@ QUnit.module('fields', {}, function () {
             assert.expect(3);
 
             this.data.partner.fields.p.default = [
-                [0, false, { foo: "coucou", int_field: 5 }],
+                [0, false, { foo: "coucou", int_field: 5, p: [] }],
             ];
 
             var form = await createView({

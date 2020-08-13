@@ -2258,8 +2258,8 @@ QUnit.module('Views', {
 
         this.data.partner.fields.p.default = [
             [6, 0, []],                  // replace with zero ids
-            [0, 0, {foo: "new foo1", product_id: 41}],   // create a new value
-            [0, 0, {foo: "new foo2", product_id: 37}],   // create a new value
+            [0, 0, {foo: "new foo1", product_id: 41, p: [] }],   // create a new value
+            [0, 0, {foo: "new foo2", product_id: 37, p: [] }],   // create a new value
         ];
 
         var nameGetCount = 0;

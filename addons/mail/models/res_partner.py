@@ -60,6 +60,7 @@ class Partner(models.Model):
         return {
             "id": self.name_get()[0][0],
             "display_name": self.name_get()[0][1],
+            "name": self.name,
             "active": self.active,
         }
 

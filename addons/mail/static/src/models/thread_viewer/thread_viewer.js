@@ -2,6 +2,7 @@ odoo.define('mail/static/src/models/thread_viewer/thread_viewer.js', function (r
 'use strict';
 
 const { registerNewModel } = require('mail/static/src/model/model_core.js');
+const { RecordDeletedError } = require('mail/static/src/model/model_errors.js');
 const { attr, many2many, many2one, one2one } = require('mail/static/src/model/model_field.js');
 
 function factory(dependencies) {
@@ -118,7 +119,12 @@ function factory(dependencies) {
             const lastMessageIsVisible = this.lastVisibleMessage &&
                 this.lastVisibleMessage === this.lastMessage;
             if (lastMessageIsVisible && this.hasComposerFocus && this.thread) {
-                this.thread.markAsSeen();
+                this.thread.markAsSeen().catch(e => {
+                    // prevent crash when executing compute during destroy
+                    if (!(e instanceof RecordDeletedError)) {
+                        throw e;
+                    }
+                });
             }
             return true;
         }

@@ -206,16 +206,7 @@ function factory(dependencies) {
                 data2.uuid = data.uuid;
             }
 
-            // relation
-            if ('direct_partner' in data) {
-                if (!data.direct_partner) {
-                    data2.correspondent = [['unlink-all']];
-                } else {
-                    data2.correspondent = [
-                        ['insert', this.env.models['mail.partner'].convertData(data.direct_partner[0])],
-                    ];
-                }
-            }
+            // relations
             if ('members' in data) {
                 if (!data.members) {
                     data2.members = [['unlink-all']];
@@ -798,6 +789,23 @@ function factory(dependencies) {
 
         /**
          * @private
+         * @returns {mail.partner}
+         */
+        _computeCorrespondent() {
+            if (this.channel_type === 'channel') {
+                return [['unlink']];
+            }
+            const correspondents = this.members.filter(partner =>
+                partner !== this.env.messaging.currentPartner
+            );
+            if (correspondents.length === 1) {
+                return [['link', correspondents[0]]];
+            }
+            return [['unlink']];
+        }
+
+        /**
+         * @private
          * @returns {string}
          */
         _computeDisplayName() {
@@ -843,16 +851,13 @@ function factory(dependencies) {
          * @returns {boolean}
          */
         _computeIsModeratedByCurrentPartner() {
-            if (this.model !== 'mail.channel') {
-                return false;
-            }
             if (!this.messaging) {
                 return false;
             }
             if (!this.messaging.currentPartner) {
                 return false;
             }
-            return this.messaging.currentPartner.moderatedChannelIds.includes(this.id);
+            return this.moderators.includes(this.env.messaging.currentPartner);
         }
 
         /**
@@ -1211,6 +1216,12 @@ function factory(dependencies) {
             isCausal: true,
         }),
         correspondent: many2one('mail.partner', {
+            compute: '_computeCorrespondent',
+            dependencies: [
+                'channel_type',
+                'members',
+                'messagingCurrentPartner',
+            ],
             inverse: 'correspondentThreads',
         }),
         correspondentNameOrDisplayName: attr({
@@ -1281,8 +1292,8 @@ function factory(dependencies) {
         isModeratedByCurrentPartner: attr({
             compute: '_computeIsModeratedByCurrentPartner',
             dependencies: [
-                'model',
                 'messagingCurrentPartner',
+                'moderators',
             ],
         }),
         /**
@@ -1376,6 +1387,12 @@ function factory(dependencies) {
         model_name: attr(),
         moderation: attr({
             default: false,
+        }),
+        /**
+         * Partners that are moderating this thread (only applies to channels).
+         */
+        moderators: many2many('mail.partner', {
+            inverse: 'moderatedChannels',
         }),
         moduleIcon: attr(),
         name: attr(),

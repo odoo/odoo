@@ -5,10 +5,11 @@ const components = {
     Chatter: require('mail/static/src/components/chatter/chatter.js'),
 };
 const {
-    afterEach: utilsAfterEach,
+    afterEach,
     afterNextRender,
-    beforeEach: utilsBeforeEach,
-    start: utilsStart,
+    beforeEach,
+    createRootComponent,
+    start,
 } = require('mail/static/src/utils/test_utils.js');
 
 QUnit.module('mail', {}, function () {
@@ -16,23 +17,18 @@ QUnit.module('components', {}, function () {
 QUnit.module('chatter', {}, function () {
 QUnit.module('chatter_tests.js', {
     beforeEach() {
-        utilsBeforeEach(this);
+        beforeEach(this);
 
         this.createChatterComponent = async ({ chatter }, otherProps) => {
-            const ChatterComponent = components.Chatter;
-            ChatterComponent.env = this.env;
-            this.component = new ChatterComponent(
-                null,
-                Object.assign({ chatterLocalId: chatter.localId }, otherProps)
-            );
-            await afterNextRender(() => this.component.mount(this.widget.el));
+            const props = Object.assign({ chatterLocalId: chatter.localId }, otherProps);
+            await createRootComponent(this, components.Chatter, {
+                props,
+                target: this.widget.el,
+            });
         };
 
         this.start = async params => {
-            if (this.widget) {
-                this.widget.destroy();
-            }
-            let { env, widget } = await utilsStart(Object.assign({}, params, {
+            const { env, widget } = await start(Object.assign({}, params, {
                 data: this.data,
             }));
             this.env = env;
@@ -40,15 +36,7 @@ QUnit.module('chatter_tests.js', {
         };
     },
     afterEach() {
-        utilsAfterEach(this);
-        if (this.component) {
-            this.component.destroy();
-        }
-        if (this.widget) {
-            this.widget.destroy();
-        }
-        delete components.Chatter.env;
-        this.env = undefined;
+        afterEach(this);
     },
 });
 
@@ -56,20 +44,12 @@ QUnit.test('base rendering when chatter has no attachment', async function (asse
     assert.expect(6);
 
     this.data['res.partner'].records.push({ id: 100 });
-    const messages = [...Array(60).keys()].map(id => {
-        return {
-            author_id: [10, "Demo User"],
-            body: `<p>Message ${id + 1}</p>`,
-            date: "2019-04-20 10:00:00",
-            id: id + 1,
-            message_type: 'comment',
+    for (let i = 0; i < 60; i++) {
+        this.data['mail.message'].records.push({
             model: 'res.partner',
-            record_name: 'General',
             res_id: 100,
-        };
-    });
-    this.data['mail.message'].records = messages;
-
+        });
+    }
     await this.start();
     const chatter = this.env.models['mail.chatter'].create({
         threadId: 100,
@@ -159,24 +139,21 @@ QUnit.test('base rendering when chatter has attachments', async function (assert
     assert.expect(3);
 
     this.data['res.partner'].records.push({ id: 100 });
-    await this.start({
-        async mockRPC(route, args) {
-            if (route.includes('ir.attachment/search_read')) {
-                return [{
-                    id: 143,
-                    filename: 'Blah.txt',
-                    mimetype: 'text/plain',
-                    name: 'Blah.txt'
-                }, {
-                    id: 144,
-                    filename: 'Blu.txt',
-                    mimetype: 'text/plain',
-                    name: 'Blu.txt'
-                }];
-            }
-            return this._super(...arguments);
+    this.data['ir.attachment'].records.push(
+        {
+            mimetype: 'text/plain',
+            name: 'Blah.txt',
+            res_id: 100,
+            res_model: 'res.partner',
+        },
+        {
+            mimetype: 'text/plain',
+            name: 'Blu.txt',
+            res_id: 100,
+            res_model: 'res.partner',
         }
-    });
+    );
+    await this.start();
     const chatter = this.env.models['mail.chatter'].create({
         threadId: 100,
         threadModel: 'res.partner',
@@ -203,24 +180,21 @@ QUnit.test('show attachment box', async function (assert) {
     assert.expect(6);
 
     this.data['res.partner'].records.push({ id: 100 });
-    await this.start({
-        async mockRPC(route, args) {
-            if (route.includes('ir.attachment/search_read')) {
-                return [{
-                    id: 143,
-                    filename: 'Blah.txt',
-                    mimetype: 'text/plain',
-                    name: 'Blah.txt'
-                }, {
-                    id: 144,
-                    filename: 'Blu.txt',
-                    mimetype: 'text/plain',
-                    name: 'Blu.txt'
-                }];
-            }
-            return this._super(...arguments);
+    this.data['ir.attachment'].records.push(
+        {
+            mimetype: 'text/plain',
+            name: 'Blah.txt',
+            res_id: 100,
+            res_model: 'res.partner',
+        },
+        {
+            mimetype: 'text/plain',
+            name: 'Blu.txt',
+            res_id: 100,
+            res_model: 'res.partner',
         }
-    });
+    );
+    await this.start();
     const chatter = this.env.models['mail.chatter'].create({
         threadId: 100,
         threadModel: 'res.partner',
@@ -262,7 +236,7 @@ QUnit.test('show attachment box', async function (assert) {
     );
 });
 
-QUnit.test('composer show/hide on log note/send message', async function (assert) {
+QUnit.test('composer show/hide on log note/send message [REQUIRE FOCUS]', async function (assert) {
     assert.expect(10);
 
     this.data['res.partner'].records.push({ id: 100 });
@@ -349,9 +323,6 @@ QUnit.test('should not display user notification messages in chatter', async fun
 
     this.data['res.partner'].records.push({ id: 100 });
     this.data['mail.message'].records = [{
-        author_id: [7, "Demo"],
-        body: "<p>User notification</p>",
-        date: "2019-04-20 11:00:00",
         id: 102,
         message_type: 'user_notification',
         model: 'res.partner',

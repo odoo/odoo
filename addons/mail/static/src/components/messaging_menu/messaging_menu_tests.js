@@ -2,10 +2,10 @@ odoo.define('mail/static/src/components/messaging_menu/messaging_menu_tests.js',
 'use strict';
 
 const {
-    afterEach: utilsAfterEach,
+    afterEach,
     afterNextRender,
-    beforeEach: utilsBeforeEach,
-    start: utilsStart,
+    beforeEach,
+    start,
 } = require('mail/static/src/utils/test_utils.js');
 
 const { makeTestPromise } = require('web.test_utils');
@@ -15,13 +15,10 @@ QUnit.module('components', {}, function () {
 QUnit.module('messaging_menu', {}, function () {
 QUnit.module('messaging_menu_tests.js', {
     beforeEach() {
-        utilsBeforeEach(this);
+        beforeEach(this);
 
         this.start = async params => {
-            if (this.widget) {
-                this.widget.destroy();
-            }
-            let { discussWidget, env, widget } = await utilsStart(Object.assign({}, params, {
+            let { discussWidget, env, widget } = await start(Object.assign({}, params, {
                 data: this.data,
                 hasMessagingMenu: true,
             }));
@@ -31,10 +28,7 @@ QUnit.module('messaging_menu_tests.js', {
         };
     },
     afterEach() {
-        utilsAfterEach(this);
-        if (this.widget) {
-            this.widget.destroy();
-        }
+        afterEach(this);
     },
 });
 
@@ -98,14 +92,7 @@ QUnit.test('messaging becomes initialized', async function (assert) {
 QUnit.test('basic rendering', async function (assert) {
     assert.expect(21);
 
-    await this.start({
-        async mockRPC(route, args) {
-            if (args.method === 'channel_fetch_preview') {
-                return [];
-            }
-            return this._super(...arguments);
-        },
-    });
+    await this.start();
     assert.strictEqual(
         document.querySelectorAll('.o_MessagingMenu').length,
         1,
@@ -229,21 +216,17 @@ QUnit.test('basic rendering', async function (assert) {
 QUnit.test('counter is taking into account failure notification', async function (assert) {
     assert.expect(2);
 
-    this.data.initMessaging.mail_failures = [{
-        date: moment.utc().format("YYYY-MM-DD HH:mm:ss"),
-        id: 11,
-        message_type: 'email',
-        model: 'mail.channel',
-        notifications: [{
-            failure_type: 'SMTP',
-            id: 21,
-            notification_status: 'exception',
-            notification_type: 'email',
-            partner_id: [41, "Someone"],
-        }],
-        res_id: 31,
-        res_model_name: "Channel",
-    }];
+    // message that is expected to have a failure
+    this.data['mail.message'].records.push({
+        id: 11, // random unique id, will be used to link failure to message
+        model: 'mail.channel', // expected value to link message to channel
+        res_id: 31, // id of a random channel
+    });
+    // failure that is expected to be used in the test
+    this.data['mail.notification'].records.push({
+        mail_message_id: 11, // id of the related message
+        notification_status: 'exception', // necessary value to have a failure
+    });
     await this.start();
 
     assert.containsOnce(
@@ -261,14 +244,7 @@ QUnit.test('counter is taking into account failure notification', async function
 QUnit.test('switch tab', async function (assert) {
     assert.expect(15);
 
-    await this.start({
-        async mockRPC(route, args) {
-            if (args.method === 'channel_fetch_preview') {
-                return [];
-            }
-            return this._super(...arguments);
-        },
-    });
+    await this.start();
 
     await afterNextRender(() => document.querySelector(`.o_MessagingMenu_toggler`).click());
     assert.strictEqual(
@@ -377,12 +353,6 @@ QUnit.test('new message', async function (assert) {
 
     await this.start({
         hasChatWindow: true,
-        async mockRPC(route, args) {
-            if (args.method === 'channel_fetch_preview') {
-                return [];
-            }
-            return this._super(...arguments);
-        },
     });
 
     await afterNextRender(() =>
@@ -413,12 +383,6 @@ QUnit.test('no new message when discuss is open', async function (assert) {
     await this.start({
         autoOpenDiscuss: true,
         hasDiscuss: true,
-        async mockRPC(route, args) {
-            if (args.method === 'channel_fetch_preview') {
-                return [];
-            }
-            return this._super(...arguments);
-        },
     });
 
     await afterNextRender(() =>
@@ -450,36 +414,24 @@ QUnit.test('no new message when discuss is open', async function (assert) {
 QUnit.test('channel preview: basic rendering', async function (assert) {
     assert.expect(9);
 
-    Object.assign(this.data.initMessaging, {
-        channel_slots: {
-            channel_channel: [{
-                channel_type: "channel",
-                id: 20,
-                is_pinned: true,
-                name: "General",
-            }],
-        },
+    this.data['res.partner'].records.push({
+        id: 7, // random unique id, to link message author
+        name: "Demo", // random name, will be asserted in the test
     });
-    await this.start({
-        async mockRPC(route, args) {
-            if (args.method === 'channel_fetch_preview') {
-                return [{
-                    id: 20,
-                    last_message: {
-                        author_id: [7, "Demo"],
-                        body: "<p>test</p>",
-                        channel_ids: [20],
-                        id: 100,
-                        message_type: 'comment',
-                        model: 'mail.channel',
-                        record_name: "General",
-                        res_id: 20,
-                    },
-                }];
-            }
-            return this._super(...arguments);
-        },
+    // channel that is expected to be found in the test
+    this.data['mail.channel'].records.push({
+        id: 20, // random unique id, will be used to link message to channel
+        name: "General", // random name, will be asserted in the test
     });
+    // message that is expected to be displayed in the test
+    this.data['mail.message'].records.push({
+        author_id: 7, // not current partner, will be asserted in the test
+        body: "<p>test</p>", // random body, will be asserted in the test
+        channel_ids: [20], // id of related channel
+        model: 'mail.channel', // necessary to link message to channel
+        res_id: 20, // id of related channel
+    });
+    await this.start();
 
     await afterNextRender(() => document.querySelector(`.o_MessagingMenu_toggler`).click());
     assert.strictEqual(
@@ -561,55 +513,24 @@ QUnit.test('channel preview: basic rendering', async function (assert) {
 QUnit.test('filtered previews', async function (assert) {
     assert.expect(12);
 
-    Object.assign(this.data.initMessaging, {
-        channel_slots: {
-            channel_channel: [{
-                channel_type: "channel",
-                id: 20,
-                is_pinned: true,
-                name: "General",
-            }],
-            channel_direct_message: [{
-                channel_type: "chat",
-                direct_partner: [{
-                    id: 7,
-                    name: "Demo",
-                }],
-                id: 10,
-                is_pinned: true,
-            }],
+    // chat and channel expected to be found in the menu
+    this.data['mail.channel'].records.push(
+        { channel_type: "chat", id: 10 },
+        { id: 20 },
+    );
+    this.data['mail.message'].records.push(
+        {
+            channel_ids: [10], // id of related channel
+            model: 'mail.channel', // to link message to channel
+            res_id: 10, // id of related channel
         },
-    });
-    await this.start({
-        async mockRPC(route, args) {
-            if (args.method === 'channel_fetch_preview') {
-                return [{
-                    id: 20,
-                    last_message: {
-                        author_id: [7, "Demo"],
-                        body: "<p>test</p>",
-                        channel_ids: [20],
-                        id: 100,
-                        message_type: 'comment',
-                        model: 'mail.channel',
-                        res_id: 20,
-                    },
-                }, {
-                    id: 10,
-                    last_message: {
-                        author_id: [7, "Demo"],
-                        body: "<p>test2</p>",
-                        channel_ids: [10],
-                        id: 101,
-                        message_type: 'comment',
-                        model: 'mail.channel',
-                        res_id: 10,
-                    },
-                }];
-            }
-            return this._super(...arguments);
+        {
+            channel_ids: [20], // id of related channel
+            model: 'mail.channel', // to link message to channel
+            res_id: 20, // id of related channel
         },
-    });
+    );
+    await this.start();
 
     await afterNextRender(() =>
         document.querySelector(`.o_MessagingMenu_toggler`).click()
@@ -758,24 +679,10 @@ QUnit.test('filtered previews', async function (assert) {
 QUnit.test('open chat window from preview', async function (assert) {
     assert.expect(1);
 
-    Object.assign(this.data.initMessaging, {
-        channel_slots: {
-            channel_channel: [{
-                channel_type: "channel",
-                id: 20,
-                is_pinned: true,
-                name: "General",
-            }],
-        },
-    });
+    // channel expected to be found in the menu, only its existence matters, data are irrelevant
+    this.data['mail.channel'].records.push({});
     await this.start({
         hasChatWindow: true,
-        async mockRPC(route, args) {
-            if (args.method === 'channel_fetch_preview') {
-                return [];
-            }
-            return this._super(...arguments);
-        },
     });
 
     await afterNextRender(() =>
@@ -794,29 +701,11 @@ QUnit.test('open chat window from preview', async function (assert) {
 QUnit.test('no code injection in message body preview', async function (assert) {
     assert.expect(5);
 
-    Object.assign(this.data.initMessaging, {
-        channel_slots: {
-            channel_channel: [{
-                channel_type: 'channel',
-                id: 1,
-                is_pinned: true,
-                name: "General",
-            }],
-        },
-    });
-    this.data['mail.channel'].records = [{
-        channel_message_ids: [1],
-        channel_type: 'channel',
-        id: 1,
-        is_pinned: true,
-        name: "General",
-    }];
-    this.data['mail.message'].records = [{
-        author_id: [1, "Georges"],
+    this.data['mail.channel'].records.push({ id: 11 });
+    this.data['mail.message'].records.push({
         body: "<p><em>&shoulnotberaised</em><script>throw new Error('CodeInjectionError');</script></p>",
-        channel_ids: [1],
-        id: 1,
-    }];
+        channel_ids: [11],
+    });
     await this.start();
 
     await afterNextRender(() => {
@@ -840,7 +729,7 @@ QUnit.test('no code injection in message body preview', async function (assert) 
     assert.strictEqual(
         document.querySelector('.o_ThreadPreview_inlineText')
             .textContent.replace(/\s/g, ""),
-        "Georges:&shoulnotberaisedthrownewError('CodeInjectionError');",
+        "You:&shoulnotberaisedthrownewError('CodeInjectionError');",
         "should display correct uninjected last message inline content"
     );
     assert.containsNone(
@@ -853,29 +742,11 @@ QUnit.test('no code injection in message body preview', async function (assert) 
 QUnit.test('no code injection in message body preview from sanitized message', async function (assert) {
     assert.expect(5);
 
-    Object.assign(this.data.initMessaging, {
-        channel_slots: {
-            channel_channel: [{
-                channel_type: 'channel',
-                id: 1,
-                is_pinned: true,
-                name: "General",
-            }],
-        },
-    });
-    this.data['mail.channel'].records = [{
-        channel_message_ids: [1],
-        channel_type: 'channel',
-        id: 1,
-        is_pinned: true,
-        name: "General",
-    }];
-    this.data['mail.message'].records = [{
-        author_id: [1, "Georges"],
+    this.data['mail.channel'].records.push({ id: 11 });
+    this.data['mail.message'].records.push({
         body: "<p>&lt;em&gt;&shoulnotberaised&lt;/em&gt;&lt;script&gt;throw new Error('CodeInjectionError');&lt;/script&gt;</p>",
-        channel_ids: [1],
-        id: 1,
-    }];
+        channel_ids: [11],
+    });
     await this.start();
 
     await afterNextRender(() => {
@@ -899,7 +770,7 @@ QUnit.test('no code injection in message body preview from sanitized message', a
     assert.strictEqual(
         document.querySelector('.o_ThreadPreview_inlineText')
             .textContent.replace(/\s/g, ""),
-        "Georges:<em>&shoulnotberaised</em><script>thrownewError('CodeInjectionError');</script>",
+        "You:<em>&shoulnotberaised</em><script>thrownewError('CodeInjectionError');</script>",
         "should display correct uninjected last message inline content"
     );
     assert.containsNone(
@@ -912,29 +783,11 @@ QUnit.test('no code injection in message body preview from sanitized message', a
 QUnit.test('<br/> tags in message body preview are transformed in spaces', async function (assert) {
     assert.expect(4);
 
-    Object.assign(this.data.initMessaging, {
-        channel_slots: {
-            channel_channel: [{
-                channel_type: 'channel',
-                id: 1,
-                is_pinned: true,
-                name: "General",
-            }],
-        },
-    });
-    this.data['mail.channel'].records = [{
-        channel_message_ids: [1],
-        channel_type: 'channel',
-        id: 1,
-        is_pinned: true,
-        name: "general",
-    }];
-    this.data['mail.message'].records = [{
-        author_id: [1, "Georges"],
+    this.data['mail.channel'].records.push({ id: 11 });
+    this.data['mail.message'].records.push({
         body: "<p>a<br/>b<br>c<br   />d<br     ></p>",
-        channel_ids: [1],
-        id: 1,
-    }];
+        channel_ids: [11],
+    });
     await this.start();
 
     await afterNextRender(() => {
@@ -957,7 +810,7 @@ QUnit.test('<br/> tags in message body preview are transformed in spaces', async
     );
     assert.strictEqual(
         document.querySelector('.o_ThreadPreview_inlineText').textContent,
-        "Georges: a b c d",
+        "You: a b c d",
         "should display correct last message inline content with brs replaced by spaces"
     );
 });

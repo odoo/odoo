@@ -4,30 +4,24 @@ odoo.define('mail/static/src/components/discuss/tests/discuss_tests.js', functio
 const BusService = require('bus.BusService');
 
 const {
-    afterEach: utilsAfterEach,
+    afterEach,
     afterNextRender,
-    beforeEach: utilsBeforeEach,
-    start: utilsStart,
+    beforeEach,
+    start,
 } = require('mail/static/src/utils/test_utils.js');
 
 const Bus = require('web.Bus');
-const {
-    makeTestPromise,
-    file: {
-        createFile,
-        inputFiles,
-    },
-} = require('web.test_utils');
+const { makeTestPromise, file: { createFile, inputFiles } } = require('web.test_utils');
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
 QUnit.module('discuss', {}, function () {
 QUnit.module('discuss_tests.js', {
     beforeEach() {
-        utilsBeforeEach(this);
+        beforeEach(this);
 
         this.start = async params => {
-            let { env, widget } = await utilsStart(Object.assign({}, params, {
+            const { env, widget } = await start(Object.assign({}, params, {
                 autoOpenDiscuss: true,
                 data: this.data,
                 hasDiscuss: true,
@@ -37,10 +31,7 @@ QUnit.module('discuss_tests.js', {
         };
     },
     afterEach() {
-        if (this.widget) {
-            this.widget.destroy();
-        }
-        utilsAfterEach(this);
+        afterEach(this);
     },
 });
 
@@ -49,11 +40,11 @@ QUnit.test('messaging not initialized', async function (assert) {
 
     await this.start({
         async mockRPC(route) {
+            const _super = this._super.bind(this, ...arguments); // limitation of class.js
             if (route === '/mail/init_messaging') {
-                // simulate messaging never initialized
-                return new Promise(resolve => {});
+                await makeTestPromise(); // simulate messaging never initialized
             }
-            return this._super(...arguments);
+            return _super();
         },
         waitUntilMessagingInitialized: false,
     });
@@ -366,9 +357,8 @@ QUnit.test('sidebar: change item', async function (assert) {
 QUnit.test('sidebar: inbox with counter', async function (assert) {
     assert.expect(2);
 
-    Object.assign(this.data.initMessaging, {
-        needaction_inbox_counter: 100,
-    });
+    // notification expected to be counted at init_messaging
+    this.data['mail.notification'].records.push({ res_partner_id: this.data.currentPartnerId });
     await this.start();
     assert.strictEqual(
         document.querySelectorAll(`
@@ -387,7 +377,7 @@ QUnit.test('sidebar: inbox with counter', async function (assert) {
             }"]
             .o_DiscussSidebarItem_counter
         `).textContent,
-        "100",
+        "1",
         "should have counter value"
     );
 });
@@ -426,16 +416,9 @@ QUnit.test('sidebar: add channel', async function (assert) {
 QUnit.test('sidebar: basic channel rendering', async function (assert) {
     assert.expect(14);
 
-    Object.assign(this.data.initMessaging, {
-        channel_slots: {
-            channel_channel: [{
-                channel_type: "channel",
-                id: 20,
-                is_pinned: true,
-                name: "General",
-            }],
-        },
-    });
+    // channel expected to be found in the sidebar,
+    // with a random unique id and name that  will be referenced in the test
+    this.data['mail.channel'].records.push({ id: 20, name: "General" });
     await this.start();
     assert.strictEqual(
         document.querySelectorAll(`.o_DiscussSidebar_groupChannel .o_DiscussSidebar_item`).length,
@@ -523,16 +506,19 @@ QUnit.test('sidebar: basic channel rendering', async function (assert) {
 QUnit.test('sidebar: channel rendering with needaction counter', async function (assert) {
     assert.expect(5);
 
-    Object.assign(this.data.initMessaging, {
-        channel_slots: {
-            channel_channel: [{
-                channel_type: "channel",
-                id: 20,
-                is_pinned: true,
-                name: "General",
-                message_needaction_counter: 10,
-            }],
-        },
+    // channel expected to be found in the sidebar
+    // with a random unique id that will be used to link message
+    this.data['mail.channel'].records.push({ id: 20 });
+    // expected needaction message
+    this.data['mail.message'].records.push({
+        id: 100, // random unique id, useful to link notification
+        model: 'mail.channel', // value to link message to channel
+        res_id: 20, // id of related channel
+    });
+    // expected needaction notification
+    this.data['mail.notification'].records.push({
+        mail_message_id: 100, // id of related message
+        res_partner_id: this.data.currentPartnerId, // must be for current partner
     });
     await this.start();
     const channel = document.querySelector(`.o_DiscussSidebar_groupChannel .o_DiscussSidebar_item`);
@@ -543,7 +529,7 @@ QUnit.test('sidebar: channel rendering with needaction counter', async function 
     );
     assert.strictEqual(
         channel.querySelector(`:scope .o_DiscussSidebarItem_counter`).textContent,
-        "10",
+        "1",
         "should have counter value"
     );
     assert.strictEqual(
@@ -566,17 +552,8 @@ QUnit.test('sidebar: channel rendering with needaction counter', async function 
 QUnit.test('sidebar: mailing channel', async function (assert) {
     assert.expect(1);
 
-    Object.assign(this.data.initMessaging, {
-        channel_slots: {
-            channel_channel: [{
-                channel_type: "channel",
-                id: 20,
-                is_pinned: true,
-                mass_mailing: true,
-                name: "General",
-            }],
-        },
-    });
+    // channel that is expected to be in the sidebar, with proper mass_mailing value
+    this.data['mail.channel'].records.push({ mass_mailing: true });
     await this.start();
     assert.containsOnce(
         document.querySelector(`.o_DiscussSidebar_groupChannel .o_DiscussSidebar_item`),
@@ -588,24 +565,12 @@ QUnit.test('sidebar: mailing channel', async function (assert) {
 QUnit.test('sidebar: public/private channel rendering', async function (assert) {
     assert.expect(5);
 
-    Object.assign(this.data.initMessaging, {
-        channel_slots: {
-            channel_channel: [{
-                channel_type: "channel",
-                id: 100,
-                is_pinned: true,
-                name: "channel1",
-                public: 'public',
-            }],
-            channel_private_group: [{
-                channel_type: "channel",
-                id: 101,
-                is_pinned: true,
-                name: "channel2",
-                public: 'private',
-            }],
-        },
-    });
+    // channels that are expected to be found in the sidebar (one public, one private)
+    // with random unique id and name that will be referenced in the test
+    this.data['mail.channel'].records.push(
+        { id: 100, name: "channel1", public: 'public', },
+        { id: 101, name: "channel2", public: 'private' }
+    );
     await this.start();
     assert.strictEqual(
         document.querySelectorAll(`.o_DiscussSidebar_groupChannel .o_DiscussSidebar_item`).length,
@@ -671,18 +636,15 @@ QUnit.test('sidebar: public/private channel rendering', async function (assert) 
 QUnit.test('sidebar: basic chat rendering', async function (assert) {
     assert.expect(11);
 
-    Object.assign(this.data.initMessaging, {
-        channel_slots: {
-            channel_direct_message: [{
-                channel_type: "chat",
-                direct_partner: [{
-                    id: 7,
-                    name: "Demo",
-                }],
-                id: 10,
-                is_pinned: true,
-            }],
-        },
+    // expected correspondent, with a random unique id that will be used to link
+    // partner to chat and a random name that will be asserted in the test
+    this.data['res.partner'].records.push({ id: 17, name: "Demo" });
+    // chat expected to be found in the sidebar
+    this.data['mail.channel'].records.push({
+        channel_type: 'chat', // testing a chat is the goal of the test
+        id: 10, // random unique id, will be referenced in the test
+        members: [this.data.currentPartnerId, 17], // expected partners
+        public: 'private', // expected value for testing a chat
     });
     await this.start();
     assert.strictEqual(
@@ -697,7 +659,7 @@ QUnit.test('sidebar: basic chat rendering', async function (assert) {
             thread.id === 10 &&
             thread.model === 'mail.channel'
         ).localId,
-        "should have chat with Id 20"
+        "should have chat with Id 10"
     );
     assert.strictEqual(
         chat.querySelectorAll(`:scope .o_DiscussSidebarItem_activeIndicator`).length,
@@ -749,19 +711,12 @@ QUnit.test('sidebar: basic chat rendering', async function (assert) {
 QUnit.test('sidebar: chat rendering with unread counter', async function (assert) {
     assert.expect(5);
 
-    Object.assign(this.data.initMessaging, {
-        channel_slots: {
-            channel_direct_message: [{
-                channel_type: "chat",
-                direct_partner: [{
-                    id: 7,
-                    name: "Demo",
-                }],
-                id: 10,
-                is_pinned: true,
-                message_unread_counter: 100,
-            }],
-        },
+    // chat expected to be found in the sidebar
+    this.data['mail.channel'].records.push({
+        channel_type: 'chat', // testing a chat is the goal of the test
+        id: 10, // random unique id, will be referenced in the test
+        message_unread_counter: 100,
+        public: 'private', // expected value for testing a chat
     });
     await this.start();
     const chat = document.querySelector(`.o_DiscussSidebar_groupChat .o_DiscussSidebar_item`);
@@ -795,38 +750,34 @@ QUnit.test('sidebar: chat rendering with unread counter', async function (assert
 QUnit.test('sidebar: chat im_status rendering', async function (assert) {
     assert.expect(7);
 
-    Object.assign(this.data.initMessaging, {
-        channel_slots: {
-            channel_direct_message: [{
-                channel_type: "chat",
-                direct_partner: [{
-                    id: 101,
-                    im_status: 'offline',
-                    name: "Partner1",
-                }],
-                id: 11,
-                is_pinned: true,
-            }, {
-                channel_type: "chat",
-                direct_partner: [{
-                    id: 102,
-                    im_status: 'online',
-                    name: "Partner2",
-                }],
-                id: 12,
-                is_pinned: true,
-            }, {
-                channel_type: "chat",
-                direct_partner: [{
-                    id: 103,
-                    im_status: 'away',
-                    name: "Partner3",
-                }],
-                id: 13,
-                is_pinned: true,
-            }],
+    // expected correspondent, with a random unique id that will be used to link
+    // partner to chat, and various im_status values to assert
+    this.data['res.partner'].records.push(
+        { id: 101, im_status: 'offline', name: "Partner1" },
+        { id: 102, im_status: 'online', name: "Partner2" },
+        { id: 103, im_status: 'away', name: "Partner3" }
+    );
+    // chats expected to be found in the sidebar
+    this.data['mail.channel'].records.push(
+        {
+            channel_type: 'chat', // testing a chat is the goal of the test
+            id: 11, // random unique id, will be referenced in the test
+            members: [this.data.currentPartnerId, 101], // expected partners
+            public: 'private', // expected value for testing a chat
         },
-    });
+        {
+            channel_type: 'chat', // testing a chat is the goal of the test
+            id: 12, // random unique id, will be referenced in the test
+            members: [this.data.currentPartnerId, 102], // expected partners
+            public: 'private', // expected value for testing a chat
+        },
+        {
+            channel_type: 'chat', // testing a chat is the goal of the test
+            id: 13, // random unique id, will be referenced in the test
+            members: [this.data.currentPartnerId, 103], // expected partners
+            public: 'private', // expected value for testing a chat
+        }
+    );
     await this.start();
     assert.strictEqual(
         document.querySelectorAll(`.o_DiscussSidebar_groupChat .o_DiscussSidebar_item`).length,
@@ -919,19 +870,15 @@ QUnit.test('sidebar: chat im_status rendering', async function (assert) {
 QUnit.test('sidebar: chat custom name', async function (assert) {
     assert.expect(1);
 
-    Object.assign(this.data.initMessaging, {
-        channel_slots: {
-            channel_direct_message: [{
-                channel_type: "chat",
-                custom_channel_name: "Marc",
-                direct_partner: [{
-                    id: 7,
-                    name: "Marc Demo",
-                }],
-                id: 10,
-                is_pinned: true,
-            }],
-        },
+    // expected correspondent, with a random unique id that will be used to link
+    // partner to chat, and a random name not used in the scope of this test but set for consistency
+    this.data['res.partner'].records.push({ id: 101, name: "Marc Demo" });
+    // chat expected to be found in the sidebar
+    this.data['mail.channel'].records.push({
+        channel_type: 'chat', // testing a chat is the goal of the test
+        custom_channel_name: "Marc", // testing a custom name is the goal of the test
+        members: [this.data.currentPartnerId, 101], // expected partners
+        public: 'private', // expected value for testing a chat
     });
     await this.start();
     const chat = document.querySelector(`.o_DiscussSidebar_groupChat .o_DiscussSidebar_item`);
@@ -945,28 +892,17 @@ QUnit.test('sidebar: chat custom name', async function (assert) {
 QUnit.test('sidebar: rename chat', async function (assert) {
     assert.expect(8);
 
-    Object.assign(this.data.initMessaging, {
-        channel_slots: {
-            channel_direct_message: [{
-                custom_channel_name: "Marc",
-                channel_type: "chat",
-                direct_partner: [{
-                    id: 7,
-                    name: "Marc Demo",
-                }],
-                id: 10,
-                is_pinned: true,
-            }],
-        },
+    // expected correspondent, with a random unique id that will be used to link
+    // partner to chat, and a random name not used in the scope of this test but set for consistency
+    this.data['res.partner'].records.push({ id: 101, name: "Marc Demo" });
+    // chat expected to be found in the sidebar
+    this.data['mail.channel'].records.push({
+        channel_type: 'chat', // testing a chat is the goal of the test
+        custom_channel_name: "Marc", // testing a custom name is the goal of the test
+        members: [this.data.currentPartnerId, 101], // expected partners
+        public: 'private', // expected value for testing a chat
     });
-    await this.start({
-        async mockRPC(route, args) {
-            if (args.method === 'channel_set_custom_name') {
-                return;
-            }
-            return this._super(...arguments);
-        },
-    });
+    await this.start();
     const chat = document.querySelector(`.o_DiscussSidebar_groupChat .o_DiscussSidebar_item`);
     assert.strictEqual(
         chat.querySelector(`:scope .o_DiscussSidebarItem_name`).textContent,
@@ -1020,16 +956,9 @@ QUnit.test('sidebar: rename chat', async function (assert) {
 QUnit.test('default thread rendering', async function (assert) {
     assert.expect(16);
 
-    Object.assign(this.data.initMessaging, {
-        channel_slots: {
-            channel_channel: [{
-                channel_type: "channel",
-                id: 20,
-                is_pinned: true,
-                name: "General",
-            }],
-        },
-    });
+    // channel expected to be found in the sidebar,
+    // with a random unique id that will be referenced in the test
+    this.data['mail.channel'].records.push({ id: 20 });
     await this.start();
     assert.strictEqual(
         document.querySelectorAll(`
@@ -1068,7 +997,7 @@ QUnit.test('default thread rendering', async function (assert) {
             }"]
         `).length,
         1,
-        "should have 'general' channel in the sidebar"
+        "should have channel 20 in the sidebar"
     );
     assert.ok(
         document.querySelector(`
@@ -1167,7 +1096,7 @@ QUnit.test('default thread rendering', async function (assert) {
                 ).localId
             }"]
         `).classList.contains('o-active'),
-        "channel 'general' should be active thread"
+        "channel 20 should be active thread"
     );
     assert.strictEqual(
         document.querySelectorAll(`
@@ -1258,15 +1187,14 @@ QUnit.test('auto-select thread in discuss context', async function (assert) {
 QUnit.test('load single message from channel initially', async function (assert) {
     assert.expect(8);
 
-    Object.assign(this.data.initMessaging, {
-        channel_slots: {
-            channel_channel: [{
-                channel_type: "channel",
-                id: 20,
-                is_pinned: true,
-                name: "General",
-            }],
-        },
+    // channel expected to be rendered, with a random unique id that will be referenced in the test
+    this.data['mail.channel'].records.push({ id: 20 });
+    this.data['mail.message'].records.push({
+        channel_ids: [20],
+        date: "2019-04-20 10:00:00",
+        id: 100,
+        model: 'mail.channel',
+        res_id: 20,
     });
     await this.start({
         discuss: {
@@ -1291,17 +1219,6 @@ QUnit.test('load single message from channel initially', async function (assert)
                     [["channel_ids", "in", [20]]],
                     "should fetch messages from channel"
                 );
-                return [{
-                    author_id: [11, "Demo"],
-                    body: "<p>body</p>",
-                    channel_ids: [20],
-                    date: "2019-04-20 10:00:00",
-                    id: 100,
-                    message_type: 'comment',
-                    model: 'mail.channel',
-                    record_name: 'General',
-                    res_id: 20,
-                }];
             }
             return this._super(...arguments);
         },
@@ -1342,37 +1259,25 @@ QUnit.test('basic rendering of message', async function (assert) {
     // AKU TODO: should be in message-only tests
     assert.expect(13);
 
-    Object.assign(this.data.initMessaging, {
-        channel_slots: {
-            channel_channel: [{
-                channel_type: "channel",
-                id: 20,
-                is_pinned: true,
-                name: "General",
-            }],
-        },
+    // channel expected to be rendered, with a random unique id that will be referenced in the test
+    this.data['mail.channel'].records.push({ id: 20 });
+    // partner to be set as author, with a random unique id that will be used to
+    // link message and a random name that will be asserted in the test
+    this.data['res.partner'].records.push({ id: 11, name: "Demo" });
+    this.data['mail.message'].records.push({
+        author_id: 11,
+        body: "<p>body</p>",
+        channel_ids: [20],
+        date: "2019-04-20 10:00:00",
+        id: 100,
+        model: 'mail.channel',
+        res_id: 20,
     });
     await this.start({
         discuss: {
             params: {
                 default_active_id: 'mail.channel_20',
             },
-        },
-        async mockRPC(route, args) {
-            if (args.method === 'message_fetch') {
-                return [{
-                    author_id: [11, "Demo"],
-                    body: "<p>body</p>",
-                    channel_ids: [20],
-                    date: "2019-04-20 10:00:00",
-                    id: 100,
-                    message_type: 'comment',
-                    model: 'mail.channel',
-                    record_name: 'General',
-                    res_id: 20,
-                }];
-            }
-            return this._super(...arguments);
         },
     });
     const message = document.querySelector(`
@@ -1456,47 +1361,37 @@ QUnit.test('basic rendering of squashed message', async function (assert) {
     // AKU TODO: should be message and/or message list-only tests
     assert.expect(12);
 
-    Object.assign(this.data.initMessaging, {
-        channel_slots: {
-            channel_channel: [{
-                channel_type: "channel",
-                id: 20,
-                is_pinned: true,
-                name: "General",
-            }],
+    // channel expected to be rendered, with a random unique id that will be referenced in the test
+    this.data['mail.channel'].records.push({ id: 20 });
+    // partner to be set as author, with a random unique id that will be used to link message
+    this.data['res.partner'].records.push({ id: 11 });
+    this.data['mail.message'].records.push(
+        {
+            author_id: 11, // must be same author as other message
+            body: "<p>body1</p>", // random body, set for consistency
+            channel_ids: [20], // to link message to channel
+            date: "2019-04-20 10:00:00", // date must be within 1 min from other message
+            id: 100, // random unique id, will be referenced in the test
+            message_type: 'comment', // must be a squash-able type-
+            model: 'mail.channel', // to link message to channel
+            res_id: 20, // id of related channel
         },
-    });
+        {
+            author_id: 11, // must be same author as other message
+            body: "<p>body2</p>", // random body, will be asserted in the test
+            channel_ids: [20], // to link message to channel
+            date: "2019-04-20 10:00:30", // date must be within 1 min from other message
+            id: 101, // random unique id, will be referenced in the test
+            message_type: 'comment', // must be a squash-able type
+            model: 'mail.channel', // to link message to channel
+            res_id: 20, // id of related channel
+        }
+    );
     await this.start({
         discuss: {
             params: {
                 default_active_id: 'mail.channel_20',
             },
-        },
-        async mockRPC(route, args) {
-            if (args.method === 'message_fetch') {
-                return [{
-                    author_id: [11, "Demo"],
-                    body: "<p>body1</p>",
-                    channel_ids: [20],
-                    date: "2019-04-20 10:00:00",
-                    id: 100,
-                    message_type: 'comment',
-                    model: 'mail.channel',
-                    record_name: 'General',
-                    res_id: 20,
-                }, {
-                    author_id: [11, "Demo"],
-                    body: "<p>body2</p>",
-                    channel_ids: [20],
-                    date: "2019-04-20 10:00:30",
-                    id: 101,
-                    message_type: 'comment',
-                    model: 'mail.channel',
-                    record_name: 'General',
-                    res_id: 20,
-                }];
-            }
-            return this._super(...arguments);
         },
     });
     assert.strictEqual(
@@ -1576,39 +1471,35 @@ QUnit.test('basic rendering of squashed message', async function (assert) {
 QUnit.test('inbox messages are never squashed', async function (assert) {
     assert.expect(3);
 
-    await this.start({
-        async mockRPC(route, args) {
-            if (args.method === 'message_fetch') {
-                // fetching messages from inbox
-                return [{
-                    author_id: [11, "Demo"],
-                    body: "<p>body1</p>",
-                    channel_ids: [20],
-                    date: "2019-04-20 10:00:00",
-                    id: 100,
-                    message_type: 'comment',
-                    model: 'mail.channel',
-                    needaction: true,
-                    needaction_partner_ids: [3],
-                    record_name: 'General',
-                    res_id: 20,
-                }, {
-                    author_id: [11, "Demo"],
-                    body: "<p>body2</p>",
-                    channel_ids: [20],
-                    date: "2019-04-20 10:00:30",
-                    id: 101,
-                    message_type: 'comment',
-                    model: 'mail.channel',
-                    needaction: true,
-                    needaction_partner_ids: [3],
-                    record_name: 'General',
-                    res_id: 20,
-                }];
-            }
-            return this._super(...arguments);
+    // partner to be set as author, with a random unique id that will be used to link message
+    this.data['res.partner'].records.push({ id: 11 });
+    this.data['mail.message'].records.push(
+        {
+            author_id: 11, // must be same author as other message
+            body: "<p>body1</p>", // random body, set for consistency
+            channel_ids: [20], // to link message to channel
+            date: "2019-04-20 10:00:00", // date must be within 1 min from other message
+            id: 100, // random unique id, will be referenced in the test
+            message_type: 'comment', // must be a squash-able type-
+            model: 'mail.channel', // to link message to channel
+            needaction: true, // necessary for message_fetch domain
+            needaction_partner_ids: [this.data.currentPartnerId], // for consistency
+            res_id: 20, // id of related channel
         },
-    });
+        {
+            author_id: 11, // must be same author as other message
+            body: "<p>body2</p>", // random body, will be asserted in the test
+            channel_ids: [20], // to link message to channel
+            date: "2019-04-20 10:00:30", // date must be within 1 min from other message
+            id: 101, // random unique id, will be referenced in the test
+            message_type: 'comment', // must be a squash-able type
+            model: 'mail.channel', // to link message to channel
+            needaction: true, // necessary for message_fetch domain
+            needaction_partner_ids: [this.data.currentPartnerId], // for consistency
+            res_id: 20, // id of related channel
+        }
+    );
+    await this.start();
     assert.strictEqual(
         document.querySelectorAll(`
             .o_Discuss_thread .o_ThreadViewer_messageList .o_MessageList_message
@@ -1644,16 +1535,18 @@ QUnit.test('load all messages from channel initially, less than fetch limit (29 
     // AKU TODO: thread specific test
     assert.expect(5);
 
-    Object.assign(this.data.initMessaging, {
-        channel_slots: {
-            channel_channel: [{
-                channel_type: "channel",
-                id: 20,
-                is_pinned: true,
-                name: "General",
-            }],
-        },
-    });
+    // channel expected to be rendered, with a random unique id that will be referenced in the test
+    this.data['mail.channel'].records.push({ id: 20 });
+    // partner to be set as author, with a random unique id that will be used to link message
+    this.data['res.partner'].records.push({ id: 11 });
+    for (let i = 28; i >= 0; i--) {
+        this.data['mail.message'].records.push({
+            channel_ids: [20],
+            date: "2019-04-20 10:00:00",
+            model: 'mail.channel',
+            res_id: 20,
+        });
+    }
     await this.start({
         discuss: {
             params: {
@@ -1663,22 +1556,6 @@ QUnit.test('load all messages from channel initially, less than fetch limit (29 
         async mockRPC(route, args) {
             if (args.method === 'message_fetch') {
                 assert.strictEqual(args.kwargs.limit, 30, "should fetch up to 30 messages");
-                let messagesData = [];
-                // 29 messages
-                for (let i = 28; i >= 0; i--) {
-                    messagesData.push({
-                        author_id: [10 + i, `User${i}`],
-                        body: `<p>body${i}</p>`,
-                        channel_ids: [20],
-                        date: "2019-04-20 10:00:00",
-                        id: 100 + i,
-                        message_type: 'comment',
-                        model: 'mail.channel',
-                        record_name: 'General',
-                        res_id: 20,
-                    });
-                }
-                return messagesData;
             }
             return this._super(...arguments);
         },
@@ -1715,78 +1592,25 @@ QUnit.test('load all messages from channel initially, less than fetch limit (29 
 
 QUnit.test('load more messages from channel', async function (assert) {
     // AKU: thread specific test
-    assert.expect(8);
+    assert.expect(6);
 
-    let step = 0;
-    Object.assign(this.data.initMessaging, {
-        channel_slots: {
-            channel_channel: [{
-                channel_type: "channel",
-                id: 20,
-                is_pinned: true,
-                name: "General",
-            }],
-        },
-    });
+    // channel expected to be rendered, with a random unique id that will be referenced in the test
+    this.data['mail.channel'].records.push({ id: 20 });
+    // partner to be set as author, with a random unique id that will be used to link message
+    this.data['res.partner'].records.push({ id: 11 });
+    for (let i = 0; i < 40; i++) {
+        this.data['mail.message'].records.push({
+            channel_ids: [20],
+            date: "2019-04-20 10:00:00",
+            model: 'mail.channel',
+            res_id: 20,
+        });
+    }
     await this.start({
         discuss: {
             params: {
                 default_active_id: 'mail.channel_20',
             },
-        },
-        async mockRPC(route, args) {
-            if (args.method === 'message_fetch') {
-                step++;
-                if (step === 1) {
-                    // fetching messages from channel (initial load)
-                    assert.strictEqual(
-                        args.kwargs.limit,
-                        30,
-                        "should fetch up to 30 messages"
-                    );
-                    let messagesData = [];
-                    // 30 messages
-                    for (let i = 39; i >= 10; i--) {
-                        messagesData.push({
-                            author_id: [10 + i, `User${i}`],
-                            body: `<p>body${i}</p>`,
-                            channel_ids: [20],
-                            date: "2019-04-20 10:00:00",
-                            id: 100 + i,
-                            message_type: 'comment',
-                            model: 'mail.channel',
-                            record_name: 'General',
-                            res_id: 20,
-                        });
-                    }
-                    return messagesData;
-                }
-                if (step === 2) {
-                    // fetching more messages from channel (load more)
-                    assert.strictEqual(
-                        args.kwargs.limit,
-                        30,
-                        "should fetch up to 30 messages"
-                    );
-                    let messagesData = [];
-                    // 10 messages
-                    for (let i = 9; i >= 0; i--) {
-                        messagesData.push({
-                            author_id: [10 + i, `User${i}`],
-                            body: `<p>body${i}</p>`,
-                            channel_ids: [20],
-                            date: "2019-04-20 10:00:00",
-                            id: 100 + i,
-                            message_type: 'comment',
-                            model: 'mail.channel',
-                            record_name: 'General',
-                            res_id: 20,
-                        });
-                    }
-                    return messagesData;
-                }
-            }
-            return this._super(...arguments);
         },
     });
     assert.strictEqual(
@@ -1843,42 +1667,20 @@ QUnit.test('auto-scroll to bottom of thread', async function (assert) {
     // AKU TODO: thread specific test
     assert.expect(2);
 
-    Object.assign(this.data.initMessaging, {
-        channel_slots: {
-            channel_channel: [{
-                channel_type: "channel",
-                id: 20,
-                is_pinned: true,
-                name: "General",
-            }],
-        },
-    });
+    // channel expected to be rendered, with a random unique id that will be referenced in the test
+    this.data['mail.channel'].records.push({ id: 20 });
+    for (let i = 1; i <= 25; i++) {
+        this.data['mail.message'].records.push({
+            channel_ids: [20],
+            model: 'mail.channel',
+            res_id: 20,
+        });
+    }
     await this.start({
         discuss: {
             params: {
                 default_active_id: 'mail.channel_20',
             },
-        },
-        async mockRPC(route, args) {
-            if (args.method === 'message_fetch') {
-                let messagesData = [];
-                // 25 messages
-                for (let i = 1; i <= 25; i++) {
-                    messagesData.push({
-                        author_id: [10 + i, `User${i}`],
-                        body: `<p>body${i}</p>`,
-                        channel_ids: [20],
-                        date: "2019-04-20 10:00:00",
-                        id: 100 + i,
-                        message_type: 'comment',
-                        model: 'mail.channel',
-                        record_name: 'General',
-                        res_id: 20,
-                    });
-                }
-                return messagesData;
-            }
-            return this._super(...arguments);
         },
     });
     assert.strictEqual(
@@ -1900,66 +1702,20 @@ QUnit.test('load more messages from channel (auto-load on scroll)', async functi
     // AKU TODO: thread specific test
     assert.expect(3);
 
-    let step = 0;
-    Object.assign(this.data.initMessaging, {
-        channel_slots: {
-            channel_channel: [{
-                channel_type: "channel",
-                id: 20,
-                is_pinned: true,
-                name: "General",
-            }],
-        },
-    });
+    // channel expected to be rendered, with a random unique id that will be referenced in the test
+    this.data['mail.channel'].records.push({ id: 20 });
+    for (let i = 0; i < 40; i++) {
+        this.data['mail.message'].records.push({
+            channel_ids: [20],
+            model: 'mail.channel',
+            res_id: 20,
+        });
+    }
     await this.start({
         discuss: {
             params: {
                 default_active_id: 'mail.channel_20',
             },
-        },
-        async mockRPC(route, args) {
-            if (args.method === 'message_fetch') {
-                step++;
-                if (step === 1) {
-                    // fetching messages from channel (initial load)
-                    let messagesData = [];
-                    // 30 messages
-                    for (let i = 39; i >= 10; i--) {
-                        messagesData.push({
-                            author_id: [10 + i, `User${i}`],
-                            body: `<p>body${i}</p>`,
-                            channel_ids: [20],
-                            date: "2019-04-20 10:00:00",
-                            id: 100 + i,
-                            message_type: 'comment',
-                            model: 'mail.channel',
-                            record_name: 'General',
-                            res_id: 20,
-                        });
-                    }
-                    return messagesData;
-                }
-                if (step === 2) {
-                    // fetching more messages from channel (load more)
-                    let messagesData = [];
-                    // 10 messages
-                    for (let i = 9; i >= 0; i--) {
-                        messagesData.push({
-                            author_id: [10 + i, `User${i}`],
-                            body: `<p>body${i}</p>`,
-                            channel_ids: [20],
-                            date: "2019-04-20 10:00:00",
-                            id: 100 + i,
-                            message_type: 'comment',
-                            model: 'mail.channel',
-                            record_name: 'General',
-                            res_id: 20,
-                        });
-                    }
-                    return messagesData;
-                }
-            }
-            return this._super(...arguments);
         },
     });
     assert.strictEqual(
@@ -1989,59 +1745,29 @@ QUnit.test('load more messages from channel (auto-load on scroll)', async functi
     );
 });
 
-QUnit.test('new messages separator', async function (assert) {
+QUnit.test('new messages separator [REQUIRE FOCUS]', async function (assert) {
     // this test requires several messages so that the last message is not
     // visible. This is necessary in order to display 'new messages' and not
     // remove from DOM right away from seeing last message.
     // AKU TODO: thread specific test
     assert.expect(6);
 
-    let step = 0;
-    Object.assign(this.data.initMessaging, {
-        channel_slots: {
-            channel_channel: [{
-                channel_type: "channel",
-                id: 20,
-                is_pinned: true,
-                message_unread_counter: 0,
-                name: "General",
-                seen_message_id: 125,
-            }],
-        },
-    });
+    // channel expected to be rendered, with a random unique id that will be
+    // referenced in the test and the seen_message_id value set to last message
+    this.data['mail.channel'].records.push({ id: 20, seen_message_id: 125 });
+    for (let i = 1; i <= 25; i++) {
+        this.data['mail.message'].records.push({
+            channel_ids: [20],
+            id: 100 + i, // for setting proper value for seen_message_id
+            model: 'mail.channel',
+            res_id: 20,
+        });
+    }
     await this.start({
         discuss: {
             params: {
                 default_active_id: 'mail.channel_20',
             },
-        },
-        async mockRPC(route, args) {
-            if (args.method === 'message_fetch') {
-                step++;
-                if (step === 1) {
-                    // fetching messages from channel (initial load)
-                    let messagesData = [];
-                    // 25 messages
-                    for (let i = 1; i <= 25; i++) {
-                        messagesData.push({
-                            author_id: [10 + i, `User${i}`],
-                            body: `<p>body${i}</p>`,
-                            channel_ids: [20],
-                            date: "2019-04-20 10:00:00",
-                            id: 100 + i,
-                            message_type: 'comment',
-                            model: 'mail.channel',
-                            record_name: 'General',
-                            res_id: 20,
-                        });
-                    }
-                    return messagesData;
-                }
-                if (step === 2) {
-                    throw new Error("should not fetch more messages");
-                }
-            }
-            return this._super(...arguments);
         },
     });
     assert.containsN(
@@ -2055,26 +1781,20 @@ QUnit.test('new messages separator', async function (assert) {
         '.o_MessageList_separatorNewMessages',
         "should not display 'new messages' separator"
     );
-
     // scroll to top
     document.querySelector(`.o_Discuss_thread .o_ThreadViewer_messageList`).scrollTop = 0;
     // composer is focused by default, we remove that focus
     document.querySelector('.o_ComposerTextInput_textarea').blur();
     // simulate receiving a new message
     const data = {
-        author_id: [36, "User26"],
-        body: "<p>body26</p>",
         channel_ids: [20],
-        date: "2019-04-20 10:00:00",
         id: 126,
-        message_type: 'comment',
         model: 'mail.channel',
-        record_name: 'General',
         res_id: 20,
     };
     await afterNextRender(() => {
         const notifications = [[['my-db', 'mail.channel', 20], data]];
-        this.widget.call('bus_service', 'trigger', 'notification', notifications)
+        this.widget.call('bus_service', 'trigger', 'notification', notifications);
     });
     assert.containsN(
         document.body,
@@ -2087,17 +1807,16 @@ QUnit.test('new messages separator', async function (assert) {
         '.o_MessageList_separatorNewMessages',
         "should display 'new messages' separator"
     );
-
     await afterNextRender(() => {
         document.querySelector(`.o_Discuss_thread .o_ThreadViewer_messageList`).scrollTop =
             document.querySelector(`.o_Discuss_thread .o_ThreadViewer_messageList`).scrollHeight;
     });
-
     assert.containsOnce(
         document.body,
         '.o_MessageList_separatorNewMessages',
         "should still display 'new messages' separator as composer is not focused"
     );
+
     await afterNextRender(() =>
         document.querySelector('.o_ComposerTextInput_textarea').focus()
     );
@@ -2110,72 +1829,27 @@ QUnit.test('new messages separator', async function (assert) {
 
 QUnit.test('restore thread scroll position', async function (assert) {
     assert.expect(4);
-
-    let step = 0;
-    Object.assign(this.data.initMessaging, {
-        channel_slots: {
-            channel_channel: [{
-                channel_type: "channel",
-                id: 1,
-                is_pinned: true,
-                name: "channel1",
-            }, {
-                channel_type: "channel",
-                id: 2,
-                is_pinned: true,
-                name: "channel2",
-            }],
-        },
-    });
+    // channels expected to be rendered, with random unique id that will be referenced in the test
+    this.data['mail.channel'].records.push({ id: 11 }, { id: 12 });
+    for (let i = 1; i <= 25; i++) {
+        this.data['mail.message'].records.push({
+            channel_ids: [11],
+            model: 'mail.channel',
+            res_id: 11,
+        });
+    }
+    for (let i = 1; i <= 25; i++) {
+        this.data['mail.message'].records.push({
+            channel_ids: [12],
+            model: 'mail.channel',
+            res_id: 12,
+        });
+    }
     await this.start({
         discuss: {
             params: {
-                default_active_id: 'mail.channel_1',
+                default_active_id: 'mail.channel_11',
             },
-        },
-        async mockRPC(route, args) {
-            if (args.method === 'message_fetch') {
-                step++;
-                if (step === 1) {
-                    // fetching messages from channel1 (initial load)
-                    let messagesData = [];
-                    // 25 messages
-                    for (let i = 1; i <= 25; i++) {
-                        messagesData.push({
-                            author_id: [10 + i, `User${i}`],
-                            body: `<p>body${i}</p>`,
-                            channel_ids: [1],
-                            date: "2019-04-20 10:00:00",
-                            id: 100 + i,
-                            message_type: 'comment',
-                            model: 'mail.channel',
-                            record_name: 'channel1',
-                            res_id: 1,
-                        });
-                    }
-                    return messagesData;
-                }
-                if (step === 2) {
-                    // fetching messages from channel2 (initial load)
-                    let messagesData = [];
-                    // 25 messages
-                    for (let i = 1; i <= 25; i++) {
-                        messagesData.push({
-                            author_id: [10 + i, `User${i}`],
-                            body: `<p>body${i}</p>`,
-                            channel_ids: [2],
-                            date: "2019-04-20 10:00:00",
-                            id: 200 + i,
-                            message_type: 'comment',
-                            model: 'mail.channel',
-                            record_name: 'channel2',
-                            res_id: 2,
-                        });
-                    }
-                    return messagesData;
-                }
-            }
-            return this._super(...arguments);
         },
     });
     assert.strictEqual(
@@ -2186,7 +1860,7 @@ QUnit.test('restore thread scroll position', async function (assert) {
         "should have 25 messages"
     );
 
-    // scroll to top of channel1
+    // scroll to top of channel11
     await afterNextRender(() => {
         document.querySelector(`.o_Discuss_thread .o_ThreadViewer_messageList`).scrollTop = 0;
     });
@@ -2196,25 +1870,25 @@ QUnit.test('restore thread scroll position', async function (assert) {
         "should have scrolled to top of thread"
     );
 
-    // select channel2
+    // select channel12
     await afterNextRender(() =>
         document.querySelector(`
             .o_DiscussSidebar_groupChannel
             .o_DiscussSidebar_item[data-thread-local-id="${
                 this.env.models['mail.thread'].find(thread =>
-                    thread.id === 2 &&
+                    thread.id === 12 &&
                     thread.model === 'mail.channel'
                 ).localId
             }"]
         `).click()
     );
-    // select channel1
+    // select channel11
     await afterNextRender(() =>
         document.querySelector(`
             .o_DiscussSidebar_groupChannel
             .o_DiscussSidebar_item[data-thread-local-id="${
                 this.env.models['mail.thread'].find(thread =>
-                    thread.id === 1 &&
+                    thread.id === 11 &&
                     thread.model === 'mail.channel'
                 ).localId
             }"]
@@ -2223,16 +1897,16 @@ QUnit.test('restore thread scroll position', async function (assert) {
     assert.strictEqual(
         document.querySelector(`.o_Discuss_thread .o_ThreadViewer_messageList`).scrollTop,
         0,
-        "should have recovered scroll position of channel1 (scroll to top)"
+        "should have recovered scroll position of channel11 (scroll to top)"
     );
 
-    // select channel2
+    // select channel12
     await afterNextRender(() =>
         document.querySelector(`
             .o_DiscussSidebar_groupChannel
             .o_DiscussSidebar_item[data-thread-local-id="${
                 this.env.models['mail.thread'].find(thread =>
-                    thread.id === 2 &&
+                    thread.id === 12 &&
                     thread.model === 'mail.channel'
                 ).localId
             }"]
@@ -2245,69 +1919,36 @@ QUnit.test('restore thread scroll position', async function (assert) {
     assert.strictEqual(
         messageList.scrollTop + messageList.clientHeight,
         messageList.scrollHeight,
-        "should have recovered scroll position of channel2 (scroll to bottom)"
+        "should have recovered scroll position of channel12 (scroll to bottom)"
     );
 });
 
 QUnit.test('message origin redirect to channel', async function (assert) {
     assert.expect(15);
 
-    let step = 0;
-    Object.assign(this.data.initMessaging, {
-        channel_slots: {
-            channel_channel: [{
-                channel_type: 'channel',
-                id: 1,
-                is_pinned: true,
-                name: "channel1",
-            }, {
-                channel_type: 'channel',
-                id: 2,
-                is_pinned: true,
-                name: "channel2",
-            }],
+    // channels expected to be rendered, with random unique id that will be referenced in the test
+    this.data['mail.channel'].records.push({ id: 11 }, { id: 12 });
+    this.data['mail.message'].records.push(
+        {
+            channel_ids: [11, 12],
+            id: 100,
+            model: 'mail.channel',
+            record_name: "channel11",
+            res_id: 11,
         },
-    });
-    let messagesData = [{
-        author_id: [10, "User1"],
-        body: `<p>message1</p>`,
-        channel_ids: [1, 2],
-        date: "2019-04-20 10:00:00",
-        id: 100,
-        message_type: 'comment',
-        model: 'mail.channel',
-        record_name: "channel1",
-        res_id: 1,
-    }, {
-        author_id: [11, "User2"],
-        body: `<p>message2</p>`,
-        channel_ids: [1, 2],
-        date: "2019-04-20 10:00:00",
-        id: 101,
-        message_type: 'comment',
-        model: 'mail.channel',
-        record_name: "channel2",
-        res_id: 2,
-    }];
+        {
+            channel_ids: [11, 12],
+            id: 101,
+            model: 'mail.channel',
+            record_name: "channel12",
+            res_id: 12,
+        }
+    );
     await this.start({
         discuss: {
             params: {
-                default_active_id: 'mail.channel_1',
+                default_active_id: 'mail.channel_11',
             },
-        },
-        async mockRPC(route, args) {
-            if (args.method === 'message_fetch') {
-                step++;
-                if (step === 1) {
-                    // fetching messages from channel1 (initial load)
-                    return messagesData;
-                }
-                if (step === 2) {
-                    // fetching messages from channel2 (initial load)
-                    return messagesData;
-                }
-            }
-            return this._super(...arguments);
         },
     });
     assert.strictEqual(
@@ -2344,7 +1985,7 @@ QUnit.test('message origin redirect to channel', async function (assert) {
             .o_Message_originThread
         `).length,
         0,
-        "message1 should not have origin part in channel1 (same origin as channel)"
+        "message1 should not have origin part in channel11 (same origin as channel)"
     );
     assert.strictEqual(
         document.querySelectorAll(`
@@ -2355,7 +1996,7 @@ QUnit.test('message origin redirect to channel', async function (assert) {
             .o_Message_originThread
         `).length,
         1,
-        "message2 should have origin part (origin is channel2 !== channel1)"
+        "message2 should have origin part (origin is channel12 !== channel11)"
     );
     assert.strictEqual(
         document.querySelector(`
@@ -2365,7 +2006,7 @@ QUnit.test('message origin redirect to channel', async function (assert) {
             }"]
             .o_Message_originThread
         `).textContent.trim(),
-        "(from #channel2)",
+        "(from #channel12)",
         "message2 should display name of origin channel"
     );
     assert.strictEqual(
@@ -2380,7 +2021,7 @@ QUnit.test('message origin redirect to channel', async function (assert) {
         "message2 should have link to redirect to origin"
     );
 
-    // click on origin link of message2 (= channel2)
+    // click on origin link of message2 (= channel12)
     await afterNextRender(() =>
         document.querySelector(`
             .o_Discuss_thread
@@ -2395,13 +2036,13 @@ QUnit.test('message origin redirect to channel', async function (assert) {
             .o_DiscussSidebar_groupChannel
             .o_DiscussSidebar_item[data-thread-local-id="${
                 this.env.models['mail.thread'].find(thread =>
-                    thread.id === 2 &&
+                    thread.id === 12 &&
                     thread.model === 'mail.channel'
                 ).localId
             }"]
             .o_DiscussSidebarItem_activeIndicator
         `).classList.contains('o-item-active'),
-        "channel2 should be active channel on redirect from discuss app"
+        "channel12 should be active channel on redirect from discuss app"
     );
     assert.strictEqual(
         document.querySelectorAll(`.o_Discuss_thread .o_Message`).length,
@@ -2437,7 +2078,7 @@ QUnit.test('message origin redirect to channel', async function (assert) {
             .o_Message_originThread
         `).length,
         1,
-        "message1 should have origin thread part (= channel1 !== channel2)"
+        "message1 should have origin thread part (= channel11 !== channel12)"
     );
     assert.strictEqual(
         document.querySelectorAll(`
@@ -2448,7 +2089,7 @@ QUnit.test('message origin redirect to channel', async function (assert) {
             .o_Message_originThread
         `).length,
         0,
-        "message2 should not have origin thread part in channel2 (same as current channel)"
+        "message2 should not have origin thread part in channel12 (same as current channel)"
     );
     assert.strictEqual(
         document.querySelector(`
@@ -2458,7 +2099,7 @@ QUnit.test('message origin redirect to channel', async function (assert) {
             }"]
             .o_Message_originThread
         `).textContent.trim(),
-        "(from #channel1)",
+        "(from #channel11)",
         "message1 should display name of origin channel"
     );
     assert.strictEqual(
@@ -2477,68 +2118,45 @@ QUnit.test('message origin redirect to channel', async function (assert) {
 QUnit.test('redirect to author (open chat)', async function (assert) {
     assert.expect(9);
 
-    let step = 0;
-    Object.assign(this.data.initMessaging, {
-        channel_slots: {
-            channel_channel: [{
-                channel_type: "channel",
-                id: 1,
-                is_pinned: true,
-                name: "General",
-            }],
-            channel_direct_message: [{
-                channel_type: "chat",
-                direct_partner: [{
-                    id: 7,
-                    name: "Demo",
-                }],
-                id: 10,
-                is_pinned: true,
-            }],
+    // expected correspondent, with a random unique id that will be used to link
+    // partner to chat and a random name that will be asserted in the test
+    this.data['res.partner'].records.push({ id: 7, name: "Demo" });
+    this.data['res.users'].records.push({ partner_id: 7 });
+    this.data['mail.channel'].records.push(
+        // channel expected to be found in the sidebar
+        {
+            id: 1, // random unique id, will be referenced in the test
+            name: "General", // random name, will be asserted in the test
         },
-    });
+        // chat expected to be found in the sidebar
+        {
+            channel_type: 'chat', // testing a chat is the goal of the test
+            id: 10, // random unique id, will be referenced in the test
+            members: [this.data.currentPartnerId, 7], // expected partners
+            public: 'private', // expected value for testing a chat
+        }
+    );
+    this.data['mail.message'].records.push(
+        {
+            author_id: 7,
+            channel_ids: [1],
+            id: 100,
+            model: 'mail.channel',
+            res_id: 1,
+        },
+        {
+            author_id: this.data.currentPartnerId,
+            channel_ids: [1],
+            id: 101,
+            model: 'mail.channel',
+            res_id: 1,
+        }
+    );
     await this.start({
         discuss: {
             params: {
                 default_active_id: 'mail.channel_1',
             },
-        },
-        async mockRPC(route, args) {
-            if (args.method === 'message_fetch') {
-                step++;
-                if (step === 1) {
-                    // fetching messages from General (initial load)
-                    return [{
-                        author_id: [7, "Demo"],
-                        body: `<p>message1</p>`,
-                        channel_ids: [1],
-                        date: "2019-04-20 10:00:00",
-                        id: 100,
-                        message_type: 'comment',
-                        model: 'mail.channel',
-                        record_name: "General",
-                        res_id: 1,
-                    }, {
-                        author_id: [3, "Me"],
-                        body: `<p>message2</p>`,
-                        channel_ids: [1],
-                        date: "2019-04-20 10:00:00",
-                        id: 101,
-                        message_type: 'comment',
-                        model: 'mail.channel',
-                        record_name: "General",
-                        res_id: 1,
-                    }];
-                }
-                if (step === 2) {
-                    // fetching messages from DM (initial load)
-                    return [];
-                }
-            }
-            if (args.model === 'res.users' && args.method === 'search') {
-                return [2];
-            }
-            return this._super(...arguments);
         },
     });
     assert.ok(
@@ -2638,20 +2256,9 @@ QUnit.test('sidebar quick search', async function (assert) {
     // feature enables at 20 or more channels
     assert.expect(6);
 
-    let channelsData = [];
     for (let id = 1; id <= 20; id++) {
-        channelsData.push({
-            channel_type: 'channel',
-            id,
-            is_pinned: true,
-            name: `channel${id}`,
-        });
+        this.data['mail.channel'].records.push({ id, name: `channel${id}` });
     }
-    Object.assign(this.data.initMessaging, {
-        channel_slots: {
-            channel_channel: channelsData,
-        },
-    });
     await this.start();
     assert.strictEqual(
         document.querySelectorAll(`.o_DiscussSidebar_groupChannel .o_DiscussSidebar_item`).length,
@@ -2714,16 +2321,9 @@ QUnit.test('sidebar quick search', async function (assert) {
 QUnit.test('basic control panel rendering', async function (assert) {
     assert.expect(8);
 
-    Object.assign(this.data.initMessaging, {
-        channel_slots: {
-            channel_channel: [{
-                channel_type: "channel",
-                id: 20,
-                is_pinned: true,
-                name: "General",
-            }],
-        },
-    });
+    // channel expected to be found in the sidebar
+    // with a random unique id and name that will be referenced in the test
+    this.data['mail.channel'].records.push({ id: 20, name: "General" });
     await this.start();
     assert.strictEqual(
         document.querySelector(`
@@ -2793,62 +2393,42 @@ QUnit.test('basic control panel rendering', async function (assert) {
 QUnit.test('inbox: mark all messages as read', async function (assert) {
     assert.expect(8);
 
-    const self = this;
-    Object.assign(this.data.initMessaging, {
-        needaction_inbox_counter: 2,
-        channel_slots: {
-            channel_channel: [{
-                channel_type: "channel",
-                id: 20,
-                is_pinned: true,
-                message_needaction_counter: 2,
-                name: "General",
-            }],
+    // channel expected to be found in the sidebar,
+    // with a random unique id that will be referenced in the test
+    this.data['mail.channel'].records.push({ id: 20 });
+    this.data['mail.message'].records.push(
+        // first expected message
+        {
+            id: 100, // random unique id, useful to link notification
+            model: 'mail.channel', // value to link message to channel
+            // needaction needs to be set here for message_fetch domain, because
+            // mocked models don't have computed fields
+            needaction: true,
+            res_id: 20, // id of related channel
         },
-    });
-    await this.start({
-        async mockRPC(route, args) {
-            if (args.method === 'message_fetch') {
-                return [{
-                    author_id: [7, "Demo"],
-                    body: `<p>message1</p>`,
-                    channel_ids: [20],
-                    date: "2019-04-20 10:00:00",
-                    id: 100,
-                    message_type: 'comment',
-                    model: 'mail.channel',
-                    needaction: true,
-                    needaction_partner_ids: [3],
-                    record_name: "General",
-                    res_id: 20,
-                }, {
-                    author_id: [8, "Other"],
-                    body: `<p>message2</p>`,
-                    channel_ids: [20],
-                    date: "2019-04-20 10:00:00",
-                    id: 101,
-                    message_type: 'comment',
-                    model: 'mail.channel',
-                    needaction: true,
-                    needaction_partner_ids: [3],
-                    record_name: "General",
-                    res_id: 20,
-                }];
-            }
-            if (args.method === 'mark_all_as_read') {
-                // simulate mark as read notification
-                const data = {
-                    message_ids: [100, 101],
-                    type: 'mark_as_read',
-                };
-                const notifications = [[['my-db', 'res.partner'], data]];
-                self.widget.call('bus_service', 'trigger', 'notification', notifications);
-                return;
-
-            }
-            return this._super(...arguments);
+        // second expected message
+        {
+            id: 101, // random unique id, useful to link notification
+            model: 'mail.channel', // value to link message to channel
+            // needaction needs to be set here for message_fetch domain, because
+            // mocked models don't have computed fields
+            needaction: true,
+            res_id: 20, // id of related channel
+        }
+    );
+    this.data['mail.notification'].records.push(
+        // notification to have first message in inbox
+        {
+            mail_message_id: 100, // id of related message
+            res_partner_id: this.data.currentPartnerId, // must be for current partner
         },
-    });
+        // notification to have second message in inbox
+        {
+            mail_message_id: 101, // id of related message
+            res_partner_id: this.data.currentPartnerId, // must be for current partner
+        }
+    );
+    await this.start();
     assert.strictEqual(
         document.querySelector(`
             .o_DiscussSidebar_item[data-thread-local-id="${
@@ -2922,55 +2502,16 @@ QUnit.test('inbox: mark all messages as read', async function (assert) {
 QUnit.test('starred: unstar all', async function (assert) {
     assert.expect(6);
 
-    const self = this;
-    Object.assign(this.data.initMessaging, { starred_counter: 2 });
+    // messages expected to be starred
+    this.data['mail.message'].records.push(
+        { starred_partner_ids: [this.data.currentPartnerId] },
+        { starred_partner_ids: [this.data.currentPartnerId] }
+    );
     await this.start({
         discuss: {
             params: {
                 default_active_id: 'mail.box_starred',
             },
-        },
-        async mockRPC(route, args) {
-            if (args.method === 'message_fetch') {
-                return [{
-                    author_id: [7, "Demo"],
-                    body: `<p>message1</p>`,
-                    channel_ids: [20],
-                    date: "2019-04-20 10:00:00",
-                    id: 100,
-                    message_type: 'comment',
-                    model: 'mail.channel',
-                    record_name: "General",
-                    res_id: 20,
-                    starred: true,
-                    starred_partner_ids: [3],
-                }, {
-                    author_id: [8, "Other"],
-                    body: `<p>message2</p>`,
-                    channel_ids: [20],
-                    date: "2019-04-20 10:00:00",
-                    id: 101,
-                    message_type: 'comment',
-                    model: 'mail.channel',
-                    record_name: "General",
-                    res_id: 20,
-                    starred: true,
-                    starred_partner_ids: [3],
-                }];
-            }
-            if (args.method === 'unstar_all') {
-                // simulate toggle_star notification
-                const data = {
-                    message_ids: [100, 101],
-                    starred: false,
-                    type: 'toggle_star',
-                };
-                const notifications = [[['my-db', 'res.partner'], data]];
-                self.widget.call('bus_service', 'trigger', 'notification', notifications);
-                return;
-
-            }
-            return this._super(...arguments);
         },
     });
     assert.strictEqual(
@@ -3020,31 +2561,15 @@ QUnit.test('starred: unstar all', async function (assert) {
 QUnit.test('toggle_star message', async function (assert) {
     assert.expect(16);
 
-    const self = this;
-    Object.assign(this.data.initMessaging, {
-        channel_slots: {
-            channel_channel: [{
-                channel_type: "channel",
-                id: 20,
-                is_pinned: true,
-                name: "General",
-            }],
-        },
-    });
-    let messageData = {
-        author_id: [11, "Demo"],
-        body: "<p>body</p>",
+    // channel expected to be initially rendered
+    // with a random unique id, will be referenced in the test
+    this.data['mail.channel'].records.push({ id: 20 });
+    this.data['mail.message'].records.push({
         channel_ids: [20],
-        date: "2019-04-20 10:00:00",
         id: 100,
-        message_type: 'comment',
         model: 'mail.channel',
-        record_name: 'General',
         res_id: 20,
-        starred: false,
-        starred_partner_ids: [],
-    };
-
+    });
     await this.start({
         discuss: {
             params: {
@@ -3052,9 +2577,6 @@ QUnit.test('toggle_star message', async function (assert) {
             },
         },
         async mockRPC(route, args) {
-            if (args.method === 'message_fetch') {
-                return [messageData];
-            }
             if (args.method === 'toggle_message_starred') {
                 assert.step('rpc:toggle_message_starred');
                 assert.strictEqual(
@@ -3062,16 +2584,6 @@ QUnit.test('toggle_star message', async function (assert) {
                     100,
                     "should have message Id in args"
                 );
-                // simulate toggle_star notification
-                messageData.starred = !messageData.starred;
-                const data = {
-                    message_ids: [100],
-                    starred: messageData.starred,
-                    type: 'toggle_star',
-                };
-                const notifications = [[['my-db', 'res.partner'], data]];
-                self.widget.call('bus_service', 'trigger', 'notification', notifications);
-                return;
             }
             return this._super(...arguments);
         },
@@ -3152,32 +2664,17 @@ QUnit.test('toggle_star message', async function (assert) {
 QUnit.test('composer state: text save and restore', async function (assert) {
     assert.expect(2);
 
-    Object.assign(this.data.initMessaging, {
-        channel_slots: {
-            channel_channel: [{
-                channel_type: 'channel',
-                id: 20,
-                is_pinned: true,
-                name: "General",
-            }, {
-                channel_type: 'channel',
-                id: 21,
-                is_pinned: true,
-                name: "Special",
-            }],
-        },
-    });
+    // channels expected to be found in the sidebar,
+    // with random unique id and name that will be referenced in the test
+    this.data['mail.channel'].records.push(
+        { id: 20, name: "General" },
+        { id: 21, name: "Special" }
+    );
     await this.start({
         discuss: {
             params: {
                 default_active_id: 'mail.channel_20',
             },
-        },
-        async mockRPC(route, args) {
-            if (args.method === 'message_fetch') {
-                return [];
-            }
-            return this._super(...arguments);
         },
     });
     // Write text in composer for #general
@@ -3219,32 +2716,17 @@ QUnit.test('composer state: text save and restore', async function (assert) {
 QUnit.test('composer state: attachments save and restore', async function (assert) {
     assert.expect(6);
 
-    Object.assign(this.data.initMessaging, {
-        channel_slots: {
-            channel_channel: [{
-                channel_type: 'channel',
-                id: 20,
-                is_pinned: true,
-                name: "General",
-            }, {
-                channel_type: 'channel',
-                id: 21,
-                is_pinned: true,
-                name: "Special",
-            }],
-        },
-    });
+    // channels expected to be found in the sidebar
+    // with random unique id and name that will be referenced in the test
+    this.data['mail.channel'].records.push(
+        { id: 20, name: "General" },
+        { id: 21, name: "Special" }
+    );
     await this.start({
         discuss: {
             params: {
                 default_active_id: 'mail.channel_20',
             },
-        },
-        async mockRPC(route, args) {
-            if (args.method === 'message_fetch') {
-                return [];
-            }
-            return this._super(...arguments);
         },
     });
     const channels = document.querySelectorAll(`
@@ -3330,18 +2812,10 @@ QUnit.test('composer state: attachments save and restore', async function (asser
 QUnit.test('post a simple message', async function (assert) {
     assert.expect(15);
 
-    const self = this;
-    Object.assign(this.data.initMessaging, {
-        channel_slots: {
-            channel_channel: [{
-                channel_type: "channel",
-                id: 20,
-                is_pinned: true,
-                name: "General",
-            }],
-        },
-    });
-    let messagesData = [];
+    // channel expected to be found in the sidebar
+    // with a random unique id that will be referenced in the test
+    this.data['mail.channel'].records.push({ id: 20 });
+    let postedMessageId;
     await this.start({
         discuss: {
             params: {
@@ -3349,9 +2823,7 @@ QUnit.test('post a simple message', async function (assert) {
             },
         },
         async mockRPC(route, args) {
-            if (args.method === 'message_fetch') {
-                return messagesData;
-            }
+            const res = await this._super(...arguments);
             if (args.method === 'message_post') {
                 assert.step('message_post');
                 assert.strictEqual(
@@ -3374,27 +2846,9 @@ QUnit.test('post a simple message', async function (assert) {
                     "mail.mt_comment",
                     "should set subtype_xmlid as 'comment'"
                 );
-                // simulate receiving a new message
-                const data = {
-                    author_id: [3, "Admin"],
-                    body: args.kwargs.body,
-                    channel_ids: [20],
-                    date: "2019-04-20 11:00:00",
-                    id: 101,
-                    message_type: args.kwargs.message_type,
-                    model: 'mail.channel',
-                    subtype_xmlid: args.kwargs.subtype_xmlid,
-                    record_name: 'General',
-                    res_id: 20,
-                };
-                const notifications = [
-                    [['my-db', 'mail.channel', 20], data]
-                ];
-                messagesData.push(data);
-                self.widget.call('bus_service', 'trigger', 'notification', notifications);
-                return;
+                postedMessageId = res;
             }
-            return this._super(...arguments);
+            return res;
         },
     });
     assert.strictEqual(
@@ -3440,13 +2894,13 @@ QUnit.test('post a simple message', async function (assert) {
     const message = document.querySelector(`.o_Message`);
     assert.strictEqual(
         message.dataset.messageLocalId,
-        this.env.models['mail.message'].find(message => message.id === 101).localId,
+        this.env.models['mail.message'].find(message => message.id === postedMessageId).localId,
         "new message in thread should be linked to newly created message from message post"
     );
     assert.strictEqual(
         message.querySelector(`:scope .o_Message_authorName`).textContent,
-        "Admin",
-        "new message in thread should be from Admin"
+        "Mitchell Admin",
+        "new message in thread should be from current partner name"
     );
     assert.strictEqual(
         message.querySelector(`:scope .o_Message_content`).textContent,
@@ -3459,24 +2913,14 @@ QUnit.test('rendering of inbox message', async function (assert) {
     // AKU TODO: kinda message specific test
     assert.expect(7);
 
-    await this.start({
-        async mockRPC(route, args) {
-            if (args.method === 'message_fetch') {
-                return [{
-                    author_id: [11, "Demo"],
-                    body: "<p>body</p>",
-                    date: "2019-04-20 10:00:00",
-                    id: 100,
-                    message_type: 'comment',
-                    model: 'project.task',
-                    needaction_partner_ids: [44],
-                    record_name: 'Refactoring',
-                    res_id: 20,
-                }];
-            }
-            return this._super(...arguments);
-        },
+    this.data['mail.message'].records.push({
+        model: 'res.partner', // random existing model
+        needaction: true, // for message_fetch domain
+        needaction_partner_ids: [this.data.currentPartnerId], // for consistency
+        record_name: 'Refactoring', // random name, will be asserted in the test
+        res_id: 20, // random related id
     });
+    await this.start();
     assert.strictEqual(
         document.querySelectorAll('.o_Message').length,
         1,
@@ -3515,45 +2959,18 @@ QUnit.test('rendering of inbox message', async function (assert) {
     );
 });
 
-QUnit.test('mark channel as seen on last message visible', async function (assert) {
+QUnit.test('mark channel as seen on last message visible [REQUIRE FOCUS]', async function (assert) {
     assert.expect(3);
 
-    let step = 0;
-    Object.assign(this.data.initMessaging, {
-        channel_slots: {
-            channel_channel: [{
-                channel_type: 'channel',
-                id: 10,
-                is_pinned: true,
-                message_unread_counter: 1,
-                name: "General",
-            }],
-        },
+    // channel expected to be found in the sidebar, with the expected message_unread_counter
+    // and a random unique id that will be referenced in the test
+    this.data['mail.channel'].records.push({ id: 10, message_unread_counter: 1 });
+    this.data['mail.message'].records.push({
+        channel_ids: [10],
+        model: 'mail.channel',
+        res_id: 10,
     });
-    await this.start({
-        async mockRPC(route, args) {
-            if (args.method === 'message_fetch') {
-                step++;
-                if (step === 1) {
-                    return [];
-                }
-                if (step === 2) {
-                    return [{
-                        author_id: [11, "Demo"],
-                        body: "<p>body</p>",
-                        date: "2019-04-20 10:00:00",
-                        id: 100,
-                        message_type: 'comment',
-                        model: 'mail.channel',
-                        record_name: "General",
-                        res_id: 10,
-                    }];
-                }
-                throw new Error("should not call 'message_fetch' more than twice");
-            }
-            return this._super(...arguments);
-        },
-    });
+    await this.start();
     assert.containsOnce(
         document.body,
         `.o_DiscussSidebar_item[data-thread-local-id="${
@@ -3604,14 +3021,7 @@ QUnit.test('mark channel as seen on last message visible', async function (asser
 QUnit.test('receive new needaction messages', async function (assert) {
     assert.expect(12);
 
-    await this.start({
-        async mockRPC(route, args) {
-            if (args.method === 'message_fetch') {
-                return [];
-            }
-            return this._super(...arguments);
-        },
-    });
+    await this.start();
     assert.ok(
         document.querySelector(`
             .o_DiscussSidebar_item[data-thread-local-id="${
@@ -3646,14 +3056,9 @@ QUnit.test('receive new needaction messages', async function (assert) {
     // simulate receiving a new needaction message
     await afterNextRender(() => {
         const data = {
-            author_id: [7, "Demo"],
-            body: "<p>Test</p>",
-            date: "2019-04-20 11:00:00",
             id: 100,
-            message_type: 'comment',
             needaction_partner_ids: [3],
-            model: 'project.task',
-            record_name: 'Refactoring',
+            model: 'res.partner',
             res_id: 20,
         };
         const notifications = [[['my-db', 'ir.needaction', 3], data]];
@@ -3692,14 +3097,9 @@ QUnit.test('receive new needaction messages', async function (assert) {
     // simulate receiving another new needaction message
     await afterNextRender(() => {
         const data2 = {
-            author_id: [7, "Demo"],
-            body: "<p>Test2</p>",
-            date: "2019-04-20 11:00:00",
             id: 101,
-            message_type: 'comment',
             needaction_partner_ids: [3],
-            model: 'project.task',
-            record_name: 'Refactoring',
+            model: 'res.partner',
             res_id: 20,
         };
         const notifications2 = [[['my-db', 'ir.needaction', 3], data2]];
@@ -3743,30 +3143,32 @@ QUnit.test('receive new needaction messages', async function (assert) {
 QUnit.test('reply to message from inbox (message linked to document)', async function (assert) {
     assert.expect(19);
 
-    Object.assign(this.data.initMessaging, { needaction_inbox_counter: 1 });
-
-    let messagesData = [];
+    // message that is expected to be found in Inbox
+    this.data['mail.message'].records.push({
+        body: "<p>Test</p>",
+        date: "2019-04-20 11:00:00",
+        id: 100, // random unique id, will be used to link notification to message
+        message_type: 'comment',
+        // needaction needs to be set here for message_fetch domain, because
+        // mocked models don't have computed fields
+        needaction: true,
+        model: 'res.partner',
+        record_name: 'Refactoring',
+        res_id: 20,
+    });
+    // notification to have message in Inbox
+    this.data['mail.notification'].records.push({
+        mail_message_id: 100, // id of related message
+        res_partner_id: this.data.currentPartnerId, // must be for current partner
+    });
     await this.start({
         async mockRPC(route, args) {
-            if (args.method === 'message_fetch') {
-                return [{
-                    author_id: [7, "Demo"],
-                    body: "<p>Test</p>",
-                    date: "2019-04-20 11:00:00",
-                    id: 100,
-                    message_type: 'comment',
-                    needaction_partner_ids: [3],
-                    model: 'project.task',
-                    record_name: 'Refactoring',
-                    res_id: 20,
-                }];
-            }
             if (args.method === 'message_post') {
                 assert.step('message_post');
                 assert.strictEqual(
                     args.model,
-                    'project.task',
-                    "should post message to record with model 'project.task'"
+                    'res.partner',
+                    "should post message to record with model 'res.partner'"
                 );
                 assert.strictEqual(
                     args.args[0],
@@ -3783,21 +3185,6 @@ QUnit.test('reply to message from inbox (message linked to document)', async fun
                     "comment",
                     "should set message type as 'comment'"
                 );
-                messagesData.push({
-                    author_id: [3, "Admin"],
-                    body: args.kwargs.body,
-                    date: "2019-04-20 11:00:00",
-                    id: 101,
-                    message_type: args.kwargs.message_type,
-                    model: args.model,
-                    subtype_xmlid: args.kwargs.subtype_xmlid,
-                    record_name: 'Refactoring',
-                    res_id: 20,
-                });
-                return;
-            }
-            if (args.method === 'message_format') {
-                return messagesData;
             }
             return this._super(...arguments);
         },
@@ -3876,109 +3263,34 @@ QUnit.test('reply to message from inbox (message linked to document)', async fun
 });
 
 QUnit.test('load recent messages from thread (already loaded some old messages)', async function (assert) {
-    assert.expect(17);
+    assert.expect(6);
 
-    Object.assign(this.data.initMessaging, {
-        channel_slots: {
-            channel_channel: [{
-                channel_type: 'channel',
-                id: 20,
-                is_pinned: true,
-                name: "General",
-            }],
-        },
-        needaction_inbox_counter: 1,
-    });
-    let step = 0;
-    let mailMessages = {};
+    // channel expected to be found in the sidebar,
+    // with a random unique id that will be referenced in the test
+    this.data['mail.channel'].records.push({ id: 20 });
     for (let i = 0; i < 50; i++) {
-        mailMessages[100 + i] = {
-            author_id: [7, "Demo"],
-            body: `<p>Test${i}</p>`,
-            date: `2019-04-20 11:00:${i < 10 ? '0' + i : i}`,
-            id: 100 + i,
-            message_type: 'comment',
-            needaction_partner_ids: i === 0 ? [3] : [],
-            model: 'mail.channel',
-            record_name: "General",
-            res_id: 20,
-        };
+        this.data['mail.message'].records.push({
+            channel_ids: [20], // id of related channel
+            id: 100 + i, // random unique id, will be referenced in the test
+            model: 'mail.channel', // expected value to link message to channel
+            // needaction needs to be set here for message_fetch domain, because
+            // mocked models don't have computed fields
+            needaction: i === 0,
+            // the goal is to have only the first (oldest) message in Inbox
+            needaction_partner_ids: i === 0 ? [this.data.currentPartnerId] : [],
+            res_id: 20, // id of related channel
+        });
     }
-    await this.start({
-        async mockRPC(route, args) {
-            if (args.method === 'message_fetch') {
-                step++;
-                if (step === 1) {
-                    assert.step('message_fetch:load_inbox');
-                    assert.deepEqual(
-                        args.args[0],
-                        [['needaction', '=', true]],
-                        "should fetch needaction messages from inbox"
-                    );
-                    const needactionMessages = Object
-                        .values(mailMessages)
-                        .filter(mailMessage =>
-                            mailMessage.needaction_partner_ids.length > 0
-                        );
-                    return needactionMessages;
-                }
-                if (step === 2) {
-                    assert.step('message_fetch:load_channel_20');
-                    assert.deepEqual(
-                        args.args[0],
-                        [['channel_ids', 'in', [20]]],
-                        "should fetch messages from channel ID 20"
-                    );
-                    assert.strictEqual(
-                        args.kwargs.limit,
-                        30,
-                        "should limit fetch to 30 messages (load)"
-                    );
-                    const moreRecentMessages = Object
-                        .values(mailMessages)
-                        .sort((mailMsg1, mailMsg2) => mailMsg1.id > mailMsg2.id ? -1 : 1)
-                        .splice(0, 30);
-                    return moreRecentMessages;
-                }
-                if (step === 3) {
-                    assert.step('message_fetch:load_more_channel_20');
-                    assert.deepEqual(
-                        args.args[0],
-                        // loaded 30 messages, so 150 - 30 = 120 = ID of last message fetched
-                        // => load more messages starting from this ID
-                        [['id', '<', 120], ['channel_ids', 'in', [20]]],
-                        "should fetch more messages from 30 more recent messages"
-                    );
-                    assert.strictEqual(
-                        args.kwargs.limit,
-                        30,
-                        "should limit fetch to 30 messages (load more)"
-                    );
-                    const loadMoreMessages = Object
-                        .values(mailMessages)
-                        .filter(mailMessage => mailMessage.id < 120)
-                        .sort((mailMsg1, mailMsg2) => mailMsg1.id > mailMsg2.id ? -1 : 1)
-                        .splice(0, 30);
-                    return loadMoreMessages;
-                }
-                throw new Error("should not fetch more than twice");
-            }
-            return this._super(...arguments);
-        },
-    });
-    assert.verifySteps(
-        ['message_fetch:load_inbox'],
-        "should initially have fetched messages from inbox"
-    );
+    await this.start();
     assert.strictEqual(
         document.querySelectorAll('.o_Message').length,
         1,
-        "should fetch a single message from inbox"
+        "Inbox should have a single message initially"
     );
     assert.strictEqual(
         document.querySelector('.o_Message').dataset.messageLocalId,
         this.env.models['mail.message'].find(message => message.id === 100).localId,
-        "should have fetched 1st message of channel 'General' as needaction from inbox"
+        "the only message initially should be the one marked as 'needaction'"
     );
 
     await afterNextRender(() =>
@@ -3991,14 +3303,11 @@ QUnit.test('load recent messages from thread (already loaded some old messages)'
             }"]
         `).click()
     );
-    assert.verifySteps(
-        ['message_fetch:load_channel_20'],
-        "should initially have fetched messages from channel 'General' (channel 20)"
-    );
     assert.strictEqual(
         document.querySelectorAll('.o_Message').length,
         31,
-        "should display 30 messages from channel 'General' (only fetched ones)"
+        `should display 31 messages inside the channel after clicking on it (the previously known
+        message from Inbox and the 30 most recent messages that have been fetched)`
     );
     assert.strictEqual(
         document.querySelectorAll(`
@@ -4007,20 +3316,16 @@ QUnit.test('load recent messages from thread (already loaded some old messages)'
             }"]
         `).length,
         1,
-        "should not display 1st message of 'General' as needaction from inbox"
+        "should display the message from Inbox inside the channel too"
     );
 
     await afterNextRender(() => {
         document.querySelector(`.o_Discuss_thread .o_ThreadViewer_messageList`).scrollTop = 0;
     });
-    assert.verifySteps(
-        ['message_fetch:load_more_channel_20'],
-        "should have fetched more messages from channel 'General' (channel 20)"
-    );
     assert.strictEqual(
         document.querySelectorAll('.o_Message').length,
         50,
-        "should display 50 messages from channel 'General' (all fetched)"
+        "should display 50 messages inside the channel after scrolling to load more (all messages fetched)"
     );
     assert.strictEqual(
         document.querySelectorAll(`
@@ -4029,60 +3334,52 @@ QUnit.test('load recent messages from thread (already loaded some old messages)'
             }"]
         `).length,
         1,
-        "should include 1st message of 'General' as needaction from inbox in the fetched more messages"
+        "should still display the message from Inbox inside the channel too"
     );
 });
 
 QUnit.test('messages marked as read move to "History" mailbox', async function (assert) {
     assert.expect(10);
 
-    const self = this;
-    this.data['mail.message'].records = [{
-        author_id: [5, 'Demo User'],
-        body: '<p>test 1</p>',
-        id: 1,
-        needaction: true,
-        needaction_partner_ids: [3],
-    }, {
-        author_id: [6, 'Test User'],
-        body: '<p>test 2</p>',
-        id: 2,
-        needaction: true,
-        needaction_partner_ids: [3],
-    }];
-    this.data['mail.notification'].records = [{
-        id: 50,
-        is_read: false,
-        mail_message_id: 1,
-        res_partner_id: 3,
-    }, {
-        id: 51,
-        is_read: false,
-        mail_message_id: 2,
-        res_partner_id: 3,
-    }];
-    this.data.initMessaging.needaction_inbox_counter = 2;
+    // channel expected to be found in the sidebar
+    // with a random unique id that will be referenced in the test
+    this.data['mail.channel'].records.push({ id: 20 });
+    // expected messages
+    this.data['mail.message'].records.push(
+        {
+            id: 100, // random unique id, useful to link notification
+            model: 'mail.channel', // value to link message to channel
+            // needaction needs to be set here for message_fetch domain, because
+            // mocked models don't have computed fields
+            needaction: true,
+            res_id: 20, // id of related channel
+        },
+        {
+            id: 101, // random unique id, useful to link notification
+            model: 'mail.channel', // value to link message to channel
+            // needaction needs to be set here for message_fetch domain, because
+            // mocked models don't have computed fields
+            needaction: true,
+            res_id: 20, // id of related channel
+        }
+    );
+    this.data['mail.notification'].records.push(
+        // notification to have first message in inbox
+        {
+            mail_message_id: 100, // id of related message
+            res_partner_id: this.data.currentPartnerId, // must be for current partner
+        },
+        // notification to have second message in inbox
+        {
+            mail_message_id: 101, // id of related message
+            res_partner_id: this.data.currentPartnerId, // must be for current partner
+        }
+    );
     await this.start({
         discuss: {
             params: {
                 default_active_id: 'mail.box_history',
             },
-        },
-        async mockRPC(route, args) {
-            if (args.method === 'mark_all_as_read') {
-                for (const message of this.data['mail.message'].records) {
-                    message.history_partner_ids = [3];
-                    message.needaction_partner_ids = [];
-                }
-                const notificationData = {
-                    type: 'mark_as_read',
-                    message_ids: [1, 2],
-                };
-                const notification = [[false, 'res.partner', 3], notificationData];
-                self.widget.call('bus_service', 'trigger', 'notification', [notification]);
-                return 3;
-            }
-            return this._super(...arguments);
         },
     });
     assert.ok(
@@ -4172,43 +3469,32 @@ QUnit.test('messages marked as read move to "History" mailbox', async function (
 QUnit.test('mark a single message as read should only move this message to "History" mailbox', async function (assert) {
     assert.expect(9);
 
-    this.data['mail.message'].records = [{
-        author_id: [5, 'Demo User'],
-        body: '<p>test 1</p>',
-        id: 1,
-        needaction: true,
-        needaction_partner_ids: [3],
-    }, {
-        author_id: [6, 'Test User'],
-        body: '<p>test 2</p>',
-        id: 2,
-        needaction: true,
-        needaction_partner_ids: [3],
-    }];
-    this.data['mail.notification'].records = [{
-        id: 50,
-        is_read: false,
-        mail_message_id: 1,
-        res_partner_id: 3,
-    }, {
-        id: 51,
-        is_read: false,
-        mail_message_id: 2,
-        res_partner_id: 3,
-    }];
-    this.data.initMessaging.needaction_inbox_counter = 2;
+    this.data['mail.message'].records.push(
+        {
+            id: 1,
+            needaction: true,
+            needaction_partner_ids: [this.data.currentPartnerId],
+        },
+        {
+            id: 2,
+            needaction: true,
+            needaction_partner_ids: [this.data.currentPartnerId],
+        }
+    );
+    this.data['mail.notification'].records.push(
+        {
+            mail_message_id: 1,
+            res_partner_id: this.data.currentPartnerId,
+        },
+        {
+            mail_message_id: 2,
+            res_partner_id: this.data.currentPartnerId,
+        }
+    );
     await this.start({
         discuss: {
             params: {
                 default_active_id: 'mail.box_history',
-            },
-        },
-        env: {
-            session: {
-                name: 'Admin',
-                partner_display_name: 'Your Company, Admin',
-                partner_id: 3,
-                uid: 2,
             },
         },
     });
@@ -4301,75 +3587,25 @@ QUnit.test('mark a single message as read should only move this message to "Hist
 });
 
 QUnit.test('all messages in "Inbox" in "History" after marked all as read', async function (assert) {
-    assert.expect(10);
+    assert.expect(4);
 
-    const self = this;
-    const messagesData = [];
     const messageOffset = 200;
-    const partnerOffset = 100;
-    for (let i = messageOffset; i < messageOffset + 40; i++) {
-        messagesData.push({
-            author_id: [partnerOffset + i, 'User ' + (partnerOffset + i)],
-            body: '<p>test ' + i + '</p>',
-            id: i,
+    for (let id = messageOffset; id < messageOffset + 40; id++) {
+        // message expected to be found in Inbox
+        this.data['mail.message'].records.push({
+            id, // will be used to link notification to message
+            // needaction needs to be set here for message_fetch domain, because
+            // mocked models don't have computed fields
             needaction: true,
-            needaction_partner_ids: [3],
         });
+        // notification to have message in Inbox
+        this.data['mail.notification'].records.push({
+            mail_message_id: id, // id of related message
+            res_partner_id: this.data.currentPartnerId, // must be for current partner
+        });
+
     }
-
-    this.data['mail.message'].records = messagesData;
-
-    let messageFetchCount = 0;
-    const initDef = makeTestPromise();
-    const markAllReadDef = makeTestPromise();
-    const clickHistoryDef = makeTestPromise();
-    const loadMoreDef = makeTestPromise();
-
-    await this.start({
-        async mockRPC(route, args) {
-            if (args.method === 'mark_all_as_read') {
-                const messageIDs = [];
-                for (let i = 0; i < messagesData.length; i++) {
-                    this.data['mail.message'].records[i].history_partner_ids = [3];
-                    this.data['mail.message'].records[i].needaction_partner_ids = [];
-                    this.data['mail.message'].records[i].needaction = false;
-                    messageIDs.push(messageOffset + i);
-                }
-                const notificationData = {
-                    type: 'mark_as_read',
-                    message_ids: messageIDs,
-                };
-                const notification = [[false, 'res.partner', 3], notificationData];
-                self.widget.call('bus_service', 'trigger', 'notification', [notification]);
-                markAllReadDef.resolve();
-                return 3;
-            }
-            if (args.method === 'message_fetch') {
-                // 1st message_fetch: 'Inbox' initially
-                // 2nd message_fetch: 'History' initially
-                // 3rd message_fetch: 'History' load more
-                assert.step(args.method);
-
-                messageFetchCount++;
-                if (messageFetchCount === 1) {
-                    initDef.resolve();
-                }
-                if (messageFetchCount === 2) {
-                    clickHistoryDef.resolve();
-                }
-                if (messageFetchCount === 3) {
-                    loadMoreDef.resolve();
-                }
-            }
-            return this._super(...arguments);
-        },
-    });
-
-    await initDef;
-    assert.verifySteps(
-        ['message_fetch'],
-        "should fetch messages once for needaction messages (Inbox)"
-    );
+    await this.start();
     assert.containsN(
         document.body,
         '.o_Message',
@@ -4380,12 +3616,11 @@ QUnit.test('all messages in "Inbox" in "History" after marked all as read', asyn
     await afterNextRender(async () => {
         const markAllReadButton = document.querySelector('.o_widget_Discuss_controlPanelButtonMarkAllRead');
         markAllReadButton.click();
-        await markAllReadDef;
     });
     assert.containsNone(
         document.body,
         '.o_Message',
-        "there should no message in inbox anymore"
+        "there should no message in Inbox anymore"
     );
 
     await afterNextRender(async () => {
@@ -4394,12 +3629,7 @@ QUnit.test('all messages in "Inbox" in "History" after marked all as read', asyn
                 this.env.messaging.history.localId
             }"]
         `).click();
-        await clickHistoryDef;
     });
-    assert.verifySteps(
-        ['message_fetch'],
-        "should fetch messages once for history"
-    );
     assert.containsN(
         document.body,
         '.o_Message',
@@ -4410,12 +3640,7 @@ QUnit.test('all messages in "Inbox" in "History" after marked all as read', asyn
     // simulate a scroll to top to load more messages
     await afterNextRender(async () => {
         document.querySelector('.o_MessageList').scrollTop = 0;
-        await loadMoreDef;
     });
-    assert.verifySteps(
-        ['message_fetch'],
-        "should fetch more messages in history for loadMore"
-    );
     assert.containsN(
         document.body,
         '.o_Message',
@@ -4427,24 +3652,15 @@ QUnit.test('all messages in "Inbox" in "History" after marked all as read', asyn
 QUnit.test('receive new channel message: out of odoo focus (notification, channel)', async function (assert) {
     assert.expect(4);
 
-    Object.assign(this.data.initMessaging, {
-        channel_slots: {
-            channel_channel: [{
-                channel_type: "channel",
-                id: 20,
-                is_pinned: true,
-                message_unread_counter: 0,
-                name: "General",
-            }],
-        },
-    });
+    // channel expected to be found in the sidebar
+    // with a random unique id that will be referenced in the test
+    this.data['mail.channel'].records.push({ id: 20 });
     const bus = new Bus();
     bus.on('set_title_part', null, payload => {
         assert.step('set_title_part');
         assert.strictEqual(payload.part, '_chat');
         assert.strictEqual(payload.title, "1 Message");
     });
-
     await this.start({
         env: { bus },
         services: {
@@ -4461,14 +3677,9 @@ QUnit.test('receive new channel message: out of odoo focus (notification, channe
     // simulate receiving a new message with odoo focused
     await afterNextRender(() => {
         const messageData = {
-            author_id: [7, "Demo User"],
-            body: "<p>Test</p>",
             channel_ids: [20],
-            date: "2019-04-20 10:00:00",
             id: 126,
-            message_type: 'comment',
             model: 'mail.channel',
-            record_name: 'General',
             res_id: 20,
         };
         const notifications = [[['my-db', 'mail.channel', 20], messageData]];
@@ -4480,28 +3691,15 @@ QUnit.test('receive new channel message: out of odoo focus (notification, channe
 QUnit.test('receive new channel message: out of odoo focus (notification, chat)', async function (assert) {
     assert.expect(4);
 
-    Object.assign(this.data.initMessaging, {
-        channel_slots: {
-            channel_direct_message: [{
-                channel_type: "chat",
-                direct_partner: [{
-                    id: 7,
-                    is_pinned: true,
-                    name: "Demo User",
-                }],
-                id: 10,
-                is_pinned: true,
-                message_unread_counter: 0,
-            }],
-        },
-    });
+    // chat expected to be found in the sidebar with the proper channel_type
+    // and a random unique id that will be referenced in the test
+    this.data['mail.channel'].records.push({ channel_type: "chat", id: 10 });
     const bus = new Bus();
     bus.on('set_title_part', null, payload => {
         assert.step('set_title_part');
         assert.strictEqual(payload.part, '_chat');
         assert.strictEqual(payload.title, "1 Message");
     });
-
     await this.start({
         env: { bus },
         services: {
@@ -4518,14 +3716,9 @@ QUnit.test('receive new channel message: out of odoo focus (notification, chat)'
     // simulate receiving a new message with odoo focused
     await afterNextRender(() => {
         const messageData = {
-            author_id: [7, "Demo User"],
-            body: "<p>Test</p>",
             channel_ids: [10],
-            date: "2019-04-20 10:00:00",
             id: 126,
-            message_type: 'comment',
             model: 'mail.channel',
-            record_name: 'General',
             res_id: 10,
         };
         const notifications = [[['my-db', 'mail.channel', 10], messageData]];
@@ -4538,27 +3731,12 @@ QUnit.test('receive new channel messages: out of odoo focus (tab title)', async 
     assert.expect(12);
 
     let step = 0;
-    Object.assign(this.data.initMessaging, {
-        channel_slots: {
-            channel_channel: [{
-                channel_type: "channel",
-                id: 20,
-                is_pinned: true,
-                message_unread_counter: 0,
-                name: "General",
-            }],
-            channel_direct_message: [{
-                channel_type: "chat",
-                direct_partner: [{
-                    id: 7,
-                    name: "Demo User",
-                }],
-                id: 10,
-                is_pinned: true,
-                message_unread_counter: 0,
-            }],
-        },
-    });
+    // channel and chat expected to be found in the sidebar
+    // with random unique id and name that will be referenced in the test
+    this.data['mail.channel'].records.push(
+        { id: 20, name: "General" },
+        { channel_type: 'chat', id: 10, public: 'private' }
+    );
     const bus = new Bus();
     bus.on('set_title_part', null, payload => {
         step++;
@@ -4574,7 +3752,6 @@ QUnit.test('receive new channel messages: out of odoo focus (tab title)', async 
             assert.strictEqual(payload.title, "3 Messages");
         }
     });
-
     await this.start({
         env: { bus },
         services: {
@@ -4591,14 +3768,9 @@ QUnit.test('receive new channel messages: out of odoo focus (tab title)', async 
     // simulate receiving a new message in general with odoo focused
     await afterNextRender(() => {
         const messageData1 = {
-            author_id: [7, "Demo User"],
-            body: "<p>Test1</p>",
             channel_ids: [20],
-            date: "2019-04-20 10:00:00",
             id: 126,
-            message_type: 'comment',
             model: 'mail.channel',
-            record_name: 'General',
             res_id: 20,
         };
         const notifications1 = [[['my-db', 'mail.channel', 20], messageData1]];
@@ -4609,14 +3781,9 @@ QUnit.test('receive new channel messages: out of odoo focus (tab title)', async 
     // simulate receiving a new message in chat with odoo focused
     await afterNextRender(() => {
         const messageData2 = {
-            author_id: [7, "Demo User"],
-            body: "<p>Test2</p>",
             channel_ids: [10],
-            date: "2019-04-20 10:00:00",
             id: 127,
-            message_type: 'comment',
             model: 'mail.channel',
-            record_name: 'General',
             res_id: 10,
         };
         const notifications2 = [[['my-db', 'mail.channel', 10], messageData2]];
@@ -4627,14 +3794,9 @@ QUnit.test('receive new channel messages: out of odoo focus (tab title)', async 
     // simulate receiving another new message in chat with odoo focused
     await afterNextRender(() => {
         const messageData3 = {
-            author_id: [7, "Demo User"],
-            body: "<p>Test3</p>",
             channel_ids: [10],
-            date: "2019-04-20 10:00:00",
             id: 128,
-            message_type: 'comment',
             model: 'mail.channel',
-            record_name: 'General',
             res_id: 10,
         };
         const notifications3 = [[['my-db', 'mail.channel', 20], messageData3]];
@@ -4646,27 +3808,23 @@ QUnit.test('receive new channel messages: out of odoo focus (tab title)', async 
 QUnit.test('auto-focus composer on opening thread', async function (assert) {
     assert.expect(14);
 
-    Object.assign(this.data.initMessaging, {
-        channel_slots: {
-            channel_channel: [{
-                channel_type: "channel",
-                id: 20,
-                is_pinned: true,
-                message_unread_counter: 0,
-                name: "General",
-            }],
-            channel_direct_message: [{
-                channel_type: "chat",
-                direct_partner: [{
-                    id: 7,
-                    name: "Demo User",
-                }],
-                id: 10,
-                is_pinned: true,
-                message_unread_counter: 0,
-            }],
+    // expected correspondent, with a random unique id that will be used to link
+    // partner to chat and a random name that will be asserted in the test
+    this.data['res.partner'].records.push({ id: 7, name: "Demo User" });
+    this.data['mail.channel'].records.push(
+        // channel expected to be found in the sidebar
+        {
+            id: 20, // random unique id, will be referenced in the test
+            name: "General", // random name, will be asserted in the test
         },
-    });
+        // chat expected to be found in the sidebar
+        {
+            channel_type: 'chat', // testing a chat is the goal of the test
+            id: 10, // random unique id, will be referenced in the test
+            members: [this.data.currentPartnerId, 7], // expected partners
+            public: 'private', // expected value for testing a chat
+        }
+    );
     await this.start();
     assert.strictEqual(
         document.querySelectorAll(`

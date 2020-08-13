@@ -37,8 +37,18 @@ var MockServer = Class.extend({
             model.records = model.records || [];
 
             for (var i = 0; i < model.records.length; i++) {
-                var record = model.records[i];
-                this._applyDefaults(model, record);
+                const values = model.records[i];
+                // add potentially missing id
+                const id = values.id === undefined
+                    ? this._getUnusedID(modelName) :
+                    values.id;
+                // create a clean object, initial values are passed to write
+                model.records[i] = { id };
+                // ensure initial data goes through proper conversion (x2m, ...)
+                this._applyDefaults(model, values);
+                this._writeRecord(modelName, values, id, {
+                    ensureIntegrity: false,
+                });
             }
         }
 
@@ -95,6 +105,26 @@ var MockServer = Class.extend({
         return fvg;
     },
     /**
+     * Simulates a complete fetch call.
+     *
+     * @param {string} resource
+     * @param {Object} init
+     * @returns {any}
+     */
+    async performFetch(resource, init) {
+        if (this.debug) {
+            console.log(
+                '%c[fetch] request ' + resource, 'color: blue; font-weight: bold;',
+                JSON.parse(JSON.stringify(init))
+            );
+        }
+        const res = await this._performFetch(resource, init);
+        if (this.debug) {
+            console.log('%c[fetch] response' + resource, 'color: blue; font-weight: bold;', res);
+        }
+        return res;
+    },
+    /**
      * Simulate a complete RPC call. This is the main method for this class.
      *
      * This method also log incoming and outgoing data, and stringify/parse data
@@ -136,9 +166,7 @@ var MockServer = Class.extend({
             var message = result && result.message;
             var event = result && result.event;
             var errorString = JSON.stringify(message || false);
-            if (debug) {
-                console.log('%c[rpc] response (error) ' + route, 'color: orange; font-weight: bold;', JSON.parse(errorString));
-            }
+            console.warn('%c[rpc] response (error) ' + route, 'color: orange; font-weight: bold;', JSON.parse(errorString));
             return Promise.reject({message: errorString, event: event || $.Event()});
         });
 
@@ -165,7 +193,8 @@ var MockServer = Class.extend({
             }
             if (!(fieldName in record)) {
                 if ('default' in model.fields[fieldName]) {
-                    record[fieldName] = model.fields[fieldName].default;
+                    const def = model.fields[fieldName].default;
+                    record[fieldName] = typeof def === 'function' ? def.call(this) : def;
                 } else if (_.contains(['one2many', 'many2many'], model.fields[fieldName].type)) {
                     record[fieldName] = [];
                 } else {
@@ -375,9 +404,11 @@ var MockServer = Class.extend({
      * @private
      * @param {string} model a model name
      * @param {any[]} domain
+     * @param {Object} [params={}]
+     * @param {boolean} [params.active_test=true]
      * @returns {Object[]} a list of records
      */
-    _getRecords: function (model, domain) {
+    _getRecords: function (model, domain, { active_test = true } = {}) {
         if (!_.isArray(domain)) {
             throw new Error("MockServer._getRecords: given domain has to be an array.");
         }
@@ -385,7 +416,7 @@ var MockServer = Class.extend({
         var self = this;
         var records = this.data[model].records;
 
-        if ('active' in this.data[model].fields) {
+        if (active_test && 'active' in this.data[model].fields) {
             // add ['active', '=', true] to the domain if 'active' is not yet present in domain
             var activeInDomain = false;
             _.each(domain, function (subdomain) {
@@ -416,18 +447,15 @@ var MockServer = Class.extend({
                 return criterion;
             });
             records = _.filter(records, function (record) {
-                var fieldValues = _.mapObject(record, function (value) {
-                    return value instanceof Array ? value[0] : value;
-                });
-                return self._evaluateDomain(domain, fieldValues);
+                return self._evaluateDomain(domain, record);
             });
         }
 
         return records;
     },
     /**
-     * Helper function, to find an available ID. The current algorithm is to add
-     * all other IDS.
+     * Helper function, to find an available ID. The current algorithm is to
+     * return the currently highest id + 1.
      *
      * @private
      * @param {string} modelName
@@ -435,9 +463,12 @@ var MockServer = Class.extend({
      */
     _getUnusedID: function (modelName) {
         var model = this.data[modelName];
-        return _.reduce(model.records, function (acc, record){
-            return acc + record.id;
-        }, 1);
+        return model.records.reduce((max, record) => {
+            if (!Number.isInteger(record.id)) {
+                return max;
+            }
+            return Math.max(record.id, max);
+        }, 0) + 1;
     },
     /**
      * Simulate a 'copy' operation, so we simply try to duplicate a record in
@@ -475,7 +506,7 @@ var MockServer = Class.extend({
         var record = {id: id};
         model.records.push(record);
         this._applyDefaults(model, values);
-        this._mockWrite(modelName, [[id], values]);
+        this._writeRecord(modelName, values, id);
         return id;
     },
     /**
@@ -1697,6 +1728,16 @@ var MockServer = Class.extend({
         return true;
     },
     /**
+     * Dispatches a fetch call to the correct helper function.
+     *
+     * @param {string} resource
+     * @param {Object} init
+     * @returns {any}
+     */
+    _performFetch(resource, init) {
+        throw new Error("Unimplemented resource: " + resource);
+    },
+    /**
      * Dispatch a RPC call to the correct helper function
      *
      * @see performRpc
@@ -1851,24 +1892,34 @@ var MockServer = Class.extend({
      * @param {string} model
      * @param {Object} values
      * @param {integer} id
+     * @param {Object} [params={}]
+     * @param {boolean} [params.ensureIntegrity=true] writing non-existing id
+     *  in many2one field will throw if this param is true
      */
-    _writeRecord: function (model, values, id) {
+    _writeRecord: function (model, values, id, { ensureIntegrity = true } = {}) {
         var self = this;
         var record = _.findWhere(this.data[model].records, {id: id});
         for (var field_changed in values) {
             var field = this.data[model].fields[field_changed];
             var value = values[field_changed];
             if (!field) {
-                console.warn("Mock: Can't write on field '" + field_changed + "' on model '" + model + "' (field is undefined)");
-                continue;
+                throw Error(`Mock: Can't write value "${JSON.stringify(value)}" on field "${field_changed}" on record "${model},${id}" (field is undefined)`);
             }
             if (_.contains(['one2many', 'many2many'], field.type)) {
                 var ids = _.clone(record[field_changed]) || [];
+
+                // fallback to command 6 when given a simple list of ids
+                if (
+                    Array.isArray(value) &&
+                    value.reduce((hasOnlyInt, val) => hasOnlyInt && Number.isInteger(val), true)
+                ) {
+                    value = [[6, 0, value]];
+                }
                 // convert commands
-                _.each(value, function (command) {
+                for (const command of value || []) {
                     if (command[0] === 0) { // CREATE
-                        var id = self._mockCreate(field.relation, command[2]);
-                        ids.push(id);
+                        const newId = self._mockCreate(field.relation, command[2]);
+                        ids.push(newId);
                     } else if (command[0] === 1) { // UPDATE
                         self._mockWrite(field.relation, [[command[1]], command[2]]);
                     } else if (command[0] === 2) { // DELETE
@@ -1882,22 +1933,22 @@ var MockServer = Class.extend({
                     } else if (command[0] === 5) { // DELETE ALL
                         ids = [];
                     } else if (command[0] === 6) { // REPLACE WITH
-                        ids = command[2];
+                        // copy array to avoid leak by reference (eg. of default data)
+                        ids = [...command[2]];
                     } else {
-                        console.error('Command ' + JSON.stringify(command) + ' not supported by the MockServer');
+                        throw Error(`Command "${JSON.stringify(value)}" not supported by the MockServer on field "${field_changed}" on record "${model},${id}"`);
                     }
-                });
+                }
                 record[field_changed] = ids;
             } else if (field.type === 'many2one') {
                 if (value) {
                     var relatedRecord = _.findWhere(this.data[field.relation].records, {
                         id: value
                     });
-                    if (!relatedRecord) {
-                        throw new Error("Wrong id for a many2one");
-                    } else {
-                        record[field_changed] = value;
+                    if (!relatedRecord && ensureIntegrity) {
+                        throw Error(`Wrong id "${JSON.stringify(value)}" for a many2one on field "${field_changed}" on record "${model},${id}"`);
                     }
+                    record[field_changed] = value;
                 } else {
                     record[field_changed] = false;
                 }
