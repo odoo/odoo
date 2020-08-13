@@ -250,7 +250,7 @@ class MrpWorkorder(models.Model):
             if len(wo.production_id.workorder_ids) == 1:
                 res.append((wo.id, "%s - %s - %s" % (wo.production_id.name, wo.product_id.name, wo.name)))
             else:
-                res.append((wo.id, "%s - %s - %s - %s" % (wo.production_id.workorder_ids.ids.index(wo.id) + 1, wo.production_id.name, wo.product_id.name, wo.name)))
+                res.append((wo.id, "%s - %s - %s - %s" % (wo.production_id.workorder_ids.ids.index(wo._origin.id) + 1, wo.production_id.name, wo.product_id.name, wo.name)))
         return res
 
     def unlink(self):
