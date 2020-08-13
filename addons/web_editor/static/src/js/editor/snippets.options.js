@@ -491,6 +491,7 @@ registry.marginAndResize = SnippetOption.extend({
             var body_mouseup = function () {
                 $body.unbind('mousemove', body_mousemove);
                 $body.unbind('mouseup', body_mouseup);
+                $body.unbind('mouseleave', body_mouseup);
                 $body.removeClass(cursor);
                 setTimeout(function () {
                     if (begin !== current) {
@@ -511,6 +512,7 @@ registry.marginAndResize = SnippetOption.extend({
             };
             $body.mousemove(body_mousemove);
             $body.mouseup(body_mouseup);
+            $body.mouseleave(body_mouseup);
         });
         $auto_size.on('click', function () {
             self.$target.css('height', '');
