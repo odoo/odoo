@@ -5,7 +5,7 @@
     'name': 'Sales',
     'version': '1.0',
     'category': 'Sales/Sales',
-    'sequence': 17,
+    'sequence': 5,
     'summary': 'From quotations to invoices',
     'description': """
 Manage sales quotations and orders

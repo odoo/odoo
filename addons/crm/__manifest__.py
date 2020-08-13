@@ -5,7 +5,7 @@
     'name': 'CRM',
     'version': '1.2',
     'category': 'Sales/CRM',
-    'sequence': 5,
+    'sequence': 15,
     'summary': 'Track leads and close opportunities',
     'description': "",
     'website': 'https://www.odoo.com/page/crm',

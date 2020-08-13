@@ -5,7 +5,7 @@
     'name': 'Employees',
     'version': '1.1',
     'category': 'Human Resources/Employees',
-    'sequence': 75,
+    'sequence': 95,
     'summary': 'Centralize employee information',
     'description': "",
     'website': 'https://www.odoo.com/page/employees',
