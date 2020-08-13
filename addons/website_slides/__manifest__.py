@@ -2,7 +2,7 @@
 {
     'name': 'eLearning',
     'version': '2.2',
-    'sequence': 145,
+    'sequence': 125,
     'summary': 'Manage and publish an eLearning platform',
     'website': 'https://www.odoo.com/page/slides',
     'category': 'Website/eLearning',

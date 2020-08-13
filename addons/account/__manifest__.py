@@ -4,7 +4,7 @@
     'name' : 'Invoicing',
     'version' : '1.1',
     'summary': 'Invoices & Payments',
-    'sequence': 15,
+    'sequence': 10,
     'description': """
 Invoicing & Payments
 ====================

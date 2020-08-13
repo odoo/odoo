@@ -5,7 +5,7 @@
     'name': 'Purchase',
     'version': '1.2',
     'category': 'Inventory/Purchase',
-    'sequence': 60,
+    'sequence': 35,
     'summary': 'Purchase orders, tenders and agreements',
     'description': "",
     'website': 'https://www.odoo.com/page/purchase',

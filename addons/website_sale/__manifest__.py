@@ -1,7 +1,7 @@
 {
     'name': 'eCommerce',
     'category': 'Website/Website',
-    'sequence': 55,
+    'sequence': 50,
     'summary': 'Sell your products online',
     'website': 'https://www.odoo.com/page/e-commerce',
     'version': '1.0',

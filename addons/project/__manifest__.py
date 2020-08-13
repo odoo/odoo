@@ -6,7 +6,7 @@
     'version': '1.1',
     'website': 'https://www.odoo.com/page/project-management',
     'category': 'Services/Project',
-    'sequence': 10,
+    'sequence': 45,
     'summary': 'Organize and plan your projects',
     'depends': [
         'analytic',

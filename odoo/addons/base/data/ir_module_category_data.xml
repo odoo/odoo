@@ -3,16 +3,18 @@
     <data>
         <record model="ir.module.category" id="module_category_hidden">
             <field name="name">Technical</field>
-            <field name="sequence">0</field>
+            <field name="sequence">60</field>
             <field name="visible" eval="0" />
         </record>
 
         <record model="ir.module.category" id="module_category_accounting">
             <field name="name">Accounting</field>
+            <field name="sequence">15</field>
         </record>
 
         <record model="ir.module.category" id="module_category_accounting_localizations">
             <field name="name">Localization</field>
+            <field name="sequence">65</field>
             <field name="visible" eval="0" />
             <field name="parent_id" ref="module_category_accounting"/>
         </record>
@@ -41,32 +43,27 @@
 
         <record model="ir.module.category" id="module_category_sales">
             <field name="name">Sales</field>
-            <field name="sequence">6</field>
+            <field name="sequence">5</field>
         </record>
 
         <record model="ir.module.category" id="module_category_human_resources">
             <field name="name">Human Resources</field>
-            <field name="sequence">8</field>
-        </record>
-
-        <record model="ir.module.category" id="module_category_operations">
-            <field name="name">Operations</field>
-            <field name="sequence">10</field>
+            <field name="sequence">45</field>
         </record>
 
         <record model="ir.module.category" id="module_category_marketing">
             <field name="name">Marketing</field>
-            <field name="sequence">12</field>
+            <field name="sequence">40</field>
         </record>
 
         <record model="ir.module.category" id="module_category_manufacturing">
             <field name="name">Manufacturing</field>
-            <field name="sequence">14</field>
+            <field name="sequence">30</field>
         </record>
 
         <record model="ir.module.category" id="module_category_website">
             <field name="name">Website</field>
-            <field name="sequence">16</field>
+            <field name="sequence">35</field>
         </record>
 
         <record model="ir.module.category" id="module_category_theme">
@@ -93,10 +90,30 @@
             <field name="sequence">25</field>
         </record>
 
+        <record model="ir.module.category" id="module_category_services">
+            <field name="name">Services</field>
+            <field name="sequence">10</field>
+        </record>
+
         <record model="ir.module.category" id="module_category_services_helpdesk">
             <field name="name">Helpdesk</field>
             <field name="description">After-sales services</field>
             <field name="sequence">14</field>
+        </record>
+
+        <record model="ir.module.category" id="module_category_inventory">
+            <field name="name">Inventory</field>
+            <field name="sequence">25</field>
+        </record>
+
+        <record model="ir.module.category" id="module_category_productivity">
+            <field name="name">Productivity</field>
+            <field name="sequence">50</field>
+        </record>
+
+        <record model="ir.module.category" id="module_category_customizations">
+            <field name="name">Customizations</field>
+            <field name="sequence">55</field>
         </record>
 
         <record model="ir.module.category" id="module_category_administration_administration">
