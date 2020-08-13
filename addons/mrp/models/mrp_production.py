@@ -1107,6 +1107,7 @@ class MrpProduction(models.Model):
             if not production.move_raw_ids:
                 raise UserError(_("Add some materials to consume before marking this MO as to do."))
             production.move_raw_ids._adjust_procure_method()
+            (production.move_raw_ids | production.move_finished_ids).origin = production.origin or production.procurement_group_id.name
             (production.move_raw_ids | production.move_finished_ids)._action_confirm()
             # in case of 3-step manufacturing, create post manufacturing move when it's cancelled
             # this may happen when "reset to draft" or change a confirmed MO
