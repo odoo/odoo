@@ -3,6 +3,7 @@ odoo.define("website_event_track_online.website_event_pwa_widget", function (req
 
     var config = require("web.config");
     var publicWidget = require("web.public.widget");
+    var utils = require("web.utils");
 
     var PWAInstallBanner = publicWidget.Widget.extend({
         xmlDependencies: ["/website_event_track_online/static/src/xml/website_event_pwa.xml"],
@@ -41,7 +42,7 @@ odoo.define("website_event_track_online.website_event_pwa_widget", function (req
         start: function () {
             var superProm = this._super.apply(this, arguments);
             window.addEventListener("beforeinstallprompt", this.beforeInstallPromptHandler);
-            return superProm.then(this._registerServiceWorker);
+            return superProm.then(this._registerServiceWorker.bind(this));
         },
 
         /**
@@ -58,6 +59,19 @@ odoo.define("website_event_track_online.website_event_pwa_widget", function (req
         //--------------------------------------------------------------------------
 
         /**
+         * Returns the website's language
+         * @private
+         * @return {String}
+         */
+        _getLangPrefix: function () {
+            var lang = utils.get_cookie('frontend_lang');
+            if (lang !== undefined && window.location.href.indexOf(`/${lang}/`) >= 0) {
+                return `/${lang}`;
+            }
+            return '';
+        },
+
+        /**
          * @private
          */
         _hideInstallBanner: function () {
@@ -72,8 +86,9 @@ odoo.define("website_event_track_online.website_event_pwa_widget", function (req
             if (!("serviceWorker" in navigator)) {
                 return;
             }
+            var langPrefix = this._getLangPrefix();
             navigator.serviceWorker
-                .register("/event/service-worker.js", { scope: "/event" })
+                .register(`${langPrefix}/event/service-worker.js`, { scope: `${langPrefix}/event` })
                 .then((registration) => {
                     console.info("Registration successful, scope is:", registration.scope);
                 })

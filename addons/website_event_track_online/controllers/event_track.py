@@ -8,6 +8,7 @@ from datetime import timedelta
 import pytz
 
 from odoo import exceptions, http, fields
+from odoo.addons.http_routing.models.ir_http import url_for
 from odoo.addons.website_event_track.controllers.main import WebsiteEventTrackController
 from odoo.http import request
 from odoo.modules.module import get_module_resource
@@ -243,8 +244,8 @@ class EventTrackOnlineController(WebsiteEventTrackController):
             'name': _('%s Online Events') % company.name,
             'short_name': company.name,
             'description': _('%s Online Events') % company.name,
-            'scope': '/event',
-            'start_url': '/event',
+            'scope': url_for('/event'),
+            'start_url': url_for('/event'),
             'display': 'standalone',
             'background_color': '#ffffff',
             'theme_color': '#875A7B',
@@ -270,6 +271,6 @@ class EventTrackOnlineController(WebsiteEventTrackController):
             body = fp.read()
         response = request.make_response(body, [
             ('Content-Type', 'text/javascript'),
-            ('Service-Worker-Allowed', '/event'),
+            ('Service-Worker-Allowed', url_for('/event')),
         ])
         return response
