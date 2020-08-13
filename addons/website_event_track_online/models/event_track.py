@@ -17,6 +17,12 @@ class Track(models.Model):
     partner_biography = fields.Html(
         string='Biography', compute='_compute_partner_biography',
         readonly=False, store=True)
+    partner_function = fields.Char(
+        'Job Position', related='partner_id.function',
+        compute_sudo=True, readonly=True)
+    partner_company_name = fields.Char(
+        'Company Name', related='partner_id.parent_name',
+        compute_sudo=True, readonly=True)
     image = fields.Image(
         string="Speaker Photo", compute="_compute_speaker_image",
         readonly=False, store=True,
