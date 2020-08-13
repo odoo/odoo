@@ -17,6 +17,8 @@ Accounting chart and localization for Ecuador.
     'depends': [
         'account',
         'base_iban',
+        'l10n_latam_base',
+        'l10n_latam_invoice_document',
     ],
     'data': [
         'data/l10n_ec_chart_data.xml',
