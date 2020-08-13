@@ -3429,3 +3429,115 @@ td {
 .currencyCashBox {
     font-size: 30px;
 }
+
+.receipt-screen .default-view {
+    display: flex;
+    overflow: hidden;
+}
+
+.receipt-screen .default-view .pos-receipt-container {
+    flex: 0 1 400px;
+    overflow: auto;
+}
+
+.receipt-screen .default-view .actions {
+    flex: 1;
+    margin: 0 1.5rem;
+}
+
+.receipt-screen .default-view .actions * {
+    font-size: 1rem;
+}
+
+.receipt-screen .default-view .actions h1 {
+    font-size: 1.5rem;
+    margin-bottom: 4rem;
+}
+
+.receipt-screen .default-view .actions .buttons {
+    display: flex;
+    margin: 1rem 0px;
+}
+
+.receipt-screen .default-view .actions .buttons .button {
+    flex: 1;
+    border: solid 1px rgb(209, 209, 209);
+    padding: 1rem;
+    text-align: center;
+    border-radius: 3px;
+    cursor: pointer;
+    background: rgb(230, 230, 230);
+}
+
+.receipt-screen .default-view .actions .send-email {
+    display: flex;
+}
+
+.receipt-screen .default-view .actions .send-email .email-icon {
+    padding: 1rem;
+    border: solid 1px rgb(209, 209, 209);
+    border-right: none;
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
+}
+
+.receipt-screen .default-view .actions .send-email .input-email {
+    display: flex;
+    flex: 1;
+    background: white;
+    border: solid 1px rgb(209, 209, 209);
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+}
+
+.receipt-screen .default-view .actions .send-email input {
+    flex: 1;
+    padding-left: 1rem;
+    border: none;
+    color: #555555;
+}
+
+.receipt-screen .default-view .actions .send-email input:focus {
+    outline: none;
+}
+
+.receipt-screen .default-view .actions .send-email button.send {
+    padding: 1rem 40px;
+    margin: 2px;
+    border: none;
+    background: rgb(230, 230, 230);
+}
+
+.receipt-screen .default-view .actions .send-email button.send.highlight {
+    color: white;
+    background-color: #6EC89B;
+}
+
+.receipt-screen .notice {
+    margin-top: 6px;
+}
+
+.receipt-screen .notice.failed {
+    color: rgb(168, 89, 89);
+}
+
+.receipt-screen .notice.successful {
+    color: #6EC89B;
+}
+
+@media screen and (max-width: 768px) {
+    .receipt-screen .default-view {
+        flex-direction: column-reverse;
+        overflow: auto;
+    }
+    .receipt-screen .default-view .actions {
+        flex: 0;
+    }
+    .receipt-screen .default-view .actions h1 {
+        margin-bottom: 1.5rem;
+    }
+    .receipt-screen .default-view .pos-receipt-container {
+        flex: 1;
+        overflow: visible;
+    }
+}

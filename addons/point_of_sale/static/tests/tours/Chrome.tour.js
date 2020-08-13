@@ -49,7 +49,7 @@ odoo.define('point_of_sale.tour.Chrome', function (require) {
     // Select order 3, should be at Receipt Screen
     Chrome.do.clickTicketButton();
     TicketScreen.do.selectOrder('-0003');
-    ReceiptScreen.check.changeIs('0.0');
+    ReceiptScreen.check.totalAmountContains('30.0');
 
     // Pay order 1, with change
     Chrome.do.clickTicketButton();
@@ -58,16 +58,16 @@ odoo.define('point_of_sale.tour.Chrome', function (require) {
     PaymentScreen.do.clickPaymentMethod('Cash');
     PaymentScreen.do.pressNumpad('2 0');
     PaymentScreen.do.clickValidate();
-    ReceiptScreen.check.changeIs('18.0');
+    ReceiptScreen.check.totalAmountContains('2.0');
 
     // Order 1 now should have Receipt status
     Chrome.do.clickTicketButton();
     TicketScreen.check.checkStatus('-0001', 'Receipt');
 
     // Select order 3, should still be at Receipt Screen
-    // but change should be different.
+    // and the total amount doesn't change.
     TicketScreen.do.selectOrder('-0003');
-    ReceiptScreen.check.changeIs('0.0');
+    ReceiptScreen.check.totalAmountContains('30.0');
 
     // click next screen on order 3
     // then delete the new empty order
