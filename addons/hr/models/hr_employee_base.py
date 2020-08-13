@@ -25,7 +25,7 @@ class HrEmployeeBase(models.AbstractModel):
     address_id = fields.Many2one('res.partner', 'Work Address', compute="_compute_address_id", store=True, readonly=False,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     work_phone = fields.Char('Work Phone', compute="_compute_phones", store=True, readonly=False)
-    mobile_phone = fields.Char('Work Mobile', compute="_compute_phones", store=True, readonly=False)
+    mobile_phone = fields.Char('Work Mobile')
     work_email = fields.Char('Work Email')
     work_location = fields.Char('Work Location')
     user_id = fields.Many2one('res.users')
@@ -110,9 +110,11 @@ class HrEmployeeBase(models.AbstractModel):
 
     @api.depends('address_id')
     def _compute_phones(self):
-        for employee in self.filtered('address_id'):
-            if employee.address_id.phone:
+        for employee in self:
+            if employee.address_id and employee.address_id.phone:
                 employee.work_phone = employee.address_id.phone
+            else:
+                employee.work_phone = False
 
     @api.depends('company_id')
     def _compute_address_id(self):
