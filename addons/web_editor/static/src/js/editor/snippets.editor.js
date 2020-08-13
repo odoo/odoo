@@ -828,6 +828,7 @@ var SnippetsMenu = Widget.extend({
         'snippet_removed': '_onSnippetRemoved',
         'snippet_cloned': '_onSnippetCloned',
         'snippet_option_visibility_update': '_onSnippetOptionVisibilityUpdate',
+        'snippet_thumbnail_url_request': '_onSnippetThumbnailURLRequest',
         'reload_snippet_dropzones': '_disableUndroppableSnippets',
         'request_save': '_onSaveRequest',
         'update_customize_elements': '_onUpdateCustomizeElements',
@@ -2306,6 +2307,14 @@ var SnippetsMenu = Widget.extend({
             await this._activateSnippet(false);
         }
         await this._updateInvisibleDOM(); // Re-render to update status
+    },
+    /**
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onSnippetThumbnailURLRequest(ev) {
+        const $snippet = this.$snippets.has(`[data-snippet="${ev.data.key}"]`);
+        ev.data.onSuccess($snippet.length ? $snippet[0].dataset.oeThumbnail : '');
     },
     /**
      * @private
