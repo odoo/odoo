@@ -4,6 +4,7 @@
 {
     'name': 'PayuLatam Payment Acquirer',
     'category': 'Accounting/Payment Acquirers',
+    'sequence': 370,
     'summary': 'Payment Acquirer: PayuLatam Implementation',
     'description': """Payulatam payment acquirer""",
     'depends': ['payment'],

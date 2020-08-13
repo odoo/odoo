@@ -3,7 +3,7 @@
 {
     'name': 'Events',
     'category': 'Marketing/Events',
-    'sequence': 166,
+    'sequence': 140,
     'summary': 'Publish events, sell tickets',
     'website': 'https://www.odoo.com/page/events',
     'description': "",

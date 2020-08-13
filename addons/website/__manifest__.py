@@ -4,7 +4,7 @@
 {
     'name': 'Website',
     'category': 'Website/Website',
-    'sequence': 7,
+    'sequence': 20,
     'summary': 'Enterprise website builder',
     'website': 'https://www.odoo.com/page/website-builder',
     'version': '1.0',

@@ -8,6 +8,7 @@
     'version': '1.0',
     'author': 'Eezee-It',
     'category': 'Accounting/Payment Acquirers',
+    'sequence': 385,
     'description': """
 Worldline SIPS Payment Acquirer for online payments
 

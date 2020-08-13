@@ -4,6 +4,7 @@
 {
     'name': 'Alipay Payment Acquirer',
     'category': 'Accounting/Payment Acquirers',
+    'sequence': 345,
     'summary': 'Payment Acquirer: Alipay Implementation',
     'description': """Alipay Payment Acquirer""",
     'depends': ['payment'],

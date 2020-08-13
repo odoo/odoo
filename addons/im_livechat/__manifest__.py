@@ -2,7 +2,7 @@
 {
     'name' : 'Live Chat',
     'version': '1.0',
-    'sequence': 170,
+    'sequence': 210,
     'summary': 'Chat with your website visitors',
     'category': 'Website/Live Chat',
     'complexity': 'easy',

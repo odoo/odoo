@@ -5,6 +5,7 @@
     'name': 'Employee Contracts',
     'version': '1.0',
     'category': 'Human Resources/Contracts',
+    'sequence': 335,
     'description': """
 Add all information on the employee form to manage contracts.
 =============================================================

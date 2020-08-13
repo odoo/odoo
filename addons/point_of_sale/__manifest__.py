@@ -5,7 +5,7 @@
     'name': 'Point of Sale',
     'version': '1.0.1',
     'category': 'Sales/Point of Sale',
-    'sequence': 20,
+    'sequence': 40,
     'summary': 'User-friendly PoS interface for shops and restaurants',
     'description': "",
     'depends': ['stock_account', 'barcodes', 'web_editor', 'digest'],
