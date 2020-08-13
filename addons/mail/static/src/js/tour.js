@@ -32,8 +32,8 @@ tour.register('mail_tour', {
     },
 }, {
     trigger: ".ui-menu-item > a",
-    auto: true,
-    in_modal: false,
+    content: _t("<p>Create a public or private channel.</p>"),
+    position: "right",
 }, {
     trigger: '.o_mail_discuss .o_composer_text_field',
     content: _t("<p><b>Write a message</b> to the members of the channel here.</p> <p>You can notify someone with <i>'@'</i> or link another channel with <i>'#'</i>. Start your message with <i>'/'</i> to get the list of possible commands.</p>"),
