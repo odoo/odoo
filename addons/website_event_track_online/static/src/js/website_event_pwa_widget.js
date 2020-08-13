@@ -76,6 +76,7 @@ odoo.define("website_event_track_online.website_event_pwa_widget", function (req
          */
         _hideInstallBanner: function () {
             this.installBanner ? this.installBanner.destroy() : undefined;
+            $('.o_livechat_button').css('bottom', '0');
         },
 
         /**
@@ -102,7 +103,11 @@ odoo.define("website_event_track_online.website_event_pwa_widget", function (req
          */
         _showInstallBanner: function () {
             this.installBanner = new PWAInstallBanner(this);
-            this.installBanner.appendTo(this.$el);
+            this.installBanner.appendTo(this.$el).then(() => {
+                // If Livechat available, It should be placed above the PWA banner.
+                var height = this.$('.o_pwa_install_banner').outerHeight(true);
+                $('.o_livechat_button').css('bottom', height + 'px');
+            });
         },
 
         //--------------------------------------------------------------------------

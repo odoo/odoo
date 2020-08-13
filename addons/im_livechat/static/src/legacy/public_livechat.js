@@ -110,6 +110,13 @@ var LivechatButton = Widget.extend({
         if (this.options.button_text_color) {
             this.$el.css('color', this.options.button_text_color);
         }
+
+        // If website_event_track_online installed, put the livechat banner above the PWA banner.
+        var pwaBannerHeight = $('.o_pwa_install_banner').outerHeight(true);
+        if (pwaBannerHeight) {
+            this.$el.css('bottom', pwaBannerHeight + 'px');
+        }
+
         return this._super();
     },
 
