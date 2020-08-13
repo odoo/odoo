@@ -31,18 +31,36 @@ class TestHrHolidaysCommon(common.TransactionCase):
             'name': 'Research and devlopment',
         })
 
+        # Create a an accrual plan
+        AccrualPlan = self.env['hr.accrual.plan'].with_context(tracking_disable=True)
+        self.accrual_plan = AccrualPlan.create({
+            'name': 'Accrual Plan For Test',
+            'accrual_ids': [(0, 0, {
+                'name': '1h/day daily after 0 day',
+                'start_count': 0,
+                'start_type': 'days',
+                'added_hours': 1,
+                'frequency': 'daily',
+                'start_of_period': 'first',
+            })],
+        })
+
         self.employee_emp = self.env['hr.employee'].create({
             'name': 'David Employee',
             'user_id': self.user_employee_id,
             'department_id': self.rd_dept.id,
+            'accrual_plan_id': self.accrual_plan.id,
         })
+
         self.employee_emp_id = self.employee_emp.id
 
         self.employee_hruser = self.env['hr.employee'].create({
             'name': 'Armande HrUser',
             'user_id': self.user_hruser_id,
             'department_id': self.rd_dept.id,
+            'accrual_plan_id': self.accrual_plan.id,
         })
+
         self.employee_hruser_id = self.employee_hruser.id
 
         self.employee_hrmanager = self.env['hr.employee'].create({
