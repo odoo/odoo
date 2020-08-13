@@ -138,7 +138,7 @@ class AccrualPlanLine(models.Model):
             previous = today
 
         if self.frequency == 'weekly':
-            if self.start_of_period == "first monday" or self.start_of_period == "first":
+            if self.start_of_period in ["first monday", "first"]:
                 next = self._get_next_weekday(today, 1)
             elif self.start_of_period == "last":
                 next = self._get_next_weekday(today, 4)
