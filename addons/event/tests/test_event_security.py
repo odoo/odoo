@@ -58,11 +58,6 @@ class TestEventSecurity(TestEventCommon):
                 'name': 'TestEvent Modified',
             })
 
-        # with self.assertRaises(AccessError):
-        #     self.env['event.stage'].create({
-        #         'name': 'TestStage',
-        #     })
-
     @users('user_eventmanager')
     @mute_logger('odoo.models.unlink', 'odoo.addons.base.models.ir_model')
     def test_event_access_event_manager(self):
