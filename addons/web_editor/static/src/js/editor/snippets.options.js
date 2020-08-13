@@ -491,6 +491,7 @@ registry.sizing = SnippetOption.extend({
             var body_mouseup = function () {
                 $body.off('mousemove', body_mousemove);
                 $body.off('mouseup', body_mouseup);
+                $body.off('mouseenter', body_mouseenter);
                 $body.removeClass(cursor);
                 $handle.removeClass('o_active');
 
@@ -510,8 +511,14 @@ registry.sizing = SnippetOption.extend({
                     });
                 }, 0);
             };
+            var body_mouseenter = function (ev) {
+                if (!ev.buttons) {
+                    body_mouseup();
+                }
+            };
             $body.on('mousemove', body_mousemove);
             $body.on('mouseup', body_mouseup);
+            $body.on('mouseenter', body_mouseenter);
         });
 
         return def;
