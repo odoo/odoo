@@ -567,7 +567,7 @@ class Option:
     required: bool = False
     """
     Whether the user have to provide a suitable value via any source,
-    that the is no hardcoded default value should not be used.
+    that the hardcoded default value should not be used.
     """
 
     default: Any = None
