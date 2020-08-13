@@ -115,6 +115,7 @@ class AccrualPlanLine(models.Model):
             record.start_delta = year_zero + delta
 
     def _get_start_after_delta(self):
+        self.ensure_one()
         delta = relativedelta(days=0)
         if self.start_type == 'days':
             delta = relativedelta(days=self.start_count)
