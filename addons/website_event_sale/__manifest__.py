@@ -15,7 +15,6 @@ Sell event tickets through eCommerce app.
         'views/event_event_views.xml',
         'views/website_event_templates.xml',
         'views/website_sale_templates.xml',
-        'security/ir.model.access.csv',
         'security/website_event_sale_security.xml',
     ],
     'auto_install': True
