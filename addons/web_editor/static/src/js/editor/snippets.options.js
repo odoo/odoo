@@ -4355,6 +4355,12 @@ registry.SnippetSave = SnippetOptionWidget.extend({
                         const snippetName = dialog.el.querySelector('.o_we_snippet_name_input').value;
                         const targetCopyEl = this.$target[0].cloneNode(true);
                         delete targetCopyEl.dataset.name;
+                        const snippetKey = this.$target[0].dataset.snippet;
+                        let thumbnailURL;
+                        this.trigger_up('snippet_thumbnail_url_request', {
+                            key: snippetKey,
+                            onSuccess: url => thumbnailURL = url,
+                        });
                         await this._rpc({
                             model: 'ir.ui.view',
                             method: 'save_snippet',
@@ -4362,7 +4368,8 @@ registry.SnippetSave = SnippetOptionWidget.extend({
                                 'name': snippetName,
                                 'arch': targetCopyEl.outerHTML,
                                 'template_key': this.options.snippets,
-                                'snippet_class': [...this.$target[0].classList].filter(x => /\bs_./g.test(x))[0],
+                                'snippet_key': snippetKey,
+                                'thumbnail_url': thumbnailURL,
                             },
                         });
                         this.trigger_up('reload_snippet_template');

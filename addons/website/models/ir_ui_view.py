@@ -501,14 +501,6 @@ class View(models.Model):
     # --------------------------------------------------------------------------
 
     @api.model
-    def _get_default_snippet_thumbnail(self, snippet_class=None):
-        if snippet_class:
-            for path in website.__path__:
-                if os.path.isfile(path + '/static/src/img/snippets_thumbs/%s.png' % snippet_class):
-                    return '/website/static/src/img/snippets_thumbs/%s.png' % snippet_class
-        return super()._get_default_snippet_thumbnail()
-
-    @api.model
     def _snippet_save_view_values_hook(self):
         res = super()._snippet_save_view_values_hook()
         website_id = self.env.context.get('website_id')
