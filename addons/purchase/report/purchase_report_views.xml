@@ -4,7 +4,7 @@
             <field name="name">product.month.pivot</field>
             <field name="model">purchase.report</field>
             <field name="arch" type="xml">
-                <pivot string="Purchase Analysis" disable_linking="True" display_quantity="true">
+                <pivot string="Purchase Analysis" disable_linking="True" display_quantity="true" sample="1">
                     <field name="category_id" type="row"/>
                     <field name="order_id" type="measure"/>
                     <field name="untaxed_total" type="measure"/>

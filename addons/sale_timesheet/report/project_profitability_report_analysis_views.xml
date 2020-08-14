@@ -5,7 +5,7 @@
         <field name="name">project.profitability.report.pivot</field>
         <field name="model">project.profitability.report</field>
         <field name="arch" type="xml">
-            <pivot string="Profitability Analysis" display_quantity="true" disable_linking="True">
+            <pivot string="Profitability Analysis" display_quantity="true" disable_linking="True" sample="1">
                 <field name="project_id" type="row"/>
                 <field name="amount_untaxed_to_invoice" type="measure"/>
                 <field name="amount_untaxed_invoiced" type="measure"/>
