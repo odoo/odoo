@@ -29,22 +29,24 @@
                 <field name="last_stage_id" invisible="1"/>
                 <field name="create_date" readonly="1" widget="date" optional="show"/>
                 <field name="date_last_stage_update" invisible="1"/>
-                <field name="name" readonly="1"/>
                 <field name="partner_name" readonly="1"/>
-                <field name="email_from" readonly="1" optional="hide"/>
+                <field name="name" readonly="1"/>
+                <field name="partner_mobile" widget="phone" readonly="1" optional="show"/>
                 <field name="partner_phone" widget="phone" readonly="1" optional="hide"/>
+                <field name="email_from" readonly="1" optional="hide"/>
                 <field name="job_id"/>
-                <field name="stage_id"/>
+                <field name="categ_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="show"/>
+                <field name="priority" widget="priority" optional="show"/>
                 <field name="medium_id" optional="hide"/>
                 <field name="source_id" readonly="1" optional="hide"/>
-                <field name="priority" widget="priority" optional="show"/>
-                <field name="salary_expected" optional="show"/>
+                <field name="salary_expected" optional="hide"/>
                 <field name="salary_proposed" optional="hide"/>
                 <field name="type_id" invisible="1"/>
-                <field name="availability" optional="show"/>
+                <field name="availability" optional="hide"/>
                 <field name="department_id" invisible="context.get('invisible_department', True)" readonly="1"/>
-                <field name="user_id" widget="many2one_avatar_user" optional="hide"/>
-                <field name="company_id" groups="base.group_multi_company" readonly="1"/>
+                <field name="user_id" widget="many2one_avatar_user" optional="show"/>
+                <field name="company_id" groups="base.group_multi_company" readonly="1" optional="hide"/>
+                <field name="stage_id"/>
             </tree>
         </field>
     </record>
@@ -69,10 +71,10 @@
         <field name="name">Jobs - Recruitment Form</field>
         <field name="model">hr.applicant</field>
         <field name="arch" type="xml">
-          <form string="Jobs - Recruitment Form">
+          <form string="Jobs - Recruitment Form" class="o_applicant_form">
             <header>
                 <button string="Create Employee" name="create_employee_from_applicant" type="object"
-                        class="oe_highlight" attrs="{'invisible': ['|',('emp_id', '!=', False),('active', '=', False)]}" confirm="Are you sure?"/>
+                        class="oe_highlight o_create_employee" attrs="{'invisible': ['|',('emp_id', '!=', False),('active', '=', False)]}"/>
                 <button string="Refuse" name="toggle_active" type="object" attrs="{'invisible': [('active', '=', False)]}"/>
                 <button string="Restore" name="toggle_active" type="object" attrs="{'invisible': [('active', '=', True)]}"/>
                 <field name="stage_id" widget="statusbar" options="{'clickable': '1', 'fold_field': 'fold'}" attrs="{'invisible': [('active', '=', False),('emp_id', '=', False)]}"/>
@@ -152,7 +154,7 @@
             <div class="oe_chatter">
                 <field name="message_follower_ids"/>
                 <field name="activity_ids"/>
-                <field name="message_ids" options="{'post_refresh': 'recipients', 'open_attachments': True}"/>
+                <field name="message_ids" options="{'open_attachments': True}"/>
             </div>
           </form>
         </field>
@@ -229,6 +231,17 @@
         </field>
     </record>
 
+     <record id="hr_recruitment_source_view_search" model="ir.ui.view">
+        <field name="name">hr.recruitment.source.view.search</field>
+        <field name="model">hr.recruitment.source</field>
+        <field name="arch" type="xml">
+            <search string="Search Source">
+                <field name="source_id"/>
+                <field name="job_id"/>
+           </search>
+        </field>
+    </record>
+
     <record model="ir.ui.view" id="hr_applicant_calendar_view">
         <field name="name">Hr Applicants Calendar</field>
         <field name="model">hr.applicant</field>
@@ -287,14 +300,14 @@
                         <div t-attf-class="{{!selection_mode ? 'oe_kanban_color_' + kanban_getcolor(record.color.raw_value) : ''}} oe_kanban_card oe_kanban_global_click oe_applicant_kanban oe_semantic_html_override">
                             <span class="badge badge-pill badge-danger pull-right mr-4" attrs="{'invisible': [('active', '=', True)]}">Refused</span>
                             <div class="o_dropdown_kanban dropdown">
-                                <a class="dropdown-toggle o-no-caret btn" role="button" data-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
+                                <a class="dropdown-toggle o-no-caret btn" role="button" data-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu" data-display="static">
                                     <span class="fa fa-ellipsis-v"/>
                                 </a>
                                 <div class="dropdown-menu" role="menu">
                                     <t t-if="widget.deletable"><a role="menuitem" type="delete" class="dropdown-item">Delete</a></t>
                                     <a role="menuitem" name="action_makeMeeting" type="object" class="dropdown-item">Schedule Interview</a>
                                     <div role="separator" class="dropdown-divider"></div>
-                                    <ul class="oe_kanban_colorpicker" data-field="color"/>
+                                    <ul class="oe_kanban_colorpicker text-center" data-field="color"/>
                                 </div>
                             </div>
                             <div class="oe_kanban_content">
@@ -327,7 +340,7 @@
                                                 <t t-esc="record.attachment_number.raw_value"/>
                                             </span>
                                         </a>
-                                        <div class="o_kanban_state_with_padding">
+                                        <div class="o_kanban_state_with_padding ml-1 mr-2" >
                                             <field name="kanban_state" widget="kanban_state_selection"/>
                                             <field name="legend_normal" invisible="1"/>
                                             <field name="legend_blocked" invisible="1"/>
@@ -387,13 +400,13 @@
         <field name="name">Jobs Sources</field>
         <field name="res_model">hr.recruitment.source</field>
         <field name="view_mode">tree</field>
-        <field name="domain">[('job_id', '=', active_id)]</field>
-        <field name="context">{'default_job_id': active_id}</field>
+        <field name="search_view_id" ref="hr_recruitment_source_view_search"/>
+        <field name="context">{'search_default_job_id': [active_id], 'default_job_id': active_id}</field>
         <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
-                Create some aliases to track where applicants come from
+                Want to analyse where applications come from ?
               </p><p>
-                These aliases can be emails or urls for every source. When the applicant arrives here through one of these you'll know where he came from.
+                Use emails and links trackers
               </p>
          </field>
     </record>
@@ -416,21 +429,21 @@
         <field name="model">hr.job</field>
         <field name="priority">200</field>
         <field name="arch" type="xml">
-            <form string="Create a Job Position">
+            <form string="Create a Job Position" class="o_hr_job_simple_form" >
                 <sheet>
                     <group>
-                        <field name="name" class="oe_inline" placeholder="e.g. Sales Manager"/>
+                        <field name="name" class="o_job_name oe_inline" placeholder="e.g. Sales Manager"/>
                         <label for="alias_name" string="Application email" attrs="{'invisible': [('alias_domain', '=', False)]}" help="Define a specific contact address for this job position. If you keep it empty, the default email address will be used which is in human resources settings"/>
                         <div name="alias_def" attrs="{'invisible': [('alias_domain', '=', False)]}">
                             <field name="alias_id" class="oe_read_only" string="Email Alias" required="0"/>
                             <div class="oe_edit_only" name="edit_alias">
-                                <field name="alias_name" class="oe_inline"/>@<field name="alias_domain" class="oe_inline" readonly="1"/>
+                                <field name="alias_name" class="oe_inline o_job_alias" placeholder="e.g. sales-manager"/>@<field name="alias_domain" class="oe_inline" readonly="1"/>
                             </div>
                             <div class="text-muted" attrs="{'invisible': [('alias_domain', '=', False)]}">Applicants can send resume to this email address,<br/>it will create an application automatically</div>
                         </div>
                     </group>
                     <footer>
-                        <button string="Create" name="close_dialog" type="object" class="btn-primary"/>
+                        <button string="Create" name="close_dialog" type="object" class="btn-primary o_create_job"/>
                         <button string="Discard" class="btn-secondary" special="cancel"/>
                     </footer>
                 </sheet>
@@ -858,11 +871,11 @@ action = act
         <field name="name">hr.recruitment.source.tree</field>
         <field name="model">hr.recruitment.source</field>
         <field name="arch" type="xml">
-            <tree string="Sources of Applicants" editable="top" class="o_recruitment_list">
-                <field name="source_id" placeholder="e.g. LinkedIn"/>
-                <field name="job_id"/>
-                <button name="create_alias" title="Generate email alias" type="object" icon="fa-repeat" />
-                <field name="email"/>
+            <tree string="Sources of Applicants" editable="top" class="o_recruitment_list" sample="1">
+                <field name="source_id" placeholder="e.g. LinkedIn" decoration-bf="1" attrs="{'readonly': [('id', '!=', False)]}"/>
+                <field name="job_id" attrs="{'readonly': [('id', '!=', False)]}"/>
+                <field name="email" attrs="{'invisible': [('email', '=', False)]}" widget="email"/>
+                <button name="create_alias" string="Generate Email" class="btn btn-primary" type="object" attrs="{'invisible': [('email', '!=', False)]}"/>
             </tree>
         </field>
     </record>

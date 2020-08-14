@@ -82,8 +82,10 @@ class HrEmployeePrivate(models.Model):
     visa_expire = fields.Date('Visa Expire Date', groups="hr.group_hr_user", tracking=True)
     additional_note = fields.Text(string='Additional Note', groups="hr.group_hr_user", tracking=True)
     certificate = fields.Selection([
+        ('graduate', 'Graduate'),
         ('bachelor', 'Bachelor'),
         ('master', 'Master'),
+        ('doctor', 'Doctor'),
         ('other', 'Other'),
     ], 'Certificate Level', default='other', groups="hr.group_hr_user", tracking=True)
     study_field = fields.Char("Field of Study", groups="hr.group_hr_user", tracking=True)
