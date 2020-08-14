@@ -104,6 +104,22 @@ class User(models.Model):
         return bool(events | synced_events) or bool(recurrences | synced_recurrences)
 
     @api.model
+    def _get_admin_notification(self, failure_type, module_messages=None):
+        google_calendar_messages = {
+            "google_calendar__sync": lambda: (
+                _('Google calendar synchronization failure'),
+                _(
+                    "The synchronization of Google calendar encountered an error and was not completed.\n"
+                    "You can check our documentation to know how to synchronize your Odoo calendar with Google calendar."
+                ),
+                {
+                   "related_doc": 'https://www.odoo.com/documentation/user/online/crm/optimize/google_calendar_credentials.html?highlight=google'
+                }
+            )
+        }
+        return super()._get_admin_notification(failure_type, google_calendar_messages)
+
+    @api.model
     def _sync_all_google_calendar(self):
         """ Cron job """
         users = self.env['res.users'].search([('google_calendar_rtoken', '!=', False)])
@@ -114,3 +130,5 @@ class User(models.Model):
                 user.with_user(user).sudo()._sync_google_calendar(google)
             except Exception as e:
                 _logger.exception("[%s] Calendar Synchro - Exception : %s !", user, exception_to_unicode(e))
+                # Send notification to admin : google calendar sync failure
+                self._notify_admins(*self._get_admin_notification('google_calendar__sync')())
