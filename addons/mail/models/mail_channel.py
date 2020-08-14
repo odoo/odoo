@@ -228,6 +228,8 @@ class Channel(models.Model):
 
     def unlink(self):
         # Delete mail.channel
+        if any(channel_xmlid == 'mail.channel_admins' for channel_xmlid in self.get_external_id().values()):
+            raise UserError(_('The "Administrators" channel is used to post notifications about system failures, it cannot be deleted.'))
         try:
             all_emp_group = self.env.ref('mail.channel_all_employees')
         except ValueError:
