@@ -6,7 +6,7 @@
         <div class="o_wevent_online o_wevent_online_bg o_wesession_index">
             <!-- Options -->
             <t t-set="option_widescreen" t-value="option_widescreen or False"/>
-            <t t-set="option_track_wishlist" t-value="not event.is_done and request.website.viewref('website_event_track.session_topbar_wishlist').active"/>
+            <t t-set="option_track_wishlist" t-value="not event.is_done and is_view_active('website_event_track.session_topbar_wishlist')"/>
             <!-- Drag/Drop Area -->
             <div id="oe_structure_wesession_track_index_1" class="oe_structure"/>
             <!-- Content -->

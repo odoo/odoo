@@ -5,7 +5,7 @@
     <t t-call="website_event.layout">
         <div class="o_wevent_online o_wesession_index">
             <!-- Options -->
-            <t t-set="option_track_wishlist" t-value="not event.is_done and request.website.viewref('website_event_track.session_topbar_wishlist').active"/>
+            <t t-set="option_track_wishlist" t-value="not event.is_done and is_view_active('website_event_track.session_topbar_wishlist')"/>
             <!-- Topbar -->
             <t t-call="website_event_track.session_topbar"/>
             <!-- Drag/Drop Area -->

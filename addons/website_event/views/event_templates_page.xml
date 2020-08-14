@@ -5,7 +5,7 @@
 <template id="layout" name="Event">
     <t t-call="website.layout">
         <!-- Options -->
-        <t t-set="opt_events_list_categories" t-value="request.website.viewref('website_event.opt_events_list_categories').active"/>
+        <t t-set="opt_events_list_categories" t-value="is_view_active('website_event.opt_events_list_categories')"/>
         <div id="wrap" class="o_wevent_event js_event">
             <t t-if="not event.menu_id">
                 <nav class="navbar navbar-light border-top shadow-sm d-print-none">
