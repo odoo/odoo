@@ -12,7 +12,16 @@ class IapEnrichAPI(models.AbstractModel):
 
     @api.model
     def _contact_iap(self, local_endpoint, params):
-        account = self.env['iap.account'].get('reveal')
+        # Get IAP account model
+        iap_account_model = self.env['iap.account']
+        # Get current credits :
+        # in 'get_credits' method : the targeted account getter is called with a 'force_create=False' (see iap.py > 'get_credits()')
+        account_credits = iap_account_model.get_credits('reveal')
+        # Test if credits min value reached
+        if account_credits <= 5:
+            # Send notification to admin : low credits on lead enrichment
+            self._notify_admins(*self._get_admin_notification('iap__low_credits')(account_credits))
+        account = iap_account_model.get('reveal')
         dbuuid = self.env['ir.config_parameter'].sudo().get_param('database.uuid')
         params['account_token'] = account.account_token
         params['dbuuid'] = dbuuid
