@@ -394,6 +394,10 @@ body.editor_enable.editor_has_snippets {
             @include we-icon-button('\f0d7');
             text-align: left;
 
+            > img, > svg {
+                max-width: 100%;
+            }
+
             + * {
                 display: none !important;
                 border: $o-we-sidebar-content-field-dropdown-border-width solid $o-we-sidebar-content-field-dropdown-border-color;
@@ -648,6 +652,10 @@ body.editor_enable.editor_has_snippets {
 
                     > div {
                         line-height: $o-we-sidebar-content-field-dropdown-item-height;
+
+                        img, svg {
+                            max-width: 100%;
+                        }
                     }
 
                     &:not(.d-none) ~ we-button {
