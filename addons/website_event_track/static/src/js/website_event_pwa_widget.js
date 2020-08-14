@@ -68,14 +68,20 @@ odoo.define("website_event_track.website_event_pwa_widget", function (require) {
         //--------------------------------------------------------------------------
 
         /**
-         * Returns the website's language
+         * Returns the website's language from the URL
+         * 
+         * Note: this method performs a matching against both the simple (eg. "en") and complete (eg. "en_US")
+         *       language formatting in the url. This is required as the cookie always returns the complete
+         *       form but the URL can use both, depending on the language (eg. "en_US" => "en" but "en_UK" => "en_UK").
          * @private
          * @return {String}
          */
         _getLangPrefix: function () {
             var lang = utils.get_cookie("frontend_lang");
-            if (lang !== undefined && window.location.href.indexOf("/" + lang + "/") >= 0) {
-                return "/" + lang;
+            var path = window.location.pathname;
+            var matches = path.match(new RegExp("^\/?(" + lang + "|" + lang.slice(0, 2) + ")\/"));
+            if (lang && matches && matches[1]) {
+                return "/" + matches[1];
             }
             return "";
         },

@@ -56,3 +56,9 @@ class TrackManifest(http.Controller):
             ('Service-Worker-Allowed', url_for('/event')),
         ])
         return response
+
+    @http.route('/event/offline', type='http', auth='public', methods=['GET'], website=True, sitemap=False)
+    def offline(self):
+        """ Returns the offline page used by the 'website_event' PWA
+        """
+        return request.render('website_event_track.pwa_offline')
