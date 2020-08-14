@@ -351,7 +351,7 @@ msgstr "<strong>Năng lực Sản xuất</strong>"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workorder_view_gantt
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_gantt_production
 msgid "<strong>Workcenter: </strong>"
-msgstr "<strong>Khu vực làm việc:</strong>"
+msgstr "<strong>Năng lực sản xuất:</strong>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
@@ -929,7 +929,7 @@ msgstr "Màu sắc"
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_abstract_workorder
 msgid "Common code between produce wizards and workorders."
-msgstr "Mã chung giữa trình hướng dẫn sản xuất và lệnh làm việc."
+msgstr "Mã chung giữa trình hướng dẫn sản xuất và hoạt động sản xuất."
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_res_company
@@ -972,7 +972,7 @@ msgstr "Thành phần đang có"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_line__raw_workorder_id
 msgid "Component for Workorder"
-msgstr "Thành phần của lệnh làm việc"
+msgstr "Nguyên liệu cho hoạt động sản xuất"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_line__raw_product_produce_id
@@ -1520,7 +1520,7 @@ msgstr "Nhãn thành phẩm phẩm (ZPL)"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_line__finished_workorder_id
 msgid "Finished Product for Workorder"
-msgstr "Thành phẩm của lệnh làm việc"
+msgstr "Thành phẩm của hoạt động sản xuất"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_line__finished_product_produce_id
@@ -1809,8 +1809,8 @@ msgid ""
 "Impossible to plan the workorder. Please check the workcenter "
 "availabilities."
 msgstr ""
-"Không thể lập kế hoạch Lệnh làm việc. Vui lòng kiểm tra các Khu vực làm việc"
-" hiện có."
+"Không thể lập kế hoạch cho hoạt động sản xuất. Vui lòng kiểm tra tính khả dụng "
+" của các Năng lực sản xuất."
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__state__progress
@@ -2110,7 +2110,7 @@ msgstr "Thấp"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__group_mrp_routings
 msgid "MRP Work Orders"
-msgstr "Lệnh làm việc MRP"
+msgstr "Hoạt động sản xuất"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_workcenter_productivity_loss_type
@@ -3614,7 +3614,7 @@ msgid ""
 "Some work orders are already done, you cannot unplan this manufacturing "
 "order."
 msgstr ""
-"Một số lệnh làm việc đã được hoàn tất, bạn không thể huỷ kế hoạch Lệnh sản "
+"Một số hoạt động sản xuất đã được hoàn tất, bạn không thể huỷ kế hoạch Lệnh sản "
 "xuất này được."
 
 #. module: mrp
@@ -3624,7 +3624,7 @@ msgid ""
 "Some work orders have already started, you cannot unplan this manufacturing "
 "order."
 msgstr ""
-"Một số lệnh làm việc đã được bắt đầu, bạn không thể huỷ kế hoạch Lệnh sản "
+"Một số hoạt động sản xuất đã được bắt đầu, bạn không thể huỷ kế hoạch Lệnh sản "
 "xuất này được."
 
 #. module: mrp
@@ -3945,8 +3945,8 @@ msgid ""
 "The planned end date of the work order cannot be prior to the planned start "
 "date, please correct this to save the work order."
 msgstr ""
-"Ngày dự kiến kết thúc của Lệnh làm việc không thể trước ngày dự kiến bắt "
-"đầu, vui lòng sửa lỗi này để lưu Lệnh làm việc."
+"Ngày dự kiến kết thúc của hoạt động sản xuất không thể trước ngày dự kiến bắt "
+"đầu, vui lòng sửa lỗi này để lưu hoạt động sản xuất."
 
 #. module: mrp
 #: code:addons/mrp/wizard/mrp_product_produce.py:0
@@ -4506,7 +4506,7 @@ msgstr "Đang chờ các thành phần"
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_workorder__state__pending
 msgid "Waiting for another WO"
-msgstr "Đang chờ lệnh làm việc khác"
+msgstr "Đang chờ hoạt động sản xuất khác"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_warehouse
@@ -4769,8 +4769,8 @@ msgid ""
 "              starting from this date. If empty, the work orders will be "
 "planned as soon as possible."
 msgstr ""
-"Lệnh làm việc sẽ được lên kế hoạch dựa trên sự sẵn có của các khu vực làm "
-"việc bắt đầu từ ngày này. Nếu trống, các Lệnh làm việc sẽ được lên kế hoạch "
+"Hoạt động sản xuất sẽ được lên kế hoạch dựa trên sự sẵn có của các khu vực làm "
+"việc bắt đầu từ ngày này. Nếu trống, các Hoạt động sản xuất sẽ được lên kế hoạch "
 "càng sớm càng tốt."
 
 #. module: mrp
@@ -4898,7 +4898,7 @@ msgid ""
 "You cannot change the workcenter of a work order that is in progress or "
 "done."
 msgstr ""
-"Bạn không thể thay đổi khu vực làm việc của một lệnh sản xuất khi nó đang xử"
+"Bạn không thể thay đổi Năng lực sản xuất của một lệnh sản xuất khi nó đang xử"
 " lý hoặc hoàn tất"
 
 #. module: mrp
@@ -4933,7 +4933,7 @@ msgstr "Bạn không thể có %s sản phẩm hoàn chỉnh và trong sản ph�
 #: code:addons/mrp/models/mrp_workorder.py:0
 #, python-format
 msgid "You cannot link this work order to another manufacturing order."
-msgstr "Bạn không thể liên kết Lệnh làm việc này đến một Lệnh sản xuất khác"
+msgstr "Bạn không thể liên kết Hoạt động sản xuất này đến một Lệnh sản xuất khác"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
@@ -4980,7 +4980,7 @@ msgid ""
 "You have produced %s %s of lot %s in the previous workorder. You are trying "
 "to produce %s in this one"
 msgstr ""
-"Bạn có sản xuất %s %s của Lô %s trong Lệnh làm việc trước đó. Bạn nên thử "
+"Bạn có sản xuất %s %s của Lô %s trong Hoạt động sản xuất trước đó. Bạn nên thử "
 "sản xuất %s ở lần này"
 
 #. module: mrp
