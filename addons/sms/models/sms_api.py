@@ -17,7 +17,13 @@ class SmsApi(models.AbstractModel):
         params['account_token'] = account.account_token
         endpoint = self.env['ir.config_parameter'].sudo().get_param('sms.endpoint', DEFAULT_ENDPOINT)
         # TODO PRO, the default timeout is 15, do we have to increase it ?
-        return iap.jsonrpc(endpoint + local_endpoint, params=params)
+        result = iap.jsonrpc(endpoint + local_endpoint, params=params)
+        # in some api calls we can get the credits from result
+        account_credits = float(result[0]['credit'])
+        if account_credits <= 5:
+            # Send notification to admin : low credits when sms sent (default threshold == 5 -> should be updated for each service!)
+            self._notify_admins(*self._get_admin_notification('iap__low_credits')(account_credits))
+        return result
 
     @api.model
     def _send_sms(self, numbers, message):
