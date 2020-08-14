@@ -32,7 +32,8 @@ class Users(models.Model):
         try:
             return super(Users, self)._check_credentials(password, env)
         except AccessDenied:
-            if self.env.user.active:
+            passwd_allowed = env['interactive'] or not self.env.user._rpc_api_keys_only()
+            if passwd_allowed and self.env.user.active:
                 Ldap = self.env['res.company.ldap']
                 for conf in Ldap._get_ldap_dicts():
                     if Ldap._authenticate(conf, self.env.user.login, password):
