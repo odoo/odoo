@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from werkzeug.urls import url_join
-
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.addons.http_routing.models.ir_http import slug
 
 
@@ -24,14 +22,6 @@ class EventMeetingRoom(models.Model):
     summary = fields.Char("Summary")
     target_audience = fields.Char("Audience", translate=True)
 
-    # TDE FIXME: merge with mixin code
-    ROOM_CONFIG_FIELDS = {
-        'room_name': 'name',
-        'room_lang_id': 'lang_id',
-        'room_max_capacity': 'max_capacity',
-        'room_participant_count': 'participant_count',
-    }
-
     @api.depends('name', 'event_id.name')
     def _compute_website_url(self):
         super(EventMeetingRoom, self)._compute_website_url()
@@ -42,19 +32,7 @@ class EventMeetingRoom(models.Model):
 
     @api.model_create_multi
     def create(self, values_list):
-        # TDE FIXME: merge with mixin code
         for values in values_list:
-            if not values.get("chat_room_id"):
-                # be sure to always create a `chat.room` for each `event.meeting.room`
-                chat_room = self.env["chat.room"].create({
-                    self.ROOM_CONFIG_FIELDS[field]: value
-                    for field, value in dict(values).items()
-                    if field in self.ROOM_CONFIG_FIELDS and values.pop(field)
-                })
-
-                values["chat_room_id"] = chat_room.id
-
-            values["name"] = values["name"].capitalize()
-            values["target_audience"] = (values.get("target_audience") or _("Attendee(s)")).capitalize()
-
+            if not values.get("chat_room_id") and not values.get('room_name'):
+                values['room_name'] = 'odoo-room-%s' % (values['name'])
         return super(EventMeetingRoom, self).create(values_list)
