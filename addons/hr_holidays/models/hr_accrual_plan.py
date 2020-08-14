@@ -43,6 +43,8 @@ class AccrualPlan(models.Model):
                         line = accrual_line
                 else:
                     line = accrual_line
+            else:
+                break
         return line
 
     def action_open_accrual_plan_employees(self):
