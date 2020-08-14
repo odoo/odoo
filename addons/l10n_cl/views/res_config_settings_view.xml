@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="account.res_config_settings_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//div[@id='invoicing_settings']" position="after">
-                <div id="l10n_cl_title">
+                <div id="l10n_cl_title" attrs="{'invisible': True}">
                     <h2>Chilean Localization</h2>
                 </div>
                 <div id="l10n_cl_section" class="row mt16 o_settings_container" groups="account.group_account_manager">
