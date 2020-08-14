@@ -95,6 +95,13 @@ class ResPartner(models.Model):
             'country_code': self.env.company.country_id.code,
             'zip': self.env.company.zip,
         })
+        # This method is used for search & enrich (search will only return the list of suggested partners)
+        if action == 'enrich':
+            account_credits = self.env['iap.account'].get_credits('partner_autocomplete')
+            if account_credits <= 5:
+                # Send notification to admin : low credits on partner autocomplete
+                # (threshold fixed to 5 - should be updated for each service!)
+                self._notify_admins(*self._get_admin_notification('iap__low_credits')(account_credits))
         try:
             return jsonrpc(url=url, params=params, timeout=timeout), False
         except (ConnectionError, HTTPError, exceptions.AccessError, exceptions.UserError) as exception:
