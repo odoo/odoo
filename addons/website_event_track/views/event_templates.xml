@@ -41,4 +41,35 @@
     <meta name="theme-color" content="#875A7B"/>
 </template>
 
+<template id="pwa_offline" inherit_id="website_event.index" primary="True">
+    <xpath expr='//div[@id="wrap"]' position="replace">
+        <div id="wrap" class="o_wevent_index">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12 card-body">
+                        <div class="h2 mb-3">You're offline!</div>
+                        <div class="alert alert-info text-center">
+                            <span class="fa-stack fa-4x">
+                                <i class="fa fa-wifi fa-stack-1x"></i>
+                                <i class="fa fa-ban fa-stack-2x text-muted"></i>
+                            </span>
+                            <p>This page hasn't been saved for offline reading yet.<br/>Please check your network connection.</p>
+                            <p>
+                                <a t-att-href="url_for('/event')" class="btn btn-primary btn-block">Home page</a>
+                                <button onclick="history.back();" class="btn btn-secondary btn-block">Previous page</button>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript">
+            window.addEventListener('online', function(e) {
+                console.log('Go back online');
+                location.reload();
+            });
+        </script>
+    </xpath>
+</template>
+
 </odoo>
