@@ -713,12 +713,14 @@ var KanbanActivity = BasicActivity.extend({
      */
     _renderDropdown: function () {
         var self = this;
-        this.$('.o_activity')
+        this.dropdownContainer = this.$('.o_activity');
+        this.dropdownContainer
             .toggleClass('dropdown-menu-right', config.device.isMobile)
             .html(QWeb.render('mail.KanbanActivityLoading'));
         return _readActivities(this, this.value.res_ids).then(function (activities) {
             activities = setFileUploadID(activities);
-            self.$('.o_activity').html(QWeb.render('mail.KanbanActivityDropdown', {
+            self.dropdownContainer = self.dropdownContainer.detach().appendTo('body').css('z-index', '9999')
+            .html(QWeb.render('mail.KanbanActivityDropdown', {
                 selection: self.selection,
                 records: _.groupBy(setDelayLabel(activities), 'state'),
                 session: session,
