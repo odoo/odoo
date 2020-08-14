@@ -7,6 +7,7 @@
 Functional
 ----------
 
+
 This module add accounting features for the Argentinian localization, which represent the minimal configuration needed for a company  to operate in Argentina and under the AFIP (Administración Federal de Ingresos Públicos) regulations and guidelines.
 
 Follow the next configuration steps for Production:
