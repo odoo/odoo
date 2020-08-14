@@ -204,6 +204,8 @@ $i: 1;
                 }
                 &::before {
                     @include o-position-absolute($-cc-base-spacer * -0.25, $-cc-r-gap, 0, $-cc-l-gap);
+                    z-index: auto;
+                    transform: none;
                 }
                 + we-collapse {
                     margin-bottom: $-cc-base-spacer * 1.3;

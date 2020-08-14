@@ -599,7 +599,28 @@ body.editor_enable.editor_has_snippets {
             &:not(.o_we_icon_select) we-toggler {
                 @include large-component();
             }
+            &.o_we_widget_opened .o_we_dropdown_caret {
+                position: relative;
+                display: block;
+                align-self: flex-end;
 
+                &::before, &::after {
+                    content: '';
+                    $-toggler-caret-size: 2 * $o-we-sidebar-content-field-control-item-spacing + $o-we-sidebar-content-field-control-item-size;
+                    @include o-position-absolute(100%, $-toggler-caret-size);
+                    z-index: $zindex-dropdown + 1;
+                    transform: translateX(50%);
+                    margin-top: $o-we-dropdown-caret-spacing;
+                    border-bottom: ($o-we-item-spacing + $o-we-sidebar-content-field-dropdown-border-width - $o-we-dropdown-caret-spacing) solid $o-we-dropdown-border-color;
+                    border-left: $o-we-item-spacing solid transparent;
+                    border-right: $o-we-item-spacing solid transparent;
+                }
+                &::after {
+                    border-bottom-color: $o-we-sidebar-content-field-dropdown-item-bg;
+                    border-left-width: ($o-we-item-spacing - 1px);
+                    border-right-width: ($o-we-item-spacing - 1px);
+                }
+            }
             we-selection-items {
                 @include o-position-absolute(100%, 0, auto, 0);
                 z-index: $zindex-dropdown;
@@ -774,8 +795,19 @@ body.editor_enable.editor_has_snippets {
                 }
             }
 
-            &.o_we_widget_opened .o_we_color_preview {
-                border: 2px solid $o-we-accent;
+            &.o_we_widget_opened {
+
+                .o_we_color_preview {
+                    border: 2px solid $o-we-accent;
+                }
+                .o_we_dropdown_caret {
+                    &::before, &::after {
+                        right: $o-we-sidebar-content-field-colorpicker-size / 2;
+                    }
+                    &::after {
+                        border-bottom-width: ($o-we-item-spacing + $o-we-sidebar-content-field-dropdown-border-width - $o-we-dropdown-caret-spacing) + 1px; // 1px = colorpicker inset box-shadow...
+                    }
+                }
             }
 
             we-toggler {

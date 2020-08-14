@@ -50,6 +50,7 @@ $o-we-translated-content-color: rgb(120, 215, 110) !default;
 
 $o-we-toolbar-height: 32px !default;
 
+$o-we-item-spacing: 7px !default;
 $o-we-item-border-width: 1px !default;
 $o-we-item-border-color: $o-we-bg-darkest !default;
 $o-we-item-border-radius: 1px !default;
@@ -64,7 +65,7 @@ $o-we-item-standup-color-dark: $o-we-bg-darkest;
 $o-we-item-standup-top: inset 0 1px 0;
 $o-we-item-standup-bottom: inset 0 -1px 0;
 
-$o-we-dropdown-spacing: 5px !default;
+$o-we-dropdown-spacing: $o-we-item-spacing !default;
 $o-we-dropdown-bg: $o-we-bg-darker !default;
 $o-we-dropdown-border-width: 1px !default;
 $o-we-dropdown-border-color: $o-we-bg-darkest !default;
@@ -77,6 +78,7 @@ $o-we-dropdown-item-color: $o-we-fg-dark !default;
 $o-we-dropdown-item-hover-color: $o-we-fg-light !default;
 $o-we-dropdown-item-active-bg: mix($o-we-dropdown-item-bg, $o-we-dropdown-item-bg-hover) !default;
 $o-we-dropdown-item-active-color: $o-we-fg-lighter !default;
+$o-we-dropdown-caret-spacing: 2px !default;
 
 $o-we-sidebar-bg: $o-we-bg !default;
 $o-we-sidebar-color: $o-we-color !default;
@@ -117,7 +119,7 @@ $o-we-sidebar-content-block-spacing: 10px !default;
 $o-we-sidebar-content-fold-block-bg: $o-we-bg-dark !default;
 $o-we-sidebar-content-fold-block-inner-spacing: $o-we-sidebar-content-block-spacing !default;
 
-$o-we-sidebar-content-field-spacing: 7px !default;
+$o-we-sidebar-content-field-spacing: $o-we-item-spacing !default;
 $o-we-sidebar-content-field-color: $o-we-fg-darker !default;
 $o-we-sidebar-content-field-control-item-color: $o-we-fg-darker !default;
 $o-we-sidebar-content-field-control-item-size: 1em !default;
