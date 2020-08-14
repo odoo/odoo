@@ -144,6 +144,46 @@ odoo_mailgate: "|/path/to/odoo-mailgate.py --host=localhost -u %(uid)d -p PASSWO
         """ Method called by cron to fetch mails from servers """
         return self.search([('state', '=', 'done'), ('server_type', 'in', ['pop', 'imap'])]).fetch_mail()
 
+    @api.model
+    def _get_admin_notification(self, failure_type, module_messages=None):
+        record_link = self._format_record_link('go to mail server')
+        fetchmail_messages = {
+            "fetchmail__mail_process": lambda failures_count=0: (
+                _('Email process failure'),
+                _(
+                    "Odoo has been unable to process %(failures_count)d email(s) on the incoming mail server.\n"
+                    "This means that messages sent by users or customers through email replies might be absent from Odoo.\n"
+                    "The main reason for this issue could be that there is no configured route for incoming message.\n"
+                    "To solve this problem, create an appropriate mail.alias or force the destination model."
+                ) % {
+                    'failures_count': failures_count,
+                },
+                {
+                    "related_doc": 'https://www.odoo.com/documentation/user/online/discuss/email_servers.html',
+                    "related_view_url": record_link.get('url', False),
+                    "related_view_text": record_link.get('text', False),
+                }
+            ),
+
+            "fetchmail__mail_fetch": lambda: (
+                _('Email fetch failure'),
+                _(
+                    "Odoo has been unable to fetch emails on the incoming mail server.\n"
+                    "This means that messages sent by users or customers through email replies might be absent from Odoo.\n"
+                    "To solve this problem, click on 'Reset Confirmation' for that incomaing mail server.\n"
+                    "Make sure that the configuration of the Incoming Mail Server is correct: login/password, protocol, etc. "
+                    "and click on the 'Test & Confirm' button.\n"
+                    "If your configuration is incorrect, an error message should help you diagnose the issue."
+                ),
+                {
+                    "related_doc": 'https://www.odoo.com/documentation/user/online/discuss/email_servers.html',
+                    "related_view_url": record_link.get('url', False),
+                    "related_view_text": record_link.get('text', False),
+                }
+            )
+        }
+        return super()._get_admin_notification(failure_type, fetchmail_messages)
+
     def fetch_mail(self):
         """ WARNING: meant for cron usage only - will commit() after each email! """
         additionnal_context = {
@@ -174,8 +214,13 @@ odoo_mailgate: "|/path/to/odoo-mailgate.py --host=localhost -u %(uid)d -p PASSWO
                         self._cr.commit()
                         count += 1
                     _logger.info("Fetched %d email(s) on %s server %s; %d succeeded, %d failed.", count, server.server_type, server.name, (count - failed), failed)
+                    if failed:
+                        # Notify admins : imap server fetch & process failure
+                        self._notify_admins(*server._get_admin_notification('fetchmail__mail_process')(failed))
                 except Exception:
                     _logger.info("General failure when trying to fetch mail from %s server %s.", server.server_type, server.name, exc_info=True)
+                    # Notify admins : imap server fetch & general failure
+                    self._notify_admins(*server._get_admin_notification('fetchmail__mail_fetch')())
                 finally:
                     if imap_server:
                         imap_server.close()
@@ -201,8 +246,13 @@ odoo_mailgate: "|/path/to/odoo-mailgate.py --host=localhost -u %(uid)d -p PASSWO
                             break
                         pop_server.quit()
                         _logger.info("Fetched %d email(s) on %s server %s; %d succeeded, %d failed.", num_messages, server.server_type, server.name, (num_messages - failed), failed)
+                        if failed:
+                            # Notify admins : pop server fetch & process failure
+                            self._notify_admins(*server._get_admin_notification('fetchmail__mail_process')(failed))
                 except Exception:
                     _logger.info("General failure when trying to fetch mail from %s server %s.", server.server_type, server.name, exc_info=True)
+                    # Notify admins : pop server fetch & general failure
+                    self._notify_admins(*server._get_admin_notification('fetchmail__mail_fetch')())
                 finally:
                     if pop_server:
                         pop_server.quit()
