@@ -157,7 +157,7 @@ class TestAccountEdiFacturx(AccountTestEdiCommon):
         with self.mocked_today('2017-02-01'):
             self.invoice.post()
 
-            xml_content = self.facturx_edi_format._export_invoice_to_attachment(self.invoice)['datas']
+            xml_content = self.facturx_edi_format._export_invoice_to_embed_to_pdf(None, self.invoice)['datas']
             current_etree = self.get_xml_tree_from_string(xml_content)
             expected_etree = self.get_xml_tree_from_string(self.expected_invoice_facturx_values)
             self.assertXmlTreeEqual(current_etree, expected_etree)
@@ -171,7 +171,7 @@ class TestAccountEdiFacturx(AccountTestEdiCommon):
         with self.mocked_today('2017-02-01'):
             self.invoice.post()
 
-            xml_content = self.facturx_edi_format._export_invoice_to_attachment(self.invoice)['datas']
+            xml_content = self.facturx_edi_format._export_invoice_to_embed_to_pdf(None, self.invoice)['datas']
             current_etree = self.get_xml_tree_from_string(xml_content)
             expected_etree = self.with_applied_xpath(
                 self.get_xml_tree_from_string(self.expected_invoice_facturx_values),
