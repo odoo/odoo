@@ -3430,7 +3430,7 @@ class AccountMoveLine(models.Model):
         whether or not it comes from a refund operation.
         This is overridden by pos in order to treat returns properly.
         """
-        return aml.move_id.move_type in ('in_refund', 'out_refund') and -1 or 1
+        return aml.move_id.move_type in ('in_refund', 'out_refund')
 
     # -------------------------------------------------------------------------
     # CONSTRAINT METHODS
