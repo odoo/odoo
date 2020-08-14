@@ -53,9 +53,12 @@ class EventSponsor(models.Model):
         for sponsor in self:
             if sponsor.is_exhibitor and not sponsor.room_name:
                 if sponsor.name:
-                    sponsor.room_name = self.env['chat.room']._jitsi_sanitize_name("odoo-exhibitor-%s" % sponsor.name)
+                    room_name = "odoo-exhibitor-%s" % sponsor.name
                 else:
-                    sponsor.room_name = self.env['chat.room']._default_name()
+                    room_name = self.env['chat.room']._default_name(objname='exhibitor')
+                sponsor.room_name = self._jitsi_sanitize_name(room_name)
+            if sponsor.is_exhibitor and not sponsor.room_max_capacity:
+                sponsor.room_max_capacity = '8'
 
     @api.depends('partner_id')
     def _compute_website_description(self):
@@ -97,6 +100,10 @@ class EventSponsor(models.Model):
             else:
                 sponsor.country_flag_url = False
 
+    # ------------------------------------------------------------
+    # MIXINS
+    # ---------------------------------------------------------
+
     @api.depends('name', 'event_id.name')
     def _compute_website_url(self):
         super(EventSponsor, self)._compute_website_url()
@@ -105,13 +112,32 @@ class EventSponsor(models.Model):
                 base_url = sponsor.event_id.get_base_url()
                 sponsor.website_url = '%s/event/%s/exhibitor/%s' % (base_url, slug(sponsor.event_id), slug(sponsor))
 
+    # ------------------------------------------------------------
+    # CRUD
+    # ------------------------------------------------------------
+
     @api.model_create_multi
     def create(self, values_list):
         for values in values_list:
             if values.get('is_exhibitor') and not values.get('room_name'):
-                name = values['name'] if values.get('name') else self.env['res.partner'].browse(values['partner_id']).name or 'sponsor'
-                values['room_name'] = self.env['chat.room']._jitsi_sanitize_name(name)
+                exhibitor_name = values['name'] if values.get('name') else self.env['res.partner'].browse(values['partner_id']).name
+                name = 'odoo-exhibitor-%s' % exhibitor_name or 'sponsor'
+                values['room_name'] = name
         return super(EventSponsor, self).create(values_list)
+
+    def write(self, values):
+        toupdate = self.env['event.sponsor']
+        if values.get('is_exhibitor') and not values.get('chat_room_id') and not values.get('room_name'):
+            toupdate = self.filtered(lambda exhibitor: not exhibitor.chat_room_id)
+            # go into sequential update in order to create a custom room name for each sponsor
+            for exhibitor in toupdate:
+                values['room_name'] = 'odoo-exhibitor-%s' % exhibitor.name
+                super(EventSponsor, exhibitor).write(values)
+        return super(EventSponsor, self - toupdate).write(values)
+
+    # ------------------------------------------------------------
+    # ACTIONS
+    # ---------------------------------------------------------
 
     def get_backend_menu_id(self):
         return self.env.ref('event.event_main_menu').id
