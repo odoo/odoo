@@ -72,18 +72,21 @@
     </div>
 
     <section t-else="" class="col-12" t-foreach="days" t-as="day">
-        <!-- Day Title -->
-        <div class="o_page_hader d-flex justify-content-between align-items-center mt-3 mb-0 border-bottom border-dark">
-            <h3 class="d-flex">
-                <span class="mr-2" t-esc="day.strftime('%A')"/> <span t-esc="day.day"/>
-                <div class="ml-2 d-flex flex-column" style="line-height: 0.8; font-size: 0.5em;">
-                    <span class="pt-1 pb-1" t-esc="day.strftime('%B').upper()"/>
-                    <span t-esc="day.year"/>
+        <!-- DAY HEADER -->
+        <div class="o_we_track_day_header mt-3 w-100 d-flex justify-content-between align-items-center">
+            <div class="d-flex">
+                <span class="h1 m-0 font-weight-bold" t-esc="day"
+                    t-options="{'widget': 'date', 'format': 'EEEE dd'}"/>
+                <div class="d-flex flex-column ml-2">
+                    <span class="font-weight-bold" t-esc="day"
+                        t-options="{'widget': 'date', 'format': 'MMMM'}"/>
+                    <span class="font-weight-bold" t-esc="day"
+                        t-options="{'widget': 'date', 'format': 'YYYY'}"/>
                 </div>
-
-            </h3>
+            </div>
             <small class="float-right text-muted"><t t-esc="tracks_by_days[day]"/> tracks</small>
         </div>
+        <hr class="mt-2 pb-1 mb-1"/>
 
         <!-- Day Agenda -->
         <div class="o_we_online_agenda">
@@ -147,24 +150,19 @@
 
 <template id="agenda_main_track" name="Track Agenda: Track">
     <div class="d-flex flex-column h-100">
-        <div class="d-flex justify-content-between align-items-center">
-            <div class="text-muted">
-                <small t-if="track.partner_id"><i class="fa fa-user mr-2"/><t t-esc="track.partner_id.sudo().name"/></small>
-                <small t-if="not track.partner_id"><i class="fa fa-user mr-2"/><t t-esc="track.partner_name"/></small>
-            </div>
-            <div class="d-flex o_weagenda_track_badges">
-                <small t-if="not track.website_published and user_event_manager and track.stage_id.is_accepted"
-                       class="ml-1 badge badge-danger o_wevent_online_badge_unpublished">Unpublished</small>
-                <small t-if="not track.stage_id.is_accepted"
-                       class="ml-1 badge badge-danger o_wevent_online_badge_unpublished">Not Accepted</small>
-                <span t-if="option_track_wishlist">
-                    <t t-call="website_event_track_online.track_widget_reminder">
-                        <t t-set="reminder_light" t-value="True"/>
-                        <t t-set="reminder_small" t-value="True"/>
-                        <t t-set="light_theme" t-value="True"/>
-                    </t>
-                </span>
-            </div>
+        <div class="d-flex justify-content-end flex-wrap-reverse o_weagenda_track_badges">
+            <small t-if="not track.website_published and user_event_manager and track.stage_id.is_accepted"
+                   title="Unpublished"
+                   class="ml-1 badge badge-danger o_wevent_online_badge_unpublished">Unpublished</small>
+            <small t-if="not track.stage_id.is_accepted" title="Not Accepted"
+                   class="ml-1 badge badge-danger o_wevent_online_badge_unpublished">Not Accepted</small>
+            <span t-if="option_track_wishlist">
+                <t t-call="website_event_track_online.track_widget_reminder">
+                    <t t-set="reminder_light" t-value="True"/>
+                    <t t-set="reminder_small" t-value="True"/>
+                    <t t-set="light_theme" t-value="False"/>
+                </t>
+            </span>
         </div>
 
         <div class="o_we_agenda_card_content d-flex flex-column justify-content-center my-1">
@@ -175,7 +173,7 @@
             </div>
             <div class="d-flex justify-content-center flex-wrap">
                 <t t-foreach="track.tag_ids" t-as="tag">
-                    <span t-if="tag.color"
+                    <span t-if="tag.color" t-att-title="tag.name"
                           t-attf-class="mr-1 mt-1 badge #{'o_tag_color_'+str(tag.color)}" t-esc="tag.name"
                           t-attf-onclick="
                             var value = '#{tag.name}' ;
@@ -185,6 +183,13 @@
                           "
                     />
                 </t>
+            </div>
+        </div>
+
+        <div>
+            <div class="text-muted text-right">
+                <small t-if="track.partner_id or track.partner_name">
+                    <i class="fa fa-user mr-2"/><t t-esc="track.partner_id.sudo().name or track.partner_name"/></small>
             </div>
         </div>
     </div>

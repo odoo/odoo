@@ -81,7 +81,7 @@ class WebsiteEventTrackQuizCommunityController(WebsiteEventCommunityController):
             position = position + 1
 
         return {
-            'top3_visitors': leaderboard[:3] if len(leaderboard) >= 3 else False,
+            'top3_visitors': leaderboard[:3],
             'visitors': leaderboard,
             'current_visitor_position': current_visitor_position,
             'current_visitor': current_visitor,

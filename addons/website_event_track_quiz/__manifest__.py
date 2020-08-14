@@ -21,6 +21,7 @@
         'views/event_quiz_views.xml',
         'views/event_quiz_question_views.xml',
         'views/event_track_views.xml',
+        'views/event_track_visitor_views.xml',
         'views/event_menus.xml',
         'views/event_quiz_templates.xml',
         'views/event_track_templates_page.xml',

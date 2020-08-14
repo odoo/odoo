@@ -143,15 +143,23 @@
                 <li t-foreach="sponsors_other" t-as="sponsor_other">
                     <a class="d-flex w-100 h-100 px-2 pt-2 pb-1 text-decoration-none"
                         t-att-href="sponsor_other.website_url">
-                        <img t-if="sponsor_other.partner_id.country_id"
-                            class="mr-2 o_wesponsor_aside_logo"
+                        <div class="d-flex flex-column align-items-center">
+                            <img t-if="sponsor_other.partner_id.country_id"
+                            class="mr-2 mb-1 o_wesponsor_aside_logo"
                             t-att-src="website.image_url(sponsor_other.partner_id.country_id, 'image')"
                             t-att-alt="sponsor_other.partner_id.country_id.name"/>
+                            <span t-if="sponsor_other.sponsor_type_id.display_ribbon_style not in [False, 'no_ribbon']"
+                                t-att-class="'badge badge-light mr-2 ribbon_%s' % sponsor_other.sponsor_type_id.display_ribbon_style"
+                                t-esc="sponsor_other.sponsor_type_id.name"/>
+                            <span t-else="" class="badge badge-light mr-2"
+                                t-esc="sponsor_other.sponsor_type_id.name"/>
+                        </div>
                         <div class="flex-grow-1 overflow-auto">
                             <span class="d-flex align-items-baseline o_wesponsor_sponsor_name">
                                 <span class="d-inline-block text-truncate" t-esc="sponsor_other.name"/>
-                                <span class="badge badge-light ml-auto" t-esc="sponsor_other.sponsor_type_id.name"/>
+
                             </span>
+
                             <small class="text-muted" t-esc="sponsor_other.subtitle"/>
                         </div>
                     </a>
