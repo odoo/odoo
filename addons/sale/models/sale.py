@@ -586,6 +586,33 @@ class SaleOrder(models.Model):
 
     def _get_invoice_grouping_keys(self):
         return ['company_id', 'partner_id', 'currency_id']
+    
+    def _prepare_invoice_lines(self, precision=None, final=False):
+        """
+        Prepare the array of invoice line values to create new invoice lines for a sales order line
+        """
+        self.ensure_one()
+        
+        pending_section = None
+        
+        if not precision:
+            precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+        
+        # Array of invoice line values.
+        invoice_lines = []
+        
+        for line in self.order_line:
+            if line.display_type == 'line_section':
+                pending_section = line
+                continue
+            if float_is_zero(line.qty_to_invoice, precision_digits=precision):
+                continue
+            if line.qty_to_invoice > 0 or (line.qty_to_invoice < 0 and final):
+                if pending_section:
+                    invoice_lines.append((0, 0, pending_section._prepare_invoice_line()))
+                    pending_section = None
+                invoice_lines.append((0, 0, line._prepare_invoice_line()))
+        return invoice_lines
 
     def _create_invoices(self, grouped=False, final=False):
         """
@@ -607,27 +634,16 @@ class SaleOrder(models.Model):
         # 1) Create invoices.
         invoice_vals_list = []
         for order in self:
-            pending_section = None
-
             # Invoice values.
             invoice_vals = order._prepare_invoice()
-
+            
             # Invoice line values (keep only necessary sections).
-            for line in order.order_line:
-                if line.display_type == 'line_section':
-                    pending_section = line
-                    continue
-                if float_is_zero(line.qty_to_invoice, precision_digits=precision):
-                    continue
-                if line.qty_to_invoice > 0 or (line.qty_to_invoice < 0 and final):
-                    if pending_section:
-                        invoice_vals['invoice_line_ids'].append((0, 0, pending_section._prepare_invoice_line()))
-                        pending_section = None
-                    invoice_vals['invoice_line_ids'].append((0, 0, line._prepare_invoice_line()))
+            invoice_line_vals = order._prepare_invoice_lines(precision=precision, final=final)
 
-            if not invoice_vals['invoice_line_ids']:
+            if not invoice_line_vals:
                 raise UserError(_('There is no invoiceable line. If a product has a Delivered quantities invoicing policy, please make sure that a quantity has been delivered.'))
 
+            invoice_vals['invoice_line_ids'].extend(invoice_line_vals)
             invoice_vals_list.append(invoice_vals)
 
         if not invoice_vals_list:
