@@ -4,7 +4,7 @@ from odoo.tests import tagged, new_test_user
 from odoo.tests.common import Form
 from odoo import fields, api, SUPERUSER_ID
 from odoo.sql_db import db_connect
-from odoo.exceptions import ValidationError, UserError
+from odoo.exceptions import UserError
 from odoo.tools import mute_logger
 
 from dateutil.relativedelta import relativedelta
@@ -494,8 +494,9 @@ class TestAccountMove(AccountTestInvoicingCommon):
         self.assertEqual(copies[5].name, 'XMISC/2019/00004')
 
         # Can't have twice the same name
-        with self.assertRaises(ValidationError):
+        with self.assertRaises(psycopg2.IntegrityError), self.env.cr.savepoint(), mute_logger('odoo.sql_db'):
             copies[0].name = 'XMISC/2019/00001'
+            copies[0].flush()
 
         # Lets remove the order by date
         copies[0].name = 'XMISC/2019/10001'
