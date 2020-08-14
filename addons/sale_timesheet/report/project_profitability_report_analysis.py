@@ -34,6 +34,14 @@ class ProfitabilityAnalysis(models.Model):
     other_revenues = fields.Float("Other Revenues", digits=(16, 2), readonly=True, group_operator="sum",
                                   help="All revenues that are not from timesheets and that are linked to the analytic account of the project.")
 
+    _depends = {
+        'sale.order': ['date_order', 'currency_rate'],
+        'sale.order.line': ['untaxed_amount_to_invoice', 'invoice_status', 'qty_delivered_method', 'product_id', 'price_reduce', 'task_id', 'project_id'],
+        'product.product': ['product_tmpl_id'],
+        'product.template': ['expense_policy'],
+        'project.project': ['partner_id', 'analytic_account_id', 'user_id', 'company_id', 'allow_timesheets', 'sale_line_id'],
+    }
+
     def init(self):
         tools.drop_view_if_exists(self._cr, self._table)
         query = """
