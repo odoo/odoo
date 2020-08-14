@@ -19,7 +19,8 @@ class EventMeetingRoom(models.Model):
     is_published = fields.Boolean(copy=True)  # make the inherited field copyable
     event_id = fields.Many2one("event.event", string="Event", required=True, ondelete="cascade")
     is_pinned = fields.Boolean("Is Pinned")
-    summary = fields.Char("Summary")
+    chat_room_id = fields.Many2one("chat.room", required=True, ondelete="restrict")
+    summary = fields.Char("Summary", translate=True)
     target_audience = fields.Char("Audience", translate=True)
 
     @api.depends('name', 'event_id.name')
