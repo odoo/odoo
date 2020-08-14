@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import datetime
+
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError, UserError
 
@@ -71,6 +73,18 @@ class EventTicket(models.Model):
     seats_available = fields.Integer(string='Available Seats', compute='_compute_seats', store=True)
     seats_unconfirmed = fields.Integer(string='Unconfirmed Seats', compute='_compute_seats', store=True)
     seats_used = fields.Integer(string='Used Seats', compute='_compute_seats', store=True)
+
+    @api.onchange('start_sale_date')
+    def _onchange_start_sale_date(self):
+        for ticket in self:
+            if ticket.event_id.date_end < datetime.datetime.combine(ticket.start_sale_date, datetime.time(0, 0)):
+                raise UserError(_('The tickets sale start date must be before the event start date'))
+
+    @api.onchange('end_sale_date')
+    def _onchange_end_sale_date(self):
+        for ticket in self:
+            if ticket.event_id.date_end < datetime.datetime.combine(ticket.end_sale_date, datetime.time(0, 0)):
+                raise UserError(_('The tickets sale end date must be before the event start date'))
 
     @api.depends('end_sale_date', 'event_id.date_tz')
     def _compute_is_expired(self):
