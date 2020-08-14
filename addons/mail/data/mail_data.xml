@@ -402,5 +402,26 @@
 <p></p>
 </div>
         </template>
+        <!-- Admin technical notifications template -->
+        <template id="mail_channel_notify_admins">
+            <div>
+                <p><b><t t-esc='subject'/></b></p>
+                <pre><t t-esc='message'/></pre><br/>
+                <!-- 
+                    Optional documentation section (added on template with the same model 
+                    to minimise parameters on "_notify_admins()" method) 
+                -->
+                <t t-if="helper_related_doc">
+                    <a class="btn btn-primary" t-att-href="helper_related_doc">
+                        check related documentation
+                    </a>
+                </t>
+                <t t-if="helper_related_view_url and helper_related_view_text">
+                    <a class="btn btn-secondary {{ helper_related_doc ? 'ml-4' : '' }}" t-att-href="helper_related_view_url">
+                       <t t-esc='helper_related_view_text'/>
+                    </a>
+                </t>
+            </div>
+        </template>
     </data>
 </odoo>

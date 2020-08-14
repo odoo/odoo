@@ -8,6 +8,14 @@
             <field name="description">General announcements for all employees.</field>
         </record>
 
+        <!-- Admins channel record > authorized group : 'base.group_system' -->
+        <record model="mail.channel" id="channel_admins">
+            <field name="name">Administrators</field>
+            <field name="group_ids" eval="[(4, ref('base.group_system'))]"/>
+            <field name="group_public_id" ref="base.group_system"/>
+            <field name="description">Notifications about system silent failures to make admins aware of them.</field>
+        </record>
+
         <!-- notify all employees of module installation -->
         <record model="mail.message" id="module_install_notification">
             <field name="model">mail.channel</field>
