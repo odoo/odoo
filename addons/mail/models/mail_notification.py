@@ -3,8 +3,9 @@
 
 from dateutil.relativedelta import relativedelta
 
-from odoo import api, fields, models
+from odoo import api, fields, models, tools
 from odoo.tools.translate import _
+from datetime import timedelta
 
 
 class MailNotification(models.Model):
@@ -102,3 +103,48 @@ class MailNotification(models.Model):
             'failure_type': notif.failure_type,
             'partner_id': [notif.res_partner_id.id, notif.res_partner_id.display_name],
         } for notif in self]
+
+    @api.model
+    def _cron_notify_admins(self):
+        """
+            Cron activity : Posts notifications about failed mails/sms and other batch failures...
+            This cron was created to avoid adding notification code (failure counter, '_notify_admins()' method...) while mail stack processed.
+        """
+        cron = self.env.ref('mail.ir_cron_mail_notify_administrators')
+        # Get the last check date (related to the cron period == 1 day)
+        previous_date = fields.Datetime.now() - relativedelta(**{cron.interval_type: cron.interval_number})
+
+        # Count failed mails : (we can get failed mails from 'mail.mail')
+        # Some emails (ex : for ignored recipients) are deleted from mails list, so we get them from 'mail.notification'
+        failed_ignored_emails_counter = self.env['mail.notification'].sudo().search_count([
+            # We use 'mail_message_id.create_date' as a substitute for date or create_date in 'mail.notification'
+            ('mail_message_id.create_date', '>=', previous_date.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)),
+            ('notification_status', '=', 'exception'),
+            ('notification_type', '=', 'email'),
+            ('failure_type', '=', 'RECIPIENT')]
+        )
+        # The 'mail.notification' counter will count only 'RECIPIENT' related failures.
+        failed_emails_counter = self.env['mail.mail'].sudo().search_count([
+                ('date', '>=', previous_date.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)),
+                ('state', '=', 'exception')])
+
+        # Get notifications w-action (used to add a link to sms-mail notifs in admins channel)
+        mail_sms_notifications_window_action = self.env.ref('mail.mail_notification_action').id
+
+        # '_notify_admins' methods in daily cron job should use a repeat_delay of 1 day
+        if failed_emails_counter:
+            self._notify_admins(
+                *self._get_admin_notification('mail__smtp_connection')(
+                    failed_emails_counter,
+                    mail_sms_notifications_window_action
+                ),
+                repeat_delay=timedelta(days=1)
+            )
+        if failed_ignored_emails_counter:
+            self._notify_admins(
+                *self._get_admin_notification('mail__invalid_recipient')(
+                    failed_ignored_emails_counter,
+                    mail_sms_notifications_window_action
+                ),
+                repeat_delay=timedelta(days=1)
+            )

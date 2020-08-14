@@ -55,5 +55,15 @@
             <field name="state">code</field>
         </record>
 
+        <record id="ir_cron_mail_notify_administrators" model="ir.cron">
+            <field name="name">Mail: Notify admins about technical issues</field>
+            <field name="model_id" ref="model_mail_notification"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_notify_admins()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="False"/>
+        </record>
     </data>
 </odoo>
