@@ -164,7 +164,7 @@
         <field name="name">Jobs - Recruitment</field>
         <field name="model">hr.applicant</field>
         <field name="arch" type="xml">
-              <pivot string="Job Applications">
+              <pivot string="Job Applications" sample="1">
                 <field name="create_date" type="row"/>
                 <field name="stage_id" type="col"/>
                 <field name="color" invisible="1"/>
@@ -930,7 +930,7 @@ action = act
          <field name="name">hr.applicant.pivot</field>
          <field name="model">hr.applicant</field>
          <field name="arch" type="xml">
-             <pivot string="Recruitment Analysis">
+             <pivot string="Recruitment Analysis" sample="1">
                  <field name="stage_id" type="row"/>
                  <field name="job_id" type="col"/>
              </pivot>

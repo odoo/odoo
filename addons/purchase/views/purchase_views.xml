@@ -111,7 +111,7 @@
             <field name="name">purchase.order.pivot</field>
             <field name="model">purchase.order</field>
             <field name="arch" type="xml">
-                <pivot string="Purchase Order" display_quantity="True">
+                <pivot string="Purchase Order" display_quantity="True" sample="1">
                     <field name="partner_id" type="row"/>
                     <field name="amount_total" type="measure"/>
                 </pivot>

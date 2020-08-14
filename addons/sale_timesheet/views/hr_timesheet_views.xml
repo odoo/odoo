@@ -25,7 +25,7 @@
         <field name="name">account.analytic.line.pivot.revenue</field>
         <field name="model">account.analytic.line</field>
         <field name="arch" type="xml">
-            <pivot string="Timesheet">
+            <pivot string="Timesheet" sample="1">
                 <field name="employee_id" type="row"/>
                 <field name="date" interval="month" type="col"/>
                 <field name="unit_amount" type="measure"/>
@@ -75,7 +75,7 @@
         <field name="name">account.analytic.line.pivot.billing.rate</field>
         <field name="model">account.analytic.line</field>
         <field name="arch" type="xml">
-            <pivot string="Timesheet">
+            <pivot string="Timesheet" sample="1">
                 <field name="timesheet_invoice_type" type="col"/>
                 <field name="unit_amount" type="measure" widget="timesheet_uom"/>
                 <field name="amount" string="Timesheet Costs"/>

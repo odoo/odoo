@@ -4,7 +4,7 @@
             <field name="name">mailing.trace.report.view.pivot</field>
             <field name="model">mailing.trace.report</field>
             <field name="arch" type="xml">
-                <pivot string="Mass Mailing Statistics" disable_linking="True">
+                <pivot string="Mass Mailing Statistics" disable_linking="True" sample="1">
                     <field name="campaign" type="row"/>
                     <field name="sent" type="measure"/>
                     <field name="delivered" type="measure"/>

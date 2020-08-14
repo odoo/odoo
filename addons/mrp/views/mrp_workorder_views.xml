@@ -270,7 +270,7 @@
         <field name="name">mrp.production.work.order.pivot</field>
         <field name="model">mrp.workorder</field>
         <field name="arch" type="xml">
-            <pivot string="Operations">
+            <pivot string="Operations" sample="1">
                 <field name="date_start"/>
                 <field name="operation_id"/>
                 <field name="duration" type="measure"/>
@@ -475,7 +475,7 @@
         <field name="name">report.workcenter.load.pivot</field>
         <field name="model">mrp.workorder</field>
         <field name="arch" type="xml">
-            <pivot string="Work Center Loads">
+            <pivot string="Work Center Loads" sample="1">
                 <field name="duration_expected" type="measure"/>
                 <field name="workcenter_id" type="row"/>
                 <field name="production_date" type="row" interval="day"/>
