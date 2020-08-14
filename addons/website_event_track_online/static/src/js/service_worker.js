@@ -9,6 +9,7 @@ const pendingRequestsQueueName = `${PREFIX}-pending-requests`;
 const cacheName = `${PREFIX}-cache`;
 const syncStore = new Store(`${PREFIX}-sync-db`, `${PREFIX}-sync-store`);
 const cacheStore = new Store(`${PREFIX}-cache-db`, `${PREFIX}-cache-store`);
+const offlineRoute = `${self.registration.scope}/offline`;
 
 /**
  *
@@ -42,6 +43,12 @@ const isSyncableURL = canHandleRoutes(SYNCABLE_ROUTES);
  * @returns {Function}
  */
 const isCachableURL = canHandleRoutes(CACHABLE_ROUTES);
+
+/**
+ *
+ * @return {Promise}
+ */
+const fetchToCacheOfflinePage = () => caches.open(cacheName).then((cache) => cache.add(offlineRoute));
 
 /**
  *
@@ -145,6 +152,19 @@ const isCachableRequest = (request) => isGET(request) || isCachableURL(request.u
 
 /**
  *
+ * @param request
+ * @param requestError
+ * @return {boolean}
+ */
+const isOfflineDocumentRequest = (request, requestError) =>
+    request && requestError && requestError.message === 'Failed to fetch' && (
+        (isGET(request) && request.mode === 'navigate' && request.destination === 'document') ||
+        // request.mode = navigate isn't supported in all browsers => check for http header accept:text/html
+        (request.method === 'GET' && request.headers.get('accept').includes('text/html'))
+    );
+
+/**
+ *
  * @param {Request} request
  * @returns {Promise<Response|null>}
  */
@@ -179,7 +199,11 @@ const processFetchEvent = async ({ request }) => {
         await cacheRequest(request, response);
     } catch (requestError) {
         if (isCachableRequest(requestCopy)) {
-            response = await matchCache(requestCopy);
+            try {
+                response = await matchCache(requestCopy);
+            } catch (err) {
+                console.warn("An error occurs when reading the cache request", err);
+            }
         } else if (isSyncableURL(requestCopy.url)) {
             const pendingRequests = (await get(pendingRequestsQueueName, syncStore)) || [];
             const serializedRequest = await serializeRequest(requestCopy);
@@ -196,6 +220,10 @@ const processFetchEvent = async ({ request }) => {
         }
 
         if (!response) {
+            if (isOfflineDocumentRequest(request, requestError)) {
+                const cache = await caches.open(cacheName);
+                return await cache.match(offlineRoute);
+            }
             throw requestError;
         }
     }
@@ -277,4 +305,9 @@ self.addEventListener("sync", (event) => {
 
 self.addEventListener("message", (event) => {
     event.waitUntil(processMessage(event.data));
+});
+
+// Precache static resources here. Like offline page
+self.addEventListener('install', (event) => {
+    event.waitUntil(fetchToCacheOfflinePage());
 });
