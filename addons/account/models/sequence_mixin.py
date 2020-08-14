@@ -136,11 +136,14 @@ class SequenceMixin(models.AbstractModel):
             param['id'] = self.id or self.id.origin
 
         query = """
-            SELECT {field} FROM {table}
-            {where_string}
-            AND sequence_prefix = (SELECT sequence_prefix FROM account_move {where_string} ORDER BY id DESC LIMIT 1)
-            ORDER BY sequence_number DESC
-            LIMIT 1 FOR UPDATE
+            UPDATE {table} SET write_date = write_date WHERE id = (
+                SELECT id FROM {table}
+                {where_string}
+                AND sequence_prefix = (SELECT sequence_prefix FROM {table} {where_string} ORDER BY id DESC LIMIT 1)
+                ORDER BY sequence_number DESC
+                LIMIT 1
+            )
+            RETURNING {field};
         """.format(
             table=self._table,
             where_string=where_string,
