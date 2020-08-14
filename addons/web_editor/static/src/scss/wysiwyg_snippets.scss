@@ -159,7 +159,6 @@ body.editor_enable.editor_has_snippets {
     border: none;
     background: transparent;
     color: inherit;
-    font-size: 1.1em;
     font-weight: normal;
 
     > span {
@@ -190,7 +189,6 @@ body.editor_enable.editor_has_snippets {
     font-family: $o-we-font-family;
     font-size: $o-we-sidebar-font-size;
     font-weight: 400;
-    line-height: 1;
 
     transition: transform 400ms ease 0s;
     transform: translateX(-100%);
@@ -354,7 +352,7 @@ body.editor_enable.editor_has_snippets {
 
         @mixin large-component() {
             flex: 1 1 auto;
-            width: $o-we-sidebar-width / 2; // TODO maybe there is a better way to implement this
+            width: ($o-we-sidebar-width - $o-we-sidebar-content-padding-base - $o-we-sidebar-content-indent) * 0.5;
         }
 
         we-button, we-toggler {
@@ -421,8 +419,8 @@ body.editor_enable.editor_has_snippets {
         we-customizeblock-options {
             position: relative;
             display: block;
-            padding: 0 $o-we-sidebar-content-block-spacing $o-we-sidebar-content-block-spacing $o-we-sidebar-content-indent;
             box-shadow: 0 $o-we-sidebar-content-main-title-border-extension 0 $o-we-sidebar-content-main-title-border-color;
+            padding: $o-we-sidebar-content-block-spacing * .3 $o-we-sidebar-content-padding-base $o-we-sidebar-content-block-spacing * 1.5 $o-we-sidebar-content-indent;
             background-image: $o-we-sidebar-content-main-title-shadow;
             background-size: 100% ($o-we-sidebar-content-main-title-height / 2);
             background-repeat: no-repeat;
@@ -431,10 +429,10 @@ body.editor_enable.editor_has_snippets {
                 display: flex;
                 align-items: center;
                 margin-bottom: $o-we-sidebar-content-main-title-margin-bottom - $o-we-sidebar-content-field-spacing;
+                font-size: $o-we-sidebar-content-main-title-font-size;
 
                 > span {
                     color: $o-we-sidebar-content-main-title-color !important;
-                    font-size: $o-we-sidebar-content-main-title-font-size;
                     line-height: $o-we-sidebar-content-main-title-height;
                 }
 
@@ -442,6 +440,11 @@ body.editor_enable.editor_has_snippets {
                     flex: 0 0 auto;
                     display: block;
                     margin-left: auto;
+                    font-size: .9em;
+
+                    .oe_snippet_remove {
+                        font-size: 1.2em;
+                    }
 
                     > * {
                         margin-left: $o-we-sidebar-content-field-multi-spacing;
@@ -1068,7 +1071,7 @@ body.editor_enable.editor_has_snippets {
     @extend %o-preview-alpha-background;
     font-family: sans-serif !important;
     font-size: 16px !important;
-    padding: $o-we-sidebar-content-field-spacing * 1.6;
+    padding: $o-we-sidebar-content-field-spacing;
 }
 .o_we_cc_preview_wrapper > * {
     margin-top: 0 !important;
@@ -1139,6 +1142,10 @@ body.editor_enable.editor_has_snippets {
             background-clip: padding-box;
             border-top: $o-we-sidebar-content-field-spacing solid transparent;
             border-bottom: $o-we-sidebar-content-field-spacing solid transparent;
+
+            + .o_we_color_combination_btn {
+                margin-top: $o-we-sidebar-content-field-spacing * -.5;
+            }
 
             .o_we_cc_preview_wrapper:after {
                 // For some reasons, in this specific context we have to
