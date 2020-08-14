@@ -778,6 +778,10 @@ const SelectUserValueWidget = BaseSelectionUserValueWidget.extend({
             this.menuTogglerEl.appendChild(iconEl);
         }
         this.containerEl.insertBefore(this.menuTogglerEl, this.menuEl);
+
+        const dropdownCaretEl = document.createElement('span');
+        dropdownCaretEl.classList.add('o_we_dropdown_caret');
+        this.containerEl.appendChild(dropdownCaretEl);
     },
 
     //--------------------------------------------------------------------------
