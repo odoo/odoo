@@ -1,10 +1,12 @@
 odoo.define('calendar.systray.ActivityMenuTests', function (require) {
 "use strict";
 
-const { afterEach, beforeEach, start } = require('mail/static/src/utils/test_utils.js');
-var ActivityMenu = require('mail.systray.ActivityMenu');
+const { afterEach, beforeEach } = require('mail/static/src/utils/test_utils.js');
+const ActivityMenu = require('mail.systray.ActivityMenu');
+const testUtils = require('web.test_utils');
 
-var testUtils = require('web.test_utils');
+const { createComponent } = testUtils;
+
 
 QUnit.module('calendar', {}, function () {
 QUnit.module('ActivityMenu', {
@@ -47,35 +49,45 @@ QUnit.module('ActivityMenu', {
 
 QUnit.test('activity menu widget:today meetings', async function (assert) {
     assert.expect(6);
-    var self = this;
+    const self = this;
 
-    const { widget } = await start({
+    const activityMenu = await createComponent(ActivityMenu, {
         data: this.data,
         mockRPC: function (route, args) {
-            if (args.method === 'systray_get_activities') {
-                return Promise.resolve(self.data['calendar.event']['records']);
+            if (args.method === "systray_get_activities") {
+                return Promise.resolve(self.data["calendar.event"]["records"]);
             }
             return this._super(route, args);
         },
+        intercepts: {
+            "do-action": (ev) => {
+                assert.strictEqual(
+                    ev.detail.action,
+                    "calendar.action_calendar_event",
+                    "should open meeting calendar view in day mode"
+                );
+            },
+        },
+        session: {
+            async user_has_group(group) {},
+        },
     });
 
-    const activityMenu = new ActivityMenu(widget);
-    await activityMenu.appendTo($('#qunit-fixture'));
+    await activityMenu.mount(document.querySelector("#qunit-fixture"));
 
-    assert.hasClass(activityMenu.$el, 'o_mail_systray_item', 'should be the instance of widget');
+    assert.hasClass(activityMenu.el, 'o_mail_systray_item', 'should be the instance of widget');
 
-    await testUtils.dom.click(activityMenu.$('.dropdown-toggle'));
+    await testUtils.dom.click(activityMenu.el.querySelector('.dropdown-toggle'));
+    await testUtils.dom.click(activityMenu.el.querySelector('.o_mail_preview'));
 
-    testUtils.mock.intercept(activityMenu, 'do_action', function (event) {
-        assert.strictEqual(event.data.action, "calendar.action_calendar_event", 'should open meeting calendar view in day mode');
-    });
-    await testUtils.dom.click(activityMenu.$('.o_mail_preview'));
-
-    assert.ok(activityMenu.$('.o_meeting_filter'), "should be a meeting");
+    assert.ok(activityMenu.el.querySelector('.o_meeting_filter'), "should be a meeting");
     assert.containsN(activityMenu, '.o_meeting_filter', 2, 'there should be 2 meetings');
-    assert.hasClass(activityMenu.$('.o_meeting_filter').eq(0), 'o_meeting_bold', 'this meeting is yet to start');
-    assert.doesNotHaveClass(activityMenu.$('.o_meeting_filter').eq(1), 'o_meeting_bold', 'this meeting has been started');
-    widget.destroy();
+    assert.hasClass(activityMenu.el.querySelector('.o_meeting_filter'), 'o_meeting_bold',
+        'this meeting is yet to start');
+    assert.doesNotHaveClass(activityMenu.el.querySelectorAll('.o_meeting_filter')[1], 'o_meeting_bold',
+        'this meeting has been started');
+
+    activityMenu.destroy();
 });
 });
 

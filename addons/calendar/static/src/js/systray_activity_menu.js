@@ -1,55 +1,72 @@
 odoo.define('calendar.systray.ActivityMenu', function (require) {
-"use strict";
+    "use strict";
 
-var ActivityMenu = require('mail.systray.ActivityMenu');
-var fieldUtils = require('web.field_utils');
+    const ActivityMenu = require('mail.systray.ActivityMenu');
+    const fieldUtils = require('web.field_utils');
 
-ActivityMenu.include({
+    ActivityMenu.patch("calendar.systray.ActivityMenu", (T) => {
+        class CalendarActivityMenu extends T {
 
-    //-----------------------------------------
-    // Private
-    //-----------------------------------------
+            //-----------------------------------------
+            // Public
+            //-----------------------------------------
 
-    /**
-     * parse date to server value
-     *
-     * @private
-     * @override
-     */
-    _getActivityData: function () {
-        var self = this;
-        return this._super.apply(this, arguments).then(function () {
-            var meeting = _.find(self._activities, {type: 'meeting'});
-            if (meeting && meeting.meetings)  {
-                _.each(meeting.meetings, function (res) {
-                    res.start = fieldUtils.parse.datetime(res.start, false, {isUTC: true});
-                });
+            meetingStart(start) {
+                return moment(start).local().format("hh:mm A");
             }
-        });
-    },
 
-    //-----------------------------------------
-    // Handlers
-    //-----------------------------------------
+            //-----------------------------------------
+            // Private
+            //-----------------------------------------
 
-    /**
-     * @private
-     * @override
-     */
-    _onActivityFilterClick: function (ev) {
-        var $el = $(ev.currentTarget);
-        var data = _.extend({}, $el.data());
-        if (data.res_model === "calendar.event" && data.filter === "my") {
-            this.do_action('calendar.action_calendar_event', {
-                additional_context: {
-                    default_mode: 'day',
-                    search_default_mymeetings: 1,
+            /**
+             * parse date to server value
+             *
+             * @private
+             * @override
+             */
+            async _getActivityData() {
+                await super._getActivityData(...arguments);
+                const meeting = this.state.activities.find(activity => activity.type === "meeting");
+                if (meeting && meeting.meetings) {
+                    meeting.meetings.forEach(res => {
+                        res.start = fieldUtils.parse.datetime(res.start, false, {
+                            isUTC: true,
+                        });
+                    });
                 }
-            });
-        } else {
-            this._super.apply(this, arguments);
+            }
+
+            //-----------------------------------------
+            // Handlers
+            //-----------------------------------------
+
+            /**
+             * @private
+             * @override
+             */
+            _onActivityFilterClick(ev) {
+                const el = ev.currentTarget;
+                const data = Object.assign({}, el.dataset);
+                if (data.res_model === "calendar.event" && data.filter === "my") {
+                    this.trigger("do-action", {
+                        action: "calendar.action_calendar_event",
+                        options: {
+                            additional_context: {
+                                default_mode: "day",
+                                search_default_mymeetings: 1,
+                            },
+                        },
+                    });
+                } else {
+                    super._onActivityFilterClick(...arguments);
+                }
+            }
         }
-    },
-});
+
+        return CalendarActivityMenu;
+    });
+
+    return ActivityMenu;
 
 });
