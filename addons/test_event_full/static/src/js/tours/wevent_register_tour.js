@@ -26,25 +26,25 @@ var discoverTalkSteps = function (talkName, fromList, reminderOn, toggleReminder
         steps = steps.concat([{
             content: "Check Reminder is on",
             trigger: 'div.o_wetrack_js_reminder i.fa-bell',
-            extra_trigger: 'small.o_wetrack_js_reminder_text:contains("Reminder On")',
+            extra_trigger: 'span.o_wetrack_js_reminder_text:contains("Reminder On")',
             run: function () {}, // it's a check
         }]);
     }
     else {
         steps = steps.concat([{
             content: "Check Reminder is Off",
-            trigger: 'small.o_wetrack_js_reminder_text:contains("Set Reminder")',
+            trigger: 'span.o_wetrack_js_reminder_text:contains("Set Reminder")',
             run: function () {}, // it's a check
         }]);
         if (toggleReminder) {
             steps = steps.concat([{
                 content: "Set Reminder",
-                trigger: 'small.o_wetrack_js_reminder_text',
+                trigger: 'span.o_wetrack_js_reminder_text',
                 run: 'click',
             }, {
                 content: "Check Reminder is On",
                 trigger: 'div.o_wetrack_js_reminder i.fa-bell',
-                extra_trigger: 'small.o_wetrack_js_reminder_text:contains("Reminder On")',
+                extra_trigger: 'span.o_wetrack_js_reminder_text:contains("Reminder On")',
                 run: function () {}, // it's a check
             }]);
         }
@@ -60,8 +60,10 @@ var discoverTalkSteps = function (talkName, fromList, reminderOn, toggleReminder
 var discoverRoomSteps = function (roomName) {
     var steps = [{
         content: 'Go on "' + roomName + '" room in List',
-        trigger: 'a.o_wevent_meeting_room_card h3:contains("' + roomName + '")',
-        run: 'click',
+        trigger: 'a.o_wevent_meeting_room_card h4:contains("' + roomName + '")',
+        run: function() {
+            // can't click on it, it will try to launch Jitsi and fail on chrome headless
+        },
     }];
     return steps;
 };
@@ -73,16 +75,14 @@ var discoverRoomSteps = function (roomName) {
 
 var registerSteps = [{
     content: 'Go on Register',
-    trigger: 'li.btn-primary a:contains("Register")',
+    trigger: 'a.btn-primary:contains("Register")',
 }, {
     content: "Select 2 units of 'Standard' ticket type",
-    extra_trigger: '#wrap:not(:has(a[href*="/event"]:contains("Conference for Architects")))',
-    trigger: 'select:eq(0)',
+    trigger: '#o_wevent_tickets_collapse .row:has(.o_wevent_registration_multi_select:contains("Free")) select',
     run: 'text 2',
 }, {
     content: "Click on 'Register' button",
-    extra_trigger: 'select:eq(0):has(option:contains(2):propSelected)',
-    trigger: '.btn-primary:contains("Register")',
+    trigger: '#o_wevent_tickets .btn-primary:contains("Register"):not(:disabled)',
     run: 'click',
 }, {
     content: "Fill attendees details",
@@ -100,6 +100,9 @@ var registerSteps = [{
     extra_trigger: "input[name='1-name'], input[name='2-name'], input[name='3-name']",
     trigger: 'button:contains("Continue")',
     run: 'click',
+}, {
+    trigger: 'h3:contains("Registration confirmed!")',
+    run: function () {} // check
 }];
 
 /**

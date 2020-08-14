@@ -243,7 +243,7 @@ class TestWEventCommon(HttpCaseWithUserDemo, HttpCaseWithUserPortal, EventDtPatc
             'name': 'What This Event Is All About',
             'event_id': self.event.id,
             'stage_id': self.env.ref('website_event_track.event_track_stage3').id,
-            'date': datetime.combine(self.reference_now, time(5, 0)),
+            'date': self.reference_now + timedelta(hours=1),
             'duration': 2,
             'is_published': True,
             'wishlisted_by_default': True,
