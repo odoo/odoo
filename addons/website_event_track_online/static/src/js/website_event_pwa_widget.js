@@ -10,6 +10,14 @@ odoo.define("website_event_track_online.website_event_pwa_widget", function (req
         template: "pwa_install_banner",
         events: {
             "click .o_btn_install": "_onClickInstall",
+            "click .o_btn_close": "_onClickClose",
+        },
+
+        /**
+         * @private
+         */
+        _onClickClose: function () {
+            this.trigger_up("prompt_close_bar");
         },
 
         /**
@@ -24,6 +32,7 @@ odoo.define("website_event_track_online.website_event_pwa_widget", function (req
         selector: "#wrapwrap.event",
         custom_events: {
             prompt_install: "_onPromptInstall",
+            prompt_close_bar: "_onPromptCloseBar",
         },
 
         /**
@@ -126,7 +135,14 @@ odoo.define("website_event_track_online.website_event_pwa_widget", function (req
             this.deferredPrompt = ev;
             this._showInstallBanner();
         },
-
+        /**
+         * @private
+         * @param ev {Event}
+         */
+        _onPromptCloseBar: function (ev) {
+            ev.stopPropagation();
+            this._hideInstallBanner();
+        },
         /**
          * @private
          * @param ev {Event}
