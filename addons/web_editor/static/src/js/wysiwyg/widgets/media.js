@@ -486,6 +486,11 @@ var FileWidget = SearchableMediaWidget.extend({
                 self.$media.css(style);
             }
 
+            if (self.options.onUpload) {
+                // We consider that when selecting an image it is as if we upload it in the html content.
+                self.options.onUpload(img);
+            }
+
             // Remove crop related attributes
             if (self.$media.attr('data-aspect-ratio')) {
                 var attrs = ['aspect-ratio', 'x', 'y', 'width', 'height', 'rotate', 'scale-x', 'scale-y'];
