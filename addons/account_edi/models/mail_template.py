@@ -17,16 +17,19 @@ class MailTemplate(models.Model):
         if self.model != 'account.move':
             return res
 
-        existing_attachments = self.env['ir.attachment'].search([
-                ('res_model', '=', 'account.move'),
-                ('res_id', 'in', res_ids),
-                ('edi_format_id', '!=', False)])
+        groupby_moves = {}
+        all_attachments = self.env['ir.attachment'].search([
+            ('res_model', '=', 'account.move'),
+            ('res_id', 'in', res_ids),
+            ('edi_format_id', '!=', False)
+        ])
+        for attachment in all_attachments:
+            groupby_moves.setdefault(attachment.res_id, self.env['ir.attachment'])
+            groupby_moves[attachment.res_id] |= attachment
 
-        for record in self.env[self.model].browse(res_ids):
-            available_formats = existing_attachments.filtered(lambda a: a.res_id == record.id)
-            missing_formats = record.journal_id.edi_format_ids.filtered(lambda f: f._origin.id not in available_formats.edi_format_id.ids)
-            new_attachments = missing_formats._create_ir_attachments(record)
-            available_formats |= new_attachments
-            (res[record.id] if multi_mode else res).setdefault('attachments', []).extend([(a.name, a.datas) for a in available_formats])
+        for move_id, attachments in groupby_moves.items():
+            record_data = (res[move_id] if multi_mode else res)
+            record_data.setdefault('attachments', [])
+            record_data['attachments'] += [(attachment.name, attachment.datas) for attachment in attachments]
 
         return res

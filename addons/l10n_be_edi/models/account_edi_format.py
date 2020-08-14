@@ -38,9 +38,3 @@ class AccountEdiFormat(models.Model):
                 'res_id': invoice._origin.id,
                 'mimetype': 'application/xml'
                 }
-
-    def _export_invoice_to_embed_to_pdf(self, pdf_content, invoice):
-        self.ensure_one()
-        if self.code != 'efff_1':
-            return super()._export_invoice_to_embed_to_pdf(pdf_content, invoice)
-        return False  # ubl must not be embedded to PDF.

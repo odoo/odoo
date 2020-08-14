@@ -63,7 +63,7 @@ class AccountEdiFormat(models.Model):
         """
         # TO OVERRIDE
         self.ensure_one()
-        return self._export_invoice_to_attachment(invoice)
+        return False
 
     ####################################################
     # Import methods to override based on EDI Format
