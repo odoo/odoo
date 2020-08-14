@@ -37,150 +37,149 @@
             <field name="model">res.users</field>
             <field name="inherit_id" ref="res_users_view_form_simple_modif"/>
             <field name="arch" type="xml">
-                <form position="replace">
-                <form create="false" js_class="hr_employee_profile_form">
-                    <field name="hr_presence_state" invisible="1"/>
-                    <header>
-                        <button name="preference_change_password" type="object" string="Change password" class="btn btn-secondary"/>
-                    </header>
-                    <sheet>
-                        <div class="oe_button_box" name="button_box">
-                            <button
-                                id="hr_presence_button"
-                                class="oe_stat_button"
-                                disabled="1"
-                                invisible="context.get('from_my_profile', False)"
-                                attrs="{'invisible': [('hr_presence_state', '=', 'absent')]}">
-                                <div role="img" class="fa fa-fw fa-circle text-success o_button_icon" attrs="{'invisible': [('hr_presence_state', '!=', 'present')]}" aria-label="Available" title="Available"/>
-                                <div role="img" class="fa fa-fw fa-circle text-warning o_button_icon" attrs="{'invisible': [('hr_presence_state', '!=', 'to_define')]}" aria-label="Away" title="Away"/>
-                                <div role="img" class="fa fa-fw fa-circle text-danger o_button_icon" attrs="{'invisible': [('hr_presence_state', '!=', 'absent')]}" aria-label="Not available" title="Not available"/>
+                <form position="attributes">
+                    <attribute name="create">false</attribute>
+                    <attribute name="js_class">hr_employee_profile_form</attribute>
+                </form>
+                <notebook position="replace">
+                        <field name="hr_presence_state" invisible="1"/>
+                        <header>
+                        </header>
+                        <sheet>$0</sheet>
+                </notebook>
+                <notebook position="before">
+                    <div class="oe_button_box" name="button_box">
+                        <button
+                            id="hr_presence_button"
+                            class="oe_stat_button"
+                            disabled="1"
+                            invisible="context.get('from_my_profile', False)"
+                            attrs="{'invisible': [('hr_presence_state', '=', 'absent')]}">
+                            <div role="img" class="fa fa-fw fa-circle text-success o_button_icon" attrs="{'invisible': [('hr_presence_state', '!=', 'present')]}" aria-label="Available" title="Available"/>
+                            <div role="img" class="fa fa-fw fa-circle text-warning o_button_icon" attrs="{'invisible': [('hr_presence_state', '!=', 'to_define')]}" aria-label="Away" title="Away"/>
+                            <div role="img" class="fa fa-fw fa-circle text-danger o_button_icon" attrs="{'invisible': [('hr_presence_state', '!=', 'absent')]}" aria-label="Not available" title="Not available"/>
 
-                                <div class="o_stat_info" attrs="{'invisible': [('hr_presence_state', '=', 'present')]}">
-                                    <span class="o_stat_text">
-                                        Not Connected
-                                    </span>
-                                </div>
-                                <div class="o_stat_info" attrs="{'invisible': [('hr_presence_state', '!=', 'present')]}">
-                                    <span class="o_stat_value" attrs="{'invisible': [('last_activity_time', '=', False)]}">
-                                        <field name="last_activity_time"/>
-                                    </span>
-                                    <span class="o_stat_value" attrs="{'invisible': [('last_activity_time', '!=', False)]}">
-                                        <field name="last_activity"/>
-                                    </span>
-                                    <span class="o_stat_text">Connected Since</span>
-                                </div>
-                            </button>
-                        </div>
-                        <field name="image_1920" widget='image' class="oe_avatar" options='{"zoom": true, "preview_image":"image_128"}'/>
-                        <div class="oe_title">
-                            <h1>
-                                <field name="name" placeholder="Employee's Name" required="True" readonly="context.get('from_my_profile', False)"/>
-                            </h1>
-                        </div>
-                        <div class="row">
-                            <h2 class="col-6">
-                                <field name="job_title" placeholder="Job Position" attrs="{'readonly': [('can_edit', '=', False)]}"/>
-                            </h2>
-                        </div>
+                            <div class="o_stat_info" attrs="{'invisible': [('hr_presence_state', '=', 'present')]}">
+                                <span class="o_stat_text">
+                                    Not Connected
+                                </span>
+                            </div>
+                            <div class="o_stat_info" attrs="{'invisible': [('hr_presence_state', '!=', 'present')]}">
+                                <span class="o_stat_value" attrs="{'invisible': [('last_activity_time', '=', False)]}">
+                                    <field name="last_activity_time"/>
+                                </span>
+                                <span class="o_stat_value" attrs="{'invisible': [('last_activity_time', '!=', False)]}">
+                                    <field name="last_activity"/>
+                                </span>
+                                <span class="o_stat_text">Connected Since</span>
+                            </div>
+                        </button>
+                    </div>
+                    <field name="image_1920" widget='image' class="oe_avatar" options='{"zoom": true, "preview_image":"image_128"}'/>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Employee's Name" required="True" readonly="context.get('from_my_profile', False)"/>
+                        </h1>
+                    </div>
+                    <div class="row">
+                        <h2 class="col-6">
+                            <field name="job_title" placeholder="Job Position" attrs="{'readonly': [('can_edit', '=', False)]}"/>
+                        </h2>
+                    </div>
+                    <group>
                         <group>
-                            <group>
-                                <field name="can_edit" invisible="1"/>
-                                <field name="mobile_phone" widget="phone" attrs="{'readonly': [('can_edit', '=', False)]}" options="{'enable_sms': false}"/>
-                                <field name="work_phone" widget="phone" attrs="{'readonly': [('can_edit', '=', False)]}" options="{'enable_sms': false}"/>
+                            <field name="can_edit" invisible="1"/>
+                            <field name="mobile_phone" widget="phone" attrs="{'readonly': [('can_edit', '=', False)]}" options="{'enable_sms': false}"/>
+                            <field name="work_phone" widget="phone" attrs="{'readonly': [('can_edit', '=', False)]}" options="{'enable_sms': false}"/>
+                        </group>
+                        <group>
+                            <field name="work_email" widget="email" attrs="{'readonly': [('can_edit', '=', False)]}"/>
+                            <field name="work_location" attrs="{'readonly': [('can_edit', '=', False)]}"/>
+                            <field name="company_id" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="employee_parent_id" attrs="{'readonly': [('can_edit', '=', False)]}"/>
+                            <field name="coach_id" attrs="{'readonly': [('can_edit', '=', False)]}"/>
+                        </group>
+                    </group>
+                </notebook>
+                <notebook position="inside">
+                    <page name="public" string="Work Information">
+                        <div id="o_work_employee_container"> <!-- These two div are used to position org_chart -->
+                            <div id="o_work_employee_main">
+                                <group string="Location">
+                                    <field name="department_id" attrs="{'readonly': [('can_edit', '=', False)]}"/>
+                                    <field name="address_id"
+                                        context="{'show_address': 1}"
+                                        options='{"always_reload": True, "highlight_first_line": True}'
+                                        attrs="{'readonly': [('can_edit', '=', False)]}"/>
+                                </group>
+                                <group name="managers" string="Approvers" class="hide-group-if-empty">
+                                    <!-- overridden in other modules -->
+                                </group>
+                            </div>
+                        </div>
+                    </page>
+                    <page name="personal_information" string="Private Information">
+                        <group>
+                            <group string="Contact Information">
+                                <field name="employee_ids" invisible="1"/>
+                                <field name="address_home_id"
+                                    context="{
+                                        'show_address': 1,
+                                        'default_employee_ids': employee_ids,
+                                        'default_type': 'private',
+                                        'form_view_ref': 'base.res_partner_view_form_private'}"
+                                    options='{"always_reload": True, "highlight_first_line": True}'
+                                    attrs="{'readonly': [('can_edit', '=', False)]}"/>
+                                <field name="private_email" string="Email" attrs="{'readonly': [('can_edit', '=', False)]}"/>
+                                <field name="employee_phone" string="Phone" class="o_force_ltr" attrs="{'readonly': [('can_edit', '=', False)]}" options="{'enable_sms': false}"/>
+                                <field name="employee_bank_account_id" attrs="{'readonly': [('can_edit', '=', False)]}"/>
+                                <field name="km_home_work" attrs="{'readonly': [('can_edit', '=', False)]}"/>
                             </group>
-                            <group>
-                                <field name="work_email" widget="email" attrs="{'readonly': [('can_edit', '=', False)]}"/>
-                                <field name="work_location" attrs="{'readonly': [('can_edit', '=', False)]}"/>
-                                <field name="company_id" invisible="1"/>
+                            <group string="Citizenship">
+                                <field name="employee_country_id" options='{"no_open": True, "no_create": True}' attrs="{'readonly': [('can_edit', '=', False)]}"/>
+                                <field name="identification_id" attrs="{'readonly': [('can_edit', '=', False)]}"/>
+                                <field name="passport_id" attrs="{'readonly': [('can_edit', '=', False)]}"/>
+                                <field name="gender" attrs="{'readonly': [('can_edit', '=', False)]}"/>
+                                <field name="birthday" attrs="{'readonly': [('can_edit', '=', False)]}"/>
+                                <field name="place_of_birth" attrs="{'readonly': [('can_edit', '=', False)]}"/>
+                                <field name="country_of_birth" attrs="{'readonly': [('can_edit', '=', False)]}"/>
                             </group>
-                            <group>
-                                <field name="employee_parent_id" attrs="{'readonly': [('can_edit', '=', False)]}"/>
-                                <field name="coach_id" attrs="{'readonly': [('can_edit', '=', False)]}"/>
+                            <group string="Marital Status">
+                                <field name="marital" attrs="{'readonly': [('can_edit', '=', False)]}"/>
+                                <field name="spouse_complete_name" attrs="{'invisible': [('marital', 'not in', ['married', 'cohabitant'])], 'readonly': [('can_edit', '=', False)]}"/>
+                                <field name="spouse_birthdate" attrs="{'invisible': [('marital', 'not in', ['married', 'cohabitant'])], 'readonly': [('can_edit', '=', False)]}"/>
+                            </group>
+                            <group string="Education">
+                                <field name="certificate" attrs="{'readonly': [('can_edit', '=', False)]}"/>
+                                <field name="study_field" attrs="{'readonly': [('can_edit', '=', False)]}"/>
+                                <field name="study_school" attrs="{'readonly': [('can_edit', '=', False)]}"/>
+                            </group>
+                            <group string="Dependant">
+                                <field name="children" attrs="{'readonly': [('can_edit', '=', False)]}"/>
+                            </group>
+                            <group string="Emergency">
+                                <field name="emergency_contact" attrs="{'readonly': [('can_edit', '=', False)]}"/>
+                                <field name="emergency_phone" widget="phone" attrs="{'readonly': [('can_edit', '=', False)]}" options="{'enable_sms': false}"/>
+                            </group>
+                            <group string="Work Permit" name="work_permit">
+                                <field name="visa_no" attrs="{'readonly': [('can_edit', '=', False)]}"/>
+                                <field name="permit_no" attrs="{'readonly': [('can_edit', '=', False)]}"/>
+                                <field name="visa_expire" attrs="{'readonly': [('can_edit', '=', False)]}"/>
                             </group>
                         </group>
-                        <notebook>
-                            <page name="preferences" string="Preferences">
-                                <div>$0</div>
-                            </page>
-                            <page name="public" string="Work Information">
-                                <div id="o_work_employee_container"> <!-- These two div are used to position org_chart -->
-                                    <div id="o_work_employee_main">
-                                        <group string="Location">
-                                            <field name="department_id" attrs="{'readonly': [('can_edit', '=', False)]}"/>
-                                            <field name="address_id"
-                                                context="{'show_address': 1}"
-                                                options='{"always_reload": True, "highlight_first_line": True}'
-                                                attrs="{'readonly': [('can_edit', '=', False)]}"/>
-                                        </group>
-                                        <group name="managers" string="Approvers" class="hide-group-if-empty">
-                                            <!-- overridden in other modules -->
-                                        </group>
-                                    </div>
-                                </div>
-                            </page>
-                            <page name="personal_information" string="Private Information">
-                                <group>
-                                    <group string="Contact Information">
-                                        <field name="employee_ids" invisible="1"/>
-                                        <field name="address_home_id"
-                                            context="{
-                                                'show_address': 1,
-                                                'default_employee_ids': employee_ids,
-                                                'default_type': 'private',
-                                                'form_view_ref': 'base.res_partner_view_form_private'}"
-                                            options='{"always_reload": True, "highlight_first_line": True}'
-                                            attrs="{'readonly': [('can_edit', '=', False)]}"/>
-                                        <field name="private_email" string="Email" attrs="{'readonly': [('can_edit', '=', False)]}"/>
-                                        <field name="employee_phone" string="Phone" class="o_force_ltr" attrs="{'readonly': [('can_edit', '=', False)]}" options="{'enable_sms': false}"/>
-                                        <field name="employee_bank_account_id" attrs="{'readonly': [('can_edit', '=', False)]}"/>
-                                        <field name="km_home_work" attrs="{'readonly': [('can_edit', '=', False)]}"/>
-                                    </group>
-                                    <group string="Citizenship">
-                                        <field name="employee_country_id" options='{"no_open": True, "no_create": True}' attrs="{'readonly': [('can_edit', '=', False)]}"/>
-                                        <field name="identification_id" attrs="{'readonly': [('can_edit', '=', False)]}"/>
-                                        <field name="passport_id" attrs="{'readonly': [('can_edit', '=', False)]}"/>
-                                        <field name="gender" attrs="{'readonly': [('can_edit', '=', False)]}"/>
-                                        <field name="birthday" attrs="{'readonly': [('can_edit', '=', False)]}"/>
-                                        <field name="place_of_birth" attrs="{'readonly': [('can_edit', '=', False)]}"/>
-                                        <field name="country_of_birth" attrs="{'readonly': [('can_edit', '=', False)]}"/>
-                                    </group>
-                                    <group string="Marital Status">
-                                        <field name="marital" attrs="{'readonly': [('can_edit', '=', False)]}"/>
-                                        <field name="spouse_complete_name" attrs="{'invisible': [('marital', 'not in', ['married', 'cohabitant'])], 'readonly': [('can_edit', '=', False)]}"/>
-                                        <field name="spouse_birthdate" attrs="{'invisible': [('marital', 'not in', ['married', 'cohabitant'])], 'readonly': [('can_edit', '=', False)]}"/>
-                                    </group>
-                                    <group string="Education">
-                                        <field name="certificate" attrs="{'readonly': [('can_edit', '=', False)]}"/>
-                                        <field name="study_field" attrs="{'readonly': [('can_edit', '=', False)]}"/>
-                                        <field name="study_school" attrs="{'readonly': [('can_edit', '=', False)]}"/>
-                                    </group>
-                                    <group string="Dependant">
-                                        <field name="children" attrs="{'readonly': [('can_edit', '=', False)]}"/>
-                                    </group>
-                                    <group string="Emergency">
-                                        <field name="emergency_contact" attrs="{'readonly': [('can_edit', '=', False)]}"/>
-                                        <field name="emergency_phone" widget="phone" attrs="{'readonly': [('can_edit', '=', False)]}" options="{'enable_sms': false}"/>
-                                    </group>
-                                    <group string="Work Permit" name="work_permit">
-                                        <field name="visa_no" attrs="{'readonly': [('can_edit', '=', False)]}"/>
-                                        <field name="permit_no" attrs="{'readonly': [('can_edit', '=', False)]}"/>
-                                        <field name="visa_expire" attrs="{'readonly': [('can_edit', '=', False)]}"/>
-                                    </group>
-                                </group>
-                            </page>
-                             <page name="hr_settings" string="HR Settings">
-                                <group>
-                                    <group string='Status' name="active_group" invisible="1"></group>
-                                    <group string="Attendance" name="identification_group">
-                                        <field name="pin" attrs="{'readonly': [('can_edit', '=', False)]}"/>
-                                        <field name="barcode" attrs="{'readonly': [('can_edit', '=', False)]}"/>
-                                    </group>
-                                </group>
-                            </page>
-                        </notebook>
-                    </sheet>
-                </form>
-                </form>
+                    </page>
+                     <page name="hr_settings" string="HR Settings">
+                        <group>
+                            <group string='Status' name="active_group" invisible="1"></group>
+                            <group string="Attendance" name="identification_group">
+                                <field name="pin" attrs="{'readonly': [('can_edit', '=', False)]}"/>
+                                <field name="barcode" attrs="{'readonly': [('can_edit', '=', False)]}"/>
+                            </group>
+                        </group>
+                    </page>
+                </notebook>
             </field>
         </record>
 
