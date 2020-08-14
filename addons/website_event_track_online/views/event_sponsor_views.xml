@@ -18,6 +18,12 @@
         <field name="model">event.sponsor</field>
         <field name="inherit_id" ref="website_event_track.event_sponsor_view_tree"/>
         <field name="arch" type="xml">
+            <xpath expr="//tree" position="attributes">
+                <attribute name="multi_edit">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='partner_id']" position="attributes">
+                <attribute name="readonly">1</attribute>
+            </xpath>
             <xpath expr="//field[@name='partner_id']" position="after">
                 <field name="name"/>
                 <field name="email"/>

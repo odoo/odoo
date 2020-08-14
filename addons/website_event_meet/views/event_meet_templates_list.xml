@@ -115,7 +115,7 @@
             <div class="o_wevent_meeting_room_corner_ribbon" t-if="meeting_room.room_is_full">Full</div>
             <div class="d-flex flex-column">
                 <div class="d-flex flex-row justify-content-between">
-                    <h4 class="text-break mw-75" t-esc="meeting_room.name"/>
+                    <h4 class="text-break mw-75 text-uppercase" t-esc="meeting_room.name"/>
                     <div t-if="is_event_manager" class="w-25">
                         <div class="dropdown float-right dropleft">
                             <button class="btn py-0" data-toggle="dropdown"><h3 class="m-0">&#8942;</h3></button>
@@ -133,9 +133,9 @@
                 <span t-esc="meeting_room.summary" class="h5 text-muted"/>
                 <div class="d-flex flex-row justify-content-between align-items-center">
                     <span class="h6 m-0 row">
-                        <span class="o_wevent_participant_count">
-                            <t t-esc="meeting_room.room_participant_count"/>&amp;nbsp;</span>
-                        <t t-esc="meeting_room.target_audience or 'participant(s)'"/>
+                        <span t-esc="meeting_room.room_participant_count"/>&amp;nbsp;
+                        <span t-if="meeting_room.target_audience" class="text-uppercase" t-field="meeting_room.target_audience"/>
+                        <span t-else="" class="text-uppercase">participant(s)</span>
                     </span>
                     <div class="d-inline border py-1 px-2 bg-secondary" t-esc="meeting_room.room_lang_id.name"/>
                 </div>
@@ -155,11 +155,18 @@
             <hr class="mt-2 mb-3"/>
             <p>Want to create your own discussion room ?</p>
             <p>Be sure you are ready to spend at least 10 minutes in the room if you want to initiate a new topic.</p>
-            <a href="#" role="button"  class="btn btn-primary o_wevent_create_room_button"
+            <a href="#" role="button"
+                class="btn btn-primary o_wevent_create_room_button"
+                t-if="event.is_ongoing or event.start_today or is_event_manager"
                 t-att-data-event-id="event.id"
                 t-att-data-default-lang-code="default_lang_code">
                 <span>Create a Room</span>
             </a>
+            <div t-else="" class="d-flex flex-column">
+                <button disabled="disabled" class="btn btn-primary align-self-start">Create a Room</button>
+                Room creation will be available when event starts at 
+                <span class="font-weight-bold" t-field="event.with_context(tz=event.date_tz).date_begin" t-options="{'format': 'medium'}"/>
+            </div>
         </div>
     </div>
 </template>

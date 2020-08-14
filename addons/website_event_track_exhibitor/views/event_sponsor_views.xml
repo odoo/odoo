@@ -18,6 +18,7 @@
         <field name="inherit_id" ref="website_event_track_online.event_sponsor_view_tree"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='sponsor_type_id']" position="after">
+                <field name="is_published" optional="show"/>
                 <field name="is_exhibitor"/>
             </xpath>
         </field>
