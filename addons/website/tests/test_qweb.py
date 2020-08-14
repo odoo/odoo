@@ -50,15 +50,15 @@ class TestQweb(TransactionCaseWithUserDemo):
         <script type="text/javascript" src="http://test.cdn%(js)s"></script>
     </head>
     <body>
-        <img src="http://test.external.link/img.png"/>
-        <img src="http://test.cdn/website/static/img.png"/>
+        <img src="http://test.external.link/img.png" loading="lazy"/>
+        <img src="http://test.cdn/website/static/img.png" loading="lazy"/>
         <a href="http://test.external.link/link">x</a>
         <a href="http://test.cdn/web/content/local_link">x</a>
         <span style="background-image: url('http://test.cdn/web/image/2')">xxx</span>
         <div widget="html"><span class="toto">
-                span<span class="fa"></span><img src="http://test.cdn/web/image/1">
+                span<span class="fa"></span><img src="http://test.cdn/web/image/1" loading="lazy">
             </span></div>
-        <div widget="image"><img src="http://test.cdn/web/image/res.users/%(user_id)s/image_1920/%(filename)s" class="img img-fluid" alt="%(alt)s"/></div>
+        <div widget="image"><img src="http://test.cdn/web/image/res.users/%(user_id)s/image_1920/%(filename)s" class="img img-fluid" alt="%(alt)s" loading="lazy"/></div>
     </body>
 </html>""" % {
             "js": attachments[0].url,
