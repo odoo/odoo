@@ -1977,7 +1977,8 @@ var SnippetsMenu = Widget.extend({
         this.customizePanel.classList.toggle('d-none', tab === this.tabs.BLOCKS);
 
         this.$('.o_we_add_snippet_btn').toggleClass('active', tab === this.tabs.BLOCKS);
-        this.$('.o_we_customize_snippet_btn').toggleClass('active', tab === this.tabs.OPTIONS);
+        this.$('.o_we_customize_snippet_btn').toggleClass('active', tab === this.tabs.OPTIONS)
+                                             .prop('disabled', tab !== this.tabs.OPTIONS);
     },
 
     //--------------------------------------------------------------------------
