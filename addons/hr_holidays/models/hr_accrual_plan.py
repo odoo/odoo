@@ -27,8 +27,13 @@ class AccrualPlan(models.Model):
 
     @api.depends('employee_ids')
     def _compute_employees_count(self):
+        results = self.env['hr.employee'].read_group(
+            [('accrual_plan_id', '=', self.ids)],
+            fields=['accrual_plan_id', 'name:array_agg'],
+            groupby=['accrual_plan_id'])
+        employees_ids_map = {result['accrual_plan_id'][0]: result['name'] for result in results}
         for plan in self:
-            plan.employees_count = len(plan.employee_ids)
+            plan.employees_count = len(employees_ids_map.get(plan.id, []))
 
     def _get_accrual_line(self, employee):
         # Get the appropriate accrual line accorded to the start date of an employee
