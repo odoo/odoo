@@ -441,57 +441,64 @@
                     <h1>
                         <field name="name" readonly="1" class="oe_inline"/>
                     </h1>
-                    <group name="preferences">
-                        <group>
-                            <field name="email" widget="email" readonly="0"/>
-                        </group>
-                        <group>
-                            <label for="lang"/>
-                            <div class="o_row">
-                                <field name="lang" required="1" readonly="0"/>
-                                <button
-                                    type="action"
-                                    name="%(base.res_lang_act_window)d"
-                                    class="btn-sm btn-link mb4 fa fa-globe"
-                                    aria-label="More languages"
-                                    groups="base.group_system"
-                                    title="More languages"
-                                />
-                            </div>
-                            <field name="tz" widget="timezone_mismatch" options="{'tz_offset_field': 'tz_offset'}" readonly="0"/>
-                            <field name="tz_offset" invisible="1"/>
-                        </group>
-                    </group>
-                    <group name="signature">
-                        <field name="signature" readonly="0"/>
-                    </group>
-                    <group name="status" string="Status" invisible="1">
-                        <field name="company_id" options="{'no_create': True}" readonly="0"
-                            groups="base.group_multi_company"/>
-                    </group>
-                    <group name="preference_contact"></group>
-                    <group>
-                        <group>
-                            <field name="api_keys_only_explicit"
-                                   readonly="0"
-                                   string="Require API key"
-                                   help="Only allow API (RPC) access using API keys, not login/password"/>
-                        </group>
-                    </group>
-                    <group>
-                        <label for="api_key_ids">API Keys</label>
-                        <field name="api_key_ids" nolabel="1" colspan="4" readonly="0">
-                            <tree editable="bottom" create="false" delete="false">
-                                <field name="name"/>
-                                <button type="object" name="remove" icon="fa-trash"/>
-                            </tree>
-                        </field>
-                        <button string="Add Key" type="object" name="api_key_wizard"/>
-                    </group>
+                    <notebook>
+                        <page string="Preferences">
+                            <group name="preferences">
+                                <group>
+                                    <field name="email" widget="email" readonly="0"/>
+                                </group>
+                                <group>
+                                    <label for="lang"/>
+                                    <div class="o_row">
+                                        <field name="lang" required="1" readonly="0"/>
+                                        <button
+                                            type="action"
+                                            name="%(base.res_lang_act_window)d"
+                                            class="btn-sm btn-link mb4 fa fa-globe"
+                                            aria-label="More languages"
+                                            groups="base.group_system"
+                                            title="More languages"
+                                        />
+                                    </div>
+                                    <field name="tz" widget="timezone_mismatch" options="{'tz_offset_field': 'tz_offset'}" readonly="0"/>
+                                    <field name="tz_offset" invisible="1"/>
+                                </group>
+                            </group>
+                            <group name="signature">
+                                <field name="signature" readonly="0"/>
+                            </group>
+                            <group name="status" string="Status" invisible="1">
+                                <field name="company_id" options="{'no_create': True}" readonly="0"
+                                    groups="base.group_multi_company"/>
+                            </group>
+                            <group name="preference_contact"></group>
+                        </page>
+                        <page string="Account Security">
+                            <group name="auth" string="Authentication">
+                                <div>
+                                    <button name="preference_change_password" type="object" string="Change password" class="btn btn-secondary"/>
+                                </div>
+                            </group>
+                            <group string="Developer API Keys">
+                                <div colspan="2" attrs="{'invisible': [('api_key_ids', '=', [])]}">
+                                    <field name="api_key_ids" nolabel="1" colspan="4" readonly="0">
+                                        <tree editable="bottom" create="false" delete="false">
+                                            <field name="name"/>
+                                            <field name="scope"/>
+                                            <field name="create_date"/>
+                                            <button type="object" name="remove" icon="fa-trash"/>
+                                        </tree>
+                                    </field>
+                                </div>
+                                <div colspan="2">
+                                    <button name="api_key_wizard" string="New API Key" type="object" class="btn btn-secondary"/>
+                                </div>
+                            </group>
+                        </page>
+                    </notebook>
                     <footer>
                         <button name="preference_save" type="object" string="Save" class="btn-primary"/>
                         <button name="preference_cancel" string="Cancel" special="cancel" class="btn-secondary"/>
-                        <button name="preference_change_password" type="object" string="Change password" class="btn-secondary"/>
                     </footer>
                 </form>
             </field>
