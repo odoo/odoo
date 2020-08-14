@@ -1,12 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import re
-
 from uuid import uuid4
 
 from odoo import api, fields, models
-from odoo.tools import remove_accents
 
 
 class ChatRoom(models.Model):
@@ -22,8 +19,8 @@ class ChatRoom(models.Model):
     _name = "chat.room"
     _description = "Chat Room"
 
-    def _default_name(self):
-        return "odoo-room-%s" % str(uuid4())[:8]
+    def _default_name(self, objname='room'):
+        return "odoo-%s-%s" % (objname, str(uuid4())[:8])
 
     name = fields.Char(
         "Room Name", required=True, copy=False,
@@ -62,6 +59,3 @@ class ChatRoom(models.Model):
 
         for room in self:
             room.jitsi_server_domain = jitsi_server_domain
-
-    def _jitsi_sanitize_name(self, name):
-        return re.sub(r'[^\w+.]+', '-', remove_accents(name).lower())

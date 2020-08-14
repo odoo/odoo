@@ -38,8 +38,9 @@ class TestWebsiteEventMeet(TestEventCommon):
             "target_audience": "dev",
             "room_max_capacity": "20",
         })
-
+        self.assertEqual(meeting_room_1.room_name, 'odoo-room-test-meeting-room')
         meeting_room_2 = meeting_room_1.copy()
+        self.assertEqual(meeting_room_2.room_name, 'odoo-room-test-meeting-room-1')
 
         chat_room_1 = meeting_room_1.chat_room_id
         chat_room_2 = meeting_room_2.chat_room_id
@@ -50,6 +51,9 @@ class TestWebsiteEventMeet(TestEventCommon):
         self.assertNotEqual(chat_room_1.name, chat_room_2.name, "Must generate a new chat room name")
         self.assertEqual(chat_room_1.max_capacity, "20", "Must set the max capacity on the chat room")
         self.assertEqual(chat_room_2.max_capacity, "20", "Must copy the max capacity")
+
+        meeting_room_3 = meeting_room_1.copy()
+        self.assertEqual(meeting_room_3.room_name, 'odoo-room-test-meeting-room-2')
 
     def test_meeting_room_unlink(self):
         """Test the duplication of the meeting room."""
