@@ -6,7 +6,7 @@
             <field name="name">im_livechat.report.operator.pivot</field>
             <field name="model">im_livechat.report.operator</field>
             <field name="arch" type="xml">
-                <pivot string="Livechat Support Statistics" disable_linking="True">
+                <pivot string="Livechat Support Statistics" disable_linking="True" sample="1">
                     <field name="partner_id" type="row"/>
                     <field name="duration" type="measure"/>
                     <field name="nbr_channel" type="measure"/>

@@ -456,7 +456,7 @@
             <field name="name">event.event.view.pivot</field>
             <field name="model">event.event</field>
             <field name="arch" type="xml">
-                <pivot string="Event">
+                <pivot string="Event" sample="1">
                     <field name="name" type="row"/>
                     <field name="seats_reserved" type="measure"/>
                 </pivot>
@@ -666,7 +666,7 @@
             <field name="name">event.registration.pivot</field>
             <field name="model">event.registration</field>
             <field name="arch" type="xml">
-                <pivot string="Registration" display_quantity="True">
+                <pivot string="Registration" display_quantity="True" sample="1">
                     <field name="event_id" type="row"/>
                 </pivot>
             </field>
