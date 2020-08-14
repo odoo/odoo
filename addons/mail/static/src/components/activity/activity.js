@@ -43,7 +43,13 @@ class Activity extends Component {
          * Useful to programmatically prompts the browser file uploader.
          */
         this._fileUploaderRef = useRef('fileUploader');
+        this._constructor();
     }
+
+    /**
+     * Allows patching constructor.
+     */
+    _constructor() {}
 
     //--------------------------------------------------------------------------
     // Public
