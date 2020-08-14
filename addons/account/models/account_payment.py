@@ -642,16 +642,14 @@ class account_payment(models.Model):
 
     @api.multi
     def cancel(self):
-        for rec in self:
-            for move in rec.move_line_ids.mapped('move_id'):
-                if rec.invoice_ids:
-                    move.line_ids.remove_move_reconcile()
-                if move.state != 'draft':
-                    move.button_cancel()
-                move.unlink()
-            rec.write({
-                'state': 'cancelled',
-            })
+        moves_with_invoice = self.filtered(lambda x: x.invoice_ids).mapped('move_line_ids.move_id')
+        moves_with_invoice.mapped('line_ids').remove_move_reconcile()
+        
+        moves = self.mapped('move_line_ids.move_id')
+        moves.filtered(lambda x: x.state != 'draft').button_cancel()
+        moves.unlink()
+        
+        self.write({'state': 'cancelled',})
 
     @api.multi
     def unlink(self):
