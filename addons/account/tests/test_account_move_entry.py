@@ -2,12 +2,14 @@
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged, new_test_user
 from odoo.tests.common import Form
-from odoo import fields
+from odoo import fields, api, SUPERUSER_ID
 from odoo.exceptions import ValidationError, UserError, RedirectWarning
+from odoo.tools import mute_logger
 
 from dateutil.relativedelta import relativedelta
 from functools import reduce
 import json
+import psycopg2
 
 
 @tagged('post_install', '-at_install')
@@ -547,6 +549,53 @@ class TestAccountMove(AccountTestInvoicingCommon):
         self.assertEqual(copies[3].state, 'posted')
         self.assertEqual(copies[5].name, 'XMISC/2019/10005')
         self.assertEqual(copies[5].state, 'draft')
+
+    def test_sequence_concurency(self):
+        with self.env.registry.cursor() as cr0,\
+                self.env.registry.cursor() as cr1,\
+                self.env.registry.cursor() as cr2:
+            env0 = api.Environment(cr0, SUPERUSER_ID, {})
+            env1 = api.Environment(cr1, SUPERUSER_ID, {})
+            env2 = api.Environment(cr2, SUPERUSER_ID, {})
+
+            journal = env0['account.journal'].create({
+                'name': 'concurency_test',
+                'code': 'CT',
+                'type': 'general',
+            })
+            account = env0['account.account'].create({
+                'code': 'CT',
+                'name': 'CT',
+                'user_type_id': env0.ref('account.data_account_type_fixed_assets').id,
+            })
+            moves = env0['account.move'].create([{
+                'journal_id': journal.id,
+                'date': fields.Date.from_string('2016-01-01'),
+                'line_ids': [(0, 0, {'name': 'name', 'account_id': account.id})]
+            }] * 3)
+            moves.name = '/'
+            moves[0].action_post()
+            self.assertEqual(moves.mapped('name'), ['CT/2016/01/0001', '/', '/'])
+            env0.cr.commit()
+
+            # start the transactions here on cr2 to simulate concurency with cr1
+            env2.cr.execute('SELECT 1')
+
+            move = env1['account.move'].browse(moves[1].id)
+            move.action_post()
+            env1.cr.commit()
+
+            move = env2['account.move'].browse(moves[2].id)
+            with self.assertRaises(psycopg2.OperationalError), env2.cr.savepoint(), mute_logger('odoo.sql_db'):
+                move.action_post()
+
+            self.assertEqual(moves.mapped('name'), ['CT/2016/01/0001', 'CT/2016/01/0002', '/'])
+            moves.button_draft()
+            moves.posted_before = False
+            moves.unlink()
+            journal.unlink()
+            account.unlink()
+            env0.cr.commit()
 
     def test_add_followers_on_post(self):
         # Add some existing partners, some from another company
