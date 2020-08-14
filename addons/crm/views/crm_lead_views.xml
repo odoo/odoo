@@ -22,7 +22,7 @@
                             domain="['|', ('team_id', '=', team_id), ('team_id', '=', False)]"
                             attrs="{'invisible': ['|', ('active', '=', False), ('type', '=', 'lead')]}"/>
                     </header>
-                    <div class="text-center alert alert-primary" role="alert" attrs="{'invisible': ['|', ('ribbon_message', '=', False), ('ribbon_message', '=', '')]}">
+                    <div class="text-center alert alert-primary oe_edit_only" role="alert" attrs="{'invisible': ['|', ('ribbon_message', '=', False), ('ribbon_message', '=', '')]}">
                         <field name="ribbon_message"/>
                     </div>
                     <sheet>
