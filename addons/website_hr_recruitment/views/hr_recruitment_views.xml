@@ -5,7 +5,7 @@
         <field name="model">hr.recruitment.source</field>
         <field name="inherit_id" ref="hr_recruitment.hr_recruitment_source_tree"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='email']" position="after">
+            <xpath expr="//field[@name='email']" position="before">
                 <field name="url" widget="url"/>
             </xpath>
         </field>
