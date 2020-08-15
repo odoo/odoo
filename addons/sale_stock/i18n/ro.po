@@ -120,6 +120,11 @@ msgid ""
 "  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"În funcție de configurația produsului, cantitatea livrată poate fi calculată automat prin mecanism:\n"
+"  - Manual: cantitatea este setată manual pe linie\n"
+"  - Analitic: Din cheltuieli: cantitatea este suma cantitativă din cheltuielile înregistrate\n"
+"  - Foaie de timp: cantitatea este suma de ore înregistrate pe sarcini legate de această linie de vânzare\n"
+"  - Mișcări ale stocurilor: cantitatea provine din culesuri ridicate\n"
 
 #. module: sale_stock
 #: model:ir.ui.menu,name:sale_stock.menu_aftersale
@@ -200,6 +205,10 @@ msgid ""
 "shipping, the shipping policy of the order will be taken into account to "
 "either use the minimum or maximum lead time of the order lines."
 msgstr ""
+"Data de livrare pe care o puteți promite clientului, calculată din termenul "
+"minim de livrare a liniilor de comandă în cazul produselor Service. În cazul"
+" transportului, politica de expediere a comenzii va fi luată în considerare "
+"pentru a utiliza termenul de plată minim sau maxim al liniilor de comandă."
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__group_lot_on_invoice
@@ -379,7 +388,7 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__qty_delivered_method
 msgid "Method to update delivered qty"
-msgstr ""
+msgstr "Metoda de actualizare a cantității livrate"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
@@ -564,7 +573,7 @@ msgstr "Regulă stoc"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_rules_report
 msgid "Stock Rules report"
-msgstr ""
+msgstr "Stock Rules Report"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_report_stock_report_stock_rule
@@ -637,7 +646,7 @@ msgstr "Atenție!"
 #. module: sale_stock
 #: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__picking_policy__one
 msgid "When all products are ready"
-msgstr ""
+msgstr "Când toate produsele sunt pregătite"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
@@ -691,4 +700,4 @@ msgstr "comandat în loc de"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
 msgid "processed instead of"
-msgstr ""
+msgstr "prelucrate în loc de"
