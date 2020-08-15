@@ -52,3 +52,12 @@ class PurchaseBillUnion(models.Model):
             name += ': ' + formatLang(self.env, amount, monetary=True, currency_obj=doc.currency_id)
             result.append((doc.id, name))
         return result
+    
+        @api.model
+        def _name_search(self, name='', args=None, operator='ilike', limit=100, name_get_uid=None):
+        if args is None:
+            args = []
+        domain = args + ['|', ('reference', operator, name), ('name', operator, name)]
+        purchase_bill_union_ids = self._search(domain, limit=limit, access_rights_uid=name_get_uid)
+        return models.lazy_name_get(self.browse(purchase_bill_union_ids).with_user(name_get_uid))
+
