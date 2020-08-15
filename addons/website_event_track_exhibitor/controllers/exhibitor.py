@@ -135,10 +135,10 @@ class ExhibitorController(WebsiteEventTrackController):
             [('id', '!=', sponsor.id)]
         ])
         sponsors_other = request.env['event.sponsor'].sudo().search(search_domain_base)
-        sponsors_other = sponsors_other.filtered(lambda sponsor: sponsor.is_in_opening_hours)
         current_country = sponsor.partner_id.country_id
 
         sponsors_other = sponsors_other.sorted(key=lambda sponsor: (
+            sponsor.is_in_opening_hours,
             sponsor.partner_id.country_id == current_country,
             -1 * sponsor.sponsor_type_id.sequence,
             randint(0, 20)
