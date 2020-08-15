@@ -53,8 +53,8 @@ class PurchaseBillUnion(models.Model):
             result.append((doc.id, name))
         return result
     
-        @api.model
-        def _name_search(self, name='', args=None, operator='ilike', limit=100, name_get_uid=None):
+    @api.model
+    def _name_search(self, name='', args=None, operator='ilike', limit=100, name_get_uid=None):
         if args is None:
             args = []
         domain = args + ['|', ('reference', operator, name), ('name', operator, name)]
