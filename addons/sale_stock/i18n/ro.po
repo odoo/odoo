@@ -123,6 +123,11 @@ msgid ""
 "  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"În funcție de configurația produsului, cantitatea livrată poate fi calculată automat prin mecanism:\n"
+"  - Manual: cantitatea este setată manual pe linie\n"
+"  - Analitic: Din cheltuieli: cantitatea este suma cantitativă din cheltuielile înregistrate\n"
+"  - Foaie de timp: cantitatea este suma de ore înregistrate pe sarcini legate de această linie de vânzare\n"
+"  - Mișcări ale stocurilor: cantitatea provine din culesuri ridicate\n"
 
 #. module: sale_stock
 #: model:ir.ui.menu,name:sale_stock.menu_aftersale
@@ -132,7 +137,7 @@ msgstr "După Vânzare"
 #. module: sale_stock
 #: selection:sale.order.line,qty_delivered_method:0
 msgid "Analytic From Expenses"
-msgstr ""
+msgstr "Analitic Din Cheltuieli"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
@@ -328,7 +333,7 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__qty_delivered_method
 msgid "Method to update delivered qty"
-msgstr ""
+msgstr "Metoda de actualizare a cantității livrate"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
@@ -507,7 +512,7 @@ msgstr "Regulă stoc"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_rules_report
 msgid "Stock Rules report"
-msgstr ""
+msgstr "Stock Rules Report"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_report_stock_report_stock_rule
@@ -619,4 +624,4 @@ msgstr "comandat în loc de"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
 msgid "processed instead of"
-msgstr ""
+msgstr "prelucrate în loc de"
