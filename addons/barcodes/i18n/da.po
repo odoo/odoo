@@ -10,6 +10,7 @@
 # Sanne Kristensen <sanne@vkdata.dk>, 2019
 # Ejner Sønniksen <ejner@vkdata.dk>, 2019
 # lhmflexerp <lhm@flexerp.dk>, 2019
+# Mads Søndergaard, 2020
 # 
 msgid ""
 msgstr ""
@@ -17,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-08-26 08:16+0000\n"
 "PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: lhmflexerp <lhm@flexerp.dk>, 2019\n"
+"Last-Translator: Mads Søndergaard, 2020\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,7 +30,7 @@ msgstr ""
 #: code:addons/barcodes/models/barcodes.py:0
 #, python-format
 msgid " '*' is not a valid Regex Barcode Pattern. Did you mean '.*' ?"
-msgstr ""
+msgstr "'*' er ikke et gyldigt Regex stregkode mønster. Mente du '.*' ?"
 
 #. module: barcodes
 #: code:addons/barcodes/models/barcodes.py:0
@@ -270,6 +271,12 @@ msgid ""
 "                                the barcode field on the associated records <i>must</i> show these digits as \n"
 "                                zeroes."
 msgstr ""
+"Mønstre kan også definere hvorledes numeriske værdier - så som vægt eller pris - kan være\n"
+"                                indkodet i stregkoden. De er indikeret med <code>{NNN}</code> hvor N'erne\n"
+"                                definerer hvor numrets tal er indkodet. Decimaltal er også understøttet via \n"
+"                                decimaler indikeret med D'er, så som <code>{NNNDD}</code>. I disse tilfælde, \n"
+"                                <i>skal</i> stregkoden på det tilhørende registreringsfelt vise disse tal som \n"
+"                                nuller."
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__name
@@ -362,6 +369,10 @@ msgid ""
 "setting determines if a UPC/EAN barcode should be automatically converted in"
 " one way or another when trying to match a rule with the other encoding."
 msgstr ""
+"UPC Koder kan omdannes til EAN ved at præfiksere dem med et nul. Denne "
+"indstilling bestemmer om en UPC/EAN stregkode bør konverteres automatisk til"
+" den ene eller anden side, når der forsøges at matche en regel med en anden "
+"indkodning."
 
 #. module: barcodes
 #: model:ir.model.fields.selection,name:barcodes.selection__barcode_rule__encoding__upca
