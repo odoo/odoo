@@ -10,7 +10,7 @@
 # Boris Kodelja <boris@hbs.si>, 2019
 # Tadej Lupšina <tadej@hbs.si>, 2019
 # Jasmina Macur <jasmina@hbs.si>, 2019
-# Matjaz Mozetic <m.mozetic@matmoz.si>, 2019
+# Matjaz Mozetic <m.mozetic@matmoz.si>, 2020
 # 
 msgid ""
 msgstr ""
@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-09 10:31+0000\n"
 "PO-Revision-Date: 2018-08-24 09:25+0000\n"
-"Last-Translator: Matjaz Mozetic <m.mozetic@matmoz.si>, 2019\n"
+"Last-Translator: Matjaz Mozetic <m.mozetic@matmoz.si>, 2020\n"
 "Language-Team: Slovenian (https://www.transifex.com/odoo/teams/41243/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -58,7 +58,7 @@ msgstr "Potreba po ukrepu"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__additional_landed_cost
 msgid "Additional Landed Cost"
-msgstr "Dodatni stroški dostave"
+msgstr "Dodatni odvisni stroški dobave"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_attachment_count
@@ -69,7 +69,7 @@ msgstr "Število prilog"
 #: selection:product.template,split_method:0
 #: selection:stock.landed.cost.lines,split_method:0
 msgid "By Current Cost"
-msgstr ""
+msgstr "Po tekoči lastni ceni"
 
 #. module: stock_landed_costs
 #: selection:product.template,split_method:0
@@ -138,12 +138,12 @@ msgid ""
 "landed costs."
 msgstr ""
 "Postavke stroškov in popravkov se ne ujemajo. Mogoče je potrebno ponovno "
-"izračunati stroške dostave."
+"izračunati odvisne stroške dobave."
 
 #. module: stock_landed_costs
 #: model_terms:ir.actions.act_window,help:stock_landed_costs.action_stock_landed_cost
 msgid "Create a new landed cost"
-msgstr "Ustvari nov strošek dostave"
+msgstr "Ustvari nov odvisni strošek dobave"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__create_uid
@@ -168,7 +168,7 @@ msgstr "Datum"
 #. module: stock_landed_costs
 #: model_terms:ir.actions.act_window,help:stock_landed_costs.stock_landed_cost_type_action
 msgid "Define a new kind of landed cost"
-msgstr "Določite novo vrsto stroškov dostave"
+msgstr "Določite novo vrsto odvisnih stroškov dobave"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__name
@@ -181,7 +181,7 @@ msgstr "Opis"
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__display_name
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__display_name
 msgid "Display Name"
-msgstr "Prikazni naziv"
+msgstr "Prikazani naziv"
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
@@ -294,7 +294,7 @@ msgstr "Je sledilec"
 #: model:ir.model.fields,field_description:stock_landed_costs.field_product_product__landed_cost_ok
 #: model:ir.model.fields,field_description:stock_landed_costs.field_product_template__landed_cost_ok
 msgid "Is a Landed Cost"
-msgstr "Je strošek dostave"
+msgstr "Je odvisni strošek dobave"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__description
@@ -311,12 +311,12 @@ msgstr "Temeljnica"
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_move__landed_cost_value
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__cost_id
 msgid "Landed Cost"
-msgstr "Strošek dostave"
+msgstr "Odvisni strošek dobave"
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "Landed Cost Name"
-msgstr "Naziv stroška dostave"
+msgstr "Naziv odvisnega stroška dobave"
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.stock_landed_cost_tree_view
@@ -328,7 +328,7 @@ msgstr "Vrsta odvisnega stroška"
 #: model:ir.ui.menu,name:stock_landed_costs.menu_stock_landed_cost_type
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.res_config_settings_view_form
 msgid "Landed Cost Types"
-msgstr "Vrste stroškov dostave"
+msgstr "Vrste odvisnih stroškov dobave"
 
 #. module: stock_landed_costs
 #: model:ir.actions.act_window,name:stock_landed_costs.action_stock_landed_cost
@@ -338,17 +338,17 @@ msgstr "Vrste stroškov dostave"
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_tree
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_type_form
 msgid "Landed Costs"
-msgstr "Stroški dostave"
+msgstr "Odvisni stroški dobave"
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "Landed cost are computed based on the purchase unit of measure."
-msgstr "Stroški dostave se izračunajo na podlagi nabavne enote mere."
+msgstr "Odvisni stroški dobave se izračunajo na podlagi nabavne enote mere."
 
 #. module: stock_landed_costs
 #: model:mail.message.subtype,description:stock_landed_costs.mt_stock_landed_cost_open
 msgid "Landed cost validated"
-msgstr "Strošek dostave potrjen"
+msgstr "Odvisni strošek dobave potrjen"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost____last_update
@@ -405,8 +405,8 @@ msgstr "Novo"
 msgid ""
 "No valuation adjustments lines. You should maybe recompute the landed costs."
 msgstr ""
-"Ni postavk popravkov vrednosti. Mogoče bi morali ponovno preračunati stroške"
-" dostave."
+"Ni postavk popravkov vrednosti. Mogoče bi morali ponovno preračunati odvisne"
+" stroške dobave."
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_needaction_counter
@@ -437,7 +437,7 @@ msgstr "Število neprebranih sporočil"
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:89
 #, python-format
 msgid "Only draft landed costs can be validated"
-msgstr "Potrdi se lahko le osnutke stroškov dostave"
+msgstr "Potrdi se lahko le osnutke odvisnih stroškov dobave"
 
 #. module: stock_landed_costs
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:314
@@ -496,7 +496,7 @@ msgstr "Status"
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_stock_landed_cost
 msgid "Stock Landed Cost"
-msgstr "Stroški dostave zaloge"
+msgstr "Odvisni stroški dobave zaloge"
 
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_stock_landed_cost_lines
@@ -541,8 +541,8 @@ msgid ""
 "Validated landed costs cannot be cancelled, but you could create negative "
 "landed costs to reverse them"
 msgstr ""
-"Potrjenih stroškov dostave ni mogoče preklicati, lahko pa ustvarite "
-"negativne stroške dostave, da bi jih razveljavili."
+"Potrjenih odvisnih stroškov dobave ni mogoče preklicati, lahko pa ustvarite "
+"negativne odvisne stroške, da bi jih razveljavili."
 
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_stock_valuation_adjustment_lines
@@ -583,9 +583,9 @@ msgid ""
 "only be applied for products with automated inventory valuation and FIFO "
 "costing method."
 msgstr ""
-"Stroškov dostave ni mogoče aplicirati na izbrani prenos (izbrane prenose). "
-"Stroški dostave se lahko nanašajo le na izdelke s samodejnim vrednotenjem "
-"zalog in FIFO metodo vrednotenja."
+"Odvisnih stroškov dobave ni mogoče aplicirati na izbrani prenos (izbrane "
+"prenose). Odvisni stroški dobave se lahko nanašajo le na izdelke s "
+"samodejnim vrednotenjem zalog in FIFO metodo vrednotenja."
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_type_form
