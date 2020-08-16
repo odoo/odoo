@@ -3,23 +3,22 @@
 # 	* website_profile
 # 
 # Translators:
-# sao sang <saosangmo@yahoo.com>, 2019
-# Martin Trigaux, 2019
-# fanha99 <fanha99@hotmail.com>, 2019
-# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2019
-# Thang Duong Bao <nothingctrl@gmail.com>, 2019
-# Duy BQ <duybq86@gmail.com>, 2019
-# Chinh Chinh <trinhttp@trobz.com>, 2019
-# Dung Nguyen Thi <dungnt@trobz.com>, 2019
-# Dao Nguyen <trucdao.uel@gmail.com>, 2019
+# sao sang <saosangmo@yahoo.com>, 2020
+# Martin Trigaux, 2020
+# fanha99 <fanha99@hotmail.com>, 2020
+# Thang Duong Bao <nothingctrl@gmail.com>, 2020
+# Duy BQ <duybq86@gmail.com>, 2020
+# Trinh Tran Thi Phuong <trinhttp@trobz.com>, 2020
+# Dung Nguyen Thi <dungnt@trobz.com>, 2020
+# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~13.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:17+0000\n"
-"PO-Revision-Date: 2019-08-26 09:16+0000\n"
-"Last-Translator: Dao Nguyen <trucdao.uel@gmail.com>, 2019\n"
+"POT-Creation-Date: 2020-02-13 07:25+0000\n"
+"PO-Revision-Date: 2019-03-20 15:01+0000\n"
+"Last-Translator: Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2020\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -55,18 +54,13 @@ msgid ". Try another search."
 msgstr ""
 
 #. module: website_profile
-#: model_terms:ir.ui.view,arch_db:website_profile.user_profile_content
-msgid "40%"
+#: model_terms:ir.ui.view,arch_db:website_profile.user_badges
+msgid "<i class=\"fa fa-arrow-right mr-1\"/>All Badges"
 msgstr ""
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_badges
-msgid "<i class=\"fa fa-arrow-right mr-1\"/>Check all available badges"
-msgstr ""
-
-#. module: website_profile
-#: model_terms:ir.ui.view,arch_db:website_profile.user_badges
-msgid "<i class=\"fa fa-arrow-right\"/> Check available badges"
+msgid "<i class=\"fa fa-arrow-right\"/> All Badges"
 msgstr ""
 
 #. module: website_profile
@@ -171,6 +165,11 @@ msgstr ""
 msgid ""
 "<span id=\"email_validated_message\">Congratulations! Your email has just "
 "been validated.</span>"
+msgstr ""
+
+#. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.users_page_header
+msgid "<strong class=\"form-group text-white mr-2\">Rank by :</strong>"
 msgstr ""
 
 #. module: website_profile
@@ -279,6 +278,12 @@ msgid "All Users"
 msgstr ""
 
 #. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.all_user_card
+#: model_terms:ir.ui.view,arch_db:website_profile.users_page_header
+msgid "All time"
+msgstr ""
+
+#. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.badge_content
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_content
 msgid "Badges"
@@ -288,8 +293,8 @@ msgstr "Huy chương"
 #: model_terms:ir.ui.view,arch_db:website_profile.badge_content
 msgid ""
 "Besides gaining reputation with your questions and answers,\n"
-"                    you receive badges for being especially helpful.<br class=\"d-none d-lg-inline-block\"/>Badges\n"
-"                    appear on your profile page, and your posts."
+"                        you receive badges for being especially helpful.<br class=\"d-none d-lg-inline-block\"/>Badges\n"
+"                        appear on your profile page, and your posts."
 msgstr ""
 
 #. module: website_profile
@@ -301,6 +306,11 @@ msgstr "Tiểu sử"
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
 msgid "Clear"
 msgstr "Làm sạch"
+
+#. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.user_profile_content
+msgid "Click here to send a verification email."
+msgstr ""
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.email_validation_banner
@@ -363,6 +373,11 @@ msgid "Mobile sub-nav"
 msgstr ""
 
 #. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.all_user_card
+msgid "Monthly"
+msgstr "Hàng tháng"
+
+#. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_content
 msgid "More info"
 msgstr "Nhiều thông tin hơn"
@@ -379,7 +394,7 @@ msgstr ""
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_badges
-msgid "No badge yet"
+msgid "No badges yet!"
 msgstr ""
 
 #. module: website_profile
@@ -427,9 +442,19 @@ msgid "Search users"
 msgstr ""
 
 #. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.users_page_header
+msgid "This month"
+msgstr "Tháng này"
+
+#. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.private_profile
 msgid "This profile is private!"
 msgstr "Hồ sơ này là riêng tư!"
+
+#. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.users_page_header
+msgid "This week"
+msgstr "Tuần này"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.top3_user_card
@@ -455,11 +480,22 @@ msgstr "Người dùng"
 #. module: website_profile
 #: model:ir.model,name:website_profile.model_website
 msgid "Website"
-msgstr "Website"
+msgstr "Trang web"
+
+#. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.all_user_card
+msgid "Weekly"
+msgstr "Hàng tuần"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main
 msgid "When you finish a course or reach milestones, you're awarded badges."
+msgstr ""
+
+#. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.all_user_card
+#: model_terms:ir.ui.view,arch_db:website_profile.top3_user_card
+msgid "XP"
 msgstr ""
 
 #. module: website_profile
@@ -474,6 +510,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_sub_nav
 msgid "breadcrumb"
 msgstr "breadcrumb"
+
+#. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.all_user_card
+msgid "gain"
+msgstr ""
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main
