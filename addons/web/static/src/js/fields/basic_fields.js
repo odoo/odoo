@@ -1896,38 +1896,37 @@ var FieldBinaryImage = AbstractFieldBinary.extend({
     _renderReadonly: function () {
         this._super.apply(this, arguments);
 
-        if(this.nodeOptions.zoom) {
-            var unique = this.recordData.__last_update;
-            var url = this._getImageUrl(this.model, this.res_id, 'image_1920', unique);
-            var $img;
-            var imageField = _.find(Object.keys(this.recordData), function(o) {
-                return o.startsWith('image_');
-            });
+        var unique = this.recordData.__last_update;
+        var url = this._getImageUrl(this.model, this.res_id, 'image_1920', unique);
+        var $img;
+        var imageField = _.find(Object.keys(this.recordData), function(o) {
+            return o.startsWith('image_');
+        });
 
-            if(this.nodeOptions.background)
-            {
-                if('tag' in this.nodeOptions) {
-                    this.tagName = this.nodeOptions.tag;
-                }
-
-                if('class' in this.attrs) {
-                    this.$el.addClass(this.attrs.class);
-                }
-
-                const image_field = this.field.manual ? this.name:'image_128';
-                var urlThumb = this._getImageUrl(this.model, this.res_id, image_field, unique);
-
-                this.$el.empty();
-                $img = this.$el;
-                $img.css('backgroundImage', 'url(' + urlThumb + ')');
-            } else {
-                $img = this.$('img');
+        if(this.nodeOptions.background)
+        {
+            if('tag' in this.nodeOptions) {
+                this.tagName = this.nodeOptions.tag;
             }
+
+            if('class' in this.attrs) {
+                this.$el.addClass(this.attrs.class);
+            }
+
+            const image_field = this.field.manual ? this.name:'image_128';
+            var urlThumb = this._getImageUrl(this.model, this.res_id, image_field, unique);
+
+            this.$el.empty();
+            $img = this.$el;
+            $img.css('backgroundImage', 'url(' + urlThumb + ')');
+        } else {
+            $img = this.$('img');
+        }
+        if(this.nodeOptions.zoom) {
             var zoomDelay = 0;
             if (this.nodeOptions.zoom_delay) {
                 zoomDelay = this.nodeOptions.zoom_delay;
             }
-
             if(this.recordData[imageField]) {
                 $img.attr('data-zoom', 1);
                 $img.attr('data-zoom-image', url);
