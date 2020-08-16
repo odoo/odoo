@@ -18,6 +18,7 @@
 # lhmflexerp <lhm@flexerp.dk>, 2019
 # JonathanStein <jstein@image.dk>, 2020
 # Sanne Kristensen <sanne@vkdata.dk>, 2020
+# Mads Søndergaard, 2020
 # 
 msgid ""
 msgstr ""
@@ -25,7 +26,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-03 15:05+0000\n"
 "PO-Revision-Date: 2017-09-20 10:13+0000\n"
-"Last-Translator: Sanne Kristensen <sanne@vkdata.dk>, 2020\n"
+"Last-Translator: Mads Søndergaard, 2020\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -481,6 +482,11 @@ msgid ""
 "        Colloquially known as \"Month 13\"\n"
 "    "
 msgstr ""
+"\n"
+"        Tillad at generere forsøgs opgørelse for afsluttende post.\n"
+"\n"
+"        I folkemunde kendt som \"Den 13. Måned\"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_voip
@@ -504,6 +510,9 @@ msgid ""
 "        Bill timesheets logged on helpdesk tickets.\n"
 "    "
 msgstr ""
+"\n"
+"        Fakturér timesedler bogført på helpdesk sager.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_maintenance
@@ -511,6 +520,8 @@ msgid ""
 "\n"
 "        Bridge between HR and Maintenance."
 msgstr ""
+"\n"
+"        Bro mellem HR og Vedligeholdelse."
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_data_drinks
@@ -538,6 +549,12 @@ msgid ""
 "        DIOT Report\n"
 "    "
 msgstr ""
+"\n"
+"        Elektroniske regnskabsrapporter\n"
+"            - COA\n"
+"            - Prøve regnskab\n"
+"        DIOT Rapport\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_cache
@@ -573,6 +590,12 @@ msgid ""
 "        For more informations about the SEPA standards : http://www.iso20022.org/ and http://www.europeanpaymentscouncil.eu/\n"
 "    "
 msgstr ""
+"\n"
+"        Generere betalings ordre som foreslået af SEPA normen, takket være pain.001 messages. Undersøttet pain version (land) er pain.001.001.03 (generisk), pain.001.001.03.ch.02 (Schweiz) og pain.001.003.03 (Tyskland). Den genererede XML fil kan uploades til din bank.\n"
+"\n"
+"        Dette modul følger retningslinjerne for implementation udstedt af Det Europæiske Betalingsråd.\n"
+"        For yderligere information om SEPA Standarder, se : http://www.iso20022.org/ og http://www.europeanpaymentscouncil.eu/\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_voip
@@ -595,6 +618,9 @@ msgid ""
 "        Print amount in words on checks issued for expenses\n"
 "    "
 msgstr ""
+"\n"
+"        Print mængde i ord på checks udstedt for udgifter\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_sparse_field
@@ -606,6 +632,12 @@ msgid ""
 "        fields are stored in a \"serialized\" field in the form of a JSON mapping.\n"
 "    "
 msgstr ""
+"\n"
+"        Formålet med dette modul er et implementerer \"sparsomme\" felter, dvs. felter\n"
+"        der mest er nul-værdi. Denne implementation forbigår PostgreSQL\n"
+"        restriktionen på antallet af kolonner i en tabel. Værdierne af samtlige sparsomme\n"
+"        felter er gemt i et \"føljeton\" felt i form af en JSON mapping.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_barcode
@@ -664,6 +696,37 @@ msgid ""
 "        try to use this method on an invoice for whose payment no mandate can be used.\n"
 "    "
 msgstr ""
+"\n"
+"        Dette modul gør det muligt at genrére SEPA Direct Debit (SDD)-kompatible XML filer (i overensstemmelse\n"
+"        med pain.008.001.02 specifikationen) til at sende til din bank for at\n"
+"        samle et sæt af betalinger.\n"
+"\n"
+"        For at være berettiget denne betalingsmetode, skal en kunde først\n"
+"        have returneret et mandat til virksomheden, hvor de giver deres samtykke til at bruge direkte debitering.\n"
+"        Denne samtykkeerklæring skal have været indkodet som \"kunde mandat\" i Odoo.\n"
+"\n"
+"        Du skal også leve op til de følgende krav for at kunne\n"
+"        genrére en SSD fil:\n"
+"        - Din virksomhedskonto skal have et gyldigt IBAN nummer\n"
+"        - Din virksomhedskonto skal være forbundet til en bank med et gyldigt BIC\n"
+"        - Din virksomhed skal have modtaget en keditor id (dette kan gøres i 'indstillinger' menuen i regnskabs modulet)\n"
+"        - Din virksomhed skal have defineret en journal til at modtage SSD betalinger (igen, i 'Indtillinger' i regnskabs modulet)\n"
+"        - Enhver kunde du generere en betaling fra skal have et gyldigt IBAN kontonummer i en bank forbundet med et korrekt BIC.\n"
+"\n"
+"        Odoo underretter dig hvis en af disse krav ikke er opfyldt.\n"
+"\n"
+"        Enhver faktura der bliver godkendt for en kudne med et mandat vil\n"
+"        automatisk blive sat til 'betalt', og en betaling vil blive genereret. En\n"
+"        indstilling på instrumentbrættet vil derefter gøre dig i stand til at få vist alle betalinger genereret\n"
+"        via SDD, og at generere en XML samlings fil for dem, i grupper som\n"
+"        du ønsker.\n"
+"\n"
+"        En dedikeret 'SEPA Direct Debit' betalingsmetode er tilgængelig for\n"
+"        åbne fakturaer, når der vælges en bankkonto i 'registrer betaling' i guiden.\n"
+"        Brug den til at generere en SSD betaling for fakturaen, hvis du tilføjede et mandat\n"
+"        for dens ejer efter dens godkendelse. Du vil se en fejlmeddelelse hvis du\n"
+"        prøver at bruge denne metode på en faktura hvortil dens betaling ikke kan gøre brug af et mandat.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_online_sync
@@ -681,6 +744,9 @@ msgid ""
 "        This module is used for Online bank synchronization. It provides basic methods to synchronize bank statement.\n"
 "    "
 msgstr ""
+"\n"
+"        Dette modul er brugt til Online bank synkronisering. Den tilføjer basale metoder for synkronisering af kontoudtog.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_mobile
@@ -706,6 +772,8 @@ msgid ""
 "\n"
 "        Use Plaid.com to retrieve bank statements"
 msgstr ""
+"\n"
+"        Brug Plaid.com til at hente kontoudtog"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_plaid
@@ -714,6 +782,9 @@ msgid ""
 "        Use Plaid.com to retrieve bank statements.\n"
 "    "
 msgstr ""
+"\n"
+"        Brug Plaid.com til at hente kontoudtog.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_recruitment_survey
@@ -724,6 +795,11 @@ msgid ""
 "        to allow you to define interviews for different jobs.\n"
 "    "
 msgstr ""
+"\n"
+"        Brug interview formularer under ansættelses process.\n"
+"        Dette modul er integreret med et undersøgelses modul\n"
+"        der gør dig istand til at definere interview for forskellige job.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_timesheet_grid_sale
@@ -733,6 +809,10 @@ msgid ""
 "        linked to an SO, or only the validated timesheets\n"
 "    "
 msgstr ""
+"\n"
+"        Når timesedler fakturareres; tillad fakturering af alle timesedler\n"
+"        forbundet til en salgsordre, eller kun godkendte timesedler\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_multilang
@@ -745,6 +825,13 @@ msgid ""
 "          templates to target objects.\n"
 "    "
 msgstr ""
+"\n"
+"    * Flersproget understøttelse af kontooversigt, skat, skattekodder, journaler,\n"
+"      bogførings skabeloner, analytiske kontooversigt, og analytiske journaler.\n"
+"    * Ændringer af opsætnings guide\n"
+"        - Kopiér oversættelse af COA, skat, skattekode skatteposition fra\n"
+"          skabeloner og mål-objekter.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_quality_mrp
@@ -752,6 +839,8 @@ msgid ""
 "\n"
 "    Adds workcenters to Quality Control\n"
 msgstr ""
+"\n"
+"    Tilføjer arbejdscentre til kvalitetskontrol\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_documentation_examples
@@ -762,6 +851,11 @@ msgid ""
 "    syntax-checked and tested.\n"
 "    "
 msgstr ""
+"\n"
+"    Indeholder fragmenter af kode til at blive brugt som eksempler på teknisk dokumentation\n"
+"    (via ``literalinclude`` direktivet) i situationer hvor de kan\n"
+"checkes for syntakst og testet.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_stock
@@ -789,6 +883,13 @@ msgid ""
 "    * The new lock date for advisors must be set after the previous lock date.\n"
 "    "
 msgstr ""
+"\n"
+"    Gør afslutningsdato irreversibel:\n"
+"\n"
+"    * Du kan ikke definere mere strikse betingelser for rådgivere end for brugere. I så fald, skal afslutningsdatoen for en rådgiver blive sæt før brugerens afslutningsdato.\n"
+"    * Du kan ikke afslutte en periode der endnu ikke er overstået. I så fald, skal afslutningsdatoen for rådgivere være sat før sidste dag i den forrige måned.\n"
+"    * Den nye afslutningsdato for rådgivere skal være sat efter den tidligere afslutningsdato.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_timesheet_attendance
@@ -797,6 +898,9 @@ msgid ""
 "    Module linking the attendance module to the timesheet app.\n"
 "    "
 msgstr ""
+"\n"
+"    Modul der forbinder fremmøde modulet til timeseddel app'en.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_payment_payumoney
@@ -807,6 +911,11 @@ msgid ""
 "    PayUmoney payment gateway supports only INR currency.\n"
 "    "
 msgstr ""
+"\n"
+"    PayuMoney betalingsindhenter for Indien.\n"
+"\n"
+"    PayUmoney betalings gateway understøtter kun INR valuta.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_mx_tax_cash_basis
@@ -856,6 +965,10 @@ msgid ""
 "* Activate grid view for timesheets\n"
 "    "
 msgstr ""
+"\n"
+"* Timeseddel indgivelse og godkendelse\n"
+"* Aktivér gittervisning for timesedler\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_report_intrastat
@@ -878,6 +991,12 @@ msgid ""
 "\n"
 "It assigns manager and user access rights to the Administrator for the accounting application and only user rights to the Demo user.\n"
 msgstr ""
+"\n"
+"Bogførings adgangsrettigheder\n"
+"========================\n"
+"Den giver Administrator brugeren adgang til alle bogførings funktioner, så som journal genstande samt kontooversigte.\n"
+"\n"
+"Den tilskriver leder- og brugerrettigheder til administratoren for bogførings applikationer, og kun brugerrettigheder til demonstrations brugeren.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_hr_payroll_account
@@ -887,6 +1006,10 @@ msgid ""
 "==========================================\n"
 "    "
 msgstr ""
+"\n"
+"Regnskabsdata for Belgiske lønningsregler.\n"
+"==========================================\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_reports
@@ -1139,6 +1262,17 @@ msgid ""
 "You can assign several contracts per employee.\n"
 "    "
 msgstr ""
+"\n"
+"Tilføj al information på ansattes form for at styre kontrakter.\n"
+"=============================================================\n"
+"\n"
+"    * Kontrakt\n"
+"    * Fødselssted,\n"
+"    * Medicinsk undersøgelsesdato\n"
+"    * Firmakøretøj\n"
+"\n"
+"Du kan tilskrive flere kontrakter per ansat.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_product_email_template
@@ -1151,6 +1285,13 @@ msgid ""
 "For instance when invoicing a training, the training agenda and materials will automatically be sent to your customers.'\n"
 "    "
 msgstr ""
+"\n"
+"Tilføj email skabeloner til produkter, som sendes med faktura bekræftelsen\n"
+"==================================================================\n"
+"\n"
+"Brug dette modul til at linke dine produkter til en skabelon for at sende komplet information og værktøjer til dine kunder.\n"
+"For eksempel når en træning faktureres, vil træningsskemaet samt materialer automatisk blive tilsendt dine kunder.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_product_margin
@@ -1161,6 +1302,11 @@ msgid ""
 "\n"
 "The wizard to launch the report has several options to help you get the data you need.\n"
 msgstr ""
+"\n"
+"Tilføjer en rapporterings menu i produkter, som udregner salg, indkøb, marginer, og andre interessante indikatorer, baseret på fakturaer.\n"
+"=============================================================================================================================\n"
+"\n"
+"Guiden der starter rapporten har flere valgmuligheder til at hjælpe dig med at indsamle den data du har behov for.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pad
@@ -1173,6 +1319,13 @@ msgid ""
 "pads (by default, http://etherpad.com/).\n"
 "    "
 msgstr ""
+"\n"
+"Tilføjer forbedret udnerstøttelse til (Ether)Pad vedhæftninger i web-klienten.\n"
+"===================================================================\n"
+"\n"
+"Lader selskabet tilpasse hvilke Pad installationer der skal bruges til at forbinde til nye\n"
+"pads (per standard, http://etherpad.com/).\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_intrastat_2019
@@ -1190,6 +1343,10 @@ msgid ""
 "-------------------------------------------------------------\n"
 "\n"
 msgstr ""
+"\n"
+"Gør det muligt for klienter at bestille tid gennem din hjemmeside\n"
+"-------------------------------------------------------------\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_mercury
@@ -1217,6 +1374,9 @@ msgid ""
 "Allow users to login through OAuth2 Provider.\n"
 "=============================================\n"
 msgstr ""
+"\n"
+"Gør det muligt for kunder at logge ind via en OAuth2 udbyder.\n"
+"=============================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_auth_signup
@@ -1226,6 +1386,10 @@ msgid ""
 "===============================================\n"
 "    "
 msgstr ""
+"\n"
+"Gør det muligt for brugere at registrere sig og ændre deres kodeord\n"
+"===============================================\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_cancel
@@ -1258,6 +1422,13 @@ msgid ""
 "according to the order/contract you work on. This allows to\n"
 "have real delivered quantities in sales orders.\n"
 msgstr ""
+"\n"
+"Gør det muligt at sælge timesedler i dine salgsordre\n"
+"=============================================\n"
+"\n"
+"Dette modul sætter det korrekte produkt op alle timeseddel linjer\n"
+"i forhold til den ordre/kontrakt du arbejder på. Dette gør det muligt at\n"
+"have reelle leverede kvantiteter i salgsordre.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery
@@ -1269,6 +1440,12 @@ msgid ""
 "You can define your own carrier for prices. When creating\n"
 "invoices from picking, the system is able to add and compute the shipping line.\n"
 msgstr ""
+"\n"
+"Gør det muligt for dig at tilføje leveringsmetode til salgsordre og pluk.\n"
+"==============================================================\n"
+"\n"
+"Du kan definere dine egne leverandører for priser. Når der oprettes\n"
+"fakturaer fra pluk, er systemet i stand til at tilføje og udregne afsendings linjen.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_account
@@ -1279,6 +1456,11 @@ msgid ""
 "\n"
 "* Cost structure report\n"
 msgstr ""
+"\n"
+"Analytisk Regnskab i MRP\n"
+"==========================\n"
+"\n"
+"* Omkostningsstrukturrapport\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ar
@@ -1299,6 +1481,9 @@ msgid ""
 "Ask questions, get answers, no distractions\n"
 "        "
 msgstr ""
+"\n"
+"Stil spørgsmål, få svar; ingen distraktioner\n"
+"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_test
@@ -1312,6 +1497,14 @@ msgid ""
 "in PDF format which can be accessed by Menu Reporting -> Accounting Tests, then select the test \n"
 "and print the report from Print button in header area.\n"
 msgstr ""
+"\n"
+"Opgørelse af regnskab.\n"
+"======================\n"
+"Med dette modul kan du checke overensstemmelser og uoverensstemmelser i regnskabsmodulet fra menuen Rappotering/Regnskab/Regnskab Tests.\n"
+"\n"
+"Du kan skrive en forespørgsel for at oprette en Overensstemmelses test, hvor du vil modtage resultatet af testen\n"
+"I PDF format, som kan tilgås i menuen Rapporting -> Regnskabs tests, og så vælge test\n"
+"og print rapporten fra Print knappen i sidehoved området.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_asset
@@ -1324,6 +1517,13 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Kapitalforvaltning\n"
+"=================\n"
+"Håndter kapital ejet af et selskab eller en person.\n"
+"Sporer uoverensstemmelser og opretter korresponderende journalposter.\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_document
@@ -1334,6 +1534,11 @@ msgid ""
 "* Show attachment on the top of the forms\n"
 "* Document Indexation: odt\n"
 msgstr ""
+"\n"
+"Vedhæftnings liste og dokument indeksering\n"
+"========================================\n"
+"* Vis vedhæftninger i toppen af formerne\n"
+"* Dokument indeksering: odt\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_au
@@ -1349,6 +1554,16 @@ msgid ""
 "    - sets up Australian taxes.\n"
 "    "
 msgstr ""
+"\n"
+"Australsk regnskabsmodul\n"
+"============================\n"
+"\n"
+"Australs regnskab, standard oversigter og lokaliseringer.\n"
+"\n"
+"Derudover:\n"
+"    - aktivere en række regionale valutaer\n"
+"    - opretter Australske skatte.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_au_reports
@@ -1387,6 +1602,17 @@ msgid ""
 "This wizard will activate the CRON job and the Scheduler and will start the automatic translation via Gengo Services for all the terms where you requested it.\n"
 "    "
 msgstr ""
+"\n"
+"Automatiserede oversættelser via Gengo API\n"
+"========================================\n"
+"\n"
+"Dette modul vil installere passiv planlægning for automatiserede oversætterer \n"
+"via Gengo API'en.  For at aktivere den, skal du\n"
+"1) Konfigurere din Gengo godkendelsesparametre under `Indstillinger > Selskaber > Gengo Parametre`\n"
+"2) Start guiden under `Indstillinger > Ansøgning termer > Gengo: Manuel Efterspørgsel for Oversættelse` og følg guiden.\n"
+"\n"
+"Guiden vil aktivere det CRON job, og planlæggeren vil starte den automatiske oversættelse via Gengo Services for alle termer du anmodede om.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hw_scanner
@@ -1415,6 +1641,16 @@ msgid ""
 "    - Regional State listings\n"
 "    "
 msgstr ""
+"\n"
+"Basismodul for Etiopisk lokalisering\n"
+"======================================\n"
+"\n"
+"Dette er den seneste Etiopiske Odoo lokalisering, og består af:\n"
+"    - Kontooversigt\n"
+"    - Moms struktur\n"
+"    - Struktur for kildeskat\n"
+"    - Regionale statslister\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_br
@@ -1487,6 +1723,20 @@ msgid ""
 "    * Salary Maj, ONSS, Withholding Tax, Child Allowance, ...\n"
 "    "
 msgstr ""
+"\n"
+"Belgiske lønningsregler.\n"
+"======================\n"
+"\n"
+"    * Ansattes detaljer\n"
+"    * Ansattes kontrakter\n"
+"    * Pas baseret kontrakt\n"
+"    * Tillæg/Fradag\n"
+"    * Tillad konfiguration af grundlæggende / brutto / netto løn\n"
+"    * Ansattes lønseddel\n"
+"    * Månedligt lønregister\n"
+"    * Integreret med Fritagnings styring\n"
+"    * Løn Maj, ONSS, kildeskat, børnetilskud, ...\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_blackbox_be
@@ -1522,6 +1772,12 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Boliviansk regnskabsoversigt og moms lokalisering.\n"
+"\n"
+"Plan contable boliviano e impuestos de acuerdo a disposiciones vigentes\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_rating
@@ -1530,6 +1786,8 @@ msgid ""
 "Bridge module for rating on website stuff.\n"
 "        "
 msgstr ""
+"\n"
+"Bromodul for bedømmelse af hjemmeside ting."
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_timesheet_holidays
@@ -1542,6 +1800,13 @@ msgid ""
 "on leaves. Project and task can be configured company-wide.\n"
 "    "
 msgstr ""
+"\n"
+"Bromodul der integrere fritagning i timesedler\n"
+"================================================\n"
+"\n"
+"Dette modul gør det muligt at automatisk bogføre timesedler, når en ansat er på \n"
+"orlog. Projekt og opgave kan konfigureres i hele virksomheden.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_automation_hr_contract
@@ -1551,6 +1816,10 @@ msgid ""
 "====================================================\n"
 "    "
 msgstr ""
+"\n"
+"Bro til at tilføje kontrakt kalender på automatiserede handlinger\n"
+"====================================================\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_crm_phone_validation
@@ -1594,6 +1863,32 @@ msgid ""
 "If you install this module, and select Custom chart a basic chart will be proposed, \n"
 "but you will need set manually account defaults for taxes.\n"
 msgstr ""
+"\n"
+"Kontooversigt for Venezuela.\n"
+"===============================\n"
+"\n"
+"Venezuela har ikke nogen kontooversigt ved lov, men standarden\n"
+"foreslået i Odoo burde stemme overens med de accepterede bedste praksis i Venezuela, \n"
+"denne plan følger disse praksis.\n"
+"\n"
+"Dette modul er blevet testet som basis for over 1000 selskaber, fordi\n"
+"den er baseret på en blanding af de mest almindelige software på det Venezuelanske \n"
+"marked, hvilket vil få revisorer til at føle dem sikre i deres første skridt med Odoo.\n"
+"\n"
+"Dette modul lader ikke som om det er lokaliseringen for Venezuela, men den vil hjælpe dig med at starte rigtig hurtigt med Odoo i dette land. \n"
+"\n"
+"Dette modul giver dig:\n"
+"---------------------\n"
+"\n"
+"- Grundmoms i Venezuela.\n"
+"- Basisdata at teste med samfunds lokaliseringer.\n"
+"- Start et selskab fra 0 hvis dine behov er grundlæggende fra en revisors synspunkt.\n"
+"\n"
+"Vi anbefaler brugen af account_anglo_saxon hvis du vil have evalueret dit \n"
+"lager, eftersom Venezuela ikke bruger fakturaer\n"
+"\n"
+"Hvis du isntallere dette modul og vælger Tilpasset oversigt, vil en basis oversigt blive foreslået, \n"
+"men du vil skulle manuelt sætte standard skatte for kontoer.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_th
@@ -1605,6 +1900,12 @@ msgid ""
 "Thai accounting chart and localization.\n"
 "    "
 msgstr ""
+"\n"
+"Kontooversigt for Thailand.\n"
+"===============================\n"
+"\n"
+"Thai kontooversigt og lokalisering.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_cr
@@ -1623,6 +1924,19 @@ msgid ""
 "please go to http://translations.launchpad.net/openerp-costa-rica.\n"
 "    "
 msgstr ""
+"\n"
+"Kontooversigt for Costa Rica.\n"
+"=================================\n"
+"\n"
+"Inkluderer:\n"
+"---------\n"
+"    * account.account.template\n"
+"    * account.tax.template\n"
+"    * account.chart.template\n"
+"\n"
+"Alt er på Engelsk med Spanske oversættelser. Yderligere oversættelser er velkomne,\n"
+"besøg venligst http://translations.launchpad.net/openerp-costa-rica.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_cl
@@ -1645,6 +1959,12 @@ msgid ""
 "This module allows to enforce users to choose the city of a partner inside a given list instead of a free text field.\n"
 "        "
 msgstr ""
+"\n"
+" Bystyring i adresser\n"
+"============================\n"
+"\n"
+"Dette modul gør det muligt at tvinge brugere til at vælge en partners by fra en given liste, i stedet for fra et friteksts felt.\n"
+"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_timesheet_forecast_sale
@@ -1656,6 +1976,12 @@ msgid ""
 "In your project plan, you can compare your timesheets and your forecast to better schedule your resources.\n"
 "    "
 msgstr ""
+"\n"
+"Sammeling timesedler og prognoser for dine projekter.\n"
+"==================================================\n"
+"\n"
+"I din projektplan kan du sammenligne dine timesedler og din prognose, for bedre at kunne skemalægge dine ressourcer.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_decimal_precision
@@ -1732,6 +2058,18 @@ msgid ""
 "when you confirm your sales order it will automatically create a registration for\n"
 "this event.\n"
 msgstr ""
+"\n"
+"Registrering via Salgsordre.\n"
+"========================================\n"
+"\n"
+"Dette modul gør det muligt for dig at automatisere og forbinde registreringen med\n"
+"dit primære salgsstrøm, og derved aktivere faktureringens funktioner af registreringer.\n"
+"\n"
+"Den definerer en ny slags tjeneste produkt der tilbyder dig muligheden for at\n"
+"vælge en begivenhedskategori der er knyttet til den. Når du indkoder en salgsorder for\n"
+"det produkt, kan du vælge en eksisterende begivenhed indenfor den kategori, og\n"
+"når du godkender dit salgsorder, vil den automatisk oprette en registrering for\n"
+"den begivenhed.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_hr
@@ -1764,6 +2102,33 @@ msgid ""
 " https://www.rrif.hr/dok/preuzimanje/rrif-rp2012.rar\n"
 "\n"
 msgstr ""
+"\n"
+"Kroatisk lokalisering.\n"
+"======================\n"
+"\n"
+"Author: Goran Kliska, Slobodni programi d.o.o., Zagreb\n"
+"        https://www.slobodni-programi.hr\n"
+"\n"
+"Contributions:\n"
+"  Tomislav Bošnjaković, Storm Computers: tipovi konta\n"
+"  Ivan Vađić, Slobodni programi: tipovi konta\n"
+"\n"
+"Description:\n"
+"\n"
+"Croatian Chart of Accounts (RRIF ver.2012)\n"
+"\n"
+"RRIF-ov računski plan za poduzetnike za 2012.\n"
+"Vrste konta\n"
+"Kontni plan prema RRIF-u, dorađen u smislu kraćenja naziva i dodavanja analitika\n"
+"Porezne grupe prema poreznoj prijavi\n"
+"Porezi PDV obrasca\n"
+"Ostali porezi\n"
+"Osnovne fiskalne pozicije\n"
+"\n"
+"Izvori podataka:\n"
+" https://www.rrif.hr/dok/preuzimanje/rrif-rp2011.rar\n"
+" https://www.rrif.hr/dok/preuzimanje/rrif-rp2012.rar\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_delivery
@@ -1798,6 +2163,12 @@ msgid ""
 "German accounting chart and localization.\n"
 "    "
 msgstr ""
+"\n"
+"Dieses  Modul beinhaltet einen deutschen Kontenrahmen basierend auf dem SKR03.\n"
+"==============================================================================\n"
+"\n"
+"Tysk kontooversigt og lokalisering.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_de_skr04
@@ -1809,6 +2180,12 @@ msgid ""
 "German accounting chart and localization.\n"
 "    "
 msgstr ""
+"\n"
+"Dieses  Modul beinhaltet einen deutschen Kontenrahmen basierend auf dem SKR04.\n"
+"==============================================================================\n"
+"\n"
+"Tysk kontooversigt og lokalisering.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_twitter
@@ -1853,6 +2230,13 @@ msgid ""
 "This module allows the creation of the EDI documents and the communication with the Mexican certification providers (PACs) to sign/cancel them.\n"
 "    "
 msgstr ""
+"\n"
+"EDI Mexicansk lokalisering\n"
+"========================\n"
+"Gør det muligt for brugeren at oprette EDI dokumentet for Mexikansk fakturering.\n"
+"\n"
+"Dette modul gør det muligt at oprette EDI dokumenter samt kommunikationen med den Mexicanske certificerings udbyder (PACs) for at underskrive/afvise dem.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mx_edi_payment_bank
@@ -1876,6 +2260,14 @@ msgid ""
 "that would need such functionality.\n"
 "\n"
 msgstr ""
+"\n"
+"ESC/POS Hardware Driver\n"
+"=======================\n"
+"\n"
+"Dette modul gør det muligt for Odoo at printe via ESC/POS kompatible printere, og\n"
+"at åbne ESC/POS kontrollerede kasseapparater ved Point of Sale, samt andre moduler\n"
+"der kunne behøve en sådan funktionalitet.\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_eu_service
@@ -1929,6 +2321,53 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"EU Mini One Stop Shop (MOSS) moms for telekommunications, broadcasting og elektronisk tjenester\n"
+"=============================================================================================\n"
+"\n"
+"Fra og med d. 1. January, 2015, skal telekommunikations, broadcasting,\n"
+"og elektroniske tjenester solgt indenfor Den Europæiske Union\n"
+"takseres i det land hvor kunden\n"
+"tilhører. For at simplificere. For at forenkle anvendelsen af dette EU\n"
+"direktiv, tillader Mini One Stop Shop (MOSS) registreringsskemaet\n"
+"at selskaber opretter en unik momsdeklaration.\n"
+"\n"
+"Dette modul gør det muligt ved at hjælpe med oprettelsen\n"
+"af påkrævede EU skattepositioner og beskatninger, for at\n"
+"automatisk anvende og registrere de påkrævede takster.\n"
+"\n"
+"Dette modul installere en guide til at hjælpe med opsætningen af skattepositioner\n"
+"og takster for salget af elektroniske tjenester indenfor EU.\n"
+"\n"
+"Guiden lader dig vælge:\n"
+" - De EU lande hvor du tilbyder disse\n"
+"   tjenester\n"
+" - Dit nationale moms taksering for tjenester, your national VAT tax for services, der skal forbindes med det pågældende lands moms\n"
+" - Valgfrit: En skattepositions skabelon, til\n"
+"    at kopiere konto forbindelsen. Bør være din \n"
+"   eksisterende B2C Intra-EU skatteposition (standard\n"
+"   sat til ingen konto forbindelse)\n"
+" - Valgfrit: En konto til at bruge til at indsamle\n"
+"   skattemængderne (standard sat til kontoen brugt af din\n"
+"   nationale momsbeskatnings tjeneste)\n"
+"\n"
+"Den oprette de tilsvarende skattepositioner og takster,\n"
+"som kan anvendes automatisk for salg i EU med en kunder\n"
+"i udvalgte lande\n"
+"Guiden kan køres igen for at tilføje yderligere lande.\n"
+"\n"
+"Guiden opretter en separat Momsoversigt, til at indsamle\n"
+"momsmængden af MOSS deklarationen, så udtrækningen af MOSS\n"
+"data burde være ligetil.\n"
+"Se efter Momsoversigten ved navn \"EU MOSS VAT Chart\" i\n"
+"Skatterapport menuen (Generic Accounting Report).\n"
+"\n"
+"Referencer\n"
+"++++++++++\n"
+"- Directive 2008/8/EC\n"
+"- Council Implementing Regulation (EU) No 1042/2013\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_utm
@@ -1983,6 +2422,15 @@ msgid ""
 "with the street name, the house number, and room number.\n"
 "        "
 msgstr ""
+"\n"
+"Udvides adressestyring\n"
+"=============================\n"
+"\n"
+"Disse modul indeholder alle de ekstra felter man kunne have brug for, for at styre adresser præcist.\n"
+"\n"
+"For eksempel, i juridiske rapporter, hvor lande har behov far at opdele en vej ind i flere felter,\n"
+"med vejnavn, hus nummer, og værelses nummer.\n"
+"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hw_blackbox_be
@@ -2022,6 +2470,24 @@ msgid ""
 "      payslip interface, but not in the payslip report\n"
 "    "
 msgstr ""
+"\n"
+"Franske lønningsregler.\n"
+"=====================\n"
+"\n"
+"    - Konfiguration af hr_payroll for Fransk lokalisering\n"
+"    - Alle primære bidrags regler for Franske lønninger, for 'cadre' og 'non-cade'\n"
+"    - Ny lønningsrapport\n"
+"\n"
+"TODO-liste:\n"
+"-----\n"
+"    - Integration med ferie modul til fradragelse og godtgørelse\n"
+"    - Integration med hr_payroll_account for den automatiske account_move_line\n"
+"      oprettelse fra lønningsseddel\n"
+"    - Fortsæt med integrationen af bidrag. I øjeblikket er kun det primære bidrag\n"
+"      implementeret\n"
+"    - Genindlæg rapporten under webkit\n"
+"    - payslip.line med appears_in_payslip = False bør vises i lønnings-interfacet, men ikke i lønseddels rapporten\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_gamification
@@ -2038,6 +2504,17 @@ msgid ""
 "\n"
 "Both goals and badges are flexibles and can be adapted to a large range of modules and actions. When installed, this module creates easy goals to help new users to discover Odoo and configure their user profile.\n"
 msgstr ""
+"\n"
+"Gamificering process\n"
+"====================\n"
+"Gamificerings modulet tilføjer måder til at evaluere og motivere brugere af Odoo.\n"
+"\n"
+"Brugerne kan evalueres ved hjælp af mål og numeriske mål der skal opnås.\n"
+"**Mål** tilskrives gennem **udfordringer** til at evaluere og sammenligne medlemmer af et hold med hinanden over tid.\n"
+"\n"
+"For ikke-numeriske præstationer kan **emblemer** gives til brugere. Fra et simpelt \"tak\" for en enestående præstation,  er et emblem en nem måde at udtrykke taknemmelighed til brugeren for deres gode arbejde.\n"
+"\n"
+"Både mål og emblemer er fleksible, og kan blive tilpasset til en lang række moduler og handlinger. Når det er installeret opretter dette modul nemme mål, for at hjælpe nye brugere med at opdage Odoo og konfigurere deres profil.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_uy
@@ -2049,6 +2526,12 @@ msgid ""
 "Provide Templates for Chart of Accounts, Taxes for Uruguay.\n"
 "\n"
 msgstr ""
+"\n"
+"Generel kontooversigt.\n"
+"==========================\n"
+"\n"
+"Giver skabeloner for kontooversigter og skatte for Uruguay.\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_intrastat
@@ -2071,6 +2554,14 @@ msgid ""
 "    * Company Contribution Management\n"
 "    "
 msgstr ""
+"\n"
+"Generisk lønningssystem integreret med Regnskab.\n"
+"==================================================\n"
+"\n"
+"    * Udgifts indkodning\n"
+"    * Betalings indkodning\n"
+"    * Selskabsbidragsstyring\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_mail_push
@@ -2098,6 +2589,15 @@ msgid ""
 "are found in other modules that must be installed separately. \n"
 "\n"
 msgstr ""
+"\n"
+"Hardware Proxy\n"
+"=============\n"
+"\n"
+"Dette modul gør dig i stand til at bruge perifere enheder forbundet til denne server via fjernadgang.\n"
+"\n"
+"Dette modul indeholder kun den muliggørende ramme. De faktiske enhedsdrivere\n"
+"findes i andre moduler, som skal installeres separat.\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_helpdesk
@@ -2121,6 +2621,24 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Helpdesk - Sagsstyrings applikation\n"
+"================================\n"
+"\n"
+"Funktioner:\n"
+"\n"
+"    - Processér sager gennem diverse stadier for at løse dem.\n"
+"    - Tilføj prioriteringer, typer, beskrivelser, og tags, for at definere dine sager.\n"
+"    - Brug chatter funktionen til at kommunikere yderligere information samt ping medarbejdere på sager.\n"
+"    - Nyd brugen af et tilpasset instrumentbræt, og en nem-at-bruge kanban visning, til at håndtere dine sager.\n"
+"    - Udfør dybdegående analyse af dine sager gennem en drejevisning i rapport menuen\n"
+"    - Opret et hold og definér dets medlemmer, brug en automatisk tildelingsmetode hvis du ønsker.\n"
+"    - Brug et mail alias til automatisk at oprette sager samt kommunikere med dine kunder.\n"
+"    - Tilføj automatisk tjenesteniveau aftale deadlines til dine sager.\n"
+"    - Indhent kundetilbagemeldinger gennem brugen af bedømmelser.\n"
+"    - Installér yderligere funktioner nemt via din hold form visning.\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_import_module
@@ -2132,6 +2650,12 @@ msgid ""
 "This module allows authorized users to import a custom data module (.xml files and static assests)\n"
 "for customization purpose.\n"
 msgstr ""
+"\n"
+"Importer brugerdefineret data modul\n"
+"===========================\n"
+"\n"
+"Dette modul gør det muligt for autoriserede brugere at importere brugerdefinerede data moduler (.xml filer og statiske aktiver)\n"
+"til tilpasningsformål.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_cn_standard
@@ -2151,6 +2675,20 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Indeholder de følgende data i Regnskabsstandarder for Virksomhedsselskaber\n"
+"包含企业会计准则以下数据\n"
+"\n"
+"* Kontooversigt\n"
+"* 科目表模板\n"
+"\n"
+"* Konto skabeloner\n"
+"* 科目模板\n"
+"\n"
+"* Skatteskabeloner\n"
+"* 税金模板\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in
@@ -2168,6 +2706,17 @@ msgid ""
 "Sheet, now only Vertical format has been permitted Which is Supported By Odoo.\n"
 "  "
 msgstr ""
+"\n"
+"Indisk Regnskab: Kontooversigt.\n"
+"====================================\n"
+"\n"
+"Indisk regnskab og kontooversigt.\n"
+"\n"
+"Odoo gør det muligt at styre Indisk regnskab ved at give adgang til to formater for kontooversigt, dvs. Indisk kontooversigt - standard, og Indisk kontooversigt - skema VI (6).\n"
+"\n"
+"Bemærk: Skema VI er blevet revideret af MCA og er brugbar på alle Afstemningssedler oprettet efter d. 31. Marts, 2011. Formatet har fjernet de to tidligere mulige formater for Afstemningssedler,\n"
+" hvor nu kun det lodrette format er tilladt, hvilket er understøttet af Odoo.\n"
+"  "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in_schedule6
@@ -2206,6 +2755,22 @@ msgid ""
 "    - Yearly Salary by Head and Yearly Salary by Employee Report\n"
 "    "
 msgstr ""
+"\n"
+"Indiske lønningsregler.\n"
+"============================\n"
+"\n"
+"    -Konfiguration af hr_payroll for Indisk lokalisering\n"
+"    -Alle primære bidragsregler for Indiske lønsedler..\n"
+"    * Ny lønseddel rapport\n"
+"    * Ansattes kontrakter\n"
+"    * Tillad konfiguration af grund / brutto / netto løn\n"
+"    * Ansattes lønseddel\n"
+"    * Bidrag / afdrag\n"
+"    * Integreret med Orlogsstyring\n"
+"    * Medicinsk bidrag, rejsebidrag, børnebidrag, ...\n"
+"    - Lønnings råd og rapportering\n"
+"    - Årlig indkomst per hoved og årlig indkomst per ansattes rapport\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_mail_github
@@ -2217,6 +2782,12 @@ msgid ""
 "This Module integrates all post commits, pull requests and activity of github issue to channels in Odoo.\n"
 "    "
 msgstr ""
+"\n"
+"Integrér Github med Odoo Discuss.\n"
+"======================================\n"
+"\n"
+"Dette modul integrere alle commits og pull efterspørgsler, samt aktivitet i github problemer, til kanaler i Odoo.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_google_drive
@@ -2228,6 +2799,12 @@ msgid ""
 "This module allows you to integrate google documents to any of your Odoo record quickly and easily using OAuth 2.0 for Installed Applications,\n"
 "You can configure your google Authorization Code from Settings > Configuration > General Settings by clicking on \"Generate Google Authorization Code\"\n"
 msgstr ""
+"\n"
+"Integrér google dokument med Odoo posten.\n"
+"============================================\n"
+"\n"
+"Dette modul gør dig istand til at integrere google dokumenter til enhver af dine Odoo poster nemt og hurtigt via OAuth 2.0 for installerede applikationer.\n"
+"Du kan konfigurere din google autoriserings-kode i Indstillinger > Konfiguration > Generelle Indstillinger, ved at klikke på \"Generér Google Autoriserings kode\"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_invoicing
@@ -2240,6 +2817,13 @@ msgid ""
 "You could use this simplified accounting in case you work with an (external) account to keep your books, and you still want to keep track of payments. This module also offers you an easy method of registering payments, without having to encode complete abstracts of account.\n"
 "    "
 msgstr ""
+"\n"
+"Fakturering & Betalinger\n"
+"====================\n"
+"Det specifikke og nemt-at-bruge fakturerings system i Odoo gør dig i stand til at følge dine regnskaber, selv når du ikke er en revisor. Den tilbyder en nem måde at følge op på dine sælgere og kunder.\n"
+"\n"
+"Du kan bruge dette simplificerede regnskab i tilfælde af at du arbejder med en (ekstern) konto til bogføring, og du stadig gerne vil være i stand til at spore betalinger. Dette modul tilbyder dig også en nem måde at registrere betalinger på, uden at skulle være nødt til at indkøbe fuldstændige abstrakter af konti.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_landed_costs
@@ -2286,6 +2870,12 @@ msgid ""
 "Allows users to create custom dashboard.\n"
 "    "
 msgstr ""
+"\n"
+"Lader brugeren oprette et brugerdefineret instrumentbræt.\n"
+"========================================\n"
+"\n"
+"Tillader brugeren at oprette et brugerdefineret instrumentbræt.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_im_livechat
@@ -2301,6 +2891,16 @@ msgid ""
 "\n"
 "        "
 msgstr ""
+"\n"
+"Live Chat Support\n"
+"==========================\n"
+"\n"
+"Gør det muligt at opsætte øjeblikkelige besked-widgets på enhver side, som vil kommunikere\n"
+"med den nuværende server, og uddele besøgendes forespørgsler ud mellem flere live\n"
+" chat operatører\n"
+"Hjælp dine kunder med denne chat, og analysér deres tilbagemeldinger.\n"
+"\n"
+"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_maintenance
@@ -2314,6 +2914,14 @@ msgid ""
 "* Equipments related to workcenters\n"
 "* MTBF, MTTR, ...\n"
 msgstr ""
+"\n"
+"Vedligeholdelse i MRP\n"
+"==================\n"
+"* Præventiv vs korrigerende vedligeholdelse\n"
+"* Definer forskellige stadier for dine vedligeholdelsesforespørgsler\n"
+"* Planlæg vedligeholdelsesforespørgsler (inklusiv gentagende præventive)\n"
+"* Udstyr relateret til arbejdscentre\n"
+"* MTBF, MTTR, ...\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_3way_match
@@ -2340,6 +2948,27 @@ msgid ""
 "    - Exception (Received and invoiced quantities differ)\n"
 "    "
 msgstr ""
+"\n"
+"Håndtér 3-vejs matching på sælgerregninger\n"
+"=====================================\n"
+"\n"
+"I produktionsindustrien modtager folk ofte sælgerregninger før\n"
+"de modtager deres indkøb, men de vil ikke betale regningen før varerne\n"
+"er blevet leveret.\n"
+"\n"
+"Løsningen til denne situation, er at oprette sælgerregningen når du modtager den\n"
+"(baseret på rangeret kvantiteter) men først betal fakturaen når de modtagne \n"
+"mængder (på indkøbsordre linjerne) stemmer overens med den nedskrevne sælgerregning.\n"
+"\n"
+"Dette modul introducerer en \"afgiv til betaling\" mekanisme, der markere for hver sælger\n"
+"regning, om den kan betales eller ej.\n"
+"\n"
+"Hver sælgerregning modtager én af følgende tre tilstande:\n"
+"\n"
+"    - Ja (regningen kan betales)\n"
+"    - Nej (Regningen kan ikke betales; intet er blevet leveret endnu)\n"
+"    - Undtagelse (Forskel på modtaget og faktureret mængder)\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_dropshipping
@@ -2358,6 +2987,16 @@ msgid ""
 "internal transfer document is needed.\n"
 "\n"
 msgstr ""
+"\n"
+"Håndter drop shipping ordre\n"
+"===========================\n"
+"\n"
+"Dette modul tilføjer en prækonfigureret Drop Shipping operationsstype, samt en indkøbsrute der tillader konfigurering til Drop Shipping af produkter og ordre.\n"
+"\n"
+"Når drop shipping bruges, bliver varerne overført direkte\n"
+" fra sælger til kunde (direkte levering) uden\n"
+"at gå gennem forhandlerens lager. I dette tilfælde er et internt overførsels dokument unødvendig.\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_expense
@@ -2380,6 +3019,23 @@ msgid ""
 "This module also uses analytic accounting and is compatible with the invoice on timesheet module so that you are able to automatically re-invoice your customers' expenses if your work by project.\n"
 "    "
 msgstr ""
+"\n"
+"Håndter udgifter fra ansatte\n"
+"============================\n"
+"\n"
+"Denne applikation gør det muligt for dig at håndtere dine ansattes daglige udgifter. Den giver dig adgang til dine ansattes udgifts notater, og giver dig rettighed til at gennemføre og godkende eller afvise notaterne. Efter godkendelse opretter den en faktura til den ansatte.\n"
+"Den ansatte kan indkode deres egne udgifter, og godkendelsesstrømmen fører den automatisk ind i regnskabet efter godkendelse af ledere.\n"
+"\n"
+"\n"
+"Hele strømmen er implementeret som følger:\n"
+"---------------------------------\n"
+"* Kladde over udgifter\n"
+"* Indgivelse af ansatte til dennes leder\n"
+"* Godkendelse fra dennes leder\n"
+"* Godkendelse af revisoren samt regnskabsposteringen oprettes\n"
+"\n"
+"Dette modul bruger også analytisk regnskab, og er kompatible med fakturaen i timeseddel moduleet, så du er i stand til at automatisk gen-fakturere dine kunders udgifter hvis du arbejder på projekt-basis.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_holidays
@@ -2471,6 +3127,12 @@ msgid ""
 "Bridge module adding UX requirements to ease mass mailing of event attendees.\n"
 "        "
 msgstr ""
+"\n"
+"Masse email begivenhedsdeltagere\n"
+"=========================\n"
+"\n"
+"Bromodul der tilføjer UX kravene, for at gøre det lettere at sende masse emails ud til begivenhedsdeltagere.\n"
+"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_mass_mailing_event_track
@@ -2482,6 +3144,12 @@ msgid ""
 "Bridge module adding UX requirements to ease mass mailing of event track speakers.\n"
 "        "
 msgstr ""
+"\n"
+"Masse email begivensssporings talere\n"
+"==============================\n"
+"\n"
+"Bromodul der tilføjer UX kravene, for at gøre det lettere at udsende masse emails til begivenhedssporings talere.\n"
+"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_mps
@@ -2501,6 +3169,20 @@ msgid ""
 "safety stock, min/max to supply and to manually override the amount you will\n"
 "procure.\n"
 msgstr ""
+"\n"
+"Master Produktionsplan\n"
+"==========================\n"
+"\n"
+"Nogle gange skal du oprette indkøbsordre på komponenter til\n"
+"produktionsordre som først vil blive fremstillet senere. Eller til produktionsordre\n"
+"hvor du først vil have salgsordrene i hænde senere. Løsningen er at forudsige\n"
+"dine salgsprognoser og, baseret på den, opretter du nogle produktions- \n"
+"eller indkøbsordre\n"
+"\n"
+"Du skal vælge de produkter du vil tilføje rapporten. Du kan vælge\n"
+"perioden for rapporten: dag, uge, måned, ... Det er også muligt at definere\n"
+"sikkerheds lager, minimum/maksimum til udbydelse, og at manuelt overskrive den mængde du vil \n"
+"indkøbe.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mx
@@ -2525,6 +3207,25 @@ msgid ""
 ".. _SAT: http://www.sat.gob.mx/\n"
 "    "
 msgstr ""
+"\n"
+"Minimal regnskabskonfiguration for Mexico.\n"
+"============================================\n"
+"\n"
+"Dette kontoplan er et minimalt forslag for at kunne bruge OoB,\n"
+"regnskabsfunktionen i Odoo.\n"
+"\n"
+"Dette foregiver ikke at være al lokalisering for Mexico, det er bare det minimale\n"
+"data, der kræves for at starte fra 0 i mexicansk lokalisering.\n"
+"\n"
+"Dette moduler og dets indhold opdateres ofte af openerp-mexico holdet.\n"
+"\n"
+"Med dette modul har du:\n"
+"\n"
+"- Minimalt kontoplan testet i produktionsmiljøer.\n"
+"- Minimum skema for at overholde SAT_-kravene.\n"
+"\n"
+".. _SAT: http://www.sat.gob.mx/\n"
+" "
 
 #. module: base
 #: model:ir.module.module,description:base.module_analytic
@@ -2538,6 +3239,13 @@ msgid ""
 "that have no counterpart in the general financial accounts.\n"
 "    "
 msgstr ""
+"\n"
+"Modul til definition af analytisk regnskabsobjekt.\n"
+"===============================================\n"
+"\n"
+"I Odoo er analytiske konti linket til generelle konti, men behandlet \n"
+"fuldstændig uafhængigt. Derfor kan du indføre forskellige analytiske operationer,\n"
+" som ingen modpart har i de generelle finansielle konti.    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_resource
@@ -2551,6 +3259,14 @@ msgid ""
 "associated to every resource. It also manages the leaves of every resource.\n"
 "    "
 msgstr ""
+"\n"
+"Modul til ressource administration.\n"
+"===============================\n"
+"\n"
+"En ressource repræsentere noget der kan blive planlagt (en udvikler på en\n"
+" opgave eller et arbejdscenter på en produktionsordre). Dette modul administrere en ressourcekalender\n"
+"forbundet med enhver ressource. Den administrere også bladende for hver ressource.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_mail
@@ -2559,6 +3275,9 @@ msgid ""
 "Module holding mail improvements for website.\n"
 "It is responsible of comments moderation for published documents (forum, slides, blog, ...)\n"
 msgstr ""
+"\n"
+"Modul indeholdende email forbedringer til hjemmesiden.\n"
+"Den er ansvarlig for moderation af kommentarer på udgivede dokumenter (forum, dias, blog, ...)\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_reports_followup
@@ -2590,6 +3309,12 @@ msgid ""
 "Improve the import of bank statement feature to support the SEPA recommanded Cash Management format (CAMT.053).\n"
 "    "
 msgstr ""
+"\n"
+"Modul til at importere CAMT kontoudtog.\n"
+"======================================\n"
+"\n"
+"Forbedre importering af kontoudtogs funktionen til at understøtte SEPA rekommenderet kontant administrations formatet (CAMT.053).\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_coda
@@ -2641,6 +3366,48 @@ msgid ""
 "V2.2 specifications.\n"
 "If required, you can manually adjust the descriptions via the CODA configuration menu.\n"
 msgstr ""
+"\n"
+"Modul til at importere CODA kontoudtog.\n"
+"======================================\n"
+"\n"
+"Understøttet er CODA flade filer i V2 format fra Belgiske bankkonti.\n"
+"----------------------------------------------------------------------\n"
+"    * CODA v1 understøttelse.\n"
+"    * CODA v2.2 understøttelse.\n"
+"    * Understøttelse af udenlandsk valuta.\n"
+"    * Understøttelse til alle data typer af posteringer (0, 1, 2, 3, 4, 8, 9).\n"
+"    * Analyse og logning af alle transaktionskoder og struktureret format\n"
+" kommunikationer\n"
+"    * Automatisk tilskrivelse af Finansiel journal via CODA konfigurations parametre.\n"
+"    * Understøttelse af flere journaler per kontonummer.\n"
+"    * Understøttelse af flere udtog fra forskellige konti i én enkelt\n"
+" CODA fil\n"
+"    * Understøttelse af 'analysér kun' CODA kontonumre (defineret som type='info' i\n"
+"      CODA kontonummer konfiguration posteringer).\n"
+"    * Flersproget CODA analyse, analyse konfigurations data mulig for Engelsk, \n"
+"Hollandsk, og Fransk.\n"
+"\n"
+"De maskin-læselige CODA filer er analyseret og gemt i menneske-læselig format i\n"
+" CODA kontoudtog. Derudover er kontoudtog også genereret indeholdende en del af\n"
+" CODA informationen (kun de transaktionslinjer der er nødvendige for \n"
+"oprettelsen af regnskabsposteringer). CODA kontoudtoget er et \n"
+"'skrivebeskyttet' object, hvorfor det forbliver en troværdig repræsentation af den originale CODA fil, hvorimod kontoudtoget vil blive modificeret som nødvendigt af virksomhedens regnskabsprocedure\n"
+"\n"
+"CODA kontoer konfigureret som type 'info' vil kun generere CODA kontoudtog.\n"
+"\n"
+"En fjernelse af et objekt i CODA proceduren resultere i fjernelsen af de \n"
+"forbundne objekter. Fjernelsen af en CODA fil indeholdende flere kontoudtog\n"
+"vil også fjerne de tilhørende udtog.\n"
+"\n"
+"I stedet for manuel justering af de genererede kontoudtog kan du også gen-importere CODA'en efter opdatering af OpenERP databasen, med den information der manglede, for at gøre automatisk afstemning muligt.\n"
+"\n"
+"Bemærkning omkring CODA V1 understøttelse:\n"
+"~~~~~~~~~~~~~~~~~~~~~~~~~~\n"
+"I visse tilfælde er en transaktionskode, transaktions kategori, eller struktureret kommunikation\n"
+"blevet tildelt en ny eller tydeligere beskrivelse i CODA V2. \n"
+"Beskrivelsen tildelt fra CODA konfigurations tabellerne er baseret på CODA\n"
+" V2.2 specifikationerne.\n"
+"Om nødvendigt, kan du manuelt justere beskrivelserne via CODA konfigurations menuen.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_bank_statement_import_csv
@@ -2657,6 +3424,17 @@ msgid ""
 "Because of the CSV format limitation, we cannot ensure the same transactions aren't imported several times or handle multicurrency.\n"
 "Whenever possible, you should use a more appropriate file format like OFX.\n"
 msgstr ""
+"\n"
+"Modul til import af CSV kontoudtog.\n"
+"======================================\n"
+"\n"
+"Dette modul gør det muligt for dig at importere CSV filer i Odoo: De er parsede og gemt i menneske-læselig format under \n"
+"Regnskab \\ Bank og kontant \\ Kontoudtog.\n"
+"\n"
+"Vigtigt:\n"
+"---------------------------------------------\n"
+"På grund af begrænsningerne af CSV formatet, kan vi ikke forsikre at de samme transaktioner ikke er importeret flere gange, eller håndtere multivaluta.\n"
+"Hvor end muligt, bør du bruge de korrekte filformater, så som OFX.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_bank_statement_import_ofx
@@ -2672,6 +3450,17 @@ msgid ""
 "creation of the Financial Accounting records).\n"
 "    "
 msgstr ""
+"\n"
+"Modul til import af OFX kontoudtog.\n"
+"======================================\n"
+"\n"
+"Dette modul gør det muligt at importere maskin-læselig OFX filer i Odoo: De er parsede og gemt i menneske-læselig format under\n"
+"Regnskab \\ Bank og kontant \\ Kontoudtog.\n"
+"Accounting \\ Bank and Cash \\ Bank Statements.\n"
+"\n"
+"Kontoudtog kan blive genereret indeholdende dele af OFX informationerne (kun de transkationslinjer der er nødvendige for oprettelsen af \n"
+"Regnskabsposteringerne)\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_bank_statement_import_qif
@@ -2688,6 +3477,17 @@ msgid ""
 "Because of the QIF format limitation, we cannot ensure the same transactions aren't imported several times or handle multicurrency.\n"
 "Whenever possible, you should use a more appropriate file format like OFX.\n"
 msgstr ""
+"\n"
+"Modul til import af QIF kontoudtog.\n"
+"======================================\n"
+"\n"
+"Dette modul gør det muligt at importere maskin-læselig QIF filer i Odoo: de er parsede og gemt i menneske-læselig format under\n"
+"Regnskab \\ Bank og kontant \\ Kontoudtog.\n"
+"\n"
+"Vigtigt\n"
+"---------------------------------------------\n"
+"På grund af begrænsningerne af QIF formatet, kan vi ikke forsikre at samme transaktioner ikke bliver importeret flere gange, eller håndtere multivaluta.\n"
+"Hvor end muligt, bør du bruge et mere passende filformat, så som OFX.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_voip_onsip
@@ -2696,6 +3496,8 @@ msgid ""
 "Module with the required configuration to connect to OnSIP.\n"
 "    "
 msgstr ""
+"\n"
+"Modul med den nødvendige konfiguration til at forbinde til OnSIP."
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_cash_basis_base_account
@@ -2719,6 +3521,16 @@ msgid ""
 "    - sets up New Zealand taxes.\n"
 "    "
 msgstr ""
+"\n"
+"New Zealand regnskabsmodul\n"
+"=============================\n"
+"\n"
+"New Zealand regnskabs standard posteringer og lokaliseringer.\n"
+"\n"
+"Derudover:\n"
+"    - aktivere en række regionale valuta.\n"
+"    - opretter New Zealandske skatte.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_import
@@ -2808,6 +3620,12 @@ msgid ""
 "This module modifies the web addon to provide Enterprise design and responsiveness.\n"
 "        "
 msgstr ""
+"\n"
+"Odoo Enterprise Web Klient.\n"
+"===========================\n"
+"\n"
+"Dette modul modificere hjemmeside addon'en til at udbyde Enterprise design og reaktivitet.\n"
+"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_form_editor
@@ -2838,6 +3656,10 @@ msgid ""
 "==========================\n"
 "\n"
 msgstr ""
+"\n"
+"Odoo Web Editor widget.\n"
+"==========================\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_web
@@ -2849,6 +3671,12 @@ msgid ""
 "This module provides the core of the Odoo Web Client.\n"
 "        "
 msgstr ""
+"\n"
+"Odoo Web kernemodul.\n"
+"========================\n"
+"\n"
+"Dette modul udbyder kernen af Odoo Web Klienten.\n"
+"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_tour
@@ -2858,6 +3686,10 @@ msgid ""
 "========================\n"
 "\n"
 msgstr ""
+"\n"
+"Odoo Web rundvisninger.\n"
+"========================\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_google_map
@@ -2931,6 +3763,10 @@ msgid ""
 "=========================\n"
 "\n"
 msgstr ""
+"\n"
+"Openerp Web Diagramvisning.\n"
+"=========================\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_org_chart
@@ -2943,6 +3779,13 @@ msgid ""
 "(N+1, N+2, direct subordinates)\n"
 "        "
 msgstr ""
+"\n"
+"Org kort Widget til HR\n"
+"=======================\n"
+"\n"
+"Dette modul udvider ansatte formen med et organiseret kort.\n"
+"(N+1, N+2, direkte underordnede)\n"
+"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_event
@@ -2959,6 +3802,17 @@ msgid ""
 "* Manage your Events and Registrations\n"
 "* Use emails to automatically confirm and send acknowledgments for any event registration\n"
 msgstr ""
+"\n"
+"Organisation og administration af begivenheder.\n"
+"======================================\n"
+"\n"
+"Dette begivenhedsmodul gør dig i stand til at effektivt organisere begivenheder og relaterede opgaver: planlægning, registreringssporing,\n"
+"deltagere, osv.\n"
+"\n"
+"Nøglefunktioner\n"
+"------------\n"
+"* Administrér dine begivenheder og registreringer\n"
+"* Brug emails til at automatisk godkende og sende accept til enhver begivenhedsregistrering\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_hr
@@ -2991,6 +3845,15 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Panamansk regnskabsdiagram og skatte lokalisering.\n"
+"\n"
+"Plan contable panameño e impuestos de acuerdo a disposiciones vigentes\n"
+"\n"
+"Con la Colaboración de\n"
+"- AHMNET CORP http://www.ahmnet.com\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_geolocalize
@@ -3000,6 +3863,10 @@ msgid ""
 "========================\n"
 "    "
 msgstr ""
+"\n"
+"Partners geolokation\n"
+"========================\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_appraisal
@@ -3021,6 +3888,22 @@ msgid ""
 "* Every Appraisal Form filled by employees, colleague, collaborator, can be viewed in a PDF form.\n"
 "* Meeting Requests are created manually according to employees appraisals.\n"
 msgstr ""
+"\n"
+"Periodisk vurdering af ansatte\n"
+"==============================\n"
+"\n"
+"Ved at bruge denne applikation kan du vedligeholde motiverende processer gennem periodiske vurderinger af dine ansattes præstation. Den normale vurdering af menneskelige ressourcer kan gavne såvel dine folk som din organisation.\n"
+"\n"
+"En vurderingsplan kan tilskrives hver ansat. Disse planer definere frekvensen samt måden du administrerer din periodiske personlige vurdering.\n"
+"\n"
+"Nøglefunktioner\n"
+"------------\n"
+"* Evnen til at oprette ansatte evaluering(er).\n"
+"* En evaluering kan laves af en ansats leder, eller automatisk, baseret på et skema defineret i ansatte formen.\n"
+"* Vurderingen udføres i overensstemmelse med en plan hvori diverse spørgeskemaer kan oprettes. Hvert spørgerskema kan besvares af et hvis niveau i den ansattes hierarki. Den endelige anmeldelse og vurdering udføres af lederen.\n"
+"* Leder, kollega, medarbejde, og ansatte selv, modtager en email om at udføre en periodisk evaluering.\n"
+"* Samtlige evaluerings formularer udfyldt af ansatte, kolleger, samt medarbejdere, kan ses i PDF format.\n"
+"* Mødeanmodninger kan oprettes manuelt i forhold til en ansats evalueringer.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_pe
@@ -3059,6 +3942,12 @@ msgid ""
 "Italian accounting chart and localization.\n"
 "    "
 msgstr ""
+"\n"
+"Piano dei conti italiano di un'impresa generica.\n"
+"================================================\n"
+"\n"
+"Italiensk kontodiagram og lokalisering.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hw_posbox_homepage
@@ -3100,6 +3989,13 @@ msgid ""
 "* Different approval flows possible depending on the type of change order\n"
 "\n"
 msgstr ""
+"\n"
+"Produktlivs administration\n"
+"=======================\n"
+"\n"
+"* Versionering af materiale- og routingregning\n"
+"* Forskellige godkendelsesstrømme er mulige, afhængig af typen på ændrings ordren\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_product_extended
@@ -3117,6 +4013,8 @@ msgid ""
 "Proposes advanced routing options not available in web or base to keep\n"
 "base modules simple.\n"
 msgstr ""
+"\n"
+"Foreslå avancerede routing muligheder som ikke er tilgængelige i web eller base modulet for at holde base moduler enkle.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_crm_partner_assign
@@ -3145,6 +4043,20 @@ msgid ""
 "\n"
 "  "
 msgstr ""
+"\n"
+"Udgiv dine produkter på eBay\n"
+"=============================\n"
+"\n"
+"eBay integratoren giver dig mulighed for at administrere dine Odoo produkter på eBay.\n"
+"\n"
+"Nøgle funktioner\n"
+"------------\n"
+"* Udgiv produkter på eBat\n"
+"* Gennemgå, genlist, eller afslut atrikler på eBay\n"
+"* Integration med lagerbevægelser\n"
+"* Automatisk oprettelse af salgsordre og faktura\n"
+"\n"
+"  "
 
 #. module: base
 #: model:ir.module.module,description:base.module_quality
@@ -3171,6 +4083,12 @@ msgid ""
 "Create some products for which you can re-invoice the costs.\n"
 "This module allow to reinvoice employee expense, by setting the SO directly on the expense.\n"
 msgstr ""
+"\n"
+"Genfakturér ansattes udgifter\n"
+"==========================\n"
+"\n"
+"Opret nogle produkter hvor du kan genfakturere omkostningerne.\n"
+"Dette modul gør det muligt at genfakturere ansattes udgifter, ved at sætte salgsordren direkte på udgiften.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_fetchmail
@@ -3204,6 +4122,34 @@ msgid ""
 "(technically: Server Actions) to be triggered for each incoming mail.\n"
 "    "
 msgstr ""
+"\n"
+"Hent indgående email fra POP/IMAP servere\n"
+"============================================\n"
+"\n"
+"Indtast parametrene for din(e) POP/IMAP konto(er), og samtlige indgående emails på\n"
+"disse konto vil automatisk hentes ind i dit Odoo system. Alle\n"
+"POP3/IMAP-kompatible servere understøttes, inklusiv dem der kræver en\n"
+"krypteret SSL/TLS forbindelse..\n"
+"\n"
+"Dette kan bruges til at nemt oprette email-baseret arbejdsstrømme for mange email-aktiverede Odoo dokumenter, så som:\n"
+"----------------------------------------------------------------------------------------------------------\n"
+"    * CRM Kundeemner/muligheder\n"
+"    * CRM Krav\n"
+"    * Projekt problemer\n"
+"    * Projekt sager\n"
+"    * Human Resource Ansættelser (Ansøgere)\n"
+"\n"
+"Bare installer den relevante applikation, og du kan tilskrive hvilken som helst af disse dokument\n"
+" typer (Kundeemner, projekt problemer) til dine indgående email konti. Ny emails vil\n"
+"automatisk oprette nye dokumenter af den valgte type, så det er en leg at oprette en\n"
+"mailbox-til-Odoo integrering. Bedre endnu: Disse dokumenter opfører sig direkte som mini\n"
+"samtaler synkroniseret via email. Du kan besvare dem inde fra Odoo, og \n"
+"svarene vil automatisk blive indhentet når de kommer tilbage, og vedhæftes det\n"
+" samme \"samtale\" dokument.\n"
+"\n"
+"For mere specifikke behov, kan du også tilskrive brugerdefinerede handlinger\n"
+"(teknisk: Server handlinger) som aktiveres for hver indgående email.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_subscription_dashboard
@@ -3216,6 +4162,13 @@ msgid ""
 "2) Analyse the subscriptions modifications by salesman and compute their value.\n"
 "    "
 msgstr ""
+"\n"
+"Salgsabonnement instrumentbræt\n"
+"===========================\n"
+"Tilføjer instrumentbræt til :\n"
+"1) Analyser de tilbagevendende indtægter samt andre målinger for abonnementer\n"
+"2) Analyser abonemment modificering foretaget af sælgere og udregn deres værdi.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hw_screen
@@ -3249,6 +4202,15 @@ msgid ""
 "See: https://www.bpost.be/portal/goHome\n"
 "    "
 msgstr ""
+"\n"
+"Send dine leveringer gennem bpost og spor dem online\n"
+"=======================================================\n"
+"\n"
+"Virksomheder i Belgien kan gøre brug af levering gennem den \n"
+"lokale post-virksomhed.\n"
+"\n"
+"Se: https://www.bpost.be/portal/goHome\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_analytic_default
@@ -3266,6 +4228,18 @@ msgid ""
 "    * Date\n"
 "    "
 msgstr ""
+"\n"
+"Angiv standard værdierne for dine analytiske konti.\n"
+"==============================================\n"
+"\n"
+"Gør det muligt at automatisk vælge analytiske konti baseret på kriterier:\n"
+"---------------------------------------------------------------------\n"
+"    * Produkt\n"
+"    * Partner\n"
+"    * Bruger\n"
+"    * Virksomhed\n"
+"    * Dato\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_slides
@@ -3291,6 +4265,10 @@ msgid ""
 "Let your customers follow the signature process easily.\n"
 "    "
 msgstr ""
+"\n"
+"Underskriv og færdiggør dine dokumenter nemt. Tilpas dine dokumenter med tekst og signatur felter, og send dem til dine modtagere.\n"
+"\n"
+"Lad dine kunder nemt følge signatur processen."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_sg
@@ -3330,6 +4308,18 @@ msgid ""
 "    * Defines fiscal positions for spanish fiscal legislation\n"
 "    * Defines tax reports mod 111, 115 and 303\n"
 msgstr ""
+"\n"
+"Spansk Kontodiagram (PGCE 2008).\n"
+"========================================\n"
+"\n"
+"    * Definerer de følgende kontodiagram skabeloner:\n"
+"        * Spansk generel kontodiagram 2008\n"
+"        * Spansk generel kontodiagram 2008 for små og mellem virksomheder\n"
+"        * Spansk generel kontodiagram 2008 for foreninger\n"
+"    * Definerer skabeloner for salg- og købsmoms\n"
+"    * Definerer skatte skabeloner\n"
+"    * Definerer skattepositioner for Spansk finanslovgivning\n"
+"    * Definerer skatterapporter mod 111, 115 og 303\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_studio
@@ -3346,6 +4336,17 @@ msgid ""
 "\n"
 "Note: Only the admin user is allowed to make those customizations.\n"
 msgstr ""
+"\n"
+"Studio - Tilpas Odoo\n"
+"=======================\n"
+"\n"
+"Denne addon gør det muligt for brugeren at tilpasse de fleste elementer af bruger-interfacet, på en\n"
+"simpel og grafisk måde. Den har to primære funktioner:\n"
+"\n"
+"* lav en ny applikation (tilføj modul, top-level menu genstand, og standard handling)\n"
+"* tilpas en eksisterende applikation (rediger menuer, handlinger, visninger, oversættelser, ...)\n"
+"\n"
+"Bemærk: Kun administratoren har rettigheder til at lave de ændringer.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_studio
@@ -3358,6 +4359,12 @@ msgid ""
 "model. Furthermore, you can create a new website form or edit an existing one.\n"
 "\n"
 msgstr ""
+"\n"
+"Studio - Tilpas Odoo\n"
+"=======================\n"
+"\n"
+"Denne addon gør det muligt for brugeren at vise alle hjemmeside formularene linket til en bestemt\n"
+"model. Derudover kan du lave en ny hjemmeside formular, eller redigere en eksisterende en.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_quote_subscription
@@ -3401,6 +4408,24 @@ msgid ""
 "    - Clicking the 'Send by mail' button will attach two files to your draft mail : the invoice, and the corresponding ISR.\n"
 "    "
 msgstr ""
+"\n"
+"Schweizisk lokalisering\n"
+"==================\n"
+"Dette modul definerer et kontodiagram for Schweiz (Swiss PME/KMU 2015), skatte, og aktivere oprettelsen af ISR når du printer en faktura eller sender den via mail.\n"
+"\n"
+"En ISR vil blive oprettet hvis du specificerer den nødvendige information :\n"
+"    - Kontonummeret du forventer at modtage betaling på skal være angivet, samt have en gyldig post-reference.\n"
+"    - Din faktura skal have været tilskrevet en bankkonto for at modtage betaling\n"
+"      (dette kan gøres manuelt, men en standard værdi sættes automatisk hvis du har defineret et kontonummer)\n"
+"    - Du skal have angivet post-referencen til din bank.\n"
+"    - Din faktura skal være angivet i EUR eller CHF (siden ISR'er ikke modtager andre valuta)\n"
+"\n"
+"Oprettelsen af ISR'en er automatisk hvis du opfølger ovennævnte kriterier.\n"
+"\n"
+"Sådan her fungerer det:\n"
+"    - Udprintning af fakturaen vil udløse nedhentninger af to filer: fakturaen, og dens ISR\n"
+"    - Ved at klikke på 'Send via mail' knappen vedhæftet to filer til din mail-kladde: Fakturaen, og den tilsvarende ISR.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_yodlee
@@ -3411,6 +4436,11 @@ msgid ""
 "\n"
 "Yodlee interface.\n"
 msgstr ""
+"\n"
+"Synkronisér dine bank-feeds med Yodlee\n"
+"================================\n"
+"\n"
+"Yodlee interface.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_timesheet_synchro
@@ -3422,6 +4452,12 @@ msgid ""
 "If you use the external timesheet application, this module alows you to synchronize timesheet entries between Odoo and the application.\n"
 "    "
 msgstr ""
+"\n"
+"Synkronisering af timesedle-posteringer med den eksterne timeseddel applikation.\n"
+"=============================================================================\n"
+"\n"
+"Hvis du bruger den eksterne timeseddel applikation, gør dette modul det muligt for dig at synkronisere posteringer mellem Odoo og applikationen.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_voucher
@@ -3462,6 +4498,18 @@ msgid ""
 "    * Repair quotation report\n"
 "    * Notes for the technician and for the final customer\n"
 msgstr ""
+"\n"
+"Målet er at have et komplet modul til administrationen af alle produkt reparationer.\n"
+"====================================================================\n"
+"\n"
+"De følgende emner dækkes af dette modul:\n"
+"------------------------------------------------------\n"
+"    * Tilføj/fjern produkter i reparationen\n"
+"    * Indvirkning på aktier\n"
+"    * Fakturering (produkter og/eller tjenester)\n"
+"    * Garantikoncept\n"
+"    *Tilbudsrapport på reparation\n"
+"    * Notater til tekniker og den endelige kunde\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_lunch
@@ -3481,6 +4529,20 @@ msgid ""
 "If you want to save your employees' time and avoid them to always have coins in their pockets, this module is essential.\n"
 "    "
 msgstr ""
+"\n"
+"Basismodulet til administration af frokost.\n"
+"================================\n"
+"\n"
+"Mange virksomheder bestiller sandwich, pizzaer, og andet, fra vante sælgere, for at tilbyde dem flere faciliteter.\n"
+"\n"
+"Dog er kræver det en ordentlig administrering af frokosten i firmaet, i særdeleshed når antallet af ansatte og sælgere er vigtig.\n"
+"\n"
+"\"Frokost bestilling\" modulet er udviklet for at gøre denne administration lettere, men også for at tilbyde ansatte flere værktøjer og brugbarhed.\n"
+"\n"
+"Udover et mættende måltid og sælger administration, tilbyder dette modul også muligheden for at fremvise en advarsel, og tilbyder hurtig-bestillings valg baseret på en ansats præferencer.\n"
+"\n"
+"Hvis du ønsker at spare dine ansattes tid, og undgå at de altid skal have kontanter i deres lommer, er dette modul essentiel.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_base
@@ -3489,6 +4551,9 @@ msgid ""
 "The kernel of Odoo, needed for all installation.\n"
 "===================================================\n"
 msgstr ""
+"\n"
+"Kernen af Odoo; påkrævet for al installation.\n"
+"===================================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_google_account
@@ -3508,6 +4573,9 @@ msgid ""
 "The module adds the possibility to display data from Odoo in Google Spreadsheets in real time.\n"
 "=================================================================================================\n"
 msgstr ""
+"\n"
+"Modulet tilføjer muligheden for at fremvise data fra Odoo i Google Spreadsheets i realtid.\n"
+"=================================================================================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fr_pos_cert
@@ -3528,6 +4596,21 @@ msgid ""
 "\n"
 "    Access to download the mandatory Certificate of Conformity delivered by Odoo SA (only for Odoo Enterprise users)\n"
 msgstr ""
+"\n"
+"Denne add-on bringer de tekniske krav frra den Franske regulering CGI art.  286, I. 3° bis som stipulerer, at visse kiterier vedrørende uforanderligheden, sikkerheden, lagringen, og arkiveringen af data relateret til salg til private individer (B2C).\n"
+"-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n"
+"\n"
+"Installer den hvis du bruger en Point of Sale applikation til at sælge til individer.\n"
+"\n"
+"Modulet tilføjer følgende funktioner:\n"
+"\n"
+"    Uforanderlighed: deaktiverer af samtlige måder at annullerer eller modificerer nøgle data i POS bestillinger, faktura, og journal posteringer.\n"
+"\n"
+"    Sikkerhed: Kædnings algoritme til at godkende uforanderligheden.\n"
+"\n"
+"    Lagring: automatisk afslutning af salg med udregning af både periode og akkumulerede totaler (daglig, månedlig, årlig)\n"
+"\n"
+"    Adgang til at hente den obligatoriske Overensstemmelsescertifikat leveret af Odoo SA (kun for Odoo Enterprise brugere)\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fr_certification
@@ -3555,6 +4638,10 @@ msgid ""
 "time it takes to load a POS session with a lot of products.\n"
 "    "
 msgstr ""
+"\n"
+"Dette opretter en produkt cache per POS konfiguration. Den sænker drastisk \n"
+"den tid det tager et starte en POS session med mange produkter.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_calendar
@@ -3571,6 +4658,17 @@ msgid ""
 "If you need to manage your meetings, you should install the CRM module.\n"
 "    "
 msgstr ""
+"\n"
+"Dette er et fuldt udstyret kalender system.\n"
+"========================================\n"
+"\n"
+"Den understøtter:\n"
+"------------\n"
+"    - Begivenheds kalender\n"
+"    - Tilbagevendende begivenheder\n"
+"\n"
+"Hvis du har behov for at administrere dine møder, bør du installere CRM modulet.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_product
@@ -3596,6 +4694,26 @@ msgid ""
 "Print product labels with barcode.\n"
 "    "
 msgstr ""
+"\n"
+"Dette er basismodulet til administreringen af produkter og prislister i Odoo.\n"
+"========================================================================\n"
+"\n"
+"Produkter understøtter varianter, forskellige prisfastsættelses metoder, sælger information,\n"
+"lav til lager/bestilling, forskellige måleenheder, indpakning, og egenskaber.\n"
+"\n"
+"Prislister understøtter:\n"
+"-------------------\n"
+"    * Flere niveauer af rabat (per produkt, på kategori, kvantitet)\n"
+"    * Udregn pris baseret på forskellige kriterier:\n"
+"        * En anden prisliste\n"
+"        * Omkostning\n"
+"        * Listepris\n"
+"        * Sælgerpris\n"
+"\n"
+"Prisliste præferencer per produkt og/eller partnere.\n"
+"\n"
+"Print produkt mærkater med stregkode.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be
@@ -3654,6 +4772,12 @@ msgid ""
 "Accounting chart and localization for Ecuador.\n"
 "    "
 msgstr ""
+"\n"
+"Dette er basismodulet til administrering af kontodiagrammet for Ecuador i Odoo.\n"
+"==============================================================================\n"
+"\n"
+"Kontodiagram og lokalisering for Ecuador.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_gr
@@ -3665,6 +4789,12 @@ msgid ""
 "Greek accounting chart and localization.\n"
 "    "
 msgstr ""
+"\n"
+"Dette er basismodulet til administrering af kontodiagrammet for Grækenland.\n"
+"==================================================================\n"
+"\n"
+"Græsk kontodiagram og lokalisering.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_gt
@@ -3677,6 +4807,13 @@ msgid ""
 "la moneda del Quetzal. -- Adds accounting chart for Guatemala. It also includes\n"
 "taxes and the Quetzal currency."
 msgstr ""
+"\n"
+"Dette er basismodulet til administrering af kontodiagrammer for Guatemala.\n"
+"=====================================================================\n"
+"\n"
+"Agrega una nomenclatura contable para Guatemala. También icluye impuestos y\n"
+"la moneda del Quetzal. -- Adds accounting chart for Guatemala. It also includes\n"
+"taxes and the Quetzal currency."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_hn
@@ -3689,6 +4826,13 @@ msgid ""
 "moneda Lempira. -- Adds accounting chart for Honduras. It also includes taxes\n"
 "and the Lempira currency."
 msgstr ""
+"\n"
+"Dette er basismodulet til administrering af kontodiagrammet for Honduras.\n"
+"====================================================================\n"
+"    \n"
+"Agrega una nomenclatura contable para Honduras. También incluye impuestos y la\n"
+"moneda Lempira. -- Adds accounting chart for Honduras. It also includes taxes\n"
+"and the Lempira currency."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_lu
@@ -3707,6 +4851,18 @@ msgid ""
 "      see the first sheet of tax.xls for details of coverage\n"
 "    * to update the chart of tax template, update tax.xls and run tax2csv.py\n"
 msgstr ""
+"\n"
+"Dette er basismodulet for administrering af kontodiagrammet for Luxembourg\n"
+"======================================================================\n"
+"\n"
+"    * Luxembourgs officielle kontodiagram (lov fra June 2009 + 2015 diagram og skatte),\n"
+"    * Skattekodekortet for Luxembourg\n"
+"    * De primære skatte brugt i Luxembourg\n"
+"    * Standard skatteposition for lokal, intracom, extracom\n"
+"\n"
+"Bemærkninger:\n"
+"    * 2015 skattediagrammet er stort set implementeret, se det første ark af tax.xls for detaljer vedrørende dækning\n"
+"    * opdater tax.xls og kør tax2csv.py for at opdatere skattediagrams skabelonen\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ma
@@ -3732,6 +4888,12 @@ msgid ""
 "Install some generic chart of accounts.\n"
 "    "
 msgstr ""
+"\n"
+"Dette er basismodulet til administrering af det generiske regnskabsdiagram i Odoo.\n"
+"==============================================================================\n"
+"\n"
+"Installér en generisk kontodiagram.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_uk
@@ -3744,6 +4906,13 @@ msgid ""
 "    - InfoLogic UK counties listing\n"
 "    - a few other adaptations"
 msgstr ""
+"\n"
+"Dette er den seneste Britiske lokalisering nødvendig for at køre Odoo regnskab for Britisk SME'er med:\n"
+"=================================================================================================\n"
+"    - Et CT600-klar kontodiagram\n"
+"    - VAT100-klar skattestruktur\n"
+"    - InfoLogic Britiske amter liste\n"
+"    - et par andre tilpasninger"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ro
@@ -3756,6 +4925,13 @@ msgid ""
 "Romanian accounting chart and localization.\n"
 "    "
 msgstr ""
+"\n"
+"Dette modulet til at administrere regnskabsdiagram, momsstruktur, skatteposition, og skattekortlægning.\n"
+"Den tilføjer også registreringsnummer for Rumænien i Odoo.\n"
+"================================================================================================================\n"
+"\n"
+"Rumænsk regnskabsdiagram og lokalisering.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ca
@@ -3788,6 +4964,33 @@ msgid ""
 "position.\n"
 "    "
 msgstr ""
+"\n"
+"Dette er modulet til at administrere Canadisk regnskabsdiagram i Odoo.\n"
+"===========================================================================================\n"
+"\n"
+"Canadisk regnskabsdiagram og lokalisering..\n"
+"\n"
+"Skattepositioner\n"
+"----------------\n"
+"\n"
+"Ved overvejeleser af hvilke beskatninger der til tilføjes, er det afgørende hvilken provins hvori leveringen sker.\n"
+"Derfor har vi valgt at implementere det mest almene tilfælde i skattepositioner: leveringen er\n"
+"sælgerens ansvar, og udføres ved kundens lokation.\n"
+"\n"
+"Nogle eksempler:\n"
+"\n"
+"1) Du har en kunde fra en anden provins, og du levere til deres lokation.\n"
+"På kunden angives skattepositionen til deres provins.\n"
+"\n"
+"2) Du har en kunde fra en anden provins, men denne kunde kommer til din lokation\n"
+" med deres varevogn for at afhente produkterne. På kunden skal der ikke angives nogen skatteposition.\n"
+"\n"
+"3) En international sælger opkræver ikke skat. Skat kræves i tolden\n"
+" af tolderen. På sælgeren angives skattepositionen som International.\n"
+"\n"
+"4) En international sælger opkræver din provinsielle skat. De er registreret med din \n"
+"position.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_pl
@@ -3804,6 +5007,17 @@ msgid ""
 "Wewnętrzny numer wersji OpenGLOBE 1.02\n"
 "    "
 msgstr ""
+"\n"
+"Dette er modulet til administrering af regnskabsdiagrammer og skatte for Polen i Odoo.\n"
+"==================================================================================\n"
+"\n"
+"To jest moduł do tworzenia wzorcowego planu kont, podatków, obszarów podatkowych i\n"
+"rejestrów podatkowych. Moduł ustawia też konta do kupna i sprzedaży towarów\n"
+"zakładając, że wszystkie towary są w obrocie hurtowym.\n"
+"\n"
+"Niniejszy moduł jest przeznaczony dla odoo 8.0.\n"
+"Wewnętrzny numer wersji OpenGLOBE 1.02\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fr
@@ -3830,6 +5044,23 @@ msgid ""
 "\n"
 "**Credits:** Sistheo, Zeekom, CrysaLEAD, Akretion and Camptocamp.\n"
 msgstr ""
+"\n"
+"Dette er modulet til at administrere regnskabsdiagrammet for Frankrig i Odoo.\n"
+"========================================================================\n"
+"\n"
+"Dette modul gælder for virksomheder med base i det Franske fastland. Det gælder ikke\n"
+"virksomheder med base i DOM-TOM'erne (Guadeloupe, Martinique, Guyane, Réunion, Moyatte).\n"
+"\n"
+"Dette lokaliserings modul oprette moms af typen 'inklusiv moms' ti indkøb\n"
+"(det er ikke videre påkrævet når du bruger modulet 'hr_expense'). Bemærk at disse 'inklusiv moms' beskatninger ikke administreres af skattepositionerne udbudy af dette\n"
+"modul (fordi det er komplekst at administrere både 'inklusiv moms' og 'eksklusiv moms' scenarier i skattepositioner).\n"
+"\n"
+"Dette lokaliserings modul håndterer ikke scenariet hvor et Fransk fastlands virksomhed sælger tjenester til en virksomhed baseret i DOM'erne korrekt. Vi kunne administrere det i\n"
+" skattepositionerne, men det ville kræve at man differentierede mellem 'produkt' moms\n"
+" og 'tjeneste' moms. Vi anser at det er for 'tungt' at have dette med per standard i l10n_fr; virksomheder som sælger tjenester til DOM-baserede virksomheder bør opdatere \n"
+"konfigurationen af deres skatte og skattepositioner manuelt.\n"
+"\n"
+"**Anerkendelser:** Sistheo, Zeekom, CrysaLEAD, Akretion and Camptocamp.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_vn
@@ -3845,6 +5076,16 @@ msgid ""
 "    - General Solutions.\n"
 "    - Trobz\n"
 msgstr ""
+"\n"
+"Dette modul er til administrering af regnskab for Vietnam i Odoo.\n"
+"=========================================================================\n"
+"\n"
+"Dette modul gælder for virksomheder baseret på Vietnamesisk regnskabs standard (VAS) \n"
+"med kontodiagram under Circular No. 200/2014/TT-BTC\n"
+"\n"
+"**Anerkendelser:**\n"
+"    - General Solutions.\n"
+"    - Trobz\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_vn_reports
@@ -3875,6 +5116,10 @@ msgid ""
 "=================================================\n"
 "    "
 msgstr ""
+"\n"
+"Dette modul tilføjer en PAD i alle projekt formular visninger.\n"
+"=================================================\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_crm
@@ -3891,6 +5136,17 @@ msgid ""
 "modules.\n"
 "    "
 msgstr ""
+"\n"
+"Dette modul tilføjer en genvej på én eller flere muligheds sager i CRM'en.\n"
+"===========================================================================\n"
+"\n"
+"Denne genvej lader dig oprette salgsordre baseret på den valgte sag.\n"
+"Hvis forskellige sager er åbne (en liste), opretter den en salgsordre per sag.\n"
+"Sagen afsluttes derefter, og linkes til den oprettede salgsordre.\n"
+"\n"
+"Vi foreslår at du installerer dette modul, hvis du installerede både salg og crm \n"
+"modulerne.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_portal
@@ -3905,6 +5161,12 @@ msgid ""
 "of this module is to allow the display of a customer portal without having\n"
 "a dependency towards website edition and customization capabilities."
 msgstr ""
+"\n"
+"Dette modul tilføjer den påkrævede grundkode for en fuld integration af kundeportalen.\n"
+"Den indeholder grund controller klassen og grund skabeloner. Virksomheds addons vil tilføje deres specifikke skabeloner og controllere for at udvide kundeportalen.\n"
+"\n"
+"Dette modul indeholder mest kode fra odoo v10 website_portal.\n"
+"Formålet med dette modul er at gøre det muligt at vise en kundeportal, uden at skulle have en afhængighed mod hjemmeside udgaven og tilpasnings evner."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fr_sale_closing
@@ -3928,6 +5190,10 @@ msgid ""
 "the registration is confirmed.\n"
 "    "
 msgstr ""
+"\n"
+"Dette modul tilføjer understøttelse af stregkode-scanning til begivenheds administrationssystemet.\n"
+"En stregkode oprettes for hver deltagende, og printes på et kort. Når det scannes,\n"
+"godkendes registreringen."
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_margin
@@ -3940,6 +5206,13 @@ msgid ""
 "Price and Cost Price.\n"
 "    "
 msgstr ""
+"\n"
+"Dette modul tilføjer en 'margin' på salgsordre.\n"
+"=============================================\n"
+"\n"
+"Dette giver angiver indtægten gennem udregning af forskellen på enhedspris \n"
+"og omkostning.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_picking_batch
@@ -4082,6 +5355,20 @@ msgid ""
 "invoice and send propositions for membership renewal.\n"
 "    "
 msgstr ""
+"\n"
+"Dette modul gør dig istand til at administrere alle operationer for administrations medlemskaber.\n"
+"=========================================================================\n"
+"\n"
+"Den understøtte flere forskellige slags medlemmer:\n"
+"--------------------------------------\n"
+"    * Gratis medlen\n"
+"    * Associeret medlem (f.eks.: en gruppe abonnerer på et medlemsskab for alle datterselskaber)\n"
+"    * Betalende medlemmer\n"
+"    * Specielle medlemssprise\n"
+"\n"
+"Den er integreret med salg og regnskab, for at gøre det muligt for dig \n"
+"automatisk at fakturére og sende foreslag for medlemsskabsfornyelse\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_subscription
@@ -4094,6 +5381,13 @@ msgid ""
 "    - Modify subscriptions with sales orders\n"
 "    - Generate invoice automatically at fixed intervals\n"
 msgstr ""
+"\n"
+"Det modul gør det muligt for dig at administrere abonnementer.\n"
+"\n"
+"Funktioner:\n"
+"    - Opret og redigér abonnementer\n"
+"    - Modificer abonnementer med salgsordre\n"
+"    - Generere faktura automatisk ved faste intervaller\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_purchase_requisition
@@ -4106,6 +5400,12 @@ msgid ""
 "competing offers from different vendors and select the best ones. Blanket orders\n"
 "are agreements you have with vendors to benefit from a predetermined pricing.\n"
 msgstr ""
+"\n"
+"Dette modul gør dig istand til at administrere købsaftaler.\n"
+"===========================================================\n"
+"\n"
+"Administrer indkaldelse af bud og ordret ordre. Indkaldelse af bud bruges til at få\n"
+"konkurrerende tilbud fra forskellige sælgere, og vælge de bedste. Ordret ordre er aftaler du har med sælgere, for at drage fordel af en forudbestemt pris.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_byproduct
@@ -4149,6 +5449,8 @@ msgid ""
 "This module contains all the common features of Sales Management and eCommerce.\n"
 "    "
 msgstr ""
+"\n"
+"Dette moudul indeholder alle de typiske funktioner af Salgsadministration og eHandel."
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_rating_project
@@ -4172,6 +5474,11 @@ msgid ""
 "\n"
 "The service is provided by the In App Purchase Odoo platform.\n"
 msgstr ""
+"\n"
+"Dette modul giver en ramme for SMS-tesktmeddelelser\n"
+"----------------------------------------------------\n"
+"\n"
+"Tjenesten udbydes af In App Køb Odoo platformen.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_contacts
@@ -4180,6 +5487,9 @@ msgid ""
 "This module gives you a quick view of your contacts directory, accessible from your home page.\n"
 "You can track your vendors, customers and other contacts.\n"
 msgstr ""
+"\n"
+"Dette modul giver dig en hurtig visning af din kontaktbog, tilgængelig fra din hjemmeside.\n"
+"Du kan spore dine sælgerer, kunder, samt andre kontakter.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_setup
@@ -4192,6 +5502,13 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Dette modul hjælper til med at konfigurere et system ved installeringen af en ny database.\n"
+"================================================================================\n"
+"\n"
+"Viser dig en liste af applikationsfunktioner at installere fra.\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_timesheet
@@ -4208,6 +5525,16 @@ msgid ""
 "up a management by affair.\n"
 "    "
 msgstr ""
+"\n"
+"Dette modul implementerer et timeseddels system.\n"
+"==========================================\n"
+"\n"
+"Hver ansat kan indkode og spore deres tid brugt på forskellige projekter.\n"
+"\n"
+"Udbyder mange rapporter om tid og sporing af ansatte.\n"
+"\n"
+"Den er fuldstændig integreret med omkostningsregnskabs modulet. Den gør det muligt for dig at indstille en administration per affære.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_syscohada
@@ -4227,6 +5554,20 @@ msgid ""
 "    Replica of Democratic Congo, Senegal, Chad, Togo.\n"
 "    "
 msgstr ""
+"\n"
+"Dette modul implementerer regnskabsdiagrammet for OHADA området i Vest- og Centralafrika.\n"
+"===========================================================\n"
+"    \n"
+"Den gør det muligt for hvilken som helst virksomhed eller forening af administrerer finansielle regnskab.\n"
+"\n"
+"Lande der bruger OHADA er følgende:\n"
+"-------------------------------------------\n"
+"    Benin, Burkina Faso, Cameroon, Den Centralafrikanske Republik, Comorerne, Congo,\n"
+"    \n"
+"    Elfenbenskysten, Gabon, Guinea, Guinea Bissau, Ækvatorialguinea, Mali, Niger,\n"
+"    \n"
+"   Den Demokratiske Republik Congo, Senegal, Tchad, Togo.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_iban
@@ -4239,6 +5580,12 @@ msgid ""
 "with a single statement.\n"
 "    "
 msgstr ""
+"\n"
+"Dette modul installerer grundlaget for IBAN (International Bank Account Number) kontonumre, og checker deres gyldighed.\n"
+"======================================================================================================================\n"
+"\n"
+"Evnen til at udtrække de korrekt repræsenterede lokal-konti fra IBAN kontoer med ét enkelt udtog.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_association
@@ -4251,6 +5598,12 @@ msgid ""
 "membership products (schemes).\n"
 "    "
 msgstr ""
+"\n"
+"Dette modul er for at konfigurere moduler relateret til en forening.\n"
+"==============================================================\n"
+"\n"
+"Den installerer  profilen for at foreninger kan administrere begivenheder, registreringer, medlemskaber, og medlemskabsprodukter (skemaer).\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_check_printing
@@ -4261,6 +5614,10 @@ msgid ""
 "The check settings are located in the accounting journals configuration page.\n"
 "    "
 msgstr ""
+"\n"
+"Dette modul tilbyder basal funktionaliteter til at gennemføre betalinger via udprintning af checks.\n"
+"Det skal bruges som en afhængighed af moduler der tilbyder lande-specifikke check skabeloner.\n"
+"Check indstillingerne findes i regnskabsjournal konfigurations siden."
 
 #. module: base
 #: model:ir.module.module,description:base.module_purchase_mrp
@@ -4273,6 +5630,12 @@ msgid ""
 "from purchase order.\n"
 "    "
 msgstr ""
+"\n"
+"Dette modul giver brugeren evnen til at installere mrp og salgsmoduler på én gang.\n"
+"========================================================================================\n"
+"\n"
+"Det bruges i bund og grund når vi vil sporer produktionsordre oprettet købsordre.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_mrp
@@ -4285,6 +5648,12 @@ msgid ""
 "from sales order. It adds sales name and sales Reference on production order.\n"
 "    "
 msgstr ""
+"\n"
+"Dette modul giver brugeren evnen til at installere mrp og salgsmoduler på én gang.\n"
+"====================================================================================\n"
+"\n"
+"Dette bruges i bund og grund når vi vil spore produktionsordre oprettet fra salgsordre. Den tilføjer salgsnavne og salgsreferencer på produktionsordre\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_iap
@@ -4292,6 +5661,8 @@ msgid ""
 "\n"
 "This module provides standard tools (account model, context manager and helpers) to support In-App purchases inside Odoo.\n"
 msgstr ""
+"\n"
+"Dette modul giver grundværktøjer (konto model, kontekst leder og hjælpere) til support i In-App indkøb indeni Odoo.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_at
@@ -4313,6 +5684,12 @@ msgid ""
 "Use for update your text memo in real time with the following user that you invite.\n"
 "\n"
 msgstr ""
+"\n"
+"Dette modul opdaterer memoer inde i Odoo fra en ekstern pad\n"
+"=================================================================\n"
+"\n"
+"Brug for at opdatere dine tekst-memoer i realtid med de følgende brugere som du inviterer.\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_procurement_jit
@@ -4333,6 +5710,15 @@ msgid ""
 "still unreserve a picking.\n"
 "    "
 msgstr ""
+"\n"
+"Dette modul vil automatisk reservere pluk fra lager når en salgsorder godkendes.\n"
+"=============================================================================================\n"
+"Ved godkendelse af en salgsorder, eller når kvantiteter er tilføjet, vil plukningen der reserverer fra lager blive reserveret hvis de nødvendige mængder er tilgængelige.\n"
+"\n"
+"Ved den mest simple konfiguration er dette en nem at arbejde ud fra først til mølle. Dog, når det ikke er installeret kan du bruge manuel reservation, eller køre planlægningerne der hvor systemet vil tage højde for den forventede dato samt prioriteten.\n"
+"\n"
+"Hvis denne automatiske reservation ville reservere for meget, kan du stadig omstøde reserveringen af et pluk.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_delivery_ups
@@ -4350,6 +5736,9 @@ msgid ""
 "This module will test the main workflow of Odoo.\n"
 "It will install some main apps and will try to execute the most important actions.\n"
 msgstr ""
+"\n"
+"Dette modul vil teste Odoos primære workflow.\n"
+"Det vil installere visse primære applikationer, og vil forsøge at udføre de vigtigste handlinger.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_kanban_gauge
@@ -4357,6 +5746,8 @@ msgid ""
 "\n"
 "This widget allows to display gauges using d3 library.\n"
 msgstr ""
+"\n"
+"Denne widget gør det muligt at vise målinger via d3 biblioteket.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_product_expiry
@@ -4374,6 +5765,18 @@ msgid ""
 "\n"
 "Also implements the removal strategy First Expiry First Out (FEFO) widely used, for example, in food industries.\n"
 msgstr ""
+"\n"
+"Følg diverse datoer på produkter og produktnumre.\n"
+"======================================================\n"
+"\n"
+"Følgende datoer kan spores:\n"
+"-------------------------------\n"
+"    - end of life\n"
+"    - bedst før dato\n"
+"    - fjernelses dato\n"
+"    - advarsels dato\n"
+"\n"
+"Implementerer også en Første Udløbsdato Først Ud (FEFO) fjernelses strategien, alment benyttet i, for eksempel, fødevareindustrier.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_transifex
@@ -4392,6 +5795,16 @@ msgid ""
 "project.\n"
 "        "
 msgstr ""
+"\n"
+"Transifex integration\n"
+"=====================\n"
+"Dette modul vil opføre et link til Transifex projektet i oversættelsesvisningen.\n"
+"Formålet med dette modul er at gøre oversættelsen af de primære moduler hurtigere.\n"
+"\n"
+"For at fungere, bruger Odoo Transifex konfigurationsfiler `.tx/config` for at finde projektkilden. Brugerdefinerede moduler vil ikke blive oversat (da de ikke er udgivet på det primære Transifex projekt).\n"
+"\n"
+"Sproget brugeren prøver at oversætte skal være aktiveret på Transifex projektet.\n"
+"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_tr
@@ -4415,6 +5828,11 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"De Forenede Arabiske Emiraters regnskabsdiagram og lokalisering.\n"
+"=======================================================\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_us
@@ -4424,6 +5842,10 @@ msgid ""
 "==================================\n"
 "    "
 msgstr ""
+"\n"
+"Amerikas Forenede Stater - Kontoplan.\n"
+"==================================\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_sales_team
@@ -4467,6 +5889,25 @@ msgid ""
 "only the country code will be validated.\n"
 "    "
 msgstr ""
+"\n"
+"Momsvalidering af partners moms.\n"
+"=========================================\n"
+"\n"
+"Efter dette modul er installeret, vil værdier indtastet i Momsfeltet ved partnere\n"
+"blive valideret for alle understøttede lande. Landet udledes fra Alfa-2 koden som præfikserer momstallet, f.eks. vil ``BE0477472701``\n"
+"blive valideret ved brug af Belgiske regler.\n"
+"\n"
+"Der er to forskellige niveauer indenfor Momsvalidering:\n"
+"--------------------------------------------------------\n"
+"    * Per standard udføres et simpelt off-line check via de kendte valideringsregler for landet; normalvis et simpelt ciffer check. Dette er hurtigt og altid tilgængeligt, men tillader tal der muligvis ikke er allokerede eller gyldige længere.\n"
+"\n"
+"    * Når indstillingen \"VAT VIES Check\" er aktiveret (i konfigurationen af brugerens\n"
+" virksomhed), vil momstal i stedet blive indsendt til den online EU VIES\n"
+"      database, hvilket virkelig vil verificere at tallet er gyldigt og i øjeblikket allokeret til en europæisk virksomhed. Dette er en smule langsommere end det simple\n"
+"off-line check, kræver en internetforbindelse, og kan muligvis ikke være tilgængelig hele tiden. Hvis tjenesten ikke er tilgængelig, eller ikke understøtter det efterspurgte land (f.eks. for ikke-europæiske lande), vil et simpelt check udføres i stedet.\n"
+"\n"
+"Understøttede lande indbefatter i øjeblikket EU lande samt et par ikke-EU lande, så som Chile, Colombia, Mexico, Norge, og Rusland. For ikke understøttede lande vil kun landekoden blive valideret.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_fleet
@@ -4488,6 +5929,19 @@ msgid ""
 "* Show all costs associated to a vehicle or to a type of service\n"
 "* Analysis graph for costs\n"
 msgstr ""
+"\n"
+"Køretøj, leje, forsikring, omkostning\n"
+"==================================\n"
+"Med dette modul hjælper Odoo dig med at administrere alle dine køretøjer, kontrakterne samt tjenesterne forbundet med de køretøjer, brandstofs logning, omkostninger, og mange andre funktioner som er nødvendige for administrationen af din flåde af køretøj(er)\n"
+"\n"
+"Primære funktioner\n"
+"-------------\n"
+"* Tilføj køretøjer til din flåde\n"
+"* Administrer kontrakter for køretøjer\n"
+"* Påmindelse om hvornår en kontrakt udløber\n"
+"* Tilføj tjenester, brandstof logning, kilometertæller værdier for alle køretøjer\n"
+"* Vis alle omkostninger forbundet med et køretøj eller form for tjeneste\n"
+"* Graf-analyse af omkostninger\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_account
@@ -4507,6 +5961,20 @@ msgid ""
 "* Stock Inventory Value at given date (support dates in the past)\n"
 "    "
 msgstr ""
+"\n"
+"WMS Regnskabs modul\n"
+"======================\n"
+"Dette modul opretter et link mellem 'lager' og 'konto' modulerne, og gør det muligt for dig at oprette regnskabsposteringer for at værdisætte dine lagerbevægelser \n"
+"\n"
+"Nøgle funktioner\n"
+"------------\n"
+"* Lagervaluering (periodisk eller automatisk)\n"
+"* Fakturering fra pluk\n"
+"\n"
+"Instrumentbræt / rapporter fra lagerhus administration indbefatter:\n"
+"------------------------------------------------------\n"
+"* Værdi af lagerinventar på en given dato (understøtter fortidige datoer)\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_helpdesk_forum
@@ -4520,6 +5988,14 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Hjemmeside fora integration for helpdesk modulet\n"
+"=================================================\n"
+"\n"
+"    Gør det muligt for dine hold at have et relateret fora til at besvare kunders spørgsmål.\n"
+"    Omdan sager til spørgsmål på forummet med et enkelt klik.\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_gengo
@@ -4545,6 +6021,16 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Hjemmeside IM Livechat integration for helpdesk moduler\n"
+"=======================================================\n"
+"\n"
+"Funktioner:\n"
+"\n"
+"    - Hav en team-relateret livechat kanal til at besvare dine kunders spørgsmål.\n"
+"    - Opret nemt nye sager via kommandoer i kanalen.\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_helpdesk_slides
@@ -4557,6 +6043,13 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Hjemmeside dias integration med helpdesk modulet\n"
+"==================================================\n"
+"\n"
+"    Tilføjer dias præsentationer til dine hold, så kunder der vil have hjælp kan se disse før de indsender nye sager.\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_membership
@@ -4609,12 +6102,16 @@ msgid ""
 "Works with Worldline keys version 2.0, contains implementation of\n"
 "payments acquirer using Worldline SIPS."
 msgstr ""
+"\n"
+"Worldline SIPS betalingsmodtager for online betalinegr\n"
+"\n"
+"Fungerer med Worldline keys version 2.0, indeholder implementering af betalingsmodtager via Worldline SIPS."
 
 #. module: base
 #: code:addons/base/ir/ir_ui_view.py:1054
 #, python-format
 msgid " - %r in %s=%r"
-msgstr ""
+msgstr " - %r i %s=%r"
 
 #. module: base
 #: model:ir.module.module,description:base.module_inter_company_rules
@@ -4623,6 +6120,9 @@ msgid ""
 "\n"
 "    Supported documents are SO, PO and invoices/credit notes.\n"
 msgstr ""
+"Modul til synkronisering af dokumenter mellem flere virksomheder. For eksempel gør den det muligt for dig at få en salgsordre oprettet automatisk når en købsordre godkendes ved et af systemets andre virksomheder som sælger, og omvendt.\n"
+"\n"
+"   Understøttede dokumenter er salgsordre, købsordre, fakturaer og kreditnota.\n"
 
 #. module: base
 #: code:addons/model.py:148
@@ -4631,6 +6131,8 @@ msgid ""
 " another model requires the record being deleted. If possible, archive it "
 "instead."
 msgstr ""
+" et andet modul kræver at posteringen er slettet. Hvis muligt, arkivér "
+"istedet."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
@@ -4640,17 +6142,17 @@ msgstr "%A - fuldstændigt ugedagsnavn"
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
 msgid "%B - Full month name.\""
-msgstr ""
+msgstr "%B - månedens fulde navn.\""
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
 msgid "%H - Hour (24-hour clock) [00,23].\""
-msgstr ""
+msgstr "%H - Timer (24-timers ur) [00,23].\""
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
 msgid "%I - Hour (12-hour clock) [01,12].\""
-msgstr ""
+msgstr "%I - Timer (12-timers ur) [01,12].\""
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
@@ -4695,7 +6197,7 @@ msgstr "%m - Måned nummer [01,12].\""
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
 msgid "%p - Equivalent of either AM or PM.\""
-msgstr ""
+msgstr "%p - Tilsvarende til enten AM eller PM.\""
 
 #. module: base
 #: code:addons/base/ir/ir_filters.py:38
@@ -4765,7 +6267,7 @@ msgstr "Eller dit foretrukne teksteditor"
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodulereference
 msgid ", readonly"
-msgstr ""
+msgstr ", skrivebeskyttet"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodulereference
@@ -4779,6 +6281,8 @@ msgid ""
 "- Create/update: a mandatory field is not set.\n"
 "- Delete: another model requires the record being deleted. If possible, archive it instead."
 msgstr ""
+"- Opret/opdatér: et obligatorisk felt er ikke angivet.\n"
+"- Slet: et andet modul kræver at posteringen slettes. Om muligt, arkivér det istedet."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -4798,7 +6302,7 @@ msgstr "- grupper ="
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "- ondelete ="
-msgstr ""
+msgstr "- ondelete ="
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -4813,7 +6317,7 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "- size ="
-msgstr ""
+msgstr "- størrelse ="
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.module_form
@@ -4843,7 +6347,7 @@ msgstr "-Dette modul ekskluderer ikke andre moduler."
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
 msgid "1. %b, %B         ==&gt; Dec, December"
-msgstr ""
+msgstr "1. %b, %B         ==&gt; Dec, December"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_rule_form
@@ -4869,7 +6373,7 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
 msgid "3. %y, %Y         ==&gt; 08, 2008"
-msgstr ""
+msgstr "3. %y, %Y         ==&gt; 08, 2008"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_rule_form
@@ -4883,32 +6387,32 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
 msgid "4. %d, %m         ==&gt; 05, 12"
-msgstr ""
+msgstr "4. %d, %m         ==&gt; 05, 12"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
 msgid "5. %H:%M:%S      ==&gt; 18:25:20"
-msgstr ""
+msgstr "5. %H:%M:%S      ==&gt; 18:25:20"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
 msgid "6. %I:%M:%S %p  ==&gt; 06:25:20 PM"
-msgstr ""
+msgstr "6. %I:%M:%S %p  ==&gt; 06:25:20 PM"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
 msgid "7. %j              ==&gt; 340"
-msgstr ""
+msgstr "7. %j              ==&gt; 340"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
 msgid "8. %S              ==&gt; 20"
-msgstr ""
+msgstr "8. %S              ==&gt; 20"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
 msgid "9. %w              ==&gt; 5 ( Friday is the 6th day)"
-msgstr ""
+msgstr "9. %w              ==&gt; 5 ( Fredag er den 6. dag)"
 
 #. module: base
 #: selection:report.paperformat,format:0
@@ -4936,24 +6440,24 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
 msgid "<code>Warning</code>: Warning Exception to use with <code>raise</code>"
-msgstr ""
+msgstr "<code>Advarsel</code>: Advarselsflag til brug med <code>flag</code>"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_model_fields_form
 #: model:ir.ui.view,arch_db:base.view_model_form
 msgid "<code>datetime</code> (Python module)"
-msgstr ""
+msgstr "<code>datetime</code> (Python modul)"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_model_fields_form
 #: model:ir.ui.view,arch_db:base.view_model_form
 msgid "<code>dateutil</code> (Python module)"
-msgstr ""
+msgstr "<code>dateutil</code> (Python modul)"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
 msgid "<code>env</code>: Odoo Environment on which the action is triggered"
-msgstr ""
+msgstr "<code>env</code>: Odoo miljø hvorpå en handling udløses"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
@@ -4961,6 +6465,8 @@ msgid ""
 "<code>log(message, level='info')</code>:logging function to record debug "
 "information in <code>ir.logging</code> table"
 msgstr ""
+"<code>log(message, level='info')</code>:loging funktion til at optage "
+"fejlfindingsinformation i <code>ir.logging</code> tabel"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
@@ -4968,12 +6474,15 @@ msgid ""
 "<code>model</code>: Odoo Model of the record on which the action is "
 "triggered; is a void recordset"
 msgstr ""
+"<code>model</code>: Odoo Model af posteringen hvorpå handlingen udløses; er "
+"et ugyldigt posteringssæt "
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
 msgid ""
 "<code>record</code>: record on which the action is triggered; may be be void"
 msgstr ""
+"<code>record</code>: postering hvorpå handlingen udløses; kan være ugyldig"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
@@ -4981,18 +6490,20 @@ msgid ""
 "<code>records</code>: recordset of all records on which the action is "
 "triggered in multi mode; may be void"
 msgstr ""
+"<code>records</code>: datasæt af alle data hvorpå en handling udløses i "
+"multi tilstand; kan være ugyldig"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_model_fields_form
 #: model:ir.ui.view,arch_db:base.view_model_form
 msgid "<code>self</code> (the set of records to compute)"
-msgstr ""
+msgstr "<code>self</code> (sættet af data der skal beregnes)"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_model_fields_form
 #: model:ir.ui.view,arch_db:base.view_model_form
 msgid "<code>time</code> (Python module)"
-msgstr ""
+msgstr "<code>time</code> (Python modul)"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
@@ -5000,6 +6511,8 @@ msgid ""
 "<code>time</code>, <code>datetime</code>, <code>dateutil</code>, "
 "<code>timezone</code>: useful Python libraries"
 msgstr ""
+"<code>time</code>, <code>datetime</code>, <code>dateutil</code>, "
+"<code>timezone</code>: nyttige Python biblioteker"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_currency_kanban
@@ -5009,12 +6522,12 @@ msgstr "<strong><span>Nuværende kurs: </span></strong>"
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "<strong>Apps</strong>"
-msgstr ""
+msgstr "<strong>Applikationer</strong>"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "<strong>Attribute</strong>"
-msgstr ""
+msgstr "<strong>Egenskaber</strong>"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodulereference
@@ -5039,7 +6552,7 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "<strong>Inherited</strong>"
-msgstr ""
+msgstr "<strong>Nedarvet</strong>"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -5079,7 +6592,7 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "<strong>Seq</strong>"
-msgstr ""
+msgstr "<strong>Sekv</strong>"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_base_module_upgrade
@@ -5349,6 +6862,69 @@ msgid ""
 "\n"
 ".. figure:: static/description/invoice_custom_xml.png\n"
 msgstr ""
+"==========================================\n"
+"Odoo Mexico lokalisering for lager / landing\n"
+"==========================================\n"
+"\n"
+"Dette modul udvider funktionaliteten af den Mexicanske lokalisering til at understøtte\n"
+"toldnumre forbundet med landede omkostninger, når du opretter elektroniske\n"
+" fakturaer\n"
+"\n"
+"Brug\n"
+"=====\n"
+"\n"
+"For at bruge dette modul, skal du:\n"
+"\n"
+"* Oprette en ny købsordre på et udenlandsk produkt. Landede omkostninger er\n"
+"kun mulige for produkter konfigurerede med 'automatiserede' værdisætning med\n"
+"'FIFO' omkostningsmetode. Omkostningsmetoden er konfigureret i produktkategorien.\n"
+"\n"
+".. figur:: static/description/purchase_order_new.png\n"
+"\n"
+"* Modtag produktet fra købsordren\n"
+"\n"
+".. figur:: static/description/picking_done_purchase.png\n"
+"\n"
+"* Gå til Inventar -> Inventar kontrol -> Landede omkostning\n"
+"\n"
+"* Opret en ny landet omkostning som indikerer plukningen af købsordren\n"
+"og nummeret på toldinformationen (andragende). Landede omkostninger er kun muligt for produkter konfigureret i realtids-vurdering med rigtige pris omkostningsmetoder. Omkostningsmetoden er konfigureret under produktkategorien\n"
+"\n"
+".. figur:: static/description/landed_cost_picking.png\n"
+"\n"
+"* Start ved at opret specifikke produkter til at indikere dine forskellige landede omkostninger, så som fragt, forsikring, og told.\n"
+"\n"
+"  gå til Inventar -> Konfiguration -> Landede omkostningstyper. Landede omkostninger er kun mulige for produkter konfigureret i realtids-vurderinger med rigtige pris omkostningsmetoder. Omkostningsmetoden er konfigureret under produktkategorien.\n"
+"\n"
+".. figur:: static/description/product_landed_cost.png\n"
+"\n"
+"* Klik på Udregn knappen og se hvorledes de landede omkostninger deles over pluklinjerne.\n"
+"\n"
+".. figur:: static/description/compute_landed_cost.png\n"
+"\n"
+"* For at godkende fordelingen af landede omkostninger, klik på Godkend knappen.\n"
+"\n"
+".. figur:: static/description/validate_landed_cost.png\n"
+"\n"
+"* Opret en salgsordre for produktet købt fra udlandet\n"
+"\n"
+".. figur:: static/description/sale_order_new.png\n"
+"\n"
+"* Levér produktet forbundet med salgsordren\n"
+"\n"
+".. figur:: static/description/picking_done_sale.png\n"
+"\n"
+"* Opret og valider en ny faktura forbundet med salgsordren\n"
+"\n"
+".. figur:: static/description/validate_invoice_customs.png\n"
+"\n"
+"* Toldinformationen findes i linjerne af fakturaen forbundet med hvert produkt.\n"
+"\n"
+".. figur:: static/description/invoice_custom_pedimento.png\n"
+"\n"
+"* Check den elektroniske faktura forbundet med produktet, hvor knudepunktet for toldinformationer er vist\n"
+"\n"
+".. figur:: static/description/invoice_custom_xml.png\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mx_edi_customs
@@ -5403,7 +6979,7 @@ msgstr ""
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_A
 msgid "A AGRICULTURE, FORESTRY AND FISHING"
-msgstr ""
+msgstr "EN AGRIKULTUR, SKOVHUGST OG FISKERI"
 
 #. module: base
 #: code:addons/models.py:2826
@@ -5452,12 +7028,12 @@ msgstr "Et modul til at teste import/eksport."
 #. module: base
 #: model:ir.module.module,description:base.module_test_new_api
 msgid "A module to test the API."
-msgstr ""
+msgstr "Et modul til testning af API'en"
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_rpc
 msgid "A module to test the RPC requests."
-msgstr ""
+msgstr "Et modul til test af RPC anmodninger."
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_uninstall
@@ -5467,17 +7043,17 @@ msgstr "Et modul til at teste afinstallationsfunktionen."
 #. module: base
 #: model:ir.module.module,description:base.module_test_translation_import
 msgid "A module to test translation import."
-msgstr ""
+msgstr "Et modul til at teste import af oversættelse."
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_assetsbundle
 msgid "A module to verify the Assets Bundle mechanism."
-msgstr ""
+msgstr "Et modul til at bekræfte aktiver bundle-mekanismen."
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_inherits
 msgid "A module to verify the inheritance using _inherits."
-msgstr ""
+msgstr "Et modul til at bekræfte nedarvningen ved brug af _inherits."
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_inherit
@@ -5623,17 +7199,17 @@ msgstr "Adgangstoken"
 #. module: base
 #: model:res.groups,name:base.group_private_addresses
 msgid "Access to Private Addresses"
-msgstr ""
+msgstr "Adgang til privat-adresser"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_analytic_default
 msgid "Account Analytic Defaults"
-msgstr ""
+msgstr "Kontoanalyse standarder"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_bank_statement_import
 msgid "Account Bank Statement Import"
-msgstr ""
+msgstr "Kontoudtog importering"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_localization_account_charts
@@ -5673,17 +7249,17 @@ msgstr "Konto TaxCloud"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_account_taxcloud
 msgid "Account TaxCloud - Ecommerce"
-msgstr ""
+msgstr "Konto TaxCloud - eHandle"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_account_taxcloud
 msgid "Account TaxCloud - Sale"
-msgstr ""
+msgstr "Konto TaxCloud - Salg"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_payment
 msgid "Account and Payment Link and Portal"
-msgstr ""
+msgstr "Konto, betalingslink, og portal"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting
@@ -5744,6 +7320,20 @@ msgid ""
 "\n"
 "Note: total digits configured by default are 6.\n"
 msgstr ""
+"Regnskabsdiagram for Holland\n"
+"================================\n"
+"\n"
+"Dette modul er speciallavet til at administrere regnskabsfunktionaliteten i henhold til Hollandsk bedste praksis..\n"
+"\n"
+"Dette modul indeholder det Hollandske kontooversigt og moms skema. Dette skema er lavet til de mest almindelige virksomheder, og er derfor brugbare for stort set alle virksomheder.\n"
+"\n"
+"Momskontoerne er forbundet med det samme for at oprette de nødvendige rapporter. Eksempler på dette rapporterer interkommunitære transaktioner.\n"
+"\n"
+"Efter installering af dette modul vil konfigurationen blive aktiveret.\n"
+"Vælg kontooversigten med navnet \"Holland - Regnskab\".\n"
+"Indtast herefter navnet på virksomheden, alle cifre i  kontooversigten, kontonummer, og standard valutaen.\n"
+"\n"
+"Bemærk: Det totale antal cifre konfigureret er per standard 6.\n"
 
 #. module: base
 #: selection:ir.actions.act_url,binding_type:0
@@ -5788,7 +7378,7 @@ msgstr "Navn på Handling"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_url_target
 msgid "Action Target"
-msgstr ""
+msgstr "Handlings mål"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_server_state
@@ -5812,12 +7402,12 @@ msgstr "Handlingstype"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_url_url
 msgid "Action URL"
-msgstr ""
+msgstr "Handlings URL"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_window_usage
 msgid "Action Usage"
-msgstr ""
+msgstr "Handlings brug"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_sequence_actions
@@ -5872,17 +7462,17 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_transifex
 msgid "Add a link to edit a translation in Transifex"
-msgstr ""
+msgstr "Tilføj et link til at redigere en oversættelse i Transifex"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_base_address_city
 msgid "Add a many2one field city on addresses"
-msgstr ""
+msgstr "Tilføj et many2one felt by på adresser"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_delivery_barcode
 msgid "Add barcode scanning facilities to Delivery."
-msgstr ""
+msgstr "Tilføj stregkode scannings faciliteter til levering."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_stock_barcode
@@ -5892,7 +7482,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_event_barcode
 msgid "Add barcode scanning feature to event management."
-msgstr ""
+msgstr "tilføj stregkode scannings funktioner til begivenhedsadministrering."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_base_address_extended
@@ -6009,13 +7599,14 @@ msgstr "Administration"
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_N
 msgid "Administrative"
-msgstr ""
+msgstr "Administrative"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_country_state_name
 msgid ""
 "Administrative divisions of a country. E.g. Fed. State, Departement, Canton"
 msgstr ""
+"Administrative delinger af lande. F.eks. føderal, stat, afdeling, kanton"
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:922 code:addons/base/ir/ir_model.py:1034
@@ -6027,12 +7618,12 @@ msgstr "Administrator adgang er nødvendig for at afinstallere et modul"
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_country_form
 msgid "Advanced Address Formatting"
-msgstr ""
+msgstr "Avanceret adresse formatering"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_track
 msgid "Advanced Events"
-msgstr ""
+msgstr "Avancerede begivenheder"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.act_report_xml_view
@@ -6045,12 +7636,12 @@ msgstr "Avancerede egenskaber"
 #: model:ir.module.module,description:base.module_payment_adyen
 #: model:ir.module.module,shortdesc:base.module_payment_adyen
 msgid "Adyen Payment Acquirer"
-msgstr ""
+msgstr "Adyen betalingsmodtager"
 
 #. module: base
 #: selection:ir.module.module,license:0
 msgid "Affero GPL-3"
-msgstr ""
+msgstr "Affero GPL-3"
 
 #. module: base
 #: model:res.country,name:base.af
@@ -6060,7 +7651,7 @@ msgstr ""
 #. module: base
 #: selection:res.country,name_position:0
 msgid "After Address"
-msgstr ""
+msgstr "Efter adresse"
 
 #. module: base
 #: selection:res.currency,position:0
@@ -6117,7 +7708,7 @@ msgstr "Tillader brugertilpasning af en rapport."
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_coupon_delivery
 msgid "Allows to offer free shippings in coupon reward"
-msgstr ""
+msgstr "Tillad at tilbyde gratis fragt i kupon belønning"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hw_posbox_upgrade
@@ -6171,6 +7762,9 @@ msgid ""
 "An arbitrary string, interpreted by the client according to its own needs "
 "and wishes. There is no central tag repository across clients."
 msgstr ""
+"En tilfældig string, fortolket af klienten i henhold til dens egne behov og "
+"ønsker. Der er ikke noget centralt tag opbevaringssted henover flere "
+"klienter."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_module_module_auto_install
@@ -6179,6 +7773,9 @@ msgid ""
 " its dependencies are satisfied. If the module has no dependency, it is "
 "always installed."
 msgstr ""
+"Et auto-installérbart modul som automatisk installeres af systemet når alle "
+"dets afhængigheder er tilfredsstillet. Hvis modulet ikke har nogle "
+"afhængigheder, er den altid installeret."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_analytic
@@ -6232,6 +7829,8 @@ msgid ""
 "Appears by default on the top right corner of your printed documents (report"
 " header)."
 msgstr ""
+"Vises per standard i det øverste højre hjørne af dine printede dokumenter "
+"(rapport hoved)."
 
 #. module: base
 #: model:ir.model,name:base.model_ir_module_category
@@ -6278,7 +7877,7 @@ msgstr "Anvend planlagte opgraderinger"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_rule_perm_create
 msgid "Apply for Create"
-msgstr ""
+msgstr "Gør gældende for kasse"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_rule_perm_unlink
@@ -6288,12 +7887,12 @@ msgstr "Godkend for slet"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_rule_perm_read
 msgid "Apply for Read"
-msgstr ""
+msgstr "Gør gældende for læs"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_rule_perm_write
 msgid "Apply for Write"
-msgstr ""
+msgstr "Gør gældende for skriv"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_calendar
@@ -6322,7 +7921,7 @@ msgstr "Apps til eksport"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_module_upgrade_module_info
 msgid "Apps to Update"
-msgstr ""
+msgstr "Applikationer der skal opdateres"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -6332,12 +7931,12 @@ msgstr "Apps:"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view_arch_db
 msgid "Arch Blob"
-msgstr ""
+msgstr "Arch blob"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view_arch_fs
 msgid "Arch Filename"
-msgstr ""
+msgstr "Arch filnavn"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_view_form
@@ -6367,7 +7966,7 @@ msgstr "Argentina - Regnskabsrapporter"
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_act_client_params
 msgid "Arguments sent to the client along with the view tag"
-msgstr ""
+msgstr "Argumenter sendt til klient sammen med visnings tagget"
 
 #. module: base
 #: model:res.country,name:base.am
@@ -6377,7 +7976,7 @@ msgstr "Armenien"
 #. module: base
 #: model:res.country,name:base.aw
 msgid "Aruba"
-msgstr ""
+msgstr "Aruba"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_asset
@@ -6387,12 +7986,12 @@ msgstr "Styring af aktiver"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_paperformat_report_ids
 msgid "Associated reports"
-msgstr ""
+msgstr "Tilknyttede rapporter"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_association
 msgid "Associations Management"
-msgstr ""
+msgstr "Tilknytnings administration"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_membership
@@ -6437,7 +8036,7 @@ msgstr "Vedhæftede filer"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_document
 msgid "Attachments List and Document Indexation"
-msgstr ""
+msgstr "Vedhæftnings liste og dokument indeksering"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_hr_attendance
@@ -6457,7 +8056,7 @@ msgstr "Australien"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_au
 msgid "Australian - Accounting"
-msgstr ""
+msgstr "Australsk - regnskab"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_au_reports
@@ -6473,12 +8072,12 @@ msgstr "Østrig"
 #: model:ir.module.module,shortdesc:base.module_l10n_at
 #: model:ir.module.module,shortdesc:base.module_l10n_at_reports
 msgid "Austria - Accounting"
-msgstr ""
+msgstr "Østrig - regnskab"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_auth_ldap
 msgid "Authentication via LDAP"
-msgstr ""
+msgstr "Autentificering via LDAP"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module_author
@@ -6515,12 +8114,12 @@ msgstr "Automatiseret handling"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_automation
 msgid "Automated Action Rules"
-msgstr ""
+msgstr "Automatiserede handlings roller"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_automation_hr_contract
 msgid "Automated Action based on Employee Contracts"
-msgstr ""
+msgstr "Automatiserede handlinger baseret på ansattes kontrakter"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_gengo
@@ -6537,6 +8136,8 @@ msgstr "Automatisk Installation"
 #, python-format
 msgid "Automatic install of downloaded Apps is currently disabled."
 msgstr ""
+"Automatiseret installering af hentede applikationer som i øjeblikket af "
+"deaktiverede"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_translation_state
@@ -6544,6 +8145,8 @@ msgid ""
 "Automatically set to let administators find new terms that might need to be "
 "translated"
 msgstr ""
+"Anvend automatisk for at lade administratorer finde nye termer som muligvis "
+"skal oversættes"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_automation
@@ -6563,7 +8166,7 @@ msgstr "Aserbajdsjan"
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_B
 msgid "B MINING AND QUARRYING"
-msgstr ""
+msgstr "B MINEDRIFT OG STENBRUD"
 
 #. module: base
 #: selection:report.paperformat,format:0
@@ -6692,7 +8295,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,help:base.field_res_company_bank_ids
 msgid "Bank accounts related to this company"
-msgstr ""
+msgstr "Bank konti forbundet med denne virksomhed"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_res_bank_form
@@ -6721,12 +8324,12 @@ msgstr "Stregkodescanner Hardware Driver"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_barcodes_mobile
 msgid "Barcode in Mobile"
-msgstr ""
+msgstr "Stregkode i mobil"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_barcodes_mobile
 msgid "Barcode scan in Mobile"
-msgstr ""
+msgstr "Stregkode scanning i mobil"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_barcodes
@@ -6771,12 +8374,12 @@ msgstr "Standard egenskaber"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_import
 msgid "Base import"
-msgstr ""
+msgstr "Basis import"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_import_module
 msgid "Base import module"
-msgstr ""
+msgstr "Basis import modul"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_partner
@@ -6793,7 +8396,7 @@ msgstr "Grundlag for visning"
 #: model:ir.cron,cron_name:base.autovacuum_job
 #: model:ir.cron,name:base.autovacuum_job
 msgid "Base: Auto-vacuum internal data"
-msgstr ""
+msgstr "Base: Auto-rens intern data"
 
 #. module: base
 #: model:ir.actions.server,name:base.action_server_module_immediate_install
@@ -6803,12 +8406,12 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_web_grid
 msgid "Basic 2D Grid view for odoo"
-msgstr ""
+msgstr "Fundamental 2D gitter visning til odoo"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_iap
 msgid "Basic models and helpers to support In-App purchases."
-msgstr ""
+msgstr "Fundamentale modeller og hjælpere til support i In-app køb."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_batch_deposit
@@ -6818,7 +8421,7 @@ msgstr ""
 #. module: base
 #: selection:res.country,name_position:0
 msgid "Before Address"
-msgstr ""
+msgstr "Før adresse"
 
 #. module: base
 #: selection:res.currency,position:0
@@ -6840,7 +8443,7 @@ msgstr "Hviderusland"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_intrastat
 msgid "Belgian Intrastat Declaration"
-msgstr ""
+msgstr "Belgisk Intrastat erklæring"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_intrastat_2019
@@ -6870,22 +8473,22 @@ msgstr "Belgien - Regnskabsrapporter"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_coda
 msgid "Belgium - Import Bank CODA Statements"
-msgstr ""
+msgstr "Belgien - Importér bank CODA udtog"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll
 msgid "Belgium - Payroll"
-msgstr ""
+msgstr "Belgien - lønninger"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll_fleet
 msgid "Belgium - Payroll - Fleet"
-msgstr ""
+msgstr "Belgien - lønninger - flåde"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll_account
 msgid "Belgium - Payroll with Accounting"
-msgstr ""
+msgstr "Belgien - Lønninger med regnskab"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_invoice_bba
@@ -7010,7 +8613,7 @@ msgstr ""
 #. module: base
 #: selection:res.company,external_report_layout:0
 msgid "Boxed"
-msgstr ""
+msgstr "Boxet"
 
 #. module: base
 #: model:res.country,name:base.br
@@ -11693,6 +13296,8 @@ msgid ""
 "If this field is empty, the view applies to all users. Otherwise, the view "
 "applies to the users of those groups only."
 msgstr ""
+"Hvis dette felt er tomt, gælder view'et for alle brugere. Ellers, gælder "
+"view'et kun for brugere af disse grupper."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_ui_view_active
@@ -11702,6 +13307,9 @@ msgid ""
 "* if False, the view currently does not extend its parent but can be enabled\n"
 "         "
 msgstr ""
+"Hvis view er nedarvet,\n"
+"* hvis Sandt, forlænges view'et altid til ophavet\n"
+"* hvis Falskt, forlænges view'et ikke på nuværende tidspunkt til ophavet, men det kan aktiveres"
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_country_state
@@ -15526,6 +17134,11 @@ msgid ""
 "(<xpath/>) are applied, and the result is used as if it were this view's\n"
 "actual arch.\n"
 msgstr ""
+"Gælder kun hvis denne visning nedarver fra en anden (inherit_id er ikke falsk/nulværdi).\n"
+"\n"
+"* hvis extension (standard), hvis denne visning er efterspurgt, slås den nærmeste primære visning op (via inherit_id), hvorpå all visninger nedarver fra denne med denne\n"
+"visnings-model anvendt\n"
+"* hvis primary,  gennemkøres den nærmeste primære visning fuldt (selv hvis den bruger en anden model end denne), derefter er denne visnings nedarvnings specifikationer (<xpath/>) anvendt, og resultatet bliver brugt som var det denne visnings faktiske arch.\n"
 
 #. module: base
 #: sql_constraint:res.currency.rate:0
@@ -19849,7 +21462,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,help:base.field_res_lang_code
 msgid "This field is used to set/get locales for user"
-msgstr ""
+msgstr "Dette felt bliver brugt til at sætte/modtage lokaler for brugeren"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.wizard_lang_export

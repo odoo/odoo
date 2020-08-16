@@ -22,6 +22,7 @@
 # Rasmus Værum <rasmus@niova.dk>, 2019
 # lhmflexerp <lhm@flexerp.dk>, 2019
 # Sanne Kristensen <sanne@vkdata.dk>, 2020
+# Mads Søndergaard, 2020
 # 
 msgid ""
 msgstr ""
@@ -29,7 +30,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-03-29 09:07+0000\n"
 "PO-Revision-Date: 2017-09-20 10:13+0000\n"
-"Last-Translator: Sanne Kristensen <sanne@vkdata.dk>, 2020\n"
+"Last-Translator: Mads Søndergaard, 2020\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2474,6 +2475,9 @@ msgid ""
 "account if this is a Customer Invoice or Vendor Credit Note, otherwise a "
 "Partner bank account number."
 msgstr ""
+"Kontonummer hvortil fakturaen vil blive betalt. En virksomheds bankkonto, "
+"hvis dette er en kundefaktura eller leverandør-kreditnota, ellers et Partner"
+" bank kontonummer"
 
 #. module: account
 #. openerp-web
@@ -5527,6 +5531,11 @@ msgid ""
 "telecommunications, and services that are electronically supplied instead of"
 " shipped. Gift cards sent online are not included in the definition."
 msgstr ""
+"Hvis du sælger digitale vare til kunder i EU, skal du opkræve moms baseret "
+"på dine kunders placering. Denne regel gælder uanset hvor du er lokaliseret."
+" Digitale vare er defineret i lovgivningen som transmission, "
+"telekommunikation, og tjenester, der leveres elektronisk i stedet for "
+"afsendt. Gavekort, der sendes online, er ikke inkluderet i definitionen."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_line_product_image
@@ -6822,6 +6831,9 @@ msgid ""
 "Electronic: Get paid automatically through a payment acquirer by requesting a transaction on a card saved by the customer when buying or subscribing online (payment token).\n"
 "Batch Deposit: Encase several customer checks at once by generating a batch deposit to submit to your bank. When encoding the bank statement in Odoo,you are suggested to reconcile the transaction with the batch deposit. Enable this option from the settings."
 msgstr ""
+"Manuel: Bliv betalt kontant, via check, eller en anden metode udenfor Odoo.\n"
+"Elektronisk: Bliv betalt automatisk gennem en betalingsopkræver ved at anmode om en transaktion på et kort gemt af kunden, når de køber eller abonnerer online (btalingstoken)\n"
+"Batch-indbetaling: Indkapsl flere kundecheck på én gang ved at generere et batchindskud, der skal indsendes til din bank. Når du indkoder kontoudtoget i Odoo, foreslås du at afstemme transaktionen med batch-indskuddet. Aktivér denne indstilling fra Indstillinger."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_abstract_payment_payment_method_id
@@ -6842,6 +6854,9 @@ msgid ""
 "Check:Pay bill by check and print it from Odoo.\n"
 "SEPA Credit Transfer: Pay bill from a SEPA Credit Transfer file you submit to your bank. Enable this option from the settings."
 msgstr ""
+"Manuel: Betal regning kontant eller gennem en anden metode udenfor Odoo.\n"
+"Check: Betal regning via check og print den fra Odoo.\n"
+"SEPA Kredit Overførsel: Betal regning fra en SEPA Kredit Overførsel fil du indgiver til din bank. Aktivér denne indtillinger i Indstilling."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -7111,7 +7126,7 @@ msgstr "Beskrivelse"
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Navigate easily through reports and see what is behind the numbers"
-msgstr ""
+msgstr "Navigér nemt gennem rapporter, og se hvad der gemmer sig bag tallene."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_tax
@@ -11579,6 +11594,8 @@ msgid ""
 "You cannot change the currency of the company since some journal items "
 "already exist"
 msgstr ""
+"Du kan ikke ændre virksomhedens valuta siden visse journal genstande "
+"allerede eksisterer."
 
 #. module: account
 #: code:addons/account/models/account.py:235
@@ -11647,6 +11664,8 @@ msgid ""
 "You cannot disable this setting because some of your taxes are cash basis. "
 "Modify your taxes first before disabling this setting."
 msgstr ""
+"Du kan ikke frakoble denne funktion fordi nogle af dine skatter er kontant-"
+"baseret. Modificer dine skatter først, før du frakobler denne funktion."
 
 #. module: account
 #: code:addons/account/models/account.py:248
@@ -11747,6 +11766,8 @@ msgid ""
 "You cannot set a currency on this account as it already has some journal "
 "entries having a different foreign currency."
 msgstr ""
+"Du kan ikke angive en valuta på denne konto da den har journal posteringer "
+"med en anden, udenlandsk valuta."
 
 #. module: account
 #: code:addons/account/models/account_move.py:1368
@@ -12160,7 +12181,7 @@ msgstr "For at indstille balancen for alle dine konti."
 #: code:addons/account/static/src/xml/account_reconciliation.xml:53
 #, python-format
 msgid "transactions in"
-msgstr ""
+msgstr "Transaktioner"
 
 #. module: account
 #: model:ir.model,name:account.model_wizard_multi_charts_accounts

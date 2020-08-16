@@ -365,6 +365,12 @@ msgid ""
 "                                    If you want to use only selected records please uncheck this selection box :\n"
 "                                </span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('use_active_domain', '=', True)]}\">\n"
+"                                    Dacă doriți să o trimiteți pentru toate înregistrările care corespund criteriului dvs. de căutare, bifați această casetă :\n"
+"                                </span>\n"
+"                                <span attrs=\"{'invisible': [('use_active_domain', '=', False)]}\">\n"
+"                                 Dacă doriți să utilizați doar înregistrări selectate, debifați această casetă de selectare:\n"
+"                                </span>"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_form
@@ -412,6 +418,8 @@ msgid ""
 "<strong>Only records checked in list view will be used.</strong><br/>\n"
 "                                The email will be sent for all the records selected in the list."
 msgstr ""
+"<strong>Vor fi utilizate doar înregistrările verificate în vizualizarea listei.</strong><br/>\n"
+"                                Mesajul va fi trimis pentru toate înregistrările selectate în listă."
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
@@ -436,6 +444,8 @@ msgid ""
 "A shortcode is a keyboard shortcut. For instance, you type #gm and it will "
 "be transformed into \"Good Morning\"."
 msgstr ""
+"Un shortcode este o comandă rapidă de la tastatură. De exemplu, tastați #bd "
+"și acesta va fi transformat în „Bună dimineața”."
 
 #. module: mail
 #: model:ir.model,name:mail.model_res_groups
@@ -568,7 +578,7 @@ msgstr "Activitate"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_activity_mixin
 msgid "Activity Mixin"
-msgstr ""
+msgstr "Activitate Mixin"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_activity_type
@@ -619,6 +629,7 @@ msgstr "Adaugă interesați"
 #, python-format
 msgid "Add Followers can only be done on a mail thread model"
 msgstr ""
+"Adăugarea Următoarelor se poate face doar pe un model de thread de mail"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_user_signature
@@ -751,6 +762,8 @@ msgid ""
 "Answers do not go in the original document discussion thread. This has an "
 "impact on the generated message-id."
 msgstr ""
+"Răspunsurile nu sunt incluse în firul de discuție al documentului original. "
+"Acest lucru are un impact asupra mesajului-id generat."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_model_id
@@ -796,6 +809,8 @@ msgid ""
 "Attachments are linked to a document through model / res_id and to the "
 "message through this field."
 msgstr ""
+"Fișierele atașate sunt legate de un document prin model / res_id și mesajul "
+"prin acest câmp."
 
 #. module: mail
 #: selection:mail.alias,alias_contact:0
@@ -839,7 +854,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_message_author_avatar
 #: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_author_avatar
 msgid "Author's avatar"
-msgstr ""
+msgstr "Avatarul Autor"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_group_public_id
@@ -982,7 +997,7 @@ msgstr "Canal"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_channel_message_ids
 msgid "Channel Message"
-msgstr ""
+msgstr "Mesaj Canal"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_channel_type
@@ -1027,12 +1042,12 @@ msgstr "Conversație"
 #. module: mail
 #: selection:mail.channel,channel_type:0
 msgid "Chat Discussion"
-msgstr ""
+msgstr "Discuție Chat"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_shortcode_action
 msgid "Chat Shortcode"
-msgstr ""
+msgstr "CodScurt Chat"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_child_ids
@@ -1372,6 +1387,9 @@ msgid ""
 "- partner (using id on a partner or the partner_id field) OR\n"
 "- email (using email_from or email field)"
 msgstr ""
+"Destinatari impliciții ai înregistrării:\n"
+"-partener (folosind id-ul unui partener sau câmpul partener_id) OR\n"
+"- e-mail (utilizând câmpul de e-mail sau de email_from)"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_auto_delete
@@ -1492,7 +1510,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_res_name
 msgid "Display name of the related document."
-msgstr ""
+msgstr "Afișează numele documentului aferent."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message_auto_delete_message
@@ -1708,18 +1726,19 @@ msgstr ""
 #. module: mail
 #: sql_constraint:mail.followers:0
 msgid "Error, a channel cannot follow twice the same object."
-msgstr ""
+msgstr "Eroare, un canal nu poate urma de două ori același obiect."
 
 #. module: mail
 #: sql_constraint:mail.followers:0
 msgid "Error, a partner cannot follow twice the same object."
-msgstr ""
+msgstr "Eroare, un partener nu poate urma de două ori același obiect."
 
 #. module: mail
 #: sql_constraint:mail.followers:0
 msgid ""
 "Error: A follower must be either a partner or a channel (but not both)."
 msgstr ""
+"Eroare: un urmăritor trebuie să fie partener sau canal (dar nu ambele)."
 
 #. module: mail
 #: selection:mail.alias,alias_contact:0 selection:mail.channel,public:0
@@ -1764,6 +1783,8 @@ msgid ""
 "Failure reason. This is usually the exception thrown by the email server, "
 "stored to ease the debugging of mailing issues."
 msgstr ""
+"Motivul eșecului. Aceasta este, de obicei, excepția aruncată de serverul de "
+"e-mail, stocat pentru a ușura depanarea problemelor de poștă."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_starred_partner_ids
@@ -1771,7 +1792,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_message_starred_partner_ids
 #: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_starred_partner_ids
 msgid "Favorited By"
-msgstr ""
+msgstr "Favorit De"
 
 #. module: mail
 #. openerp-web
@@ -2157,7 +2178,7 @@ msgstr "Ascuns"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype_hidden
 msgid "Hide the subtype in the follower options"
-msgstr ""
+msgstr "Ascundeți subtipul în opțiunile de urmărire"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_id
@@ -2215,7 +2236,7 @@ msgstr "Id-ul resursei urmărite"
 #: code:addons/mail/static/src/xml/client_action.xml:203
 #, python-format
 msgid "Idle"
-msgstr ""
+msgstr "Inactiv"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_account_analytic_account_message_unread
@@ -2351,6 +2372,8 @@ msgid ""
 "If checked, the partners will receive an email warning they have been added "
 "in the document's followers."
 msgstr ""
+"Dacă sunt bifate, partenerii vor primi un avertisment prin e-mail pe care "
+"l-au adăugat în următorii documentului."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_user_signature
@@ -2377,6 +2400,8 @@ msgid ""
 "If set, the queue manager will send the email after the date. If not set, "
 "the email will be send as soon as possible."
 msgstr ""
+"Dacă este setat, managerul de coadă va trimite e-mailul după dată. Dacă nu "
+"este setat, e-mailul va fi trimis cât mai curând posibil."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_scheduled_date
@@ -2392,12 +2417,14 @@ msgid ""
 "If you have setup a catch-all email domain redirected to the Odoo server, "
 "enter the domain name here."
 msgstr ""
+"Dacă ați configurat un domeniu de e-mail captivant redirecționat către "
+"serverul Odoo, introduceți numele de domeniu aici."
 
 #. module: mail
 #: code:addons/mail/models/mail_alias.py:141
 #, python-format
 msgid "Inactive Alias"
-msgstr ""
+msgstr "Alias Inactiv"
 
 #. module: mail
 #. openerp-web
@@ -2592,7 +2619,7 @@ msgstr "Este un membru"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_partner_is_pinned
 msgid "Is pinned on the interface"
-msgstr ""
+msgstr "Este fixat pe interfață"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.mail_channel_view_kanban
@@ -2704,7 +2731,7 @@ msgstr "Ultima modificare la"
 #: model:ir.model.fields,field_description:mail.field_mail_channel_channel_last_seen_partner_ids
 #: model:ir.model.fields,field_description:mail.field_mail_channel_partner_seen_message_id
 msgid "Last Seen"
-msgstr ""
+msgstr "Ultima Oară Văzut"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_write_uid
@@ -2779,28 +2806,30 @@ msgstr "Părăsește  acest canal"
 msgid ""
 "List of channels that will be added as listeners of the current document."
 msgstr ""
+"Lista canalelor care vor fi adăugate ca ascultători ai documentului curent."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_wizard_invite_partner_ids
 msgid ""
 "List of partners that will be added as follower of the current document."
 msgstr ""
+"Lista partenerilor care vor fi adăugați ca adept al documentului curent."
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:706
 #, python-format
 msgid "List users in the current channel"
-msgstr ""
+msgstr "Listează utilizatorii din canalul curent"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_followers_channel_id
 msgid "Listener"
-msgstr ""
+msgstr "Ascultător"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_channel_partner_ids
 msgid "Listeners"
-msgstr ""
+msgstr "Ascultători"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_channel_partner
@@ -2863,7 +2892,7 @@ msgstr "Înregistrați sau programați o activitate"
 #: model:ir.model.fields,field_description:mail.field_mail_message_mail_activity_type_id
 #: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_mail_activity_type_id
 msgid "Mail Activity Type"
-msgstr ""
+msgstr "Tip Activitate Mail"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.mail_channel_view_form
@@ -2880,30 +2909,32 @@ msgstr "Livrare email eșuată"
 #: model:ir.model.fields,field_description:mail.field_ir_model_is_mail_thread
 #: model:ir.ui.view,arch_db:mail.model_search_view
 msgid "Mail Thread"
-msgstr ""
+msgstr "Fir Mail"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_tracking_value
 msgid "Mail Tracking Value"
-msgstr ""
+msgstr "Valoare Urmărire Mail"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail_notification
 msgid "Mail has been created to notify people of an existing mail.message"
 msgstr ""
+"E-mailul a fost creat pentru a anunța oamenii despre un mesaj de e-mail "
+"existent"
 
 #. module: mail
 #: model:ir.actions.server,name:mail.ir_cron_mail_scheduler_action_ir_actions_server
 #: model:ir.cron,cron_name:mail.ir_cron_mail_scheduler_action
 #: model:ir.cron,name:mail.ir_cron_mail_scheduler_action
 msgid "Mail: Email Queue Manager"
-msgstr ""
+msgstr "E-mail: Email Queue Manager"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:837
 #, python-format
 msgid "Mailbox unavailable - %s"
-msgstr ""
+msgstr "Cutie poștală indisponibilă - %s"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.res_partner_view_form_inherit_mail
