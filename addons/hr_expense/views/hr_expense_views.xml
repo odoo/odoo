@@ -40,11 +40,11 @@
             </field>
         </record>
 
-        <record id="view_expenses_tree" model="ir.ui.view">
+        <record id="hr_expense_view_expenses_analysis_tree" model="ir.ui.view">
             <field name="name">hr.expense.tree</field>
             <field name="model">hr.expense</field>
             <field name="arch" type="xml">
-                <tree string="Expenses" multi_edit="1" js_class="hr_expense_tree_dashboard_upload" sample="1">
+                <tree string="Expenses" multi_edit="1" sample="1">
                     <header>
                         <button name="action_submit_expenses" type="object" string="Create Report"/>
                     </header>
@@ -70,6 +70,18 @@
                     <field name="message_unread" invisible="1"/>
                     <field name="state" optional="show" readonly="1" decoration-info="state == 'draft'" decoration-success="state in ['reported', 'approved', 'done']" decoration-danger="state in 'refused'" widget="badge"/>
                 </tree>
+            </field>
+        </record>
+
+        <record id="view_expenses_tree" model="ir.ui.view">
+            <field name="name">hr.expense.tree</field>
+            <field name="model">hr.expense</field>
+            <field name="inherit_id" ref="hr_expense_view_expenses_analysis_tree"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <xpath expr="//tree" position="attributes">
+                    <attribute name="js_class">hr_expense_tree_dashboard_upload</attribute>
+                </xpath>
             </field>
         </record>
 
@@ -185,11 +197,11 @@
             </field>
         </record>
 
-        <record id="hr_expense_kanban_view" model="ir.ui.view">
+        <record id="hr_expense_view_expenses_analysis_kanban" model="ir.ui.view">
             <field name="name">hr.expense.kanban</field>
             <field name="model">hr.expense</field>
             <field name="arch" type="xml">
-                <kanban class="o_kanban_mobile hr_expense" js_class="hr_expense_kanban" sample="1">
+                <kanban class="o_kanban_mobile hr_expense" sample="1">
                     <field name="name"/>
                     <field name="employee_id"/>
                     <field name="total_amount"/>
@@ -222,6 +234,18 @@
                         </t>
                     </templates>
                 </kanban>
+            </field>
+        </record>
+
+        <record id="hr_expense_kanban_view" model="ir.ui.view">
+            <field name="name">hr.expense.kanban</field>
+            <field name="model">hr.expense</field>
+            <field name="inherit_id" ref="hr_expense_view_expenses_analysis_kanban"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <xpath expr="//kanban" position="attributes">
+                    <attribute name="js_class">hr_expense_kanban</attribute>
+                </xpath>
             </field>
         </record>
 
@@ -308,15 +332,29 @@
         </record>
 
         <record id="hr_expense_actions_all" model="ir.actions.act_window">
-            <field name="name">All Expenses</field>
+            <field name="name">Expenses Analysis</field>
             <field name="res_model">hr.expense</field>
-            <field name="view_mode">graph,pivot,tree,kanban,form,activity</field>
+            <field name="view_mode">graph,pivot,tree,kanban,form</field>
             <field name="search_view_id" ref="hr_expense_view_search"/>
             <field name="help" type="html">
-              <p class="o_view_nocontent_smiling_face">
-                Create a new expense
-              </p>
+                <p class="o_view_nocontent_empty_folder">
+                    No data yet!
+                </p><p>
+                    Create new expenses to get statistics.
+                </p>
             </field>
+        </record>
+
+        <record id="hr_expense_actions_all_tree" model="ir.actions.act_window.view">
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="hr_expense_view_expenses_analysis_tree"/>
+            <field name="act_window_id" ref="hr_expense_actions_all"/>
+        </record>
+
+        <record id="hr_expense_actions_all_kanban" model="ir.actions.act_window.view">
+            <field name="view_mode">kanban</field>
+            <field name="view_id" ref="hr_expense_view_expenses_analysis_kanban"/>
+            <field name="act_window_id" ref="hr_expense_actions_all"/>
         </record>
 
         <record id="hr_expense_actions_my_unsubmitted" model="ir.actions.act_window">
@@ -450,9 +488,9 @@
             <field name="domain">[('can_be_expensed', '=', True)]</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
-                No expense products found.
+                No expense products found. Let's create one!
               </p><p>
-                Let's create one! Expense products can be reinvoiced to your customers.
+                Expense products can be reinvoiced to your customers.
               </p>
             </field>
         </record>
@@ -758,9 +796,9 @@
             <field name="view_id" ref="view_hr_expense_sheet_dashboard_tree"/>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
-                No expense report found.
+                No expense report found. Let's create one!
               </p><p>
-                Let's create one! Once you have created your expense, submit it to your manager who will validate it.
+                Once you have created your expense, submit it to your manager who will validate it.
               </p>
             </field>
         </record>
@@ -774,8 +812,8 @@
             <field name="context">{'search_default_submitted': 1}</field>
             <field name="view_id" ref="view_hr_expense_sheet_tree"/>
             <field name="help" type="html">
-              <p class="o_view_nocontent_empty_folder">
-                No expense reports found.
+              <p class="o_view_nocontent_smiling_face">
+                No expense reports found
               </p><p>
                 Approve the new expense reports submitted by the employees you manage.
               </p>
@@ -791,7 +829,7 @@
             <field name="context">{'search_default_to_post': 1}</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
-                No expense reports found.
+                No expense reports found
               </p><p>
                 Post the journal entries of the new expense reports approved by the employees' manager.
               </p>
@@ -807,7 +845,7 @@
             <field name="context">{'search_default_approved': 1}</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
-                No expense reports found.
+                No expense reports found
               </p><p>
                 Reimburse the employees who incurred these costs or simply register the corresponding payments.
               </p>
@@ -815,16 +853,18 @@
         </record>
 
         <record id="action_hr_expense_sheet_all" model="ir.actions.act_window">
-            <field name="name">All Expense Reports</field>
+            <field name="name">All Reports</field>
             <field name="res_model">hr.expense.sheet</field>
             <field name="view_mode">tree,kanban,form,pivot,graph</field>
             <field name="search_view_id" ref="hr_expense_sheet_view_search"/>
             <field name="domain">[]</field>
             <field name="context">{}</field>
             <field name="help" type="html">
-              <p class="o_view_nocontent_smiling_face">
-                No expense reports found.
-              </p>
+                <p class="o_view_nocontent_smiling_face">
+                    No expense reports found. Let's create one!
+                </p><p>
+                    Expense reports regroup all the expenses incurred during a specific event.
+                </p>
             </field>
         </record>
 
