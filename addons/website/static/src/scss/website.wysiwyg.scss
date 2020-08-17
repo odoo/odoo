@@ -21,12 +21,15 @@
 
 // EDITOR TOP BAR AND POPOVER
 #web_editor-top-edit .o_we_website_top_actions {
-    @include o-position-absolute($top: 0, $left: 0);
+    @include o-position-absolute($top: 0, $right: 0);
     z-index: $zindex-popover + 5;
     display: flex;
     width: $o-we-sidebar-width;
     height: $o-we-sidebar-top-height;
     background-color: $o-we-sidebar-tabs-bg;
+
+    display: flex;
+    flex-direction: row-reverse;
 
     .btn-group, .btn {
         height: 100%;

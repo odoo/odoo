@@ -19,10 +19,10 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
 }
 
 .editor_enable {
-    padding-top: var(--o-we-toolbar-height) !important;
+    padding-top: 0 !important;
 
     .note-popover .popover .popover-body {
-        height: var(--o-we-toolbar-height);
+        // height: var(--o-we-toolbar-height);
     }
     .note-popover .popover  {
         transform: none;
@@ -33,8 +33,8 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
     @include o-position-absolute(0, 0, auto, 0);
     position: fixed;
     z-index: $o-we-zindex;
-    height: var(--o-we-toolbar-height);
-    background-color: $o-we-bg;
+    // height: var(--o-we-toolbar-height);
+    //background-color: $o-we-bg;
 
     .note-popover .popover {
         top: 0 !important;
@@ -393,6 +393,10 @@ img.o_we_selected_image {
 // seeing the images' quality clearly in the wysiwyg.
 img::selection {
     background: transparent;
+}
+
+#web_editor-toolbars {
+    display: none!important;
 }
 
 @include media-breakpoint-down(md) {
