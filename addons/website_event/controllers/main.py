@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 
+import collections
 import babel.dates
 import re
 import werkzeug
 from werkzeug.datastructures import OrderedMultiDict
+from werkzeug.exceptions import NotFound
 
 from ast import literal_eval
 from collections import defaultdict
@@ -13,6 +15,7 @@ from dateutil.relativedelta import relativedelta
 from odoo import fields, http, _
 from odoo.addons.http_routing.models.ir_http import slug
 from odoo.addons.website.controllers.main import QueryURL
+from odoo.addons.event.controllers.main import EventController
 from odoo.http import request
 from odoo.osv import expression
 from odoo.tools.misc import get_lang, format_date
@@ -27,7 +30,7 @@ class WebsiteEventController(http.Controller):
     @http.route(['/event', '/event/page/<int:page>', '/events', '/events/page/<int:page>'], type='http', auth="public", website=True, sitemap=sitemap_event)
     def events(self, page=1, **searches):
         Event = request.env['event.event']
-        EventType = request.env['event.type']
+        SudoEventType = request.env['event.type'].sudo()
 
         searches.setdefault('search', '')
         searches.setdefault('date', 'all')
@@ -95,7 +98,7 @@ class WebsiteEventController(http.Controller):
                     current_date = date[1]
 
         if searches["type"] != 'all':
-            current_type = EventType.browse(int(searches['type']))
+            current_type = SudoEventType.browse(int(searches['type']))
             domain_search["type"] = [("event_type_id", "=", int(searches["type"]))]
 
         if searches["country"] != 'all' and searches["country"] != 'online':
@@ -296,6 +299,9 @@ class WebsiteEventController(http.Controller):
 
     @http.route(['/event/<model("event.event"):event>/registration/new'], type='json', auth="public", methods=['POST'], website=True)
     def registration_new(self, event, **post):
+        if not event.can_access_from_current_website():
+            raise werkzeug.exceptions.NotFound()
+
         tickets = self._process_tickets_form(event, post)
         availability_check = True
         if event.seats_limited:
@@ -311,14 +317,16 @@ class WebsiteEventController(http.Controller):
     def _process_attendees_form(self, event, form_details):
         """ Process data posted from the attendee details form.
 
-        :param details: posted data from frontend registration form, like
+        :param form_details: posted data from frontend registration form, like
             {'1-name': 'r', '1-email': 'r@r.com', '1-phone': '', '1-event_ticket_id': '1'}
         """
-        registration_fields = request.env['event.registration']._fields
+        allowed_fields = {'name', 'phone', 'email', 'mobile', 'event_id', 'partner_id', 'event_ticket_id'}
+        registration_fields = {key: v for key, v in request.env['event.registration']._fields.items() if key in allowed_fields}
         registrations = {}
         global_values = {}
         for key, value in form_details.items():
-            counter, field_name = key.split('-', 1)
+            counter, attr_name = key.split('-', 1)
+            field_name = attr_name.split('-')[0]
             if field_name not in registration_fields:
                 continue
             elif isinstance(registration_fields[field_name], (fields.Many2one, fields.Integer)):
@@ -327,12 +335,13 @@ class WebsiteEventController(http.Controller):
                 value = value
 
             if counter == '0':
-                global_values[field_name] = value
+                global_values[attr_name] = value
             else:
-                registrations.setdefault(counter, dict())[field_name] = value
+                registrations.setdefault(counter, dict())[attr_name] = value
         for key, value in global_values.items():
             for registration in registrations.values():
                 registration[key] = value
+
         return list(registrations.values())
 
     def _create_attendees_from_registration_post(self, event, registration_data):
@@ -351,11 +360,11 @@ class WebsiteEventController(http.Controller):
             raise werkzeug.exceptions.NotFound()
 
         registrations = self._process_attendees_form(event, post)
-        attendees = self._create_attendees_from_registration_post(event, registrations)
+        attendees_sudo = self._create_attendees_from_registration_post(event, registrations)
 
         urls = event._get_event_resource_urls()
         return request.render("website_event.registration_complete", {
-            'attendees': attendees,
+            'attendees': attendees_sudo,
             'event': event,
             'google_url': urls.get('google_url'),
             'iCal_url': urls.get('iCal_url')
@@ -369,6 +378,6 @@ class WebsiteEventController(http.Controller):
             except:
                 pass
             else:
-                # perform a search to filter on existing / valid tags implicitely
+                # perform a search to filter on existing / valid tags implicitely + apply rules on color
                 tags = request.env['event.tag'].search([('id', 'in', tag_ids)])
         return tags

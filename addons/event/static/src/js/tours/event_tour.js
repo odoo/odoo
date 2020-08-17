@@ -96,6 +96,7 @@ tour.register('event_tour', {
 }, {
     trigger: 'button.o_kanban_add',
     content: _t("Click <b>add</b> to create a new stage."),
+    position: 'bottom',
     width: 200,
     run: 'click',
 }].filter(Boolean));

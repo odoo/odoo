@@ -16,6 +16,7 @@
         'views/event_templates.xml',
         'views/event_templates_misc_pages.xml',
         'views/event_templates_registration.xml',
+        'views/website_templates.xml',
         'views/event_views.xml',
         'security/ir.model.access.csv',
         'security/event_security.xml',
