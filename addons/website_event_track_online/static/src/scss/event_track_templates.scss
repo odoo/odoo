@@ -47,13 +47,9 @@
  * AGENDA
  */
 .o_we_online_agenda {
-    overflow-x: hidden;
-    @media (max-width: map-get($grid-breakpoints, 'md')) {
-        overflow-x: scroll;
-    }
+    overflow-x: scroll;
 
     table {
-        table-layout:fixed;
         border-collapse: separate;
         border-spacing: 0em 0em;
         tr {
@@ -68,7 +64,13 @@
             }
         }
         th.active, td:not(.active) {
-            background-color: #d3d3d36e;
+            background-color: rgba(211, 211, 211, 0.1);
+            border: 0px;
+            border-right: 1em solid white;
+            vertical-align: middle;
+            span {
+                word-break: break-word;
+            }
         }
         th:not(.active), td.active {
             width: 100px;
@@ -79,6 +81,18 @@
         td {
             height: 0px;
             border: 0px;
+
+            @for $size from 1 through 20 {
+                @if #{$size} != 1 {
+                    &.o_location_size_#{$size} {
+                        width: calc(100% / (#{$size} - 1));
+                        min-width: 150px;
+                    }
+                } @else {
+                    width: calc(100%);
+                }
+            }
+
             &.active {
                 position: sticky;
                 left: 0;
@@ -90,6 +104,9 @@
                 span {
                     cursor: pointer;
                 }
+                .o_we_agenda_card_title, small {
+                    word-break: break-word;
+                }
             }
             .badge {
                 height: fit-content;
@@ -97,19 +114,36 @@
                 white-space: nowrap;
                 text-overflow: ellipsis;
                 overflow: hidden;
+                font-size: xx-small;
+                padding: 0.2em 0.5em;
+                border-radius: 1em;
+                line-height: 10px;
             }
             &.invisible {
                 visibility: visible !important;
                 opacity: 0.3;
             }
-            &.o_we_agenda_time_slot_main {
+            &.o_we_agenda_time_slot_main, &.o_we_agenda_time_slot_half {
+                padding: 0;
+            }
+            &.o_we_agenda_time_slot_main > div {
+                padding: 0.3em;
                 border-top: 1px solid lightgrey;
             }
-            &.o_we_agenda_time_slot_half {
+            &.o_we_agenda_time_slot_half > div {
+                padding: 0.3em;
                 border-top: 1px dashed lightgrey;
             }
+            &.event_track {
+                padding: 0;
+                > div {
+                    padding: 0.3em;
+                    border-top: 1px solid lightgrey;
+                }
+
+            }
             &.event_color_0 {
-                background-color: lightgrey;
+                background-color: rgba(211, 211, 211, 0.5);
             }
             &.event_color_1 {
                 background-color: rgba(240, 96, 80, 0.2);
@@ -133,7 +167,7 @@
                 background-color: rgba(44,131,151,0.2);
             }
             &.event_color_8 {
-                background-color: rgba(71,85,119,0.2);;
+                background-color: rgba(71,85,119,0.2);
             }
             &.event_color_9 {
                 background-color: rgba(214,20,95,0.2);
