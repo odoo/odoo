@@ -333,7 +333,7 @@ class HolidaysRequest(models.Model):
 
                 if resource_calendar_id.two_weeks_calendar:
                     # find week type of start_date
-                    start_week_type = int(math.floor((holiday.request_date_from.toordinal() - 1) / 7) % 2)
+                    start_week_type = self.env['resource.calendar.attendance'].get_week_type(holiday.request_date_from)
                     attendance_actual_week = [att for att in attendances if att.week_type is False or int(att.week_type) == start_week_type]
                     attendance_actual_next_week = [att for att in attendances if att.week_type is False or int(att.week_type) != start_week_type]
                     # First, add days of actual week coming after date_from
@@ -342,8 +342,7 @@ class HolidaysRequest(models.Model):
                     attendance_filtred += list(attendance_actual_next_week)
                     # Third, add days of actual week (to consider days that we have remove first because they coming before date_from)
                     attendance_filtred += list(attendance_actual_week)
-
-                    end_week_type = int(math.floor((holiday.request_date_to.toordinal() - 1) / 7) % 2)
+                    end_week_type = self.env['resource.calendar.attendance'].get_week_type(holiday.request_date_to)
                     attendance_actual_week = [att for att in attendances if att.week_type is False or int(att.week_type) == end_week_type]
                     attendance_actual_next_week = [att for att in attendances if att.week_type is False or int(att.week_type) != end_week_type]
                     attendance_filtred_reversed = list(reversed([att for att in attendance_actual_week if int(att.dayofweek) <= holiday.request_date_to.weekday()]))
