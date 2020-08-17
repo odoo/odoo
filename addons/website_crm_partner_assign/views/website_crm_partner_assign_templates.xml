@@ -208,17 +208,17 @@
         </xpath>
     </template>
 
-    <template id="portal_my_home_lead" name="Portal My Home : lead entries" inherit_id="portal.portal_my_home" priority="15">
+    <template id="portal_my_home_lead" name="Show Leads / Opps" customize_show="True" inherit_id="portal.portal_my_home" priority="15">
         <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
-            <t t-if="lead_count" t-call="portal.portal_docs_entry">
+            <t t-call="portal.portal_docs_entry">
                 <t t-set="title">Leads</t>
                 <t t-set="url" t-value="'/my/leads'"/>
-                <t t-set="count" t-value="lead_count"/>
+                <t t-set="placeholder_count" t-value="'lead_count'"/>
             </t>
             <t t-call="portal.portal_docs_entry">
                 <t t-set="title">Opportunities</t>
                 <t t-set="url" t-value="'/my/opportunities'"/>
-                <t t-set="count" t-value="opp_count"/>
+                <t t-set="placeholder_count" t-value="'opp_count'"/>
             </t>
         </xpath>
     </template>

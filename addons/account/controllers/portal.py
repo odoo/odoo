@@ -10,12 +10,13 @@ from odoo.http import request
 
 class PortalAccount(CustomerPortal):
 
-    def _prepare_home_portal_values(self):
-        values = super(PortalAccount, self)._prepare_home_portal_values()
-        invoice_count = request.env['account.move'].search_count([
-            ('move_type', 'in', ('out_invoice', 'in_invoice', 'out_refund', 'in_refund', 'out_receipt', 'in_receipt')),
-        ])
-        values['invoice_count'] = invoice_count
+    def _prepare_home_portal_values(self, counters):
+        values = super()._prepare_home_portal_values(counters)
+        if 'invoice_count' in counters:
+            invoice_count = request.env['account.move'].search_count([
+                ('move_type', 'in', ('out_invoice', 'in_invoice', 'out_refund', 'in_refund', 'out_receipt', 'in_receipt')),
+            ])
+            values['invoice_count'] = invoice_count
         return values
 
     # ------------------------------------------------------------

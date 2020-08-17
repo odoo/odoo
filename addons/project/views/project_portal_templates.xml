@@ -19,17 +19,17 @@
         </xpath>
     </template>
 
-    <template id="portal_my_home" name="Portal My Home: project entries" inherit_id="portal.portal_my_home" priority="40">
+    <template id="portal_my_home" name="Show Projects / Tasks" customize_show="True" inherit_id="portal.portal_my_home" priority="40">
         <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
-            <t t-if="project_count" t-call="portal.portal_docs_entry">
+            <t t-call="portal.portal_docs_entry">
                 <t t-set="title">Projects</t>
                 <t t-set="url" t-value="'/my/projects'"/>
-                <t t-set="count" t-value="project_count"/>
+                <t t-set="placeholder_count" t-value="'project_count'"/>
             </t>
-            <t t-if="task_count" t-call="portal.portal_docs_entry">
+            <t t-call="portal.portal_docs_entry">
                 <t t-set="title">Tasks</t>
                 <t t-set="url" t-value="'/my/tasks'"/>
-                <t t-set="count" t-value="task_count"/>
+                <t t-set="placeholder_count" t-value="'task_count'"/>
             </t>
         </xpath>
     </template>
