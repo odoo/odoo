@@ -54,4 +54,18 @@
     </t>
 </template>
 
+<template id="404" name="Event 404">
+    <t t-call="website.layout">
+        <div id="wrap">
+            <div class="oe_structure oe_empty">
+                <div class="container">
+                    <h1 class="mt-4">Event not found!</h1>
+                    <p>Sorry, the requested event is not available anymore.</p>
+                    <p><a t-attf-href="/event">Return to the event list.</a></p>
+                </div>
+            </div>
+        </div>
+    </t>
+</template>
+
 </odoo>
