@@ -7,6 +7,8 @@ var publicWidget = require('web.public.widget');
 var wUtils = require('website.utils');
 var animations = require('website.content.snippets.animation');
 
+const extraMenuUpdateCallbacks = [];
+
 const BaseAnimatedHeader = animations.Animation.extend({
     disabledInEditableMode: false,
     effects: [{
@@ -47,8 +49,8 @@ const BaseAnimatedHeader = animations.Animation.extend({
         // We can rely on transitionend which is well supported but not on
         // transitionstart, so we listen to a custom odoo event.
         this._transitionCount = 0;
-        this.$el.on('odoo-transitionstart.BaseAnimatedHeader', () => this._updateMainPaddingTopLoop(1));
-        this.$el.on('transitionend.BaseAnimatedHeader', () => this._updateMainPaddingTopLoop(-1));
+        this.$el.on('odoo-transitionstart.BaseAnimatedHeader', () => this._adaptToHeaderChangeLoop(1));
+        this.$el.on('transitionend.BaseAnimatedHeader', () => this._adaptToHeaderChangeLoop(-1));
 
         return this._super(...arguments);
     },
@@ -69,31 +71,22 @@ const BaseAnimatedHeader = animations.Animation.extend({
 
     /**
      * @private
-     * @param {boolean} [useFixed=true]
      */
-    _toggleFixedHeader: function (useFixed = true) {
-        this.fixedHeader = useFixed;
-        this.el.classList.toggle('o_header_affixed', useFixed);
+    _adaptToHeaderChange: function () {
         this._updateMainPaddingTop();
-    },
-    /**
-     * @private
-     */
-    _updateMainPaddingTop: function () {
-        this.headerHeight = this.$el.outerHeight();
-        if (this.isOverlayHeader || this.$navbarCollapses.hasClass('show')) {
-            return;
-        }
 
-        const headerSize = this.el.classList.contains('o_header_affixed');
-        this.$main.css('padding-top', headerSize ? this.headerHeight : '');
+        const bottom = this.el.getBoundingClientRect().bottom
+            || (this.el.nextElementSibling.getBoundingClientRect().top + window.scrollY);
+        for (const callback of extraMenuUpdateCallbacks) {
+            callback(bottom);
+        }
     },
     /**
      * @private
      * @param {integer} [addCount=0]
      */
-    _updateMainPaddingTopLoop: function (addCount = 0) {
-        this._updateMainPaddingTop();
+    _adaptToHeaderChangeLoop: function (addCount = 0) {
+        this._adaptToHeaderChange();
 
         this._transitionCount += addCount;
         this._transitionCount = Math.max(0, this._transitionCount);
@@ -101,21 +94,50 @@ const BaseAnimatedHeader = animations.Animation.extend({
         // As long as we detected a transition start without its related
         // transition end, keep updating the main padding top.
         if (this._transitionCount > 0) {
-            window.requestAnimationFrame(() => this._updateMainPaddingTopLoop());
+            window.requestAnimationFrame(() => this._adaptToHeaderChangeLoop());
 
             // The normal case would be to have the transitionend event to be
             // fired but we cannot rely on it, so we use a timeout as fallback.
             if (addCount !== 0) {
-                clearTimeout(this._paddingLoopTimer);
-                this._paddingLoopTimer = setTimeout(() => {
-                    this._updateMainPaddingTopLoop(-this._transitionCount);
+                clearTimeout(this._changeLoopTimer);
+                this._changeLoopTimer = setTimeout(() => {
+                    this._adaptToHeaderChangeLoop(-this._transitionCount);
                 }, 500);
             }
         } else {
             // When we detected all transitionend events, we need to stop the
             // setTimeout fallback.
-            clearTimeout(this._paddingLoopTimer);
+            clearTimeout(this._changeLoopTimer);
         }
+    },
+    /**
+     * @private
+     */
+    _computeTopGap() {
+        return 0;
+    },
+    /**
+     * @private
+     * @param {boolean} [useFixed=true]
+     */
+    _toggleFixedHeader: function (useFixed = true) {
+        this.fixedHeader = useFixed;
+        this.el.classList.toggle('o_header_affixed', useFixed);
+        this.el.classList.toggle('o_top_fixed_element', useFixed);
+        this._adaptToHeaderChange();
+    },
+    /**
+     * @private
+     */
+    _updateMainPaddingTop: function () {
+        this.headerHeight = this.$el.outerHeight();
+        this.topGap = this._computeTopGap();
+
+        if (this.isOverlayHeader) {
+            return;
+        }
+        const headerSize = this.el.classList.contains('o_header_affixed');
+        this.$main.css('padding-top', headerSize ? this.headerHeight : '');
     },
 
     //--------------------------------------------------------------------------
@@ -197,8 +219,8 @@ publicWidget.registry.StandardAffixedHeader = BaseAnimatedHeader.extend({
     _updateHeaderOnScroll: function (scroll) {
         this._super(...arguments);
 
-        const mainPosScrolled = (scroll > this.headerHeight);
-        const reachPosScrolled = (scroll > this.scrolledPoint);
+        const mainPosScrolled = (scroll > this.headerHeight + this.topGap);
+        const reachPosScrolled = (scroll > this.scrolledPoint + this.topGap);
 
         // Switch between static/fixed position of the header
         if (this.fixedHeader !== mainPosScrolled) {
@@ -208,7 +230,7 @@ publicWidget.registry.StandardAffixedHeader = BaseAnimatedHeader.extend({
         }
         // Show/hide header
         if (this.fixedHeaderShow !== reachPosScrolled) {
-            this.$el.css('transform', reachPosScrolled ? '' : 'translate(0, -100%)');
+            this.$el.css('transform', reachPosScrolled ? `translate(0, -${this.topGap}px)` : 'translate(0, -100%)');
             this.fixedHeaderShow = reachPosScrolled;
         }
     },
@@ -228,12 +250,16 @@ publicWidget.registry.FixedHeader = BaseAnimatedHeader.extend({
         this._super(...arguments);
         // Need to be 'unfixed' when the window is not scrolled so that the
         // transparent menu option still works.
-        if (scroll > this.scrolledPoint) {
+        if (scroll > (this.scrolledPoint + this.topGap)) {
             if (!this.$el.hasClass('o_header_affixed')) {
+                this.$el.css('transform', `translate(0, -${this.topGap}px)`);
+                void this.$el[0].offsetWidth; // Force a paint refresh
                 this._toggleFixedHeader(true);
             }
         } else {
             this._toggleFixedHeader(false);
+            void this.$el[0].offsetWidth; // Force a paint refresh
+            this.$el.css('transform', '');
         }
     },
 });
@@ -247,7 +273,9 @@ const BaseDisappearingHeader = publicWidget.registry.FixedHeader.extend({
         this.scrollingDownwards = true;
         this.hiddenHeader = false;
         this.position = 0;
+        this.atTop = true;
         this.checkPoint = 0;
+        this.scrollOffsetLimit = 200;
     },
     /**
      * @override
@@ -262,13 +290,17 @@ const BaseDisappearingHeader = publicWidget.registry.FixedHeader.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * @abstract
+     * @private
      */
-    _hideHeader: function () {},
+    _hideHeader: function () {
+        this.$el.trigger('odoo-transitionstart');
+    },
     /**
      * @private
      */
-    _showHeader: function () {},
+    _showHeader: function () {
+        this.$el.trigger('odoo-transitionstart');
+    },
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -281,24 +313,32 @@ const BaseDisappearingHeader = publicWidget.registry.FixedHeader.extend({
         this._super(...arguments);
 
         const scrollingDownwards = (scroll > this.position);
+        const atTop = (scroll <= 0);
         if (scrollingDownwards !== this.scrollingDownwards) {
             this.checkPoint = scroll;
         }
 
+        this.scrollingDownwards = scrollingDownwards;
+        this.position = scroll;
+        this.atTop = atTop;
+
         if (scrollingDownwards) {
-            if (!this.hiddenHeader && scroll - this.checkPoint > 200) {
+            if (!this.hiddenHeader && scroll - this.checkPoint > (this.scrollOffsetLimit + this.topGap)) {
                 this.hiddenHeader = true;
                 this._hideHeader();
             }
         } else {
-            if (this.hiddenHeader && scroll - this.checkPoint < -100) {
+            if (this.hiddenHeader && scroll - this.checkPoint < -(this.scrollOffsetLimit + this.topGap) / 2) {
                 this.hiddenHeader = false;
                 this._showHeader();
             }
         }
 
-        this.scrollingDownwards = scrollingDownwards;
-        this.position = scroll;
+        if (atTop && !this.atTop) {
+            // Force reshowing the invisible-on-scroll sections when reaching
+            // the top again
+            this._showHeader();
+        }
     },
 });
 
@@ -313,13 +353,15 @@ publicWidget.registry.DisappearingHeader = BaseDisappearingHeader.extend({
      * @override
      */
     _hideHeader: function () {
+        this._super(...arguments);
         this.$el.css('transform', 'translate(0, -100%)');
     },
     /**
      * @override
      */
     _showHeader: function () {
-        this.$el.css('transform', '');
+        this._super(...arguments);
+        this.$el.css('transform', this.atTop ? '' : `translate(0, -${this.topGap}px)`);
     },
 });
 
@@ -334,12 +376,15 @@ publicWidget.registry.FadeOutHeader = BaseDisappearingHeader.extend({
      * @override
      */
     _hideHeader: function () {
+        this._super(...arguments);
         this.$el.stop(false, true).fadeOut();
     },
     /**
      * @override
      */
     _showHeader: function () {
+        this._super(...arguments);
+        this.$el.css('transform', this.atTop ? '' : `translate(0, -${this.topGap}px)`);
         this.$el.stop(false, true).fadeIn();
     },
 });
@@ -538,4 +583,8 @@ publicWidget.registry.hoverableDropdown = animations.Animation.extend({
         $dropdown.find(this.$dropdownMenus).removeClass('show');
     },
 });
+
+return {
+    extraMenuUpdateCallbacks: extraMenuUpdateCallbacks,
+};
 });
