@@ -84,7 +84,7 @@
                         t-options="{'widget': 'date', 'format': 'YYYY'}"/>
                 </div>
             </div>
-            <small class="float-right text-muted"><t t-esc="tracks_by_days[day]"/> tracks</small>
+            <small class="float-right text-muted align-self-end"><t t-esc="tracks_by_days[day]"/> tracks</small>
         </div>
         <hr class="mt-2 pb-1 mb-1"/>
 
@@ -95,7 +95,7 @@
             <tr>
                 <th class="border-0 bg-white position-sticky"/>
                 <t t-foreach="locations" t-as="location">
-                    <th t-if="location" class="active text-center border-0">
+                    <th t-if="location" class="active text-center">
                         <span t-esc="location and location.name or 'Unknown'"/>
                     </th>
                 </t>
@@ -118,14 +118,14 @@
                             <t t-foreach="tracks" t-as="track">
                                 <t t-if="track.location_id and track.location_id == location">
                                     <td t-att-rowspan="tracks[track]['rowspan']"
-                                        t-attf-class="text-center event_color_#{track.color} #{track and 'event_track' or ''}">
+                                        t-attf-class="text-center event_color_#{track.color} #{track and 'event_track' or ''} o_location_size_#{len(locations)}">
                                         <t t-call="website_event_track_online.agenda_main_track"/>
                                     </td>
                                 </t>
                                 <t t-else="">
                                     <td t-att-colspan="len(locations)-1"
                                         t-att-rowspan="tracks[track]['rowspan']"
-                                        t-attf-class="text-center event_color_#{track.color} #{track and 'event_track' or ''}">
+                                        t-attf-class="text-center event_color_#{track.color} #{track and 'event_track' or ''} o_location_size_#{len(locations)}">
                                         <t t-call="website_event_track_online.agenda_main_track"/>
                                     </td>
                                 </t>
@@ -134,11 +134,11 @@
                         </t>
                         <t t-elif="location and (time_slot, location) not in used_cells">
                             <td t-att-rowspan="1"
-                                t-att-class="'%s' % (
+                                t-att-class="'o_location_size_%s %s' % (len(locations),
                                     'o_we_agenda_time_slot_half' if is_half_hour else
                                     'o_we_agenda_time_slot_main' if is_round_hour else
                                     ''
-                                )"/>
+                                )"><div/></td>
                         </t>
                     </t>
                 </tr>
@@ -169,7 +169,11 @@
             <div t-att-class="'text-black' if track.website_published or user_event_manager else 'text-muted'"
                  t-att-onclick="'window.location=\'/event/%s/track/%s\'' % (slug(event), slug(track))
                     if track.website_published or user_event_manager else ''">
-                <span class="text-bold" t-esc="track.name"/>
+                <span class="o_we_agenda_card_title text-bold" t-esc="track.name"/>
+            </div>
+            <div class="text-muted text-center">
+                <small t-if="track.partner_id or track.partner_name">
+                    <t t-esc="track.partner_id.sudo().name or track.partner_name"/></small>
             </div>
             <div class="d-flex justify-content-center flex-wrap">
                 <t t-foreach="track.tag_ids" t-as="tag">
@@ -183,13 +187,6 @@
                           "
                     />
                 </t>
-            </div>
-        </div>
-
-        <div>
-            <div class="text-muted text-right">
-                <small t-if="track.partner_id or track.partner_name">
-                    <i class="fa fa-user mr-2"/><t t-esc="track.partner_id.sudo().name or track.partner_name"/></small>
             </div>
         </div>
     </div>
