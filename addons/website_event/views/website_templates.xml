@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<!-- User Navbar -->
+<template id="user_navbar_inherit_website_event" inherit_id="website.user_navbar">
+    <xpath expr="//div[@id='o_new_content_menu_choices']//div[@name='module_website_event']" position="attributes">
+        <attribute name="name"/>
+        <attribute name="t-att-data-module-id"/>
+        <attribute name="t-att-data-module-shortdesc"/>
+        <attribute name="groups">event.group_event_manager</attribute>
+    </xpath>
+</template>
+
+<!-- User Navbar - Edit Options -->
+<template id="event_edit_options" inherit_id="website.user_navbar" name="Edit Event Options">
+    <xpath expr="//li[@id='edit-page-menu']" position="after">
+        <t t-if="main_object._name == 'event.event'" t-set="action" t-value="'event.action_event_view'"/>
+    </xpath>
+</template>
+
+</odoo>
