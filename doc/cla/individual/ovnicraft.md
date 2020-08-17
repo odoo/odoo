@@ -1,4 +1,4 @@
-Ecuador, 09-04-2020
+Ecuador, 2020-08-17
 
 I hereby agree to the terms of the Odoo Individual Contributor License
 Agreement v1.0.
