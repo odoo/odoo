@@ -141,7 +141,7 @@ tour.register('sale_product_configurator_edition_tour', {
 }, {
     trigger: '.o_sale_product_configurator_edit',
 }, {
-    trigger: 'td.o_data_cell:contains("2.000")',
+    trigger: 'td.o_data_cell:contains("2.00")',
     run: function (){} // check quantity
 }, {
     trigger: 'td.o_product_configurator_cell',
