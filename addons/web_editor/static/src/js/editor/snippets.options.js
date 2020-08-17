@@ -1640,14 +1640,14 @@ const SelectPagerUserValueWidget = SelectUserValueWidget.extend({
         this.pages = this.options.childNodes.filter(node => node.matches && node.matches('we-select-page'));
         this.numPages = this.pages.length;
 
-        const prev = document.createElement('i');
+        const prev = document.createElement('we-button');
         prev.classList.add('o_we_pager_prev', 'fa', 'fa-chevron-left');
 
         this.pageNum = document.createElement('span');
         this.currentPage = 0;
         this._updatePageNum();
 
-        const next = document.createElement('i');
+        const next = document.createElement('we-button');
         next.classList.add('o_we_pager_next', 'fa', 'fa-chevron-right');
 
         const pagerControls = document.createElement('div');
