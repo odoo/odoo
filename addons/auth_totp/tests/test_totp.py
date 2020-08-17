@@ -1,11 +1,12 @@
 import time
+from xmlrpc.client import Fault
 
 from passlib.totp import TOTP
 
 from odoo import http
 from odoo.exceptions import AccessDenied
 from odoo.service import common as auth, model
-from odoo.tests import tagged, HttpCase
+from odoo.tests import tagged, HttpCase, get_db_name
 
 from ..controllers.home import Home
 
@@ -15,8 +16,9 @@ class TestTOTP(HttpCase):
         super().setUp()
 
         totp = None
-        # test endpoint as doing totp on the client side is not really an option
-        # (needs sha1 and hmac + BE packing of 64b integers)
+        # might be possible to do client-side using `crypto.subtle` instead of
+        # this horror show, but requires working on 64b integers, & BigInt is
+        # significantly less well supported than crypto
         def totp_hook(self, secret=None):
             nonlocal totp
             if totp is None:
@@ -43,13 +45,37 @@ class TestTOTP(HttpCase):
         # 1. Enable 2FA
         self.start_tour('/web', 'totp_tour_setup', login='demo')
 
-        # 2. Check 2FA is required
+        # 2. Verify that RPC is blocked because 2FA is on.
+        self.assertFalse(
+            self.xmlrpc_common.authenticate(get_db_name(), 'demo', 'demo', {}),
+            "Should not have returned a uid"
+        )
+        self.assertFalse(
+            self.xmlrpc_common.authenticate(get_db_name(), 'demo', 'demo', {'interactive': True}),
+            'Trying to fake the auth type should not work'
+        )
+        uid = self.env.ref('base.user_demo').id
+        with self.assertRaisesRegex(Fault, r'Access Denied'):
+            self.xmlrpc_object.execute_kw(
+                get_db_name(), uid, 'demo',
+                'res.users', 'read', [uid, ['login']]
+            )
+
+        # 3. Check 2FA is required and disable it
         self.start_tour('/', 'totp_login_enabled', login=None)
 
-        # 3. TODO: verify that RPC is blocked because 2FA is on.
-
-        # 4. Finally, disable 2FA otherwise we can't re-login
+        # 4. Finally, check that 2FA is in fact disabled
         self.start_tour('/', 'totp_login_disabled', login=None)
+
+        # 5. Check that rpc is now re-allowed
+        uid = self.xmlrpc_common.authenticate(get_db_name(), 'demo', 'demo', {})
+        self.assertEqual(uid, self.env.ref('base.user_demo').id)
+        [r] = self.xmlrpc_object.execute_kw(
+            get_db_name(), uid, 'demo',
+            'res.users', 'read', [uid, ['login']]
+        )
+        self.assertEqual(r['login'], 'demo')
+
 
     def test_totp_administration(self):
         self.start_tour('/web', 'totp_tour_setup', login='demo')
