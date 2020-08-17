@@ -239,8 +239,10 @@
                             <h4 class="card-header">Practical Info</h4>
                             <div class="card-body">
                                 <b>Date</b><br/>
-                                <span t-field="track.date" t-options='{"hide_seconds":"True"}'/>
-                                <t t-if="event.date_tz">(<span t-field="event.date_tz"/>)</t>
+                                <span t-field="track.date" t-options='{"hide_seconds":"True", "format": "short"}'/>
+                                <t t-if="event.date_tz">
+                                    (<span t-field="track.date" t-options='{"format": "zzz"}'/>)
+                                </t>
                                 <br/>
                                 <b>Duration</b><br/>
                                 <span t-field="track.duration" t-options='{"widget": "duration", "unit": "hour", "round": "minute"}'/><br/>

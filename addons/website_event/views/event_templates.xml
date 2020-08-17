@@ -51,7 +51,7 @@
                 <div class="d-flex align-items-center flex-wrap pl-sm-3 pr-0">
                     <t t-call="website_event.events_search_box">
                         <t t-set="_searches" t-value="searches"/>
-                        <t t-set="_placeholder" t-value="'Search an event ...'"/>
+                        <t t-set="_placeholder">Search an event...</t>
                     </t>
                 </div>
             </div>
@@ -346,29 +346,35 @@
 <!-- Event -->
 <template id="layout" name="Event">
     <t t-call="website.layout">
+        <!-- Options -->
+        <t t-set="opt_events_list_categories" t-value="request.website.viewref('website_event.opt_events_list_categories').active"/>
         <div id="wrap" class="o_wevent_event js_event">
             <t t-if="not event.menu_id">
                 <nav class="navbar navbar-light border-top shadow-sm d-print-none">
-                    <div class="container">
-                        <a href="/event" class="navbar-brand h4 my-0 mr-4">
-                            <i class="fa fa-long-arrow-left text-primary mr-2"/>All Events
+                    <div class="container align-items-baseline justify-content-start">
+                        <a href="/event" class="navbar-brand h4 my-0 mr-0 mr-md-4">
+                            <i class="fa fa-long-arrow-left text-primary mr-2"/>
+                            <span>All Events</span>
                         </a>
-                        <ul class="navbar-nav flex-row">
-                            <li class="nav-item mr-3">
+                        <ul class="navbar-nav flex-row ml-md-auto ml-0">
+                            <li t-if="opt_events_list_categories" class="nav-item mr-3">
                                 <a t-attf-href="/event?type=#{event.event_type_id.id}" t-if="event.event_type_id" class="nav-link">
-                                    <i class="fa fa-folder-open text-primary mr-2"/><t t-esc="event.event_type_id.name"/>
+                                    <i class="fa fa-folder-open text-primary mr-2"/><span t-field="event.event_type_id"/>
                                 </a>
                             </li>
                             <li class="nav-item mr-3">
                                 <a t-if="event.country_id" t-attf-href="/event?country=#{event.country_id.id}" class="nav-link">
-                                    <i class="fa fa-map-marker text-primary mr-2"/><t t-esc="event.country_id.name"/>
+                                    <i class="fa fa-map-marker text-primary mr-2"/><span t-field="event.country_id"/>
                                 </a>
                             </li>
                         </ul>
-                        <t t-call="website_event.events_search_box">
-                            <t t-set="_classes" t-value="'ml-auto'"/>
-                            <t t-set="_searches" t-value="searches"/>
-                        </t>
+                        <div class="d-flex align-items-centerflex-wrap pl-sm-3 pr-0">
+                            <t t-call="website_event.events_search_box">
+                                <t t-set="_classes" t-value="'ml-auto'"/>
+                                <t t-set="_searches" t-value="searches"/>
+                                <t t-set="_placeholder">Search an event ...</t>
+                            </t>
+                        </div>
                     </div>
                 </nav>
             </t>
@@ -461,7 +467,7 @@
                                 "fields": ["phone", "mobile", "email"]
                             }'/>
                             <i class="fa fa-map-marker fa-fw" role="img"/>
-                            <a t-att-href="event.google_map_link()" target="_blank">Get the direction</a>
+                            <a t-att-href="event._google_map_link()" target="_blank">Get the direction</a>
                         </div>
                         <!-- Organizer -->
                         <div t-if="event.organizer_id" class="o_wevent_sidebar_block">

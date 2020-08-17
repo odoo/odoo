@@ -26,10 +26,10 @@
 <!-- Meeting Rooms Main Display -->
 <template id="community_main" name="Meeting Rooms: Main Display">
     <div class="col-12 col-md-8 pl-0 pr-0 pr-md-3 mt-3">
-        <h1 class="d-flex flex-row justify-content-between">
+        <h2 class="d-flex flex-row justify-content-between">
             <span>Join a room</span>
             <div class="dropdown">
-                <a class="dropdown-toggle o-no-caret btn pr-0" title="Languages Menu"
+                <a class="dropdown-toggle o-no-caret btn p-0" title="Languages Menu"
                     aria-label="Dropdown menu" data-display="static" data-toggle="dropdown" href="#" role="button">
                     <span t-esc="current_lang.name if current_lang else 'All Languages'"/> ▼</a>
                 <div class="dropdown-menu" role="menu">
@@ -38,7 +38,7 @@
                     <a class="dropdown-item" role="menuitem" t-as="language" t-attf-href="/event/#{slug(event)}/community?lang=#{language.id}" t-esc="language.name" t-foreach="available_languages"/>
                 </div>
             </div>
-        </h1>
+        </h2>
         <hr class="mt-2 mb-3"/>
         <p class="mt-">Choose a topic that interests you and start talking with the community. <br/> Don't forget to setup your camera and microphone.</p>
         <div class="d-flex flex-column justify-content-start align-items-start">
@@ -130,7 +130,7 @@
                         </button>
                     </div>
                 </div>
-                <span t-esc="meeting_room.summary" class="h5 text-muted"/>
+                <span class="text-muted" t-field="meeting_room.summary"/>
                 <div class="d-flex flex-row justify-content-between align-items-center">
                     <span class="h6 m-0 row">
                         <span t-esc="meeting_room.room_participant_count"/>&amp;nbsp;
@@ -151,10 +151,9 @@
 <template id="community_aside" name="Community: Aside">
     <div class="col-md-4 p-0 mt-3 o_wevent_community_aside">
         <div class="d-none d-md-block mb-3" t-if="event.meeting_room_allow_creation">
-            <h1>Launch a new topic</h1>
+            <h2>Start a topic</h2>
             <hr class="mt-2 mb-3"/>
             <p>Want to create your own discussion room ?</p>
-            <p>Be sure you are ready to spend at least 10 minutes in the room if you want to initiate a new topic.</p>
             <a href="#" role="button"
                 class="btn btn-primary o_wevent_create_room_button"
                 t-if="event.is_ongoing or event.start_today or is_event_manager"

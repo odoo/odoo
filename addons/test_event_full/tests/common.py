@@ -3,7 +3,6 @@
 
 from datetime import datetime, timedelta, time
 
-from odoo import fields
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo, HttpCaseWithUserPortal
 from odoo.addons.event_crm.tests.common import TestEventCrmCommon
 from odoo.addons.sales_team.tests.common import TestSalesCommon
@@ -209,27 +208,18 @@ class TestWEventCommon(HttpCaseWithUserDemo, HttpCaseWithUserPortal, EventDtPatc
         # ------------------------------------------------------------
 
         self.event_question_1 = self.env['event.question'].create({
-            'title': 'Question1',
+            'title': 'Which field are you working in',
             'question_type': 'simple_choice',
             'event_id': self.event.id,
             'once_per_order': False,
             'answer_ids': [
-                (0, 0, {'name': 'Q1-Answer1'}),
-                (0, 0, {'name': 'Q1-Answer2'})
+                (0, 0, {'name': 'Consumers'}),
+                (0, 0, {'name': 'Sales'}),
+                (0, 0, {'name': 'Research'}),
             ],
         })
         self.event_question_2 = self.env['event.question'].create({
-            'title': 'Question2',
-            'question_type': 'simple_choice',
-            'event_id': self.event.id,
-            'once_per_order': True,
-            'answer_ids': [
-                (0, 0, {'name': 'Q2-Answer1'}),
-                (0, 0, {'name': 'Q2-Answer2'})
-            ],
-        })
-        self.event_question_3 = self.env['event.question'].create({
-            'title': 'Question3',
+            'title': 'How did you hear about us ?',
             'question_type': 'text_box',
             'event_id': self.event.id,
             'once_per_order': True,
