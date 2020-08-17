@@ -8,6 +8,7 @@ import time
 from collections import defaultdict
 from contextlib import contextmanager
 from functools import partial
+import threading
 from unittest.mock import patch
 from smtplib import SMTPServerDisconnected
 
@@ -35,10 +36,19 @@ class MockEmail(common.BaseCase):
     @contextmanager
     def mock_mail_gateway(self, mail_unlink_sent=False, sim_error=None):
         build_email_origin = IrMailServer.build_email
+        send_email_origin = IrMailServer.send_email
         mail_create_origin = MailMail.create
         mail_unlink_origin = MailMail.unlink
         self._init_mail_mock()
         self.mail_unlink_sent = mail_unlink_sent
+
+        class FakeSMTPServer:
+            @staticmethod
+            def sendmail(smtp_from, smtp_to_list, message_str, mail_options=(), rcpt_options=()):
+                self._mails_str.append(message_str)
+            @staticmethod
+            def send_message(message, smtp_from, smtp_to_list, mail_options=(), rcpt_options=()):
+                self._mails_str.append(message.as_string())
 
         def _ir_mail_server_connect(model, *args, **kwargs):
             if sim_error and sim_error == 'connect_smtp_notfound':
@@ -62,7 +72,14 @@ class MockEmail(common.BaseCase):
                 raise SMTPServerDisconnected('SMTPServerDisconnected')
             elif sim_error and sim_error == 'send_delivery':
                 raise MailDeliveryException('MailDeliveryException')
-            return message['Message-Id']
+
+            kwargs['smtp_session'] = FakeSMTPServer
+            testing = getattr(threading.currentThread(), 'testing')
+            threading.currentThread().testing = False
+            try:
+                return send_email_origin(model, message, *args, **kwargs)
+            finally:
+                threading.currentThread().testing = testing
 
         def _mail_mail_create(model, *args, **kwargs):
             res = mail_create_origin(model, *args, **kwargs)
@@ -84,6 +101,7 @@ class MockEmail(common.BaseCase):
     def _init_mail_mock(self):
         self._mails = []
         self._mails_args = []
+        self._mails_str = []
         self._new_mails = self.env['mail.mail'].sudo()
 
     # ------------------------------------------------------------

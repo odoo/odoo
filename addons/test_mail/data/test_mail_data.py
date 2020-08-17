@@ -1,16 +1,17 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-MAIL_TEMPLATE = """Return-Path: <whatever-2a840@postmaster.twitter.com>
+MAIL_TEMPLATE = """\
+Return-Path: <whatever-2a840@postmaster.twitter.com>
 To: {to}
 cc: {cc}
 Received: by mail1.openerp.com (Postfix, from userid 10002)
-    id 5DF9ABFB2A; Fri, 10 Aug 2012 16:16:39 +0200 (CEST)
+ id 5DF9ABFB2A; Fri, 10 Aug 2012 16:16:39 +0200 (CEST)
 From: {email_from}
 Subject: {subject}
 MIME-Version: 1.0
 Content-Type: multipart/alternative;
-    boundary="----=_Part_4200734_24778174.1344608186754"
+ boundary="----=_Part_4200734_24778174.1344608186754"
 Date: Fri, 10 Aug 2012 14:16:26 +0000
 Message-ID: {msg_id}
 {extra}
@@ -43,10 +44,11 @@ Content-Transfer-Encoding: quoted-printable
 ------=_Part_4200734_24778174.1344608186754--
 """
 
-MAIL_TEMPLATE_PLAINTEXT = """Return-Path: <whatever-2a840@postmaster.twitter.com>
+MAIL_TEMPLATE_PLAINTEXT = """\
+Return-Path: <whatever-2a840@postmaster.twitter.com>
 To: {to}
 Received: by mail1.openerp.com (Postfix, from userid 10002)
-    id 5DF9ABFB2A; Fri, 10 Aug 2012 16:16:39 +0200 (CEST)
+ id 5DF9ABFB2A; Fri, 10 Aug 2012 16:16:39 +0200 (CEST)
 From: {email_from}
 Subject: {subject}
 MIME-Version: 1.0
@@ -61,30 +63,31 @@ Please call me as soon as possible this afternoon!
 Sylvie
 """
 
-MAIL_MULTIPART_MIXED = """Return-Path: <ignasse.carambar@gmail.com>
+MAIL_MULTIPART_MIXED = """\
+Return-Path: <ignasse.carambar@gmail.com>
 X-Original-To: raoul@grosbedon.fr
 Delivered-To: raoul@grosbedon.fr
 Received: by mail1.grosbedon.com (Postfix, from userid 10002)
-    id E8166BFACA; Fri, 23 Aug 2013 13:18:01 +0200 (CEST)
+ id E8166BFACA; Fri, 23 Aug 2013 13:18:01 +0200 (CEST)
 X-Spam-Checker-Version: SpamAssassin 3.3.1 (2010-03-16) on mail1.grosbedon.com
-X-Spam-Level:
+X-Spam-Level: 
 X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,FREEMAIL_FROM,
-    HTML_MESSAGE,RCVD_IN_DNSWL_LOW autolearn=unavailable version=3.3.1
-Received: from mail-ie0-f173.google.com (mail-ie0-f173.google.com [209.85.223.173])
-    by mail1.grosbedon.com (Postfix) with ESMTPS id 9BBD7BFAAA
-    for <raoul@openerp.fr>; Fri, 23 Aug 2013 13:17:55 +0200 (CEST)
+ HTML_MESSAGE,RCVD_IN_DNSWL_LOW autolearn=unavailable version=3.3.1
+Received: from mail-ie0-f173.google.com (mail-ie0-f173.google.com
+ [209.85.223.173]) by mail1.grosbedon.com (Postfix) with ESMTPS id 9BBD7BFAAA
+ for <raoul@openerp.fr>; Fri, 23 Aug 2013 13:17:55 +0200 (CEST)
 Received: by mail-ie0-f173.google.com with SMTP id qd12so575130ieb.4
-        for <raoul@grosbedon.fr>; Fri, 23 Aug 2013 04:17:54 -0700 (PDT)
+ for <raoul@grosbedon.fr>; Fri, 23 Aug 2013 04:17:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20120113;
-        h=mime-version:date:message-id:subject:from:to:content-type;
-        bh=dMNHV52EC7GAa7+9a9tqwT9joy9z+1950J/3A6/M/hU=;
-        b=DGuv0VjegdSrEe36ADC8XZ9Inrb3Iu+3/52Bm+caltddXFH9yewTr0JkCRQaJgMwG9
-         qXTQgP8qu/VFEbCh6scu5ZgU1hknzlNCYr3LT+Ih7dAZVUEHUJdwjzUU1LFV95G2RaCd
-         /Lwff6CibuUvrA+0CBO7IRKW0Sn5j0mukYu8dbaKsm6ou6HqS8Nuj85fcXJfHSHp6Y9u
-         dmE8jBh3fHCHF/nAvU+8aBNSIzl1FGfiBYb2jCoapIuVFitKR4q5cuoodpkH9XqqtOdH
-         DG+YjEyi8L7uvdOfN16eMr7hfUkQei1yQgvGu9/5kXoHg9+Gx6VsZIycn4zoaXTV3Nhn
-         nu4g==
+ d=gmail.com; s=20120113;
+ h=mime-version:date:message-id:subject:from:to:content-type;
+ bh=dMNHV52EC7GAa7+9a9tqwT9joy9z+1950J/3A6/M/hU=;
+ b=DGuv0VjegdSrEe36ADC8XZ9Inrb3Iu+3/52Bm+caltddXFH9yewTr0JkCRQaJgMwG9
+ qXTQgP8qu/VFEbCh6scu5ZgU1hknzlNCYr3LT+Ih7dAZVUEHUJdwjzUU1LFV95G2RaCd
+ /Lwff6CibuUvrA+0CBO7IRKW0Sn5j0mukYu8dbaKsm6ou6HqS8Nuj85fcXJfHSHp6Y9u
+ dmE8jBh3fHCHF/nAvU+8aBNSIzl1FGfiBYb2jCoapIuVFitKR4q5cuoodpkH9XqqtOdH
+ DG+YjEyi8L7uvdOfN16eMr7hfUkQei1yQgvGu9/5kXoHg9+Gx6VsZIycn4zoaXTV3Nhn
+ nu4g==
 MIME-Version: 1.0
 X-Received: by 10.50.124.65 with SMTP id mg1mr1144467igb.43.1377256674216;
  Fri, 23 Aug 2013 04:17:54 -0700 (PDT)
@@ -113,6 +116,7 @@ Content-Type: text/html; charset=ISO-8859-1
 <div dir="ltr">Should create a multipart/mixed: from gmail, <b>bold</b>, with attachment.<br clear="all"><div><br></div>-- <br>Marcel Boitempoils.</div>
 
 --089e01536c4ed4d16d04e49b8e94--
+
 --089e01536c4ed4d17204e49b8e96
 Content-Type: text/plain; charset=US-ASCII; name="test.txt"
 Content-Disposition: attachment; filename="test.txt"
@@ -120,12 +124,15 @@ Content-Transfer-Encoding: base64
 X-Attachment-Id: f_hkpb27k00
 
 dGVzdAo=
---089e01536c4ed4d17204e49b8e96--"""
+--089e01536c4ed4d17204e49b8e96--
+"""
 
-MAIL_MULTIPART_MIXED_TWO = """X-Original-To: raoul@grosbedon.fr
+MAIL_MULTIPART_MIXED_TWO = """\
+X-Original-To: raoul@grosbedon.fr
 Delivered-To: raoul@grosbedon.fr
 Received: by mail1.grosbedon.com (Postfix, from userid 10002)
-    id E8166BFACA; Fri, 23 Aug 2013 13:18:01 +0200 (CEST)
+ id E8166BFACA; Fri, 23 Aug 2013 13:18:01 +0200 (CEST)
+To: raoul@grosbedon.fr
 From: "Bruce Wayne" <bruce@wayneenterprises.com>
 Content-Type: multipart/alternative;
  boundary="Apple-Mail=_9331E12B-8BD2-4EC7-B53E-01F3FBEC9227"
@@ -135,7 +142,7 @@ Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.6\))
 --Apple-Mail=_9331E12B-8BD2-4EC7-B53E-01F3FBEC9227
 Content-Transfer-Encoding: 7bit
 Content-Type: text/plain;
-    charset=us-ascii
+ charset=us-ascii
 
 First and second part
 
@@ -146,15 +153,15 @@ Content-Type: multipart/mixed;
 --Apple-Mail=_CA6C687E-6AA0-411E-B0FE-F0ABB4CFED1F
 Content-Transfer-Encoding: 7bit
 Content-Type: text/html;
-    charset=us-ascii
+ charset=us-ascii
 
 <html><head></head><body>First part</body></html>
 
 --Apple-Mail=_CA6C687E-6AA0-411E-B0FE-F0ABB4CFED1F
 Content-Disposition: inline;
-    filename=thetruth.pdf
+ filename=thetruth.pdf
 Content-Type: application/pdf;
-    name="thetruth.pdf"
+ name="thetruth.pdf"
 Content-Transfer-Encoding: base64
 
 SSBhbSB0aGUgQmF0TWFuCg==
@@ -162,7 +169,7 @@ SSBhbSB0aGUgQmF0TWFuCg==
 --Apple-Mail=_CA6C687E-6AA0-411E-B0FE-F0ABB4CFED1F
 Content-Transfer-Encoding: 7bit
 Content-Type: text/html;
-    charset=us-ascii
+ charset=us-ascii
 
 <html><head></head><body>Second part</body></html>
 --Apple-Mail=_CA6C687E-6AA0-411E-B0FE-F0ABB4CFED1F--
@@ -170,24 +177,28 @@ Content-Type: text/html;
 --Apple-Mail=_9331E12B-8BD2-4EC7-B53E-01F3FBEC9227--
 """
 
-MAIL_SINGLE_BINARY = """X-Original-To: raoul@grosbedon.fr
+MAIL_SINGLE_BINARY = """\
+X-Original-To: raoul@grosbedon.fr
 Delivered-To: raoul@grosbedon.fr
 Received: by mail1.grosbedon.com (Postfix, from userid 10002)
-    id E8166BFACA; Fri, 23 Aug 2013 13:18:01 +0200 (CEST)
+ id E8166BFACA; Fri, 23 Aug 2013 13:18:01 +0200 (CEST)
+To: raoul@grosbedon.fr
 From: "Bruce Wayne" <bruce@wayneenterprises.com>
 Content-Type: application/pdf;
 Content-Disposition: filename=thetruth.pdf
 Content-Transfer-Encoding: base64
 Message-Id: <6BB1FAB2-2104-438E-9447-07AE2C8C4A92@sexample.com>
-Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.6\))
+Mime-Version: 1.0 (Mac OS X Mail 7.3 \\(1878.6\\))
 
 SSBhbSB0aGUgQmF0TWFuCg=="""
 
 
-MAIL_MULTIPART_WEIRD_FILENAME = """X-Original-To: john@doe.com
+MAIL_MULTIPART_WEIRD_FILENAME = """\
+X-Original-To: john@doe.com
 Delivered-To: johndoe@example.com
 Received: by mail.example.com (Postfix, from userid 10002)
-    id E8166BFACB; Fri, 23 Aug 2013 13:18:02 +0200 (CEST)
+ id E8166BFACB; Fri, 23 Aug 2013 13:18:02 +0200 (CEST)
+To: johndoe@example.com
 From: "Bruce Wayne" <bruce@wayneenterprises.com>
 Subject: test
 Message-ID: <c0c20fdd-a38e-b296-865b-d9232bf30ce5@odoo.com>
@@ -210,42 +221,43 @@ Content-Type: text/plain; charset=UTF-8;
  name="=?UTF-8?B?NjJfQDssXVspPS4ow4fDgMOJLnR4dA==?="
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment;
- filename*0*=utf-8'en-us'%36%32%5F%40%3B%2C%5D%5B%29%3D%2E%28%C3%87%C3%80%C3%89;
- filename*1*=%2E%74%78%74
+ filename*0*=utf-8'en-us'62_%40%3B%2C%5D%5B%29%3D.%28%C3%87%C3%80%C3%89.txt;
 
 SSBhbSBhIGZpbGUgd2l0aCBhIHZhbGlkIHdpbmRvd3MgZmlsZW5hbWUK
 --------------FACA7766210AAA981EAE01F3--
 """
 
 
-MAIL_MULTIPART_IMAGE = """X-Original-To: raoul@example.com
+MAIL_MULTIPART_IMAGE = """\
+X-Original-To: raoul@example.com
 Delivered-To: micheline@example.com
 Received: by mail1.example.com (Postfix, from userid 99999)
-    id 9DFB7BF509; Thu, 17 Dec 2015 15:22:56 +0100 (CET)
+ id 9DFB7BF509; Thu, 17 Dec 2015 15:22:56 +0100 (CET)
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on mail1.example.com
 X-Spam-Level: *
 X-Spam-Status: No, score=1.1 required=5.0 tests=FREEMAIL_FROM,
-    HTML_IMAGE_ONLY_08,HTML_MESSAGE,RCVD_IN_DNSWL_LOW,RCVD_IN_MSPIKE_H3,
-    RCVD_IN_MSPIKE_WL,T_DKIM_INVALID autolearn=no autolearn_force=no version=3.4.0
-Received: from mail-lf0-f44.example.com (mail-lf0-f44.example.com [209.85.215.44])
-    by mail1.example.com (Postfix) with ESMTPS id 1D80DBF509
-    for <micheline@example.com>; Thu, 17 Dec 2015 15:22:56 +0100 (CET)
+ HTML_IMAGE_ONLY_08,HTML_MESSAGE,RCVD_IN_DNSWL_LOW,RCVD_IN_MSPIKE_H3,
+ RCVD_IN_MSPIKE_WL,T_DKIM_INVALID autolearn=no autolearn_force=no
+ version=3.4.0
+Received: from mail-lf0-f44.example.com (mail-lf0-f44.example.com
+ [209.85.215.44]) by mail1.example.com (Postfix) with ESMTPS id 1D80DBF509 for
+ <micheline@example.com>; Thu, 17 Dec 2015 15:22:56 +0100 (CET)
 Authentication-Results: mail1.example.com; dkim=pass
-    reason="2048-bit key; unprotected key"
-    header.d=example.com header.i=@example.com header.b=kUkTIIlt;
-    dkim-adsp=pass; dkim-atps=neutral
+ reason="2048-bit key; unprotected key"
+ header.d=example.com header.i=@example.com header.b=kUkTIIlt;
+ dkim-adsp=pass; dkim-atps=neutral
 Received: by mail-lf0-f44.example.com with SMTP id z124so47959461lfa.3
-        for <micheline@example.com>; Thu, 17 Dec 2015 06:22:56 -0800 (PST)
+ for <micheline@example.com>; Thu, 17 Dec 2015 06:22:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=example.com; s=20120113;
-        h=mime-version:date:message-id:subject:from:to:content-type;
-        bh=GdrEuMrz6vxo/Z/F+mJVho/1wSe6hbxLx2SsP8tihzw=;
-        b=kUkTIIlt6fe4dftKHPNBkdHU2rO052o684R0e2bqH7roGUQFb78scYE+kqX0wo1zlk
-         zhKPVBR1TqTsYlqcHu+D3aUzai7L/Q5m40sSGn7uYGkZJ6m1TwrWNqVIgTZibarqvy94
-         NWhrjjK9gqd8segQdSjCgTipNSZME4bJCzPyBg/D5mqe07FPBJBGoF9SmIzEBhYeqLj1
-         GrXjb/D8J11aOyzmVvyt+bT+oeLUJI8E7qO5g2eQkMncyu+TyIXaRofOOBA14NhQ+0nS
-         w5O9rzzqkKuJEG4U2TJ2Vi2nl2tHJW2QPfTtFgcCzGxQ0+5n88OVlbGTLnhEIJ/SYpem
-         O5EA==
+ d=example.com; s=20120113;
+ h=mime-version:date:message-id:subject:from:to:content-type;
+ bh=GdrEuMrz6vxo/Z/F+mJVho/1wSe6hbxLx2SsP8tihzw=;
+ b=kUkTIIlt6fe4dftKHPNBkdHU2rO052o684R0e2bqH7roGUQFb78scYE+kqX0wo1zlk
+ zhKPVBR1TqTsYlqcHu+D3aUzai7L/Q5m40sSGn7uYGkZJ6m1TwrWNqVIgTZibarqvy94
+ NWhrjjK9gqd8segQdSjCgTipNSZME4bJCzPyBg/D5mqe07FPBJBGoF9SmIzEBhYeqLj1
+ GrXjb/D8J11aOyzmVvyt+bT+oeLUJI8E7qO5g2eQkMncyu+TyIXaRofOOBA14NhQ+0nS
+ w5O9rzzqkKuJEG4U2TJ2Vi2nl2tHJW2QPfTtFgcCzGxQ0+5n88OVlbGTLnhEIJ/SYpem
+ O5EA==
 MIME-Version: 1.0
 X-Received: by 10.25.167.197 with SMTP id q188mr22222517lfe.129.1450362175493;
  Thu, 17 Dec 2015 06:22:55 -0800 (PST)
@@ -296,6 +308,7 @@ r><div class=3D"gmail_signature">Thibault Delavall=C3=A9e</div>
 </div>
 
 --001a11416b9e9b229805272b7051--
+
 --001a11416b9e9b229a05272b7052
 Content-Type: image/gif; name="=?UTF-8?B?b3JhbmfDqWUuZ2lm?="
 Content-Disposition: inline; filename="=?UTF-8?B?b3JhbmfDqWUuZ2lm?="
@@ -326,7 +339,8 @@ AAAAACwAAAAAAgACAAAEA3DJFQA7
 --001a11416b9e9b229a05272b7052--
 """
 
-MAIL_EML_ATTACHMENT = """Subject: Re: test attac
+MAIL_EML_ATTACHMENT = """\
+Subject: Re: test attac
 From: {email_from}
 To: {to}
 References: <f3b9f8f8-28fa-2543-cab2-7aa68f679ebb@odoo.com>
@@ -361,52 +375,57 @@ Content-Disposition: attachment;
 
 Delivered-To: anon2@gmail1.openerp.com
 Received: by 10.46.1.170 with SMTP id f42csp2379722lji;
-        Mon, 5 Mar 2018 01:19:23 -0800 (PST)
-X-Google-Smtp-Source: AG47ELsYTlAcblMxfnaEENQuF+MFoac5Q07wieyw0cybq/qOX4+DmayqoQILkiWT+NiTOcnr/ACO
+ Mon, 5 Mar 2018 01:19:23 -0800 (PST)
+X-Google-Smtp-Source: 
+ AG47ELsYTlAcblMxfnaEENQuF+MFoac5Q07wieyw0cybq/qOX4+DmayqoQILkiWT+NiTOcnr/ACO
 X-Received: by 10.28.154.213 with SMTP id c204mr7237750wme.64.1520241563503;
-        Mon, 05 Mar 2018 01:19:23 -0800 (PST)
+ Mon, 05 Mar 2018 01:19:23 -0800 (PST)
 ARC-Seal: i=1; a=rsa-sha256; t=1520241563; cv=none;
-        d=google.com; s=arc-20160816;
-        b=BqgMSbqmbpYW1ZtfGTVjj/654MBmabw4XadNZEaI96hDaub6N6cP8Guu3PoxscI9os
-         0OLYVP1s/B+Vv9rIzulCwHyHsgnX+aTxGYepTDN6x8SA9Qeb9aQoNSVvQLryTAoGpaFr
-         vXhw8aPWyr28edE03TDFA/s7X65Bf6dV5zJdMiUPVqGkfYfcTHMf3nDER5vk8vQj7tve
-         Cfyy0h9vLU9RSEtdFwmlEkLmgT9NQ3GDf0jQ97eMXPgR2q6duCPoMcz15KlWOno53xgH
-         EiV7aIZ5ZMN/m+/2xt3br/ubJ5euFojWhDnHUZoaqd08TCSQPd4fFCCx75MjDeCnwYMn
-         iKSg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
-        h=content-language:mime-version:user-agent:date:message-id:subject
-         :from:to:dkim-signature:arc-authentication-results;
-        bh=/UIFqhjCCbwBLsI4w7YY98QH6G/wxe+2W4bbMDCskjM=;
-        b=Wv5jt+usnSgWI96GaZWUN8/VKl1drueDpU/4gkyX/iK4d6S4CuSDjwYAc3guz/TjeW
-         GoKCqT30IGZoStpXQbuLry7ezXNK+Fp8MJKN2n/x5ClJWHxIsxIGlP2QC3TO8RI0P5o0
-         GXG9izW93q1ubkdPJFt3unSjjwSYf5XVQAZQtRm9xKjqA+lbtFbsnbjJ4wgYBURnD8ma
-         Qxb2xsxXDelaZvtdlzHRDn5SEkbqhcCclEYw6oRLpVQFZeYtPxcCleVybtj2owJxdaLp
-         7wXuo/gpYe6E2cPuS2opei8AzjEhYTNzlYXTPvaoxCCTTjfGTaPv22TeRDehuIXngSEl
-         Nmmw==
-ARC-Authentication-Results: i=1; mx.google.com;
-       dkim=pass header.i=@odoo.com header.s=mail header.b=MCzhjB9b;
-       spf=pass (google.com: domain of soup@odoo.com designates 149.202.180.44 as permitted sender) smtp.mailfrom=soup@odoo.com;
-       dmarc=pass (p=NONE sp=NONE dis=NONE) header.from=odoo.com
+ d=google.com; s=arc-20160816;
+ b=BqgMSbqmbpYW1ZtfGTVjj/654MBmabw4XadNZEaI96hDaub6N6cP8Guu3PoxscI9os
+ 0OLYVP1s/B+Vv9rIzulCwHyHsgnX+aTxGYepTDN6x8SA9Qeb9aQoNSVvQLryTAoGpaFr
+ vXhw8aPWyr28edE03TDFA/s7X65Bf6dV5zJdMiUPVqGkfYfcTHMf3nDER5vk8vQj7tve
+ Cfyy0h9vLU9RSEtdFwmlEkLmgT9NQ3GDf0jQ97eMXPgR2q6duCPoMcz15KlWOno53xgH
+ EiV7aIZ5ZMN/m+/2xt3br/ubJ5euFojWhDnHUZoaqd08TCSQPd4fFCCx75MjDeCnwYMn
+ iKSg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com;
+ s=arc-20160816;
+ h=content-language:mime-version:user-agent:date:message-id:subject
+ :from:to:dkim-signature:arc-authentication-results;
+ bh=/UIFqhjCCbwBLsI4w7YY98QH6G/wxe+2W4bbMDCskjM=;
+ b=Wv5jt+usnSgWI96GaZWUN8/VKl1drueDpU/4gkyX/iK4d6S4CuSDjwYAc3guz/TjeW
+ GoKCqT30IGZoStpXQbuLry7ezXNK+Fp8MJKN2n/x5ClJWHxIsxIGlP2QC3TO8RI0P5o0
+ GXG9izW93q1ubkdPJFt3unSjjwSYf5XVQAZQtRm9xKjqA+lbtFbsnbjJ4wgYBURnD8ma
+ Qxb2xsxXDelaZvtdlzHRDn5SEkbqhcCclEYw6oRLpVQFZeYtPxcCleVybtj2owJxdaLp
+ 7wXuo/gpYe6E2cPuS2opei8AzjEhYTNzlYXTPvaoxCCTTjfGTaPv22TeRDehuIXngSEl
+ Nmmw==
+ARC-Authentication-Results: i=1; mx.google.com; dkim=pass header.i=@odoo.com
+ header.s=mail header.b=MCzhjB9b; spf=pass (google.com: domain of
+ soup@odoo.com designates 149.202.180.44 as permitted sender)
+ smtp.mailfrom=soup@odoo.com;
+ dmarc=pass (p=NONE sp=NONE dis=NONE) header.from=odoo.com
 Return-Path: <soup@odoo.com>
 Received: from mail2.odoo.com (mail2.odoo.com. [149.202.180.44])
-        by mx.google.com with ESMTPS id y4si4279200wmy.148.2018.03.05.01.19.22
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 05 Mar 2018 01:19:23 -0800 (PST)
-Received-SPF: pass (google.com: domain of soup@odoo.com designates 149.202.180.44 as permitted sender) client-ip=149.202.180.44;
-Authentication-Results: mx.google.com;
-       dkim=pass header.i=@odoo.com header.s=mail header.b=MCzhjB9b;
-       spf=pass (google.com: domain of soup@odoo.com designates 149.202.180.44 as permitted sender) smtp.mailfrom=soup@odoo.com;
-       dmarc=pass (p=NONE sp=NONE dis=NONE) header.from=odoo.com
+ by mx.google.com with ESMTPS id y4si4279200wmy.148.2018.03.05.01.19.22
+ (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+ Mon, 05 Mar 2018 01:19:23 -0800 (PST)
+Received-SPF: pass (google.com: domain of soup@odoo.com designates
+ 149.202.180.44 as permitted sender) client-ip=149.202.180.44;
+Authentication-Results: mx.google.com; dkim=pass header.i=@odoo.com
+ header.s=mail header.b=MCzhjB9b;
+ spf=pass (google.com: domain of soup@odoo.com designates
+ 149.202.180.44 as permitted sender) smtp.mailfrom=soup@odoo.com;
+ dmarc=pass (p=NONE sp=NONE dis=NONE) header.from=odoo.com
 Received: from [10.10.31.24] (unknown [91.183.114.50])
-	(Authenticated sender: soup)
-	by mail2.odoo.com (Postfix) with ESMTPSA id 7B571A4085
-	for <what@odoo.com>; Mon,  5 Mar 2018 10:19:21 +0100 (CET)
+ (Authenticated sender: soup)
+ by mail2.odoo.com (Postfix) with ESMTPSA id 7B571A4085
+ for <what@odoo.com>; Mon,  5 Mar 2018 10:19:21 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=odoo.com; s=mail;
-	t=1520241562; bh=L2r7Sp/vjogIdM1k8H9zDGDjnhKolsTTLLjndnFC4Jc=;
-	h=To:From:Subject:Date:From;
-	b=MCzhjB9bnsrJ3uKjq+GjujFxmtrq3fc7Vv7Vg2C72EPKnkxgqy6yPjWKtXbBlaiT3
-	 YjKI24aiSQlOeOPQiqFgiDzeqqemNDp+CRuhoYz1Vbz+ESRaHtkWRLb7ZjvohS2k7e
-	 RTq7tUxY2nUL2YrNHV7DFYtJVBwiTuyLP6eAiJdE=
+ t=1520241562; bh=L2r7Sp/vjogIdM1k8H9zDGDjnhKolsTTLLjndnFC4Jc=;
+ h=To:From:Subject:Date:From;
+ b=MCzhjB9bnsrJ3uKjq+GjujFxmtrq3fc7Vv7Vg2C72EPKnkxgqy6yPjWKtXbBlaiT3
+ YjKI24aiSQlOeOPQiqFgiDzeqqemNDp+CRuhoYz1Vbz+ESRaHtkWRLb7ZjvohS2k7e
+ RTq7tUxY2nUL2YrNHV7DFYtJVBwiTuyLP6eAiJdE=
 To: what@odoo.com
 From: Soup <soup@odoo.com>
 Subject: =?UTF-8?Q?Soupe_du_jour_:_Pois_cass=c3=a9s?=
@@ -419,8 +438,8 @@ Content-Type: multipart/alternative;
  boundary="------------1F2D18B1129FC2F0B9EECF50"
 Content-Language: en-US
 X-Spam-Status: No, score=-1.2 required=5.0 tests=ALL_TRUSTED,BAYES_00,
-	HTML_IMAGE_ONLY_08,HTML_MESSAGE,T_REMOTE_IMAGE autolearn=no
-	autolearn_force=no version=3.4.0
+ HTML_IMAGE_ONLY_08,HTML_MESSAGE,T_REMOTE_IMAGE autolearn=no
+ autolearn_force=no version=3.4.0
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on mail2.odoo.com
 
 This is a multi-part message in MIME format.
@@ -465,83 +484,86 @@ Web: <a class="moz-txt-link-freetext" href="http://www.odoo.com">http://www.odoo
 
 --------------1F2D18B1129FC2F0B9EECF50--
 
---------------A6B5FD5F68F4D73ECD739009--"""
+--------------A6B5FD5F68F4D73ECD739009--
+"""
 
 
-MAIL_XHTML = """Return-Path: <xxxx@xxxx.com>
+MAIL_XHTML = """\
+Return-Path: <xxxx@xxxx.com>
 Received: from xxxx.internal (xxxx.xxxx.internal [1.1.1.1])
-	 by xxxx (xxxx 1.1.1-111-g972eecc-slipenbois) with LMTPA;
-	 Fri, 13 Apr 2018 22:11:52 -0400
+ by xxxx (xxxx 1.1.1-111-g972eecc-slipenbois) with LMTPA;
+ Fri, 13 Apr 2018 22:11:52 -0400
 X-Cyrus-Session-Id: sloti35d1t38-1111111-11111111111-5-11111111111111111111
 X-Sieve: CMU Sieve 1.0
-X-Spam-known-sender: no ("Email failed DMARC policy for domain"); in-addressbook
+X-Spam-known-sender: 
+ no ("Email failed DMARC policy for domain"); in-addressbook
 X-Spam-score: 0.0
 X-Spam-hits: ALL_TRUSTED -1, BAYES_00 -1.9, FREEMAIL_FROM 0.001,
-  HTML_FONT_LOW_CONTRAST 0.001, HTML_MESSAGE 0.001, SPF_SOFTFAIL 0.665,
-  LANGUAGES en, BAYES_USED global, SA_VERSION 1.1.0
+ HTML_FONT_LOW_CONTRAST 0.001, HTML_MESSAGE 0.001, SPF_SOFTFAIL 0.665,
+ LANGUAGES en, BAYES_USED global, SA_VERSION 1.1.0
 X-Spam-source: IP='1.1.1.1', Host='unk', Country='unk', FromHeader='com',
-  MailFrom='com'
+ MailFrom='com'
 X-Spam-charsets: plain='utf-8', html='utf-8'
 X-IgnoreVacation: yes ("Email failed DMARC policy for domain")
 X-Resolved-to: catchall@xxxx.xxxx
 X-Delivered-to: catchall@xxxx.xxxx
 X-Mail-from: xxxx@xxxx.com
 Received: from mx4 ([1.1.1.1])
-  by xxxx.internal (LMTPProxy); Fri, 13 Apr 2018 22:11:52 -0400
+ by xxxx.internal (LMTPProxy); Fri, 13 Apr 2018 22:11:52 -0400
 Received: from xxxx.xxxx.com (localhost [127.0.0.1])
-	by xxxx.xxxx.internal (Postfix) with ESMTP id E1111C1111;
-	Fri, 13 Apr 2018 22:11:51 -0400 (EDT)
+ by xxxx.xxxx.internal (Postfix) with ESMTP id E1111C1111;
+ Fri, 13 Apr 2018 22:11:51 -0400 (EDT)
 Received: from xxxx.xxxx.internal (localhost [127.0.0.1])
-    by xxxx.xxxx.com (Authentication Milter) with ESMTP
-    id BBDD1111D1A;
-    Fri, 13 Apr 2018 22:11:51 -0400
-ARC-Authentication-Results: i=1; xxxx.xxxx.com; arc=none (no signatures found);
-    dkim=pass (2048-bit rsa key sha256) header.d=xxxx.com header.i=@xxxx.com header.b=P1aaAAaa x-bits=2048 x-keytype=rsa x-algorithm=sha256 x-selector=fm2;
-    dmarc=fail (p=none,d=none) header.from=xxxx.com;
-    iprev=pass policy.iprev=1.1.1.1 (out1-smtp.xxxx.com);
-    spf=softfail smtp.mailfrom=xxxx@xxxx.com smtp.helo=out1-smtp.xxxx.com;
-    x-aligned-from=pass (Address match);
-    x-cm=none score=0;
-    x-ptr=pass x-ptr-helo=out1-smtp.xxxx.com x-ptr-lookup=out1-smtp.xxxx.com;
-    x-return-mx=pass smtp.domain=xxxx.com smtp.result=pass smtp_is_org_domain=yes header.domain=xxxx.com header.result=pass header_is_org_domain=yes;
-    x-tls=pass version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128;
-    x-vs=clean score=0 state=0
-Authentication-Results: xxxx.xxxx.com;
-    arc=none (no signatures found);
-    dkim=pass (2048-bit rsa key sha256) header.d=xxxx.com header.i=@xxxx.com header.b=P1awJPiy x-bits=2048 x-keytype=rsa x-algorithm=sha256 x-selector=fm2;
-    dmarc=fail (p=none,d=none) header.from=xxxx.com;
-    iprev=pass policy.iprev=66.111.4.25 (out1-smtp.xxxx.com);
-    spf=softfail smtp.mailfrom=xxxx@xxxx.com smtp.helo=out1-smtp.xxxx.com;
-    x-aligned-from=pass (Address match);
-    x-cm=none score=0;
-    x-ptr=pass x-ptr-helo=out1-smtp.xxxx.com x-ptr-lookup=out1-smtp.xxxx.com;
-    x-return-mx=pass smtp.domain=xxxx.com smtp.result=pass smtp_is_org_domain=yes header.domain=xxxx.com header.result=pass header_is_org_domain=yes;
-    x-tls=pass version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128;
-    x-vs=clean score=0 state=0
+ by xxxx.xxxx.com (Authentication Milter) with ESMTP
+ id BBDD1111D1A;
+ Fri, 13 Apr 2018 22:11:51 -0400
+ARC-Authentication-Results: i=1; xxxx.xxxx.com; arc=none (no signatures
+ found); dkim=pass (2048-bit rsa key sha256) header.d=xxxx.com
+ header.i=@xxxx.com header.b=P1aaAAaa x-bits=2048 x-keytype=rsa
+ x-algorithm=sha256 x-selector=fm2; dmarc=fail (p=none,d=none)
+ header.from=xxxx.com; iprev=pass policy.iprev=1.1.1.1 (out1-smtp.xxxx.com);
+ spf=softfail smtp.mailfrom=xxxx@xxxx.com smtp.helo=out1-smtp.xxxx.com;
+ x-aligned-from=pass (Address match); x-cm=none score=0; x-ptr=pass
+ x-ptr-helo=out1-smtp.xxxx.com x-ptr-lookup=out1-smtp.xxxx.com;
+ x-return-mx=pass smtp.domain=xxxx.com smtp.result=pass smtp_is_org_domain=yes
+ header.domain=xxxx.com header.result=pass header_is_org_domain=yes;
+ x-tls=pass version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128;
+ x-vs=clean score=0 state=0
+Authentication-Results: xxxx.xxxx.com; arc=none (no signatures found);
+ dkim=pass (2048-bit rsa key sha256) header.d=xxxx.com header.i=@xxxx.com
+ header.b=P1awJPiy x-bits=2048 x-keytype=rsa x-algorithm=sha256
+ x-selector=fm2; dmarc=fail (p=none,d=none) header.from=xxxx.com; iprev=pass
+ policy.iprev=66.111.4.25 (out1-smtp.xxxx.com);
+ spf=softfail smtp.mailfrom=xxxx@xxxx.com smtp.helo=out1-smtp.xxxx.com;
+ x-aligned-from=pass (Address match);
+ x-cm=none score=0;
+ x-ptr=pass x-ptr-helo=out1-smtp.xxxx.com x-ptr-lookup=out1-smtp.xxxx.com;
+ x-return-mx=pass smtp.domain=xxxx.com smtp.result=pass smtp_is_org_domain=yes
+ header.domain=xxxx.com header.result=pass header_is_org_domain=yes;
+ x-tls=pass version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128;
+ x-vs=clean score=0 state=0
 X-ME-VSCategory: clean
 X-ME-CMScore: 0
 X-ME-CMCategory: none
-Received-SPF: softfail
-    (gmail.com ... _spf.xxxx.com: Sender is not authorized by default to use 'xxxx@xxxx.com' in 'mfrom' identity, however domain is not currently prepared for false failures (mechanism '~all' matched))
-    receiver=xxxx.xxxx.com;
-    identity=mailfrom;
-    envelope-from="xxxx@xxxx.com";
-    helo=out1-smtp.xxxx.com;
-    client-ip=1.1.1.1
+Received-SPF: softfail (gmail.com ... _spf.xxxx.com: Sender is not authorized
+ by default to use 'xxxx@xxxx.com' in 'mfrom' identity, however domain is not
+ currently prepared for false failures (mechanism '~all' matched))
+ receiver=xxxx.xxxx.com; identity=mailfrom; envelope-from="xxxx@xxxx.com";
+ helo=out1-smtp.xxxx.com; client-ip=1.1.1.1
 Received: from xxxx.xxxx.internal (gateway1.xxxx.internal [1.1.1.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by xxxx.xxxx.internal (Postfix) with ESMTPS;
-	Fri, 13 Apr 2018 22:11:51 -0400 (EDT)
+ (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+ (No client certificate requested)
+ by xxxx.xxxx.internal (Postfix) with ESMTPS;
+ Fri, 13 Apr 2018 22:11:51 -0400 (EDT)
 Received: from compute3.internal (xxxx.xxxx.internal [10.202.2.43])
-	by xxxx.xxxx.internal (Postfix) with ESMTP id 8BD5B21BBD;
-	Fri, 13 Apr 2018 22:11:51 -0400 (EDT)
+ by xxxx.xxxx.internal (Postfix) with ESMTP id 8BD5B21BBD;
+ Fri, 13 Apr 2018 22:11:51 -0400 (EDT)
 Received: from xxxx ([10.202.2.163])
-  by xxxx.internal (MEProxy); Fri, 13 Apr 2018 22:11:51 -0400
+ by xxxx.internal (MEProxy); Fri, 13 Apr 2018 22:11:51 -0400
 X-ME-Sender: <xms:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa>
 Received: from [1.1.1.1] (unknown [1.1.1.1])
-	by mail.xxxx.com (Postfix) with ESMTPA id BF5E1111D
-	for <catchall@xxxx.xxxx>; Fri, 13 Apr 2018 22:11:50 -0400 (EDT)
+ by mail.xxxx.com (Postfix) with ESMTPA id BF5E1111D
+ for <catchall@xxxx.xxxx>; Fri, 13 Apr 2018 22:11:50 -0400 (EDT)
 From: Sylvie Lelitre <test.sylvie.lelitre@agrolait.com>
 To: generic@mydomain.com
 Subject: Re: xxxx (Ref PO1)
@@ -577,17 +599,17 @@ Content-Transfer-Encoding: quoted-printable
 
 <?xml version=3D"1.0" encoding=3D"utf-16"?><html><head><style type=3D"text/=
 css"><!--blockquote.cite
-{margin-left: 5px; margin-right: 0px; padding-left: 10px; padding-right:=
+&#123;margin-left: 5px; margin-right: 0px; padding-left: 10px; padding-right:=
  0px; border-left-width: 1px; border-left-style: solid; border-left-color:=
- rgb(204, 204, 204);}
+ rgb(204, 204, 204);&#124;
 blockquote.cite2
-{margin-left: 5px; margin-right: 0px; padding-left: 10px; padding-right:=
+&#123;margin-left: 5px; margin-right: 0px; padding-left: 10px; padding-right:=
  0px; border-left-width: 1px; border-left-style: solid; border-left-color:=
- rgb(204, 204, 204); margin-top: 3px; padding-top: 0px;}
+ rgb(204, 204, 204); margin-top: 3px; padding-top: 0px;&#124;
 a img
-{border: 0px;}
+&#123;border: 0px;&#124;
 body
-{font-family: Tahoma; font-size: 12pt;}
+&#123;font-family: Tahoma; font-size: 12pt;&#124;
 --></style></head><body><div>this is a reply to PO200109 from emClient</div=
 ><div id=3D"signature_old"><div style=3D"font-family: Tahoma; font-size:=
  12 pt;">-- <br /><span><span class=3D"__postbox-detected-content __postbox=
@@ -706,14 +728,18 @@ o</a>.
 </pre>
 </blockquote></div>
 </body></html>
---------=_MB48E455BD-2850-42EC-B1CA-886CDF48905E--"""
+--------=_MB48E455BD-2850-42EC-B1CA-886CDF48905E--
+
+--------=_MB48E455BD-1111-42EC-1111-886CDF48905E--
+"""
 
 
-MAIL_BOUNCE = """Return-Path: <>
+MAIL_BOUNCE = """\
+Return-Path: <whatever-2a840@postmaster.twitter.com>
 X-Original-To: {to}
 Delivered-To: {to}
 Received: by mail2.test.ironsky (Postfix)
-    id 93A83A5F0D; Mon, 15 Apr 2019 15:41:06 +0200 (CEST)
+ id 93A83A5F0D; Mon, 15 Apr 2019 15:41:06 +0200 (CEST)
 Date: Mon, 15 Apr 2019 15:41:06 +0200 (CEST)
 From: MAILER-DAEMON@mail2.test.ironsky (Mail Delivery System)
 Subject: {subject}
@@ -721,7 +747,7 @@ To: {to}
 Auto-Submitted: auto-replied
 MIME-Version: 1.0
 Content-Type: multipart/report; report-type=delivery-status;
-    boundary="92726A5F09.1555335666/mail2.test.ironsky"
+ boundary="92726A5F09.1555335666/mail2.test.ironsky"
 Message-Id: <20190415134106.93A83A5F0D@mail2.test.ironsky>
 
 This is a MIME-encapsulated message.
@@ -766,16 +792,16 @@ Content-Description: Undelivered Message
 Content-Type: message/rfc822
 
 Return-Path: <{to}>
-Received: from [127.0.0.1] (host-212-68-194-133.dynamic.voo.be [212.68.194.133])
-    (Authenticated sender: aaa)
-    by mail2.test.ironsky (Postfix) with ESMTPSA id 92726A5F09
-    for <{email_from}>; Mon, 15 Apr 2019 15:40:24 +0200 (CEST)
+Received: from [127.0.0.1] (host-212-68-194-133.dynamic.voo.be
+ [212.68.194.133]) (Authenticated sender: aaa) by mail2.test.ironsky (Postfix)
+ with ESMTPSA id 92726A5F09 for <{email_from}>; Mon, 15
+ Apr 2019 15:40:24 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=test.ironsky; s=mail;
-    t=1555335624; bh=x6cSjphxNDiRDMmm24lMAUKtdCFfftM8w/fdUyfoeFs=;
-    h=references:Subject:From:Reply-To:To:Date:From;
-    b=Bo0BsXAHgKiBfBtMvvO/+KaS9PuuS0+AozL4SxU05jHZcJFc7qFIPEpqkJIdbzNcQ
-     wq0PJYclgX7QZDOMm3VHQwcwOxBDXAbdnpfkPM9/wa+FWKfr6ikowMTHHT3CA1qNbe
-     h+BQVyBKIvr/LDFPSN2hQmfXWwWupm1lgUhJ07T4=
+ t=1555335624; bh=x6cSjphxNDiRDMmm24lMAUKtdCFfftM8w/fdUyfoeFs=;
+ h=references:Subject:From:Reply-To:To:Date:From;
+ b=Bo0BsXAHgKiBfBtMvvO/+KaS9PuuS0+AozL4SxU05jHZcJFc7qFIPEpqkJIdbzNcQ
+ wq0PJYclgX7QZDOMm3VHQwcwOxBDXAbdnpfkPM9/wa+FWKfr6ikowMTHHT3CA1qNbe
+ h+BQVyBKIvr/LDFPSN2hQmfXWwWupm1lgUhJ07T4=
 Content-Type: multipart/mixed; boundary="===============7355787381227985247=="
 MIME-Version: 1.0
 Message-Id: {extra}
@@ -787,12 +813,13 @@ To: Raoul <{email_from}>
 Date: Mon, 15 Apr 2019 13:40:24 -0000
 X-Odoo-Objects: project.project-3, ,project.task-32
 X-Spam-Status: No, score=-2.0 required=5.0 tests=ALL_TRUSTED,BAYES_00,
-    DKIM_ADSP_NXDOMAIN,HEADER_FROM_DIFFERENT_DOMAINS,HTML_MESSAGE
-    shortcircuit=no autolearn=no autolearn_force=no version=3.4.2
+ DKIM_ADSP_NXDOMAIN,HEADER_FROM_DIFFERENT_DOMAINS,HTML_MESSAGE
+ shortcircuit=no autolearn=no autolearn_force=no version=3.4.2
 X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on mail2.test.ironsky
 
 --===============7355787381227985247==
-Content-Type: multipart/alternative; boundary="===============8588563873240298690=="
+Content-Type: multipart/alternative;
+ boundary="===============8588563873240298690=="
 MIME-Version: 1.0
 
 --===============8588563873240298690==
