@@ -1031,6 +1031,18 @@ table.table_desc tr td {
     }
 }
 
+// Navbar Dropdown Menu
+header > .navbar > * .dropdown-menu {
+    max-height: 60vh;
+    overflow-y: auto;
+}
+
+header.o_affix_enabled > .navbar > * .dropdown-menu {
+    @include media-breakpoint-down(md) {
+        max-height: 100%;
+    }
+}
+
 // Copyright
 .o_footer_copyright {
     padding: 8px;
