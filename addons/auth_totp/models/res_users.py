@@ -14,6 +14,7 @@ import werkzeug.urls
 from odoo import _, api, fields, models
 from odoo.addons.base.models.res_users import check_identity
 from odoo.exceptions import AccessDenied, UserError
+from odoo.http import request
 
 _logger = logging.getLogger(__name__)
 
@@ -45,6 +46,9 @@ class Users(models.Model):
         self.ensure_one()
         return self.totp_enabled or super()._rpc_api_keys_only()
 
+    def _get_session_token_fields(self):
+        return super()._get_session_token_fields() | {'totp_secret'}
+
     def _totp_check(self, code):
         sudo = self.sudo()
         key = base64.b32decode(sudo.totp_secret.upper())
@@ -65,6 +69,11 @@ class Users(models.Model):
             return False
 
         self.sudo().totp_secret = secret
+        if request:
+            # update session token so the user does not get logged out (cache cleared by change)
+            new_token = self.env.user._compute_session_token(request.session.sid)
+            request.session.session_token = new_token
+
         _logger.info("2FA enable: SUCCESS for '%s' (#%s)", self.login, self.id)
         return True
 
@@ -75,6 +84,11 @@ class Users(models.Model):
             return False
 
         self.sudo().write({'totp_secret': False})
+        if request and self == self.env.user:
+            # update session token so the user does not get logged out (cache cleared by change)
+            new_token = self.env.user._compute_session_token(request.session.sid)
+            request.session.session_token = new_token
+
         _logger.info("2FA disable: SUCCESS for '%s' (#%s) by uid #%s", self.login, self.id, self.env.user.id)
         return {'type': 'ir.actions.act_window_close'}
 
