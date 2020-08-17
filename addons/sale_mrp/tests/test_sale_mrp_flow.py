@@ -1242,7 +1242,7 @@ class TestSaleMrpFlow(ValuationReconciliationTestCommon):
         # kit_uom_in_kit --|- component_uom_gm  x3 Test-KG
         #                  |- kit_uom_1         x2 Test-Dozen --|- component_uom_unit    x2 Test-Dozen
         #                                                       |- component_uom_dozen   x1 Test-Dozen
-        #                                                       |- component_uom_kg      x3 Test-G
+        #                                                       |- component_uom_kg      x5 Test-G
 
         kit_uom_1 = self._create_product('Sub Kit 1', self.uom_unit)
         kit_uom_in_kit = self._create_product('Parent Kit', self.uom_unit)
@@ -1265,7 +1265,7 @@ class TestSaleMrpFlow(ValuationReconciliationTestCommon):
             'bom_id': bom_kit_uom_1.id})
         BomLine.create({
             'product_id': component_uom_kg.id,
-            'product_qty': 3.0,
+            'product_qty': 5.0,
             'product_uom_id': self.uom_gm.id,
             'bom_id': bom_kit_uom_1.id})
 
@@ -1294,7 +1294,7 @@ class TestSaleMrpFlow(ValuationReconciliationTestCommon):
         # Set enough quantities to make 1 kit_uom_in_kit in WH1
         self.env['stock.quant']._update_available_quantity(component_uom_unit, warehouse_1.lot_stock_id, 576)
         self.env['stock.quant']._update_available_quantity(component_uom_dozen, warehouse_1.lot_stock_id, 24)
-        self.env['stock.quant']._update_available_quantity(component_uom_kg, warehouse_1.lot_stock_id, 0.072)
+        self.env['stock.quant']._update_available_quantity(component_uom_kg, warehouse_1.lot_stock_id, 0.12)
         self.env['stock.quant']._update_available_quantity(component_uom_gm, warehouse_1.lot_stock_id, 3000)
 
         # Creation of a sale order for x5 kit_uom_in_kit
@@ -1323,7 +1323,7 @@ class TestSaleMrpFlow(ValuationReconciliationTestCommon):
         qty_to_process = {
             component_uom_unit: (1152, self.uom_unit),
             component_uom_dozen: (48, self.uom_dozen),
-            component_uom_kg: (0.144, self.uom_kg),
+            component_uom_kg: (0.24, self.uom_kg),
             component_uom_gm: (6000, self.uom_gm)
         }
         self._create_move_quantities(qty_to_process, components, warehouse_1)
@@ -1488,7 +1488,7 @@ class TestSaleMrpFlow(ValuationReconciliationTestCommon):
         move_component_unit = order.picking_ids[0].move_lines.filtered(lambda m: m.product_id == component_unit)
         move_component_kg = order.picking_ids[0].move_lines - move_component_unit
         self.assertEqual(move_component_unit.product_uom_qty, 0.5)
-        self.assertEqual(move_component_kg.product_uom_qty, 0.583)
+        self.assertEqual(move_component_kg.product_uom_qty, 0.58)
 
     def test_product_type_service_1(self):
         route_manufacture = self.company_data['default_warehouse'].manufacture_pull_id.route_id.id

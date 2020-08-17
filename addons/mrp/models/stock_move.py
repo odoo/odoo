@@ -107,7 +107,7 @@ class StockMove(models.Model):
         store=True,
         help='Technical Field to order moves')
     order_finished_lot_ids = fields.Many2many('stock.production.lot', string="Finished Lot/Serial Number", compute='_compute_order_finished_lot_ids')
-    should_consume_qty = fields.Float('Quantity To Consume', compute='_compute_should_consume_qty')
+    should_consume_qty = fields.Float('Quantity To Consume', compute='_compute_should_consume_qty', digits='Product Unit of Measure')
 
     def _unreserve_initial_demand(self, new_move):
         # If you were already putting stock.move.lots on the next one in the work order, transfer those to the new move

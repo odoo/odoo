@@ -275,10 +275,10 @@ class TestPacking(TestPackingCommon):
 
     def test_move_picking_with_package(self):
         """
-        355.4 rounded with 0.001 precision is 355.40000000000003.
+        355.4 rounded with 0.01 precision is 355.40000000000003.
         check that nonetheless, moving a picking is accepted
         """
-        self.assertEqual(self.productA.uom_id.rounding, 0.001)
+        self.assertEqual(self.productA.uom_id.rounding, 0.01)
         self.assertEqual(
             float_round(355.4, precision_rounding=self.productA.uom_id.rounding),
             355.40000000000003,

@@ -101,7 +101,7 @@ tour.register('sale_matrix_tour', {
     run: 'click' // apply the matrix
 }, {
     trigger: '.o_form_button_save:contains("Save")',
-    extra_trigger: '.o_field_cell.o_data_cell.o_list_number:contains("4.000")',
+    extra_trigger: '.o_field_cell.o_data_cell.o_list_number:contains("4.00")',
     run: 'click' // SAVE Sales Order, after matrix has been applied (extra_trigger).
 }, {
     trigger: '.o_form_button_edit:contains("Edit")',
@@ -134,7 +134,7 @@ tour.register('sale_matrix_tour', {
     run: 'click' // apply the matrix
 }, {
     trigger: '.o_form_button_save:contains("Save")',
-    extra_trigger: '.o_field_cell.o_data_cell.o_list_number:contains("8.200")',
+    extra_trigger: '.o_field_cell.o_data_cell.o_list_number:contains("8.20")',
     run: 'click' // SAVE Sales Order, after matrix has been applied (extra_trigger).
 },
 ]);

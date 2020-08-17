@@ -304,22 +304,22 @@ class TestSaleToInvoice(TestSaleCommon):
         self.assertEqual(sol_prod_deliver.qty_invoiced, 5.0)
         # We would have to change the digits of the field to
         # test a greater decimal precision.
-        quantity = 5.003
+        quantity = 5.13
         move_form = Form(sale_order.invoice_ids)
         with move_form.invoice_line_ids.edit(0) as line_form:
             line_form.quantity = quantity
         move_form.save()
 
-        # Default uom rounding to 0.001
+        # Default uom rounding to 0.01
         qty_invoiced_field = sol_prod_deliver._fields.get('qty_invoiced')
         sol_prod_deliver.env.add_to_compute(qty_invoiced_field, sol_prod_deliver)
         self.assertEqual(sol_prod_deliver.qty_invoiced, quantity)
 
-        # Rounding to 0.01, should be rounded with UP (ceil) rounding_method
+        # Rounding to 0.1, should be rounded with UP (ceil) rounding_method
         # Not floor or half up rounding.
         sol_prod_deliver.product_uom.rounding *= 10
         sol_prod_deliver.product_uom.flush(['rounding'])
-        expected_qty = 5.01
+        expected_qty = 5.2
         qty_invoiced_field = sol_prod_deliver._fields.get('qty_invoiced')
         sol_prod_deliver.env.add_to_compute(qty_invoiced_field, sol_prod_deliver)
         self.assertEqual(sol_prod_deliver.qty_invoiced, expected_qty)
