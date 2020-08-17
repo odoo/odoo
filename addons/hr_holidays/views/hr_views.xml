@@ -259,7 +259,7 @@
         <field name="model">res.users</field>
         <field name="inherit_id" ref="hr.res_users_view_form_profile"/>
         <field name="arch" type="xml">
-            <button name="preference_change_password" position="before">
+            <xpath expr="//header" position="inside">
                 <button name="%(hr_leave_action_new_request)d"
                 string="Request Time off"
                 type="action"
@@ -268,7 +268,7 @@
                 string="Request Allocation"
                 type="action"
                 class="btn btn-primary"/>
-            </button>
+            </xpath>
             <xpath expr="//group[@name='managers']" position="inside">
                 <field name="leave_manager_id" attrs="{'readonly': [('can_edit', '=', False)]}"/>
             </xpath>

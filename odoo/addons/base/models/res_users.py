@@ -1,30 +1,35 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import contextlib
 
 import base64
-import pytz
+import binascii
+import contextlib
 import datetime
+import hmac
 import ipaddress
 import itertools
+import json
 import logging
-import hmac
-
+import os
+import time
 from collections import defaultdict
 from hashlib import sha256
 from itertools import chain, repeat
+
+import decorator
+import passlib.context
+import pytz
 from lxml import etree
 from lxml.builder import E
-import passlib.context
 
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
 from odoo.exceptions import AccessDenied, AccessError, UserError, ValidationError
 from odoo.http import request
+from odoo.modules.module import get_module_resource
 from odoo.osv import expression
 from odoo.service.db import check_super
 from odoo.tools import partition, collections, frozendict, lazy_property, image_process
-from odoo.modules.module import get_module_resource
 
 _logger = logging.getLogger(__name__)
 
@@ -82,6 +87,47 @@ def parse_m2m(commands):
         else:
             ids.append(command)
     return ids
+
+def _jsonable(o):
+    try: json.dumps(o)
+    except TypeError: return False
+    else: return True
+
+@decorator.decorator
+def check_identity(fn, self):
+    """ Wrapped method should be an *action method* (called from a button
+    type=object), and requires extra security to be executed. This decorator
+    checks if the identity (password) has been checked in the last 10mn, and
+    pops up an identity check wizard if not.
+
+    Prevents access outside of interactive contexts (aka with a request)
+    """
+    if not request:
+        raise UserError(_("This method can only be accessed over HTTP"))
+
+    if request.session.get('identity-check-last', 0) > time.time() - 10 * 60:
+        # update identity-check-last like github?
+        return fn(self)
+
+    w = self.sudo().env['res.users.identitycheck'].create({
+        'request': json.dumps([
+            { # strip non-jsonable keys (e.g. mapped to recordsets like binary_field_real_user)
+                k: v for k, v in self.env.context.items()
+                if _jsonable(v)
+            },
+            self._name,
+            self.ids,
+            fn.__name__
+        ])
+    })
+    return {
+        'type': 'ir.actions.act_window',
+        'res_model': 'res.users.identitycheck',
+        'res_id': w.id,
+        'name': _("Security Control"),
+        'target': 'new',
+        'views': [(False, 'form')],
+    }
 
 #----------------------------------------------------------
 # Basic res.groups and res.users
@@ -214,7 +260,6 @@ class Users(models.Model):
     _description = 'Users'
     _inherits = {'res.partner': 'partner_id'}
     _order = 'name, login'
-    __uid_cache = defaultdict(dict)             # {dbname: {uid: password}}
 
     # User can write on a few of his own fields (but not his groups for example)
     SELF_WRITEABLE_FIELDS = ['signature', 'action_id', 'company_id', 'email', 'name', 'image_1920', 'lang', 'tz']
@@ -318,7 +363,7 @@ class Users(models.Model):
         )
         self.invalidate_cache(['password'], [uid])
 
-    def _check_credentials(self, password):
+    def _check_credentials(self, password, env):
         """ Validates the current user's password.
 
         Override this method to plug additional authentication methods.
@@ -545,26 +590,24 @@ class Users(models.Model):
             # DLE P139: Calling invalidate_cache on a new, well you lost everything as you wont be able to take it back from the cache
             # `test_00_equipment_multicompany_user`
             self.env['ir.model.access'].call_cache_clearing_methods()
-            self.env['ir.rule'].clear_caches()
-            self.has_group.clear_cache(self)
-        if any(key.startswith('context_') or key in ('lang', 'tz') for key in values):
-            self.context_get.clear_cache(self)
-        if any(key in values for key in ['active'] + USER_PRIVATE_FIELDS):
-            db = self._cr.dbname
-            for id in self.ids:
-                self.__uid_cache[db].pop(id, None)
-        if any(key in values for key in self._get_session_token_fields()):
-            self._invalidate_session_cache()
+
+        # per-method / per-model caches have been removed so the various
+        # clear_cache/clear_caches methods pretty much just end up calling
+        # Registry._clear_cache
+        invalidation_fields = {
+            'groups_id', 'active', 'lang', 'tz', 'company_id',
+            *USER_PRIVATE_FIELDS,
+            *self._get_session_token_fields()
+        }
+        if (invalidation_fields & values.keys()) or any(key.startswith('context_') for key in values):
+            self.clear_caches()
 
         return res
 
     def unlink(self):
         if SUPERUSER_ID in self.ids:
             raise UserError(_('You can not remove the admin user as it is used internally for resources created by Odoo (updates, module installation, ...)'))
-        db = self._cr.dbname
-        for id in self.ids:
-            self.__uid_cache[db].pop(id, None)
-        self._invalidate_session_cache()
+        self.clear_caches()
         return super(Users, self).unlink()
 
     @api.model
@@ -630,7 +673,7 @@ class Users(models.Model):
         return self._order
 
     @classmethod
-    def _login(cls, db, login, password):
+    def _login(cls, db, login, password, user_agent_env):
         if not password:
             raise AccessDenied()
         ip = request.httprequest.environ['REMOTE_ADDR'] if request else 'n/a'
@@ -642,7 +685,7 @@ class Users(models.Model):
                     if not user:
                         raise AccessDenied()
                     user = user.with_user(user)
-                    user._check_credentials(password)
+                    user._check_credentials(password, user_agent_env)
                     tz = request.httprequest.cookies.get('tz') if request else None
                     if tz in pytz.all_timezones and (not user.tz or not user.login_date):
                         # first login or missing tz -> set tz to browser tz
@@ -667,7 +710,7 @@ class Users(models.Model):
            :param dict user_agent_env: environment dictionary describing any
                relevant environment attributes
         """
-        uid = cls._login(db, login, password)
+        uid = cls._login(db, login, password, user_agent_env=user_agent_env)
         if user_agent_env and user_agent_env.get('base_location'):
             with cls.pool.cursor() as cr:
                 env = api.Environment(cr, uid, {})
@@ -684,23 +727,20 @@ class Users(models.Model):
         return uid
 
     @classmethod
+    @tools.ormcache('uid', 'passwd')
     def check(cls, db, uid, passwd):
         """Verifies that the given (uid, password) is authorized for the database ``db`` and
            raise an exception if it is not."""
         if not passwd:
             # empty passwords disallowed for obvious security reasons
             raise AccessDenied()
-        db = cls.pool.db_name
-        if cls.__uid_cache[db].get(uid) == passwd:
-            return
-        cr = cls.pool.cursor()
-        try:
+
+        with contextlib.closing(cls.pool.cursor()) as cr:
             self = api.Environment(cr, uid, {})[cls._name]
             with self._assert_can_auth():
-                self._check_credentials(passwd)
-                cls.__uid_cache[db][uid] = passwd
-        finally:
-            cr.close()
+                if not self.env.user.active:
+                    raise AccessDenied()
+                self._check_credentials(passwd, {'interactive': False})
 
     def _get_session_token_fields(self):
         return {'id', 'login', 'password', 'active'}
@@ -714,7 +754,7 @@ class Users(models.Model):
                                 FROM res_users
                                 WHERE id=%%s""" % (session_fields), (self.id,))
         if self.env.cr.rowcount != 1:
-            self._invalidate_session_cache()
+            self.clear_caches()
             return False
         data_fields = self.env.cr.fetchone()
         # generate hmac key
@@ -724,10 +764,6 @@ class Users(models.Model):
         h = hmac.new(key, data, sha256)
         # keep in the cache the token
         return h.hexdigest()
-
-    def _invalidate_session_cache(self):
-        """ Clear the sessions cache """
-        self._compute_session_token.clear_cache(self)
 
     @api.model
     def change_password(self, old_passwd, new_passwd):
@@ -739,11 +775,19 @@ class Users(models.Model):
         :raise: odoo.exceptions.AccessDenied when old password is wrong
         :raise: odoo.exceptions.UserError when new password is not set or empty
         """
-        self.check(self._cr.dbname, self._uid, old_passwd)
-        if new_passwd:
-            # use self.env.user here, because it has uid=SUPERUSER_ID
-            return self.env.user.write({'password': new_passwd})
-        raise UserError(_("Setting empty passwords is not allowed for security reasons!"))
+        if not old_passwd:
+            raise AccessDenied()
+        if not new_passwd:
+            raise UserError(_("Setting empty passwords is not allowed for security reasons!"))
+
+        # alternatively: use identitycheck wizard?
+        self._check_credentials(old_passwd, {'interactive': True})
+
+        ip = request.httprequest.environ['REMOTE_ADDR'] if request else 'n/a'
+        _logger.info("Password change for '%s' (#%s) from %s", self.env.user.login, self.env.uid, ip)
+
+        # use self.env.user here, because it has uid=SUPERUSER_ID
+        return self.env.user.write({'password': new_passwd})
 
     def preference_save(self):
         return {
@@ -954,6 +998,9 @@ class Users(models.Model):
             return 'base/static/img/user-slash.png'
         return super()._get_placeholder_filename(field=field)
 
+    def _mfa_url(self):
+        """ If an MFA method is enabled, returns the URL for its second step. """
+        return
 #
 # Implied groups
 #
@@ -1417,6 +1464,29 @@ class UsersView(models.Model):
                     }
         return res
 
+class CheckIdentity(models.TransientModel):
+    """ Wizard used to re-check the user's credentials (password)
+
+    Might be useful before the more security-sensitive operations, users might be
+    leaving their computer unlocked & unattended. Re-checking credentials mitigates
+    some of the risk of a third party using such an unattended device to manipulate
+    the account.
+    """
+    _name = 'res.users.identitycheck'
+    _description = "Password Check Wizard"
+
+    request = fields.Char(readonly=True, groups='.') # no access
+    password = fields.Char()
+
+    def run_check(self):
+        assert request, "This method can only be accessed over HTTP"
+        self.create_uid._check_credentials(self.password, {'interactive': True})
+        self.password = False
+
+        request.session['identity-check-last'] = time.time()
+        ctx, model, ids, method = json.loads(self.sudo().request)
+        return getattr(self.env(context=ctx)[model].browse(ids), method)()
+
 #----------------------------------------------------------
 # change password wizard
 #----------------------------------------------------------
@@ -1460,3 +1530,150 @@ class ChangePasswordUser(models.TransientModel):
             line.user_id.write({'password': line.new_passwd})
         # don't keep temporary passwords in the database longer than necessary
         self.write({'new_passwd': False})
+
+# API keys support
+API_KEY_SIZE = 20 # in bytes
+INDEX_SIZE = 8 # in hex digits, so 4 bytes, or 20% of the key
+KEY_CRYPT_CONTEXT = passlib.context.CryptContext(
+    # default is 29000 rounds which is 25~50ms, which is probably unnecessary
+    # given in this case all the keys are completely random data: dictionary
+    # attacks on API keys isn't much of a concern
+    ['pbkdf2_sha512'], pbkdf2_sha512__rounds=6000,
+)
+hash_api_key = getattr(KEY_CRYPT_CONTEXT, 'hash', None) or KEY_CRYPT_CONTEXT.encrypt
+class APIKeysUser(models.Model):
+    _inherit = 'res.users'
+
+    api_key_ids = fields.One2many('res.users.apikeys', 'user_id', string="API Keys")
+
+    def __init__(self, pool, cr):
+        init_res = super().__init__(pool, cr)
+        # duplicate list to avoid modifying the original reference
+        type(self).SELF_WRITEABLE_FIELDS = self.SELF_WRITEABLE_FIELDS + ['api_key_ids']
+        type(self).SELF_READABLE_FIELDS = self.SELF_READABLE_FIELDS + ['api_key_ids']
+        return init_res
+
+    def _rpc_api_keys_only(self):
+        """ To be overridden if RPC access needs to be restricted to API keys, e.g. for 2FA """
+        return False
+
+    def _check_credentials(self, password, user_agent_env):
+        if user_agent_env['interactive']:
+            return super()._check_credentials(password, user_agent_env)
+
+        if not self.env.user._rpc_api_keys_only():
+            try:
+                return super()._check_credentials(password, user_agent_env)
+            except AccessDenied:
+                pass
+
+        # 'rpc' scope does not really exist, we basically require a global key (scope NULL)
+        if self.env['res.users.apikeys']._check_credentials(scope='rpc', key=password) == self.env.uid:
+            return
+
+        raise AccessDenied()
+
+    @check_identity
+    def api_key_wizard(self):
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'res.users.apikeys.description',
+            'name': 'New API Key',
+            'target': 'new',
+            'views': [(False, 'form')],
+        }
+
+class APIKeys(models.Model):
+    _name = _description = 'res.users.apikeys'
+    _auto = False # so we can have a secret column
+
+    name = fields.Char("Description", required=True, readonly=True)
+    user_id = fields.Many2one('res.users', index=True, required=True, readonly=True, ondelete="cascade")
+    scope = fields.Char("Scope", readonly=True)
+    create_date = fields.Datetime("Creation Date", readonly=True)
+
+    def init(self):
+        # pylint: disable=sql-injection
+        self.env.cr.execute("""
+        CREATE TABLE IF NOT EXISTS {table} (
+            id serial primary key,
+            name varchar not null,
+            user_id integer not null REFERENCES res_users(id),
+            scope varchar,
+            index varchar({index_size}) not null CHECK (char_length(index) = {index_size}),
+            key varchar not null,
+            create_date timestamp without time zone DEFAULT (now() at time zone 'utc')
+        );
+        CREATE INDEX ON {table} (user_id, index);
+        """.format(table=self._table, index_size=INDEX_SIZE))
+
+    @check_identity
+    def remove(self):
+        if self.env.is_system() or self.mapped('user_id') == self.env.user:
+            ip = request.httprequest.environ['REMOTE_ADDR'] if request else 'n/a'
+            _logger.info("API key(s) removed: scope: <%s> for '%s' (#%s) from %s",
+               self.mapped('scope'), self.env.user.login, self.env.uid, ip)
+            self.sudo().unlink()
+            return {'type': 'ir.actions.act_window_close'}
+        raise AccessError(_("You can not remove API keys unless they're yours or you are a system user"))
+
+    def _check_credentials(self, *, scope, key):
+        assert scope, "scope is required"
+        index = key[:INDEX_SIZE]
+        self.env.cr.execute('SELECT user_id, key FROM res_users_apikeys WHERE index = %s AND (scope IS NULL OR scope = %s)', [index, scope])
+        for user_id, current_key in self.env.cr.fetchall():
+            if KEY_CRYPT_CONTEXT.verify(key, current_key):
+                return user_id
+
+    def _generate(self, scope, name):
+        """Generates an api key.
+        :param str scope: the scope of the key. If None, the key will give access to any rpc.
+        :param str name: the name of the key, mainly intended to be displayed in the UI.
+        :return: str: the key.
+
+        """
+        # no need to clear the LRU when *adding* a key, only when removing
+        k = binascii.hexlify(os.urandom(API_KEY_SIZE)).decode()
+        self.env.cr.execute("""
+        INSERT INTO res_users_apikeys (name, user_id, scope, key, index)
+        VALUES (%s, %s, %s, %s, %s)
+        RETURNING id
+        """,
+        [name, self.env.user.id, scope, hash_api_key(k), k[:INDEX_SIZE]])
+
+        ip = request.httprequest.environ['REMOTE_ADDR'] if request else 'n/a'
+        _logger.info("API key generated: scope: <%s> for '%s' (#%s) from %s",
+            scope, self.env.user.login, self.env.uid, ip)
+
+        return k
+
+class APIKeyDescription(models.TransientModel):
+    _name = _description = 'res.users.apikeys.description'
+
+    name = fields.Char("Description", required=True)
+
+    @check_identity
+    def make_key(self):
+        # only create keys for users who can delete their keys
+        if not self.user_has_groups('base.group_user'):
+            raise AccessError(_("Only internal users can create API keys"))
+
+        description = self.sudo()
+        k = self.env['res.users.apikeys']._generate(None, self.sudo().name)
+        description.unlink()
+
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'res.users.apikeys.show',
+            'name': 'API Key Ready',
+            'views': [(False, 'form')],
+            'target': 'new',
+            'context': {
+                'default_key': k,
+            }
+        }
+
+class APIKeyShow(models.AbstractModel):
+    _name = _description = 'res.users.apikeys.show'
+
+    key = fields.Char(readonly=True)

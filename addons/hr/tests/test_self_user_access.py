@@ -58,6 +58,7 @@ class TestSelfAccessProfile(TestHrCommon):
             field.groups.split(',')
             for field in self.env['res.users']._fields.values()
             if field.groups
+            if field.groups != '.' # "no-access" group on purpose
         ])
         all_groups = self.env['res.groups']
         for xml_id in all_groups_xml_ids:

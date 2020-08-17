@@ -48,7 +48,6 @@ except ImportError:
     psutil = None
 
 import odoo
-from odoo import fields
 from .service.server import memory_info
 from .service import security, model as service_model
 from .sql_db import flush_env
@@ -974,36 +973,45 @@ class OpenERPSession(sessions.Session):
                 return self.__setitem__(k, v)
         object.__setattr__(self, k, v)
 
-    def authenticate(self, db, login=None, password=None, uid=None):
+    def authenticate(self, db, login=None, password=None):
         """
         Authenticate the current user with the given db, login and
         password. If successful, store the authentication parameters in the
-        current session and request.
-
-        :param uid: If not None, that user id will be used instead the login
-                    to authenticate the user.
+        current session and request, unless multi-factor-authentication
+        is activated. In that case, that last part will be done by
+        :ref:`finalize`.
         """
 
-        if uid is None:
-            wsgienv = request.httprequest.environ
-            env = dict(
-                base_location=request.httprequest.url_root.rstrip('/'),
-                HTTP_HOST=wsgienv['HTTP_HOST'],
-                REMOTE_ADDR=wsgienv['REMOTE_ADDR'],
-            )
-            uid = odoo.registry(db)['res.users'].authenticate(db, login, password, env)
-        else:
-            security.check(db, uid, password)
+        wsgienv = request.httprequest.environ
+        env = dict(
+            interactive=True,
+            base_location=request.httprequest.url_root.rstrip('/'),
+            HTTP_HOST=wsgienv['HTTP_HOST'],
+            REMOTE_ADDR=wsgienv['REMOTE_ADDR'],
+        )
+        uid = odoo.registry(db)['res.users'].authenticate(db, login, password, env)
+        self.pre_uid = uid
+
+        user = request.env(user=uid)['res.users'].browse(uid)
+        if not user._mfa_url():
+            self.finalize()
+
         self.rotate = True
         self.db = db
-        self.uid = uid
         self.login = login
-        self.session_token = uid and security.compute_session_token(self, request.env)
-        request.uid = uid
         request.disable_db = False
 
-        if uid: self.get_context()
         return uid
+
+    def finalize(self):
+        """ Finalizes a partial session, should be called on MFA validation to
+        convert a partial / pre-session into a full-fledged "logged-in" one
+        """
+        self.rotate = True
+        request.uid = self.uid = self.pop('pre_uid')
+        user = request.env(user=self.uid)['res.users'].browse(self.uid)
+        self.session_token = user._compute_session_token(self.sid)
+        self.get_context()
 
     def check_security(self):
         """
