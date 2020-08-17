@@ -13,12 +13,12 @@
     </xpath>
   </template>
 
-  <template id="portal_my_home_purchase" name="Portal My Home : purchase entry" inherit_id="portal.portal_my_home" priority="25">
+  <template id="portal_my_home_purchase" name="Show Purchase Orders" customize_show="True" inherit_id="portal.portal_my_home" priority="25">
     <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
-        <t t-if="purchase_count" t-call="portal.portal_docs_entry">
+        <t t-call="portal.portal_docs_entry">
             <t t-set="title">Purchase Orders</t>
             <t t-set="url" t-value="'/my/purchase'"/>
-            <t t-set="count" t-value="purchase_count"/>
+            <t t-set="placeholder_count" t-value="'purchase_count'"/>
         </t>
     </xpath>
   </template>

@@ -16,11 +16,12 @@ from odoo.addons.web.controllers.main import Binary
 
 class CustomerPortal(CustomerPortal):
 
-    def _prepare_home_portal_values(self):
-        values = super(CustomerPortal, self)._prepare_home_portal_values()
-        values['purchase_count'] = request.env['purchase.order'].search_count([
-            ('state', 'in', ['purchase', 'done', 'cancel'])
-        ])
+    def _prepare_home_portal_values(self, counters):
+        values = super()._prepare_home_portal_values(counters)
+        if 'purchase_count' in counters:
+            values['purchase_count'] = request.env['purchase.order'].search_count([
+                ('state', 'in', ['purchase', 'done', 'cancel'])
+            ])
         return values
 
     def _purchase_order_get_page_view_values(self, order, access_token, **kwargs):
@@ -39,7 +40,6 @@ class CustomerPortal(CustomerPortal):
     @http.route(['/my/purchase', '/my/purchase/page/<int:page>'], type='http', auth="user", website=True)
     def portal_my_purchase_orders(self, page=1, date_begin=None, date_end=None, sortby=None, filterby=None, **kw):
         values = self._prepare_portal_layout_values()
-        partner = request.env.user.partner_id
         PurchaseOrder = request.env['purchase.order']
 
         domain = []
