@@ -427,6 +427,23 @@ class ResPartner(models.Model):
     supplier_rank = fields.Integer(default=0)
     customer_rank = fields.Integer(default=0)
 
+    starred_vendor_bill = fields.Many2one('account.move', inverse='_inverse_starred_vendor_bill', store=True,
+        domain=[('move_type', '=', 'in_invoice'), ('partner_id', 'child_of', 'id')], company_dependent=True,
+        string='Starred Vendor Bill', help='Vendor bill used as template for autocomplete')
+
+    def get_starred_bill_data(self):
+        if self.starred_vendor_bill:
+            count = self.env['account.move'].search_count([
+                ('id', '=', self.starred_vendor_bill.id),
+                ('partner_id.id', 'child_of', [self.id])
+            ]) 
+            return {
+                "id": self.starred_vendor_bill.id,
+                "name": self.starred_vendor_bill.name,
+                "is_not_from_parent": count > 0,
+            }
+        return None
+
     def _get_name_search_order_by_fields(self):
         res = super()._get_name_search_order_by_fields()
         partner_search_mode = self.env.context.get('res_partner_search_mode')
@@ -451,11 +468,16 @@ class ResPartner(models.Model):
         ''' Find the partner for which the accounting entries will be created '''
         return partner.commercial_partner_id
 
+    def _inverse_starred_vendor_bill(self):
+        for partner in self:
+            if partner.parent_id and not partner.is_company and partner.parent_id.starred_vendor_bill != partner.starred_vendor_bill:
+                partner.parent_id.starred_vendor_bill = partner.starred_vendor_bill
+
     @api.model
     def _commercial_fields(self):
         return super(ResPartner, self)._commercial_fields() + \
             ['debit_limit', 'property_account_payable_id', 'property_account_receivable_id', 'property_account_position_id',
-             'property_payment_term_id', 'property_supplier_payment_term_id', 'last_time_entries_checked']
+             'property_payment_term_id', 'property_supplier_payment_term_id', 'last_time_entries_checked', 'starred_vendor_bill']
 
     def action_view_partner_invoices(self):
         self.ensure_one()
