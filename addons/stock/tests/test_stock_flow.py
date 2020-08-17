@@ -9,6 +9,8 @@ from odoo import fields
 class TestStockFlow(TestStockCommon):
     def setUp(cls):
         super(TestStockFlow, cls).setUp()
+        decimal_product_uom = cls.env.ref('product.decimal_product_uom')
+        decimal_product_uom.digits = 3
         cls.partner_company2 = cls.env['res.partner'].create({
             'name': 'My Company (Chicago)-demo',
             'email': 'chicago@yourcompany.com',

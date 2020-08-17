@@ -35,7 +35,7 @@ class TestUom(TransactionCase):
         # into Kilograms should work even if grams are rounded to 1.
         self.uom_gram.write({'rounding': 1})
         qty = self.uom_gram._compute_quantity(1234, self.uom_kgm)
-        self.assertEqual(qty, 1.234, "Converted quantity does not correspond.")
+        self.assertEqual(qty, 1.24, "Converted quantity does not correspond.")
 
     def test_20_rounding(self):
         product_uom = self.env['uom.uom'].create({
