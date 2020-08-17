@@ -574,7 +574,7 @@ class PosSession(models.Model):
         split_cash_receivable_vals = defaultdict(list)
         for payment, amounts in split_receivables_cash.items():
             statement = statements_by_journal_id[payment.payment_method_id.cash_journal_id.id]
-            split_cash_statement_line_vals[statement].append(self._get_statement_line_vals(statement, payment.payment_method_id.receivable_account_id, amounts['amount']))
+            split_cash_statement_line_vals[statement].append(self._get_split_statement_line_vals(statement, payment, amounts['amount']))
             split_cash_receivable_vals[statement].append(self._get_split_receivable_vals(payment, amounts['amount'], amounts['amount_converted']))
         # handle combine cash payments
         combine_cash_statement_line_vals = defaultdict(list)
@@ -818,6 +818,11 @@ class PosSession(models.Model):
             'journal_id': statement.journal_id.id,
             'counterpart_account_id': receivable_account.id,
         }
+
+    def _get_split_statement_line_vals(self, statement, payment, amount):
+        res = self._get_statement_line_vals(statement, payment.payment_method_id.receivable_account_id, amount)
+        res['partner_id'] = self.env['res.partner']._find_accounting_partner(payment.partner_id).id
+        return res
 
     def _update_amounts(self, old_amounts, amounts_to_add, date, round=True, force_company_currency=False):
         """Responsible for adding `amounts_to_add` to `old_amounts` considering the currency of the session.
