@@ -1740,6 +1740,12 @@ const SnippetOptionWidget = Widget.extend({
      * @type {boolean}
      */
     isTopOption: false,
+    /**
+     * Forces the target to not be possible to remove.
+     *
+     * @type {boolean}
+     */
+    forceNoDeleteButton: false,
 
     /**
      * The option `$el` is supposed to be the associated DOM UI element.

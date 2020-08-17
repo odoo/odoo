@@ -1318,6 +1318,7 @@ options.registry.Carousel = options.Class.extend({
 
 options.registry.CarouselItem = options.Class.extend({
     isTopOption: true,
+    forceNoDeleteButton: true,
 
     /**
      * @override
@@ -1331,8 +1332,6 @@ options.registry.CarouselItem = options.Class.extend({
         var titleTextEl = leftPanelEl.querySelector('we-title > span');
         this.counterEl = document.createElement('span');
         titleTextEl.appendChild(this.counterEl);
-
-        leftPanelEl.querySelector('.oe_snippet_remove').classList.add('d-none'); // TODO improve the way to do that
 
         return this._super(...arguments);
     },
