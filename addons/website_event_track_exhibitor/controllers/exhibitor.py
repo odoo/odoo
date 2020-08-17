@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from ast import literal_eval
-from random import randint
+from random import randint, sample
 from werkzeug.exceptions import NotFound, Forbidden
 
 from odoo import exceptions, http
@@ -82,7 +82,7 @@ class ExhibitorController(WebsiteEventTrackController):
         sponsor_categories = [
             dict({
                 'sponsorship': sponsor_category,
-                'sponsors': sponsors,
+                'sponsors': sample(sponsors, len(sponsors)),
             }) for sponsor_category, sponsors in sponsor_categories.items()]
 
         # return rendering values
@@ -154,7 +154,7 @@ class ExhibitorController(WebsiteEventTrackController):
             'sponsor': sponsor,
             'hide_sponsors': True,
             # sidebar
-            'sponsors_other': sponsors_other,
+            'sponsors_other': sponsors_other[:30],
             # options
             'option_widescreen': option_widescreen,
             'option_can_edit': request.env.user.has_group('event.group_event_manager'),
