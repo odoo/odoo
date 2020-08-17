@@ -109,6 +109,7 @@ class MrpProduction(models.Model):
         'stock.picking.type', 'Operation Type',
         domain="[('code', '=', 'mrp_operation'), ('company_id', '=', company_id)]",
         default=_get_default_picking_type, required=True, check_company=True)
+    use_create_components_lots = fields.Boolean(related='picking_type_id.use_create_components_lots')
     location_src_id = fields.Many2one(
         'stock.location', 'Components Location',
         default=_get_default_location_src_id,
@@ -667,6 +668,22 @@ class MrpProduction(models.Model):
     @api.onchange('qty_producing', 'lot_producing_id')
     def _onchange_producing(self):
         self._set_qty_producing()
+
+    @api.onchange('lot_producing_id')
+    def _onchange_lot_producing(self):
+        if self.product_id.tracking == 'serial':
+            if self.env['stock.move.line'].search_count([
+                ('company_id', '=', self.company_id.id),
+                ('product_id', '=', self.product_id.id),
+                ('lot_id', '=', self.lot_producing_id.id),
+                ('state', '!=', 'cancel')
+            ]):
+                return {
+                    'warning': {
+                        'title': _('Warning'),
+                        'message': _('Existing Serial number (%s). Please correct the serial numbers encoded.') % self.lot_producing_id.name
+                    }
+                }
 
     @api.onchange('bom_id')
     def _onchange_workorder_ids(self):

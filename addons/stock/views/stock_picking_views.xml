@@ -233,6 +233,7 @@
                 <field name="move_line_exist" invisible="1"/>
                 <field name="has_packages" invisible="1"/>
                 <field name="picking_type_entire_packs" invisible="1"/>
+                <field name="use_create_lots" invisible="1"/>
 
                 <header>
                     <button name="action_confirm" attrs="{'invisible': [('show_mark_as_todo', '=', False)]}" string="Mark as Todo" type="object" class="oe_highlight" groups="base.group_user"/>
@@ -380,6 +381,14 @@
                                     <field name="json_forecast" string="Reserved" attrs="{'column_invisible': ['|', ('parent.picking_type_code', '!=', 'outgoing'), ('parent.state','=', 'done')]}" widget="forecast_widget"/>
                                     <field name="quantity_done" string="Done" attrs="{'readonly': [('is_quantity_done_editable', '=', False)]}"/>
                                     <field name="product_uom" attrs="{'readonly': [('state', '!=', 'draft'), ('additional', '=', False)]}" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="uom.group_uom"/>
+                                    <field name="lot_ids" widget="many2many_tags"
+                                        groups="stock.group_production_lot"
+                                        attrs="{'invisible': ['|', ('show_details_visible', '=', False), ('has_tracking', '!=', 'serial')]}"
+                                        optional="hide"
+                                        options="{'create': [('parent.use_create_lots', '=', True)]}"
+                                        context="{'default_company_id': company_id, 'default_product_id': product_id, 'active_picking_id': parent.id}"
+                                        domain="[('product_id','=',product_id)]"
+                                    />
                                     <button name="action_show_details" type="object" icon="fa-list" width="0.1"
                                             attrs="{'invisible': [('show_details_visible', '=', False)]}" options='{"warn": true}'/>
                                     <button name="action_assign_serial" type="object"

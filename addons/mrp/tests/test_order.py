@@ -976,7 +976,8 @@ class TestMrpOrder(TestMrpCommon):
         mo2.action_confirm()
 
         mo_form = Form(mo2)
-        mo_form.lot_producing_id = sn
+        with self.assertLogs(level="WARNING"):
+            mo_form.lot_producing_id = sn
         mo2 = mo_form.save()
         with self.assertRaises(UserError):
             mo2.button_mark_done()

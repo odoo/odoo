@@ -144,11 +144,18 @@ class StockMoveLine(models.Model):
                     counter = Counter([line.lot_name for line in move_lines_to_check])
                     if counter.get(self.lot_name) and counter[self.lot_name] > 1:
                         message = _('You cannot use the same serial number twice. Please correct the serial numbers encoded.')
+                    elif not self.lot_id:
+                        counter = self.env['stock.production.lot'].search_count([
+                            ('company_id', '=', self.company_id.id),
+                            ('product_id', '=', self.product_id.id),
+                            ('name', '=', self.lot_name),
+                        ])
+                        if counter > 0:
+                            message = _('Existing Serial number (%s). Please correct the serial number encoded.') % self.lot_name
                 elif self.lot_id:
                     counter = Counter([line.lot_id.id for line in move_lines_to_check])
                     if counter.get(self.lot_id.id) and counter[self.lot_id.id] > 1:
                         message = _('You cannot use the same serial number twice. Please correct the serial numbers encoded.')
-
             if message:
                 res['warning'] = {'title': _('Warning'), 'message': message}
         return res
@@ -423,8 +430,16 @@ class StockMoveLine(models.Model):
                             # If a picking type is linked, we may have to create a production lot on
                             # the fly before assigning it to the move line if the user checked both
                             # `use_create_lots` and `use_existing_lots`.
-                            if ml.lot_name:
-                                ml_to_create_lot |= ml
+                            if ml.lot_name and not ml.lot_id:
+                                lot = self.env['stock.production.lot'].search([
+                                    ('company_id', '=', ml.company_id.id),
+                                    ('product_id', '=', ml.product_id.id),
+                                    ('name', '=', ml.lot_name),
+                                ])
+                                if lot:
+                                    ml.lot_id = lot.id
+                                else:
+                                    ml_to_create_lot |= ml
                         elif not picking_type_id.use_create_lots and not picking_type_id.use_existing_lots:
                             # If the user disabled both `use_create_lots` and `use_existing_lots`
                             # checkboxes on the picking type, he's allowed to enter tracked

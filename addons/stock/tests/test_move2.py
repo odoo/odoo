@@ -2772,3 +2772,46 @@ class TestAutoAssign(TestStockCommon):
 
         self.assertEqual(picking_client.state, 'waiting', "MTO moves can't be automatically assigned.")
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.productA, pack_location), 10.0)
+
+    def test_serial_lot_ids(self):
+        self.stock_location = self.env.ref('stock.stock_location_stock')
+        self.customer_location = self.env.ref('stock.stock_location_customers')
+        self.supplier_location = self.env.ref('stock.stock_location_suppliers')
+        self.uom_unit = self.env.ref('uom.product_uom_unit')
+        self.product_serial = self.env['product.product'].create({
+            'name': 'PSerial',
+            'type': 'product',
+            'tracking': 'serial',
+            'categ_id': self.env.ref('product.product_category_all').id,
+        })
+
+        move = self.env['stock.move'].create({
+            'name': 'TestReceive',
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.product_serial.id,
+            'product_uom': self.uom_unit.id,
+            'picking_type_id': self.env.ref('stock.picking_type_in').id,
+        })
+        self.assertEqual(move.state, 'draft')
+        lot1 = self.env['stock.production.lot'].create({
+            'name': 'serial1',
+            'product_id': self.product_serial.id,
+            'company_id': self.env.company.id,
+        })
+        lot2 = self.env['stock.production.lot'].create({
+            'name': 'serial2',
+            'product_id': self.product_serial.id,
+            'company_id': self.env.company.id,
+        })
+        lot3 = self.env['stock.production.lot'].create({
+            'name': 'serial3',
+            'product_id': self.product_serial.id,
+            'company_id': self.env.company.id,
+        })
+        move.lot_ids = [(4, lot1.id)]
+        move.lot_ids = [(4, lot2.id)]
+        move.lot_ids = [(4, lot3.id)]
+        self.assertEqual(move.quantity_done, 3.0)
+        move.lot_ids = [(3, lot2.id)]
+        self.assertEqual(move.quantity_done, 2.0)
