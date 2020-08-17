@@ -57,6 +57,10 @@ tour.register('totp_tour_setup', {
     trigger: '[data-menu=settings]',
     run: 'click',
 }, {
+    content: "Switch to security tab",
+    trigger: 'a[role=tab]:contains("Account Security")',
+    run: 'click',
+}, {
     content: "Check that the button has changed",
     trigger: 'button:contains(Disable two-factor authentication)',
     run: () => {}
@@ -132,6 +136,10 @@ tour.register('totp_login_enabled', {
 }, {
     content: "Open preferences / profile screen",
     trigger: '[data-menu=settings]',
+    run: 'click',
+}, {
+    content: "Switch to security tab",
+    trigger: 'a[role=tab]:contains("Account Security")',
     run: 'click',
 }, {
     content: "Check that the button has changed",
