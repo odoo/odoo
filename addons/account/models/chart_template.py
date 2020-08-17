@@ -263,6 +263,24 @@ class AccountChartTemplate(models.Model):
         if not company.account_journal_suspense_account_id:
             company.account_journal_suspense_account_id = self._create_liquidity_journal_suspense_account(company, self.code_digits)
 
+        if not company.default_cash_difference_expense_account_id:
+            company.default_cash_difference_expense_account_id = self.env['account.account'].create({
+                'name': _('Cash Difference Loss'),
+                'code': self.env['account.account']._search_new_account_code(company, self.code_digits, '999'),
+                'user_type_id': self.env.ref('account.data_account_type_expenses').id,
+                'tag_ids': [(6, 0, self.env.ref('account.account_tag_investing').ids)],
+                'company_id': company.id,
+            })
+
+        if not company.default_cash_difference_income_account_id:
+            company.default_cash_difference_income_account_id = self.env['account.account'].create({
+                'name': _('Cash Difference Gain'),
+                'code': self.env['account.account']._search_new_account_code(company, self.code_digits, '999'),
+                'user_type_id': self.env.ref('account.data_account_type_revenue').id,
+                'tag_ids': [(6, 0, self.env.ref('account.account_tag_investing').ids)],
+                'company_id': company.id,
+            })
+
         # Set default PoS receivable account in company
         default_pos_receivable = self.default_pos_receivable_account_id.id
         if not default_pos_receivable and self.parent_id:
