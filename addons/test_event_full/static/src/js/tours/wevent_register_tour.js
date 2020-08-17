@@ -91,9 +91,12 @@ var registerSteps = [{
         $("input[name='1-name']").val("Raoulette Poiluchette");
         $("input[name='1-phone']").val("0456112233");
         $("input[name='1-email']").val("raoulette@example.com");
+        $("select[name*='question_answer-1']").val($("select[name*='question_answer-1'] option:contains('Consumers')").val());
         $("input[name='2-name']").val("Michel Tractopelle");
         $("input[name='2-phone']").val("0456332211");
         $("input[name='2-email']").val("michel@example.com");
+        $("select[name*='question_answer-2']").val($("select[name*='question_answer-1'] option:contains('Research')").val());
+        $("textarea[name*='question_answer']").text("An unicorn told me about you. I ate it afterwards.");
     },
 }, {
     content: "Validate attendees details",
@@ -101,8 +104,15 @@ var registerSteps = [{
     trigger: 'button:contains("Continue")',
     run: 'click',
 }, {
-    trigger: 'h3:contains("Registration confirmed!")',
+    trigger: 'div.o_wereg_confirmed_attendees span:contains("Raoulette Poiluchette")',
     run: function () {} // check
+}, {
+    trigger: 'div.o_wereg_confirmed_attendees span:contains("Michel Tractopelle")',
+    run: function () {} // check
+},  {
+    content: "Click on 'register favorites talks' button",
+    trigger: 'a:contains("register to your favorites talks now")',
+    run: 'click',
 }];
 
 /**
