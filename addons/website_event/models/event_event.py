@@ -45,7 +45,7 @@ class Event(models.Model):
             email = self.env.user.partner_id.email
             for event in self:
                 domain = ['&', '|', ('email', '=', email), ('partner_id', '=', self.env.user.partner_id.id), ('event_id', '=', event.id)]
-                event.is_participating = self.env['event.registration'].search_count(domain)
+                event.is_participating = self.env['event.registration'].sudo().search_count(domain)
         else:
             self.is_participating = False
 
@@ -193,6 +193,10 @@ class Event(models.Model):
     # ------------------------------------------------------------
 
     def google_map_link(self, zoom=8):
+        """ Temporary method for stable """
+        return self._google_map_link(zoom=zoom)
+
+    def _google_map_link(self, zoom=8):
         self.ensure_one()
         if self.address_id:
             return self.sudo().address_id.google_map_link(zoom=zoom)
