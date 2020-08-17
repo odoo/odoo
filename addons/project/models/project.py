@@ -429,20 +429,22 @@ class Project(models.Model):
         favorite_projects.write({'favorite_user_ids': [(3, self.env.uid)]})
 
     def action_view_tasks(self):
-        action = self.with_context(active_id=self.id, active_ids=self.ids).env.ref('project.act_project_project_2_project_task_all').read()[0]
+        action = self.with_context(active_id=self.id, active_ids=self.ids) \
+            .env.ref('project.act_project_project_2_project_task_all') \
+            .sudo().read()[0]
         action['display_name'] = self.name
         return action
 
     def action_view_account_analytic_line(self):
         """ return the action to see all the analytic lines of the project's analytic account """
-        action = self.env.ref('analytic.account_analytic_line_action').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("analytic.account_analytic_line_action")
         action['context'] = {'default_account_id': self.analytic_account_id.id}
         action['domain'] = [('account_id', '=', self.analytic_account_id.id)]
         return action
 
     def action_view_all_rating(self):
         """ return the action to see all the rating of the project and activate default filters"""
-        action = self.env['ir.actions.act_window'].for_xml_id('project', 'rating_rating_action_view_project_rating')
+        action = self.env['ir.actions.act_window']._for_xml_id('project.rating_rating_action_view_project_rating')
         action['name'] = _('Ratings of %s') % (self.name,)
         action_context = ast.literal_eval(action['context']) if action['context'] else {}
         action_context.update(self._context)
@@ -1320,7 +1322,7 @@ class Task(models.Model):
         }
 
     def action_subtask(self):
-        action = self.env.ref('project.project_task_action_sub_task').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("project.project_task_action_sub_task")
 
         # display all subtasks of current task
         action['domain'] = [('id', 'child_of', self.id), ('id', '!=', self.id)]

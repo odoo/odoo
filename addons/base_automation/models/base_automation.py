@@ -164,7 +164,7 @@ class BaseAutomation(models.Model):
         if '__action_done' not in self._context:
             self = self.with_context(__action_done={})
         domain = [('model_name', '=', records._name), ('trigger', 'in', triggers)]
-        actions = self.with_context(active_test=True).search(domain)
+        actions = self.with_context(active_test=True).sudo().search(domain)
         return actions.with_env(self.env)
 
     def _get_eval_context(self):
@@ -258,7 +258,7 @@ class BaseAutomation(models.Model):
                         'domain_post': domain_post,
                     }
                     try:
-                        self.action_server_id.with_context(**ctx).run()
+                        self.action_server_id.sudo().with_context(**ctx).run()
                     except Exception as e:
                         self._add_postmortem_action(e)
                         raise e

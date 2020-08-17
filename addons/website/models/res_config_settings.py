@@ -144,7 +144,7 @@ class ResConfigSettings(models.TransientModel):
         super(ResConfigSettings, self).set_values()
 
     def open_template_user(self):
-        action = self.env.ref('base.action_res_users').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("base.action_res_users")
         action['res_id'] = literal_eval(self.env['ir.config_parameter'].sudo().get_param('base.template_portal_user_id', 'False'))
         action['views'] = [[self.env.ref('base.view_users_form').id, 'form']]
         return action
@@ -189,6 +189,6 @@ class ResConfigSettings(models.TransientModel):
 
     def install_theme_on_current_website(self):
         self.website_id._force()
-        action = self.env.ref('website.theme_install_kanban_action').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("website.theme_install_kanban_action")
         action['target'] = 'main'
         return action

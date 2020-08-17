@@ -182,7 +182,7 @@ class BaseDocumentLayout(models.TransientModel):
     def action_open_base_document_layout(self, action_ref=None):
         if not action_ref:
             action_ref = 'base.action_base_document_layout_configurator'
-        return self.env.ref(action_ref).read()[0]
+        return self.env["ir.actions.actions"]._for_xml_id(action_ref)
 
     def document_layout_save(self):
         # meant to be overridden

@@ -800,7 +800,7 @@ class Lead(models.Model):
             :return dict: dictionary value for created Meeting view
         """
         self.ensure_one()
-        action = self.env.ref('calendar.action_calendar_event').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("calendar.action_calendar_event")
         partner_ids = self.env.user.partner_id.ids
         if self.partner_id:
             partner_ids.append(self.partner_id.id)

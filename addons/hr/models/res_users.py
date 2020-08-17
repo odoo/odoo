@@ -188,7 +188,7 @@ class User(models.Model):
     @api.model
     def action_get(self):
         if self.env.user.employee_id:
-            return self.sudo().env.ref('hr.res_users_action_my').read()[0]
+            return self.sudo().env.ref('hr.res_users_action_my').sudo().read()[0]
         return super(User, self).action_get()
 
     @api.depends('employee_ids')

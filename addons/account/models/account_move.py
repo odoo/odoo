@@ -2361,7 +2361,7 @@ class AccountMove(models.Model):
         return self.move_type == 'out_invoice' and not self.payment_reference
 
     def action_reverse(self):
-        action = self.env.ref('account.action_view_account_move_reversal').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("account.action_view_account_move_reversal")
 
         if self.is_invoice():
             action['name'] = _('Credit Note')
@@ -2614,7 +2614,7 @@ class AccountMove(models.Model):
     # offer the possibility to duplicate thanks to a button instead of a hidden menu, which is more visible
     def action_duplicate(self):
         self.ensure_one()
-        action = self.env.ref('account.action_move_journal_line').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("account.action_move_journal_line")
         action['context'] = dict(self.env.context)
         action['context']['form_view_initial_mode'] = 'edit'
         action['context']['view_no_maturity'] = False

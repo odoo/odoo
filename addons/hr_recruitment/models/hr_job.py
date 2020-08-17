@@ -129,7 +129,7 @@ class Job(models.Model):
         return self.env.ref('hr_recruitment.mt_job_new')
 
     def action_get_attachment_tree_view(self):
-        action = self.env.ref('base.action_attachment').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("base.action_attachment")
         action['context'] = {
             'default_res_model': self._name,
             'default_res_id': self.ids[0]

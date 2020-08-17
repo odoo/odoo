@@ -75,7 +75,7 @@ class ProjectCreateSalesOrder(models.TransientModel):
         sale_order = self._create_sale_order()
 
         view_form_id = self.env.ref('sale.view_order_form').id
-        action = self.env.ref('sale.action_orders').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("sale.action_orders")
         action.update({
             'views': [(view_form_id, 'form')],
             'view_mode': 'form',

@@ -431,7 +431,7 @@ class Product(models.Model):
         return res
 
     def action_view_orderpoints(self):
-        action = self.env.ref('stock.action_orderpoint').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("stock.action_orderpoint")
         action['context'] = literal_eval(action.get('context'))
         action['context'].pop('search_default_trigger', False)
         action['context'].update({
@@ -451,7 +451,7 @@ class Product(models.Model):
 
     def action_view_stock_move_lines(self):
         self.ensure_one()
-        action = self.env.ref('stock.stock_move_line_action').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("stock.stock_move_line_action")
         action['domain'] = [('product_id', '=', self.id)]
         return action
 
@@ -466,7 +466,7 @@ class Product(models.Model):
 
     def action_open_product_lot(self):
         self.ensure_one()
-        action = self.env.ref('stock.action_production_lot_form').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("stock.action_production_lot_form")
         action['domain'] = [('product_id', '=', self.id)]
         action['context'] = {
             'default_product_id': self.id,
@@ -513,7 +513,7 @@ class Product(models.Model):
 
     def action_product_forecast_report(self):
         self.ensure_one()
-        action = self.env.ref('stock.stock_replenishment_product_product_action').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("stock.stock_replenishment_product_product_action")
         return action
 
     @api.model
@@ -758,7 +758,7 @@ class ProductTemplate(models.Model):
             return self.action_open_quants()
         else:
             default_product_id = len(self.product_variant_ids) == 1 and self.product_variant_id.id
-            action = self.env.ref('stock.action_change_product_quantity').read()[0]
+            action = self.env["ir.actions.actions"]._for_xml_id("stock.action_change_product_quantity")
             action['context'] = dict(
                 self.env.context,
                 default_product_id=default_product_id,
@@ -780,13 +780,13 @@ class ProductTemplate(models.Model):
 
     def action_view_stock_move_lines(self):
         self.ensure_one()
-        action = self.env.ref('stock.stock_move_line_action').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("stock.stock_move_line_action")
         action['domain'] = [('product_id.product_tmpl_id', 'in', self.ids)]
         return action
 
     def action_open_product_lot(self):
         self.ensure_one()
-        action = self.env.ref('stock.action_production_lot_form').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("stock.action_production_lot_form")
         action['domain'] = [('product_id.product_tmpl_id', '=', self.id)]
         action['context'] = {
             'default_product_tmpl_id': self.id,
@@ -811,13 +811,13 @@ class ProductTemplate(models.Model):
                 'product_id': products.id,
                 'warehouse_ids': warehouse.ids,
             }, config=False)
-        action = self.env.ref('stock.action_stock_rules_report').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("stock.action_stock_rules_report")
         action['context'] = self.env.context
         return action
 
     def action_product_tmpl_forecast_report(self):
         self.ensure_one()
-        action = self.env.ref('stock.stock_replenishment_product_product_action').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id('stock.stock_replenishment_product_product_action')
         return action
 
 class ProductCategory(models.Model):

@@ -339,7 +339,7 @@ class Applicant(models.Model):
         partners = self.partner_id | self.user_id.partner_id | self.department_id.manager_id.user_id.partner_id
 
         category = self.env.ref('hr_recruitment.categ_meet_interview')
-        res = self.env['ir.actions.act_window'].for_xml_id('calendar', 'action_calendar_event')
+        res = self.env['ir.actions.act_window']._for_xml_id('calendar.action_calendar_event')
         res['context'] = {
             'default_partner_ids': partners.ids,
             'default_user_id': self.env.uid,

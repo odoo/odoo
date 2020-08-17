@@ -555,7 +555,7 @@ class PurchaseOrder(models.Model):
             self.sudo()._read(['invoice_ids'])
             invoices = self.invoice_ids
 
-        action = self.env.ref('account.action_move_in_invoice_type')
+        action = self.env.ref('account.action_move_in_invoice_type').sudo()
         result = action.read()[0]
         # choose the view_mode accordingly
         if len(invoices) > 1:

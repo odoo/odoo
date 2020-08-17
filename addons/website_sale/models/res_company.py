@@ -13,5 +13,5 @@ class ResCompany(models.Model):
     def action_open_website_sale_onboarding_payment_acquirer(self):
         """ Called by onboarding panel above the quotation list."""
         self.env.company.get_chart_of_accounts_or_fail()
-        action = self.env.ref('website_sale.action_open_website_sale_onboarding_payment_acquirer_wizard').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("website_sale.action_open_website_sale_onboarding_payment_acquirer_wizard")
         return action

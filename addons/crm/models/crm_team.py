@@ -126,7 +126,7 @@ class Team(models.Model):
     #TODO JEM : refactor this stuff with xml action, proper customization,
     @api.model
     def action_your_pipeline(self):
-        action = self.env.ref('crm.crm_lead_action_pipeline').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("crm.crm_lead_action_pipeline")
         user_team_id = self.env.user.sale_team_id.id
         if user_team_id:
             # To ensure that the team is readable in multi company
@@ -154,7 +154,7 @@ class Team(models.Model):
 
     def action_primary_channel_button(self):
         if self.use_opportunities:
-            return self.env.ref('crm.crm_case_form_view_salesteams_opportunity').read()[0]
+            return self.env["ir.actions.actions"]._for_xml_id("crm.crm_case_form_view_salesteams_opportunity")
         return super(Team,self).action_primary_channel_button()
 
     def _graph_get_model(self):

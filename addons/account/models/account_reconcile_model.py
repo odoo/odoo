@@ -226,7 +226,7 @@ class AccountReconcileModel(models.Model):
 
     def action_reconcile_stat(self):
         self.ensure_one()
-        action = self.env.ref('account.action_move_journal_line').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("account.action_move_journal_line")
         self._cr.execute('''
             SELECT ARRAY_AGG(DISTINCT move_id)
             FROM account_move_line
