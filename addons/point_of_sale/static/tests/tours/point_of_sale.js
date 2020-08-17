@@ -408,10 +408,8 @@ odoo.define('point_of_sale.tour.acceptance', function (require) {
     steps = steps.concat(selected_orderline_has({product: 'Desk Organizer', quantity: '0.9', price: '4.59'}));
     steps = steps.concat(press_product_numpad('9'))
     steps = steps.concat(selected_orderline_has({product: 'Desk Organizer', quantity: '0.99', price: '5.05'}));
-    steps = steps.concat(press_product_numpad('9'))
-    steps = steps.concat(selected_orderline_has({product: 'Desk Organizer', quantity: '0.999', price: '5.09'}));
     steps = steps.concat(goto_payment_screen_and_select_payment_method());
-    steps = steps.concat(selected_payment_has('Cash', '5.09'));
+    steps = steps.concat(selected_payment_has('Cash', '5.05'));
     steps = steps.concat(finish_order());
 
     // Test fiscal position one2many map (align with backend)
