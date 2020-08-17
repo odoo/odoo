@@ -278,31 +278,38 @@ body.editor_enable.editor_has_snippets {
     // Snippet filter input
     .o_snippet_search_filter {
         position: relative;
-        width: 100%;
-        background-color: $o-we-bg-lighter;
+        box-shadow: $o-we-item-standup-bottom $o-we-item-standup-color-dark, 0 10px 10px rgba($o-we-item-standup-color-dark, .2);
+        z-index: 2;
+
+        &, .o_snippet_search_filter_input {
+            width: 100%;
+        }
 
         .o_snippet_search_filter_input {
-            width: 100%;
-            padding: $o-we-sidebar-content-field-clickable-spacing;
-            padding-right: 2em;
-            border: 0px;
             background-color: $o-we-sidebar-content-field-input-bg;
-            color: inherit;
+            padding: $o-we-sidebar-blocks-content-spacing 2em $o-we-sidebar-blocks-content-spacing $o-we-sidebar-blocks-content-spacing;
+            border: 0;
+            border-bottom: $o-we-sidebar-content-field-border-width solid $o-we-sidebar-content-field-border-color;
+            color: $o-we-fg-lighter;
 
             &::placeholder {
+                font-style: italic;
                 color: $o-we-sidebar-content-field-control-item-color;
             }
+
             &:focus {
-                border-color: $o-we-sidebar-content-field-input-border-color;
+                background-color: $o-we-bg-lighter;
                 outline: none;
             }
         }
+
         .o_snippet_search_filter_reset {
             @include o-position-absolute($o-we-sidebar-blocks-content-spacing, $o-we-sidebar-blocks-content-spacing, $o-we-sidebar-blocks-content-spacing);
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 0 $o-we-sidebar-content-field-clickable-spacing;
+            @include o-hover-text-color($o-we-sidebar-content-field-control-item-color, $o-we-fg-lighter);
             cursor: pointer;
         }
     }
@@ -315,7 +322,7 @@ body.editor_enable.editor_has_snippets {
     > #o_scroll {
         background-color: $o-we-sidebar-blocks-content-bg;
         padding: 0 $o-we-sidebar-blocks-content-spacing;
-        box-shadow: $o-we-item-standup-top rgba($o-we-item-standup-color-light, .2);
+        z-index: 1;
 
         .o_panel, .o_panel_header {
             padding: $o-we-sidebar-blocks-content-spacing 0;
