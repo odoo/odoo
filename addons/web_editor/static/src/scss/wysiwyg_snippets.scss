@@ -238,6 +238,9 @@ body.editor_enable.editor_has_snippets {
         width: 100%;
         padding: $o-we-sidebar-blocks-content-spacing;
         background-color: $o-we-bg-lighter;
+        box-shadow: $o-we-item-standup-bottom $o-we-item-standup-color-dark,
+                    0 10px 10px rgba($o-we-item-standup-color-dark, .2);
+        z-index: 2;
 
         .o_snippet_search_filter_input {
             width: 100%;
@@ -274,7 +277,7 @@ body.editor_enable.editor_has_snippets {
     > #o_scroll {
         background-color: $o-we-sidebar-blocks-content-bg;
         padding: 0 $o-we-sidebar-blocks-content-spacing;
-        box-shadow: $o-we-item-standup-top rgba($o-we-item-standup-color-light, .2);
+        z-index: 1;
 
         .o_panel, .o_panel_header {
             padding: $o-we-sidebar-blocks-content-spacing 0;
