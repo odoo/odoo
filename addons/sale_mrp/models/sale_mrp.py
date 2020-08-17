@@ -11,6 +11,7 @@ class SaleOrderLine(models.Model):
     @api.multi
     def _compute_qty_delivered(self):
         super(SaleOrderLine, self)._compute_qty_delivered()
+<<<<<<< HEAD
         for order_line in self:
             if order_line.qty_delivered_method == 'stock_move':
                 boms = order_line.move_ids.mapped('bom_line_id.bom_id')
@@ -28,6 +29,28 @@ class SaleOrderLine(models.Model):
                     }
                     order_qty = order_line.product_uom._compute_quantity(order_line.product_uom_qty, relevant_bom.product_uom_id)
                     order_line.qty_delivered = moves._compute_kit_quantities(order_line.product_id, order_qty, relevant_bom, filters)
+=======
+
+        for line in self:
+            if line.qty_delivered_method == 'stock_move':
+                # In the case of a kit, we need to check if all components are shipped. Since the BOM might
+                # have changed, we don't compute the quantities but verify the move state.
+                bom = self.env['mrp.bom']._bom_find(product=line.product_id, company_id=line.company_id.id)
+                if bom and bom.type == 'phantom':
+                    # bom_delivered
+                    moves = line.move_ids.filtered(lambda m: m.picking_id and m.picking_id.state != 'cancel' and m.state == 'done')
+                    outgoing_moves = moves.filtered(lambda m: m.location_dest_id.usage == "customer" and (not m.origin_returned_move_id or (m.origin_returned_move_id and m.to_refund)))
+                    bom_returned = all(
+                        [
+                            moves.filtered(lambda m: m.location_dest_id.usage != "customer" and m.to_refund and m.origin_returned_move_id.id == move.id)
+                            for move in outgoing_moves
+                        ]
+                    )
+                    if moves and not bom_returned:
+                        line.qty_delivered = line.product_uom_qty
+                    else:
+                        line.qty_delivered = 0.0
+>>>>>>> d93f5b38f21... temp
 
     @api.multi
     def _get_bom_component_qty(self, bom):
