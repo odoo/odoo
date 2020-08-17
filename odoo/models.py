@@ -2888,6 +2888,9 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                     })
 
                 def format_groups(field):
+                    if field.groups == '.':
+                        return _("always forbidden")
+
                     anyof = self.env['res.groups']
                     noneof = self.env['res.groups']
                     for g in field.groups.split(','):
