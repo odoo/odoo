@@ -1475,7 +1475,7 @@ class CheckIdentity(models.TransientModel):
     _name = 'res.users.identitycheck'
     _description = "Password Check Wizard"
 
-    request = fields.Char(readonly=True, groups='.') # no access
+    request = fields.Char(readonly=True, groups=fields.NO_ACCESS)
     password = fields.Char()
 
     def run_check(self):
