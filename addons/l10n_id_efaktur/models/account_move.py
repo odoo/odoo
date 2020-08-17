@@ -56,7 +56,7 @@ class AccountMove(models.Model):
     @api.depends('partner_id')
     def _compute_need_kode_transaksi(self):
         for move in self:
-            move.l10n_id_need_kode_transaksi = move.partner_id.l10n_id_pkp and not move.l10n_id_tax_number and move.type == 'out_invoice' and move.country_code == 'ID'
+            move.l10n_id_need_kode_transaksi = move.partner_id.l10n_id_pkp and not move.l10n_id_tax_number and move.move_type == 'out_invoice' and move.country_code == 'ID'
 
     @api.constrains('l10n_id_kode_transaksi', 'line_ids')
     def _constraint_kode_ppn(self):
