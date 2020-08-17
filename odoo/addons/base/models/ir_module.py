@@ -950,7 +950,7 @@ class Module(models.Model):
                 ])
 
             Module = self.env['ir.module.module']
-            records = self.env['ir.module.category'].search_read(domain, ['display_name'])
+            records = self.env['ir.module.category'].search_read(domain, ['display_name'], order="sequence")
 
             values_range = OrderedDict()
             for record in records:
