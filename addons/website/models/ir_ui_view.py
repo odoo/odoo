@@ -395,7 +395,7 @@ class View(models.Model):
             if values and 'main_object' in values:
                 if request.env.user.has_group('website.group_website_publisher'):
                     func = getattr(values['main_object'], 'get_backend_menu_id', False)
-                    values['backend_menu_id'] = func and func() or self.env.ref('website.menu_website_configuration').id
+                    values['backend_menu_id'] = func and func() or self.env['ir.model.data'].xmlid_to_res_id('website.menu_website_configuration')
 
         if self._context != new_context:
             self = self.with_context(new_context)
