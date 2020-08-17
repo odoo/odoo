@@ -1356,11 +1356,10 @@ const MediapickerUserValueWidget = UserValueWidget.extend({
             iconEl.classList.add('fa', 'fa-fw', 'fa-camera');
         } else {
             iconEl.classList.add('fa', 'fa-fw', 'fa-refresh', 'mr-1');
-
             this.el.classList.add('o_we_no_toggle');
-            this.containerEl.innerHTML += _t("Replace media");
+            this.containerEl.textContent = _t("Replace media");
         }
-        this.containerEl.prepend(iconEl);
+        $(this.containerEl).prepend(iconEl);
     },
 
     //--------------------------------------------------------------------------

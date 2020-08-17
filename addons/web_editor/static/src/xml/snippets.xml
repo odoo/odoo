@@ -45,14 +45,14 @@
     <div t-name="web_editor.snippet.option.colorpicker" class="colorpicker">
         <div class="o_we_colorpicker_switch_panel d-flex justify-content-end px-2">
             <t t-if="widget.withCombinations">
-                <a tabindex="1" class="o_we_colorpicker_switch_pane_btn active" data-target="color-combinations">
+                <button type="button" tabindex="1" class="o_we_colorpicker_switch_pane_btn active" data-target="color-combinations">
                     <span>Combinations</span>
-                </a>
-                <a tabindex="2" t-attf-class="o_we_colorpicker_switch_pane_btn #{widget.withCombinations ? '' : 'active'}" data-target="theme-colors">
+                </button>
+                <button type="button" tabindex="2" t-attf-class="o_we_colorpicker_switch_pane_btn #{widget.withCombinations ? '' : 'active'}" data-target="theme-colors">
                     <span>Custom</span>
-                </a>
+                </button>
             </t>
-            <button t-if="widget.resetButton" type="button" class="my-1 ml-4 o_we_color_btn o_colorpicker_reset">
+            <button t-if="widget.resetButton" type="button" class="my-1 ml-auto o_we_color_btn o_colorpicker_reset">
                 <t t-if="widget.withCombinations">None</t>
                 <t t-else="">Reset</t>
             </button>
