@@ -176,6 +176,7 @@ class StockMove(models.Model):
     next_serial_count = fields.Integer('Number of SN')
     orderpoint_id = fields.Many2one('stock.warehouse.orderpoint', 'Original Reordering Rule', check_company=True)
     json_forecast = fields.Char('JSON data for the forecast widget', compute='_compute_json_forecast')
+    lot_ids = fields.Many2many('stock.production.lot', compute='_compute_lot_ids', inverse='_set_lot_ids', string='Serial Numbers', readonly=False)
 
     @api.onchange('product_id', 'picking_type_id')
     def onchange_product(self):
@@ -465,6 +466,35 @@ class StockMove(models.Model):
         for move in self:
             move_linked = (move.move_dest_ids | move.move_orig_ids).filtered(lambda m: m.state not in ('done', 'cancel'))
             move_linked.filtered(lambda m: m.date_deadline != move.date_deadline).date_deadline = move.date_deadline
+
+    @api.depends('move_line_ids', 'move_line_ids.lot_id', 'move_line_ids.qty_done')
+    def _compute_lot_ids(self):
+        for move in self:
+            if move.picking_type_id.show_reserved is False:
+                move.lot_ids = move.move_line_nosuggest_ids.filtered(lambda ml: ml.lot_id and not float_is_zero(ml.qty_done, precision_rounding=ml.product_uom_id.rounding)).lot_id
+            else:
+                move.lot_ids = move.move_line_ids.filtered(lambda ml: ml.lot_id and not float_is_zero(ml.qty_done, precision_rounding=ml.product_uom_id.rounding)).lot_id
+
+    def _set_lot_ids(self):
+        for move in self:
+            move_lines_commands = []
+            if move.picking_type_id.show_reserved is False:
+                mls = move.move_line_nosuggest_ids
+            else:
+                mls = move.move_line_ids
+            mls = mls.filtered(lambda ml: ml.lot_id)
+            for ml in mls:
+                if ml.lot_id not in move.lot_ids:
+                    move_lines_commands.append((2, ml.id))
+            ls = move.move_line_ids.lot_id
+            for lot in move.lot_ids:
+                if lot not in ls:
+                    move_line_vals = self._prepare_move_line_vals(quantity=0)
+                    move_line_vals['lot_id'] = lot.id
+                    move_line_vals['lot_name'] = lot.name
+                    move_line_vals['qty_done'] = 1
+                    move_lines_commands.append((0, 0, move_line_vals))
+            move.write({'move_line_ids': move_lines_commands})
 
     @api.constrains('product_uom')
     def _check_uom(self):
@@ -830,6 +860,29 @@ class StockMove(models.Model):
         self.name = product.partner_ref
         self.product_uom = product.uom_id.id
 
+    @api.onchange('lot_ids')
+    def _onchange_lot_ids(self):
+        used_lots = self.env['stock.move.line'].search([
+            ('company_id', '=', self.company_id.id),
+            ('product_id', '=', self.product_id.id),
+            ('lot_id', 'in', self.lot_ids.ids),
+            ('move_id', '!=', self._origin.id),
+            ('state', '!=', 'cancel')
+        ])
+
+        counter = self.env['stock.move.line'].search_count([
+            ('company_id', '=', self.company_id.id),
+            ('product_id', '=', self.product_id.id),
+            ('move_id', '=', self._origin.id),
+            ('lot_id', '=', False),
+            ('lot_name', '!=', False),
+        ])
+        self.update({'quantity_done': len(self.lot_ids) + counter})
+        if used_lots:
+            return {
+                'warning': {'title': _('Warning'), 'message': _('Existing Serial numbers (%s). Please correct the serial numbers encoded.') % ','.join(used_lots.lot_id.mapped('display_name'))}
+            }
+
     @api.onchange('move_line_ids', 'move_line_nosuggest_ids')
     def onchange_move_line_ids(self):
         if not self.picking_type_id.use_create_lots:
@@ -857,6 +910,15 @@ class StockMove(models.Model):
                     self.update({'move_line_ids': move_lines_commands})
                 else:
                     self.update({'move_line_nosuggest_ids': move_lines_commands})
+                existing_lots = self.env['stock.production.lot'].search([
+                    ('company_id', '=', self.company_id.id),
+                    ('product_id', '=', self.product_id.id),
+                    ('name', 'in', split_lines),
+                ])
+                if existing_lots:
+                    return {
+                        'warning': {'title': _('Warning'), 'message': _('Existing Serial Numbers (%s). Please correct the serial numbers encoded.') % ','.join(existing_lots.mapped('display_name'))}
+                    }
                 break
 
     @api.onchange('product_uom')
