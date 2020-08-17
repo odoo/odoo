@@ -94,6 +94,12 @@ class SetupBarBankConfigWizard(models.TransientModel):
         """
         vals['partner_id'] = self.env.company.partner_id.id
         vals['new_journal_name'] = vals['acc_number']
+
+        # If no bank has been selected, but we have a bic, we are using it to find or create the bank
+        if not vals['bank_id'] and vals['bank_bic']:
+            vals['bank_id'] = self.env['res.bank'].search([('bic', '=', vals['bank_bic'])], limit=1).id \
+                              or self.env['res.bank'].create({'name': vals['bank_bic'], 'bic': vals['bank_bic']}).id
+
         return super(SetupBarBankConfigWizard, self).create(vals)
 
     @api.onchange('linked_journal_id')
