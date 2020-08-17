@@ -27,7 +27,6 @@
             <field name="name">Units</field>
             <field name="factor" eval="1.0"/>
             <field name="uom_type">reference</field>
-            <field name="rounding" eval="0.001"/>
         </record>
        <record id="product_uom_dozen" model="uom.uom">
             <field name="category_id" ref="uom.product_uom_categ_unit"/>
@@ -41,7 +40,6 @@
             <field name="name">kg</field>
             <field name="factor" eval="1"/>
             <field name="uom_type">reference</field>
-            <field name="rounding" eval="0.001"/>
         </record>
         <record id="product_uom_gram" model="uom.uom">
             <field name="category_id" ref="product_uom_categ_kgm"/>
