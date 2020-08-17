@@ -158,7 +158,7 @@ body.editor_enable.editor_has_snippets {
     @include o-text-overflow(block);
     @include we-svg-icon($o-we-sidebar-content-field-clickable-color, $o-we-sidebar-content-field-clickable-color);
 
-    padding: 0 $o-we-sidebar-content-field-button-group-button-spacing;
+    padding: 1px $o-we-sidebar-content-field-button-group-button-spacing;
     border: $o-we-sidebar-content-field-border-width solid $o-we-sidebar-content-field-border-color;
     border-radius: $o-we-sidebar-content-field-border-radius;
     background-color: $o-we-sidebar-content-field-clickable-bg;
@@ -169,26 +169,25 @@ body.editor_enable.editor_has_snippets {
     }
 
     &.active:not(.o_we_no_toggle) {
-        background-color: $o-we-sidebar-content-field-pressed-bg;
+        background: $o-we-sidebar-content-field-pressed-bg;
     }
 }
 
 %we-generic-tab-button {
     @extend %we-generic-link;
     @include o-text-overflow(inline-flex);
+
     flex: 1 1 auto;
     justify-content: center;
-    border: none;
-    background-color: transparent;
-    color: inherit;
     font-weight: normal;
 
-    > span {
-        display: inline-block;
+    span {
         $-r: $o-we-sidebar-tabs-size-ratio;
         padding: (0.6em * $-r) (0.4em * $-r) (0.5em * $-r);
+        display: inline-block;
     }
-    &.active > span {
+
+    &.active span {
         color: $o-we-sidebar-content-field-colorpicker-dropdown-active-color;
         box-shadow: inset 0 ($o-we-sidebar-tabs-active-border-width * -1) 0 $o-we-sidebar-tabs-active-border-color;
     }
@@ -222,11 +221,11 @@ body.editor_enable.editor_has_snippets {
     #snippets_menu {
         flex: 0 0 auto;
         display: flex;
-        background-color: $o-we-sidebar-tabs-bg;
+        background: $o-we-sidebar-tabs-bg;
         box-shadow: $o-we-item-standup-top rgba($o-we-item-standup-color-light, .2);
         color: $o-we-sidebar-tabs-color;
 
-        > button {
+        > a {
             @extend %we-generic-tab-button;
         }
     }
@@ -328,29 +327,34 @@ body.editor_enable.editor_has_snippets {
         }
         #snippet_custom .oe_snippet {
             width: 100%;
+            justify-content: space-between;
+            align-items: stretch;
 
             &, .oe_snippet_thumbnail, .o_delete_btn {
                 display: flex;
             }
+
             .oe_snippet_thumbnail, .o_delete_btn {
                 align-items: center;
             }
+
             .oe_snippet_thumbnail {
                 min-width: 0; // Ensure text-overflow on flex children
             }
+
             .oe_snippet_thumbnail_title {
                 @include o-text-overflow(block);
             }
+
             .oe_snippet_thumbnail_img {
                 flex-shrink: 0;
-                width: 40px;
-                height: 32px;
                 padding: 0;
+                height: 32px;
+                width: 40px;
             }
+
             .o_delete_btn {
                 @extend %we-generic-link;
-                padding-top: 0;
-                padding-bottom: 0;
             }
         }
     }
@@ -402,6 +406,18 @@ body.editor_enable.editor_has_snippets {
             }
             &.active {
                 @include we-icon-button('\f0d8');
+                overflow: visible!important;
+
+                &:not([class*='o_we_option_font_']):before {
+                    @include o-position-absolute(100%, 20%);
+                    content: '\f0d8';
+                    font: #{$o-we-item-spacing*3}/0 FontAwesome;
+                    color: $o-we-sidebar-content-field-dropdown-item-bg;
+                    text-shadow: 0 ($o-we-dropdown-border-width * -1) 0 $o-we-dropdown-border-color;
+                    transform: translateY($o-we-sidebar-content-field-dropdown-spacing - ($o-we-dropdown-border-width*2) - $o-we-item-border-width);
+                    z-index: $zindex-dropdown + 1;
+                }
+
                 + * {
                     display: block !important;
                 }
@@ -428,15 +444,16 @@ body.editor_enable.editor_has_snippets {
             position: relative;
             display: block;
             padding: 0 $o-we-sidebar-content-padding-base $o-we-sidebar-content-block-spacing * 1.5 $o-we-sidebar-content-indent;
-            background-color: $o-we-bg-lighter;
+            background: $o-we-bg-lighter;
             box-shadow: $o-we-item-standup-bottom rgba($o-we-item-standup-color-dark, 0.8);
 
             > we-title {
                 display: flex;
                 align-items: center;
+                position: relative;
                 margin: 0 (-$o-we-sidebar-content-padding-base) 0 (-$o-we-sidebar-content-indent);
                 padding: $o-we-sidebar-content-block-spacing * .3 $o-we-sidebar-content-padding-base 0 $o-we-sidebar-content-indent;
-                background-color: $o-we-bg-light;
+                background: $o-we-bg-light;
                 box-shadow: $o-we-item-standup-top rgba($o-we-item-standup-color-light, .2), $o-we-item-standup-bottom rgba($o-we-item-standup-color-dark, .5);
                 font-size: $o-we-sidebar-content-main-title-font-size;
 
@@ -464,6 +481,13 @@ body.editor_enable.editor_has_snippets {
                         }
                     }
                 }
+            }
+
+            &.o_we_level_highlight > we-title:before {
+                @include o-position-absolute(1px, auto, 1px, 1px);
+                content: "";
+                background-color: $o-we-accent;
+                width: 2px;
             }
         }
 
@@ -612,6 +636,10 @@ body.editor_enable.editor_has_snippets {
                 background: none;
             }
 
+            &:not(.o_we_so_color_palette) + we-button:not(:hover) {
+                background: none;
+            }
+
             we-selection-items {
                 @include o-position-absolute(100%, 0, auto, 0);
                 z-index: $zindex-dropdown;
@@ -722,6 +750,22 @@ body.editor_enable.editor_has_snippets {
             }
         }
 
+        we-customizeblock-option > we-button-group.o_we_user_value_widget we-selection-items {
+            @include large-component();
+
+            we-button {
+                display: flex;
+                justify-content: center;
+                flex: 0 1 percentage(1/4);
+                padding:  $o-we-sidebar-content-field-button-group-button-spacing/4 $o-we-sidebar-content-field-button-group-button-spacing/3;
+                text-align: center;
+
+                &.active {
+                    padding-left: 2px;
+                }
+            }
+        }
+
         // Inputs
         we-input.o_we_user_value_widget {
 
@@ -736,8 +780,8 @@ body.editor_enable.editor_has_snippets {
                     border-color: $o-we-sidebar-content-field-input-border-color;
                 }
 
-                > we-button { // for input-group
-                    border: none;
+                > we-button {
+                    border:none!important
                 }
             }
 
@@ -790,18 +834,17 @@ body.editor_enable.editor_has_snippets {
                 }
             }
 
-            &.o_we_widget_opened {
+            &.o_we_widget_opened .o_we_color_preview {
+                border: 2px solid $o-we-accent;
+                z-index: $zindex-dropdown + 1;
 
-                .o_we_color_preview {
-                    border: 2px solid $o-we-accent;
-                }
-                .o_we_dropdown_caret {
-                    &::before, &::after {
-                        right: $o-we-sidebar-content-field-colorpicker-size / 2;
-                    }
-                    &::after {
-                        border-bottom-width: ($o-we-item-spacing + $o-we-sidebar-content-field-dropdown-border-width - $o-we-dropdown-caret-spacing) + 1px; // 1px = colorpicker inset box-shadow...
-                    }
+                &:before {
+                    @include o-position-absolute(100%, 50%);
+                    content: '\f0d8';
+                    font: #{$o-we-item-spacing*3}/0 FontAwesome;
+                    color: $o-we-sidebar-content-field-colorpicker-dropdown-bg;
+                    text-shadow: 0 -1px 0 $o-we-dropdown-border-color;
+                    transform: translateX(50%) translateY($o-we-item-spacing + 1);
                 }
             }
 
@@ -994,6 +1037,147 @@ body.editor_enable.editor_has_snippets {
         }
 
         //----------------------------------------------------------------------
+        // 'Options' Tab Specific Components
+        //----------------------------------------------------------------------
+
+        // Theme Colors Editor
+        .o_we_theme_colors_selector {
+            > we-title {
+                display: none
+            }
+
+            .o_we_so_color_palette.o_we_user_value_widget {
+                + .o_we_so_color_palette {
+                    margin-left: 10px;
+                }
+
+                .o_we_color_preview {
+                    width: $o-we-sidebar-content-field-colorpicker-size-large;
+                    height: $o-we-sidebar-content-field-colorpicker-size-large;
+                }
+            }
+
+            > div, we-select.o_we_theme_colors_select, we-toggler {
+                display: flex;
+            }
+
+            > div {
+                align-items: stretch;
+                width: 100%;
+            }
+
+            we-select.o_we_theme_colors_select {
+                justify-content: flex-end;
+                margin-left: auto;
+
+                > div, we-toggler {
+                    height: 100%;
+                }
+            }
+
+            we-toggler {
+                align-items: center;
+                padding: 0 0.4rem;
+                font-size: 1.5em;
+
+                &:after {
+                    content: none;
+                }
+            }
+        }
+
+        // Palettes Dropdown
+        .o_palette_color_preview_button > div {
+            min-height: 24px;
+        }
+
+        // CC Editor
+        .o_color_combinations_edition {
+            $-cc-base-spacer: 16px;
+            $-cc-r-gap: $o-we-sidebar-content-block-spacing * -1;
+            $-cc-l-gap: ($o-we-sidebar-content-indent * -1) - 1px;
+
+            we-toggler {
+                margin: ($-cc-base-spacer * .5) 0;
+                border: 0;
+                padding-right: 0;
+                background: none;
+                overflow: visible;
+
+                &:after {
+                    top: $-cc-base-spacer * .3;
+                    left: $-cc-base-spacer * -.8;
+                    transform: rotate(-90deg);
+                }
+
+                .o_we_cc_preview_wrapper {
+                    border: 1px solid $o-we-sidebar-content-field-dropdown-border-color;
+                }
+
+                &.active {
+                    &:after {
+                        transform: rotate(180deg);
+                    }
+
+                    &:before, + we-collapse:before {
+                        content: '';
+                        background-color: $o-we-bg-light;
+                    }
+
+                    &:before {
+                        @include o-position-absolute($-cc-base-spacer * -0.25, $-cc-r-gap, 0, $-cc-l-gap);
+                        z-index: auto;
+                        transform: none;
+                    }
+
+                    + we-collapse {
+                        margin-bottom: $-cc-base-spacer * 1.3;
+                        padding-left: $-cc-base-spacer;
+                        border: none;
+                        background: none;
+
+                        &:before {
+                            @include o-position-absolute(0, $-cc-r-gap, $-cc-base-spacer * -0.5, $-cc-l-gap);
+                            box-shadow: $o-we-item-standup-bottom rgba($o-we-item-standup-color-light, 0.2);
+                        }
+                    }
+                }
+            }
+
+            &:last-of-type we-toggler {
+                margin-bottom: 0;
+            }
+
+            we-collapse {
+                we-select.o_cc_subheadings_toggler, .o_cc_subheadings_collapse {
+                    we-title {
+                        position: relative;
+                        overflow: visible;
+                    }
+                }
+
+                .o_cc_subheadings_collapse {
+                    margin-bottom: $-cc-base-spacer;
+                }
+
+                we-select.o_cc_subheadings_toggler.active:before, .o_cc_subheadings_collapse:before {
+                    content: '';
+                    background-color: $o-we-bg-dark;
+                }
+
+                we-select.o_cc_subheadings_toggler.active:before {
+                    @include o-position-absolute($-cc-base-spacer * -0.25, $-cc-r-gap, $-cc-base-spacer * -0.5, $-cc-l-gap * 2);
+                    box-shadow: $o-we-item-standup-top $o-we-item-standup-color-dark;
+                }
+
+                .o_cc_subheadings_collapse:before {
+                    @include o-position-absolute(0, $-cc-r-gap, $-cc-base-spacer * -0.5, $-cc-l-gap * 2);
+                    box-shadow: $o-we-item-standup-bottom rgba($o-we-item-standup-color-light, .2);
+                }
+            }
+        }
+
+        //----------------------------------------------------------------------
         // Layout Utils
         //----------------------------------------------------------------------
 
@@ -1060,10 +1244,10 @@ body.editor_enable.editor_has_snippets {
         }
 
         .o_we_image_weight {
+            margin: $o-we-sidebar-content-field-spacing *.25 $o-we-item-border-width $o-we-sidebar-content-field-spacing*2;
             display: flex;
             justify-content: flex-end;
             align-items: center;
-            margin: $o-we-sidebar-content-field-spacing *.25 $o-we-item-border-width $o-we-sidebar-content-field-spacing*2;
 
             b {
                 margin-left: $o-we-sidebar-content-field-label-spacing;
@@ -1160,14 +1344,16 @@ body.editor_enable.editor_has_snippets {
         border-bottom: 1px solid $o-we-bg-dark;
         box-shadow: inset 0 1px 0 rgba(white, .2);
     }
+
     .o_we_colorpicker_switch_pane_btn {
         @extend %we-generic-tab-button;
-        flex: 0 0 auto;
     }
+
     .o_colorpicker_reset {
         max-width: 40%;
         @extend %we-generic-button;
     }
+
     .o_colorpicker_sections {
 
         .o_we_color_btn, .o_we_color_combination_btn {
@@ -1207,9 +1393,9 @@ body.editor_enable.editor_has_snippets {
             }
 
             .o_we_cc_preview_wrapper:after {
-                // For some reasons, in this specific context we have to
-                // compensate a 1px gap between the flex container and the
-                // absolute positioned pseudo-element that generates the bg.
+                // For some reasons, in this specific context we have to compensate
+                // a 1px gap between the flex container and the absolute positioned
+                // speudo-element that generate the bg-color.
                 bottom: -1px;
             }
         }
@@ -1444,29 +1630,36 @@ body.editor_enable.editor_has_snippets {
                 > div {
                     display: flex;
 
-                    > * {
+                    we-button, .o_move_handle, .o_delete_button {
                         @extend %we-generic-button;
+
                         margin: 0 1px 0;
                         min-width: 22px;
                         padding: 0 $o-we-sidebar-content-field-button-group-button-spacing * .5;
                         color: $o-we-fg-lighter;
                     }
+
                     .o_move_handle {
                         cursor: move;
-                        width: 30px;
-                        height: 22px;
-                        background-image: url('/web_editor/static/src/img/snippets_options/o_overlay_move_drag.svg');
-                        background-position: center;
-                        background-repeat: no-repeat;
+
+                        &::before {
+                            content:'';
+                            display: block;
+                            padding: 10px;
+                            background: url('/web_editor/static/src/img/snippets_options/o_overlay_move_drag.svg') center no-repeat;
+                        }
                     }
+
                     .o_delete_button {
                         margin-left: $o-we-sidebar-content-field-button-group-button-spacing;
                         background-color: mix($o-we-color-danger, $o-we-sidebar-content-field-clickable-bg);;
                     }
+
                     &:hover {
-                        > * {
+                        we-button, .o_move_handle, .o_delete_button {
                             @include o-hover-opacity(.6);
                         }
+
                         we-button:hover, .o_move_handle:hover {
                             border-color: mix($o-we-handles-accent-color, $o-we-sidebar-content-field-pressed-bg, .4);
                             background-color: $o-we-sidebar-content-field-pressed-bg;

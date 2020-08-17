@@ -26,15 +26,15 @@
                 <input type="text" t-attf-class="o_red_input {{input_classes}}" data-color-method="rgb" size="1"/>
                 <input type="text" t-attf-class="o_green_input {{input_classes}}" data-color-method="rgb" size="1"/>
                 <input type="text" t-attf-class="o_blue_input mr-0 {{input_classes}}" data-color-method="rgb" size="1"/>
-                <t t-if="!widget.options.noTransparency">
-                    <input type="text" t-attf-class="o_opacity_input {{input_classes}}" data-color-method="opacity" size="1"/>
-                    <span class="flex-grow-0 ml-1 text-white-50">
-                        RGBA
+                    <t t-if="!widget.options.noTransparency">
+                        <input type="text" t-attf-class="o_opacity_input {{input_classes}}" data-color-method="opacity" size="1"/>
+                        <span class="flex-grow-0 ml-1 text-white-50">
+                            RGBA
+                        </span>
+                    </t>
+                    <span t-else="" class="flex-grow-0 ml-1 text-white-50">
+                        RGB
                     </span>
-                </t>
-                <span t-else="" class="flex-grow-0 ml-1 text-white-50">
-                    RGB
-                </span>
             </div>
         </div>
     </div>
