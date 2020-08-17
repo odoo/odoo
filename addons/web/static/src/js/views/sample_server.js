@@ -301,7 +301,7 @@ odoo.define('web.SampleServer', function (require) {
          * @returns {number} float in [O, max[
          */
         _getRandomFloat(max) {
-            return Math.random() * max;
+            return parseFloat((Math.random() * max).toFixed(2));
         }
 
         /**
