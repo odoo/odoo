@@ -19,6 +19,7 @@ class TestLifoPrice(ValuationReconciliationTestCommon):
             'property_cost_method': 'fifo',
         })
         res_partner_3 = self.env['res.partner'].create({'name': 'My Test Partner'})
+        self.company_data['default_warehouse'].out_type_id.show_operations = False
 
         # Set a product as using lifo price
         product_form = Form(self.env['product.product'])
