@@ -142,7 +142,7 @@
 <template id="exhibitors_display_cards" name="Exhibitors Cards">
     <div t-foreach="sponsor_categories" t-as="sponsor_category" class="row mb-3">
         <div class="col-12">
-            <h5 class="m-0" t-esc="sponsor_category['sponsorship'].name"/>
+            <h2 class="m-0" t-esc="sponsor_category['sponsorship'].name"/>
             <hr class="mt-2 pb-1 mb-1"/>
         </div>
         <div t-foreach="sponsor_category['sponsors']" t-as="sponsor" class="col-md-6 col-lg-3 mb-4">
@@ -176,7 +176,12 @@
                     <div t-if="sponsor_image_url" class="card-img-top position-static o_wesponsor_bg_image"
                         t-attf-style="padding-top: 50%; background-image: url(#{sponsor_image_url});">
                         <div class="o_wesponsor_connect_button">
-                            <a href="#" class="btn btn-primary h3">Connect</a>
+                            <a href="#" class="btn btn-primary h3">
+                                <t t-if="not user_event_manager and not sponsor.event_id.is_ongoing and not event.is_participating">
+                                    Register
+                                </t>
+                                <t t-else="">Connect</t>
+                            </a>
                         </div>
                         <img class="position-absolute mr-2 mt-2"
                             style="right: 0; top: 0; max-height: 20px;"
@@ -187,7 +192,12 @@
                     <div t-else="" class="o_wesponsor_gradient card-img-top position-relative"
                         style="padding-top: 50%">
                         <div class="o_wesponsor_connect_button">
-                            <a href="#" class="btn btn-primary h3">Connect</a>
+                            <a href="#" class="btn btn-primary h3">
+                                <t t-if="not user_event_manager and not sponsor.event_id.is_ongoing and not event.is_participating">
+                                    Register
+                                </t>
+                                <t t-else="">Connect</t>
+                            </a>
                         </div>
                     </div>
                 </div>
