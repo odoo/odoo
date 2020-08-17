@@ -217,10 +217,12 @@ class ResourceCalendar(models.Model):
     @api.depends('two_weeks_calendar')
     def _compute_two_weeks_explanation(self):
         today = fields.Date.today()
-        week_type = _("odd") if int(math.floor((today.toordinal() - 1) / 7) % 2) else _("even")
+        week_type = self.env['resource.calendar.attendance'].get_week_type(today)
+        week_type_str = _("second") if week_type else _("first")
         first_day = date_utils.start_of(today, 'week')
         last_day = date_utils.end_of(today, 'week')
-        self.two_weeks_explanation = "This week (from %s to %s) is an %s week." % (first_day, last_day, week_type)
+        self.two_weeks_explanation = _("The current week (from %s to %s) correspond to the  %s one.", first_day,
+                                       last_day, week_type_str)
 
     def _get_global_attendances(self):
         return self.attendance_ids.filtered(lambda attendance:
@@ -253,7 +255,7 @@ class ResourceCalendar(models.Model):
             self.attendance_ids.unlink()
             self.attendance_ids = [
                 (0, 0, {
-                    'name': 'Even week',
+                    'name': 'First week',
                     'dayofweek': '0',
                     'sequence': '0',
                     'hour_from': 0,
@@ -263,12 +265,11 @@ class ResourceCalendar(models.Model):
                     'display_type':
                     'line_section'}),
                 (0, 0, {
-                    'name': 'Odd week',
+                    'name': 'Second week',
                     'dayofweek': '0',
                     'sequence': '25',
                     'hour_from': 0,
-                    'day_period':
-                    'morning',
+                    'day_period': 'morning',
                     'week_type': '1',
                     'hour_to': 0,
                     'display_type': 'line_section'}),
@@ -388,7 +389,7 @@ class ResourceCalendar(models.Model):
                 if attendance.date_to:
                     until = min(until, attendance.date_to)
                 if attendance.week_type:
-                    start_week_type = int(math.floor((start.toordinal()-1)/7) % 2)
+                    start_week_type = self.env['resource.calendar.attendance'].get_week_type(start)
                     if start_week_type != int(attendance.week_type):
                         # start must be the week of the attendance
                         # if it's not the case, we must remove one week
@@ -769,9 +770,9 @@ class ResourceCalendarAttendance(models.Model):
     day_period = fields.Selection([('morning', 'Morning'), ('afternoon', 'Afternoon')], required=True, default='morning')
     resource_id = fields.Many2one('resource.resource', 'Resource')
     week_type = fields.Selection([
-        ('1', 'Odd week'),
-        ('0', 'Even week')
-        ], 'Week Even/Odd', default=False)
+        ('1', 'Second'),
+        ('0', 'First')
+        ], 'Week Number', default=False)
     two_weeks_calendar = fields.Boolean("Calendar in 2 weeks mode", related='calendar_id.two_weeks_calendar')
     display_type = fields.Selection([
         ('line_section', "Section")], default=False, help="Technical field for UX purpose.")
@@ -789,6 +790,24 @@ class ResourceCalendarAttendance(models.Model):
         # avoid wrong order
         self.hour_to = max(self.hour_to, self.hour_from)
 
+    @api.model
+    def get_week_type(self, date):
+        # week_type is defined by
+        #  * counting the number of days from January 1 of year 1
+        #    (extrapolated to dates prior to the first adoption of the Gregorian calendar)
+        #  * converted to week numbers and then the parity of this number is asserted.
+        # It ensures that an even week number always follows an odd week number. With classical week number,
+        # some years have 53 weeks. Therefore, two consecutive odd week number follow each other (53 --> 1).
+        return int(math.floor((date.toordinal() - 1) / 7) % 2)
+
+    def _compute_display_name(self):
+        super()._compute_display_name()
+        this_week_type = str(self.get_week_type(fields.Date.context_today(self)))
+        section_names = {'0': _('First week'), '1': _('Second week')}
+        section_info = {True: _('this week'), False: _('other week')}
+        for record in self.filtered(lambda l: l.display_type == 'line_section'):
+            section_name = "%s (%s)" % (section_names[record.week_type], section_info[this_week_type == record.week_type])
+            record.display_name = section_name
 
 class ResourceResource(models.Model):
     _name = "resource.resource"
