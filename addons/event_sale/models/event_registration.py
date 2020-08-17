@@ -58,7 +58,7 @@ class EventRegistration(models.Model):
                 registration.utm_medium_id = False
 
     def action_view_sale_order(self):
-        action = self.env.ref('sale.action_orders').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("sale.action_orders")
         action['views'] = [(False, 'form')]
         action['res_id'] = self.sale_order_id.id
         return action

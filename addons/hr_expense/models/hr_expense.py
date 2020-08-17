@@ -325,7 +325,7 @@ class HrExpense(models.Model):
 
     def action_get_attachment_view(self):
         self.ensure_one()
-        res = self.env['ir.actions.act_window'].for_xml_id('base', 'action_attachment')
+        res = self.env['ir.actions.act_window']._for_xml_id('base.action_attachment')
         res['domain'] = [('res_model', '=', 'hr.expense'), ('res_id', 'in', self.ids)]
         res['context'] = {'default_res_model': 'hr.expense', 'default_res_id': self.id}
         return res
@@ -915,7 +915,7 @@ class HrExpenseSheet(models.Model):
         return res
 
     def action_get_attachment_view(self):
-        res = self.env['ir.actions.act_window'].for_xml_id('base', 'action_attachment')
+        res = self.env['ir.actions.act_window']._for_xml_id('base.action_attachment')
         res['domain'] = [('res_model', '=', 'hr.expense'), ('res_id', 'in', self.expense_line_ids.ids)]
         res['context'] = {
             'default_res_model': 'hr.expense.sheet',

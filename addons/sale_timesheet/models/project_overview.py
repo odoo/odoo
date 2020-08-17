@@ -542,7 +542,7 @@ def _to_action_data(model=None, *, action=None, views=None, res_id=None, domain=
     # pass in either action or (model, views)
     if action:
         assert model is None and views is None
-        act = clean_action(action.read()[0])
+        act = clean_action(action.read()[0], env=action.env)
         model = act['res_model']
         views = act['views']
     # FIXME: search-view-id, possibly help?

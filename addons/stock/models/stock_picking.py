@@ -200,7 +200,7 @@ class PickingType(models.Model):
             self.show_reserved = True
 
     def _get_action(self, action_xmlid):
-        action = self.env.ref(action_xmlid).read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id(action_xmlid)
         if self:
             action['display_name'] = self.display_name
 
@@ -1365,7 +1365,7 @@ class Picking(models.Model):
 
     def action_see_move_scrap(self):
         self.ensure_one()
-        action = self.env.ref('stock.action_stock_scrap').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("stock.action_stock_scrap")
         scraps = self.env['stock.scrap'].search([('picking_id', '=', self.id)])
         action['domain'] = [('id', 'in', scraps.ids)]
         action['context'] = dict(self._context, create=False)
@@ -1373,14 +1373,14 @@ class Picking(models.Model):
 
     def action_see_packages(self):
         self.ensure_one()
-        action = self.env.ref('stock.action_package_view').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("stock.action_package_view")
         packages = self.move_line_ids.mapped('result_package_id')
         action['domain'] = [('id', 'in', packages.ids)]
         action['context'] = {'picking_id': self.id}
         return action
 
     def action_picking_move_tree(self):
-        action = self.env.ref('stock.stock_move_action').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("stock.stock_move_action")
         action['views'] = [
             (self.env.ref('stock.view_picking_move_tree').id, 'tree'),
         ]

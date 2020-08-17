@@ -364,7 +364,7 @@ class Website(models.Model):
     @api.model
     def action_dashboard_redirect(self):
         if self.env.user.has_group('sales_team.group_sale_salesman'):
-            return self.env.ref('website.backend_dashboard').read()[0]
+            return self.env["ir.actions.actions"]._for_xml_id("website.backend_dashboard")
         return super(Website, self).action_dashboard_redirect()
 
     def get_suggested_controllers(self):

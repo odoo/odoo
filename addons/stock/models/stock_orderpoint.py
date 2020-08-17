@@ -291,7 +291,7 @@ class StockWarehouseOrderpoint(models.Model):
 
         return replenish report ir.actions.act_window
         """
-        action = self.env.ref('stock.action_orderpoint_replenish').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("stock.action_orderpoint_replenish")
         action['context'] = self.env.context
         orderpoints = self.env['stock.warehouse.orderpoint'].search([])
         # Remove previous automatically created orderpoint that has been refilled.

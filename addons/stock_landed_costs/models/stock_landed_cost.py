@@ -273,7 +273,7 @@ class StockLandedCost(models.Model):
     def action_view_stock_valuation_layers(self):
         self.ensure_one()
         domain = [('id', 'in', self.stock_valuation_layer_ids.ids)]
-        action = self.env.ref('stock_account.stock_valuation_layer_action').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("stock_account.stock_valuation_layer_action")
         return dict(action, domain=domain)
 
     def _get_targeted_move_ids(self):
