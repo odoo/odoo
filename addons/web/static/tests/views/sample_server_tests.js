@@ -77,7 +77,7 @@ odoo.define('web.sample_server_tests', function (require) {
         QUnit.module("Basic behaviour");
 
         QUnit.test("Sample data: people type + all field names", async function (assert) {
-            assert.expect(24);
+            assert.expect(25);
 
             mock.patch(session, {
                 company_currency_id: 4,
@@ -133,6 +133,9 @@ odoo.define('web.sample_server_tests', function (require) {
             assertBetween('color', 0, MAX_COLOR_INT);
             assertBetween('age', 0, MAX_INTEGER);
             assertBetween('salary', 0, MAX_MONETARY);
+
+            // check float field have 2 decimal rounding
+            assert.strictEqual(rec.height, parseFloat(parseFloat(rec.height).toFixed(2)));
 
             const selectionValues = this.fields['res.users'].type.selection.map(
                 (sel) => sel[0]
