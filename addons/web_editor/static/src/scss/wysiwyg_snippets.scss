@@ -468,6 +468,23 @@ body.editor_enable.editor_has_snippets {
             }
         }
 
+        //// ===========  POC  ================
+
+        /// Emulate to current active level (by default it's the last one)
+        we-customizeblock-options:not(.d-none):last-of-type() > we-title:before {
+            @include o-position-absolute(1px, auto, 1px, 1px);
+            content: "";
+            background-color: $o-we-accent;
+            width: 2px;
+        }
+
+        /// Override the prev. rule in case there's another level highlighted
+        we-customizeblock-options.o_we_level_highlight ~ we-customizeblock-options:not(.d-none)  > we-title:before {
+            display: none!important;
+        }
+
+        //// ===================================
+
         we-customizeblock-option {
             position: relative;
             display: block;

@@ -518,6 +518,8 @@ var SnippetEditor = Widget.extend({
 
         this.$el.find('[data-toggle="dropdown"]').dropdown();
 
+        let self = this;
+
         return Promise.all(defs).then(() => {
             const options = _.sortBy(this.styles, '__order');
             options.forEach(option => {
@@ -528,6 +530,20 @@ var SnippetEditor = Widget.extend({
                 }
             });
             $optionsSection.toggleClass('d-none', options.length === 0);
+
+            $optionsSection.on('mouseenter', function() {
+                if (!$optionsSection.is(':visible')) {
+                    return;
+                }
+                $('.o_we_customize_panel .o_we_level_highlight').removeClass('o_we_level_highlight');
+                $optionsSection.addClass('o_we_level_highlight');
+            });
+            $optionsSection.on('mouseleave', function() {
+                if (!$optionsSection.is(':visible')) {
+                    return;
+                }
+                $optionsSection.removeClass('o_we_level_highlight');
+            });
         });
     },
     /**
