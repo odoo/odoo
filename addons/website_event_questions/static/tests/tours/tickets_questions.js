@@ -44,7 +44,7 @@ tour.register('test_tickets_questions', {
     trigger: 'div:contains("Ticket #2").modal-body select[name*="question_answer"]',
     run: 'text Pastafarian'
 }, {
-    trigger: 'div:contains("General questions").modal-body select[name*="question_answer"]',
+    trigger: 'div.o_wevent_registration_question_global select[name*="question_answer"]',
     run: 'text A friend'
 }, {
     trigger: 'button:contains("Continue")',
