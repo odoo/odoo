@@ -39,18 +39,15 @@
 </template>
 
 <template id="snippet_options_image_optimization_widgets">
-    <t t-set="filter_label">Color Filter</t>
-    <t t-set="width_label">Width</t>
-    <t t-set="quality_label">Quality</t>
     <div class="o_we_external_warning d-none">
         <we-title title="Quality options are unavailable for external images. If you want to change this image's quality, please first download it from the original source and upload it in Odoo.">
             <i class="fa fa-warning" /> External Image
         </we-title>
     </div>
-    <!-- &emsp; -->
-    <we-colorpicker t-att-string="indent and (' ⌙ %s' % filter_label) or filter_label" data-set-filter="" data-excluded="common, theme"/>
-    <we-select t-att-string="indent and (' ⌙ %s' % width_label) or width_label" data-name="width_select_opt"/>
-    <we-range t-att-string="indent and (' ⌙ %s' % quality_label) or quality_label" data-set-quality=""/>
+
+    <we-colorpicker string="Color Filter" data-set-filter="" data-excluded="common, theme" t-att-class="indent and 'o_we_indent o_we_indent_lev2'"/>
+    <we-select string="Width" data-name="width_select_opt" t-att-class="indent and 'o_we_indent o_we_indent_lev2'"/>
+    <we-range string="Quality" data-set-quality="" t-att-class="indent and 'o_we_indent o_we_indent_lev2'"/>
     <div class="o_we_image_weight d-none"><small/><b/></div>
 </template>
 
@@ -99,7 +96,7 @@
              t-att-data-selector="selector"
              t-att-data-exclude="exclude"
              t-att-data-target="target">
-            <we-row string="⌙ Image">
+            <we-row string="Image" class="o_we_indent">
                 <we-imagepicker title="Edit image"
                                 data-background=""
                                 data-name="bg_image_opt"
@@ -111,7 +108,7 @@
              t-att-data-selector="selector"
              t-att-data-exclude="exclude"
              t-att-data-target="target">
-            <we-row string=" ⌙ Position"><!-- &emsp; -->
+            <we-row string="Position" class="o_we_indent o_we_indent_lev2">
                 <we-select data-no-preview="true">
                     <we-button data-background-type="cover">Cover</we-button>
                     <we-button data-background-type="repeat-pattern" data-name="background_repeat_opt">Repeat pattern</we-button>
@@ -122,8 +119,8 @@
             </we-row>
             <we-multi data-css-property="background-size" data-dependencies="background_repeat_opt">
                 <!-- &emsp; -->
-                <we-input string="  ⌙ Width" data-select-style="auto" placeholder="auto" data-unit="px"/>
-                <we-input string="  ⌙ Height" data-select-style="auto" placeholder="auto" data-unit="px"/>
+                <we-input string="Width" data-select-style="auto" placeholder="auto" data-unit="px" class="o_we_indent o_we_indent_lev2"/>
+                <we-input string="Height" data-select-style="auto" placeholder="auto" data-unit="px" class="o_we_indent o_we_indent_lev2"/>
             </we-multi>
         </div>
 
@@ -140,7 +137,8 @@
         <div t-att-data-selector="selector"
              t-att-data-exclude="exclude"
              t-att-data-target="target">
-            <we-colorpicker string="⌙ Filter"
+            <we-colorpicker string="Filter"
+                            class="o_we_indent"
                             data-select-style="true"
                             data-css-property="background-color"
                             data-color-prefix="bg-"
@@ -151,7 +149,7 @@
              t-att-data-selector="selector"
              t-att-data-exclude="exclude"
              t-att-data-target="target">
-            <we-select-pager class="o_we_shape_menu" string="⌙ Shape" data-dependencies="!shape_none_opt" data-name="bg_shape_opt">
+            <we-select-pager class="o_we_shape_menu o_we_indent" string="Shape" data-dependencies="!shape_none_opt" data-name="bg_shape_opt">
                 <!-- Invisible None button to be used for select's placeholder text -->
                 <we-button data-shape="" data-name="shape_none_opt"/>
                 <we-select-page>
@@ -265,11 +263,11 @@
                     <we-button data-shape="web_editor/Zigs/05" data-select-label="Zigs 05"/>
                 </we-select-page>
             </we-select-pager>
-            <we-row string=" ⌙ Flip"><!-- &emsp; -->
+            <we-row string="Flip" class="o_we_indent o_we_indent_lev2">
                 <we-button data-flip-x="true" data-no-preview="true" data-dependencies="!shape_none_opt"><i class="fa fa-fw fa-arrows-h"/></we-button>
                 <we-button data-flip-y="true" data-no-preview="true" data-dependencies="!shape_none_opt"><i class="fa fa-fw fa-arrows-v"/></we-button>
             </we-row>
-            <we-row string=" ⌙ Colors" data-name="colors"/>
+            <we-row string="Colors" data-name="colors" class="o_we_indent o_we_indent_lev2"/>
         </div>
     </t>
 </template>

@@ -195,7 +195,8 @@
              t-att-data-exclude="exclude"
              t-att-data-target="target">
             <!-- &emsp; -->
-            <we-select string=" ⌙ Parallax"
+            <we-select string="Parallax"
+                       class="o_we_indent o_we_indent_lev2"
                        data-attribute-name="scrollBackgroundRatio"
                        data-attribute-default-value="0"
                        data-parallax-type-opt="true"
@@ -206,7 +207,8 @@
                 <we-button data-name="parallax_top_opt" data-select-data-attribute="1.5">Bottom to Top</we-button>
                 <we-button data-name="parallax_bottom_opt" data-select-data-attribute="-1.5">Top to Bottom</we-button>
             </we-select>
-            <we-range string="  ⌙ Intensity"
+            <we-range string="Intensity"
+                      class="o_we_indent o_we_indent_lev3"
                       data-dependencies="parallax_top_opt"
                       data-select-data-attribute=""
                       data-attribute-name="scrollBackgroundRatio"
@@ -215,7 +217,8 @@
                       data-min="0"
                       data-max="3"
                       data-step="0.15"/> <!-- Make sure this cannot land on 1 -->
-            <we-range string="  ⌙ Intensity"
+            <we-range string="Intensity"
+                      class="o_we_indent o_we_indent_lev3"
                       data-dependencies="parallax_bottom_opt"
                       data-select-data-attribute=""
                       data-attribute-name="scrollBackgroundRatio"
@@ -229,7 +232,7 @@
              t-att-data-selector="selector"
              t-att-data-exclude="exclude"
              t-att-data-target="target">
-            <we-row string="⌙ Video">
+            <we-row string="Video" class="o_we_indent">
                 <we-videopicker title="Edit video"
                                 data-background=""
                                 data-name="bg_video_opt"
@@ -240,7 +243,7 @@
 </template>
 
 <template id="snippet_options_border_line_widgets">
-    <we-row t-att-string="label">
+    <we-row t-att-string="label" t-att-class="classes and classes">
         <we-input data-name="border_width_opt"
                   t-att-data-apply-to="apply_to"
                   data-select-style="0"
@@ -288,13 +291,13 @@
                    title="Inset"/>
     </we-button-group>
     <we-multi data-css-property="box-shadow" data-dependencies="shadow_active_opt, shadow_inset_opt">
-        <we-colorpicker string="⌙ Color" data-select-style="" data-css-compatible=""/>
-        <we-row string="⌙ Offset (X, Y)">
+        <we-colorpicker string="Color" data-select-style="" data-css-compatible="" class="o_we_indent"/>
+        <we-row string="Offset (X, Y)" class="o_we_indent">
             <we-input data-select-style="" data-unit="px"/>
             <we-input data-select-style="" data-unit="px"/>
         </we-row>
-        <we-input string="⌙ Blur" data-select-style="" data-unit="px"/>
-        <we-input string="⌙ Spread" data-select-style="" data-unit="px"/>
+        <we-input string="Blur" data-select-style="" data-unit="px" class="o_we_indent"/>
+        <we-input string="Spread" data-select-style="" data-unit="px" class="o_we_indent"/>
         <!-- Inset parameter always hidden (as controlled above) but needed -->
         <!-- for the we-multi widget to work properly. -->
         <we-checkbox data-name="fake_inset_shadow_opt" data-select-style="inset"/>
@@ -537,19 +540,21 @@
             <we-button data-customize-website-views="website.layout_logo_show">Image</we-button>
             <we-button data-customize-website-views="website.header_logo_none" data-name="header_logo_none_opt">None</we-button>
         </we-select>
-        <we-input string="⌙ Height"
+        <we-input string="Height"
                   data-dependencies="!header_logo_none_opt"
                   data-customize-website-variable="null"
                   data-variable="logo-height"
                   data-unit="px"
-                  data-save-unit="rem"/>
-        <we-input string="⌙ Height (Scrolled)"
+                  data-save-unit="rem"
+                  class="o_we_indent"/>
+        <we-input string="Height (Scrolled)"
                   data-name="option_logo_height_scrolled"
                   data-customize-website-variable="null"
                   data-variable="fixed-logo-height"
                   data-unit="px"
                   data-save-unit="rem"
-                  data-dependencies="!header_effect_scroll_opt"/>
+                  data-dependencies="!header_effect_scroll_opt"
+                  class="o_we_indent"/>
         <we-row string="Font">
             <we-fontfamilypicker data-variable="navbar-font"/>
             <we-input data-customize-website-variable="null" data-variable="header-font-size" data-unit="px" data-save-unit="rem"/>
@@ -879,10 +884,11 @@
             <we-button data-customize-website-views="" data-name="layout_full_opt">Full</we-button>
             <we-button data-customize-website-views="website.option_layout_boxed_variables" id="option_layout_boxed">Boxed</we-button>
         </we-select>
-        <we-row string="⌙ Background" data-no-preview="true">
+        <we-row string="Background" data-no-preview="true">
             <we-colorpicker data-dependencies="!layout_full_opt"
                             data-customize-website-color=""
-                            data-color="body"/>
+                            data-color="body"
+                            class="o_we_indent"/>
             <we-button-group>
                 <we-button title="Image"
                            data-customize-website-views="website.option_custom_body_image"
@@ -902,8 +908,8 @@
                   data-unit="px"
                   data-save-unit="rem"/>
         <we-fontfamilypicker string="Font family" data-variable="font"/>
-        <we-fontfamilypicker string="⌙ Headings" data-variable="headings-font"/>
-        <we-fontfamilypicker string="⌙ Buttons" data-variable="buttons-font"/>
+        <we-fontfamilypicker string="Headings" data-variable="headings-font" class="o_we_indent"/>
+        <we-fontfamilypicker string="Buttons" data-variable="buttons-font" class="o_we_indent"/>
         <we-select string="Main Buttons" data-variable="btn-primary-outline">
             <we-button data-customize-website-variable="false">Fill</we-button>
             <we-button data-customize-website-variable="true">Outline</we-button>

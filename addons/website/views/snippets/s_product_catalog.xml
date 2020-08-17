@@ -64,7 +64,8 @@
             <we-checkbox string="Descriptions" data-toggle-description="true"
                          data-no-preview="true"/>
             <t t-call="website.snippet_options_border_line_widgets">
-                <t t-set="label">⌙ Separator</t>
+                <t t-set="label">Separator</t>
+                <t t-set="classes">o_we_indent</t>
                 <t t-set="direction" t-value="'top'"/>
                 <t t-set="apply_to" t-value="'.s_product_catalog_dish_description'"/>
                 <!-- Note: no need of extra dependency thanks to the apply-to -->

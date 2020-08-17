@@ -466,6 +466,30 @@ body.editor_enable.editor_has_snippets {
                     }
                 }
             }
+
+            .o_we_indent {
+                > we-title:before {
+                    content: "⌙";
+                    margin-left: .1ch;
+                    margin-right: .5ch;
+                    opacity: .6;
+                }
+
+                &.o_we_indent_lev2 > we-title:before {
+                    margin-left: 1.2ch;
+                }
+
+                &.o_we_indent_lev3 > we-title:before {
+                    margin-left: 2.2ch;
+                }
+            }
+
+            &.o_we_level_highlight > we-title:before {
+                @include o-position-absolute(1px, auto, 1px, 1px);
+                content: "";
+                background-color: $o-we-accent;
+                width: 2px;
+            }
         }
 
         //// ===========  POC  ================
