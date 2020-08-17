@@ -25,6 +25,9 @@ var globalSelector = {
 var SnippetEditor = Widget.extend({
     template: 'web_editor.snippet_overlay',
     xmlDependencies: ['/web_editor/static/src/xml/snippets.xml'],
+    events: {
+        'click .oe_snippet_remove': '_onRemoveClick',
+    },
     custom_events: {
         'option_update': '_onOptionUpdate',
         'user_value_widget_request': '_onUserValueWidgetRequest',
@@ -103,7 +106,7 @@ var SnippetEditor = Widget.extend({
         }
 
         if (!this.isTargetParentEditable) {
-            $customize.find('.oe_snippet_remove').addClass('d-none');
+            this.$el.add($customize).find('.oe_snippet_remove').addClass('d-none');
         }
 
         var _animationsCount = 0;
@@ -511,6 +514,11 @@ var SnippetEditor = Widget.extend({
             }
             this.styles[key] = option;
             option.__order = i++;
+
+            if (option.forceNoDeleteButton) {
+                this.$el.add($optionsSection).find('.oe_snippet_remove').addClass('d-none');
+            }
+
             return option.appendTo(document.createDocumentFragment());
         });
 
