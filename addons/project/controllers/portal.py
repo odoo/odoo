@@ -15,10 +15,12 @@ from odoo.osv.expression import OR
 
 class CustomerPortal(CustomerPortal):
 
-    def _prepare_home_portal_values(self):
-        values = super(CustomerPortal, self)._prepare_home_portal_values()
-        values['project_count'] = request.env['project.project'].search_count([])
-        values['task_count'] = request.env['project.task'].search_count([])
+    def _prepare_home_portal_values(self, counters):
+        values = super()._prepare_home_portal_values(counters)
+        if 'project_count' in counters:
+            values['project_count'] = request.env['project.project'].search_count([])
+        if 'task_count' in counters:
+            values['task_count'] = request.env['project.task'].search_count([])
         return values
 
     # ------------------------------------------------------------

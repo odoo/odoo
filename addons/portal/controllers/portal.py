@@ -159,16 +159,22 @@ class CustomerPortal(Controller):
             'archive_groups': [],
         }
 
-    def _prepare_home_portal_values(self):
+    def _prepare_home_portal_values(self, counters):
         """Values for /my & /my/home routes template rendering.
 
         Includes the record count for the displayed badges.
+        where 'coutners' is the list of the displayed badges
+        and so the list to compute.
         """
-        return self._prepare_portal_layout_values()
+        return {}
+
+    @route(['/my/counters'], type='json', auth="user", website=True)
+    def counters(self, counters, **kw):
+        return self._prepare_home_portal_values(counters)
 
     @route(['/my', '/my/home'], type='http', auth="user", website=True)
     def home(self, **kw):
-        values = self._prepare_home_portal_values()
+        values = self._prepare_portal_layout_values()
         return request.render("portal.portal_my_home", values)
 
     @route(['/my/account'], type='http', auth='user', website=True)

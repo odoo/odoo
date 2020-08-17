@@ -163,7 +163,14 @@
     <template id="portal_docs_entry" name="My Portal Docs Entry">
         <a t-att-href="url" t-att-title="title" class="list-group-item list-group-item-action d-flex align-items-center justify-content-between">
             <t t-esc="title"/>
-            <span class="badge badge-secondary badge-pill" t-esc="count"/>
+            <t t-if='count'>
+                <span class="badge badge-secondary badge-pill" t-esc="count"/>
+            </t>
+            <t t-elif="placeholder_count">
+                <span class="badge badge-secondary badge-pill" t-att-data-placeholder_count="placeholder_count">
+                    <i class="fa fa-spin fa-spinner"></i>
+                </span>
+            </t>
         </a>
     </template>
 
