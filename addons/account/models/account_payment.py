@@ -109,6 +109,11 @@ class AccountPayment(models.Model):
         help="Invoices whose journal items have been reconciled with these payments.")
     reconciled_invoices_count = fields.Integer(string="# Reconciled Invoices",
         compute="_compute_stat_buttons_from_reconciliation")
+    reconciled_bill_ids = fields.Many2many('account.move', string="Reconciled Bills",
+        compute='_compute_stat_buttons_from_reconciliation',
+        help="Invoices whose journal items have been reconciled with these payments.")
+    reconciled_bills_count = fields.Integer(string="# Reconciled Bills",
+        compute="_compute_stat_buttons_from_reconciliation")
     reconciled_statement_ids = fields.Many2many('account.move', string="Reconciled Statements",
         compute='_compute_stat_buttons_from_reconciliation',
         help="Statements matched to this payment")
@@ -422,6 +427,8 @@ class AccountPayment(models.Model):
         if not stored_payments:
             self.reconciled_invoice_ids = False
             self.reconciled_invoices_count = 0
+            self.reconciled_bill_ids = False
+            self.reconciled_bills_count = 0
             self.reconciled_statement_ids = False
             self.reconciled_statements_count = 0
             return
@@ -433,7 +440,8 @@ class AccountPayment(models.Model):
         self._cr.execute('''
             SELECT
                 payment.id,
-                ARRAY_AGG(DISTINCT invoice.id) AS invoice_ids
+                ARRAY_AGG(DISTINCT invoice.id) AS invoice_ids,
+                invoice.move_type
             FROM account_payment payment
             JOIN account_move move ON move.id = payment.move_id
             JOIN account_move_line line ON line.move_id = move.id
@@ -448,16 +456,24 @@ class AccountPayment(models.Model):
             JOIN account_move invoice ON invoice.id = counterpart_line.move_id
             JOIN account_account account ON account.id = line.account_id
             WHERE account.internal_type IN ('receivable', 'payable')
+                AND payment.id IN %(payment_ids)s
                 AND line.id != counterpart_line.id
                 AND invoice.move_type in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt')
-            GROUP BY payment.id
-        ''')
-        query_res = dict((payment_id, invoice_ids) for payment_id, invoice_ids in self._cr.fetchall())
-
-        for pay in self:
-            invoice_ids = query_res.get(pay.id, [])
-            pay.reconciled_invoice_ids = [(6, 0, invoice_ids)]
-            pay.reconciled_invoices_count = len(invoice_ids)
+            GROUP BY payment.id, invoice.move_type
+        ''', {
+            'payment_ids': tuple(stored_payments.ids)
+        })
+        query_res = self._cr.dictfetchall()
+        self.reconciled_invoice_ids = self.reconciled_invoices_count = False
+        self.reconciled_bill_ids = self.reconciled_bills_count = False
+        for res in query_res:
+            pay = self.browse(res['id'])
+            if res['move_type'] in self.env['account.move'].get_sale_types(True):
+                pay.reconciled_invoice_ids += self.env['account.move'].browse(res.get('invoice_ids', []))
+                pay.reconciled_invoices_count = len(res.get('invoice_ids', []))
+            else:
+                pay.reconciled_bill_ids += self.env['account.move'].browse(res.get('invoice_ids', []))
+                pay.reconciled_bills_count = len(res.get('invoice_ids', []))
 
         self._cr.execute('''
             SELECT
@@ -477,10 +493,13 @@ class AccountPayment(models.Model):
                 OR
                 part.credit_move_id = counterpart_line.id
             WHERE (account.id = journal.payment_debit_account_id OR account.id = journal.payment_credit_account_id)
+                AND payment.id IN %(payment_ids)s
                 AND line.id != counterpart_line.id
                 AND counterpart_line.statement_id IS NOT NULL
             GROUP BY payment.id
-        ''')
+        ''', {
+            'payment_ids': tuple(stored_payments.ids)
+        })
         query_res = dict((payment_id, statement_ids) for payment_id, statement_ids in self._cr.fetchall())
 
         for pay in self:
@@ -745,6 +764,30 @@ class AccountPayment(models.Model):
             action.update({
                 'view_mode': 'list,form',
                 'domain': [('id', 'in', self.reconciled_invoice_ids.ids)],
+            })
+        return action
+
+    def button_open_bills(self):
+        ''' Redirect the user to the bill(s) paid by this payment.
+        :return:    An action on account.move.
+        '''
+        self.ensure_one()
+
+        action = {
+            'name': _("Paid Bills"),
+            'type': 'ir.actions.act_window',
+            'res_model': 'account.move',
+            'context': {'create': False},
+        }
+        if len(self.reconciled_bill_ids) == 1:
+            action.update({
+                'view_mode': 'form',
+                'res_id': self.reconciled_bill_ids.id,
+            })
+        else:
+            action.update({
+                'view_mode': 'list,form',
+                'domain': [('id', 'in', self.reconciled_bill_ids.ids)],
             })
         return action
 

@@ -107,19 +107,41 @@ class AccountJournal(models.Model):
     sequence_override_regex = fields.Text(help="Technical field used to enforce complex sequence composition that the system would normally misunderstand.\n"\
                                           "This is a regex that can include all the following capture groups: prefix1, year, prefix2, month, prefix3, seq, suffix.\n"\
                                           "The prefix* groups are the separators between the year, month and the actual increasing sequence number (seq).\n"\
-                                          
+
                                           "e.g: ^(?P<prefix1>.*?)(?P<year>\d{4})(?P<prefix2>\D*?)(?P<month>\d{2})(?P<prefix3>\D+?)(?P<seq>\d+)(?P<suffix>\D*?)$")
 
-    inbound_payment_method_ids = fields.Many2many('account.payment.method', 'account_journal_inbound_payment_method_rel', 'journal_id', 'inbound_payment_method',
-        domain=[('payment_type', '=', 'inbound')], string='Inbound Payment Methods', default=lambda self: self._default_inbound_payment_methods(),
-        help="Manual: Get paid by cash, check or any other method outside of Odoo.\n"\
-             "Electronic: Get paid automatically through a payment acquirer by requesting a transaction on a card saved by the customer when buying or subscribing online (payment token).\n"\
-             "Batch Deposit: Encase several customer checks at once by generating a batch deposit to submit to your bank. When encoding the bank statement in Odoo,you are suggested to reconcile the transaction with the batch deposit. Enable this option from the settings.")
-    outbound_payment_method_ids = fields.Many2many('account.payment.method', 'account_journal_outbound_payment_method_rel', 'journal_id', 'outbound_payment_method',
-        domain=[('payment_type', '=', 'outbound')], string='Outbound Payment Methods', default=lambda self: self._default_outbound_payment_methods(),
-        help="Manual:Pay bill by cash or any other method outside of Odoo.\n"\
-             "Check:Pay bill by check and print it from Odoo.\n"\
-             "SEPA Credit Transfer: Pay bill from a SEPA Credit Transfer file you submit to your bank. Enable this option from the settings.")
+    inbound_payment_method_ids = fields.Many2many(
+        comodel_name='account.payment.method',
+        relation='account_journal_inbound_payment_method_rel',
+        column1='journal_id',
+        column2='inbound_payment_method',
+        domain=[('payment_type', '=', 'inbound')],
+        string='Inbound Payment Methods',
+        compute='_compute_inbound_payment_method_ids',
+        store=True,
+        readonly=False,
+        help="Manual: Get paid by cash, check or any other method outside of Odoo.\n"
+             "Electronic: Get paid automatically through a payment acquirer by requesting a transaction"
+             " on a card saved by the customer when buying or subscribing online (payment token).\n"
+             "Batch Deposit: Encase several customer checks at once by generating a batch deposit to"
+             " submit to your bank. When encoding the bank statement in Odoo,you are suggested to"
+             " reconcile the transaction with the batch deposit. Enable this option from the settings."
+    )
+    outbound_payment_method_ids = fields.Many2many(
+        comodel_name='account.payment.method',
+        relation='account_journal_outbound_payment_method_rel',
+        column1='journal_id',
+        column2='outbound_payment_method',
+        domain=[('payment_type', '=', 'outbound')],
+        string='Outbound Payment Methods',
+        compute='_compute_outbound_payment_method_ids',
+        store=True,
+        readonly=False,
+        help="Manual:Pay bill by cash or any other method outside of Odoo.\n"
+             "Check:Pay bill by check and print it from Odoo.\n"
+             "SEPA Credit Transfer: Pay bill from a SEPA Credit Transfer file you submit to your"
+             " bank. Enable this option from the settings."
+    )
     at_least_one_inbound = fields.Boolean(compute='_methods_compute', store=True)
     at_least_one_outbound = fields.Boolean(compute='_methods_compute', store=True)
     profit_account_id = fields.Many2one(
@@ -189,6 +211,22 @@ class AccountJournal(models.Model):
                 journal.default_account_type = self.env.ref(default_account_id_types[journal.type]).id
             else:
                 journal.default_account_type = False
+
+    @api.depends('type')
+    def _compute_outbound_payment_method_ids(self):
+        for journal in self:
+            if journal.type in ('bank', 'cash'):
+                journal.outbound_payment_method_ids = self._default_outbound_payment_methods()
+            else:
+                journal.outbound_payment_method_ids = False
+
+    @api.depends('type')
+    def _compute_inbound_payment_method_ids(self):
+        for journal in self:
+            if journal.type in ('bank', 'cash'):
+                journal.inbound_payment_method_ids = self._default_inbound_payment_methods()
+            else:
+                journal.inbound_payment_method_ids = False
 
     @api.depends('company_id', 'type')
     def _compute_suspense_account_id(self):
