@@ -669,14 +669,6 @@ $-transition-duration: 200ms;
         transition: transform $-transition-duration;
     }
 
-    .navbar-collapse {
-        @if o-website-value('header-template') != 'logo_hamburger' {
-            max-height: 70vh;
-        }
-        &.show {
-            overflow-y: auto;
-        }
-    }
     &.o_header_is_scrolled {
         .navbar-brand {
             font-size: $o-theme-navbar-fixed-logo-height / $line-height-base;
@@ -737,6 +729,25 @@ $-transition-duration: 200ms;
 
 // Header templates
 header {
+    * .dropdown-menu {
+        max-height: 60vh;
+        @include media-breakpoint-down(sm) {
+            max-height: 100%;
+        }
+        &.show {
+            overflow-y: auto;
+        }
+    }
+
+    .navbar-collapse {
+        @if o-website-value('header-template') != 'logo_hamburger' {
+            max-height: 70vh;
+        }
+        &.show {
+            overflow-y: auto;
+        }
+    }
+
     &:not(.o_header_no_transition) {
         .navbar-brand {
             transition: font-size $-transition-duration, opacity $-transition-duration ease-out;
