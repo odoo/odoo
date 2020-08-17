@@ -66,10 +66,16 @@ odoo.define('pos_restaurant.TipScreen', function (require) {
         }
         goNextScreen() {
             this.env.pos.get_order().finalize();
-            this.showScreen(this.nextScreen);
+            const { name, props } = this.nextScreen;
+            this.showScreen(name, props);
         }
         get nextScreen() {
-            return 'FloorScreen';
+            if (this.env.pos.config.module_pos_restaurant && this.env.pos.config.iface_floorplan) {
+                const table = this.env.pos.table;
+                return { name: 'FloorScreen', props: { floor: table ? table.floor : null } };
+            } else {
+                return { name: 'ProductScreen' };
+            }
         }
     }
     TipScreen.template = 'pos_restaurant.TipScreen';
