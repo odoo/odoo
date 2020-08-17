@@ -171,8 +171,13 @@ class AccountMove(models.Model):
     country_code = fields.Char(related='company_id.country_id.code', readonly=True)
     user_id = fields.Many2one(string='User', related='invoice_user_id',
         help='Technical field used to fit the generic behavior in mail templates.')
-    is_move_sent = fields.Boolean(readonly=True, default=False, copy=False,
-        help="It indicates that the invoice/payment has been sent.")
+    is_move_sent = fields.Boolean(
+        readonly=True,
+        default=False,
+        copy=False,
+        tracking=True,
+        help="It indicates that the invoice/payment has been sent.",
+    )
     partner_bank_id = fields.Many2one('res.partner.bank', string='Recipient Bank',
         help='Bank Account Number to which the invoice will be paid. A Company bank account if this is a Customer Invoice or Vendor Credit Note, otherwise a Partner bank account number.',
         check_company=True)

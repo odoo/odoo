@@ -171,6 +171,15 @@
                                 <span attrs="{'invisible': [('reconciled_invoices_count','&lt;=', 1)]}">Invoices</span>
                             </button>
 
+                            <!-- Bill stat button -->
+                            <button name="button_open_bills" type="object"
+                                    class="oe_stat_button" icon="fa-bars"
+                                    attrs="{'invisible': [('reconciled_bills_count','=', 0)]}">
+                                <field name="reconciled_bills_count"/>
+                                <span attrs="{'invisible': [('reconciled_bills_count','&gt;', 1)]}">Bill</span>
+                                <span attrs="{'invisible': [('reconciled_bills_count','&lt;=', 1)]}">Bills</span>
+                            </button>
+
                             <!-- Statement stat button -->
                             <button name="button_open_statements" type="object"
                                     class="oe_stat_button" icon="fa-bars"
