@@ -35,6 +35,40 @@
             <field name="binding_model_id" ref="base.model_res_users"/>
         </record>
 
+        <record id="identity_check_wizard" model="ir.ui.view">
+            <field name="model">res.users.identitycheck</field>
+            <field name="arch" type="xml">
+                <form string="Security Control">
+                    <sheet>
+                        <div class="row container">
+                            <div class="col-8 offset-2">
+                              <div class="card bg-dark my-b mx-5">
+                                <div class="card-header">
+                                    <span class="fa fa-bell mx-2" t-translation="off">&amp;nbsp;</span>
+                                    <span class="text-uppercase">Security Control</span>
+                                </div>
+                                <div class="card-body">
+                                  <a href="/web/reset_password/" class="float-right">Forgot password?</a>
+                                  <h4 class="card-title">Please confirm your password to continue</h4>
+                                  <p class="card-text">
+                                    This is necessary for security-related changes. The authorization will last for a few minutes.
+                                  </p>
+                                  <div>
+                                    <label for="password"/>
+                                    <field class="col-4" name="password" autocomplete="current-password"
+                                           required="True" password="True"/>
+                                  </div>
+                                  <button string="Confirm Password" type="object" name="run_check" class="btn btn-primary mt-3"/>
+                                </div>
+                              </div>
+                            </div>
+                        </div>
+                        <footer><!-- no buttons --></footer>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
         <!-- res.groups -->
         <record id="view_groups_search" model="ir.ui.view">
             <field name="name">res.groups.search</field>
@@ -338,6 +372,65 @@
         </record>
         <menuitem action="action_res_users" id="menu_action_res_users" parent="base.menu_users" sequence="0"/>
 
+
+        <record id="action_res_users_keys_description" model="ir.actions.act_window">
+            <field name="name">API Key: description input wizard</field>
+            <field name="res_model">res.users.apikeys.description</field>
+            <field name="target">new</field>
+            <field name="view_mode">form</field>
+        </record>
+        <record id="form_res_users_key_description" model="ir.ui.view">
+            <field name="name">API Key: description input form</field>
+            <field name="model">res.users.apikeys.description</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                    <h3 class="font-weight-bold">
+                        Name your key
+                    </h3>
+                    <p>Enter a description of and purpose for the key.</p>
+                    <field name="name" placeholder="What's this key for?"/>
+                    <p>
+                        It is very important that this description be clear
+                        and complete, <strong>it will be the only way to
+                        identify the key once created</strong>.
+                    </p>
+                    <footer>
+                        <button name="make_key" type="object" string="Generate key" class="btn-primary"/>
+                        <button special="cancel" string="Cancel" class="btn-secondary"/>
+                    </footer>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="form_res_users_key_show" model="ir.ui.view">
+            <field name="name">API Key: show</field>
+            <field name="model">res.users.apikeys.show</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <h3 class="font-weight-bold">
+                            Write down your key
+                        </h3>
+                        <p>
+                            Here is your new API key, use it instead of a password for RPC access.
+                            Your login is still necessary for interactive usage.
+                        </p>
+                        <p><code><field name="key" readonly="True"/></code></p>
+                        <p class="alert alert-warning" role="alert">
+                            <strong>Important:</strong>
+                            The key cannot be retrieved later and provides <b>full access</b>
+                            to your user account, it is very important to store it securely.
+                        </p>
+                        <footer>
+                            <button special="cancel" string="Done!"/>
+                        </footer>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
         <record id="view_users_form_simple_modif" model="ir.ui.view">
             <field name="name">res.users.preferences.form</field>
             <field name="model">res.users</field>
@@ -348,39 +441,64 @@
                     <h1>
                         <field name="name" readonly="1" class="oe_inline"/>
                     </h1>
-                    <group name="preferences">
-                        <group>
-                            <field name="email" widget="email" readonly="0"/>
-                        </group>
-                        <group>
-                            <label for="lang"/>
-                            <div class="o_row">
-                                <field name="lang" required="1" readonly="0"/>
-                                <button
-                                    type="action"
-                                    name="%(base.res_lang_act_window)d"
-                                    class="btn-sm btn-link mb4 fa fa-globe"
-                                    aria-label="More languages"
-                                    groups="base.group_system"
-                                    title="More languages"
-                                />
-                            </div>
-                            <field name="tz" widget="timezone_mismatch" options="{'tz_offset_field': 'tz_offset'}" readonly="0"/>
-                            <field name="tz_offset" invisible="1"/>
-                        </group>
-                    </group>
-                    <group name="signature">
-                        <field name="signature" readonly="0"/>
-                    </group>
-                    <group name="status" string="Status" invisible="1">
-                        <field name="company_id" options="{'no_create': True}" readonly="0"
-                            groups="base.group_multi_company"/>
-                    </group>
-                    <group name="preference_contact"></group>
+                    <notebook>
+                        <page string="Preferences">
+                            <group name="preferences">
+                                <group>
+                                    <field name="email" widget="email" readonly="0"/>
+                                </group>
+                                <group>
+                                    <label for="lang"/>
+                                    <div class="o_row">
+                                        <field name="lang" required="1" readonly="0"/>
+                                        <button
+                                            type="action"
+                                            name="%(base.res_lang_act_window)d"
+                                            class="btn-sm btn-link mb4 fa fa-globe"
+                                            aria-label="More languages"
+                                            groups="base.group_system"
+                                            title="More languages"
+                                        />
+                                    </div>
+                                    <field name="tz" widget="timezone_mismatch" options="{'tz_offset_field': 'tz_offset'}" readonly="0"/>
+                                    <field name="tz_offset" invisible="1"/>
+                                </group>
+                            </group>
+                            <group name="signature">
+                                <field name="signature" readonly="0"/>
+                            </group>
+                            <group name="status" string="Status" invisible="1">
+                                <field name="company_id" options="{'no_create': True}" readonly="0"
+                                    groups="base.group_multi_company"/>
+                            </group>
+                            <group name="preference_contact"></group>
+                        </page>
+                        <page string="Account Security">
+                            <group name="auth" string="Authentication">
+                                <div>
+                                    <button name="preference_change_password" type="object" string="Change password" class="btn btn-secondary"/>
+                                </div>
+                            </group>
+                            <group string="Developer API Keys">
+                                <div colspan="2" attrs="{'invisible': [('api_key_ids', '=', [])]}">
+                                    <field name="api_key_ids" nolabel="1" colspan="4" readonly="0">
+                                        <tree editable="bottom" create="false" delete="false">
+                                            <field name="name"/>
+                                            <field name="scope"/>
+                                            <field name="create_date"/>
+                                            <button type="object" name="remove" icon="fa-trash"/>
+                                        </tree>
+                                    </field>
+                                </div>
+                                <div colspan="2">
+                                    <button name="api_key_wizard" string="New API Key" type="object" class="btn btn-secondary"/>
+                                </div>
+                            </group>
+                        </page>
+                    </notebook>
                     <footer>
                         <button name="preference_save" type="object" string="Save" class="btn-primary"/>
                         <button name="preference_cancel" string="Cancel" special="cancel" class="btn-secondary"/>
-                        <button name="preference_change_password" type="object" string="Change password" class="btn-secondary"/>
                     </footer>
                 </form>
             </field>
@@ -399,6 +517,27 @@
             <field name="act_window_id" ref="action_res_users_my"/>
         </record>
 
+        <record model="ir.ui.view" id="view_apikeys">
+            <field name="name">API Keys Listing</field>
+            <field name="model">res.users.apikeys</field>
+            <field name="groups_id" eval="[(4, ref('base.group_system'))]"/>
+            <field name="arch" type="xml">
+                <tree create="false" edit="false" delete="false" editable="bottom">
+                    <field name="user_id"/>
+                    <field name="name"/>
+                    <field name="scope"/>
+                    <field name="create_date"/>
+                    <button type="object" name="remove" icon="fa-trash"/>
+                </tree>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="action_apikeys_admin">
+            <field name="name">API Keys Listing</field>
+            <field name="res_model">res.users.apikeys</field>
+            <field name="view_mode">tree</field>
+            <field name="groups_id" eval="[(4, ref('base.group_system'))]"/>
+            <field name="view_id" ref="base.view_apikeys"/>
+        </record>
 
     </data>
 </odoo>

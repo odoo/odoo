@@ -117,6 +117,11 @@
                                     <hr class="mt-1 mb-0"/>
                                     <div t-field="user_id.partner_id" t-options='{"widget": "contact", "fields": ["email", "phone", "address", "name"]}'/>
                                 </div>
+                                <div class="o_portal_my_security mt-3">
+                                    <h4>Account Security </h4>
+                                    <hr class="mt-1 mb-1"/>
+                                    <a href="/my/security"><i class="fa fa-pencil mx-1"/>Edit Security Settings</a>
+                                </div>
                                 <div class="o_my_archives" t-if="archive_groups">
                                     <t t-call="portal.portal_archive_groups"/>
                                 </div>
@@ -436,6 +441,58 @@
                 </div>
             </form>
         </t>
+    </template>
+
+    <template id="portal_my_security">
+        <t t-call="portal.portal_layout"><div class="o_portal_security_body">
+            <t t-set="additional_title">Security</t>
+            <t t-set="no_breadcrumbs" t-value="1"/>
+            <div class="alert alert-danger" role="alert" t-if="get_error(errors)">
+                <t t-esc="errors"/>
+            </div>
+            <section>
+                <h3>Change Password</h3>
+                <t t-set="path">password</t>
+                <div class="alert alert-success" role="alert" t-if="success and success.get('password')">
+                    Password Updated!
+                </div>
+                <div class="alert alert-danger" role="alert" t-if="get_error(errors, 'password')">
+                    <t t-esc="errors['password']"/>
+                </div>
+                <form action="/my/security" method="post" class="oe_reset_password_form">
+                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                    <input type="hidden" name="op" value="password"/>
+                    <div class="form-group">
+                        <label for="current">Password:</label>
+                        <input type="password" t-attf-class="form-control form-control-sm {{ 'is-invalid' if get_error(errors, 'password.old') else '' }}"
+                               id="current" name="old"
+                               autocomplete="current-password" required="required"/>
+                        <div class="invalid-feedback">
+                            <t t-esc="get_error(errors, 'password.old')"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="new">New Password:</label>
+                        <input type="password" t-attf-class="form-control form-control-sm {{ 'is-invalid' if get_error(errors, 'password.new1') else '' }}"
+                               id="new" name="new1"
+                               autocomplete="new-password" required="required"/>
+                        <div class="invalid-feedback">
+                            <t t-esc="get_error(errors, 'password.new1')"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="new2">Verify New Password:</label>
+                        <input type="password" t-attf-class="form-control form-control-sm {{ 'is-invalid' if get_error(errors, 'password.new2') else '' }}"
+                               id="new2" name="new2"
+                               autocomplete="new-password" required="required"/>
+                        <div class="invalid-feedback">
+                            <t t-esc="get_error(errors, 'password.new2')"/>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-danger">Change Password</button>
+                </form>
+            </section>
+        </div></t>
     </template>
 
     <template id="record_pager" name="Portal Record Pager">

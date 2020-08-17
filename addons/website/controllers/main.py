@@ -95,16 +95,21 @@ class Website(Home):
     # while portal users are redirected to the frontend by default
     # ------------------------------------------------------
 
-    @http.route(website=True, auth="public", sitemap=False)
-    def web_login(self, redirect=None, *args, **kw):
-        response = super(Website, self).web_login(redirect=redirect, *args, **kw)
+    def _login_redirect(self, uid, redirect=None):
+        """ Redirect regular users (employees) to the backend) and others to
+        the frontend
+        """
         if not redirect and request.params['login_success']:
-            if request.env['res.users'].browse(request.uid).has_group('base.group_user'):
+            if request.env['res.users'].browse(uid).has_group('base.group_user'):
                 redirect = b'/web?' + request.httprequest.query_string
             else:
                 redirect = '/my'
-            return http.redirect_with_hash(redirect)
-        return response
+        return super()._login_redirect(uid, redirect=redirect)
+
+    # Force website=True + auth='public', required for login form layout
+    @http.route(website=True, auth="public", sitemap=False)
+    def web_login(self, *args, **kw):
+        return super().web_login(*args, **kw)
 
     # ------------------------------------------------------
     # Business
