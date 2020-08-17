@@ -147,7 +147,7 @@ odoo.define('web.SampleServer', function (require) {
                         for (const record of records) {
                             value += record[fieldName];
                         }
-                        values[fieldName] = value;
+                        values[fieldName] = Number(value.toFixed(2));
                     } else {
                         values[fieldName] = null;
                     }
@@ -233,7 +233,7 @@ odoo.define('web.SampleServer', function (require) {
                     return this._getRandomDate(format);
                 }
                 case "float":
-                    return this._getRandomFloat(SampleServer.MAX_FLOAT);
+                    return Number(this._getRandomFloat(SampleServer.MAX_FLOAT).toFixed(2));
                 case "integer": {
                     let max = SampleServer.MAX_INTEGER;
                     if (fieldName.includes('color')) {
