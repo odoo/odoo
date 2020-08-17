@@ -8,37 +8,67 @@ from odoo.exceptions import ValidationError
 class AccountJournal(models.Model):
     _inherit = "account.journal"
 
-    @api.depends('outbound_payment_method_ids')
-    def _compute_check_printing_payment_method_selected(self):
-        for journal in self:
-            journal.check_printing_payment_method_selected = any(pm.code == 'check_printing' for pm in journal.outbound_payment_method_ids)
+    check_manual_sequencing = fields.Boolean(
+        string='Manual Numbering',
+        default=False,
+        help="Check this option if your pre-printed checks are not numbered.",
+    )
+    check_sequence_id = fields.Many2one(
+        comodel_name='ir.sequence',
+        string='Check Sequence',
+        readonly=True,
+        copy=False,
+        help="Checks numbering sequence.",
+    )
+    check_next_number = fields.Char(
+        string='Next Check Number',
+        compute='_compute_check_next_number',
+        inverse='_inverse_check_next_number',
+        help="Sequence number of the next printed check.",
+    )
+    check_printing_payment_method_selected = fields.Boolean(
+        compute='_compute_check_printing_payment_method_selected',
+        help="Technical feature used to know whether check printing was enabled as payment method.",
+    )
 
     @api.depends('check_manual_sequencing')
-    def _get_check_next_number(self):
+    def _compute_check_next_number(self):
         for journal in self:
-            if journal.check_sequence_id:
-                journal.check_next_number = journal.check_sequence_id.number_next_actual
+            sequence = journal.check_sequence_id
+            if sequence:
+                journal.check_next_number = sequence.get_next_char(sequence.number_next_actual)
             else:
                 journal.check_next_number = 1
 
-    def _set_check_next_number(self):
+    def _inverse_check_next_number(self):
         for journal in self:
             if journal.check_next_number and not re.match(r'^[0-9]+$', journal.check_next_number):
                 raise ValidationError(_('Next Check Number should only contains numbers.'))
             if int(journal.check_next_number) < journal.check_sequence_id.number_next_actual:
-                raise ValidationError(_("The last check number was %s. In order to avoid a check being rejected "
-                    "by the bank, you can only use a greater number.") % journal.check_sequence_id.number_next_actual)
+                raise ValidationError(_(
+                    "The last check number was %s. In order to avoid a check being rejected "
+                    "by the bank, you can only use a greater number.",
+                    journal.check_sequence_id.number_next_actual
+                ))
             if journal.check_sequence_id:
                 journal.check_sequence_id.sudo().number_next_actual = int(journal.check_next_number)
+                journal.check_sequence_id.sudo().padding = len(journal.check_next_number)
 
-    check_manual_sequencing = fields.Boolean('Manual Numbering', default=False,
-        help="Check this option if your pre-printed checks are not numbered.")
-    check_sequence_id = fields.Many2one('ir.sequence', 'Check Sequence', readonly=True, copy=False,
-        help="Checks numbering sequence.")
-    check_next_number = fields.Char('Next Check Number', compute='_get_check_next_number', inverse='_set_check_next_number',
-        help="Sequence number of the next printed check.")
-    check_printing_payment_method_selected = fields.Boolean(compute='_compute_check_printing_payment_method_selected',
-        help="Technical feature used to know whether check printing was enabled as payment method.")
+    @api.depends('type')
+    def _compute_outbound_payment_method_ids(self):
+        super()._compute_outbound_payment_method_ids()
+        for journal in self:
+            if journal.type == 'cash':
+                check_method = self.env.ref('account_check_printing.account_payment_method_check')
+                journal.outbound_payment_method_ids -= check_method
+
+    @api.depends('outbound_payment_method_ids')
+    def _compute_check_printing_payment_method_selected(self):
+        for journal in self:
+            journal.check_printing_payment_method_selected = any(
+                pm.code == 'check_printing'
+                for pm in journal.outbound_payment_method_ids
+            )
 
     @api.model
     def create(self, vals):
@@ -73,13 +103,10 @@ class AccountJournal(models.Model):
         """ Enables check printing payment method and add a check sequence on bank journals.
             Called upon module installation via data file.
         """
-        check_printing = self.env.ref('account_check_printing.account_payment_method_check')
-        bank_journals = self.search([('type', '=', 'bank')])
-        for bank_journal in bank_journals:
+        check_method = self.env.ref('account_check_printing.account_payment_method_check')
+        for bank_journal in self.search([('type', '=', 'bank')]):
             bank_journal._create_check_sequence()
-            bank_journal.write({
-                'outbound_payment_method_ids': [(4, check_printing.id, None)],
-            })
+            bank_journal.outbound_payment_method_ids += check_method
 
     def get_journal_dashboard_datas(self):
         domain_checks_to_print = [
@@ -93,6 +120,7 @@ class AccountJournal(models.Model):
         )
 
     def action_checks_to_print(self):
+        check_method = self.env.ref('account_check_printing.account_payment_method_check')
         return {
             'name': _('Checks to Print'),
             'type': 'ir.actions.act_window',
@@ -104,6 +132,6 @@ class AccountJournal(models.Model):
                 journal_id=self.id,
                 default_journal_id=self.id,
                 default_payment_type='outbound',
-                default_payment_method_id=self.env.ref('account_check_printing.account_payment_method_check').id,
+                default_payment_method_id=check_method.id,
             ),
         }

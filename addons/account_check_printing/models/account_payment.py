@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, fields, api, _
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import UserError, ValidationError, RedirectWarning
 from odoo.tools.misc import formatLang, format_date
 
 INV_LINES_PER_STUB = 9
@@ -11,15 +11,55 @@ INV_LINES_PER_STUB = 9
 class AccountPayment(models.Model):
     _inherit = "account.payment"
 
-    check_amount_in_words = fields.Char(string="Amount in Words", store=True, readonly=False,
-        compute='_compute_check_amount_in_words')
+    check_amount_in_words = fields.Char(
+        string="Amount in Words",
+        store=True,
+        compute='_compute_check_amount_in_words',
+    )
     check_manual_sequencing = fields.Boolean(related='journal_id.check_manual_sequencing')
-    check_number = fields.Char(string="Check Number", store=True, readonly=True,
+    check_number = fields.Char(
+        string="Check Number",
+        store=True,
+        readonly=True,
         compute='_compute_check_number',
+        inverse='_inverse_check_number',
         help="The selected journal is configured to print check numbers. If your pre-printed check paper already has numbers "
-             "or if the current numbering is wrong, you can change it in the journal configuration page.")
-    check_number_int = fields.Integer(string="Check Number Integer", store=True,
-        compute='_compute_check_number_int')
+             "or if the current numbering is wrong, you can change it in the journal configuration page.",
+    )
+
+    @api.constrains('check_number', 'journal_id')
+    def _constrains_check_number(self):
+        if not self:
+            return
+        try:
+            self.mapped(lambda p: str(int(p.check_number)))
+        except ValueError:
+            raise ValidationError(_('Check numbers can only consist of digits'))
+        self.flush()
+        self.env.cr.execute("""
+            SELECT payment.check_number, move.journal_id
+              FROM account_payment payment
+              JOIN account_move move ON move.id = payment.move_id
+              JOIN account_journal journal ON journal.id = move.journal_id,
+                   account_payment other_payment
+              JOIN account_move other_move ON other_move.id = other_payment.move_id
+             WHERE payment.check_number::INTEGER = other_payment.check_number::INTEGER
+               AND move.journal_id = other_move.journal_id
+               AND payment.id != other_payment.id
+               AND payment.id IN %(ids)s
+        """, {
+            'ids': tuple(self.ids),
+        })
+        res = self.env.cr.dictfetchall()
+        if res:
+            raise ValidationError(_(
+                'The following numbers are already used:\n%s',
+                '\n'.join(_(
+                    '%(number)s in journal %(journal)s',
+                    number=r['check_number'],
+                    journal=self.env['account.journal'].browse(r['journal_id']).display_name,
+                ) for r in res)
+            ))
 
     @api.depends('payment_method_id', 'currency_id', 'amount')
     def _compute_check_amount_in_words(self):
@@ -33,21 +73,24 @@ class AccountPayment(models.Model):
     def _compute_check_number(self):
         for pay in self:
             if pay.journal_id.check_manual_sequencing:
-                pay.check_number = pay.journal_id.check_sequence_id.number_next_actual
+                sequence = pay.journal_id.check_sequence_id
+                pay.check_number = sequence.get_next_char(sequence.number_next_actual)
             else:
                 pay.check_number = False
 
-    @api.depends('check_number')
-    def _compute_check_number_int(self):
-        # store check number as int to avoid doing a lot of checks and transformations
-        # when calculating next_check_number
+    def _inverse_check_number(self):
+        for payment in self:
+            if payment.check_number:
+                sequence = payment.journal_id.check_sequence_id
+                sequence.padding = len(payment.check_number)
+
+    @api.depends('payment_type', 'journal_id', 'partner_id')
+    def _compute_payment_method_id(self):
+        super()._compute_payment_method_id()
         for record in self:
-            number = record.check_number
-            try:
-                number = int(number)
-            except Exception as e:
-                number = 0
-            record.check_number_int = number
+            preferred = record.partner_id.with_company(record.company_id).property_payment_method_id
+            if record.payment_type == 'outbound' and preferred in record.journal_id.outbound_payment_method_ids:
+                record.payment_method_id = preferred
 
     def action_post(self):
         res = super(AccountPayment, self).action_post()
@@ -71,10 +114,19 @@ class AccountPayment(models.Model):
         if not self[0].journal_id.check_manual_sequencing:
             # The wizard asks for the number printed on the first pre-printed check
             # so payments are attributed the number of the check the'll be printed on.
-            last_printed_check = self.search([
-                ('journal_id', '=', self[0].journal_id.id),
-                ('check_number_int', '!=', 0)], order="check_number_int desc", limit=1)
-            next_check_number = last_printed_check and last_printed_check.check_number_int + 1 or 1
+            self.env.cr.execute("""
+                  SELECT payment.id
+                    FROM account_payment payment
+                    JOIN account_move move ON movE.id = payment.move_id
+                   WHERE journal_id = %(journal_id)s
+                ORDER BY check_number::INTEGER DESC
+                   LIMIT 1
+            """, {
+                'journal_id': self.journal_id.id,
+            })
+            last_printed_check = self.browse(self.env.cr.fetchone())
+            number_len = len(last_printed_check.check_number or "")
+            next_check_number = '%0{}d'.format(number_len) % (int(last_printed_check.check_number) + 1)
 
             return {
                 'name': _('Print Pre-numbered Checks'),
@@ -94,13 +146,20 @@ class AccountPayment(models.Model):
     def action_unmark_sent(self):
         self.write({'is_move_sent': False})
 
+    def action_void_check(self):
+        self.action_draft()
+        self.action_cancel()
+
     def do_print_checks(self):
-        check_layout = self[0].company_id.account_check_printing_layout
+        check_layout = self.company_id.account_check_printing_layout
+        redirect_action = self.env.ref('account.action_account_config')
         if not check_layout or check_layout == 'disabled':
-            raise UserError(_("You have to choose a check layout. For this, go in Invoicing/Accounting Settings, search for 'Checks layout' and set one."))
+            msg = _("You have to choose a check layout. For this, go in Invoicing/Accounting Settings, search for 'Checks layout' and set one.")
+            raise RedirectWarning(msg, redirect_action.id, _('Go to the configuration panel'))
         report_action = self.env.ref(check_layout, False)
         if not report_action:
-            raise UserError(_("Something went wrong with Check Layout, please select another layout in Invoicing/Accounting Settings and try again."))
+            msg = _("Something went wrong with Check Layout, please select another layout in Invoicing/Accounting Settings and try again.")
+            raise RedirectWarning(msg, redirect_action.id, _('Go to the configuration panel'))
         self.write({'is_move_sent': True})
         return report_action.report_action(self)
 
@@ -113,7 +172,8 @@ class AccountPayment(models.Model):
     def _check_build_page_info(self, i, p):
         multi_stub = self.company_id.account_check_printing_multi_stub
         return {
-            'sequence_number': self.check_number if (self.journal_id.check_manual_sequencing and self.check_number != 0) else False,
+            'sequence_number': self.check_number,
+            'manual_sequencing': self.journal_id.check_manual_sequencing,
             'date': format_date(self.env, self.date),
             'partner_id': self.partner_id,
             'partner_name': self.partner_id.name,
