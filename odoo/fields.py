@@ -29,6 +29,9 @@ from odoo.exceptions import CacheMiss
 DATE_LENGTH = len(date.today().strftime(DATE_FORMAT))
 DATETIME_LENGTH = len(datetime.now().strftime(DATETIME_FORMAT))
 
+# hacky-ish way to prevent access to a field through the ORM (except for sudo mode)
+NO_ACCESS='.'
+
 IR_MODELS = (
     'ir.model', 'ir.model.data', 'ir.model.fields', 'ir.model.fields.selection',
     'ir.model.relation', 'ir.model.constraint', 'ir.module.module',

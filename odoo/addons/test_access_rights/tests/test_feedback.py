@@ -390,6 +390,20 @@ Fields:
     % self.user.id
         )
 
+        with self.assertRaises(AccessError) as ctx:
+            _ = self.record.forbidden3
+
+        self.assertEqual(
+            ctx.exception.args[0],
+            """The requested operation can not be completed due to security restrictions.
+
+Document type: Object For Test Access Right (test_access_right.some_obj)
+Operation: read
+User: %s
+Fields:
+- forbidden3 (always forbidden)""" % self.user.id
+        )
+
     def test_write(self):
         self.env.ref('base.group_no_one').write(
             {'users': [(4, self.user.id)]})

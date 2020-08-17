@@ -21,7 +21,7 @@ _logger = logging.getLogger(__name__)
 class Users(models.Model):
     _inherit = 'res.users'
 
-    totp_secret = fields.Char(copy=False, groups=".") # no access
+    totp_secret = fields.Char(copy=False, groups=fields.NO_ACCESS)
     totp_enabled = fields.Boolean(string="TOTP enabled", compute='_compute_totp_enabled')
 
     def __init__(self, pool, cr):
