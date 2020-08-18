@@ -203,6 +203,9 @@ class SaleOrderOption(models.Model):
         order_line._compute_tax_id()
 
         self.write({'line_id': order_line.id})
+        if sale_order:
+            sale_order.add_option_to_order_with_taxcloud()
+
 
     @api.multi
     def _get_values_to_add_to_order(self):
