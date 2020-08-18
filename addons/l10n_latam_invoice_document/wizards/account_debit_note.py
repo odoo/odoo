@@ -11,5 +11,5 @@ class AccountDebitNote(models.TransientModel):
         new_move_id = res.get('res_id')
         if new_move_id:
             new_move = self.env['account.move'].browse(new_move_id)
-            new_move.with_context(internal_type='debit_note')._compute_l10n_latam_document_type()
+            new_move._compute_l10n_latam_document_type()
         return res
