@@ -6,6 +6,8 @@
         <!-- Vorlagen: Kontenplan -->
         <record id="l10n_at_chart_template" model="account.chart.template">
             <field name="name">Einheitskontenrahmen Österreich 2010</field>
+            <field name="country_id" ref="base.at" />
+
             <field name="complete_tax_set" eval="True" />
             <field name="visible" eval="True" />
 

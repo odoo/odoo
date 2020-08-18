@@ -5,6 +5,7 @@
             <field name="name">PGCE común</field>
             <field name="visible" eval="0"/>
             <field name="currency_id" ref="base.EUR"/>
+            <field name="country_ids" eval="[(6, 0, [ref('base.es')])]" />
             <field name="cash_account_code_prefix">570</field>
             <field name="bank_account_code_prefix">572</field>
             <field name="transfer_account_code_prefix">572999</field>
@@ -14,6 +15,7 @@
             <field name="name">PGCE PYMEs 2008</field>
             <field name="complete_tax_set" eval="True"/>
             <field name="currency_id" ref="base.EUR"/>
+            <field name="country_ids" eval="[(6, 0, [ref('base.es')])]" />
             <field name="cash_account_code_prefix">570</field>
             <field name="bank_account_code_prefix">572</field>
             <field name="transfer_account_code_prefix">572999</field>
@@ -21,23 +23,25 @@
         </record>
 
         <record id="account_chart_template_assoc" model="account.chart.template">
-        <field name="name">PGCE entidades sin ánimo de lucro 2008</field>
-        <field name="complete_tax_set" eval="True"/>
-        <field name="currency_id" ref="base.EUR"/>
-        <field name="cash_account_code_prefix">570</field>
-        <field name="bank_account_code_prefix">572</field>
-        <field name="transfer_account_code_prefix">572999</field>
-        <field name="parent_id" ref="account_chart_template_common"/>
-    </record>
+            <field name="name">PGCE entidades sin ánimo de lucro 2008</field>
+            <field name="complete_tax_set" eval="True"/>
+            <field name="currency_id" ref="base.EUR"/>
+            <field name="country_ids" eval="[(6, 0, [ref('base.es')])]" />
+            <field name="cash_account_code_prefix">570</field>
+            <field name="bank_account_code_prefix">572</field>
+            <field name="transfer_account_code_prefix">572999</field>
+            <field name="parent_id" ref="account_chart_template_common"/>
+        </record>
 
-    <record id="account_chart_template_full" model="account.chart.template">
-        <field name="name">PGCE completo 2008</field>
-        <field name="complete_tax_set" eval="True"/>
-        <field name="currency_id" ref="base.EUR"/>
-        <field name="cash_account_code_prefix">570</field>
-        <field name="bank_account_code_prefix">572</field>
-        <field name="transfer_account_code_prefix">572999</field>
-        <field name="parent_id" ref="account_chart_template_common"/>
-    </record>
+        <record id="account_chart_template_full" model="account.chart.template">
+            <field name="name">PGCE completo 2008</field>
+            <field name="complete_tax_set" eval="True"/>
+            <field name="currency_id" ref="base.EUR"/>
+            <field name="country_ids" eval="[(6, 0, [ref('base.es')])]" />
+            <field name="cash_account_code_prefix">570</field>
+            <field name="bank_account_code_prefix">572</field>
+            <field name="transfer_account_code_prefix">572999</field>
+            <field name="parent_id" ref="account_chart_template_common"/>
+        </record>
     </data>
 </odoo>

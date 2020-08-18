@@ -7,6 +7,7 @@
             <field name="transfer_account_code_prefix">18</field>
             <field name="code_digits">6</field>
             <field name="currency_id" ref="base.SAR"/>
+            <field name="country_ids" eval="[(6, 0, [ref('base.sa')])]" />
             <field name="spoken_languages" eval="'en_US;ar_EG;ar_SY'"/>
         </record>
 </odoo>

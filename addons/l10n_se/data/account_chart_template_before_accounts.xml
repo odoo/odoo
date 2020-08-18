@@ -4,6 +4,7 @@
         <record id="l10nse_chart_template" model="account.chart.template">
             <field name="name">Swedish Chart of Account</field>
             <field name="currency_id" ref="base.SEK"/>
+            <field name="country_ids" eval="[(6, 0, [ref('base.se')])]" />
             <field name="bank_account_code_prefix">193</field>
             <field name="cash_account_code_prefix">191</field>
             <field name="transfer_account_code_prefix">194</field>

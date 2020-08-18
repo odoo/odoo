@@ -91,6 +91,7 @@ class AccountChartTemplate(models.Model):
         help="Set this to False if you don't want this template to be used actively in the wizard that generate Chart of Accounts from "
             "templates, this is useful when you want to generate accounts of this template only when loading its child template.")
     currency_id = fields.Many2one('res.currency', string='Currency', required=True)
+    country_ids = fields.Many2many('res.country', string='Countries', help="Countries that use this Chart of Account template")
     use_anglo_saxon = fields.Boolean(string="Use Anglo-Saxon accounting", default=False)
     complete_tax_set = fields.Boolean(string='Complete Set of Taxes', default=True,
         help="This boolean helps you to choose if you want to propose to the user to encode the sale and purchase rates or choose from list "

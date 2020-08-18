@@ -4,6 +4,7 @@
     <record id="l10n_dz_pcg_chart_template" model="account.chart.template">
         <field name="name">Plan Comptable Général (Algerie)</field>
         <field name="currency_id" ref="base.DZD"/>
+        <field name="country_ids" eval="[(6, 0, [ref('base.dz')])]" />
         <field name="code_digits" eval="6"/>
         <field name="bank_account_code_prefix">512</field>
         <field name="cash_account_code_prefix">53</field>
