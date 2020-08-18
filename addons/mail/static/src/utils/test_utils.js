@@ -368,6 +368,7 @@ async function createRootComponent(self, Component, { props = {}, target }) {
  *   is set: provide data that is passed to discuss widget (= client action) as
  *   2nd positional argument.
  * @param {Object} [param0.env={}]
+ * @param {function} [param0.mockFetch]
  * @param {function} [param0.mockRPC]
  * @param {boolean} [param0.hasActionManager=false] if set, use
  *   createActionManager.

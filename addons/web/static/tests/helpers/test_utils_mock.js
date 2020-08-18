@@ -333,6 +333,7 @@ function removeSrcAttribute(el, rpc) {
  * @param {string} [params.currentDate]
  * @param {Object} [params.data]
  * @param {boolean} [params.debug]
+ * @param {function} [params.mockFetch]
  * @param {function} [params.mockRPC]
  * @param {number} [params.fieldDebounce=0] the value of the DEBOUNCE attribute
  *   of fields
@@ -351,8 +352,11 @@ async function addMockEnvironmentOwl(Component, params, mockServer) {
     // instantiate a mockServer if not provided
     if (!mockServer) {
         let Server = MockServer;
+        if (params.mockFetch) {
+            Server = MockServer.extend({ _performFetch: params.mockFetch });
+        }
         if (params.mockRPC) {
-            Server = MockServer.extend({ _performRpc: params.mockRPC });
+            Server = Server.extend({ _performRpc: params.mockRPC });
         }
         mockServer = new Server(params.data, {
             actions: params.actions,
@@ -466,6 +470,9 @@ async function addMockEnvironmentOwl(Component, params, mockServer) {
  * @param {number} [params.debug] if set to true, logs RPCs and uncaught Odoo
  *   events.
  * @param {Object} [params.bus] the instance of Bus that will be used (in the env)
+ * @param {function} [params.mockFetch] a function that will be used to override
+ *   the _performFetch method from the mock server. It is really useful to add
+ *   some custom fetch mocks, or to check some assertions.
  * @param {function} [params.mockRPC] a function that will be used to override
  *   the _performRpc method from the mock server. It is really useful to add
  *   some custom rpc mocks, or to check some assertions.
@@ -506,8 +513,11 @@ async function addMockEnvironment(widget, params) {
 
     // instantiate mock server
     var Server = MockServer;
+    if (params.mockFetch) {
+        Server = MockServer.extend({ _performFetch: params.mockFetch });
+    }
     if (params.mockRPC) {
-        Server = MockServer.extend({ _performRpc: params.mockRPC });
+        Server = Server.extend({ _performRpc: params.mockRPC });
     }
     var mockServer = new Server(params.data, {
         actions: params.actions,
