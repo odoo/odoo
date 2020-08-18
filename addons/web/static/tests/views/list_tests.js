@@ -1495,6 +1495,31 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('Do not display nocontent when it is an empty html tag', function (assert) {
+        assert.expect(2);
+
+        this.data.foo.records = [];
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree><field name="foo"/></tree>',
+            viewOptions: {
+                action: {
+                    help: '<p class="hello"></p>'
+                }
+            },
+        });
+
+        assert.strictEqual(list.$('.oe_view_nocontent').length, 0,
+            "should not display the no content helper");
+
+        assert.strictEqual(list.$('table').length, 1, "should have a table in the dom");
+
+        list.destroy();
+    });
+
     QUnit.test('list view, editable, without data', function (assert) {
         assert.expect(13);
 
