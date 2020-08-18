@@ -10,8 +10,6 @@ var core = require('web.core');
 var QuickCreateFormView = require('web.QuickCreateFormView');
 var Widget = require('web.Widget');
 
-var qweb = core.qweb;
-
 var RecordQuickCreate = Widget.extend({
     className: 'o_kanban_quick_create',
     custom_events: {
@@ -85,7 +83,7 @@ var RecordQuickCreate = Widget.extend({
      */
     start: function () {
         this.$el.append(this.controller.$el);
-        this.$el.append(qweb.render('KanbanView.RecordQuickCreate.buttons'));
+        this.controller.renderButtons(this.$el);
 
         // focus the first field
         this.controller.autofocus();
