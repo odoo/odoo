@@ -73,11 +73,11 @@ odoo.define("website_event_track_online.website_event_pwa_widget", function (req
          * @return {String}
          */
         _getLangPrefix: function () {
-            var lang = utils.get_cookie('frontend_lang');
-            if (lang !== undefined && window.location.href.indexOf(`/${lang}/`) >= 0) {
-                return `/${lang}`;
+            var lang = utils.get_cookie("frontend_lang");
+            if (lang !== undefined && window.location.href.indexOf("/" + lang + "/") >= 0) {
+                return "/" + lang;
             }
-            return '';
+            return "";
         },
 
         /**
@@ -85,7 +85,7 @@ odoo.define("website_event_track_online.website_event_pwa_widget", function (req
          */
         _hideInstallBanner: function () {
             this.installBanner ? this.installBanner.destroy() : undefined;
-            $('.o_livechat_button').css('bottom', '0');
+            $(".o_livechat_button").css("bottom", "0");
         },
 
         /**
@@ -98,11 +98,11 @@ odoo.define("website_event_track_online.website_event_pwa_widget", function (req
             }
             var langPrefix = this._getLangPrefix();
             navigator.serviceWorker
-                .register(`${langPrefix}/event/service-worker.js`, { scope: `${langPrefix}/event` })
-                .then((registration) => {
+                .register(langPrefix + "/event/service-worker.js", { scope: langPrefix + "/event" })
+                .then(function (registration) {
                     console.info("Registration successful, scope is:", registration.scope);
                 })
-                .catch((error) => {
+                .catch(function (error) {
                     console.error("Service worker registration failed, error:", error);
                 });
         },
@@ -111,11 +111,12 @@ odoo.define("website_event_track_online.website_event_pwa_widget", function (req
          * @private
          */
         _showInstallBanner: function () {
+            var self = this;
             this.installBanner = new PWAInstallBanner(this);
-            this.installBanner.appendTo(this.$el).then(() => {
+            this.installBanner.appendTo(this.$el).then(function () {
                 // If Livechat available, It should be placed above the PWA banner.
-                var height = this.$('.o_pwa_install_banner').outerHeight(true);
-                $('.o_livechat_button').css('bottom', height + 'px');
+                var height = self.$(".o_pwa_install_banner").outerHeight(true);
+                $(".o_livechat_button").css("bottom", height + "px");
             });
         },
 
@@ -151,7 +152,7 @@ odoo.define("website_event_track_online.website_event_pwa_widget", function (req
             ev.stopPropagation();
             this.deferredPrompt.prompt();
             this._hideInstallBanner();
-            this.deferredPrompt.userChoice.then((choiceResult) => {
+            this.deferredPrompt.userChoice.then(function (choiceResult) {
                 if (choiceResult.outcome === "accepted") {
                     console.log("User accepted the install prompt");
                 } else {
