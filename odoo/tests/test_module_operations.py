@@ -7,11 +7,6 @@ import time
 
 sys.path.append(os.path.abspath(os.path.join(__file__,'../../../')))
 
-import odoo
-from odoo.tools import topological_sort, unique
-from odoo.netsvc import init_logger
-from odoo.tests import standalone_tests
-
 _logger = logging.getLogger('test_module_operations')
 
 BLACKLIST = {
@@ -147,10 +142,12 @@ if __name__ == '__main__':
     args = parse_args()
 
     import odoo
-    odoo.bootstrap(var(args))
+    odoo.config['addons_path'] = args.addons_path
+    odoo.config['database'] = args.database
+    odoo.bootstrap()
 
-    import odoo.logging_config
-    odoo.logging_config.init_logger()
+    from odoo.tools import topological_sort, unique
+    from odoo.tests import standalone_tests
 
 
     logging.getLogger('odoo.modules.loading').setLevel(logging.CRITICAL)

@@ -1132,7 +1132,7 @@ class WorkerCron(Worker):
 server = None
 
 def load_server_wide_modules():
-    for m in config['server_wide_modules']:
+    for m in {'base', 'web'} | config['server_wide_modules']:
         try:
             odoo.modules.module.load_openerp_module(m)
         except Exception:
