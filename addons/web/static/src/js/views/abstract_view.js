@@ -74,9 +74,14 @@ var AbstractView = Class.extend({
      * @param {string} [params.action.help]
      */
     init: function (viewInfo, params) {
+        // The noContentHelper's message can be empty, i.e. either a real empty string
+        // or an empty html tag. In both cases, we consider the helper empty.
+        var help = params.action && params.action.help;
+        var htmlHelp = document.createElement("div");
+        htmlHelp.innerHTML = help;
         this.rendererParams = {
             arch: viewInfo.arch,
-            noContentHelp: params.action && params.action.help,
+            noContentHelp: htmlHelp.innerText.trim() ? help : "",
         };
 
         this.controllerParams = {
