@@ -28,6 +28,8 @@
         'views/website_templates.xml',
         'views/event_event_views.xml',
         'views/event_type_views.xml',
+        'views/website_event_menu_views.xml',
+        'views/event_menus.xml',
         'security/ir.model.access.csv',
         'security/event_security.xml',
     ],
