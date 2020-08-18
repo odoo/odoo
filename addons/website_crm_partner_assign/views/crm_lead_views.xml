@@ -89,4 +89,51 @@
             </field>
         </record>
 
+        <record id="crm_lead_view_pivot" model="ir.ui.view">
+            <field name="name">crm.lead.view.pivot.inherit.partner.assign</field>
+            <field name="model">crm.lead</field>
+            <field name="inherit_id" ref="crm.crm_lead_view_pivot"/>
+            <field name="arch" type="xml">
+                <xpath expr="//pivot" position="inside">
+                    <field name="partner_latitude" invisible="1"/>
+                    <field name="partner_longitude" invisible="1"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="crm_lead_view_graph" model="ir.ui.view">
+            <field name="name">crm.lead.view.graph.inherit.partner.assign</field>
+            <field name="model">crm.lead</field>
+            <field name="inherit_id" ref="crm.crm_lead_view_graph"/>
+            <field name="arch" type="xml">
+                <xpath expr="//graph" position="inside">
+                    <field name="partner_latitude" invisible="1"/>
+                    <field name="partner_longitude" invisible="1"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="crm_lead_view_graph_report_opportunity" model="ir.ui.view">
+            <field name="name">crm.lead.view.graph.report.opportunity.inherit.partner.assign</field>
+            <field name="model">crm.lead</field>
+            <field name="inherit_id" ref="crm.crm_opportunity_report_view_graph"/>
+            <field name="arch" type="xml">
+                <xpath expr="//graph" position="inside">
+                    <field name="partner_latitude" invisible="1"/>
+                    <field name="partner_longitude" invisible="1"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="crm_lead_view_graph_report_lead" model="ir.ui.view">
+            <field name="name">crm.lead.view.graph.report.lead.inherit.partner.assign</field>
+            <field name="model">crm.lead</field>
+            <field name="inherit_id" ref="crm.crm_opportunity_report_view_graph_lead"/>
+            <field name="arch" type="xml">
+                <xpath expr="//graph" position="inside">
+                    <field name="partner_latitude" invisible="1"/>
+                    <field name="partner_longitude" invisible="1"/>
+                </xpath>
+            </field>
+        </record>
 </odoo>
