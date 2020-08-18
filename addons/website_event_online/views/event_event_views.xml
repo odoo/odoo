@@ -6,10 +6,8 @@
         <field name="model">event.event</field>
         <field name="inherit_id" ref="event.view_event_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//div[hasclass('oe_title')]" position="after">
+            <xpath expr="//[field@name='website_menu']" position="after">
                 <div name="event_menu_configuration" groups="base.group_no_one">
-                    <label for="website_menu" string="Website Submenu"/>
-                    <field name="website_menu"/>
                     <label for="menu_register_cta" string="Register Button"/>
                     <field name="menu_register_cta"/>
                 </div>

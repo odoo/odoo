@@ -27,7 +27,6 @@
         'views/event_sponsor_views.xml',
         'views/event_event_views.xml',
         'views/event_type_views.xml',
-        'views/website_event_menu_views.xml',
         'views/event_menus.xml',
     ],
     'demo': [

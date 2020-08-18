@@ -36,6 +36,13 @@ class Event(models.Model):
         help="Creates menus Introduction, Location and Register on the page "
              "of the event on the website.")
     menu_id = fields.Many2one('website.menu', 'Event Menu', copy=False)
+    community_menu = fields.Boolean(
+        "Community Menu", compute="_compute_community_menu",
+        readonly=False, store=True,
+        help="Display community tab on website")
+    community_menu_ids = fields.One2many(
+        "website.event.menu", "event_id", string="Event Community Menus",
+        domain=[("menu_type", "=", "community")])
 
     def _compute_is_participating(self):
         # we don't allow public user to see participating label
@@ -47,13 +54,6 @@ class Event(models.Model):
         else:
             self.is_participating = False
 
-    @api.depends('name')
-    def _compute_website_url(self):
-        super(Event, self)._compute_website_url()
-        for event in self:
-            if event.id:  # avoid to perform a slug on a not yet saved record in case of an onchange.
-                event.website_url = '/event/%s' % slug(event)
-
     @api.depends('event_type_id')
     def _compute_website_menu(self):
         """ Also ensure a value for website_menu as it is a trigger notably for
@@ -63,6 +63,24 @@ class Event(models.Model):
                 event.website_menu = event.event_type_id.website_menu
             elif not event.website_menu:
                 event.website_menu = False
+
+    @api.depends("event_type_id", "website_menu", "community_menu")
+    def _compute_community_menu(self):
+        """ At type onchange: synchronize. At website_menu update: synchronize. """
+        for event in self:
+            if event.event_type_id and event.event_type_id != event._origin.event_type_id:
+                event.community_menu = event.event_type_id.community_menu
+            elif event.website_menu and event.website_menu != event._origin.website_menu or not event.community_menu:
+                event.community_menu = True
+            elif not event.website_menu:
+                event.community_menu = False
+
+    @api.depends('name')
+    def _compute_website_url(self):
+        super(Event, self)._compute_website_url()
+        for event in self:
+            if event.id:  # avoid to perform a slug on a not yet saved record in case of an onchange.
+                event.website_url = '/event/%s' % slug(event)
 
     @api.model
     def create(self, vals):
@@ -91,7 +109,10 @@ class Event(models.Model):
 
         :return list: list of fields, each of which triggering a menu update
           like website_menu, website_track, ... """
-        return ['website_menu']
+        return ['website_menu', 'community_menu']
+
+    def _get_menu_type_field_matching(self):
+        return {'community': 'community_menu'}
 
     def _split_menus_state_by_field(self):
         """ For each field linked to a menu, get the set of events having this
@@ -135,7 +156,7 @@ class Event(models.Model):
                 menus_update_by_field[fname] |= menus_state_by_field[fname]['deactivated'].filtered(lambda event: event[fname])
         return menus_update_by_field
 
-    def _get_menu_entries(self):
+    def _get_website_menu_entries(self):
         """ Method returning menu entries to display on the website view of the
         event, possibly depending on some options in inheriting modules.
 
@@ -143,13 +164,21 @@ class Event(models.Model):
           * name: menu item name
           * url: if set, url to a route (do not use xml_id in that case);
           * xml_id: template linked to the page (do not use url in that case);
+          * sequence: specific sequence of menu entry to be set on the menu;
+          * menu_type: type of menu entry (used in inheriting modules to ease
+            menu management; not used in this module in 13.3 due to technical
+            limitations);
         """
         self.ensure_one()
         return [
-            (_('Introduction'), False, 'website_event.template_intro'),
-            (_('Location'), False, 'website_event.template_location'),
-            (_('Register'), '/event/%s/register' % slug(self), False),
+            (_('Introduction'), False, 'website_event.template_intro', 1, False),
+            (_('Location'), False, 'website_event.template_location', 50, False),
+            (_('Register'), '/event/%s/register' % slug(self), False, 100, False),
         ]
+
+    def _get_community_menu_entries(self):
+        self.ensure_one()
+        return [(_('Community'), '/event/%s/community' % slug(self), False, 80, 'community')]
 
     def _update_website_menus(self, menus_update_by_field=None):
         """ Synchronize event configuration and its menu entries for frontend.
@@ -161,8 +190,44 @@ class Event(models.Model):
             elif event.website_menu and not event.menu_id:
                 root_menu = self.env['website.menu'].sudo().create({'name': event.name, 'website_id': event.website_id.id})
                 event.menu_id = root_menu
-                for sequence, (name, url, xml_id) in enumerate(event._get_menu_entries()):
-                    event._create_menu(sequence, name, url, xml_id)
+            if event.website_menu and (not menus_update_by_field or event in menus_update_by_field.get('website_menu')):
+                for name, url, xml_id, menu_sequence, menu_type in event._get_website_menu_entries():
+                    event._create_menu(menu_sequence, name, url, xml_id, menu_type=menu_type)
+            if event.menu_id and (not menus_update_by_field or event in menus_update_by_field.get('community_menu')):
+                event._update_website_menu_entry('community_menu', 'community_menu_ids', '_get_community_menu_entries')
+
+    def _update_website_menu_entry(self, fname_bool, fname_o2m, method_name):
+        """ Generic method to create menu entries based on a flag on event. This
+        method is a bit obscure, but is due to preparation of adding new menus
+        entries and pages for event in a stable version, leading to some constraints
+        while developing.
+
+        :param fname_bool: field name (e.g. website_track)
+        :param fname_o2m: o2m linking towards website.event.menu matching the
+          boolean fields (normally an entry ot website.event.menu with type matching
+          the boolean field name)
+        :param method_name: method returning menu entries information: url, sequence, ...
+        """
+        self.ensure_one()
+        new_menu = None
+
+        if self[fname_bool] and not self[fname_o2m]:
+            # menus not found but boolean True: get menus to create
+            for sequence, menu_data in enumerate(getattr(self, method_name)()):
+                # some modules have 4 data: name, url, xml_id, menu_type; however we
+                # plan to support sequence in future modules, so this hackish code is
+                # necessary to avoid crashing. Not nice, but stable target = meh.
+                if len(menu_data) == 4:
+                    (name, url, xml_id, menu_type) = menu_data
+                    menu_sequence = sequence
+                elif len(menu_data) == 5:
+                    (name, url, xml_id, menu_sequence, menu_type) = menu_data
+                new_menu = self._create_menu(menu_sequence, name, url, xml_id, menu_type=menu_type)
+        elif not self[fname_bool]:
+            # will cascade delete to the website.event.menu
+            self[fname_o2m].mapped('menu_id').sudo().unlink()
+
+        return new_menu
 
     def _create_menu(self, sequence, name, url, xml_id, menu_type=False):
         """ If url: create a website menu. Menu leads directly to the URL that
@@ -184,6 +249,12 @@ class Event(models.Model):
             'sequence': sequence,
             'website_id': self.website_id.id,
         })
+        if menu_type:
+            self.env['website.event.menu'].create({
+                'menu_id': website_menu.id,
+                'event_id': self.id,
+                'menu_type': menu_type,
+            })
         return website_menu
 
     # ------------------------------------------------------------
