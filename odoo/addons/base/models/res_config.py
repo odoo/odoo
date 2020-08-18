@@ -599,6 +599,20 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
             IrConfigParameter.set_param(icp, value)
 
     def execute(self):
+        """
+        Called when settings are saved.
+
+        This method will call `set_values` and will install/uninstall any modules defined by
+        `module_` Boolean fields and then trigger a web client reload.
+
+        .. warning::
+
+            This method **SHOULD NOT** be overridden, in most cases what you want to override is
+            `~set_values()` since `~execute()` does little more than simply call `~set_values()`.
+
+            The part that installs/uninstalls modules **MUST ALWAYS** be at the end of the
+            transaction, otherwise there's a big risk of registry <-> database desynchronisation.
+        """
         self.ensure_one()
         if not self.env.is_admin():
             raise AccessError(_("Only administrators can change the settings"))
