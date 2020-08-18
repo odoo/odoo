@@ -1,5 +1,9 @@
-odoo.define('web.config', function () {
+odoo.define('web.config', function (require) {
 "use strict";
+
+const Bus = require('web.Bus');
+
+const bus = new Bus();
 
 /**
  * This module contains all the (mostly) static 'environmental' information.
@@ -12,6 +16,13 @@ odoo.define('web.config', function () {
 
 var config = {
     device: {
+        /**
+        * bus to use in order to be able to handle device config related events
+        *   - 'size_changed' : triggered when window size is
+        *     corresponding to a new bootstrap breakpoint. The new size_class
+         *    is provided.
+        */
+        bus: bus,
         /**
          * touch is a boolean, true if the device supports touch interaction
          *
@@ -99,6 +110,7 @@ function _updateSizeProps() {
     if (sc !== config.device.size_class) {
         config.device.size_class = sc;
         config.device.isMobile = config.device.size_class <= config.device.SIZES.SM;
+        config.device.bus.trigger('size_changed', config.device.size_class);
     }
 }
 
