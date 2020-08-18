@@ -74,10 +74,9 @@
 
             <t t-call="portal.portal_record_layout">
                 <t t-set="card_header">
-                    <h5 class="mb-0 row">
-                        <small class="text-muted col-3 col-md-1">Project - </small>
-                        <span t-field="project.name" class="col-7 col-sm-9 text-truncate "/>
-                        <span class="col-2 text-center">
+                    <h5 class="mb-0">
+                        <span t-field="project.name" class="text-truncate"/>
+                        <span class="float-right">
                             <a role="button" t-attf-href="/my/tasks?filterby=#{project.id}" class="btn btn-sm btn-secondary">
                                 <span class="fa fa-tasks" role="img" aria-label="Tasks" title="Tasks"/>
                                 <span t-esc="project.task_count" />

@@ -265,6 +265,11 @@ class Project(models.Model):
             if project.partner_id and project.partner_phone != project.partner_id.phone:
                 project.partner_id.phone = project.partner_phone
 
+    @api.onchange('alias_enabled')
+    def _onchange_alias_name(self):
+        if not self.alias_enabled:
+            self.alias_name = False
+
     def _compute_alias_enabled(self):
         for project in self:
             project.alias_enabled = project.alias_domain and project.alias_id.alias_name
