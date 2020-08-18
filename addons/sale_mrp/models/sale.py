@@ -74,7 +74,7 @@ class SaleOrderLine(models.Model):
                     # the products for this PO will set the qty_delivered. We might need to check the
                     # state of all PO as well... but sale_mrp doesn't depend on purchase.
                     if dropship:
-                        if order_line.move_ids and all([m.state == 'done' for m in order_line.move_ids]):
+                        if order_line.move_ids and all(m.state == 'done' for m in order_line.move_ids):
                             order_line.qty_delivered = order_line.product_uom_qty
                         else:
                             order_line.qty_delivered = 0.0
@@ -91,7 +91,7 @@ class SaleOrderLine(models.Model):
                 # when the product sold is made only of kits. In this case, the BOM of the stock moves
                 # do not correspond to the product sold => no relevant BOM.
                 elif boms:
-                    if all([m.state == 'done' for m in order_line.move_ids]):
+                    if all(m.state == 'done' for m in order_line.move_ids):
                         order_line.qty_delivered = order_line.product_uom_qty
                     else:
                         order_line.qty_delivered = 0.0
