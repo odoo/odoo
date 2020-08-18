@@ -230,7 +230,7 @@ class Applicant(models.Model):
 
     @api.depends('job_id')
     def _compute_department(self):
-        for applicant in self.filtered(lambda a: a.job_id):
+        for applicant in self:
             applicant.department_id = applicant.job_id.department_id.id
 
     @api.depends('job_id')
