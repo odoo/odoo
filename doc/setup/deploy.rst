@@ -100,7 +100,7 @@ Configuration sample
 * Allow tcp connection on localhost
 * Allow tcp connection from 192.168.1.x network
 
-in ``/etc/postgresql/9.5/main/pg_hba.conf`` set:
+in ``/etc/postgresql/9.6/main/pg_hba.conf`` set:
 
 .. code-block:: text
 
@@ -108,7 +108,7 @@ in ``/etc/postgresql/9.5/main/pg_hba.conf`` set:
   host    all             all             127.0.0.1/32            md5
   host    all             all             192.168.1.0/24          md5
 
-in ``/etc/postgresql/9.5/main/postgresql.conf`` set:
+in ``/etc/postgresql/9.6/main/postgresql.conf`` set:
 
 .. code-block:: text
 
