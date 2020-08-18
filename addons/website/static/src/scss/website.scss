@@ -87,6 +87,11 @@ $-seen-urls: ();
 }
 
 #wrapwrap {
+    // When the modal is in #wrapwrap, position top should be size of the navbar
+    .modal {
+        top: $o-navbar-height;
+    }
+
     @if o-website-value('body-image') {
         background-image: url("/#{str-slice(o-website-value('body-image'), 2)}");
         background-position: center;
