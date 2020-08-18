@@ -447,7 +447,7 @@ class IrHttp(models.AbstractModel):
         # check authentication level
         try:
             if func:
-                cls._authenticate(func.routing['auth'])
+                cls._authenticate(func)
             elif request.uid is None and request.is_frontend:
                 cls._auth_method_public()
         except Exception as e:
