@@ -66,6 +66,7 @@ class PurchaseOrder(models.Model):
     # --------------------------------------------------
 
     def write(self, vals):
+        pre_order_line_qty = 0
         if vals.get('order_line') and self.state == 'purchase':
             for order in self:
                 pre_order_line_qty = {order_line: order_line.product_qty for order_line in order.mapped('order_line')}
