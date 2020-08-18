@@ -5,7 +5,7 @@ import datetime
 import logging
 
 from odoo import _, api, fields, models, tools
-from odoo.addons.iap import InsufficientCreditError
+from odoo.addons.iap.tools import iap_tools
 
 _logger = logging.getLogger(__name__)
 
@@ -13,7 +13,6 @@ _logger = logging.getLogger(__name__)
 class Lead(models.Model):
     _inherit = 'crm.lead'
 
-    reveal_id = fields.Char(string='Reveal ID', index=True)
     iap_enrich_done = fields.Boolean(string='Enrichment done', help='Whether IAP service for lead enrichment based on email has been performed on this lead.')
     show_enrich_button = fields.Boolean(string='Allow manual enrich', compute="_compute_show_enrich_button")
 
@@ -58,7 +57,7 @@ class Lead(models.Model):
         if lead_emails:
             try:
                 iap_response = self.env['iap.enrich.api']._request_enrich(lead_emails)
-            except InsufficientCreditError:
+            except iap_tools.InsufficientCreditError:
                 _logger.info('Sent batch %s enrich requests: failed because of credit', len(lead_emails))
                 if not from_cron:
                     data = {
@@ -114,7 +113,7 @@ class Lead(models.Model):
             template_values = iap_data
             template_values['flavor_text'] = _("Lead enriched based on email address")
             lead.message_post_with_view(
-                'partner_autocomplete.enrich_service_information',
+                'iap_mail.enrich_company',
                 values=template_values,
                 subtype_id=self.env.ref('mail.mt_note').id
             )
