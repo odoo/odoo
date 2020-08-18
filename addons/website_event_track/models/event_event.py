@@ -85,53 +85,10 @@ class Event(models.Model):
             if (not menus_update_by_field) or (event in menus_update_by_field.get('website_track_proposal')):
                 event._update_website_menu_entry('website_track_proposal', 'track_proposal_menu_ids', '_get_track_proposal_menu_entries')
 
-    def _update_website_menu_entry(self, fname_bool, fname_o2m, method_name):
-        """ Generic method to create menu entries based on a flag on event. This
-        method is a bit obscure, but is due to preparation of adding new menus
-        entries and pages for event in a stable version, leading to some constraints
-        while developing.
-
-        :param fname_bool: field name (e.g. website_track)
-        :param fname_o2m: o2m linking towards website.event.menu matching the
-          boolean fields (normally an entry ot website.event.menu with type matching
-          the boolean field name)
-        :param method_name: method returning menu entries information: url, sequence, ...
-        """
-        self.ensure_one()
-        new_menu = None
-
-        if self[fname_bool] and not self[fname_o2m]:
-            # menus not found but boolean True: get menus to create
-            for sequence, menu_data in enumerate(getattr(self, method_name)()):
-                # some modules have 4 data: name, url, xml_id, menu_type; however we
-                # plan to support sequence in future modules, so this hackish code is
-                # necessary to avoid crashing. Not nice, but stable target = meh.
-                if len(menu_data) == 4:
-                    (name, url, xml_id, menu_type) = menu_data
-                    menu_sequence = sequence
-                elif len(menu_data) == 5:
-                    (name, url, xml_id, menu_sequence, menu_type) = menu_data
-                new_menu = self._create_menu(menu_sequence, name, url, xml_id, menu_type=menu_type)
-        elif not self[fname_bool]:
-            # will cascade delete to the website.event.menu
-            self[fname_o2m].mapped('menu_id').sudo().unlink()
-
-        return new_menu
-
-    def _create_menu(self, sequence, name, url, xml_id, menu_type=False):
-        """ Override menu creation from website_event to link a website.event.menu
-        to the newly create menu (either page and url). """
-        website_menu = super(Event, self)._create_menu(sequence, name, url, xml_id, menu_type=menu_type)
-        if menu_type:
-            self.env['website.event.menu'].create({
-                'menu_id': website_menu.id,
-                'event_id': self.id,
-                'menu_type': menu_type,
-            })
-        return website_menu
-
     def _get_menu_type_field_matching(self):
-        return {'track_proposal': 'website_track_proposal'}
+        res = super(Event, self)._get_menu_type_field_matching()
+        res['track_proposal'] = 'website_track_proposal'
+        return res
 
     def _get_track_menu_entries(self):
         """ Method returning menu entries to display on the website view of the
@@ -146,10 +103,11 @@ class Event(models.Model):
         """
         self.ensure_one()
         return [
-            (_('Talks'), '/event/%s/track' % slug(self), False, 'track'),
-            (_('Agenda'), '/event/%s/agenda' % slug(self), False, False)]
+            (_('Talks'), '/event/%s/track' % slug(self), False, 10, 'track'),
+            (_('Agenda'), '/event/%s/agenda' % slug(self), False, 70, False)
+        ]
 
     def _get_track_proposal_menu_entries(self):
         """ See website_event_track._get_track_menu_entries() """
         self.ensure_one()
-        return [(_('Talk Proposals'), '/event/%s/track_proposal' % slug(self), False, 'track_proposal')]
+        return [(_('Talk Proposals'), '/event/%s/track_proposal' % slug(self), False, 15, 'track_proposal')]
