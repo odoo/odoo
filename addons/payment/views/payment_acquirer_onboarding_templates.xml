@@ -12,14 +12,6 @@
             <t t-set="state" t-value="state.get('payment_acquirer_onboarding_state')" />
         </t>
     </template>
-    <!-- add it in the account invoice onboarding panel -->
-    <template id="account_invoice_payment_acquirer_onboarding"
-              name="account invoice payment acquirer onboarding"
-              inherit_id="account.account_invoice_onboarding_panel">
-        <xpath expr="//t[@name='sample_invoice_step']" position="before">
-            <t t-call="payment.onboarding_payment_acquirer_step" name="payment_acquirer_step" />
-         </xpath>
-    </template>
     <!--PAYMENT ACQUIRER-->
     <record model="ir.ui.view" id="payment_acquirer_onboarding_wizard_form">
         <field name="name">payment.acquirer.onboarding.wizard.form</field>

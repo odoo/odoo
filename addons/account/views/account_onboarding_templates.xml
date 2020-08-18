@@ -13,17 +13,17 @@
             <t t-set="state" t-value="state.get('account_onboarding_invoice_layout_state')" />
         </t>
     </template>
-    <template id="onboarding_sample_invoice_step">
+    <template id="onboarding_create_invoice_step">
         <t t-call="base.onboarding_step">
-            <t t-set="title">Sample Invoice</t>
+            <t t-set="title">Create Invoice</t>
             <t t-set="description">
-                Send an invoice to test the customer portal.
+                Create your first invoice.
             </t>
-            <t t-set="btn_text">Send sample</t>
-            <t t-set="done_text">Sample invoice sent!</t>
-            <t t-set="method" t-value="'action_open_account_onboarding_sample_invoice'" />
+            <t t-set="btn_text">Create</t>
+            <t t-set="done_text">First invoice sent!</t>
+            <t t-set="method" t-value="'action_open_account_onboarding_create_invoice'" />
             <t t-set="model" t-value="'res.company'" />
-            <t t-set="state" t-value="state.get('account_onboarding_sample_invoice_state')" />
+            <t t-set="state" t-value="state.get('account_onboarding_create_invoice_state')" />
         </t>
     </template>
     <template id="onboarding_bank_account_step">
@@ -81,7 +81,7 @@
 
             <t t-call="base.onboarding_company_step" name="company_step" />
             <t t-call="account.onboarding_invoice_layout_step" name="invoice_layout_step" />
-            <t t-call="account.onboarding_sample_invoice_step" name="sample_invoice_step" />
+            <t t-call="account.onboarding_create_invoice_step" name="create_invoice_step" />
         </t>
     </template>
     <template id="account_dashboard_onboarding_panel" name="account.dashboard.onboarding.panel">
@@ -98,32 +98,13 @@
         </t>
     </template>
     <!-- SAMPLE INVOICE EMAIL -->
-    <record model="ir.ui.view" id="email_compose_onboarding_sample_invoice">
-        <field name="name">mail.compose.message.form.account_invoice_onboarding_sample_invoice
-        </field>
-        <field name="model">mail.compose.message</field>
-        <field name="inherit_id" ref="mail.email_compose_message_wizard_form" />
-        <field name="priority">1000</field>
-        <field name="mode">primary</field>
-        <field name="arch" type="xml">
-            <xpath expr="//span[@name='document_followers_text']" position="attributes">
-                <attribute name="invisible">1</attribute>
-            </xpath>
-            <xpath expr="//button[@name='save_as_template']" position="attributes">
-                <attribute name="invisible">1</attribute>
-            </xpath>
-            <xpath expr="//field[@name='template_id']" position="attributes">
-                <attribute name="invisible">1</attribute>
-            </xpath>
-        </field>
-    </record>
-    <record id="action_open_account_onboarding_sample_invoice" model="ir.actions.act_window">
-        <field name="name">Send a sample invoice</field>
+    <record id="action_open_account_onboarding_create_invoice" model="ir.actions.act_window">
+        <field name="name">Create first invoice</field>
         <field name="type">ir.actions.act_window</field>
-        <field name="res_model">mail.compose.message</field>
+        <field name="res_model">account.move</field>
         <field name="view_mode">form</field>
-        <field name="view_id" ref="email_compose_onboarding_sample_invoice" />
-        <field name="target">new</field>
+        <field name="view_id" ref="account.view_move_form" />
+        <field name="context">{'default_move_type': 'out_invoice'}</field>
     </record>
     <!-- SALE TAX -->
     <template id="onboarding_sale_tax_step">
