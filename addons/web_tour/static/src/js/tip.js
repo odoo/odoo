@@ -123,11 +123,15 @@ var Tip = Widget.extend({
         return this._super.apply(this, arguments);
     },
     update: function ($anchor) {
+        // We unbind/rebind events on each update because we support widgets
+        // detaching and re-attaching nodes to their DOM element without keeping
+        // the initial event handlers, with said node being potential tip
+        // anchors (e.g. FieldMonetary > input element).
+        this._unbind_anchor_events();
         if (!$anchor.is(this.$anchor)) {
-            this._unbind_anchor_events();
             this._setupAnchor($anchor);
-            this._bind_anchor_events();
         }
+        this._bind_anchor_events();
         if (!this.$el) {
             // Ideally this case should not happen but this is still possible,
             // as update may be called before the `start` method is called.

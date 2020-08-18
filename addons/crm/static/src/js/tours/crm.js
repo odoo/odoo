@@ -35,9 +35,10 @@ tour.register('crm_tour', {
     trigger: ".o_kanban_quick_create .o_field_widget[name='name']",
     auto: true,
 }, {
-    trigger: '.o_kanban_quick_create .o_field_monetary[name="expected_revenue"]',
+    trigger: '.o_kanban_quick_create .o_field_monetary[name="expected_revenue"] input',
     content: _t("Define here the Expected Revenue of this Opportunity."),
     position: 'right',
+    run: "text 12.3",
 }, {
     trigger: ".o_kanban_quick_create .o_kanban_add",
     content: _t("Now, <b>add your Opportunity</b> to your Pipeline."),
