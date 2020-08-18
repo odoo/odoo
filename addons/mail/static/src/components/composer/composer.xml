@@ -155,7 +155,7 @@
                         'o-composer-is-compact': props.isCompact,
                         'o-has-current-partner-avatar': props.hasCurrentPartnerAvatar,
                     }"
-                    t-att-disabled="(!composer.textInputContent and composer.attachments.length === 0) ? 'disabled' : ''"
+                    t-att-disabled="!composer.canPostMessage ? 'disabled' : ''"
                     type="button"
                     t-on-click="_onClickSend"
                 >
