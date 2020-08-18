@@ -62,18 +62,19 @@
         </field>
     </record>
 
+    <!-- ACTIVITY TREE VIEW + MUTI_EDIT -->
     <record id="mail_activity_type_view_tree" model="ir.ui.view">
         <field name="name">mail.activity.type.view.tree</field>
         <field name="model">mail.activity.type</field>
         <field name="arch" type="xml">
-            <tree string="Activities" sample="1">
+            <tree string="Activities" sample="1" multi_edit="1">
                 <field name="sequence" widget="handle"/>
-                <field name="name"/>
+                <field name="name" readonly="1"/>
                 <field name="summary"/>
                 <field name="delay_label" string="Planned in" class="text-right"/>
                 <field name="delay_from" string="Type"/>
-                <field name="res_model_id" groups="base.group_no_one"/>
-                <field name="icon" groups="base.group_no_one"/>
+                <field name="res_model_id" groups="base.group_no_one" readonly="1"/>
+                <field name="icon" groups="base.group_no_one" readonly="1"/>
             </tree>
         </field>
     </record>
