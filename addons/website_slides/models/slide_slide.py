@@ -611,7 +611,7 @@ class Slide(models.Model):
             self.env.user.add_karma(karma_to_add)
 
     def action_set_viewed(self, quiz_attempts_inc=False):
-        if not all(slide.channel_id.is_member for slide in self):
+        if any(not slide.channel_id.is_member for slide in self):
             raise UserError(_('You cannot mark a slide as viewed if you are not among its members.'))
 
         return bool(self._action_set_viewed(self.env.user.partner_id, quiz_attempts_inc=quiz_attempts_inc))
@@ -638,7 +638,7 @@ class Slide(models.Model):
             'vote': 0} for new_slide in new_slides])
 
     def action_set_completed(self):
-        if not all(slide.channel_id.is_member for slide in self):
+        if any(not slide.channel_id.is_member for slide in self):
             raise UserError(_('You cannot mark a slide as completed if you are not among its members.'))
 
         return self._action_set_completed(self.env.user.partner_id)
@@ -663,7 +663,7 @@ class Slide(models.Model):
         return True
 
     def _action_set_quiz_done(self):
-        if not all(slide.channel_id.is_member for slide in self):
+        if any(not slide.channel_id.is_member for slide in self):
             raise UserError(_('You cannot mark a slide quiz as completed if you are not among its members.'))
 
         points = 0

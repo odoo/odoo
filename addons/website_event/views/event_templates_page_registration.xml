@@ -140,7 +140,7 @@
             </t>
         </div>
     </div>
-    <form t-if="event.event_registrations_open and (not event.event_ticket_ids or not all([ticket.is_expired for ticket in event.event_ticket_ids]))"
+    <form t-if="event.event_registrations_open and (not event.event_ticket_ids or any(not ticket.is_expired for ticket in event.event_ticket_ids))"
         id="registration_form"
         class="mb-5"
         t-attf-action="/event/#{slug(event)}/registration/new" method="post"

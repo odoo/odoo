@@ -1030,7 +1030,7 @@ class Task(models.Model):
         days = list(DAYS.keys())
         week_start = fields.Datetime.today().weekday()
 
-        if all([d in default_fields for d in days]):
+        if all(d in default_fields for d in days):
             vals[days[week_start]] = True
         if 'repeat_day' in default_fields:
             vals['repeat_day'] = str(fields.Datetime.today().day)

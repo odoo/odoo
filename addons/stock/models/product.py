@@ -463,7 +463,7 @@ class Product(models.Model):
     def action_open_quants(self):
         domain = [('product_id', 'in', self.ids)]
         hide_location = not self.user_has_groups('stock.group_stock_multi_locations')
-        hide_lot = all([product.tracking == 'none' for product in self])
+        hide_lot = all(product.tracking == 'none' for product in self)
         self = self.with_context(
             hide_location=hide_location, hide_lot=hide_lot,
             no_at_date=True, search_default_on_hand=True,

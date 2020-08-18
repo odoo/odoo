@@ -89,7 +89,7 @@ class Lang(models.Model):
                     'Provided as the thousand separator in each case.')
         for lang in self:
             try:
-                if not all(isinstance(x, int) for x in json.loads(lang.grouping)):
+                if any(not isinstance(x, int) for x in json.loads(lang.grouping)):
                     raise ValidationError(warning)
             except Exception:
                 raise ValidationError(warning)

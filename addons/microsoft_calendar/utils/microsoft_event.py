@@ -216,8 +216,8 @@ class MicrosoftEvent(abc.Set):
         return self.filter(lambda e: e._odoo_id)
 
     def _get_model(self, env):
-        if all([e.is_recurrence() for e in self]):
+        if all(e.is_recurrence() for e in self):
             return env['calendar.recurrence']
-        if all([not e.is_recurrence() for e in self]):
+        if all(not e.is_recurrence() for e in self):
             return env['calendar.event']
         raise TypeError("Mixing Microsoft events and Microsoft recurrences")
