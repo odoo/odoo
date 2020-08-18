@@ -6884,6 +6884,45 @@ QUnit.module('Views', {
 
         kanban.destroy();
     });
+
+    QUnit.test("quick create: keyboard navigation to buttons", async function (assert) {
+        assert.expect(2);
+
+        const kanban = await createView({
+            arch: `
+                <kanban on_create="quick_create">
+                    <field name="bar"/>
+                    <templates>
+                        <div t-name="kanban-box">
+                            <field name="display_name"/>
+                        </div>
+                    </templates>
+                </kanban>`,
+            data: this.data,
+            groupBy: ["bar"],
+            model: "partner",
+            View: KanbanView,
+        });
+
+        // Open quick create
+        await testUtils.kanban.clickCreate(kanban);
+
+        assert.containsOnce(kanban, ".o_kanban_group:first .o_kanban_quick_create");
+
+        const $displayName = kanban.$(".o_kanban_quick_create .o_field_widget[name=display_name]");
+
+        // Fill in mandatory field
+        await testUtils.fields.editInput($displayName, "aaa");
+        // Tab -> goes to first primary button
+        await testUtils.dom.triggerEvent($displayName, "keydown", {
+            keyCode: $.ui.keyCode.TAB,
+            which: $.ui.keyCode.TAB,
+        });
+
+        assert.hasClass(document.activeElement, "btn btn-primary o_kanban_add");
+
+        kanban.destroy();
+    });
 });
 
 });
