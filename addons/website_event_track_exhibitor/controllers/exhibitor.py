@@ -108,7 +108,8 @@ class ExhibitorController(EventTrackController):
     # FRONTEND FORM
     # ------------------------------------------------------------
 
-    @http.route(['/event/<model("event.event"):event>/exhibitor/<model("event.sponsor"):sponsor>'], type='http', auth="public", website=True, sitemap=False)
+    @http.route(['''/event/<model("event.event", "[('exhibitor_menu', '=', True)]"):event>/exhibitor/<model("event.sponsor", "[('event_id', '=', event.id)]"):sponsor>'''],
+                type='http', auth="public", website=True, sitemap=True)
     def event_exhibitor(self, event, sponsor, **options):
         if not event.can_access_from_current_website():
             raise NotFound()

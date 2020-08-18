@@ -114,7 +114,7 @@ class WebsiteEventMeetController(EventCommunityController):
     # ROOM PAGE VIEW
     # ------------------------------------------------------------
 
-    @http.route("/event/<model('event.event'):event>/meeting_room/<model('event.meeting.room'):meeting_room>",
+    @http.route('''/event/<model('event.event', "[('community_menu', '=', True)]"):event>/meeting_room/<model("event.meeting.room","[('event_id','=',event.id)]"):meeting_room>''',
                 type="http", auth="public", website=True, sitemap=True)
     def event_meeting_room_page(self, event, meeting_room, **post):
         """Display the meeting room frontend view.
