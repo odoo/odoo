@@ -313,6 +313,9 @@ class WebRequest(object):
         # callers to check & look at)
         raise exception.with_traceback(None) from new_cause
 
+    def _is_cors_preflight(self, endpoint):
+        return False
+
     def _call_function(self, *args, **kwargs):
         request = self
         if self.endpoint.routing['type'] != self._request_type:
@@ -751,8 +754,11 @@ class HttpRequest(WebRequest):
         except werkzeug.exceptions.HTTPException as e:
             return e
 
+    def _is_cors_preflight(self, endpoint):
+        return request.httprequest.method == 'OPTIONS' and endpoint and endpoint.routing.get('cors')
+
     def dispatch(self):
-        if request.httprequest.method == 'OPTIONS' and request.endpoint and request.endpoint.routing.get('cors'):
+        if self._is_cors_preflight(request.endpoint):
             headers = {
                 'Access-Control-Max-Age': 60 * 60 * 24,
                 'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept'
