@@ -129,6 +129,7 @@
         <script type="text/javascript" src="/web/static/src/js/libs/download.js"></script>
         <script type="text/javascript" src="/web/static/src/js/libs/content-disposition.js"></script>
         <script type="text/javascript" src="/web/static/src/js/libs/underscore.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/libs/fullcalendar.js"></script>
 
         <script type="text/javascript" src="/web/static/src/js/core/abstract_service.js"></script>
         <script type="text/javascript" src="/web/static/src/js/core/abstract_storage_service.js"></script>
@@ -429,6 +430,7 @@
 
     <!-- Do not direcly call this template, call 'conditional_assets_tests' instead -->
     <template id="assets_tests" name="Tests Assets">
+        <script type="text/javascript" src="/web/static/tests/helpers/test_utils_file.js"/>
     </template>
 
     <template id="conditional_assets_tests" name="Tests Assets Bundle">
@@ -463,6 +465,12 @@
         <xpath expr="//head/meta[last()]" position="after">
             <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
         </xpath>
+        <xpath expr="//head" position="inside">
+            <script type="text/javascript">
+                const userTZ = Intl.DateTimeFormat().resolvedOptions().timeZone;
+                document.cookie = `tz=${userTZ}; path=/`;
+            </script>
+        </xpath>
         <xpath expr="//head/link[last()]" position="after">
             <t t-call-assets="web.assets_common" t-js="false"/>
             <t t-call-assets="web.assets_frontend" t-js="false"/>
@@ -494,7 +502,7 @@
                             <div class="row">
                                 <div class="col-sm text-center text-sm-left text-muted">
                                     <t t-call="web.debug_icon"/>
-                                    <span class="o_footer_copyright_name">Copyright &amp;copy; Company name</span>
+                                    <span class="o_footer_copyright_name mr-2">Copyright &amp;copy; Company name</span>
                                 </div>
                                 <div class="col-sm text-center text-sm-right">
                                     <t t-call="web.brand_promotion"/>

@@ -206,16 +206,7 @@ function factory(dependencies) {
                 data2.uuid = data.uuid;
             }
 
-            // relation
-            if ('direct_partner' in data) {
-                if (!data.direct_partner) {
-                    data2.correspondent = [['unlink-all']];
-                } else {
-                    data2.correspondent = [
-                        ['insert', this.env.models['mail.partner'].convertData(data.direct_partner[0])],
-                    ];
-                }
-            }
+            // relations
             if ('members' in data) {
                 if (!data.members) {
                     data2.members = [['unlink-all']];
@@ -542,7 +533,7 @@ function factory(dependencies) {
         openExpanded() {
             const discuss = this.env.messaging.discuss;
             if (['mail.channel', 'mail.box'].includes(this.model)) {
-                discuss.threadViewer.update({ thread: [['replace', this]] });
+                discuss.threadViewer.update({ thread: [['link', this]] });
                 this.env.bus.trigger('do-action', {
                     action: 'mail.action_discuss',
                     options: {
@@ -581,20 +572,18 @@ function factory(dependencies) {
          * Refresh followers information from server.
          */
         async refreshFollowers() {
-            // FIXME Do that with only one RPC (see task-2243180)
-            const [{ message_follower_ids: followerIds }] = await this.async(() => this.env.services.rpc({
-                model: this.model,
-                method: 'read',
-                args: [this.id, ['message_follower_ids']],
+            if (this.isTemporary) {
+                this.update({ followers: [['unlink-all']] });
+                return;
+            }
+            const { followers } = await this.async(() => this.env.services.rpc({
+                route: '/mail/read_followers',
+                params: {
+                    res_id: this.id,
+                    res_model: this.model,
+                },
             }));
-            if (followerIds && followerIds.length > 0) {
-                const { followers } = await this.async(() => this.env.services.rpc({
-                    route: '/mail/read_followers',
-                    params: {
-                        follower_ids: followerIds,
-                        context: {}, // FIXME empty context to be overridden in session.js with 'allowed_company_ids' task-2243187
-                    }
-                }));
+            if (followers.length > 0) {
                 this.update({
                     followers: [['insert-and-replace', followers.map(data =>
                         this.env.models['mail.follower'].convertData(data))
@@ -794,6 +783,23 @@ function factory(dependencies) {
 
         /**
          * @private
+         * @returns {mail.partner}
+         */
+        _computeCorrespondent() {
+            if (this.channel_type === 'channel') {
+                return [['unlink']];
+            }
+            const correspondents = this.members.filter(partner =>
+                partner !== this.env.messaging.currentPartner
+            );
+            if (correspondents.length === 1) {
+                return [['link', correspondents[0]]];
+            }
+            return [['unlink']];
+        }
+
+        /**
+         * @private
          * @returns {string}
          */
         _computeDisplayName() {
@@ -839,16 +845,13 @@ function factory(dependencies) {
          * @returns {boolean}
          */
         _computeIsModeratedByCurrentPartner() {
-            if (this.model !== 'mail.channel') {
-                return false;
-            }
             if (!this.messaging) {
                 return false;
             }
             if (!this.messaging.currentPartner) {
                 return false;
             }
-            return this.messaging.currentPartner.moderatedChannelIds.includes(this.id);
+            return this.moderators.includes(this.env.messaging.currentPartner);
         }
 
         /**
@@ -895,7 +898,7 @@ function factory(dependencies) {
             ) {
                 return [['unlink-all']];
             }
-            return [['replace', currentPartnerOrderedSeenMessages.slice().pop()]];
+            return [['link', currentPartnerOrderedSeenMessages.slice().pop()]];
         }
 
         /**
@@ -907,7 +910,10 @@ function factory(dependencies) {
                 length: l,
                 [l - 1]: lastMessage,
             } = this.orderedMessages;
-            return [['replace', lastMessage]];
+            if (lastMessage) {
+                return [['link', lastMessage]];
+            }
+            return [['unlink']];
         }
 
         /**
@@ -922,7 +928,10 @@ function factory(dependencies) {
                 length: l,
                 [l - 1]: lastNeedactionMessage,
             } = orderedNeedactionMessages;
-            return [['replace', lastNeedactionMessage]];
+            if (lastNeedactionMessage) {
+                return [['link', lastNeedactionMessage]];
+            }
+            return [['unlink']];
         }
 
         /**
@@ -1201,6 +1210,12 @@ function factory(dependencies) {
             isCausal: true,
         }),
         correspondent: many2one('mail.partner', {
+            compute: '_computeCorrespondent',
+            dependencies: [
+                'channel_type',
+                'members',
+                'messagingCurrentPartner',
+            ],
             inverse: 'correspondentThreads',
         }),
         correspondentNameOrDisplayName: attr({
@@ -1271,8 +1286,8 @@ function factory(dependencies) {
         isModeratedByCurrentPartner: attr({
             compute: '_computeIsModeratedByCurrentPartner',
             dependencies: [
-                'model',
                 'messagingCurrentPartner',
+                'moderators',
             ],
         }),
         /**
@@ -1366,6 +1381,12 @@ function factory(dependencies) {
         model_name: attr(),
         moderation: attr({
             default: false,
+        }),
+        /**
+         * Partners that are moderating this thread (only applies to channels).
+         */
+        moderators: many2many('mail.partner', {
+            inverse: 'moderatedChannels',
         }),
         moduleIcon: attr(),
         name: attr(),

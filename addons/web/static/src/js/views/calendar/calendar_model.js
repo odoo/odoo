@@ -9,12 +9,6 @@ var session = require('web.session');
 
 var _t = core._t;
 
-var scales = [
-    'day',
-    'week',
-    'month'
-];
-
 function dateToServer (date) {
     return date.clone().utc().locale('en').format('YYYY-MM-DD HH:mm:ss');
 }
@@ -192,6 +186,7 @@ return AbstractModel.extend({
         this.mapping = params.mapping;
         this.mode = params.mode;       // one of month, week or day
         this.scales = params.scales;   // one of month, week or day
+        this.scalesInfo = params.scalesInfo;
 
         // Check whether the date field is editable (i.e. if the events can be
         // dragged and dropped)
@@ -273,6 +268,19 @@ return AbstractModel.extend({
         this.data.highlight_date = this.data.target_date = start.clone();
         this.data.start_date = this.data.end_date = start;
         switch (this.data.scale) {
+            case 'year': {
+                const yearStart = this.data.start_date.clone().startOf('year');
+                let yearStartDay = this.week_start;
+                if (yearStart.day() < yearStartDay) {
+                    // the 1st of January is before our week start (e.g. week start is Monday, and
+                    // 01/01 is Sunday), so we go one week back
+                    yearStartDay -= 7;
+                }
+                this.data.start_date = yearStart.day(yearStartDay).startOf('day');
+                this.data.end_date = this.data.end_date.clone()
+                    .endOf('year').day(this.week_stop).endOf('day');
+                break;
+            }
             case 'month':
                 var monthStart = this.data.start_date.clone().startOf('month');
 
@@ -322,7 +330,7 @@ return AbstractModel.extend({
      * @param {string} scale the scale to set
      */
     setScale: function (scale) {
-        if (!_.contains(scales, scale)) {
+        if (!_.contains(this.scales, scale)) {
             scale = "week";
         }
         this.data.scale = scale;
@@ -426,7 +434,7 @@ return AbstractModel.extend({
             hour12: false,
         };
         return {
-            defaultView: (this.mode === "month")? "dayGridMonth" : ((this.mode === "week")? "timeGridWeek" : ((this.mode === "day")? "timeGridDay" : "timeGridWeek")),
+            defaultView: this.scalesInfo[this.mode || 'week'],
             header: false,
             selectable: this.creatable && this.create_right,
             selectMirror: true,

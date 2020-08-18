@@ -36,7 +36,7 @@ class MailResendMessage(models.TransientModel):
                 "resend": True,
                 "message": notif.format_failure_reason(),
             }) for notif in notification_ids]
-            has_user = any([notif.res_partner_id.user_ids for notif in notification_ids])
+            has_user = any(notif.res_partner_id.user_ids for notif in notification_ids)
             if has_user:
                 partner_readonly = not self.env['res.users'].check_access_rights('write', raise_exception=False)
             else:

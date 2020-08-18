@@ -576,13 +576,6 @@ class Channel(models.Model):
 
             # find the channel partner state, if logged user
             if self.env.user and self.env.user.partner_id:
-                # add the partner for 'direct mesage' channel
-                if channel.channel_type == 'chat':
-                    # direct_partner should be removed from channel info since we can find it from members and channel_type
-                    # we keep it know to avoid change tests and javascript
-                    direct_partner = channel_partners.filtered(lambda pc: pc.partner_id.id != self.env.user.partner_id.id)
-                    if direct_partner:
-                        info['direct_partner'] = [partner_infos[direct_partner[0].partner_id.id]]
                 # add needaction and unread counter, since the user is logged
                 info['message_needaction_counter'] = channel.message_needaction_counter
                 info['message_unread_counter'] = channel.message_unread_counter
@@ -600,12 +593,13 @@ class Channel(models.Model):
             # add members infos
             partner_ids = channel_partners.mapped('partner_id').ids
             info['members'] = [partner_infos[partner] for partner in partner_ids]
-            info['seen_partners_info'] = [{
-                'id': cp.id,
-                'partner_id': cp.partner_id.id,
-                'fetched_message_id': cp.fetched_message_id.id,
-                'seen_message_id': cp.seen_message_id.id,
-            } for cp in channel_partners]
+            if channel.channel_type != 'channel':
+                info['seen_partners_info'] = [{
+                    'id': cp.id,
+                    'partner_id': cp.partner_id.id,
+                    'fetched_message_id': cp.fetched_message_id.id,
+                    'seen_message_id': cp.seen_message_id.id,
+                } for cp in channel_partners]
 
             channel_infos.append(info)
         return channel_infos

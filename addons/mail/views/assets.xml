@@ -38,7 +38,9 @@
                 <!-- Emojis -->
                 <script type="text/javascript" src="/mail/static/src/js/emojis.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/emojis_mixin.js"/>
-                <script type="text/javascript" src="/mail/static/src/js/text_emojis_fields.js"/>
+                <script type="text/javascript" src="/mail/static/src/js/field_emojis_common.js"/>
+                <script type="text/javascript" src="/mail/static/src/js/field_char_emojis.js"/>
+                <script type="text/javascript" src="/mail/static/src/js/field_text_emojis.js"/>
                 <link rel="stylesheet" type="text/scss" href="/mail/static/src/scss/emojis.scss"/>
                 <!-- Others -->
 
@@ -230,6 +232,7 @@
             <xpath expr="." position="inside">
                 <script type="text/javascript" src="/mail/static/src/env/test_env.js"></script>
                 <script type="text/javascript" src="/mail/static/src/utils/test_utils.js"></script>
+                <script type="text/javascript" src="/mail/static/tests/helpers/mock_models.js"></script>
                 <script type="text/javascript" src="/mail/static/tests/helpers/mock_server.js"></script>
             </xpath>
         </template>

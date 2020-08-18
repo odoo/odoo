@@ -31,7 +31,7 @@ odoo.define('point_of_sale.tour.ProductScreenTourMethods', function (require) {
             return [
                 {
                     content: `selecting '${name}' subcategory`,
-                    trigger: `.category-list .category-simple-button:contains("${name}")`,
+                    trigger: `.products-widget > .products-widget-control .category-simple-button:contains("${name}")`,
                 },
                 {
                     content: `'${name}' subcategory selected`,

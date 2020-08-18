@@ -5,6 +5,7 @@ odoo.define('point_of_sale.tour.OrderManagementScreen', function (require) {
     const { ProductScreen } = require('point_of_sale.tour.ProductScreenTourMethods');
     const { PaymentScreen } = require('point_of_sale.tour.PaymentScreenTourMethods');
     const { ClientListScreen } = require('point_of_sale.tour.ClientListScreenTourMethods');
+    const { TicketScreen } = require('point_of_sale.tour.TicketScreenTourMethods');
     const { Chrome } = require('point_of_sale.tour.ChromeTourMethods');
     const { makeFullOrder } = require('point_of_sale.tour.CompositeTourMethods');
     const { getSteps, startSteps } = require('point_of_sale.tour.utils');
@@ -70,11 +71,13 @@ odoo.define('point_of_sale.tour.OrderManagementScreen', function (require) {
 
     // Add 2 orders, they should appear in order management screen
     // order 0006
-    Chrome.do.newOrder();
+    Chrome.do.clickTicketButton();
+    TicketScreen.do.clickNewTicket();
     ProductScreen.exec.addOrderline('Whiteboard Pen', '66', '6');
 
     // order 0007, should be at payment screen
-    Chrome.do.newOrder();
+    Chrome.do.clickTicketButton();
+    TicketScreen.do.clickNewTicket();
     ProductScreen.exec.addOrderline('Monitor Stand', '55', '5');
     ProductScreen.do.clickCustomerButton();
     ClientListScreen.exec.setClient('Azure Interior');

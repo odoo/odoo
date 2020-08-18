@@ -7,6 +7,9 @@ import unittest
 class BaseTestUi(odoo.tests.HttpCase):
 
     def main_flow_tour(self):
+        # Enable Make to Order
+        self.env.ref('stock.route_warehouse0_mto').active = True
+
         # Define minimal accounting data to run without CoA
         a_expense = self.env['account.account'].create({
             'code': 'X2120',
@@ -53,15 +56,13 @@ class BaseTestUi(odoo.tests.HttpCase):
             'name': 'Bank - Test',
             'code': 'TBNK',
             'type': 'bank',
-            'default_credit_account_id': bnk.id,
-            'default_debit_account_id': bnk.id,
+            'default_account_id': bnk.id,
         })
         self.sales_journal = self.env['account.journal'].create({
             'name': 'Customer Invoices - Test',
             'code': 'TINV',
             'type': 'sale',
-            'default_credit_account_id': a_sale.id,
-            'default_debit_account_id': a_sale.id,
+            'default_account_id': a_sale.id,
             'refund_sequence': True,
         })
 

@@ -244,6 +244,7 @@ class Meeting(models.Model):
     recurrency = fields.Boolean('Recurrent', help="Recurrent Event")
     recurrence_id = fields.Many2one(
         'calendar.recurrence', string="Recurrence Rule", index=True)
+    follow_recurrence = fields.Boolean(default=False) # Indicates if an event follows the recurrence, i.e. is not an exception
     recurrence_update = fields.Selection([
         ('self_only', "This event"),
         ('future_events', "This and following events"),
@@ -559,7 +560,7 @@ class Meeting(models.Model):
                 recurrence_vals += [dict(values, base_event_id=event.id, calendar_event_ids=[(4, event.id)])]
             elif future:
                 to_update |= event.recurrence_id._split_from(event, values)
-        self.recurrency = True
+        self.write({'recurrency': True, 'follow_recurrence': True})
         to_update |= self.env['calendar.recurrence'].create(recurrence_vals)
         return to_update._apply_recurrence()
 
@@ -629,6 +630,10 @@ class Meeting(models.Model):
 
         if 'partner_ids' in values:
             values['attendee_ids'] = self._attendees_values(values['partner_ids'])
+
+        if (not recurrence_update_setting or recurrence_update_setting == 'self_only' and len(self) == 1) and 'follow_recurrence' not in values:
+            if any({field: values.get(field) for field in self.env['calendar.event']._get_time_fields() if field in values}):
+                values['follow_recurrence'] = False
 
         previous_attendees = self.attendee_ids
 
@@ -702,9 +707,11 @@ class Meeting(models.Model):
         recurring_vals = [vals for vals in vals_list if vals.get('recurrency')]
         other_vals = [vals for vals in vals_list if not vals.get('recurrency')]
         events = super().create(other_vals)
+
         for vals in recurring_vals:
 
             recurrence_values = {field: vals.pop(field) for field in recurrence_fields if field in vals}
+            vals['follow_recurrence'] = True
             event = super().create(vals)
             events |= event
             if vals.get('recurrency'):

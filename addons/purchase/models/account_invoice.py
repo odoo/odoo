@@ -45,6 +45,7 @@ class AccountMove(models.Model):
 
         # Copy data from PO
         invoice_vals = self.purchase_id.with_company(self.purchase_id.company_id)._prepare_invoice()
+        del invoice_vals['ref']
         self.update(invoice_vals)
 
         # Copy purchase lines.
@@ -130,6 +131,7 @@ class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'
 
     purchase_line_id = fields.Many2one('purchase.order.line', 'Purchase Order Line', ondelete='set null', index=True)
+    purchase_order_id = fields.Many2one('purchase.order', 'Purchase Order', related='purchase_line_id.order_id', readonly=True)
 
     def _copy_data_extend_business_fields(self, values):
         # OVERRIDE to copy the 'purchase_line_id' field as well.

@@ -80,7 +80,7 @@ class AccountAnalyticLine(models.Model):
         for vals in vals_list:
             # when the name is not provide by the 'Add a line', we set a default one
             if vals.get('project_id') and not vals.get('name'):
-                vals['name'] = _('/')
+                vals['name'] = '/'
             # compute employee only for timesheet lines, makes no sense for other lines
             if not vals.get('employee_id') and vals.get('project_id'):
                 vals['employee_id'] = user_map.get(vals.get('user_id') or default_user_id)
@@ -98,6 +98,8 @@ class AccountAnalyticLine(models.Model):
             raise AccessError(_("You cannot access timesheets that are not yours."))
 
         values = self._timesheet_preprocess(values)
+        if 'name' in values and not values.get('name'):
+            values['name'] = '/'
         result = super(AccountAnalyticLine, self).write(values)
         # applied only for timesheet
         self.filtered(lambda t: t.project_id)._timesheet_postprocess(values)
@@ -179,7 +181,7 @@ class AccountAnalyticLine(models.Model):
         result = {id_: {} for id_ in self.ids}
         sudo_self = self.sudo()  # this creates only one env for all operation that required sudo()
         # (re)compute the amount (depending on unit_amount, employee_id for the cost, and account_id for currency)
-        if any([field_name in values for field_name in ['unit_amount', 'employee_id', 'account_id']]):
+        if any(field_name in values for field_name in ['unit_amount', 'employee_id', 'account_id']):
             for timesheet in sudo_self:
                 cost = timesheet.employee_id.timesheet_cost or 0.0
                 amount = -timesheet.unit_amount * cost

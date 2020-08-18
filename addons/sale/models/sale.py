@@ -570,7 +570,7 @@ class SaleOrder(models.Model):
 
     def action_view_invoice(self):
         invoices = self.mapped('invoice_ids')
-        action = self.env.ref('account.action_move_out_invoice_type').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("account.action_move_out_invoice_type")
         if len(invoices) > 1:
             action['domain'] = [('id', 'in', invoices.ids)]
         elif len(invoices) == 1:
@@ -825,11 +825,17 @@ Reason(s) of this behavior could be:
         """
         # create an analytic account if at least an expense product
         for order in self:
-            if any([expense_policy not in [False, 'no'] for expense_policy in order.order_line.mapped('product_id.expense_policy')]):
+            if any(expense_policy not in [False, 'no'] for expense_policy in order.order_line.mapped('product_id.expense_policy')):
                 if not order.analytic_account_id:
                     order._create_analytic_account()
 
         return True
+
+    def _prepare_confirmation_values(self):
+        return {
+            'state': 'sale',
+            'date_order': fields.Datetime.now()
+        }
 
     def action_confirm(self):
         if self._get_forbidden_state_confirm() & set(self.mapped('state')):
@@ -839,10 +845,7 @@ Reason(s) of this behavior could be:
 
         for order in self.filtered(lambda order: order.partner_id not in order.message_partner_ids):
             order.message_subscribe([order.partner_id.id])
-        self.write({
-            'state': 'sale',
-            'date_order': fields.Datetime.now()
-        })
+        self.write(self._prepare_confirmation_values())
         self._action_confirm()
         if self.env.user.has_group('sale.group_auto_done_setting'):
             self.action_done()
@@ -925,12 +928,12 @@ Reason(s) of this behavior could be:
         '''
         # Ensure the currencies are the same.
         currency = self[0].pricelist_id.currency_id
-        if any([so.pricelist_id.currency_id != currency for so in self]):
+        if any(so.pricelist_id.currency_id != currency for so in self):
             raise ValidationError(_('A transaction can\'t be linked to sales orders having different currencies.'))
 
         # Ensure the partner are the same.
         partner = self[0].partner_id
-        if any([so.partner_id != partner for so in self]):
+        if any(so.partner_id != partner for so in self):
             raise ValidationError(_('A transaction can\'t be linked to sales orders having different partners.'))
 
         # Try to retrieve the acquirer. However, fallback to the token's acquirer.

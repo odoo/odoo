@@ -38,7 +38,7 @@ CRM_LEAD_FIELDS_TO_MERGE = [
     'partner_name',
     'phone',
     'probability',
-    'planned_revenue',
+    'expected_revenue',
     'street',
     'street2',
     'zip',
@@ -47,6 +47,24 @@ CRM_LEAD_FIELDS_TO_MERGE = [
     'email_from',
     'email_cc',
     'website']
+
+# Subset of partner fields: sync any of those
+PARTNER_FIELDS_TO_SYNC = [
+    'mobile',
+    'title',
+    'function',
+    'website',
+]
+
+# Subset of partner fields: sync all or none to avoid mixed addresses
+PARTNER_ADDRESS_FIELDS_TO_SYNC = [
+    'street',
+    'street2',
+    'city',
+    'zip',
+    'state_id',
+    'country_id',
+]
 
 # Those values have been determined based on benchmark to minimise
 # computation time, number of transaction and transaction time.
@@ -107,8 +125,16 @@ class Lead(models.Model):
         help="Classify and analyze your lead/opportunity categories like: Training, Service")
     color = fields.Integer('Color Index', default=0)
     # Opportunity specific
-    planned_revenue = fields.Monetary('Expected Revenue', currency_field='company_currency', tracking=True)
-    expected_revenue = fields.Monetary('Prorated Revenue', currency_field='company_currency', store=True, compute="_compute_expected_revenue")
+    expected_revenue = fields.Monetary('Expected Revenue', currency_field='company_currency', tracking=True)
+    prorated_revenue = fields.Monetary('Prorated Revenue', currency_field='company_currency', store=True, compute="_compute_prorated_revenue")
+    recurring_revenue = fields.Monetary('Recurring Revenues', currency_field='company_currency', groups="crm.group_use_recurring_revenues")
+    recurring_plan = fields.Many2one('crm.recurring.plan', string="Recurring Plan", groups="crm.group_use_recurring_revenues")
+    recurring_revenue_monthly = fields.Monetary('Expected MRR', currency_field='company_currency', store=True,
+                                               compute="_compute_recurring_revenue_monthly",
+                                               groups="crm.group_use_recurring_revenues")
+    recurring_revenue_monthly_prorated = fields.Monetary('Prorated MRR', currency_field='company_currency', store=True,
+                                               compute="_compute_recurring_revenue_monthly_prorated",
+                                               groups="crm.group_use_recurring_revenues")
     company_currency = fields.Many2one("res.currency", string='Currency', related='company_id.currency_id', readonly=True)
     # Dates
     date_closed = fields.Datetime('Closed Date', readonly=True, copy=False)
@@ -282,7 +308,7 @@ class Lead(models.Model):
     @api.depends('partner_id.email')
     def _compute_email_from(self):
         for lead in self:
-            if lead.partner_id and lead.partner_id.email != lead.email_from:
+            if lead.partner_id.email and lead.partner_id.email != lead.email_from:
                 lead.email_from = lead.partner_id.email
 
     def _inverse_email_from(self):
@@ -293,7 +319,7 @@ class Lead(models.Model):
     @api.depends('partner_id.phone')
     def _compute_phone(self):
         for lead in self:
-            if lead.partner_id and lead.phone != lead.partner_id.phone:
+            if lead.partner_id.phone and lead.phone != lead.partner_id.phone:
                 lead.phone = lead.partner_id.phone
 
     def _inverse_phone(self):
@@ -348,10 +374,20 @@ class Lead(models.Model):
                 if was_automated:
                     lead.probability = lead.automated_probability
 
-    @api.depends('planned_revenue', 'probability')
-    def _compute_expected_revenue(self):
+    @api.depends('expected_revenue', 'probability')
+    def _compute_prorated_revenue(self):
         for lead in self:
-            lead.expected_revenue = round((lead.planned_revenue or 0.0) * (lead.probability or 0) / 100.0, 2)
+            lead.prorated_revenue = round((lead.expected_revenue or 0.0) * (lead.probability or 0) / 100.0, 2)
+
+    @api.depends('recurring_revenue', 'recurring_plan.number_of_months')
+    def _compute_recurring_revenue_monthly(self):
+        for lead in self:
+            lead.recurring_revenue_monthly = (lead.recurring_revenue or 0.0) / (lead.recurring_plan.number_of_months or 1)
+
+    @api.depends('recurring_revenue_monthly', 'probability')
+    def _compute_recurring_revenue_monthly_prorated(self):
+        for lead in self:
+            lead.recurring_revenue_monthly_prorated = (lead.recurring_revenue_monthly or 0.0) * (lead.probability or 0) / 100.0
 
     def _compute_meeting_count(self):
         if self.ids:
@@ -416,27 +452,29 @@ class Lead(models.Model):
             self.mobile = self.phone_format(self.mobile)
 
     def _prepare_values_from_partner(self, partner):
-        """ Get a dictionary with values coming from customer information to
-        copy on a lead. Email_from and phone fields get the current lead
-        values to avoid being reset if customer has no value for them. """
+        """ Get a dictionary with values coming from partner information to
+        copy on a lead. Non-address fields get the current lead
+        values to avoid being reset if partner has no value for them. """
+
+        # Sync all address fields from partner, or none, to avoid mixing them.
+        if any(partner[f] for f in PARTNER_ADDRESS_FIELDS_TO_SYNC):
+            values = {f: partner[f] for f in PARTNER_ADDRESS_FIELDS_TO_SYNC}
+        else:
+            values = {f: self[f] for f in PARTNER_ADDRESS_FIELDS_TO_SYNC}
+
+        # For other fields, get the info from the partner, but only if set
+        values.update({f: partner[f] or self[f] for f in PARTNER_FIELDS_TO_SYNC})
+
+        # Fields with specific logic
         partner_name = partner.parent_id.name
         if not partner_name and partner.is_company:
             partner_name = partner.name
-
-        return {
-            'partner_name': partner_name,
-            'contact_name': partner.name if not partner.is_company else False,
-            'title': partner.title.id,
-            'street': partner.street,
-            'street2': partner.street2,
-            'city': partner.city,
-            'state_id': partner.state_id.id,
-            'country_id': partner.country_id.id,
-            'mobile': partner.mobile,
-            'zip': partner.zip,
-            'function': partner.function,
-            'website': partner.website,
-        }
+        contact_name = False if partner.is_company else partner.name
+        values.update({
+            'partner_name': partner_name or self.partner_name,
+            'contact_name': contact_name or self.contact_name,
+        })
+        return self._convert_to_write(values)
 
     # ------------------------------------------------------------
     # ORM
@@ -701,14 +739,34 @@ class Lead(models.Model):
         self.ensure_one()
         self.action_set_won()
 
-        if self.user_id and self.team_id and self.planned_revenue:
+        message = self._get_rainbowman_message()
+        if message:
+            return {
+                'effect': {
+                    'fadeout': 'slow',
+                    'message': message,
+                    'img_url': '/web/image/%s/%s/image_1024' % (self.team_id.user_id._name, self.team_id.user_id.id) if self.team_id.user_id.image_1024 else '/web/static/src/img/smile.svg',
+                    'type': 'rainbow_man',
+                }
+            }
+        return True
+
+    def get_rainbowman_message(self):
+        self.ensure_one()
+        if self.stage_id.is_won:
+            return self._get_rainbowman_message()
+        return False
+
+    def _get_rainbowman_message(self):
+        message = False
+        if self.user_id and self.team_id and self.expected_revenue:
             query = """
                 SELECT
                     SUM(CASE WHEN user_id = %(user_id)s THEN 1 ELSE 0 END) as total_won,
-                    MAX(CASE WHEN date_closed >= CURRENT_DATE - INTERVAL '30 days' AND user_id = %(user_id)s THEN planned_revenue ELSE 0 END) as max_user_30,
-                    MAX(CASE WHEN date_closed >= CURRENT_DATE - INTERVAL '7 days' AND user_id = %(user_id)s THEN planned_revenue ELSE 0 END) as max_user_7,
-                    MAX(CASE WHEN date_closed >= CURRENT_DATE - INTERVAL '30 days' AND team_id = %(team_id)s THEN planned_revenue ELSE 0 END) as max_team_30,
-                    MAX(CASE WHEN date_closed >= CURRENT_DATE - INTERVAL '7 days' AND team_id = %(team_id)s THEN planned_revenue ELSE 0 END) as max_team_7
+                    MAX(CASE WHEN date_closed >= CURRENT_DATE - INTERVAL '30 days' AND user_id = %(user_id)s THEN expected_revenue ELSE 0 END) as max_user_30,
+                    MAX(CASE WHEN date_closed >= CURRENT_DATE - INTERVAL '7 days' AND user_id = %(user_id)s THEN expected_revenue ELSE 0 END) as max_user_7,
+                    MAX(CASE WHEN date_closed >= CURRENT_DATE - INTERVAL '30 days' AND team_id = %(team_id)s THEN expected_revenue ELSE 0 END) as max_team_30,
+                    MAX(CASE WHEN date_closed >= CURRENT_DATE - INTERVAL '7 days' AND team_id = %(team_id)s THEN expected_revenue ELSE 0 END) as max_team_7
                 FROM crm_lead
                 WHERE
                     type = 'opportunity'
@@ -725,35 +783,24 @@ class Lead(models.Model):
                                         'team_id': self.team_id.id})
             query_result = self.env.cr.dictfetchone()
 
-            message = False
             if query_result['total_won'] == 1:
                 message = _('Go, go, go! Congrats for your first deal.')
-            elif query_result['max_team_30'] == self.planned_revenue:
+            elif query_result['max_team_30'] == self.expected_revenue:
                 message = _('Boom! Team record for the past 30 days.')
-            elif query_result['max_team_7'] == self.planned_revenue:
+            elif query_result['max_team_7'] == self.expected_revenue:
                 message = _('Yeah! Deal of the last 7 days for the team.')
-            elif query_result['max_user_30'] == self.planned_revenue:
+            elif query_result['max_user_30'] == self.expected_revenue:
                 message = _('You just beat your personal record for the past 30 days.')
-            elif query_result['max_user_7'] == self.planned_revenue:
+            elif query_result['max_user_7'] == self.expected_revenue:
                 message = _('You just beat your personal record for the past 7 days.')
-
-            if message:
-                return {
-                    'effect': {
-                        'fadeout': 'slow',
-                        'message': message,
-                        'img_url': '/web/image/%s/%s/image_1024' % (self.team_id.user_id._name, self.team_id.user_id.id) if self.team_id.user_id.image_1024 else '/web/static/src/img/smile.svg',
-                        'type': 'rainbow_man',
-                    }
-                }
-        return True
+        return message
 
     def action_schedule_meeting(self):
         """ Open meeting's calendar view to schedule meeting on current opportunity.
             :return dict: dictionary value for created Meeting view
         """
         self.ensure_one()
-        action = self.env.ref('calendar.action_calendar_event').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("calendar.action_calendar_event")
         partner_ids = self.env.user.partner_id.ids
         if self.partner_id:
             partner_ids.append(self.partner_id.id)
@@ -1024,11 +1071,12 @@ class Lead(models.Model):
         """
         new_team_id = team_id if team_id else self.team_id.id
         upd_values = {
-            'partner_id': customer.id if customer else False,
             'type': 'opportunity',
             'date_open': fields.Datetime.now(),
             'date_conversion': fields.Datetime.now(),
         }
+        if customer != self.partner_id:
+            upd_values['partner_id'] = customer.id if customer else False
         if not self.stage_id:
             stage = self._stage_find(team_id=new_team_id)
             upd_values['stage_id'] = stage.id
@@ -1137,10 +1185,12 @@ class Lead(models.Model):
             res['lang'] = self.lang_id.code
         return res
 
-    def _find_matching_partner(self):
+    def _find_matching_partner(self, email_only=False):
         """ Try to find a matching partner with available information on the
-        lead, using notably customer's name, email, phone, ...
+        lead, using notably customer's name, email, ...
 
+        :param email_only: Only find a matching based on the email. To use
+            for automatic process where ilike based on name can be too dangerous
         :return: partner browse record
         """
         self.ensure_one()
@@ -1149,7 +1199,7 @@ class Lead(models.Model):
         if not partner and self.email_from:
             partner = self.env['res.partner'].search([('email', '=', self.email_from)], limit=1)
 
-        if not partner:
+        if not partner and not email_only:
             # search through the existing partners based on the lead's partner or contact name
             # to be aligned with _create_customer, search on lead's name as last possibility
             for customer_potential_name in [self[field_name] for field_name in ['partner_name', 'contact_name', 'name'] if self[field_name]]:
@@ -1214,7 +1264,7 @@ class Lead(models.Model):
         if self._context.get('default_type') == 'lead':
             help_title = _('Create a new lead')
         else:
-            help_title = _('Create opportunities to keep an eye on all your ongoing sales talks.')
+            help_title = _('Create an opportunity to start playing with your pipeline.')
         alias_record = self.env['mail.alias'].search([
             ('alias_name', '!=', False),
             ('alias_name', '!=', ''),
@@ -1224,8 +1274,8 @@ class Lead(models.Model):
         ], limit=1)
         if alias_record and alias_record.alias_domain and alias_record.alias_name:
             email = '%s@%s' % (alias_record.alias_name, alias_record.alias_domain)
-            email_link = "<a href='mailto:%s'>%s</a>" % (email, email)
-            sub_title = _('Emails sent to %s automatically create opportunities.') % (email_link)
+            email_link = "<b><a href='mailto:%s'>%s</a></b>" % (email, email)
+            sub_title = _('Use the top left <i>Create</i> button, or send an email to %s to test the email gateway.') % (email_link)
         return '<p class="o_view_nocontent_smiling_face">%s</p><p class="oe_view_nocontent_alias">%s</p>' % (help_title, sub_title)
 
     # ------------------------------------------------------------

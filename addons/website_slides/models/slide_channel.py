@@ -8,7 +8,7 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, tools, _
 from odoo.addons.http_routing.models.ir_http import slug
-from odoo.exceptions import UserError, AccessError
+from odoo.exceptions import AccessError
 from odoo.osv import expression
 
 
@@ -96,8 +96,8 @@ class Channel(models.Model):
     description_short = fields.Text('Short Description', translate=True, help="The description that is displayed on the course card")
     description_html = fields.Html('Detailed Description', translate=tools.html_translate, sanitize_attributes=False, sanitize_form=False)
     channel_type = fields.Selection([
-        ('documentation', 'Documentation'), ('training', 'Training')],
-        string="Course type", default="documentation", required=True)
+        ('training', 'Training'), ('documentation', 'Documentation')],
+        string="Course type", default="training", required=True)
     sequence = fields.Integer(default=10, help='Display order')
     user_id = fields.Many2one('res.users', string='Responsible', default=lambda self: self.env.uid)
     color = fields.Integer('Color Index', default=0, help='Used to decorate kanban view')
@@ -105,7 +105,7 @@ class Channel(models.Model):
         'slide.channel.tag', 'slide_channel_tag_rel', 'channel_id', 'tag_id',
         string='Tags', help='Used to categorize and filter displayed channels/courses')
     # slides: promote, statistics
-    slide_ids = fields.One2many('slide.slide', 'channel_id', string="Slides and categories")
+    slide_ids = fields.One2many('slide.slide', 'channel_id', string="Slides and categories", context={'active_test': False})
     slide_content_ids = fields.One2many('slide.slide', string='Slides', compute="_compute_category_and_slide_ids")
     slide_category_ids = fields.One2many('slide.slide', string='Categories', compute="_compute_category_and_slide_ids")
     slide_last_update = fields.Date('Last Update', compute='_compute_slide_last_update', store=True)
@@ -115,8 +115,17 @@ class Channel(models.Model):
     promote_strategy = fields.Selection([
         ('latest', 'Latest Published'),
         ('most_voted', 'Most Voted'),
-        ('most_viewed', 'Most Viewed')],
-        string="Featured Content", default='latest', required=True)
+        ('most_viewed', 'Most Viewed'),
+        ('specific', 'Specific'),
+        ('none', 'None')],
+        string="Promoted Content", default='latest', required=False,
+        help='Depending the promote strategy, a slide will appear on the top of the course\'s page :\n'
+             ' * Latest Published : the slide created last.\n'
+             ' * Most Voted : the slide which have to most vote.\n'
+             ' * Most Viewed ; the slide which have been viewed the most.\n'
+             ' * Specific : You choose the slide to appear.\n'
+             ' * None : There won\'t be any slide showing.\n')
+    promoted_slide_id = fields.Many2one('slide.slide', string='Promoted Slide')
     access_token = fields.Char("Security Token", copy=False, default=_default_access_token)
     nbr_presentation = fields.Integer('Presentations', compute='_compute_slides_statistics', store=True)
     nbr_document = fields.Integer('Documents', compute='_compute_slides_statistics', store=True)
@@ -131,7 +140,7 @@ class Channel(models.Model):
     rating_avg_stars = fields.Float("Rating Average (Stars)", compute='_compute_rating_stats', digits=(16, 1), compute_sudo=True)
     # configuration
     allow_comment = fields.Boolean(
-        "Allow rating on Course", default=False,
+        "Allow rating on Course", default=True,
         help="If checked it allows members to either:\n"
              " * like content and post comments on documentation course;\n"
              " * post comment and review on training course;")
@@ -419,6 +428,7 @@ class Channel(models.Model):
         to_activate = self.filtered(lambda channel: not channel.active)
         res = super(Channel, self).toggle_active()
         if to_archive:
+            to_archive.is_published = False
             to_archive.mapped('slide_ids').action_archive()
         if to_activate:
             to_activate.with_context(active_test=False).mapped('slide_ids').action_unarchive()
@@ -443,7 +453,7 @@ class Channel(models.Model):
     # ---------------------------------------------------------
 
     def action_redirect_to_members(self, state=None):
-        action = self.env.ref('website_slides.slide_channel_partner_action').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("website_slides.slide_channel_partner_action")
         action['domain'] = [('channel_id', 'in', self.ids)]
         if len(self) == 1:
             action['display_name'] = _('Attendees of %s', self.name)
@@ -467,7 +477,7 @@ class Channel(models.Model):
             default_channel_id=self.id,
             default_use_template=bool(template),
             default_template_id=template and template.id or False,
-            notif_layout='mail.mail_notification_light',
+            notif_layout='website_slides.mail_notification_channel_invite',
         )
         return {
             'type': 'ir.actions.act_window',
@@ -590,7 +600,7 @@ class Channel(models.Model):
             self.env['slide.channel.partner'].sudo().search(removed_channel_partner_domain).unlink()
 
     def action_view_slides(self):
-        action = self.env.ref('website_slides.slide_slide_action').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("website_slides.slide_slide_action")
         action['context'] = {
             'search_default_published': 1,
             'default_channel_id': self.id
@@ -599,7 +609,7 @@ class Channel(models.Model):
         return action
 
     def action_view_ratings(self):
-        action = self.env.ref('website_slides.rating_rating_action_slide_channel').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("website_slides.rating_rating_action_slide_channel")
         action['name'] = _('Rating of %s') % (self.name)
         action['domain'] = [('res_id', 'in', self.ids)]
         return action

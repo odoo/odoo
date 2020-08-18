@@ -9,7 +9,7 @@ class StockQuantityHistory(models.TransientModel):
     def open_at_date(self):
         active_model = self.env.context.get('active_model')
         if active_model == 'stock.valuation.layer':
-            action = self.env.ref('stock_account.stock_valuation_layer_action').read()[0]
+            action = self.env["ir.actions.actions"]._for_xml_id("stock_account.stock_valuation_layer_action")
             action['domain'] = [('create_date', '<=', self.inventory_datetime)]
             action['display_name'] = str(self.inventory_datetime)
             return action

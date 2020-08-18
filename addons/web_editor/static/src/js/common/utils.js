@@ -187,6 +187,33 @@ function _getCSSVariableValue(key, htmlStyle) {
     // double-quotes when reading them through getPropertyValue...
     return value.replace(/"/g, "'");
 }
+/**
+ * Normalize a color in case it is a variable name so it can be used outside of
+ * css.
+ *
+ * @param {string} color the color to normalize into a css value
+ * @returns {string} the normalized color
+ */
+function _normalizeColor(color) {
+    if (ColorpickerWidget.isCSSColor(color)) {
+        return color;
+    }
+    return _getCSSVariableValue(color);
+}
+/**
+ * Parse an element's background-image's url.
+ *
+ * @param {string} string a css value in the form 'url("...")'
+ * @returns {string|false} the src of the image or false if not parsable
+ */
+function _getBgImageURL(el) {
+    const string = $(el).css('background-image');
+    const match = string.match(/^url\((['"])(.*?)\1\)$/);
+    if (!match) {
+        return '';
+    }
+    return match[2];
+}
 
 return {
     CSS_SHORTHANDS: CSS_SHORTHANDS,
@@ -199,5 +226,7 @@ return {
     isColorCombinationName: _isColorCombinationName,
     computeColorClasses: _computeColorClasses,
     getCSSVariableValue: _getCSSVariableValue,
+    normalizeColor: _normalizeColor,
+    getBgImageURL: _getBgImageURL,
 };
 });

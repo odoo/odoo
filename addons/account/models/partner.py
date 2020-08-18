@@ -476,7 +476,7 @@ class ResPartner(models.Model):
 
     def action_view_partner_invoices(self):
         self.ensure_one()
-        action = self.env.ref('account.action_move_out_invoice_type').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("account.action_move_out_invoice_type")
         action['domain'] = [
             ('move_type', 'in', ('out_invoice', 'out_refund')),
             ('partner_id', 'child_of', self.id),

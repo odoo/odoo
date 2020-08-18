@@ -5,10 +5,11 @@ const components = {
     Message: require('mail/static/src/components/message/message.js'),
 };
 const {
-    afterEach: utilsAfterEach,
+    afterEach,
     afterNextRender,
-    beforeEach: utilsBeforeEach,
-    start: utilsStart,
+    beforeEach,
+    createRootComponent,
+    start,
 } = require('mail/static/src/utils/test_utils.js');
 
 const Bus = require('web.Bus');
@@ -18,20 +19,18 @@ QUnit.module('components', {}, function () {
 QUnit.module('message', {}, function () {
 QUnit.module('message_tests.js', {
     beforeEach() {
-        utilsBeforeEach(this);
+        beforeEach(this);
 
         this.createMessageComponent = async (message, otherProps) => {
-            const MessageComponent = components.Message;
-            MessageComponent.env = this.env;
-            this.component = new MessageComponent(null, Object.assign({
-                messageLocalId: message.localId,
-            }, otherProps));
-            delete MessageComponent.env;
-            await this.component.mount(this.widget.el);
+            const props = Object.assign({ messageLocalId: message.localId }, otherProps);
+            await createRootComponent(this, components.Message, {
+                props,
+                target: this.widget.el,
+            });
         };
 
         this.start = async params => {
-            let { env, widget } = await utilsStart(Object.assign({}, params, {
+            const { env, widget } = await start(Object.assign({}, params, {
                 data: this.data,
             }));
             this.env = env;
@@ -39,17 +38,7 @@ QUnit.module('message_tests.js', {
         };
     },
     afterEach() {
-        utilsAfterEach(this);
-        if (this.component) {
-            // The component must be destroyed before the widget, because the
-            // widget might destroy the models before destroying the component,
-            // and the Message component is relying on messaging.
-            this.component.destroy();
-        }
-        if (this.widget) {
-            this.widget.destroy();
-        }
-        this.env = undefined;
+        afterEach(this);
     },
 });
 
@@ -270,7 +259,6 @@ QUnit.test('No Price Available', async function (assert) {
         async mockRPC(route, args) {
             if (args.method === 'cancel_letter' && args.model === 'mail.message' && args.args[0][0] === 10) {
                 assert.step(args.method);
-                return;
             }
             return this._super(...arguments);
         },
@@ -357,10 +345,6 @@ QUnit.test('Credit Error', async function (assert) {
         async mockRPC(route, args) {
             if (args.method === 'send_letter' && args.model === 'mail.message' && args.args[0][0] === 10) {
                 assert.step(args.method);
-                return;
-            }
-            if (args.method === 'get_credits_url') {
-                return 'credits_url';
             }
             return this._super(...arguments);
         },
@@ -452,10 +436,6 @@ QUnit.test('Trial Error', async function (assert) {
         async mockRPC(route, args) {
             if (args.method === 'send_letter' && args.model === 'mail.message' && args.args[0][0] === 10) {
                 assert.step(args.method);
-                return;
-            }
-            if (args.method === 'get_credits_url') {
-                return 'credits_url_trial';
             }
             return this._super(...arguments);
         },
@@ -611,8 +591,24 @@ QUnit.test('Format Error', async function (assert) {
 });
 
 QUnit.test('Missing Required Fields', async function (assert) {
-    assert.expect(9);
+    assert.expect(8);
 
+    this.data['mail.message'].records.push({
+        id: 10, // random unique id, useful to link letter and notification
+        message_type: 'snailmail',
+        res_id: 20, // non 0 id, necessary to fetch failure at init
+        model: 'res.partner', // not mail.compose.message, necessary to fetch failure at init
+    });
+    this.data['mail.notification'].records.push({
+        failure_type: 'sn_fields',
+        mail_message_id: 10,
+        notification_status: 'exception',
+        notification_type: 'snail',
+    });
+    this.data['snailmail.letter'].records.push({
+        id: 22, // random unique id, will be asserted in the test
+        message_id: 10, // id of related message
+    });
     const bus = new Bus();
     bus.on('do-action', null, payload => {
         assert.step('do_action');
@@ -623,41 +619,19 @@ QUnit.test('Missing Required Fields', async function (assert) {
         );
         assert.strictEqual(
             payload.options.additional_context.default_letter_id,
-            22, // should be the same as the id returned by search
+            22,
             "action should have correct letter id"
         );
     });
 
     await this.start({
         env: { bus },
-        async mockRPC(route, args) {
-            if (args.model === 'snailmail.letter' && args.method === 'search') {
-                assert.step('search');
-                return [22]; // should be the same as the id given to the action
-            }
-            return this._super(...arguments);
-        },
     });
     const threadViewer = this.env.models['mail.thread_viewer'].create({
-        thread: [['create', {
-            id: 11,
-            model: 'mail.channel',
-        }]],
+        thread: [['insert', { id: 20, model: 'res.partner' }]],
     });
-    const message = this.env.models['mail.message'].create({
-        id: 10,
-        message_type: 'snailmail',
-        notifications: [['insert', {
-            failure_type: 'sn_fields',
-            id: 11,
-            notification_status: 'exception',
-            notification_type: 'snail',
-        }]],
-        originThread: [['link', threadViewer.thread]]
-    });
-    await this.createMessageComponent(message, {
-        threadViewerLocalId: threadViewer.localId
-    });
+    const message = this.env.models['mail.message'].find(message => message.id === 10);
+    await this.createMessageComponent(message, { threadViewerLocalId: threadViewer.localId });
 
     assert.containsOnce(
         document.body,
@@ -684,8 +658,8 @@ QUnit.test('Missing Required Fields', async function (assert) {
         document.querySelector('.o_Message_notificationIconContainer').click();
     });
     assert.verifySteps(
-        ['search', 'do_action'],
-        "the id of the letter related to the message should be returned by a search and an action should be done to display the missing fields dialog"
+        ['do_action'],
+        "an action should be done to display the missing fields dialog"
     );
 });
 

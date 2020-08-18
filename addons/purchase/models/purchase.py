@@ -555,7 +555,7 @@ class PurchaseOrder(models.Model):
             self.sudo()._read(['invoice_ids'])
             invoices = self.invoice_ids
 
-        action = self.env.ref('account.action_move_in_invoice_type')
+        action = self.env.ref('account.action_move_in_invoice_type').sudo()
         result = action.read()[0]
         # choose the view_mode accordingly
         if len(invoices) > 1:
@@ -619,8 +619,8 @@ class PurchaseOrder(models.Model):
         result['my_to_send'] = po.search_count([('state', '=', 'draft'), ('user_id', '=', self.env.uid)])
         result['all_waiting'] = po.search_count([('state', '=', 'sent'), ('date_order', '>=', fields.Datetime.now())])
         result['my_waiting'] = po.search_count([('state', '=', 'sent'), ('date_order', '>=', fields.Datetime.now()), ('user_id', '=', self.env.uid)])
-        result['all_late'] = po.search_count([('state', '=', 'sent'), ('date_order', '<', fields.Datetime.now())])
-        result['my_late'] = po.search_count([('state', '=', 'sent'), ('date_order', '<', fields.Datetime.now()), ('user_id', '=', self.env.uid)])
+        result['all_late'] = po.search_count([('state', 'in', ['draft', 'sent', 'to approve']), ('date_order', '<', fields.Datetime.now())])
+        result['my_late'] = po.search_count([('state', 'in', ['draft', 'sent', 'to approve']), ('date_order', '<', fields.Datetime.now()), ('user_id', '=', self.env.uid)])
 
         # Calculated values ('avg order value', 'avg days to purchase', and 'total last 7 days') note that 'avg order value' and
         # 'total last 7 days' takes into account exchange rate and current company's currency's precision. Min of currency precision
@@ -687,7 +687,7 @@ class PurchaseOrder(models.Model):
         if confirm_type in ['reminder', 'reception']:
             param = url_encode({
                 'confirm': confirm_type,
-                'confirmed_date': self.date_planned.date(),
+                'confirmed_date': self.date_planned and self.date_planned.date(),
             })
             return self.get_portal_url(query_string='&%s' % param)
         return self.get_portal_url()

@@ -155,6 +155,6 @@ class StockValuationLayerRevaluation(models.TransientModel):
             })],
         }
         account_move = self.env['account.move'].create(move_vals)
-        account_move.post()
+        account_move._post()
 
         return True

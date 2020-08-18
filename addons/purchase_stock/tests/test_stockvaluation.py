@@ -382,7 +382,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         move_form.partner_id = self.partner_id
         move_form.purchase_id = po1
         invoice_po1 = move_form.save()
-        invoice_po1.post()
+        invoice_po1.action_post()
 
         # Receive 10@20 ; create the vendor bill
         po2 = self.env['purchase.order'].create({
@@ -407,7 +407,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         move_form.partner_id = self.partner_id
         move_form.purchase_id = po2
         invoice_po2 = move_form.save()
-        invoice_po2.post()
+        invoice_po2.action_post()
 
         # valuation of product1 should be 300
         self.assertEqual(self.product1.value_svl, 300)
@@ -433,7 +433,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         with move_form.invoice_line_ids.edit(0) as line_form:
             line_form.quantity = 10
         creditnote_po2 = move_form.save()
-        creditnote_po2.post()
+        creditnote_po2.action_post()
 
         # check the anglo saxon entries
         price_diff_entry = self.env['account.move.line'].search([('account_id', '=', self.price_diff_account.id)])
@@ -467,7 +467,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         with move_form.invoice_line_ids.edit(0) as line_form:
             line_form.price_unit = 15.0
         invoice = move_form.save()
-        invoice.post()
+        invoice.action_post()
 
         # Check what was posted in the price difference account
         price_diff_aml = self.env['account.move.line'].search([('account_id','=', self.price_diff_account.id)])
@@ -590,7 +590,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
             })]
         })
 
-        inv.post()
+        inv.action_post()
 
         move_lines = inv.line_ids
         self.assertEqual(len(move_lines), 2)
@@ -734,7 +734,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
             ]
         })
 
-        inv.post()
+        inv.action_post()
 
         for p in patchers:
             p.stop()
@@ -898,7 +898,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
             ]
         })
 
-        inv.post()
+        inv.action_post()
 
         for p in patchers:
             p.stop()
@@ -1074,7 +1074,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
             ]
         })
 
-        inv.post()
+        inv.action_post()
 
         today = date_delivery1
         backorder_picking = self.env['stock.picking'].search([('backorder_id', '=', picking.id)])
@@ -1104,7 +1104,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
             ]
         })
 
-        inv1.post()
+        inv1.action_post()
 
         for p in patchers:
             p.stop()
@@ -1216,7 +1216,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
             line_form.price_unit = 100.0
             line_form.discount = 10.0
         invoice = invoice_form.save()
-        invoice.post()
+        invoice.action_post()
 
         # Check what was posted in the price difference account
         price_diff_aml = self.env['account.move.line'].search([('account_id','=', self.price_diff_account.id)])
@@ -1262,7 +1262,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
             line_form.tax_ids.clear()
             line_form.discount = 10.0
         invoice = invoice_form.save()
-        invoice.post()
+        invoice.action_post()
 
         # Check what was posted in the price difference account
         price_diff_aml = self.env['account.move.line'].search([('account_id', '=', self.price_diff_account.id)])
@@ -1308,7 +1308,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
             line_form.price_unit = 100.0
             line_form.discount = 10.0
         invoice = invoice_form.save()
-        invoice.post()
+        invoice.action_post()
 
         # Check if something was posted in the price difference account
         price_diff_aml = self.env['account.move.line'].search([('account_id','=', self.price_diff_account.id)])

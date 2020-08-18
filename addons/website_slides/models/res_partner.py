@@ -34,7 +34,7 @@ class ResPartner(models.Model):
                 partner.slide_channel_company_count = 0
 
     def action_view_courses(self):
-        action = self.env.ref('website_slides.slide_channel_action_overview').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("website_slides.slide_channel_action_overview")
         action['name'] = _('Followed Courses')
         action['domain'] = ['|', ('partner_ids', 'in', self.ids), ('partner_ids', 'in', self.child_ids.ids)]
         return action

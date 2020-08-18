@@ -1234,15 +1234,14 @@ class ChromeBrowser():
             return m[0]
         return replacer
 
-class HttpCase(TransactionCase):
-    """ Transactional HTTP TestCase with url_open and Chrome headless helpers.
-    """
+
+class HttpCaseCommon(BaseCase):
     registry_test_mode = True
     browser = None
     browser_size = '1366x768'
 
     def __init__(self, methodName='runTest'):
-        super(HttpCase, self).__init__(methodName)
+        super().__init__(methodName)
         # v8 api with correct xmlrpc exception handling.
         self.xmlrpc_url = url_8 = 'http://%s:%d/xmlrpc/2/' % (HOST, odoo.tools.config['http_port'])
         self.xmlrpc_common = xmlrpclib.ServerProxy(url_8 + 'common')
@@ -1250,6 +1249,14 @@ class HttpCase(TransactionCase):
         self.xmlrpc_object = xmlrpclib.ServerProxy(url_8 + 'object')
         cls = type(self)
         cls._logger = logging.getLogger('%s.%s' % (cls.__module__, cls.__name__))
+
+    def setUp(self):
+        super().setUp()
+        if self.registry_test_mode:
+            self.registry.enter_test_mode(self.cr)
+            self.addCleanup(self.registry.leave_test_mode)
+        # setup an url opener helper
+        self.opener = requests.Session()
 
     @classmethod
     def start_browser(cls):
@@ -1263,20 +1270,6 @@ class HttpCase(TransactionCase):
         if cls.browser:
             cls.browser.stop()
             cls.browser = None
-
-    def setUp(self):
-        super(HttpCase, self).setUp()
-        if self.registry_test_mode:
-            self.registry.enter_test_mode(self.cr)
-            self.addCleanup(self.registry.leave_test_mode)
-        # setup a magic session_id that will be rollbacked
-        self.session = odoo.http.root.session_store.new()
-        self.session_id = self.session.sid
-        self.session.db = get_db_name()
-        odoo.http.root.session_store.save(self.session)
-        # setup an url opener helper
-        self.opener = requests.Session()
-        self.opener.cookies['session_id'] = self.session_id
 
     def url_open(self, url, data=None, files=None, timeout=10, headers=None, allow_redirects=True):
         self.env['base'].flush()
@@ -1312,34 +1305,44 @@ class HttpCase(TransactionCase):
         odoo.http.root.session_store.save(self.session)
 
     def authenticate(self, user, password):
-        # stay non-authenticated
-        if user is None:
-            if self.session:
-                odoo.http.root.session_store.delete(self.session)
-            self.browser.delete_cookie('session_id', domain=HOST)
-            return
-
         db = get_db_name()
-        uid = self.registry['res.users'].authenticate(db, user, password, None)
-        env = api.Environment(self.cr, uid, {})
+        if getattr(self, 'session', None):
+            odoo.http.root.session_store.delete(self.session)
 
-        # self.session.authenticate(db, user, password, uid=uid)
-        # OpenERPSession.authenticate accesses the current request, which we
-        # don't have, so reimplement it manually...
-        session = self.session
-
+        self.session = session  = odoo.http.root.session_store.new()
         session.db = db
-        session.uid = uid
-        session.login = user
-        session.session_token = uid and security.compute_session_token(session, env)
-        session.context = dict(env['res.users'].context_get() or {})
-        session.context['uid'] = uid
-        session._fix_lang(session.context)
+
+        if user: # if authenticated
+            uid = self.registry['res.users'].authenticate(db, user, password, {'interactive': False})
+            env = api.Environment(self.cr, uid, {})
+            session.uid = uid
+            session.login = user
+            session.session_token = uid and security.compute_session_token(session, env)
+            session.context = dict(env['res.users'].context_get() or {})
+            session.context['uid'] = uid
+            session._fix_lang(session.context)
 
         odoo.http.root.session_store.save(session)
+        # Reset the opener: turns out when we set cookies['foo'] we're really
+        # setting a cookie on domain='' path='/'.
+        #
+        # But then our friendly neighborhood server might set a cookie for
+        # domain='localhost' path='/' (with the same value) which is considered
+        # a *different* cookie following ours rather than the same.
+        #
+        # When we update our cookie, it's done in-place, so the server-set
+        # cookie is still present and (as it follows ours and is more precise)
+        # very likely to still be used, therefore our session change is ignored.
+        #
+        # An alternative would be to set the cookie to None (unsetting it
+        # completely) or clear-ing session.cookies.
+        self.opener = requests.Session()
+        self.opener.cookies['session_id'] = session.sid
         if self.browser:
             self._logger.info('Setting session cookie in browser')
-            self.browser.set_cookie('session_id', self.session_id, '/', HOST)
+            self.browser.set_cookie('session_id', session.sid, '/', HOST)
+
+        return session
 
     def browser_js(self, url_path, code, ready='', login=None, timeout=60, **kw):
         """ Test js code running in the browser
@@ -1416,6 +1419,16 @@ class HttpCase(TransactionCase):
         # database
         self.env.cache.invalidate()
         return res
+
+
+class HttpCase(HttpCaseCommon, TransactionCase):
+    """ Transactional HTTP TestCase with url_open and Chrome headless helpers.
+    """
+    pass
+
+
+class HttpSavepointCase(HttpCaseCommon, SavepointCase):
+    pass
 
 
 def users(*logins):

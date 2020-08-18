@@ -4,7 +4,9 @@
 from ast import literal_eval
 
 from odoo import api, fields, models
-from pytz import timezone, UTC
+from pytz import timezone, UTC, utc
+from datetime import timedelta
+
 from odoo.tools import format_time
 
 
@@ -45,6 +47,12 @@ class HrEmployeeBase(models.AbstractModel):
         ('to_define', 'To Define')], compute='_compute_presence_state', default='to_define')
     last_activity = fields.Date(compute="_compute_last_activity")
     last_activity_time = fields.Char(compute="_compute_last_activity")
+    hr_icon_display = fields.Selection([
+        ('presence_present', 'Present'),
+        ('presence_absent_active', 'Present but not active'),
+        ('presence_absent', 'Absent'),
+        ('presence_to_define', 'To define'),
+        ('presence_undetermined', 'Undetermined')], compute='_compute_presence_icon')
 
     @api.depends('user_id.im_status')
     def _compute_presence_state(self):
@@ -54,12 +62,14 @@ class HrEmployeeBase(models.AbstractModel):
         """
         # Check on login
         check_login = literal_eval(self.env['ir.config_parameter'].sudo().get_param('hr.hr_presence_control_login', 'False'))
+        employee_to_check_working = self.filtered(lambda e: e.user_id.im_status)
+        working_now_list = employee_to_check_working._get_employee_working_now()
         for employee in self:
             state = 'to_define'
             if check_login:
-                if employee.user_id.im_status == 'online':
+                if employee.user_id.im_status == 'online' or employee.last_activity:
                     state = 'present'
-                elif employee.user_id.im_status == 'offline':
+                elif employee.user_id.im_status == 'offline' and employee.id not in working_now_list:
                     state = 'absent'
             employee.hr_presence_state = state
 
@@ -114,3 +124,54 @@ class HrEmployeeBase(models.AbstractModel):
     def _compute_parent_id(self):
         for employee in self.filtered('department_id.manager_id'):
             employee.parent_id = employee.department_id.manager_id
+
+    @api.depends('resource_calendar_id', 'hr_presence_state')
+    def _compute_presence_icon(self):
+        """
+        This method compute the state defining the display icon in the kanban view.
+        It can be overriden to add other possibilities, like time off or attendances recordings.
+        """
+        working_now_list = self._get_employee_working_now()
+        for employee in self:
+            if employee.hr_presence_state == 'present':
+                if employee.id in working_now_list:
+                    icon = 'presence_present'
+                else:
+                    icon = 'presence_absent_active'
+            elif employee.hr_presence_state == 'absent':
+                # employee is not in the working_now_list and he has a user_id
+                icon = 'presence_absent'
+            else:
+                # without attendance, default employee state is 'to_define' without confirmed presence/absence
+                # we need to check why they are not there
+                if employee.user_id:
+                    # Display an orange icon on internal users.
+                    icon = 'presence_to_define'
+                else:
+                    # We don't want non-user employee to have icon.
+                    icon = 'presence_undetermined'
+            employee.hr_icon_display = icon
+
+    @api.model
+    def _get_employee_working_now(self):
+        working_now = []
+        # We loop over all the employee tz and the resource calendar_id to detect working hours in batch.
+        all_employee_tz = self.mapped('tz')
+        for tz in all_employee_tz:
+            employee_ids = self.filtered(lambda e: e.tz == tz)
+            resource_calendar_ids = employee_ids.mapped('resource_calendar_id')
+            for calendar_id in resource_calendar_ids:
+                res_employee_ids = employee_ids.filtered(lambda e: e.resource_calendar_id.id == calendar_id.id)
+                start_dt = fields.Datetime.now()
+                stop_dt = start_dt + timedelta(hours=1)
+                from_datetime = utc.localize(start_dt).astimezone(timezone(tz or 'UTC'))
+                to_datetime = utc.localize(stop_dt).astimezone(timezone(tz or 'UTC'))
+                # Getting work interval of the first is working. Functions called on resource_calendar_id
+                # are waiting for singleton
+                work_interval = res_employee_ids[0].resource_calendar_id._work_intervals(from_datetime, to_datetime)
+                # Employee that is not supposed to work have empty items.
+                if len(work_interval._items) > 0:
+                    # The employees should be working now according to their work schedule
+                    working_now += res_employee_ids.ids
+        return working_now
+

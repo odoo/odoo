@@ -30,6 +30,7 @@ class TestLeadConvert(crm_common.TestLeadConvertCommon):
     @users('user_sales_manager')
     def test_lead_convert_base(self):
         """ Test base method ``convert_opportunity`` or crm.lead model """
+        self.assertFalse(self.contact_2.phone)
         lead = self.lead_1.with_user(self.env.user)
         lead.write({
             'phone': '123456789',
@@ -43,7 +44,7 @@ class TestLeadConvert(crm_common.TestLeadConvertCommon):
         self.assertEqual(lead.partner_id, self.contact_2)
         self.assertEqual(lead.email_from, self.contact_2.email)
         self.assertEqual(lead.mobile, self.contact_2.mobile)
-        self.assertEqual(lead.phone, self.contact_2.phone)
+        self.assertEqual(lead.phone, '123456789')
         self.assertEqual(lead.team_id, self.sales_team_1)
         self.assertEqual(lead.stage_id, self.stage_team1_1)
 
@@ -204,6 +205,27 @@ class TestLeadConvert(crm_common.TestLeadConvertCommon):
         self.assertEqual(self.lead_1.team_id, self.sales_team_1)
         self.assertEqual(self.lead_1.stage_id, self.stage_team1_1)
         self.assertEqual(self.lead_1.partner_id, self.env['res.partner'])
+
+    @users('user_sales_manager')
+    def test_lead_convert_same_partner(self):
+        """ Check that we don't erase lead information
+        with existing partner info if the partner is already set
+        """
+        partner = self.env['res.partner'].create({
+            'name': 'Empty partner',
+        })
+        lead = self.env['crm.lead'].create({
+            'name': 'LEAD',
+            'partner_id': partner.id,
+            'type': 'lead',
+            'email_from': 'demo@test.com',
+            'street': 'my street',
+            'city': 'my city',
+        })
+        lead.convert_opportunity(partner.id)
+        self.assertEqual(lead.email_from, 'demo@test.com', 'Email From should be preserved during conversion')
+        self.assertEqual(lead.street, 'my street', 'Street should be preserved during conversion')
+        self.assertEqual(lead.city, 'my city', 'City should be preserved during conversion')
 
     @users('user_sales_manager')
     def test_lead_merge(self):
@@ -481,6 +503,29 @@ class TestLeadConvertMass(crm_common.TestLeadConvertMassCommon):
         for lead in lead_1_final | lead_w_partner_final:
             self.assertTrue(lead.active)
             self.assertEqual(lead.type, 'opportunity')
+
+    def test_mass_convert_find_existing(self):
+        """ Check that we don't find a wrong partner
+            that have similar name during mass conversion
+        """
+        wrong_partner = self.env['res.partner'].create({
+            'name': 'casa depapel',
+            'street': "wrong street"
+        })
+
+        lead = self.env['crm.lead'].create({'name': 'Asa Depape'})
+        mass_convert = self.env['crm.lead2opportunity.partner.mass'].with_context({
+            'active_model': 'crm.lead',
+            'active_ids': lead.ids,
+            'active_id': lead.ids[0]
+        }).create({
+            'deduplicate': False,
+            'action': 'each_exist_or_create',
+            'name': 'convert',
+        })
+        mass_convert.action_mass_convert()
+
+        self.assertNotEqual(lead.partner_id, wrong_partner, "Partner Id should not match the wrong contact")
 
     def test_mass_convert_w_salesmen(self):
         # reset some assigned users to test salesmen assign

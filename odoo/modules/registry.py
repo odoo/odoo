@@ -114,6 +114,7 @@ class Registry(Mapping):
         self._fields_by_model = None
         self._ordinary_tables = None
         self._constraint_queue = deque()
+        self.__cache = LRU(8192)
 
         # modules fully loaded (maintained during init phase by `loading` module)
         self._init_modules = set()
@@ -218,6 +219,7 @@ class Registry(Mapping):
         """
         from .. import models
 
+        self.clear_caches()
         lazy_property.reset_all(self)
 
         # Instantiate registered classes (via the MetaModel automatic discovery
@@ -234,6 +236,7 @@ class Registry(Mapping):
         """ Complete the setup of models.
             This must be called after loading modules and before using the ORM.
         """
+        self.clear_caches()
         lazy_property.reset_all(self)
         self.registry_invalidated = True
         env = odoo.api.Environment(cr, SUPERUSER_ID, {})
@@ -333,20 +336,27 @@ class Registry(Mapping):
     def post_constraint(self, func, *args, **kwargs):
         """ Call the given function, and delay it if it fails during an upgrade. """
         try:
-            func(*args, **kwargs)
+            if (func, args, kwargs) not in self._constraint_queue:
+                # Module A may try to apply a constraint and fail but another module B inheriting
+                # from Module A may try to reapply the same constraint and succeed, however the
+                # constraint would already be in the _constraint_queue and would be executed again
+                # at the end of the registry cycle, this would fail (already-existing constraint)
+                # and generate an error, therefore a constraint should only be applied if it's
+                # not already marked as "to be applied".
+                func(*args, **kwargs)
         except Exception as e:
             if self._is_install:
                 _schema.error(*e.args)
             else:
                 _schema.info(*e.args)
-                self._constraint_queue.append(partial(func, *args, **kwargs))
+                self._constraint_queue.append((func, args, kwargs))
 
     def finalize_constraints(self):
         """ Call the delayed functions from above. """
         while self._constraint_queue:
-            func = self._constraint_queue.popleft()
+            func, args, kwargs = self._constraint_queue.popleft()
             try:
-                func()
+                func(*args, **kwargs)
             except Exception as e:
                 _schema.error(*e.args)
 
@@ -497,15 +507,9 @@ class Registry(Mapping):
             for table in missing_tables:
                 _logger.error("Model %s has no table.", table2model[table])
 
-    @lazy_property
-    def cache(self):
-        """ A cache for model methods. """
-        # this lazy_property is automatically reset by lazy_property.reset_all()
-        return LRU(8192)
-
     def _clear_cache(self):
         """ Clear the cache and mark it as invalidated. """
-        self.cache.clear()
+        self.__cache.clear()
         self.cache_invalidated = True
 
     def clear_caches(self):
@@ -611,7 +615,7 @@ class Registry(Mapping):
                 self.setup_models(cr)
                 self.registry_invalidated = False
         if self.cache_invalidated:
-            self.cache.clear()
+            self.__cache.clear()
             self.cache_invalidated = False
 
     @contextmanager

@@ -4,7 +4,7 @@
             <field name="name">crm.lead.form</field>
             <field name="model">crm.lead</field>
             <field name="arch" type="xml">
-                <form class="o_lead_opportunity_form">
+                <form class="o_lead_opportunity_form" js_class="crm_form">
                     <header>
                         <button name="action_set_won_rainbowman" string="Mark Won"
                             type="object" class="oe_highlight"
@@ -22,7 +22,7 @@
                             domain="['|', ('team_id', '=', team_id), ('team_id', '=', False)]"
                             attrs="{'invisible': ['|', ('active', '=', False), ('type', '=', 'lead')]}"/>
                     </header>
-                    <div class="text-center alert alert-primary" role="alert" attrs="{'invisible': ['|', ('ribbon_message', '=', False), ('ribbon_message', '=', '')]}">
+                    <div class="text-center alert alert-primary oe_edit_only" role="alert" attrs="{'invisible': ['|', ('ribbon_message', '=', False), ('ribbon_message', '=', '')]}">
                         <field name="ribbon_message"/>
                     </div>
                     <sheet>
@@ -30,7 +30,7 @@
                         <div class="oe_button_box" name="button_box">
                             <button name="action_schedule_meeting" type="object"
                                 class="oe_stat_button" icon="fa-calendar"
-                                context="{'partner_id': partner_id, 'search_default_opportunity_id': id}"
+                                context="{'partner_id': partner_id}"
                                 attrs="{'invisible': [('type', '=', 'lead')]}">
                                 <div class="o_stat_info">
                                     <field name="meeting_count" class="o_stat_value"/>
@@ -45,12 +45,25 @@
                             <label for="name" class="oe_edit_only" string="Lead" attrs="{'invisible': [('type', '=', 'opportunity')]}"/>
                             <label for="name" class="oe_edit_only" attrs="{'invisible': [('type', '=', 'lead')]}"/>
                             <h1><field name="name" placeholder="e.g. Product Pricing"/></h1>
-                            <h2 class="o_row row no-gutters d-flex align-items-end">
+                            <h2 class="o_row no-gutters align-items-end">
                                 <div class="col" attrs="{'invisible': [('type', '=', 'lead')]}">
-                                    <label for="planned_revenue" class="oe_edit_only" />
+                                    <label for="expected_revenue" class="oe_edit_only" />
                                     <div class="o_row">
                                         <field name="company_currency" invisible="1"/>
-                                        <field name="planned_revenue" class="oe_inline" widget='monetary' options="{'currency_field': 'company_currency'}"/>
+                                        <field name="expected_revenue" class="oe_inline" widget='monetary' options="{'currency_field': 'company_currency'}"/>
+                                        <span class="oe_grey p-2" groups="crm.group_use_recurring_revenues"> + </span>
+                                        <span class="oe_grey p-2" groups="!crm.group_use_recurring_revenues"> at </span>
+                                    </div>
+                                </div>
+                                <div class="col" attrs="{'invisible': [('type', '=', 'lead')]}" groups="crm.group_use_recurring_revenues">
+                                    <div class="o_row">
+                                        <field name="recurring_revenue" class="pr-2 oe_inline" widget="monetary" options="{'currency_field': 'company_currency'}"/>
+                                    </div>
+                                </div>
+                                <div class="col" attrs="{'invisible': [('type', '=', 'lead')]}" groups="crm.group_use_recurring_revenues">
+                                    <div class="o_row">
+                                        <field name="recurring_plan" class="oe_inline" placeholder="E.g. Monthly"
+                                               attrs="{'required': [('recurring_revenue', '!=', 0)]}" options="{'no_create': True, 'no_open': True}"/>
                                         <span class="oe_grey p-2"> at </span>
                                     </div>
                                 </div>
@@ -62,7 +75,7 @@
                                             <i class="fa fa-gear" role="img" title="Switch to automatic probability" aria-label="Switch to automatic probability"></i>
                                         </button>
                                         <small class="oe_grey h6 mb0" attrs="{'invisible': [('is_automated_probability', '=', True)]}">
-                                            <field class="mb0" name="automated_probability"/> %% (Estimated by Odoo)
+                                            <field class="mb0" name="automated_probability"/> %%
                                         </small>
                                     </div>
                                     <div id="probability" class="o_row d-flex">
@@ -317,13 +330,13 @@
                     <field name="partner_name" optional="hide"/>
                     <field name="email_from" optional="show"/>
                     <field name="phone" optional="show" class="o_force_ltr"/>
+                    <field name="company_id" groups="base.group_multi_company" optional="show"/>
                     <field name="city" optional="show"/>
                     <field name="state_id" optional="hide"/>
                     <field name="country_id" optional="show"/>
                     <field name="partner_id" invisible="1"/>
                     <field name="user_id" optional="show"  widget="many2one_avatar_user"/>
                     <field name="team_id" optional="show"/>
-                    <field name="company_id" groups="base.group_multi_company" optional="show"/>
                     <field name="active" invisible="1"/>
                     <field name="probability" invisible="1"/>
                     <field name="campaign_id" optional="hide"/>
@@ -342,7 +355,7 @@
             <field name="model">crm.lead</field>
             <field name="priority" eval="100"/>
             <field name="arch" type="xml">
-                <kanban class="o_kanban_mobile" archivable="false" sample="1">
+                <kanban class="o_kanban_mobile" archivable="false" js_class="crm_kanban" sample="1">
                     <field name="name"/>
                     <field name="contact_name"/>
                     <field name="priority"/>
@@ -381,13 +394,13 @@
             </field>
         </record>
 
-        <record  id="crm_case_calendar_view_leads" model="ir.ui.view">
+        <record id="crm_case_calendar_view_leads" model="ir.ui.view">
             <field name="name">crm.lead.calendar.lead</field>
             <field name="model">crm.lead</field>
             <field name="priority" eval="2"/>
             <field name="arch" type="xml">
                 <calendar string="Leads Generation" create="0" mode="month" date_start="activity_date_deadline" color="user_id" hide_time="true" event_limit="5">
-                    <field name="planned_revenue"/>
+                    <field name="expected_revenue"/>
                     <field name="partner_id" avatar_field="image_128"/>
                     <field name="user_id" filters="1" invisible="1"/>
                 </calendar>
@@ -405,10 +418,15 @@
                         <field name="name" placeholder="e.g. Product Pricing" />
                         <field name="email_from" string="Email" />
                         <field name="phone" string="Phone" />
-                        <label for="planned_revenue"/>
+                        <label for="expected_revenue"/>
                         <div class="o_row">
-                            <field name="planned_revenue" class="oe_inline mr-5" widget="monetary" options="{'currency_field': 'company_currency'}"/>
+                            <field name="expected_revenue" class="oe_inline mr-5" widget="monetary" options="{'currency_field': 'company_currency'}"/>
                             <field name="priority" class="oe_inline" nolabel="1" widget="priority"/>
+                        </div>
+                        <div class="o_row">
+                            <field name="recurring_revenue" class="oe_inline pr-4" widget="monetary" options="{'currency_field': 'company_currency'}"/>
+                            <field name="recurring_plan" class="oe_inline" placeholder="E.g. Monthly"
+                                   attrs="{'required': [('recurring_revenue', '!=', 0)]}" options="{'no_create': True, 'no_open': True}"/>
                         </div>
                         <field name="company_currency" invisible="1"/>
                         <field name="company_id" invisible="1"/>
@@ -441,7 +459,7 @@
                             <img t-att-src="activity_image('res.users', 'image_128', record.user_id.raw_value)" t-att-title="record.user_id.value" t-att-alt="record.user_id.value"/>
                             <div>
                                 <field name="name" display="full"/>
-                                <field name="planned_revenue" widget="monetary" display="full" muted="1"/>
+                                <field name="expected_revenue" widget="monetary" display="full" muted="1"/>
                             </div>
                         </div>
                     </templates>
@@ -459,7 +477,7 @@
                     <field name="stage_id" options='{"group_by_tooltip": {"requirements": "Description"}}'/>
                     <field name="color"/>
                     <field name="priority"/>
-                    <field name="planned_revenue"/>
+                    <field name="expected_revenue"/>
                     <field name="kanban_state"/>
                     <field name="activity_date_deadline"/>
                     <field name="user_email"/>
@@ -470,7 +488,7 @@
                     <field name="company_currency"/>
                     <field name="activity_state" />
                     <field name="activity_ids" />
-                    <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}' sum_field="planned_revenue" help="This bar allows to filter the opportunities based on scheduled activities."/>
+                    <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}' sum_field="expected_revenue" help="This bar allows to filter the opportunities based on scheduled activities."/>
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="#{!selection_mode ? kanban_color(record.color.raw_value) : ''} oe_kanban_global_click">
@@ -490,10 +508,16 @@
                                         <strong><field name="name"/></strong>
                                     </div>
                                     <div class="o_kanban_record_subtitle">
-                                        <t t-if="record.planned_revenue.raw_value">
-                                            <field name="planned_revenue" widget="monetary" options="{'currency_field': 'company_currency'}"/>
-                                            <span t-if="record.partner_id.value"> - </span>
+                                        <t t-if="record.expected_revenue.raw_value">
+                                            <field name="expected_revenue" widget="monetary" options="{'currency_field': 'company_currency'}"/>
+                                            <span t-if="record.recurring_revenue and record.recurring_revenue.raw_value"> + </span>
                                         </t>
+                                        <t t-if="record.recurring_revenue and record.recurring_revenue.raw_value">
+                                            <field name="recurring_revenue" widget="monetary" options="{'currency_field': 'company_currency'}"/>
+                                            <field name="recurring_plan"/>
+                                        </t>
+                                    </div>
+                                    <div>
                                         <span t-if="record.partner_id.value" t-esc="record.partner_id.value"></span>
                                     </div>
                                     <div>
@@ -631,6 +655,7 @@
                     <field name="contact_name" optional="show"/>
                     <field name="email_from"/>
                     <field name="phone" class="o_force_ltr"/>
+                    <field name="company_id" groups="base.group_multi_company" optional="show"/>
                     <field name="city" optional="hide"/>
                     <field name="state_id" optional="hide"/>
                     <field name="country_id" optional="hide"/>
@@ -644,11 +669,13 @@
                     <field name="medium_id" optional="hide"/>
                     <field name="source_id" optional="hide"/>
                     <field name="company_currency" invisible="1"/>
-                    <field name="planned_revenue" sum="Expected Revenues" optional="show" widget="monetary" options="{'currency_field': 'company_currency'}"/>
+                    <field name="expected_revenue" sum="Expected Revenues" optional="show" widget="monetary" options="{'currency_field': 'company_currency'}"/>
+                    <field name="recurring_revenue_monthly" sum="Expected MRR" optional="show" widget="monetary" options="{'currency_field': 'company_currency'}"/>
+                    <field name="recurring_revenue" sum="Recurring Revenue" optional="hide" widget="monetary" options="{'currency_field': 'company_currency'}"/>
+                    <field name="recurring_plan" optional="hide"/>
                     <field name="stage_id" optional="show" decoration-bf="1"/>
                     <field name="active" invisible="1"/>
                     <field name="probability" optional="hide"/>
-                    <field name="company_id" groups="base.group_multi_company" optional="show"/>
                     <field name="tag_ids" optional="hide" widget="many2many_tags" options="{'color_field': 'color'}"/>
                     <field name="referred" invisible="1"/>
                     <field name="message_needaction" invisible="1"/>
@@ -716,7 +743,7 @@
             <field name="name">crm.lead.view.graph</field>
             <field name="model">crm.lead</field>
             <field name="arch" type="xml">
-                <graph string="Opportunities">
+                <graph string="Opportunities" sample="1">
                     <field name="stage_id" type="col"/>
                     <field name="user_id" type="row"/>
                 </graph>
@@ -730,7 +757,8 @@
                 <pivot string="Pipeline Analysis">
                     <field name="create_date" interval="month" type="row"/>
                     <field name="stage_id" type="col"/>
-                    <field name="planned_revenue" type="measure"/>
+                    <field name="expected_revenue" type="measure"/>
+                    <field name="recurring_revenue_monthly" type="measure"/>
                     <field name="color" invisible="1"/>
                 </pivot>
             </field>
@@ -887,7 +915,7 @@ if record:
             <field name="res_model">crm.lead</field>
             <field name="view_mode">tree,kanban,graph,pivot,calendar,form,activity</field>
             <field name="view_id" ref="crm_lead_view_list_activities"/>
-            <field name="domain">[('type','=','opportunity'), ('activity_ids','!=',False)]</field>
+            <field name="domain">[('activity_ids','!=',False)]</field>
             <field name="search_view_id" ref="crm.view_crm_case_my_activities_filter"/>
             <field name="context">{'default_type': 'opportunity',
                     'search_default_assigned_to_me': 1}
@@ -953,6 +981,7 @@ if record:
             <field name="name">Crm: My Pipeline</field>
             <field name="model_id" ref="crm.model_crm_team"/>
             <field name="state">code</field>
+            <field name="groups_id"  eval="[(4, ref('base.group_user'))]"/>
             <field name="code">action = model.action_your_pipeline()</field>
         </record>
 

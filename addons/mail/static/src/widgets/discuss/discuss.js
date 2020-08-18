@@ -306,7 +306,7 @@ const DiscussWidget = AbstractAction.extend({
      * @private
      */
     _onClickMarkAllAsRead() {
-        this.env.models['mail.message'].markAllAsRead({ domain: this.domain });
+        this.env.models['mail.message'].markAllAsRead(this.domain);
     },
     /**
      * @private

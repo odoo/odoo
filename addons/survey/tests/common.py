@@ -167,7 +167,7 @@ class SurveyCase(common.SavepointCase):
         return self.opener.post(url=url, json={'params': post_data})
 
     def _find_csrf_token(self, text):
-        csrf_token_re = re.compile("(input.+csrf_token.+value=\")([_a-zA-Z0-9]{51})", re.MULTILINE)
+        csrf_token_re = re.compile("(input.+csrf_token.+value=\")([a-f0-9]{40}o[0-9]*)", re.MULTILINE)
         return csrf_token_re.search(text).groups()[1]
 
     def _prepare_post_data(self, question, answers, post_data):

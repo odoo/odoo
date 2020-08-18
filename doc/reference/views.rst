@@ -97,16 +97,20 @@ an impact on all view types.
 
   Disable/enable record duplication on the view through the **Action** dropdown.
 
-* ``decoration-$`` (``list`` & ``gantt``)
+* ``decoration-{$name}`` (``list`` & ``gantt``)
 
   Define a conditional display of a record in the style of a row's text based on the corresponding
   record's attributes.
 
   Values are Python expressions. For each record, the expression is evaluated
-  with the record's attributes as context values and, if ``true``, the
-  corresponding style is applied to the row. Other context values are
-  ``uid`` (the id of the current user) and ``current_date`` (the current date
-  as a string of the form ``YYYY-MM-DD``).
+  with the record's attributes as context values and if ``true``, the
+  corresponding style is applied to the row. Here are some of the other values
+  available in the context:
+
+  * ``uid``: the id of the current user,
+  * ``today``: the current local date as a string of the form ``YYYY-MM-DD``,
+  * ``now``: same as ``today`` with the addition of the current time.
+    This value is formatted as ``YYYY-MM-DD hh:mm:ss``.
 
   .. code-block:: xml
 
@@ -121,7 +125,7 @@ an impact on all view types.
      ``info``, ``warning``, ``danger`` and ``secondary`` displays. The list view supports ``bf``,
      ``it``, ``success``, ``info``, ``warning``, ``danger``, ``muted`` and ``primary`` displays.
 
-* ``sample`` (``kanban`` & ``list`` & ``gantt``)
+* ``sample`` (``kanban`` & ``list`` & ``gantt`` & ``graph`` & ``pivot`` & ``cohort`` & ``dashboard``)
 
   Populate the view with a set of sample records if none are found for the current model.
   This attribute is false by default.
@@ -371,7 +375,7 @@ Possible children of the view element are:
 Calendar
 --------
 
-Calendar views display records as events in a daily, weekly or monthly
+Calendar views display records as events in a daily, weekly, monthly or yearly
 calendar. Their root element is ``<calendar>``. Available attributes on the
 calendar view are:
 
@@ -406,7 +410,10 @@ calendar view are:
     event is flagged as day-long (and duration is irrelevant)
 ``mode``
     Default display mode when loading the calendar.
-    Possible attributes are: ``day``, ``week``, ``month``
+    Possible attributes are: ``day``, ``week``, ``month``, ``year``
+``scales``
+    Comma-separated list of scales to provide. By default, all scales are
+    available. See mode for possible scale values.
 
 ``<field>``
   declares fields to aggregate or to use in kanban *logic*. If the field is
@@ -930,9 +937,13 @@ take the following attributes:
 
     Values are Python expressions. For each record, the expression is evaluated
     with the record's attributes as context values and if ``true``, the
-    corresponding style is applied to the row. Other context values are
-    ``uid`` (the id of the current user) and ``current_date`` (the current date
-    as a string of the form ``yyyy-MM-dd``).
+    corresponding style is applied to the row. Here are some of the other values
+    available in the context:
+
+    * ``uid``: the id of the current user,
+    * ``today``: the current local date as a string of the form ``YYYY-MM-DD``,
+    * ``now``: same as ``today`` with the addition of the current time.
+      This value is formatted as ``YYYY-MM-DD hh:mm:ss``.
 
     ``{$name}`` can be one of the following `bootstrap contextual color`_ (``danger``,
     ``info``, ``secondary``, ``success`` or ``warning``).
@@ -2027,6 +2038,8 @@ Possible children elements of the search view are:
 
   A domain might be used to express a dependency on another field (with select="one")
   of the search panel. Consider
+  /!\ This attribute is incompatible with a select="one" with enabled counters; if a select="multi"
+  has a `domain` attribute, all select="one" will have their counters disabled.
 
   .. code-block:: xml
 

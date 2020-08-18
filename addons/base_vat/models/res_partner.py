@@ -223,26 +223,6 @@ class ResPartner(models.Model):
         checksum = extra + sum((8-i) * int(x) for i, x in enumerate(vat[:7]))
         return 'WABCDEFGHIJKLMNOPQRSTUV'[checksum % 23]
 
-    def check_vat_co(self, rut):
-        '''
-        Check Colombian RUT number.
-        Method copied from vatnumber 1.2 lib https://code.google.com/archive/p/vatnumber/
-        '''
-        if len(rut) != 10:
-            return False
-        try:
-            int(rut)
-        except ValueError:
-            return False
-        nums = [3, 7, 13, 17, 19, 23, 29, 37, 41, 43, 47, 53, 59, 67, 71]
-        sum = 0
-        for i in range(len(rut) - 2, -1, -1):
-            sum += int(rut[i]) * nums[len(rut) - 2 - i]
-        if sum % 11 > 1:
-            return int(rut[-1]) == 11 - (sum % 11)
-        else:
-            return int(rut[-1]) == sum % 11
-
     def check_vat_ie(self, vat):
         """ Temporary Ireland VAT validation to support the new format
         introduced in January 2013 in Ireland, until upstream is fixed.
@@ -488,6 +468,10 @@ class ResPartner(models.Model):
             ]
             return any(re.compile(rx).match(vat) for rx in all_gstin_re)
         return False
+
+    def format_vat_ch(self, vat):
+        stdnum_vat_format = getattr(stdnum.util.get_cc_module('ch', 'vat'), 'format', None)
+        return stdnum_vat_format('CH' + vat)[2:] if stdnum_vat_format else vat
 
     def _fix_vat_number(self, vat, country_id):
         code = self.env['res.country'].browse(country_id).code if country_id else False

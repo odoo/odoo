@@ -4,12 +4,13 @@
 {
     'name': 'Website',
     'category': 'Website/Website',
-    'sequence': 7,
+    'sequence': 20,
     'summary': 'Enterprise website builder',
     'website': 'https://www.odoo.com/page/website-builder',
     'version': '1.0',
     'description': "",
     'depends': [
+        'digest',
         'web',
         'web_editor',
         'http_routing',
@@ -23,6 +24,7 @@
         'data/website_visitor_cron.xml',
         'security/website_security.xml',
         'security/ir.model.access.csv',
+        'data/digest_data.xml',
         'views/assets.xml',
         'views/website_templates.xml',
         'views/website_navbar_templates.xml',

@@ -173,7 +173,7 @@ class StockLandedCost(models.Model):
             move_vals['stock_valuation_layer_ids'] = [(6, None, valuation_layer_ids)]
             move = move.create(move_vals)
             cost.write({'state': 'done', 'account_move_id': move.id})
-            move.post()
+            move._post()
 
             if cost.vendor_bill_id and cost.vendor_bill_id.state == 'posted' and cost.company_id.anglo_saxon_accounting:
                 all_amls = cost.vendor_bill_id.line_ids | cost.account_move_id.line_ids
@@ -273,7 +273,7 @@ class StockLandedCost(models.Model):
     def action_view_stock_valuation_layers(self):
         self.ensure_one()
         domain = [('id', 'in', self.stock_valuation_layer_ids.ids)]
-        action = self.env.ref('stock_account.stock_valuation_layer_action').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("stock_account.stock_valuation_layer_action")
         return dict(action, domain=domain)
 
     def _get_targeted_move_ids(self):

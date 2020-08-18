@@ -12,7 +12,7 @@ const viewRegistry = require('web.view_registry');
 
 var _t = core._t;
 
-const GoogleCalendarModel = CalendarModel.extend({
+const GoogleCalendarModel = CalendarModel.include({
 
     /**
      * @override
@@ -23,7 +23,7 @@ const GoogleCalendarModel = CalendarModel.extend({
         try {
             await Promise.race([
                 new Promise(resolve => setTimeout(resolve, 1000)),
-                this._syncCalendar(true)
+                this._syncGoogleCalendar(true)
             ]);
         } catch (error) {
             if (error.event) {
@@ -34,7 +34,7 @@ const GoogleCalendarModel = CalendarModel.extend({
         return _super(...arguments);
     },
 
-    _syncCalendar(shadow = false) {
+    _syncGoogleCalendar(shadow = false) {
         var context = this.getSession().user_context;
         return this._rpc({
             route: '/google_calendar/sync_data',
@@ -47,9 +47,9 @@ const GoogleCalendarModel = CalendarModel.extend({
     },
 })
 
-const GoogleCalendarController = CalendarController.extend({
+const GoogleCalendarController = CalendarController.include({
     custom_events: _.extend({}, CalendarController.prototype.custom_events, {
-        syncCalendar: '_onSyncCalendar',
+        syncGoogleCalendar: '_onGoogleSyncCalendar',
     }),
 
 
@@ -65,10 +65,10 @@ const GoogleCalendarController = CalendarController.extend({
      * @private
      * @returns {OdooEvent} event
      */
-    _onSyncCalendar: function (event) {
+    _onGoogleSyncCalendar: function (event) {
         var self = this;
 
-        return this.model._syncCalendar().then(function (o) {
+        return this.model._syncGoogleCalendar().then(function (o) {
             if (o.status === "need_auth") {
                 Dialog.alert(self, _t("You will be redirected to Google to authorize access to your calendar!"), {
                     confirm_callback: function() {
@@ -96,9 +96,9 @@ const GoogleCalendarController = CalendarController.extend({
     }
 });
 
-const GoogleCalendarRenderer = CalendarRenderer.extend({
+const GoogleCalendarRenderer = CalendarRenderer.include({
     events: _.extend({}, CalendarRenderer.prototype.events, {
-        'click .o_google_sync_button': '_onSyncCalendar',
+        'click .o_google_sync_button': '_onGoogleSyncCalendar',
     }),
 
     //--------------------------------------------------------------------------
@@ -133,11 +133,11 @@ const GoogleCalendarRenderer = CalendarRenderer.extend({
      *
      * @private
      */
-    _onSyncCalendar: function () {
+    _onGoogleSyncCalendar: function () {
         var self = this;
         var context = this.getSession().user_context;
         this.$googleButton.prop('disabled', true);
-        this.trigger_up('syncCalendar', {
+        this.trigger_up('syncGoogleCalendar', {
             on_always: function () {
                 self.$googleButton.prop('disabled', false);
             },
@@ -145,18 +145,7 @@ const GoogleCalendarRenderer = CalendarRenderer.extend({
     },
 });
 
-var GoogleCalendarView = CalendarView.extend({
-    config: _.extend({}, CalendarView.prototype.config, {
-        Controller: GoogleCalendarController,
-        Model: GoogleCalendarModel,
-        Renderer: GoogleCalendarRenderer,
-    }),
-});
-
-viewRegistry.add('google_sync_calendar', GoogleCalendarView);
-
 return {
-    GoogleCalendarView,
     GoogleCalendarController,
     GoogleCalendarModel,
     GoogleCalendarRenderer,

@@ -89,8 +89,8 @@ QUnit.module('basic_fields', {
                     qux: false,
                     selection: 'done',
                 },
-                {id: 3, bar: true, foo: "gnap", int_field: 80, qux: -3.89859, m2o: 1, m2m: []},
-                {id: 5, bar: false, foo: "blop", int_field: -4, qux: 9.1, m2o: 1, m2m: [1], currency_id: 1}],
+                {id: 3, bar: true, foo: "gnap", int_field: 80, qux: -3.89859},
+                {id: 5, bar: false, foo: "blop", int_field: -4, qux: 9.1, currency_id: 1}],
                 onchanges: {},
             },
             product: {
@@ -117,6 +117,7 @@ QUnit.module('basic_fields', {
             },
             currency: {
                 fields: {
+                    digits: { string: "Digits" },
                     symbol: {string: "Currency Sumbol", type: "char", searchable: true},
                     position: {string: "Currency Position", type: "char", searchable: true},
                 },
@@ -3891,6 +3892,36 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.test('date field: hit enter should update value', async function (assert) {
+        assert.expect(2);
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners"><field name="date"/></form>',
+            res_id: 1,
+            translateParameters: {  // Avoid issues due to localization formats
+                date_format: '%m/%d/%Y',
+            },
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        const year = (new Date()).getFullYear();
+
+        await testUtils.fields.editInput(form.el.querySelector('input[name="date"]'), '01/08');
+        await testUtils.fields.triggerKeydown(form.el.querySelector('input[name="date"]'), 'enter');
+        assert.strictEqual(form.el.querySelector('input[name="date"]').value, '01/08/' + year);
+
+        await testUtils.fields.editInput(form.el.querySelector('input[name="date"]'), '08/01');
+        await testUtils.fields.triggerKeydown(form.el.querySelector('input[name="date"]'), 'enter');
+        assert.strictEqual(form.el.querySelector('input[name="date"]').value, '08/01/' + year);
+
+        form.destroy();
+    });
+
     QUnit.module('FieldDatetime');
 
     QUnit.test('datetime field in form view', async function (assert) {
@@ -4428,7 +4459,7 @@ QUnit.module('basic_fields', {
             { id: 5, datetime: '2017-10-05 04:00:00' }, // - 3 days
             { id: 6, datetime: '2018-02-08 04:00:00' }, // + 4 months (diff >= 100 days)
             { id: 7, datetime: '2017-06-08 04:00:00' }, // - 4 months (diff >= 100 days)
-            { id: 6, datetime: false },
+            { id: 8, datetime: false },
         ];
 
         const list = await createView({

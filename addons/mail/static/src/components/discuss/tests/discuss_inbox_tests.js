@@ -2,23 +2,24 @@ odoo.define('mail/static/src/components/discuss/tests/discuss_inbox_tests.js', f
 'use strict';
 
 const {
-    afterEach: utilsAfterEach,
+    afterEach,
     afterNextRender,
-    beforeEach: utilsBeforeEach,
+    beforeEach,
     nextAnimationFrame,
-    start: utilsStart,
+    start,
 } = require('mail/static/src/utils/test_utils.js');
 
+const Bus = require('web.Bus');
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
 QUnit.module('discuss', {}, function () {
 QUnit.module('discuss_inbox_tests.js', {
     beforeEach() {
-        utilsBeforeEach(this);
+        beforeEach(this);
 
         this.start = async params => {
-            let { env, widget } = await utilsStart(Object.assign({}, params, {
+            const { env, widget } = await start(Object.assign({}, params, {
                 autoOpenDiscuss: true,
                 data: this.data,
                 hasDiscuss: true,
@@ -28,33 +29,26 @@ QUnit.module('discuss_inbox_tests.js', {
         };
     },
     afterEach() {
-        if (this.widget) {
-            this.widget.destroy();
-        }
-        utilsAfterEach(this);
+        afterEach(this);
     },
 });
 
 QUnit.test('reply: discard on pressing escape', async function (assert) {
     assert.expect(9);
 
-    this.data['res.partner'].records = [{
+    // partner expected to be found by mention
+    this.data['res.partner'].records.push({
         email: "testpartnert@odoo.com",
         id: 11,
         name: "TestPartner",
-    }];
-    this.data['mail.message'].records = [{
-        author_id: [7, "Demo"],
-        body: "<p>Test</p>",
-        date: "2019-04-20 11:00:00",
-        id: 100,
-        message_type: 'comment',
+    });
+    // message expected to be found in inbox
+    this.data['mail.message'].records.push({
+        model: 'res.partner',
         needaction: true,
-        needaction_partner_ids: [3],
-        model: 'project.task',
-        record_name: 'Refactoring',
+        needaction_partner_ids: [this.data.currentPartnerId],
         res_id: 20,
-    }];
+    });
     await this.start();
     assert.containsOnce(
         document.body,
@@ -137,18 +131,12 @@ QUnit.test('reply: discard on pressing escape', async function (assert) {
 QUnit.test('reply: discard on discard button click', async function (assert) {
     assert.expect(4);
 
-    this.data['mail.message'].records = [{
-        author_id: [7, "Demo"],
-        body: "<p>Test</p>",
-        date: "2019-04-20 11:00:00",
-        id: 100,
-        message_type: 'comment',
+    this.data['mail.message'].records.push({
+        model: 'res.partner',
         needaction: true,
-        needaction_partner_ids: [3],
-        model: 'project.task',
-        record_name: "Refactoring",
+        needaction_partner_ids: [this.data.currentPartnerId],
         res_id: 20,
-    }];
+    });
     await this.start();
     assert.containsOnce(
         document.body,
@@ -183,18 +171,12 @@ QUnit.test('reply: discard on discard button click', async function (assert) {
 QUnit.test('reply: discard on reply button toggle', async function (assert) {
     assert.expect(3);
 
-    this.data['mail.message'].records = [{
-        author_id: [7, "Demo"],
-        body: "<p>Test</p>",
-        date: "2019-04-20 11:00:00",
-        id: 100,
-        message_type: 'comment',
+    this.data['mail.message'].records.push({
+        model: 'res.partner',
         needaction: true,
-        needaction_partner_ids: [3],
-        model: 'project.task',
-        record_name: "Refactoring",
+        needaction_partner_ids: [this.data.currentPartnerId],
         res_id: 20,
-    }];
+    });
     await this.start();
     assert.containsOnce(
         document.body,
@@ -224,18 +206,12 @@ QUnit.test('reply: discard on reply button toggle', async function (assert) {
 QUnit.test('reply: discard on click away', async function (assert) {
     assert.expect(7);
 
-    this.data['mail.message'].records = [{
-        author_id: [7, "Demo"],
-        body: "<p>Test</p>",
-        date: "2019-04-20 11:00:00",
-        id: 100,
-        message_type: 'comment',
+    this.data['mail.message'].records.push({
+        model: 'res.partner',
         needaction: true,
-        needaction_partner_ids: [3],
-        model: 'project.task',
-        record_name: "Refactoring",
+        needaction_partner_ids: [this.data.currentPartnerId],
         res_id: 20,
-    }];
+    });
     await this.start();
     assert.containsOnce(
         document.body,
@@ -296,21 +272,13 @@ QUnit.test('reply: discard on click away', async function (assert) {
 QUnit.test('"reply to" composer should log note if message replied to is a note', async function (assert) {
     assert.expect(6);
 
-    this.data['mail.message'].records = [{
-        author_id: [7, "Demo"],
-        body: "<p>Test</p>",
-        date: "2019-04-20 11:00:00",
-        id: 100,
+    this.data['mail.message'].records.push({
         is_discussion: false,
-        is_notification: false,
-        message_type: 'comment',
+        model: 'res.partner',
         needaction: true,
-        needaction_partner_ids: [3],
-        model: 'project.task',
-        record_name: "Refactoring",
+        needaction_partner_ids: [this.data.currentPartnerId],
         res_id: 20,
-    }];
-
+    });
     await this.start({
         async mockRPC(route, args) {
             if (args.method === 'message_post') {
@@ -355,21 +323,13 @@ QUnit.test('"reply to" composer should log note if message replied to is a note'
 QUnit.test('"reply to" composer should send message if message replied to is not a note', async function (assert) {
     assert.expect(6);
 
-    this.data['mail.message'].records = [{
-        author_id: [7, "Demo"],
-        body: "<p>Test</p>",
-        date: "2019-04-20 11:00:00",
-        id: 100,
+    this.data['mail.message'].records.push({
         is_discussion: true,
-        is_notification: false,
-        message_type: 'comment',
+        model: 'res.partner',
         needaction: true,
-        needaction_partner_ids: [3],
-        model: 'project.task',
-        record_name: "Refactoring",
+        needaction_partner_ids: [this.data.currentPartnerId],
         res_id: 20,
-    }];
-
+    });
     await this.start({
         async mockRPC(route, args) {
             if (args.method === 'message_post') {
@@ -411,36 +371,22 @@ QUnit.test('"reply to" composer should send message if message replied to is not
     assert.verifySteps(['message_post']);
 });
 
-QUnit.test('error notifications should not be shown in inbox', async function (assert) {
+QUnit.test('error notifications should not be shown in Inbox', async function (assert) {
     assert.expect(3);
 
-    Object.assign(this.data.initMessaging, {
-        channel_slots: {
-            channel_channel: [{
-                channel_type: 'channel',
-                id: 20,
-                is_pinned: true,
-                name: "General",
-            }],
-        },
-        needaction_inbox_counter: 1,
-    });
-    this.data['mail.message'].records = [{
-        author_id: [7, "Demo"],
-        body: "<p>Test</p>",
-        date: "2019-04-20 11:00:00",
+    this.data['mail.message'].records.push({
         id: 100,
-        message_type: 'comment',
         model: 'mail.channel',
         needaction: true,
-        needaction_partner_ids: [3],
-        notifications: [{
-            id: 11,
-            notification_status: 'exception',
-            notification_type: 'email',
-        }],
+        needaction_partner_ids: [this.data.currentPartnerId],
         res_id: 20,
-    }];
+    });
+    this.data['mail.notification'].records.push({
+        mail_message_id: 100, // id of related message
+        res_partner_id: this.data.currentPartnerId, // must be for current partner
+        notification_status: 'exception',
+        notification_type: 'email',
+    });
     await this.start();
     assert.containsOnce(
         document.body,
@@ -455,38 +401,20 @@ QUnit.test('error notifications should not be shown in inbox', async function (a
     assert.containsNone(
         document.body,
         '.o_Message_notificationIcon',
-        "should not display any notification icon in inbox"
+        "should not display any notification icon in Inbox"
     );
 });
 
-QUnit.test('show subject of message in inbox', async function (assert) {
+QUnit.test('show subject of message in Inbox', async function (assert) {
     assert.expect(3);
 
-    this.data['mail.message'].records = [{
-        author_id: [7, "Demo"],
-        body: "<p>Test</p>",
-        date: "2019-04-20 11:00:00",
-        id: 100,
-        is_discussion: false,
-        is_notification: false,
-        message_type: 'comment',
-        needaction: true,
-        needaction_partner_ids: [3],
-        model: 'mail.channel',
-        res_id: 20,
-        subject: "Salutations, voyageur",
-    }];
-
-    await this.start({
-        env: {
-            session: {
-                name: 'Admin',
-                partner_display_name: 'Your Company, Admin',
-                partner_id: 3,
-                uid: 2,
-            },
-        },
+    this.data['mail.message'].records.push({
+        model: 'mail.channel', // random existing model
+        needaction: true, // message_fetch domain
+        needaction_partner_ids: [this.data.currentPartnerId], // not needed, for consistency
+        subject: "Salutations, voyageur", // will be asserted in the test
     });
+    await this.start();
     assert.containsOnce(
         document.body,
         '.o_Message',
@@ -501,39 +429,23 @@ QUnit.test('show subject of message in inbox', async function (assert) {
         document.querySelector('.o_Message_subject').textContent,
         "Subject: Salutations, voyageur",
         "Subject of the message should be 'Salutations, voyageur'"
-    )
+    );
 });
 
 QUnit.test('show subject of message in history', async function (assert) {
     assert.expect(3);
 
-    this.data['mail.message'].records = [{
-        author_id: [7, "Demo"],
-        body: "<p>Test</p>",
-        date: "2019-04-20 11:00:00",
-        history_partner_ids: [3],
-        id: 100,
-        message_type: 'comment',
-        model: 'project.task',
-        record_name: "Refactoring",
-        res_id: 20,
-        subject: "Salutations, voyageur",
-    }];
-
+    this.data['mail.message'].records.push({
+        history_partner_ids: [3], // not needed, for consistency
+        model: 'mail.channel', // random existing model
+        subject: "Salutations, voyageur", // will be asserted in the test
+    });
     await this.start({
         discuss: {
             params: {
                 default_active_id: 'mail.box_history',
             },
         },
-        env: {
-            session: {
-                name: 'Admin',
-                partner_display_name: 'Your Company, Admin',
-                partner_id: 3,
-                uid: 2,
-            },
-        },
     });
     assert.containsOnce(
         document.body,
@@ -549,7 +461,70 @@ QUnit.test('show subject of message in history', async function (assert) {
         document.querySelector('.o_Message_subject').textContent,
         "Subject: Salutations, voyageur",
         "Subject of the message should be 'Salutations, voyageur'"
-    )
+    );
+});
+
+QUnit.test('click on (non-channel/non-partner) origin thread link should redirect to form view', async function (assert) {
+    assert.expect(9);
+
+    const bus = new Bus();
+    bus.on('do-action', null, payload => {
+        // Callback of doing an action (action manager).
+        // Expected to be called on click on origin thread link,
+        // which redirects to form view of record related to origin thread
+        assert.step('do-action');
+        assert.strictEqual(
+            payload.action.type,
+            'ir.actions.act_window',
+            "action should open a view"
+        );
+        assert.deepEqual(
+            payload.action.views,
+            [[false, 'form']],
+            "action should open form view"
+        );
+        assert.strictEqual(
+            payload.action.res_model,
+            'some.model',
+            "action should open view with model 'some.model' (model of message origin thread)"
+        );
+        assert.strictEqual(
+            payload.action.res_id,
+            10,
+            "action should open view with id 10 (id of message origin thread)"
+        );
+    });
+    this.data['some.model'] = { fields: {}, records: [{ id: 10 }] };
+    this.data['mail.message'].records.push({
+        model: 'some.model',
+        needaction: true,
+        needaction_partner_ids: [this.data.currentPartnerId],
+        record_name: "Some record",
+        res_id: 10,
+    });
+    await this.start({
+        env: {
+            bus,
+        },
+    });
+    assert.containsOnce(
+        document.body,
+        '.o_Message',
+        "should display a single message"
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_Message_originThreadLink',
+        "should display origin thread link"
+    );
+    assert.strictEqual(
+        document.querySelector('.o_Message_originThreadLink').textContent,
+        "Some record",
+        "origin thread link should display record name"
+    );
+
+    document.querySelector('.o_Message_originThreadLink').click();
+    assert.verifySteps(['do-action'], "should have made an action on click on origin thread (to open form view)");
 });
 
 });

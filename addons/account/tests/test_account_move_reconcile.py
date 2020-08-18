@@ -240,7 +240,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                 (0, 0, {'debit': 0.0,       'credit': 500.0,    'account_id': account_id}),
             ]
         })
-        move.post()
+        move.action_post()
 
         line_1 = move.line_ids.filtered(lambda line: line.debit == 1000.0)
         line_2 = move.line_ids.filtered(lambda line: line.debit == 200.0)
@@ -249,11 +249,11 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         line_5 = move.line_ids.filtered(lambda line: line.credit == 500.0)
 
         self.assertRecordValues(line_1 + line_2 + line_3 + line_4 + line_5, [
-            {'amount_residual': 1000.0,     'amount_residual_currency': 0.0,    'reconciled': False},
-            {'amount_residual': 200.0,      'amount_residual_currency': 0.0,    'reconciled': False},
-            {'amount_residual': -300.0,     'amount_residual_currency': 0.0,    'reconciled': False},
-            {'amount_residual': -400.0,     'amount_residual_currency': 0.0,    'reconciled': False},
-            {'amount_residual': -500.0,     'amount_residual_currency': 0.0,    'reconciled': False},
+            {'amount_residual': 1000.0,     'amount_residual_currency': 1000.0, 'reconciled': False},
+            {'amount_residual': 200.0,      'amount_residual_currency': 200.0,  'reconciled': False},
+            {'amount_residual': -300.0,     'amount_residual_currency': -300.0, 'reconciled': False},
+            {'amount_residual': -400.0,     'amount_residual_currency': -400.0, 'reconciled': False},
+            {'amount_residual': -500.0,     'amount_residual_currency': -500.0, 'reconciled': False},
         ])
 
         res = (line_1 + line_3).reconcile()
@@ -267,7 +267,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         }])
 
         self.assertRecordValues(line_1 + line_3, [
-            {'amount_residual': 700.0,      'amount_residual_currency': 0.0,    'reconciled': False},
+            {'amount_residual': 700.0,      'amount_residual_currency': 700.0,  'reconciled': False},
             {'amount_residual': 0.0,        'amount_residual_currency': 0.0,    'reconciled': True},
         ])
 
@@ -282,7 +282,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         }])
 
         self.assertRecordValues(line_1 + line_4, [
-            {'amount_residual': 300.0,      'amount_residual_currency': 0.0,    'reconciled': False},
+            {'amount_residual': 300.0,      'amount_residual_currency': 300.0,  'reconciled': False},
             {'amount_residual': 0.0,        'amount_residual_currency': 0.0,    'reconciled': True},
         ])
 
@@ -298,7 +298,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
 
         self.assertRecordValues(line_1 + line_5, [
             {'amount_residual': 0.0,        'amount_residual_currency': 0.0,    'reconciled': True},
-            {'amount_residual': -200.0,     'amount_residual_currency': 0.0,    'reconciled': False},
+            {'amount_residual': -200.0,     'amount_residual_currency': -200.0, 'reconciled': False},
         ])
 
         res = (line_2 + line_5).reconcile()
@@ -344,7 +344,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             }
         ])
 
-        moves.post()
+        moves.action_post()
 
         line_1 = moves.line_ids.filtered(lambda line: line.debit == 1200.0)
         line_2 = moves.line_ids.filtered(lambda line: line.debit == 120.0)
@@ -421,7 +421,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                 'credit': 660.0,
                 'amount_currency': 0.0,
                 'currency_id': currency_id,
-                'account_id': exchange_diff.journal_id.default_credit_account_id.id,
+                'account_id': exchange_diff.journal_id.company_id.income_currency_exchange_account_id.id,
             },
         ])
 
@@ -478,7 +478,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             }
         ])
 
-        moves.post()
+        moves.action_post()
 
         line_1 = moves.line_ids.filtered(lambda line: line.debit == 1200.0)
         line_2 = moves.line_ids.filtered(lambda line: line.debit == 780.0)
@@ -548,7 +548,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                 'credit': 0.0,
                 'amount_currency': 780.0,
                 'currency_id': currency1_id,
-                'account_id': exchange_diff.journal_id.default_debit_account_id.id,
+                'account_id': exchange_diff.journal_id.company_id.expense_currency_exchange_account_id.id,
             },
             {
                 'debit': 0.0,
@@ -563,7 +563,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                 'credit': 0.0,
                 'amount_currency': 480.0,
                 'currency_id': currency2_id,
-                'account_id': exchange_diff.journal_id.default_debit_account_id.id,
+                'account_id': exchange_diff.journal_id.company_id.expense_currency_exchange_account_id.id,
             },
             {
                 'debit': 0.0,
@@ -578,7 +578,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                 'credit': 0.0,
                 'amount_currency': 1440.0,
                 'currency_id': currency2_id,
-                'account_id': exchange_diff.journal_id.default_debit_account_id.id,
+                'account_id': exchange_diff.journal_id.company_id.expense_currency_exchange_account_id.id,
             },
             {
                 'debit': 0.0,
@@ -593,7 +593,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                 'credit': 0.0,
                 'amount_currency': 2040.0,
                 'currency_id': currency2_id,
-                'account_id': exchange_diff.journal_id.default_debit_account_id.id,
+                'account_id': exchange_diff.journal_id.company_id.expense_currency_exchange_account_id.id,
             },
             {
                 'debit': 0.0,
@@ -608,7 +608,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                 'credit': 0.0,
                 'amount_currency': 1200.0,
                 'currency_id': currency1_id,
-                'account_id': exchange_diff.journal_id.default_debit_account_id.id,
+                'account_id': exchange_diff.journal_id.company_id.expense_currency_exchange_account_id.id,
             },
             {
                 'debit': 0.0,
@@ -751,13 +751,13 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             ]
         })
 
-        (cash_basis_move + payment_move).post()
+        (cash_basis_move + payment_move).action_post()
         
         # Initial amounts by accounts:
         
         self.assertAmountsGroupByAccount([
             # Account                               Balance     Amount Currency
-            (self.cash_basis_transfer_account,      -33.34,     0.0),
+            (self.cash_basis_transfer_account,      -33.34,     -33.34),
             (self.tax_account_1,                    0.0,        0.0),
             (self.tax_account_2,                    0.0,        0.0),
         ])
@@ -798,8 +798,8 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
 
         self.assertAmountsGroupByAccount([
             # Account                               Balance     Amount Currency
-            (self.cash_basis_transfer_account,      -22.23,     0.0),
-            (self.tax_account_1,                    -11.11,     0.0),
+            (self.cash_basis_transfer_account,      -22.23,     -22.23),
+            (self.tax_account_1,                    -11.11,     -11.11),
             (self.tax_account_2,                    0.0,        0.0),
         ])
 
@@ -850,8 +850,8 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
 
         self.assertAmountsGroupByAccount([
             # Account                               Balance     Amount Currency
-            (self.cash_basis_transfer_account,      -0.01,      0.0),
-            (self.tax_account_1,                    -33.33,     0.0),
+            (self.cash_basis_transfer_account,      -0.01,      -0.01),
+            (self.tax_account_1,                    -33.33,     -33.33),
             (self.tax_account_2,                    0.0,        0.0),
         ])
 
@@ -879,8 +879,8 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         self.assertAmountsGroupByAccount([
             # Account                               Balance     Amount Currency
             (self.cash_basis_transfer_account,      0.0,        0.0),
-            (self.tax_account_1,                    -33.33,     0.0),
-            (self.tax_account_2,                    -0.01,      0.0),
+            (self.tax_account_1,                    -33.33,     -33.33),
+            (self.tax_account_2,                    -0.01,      -0.01),
         ])
 
     def test_reconcile_cash_basis_workflow_multi_currency(self):
@@ -968,7 +968,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             ]
         })
 
-        (cash_basis_move + payment_move).post()
+        (cash_basis_move + payment_move).action_post()
 
         # Initial amounts by accounts:
 
@@ -1186,7 +1186,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             ]
         })
 
-        (cash_basis_move + payment_move + end_move).post()
+        (cash_basis_move + payment_move + end_move).action_post()
 
         self.assertAmountsGroupByAccount([
             # Account                               Balance     Amount Currency
@@ -1301,7 +1301,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             ]
         })
 
-        (cash_basis_move + payment_move).post()
+        (cash_basis_move + payment_move).action_post()
 
         self.assertAmountsGroupByAccount([
             # Account                               Balance     Amount Currency
@@ -1345,7 +1345,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                 'credit': 0.0,
                 'amount_currency': 0.0,
                 'currency_id': currency_id,
-                'account_id': transfer_exchange_diff.journal_id.default_debit_account_id.id,
+                'account_id': transfer_exchange_diff.journal_id.company_id.expense_currency_exchange_account_id.id,
             },
         ])
 
@@ -1399,7 +1399,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             ]
         })
 
-        (invoice_move + payment_move).post()
+        (invoice_move + payment_move).action_post()
 
         receivable_lines = (invoice_move + payment_move).line_ids\
             .filtered(lambda line: line.account_id == self.extra_receivable_account_1)
@@ -1507,7 +1507,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             ]
         })
 
-        (invoice_move + refund_move).post()
+        (invoice_move + refund_move).action_post()
 
         receivable_lines = (invoice_move + refund_move).line_ids\
             .filtered(lambda line: line.account_id == self.extra_receivable_account_1)
@@ -1605,7 +1605,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             ]
         })
 
-        (invoice_move + payment_move).post()
+        (invoice_move + payment_move).action_post()
 
         receivable_lines = (invoice_move + payment_move).line_ids\
             .filtered(lambda line: line.account_id == self.extra_receivable_account_1)

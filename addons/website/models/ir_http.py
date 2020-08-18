@@ -216,7 +216,7 @@ class Http(models.AbstractModel):
     @classmethod
     def _get_frontend_langs(cls):
         if get_request_website():
-            return [code for code, _, _ in request.env['res.lang'].get_available()]
+            return [code for code, *_ in request.env['res.lang'].get_available()]
         else:
             return super()._get_frontend_langs()
 
@@ -282,7 +282,7 @@ class Http(models.AbstractModel):
     @classmethod
     def _get_exception_code_values(cls, exception):
         code, values = super(Http, cls)._get_exception_code_values(exception)
-        if request.website.is_publisher() and isinstance(exception, werkzeug.exceptions.NotFound):
+        if isinstance(exception, werkzeug.exceptions.NotFound) and request.website.is_publisher():
             code = 'page_404'
             values['path'] = request.httprequest.path[1:]
         if isinstance(exception, werkzeug.exceptions.Forbidden) and \

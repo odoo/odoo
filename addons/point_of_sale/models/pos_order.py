@@ -49,6 +49,8 @@ class PosOrder(models.Model):
             'amount_return':  ui_order['amount_return'],
             'company_id': self.env['pos.session'].browse(ui_order['pos_session_id']).company_id.id,
             'to_invoice': ui_order['to_invoice'] if "to_invoice" in ui_order else False,
+            'is_tipped': ui_order.get('is_tipped', False),
+            'tip_amount': ui_order.get('tip_amount', 0),
         }
 
     @api.model
@@ -253,6 +255,8 @@ class PosOrder(models.Model):
     session_move_id = fields.Many2one('account.move', string='Session Journal Entry', related='session_id.move_id', readonly=True, copy=False)
     to_invoice = fields.Boolean('To invoice')
     is_invoiced = fields.Boolean('Is Invoiced', compute='_compute_is_invoiced')
+    is_tipped = fields.Boolean('Is this already tipped?', readonly=True)
+    tip_amount = fields.Float(string='Tip Amount', digits=0, readonly=True)
 
     @api.depends('account_move')
     def _compute_is_invoiced(self):
@@ -414,7 +418,7 @@ class PosOrder(models.Model):
             message = _("This invoice has been created from the point of sale session: <a href=# data-oe-model=pos.order data-oe-id=%d>%s</a>") % (order.id, order.name)
             new_move.message_post(body=message)
             order.write({'account_move': new_move.id, 'state': 'invoiced'})
-            new_move.sudo().with_company(order.company_id).post()
+            new_move.sudo().with_company(order.company_id)._post()
             moves += new_move
 
         if not moves:
@@ -578,6 +582,8 @@ class PosOrder(models.Model):
         """
         orders = self.search([('id', 'in', server_ids),('state', '=', 'draft')])
         orders.write({'state': 'cancel'})
+        # TODO Looks like delete cascade is a better solution.
+        orders.mapped('payment_ids').sudo().unlink()
         orders.sudo().unlink()
         return orders.ids
 
@@ -613,6 +619,8 @@ class PosOrder(models.Model):
             'state': order.state,
             'account_move': order.account_move.id,
             'id': order.id,
+            'is_tipped': order.is_tipped,
+            'tip_amount': order.tip_amount,
         }
 
     def export_for_ui(self):
@@ -664,6 +672,7 @@ class PosOrderLine(models.Model):
     pack_lot_ids = fields.One2many('pos.pack.operation.lot', 'pos_order_line_id', string='Lot/serial Number')
     product_uom_id = fields.Many2one('uom.uom', string='Product UoM', related='product_id.uom_id')
     currency_id = fields.Many2one('res.currency', related='order_id.currency_id')
+    full_product_name = fields.Char('Full Product Name')
 
     @api.model
     def _prepare_refund_data(self, refund_order_id):

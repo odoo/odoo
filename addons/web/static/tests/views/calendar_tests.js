@@ -63,7 +63,8 @@ QUnit.module('Views', {
                     {id: 3, user_id: 4, partner_id: 4, name: "event 3", start: "2016-12-12 15:55:05", stop: "2016-12-12 16:55:05", allday: false, partner_ids: [1], type: 2},
                     {id: 4, user_id: session.uid, partner_id: 1, name: "event 4", start: "2016-12-14 15:55:05", stop: "2016-12-14 18:55:05", allday: true, partner_ids: [1], type: 2},
                     {id: 5, user_id: 4, partner_id: 4, name: "event 5", start: "2016-12-13 15:55:05", stop: "2016-12-20 18:55:05", allday: false, partner_ids: [2,3], type: 2},
-                    {id: 6, user_id: session.uid, partner_id: 1, name: "event 6", start: "2016-12-18 08:00:00", stop: "2016-12-18 09:00:00", allday: false, partner_ids: [3], type: 3}
+                    {id: 6, user_id: session.uid, partner_id: 1, name: "event 6", start: "2016-12-18 08:00:00", stop: "2016-12-18 09:00:00", allday: false, partner_ids: [3], type: 3},
+                    {id: 7, user_id: session.uid, partner_id: 1, name: "event 7", start: "2016-11-14 08:00:00", stop: "2016-11-16 17:00:00", allday: false, partner_ids: [2], type: 1},
                 ],
                 check_access_rights: function () {
                     return Promise.resolve(true);
@@ -153,7 +154,7 @@ QUnit.module('Views', {
         assert.expect(24);
 
         this.data.event.records.push({
-            id: 7,
+            id: 8,
             user_id: session.uid,
             partner_id: false,
             name: "event 7",
@@ -280,7 +281,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('breadcrumbs are updated with the displayed period', async function (assert) {
-        assert.expect(3);
+        assert.expect(4);
 
         var archs = {
             'event,1,calendar': '<calendar date_start="start" date_stop="stop" all_day="allday"/>',
@@ -320,6 +321,11 @@ QUnit.module('Views', {
         await testUtils.dom.click($('.o_control_panel .o_calendar_button_month'));
         assert.strictEqual($('.o_control_panel .breadcrumb-item').text(),
             'Meetings Test (December 2016)', "should display the current month");
+
+        // switch to year mode
+        await testUtils.dom.click($('.o_control_panel .o_calendar_button_year'));
+        assert.strictEqual($('.o_control_panel .breadcrumb-item').text(),
+            'Meetings Test (2016)', "should display the current year");
 
         actionManager.destroy();
     });
@@ -2030,8 +2036,8 @@ QUnit.module('Views', {
         assert.expect(5);
 
         this.data.event.records.push(
-            {id: 7, user_id: 4, partner_id: 1, name: "event 7", start: "2016-12-11 09:00:00", stop: "2016-12-11 10:00:00", allday: false, partner_ids: [1,2,3], event_type_id: 3, color: 4},
-            {id: 8, user_id: 4, partner_id: 1, name: "event 8", start: "2016-12-11 19:00:00", stop: "2016-12-11 20:00:00", allday: false, partner_ids: [1,2,3], event_type_id: 1, color: 1},
+            {id: 8, user_id: 4, partner_id: 1, name: "event 8", start: "2016-12-11 09:00:00", stop: "2016-12-11 10:00:00", allday: false, partner_ids: [1,2,3], event_type_id: 3, color: 4},
+            {id: 9, user_id: 4, partner_id: 1, name: "event 9", start: "2016-12-11 19:00:00", stop: "2016-12-11 20:00:00", allday: false, partner_ids: [1,2,3], event_type_id: 1, color: 1},
         );
 
         var calendar = await createCalendarView({
@@ -2062,7 +2068,7 @@ QUnit.module('Views', {
 
         assert.containsOnce($typeFilter, '.o_calendar_filter_item[data-value=3].o_cw_filter_color_4', "Filter for event type 3 must have the color 4");
 
-        assert.containsOnce(calendar, '.fc-event[data-event-id=7].o_calendar_color_4', "Event of event type 3 must have the color 4");
+        assert.containsOnce(calendar, '.fc-event[data-event-id=8].o_calendar_color_4', "Event of event type 3 must have the color 4");
 
         calendar.destroy();
     });
@@ -2299,30 +2305,30 @@ QUnit.module('Views', {
             partner_id: 3
         });
         this.data.event.records.push({
-            id: 7,
+            id: 8,
             user_id: 5,
             partner_id: 3,
-            name: "event 7",
+            name: "event 8",
             start: "2016-12-06 04:00:00",
             stop: "2016-12-06 08:00:00",
             allday: false,
             partner_ids: [1,2,3],
             type: 1
         }, {
-            id: 8,
+            id: 9,
             user_id: session.uid,
             partner_id: 1,
-            name: "event 8",
+            name: "event 9",
             start: "2016-12-07 04:00:00",
             stop: "2016-12-07 08:00:00",
             allday: false,
             partner_ids: [1,2,3],
             type: 1
         },{
-            id: 9,
+            id: 10,
             user_id: 4,
             partner_id: 4,
-            name: "event 9",
+            name: "event 10",
             start: "2016-12-08 04:00:00",
             stop: "2016-12-08 08:00:00",
             allday: false,
@@ -2357,7 +2363,7 @@ QUnit.module('Views', {
 
         assert.containsN(calendar, '.o_calendar_filter_item', 6, "should display 6 filter items");
         assert.containsN(calendar, '.fc-event', 2, "should display 2 events");
-        assert.strictEqual(calendar.$('.fc-event .o_event_title').text().replace(/\s/g, ''), "event7event8",
+        assert.strictEqual(calendar.$('.fc-event .o_event_title').text().replace(/\s/g, ''), "event8event9",
             "should display 2 events");
 
         calendar.destroy();
@@ -3518,6 +3524,258 @@ QUnit.module('Views', {
         calendar.destroy();
     });
 
+    QUnit.test('correctly display year view', async function (assert) {
+        assert.expect(27);
+
+        const calendar = await createCalendarView({
+            View: CalendarView,
+            model: 'event',
+            data: this.data,
+            arch: `
+                <calendar
+                    create="false"
+                    event_open_popup="true"
+                    date_start="start"
+                    date_stop="stop"
+                    all_day="allday"
+                    mode="year"
+                    attendee="partner_ids"
+                    color="partner_id"
+                >
+                    <field name="partner_ids" write_model="filter_partner" write_field="partner_id"/>
+                    <field name="partner_id" filters="1" invisible="1"/>
+                </calendar>`,
+            archs: archs,
+            viewOptions: {
+                initialDate: initialDate,
+            },
+        }, {positionalClicks: true});
+
+        // Check view
+        assert.containsN(calendar, '.fc-month', 12);
+        assert.strictEqual(
+            calendar.el.querySelector('.fc-month:first-child .fc-header-toolbar').textContent,
+            'Jan 2016'
+        );
+        assert.containsN(calendar.el, '.fc-bgevent', 7,
+            'There should be 6 events displayed but there is 1 split on 2 weeks');
+
+        async function clickDate(date) {
+            const el = calendar.el.querySelector(`.fc-day-top[data-date="${date}"]`);
+            el.scrollIntoView(); // scroll to it as the calendar could be too small
+
+            testUtils.dom.triggerMouseEvent(el, "mousedown");
+            testUtils.dom.triggerMouseEvent(el, "mouseup");
+
+            await testUtils.nextTick();
+        }
+
+        assert.notOk(calendar.el.querySelector('.fc-day-top[data-date="2016-11-17"]')
+            .classList.contains('fc-has-event'));
+        await clickDate('2016-11-17');
+        assert.containsNone(calendar, '.o_cw_popover');
+
+        assert.ok(calendar.el.querySelector('.fc-day-top[data-date="2016-11-16"]')
+            .classList.contains('fc-has-event'));
+        await clickDate('2016-11-16');
+        assert.containsOnce(calendar, '.o_cw_popover');
+        let popoverText = calendar.el.querySelector('.o_cw_popover')
+            .textContent.replace(/\s{2,}/g, ' ').trim();
+        assert.strictEqual(popoverText, 'November 14-16, 2016 event 7');
+        await testUtils.dom.click(calendar.el.querySelector('.o_cw_popover_close'));
+        assert.containsNone(calendar, '.o_cw_popover');
+
+        assert.ok(calendar.el.querySelector('.fc-day-top[data-date="2016-11-14"]')
+            .classList.contains('fc-has-event'));
+        await clickDate('2016-11-14');
+        assert.containsOnce(calendar, '.o_cw_popover');
+        popoverText = calendar.el.querySelector('.o_cw_popover')
+            .textContent.replace(/\s{2,}/g, ' ').trim();
+        assert.strictEqual(popoverText, 'November 14-16, 2016 event 7');
+        await testUtils.dom.click(calendar.el.querySelector('.o_cw_popover_close'));
+        assert.containsNone(calendar, '.o_cw_popover');
+
+        assert.notOk(calendar.el.querySelector('.fc-day-top[data-date="2016-11-13"]')
+            .classList.contains('fc-has-event'));
+        await clickDate('2016-11-13');
+        assert.containsNone(calendar, '.o_cw_popover');
+
+        assert.notOk(calendar.el.querySelector('.fc-day-top[data-date="2016-12-10"]')
+            .classList.contains('fc-has-event'));
+        await clickDate('2016-12-10');
+        assert.containsNone(calendar, '.o_cw_popover');
+
+        assert.ok(calendar.el.querySelector('.fc-day-top[data-date="2016-12-12"]')
+            .classList.contains('fc-has-event'));
+        await clickDate('2016-12-12');
+        assert.containsOnce(calendar, '.o_cw_popover');
+        popoverText = calendar.el.querySelector('.o_cw_popover')
+            .textContent.replace(/\s{2,}/g, ' ').trim();
+        assert.strictEqual(popoverText, 'December 12, 2016 event 2 event 3');
+        await testUtils.dom.click(calendar.el.querySelector('.o_cw_popover_close'));
+        assert.containsNone(calendar, '.o_cw_popover');
+
+        assert.ok(calendar.el.querySelector('.fc-day-top[data-date="2016-12-14"]')
+            .classList.contains('fc-has-event'));
+        await clickDate('2016-12-14');
+        assert.containsOnce(calendar, '.o_cw_popover');
+        popoverText = calendar.el.querySelector('.o_cw_popover')
+            .textContent.replace(/\s{2,}/g, ' ').trim();
+        assert.strictEqual(popoverText,
+            'December 14, 2016 event 4 December 13-20, 2016 event 5');
+        await testUtils.dom.click(calendar.el.querySelector('.o_cw_popover_close'));
+        assert.containsNone(calendar, '.o_cw_popover');
+
+        assert.notOk(calendar.el.querySelector('.fc-day-top[data-date="2016-12-21"]')
+            .classList.contains('fc-has-event'));
+        await clickDate('2016-12-21');
+        assert.containsNone(calendar, '.o_cw_popover');
+
+        calendar.destroy();
+    });
+
+    QUnit.test('toggle filters in year view', async function (assert) {
+        assert.expect(42);
+
+        const calendar = await createCalendarView({
+            View: CalendarView,
+            model: 'event',
+            data: this.data,
+            arch: `
+                <calendar
+                    event_open_popup="true"
+                    date_start="start"
+                    date_stop="stop"
+                    all_day="allday"
+                    mode="year"
+                    attendee="partner_ids"
+                    color="partner_id"
+                >
+                    <field name="partner_ids" write_model="filter_partner" write_field="partner_id"/>
+                    <field name="partner_id" filters="1" invisible="1"/>
+                '</calendar>`,
+            archs: archs,
+            viewOptions: {
+                initialDate: initialDate,
+            },
+        });
+
+        function checkEvents(countMap) {
+            for (const [id, count] of Object.entries(countMap)) {
+                assert.containsN(calendar, `.fc-bgevent[data-event-id="${id}"]`, count);
+            }
+        }
+
+        checkEvents({ 1: 1, 2: 1, 3: 1, 4: 1, 5: 2, 7: 1, });
+        await testUtils.dom.click(calendar.el.querySelector(
+            '#o_cw_filter_collapse_attendees .o_calendar_filter_item[data-value="2"] label'));
+        checkEvents({ 1: 1, 2: 1, 3: 1, 4: 1, 5: 0, 7: 0, });
+        await testUtils.dom.click(calendar.el.querySelector(
+            '#o_cw_filter_collapse_user .o_calendar_filter_item[data-value="1"] label'));
+        checkEvents({ 1: 0, 2: 0, 3: 1, 4: 0, 5: 0, 7: 0, });
+        await testUtils.dom.click(calendar.el.querySelector(
+            '#o_cw_filter_collapse_user .o_calendar_filter_item[data-value="4"] label'));
+        checkEvents({ 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 7: 0, });
+        await testUtils.dom.click(calendar.el.querySelector(
+            '#o_cw_filter_collapse_attendees .o_calendar_filter_item[data-value="1"] label'));
+        checkEvents({ 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 7: 0, });
+        await testUtils.dom.click(calendar.el.querySelector(
+            '#o_cw_filter_collapse_attendees .o_calendar_filter_item[data-value="2"] label'));
+        checkEvents({ 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 7: 0, });
+        await testUtils.dom.click(calendar.el.querySelector(
+            '#o_cw_filter_collapse_user .o_calendar_filter_item[data-value="4"] label'));
+        checkEvents({ 1: 0, 2: 0, 3: 0, 4: 0, 5: 2, 7: 0, });
+
+        calendar.destroy();
+    });
+
+    QUnit.test('allowed scales', async function (assert) {
+        assert.expect(8);
+
+        let calendar = await createCalendarView({
+            View: CalendarView,
+            model: 'event',
+            data: this.data,
+            arch:
+                `<calendar
+                    date_start="start"
+                    date_stop="stop"
+                    all_day="allday"/>`,
+            archs: archs,
+            viewOptions: {
+                initialDate: initialDate,
+            },
+        });
+
+        assert.containsOnce(calendar, '.o_calendar_scale_buttons .o_calendar_button_day');
+        assert.containsOnce(calendar, '.o_calendar_scale_buttons .o_calendar_button_week');
+        assert.containsOnce(calendar, '.o_calendar_scale_buttons .o_calendar_button_month');
+        assert.containsOnce(calendar, '.o_calendar_scale_buttons .o_calendar_button_year');
+
+        calendar.destroy();
+
+        calendar = await createCalendarView({
+            View: CalendarView,
+            model: 'event',
+            data: this.data,
+            arch:
+                `<calendar
+                    date_start="start"
+                    date_stop="stop"
+                    all_day="allday"
+                    scales="day,week"/>`,
+            archs: archs,
+            viewOptions: {
+                initialDate: initialDate,
+            },
+        });
+
+        assert.containsOnce(calendar, '.o_calendar_scale_buttons .o_calendar_button_day');
+        assert.containsOnce(calendar, '.o_calendar_scale_buttons .o_calendar_button_week');
+        assert.containsNone(calendar, '.o_calendar_scale_buttons .o_calendar_button_month');
+        assert.containsNone(calendar, '.o_calendar_scale_buttons .o_calendar_button_year');
+
+        calendar.destroy();
+    });
+
+    QUnit.test('click outside the popup should close it', async function (assert) {
+        assert.expect(4);
+
+        var calendar = await createCalendarView({
+            View: CalendarView,
+            model: 'event',
+            data: this.data,
+            arch:
+                `<calendar
+                    create="false"
+                    event_open_popup="true"
+                    quick_add="false"
+                    date_start="start"
+                    date_stop="stop"
+                    all_day="allday"
+                    mode="month"/>`,
+            archs: archs,
+            viewOptions: {
+                initialDate: initialDate,
+            },
+        });
+
+        assert.containsNone(calendar, '.o_cw_popover');
+
+        await testUtils.dom.click(calendar.el.querySelector('.fc-event .fc-content'));
+        assert.containsOnce(calendar, '.o_cw_popover',
+            'open popup when click on event');
+
+        await testUtils.dom.click(calendar.el.querySelector('.o_cw_body'));
+        assert.containsOnce(calendar, '.o_cw_popover',
+            'keep popup openned when click inside popup');
+
+        await testUtils.dom.click(calendar.el.querySelector('.o_content'));
+        assert.containsNone(calendar, '.o_cw_popover',
+            'close popup when click outside popup');
+
+        calendar.destroy();
+    });
 });
 
 });

@@ -132,7 +132,7 @@ class Project(models.Model):
         }
 
     def action_view_timesheet_plan(self):
-        action = self.env.ref('sale_timesheet.project_timesheet_action_client_timesheet_plan').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("sale_timesheet.project_timesheet_action_client_timesheet_plan")
         action['params'] = {
             'project_ids': self.ids,
         }
@@ -309,3 +309,10 @@ class ProjectTask(models.Model):
 
     def _get_action_view_so_ids(self):
         return list(set((self.sale_order_id + self.timesheet_ids.so_line.order_id).ids))
+
+class ProjectTaskRecurrence(models.Model):
+    _inherit = 'project.task.recurrence'
+
+    @api.model
+    def _get_recurring_fields(self):
+        return ['analytic_account_id'] + super(ProjectTaskRecurrence, self)._get_recurring_fields()

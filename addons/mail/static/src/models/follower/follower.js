@@ -59,7 +59,7 @@ function factory(dependencies) {
          *  Close subtypes dialog
          */
         closeSubtypes() {
-            this.env.messaging.dialogManager.close(this._subtypesListDialog);
+            this._subtypesListDialog.delete();
             this._subtypesListDialog = undefined;
         }
 
@@ -111,7 +111,7 @@ function factory(dependencies) {
                 }
             }
             this._subtypesListDialog = this.env.messaging.dialogManager.open('mail.follower_subtype_list', {
-                follower: [['replace', this]],
+                follower: [['link', this]],
             });
         }
 

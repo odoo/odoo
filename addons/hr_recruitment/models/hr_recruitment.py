@@ -114,7 +114,7 @@ class Applicant(models.Model):
     categ_ids = fields.Many2many('hr.applicant.category', string="Tags")
     company_id = fields.Many2one('res.company', "Company", compute='_compute_company', store=True, readonly=False, tracking=True)
     user_id = fields.Many2one(
-        'res.users', "Responsible", compute='_compute_user',
+        'res.users', "Recruiter", compute='_compute_user',
         tracking=True, default=lambda self: self.env.uid, store=True, readonly=False)
     date_closed = fields.Datetime("Closed", compute='_compute_date_closed', store=True, index=True)
     date_open = fields.Datetime("Assigned", readonly=True, index=True)
@@ -149,9 +149,9 @@ class Applicant(models.Model):
         ('done', 'Green'),
         ('blocked', 'Red')], string='Kanban State',
         copy=False, default='normal', required=True)
-    legend_blocked = fields.Char(related='stage_id.legend_blocked', string='Kanban Blocked', readonly=False, related_sudo=True)
-    legend_done = fields.Char(related='stage_id.legend_done', string='Kanban Valid', readonly=False, related_sudo=True)
-    legend_normal = fields.Char(related='stage_id.legend_normal', string='Kanban Ongoing', readonly=False, related_sudo=True)
+    legend_blocked = fields.Char(related='stage_id.legend_blocked', string='Kanban Blocked')
+    legend_done = fields.Char(related='stage_id.legend_done', string='Kanban Valid')
+    legend_normal = fields.Char(related='stage_id.legend_normal', string='Kanban Ongoing')
     application_count = fields.Integer(compute='_compute_application_count', help='Applications with the same email')
     meeting_count = fields.Integer(compute='_compute_meeting_count', help='Meeting Count')
     refuse_reason_id = fields.Many2one('hr.applicant.refuse.reason', string='Refuse Reason', tracking=True)
@@ -250,8 +250,8 @@ class Applicant(models.Model):
 
     @api.depends('job_id')
     def _compute_user(self):
-        for applicant in self.filtered(lambda a: a.job_id):
-            applicant.user_id = applicant.job_id.user_id.id
+        for applicant in self:
+            applicant.user_id = applicant.job_id.user_id.id or self.env.uid
 
     @api.depends('partner_id')
     def _compute_partner_phone_email(self):
@@ -308,11 +308,28 @@ class Applicant(models.Model):
             res = super(Applicant, self).write(vals)
         return res
 
-    @api.model
     def get_empty_list_help(self, help):
-        return super(Applicant, self.with_context(empty_list_help_model='hr.job',
-                                                  empty_list_help_id=self.env.context.get('default_job_id'),
-                                                  empty_list_help_document_name=_("job applicant"))).get_empty_list_help(help)
+        if 'active_id' in  self.env.context:
+            alias_id = self.env['hr.job'].browse(self.env.context['active_id']).alias_id
+        else:
+            alias_id = False
+
+        nocontent_values = {
+            'help_title': _('No application yet'),
+            'para_1': _('Let people apply by email to save time.') ,
+            'para_2': _('Attachments, like resumes, get indexed automatically.'),
+        }
+        nocontent_body = """
+            <p class="o_view_nocontent_empty_folder">%(help_title)s</p>
+            <p>%(para_1)s<br/>%(para_2)s</p>"""
+
+        if alias_id and alias_id.alias_domain and alias_id.alias_name:
+            email = alias_id.display_name 
+            email_link = "<a href='mailto:%s'>%s</a>" % (email, email)
+            nocontent_values['email_link'] = email_link
+            nocontent_body += """<p class="o_copy_paste_email">%(email_link)s</p>"""
+
+        return nocontent_body % nocontent_values
 
     def action_makeMeeting(self):
         """ This opens Meeting's calendar view to schedule meeting on current applicant
@@ -322,7 +339,7 @@ class Applicant(models.Model):
         partners = self.partner_id | self.user_id.partner_id | self.department_id.manager_id.user_id.partner_id
 
         category = self.env.ref('hr_recruitment.categ_meet_interview')
-        res = self.env['ir.actions.act_window'].for_xml_id('calendar', 'action_calendar_event')
+        res = self.env['ir.actions.act_window']._for_xml_id('calendar.action_calendar_event')
         res['context'] = {
             'default_partner_ids': partners.ids,
             'default_user_id': self.env.uid,
@@ -454,33 +471,24 @@ class Applicant(models.Model):
                 applicant.partner_id = new_partner_id
                 address_id = new_partner_id.address_get(['contact'])['contact']
             if applicant.partner_name or contact_name:
-                employee = self.env['hr.employee'].create({
-                    'name': applicant.partner_name or contact_name,
-                    'job_id': applicant.job_id.id or False,
-                    'job_title': applicant.job_id.name,
+                employee_data = {
+                    'default_name': applicant.partner_name or contact_name,
+                    'default_job_id': applicant.job_id.id,
+                    'default_job_title': applicant.job_id.name,
                     'address_home_id': address_id,
-                    'department_id': applicant.department_id.id or False,
-                    'address_id': applicant.company_id and applicant.company_id.partner_id
+                    'default_department_id': applicant.department_id.id or False,
+                    'default_address_id': applicant.company_id and applicant.company_id.partner_id
                             and applicant.company_id.partner_id.id or False,
-                    'work_email': applicant.department_id and applicant.department_id.company_id
+                    'default_work_email': applicant.department_id and applicant.department_id.company_id
                             and applicant.department_id.company_id.email or False,
-                    'work_phone': applicant.department_id and applicant.department_id.company_id
-                            and applicant.department_id.company_id.phone or False})
-                applicant.write({'emp_id': employee.id})
-                if applicant.job_id:
-                    applicant.job_id.write({'no_of_hired_employee': applicant.job_id.no_of_hired_employee + 1})
-                    applicant.job_id.message_post(
-                        body=_('New Employee %s Hired', applicant.partner_name if applicant.partner_name else applicant.name),
-                        subtype_xmlid="hr_recruitment.mt_job_applicant_hired")
-                applicant.message_post_with_view(
-                    'hr_recruitment.applicant_hired_template',
-                    values={'applicant': applicant},
-                    subtype_id=self.env.ref("hr_recruitment.mt_applicant_hired").id)
-
+                    'default_work_phone': applicant.department_id.company_id.phone,
+                    'form_view_initial_mode': 'edit',
+                    'default_applicant_id': applicant.ids,
+                    }
+                    
         employee_action = self.env.ref('hr.open_view_employee_list')
         dict_act_window = employee_action.read([])[0]
-        dict_act_window['context'] = {'form_view_initial_mode': 'edit'}
-        dict_act_window['res_id'] = employee.id
+        dict_act_window['context'] = employee_data
         return dict_act_window
 
     def archive_applicant(self):

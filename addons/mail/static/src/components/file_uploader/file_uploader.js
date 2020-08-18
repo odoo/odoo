@@ -97,7 +97,7 @@ class FileUploader extends Component {
      */
     async _performUpload(files) {
         for (const file of files) {
-            const response = await window.fetch('/web/binary/upload_attachment', {
+            const response = await this.env.browser.fetch('/web/binary/upload_attachment', {
                 method: 'POST',
                 body: this._createFormData(file),
             });

@@ -8,6 +8,7 @@ import lxml
 import random
 import re
 import threading
+import werkzeug.urls
 from ast import literal_eval
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
@@ -65,7 +66,7 @@ class MassMailing(models.Model):
             return False
 
     active = fields.Boolean(default=True, tracking=True)
-    subject = fields.Char('Subject', help='Subject of emails to send', required=True, translate=True)
+    subject = fields.Char('Subject', help='Subject of your Mailing', required=True, translate=True)
     email_from = fields.Char(string='Send From', required=True,
         default=lambda self: self.env.user.email_formatted)
     sent_date = fields.Datetime(string='Sent Date', copy=False)
@@ -299,7 +300,7 @@ class MassMailing(models.Model):
 
     def action_schedule(self):
         self.ensure_one()
-        action = self.env.ref('mass_mailing.mailing_mailing_schedule_date_action').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("mass_mailing.mailing_mailing_schedule_date_action")
         action['context'] = dict(self.env.context, default_mass_mailing_id=self.id)
         return action
 
@@ -331,7 +332,7 @@ class MassMailing(models.Model):
         return self._action_view_traces_filtered('sent')
 
     def _action_view_traces_filtered(self, view_filter):
-        action = self.env.ref('mass_mailing.mailing_trace_action').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("mass_mailing.mailing_trace_action")
         action['name'] = _('%s Traces') % (self.name)
         action['context'] = {'search_default_mass_mailing_id': self.id,}
         filter_key = 'search_default_filter_%s' % (view_filter)
@@ -528,6 +529,34 @@ class MassMailing(models.Model):
         done_res_ids = [record['res_id'] for record in already_mailed]
         return [rid for rid in res_ids if rid not in done_res_ids]
 
+    def _get_unsubscribe_url(self, email_to, res_id):
+        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        url = werkzeug.urls.url_join(
+            base_url, 'mail/mailing/%(mailing_id)s/unsubscribe?%(params)s' % {
+                'mailing_id': self.id,
+                'params': werkzeug.urls.url_encode({
+                    'res_id': res_id,
+                    'email': email_to,
+                    'token': self._unsubscribe_token(res_id, email_to),
+                }),
+            }
+        )
+        return url
+
+    def _get_view_url(self, email_to, res_id):
+        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        url = werkzeug.urls.url_join(
+            base_url, 'mailing/%(mailing_id)s/view?%(params)s' % {
+                'mailing_id': self.id,
+                'params': werkzeug.urls.url_encode({
+                    'res_id': res_id,
+                    'email': email_to,
+                    'token': self._unsubscribe_token(res_id, email_to),
+                }),
+            }
+        )
+        return url
+
     def action_send_mail(self, res_ids=None):
         author_id = self.env.user.partner_id.id
 
@@ -540,7 +569,7 @@ class MassMailing(models.Model):
             composer_values = {
                 'author_id': author_id,
                 'attachment_ids': [(4, attachment.id) for attachment in mailing.attachment_ids],
-                'body': mailing.body_html,
+                'body': self._prepend_preview(self.body_html),
                 'subject': mailing.subject,
                 'model': mailing.mailing_model_real,
                 'email_from': mailing.email_from,
@@ -583,7 +612,7 @@ class MassMailing(models.Model):
             if mass_mailing.medium_id:
                 vals['medium_id'] = mass_mailing.medium_id.id
 
-            res[mass_mailing.id] = self._shorten_links(html, vals, blacklist=['/unsubscribe_from_list'])
+            res[mass_mailing.id] = mass_mailing._shorten_links(html, vals, blacklist=['/unsubscribe_from_list', '/view'])
 
         return res
 

@@ -145,7 +145,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
         self.assertFalse(timesheet4.timesheet_invoice_id, "The timesheet4 should not be linked to the invoice, since we are in ordered quantity")
 
         # validate the first invoice
-        invoice1.post()
+        invoice1.action_post()
 
         self.assertEqual(so_line_ordered_global_project.product_uom_qty, invoice_line_1.quantity, "The invoice (ordered) quantity should not change when modifying timesheet")
         self.assertFalse(timesheet1.timesheet_invoice_id, "The timesheet1 should not be linked to the invoice, since we are in ordered quantity")
@@ -289,7 +289,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
         self.assertFalse(timesheet4.timesheet_invoice_id, "The timesheet4 should not still be linked to the invoice")
 
         # validate the second invoice
-        invoice2.post()
+        invoice2.action_post()
 
         self.assertEqual(timesheet1.timesheet_invoice_id, invoice1, "The timesheet1 should not be linked to the invoice 1, even after validation")
         self.assertEqual(timesheet2.timesheet_invoice_id, invoice2, "The timesheet2 should not be linked to the invoice 1, even after validation")
@@ -372,7 +372,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
         self.assertFalse(timesheet2.timesheet_invoice_id, "The timesheet2 should not be linked to the invoice, since timesheets are used for time tracking in milestone")
 
         # validate the invoice
-        invoice1.post()
+        invoice1.action_post()
 
         self.assertFalse(timesheet1.timesheet_invoice_id, "The timesheet1 should not be linked to the invoice, even after invoice validation")
         self.assertFalse(timesheet2.timesheet_invoice_id, "The timesheet2 should not be linked to the invoice, even after invoice validation")
@@ -392,6 +392,12 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
             'partner_invoice_id': self.partner_a.id,
             'partner_shipping_id': self.partner_a.id,
             'pricelist_id': self.company_data['default_pricelist'].id,
+        })
+        # Section Line
+        so_line_ordered_project_only = self.env['sale.order.line'].create({
+            'name': "Section Name",
+            'order_id': sale_order.id,
+            'display_type': 'line_section',
         })
         so_line_deliver_global_project = self.env['sale.order.line'].create({
             'name': self.product_delivery_timesheet2.name,
@@ -467,41 +473,45 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
         # invoice SO
         wizard = self.env['sale.advance.payment.inv'].with_context(self.context).create({
             'advance_payment_method': 'delivered',
-            'date_invoice_timesheet': today - timedelta(days=10)
+            'date_start_invoice_timesheet': today - timedelta(days=16),
+            'date_end_invoice_timesheet': today - timedelta(days=10)
         })
 
-        self.assertTrue(wizard.invoicing_timesheet_enabled, 'The "date_invoice_timesheet" field should be visible in the wizard because a product in sale order has service_policy to "Timesheet on Task"')
+        self.assertTrue(wizard.invoicing_timesheet_enabled, 'The "date_start_invoice_timesheet" and "date_end_invoice_timesheet" field should be visible in the wizard because a product in sale order has service_policy to "Timesheet on Task"')
 
         with self.assertRaises(UserError):
             wizard.create_invoices()
 
-        self.assertFalse(sale_order.invoice_ids, 'Normally, no invoice will be created created because the timesheet logged is after the date defined in date_invoice_timesheet field')
+        self.assertFalse(sale_order.invoice_ids, 'Normally, no invoice will be created because the timesheet logged is after the period defined in date_start_invoice_timesheet and date_end_invoice_timesheet field')
 
         wizard.write({
-            'date_invoice_timesheet': today - timedelta(days=6)
+            'date_start_invoice_timesheet': today - timedelta(days=10),
+            'date_end_invoice_timesheet': today - timedelta(days=6)
         })
         wizard.create_invoices()
 
-        self.assertTrue(sale_order.invoice_ids, 'One invoice should be created because the timesheet logged is before or equal to the date defined in wizard')
+        self.assertTrue(sale_order.invoice_ids, 'One invoice should be created because the timesheet logged is between the period defined in wizard')
 
         invoice = sale_order.invoice_ids[0]
         self.assertEqual(so_line_deliver_global_project.qty_invoiced, timesheet1.unit_amount)
 
         # validate invoice
-        invoice.post()
+        invoice.action_post()
 
         wizard.write({
-            'date_invoice_timesheet': today - timedelta(days=4)
+            'date_start_invoice_timesheet': today - timedelta(days=16),
+            'date_end_invoice_timesheet': today - timedelta(days=4)
         })
         wizard.create_invoices()
 
         self.assertEqual(len(sale_order.invoice_ids), 2)
         invoice2 = sale_order.invoice_ids[-1]
 
-        self.assertEqual(so_line_deliver_global_project.qty_invoiced, timesheet1.unit_amount + timesheet3.unit_amount, "The last invoice done should have the quantity of the timesheet 3, because the date this timesheet is the only one before the 'date_invoice_timesheet' field in the wizard.")
+        self.assertEqual(so_line_deliver_global_project.qty_invoiced, timesheet1.unit_amount + timesheet3.unit_amount, "The last invoice done should have the quantity of the timesheet 3, because the date this timesheet is the only one before the 'date_end_invoice_timesheet' field in the wizard.")
 
         wizard.write({
-            'date_invoice_timesheet': today
+            'date_start_invoice_timesheet': today - timedelta(days=4),
+            'date_end_invoice_timesheet': today
         })
 
         wizard.create_invoices()
@@ -565,7 +575,8 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
         }
         wizard = self.env['sale.advance.payment.inv'].with_context(self.context).create({
             'advance_payment_method': 'delivered',
-            'date_invoice_timesheet': today
+            'date_start_invoice_timesheet': today - timedelta(days=4),
+            'date_end_invoice_timesheet': today
         })
         wizard.create_invoices()
 

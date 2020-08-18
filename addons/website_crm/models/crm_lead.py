@@ -28,7 +28,7 @@ class Lead(models.Model):
 
     def action_redirect_to_page_views(self):
         visitors = self.visitor_ids
-        action = self.env.ref('website.website_visitor_page_action').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("website.website_visitor_page_action")
         action['domain'] = [('visitor_id', 'in', visitors.ids)]
         # avoid grouping if only few records
         if len(visitors.website_track_ids.ids) > 15 and len(visitors.page_ids.ids) > 1:

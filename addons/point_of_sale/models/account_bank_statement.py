@@ -9,7 +9,7 @@ class AccountBankStatement(models.Model):
     _inherit = 'account.bank.statement'
 
     pos_session_id = fields.Many2one('pos.session', string="Session", copy=False)
-    account_id = fields.Many2one('account.account', related='journal_id.default_debit_account_id', readonly=True)
+    account_id = fields.Many2one('account.account', related='journal_id.default_account_id', readonly=True)
 
     def button_validate_or_action(self):
         # OVERRIDE to check the consistency of the statement's state regarding the session's state.
@@ -21,7 +21,7 @@ class AccountBankStatement(models.Model):
     def unlink(self):
         for bs in self:
             if bs.pos_session_id:
-                raise UserError(_("You cannot delete a bank statement used in an open Point of Sale session."))
+                raise UserError(_("You cannot delete a bank statement linked to Point of Sale session."))
         return super( AccountBankStatement, self).unlink()
 
 class AccountBankStatementLine(models.Model):

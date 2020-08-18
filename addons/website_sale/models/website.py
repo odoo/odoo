@@ -48,6 +48,8 @@ class Website(models.Model):
     shop_ppg = fields.Integer(default=20, string="Number of products in the grid on the shop")
     shop_ppr = fields.Integer(default=4, string="Number of grid columns on the shop")
 
+    shop_extra_field_ids = fields.One2many('website.sale.extra.field', 'website_id', string='E-Commerce Extra Fields')
+
     @api.depends('all_pricelist_ids')
     def _compute_pricelist_ids(self):
         Pricelist = self.env['product.pricelist']
@@ -227,6 +229,8 @@ class Website(models.Model):
         company = self.company_id or pricelist.company_id
         if company:
             values['company_id'] = company.id
+            if self.env['ir.config_parameter'].sudo().get_param('sale.use_sale_note'):
+                values['note'] = company.sale_note or ""
 
         return values
 
@@ -360,10 +364,25 @@ class Website(models.Model):
     @api.model
     def action_dashboard_redirect(self):
         if self.env.user.has_group('sales_team.group_sale_salesman'):
-            return self.env.ref('website.backend_dashboard').read()[0]
+            return self.env["ir.actions.actions"]._for_xml_id("website.backend_dashboard")
         return super(Website, self).action_dashboard_redirect()
 
     def get_suggested_controllers(self):
         suggested_controllers = super(Website, self).get_suggested_controllers()
         suggested_controllers.append((_('eCommerce'), url_for('/shop'), 'website_sale'))
         return suggested_controllers
+
+
+class WebsiteSaleExtraField(models.Model):
+    _name = 'website.sale.extra.field'
+    _description = 'E-Commerce Extra Info Shown on product page'
+    _order = 'sequence'
+
+    website_id = fields.Many2one('website')
+    sequence = fields.Integer(default=10)
+    field_id = fields.Many2one(
+        'ir.model.fields',
+        domain=[('model_id.model', '=', 'product.template')]
+    )
+    label = fields.Char(related='field_id.field_description')
+    name = fields.Char(related='field_id.name')

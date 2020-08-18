@@ -297,8 +297,26 @@ def make_conditional(response, last_modified=None, etag=None, max_age=0):
         response.set_etag(etag)
     return response.make_conditional(request.httprequest)
 
+def _get_login_redirect_url(uid, redirect=None):
+    """ Decide if user requires a specific post-login redirect, e.g. for 2FA, or if they are
+    fully logged and can proceed to the requested URL
+    """
+    if request.session.uid: # fully logged
+        return redirect or '/web'
+
+    # partial session (MFA)
+    url = request.env(user=uid)['res.users'].browse(uid)._mfa_url()
+    if not redirect:
+        return url
+
+    parsed = werkzeug.urls.url_parse(url)
+    qs = parsed.decode_query()
+    qs['redirect'] = redirect
+    return parsed.replace(query=werkzeug.urls.url_encode(qs)).to_url()
+
 def login_and_redirect(db, login, key, redirect_url='/web'):
-    request.session.authenticate(db, login, key)
+    uid = request.session.authenticate(db, login, key)
+    redirect_url = _get_login_redirect_url(uid, redirect_url)
     return set_cookie_and_redirect(redirect_url)
 
 def set_cookie_and_redirect(redirect_url):
@@ -306,12 +324,18 @@ def set_cookie_and_redirect(redirect_url):
     redirect.autocorrect_location_header = False
     return redirect
 
-def clean_action(action):
+def clean_action(action, env):
     action.setdefault('flags', {})
     action_type = action.setdefault('type', 'ir.actions.act_window_close')
     if action_type == 'ir.actions.act_window':
-        return fix_view_modes(action)
-    return action
+        action = fix_view_modes(action)
+
+    # When returning an action, only few information are really usefull
+    return {
+        field: value
+        for field, value in action.items()
+        if field in env[action['type']]._get_readable_fields()
+    }
 
 # I think generate_views,fix_view_modes should go into js ActionManager
 def generate_views(action):
@@ -869,7 +893,7 @@ class Home(http.Controller):
         return response
 
     def _login_redirect(self, uid, redirect=None):
-        return redirect if redirect else '/web'
+        return _get_login_redirect_url(uid, redirect)
 
     @http.route('/web/login', type='http', auth="none")
     def web_login(self, redirect=None, **kw):
@@ -918,7 +942,8 @@ class Home(http.Controller):
         uid = request.env.user.id
         if request.env.user._is_system():
             uid = request.session.uid = odoo.SUPERUSER_ID
-            request.env['res.users']._invalidate_session_cache()
+            # invalidate session token cache as we've changed the uid
+            request.env['res.users'].clear_caches()
             request.session.session_token = security.compute_session_token(request.session, request.env)
 
         return http.local_redirect(self._login_redirect(uid), keep_hash=True)
@@ -1338,7 +1363,7 @@ class DataSet(http.Controller):
     def call_button(self, model, method, args, kwargs):
         action = self._call_kw(model, method, args, kwargs)
         if isinstance(action, dict) and action.get('type') != '':
-            return clean_action(action)
+            return clean_action(action, env=request.env)
         return False
 
     @http.route('/web/dataset/resequence', type='json', auth="user")
@@ -1668,7 +1693,7 @@ class Action(http.Controller):
             except Exception:
                 action_id = 0   # force failed read
 
-        base_action = Actions.browse([action_id]).read(['type'])
+        base_action = Actions.browse([action_id]).sudo().read(['type'])
         if base_action:
             ctx = dict(request.context)
             action_type = base_action[0]['type']
@@ -1677,15 +1702,16 @@ class Action(http.Controller):
             if additional_context:
                 ctx.update(additional_context)
             request.context = ctx
-            action = request.env[action_type].browse([action_id]).read()
+            action = request.env[action_type].sudo().browse([action_id]).read()
             if action:
-                value = clean_action(action[0])
+                value = clean_action(action[0], env=request.env)
         return value
 
     @http.route('/web/action/run', type='json', auth="user")
     def run(self, action_id):
-        result = request.env['ir.actions.server'].browse([action_id]).run()
-        return clean_action(result) if result else False
+        action = request.env['ir.actions.server'].browse([action_id])
+        result = action.run()
+        return clean_action(result, env=action.env) if result else False
 
 class Export(http.Controller):
 

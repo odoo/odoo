@@ -15,10 +15,6 @@
                 <filter string="My Department Time Off" name="department" domain="[('department_id.manager_id.user_id', '=', uid)]" help="My Department Time Off"/>
                 <filter name="my_team_leaves" string="My Team Time Off" domain="[('employee_id.parent_id.user_id', '=', uid)]" groups="hr_holidays.group_hr_holidays_manager" help="Time Off of Your Team Member"/>
                 <separator/>
-                <filter string="To Report in Payslip" name="gray" domain="[('payslip_status', '=', False)]" groups="hr_holidays.group_hr_holidays_manager"/>
-                <separator/>
-                <filter string="To Do" name="todo" domain="[('payslip_status', '=', False), ('holiday_status_id.active', '=', True)]"/>
-                <separator/>
                 <filter name="year" string="Current Year"
                     domain="[('holiday_status_id.active', '=', True)]" help="Active Time Off"/>
                 <separator/>
@@ -28,9 +24,7 @@
                 <field name="department_id" operator="child_of"/>
                 <field name="holiday_status_id"/>
                 <group expand="0" string="Group By">
-                    <filter name="group_name" string="Description" context="{'group_by':'name'}"/>
                     <filter name="group_employee" string="Employee" context="{'group_by':'employee_id'}"/>
-                    <filter name="group_category" string="Category" context="{'group_by':'category_id'}"/>
                     <filter name="group_type" string="Type" context="{'group_by':'holiday_status_id'}"/>
                     <separator/>
                     <filter name="group_date_from" string="Start Date" context="{'group_by':'date_from'}"/>
@@ -46,10 +40,10 @@
             <tree create="0" edit="0" delete="0">
                 <field name="employee_id"/>
                 <field name="number_of_days" string="Number of Days" sum="Remaining Days"/>
+                <field name="leave_type"/>
                 <field name="date_from"/>
                 <field name="date_to"/>
                 <field name="state"/>
-                <field name="leave_type"/>
                 <field name="name"/>
             </tree>
         </field>

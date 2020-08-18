@@ -86,10 +86,9 @@ odoo.define('point_of_sale.OrderManagementScreen', function (require) {
          * @param {models.Order} order
          */
         _setOrder(order) {
+            this.env.pos.set_order(order);
             if (order === this.env.pos.get_order()) {
                 this.close();
-            } else {
-                this.env.pos.set_order(order);
             }
         }
     }

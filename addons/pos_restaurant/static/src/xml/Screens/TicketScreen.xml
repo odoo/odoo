@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="TicketScreen" t-inherit="point_of_sale.TicketScreen" t-inherit-mode="extension" owl="1">
+        <xpath expr="//div[hasclass('header-row')]//div[@name='delete']" position="before">
+            <div t-if="env.pos.config.iface_floorplan" class="col start" name="table">Table</div>
+        </xpath>
+        <xpath expr="//div[hasclass('order-row')]//div[@name='delete']" position="before">
+            <div t-if="env.pos.config.iface_floorplan" class="col start" name="table">
+                <t t-esc="getTable(order)"></t>
+            </div>
+        </xpath>
+    </t>
+
+</templates>

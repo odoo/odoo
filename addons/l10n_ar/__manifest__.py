@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
-    'name': 'Argentinian Accounting',
+    'name': 'Argentina - Accounting',
     'version': "3.0",
     'description': """
 Functional
@@ -66,7 +66,7 @@ Master Data:
 * Partners: Consumidor Final and AFIP
 """,
     'author': 'ADHOC SA',
-    'category': 'Accounting/Localizations',
+    'category': 'Accounting/Localizations/Account Charts',
     'depends': [
         'l10n_latam_invoice_document',
         'l10n_latam_base',
@@ -108,7 +108,7 @@ Master Data:
         'demo/mono_demo.xml',
         'demo/respinsc_demo.xml',
         'demo/res_partner_demo.xml',
-        'demo/account_tax_template_demo.xml',
+        'demo/account_tax_demo.xml',
         'demo/product_product_demo.xml',
         'demo/account_customer_invoice_demo.xml',
         'demo/account_customer_refund_demo.xml',

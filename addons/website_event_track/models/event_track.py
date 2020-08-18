@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import timedelta
 from random import randint
 
 from odoo import api, fields, models
 from odoo.tools.translate import _, html_translate
 from odoo.addons.http_routing.models.ir_http import slug
-from datetime import timedelta
 
 
 class TrackTag(models.Model):
@@ -14,13 +14,13 @@ class TrackTag(models.Model):
     _description = 'Event Track Tag'
     _order = 'name'
 
-    def _get_default_color(self):
+    def _default_color(self):
         return randint(1, 11)
 
     name = fields.Char('Tag Name', required=True)
     track_ids = fields.Many2many('event.track', string='Tracks')
     color = fields.Integer(
-        string='Color Index', default=_get_default_color,
+        string='Color Index', default=lambda self: self._default_color(),
         help="Note that colorless tags won't be available on the website.")
 
     _sql_constraints = [

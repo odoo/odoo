@@ -246,8 +246,11 @@ function factory(dependencies) {
         model: attr({
             default: 'res.partner',
         }),
-        moderatedChannelIds: attr({
-            default: [],
+        /**
+         * Channels that are moderated by this partner.
+         */
+        moderatedChannels: many2many('mail.thread', {
+            inverse: 'moderators',
         }),
         name: attr(),
         nameOrDisplayName: attr({

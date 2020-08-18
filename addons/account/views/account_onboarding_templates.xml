@@ -59,13 +59,16 @@
             <t t-set="state" t-value="state.get('account_setup_coa_state')" />
         </t>
     </template>
-    <template id="dashboard_onboarding_company_step" primary="True"
-              inherit_id="base.onboarding_company_step">
-        <xpath expr="//t[@t-set='description']" position="replace">
-            <t t-set="description">
-                Setup your company's data for reports headers.
-            </t>
-        </xpath>
+    <template id="dashboard_onboarding_bill_step">
+        <t t-call="base.onboarding_step">
+            <t t-set="title">First Bill</t>
+            <t t-set="description">Digitalize your vendor bills with OCR and Artificial Intelligence.</t>
+            <t t-set="btn_text">Let's start!</t>
+            <t t-set="done_text">All done!</t>
+            <t t-set="method" t-value="'setting_upload_bill_wizard'"/>
+            <t t-set="model" t-value="'account.move'"/>
+            <t t-set="state" t-value="state.get('account_setup_bill_state')"/>
+        </t>
     </template>
     <!-- ONBOARDING PANELS -->
     <template id="account_invoice_onboarding_panel" name="account.invoice.onboarding.panel">
@@ -88,7 +91,7 @@
             <t t-set="close_method" t-value="'action_close_account_dashboard_onboarding'"/>
             <t t-set="close_model" t-value="'res.company'"/>
 
-            <t t-call="account.dashboard_onboarding_company_step" name="company_step" />
+            <t t-call="account.dashboard_onboarding_bill_step" name="company_step" />
             <t t-call="account.onboarding_bank_account_step" name="bank_account_step" />
             <t t-call="account.onboarding_fiscal_year_step" name="fiscal_year_step" />
             <t t-call="account.onboarding_chart_of_account_step" name="chart_of_account_step" />

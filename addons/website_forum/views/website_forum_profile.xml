@@ -55,13 +55,13 @@
         <xpath expr="//div[@id='profile_extra_info_tabcontent']" position="inside">
             <t t-if="forum">
                 <div role="tabpanel" class="o_wforum_profile_tab tab-pane" id="questions">
-                    <div class="mb32">
+                    <div class="mb-4">
                         <h5 class="border-bottom pb-1">
                             Questions
                             <t t-call="website_forum.forum_filter_tag"/>
                         </h5>
                         <t t-if="questions">
-                            <div class="mb4" t-foreach="questions" t-as="question">
+                            <div class="mb-1" t-foreach="questions" t-as="question">
                                 <t t-call="website_forum.display_post"/>
                             </div>
                         </t>
@@ -70,9 +70,9 @@
                         </t>
                     </div>
                     <t t-if="favourite">
-                        <div class="mb4">
+                        <div class="mb-4">
                             <h5 class="border-bottom pb-1">Favourite Questions</h5>
-                            <div t-foreach="favourite" t-as="question">
+                            <div class="mb-1" t-foreach="favourite" t-as="question">
                                 <t t-call="website_forum.display_post">
                                     <t t-set="hide_fav_icon" t-value="True"/>
                                 </t>
@@ -80,23 +80,23 @@
                         </div>
                     </t>
                     <t t-if="followed">
-                        <div class="mb4">
+                        <div class="mb-4">
                             <h5 class="border-bottom pb-1">Followed Questions</h5>
-                            <div t-foreach="followed" t-as="question" class="mb16">
+                            <div class="mb-1" t-foreach="followed" t-as="question">
                                 <t t-call="website_forum.display_post"/>
                             </div>
                         </div>
                     </t>
                 </div>
                 <div role="tabpanel" class="o_wforum_profile_tab tab-pane" id="answers">
-                    <div class="mb32">
+                    <div class="mb-4">
                         <h5 class="border-bottom pb-1">
                             Answers
                             <t t-call="website_forum.forum_filter_tag"/>
                         </h5>
 
                         <t t-if="answers">
-                            <div t-foreach="answers" t-as="answer">
+                            <div class="mb-1" t-foreach="answers" t-as="answer">
                                 <t t-call="website_forum.display_post_answer"/>
                             </div>
                         </t>
@@ -106,13 +106,13 @@
                     </div>
                 </div>
                 <div role="tabpanel" class="o_wforum_profile_tab tab-pane" id="votes" t-if="uid == user.id">
-                    <div class="mb32">
+                    <div class="mb-4">
                         <h5 class="border-bottom pb-1">Votes</h5>
                         <t t-call="website_forum.user_votes"/>
                     </div>
                 </div>
                 <div role="tabpanel" class="o_wforum_profile_tab tab-pane" id="activity" t-if="uid == user.id">
-                    <div class="mb32">
+                    <div class="mb-4">
                         <h5 class="border-bottom pb-1">
                             Activities
                             <t t-call="website_forum.forum_filter_tag"/>

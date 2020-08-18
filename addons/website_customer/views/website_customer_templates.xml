@@ -221,7 +221,7 @@
 </template>
 
 <template id="references_block" name="Partner References Block">
-        <t t-if="any([p.website_published for p in partner.implemented_partner_ids])">
+        <t t-if="any(p.website_published for p in partner.implemented_partner_ids)">
             <h3 id="references">References</h3>
             <div t-foreach="partner.implemented_partner_ids" t-as="reference" class="media mt-3">
               <t t-if="reference.website_published">

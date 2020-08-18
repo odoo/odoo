@@ -359,7 +359,7 @@ class IrAttachment(models.Model):
             # XDO note: if read on sudo, read twice, one for constraints, one for _inverse_datas as user
             if attachment.type == 'binary' and attachment.url:
                 has_group = self.env.user.has_group
-                if not any([has_group(g) for g in attachment.get_serving_groups()]):
+                if not any(has_group(g) for g in attachment.get_serving_groups()):
                     raise ValidationError("Sorry, you are not allowed to write on this document")
 
     @api.model
@@ -570,7 +570,7 @@ class IrAttachment(models.Model):
 
     @api.model
     def action_get(self):
-        return self.env['ir.actions.act_window'].for_xml_id('base', 'action_attachment')
+        return self.env['ir.actions.act_window']._for_xml_id('base.action_attachment')
 
     @api.model
     def get_serve_attachment(self, url, extra_domain=None, extra_fields=None, order=None):

@@ -267,8 +267,7 @@ class PaymentAcquirer(models.Model):
             'sequence': 999,
             'type': 'bank',
             'company_id': self.company_id.id,
-            'default_debit_account_id': account.id,
-            'default_credit_account_id': account.id,
+            'default_account_id': account.id,
             # Show the journal on dashboard if the acquirer is published on the website.
             'show_on_dashboard': self.state == 'enabled',
             # Don't show payment methods in the backend.
@@ -674,7 +673,7 @@ class PaymentTransaction(models.Model):
         self.payment_id = payment
 
         if self.invoice_ids:
-            self.invoice_ids.filtered(lambda move: move.state == 'draft').post()
+            self.invoice_ids.filtered(lambda move: move.state == 'draft')._post()
 
             (payment.line_ids + self.invoice_ids.line_ids)\
                 .filtered(lambda line: line.account_id == payment.destination_account_id and not line.reconciled)\
@@ -814,7 +813,7 @@ class PaymentTransaction(models.Model):
     def _reconcile_after_transaction_done(self):
         # Validate invoices automatically upon the transaction is posted.
         invoices = self.mapped('invoice_ids').filtered(lambda inv: inv.state == 'draft')
-        invoices.post()
+        invoices._post()
 
         # Create & Post the payments.
         for trans in self:
@@ -1091,13 +1090,13 @@ class PaymentTransaction(models.Model):
         return res
 
     def action_capture(self):
-        if any([t.state != 'authorized' for t in self]):
-            raise ValidationError(_('Only transactions having the capture status can be captured.'))
+        if any(t.state != 'authorized' for t in self):
+            raise ValidationError(_('Only transactions having the authorized status can be captured.'))
         for tx in self:
             tx.s2s_capture_transaction()
 
     def action_void(self):
-        if any([t.state != 'authorized' for t in self]):
+        if any(t.state != 'authorized' for t in self):
             raise ValidationError(_('Only transactions having the capture status can be voided.'))
         for tx in self:
             tx.s2s_void_transaction()

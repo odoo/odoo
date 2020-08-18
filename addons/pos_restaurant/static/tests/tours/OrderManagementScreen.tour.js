@@ -11,6 +11,7 @@ odoo.define('pos_restaurant.tour.OrderManagementScreen', function (require) {
     } = require('point_of_sale.tour.OrderManagementScreenTourMethods');
     const { FloorScreen } = require('pos_restaurant.tour.FloorScreenTourMethods');
     const { ProductScreen } = require('pos_restaurant.tour.ProductScreenTourMethods');
+    const { TicketScreen } = require('point_of_sale.tour.TicketScreenTourMethods');
     const { getSteps, startSteps } = require('point_of_sale.tour.utils');
     var Tour = require('web_tour.tour');
 
@@ -36,7 +37,8 @@ odoo.define('pos_restaurant.tour.OrderManagementScreen', function (require) {
         ['Water', '3', '4'],
         ['Minute Maid', '5', '6']
     );
-    Chrome.do.newOrder();
+    Chrome.do.clickTicketButton();
+    TicketScreen.do.clickNewTicket();
     ProductScreen.exec.addMultiOrderlines(['Coca-Cola', '1', '2'], ['Minute Maid', '5', '6']);
     Chrome.do.backToFloor();
 
@@ -47,7 +49,8 @@ odoo.define('pos_restaurant.tour.OrderManagementScreen', function (require) {
         ['Water', '9', '10'],
         ['Minute Maid', '11', '12']
     );
-    Chrome.do.newOrder();
+    Chrome.do.clickTicketButton();
+    TicketScreen.do.clickNewTicket();
     ProductScreen.exec.addMultiOrderlines(['Coca-Cola', '13', '14'], ['Minute Maid', '15', '16']);
     Chrome.do.backToFloor();
 

@@ -6,10 +6,11 @@ const components = {
 };
 
 const {
-    afterEach: utilsAfterEach,
+    afterEach,
     afterNextRender,
-    beforeEach: utilsBeforeEach,
-    start: utilsStart,
+    beforeEach,
+    createRootComponent,
+    start,
 } = require('mail/static/src/utils/test_utils.js');
 
 QUnit.module('mail', {}, function () {
@@ -17,38 +18,21 @@ QUnit.module('components', {}, function () {
 QUnit.module('notification_list', {}, function () {
 QUnit.module('notification_list_tests.js', {
     beforeEach() {
-        utilsBeforeEach(this);
+        beforeEach(this);
 
         /**
          * @param {Object} param0
          * @param {string} [param0.filter='all']
          */
         this.createNotificationListComponent = async ({ filter = 'all' }) => {
-            const NotificationListComponent = components.NotificationList;
-            NotificationListComponent.env = this.env;
-            this.component = new NotificationListComponent(null, { filter });
-            await afterNextRender(() => this.component.mount(this.widget.el));
+            await createRootComponent(this, components.NotificationList, {
+                props: { filter },
+                target: this.widget.el,
+            });
         };
 
         this.start = async params => {
-            Object.assign(this.data.initMessaging, {
-                channel_slots: {
-                    channel_channel: [{
-                        channel_type: 'channel',
-                        id: 100,
-                        is_pinned: true,
-                        name: "Channel 2019",
-                        message_unread_counter: 0,
-                    }, {
-                        channel_type: 'channel',
-                        id: 200,
-                        is_pinned: true,
-                        name: "Channel 2020",
-                        message_unread_counter: 0,
-                    }],
-                },
-            });
-            let { env, widget } = await utilsStart(Object.assign({}, params, {
+            const { env, widget } = await start(Object.assign({}, params, {
                 data: this.data,
             }));
             this.env = env;
@@ -56,55 +40,33 @@ QUnit.module('notification_list_tests.js', {
         };
     },
     afterEach() {
-        utilsAfterEach(this);
-        if (this.component) {
-            this.component.destroy();
-            this.component = undefined;
-        }
-        if (this.widget) {
-            this.widget.destroy();
-            this.widget = undefined;
-        }
-        this.env = undefined;
-        delete components.NotificationList.env;
+        afterEach(this);
     },
 });
 
 QUnit.test('marked as read thread notifications are ordered by last message date', async function (assert) {
     assert.expect(3);
 
-    this.data['mail.channel'].records = [{
-        channel_type: 'channel',
-        id: 100,
-        message_unread_counter: 0,
-        name: "Channel 2019",
-    }, {
-        channel_type: 'channel',
-        id: 200,
-        message_unread_counter: 0,
-        name: "Channel 2020",
-    }];
-    this.data['mail.message'].records = [{
-        author_id: [10, "Author A"],
-        body: "<p>Message A</p>",
-        channel_ids: [100],
-        date: "2019-01-01 00:00:00",
-        id: 42,
-        message_type: 'comment',
-        model: 'mail.channel',
-        record_name: 'Channel 2019',
-        res_id: 100,
-    }, {
-        author_id: [20, "Author B"],
-        body: "<p>Message B</p>",
-        channel_ids: [200],
-        date: "2020-01-01 00:00:00",
-        id: 43,
-        message_type: 'comment',
-        model: 'mail.channel',
-        record_name: 'Channel 2020',
-        res_id: 200,
-    }];
+    this.data['mail.channel'].records.push(
+        { id: 100, name: "Channel 2019" },
+        { id: 200, name: "Channel 2020" }
+    );
+    this.data['mail.message'].records.push(
+        {
+            channel_ids: [100],
+            date: "2019-01-01 00:00:00",
+            id: 42,
+            model: 'mail.channel',
+            res_id: 100,
+        },
+        {
+            channel_ids: [200],
+            date: "2020-01-01 00:00:00",
+            id: 43,
+            model: 'mail.channel',
+            res_id: 200,
+        }
+    );
     await this.start();
     await this.createNotificationListComponent({ filter: 'all' });
     assert.containsN(
@@ -129,38 +91,26 @@ QUnit.test('marked as read thread notifications are ordered by last message date
 QUnit.test('thread notifications are re-ordered on receiving a new message', async function (assert) {
     assert.expect(4);
 
-    this.data['mail.channel'].records = [{
-        channel_type: 'channel',
-        id: 100,
-        message_unread_counter: 0,
-        name: "Channel 2019",
-    }, {
-        channel_type: 'channel',
-        id: 200,
-        message_unread_counter: 0,
-        name: "Channel 2020",
-    }];
-    this.data['mail.message'].records = [{
-        author_id: [10, "Author A"],
-        body: "<p>Message A</p>",
-        channel_ids: [100],
-        date: "2019-01-01 00:00:00",
-        id: 42,
-        message_type: 'comment',
-        model: 'mail.channel',
-        record_name: 'Channel 2019',
-        res_id: 100,
-    }, {
-        author_id: [20, "Author B"],
-        body: "<p>Message B</p>",
-        channel_ids: [200],
-        date: "2020-01-01 00:00:00",
-        id: 43,
-        message_type: 'comment',
-        model: 'mail.channel',
-        record_name: 'Channel 2020',
-        res_id: 200,
-    }];
+    this.data['mail.channel'].records.push(
+        { id: 100, name: "Channel 2019" },
+        { id: 200, name: "Channel 2020" }
+    );
+    this.data['mail.message'].records.push(
+        {
+            channel_ids: [100],
+            date: "2019-01-01 00:00:00",
+            id: 42,
+            model: 'mail.channel',
+            res_id: 100,
+        },
+        {
+            channel_ids: [200],
+            date: "2020-01-01 00:00:00",
+            id: 43,
+            model: 'mail.channel',
+            res_id: 200,
+        }
+    );
     await this.start();
     await this.createNotificationListComponent({ filter: 'all' });
     assert.containsN(

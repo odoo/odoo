@@ -3,7 +3,7 @@
 {
     'name': 'Events',
     'category': 'Marketing/Events',
-    'sequence': 166,
+    'sequence': 140,
     'summary': 'Publish events, sell tickets',
     'website': 'https://www.odoo.com/page/events',
     'description': "",
@@ -15,6 +15,8 @@
         'views/event_snippets.xml',
         'views/event_templates.xml',
         'views/event_templates_misc_pages.xml',
+        'views/event_templates_registration.xml',
+        'views/website_templates.xml',
         'views/event_views.xml',
         'security/ir.model.access.csv',
         'security/event_security.xml',

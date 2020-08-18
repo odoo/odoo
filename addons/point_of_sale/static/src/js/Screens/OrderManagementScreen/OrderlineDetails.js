@@ -21,7 +21,7 @@ odoo.define('point_of_sale.OrderlineDetails', function (require) {
                 return format.float(roundedQuantity, { digits: [69, decimals] });
             };
             return {
-                productName: line.get_product().display_name,
+                productName: line.get_full_product_name(),
                 totalPrice: line.get_price_with_tax(),
                 quantity: formatQty(line),
                 unit: line.get_unit().name,

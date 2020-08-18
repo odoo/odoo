@@ -414,6 +414,42 @@ function formatSelection(value, field, options) {
 ////////////////////////////////////////////////////////////////////////////////
 
 /**
+ * Smart date inputs are shortcuts to write dates quicker.
+ * These shortcuts should respect the format ^[+-]\d+[dmwy]?$
+ * 
+ * e.g.
+ *   "+1d" or "+1" will return now + 1 day
+ *   "-2w" will return now - 2 weeks
+ *   "+3m" will return now + 3 months
+ *   "-4y" will return now + 4 years
+ *
+ * @param {string} value
+ * @returns {Moment|false} Moment date object
+ */
+function parseSmartDateInput(value) {
+    const units = {
+        d: 'days',
+        m: 'months',
+        w: 'weeks',
+        y: 'years',
+    };
+    const re = new RegExp(`^([+-])(\\d+)([${Object.keys(units).join('')}]?)$`);
+    const match = re.exec(value);
+    if (match) {
+        let date = moment();
+        const offset = parseInt(match[2], 10);
+        const unit = units[match[3] || 'd'];
+        if (match[1] === '+') {
+            date.add(offset, unit);
+        } else {
+            date.subtract(offset, unit);
+        }
+        return date;
+    }
+    return false;
+}
+
+/**
  * Create an Date object
  * The method toJSON return the formated value to send value server side
  *
@@ -433,11 +469,16 @@ function parseDate(value, field, options) {
     var datePattern = time.getLangDateFormat();
     var datePatternWoZero = datePattern.replace('MM', 'M').replace('DD', 'D');
     var date;
-    if (options && options.isUTC) {
-        value = value.padStart(10, "0"); // server may send "932-10-10" for "0932-10-10" on some OS
-        date = moment.utc(value);
+    const smartDate = parseSmartDateInput(value);
+    if (smartDate) {
+        date = smartDate;
     } else {
-        date = moment.utc(value, [datePattern, datePatternWoZero, moment.ISO_8601]);
+        if (options && options.isUTC) {
+            value = value.padStart(10, "0"); // server may send "932-10-10" for "0932-10-10" on some OS
+            date = moment.utc(value);
+        } else {
+            date = moment.utc(value, [datePattern, datePatternWoZero, moment.ISO_8601]);
+        }
     }
     if (date.isValid()) {
         if (date.year() === 0) {
@@ -475,13 +516,18 @@ function parseDateTime(value, field, options) {
     var pattern1 = datePattern + ' ' + timePattern;
     var pattern2 = datePatternWoZero + ' ' + timePatternWoZero;
     var datetime;
-    if (options && options.isUTC) {
-        // phatomjs crash if we don't use this format
-        datetime = moment.utc(value.replace(' ', 'T') + 'Z');
+    const smartDate = parseSmartDateInput(value);
+    if (smartDate) {
+        datetime = smartDate;
     } else {
-        datetime = moment.utc(value, [pattern1, pattern2, moment.ISO_8601]);
-        if (options && options.timezone) {
-            datetime.add(-session.getTZOffset(datetime), 'minutes');
+        if (options && options.isUTC) {
+            // phatomjs crash if we don't use this format
+            datetime = moment.utc(value.replace(' ', 'T') + 'Z');
+        } else {
+            datetime = moment.utc(value, [pattern1, pattern2, moment.ISO_8601]);
+            if (options && options.timezone) {
+                datetime.add(-session.getTZOffset(datetime), 'minutes');
+            }
         }
     }
     if (datetime.isValid()) {

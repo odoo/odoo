@@ -2,13 +2,14 @@
 <templates>
 
     <div t-name="web.PivotRenderer" class="o_pivot" owl="1">
-        <t t-if="!props.hasData || !props.measures.length">
-            <t t-set="description">
-                Try to add some records, or make sure that there is at least one measure and no active filter in the search bar
+        <t t-if="!(props.hasData and props.measures.length) or (props.isSample and !props.isEmbedded)">
+            <t t-if="props.noContentHelp" t-call="web.ActionHelper" >
+                <t t-set="noContentHelp" t-value="props.noContentHelp"/>
             </t>
-            <t t-call="web.NoContentHelper"/>
+            <t t-else="" t-call="web.NoContentHelper"/>
         </t>
-        <table t-else="1" class="table-hover table-sm table-bordered" t-att-class="{ o_enable_linking: !props.disableLinking }">
+
+        <table t-if="props.hasData and props.measures.length" class="table-hover table-sm table-bordered" t-att-class="{ o_enable_linking: !props.disableLinking }">
             <thead>
                 <tr t-foreach="props.table.headers" t-as="row" t-key="'header_' + row_index">
                     <t t-foreach="row" t-as="cell" t-key="'header_row_' + cell_index">

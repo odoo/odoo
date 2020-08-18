@@ -11,7 +11,6 @@
     'data': [
         'data/google_calendar_data.xml',
         'security/ir.model.access.csv',
-        'views/calendar_event_views.xml',
         'wizard/reset_account_views.xml',
         'views/res_config_settings_views.xml',
         'views/res_users_views.xml',

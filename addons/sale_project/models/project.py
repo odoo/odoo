@@ -134,7 +134,7 @@ class ProjectTask(models.Model):
         so_to_confirm.action_confirm()
 
         # redirect create invoice wizard (of the Sales Order)
-        action = self.env.ref('sale.action_view_sale_advance_payment_inv').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("sale.action_view_sale_advance_payment_inv")
         context = literal_eval(action.get('context', "{}"))
         context.update({
             'active_id': self.sale_order_id.id if len(self) == 1 else False,
@@ -143,3 +143,13 @@ class ProjectTask(models.Model):
         })
         action['context'] = context
         return action
+
+class ProjectTaskRecurrence(models.Model):
+    _inherit = 'project.task.recurrence'
+
+    def _new_task_values(self, task):
+        values = super(ProjectTaskRecurrence, self)._new_task_values(task)
+        task = self.sudo().task_ids[0]
+        if not task.is_fsm:
+            values['sale_line_id'] = task.sale_line_id.id
+        return values

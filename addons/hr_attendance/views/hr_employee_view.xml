@@ -132,7 +132,9 @@
                                     <span id="oe_hr_attendance_status" class="fa fa-circle oe_hr_attendance_status_green" role="img" aria-label="Available" title="Available"></span>
                                 </div>
                                 <div class="float-right" t-if="record.attendance_state.raw_value == 'checked_out'">
-                                    <span id="oe_hr_attendance_status" class="fa fa-circle oe_hr_attendance_status_red" role="img" aria-label="Not available" title="Not available"></span>
+                                    <span id="oe_hr_attendance_status" class="fa fa-circle oe_hr_attendance_status_orange"
+                                          role="img" aria-label="Not available" title="Not available">
+                                    </span>
                                 </div>
                                 <strong>
                                     <field name="name"/>

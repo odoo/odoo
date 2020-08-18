@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from itertools import groupby
 from re import search
+from functools import partial
 
 from odoo import api, fields, models
 
@@ -181,6 +182,36 @@ class PosOrder(models.Model):
             del order['create_date']
 
         return table_orders
+
+    def set_tip(self, tip_line_vals):
+        """Set tip to `self` based on values in `tip_line_vals`."""
+
+        self.ensure_one()
+        PosOrderLine = self.env['pos.order.line']
+        process_line = partial(PosOrderLine._order_line_fields, session_id=self.session_id.id)
+
+        # 1. add/modify tip orderline
+        processed_tip_line_vals = process_line([0, 0, tip_line_vals])[2]
+        processed_tip_line_vals.update({ "order_id": self.id })
+        tip_line = self.lines.filtered(lambda line: line.product_id == self.session_id.config_id.tip_product_id)
+        if not tip_line:
+            tip_line = PosOrderLine.create(processed_tip_line_vals)
+        else:
+            tip_line.write(processed_tip_line_vals)
+
+        # 2. modify payment
+        payment_line = self.payment_ids.filtered(lambda line: not line.is_change)[0]
+        # TODO it would be better to throw error if there are multiple payment lines
+        # then ask the user to select which payment to update, no?
+        payment_line._update_payment_line_for_tip(tip_line.price_subtotal_incl)
+
+        # 3. flag order as tipped and update order fields
+        self.write({
+            "is_tipped": True,
+            "tip_amount": tip_line.price_subtotal_incl,
+            "amount_total": self.amount_total + tip_line.price_subtotal_incl,
+            "amount_paid": self.amount_paid + tip_line.price_subtotal_incl,
+        })
 
     @api.model
     def _order_fields(self, ui_order):

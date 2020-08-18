@@ -11,11 +11,26 @@ class ResConfigSettings(models.TransientModel):
     currency_id = fields.Many2one('res.currency', related="company_id.currency_id", required=True, readonly=False,
         string='Currency', help="Main currency of the company.")
     currency_exchange_journal_id = fields.Many2one(
-        'account.journal',
+        comodel_name='account.journal',
         related='company_id.currency_exchange_journal_id', readonly=False,
-        string="Exchange Gain or Loss Journal",
+        string="Currency Exchange Journal",
         domain="[('company_id', '=', company_id), ('type', '=', 'general')]",
         help='The accounting journal where automatic exchange differences will be registered')
+    income_currency_exchange_account_id = fields.Many2one(
+        comodel_name="account.account",
+        related="company_id.income_currency_exchange_account_id",
+        string="Gain Account",
+        readonly=False,
+        domain=lambda self: "[('internal_type', '=', 'other'), ('deprecated', '=', False), ('company_id', '=', company_id),\
+                             ('user_type_id', 'in', %s)]" % [self.env.ref('account.data_account_type_revenue').id,
+                                                             self.env.ref('account.data_account_type_other_income').id])
+    expense_currency_exchange_account_id = fields.Many2one(
+        comodel_name="account.account",
+        related="company_id.expense_currency_exchange_account_id",
+        string="Loss Account",
+        readonly=False,
+        domain=lambda self: "[('internal_type', '=', 'other'), ('deprecated', '=', False), ('company_id', '=', company_id),\
+                             ('user_type_id', '=', %s)]" % self.env.ref('account.data_account_type_expenses').id)
     has_chart_of_accounts = fields.Boolean(compute='_compute_has_chart_of_accounts', string='Company has a chart of accounts')
     chart_template_id = fields.Many2one('account.chart.template', string='Template', default=lambda self: self.env.company.chart_template_id,
         domain="[('visible','=', True)]")

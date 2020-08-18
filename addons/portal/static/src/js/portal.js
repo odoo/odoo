@@ -2,6 +2,9 @@ odoo.define('portal.portal', function (require) {
 'use strict';
 
 var publicWidget = require('web.public.widget');
+const Dialog = require('web.Dialog');
+const {_t, qweb} = require('web.core');
+const ajax = require('web.ajax');
 
 publicWidget.registry.portalDetails = publicWidget.Widget.extend({
     selector: '.o_portal_details',
@@ -47,6 +50,46 @@ publicWidget.registry.portalDetails = publicWidget.Widget.extend({
      */
     _onCountryChange: function () {
         this._adaptAddressForm();
+    },
+});
+
+publicWidget.registry.PortalHomeCounters = publicWidget.Widget.extend({
+    selector: '.o_portal_my_home',
+
+    /**
+     * @override
+     */
+    start: function () {
+        var def = this._super.apply(this, arguments);
+        this._updateCounters();
+        return def;
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    async _updateCounters(elem) {
+        const numberRpc = 3;
+        const needed = this.$('[data-placeholder_count]')
+                                .map((i, o) => $(o).data('placeholder_count'))
+                                .toArray();
+        const counterByRpc = Math.ceil(needed.length / numberRpc);  // max counter, last can be less
+
+        const proms = [...Array(Math.min(numberRpc, needed.length)).keys()].map(async i => {
+            await this._rpc({
+                route: "/my/counters",
+                params: {
+                    counters: needed.slice(i * counterByRpc, (i + 1) * counterByRpc)
+                },
+            }).then(data => {
+                Object.keys(data).map(k => this.$("[data-placeholder_count='" + k + "']").text(data[k]));
+            });
+        });
+        return Promise.all(proms);
     },
 });
 
@@ -119,4 +162,83 @@ publicWidget.registry.portalSearchPanel = publicWidget.Widget.extend({
         }
     },
 });
+
+const tmpl = ajax.loadXML('/portal/static/src/xml/portal_security.xml', qweb);
+
+/**
+ * Wraps an RPC call in a check for the result being an identity check action
+ * descriptor. If no such result is found, just returns the wrapped promise's
+ * result as-is; otherwise shows an identity check dialog and resumes the call
+ * on success.
+ *
+ * Warning: does not in and of itself trigger an identity check, a promise which
+ * never triggers and identity check internally will do nothing of use.
+ *
+ * @param {Function} rpc Widget#_rpc bound do the widget
+ * @param {Promise} wrapped promise to check for an identity check request
+ * @returns {Promise} result of the original call
+ */
+function handleCheckIdentity(rpc, wrapped) {
+    return wrapped.then((r) => {
+        if (!_.isMatch(r, {type: 'ir.actions.act_window', res_model: 'res.users.identitycheck'})) {
+            return r;
+        }
+        const check_id = r.res_id;
+        return tmpl.then(() => new Promise((resolve, reject) => {
+            const d = new Dialog(null, {
+                title: _t("Security Control"),
+                $content: qweb.render('portal.identitycheck'),
+                buttons: [{
+                    text: _t("Confirm Password"), classes: 'btn btn-primary',
+                    // nb: if click & close, waits for click to resolve before closing
+                    click() {
+                        const password_input = this.el.querySelector('[name=password]');
+                        if (!password_input.reportValidity()) {
+                            password_input.classList.add('is-invalid');
+                            return;
+                        }
+                        return rpc({
+                            model: 'res.users.identitycheck',
+                            method: 'write',
+                            args: [check_id, {password: password_input.value}]
+                        }).then(() => rpc({
+                            model: 'res.users.identitycheck',
+                            method: 'run_check',
+                            args: [check_id]
+                        })).then((r) => {
+                            this.close();
+                            resolve(r);
+                        }, (err) => {
+                            err.event.preventDefault(); // suppress crashmanager
+                            password_input.classList.add('is-invalid');
+                            password_input.setCustomValidity(_t("Check failed"));
+                            password_input.reportValidity();
+                        });
+                    }
+                }, {
+                    text: _t('Cancel'), close: true
+                }]
+            }).on('close', null, () => {
+                // unlink wizard object?
+                reject();
+            });
+            d.opened(() => {
+                const pw = d.el.querySelector('[name="password"]');
+                pw.focus();
+                pw.addEventListener('input', () => {
+                    pw.classList.remove('is-invalid');
+                    pw.setCustomValidity('');
+                });
+                d.el.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    d.$footer.find('.btn-primary').click();
+                });
+            });
+            d.open();
+        }));
+    });
+}
+return {
+    handleCheckIdentity,
+}
 });

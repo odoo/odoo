@@ -29,6 +29,9 @@ from odoo.exceptions import CacheMiss
 DATE_LENGTH = len(date.today().strftime(DATE_FORMAT))
 DATETIME_LENGTH = len(datetime.now().strftime(DATETIME_FORMAT))
 
+# hacky-ish way to prevent access to a field through the ORM (except for sudo mode)
+NO_ACCESS='.'
+
 IR_MODELS = (
     'ir.model', 'ir.model.data', 'ir.model.fields', 'ir.model.fields.selection',
     'ir.model.relation', 'ir.model.constraint', 'ir.module.module',
@@ -1589,7 +1592,7 @@ class Html(_String):
         (only a white list of attributes is accepted, default: ``True``)
     :param bool sanitize_attributes: whether to sanitize attributes
         (only a white list of attributes is accepted, default: ``True``)
-    :param bool sanitize_style: whether to sanitize style attributes (default: ``True``)
+    :param bool sanitize_style: whether to sanitize style attributes (default: ``False``)
     :param bool strip_style: whether to strip style attributes
         (removed and therefore not sanitized, default: ``False``)
     :param bool strip_classes: whether to strip classes attributes (default: ``False``)

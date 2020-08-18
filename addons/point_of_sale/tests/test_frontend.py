@@ -43,8 +43,8 @@ class TestPointOfSaleHttpCommon(odoo.tests.HttpCase):
         # Archive all existing product to avoid noise during the tours
         all_pos_product = self.env['product.product'].search([('available_in_pos', '=', True)])
         discount = self.env.ref('point_of_sale.product_product_consumable')
-        tip = self.env.ref('point_of_sale.product_product_tip')
-        (all_pos_product - discount - tip)._write({'active': False})
+        self.tip = self.env.ref('point_of_sale.product_product_tip')
+        (all_pos_product - discount - self.tip)._write({'active': False})
 
         # In DESKS categ: Desk Pad
         pos_categ_desks = env.ref('point_of_sale.pos_category_desks')
@@ -109,6 +109,12 @@ class TestPointOfSaleHttpCommon(odoo.tests.HttpCase):
             'list_price': 5.10,
             'taxes_id': False,
         })
+        configurable_chair = env['product.product'].create({
+            'name': 'Configurable Chair',
+            'available_in_pos': True,
+            'list_price': 10,
+            'taxes_id': False,
+        })
 
         attribute = env['product.attribute'].create({
             'name': 'add 2',
@@ -123,6 +129,68 @@ class TestPointOfSaleHttpCommon(odoo.tests.HttpCase):
             'value_ids': [(6, 0, attribute_value.ids)]
         })
         line.product_template_value_ids[0].price_extra = 2
+
+        chair_color_attribute = env['product.attribute'].create({
+            'name': 'Color',
+            'display_type': 'color',
+            'create_variant': 'no_variant',
+        })
+        chair_color_red = env['product.attribute.value'].create({
+            'name': 'Red',
+            'attribute_id': chair_color_attribute.id,
+            'html_color': '#ff0000',
+        })
+        chair_color_blue = env['product.attribute.value'].create({
+            'name': 'Blue',
+            'attribute_id': chair_color_attribute.id,
+            'html_color': '#0000ff',
+        })
+        chair_color_line = env['product.template.attribute.line'].create({
+            'product_tmpl_id': configurable_chair.product_tmpl_id.id,
+            'attribute_id': chair_color_attribute.id,
+            'value_ids': [(6, 0, [chair_color_red.id, chair_color_blue.id])]
+        })
+        chair_color_line.product_template_value_ids[0].price_extra = 1
+
+        chair_legs_attribute = env['product.attribute'].create({
+            'name': 'Chair Legs',
+            'display_type': 'select',
+            'create_variant': 'no_variant',
+        })
+        chair_legs_metal = env['product.attribute.value'].create({
+            'name': 'Metal',
+            'attribute_id': chair_legs_attribute.id,
+        })
+        chair_legs_wood = env['product.attribute.value'].create({
+            'name': 'Wood',
+            'attribute_id': chair_legs_attribute.id,
+        })
+        chair_legs_line = env['product.template.attribute.line'].create({
+            'product_tmpl_id': configurable_chair.product_tmpl_id.id,
+            'attribute_id': chair_legs_attribute.id,
+            'value_ids': [(6, 0, [chair_legs_metal.id, chair_legs_wood.id])]
+        })
+
+        chair_fabrics_attribute = env['product.attribute'].create({
+            'name': 'Fabrics',
+            'display_type': 'radio',
+            'create_variant': 'no_variant',
+        })
+        chair_fabrics_leather = env['product.attribute.value'].create({
+            'name': 'Leather',
+            'attribute_id': chair_fabrics_attribute.id,
+        })
+        chair_fabrics_other = env['product.attribute.value'].create({
+            'name': 'Other',
+            'attribute_id': chair_fabrics_attribute.id,
+            'is_custom': True,
+        })
+        chair_fabrics_line = env['product.template.attribute.line'].create({
+            'product_tmpl_id': configurable_chair.product_tmpl_id.id,
+            'attribute_id': chair_fabrics_attribute.id,
+            'value_ids': [(6, 0, [chair_fabrics_leather.id, chair_fabrics_other.id])]
+        })
+        chair_color_line.product_template_value_ids[1].is_custom = True
 
         fixed_pricelist = env['product.pricelist'].create({
             'name': 'Fixed',
@@ -407,6 +475,11 @@ class TestPointOfSaleHttpCommon(odoo.tests.HttpCase):
 class TestUi(TestPointOfSaleHttpCommon):
     def test_01_pos_basic_order(self):
 
+        self.main_pos_config.write({
+            'iface_tipproduct': True,
+            'tip_product_id': self.tip.id,
+        })
+
         # open a session, the /pos/web controller will redirect to it
         self.main_pos_config.open_session_cb(check_coa=False)
 
@@ -425,6 +498,10 @@ class TestUi(TestPointOfSaleHttpCommon):
         for order in self.env['pos.order'].search([]):
             self.assertEqual(order.state, 'paid', "Validated order has payment of " + str(order.amount_paid) + " and total of " + str(order.amount_total))
 
+        # check if email from ReceiptScreenTour is properly sent
+        email_count = self.env['mail.mail'].search_count([('email_to', '=', 'test@receiptscreen.com')])
+        self.assertEqual(email_count, 1)
+
     def test_02_pos_with_invoiced(self):
         self.main_pos_config.open_session_cb(check_coa=False)
         self.start_tour("/pos/web?config_id=%d" % self.main_pos_config.id, 'ChromeTour', login="admin", step_delay=50)
@@ -437,3 +514,12 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.write({ 'manage_orders': True, 'module_account': True })
         self.main_pos_config.open_session_cb(check_coa=False)
         self.start_tour("/pos/web?config_id=%d" % self.main_pos_config.id, 'OrderManagementScreenTour', login="admin", step_delay=50)
+
+    def test_04_product_configurator(self):
+        self.main_pos_config.write({ 'product_configurator': True })
+        self.main_pos_config.open_session_cb(check_coa=False)
+        self.start_tour("/pos/web?config_id=%d" % self.main_pos_config, 'ProductConfiguratorTour', login="admin", step_delay=50)
+
+    def test_05_ticket_screen(self):
+        self.main_pos_config.open_session_cb(check_coa=False)
+        self.start_tour("/pos/web?config_id=%d" % self.main_pos_config.id, 'TicketScreenTour', login="admin", step_delay=50)

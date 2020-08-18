@@ -4,7 +4,7 @@
     "name": "Swedish - Accounting",
     "version": "1.0",
     "author": "XCLUDE",
-    "category": 'Accounting/Localizations',
+    "category": "Accounting/Localizations/Account Charts",
     "depends": ["account", "base_vat"],
     "data": [
         "data/account_chart_template_before_accounts.xml",

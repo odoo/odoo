@@ -30,8 +30,11 @@ const UrlPickerUserValueWidget = InputUserValueWidget.extend({
     start: async function () {
         await this._super(...arguments);
         const linkButton = document.createElement('we-button');
-        linkButton.classList.add('o_we_redirect_to', 'fa', 'fa-fw', 'fa-external-link');
+        const icon = document.createElement('i');
+        icon.classList.add('fa', 'fa-fw', 'fa-external-link')
+        linkButton.classList.add('o_we_redirect_to');
         linkButton.title = _t("Redirect to URL in a new tab");
+        linkButton.appendChild(icon);
         this.containerEl.appendChild(linkButton);
         this.el.classList.add('o_we_large_input');
         this.inputEl.classList.add('text-left');
@@ -113,13 +116,13 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
     },
 
     //--------------------------------------------------------------------------
-    // Private
+    // Public
     //--------------------------------------------------------------------------
 
     /**
      * @override
      */
-    _updateUI: async function () {
+    async setValue() {
         await this._super(...arguments);
 
         for (const className of this.menuTogglerEl.classList) {
@@ -269,15 +272,10 @@ const GPSPicker = InputUserValueWidget.extend({
     getMethodsParams: function (methodName) {
         return Object.assign({gmapPlace: this._gmapPlace || {}}, this._super(...arguments));
     },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
     /**
      * @override
      */
-    _updateUI: async function () {
+    async setValue() {
         await this._super(...arguments);
 
         await new Promise(resolve => {
@@ -320,6 +318,7 @@ const GPSPicker = InputUserValueWidget.extend({
         });
         this.inputEl.value = this._gmapPlace.formatted_address;
     },
+
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
@@ -630,16 +629,94 @@ options.Class.include({
     },
 });
 
-options.registry.BackgroundImage.include({
-    background: async function (previewMode, widgetValue, params) {
+function _getLastPreFilterLayerElement($el) {
+    // Make sure parallax and video element are considered to be below the
+    // color filters / shape
+    const $bgVideo = $el.find('> .o_bg_video_container');
+    if ($bgVideo.length) {
+        return $bgVideo[0];
+    }
+    const $parallaxEl = $el.find('> .s_parallax_bg');
+    if ($parallaxEl.length) {
+        return $parallaxEl[0];
+    }
+    return null;
+}
+
+options.registry.BackgroundToggler.include({
+    /**
+     * Toggles background video on or off.
+     *
+     * @see this.selectClass for parameters
+     */
+    toggleBgVideo(previewMode, widgetValue, params) {
+        if (!widgetValue) {
+            // TODO: use setWidgetValue instead of calling background directly when possible
+            const [bgVideoWidget] = this._requestUserValueWidgets('bg_video_opt');
+            const bgVideoOpt = bgVideoWidget.getParent();
+            return bgVideoOpt._setBgVideo(false, '');
+        } else {
+            // TODO: use trigger instead of el.click when possible
+            this._requestUserValueWidgets('bg_video_opt')[0].el.click();
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    _computeWidgetState(methodName, params) {
+        if (methodName === 'toggleBgVideo') {
+            return this.$target[0].classList.contains('o_background_video');
+        }
+        return this._super(...arguments);
+    },
+    /**
+     * TODO an overall better management of background layers is needed
+     *
+     * @override
+     */
+    _getLastPreFilterLayerElement() {
+        const el = _getLastPreFilterLayerElement(this.$target);
+        if (el) {
+            return el;
+        }
+        return this._super(...arguments);
+    },
+});
+
+options.registry.BackgroundShape.include({
+    /**
+     * TODO need a better management of background layers
+     *
+     * @override
+     */
+    _getLastPreShapeLayerElement() {
+        const el = this._super(...arguments);
+        if (el) {
+            return el;
+        }
+        return _getLastPreFilterLayerElement(this.$target);
+    }
+});
+
+options.registry.BackgroundVideo = options.Class.extend({
+
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
+    /**
+     * Sets the target's background video.
+     *
+     * @see this.selectClass for parameters
+     */
+    background: function (previewMode, widgetValue, params) {
         if (previewMode === 'reset' && this.videoSrc) {
             return this._setBgVideo(false, this.videoSrc);
-        }
-
-        const _super = this._super.bind(this);
-        if (!params.isVideo) {
-            await this._setBgVideo(previewMode, '');
-            return _super(...arguments);
         }
         return this._setBgVideo(previewMode, widgetValue);
     },
@@ -651,9 +728,12 @@ options.registry.BackgroundImage.include({
     /**
      * @override
      */
-    _computeWidgetState: function (methodName) {
-        if (methodName === 'background' && this.$target[0].classList.contains('o_background_video')) {
-            return this.$('> .o_bg_video_container iframe').attr('src');
+    _computeWidgetState: function (methodName, params) {
+        if (methodName === 'background') {
+            if (this.$target[0].classList.contains('o_background_video')) {
+                return this.$('> .o_bg_video_container iframe').attr('src');
+            }
+            return '';
         }
         return this._super(...arguments);
     },
@@ -681,90 +761,9 @@ options.registry.BackgroundImage.include({
         }
         await this._refreshPublicWidgets();
     },
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     */
-     _onBackgroundColorUpdate: async function (ev, previewMode) {
-        const ret = await this._super(...arguments);
-        if (ret) {
-            this._setBgVideo(previewMode, '');
-        }
-        return ret;
-    },
 });
 
-options.registry.BackgroundOptimize.include({
-    /**
-     * @override
-     */
-    _computeVisibility() {
-        if (this.$target.hasClass('o_background_video')) {
-            return false;
-        }
-        return this._super(...arguments);
-    },
-});
-
-options.registry.SwitchTheme = options.Class.extend({
-    isTopOption: true,
-
-    //--------------------------------------------------------------------------
-    // Options
-    //--------------------------------------------------------------------------
-
-    /**
-     * @see this.selectClass for parameters
-     */
-    switchTheme: async function (previewMode, widgetValue, params) {
-        const save = await new Promise(resolve => {
-            Dialog.confirm(this, _t("Changing theme requires to leave the editor. This will save all your changes, are you sure you want to proceed? Be careful that changing the theme will reset all your color customizations."), {
-                confirm_callback: () => resolve(true),
-                cancel_callback: () => resolve(false),
-            });
-        });
-        if (!save) {
-            return;
-        }
-        this.trigger_up('request_save', {
-            reload: false,
-            onSuccess: () => window.location.href = '/web#action=website.theme_install_kanban_action',
-        });
-    },
-});
-
-options.registry.Theme = options.Class.extend({
-    events: {
-        'click .o_color_combinations_edition we-toggler': '_onCCTogglerClick',
-        // FIXME investigate why using 'click' does not work *anymore* but those
-        // foldable areas will be made more robust and standard with the new UI.
-        'mouseup .o_cc_subheadings_toggler_icon': '_onCCHeadingsTogglerClick',
-    },
-
-    /**
-     * @override
-     */
-    start: async function () {
-        // Checks for support of the old color system
-        const style = window.getComputedStyle(document.documentElement);
-        const supportOldColorSystem = weUtils.getCSSVariableValue('support-13-0-color-system', style) === 'true';
-        const hasCustomizedOldColorSystem = weUtils.getCSSVariableValue('has-customized-13-0-color-system', style) === 'true';
-        this._showOldColorSystemWarning = supportOldColorSystem && hasCustomizedOldColorSystem;
-
-        return this._super(...arguments);
-    },
-    /**
-     * @override
-     */
-    updateUIVisibility: async function () {
-        await this._super(...arguments);
-        const oldColorSystemEl = this.el.querySelector('.o_old_color_system_warning');
-        oldColorSystemEl.classList.toggle('d-none', !this._showOldColorSystemWarning);
-    },
+options.registry.OptionsTab = options.Class.extend({
 
     //--------------------------------------------------------------------------
     // Options
@@ -786,7 +785,7 @@ options.registry.Theme = options.Class.extend({
      * @todo use scss customization instead (like for user colors)
      * @see this.selectClass for parameters
      */
-    customizeBodyBg: async function (previewMode, widgetValue, params) {
+    async customizeBodyBg(previewMode, widgetValue, params) {
         const xmlID = 'website.option_custom_body_image';
         if (widgetValue) {
             await this._rpc({
@@ -810,6 +809,9 @@ options.registry.Theme = options.Class.extend({
 
         await this._reloadBundles();
     },
+    /**
+     * @see this.selectClass for parameters
+     */
     async enableImagepicker(previewMode, widgetValue, params) {
         if (widgetValue) {
             // TODO improve: here we make a hack so that a hidden imagepicker
@@ -892,6 +894,24 @@ options.registry.Theme = options.Class.extend({
             dialog.open();
         });
     },
+    /**
+     * @see this.selectClass for parameters
+     */
+    async switchTheme(previewMode, widgetValue, params) {
+        const save = await new Promise(resolve => {
+            Dialog.confirm(this, _t("Changing theme requires to leave the editor. This will save all your changes, are you sure you want to proceed? Be careful that changing the theme will reset all your color customizations."), {
+                confirm_callback: () => resolve(true),
+                cancel_callback: () => resolve(false),
+            });
+        });
+        if (!save) {
+            return;
+        }
+        this.trigger_up('request_save', {
+            reload: false,
+            onSuccess: () => window.location.href = '/web#action=website.theme_install_kanban_action',
+        });
+    },
 
     //--------------------------------------------------------------------------
     // Private
@@ -919,7 +939,7 @@ options.registry.Theme = options.Class.extend({
     /**
      * @override
      */
-    _computeWidgetState: async function (methodName, params) {
+    async _computeWidgetState(methodName, params) {
         if (methodName === 'customizeBodyBg') {
             const bgURL = $('#wrapwrap').css('background-image');
             const srcValueWrapper = /url\(['"]*|['"]*\)|^none$/g;
@@ -964,6 +984,62 @@ options.registry.Theme = options.Class.extend({
         });
         return aceEditor;
     },
+});
+
+options.registry.ThemeColors = options.registry.OptionsTab.extend({
+    events: Object.assign({}, options.registry.OptionsTab.prototype.events, {
+        'click .o_color_combinations_edition we-toggler': '_onCCTogglerClick',
+        // FIXME investigate why using 'click' does not work *anymore* but those
+        // foldable areas will be made more robust and standard with the new UI.
+        'mouseup .o_cc_subheadings_toggler_icon': '_onCCHeadingsTogglerClick',
+    }),
+
+    /**
+     * @constructor
+     */
+    init() {
+        this._super(...arguments);
+        this._showCCSubHeadings = {};
+    },
+    /**
+     * @override
+     */
+    async start() {
+        // Checks for support of the old color system
+        const style = window.getComputedStyle(document.documentElement);
+        const supportOldColorSystem = weUtils.getCSSVariableValue('support-13-0-color-system', style) === 'true';
+        const hasCustomizedOldColorSystem = weUtils.getCSSVariableValue('has-customized-13-0-color-system', style) === 'true';
+        this._showOldColorSystemWarning = supportOldColorSystem && hasCustomizedOldColorSystem;
+
+        return this._super(...arguments);
+    },
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    async updateUIVisibility() {
+        await this._super(...arguments);
+        const oldColorSystemEl = this.el.querySelector('.o_old_color_system_warning');
+        oldColorSystemEl.classList.toggle('d-none', !this._showOldColorSystemWarning);
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    async _computeWidgetVisibility(widgetName, params) {
+        if (params.shUid) {
+            return !!this._showCCSubHeadings[params.shUid];
+        }
+        return this._super(...arguments);
+    },
     /**
      * @override
      */
@@ -972,13 +1048,10 @@ options.registry.Theme = options.Class.extend({
 
         uiFragment.querySelectorAll('.o_cc_subheadings_toggler').forEach(headingsEl => {
             const togglerEl = document.createElement('span');
-            togglerEl.classList.add('o_cc_subheadings_toggler_icon', 'o_we_fold_icon', 'fa', 'fa-caret-down');
+            togglerEl.classList.add('o_cc_subheadings_toggler_icon', 'o_we_fold_icon', 'fa', 'fa-caret-right');
             togglerEl.setAttribute('role', 'button');
             const titleEl = headingsEl.querySelector('we-title');
             titleEl.insertBefore(togglerEl, titleEl.firstChild);
-        });
-        uiFragment.querySelectorAll('.o_cc_subheadings_collapse').forEach(subheadingsEl => {
-            subheadingsEl.classList.add('d-none');
         });
 
         return uiFragment;
@@ -1010,7 +1083,7 @@ options.registry.Theme = options.Class.extend({
             togglerEl.classList.add('pt-0', 'pb-0', 'pl-0');
             const divEl = document.createElement('div');
             const ccPreviewEl = $(qweb.render('web_editor.color.combination.preview'))[0];
-            ccPreviewEl.classList.add('p-1', 'text-center', `o_cc${i}`);
+            ccPreviewEl.classList.add('text-center', `o_cc${i}`);
             divEl.appendChild(ccPreviewEl);
             togglerEl.appendChild(divEl);
             ccEl.appendChild(togglerEl);
@@ -1046,10 +1119,21 @@ options.registry.Theme = options.Class.extend({
     _onCCHeadingsTogglerClick(ev) {
         const togglerEl = ev.currentTarget;
         const collapseEl = togglerEl.closest('we-collapse').querySelector('.o_cc_subheadings_collapse');
-        const show = togglerEl.classList.contains('fa-caret-down');
-        togglerEl.classList.toggle('fa-caret-down', !show);
-        togglerEl.classList.toggle('fa-caret-up', show);
-        collapseEl.classList.toggle('d-none', !show);
+        const show = togglerEl.classList.contains('fa-caret-right');
+        const parentEl = togglerEl.closest('we-select');
+        togglerEl.classList.toggle('fa-caret-right', !show);
+        togglerEl.classList.toggle('fa-caret-down', show);
+        parentEl.classList.toggle('active', show);
+        this._showCCSubHeadings[collapseEl.dataset.uid] = show;
+        // FIXME big hack to rerender the interface (all the foldable code is
+        // a hack currently anyway, it needs to be generic)
+        this.trigger_up('snippet_edition_request', {exec: async () => {
+            return new Promise(resolve => setTimeout(() => {
+                this.trigger_up('snippet_option_update', {
+                    onSuccess: () => resolve(),
+                });
+            }));
+        }});
     },
 });
 
@@ -1234,6 +1318,7 @@ options.registry.Carousel = options.Class.extend({
 
 options.registry.CarouselItem = options.Class.extend({
     isTopOption: true,
+    forceNoDeleteButton: true,
 
     /**
      * @override
@@ -1247,8 +1332,6 @@ options.registry.CarouselItem = options.Class.extend({
         var titleTextEl = leftPanelEl.querySelector('we-title > span');
         this.counterEl = document.createElement('span');
         titleTextEl.appendChild(this.counterEl);
-
-        leftPanelEl.querySelector('.oe_snippet_remove').classList.add('d-none'); // TODO improve the way to do that
 
         return this._super(...arguments);
     },
@@ -1508,16 +1591,22 @@ options.registry.layout_column = options.Class.extend({
     },
 });
 
-options.registry.parallax = options.Class.extend({
+options.registry.Parallax = options.Class.extend({
     /**
      * @override
      */
-    onFocus: function () {
-        this.trigger_up('option_update', {
-            optionNames: ['BackgroundImage', 'BackgroundPosition'],
-            name: 'target',
-            data: this.$target.find('> .s_parallax_bg'),
-        });
+    async start() {
+        this.parallaxEl = this.$target.find('> .s_parallax_bg')[0] || null;
+        this._updateBackgroundOptions();
+
+        this.$target.on('content_changed.ParallaxOption', this._onExternalUpdate.bind(this));
+
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    onFocus() {
         // Refresh the parallax animation on focus; at least useful because
         // there may have been changes in the page that influenced the parallax
         // rendering (new snippets, ...).
@@ -1527,8 +1616,120 @@ options.registry.parallax = options.Class.extend({
     /**
      * @override
      */
-    onMove: function () {
+    onMove() {
         this._refreshPublicWidgets();
+    },
+    /**
+     * @override
+     */
+    destroy() {
+        this._super(...arguments);
+        this.$target.off('.ParallaxOption');
+    },
+
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
+    /**
+     * Build/remove parallax.
+     *
+     * @see this.selectClass for parameters
+     */
+    async selectDataAttribute(previewMode, widgetValue, params) {
+        await this._super(...arguments);
+        if (params.attributeName !== 'scrollBackgroundRatio') {
+            return;
+        }
+
+        const isParallax = (widgetValue !== '0');
+        this.$target.toggleClass('parallax', isParallax);
+        this.$target.toggleClass('s_parallax_is_fixed', widgetValue === '1');
+        this.$target.toggleClass('s_parallax_no_overflow_hidden', (widgetValue === '0' || widgetValue === '1'));
+        if (isParallax) {
+            if (!this.parallaxEl) {
+                this.parallaxEl = document.createElement('span');
+                this.parallaxEl.classList.add('s_parallax_bg');
+                this.$target.prepend(this.parallaxEl);
+            }
+        } else {
+            if (this.parallaxEl) {
+                this.parallaxEl.remove();
+                this.parallaxEl = null;
+            }
+        }
+
+        this._updateBackgroundOptions();
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    async _computeVisibility(widgetName) {
+        return !this.$target.hasClass('o_background_video');
+    },
+    /**
+     * @override
+     */
+    async _computeWidgetState(methodName, params) {
+        if (methodName === 'selectDataAttribute' && params.parallaxTypeOpt) {
+            const attrName = params.attributeName;
+            const attrValue = (this.$target[0].dataset[attrName] || params.attributeDefaultValue).trim();
+            switch (attrValue) {
+                case '0':
+                case '1': {
+                    return attrValue;
+                }
+                default: {
+                    return (attrValue.startsWith('-') ? '-1.5' : '1.5');
+                }
+            }
+        }
+        return this._super(...arguments);
+    },
+    /**
+     * Updates external background-related option to work with the parallax
+     * element instead of the original target when necessary.
+     *
+     * @private
+     */
+    _updateBackgroundOptions() {
+        this.trigger_up('option_update', {
+            optionNames: ['BackgroundImage', 'BackgroundPosition', 'BackgroundOptimize'],
+            name: 'target',
+            data: this.parallaxEl ? $(this.parallaxEl) : this.$target,
+        });
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Called on any snippet update to check if the parallax should still be
+     * enabled or not.
+     *
+     * TODO there is probably a better system to implement to solve this issue.
+     *
+     * @private
+     * @param {Event} ev
+     */
+    _onExternalUpdate(ev) {
+        if (!this.parallaxEl) {
+            return;
+        }
+        const bgImage = this.parallaxEl.style.backgroundImage;
+        if (!bgImage || bgImage === 'none' || this.$target.hasClass('o_background_video')) {
+            // The parallax option was enabled but the background image was
+            // removed: disable the parallax option.
+            const widget = this._requestUserValueWidgets('parallax_none_opt')[0];
+            widget.$el.click();
+            widget.getParent().close(); // FIXME remove this ugly hack asap
+        }
     },
 });
 

@@ -62,7 +62,7 @@ class ProductTemplate(models.Model):
         # Create the account moves.
         if move_vals_list:
             account_moves = self.env['account.move'].sudo().create(move_vals_list)
-            account_moves.post()
+            account_moves._post()
         return res
 
     # -------------------------------------------------------------------------
@@ -282,7 +282,7 @@ class ProductProduct(models.Model):
 
         account_moves = self.env['account.move'].sudo().create(am_vals_list)
         if account_moves:
-            account_moves.post()
+            account_moves._post()
 
     def _run_fifo(self, quantity, company):
         self.ensure_one()
@@ -489,7 +489,7 @@ class ProductProduct(models.Model):
             'stock_move_id': vacuum_svl.stock_move_id.id,
             'move_type': 'entry',
         })
-        new_account_move.post()
+        new_account_move._post()
         to_reconcile_account_move_lines = vacuum_svl.account_move_id.line_ids.filtered(lambda l: not l.reconciled and l.account_id == accounts['stock_output'] and l.account_id.reconcile)
         to_reconcile_account_move_lines += new_account_move.line_ids.filtered(lambda l: not l.reconciled and l.account_id == accounts['stock_output'] and l.account_id.reconcile)
         return to_reconcile_account_move_lines.reconcile()
@@ -783,5 +783,5 @@ class ProductCategory(models.Model):
         # Create the account moves.
         if move_vals_list:
             account_moves = self.env['account.move'].sudo().create(move_vals_list)
-            account_moves.post()
+            account_moves._post()
         return res

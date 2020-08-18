@@ -14,24 +14,22 @@ from odoo.osv import expression
 
 class CustomerPortal(CustomerPortal):
 
-    def _prepare_home_portal_values(self):
-        values = super(CustomerPortal, self)._prepare_home_portal_values()
+    def _prepare_home_portal_values(self, counters):
+        values = super()._prepare_home_portal_values(counters)
         partner = request.env.user.partner_id
 
         SaleOrder = request.env['sale.order']
-        quotation_count = SaleOrder.search_count([
-            ('message_partner_ids', 'child_of', [partner.commercial_partner_id.id]),
-            ('state', 'in', ['sent', 'cancel'])
-        ])
-        order_count = SaleOrder.search_count([
-            ('message_partner_ids', 'child_of', [partner.commercial_partner_id.id]),
-            ('state', 'in', ['sale', 'done'])
-        ])
+        if 'quotation_count' in counters:
+            values['quotation_count'] = SaleOrder.search_count([
+                ('message_partner_ids', 'child_of', [partner.commercial_partner_id.id]),
+                ('state', 'in', ['sent', 'cancel'])
+            ])
+        if 'order_count' in counters:
+            values['order_count'] = SaleOrder.search_count([
+                ('message_partner_ids', 'child_of', [partner.commercial_partner_id.id]),
+                ('state', 'in', ['sale', 'done'])
+            ])
 
-        values.update({
-            'quotation_count': quotation_count,
-            'order_count': order_count,
-        })
         return values
 
     #

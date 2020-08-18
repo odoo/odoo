@@ -2,17 +2,24 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="Chrome" owl="1">
-        <div class="pos" t-att-class="{ 'big-scrollbars': state.uiState.hasBigScrollBars }">
+        <div class="pos" t-att-class="{ 'big-scrollbars': state.hasBigScrollBars }">
             <div class="pos-receipt-print"></div>
+            <div class="pos-topheader" t-att-class="{ oe_hidden: state.uiState !== 'READY' }">
+                <div t-if="tempScreen.isShown" class="block-top-header" />
+                <div class="pos-branding" t-if= "!env.isMobile">
+                    <img class="pos-logo" t-on-click="trigger('toggle-debug-widget')"
+                         src="/point_of_sale/static/src/img/logo.png" alt="Logo" />
+                    <TicketButton isTicketScreenShown="isTicketScreenShown" />
+                </div>
+                <div class="pos-rightheader">
+                    <TicketButton isTicketScreenShown="isTicketScreenShown" t-if="env.isMobile" />
+                    <div class="search-bar-portal" />
+                    <div class="status-buttons-portal" />
+                </div>
+            </div>
             <t t-if="state.uiState === 'READY'">
-                <div class="pos-topheader">
-                    <div t-if="tempScreen.isShown" class="block-top-header" />
-                    <div class="pos-branding">
-                        <img t-if= "!env.isMobile" class="pos-logo" t-on-click="trigger('toggle-debug-widget')"
-                             src="/point_of_sale/static/src/img/logo.png" alt="Logo" />
-                    </div>
-                    <div class="pos-rightheader">
-                        <OrderSelector />
+                <Portal target="'.pos .status-buttons-portal'">
+                    <div class="status-buttons">
                         <t t-if="!env.isMobile">
                             <CashierName />
                         </t>
@@ -23,7 +30,7 @@
                         <SyncNotification />
                         <HeaderButton />
                     </div>
-                </div>
+                </Portal>
                 <div class="pos-content">
                     <div class="window">
                         <div class="subwindow">
@@ -93,7 +100,7 @@
                     <div t-attf-style="background-image:url(#{orderline.product.image_base64})" />
                 </div>
                 <div>
-                    <t t-esc="orderline.product.display_name" />
+                    <t t-esc="orderline.get_full_product_name()" />
                 </div>
                 <div>
                     <t t-esc="orderline.get_quantity_str()" />

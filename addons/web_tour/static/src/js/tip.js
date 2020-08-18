@@ -107,6 +107,9 @@ var Tip = Widget.extend({
         this._unbind_anchor_events();
         clearTimeout(this.timerIn);
         clearTimeout(this.timerOut);
+        // clear this timeout so that we won't call _updatePosition after we
+        // destroy the widget and leave an undesired bubble.
+        clearTimeout(this._transitionEndTimer);
 
         // Do not remove the parent class if it contains other tooltips
         const _removeParentClass = $el => {

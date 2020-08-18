@@ -7,10 +7,12 @@ from odoo.exceptions import UserError, ValidationError
 class AccountPaymentMethod(models.Model):
     _name = "account.payment.method"
     _description = "Payment Methods"
+    _order = 'sequence'
 
     name = fields.Char(required=True, translate=True)
     code = fields.Char(required=True)  # For internal identification
     payment_type = fields.Selection([('inbound', 'Inbound'), ('outbound', 'Outbound')], required=True)
+    sequence = fields.Integer(help='Used to order Methods in the form view', default=10)
 
 
 class AccountPayment(models.Model):
@@ -123,6 +125,7 @@ class AccountPayment(models.Model):
     require_partner_bank_account = fields.Boolean(
         compute='_compute_show_require_partner_bank',
         help="Technical field used to know whether the field `partner_bank_id` needs to be required or not in the payments form views")
+    country_code = fields.Char(related='company_id.country_id.code')
 
     _sql_constraints = [
         (
@@ -189,21 +192,11 @@ class AccountPayment(models.Model):
             counterpart_amount = 0.0
             write_off_amount = 0.0
 
-        # Manage currency.
-        if self.currency_id == self.company_id.currency_id:
-            # Single-currency.
-            balance = counterpart_amount
-            counterpart_amount_currency = 0.0
-            write_off_balance = write_off_amount
-            write_off_amount_currency = 0.0
-            currency_id = False
-        else:
-            # Multi-currencies.
-            balance = self.currency_id._convert(counterpart_amount, self.company_id.currency_id, self.company_id, self.date)
-            counterpart_amount_currency = counterpart_amount
-            write_off_balance = self.currency_id._convert(write_off_amount, self.company_id.currency_id, self.company_id, self.date)
-            write_off_amount_currency = write_off_amount
-            currency_id = self.currency_id.id
+        balance = self.currency_id._convert(counterpart_amount, self.company_id.currency_id, self.company_id, self.date)
+        counterpart_amount_currency = counterpart_amount
+        write_off_balance = self.currency_id._convert(write_off_amount, self.company_id.currency_id, self.company_id, self.date)
+        write_off_amount_currency = write_off_amount
+        currency_id = self.currency_id.id
 
         if self.is_internal_transfer:
             if self.payment_type == 'inbound':
@@ -439,16 +432,17 @@ class AccountPayment(models.Model):
             FROM account_payment payment
             JOIN account_move move ON move.id = payment.move_id
             JOIN account_move_line line ON line.move_id = move.id
-            JOIN account_partial_reconcile part ON 
-                part.debit_move_id = line.id 
-                OR 
+            JOIN account_partial_reconcile part ON
+                part.debit_move_id = line.id
+                OR
                 part.credit_move_id = line.id
-            JOIN account_move_line counterpart_line ON 
+            JOIN account_move_line counterpart_line ON
                 part.debit_move_id = counterpart_line.id
-                OR 
+                OR
                 part.credit_move_id = counterpart_line.id
             JOIN account_move invoice ON invoice.id = counterpart_line.move_id
-            WHERE line.account_internal_type IN ('receivable', 'payable')
+            JOIN account_account account ON account.id = line.account_id
+            WHERE account.internal_type IN ('receivable', 'payable')
                 AND line.id != counterpart_line.id
                 AND invoice.move_type in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt')
             GROUP BY payment.id
@@ -469,13 +463,13 @@ class AccountPayment(models.Model):
             JOIN account_journal journal ON journal.id = move.journal_id
             JOIN account_move_line line ON line.move_id = move.id
             JOIN account_account account ON account.id = line.account_id
-            JOIN account_partial_reconcile part ON 
-                part.debit_move_id = line.id 
-                OR 
+            JOIN account_partial_reconcile part ON
+                part.debit_move_id = line.id
+                OR
                 part.credit_move_id = line.id
-            JOIN account_move_line counterpart_line ON 
+            JOIN account_move_line counterpart_line ON
                 part.debit_move_id = counterpart_line.id
-                OR 
+                OR
                 part.credit_move_id = counterpart_line.id
             WHERE (account.id = journal.payment_debit_account_id OR account.id = journal.payment_credit_account_id)
                 AND line.id != counterpart_line.id
@@ -627,17 +621,17 @@ class AccountPayment(models.Model):
                 else:
                     partner_type = 'supplier'
 
-                liquidity_amount = liquidity_lines.amount_currency if liquidity_lines.currency_id else liquidity_lines.balance
+                liquidity_amount = liquidity_lines.amount_currency
 
                 move_vals_to_write.update({
-                    'currency_id': liquidity_lines.currency_id.id or liquidity_lines.company_currency_id.id,
+                    'currency_id': liquidity_lines.currency_id.id,
                     'partner_id': liquidity_lines.partner_id.id,
                 })
                 payment_vals_to_write.update({
                     'amount': abs(liquidity_amount),
                     'payment_type': 'inbound' if liquidity_amount > 0.0 else 'outbound',
                     'partner_type': partner_type,
-                    'currency_id': liquidity_lines.currency_id.id or liquidity_lines.company_currency_id.id,
+                    'currency_id': liquidity_lines.currency_id.id,
                     'destination_account_id': counterpart_lines.account_id.id,
                     'partner_id': liquidity_lines.partner_id.id,
                 })
@@ -665,9 +659,8 @@ class AccountPayment(models.Model):
             # This allows to create a new payment with custom 'line_ids'.
 
             if writeoff_lines:
-                writeoff_amount_field = 'balance' if pay.currency_id == pay.company_id.currency_id else 'amount_currency'
-                writeoff_amount = sum(writeoff_lines.mapped(writeoff_amount_field))
-                counterpart_amount = counterpart_lines[writeoff_amount_field]
+                writeoff_amount = sum(writeoff_lines.mapped('amount_currency'))
+                counterpart_amount = counterpart_lines['amount_currency']
                 if writeoff_amount > 0.0 and counterpart_amount > 0.0:
                     sign = 1
                 else:
@@ -716,7 +709,7 @@ class AccountPayment(models.Model):
 
     def action_post(self):
         ''' draft -> posted '''
-        self.move_id.post()
+        self.move_id._post(soft=False)
 
     def action_cancel(self):
         ''' draft -> cancelled '''

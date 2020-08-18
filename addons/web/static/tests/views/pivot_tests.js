@@ -1511,6 +1511,37 @@ QUnit.module('Views', {
         pivot.destroy();
     });
 
+    QUnit.test('clear table cells data after closeGroup', async function (assert) {
+        assert.expect(2);
+
+        const pivot = await createView({
+            View: PivotView,
+            model: "partner",
+            data: this.data,
+            arch: '<pivot/>',
+            groupBy: ['product_id'],
+        });
+
+        await testUtils.dom.click(pivot.el.querySelector('thead .o_pivot_header_cell_closed'));
+        await testUtils.dom.click(pivot.el.querySelectorAll('.o_pivot_field_menu .dropdown-item[data-field="date"]')[0]);
+
+        // close and reopen row groupings after changing value
+        this.data.partner.records.find(r => r.product_id === 37).date = '2016-10-27';
+        await testUtils.dom.click(pivot.el.querySelector('tbody .o_pivot_header_cell_opened'));
+        await testUtils.dom.click(pivot.el.querySelector('tbody .o_pivot_header_cell_closed'));
+        await testUtils.dom.click(pivot.el.querySelector('.o_pivot_field_menu .dropdown-item[data-field="product_id"]'));
+        assert.strictEqual(pivot.el.querySelectorAll('.o_pivot_cell_value')[4].innerText, ''); // xphone December 2016
+
+        // invert axis, and reopen column groupings
+        await testUtils.dom.click(pivot.el.querySelector('.o_cp_buttons .o_pivot_flip_button'));
+        await testUtils.dom.click(pivot.el.querySelector('thead .o_pivot_header_cell_opened'));
+        await testUtils.dom.click(pivot.el.querySelector('thead .o_pivot_header_cell_closed'));
+        await testUtils.dom.click(pivot.el.querySelector('.o_pivot_field_menu .dropdown-item[data-field="product_id"]'));
+        assert.strictEqual(pivot.el.querySelectorAll('.o_pivot_cell_value')[3].innerText, ''); // December 2016 xphone
+
+        pivot.destroy();
+    });
+
     QUnit.test('correctly uses pivot_ keys from the context (at reload)', async function (assert) {
         assert.expect(8);
 
@@ -2333,6 +2364,32 @@ QUnit.module('Views', {
         pivot.destroy();
     });
 
+    QUnit.test('Click on the measure list but not on a menu item', async function (assert) {
+        assert.expect(2);
+
+        const pivot = await createView({
+            View: PivotView,
+            model: "partner",
+            data: this.data,
+            arch: `<pivot/>`,
+        });
+
+        // open the "Measures" menu
+        await testUtils.dom.click(pivot.el.querySelector('.o_cp_buttons button'));
+
+        // click on the divider in the "Measures" menu does not crash
+        await testUtils.dom.click(pivot.el.querySelector('.o_pivot_measures_list .dropdown-divider'));
+        // the menu should still be open
+        assert.isVisible(pivot.el.querySelector('.o_pivot_measures_list'));
+
+        // click on the measure list but not on a menu item or the separator
+        await testUtils.dom.click(pivot.el.querySelector('.o_pivot_measures_list'));
+        // the menu should still be open
+        assert.isVisible(pivot.el.querySelector('.o_pivot_measures_list'));
+
+        pivot.destroy();
+    });
+
     QUnit.test('Navigation list view for a group and back with breadcrumbs', async function (assert) {
         assert.expect(16);
         // create an action manager to test the interactions with the search view
@@ -2638,8 +2695,6 @@ QUnit.module('Views', {
     QUnit.test('group bys added via control panel and expand Header do not stack', async function (assert) {
         assert.expect(8);
 
-        delete this.data.partner.fields.date;
-
         var pivot = await createView({
             View: PivotView,
             model: 'partner',
@@ -2867,6 +2922,104 @@ QUnit.module('Views', {
         await testUtils.dom.click(pivot.$buttons.find('.o_pivot_flip_button'));
         assert.verifySteps(["o_pivot_flip_button"]);
         _testButtons = () => true;
+        pivot.destroy();
+    });
+
+    QUnit.test('empty pivot view with action helper', async function (assert) {
+        assert.expect(4);
+
+        const pivot = await createView({
+            View: PivotView,
+            model: "partner",
+            data: this.data,
+            arch: `
+                <pivot>
+                    <field name="product_id" type="measure"/>
+                    <field name="date" interval="month" type="col"/>
+                </pivot>`,
+            domain: [['id', '<', 0]],
+            viewOptions: {
+                action: {
+                    help: '<p class="abc">click to add a foo</p>'
+                }
+            },
+        });
+
+        assert.containsOnce(pivot, '.o_view_nocontent .abc');
+        assert.containsNone(pivot, 'table');
+
+        await pivot.reload({ domain: [] });
+
+        assert.containsNone(pivot, '.o_view_nocontent .abc');
+        assert.containsOnce(pivot, 'table');
+
+        pivot.destroy();
+    });
+
+    QUnit.test('empty pivot view with sample data', async function (assert) {
+        assert.expect(7);
+
+        const pivot = await createView({
+            View: PivotView,
+            model: "partner",
+            data: this.data,
+            arch: `
+                <pivot sample="1">
+                    <field name="product_id" type="measure"/>
+                    <field name="date" interval="month" type="col"/>
+                </pivot>`,
+            domain: [['id', '<', 0]],
+            viewOptions: {
+                action: {
+                    help: '<p class="abc">click to add a foo</p>'
+                }
+            },
+        });
+
+        assert.hasClass(pivot.el, 'o_view_sample_data');
+        assert.containsOnce(pivot, '.o_view_nocontent .abc');
+        assert.containsOnce(pivot, 'table.o_sample_data_disabled');
+
+        await pivot.reload({ domain: [] });
+
+        assert.doesNotHaveClass(pivot.el, 'o_view_sample_data');
+        assert.containsNone(pivot, '.o_view_nocontent .abc');
+        assert.containsOnce(pivot, 'table');
+        assert.doesNotHaveClass(pivot.$('table'), 'o_sample_data_disabled');
+
+        pivot.destroy();
+    });
+
+    QUnit.test('non empty pivot view with sample data', async function (assert) {
+        assert.expect(7);
+
+        const pivot = await createView({
+            View: PivotView,
+            model: "partner",
+            data: this.data,
+            arch: `
+                <pivot sample="1">
+                    <field name="product_id" type="measure"/>
+                    <field name="date" interval="month" type="col"/>
+                </pivot>`,
+            viewOptions: {
+                action: {
+                    help: '<p class="abc">click to add a foo</p>'
+                }
+            },
+        });
+
+        assert.doesNotHaveClass(pivot.el, 'o_view_sample_data');
+        assert.containsNone(pivot, '.o_view_nocontent .abc');
+        assert.containsOnce(pivot, 'table');
+        assert.doesNotHaveClass(pivot.$('table'), 'o_sample_data_disabled');
+
+        await pivot.reload({ domain: [['id', '<', 0]] });
+
+        assert.doesNotHaveClass(pivot.el, 'o_view_sample_data');
+        assert.containsOnce(pivot, '.o_view_nocontent .abc');
+        assert.containsNone(pivot, 'table');
+
         pivot.destroy();
     });
 });

@@ -375,7 +375,7 @@
                                     <field name="json_forecast" string="Reserved" attrs="{'column_invisible': ['|', ('parent.picking_type_code', '!=', 'outgoing'), ('parent.state','=', 'done')]}" widget="forecast_widget"/>
                                     <field name="quantity_done" string="Done" attrs="{'readonly': [('is_quantity_done_editable', '=', False)]}"/>
                                     <field name="product_uom" attrs="{'readonly': [('state', '!=', 'draft'), ('additional', '=', False)]}" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="uom.group_uom"/>
-                                    <button name="action_show_details" string="Register lots, packs, location" type="object" icon="fa-list" width="0.1"
+                                    <button name="action_show_details" type="object" icon="fa-list" width="0.1"
                                             attrs="{'invisible': [('show_details_visible', '=', False)]}" options='{"warn": true}'/>
                                     <button name="action_assign_serial" type="object"
                                             icon="fa-plus-square"
@@ -578,7 +578,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="view_mode">tree,kanban,form,calendar</field>
             <field name="domain"></field>
-            <field name="context">{'contact_display': 'partner_address', 'search_default_late': 1}</field>
+            <field name="context">{'contact_display': 'partner_address', 'search_default_planning_issues': 1}</field>
             <field name="search_view_id" ref="view_picking_internal_search"/>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">

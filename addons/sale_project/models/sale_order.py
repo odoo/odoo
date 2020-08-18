@@ -72,7 +72,7 @@ class SaleOrder(models.Model):
                 eval_context.update({'active_id': task_projects.id})
                 action['context'] = safe_eval(action['context'], eval_context)
         else:
-            action = self.env.ref('project.action_view_task').read()[0]
+            action = self.env["ir.actions.actions"]._for_xml_id("project.action_view_task")
             action['context'] = {}  # erase default context to avoid default filter
             if len(self.tasks_ids) > 1:  # cross project kanban task
                 action['views'] = [[False, 'kanban'], [list_view_id, 'tree'], [form_view_id, 'form'], [False, 'graph'], [False, 'calendar'], [False, 'pivot']]

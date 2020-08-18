@@ -38,6 +38,8 @@ class HrEmployeeBase(models.AbstractModel):
     is_absent = fields.Boolean('Absent Today', compute='_compute_leave_status', search='_search_absent_employee')
     allocation_display = fields.Char(compute='_compute_allocation_count')
     allocation_used_display = fields.Char(compute='_compute_total_allocation_used')
+    hr_icon_display = fields.Selection(selection_add=[('presence_holiday_absent', 'On leave'),
+                                                      ('presence_holiday_present', 'Present but on leave')])
 
     def _get_date_start_work(self):
         return self.create_date
@@ -94,6 +96,17 @@ class HrEmployeeBase(models.AbstractModel):
         super()._compute_presence_state()
         employees = self.filtered(lambda employee: employee.hr_presence_state != 'present' and employee.is_absent)
         employees.update({'hr_presence_state': 'absent'})
+
+    def _compute_presence_icon(self):
+        super()._compute_presence_icon()
+        employees_absent = self.filtered(lambda employee:
+                                         employee.hr_icon_display not in ['presence_present', 'presence_absent_active']
+                                         and employee.is_absent)
+        employees_absent.update({'hr_icon_display': 'presence_holiday_absent'})
+        employees_present = self.filtered(lambda employee:
+                                          employee.hr_icon_display in ['presence_present', 'presence_absent_active']
+                                          and employee.is_absent)
+        employees_present.update({'hr_icon_display': 'presence_holiday_present'})
 
     def _compute_leave_status(self):
         # Used SUPERUSER_ID to forcefully get status of other user's leave, to bypass record rule

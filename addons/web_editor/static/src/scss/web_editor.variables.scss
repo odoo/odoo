@@ -9,10 +9,11 @@
 $o-we-bg-darkest: #000000 !default;
 $o-we-bg-darker: #141217 !default;
 $o-we-bg-dark: #191922 !default;
-$o-we-bg-light: #23232D !default;
-$o-we-bg-lighter: #32323D !default;
+$o-we-bg-light: #2b2b33 !default;
+$o-we-bg-lighter: #3e3e46 !default;
+$o-we-bg-lightest: #595964 !default;
 
-$o-we-fg-darker: #808080 !default;
+$o-we-fg-darker: #9d9d9d !default;
 $o-we-fg-dark: #C6C6C6 !default;
 $o-we-fg-light: #D9D9D9 !default;
 $o-we-fg-lighter: #FFFFFF !default;
@@ -26,14 +27,14 @@ $o-we-bg: $o-we-bg-light !default;
 $o-we-color: $o-we-fg-light !default;
 $o-we-font-size: 13px !default;
 $o-we-font-family: Roboto, 'Montserrat', 'Segoe UI', 'Helvetica Neue', Helvetica, Arial, sans-serif !default;
-$o-we-accent: #00ABC1 !default;
+$o-we-accent: #01bad2 !default;
 $o-we-border-width: 1px !default;
 $o-we-border-color: $o-we-bg-light !default;
 
 $o-we-ace-color: #2F3129 !default;
 
 $o-we-handles-offset-to-hide: 10000px !default;
-$o-we-handles-btn-size: 18px !default;
+$o-we-handles-btn-size: 20px !default;
 $o-we-handles-accent-color: $o-we-accent !default;
 $o-we-handles-accent-color-preview: $o-enterprise-color !default;
 $o-we-handle-edge-size: 8px !default;
@@ -49,36 +50,46 @@ $o-we-translated-content-color: rgb(120, 215, 110) !default;
 
 $o-we-toolbar-height: 32px !default;
 
+$o-we-item-spacing: 8px !default;
 $o-we-item-border-width: 1px !default;
 $o-we-item-border-color: $o-we-bg-darkest !default;
-$o-we-item-border-radius: 1px !default;
-$o-we-item-clickable-bg: linear-gradient($o-we-bg-light, $o-we-bg-darker) !default;
-$o-we-item-pressed-bg: linear-gradient($o-we-bg-darkest, $o-we-bg-darker) !default;
+$o-we-item-border-radius: 2px !default;
+$o-we-item-clickable-bg: $o-we-bg-lightest!default;
+$o-we-item-clickable-color: $o-we-fg-light!default;
+$o-we-item-clickable-hover-bg: $o-we-bg-dark!default;
+$o-we-item-pressed-bg: $o-we-bg-light !default;
 $o-we-item-pressed-color: $o-we-fg-lighter !default;
 
-$o-we-dropdown-spacing: 5px !default;
+$o-we-item-standup-color-light: $o-we-fg-lighter;
+$o-we-item-standup-color-dark: $o-we-bg-darkest;
+$o-we-item-standup-top: inset 0 1px 0;
+$o-we-item-standup-bottom: inset 0 -1px 0;
+
+$o-we-dropdown-spacing: $o-we-item-spacing !default;
 $o-we-dropdown-bg: $o-we-bg-darker !default;
 $o-we-dropdown-border-width: 1px !default;
 $o-we-dropdown-border-color: $o-we-bg-darkest !default;
 $o-we-dropdown-shadow: 0 2px 8px 0 rgba(black, 0.5) !default;
-$o-we-dropdown-item-height: 30px !default;
+$o-we-dropdown-item-height: 34px !default;
 $o-we-dropdown-item-spacing: 1px !default;
-$o-we-dropdown-item-bg: $o-we-bg-light !default;
+$o-we-dropdown-item-bg: $o-we-bg-lightest !default;
+$o-we-dropdown-item-bg-hover: $o-we-bg-light !default;
 $o-we-dropdown-item-color: $o-we-fg-dark !default;
-$o-we-dropdown-item-active-color: $o-we-fg-light !default;
+$o-we-dropdown-item-hover-color: $o-we-fg-light !default;
+$o-we-dropdown-item-active-bg: mix($o-we-dropdown-item-bg, $o-we-dropdown-item-bg-hover) !default;
+$o-we-dropdown-item-active-color: $o-we-fg-lighter !default;
+$o-we-dropdown-caret-spacing: 2px !default;
 
 $o-we-sidebar-bg: $o-we-bg !default;
 $o-we-sidebar-color: $o-we-color !default;
-$o-we-sidebar-font-size: 11px !default;
+$o-we-sidebar-font-size: 12px !default;
 $o-we-sidebar-border-width: $o-we-border-width !default;
 $o-we-sidebar-border-color: $o-we-border-color !default;
-$o-we-sidebar-width: $o-we-sidebar-border-width + 270px !default;
+$o-we-sidebar-width: $o-we-sidebar-border-width + 290px !default;
 
-$o-we-sidebar-top-height: 26px !default;
+$o-we-sidebar-top-height: 46px !default;
 
-$o-we-sidebar-tabs-border-width: $o-we-sidebar-border-width !default;
-$o-we-sidebar-tabs-border-color: $o-we-sidebar-border-color !default;
-$o-we-sidebar-tabs-height: $o-we-sidebar-tabs-border-width + 29px !default;
+$o-we-sidebar-tabs-size-ratio: 1 !default;
 $o-we-sidebar-tabs-bg: $o-we-bg-darker !default;
 $o-we-sidebar-tabs-color: $o-we-sidebar-color !default;
 $o-we-sidebar-tabs-disabled-color: $o-we-fg-darker !default;
@@ -95,31 +106,29 @@ $o-we-sidebar-content-highlight-bar-width: 2px !default;
 $o-we-sidebar-content-highlight-bar-color: $o-we-accent !default;
 
 $o-we-sidebar-content-gutter-item-indent: 5px !default;
-$o-we-sidebar-content-indent: $o-we-sidebar-content-gutter-item-indent + $o-we-sidebar-content-highlight-bar-width + 12px !default;
-$o-we-sidebar-content-backdrop-bg: rgba(black, 0.5) !important;
+$o-we-sidebar-content-padding-base: 10px !default;
+$o-we-sidebar-content-indent: $o-we-sidebar-content-gutter-item-indent + $o-we-sidebar-content-padding-base !default;
+$o-we-sidebar-content-backdrop-bg: rgba(black, 0.2) !default;
+$o-we-sidebar-content-available-room: $o-we-sidebar-width - $o-we-sidebar-content-padding-base - $o-we-sidebar-content-indent !default;
 
-$o-we-sidebar-content-main-title-border-width: 1px !default;
-$o-we-sidebar-content-main-title-border-color: $o-we-bg-light !default;
 $o-we-sidebar-content-main-title-height: 32px !default;
-$o-we-sidebar-content-main-title-shadow-start: rgba(black, 0.7);
-$o-we-sidebar-content-main-title-shadow: linear-gradient($o-we-sidebar-content-main-title-shadow-start, rgba(black, 0)) !default;
 $o-we-sidebar-content-main-title-color: $o-we-fg-lighter !default;
 $o-we-sidebar-content-main-title-font-size: 13px !default;
-$o-we-sidebar-content-main-title-margin-bottom: 2px !default;
 
 $o-we-sidebar-content-block-spacing: 10px !default;
 
 $o-we-sidebar-content-fold-block-bg: $o-we-bg-dark !default;
 $o-we-sidebar-content-fold-block-inner-spacing: $o-we-sidebar-content-block-spacing !default;
 
-$o-we-sidebar-content-field-spacing: 5px !default;
-$o-we-sidebar-content-field-color: $o-we-fg-dark !default;
+$o-we-sidebar-content-field-spacing: $o-we-item-spacing !default;
+$o-we-sidebar-content-field-color: $o-we-fg-darker !default;
 $o-we-sidebar-content-field-control-item-color: $o-we-fg-darker !default;
 $o-we-sidebar-content-field-control-item-size: 1em !default;
 $o-we-sidebar-content-field-control-item-spacing: 0.5em !default;
-$o-we-sidebar-content-field-label-spacing: 4px !default;
-$o-we-sidebar-content-field-label-width: $o-we-sidebar-content-field-label-spacing + 102px !default;
-$o-we-sidebar-content-field-multi-spacing: $o-we-sidebar-content-field-label-spacing !default;
+$o-we-sidebar-content-field-label-spacing: 6px !default;
+
+$o-we-sidebar-content-field-label-width: $o-we-sidebar-content-available-room * .4 !default;
+$o-we-sidebar-content-field-multi-spacing: $o-we-sidebar-content-field-label-spacing * .5 !default;
 $o-we-sidebar-content-field-height: 22px !default;
 
 $o-we-sidebar-content-field-border-width: $o-we-item-border-width !default;
@@ -127,6 +136,7 @@ $o-we-sidebar-content-field-border-color:$o-we-item-border-color !default;
 $o-we-sidebar-content-field-border-radius: $o-we-item-border-radius !default;
 $o-we-sidebar-content-field-disabled-color: $o-we-sidebar-content-field-control-item-color !default;
 $o-we-sidebar-content-field-clickable-bg: $o-we-item-clickable-bg !default;
+$o-we-sidebar-content-field-clickable-color: $o-we-item-clickable-color !default;
 $o-we-sidebar-content-field-clickable-spacing: $o-we-sidebar-content-field-label-spacing !default;
 $o-we-sidebar-content-field-pressed-bg: $o-we-item-pressed-bg !default;
 $o-we-sidebar-content-field-pressed-color: $o-we-item-pressed-color !default;
@@ -139,28 +149,31 @@ $o-we-sidebar-content-field-dropdown-shadow: $o-we-dropdown-shadow !default;
 $o-we-sidebar-content-field-dropdown-item-height: $o-we-dropdown-item-height !default;
 $o-we-sidebar-content-field-dropdown-item-spacing: $o-we-dropdown-item-spacing !default;
 $o-we-sidebar-content-field-dropdown-item-bg: $o-we-dropdown-item-bg !default;
+$o-we-sidebar-content-field-dropdown-item-bg-hover: $o-we-dropdown-item-bg-hover !default;
 $o-we-sidebar-content-field-dropdown-item-color: $o-we-dropdown-item-color !default;
+$o-we-sidebar-content-field-dropdown-item-hover-color: $o-we-dropdown-item-hover-color !default;
+$o-we-sidebar-content-field-dropdown-item-active-bg: $o-we-dropdown-item-active-bg !default;
 $o-we-sidebar-content-field-dropdown-item-active-color: $o-we-dropdown-item-active-color !default;
 
 $o-we-sidebar-content-field-colorpicker-size: 20px !default;
+$o-we-sidebar-content-field-colorpicker-size-large: 26px !default;
 $o-we-sidebar-content-field-colorpicker-shadow: inset 0 0 0 1px rgba(white, 0.5) !default;
-$o-we-sidebar-content-field-colorpicker-dropdown-bg: $o-we-bg-light !important;
-$o-we-sidebar-content-field-colorpicker-dropdown-color: $o-we-fg-light !important;
-$o-we-sidebar-content-field-colorpicker-dropdown-active-color: $o-we-fg-lighter !important;
-$o-we-sidebar-content-field-colorpicker-cc-width: 208px !important;
-$o-we-sidebar-content-field-colorpicker-cc-height: 26px !important;
+$o-we-sidebar-content-field-colorpicker-dropdown-bg: $o-we-bg-lightest !default;
+$o-we-sidebar-content-field-colorpicker-dropdown-color: $o-we-fg-light !default;
+$o-we-sidebar-content-field-colorpicker-dropdown-active-color: $o-we-fg-lighter !default;
+$o-we-sidebar-content-field-colorpicker-cc-width: 208px !default;
+$o-we-sidebar-content-field-colorpicker-cc-height: 26px !default;
 
 $o-we-sidebar-content-field-input-max-width: 60px !default;
-$o-we-sidebar-content-field-input-bg: $o-we-bg-darker !default;
-$o-we-sidebar-content-field-input-font-family: monospace !default;
-$o-we-sidebar-content-field-input-unit-font-size: 9px !default;
+$o-we-sidebar-content-field-input-bg: $o-we-bg-light !default;
+$o-we-sidebar-content-field-input-font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !default;
+$o-we-sidebar-content-field-input-unit-font-size: 11px !default;
 $o-we-sidebar-content-field-input-border-color: $o-we-accent !default;
 
-// This value allows 5 fa icons (fit one row exactly with this)
-$o-we-sidebar-content-field-button-group-button-spacing: $o-we-sidebar-content-field-clickable-spacing * 1.5 !default;
+$o-we-sidebar-content-field-button-group-button-spacing: $o-we-sidebar-content-field-clickable-spacing;
 
-$o-we-sidebar-content-field-progress-height: 3px !default;
-$o-we-sidebar-content-field-progress-control-height: 7px !default;
+$o-we-sidebar-content-field-progress-height: 4px !default;
+$o-we-sidebar-content-field-progress-control-height: 10px !default;
 $o-we-sidebar-content-field-progress-color: $o-we-fg-darker !default;
 $o-we-sidebar-content-field-progress-active-color: $o-we-accent !default;
 
@@ -578,3 +591,101 @@ $o-color-extras-nesting-selector: '&, .o_colored_level &';
         }
     }
 }
+
+// format: (module_name: (shape_filename: ('position': X, 'size': Y, 'colors': (1, [3], ...)), ...))
+$o-bg-shapes: ('web_editor': (
+    'Airy/01': ('position': bottom, 'size': 100% auto, 'colors': (1), 'repeat-y': false),
+    'Airy/02': ('position': top, 'size': 100% auto, 'colors': (1), 'repeat-y': false),
+    'Airy/03': ('position': top, 'size': 100% auto, 'colors': (5), 'repeat-y': false),
+    'Airy/04': ('position': center, 'size': 100% 100%, 'colors': (1), 'repeat-y': false),
+    'Airy/05': ('position': center, 'size': 100% 100%, 'colors': (1), 'repeat-y': false),
+    'Airy/06': ('position': bottom, 'size': 100% auto, 'colors': (2), 'repeat-y': false),
+    'Airy/07': ('position': top, 'size': 100% auto, 'colors': (2), 'repeat-y': false),
+    'Airy/08': ('position': bottom, 'size': 100% auto, 'colors': (1), 'repeat-y': false),
+    'Airy/09': ('position': top, 'size': 100% auto, 'colors': (1), 'repeat-y': false),
+    'Airy/10': ('position': bottom, 'size': 100% auto, 'colors': (5), 'repeat-y': false),
+    'Airy/11': ('position': top, 'size': 100% auto, 'colors': (5), 'repeat-y': false),
+    'Airy/12': ('position': top, 'size': 100% auto, 'colors': (1, 3), 'repeat-y': false),
+    'Airy/13': ('position': bottom, 'size': 100% auto, 'colors': (1, 4), 'repeat-y': false),
+    'Airy/14': ('position': bottom, 'size': 100% auto, 'colors': (1, 4), 'repeat-y': false),
+    'Blobs/01': ('position': top, 'size': 100% auto, 'colors': (2), 'repeat-y': false),
+    'Blobs/02': ('position': center, 'size': 100% 100%, 'colors': (1, 2), 'repeat-y': false),
+    'Blobs/03': ('position': top, 'size': 100% auto, 'colors': (2), 'repeat-y': false),
+    'Blobs/04': ('position': center, 'size': 100% auto, 'colors': (5), 'repeat-y': false),
+    'Blobs/05': ('position': bottom, 'size': 100% auto, 'colors': (1), 'repeat-y': false),
+    'Blobs/06': ('position': top, 'size': 100% auto, 'colors': (1), 'repeat-y': false),
+    'Blobs/07': ('position': top, 'size': 100% auto, 'colors': (5), 'repeat-y': false),
+    'Blobs/08': ('position': right, 'size': 100% auto, 'colors': (1), 'repeat-y': false),
+    'Blobs/09': ('position': bottom, 'size': 100% auto, 'colors': (3), 'repeat-y': false),
+    'Blobs/10': ('position': top, 'size': 100% auto, 'colors': (1, 5), 'repeat-y': false),
+    'Blobs/11': ('position': center, 'size': 100% auto, 'colors': (1), 'repeat-y': false),
+    'Blobs/12': ('position': bottom, 'size': 100% auto, 'colors': (1), 'repeat-y': false),
+    'Blocks/01': ('position': bottom, 'size': 100% auto, 'colors': (1, 3, 5), 'repeat-y': false),
+    'Blocks/02': ('position': top, 'size': 100% auto, 'colors': (1, 3, 5), 'repeat-y': false),
+    'Blocks/03': ('position': bottom, 'size': 100% auto, 'colors': (1, 4), 'repeat-y': false),
+    'Blocks/04': ('position': bottom, 'size': 100% auto, 'colors': (1, 2, 3, 5), 'repeat-y': false),
+    'Bold/01': ('position': top, 'size': 100% auto, 'colors': (2), 'repeat-y': false),
+    'Bold/02': ('position': bottom, 'size': 100% auto, 'colors': (1, 2, 3), 'repeat-y': false),
+    'Bold/03': ('position': bottom, 'size': 100% auto, 'colors': (1, 3, 5), 'repeat-y': false),
+    'Bold/04': ('position': top, 'size': 100% auto, 'colors': (2, 3), 'repeat-y': false),
+    'Bold/05': ('position': center, 'size': 100% auto, 'colors': (5), 'repeat-y': false),
+    'Bold/06': ('position': center, 'size': 100% auto, 'colors': (5), 'repeat-y': false),
+    'Bold/07': ('position': bottom, 'size': 100% auto, 'colors': (1, 2), 'repeat-y': false),
+    'Bold/08': ('position': top, 'size': 100% auto, 'colors': (1), 'repeat-y': false),
+    'Bold/09': ('position': bottom, 'size': 100% auto, 'colors': (2, 3), 'repeat-y': false),
+    'Bold/10': ('position': top, 'size': 100% auto, 'colors': (1, 3, 4, 5), 'repeat-y': false),
+    'Bold/11': ('position': bottom, 'size': 100% auto, 'colors': (1, 2, 3), 'repeat-y': false),
+    'Bold/12': ('position': center, 'size': 100% auto, 'colors': (1, 2, 5), 'repeat-y': false),
+    'Origins/01': ('position': bottom, 'size': 100% auto, 'colors': (2, 5), 'repeat-y': false),
+    'Origins/02': ('position': bottom, 'size': 100% auto, 'colors': (3), 'repeat-y': false),
+    'Origins/03': ('position': top, 'size': 100% auto, 'colors': (3), 'repeat-y': false),
+    'Origins/04': ('position': bottom, 'size': 100% auto, 'colors': (3), 'repeat-y': false),
+    'Origins/05': ('position': top, 'size': 100% auto, 'colors': (3), 'repeat-y': false),
+    'Origins/06': ('position': center, 'size': 100% auto, 'colors': (3), 'repeat-y': false),
+    'Origins/07': ('position': center, 'size': 100% 100%, 'colors': (3), 'repeat-y': false),
+    'Origins/08': ('position': bottom, 'size': 100% auto, 'colors': (3), 'repeat-y': false),
+    'Origins/09': ('position': top, 'size': 100% auto, 'colors': (1, 5), 'repeat-y': false),
+    'Origins/10': ('position': bottom, 'size': 100% auto, 'colors': (2, 5), 'repeat-y': false),
+    'Origins/11': ('position': bottom, 'size': 100% auto, 'colors': (3, 5), 'repeat-y': false),
+    'Origins/12': ('position': top, 'size': 100% auto, 'colors': (3, 5), 'repeat-y': false),
+    'Origins/13': ('position': center, 'size': 100% auto, 'colors': (3, 5), 'repeat-y': false),
+    'Origins/14': ('position': bottom, 'size': 100% auto, 'colors': (4), 'repeat-y': false),
+    'Origins/15': ('position': top, 'size': 100% auto, 'colors': (4), 'repeat-y': false),
+    'Rainy/01': ('position': bottom, 'size': 100% auto, 'colors': (1, 5), 'repeat-y': false),
+    'Rainy/02': ('position': top, 'size': 100% auto, 'colors': (1, 4, 5), 'repeat-y': false),
+    'Rainy/03': ('position': top, 'size': 100% auto, 'colors': (2, 4, 5), 'repeat-y': true),
+    'Rainy/04': ('position': top, 'size': 100% auto, 'colors': (1, 5), 'repeat-y': false),
+    'Rainy/05': ('position': top, 'size': 100% auto, 'colors': (1, 5), 'repeat-y': false),
+    'Rainy/06': ('position': bottom, 'size': 100% auto, 'colors': (1, 2, 3), 'repeat-y': false),
+    'Rainy/07': ('position': top, 'size': 100% auto, 'colors': (1, 2, 3), 'repeat-y': false),
+    'Rainy/08': ('position': top, 'size': 100% auto, 'colors': (1, 4), 'repeat-y': false),
+    'Rainy/09': ('position': top, 'size': 100% auto, 'colors': (1), 'repeat-y': false),
+    'Wavy/01': ('position': bottom, 'size': 100% auto, 'colors': (4), 'repeat-y': false),
+    'Wavy/02': ('position': top, 'size': 100% auto, 'colors': (4), 'repeat-y': false),
+    'Wavy/03': ('position': top, 'size': 100% auto, 'colors': (1, 2), 'repeat-y': false),
+    'Wavy/04': ('position': bottom, 'size': 100% auto, 'colors': (1, 5), 'repeat-y': false),
+    'Wavy/05': ('position': top, 'size': 100% auto, 'colors': (1, 5), 'repeat-y': false),
+    'Wavy/06': ('position': top, 'size': 100% auto, 'colors': (1, 3, 4, 5), 'repeat-y': false),
+    'Wavy/07': ('position': top, 'size': 100% auto, 'colors': (3), 'repeat-y': false),
+    'Wavy/08': ('position': top, 'size': 100% auto, 'colors': (2), 'repeat-y': false),
+    'Wavy/09': ('position': bottom, 'size': 100% auto, 'colors': (1, 5), 'repeat-y': false),
+    'Wavy/10': ('position': center, 'size': 100% auto, 'colors': (1, 2), 'repeat-y': false),
+    'Wavy/11': ('position': bottom, 'size': 100% auto, 'colors': (1, 4), 'repeat-y': false),
+    'Wavy/12': ('position': top, 'size': 100% auto, 'colors': (1), 'repeat-y': false),
+    'Wavy/13': ('position': bottom, 'size': 100% auto, 'colors': (4), 'repeat-y': false),
+    'Wavy/14': ('position': bottom, 'size': 100% auto, 'colors': (1, 3), 'repeat-y': false),
+    'Wavy/15': ('position': top, 'size': 100% auto, 'colors': (1), 'repeat-y': false),
+    'Wavy/16': ('position': bottom, 'size': 100% auto, 'colors': (1), 'repeat-y': false),
+    'Wavy/17': ('position': top, 'size': 100% auto, 'colors': (1), 'repeat-y': false),
+    'Wavy/18': ('position': bottom, 'size': 100% auto, 'colors': (5), 'repeat-y': false),
+    'Wavy/19': ('position': top, 'size': 100% auto, 'colors': (5), 'repeat-y': false),
+    'Wavy/20': ('position': bottom, 'size': 100% auto, 'colors': (2), 'repeat-y': false),
+    'Wavy/21': ('position': top, 'size': 100% auto, 'colors': (2), 'repeat-y': false),
+    'Wavy/22': ('position': bottom, 'size': 100% auto, 'colors': (3), 'repeat-y': false),
+    'Wavy/23': ('position': top, 'size': 100% auto, 'colors': (3), 'repeat-y': false),
+    'Zigs/01': ('position': bottom, 'size': 100% auto, 'colors': (2), 'repeat-y': false),
+    'Zigs/02': ('position': bottom, 'size': 100% auto, 'colors': (2), 'repeat-y': false),
+    'Zigs/03': ('position': top, 'size': 100% auto, 'colors': (1), 'repeat-y': true),
+    'Zigs/04': ('position': bottom, 'size': 100% auto, 'colors': (1), 'repeat-y': false),
+    'Zigs/05': ('position': bottom, 'size': 100% auto, 'colors': (3), 'repeat-y': false),
+));

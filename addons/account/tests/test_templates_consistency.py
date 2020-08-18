@@ -34,7 +34,7 @@ class AccountingTestTemplConsistency(TransactionCase):
         self.check_fields_consistency(
             'account.account.template', 'account.account', exceptions=['chart_template_id', 'nocreate'])
         self.check_fields_consistency(
-            'account.account', 'account.account.template', exceptions=['company_id', 'deprecated', 'opening_debit', 'opening_credit', 'allowed_journal_ids', 'group_id', 'root_id'])
+            'account.account', 'account.account.template', exceptions=['company_id', 'deprecated', 'opening_debit', 'opening_credit', 'allowed_journal_ids', 'group_id', 'root_id', 'is_off_balance'])
 
     def test_account_tax_fields(self):
         '''Test fields consistency for ('account.tax', 'account.tax.template')
@@ -61,7 +61,7 @@ class AccountingTestTemplConsistency(TransactionCase):
         '''Test fields consistency for ('account.reconcile.model', 'account.reconcile.model.template')
         '''
         self.check_fields_consistency('account.reconcile.model.template', 'account.reconcile.model', exceptions=['chart_template_id'])
-        self.check_fields_consistency('account.reconcile.model', 'account.reconcile.model.template', exceptions=['company_id', 'past_months_limit', 'partner_mapping_line_ids'])
+        self.check_fields_consistency('account.reconcile.model', 'account.reconcile.model.template', exceptions=['active', 'company_id', 'past_months_limit', 'partner_mapping_line_ids'])
         # lines
         self.check_fields_consistency('account.reconcile.model.line.template', 'account.reconcile.model.line', exceptions=['chart_template_id'])
         self.check_fields_consistency('account.reconcile.model.line', 'account.reconcile.model.line.template', exceptions=['company_id', 'journal_id', 'analytic_account_id', 'analytic_tag_ids', 'amount'])
