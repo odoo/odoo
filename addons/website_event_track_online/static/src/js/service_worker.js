@@ -130,6 +130,7 @@ const cacheRequest = async (request, response) => {
         const cache = await caches.open(cacheName);
         await cache.put(request, response.clone());
     } else if (isCachableURL(request.url)) {
+        const serializedRequest = await serializeRequest(request);
         const serializedResponse = await serializeResponse(response.clone());
         await set(buildCacheKey(serializedRequest), serializedResponse, cacheStore);
     }
