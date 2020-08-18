@@ -1595,7 +1595,7 @@ class StockMove(models.Model):
             else:
                 if move.procure_method == 'make_to_order' and not move.move_orig_ids:
                     move.state = 'waiting'
-                elif move.move_orig_ids and not all(orig.state in ('done', 'cancel') for orig in move.move_orig_ids):
+                elif move.move_orig_ids and any(orig.state not in ('done', 'cancel') for orig in move.move_orig_ids):
                     move.state = 'waiting'
                 else:
                     move.state = 'confirmed'

@@ -170,13 +170,13 @@ class WebsitePublishedMixin(models.AbstractModel):
         is_publish_modified = any(
             [set(v.keys()) & {'is_published', 'website_published'} for v in vals_list]
         )
-        if is_publish_modified and not all(record.can_publish for record in records):
+        if is_publish_modified and any(not record.can_publish for record in records):
             raise AccessError(self._get_can_publish_error_message())
 
         return records
 
     def write(self, values):
-        if 'is_published' in values and not all(record.can_publish for record in self):
+        if 'is_published' in values and any(not record.can_publish for record in self):
             raise AccessError(self._get_can_publish_error_message())
 
         return super(WebsitePublishedMixin, self).write(values)
