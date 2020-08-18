@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-# @author Team Optesis <44674493+optesis-ibg@users.noreply.github.com>
+# @author Ibrahima GUEYE <44674493+optesis-ibg@users.noreply.github.com>
 # Copyright (c) Optesis 2018 www.optesis.com
 {
     'name': 'Syscohada révisé',
