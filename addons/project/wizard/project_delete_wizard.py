@@ -14,7 +14,7 @@ class ProjectDelete(models.TransientModel):
 
     def _compute_projects_archived(self):
         for wizard in self.with_context(active_test=False):
-            wizard.projects_archived = all([not p.active for p in wizard.project_ids])
+            wizard.projects_archived = all(not p.active for p in wizard.project_ids)
 
     def _compute_task_count(self):
         for wizard in self:
