@@ -246,7 +246,7 @@ class WebsitePayment(http.Controller):
         if partner_id:
             values['pms'] = request.env['payment.token'].search([
                 ('acquirer_id', 'in', acquirers.ids),
-                ('partner_id', '=', partner_id)
+                ('partner_id', 'child_of', partner.commercial_partner_id.id)
             ])
         else:
             values['pms'] = []
