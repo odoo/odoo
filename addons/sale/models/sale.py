@@ -977,6 +977,9 @@ class SaleOrder(models.Model):
         self.ensure_one()
         return self.env.ref('sale.action_quotations_with_onboarding')
 
+    def add_option_to_order_with_taxcloud(self):
+        self.ensure_one()
+
 
 class SaleOrderLine(models.Model):
     _name = 'sale.order.line'
