@@ -5,7 +5,7 @@
 {
     'name': 'Syscohada révisé',
     'version': '2.0.1',
-    'author': 'Optesis SA',
+    'author': 'Optesis',
     'license': 'LGPL-3',
     'website': 'http://www.optesis.com',
     'category': 'Localization',
