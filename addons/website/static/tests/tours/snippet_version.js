@@ -60,6 +60,9 @@ tour.register("snippet_version", {
     content: "Got to s_share slide",
     extra_trigger: 'we-customizeblock-options:contains(Text - Image) .snippet-option-VersionControl  > we-alert',
     trigger: '#wrap.o_editable .s_carousel .carousel-control-prev',
+    run: function () {
+        $('#wrap.o_editable .s_carousel').carousel(2);
+    },
 }, {
     content: "Edit s_share",
     trigger: '#wrap.o_editable .s_share',
