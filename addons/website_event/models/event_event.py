@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import werkzeug.urls
 import json
+import werkzeug.urls
 
 from odoo import api, fields, models, _
 from odoo.addons.http_routing.models.ir_http import slug
@@ -10,16 +10,14 @@ from odoo.addons.http_routing.models.ir_http import slug
 GOOGLE_CALENDAR_URL = 'https://www.google.com/calendar/render?'
 
 
-class EventType(models.Model):
-    _name = 'event.type'
-    _inherit = ['event.type']
-
-    website_menu = fields.Boolean('Display a dedicated menu on Website')
-
-
 class Event(models.Model):
     _name = 'event.event'
-    _inherit = ['event.event', 'website.seo.metadata', 'website.published.multi.mixin', 'website.cover_properties.mixin']
+    _inherit = [
+        'event.event',
+        'website.seo.metadata',
+        'website.published.multi.mixin',
+        'website.cover_properties.mixin'
+    ]
 
     def _default_cover_properties(self):
         res = super()._default_cover_properties()

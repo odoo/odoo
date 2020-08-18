@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<!-- Search Box -->
+<template id="events_search_box" inherit_id="website.website_search_box" primary="True">
+    <xpath expr="//div[@role='search']" position="replace">
+        <form t-attf-class="o_wevent_event_searchbar_form o_wait_lazy_js w-100 my-1 my-lg-0 #{_classes}"
+              t-att-action="action if action else '/event'" method="get">
+            <t t-set="search" t-value="search or _searches and _searches['search']"/>
+            <t t-set="placeholder" t-value="placeholder or _placeholder"/>
+            <t>$0</t>
+            <t t-foreach="_searches" t-as="search">
+                <input t-if="search != 'search' and search_value != 'all'" type="hidden"
+                    t-att-name="search" t-att-value="search_value"/>
+            </t>
+            <t t-raw="0"/>
+        </form>
+    </xpath>
+</template>
+
+<!-- Snippet - Country Events - List -->
+<template id="country_events_list" name="Country Events List">
+    <div class="country_events_list">
+        <t t-if="events">
+            <h6 class="o_wevent_sidebar_title">
+                <t t-if="country">
+                    <i class="fa fa-flag mr-2"/>Events: <span t-esc="country.name"/>
+                    <img class="img-fluid" t-att-src="website.image_url(country, 'image')" alt=""/>
+                </t>
+                <t t-else="">
+                    <i class="fa fa-globe mr-2"/>Upcoming Events
+                </t>
+            </h6>
+            <ul class="list-group mb-3">
+                <li t-foreach="events[:5]" t-as="event_dict" class="list-group-item d-flex justify-content-between">
+                    <a t-att-href="event_dict['url']">
+                        <i t-if="not event_dict['event'].website_published" class="fa fa-ban text-danger mr-1" role="img" aria-label="Unpublished" title="Unpublished"/>
+                        <span t-esc="event_dict['event'].name" t-attf-class="#{(not event_dict['event'].website_published) and 'text-danger' or ''}"/>
+                    </a>
+                    <span t-esc="event_dict['date']"/>
+                </li>
+            </ul>
+            <div t-if="len(events) &gt; 5">
+                <t t-if="country">
+                    <a t-attf-href="/event?country=#{country.id}" class="small"><b>See all events from <span t-esc="country.name"/></b></a>
+                </t>
+                <t t-else="">
+                    <a href="/event" class="small"><b>View all</b></a>
+                </t>
+            </div>
+        </t>
+    </div>
+</template>
+
+</odoo>
