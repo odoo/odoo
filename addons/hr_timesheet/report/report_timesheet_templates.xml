@@ -38,6 +38,7 @@
                                         </td>
                                         <td>
                                            <span t-field="l.user_id.partner_id.name"/>
+                                           <span t-if="not l.user_id.partner_id.name" t-field="l.employee_id"/>
                                         </td>
                                         <td >
                                             <span t-field="l.name" t-options="{'widget': 'text'}"/>
