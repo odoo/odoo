@@ -21,6 +21,7 @@ const {
         createFile,
         inputFiles,
     },
+    makeTestPromise,
 } = require('web.test_utils');
 
 QUnit.module('mail', {}, function () {
@@ -883,6 +884,148 @@ QUnit.test('current partner notify is typing again to other members every 50s of
     assert.verifySteps(
         ['notify_typing:true'],
         "should have notified current partner is still typing after 50s of straight typing"
+    );
+});
+
+QUnit.test('composer: send button is disabled if attachment upload is not finished', async function (assert) {
+    assert.expect(8);
+
+    const attachmentUploadedPromise = makeTestPromise();
+    await this.start({
+        async mockFetch(resource, init) {
+            const res = this._super(...arguments);
+            if (resource === '/web/binary/upload_attachment') {
+                await attachmentUploadedPromise;
+            }
+            return res;
+        }
+    });
+    const composer = this.env.models['mail.composer'].create();
+    await this.createComposerComponent(composer);
+    const file = await createFile({
+        content: 'hello, world',
+        contentType: 'text/plain',
+        name: 'text.txt',
+    });
+    await afterNextRender(() =>
+        inputFiles(
+            document.querySelector('.o_FileUploader_input'),
+            [file]
+        )
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_Attachment',
+        "should have an attachment after a file has been input"
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_Attachment.o-temporary',
+        "attachment displayed is being uploaded"
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_Composer_buttonSend',
+        "composer send button should be displayed"
+    );
+    assert.ok(
+        !!document.querySelector('.o_Composer_buttonSend').attributes.disabled,
+        "composer send button should be disabled as attachment is not yet uploaded"
+    );
+
+    // simulates attachment finishes uploading
+    await afterNextRender(() => attachmentUploadedPromise.resolve());
+    assert.containsOnce(
+        document.body,
+        '.o_Attachment',
+        "should have only one attachment"
+    );
+    assert.containsNone(
+        document.body,
+        '.o_Attachment.o-temporary',
+        "attachment displayed should be uploaded"
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_Composer_buttonSend',
+        "composer send button should still be present"
+    );
+    assert.ok(
+        !document.querySelector('.o_Composer_buttonSend').attributes.disabled,
+        "composer send button should be enabled as attachment is now uploaded"
+    );
+});
+
+QUnit.test('warning when attempting to post message when attachments are still uploading', async function (assert) {
+    assert.expect(7);
+
+    await this.start({
+        async mockFetch(resource, init) {
+            const res = this._super(...arguments);
+            if (resource === '/web/binary/upload_attachment') {
+                // simulates attachment is never finished uploading
+                await new Promise(() => {});
+            }
+            return res;
+        },
+        services: {
+            notification: {
+                notify(params) {
+                    assert.strictEqual(
+                        params.message,
+                        "Please wait while the file is uploading.",
+                        "notification content should be about the uploading file"
+                    );
+                    assert.strictEqual(
+                        params.type,
+                        'warning',
+                        "notification should be a warning"
+                    );
+                    assert.step('notification');
+                }
+            }
+        },
+    });
+    const thread = this.env.models['mail.thread'].create({
+        composer: [['create', { isLog: false }]],
+        id: 20,
+        model: 'res.partner',
+    });
+    await this.createComposerComponent(thread.composer);
+    const file = await createFile({
+        content: 'hello, world',
+        contentType: 'text/plain',
+        name: 'text.txt',
+    });
+    await afterNextRender(() =>
+        inputFiles(
+            document.querySelector('.o_FileUploader_input'),
+            [file]
+        )
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_Attachment',
+        "should have only one attachment"
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_Attachment.o-temporary',
+        "attachment displayed is being uploaded"
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_Composer_buttonSend',
+        "composer send button should be displayed"
+    );
+
+    // Try to send message
+    document
+        .querySelector(`.o_ComposerTextInput_textarea`)
+        .dispatchEvent(new window.KeyboardEvent('keydown', { key: 'Enter' }));
+    assert.verifySteps(
+        ['notification'],
+        "should have triggered a notification for inability to post message at the moment (some attachments are still being uploaded)"
     );
 });
 

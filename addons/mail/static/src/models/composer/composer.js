@@ -294,7 +294,10 @@ function factory(dependencies) {
          * @returns {boolean}
          */
         _computeCanPostMessage() {
-            return this.textInputContent || this.attachments.length !== 0;
+            if (!this.textInputContent && this.attachments.length === 0) {
+                return false;
+            }
+            return !this.hasUploadingAttachment;
         }
 
         /**
@@ -317,6 +320,14 @@ function factory(dependencies) {
          */
         _computeHasSuggestedPartners() {
             return this.allSuggestedPartners.length > 0;
+        }
+
+        /**
+         * @private
+         * @returns {boolean}
+         */
+        _computeHasUploadingAttachment() {
+            return this.attachments.some(attachment => attachment.isTemporary);
         }
 
         /**
@@ -540,10 +551,21 @@ function factory(dependencies) {
         attachments: many2many('mail.attachment', {
             inverse: 'composers',
         }),
+        /**
+         * This field watches the uploading (= temporary) status of attachments
+         * linked to this composer.
+         *
+         * Useful to determine whether there are some attachments that are being
+         * uploaded.
+         */
+        attachmentsAreTemporary: attr({
+            related: 'attachments.isTemporary',
+        }),
         canPostMessage: attr({
             compute: '_computeCanPostMessage',
             dependencies: [
                 'attachments',
+                'hasUploadingAttachment',
                 'textInputContent',
             ],
             default: false,
@@ -561,6 +583,17 @@ function factory(dependencies) {
             dependencies: [
                 'extraSuggestedPartners',
                 'mainSuggestedPartners',
+            ],
+        }),
+        /**
+         * This field determines whether some attachments linked to this
+         * composer are being uploaded.
+         */
+        hasUploadingAttachment: attr({
+            compute: '_computeHasUploadingAttachment',
+            dependencies: [
+                'attachments',
+                'attachmentsAreTemporary',
             ],
         }),
         hasFocus: attr({
