@@ -151,7 +151,10 @@ const isCachableRequest = (request) => isGET(request) || isCachableURL(request.u
 const matchCache = async (request) => {
     if (isGET(request)) {
         const cache = await caches.open(cacheName);
-        return await cache.match(request);
+        const response = await cache.match(request.url);
+        if (response) {
+            return deserializeResponse(await serializeResponse(response.clone()));
+        }
     }
     if (isCachableURL(request.url)) {
         const serializedRequest = await serializeRequest(request);
@@ -217,6 +220,50 @@ const processPendingRequests = async () => {
     }
 };
 
+/**
+ * Add given urls to the Cache, skipping the ones already present
+ * @param {Array<string>} urls
+ */
+const prefetchUrls = async (urls = []) => {
+    const cache = await caches.open(cacheName);
+    let urlsToCache = new Set(urls);
+    for (let url of urlsToCache) {
+        (await cache.match(url)) ? urlsToCache.delete(url) : undefined;
+    }
+    return cache.addAll([...urlsToCache]);
+};
+
+/**
+ * Handle the message sent to the Worker (using the postMessage() method).
+ * The message is defined by the name of the action to perform and its associated parameters (optional).
+ *
+ * Actions:
+ * - prefetch-pages: add {Array} urls with their "alternative url" to the Cache (if not already present).
+ * - prefetch-assets: add {Array} urls to the Cache (if not already present).
+ *
+ * @param {Object} data
+ * @param {string} data.action action's name
+ * @param {*} data.* action's parameter(s)
+ * @returns {Promise}
+ */
+const processMessage = (data) => {
+    const { action } = data;
+    switch (action) {
+        case "prefetch-pages":
+            const { urls: pagesUrls } = data;
+            // To prevent redirection cached by the browser (cf. 301 Permanently Moved) from breaking the offline cache
+            // we also add alternative urls with the following rule:
+            // * if original url has a trailing "/", adds url with striped trailing "/"
+            // * if original url doesn't end with "/", adds url without the trailing "/"
+            const maybeRedirectedUrl = pagesUrls.map((url) => (url.endsWith("/") ? url.slice(0, -1) : url));
+            return prefetchUrls([...pagesUrls, ...maybeRedirectedUrl]);
+        case "prefetch-assets":
+            const { urls: assetsUrls } = data;
+            return prefetchUrls(assetsUrls);
+    }
+    throw new Error(`Action '${action}' not found.`);
+};
+
 self.addEventListener("fetch", (event) => {
     event.respondWith(processFetchEvent(event));
 });
@@ -226,4 +273,8 @@ self.addEventListener("sync", (event) => {
     if (event.tag === pendingRequestsQueueName) {
         event.waitUntil(processPendingRequests());
     }
+});
+
+self.addEventListener("message", (event) => {
+    event.waitUntil(processMessage(event.data));
 });
