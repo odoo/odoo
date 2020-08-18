@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <odoo>
-    <data>
+    <data noupdate="1">
         <record id="im_livechat_channel_rule_demo" model="im_livechat.channel.rule">
             <field name="regex_url">/im_livechat/</field>
             <field name="action">auto_popup</field>
@@ -30,8 +30,18 @@
             <field name="rated_partner_id" ref="base.partner_admin"/>
             <field eval="False" name="partner_id"/>
             <field eval="True" name="consumed"/>
+            <field name="rating">5</field>
         </record>
-        <function eval="([ref('im_livechat.im_livechat_mail_channel_data_0')], 5)" model="mail.channel" name="rating_apply"/>
+        <record id="im_livechat_mail_message_rating_1_data" model="mail.message">
+            <field name="model">mail.channel</field>
+            <field name="res_id" ref="im_livechat.im_livechat_mail_channel_data_0"/>
+            <field name="message_type">email</field>
+            <field name="body">Rating: 😊</field>
+            <field eval="False" name="author_id"/>
+            <field eval="[(4, ref('im_livechat.im_livechat_mail_channel_data_0'))]" name="channel_ids"/>
+            <field eval="DateTime.today() + relativedelta(months=-1, days=-0, minutes=6)" name="date"/>
+            <field eval="DateTime.today() + relativedelta(months=-1, days=-0, minutes=6)" name="create_date"/>
+        </record>
         <record id="im_livechat_mail_message_5_data" model="mail.message">
             <field name="model">mail.channel</field>
             <field name="res_id" ref="im_livechat.im_livechat_mail_channel_data_0"/>
@@ -40,6 +50,7 @@
             <field name="body">You're welcome, have a nice day!</field>
             <field eval="[(4, ref('im_livechat.im_livechat_mail_channel_data_0'))]" name="channel_ids"/>
             <field eval="DateTime.today() + relativedelta(months=-1, days=-0, minutes=5)" name="date"/>
+            <field eval="DateTime.today() + relativedelta(months=-1, days=-0, minutes=5)" name="create_date"/>
         </record>
         <record id="im_livechat_mail_message_4_data" model="mail.message">
             <field name="model">mail.channel</field>
@@ -49,6 +60,7 @@
             <field name="body">Great! Thanks for the info</field>
             <field eval="[(4, ref('im_livechat.im_livechat_mail_channel_data_0'))]" name="channel_ids"/>
             <field eval="DateTime.today() + relativedelta(months=-1, days=-0, minutes=4)" name="date"/>
+            <field eval="DateTime.today() + relativedelta(months=-1, days=-0, minutes=4)" name="create_date"/>
         </record>
         <record id="im_livechat_mail_message_3_data" model="mail.message">
             <field name="model">mail.channel</field>
@@ -58,6 +70,7 @@
             <field name="body">Yes, you can use our Timesheets application and Awesome Timesheets to record your time efficiently!</field>
             <field eval="[(4, ref('im_livechat.im_livechat_mail_channel_data_0'))]" name="channel_ids"/>
             <field eval="DateTime.today() + relativedelta(months=-1, days=-0, minutes=3)" name="date"/>
+            <field eval="DateTime.today() + relativedelta(months=-1, days=-0, minutes=3)" name="create_date"/>
         </record>
         <record id="im_livechat_mail_message_2_data" model="mail.message">
             <field name="model">mail.channel</field>
@@ -67,6 +80,7 @@
             <field name="body">I'm looking for an application to record my timesheet, any tips?</field>
             <field eval="[(4, ref('im_livechat.im_livechat_mail_channel_data_0'))]" name="channel_ids"/>
             <field eval="DateTime.today() + relativedelta(months=-1, days=-0, minutes=2)" name="date"/>
+            <field eval="DateTime.today() + relativedelta(months=-1, days=-0, minutes=2)" name="create_date"/>
         </record>
         <record id="im_livechat_mail_message_1_data" model="mail.message">
             <field name="model">mail.channel</field>
@@ -76,6 +90,7 @@
             <field name="body">Hello, how may I help you?</field>
             <field eval="[(4, ref('im_livechat.im_livechat_mail_channel_data_0'))]" name="channel_ids"/>
             <field eval="DateTime.today() + relativedelta(months=-1, days=-0, minutes=1)" name="date"/>
+            <field eval="DateTime.today() + relativedelta(months=-1, days=-0, minutes=1)" name="create_date"/>
         </record>
         <!-- Session 1 -->
         <record id="im_livechat_mail_channel_data_1" model="mail.channel">
@@ -91,8 +106,18 @@
             <field name="rated_partner_id" ref="base.partner_demo"/>
             <field eval="False" name="partner_id"/>
             <field eval="True" name="consumed"/>
+            <field name="rating">5</field>
         </record>
-        <function eval="([ref('im_livechat.im_livechat_mail_channel_data_1')], 5)" model="mail.channel" name="rating_apply"/>
+        <record id="im_livechat_mail_message_rating_2_data" model="mail.message">
+            <field name="model">mail.channel</field>
+            <field name="res_id" ref="im_livechat.im_livechat_mail_channel_data_1"/>
+            <field name="message_type">email</field>
+            <field eval="False" name="author_id"/>
+            <field name="body">Rating: 😊</field>
+            <field eval="[(4, ref('im_livechat.im_livechat_mail_channel_data_1'))]" name="channel_ids"/>
+            <field eval="DateTime.today() + relativedelta(months=-1, days=-1, minutes=11)" name="date"/>
+            <field eval="DateTime.today() + relativedelta(months=-1, days=-1, minutes=11)" name="create_date"/>
+        </record>
         <record id="im_livechat_mail_message_10_data" model="mail.message">
             <field name="model">mail.channel</field>
             <field name="res_id" ref="im_livechat.im_livechat_mail_channel_data_1"/>
@@ -101,6 +126,7 @@
             <field name="body">You're welcome, enjoy Odoo!</field>
             <field eval="[(4, ref('im_livechat.im_livechat_mail_channel_data_1'))]" name="channel_ids"/>
             <field eval="DateTime.today() + relativedelta(months=-1, days=-1, minutes=10)" name="date"/>
+            <field eval="DateTime.today() + relativedelta(months=-1, days=-1, minutes=10)" name="create_date"/>
         </record>
         <record id="im_livechat_mail_message_9_data" model="mail.message">
             <field name="model">mail.channel</field>
@@ -110,6 +136,7 @@
             <field name="body">Awesome, thanks!</field>
             <field eval="[(4, ref('im_livechat.im_livechat_mail_channel_data_1'))]" name="channel_ids"/>
             <field eval="DateTime.today() + relativedelta(months=-1, days=-1, minutes=9)" name="date"/>
+            <field eval="DateTime.today() + relativedelta(months=-1, days=-1, minutes=9)" name="create_date"/>
         </record>
         <record id="im_livechat_mail_message_8_data" model="mail.message">
             <field name="model">mail.channel</field>
@@ -119,6 +146,7 @@
             <field name="body">Yes, we just released a new application called Social Marketing that should fit your needs! Check it out :)</field>
             <field eval="[(4, ref('im_livechat.im_livechat_mail_channel_data_1'))]" name="channel_ids"/>
             <field eval="DateTime.today() + relativedelta(months=-1, days=-1, minutes=8)" name="date"/>
+            <field eval="DateTime.today() + relativedelta(months=-1, days=-1, minutes=8)" name="create_date"/>
         </record>
         <record id="im_livechat_mail_message_7_data" model="mail.message">
             <field name="model">mail.channel</field>
@@ -128,6 +156,7 @@
             <field name="body">I was wondering if Odoo has an application to easily manage social media for my business..</field>
             <field eval="[(4, ref('im_livechat.im_livechat_mail_channel_data_1'))]" name="channel_ids"/>
             <field eval="DateTime.today() + relativedelta(months=-1, days=-1, minutes=7)" name="date"/>
+            <field eval="DateTime.today() + relativedelta(months=-1, days=-1, minutes=7)" name="create_date"/>
         </record>
         <record id="im_livechat_mail_message_6_data" model="mail.message">
             <field name="model">mail.channel</field>
@@ -137,6 +166,7 @@
             <field name="body">Hello, how may I help you?</field>
             <field eval="[(4, ref('im_livechat.im_livechat_mail_channel_data_1'))]" name="channel_ids"/>
             <field eval="DateTime.today() + relativedelta(months=-1, days=-1, minutes=6)" name="date"/>
+            <field eval="DateTime.today() + relativedelta(months=-1, days=-1, minutes=6)" name="create_date"/>
         </record>
         <!-- Session 2 -->
         <record id="im_livechat_mail_channel_data_2" model="mail.channel">
@@ -152,8 +182,18 @@
             <field name="rated_partner_id" ref="base.partner_admin"/>
             <field name="partner_id" ref="base.partner_demo_portal"/>
             <field eval="True" name="consumed"/>
+            <field name="rating">3</field>
         </record>
-        <function eval="([ref('im_livechat.im_livechat_mail_channel_data_2')], 5)" model="mail.channel" name="rating_apply"/>
+        <record id="im_livechat_mail_message_rating_3_data" model="mail.message">
+            <field name="model">mail.channel</field>
+            <field name="res_id" ref="im_livechat.im_livechat_mail_channel_data_2"/>
+            <field name="message_type">email</field>
+            <field name="author_id" ref="base.partner_demo_portal"/>
+            <field name="body">Rating: 😐</field>
+            <field eval="[(4, ref('im_livechat.im_livechat_mail_channel_data_2'))]" name="channel_ids"/>
+            <field eval="DateTime.today() - relativedelta(minutes=3, seconds=-14)" name="date"/>
+            <field eval="DateTime.today() - relativedelta(minutes=3, seconds=-14)" name="create_date"/>
+        </record>
         <record id="im_livechat_mail_message_14_data" model="mail.message">
             <field name="model">mail.channel</field>
             <field name="res_id" ref="im_livechat.im_livechat_mail_channel_data_2"/>
@@ -161,7 +201,8 @@
             <field name="author_id" ref="base.partner_demo_portal"/>
             <field name="body">Oh :(</field>
             <field eval="[(4, ref('im_livechat.im_livechat_mail_channel_data_2'))]" name="channel_ids"/>
-            <field eval="DateTime.today() + relativedelta(months=-1, days=-2, minutes=14)" name="date"/>
+            <field eval="DateTime.today() - relativedelta(minutes=3, seconds=-13)" name="date"/>
+            <field eval="DateTime.today() - relativedelta(minutes=3, seconds=-13)" name="create_date"/>
         </record>
         <record id="im_livechat_mail_message_13_data" model="mail.message">
             <field name="model">mail.channel</field>
@@ -170,7 +211,8 @@
             <field name="author_id" ref="base.partner_admin"/>
             <field name="body">Nope, sorry to disappoint :(</field>
             <field eval="[(4, ref('im_livechat.im_livechat_mail_channel_data_2'))]" name="channel_ids"/>
-            <field eval="DateTime.today() + relativedelta(months=-1, days=-2, minutes=13)" name="date"/>
+            <field eval="DateTime.today() - relativedelta(minutes=3, seconds=-10)" name="date"/>
+            <field eval="DateTime.today() - relativedelta(minutes=3, seconds=-10)" name="create_date"/>
         </record>
         <record id="im_livechat_mail_message_12_data" model="mail.message">
             <field name="model">mail.channel</field>
@@ -179,7 +221,8 @@
             <field name="author_id" ref="base.partner_demo_portal"/>
             <field name="body">Hello, are you single?</field>
             <field eval="[(4, ref('im_livechat.im_livechat_mail_channel_data_2'))]" name="channel_ids"/>
-            <field eval="DateTime.today() + relativedelta(months=-1, days=-2, minutes=12)" name="date"/>
+            <field eval="DateTime.today() - relativedelta(minutes=3, seconds=-5)" name="date"/>
+            <field eval="DateTime.today() - relativedelta(minutes=3, seconds=-5)" name="create_date"/>
         </record>
         <record id="im_livechat_mail_message_11_data" model="mail.message">
             <field name="model">mail.channel</field>
@@ -188,7 +231,8 @@
             <field name="author_id" ref="base.partner_admin"/>
             <field name="body">Hello, how may I help you?</field>
             <field eval="[(4, ref('im_livechat.im_livechat_mail_channel_data_2'))]" name="channel_ids"/>
-            <field eval="DateTime.today() + relativedelta(months=-1, days=-2, minutes=11)" name="date"/>
+            <field eval="DateTime.today() - relativedelta(minutes=3)" name="date"/>
+            <field eval="DateTime.today() - relativedelta(minutes=3)" name="create_date"/>
         </record>
         <!-- Session 3 -->
         <record id="im_livechat_mail_channel_data_3" model="mail.channel">
@@ -204,8 +248,18 @@
             <field name="rated_partner_id" ref="base.partner_demo"/>
             <field name="partner_id" ref="base.partner_demo_portal"/>
             <field eval="True" name="consumed"/>
+            <field name="rating">5</field>
         </record>
-        <function eval="([ref('im_livechat.im_livechat_mail_channel_data_3')], 5)" model="mail.channel" name="rating_apply"/>
+        <record id="im_livechat_mail_message_rating_4_data" model="mail.message">
+            <field name="model">mail.channel</field>
+            <field name="res_id" ref="im_livechat.im_livechat_mail_channel_data_3"/>
+            <field name="message_type">email</field>
+            <field name="author_id" ref="base.partner_demo_portal"/>
+            <field name="body">Rating: 😊</field>
+            <field eval="[(4, ref('im_livechat.im_livechat_mail_channel_data_3'))]" name="channel_ids"/>
+            <field eval="DateTime.today() - relativedelta(minutes=1, seconds=-51)" name="date"/>
+            <field eval="DateTime.today() - relativedelta(minutes=1, seconds=-51)" name="create_date"/>
+        </record>
         <record id="im_livechat_mail_message_17_data" model="mail.message">
             <field name="model">mail.channel</field>
             <field name="res_id" ref="im_livechat.im_livechat_mail_channel_data_3"/>
@@ -213,7 +267,8 @@
             <field name="author_id" ref="base.partner_demo_portal"/>
             <field name="body">Thanks for the info, I'll look into it!</field>
             <field eval="[(4, ref('im_livechat.im_livechat_mail_channel_data_3'))]" name="channel_ids"/>
-            <field eval="DateTime.today() + relativedelta(months=-2, days=-3, minutes=17)" name="date"/>
+            <field eval="DateTime.today() - relativedelta(minutes=1, seconds=-50)" name="date"/>
+            <field eval="DateTime.today() - relativedelta(minutes=1, seconds=-50)" name="create_date"/>
         </record>
         <record id="im_livechat_mail_message_16_data" model="mail.message">
             <field name="model">mail.channel</field>
@@ -222,7 +277,8 @@
             <field name="author_id" ref="base.partner_demo"/>
             <field name="body">Hello Joel Willis, you're at the right place! You can customize Odoo using our Studio application in just a few clicks.</field>
             <field eval="[(4, ref('im_livechat.im_livechat_mail_channel_data_3'))]" name="channel_ids"/>
-            <field eval="DateTime.today() + relativedelta(months=-2, days=-3, minutes=16)" name="date"/>
+            <field eval="DateTime.today() - relativedelta(minutes=1, seconds=-45)" name="date"/>
+            <field eval="DateTime.today() - relativedelta(minutes=1, seconds=-45)" name="create_date"/>
         </record>
         <record id="im_livechat_mail_message_15_data" model="mail.message">
             <field name="model">mail.channel</field>
@@ -231,7 +287,8 @@
             <field name="author_id" ref="base.partner_demo_portal"/>
             <field name="body">Hello, I'm looking for a software that can be easily updated with my needs.</field>
             <field eval="[(4, ref('im_livechat.im_livechat_mail_channel_data_3'))]" name="channel_ids"/>
-            <field eval="DateTime.today() + relativedelta(months=-2, days=-3, minutes=15)" name="date"/>
+            <field eval="DateTime.today() - relativedelta(minutes=1)" name="date"/>
+            <field eval="DateTime.today() - relativedelta(minutes=1)" name="create_date"/>
         </record>
         <!-- Session 4 -->
         <record id="im_livechat_mail_channel_data_4" model="mail.channel">
@@ -247,8 +304,18 @@
             <field name="rated_partner_id" ref="base.partner_admin"/>
             <field eval="False" name="partner_id"/>
             <field eval="True" name="consumed"/>
+            <field name="rating">1</field>
         </record>
-        <function eval="([ref('im_livechat.im_livechat_mail_channel_data_4')], 1)" model="mail.channel" name="rating_apply"/>
+        <record id="im_livechat_mail_message_rating_5_data" model="mail.message">
+            <field name="model">mail.channel</field>
+            <field name="res_id" ref="im_livechat.im_livechat_mail_channel_data_4"/>
+            <field name="message_type">email</field>
+            <field eval="False" name="author_id"/>
+            <field name="body">Rating: 🙁</field>
+            <field eval="[(4, ref('im_livechat.im_livechat_mail_channel_data_4'))]" name="channel_ids"/>
+            <field eval="DateTime.today() + relativedelta(months=-2, days=-4, minutes=22)" name="date"/>
+            <field eval="DateTime.today() + relativedelta(months=-2, days=-4, minutes=22)" name="create_date"/>
+        </record>
         <record id="im_livechat_mail_message_21_data" model="mail.message">
             <field name="model">mail.channel</field>
             <field name="res_id" ref="im_livechat.im_livechat_mail_channel_data_4"/>
@@ -257,6 +324,7 @@
             <field name="body">Ok.. Will do, thanks</field>
             <field eval="[(4, ref('im_livechat.im_livechat_mail_channel_data_4'))]" name="channel_ids"/>
             <field eval="DateTime.today() + relativedelta(months=-2, days=-4, minutes=21)" name="date"/>
+            <field eval="DateTime.today() + relativedelta(months=-2, days=-4, minutes=21)" name="create_date"/>
         </record>
         <record id="im_livechat_mail_message_20_data" model="mail.message">
             <field name="model">mail.channel</field>
@@ -266,6 +334,7 @@
             <field name="body">Hi, if you need help with your database, feel free to contact our support via http://www.odoo.com/help</field>
             <field eval="[(4, ref('im_livechat.im_livechat_mail_channel_data_4'))]" name="channel_ids"/>
             <field eval="DateTime.today() + relativedelta(months=-2, days=-4, minutes=20)" name="date"/>
+            <field eval="DateTime.today() + relativedelta(months=-2, days=-4, minutes=20)" name="create_date"/>
         </record>
         <record id="im_livechat_mail_message_19_data" model="mail.message">
             <field name="model">mail.channel</field>
@@ -275,6 +344,7 @@
             <field name="body">Hello, it seems that I can't log in to my database. Can you help?</field>
             <field eval="[(4, ref('im_livechat.im_livechat_mail_channel_data_4'))]" name="channel_ids"/>
             <field eval="DateTime.today() + relativedelta(months=-2, days=-4, minutes=19)" name="date"/>
+            <field eval="DateTime.today() + relativedelta(months=-2, days=-4, minutes=19)" name="create_date"/>
         </record>
         <record id="im_livechat_mail_message_18_data" model="mail.message">
             <field name="model">mail.channel</field>
@@ -284,6 +354,7 @@
             <field name="body">Hello, how may I help you?</field>
             <field eval="[(4, ref('im_livechat.im_livechat_mail_channel_data_4'))]" name="channel_ids"/>
             <field eval="DateTime.today() + relativedelta(months=-2, days=-4, minutes=18)" name="date"/>
+            <field eval="DateTime.today() + relativedelta(months=-2, days=-4, minutes=18)" name="create_date"/>
         </record>
         <!-- Session 5 -->
         <record id="im_livechat_mail_channel_data_5" model="mail.channel">
@@ -299,8 +370,18 @@
             <field name="rated_partner_id" ref="base.partner_admin"/>
             <field eval="False" name="partner_id"/>
             <field eval="True" name="consumed"/>
+            <field name="rating">5</field>
         </record>
-        <function eval="([ref('im_livechat.im_livechat_mail_channel_data_5')], 5)" model="mail.channel" name="rating_apply"/>
+        <record id="im_livechat_mail_message_rating_6_data" model="mail.message">
+            <field name="model">mail.channel</field>
+            <field name="res_id" ref="im_livechat.im_livechat_mail_channel_data_5"/>
+            <field name="message_type">email</field>
+            <field eval="False" name="author_id"/>
+            <field name="body">Rating: 😊</field>
+            <field eval="[(4, ref('im_livechat.im_livechat_mail_channel_data_5'))]" name="channel_ids"/>
+            <field eval="DateTime.today() + relativedelta(months=-3, days=-5, minutes=26)" name="date"/>
+            <field eval="DateTime.today() + relativedelta(months=-3, days=-5, minutes=26)" name="create_date"/>
+        </record>
         <record id="im_livechat_mail_message_25_data" model="mail.message">
             <field name="model">mail.channel</field>
             <field name="res_id" ref="im_livechat.im_livechat_mail_channel_data_5"/>
@@ -309,6 +390,7 @@
             <field name="body">Thanks!</field>
             <field eval="[(4, ref('im_livechat.im_livechat_mail_channel_data_5'))]" name="channel_ids"/>
             <field eval="DateTime.today() + relativedelta(months=-3, days=-5, minutes=25)" name="date"/>
+            <field eval="DateTime.today() + relativedelta(months=-3, days=-5, minutes=25)" name="create_date"/>
         </record>
         <record id="im_livechat_mail_message_24_data" model="mail.message">
             <field name="model">mail.channel</field>
@@ -318,6 +400,7 @@
             <field name="body">Yes, of course, you can find it here: https://www.odoo.com/documentation/user/14.0/</field>
             <field eval="[(4, ref('im_livechat.im_livechat_mail_channel_data_5'))]" name="channel_ids"/>
             <field eval="DateTime.today() + relativedelta(months=-3, days=-5, minutes=24)" name="date"/>
+            <field eval="DateTime.today() + relativedelta(months=-3, days=-5, minutes=24)" name="create_date"/>
         </record>
         <record id="im_livechat_mail_message_23_data" model="mail.message">
             <field name="model">mail.channel</field>
@@ -327,6 +410,7 @@
             <field name="body">Hello, I'm a bit lost in the Invetory module, is there some documentation I could find?</field>
             <field eval="[(4, ref('im_livechat.im_livechat_mail_channel_data_5'))]" name="channel_ids"/>
             <field eval="DateTime.today() + relativedelta(months=-3, days=-5, minutes=23)" name="date"/>
+            <field eval="DateTime.today() + relativedelta(months=-3, days=-5, minutes=23)" name="create_date"/>
         </record>
         <record id="im_livechat_mail_message_22_data" model="mail.message">
             <field name="model">mail.channel</field>
@@ -336,6 +420,7 @@
             <field name="body">Hello, how may I help you?</field>
             <field eval="[(4, ref('im_livechat.im_livechat_mail_channel_data_5'))]" name="channel_ids"/>
             <field eval="DateTime.today() + relativedelta(months=-3, days=-5, minutes=22)" name="date"/>
+            <field eval="DateTime.today() + relativedelta(months=-3, days=-5, minutes=22)" name="create_date"/>
         </record>
         <!-- Session 6 -->
         <record id="im_livechat_mail_channel_data_6" model="mail.channel">
@@ -349,10 +434,20 @@
             <field name="res_id" ref="im_livechat.im_livechat_mail_channel_data_6"/>
             <field name="res_model_id" ref="mail.model_mail_channel"/>
             <field name="rated_partner_id" ref="base.partner_admin"/>
-            <field name="partner_id" ref="base.partner_demo_portal"/>
+            <field name="partner_id" eval="False"/>
             <field eval="True" name="consumed"/>
+            <field name="rating">5</field>
         </record>
-        <function eval="([ref('im_livechat.im_livechat_mail_channel_data_6')], 5)" model="mail.channel" name="rating_apply"/>
+        <record id="im_livechat_mail_message_rating_7_data" model="mail.message">
+            <field name="model">mail.channel</field>
+            <field name="res_id" ref="im_livechat.im_livechat_mail_channel_data_6"/>
+            <field name="message_type">email</field>
+            <field name="author_id" ref="base.partner_demo_portal"/>
+            <field name="body">Rating: 😊</field>
+            <field eval="[(4, ref('im_livechat.im_livechat_mail_channel_data_6'))]" name="channel_ids"/>
+            <field eval="DateTime.today() + relativedelta(months=-3, days=-6, minutes=30)" name="date"/>
+            <field eval="DateTime.today() + relativedelta(months=-3, days=-6, minutes=30)" name="create_date"/>
+        </record>
         <record id="im_livechat_mail_message_29_data" model="mail.message">
             <field name="model">mail.channel</field>
             <field name="res_id" ref="im_livechat.im_livechat_mail_channel_data_6"/>
@@ -361,6 +456,7 @@
             <field name="body">Good to hear, thanks!</field>
             <field eval="[(4, ref('im_livechat.im_livechat_mail_channel_data_6'))]" name="channel_ids"/>
             <field eval="DateTime.today() + relativedelta(months=-3, days=-6, minutes=29)" name="date"/>
+            <field eval="DateTime.today() + relativedelta(months=-3, days=-6, minutes=29)" name="create_date"/>
         </record>
         <record id="im_livechat_mail_message_28_data" model="mail.message">
             <field name="model">mail.channel</field>
@@ -370,6 +466,7 @@
             <field name="body">Joel Willis, you'll need our Inventory and Sales application to do so. You can try them for 15 days, FOR FREE :)</field>
             <field eval="[(4, ref('im_livechat.im_livechat_mail_channel_data_6'))]" name="channel_ids"/>
             <field eval="DateTime.today() + relativedelta(months=-3, days=-6, minutes=28)" name="date"/>
+            <field eval="DateTime.today() + relativedelta(months=-3, days=-6, minutes=28)" name="create_date"/>
         </record>
         <record id="im_livechat_mail_message_27_data" model="mail.message">
             <field name="model">mail.channel</field>
@@ -379,6 +476,7 @@
             <field name="body">Hi, I need a software to easily manage my stock, and generate sales orders.</field>
             <field eval="[(4, ref('im_livechat.im_livechat_mail_channel_data_6'))]" name="channel_ids"/>
             <field eval="DateTime.today() + relativedelta(months=-3, days=-6, minutes=27)" name="date"/>
+            <field eval="DateTime.today() + relativedelta(months=-3, days=-6, minutes=27)" name="create_date"/>
         </record>
         <record id="im_livechat_mail_message_26_data" model="mail.message">
             <field name="model">mail.channel</field>
@@ -388,6 +486,7 @@
             <field name="body">Hello, how may I help you?</field>
             <field eval="[(4, ref('im_livechat.im_livechat_mail_channel_data_6'))]" name="channel_ids"/>
             <field eval="DateTime.today() + relativedelta(months=-3, days=-6, minutes=26)" name="date"/>
+            <field eval="DateTime.today() + relativedelta(months=-3, days=-6, minutes=26)" name="create_date"/>
         </record>
         <!-- Session 7 -->
         <record id="im_livechat_mail_channel_data_7" model="mail.channel">
@@ -403,8 +502,18 @@
             <field name="rated_partner_id" ref="base.partner_demo"/>
             <field eval="False" name="partner_id"/>
             <field eval="True" name="consumed"/>
+            <field name="rating">5</field>
         </record>
-        <function eval="([ref('im_livechat.im_livechat_mail_channel_data_7')], 5)" model="mail.channel" name="rating_apply"/>
+        <record id="im_livechat_mail_message_rating_8_data" model="mail.message">
+            <field name="model">mail.channel</field>
+            <field name="res_id" ref="im_livechat.im_livechat_mail_channel_data_7"/>
+            <field name="message_type">email</field>
+            <field eval="False" name="author_id"/>
+            <field name="body">Rating: 😊</field>
+            <field eval="[(4, ref('im_livechat.im_livechat_mail_channel_data_7'))]" name="channel_ids"/>
+            <field eval="DateTime.today() + relativedelta(months=-3, days=-7, minutes=34)" name="date"/>
+            <field eval="DateTime.today() + relativedelta(months=-3, days=-7, minutes=34)" name="create_date"/>
+        </record>
         <record id="im_livechat_mail_message_33_data" model="mail.message">
             <field name="model">mail.channel</field>
             <field name="res_id" ref="im_livechat.im_livechat_mail_channel_data_7"/>
@@ -413,6 +522,7 @@
             <field name="body">I'm great, thanks for asking!</field>
             <field eval="[(4, ref('im_livechat.im_livechat_mail_channel_data_7'))]" name="channel_ids"/>
             <field eval="DateTime.today() + relativedelta(months=-3, days=-7, minutes=33)" name="date"/>
+            <field eval="DateTime.today() + relativedelta(months=-3, days=-7, minutes=33)" name="create_date"/>
         </record>
         <record id="im_livechat_mail_message_32_data" model="mail.message">
             <field name="model">mail.channel</field>
@@ -422,6 +532,7 @@
             <field name="body">I'm fine, and you?</field>
             <field eval="[(4, ref('im_livechat.im_livechat_mail_channel_data_7'))]" name="channel_ids"/>
             <field eval="DateTime.today() + relativedelta(months=-3, days=-7, minutes=32)" name="date"/>
+            <field eval="DateTime.today() + relativedelta(months=-3, days=-7, minutes=32)" name="create_date"/>
         </record>
         <record id="im_livechat_mail_message_31_data" model="mail.message">
             <field name="model">mail.channel</field>
@@ -431,6 +542,7 @@
             <field name="body">Heeeey Marc, how are you?</field>
             <field eval="[(4, ref('im_livechat.im_livechat_mail_channel_data_7'))]" name="channel_ids"/>
             <field eval="DateTime.today() + relativedelta(months=-3, days=-7, minutes=31)" name="date"/>
+            <field eval="DateTime.today() + relativedelta(months=-3, days=-7, minutes=31)" name="create_date"/>
         </record>
         <record id="im_livechat_mail_message_30_data" model="mail.message">
             <field name="model">mail.channel</field>
@@ -440,21 +552,29 @@
             <field name="body">Hello, how may I help you?</field>
             <field eval="[(4, ref('im_livechat.im_livechat_mail_channel_data_7'))]" name="channel_ids"/>
             <field eval="DateTime.today() + relativedelta(months=-3, days=-7, minutes=30)" name="date"/>
+            <field eval="DateTime.today() + relativedelta(months=-3, days=-7, minutes=30)" name="create_date"/>
         </record>
 
+        <!-- Session 8 -->
         <record id="mail_channel_livechat_1" model="mail.channel">
             <field name="name">Visitor, Mitchell Admin</field>
             <field name="livechat_operator_id" ref="base.partner_admin"/>
             <field name="livechat_channel_id" ref="im_livechat.im_livechat_channel_data"/>
-            <field name="create_date" eval="datetime.now() - timedelta(days=1)"/>
             <field name="channel_type">livechat</field>
         </record>
-
+        <record id="im_livechat_rating_9" model="rating.rating">
+            <field name="res_id" ref="im_livechat.mail_channel_livechat_1"/>
+            <field name="res_model_id" ref="mail.model_mail_channel"/>
+            <field name="rated_partner_id" ref="base.partner_admin"/>
+            <field name="partner_id" eval="False"/>
+            <field eval="True" name="consumed"/>
+            <field name="rating">5</field>
+        </record>
         <record id="mail_message_livechat_1" model="mail.message">
             <field name="author_id" eval="False"/>
             <field name="record_name">Visitor</field>
-            <field name="date" eval="datetime.now() - timedelta(days=1)"/>
-            <field name="create_date" eval="datetime.now() - timedelta(days=1)"/>
+            <field name="date" eval="DateTime.today() - relativedelta(months=1, days=1)"/>
+            <field name="create_date" eval="DateTime.today() - relativedelta(months=1, days=1)"/>
             <field name="body">Hi</field>
             <field name="res_id" ref="im_livechat.mail_channel_livechat_1"/>
             <field name="model">mail.channel</field>
@@ -462,8 +582,8 @@
         </record>
         <record id="mail_message_livechat_2" model="mail.message">
             <field name="author_id" ref="base.partner_admin"/>
-            <field name="date" eval="datetime.now() - timedelta(days=1, seconds=-15)"/>
-            <field name="create_date" eval="datetime.now() - timedelta(days=1, seconds=-15)"/>
+            <field name="date" eval="DateTime.today() - relativedelta(months=1, days=1, seconds=-15)"/>
+            <field name="create_date" eval="DateTime.today() - relativedelta(months=1, days=1, seconds=-15)"/>
             <field name="body">Hello, how may I help you?</field>
             <field name="res_id" ref="im_livechat.mail_channel_livechat_1"/>
             <field name="model">mail.channel</field>
@@ -472,8 +592,8 @@
         <record id="mail_message_livechat_3" model="mail.message">
             <field name="author_id" eval="False"/>
             <field name="record_name">Visitor</field>
-            <field name="date" eval="datetime.now() - timedelta(days=1, seconds=-25)"/>
-            <field name="create_date" eval="datetime.now() - timedelta(days=1, seconds=-25)"/>
+            <field name="date" eval="DateTime.today() - relativedelta(months=1, days=1, seconds=-25)"/>
+            <field name="create_date" eval="DateTime.today() - relativedelta(months=1, days=1, seconds=-25)"/>
             <field name="body">I would like to know more about the CRM application</field>
             <field name="res_id" ref="im_livechat.mail_channel_livechat_1"/>
             <field name="model">mail.channel</field>
@@ -481,8 +601,8 @@
         </record>
         <record id="mail_message_livechat_4" model="mail.message">
             <field name="author_id" ref="base.partner_admin"/>
-            <field name="date" eval="datetime.now() - timedelta(days=1, seconds=-33)"/>
-            <field name="create_date" eval="datetime.now() - timedelta(days=1, seconds=-33)"/>
+            <field name="date" eval="DateTime.today() - relativedelta(months=1, days=1, seconds=-33)"/>
+            <field name="create_date" eval="DateTime.today() - relativedelta(months=1, days=1, seconds=-33)"/>
             <field name="body">The CRM application helps you to track leads, close opportunities and get accurate forecasts. You can test it for free on our website.</field>
             <field name="res_id" ref="im_livechat.mail_channel_livechat_1"/>
             <field name="model">mail.channel</field>
@@ -491,32 +611,53 @@
         <record id="mail_message_livechat_5" model="mail.message">
             <field name="author_id" eval="False"/>
             <field name="record_name">Visitor</field>
-            <field name="date" eval="datetime.now() - timedelta(days=1, seconds=-42)"/>
-            <field name="create_date" eval="datetime.now() - timedelta(days=1, seconds=-42)"/>
+            <field name="date" eval="DateTime.today() - relativedelta(months=1, days=1, seconds=-42)"/>
+            <field name="create_date" eval="DateTime.today() - relativedelta(months=1, days=1, seconds=-42)"/>
             <field name="body">Great, thanks!</field>
             <field name="res_id" ref="im_livechat.mail_channel_livechat_1"/>
             <field name="model">mail.channel</field>
             <field name="channel_ids" eval="[(6, False, [mail_channel_livechat_1])]"/>
         </record>
-        <record id="mail_message_livechat_6" model="mail.message">
+        <record id="mail_message_livechat_rating_9" model="mail.message">
             <field name="author_id" eval="False"/>
             <field name="record_name">Visitor</field>
-            <field name="date" eval="datetime.now() - timedelta(days=1, seconds=-53)"/>
-            <field name="create_date" eval="datetime.now() - timedelta(days=1, seconds=-53)"/>
-            <field name="body">Rating: :-)</field>
+            <field name="date" eval="DateTime.today() - relativedelta(months=1, days=1, seconds=-45)"/>
+            <field name="create_date" eval="DateTime.today() - relativedelta(months=1, days=1, seconds=-45)"/>
+            <field name="body">Rating: 😊</field>
             <field name="res_id" ref="im_livechat.mail_channel_livechat_1"/>
             <field name="model">mail.channel</field>
             <field name="channel_ids" eval="[(6, False, [mail_channel_livechat_1])]"/>
         </record>
-        <record id="rating_rating_livechat_1" model="rating.rating">
-            <field name="res_model_id" ref="mail.model_mail_channel"/>
-            <field name="rated_partner_id" ref="base.partner_admin"/>
-            <field name="partner_id" ref="base.partner_admin"/>
-            <field name="create_date" eval="datetime.now() - timedelta(days=1, seconds=-53)"/>
-            <field name="res_id" ref="im_livechat.mail_channel_livechat_1"/>
-            <field name="rating" eval="5"/>
-            <field name="consumed" eval="True"/>
-        </record>
-
     </data>
+
+    <data noupdate="0">
+        <record id="im_livechat_mail_channel_data_0" model="mail.channel">
+            <field eval="DateTime.today() + relativedelta(months=-1, days=-0, minutes=0)" name="create_date"/>
+        </record>
+        <record id="im_livechat_mail_channel_data_1" model="mail.channel">
+            <field eval="DateTime.today() + relativedelta(months=-1, days=-1, minutes=5)" name="create_date"/>
+        </record>
+        <record id="im_livechat_mail_channel_data_2" model="mail.channel">
+            <field eval="DateTime.today() - relativedelta(minutes=3)" name="create_date"/>
+        </record>
+        <record id="im_livechat_mail_channel_data_3" model="mail.channel">
+            <field eval="DateTime.today() - relativedelta(minutes=1)" name="create_date"/>
+        </record>
+        <record id="im_livechat_mail_channel_data_4" model="mail.channel">
+            <field eval="DateTime.today() + relativedelta(months=-2, days=-4, minutes=17)" name="create_date"/>
+        </record>
+        <record id="im_livechat_mail_channel_data_5" model="mail.channel">
+            <field eval="DateTime.today() + relativedelta(months=-3, days=-5, minutes=21)" name="create_date"/>
+        </record>
+        <record id="im_livechat_mail_channel_data_6" model="mail.channel">
+            <field eval="DateTime.today() + relativedelta(months=-3, days=-6, minutes=25)" name="create_date"/>
+        </record>
+        <record id="im_livechat_mail_channel_data_7" model="mail.channel">
+            <field eval="DateTime.today() + relativedelta(months=-3, days=-7, minutes=29)" name="create_date"/>
+        </record>
+        <record id="mail_channel_livechat_1" model="mail.channel">
+            <field name="create_date" eval="DateTime.today() + relativedelta(days=1)"/>
+        </record>
+    </data>
+
 </odoo>

@@ -93,7 +93,7 @@ class ImLivechatReportChannel(models.Model):
                     JOIN im_livechat_channel L ON (L.id = C.livechat_channel_id)
                     LEFT JOIN mail_message MO ON (R.mail_message_id = MO.id AND MO.author_id = C.livechat_operator_id)
                     LEFT JOIN rating_rating Rate ON (Rate.res_id = C.id and Rate.res_model = 'mail.channel' and Rate.parent_res_model = 'im_livechat.channel')
-                    WHERE C.livechat_operator_id is not null
+                    WHERE C.livechat_operator_id is not null AND (M.author_id != %s or M.author_id is null)
                 GROUP BY C.livechat_operator_id, C.id, C.name, C.livechat_channel_id, L.name, C.create_date, C.uuid, Rate.rating
             )
-        """)
+        """, (self.env.ref("base.partner_root").id, ))

@@ -38,7 +38,7 @@ class ImLivechatReportOperator(models.Model):
                     JOIN mail_message_mail_channel_rel R ON R.mail_channel_id = C.id
                     JOIN mail_message M ON R.mail_message_id = M.id
                     LEFT JOIN mail_message MO ON (R.mail_message_id = MO.id AND MO.author_id = C.livechat_operator_id)
-                WHERE C.livechat_channel_id IS NOT NULL
+                WHERE C.livechat_channel_id IS NOT NULL AND (M.author_id != %s or M.author_id is null)
                 GROUP BY C.id, C.livechat_operator_id
             )
-        """)
+        """, (self.env.ref("base.partner_root").id, ))
