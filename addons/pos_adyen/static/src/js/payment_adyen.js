@@ -207,6 +207,15 @@ var PaymentAdyen = PaymentInterface.extend({
                     var config = self.pos.config;
                     var payment_response = notification.SaleToPOIResponse.PaymentResponse;
                     var payment_result = payment_response.PaymentResult;
+
+                    var cashier_receipt = payment_response.PaymentReceipt.find(function (receipt) {
+                        return receipt.DocumentQualifier == 'CashierReceipt';
+                    });
+
+                    if (cashier_receipt) {
+                        line.set_cashier_receipt(self._convert_receipt_info(cashier_receipt.OutputContent.OutputText));
+                    }
+
                     var customer_receipt = payment_response.PaymentReceipt.find(function (receipt) {
                         return receipt.DocumentQualifier == 'CustomerReceipt';
                     });

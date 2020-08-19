@@ -12,6 +12,11 @@ odoo.define('pos_restaurant.TipScreen', function (require) {
             this.state = useContext(this.currentOrder.uiState.TipScreen);
             this._totalAmount = this.currentOrder.get_total_with_tax();
         }
+        mounted () {
+            if (this.env.pos.proxy.printer) {
+                this.printTipReceipt();
+            }
+        }
         get overallAmountStr() {
             const tipAmount = parse.float(this.state.inputTipAmount || '0');
             const original = this.env.pos.format_currency(this.totalAmount);
@@ -90,6 +95,28 @@ odoo.define('pos_restaurant.TipScreen', function (require) {
                 return { name: 'FloorScreen', props: { floor: table ? table.floor : null } };
             } else {
                 return { name: 'ProductScreen' };
+            }
+        }
+        async printTipReceipt() {
+            const receipts = [
+                this.currentOrder.selected_paymentline.ticket,
+                this.currentOrder.selected_paymentline.cashier_receipt
+            ];
+
+            for (let i = 0; i < receipts.length; i++) {
+                const data = receipts[i];
+                var receipt = this.env.qweb.renderToString('TipReceipt', {
+                    receipt: this.currentOrder.getOrderReceiptEnv().receipt,
+                    data: data,
+                    total: this.env.pos.format_currency(this.totalAmount),
+                });
+                const printResult = await this.env.pos.proxy.printer.print_receipt(receipt);
+                if (!printResult.successful) {
+                    await this.showPopup('ErrorPopup', {
+                        title: printResult.message.title,
+                        body: printResult.message.body,
+                    });
+                }
             }
         }
     }
