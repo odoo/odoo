@@ -104,6 +104,12 @@ class ResCompany(models.Model):
     account_invoice_onboarding_state = fields.Selection(DASHBOARD_ONBOARDING_STATES, string="State of the account invoice onboarding panel", default='not_done')
     account_dashboard_onboarding_state = fields.Selection(DASHBOARD_ONBOARDING_STATES, string="State of the account dashboard onboarding panel", default='not_done')
     invoice_terms = fields.Text(string='Default Terms and Conditions', translate=True)
+    terms_type = fields.Selection([('plain', 'Terms as Notes'), ('html', 'Terms as Web Page')],
+                                  string='Terms & Conditions format', default='plain')
+    invoice_terms_html = fields.Html(string='Default Terms and Conditions as a Web page', translate=True,
+                                     default="""<h1 style="text-align: center; ">Terms &amp; Conditions</h1>
+                                     <p>Your conditions...</p>""")
+
     account_setup_bill_state = fields.Selection(ONBOARDING_STEP_STATES, string="State of the onboarding bill step", default='not_done')
 
     # Needed in the Point of Sale

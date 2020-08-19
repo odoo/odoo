@@ -100,6 +100,12 @@ class ResConfigSettings(models.TransientModel):
     invoice_is_email = fields.Boolean(string='Send Email', related='company_id.invoice_is_email', readonly=False)
     incoterm_id = fields.Many2one('account.incoterms', string='Default incoterm', related='company_id.incoterm_id', help='International Commercial Terms are a series of predefined commercial terms used in international transactions.', readonly=False)
     invoice_terms = fields.Text(related='company_id.invoice_terms', string="Terms & Conditions", readonly=False)
+    invoice_terms_html = fields.Html(related='company_id.invoice_terms_html', string="Terms & Conditions as a Web page",
+                                     readonly=False)
+    terms_type = fields.Selection(
+        related='company_id.terms_type', readonly=False)
+    preview_ready = fields.Boolean(string="Display preview button")
+
     use_invoice_terms = fields.Boolean(
         string='Default Terms & Conditions',
         config_parameter='account.use_invoice_terms')
@@ -114,6 +120,11 @@ class ResConfigSettings(models.TransientModel):
         # install a chart of accounts for the given company (if required)
         if self.env.company == self.company_id and self.chart_template_id and self.chart_template_id != self.company_id.chart_template_id:
             self.chart_template_id._load(15.0, 15.0, self.env.company)
+        # convert terms and conditions if the html page option is chosen
+        if self.use_invoice_terms and self.terms_type == 'html':
+            # Set default plain terms & conditions
+            self.invoice_terms = _('Terms & Conditions: %s/terms', self.get_base_url())
+
 
     @api.depends('company_id')
     def _compute_has_chart_of_accounts(self):
@@ -162,6 +173,13 @@ class ResConfigSettings(models.TransientModel):
                              'Modify your taxes first before disabling this setting.')
             }
         return res
+
+    @api.onchange('company_id', 'terms_type', 'invoice_terms_html')
+    def _onchange_terms_preview(self):
+        if self.env.company.terms_type == 'html' and self.terms_type == 'html':
+            self.preview_ready = True
+        else:
+            self.preview_ready = False
 
     @api.model
     def create(self, values):

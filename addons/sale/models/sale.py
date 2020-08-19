@@ -207,6 +207,7 @@ class SaleOrder(models.Model):
         ], string='Invoice Status', compute='_get_invoice_status', store=True, readonly=True)
 
     note = fields.Text('Terms and conditions', default=_default_note)
+    terms_type = fields.Selection(related='company_id.terms_type')
 
     amount_untaxed = fields.Monetary(string='Untaxed Amount', store=True, readonly=True, compute='_amount_all', tracking=5)
     amount_by_group = fields.Binary(string="Tax amount by group", compute='_amount_by_group', help="type: [(name, amount, base, formated amount, formated base)]")
@@ -377,8 +378,11 @@ class SaleOrder(models.Model):
         if user_id and self.user_id.id != user_id:
             values['user_id'] = user_id
 
-        if self.env['ir.config_parameter'].sudo().get_param('account.use_invoice_terms') and self.env.company.invoice_terms:
-            values['note'] = self.with_context(lang=self.partner_id.lang).env.company.invoice_terms
+        if self.env['ir.config_parameter'].sudo().get_param('account.use_invoice_terms'):
+            if self.env.company.terms_type == 'html' and self.env.company.invoice_terms_html:
+                values['note'] = _('Terms & Conditions: %s/%s/terms', self.get_base_url(), self.partner_id.lang)
+            elif self.env.company.invoice_terms:
+                values['note'] = self.with_context(lang=self.partner_id.lang).env.company.invoice_terms
         if not self.env.context.get('not_self_saleperson') or not self.team_id:
             values['team_id'] = self.env['crm.team']._get_default_team_id(domain=['|', ('company_id', '=', self.company_id.id), ('company_id', '=', False)],user_id=user_id)
         self.update(values)
