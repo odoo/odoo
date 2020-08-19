@@ -54,21 +54,20 @@
         </div>
         <!-- TRACK DESCRIPTION -->
         <div class="o_wesession_track_main_description">
-            <div class="mx-3 pt-3 d-flex justify-content-between">
-                <span class="h4" t-esc="track.name"/>
-                <div class="o_we_track_action_buttons d-flex justify-content-end align-items-center flex-wrap">
+            <div class="mx-3 pt-3 mb-3 d-flex justify-content-between flex-column flex-md-row">
+                <div class="d-flex flex-column">
+                    <span class="h4 mb-0" t-esc="track.name"/>
+                    <div>
+                        <t t-foreach="track.tag_ids" t-as="tag">
+                            <span t-if="tag.color"
+                                t-att-class="'badge o_tag_color_hovered_%s' % (tag.color)"
+                                t-esc="tag.name"/>
+                        </t>
+                    </div>
+                </div>
+                <div class="o_we_track_action_buttons d-flex justify-content-md-end align-items-center flex-wrap">
                     <div class="o_we_track_reminder_button my-1">
-                        <!-- Mobile -->
                         <div t-if="option_track_wishlist and not track.is_track_done"
-                            class="d-md-none d-inline ml-auto"
-                            t-call="website_event_track_online.track_widget_reminder">
-                            <t t-set="reminder_small" t-value="True"/>
-                            <t t-set="reminder_light" t-value="True"/>
-                            <t t-set="light_theme" t-value="False"/>
-                        </div>
-                        <!-- Desktop -->
-                        <div t-if="option_track_wishlist and not track.is_track_done"
-                            class="d-none d-sm-inline"
                             t-call="website_event_track_online.track_widget_reminder">
                             <t t-set="reminder_small" t-value="False"/>
                             <t t-set="reminder_light" t-value="False"/>
@@ -77,6 +76,10 @@
                 </div>
             </div>
             <div class="mx-3 text-muted">
+                <t t-if="track.location_id">
+                    <strong>Location:</strong> <span t-field="track.location_id"/>
+                    <span> - </span>
+                </t>
                 <span t-field="track.date"
                     t-options='{"hide_seconds":"True", "format": "short"}'/>
                 -
@@ -88,9 +91,7 @@
                 (<span t-field="track.duration"
                     t-options='{"widget": "duration", "unit": "hour", "round": "minute"}'/>)
             </div>
-            <div class="mx-3 text-muted" t-if="track.location_id">
-                <strong>Location:</strong> <span t-field="track.location_id"/>
-            </div>
+            
             <hr class="mt-2 mb-0"/>
 
             <!-- ABOUT AUTHOR -->
@@ -98,7 +99,7 @@
                 <div class="mt-2 d-flex">
                     <span t-if="track.image" t-field="track.image" class="o_wevent_online_page_avatar"
                         t-options="{'widget': 'image', 'class': 'rounded-circle', 'max_width': '96'}"/>
-                    <div class="px-3 d-flex flex-column">
+                    <div class="pl-2 pr-0 pr-md-2 d-flex flex-column">
                         <span t-field="track.partner_name" class="font-weight-bold mb-2"/>
                         <span class="mb-1 d-flex align-items-baseline text-break" t-if="track.partner_function">
                             <i class="fa fa-briefcase mr-2"/><span t-esc="track.partner_function"/>
