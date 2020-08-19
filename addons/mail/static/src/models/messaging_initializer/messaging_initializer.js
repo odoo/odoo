@@ -17,8 +17,6 @@ function factory(dependencies) {
          * the current user. This includes pinned channels for instance.
          */
         async start() {
-            await this.async(() => this.env.session.is_bound);
-
             this.messaging.update({
                 history: [['create', {
                     id: 'history',
