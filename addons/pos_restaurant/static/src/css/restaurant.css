@@ -512,38 +512,49 @@
 }
 
 .pos-receipt .tip-form {
-    padding-top: 10px;
-    padding-bottom: 10px;
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+}
+
+.pos-receipt .tip-form .title {
+    text-align: center;
 }
 
 .pos-receipt .tip-form > div {
-    margin-top: 10px;
-}
-
-.pos-receipt .tip-form .checkbox {
-    display: inline-block;
-    height: 25px;
-    width: 25px;
-    border: solid 1px black;
-    margin-right: 10px;
-    box-shadow: 2px 2px 0px 0px rgba(171,171,171,1);
+    margin-top: 1rem;
 }
 
 .pos-receipt .tip-form .option {
     display: flex;
-    flex-flow: row nowrap;
+    flex-flow: column nowrap;
     align-items: center;
     flex: 1;
     justify-content: center;
 }
 
-.pos-receipt .tip-form .option .percentage {
-    font-size: 10px;
-    color: #757575;
-}
-
 .pos-receipt .tip-form .percentage-options {
     display: flex;
     flex-flow: row nowrap;
-    margin-bottom: 16px;
+}
+
+.ticket-screen .tip-cell {
+    height: 100%;
+    width: 100%;
+    text-align: right;
+}
+
+.ticket-screen .tip-cell input {
+    width: 100%;
+    text-align: right;
+    font-size: medium;
+    color: #555555;
+    padding-bottom: 5px;
+    border: none;
+    outline: none;
+}
+
+.ticket-screen .tip-cell input:focus {
+    border: none;
+    outline: none;
+    border-bottom: solid 1px #555555;
 }

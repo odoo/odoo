@@ -4,13 +4,20 @@ odoo.define('pos_restaurant.TipScreen', function (require) {
     const Registries = require('point_of_sale.Registries');
     const PosComponent = require('point_of_sale.PosComponent');
     const { parse } = require('web.field_utils');
-    const { useState } = owl.hooks;
+    const { useContext } = owl.hooks;
 
     class TipScreen extends PosComponent {
         constructor() {
             super(...arguments);
-            this.state = useState({ inputCustomAmount: '' });
+            this.state = useContext(this.currentOrder.uiState.TipScreen);
             this._totalAmount = this.currentOrder.get_total_with_tax();
+        }
+        get overallAmountStr() {
+            const tipAmount = parse.float(this.state.inputTipAmount || '0');
+            const original = this.env.pos.format_currency(this.totalAmount);
+            const tip = this.env.pos.format_currency(tipAmount);
+            const overall = this.env.pos.format_currency(this.totalAmount + tipAmount);
+            return `${original} + ${tip} tip = ${overall}`;
         }
         get totalAmount() {
             return this._totalAmount;
@@ -25,7 +32,8 @@ odoo.define('pos_restaurant.TipScreen', function (require) {
                 { percentage: '25%', amount: 0.25 * this.totalAmount },
             ];
         }
-        async setTip(amount) {
+        async validateTip() {
+            const amount = parse.float(this.state.inputTipAmount) || 0;
             const order = this.env.pos.get_order();
             const serverId = this.env.pos.validated_orders_name_server_id_map[order.name];
 
@@ -35,6 +43,26 @@ odoo.define('pos_restaurant.TipScreen', function (require) {
                     body: 'This order is not yet synced to server. Make sure it is synced then try again.',
                 });
                 return;
+            }
+
+            if (!amount) {
+                await this.rpc({
+                    method: 'set_no_tip',
+                    model: 'pos.order',
+                    args: [serverId],
+                });
+                this.goNextScreen();
+                return;
+            }
+
+            if (amount > 0.25 * this.totalAmount) {
+                const { confirmed } = await this.showPopup('ConfirmPopup', {
+                    title: 'Are you sure?',
+                    body: `${this.env.pos.format_currency(
+                        amount
+                    )} is more than 25% of the order's total amount. Are you sure of this tip amount?`,
+                });
+                if (!confirmed) return;
             }
 
             // set the tip by temporarily allowing order modification
@@ -50,19 +78,6 @@ odoo.define('pos_restaurant.TipScreen', function (require) {
                 args: [serverId, tip_line.export_as_JSON()],
             });
             this.goNextScreen();
-        }
-        async tipCustomAmount() {
-            const tipAmount = parse.float(this.state.inputCustomAmount);
-            if (tipAmount > 0.25 * this._totalAmount) {
-                const { confirmed } = await this.showPopup('ConfirmPopup', {
-                    title: 'Are you sure?',
-                    body: `${this.env.pos.format_currency(
-                        tipAmount
-                    )} is more than 25% of the order's total amount. Are you sure of this tip amount?`,
-                });
-                if (!confirmed) return;
-            }
-            await this.setTip(tipAmount);
         }
         goNextScreen() {
             this.env.pos.get_order().finalize();

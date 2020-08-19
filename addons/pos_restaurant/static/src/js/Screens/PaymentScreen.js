@@ -7,7 +7,16 @@ odoo.define('pos_restaurant.PosResPaymentScreen', function (require) {
     const PosResPaymentScreen = (PaymentScreen) =>
         class extends PaymentScreen {
             get nextScreen() {
-                return this.env.pos.config.set_tip_after_payment && !this.currentOrder.is_tipped ? 'TipScreen' : super.nextScreen;
+                const order = this.currentOrder;
+                if (!this.env.pos.config.set_tip_after_payment || order.is_tipped) {
+                    return super.nextScreen;
+                }
+                // Take the first payment method as the main payment.
+                const mainPayment = order.get_paymentlines()[0];
+                if (mainPayment.canBeTipped()) {
+                    return 'TipScreen';
+                }
+                return super.nextScreen;
             }
         };
 

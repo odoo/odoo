@@ -17,9 +17,6 @@ odoo.define('pos_restaurant.tour.TipScreenTourMethods', function (require) {
                     trigger: `.tip-screen .custom-amount-form input`,
                     run: `text ${amount}`,
                 },
-                {
-                    trigger: '.tip-screen .custom-amount-form .button',
-                },
             ];
         }
     }
@@ -48,6 +45,18 @@ odoo.define('pos_restaurant.tour.TipScreenTourMethods', function (require) {
                     run: () => {},
                 },
             ];
+        }
+        inputAmountIs(amount) {
+            return [
+                {
+                    trigger: `.tip-screen .custom-amount-form input`,
+                    run: function() {
+                        if (this.$anchor.val().indexOf(amount) === -1) {
+                            throw new Error(`".tip-screen .custom-amount-form input" element does not contain ${amount}.`)
+                        };
+                    },
+                }
+            ]
         }
     }
 
