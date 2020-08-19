@@ -52,6 +52,12 @@
                                     </t>
                                 </t>
                             </ul>
+                            <!-- Add Register additional CTA button, in addition to menus -->
+                            <a t-if="event.menu_register_cta and not event.is_participating"
+                                t-att-href="'/event/%s/register' % (slug(event))"
+                                class="btn btn-primary ml-auto">
+                                Register
+                            </a>
                         </div>
                     </div>
                 </nav>

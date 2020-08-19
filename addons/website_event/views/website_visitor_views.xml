@@ -29,7 +29,7 @@
         <field name="inherit_id" ref="website.website_visitor_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//button[@id='w_visitor_visit_counter']" position="before">
-                <button name="%(website_event_online.event_registration_action_from_visitor)d"
+                <button name="%(website_event.event_registration_action_from_visitor)d"
                     type="action"
                     class="oe_stat_button" icon="fa-ticket"
                     attrs="{'invisible': [('event_registration_count', '=', 0)]}">
