@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="agenda">
+    <t t-call="website_event.layout">
+        <div class="oe_structure" id="oe_structure_website_event_track_agenda_1"/>
+        <section class="container pt48">
+            <h1 t-field="event.name"/>
+            <div class="form-inline float-right">
+                <label class="invisible text-muted" id="search_summary"><span id="search_number">0</span> Found </label>
+                <input type="text" class="form-control" placeholder="Filter Tracks..." id="event_track_search"/>
+            </div>
+        </section>
+        <t t-set="dayslist" t-value="list(days.keys())"/>
+        <t t-set="dayslist2" t-value="dayslist.sort()"/> <!-- display days in the right order -->
+        <section class="container" t-foreach="dayslist" t-as="day">
+            <t t-set="locations" t-value="days[day]['locations']"/>
+            <t t-set="dates" t-value="days[day]['dates']"/>
+            <h3 class="o_page_header mt0">
+                <span t-field="tracks_by_days[day][0].date" t-options="{'widget': 'date'}"/>
+                <small><t t-esc="len(tracks_by_days[day])"/> talks</small>
+            </h3>
+            <table id="table_search" class="table table-bordered table-sm">
+            <tr>
+                <th/>
+                <t t-foreach="locations.keys()" t-as="location">
+                    <th t-if="location" class="active">
+                        <span t-esc="location and location.name or 'Unknown'"/>
+                    </th>
+                </t>
+            </tr>
+            <tr t-foreach="dates" t-as="dt">
+                <td class="active">
+                    <b t-esc="dt[-1]"/>
+                </td>
+                <t t-if="dt[2]"> <!-- Not a multi location -->
+                    <t t-foreach="locations" t-as="location">
+                        <t t-if="location and dt[1].get(location, False)">
+                            <t t-set="track" t-value="dt[1][location][0]"/>
+                            <t t-if="track">
+                                <td t-att-rowspan="dt[1][location][3]" t-attf-class="event_color_#{track.color} #{track and 'event_track' or ''}">
+                                    <t t-if="track" name="track_agenda_track_cell">
+                                        <a t-attf-href="/event/#{ slug(event) }/track/#{ slug(track) }">
+                                            <span t-esc="track and track.name"/>
+                                            <span t-if="not track.website_published" class="badge badge-warning">unpublished</span>
+                                        </a>
+                                        <div class="text-muted">
+                                            <small t-if="track.partner_id" t-esc="track.partner_id.sudo().name"/>
+                                            <small t-if="not track.partner_id" t-esc="track.partner_name"/>
+                                        </div>
+                                    </t>
+                                </td>
+                            </t>
+                            <td t-if="not track" t-att-rowspan="dt[1][location][3]" class="event_track"/>
+                        </t>
+                    </t>
+                </t><t t-if="not dt[2]">
+                    <t t-set="track" t-value="dt[1][False][0]"/>
+                    <td t-att-colspan="len(locations)-1" t-attf-class="text-center event_color_#{track.color} #{track and 'event_track' or ''}">
+                        <a t-attf-href="/event/#{ slug(event) }/track/#{ slug(track) }">
+                            <span t-esc="track.name"/>
+                        </a>
+                        <div class="text-muted">
+                            <small t-if="track.partner_id" t-esc="track.partner_id.sudo().name"/>
+                            <small t-if="not track.partner_id" t-esc="track.partner_name"/>
+                        </div>
+                    </td>
+                </t>
+            </tr>
+            </table>
+        </section>
+        <div class="oe_structure" id="oe_structure_website_event_track_agenda_2"/>
+    </t>
+</template>
+
+</odoo>
