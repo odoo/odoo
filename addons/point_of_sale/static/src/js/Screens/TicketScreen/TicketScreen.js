@@ -121,8 +121,11 @@ odoo.define('point_of_sale.TicketScreen', function (require) {
         get searchBarConfig() {
             return {
                 searchFields: this.constants.searchFieldNames,
-                filter: { show: true, options: ['All Tickets', 'Ongoing', 'Payment', 'Receipt'] },
+                filter: { show: true, options: this.filterOptions },
             };
+        }
+        get filterOptions() {
+            return ['All Tickets', 'Ongoing', 'Payment', 'Receipt'];
         }
         /**
          * An object with keys containing the search field names which map to functions.
@@ -163,7 +166,6 @@ odoo.define('point_of_sale.TicketScreen', function (require) {
                 ProductScreen: 'Ongoing',
                 PaymentScreen: 'Payment',
                 ReceiptScreen: 'Receipt',
-                TipScreen: 'Tipping',
             };
         }
         _initializeSearchFieldConstants() {

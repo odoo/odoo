@@ -2535,6 +2535,9 @@ exports.Order = Backbone.Model.extend({
                 emailSuccessful: null,
                 emailNotice: '',
             }),
+            TipScreen: new Context({
+                inputTipAmount: '',
+            })
         };
 
         if (options.json) {
@@ -2877,6 +2880,7 @@ exports.Order = Backbone.Model.extend({
                     lines[i].set_unit_price(tip);
                     lines[i].set_lst_price(tip);
                     lines[i].price_manually_set = true;
+                    lines[i].order.tip_amount = tip;
                     return;
                 }
             }

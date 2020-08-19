@@ -11,45 +11,28 @@
             <attribute name="t-if">!props.isBill</attribute>
         </xpath>
         <xpath expr="//div[hasclass('before-footer')]" position="after">
-            <t t-if="env.pos.config.set_tip_after_payment and !props.order.is_tipped">
+            <t t-if="props.isBill and env.pos.config.set_tip_after_payment">
                 <div class="tip-form">
-                    <div>Add a tip:</div>
+                    <div class="title">For convenience, we are providing the following gratuity calculations:</div>
                     <div class="percentage-options">
                         <div class="option">
-                            <div class="checkbox"></div>
-                            <div>
-                                <div class="amount">
-                                    <t t-esc="env.pos.format_currency(receipt.total_with_tax * 0.15)"></t>
-                                </div>
-                                <div class="percentage">(15%)</div>
+                            <div>15%</div>
+                            <div class="amount">
+                                <t t-esc="env.pos.format_currency(receipt.total_with_tax * 0.15)"></t>
                             </div>
                         </div>
                         <div class="option">
-                            <div class="checkbox"></div>
-                            <div>
-                                <div class="amount">
-                                    <t t-esc="env.pos.format_currency(receipt.total_with_tax * 0.20)"></t>
-                                </div>
-                                <div class="percentage">(20%)</div>
+                            <div>20%</div>
+                            <div class="amount">
+                                <t t-esc="env.pos.format_currency(receipt.total_with_tax * 0.20)"></t>
                             </div>
                         </div>
                         <div class="option">
-                            <div class="checkbox"></div>
-                            <div>
-                                <div class="amount">
-                                    <t t-esc="env.pos.format_currency(receipt.total_with_tax * 0.25)"></t>
-                                </div>
-                                <div class="percentage">(25%)</div>
+                            <div>25%</div>
+                            <div class="amount">
+                                <t t-esc="env.pos.format_currency(receipt.total_with_tax * 0.25)"></t>
                             </div>
                         </div>
-                    </div>
-                    <div class="custom-amount">
-                        <span>Custom amount:</span>
-                        <div class="pos-receipt-right-align">________________________</div>
-                    </div>
-                    <div class="signature">
-                        <span>Signature:</span>
-                        <div class="pos-receipt-right-align">________________________</div>
                     </div>
                 </div>
             </t>

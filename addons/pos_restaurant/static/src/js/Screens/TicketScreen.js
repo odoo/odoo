@@ -1,9 +1,13 @@
 odoo.define('pos_restaurant.TicketScreen', function (require) {
     'use strict';
 
+    const PosComponent = require('point_of_sale.PosComponent');
     const TicketScreen = require('point_of_sale.TicketScreen');
     const Registries = require('point_of_sale.Registries');
+    const { useAutofocus } = require('web.custom_hooks');
     const { posbus } = require('point_of_sale.utils');
+    const { parse } = require('web.field_utils');
+    const { useState, useContext } = owl.hooks;
 
     const PosResTicketScreen = (TicketScreen) =>
         class extends TicketScreen {
@@ -14,6 +18,14 @@ odoo.define('pos_restaurant.TicketScreen', function (require) {
                     // to properly rerender the components that listens to it.
                     posbus.trigger('table-set');
                 }
+            }
+            get filterOptions() {
+                return [...super.filterOptions, 'Tipping'];
+            }
+            get _screenToStatusMap() {
+                return Object.assign(super._screenToStatusMap, {
+                    TipScreen: 'Tipping',
+                });
             }
             getTable(order) {
                 return `${order.table.floor.name} (${order.table.name})`;
@@ -46,9 +58,80 @@ odoo.define('pos_restaurant.TicketScreen', function (require) {
                     return this.env.pos.get('orders').models;
                 }
             }
+            async settleTips() {
+                // set tip in each order
+                for (const order of this.filteredOrderList) {
+                    const tipAmount = parse.float(order.uiState.TipScreen.state.inputTipAmount || '0');
+                    const serverId = this.env.pos.validated_orders_name_server_id_map[order.name];
+                    if (!serverId) {
+                        console.warn(`${order.name} is not yet sync. Sync it to server before setting a tip.`);
+                    } else {
+                        const result = await this.setTip(order, serverId, tipAmount);
+                        if (!result) break;
+                    }
+                }
+            }
+            async setTip(order, serverId, amount) {
+                try {
+                    if (!amount) {
+                        await this.setNoTip();
+                    } else {
+                        order.finalized = false;
+                        order.set_tip(amount);
+                        order.finalized = true;
+                        const tip_line = order.selected_orderline;
+                        await this.rpc({
+                            method: 'set_tip',
+                            model: 'pos.order',
+                            args: [serverId, tip_line.export_as_JSON()],
+                        });
+                    }
+                    order.finalize();
+                    return true;
+                } catch (error) {
+                    const { confirmed } = await this.showPopup('ConfirmPopup', {
+                        title: 'Failed to set tip',
+                        body: `Failed to set tip to ${order.name}. Do you want to proceed on setting the tips of the remaining?`,
+                    });
+                    return confirmed;
+                }
+            }
+            async setNoTip() {
+                await this.rpc({
+                    method: 'set_no_tip',
+                    model: 'pos.order',
+                    args: [serverId],
+                });
+            }
         };
 
     Registries.Component.extend(TicketScreen, PosResTicketScreen);
 
-    return TicketScreen;
+    class TipCell extends PosComponent {
+        constructor() {
+            super(...arguments);
+            this.state = useState({ isEditing: false });
+            this.orderUiState = useContext(this.props.order.uiState.TipScreen);
+            useAutofocus({ selector: 'input' });
+        }
+        get tipAmountStr() {
+            return this.env.pos.format_currency(parse.float(this.orderUiState.inputTipAmount || '0'));
+        }
+        onBlur() {
+            this.state.isEditing = false;
+        }
+        onKeydown(event) {
+            if (event.key === 'Enter') {
+                this.state.isEditing = false;
+            }
+        }
+        editTip() {
+            this.state.isEditing = true;
+        }
+    }
+    TipCell.template = 'TipCell';
+
+    Registries.Component.add(TipCell);
+
+    return { TicketScreen, TipCell };
 });
