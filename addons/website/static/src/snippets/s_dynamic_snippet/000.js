@@ -23,7 +23,7 @@ const DynamicSnippet = publicWidget.Widget.extend({
          *
          * @type {*|jQuery.fn.init|jQuery|HTMLElement}
          */
-        this.$data = $();
+        this.data = [];
         this.renderedContent = '';
         this.isDesplayedAsMobile = config.device.isMobile;
         this.uniqueId = _.uniqueId('s_dynamic_snippet_');
@@ -74,7 +74,7 @@ const DynamicSnippet = publicWidget.Widget.extend({
      *
      * @private
      */
-    _clearContent: function() {
+    _clearContent: function () {
         const $dynamicSnippetTemplate = this.$el.find('.dynamic_snippet_template');
         if ($dynamicSnippetTemplate) {
             $dynamicSnippetTemplate.html('');
@@ -85,7 +85,7 @@ const DynamicSnippet = publicWidget.Widget.extend({
      * are required in order to fetch data.
      * @private
      */
-    _isConfigComplete: function() {
+    _isConfigComplete: function () {
         return this.$el.get(0).dataset.filterId !== undefined && this.$el.get(0).dataset.templateKey !== undefined;
     },
     /**
@@ -114,12 +114,12 @@ const DynamicSnippet = publicWidget.Widget.extend({
                 })
                 .then(
                     (data) => {
-                        this.$data = $(data).filter((index, node) => node.nodeType === 1);
+                        this.data = data;
                     }
                 );
         } else {
             return new Promise((resolve) => {
-                this.$data = $();
+                this.data = [];
                 resolve();
             });
         }
@@ -160,7 +160,7 @@ const DynamicSnippet = publicWidget.Widget.extend({
                     ? this.$target[0].dataset.numberOfElementsSmallDevices
                     : this.$target[0].dataset.numberOfElements
             ),
-            data: this.$data.map((index, data) => data.outerHTML),
+            data: this.data,
             uniqueId: this.uniqueId
         };
     },
@@ -169,7 +169,7 @@ const DynamicSnippet = publicWidget.Widget.extend({
      * @private
      */
     _render: function () {
-        if (this.$data.length > 0) {
+        if (this.data.length) {
             this._prepareContent();
         } else {
             this.renderedContent = '';
