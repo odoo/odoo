@@ -184,7 +184,7 @@
                             </div>
                         </div>
                     </div>
-                    <p t-if="o.move_type in ('out_invoice', 'in_refund') and o.payment_reference">
+                    <p t-if="o.move_type in ('out_invoice', 'in_refund') and o.payment_reference" name="payment_communication">
                         Please use the following communication for your payment : <b><span t-field="o.payment_reference"/></b>
                     </p>
                     <p t-if="o.invoice_payment_term_id" name="payment_term">
@@ -196,7 +196,7 @@
                     <p t-if="o.fiscal_position_id.note" name="note">
                         <span t-field="o.fiscal_position_id.note"/>
                     </p>
-                    <p t-if="o.invoice_incoterm_id" name="note">
+                    <p t-if="o.invoice_incoterm_id" name="incoterm">
                         <strong>Incoterm: </strong><span t-field="o.invoice_incoterm_id.code"/> - <span t-field="o.invoice_incoterm_id.name"/>
                     </p>
                     <div id="qrcode" t-if="o.display_qr_code">
