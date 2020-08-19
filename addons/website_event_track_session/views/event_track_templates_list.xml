@@ -5,7 +5,7 @@
     inherit_id="website_event_track.tracks">
     <!-- New main layout -->
     <xpath expr="//div[@id='oe_structure_website_event_track_tracks_1']" position="before">
-        <div class="o_wevent_online o_wevent_online_bg o_wesession_index">
+        <div class="o_wevent_online o_wesession_index">
             <!-- Options -->
             <t t-set="option_track_wishlist" t-value="not event.is_done and request.website.viewref('website_event_track_session.session_topbar_wishlist').active"/>
             <!-- Topbar -->
@@ -22,7 +22,7 @@
                 </div>
             </div>
             <!-- Drag/Drop Area -->
-            <div id="oe_structure_wesession_index_2" class="oe_structure"/>
+            <div id="oe_structure_wesession_index_2" class="oe_structure mb-5"/>
         </div>
     </xpath>
     <!-- Reset existing template as nothing to keep -->
@@ -185,28 +185,11 @@
                     <hr class="mt-2 pb-1 mb-1"/>
                 </div>
                 <!-- DAY TRACKS LIST -->
-                <ul class="list-unstyled mx-3 o_wesession_list_tracks">
-                    <!-- CELLS HEADERS -->
-                    <li class="o_wesession_list_item row bg-white shadow-sm py-2 d-none d-md-flex">
-                        <span t-att-class="'col-md-4' if not event.is_done else 'col-md-5'">Topic</span>
-                        <span t-att-class="'col-md-2' if not event.is_done else 'col-md-3'">Tags</span>
-                        <span t-att-class="'col-md-6' if not event.is_done else 'col-md-4'">
-                            <span class="row">
-                                <span t-att-class="'col-md-4' if not event.is_done else 'col-md-8'">Speaker</span>
-                                <span t-att-class="'col-md-3' if not event.is_done else 'col-md-4'">Duration</span>
-                                <span t-if="not event.is_done" class="col-md-5">
-                                    <t t-if="today_tz &lt;= tracks_date">Starts</t>
-                                    <t t-else=""></t>
-                                </span>
-                            </span>
-                        </span>
-                    </li>
-                    <li t-foreach="tracks" t-as="track"
-                        class="o_wesession_list_item row bg-white-50 py-2">
-                        <span t-att-class="'%s col-12 o_wesession_list_item_topic d-flex align-items-start' % ('col-md-4' if not event.is_done else 'col-md-5')"
-                            name="o_wesession_list_item_topic">
-                            <a t-att-href="track.website_url"
-                                t-if="track.is_published or user_event_manager">
+                <div t-foreach="tracks" t-as="track" class="row mt8 o_wesession_list_item">
+                    <div class="col-md-7">
+                        <span class="h5 mb0">
+                            <a t-if="track.is_published or user_event_manager"
+                                t-att-href="track.website_url">
                                 <span t-field="track.name"/>
                             </a>
                             <t t-else="">
@@ -216,55 +199,43 @@
                                 class="badge badge-danger ml-2 o_wevent_online_badge_unpublished">
                                 Unpublished
                             </span>
-                            <!-- Mobile: display reminder icon near name, not in list to save space -->
-                            <div t-if="option_track_wishlist"
-                                class="d-md-none d-inline ml-auto"
-                                t-call="website_event_track_online.track_widget_reminder">
-                                <t t-set="reminder_light" t-value="True"/>
-                                <t t-set="remidner_small" t-value="True"/>
-                                <t t-set="light_theme" t-value="False"/>
-                            </div>
                         </span>
-                        <div t-att-class="'%s col-12 mt-2 mt-md-0' % ('col-md-2' if not event.is_done else 'col-md-3')">
-                            <t t-foreach="track.tag_ids" t-as="tag">
-                                <t t-if="tag.color" t-call="website_event_track_session.track_tag_badge_link"/>
+                        <div class="text-muted">
+                            <span class="text-muted" t-esc="track.partner_name"/> &amp;bull; 
+                            <span t-esc="track.duration"
+                                t-options="{'widget': 'duration', 'digital': False, 'format': 'short', 'unit': 'hour', 'round': 'minute'}"/>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div t-if="not event.is_done" class="float-right">
+                            <t t-if="today_tz &lt;= tracks_date">
+                                <span t-if="track.is_track_live and not track.is_track_done"
+                                    class="badge badge-danger">Live</span>
+                                <span t-elif="not track.is_track_done and track.is_track_soon">
+                                    <span t-esc="track.track_start_remaining"
+                                        t-options="{'widget': 'duration', 'digital': False, 'format': 'narrow',
+                                                    'add_direction': True, 'unit': 'second', 'round': 'minute'}"/>
+                                </span>
+                                <t t-elif="not track.is_track_done and not track.is_track_soon">
+                                    <span
+                                        class="mr-2"
+                                        t-esc="track.date"
+                                        t-options="{'widget': 'datetime', 'time_only': True, 'format': 'short'}"/>
+                                    <t t-if="option_track_wishlist"
+                                        t-call="website_event_track_online.track_widget_reminder">
+                                        <t t-set="reminder_small" t-value="True"/>
+                                    </t>
+                                </t>
+                                <t t-else="">
+                                    <span class="badge badge-info">Finished</span>
+                                </t>
                             </t>
                         </div>
-                        <div t-att-class="'%s col-12 mt-2 mt-md-0' % ('col-md-6' if not event.is_done else 'col-md-4')"
-                            name="o_wesession_list_item_organization">
-                            <div class="row">
-                                <span t-att-class="'%s col-4' % ('col-md-4' if not event.is_done else 'col-md-8')">
-                                    <span t-esc="track.partner_name"/>
-                                </span>
-                                <span t-att-class="'%s col-5' % ('col-md-3' if not event.is_done else 'col-md-4')"
-                                    t-esc="track.duration"
-                                    t-options="{'widget': 'duration', 'digital': False, 'format': 'short', 'unit': 'hour', 'round': 'minute'}"/>
-                                <span t-if="not event.is_done" 
-                                    class="col-md-5 col-3 d-flex align-items-start justify-content-between">
-                                    <t t-if="today_tz &lt;= tracks_date">
-                                        <span t-if="track.is_track_live and not track.is_track_done"
-                                            class="badge badge-danger">Live</span>
-                                        <span t-elif="not track.is_track_done and track.is_track_soon">
-                                            <span t-esc="track.track_start_remaining"
-                                                t-options="{'widget': 'duration', 'digital': False, 'format': 'narrow',
-                                                            'add_direction': True, 'unit': 'second', 'round': 'minute'}"/>
-                                        </span>
-                                        <span t-elif="not track.is_track_done and not track.is_track_soon"
-                                            t-esc="track.date"
-                                            class=""
-                                            t-options="{'widget': 'datetime', 'time_only': True, 'format': 'short'}"/>
-                                        <span t-else="" class="badge badge-info">Finished</span>
-                                        <div t-if="option_track_wishlist"
-                                            class="d-none d-sm-inline"
-                                            t-call="website_event_track_online.track_widget_reminder">
-                                            <t t-set="reminder_small" t-value="True"/>
-                                        </div>
-                                    </t>
-                                </span>
-                            </div>
-                        </div>
-                    </li>
-                </ul>
+                        <t t-foreach="track.tag_ids" t-as="tag">
+                            <t t-if="tag.color" t-call="website_event_track_session.track_tag_badge_link"/>
+                        </t>
+                    </div>
+                </div>
             </li>
         </ul>
     </div>
