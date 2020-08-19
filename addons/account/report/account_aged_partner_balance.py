@@ -31,14 +31,14 @@ class ReportAgedPartnerBalance(models.AbstractModel):
         start = date_from
         for i in range(5)[::-1]:
             stop = start - relativedelta(days=period_length)
-            period_name = str((5-(i+1)) * period_length + 1) + '-' + str((5-i) * period_length)
+            period_name = str((5 - (i + 1)) * period_length + 1) + '-' + str((5 - i) * period_length)
             period_stop = (start - relativedelta(days=1)).strftime('%Y-%m-%d')
             if i == 0:
                 period_name = '+' + str(4 * period_length)
             periods[str(i)] = {
                 'name': period_name,
                 'stop': period_stop,
-                'start': (i!=0 and stop.strftime('%Y-%m-%d') or False),
+                'start': (i != 0 and stop.strftime('%Y-%m-%d') or False),
             }
             start = stop
 
@@ -53,23 +53,30 @@ class ReportAgedPartnerBalance(models.AbstractModel):
         if target_move == 'posted':
             move_state = ['posted']
         arg_list = (tuple(move_state), tuple(account_type), date_from, date_from,)
-        if ctx.get('partner_ids'):
-            partner_clause = 'AND (l.partner_id IN %s)'
-            arg_list += (tuple(ctx['partner_ids'].ids),)
+        if 'partner_ids' in ctx:
+            if ctx['partner_ids']:
+                partner_clause = 'AND (l.partner_id IN %s)'
+                arg_list += (tuple(ctx['partner_ids'].ids),)
+            else:
+                partner_clause = 'AND l.partner_id IS NULL'
         if ctx.get('partner_categories'):
             partner_clause += 'AND (l.partner_id IN %s)'
             partner_ids = self.env['res.partner'].search([('category_id', 'in', ctx['partner_categories'].ids)]).ids
             arg_list += (tuple(partner_ids or [0]),)
         arg_list += (date_from, tuple(company_ids))
+
         query = '''
-            SELECT DISTINCT l.partner_id, UPPER(res_partner.name)
-            FROM account_move_line AS l left join res_partner on l.partner_id = res_partner.id, account_account, account_move am
+            SELECT DISTINCT l.partner_id, res_partner.name AS name, UPPER(res_partner.name) AS UPNAME, CASE WHEN prop.value_text IS NULL THEN 'normal' ELSE prop.value_text END AS trust
+            FROM account_move_line AS l
+              LEFT JOIN res_partner ON l.partner_id = res_partner.id
+              LEFT JOIN ir_property prop ON (prop.res_id = 'res.partner,'||res_partner.id AND prop.name='trust' AND prop.company_id=%s),
+              account_account, account_move am
             WHERE (l.account_id = account_account.id)
                 AND (l.move_id = am.id)
                 AND (am.state IN %s)
                 AND (account_account.internal_type IN %s)
                 AND (
-                        l.reconciled IS FALSE
+                        l.reconciled IS NOT TRUE
                         OR l.id IN(
                             SELECT credit_move_id FROM account_partial_reconcile where max_date > %s
                             UNION ALL
@@ -80,6 +87,7 @@ class ReportAgedPartnerBalance(models.AbstractModel):
                 AND (l.date <= %s)
                 AND l.company_id IN %s
             ORDER BY UPPER(res_partner.name)'''
+        arg_list = (self.env.user.company_id.id,) + arg_list
         cr.execute(query, arg_list)
 
         partners = cr.dictfetchall()
@@ -88,8 +96,8 @@ class ReportAgedPartnerBalance(models.AbstractModel):
             total.append(0)
 
         # Build a string like (1,2,3) for easy use in SQL query
-        partner_ids = [partner['partner_id'] for partner in partners if partner['partner_id']]
-        lines = dict((partner['partner_id'] or False, []) for partner in partners)
+        partner_ids = [partner['partner_id'] for partner in partners]
+        lines = dict((partner['partner_id'], []) for partner in partners)
         if not partner_ids:
             return [], [], {}
 
@@ -140,10 +148,12 @@ class ReportAgedPartnerBalance(models.AbstractModel):
                     continue
                 for partial_line in line.matched_debit_ids:
                     if partial_line.max_date <= date_from:
-                        line_amount += partial_line.company_id.currency_id._convert(partial_line.amount, user_currency, user_company, date_from)
+                        line_amount += partial_line.company_id.currency_id._convert(partial_line.amount, user_currency,
+                                                                                    user_company, date_from)
                 for partial_line in line.matched_credit_ids:
                     if partial_line.max_date <= date_from:
-                        line_amount -= partial_line.company_id.currency_id._convert(partial_line.amount, user_currency, user_company, date_from)
+                        line_amount -= partial_line.company_id.currency_id._convert(partial_line.amount, user_currency,
+                                                                                    user_company, date_from)
 
                 if not self.env.user.company_id.currency_id.is_zero(line_amount):
                     partners_amount[partner_id] += line_amount
@@ -152,7 +162,7 @@ class ReportAgedPartnerBalance(models.AbstractModel):
                         'line': line,
                         'amount': line_amount,
                         'period': i + 1,
-                        })
+                    })
             history.append(partners_amount)
 
         # This dictionary will store the not due amount of all partners
@@ -167,7 +177,8 @@ class ReportAgedPartnerBalance(models.AbstractModel):
                 AND (l.date <= %s)
                 AND l.company_id IN %s
                 ORDER BY COALESCE(l.date_maturity, l.date)'''
-        cr.execute(query, (tuple(move_state), tuple(account_type), date_from, tuple(partner_ids), date_from, tuple(company_ids)))
+        cr.execute(query, (
+        tuple(move_state), tuple(account_type), date_from, tuple(partner_ids), date_from, tuple(company_ids)))
         aml_ids = cr.fetchall()
         aml_ids = aml_ids and [x[0] for x in aml_ids] or []
         for line in self.env['account.move.line'].browse(aml_ids):
@@ -179,10 +190,12 @@ class ReportAgedPartnerBalance(models.AbstractModel):
                 continue
             for partial_line in line.matched_debit_ids:
                 if partial_line.max_date <= date_from:
-                    line_amount += partial_line.company_id.currency_id._convert(partial_line.amount, user_currency, user_company, date_from)
+                    line_amount += partial_line.company_id.currency_id._convert(partial_line.amount, user_currency,
+                                                                                user_company, date_from)
             for partial_line in line.matched_credit_ids:
                 if partial_line.max_date <= date_from:
-                    line_amount -= partial_line.company_id.currency_id._convert(partial_line.amount, user_currency, user_company, date_from)
+                    line_amount -= partial_line.company_id.currency_id._convert(partial_line.amount, user_currency,
+                                                                                user_company, date_from)
             if not self.env.user.company_id.currency_id.is_zero(line_amount):
                 undue_amounts[partner_id] += line_amount
                 lines.setdefault(partner_id, [])
@@ -216,21 +229,19 @@ class ReportAgedPartnerBalance(models.AbstractModel):
                 if not float_is_zero(values[str(i)], precision_rounding=self.env.user.company_id.currency_id.rounding):
                     at_least_one_amount = True
             values['total'] = sum([values['direction']] + [values[str(i)] for i in range(5)])
-            ## Add for total
+            # Add for total
             total[(i + 1)] += values['total']
             values['partner_id'] = partner['partner_id']
             if partner['partner_id']:
-                #browse the partner name and trust field in sudo, as we may not have full access to the record (but we still have to see it in the report)
-                browsed_partner = self.env['res.partner'].sudo().browse(partner['partner_id'])
-                values['name'] = browsed_partner.name and len(browsed_partner.name) >= 45 and browsed_partner.name[0:40] + '...' or browsed_partner.name
-                values['trust'] = browsed_partner.trust
+                name = partner['name'] or ''
+                values['name'] = len(name) >= 45 and name[0:40] + '...' or name
+                values['trust'] = partner['trust']
             else:
                 values['name'] = _('Unknown Partner')
                 values['trust'] = False
 
             if at_least_one_amount or (self._context.get('include_nullified_amount') and lines[partner['partner_id']]):
                 res.append(values)
-
         return res, total, lines
 
     @api.model
