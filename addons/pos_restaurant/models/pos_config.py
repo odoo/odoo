@@ -14,7 +14,7 @@ class PosConfig(models.Model):
     printer_ids = fields.Many2many('restaurant.printer', 'pos_config_printer_rel', 'config_id', 'printer_id', string='Order Printers')
     is_table_management = fields.Boolean('Floors & Tables')
     is_order_printer = fields.Boolean('Order Printer')
-    set_tip_after_payment = fields.Boolean('Set Tip After Payment')
+    set_tip_after_payment = fields.Boolean('Set Tip After Payment', help="Adjust the amount authorized by payment terminals to add a tip after the customers left or at the end of the day.")
     module_pos_restaurant = fields.Boolean(default=True)
 
     @api.onchange('module_pos_restaurant')
