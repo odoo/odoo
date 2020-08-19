@@ -688,12 +688,6 @@ class Task(models.Model):
         if self.project_id.company_id != self.company_id:
             self.project_id = False
 
-    @api.constrains('parent_id', 'child_ids')
-    def _check_subtask_level(self):
-        for task in self:
-            if task.parent_id and task.child_ids:
-                raise ValidationError(_('Task %s cannot have several subtask levels.' % (task.name,)))
-
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         if default is None:
