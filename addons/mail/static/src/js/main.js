@@ -8,6 +8,37 @@ const env = require('web.commonEnv');
 const { Store } = owl;
 const { EventBus } = owl.core;
 
+async function createMessaging() {
+    await new Promise(resolve => {
+        /**
+         * Called when all JS resources are loaded. This is useful in order
+         * to do some processing after other JS files have been parsed, for
+         * example new models or patched models that are coming from
+         * other modules, because some of those patches might need to be
+         * applied before messaging initialization.
+         */
+        window.addEventListener('load', resolve);
+    });
+    /**
+     * All JS resources are loaded, but not necessarily processed.
+     * We assume no messaging-related modules return any Promise,
+     * therefore they should be processed *at most* asynchronously at
+     * "Promise time".
+     */
+    await new Promise(resolve => setTimeout(resolve));
+    /**
+     * Some models require session data, like locale text direction (depends on
+     * fully loaded translation).
+     */
+    await env.session.is_bound;
+
+    env.modelManager.start();
+    /**
+     * Create the messaging singleton record.
+     */
+    env.messaging = env.models['mail.messaging'].create();
+}
+
 /**
  * Messaging store
  */
@@ -43,6 +74,13 @@ Object.assign(env, {
     loadingBaseDelayDuration: 400,
     messaging: undefined,
     messagingBus: new EventBus(),
+    /**
+     * Promise which becomes resolved when messaging is created.
+     *
+     * Useful for discuss widget to know when messaging is created, because this
+     * is an essential condition to make it work.
+     */
+    messagingCreatedPromise: createMessaging(),
     modelManager: new ModelManager(env),
     store,
 });
@@ -76,31 +114,6 @@ env.bus.on(
     () => env.messagingBus.trigger('will_show_home_menu')
 );
 
-(async function start() {
-    await new Promise(resolve => {
-        /**
-         * Called when all JS resources are loaded. This is useful in order
-         * to do some processing after other JS files have been parsed, for
-         * example new models or patched models that are coming from
-         * other modules, because some of those patches might need to be
-         * applied before messaging initialization.
-         */
-        window.addEventListener('load', resolve);
-    });
-    /**
-     * All JS resources are loaded, but not necessarily processed.
-     * We assume no messaging-related modules return any Promise,
-     * therefore they should be processed *at most* asynchronously at
-     * "Promise time".
-     */
-    await new Promise(resolve => setTimeout(resolve));
-
-    env.modelManager.start(env);
-    /**
-     * Create the messaging singleton record.
-     */
-    env.messaging = env.models['mail.messaging'].create();
-    await env.messaging.start();
-})();
+env.messagingCreatedPromise.then(() => env.messaging.start());
 
 });

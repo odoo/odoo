@@ -58,6 +58,7 @@ function addMessagingToEnv(providedEnv = {}) {
         },
         loadingBaseDelayDuration: providedEnv.loadingBaseDelayDuration || 0,
         messaging: undefined,
+        messagingCreatedPromise: makeDeferred(),
         messagingInitializedDeferred: makeDeferred(),
         messagingBus: new EventBus(),
         modelManager: undefined,

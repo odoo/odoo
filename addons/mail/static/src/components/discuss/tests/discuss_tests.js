@@ -46,7 +46,7 @@ QUnit.test('messaging not initialized', async function (assert) {
             }
             return _super();
         },
-        waitUntilMessagingInitialized: false,
+        waitUntilMessagingCondition: 'created',
     });
     assert.strictEqual(
         document.querySelectorAll('.o_Discuss_messagingNotInitialized').length,
@@ -68,7 +68,7 @@ QUnit.test('messaging becomes initialized', async function (assert) {
             }
             return _super();
         },
-        waitUntilMessagingInitialized: false,
+        waitUntilMessagingCondition: 'created',
     });
     assert.strictEqual(
         document.querySelectorAll('.o_Discuss_messagingNotInitialized').length,

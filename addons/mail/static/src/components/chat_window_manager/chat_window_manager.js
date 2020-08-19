@@ -17,14 +17,14 @@ class ChatWindowManager extends Component {
     constructor(...args) {
         super(...args);
         useStore(props => {
-            const chatWindowManager = this.env.messaging.chatWindowManager;
+            const chatWindowManager = this.env.messaging && this.env.messaging.chatWindowManager;
             const allOrderedVisible = chatWindowManager
                 ? chatWindowManager.allOrderedVisible
                 : [];
             return {
                 allOrderedVisible: allOrderedVisible.map(chatWindow => chatWindow ? chatWindow.__state : undefined),
                 chatWindowManager: chatWindowManager ? chatWindowManager.__state : undefined,
-                isInitialized: this.env.messaging.isInitialized,
+                isMessagingInitialized: this.env.isMessagingInitialized(),
             };
         }, {
             compareDepth: {

@@ -5,6 +5,7 @@ const {
     afterEach,
     afterNextRender,
     beforeEach,
+    nextAnimationFrame,
     start,
 } = require('mail/static/src/utils/test_utils.js');
 
@@ -32,6 +33,78 @@ QUnit.module('messaging_menu_tests.js', {
     },
 });
 
+QUnit.test('[technical] messaging not created then becomes created', async function (assert) {
+    /**
+     * Creation of messaging in env is async due to generation of models being
+     * async. Generation of models is async because it requires parsing of all
+     * JS modules that contain pieces of model definitions.
+     *
+     * Time of having no messaging is very short, almost imperceptible by user
+     * on UI, but the display should not crash during this critical time period.
+     */
+    assert.expect(2);
+
+    const messagingBeforeCreationDeferred = makeTestPromise();
+    await this.start({
+        messagingBeforeCreationDeferred,
+        waitUntilMessagingCondition: 'none',
+    });
+    assert.containsOnce(
+        document.body,
+        '.o_MessagingMenu',
+        "should have messaging menu even when messaging is not yet created"
+    );
+
+    // simulate messaging becoming created
+    messagingBeforeCreationDeferred.resolve();
+    await nextAnimationFrame();
+    assert.containsOnce(
+        document.body,
+        '.o_MessagingMenu',
+        "should still contain messaging menu after messaging has been created"
+    );
+});
+
+QUnit.test('[technical] no crash on attempting opening messaging menu when messaging not created', async function (assert) {
+    /**
+     * Creation of messaging in env is async due to generation of models being
+     * async. Generation of models is async because it requires parsing of all
+     * JS modules that contain pieces of model definitions.
+     *
+     * Time of having no messaging is very short, almost imperceptible by user
+     * on UI, but the display should not crash during this critical time period.
+     *
+     * Messaging menu is not expected to be open on click because state of
+     * messaging menu requires messaging being created.
+     */
+    assert.expect(2);
+
+    await this.start({
+        messagingBeforeCreationDeferred: new Promise(() => {}), // keep messaging not created
+        waitUntilMessagingCondition: 'none',
+    });
+    assert.containsOnce(
+        document.body,
+        '.o_MessagingMenu',
+        "should have messaging menu even when messaging is not yet created"
+    );
+
+    let error;
+    try {
+        document.querySelector('.o_MessagingMenu_toggler').click();
+        await nextAnimationFrame();
+    } catch (err) {
+        error = err;
+    }
+    assert.notOk(
+        !!error,
+        "Should not crash on attempt to open messaging menu when messaging not created"
+    );
+    if (error) {
+        throw error;
+    }
+});
+
 QUnit.test('messaging not initialized', async function (assert) {
     assert.expect(2);
 
@@ -43,7 +116,7 @@ QUnit.test('messaging not initialized', async function (assert) {
             }
             return this._super(...arguments);
         },
-        waitUntilMessagingInitialized: false,
+        waitUntilMessagingCondition: 'created',
     });
     assert.strictEqual(
         document.querySelectorAll('.o_MessagingMenu_loading').length,
@@ -72,7 +145,7 @@ QUnit.test('messaging becomes initialized', async function (assert) {
             }
             return _super();
         },
-        waitUntilMessagingInitialized: false,
+        waitUntilMessagingCondition: 'created',
     });
     await afterNextRender(() => document.querySelector(`.o_MessagingMenu_toggler`).click());
 
