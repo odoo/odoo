@@ -992,14 +992,14 @@ class OpenERPSession(sessions.Session):
         uid = odoo.registry(db)['res.users'].authenticate(db, login, password, env)
         self.pre_uid = uid
 
-        user = request.env(user=uid)['res.users'].browse(uid)
-        if not user._mfa_url():
-            self.finalize()
-
         self.rotate = True
         self.db = db
         self.login = login
         request.disable_db = False
+
+        user = request.env(user=uid)['res.users'].browse(uid)
+        if not user._mfa_url():
+            self.finalize()
 
         return uid
 
