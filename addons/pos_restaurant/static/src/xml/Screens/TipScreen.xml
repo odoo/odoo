@@ -10,6 +10,11 @@
                         <span> </span>
                         <span>Back</span>
                     </span>
+                    <span class="button" t-if="env.pos.proxy.printer" t-on-click="printTipReceipt()">
+                        <i class="fa fa-print"></i>
+                        <span> </span>
+                        <span>Reprint receipts</span>
+                    </span>
                     <div class="top-content-center">
                         <h1>Add a tip</h1>
                     </div>
