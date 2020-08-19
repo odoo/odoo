@@ -377,4 +377,17 @@ models.PosModel = models.PosModel.extend({
 
 });
 
+
+var _super_paymentline = models.Paymentline.prototype;
+models.Paymentline = models.Paymentline.extend({
+    /**
+     * Override this method to be able to show the tip screen which allow
+     * tipping even after payment. By default, this returns true for all
+     * non-cash payment.
+     */
+    canBeTipped: function() {
+        return !this.payment_method.is_cash_count;
+    },
+});
+
 });

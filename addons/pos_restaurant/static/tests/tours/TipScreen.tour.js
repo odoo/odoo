@@ -24,7 +24,7 @@ odoo.define('pos_restaurant.tour.TipScreen', function (require) {
     FloorScreen.do.clickTable('T2');
     ProductScreen.check.totalAmountIs('2.0');
     ProductScreen.do.clickPayButton();
-    PaymentScreen.do.clickPaymentMethod('Cash');
+    PaymentScreen.do.clickPaymentMethod('Bank');
     PaymentScreen.do.clickValidate();
     TipScreen.check.isShown();
     Chrome.do.clickTicketButton();
@@ -44,7 +44,7 @@ odoo.define('pos_restaurant.tour.TipScreen', function (require) {
     ProductScreen.exec.addOrderline('Minute Maid', '3', '2');
     ProductScreen.check.totalAmountIs('6.0');
     ProductScreen.do.clickPayButton();
-    PaymentScreen.do.clickPaymentMethod('Cash');
+    PaymentScreen.do.clickPaymentMethod('Bank');
     PaymentScreen.do.clickValidate();
     TipScreen.check.isShown();
     Chrome.do.clickTicketButton();
@@ -65,6 +65,8 @@ odoo.define('pos_restaurant.tour.TipScreen', function (require) {
     TipScreen.check.percentAmountIs('20%', '0.40');
     TipScreen.check.percentAmountIs('25%', '0.50');
     TipScreen.do.clickPercentTip('20%');
+    TipScreen.check.inputAmountIs('0.40')
+    Chrome.do.backToFloor();
     FloorScreen.check.isShown();
     Chrome.do.clickTicketButton();
 
@@ -76,6 +78,8 @@ odoo.define('pos_restaurant.tour.TipScreen', function (require) {
     TipScreen.check.percentAmountIs('20%', '1.20');
     TipScreen.check.percentAmountIs('25%', '1.50');
     TipScreen.do.clickPercentTip('25%');
+    TipScreen.check.inputAmountIs('1.50');
+    Chrome.do.backToFloor();
     FloorScreen.check.isShown();
     Chrome.do.clickTicketButton();
 
@@ -83,7 +87,7 @@ odoo.define('pos_restaurant.tour.TipScreen', function (require) {
     TicketScreen.do.selectOrder('-0004');
     ProductScreen.check.totalAmountIs('8.0');
     ProductScreen.do.clickPayButton();
-    PaymentScreen.do.clickPaymentMethod('Cash');
+    PaymentScreen.do.clickPaymentMethod('Bank');
     PaymentScreen.do.clickValidate();
     TipScreen.check.isShown();
     TipScreen.check.totalAmountIs('8.0');
@@ -91,13 +95,19 @@ odoo.define('pos_restaurant.tour.TipScreen', function (require) {
     TipScreen.check.percentAmountIs('20%', '1.60');
     TipScreen.check.percentAmountIs('25%', '2.00');
     TipScreen.do.setCustomTip('1.00');
+    TipScreen.check.inputAmountIs('1.00')
+    Chrome.do.backToFloor();
     FloorScreen.check.isShown();
 
+    // settle tips here
+    Chrome.do.clickTicketButton();
+    TicketScreen.do.selectFilter('Tipping');
+    TicketScreen.do.settleTips();
+    TicketScreen.do.selectFilter('All Tickets');
+    TicketScreen.check.nthRowContains(2, 'Ongoing');
 
     // tip order2 during payment
     // tip screen should not show after validating payment screen
-    Chrome.do.clickTicketButton();
-    TicketScreen.check.checkStatus('-0002', 'Ongoing');
     TicketScreen.do.selectOrder('-0002');
     ProductScreen.do.clickPayButton();
     PaymentScreen.do.clickTipButton();

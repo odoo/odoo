@@ -213,6 +213,14 @@ class PosOrder(models.Model):
             "amount_paid": self.amount_paid + tip_line.price_subtotal_incl,
         })
 
+    def set_no_tip(self):
+        """Override this method to introduce action when setting no tip."""
+        self.ensure_one()
+        self.write({
+            "is_tipped": True,
+            "tip_amount": 0,
+        })
+
     @api.model
     def _order_fields(self, ui_order):
         order_fields = super(PosOrder, self)._order_fields(ui_order)
