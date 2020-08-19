@@ -8,10 +8,10 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='code']/.." position="inside">
                 <button name="button_create_new_sequences" type="object" string="Create New Sequences"
-                        attrs="{'invisible': ['|', '|', '|', ('l10n_cl_sequence_ids', '!=', []), ('l10n_latam_use_documents', '=', False), ('type', '=', 'purchase'), ('l10n_latam_country_code', '!=', 'CL')]}"
+                        attrs="{'invisible': ['|', '|', '|', ('l10n_cl_sequence_ids', '!=', []), ('l10n_latam_use_documents', '=', False), ('type', '=', 'purchase'), ('country_code', '!=', 'CL')]}"
                         class="btn btn-primary"/>
                 <field name="l10n_cl_sequence_ids" nolabel="1" colspan="2"
-                       attrs="{'invisible': ['|', '|', ('l10n_latam_use_documents', '=', False), ('l10n_latam_country_code', '!=', 'CL'), ('type', '=', 'purchase')]}">
+                       attrs="{'invisible': ['|', '|', ('l10n_latam_use_documents', '=', False), ('country_code', '!=', 'CL'), ('type', '=', 'purchase')]}">
                     <tree default_order="id">
                         <field name="name" readonly="True" string="Sequence"/>
                         <field name="number_next_actual" string="Next Number"/>
