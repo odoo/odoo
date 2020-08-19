@@ -14,7 +14,6 @@ def pre_init_hook(cr):
     companies = env['res.company'].search([])
     for company in companies:
         company.terms_type = 'html'
-        company.invoice_terms = _('Terms & Conditions: %s/terms', company.get_base_url())
 
 
 def uninstall_hook(cr, registry):
