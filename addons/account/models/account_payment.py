@@ -646,7 +646,7 @@ class account_payment(models.Model):
 
             if rec.invoice_ids:
                 (move + rec.invoice_ids).line_ids \
-                    .filtered(lambda line: not line.reconciled and line.account_id == rec.destination_account_id)\
+                    .filtered(lambda line: not line.reconciled and line.account_id == rec.destination_account_id and not (line.account_id == line.payment_id.writeoff_account_id and line.name == line.payment_id.writeoff_label))\
                     .reconcile()
 
         return True
