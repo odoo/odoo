@@ -2,43 +2,22 @@
  * EVENT TOOL: REMINDER WIDGET
  */
 .o_wevent_event .o_wetrack_js_reminder {
-    width: fit-content;
-    height: fit-content;
-    cursor: pointer;
-    background: grey;
+    // Icon only
+    &.btn-link {
+        padding: 0;
+    }
+
+    // Ensure width for size coherency
+    &:not(.btn-link) {
+        min-width: 100px;
+    }
 
     i {
         &.fa-bell {
             color: gold;
         }
         &.fa-bell-o {
-            color: white
-        }
-    }
-
-    // Icon only
-    &.o_wetrack_reminder_light {
-        background: transparent;
-        padding: 0;
-        i {
-            &.inactive_color_dark {
-                color: grey;
-            }
-        }
-        &:not(.o_wetrack_reminder_small) {
-            i {
-                font-size: 1.5em;
-            }
-        }
-    }
-
-    // Text included
-    &:not(.o_wetrack_reminder_light) {
-        &.o_wetrack_reminder_small {
-            padding: 0.25rem 0.50rem;
-            span {
-                min-width: 70px;
-            }
+            color: black;
         }
     }
 }

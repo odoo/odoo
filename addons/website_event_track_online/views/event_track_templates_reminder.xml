@@ -7,17 +7,20 @@
     * light_theme: bell is white/gold if set; otherwse bell is gray / white
  -->
 <template id="track_widget_reminder">
-    <div t-att-class="'o_wetrack_js_reminder btn d-flex align-items-center justify-content-between rounded %s %s' % (
-        'o_wetrack_reminder_light' if reminder_light else '',
-        'o_wetrack_reminder_small' if reminder_small else '')">
-        <span t-if="not reminder_light"
-              t-att-class="'o_wetrack_js_reminder_text text-white text-left mr-1 %s' % ('small d-sm-inline' if reminder_small else '')">
-            <t t-esc="'Set Reminder' if not track.is_reminder_on else 'Reminder On'"/>
-        </span>
+    <div t-att-class="'o_wetrack_js_reminder btn %s %s' % (
+        'btn-link' if reminder_light else 'btn-outline-primary',
+        'btn-sm' if reminder_small else '')">
         <i t-att-class="'fa fa-bell%s inactive_color_%s' % ('' if track.is_reminder_on else '-o', 'dark' if reminder_light and not light_theme else 'light')"
            t-att-data-track-id="track.id"
            t-att-title="'Reminder On' if track.is_reminder_on else 'Set a Reminder'"
            t-att-data-reminder-on="bool(track.is_reminder_on)"></i>
+        <span t-if="not reminder_light" class="o_wetrack_js_reminder_text">
+            <t t-if="not track.is_reminder_on">
+                Set Reminder
+            </t><t t-else="">
+                Reminder On
+            </t>
+        </span>
     </div>
 </template>
 
