@@ -1528,8 +1528,8 @@ QUnit.module('fields', {}, function () {
 
             this.data.partner.records[0].display_name = "MyTrululu";
             this.data.partner.fields.p.default = [
-                [0, 0, { trululu: 1 }],
-                [0, 0, { trululu: 1 }]
+                [0, 0, { trululu: 1, p: [] }],
+                [0, 0, { trululu: 1, p: [] }]
             ];
 
             var form = await createView({
@@ -1563,8 +1563,8 @@ QUnit.module('fields', {}, function () {
             assert.expect(4);
 
             this.data.partner.fields.p.default = [
-                [0, 0, { display_name: 'record1', trululu: 1 }],
-                [0, 0, { display_name: 'record2', trululu: 2 }]
+                [0, 0, { display_name: 'record1', trululu: 1, p: [] }],
+                [0, 0, { display_name: 'record2', trululu: 2, p: [] }]
             ];
 
             var form = await createView({

@@ -86,6 +86,7 @@ QUnit.module('Views', {
             },
             product: {
                 fields: {
+                    display_name: {string: "Product Name", type: "char"},
                     name: {string: "Product Name", type: "char"},
                     partner_type_id: {string: "Partner type", type: "many2one", relation: "partner_type"},
                 },
