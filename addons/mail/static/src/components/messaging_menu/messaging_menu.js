@@ -24,7 +24,14 @@ class MessagingMenu extends Component {
          * item is not considered as a click away from messaging menu in mobile.
          */
         this.id = _.uniqueId('o_messagingMenu_');
-        useStore((...args) => this._useStoreSelector(...args));
+        useStore(props => {
+            return {
+                isDeviceMobile: this.env.messaging && this.env.messaging.device.isMobile,
+                isDiscussOpen: this.env.messaging && this.env.messaging.discuss.isOpen,
+                isMessagingInitialized: this.env.isMessagingInitialized(),
+                messagingMenu: this.env.messaging && this.env.messaging.messagingMenu.__state,
+            };
+        });
 
         /**
          * Reference of the new message input in mobile. Useful to include it
@@ -63,7 +70,7 @@ class MessagingMenu extends Component {
      * @returns {mail.messaging_menu}
      */
     get messagingMenu() {
-        return this.env.messaging.messagingMenu;
+        return this.env.messaging && this.env.messaging.messagingMenu;
     }
 
     /**
@@ -93,22 +100,6 @@ class MessagingMenu extends Component {
     }
 
     //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     */
-    _useStoreSelector(props) {
-        return {
-            messagingMenu: this.env.messaging.messagingMenu.__state,
-            isDeviceMobile: this.env.messaging.device.isMobile,
-            isDiscussOpen: this.env.messaging.discuss.isOpen,
-            isMessagingInitialized: this.env.messaging.isInitialized,
-        };
-    }
-
-    //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
 
@@ -119,6 +110,14 @@ class MessagingMenu extends Component {
      * @param {MouseEvent} ev
      */
     _onClickCaptureGlobal(ev) {
+        if (!this.env.messaging) {
+            /**
+             * Messaging not created, which means essential models like
+             * messaging menu are not ready, so user interactions are omitted
+             * during this (short) period of time.
+             */
+            return;
+        }
         // in mobile: keeps the messaging menu open in background
         // TODO: maybe need to move this to a mobile component?
         // task-2089887
@@ -167,6 +166,14 @@ class MessagingMenu extends Component {
     _onClickToggler(ev) {
         // avoid following dummy href
         ev.preventDefault();
+        if (!this.env.messaging) {
+            /**
+             * Messaging not created, which means essential models like
+             * messaging menu are not ready, so user interactions are omitted
+             * during this (short) period of time.
+             */
+            return;
+        }
         this.messagingMenu.toggleOpen();
     }
 
