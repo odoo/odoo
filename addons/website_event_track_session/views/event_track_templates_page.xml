@@ -140,7 +140,7 @@
             <div class="mx-2" t-if="track.website_cta">
                 <t t-set="cta_coundown" t-value="bool(track.website_cta_start_remaining)"/>
                 <div t-if="cta_coundown" class="text-center mt-2 mt-md-0 w-100 btn btn-primary d-none">
-                    <t t-call="website_event_online.display_timer_widget">
+                    <t t-call="website_event.display_timer_widget">
                         <t t-set="pre_remaining_time" t-value="int(track.track_start_remaining)"/>
                         <!--<t t-set="pre_countdown_text" t-value="'Talk starts in'"/>-->
                         <t t-set="pre_countdown_display" t-value="bool(False)"/>

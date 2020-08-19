@@ -12,7 +12,7 @@
     'description': "",
     'depends': [
         'sms',
-        'website_event_online',
+        'website_event',
         'website_event_track',
     ],
     'data': [
