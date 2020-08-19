@@ -18,7 +18,7 @@
             </t>
             <t t-else="">
                 <p class="form-control" t-esc="partner.l10n_ar_afip_responsibility_type_id.name" readonly="1" title="Changing AFIP Responsibility type is not allowed once document(s) have been issued for your account. Please contact us directly for this operation."/>
-                <input name="l10n_ar_afip_responsibility_type_id" class="form-control" value="partner.l10n_ar_afip_responsibility_type_id.id" type='hidden'/>
+                <input name="l10n_ar_afip_responsibility_type_id" class="form-control" t-att-value="partner.l10n_ar_afip_responsibility_type_id.id" type='hidden'/>
             </t>
         </div>
 
@@ -37,7 +37,7 @@
             </t>
             <t t-else="">
                 <p class="form-control" t-esc="partner.l10n_latam_identification_type_id.name" readonly="1" title="Changing Identification type is not allowed once document(s) have been issued for your account. Please contact us directly for this operation."/>
-                <input name="l10n_latam_identification_type_id" class="form-control" value="partner.l10n_latam_identification_type_id.id" type='hidden'/>
+                <input name="l10n_latam_identification_type_id" class="form-control" t-att-value="partner.l10n_latam_identification_type_id.id" type='hidden'/>
             </t>
         </div>
 
