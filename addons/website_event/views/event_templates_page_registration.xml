@@ -121,6 +121,7 @@
             <i class="fa fa-pencil mr-2" role="img" aria-label="Edit" title="Edit event registration in backend"/><em>Configure Event Tickets</em>
         </a>
     </div>
+    <div t-if="toast_message" class="o_wevent_register_toaster d-none" t-att-data-message="toast_message"/>
     <div t-if="not event.event_registrations_open" class="bg-white mb-5">
         <div class="alert alert-info mb-0 d-flex justify-content-between align-items-center" role="status">
             <t t-if="event.start_sale_date and event.start_sale_date &gt; datetime.date.today()">

@@ -16,7 +16,6 @@ automatic lead generation, full Online support, ...
         'event_sale',
         'website_event_crm_questions',
         'website_event_questions',
-        'website_event_online',
         'website_event_questions',
         'website_event_meet',
         'website_event_sale',
