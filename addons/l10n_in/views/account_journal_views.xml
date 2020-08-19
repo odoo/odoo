@@ -5,9 +5,6 @@
         <field name="model">account.journal</field>
         <field name="inherit_id" ref="account.view_account_journal_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//group[@name='column_posting']" position="attributes">
-                <attribute name="attrs">{'invisible': [('type', 'not in', ['bank', 'cash', 'sale', 'purchase'])]}</attribute>
-            </xpath>
             <field name="company_id" position="after">
                 <field name="l10n_in_gstin_partner_id" context="{'show_vat':True}" options='{"no_create": True,"always_reload": True}'/>
             </field>
