@@ -245,23 +245,6 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12 col-lg-6 o_setting_box" id="use_invoice_terms">
-                                <div class="o_setting_left_pane">
-                                    <field name="use_invoice_terms"/>
-                                </div>
-                                <div class="o_setting_right_pane">
-                                    <label for="use_invoice_terms"/>
-                                    <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
-                                    <div class="text-muted">
-                                        Show standard terms &amp; conditions on invoices/orders
-                                    </div>
-                                    <div class="content-group" attrs="{'invisible': [('use_invoice_terms','=',False)]}">
-                                        <div class="mt16">
-                                            <field name="invoice_terms" placeholder="Insert your terms &amp; conditions here..."/>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
                             <div class="col-12 col-lg-6 o_setting_box" id="get_invoice_warnings">
                                 <div class="o_setting_left_pane">
                                     <field name="group_warning_account"/>
@@ -320,6 +303,40 @@
                                     <label for="group_show_sale_receipts"/>
                                     <div class="text-muted">
                                         Active to create sale receipt
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6 o_setting_box" id="use_invoice_terms">
+                                <div class="o_setting_left_pane">
+                                    <field name="use_invoice_terms"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="use_invoice_terms"/>
+                                    <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
+                                    <div class="text-muted">
+                                        Show standard terms &amp; conditions on invoices/orders
+                                    </div>
+                                    <div class="content-group" attrs="{'invisible': [('use_invoice_terms','=',False)]}">
+                                        <div class="mt16">
+                                            <field name="terms_type" class="o_light_label" widget="radio"/>
+                                            <div class="d-flex">
+                                                <field name="invoice_terms"
+                                                       attrs="{'invisible': [('terms_type', '=', 'html')]}"
+                                                       class="oe_account_terms"
+                                                       placeholder="Insert your terms &amp; conditions here..."/>
+                                                <field name="invoice_terms_html"
+                                                       attrs="{'invisible': [('terms_type', '=', 'plain')]}"
+                                                       class="oe_account_terms"
+                                                       placeholder="Insert your terms &amp; conditions here..."/>
+                                            </div>
+                                            <field name="preview_ready" invisible="1"/>
+                                            <div attrs="{'invisible': [('preview_ready', '=', False)]}">
+                                                <a href="/terms">
+                                                    <i class="fa fa-arrow-right"></i>
+                                                    Preview
+                                                </a>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

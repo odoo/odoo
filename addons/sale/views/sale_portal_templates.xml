@@ -537,7 +537,14 @@
             <section id="terms" class="mt-5" t-if="sale_order.note">
                 <h3 class="">Terms &amp; Conditions</h3>
                 <hr class="mt-0 mb-1"/>
-                <em t-field="sale_order.note"/>
+                <t t-if="sale_order.terms_type == 'html'">
+                    <!-- Note is plain text. This ensures a clickable link  -->
+                    <t t-set="tc_url" t-value="'%s/%s/terms' % (base_url, sale_order.partner_id.lang)"/>
+                    <em>Terms &amp; Conditions: <a t-att-href="tc_url"><t t-esc="tc_url"/></a></em>
+                </t>
+                <t t-else="">
+                    <em t-field="sale_order.note"/>
+                </t>
             </section>
 
             <section class="mt-5" t-if="sale_order.payment_term_id">
