@@ -3,7 +3,7 @@
     <record id="event_type_view_form_inherit_question" model="ir.ui.view">
         <field name="name">event.type.view.form.inherit.question</field>
         <field name="model">event.type</field>
-        <field name="inherit_id" ref="website_event.event_type_view_form_inherit_website"/>
+        <field name="inherit_id" ref="website_event.event_type_view_form"/>
         <field name="arch" type="xml">
             <div name="event_type_attendees_auto_confirm" position="after">
                 <div class="col-12 col-lg-12 o_setting_box">
@@ -28,10 +28,10 @@
         </field>
     </record>
 
-    <record id="event_event_view_form_inherit_question" model="ir.ui.view">
+    <record id="event_event_view_form" model="ir.ui.view">
         <field name="name">event.event.view.form.inherit.question</field>
         <field name="model">event.event</field>
-        <field name="inherit_id" ref="website_event.event_event_view_form_inherit_website"/>
+        <field name="inherit_id" ref="website_event.event_event_view_form"/>
         <field name="arch" type="xml">
             <data>
                 <page name="event_notes" position="before">
