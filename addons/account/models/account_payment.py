@@ -679,7 +679,116 @@ class AccountPayment(models.Model):
                     'account_id': writeoff_lines[0].account_id.id,
                 }
             else:
+<<<<<<< HEAD
                 write_off_line_vals = {}
+=======
+                liquidity_line_name = payment.name
+
+            # ==== 'inbound' / 'outbound' ====
+
+            move_vals = {
+                'date': payment.payment_date,
+                'ref': payment.communication,
+                'journal_id': payment.journal_id.id,
+                'currency_id': payment.journal_id.currency_id.id or payment.company_id.currency_id.id,
+                'partner_id': payment.partner_id.id,
+                'line_ids': [
+                    # Receivable / Payable / Transfer line.
+                    (0, 0, {
+                        'name': rec_pay_line_name,
+                        'amount_currency': counterpart_amount + write_off_amount if currency_id else 0.0,
+                        'currency_id': currency_id,
+                        'debit': balance + write_off_balance > 0.0 and balance + write_off_balance or 0.0,
+                        'credit': balance + write_off_balance < 0.0 and -balance - write_off_balance or 0.0,
+                        'date_maturity': payment.payment_date,
+                        'partner_id': payment.partner_id.commercial_partner_id.id,
+                        'account_id': payment.destination_account_id.id,
+                        'payment_id': payment.id,
+                    }),
+                    # Liquidity line.
+                    (0, 0, {
+                        'name': liquidity_line_name,
+                        'amount_currency': -liquidity_amount if liquidity_line_currency_id else 0.0,
+                        'currency_id': liquidity_line_currency_id,
+                        'debit': balance < 0.0 and -balance or 0.0,
+                        'credit': balance > 0.0 and balance or 0.0,
+                        'date_maturity': payment.payment_date,
+                        'partner_id': payment.partner_id.commercial_partner_id.id,
+                        'account_id': liquidity_line_account.id,
+                        'payment_id': payment.id,
+                    }),
+                ],
+            }
+            if write_off_balance:
+                # Write-off line.
+                move_vals['line_ids'].append((0, 0, {
+                    'name': payment.writeoff_label,
+                    'amount_currency': -write_off_amount,
+                    'currency_id': currency_id,
+                    'debit': write_off_balance < 0.0 and -write_off_balance or 0.0,
+                    'credit': write_off_balance > 0.0 and write_off_balance or 0.0,
+                    'date_maturity': payment.payment_date,
+                    'partner_id': payment.partner_id.commercial_partner_id.id,
+                    'account_id': payment.writeoff_account_id.id,
+                    'payment_id': payment.id,
+                }))
+
+            if payment.move_name:
+                move_vals['name'] = payment.move_name
+
+            all_move_vals.append(move_vals)
+
+        return all_move_vals
+
+    def post(self):
+        """ Create the journal items for the payment and update the payment's state to 'posted'.
+            A journal entry is created containing an item in the source liquidity account (selected journal's default_debit or default_credit)
+            and another in the destination reconcilable account (see _compute_destination_account_id).
+            If invoice_ids is not empty, there will be one reconcilable move line per invoice to reconcile with.
+            If the payment is a transfer, a second journal entry is created in the destination journal to receive money from the transfer account.
+        """
+        AccountMove = self.env['account.move'].with_context(default_move_type='entry')
+        for rec in self:
+
+            if rec.state != 'draft':
+                raise UserError(_("Only a draft payment can be posted."))
+
+            if any(inv.state != 'posted' for inv in rec.invoice_ids):
+                raise ValidationError(_("The payment cannot be processed because the invoice is not open!"))
+
+            # keep the name in case of a payment reset to draft
+            if not rec.name:
+                if rec.is_internal_transfer:
+                    sequence_code = 'account.payment.transfer'
+                else:
+                    if rec.partner_type == 'customer':
+                        if rec.payment_type == 'inbound':
+                            sequence_code = 'account.payment.customer.invoice'
+                        elif rec.payment_type == 'outbound':
+                            sequence_code = 'account.payment.customer.refund'
+                    elif rec.partner_type == 'supplier':
+                        if rec.payment_type == 'inbound':
+                            sequence_code = 'account.payment.supplier.refund'
+                        elif rec.payment_type == 'outbound':
+                            sequence_code = 'account.payment.supplier.invoice'
+                rec.name = self.env['ir.sequence'].next_by_code(sequence_code, sequence_date=rec.payment_date)
+                if not rec.name and not rec.is_internal_transfer:
+                    raise UserError(_("You have to define a sequence for %s in your company.") % (sequence_code,))
+
+            move = AccountMove.create(rec._prepare_payment_moves())
+            if move.journal_id.post_at != 'bank_rec':
+                move.post()
+
+            # Update the state / move before performing any reconciliation.
+            rec.write({'state': 'posted', 'move_name': move.name})
+
+            if rec.invoice_ids:
+                (move + rec.invoice_ids).line_ids \
+                    .filtered(lambda line: not line.reconciled and line.account_id == rec.destination_account_id and not (line.account_id == line.payment_id.writeoff_account_id and line.name == line.payment_id.writeoff_label))\
+                    .reconcile()
+
+        return True
+>>>>>>> bc73c3e6b18... temp
 
             line_vals_list = pay._prepare_move_line_default_vals(write_off_line_vals=write_off_line_vals)
 
