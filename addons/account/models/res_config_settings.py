@@ -100,6 +100,12 @@ class ResConfigSettings(models.TransientModel):
     invoice_is_email = fields.Boolean(string='Send Email', related='company_id.invoice_is_email', readonly=False)
     incoterm_id = fields.Many2one('account.incoterms', string='Default incoterm', related='company_id.incoterm_id', help='International Commercial Terms are a series of predefined commercial terms used in international transactions.', readonly=False)
     invoice_terms = fields.Text(related='company_id.invoice_terms', string="Terms & Conditions", readonly=False)
+    invoice_terms_html = fields.Html(related='company_id.invoice_terms_html', string="Terms & Conditions as a Web page",
+                                     readonly=False)
+    terms_type = fields.Selection(
+        related='company_id.terms_type', readonly=False)
+    preview_ready = fields.Boolean(string="Display preview button", compute='_compute_terms_preview')
+
     use_invoice_terms = fields.Boolean(
         string='Default Terms & Conditions',
         config_parameter='account.use_invoice_terms')
@@ -162,6 +168,13 @@ class ResConfigSettings(models.TransientModel):
                              'Modify your taxes first before disabling this setting.')
             }
         return res
+
+    @api.depends('terms_type')
+    def _compute_terms_preview(self):
+        for setting in self:
+            # We display the preview button only if the terms_type is html in the setting but also on the company
+            # to avoid landing on an error page (see terms.py controller)
+            setting.preview_ready = self.env.company.terms_type == 'html' and setting.terms_type == 'html'
 
     @api.model
     def create(self, values):
