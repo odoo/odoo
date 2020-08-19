@@ -25,17 +25,19 @@ class Discuss extends Component {
     constructor(...args) {
         super(...args);
         useStore(props => {
-            const discuss = this.env.messaging.discuss;
+            const discuss = this.env.messaging && this.env.messaging.discuss;
             return {
-                checkedMessages: discuss.threadViewer.checkedMessages.map(message => message.__state),
-                discuss: discuss.__state,
-                isDeviceMobile: this.env.messaging.device.isMobile,
-                isMessagingInitialized: this.env.messaging.isInitialized,
-                thread: discuss.thread ? discuss.thread.__state : undefined,
-                threadCache: discuss.threadViewer.threadCache
+                checkedMessages: discuss ? discuss.threadViewer.checkedMessages.map(message => message.__state) : [],
+                discuss: discuss ? discuss.__state : undefined,
+                isDeviceMobile: this.env.messaging && this.env.messaging.device.isMobile,
+                isMessagingInitialized: this.env.isMessagingInitialized(),
+                thread: discuss && discuss.thread ? discuss.thread.__state : undefined,
+                threadCache: (discuss && discuss.threadViewer && discuss.threadViewer.threadCache)
                     ? discuss.threadViewer.threadCache.__state
                     : undefined,
-                uncheckedMessages: discuss.threadViewer.uncheckedMessages.map(message => message.__state),
+                uncheckedMessages: discuss && discuss.threadViewer
+                    ? discuss.threadViewer.uncheckedMessages.map(message => message.__state)
+                    : [],
             };
         }, {
             compareDepth: {
