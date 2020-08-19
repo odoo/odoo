@@ -351,8 +351,11 @@ class MrpWorkorder(models.Model):
     @api.onchange('date_planned_finished')
     def _onchange_date_planned_finished(self):
         if self.date_planned_start and self.date_planned_finished:
-            diff = self.date_planned_finished - self.date_planned_start
-            self.duration_expected = diff.total_seconds() / 60
+            interval = self.workcenter_id.resource_calendar_id.get_work_duration_data(
+                self.date_planned_start, self.date_planned_finished,
+                domain=[('time_type', 'in', ['leave', 'other'])]
+            )
+            self.duration_expected = interval['hours'] * 60
 
     @api.onchange('operation_id')
     def _onchange_operation_id(self):
@@ -363,7 +366,10 @@ class MrpWorkorder(models.Model):
     @api.onchange('date_planned_start', 'duration_expected')
     def _onchange_date_planned_start(self):
         if self.date_planned_start and self.duration_expected:
-            self.date_planned_finished = self.date_planned_start + relativedelta(minutes=self.duration_expected)
+            self.date_planned_finished = self.workcenter_id.resource_calendar_id.plan_hours(
+                self.duration_expected / 60.0, self.date_planned_start,
+                compute_leaves=True, domain=[('time_type', 'in', ['leave', 'other'])]
+            )
 
     @api.onchange('operation_id', 'workcenter_id', 'qty_production')
     def _onchange_expected_duration(self):
