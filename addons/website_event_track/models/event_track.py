@@ -2,37 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import timedelta
-from random import randint
 
 from odoo import api, fields, models
 from odoo.tools.translate import _, html_translate
 from odoo.addons.http_routing.models.ir_http import slug
-
-
-class TrackTag(models.Model):
-    _name = "event.track.tag"
-    _description = 'Event Track Tag'
-    _order = 'name'
-
-    def _default_color(self):
-        return randint(1, 11)
-
-    name = fields.Char('Tag Name', required=True)
-    track_ids = fields.Many2many('event.track', string='Tracks')
-    color = fields.Integer(
-        string='Color Index', default=lambda self: self._default_color(),
-        help="Note that colorless tags won't be available on the website.")
-
-    _sql_constraints = [
-        ('name_uniq', 'unique (name)', "Tag name already exists !"),
-    ]
-
-
-class TrackLocation(models.Model):
-    _name = "event.track.location"
-    _description = 'Event Track Location'
-
-    name = fields.Char('Location', required=True)
 
 
 class Track(models.Model):
@@ -45,22 +18,21 @@ class Track(models.Model):
     def _get_default_stage_id(self):
         return self.env['event.track.stage'].search([], limit=1).id
 
+    # description
     name = fields.Char('Title', required=True, translate=True)
+    event_id = fields.Many2one('event.event', 'Event', required=True)
+    image = fields.Image("Image", max_width=128, max_height=128)
     active = fields.Boolean(default=True)
     user_id = fields.Many2one('res.users', 'Responsible', tracking=True, default=lambda self: self.env.user)
     company_id = fields.Many2one('res.company', related='event_id.company_id')
-    partner_id = fields.Many2one('res.partner', 'Speaker')
-    partner_name = fields.Char(
-        string='Name', compute='_compute_partner_info',
-        readonly=False, store=True, tracking=10)
-    partner_email = fields.Char(
-        string='Email', compute='_compute_partner_info',
-        readonly=False, store=True, tracking=20)
-    partner_phone = fields.Char(
-        string='Phone', compute='_compute_partner_info',
-        readonly=False, store=True, tracking=30)
-    partner_biography = fields.Html(string='Biography')
     tag_ids = fields.Many2many('event.track.tag', string='Tags')
+    description = fields.Html(translate=html_translate, sanitize_attributes=False, sanitize_form=False)
+    color = fields.Integer('Color')
+    priority = fields.Selection([
+        ('0', 'Low'), ('1', 'Medium'),
+        ('2', 'High'), ('3', 'Highest')],
+        'Priority', required=True, default='1')
+    # management
     stage_id = fields.Many2one(
         'event.track.stage', string='Stage', ondelete='restrict',
         index=True, copy=False, default=_get_default_stage_id,
@@ -75,18 +47,23 @@ class Track(models.Model):
              " * Grey is the default situation\n"
              " * Red indicates something is preventing the progress of this track\n"
              " * Green indicates the track is ready to be pulled to the next stage")
-    description = fields.Html(translate=html_translate, sanitize_attributes=False, sanitize_form=False)
+    # speaker
+    partner_id = fields.Many2one('res.partner', 'Speaker')
+    partner_name = fields.Char(
+        string='Name', compute='_compute_partner_info',
+        readonly=False, store=True, tracking=10)
+    partner_email = fields.Char(
+        string='Email', compute='_compute_partner_info',
+        readonly=False, store=True, tracking=20)
+    partner_phone = fields.Char(
+        string='Phone', compute='_compute_partner_info',
+        readonly=False, store=True, tracking=30)
+    partner_biography = fields.Html(string='Biography')
+    location_id = fields.Many2one('event.track.location', 'Location')
+    # time information
     date = fields.Datetime('Track Date')
     date_end = fields.Datetime('Track End Date', compute='_compute_end_date', store=True)
     duration = fields.Float('Duration', default=1.5, help="Track duration in hours.")
-    location_id = fields.Many2one('event.track.location', 'Location')
-    event_id = fields.Many2one('event.event', 'Event', required=True)
-    color = fields.Integer('Color')
-    priority = fields.Selection([
-        ('0', 'Low'), ('1', 'Medium'),
-        ('2', 'High'), ('3', 'Highest')],
-        'Priority', required=True, default='1')
-    image = fields.Image("Image", max_width=128, max_height=128)
 
     @api.depends('name')
     def _compute_website_url(self):

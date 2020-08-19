@@ -16,14 +16,39 @@ from odoo.tools import plaintext2html, html2plaintext
 
 class WebsiteEventTrackController(http.Controller):
 
-    @http.route(['''/event/<model("event.event"):event>/track/<model("event.track", "[('event_id','=',event.id)]"):track>'''], type='http', auth="public", website=True, sitemap=True)
-    def event_track_view(self, event, track, **post):
-        if not event.can_access_from_current_website():
+    # ------------------------------------------------------------
+    # TRACK LIST VIEW
+    # ------------------------------------------------------------
+
+    @http.route([
+        '''/event/<model("event.event"):event>/track''',
+        '''/event/<model("event.event"):event>/track/tag/<model("event.track.tag"):tag>'''
+    ], type='http', auth="public", website=True, sitemap=False)
+    def event_tracks(self, event, tag=None, **post):
+        if not event.can_access_from_current_website() or (tag and tag.color == 0):
             raise NotFound()
 
-        track = track.sudo().with_context(tz=event.date_tz or 'UTC')
-        values = {'track': track, 'event': track.event_id, 'main_object': track}
-        return request.render("website_event_track.track_view", values)
+        event = event.with_context(tz=event.date_tz or 'UTC')
+        searches = {}
+        if tag:
+            searches.update(tag=tag.id)
+            tracks = event.track_ids.filtered(lambda track: tag in track.tag_ids)
+        else:
+            tracks = event.track_ids
+
+        values = {
+            'event': event,
+            'main_object': event,
+            'tracks': tracks,
+            'tags': event.tracks_tag_ids,
+            'searches': searches,
+            'html2plaintext': html2plaintext
+        }
+        return request.render("website_event_track.tracks", values)
+
+    # ------------------------------------------------------------
+    # AGENDA VIEW
+    # ------------------------------------------------------------
 
     def _get_locale_time(self, dt_time, lang_code):
         """ Get locale time from datetime object
@@ -105,31 +130,22 @@ class WebsiteEventTrackController(http.Controller):
     def _event_agenda_get_tracks(self, event):
         return event.track_ids
 
-    @http.route([
-        '''/event/<model("event.event"):event>/track''',
-        '''/event/<model("event.event"):event>/track/tag/<model("event.track.tag"):tag>'''
-    ], type='http', auth="public", website=True, sitemap=False)
-    def event_tracks(self, event, tag=None, **post):
-        if not event.can_access_from_current_website() or (tag and tag.color == 0):
+    # ------------------------------------------------------------
+    # TRACK PAGE VIEW
+    # ------------------------------------------------------------
+
+    @http.route(['''/event/<model("event.event"):event>/track/<model("event.track", "[('event_id','=',event.id)]"):track>'''], type='http', auth="public", website=True, sitemap=True)
+    def event_track_view(self, event, track, **post):
+        if not event.can_access_from_current_website():
             raise NotFound()
 
-        event = event.with_context(tz=event.date_tz or 'UTC')
-        searches = {}
-        if tag:
-            searches.update(tag=tag.id)
-            tracks = event.track_ids.filtered(lambda track: tag in track.tag_ids)
-        else:
-            tracks = event.track_ids
+        track = track.sudo().with_context(tz=event.date_tz or 'UTC')
+        values = {'track': track, 'event': track.event_id, 'main_object': track}
+        return request.render("website_event_track.track_view", values)
 
-        values = {
-            'event': event,
-            'main_object': event,
-            'tracks': tracks,
-            'tags': event.tracks_tag_ids,
-            'searches': searches,
-            'html2plaintext': html2plaintext
-        }
-        return request.render("website_event_track.tracks", values)
+    # ------------------------------------------------------------
+    # TRACK PROPOSAL
+    # ------------------------------------------------------------
 
     @http.route(['''/event/<model("event.event"):event>/track_proposal'''], type='http', auth="public", website=True, sitemap=False)
     def event_track_proposal(self, event, **post):

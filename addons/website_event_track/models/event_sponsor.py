@@ -4,15 +4,6 @@
 from odoo import api, fields, models, _
 
 
-class SponsorType(models.Model):
-    _name = "event.sponsor.type"
-    _description = 'Event Sponsor Type'
-    _order = "sequence"
-
-    name = fields.Char('Sponsor Type', required=True, translate=True)
-    sequence = fields.Integer('Sequence')
-
-
 class Sponsor(models.Model):
     _name = "event.sponsor"
     _description = 'Event Sponsor'
