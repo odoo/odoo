@@ -94,7 +94,7 @@ class PrinterDriver(Driver):
     def supported(cls, device):
         if device.get('supported', False):
             return True
-        protocol = ['dnssd', 'lpd']
+        protocol = ['dnssd', 'lpd', 'socket']
         if any(x in device['url'] for x in protocol) and device['device-make-and-model'] != 'Unknown' or 'direct' in device['device-class']:
             model = cls.get_device_model(device)
             ppdFile = ''
