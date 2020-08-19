@@ -36,15 +36,20 @@
     &.s_blockquote_cover {
         text-align: center;
         .s_blockquote_icon {
+            position: relative;
+            z-index: 1;
             float: none;
             margin-bottom: -$spacer * 1.5;
         }
         p:last-of-type {
             margin-bottom: $spacer * .5;
         }
+        .s_blockquote_content, .s_blockquote_filter { // s_blockquote_filter is there for compatibility
+            padding: $spacer * 3 $spacer * 2 $spacer * 2;
+        }
         // Compatibility
         .s_blockquote_filter {
-            padding: $spacer * 3 $spacer * 2 $spacer * 2;
+            margin: $spacer * -3 $spacer * -2 $spacer * -2;
         }
         .quote_char {
             margin: $spacer * 2 0 $spacer 0;
