@@ -4,11 +4,11 @@
     <t t-name="mail.Discuss" owl="1">
         <div class="o_Discuss"
             t-att-class="{
-                'o-adding-item': discuss.isAddingChannel or discuss.isAddingChat,
-                'o-mobile': env.messaging.device.isMobile,
+                'o-adding-item': discuss ? discuss.isAddingChannel or discuss.isAddingChat : false,
+                'o-mobile': env.messaging ? env.messaging.device.isMobile : false,
             }"
         >
-            <t t-if="!env.messaging.isInitialized">
+            <t t-if="!env.isMessagingInitialized()">
                 <div class="o_Discuss_messagingNotInitialized"><i class="o_Discuss_messagingNotInitializedIcon fa fa-spinner fa-spin"/>Please wait...</div>
             </t>
             <t t-else="">
@@ -21,13 +21,12 @@
                         <t t-call="mail.Discuss.content"/>
                     </div>
                 </t>
-            </t>
-
-            <t t-if="discuss.hasModerationDiscardDialog">
-                <ModerationDiscardDialog messageLocalIds="discuss.threadViewer.checkedMessages.map(message => message.localId)" t-on-dialog-closed="_onDialogClosedModerationDiscard"/>
-            </t>
-            <t t-if="discuss.hasModerationRejectDialog">
-                <ModerationRejectDialog messageLocalIds="discuss.threadViewer.checkedMessages.map(message => message.localId)" t-on-dialog-closed="_onDialogClosedModerationReject"/>
+                <t t-if="discuss.hasModerationDiscardDialog">
+                    <ModerationDiscardDialog messageLocalIds="discuss.threadViewer.checkedMessages.map(message => message.localId)" t-on-dialog-closed="_onDialogClosedModerationDiscard"/>
+                </t>
+                <t t-if="discuss.hasModerationRejectDialog">
+                    <ModerationRejectDialog messageLocalIds="discuss.threadViewer.checkedMessages.map(message => message.localId)" t-on-dialog-closed="_onDialogClosedModerationReject"/>
+                </t>
             </t>
         </div>
     </t>
