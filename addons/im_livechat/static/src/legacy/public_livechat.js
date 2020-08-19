@@ -233,10 +233,21 @@ var LivechatButton = Widget.extend({
         }
         def.then(function (livechatData) {
             if (!livechatData || !livechatData.operator_pid) {
-                self.displayNotification({
-                    message: _t("No available collaborator, please try again later."),
-                    sticky: true
-                });
+                try {
+                    self.displayNotification({
+                        message: _t("No available collaborator, please try again later."),
+                        sticky: true,
+                    });
+                } catch (err) {
+                    /**
+                     * Failure in displaying notification happens when
+                     * notification service doesn't exist, which is the case in
+                     * external lib. We don't want notifications in external
+                     * lib at the moment because they use bootstrap toast and
+                     * we don't want to include boostrap in external lib.
+                     */
+                    console.warn(_t("No available collaborator, please try again later."));
+                }
             } else {
                 self._livechat = new WebsiteLivechat({
                     parent: self,
@@ -328,10 +339,22 @@ var LivechatButton = Widget.extend({
             .rpc('/mail/chat_post', { uuid: this._livechat.getUUID(), message_content: message.content })
             .then(function (messageId) {
                 if (!messageId) {
-                    self.displayNotification({
-                        message: _t("Session expired... Please refresh and try again."),
-                        sticky: true
-                    });
+                    try {
+                        self.displayNotification({
+                            message: _t("Session expired... Please refresh and try again."),
+                            sticky: true,
+                        });
+                    } catch (err) {
+                        /**
+                         * Failure in displaying notification happens when
+                         * notification service doesn't exist, which is the case
+                         * in external lib. We don't want notifications in
+                         * external lib at the moment because they use bootstrap
+                         * toast and we don't want to include boostrap in
+                         * external lib.
+                         */
+                        console.warn(_t("Session expired... Please refresh and try again."));
+                    }
                     self._closeChat();
                 }
                 self._chatWindow.scrollToBottom();
