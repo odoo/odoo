@@ -5,6 +5,7 @@ from collections import OrderedDict
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
 from odoo.osv import expression
+from lxml import etree as ET
 
 
 class WebsiteSnippetFilter(models.Model):
@@ -49,7 +50,9 @@ class WebsiteSnippetFilter(models.Model):
             return ''
 
         records = self._prepare_values(limit, search_domain)
-        return self.env['ir.ui.view'].sudo().with_context(inherit_branding=False)._render_template(template_key, dict(records=records))
+        View = self.env['ir.ui.view'].sudo().with_context(inherit_branding=False)
+        content = View._render_template(template_key, dict(records=records)).decode('utf-8')
+        return [ET.tostring(el) for el in ET.fromstring('<root>%s</root>' % content).getchildren()]
 
     def _prepare_values(self, limit=None, search_domain=[]):
         """Gets the data and returns it the right format for render."""
