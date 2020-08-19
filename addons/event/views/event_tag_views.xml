@@ -9,7 +9,7 @@
                 <tree string="Event Category">
                     <field name="sequence" widget="handle"/>
                     <field name="name"/>
-                    <field name="tag_ids" widget="many2many_tags" />
+                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                 </tree>
             </field>
         </record>
@@ -28,6 +28,7 @@
                                 <tree string="Tags" editable="bottom">
                                     <field name="sequence" widget="handle"/>
                                     <field name="name"/>
+                                    <field name="color" widget="color_picker"/>
                                 </tree>
                             </field>
                         </group>
@@ -51,6 +52,7 @@
                     <field name="sequence" widget="handle"/>
                     <field name="name"/>
                     <field name="category_id"/>
+                    <field name="color" widget="color_picker"/>
                 </tree>
             </field>
         </record>
@@ -64,6 +66,7 @@
                         <group>
                             <field name="name"/>
                             <field name="category_id" widget="many2one"/>
+                            <field name="color" widget="color_picker"/>
                         </group>
                     </sheet>
                 </form>

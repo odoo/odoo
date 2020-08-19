@@ -78,7 +78,7 @@
                                     <label for="tag_ids" string="Tags"/>
                                     <div class="row">
                                         <div class="col-12 mt16">
-                                            <field name="tag_ids" widget="many2many_tags" options="{'no_quick_create': True}"/>
+                                            <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_quick_create': True}"/>
                                         </div>
                                     </div>
                                 </div>
@@ -232,7 +232,7 @@
                                 </div>
                                 <field name="date_tz"/>
                                 <field name="event_type_id" string="Template" options="{'no_create':True}"/>
-                                <field name="tag_ids" widget="many2many_tags" options="{'no_quick_create': True}"/>
+                                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_quick_create': True}"/>
                             </group>
                             <group>
                                 <field name="organizer_id"/>
