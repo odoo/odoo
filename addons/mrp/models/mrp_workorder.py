@@ -273,18 +273,27 @@ class MrpWorkorder(models.Model):
                     })
                     qty -= 1
             else:
-                MoveLine.create({
-                    'move_id': move.id,
-                    'product_uom_qty': 0,
-                    'product_uom_id': move.product_uom.id,
-                    'qty_done': qty,
-                    'product_id': move.product_id.id,
-                    'production_id': self.production_id.id,
-                    'workorder_id': self.id,
-                    'done_wo': False,
-                    'location_id': move.location_id.id,
-                    'location_dest_id': move.location_dest_id.id,
-                    })
+                if move.product_id.tracking == 'lot' and move.active_move_line_ids:
+                    for line in move.active_move_line_ids:
+                        line.write({
+                            'production_id': self.production_id.id,
+                            'workorder_id': self.id,
+                            'done_wo': False,
+                            'qty_done': line.product_uom_qty,
+                        })
+                else:
+                    MoveLine.create({
+                        'move_id': move.id,
+                        'product_uom_qty': 0,
+                        'product_uom_id': move.product_uom.id,
+                        'qty_done': qty,
+                        'product_id': move.product_id.id,
+                        'production_id': self.production_id.id,
+                        'workorder_id': self.id,
+                        'done_wo': False,
+                        'location_id': move.location_id.id,
+                        'location_dest_id': move.location_dest_id.id,
+                        })
 
     def _assign_default_final_lot_id(self):
         self.final_lot_id = self.env['stock.production.lot'].search([('use_next_on_work_order_id', '=', self.id)],
