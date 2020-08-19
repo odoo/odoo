@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 import base64
+import functools
 import hmac
 import io
 import logging
 import os
+import re
 import struct
 import time
 
@@ -16,6 +18,7 @@ from odoo.http import request
 
 _logger = logging.getLogger(__name__)
 
+compress = functools.partial(re.sub, r'\s', '')
 class Users(models.Model):
     _inherit = 'res.users'
 
@@ -49,7 +52,7 @@ class Users(models.Model):
 
     def _totp_check(self, code):
         sudo = self.sudo()
-        key = base64.b32decode(sudo.totp_secret.upper())
+        key = base64.b32decode(sudo.totp_secret)
         match = TOTP(key).match(code)
         if match is None:
             _logger.info("2FA check: FAIL for '%s' (#%s)", self.login, self.id)
@@ -61,7 +64,8 @@ class Users(models.Model):
             _logger.info("2FA enable: REJECT for '%s' (#%s)", self.login, self.id)
             return False
 
-        match = TOTP(base64.b32decode(secret.upper())).match(code)
+        secret = compress(secret).upper()
+        match = TOTP(base64.b32decode(secret)).match(code)
         if match is None:
             _logger.info("2FA enable: REJECT CODE for '%s' (#%s)", self.login, self.id)
             return False
@@ -101,9 +105,12 @@ class Users(models.Model):
             raise UserError(_("Two-factor authentication already enabled"))
 
         secret_bytes_count = TOTP_SECRET_SIZE // 8
+        secret = base64.b32encode(os.urandom(secret_bytes_count)).decode()
+        # format secret in groups of 4 characters for readability
+        secret = ' '.join(map(''.join, zip(*[iter(secret)]*4)))
         w = self.env['auth_totp.wizard'].create({
             'user_id': self.id,
-            'secret': base64.b32encode(os.urandom(secret_bytes_count)).decode(),
+            'secret': secret,
         })
         return {
             'type': 'ir.actions.act_window',
@@ -125,7 +132,7 @@ class TOTPWizard(models.TransientModel):
         attachment=False, store=True, readonly=True,
         compute='_compute_qrcode',
     )
-    code = fields.Char(string="Verification Code", placeholder="6-digit code", size=6)
+    code = fields.Char(string="Verification Code", size=7)
 
     @api.depends('user_id.login', 'user_id.company_id.display_name', 'secret')
     def _compute_qrcode(self):
@@ -135,7 +142,7 @@ class TOTPWizard(models.TransientModel):
                 'otpauth', 'totp',
                 werkzeug.urls.url_quote(label, safe=''),
                 werkzeug.urls.url_encode({
-                    'secret': w.secret,
+                    'secret': compress(w.secret),
                     'issuer': w.user_id.company_id.display_name,
                     # apparently a lowercase hash name is anathema to google
                     # authenticator (error) and passlib (no token)
@@ -153,7 +160,7 @@ class TOTPWizard(models.TransientModel):
     @check_identity
     def enable(self):
         try:
-            c = int(self.code)
+            c = int(compress(self.code))
         except ValueError:
             raise UserError(_("The verification code should only contain numbers"))
         if self.user_id._totp_try_setting(self.secret, c):

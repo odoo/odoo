@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import re
+
 import odoo.addons.web.controllers.main
 from odoo import http, _
 from odoo.exceptions import AccessDenied
@@ -23,7 +25,7 @@ class Home(odoo.addons.web.controllers.main.Home):
             user = request.env['res.users'].browse(request.session.pre_uid)
             try:
                 with user._assert_can_auth():
-                    user._totp_check(int(kwargs['totp_token']))
+                    user._totp_check(int(re.sub(r'\s', '', kwargs['totp_token'])))
             except AccessDenied:
                 error = _("Verification failed, please double-check the 6-digit code")
             except ValueError:
