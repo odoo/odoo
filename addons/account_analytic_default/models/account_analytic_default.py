@@ -69,8 +69,8 @@ class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'
 
     # Overload of fields defined in account
-    analytic_account_id = fields.Many2one(compute="_compute_analytic_account", store=True, readonly=False)
-    analytic_tag_ids = fields.Many2many(compute="_compute_analytic_account", store=True, readonly=False)
+    analytic_account_id = fields.Many2one(compute="_compute_analytic_account", store=True, readonly=False, copy=True)
+    analytic_tag_ids = fields.Many2many(compute="_compute_analytic_account", store=True, readonly=False, copy=True)
 
     @api.depends('product_id', 'account_id', 'partner_id', 'date_maturity')
     def _compute_analytic_account(self):
