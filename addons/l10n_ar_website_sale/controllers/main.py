@@ -18,7 +18,7 @@ class L10nARWebsiteSale(WebsiteSale):
         """Extend to send information about the identification types and AFIP responsibility to show in the address form"""
         response = super().address(**kw)
         if request.website.sudo().company_id.country_id.code == "AR":
-            response.qcontext.update({'identification_types': request.env['l10n_latam.identification.type'].search([]),
+            response.qcontext.update({'identification_types': request.env['l10n_latam.identification.type'].search(['|', ('country_id', '=', False), ('country_id.code', '=', 'AR')]),
                                       'responsibility_types': request.env['l10n_ar.afip.responsibility.type'].search([]),
                                       'identification': kw.get('l10n_latam_identification_type_id'),
                                       'responsibility': kw.get('l10n_ar_afip_responsibility_type_id')})
