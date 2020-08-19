@@ -34,22 +34,33 @@ function factory(dependencies) {
         /**
          * Toggle whether the messaging menu is open or not.
          */
-        async toggleOpen() {
-            if (!this.isOpen) {
-                const inbox = this.env.messaging.inbox;
-                if (!inbox.mainCache.isLoaded && !inbox.mainCache.isLoading) {
-                    // populate some needaction messages on threads.
-                    // FIXME: await necessary due to bug in tests without it
-                    // see task-id 2275999
-                    await this.async(() => inbox.mainCache.loadMessages());
-                }
-            }
+        toggleOpen() {
             this.update({ isOpen: !this.isOpen });
         }
 
         //----------------------------------------------------------------------
         // Private
         //----------------------------------------------------------------------
+
+        /**
+         * @private
+         */
+        _computeInboxMessagesAutoloader() {
+            if (!this.isOpen) {
+                return;
+            }
+            const inbox = this.env.messaging.inbox;
+            if (
+                !inbox ||
+                !inbox.mainCache ||
+                inbox.mainCache.isLoaded ||
+                inbox.mainCache.isLoading
+            ) {
+                return;
+            }
+            // populate some needaction messages on threads.
+            inbox.mainCache.loadMessages();
+        }
 
         /**
          * @private
@@ -104,6 +115,23 @@ function factory(dependencies) {
             default: 0,
         }),
         /**
+         * Dummy field to automatically load messages of inbox when messaging
+         * menu is open.
+         *
+         * Useful because needaction notifications require fetching inbox
+         * messages to work.
+         */
+        inboxMessagesAutoloader: attr({
+            compute: '_computeInboxMessagesAutoloader',
+            dependencies: [
+                'isOpen',
+                'messagingInbox',
+                'messagingInboxMainCache',
+                'messagingInboxMainCacheIsLoaded',
+                'messagingInboxMainCacheIsLoading',
+            ],
+        }),
+        /**
          * Determine whether the mobile new message input is visible or not.
          */
         isMobileNewMessageToggled: attr({
@@ -117,6 +145,18 @@ function factory(dependencies) {
         }),
         messaging: one2one('mail.messaging', {
             inverse: 'messagingMenu',
+        }),
+        messagingInbox: one2one('mail.thread', {
+            related: 'messaging.inbox',
+        }),
+        messagingInboxMainCache: one2one('mail.thread_cache', {
+            related: 'messagingInbox.mainCache',
+        }),
+        messagingInboxMainCacheIsLoaded: attr({
+            related: 'messagingInboxMainCache.isLoaded',
+        }),
+        messagingInboxMainCacheIsLoading: attr({
+            related: 'messagingInboxMainCache.isLoading',
         }),
     };
 

@@ -1,10 +1,12 @@
 odoo.define('mail/static/src/widgets/form_renderer/form_renderer_tests.js', function (require) {
 "use strict";
 
+const { makeDeferred } = require('mail/static/src/utils/deferred/deferred.js');
 const {
     afterEach,
     afterNextRender,
     beforeEach,
+    nextAnimationFrame,
     start,
 } = require('mail/static/src/utils/test_utils.js');
 
@@ -47,6 +49,223 @@ QUnit.module('form_renderer_tests.js', {
     afterEach() {
         afterEach(this);
     },
+});
+
+QUnit.test('[technical] spinner when messaging is not created', async function (assert) {
+    /**
+     * Creation of messaging in env is async due to generation of models being
+     * async. Generation of models is async because it requires parsing of all
+     * JS modules that contain pieces of model definitions.
+     *
+     * Time of having no messaging is very short, almost imperceptible by user
+     * on UI, but the display should not crash during this critical time period.
+     */
+    assert.expect(3);
+
+    this.data['res.partner'].records.push({
+        display_name: "second partner",
+        id: 12,
+    });
+    await this.createView({
+        data: this.data,
+        hasView: true,
+        messagingBeforeCreationDeferred: makeDeferred(), // block messaging creation
+        waitUntilMessagingCondition: 'none',
+        // View params
+        View: FormView,
+        model: 'res.partner',
+        arch: `
+            <form string="Partners">
+                <sheet>
+                    <field name="name"/>
+                </sheet>
+                <div class="oe_chatter"></div>
+            </form>
+        `,
+        res_id: 12,
+    });
+    assert.containsOnce(
+        document.body,
+        '.o_ChatterContainer',
+        "should display chatter container even when messaging is not created yet"
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_ChatterContainer_noChatter',
+        "chatter container should not display any chatter when messaging not created"
+    );
+    assert.strictEqual(
+        document.querySelector('.o_ChatterContainer').textContent,
+        "Please wait...",
+        "chatter container should display spinner when messaging not yet created"
+    );
+});
+
+QUnit.test('[technical] keep spinner on transition from messaging non-created to messaging created (and non-initialized)', async function (assert) {
+    /**
+     * Creation of messaging in env is async due to generation of models being
+     * async. Generation of models is async because it requires parsing of all
+     * JS modules that contain pieces of model definitions.
+     *
+     * Time of having no messaging is very short, almost imperceptible by user
+     * on UI, but the display should not crash during this critical time period.
+     */
+    assert.expect(4);
+
+    const messagingBeforeCreationDeferred = makeDeferred();
+    this.data['res.partner'].records.push({
+        display_name: "second partner",
+        id: 12,
+    });
+    await this.createView({
+        data: this.data,
+        hasView: true,
+        messagingBeforeCreationDeferred,
+        async mockRPC(route, args) {
+            const _super = this._super.bind(this, ...arguments); // limitation of class.js
+            if (route === '/mail/init_messaging') {
+                await new Promise(() => {}); // simulate messaging never initialized
+            }
+            return _super();
+        },
+        waitUntilMessagingCondition: 'none',
+        // View params
+        View: FormView,
+        model: 'res.partner',
+        arch: `
+            <form string="Partners">
+                <sheet>
+                    <field name="name"/>
+                </sheet>
+                <div class="oe_chatter"></div>
+            </form>
+        `,
+        res_id: 12,
+    });
+    assert.strictEqual(
+        document.querySelector('.o_ChatterContainer').textContent,
+        "Please wait...",
+        "chatter container should display spinner when messaging not yet created"
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_ChatterContainer_noChatter',
+        "chatter container should not display any chatter when messaging not created"
+    );
+
+    // simulate messaging become created
+    messagingBeforeCreationDeferred.resolve();
+    await nextAnimationFrame();
+    assert.strictEqual(
+        document.querySelector('.o_ChatterContainer').textContent,
+        "Please wait...",
+        "chatter container should still display spinner when messaging is created but not initialized"
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_ChatterContainer_noChatter',
+        "chatter container should still not display any chatter when messaging not initialized"
+    );
+});
+
+QUnit.test('spinner when messaging is created but not initialized', async function (assert) {
+    assert.expect(3);
+
+    this.data['res.partner'].records.push({
+        display_name: "second partner",
+        id: 12,
+    });
+    await this.createView({
+        data: this.data,
+        hasView: true,
+        async mockRPC(route, args) {
+            const _super = this._super.bind(this, ...arguments); // limitation of class.js
+            if (route === '/mail/init_messaging') {
+                await new Promise(() => {}); // simulate messaging never initialized
+            }
+            return _super();
+        },
+        waitUntilMessagingCondition: 'created',
+        // View params
+        View: FormView,
+        model: 'res.partner',
+        arch: `
+            <form string="Partners">
+                <sheet>
+                    <field name="name"/>
+                </sheet>
+                <div class="oe_chatter"></div>
+            </form>
+        `,
+        res_id: 12,
+    });
+    assert.containsOnce(
+        document.body,
+        '.o_ChatterContainer',
+        "should display chatter container even when messaging is not fully initialized"
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_ChatterContainer_noChatter',
+        "chatter container should not display any chatter when messaging not initialized"
+    );
+    assert.strictEqual(
+        document.querySelector('.o_ChatterContainer').textContent,
+        "Please wait...",
+        "chatter container should display spinner when messaging not yet initialized"
+    );
+});
+
+QUnit.test('transition non-initialized messaging to initialized messaging: display spinner then chatter', async function (assert) {
+    assert.expect(3);
+
+    const messagingBeforeInitializationDeferred = makeDeferred();
+    this.data['res.partner'].records.push({
+        display_name: "second partner",
+        id: 12,
+    });
+    await this.createView({
+        data: this.data,
+        hasView: true,
+        async mockRPC(route, args) {
+            const _super = this._super.bind(this, ...arguments); // limitation of class.js
+            if (route === '/mail/init_messaging') {
+                await messagingBeforeInitializationDeferred;
+            }
+            return _super();
+        },
+        waitUntilMessagingCondition: 'created',
+        // View params
+        View: FormView,
+        model: 'res.partner',
+        arch: `
+            <form string="Partners">
+                <sheet>
+                    <field name="name"/>
+                </sheet>
+                <div class="oe_chatter"></div>
+            </form>
+        `,
+        res_id: 12,
+    });
+    assert.strictEqual(
+        document.querySelector('.o_ChatterContainer').textContent,
+        "Please wait...",
+        "chatter container should display spinner when messaging not yet initialized"
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_ChatterContainer_noChatter',
+        "chatter container should not display any chatter when messaging not initialized"
+    );
+
+    // Simulate messaging becomes initialized
+    await afterNextRender(() => messagingBeforeInitializationDeferred.resolve());
+    assert.containsNone(
+        document.body,
+        '.o_ChatterContainer_noChatter',
+        "chatter container should now display chatter when messaging becomes initialized"
+    );
 });
 
 QUnit.test('basic chatter rendering', async function (assert) {
