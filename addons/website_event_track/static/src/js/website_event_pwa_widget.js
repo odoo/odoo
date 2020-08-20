@@ -1,4 +1,4 @@
-odoo.define("website_event_track_online.website_event_pwa_widget", function (require) {
+odoo.define("website_event_track.website_event_pwa_widget", function (require) {
     "use strict";
 
     var config = require("web.config");
@@ -6,7 +6,7 @@ odoo.define("website_event_track_online.website_event_pwa_widget", function (req
     var utils = require("web.utils");
 
     var PWAInstallBanner = publicWidget.Widget.extend({
-        xmlDependencies: ["/website_event_track_online/static/src/xml/website_event_pwa.xml"],
+        xmlDependencies: ["/website_event_track/static/src/xml/website_event_pwa.xml"],
         template: "pwa_install_banner",
         events: {
             "click .o_btn_install": "_onClickInstall",

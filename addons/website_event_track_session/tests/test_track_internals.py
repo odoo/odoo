@@ -6,7 +6,7 @@ from unittest.mock import patch
 
 from odoo import fields
 from odoo.addons.website.models.website_visitor import WebsiteVisitor
-from odoo.addons.website_event_track_online.tests.common import TestEventTrackOnlineCommon
+from odoo.addons.website_event_track.tests.common import TestEventTrackOnlineCommon
 
 
 class TestTrackSuggestions(TestEventTrackOnlineCommon):

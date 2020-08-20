@@ -3,10 +3,10 @@
 
 from odoo import http
 
-from odoo.addons.website_event_track_online.controllers.event_track import EventTrackOnlineController
+from odoo.addons.website_event_track.controllers.event_track import EventTrackController
 
 
-class EventTrackLiveController(EventTrackOnlineController):
+class EventTrackLiveController(EventTrackController):
 
     @http.route('/event_track/get_track_suggestion', type='json', auth='public', website=True)
     def get_next_track_suggestion(self, track_id):

@@ -68,7 +68,7 @@
                 <div class="o_we_track_action_buttons d-flex justify-content-md-end align-items-center flex-wrap">
                     <div class="o_we_track_reminder_button my-1">
                         <div t-if="option_track_wishlist and not track.is_track_done"
-                            t-call="website_event_track_online.track_widget_reminder">
+                            t-call="website_event_track.track_widget_reminder">
                             <t t-set="reminder_small" t-value="False"/>
                             <t t-set="reminder_light" t-value="False"/>
                         </div>

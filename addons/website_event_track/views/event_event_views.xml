@@ -22,6 +22,12 @@
                     <field name="sponsor_count" string="Sponsors" widget="statinfo"/>
                 </button>
             </xpath>
+            <xpath expr="//field[@name='website_menu']" position="after">
+                <label for="website_track" string="Showcase Tracks"/>
+                <field name="website_track"/>
+                <label for="website_track_proposal" string="Allow Track Proposals"/>
+                <field name="website_track_proposal"/>
+            </xpath>
         </field>
     </record>
 
