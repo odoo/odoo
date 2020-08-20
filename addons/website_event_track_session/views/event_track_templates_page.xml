@@ -80,16 +80,20 @@
                     <strong>Location:</strong> <span t-field="track.location_id"/>
                     <span> - </span>
                 </t>
-                <span t-field="track.date"
-                    t-options='{"hide_seconds":"True", "format": "short"}'/>
-                -
-                <span t-field="track.date_end"
-                    t-options='{"hide_seconds":"True", "format": "short"}'/>
-                <t t-if="event.date_tz">
-                    (<span t-field="track.date_end" t-options='{"format": "zzz"}'/>)
+                <t t-if="track.date">
+                    <span t-field="track.date"
+                        t-options='{"hide_seconds":"True", "format": "short"}'/>
+                    -
+                    <span t-field="track.date_end"
+                        t-options='{"hide_seconds":"True", "format": "short"}'/>
+                    <t t-if="event.date_tz">
+                        (<span t-field="track.date_end" t-options='{"format": "zzz"}'/>)
+                    </t>
                 </t>
-                (<span t-field="track.duration"
-                    t-options='{"widget": "duration", "unit": "hour", "round": "minute"}'/>)
+                <t t-if="track.duration">
+                    (<span t-field="track.duration"
+                        t-options='{"widget": "duration", "unit": "hour", "round": "minute"}'/>)
+                </t>
             </div>
             
             <hr class="mt-2 mb-0"/>

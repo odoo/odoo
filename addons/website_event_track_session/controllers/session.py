@@ -5,7 +5,7 @@ from ast import literal_eval
 from pytz import timezone, utc
 from werkzeug.exceptions import Forbidden, NotFound
 
-from odoo import exceptions, fields, http
+from odoo import fields, http, _
 from odoo.addons.website_event_track_online.controllers.event_track import EventTrackOnlineController
 from odoo.http import request
 from odoo.osv import expression
@@ -20,7 +20,6 @@ class WebsiteEventSessionController(EventTrackOnlineController):
         but not reachable for teasing purpose. """
         search_domain_base = [
             ('event_id', '=', event.id),
-            ('date', '!=', False)
         ]
         if not request.env.user.has_group('event.group_event_user'):
             search_domain_base = expression.AND([
@@ -101,18 +100,23 @@ class WebsiteEventSessionController(EventTrackOnlineController):
         if searches.get('search_wishlist'):
             tracks_sudo = tracks_sudo.filtered(lambda track: track.is_reminder_on)
 
-        # organize categories for display: live, soon and day-based
+        # organize categories for display: announced, live, soon and day-based
+        tracks_announced = tracks_sudo.filtered(lambda track: not track.date)
+        tracks_wdate = tracks_sudo - tracks_announced
         date_begin_tz_all = list(set(
             dt.date()
-            for dt in self._get_dt_in_event_tz(tracks_sudo.mapped('date'), event)
+            for dt in self._get_dt_in_event_tz(tracks_wdate.mapped('date'), event)
         ))
         date_begin_tz_all.sort()
-        tracks_sudo_live = tracks_sudo.filtered(lambda track: track.is_published and track.is_track_live)
-        tracks_sudo_soon = tracks_sudo.filtered(lambda track: track.is_published and not track.is_track_live and track.is_track_soon)
+        tracks_sudo_live = tracks_wdate.filtered(lambda track: track.is_published and track.is_track_live)
+        tracks_sudo_soon = tracks_wdate.filtered(lambda track: track.is_published and not track.is_track_live and track.is_track_soon)
         tracks_by_day = []
         for display_date in date_begin_tz_all:
-            matching_track = tracks_sudo.filtered(lambda track: self._get_dt_in_event_tz([track.date], event)[0].date() == display_date)
-            tracks_by_day.append((display_date, matching_track))
+            matching_tracks = tracks_wdate.filtered(lambda track: self._get_dt_in_event_tz([track.date], event)[0].date() == display_date)
+            tracks_by_day.append({'date': display_date, 'name': display_date, 'tracks': matching_tracks})
+        if tracks_announced:
+            tracks_announced = tracks_announced.sorted('wishlisted_by_default', reverse=True)
+            tracks_by_day.append({'date': False, 'name': _('Coming soon'), 'tracks': tracks_announced})
 
         # return rendering values
         return {

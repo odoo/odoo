@@ -10,11 +10,11 @@
     </xpath>
     <!-- ADD YOUTUBE ICON -->
     <xpath expr="//div[hasclass('o_wesession_list_item')]/div[hasclass('col-md-7')]//a/span[@t-field='track.name']" position="before">
-        <i t-if="track.youtube_video_url and (track.is_track_soon or track.is_track_live or track.is_youtube_replay)"
+        <i t-if="track.date and track.youtube_video_url and (track.is_track_soon or track.is_track_live or track.is_youtube_replay)"
             class="fa fa-youtube-play text-danger mr-1"/>
     </xpath>
     <xpath expr="//div[hasclass('o_wesession_list_item')]/div[hasclass('col-md-7')]//t/span[@t-field='track.name']" position="before">
-        <i t-if="track.youtube_video_url and (track.is_track_soon or track.is_track_live or track.is_youtube_replay)"
+        <i t-if="track.date and track.youtube_video_url and (track.is_track_soon or track.is_track_live or track.is_youtube_replay)"
             class="fa fa-youtube-play text-danger mr-1"/>
     </xpath>
 </template>
