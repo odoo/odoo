@@ -146,6 +146,50 @@ parameters
                 username = "admin",
                 password = <insert password for your admin user (default: admin)>;
 
+API Keys
+''''''''
+
+.. versionadded:: 14.0
+
+Odoo has support for **api keys** and (depending on modules or settings) may
+**require** these keys to perform webservice operations.
+
+The way to use API Keys in your scripts is to simply replace your **password**
+by the key. The login remains in-use. You should store the API Key as carefully
+as the password as they essentially provide the same access to your user
+account (although they can not be used to log-in via the interface).
+
+In order to add a key to your account, simply go to your
+:guilabel:`Preferences` (or :guilabel:`My Profile`):
+
+.. figure:: images/preferences.png
+    :align: center
+
+then open the :guilabel:`Account Security` tab, and click
+:guilabel:`New API Key`:
+
+.. figure:: images/account-security.png
+    :align: center
+
+Input a description for the key, **this description should be as clear and
+complete as possible**: it is the only way you will have to identify your keys
+later and know whether you should remove them or keep them around.
+
+Click :guilabel:`Generate Key`, then copy the key provided. **Store this key
+carefully**: it is equivalent to your password, and just like your password
+the system will not be able to retrieve or show the key again later on. If you lose
+this key, you will have to create a new one (and probably delete the one you
+lost).
+
+Once you have keys configured on your account, they will appear above the
+:guilabel:`New API Key` button, and you will be able to delete them:
+
+.. figure:: images/delete-key.png
+    :align: center
+
+**A deleted API key can not be undeleted or re-set**. You will have to generate
+a new key and update all the places where you used the old one.
+
 demo
 ''''
 

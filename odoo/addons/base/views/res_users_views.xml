@@ -479,7 +479,11 @@
                                     <button name="preference_change_password" type="object" string="Change password" class="btn btn-secondary"/>
                                 </div>
                             </group>
-                            <group string="Developer API Keys">
+                            <group string="Developer API Keys" help="test">
+                                <a href="https://www.odoo.com/documentation/master/webservice/odoo.html#api-keys" target="_blank">
+                                    <i class="fa fa-fw o_button_icon fa-arrow-right"></i>
+                                    <span>Documentation</span>
+                                </a>
                                 <div colspan="2" attrs="{'invisible': [('api_key_ids', '=', [])]}">
                                     <field name="api_key_ids" nolabel="1" colspan="4" readonly="0">
                                         <tree editable="bottom" create="false" delete="false">
