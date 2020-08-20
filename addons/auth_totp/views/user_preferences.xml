@@ -9,6 +9,33 @@
             </tree>
         </field>
     </record>
+    <record model="ir.ui.view" id="view_totp_form">
+        <field name="name">user form: add totp status</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='references']/group[1]" position="before">
+                <field name="totp_enabled" invisible="1"/>
+                <group attrs="{'invisible': [('totp_enabled', '!=', False)]}">
+                    <div>
+                        <span class="alert alert-info" role="status">
+                            <i class="fa fa-warning"/>
+                            Two-factor authentication not enabled
+                        </span>
+                    </div>
+                </group>
+                <group attrs="{'invisible': [('totp_enabled', '=', False)]}">
+                    <div>
+                        <span class="text-success">
+                            <i class="fa fa-check-circle"/>
+                            Two-factor authentication enabled
+                        </span>
+                    </div>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
     <record model="ir.actions.server" id="action_disable_totp">
         <field name="name">Disable TOTP on users</field>
         <field name="model_id" ref="base.model_res_users"/>
