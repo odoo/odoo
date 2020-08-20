@@ -33,8 +33,8 @@ class WebsiteEventSessionController(EventTrackOnlineController):
     # ------------------------------------------------------------
 
     @http.route([
-        '''/event/<model("event.event"):event>/track''',
-        '''/event/<model("event.event"):event>/track/tag/<model("event.track.tag"):tag>'''
+        '''/event/<model("event.event", "[('website_track', '=', True)]"):event>/track''',
+        '''/event/<model("event.event", "[('website_track', '=', True)]"):event>/track/tag/<model("event.track.tag"):tag>'''
     ], type='http', auth="public", website=True, sitemap=False)
     def event_tracks(self, event, tag=None, **searches):
         """ Main route
@@ -145,7 +145,8 @@ class WebsiteEventSessionController(EventTrackOnlineController):
     # PAGE VIEW
     # ------------------------------------------------------------
 
-    @http.route('/event/<model("event.event"):event>/track/<model("event.track"):track>',
+    @http.route('''/event/<model("event.event", "[('website_track', '=', True)]"):event>
+                    /track/<model("event.track", , "[('event_id', '=', event.id)]"):track>''',
                 type='http', auth="public", website=True, sitemap=False)
     def event_track_page(self, event, track, **options):
         track = self._fetch_track(track.id, allow_is_accepted=False)
