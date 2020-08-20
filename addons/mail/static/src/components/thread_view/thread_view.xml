@@ -30,11 +30,11 @@
                         composerLocalId="threadView.thread.composer.localId"
                         hasCurrentPartnerAvatar="props.hasComposerCurrentPartnerAvatar"
                         hasSendButton="props.hasComposerSendButton"
-                        hasTextInputSendOnEnterEnabled="(threadView.thread.model === 'mail.channel' and threadView.thread.mass_mailing) ? false : undefined"
                         hasThreadTyping="props.hasComposerThreadTyping"
                         isCompact="(threadView.thread.model === 'mail.channel' and threadView.thread.mass_mailing) ? false : undefined"
                         showAttachmentsExtensions="props.showComposerAttachmentsExtensions"
                         showAttachmentsFilenames="props.showComposerAttachmentsFilenames"
+                        textInputSendShortcuts="(threadView.thread.model === 'mail.channel' and threadView.thread.mass_mailing) ? ['ctrl-enter', 'meta-enter'] : ['enter']"
                         t-ref="composer"
                     />
                 </t>
