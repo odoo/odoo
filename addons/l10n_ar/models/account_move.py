@@ -189,7 +189,7 @@ class AccountMove(models.Model):
 
     def _l10n_ar_get_amounts(self, company_currency=False):
         """ Method used to prepare data to present amounts and taxes related amounts when creating an
-        electronic invoice for argentinian and the txt files for digital VAT books. Only take into account the argentinian taxes """
+        electronic invoice for argentinean and the txt files for digital VAT books. Only take into account the argentinean taxes """
         self.ensure_one()
         amount_field = company_currency and 'balance' or 'price_subtotal'
         # if we use balance we need to correct sign (on price_subtotal is positive for refunds and invoices)
