@@ -136,6 +136,13 @@ var PartnerAutocompleteMixin = {
                 var company_data = result[0];
                 var logo_data = result[1];
 
+                // The vat should be returned for free. This is the reason why
+                // we add it into the data of 'company' even if an error such as
+                // an insufficient credit error is raised. 
+                if (company_data.error && company_data.vat) {
+                    company.vat = company_data.vat;
+                }
+
                 if (company_data.error && company_data.error_message === 'Insufficient Credit') {
                     self._notifyNoCredits();
                     company_data = company;
