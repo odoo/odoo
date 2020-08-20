@@ -666,7 +666,7 @@ class MrpWorkorder(models.Model):
     def _get_duration_expected(self, alternative_workcenter=False, ratio=1):
         self.ensure_one()
         if not self.workcenter_id:
-            return False
+            return self.duration_expected
         if not self.operation_id:
             duration_expected_working = (self.duration_expected - self.workcenter_id.time_start - self.workcenter_id.time_stop) * self.workcenter_id.time_efficiency / 100.0
             if duration_expected_working < 0:
