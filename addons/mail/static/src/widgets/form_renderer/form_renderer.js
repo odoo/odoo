@@ -7,6 +7,7 @@ const components = {
 
 const FormRenderer = require('web.FormRenderer');
 const { ComponentWrapper } = require('web.OwlCompatibility');
+const Domain = require('web.Domain');
 
 class ChatterContainerWrapperComponent extends ComponentWrapper {}
 
@@ -96,6 +97,7 @@ FormRenderer.include({
             ? this.state.data.message_ids.res_ids
             : [];
         const threadAttachmentCount = this.state.data.message_attachment_count || 0;
+        const disableAttachmentUpload = new Domain(this.chatterFields.disableAttachmentUpload).compute(this.state.evalContext);
         return {
             activityIds,
             context,
@@ -104,6 +106,8 @@ FormRenderer.include({
             hasFollowers: this.chatterFields.hasMessageFollowerIds,
             hasMessageList: this.chatterFields.hasMessageIds,
             isAttachmentBoxVisible: this.chatterFields.isAttachmentBoxVisible,
+            disableAttachmentUpload: disableAttachmentUpload,
+            attachmentDomain: this.chatterFields.attachmentDomain,
             messageIds,
             threadAttachmentCount,
             threadId: this.state.res_id,

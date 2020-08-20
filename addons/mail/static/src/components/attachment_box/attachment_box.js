@@ -107,8 +107,12 @@ class AttachmentBox extends Component {
 
 Object.assign(AttachmentBox, {
     components,
+    defaultProps: {
+        disableAttachmentUpload: false,
+    },
     props: {
         threadLocalId: String,
+        disableAttachmentUpload: Boolean,
     },
     template: 'mail.AttachmentBox',
 });

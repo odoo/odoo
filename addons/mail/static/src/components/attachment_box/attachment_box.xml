@@ -11,7 +11,7 @@
                 <hr class="o_AttachmentBox_dashedLine"/>
             </div>
             <div class="o_AttachmentBox_content">
-                <t t-if="isDropZoneVisible.value">
+                <t t-if="isDropZoneVisible.value and !props.disableAttachmentUpload">
                     <DropZone
                         class="o_AttachmentBox_dropZone"
                         t-on-o-dropzone-files-dropped="_onDropZoneFilesDropped"
@@ -29,7 +29,7 @@
                         t-on-o-attachment-removed="_onAttachmentRemoved"
                     />
                 </t>
-                <button class="o_AttachmentBox_buttonAdd btn btn-link" type="button" t-on-click="_onClickAdd">
+                <button t-if="!props.disableAttachmentUpload" class="o_AttachmentBox_buttonAdd btn btn-link" type="button" t-on-click="_onClickAdd">
                     <i class="fa fa-plus-square"/>
                     Add attachments
                 </button>

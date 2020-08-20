@@ -19,6 +19,10 @@ BasicView.include({
             hasRecordReloadOnFollowersUpdate: !!followers_post_refresh,
             isAttachmentBoxVisible: this._getFieldOption('message_ids', 'open_attachments', false)
                                     || this._getFieldOption('message_follower_ids', 'open_attachments', false),
+            disableAttachmentUpload: this._getFieldOption('message_ids', 'disable_upload', false)
+                                    || this._getFieldOption('message_follower_ids', 'disable_upload', false),
+            attachmentDomain: this._getFieldOption('message_ids', 'attachment_domain', [])
+                                    || this._getFieldOption('message_follower_ids', 'attachment_domain', []),
         };
         const fieldsInfo = this.fieldsInfo[this.viewType];
         this.rendererParams.chatterFields = this.chatterFields;

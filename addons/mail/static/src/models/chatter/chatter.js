@@ -249,6 +249,7 @@ function factory(dependencies) {
                 const thread = this.env.models['mail.thread'].insert({
                     id: this.threadId,
                     model: this.threadModel,
+                    attachmentDomain: this.attachmentDomain,
                 });
                 this.update({ thread: [['link', thread]] });
             }
@@ -322,6 +323,12 @@ function factory(dependencies) {
         }),
         isAttachmentBoxVisible: attr({
             default: false,
+        }),
+        disableAttachmentUpload: attr({
+            default: false,
+        }),
+        attachmentDomain: attr({
+            default: [],
         }),
         isComposerVisible: attr({
             default: false,
