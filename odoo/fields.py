@@ -1026,7 +1026,12 @@ class Field(MetaField('DummyField', (object,), {})):
                         self.compute_value(recs)
                     except (AccessError, MissingError):
                         self.compute_value(record)
-                    value = env.cache.get(record, self)
+                    try:
+                        value = env.cache.get(record, self)
+                    except CacheMiss as e:
+                        _logger.warning('CacheMiss after computing the value, you might be missing setting the value in'
+                                        ' your compute method(s) for %s' % e.name)
+                        raise e
 
             elif (not record.id) and record._origin:
                 value = self.convert_to_cache(record._origin[self.name], record)
