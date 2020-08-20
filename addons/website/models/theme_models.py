@@ -172,23 +172,42 @@ class Theme(models.AbstractModel):
                 'navbar-font': 'null',
                 'buttons-font': 'null',
                 'color-palettes-number': 'null',
+                'btn-ripple': 'null',
                 'header-template': 'null',
                 'footer-template': 'null',
+                'footer-scrolltop': 'null',
             }
         )
 
+        # Reinitialize effets
+        self.disable_view('website.option_ripple_effect')
+
         # Reinitialize header templates
+        self.enable_view('website.template_header_default')
         self.disable_view('website.template_header_hamburger')
-        self.disable_view('website.template_header_hamburger_left')
-        self.disable_view('website.template_header_navbar_text_center')
+        self.disable_view('website.template_header_vertical')
+        self.disable_view('website.template_header_sidebar')
+        self.disable_view('website.template_header_slogan')
+        self.disable_view('website.template_header_contact')
+        self.disable_view('website.template_header_minimalist')
+        self.disable_view('website.template_header_boxed')
+        self.disable_view('website.template_header_centered_logo')
+        self.disable_view('website.template_header_image')
+        self.disable_view('website.template_header_hamburger_full')
+        self.disable_view('website.template_header_magazine')
 
         # Reinitialize footer templates
         self.enable_view('website.footer_custom')
-        self.disable_view('website.template_footer_logo_about_us_below')
-        self.disable_view('website.template_footer_links_address_logo')
-        self.disable_view('website.template_footer_name_logo_links_about_us')
-        self.disable_view('website.template_footer_logo_only')
-        self.disable_view('website.template_footer_address_logo')
+        self.disable_view('website.template_footer_descriptive')
+        self.disable_view('website.template_footer_centered')
+        self.disable_view('website.template_footer_links')
+        self.disable_view('website.template_footer_minimalist')
+        self.disable_view('website.template_footer_contact')
+        self.disable_view('website.template_footer_call_to_action')
+        self.disable_view('website.template_footer_headline')
+
+        # Reinitialize footer scrolltop template
+        self.disable_view('website.option_footer_scrolltop')
 
     @api.model
     def _toggle_view(self, xml_id, active):
@@ -219,6 +238,16 @@ class Theme(models.AbstractModel):
     @api.model
     def disable_view(self, xml_id):
         self._toggle_view(xml_id, False)
+
+    @api.model
+    def enable_header_off_canvas(self):
+        """ Enabling off canvas require to enable quite a lot of template so
+            this shortcut was made to make it easier.
+        """
+        self.enable_view("website.option_header_off_canvas")
+        self.enable_view("website.option_header_off_canvas_template_header_hamburger")
+        self.enable_view("website.option_header_off_canvas_template_header_sidebar")
+        self.enable_view("website.option_header_off_canvas_template_header_hamburger_full")
 
 
 class IrUiView(models.Model):

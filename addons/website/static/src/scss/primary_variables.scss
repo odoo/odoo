@@ -1,4 +1,3 @@
-$o-theme-layout: 'full';
 
 //------------------------------------------------------------------------------
 // Colors
@@ -7,6 +6,8 @@ $o-theme-layout: 'full';
 $o-base-color-palette: map-merge($o-base-color-palette, (
     'body': $o-portal-default-body-bg,
     'menu': 1, // o_cc1
+    'menu-border-color': null, // Default to classes used on the template
+    'header-boxed': '200',
     'footer': 5, // o_cc5
     'copyright': 'black-15',
 ));
@@ -247,11 +248,41 @@ $o-base-website-values-palette: (
     'body-image': null,
     'body-image-type': 'image', // 'image' or 'pattern'
 
+    'layout': 'full', // 'full' / 'boxed'
     'color-palettes-number': null, // Default to the individual variables for each color palette type
 
     'btn-primary-outline': false,
     'btn-secondary-outline': false,
     'link-underline': 'hover', // 'never' / 'hover' / 'always'
+    'btn-ripple': false,
+
+    'btn-padding-y': null, // Default to BS
+    'btn-padding-x': null, // Default to BS
+    'btn-font-size': null, // Default to BS
+    'btn-padding-y-sm': null, // Default to portal value
+    'btn-padding-x-sm': null, // Default to portal value
+    'btn-font-size-sm': null, // Default to BS
+    'btn-padding-y-lg': null, // Default to BS
+    'btn-padding-x-lg': null, // Default to BS
+    'btn-font-size-lg': null, // Default to BS
+    'btn-border-width': null, // Default to BS
+    'btn-border-radius': null, // Default to BS
+    'btn-border-radius-sm': null, // Default to BS
+    'btn-border-radius-lg': null, // Default to BS
+
+    'input-padding-y': null, // Default to BS
+    'input-padding-x': null, // Default to BS
+    'input-font-size': null, // Default to BS
+    'input-padding-y-sm': null, // Default to BS
+    'input-padding-x-sm': null, // Default to BS
+    'input-font-size-sm': null, // Default to BS
+    'input-padding-y-lg': null, // Default to BS
+    'input-padding-x-lg': null, // Default to BS
+    'input-font-size-lg': null, // Default to BS
+    'input-border-width': null, // Default to BS
+    'input-border-radius': null, // Default to BS
+    'input-border-radius-sm': null, // Default to BS
+    'input-border-radius-lg': null, // Default to BS
 
     // A key from the $o-theme-font-configs map (null = default to the first key)
     'font': null,
@@ -259,12 +290,21 @@ $o-base-website-values-palette: (
     'navbar-font': null,
     'buttons-font': null,
 
-    'header-template': 'logo_menu',
+    'header-template': 'default', // 'default' / 'hamburger' / 'vertical' / 'sidebar'
     'header-font-size': null, // Default to BS (normal font-size)
+    'header-links-style': 'default', // 'default' / 'fill' / 'outline' / 'pills' / 'block' / 'border-bottom'
     'logo-height': null, // Default to navbar height (see portal)
+    'hamburger-type': 'default', // 'default' / 'off-canvas'
+    'hamburger-position': 'left', // 'left' / 'center' / 'right'
+    'menu-border-width': null, // Default to classes used on the template
+    'menu-border-style': solid, // Default to classes used on the template
+    'menu-border-radius': null, // Default to classes used on the template
+    'menu-box-shadow': null, // Default to classes used on the template
+    'sidebar-width': 18.75rem, // 300px
 
-    'footer-template': 'products_contacts_about_us',
+    'footer-template': 'default',
     'footer-effect': null, // null / 'slideout_slide_hover' / 'slideout_shadow'
+    'footer-scrolltop': false,
 );
 $o-font-aliases-to-keys: (
     'base': 'font',
@@ -274,11 +314,9 @@ $o-font-aliases-to-keys: (
 );
 $o-website-values-palettes: (
     (
-        'header-font-size': 1rem,
-        'font-size-base': 0.875rem,
-        'headings-font': 'Gothic A1',
-        'navbar-font': 'Gothic A1',
-        'buttons-font': 'Gothic A1',
+        'headings-font': 'Source Sans Pro',
+        'navbar-font': 'Source Sans Pro',
+        'buttons-font': 'Source Sans Pro',
     ),
 ) !default;
 $o-website-values-palette-number: 1 !default;
@@ -336,9 +374,5 @@ $o-theme-font-configs: (
     'Arvo': (
         'family': ('Arvo', Times, serif),
         'url': 'Arvo:300,300i,400,400i,700,700i',
-    ),
-    'Gothic A1': (
-        'family': ('Gothic A1', sans-serif),
-        'url': 'Gothic+A1:300,300i,500,500i,700,700i',
     ),
 ) !default;

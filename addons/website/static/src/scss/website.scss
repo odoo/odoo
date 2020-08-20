@@ -46,6 +46,34 @@ $-seen-urls: ();
         $i: $i + 1;
     }
 
+    @include print-variable('btn-padding-y', $btn-padding-y);
+    @include print-variable('btn-padding-x', $btn-padding-x);
+    @include print-variable('btn-font-size', $btn-font-size);
+    @include print-variable('btn-padding-y-sm', $btn-padding-y-sm);
+    @include print-variable('btn-padding-x-sm', $btn-padding-x-sm);
+    @include print-variable('btn-font-size-sm', $btn-font-size-sm);
+    @include print-variable('btn-padding-y-lg', $btn-padding-y-lg);
+    @include print-variable('btn-padding-x-lg', $btn-padding-x-lg);
+    @include print-variable('btn-font-size-lg', $btn-font-size-lg);
+    @include print-variable('btn-border-width', $btn-border-width);
+    @include print-variable('btn-border-radius', $btn-border-radius);
+    @include print-variable('btn-border-radius-sm', $btn-border-radius-sm);
+    @include print-variable('btn-border-radius-lg', $btn-border-radius-lg);
+
+    @include print-variable('input-padding-y', $input-padding-y);
+    @include print-variable('input-padding-x', $input-padding-x);
+    @include print-variable('input-font-size', $input-font-size);
+    @include print-variable('input-padding-y-sm', $input-padding-y-sm);
+    @include print-variable('input-padding-x-sm', $input-padding-x-sm);
+    @include print-variable('input-font-size-sm', $input-font-size-sm);
+    @include print-variable('input-padding-y-lg', $input-padding-y-lg);
+    @include print-variable('input-padding-x-lg', $input-padding-x-lg);
+    @include print-variable('input-font-size-lg', $input-font-size-lg);
+    @include print-variable('input-border-width', $input-border-width);
+    @include print-variable('input-border-radius', $input-border-radius);
+    @include print-variable('input-border-radius-sm', $input-border-radius-sm);
+    @include print-variable('input-border-radius-lg', $input-border-radius-lg);
+
     @include print-variable('number-of-color-palettes', length($o-color-palettes) - 1); // -1 since the last one is the user customized one
     @include print-variable('color-palettes-number', $o-original-color-palette-number);
     @include print-variable('has-customized-colors', $o-has-customized-colors);
@@ -72,13 +100,78 @@ $-seen-urls: ();
         }
     }
 
-    @if ($o-theme-layout == 'boxed') {
-        @include media-breakpoint-up(md) {
-            padding: 0 7.5%;
+    @if o-website-value('layout') != 'full' {
+        > main {
+            background-color: o-color('o-cc1-bg');
         }
 
-        #wrap {
-            background-color: o-color('o-cc1-bg');
+        @include media-breakpoint-up(sm) {
+            padding-right: $grid-gutter-width * 2;
+            padding-left: $grid-gutter-width * 2;
+
+            > * {
+                // When the website is visually acting like a container (eg.
+                // boxed layout), increase its maximum size to handle bigger
+                // horizontal paddings.
+                $-max-widths: ();
+                @each $key, $value in $container-max-widths {
+                    $-max-widths: map-merge($-max-widths, (
+                        #{$key}: $value + $grid-gutter-width * 2,
+                    ));
+                }
+                @include make-container(0);
+                @include make-container-max-widths($-max-widths);
+            }
+
+            > header .container {
+                max-width: 100% !important;
+            }
+
+            // Vertical alignment when top-menu has visually "no background"
+            @if o-color('menu') == o-color('body') {
+                > header {
+                    .navbar, .container {
+                        padding-left: 0;
+                        padding-right: 0;
+                    }
+                }
+            }
+        }
+
+        @if o-website-value('layout') == 'framed' {
+            @include media-breakpoint-up(md) {
+                padding-top: $grid-gutter-width;
+                padding-bottom: $grid-gutter-width * 1.5;
+            }
+        } @else if o-website-value('layout') == 'postcard' {
+            @include media-breakpoint-up(md) {
+                $-border-radius: $border-radius-lg;
+                // Don't know why (browser rounding mistake?) but the inner
+                // border radius must be 1px lower for this to be visually ok
+                // (despite the fact there is no border or any space)
+                $-inner-border-radius: $-border-radius - 0.0625rem;
+                > * {
+                    margin-bottom: $spacer * 2;
+                }
+                > header {
+                    &, &.o_header_affix {
+                        .navbar {
+                            @include border-bottom-radius($-border-radius);
+                        }
+                    }
+                }
+                > main, > footer {
+                    @include border-radius($-border-radius);
+
+                    .oe_structure > :first-child {
+                        @include border-top-radius($-inner-border-radius);
+                    }
+                }
+                > main .oe_structure > :last-child,
+                .o_footer_copyright {
+                    @include border-bottom-radius($-inner-border-radius);
+                }
+            }
         }
     }
 }
@@ -141,6 +234,7 @@ $-header-nav-link-height: $nav-link-height;
         @include o-apply-colors('copyright', $background: o-color('footer'));
     }
 }
+
 h2, h3, h4, h5, h6 {
     color: color('o-cc1-h2');
 }
@@ -625,14 +719,10 @@ $-transition-duration: 200ms;
         transition: transform $-transition-duration;
     }
 
-    .navbar-collapse {
-        @if o-website-value('header-template') != 'logo_hamburger' {
-            max-height: 70vh;
-        }
-        &.show {
-            overflow-y: auto;
-        }
+    @if o-website-value('header-template') == 'boxed' {
+        background: transparent;
     }
+
     &.o_header_is_scrolled {
         .navbar-brand {
             font-size: $o-theme-navbar-fixed-logo-height / $line-height-base;
@@ -641,13 +731,17 @@ $-transition-duration: 200ms;
                 height: $o-theme-navbar-fixed-logo-height;
             }
         }
-        @include media-breakpoint-up(md) {
-            @if (index(('menu_logo_below', 'logo_menu_below'), o-website-value('header-template'))) != null {
+        @if o-website-value('header-template') == 'vertical' {
+            .o_header_centered_logo {
+                display: none;
+            }
+            @include media-breakpoint-up(lg) {
                 .navbar-brand {
-                    font-size: 0px;
+                    font-size: 0;
                     opacity: 0;
+
                     img {
-                        height: 0px;
+                        height: 0;
                     }
                 }
             }
@@ -695,18 +789,52 @@ $-transition-duration: 200ms;
     }
 }
 
-// Header templates
+$-off-canvas-hamburger: o-website-value('hamburger-type') == 'off-canvas';
+$-hamburger-left: o-website-value('hamburger-position') == 'left';
+$-hamburger-center: o-website-value('hamburger-position') == 'center';
+$-hamburger-right: o-website-value('hamburger-position') == 'right';
+
 header {
     &#top {
         // We need this z-index for the shadow option of the header
         z-index: $zindex-modal - 20;
     }
     &:not(.o_header_no_transition) {
+        #top_menu_container {
+            transition: all $-transition-duration;
+        }
         .navbar-brand {
-            transition: font-size $-transition-duration, opacity $-transition-duration ease-out;
+            transition: margin $-transition-duration, font-size $-transition-duration, opacity $-transition-duration ease-out;
 
             img {
                 transition: height $-transition-duration;
+            }
+        }
+    }
+
+    &:not(.o_header_is_scrolled) {
+        $-is-hamburger: o-website-value('header-template') == 'hamburger';
+        @include media-breakpoint-up(md) {
+            @if $-is-hamburger {
+                #top_menu_container {
+                    padding-top: $spacer * 0.5;
+                    padding-bottom: $spacer * 0.5;
+                }
+            }
+        }
+    }
+
+    #top_menu_container {
+        flex-direction: inherit;
+    }
+    @if $-hamburger-center {
+        .collapsing, .show {
+            #top_menu {
+                @if not $-off-canvas-hamburger {
+                    padding-top: 15vh;
+                    padding-bottom: 15vh;
+                }
+                text-align: center;
             }
         }
     }
@@ -716,67 +844,258 @@ header {
         .o_navbar_toggler_container {
             flex: 0 0 0;
             min-width: 0;
+            direction: if($-hamburger-left, ltr, rtl);
         }
     }
-    @if index(('hamburger_logo', 'logo_hamburger'), o-website-value('header-template')) {
-        .navbar-brand {
-            text-align: center;
-        }
-        .navbar-brand, .logo img {
-            margin: auto;
-        }
-        .navbar-nav {
-            margin-top: $spacer / 2;
-        }
-        @if o-website-value('header-template') == 'logo_hamburger' {
-            .o_navbar_toggler_container {
-                direction: rtl;
-            }
-            &:not(.o_header_is_scrolled) .container {
-                padding-top: $spacer;
-                padding-bottom: $spacer;
-            }
-            .container {
-                transition: padding 200ms;
 
-                #top_menu.navbar-nav {
-                    height: 90vh;
-                    padding-top : 10vh;
+    nav.navbar {
+        @if o-website-value('menu-border-width') {
+            border: o-website-value('menu-border-width') o-website-value('menu-border-style') o-color('menu-border-color') !important;
+        }
+        border-radius: o-website-value('menu-border-radius') !important;
+        box-shadow: o-website-value('menu-box-shadow') !important;
+    }
+}
+
+@if $-off-canvas-hamburger {
+    #top_menu_collapse {
+
+        &.collapsing, &.show {
+            @include o-position-absolute(0, 0, 0, 0);
+            position: fixed;
+            z-index: $zindex-sticky;
+            transition: none;
+            transform: none;
+
+            &, & > .o_header_collapsed_content_wrapper {
+                // TODO improve: ugly code to reset a potential wrapper
+                display: flex !important;
+                flex-flow: if($-hamburger-left, row, row-reverse) nowrap !important;
+                align-items: stretch !important;
+                justify-content: flex-start !important;
+            }
+            > .o_header_collapsed_content_wrapper {
+                // TODO improve: ugly code to reset a potential wrapper
+                max-width: none !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+
+            .o_offcanvas_menu_backdrop {
+                @include o-position-absolute(0, 0, 0, 0);
+                opacity: .2;
+                cursor: pointer;
+            }
+
+            #top_menu {
+                flex: 0 0 auto !important;
+                overflow: auto;
+                flex-flow: column nowrap !important;
+                @if $-hamburger-center {
+                    width: 100%;
+                    max-width: none;
+                } @else {
+                    max-width: 560px;
+                    text-align: left !important;
+                }
+                min-width: 250px;
+                margin: 0 !important;
+                background-color: o-color('menu');
+                transition: transform $-transition-duration cubic-bezier(.694, .0482, .335, 1);
+
+                @if $-hamburger-center {
+                    .o_offcanvas_menu_backdrop {
+                        display: none;
+                    }
+                    .o_offcanvas_menu_toggler {
+                        max-width: 90%;
+                    }
+                }
+
+                .nav-item, .o_offcanvas_logo {
+                    padding-left: $grid-gutter-width;
+                    padding-right: $grid-gutter-width;
+                }
+                .nav-item, .dropdown-menu {
+                    text-align: inherit;
+                }
+                .nav-item, .nav-link {
+                    margin: 0 !important;
+                }
+
+                .navbar-toggler {
+                    display: block !important;
+                }
+
+                // Open all dropdowns
+                .dropdown-toggle {
+                    padding-bottom: $nav-link-padding-y*0.5;
+
+                    &:after {
+                        content: none;
+                    }
                 }
                 .dropdown-menu {
-                    text-align: center;
+                    display: block;
+                    padding-top:0;
+                    border: 0;
+                    background: inherit;
+                    color: inherit;
+                }
+                .dropdown-item {
+                    padding-left: .5em;
+                    padding-right: .5em;
                 }
             }
-        }
-    } @else if index(('logo_menu_below', 'menu_logo_below'), o-website-value('header-template')) {
-        .navbar-brand {
-            text-align: center;
-        }
-        .navbar-expand-md {
-            > .container {
-                flex-wrap: wrap;
-            }
-            .navbar-collapse {
-                flex-basis: 100%;
+
+            .o_connected_user header:not(.o_header_is_scrolled) &,
+            .o_connected_user header.o_header_affixed & {
+                padding-top: $o-navbar-height !important;
             }
         }
-        .navbar-brand, #top_menu.navbar-nav, .logo img {
-            margin: auto;
+        &.collapsing #top_menu {
+            @if $-hamburger-center {
+                transform: translateY(-100%);
+            } @else if $-hamburger-left {
+                transform: translateX(-100%);
+            } @else if $-hamburger-right {
+                transform: translateX(100%);
+            }
         }
-        .navbar-brand {
-            @include media-breakpoint-up(md) {
-                @if o-website-value('header-template') == 'menu_logo_below' {
-                    margin-top: $navbar-padding-y;
+        &.show #top_menu {
+            transform: translate(0);
+        }
+
+        .o_offcanvas_menu_backdrop {
+            @if $-hamburger-left {
+                background-image: linear-gradient(90deg, currentColor 20%, transparent);
+            } @else {
+                background-image: linear-gradient(-90deg, currentColor 20%, transparent);
+            }
+        }
+    }
+}
+
+@if o-website-value('header-template') == 'vertical' {
+    header .o_header_centered_logo {
+        order: -1;
+        width: 50%;
+        margin-top: $spacer;
+
+        @include media-breakpoint-up(lg) {
+            order: inherit;
+            width: 40%;
+            margin-bottom: $spacer;
+        }
+    }
+} @else if o-website-value('header-template') == 'sidebar' {
+    @include media-breakpoint-up(lg) {
+        #wrapwrap {
+            // Hack: padding is used by layout option (boxed, etc) so use
+            // border here to be able to combine the effect.
+            @if $-hamburger-right {
+                border-right: o-website-value('sidebar-width') solid transparent;
+            } @else {
+                border-left: o-website-value('sidebar-width') solid transparent;
+            }
+
+            > header {
+                @if $-hamburger-right {
+                    @include o-position-absolute(0, 0, 0, auto);
                 } @else {
-                    margin-bottom: $navbar-padding-y;
+                    @include o-position-absolute(0, auto, 0, 0);
+                }
+                position: fixed;
+                z-index: $zindex-fixed;
+                display: flex;
+                width: o-website-value('sidebar-width');
+                transform: none !important;
+
+                .navbar {
+                    width: 100%;
+                    align-items: start;
+                    padding: $spacer;
+
+                    .navbar-brand {
+                        max-width: 100%;
+                        padding: 0 0 $spacer 0;
+                    }
+                    #top_menu_container {
+                        flex-direction: column;
+                        align-items: start;
+                        padding: 0;
+                    }
+                    .navbar-nav {
+                        flex-direction: column;
+                    }
+                    .nav-link,
+                    .dropdown-item {
+                        white-space: initial;
+                    }
+                    .dropdown-menu {
+                        position: relative;
+                    }
                 }
             }
         }
-        @if o-website-value('header-template') == 'menu_logo_below' {
-            .navbar-collapse {
-                @include media-breakpoint-up(md) {
-                    order: -1;
+        body.o_connected_user #wrapwrap > header {
+            top: $o-navbar-height;
+        }
+    }
+} @else if o-website-value('header-template') == 'boxed' {
+    #wrapwrap:not(.o_header_overlay) .o_header_boxed_background {
+        @include o-apply-colors('header-boxed');
+    }
+} @else if o-website-value('header-template') == 'centered_logo' {
+    header .o_header_centered_logo {
+        @include media-breakpoint-up(lg) {
+            width: 50%;
+        }
+    }
+} @else if o-website-value('header-template') == 'hamburger-full' {
+    @if not $-off-canvas-hamburger {
+        @include media-breakpoint-up(md) {
+            #wrapwrap {
+                $o-hamburger-full-navbar-height: $o-theme-navbar-logo-height + ($navbar-padding-y * 2);
+                > header {
+                    .navbar-collapse {
+                        > .container {
+                            height: calc(100vh - #{$o-navbar-height} - #{$o-hamburger-full-navbar-height});
+                            transition: height .3s ease;
+                        }
+                        .nav-link {
+                            padding-right: $nav-link-padding-x;
+                            padding-left: $nav-link-padding-x;
+                        }
+                        .dropdown-menu {
+                            position: absolute;
+                        }
+                    }
+                    &:not(.o_header_affixed) {
+                        position: sticky;
+                        top: 0;
+                        right: 0;
+                        bottom: auto;
+                        left: 0;
+                        z-index: $zindex-fixed;
+                    }
+                    &.o_header_affixed {
+                        transform: none !important;
+                    }
                 }
+                > main {
+                    > :first-child:not(#wrap), #wrap > :first-child {
+                        &::before {
+                            content: "";
+                            display: block;
+                            width: 100%;
+                            margin-top: $o-hamburger-full-navbar-height;
+                        }
+                    }
+                }
+            }
+            #oe_main_menu_navbar ~ #wrapwrap > header {
+                top: $o-navbar-height;
             }
         }
     }
@@ -836,24 +1155,50 @@ header {
     }
 }
 
-// Footer Templates
-#footer {
-    @if o-website-value('footer-template') != 'products_contacts_about_us' {
-        @if o-website-value('footer-template') == 'logo_about_us_below' {
-            .o_footer_logo {
-                margin-top: $spacer;
-                margin-bottom: $spacer;
+// Navbar Links Styles
+@if index(('block', 'border-bottom'), o-website-value('header-links-style')) {
+    @include media-breakpoint-up(md) {
+        .navbar {
+            padding-top: 0;
+            padding-bottom: 0;
+        }
+    }
+}
+.navbar-nav {
+    .nav-link {
+        @if o-website-value('header-links-style') == 'outline' {
+            // Need to force the padding in this case so that it stays in mobile
+            padding-right: $navbar-nav-link-padding-x;
+            padding-left: $navbar-nav-link-padding-x;
+            border: $border-width solid transparent;
+            @include border-radius($nav-pills-border-radius);
+        } @else if o-website-value('header-links-style') == 'block' {
+            // There is no way to control navbar links vertical padding in BS4
+            // independently from nav ones, just double them here instead
+            padding-top: $nav-link-padding-y * 2;
+            padding-bottom: $nav-link-padding-y * 2;
+            @include border-radius(0);
+        } @else if o-website-value('header-links-style') == 'border-bottom' {
+            // There is no way to control navbar links vertical padding in BS4
+            // independently from nav ones, just double them here instead
+            padding-top: ($nav-link-padding-y * 2);
+            padding-bottom: ($nav-link-padding-y * 2);
+            border-bottom: $nav-link-padding-y solid transparent;
+
+            // Replace horizontal paddings by margins (do this with an extra
+            // class to override .navbar-expand-* paddings priority).
+            .navbar & {
+                padding-left: 0;
+                padding-right: 0;
+                margin: 0 $navbar-nav-link-padding-x;
             }
-            .o_footer_about_us {
-                margin-bottom: $spacer;
-            }
-        } @else if o-website-value('footer-template') == 'links_address_logo' {
-            &, p {
-                text-align: center;
-            }
-            &, ul, .o_footer_address, .o_footer_logo {
-                padding-top: $spacer;
-            }
+        }
+    }
+
+    @if index(('outline', 'border-bottom'), o-website-value('header-links-style')) {
+        .nav-link.active,
+        .show > .nav-link {
+            border-color: currentColor;
         }
     }
 }
@@ -886,6 +1231,32 @@ header {
     margin-right: 0.2em;
     border-radius: $rounded-pill;
     vertical-align: top;
+}
+
+// Footer scrolltop button
+@if o-website-value('footer-scrolltop') {
+    #o_footer_scrolltop {
+        $-footer-color: o-color('footer');
+        $-copyright-color: o-color('copyright');
+        $-copyright-color: mix(rgba($-copyright-color, 1.0), $-footer-color, percentage(alpha($-copyright-color)));
+
+        box-sizing: content-box;
+        width: 3rem;
+        height: 3rem;
+        border: 0;
+        padding: 0;
+        @include o-apply-colors('footer', $with-extras: false, $background: $-footer-color);
+        text-decoration: none;
+
+        @if $-footer-color == $-copyright-color {
+            color: rgba(color-yiq($-footer-color), 0.5);
+        }
+
+        @include hover-focus {
+            @include o-apply-colors($-copyright-color, $with-extras: false, $background: $-footer-color);
+            text-decoration: none;
+        }
+    }
 }
 
 // Figure with special style

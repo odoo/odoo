@@ -6,30 +6,23 @@
             <attribute name="t-attf-class" add="#{'o_portal' if is_portal else ''}" separator=" "/>
         </xpath>
         <xpath expr="//div[@id='wrapwrap']/header/img" position="replace">
-            <nav class="navbar navbar-expand-md navbar-light bg-light">
+            <nav class="navbar navbar-expand navbar-light bg-light">
                 <div class="container">
                     <a href="/" class="navbar-brand logo">
                         <img t-att-src="'/logo.png?company=%s' % res_company.id" t-att-alt="'Logo of %s' % res_company.name" t-att-title="res_company.name"/>
                     </a>
-                    <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#top_menu_collapse">
-                        <span class="navbar-toggler-icon o_not_editable"/>
-                    </button>
-                    <div class="collapse navbar-collapse" id="top_menu_collapse">
-                        <!-- FIXME We want menu to open to the right by default (except cases handled in JS) -->
-                        <ul class="nav navbar-nav ml-auto text-right" id="top_menu">
-                            <li class="nav-item divider" t-ignore="true" t-if="not user_id._is_public()"/>
-                            <li class="nav-item dropdown" t-ignore="true" t-if="not user_id._is_public()">
-                                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
-                                    <b>
-                                        <span t-esc="user_id.name[:23] + '...' if user_id.name and len(user_id.name) &gt; 25 else user_id.name"/>
-                                    </b>
-                                </a>
-                                <div class="dropdown-menu js_usermenu" role="menu">
-                                    <a id="o_logout" class="dropdown-item" t-attf-href="/web/session/logout?redirect=/" role="menuitem">Logout</a>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
+                    <ul id="top_menu" class="nav navbar-nav ml-auto">
+                        <t t-call="portal.placeholder_user_sign_in">
+                            <t t-set="_item_class" t-value="'nav-item'"/>
+                            <t t-set="_link_class" t-value="'nav-link'"/>
+                        </t>
+                        <t t-call="portal.user_dropdown">
+                            <t t-set="_user_name" t-value="true"/>
+                            <t t-set="_item_class" t-value="'nav-item dropdown'"/>
+                            <t t-set="_link_class" t-value="'nav-link'"/>
+                            <t t-set="_dropdown_menu_class" t-value="'dropdown-menu-right'"/>
+                        </t>
+                    </ul>
                 </div>
             </nav>
         </xpath>
@@ -45,14 +38,16 @@
     <!-- Added by another template so that it can be disabled if needed -->
     <template id="footer_language_selector" inherit_id="portal.frontend_layout" name="Footer Language Selector">
         <xpath expr="//*[hasclass('o_footer_copyright_name')]" position="after">
-            <t id="language_selector_call" t-call="portal.language_selector"/>
+            <t id="language_selector_call" t-call="portal.language_selector">
+                <t t-set="_div_classes" t-value="(_div_classes or '') + ' dropup'"/>
+            </t>
         </xpath>
     </template>
 
     <template id="language_selector" name="Language Selector">
         <t t-set="active_lang" t-value="list(filter(lambda lg : lg[0] == lang, languages))[0]"/>
         <t t-set="language_selector_visible" t-value="len(languages) &gt; 1"/>
-        <div class="js_language_selector dropup" t-if="language_selector_visible">
+        <div t-attf-class="js_language_selector #{_div_classes}" t-if="language_selector_visible">
             <button class="btn btn-sm btn-outline-secondary border-0 dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                 <span t-if="not no_text"
                         class="align-middle"
@@ -69,6 +64,21 @@
                 </t>
             </div>
         </div>
+    </template>
+
+    <template id="user_dropdown" name="Portal User Dropdown">
+        <t t-set="is_connected" t-value="not user_id._is_public()"/>
+        <li t-if="is_connected" t-attf-class="#{_item_class}">
+            <a href="#" role="button" data-toggle="dropdown" t-attf-class="dropdown-toggle #{_link_class}">
+                <img t-if="_avatar" t-att-src="image_data_uri(user_id.image_256)" t-attf-class="rounded-circle #{_avatar_class}" width="24" height="24" alt="" loading="eager"/>
+                <i t-if="_icon" t-attf-class="fa fa-1x fa-fw fa-user-circle-o #{_icon_class}"/>
+                <span t-if="_user_name" t-attf-class="#{_user_name_class}" t-esc="user_id.name[:23] + '...' if user_id.name and len(user_id.name) &gt; 25 else user_id.name"/>
+            </a>
+            <div t-attf-class="dropdown-menu js_usermenu #{_dropdown_menu_class}" role="menu">
+                <div id="o_logout_divider" class="dropdown-divider"/>
+                <a t-attf-href="/web/session/logout?redirect=/" role="menuitem" id="o_logout" class="dropdown-item">Logout</a>
+            </div>
+        </li>
     </template>
 
     <template id="portal_breadcrumbs" name="Portal Breadcrumbs">
@@ -136,13 +146,12 @@
         </t>
     </template>
 
-    <template id="portal_show_sign_in" inherit_id="portal.frontend_layout" name="Show Sign In">
-        <xpath expr="//ul[@id='top_menu']" position="inside">
-            <li class="nav-item divider" groups="base.group_public"/>
-            <li groups="base.group_public" class="nav-item">
-                <a t-attf-href="/web/login" class="nav-link">
-                    <b>Sign in</b>
-                </a>
+    <template id="placeholder_user_sign_in" name="User Sign In Placeholder"/>
+
+    <template id="user_sign_in" name="User Sign In" inherit_id="portal.placeholder_user_sign_in">
+        <xpath expr="." position="inside">
+            <li groups="base.group_public" t-attf-class="#{_item_class}">
+                <a t-attf-href="/web/login" t-attf-class="#{_link_class}">Sign in</a>
             </li>
         </xpath>
     </template>
@@ -525,8 +534,8 @@
         </ul>
     </template>
 
-    <template id="my_account_link" name="Link to frontend portal" inherit_id="portal.frontend_layout">
-        <xpath expr="//a[@id='o_logout']" position="before">
+    <template id="my_account_link" name="Link to frontend portal" inherit_id="portal.user_dropdown">
+        <xpath expr="//*[@id='o_logout_divider']" position="before">
             <a href="/my/home" role="menuitem" class="dropdown-item">My Account</a>
         </xpath>
     </template>
