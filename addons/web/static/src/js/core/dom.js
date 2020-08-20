@@ -470,6 +470,9 @@ var dom = {
             sizeClass: 'SM',
         }, options || {});
 
+        var autoMarginLeftRegex = /\bm[lx]?(?:-(?:sm|md|lg|xl))?-auto\b/;
+        var autoMarginRightRegex = /\bm[rx]?(?:-(?:sm|md|lg|xl))?-auto\b/;
+
         var $extraItemsToggle = null;
 
         var debouncedAdapt = _.debounce(_adapt, 250);
@@ -514,19 +517,17 @@ var dom = {
             if (options.maxWidth) {
                 maxWidth = options.maxWidth();
             } else {
-                var mLeft = $el.is('.ml-auto, .mx-auto, .m-auto');
-                var mRight = $el.is('.mr-auto, .mx-auto, .m-auto');
-                maxWidth = computeFloatOuterWidthWithMargins($el[0], mLeft, mRight);
+                maxWidth = computeFloatOuterWidthWithMargins($el[0], true, true, true);
                 var style = window.getComputedStyle($el[0]);
                 maxWidth -= (parseFloat(style.paddingLeft) + parseFloat(style.paddingRight) + parseFloat(style.borderLeftWidth) + parseFloat(style.borderRightWidth));
                 maxWidth -= _.reduce($unfoldableItems, function (sum, el) {
-                    return sum + computeFloatOuterWidthWithMargins(el);
+                    return sum + computeFloatOuterWidthWithMargins(el, true, true, false);
                 }, 0);
             }
 
             var nbItems = $items.length;
             var menuItemsWidth = _.reduce($items, function (sum, el) {
-                return sum + computeFloatOuterWidthWithMargins(el);
+                return sum + computeFloatOuterWidthWithMargins(el, true, true, false);
             }, 0);
 
             if (maxWidth - menuItemsWidth >= -0.001) {
@@ -540,9 +541,9 @@ var dom = {
                 .append($dropdownMenu);
             $extraItemsToggle.insertAfter($items.last());
 
-            menuItemsWidth += computeFloatOuterWidthWithMargins($extraItemsToggle[0]);
+            menuItemsWidth += computeFloatOuterWidthWithMargins($extraItemsToggle[0], true, true, false);
             do {
-                menuItemsWidth -= computeFloatOuterWidthWithMargins($items.eq(--nbItems)[0]);
+                menuItemsWidth -= computeFloatOuterWidthWithMargins($items.eq(--nbItems)[0], true, true, false);
             } while (!(maxWidth - menuItemsWidth >= -0.001) && (nbItems > 0));
 
             var $extraItems = $items.slice(nbItems).detach();
@@ -552,17 +553,18 @@ var dom = {
             $extraItemsToggle.find('.nav-link').toggleClass('active', $extraItems.children().hasClass('active'));
         }
 
-        function computeFloatOuterWidthWithMargins(el, mLeft, mRight) {
+        function computeFloatOuterWidthWithMargins(el, mLeft, mRight, considerAutoMargins) {
             var rect = el.getBoundingClientRect();
             var style = window.getComputedStyle(el);
             var outerWidth = rect.right - rect.left;
-            if (mLeft !== false) {
+            if (mLeft !== false && (considerAutoMargins || !autoMarginLeftRegex.test(el.getAttribute('class')))) {
                 outerWidth += parseFloat(style.marginLeft);
             }
-            if (mRight !== false) {
+            if (mRight !== false && (considerAutoMargins || !autoMarginRightRegex.test(el.getAttribute('class')))) {
                 outerWidth += parseFloat(style.marginRight);
             }
-            return outerWidth;
+            // Would be NaN for invisible elements for example
+            return isNaN(outerWidth) ? 0 : outerWidth;
         }
     },
     /**
