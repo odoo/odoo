@@ -819,6 +819,14 @@ header {
             direction: if($-hamburger-left, ltr, rtl);
         }
     }
+
+    nav.navbar {
+        @if o-website-value('menu-border-width') {
+            border: o-website-value('menu-border-width') o-website-value('menu-border-style') o-color('menu-border-color') !important;
+        }
+        border-radius: o-website-value('menu-border-radius') !important;
+        box-shadow: o-website-value('menu-box-shadow') !important;
+    }
 }
 
 @if $-off-canvas-hamburger {

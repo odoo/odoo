@@ -1766,7 +1766,7 @@ options.registry.collapse = options.Class.extend({
     },
 });
 
-options.registry.Header = options.Class.extend({
+options.registry.HeaderLogo = options.Class.extend({
 
     //--------------------------------------------------------------------------
     // Private
@@ -1785,6 +1785,14 @@ options.registry.Header = options.Class.extend({
         }
         return this._super(...arguments);
     },
+});
+
+options.registry.HeaderTemplate = options.Class.extend({
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
     /**
      * @override
      */
@@ -2141,12 +2149,12 @@ options.registry.Box = options.Class.extend({
      */
     setShadow(previewMode, widgetValue, params) {
         this.$target.toggleClass(params.shadowClass, !!widgetValue);
-        if (widgetValue) {
-            const inset = widgetValue === 'inset' ? widgetValue : '';
-            const values = this.$target.css('box-shadow').replace('inset', '') + ` ${inset}`;
-            this.$target[0].style.setProperty('box-shadow', values, 'important');
-        } else {
-            this.$target.css('box-shadow', '');
+        const defaultShadow = this._getDefaultShadow(widgetValue, params.shadowClass);
+        console.log(defaultShadow);
+        this.$target[0].style.setProperty('box-shadow', defaultShadow, 'important');
+        if (widgetValue === 'outset') {
+            // In this case, the shadowClass is enough
+            this.$target[0].style.setProperty('box-shadow', '');
         }
     },
 
@@ -2159,7 +2167,8 @@ options.registry.Box = options.Class.extend({
      */
     _computeWidgetState(methodName, params) {
         if (methodName === 'setShadow') {
-            if (!this.$target[0].classList.contains(params.shadowClass)) {
+            const shadowValue = this.$target.css('box-shadow');
+            if (!shadowValue || shadowValue === 'none') {
                 return '';
             }
             return this.$target.css('box-shadow').includes('inset') ? 'inset' : 'outset';
@@ -2172,6 +2181,66 @@ options.registry.Box = options.Class.extend({
     async _computeWidgetVisibility(widgetName, params) {
         if (widgetName === 'fake_inset_shadow_opt') {
             return false;
+        }
+        return this._super(...arguments);
+    },
+    /**
+     * @private
+     * @param {string} type
+     * @param {string} shadowClass
+     * @returns {string}
+     */
+    _getDefaultShadow(type, shadowClass) {
+        const el = document.createElement('div');
+        if (type) {
+            el.classList.add(shadowClass);
+        }
+        document.body.appendChild(el);
+        switch (type) {
+            case 'outset': {
+                return $(el).css('box-shadow');
+            }
+            case 'inset': {
+                return $(el).css('box-shadow') + ' inset';
+            }
+        }
+        el.remove();
+        return '';
+    }
+});
+
+options.registry.HeaderBox = options.registry.Box.extend({
+
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    async selectStyle(previewMode, widgetValue, params) {
+        if ((params.variable || params.color)
+                && ['border-width', 'border-style', 'border-color', 'border-radius', 'box-shadow'].includes(params.cssProperty)) {
+            if (previewMode) {
+                return;
+            }
+            if (params.cssProperty === 'border-color') {
+                return this.customizeWebsiteColor(previewMode, widgetValue, params);
+            }
+            return this.customizeWebsiteVariable(previewMode, widgetValue, params);
+        }
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    async setShadow(previewMode, widgetValue, params) {
+        if (params.variable) {
+            if (previewMode) {
+                return;
+            }
+            const defaultShadow = this._getDefaultShadow(widgetValue, params.shadowClass);
+            return this.customizeWebsiteVariable(previewMode, defaultShadow || 'none', params);
         }
         return this._super(...arguments);
     },
