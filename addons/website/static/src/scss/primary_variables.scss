@@ -6,6 +6,7 @@
 $o-base-color-palette: map-merge($o-base-color-palette, (
     'body': $o-portal-default-body-bg,
     'menu': 1, // o_cc1
+    'menu-border-color': null, // Default to classes used on the template
     'header-boxed': '200',
     'footer': 5, // o_cc5
     'copyright': 'black-15',
@@ -267,6 +268,10 @@ $o-base-website-values-palette: (
     'logo-height': null, // Default to navbar height (see portal)
     'hamburger-type': 'default', // 'default' / 'off-canvas'
     'hamburger-position': 'left', // 'left' / 'center' / 'right'
+    'menu-border-width': null, // Default to classes used on the template
+    'menu-border-style': solid, // Default to classes used on the template
+    'menu-border-radius': null, // Default to classes used on the template
+    'menu-box-shadow': null, // Default to classes used on the template
     'sidebar-width': 18.75rem, // 300px
 
     'footer-template': 'default',
