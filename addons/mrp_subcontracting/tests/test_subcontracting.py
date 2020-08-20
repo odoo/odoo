@@ -224,9 +224,8 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
     def test_flow_4(self):
         """ Tick "Manufacture" and "MTO" on the components and trigger the
         creation of the subcontracting manufacturing order through a receipt
-        picking. Checks that the delivery to the subcontractor is not created
-        at the receipt creation. Then run the scheduler and check that
-        the delivery and MO exist.
+        picking. Checks that the delivery and MO for its components are
+        automatically created.
         """
         # Tick "manufacture" and MTO on self.comp2
         mto_route = self.env.ref('stock.route_warehouse0_mto')
@@ -263,15 +262,6 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
 
         picking_delivery = self.env['stock.picking'].search([('origin', 'ilike', '%' + picking_receipt.name + '%')])
         self.assertFalse(picking_delivery)
-
-        move = self.env['stock.move'].search([
-            ('product_id', '=', self.comp2.id),
-            ('location_id', '=', warehouse.lot_stock_id.id),
-            ('location_dest_id', '=', self.env.company.subcontracting_location_id.id)
-        ])
-        self.assertFalse(move)
-
-        self.env['procurement.group'].run_scheduler(company_id=self.env.company.id)
 
         move = self.env['stock.move'].search([
             ('product_id', '=', self.comp2.id),

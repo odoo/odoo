@@ -346,3 +346,161 @@ class TestProcurement(TestMrpCommon):
 
         move_dest._action_assign()
         self.assertEqual(move_dest.reserved_availability, 10.0)
+
+    def test_auto_assign(self):
+        """ When auto reordering rule exists, check for when:
+        1. There is not enough of a manufactured product to assign (reserve for) a picking => auto-create 1st MO
+        2. There is not enough of a manufactured component to assign the created MO => auto-create 2nd MO
+        3. Add an extra manufactured component (not in stock) to 1st MO => auto-create 3rd MO
+        4. When 2nd MO is completed => auto-assign to 1st MO
+        5. When 1st MO is completed => auto-assign to picking """
+
+        self.warehouse = self.env.ref('stock.warehouse0')
+        route_manufacture = self.warehouse.manufacture_pull_id.route_id
+
+        product_1 = self.env['product.product'].create({
+            'name': 'Cake',
+            'type': 'product',
+            'route_ids': [(6, 0, [route_manufacture.id])]
+        })
+        product_2 = self.env['product.product'].create({
+            'name': 'Cake Mix',
+            'type': 'product',
+            'route_ids': [(6, 0, [route_manufacture.id])]
+        })
+        product_3 = self.env['product.product'].create({
+            'name': 'Flour',
+            'type': 'consu',
+        })
+
+        self.env['mrp.bom'].create({
+            'product_id': product_1.id,
+            'product_tmpl_id': product_1.product_tmpl_id.id,
+            'product_uom_id': self.uom_unit.id,
+            'product_qty': 1,
+            'consumption': 'flexible',
+            'type': 'normal',
+            'bom_line_ids': [
+                (0, 0, {'product_id': product_2.id, 'product_qty': 1}),
+            ]})
+
+        self.env['mrp.bom'].create({
+            'product_id': product_2.id,
+            'product_tmpl_id': product_2.product_tmpl_id.id,
+            'product_uom_id': self.uom_unit.id,
+            'product_qty': 1,
+            'type': 'normal',
+            'bom_line_ids': [
+                (0, 0, {'product_id': product_3.id, 'product_qty': 1}),
+            ]})
+
+        # extra manufactured component added to 1st MO after it is already confirmed
+        product_4 = self.env['product.product'].create({
+            'name': 'Flavor Enchancer',
+            'type': 'product',
+            'route_ids': [(6, 0, [route_manufacture.id])]
+        })
+        product_5 = self.env['product.product'].create({
+            'name': 'MSG',
+            'type': 'consu',
+        })
+
+        self.env['mrp.bom'].create({
+            'product_id': product_4.id,
+            'product_tmpl_id': product_4.product_tmpl_id.id,
+            'product_uom_id': self.uom_unit.id,
+            'product_qty': 1,
+            'type': 'normal',
+            'bom_line_ids': [
+                (0, 0, {'product_id': product_5.id, 'product_qty': 1}),
+            ]})
+
+        # setup auto orderpoints (reordering rules)
+        self.env['stock.warehouse.orderpoint'].create({
+            'name': 'Cake RR',
+            'location_id': self.warehouse.lot_stock_id.id,
+            'product_id': product_1.id,
+            'product_min_qty': 0,
+            'product_max_qty': 5,
+        })
+
+        self.env['stock.warehouse.orderpoint'].create({
+            'name': 'Cake Mix RR',
+            'location_id': self.warehouse.lot_stock_id.id,
+            'product_id': product_2.id,
+            'product_min_qty': 0,
+            'product_max_qty': 5,
+        })
+
+        self.env['stock.warehouse.orderpoint'].create({
+            'name': 'Flavor Enchancer RR',
+            'location_id': self.warehouse.lot_stock_id.id,
+            'product_id': product_4.id,
+            'product_min_qty': 0,
+            'product_max_qty': 5,
+        })
+
+        # create picking output to trigger creating MO for reordering product_1
+        pick_output = self.env['stock.picking'].create({
+            'name': 'Cake Delivery Order',
+            'picking_type_id': self.ref('stock.picking_type_out'),
+            'location_id': self.warehouse.lot_stock_id.id,
+            'location_dest_id': self.ref('stock.stock_location_customers'),
+            'move_lines': [(0, 0, {
+                'name': '/',
+                'product_id': product_1.id,
+                'product_uom': product_1.uom_id.id,
+                'product_uom_qty': 10.00,
+                'procure_method': 'make_to_stock',
+            })],
+        })
+        pick_output.action_confirm()  # should trigger orderpoint to create and confirm 1st MO
+        pick_output.action_assign()
+
+        mo = self.env['mrp.production'].search([
+            ('product_id', '=', product_1.id),
+            ('state', '=', 'confirmed')
+        ])
+
+        self.assertEqual(len(mo), 1, "Manufacture order was not automatically created")
+        mo.action_assign()
+        self.assertEqual(mo.move_raw_ids.reserved_availability, 0, "No components should be reserved yet")
+        self.assertEqual(mo.product_qty, 15, "Quantity to produce should be picking demand + reordering rule max qty")
+
+        # 2nd MO for product_2 should have been created and confirmed when 1st MO for product_1 was confirmed
+        mo2 = self.env['mrp.production'].search([
+            ('product_id', '=', product_2.id),
+            ('state', '=', 'confirmed')
+        ])
+
+        self.assertEqual(len(mo2), 1, 'Second manufacture order was not created')
+        self.assertEqual(mo2.product_qty, 20, "Quantity to produce should be MO's 'to consume' qty + reordering rule max qty")
+        mo2_form = Form(mo2)
+        mo2_form.qty_producing = 20
+        mo2 = mo2_form.save()
+        mo2.button_mark_done()
+
+        self.assertEqual(mo.move_raw_ids.reserved_availability, 15, "Components should have been auto-reserved")
+
+        # add new component to 1st MO
+        mo_form = Form(mo)
+        with mo_form.move_raw_ids.new() as line:
+            line.product_id = product_4
+            line.product_uom_qty = 1
+        mo_form.save()  # should trigger orderpoint to create and confirm 3rd MO
+
+        mo3 = self.env['mrp.production'].search([
+            ('product_id', '=', product_4.id),
+            ('state', '=', 'confirmed')
+        ])
+
+        self.assertEqual(len(mo3), 1, 'Third manufacture order for added component was not created')
+        self.assertEqual(mo3.product_qty, 6, "Quantity to produce should be 1 + reordering rule max qty")
+
+        mo_form = Form(mo)
+        mo.move_raw_ids.quantity_done = 15
+        mo_form.qty_producing = 15
+        mo = mo_form.save()
+        mo.button_mark_done()
+
+        self.assertEqual(pick_output.move_ids_without_package.reserved_availability, 10, "Completed products should have been auto-reserved in picking")

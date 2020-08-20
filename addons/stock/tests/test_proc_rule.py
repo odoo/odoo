@@ -149,11 +149,17 @@ class TestProcRule(TransactionCase):
         self.assertEqual(receipt_move.product_uom_qty, 17.0)
 
     def test_reordering_rule_2(self):
-        """Test when not enough product to assign picking, automatically run
-        reordering rule.
+        """Test when there is not enough product to assign a picking => automatically run
+        reordering rule (RR). Add extra product to already confirmed picking => automatically
+        run another RR
         """
         self.productA = self.env['product.product'].create({
             'name': 'Desk Combination',
+            'type': 'product',
+        })
+
+        self.productB = self.env['product.product'].create({
+            'name': 'Desk Decoration',
             'type': 'product',
         })
 
@@ -164,6 +170,14 @@ class TestProcRule(TransactionCase):
         orderpoint_form.product_min_qty = 0.0
         orderpoint_form.product_max_qty = 5.0
         orderpoint = orderpoint_form.save()
+
+        self.env['stock.warehouse.orderpoint'].create({
+            'name': 'ProductB RR',
+            'location_id': warehouse.lot_stock_id.id,
+            'product_id': self.productB.id,
+            'product_min_qty': 0,
+            'product_max_qty': 5,
+        })
 
         self.env['stock.rule'].create({
             'name': 'Rule Supplier',
@@ -197,9 +211,30 @@ class TestProcRule(TransactionCase):
             ('product_id', '=', self.productA.id),
             ('location_id', '=', self.env.ref('stock.stock_location_suppliers').id)
         ])
+
         self.assertTrue(receipt_move)
         self.assertEqual(receipt_move.date.date(), date.today())
         self.assertEqual(receipt_move.product_uom_qty, 17.0)
+
+        delivery_picking.write({'move_lines': [(0, 0, {
+            'name': 'Extra Move',
+            'product_id': self.productB.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 5.0,
+            'location_id': warehouse.lot_stock_id.id,
+            'location_dest_id': self.ref('stock.stock_location_customers'),
+            'picking_id': delivery_picking.id,
+            'additional': True
+        })]})
+
+        receipt_move2 = self.env['stock.move'].search([
+            ('product_id', '=', self.productB.id),
+            ('location_id', '=', self.env.ref('stock.stock_location_suppliers').id)
+        ])
+
+        self.assertTrue(receipt_move2)
+        self.assertEqual(receipt_move2.date.date(), date.today())
+        self.assertEqual(receipt_move2.product_uom_qty, 10.0)
 
 
 class TestProcRuleLoad(TransactionCase):
