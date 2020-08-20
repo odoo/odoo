@@ -75,9 +75,9 @@
                         }"
                         composerLocalId="composer.localId"
                         hasMentionSuggestionsBelowPosition="props.hasMentionSuggestionsBelowPosition"
-                        hasSendOnEnterEnabled="props.hasTextInputSendOnEnterEnabled"
                         isCompact="props.isCompact"
-                        t-on-o-keydown-enter="_onTextInputKeydownEnter"
+                        sendShortcuts="props.textInputSendShortcuts"
+                        t-on-o-composer-text-input-send-shortcut="_onComposerTextInputSendShortcut"
                         t-on-paste="_onPasteTextInput"
                         t-ref="textInput"
                     />

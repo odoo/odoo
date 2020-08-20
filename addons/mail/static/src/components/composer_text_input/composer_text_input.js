@@ -241,18 +241,41 @@ class ComposerTextInput extends Component {
     _onKeydownTextareaEnter(ev) {
         if (this.composer.hasSuggestedPartners) {
             ev.preventDefault();
-        } else {
-            if (!this.props.hasSendOnEnterEnabled) {
-                return;
-            }
-            if (ev.shiftKey) {
-                return;
-            }
-            if (this.env.messaging.device.isMobile) {
-                return;
-            }
-            this.trigger('o-keydown-enter');
+            return;
+        }
+        if (
+            this.props.sendShortcuts.includes('ctrl-enter') &&
+            !ev.altKey &&
+            ev.ctrlKey &&
+            !ev.metaKey &&
+            !ev.shiftKey
+        ) {
+            this.trigger('o-composer-text-input-send-shortcut');
             ev.preventDefault();
+            return;
+        }
+        if (
+            this.props.sendShortcuts.includes('enter') &&
+            !ev.altKey &&
+            !ev.ctrlKey &&
+            !ev.metaKey &&
+            !ev.shiftKey &&
+            !this.env.messaging.device.isMobile
+        ) {
+            this.trigger('o-composer-text-input-send-shortcut');
+            ev.preventDefault();
+            return;
+        }
+        if (
+            this.props.sendShortcuts.includes('meta-enter') &&
+            !ev.altKey &&
+            !ev.ctrlKey &&
+            ev.metaKey &&
+            !ev.shiftKey
+        ) {
+            this.trigger('o-composer-text-input-send-shortcut');
+            ev.preventDefault();
+            return;
         }
     }
 
@@ -341,13 +364,27 @@ Object.assign(ComposerTextInput, {
     components,
     defaultProps: {
         hasMentionSuggestionsBelowPosition: false,
-        hasSendOnEnterEnabled: true,
+        sendShortcuts: [],
     },
     props: {
         composerLocalId: String,
         hasMentionSuggestionsBelowPosition: Boolean,
-        hasSendOnEnterEnabled: Boolean,
         isCompact: Boolean,
+        /**
+         * Keyboard shortcuts from text input to send message.
+         */
+        sendShortcuts: {
+            type: Array,
+            element: String,
+            validate: prop => {
+                for (const shortcut of prop) {
+                    if (!['ctrl-enter', 'enter', 'meta-enter'].includes(shortcut)) {
+                        return false;
+                    }
+                }
+                return true;
+            },
+        },
     },
     template: 'mail.ComposerTextInput',
 });

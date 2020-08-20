@@ -590,6 +590,116 @@ QUnit.test('composer: paste attachments', async function (assert) {
     );
 });
 
+QUnit.test('send message when enter is pressed while holding ctrl key (this shortcut is available)', async function (assert) {
+    // Note that test doesn't assert ENTER makes no newline, because this
+    // default browser cannot be simulated with just dispatching
+    // programmatically crafted events...
+    assert.expect(5);
+
+    this.data['mail.channel'].records.push({ id: 20 });
+    await this.start({
+        async mockRPC(route, args) {
+            if (args.method === 'message_post') {
+                assert.step('message_post');
+            }
+            return this._super(...arguments);
+        },
+    });
+    const thread = this.env.models['mail.thread'].find(thread =>
+        thread.id === 20 &&
+        thread.model === 'mail.channel'
+    );
+    await this.createComposerComponent(thread.composer, {
+        textInputSendShortcuts: ['ctrl-enter'],
+    });
+    // Type message
+    document.querySelector(`.o_ComposerTextInput_textarea`).focus();
+    document.execCommand('insertText', false, "test message");
+    assert.strictEqual(
+        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        "test message",
+        "should have inserted text content in editable"
+    );
+
+    await afterNextRender(() => {
+        const enterEvent = new window.KeyboardEvent('keydown', { key: 'Enter' });
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(enterEvent);
+    });
+    assert.strictEqual(
+        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        "test message",
+        "should have inserted text content in editable as message has not been posted"
+    );
+
+    // Send message with ctrl+enter
+    await afterNextRender(() =>
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keydown', { ctrlKey: true, key: 'Enter' }))
+    );
+    assert.verifySteps(['message_post']);
+    assert.strictEqual(
+        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        "",
+        "should have no content in composer input as message has been posted"
+    );
+});
+
+QUnit.test('send message when enter is pressed while holding meta key (this shortcut is available)', async function (assert) {
+    // Note that test doesn't assert ENTER makes no newline, because this
+    // default browser cannot be simulated with just dispatching
+    // programmatically crafted events...
+    assert.expect(5);
+
+    this.data['mail.channel'].records.push({ id: 20 });
+    await this.start({
+        async mockRPC(route, args) {
+            if (args.method === 'message_post') {
+                assert.step('message_post');
+            }
+            return this._super(...arguments);
+        },
+    });
+    const thread = this.env.models['mail.thread'].find(thread =>
+        thread.id === 20 &&
+        thread.model === 'mail.channel'
+    );
+    await this.createComposerComponent(thread.composer, {
+        textInputSendShortcuts: ['meta-enter'],
+    });
+    // Type message
+    document.querySelector(`.o_ComposerTextInput_textarea`).focus();
+    document.execCommand('insertText', false, "test message");
+    assert.strictEqual(
+        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        "test message",
+        "should have inserted text content in editable"
+    );
+
+    await afterNextRender(() => {
+        const enterEvent = new window.KeyboardEvent('keydown', { key: 'Enter' });
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(enterEvent);
+    });
+    assert.strictEqual(
+        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        "test message",
+        "should have inserted text content in editable as message has not been posted"
+    );
+
+    // Send message with meta+enter
+    await afterNextRender(() =>
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keydown', { key: 'Enter', metaKey: true }))
+    );
+    assert.verifySteps(['message_post']);
+    assert.strictEqual(
+        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        "",
+        "should have no content in composer input as message has been posted"
+    );
+});
+
 QUnit.test('composer text input cleared on message post', async function (assert) {
     assert.expect(4);
 
@@ -610,8 +720,10 @@ QUnit.test('composer text input cleared on message post', async function (assert
     );
     await this.createComposerComponent(thread.composer);
     // Type message
-    document.querySelector(`.o_ComposerTextInput_textarea`).focus();
-    document.execCommand('insertText', false, "test message");
+    await afterNextRender(() => {
+        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
+        document.execCommand('insertText', false, "test message");
+    });
     assert.strictEqual(
         document.querySelector(`.o_ComposerTextInput_textarea`).value,
         "test message",
@@ -620,8 +732,7 @@ QUnit.test('composer text input cleared on message post', async function (assert
 
     // Send message
     await afterNextRender(() =>
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keydown', { key: 'Enter' }))
+        document.querySelector('.o_Composer_buttonSend').click()
     );
     assert.verifySteps(['message_post']);
     assert.strictEqual(
@@ -691,8 +802,7 @@ QUnit.test('composer inputs cleared on message post in composer of a mailing cha
 
     // Send message
     await afterNextRender(() =>
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keydown', { key: 'Enter' }))
+        document.querySelector('.o_Composer_buttonSend').click()
     );
     assert.verifySteps(['message_post']);
     assert.strictEqual(
@@ -956,7 +1066,7 @@ QUnit.test('composer: send button is disabled if attachment upload is not finish
     );
 });
 
-QUnit.test('warning when attempting to post message when attachments are still uploading', async function (assert) {
+QUnit.test('warning on send with shortcut when attempting to post message with still-uploading attachments', async function (assert) {
     assert.expect(7);
 
     await this.start({
@@ -991,7 +1101,9 @@ QUnit.test('warning when attempting to post message when attachments are still u
         id: 20,
         model: 'res.partner',
     });
-    await this.createComposerComponent(thread.composer);
+    await this.createComposerComponent(thread.composer, {
+        textInputSendShortcuts: ['enter'],
+    });
     const file = await createFile({
         content: 'hello, world',
         contentType: 'text/plain',

@@ -14,9 +14,9 @@
                         t-att-class="{ 'o-bordered': chatter.hasExternalBorder }"
                         composerLocalId="chatter.thread.composer.localId"
                         hasMentionSuggestionsBelowPosition="true"
-                        hasTextInputSendOnEnterEnabled="false"
                         isCompact="false"
                         isExpandable="true"
+                        textInputSendShortcuts="['ctrl-enter', 'meta-enter']"
                         t-on-o-message-posted="_onComposerMessagePosted"
                         t-ref="composer"
                     />
