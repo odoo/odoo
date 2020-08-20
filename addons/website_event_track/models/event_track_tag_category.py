@@ -12,11 +12,3 @@ class TrackTagCategory(models.Model):
     name = fields.Char("Name", required=True, translate=True)
     sequence = fields.Integer('Sequence', default=10)
     tag_ids = fields.One2many('event.track.tag', 'category_id', string="Tags")
-
-
-class TrackTag(models.Model):
-    _inherit = "event.track.tag"
-    _order = "category_id, sequence, name"
-
-    sequence = fields.Integer('Sequence', default=10)
-    category_id = fields.Many2one('event.track.tag.category', string="Category", ondelete="set null")

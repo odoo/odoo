@@ -1,4 +1,4 @@
-importScripts("/website_event_track_online/static/lib/idb-keyval/idb-keyval.js");
+importScripts("/website_event_track/static/lib/idb-keyval/idb-keyval.js");
 
 const PREFIX = "odoo-event";
 const SYNCABLE_ROUTES = ["/event/track/toggle_reminder"];

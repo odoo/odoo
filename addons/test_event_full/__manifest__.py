@@ -20,7 +20,6 @@ automatic lead generation, full Online support, ...
         'website_event_meet',
         'website_event_sale',
         'website_event_track',
-        'website_event_track_online',
         'website_event_track_exhibitor',
         'website_event_track_session',
         'website_event_track_live',

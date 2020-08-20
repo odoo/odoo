@@ -228,7 +228,7 @@
                                         t-esc="track.date"
                                         t-options="{'widget': 'datetime', 'time_only': True, 'format': 'short'}"/>
                                     <t t-if="option_track_wishlist"
-                                        t-call="website_event_track_online.track_widget_reminder">
+                                        t-call="website_event_track.track_widget_reminder">
                                         <t t-set="reminder_small" t-value="True"/>
                                     </t>
                                 </t>
@@ -268,7 +268,7 @@
                     <div t-if="track.website_image_url" class="card-img-top"
                         t-attf-style="padding-top: 50%; background-image: url(#{track.website_image_url}); background-size: cover; background-position:center">
                         <span t-if="option_track_wishlist and not track.is_track_live" class="position-absolute h3 mt-2 mr-2" style="right: 0; top: 0;">
-                            <t t-call="website_event_track_online.track_widget_reminder">
+                            <t t-call="website_event_track.track_widget_reminder">
                                 <t t-set="reminder_light" t-value="True"/>
                                 <t t-set="light_theme" t-value="True"/>
                             </t>
@@ -277,7 +277,7 @@
                     <div t-else="" class="o_wesession_gradient card-img-top position-relative"
                         style="padding-top: 50%;">
                         <span t-if="option_track_wishlist" class="position-absolute h3 mt-2 mr-2" style="right: 0; top: 0;">
-                            <t t-call="website_event_track_online.track_widget_reminder">
+                            <t t-call="website_event_track.track_widget_reminder">
                                 <t t-set="reminder_light" t-value="True"/>
                             </t>
                         </span>

@@ -26,6 +26,7 @@
                         </group>
                         <group>
                             <field name="fold"/>
+                            <field name="is_accepted"/>
                             <field name="is_done"/>
                             <field name="is_cancel"/>
                             <field name="color" widget="color_picker"/>
@@ -43,6 +44,9 @@
             <tree string="Track Stage">
                 <field name="sequence" widget="handle" groups="event.group_event_manager"/>
                 <field name="name"/>
+                <field name="is_accepted"/>
+                <field name="is_done"/>
+                <field name="is_cancel"/>
                 <field name="fold"/>
             </tree>
         </field>

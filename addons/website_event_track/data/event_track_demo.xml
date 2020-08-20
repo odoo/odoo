@@ -333,6 +333,7 @@
         <field name="color">1</field>
         <field name="event_id" ref="event.event_7"/>
         <field name="stage_id" ref="event_track_stage3"/>
+        <field name="wishlisted_by_default" eval="True"/>
         <field name="date" eval="(DateTime.now() - timedelta(days=1)).strftime('%Y-%m-%d 06:00:00')"></field>
         <field name="tag_ids" eval="[
             (4, ref('website_event_track.event_track_tag1')),
@@ -474,6 +475,7 @@
         <field name="color">1</field>
         <field name="event_id" ref="event.event_7"/>
         <field name="stage_id" ref="event_track_stage3"/>
+        <field name="wishlisted_by_default" eval="True"/>
         <field name="date" eval="DateTime.now().strftime('%Y-%m-%d 06:00:00')"></field>
         <field name="tag_ids" eval="[
             (4, ref('website_event_track.event_track_tag1')),
@@ -519,6 +521,7 @@
         <field name="color">2</field>
         <field name="event_id" ref="event.event_7"/>
         <field name="stage_id" ref="event_track_stage3"/>
+        <field name="wishlisted_by_default" eval="True"/>
         <field name="location_id" ref="website_event_track.event_track_location_online_1"/>
         <field name="date" eval="DateTime.now().strftime('%Y-%m-%d 12:00:00')"></field>
         <field name="tag_ids" eval="[(4, ref('website_event_track.event_track_tag3'))]"/>
@@ -572,6 +575,7 @@
         <field name="color">7</field>
         <field name="event_id" ref="event.event_7"/>
         <field name="stage_id" ref="event_track_stage3"/>
+        <field name="wishlisted_by_default" eval="True"/>
         <field name="location_id" ref="website_event_track.event_track_location_online_2"/>
         <field name="date" eval="DateTime.now().strftime('%Y-%m-%d 13:30:00')"></field>
         <field name="tag_ids" eval="[(4, ref('website_event_track.event_track_tag1')), (4, ref('website_event_track.event_track_tag12'))]"/>
