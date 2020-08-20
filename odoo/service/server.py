@@ -520,8 +520,6 @@ class ThreadedServer(CommonServer):
                          else logger.warning if not report.testsRun \
                          else logger.info
                         log("%s when loading database %r", report, db)
-                        for test, traceback in chain(report.failures, report.errors):
-                            log("%s\n%s", report.getDescription(test), traceback)
             self.stop()
             return rc
 
