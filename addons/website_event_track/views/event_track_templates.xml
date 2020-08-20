@@ -239,9 +239,14 @@
                             <h4 class="card-header">Practical Info</h4>
                             <div class="card-body">
                                 <b>Date</b><br/>
-                                <span t-field="track.date" t-options='{"hide_seconds":"True", "format": "short"}'/>
-                                <t t-if="event.date_tz">
-                                    (<span t-field="track.date" t-options='{"format": "zzz"}'/>)
+                                <t t-if="track.date">
+                                    <span t-field="track.date" t-options='{"hide_seconds":"True", "format": "short"}'/>
+                                    <t t-if="event.date_tz">
+                                        (<span t-field="track.date" t-options='{"format": "zzz"}'/>)
+                                    </t>
+                                </t>
+                                <t t-else="">
+                                    <span>To be scheduled</span>
                                 </t>
                                 <br/>
                                 <b>Duration</b><br/>
