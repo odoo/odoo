@@ -976,6 +976,8 @@ class MrpProduction(models.Model):
 
         if moves_to_confirm:
             moves_to_confirm._action_confirm()
+            # run scheduler for moves forecasted to not have enough in stock
+            moves_to_confirm._trigger_scheduler()
 
         self.workorder_ids.filtered(lambda w: w.state not in ['done', 'cancel'])._action_confirm()
 
@@ -1074,6 +1076,8 @@ class MrpProduction(models.Model):
             production.move_raw_ids._adjust_procure_method()
             (production.move_raw_ids | production.move_finished_ids)._action_confirm()
             production.workorder_ids._action_confirm()
+            # run scheduler for moves forecasted to not have enough in stock
+            production.move_raw_ids._trigger_scheduler()
         return True
 
     def action_assign(self):
@@ -1434,6 +1438,10 @@ class MrpProduction(models.Model):
         productions_not_to_backorder._post_inventory(cancel_backorder=True)
         productions_to_backorder._post_inventory(cancel_backorder=False)
         backorders = productions_to_backorder._generate_backorder_productions()
+
+        # if completed products make other confirmed/partially_available moves available, assign them
+        done_move_finished_ids = (productions_to_backorder.move_finished_ids | productions_not_to_backorder.move_finished_ids).filtered(lambda m: m.state == 'done')
+        done_move_finished_ids._trigger_assign()
 
         # Moves without quantity done are not posted => set them as done instead of canceling. In
         # case the user edits the MO later on and sets some consumed quantity on those, we do not
