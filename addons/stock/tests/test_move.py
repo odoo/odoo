@@ -4381,13 +4381,13 @@ class StockMove(SavepointCase):
         picking.action_assign()
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product, self.stock_location), 0)
         move1.quantity_done = 1
-        picking.put_in_pack()
+        picking.action_put_in_pack()
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product, self.stock_location), 0)
         self.assertEqual(len(picking.move_line_ids), 2)
         unpacked_ml = picking.move_line_ids.filtered(lambda ml: not ml.result_package_id)
         self.assertEqual(unpacked_ml.product_qty, 1)
         unpacked_ml.qty_done = 1
-        picking.put_in_pack()
+        picking.action_put_in_pack()
         self.assertEqual(len(picking.move_line_ids), 2)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product, self.stock_location), 0)
         picking.button_validate()
@@ -4432,7 +4432,7 @@ class StockMove(SavepointCase):
         picking.action_assign()
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product, self.stock_location), 0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(product1, self.stock_location), 0)
-        picking.put_in_pack()
+        picking.action_put_in_pack()
         self.assertEqual(len(picking.move_line_ids), 2)
         self.assertEqual(picking.move_line_ids[0].qty_done, 1, "Stock move line should have 1 quantity as a done quantity.")
         self.assertEqual(picking.move_line_ids[1].qty_done, 2, "Stock move line should have 2 quantity as a done quantity.")
@@ -4482,9 +4482,9 @@ class StockMove(SavepointCase):
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product, self.stock_location), 0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(product1, self.stock_location), 0)
         move1.quantity_done = 1
-        picking.put_in_pack()
+        picking.action_put_in_pack()
         move2.quantity_done = 2
-        picking.put_in_pack()
+        picking.action_put_in_pack()
         self.assertEqual(len(picking.move_line_ids), 2)
         line1_result_package = picking.move_line_ids[0].result_package_id
         line2_result_package = picking.move_line_ids[1].result_package_id

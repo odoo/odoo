@@ -3,7 +3,7 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
-
+from odoo.tools.float_utils import float_compare, float_is_zero, float_round
 
 class StockPickingBatch(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
@@ -47,6 +47,13 @@ class StockPickingBatch(models.Model):
     picking_type_id = fields.Many2one(
         'stock.picking.type', 'Operation Type', check_company=True, copy=False,
         readonly=True, states={'draft': [('readonly', False)]})
+    scheduled_date = fields.Datetime(
+        'Scheduled Date', copy=False, store=True, readonly=False, compute="_compute_scheduled_date",
+        states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
+        help="""Scheduled date for the transfers to be processed.
+              - If manually set then scheduled date for all transfers in batch will automatically update to this date.
+              - If not manually changed and transfers are added/removed/updated then this will be their earliest scheduled date
+                but this scheduled date will not be set for all transfers in batch.""")
 
     @api.depends('company_id', 'picking_type_id', 'state')
     def _compute_allowed_picking_ids(self):
@@ -95,6 +102,15 @@ class StockPickingBatch(models.Model):
             elif all(picking.state in ['cancel', 'done'] for picking in batch.picking_ids):
                 batch.state = 'done'
 
+    @api.depends('picking_ids', 'picking_ids.scheduled_date')
+    def _compute_scheduled_date(self):
+        self.scheduled_date = min(self.picking_ids.filtered('scheduled_date').mapped('scheduled_date'), default=False)
+
+    @api.onchange('scheduled_date')
+    def onchange_scheduled_date(self):
+        if self.scheduled_date:
+            self.picking_ids.scheduled_date = self.scheduled_date
+
     def _set_move_line_ids(self):
         new_move_lines = self[0].move_line_ids
         for picking in self.picking_ids:
@@ -128,6 +144,17 @@ class StockPickingBatch(models.Model):
         if any(batch.state != 'draft' for batch in self):
             raise UserError(_("You can only delete draft batch transfers."))
         return super().unlink()
+
+    def onchange(self, values, field_name, field_onchange):
+        """Override onchange to NOT to update all scheduled_date on pickings when
+        scheduled_date on batch is updated by the change of scheduled_date on pickings.
+        """
+        result = super().onchange(values, field_name, field_onchange)
+        if field_name == 'picking_ids' and 'value' in result:
+            for line in result['value'].get('picking_ids', []):
+                if line[0] < 2 and 'scheduled_date' in line[2]:
+                    del line[2]['scheduled_date']
+        return result
 
     # -------------------------------------------------------------------------
     # Action methods
@@ -170,6 +197,30 @@ class StockPickingBatch(models.Model):
     def action_assign(self):
         self.ensure_one()
         self.picking_ids.action_assign()
+
+    def action_put_in_pack(self):
+        """ Action to put move lines with 'Done' quantities into a new pack
+        This method follows same logic to stock.picking.
+        """
+        self.ensure_one()
+        if self.state not in ('done', 'cancel'):
+            picking_move_lines = self.move_line_ids
+
+            move_line_ids = picking_move_lines.filtered(lambda ml:
+                float_compare(ml.qty_done, 0.0, precision_rounding=ml.product_uom_id.rounding) > 0
+                and not ml.result_package_id
+            )
+            if not move_line_ids:
+                move_line_ids = picking_move_lines.filtered(lambda ml: float_compare(ml.product_uom_qty, 0.0,
+                                     precision_rounding=ml.product_uom_id.rounding) > 0 and float_compare(ml.qty_done, 0.0,
+                                     precision_rounding=ml.product_uom_id.rounding) == 0)
+            if move_line_ids:
+                res = self.picking_ids[0]._pre_put_in_pack_hook(move_line_ids)
+                if not res:
+                    res = self.picking_ids[0]._put_in_pack(move_line_ids, False)
+                return res
+            else:
+                raise UserError(_("Please add 'Done' quantities to the batch picking to create a new pack."))
 
     # -------------------------------------------------------------------------
     # Miscellaneous

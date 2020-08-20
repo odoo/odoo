@@ -1328,7 +1328,7 @@ class TestStockFlow(TestStockCommon):
         # Set the quantity done on the pack operation
         move_in.move_line_ids.qty_done = 3.0
         # Put in a pack
-        picking_in.put_in_pack()
+        picking_in.action_put_in_pack()
         # Get the new package
         picking_in_package = move_in.move_line_ids.result_package_id
         # Validate picking
