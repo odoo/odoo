@@ -33,14 +33,17 @@
         <record id="event_sponsor_type1" model="event.sponsor.type">
             <field name="name">Bronze</field>
             <field name="sequence">3</field>
+            <field name="display_ribbon_style">Bronze</field>
         </record>
         <record id="event_sponsor_type2" model="event.sponsor.type">
             <field name="name">Silver</field>
             <field name="sequence">2</field>
+            <field name="display_ribbon_style">Silver</field>
         </record>
         <record id="event_sponsor_type3" model="event.sponsor.type">
             <field name="name">Gold</field>
             <field name="sequence">1</field>
+            <field name="display_ribbon_style">Gold</field>
         </record>
 
         <record id="event_track_stage0" model="event.track.stage">
@@ -58,11 +61,13 @@
             <field name="name">Announced</field>
             <field name="sequence">3</field>
             <field name="color">3</field>
+            <field name="is_accepted" eval="True"/>
         </record>
         <record id="event_track_stage3" model="event.track.stage">
             <field name="name">Published</field>
             <field name="sequence">4</field>
             <field name="color">4</field>
+            <field name="is_accepted" eval="True"/>
             <field name="is_done" eval="True"/>
         </record>
         <record id="event_track_stage4" model="event.track.stage">

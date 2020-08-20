@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-<template id="track_view">
+<template id="track_view" track="True">
     <t t-call="website_event.layout">
         <section class="pt48">
             <div class="container">
@@ -80,6 +80,20 @@
             </div>
         </section>
     </t>
+</template>
+
+<template id="track_view_wishlist"
+    name="Wishlist on Track"
+    inherit_id="website_event_track.track_view"
+    customize_show="True">
+    <xpath expr="//h1" position="replace">
+        <div class="d-flex">
+            <h1 t-field="track.name"/>
+            <div class="ml-2 pt-1">
+                <t t-call="website_event_track.track_widget_reminder"/>
+            </div>
+        </div>
+    </xpath>
 </template>
 
 </odoo>

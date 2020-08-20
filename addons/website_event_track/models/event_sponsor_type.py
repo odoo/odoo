@@ -11,3 +11,8 @@ class SponsorType(models.Model):
 
     name = fields.Char('Sponsor Type', required=True, translate=True)
     sequence = fields.Integer('Sequence')
+    display_ribbon_style = fields.Selection([
+        ('no_ribbon', 'No Ribbon'),
+        ('Gold', 'Gold'),
+        ('Silver', 'Silver'),
+        ('Bronze', 'Bronze')], string='Ribbon Style')

@@ -3,16 +3,16 @@
 
 from ast import literal_eval
 from pytz import timezone, utc
-from werkzeug.exceptions import Forbidden, NotFound
+from werkzeug.exceptions import NotFound
 
 from odoo import fields, http, _
-from odoo.addons.website_event_track_online.controllers.event_track import EventTrackOnlineController
+from odoo.addons.website_event_track.controllers.event_track import EventTrackController
 from odoo.http import request
 from odoo.osv import expression
 from odoo.tools import is_html_empty
 
 
-class WebsiteEventSessionController(EventTrackOnlineController):
+class WebsiteEventSessionController(EventTrackController):
 
     def _get_event_tracks_base_domain(self, event):
         """ Base domain for displaying tracks. Restrict to accepted or published

@@ -18,7 +18,7 @@
         <field name="inherit_id" ref="website_event.website_visitor_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//button[@id='w_visitor_visit_counter']" position="before">
-                <button name="%(website_event_track_online.event_track_action_from_visitor)d"
+                <button name="%(website_event_track.event_track_action_from_visitor)d"
                     type="action"
                     class="oe_stat_button" icon="fa-ticket"
                     attrs="{'invisible': [('event_track_wishlisted_count', '=', 0)]}">

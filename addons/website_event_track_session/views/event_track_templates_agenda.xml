@@ -2,7 +2,7 @@
 <odoo>
 
 <template id="agenda_main_track" name="Track Agenda: Track (Session)"
-    inherit_id="website_event_track_online.agenda_main_track">
+    inherit_id="website_event_track.agenda_main_track">
     <xpath expr="//div[hasclass('o_weagenda_track_badges')]/small[1]" position="before">
         <small t-if="track.is_track_live and not track.is_track_done and track.website_published"
             class="mx-1 badge badge-danger">Live
