@@ -1791,6 +1791,9 @@ var SnippetsMenu = Widget.extend({
                 $top: $('#web_editor-top-edit'), // TODO should ideally be retrieved another way
                 $left: this.$el,
             }, options.offsetElements),
+            scrollBoundaries: Object.assign({
+                left: false,
+            }, options.scrollBoundaries),
             jQueryDraggableOptions: Object.assign({
                 appendTo: this.$body,
                 cursor: 'move',
