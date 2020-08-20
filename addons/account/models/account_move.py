@@ -1038,10 +1038,10 @@ class AccountMove(models.Model):
             reference_move = self.search(domain + [('date', '<=', self.date)], order='date desc', limit=1) or self.search(domain, order='date asc', limit=1)
             sequence_number_reset = self._deduce_sequence_number_reset(reference_move.name)
             if sequence_number_reset == 'year':
-                where_string += " AND date_trunc('year', date) = date_trunc('year', %(date)s) "
+                where_string += " AND date_trunc('year', date::timestamp without time zone) = date_trunc('year', %(date)s) "
                 param['date'] = self.date
             elif sequence_number_reset == 'month':
-                where_string += " AND date_trunc('month', date) = date_trunc('month', %(date)s) "
+                where_string += " AND date_trunc('month', date::timestamp without time zone) = date_trunc('month', %(date)s) "
                 param['date'] = self.date
 
         if self.journal_id.refund_sequence:
