@@ -153,14 +153,13 @@ class IrMailServer(models.Model):
                     # ignored, just a consequence of the previous exception
                     pass
 
-        title = _("Connection Test Succeeded!")
-        message = _("Everything seems properly set up!")
+        message = _("Connection Test Successful!")
         return {
             'type': 'ir.actions.client',
             'tag': 'display_notification',
             'params': {
-                'title': title,
                 'message': message,
+                'type': 'success',
                 'sticky': False,
             }
         }
