@@ -19,6 +19,8 @@ EXTRA_REQUEST = 5
 
 class UtilPerf(HttpCase):
     def _get_url_hot_query(self, url):
+        url += ('?' not in url and '?' or '') + '&nocache'
+
         # ensure worker is in hot state
         self.url_open(url)
         self.url_open(url)
