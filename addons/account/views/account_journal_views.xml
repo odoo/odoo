@@ -46,11 +46,11 @@
                                         <field name="default_account_type" invisible="1"/>
                                         <!-- Bank -->
                                         <field name="default_account_id" string="Bank Account"
-                                               attrs="{'required': [('id', '!=', False)], 'invisible': [('type', '!=', 'bank')]}"
+                                               attrs="{'required': [('id', '!=', False), ('type', '=', 'bank')], 'invisible': [('type', '!=', 'bank')]}"
                                                groups="account.group_account_readonly"/>
                                         <!-- Cash -->
                                         <field name="default_account_id" string="Cash Account"
-                                               attrs="{'required': [('id', '!=', False)], 'invisible': [('type', '!=', 'cash')]}"
+                                               attrs="{'required': [('id', '!=', False), ('type', '=', 'cash')], 'invisible': [('type', '!=', 'cash')]}"
                                                groups="account.group_account_readonly"/>
 
                                         <field name="suspense_account_id"
@@ -60,11 +60,11 @@
                                         <field name="loss_account_id" attrs="{'invisible': [('type', '!=', 'cash')]}"/>
                                         <!-- Sales -->
                                         <field name="default_account_id" string="Default Income Account"
-                                               attrs="{'required': [('id', '!=', False)], 'invisible': [('type', '!=', 'sale')]}"
+                                               attrs="{'required': [('id', '!=', False), ('type', '=', 'sale')], 'invisible': [('type', '!=', 'sale')]}"
                                                groups="account.group_account_readonly"/>
                                         <!-- Purchase -->
                                         <field name="default_account_id" string="Default Expense Account"
-                                               attrs="{'required': [('id', '!=', False)], 'invisible': [('type', '!=', 'purchase')]}"
+                                               attrs="{'required': [('id', '!=', False), ('type', '=', 'purchase')], 'invisible': [('type', '!=', 'purchase')]}"
                                                groups="account.group_account_readonly"/>
                                         <field name="refund_sequence" attrs="{'invisible': [('type', 'not in', ['sale', 'purchase'])]}"/>
                                         <field name="code"/>
