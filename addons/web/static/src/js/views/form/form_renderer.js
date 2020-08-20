@@ -254,9 +254,6 @@ var FormRenderer = BasicRenderer.extend({
                         nav => !nav.classList.contains('o_invisible_modifier')
                     );
                 }
-                if (activeIndex <= 0) {
-                    continue; // No visible tab OR first tab = active tab (no change to make).
-                }
                 for (let i = 0; i < validTabsAmount; i++) {
                     navs[i].querySelector('.nav-link').classList.toggle('active', activeIndex === i);
                     pages[i].classList.toggle('active', activeIndex === i);
@@ -942,7 +939,12 @@ var FormRenderer = BasicRenderer.extend({
                 },
             });
         });
-        this._activateFirstVisibleTab(renderedTabs);
+        // if state from getLocalState is non empty then setLocalState will do the job
+        // setLocalState will set last active tab.
+        const state = this.getLocalState();
+        if (!Object.entries(state).length) {
+            this._activateFirstVisibleTab(renderedTabs);
+        }
         var $notebookHeaders = $('<div class="o_notebook_headers">').append($headers);
         var $notebook = $('<div class="o_notebook">').append($notebookHeaders, $pages);
         $notebook[0].dataset.name = node.attrs.name || '_default_';

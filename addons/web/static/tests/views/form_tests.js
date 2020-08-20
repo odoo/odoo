@@ -7,6 +7,7 @@ var concurrency = require('web.concurrency');
 var core = require('web.core');
 var fieldRegistry = require('web.field_registry');
 const fieldRegistryOwl = require('web.field_registry_owl');
+const FormRenderer = require('web.FormRenderer');
 var FormView = require('web.FormView');
 var mixins = require('web.mixins');
 var NotificationService = require('web.NotificationService');
@@ -928,6 +929,50 @@ QUnit.module('Views', {
         assert.hasClass(form.$('.o_notebook .nav .nav-link:nth(1)'), 'active');
 
         form.destroy();
+    });
+
+    QUnit.test("_activateFirstVisibleTab is not call when getLocalState returns some state", async function (assert) {
+        assert.expect(3);
+
+        testUtils.patch(FormRenderer, {
+            _activateFirstVisibleTab: function (renderedTabs) {
+                const state = this.getLocalState();
+                if (Object.entries(state).length) {
+                    throw new Error("if getLocalState has some state then _activateFirstVisibleTab should not call");
+                }
+                return this._super(...arguments);
+            },
+        });
+
+        const form = await createView({
+            View: FormView,
+            model: "partner",
+            data: this.data,
+            arch: `<form string="Partners">
+                <sheet>
+                    <field name="product_id"/>
+                    <notebook>
+                        <page string="Choucroute">
+                            <field name="foo"/>
+                        </page>
+                        <page string="Cassoulet" autofocus="autofocus">
+                            <field name="bar"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>`,
+            res_id: 1,
+        });
+
+        assert.doesNotHaveClass(form.$(".o_notebook .nav .nav-link:first()"), "active");
+        assert.hasClass(form.$(".o_notebook .nav .nav-link:nth(1)"), "active");
+
+        // edit form to re-render notebook node to check _activateFirstVisibleTab is not called
+        await testUtils.form.clickEdit(form);
+        assert.hasClass(form.$(".o_notebook .nav .nav-link:nth(1)"), "active");
+
+        form.destroy();
+        testUtils.unpatch(FormRenderer);
     });
 
     QUnit.test('invisible attrs on group are re-evaluated on field change', async function (assert) {
