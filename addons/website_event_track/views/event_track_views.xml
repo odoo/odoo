@@ -183,6 +183,25 @@
                         <page string="Description" name="description">
                             <field name="description"/>
                         </page>
+                        <page string="Interactivity" name="interactivity">
+                            <group>
+                                <group name="event_track_cta_group">
+                                    <field name="website_cta"/>
+                                    <field name="website_cta_title" placeholder="e.g. Get Yours Now !"
+                                        attrs="{'invisible': [('website_cta', '=', False)],
+                                                'required': [('website_cta', '=', True)]}"/>
+                                    <field name="website_cta_url" placeholder="e.g. http://www.example.com"
+                                        attrs="{'invisible': [('website_cta', '=', False)],
+                                                'required': [('website_cta', '=', True)]}"/>
+                                    <label for="website_cta_delay"
+                                        attrs="{'invisible': [('website_cta', '=', False)]}"/>
+                                    <div attrs="{'invisible': [('website_cta', '=', False)]}">
+                                        <field name="website_cta_delay" class="oe_inline"
+                                            attrs="{'required': [('website_cta', '=', True)]}"/> minutes after talk start
+                                    </div>
+                                </group>
+                            </group>
+                        </page>
                     </notebook>
                 </sheet>
                 <div class="oe_chatter">

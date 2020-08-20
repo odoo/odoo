@@ -3,11 +3,11 @@
 
 import re
 
-from odoo.addons.website_event_track_session.controllers.session import WebsiteEventSessionController
+from odoo.addons.website_event_track.controllers.event_track import EventTrackController
 from odoo.http import request
 
 
-class WebsiteEventSessionLiveController(WebsiteEventSessionController):
+class WebsiteEventSessionLiveController(EventTrackController):
 
     def _event_track_page_get_values(self, event, track, **options):
         if 'widescreen' not in options:

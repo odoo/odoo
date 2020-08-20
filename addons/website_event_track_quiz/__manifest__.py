@@ -12,7 +12,7 @@
     'description': "",
     'depends': [
         'website_profile',
-        'website_event_track_session',
+        'website_event_track',
     ],
     'data': [
         'security/ir.model.access.csv',
