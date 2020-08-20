@@ -60,7 +60,7 @@ class AccountJournal(models.Model):
     default_account_type = fields.Many2one('account.account.type', compute="_compute_default_account_type")
     default_account_id = fields.Many2one(
         comodel_name='account.account', check_company=True, copy=False, ondelete='restrict',
-        string='Default Account',  help="It acts as a default account",
+        string='Default Account',
         domain="[('deprecated', '=', False), ('company_id', '=', company_id),"
                "('user_type_id', '=', default_account_type),"
                "('user_type_id.type', 'not in', ('receivable', 'payable'))]")

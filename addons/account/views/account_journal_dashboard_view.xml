@@ -12,6 +12,7 @@
                 <field name="kanban_dashboard"/>
                 <field name="activity_ids"/>
                 <field name="activity_state"/>
+                <field name="alias_domain"/>
                 <templates>
                     <t t-name="kanban-box">
                         <div t-attf-class="#{!selection_mode ? kanban_color(record.color.raw_value) : ''}">
@@ -37,7 +38,7 @@
                                 <div class="o_primary">
                                     <a type="object" name="open_action"><field name="name"/></a>
                                 </div>
-                                <div class="o_secondary" t-att-title="dashboard.title" t-if="alias_id != ''">
+                                <div class="o_secondary" t-att-title="dashboard.title" t-if="journal_type == 'purchase' &amp;&amp; record.alias_domain.raw_value">
                                     <field name="alias_id"/>
                                 </div>
                             </div>

@@ -48,12 +48,12 @@
                                 <field name="bank_id" placeholder="e.g Bank of America"/>
                             </group>
                         </group>
-                        <group attrs="{'invisible': [('num_journals_without_account', '&lt;', 2)]}">
+                        <group attrs="{'invisible': [('num_journals_without_account', '=', 0)]}">
                            <group>
-                            <field name="linked_journal_id" attrs="{'required': [('num_journals_without_account','!=',0)]}"/>
+                            <field name="linked_journal_id" options="{'no_create': True}"/>
                           </group>
                           <group>
-                               <span class="text-muted">Only journals not yet linked to a bank account are proposed</span>
+                               <span class="text-muted">Leave empty to create a new journal for this bank account, or select a journal to link it with the bank account.</span>
                            </group>
                         </group>
                     </sheet>
