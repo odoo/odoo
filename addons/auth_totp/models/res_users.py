@@ -23,7 +23,7 @@ class Users(models.Model):
     _inherit = 'res.users'
 
     totp_secret = fields.Char(copy=False, groups=fields.NO_ACCESS)
-    totp_enabled = fields.Boolean(string="TOTP enabled", compute='_compute_totp_enabled')
+    totp_enabled = fields.Boolean(string="Two-factor authentication", compute='_compute_totp_enabled')
 
     def __init__(self, pool, cr):
         init_res = super().__init__(pool, cr)
