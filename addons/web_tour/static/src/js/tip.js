@@ -51,7 +51,7 @@ var Tip = Widget.extend({
         };
         this.initialPosition = this.info.position;
         this.viewPortState = 'in';
-        this._onAncestorScroll = _.throttle(this._onAncestorScroll, 50);
+        this._onAncestorScroll = _.throttle(this._onAncestorScroll, 0.1);
     },
     /**
      * Attaches the tip to the provided $anchor and $altAnchor.
@@ -501,7 +501,7 @@ var Tip = Widget.extend({
         if (this.tip_opened) {
             this._to_bubble_mode(true);
         } else {
-            this._updatePosition();
+            this._updatePosition(true);
         }
     },
     /**
