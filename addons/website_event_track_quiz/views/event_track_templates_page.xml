@@ -3,7 +3,7 @@
 
 <template id="event_track_content"
     name="Track: Main Description: add quiz"
-    inherit_id="website_event_track_session.event_track_content">
+    inherit_id="website_event_track.event_track_content">
     <xpath expr="//div[hasclass('o_wesession_track_main_description')]" position="after">
         <div id="we_track_quiz_container" t-if="track.quiz_id"
              t-att-class="'o_quiz_js_quiz_container o_quiz_main border-top bg-white px-2 pt-4 pb-4 col-12 %s' % ('' if track.is_quiz_completed else 'd-none')"
