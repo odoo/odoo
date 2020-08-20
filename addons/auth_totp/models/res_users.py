@@ -14,7 +14,7 @@ import werkzeug.urls
 from odoo import _, api, fields, models
 from odoo.addons.base.models.res_users import check_identity
 from odoo.exceptions import AccessDenied, UserError
-from odoo.http import request
+from odoo.http import request, db_list
 
 _logger = logging.getLogger(__name__)
 
@@ -136,14 +136,16 @@ class TOTPWizard(models.TransientModel):
 
     @api.depends('user_id.login', 'user_id.company_id.display_name', 'secret')
     def _compute_qrcode(self):
+        # TODO: make "issuer" configurable through config parameter?
+        global_issuer = request and request.httprequest.host.split(':', 1)[0]
         for w in self:
-            label = '{0.company_id.display_name}:{0.login}'.format(w.user_id)
+            issuer = global_issuer or w.user_id.company_id.display_name
             w.url = url = werkzeug.urls.url_unparse((
                 'otpauth', 'totp',
-                werkzeug.urls.url_quote(label, safe=''),
+                werkzeug.urls.url_quote(f'{issuer}:{w.user_id.login}', safe=':'),
                 werkzeug.urls.url_encode({
                     'secret': compress(w.secret),
-                    'issuer': w.user_id.company_id.display_name,
+                    'issuer': issuer,
                     # apparently a lowercase hash name is anathema to google
                     # authenticator (error) and passlib (no token)
                     'algorithm': ALGORITHM.upper(),
