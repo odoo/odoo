@@ -23,11 +23,9 @@ var EpsonPrinter = core.Class.extend(PrinterMixin, {
         if ((resultConnect == 'OK') || (resultConnect == 'SSL_CONNECT_OK')) {
             this.ePOSDevice.createDevice(deviceId, this.ePOSDevice.DEVICE_TYPE_PRINTER, options, this.callback_createDevice.bind(this));
         } else {
-            this.pos.chrome.ready.then(function () {
-                Gui.showPopup('ErrorPopup', {
-                    'title': _t('Connection to the printer failed'),
-                    'body':  _t('Please check if the printer is still connected, if the configured IP address is correct and if your printer supports the ePOS protocol.'),
-                });
+            Gui.showPopup('ErrorPopup', {
+                'title': _t('Connection to the printer failed'),
+                'body':  _t('Please check if the printer is still connected, if the configured IP address is correct and if your printer supports the ePOS protocol.'),
             });
         }
     },
