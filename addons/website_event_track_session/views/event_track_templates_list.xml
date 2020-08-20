@@ -168,11 +168,12 @@
         <ul class="list-unstyled">
             <li t-foreach="tracks_by_day" t-as="tracks_info"
                 class="mb-5">
-                <t t-set="tracks_date" t-value="tracks_info[0]"/>
-                <t t-set="tracks" t-value="tracks_info[1]"/>
+                <t t-set="tracks_date" t-value="tracks_info['date']"/>
+                <t t-set="tracks_header_name" t-value="tracks_info['name']"/>
+                <t t-set="tracks" t-value="tracks_info['tracks']"/>
                 <!-- DAY HEADER -->
                 <div class="o_we_track_day_header w-100">
-                    <div class="d-flex">
+                    <div t-if="tracks_date" class="d-flex">
                         <span class="h1 m-0 font-weight-bold" t-esc="tracks_date"
                             t-options="{'widget': 'date', 'format': 'EEEE dd'}"/>
                         <div class="d-flex flex-column ml-2">
@@ -181,6 +182,10 @@
                             <span class="font-weight-bold" t-esc="tracks_date"
                                 t-options="{'widget': 'date', 'format': 'YYYY'}"/>
                         </div>
+                    </div>
+                    <div t-elif="tracks_header_name">
+                        <span class="h1 m-0 font-weight-bold"
+                            t-esc="tracks_header_name"/>
                     </div>
                     <hr class="mt-2 pb-1 mb-1"/>
                 </div>
@@ -201,14 +206,15 @@
                             </span>
                         </span>
                         <div class="text-muted">
-                            <span class="text-muted" t-esc="track.partner_name"/> &amp;bull; 
+                            <span class="text-muted" t-esc="track.partner_name"/>
+                            <t t-if="track.partner_name"> &amp;bull; </t>
                             <span t-esc="track.duration"
                                 t-options="{'widget': 'duration', 'digital': False, 'format': 'short', 'unit': 'hour', 'round': 'minute'}"/>
                         </div>
                     </div>
                     <div class="col-md-5">
                         <div t-if="not event.is_done" class="float-right">
-                            <t t-if="today_tz &lt;= tracks_date">
+                            <t t-if="tracks_date and today_tz &lt;= tracks_date">
                                 <span t-if="track.is_track_live and not track.is_track_done"
                                     class="badge badge-danger">Live</span>
                                 <span t-elif="not track.is_track_done and track.is_track_soon">
@@ -229,6 +235,10 @@
                                 <t t-else="">
                                     <span class="badge badge-info">Finished</span>
                                 </t>
+                            </t>
+                            <t t-elif="not track.date and option_track_wishlist"
+                                t-call="website_event_track_online.track_widget_reminder">
+                                <t t-set="reminder_small" t-value="True"/>
                             </t>
                         </div>
                         <t t-foreach="track.tag_ids" t-as="tag">

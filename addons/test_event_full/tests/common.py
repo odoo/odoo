@@ -250,6 +250,16 @@ class TestWEventCommon(HttpCaseWithUserDemo, HttpCaseWithUserPortal, EventDtPatc
             'user_id': self.user_admin.id,
             'partner_id': self.event_speaker.id,
         })
+        self.track_2 = self.env['event.track'].create({
+            'name': 'Our Last Day Together !',
+            'event_id': self.event.id,
+            'stage_id': self.env.ref('website_event_track.event_track_stage3').id,
+            'date': self.reference_now + timedelta(days=1),
+            'duration': 0.75,
+            'is_published': True,
+            'user_id': self.user_admin.id,
+            'partner_id': self.event_speaker.id,
+        })
 
         # ------------------------------------------------------------
         # MEETING ROOMS
