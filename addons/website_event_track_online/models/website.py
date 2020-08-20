@@ -11,7 +11,7 @@ from odoo.tools import ImageProcess
 class Website(models.Model):
     _inherit = "website"
 
-    app_icon = fields.Image(string='Website App Icon', compute='_compute_app_icon', stored=True, readonly=True, help='This field holds the image used as mobile app icon on the website (PNG format).')
+    app_icon = fields.Image(string='Website App Icon', compute='_compute_app_icon', store=True, readonly=True, help='This field holds the image used as mobile app icon on the website (PNG format).')
 
     @api.depends('favicon')
     def _compute_app_icon(self):
