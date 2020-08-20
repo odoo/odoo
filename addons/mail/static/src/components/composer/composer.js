@@ -262,6 +262,13 @@ class Composer extends Component {
     }
 
     /**
+     * @private
+     */
+    _onComposerTextInputSendShortcut() {
+        this._postMessage();
+    }
+
+    /**
      * Called when some files have been dropped in the dropzone.
      *
      * @private
@@ -340,13 +347,6 @@ class Composer extends Component {
         await this._fileUploaderRef.comp.uploadFiles(ev.clipboardData.files);
     }
 
-    /**
-     * @private
-     */
-    _onTextInputKeydownEnter() {
-        this._postMessage();
-    }
-
 }
 
 Object.assign(Composer, {
@@ -357,7 +357,6 @@ Object.assign(Composer, {
         hasDiscardButton: false,
         hasFollowers: false,
         hasSendButton: true,
-        hasTextInputSendOnEnterEnabled: true,
         hasThreadName: false,
         hasThreadTyping: false,
         isCompact: true,
@@ -381,7 +380,6 @@ Object.assign(Composer, {
             optional: true,
         },
         hasSendButton: Boolean,
-        hasTextInputSendOnEnterEnabled: Boolean,
         hasThreadName: Boolean,
         hasThreadTyping: Boolean,
         showAttachmentsExtensions: {
@@ -403,6 +401,15 @@ Object.assign(Composer, {
         },
         isCompact: Boolean,
         isExpandable: Boolean,
+        /**
+         * If set, keyboard shortcuts from text input to send message.
+         * If not set, will use default values from `ComposerTextInput`.
+         */
+        textInputSendShortcuts: {
+            type: Array,
+            element: String,
+            optional: true,
+        },
     },
     template: 'mail.Composer',
 });
