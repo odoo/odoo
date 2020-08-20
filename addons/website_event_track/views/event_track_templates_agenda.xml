@@ -150,6 +150,9 @@
 <template id="agenda_main_track" name="Track Agenda: Track">
     <div class="d-flex flex-column h-100">
         <div class="d-flex justify-content-end flex-wrap-reverse o_weagenda_track_badges">
+            <small t-if="track.is_track_live and not track.is_track_done and track.website_published"
+                class="mx-1 badge badge-danger">Live
+            </small>
             <small t-if="not track.website_published and user_event_manager and track.stage_id.is_accepted"
                    title="Unpublished"
                    class="ml-1 badge badge-danger o_wevent_online_badge_unpublished">Unpublished</small>

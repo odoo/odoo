@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-<template id="tracks_display_list" inherit_id="website_event_track_session.tracks_display_list">
+<template id="tracks_display_list" inherit_id="website_event_track.tracks_display_list">
     <!-- TRACK LIST: ADD REPLAY TAG FOR FINISHED TRACKS -->
     <xpath expr="//div[hasclass('o_wesession_list_item')]/div[hasclass('col-md-5')]//t[@t-elif='not track.is_track_done and not track.is_track_soon']" position="after">
         <a t-elif="track.youtube_video_url and (track.is_published or user_event_manager)"

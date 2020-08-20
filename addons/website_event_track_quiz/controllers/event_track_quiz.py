@@ -2,11 +2,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import http
-from odoo.addons.website_event_track_session.controllers.session import WebsiteEventSessionController
+from odoo.addons.website_event_track.controllers.event_track import EventTrackController
 from odoo.http import request
 
 
-class WebsiteEventTrackQuiz(WebsiteEventSessionController):
+class WebsiteEventTrackQuiz(EventTrackController):
 
     # QUIZZES IN PAGE
     # ----------------------------------------------------------

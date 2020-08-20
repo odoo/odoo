@@ -12,7 +12,6 @@
     'description': "",
     'depends': [
         'website_event_track',
-        'website_event_track_session',
     ],
     'data': [
         'views/assets.xml',
