@@ -452,7 +452,7 @@ class ResPartner(models.Model):
     def check_vat_co(self, vat):
         return stdnum.util.get_cc_module('co', 'vat').is_valid(vat) if stdnum else True
 
-    # Argentinian VAT validation, contributed by ADHOC
+    # Argentinean VAT validation, contributed by ADHOC
     def check_vat_ar(self, vat):
         try:
             import stdnum.ar
