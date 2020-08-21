@@ -42,7 +42,7 @@ class HrEmployeeBase(models.AbstractModel):
         now = fields.Datetime.now()
         now_utc = pytz.utc.localize(now)
         for employee in self:
-            tz = pytz.timezone(employee.tz)
+            tz = pytz.timezone(employee.tz or 'UTC')
             now_tz = now_utc.astimezone(tz)
             start_tz = now_tz + relativedelta(months=-1, day=1, hour=0, minute=0, second=0, microsecond=0)
             start_naive = start_tz.astimezone(pytz.utc).replace(tzinfo=None)
