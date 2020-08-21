@@ -19,7 +19,15 @@
                                 website: registrations, schedule, map, ...
                             </div>
                         </div>
-                        <div id="community-menu" class="row mt16" groups="base.group_no_one" attrs="{'invisible': [('website_menu', '=', False)]}">
+                        <div class="row mt16" name="menu_register_cta"
+                            groups="base.group_no_one"
+                            attrs="{'invisible': [('website_menu', '=', False)]}">
+                            <label class="col-lg-4" for="menu_register_cta"/> <field name="menu_register_cta"/>
+                        </div>
+                        <div class="row mt16" name="community_menu"
+                            id="community-menu"
+                            groups="base.group_no_one"
+                            attrs="{'invisible': [('website_menu', '=', False)]}">
                             <label class="col-lg-4" for="community_menu"/> <field name="community_menu"/>
                         </div>
                     </div>
