@@ -743,9 +743,10 @@ class AccountTestInvoicingCommon(SavepointCase):
         '''
         chart_template = chart_template or cls.env.company.chart_template_id
 
+        currency_id = chart_template.currency_id.id
         company = cls.env['res.company'].create({
             'name': company_name,
-            'currency_id': cls.env.user.company_id.currency_id.id,
+            'currency_id': currency_id,
             **kwargs,
         })
         cls.env.user.company_ids |= company
@@ -753,7 +754,7 @@ class AccountTestInvoicingCommon(SavepointCase):
         chart_template.try_loading(company=company)
 
         # The currency could be different after the installation of the chart template.
-        company.write({'currency_id': kwargs.get('currency_id', cls.env.user.company_id.currency_id.id)})
+        company.write({'currency_id': kwargs.get('currency_id', currency_id)})
 
         return {
             'company': company,
