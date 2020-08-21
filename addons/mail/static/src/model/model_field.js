@@ -320,7 +320,7 @@ class ModelField {
      *
      * @param {mail.model} record
      * @param {any} newVal
-     * @param {Object} [options={}]
+     * @param {Object} [options]
      * @param {boolean} [options.hasToUpdateInverse] whether updating the
      *  current field should also update its inverse field. Only applies to
      *  relational fields. Typically set to false only during the process of
@@ -516,7 +516,7 @@ class ModelField {
      * @private
      * @param {mail.model} record
      * @param {mail.model|mail.model[]} newValue
-     * @param {Object} [param2]
+     * @param {Object} [param2={}]
      * @param {boolean} [param2.hasToUpdateInverse=true] whether updating the
      *  current field should also update its inverse field. Typically set to
      *  false only during the process of updating the inverse field itself, to
@@ -554,7 +554,7 @@ class ModelField {
      * @private
      * @param {mail.model} record
      * @param {mail.model} recordToLink
-     * @param {Object} [param2]
+     * @param {Object} [param2={}]
      * @param {boolean} [param2.hasToUpdateInverse=true] whether updating the
      *  current field should also update its inverse field. Typically set to
      *  false only during the process of updating the inverse field itself, to
@@ -609,7 +609,7 @@ class ModelField {
      * @private
      * @param {mail.model} record
      * @param {mail.model|mail.model[]} newValue
-     * @param {Object} [param2]
+     * @param {Object} [param2={}]
      * @param {boolean} [param2.hasToUpdateInverse=true] whether updating the
      *  current field should also update its inverse field. Typically set to
      *  false only during the process of updating the inverse field itself, to
@@ -659,7 +659,7 @@ class ModelField {
      *
      * @private
      * @param {mail.model} record
-     * @param {Object} [param1]
+     * @param {Object} [param1={}]
      * @param {boolean} [param1.hasToUpdateInverse=true] whether updating the
      *  current field should also update its inverse field. Typically set to
      *  false only during the process of updating the inverse field itself, to

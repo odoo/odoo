@@ -536,48 +536,20 @@ class ModelManager {
     _create(Model, data = {}) {
         const isMulti = typeof data[Symbol.iterator] === 'function';
         const dataList = isMulti ? data : [data];
-        const fieldNames = new Set(Object.keys(Model.fields));
-        const fields = Object.values(Model.fields);
         const records = [];
         for (const data of dataList) {
             /**
-             * 0. Ensure the record can be created: localId must be unique.
+             * 1. Ensure the record can be created: localId must be unique.
              */
             const localId = Model._createRecordLocalId(data);
             if (Model.get(localId)) {
                 throw Error(`A record already exists for model "${Model.modelName}" with localId "${localId}".`);
             }
             /**
-             * 1. Make proxified record, to redirects field access to field
-             * getter and to prevent field from being written without calling
-             * update (which is necessary to process update cycle).
-             */
-            const record = new Proxy(new Model({ valid: true }), {
-                get: (target, k) => {
-                    if (!(fieldNames.has(k))) {
-                        // No crash, we allow these reads due to patch()
-                        // implementation details that read on `this._super` even
-                        // if not set before-hand.
-                        return target[k];
-                    }
-                    return Model.fields[k].get(target);
-                },
-                set: (target, k, newVal) => {
-                    if (fieldNames.has(k)) {
-                        throw new Error("Forbidden to write on record field without .update()!!");
-                    } else {
-                        // No crash, we allow these writes due to following concerns:
-                        // - patch() implementation details that write on `this._super`
-                        // - record listeners that need setting on this with `.bind(this)`
-                        target[k] = newVal;
-                    }
-                    return true;
-                },
-            });
-            /**
              * 2. Prepare record state. Assign various keys and values that are
              * expected to be found on every record.
              */
+            const record = new Model({ valid: true });
             Object.assign(record, {
                 // The messaging env.
                 env: this.env,
@@ -589,7 +561,7 @@ class ModelManager {
                 __state: 0,
             });
             // Ensure X2many relations are Set initially (other fields can stay undefined).
-            for (const field of fields) {
+            for (const field of Model.__fieldList) {
                 if (field.fieldType === 'relation') {
                     if (['one2many', 'many2many'].includes(field.relationType)) {
                         record.__values[field.fieldName] = new Set();
@@ -607,7 +579,7 @@ class ModelManager {
              * 4. Write provided data, default data, and register computes.
              */
             const data2 = {};
-            for (const field of fields) {
+            for (const field of Model.__fieldList) {
                 if (field.fieldName in data) {
                     data2[field.fieldName] = data[field.fieldName];
                 } else {
@@ -641,7 +613,7 @@ class ModelManager {
             throw Error(`Cannot delete already deleted record ${record.localId}.`);
         }
         record._willDelete();
-        for (const field of Object.values(Model.fields)) {
+        for (const field of Model.__fieldList) {
             if (field.fieldType === 'relation') {
                 // ensure inverses are properly unlinked
                 field.set(record, [['unlink-all']]);
@@ -981,8 +953,24 @@ class ModelManager {
                 TargetModel = TargetModel.__proto__;
             }
         }
+        /**
+         * 5. Register final fields and make field accessors, to redirects field
+         * access to field getter and to prevent field from being written
+         * without calling update (which is necessary to process update cycle).
+         */
         for (const Model of Object.values(Models)) {
-            Model.fields = Model.__combinedFields;
+            // Object with fieldName/field as key/value pair, for quick access.
+            Model.__fieldMap = Model.__combinedFields;
+            // List of all fields, for iterating.
+            Model.__fieldList = Object.values(Model.__fieldMap);
+            // Add field accessors.
+            for (const field of Model.__fieldList) {
+                Object.defineProperty(Model.prototype, field.fieldName, {
+                    get() {
+                        return field.get(this); // this is bound to record
+                    },
+                });
+            }
             delete Model.__combinedFields;
         }
     }
@@ -1000,13 +988,13 @@ class ModelManager {
             const [hash, fieldName1, fieldName2] = dependent.split(
                 this.DEPENDENT_INNER_SEPARATOR
             );
-            const field1 = Model.fields[fieldName1];
+            const field1 = Model.__fieldMap[fieldName1];
             if (fieldName2) {
                 // "fieldName1.fieldName2" -> dependent is on another record
                 if (['one2many', 'many2many'].includes(field1.relationType)) {
                     for (const otherRecord of record[fieldName1]) {
                         const OtherModel = otherRecord.constructor;
-                        const field2 = OtherModel.fields[fieldName2];
+                        const field2 = OtherModel.__fieldMap[fieldName2];
                         if (field2 && field2.hashes.includes(hash)) {
                             this._registerToComputeField(otherRecord, field2);
                         }
@@ -1017,7 +1005,7 @@ class ModelManager {
                         continue;
                     }
                     const OtherModel = otherRecord.constructor;
-                    const field2 = OtherModel.fields[fieldName2];
+                    const field2 = OtherModel.__fieldMap[fieldName2];
                     if (field2 && field2.hashes.includes(hash)) {
                         this._registerToComputeField(otherRecord, field2);
                     }
@@ -1065,7 +1053,7 @@ class ModelManager {
         const Model = record.constructor;
         let hasChanged = false;
         for (const fieldName of Object.keys(data)) {
-            const field = Model.fields[fieldName];
+            const field = Model.__fieldMap[fieldName];
             if (!field) {
                 throw new Error(`Cannot create/update record with data unrelated to a field. (model: "${Model.modelName}", non-field attempted update: "${fieldName}")`);
             }
