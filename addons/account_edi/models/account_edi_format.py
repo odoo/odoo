@@ -339,11 +339,14 @@ class AccountEdiFormat(models.Model):
         for file_data in self._decode_attachment(attachment):
             for edi_format in self:
                 res = False
-                if file_data['type'] == 'xml':
-                    res = edi_format._create_invoice_from_xml_tree(file_data['filename'], file_data['xml_tree'])
-                elif file_data['type'] == 'pdf':
-                    res = edi_format._create_invoice_from_pdf_reader(file_data['filename'], file_data['pdf_reader'])
-                    file_data['pdf_reader'].stream.close()
+                try:
+                    if file_data['type'] == 'xml':
+                        res = edi_format._create_invoice_from_xml_tree(file_data['filename'], file_data['xml_tree'])
+                    elif file_data['type'] == 'pdf':
+                        res = edi_format._create_invoice_from_pdf_reader(file_data['filename'], file_data['pdf_reader'])
+                        file_data['pdf_reader'].stream.close()
+                except Exception as e:
+                    _logger.exception("Error importing attachment \"%s\" as invoice with format \"%s\"", file_data['filename'], edi_format.name, str(e))
                 if res:
                     if 'extract_state' in res:
                         # Bypass the OCR to prevent overwriting data when an EDI was succesfully imported.
@@ -361,11 +364,14 @@ class AccountEdiFormat(models.Model):
         for file_data in self._decode_attachment(attachment):
             for edi_format in self:
                 res = False
-                if file_data['type'] == 'xml':
-                    res = edi_format._update_invoice_from_xml_tree(file_data['filename'], file_data['xml_tree'], invoice)
-                elif file_data['type'] == 'pdf':
-                    res = edi_format._update_invoice_from_pdf_reader(file_data['filename'], file_data['pdf_reader'], invoice)
-                    file_data['pdf_reader'].stream.close()
+                try:
+                    if file_data['type'] == 'xml':
+                        res = edi_format._update_invoice_from_xml_tree(file_data['filename'], file_data['xml_tree'], invoice)
+                    elif file_data['type'] == 'pdf':
+                        res = edi_format._update_invoice_from_pdf_reader(file_data['filename'], file_data['pdf_reader'], invoice)
+                        file_data['pdf_reader'].stream.close()
+                except Exception as e:
+                    _logger.exception("Error importing attachment \"%s\" as invoice with format \"%s\"", file_data['filename'], edi_format.name, str(e))
                 if res:
                     if 'extract_state' in res:
                         # Bypass the OCR to prevent overwriting data when an EDI was succesfully imported.
