@@ -89,8 +89,8 @@ class AccountTax(models.Model):
         domain="[('deprecated', '=', False), ('company_id', '=', company_id)]",
         comodel_name='account.account',
         help="Account used to transition the tax amount for cash basis taxes. It will contain the tax amount as long as the original invoice has not been reconciled ; at reconciliation, this amount cancelled on this account and put on the regular tax account.")
-    invoice_repartition_line_ids = fields.One2many(string="Repartition for Invoices", comodel_name="account.tax.repartition.line", inverse_name="invoice_tax_id", copy=True, help="Repartition when the tax is used on an invoice")
-    refund_repartition_line_ids = fields.One2many(string="Repartition for Refund Invoices", comodel_name="account.tax.repartition.line", inverse_name="refund_tax_id", copy=True, help="Repartition when the tax is used on a refund")
+    invoice_repartition_line_ids = fields.One2many(string="Distribution for Invoices", comodel_name="account.tax.repartition.line", inverse_name="invoice_tax_id", copy=True, help="Distribution when the tax is used on an invoice")
+    refund_repartition_line_ids = fields.One2many(string="Distribution for Refund Invoices", comodel_name="account.tax.repartition.line", inverse_name="refund_tax_id", copy=True, help="Distribution when the tax is used on a refund")
     tax_fiscal_country_id = fields.Many2one(string='Fiscal Country', comodel_name='res.country', related='company_id.account_tax_fiscal_country_id', help="Technical field used to restrict the domain of account tags for tax repartition lines created for this tax.")
     country_code = fields.Char(related='company_id.country_id.code', readonly=True)
 
@@ -127,7 +127,7 @@ class AccountTax(models.Model):
 
         base_line = lines.filtered(lambda x: x.repartition_type == 'base')
         if len(base_line) != 1:
-            raise ValidationError(_("Invoice and credit note repartition should each contain exactly one line for the base."))
+            raise ValidationError(_("Invoice and credit note distribution should each contain exactly one line for the base."))
 
     @api.constrains('invoice_repartition_line_ids', 'refund_repartition_line_ids')
     def _validate_repartition_lines(self):
@@ -138,14 +138,14 @@ class AccountTax(models.Model):
             record._check_repartition_lines(refund_repartition_line_ids)
 
             if len(invoice_repartition_line_ids) != len(refund_repartition_line_ids):
-                raise ValidationError(_("Invoice and credit note repartition should have the same number of lines."))
+                raise ValidationError(_("Invoice and credit note distribution should have the same number of lines."))
 
             index = 0
             while index < len(invoice_repartition_line_ids):
                 inv_rep_ln = invoice_repartition_line_ids[index]
                 ref_rep_ln = refund_repartition_line_ids[index]
                 if inv_rep_ln.repartition_type != ref_rep_ln.repartition_type or inv_rep_ln.factor_percent != ref_rep_ln.factor_percent:
-                    raise ValidationError(_("Invoice and credit note repartitions should match (same percentages, in the same order)."))
+                    raise ValidationError(_("Invoice and credit note distribution should match (same percentages, in the same order)."))
                 index += 1
 
     @api.constrains('children_tax_ids', 'type_tax_use')
@@ -620,8 +620,8 @@ class AccountTaxRepartitionLine(models.Model):
     _order = 'sequence, repartition_type, id'
     _check_company_auto = True
 
-    factor_percent = fields.Float(string="%", required=True, help="Factor to apply on the account move lines generated from this repartition line, in percents")
-    factor = fields.Float(string="Factor Ratio", compute="_compute_factor", help="Factor to apply on the account move lines generated from this repartition line")
+    factor_percent = fields.Float(string="%", required=True, help="Factor to apply on the account move lines generated from this distribution line, in percents")
+    factor = fields.Float(string="Factor Ratio", compute="_compute_factor", help="Factor to apply on the account move lines generated from this distribution line")
     repartition_type = fields.Selection(string="Based On", selection=[('base', 'Base'), ('tax', 'of tax')], required=True, default='tax', help="Base on which the factor will be applied.")
     account_id = fields.Many2one(string="Account",
         comodel_name='account.account',
@@ -631,14 +631,14 @@ class AccountTaxRepartitionLine(models.Model):
     tag_ids = fields.Many2many(string="Tax Grids", comodel_name='account.account.tag', domain=[('applicability', '=', 'taxes')], copy=True)
     invoice_tax_id = fields.Many2one(comodel_name='account.tax',
         check_company=True,
-        help="The tax set to apply this repartition on invoices. Mutually exclusive with refund_tax_id")
+        help="The tax set to apply this distribution on invoices. Mutually exclusive with refund_tax_id")
     refund_tax_id = fields.Many2one(comodel_name='account.tax',
         check_company=True,
-        help="The tax set to apply this repartition on refund invoices. Mutually exclusive with invoice_tax_id")
+        help="The tax set to apply this distribution on refund invoices. Mutually exclusive with invoice_tax_id")
     tax_id = fields.Many2one(comodel_name='account.tax', compute='_compute_tax_id')
     tax_fiscal_country_id = fields.Many2one(string="Fiscal Country", comodel_name='res.country', related='company_id.account_tax_fiscal_country_id', help="Technical field used to restrict tags domain in form view.")
-    company_id = fields.Many2one(string="Company", comodel_name='res.company', compute="_compute_company", store=True, help="The company this repartition line belongs to.")
-    sequence = fields.Integer(string="Sequence", default=1, help="The order in which display and match repartition lines. For refunds to work properly, invoice repartition lines should be arranged in the same order as the credit note repartition lines they correspond to.")
+    company_id = fields.Many2one(string="Company", comodel_name='res.company', compute="_compute_company", store=True, help="The company this distribution line belongs to.")
+    sequence = fields.Integer(string="Sequence", default=1, help="The order in which display and match distribution lines. For refunds to work properly, invoice distribution lines should be arranged in the same order as the credit note distribution lines they correspond to.")
     use_in_tax_closing = fields.Boolean(string="Tax Closing Entry")
 
     @api.onchange('account_id')
@@ -652,7 +652,7 @@ class AccountTaxRepartitionLine(models.Model):
     def validate_tax_template_link(self):
         for record in self:
             if record.invoice_tax_id and record.refund_tax_id:
-                raise ValidationError(_("Tax repartition lines should apply to either invoices or refunds, not both at the same time. invoice_tax_id and refund_tax_id should not be set together."))
+                raise ValidationError(_("Tax distribution lines should apply to either invoices or refunds, not both at the same time. invoice_tax_id and refund_tax_id should not be set together."))
 
     @api.depends('factor_percent')
     def _compute_factor(self):

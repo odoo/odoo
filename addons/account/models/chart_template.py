@@ -998,11 +998,11 @@ class AccountTaxRepartitionLineTemplate(models.Model):
     _name = "account.tax.repartition.line.template"
     _description = "Tax Repartition Line Template"
 
-    factor_percent = fields.Float(string="%", required=True, help="Factor to apply on the account move lines generated from this repartition line, in percents")
+    factor_percent = fields.Float(string="%", required=True, help="Factor to apply on the account move lines generated from this distribution line, in percents")
     repartition_type = fields.Selection(string="Based On", selection=[('base', 'Base'), ('tax', 'of tax')], required=True, default='tax', help="Base on which the factor will be applied.")
     account_id = fields.Many2one(string="Account", comodel_name='account.account.template', help="Account on which to post the tax amount")
-    invoice_tax_id = fields.Many2one(comodel_name='account.tax.template', help="The tax set to apply this repartition on invoices. Mutually exclusive with refund_tax_id")
-    refund_tax_id = fields.Many2one(comodel_name='account.tax.template', help="The tax set to apply this repartition on refund invoices. Mutually exclusive with invoice_tax_id")
+    invoice_tax_id = fields.Many2one(comodel_name='account.tax.template', help="The tax set to apply this distribution on invoices. Mutually exclusive with refund_tax_id")
+    refund_tax_id = fields.Many2one(comodel_name='account.tax.template', help="The tax set to apply this distribution on refund invoices. Mutually exclusive with invoice_tax_id")
     tag_ids = fields.Many2many(string="Financial Tags", relation='account_tax_repartition_financial_tags', comodel_name='account.account.tag', copy=True, help="Additional tags that will be assigned by this repartition line for use in financial reports")
     use_in_tax_closing = fields.Boolean(string="Tax Closing Entry")
 
@@ -1048,14 +1048,14 @@ class AccountTaxRepartitionLineTemplate(models.Model):
     def validate_tax_template_link(self):
         for record in self:
             if record.invoice_tax_id and record.refund_tax_id:
-                raise ValidationError(_("Tax repartition line templates should apply to either invoices or refunds, not both at the same time. invoice_tax_id and refund_tax_id should not be set together."))
+                raise ValidationError(_("Tax distribution line templates should apply to either invoices or refunds, not both at the same time. invoice_tax_id and refund_tax_id should not be set together."))
 
     @api.constrains('plus_report_line_ids', 'minus_report_line_ids')
     def validate_tags(self):
         all_tax_rep_lines = self.mapped('plus_report_line_ids') + self.mapped('minus_report_line_ids')
         lines_without_tag = all_tax_rep_lines.filtered(lambda x: not x.tag_name)
         if lines_without_tag:
-            raise ValidationError(_("The following tax report lines are used in some tax repartition template though they don't generate any tag: %s . This probably means you forgot to set a tag_name on these lines.", str(lines_without_tag.mapped('name'))))
+            raise ValidationError(_("The following tax report lines are used in some tax distribution template though they don't generate any tag: %s . This probably means you forgot to set a tag_name on these lines.", str(lines_without_tag.mapped('name'))))
 
     def get_repartition_line_create_vals(self, company):
         rslt = [(5, 0, 0)]

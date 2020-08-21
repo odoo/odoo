@@ -135,10 +135,10 @@
                             <div attrs="{'invisible': [('amount_type', '=', 'group')]}">
                                 <field name="tax_fiscal_country_id" invisible="1"/>
                                 <field name="country_code" invisible="1"/>
-                                <group string="Repartition for Invoices">
+                                <group string="Distribution for Invoices">
                                     <field name="invoice_repartition_line_ids" nolabel="1" context="{'default_company_id': company_id}"/>
                                 </group>
-                                <group string="Repartition for Credit Notes">
+                                <group string="Distribution for Credit Notes">
                                     <field name="refund_repartition_line_ids" nolabel="1" context="{'default_company_id': company_id}"/>
                                 </group>
                             </div>
