@@ -20,7 +20,7 @@ class EventEvent(models.Model):
         for event in self:
             if event.event_type_id and event.event_type_id != event._origin.event_type_id:
                 event.exhibitor_menu = event.event_type_id.exhibitor_menu
-            elif event.website_menu and event.website_menu != event._origin.website_menu or not event.exhibitor_menu:
+            elif event.website_menu and (event.website_menu != event._origin.website_menu or not event.exhibitor_menu):
                 event.exhibitor_menu = True
             elif not event.website_menu:
                 event.exhibitor_menu = False
@@ -38,7 +38,7 @@ class EventEvent(models.Model):
     def _update_website_menus(self, menus_update_by_field=None):
         super(EventEvent, self)._update_website_menus(menus_update_by_field=menus_update_by_field)
         for event in self:
-            if not menus_update_by_field or event in menus_update_by_field.get('exhibitor_menu'):
+            if event.menu_id and (not menus_update_by_field or event in menus_update_by_field.get('exhibitor_menu')):
                 event._update_website_menu_entry('exhibitor_menu', 'exhibitor_menu_ids', '_get_exhibitor_menu_entries')
 
     def _get_menu_type_field_matching(self):

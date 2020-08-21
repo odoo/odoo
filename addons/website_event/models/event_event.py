@@ -118,7 +118,7 @@ class Event(models.Model):
         for event in self:
             if event.event_type_id and event.event_type_id != event._origin.event_type_id:
                 event.community_menu = event.event_type_id.community_menu
-            elif event.website_menu and event.website_menu != event._origin.website_menu or not event.community_menu:
+            elif event.website_menu and (event.website_menu != event._origin.website_menu or not event.community_menu):
                 event.community_menu = True
             elif not event.website_menu:
                 event.community_menu = False
@@ -129,7 +129,7 @@ class Event(models.Model):
         for event in self:
             if event.event_type_id and event.event_type_id != event._origin.event_type_id:
                 event.menu_register_cta = event.event_type_id.menu_register_cta
-            elif event.website_menu and event.website_menu != event._origin.website_menu or not event.menu_register_cta:
+            elif event.website_menu and (event.website_menu != event._origin.website_menu or not event.menu_register_cta):
                 event.menu_register_cta = True
             elif not event.website_menu:
                 event.menu_register_cta = False
