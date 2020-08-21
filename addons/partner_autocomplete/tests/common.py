@@ -51,7 +51,6 @@ class MockIAPPartnerAutocomplete(common.BaseCase):
 
     @classmethod
     def _init_mock_partner_autocomplete(cls):
-        super(MockIAPPartnerAutocomplete, cls).setUpClass()
         cls.base_de = cls.env.ref('base.de')
         cls.base_be = cls.env.ref('base.be')
         cls.be_state_bw = cls.env['res.country.state'].create({'name': 'Béwééé dis', 'code': 'bw', 'country_id': cls.base_be.id})
