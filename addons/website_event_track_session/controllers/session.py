@@ -145,9 +145,8 @@ class WebsiteEventSessionController(EventTrackOnlineController):
     # PAGE VIEW
     # ------------------------------------------------------------
 
-    @http.route('''/event/<model("event.event", "[('website_track', '=', True)]"):event>
-                    /track/<model("event.track", , "[('event_id', '=', event.id)]"):track>''',
-                type='http', auth="public", website=True, sitemap=False)
+    @http.route('''/event/<model("event.event", "[('website_track', '=', True)]"):event>/track/<model("event.track", "[('event_id', '=', event.id)]"):track>''',
+                type='http', auth="public", website=True, sitemap=True)
     def event_track_page(self, event, track, **options):
         track = self._fetch_track(track.id, allow_is_accepted=False)
 
@@ -155,6 +154,9 @@ class WebsiteEventSessionController(EventTrackOnlineController):
             "website_event_track_session.event_track_main",
             self._event_track_page_get_values(event, track.sudo(), **options)
         )
+
+    def event_track_view(self, event, track, **post):
+        return self.event_track_page(event, track, **post)
 
     def _event_track_page_get_values(self, event, track, **options):
         track = track.sudo()
