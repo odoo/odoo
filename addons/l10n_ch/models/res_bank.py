@@ -278,15 +278,6 @@ class ResPartnerBank(models.Model):
                and re.match('\d+$', reference) \
                and reference == mod10r(reference[:-1])
 
-    def _get_partner_address_lines(self, partner):
-        """ Returns a tuple of two elements containing the address lines to use
-        for this partner. Line 1 contains the street and number, line 2 contains
-        zip and city. Those two lines are limited to 70 characters
-        """
-        line_1 = (partner and partner.street or '') + ' ' + (partner and partner.street2 or '')
-        line_2 = partner.zip + ' ' + partner.city
-        return line_1[:70], line_2[:70]
-
     def _eligible_for_qr_code(self, qr_method, debtor_partner, currency):
         if qr_method == 'ch_qr':
 

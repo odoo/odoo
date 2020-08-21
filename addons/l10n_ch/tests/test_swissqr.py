@@ -12,6 +12,10 @@ QR_IBAN = 'CH21 3080 8001 2345 6782 7'
 @tagged('post_install', '-at_install')
 class TestSwissQR(AccountTestInvoicingCommon):
 
+    @classmethod
+    def setUpClass(cls, chart_template_ref='l10n_ch.l10nch_chart_template'):
+        super().setUpClass(chart_template_ref=chart_template_ref)
+
     def setUp(self):
         super(TestSwissQR, self).setUp()
         # Activate SwissQR in Swiss invoices
@@ -54,7 +58,7 @@ class TestSwissQR(AccountTestInvoicingCommon):
             .with_context(default_type='out_invoice')
             .create(
                 {
-                    'type': 'out_invoice',
+                    'move_type': 'out_invoice',
                     'partner_id': self.customer.id,
                     'currency_id': self.env.ref(currency_to_use).id,
                     'date': time.strftime('%Y') + '-12-22',
@@ -89,14 +93,14 @@ class TestSwissQR(AccountTestInvoicingCommon):
     def swissqr_not_generated(self, invoice):
         """ Prints the given invoice and tests that no Swiss QR generation is triggered. """
         self.assertFalse(
-            invoice.can_generate_qr_bill(),
+            invoice.partner_bank_id._eligible_for_qr_code('ch_qr', invoice.partner_id, invoice.currency_id),
             'No Swiss QR should be generated for this invoice',
         )
 
     def swissqr_generated(self, invoice, ref_type='NON'):
         """ Prints the given invoice and tests that a Swiss QR generation is triggered. """
         self.assertTrue(
-            invoice.can_generate_qr_bill(), 'A Swiss QR can be generated'
+            invoice.partner_bank_id._eligible_for_qr_code('ch_qr', invoice.partner_id, invoice.currency_id), 'A Swiss QR can be generated'
         )
 
         if ref_type == 'QRR':
@@ -114,7 +118,7 @@ class TestSwissQR(AccountTestInvoicingCommon):
             "1%0A"
             "{iban}%0A"
             "K%0A"
-            "YourCompany%0A"
+            "company_1_data%0A"
             "Route+de+Berne+88%0A"
             "2000+Neuch%C3%A2tel%0A"
             "%0A%0A"
@@ -140,17 +144,9 @@ class TestSwissQR(AccountTestInvoicingCommon):
         )
 
         expected_url = ("/report/barcode/?type=QR&value={}"
-                        "&width=256&height=256&quiet=1").format(payload)
+                        "&width=256&height=256&quiet=1&mask=ch_cross").format(payload)
 
-        url = invoice.partner_bank_id.build_swiss_code_url(
-            invoice.amount_residual,
-            invoice.currency_id.name,
-            None,
-            invoice.partner_id,
-            None,
-            invoice.payment_reference,
-            invoice.ref or invoice.name,
-        )
+        url = invoice.generate_qr_code()
         self.assertEqual(url, expected_url)
 
     def test_swissQR_missing_bank(self):
