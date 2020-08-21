@@ -50,14 +50,17 @@ class ProjectTaskCreateSalesOrder(models.TransientModel):
             domain = self.env['sale.order.line']._timesheet_compute_delivered_quantity_domain()
             timesheet = self.env['account.analytic.line'].read_group(domain + [('task_id', '=', self.task_id.id), ('so_line', '=', False), ('timesheet_invoice_id', '=', False)], ['unit_amount'], ['task_id'])
             unit_amount = round(timesheet[0].get('unit_amount', 0), 2) if timesheet else 0
+            if not unit_amount:
+                line.info_invoice = False
+                continue
             company_uom = self.env.company.timesheet_encode_uom_id
             label = _("hours")
             if company_uom == self.env.ref('uom.product_uom_day'):
                 label = _("days")
             if line.link_selection == 'create' and line.price_unit:
-                line.info_invoice = _("%(amount)s %(label)s will be added to the new Sales Order Item.", amount=unit_amount, label=label)
+                line.info_invoice = _("%(amount)s %(label)s will be added to the new Sales Order.", amount=unit_amount, label=label)
             elif line.sale_line_id:
-                line.info_invoice = _("%(amount)s %(label)s will be added to the selected Sales Order Item.", amount=unit_amount, label=label)
+                line.info_invoice = _("%(amount)s %(label)s will be added to the selected Sales Order.", amount=unit_amount, label=label)
             else:
                 line.info_invoice = False
 
