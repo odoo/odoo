@@ -71,7 +71,9 @@ class HrEmployeeBase(models.AbstractModel):
         return dict((row['employee_id'], row['days']) for row in self._cr.dictfetchall())
 
     def _compute_remaining_leaves(self):
-        remaining = self._get_remaining_leaves()
+        remaining = {}
+        if self.ids:
+            remaining = self._get_remaining_leaves()
         for employee in self:
             value = float_round(remaining.get(employee.id, 0.0), precision_digits=2)
             employee.leaves_count = value
