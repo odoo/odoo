@@ -343,7 +343,7 @@ class AccountEdiFormat(models.Model):
                     res = edi_format._create_invoice_from_xml_tree(file_data['filename'], file_data['xml_tree'])
                 elif file_data['type'] == 'pdf':
                     res = edi_format._create_invoice_from_pdf_reader(file_data['filename'], file_data['pdf_reader'])
-                    file_data['pdf_reader'].streamS.close()
+                    file_data['pdf_reader'].stream.close()
                 if res:
                     if 'extract_state' in res:
                         # Bypass the OCR to prevent overwriting data when an EDI was succesfully imported.
