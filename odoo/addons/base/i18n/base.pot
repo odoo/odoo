@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.3\n"
+"Project-Id-Version: Odoo Server saas~13.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-08-04 08:57+0000\n"
-"PO-Revision-Date: 2020-08-04 08:57+0000\n"
+"POT-Creation-Date: 2020-08-21 13:19+0000\n"
+"PO-Revision-Date: 2020-08-21 13:19+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -443,6 +443,15 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_website_event_crm_questions
+msgid ""
+"\n"
+"        Add information when we build the description of a lead to include\n"
+"        the questions and answers linked to the registrations.\n"
+"    "
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_l10n_mx_reports_closing
 msgid ""
 "\n"
@@ -473,6 +482,14 @@ msgstr ""
 msgid ""
 "\n"
 "        Bridge between HR and Maintenance."
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_pos_account_reports
+msgid ""
+"\n"
+"        Bridge module between point_of_sale and account_reports,\n"
+"        for tax reporting."
 msgstr ""
 
 #. module: base
@@ -647,6 +664,14 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_digest_enterprise
+msgid ""
+"\n"
+"        Enterprise digest data\n"
+"    "
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_account_sepa
 msgid ""
 "\n"
@@ -751,15 +776,6 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,description:base.module_im_support
-msgid ""
-"\n"
-"        This module allows employee users to communicate with livechat operators\n"
-"        of another database on which a counterpart addon is installed.\n"
-"    "
-msgstr ""
-
-#. module: base
 #: model:ir.module.module,description:base.module_purchase_product_matrix
 msgid ""
 "\n"
@@ -821,6 +837,14 @@ msgid ""
 "        Use it to generate a SDD payment for the invoices if you added a mandate\n"
 "        for its owner after its validation. You will see an error message if you\n"
 "        try to use this method on an invoice for whose payment no mandate can be used.\n"
+"    "
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_google_recaptcha
+msgid ""
+"\n"
+"        This module implements reCaptchaV3 so that you can prevent bot spam on your public modules.\n"
 "    "
 msgstr ""
 
@@ -1093,6 +1117,28 @@ msgstr ""
 msgid ""
 "\n"
 "  Publish your products on eBay"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_ar_reports
+msgid ""
+"\n"
+"* Add VAT Book report which is a legal requirement in Argentina and that holds the VAT detail info of sales or purchases made in a period of time.\n"
+"* Add a VAT summary report that is used to analyze invoicing\n"
+"* Add Digital VAT Book functionality that let us generate TXT files to import in AFIP. The ones we implement are:\n"
+"\n"
+"    * LIBRO_IVA_DIGITAL_VENTAS_CBTE\n"
+"    * LIBRO_IVA_DIGITAL_VENTAS_ALICUOTAS\n"
+"    * LIBRO_IVA_DIGITAL_COMPRAS_CBTE\n"
+"    * LIBRO_IVA_DIGITAL_COMPRAS_ALICUOTAS\n"
+"    * LIBRO_IVA_DIGITAL_IMPORTACION_BIENES_ALICUOTA\n"
+"\n"
+"Official Documentation AFIP\n"
+"\n"
+"* Digital VAT Book - record design https://www.afip.gob.ar/libro-iva-digital/documentos/libro-iva-digital-diseno-registros.pdf\n"
+"* CITI - record design (same as the Digital VAT Book): https://www.afip.gob.ar/comprasyventas/documentos/RegimendeInformaciondeComprasyVentasDisenosdeRegistros1.xls\n"
+"* CITI - specification (provides more information on how to format the numbers and the fillings of the numeric / alphanumeric fields): https://www.afip.gob.ar/comprasyventas/documentos/Regimen-Informacion-Compras-Ventas-Especificaciones.doc\n"
+"\n"
 msgstr ""
 
 #. module: base
@@ -1370,17 +1416,6 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,description:base.module_l10n_ar_reports
-msgid ""
-"\n"
-"Add VAT Book report which is a legal requirement in Argentine and that holds the VAT detail info of sales or purchases made in a period of time.\n"
-"\n"
-"Also add a VAT summary report that is used to analyze invoicing\n"
-"\n"
-"\n"
-msgstr ""
-
-#. module: base
 #: model:ir.module.module,description:base.module_hr_contract_reports
 msgid ""
 "\n"
@@ -1654,6 +1689,13 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_website_project
+msgid ""
+"\n"
+"Allows to publish all ratings for a particular project."
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_sale_timesheet
 msgid ""
 "\n"
@@ -1792,6 +1834,35 @@ msgid ""
 "Also:\n"
 "    - activates a number of regional currencies.\n"
 "    - sets up Australian taxes.\n"
+"    "
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_au_reports
+msgid ""
+"\n"
+"Australian Accounting Module\n"
+"============================\n"
+"\n"
+"Taxable Payments Annual Reports (TPAR) for Australia\n"
+"\n"
+"The Taxable payments annual report (TPAR) allows:\n"
+"\n"
+"    • Payments made to contractors (or subcontractors) for services, or\n"
+"    • Grants paid by government entities to ABN holders\n"
+"\n"
+"to be reported where required under the Taxable Payments Reporting System (TPRS) and the Taxable Government Grants and Payments reporting measure.\n"
+"\n"
+"The TPAR is due by 28th August each year.\n"
+"\n"
+"Penalties may apply if you don’t lodge your TPAR on time.\n"
+"\n"
+"For further information on who is required to lodge a Taxable payments annual report refer to\n"
+"https://softwaredevelopers.ato.gov.au/tprs\n"
+"\n"
+"The annual report must be provided to the Commissioner no later than 28 August after the end of the financial year. Reports can be sent more frequently for those that wish to do so.\n"
+"\n"
+"The report uses tax tags ``Service`` and ``Tax Withheld`` in order to find adequate journal items. These are set using the fiscal positions, and the right type of product (Services).\n"
 "    "
 msgstr ""
 
@@ -2465,6 +2536,20 @@ msgid ""
 "\n"
 "Electronic Accounting reports for Luxembourg\n"
 "============================================\n"
+"    "
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_account_edi
+msgid ""
+"\n"
+"Electronic Data Interchange\n"
+"=======================================\n"
+"EDI is the electronic interchange of business information using a standardized format.\n"
+"\n"
+"This is the base module for import and export of invoices in various EDI formats, and the\n"
+"the transmission of said documents to various parties involved in the exchange (other company,\n"
+"governements, etc.)\n"
 "    "
 msgstr ""
 
@@ -4083,35 +4168,6 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,description:base.module_account_analytic_default_hr_expense
-#: model:ir.module.module,description:base.module_account_analytic_default_purchase
-msgid ""
-"\n"
-"Set default values for your analytic accounts on your hr expenses.\n"
-"==================================================================\n"
-"\n"
-"Allows to automatically select analytic accounts based on Product\n"
-"    "
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,description:base.module_account_analytic_default
-msgid ""
-"\n"
-"Set default values for your analytic accounts.\n"
-"==============================================\n"
-"\n"
-"Allows to automatically select analytic accounts based on criterions:\n"
-"---------------------------------------------------------------------\n"
-"    * Product\n"
-"    * Partner\n"
-"    * User\n"
-"    * Company\n"
-"    * Date\n"
-"    "
-msgstr ""
-
-#. module: base
 #: model:ir.module.module,description:base.module_link_tracker
 msgid ""
 "\n"
@@ -4810,6 +4866,14 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_hr_appraisal_survey
+msgid ""
+"\n"
+"This module adds an integration with Survey to ask feedbacks to any employee, based on a survey to fill.\n"
+"    "
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_portal
 msgid ""
 "\n"
@@ -5099,6 +5163,15 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_sale_amazon_authentication
+msgid ""
+"\n"
+"This module enforces the 'public applications' authentication flow which relies on the Seller ID and\n"
+"on the Authorization Token, rather than on the Seller ID, Access Key and Secret Key of the 'private\n"
+"applications' flow implemented by the module sale_amazon.\n"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_sms
 msgid ""
 "\n"
@@ -5332,7 +5405,8 @@ msgstr ""
 msgid ""
 "\n"
 "This module will test the main event flows of Odoo, both frontend and backend.\n"
-"It installs sale capabilities, front-end flow, eCommerce, questions, ...\n"
+"It installs sale capabilities, front-end flow, eCommerce, questions and\n"
+"automatic lead generation, full Online support, ...\n"
 msgstr ""
 
 #. module: base
@@ -5457,8 +5531,8 @@ msgstr ""
 #: model:ir.module.module,description:base.module_sales_team
 msgid ""
 "\n"
-"Using this application you can manage Sales Teams  with CRM and/or Sales\n"
-"===========================================================================\n"
+"Using this application you can manage Sales Teams with CRM and/or Sales\n"
+"=======================================================================\n"
 " "
 msgstr ""
 
@@ -6024,6 +6098,11 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
 msgid "3. %y, %Y         ==&gt; 08, 2008"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_hr_appraisal_survey
+msgid "360 Feedback"
 msgstr ""
 
 #. module: base
@@ -6813,21 +6892,6 @@ msgid "Access to unauthorized or invalid companies."
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_account_analytic_default
-msgid "Account Analytic Defaults"
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,shortdesc:base.module_account_analytic_default_purchase
-msgid "Account Analytic Defaults for Purchase."
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,shortdesc:base.module_account_analytic_default_hr_expense
-msgid "Account Analytic Defaults for expenses."
-msgstr ""
-
-#. module: base
 #: model:ir.module.module,shortdesc:base.module_account_auto_transfer
 msgid "Account Automatic Transfers"
 msgstr ""
@@ -7085,7 +7149,7 @@ msgstr ""
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_tree
-msgid "Activate Language and Update Translations"
+msgid "Activate / Update"
 msgstr ""
 
 #. module: base
@@ -7106,6 +7170,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_currency__active
 #: model:ir.model.fields,field_description:base.field_res_lang__active
 #: model:ir.model.fields,field_description:base.field_res_partner__active
+#: model:ir.model.fields,field_description:base.field_res_partner_bank__active
 #: model:ir.model.fields,field_description:base.field_res_partner_category__active
 #: model:ir.model.fields,field_description:base.field_res_partner_industry__active
 #: model:ir.model.fields,field_description:base.field_res_users__active
@@ -7220,6 +7285,13 @@ msgid "Add in the 'Print' menu"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_event_crm_sale
+msgid ""
+"Add information of sale order linked to the registration for the creation of"
+" the lead."
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_mass_mailing_crm
 msgid "Add lead / opportunities UTM info on mass mailing"
 msgstr ""
@@ -7285,6 +7357,11 @@ msgstr ""
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Address separator"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_hr_contract_salary_payroll
+msgid "Adds a Gross to Net Salary Simulaton"
 msgstr ""
 
 #. module: base
@@ -7550,6 +7627,11 @@ msgid "Allow generating fsm tasks from ticket"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_website_event_crm
+msgid "Allow per-order lead creation mode"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_website_sale_comparison
 msgid "Allow shoppers to compare products based on their attributes"
 msgstr ""
@@ -7567,11 +7649,6 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_odoo_referral
 msgid "Allow you to refer your friends to Odoo and get rewards"
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,summary:base.module_odoo_referral_portal
-msgid "Allow you to refer your friends to Odoo and get rewards - Deprecated"
 msgstr ""
 
 #. module: base
@@ -7647,6 +7724,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_amazon
 msgid "Amazon Connector"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_sale_amazon_authentication
+msgid "Amazon/Authentication Patch"
 msgstr ""
 
 #. module: base
@@ -7824,6 +7906,11 @@ msgid "Appraisal"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_hr_appraisal_survey
+msgid "Appraisal - Survey"
+msgstr ""
+
+#. module: base
 #: model:ir.module.category,name:base.module_category_human_resources_appraisals
 msgid "Appraisals"
 msgstr ""
@@ -7902,6 +7989,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.res_partner_category_view_search
 #: model_terms:ir.ui.view,arch_db:base.res_partner_industry_view_search
 #: model_terms:ir.ui.view,arch_db:base.view_ir_mail_server_search
+#: model_terms:ir.ui.view,arch_db:base.view_partner_bank_form
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 #: model_terms:ir.ui.view,arch_db:base.view_res_bank_form
 #: model_terms:ir.ui.view,arch_db:base.view_res_partner_filter
@@ -8038,6 +8126,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_au
 msgid "Australian - Accounting"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_au_reports
+msgid "Australian Reports - Accounting"
 msgstr ""
 
 #. module: base
@@ -8638,16 +8731,6 @@ msgid "Boolean"
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_theme_bootswatch
-msgid "Bootswatch Theme"
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,description:base.module_theme_bootswatch
-msgid "Bootswatch themes"
-msgstr ""
-
-#. module: base
 #: model:res.country,name:base.ba
 msgid "Bosnia and Herzegovina"
 msgstr ""
@@ -8700,6 +8783,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_timesheet_purchase
 msgid "Bridge module between Sales Timesheet and Purchase"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_mail_bot_hr
+msgid "Bridge module between hr and mailbot."
 msgstr ""
 
 #. module: base
@@ -9982,6 +10070,11 @@ msgid "Country state"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_coupon
+msgid "Coupon"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_coupon
 msgid "Coupons & Promotions for eCommerce"
 msgstr ""
@@ -10141,6 +10234,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_crm_livechat
 msgid "Create lead from livechat conversation"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_event_crm
+msgid "Create leads from event registrations."
 msgstr ""
 
 #. module: base
@@ -10594,8 +10692,13 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_productivity_data_cleaning
-#: model:ir.module.module,shortdesc:base.module_data_merge
+#: model:ir.module.module,shortdesc:base.module_data_cleaning
 msgid "Data Cleaning"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_data_merge
+msgid "Data Cleaning (merge)"
 msgstr ""
 
 #. module: base
@@ -10985,6 +11088,11 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_digest_enterprise
+msgid "Digest Enterprise"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_digital
 msgid "Digital Products"
 msgstr ""
@@ -11338,6 +11446,13 @@ msgid "Documents - Time Off"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_documents_spreadsheet
+#: model:ir.module.module,shortdesc:base.module_documents_spreadsheet
+#: model:ir.module.module,summary:base.module_documents_spreadsheet
+msgid "Documents Spreadsheet"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_filters__domain
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__domain
 #: model:ir.model.fields,field_description:base.field_ir_rule__domain_force
@@ -11441,9 +11556,11 @@ msgid "Each model must be unique!"
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,description:base.module_social
-#: model:ir.module.module,summary:base.module_social
-msgid "Easily manage your social media and website visitors"
+#: model:ir.module.module,description:base.module_data_cleaning
+#: model:ir.module.module,summary:base.module_data_cleaning
+msgid ""
+"Easily format text data across multiple records. Find duplicate records and "
+"easily merge them."
 msgstr ""
 
 #. module: base
@@ -11618,6 +11735,12 @@ msgid "Employees"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_hr_mobile
+#: model:ir.module.module,summary:base.module_hr_mobile
+msgid "Employees in Mobile"
+msgstr ""
+
+#. module: base
 #: code:addons/base/models/ir_model.py:0
 #, python-format
 msgid "Empty dependency in %r"
@@ -11778,6 +11901,16 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_event_barcode_mobile
 msgid "Event Barcode scan in Mobile"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_event_crm
+msgid "Event CRM"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_event_crm_sale
+msgid "Event CRM Sale"
 msgstr ""
 
 #. module: base
@@ -12393,7 +12526,12 @@ msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment__datas
-msgid "File Content"
+msgid "File Content (base64)"
+msgstr ""
+
+#. module: base
+#: model:ir.model.fields,field_description:base.field_ir_attachment__raw
+msgid "File Content (raw)"
 msgstr ""
 
 #. module: base
@@ -13042,63 +13180,6 @@ msgid "Google Calendar"
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,description:base.module_google_calendar
-msgid ""
-"Google Calendar\n"
-"---------------\n"
-"\n"
-"Get your meetings, your leaves... Get your calendar anywhere and never\n"
-"forget an event, fully synchronized with the Odoo <a href=\"https://www.odoo.com/page/crm\">Open Source CRM</a>.\n"
-"\n"
-"Keep an eye on your events\n"
-"--------------------------\n"
-"\n"
-"See easily the purpose of the meeting, the start time and also the\n"
-"attendee(s)... All that without click on anything...\n"
-"\n"
-"Create so easily an event\n"
-"-------------------------\n"
-"\n"
-"In just one click you can create an event...  You can drag and drop your event\n"
-"if you want moved it to another timing.  You can shrink or extend the event if\n"
-"you need to change the start's hours or the duration of your meeting.\n"
-"\n"
-"Create recurrent event\n"
-"----------------------\n"
-"\n"
-"You can also create recurrent events with only one event.  You need to create\n"
-"an event each monday of the week ? With only one it's possible, you could\n"
-"specify the recurrence and if one of this event is moved, or deleted, it's not\n"
-"a problem, you can untie your event from the others recurrences.\n"
-"\n"
-"See all events you wants\n"
-"------------------------\n"
-"\n"
-"See in your calendar, the event from others peoples where your are attendee,\n"
-"but also their events by simply adding your favorites coworkers.  Every\n"
-"coworker will have their own color in your calendar, and every attendee will\n"
-"have their avatar in the event...\n"
-"\n"
-"Get an email\n"
-"------------\n"
-"\n"
-"You will receive an email at creation of an event where you are attendee, but\n"
-"also when this event is updated for some fields as date start, ...\n"
-"\n"
-"Be notified\n"
-"-----------\n"
-"\n"
-"You can ask to have a alarm of type 'notification' in your Odoo.  You will have\n"
-"a notification in you Odoo which ever the page you are.\n"
-"\n"
-"Google Calendar\n"
-"---------------\n"
-"\n"
-"With this plugin, you can synchronize your Odoo calendar with Google Calendar.\n"
-"\n"
-msgstr ""
-
-#. module: base
 #: model:ir.module.module,shortdesc:base.module_google_drive
 msgid "Google Drive™ integration"
 msgstr ""
@@ -13116,6 +13197,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_google_account
 msgid "Google Users"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_google_recaptcha
+msgid "Google reCAPTCHA integration"
 msgstr ""
 
 #. module: base
@@ -13147,11 +13233,6 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_grid
 msgid "Grid View"
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,summary:base.module_hr_contract_salary_payroll
-msgid "Gross to Net Salary Simulaton"
 msgstr ""
 
 #. module: base
@@ -13279,16 +13360,6 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_holidays_attendance
 msgid "HR Attendance Holidays"
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,shortdesc:base.module_hr_contract_salary
-msgid "HR Contract Salary"
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,shortdesc:base.module_hr_contract_salary_payroll
-msgid "HR Contract Salary - Payroll"
 msgstr ""
 
 #. module: base
@@ -13534,6 +13605,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,description:base.module_category_human_resources_recruitment
 msgid "Helps you manage your recruitments."
+msgstr ""
+
+#. module: base
+#: model:ir.module.category,description:base.module_category_marketing_surveys
+msgid "Helps you manage your survey for review of different-different users."
 msgstr ""
 
 #. module: base
@@ -14088,11 +14164,6 @@ msgid "Import Amazon orders and sync deliveries"
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_account_facturx
-msgid "Import Bills/Invoices From XML"
-msgstr ""
-
-#. module: base
 #: model:ir.module.module,shortdesc:base.module_account_bank_statement_import_camt
 msgid "Import CAMT Bank Statement"
 msgstr ""
@@ -14133,6 +14204,21 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,description:base.module_currency_rate_live
 msgid "Import exchange rates from the Internet.\n"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_account_edi
+msgid "Import/Export Invoices From XML/PDF"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_account_edi_facturx
+msgid "Import/Export invoices with Factur-X"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_account_edi_ubl
+msgid "Import/Export invoices with generic UBL"
 msgstr ""
 
 #. module: base
@@ -14286,6 +14372,14 @@ msgid "Inherited"
 msgstr ""
 
 #. module: base
+#: code:addons/base/models/ir_ui_view.py:0
+#, python-format
+msgid ""
+"Inherited Qweb view cannot have 'Groups' define on the record. Use 'groups' "
+"attributes inside the view definition"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__inherit_id
 msgid "Inherited View"
 msgstr ""
@@ -14303,11 +14397,6 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups__implied_ids
 msgid "Inherits"
-msgstr ""
-
-#. module: base
-#: model:ir.model.fields,field_description:base.field_ir_model_data__date_init
-msgid "Init Date"
 msgstr ""
 
 #. module: base
@@ -14394,6 +14483,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_marketing_automation_sms
 msgid "Integrate SMS Marketing in marketing campaigns"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_coupon
+msgid "Integrate coupon mechanism in orders."
 msgstr ""
 
 #. module: base
@@ -15597,11 +15691,6 @@ msgid "Live chat enterprise"
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_im_support
-msgid "Livechat Support"
-msgstr ""
-
-#. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_language_install
 msgid "Load"
 msgstr ""
@@ -16081,6 +16170,12 @@ msgid "Manage your online hiring process"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_social
+#: model:ir.module.module,summary:base.module_social
+msgid "Manage your social media and website visitors"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_stock
 msgid "Manage your stock and logistics activities"
 msgstr ""
@@ -16526,16 +16621,24 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_cron__model_id
 #: model:ir.model.fields,field_description:base.field_ir_filters__model_id
 #: model:ir.model.fields,field_description:base.field_ir_model__model
+#: model:ir.model.fields,field_description:base.field_ir_model_access__model_id
 #: model:ir.model.fields,field_description:base.field_ir_model_constraint__model
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__model_id
 #: model:ir.model.fields,field_description:base.field_ir_model_relation__model
+#: model:ir.model.fields,field_description:base.field_ir_rule__model_id
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__model
 #: model_terms:ir.ui.view,arch_db:base.act_report_xml_search_view
+#: model_terms:ir.ui.view,arch_db:base.ir_access_view_search
+#: model_terms:ir.ui.view,arch_db:base.ir_cron_view_search
 #: model_terms:ir.ui.view,arch_db:base.ir_filters_view_search
 #: model_terms:ir.ui.view,arch_db:base.view_model_constraint_search
+#: model_terms:ir.ui.view,arch_db:base.view_model_data_search
+#: model_terms:ir.ui.view,arch_db:base.view_model_fields_search
 #: model_terms:ir.ui.view,arch_db:base.view_model_search
+#: model_terms:ir.ui.view,arch_db:base.view_rule_search
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_search
 #: model_terms:ir.ui.view,arch_db:base.view_translation_search
+#: model_terms:ir.ui.view,arch_db:base.view_view_search
 msgid "Model"
 msgstr ""
 
@@ -16599,6 +16702,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__model_name
 #: model:ir.model.fields,field_description:base.field_ir_cron__model_name
 #: model:ir.model.fields,field_description:base.field_ir_model_data__model
+#: model:ir.model.fields,field_description:base.field_ir_model_fields__model
 msgid "Model Name"
 msgstr ""
 
@@ -17281,13 +17385,6 @@ msgid "OHADA - Accounting"
 msgstr ""
 
 #. module: base
-#: model:ir.model.fields,field_description:base.field_ir_model_access__model_id
-#: model:ir.model.fields,field_description:base.field_ir_rule__model_id
-#: model_terms:ir.ui.view,arch_db:base.ir_access_view_search
-#: model_terms:ir.ui.view,arch_db:base.view_model_data_search
-#: model_terms:ir.ui.view,arch_db:base.view_model_fields_search
-#: model_terms:ir.ui.view,arch_db:base.view_rule_search
-#: model_terms:ir.ui.view,arch_db:base.view_view_search
 #: model_terms:ir.ui.view,arch_db:base.view_window_action_form
 msgid "Object"
 msgstr ""
@@ -17296,16 +17393,6 @@ msgstr ""
 #: code:addons/model.py:0
 #, python-format
 msgid "Object %s doesn't exist"
-msgstr ""
-
-#. module: base
-#: model:ir.model.fields,field_description:base.field_ir_model_fields__model
-msgid "Object Name"
-msgstr ""
-
-#. module: base
-#: model:ir.model.fields,field_description:base.field_ir_model_fields__relation
-msgid "Object Relation"
 msgstr ""
 
 #. module: base
@@ -18414,11 +18501,6 @@ msgid "Odoo referral program"
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_odoo_referral_portal
-msgid "Odoo referral program bridge with portal (Deprecated)"
-msgstr ""
-
-#. module: base
 #: model:ir.model.fields,help:base.field_ir_sequence__padding
 msgid ""
 "Odoo will automatically adds some '0' on the left of the 'Next Number' to "
@@ -19224,6 +19306,11 @@ msgid "Password Policy support for Signup"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,summary:base.module_sale_amazon_authentication
+msgid "Patch module for the authentication flow of the Amazon Connector"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_logging__path
 msgid "Path"
 msgstr ""
@@ -19484,6 +19571,7 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.category,name:base.module_category_point_of_sale
 #: model:ir.module.category,name:base.module_category_sales_point_of_sale
 #: model:ir.module.module,shortdesc:base.module_point_of_sale
 msgid "Point of Sale"
@@ -19940,6 +20028,11 @@ msgid "Publish your members directory"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,summary:base.module_website_project
+msgid "Publish your project ratings"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_website_crm_partner_assign
 msgid "Publish your resellers/partners and forward leads to them"
 msgstr ""
@@ -20240,14 +20333,6 @@ msgid "Qweb field many2many"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_ui_view.py:0
-#, python-format
-msgid ""
-"Qweb view cannot have 'Groups' define on the record. Use 'groups' attributes"
-" inside the view definition"
-msgstr ""
-
-#. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_R
 msgid "R ARTS, ENTERTAINMENT AND RECREATION"
 msgstr ""
@@ -20425,6 +20510,11 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__related
 msgid "Related Field"
+msgstr ""
+
+#. module: base
+#: model:ir.model.fields,field_description:base.field_ir_model_fields__relation
+msgid "Related Model"
 msgstr ""
 
 #. module: base
@@ -20954,13 +21044,23 @@ msgid "Saint Vincent and the Grenadines"
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,summary:base.module_l10n_be_hr_contract_salary
-msgid "Salary Package Configurator"
+#: model:ir.module.module,shortdesc:base.module_hr_contract_salary
+msgid "Salary Configurator"
 msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_hr_contract_salary
-msgid "Salary Package Configurator (Belgium)"
+msgid "Salary Configurator (Belgium)"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_hr_contract_salary_payroll
+msgid "Salary Configurator - Payroll"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_l10n_be_hr_contract_salary
+msgid "Salary Package Configurator"
 msgstr ""
 
 #. module: base
@@ -22616,6 +22716,11 @@ msgid "Test Connection"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_test_data_cleaning
+msgid "Test Data Cleaning"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_test_event_full
 msgid "Test Full Event Flow"
 msgstr ""
@@ -22647,7 +22752,12 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_test_marketing_automation
-msgid "Test Suits for Automated Marketing Campaigns"
+msgid "Test Suite for Automated Marketing Campaigns"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_test_data_cleaning
+msgid "Test Suite for Data Cleaning"
 msgstr ""
 
 #. module: base
@@ -22670,6 +22780,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,description:base.module_test_read_group
 msgid "Tests for read_group"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_test_search_panel
+msgid "Tests for the search panel python methods"
 msgstr ""
 
 #. module: base
@@ -23312,6 +23427,13 @@ msgid ""
 "This is the module to manage the accounting chart for Norway in Odoo.\n"
 "\n"
 "Updated for Odoo 9 by Bringsvor Consulting AS <www.bringsvor.com>\n"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_mail_bot_hr
+msgid ""
+"This module adds the OdooBot state and notifications in the user form "
+"modified by hr."
 msgstr ""
 
 #. module: base
@@ -24262,11 +24384,6 @@ msgid "Update Apps List"
 msgstr ""
 
 #. module: base
-#: model:ir.model.fields,field_description:base.field_ir_model_data__date_update
-msgid "Update Date"
-msgstr ""
-
-#. module: base
 #: model:ir.model,name:base.model_base_module_update
 msgid "Update Module"
 msgstr ""
@@ -24357,6 +24474,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale_coupon
 msgid "Use coupon & promotion programs in your eCommerce store"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_coupon
+msgid "Use discount coupons in different sales channels."
 msgstr ""
 
 #. module: base
@@ -24717,6 +24839,18 @@ msgid "View"
 msgstr ""
 
 #. module: base
+#: code:addons/base/models/ir_ui_view.py:0
+#, python-format
+msgid "View '%s' accessible only to groups %s "
+msgstr ""
+
+#. module: base
+#: code:addons/base/models/ir_ui_view.py:0
+#, python-format
+msgid "View '%s' is private"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__arch
 #: model:ir.model.fields,field_description:base.field_ir_ui_view_custom__arch
 #: model_terms:ir.ui.view,arch_db:base.view_view_custom_form
@@ -24930,6 +25064,11 @@ msgid "Web-only translations"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_website_event_crm_questions
+msgid "Webiste Event CRM Questions"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module__website
 #: model:ir.module.category,name:base.module_category_website
 #: model:ir.module.category,name:base.module_category_website_website
@@ -24948,6 +25087,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_enterprise
 msgid "Website Enterprise"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_website_event_crm
+msgid "Website Events CRM"
 msgstr ""
 
 #. module: base
@@ -25005,6 +25149,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_payment
 msgid "Website Payment"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_website_project
+msgid "Website Project"
 msgstr ""
 
 #. module: base
@@ -25776,6 +25925,11 @@ msgid "l10n_es_real_estates"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_mail_bot_hr
+msgid "mail_bot_hr"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__many2many
 msgid "many2many"
 msgstr ""
@@ -25849,6 +26003,11 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__one2many
 msgid "one2many"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_pos_account_reports
+msgid "pos_account_reports"
 msgstr ""
 
 #. module: base
@@ -25991,6 +26150,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_convert
 msgid "test_convert"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_test_search_panel
+msgid "test_search_panel"
 msgstr ""
 
 #. module: base

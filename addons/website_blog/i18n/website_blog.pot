@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.3\n"
+"Project-Id-Version: Odoo Server saas~13.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-21 10:46+0000\n"
-"PO-Revision-Date: 2020-04-21 10:46+0000\n"
+"POT-Creation-Date: 2020-08-21 13:09+0000\n"
+"PO-Revision-Date: 2020-08-21 13:09+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -137,7 +137,7 @@ msgstr ""
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_read_next
 msgid ""
-"<span class=\"bg-gamma h6 d-inline-block py-1 px-2 rounded-sm\">Read "
+"<span class=\"bg-o-color-3 h6 d-inline-block py-1 px-2 rounded-sm\">Read "
 "Next</span>"
 msgstr ""
 
@@ -252,6 +252,11 @@ msgid "Author"
 msgstr ""
 
 #. module: website_blog
+#: model:ir.model.fields,field_description:website_blog.field_blog_post__author_name
+msgid "Author Name"
+msgstr ""
+
+#. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__author_avatar
 msgid "Avatar"
 msgstr ""
@@ -262,12 +267,14 @@ msgid "Big Pictures"
 msgstr ""
 
 #. module: website_blog
+#: code:addons/website_blog/models/website.py:0
 #: model:ir.model,name:website_blog.model_blog_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__blog_id
 #: model:website.menu,name:website_blog.menu_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_blog_view_search
 #: model_terms:ir.ui.view,arch_db:website_blog.view_blog_blog_form
 #: model_terms:ir.ui.view,arch_db:website_blog.view_blog_post_search
+#, python-format
 msgid "Blog"
 msgstr ""
 
@@ -457,6 +464,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__display_name
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag__display_name
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag_category__display_name
+#: model:ir.model.fields,field_description:website_blog.field_website__display_name
 msgid "Display Name"
 msgstr ""
 
@@ -539,6 +547,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__id
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag__id
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag_category__id
+#: model:ir.model.fields,field_description:website_blog.field_website__id
 msgid "ID"
 msgstr ""
 
@@ -571,6 +580,7 @@ msgstr ""
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__is_published
+#: model_terms:ir.ui.view,arch_db:website_blog.view_blog_post_list
 msgid "Is Published"
 msgstr ""
 
@@ -592,6 +602,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_blog.field_blog_post____last_update
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag____last_update
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag_category____last_update
+#: model:ir.model.fields,field_description:website_blog.field_website____last_update
 msgid "Last Modified on"
 msgstr ""
 
