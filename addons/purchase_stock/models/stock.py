@@ -224,7 +224,11 @@ class Orderpoint(models.Model):
                 'tag': 'display_notification',
                 'params': {
                     'title': _('The following replenishment order has been generated'),
-                    'message': '<a href="#action=%d&id=%d&model=purchase.order" target="_blank">%s</a>' % (action.id, order.id, order.display_name),
+                    'message': '%s',
+                    'links': [{
+                        'label': order.display_name,
+                        'url': f'#action={action.id}&id={order.id}&model=purchase.order',
+                    }],
                     'sticky': False,
                 }
             }

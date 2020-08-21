@@ -3892,7 +3892,10 @@ QUnit.module('ActionManager', {
                     route === "/web/dataset/call_button" &&
                     args.method === "some_method"
                 ) {
-                    return { tag: "display_notification", type: "ir.actions.client" };
+                    return {
+                        tag: "display_notification",
+                        type: "ir.actions.client"
+                    };
                 }
                 return this._super(...arguments);
             },
