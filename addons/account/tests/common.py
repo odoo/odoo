@@ -817,7 +817,7 @@ class AccountTestInvoicingCommon(SavepointCase):
             return account
 
         chart_template = chart_template or cls.env.company.chart_template_id
-        currency = cls.env.user.company_id.currency_id
+        currency = chart_template.currency_id
         company = cls.env['res.company'].create({
             'name': company_name,
             'currency_id': currency.id,
