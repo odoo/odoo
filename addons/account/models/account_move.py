@@ -2802,9 +2802,9 @@ class AccountMoveLine(models.Model):
              " are displayed). By default all new journal items are directly exigible, but with the feature cash_basis"
              " on taxes, some will become exigible only when the payment is recorded.")
     tax_repartition_line_id = fields.Many2one(comodel_name='account.tax.repartition.line',
-        string="Originator Tax Repartition Line", ondelete='restrict', readonly=True,
+        string="Originator Tax Distribution Line", ondelete='restrict', readonly=True,
         check_company=True,
-        help="Tax repartition line that caused the creation of this move line, if any")
+        help="Tax distribution line that caused the creation of this move line, if any")
     tax_tag_ids = fields.Many2many(string="Tags", comodel_name='account.account.tag', ondelete='restrict',
         help="Tags assigned to this line by the tax creating it, if any. It determines its impact on financial reports.", tracking=True)
     tax_audit = fields.Char(string="Tax Audit String", compute="_compute_tax_audit", store=True,
@@ -2875,7 +2875,7 @@ class AccountMoveLine(models.Model):
                     currency_id = company_currency_id
                     AND
                     ROUND(debit - credit - amount_currency, 2) = 0
-                )                
+                )
             )''',
             "The amount expressed in the secondary currency must be positive when account is debited and negative when "
             "account is credited. If the currency is the same as the one from the company, this amount must strictly "
