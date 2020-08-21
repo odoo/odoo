@@ -100,7 +100,7 @@
             <div class="dropdown-menu">
                 <a t-att-href="'/event/%s/exhibitors?%s' % (slug(event), keep_query('*', sponsorships=''))"
                     t-attf-class="dropdown-item d-flex align-items-center justify-content-between #{'active' if not search_sponsorships else ''}">
-                    All Countries
+                    All Sponsorships
                 </a>
                 <t t-foreach="sponsor_types" t-as="sponsor_type">
                     <a t-att-href="'/event/%s/exhibitors?%s' % (
