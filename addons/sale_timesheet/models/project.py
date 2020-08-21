@@ -82,7 +82,8 @@ class Project(models.Model):
     @api.depends('pricing_type', 'allow_timesheets', 'allow_billable', 'sale_line_employee_ids', 'sale_line_employee_ids.employee_id', 'bill_type')
     def _compute_warning_employee_rate(self):
         projects = self.filtered(lambda p: p.allow_billable and p.allow_timesheets and p.bill_type == 'customer_project' and p.pricing_type == 'employee_rate')
-        employees = self.env['account.analytic.line'].read_group([('project_id', 'in', projects.ids)], ['employee_id', 'project_id'], ['employee_id', 'project_id'], lazy=False)
+        tasks = projects.task_ids.filtered(lambda t: not t.non_allow_billable)
+        employees = self.env['account.analytic.line'].read_group([('task_id', 'in', tasks.ids)], ['employee_id', 'project_id'], ['employee_id', 'project_id'], lazy=False)
         dict_project_employee = defaultdict(list)
         for line in employees:
             dict_project_employee[line['project_id'][0]] += [line['employee_id'][0]]
@@ -171,6 +172,18 @@ class Project(models.Model):
             },
         }
 
+    def action_view_so(self):
+        self.ensure_one()
+        action_window = {
+            "type": "ir.actions.act_window",
+            "res_model": "sale.order",
+            "name": "Sales Order",
+            "views": [[False, "form"]],
+            "context": {"create": False, "show_sale": True},
+            "res_id": self.sale_order_id.id
+        }
+        return action_window
+
 
 class ProjectTask(models.Model):
     _inherit = "project.task"
@@ -203,6 +216,8 @@ class ProjectTask(models.Model):
             ('service_type', '=', 'timesheet'),
             '|', ('company_id', '=', False), ('company_id', '=', company_id)]""",
         help='Select a Service product with which you would like to bill your time spent on this task.')
+
+    non_allow_billable = fields.Boolean("Non-Billable", help="Your timesheets linked to this task will not be billed.")
 
     @api.depends(
         'allow_billable', 'allow_timesheets', 'sale_order_id')
@@ -247,10 +262,12 @@ class ProjectTask(models.Model):
         for task in self:
             task.analytic_account_active = task.analytic_account_active or task.analytic_account_id.active
 
-    @api.depends('sale_line_id', 'project_id', 'allow_billable', 'bill_type')
+    @api.depends('sale_line_id', 'project_id', 'allow_billable', 'bill_type', 'pricing_type', 'non_allow_billable')
     def _compute_sale_order_id(self):
         for task in self:
-            if task.allow_billable and task.bill_type == 'customer_project':
+            if task.allow_billable and task.bill_type == 'customer_project' and task.pricing_type == 'employee_rate' and task.non_allow_billable:
+                task.sale_order_id = False
+            elif task.allow_billable and task.bill_type == 'customer_project':
                 task.sale_order_id = task.project_id.sale_order_id
             elif task.allow_billable and task.bill_type == 'customer_task':
                 task.sale_order_id = task.sale_line_id.sudo().order_id
@@ -298,6 +315,19 @@ class ProjectTask(models.Model):
                 project = self.env['project.project'].browse(values.get('project_id'))
                 if project.allow_timesheets:
                     timesheet_ids.write({'project_id': values.get('project_id')})
+        if 'non_allow_billable' in values and self.filtered('allow_timesheets').sudo().timesheet_ids:
+            timesheet_ids = self.filtered('allow_timesheets').timesheet_ids.filtered(
+                lambda t: (not t.timesheet_invoice_id or t.timesheet_invoice_id.state == 'cancel')
+            )
+            if values['non_allow_billable']:
+                timesheet_ids.write({'so_line': False})
+            else:
+                # We write project on timesheet lines to call _timesheet_preprocess. This function will set correct the SOL
+                for project in timesheet_ids.project_id:
+                    current_timesheet_ids = timesheet_ids.filtered(lambda t: t.project_id == project)
+                    for employee in current_timesheet_ids.employee_id:
+                        current_timesheet_ids.filtered(lambda t: t.employee_id == employee).write({'project_id': project.id})
+
         return res
 
     def action_make_billable(self):
