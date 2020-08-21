@@ -8,13 +8,13 @@ from werkzeug.utils import redirect
 from odoo import exceptions, http
 from odoo.http import request
 from odoo.addons.http_routing.models.ir_http import slug
-from odoo.addons.website_event_track_online.controllers.community import WebsiteEventCommunityController
+from odoo.addons.website_event.controllers.community import EventCommunityController
 from odoo.osv import expression
 
 _logger = logging.getLogger(__name__)
 
 
-class WebsiteEventMeetController(WebsiteEventCommunityController):
+class WebsiteEventMeetController(EventCommunityController):
 
     def _get_event_rooms_base_domain(self, event):
         search_domain_base = [('event_id', '=', event.id), ('is_published', '=', True)]

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="assets_frontend" inherit_id="website.assets_frontend" name="Website Event Track Assets">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" href="/website_event_track/static/src/css/website_event_track.css"/>
+        <link rel="stylesheet" type="text/scss" href="/website_event_track/static/src/scss/event_track_templates.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/website_event_track/static/src/scss/event_track_templates_online.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/website_event_track/static/src/scss/pwa_frontend.scss"/>
+    </xpath>
+    <xpath expr="//script[last()]" position="after">
+        <script type="text/javascript" src="/website_event_track/static/src/js/website_event_track.js"></script>
+        <script type="text/javascript" src="/website_event_track/static/src/js/event_track_reminder.js"></script>
+        <script type="text/javascript" src="/website_event_track/static/src/js/website_event_pwa_widget.js"/>
+        <script type="text/javascript" src="/website_event_track/static/lib/idb-keyval/idb-keyval.js"/>
+    </xpath>
+</template>
+
+</odoo>

@@ -3,7 +3,7 @@
     <record id="event_sponsor_view_search" model="ir.ui.view">
         <field name="name">event.sponsor.view.search.inherit.exhibitor</field>
         <field name="model">event.sponsor</field>
-        <field name="inherit_id" ref="website_event_track_online.event_sponsor_view_search"/>
+        <field name="inherit_id" ref="website_event_track.event_sponsor_view_search"/>
         <field name="arch" type="xml">
             <xpath expr="//filter[@name='archived']" position="after">
                 <separator/>
@@ -15,7 +15,7 @@
     <record id="event_sponsor_view_tree" model="ir.ui.view">
         <field name="name">event.sponsor.view.tree.inherit.exhibitor</field>
         <field name="model">event.sponsor</field>
-        <field name="inherit_id" ref="website_event_track_online.event_sponsor_view_tree"/>
+        <field name="inherit_id" ref="website_event_track.event_sponsor_view_tree"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='sponsor_type_id']" position="after">
                 <field name="is_published" optional="show"/>
@@ -38,7 +38,7 @@
     <record id="event_sponsor_view_form" model="ir.ui.view">
         <field name="name">event.sponsor.view.form.inherit.exhibitor</field>
         <field name="model">event.sponsor</field>
-        <field name="inherit_id" ref="website_event_track_online.event_sponsor_view_form"/>
+        <field name="inherit_id" ref="website_event_track.event_sponsor_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//widget[@name='web_ribbon']" position="before">
                 <div class="oe_button_box" name="button_box">

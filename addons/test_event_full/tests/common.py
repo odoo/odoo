@@ -7,7 +7,7 @@ from odoo.addons.base.tests.common import HttpCaseWithUserDemo, HttpCaseWithUser
 from odoo.addons.event_crm.tests.common import TestEventCrmCommon
 from odoo.addons.sales_team.tests.common import TestSalesCommon
 from odoo.addons.website.tests.test_website_visitor import MockVisitor
-from odoo.addons.website_event_online.tests.common import EventDtPatcher
+from odoo.addons.website_event.tests.common import EventDtPatcher
 
 
 class TestEventFullCommon(TestEventCrmCommon, TestSalesCommon, EventDtPatcher, MockVisitor):

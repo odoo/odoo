@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <!-- EVENTS/CONFIGURATION/EVENT locations -->
+    <record model="ir.ui.view" id="view_event_location_form">
+        <field name="name">Event Locations</field>
+        <field name="model">event.track.location</field>
+        <field name="arch" type="xml">
+            <form string="Event Locations">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_event_location_tree">
+        <field name="name">Event Location</field>
+        <field name="model">event.track.location</field>
+        <field name="arch" type="xml">
+            <tree string="Event Location" editable="bottom">
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_event_track_location">
+        <field name="name">Event Locations</field>
+        <field name="res_model">event.track.location</field>
+    </record>
+
+</odoo>
