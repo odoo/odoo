@@ -30,7 +30,7 @@
             <field name="model">mailing.mailing</field>
             <field name="priority">10</field>
             <field name="arch" type="xml">
-                <tree string="Mailings" sample="1">
+                <tree string="Mailings" sample="1" create="false">
                     <field name="state" invisible="1"/>
                     <field name="subject" attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"/>
                     <field name="mailing_type" invisible="1"/>
@@ -55,7 +55,7 @@
             <field name="name">mailing.mailing.form</field>
             <field name="model">mailing.mailing</field>
             <field name="arch" type="xml">
-                <form string="Mailing">
+                <form string="Mailing" create="false">
                     <header style="min-height:31px;">
                         <button name="action_put_in_queue" type="object" attrs="{'invisible': [('state', 'in', ('in_queue', 'done'))]}" class="oe_highlight" string="Send"
                             confirm="This will send the email to all recipients. Do you still want to proceed ?"/>
@@ -292,7 +292,7 @@
             <field name="name">mailing.mailing.kanban</field>
             <field name="model">mailing.mailing</field>
             <field name="arch" type="xml">
-                <kanban default_group_by="state" quick_create="false" sample="1">
+                <kanban default_group_by="state" quick_create="false" sample="1" create="false">
                     <field name='state' readonly="1"/>
                     <field name='email_from' readonly="1"/>
                     <field name='color'/>
