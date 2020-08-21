@@ -55,19 +55,19 @@ class Users(models.Model):
         key = base64.b32decode(sudo.totp_secret)
         match = TOTP(key).match(code)
         if match is None:
-            _logger.info("2FA check: FAIL for '%s' (#%s)", self.login, self.id)
+            _logger.info("2FA check: FAIL for %s %r", self, self.login)
             raise AccessDenied()
-        _logger.info("2FA check: SUCCESS for '%s' (#%s)", self.login, self.id)
+        _logger.info("2FA check: SUCCESS for %s %r", self, self.login)
 
     def _totp_try_setting(self, secret, code):
         if self.totp_enabled or self != self.env.user:
-            _logger.info("2FA enable: REJECT for '%s' (#%s)", self.login, self.id)
+            _logger.info("2FA enable: REJECT for %s %r", self, self.login)
             return False
 
         secret = compress(secret).upper()
         match = TOTP(base64.b32decode(secret)).match(code)
         if match is None:
-            _logger.info("2FA enable: REJECT CODE for '%s' (#%s)", self.login, self.id)
+            _logger.info("2FA enable: REJECT CODE for %s %r", self, self.login)
             return False
 
         self.sudo().totp_secret = secret
@@ -77,13 +77,14 @@ class Users(models.Model):
             new_token = self.env.user._compute_session_token(request.session.sid)
             request.session.session_token = new_token
 
-        _logger.info("2FA enable: SUCCESS for '%s' (#%s)", self.login, self.id)
+        _logger.info("2FA enable: SUCCESS for %s %r", self, self.login)
         return True
 
     @check_identity
     def totp_disable(self):
+        logins = ', '.join(map(repr, self.mapped('login')))
         if not (self == self.env.user or self.env.user._is_admin() or self.env.su):
-            _logger.info("2FA disable: REJECT for '%s' (#%s) by uid #%s", self.login, self.id, self.env.user.id)
+            _logger.info("2FA disable: REJECT for %s (%s) by uid #%s", self, logins, self.env.user.id)
             return False
 
         self.sudo().write({'totp_secret': False})
@@ -93,8 +94,16 @@ class Users(models.Model):
             new_token = self.env.user._compute_session_token(request.session.sid)
             request.session.session_token = new_token
 
-        _logger.info("2FA disable: SUCCESS for '%s' (#%s) by uid #%s", self.login, self.id, self.env.user.id)
-        return {'type': 'ir.actions.act_window_close'}
+        _logger.info("2FA disable: SUCCESS for %s (%s) by uid #%s", self, logins, self.env.user.id)
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'type': 'warning',
+                'message': _("Two-factor authentication disabled for user(s) %s", logins),
+                'next': {'type': 'ir.actions.act_window_close'},
+            }
+        }
 
     @check_identity
     def totp_enable_wizard(self):
@@ -167,7 +176,15 @@ class TOTPWizard(models.TransientModel):
             raise UserError(_("The verification code should only contain numbers"))
         if self.user_id._totp_try_setting(self.secret, c):
             self.secret = '' # empty it, because why keep it until GC?
-            return {'type': 'ir.actions.act_window_close'}
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'type': 'success',
+                    'message': _("Two-factor authentication is now enabled."),
+                    'next': {'type': 'ir.actions.act_window_close'},
+                }
+            }
         raise UserError(_('Verification failed, please double-check the 6-digit code'))
 
 # 160 bits, as recommended by HOTP RFC 4226, section 4, R6.
