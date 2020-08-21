@@ -255,6 +255,7 @@ class MrpProduction(models.Model):
         ('available', 'Available'),
         ('expected', 'Expected'),
         ('late', 'Late')], compute='_compute_components_availability')
+    show_lot_ids = fields.Boolean('Display the serial number shortcut on the moves', compute='_compute_show_lot_ids')
 
     @api.depends('product_id', 'bom_id', 'company_id')
     def _compute_allowed_product_ids(self):
@@ -517,6 +518,11 @@ class MrpProduction(models.Model):
     def _compute_show_lock(self):
         for order in self:
             order.show_lock = self.env.user.has_group('mrp.group_locked_by_default') and order.id is not False and order.state not in {'cancel', 'draft'}
+
+    @api.depends('state','move_raw_ids')
+    def _compute_show_lot_ids(self):
+        for order in self:
+            order.show_lot_ids = order.state != 'draft' and any(m.product_id.tracking == 'serial' for m in order.move_raw_ids)
 
     _sql_constraints = [
         ('name_uniq', 'unique(name, company_id)', 'Reference must be unique per Company!'),
