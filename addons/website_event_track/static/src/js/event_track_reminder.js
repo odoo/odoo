@@ -55,7 +55,7 @@ publicWidget.registry.websiteEventTrackReminder = publicWidget.Widget.extend({
                 });
             } else {
                 self.reminderOn = reminderOnValue;
-                var reminderText = self.reminderOn ? _t('Reminder On') : _t('Set Reminder');
+                var reminderText = self.reminderOn ? _t('Favorite On') : _t('Set Favorite');
                 self.$('.o_wetrack_js_reminder_text').text(reminderText);
                 self._updateDisplay();
                 var message = self.reminderOn ? _t('Talk added to your Favorites') : _t('Talk removed from your Favorites');
@@ -74,10 +74,10 @@ publicWidget.registry.websiteEventTrackReminder = publicWidget.Widget.extend({
         var $trackLink = this.$el.find('i');
         if (this.reminderOn) {
             $trackLink.addClass('fa-bell').removeClass('fa-bell-o');
-            $trackLink.attr('title', _t('Reminder On'));
+            $trackLink.attr('title', _t('Favorite On'));
         } else {
             $trackLink.addClass('fa-bell-o').removeClass('fa-bell');
-            $trackLink.attr('title', _t('Set Reminder'));
+            $trackLink.attr('title', _t('Set Favorite'));
         }
     },
 
