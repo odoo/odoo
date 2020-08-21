@@ -123,10 +123,16 @@ class Event(models.Model):
             elif not event.website_menu:
                 event.community_menu = False
 
-    @api.depends('website_menu')
+    @api.depends("event_type_id", "website_menu")
     def _compute_menu_register_cta(self):
+        """ At type onchange: synchronize. At website_menu update: synchronize. """
         for event in self:
-            event.menu_register_cta = event.website_menu
+            if event.event_type_id and event.event_type_id != event._origin.event_type_id:
+                event.menu_register_cta = event.event_type_id.menu_register_cta
+            elif event.website_menu and event.website_menu != event._origin.website_menu or not event.menu_register_cta:
+                event.menu_register_cta = True
+            elif not event.website_menu:
+                event.menu_register_cta = False
 
     @api.depends('date_begin', 'date_end')
     def _compute_time_data(self):
