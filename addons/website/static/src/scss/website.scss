@@ -46,6 +46,34 @@ $-seen-urls: ();
         $i: $i + 1;
     }
 
+    @include print-variable('btn-padding-y', $btn-padding-y);
+    @include print-variable('btn-padding-x', $btn-padding-x);
+    @include print-variable('btn-font-size', $btn-font-size);
+    @include print-variable('btn-padding-y-sm', $btn-padding-y-sm);
+    @include print-variable('btn-padding-x-sm', $btn-padding-x-sm);
+    @include print-variable('btn-font-size-sm', $btn-font-size-sm);
+    @include print-variable('btn-padding-y-lg', $btn-padding-y-lg);
+    @include print-variable('btn-padding-x-lg', $btn-padding-x-lg);
+    @include print-variable('btn-font-size-lg', $btn-font-size-lg);
+    @include print-variable('btn-border-width', $btn-border-width);
+    @include print-variable('btn-border-radius', $btn-border-radius);
+    @include print-variable('btn-border-radius-sm', $btn-border-radius-sm);
+    @include print-variable('btn-border-radius-lg', $btn-border-radius-lg);
+
+    @include print-variable('input-padding-y', $input-padding-y);
+    @include print-variable('input-padding-x', $input-padding-x);
+    @include print-variable('input-font-size', $input-font-size);
+    @include print-variable('input-padding-y-sm', $input-padding-y-sm);
+    @include print-variable('input-padding-x-sm', $input-padding-x-sm);
+    @include print-variable('input-font-size-sm', $input-font-size-sm);
+    @include print-variable('input-padding-y-lg', $input-padding-y-lg);
+    @include print-variable('input-padding-x-lg', $input-padding-x-lg);
+    @include print-variable('input-font-size-lg', $input-font-size-lg);
+    @include print-variable('input-border-width', $input-border-width);
+    @include print-variable('input-border-radius', $input-border-radius);
+    @include print-variable('input-border-radius-sm', $input-border-radius-sm);
+    @include print-variable('input-border-radius-lg', $input-border-radius-lg);
+
     @include print-variable('number-of-color-palettes', length($o-color-palettes) - 1); // -1 since the last one is the user customized one
     @include print-variable('color-palettes-number', $o-original-color-palette-number);
     @include print-variable('has-customized-colors', $o-has-customized-colors);
