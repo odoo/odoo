@@ -22,6 +22,44 @@
                                     <div class="text-muted">
                                         Manage &amp; publish a schedule with tracks
                                     </div>
+                                    <div class="mt-3 d-flex" attrs="{'invisible': [('module_website_event_track', '=', False)]}">
+                                        <field name="module_website_event_track_live" class="w-auto"/>
+                                        <div>
+                                            <label string="Live Mode" for="module_website_event_track_live"/><br/>
+                                            <span class="text-muted">Youtube support, Chat</span>
+                                        </div>
+                                    </div>
+                                    <div class="mt-3 d-flex" attrs="{'invisible': [('module_website_event_track', '=', False)]}">
+                                        <field name="module_website_event_track_quiz" class="w-auto"/>
+                                        <div>
+                                            <label string="Quizzes on tracks" for="module_website_event_track_quiz"/><br/>
+                                            <span class="text-muted">Quizzes, leaderboard</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div>
+                                    <div class="o_setting_left_pane">
+                                        <field name="module_website_event_meet"/>
+                                    </div>
+                                    <div class="o_setting_right_pane">
+                                        <label string="Discussion Rooms" for="module_website_event_meet"/>
+                                        <div class="text-muted">
+                                            Integrate discussion rooms
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mt-3">
+                                    <div class="o_setting_left_pane">
+                                        <field name="module_website_event_track_exhibitor"/>
+                                    </div>
+                                    <div class="o_setting_right_pane">
+                                        <label string="Advanced Sponsors" for="module_website_event_track_exhibitor"/>
+                                        <div class="text-muted">
+                                            Chat, advanced exhibitors
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
