@@ -4,8 +4,13 @@
 {
     "name" : "Mongolia - Accounting",
     "version" : "1.0",
+<<<<<<< HEAD
     'category': 'Accounting/Localizations/Account Charts',
     "author" : "BumanIT LLC, Odoo S.A",
+=======
+    'category': 'Accounting/Localizations',
+    "author" : "BumanIT LLC, Odoo S.A.",
+>>>>>>> 52f7fa66560... temp
     "description": """
 This is the module to manage the accounting chart for Mongolia.
 ===============================================================
