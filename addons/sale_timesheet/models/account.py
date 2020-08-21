@@ -23,11 +23,14 @@ class AccountAnalyticLine(models.Model):
     timesheet_invoice_id = fields.Many2one('account.move', string="Invoice", readonly=True, copy=False, help="Invoice created from the timesheet")
     non_allow_billable = fields.Boolean("Non-Billable", help="Your timesheet will not be billed.")
 
-    @api.depends('so_line.product_id', 'project_id', 'task_id', 'non_allow_billable')
+    @api.depends('so_line.product_id', 'project_id', 'task_id', 'non_allow_billable', 'task_id.bill_type', 'task_id.pricing_type', 'task_id.non_allow_billable')
     def _compute_timesheet_invoice_type(self):
         non_allowed_billable = self.filtered('non_allow_billable')
         non_allowed_billable.timesheet_invoice_type = 'non_billable_timesheet'
-        for timesheet in self - non_allowed_billable:
+        non_allowed_billable_task = (self - non_allowed_billable).filtered(lambda t: t.task_id.bill_type == 'customer_project' and t.task_id.pricing_type == 'employee_rate' and t.task_id.non_allow_billable)
+        non_allowed_billable_task.timesheet_invoice_type = 'non_billable'
+
+        for timesheet in self - non_allowed_billable - non_allowed_billable_task:
             if timesheet.project_id:  # AAL will be set to False
                 invoice_type = 'non_billable_project' if not timesheet.task_id else 'non_billable'
                 if timesheet.task_id and timesheet.so_line.product_id.type == 'service':
@@ -116,7 +119,7 @@ class AccountAnalyticLine(models.Model):
                 return task.sale_line_id
             if task.pricing_type == 'fixed_rate':
                 return task.sale_line_id
-            elif task.pricing_type == 'employee_rate':
+            elif task.pricing_type == 'employee_rate' and not task.non_allow_billable:
                 map_entry = self.env['project.sale.line.employee.map'].search([('project_id', '=', task.project_id.id), ('employee_id', '=', employee.id)])
                 if map_entry:
                     return map_entry.sale_line_id

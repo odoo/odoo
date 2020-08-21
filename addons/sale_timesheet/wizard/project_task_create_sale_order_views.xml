@@ -24,7 +24,9 @@
                         <field name="sale_line_id" options="{'no_create': True, 'no_create_edit': True}" attrs="{'required': [('link_selection', '=', 'link')]}"/>
                         <field name="commercial_partner_id" invisible="1"/>
                     </group>
-                    <field name="info_invoice"/>
+                </group>
+                <group attrs="{'invisible': [('info_invoice', '=', False)]}">
+                    <field name="info_invoice" nolabel="1"/>
                 </group>
                 <footer>
                     <button string="Link to Sales Order" type="object" name="action_link_sale_order" class="oe_highlight" attrs="{'invisible': [('link_selection', '!=', 'link')]}"/>
