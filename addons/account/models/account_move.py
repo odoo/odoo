@@ -1700,6 +1700,13 @@ class AccountMove(models.Model):
             raise UserError(_('You cannot create a move already in the posted state. Please create a draft move and post it after.'))
 
         vals_list = self._move_autocomplete_invoice_lines_create(vals_list)
+
+        # If partner try to order from another company, make the partner multi-company
+        for vals in vals_list:
+            partner = self.env['res.partner'].browse(vals.get('partner_id'))
+            if partner.company_id.id != vals.get('company_id'):
+                partner.company_id = None
+
         return super(AccountMove, self).create(vals_list)
 
     def write(self, vals):
