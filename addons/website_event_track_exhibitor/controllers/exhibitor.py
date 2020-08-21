@@ -72,7 +72,7 @@ class ExhibitorController(EventTrackController):
         sponsors = request.env['event.sponsor'].sudo().search(search_domain)
         sponsors_all = request.env['event.sponsor'].sudo().search(search_domain_base)
         sponsor_types = sponsors_all.mapped('sponsor_type_id')
-        sponsor_countries = sponsors_all.mapped('partner_id.country_id')
+        sponsor_countries = sponsors_all.mapped('partner_id.country_id').sorted('name')
         # organize sponsors into categories to help display
         sponsor_categories = dict()
         for sponsor in sponsors:
