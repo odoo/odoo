@@ -6,12 +6,12 @@ from random import randint, sample
 from werkzeug.exceptions import NotFound, Forbidden
 
 from odoo import exceptions, http
-from odoo.addons.website_event_track.controllers.main import WebsiteEventTrackController
+from odoo.addons.website_event_track.controllers.event_track import EventTrackController
 from odoo.http import request
 from odoo.osv import expression
 
 
-class ExhibitorController(WebsiteEventTrackController):
+class ExhibitorController(EventTrackController):
 
     def _get_event_sponsors_base_domain(self, event):
         search_domain_base = [

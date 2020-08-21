@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import http
-
-from odoo.addons.website_event_track_online.controllers.community import WebsiteEventCommunityController
-from odoo.http import request
 from werkzeug.exceptions import Forbidden
 
+from odoo import http
+from odoo.addons.website_event.controllers.community import EventCommunityController
+from odoo.http import request
 
-class WebsiteEventTrackQuizMeetController(WebsiteEventCommunityController):
+
+class WebsiteEventTrackQuizMeetController(EventCommunityController):
 
     @http.route(['/event/<model("event.event"):event>/community'], type='http', auth="public", website=True, sitemap=False)
     def community(self, event, page=1, lang=None, **kwargs):

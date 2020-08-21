@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data>
+
+   <record id="website_visitor_view_search" model="ir.ui.view">
+        <field name="name">website.visitor.view.search.inherit.event</field>
+        <field name="model">website.visitor</field>
+        <field name="inherit_id" ref="website.website_visitor_view_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='group_by_lang']" position="after">
+                <filter string="Main Contact" name="group_by_parent_id" context="{'group_by': 'parent_id'}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="website_visitor_view_tree" model="ir.ui.view">
+        <field name="name">website.visitor.view.tree.inherit.event</field>
+        <field name="model">website.visitor</field>
+        <field name="inherit_id" ref="website.website_visitor_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='page_ids']" position="after">
+                <field name="event_registration_count"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="website_visitor_view_form" model="ir.ui.view">
+        <field name="name">website.visitor.view.form.inherit.event</field>
+        <field name="model">website.visitor</field>
+        <field name="inherit_id" ref="website.website_visitor_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@id='w_visitor_visit_counter']" position="before">
+                <button name="%(website_event.event_registration_action_from_visitor)d"
+                    type="action"
+                    class="oe_stat_button" icon="fa-ticket"
+                    attrs="{'invisible': [('event_registration_count', '=', 0)]}">
+                    <field name="event_registration_count" widget="statinfo" string="Registrations"/>
+                </button>
+            </xpath>
+            <xpath expr="//field[@name='page_ids']" position="after">
+                <field name="parent_id"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="website_visitor_view_kanban" model="ir.ui.view">
+        <field name="name">website.visitor.view.kanban.inherit.event</field>
+        <field name="model">website.visitor</field>
+        <field name="inherit_id" ref="website.website_visitor_view_kanban"/>
+        <field name="arch" type="xml">
+            <field name="page_ids" position="after">
+                <field name="event_registration_count"/>
+            </field>
+            <xpath expr="//div[@id='o_page_count']" position="after">
+                <div>Registrations<span class="float-right font-weight-bold"><field name="event_registration_count"/></span></div>
+            </xpath>
+            <xpath expr="//div[hasclass('w_visitor_kanban_actions_ungrouped')]" position="before">
+                <div class="col">
+                    <b><field name="event_registration_count"/></b>
+                    <div>Registrations</div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</data></odoo>
