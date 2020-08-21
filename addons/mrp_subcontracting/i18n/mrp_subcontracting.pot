@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.3\n"
+"Project-Id-Version: Odoo Server saas~13.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-21 10:46+0000\n"
-"PO-Revision-Date: 2020-04-21 10:46+0000\n"
+"POT-Creation-Date: 2020-08-21 13:09+0000\n"
+"PO-Revision-Date: 2020-08-21 13:09+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -65,6 +65,51 @@ msgid "Display Action Record Components"
 msgstr ""
 
 #. module: mrp_subcontracting
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_bom__display_name
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_production__display_name
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_product_supplierinfo__display_name
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_res_company__display_name
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_res_partner__display_name
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_move__display_name
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_move_line__display_name
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_picking__display_name
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_return_picking__display_name
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_rule__display_name
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: mrp_subcontracting
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_bom__id
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_production__id
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_product_supplierinfo__id
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_res_company__id
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_res_partner__id
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_move__id
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_move_line__id
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_picking__id
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_return_picking__id
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_rule__id
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__id
+msgid "ID"
+msgstr ""
+
+#. module: mrp_subcontracting
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_bom____last_update
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_production____last_update
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_product_supplierinfo____last_update
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_res_company____last_update
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_res_partner____last_update
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_move____last_update
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_move_line____last_update
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_picking____last_update
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_return_picking____last_update
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_rule____last_update
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse____last_update
+msgid "Last Modified on"
+msgstr ""
+
+#. module: mrp_subcontracting
 #: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
 #, python-format
 msgid "Make To Order"
@@ -76,14 +121,14 @@ msgid "Product Moves (Stock Move Line)"
 msgstr ""
 
 #. module: mrp_subcontracting
-#: code:addons/mrp_subcontracting/models/stock_move.py:0
-#, python-format
-msgid "Raw Materials for %s"
+#: model:ir.model,name:mrp_subcontracting.model_mrp_production
+msgid "Production Order"
 msgstr ""
 
 #. module: mrp_subcontracting
-#: model:ir.model,name:mrp_subcontracting.model_mrp_product_produce
-msgid "Record Production"
+#: code:addons/mrp_subcontracting/models/stock_move.py:0
+#, python-format
+msgid "Raw Materials for %s"
 msgstr ""
 
 #. module: mrp_subcontracting
@@ -144,6 +189,12 @@ msgstr ""
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_stock_rule
 msgid "Stock Rule"
+msgstr ""
+
+#. module: mrp_subcontracting
+#: code:addons/mrp_subcontracting/models/stock_move.py:0
+#, python-format
+msgid "Subcontract"
 msgstr ""
 
 #. module: mrp_subcontracting
@@ -235,9 +286,4 @@ msgstr ""
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_stock_warehouse
 msgid "Warehouse"
-msgstr ""
-
-#. module: mrp_subcontracting
-#: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_product_produce__subcontract_move_id
-msgid "stock move from the subcontract picking"
 msgstr ""

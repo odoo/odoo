@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.1\n"
+"Project-Id-Version: Odoo Server saas~13.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-12-16 08:45+0000\n"
-"PO-Revision-Date: 2019-12-16 08:45+0000\n"
+"POT-Creation-Date: 2020-08-21 13:09+0000\n"
+"PO-Revision-Date: 2020-08-21 13:09+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,78 +16,78 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: partner_autocomplete
-#: model_terms:ir.ui.view,arch_db:partner_autocomplete.additional_info_template
-msgid "(Time Now)"
-msgstr ""
-
-#. module: partner_autocomplete
-#: model_terms:ir.ui.view,arch_db:partner_autocomplete.additional_info_template
+#: model_terms:ir.ui.view,arch_db:partner_autocomplete.enrich_service_information
 msgid ""
 "<i class=\"fa fa-fw mr-2 fa-building text-primary\"/>\n"
-"                <b>Company type:</b>"
+"                    <b>Company type</b>"
 msgstr ""
 
 #. module: partner_autocomplete
-#: model_terms:ir.ui.view,arch_db:partner_autocomplete.additional_info_template
+#: model_terms:ir.ui.view,arch_db:partner_autocomplete.enrich_service_information
 msgid ""
 "<i class=\"fa fa-fw mr-2 fa-calendar text-primary\"/>\n"
-"                <b>Founded:</b>"
+"                    <b>Founded</b>"
 msgstr ""
 
 #. module: partner_autocomplete
-#: model_terms:ir.ui.view,arch_db:partner_autocomplete.additional_info_template
+#: model_terms:ir.ui.view,arch_db:partner_autocomplete.enrich_service_information
 msgid ""
 "<i class=\"fa fa-fw mr-2 fa-cube text-primary\"/>\n"
-"                <b>Technology Used :</b>"
+"                    <b>Technologies Used</b>"
 msgstr ""
 
 #. module: partner_autocomplete
-#: model_terms:ir.ui.view,arch_db:partner_autocomplete.additional_info_template
+#: model_terms:ir.ui.view,arch_db:partner_autocomplete.enrich_service_information
 msgid ""
 "<i class=\"fa fa-fw mr-2 fa-envelope text-primary\"/>\n"
-"                <b>Email :</b>"
+"                    <b>Email</b>"
 msgstr ""
 
 #. module: partner_autocomplete
-#: model_terms:ir.ui.view,arch_db:partner_autocomplete.additional_info_template
+#: model_terms:ir.ui.view,arch_db:partner_autocomplete.enrich_service_information
 msgid ""
 "<i class=\"fa fa-fw mr-2 fa-globe text-primary\"/>\n"
-"                <b>Timezone :</b>"
+"                    <b>Timezone</b>"
 msgstr ""
 
 #. module: partner_autocomplete
-#: model_terms:ir.ui.view,arch_db:partner_autocomplete.additional_info_template
+#: model_terms:ir.ui.view,arch_db:partner_autocomplete.enrich_service_information
 msgid ""
 "<i class=\"fa fa-fw mr-2 fa-industry text-primary\"/>\n"
-"                <b>Sector:</b>"
+"                    <b>Sectors</b>"
 msgstr ""
 
 #. module: partner_autocomplete
-#: model_terms:ir.ui.view,arch_db:partner_autocomplete.additional_info_template
+#: model_terms:ir.ui.view,arch_db:partner_autocomplete.enrich_service_information
 msgid ""
 "<i class=\"fa fa-fw mr-2 fa-money text-primary\"/>\n"
-"                <b>Annual revenue:</b>"
+"                    <b>Estimated revenue</b>"
 msgstr ""
 
 #. module: partner_autocomplete
-#: model_terms:ir.ui.view,arch_db:partner_autocomplete.additional_info_template
-msgid ""
-"<i class=\"fa fa-fw mr-2 fa-money text-primary\"/>\n"
-"                <b>Estimated annual revenue:</b>"
-msgstr ""
-
-#. module: partner_autocomplete
-#: model_terms:ir.ui.view,arch_db:partner_autocomplete.additional_info_template
+#: model_terms:ir.ui.view,arch_db:partner_autocomplete.enrich_service_information
 msgid ""
 "<i class=\"fa fa-fw mr-2 fa-phone text-primary\"/>\n"
-"                <b>Phone :</b>"
+"                    <b>Phone</b>"
 msgstr ""
 
 #. module: partner_autocomplete
-#: model_terms:ir.ui.view,arch_db:partner_autocomplete.additional_info_template
+#: model_terms:ir.ui.view,arch_db:partner_autocomplete.enrich_service_information
+msgid ""
+"<i class=\"fa fa-fw mr-2 fa-twitter text-primary\"/>\n"
+"                    <b>Twitter</b>"
+msgstr ""
+
+#. module: partner_autocomplete
+#: model_terms:ir.ui.view,arch_db:partner_autocomplete.enrich_service_information
 msgid ""
 "<i class=\"fa fa-fw mr-2 fa-users text-primary\"/>\n"
-"                <b>Employees:</b>"
+"                    <b>Employees</b>"
+msgstr ""
+
+#. module: partner_autocomplete
+#: model_terms:ir.ui.view,arch_db:partner_autocomplete.enrich_service_information
+msgid "<span> per year</span>"
 msgstr ""
 
 #. module: partner_autocomplete
@@ -106,6 +106,11 @@ msgstr ""
 #. module: partner_autocomplete
 #: model:ir.model,name:partner_autocomplete.model_res_company
 msgid "Companies"
+msgstr ""
+
+#. module: partner_autocomplete
+#: model_terms:ir.ui.view,arch_db:partner_autocomplete.enrich_service_information
+msgid "Company Logo"
 msgstr ""
 
 #. module: partner_autocomplete
@@ -136,6 +141,9 @@ msgid "Created on"
 msgstr ""
 
 #. module: partner_autocomplete
+#: model:ir.model.fields,field_description:partner_autocomplete.field_res_company__display_name
+#: model:ir.model.fields,field_description:partner_autocomplete.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner__display_name
 #: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner_autocomplete_sync__display_name
 msgid "Display Name"
 msgstr ""
@@ -148,6 +156,9 @@ msgid "IAP Account Token missing"
 msgstr ""
 
 #. module: partner_autocomplete
+#: model:ir.model.fields,field_description:partner_autocomplete.field_res_company__id
+#: model:ir.model.fields,field_description:partner_autocomplete.field_res_config_settings__id
+#: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner__id
 #: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner_autocomplete_sync__id
 msgid "ID"
 msgstr ""
@@ -163,6 +174,9 @@ msgid "Is synched"
 msgstr ""
 
 #. module: partner_autocomplete
+#: model:ir.model.fields,field_description:partner_autocomplete.field_res_company____last_update
+#: model:ir.model.fields,field_description:partner_autocomplete.field_res_config_settings____last_update
+#: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner____last_update
 #: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner_autocomplete_sync____last_update
 msgid "Last Modified on"
 msgstr ""
@@ -202,7 +216,8 @@ msgid "Partner Autocomplete Sync"
 msgstr ""
 
 #. module: partner_autocomplete
-#: model_terms:ir.ui.view,arch_db:partner_autocomplete.additional_info_template
+#: code:addons/partner_autocomplete/models/res_partner.py:0
+#, python-format
 msgid "Partner created by Odoo Partner Autocomplete Service"
 msgstr ""
 
@@ -228,11 +243,6 @@ msgid "Set Your Account Token"
 msgstr ""
 
 #. module: partner_autocomplete
-#: model_terms:ir.ui.view,arch_db:partner_autocomplete.additional_info_template
-msgid "Twitter :"
-msgstr ""
-
-#. module: partner_autocomplete
-#: model_terms:ir.ui.view,arch_db:partner_autocomplete.additional_info_template
-msgid "followers)"
+#: model_terms:ir.ui.view,arch_db:partner_autocomplete.enrich_service_information
+msgid "followers"
 msgstr ""
