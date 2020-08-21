@@ -2442,7 +2442,7 @@ class MailThread(models.AbstractModel):
             self._name, self.ids,
             list(new_partners), new_partners,
             list(new_channels), new_channels,
-            check_existing=True, existing_policy='skip')
+            check_existing=True, existing_policy='update')
 
         # notify people from auto subscription, for example like assignation
         for (template, lang), pids in notify_data.items():
