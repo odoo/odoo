@@ -10,15 +10,17 @@
     <div t-att-class="'o_wetrack_js_reminder btn %s %s' % (
         'btn-link' if reminder_light else 'btn-outline-primary',
         'btn-sm' if reminder_small else '')">
+        <t t-if="track.is_reminder_on" t-set="title">Favorite On</t>
+        <t t-else="track.is_reminder_on" t-set="title">Set Favorite</t>
         <i t-att-class="'fa fa-bell%s inactive_color_%s' % ('' if track.is_reminder_on else '-o', 'dark' if reminder_light and not light_theme else 'light')"
            t-att-data-track-id="track.id"
-           t-att-title="'Reminder On' if track.is_reminder_on else 'Set a Reminder'"
+           t-att-title="title"
            t-att-data-reminder-on="bool(track.is_reminder_on)"></i>
         <span t-if="not reminder_light" class="o_wetrack_js_reminder_text">
             <t t-if="not track.is_reminder_on">
-                Set Reminder
+                Set Favorite
             </t><t t-else="">
-                Reminder On
+                Favorite On
             </t>
         </span>
     </div>
