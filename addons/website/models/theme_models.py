@@ -193,6 +193,7 @@ class Theme(models.AbstractModel):
         self.disable_view('website.template_header_boxed')
         self.disable_view('website.template_header_centered_logo')
         self.disable_view('website.template_header_image')
+        self.disable_view('website.template_header_hamburger_full')
 
         # Reinitialize footer templates
         self.enable_view('website.footer_custom')

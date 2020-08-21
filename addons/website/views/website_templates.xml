@@ -1004,6 +1004,80 @@
     </xpath>
 </template>
 
+<template id="template_header_hamburger_full" inherit_id="website.layout" name="Template Header Hambuger Full" active="False">
+    <xpath expr="//header//nav" position="replace">
+        <nav class="navbar navbar-light o_colored_level o_cc">
+            <div id="top_menu_container" class="container">
+                <!-- Brand -->
+                <t t-call="website.placeholder_header_brand"/>
+                <!-- Navbar Toggler -->
+                <t t-call="website.navbar_toggler">
+                    <t t-set="_toggler_class" t-value="'o_header_hamburger_full_toggler ml-auto'"/>
+                </t>
+            </div>
+            <!-- Navbar Collapse -->
+            <div id="top_menu_collapse" class="collapse navbar-collapse">
+                <div class="o_header_collapsed_content_wrapper container d-flex flex-column align-items-lg-center justify-content-lg-center">
+                    <!-- Menu -->
+                    <t t-call="website.navbar_nav">
+                        <t t-set="_nav_class" t-value="'navbar-expand flex-column flex-lg-row text-center'"/>
+                        <t t-foreach="website.menu_id.child_id" t-as="submenu">
+                            <t t-call="website.submenu">
+                                <t t-set="item_class" t-value="'nav-item'"/>
+                                <t t-set="link_class" t-value="'nav-link'"/>
+                            </t>
+                        </t>
+                        <!-- Sign In -->
+                        <t t-call="portal.placeholder_user_sign_in">
+                            <t t-set="_item_class" t-value="'nav-item'"/>
+                            <t t-set="_link_class" t-value="'nav-link font-weight-bold'"/>
+                        </t>
+                        <!-- User Dropdown -->
+                        <t t-call="portal.user_dropdown">
+                            <t t-set="_user_name" t-value="true"/>
+                            <t t-set="_item_class" t-value="'nav-item dropdown'"/>
+                            <t t-set="_link_class" t-value="'nav-link font-weight-bold ml-lg-3'"/>
+                        </t>
+                    </t>
+                    <!-- Social Icons -->
+                    <div class="oe_structure w-100" id="oe_structure_header_hamburger_full_1"/>
+                </div>
+            </div>
+        </nav>
+    </xpath>
+</template>
+
+<template id="template_header_hamburger_full_oe_structure_header_hamburger_full_1" inherit_id="website.template_header_hamburger_full" name="Template Header Hamburger Full (oe_structure_header_hamburger_full_1)">
+    <xpath expr="//*[hasclass('oe_structure')][@id='oe_structure_header_hamburger_full_1']" position="replace">
+        <div class="oe_structure w-100" id="oe_structure_header_hamburger_full_1">
+            <div class="s_hr pt32 pb32" data-name="Separator">
+                <hr class="w-100 mx-auto" style="border-top-width: 1px; border-top-style: solid; border-color: var(--400);"/>
+            </div>
+            <div class="s_share text-center" data-name="Social Media">
+                <h4 class="s_share_title d-none">Follow us</h4>
+                <a href="/website/social/facebook" class="s_share_facebook" target="_blank">
+                    <i class="fa fa-1x fa-fw fa-facebook rounded-circle shadow-sm"/>
+                </a>
+                <a href="/website/social/twitter" class="s_share_twitter" target="_blank">
+                    <i class="fa fa-1x fa-fw fa-twitter rounded-circle shadow-sm"/>
+                </a>
+                <a href="/website/social/linkedin" class="s_share_linkedin" target="_blank">
+                    <i class="fa fa-1x fa-fw fa-linkedin rounded-circle shadow-sm"/>
+                </a>
+                <a href="/website/social/github" class="s_share_github" target="_blank">
+                    <i class="fa fa-1x fa-fw fa-github rounded-circle shadow-sm"/>
+                </a>
+                <a href="/website/social/youtube" class="s_share_youtube" target="_blank">
+                    <i class="fa fa-1x fa-fw fa-youtube rounded-circle shadow-sm"/>
+                </a>
+                <a href="/website/social/instagram" class="s_share_instagram" target="_blank">
+                    <i class="fa fa-1x fa-fw fa-instagram rounded-circle shadow-sm"/>
+                </a>
+            </div>
+        </div>
+    </xpath>
+</template>
+
 <!-- Navbar Hamburger Options -->
 <template id="option_header_off_canvas" inherit_id="website.navbar_nav" name="Off-Canvas Header" active="False">
     <xpath expr="//ul[@id='top_menu']" position="attributes">
@@ -1039,11 +1113,14 @@
     <xpath expr="//div[@id='oe_structure_header_hamburger_3']" position="replace"/>
 </template>
 
-
 <template id="option_header_off_canvas_template_header_sidebar" inherit_id="website.template_header_sidebar" active="False" priority="32">
     <xpath expr="//div[@id='oe_structure_header_sidebar_1']" position="attributes">
         <attribute name="class" add="d-none d-lg-block" separator=" "/>
     </xpath>
+</template>
+
+<template id="option_header_off_canvas_template_header_hamburger_full" inherit_id="website.template_header_hamburger_full" active="False" priority="32">
+    <xpath expr="//div[@id='oe_structure_header_hamburger_full_1']" position="replace"/>
 </template>
 
 <!-- Header options -->
