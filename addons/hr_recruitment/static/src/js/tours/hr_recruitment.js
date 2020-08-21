@@ -9,6 +9,7 @@ var _t = core._t;
 tour.register('hr_recruitment_tour',{
     url: "/web",
     rainbowManMessage: _t("<div>Great job! You hired a new colleague!</div><div>Try the Website app to publish job offers online.</div>"),
+    fadeout: 'very_slow',
 }, [tour.stepUtils.showAppsMenuItem(), {
     trigger: '.o_app[data-menu-xmlid="hr_recruitment.menu_hr_recruitment_root"]',
     content: _t("Let's have a look at how to <b>improve</b> your <b>hiring process</b>."),
@@ -33,7 +34,8 @@ tour.register('hr_recruitment_tour',{
     trigger: ".o_job_alias",
     extra_trigger: '.o_hr_job_simple_form',
     content: _t("Choose an application email."),
-    position: "right"
+    position: "right",
+    width: 195
 }, {
     trigger: '.o_create_job',
     content: _t('Let\'s create the position. An email will be setup for applications, and a public job description, if you use the Website app.'),
@@ -54,7 +56,8 @@ tour.register('hr_recruitment_tour',{
     trigger: ".breadcrumb-item:not(.active):last",
     extra_trigger: '.o_kanban_applicant',
     content: _t("Let’s go back to the dashboard."),
-    position: "bottom"
+    position: "bottom",
+    width: 195
 }, {
     trigger: ".oe_kanban_action_button",
     extra_trigger: '.o_hr_recruitment_kanban',
@@ -70,7 +73,8 @@ tour.register('hr_recruitment_tour',{
     trigger: ".oe_kanban_card",
     extra_trigger: '.o_kanban_applicant',
     content: _t("<b>Click to view</b> the application."),
-    position: "bottom"
+    position: "bottom",
+    width: 195
 }, {
     trigger: ".o_Chatter .o_ChatterTopbar_buttonSendMessage",
     extra_trigger: '.o_applicant_form',
@@ -90,7 +94,8 @@ tour.register('hr_recruitment_tour',{
     trigger: ".o_create_employee",
     extra_trigger: '.o_applicant_form',
     content: _t("Let’s create this new employee now."),
-    position: "bottom"
+    position: "bottom",
+    width: 225
 }, {
     trigger: ".o_form_button_save",
     extra_trigger: ".o_employee_form",
