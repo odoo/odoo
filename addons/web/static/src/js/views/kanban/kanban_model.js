@@ -34,18 +34,23 @@ var KanbanModel = BasicModel.extend({
             parentID: groupID,
         });
 
-        var def = this._fetchRecord(new_record).then(function (result) {
-            group.data.unshift(new_record.id);
-            group.res_ids.unshift(resId);
-            group.count++;
+        var prom = this._fetchRecord(new_record);
+        return this._reloadProgressBarGroupFromRecord(new_record.id, prom).then(function (result) {
+            // LPE FIXME: double verification that the record is NOT in the group yet
+            if (!_.contains(group.data, new_record.id) && !_.contains(group.res_ids, resId)) {
+                group.data.unshift(new_record.id);
+                group.res_ids.unshift(resId);
+                // LPE FIXME: in case the new record doesn't belong to the group database wise
+                // group will be incremented from 0 to 1, which is enough in this
+                // case.
+                group.count++;
 
-            // update the res_ids and count of the parent
-            self.localData[group.parentID].count++;
-            self._updateParentResIDs(group);
-
+                // update the res_ids and count of the parent
+                self.localData[group.parentID].count++;
+                self._updateParentResIDs(group);
+            }
             return result.id;
         });
-        return this._reloadProgressBarGroupFromRecord(new_record.id, def);
     },
     /**
      * Creates a new group from a name (performs a name_create).

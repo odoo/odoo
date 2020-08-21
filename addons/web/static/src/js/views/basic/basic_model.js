@@ -4207,6 +4207,18 @@ var BasicModel = AbstractModel.extend({
                             // Also keep data if we only reload groups' own data
                             delete updatedProps.data;
                         }
+                        // If only groups are updated, and no new records is in the group
+                        // we won't search_read it (optimization).
+                        // BUT we need to keep res_ids, in case a new record, not belonging to the group
+                        // is there (kanban quick create with domain)
+                        if (options && options.onlyGroups && newGroup.count === 0) {
+                            // LPE FIXME: The count will be reset to 0
+                            // if we keep it, we take the risk of breaking
+                            // loadMore stuff when a new record which doesn't belong
+                            // to the group is present in the group anyway (kanban quick create with domain)
+                            // Should we keep the count ????
+                            delete updatedProps.res_ids;
+                        }
                         // set the limit such that all previously loaded records
                         // (e.g. if we are coming back to the kanban view from a
                         // form view) are reloaded

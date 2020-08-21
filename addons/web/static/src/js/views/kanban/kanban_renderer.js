@@ -519,10 +519,7 @@ var KanbanRenderer = BasicRenderer.extend({
         if (this.state.groupedBy.length) {
             _.invoke(this.widgets, 'cancelQuickCreate');
         }
-        // if quick create adds a record then do not show no content helper
-        if (!this.$('.o_kanban_record').length) {
-            this._toggleNoContentHelper();
-        }
+        this._toggleNoContentHelper();
     },
     /**
      * @private
