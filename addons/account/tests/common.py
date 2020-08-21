@@ -190,6 +190,10 @@ class AccountTestInvoicingCommon(SavepointCase):
             return account
 
         chart_template = chart_template or cls.env.company.chart_template_id
+<<<<<<< HEAD
+=======
+        currency = chart_template.currency_id
+>>>>>>> 999bd3f9ac5... temp
         company = cls.env['res.company'].create({
             'name': company_name,
             **kwargs,
