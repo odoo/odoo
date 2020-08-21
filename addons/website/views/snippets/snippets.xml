@@ -1096,6 +1096,8 @@
             <we-fontfamilypicker string="⌙ Headings" data-variable="headings-font"/>
             <we-fontfamilypicker string="⌙ Buttons" data-variable="buttons-font"/>
         </we-collapse>
+
+        <!-- Buttons & Links -->
         <we-select string="Main Buttons" data-variable="btn-primary-outline">
             <we-button data-customize-website-variable="false">Fill</we-button>
             <we-button data-customize-website-variable="true">Outline</we-button>
@@ -1104,7 +1106,32 @@
             <we-button data-customize-website-variable="false">Fill</we-button>
             <we-button data-customize-website-variable="true">Outline</we-button>
         </we-select>
-        <we-checkbox string="Ripple Buttons"
+        <we-collapse>
+            <we-row string="⌙ Paddings">
+                <we-input title="Y" data-customize-website-variable="" data-variable="btn-padding-y" data-unit="px" data-save-unit="rem"/>
+                <we-input title="X" data-customize-website-variable="" data-variable="btn-padding-x" data-unit="px" data-save-unit="rem"/>
+            </we-row>
+            <we-row string=" ⌙ Small">
+                <we-input title="Y" data-customize-website-variable="" data-variable="btn-padding-y-sm" data-unit="px" data-save-unit="rem"/>
+                <we-input title="X" data-customize-website-variable="" data-variable="btn-padding-x-sm" data-unit="px" data-save-unit="rem"/>
+            </we-row>
+            <we-row string=" ⌙ Large">
+                <we-input title="Y" data-customize-website-variable="" data-variable="btn-padding-y-lg" data-unit="px" data-save-unit="rem"/>
+                <we-input title="X" data-customize-website-variable="" data-variable="btn-padding-x-lg" data-unit="px" data-save-unit="rem"/>
+            </we-row>
+        </we-collapse>
+        <we-collapse>
+            <we-input string="⌙ Font Size" data-customize-website-variable="" data-variable="btn-font-size" data-unit="px" data-save-unit="rem"/>
+            <we-input string=" ⌙ Small" data-customize-website-variable="" data-variable="btn-font-size-sm" data-unit="px" data-save-unit="rem"/>
+            <we-input string=" ⌙ Large" data-customize-website-variable="" data-variable="btn-font-size-lg" data-unit="px" data-save-unit="rem"/>
+        </we-collapse>
+        <we-input string="⌙ Border Width" data-customize-website-variable="" data-variable="btn-border-width" data-unit="px" data-save-unit="rem"/>>
+        <we-collapse>
+            <we-input string="⌙ Border Radius" data-customize-website-variable="" data-variable="btn-border-radius" data-unit="px" data-save-unit="rem"/>
+            <we-input string=" ⌙ Small" data-customize-website-variable="" data-variable="btn-border-radius-sm" data-unit="px" data-save-unit="rem"/>
+            <we-input string=" ⌙ Large" data-customize-website-variable="" data-variable="btn-border-radius-lg" data-unit="px" data-save-unit="rem"/>
+        </we-collapse>
+        <we-checkbox string="⌙ Ripple Effect"
                      data-customize-website-views="website.option_ripple_effect"
                      data-customize-website-variable="false|true"
                      data-variable="btn-ripple"/>
@@ -1113,6 +1140,35 @@
             <we-button data-customize-website-variable="'hover'">Underline On Hover</we-button>
             <we-button data-customize-website-variable="'always'">Always Underlined</we-button>
         </we-select>
+
+        <!-- Inputs -->
+        <we-title>Inputs</we-title>
+        <we-collapse>
+            <we-row string="⌙ Paddings">
+                <we-input title="Y" data-customize-website-variable="" data-variable="input-padding-y" data-unit="px" data-save-unit="rem"/>
+                <we-input title="X" data-customize-website-variable="" data-variable="input-padding-x" data-unit="px" data-save-unit="rem"/>
+            </we-row>
+            <we-row string=" ⌙ Small">
+                <we-input title="Y" data-customize-website-variable="" data-variable="input-padding-y-sm" data-unit="px" data-save-unit="rem"/>
+                <we-input title="X" data-customize-website-variable="" data-variable="input-padding-x-sm" data-unit="px" data-save-unit="rem"/>
+            </we-row>
+            <we-row string=" ⌙ Large">
+                <we-input title="Y" data-customize-website-variable="" data-variable="input-padding-y-lg" data-unit="px" data-save-unit="rem"/>
+                <we-input title="X" data-customize-website-variable="" data-variable="input-padding-x-lg" data-unit="px" data-save-unit="rem"/>
+            </we-row>
+        </we-collapse>
+        <we-collapse>
+            <we-input string="⌙ Font Size" data-customize-website-variable="" data-variable="input-font-size" data-unit="px" data-save-unit="rem"/>
+            <we-input string=" ⌙ Small" data-customize-website-variable="" data-variable="input-font-size-sm" data-unit="px" data-save-unit="rem"/>
+            <we-input string=" ⌙ Large" data-customize-website-variable="" data-variable="input-font-size-lg" data-unit="px" data-save-unit="rem"/>
+        </we-collapse>
+        <we-input string="⌙ Border Width" data-customize-website-variable="" data-variable="input-border-width" data-unit="px" data-save-unit="rem"/>>
+        <we-collapse>
+            <we-input string="⌙ Border Radius" data-customize-website-variable="" data-variable="input-border-radius" data-unit="px" data-save-unit="rem"/>
+            <we-input string=" ⌙ Small" data-customize-website-variable="" data-variable="input-border-radius-sm" data-unit="px" data-save-unit="rem"/>
+            <we-input string=" ⌙ Large" data-customize-website-variable="" data-variable="input-border-radius-lg" data-unit="px" data-save-unit="rem"/>
+        </we-collapse>
+
         <we-row string="Status Colors">
             <we-colorpicker title="Success" data-customize-website-color="" data-color-type="theme" data-color="success"/>
             <we-colorpicker title="Info" data-customize-website-color="" data-color-type="theme" data-color="info"/>
