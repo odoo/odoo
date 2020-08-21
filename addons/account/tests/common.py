@@ -21,11 +21,18 @@ class AccountTestInvoicingCommon(SavepointCase):
                 return account.copy(default={'code': new_code})
 
     @classmethod
+    def safe_copy(cls, record):
+        return record and record.copy()
+
+    @classmethod
     def setUpClass(cls, chart_template_ref=None):
         super(AccountTestInvoicingCommon, cls).setUpClass()
 
         if chart_template_ref:
-            chart_template = cls.env.ref(chart_template_ref)
+            if chart_template_ref == 'installed':
+                chart_template = cls.env['account.chart.template'].search([], limit=1)
+            else:
+                chart_template = cls.env.ref(chart_template_ref)
         else:
             chart_template = cls.env.ref('l10n_generic_coa.configurable_chart_template', raise_if_not_found=False)
         if not chart_template:
@@ -46,7 +53,7 @@ class AccountTestInvoicingCommon(SavepointCase):
         cls.cr = cls.env.cr
 
         cls.company_data_2 = cls.setup_company_data('company_2_data', chart_template=chart_template)
-        cls.company_data = cls.setup_company_data('company_1_data', chart_template=chart_template) 
+        cls.company_data = cls.setup_company_data('company_1_data', chart_template=chart_template)
 
         user.write({
             'company_ids': [(6, 0, (cls.company_data['company'] + cls.company_data_2['company']).ids)],
@@ -57,9 +64,9 @@ class AccountTestInvoicingCommon(SavepointCase):
 
         # ==== Taxes ====
         cls.tax_sale_a = cls.company_data['default_tax_sale']
-        cls.tax_sale_b = cls.company_data['default_tax_sale'].copy()
+        cls.tax_sale_b = cls.safe_copy(cls.company_data['default_tax_sale'])
         cls.tax_purchase_a = cls.company_data['default_tax_purchase']
-        cls.tax_purchase_b = cls.company_data['default_tax_purchase'].copy()
+        cls.tax_purchase_b = cls.safe_copy(cls.company_data['default_tax_purchase'])
         cls.tax_armageddon = cls.setup_armageddon_tax('complex_tax', cls.company_data)
 
         # ==== Products ====
@@ -87,16 +94,15 @@ class AccountTestInvoicingCommon(SavepointCase):
         # ==== Fiscal positions ====
         cls.fiscal_pos_a = cls.env['account.fiscal.position'].create({
             'name': 'fiscal_pos_a',
-            'tax_ids': [
-                (0, None, {
+            'tax_ids':
+                [(0, None, {
                     'tax_src_id': cls.tax_sale_a.id,
                     'tax_dest_id': cls.tax_sale_b.id,
-                }),
-                (0, None, {
+                })] if cls.tax_sale_a else []
+                + [(0, None, {
                     'tax_src_id': cls.tax_purchase_a.id,
                     'tax_dest_id': cls.tax_purchase_b.id,
-                }),
-            ],
+                })] if cls.tax_purchase_a else [],
             'account_ids': [
                 (0, None, {
                     'account_src_id': cls.product_a.property_account_income_id.id,
@@ -146,8 +152,8 @@ class AccountTestInvoicingCommon(SavepointCase):
             'property_payment_term_id': cls.pay_terms_b.id,
             'property_supplier_payment_term_id': cls.pay_terms_b.id,
             'property_account_position_id': cls.fiscal_pos_a.id,
-            'property_account_receivable_id': cls.company_data['default_account_receivable'].copy().id,
-            'property_account_payable_id': cls.company_data['default_account_payable'].copy().id,
+            'property_account_receivable_id': cls.safe_copy(cls.company_data['default_account_receivable']).id,
+            'property_account_payable_id': cls.safe_copy(cls.company_data['default_account_payable']).id,
             'company_id': False,
         })
 
@@ -156,8 +162,8 @@ class AccountTestInvoicingCommon(SavepointCase):
             'name': 'add_invoice_line',
             'rounding': 0.05,
             'strategy': 'add_invoice_line',
-            'profit_account_id': cls.company_data['default_account_revenue'].copy().id,
-            'loss_account_id': cls.company_data['default_account_expense'].copy().id,
+            'profit_account_id': cls.safe_copy(cls.company_data['default_account_revenue']).id,
+            'loss_account_id': cls.safe_copy(cls.company_data['default_account_expense']).id,
             'rounding_method': 'UP',
         })
         cls.cash_rounding_b = cls.env['account.cash.rounding'].create({
@@ -330,7 +336,7 @@ class AccountTestInvoicingCommon(SavepointCase):
                     'amount_type': 'percent',
                     'amount': 10.0,
                     'tax_exigibility': 'on_payment',
-                    'cash_basis_transition_account_id': company_data['default_account_tax_sale'].copy().id,
+                    'cash_basis_transition_account_id': cls.safe_copy(company_data['default_account_tax_sale']).id,
                     'invoice_repartition_line_ids': [
                         (0, 0, {
                             'factor_percent': 100,
