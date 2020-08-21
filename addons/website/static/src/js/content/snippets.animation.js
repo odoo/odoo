@@ -978,6 +978,25 @@ registry.FooterSlideout = publicWidget.Widget.extend({
     },
 });
 
+registry.HeaderHamburgerFull = publicWidget.Widget.extend({
+    selector: 'header:has(.o_header_hamburger_full_toggler):not(:has(.o_offcanvas_menu_toggler))',
+    events: {
+        'click .o_header_hamburger_full_toggler': '_onToggleClick',
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _onToggleClick() {
+        document.body.classList.add('overflow-hidden');
+        setTimeout(() => $(window).trigger('scroll'), 100);
+    },
+});
+
 return {
     Widget: publicWidget.Widget,
     Animation: Animation,

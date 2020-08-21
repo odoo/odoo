@@ -823,16 +823,27 @@ header {
 
 @if $-off-canvas-hamburger {
     #top_menu_collapse {
-        flex-direction: if($-hamburger-left, row, row-reverse);
 
         &.collapsing, &.show {
             @include o-position-absolute(0, 0, 0, 0);
             position: fixed;
-            display: flex;
-            align-items: stretch;
             z-index: $zindex-sticky;
             transition: none;
             transform: none;
+
+            &, & > .o_header_collapsed_content_wrapper {
+                // TODO improve: ugly code to reset a potential wrapper
+                display: flex !important;
+                flex-flow: if($-hamburger-left, row, row-reverse) nowrap !important;
+                align-items: stretch !important;
+                justify-content: flex-start !important;
+            }
+            > .o_header_collapsed_content_wrapper {
+                // TODO improve: ugly code to reset a potential wrapper
+                max-width: none !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
 
             .o_offcanvas_menu_backdrop {
                 @include o-position-absolute(0, 0, 0, 0);
@@ -843,12 +854,13 @@ header {
             #top_menu {
                 flex: 0 0 auto !important;
                 overflow: auto;
-                flex-wrap: nowrap;
+                flex-flow: column nowrap !important;
                 @if $-hamburger-center {
                     width: 100%;
                     max-width: none;
                 } @else {
                     max-width: 560px;
+                    text-align: left !important;
                 }
                 min-width: 250px;
                 margin: 0 !important;
@@ -870,6 +882,13 @@ header {
                 }
                 .nav-item, .dropdown-menu {
                     text-align: inherit;
+                }
+                .nav-item, .nav-link {
+                    margin: 0 !important;
+                }
+
+                .navbar-toggler {
+                    display: block !important;
                 }
 
                 // Open all dropdowns
@@ -895,7 +914,7 @@ header {
 
             .o_connected_user header:not(.o_header_is_scrolled) &,
             .o_connected_user header.o_header_affixed & {
-                padding-top: $o-navbar-height;
+                padding-top: $o-navbar-height !important;
             }
         }
         &.collapsing #top_menu {
@@ -995,6 +1014,53 @@ header {
     header .o_header_centered_logo {
         @include media-breakpoint-up(lg) {
             width: 50%;
+        }
+    }
+} @else if o-website-value('header-template') == 'hamburger-full' {
+    @if not $-off-canvas-hamburger {
+        @include media-breakpoint-up(md) {
+            #wrapwrap {
+                $o-hamburger-full-navbar-height: $o-theme-navbar-logo-height + ($navbar-padding-y * 2);
+                > header {
+                    .navbar-collapse {
+                        > .container {
+                            height: calc(100vh - #{$o-navbar-height} - #{$o-hamburger-full-navbar-height});
+                            transition: height .3s ease;
+                        }
+                        .nav-link {
+                            padding-right: $nav-link-padding-x;
+                            padding-left: $nav-link-padding-x;
+                        }
+                        .dropdown-menu {
+                            position: absolute;
+                        }
+                    }
+                    &:not(.o_header_affixed) {
+                        position: sticky;
+                        top: 0;
+                        right: 0;
+                        bottom: auto;
+                        left: 0;
+                        z-index: $zindex-fixed;
+                    }
+                    &.o_header_affixed {
+                        transform: none !important;
+                    }
+                }
+                > main {
+                    > :first-child:not(#wrap), #wrap > :first-child {
+                        &::before {
+                            content: "";
+                            display: block;
+                            width: 100%;
+                            margin-top: $o-hamburger-full-navbar-height;
+                        }
+                    }
+                }
+            }
+            #oe_main_menu_navbar ~ #wrapwrap > header {
+                top: $o-navbar-height;
+            }
         }
     }
 }
