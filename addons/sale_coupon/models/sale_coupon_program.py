@@ -254,7 +254,7 @@ class SaleCouponProgram(models.Model):
             ordered_rule_products_qty = sum(products_qties[product] for product in valid_products)
             # Avoid program if 1 ordered foo on a program '1 foo, 1 free foo'
             if program.promo_applicability == 'on_current_order' and \
-               program._is_valid_product(program.reward_product_id) and program.reward_type == 'product':
+               program.reward_type == 'product' and program._get_valid_products(program.reward_product_id):
                 ordered_rule_products_qty -= program.reward_product_quantity
             if ordered_rule_products_qty >= program.rule_min_quantity:
                 valid_programs |= program
@@ -307,6 +307,7 @@ class SaleCouponProgram(models.Model):
 
     def _is_valid_product(self, product):
         # NOTE: if you override this method, think of also overriding _get_valid_products
+        # we also encourage the use of _get_valid_products as its execution is faster
         if self.rule_products_domain:
             domain = ast.literal_eval(self.rule_products_domain) + [('id', '=', product.id)]
             return bool(self.env['product.product'].search_count(domain))
@@ -315,6 +316,6 @@ class SaleCouponProgram(models.Model):
 
     def _get_valid_products(self, products):
         if self.rule_products_domain:
-            domain = ast.literal_eval(self.rule_products_domain) + [('id', 'in', products.ids)]
-            return self.env['product.product'].search(domain)
+            domain = ast.literal_eval(self.rule_products_domain)
+            return products.filtered_domain(domain)
         return products

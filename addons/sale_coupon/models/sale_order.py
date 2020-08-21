@@ -78,10 +78,10 @@ class SaleOrder(models.Model):
     def _get_reward_values_product(self, program):
         price_unit = self.order_line.filtered(lambda line: program.reward_product_id == line.product_id)[0].price_reduce
 
-        order_lines = (self.order_line - self._get_reward_lines()).filtered(lambda x: program._is_valid_product(x.product_id))
+        order_lines = (self.order_line - self._get_reward_lines()).filtered(lambda x: program._get_valid_products(x.product_id))
         max_product_qty = sum(order_lines.mapped('product_uom_qty')) or 1
         # Remove needed quantity from reward quantity if same reward and rule product
-        if program._is_valid_product(program.reward_product_id):
+        if program._get_valid_products(program.reward_product_id):
             # number of times the program should be applied
             program_in_order = max_product_qty // (program.rule_min_quantity + program.reward_product_quantity)
             # multipled by the reward qty
