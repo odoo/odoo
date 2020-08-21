@@ -615,6 +615,25 @@ class TestFields(TransactionCaseWithUserDemo):
             discussion.name = "X"
             discussion.flush()
 
+    def test_16_compute_unassigned(self):
+        model = self.env['test_new_api.compute.unassigned']
+
+        # real record
+        record = model.create({})
+        with self.assertRaises(ValueError):
+            record.bar
+        self.assertEqual(record.bare, False)
+        self.assertEqual(record.bars, False)
+        self.assertEqual(record.bares, False)
+
+        # new record
+        record = model.new()
+        with self.assertRaises(ValueError):
+            record.bar
+        self.assertEqual(record.bare, False)
+        self.assertEqual(record.bars, False)
+        self.assertEqual(record.bares, False)
+
     def test_20_float(self):
         """ test rounding of float fields """
         record = self.env['test_new_api.mixed'].create({})
