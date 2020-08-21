@@ -63,7 +63,7 @@ var PurchaseListDashboardRenderer = ListRenderer.extend({
         e.preventDefault();
         var $action = $(e.currentTarget);
         this.trigger_up('dashboard_open_action', {
-            action_name: $action.attr('name')+"_list",
+            action_name: "purchase.dashboard_open_action_list",
             action_context: $action.attr('context'),
         });
     },
@@ -178,7 +178,7 @@ var PurchaseKanbanDashboardRenderer = KanbanRenderer.extend({
         e.preventDefault();
         var $action = $(e.currentTarget);
         this.trigger_up('dashboard_open_action', {
-            action_name: $action.attr('name')+"_kanban",
+            action_name: "purchase.purchase_action_dashboard_kanban",
             action_context: $action.attr('context'),
         });
     },
