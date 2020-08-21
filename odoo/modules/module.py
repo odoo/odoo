@@ -191,12 +191,14 @@ def get_resource_path(module, *args):
     TODO make it available inside on osv object (self.get_resource_path)
     """
     mod_path = get_module_path(module)
-    if not mod_path: return False
+    if not mod_path:
+        return False
+    return check_resource_path(mod_path, *args)
+
+def check_resource_path(mod_path, *args):
     resource_path = opj(mod_path, *args)
-    if os.path.isdir(mod_path):
-        # the module is a directory - ignore zip behavior
-        if os.path.exists(resource_path):
-            return resource_path
+    if os.path.exists(resource_path):
+        return resource_path
     return False
 
 # backwards compatibility
