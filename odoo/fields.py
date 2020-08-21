@@ -966,8 +966,8 @@ class Field(MetaField('DummyField', (object,), {})):
                     try:
                         value = env.cache.get(record, self)
                     except CacheMiss:
-                        if self.readonly:
-                            raise
+                        if self.readonly and not self.store:
+                            raise ValueError("Compute method failed to assign %s.%s" % (record, self.name))
                         # fallback to null value if compute gives nothing
                         value = self.convert_to_cache(False, record, validate=False)
                         env.cache.set(record, self, value)
