@@ -11,6 +11,11 @@ from odoo import api, fields, SUPERUSER_ID, _
 
 def create_internal_project(cr, registry):
     env = api.Environment(cr, SUPERUSER_ID, {})
+
+    # allow_timesheets is set by default, but erased for existing projects at
+    # installation, as there is no analytic account for them.
+    env['project.project'].search([]).write({'allow_timesheets': True})
+
     admin = env.ref('base.user_admin', raise_if_not_found=False)
     if not admin:
         return
