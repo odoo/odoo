@@ -594,6 +594,33 @@ class ComputeOnchangeLine(models.Model):
                                 required=True, ondelete='cascade')
 
 
+class ComputeUnassigned(models.Model):
+    _name = 'test_new_api.compute.unassigned'
+    _description = "Model with computed fields left unassigned"
+
+    foo = fields.Char()
+    bar = fields.Char(compute='_compute_bar')
+    bare = fields.Char(compute='_compute_bare', readonly=False)
+    bars = fields.Char(compute='_compute_bars', store=True)
+    bares = fields.Char(compute='_compute_bares', readonly=False, store=True)
+
+    @api.depends('foo')
+    def _compute_bar(self):
+        pass
+
+    @api.depends('foo')
+    def _compute_bare(self):
+        pass
+
+    @api.depends('foo')
+    def _compute_bars(self):
+        pass
+
+    @api.depends('foo')
+    def _compute_bares(self):
+        pass
+
+
 class ModelBinary(models.Model):
     _name = 'test_new_api.model_binary'
     _description = 'Test Image field'
