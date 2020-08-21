@@ -27,6 +27,14 @@ window.addEventListener('unhandledrejection', ev =>
 
 let active = true;
 
+// Note: we already have this function in browser_detection.js but browser_detection.js
+// is in assets_backend while crash_managere.js is in common so it will have dependency
+// of file browser_detection.js which will not be available in frontend, so copy function here
+const isBrowserChrome = function () {
+    return $.browser.chrome && // depends on jquery 1.x, removed in jquery 2 and above
+        navigator.userAgent.toLocaleLowerCase().indexOf('edge') === -1; // as far as jquery is concerned, Edge is chrome
+};
+
 /**
  * An extension of Dialog Widget to render the warnings and errors on the website.
  * Extend it with your template of choice like ErrorDialog/WarningDialog
@@ -134,7 +142,17 @@ var CrashManager = AbstractService.extend({
         // promise has been rejected due to a crash
         core.bus.on('crash_manager_unhandledrejection', this, function (ev) {
             if (ev.reason && ev.reason instanceof Error) {
-                var traceback = ev.reason.stack;
+                // Error.prototype.stack is non-standard.
+                // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error
+                // However, most engines provide an implementation.
+                // In particular, Chrome formats the contents of Error.stack
+                // https://v8.dev/docs/stack-trace-api#compatibility
+                let traceback;
+                if (isBrowserChrome()) {
+                    traceback = ev.reason.stack;
+                } else {
+                    traceback = `${_t("Error:")} ${ev.reason.message}\n${ev.reason.stack}`;
+                }
                 self.show_error({
                     type: _t("Odoo Client Error"),
                     message: '',
