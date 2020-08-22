@@ -85,27 +85,25 @@
     </t>
 
     <t t-name="website.color_combination_edition">
-        <div>
-            <we-colorpicker string="Background" data-customize-website-color="null" t-attf-data-color="o-cc#{number}-bg"/>
-            <we-colorpicker string="Text" data-customize-website-color="null" t-attf-data-color="o-cc#{number}-text"/>
-            <we-colorpicker string="Headings" class="o_cc_subheadings_toggler" data-customize-website-color="null" t-attf-data-color="o-cc#{number}-headings"/>
-            <we-row string="⌙ Sub-Headings" class="o_cc_subheadings_collapse" t-att-data-uid="number">
-                <we-colorpicker title="Headings 2" data-customize-website-color="null" t-attf-data-color="o-cc#{number}-h2" t-att-data-sh-uid="number"/>
-                <we-colorpicker title="Headings 3" data-customize-website-color="null" t-attf-data-color="o-cc#{number}-h3" t-att-data-sh-uid="number"/>
-                <we-colorpicker title="Headings 4" data-customize-website-color="null" t-attf-data-color="o-cc#{number}-h4" t-att-data-sh-uid="number"/>
-                <we-colorpicker title="Headings 5" data-customize-website-color="null" t-attf-data-color="o-cc#{number}-h5" t-att-data-sh-uid="number"/>
-                <we-colorpicker title="Headings 6" data-customize-website-color="null" t-attf-data-color="o-cc#{number}-h6" t-att-data-sh-uid="number"/>
-            </we-row>
-            <we-colorpicker string="Links" data-customize-website-color="null" t-attf-data-color="o-cc#{number}-link"/>
-            <we-row string="Main Buttons">
-                <we-colorpicker title="Background" data-customize-website-color="null" t-attf-data-color="o-cc#{number}-btn-primary"/>
-                <we-colorpicker title="Border" data-customize-website-color="null" t-attf-data-color="o-cc#{number}-btn-primary-border"/>
-            </we-row>
-            <we-row string="Buttons">
-                <we-colorpicker title="Background" data-customize-website-color="null" t-attf-data-color="o-cc#{number}-btn-secondary"/>
-                <we-colorpicker title="Border" data-customize-website-color="null" t-attf-data-color="o-cc#{number}-btn-secondary-border"/>
-            </we-row>
-        </div>
+        <we-colorpicker string="Background" data-customize-website-color="null" t-attf-data-color="o-cc#{number}-bg"/>
+        <we-colorpicker string="Text" data-customize-website-color="null" t-attf-data-color="o-cc#{number}-text"/>
+        <we-collapse>
+            <we-colorpicker string="Headings" data-customize-website-color="null" t-attf-data-color="o-cc#{number}-headings"/>
+            <we-colorpicker string="Headings 2" data-customize-website-color="null" t-attf-data-color="o-cc#{number}-h2"/>
+            <we-colorpicker string="Headings 3" data-customize-website-color="null" t-attf-data-color="o-cc#{number}-h3"/>
+            <we-colorpicker string="Headings 4" data-customize-website-color="null" t-attf-data-color="o-cc#{number}-h4"/>
+            <we-colorpicker string="Headings 5" data-customize-website-color="null" t-attf-data-color="o-cc#{number}-h5"/>
+            <we-colorpicker string="Headings 6" data-customize-website-color="null" t-attf-data-color="o-cc#{number}-h6"/>
+        </we-collapse>
+        <we-colorpicker string="Links" data-customize-website-color="null" t-attf-data-color="o-cc#{number}-link"/>
+        <we-row string="Main Buttons">
+            <we-colorpicker title="Background" data-customize-website-color="null" t-attf-data-color="o-cc#{number}-btn-primary"/>
+            <we-colorpicker title="Border" data-customize-website-color="null" t-attf-data-color="o-cc#{number}-btn-primary-border"/>
+        </we-row>
+        <we-row string="Buttons">
+            <we-colorpicker title="Background" data-customize-website-color="null" t-attf-data-color="o-cc#{number}-btn-secondary"/>
+            <we-colorpicker title="Border" data-customize-website-color="null" t-attf-data-color="o-cc#{number}-btn-secondary-border"/>
+        </we-row>
     </t>
     <div t-name="website.s_google_map_modal">
         <p>Use Google Map on your website (Contact Us page, snippets, etc).</p>

@@ -873,7 +873,6 @@
                             data-use-css-color="true"/>
             <we-select data-icon="fa-lightbulb-o" class="o_we_theme_colors_select" data-variable="color-palettes-number"/>
         </we-row>
-        <div class="o_color_combinations_edition"/>
     </div>
     <div data-js="OptionsTab" data-selector="theme-options" data-no-check="true">
         <we-checkbox string="Show Header"
@@ -905,9 +904,11 @@
                   data-variable="font-size-base"
                   data-unit="px"
                   data-save-unit="rem"/>
-        <we-fontfamilypicker string="Font family" data-variable="font"/>
-        <we-fontfamilypicker string="⌙ Headings" data-variable="headings-font"/>
-        <we-fontfamilypicker string="⌙ Buttons" data-variable="buttons-font"/>
+        <we-collapse>
+            <we-fontfamilypicker string="Font family" data-variable="font"/>
+            <we-fontfamilypicker string="⌙ Headings" data-variable="headings-font"/>
+            <we-fontfamilypicker string="⌙ Buttons" data-variable="buttons-font"/>
+        </we-collapse>
         <we-select string="Main Buttons" data-variable="btn-primary-outline">
             <we-button data-customize-website-variable="false">Fill</we-button>
             <we-button data-customize-website-variable="true">Outline</we-button>
