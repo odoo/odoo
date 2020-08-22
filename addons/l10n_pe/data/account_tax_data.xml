@@ -40,6 +40,10 @@
         <field name="name">DET</field>
         <field name="sequence">100</field>
     </record>
+    <record id="tax_group_icbper" model="account.tax.group">
+        <field name="name">ICBPER</field>
+        <field name="sequence">0</field>
+    </record>
     <!-- VAT for sales -->
     <record id="sale_tax_igv_18" model="account.tax.template">
         <field name="chart_template_id" ref="pe_chart_template"/>
@@ -223,6 +227,67 @@
                 'account_id': ref('chart40111'),
             }),
         ]"/>
+    </record>
+    <record id="sale_tax_exp" model="account.tax.template">
+        <field name="chart_template_id" ref="pe_chart_template"/>
+        <field name="name">0% EXP</field>
+        <field name="description">EXP</field>
+        <field name="l10n_pe_edi_tax_code">9995</field>
+        <field name="l10n_pe_edi_unece_category">S</field>
+        <field name="amount">0</field>
+        <field name="type_tax_use">sale</field>
+        <field name="sequence">1</field>
+        <field name="include_base_amount">1</field>
+        <field name="tax_group_id" ref="tax_group_exp"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 0,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 0,
+                'repartition_type': 'tax',
+                'account_id': ref('chart40111'),
+            }),
+
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 0,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 0,
+                'repartition_type': 'tax',
+                'account_id': ref('chart40111'),
+            }),
+        ]"/>
+    </record>
+    <record id="sale_tax_ivap" model="account.tax.template">
+        <field name="chart_template_id" ref="pe_chart_template"/>
+        <field name="name">4% IVAP</field>
+        <field name="description">IVAP</field>
+        <field name="l10n_pe_edi_tax_code">1016</field>
+        <field name="l10n_pe_edi_unece_category">S</field>
+        <field name="amount">4</field>
+        <field name="type_tax_use">sale</field>
+        <field name="sequence">1</field>
+        <field name="include_base_amount">1</field>
+        <field name="tax_group_id" ref="tax_group_ivap"/>
+    </record>
+    <record id="sale_tax_icbper" model="account.tax.template">
+        <field name="chart_template_id" ref="pe_chart_template"/>
+        <field name="name">0.2% ICBPER</field>
+        <field name="description">ICBPER</field>
+        <field name="l10n_pe_edi_tax_code">7152</field>
+        <field name="l10n_pe_edi_unece_category">S</field>
+        <field name="amount">0.2</field>
+        <field name="amount_type">fixed</field>
+        <field name="type_tax_use">sale</field>
+        <field name="sequence">1</field>
+        <field name="tax_group_id" ref="tax_group_icbper"/>
     </record>
     <!--    VAT for purchase-->
     <record id="purchase_tax_igv_18" model="account.tax.template">
