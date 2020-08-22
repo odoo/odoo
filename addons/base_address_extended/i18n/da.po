@@ -6,6 +6,7 @@
 # Martin Trigaux, 2019
 # Sanne Kristensen <sanne@vkdata.dk>, 2019
 # lhmflexerp <lhm@flexerp.dk>, 2019
+# Mads Søndergaard, 2020
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-08-12 11:31+0000\n"
 "PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: lhmflexerp <lhm@flexerp.dk>, 2019\n"
+"Last-Translator: Mads Søndergaard, 2020\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,6 +28,8 @@ msgid ""
 "Change how the system computes the full street field based on the different "
 "street subfields"
 msgstr ""
+"Ændre hvorledes systemet udregner den fulde gade felt baseret på andre gade "
+"underfelter"
 
 #. module: base_address_extended
 #: model:ir.model,name:base_address_extended.model_res_company
@@ -66,6 +69,12 @@ msgid ""
 "%(street_number)s: the house number\n"
 "%(street_number2)s: the door number"
 msgstr ""
+"Format til brug for gader tilhørende dette land.\n"
+"\n"
+"Du kan bruge python-lignende string mønstre med alle felter for gaden (for eksempel, brug '%(street_name)s, %(street_number)s' hvis du vil vise gadenavnet, efterfulgt af et komma, og så husnummeret)\n"
+"%(street_name)s: Gadenavn\n"
+"%(street_number)s: Husnummer\n"
+"%(street_number2)s: Dørnummer"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_partner__street_number
