@@ -20,6 +20,7 @@
         'data/account.account.template.csv',
         'data/l10n_pe_chart_post_data.xml',
         'data/account_tax_data.xml',
+        'data/account_fiscal_position_template_data.xml',
         'data/account_chart_template_data.xml',
         'data/res.city.csv',
         'data/l10n_pe.res.city.district.csv',
