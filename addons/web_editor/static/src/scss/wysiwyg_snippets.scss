@@ -427,14 +427,13 @@ body.editor_enable.editor_has_snippets {
         we-customizeblock-options {
             position: relative;
             display: block;
-            padding: 0 $o-we-sidebar-content-padding-base $o-we-sidebar-content-block-spacing * 1.5 $o-we-sidebar-content-indent;
+            padding: 0 0 ($o-we-sidebar-content-block-spacing * 1.5) 0;
             background-color: $o-we-bg-lighter;
             box-shadow: $o-we-item-standup-bottom rgba($o-we-item-standup-color-dark, 0.8);
 
             > we-title {
                 display: flex;
                 align-items: center;
-                margin: 0 (-$o-we-sidebar-content-padding-base) 0 (-$o-we-sidebar-content-indent);
                 padding: $o-we-sidebar-content-block-spacing * .3 $o-we-sidebar-content-padding-base 0 $o-we-sidebar-content-indent;
                 background-color: $o-we-bg-light;
                 box-shadow: $o-we-item-standup-top rgba($o-we-item-standup-color-light, .2), $o-we-item-standup-bottom rgba($o-we-item-standup-color-dark, .5);
@@ -454,7 +453,9 @@ body.editor_enable.editor_has_snippets {
                     .oe_snippet_remove {
                         font-size: 1.2em;
                     }
-
+                    we-customizeblock-option {
+                        padding: 0;
+                    }
                     we-button {
                         margin-left: $o-we-sidebar-content-field-multi-spacing;
                         padding: 0 $o-we-sidebar-content-field-multi-spacing;
@@ -470,6 +471,7 @@ body.editor_enable.editor_has_snippets {
         we-customizeblock-option {
             position: relative;
             display: block;
+            padding: 0 $o-we-sidebar-content-padding-base 0 $o-we-sidebar-content-indent;
 
             .dropdown-menu {
                 // FIXME temporary fix for m2o option for example
@@ -1060,6 +1062,56 @@ body.editor_enable.editor_has_snippets {
                 > div {
                     margin-top: 0;
                 }
+            }
+        }
+
+        we-collapse {
+            position: relative;
+            display: block;
+            padding-left: $o-we-sidebar-content-indent;
+            padding-right: $o-we-sidebar-content-padding-base;
+            margin-right: -$o-we-sidebar-content-padding-base;
+            margin-left: -$o-we-sidebar-content-indent;
+            // Allow inner margin to be considered inside the block + Visual space after/before previous/next widget + No flickering on opening
+            $-inner-spacing: ceil($o-we-sidebar-content-field-spacing / 2);
+            border-top: ($o-we-sidebar-content-field-spacing - $-inner-spacing) solid transparent;
+            padding-bottom: ($o-we-sidebar-content-field-spacing - $-inner-spacing);
+            margin-bottom: -($o-we-sidebar-content-field-spacing - $-inner-spacing);
+            background-clip: padding-box;
+
+            > :first-child, .o_we_collapse_toggler {
+                margin-top: $-inner-spacing;
+            }
+            .o_we_collapse_toggler {
+                @include o-position-absolute($top: 0, $left: 0);
+                width: $o-we-sidebar-content-indent;
+                height: $o-we-sidebar-content-field-height;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 0;
+                background: none;
+                border: none;
+
+                &::after {
+                    content: '\f0da';
+                    position: static;
+                    transform: none;
+                }
+                &.active {
+
+                    &::after {
+                        content: '\f0d7';
+                    }
+                    + * {
+                        background: none;
+                        border: none;
+                        box-shadow: none;
+                    }
+                }
+            }
+            &.active {
+                background-color: $o-we-sidebar-content-fold-block-bg;
             }
         }
 
