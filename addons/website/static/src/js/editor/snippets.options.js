@@ -987,20 +987,6 @@ options.registry.OptionsTab = options.Class.extend({
 });
 
 options.registry.ThemeColors = options.registry.OptionsTab.extend({
-    events: Object.assign({}, options.registry.OptionsTab.prototype.events, {
-        'click .o_color_combinations_edition we-toggler': '_onCCTogglerClick',
-        // FIXME investigate why using 'click' does not work *anymore* but those
-        // foldable areas will be made more robust and standard with the new UI.
-        'mouseup .o_cc_subheadings_toggler_icon': '_onCCHeadingsTogglerClick',
-    }),
-
-    /**
-     * @constructor
-     */
-    init() {
-        this._super(...arguments);
-        this._showCCSubHeadings = {};
-    },
     /**
      * @override
      */
@@ -1034,31 +1020,6 @@ options.registry.ThemeColors = options.registry.OptionsTab.extend({
     /**
      * @override
      */
-    async _computeWidgetVisibility(widgetName, params) {
-        if (params.shUid) {
-            return !!this._showCCSubHeadings[params.shUid];
-        }
-        return this._super(...arguments);
-    },
-    /**
-     * @override
-     */
-    async _renderOriginalXML($xml) {
-        const uiFragment = await this._super(...arguments);
-
-        uiFragment.querySelectorAll('.o_cc_subheadings_toggler').forEach(headingsEl => {
-            const togglerEl = document.createElement('span');
-            togglerEl.classList.add('o_cc_subheadings_toggler_icon', 'o_we_fold_icon', 'fa', 'fa-caret-right');
-            togglerEl.setAttribute('role', 'button');
-            const titleEl = headingsEl.querySelector('we-title');
-            titleEl.insertBefore(togglerEl, titleEl.firstChild);
-        });
-
-        return uiFragment;
-    },
-    /**
-     * @override
-     */
     async _renderCustomXML(uiFragment) {
         const paletteSelectorEl = uiFragment.querySelector('[data-variable="color-palettes-number"]');
         const style = window.getComputedStyle(document.documentElement);
@@ -1077,63 +1038,17 @@ options.registry.ThemeColors = options.registry.OptionsTab.extend({
             paletteSelectorEl.appendChild(btnEl);
         }
 
-        const ccEl = uiFragment.querySelector('.o_color_combinations_edition');
         for (let i = 1; i <= 5; i++) {
-            const togglerEl = document.createElement('we-toggler');
-            togglerEl.classList.add('pt-0', 'pb-0', 'pl-0');
-            const divEl = document.createElement('div');
+            const collapseEl = document.createElement('we-collapse');
             const ccPreviewEl = $(qweb.render('web_editor.color.combination.preview'))[0];
             ccPreviewEl.classList.add('text-center', `o_cc${i}`);
-            divEl.appendChild(ccPreviewEl);
-            togglerEl.appendChild(divEl);
-            ccEl.appendChild(togglerEl);
-
-            const collapseEl = document.createElement('we-collapse');
-            const editionEl = $(qweb.render('website.color_combination_edition', {number: i}))[0];
-            collapseEl.appendChild(editionEl);
-            ccEl.appendChild(collapseEl);
-        }
-    },
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onCCTogglerClick(ev) {
-        const ccTogglerEls = this.el.querySelectorAll('.o_color_combinations_edition we-toggler');
-        for (const el of ccTogglerEls) {
-            if (el !== ev.currentTarget) {
-                el.classList.remove('active');
+            collapseEl.appendChild(ccPreviewEl);
+            const editionEls = $(qweb.render('website.color_combination_edition', {number: i}));
+            for (const el of editionEls) {
+                collapseEl.appendChild(el);
             }
+            uiFragment.appendChild(collapseEl);
         }
-        ev.currentTarget.classList.toggle('active');
-    },
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onCCHeadingsTogglerClick(ev) {
-        const togglerEl = ev.currentTarget;
-        const collapseEl = togglerEl.closest('we-collapse').querySelector('.o_cc_subheadings_collapse');
-        const show = togglerEl.classList.contains('fa-caret-right');
-        const parentEl = togglerEl.closest('we-select');
-        togglerEl.classList.toggle('fa-caret-right', !show);
-        togglerEl.classList.toggle('fa-caret-down', show);
-        parentEl.classList.toggle('active', show);
-        this._showCCSubHeadings[collapseEl.dataset.uid] = show;
-        // FIXME big hack to rerender the interface (all the foldable code is
-        // a hack currently anyway, it needs to be generic)
-        this.trigger_up('snippet_edition_request', {exec: async () => {
-            return new Promise(resolve => setTimeout(() => {
-                this.trigger_up('snippet_option_update', {
-                    onSuccess: () => resolve(),
-                });
-            }));
-        }});
     },
 });
 

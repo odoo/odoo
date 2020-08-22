@@ -114,6 +114,41 @@ function _buildRowElement(title, options) {
     return groupEl;
 }
 /**
+ * Build the correct DOM for a we-collapse element.
+ *
+ * @param {string} [title] - @see _buildElement
+ * @param {Object} [options] - @see _buildElement
+ * @param {HTMLElement[]} [options.childNodes]
+ * @returns {HTMLElement}
+ */
+function _buildCollapseElement(title, options) {
+    const groupEl = _buildElement('we-collapse', title, options);
+    const titleEl = groupEl.querySelector('we-title');
+
+    const children = options && options.childNodes || [];
+    if (titleEl) {
+        titleEl.remove();
+        children.unshift(titleEl);
+    }
+    let i = 0;
+    for (i = 0; i < children.length; i++) {
+        groupEl.appendChild(children[i]);
+        if (children[i].nodeType === Node.ELEMENT_NODE) {
+            break;
+        }
+    }
+
+    const togglerEl = document.createElement('we-toggler');
+    togglerEl.classList.add('o_we_collapse_toggler');
+    groupEl.appendChild(togglerEl);
+
+    const containerEl = document.createElement('div');
+    children.slice(i + 1).forEach(node => containerEl.appendChild(node));
+    groupEl.appendChild(containerEl);
+
+    return groupEl;
+}
+/**
  * Creates a proxy for an object where one property is replaced by a different
  * value. This value is captured in the closure and can be read and written to.
  *
@@ -1729,6 +1764,9 @@ const userValueWidgetsRegistry = {
  */
 const SnippetOptionWidget = Widget.extend({
     tagName: 'we-customizeblock-option',
+    events: {
+        'click .o_we_collapse_toggler': '_onCollapseTogglerClick',
+    },
     custom_events: {
         'user_value_update': '_onUserValueUpdate',
         'user_value_widget_critical': '_onUserValueWidgetCritical',
@@ -2190,11 +2228,20 @@ const SnippetOptionWidget = Widget.extend({
 
         await Promise.all(proms);
 
-        // Hide rows which contains only hidden widgets
-        for (const rowEl of this.$el.find('we-row')) {
-            // TODO improve this, this is hackish to rely on DOM structure
-            // here. Rows should be handled as widgets or something like that.
-            rowEl.classList.toggle('d-none', $(rowEl).find('> div > .o_we_user_value_widget:not(.d-none)').length === 0);
+        // Hide layouting elements which contains only hidden widgets
+        // TODO improve this, this is hackish to rely on DOM structure here.
+        // Layouting elements should be handled as widgets or other.
+        for (const el of this.$el.find('we-row')) {
+            el.classList.toggle('d-none', !$(el).find('> div > .o_we_user_value_widget').not('.d-none').length);
+        }
+        for (const el of this.$el.find('we-collapse')) {
+            const $el = $(el);
+            el.classList.toggle('d-none', $el.children().first().hasClass('d-none'));
+            const hasNoVisibleElInCollapseMenu = !$el.children().last().children().not('.d-none').length;
+            if (hasNoVisibleElInCollapseMenu) {
+                this._toggleCollapseEl(el, false);
+            }
+            el.querySelector('.o_we_collapse_toggler').classList.toggle('d-none', hasNoVisibleElInCollapseMenu);
         }
     },
 
@@ -2399,12 +2446,14 @@ const SnippetOptionWidget = Widget.extend({
         await this._renderCustomXML(uiFragment);
 
         // Build layouting components first
-        uiFragment.querySelectorAll('we-row').forEach(el => {
-            const infos = this._extraInfoFromDescriptionElement(el);
-            const groupEl = _buildRowElement(infos.title, infos.options);
-            el.parentNode.insertBefore(groupEl, el);
-            el.parentNode.removeChild(el);
-        });
+        for (const [itemName, build] of [['we-row', _buildRowElement], ['we-collapse', _buildCollapseElement]]) {
+            uiFragment.querySelectorAll(itemName).forEach(el => {
+                const infos = this._extraInfoFromDescriptionElement(el);
+                const groupEl = build(infos.title, infos.options);
+                el.parentNode.insertBefore(groupEl, el);
+                el.parentNode.removeChild(el);
+            });
+        }
 
         // Load widgets
         await this._renderXMLWidgets(uiFragment);
@@ -2553,11 +2602,31 @@ const SnippetOptionWidget = Widget.extend({
         }
         return value;
     },
+    /**
+     * @private
+     * @param {HTMLElement} collapseEl
+     * @param {boolean|undefined} [show]
+     */
+    _toggleCollapseEl(collapseEl, show) {
+        collapseEl.classList.toggle('active', show);
+        collapseEl.querySelector('.o_we_collapse_toggler').classList.toggle('active', show);
+    },
 
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
 
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onCollapseTogglerClick(ev) {
+        const currentCollapseEl = ev.currentTarget.parentNode;
+        this._toggleCollapseEl(currentCollapseEl);
+        for (const collapseEl of currentCollapseEl.querySelectorAll('we-collapse')) {
+            this._toggleCollapseEl(collapseEl, false);
+        }
+    },
     /**
      * Called when a widget notifies a preview/change/reset.
      *
@@ -4438,6 +4507,7 @@ return {
     buildElement: _buildElement,
     buildTitleElement: _buildTitleElement,
     buildRowElement: _buildRowElement,
+    buildCollapseElement: _buildCollapseElement,
 
     // Other names for convenience
     Class: SnippetOptionWidget,
