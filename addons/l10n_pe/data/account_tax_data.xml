@@ -261,6 +261,18 @@
             }),
         ]"/>
     </record>
+    <record id="sale_tax_ivap" model="account.tax.template">
+        <field name="chart_template_id" ref="pe_chart_template"/>
+        <field name="name">4% IVAP</field>
+        <field name="description">IVAP</field>
+        <field name="l10n_pe_edi_tax_code">1016</field>
+        <field name="l10n_pe_edi_unece_category">S</field>
+        <field name="amount">4</field>
+        <field name="type_tax_use">sale</field>
+        <field name="sequence">1</field>
+        <field name="include_base_amount">1</field>
+        <field name="tax_group_id" ref="tax_group_ivap"/>
+    </record>
     <!--    VAT for purchase-->
     <record id="purchase_tax_igv_18" model="account.tax.template">
         <field name="chart_template_id" ref="pe_chart_template"/>
