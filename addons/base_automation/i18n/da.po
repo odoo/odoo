@@ -204,17 +204,17 @@ msgstr "Før opdater domæne"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__binding_model_id
 msgid "Binding Model"
-msgstr ""
+msgstr "Bindingsmodel"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__binding_type
 msgid "Binding Type"
-msgstr ""
+msgstr "Bindingstype"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__binding_view_types
 msgid "Binding View Types"
-msgstr ""
+msgstr "Binding visningstyper"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation_lead_test__state__cancel
@@ -224,7 +224,7 @@ msgstr "Annulleret"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__child_ids
 msgid "Child Actions"
-msgstr ""
+msgstr "Nedarvedes handlinger"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__child_ids
@@ -232,6 +232,8 @@ msgid ""
 "Child server actions that will be executed. Note that the last return "
 "returned action value will be used as global return value."
 msgstr ""
+"Afkoms server handlinger, som vil blive udført. Bemærk at den sidst "
+"returnerede handlings værdi, vil blive brugs som global returnerings værdi."
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation_lead_test__state__done
@@ -246,7 +248,7 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__crud_model_id
 msgid "Create/Write Target Model"
-msgstr ""
+msgstr "Opret/skriv mål model"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__create_uid
@@ -438,7 +440,7 @@ msgstr "Linje"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__link_field_id
 msgid "Link using field"
-msgstr ""
+msgstr "Forbind via felt"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trg_date_range_type__minutes
@@ -461,11 +463,13 @@ msgid ""
 "Model for record creation / update. Set this field only to specify a "
 "different model than the base model."
 msgstr ""
+"Model for datasæt oprettelse / opdatering. Udfyld kun dette felt for at "
+"angive en anden model end basis modellen."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__model_id
 msgid "Model on which the server action runs."
-msgstr ""
+msgstr "Model hvorpå server handlingen kører."
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trg_date_range_type__month
@@ -518,6 +522,8 @@ msgid ""
 "Optional help text for the users with a description of the target view, such"
 " as its usage and purpose."
 msgstr ""
+"Valgfri hjælpetekst til brugere, med en beskrivelse af mål visningen, så som"
+" forbrug eller formål."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__partner_id
@@ -540,6 +546,8 @@ msgid ""
 "Provide the field used to link the newly created record on the record on "
 "used by the server action."
 msgstr ""
+"Angiv feltet som er brugt til at forbinde det nyligt oprettede datasæt til "
+"det datasæt brugt af server handlingen."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__code
@@ -573,6 +581,8 @@ msgid ""
 "Setting a value makes this action available in the sidebar for the given "
 "model."
 msgstr ""
+"Indstillingen af en værdi giver adgang til denne handling gennem sidebaren "
+"for den givne model."
 
 #. module: base_automation
 #: model_terms:ir.actions.act_window,help:base_automation.base_automation_act
@@ -597,7 +607,7 @@ msgstr "Opsummering"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__crud_model_name
 msgid "Target Model"
-msgstr ""
+msgstr "Mål model"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__activity_user_field_name
@@ -650,6 +660,14 @@ msgid ""
 "- 'Add Followers': add followers to a record (Discuss)\n"
 "- 'Create Next Activity': create an activity (Discuss)"
 msgstr ""
+"Typer af server handlinger. De følgende værdier er tilgængelige:\n"
+"- 'Kør Python kode': En blok python kode vil blive udført\n"
+"- 'Opret': Opret et nyt datasæt med nye værdier\n"
+"- 'Opdater et datasæt': Opdater værdierne i et datasæt\n"
+"- 'Kør flere handlinger': Definer en handling der afvikler flere andre server handlinger\n"
+"- 'Send email': Send automatisk en email (Diskuter)\n"
+"- 'Tilføj følgere': Tilføj følgere til et datasæt (Diskuter)\n"
+"- 'Opret næste aktivitet': Opret en aktivitet (Diskuter)"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__usage
@@ -693,7 +711,7 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__fields_lines
 msgid "Value Mapping"
-msgstr ""
+msgstr "Værdi mapping"
 
 #. module: base_automation
 #: code:addons/base_automation/models/base_automation.py:0
@@ -740,6 +758,8 @@ msgid ""
 "Write Python code that the action will execute. Some variables are available"
 " for use; help about python expression is given in the help tab."
 msgstr ""
+"Skriv python koden handlingen skal udføre. Nogle variabler er tilgængelig "
+"til brug; hjælp vedrørende python udtryk findes under hjælp fanen."
 
 #. module: base_automation
 #. openerp-web

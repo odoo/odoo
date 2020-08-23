@@ -21,8 +21,8 @@
 # Loris Balsamo <et94@live.it>, 2020
 # Martin Trigaux, 2020
 # Iacopo Simonelli <lsi@odoo.com>, 2020
-# Sergio Zanchetta <primes2h@gmail.com>, 2020
 # Fabio Benedetti <benedetti.fabio@gmail.com>, 2020
+# Sergio Zanchetta <primes2h@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -30,7 +30,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:10+0000\n"
-"Last-Translator: Fabio Benedetti <benedetti.fabio@gmail.com>, 2020\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2020\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -478,7 +478,7 @@ msgstr "Dipartimenti ad iscrizione automatica"
 #. module: hr
 #: model:ir.model.fields,help:hr.field_mail_channel__subscription_department_ids
 msgid "Automatically subscribe members of those departments to the channel."
-msgstr "Iscrivere automaticamente al canale i membri di questi reparti."
+msgstr "Iscrizione automatica al canale per gli affiliati a questi uffici."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -624,7 +624,7 @@ msgstr "Direttore tecnico"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__child_ids
 msgid "Child Departments"
-msgstr "Reparti secondari"
+msgstr "Uffici secondari"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -776,7 +776,7 @@ msgstr "Data creazione"
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.open_module_tree_department
 msgid "Create a new department"
-msgstr "Crea un nuovo reparto"
+msgstr "Crea un nuovo ufficio"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form
@@ -851,14 +851,14 @@ msgstr "Ufficio"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__name
 msgid "Department Name"
-msgstr "Nome reparto"
+msgstr "Nome ufficio"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_module_tree_department
 #: model:ir.ui.menu,name:hr.menu_hr_department_tree
 #: model_terms:ir.ui.view,arch_db:hr.view_department_filter
 msgid "Departments"
-msgstr "Reparti"
+msgstr "Uffici"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -1248,7 +1248,7 @@ msgstr "Ufficio risorse umane"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_mail_channel__subscription_department_ids
 msgid "HR Departments"
-msgstr "Reparti risorse umane"
+msgstr "Uffici risorse umane"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -1277,7 +1277,7 @@ msgstr "Risorse umane"
 #. module: hr
 #: model:hr.job,name:hr.job_hrm
 msgid "Human Resources Manager"
-msgstr "Direttore risorse umane"
+msgstr "Responsabile risorse umane"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__id
@@ -1607,7 +1607,7 @@ msgstr "Stato civile"
 #. module: hr
 #: model:hr.job,name:hr.job_marketing
 msgid "Marketing and Community Manager"
-msgstr "Manager di Marketing e Community"
+msgstr "Responsabile marketing e comunità"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__marital__married
@@ -1841,7 +1841,7 @@ msgstr ""
 #. module: hr
 #: model:res.groups,name:hr.group_hr_user
 msgid "Officer"
-msgstr "Responsabile"
+msgstr "Direttore"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_config_settings__module_hr_org_chart
@@ -2499,8 +2499,7 @@ msgstr ""
 #: model:ir.model.constraint,message:hr.constraint_hr_job_name_company_uniq
 msgid "The name of the job position must be unique per department in company!"
 msgstr ""
-"Il nome della posizione lavorativa deve essere unico per dipartimento "
-"nell'azienda!"
+"Il nome della posizione lavorativa deve essere univoco per ufficio aziendale"
 
 #. module: hr
 #: model:res.groups,comment:hr.group_hr_user
@@ -2800,7 +2799,7 @@ msgstr ""
 #: code:addons/hr/models/hr_department.py:0
 #, python-format
 msgid "You cannot create recursive departments."
-msgstr "Non puoi creare dipartimenti ricorsivi."
+msgstr "Impossibile creare uffici ricorsivi."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -2827,7 +2826,7 @@ msgstr "codice a barre"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_department_form
 msgid "department"
-msgstr "reparto"
+msgstr "ufficio"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
