@@ -3,15 +3,17 @@
 # 	* sale_margin
 # 
 # Translators:
-# Martin Trigaux, 2019
+# Jorunn D. Newth, 2018
+# Martin Trigaux, 2020
+# Marius Stedjan <marius@stedjan.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.4\n"
+"Project-Id-Version: Odoo Server saas~13.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-12 11:32+0000\n"
-"PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Martin Trigaux, 2019\n"
+"POT-Creation-Date: 2020-08-21 13:09+0000\n"
+"PO-Revision-Date: 2016-08-05 13:09+0000\n"
+"Last-Translator: Marius Stedjan <marius@stedjan.com>, 2020\n"
 "Language-Team: Norwegian Bokmål (https://www.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,11 +27,25 @@ msgid "Cost"
 msgstr "Kostnad"
 
 #. module: sale_margin
-#: model:ir.model.fields,help:sale_margin.field_sale_order__margin
-msgid ""
-"It gives profitability by calculating the difference between the Unit Price "
-"and the cost."
-msgstr "Se lønnsomheten ved å beregne forskjellen på enhetspris og kostnad."
+#: model:ir.model.fields,field_description:sale_margin.field_sale_order__display_name
+#: model:ir.model.fields,field_description:sale_margin.field_sale_order_line__display_name
+#: model:ir.model.fields,field_description:sale_margin.field_sale_report__display_name
+msgid "Display Name"
+msgstr "Visningsnavn"
+
+#. module: sale_margin
+#: model:ir.model.fields,field_description:sale_margin.field_sale_order__id
+#: model:ir.model.fields,field_description:sale_margin.field_sale_order_line__id
+#: model:ir.model.fields,field_description:sale_margin.field_sale_report__id
+msgid "ID"
+msgstr "ID"
+
+#. module: sale_margin
+#: model:ir.model.fields,field_description:sale_margin.field_sale_order____last_update
+#: model:ir.model.fields,field_description:sale_margin.field_sale_order_line____last_update
+#: model:ir.model.fields,field_description:sale_margin.field_sale_report____last_update
+msgid "Last Modified on"
+msgstr "Sist endret"
 
 #. module: sale_margin
 #: model:ir.model.fields,field_description:sale_margin.field_sale_order__margin
@@ -39,9 +55,15 @@ msgid "Margin"
 msgstr "Margin"
 
 #. module: sale_margin
+#: model:ir.model.fields,field_description:sale_margin.field_sale_order__margin_percent
+#: model:ir.model.fields,field_description:sale_margin.field_sale_order_line__margin_percent
+msgid "Margin (%)"
+msgstr ""
+
+#. module: sale_margin
 #: model:ir.model,name:sale_margin.model_sale_report
 msgid "Sales Analysis Report"
-msgstr ""
+msgstr "Salgsanalyserapport"
 
 #. module: sale_margin
 #: model:ir.model,name:sale_margin.model_sale_order

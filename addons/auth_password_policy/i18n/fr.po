@@ -4,16 +4,20 @@
 # 
 # Translators:
 # Martin Trigaux, 2019
+# Marie Willemyns <mwi@odoo.com>, 2019
 # Lionel COUSTEIX <l.cousteix@outlook.com>, 2019
-# Cécile Collart <cco@odoo.com>, 2019
+# Priscilla Sanchez <prs@odoo.com>, 2020
+# Aurélien Pillevesse <aurelienpillevesse@hotmail.fr>, 2020
+# Cécile Collart <cco@odoo.com>, 2020
+# Gilles Mangin <gilles.mangin@phidias.fr>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.4\n"
+"Project-Id-Version: Odoo Server saas~13.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-12 11:32+0000\n"
-"PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: Cécile Collart <cco@odoo.com>, 2019\n"
+"POT-Creation-Date: 2020-08-21 13:09+0000\n"
+"PO-Revision-Date: 2019-03-20 14:55+0000\n"
+"Last-Translator: Gilles Mangin <gilles.mangin@phidias.fr>, 2020\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,6 +31,24 @@ msgid "Config Settings"
 msgstr "Paramètres de config"
 
 #. module: auth_password_policy
+#: model:ir.model.fields,field_description:auth_password_policy.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:auth_password_policy.field_res_users__display_name
+msgid "Display Name"
+msgstr "Nom affiché"
+
+#. module: auth_password_policy
+#: model:ir.model.fields,field_description:auth_password_policy.field_res_config_settings__id
+#: model:ir.model.fields,field_description:auth_password_policy.field_res_users__id
+msgid "ID"
+msgstr "ID"
+
+#. module: auth_password_policy
+#: model:ir.model.fields,field_description:auth_password_policy.field_res_config_settings____last_update
+#: model:ir.model.fields,field_description:auth_password_policy.field_res_users____last_update
+msgid "Last Modified on"
+msgstr "Dernière modification le"
+
+#. module: auth_password_policy
 #: model:ir.model.fields,field_description:auth_password_policy.field_res_config_settings__minlength
 msgid "Minimum Password Length"
 msgstr "Longueur minimale du mot de passe"
@@ -36,16 +58,19 @@ msgstr "Longueur minimale du mot de passe"
 msgid ""
 "Minimum number of characters passwords must contain, set to 0 to disable."
 msgstr ""
+"Nombre minimum de caractères que les mots de passe doivent contenir, défini "
+"sur 0 pour le désactiver."
 
 #. module: auth_password_policy
-#: code:addons/auth_password_policy/models/res_users.py:30
+#: code:addons/auth_password_policy/models/res_users.py:0
 #, python-format
 msgid "Passwords must have at least %d characters, got %d."
 msgstr ""
+"Les mots de passe doivent comporter au moins %d caractères, contient %d."
 
 #. module: auth_password_policy
 #. openerp-web
-#: code:addons/auth_password_policy/static/src/js/password_gauge.js:123
+#: code:addons/auth_password_policy/static/src/js/password_gauge.js:0
 #, python-format
 msgid ""
 "Required: %s.\n"
@@ -63,28 +88,28 @@ msgstr "Utilisateurs"
 
 #. module: auth_password_policy
 #. openerp-web
-#: code:addons/auth_password_policy/static/src/js/password_gauge.js:28
+#: code:addons/auth_password_policy/static/src/js/password_gauge.js:0
 #, python-format
 msgid "at least %d character classes"
-msgstr ""
+msgstr "au moins %d classes de caractères"
 
 #. module: auth_password_policy
 #. openerp-web
-#: code:addons/auth_password_policy/static/src/js/password_gauge.js:22
+#: code:addons/auth_password_policy/static/src/js/password_gauge.js:0
 #, python-format
 msgid "at least %d characters"
 msgstr "au moins %d caractères"
 
 #. module: auth_password_policy
 #. openerp-web
-#: code:addons/auth_password_policy/static/src/js/password_gauge.js:25
+#: code:addons/auth_password_policy/static/src/js/password_gauge.js:0
 #, python-format
 msgid "at least %d words"
 msgstr "au moins %d mots"
 
 #. module: auth_password_policy
 #. openerp-web
-#: code:addons/auth_password_policy/static/src/js/password_gauge.js:125
+#: code:addons/auth_password_policy/static/src/js/password_gauge.js:0
 #, python-format
 msgid "no requirements"
 msgstr "pas d'exigences"

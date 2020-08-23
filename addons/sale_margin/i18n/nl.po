@@ -5,14 +5,15 @@
 # Translators:
 # Martin Trigaux, 2019
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.4\n"
+"Project-Id-Version: Odoo Server saas~13.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-12 11:32+0000\n"
-"PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2019\n"
+"POT-Creation-Date: 2020-08-21 13:09+0000\n"
+"PO-Revision-Date: 2016-08-05 13:09+0000\n"
+"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2020\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,13 +27,25 @@ msgid "Cost"
 msgstr "Kostprijs"
 
 #. module: sale_margin
-#: model:ir.model.fields,help:sale_margin.field_sale_order__margin
-msgid ""
-"It gives profitability by calculating the difference between the Unit Price "
-"and the cost."
-msgstr ""
-"Het geeft de winstgevendheid weer, door het verschil tussen de verkoopprijs "
-"en kostprijs te berekenen."
+#: model:ir.model.fields,field_description:sale_margin.field_sale_order__display_name
+#: model:ir.model.fields,field_description:sale_margin.field_sale_order_line__display_name
+#: model:ir.model.fields,field_description:sale_margin.field_sale_report__display_name
+msgid "Display Name"
+msgstr "Schermnaam"
+
+#. module: sale_margin
+#: model:ir.model.fields,field_description:sale_margin.field_sale_order__id
+#: model:ir.model.fields,field_description:sale_margin.field_sale_order_line__id
+#: model:ir.model.fields,field_description:sale_margin.field_sale_report__id
+msgid "ID"
+msgstr "ID"
+
+#. module: sale_margin
+#: model:ir.model.fields,field_description:sale_margin.field_sale_order____last_update
+#: model:ir.model.fields,field_description:sale_margin.field_sale_order_line____last_update
+#: model:ir.model.fields,field_description:sale_margin.field_sale_report____last_update
+msgid "Last Modified on"
+msgstr "Laatst gewijzigd op"
 
 #. module: sale_margin
 #: model:ir.model.fields,field_description:sale_margin.field_sale_order__margin
@@ -40,6 +53,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_margin.field_sale_report__margin
 msgid "Margin"
 msgstr "Marge"
+
+#. module: sale_margin
+#: model:ir.model.fields,field_description:sale_margin.field_sale_order__margin_percent
+#: model:ir.model.fields,field_description:sale_margin.field_sale_order_line__margin_percent
+msgid "Margin (%)"
+msgstr "Marge (%)"
 
 #. module: sale_margin
 #: model:ir.model,name:sale_margin.model_sale_report

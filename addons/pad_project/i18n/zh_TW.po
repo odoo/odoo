@@ -1,17 +1,19 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * pad_project
+# 	* pad_project
 # 
 # Translators:
-# Martin Trigaux, 2019
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2020
+# Martin Trigaux, 2020
+# gogobook <O968041428@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~13.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Martin Trigaux, 2019\n"
+"POT-Creation-Date: 2020-08-21 13:09+0000\n"
+"PO-Revision-Date: 2016-08-05 13:06+0000\n"
+"Last-Translator: gogobook <O968041428@gmail.com>, 2020\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,14 +22,68 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: pad_project
+#: model:ir.model.fields,field_description:pad_project.field_project_project__pad_availability
+#: model:ir.model.fields,field_description:pad_project.field_project_task__pad_availability
+msgid "Availability of collaborative pads"
+msgstr ""
+
+#. module: pad_project
+#: model_terms:ir.ui.view,arch_db:pad_project.project_project_view_form
+msgid "Available to:"
+msgstr ""
+
+#. module: pad_project
+#: model_terms:ir.ui.view,arch_db:pad_project.project_project_view_form
+msgid "Collaborative Pads"
+msgstr "協作pad"
+
+#. module: pad_project
+#: model:ir.model.fields,field_description:pad_project.field_project_project__display_name
+#: model:ir.model.fields,field_description:pad_project.field_project_task__display_name
+msgid "Display Name"
+msgstr "顯示名稱"
+
+#. module: pad_project
+#: model_terms:ir.ui.view,arch_db:pad_project.portal_my_task
+msgid "Edit"
+msgstr "編輯"
+
+#. module: pad_project
+#: model:ir.model.fields,field_description:pad_project.field_project_project__id
+#: model:ir.model.fields,field_description:pad_project.field_project_task__id
+msgid "ID"
+msgstr "ID"
+
+#. module: pad_project
+#: model:ir.model.fields.selection,name:pad_project.selection__project_project__pad_availability__internal
+msgid "Internal Users"
+msgstr "內部使用者"
+
+#. module: pad_project
+#: model:ir.model.fields,field_description:pad_project.field_project_project____last_update
+#: model:ir.model.fields,field_description:pad_project.field_project_task____last_update
+msgid "Last Modified on"
+msgstr "最後更改日"
+
+#. module: pad_project
 #: model:ir.model.fields,field_description:pad_project.field_project_task__description_pad
 msgid "Pad URL"
 msgstr "Pad 的URL地址"
 
 #. module: pad_project
+#: model:ir.model.fields.selection,name:pad_project.selection__project_project__pad_availability__portal
+msgid "Portal Users"
+msgstr ""
+
+#. module: pad_project
 #: model:ir.model,name:pad_project.model_project_project
 msgid "Project"
 msgstr "專案"
+
+#. module: pad_project
+#: model_terms:ir.ui.view,arch_db:pad_project.portal_my_task
+msgid "Save"
+msgstr "儲存"
 
 #. module: pad_project
 #: model:ir.model,name:pad_project.model_project_task
@@ -49,3 +105,8 @@ msgstr "使用協作平台處理此專案的任務。"
 #: model:ir.model.fields,field_description:pad_project.field_project_project__use_pads
 msgid "Use collaborative pads"
 msgstr "使用協作平台"
+
+#. module: pad_project
+#: model_terms:ir.ui.view,arch_db:pad_project.project_project_view_form
+msgid "Use collaborative rich text pads on tasks"
+msgstr "使用任務中豐富的協作文本平台"

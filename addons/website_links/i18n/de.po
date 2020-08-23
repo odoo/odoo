@@ -3,22 +3,23 @@
 # 	* website_links
 # 
 # Translators:
-# e2f <projects@e2f.com>, 2019
-# aNj <anj2j@yahoo.de>, 2019
-# Philipp Hug <philipp@hug.cx>, 2019
+# f91684c3ff9ec3e650d5c8461e534581_686eae3 <449b96d9f63071f94d89e129677b83de_366193>, 2017
+# jonas <jonas.hillebrecht@bklynsoap.com>, 2017
+# Philipp Hug <philipp@hug.cx>, 2017
+# aNj <anj2j@yahoo.de>, 2017
+# e2f <projects@e2f.com>, 2018
 # Martin Trigaux, 2019
 # Wolfgang Taferner, 2019
-# darenkster <inactive+darenkster@transifex.com>, 2019
-# Katharina Moritz <kmo@e2f.com>, 2019
 # Chris Egal <sodaswed@web.de>, 2019
+# Leon Grill <leg@odoo.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~13.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-27 09:12+0000\n"
-"PO-Revision-Date: 2019-08-26 09:15+0000\n"
-"Last-Translator: Chris Egal <sodaswed@web.de>, 2019\n"
+"POT-Creation-Date: 2020-08-21 13:10+0000\n"
+"PO-Revision-Date: 2016-08-05 13:13+0000\n"
+"Last-Translator: Leon Grill <leg@odoo.com>, 2020\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -45,13 +46,12 @@ msgstr "Länder"
 #: code:addons/website_links/static/src/js/website_links_charts.js:0
 #, python-format
 msgid "# of clicks"
-msgstr "Anzahl an Klicks"
+msgstr "# an Klicks"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.share_page_menu
-msgid "<span title=\"Track this page to count clicks\">Track this Page</span>"
+msgid "<span title=\"Track this page to count clicks\">Link Tracker</span>"
 msgstr ""
-"<span title=\"Track this page to count clicks\">Diese Seite verfolgen</span>"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
@@ -86,7 +86,7 @@ msgstr "<strong>Verfolgter Link</strong>"
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 msgid "All Time"
-msgstr "Immer"
+msgstr "Alle Zeiten"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
@@ -113,7 +113,13 @@ msgid "Copy"
 msgstr "Kopieren"
 
 #. module: website_links
+#: model:ir.model.fields,field_description:website_links.field_link_tracker__display_name
+msgid "Display Name"
+msgstr "Anzeigename"
+
+#. module: website_links
 #. openerp-web
+#: code:addons/website_links/static/src/xml/recent_link.xml:0
 #: code:addons/website_links/static/src/xml/recent_link.xml:0
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 #, python-format
@@ -125,7 +131,7 @@ msgstr "Code bearbeiten"
 #: code:addons/website_links/static/src/js/website_links.js:0
 #, python-format
 msgid "Generating link..."
-msgstr "Link wird erstellt …"
+msgstr "Verknüpfung wird erstellt …"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
@@ -133,11 +139,21 @@ msgid "Get tracked link"
 msgstr "Verfolgten Link abrufen"
 
 #. module: website_links
+#: model:ir.model.fields,field_description:website_links.field_link_tracker__id
+msgid "ID"
+msgstr "ID"
+
+#. module: website_links
 #. openerp-web
 #: code:addons/website_links/static/src/xml/recent_link.xml:0
 #, python-format
 msgid "Icon"
 msgstr "Icon"
+
+#. module: website_links
+#: model:ir.model.fields,field_description:website_links.field_link_tracker____last_update
+msgid "Last Modified on"
+msgstr "Letzte Änderung am"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
@@ -190,8 +206,8 @@ msgid ""
 "Share this page with a <strong>short link</strong> that includes "
 "<strong>analytics trackers</strong>."
 msgstr ""
-"Teilen Sie diese Seite mit einem <strong>kurzen Link</strong>, der einen "
-"<strong>Analytics-Tracker</strong> enthält."
+"Teilen <strong>Sie diese Seite mit einem kurzen Link, der "
+"einen</strong><strong/> Analytics-Tracker enthält."
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
@@ -250,9 +266,9 @@ msgid ""
 "Those trackers can be used in Google Analytics to track clicks and visitors,"
 " or in Odoo reports to track opportunities and related revenues."
 msgstr ""
-"Diese Tracker können bei Google Analytics verwendet werden, um Klicks und "
-"Besucher zu verfolgen, oder bei Odoo-Berichten, um Chancen und damit "
-"verbundene Umsätze zu verfolgen."
+"Diese Tracker können bei Google Analytics verwendet werden, um Klicke und "
+"Besucher zu verfolgen, oder bei Odoo-Berichten, um Gelegenheiten und damit "
+"verbundene Einnahmen zu verfolgen."
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
@@ -323,14 +339,14 @@ msgstr "z. B. Newsletter, soziales Netzwerk, …"
 #: code:addons/website_links/static/src/js/website_links.js:0
 #, python-format
 msgid "e.g. Promotion of June, Winter Newsletter, .."
-msgstr "z. B. Juni-Angebot, Winter-Newsletter, …"
+msgstr "z. B. Promotion des Monats Juni, Winter-Newsletter, …"
 
 #. module: website_links
 #. openerp-web
 #: code:addons/website_links/static/src/js/website_links.js:0
 #, python-format
 msgid "e.g. Search Engine, Website page, .."
-msgstr "z. B. Suchmaschine, Website-Seite, …"
+msgstr "z. B. Suchmaschine, Website, …"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url

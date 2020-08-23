@@ -1,20 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * contacts
+# 	* contacts
 # 
 # Translators:
-# Ediz Duman <neps1192@gmail.com>, 2019
-# Martin Trigaux, 2019
-# Murat Kaplan <muratk@projetgrup.com>, 2019
-# Umur Akın <umura@projetgrup.com>, 2019
+# Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2017
+# Martin Trigaux, 2017
+# Ediz Duman <neps1192@gmail.com>, 2018
+# Levent Karakaş <levent@mektup.at>, 2020
+# Murat Kaplan <muratk@projetgrup.com>, 2020
+# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~13.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: Umur Akın <umura@projetgrup.com>, 2019\n"
+"POT-Creation-Date: 2020-08-21 13:09+0000\n"
+"PO-Revision-Date: 2016-08-05 12:57+0000\n"
+"Last-Translator: Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2020\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -50,16 +52,15 @@ msgstr "Kontak Ünvanları"
 
 #. module: contacts
 #: model:ir.actions.act_window,name:contacts.action_contacts
-#: model:ir.actions.act_window,name:contacts.action_contacts_summary
 #: model:ir.ui.menu,name:contacts.menu_contacts
 #: model:ir.ui.menu,name:contacts.res_partner_menu_contacts
 msgid "Contacts"
-msgstr "Kontaklar"
+msgstr "Kişiler"
 
 #. module: contacts
 #: model:ir.ui.menu,name:contacts.menu_country_partner
 msgid "Countries"
-msgstr "Ülke"
+msgstr "Ülkeler"
 
 #. module: contacts
 #: model:ir.ui.menu,name:contacts.menu_country_group
@@ -68,14 +69,33 @@ msgstr "Ülke Grubu"
 
 #. module: contacts
 #: model_terms:ir.actions.act_window,help:contacts.action_contacts
-#: model_terms:ir.actions.act_window,help:contacts.action_contacts_summary
 msgid "Create a contact in your address book"
 msgstr "Adres defterinizde bir kişi oluşturun"
+
+#. module: contacts
+#: model:ir.model.fields,field_description:contacts.field_res_users__display_name
+msgid "Display Name"
+msgstr "Görünüm Adı"
 
 #. module: contacts
 #: model:ir.ui.menu,name:contacts.menu_country_state_partner
 msgid "Fed. States"
 msgstr "İller/Eyaletler"
+
+#. module: contacts
+#: model:ir.model.fields,field_description:contacts.field_res_users__id
+msgid "ID"
+msgstr "ID"
+
+#. module: contacts
+#: model:ir.ui.menu,name:contacts.res_partner_industry_menu
+msgid "Industries"
+msgstr ""
+
+#. module: contacts
+#: model:ir.model.fields,field_description:contacts.field_res_users____last_update
+msgid "Last Modified on"
+msgstr "Son Düzenleme"
 
 #. module: contacts
 #: model:ir.ui.menu,name:contacts.menu_localisation
@@ -84,16 +104,10 @@ msgstr "Yerelleştirme"
 
 #. module: contacts
 #: model_terms:ir.actions.act_window,help:contacts.action_contacts
-#: model_terms:ir.actions.act_window,help:contacts.action_contacts_summary
 msgid "Odoo helps you to easily track all activities related to a customer."
 msgstr ""
-"Odoo, müşterilerle ile ilgili tüm faaliyetleri kolayca takip etmenize "
-"yardımcı olur."
-
-#. module: contacts
-#: model:ir.ui.menu,name:contacts.res_partner_industry_menu
-msgid "Sectors of Activity"
-msgstr "Sektörler"
+"Odoo, müşteri ile ilgili tüm etkinlikleri kolayca takip etmenize yardımcı "
+"olur."
 
 #. module: contacts
 #: model:ir.model,name:contacts.model_res_users

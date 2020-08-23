@@ -3,19 +3,20 @@
 # 	* website_sale_digital
 # 
 # Translators:
-# Jeanphy <hzh0292@qq.com>, 2019
-# Martin Trigaux, 2019
-# Jeffery CHEN <jeffery9@gmail.com>, 2019
-# 苏州远鼎 <tiexinliu@126.com>, 2019
-# liulixia <liu.lixia@elico-corp.com>, 2019
+# Gary Wei <Gary.wei@elico-corp.com>, 2016
+# liulixia <liu.lixia@elico-corp.com>, 2016
+# 苏州远鼎 <tiexinliu@126.com>, 2016
+# Martin Trigaux, 2020
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2020
+# Felix Yang - Elico Corp <felixyangsh@aliyun.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.4\n"
+"Project-Id-Version: Odoo Server saas~13.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-12 12:27+0000\n"
-"PO-Revision-Date: 2019-08-26 09:16+0000\n"
-"Last-Translator: liulixia <liu.lixia@elico-corp.com>, 2019\n"
+"POT-Creation-Date: 2020-08-21 13:10+0000\n"
+"PO-Revision-Date: 2016-08-05 13:14+0000\n"
+"Last-Translator: Felix Yang - Elico Corp <felixyangsh@aliyun.com>, 2020\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,8 +30,8 @@ msgid "Attachment"
 msgstr "附件"
 
 #. module: website_sale_digital
-#: code:addons/website_sale_digital/models/product.py:23
-#: code:addons/website_sale_digital/models/product.py:54
+#: code:addons/website_sale_digital/models/product.py:0
+#: code:addons/website_sale_digital/models/product.py:0
 #, python-format
 msgid "Digital Attachments"
 msgstr "数字化附件"
@@ -40,6 +41,14 @@ msgstr "数字化附件"
 #: model_terms:ir.ui.view,arch_db:website_sale_digital.product_template_view_form_inherit_digital
 msgid "Digital Files"
 msgstr "数字文件"
+
+#. module: website_sale_digital
+#: model:ir.model.fields,field_description:website_sale_digital.field_account_move_line__display_name
+#: model:ir.model.fields,field_description:website_sale_digital.field_ir_attachment__display_name
+#: model:ir.model.fields,field_description:website_sale_digital.field_product_product__display_name
+#: model:ir.model.fields,field_description:website_sale_digital.field_product_template__display_name
+msgid "Display Name"
+msgstr "显示名称"
 
 #. module: website_sale_digital
 #: model:ir.model.fields,field_description:website_sale_digital.field_ir_attachment__product_downloadable
@@ -59,9 +68,25 @@ msgid "File"
 msgstr "文件"
 
 #. module: website_sale_digital
+#: model:ir.model.fields,field_description:website_sale_digital.field_account_move_line__id
+#: model:ir.model.fields,field_description:website_sale_digital.field_ir_attachment__id
+#: model:ir.model.fields,field_description:website_sale_digital.field_product_product__id
+#: model:ir.model.fields,field_description:website_sale_digital.field_product_template__id
+msgid "ID"
+msgstr "ID"
+
+#. module: website_sale_digital
 #: model:ir.model,name:website_sale_digital.model_account_move_line
 msgid "Journal Item"
-msgstr "日记账项"
+msgstr "会计分录"
+
+#. module: website_sale_digital
+#: model:ir.model.fields,field_description:website_sale_digital.field_account_move_line____last_update
+#: model:ir.model.fields,field_description:website_sale_digital.field_ir_attachment____last_update
+#: model:ir.model.fields,field_description:website_sale_digital.field_product_product____last_update
+#: model:ir.model.fields,field_description:website_sale_digital.field_product_template____last_update
+msgid "Last Modified on"
+msgstr "最后修改日"
 
 #. module: website_sale_digital
 #: model:ir.model,name:website_sale_digital.model_product_product

@@ -4,15 +4,18 @@
 # 
 # Translators:
 # Martin Trigaux, 2019
-# Leon Grill <leg@odoo.com>, 2019
+# Matt <matt.fasola@braintec-group.com>, 2020
+# UteHaus, 2020
+# Ermin Trevisan <trevi@twanda.com>, 2020
+# Leon Grill <leg@odoo.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.4\n"
+"Project-Id-Version: Odoo Server saas~13.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-12 11:32+0000\n"
-"PO-Revision-Date: 2019-08-26 09:10+0000\n"
-"Last-Translator: Leon Grill <leg@odoo.com>, 2019\n"
+"POT-Creation-Date: 2020-08-21 13:09+0000\n"
+"PO-Revision-Date: 2019-03-20 14:56+0000\n"
+"Last-Translator: Leon Grill <leg@odoo.com>, 2020\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,22 +24,42 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: hr_fleet
-#: code:addons/hr_fleet/controllers/main.py:55
+#: code:addons/hr_fleet/controllers/main.py:0
 #, python-format
 msgid "%s (driven from: %s to %s)"
-msgstr ""
+msgstr "%s (gefahren von %s bis %s)"
+
+#. module: hr_fleet
+#: model_terms:ir.ui.view,arch_db:hr_fleet.fleet_vehicle_assignation_log_view_list
+msgid "Attachments"
+msgstr "Anhänge"
 
 #. module: hr_fleet
 #: model:ir.model.fields,field_description:hr_fleet.field_hr_employee__employee_cars_count
 #: model:ir.model.fields,field_description:hr_fleet.field_res_users__employee_cars_count
 msgid "Cars"
-msgstr ""
+msgstr "Autos"
 
 #. module: hr_fleet
 #: model_terms:ir.ui.view,arch_db:hr_fleet.res_users_view_form_preferences
 #: model_terms:ir.ui.view,arch_db:hr_fleet.view_employee_form
 msgid "Claim Car Report"
+msgstr "Auto Schadensbericht"
+
+#. module: hr_fleet
+#: model:ir.model,name:hr_fleet.model_hr_departure_wizard
+msgid "Departure Wizard"
 msgstr ""
+
+#. module: hr_fleet
+#: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle__display_name
+#: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle_assignation_log__display_name
+#: model:ir.model.fields,field_description:hr_fleet.field_hr_departure_wizard__display_name
+#: model:ir.model.fields,field_description:hr_fleet.field_hr_employee__display_name
+#: model:ir.model.fields,field_description:hr_fleet.field_hr_employee_public__display_name
+#: model:ir.model.fields,field_description:hr_fleet.field_res_users__display_name
+msgid "Display Name"
+msgstr "Anzeigename"
 
 #. module: hr_fleet
 #: model:ir.model,name:hr_fleet.model_fleet_vehicle_assignation_log
@@ -49,9 +72,51 @@ msgid "Employee"
 msgstr "Mitarbeiter"
 
 #. module: hr_fleet
+#: model_terms:ir.ui.view,arch_db:hr_fleet.view_employee_form
+msgid "Fleet"
+msgstr "Fahrzeugflotte"
+
+#. module: hr_fleet
+#: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle__id
+#: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle_assignation_log__id
+#: model:ir.model.fields,field_description:hr_fleet.field_hr_departure_wizard__id
+#: model:ir.model.fields,field_description:hr_fleet.field_hr_employee__id
+#: model:ir.model.fields,field_description:hr_fleet.field_hr_employee_public__id
+#: model:ir.model.fields,field_description:hr_fleet.field_res_users__id
+msgid "ID"
+msgstr "ID"
+
+#. module: hr_fleet
+#: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle____last_update
+#: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle_assignation_log____last_update
+#: model:ir.model.fields,field_description:hr_fleet.field_hr_departure_wizard____last_update
+#: model:ir.model.fields,field_description:hr_fleet.field_hr_employee____last_update
+#: model:ir.model.fields,field_description:hr_fleet.field_hr_employee_public____last_update
+#: model:ir.model.fields,field_description:hr_fleet.field_res_users____last_update
+msgid "Last Modified on"
+msgstr "Letzte Änderung am"
+
+#. module: hr_fleet
+#: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle__mobility_card
+#: model:ir.model.fields,field_description:hr_fleet.field_hr_employee__mobility_card
+#: model:ir.model.fields,field_description:hr_fleet.field_hr_employee_public__mobility_card
+msgid "Mobility Card"
+msgstr ""
+
+#. module: hr_fleet
 #: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle_assignation_log__attachment_number
 msgid "Number of Attachments"
 msgstr "Anzahl der Anhänge"
+
+#. module: hr_fleet
+#: model:ir.model,name:hr_fleet.model_hr_employee_public
+msgid "Public Employee"
+msgstr "Öffentlicher Mitarbeiter"
+
+#. module: hr_fleet
+#: model:ir.model.fields,field_description:hr_fleet.field_hr_departure_wizard__release_campany_car
+msgid "Release Company Car"
+msgstr ""
 
 #. module: hr_fleet
 #: model_terms:ir.ui.view,arch_db:hr_fleet.res_users_view_form_preferences
@@ -60,6 +125,8 @@ msgid ""
 "This report will contain only PDF files. If you want all documents, please "
 "go on vehicle page. Do you want to proceed?"
 msgstr ""
+"Dieser Bericht enthält nur PDF-Dateien. Wenn Sie alle Dokumente wünschen, "
+"gehen Sie bitte auf die Fahrzeugseite. Wollen Sie fortfahren?"
 
 #. module: hr_fleet
 #: model:ir.model,name:hr_fleet.model_res_users
@@ -67,6 +134,6 @@ msgid "Users"
 msgstr "Benutzer"
 
 #. module: hr_fleet
-#: model_terms:ir.ui.view,arch_db:hr_fleet.fleet_vehicle_assignation_log_view_list
-msgid "View Attachments"
-msgstr "Anhang anzeigen"
+#: model:ir.model,name:hr_fleet.model_fleet_vehicle
+msgid "Vehicle"
+msgstr "Fahrzeug"

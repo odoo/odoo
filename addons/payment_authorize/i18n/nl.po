@@ -3,17 +3,19 @@
 # 	* payment_authorize
 # 
 # Translators:
-# Martin Trigaux, 2019
+# Cas Vissers <casvissers@brahoo.nl>, 2017
+# Thomas Pot <thomas@open2bizz.nl>, 2018
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
+# Martin Trigaux, 2019
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~13.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2019\n"
+"POT-Creation-Date: 2020-08-21 13:09+0000\n"
+"PO-Revision-Date: 2016-08-05 13:06+0000\n"
+"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2020\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -64,6 +66,9 @@ msgid ""
 "Code: %s\n"
 "Message: %s"
 msgstr ""
+"Authorize.net fout:\n"
+"Code: %s\n"
+"Bericht: %s"
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_token__authorize_profile
@@ -77,8 +82,15 @@ msgid ""
 "Authorize: received data with missing reference (%s) or trans_id (%s) or "
 "fingerprint (%s)"
 msgstr ""
-"Authorize: data ontvangen met ontbrekende referentie (%s) of trans_id (%s) "
-"of vingerafdruk (%s)"
+"Authorize: data ontvangen met missende referentie (%s) of trans_id (%s) of "
+"fingerprint (%s)"
+
+#. module: payment_authorize
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__display_name
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_token__display_name
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_transaction__display_name
+msgid "Display Name"
+msgstr "Schermnaam"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.acquirer_form_authorize
@@ -91,6 +103,13 @@ msgid "How to get paid with Authorize.Net"
 msgstr "Hoe betaald te worden met Authorize.Net"
 
 #. module: payment_authorize
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__id
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_token__id
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_transaction__id
+msgid "ID"
+msgstr "ID"
+
+#. module: payment_authorize
 #: code:addons/payment_authorize/models/payment.py:0
 #, python-format
 msgid ""
@@ -101,9 +120,16 @@ msgstr ""
 "het token een geldige acquirer referentie heeft."
 
 #. module: payment_authorize
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer____last_update
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_token____last_update
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_transaction____last_update
+msgid "Last Modified on"
+msgstr "Laatst gewijzigd op"
+
+#. module: payment_authorize
 #: model:ir.model,name:payment_authorize.model_payment_acquirer
 msgid "Payment Acquirer"
-msgstr "Betalingsprovider"
+msgstr "Betaling verwerver"
 
 #. module: payment_authorize
 #: model:ir.model,name:payment_authorize.model_payment_token
@@ -119,7 +145,7 @@ msgstr "Betalingstransactie"
 #: code:addons/payment_authorize/controllers/main.py:0
 #, python-format
 msgid "Please complete your profile. "
-msgstr "U dient uw profiel te voltooien."
+msgstr "Gelieve uw profiel te voltooien."
 
 #. module: payment_authorize
 #: code:addons/payment_authorize/controllers/main.py:0
@@ -179,10 +205,10 @@ msgid ""
 " invoicing), you need it to automatically charge the customer when you issue"
 " an invoice."
 msgstr ""
-"Met deze optie kunnen klanten hun creditcard opslaan als een "
-"betalingsmethodeen deze opnieuw gebruiken voor een latere aankoop. Als u "
-"abonnementen beheert (periodieke facturering), hebt u deze nodig om de klant"
-" automatisch in rekening te brengen bij het bevestigen van een factuur."
+"Met deze optie kunnen klanten hun creditcard opslaan als een betaalmethode "
+"en deze opnieuw gebruiken voor een latere aankoop. Als u abonnementen "
+"beheert (periodieke facturering), hebt u deze nodig om de klant automatisch "
+"in rekening te brengen bij het bevestigen van een factuur."
 
 #. module: payment_authorize
 #: code:addons/payment_authorize/models/payment.py:0
@@ -191,6 +217,8 @@ msgid ""
 "Unable to fetch Client Key, make sure the API Login and Transaction Key are "
 "correct."
 msgstr ""
+"Kon client sleutel niet ophalen, controleer dat de API login en "
+"transactiesleutel correct zijn."
 
 #. module: payment_authorize
 #: code:addons/payment_authorize/models/payment.py:0
@@ -203,4 +231,4 @@ msgstr "Waarschuwing"
 #: code:addons/payment_authorize/static/src/js/payment_form.js:0
 #, python-format
 msgid "We are not able to add your payment method at the moment."
-msgstr "We konden uw betalingsmethodeniet toevoegen op dit moment."
+msgstr "We konden uw betaalmethode niet toevoegen op dit moment."

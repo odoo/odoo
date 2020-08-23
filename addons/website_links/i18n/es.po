@@ -3,23 +3,26 @@
 # 	* website_links
 # 
 # Translators:
-# e2f <projects@e2f.com>, 2019
-# Martin Trigaux, 2019
-# oihane <oihanecruce@gmail.com>, 2019
-# Luis M. Ontalba <luis.martinez@tecnativa.com>, 2019
-# Andres Ruiz <andres.ruiz.otalora@gmail.com>, 2019
+# Sergio Flores <vitavitae1@gmail.com>, 2016
+# Pedro M. Baeza <pedro.baeza@gmail.com>, 2016
+# Andres Ruiz <andres.ruiz.otalora@gmail.com>, 2016
+# oihane <oihanecruce@gmail.com>, 2017
+# Gustavo Valverde, 2017
+# Luis M. Ontalba <luis.martinez@tecnativa.com>, 2017
+# e2f <projects@e2f.com>, 2018
 # Antonio Trueba, 2019
-# Gustavo Valverde, 2019
-# Nicolás Broggi <rnbroggi@gmail.com>, 2019
 # Jesse Garza <jga@odoo.com>, 2019
+# Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2020
+# Martin Trigaux, 2020
+# Osiris Román <osiris.roman@yachaytech.edu.ec>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~13.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-27 09:12+0000\n"
-"PO-Revision-Date: 2019-08-26 09:15+0000\n"
-"Last-Translator: Jesse Garza <jga@odoo.com>, 2019\n"
+"POT-Creation-Date: 2020-08-21 13:10+0000\n"
+"PO-Revision-Date: 2016-08-05 13:13+0000\n"
+"Last-Translator: Osiris Román <osiris.roman@yachaytech.edu.ec>, 2020\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -50,8 +53,8 @@ msgstr "Nº de clicks"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.share_page_menu
-msgid "<span title=\"Track this page to count clicks\">Track this Page</span>"
-msgstr "<span title=\"Track this page to count clicks\">Seguir esta página</span>"
+msgid "<span title=\"Track this page to count clicks\">Link Tracker</span>"
+msgstr ""
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
@@ -117,7 +120,13 @@ msgid "Copy"
 msgstr "Copiar"
 
 #. module: website_links
+#: model:ir.model.fields,field_description:website_links.field_link_tracker__display_name
+msgid "Display Name"
+msgstr "Nombre mostrado"
+
+#. module: website_links
 #. openerp-web
+#: code:addons/website_links/static/src/xml/recent_link.xml:0
 #: code:addons/website_links/static/src/xml/recent_link.xml:0
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 #, python-format
@@ -137,11 +146,21 @@ msgid "Get tracked link"
 msgstr "Recibir enlace rastreado"
 
 #. module: website_links
+#: model:ir.model.fields,field_description:website_links.field_link_tracker__id
+msgid "ID"
+msgstr "ID"
+
+#. module: website_links
 #. openerp-web
 #: code:addons/website_links/static/src/xml/recent_link.xml:0
 #, python-format
 msgid "Icon"
 msgstr "Icono"
+
+#. module: website_links
+#: model:ir.model.fields,field_description:website_links.field_link_tracker____last_update
+msgid "Last Modified on"
+msgstr "Última modificación el"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
@@ -194,7 +213,7 @@ msgid ""
 "Share this page with a <strong>short link</strong> that includes "
 "<strong>analytics trackers</strong>."
 msgstr ""
-"Comparta esta página con un <strong>enlace corto</strong> que incluya "
+"Comparte esta página con un <strong>enlace corto</strong> que incluya "
 "<strong>rastreadores analíticos</strong>."
 
 #. module: website_links
@@ -255,8 +274,7 @@ msgid ""
 " or in Odoo reports to track opportunities and related revenues."
 msgstr ""
 "Es posible usar tales rastreadores en Google Analytics para realizar un "
-"seguimiento de clics y visitas, así como también en informes de Odoo con el "
-"fin de supervisar oportunidades e ingresos relacionados."
+"seguimiento de clics y visitas,"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
@@ -268,7 +286,7 @@ msgstr "URL"
 #: code:addons/website_links/static/src/js/website_links.js:0
 #, python-format
 msgid "Unable to get recent links"
-msgstr "No es posible recibir enlaces recientes"
+msgstr "No es posible recibir enlaces recientes."
 
 #. module: website_links
 #. openerp-web
@@ -281,7 +299,7 @@ msgstr "Indefinido"
 #: code:addons/website_links/models/link_tracker.py:0
 #, python-format
 msgid "Visit Webpage Statistics"
-msgstr ""
+msgstr "Visite las estadísticas de la página web"
 
 #. module: website_links
 #. openerp-web
@@ -293,7 +311,7 @@ msgstr "No tienes enlaces recientes."
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid "Your tracked links"
-msgstr "Sus enlaces rastreados"
+msgstr "Tus enlaces rastreados"
 
 #. module: website_links
 #. openerp-web
@@ -308,7 +326,7 @@ msgstr "cancelar"
 #: code:addons/website_links/static/src/xml/recent_link.xml:0
 #, python-format
 msgid "clicks"
-msgstr "clics"
+msgstr "clicks"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs

@@ -2,12 +2,17 @@
 # This file contains the translation of the following modules:
 # 	* sale_product_matrix
 # 
+# Translators:
+# Hongu Cosmin <cosmin513@gmail.com>, 2020
+# Martin Trigaux, 2020
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~13.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:17+0000\n"
-"PO-Revision-Date: 2019-08-26 09:14+0000\n"
+"POT-Creation-Date: 2020-08-21 13:09+0000\n"
+"PO-Revision-Date: 2019-12-16 11:09+0000\n"
+"Last-Translator: Martin Trigaux, 2020\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,6 +35,12 @@ msgid ""
 msgstr ""
 
 #. module: sale_product_matrix
+#: model:ir.model.fields,field_description:sale_product_matrix.field_product_template__display_name
+#: model:ir.model.fields,field_description:sale_product_matrix.field_sale_order__display_name
+msgid "Display Name"
+msgstr "Nume afișat"
+
+#. module: sale_product_matrix
 #: model:ir.model.fields,field_description:sale_product_matrix.field_sale_order__grid_product_tmpl_id
 msgid "Grid Product Tmpl"
 msgstr ""
@@ -40,11 +51,23 @@ msgid "Grid Update"
 msgstr ""
 
 #. module: sale_product_matrix
+#: model:ir.model.fields,field_description:sale_product_matrix.field_product_template__id
+#: model:ir.model.fields,field_description:sale_product_matrix.field_sale_order__id
+msgid "ID"
+msgstr "ID"
+
+#. module: sale_product_matrix
 #: model:ir.model.fields,help:sale_product_matrix.field_sale_order__report_grids
 msgid ""
 "If set, the matrix of the products configurable by matrix will be shown on "
 "the report of the order."
 msgstr ""
+
+#. module: sale_product_matrix
+#: model:ir.model.fields,field_description:sale_product_matrix.field_product_template____last_update
+#: model:ir.model.fields,field_description:sale_product_matrix.field_sale_order____last_update
+msgid "Last Modified on"
+msgstr "Ultima modificare la"
 
 #. module: sale_product_matrix
 #: model:ir.model.fields,field_description:sale_product_matrix.field_sale_order__grid
@@ -69,12 +92,12 @@ msgstr ""
 #. module: sale_product_matrix
 #: model:ir.model,name:sale_product_matrix.model_product_template
 msgid "Product Template"
-msgstr ""
+msgstr "Șablon produs"
 
 #. module: sale_product_matrix
 #: model:ir.model,name:sale_product_matrix.model_sale_order
 msgid "Sales Order"
-msgstr ""
+msgstr "Comandă de vânzare"
 
 #. module: sale_product_matrix
 #: model_terms:ir.ui.view,arch_db:sale_product_matrix.product_template_grid_view_form
@@ -84,7 +107,7 @@ msgstr ""
 #. module: sale_product_matrix
 #: model:ir.model.fields,help:sale_product_matrix.field_sale_order__grid_product_tmpl_id
 msgid "Technical field for product_matrix functionalities."
-msgstr ""
+msgstr "Câmp tehnic pentru funcționalitățile lui product_matrix."
 
 #. module: sale_product_matrix
 #: model:ir.model.fields,help:sale_product_matrix.field_sale_order__grid
@@ -98,11 +121,11 @@ msgstr ""
 #: model:ir.model.fields,help:sale_product_matrix.field_sale_order__grid_update
 msgid "Whether the grid field contains a new matrix to apply or not."
 msgstr ""
+"Indiferent dacă câmpul grilă conține o nouă matrice de aplicat sau nu."
 
 #. module: sale_product_matrix
 #: code:addons/sale_product_matrix/models/sale_order.py:0
 #, python-format
 msgid ""
-"You cannot change the quantity of a product present in multiple purchase "
-"lines."
+"You cannot change the quantity of a product present in multiple sale lines."
 msgstr ""

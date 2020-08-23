@@ -3,20 +3,20 @@
 # 	* website_mass_mailing
 # 
 # Translators:
+# Otgonbayar.A <gobi.mn@gmail.com>, 2018
+# Khishigbat Ganbold <khishigbat@asterisk-tech.mn>, 2018
+# Onii Onii <onii0223@yahoo.com>, 2018
 # Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2019
-# Martin Trigaux, 2019
-# Otgonbayar.A <gobi.mn@gmail.com>, 2019
-# Khishigbat Ganbold <khishigbat@asterisk-tech.mn>, 2019
-# Minj P <pminj322@gmail.com>, 2019
-# nurbakhit nurka <nurbakhit@bumanit.mn>, 2019
+# Bayarkhuu Bataa, 2019
+# Martin Trigaux, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~13.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:17+0000\n"
-"PO-Revision-Date: 2019-08-26 09:16+0000\n"
-"Last-Translator: nurbakhit nurka <nurbakhit@bumanit.mn>, 2019\n"
+"POT-Creation-Date: 2020-08-21 13:10+0000\n"
+"PO-Revision-Date: 2016-08-05 13:13+0000\n"
+"Last-Translator: Martin Trigaux, 2020\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,10 +25,15 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_mass_mailing
-#: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_popup
-msgid ""
-"<strong>Newsletter Popup!</strong> The newsletter popup is active on this "
-"page."
+#. openerp-web
+#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.js:0
+#, python-format
+msgid "${result.toast_type === 'success' ? 'Success' : 'Error'}"
+msgstr ""
+
+#. module: website_mass_mailing
+#: model_terms:ir.ui.view,arch_db:website_mass_mailing.newsletter_subscribe_options
+msgid ", .o_newsletter_popup"
 msgstr ""
 
 #. module: website_mass_mailing
@@ -46,13 +51,24 @@ msgid "Add a Newsletter Subscribe Popup"
 msgstr "Мэдээлэл захиалах попапыг нэмэх"
 
 #. module: website_mass_mailing
+#: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_popup_content
+msgid "Always <b>First</b>."
+msgstr ""
+
+#. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_block
 msgid "Always First."
 msgstr ""
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_block
-msgid "Be the first to find out all the latest news, products and trends."
+msgid "Be the first to find out all the latest news, products, and trends."
+msgstr ""
+
+#. module: website_mass_mailing
+#: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_popup_content
+msgid ""
+"Be the first to find out all the latest news,<br/> products, and trends."
 msgstr ""
 
 #. module: website_mass_mailing
@@ -61,15 +77,27 @@ msgid "Change Newsletter"
 msgstr "Зарлалын самбар өөрчлөх"
 
 #. module: website_mass_mailing
+#. openerp-web
+#: code:addons/website_mass_mailing/static/src/xml/website_mass_mailing.xml:0
+#, python-format
+msgid "Close"
+msgstr "Хаах"
+
+#. module: website_mass_mailing
+#: model:ir.model,name:website_mass_mailing.model_res_company
+msgid "Companies"
+msgstr "Компаниуд"
+
+#. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_mail_block_footer_social
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_mail_block_footer_social_left
 msgid "Contact"
-msgstr "Харилцах хаяг"
+msgstr "Холбох хаяг"
 
 #. module: website_mass_mailing
 #: model:ir.model.fields,field_description:website_mass_mailing.field_website_mass_mailing_popup__create_uid
 msgid "Created by"
-msgstr "Үүсгэсэн этгээд"
+msgstr "Үүсгэгч"
 
 #. module: website_mass_mailing
 #: model:ir.model.fields,field_description:website_mass_mailing.field_website_mass_mailing_popup__create_date
@@ -84,36 +112,29 @@ msgid "DRAG BUILDING BLOCKS HERE"
 msgstr ""
 
 #. module: website_mass_mailing
+#: model:ir.model.fields,field_description:website_mass_mailing.field_mailing_list__display_name
+#: model:ir.model.fields,field_description:website_mass_mailing.field_res_company__display_name
 #: model:ir.model.fields,field_description:website_mass_mailing.field_website_mass_mailing_popup__display_name
 msgid "Display Name"
-msgstr "Дэлгэрэнгүй нэр"
+msgstr "Дэлгэцийн нэр"
 
 #. module: website_mass_mailing
-#: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_popup
-msgid "Edit Popup"
-msgstr ""
+#. openerp-web
+#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.js:0
+#, python-format
+msgid "Error"
+msgstr "Алдаа"
 
 #. module: website_mass_mailing
-#: model_terms:ir.ui.view,arch_db:website_mass_mailing.social_links
-msgid "Facebook"
-msgstr "Facebook"
-
-#. module: website_mass_mailing
-#: model_terms:ir.ui.view,arch_db:website_mass_mailing.social_links
-msgid "Google Plus"
-msgstr ""
-
-#. module: website_mass_mailing
+#: model:ir.model.fields,field_description:website_mass_mailing.field_mailing_list__id
+#: model:ir.model.fields,field_description:website_mass_mailing.field_res_company__id
 #: model:ir.model.fields,field_description:website_mass_mailing.field_website_mass_mailing_popup__id
 msgid "ID"
 msgstr "ID"
 
 #. module: website_mass_mailing
-#: model_terms:ir.ui.view,arch_db:website_mass_mailing.social_links
-msgid "Instagram"
-msgstr ""
-
-#. module: website_mass_mailing
+#: model:ir.model.fields,field_description:website_mass_mailing.field_mailing_list____last_update
+#: model:ir.model.fields,field_description:website_mass_mailing.field_res_company____last_update
 #: model:ir.model.fields,field_description:website_mass_mailing.field_website_mass_mailing_popup____last_update
 msgid "Last Modified on"
 msgstr "Сүүлд зассан огноо"
@@ -121,17 +142,12 @@ msgstr "Сүүлд зассан огноо"
 #. module: website_mass_mailing
 #: model:ir.model.fields,field_description:website_mass_mailing.field_website_mass_mailing_popup__write_uid
 msgid "Last Updated by"
-msgstr "Сүүлд зассан этгээд"
+msgstr "Сүүлд зассан"
 
 #. module: website_mass_mailing
 #: model:ir.model.fields,field_description:website_mass_mailing.field_website_mass_mailing_popup__write_date
 msgid "Last Updated on"
 msgstr "Сүүлд зассан огноо"
-
-#. module: website_mass_mailing
-#: model_terms:ir.ui.view,arch_db:website_mass_mailing.social_links
-msgid "LinkedIn"
-msgstr "LinkedIn"
 
 #. module: website_mass_mailing
 #: model:ir.model,name:website_mass_mailing.model_mailing_list
@@ -152,16 +168,20 @@ msgid "Newsletter"
 msgstr "Сонин"
 
 #. module: website_mass_mailing
+#: model_terms:ir.ui.view,arch_db:website_mass_mailing.newsletter_subscribe_options
+msgid "Show reCaptcha Policy"
+msgstr ""
+
+#. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_form
 msgid "Subscribe"
 msgstr "Бүртгүүлэх"
 
 #. module: website_mass_mailing
-#. openerp-web
-#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.js:0
+#: code:addons/website_mass_mailing/controllers/main.py:0
 #, python-format
-msgid "Success"
-msgstr "Амжилттай"
+msgid "Suspicious activity detected by Google reCaptcha."
+msgstr ""
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_form
@@ -172,11 +192,6 @@ msgstr "Баярлалаа"
 #: model:ir.model.fields,field_description:website_mass_mailing.field_mailing_list__toast_content
 msgid "Toast Content"
 msgstr ""
-
-#. module: website_mass_mailing
-#: model_terms:ir.ui.view,arch_db:website_mass_mailing.social_links
-msgid "Twitter"
-msgstr "Жиргээ"
 
 #. module: website_mass_mailing
 #: model:ir.model.fields,field_description:website_mass_mailing.field_website_mass_mailing_popup__website_id

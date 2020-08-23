@@ -3,21 +3,25 @@
 # 	* account_payment
 # 
 # Translators:
-# danimaribeiro <danimaribeiro@gmail.com>, 2019
-# Martin Trigaux, 2019
-# Mateus Lopes <mateus1@gmail.com>, 2019
-# grazziano <gra.negocia@gmail.com>, 2019
-# Raphael Rodrigues <raphael0608@gmail.com>, 2019
+# danimaribeiro <danimaribeiro@gmail.com>, 2017
+# Martin Trigaux, 2017
+# grazziano <gra.negocia@gmail.com>, 2017
+# mariana rodrigues <mariana12v@gmail.com>, 2018
+# Raphael Rodrigues <raphael0608@gmail.com>, 2018
 # Marcelo Costa <marcelo@comdesk.com.br>, 2019
-# mariana rodrigues <mariana12v@gmail.com>, 2019
+# Marcel Savegnago <marcel.savegnago@gmail.com>, 2020
+# Vanderlei Romera <vanderleiromera@gmail.com>, 2020
+# Rodrigo de Almeida Sottomaior Macedo <rmsolucoeseminformatica@protonmail.com>, 2020
+# Mateus Lopes <mateus1@gmail.com>, 2020
+# André Augusto Firmino Cordeiro <a.cordeito@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.4\n"
+"Project-Id-Version: Odoo Server saas~13.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-12 11:32+0000\n"
-"PO-Revision-Date: 2019-08-26 09:08+0000\n"
-"Last-Translator: mariana rodrigues <mariana12v@gmail.com>, 2019\n"
+"POT-Creation-Date: 2020-08-21 13:09+0000\n"
+"PO-Revision-Date: 2017-12-13 14:50+0000\n"
+"Last-Translator: André Augusto Firmino Cordeiro <a.cordeito@gmail.com>, 2020\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,7 +37,7 @@ msgstr "&amp;vezes;"
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_success
 msgid "<b>Communication: </b>"
-msgstr ""
+msgstr "<b>Comunicação: </b"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
@@ -101,6 +105,11 @@ msgid ""
 msgstr ""
 
 #. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_payment_transaction__display_name
+msgid "Display Name"
+msgstr "Nome exibido"
+
+#. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_success
 msgid ""
 "Done, your online payment has been successfully processed. Thank you for "
@@ -108,7 +117,12 @@ msgid ""
 msgstr ""
 
 #. module: account_payment
-#: code:addons/account_payment/controllers/payment.py:53
+#: model:ir.model.fields,field_description:account_payment.field_payment_transaction__id
+msgid "ID"
+msgstr "ID"
+
+#. module: account_payment
+#: code:addons/account_payment/controllers/payment.py:0
 #, python-format
 msgid ""
 "If we store your payment information on our server, subscription payments "
@@ -118,14 +132,20 @@ msgstr ""
 "pagamentos de assinaturas serão feitos automaticamente."
 
 #. module: account_payment
-#: code:addons/account_payment/controllers/payment.py:50
+#: model:ir.model.fields,field_description:account_payment.field_payment_transaction____last_update
+msgid "Last Modified on"
+msgstr "Última modificação em"
+
+#. module: account_payment
+#: code:addons/account_payment/controllers/payment.py:0
 #, python-format
 msgid "Pay & Confirm"
 msgstr "Pagar & Confirmar"
 
 #. module: account_payment
-#: code:addons/account_payment/models/payment.py:21
+#: code:addons/account_payment/models/payment.py:0
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
 #, python-format
 msgid "Pay Now"
 msgstr "Pagar agora"
@@ -133,7 +153,7 @@ msgstr "Pagar agora"
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
 msgid "Pay now"
-msgstr ""
+msgstr "Pagar agora"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment

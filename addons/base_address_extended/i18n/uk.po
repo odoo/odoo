@@ -3,16 +3,17 @@
 # 	* base_address_extended
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019
+# Martin Trigaux, 2018
+# Bohdan Lisnenko, 2018
+# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.4\n"
+"Project-Id-Version: Odoo Server saas~13.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-12 11:31+0000\n"
-"PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019\n"
+"POT-Creation-Date: 2020-08-21 13:09+0000\n"
+"PO-Revision-Date: 2017-02-15 10:48+0000\n"
+"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2020\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,7 +27,7 @@ msgid ""
 "Change how the system computes the full street field based on the different "
 "street subfields"
 msgstr ""
-"Змініть, як система обчислює повне поле вулиці на основі різних підполей "
+"Змініть, як система обчислює повне вуличне поле на основі різних підполей "
 "вулиць"
 
 #. module: base_address_extended
@@ -45,6 +46,13 @@ msgid "Country"
 msgstr "Країна"
 
 #. module: base_address_extended
+#: model:ir.model.fields,field_description:base_address_extended.field_res_company__display_name
+#: model:ir.model.fields,field_description:base_address_extended.field_res_country__display_name
+#: model:ir.model.fields,field_description:base_address_extended.field_res_partner__display_name
+msgid "Display Name"
+msgstr "Відобразити назву"
+
+#. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_partner__street_number2
 #: model:ir.model.fields,field_description:base_address_extended.field_res_users__street_number2
 msgid "Door"
@@ -52,8 +60,6 @@ msgstr "Двері"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_company__street_number2
-#: model:ir.model.fields,help:base_address_extended.field_res_partner__street_number2
-#: model:ir.model.fields,help:base_address_extended.field_res_users__street_number2
 msgid "Door Number"
 msgstr "Номер дверей"
 
@@ -67,9 +73,9 @@ msgid ""
 "%(street_number)s: the house number\n"
 "%(street_number2)s: the door number"
 msgstr ""
-"Формат використання вулиць цієї країни.\n"
+"Формат для використання на вулицях цієї країни.\n"
 "\n"
-"Ви можете використовувати стиль рядка python з усіма полями вулиці (наприклад, використовуйте '%(street_name)s, %(street_number)s' якщо ви хочете відобразити назву вулиці, а потім через кому номер будинку)\n"
+"Ви можете використовувати стиль рядка python з усіма полями вулиці (наприклад, use'%(street_name)s, %(street_number)s' якщо ви хочете відобразити назву вулиці, а потім кома і номер будинку)\n"
 "%(street_name)s: назва вулиці\n"
 "%(street_number)s: номер будинку\n"
 "%(street_number2)s: номер дверей"
@@ -82,15 +88,27 @@ msgstr "Будинок"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_company__street_number
-#: model:ir.model.fields,help:base_address_extended.field_res_partner__street_number
-#: model:ir.model.fields,help:base_address_extended.field_res_users__street_number
 msgid "House Number"
 msgstr "Номер будинку"
 
 #. module: base_address_extended
+#: model:ir.model.fields,field_description:base_address_extended.field_res_company__id
+#: model:ir.model.fields,field_description:base_address_extended.field_res_country__id
+#: model:ir.model.fields,field_description:base_address_extended.field_res_partner__id
+msgid "ID"
+msgstr "ID"
+
+#. module: base_address_extended
+#: model:ir.model.fields,field_description:base_address_extended.field_res_company____last_update
+#: model:ir.model.fields,field_description:base_address_extended.field_res_country____last_update
+#: model:ir.model.fields,field_description:base_address_extended.field_res_partner____last_update
+msgid "Last Modified on"
+msgstr "Останні зміни на"
+
+#. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_country__street_format
 msgid "Street Format"
-msgstr "Формат вулиці"
+msgstr "Вуличний формат"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_company__street_name
@@ -112,8 +130,8 @@ msgid "Street format..."
 msgstr "Формат вулиці..."
 
 #. module: base_address_extended
-#: code:addons/base_address_extended/models/base_address_extended.py:64
-#: code:addons/base_address_extended/models/base_address_extended.py:112
+#: code:addons/base_address_extended/models/res_partner.py:0
+#: code:addons/base_address_extended/models/res_partner.py:0
 #, python-format
 msgid "Unrecognized field %s in street format."
 msgstr "Нерозпізнане поле%s у форматі вулиці."

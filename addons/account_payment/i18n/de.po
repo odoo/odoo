@@ -3,17 +3,24 @@
 # 	* account_payment
 # 
 # Translators:
+# Ralf Hilgenstock <rh@dialoge.info>, 2017
+# b4d8887ced18b222d41dc1101b082e15, 2017
+# Wolfgang Taferner, 2017
+# DE T2 <e2f48d4s5vd1s2@outlook.com>, 2017
+# Renzo Meister, 2017
+# 4e7311735ad180fde514b5b19202d965, 2017
+# Jan Meyer, 2018
 # Martin Trigaux, 2019
-# Jan Meyer, 2019
 # Chris Egal <sodaswed@web.de>, 2019
+# Leon Grill <leg@odoo.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.4\n"
+"Project-Id-Version: Odoo Server saas~13.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-12 11:32+0000\n"
-"PO-Revision-Date: 2019-08-26 09:08+0000\n"
-"Last-Translator: Chris Egal <sodaswed@web.de>, 2019\n"
+"POT-Creation-Date: 2020-08-21 13:09+0000\n"
+"PO-Revision-Date: 2017-12-13 14:50+0000\n"
+"Last-Translator: Leon Grill <leg@odoo.com>, 2020\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -53,7 +60,7 @@ msgstr "<i class=\"fa fa-fw fa-check-circle\"/> bezahlt"
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
 msgid "<i class=\"fa fa-fw fa-check-circle\"/> Pending"
-msgstr "<i class=\"fa fa-fw fa-check-circle\"/> ausstehend"
+msgstr "<i class=\"fa fa-fw fa-check-circle\"/> austehend"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
@@ -61,7 +68,7 @@ msgid ""
 "<i class=\"fa fa-info\"/> You have credits card registered, you can log-in "
 "to be able to use them."
 msgstr ""
-"Sie haben gespeicherte Kreditkarten Daten, Sie können diese zum Einloggen "
+"Sie haben gespeicherte Kredikarten Daten, sie können diese zum Einloggen "
 "nutzen."
 
 #. module: account_payment
@@ -112,6 +119,11 @@ msgstr ""
 "inline\"> ausstehend</span></span>"
 
 #. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_payment_transaction__display_name
+msgid "Display Name"
+msgstr "Anzeigename"
+
+#. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_success
 msgid ""
 "Done, your online payment has been successfully processed. Thank you for "
@@ -121,7 +133,12 @@ msgstr ""
 "Bestellung."
 
 #. module: account_payment
-#: code:addons/account_payment/controllers/payment.py:53
+#: model:ir.model.fields,field_description:account_payment.field_payment_transaction__id
+msgid "ID"
+msgstr "ID"
+
+#. module: account_payment
+#: code:addons/account_payment/controllers/payment.py:0
 #, python-format
 msgid ""
 "If we store your payment information on our server, subscription payments "
@@ -131,14 +148,20 @@ msgstr ""
 "erfolgen Abonnementszahlungen automatisch."
 
 #. module: account_payment
-#: code:addons/account_payment/controllers/payment.py:50
+#: model:ir.model.fields,field_description:account_payment.field_payment_transaction____last_update
+msgid "Last Modified on"
+msgstr "Letzte Änderung am"
+
+#. module: account_payment
+#: code:addons/account_payment/controllers/payment.py:0
 #, python-format
 msgid "Pay & Confirm"
 msgstr "Bestätigen & Zahlen"
 
 #. module: account_payment
-#: code:addons/account_payment/models/payment.py:21
+#: code:addons/account_payment/models/payment.py:0
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
 #, python-format
 msgid "Pay Now"
 msgstr "Jetzt kaufen"

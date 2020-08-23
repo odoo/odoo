@@ -3,20 +3,20 @@
 # 	* website_mass_mailing
 # 
 # Translators:
-# e2f <projects@e2f.com>, 2019
-# Martin Trigaux, 2019
-# Ermin Trevisan <trevi@twanda.com>, 2019
-# Katharina Moritz <kmo@e2f.com>, 2019
+# Tina Rittmüller <tr@ife.de>, 2017
+# Wolfgang Taferner, 2017
+# e2f <projects@e2f.com>, 2018
 # Leon Grill <leg@odoo.com>, 2019
-# Chris Egal <sodaswed@web.de>, 2019
+# Ermin Trevisan <trevi@twanda.com>, 2020
+# Martin Trigaux, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~13.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:17+0000\n"
-"PO-Revision-Date: 2019-08-26 09:16+0000\n"
-"Last-Translator: Chris Egal <sodaswed@web.de>, 2019\n"
+"POT-Creation-Date: 2020-08-21 13:10+0000\n"
+"PO-Revision-Date: 2016-08-05 13:13+0000\n"
+"Last-Translator: Martin Trigaux, 2020\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,10 +25,15 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_mass_mailing
-#: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_popup
-msgid ""
-"<strong>Newsletter Popup!</strong> The newsletter popup is active on this "
-"page."
+#. openerp-web
+#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.js:0
+#, python-format
+msgid "${result.toast_type === 'success' ? 'Success' : 'Error'}"
+msgstr ""
+
+#. module: website_mass_mailing
+#: model_terms:ir.ui.view,arch_db:website_mass_mailing.newsletter_subscribe_options
+msgid ", .o_newsletter_popup"
 msgstr ""
 
 #. module: website_mass_mailing
@@ -46,19 +51,42 @@ msgid "Add a Newsletter Subscribe Popup"
 msgstr "Ein Newsletter-Abonnements-Popup hinzufügen."
 
 #. module: website_mass_mailing
+#: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_popup_content
+msgid "Always <b>First</b>."
+msgstr ""
+
+#. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_block
 msgid "Always First."
 msgstr ""
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_block
-msgid "Be the first to find out all the latest news, products and trends."
+msgid "Be the first to find out all the latest news, products, and trends."
+msgstr ""
+
+#. module: website_mass_mailing
+#: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_popup_content
+msgid ""
+"Be the first to find out all the latest news,<br/> products, and trends."
 msgstr ""
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.newsletter_subscribe_options
 msgid "Change Newsletter"
 msgstr "Ändere Newsletter"
+
+#. module: website_mass_mailing
+#. openerp-web
+#: code:addons/website_mass_mailing/static/src/xml/website_mass_mailing.xml:0
+#, python-format
+msgid "Close"
+msgstr "Schliessen"
+
+#. module: website_mass_mailing
+#: model:ir.model,name:website_mass_mailing.model_res_company
+msgid "Companies"
+msgstr "Unternehmen"
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_mail_block_footer_social
@@ -84,36 +112,29 @@ msgid "DRAG BUILDING BLOCKS HERE"
 msgstr "ZIEHEN SIE BAUSTEINE HIERHER"
 
 #. module: website_mass_mailing
+#: model:ir.model.fields,field_description:website_mass_mailing.field_mailing_list__display_name
+#: model:ir.model.fields,field_description:website_mass_mailing.field_res_company__display_name
 #: model:ir.model.fields,field_description:website_mass_mailing.field_website_mass_mailing_popup__display_name
 msgid "Display Name"
 msgstr "Anzeigename"
 
 #. module: website_mass_mailing
-#: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_popup
-msgid "Edit Popup"
-msgstr ""
+#. openerp-web
+#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.js:0
+#, python-format
+msgid "Error"
+msgstr "Fehler"
 
 #. module: website_mass_mailing
-#: model_terms:ir.ui.view,arch_db:website_mass_mailing.social_links
-msgid "Facebook"
-msgstr "Facebook"
-
-#. module: website_mass_mailing
-#: model_terms:ir.ui.view,arch_db:website_mass_mailing.social_links
-msgid "Google Plus"
-msgstr "Google Plus"
-
-#. module: website_mass_mailing
+#: model:ir.model.fields,field_description:website_mass_mailing.field_mailing_list__id
+#: model:ir.model.fields,field_description:website_mass_mailing.field_res_company__id
 #: model:ir.model.fields,field_description:website_mass_mailing.field_website_mass_mailing_popup__id
 msgid "ID"
 msgstr "ID"
 
 #. module: website_mass_mailing
-#: model_terms:ir.ui.view,arch_db:website_mass_mailing.social_links
-msgid "Instagram"
-msgstr "Instagram"
-
-#. module: website_mass_mailing
+#: model:ir.model.fields,field_description:website_mass_mailing.field_mailing_list____last_update
+#: model:ir.model.fields,field_description:website_mass_mailing.field_res_company____last_update
 #: model:ir.model.fields,field_description:website_mass_mailing.field_website_mass_mailing_popup____last_update
 msgid "Last Modified on"
 msgstr "Letzte Änderung am"
@@ -127,11 +148,6 @@ msgstr "Zuletzt aktualisiert von"
 #: model:ir.model.fields,field_description:website_mass_mailing.field_website_mass_mailing_popup__write_date
 msgid "Last Updated on"
 msgstr "Zuletzt aktualisiert am"
-
-#. module: website_mass_mailing
-#: model_terms:ir.ui.view,arch_db:website_mass_mailing.social_links
-msgid "LinkedIn"
-msgstr "LinkedIn"
 
 #. module: website_mass_mailing
 #: model:ir.model,name:website_mass_mailing.model_mailing_list
@@ -152,16 +168,20 @@ msgid "Newsletter"
 msgstr "Newsletter"
 
 #. module: website_mass_mailing
+#: model_terms:ir.ui.view,arch_db:website_mass_mailing.newsletter_subscribe_options
+msgid "Show reCaptcha Policy"
+msgstr ""
+
+#. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_form
 msgid "Subscribe"
 msgstr "Abonnieren"
 
 #. module: website_mass_mailing
-#. openerp-web
-#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.js:0
+#: code:addons/website_mass_mailing/controllers/main.py:0
 #, python-format
-msgid "Success"
-msgstr "Erfolgreich"
+msgid "Suspicious activity detected by Google reCaptcha."
+msgstr ""
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_form
@@ -174,11 +194,6 @@ msgid "Toast Content"
 msgstr ""
 
 #. module: website_mass_mailing
-#: model_terms:ir.ui.view,arch_db:website_mass_mailing.social_links
-msgid "Twitter"
-msgstr "Twitter"
-
-#. module: website_mass_mailing
 #: model:ir.model.fields,field_description:website_mass_mailing.field_website_mass_mailing_popup__website_id
 msgid "Website"
 msgstr "Website"
@@ -186,7 +201,7 @@ msgstr "Website"
 #. module: website_mass_mailing
 #: model:ir.model.fields,field_description:website_mass_mailing.field_website_mass_mailing_popup__popup_content
 msgid "Website Popup Content"
-msgstr "Inhalt des Website-Pop-ups"
+msgstr "Inhalt des Website-Popups"
 
 #. module: website_mass_mailing
 #: model:ir.model.fields,field_description:website_mass_mailing.field_mailing_list__website_popup_ids

@@ -3,18 +3,21 @@
 # 	* hr_recruitment_survey
 # 
 # Translators:
-# Martin Trigaux, 2019
-# liAnGjiA <liangjia@qq.com>, 2019
-# inspur qiuguodong <qiuguodong@inspur.com>, 2019
-# Felix Yuen <fyu@odoo.com>, 2019
+# fausthuang, 2016
+# waveyeung <waveyeung@qq.com>, 2016
+# v2exerer <9010446@qq.com>, 2016
+# e2f <projects@e2f.com>, 2018
+# Martin Trigaux, 2020
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2020
+# Felix Yang - Elico Corp <felixyangsh@aliyun.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~13.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-23 13:49+0000\n"
-"PO-Revision-Date: 2019-08-26 09:10+0000\n"
-"Last-Translator: Felix Yuen <fyu@odoo.com>, 2019\n"
+"POT-Creation-Date: 2020-08-21 13:09+0000\n"
+"PO-Revision-Date: 2016-08-26 11:13+0000\n"
+"Last-Translator: Felix Yang - Elico Corp <felixyangsh@aliyun.com>, 2020\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,18 +30,14 @@ msgstr ""
 msgid ""
 "<span class=\"o_stat_text\">Print</span>\n"
 "                        <span class=\"o_stat_text\">Interview</span>"
-msgstr ""
-"<span class=\"o_stat_text\">打印</span>\n"
-"                        <span class=\"o_stat_text\">面谈</span>"
+msgstr "<span class=\"o_stat_text\"/><span class=\"o_stat_text\"/>"
 
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.hr_applicant_view_form_inherit
 msgid ""
 "<span class=\"o_stat_text\">Start</span>\n"
 "                        <span class=\"o_stat_text\">Interview</span>"
-msgstr ""
-"<span class=\"o_stat_text\">开始</span>\n"
-"                        <span class=\"o_stat_text\">面谈</span>"
+msgstr "<span class=\"o_stat_text\"/><span class=\"o_stat_text\"/>"
 
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.hr_applicant_view_form_inherit
@@ -49,19 +48,6 @@ msgstr "回答有关就业问题"
 #: model:ir.model,name:hr_recruitment_survey.model_hr_applicant
 msgid "Applicant"
 msgstr "申请人"
-
-#. module: hr_recruitment_survey
-#: model:ir.model.fields,field_description:hr_recruitment_survey.field_survey_survey__category
-msgid "Category"
-msgstr "类别"
-
-#. module: hr_recruitment_survey
-#: model:ir.model.fields,help:hr_recruitment_survey.field_survey_survey__category
-msgid ""
-"Category is used to know in which context the survey is used. Various apps "
-"may define their own categories when they use survey like jobs recruitment "
-"or employee appraisal surveys."
-msgstr "类别用于了解在何种上下文中使用了调查。不同的应用程序在使用招聘或员工评估调查等调查时，可能会定义自己的类别。"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,help:hr_recruitment_survey.field_hr_applicant__survey_id
@@ -76,6 +62,18 @@ msgstr "选择一个此岗位的面试表格，你可以把它打印出来让所
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.view_hr_job_kanban_inherit
 msgid "Display Interview Form"
 msgstr "显示面试界面"
+
+#. module: hr_recruitment_survey
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_applicant__display_name
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_job__display_name
+msgid "Display Name"
+msgstr "显示名称"
+
+#. module: hr_recruitment_survey
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_applicant__id
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_job__id
+msgid "ID"
+msgstr "ID"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_job__survey_id
@@ -94,6 +92,12 @@ msgid "Job Position"
 msgstr "工作岗位"
 
 #. module: hr_recruitment_survey
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_applicant____last_update
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_job____last_update
+msgid "Last Modified on"
+msgstr "最后修改日"
+
+#. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.view_hr_job_kanban_inherit
 msgid "No Interview Form"
 msgstr "没有面试表格"
@@ -101,12 +105,7 @@ msgstr "没有面试表格"
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.hr_applicant_view_form_inherit
 msgid "Print interview report"
-msgstr "打印面试表单"
-
-#. module: hr_recruitment_survey
-#: model:ir.model.fields.selection,name:hr_recruitment_survey.selection__survey_survey__category__hr_recruitment
-msgid "Recruitment"
-msgstr "招聘"
+msgstr "打印面试报告"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_applicant__response_id
@@ -114,7 +113,6 @@ msgid "Response"
 msgstr "回复"
 
 #. module: hr_recruitment_survey
-#: model:ir.model,name:hr_recruitment_survey.model_survey_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_applicant__survey_id
 msgid "Survey"
 msgstr "问卷"

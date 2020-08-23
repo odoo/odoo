@@ -3,22 +3,30 @@
 # 	* im_livechat_mail_bot
 # 
 # Translators:
-# Mateus Lopes <mateus1@gmail.com>, 2019
 # Marcelo Costa <marcelo@comdesk.com.br>, 2019
+# Rodrigo de Almeida Sottomaior Macedo <rmsolucoeseminformatica@protonmail.com>, 2020
+# Mateus Lopes <mateus1@gmail.com>, 2020
+# André Augusto Firmino Cordeiro <a.cordeito@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~13.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2019-08-26 09:11+0000\n"
-"Last-Translator: Marcelo Costa <marcelo@comdesk.com.br>, 2019\n"
+"POT-Creation-Date: 2020-08-21 13:09+0000\n"
+"PO-Revision-Date: 2019-03-20 14:57+0000\n"
+"Last-Translator: André Augusto Firmino Cordeiro <a.cordeito@gmail.com>, 2020\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: pt_BR\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#. module: im_livechat_mail_bot
+#: model:ir.model.fields,field_description:im_livechat_mail_bot.field_mail_bot__display_name
+#: model:ir.model.fields,field_description:im_livechat_mail_bot.field_res_users__display_name
+msgid "Display Name"
+msgstr "Nome exibido"
 
 #. module: im_livechat_mail_bot
 #: code:addons/im_livechat_mail_bot/models/mail_bot.py:0
@@ -33,6 +41,18 @@ msgstr ""
 "descobrimento do Odoo!"
 
 #. module: im_livechat_mail_bot
+#: model:ir.model.fields,field_description:im_livechat_mail_bot.field_mail_bot__id
+#: model:ir.model.fields,field_description:im_livechat_mail_bot.field_res_users__id
+msgid "ID"
+msgstr "ID"
+
+#. module: im_livechat_mail_bot
+#: model:ir.model.fields,field_description:im_livechat_mail_bot.field_mail_bot____last_update
+#: model:ir.model.fields,field_description:im_livechat_mail_bot.field_res_users____last_update
+msgid "Last Modified on"
+msgstr "Última modificação em"
+
+#. module: im_livechat_mail_bot
 #: model:ir.model,name:im_livechat_mail_bot.model_mail_bot
 msgid "Mail Bot"
 msgstr "Bot de email"
@@ -41,11 +61,10 @@ msgstr "Bot de email"
 #: code:addons/im_livechat_mail_bot/models/mail_bot.py:0
 #, python-format
 msgid ""
-"Not sure wat you are doing. Please press : and wait for the propositions. "
-"Select one of them and press enter."
+"Not sure what you are doing. Please, type <span "
+"class=\"o_odoobot_command\">:</span> and wait for the propositions. Select "
+"one of them and press enter."
 msgstr ""
-"Não tem certeza do que você está fazendo? Presssione : e aguarde as "
-"proposições. Selecione uma delas e então, pressione o botão Enter."
 
 #. module: im_livechat_mail_bot
 #: model:ir.model.fields,field_description:im_livechat_mail_bot.field_res_users__odoobot_state
@@ -60,8 +79,10 @@ msgstr ""
 #. module: im_livechat_mail_bot
 #: code:addons/im_livechat_mail_bot/models/mail_bot.py:0
 #, python-format
-msgid "That's me! 🎉<br/>Try to type \":\" to use canned responses."
-msgstr "Este sou eu! 🎉<br/>Tente digitar \":\" para usar respostas prontas."
+msgid ""
+"That's me! 🎉<br/>Try typing <span class=\"o_odoobot_command\">:</span> to "
+"use canned responses."
+msgstr ""
 
 #. module: im_livechat_mail_bot
 #: model:ir.model,name:im_livechat_mail_bot.model_res_users

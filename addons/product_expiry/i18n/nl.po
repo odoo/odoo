@@ -3,18 +3,20 @@
 # 	* product_expiry
 # 
 # Translators:
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
 # Cas Vissers <casvissers@brahoo.nl>, 2019
 # Martin Trigaux, 2019
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2020
+# Antoine Gilard <ang@odoo.com>, 2020
+# Gunther Clauwaert <gclauwae@hotmail.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~13.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-09 12:17+0000\n"
-"PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Martin Trigaux, 2019\n"
+"POT-Creation-Date: 2020-02-13 07:24+0000\n"
+"PO-Revision-Date: 2016-08-05 13:08+0000\n"
+"Last-Translator: Gunther Clauwaert <gclauwae@hotmail.com>, 2020\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -47,9 +49,53 @@ msgid "Alert Date Reached"
 msgstr "Waarschuwingsdatum bereikt"
 
 #. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_product_product__alert_time
+#: model:ir.model.fields,field_description:product_expiry.field_product_template__alert_time
+msgid "Alert Time"
+msgstr "Waarschuwingstijd"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_product_product__use_time
+#: model:ir.model.fields,field_description:product_expiry.field_product_template__use_time
+msgid "Best Before Time"
+msgstr "Best voor tijd"
+
+#. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot__use_date
 msgid "Best before Date"
 msgstr "Tenminste houdbaar tot datum"
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.report_lot_label_expiry
+msgid "Best before:"
+msgstr "Best voor:"
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.confirm_expiry_view
+msgid "Confirm"
+msgstr "Bevestigen"
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_expiry_picking_confirmation
+msgid "Confirm Expiry"
+msgstr "Bevestig vervallen"
+
+#. module: product_expiry
+#: code:addons/product_expiry/models/stock_picking.py:0
+#: model_terms:ir.ui.view,arch_db:product_expiry.confirm_expiry_view
+#, python-format
+msgid "Confirmation"
+msgstr "Bevestiging"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__create_uid
+msgid "Created by"
+msgstr "Aangemaakt door"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__create_date
+msgid "Created on"
+msgstr "Aangemaakt op"
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_stock_production_lot__alert_date
@@ -67,19 +113,74 @@ msgid "Dates"
 msgstr "Datums"
 
 #. module: product_expiry
-#: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot__life_date
-msgid "End of Life Date"
-msgstr "Einde levensduur datum"
+#: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__description
+msgid "Description"
+msgstr "Omschrijving"
 
 #. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.confirm_expiry_view
+msgid "Discard"
+msgstr "Negeren"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__display_name
+msgid "Display Name"
+msgstr "Schermnaam"
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.quant_search_view_inherit_product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.search_product_lot_filter_inherit_product_expiry
 msgid "Expiration Alerts"
 msgstr "Verval waarschuwingen"
 
 #. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_product_product__use_expiration_date
+#: model:ir.model.fields,field_description:product_expiry.field_product_template__use_expiration_date
+#: model:ir.model.fields,field_description:product_expiry.field_stock_move_line__expiration_date
+#: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot__expiration_date
+msgid "Expiration Date"
+msgstr "Vervaldatum"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_product_product__expiration_time
+#: model:ir.model.fields,field_description:product_expiry.field_product_template__expiration_time
+msgid "Expiration Time"
+msgstr "Vervaltijd"
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.confirm_expiry_view
+msgid "Expired Lot(s)"
+msgstr "Vervallen partij(en)"
+
+#. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot__product_expiry_reminded
 msgid "Expiry has been reminded"
-msgstr ""
+msgstr "Herinnering van vervallen is getoond"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__id
+msgid "ID"
+msgstr "ID"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation____last_update
+msgid "Last Modified on"
+msgstr "Laatst gewijzigd op"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__write_uid
+msgid "Last Updated by"
+msgstr "Laatst bijgewerkt door"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__write_date
+msgid "Last Updated on"
+msgstr "Laatst bijgewerkt op"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__lot_ids
+msgid "Lot"
+msgstr "Partij"
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_stock_production_lot
@@ -87,43 +188,61 @@ msgid "Lot/Serial"
 msgstr "Partij/Serienummer"
 
 #. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_product_product__expiration_time
+#: model:ir.model.fields,help:product_expiry.field_product_template__expiration_time
+msgid ""
+"Number of days after the receipt of the products (from the vendor or in "
+"stock after production) after which the goods may become dangerous and must "
+"not be consumed. It will be computed on the lot/serial number."
+msgstr ""
+"Aantal dagen na ontvangst van de producten (van de verkoper of in voorraad "
+"na productie) waarna de goederen gevaarlijk kunnen worden en niet meer "
+"geconsumeerd mogen worden. Het wordt berekend op basis van het partij- / "
+"serienummer."
+
+#. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_product__alert_time
 #: model:ir.model.fields,help:product_expiry.field_product_template__alert_time
 msgid ""
-"Number of days before an alert should be raised on the lot/serial number."
+"Number of days before the Expiration Date after which an alert should be "
+"raised on the lot/serial number. It will be computed on the lot/serial "
+"number."
 msgstr ""
-"Aantal dagen voordat een waarschuwing getoond moet worden op het "
-"serie/partijnummer."
-
-#. module: product_expiry
-#: model:ir.model.fields,help:product_expiry.field_product_product__life_time
-#: model:ir.model.fields,help:product_expiry.field_product_template__life_time
-msgid ""
-"Number of days before the goods may become dangerous and must not be "
-"consumed. It will be computed on the lot/serial number."
-msgstr ""
-"Aantal dagen voordat de goederen mogelijk gevaarlijk worden en gebruikt "
-"moeten worden. Het wordt berekend op de partij/serie nummer."
+"Aantal dagen vóór de vervaldatum waarna een waarschuwing op het lot- / "
+"serienummer moet worden geplaatst. Het wordt berekend op basis van het "
+"partij- / serienummer."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_product__removal_time
 #: model:ir.model.fields,help:product_expiry.field_product_template__removal_time
 msgid ""
-"Number of days before the goods should be removed from the stock. It will be"
-" computed on the lot/serial number."
+"Number of days before the Expiration Date after which the goods should be "
+"removed from the stock. It will be computed on the lot/serial number."
 msgstr ""
-"Aantal dagen voordat de goederen uit de voorraad moeten gehaald worden. Het "
-"wordt berekend op de partij/serie nummer."
+"Aantal dagen vóór de vervaldatum waarna de goederen uit de voorraad moeten "
+"worden gehaald. Het wordt berekend op basis van het partij- / serienummer."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_product__use_time
 #: model:ir.model.fields,help:product_expiry.field_product_template__use_time
 msgid ""
-"Number of days before the goods starts deteriorating, without being "
-"dangerous yet. It will be computed using the lot/serial number."
+"Number of days before the Expiration Date after which the goods starts "
+"deteriorating, without being dangerous yet. It will be computed on the "
+"lot/serial number."
 msgstr ""
-"Aantal dagen voordat de goederen achteruitgaan, zonder gevaarlijk te zijn. "
-"Dit wordt berekend op de partij/serie nummer."
+"Aantal dagen voor de Vervaldatum waarna de goederen beginnen te bederven, "
+"zonder gevaarlijk te zijn. Het wordt berekend op basis van het partij- / "
+"serienummer."
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__picking_ids
+msgid "Picking"
+msgstr "Picken"
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.confirm_expiry_view
+msgid "Proceed except for expired one"
+msgstr "Ga verder, behalve voor vervallen goederen"
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_procurement_group
@@ -131,10 +250,9 @@ msgid "Procurement Group"
 msgstr "Verwervingsgroep"
 
 #. module: product_expiry
-#: model:ir.model.fields,field_description:product_expiry.field_product_product__alert_time
-#: model:ir.model.fields,field_description:product_expiry.field_product_template__alert_time
-msgid "Product Alert Time"
-msgstr "Product signalering tijd"
+#: model:ir.model,name:product_expiry.model_product_product
+msgid "Product"
+msgstr "Product"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot__product_expiry_alert
@@ -142,27 +260,14 @@ msgid "Product Expiry Alert"
 msgstr "Product verval waarschuwing"
 
 #. module: product_expiry
-#: model:ir.model.fields,field_description:product_expiry.field_product_product__life_time
-#: model:ir.model.fields,field_description:product_expiry.field_product_template__life_time
-msgid "Product Life Time"
-msgstr "Product levensduur"
-
-#. module: product_expiry
-#: model:ir.model.fields,field_description:product_expiry.field_product_product__removal_time
-#: model:ir.model.fields,field_description:product_expiry.field_product_template__removal_time
-msgid "Product Removal Time"
-msgstr "Product verwijdertijd"
+#: model:ir.model,name:product_expiry.model_stock_move_line
+msgid "Product Moves (Stock Move Line)"
+msgstr "Productmutaties (voorraadmutatieregels)"
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_product_template
 msgid "Product Template"
 msgstr "Productsjabloon"
-
-#. module: product_expiry
-#: model:ir.model.fields,field_description:product_expiry.field_product_product__use_time
-#: model:ir.model.fields,field_description:product_expiry.field_product_template__use_time
-msgid "Product Use Time"
-msgstr "Product gebruiksduur"
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_stock_quant
@@ -176,9 +281,25 @@ msgid "Removal Date"
 msgstr "Verwijderdatum"
 
 #. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_product_product__removal_time
+#: model:ir.model.fields,field_description:product_expiry.field_product_template__removal_time
+msgid "Removal Time"
+msgstr "Tijd verwijderd"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__show_lots
+msgid "Show Lots"
+msgstr "Toon partijen"
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_stock_move
+msgid "Stock Move"
+msgstr "Voorraadmutatie"
+
+#. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_stock_production_lot__product_expiry_alert
-msgid "The Alert Date has been reached."
-msgstr "De waarschuwingsdatum is bereikt."
+msgid "The Expiration Date has been reached."
+msgstr "De vervaldatum is bereikt."
 
 #. module: product_expiry
 #: code:addons/product_expiry/models/production_lot.py:0
@@ -187,7 +308,8 @@ msgid "The alert date has been reached for this lot/serial number"
 msgstr "De waarschuwingsdatum is bereikt voor dit serie/partijnummer."
 
 #. module: product_expiry
-#: model:ir.model.fields,help:product_expiry.field_stock_production_lot__life_date
+#: model:ir.model.fields,help:product_expiry.field_stock_move_line__expiration_date
+#: model:ir.model.fields,help:product_expiry.field_stock_production_lot__expiration_date
 msgid ""
 "This is the date on which the goods with this Serial Number may become "
 "dangerous and must not be consumed."
@@ -202,6 +324,9 @@ msgid ""
 "This is the date on which the goods with this Serial Number should be "
 "removed from the stock. This date will be used in FEFO removal strategy."
 msgstr ""
+"Dit is de datum waarop de goederen met dit serienummer uit de voorraad "
+"moeten worden gehaald. Deze datum zal worden gebruikt in de FEFO-"
+"verwijderingsstrategie."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_stock_production_lot__use_date
@@ -211,3 +336,53 @@ msgid ""
 msgstr ""
 "Dit de de datum waarop de producten met dit partijnummer in kwaliteit "
 "achteruit gaan, maar nog niet gevaarlijk zijn voor de volksgezondheid."
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_stock_picking
+msgid "Transfer"
+msgstr "Verplaatsing"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_stock_move__use_expiration_date
+#: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot__use_expiration_date
+msgid "Use Expiration Date"
+msgstr "Gebruik vervaldatum"
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.report_lot_label_expiry
+msgid "Use by:"
+msgstr "Gebruikt door:"
+
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_product_product__use_expiration_date
+#: model:ir.model.fields,help:product_expiry.field_product_template__use_expiration_date
+#: model:ir.model.fields,help:product_expiry.field_stock_move__use_expiration_date
+#: model:ir.model.fields,help:product_expiry.field_stock_production_lot__use_expiration_date
+msgid ""
+"When this box is ticked, you have the possibility to specify dates to manage"
+" product expiration, on the product and on the corresponding lot/serial "
+"numbers"
+msgstr ""
+"Wanneer dit vakje is aangevinkt, heeft u de mogelijkheid om data op te geven"
+" voor het beheer van product verval, op het product en op de bijbehorende "
+"lot- / serienummers"
+
+#. module: product_expiry
+#: code:addons/product_expiry/wizard/confirm_expiry.py:0
+#, python-format
+msgid ""
+"You are going to deliver some product expired lots.\n"
+"Do you confirm you want to proceed ?"
+msgstr ""
+"U gaat een aantal vervallen loten leveren.\n"
+"Bevestig indien je verder wilt gaan??"
+
+#. module: product_expiry
+#: code:addons/product_expiry/wizard/confirm_expiry.py:0
+#, python-format
+msgid ""
+"You are going to deliver the product %s, %s which is expired.\n"
+"Do you confirm you want to proceed ?"
+msgstr ""
+"U gaat het vervallen product %s, %s leveren.\n"
+"Bevestig indien je verder wilt gaan?"

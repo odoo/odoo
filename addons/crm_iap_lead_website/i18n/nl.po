@@ -3,18 +3,18 @@
 # 	* crm_iap_lead_website
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
 # Charles Vervaecke <cvk@odoo.com>, 2019
+# Martin Trigaux, 2019
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2020
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~13.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: Charles Vervaecke <cvk@odoo.com>, 2019\n"
+"POT-Creation-Date: 2020-08-21 13:09+0000\n"
+"PO-Revision-Date: 2019-03-20 14:55+0000\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2020\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -39,7 +39,7 @@ msgstr "<span class=\"o_stat_text\"> Leads </span>"
 #. module: crm_iap_lead_website
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead_website.crm_reveal_rule_form
 msgid "<span class=\"o_stat_text\"> Opportunities </span>"
-msgstr "<span class=\"o_stat_text\">Opportuniteiten</span>"
+msgstr "<span class=\"o_stat_text\"> Verkoopkansen </span>"
 
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__active
@@ -89,7 +89,7 @@ msgstr "Maximale bedrijfsgrootte"
 #. module: crm_iap_lead_website
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead_website.crm_reveal_rule_form
 msgid "Contact Filter"
-msgstr "Contact filter"
+msgstr "Contact filte"
 
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__country_ids
@@ -111,7 +111,7 @@ msgstr "Maak een conversie regel"
 msgid ""
 "Create rules to generate B2B leads/opportunities from your website visitors."
 msgstr ""
-"Maak regels aan om B2B leads/opportuniteiten aan te maken vanuit uw website "
+"Maak regels aan om B2B leads/verkoopkansen aan te maken vanuit uw website "
 "bezoekers."
 
 #. module: crm_iap_lead_website
@@ -131,10 +131,12 @@ msgid "Data Tracking"
 msgstr "Data tracering"
 
 #. module: crm_iap_lead_website
+#: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_lead__display_name
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__display_name
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_view__display_name
+#: model:ir.model.fields,field_description:crm_iap_lead_website.field_ir_http__display_name
 msgid "Display Name"
-msgstr "Schermnaam"
+msgstr "Weergavenaam"
 
 #. module: crm_iap_lead_website
 #: code:addons/crm_iap_lead_website/models/crm_reveal_rule.py:0
@@ -165,7 +167,7 @@ msgstr "Van"
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__lead_ids
 msgid "Generated Lead / Opportunity"
-msgstr "Gegenereerde leads / prospects"
+msgstr "Gegenereerde leads / verkoopkansen"
 
 #. module: crm_iap_lead_website
 #: model:ir.model,name:crm_iap_lead_website.model_ir_http
@@ -183,8 +185,10 @@ msgid "IAP Credits"
 msgstr "IAP Credits"
 
 #. module: crm_iap_lead_website
+#: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_lead__id
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__id
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_view__id
+#: model:ir.model.fields,field_description:crm_iap_lead_website.field_ir_http__id
 msgid "ID"
 msgstr "ID"
 
@@ -200,8 +204,10 @@ msgid "Industries"
 msgstr "Industrieën"
 
 #. module: crm_iap_lead_website
+#: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_lead____last_update
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule____last_update
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_view____last_update
+#: model:ir.model.fields,field_description:crm_iap_lead_website.field_ir_http____last_update
 msgid "Last Modified on"
 msgstr "Laatst gewijzigd op"
 
@@ -259,12 +265,12 @@ msgstr ""
 #: model:ir.cron,cron_name:crm_iap_lead_website.ir_cron_crm_reveal_lead
 #: model:ir.cron,name:crm_iap_lead_website.ir_cron_crm_reveal_lead
 msgid "Lead Generation: Leads/Opportunities Generation"
-msgstr "Leadgeneratie: Leads/Prospects generatie"
+msgstr "Leadgeneratie: Leads/Verkoopkansen generatie"
 
 #. module: crm_iap_lead_website
 #: model:ir.model,name:crm_iap_lead_website.model_crm_lead
 msgid "Lead/Opportunity"
-msgstr "Lead/Prospect"
+msgstr "Lead/Verkoopkans"
 
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,help:crm_iap_lead_website.field_crm_reveal_rule__industry_tag_ids
@@ -295,7 +301,7 @@ msgstr "Maximaal 5 contacten zijn toegestaan!"
 #. module: crm_iap_lead_website
 #: model:ir.model.fields.selection,name:crm_iap_lead_website.selection__crm_reveal_rule__priority__1
 msgid "Medium"
-msgstr "Gemiddeld"
+msgstr "Medium"
 
 #. module: crm_iap_lead_website
 #: code:addons/crm_iap_lead_website/models/crm_reveal_rule.py:0
@@ -314,14 +320,14 @@ msgid "Number of Contacts"
 msgstr "Aantal contacten"
 
 #. module: crm_iap_lead_website
-#: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__leads_count
+#: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__lead_count
 msgid "Number of Generated Leads"
 msgstr "Aantal gegenereerde leads"
 
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__opportunity_count
 msgid "Number of Generated Opportunity"
-msgstr "Aantal gegenereerde opportuniteiten"
+msgstr "Aantal gegenereerde verkoopkansen"
 
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,help:crm_iap_lead_website.field_crm_reveal_rule__country_ids
@@ -330,7 +336,7 @@ msgid ""
 "leads/opportunities (using GeoIP)."
 msgstr ""
 "Alleen bezoekers van de volgende landen worden geconverteerd in "
-"leads/prospects (gebruik makende van GeoIP)."
+"leads/verkoopkansen (gebruik makende van GeoIP)."
 
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,help:crm_iap_lead_website.field_crm_reveal_rule__state_ids
@@ -339,22 +345,28 @@ msgid ""
 "leads/opportunities."
 msgstr ""
 "Alleen bezoekers van de volgende provincies worden geconverteerd in "
-"leads/prospects."
+"leads/verkoopkansen."
 
 #. module: crm_iap_lead_website
 #: model:ir.model.fields.selection,name:crm_iap_lead_website.selection__crm_reveal_rule__lead_type__opportunity
 msgid "Opportunity"
-msgstr "Prospect"
+msgstr "Verkoopkans"
 
 #. module: crm_iap_lead_website
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead_website.crm_reveal_rule_form
 msgid "Opportunity Data"
-msgstr "Prospect gegevens"
+msgstr "Verkoopkans gegevens"
 
 #. module: crm_iap_lead_website
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead_website.crm_reveal_rule_form
 msgid "Opportunity Generation Conditions"
-msgstr "Condities genereren opportuniteiten"
+msgstr "Condities genereren verkoopkansen"
+
+#. module: crm_iap_lead_website
+#: code:addons/crm_iap_lead_website/models/crm_reveal_rule.py:0
+#, python-format
+msgid "Opportunity created by Odoo Lead Generation"
+msgstr "Verkoopkans aangemaakt via de Odoo Lead generatie"
 
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__other_role_ids
@@ -415,7 +427,7 @@ msgstr "Verkoper"
 #. module: crm_iap_lead_website
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead_website.crm_reveal_rule_view_search
 msgid "Search CRM Reveal Rule"
-msgstr "Zoek CRM Reveal Regel"
+msgstr "Zoek CRM reveal regel"
 
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__seniority_id
@@ -426,7 +438,7 @@ msgstr "Senioriteit"
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__sequence
 msgid "Sequence"
-msgstr "Reeks"
+msgstr "Volgorde"
 
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_view__reveal_state
@@ -436,7 +448,7 @@ msgstr "Provincie / Staat"
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__state_ids
 msgid "States"
-msgstr "Status"
+msgstr "Provincie/Staat"
 
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__suffix
@@ -457,8 +469,8 @@ msgid ""
 msgstr ""
 "Dit is het aantal contacten om bij te houden of hun rol en senioriteit "
 "overeenkomen met uw criteria. Hun details worden getoond in de historiek van"
-" de gegenereerde leads/prospects. Er wordt één credit per gevolgd contact "
-"gebruikt."
+" de gegenereerde leads/verkoopkansen. Er wordt één credit per gevolgd "
+"contact gebruikt."
 
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,help:crm_iap_lead_website.field_crm_reveal_rule__suffix
@@ -467,7 +479,7 @@ msgid ""
 "lead/opportunity is generated with this rule"
 msgstr ""
 "Dit wordt toegevoegd aan de naam van de gegenereerde lead, zodat u deze "
-"lead/prospects gemakkelijk kunt identificeren"
+"lead/verkoopkansen gemakkelijk kunt identificeren"
 
 #. module: crm_iap_lead_website
 #: model:ir.model.fields.selection,name:crm_iap_lead_website.selection__crm_reveal_view__reveal_state__to_process
@@ -544,4 +556,4 @@ msgstr "werknemers"
 #. module: crm_iap_lead_website
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead_website.crm_reveal_rule_form
 msgid "to"
-msgstr "tot"
+msgstr "t/m"

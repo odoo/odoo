@@ -3,18 +3,18 @@
 # 	* website_links
 # 
 # Translators:
+# Eric Geens <ericgeens@yahoo.com>, 2016
 # Martin Trigaux, 2019
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
-# Cas Vissers <casvissers@brahoo.nl>, 2019
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~13.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-27 09:12+0000\n"
-"PO-Revision-Date: 2019-08-26 09:15+0000\n"
-"Last-Translator: Cas Vissers <casvissers@brahoo.nl>, 2019\n"
+"POT-Creation-Date: 2020-08-21 13:10+0000\n"
+"PO-Revision-Date: 2016-08-05 13:13+0000\n"
+"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2020\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -45,9 +45,8 @@ msgstr "# klikken"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.share_page_menu
-msgid "<span title=\"Track this page to count clicks\">Track this Page</span>"
+msgid "<span title=\"Track this page to count clicks\">Link Tracker</span>"
 msgstr ""
-"<span title=\"Volg deze pagina om kikken te tellen\">Volg deze pagina</span>"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
@@ -113,7 +112,13 @@ msgid "Copy"
 msgstr "Kopieer"
 
 #. module: website_links
+#: model:ir.model.fields,field_description:website_links.field_link_tracker__display_name
+msgid "Display Name"
+msgstr "Schermnaam"
+
+#. module: website_links
 #. openerp-web
+#: code:addons/website_links/static/src/xml/recent_link.xml:0
 #: code:addons/website_links/static/src/xml/recent_link.xml:0
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 #, python-format
@@ -133,11 +138,21 @@ msgid "Get tracked link"
 msgstr "Krijg gevolgde link"
 
 #. module: website_links
+#: model:ir.model.fields,field_description:website_links.field_link_tracker__id
+msgid "ID"
+msgstr "ID"
+
+#. module: website_links
 #. openerp-web
 #: code:addons/website_links/static/src/xml/recent_link.xml:0
 #, python-format
 msgid "Icon"
 msgstr "Icoon"
+
+#. module: website_links
+#: model:ir.model.fields,field_description:website_links.field_link_tracker____last_update
+msgid "Last Modified on"
+msgstr "Laatst gewijzigd op"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
@@ -147,7 +162,7 @@ msgstr " Vorige maand"
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 msgid "Last Week"
-msgstr "Vorige week"
+msgstr "Laatste week"
 
 #. module: website_links
 #: model:ir.model,name:website_links.model_link_tracker
@@ -234,7 +249,7 @@ msgstr "De code kan niet leeg gelaten worden"
 #: code:addons/website_links/static/src/js/website_links_charts.js:0
 #, python-format
 msgid "There is no data to show"
-msgstr "Er zijn geen gegevens om te tonen"
+msgstr "Er is geen data om te tonen"
 
 #. module: website_links
 #. openerp-web
@@ -251,7 +266,8 @@ msgid ""
 " or in Odoo reports to track opportunities and related revenues."
 msgstr ""
 "Deze trackers kunnen worden gebruikt in Google Analytics om klikken en "
-"bezoekers te volgen, of in Odoo rapportages om prospects en omzet te volgen."
+"bezoekers te volgen, of in Odoo rapportages om verkoopkansen en omzet te "
+"volgen."
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
@@ -276,7 +292,7 @@ msgstr "Niet gedefinieerd"
 #: code:addons/website_links/models/link_tracker.py:0
 #, python-format
 msgid "Visit Webpage Statistics"
-msgstr ""
+msgstr "Bezoek website statistieken"
 
 #. module: website_links
 #. openerp-web
@@ -322,7 +338,7 @@ msgstr "Bijv. Nieuwsbrieven, sociaal netwerk, ..."
 #: code:addons/website_links/static/src/js/website_links.js:0
 #, python-format
 msgid "e.g. Promotion of June, Winter Newsletter, .."
-msgstr "Bijv. Promotie van juni, winter nieuwsbrief, .."
+msgstr "Bijv. Promotie van juni, winter neiuwsbrief, .."
 
 #. module: website_links
 #. openerp-web

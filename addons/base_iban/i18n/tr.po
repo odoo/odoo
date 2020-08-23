@@ -3,19 +3,22 @@
 # 	* base_iban
 # 
 # Translators:
+# Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2017
+# Martin Trigaux, 2017
 # Ediz Duman <neps1192@gmail.com>, 2019
-# Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2019
-# Martin Trigaux, 2019
-# Murat Kaplan <muratk@projetgrup.com>, 2019
 # Umur Akın <umura@projetgrup.com>, 2019
+# Yedigen, 2019
+# Levent Karakaş <levent@mektup.at>, 2020
+# Murat Kaplan <muratk@projetgrup.com>, 2020
+# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~13.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: Umur Akın <umura@projetgrup.com>, 2019\n"
+"POT-Creation-Date: 2020-08-21 13:09+0000\n"
+"PO-Revision-Date: 2016-08-05 12:56+0000\n"
+"Last-Translator: Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2020\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,7 +31,7 @@ msgstr ""
 #: code:addons/base_iban/static/src/js/iban_widget.js:0
 #, python-format
 msgid "Account isn't IBAN compliant."
-msgstr ""
+msgstr "Hesap, IBAN uyumlu değil."
 
 #. module: base_iban
 #: model:ir.model,name:base_iban.model_res_partner_bank
@@ -42,10 +45,25 @@ msgid "Cannot compute the BBAN because the account number is not an IBAN."
 msgstr "BBAN hesaplanamıyor, çünkü hesap numarası bir IBAN değildir."
 
 #. module: base_iban
+#: model:ir.model.fields,field_description:base_iban.field_res_partner_bank__display_name
+msgid "Display Name"
+msgstr "Görünüm Adı"
+
+#. module: base_iban
 #: code:addons/base_iban/models/res_partner_bank.py:0
 #, python-format
 msgid "IBAN"
 msgstr "IBAN"
+
+#. module: base_iban
+#: model:ir.model.fields,field_description:base_iban.field_res_partner_bank__id
+msgid "ID"
+msgstr "ID"
+
+#. module: base_iban
+#: model:ir.model.fields,field_description:base_iban.field_res_partner_bank____last_update
+msgid "Last Modified on"
+msgstr "Son Düzenleme"
 
 #. module: base_iban
 #: code:addons/base_iban/models/res_partner_bank.py:0

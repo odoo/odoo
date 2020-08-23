@@ -3,16 +3,26 @@
 # 	* payment_authorize
 # 
 # Translators:
+# Olivier Lenoir <olivier.lenoir@free.fr>, 2016
+# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2016
+# Richard Mathot <rim@odoo.com>, 2017
+# Florian Hatat, 2017
+# e2f <projects@e2f.com>, 2018
+# Daniel & Delphine <dd2013@leschoupinous.net>, 2018
 # Martin Trigaux, 2019
 # Eloïse Stilmant <est@odoo.com>, 2019
+# Pauline Thiry <pth@odoo.com>, 2020
+# Aurélien Pillevesse <aurelienpillevesse@hotmail.fr>, 2020
+# Cécile Collart <cco@odoo.com>, 2020
+# Gilles Mangin <gilles.mangin@phidias.fr>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~13.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Eloïse Stilmant <est@odoo.com>, 2019\n"
+"POT-Creation-Date: 2020-08-21 13:09+0000\n"
+"PO-Revision-Date: 2016-08-05 13:06+0000\n"
+"Last-Translator: Gilles Mangin <gilles.mangin@phidias.fr>, 2020\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,11 +37,13 @@ msgid ""
 " If you don't have any account, ask your salesperson to grant you a portal "
 "access. "
 msgstr ""
+"Si vous n'avez pas de compte, veuillez demander à votre vendeur de vous "
+"donner un accès au portail."
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__authorize_client_key
 msgid "API Client Key"
-msgstr ""
+msgstr "Clé Client API"
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__authorize_login
@@ -41,7 +53,7 @@ msgstr "Identifiant API"
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__authorize_signature_key
 msgid "API Signature Key"
-msgstr ""
+msgstr "Clé de Signature API"
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__authorize_transaction_key
@@ -61,6 +73,9 @@ msgid ""
 "Code: %s\n"
 "Message: %s"
 msgstr ""
+"Erreur Authorize.net :\n"
+"Code : %s\n"
+"Message : %s"
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_token__authorize_profile
@@ -78,14 +93,28 @@ msgstr ""
 "(%s)"
 
 #. module: payment_authorize
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__display_name
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_token__display_name
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_transaction__display_name
+msgid "Display Name"
+msgstr "Nom affiché"
+
+#. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.acquirer_form_authorize
 msgid "Generate Client Key"
-msgstr ""
+msgstr "Générer Clé Client"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.acquirer_form_authorize
 msgid "How to get paid with Authorize.Net"
 msgstr "Comment se faire payer avec Authorize.Net"
+
+#. module: payment_authorize
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__id
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_token__id
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_transaction__id
+msgid "ID"
+msgstr "ID"
 
 #. module: payment_authorize
 #: code:addons/payment_authorize/models/payment.py:0
@@ -94,6 +123,15 @@ msgid ""
 "Invalid token found: the Authorize profile is missing.Please make sure the "
 "token has a valid acquirer reference."
 msgstr ""
+"Jeton trouvé non valide : le profile Authorize est manquant. Veuillez vous "
+"assurer que le jeton a une référence d'intermédiaire valide."
+
+#. module: payment_authorize
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer____last_update
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_token____last_update
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_transaction____last_update
+msgid "Last Modified on"
+msgstr "Dernière modification le"
 
 #. module: payment_authorize
 #: model:ir.model,name:payment_authorize.model_payment_acquirer
@@ -120,7 +158,7 @@ msgstr "Complétez votre profil s'il vous plaît."
 #: code:addons/payment_authorize/controllers/main.py:0
 #, python-format
 msgid "Please sign in to complete the payment."
-msgstr ""
+msgstr "Veuillez vous identifier pour finaliser le paiement."
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__provider
@@ -139,7 +177,7 @@ msgstr "Enregistrer les cartes"
 #: code:addons/payment_authorize/static/src/js/payment_form.js:0
 #, python-format
 msgid "Server Error"
-msgstr "Erreur de serveu"
+msgstr "Erreur de serveur"
 
 #. module: payment_authorize
 #: code:addons/payment_authorize/models/payment.py:0
@@ -186,6 +224,8 @@ msgid ""
 "Unable to fetch Client Key, make sure the API Login and Transaction Key are "
 "correct."
 msgstr ""
+"Impossible de récupérer la Clé Client, veuillez vous assurer que le Login "
+"API et la Clé de Transaction sont corrects."
 
 #. module: payment_authorize
 #: code:addons/payment_authorize/models/payment.py:0

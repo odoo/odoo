@@ -3,16 +3,18 @@
 # 	* payment_paypal
 # 
 # Translators:
+# Zoriana Zaiats, 2018
+# Bohdan Lisnenko, 2018
 # Martin Trigaux, 2019
-# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019
+# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~13.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019\n"
+"POT-Creation-Date: 2020-08-21 13:09+0000\n"
+"PO-Revision-Date: 2016-08-05 13:07+0000\n"
+"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2020\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -38,6 +40,12 @@ msgid "Add your Paypal account to Odoo"
 msgstr "Додайте ваш рахунок Paypal в Odoo"
 
 #. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__display_name
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_transaction__display_name
+msgid "Display Name"
+msgstr "Відобразити назву"
+
+#. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_email_account
 msgid "Email"
 msgstr "Ел. пошта"
@@ -45,7 +53,7 @@ msgstr "Ел. пошта"
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__fees_dom_fixed
 msgid "Fixed domestic fees"
-msgstr "Фіксована внутрішня комісія"
+msgstr "Фіксована домашня комісія"
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__fees_int_fixed
@@ -70,7 +78,19 @@ msgstr ""
 #. module: payment_paypal
 #: model_terms:ir.ui.view,arch_db:payment_paypal.acquirer_form_paypal
 msgid "How to configure your paypal account?"
-msgstr "Як налаштувати ваш обліковий запис у Paypal?"
+msgstr "Як налаштувати ваш обліковий запис в Paypal?"
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__id
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_transaction__id
+msgid "ID"
+msgstr "ID"
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer____last_update
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_transaction____last_update
+msgid "Last Modified on"
+msgstr "Останні зміни на"
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_seller_account
@@ -94,7 +114,7 @@ msgid ""
 "payments as they are made."
 msgstr ""
 "Передача платіжних даних дозволяє отримувати сповіщення про успішні платежі,"
-" після того, як вони будуть виконані."
+" як це робиться."
 
 #. module: payment_paypal
 #: model:ir.model,name:payment_paypal.model_payment_transaction
@@ -133,7 +153,7 @@ msgid ""
 "The Merchant ID is used to ensure communications coming from Paypal are "
 "valid and secured."
 msgstr ""
-"Merchant ID використовується для забезпечення того, щоби повідомлення, що "
+"Merchant ID використовується для забезпечення того, щоб повідомлення, що "
 "надходять від Paypal, були дійсними та захищеними."
 
 #. module: payment_paypal
@@ -149,9 +169,9 @@ msgstr "Використовувати IPN"
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__fees_dom_var
 msgid "Variable domestic fees (in percents)"
-msgstr "Вартісні внутрішні комісії (у відсотках)"
+msgstr "Вартісні внутрішні збори оплати (у відсотках)"
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__fees_int_var
 msgid "Variable international fees (in percents)"
-msgstr "Вартісні міжнародні комісії (у відсотках)"
+msgstr "Вартісні міжнародні збори оплати (у відсотках)"

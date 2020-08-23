@@ -2,12 +2,18 @@
 # This file contains the translation of the following modules:
 # 	* payment_alipay
 # 
+# Translators:
+# Dorin Hongu <dhongu@gmail.com>, 2020
+# Fekete Mihai <mihai.fekete@forestandbiomass.ro>, 2020
+# Martin Trigaux, 2020
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~13.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2019-08-26 09:12+0000\n"
+"POT-Creation-Date: 2020-08-21 13:09+0000\n"
+"PO-Revision-Date: 2019-08-12 11:51+0000\n"
+"Last-Translator: Martin Trigaux, 2020\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -38,23 +44,23 @@ msgstr ""
 #: code:addons/payment_alipay/models/payment.py:0
 #, python-format
 msgid "; multiple order found"
-msgstr ""
+msgstr "; s-au găsit mai multe rezultate"
 
 #. module: payment_alipay
 #: code:addons/payment_alipay/models/payment.py:0
 #, python-format
 msgid "; no order found"
-msgstr ""
+msgstr "; nu a fost găsit nici un rezultat"
 
 #. module: payment_alipay
 #: model:ir.model.fields,field_description:payment_alipay.field_payment_acquirer__alipay_payment_method
 msgid "Account"
-msgstr ""
+msgstr "Cont"
 
 #. module: payment_alipay
 #: model:ir.model.fields.selection,name:payment_alipay.selection__payment_acquirer__provider__alipay
 msgid "Alipay"
-msgstr ""
+msgstr "Alipay"
 
 #. module: payment_alipay
 #: model:ir.model.fields,field_description:payment_alipay.field_payment_acquirer__alipay_seller_email
@@ -85,9 +91,27 @@ msgid "Cross-border"
 msgstr ""
 
 #. module: payment_alipay
+#: model:ir.model.fields,field_description:payment_alipay.field_payment_acquirer__display_name
+#: model:ir.model.fields,field_description:payment_alipay.field_payment_transaction__display_name
+msgid "Display Name"
+msgstr "Nume afișat"
+
+#. module: payment_alipay
 #: model:ir.model.fields.selection,name:payment_alipay.selection__payment_acquirer__alipay_payment_method__express_checkout
 msgid "Express Checkout (only for Chinese Merchant)"
 msgstr ""
+
+#. module: payment_alipay
+#: model:ir.model.fields,field_description:payment_alipay.field_payment_acquirer__id
+#: model:ir.model.fields,field_description:payment_alipay.field_payment_transaction__id
+msgid "ID"
+msgstr "ID"
+
+#. module: payment_alipay
+#: model:ir.model.fields,field_description:payment_alipay.field_payment_acquirer____last_update
+#: model:ir.model.fields,field_description:payment_alipay.field_payment_transaction____last_update
+msgid "Last Modified on"
+msgstr "Ultima modificare la"
 
 #. module: payment_alipay
 #: model:ir.model.fields,field_description:payment_alipay.field_payment_acquirer__alipay_md5_signature_key
@@ -102,17 +126,17 @@ msgstr ""
 #. module: payment_alipay
 #: model:ir.model,name:payment_alipay.model_payment_acquirer
 msgid "Payment Acquirer"
-msgstr ""
+msgstr "Procesator Plată"
 
 #. module: payment_alipay
 #: model:ir.model,name:payment_alipay.model_payment_transaction
 msgid "Payment Transaction"
-msgstr ""
+msgstr "Tranzacție plată"
 
 #. module: payment_alipay
 #: model:ir.model.fields,field_description:payment_alipay.field_payment_acquirer__provider
 msgid "Provider"
-msgstr ""
+msgstr "Furnizor"
 
 #. module: payment_alipay
 #: model:ir.model.fields,help:payment_alipay.field_payment_acquirer__alipay_md5_signature_key

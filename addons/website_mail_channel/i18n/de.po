@@ -3,22 +3,22 @@
 # 	* website_mail_channel
 # 
 # Translators:
-# 4e7311735ad180fde514b5b19202d965, 2019
-# DE T2 <e2f48d4s5vd1s2@outlook.com>, 2019
-# Ralf Hilgenstock <rh@dialoge.info>, 2019
-# Martin Trigaux, 2019
-# Wolfgang Taferner, 2019
-# Ermin Trevisan <trevi@twanda.com>, 2019
+# Niki Waibel, 2017
+# 4e7311735ad180fde514b5b19202d965, 2017
+# DE T2 <e2f48d4s5vd1s2@outlook.com>, 2017
 # Johannes Croe <jcr@odoo.com>, 2019
 # Chris Egal <sodaswed@web.de>, 2019
+# Ermin Trevisan <trevi@twanda.com>, 2020
+# Martin Trigaux, 2020
+# Leon Grill <leg@odoo.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.4\n"
+"Project-Id-Version: Odoo Server saas~13.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-12 11:32+0000\n"
-"PO-Revision-Date: 2019-08-26 09:16+0000\n"
-"Last-Translator: Chris Egal <sodaswed@web.de>, 2019\n"
+"POT-Creation-Date: 2020-08-21 13:10+0000\n"
+"PO-Revision-Date: 2016-08-05 13:13+0000\n"
+"Last-Translator: Leon Grill <leg@odoo.com>, 2020\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -90,13 +90,13 @@ msgstr ""
 
 #. module: website_mail_channel
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.mail_channels
-#: model_terms:ir.ui.view,arch_db:website_mail_channel.subscribe
+#: model_terms:ir.ui.view,arch_db:website_mail_channel.s_channel
 msgid "<i class=\"fa fa-envelope-o\"/> send mail"
 msgstr "<i class=\"fa fa-envelope-o\"/>Email senden"
 
 #. module: website_mail_channel
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.mail_channels
-#: model_terms:ir.ui.view,arch_db:website_mail_channel.subscribe
+#: model_terms:ir.ui.view,arch_db:website_mail_channel.s_channel
 msgid "<i class=\"fa fa-file-o\"/> archives"
 msgstr "<i class=\"fa fa-file-o\"/> Archive"
 
@@ -109,14 +109,9 @@ msgstr ""
 
 #. module: website_mail_channel
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.mail_channels
-#: model_terms:ir.ui.view,arch_db:website_mail_channel.subscribe
+#: model_terms:ir.ui.view,arch_db:website_mail_channel.s_channel
 msgid "<i class=\"fa fa-times\"/> unsubscribe"
 msgstr "<i class=\"fa fa-times\"/> Abmelden"
-
-#. module: website_mail_channel
-#: model_terms:ir.ui.view,arch_db:website_mail_channel.subscribe
-msgid "<span class=\"oe_snippet_thumbnail_title\">Discussion Group</span>"
-msgstr "<span class=\"oe_snippet_thumbnail_title\">Diskussionsgruppe</span>"
 
 #. module: website_mail_channel
 #: model:mail.template,body_html:website_mail_channel.mail_template_list_subscribe
@@ -153,8 +148,8 @@ msgid ""
 "                        <br/><br/>\n"
 "                        If this was a mistake or you did not requested this action, please ignore this message.\n"
 "                        % if user.signature\n"
-"                        <br/>\n"
-"                        ${user.signature | safe}\n"
+"                            <br/>\n"
+"                            ${user.signature | safe}\n"
 "                        % endif\n"
 "                    </div>\n"
 "                </td></tr>\n"
@@ -225,15 +220,15 @@ msgstr ""
 "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
 "                    <div style=\"margin: 0px; padding: 0px;\">\n"
-"                        Hallo,<br/><br/>\n"
-"                       Sie haben sich für die Mailingliste angemeldet<strong>${object.name}</strong>.\n"
+"                        Guten Tag<br/><br/>\n"
+"                        Sie haben sich angemeldet für die Mailing-Liste <strong>${object.name}</strong>.\n"
 "                        <br/><br/>\n"
-"                       Zur Bestätigung besuchen Sie bitte den folgenden Link: <strong><a href=\"${ctx['token_url']}\">${ctx['token_url']}</a></strong>\n"
+"                        Zur Bestätigung klicken Sie bitte auf folgenden Link: <strong><a href=\"${ctx['token_url']}\">${ctx['token_url']}</a></strong>\n"
 "                        <br/><br/>\n"
-"                       Wenn dies ein Fehler war oder Sie diese Aktion nicht angefordert haben, ignorieren Sie diese Nachricht.\n"
+"                        Falls Sie diese Anmeldung nicht gemacht haben, ignorieren Sie diese Nachricht.\n"
 "                        % if user.signature\n"
-"                        <br/>\n"
-"                        ${user.signature | safe}\n"
+"                            <br/>\n"
+"                            ${user.signature | safe}\n"
 "                        % endif\n"
 "                    </div>\n"
 "                </td></tr>\n"
@@ -314,8 +309,8 @@ msgid ""
 "                        <br/><br/>\n"
 "                        If this was a mistake or you did not requested this action, please ignore this message.\n"
 "                        % if user.signature:\n"
-"                        <br/>\n"
-"                        ${user.signature | safe}\n"
+"                            <br/>\n"
+"                            ${user.signature | safe}\n"
 "                        % endif\n"
 "                    </div>\n"
 "                </td></tr>\n"
@@ -386,15 +381,15 @@ msgstr ""
 "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
 "                    <div style=\"margin: 0px; padding: 0px;\">\n"
-"                        Hallo,<br/><br/>\n"
-"                        Sie haben die Abmeldung von der Mailingliste beantragt<strong>${object.name}</strong>.\n"
+"                        Guten Tag<br/><br/>\n"
+"                        Sie wollen sich abmelden von <strong>${object.name}</strong>.\n"
 "                        <br/><br/>\n"
-"                        Zur Bestätigung besuchen Sie bitte den folgenden Link: <strong><a href=\"${ctx['token_url']}\">${ctx['token_url']}</a></strong>.\n"
+"                        Zur Bestätigung klicken Sie bitte auf folgenden Link: <strong><a href=\"${ctx['token_url']}\">${ctx['token_url']}</a></strong>.\n"
 "                        <br/><br/>\n"
-"                       Wenn dies ein Fehler war oder Sie diese Aktion nicht angefordert haben, ignorieren Sie diese Nachricht.\n"
+"                        Falls Sie diese Abmeldung nicht gewünscht haben, ignorieren Sie bitte diese Nachricht.\n"
 "                        % if user.signature:\n"
-"                        <br/>\n"
-"                        ${user.signature | safe}\n"
+"                            <br/>\n"
+"                            ${user.signature | safe}\n"
 "                        % endif\n"
 "                    </div>\n"
 "                </td></tr>\n"
@@ -441,13 +436,6 @@ msgstr ""
 "            "
 
 #. module: website_mail_channel
-#. openerp-web
-#: code:addons/website_mail_channel/static/src/js/website_mail_channel.editor.js:15
-#, python-format
-msgid "Add a Subscribe Button"
-msgstr "Hinzufügen eines Button zur Anmeldung"
-
-#. module: website_mail_channel
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.mail_channels
 msgid "Alone we can do so little, together we can do so much"
 msgstr "Alleine können wir wenig erreichen, zusammen sehr viel."
@@ -455,7 +443,7 @@ msgstr "Alleine können wir wenig erreichen, zusammen sehr viel."
 #. module: website_mail_channel
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.group_messages
 msgid "Archives"
-msgstr "Archive"
+msgstr "Archiv"
 
 #. module: website_mail_channel
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.group_message
@@ -481,11 +469,6 @@ msgid "By thread"
 msgstr "Nach Thread"
 
 #. module: website_mail_channel
-#: model_terms:ir.ui.view,arch_db:website_mail_channel.subscribe
-msgid "Change Discussion List"
-msgstr "Ändere Diskussionsliste"
-
-#. module: website_mail_channel
 #: model:mail.template,subject:website_mail_channel.mail_template_list_subscribe
 msgid "Confirm subscription to ${object.name}"
 msgstr "Bestätigen Sie das Abonnement für ${object.name}"
@@ -496,21 +479,26 @@ msgid "Confirm unsubscription to ${object.name}"
 msgstr "Bestätigen Sie die Abmeldung von ${object.name}"
 
 #. module: website_mail_channel
+#: model_terms:ir.ui.view,arch_db:website_mail_channel.s_channel_options
+msgid "Create a public discussion group in your backend"
+msgstr ""
+
+#. module: website_mail_channel
 #: model:ir.model,name:website_mail_channel.model_mail_channel
 msgid "Discussion Channel"
 msgstr "Diskussionskanal"
 
 #. module: website_mail_channel
-#. openerp-web
-#: code:addons/website_mail_channel/static/src/js/website_mail_channel.editor.js:16
-#, python-format
-msgid "Discussion List"
-msgstr "Diskussionsliste"
+#: model:ir.model.fields,field_description:website_mail_channel.field_mail_channel__display_name
+#: model:ir.model.fields,field_description:website_mail_channel.field_mail_mail__display_name
+#: model:ir.model.fields,field_description:website_mail_channel.field_website__display_name
+msgid "Display Name"
+msgstr "Anzeigename"
 
 #. module: website_mail_channel
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.group_message
 msgid "Follow-Ups"
-msgstr "Folgenachrichten"
+msgstr "Mahnungen"
 
 #. module: website_mail_channel
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.mail_channels
@@ -518,22 +506,37 @@ msgid "Group"
 msgstr "Gruppe"
 
 #. module: website_mail_channel
+#: model:ir.model.fields,field_description:website_mail_channel.field_mail_channel__id
+#: model:ir.model.fields,field_description:website_mail_channel.field_mail_mail__id
+#: model:ir.model.fields,field_description:website_mail_channel.field_website__id
+msgid "ID"
+msgstr "ID"
+
+#. module: website_mail_channel
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.invalid_token_subscription
 msgid "Invalid or expired confirmation link."
 msgstr "Bestätigungslink ungültig oder abgelaufen."
 
 #. module: website_mail_channel
+#: model:ir.model.fields,field_description:website_mail_channel.field_mail_channel____last_update
+#: model:ir.model.fields,field_description:website_mail_channel.field_mail_mail____last_update
+#: model:ir.model.fields,field_description:website_mail_channel.field_website____last_update
+msgid "Last Modified on"
+msgstr "Letzte Änderung am"
+
+#. module: website_mail_channel
+#: code:addons/website_mail_channel/models/website.py:0
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.group_message
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.group_messages
-#: model:website.menu,name:website_mail_channel.menu_mailing_list
+#, python-format
 msgid "Mailing Lists"
 msgstr "E-Mail-Empfängerlisten"
 
 #. module: website_mail_channel
-#: code:addons/website_mail_channel/models/mail_mail.py:20
+#: code:addons/website_mail_channel/models/mail_mail.py:0
 #, python-format
 msgid "Mailing-List"
-msgstr "E-Mail-Versandliste"
+msgstr "E-Mailversandliste"
 
 #. module: website_mail_channel
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.mail_channels
@@ -551,7 +554,7 @@ msgid "Outgoing Mails"
 msgstr "Postausgang"
 
 #. module: website_mail_channel
-#: code:addons/website_mail_channel/models/mail_mail.py:21
+#: code:addons/website_mail_channel/models/mail_mail.py:0
 #, python-format
 msgid "Post to"
 msgstr "Nachricht an"
@@ -568,7 +571,7 @@ msgstr "Bleiben Sie in Kontakt mit der Community"
 
 #. module: website_mail_channel
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.mail_channels
-#: model_terms:ir.ui.view,arch_db:website_mail_channel.subscribe
+#: model_terms:ir.ui.view,arch_db:website_mail_channel.s_channel
 msgid "Subscribe"
 msgstr "Abonnieren"
 
@@ -578,7 +581,7 @@ msgid "The address"
 msgstr "Die Adresse"
 
 #. module: website_mail_channel
-#: code:addons/website_mail_channel/controllers/main.py:245
+#: code:addons/website_mail_channel/controllers/main.py:0
 #, python-format
 msgid ""
 "The address %s is already unsubscribed or was never subscribed to any "
@@ -588,11 +591,16 @@ msgstr ""
 "Versandliste angemeldet."
 
 #. module: website_mail_channel
-#: code:addons/website_mail_channel/models/mail_mail.py:22
+#: code:addons/website_mail_channel/models/mail_mail.py:0
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.mail_channels
 #, python-format
 msgid "Unsubscribe"
 msgstr "Abmelden"
+
+#. module: website_mail_channel
+#: model:ir.model,name:website_mail_channel.model_website
+msgid "Website"
+msgstr "Website"
 
 #. module: website_mail_channel
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.confirmation_subscription
@@ -600,7 +608,7 @@ msgid "You have been correctly"
 msgstr "Sie wurden korrekt"
 
 #. module: website_mail_channel
-#: model_terms:ir.ui.view,arch_db:website_mail_channel.subscribe
+#: model_terms:ir.ui.view,arch_db:website_mail_channel.s_channel
 msgid "a confirmation email has been sent."
 msgstr "eine Bestätigungs-E-Mail wurde gesendet."
 
@@ -671,7 +679,7 @@ msgstr "angemeldet"
 #. module: website_mail_channel
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.confirmation_subscription
 msgid "to the mailing list."
-msgstr "bei der E-Mail-Versandliste."
+msgstr "bei der E-Mailversandliste."
 
 #. module: website_mail_channel
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.confirmation_subscription
@@ -680,6 +688,6 @@ msgstr "abgemeldet"
 
 #. module: website_mail_channel
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.mail_channels
-#: model_terms:ir.ui.view,arch_db:website_mail_channel.subscribe
+#: model_terms:ir.ui.view,arch_db:website_mail_channel.s_channel
 msgid "your email..."
 msgstr "Ihre E-Mail..."

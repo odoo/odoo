@@ -2,12 +2,18 @@
 # This file contains the translation of the following modules:
 # 	* calendar_sms
 # 
+# Translators:
+# Dorin Hongu <dhongu@gmail.com>, 2019
+# Foldi Robert <foldirobert@nexterp.ro>, 2020
+# Martin Trigaux, 2020
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~13.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2019-08-26 09:09+0000\n"
+"POT-Creation-Date: 2020-08-21 13:09+0000\n"
+"PO-Revision-Date: 2017-12-13 14:52+0000\n"
+"Last-Translator: Martin Trigaux, 2020\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -18,7 +24,7 @@ msgstr ""
 #. module: calendar_sms
 #: model:ir.model,name:calendar_sms.model_calendar_event
 msgid "Calendar Event"
-msgstr ""
+msgstr "Eveniment Calendar"
 
 #. module: calendar_sms
 #: model:sms.template,name:calendar_sms.sms_template_data_calendar_reminder
@@ -26,9 +32,16 @@ msgid "Calendar Event: Reminder"
 msgstr ""
 
 #. module: calendar_sms
+#: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm__display_name
+#: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm_manager__display_name
+#: model:ir.model.fields,field_description:calendar_sms.field_calendar_event__display_name
+msgid "Display Name"
+msgstr "Nume afișat"
+
+#. module: calendar_sms
 #: model:ir.model,name:calendar_sms.model_calendar_alarm
 msgid "Event Alarm"
-msgstr ""
+msgstr "Alarmă eveniment"
 
 #. module: calendar_sms
 #: model:ir.model,name:calendar_sms.model_calendar_alarm_manager
@@ -37,16 +50,28 @@ msgstr ""
 
 #. module: calendar_sms
 #: model:sms.template,body:calendar_sms.sms_template_data_calendar_reminder
-msgid ""
-"Event reminder: ${object.name} on ${object.start_datetime or "
-"object.start_date}"
+msgid "Event reminder: ${object.name}, ${object.display_time}"
 msgstr ""
 
 #. module: calendar_sms
 #: code:addons/calendar_sms/models/calendar.py:0
 #, python-format
-msgid "Event reminder: %s on %s."
+msgid "Event reminder: %s, %s."
 msgstr ""
+
+#. module: calendar_sms
+#: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm__id
+#: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm_manager__id
+#: model:ir.model.fields,field_description:calendar_sms.field_calendar_event__id
+msgid "ID"
+msgstr "ID"
+
+#. module: calendar_sms
+#: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm____last_update
+#: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm_manager____last_update
+#: model:ir.model.fields,field_description:calendar_sms.field_calendar_event____last_update
+msgid "Last Modified on"
+msgstr "Ultima modificare la"
 
 #. module: calendar_sms
 #: model:ir.model.fields.selection,name:calendar_sms.selection__calendar_alarm__alarm_type__sms
@@ -56,9 +81,9 @@ msgstr ""
 #. module: calendar_sms
 #: model:ir.actions.act_window,name:calendar_sms.calendar_event_act_window_sms_composer_single
 msgid "Send SMS to attendees"
-msgstr ""
+msgstr "Trimite SMS  la participanți"
 
 #. module: calendar_sms
 #: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm__alarm_type
 msgid "Type"
-msgstr ""
+msgstr "Tip"
