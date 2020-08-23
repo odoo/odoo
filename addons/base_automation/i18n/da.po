@@ -3,21 +3,23 @@
 # * base_automation
 # 
 # Translators:
-# Martin Trigaux, 2017
-# Ejner Sønniksen <ejner@vkdata.dk>, 2017
-# Sanne Kristensen <sanne@vkdata.dk>, 2017
 # Morten Schou <ms@msteknik.dk>, 2017
-# Pernille Kristensen <pernillekristensen1994@gmail.com>, 2017
 # Jesper Carstensen <jc@danodoo.dk>, 2017
 # Hans Henrik Gabelgaard <hhg@gabelgaard.org>, 2017
+# Ejner Sønniksen <ejner@vkdata.dk>, 2017
+# Pernille Kristensen <pernillekristensen1994@gmail.com>, 2017
+# Martin Trigaux, 2017
 # lhmflexerp <lhm@flexerp.dk>, 2017
+# Sanne Kristensen <sanne@vkdata.dk>, 2018
+# Mads Søndergaard, 2020
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-02-19 13:43+0000\n"
-"PO-Revision-Date: 2018-02-19 13:43+0000\n"
-"Last-Translator: lhmflexerp <lhm@flexerp.dk>, 2017\n"
+"PO-Revision-Date: 2017-09-20 10:15+0000\n"
+"Last-Translator: Mads Søndergaard, 2020\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -158,12 +160,12 @@ msgstr "Før opdater domæne"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_binding_model_id
 msgid "Binding Model"
-msgstr ""
+msgstr "Bindingsmodel"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_binding_type
 msgid "Binding Type"
-msgstr ""
+msgstr "Bindingstype"
 
 #. module: base_automation
 #: selection:base.automation.lead.test,state:0
@@ -178,7 +180,7 @@ msgstr "Sæt kryds i denne boks hvis denne kontakt er en kunde."
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_child_ids
 msgid "Child Actions"
-msgstr ""
+msgstr "Nedarvedes handlinger"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation_child_ids
@@ -186,6 +188,8 @@ msgid ""
 "Child server actions that will be executed. Note that the last return "
 "returned action value will be used as global return value."
 msgstr ""
+"Afkoms server handlinger, som vil blive udført. Bemærk at den sidst "
+"returnerede handlings værdi, vil blive brugs som global returnerings værdi."
 
 #. module: base_automation
 #: model:ir.actions.act_window,help:base_automation.base_automation_act
@@ -205,7 +209,7 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_crud_model_id
 msgid "Create/Write Target Model"
-msgstr ""
+msgstr "Opret/skriv mål model"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_create_uid
@@ -347,7 +351,7 @@ msgstr "Linje"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_link_field_id
 msgid "Link using field"
-msgstr ""
+msgstr "Forbind via felt"
 
 #. module: base_automation
 #: selection:base.automation,trg_date_range_type:0
@@ -371,11 +375,13 @@ msgid ""
 "Model for record creation / update. Set this field only to specify a "
 "different model than the base model."
 msgstr ""
+"Model for datasæt oprettelse / opdatering. Udfyld kun dette felt for at "
+"angive en anden model end basis modellen."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation_model_id
 msgid "Model on which the server action runs."
-msgstr ""
+msgstr "Model hvorpå server handlingen kører."
 
 #. module: base_automation
 #: selection:base.automation,trg_date_range_type:0
@@ -423,6 +429,8 @@ msgid ""
 "Optional help text for the users with a description of the target view, such"
 " as its usage and purpose."
 msgstr ""
+"Valgfri hjælpetekst til brugere, med en beskrivelse af mål visningen, så som"
+" forbrug eller formål."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test_partner_id
@@ -445,6 +453,8 @@ msgid ""
 "Provide the field used to link the newly created record on the record on "
 "used by the server action."
 msgstr ""
+"Angiv feltet som er brugt til at forbinde det nyligt oprettede datasæt til "
+"det datasæt brugt af server handlingen."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_code
@@ -482,6 +492,8 @@ msgid ""
 "Setting a value makes this action available in the sidebar for the given "
 "model."
 msgstr ""
+"Indstillingen af en værdi giver adgang til denne handling gennem sidebaren "
+"for den givne model."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test_state
@@ -543,7 +555,7 @@ msgstr "Bruger"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_fields_lines
 msgid "Value Mapping"
-msgstr ""
+msgstr "Værdi mapping"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation_trg_date_calendar_id
