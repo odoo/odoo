@@ -6,7 +6,6 @@
 # Dinar <gabbasov@it-projects.info>, 2019
 # Amaro Vita <vita.amaro@gmail.com>, 2019
 # Vitalius Sharkhun <al070572sva@gmail.com>, 2019
-# Denis Baranov <baranov@itlibertas.com>, 2019
 # 6da4f49c4b78e697e34b24b2a66289f5, 2019
 # Evgeny <transingularity@gmail.com>, 2019
 # Gennady Marchenko <gennadym@gmail.com>, 2019
@@ -30,6 +29,7 @@
 # Артур Чеботарь <artcha.chebotar@gmail.com>, 2020
 # Vasiliy Korobatov <korobatov@gmail.com>, 2020
 # Алексей Хомяков <alexey.homyakov@gmail.com>, 2020
+# Denis Baranov <baranov@itlibertas.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -37,7 +37,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-07-23 15:12+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
-"Last-Translator: Алексей Хомяков <alexey.homyakov@gmail.com>, 2020\n"
+"Last-Translator: Denis Baranov <baranov@itlibertas.com>, 2020\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -7689,6 +7689,12 @@ msgid ""
 "                                <b attrs=\"{'invisible': [('type', '!=', 'private')]}\">Private Address</b>\n"
 "                                <b attrs=\"{'invisible': [('type', '!=', False)]}\">Address</b>"
 msgstr ""
+"<b attrs=\"{'invisible': [('type', '!=', 'contact')]}\">Адрес компании</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', 'invoice')]}\">Адрес выставления счёта</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', 'delivery')]}\">Адрес доставки</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', 'other')]}\">Другой адрес</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', 'private')]}\">Личный адрес</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', False)]}\">Адрес</b>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_short_form
@@ -17331,7 +17337,7 @@ msgstr "Загрузить перевод"
 #. module: base
 #: model:ir.actions.act_window,name:base.demo_force_install_action
 msgid "Load demo data"
-msgstr "Скачать демо-данные"
+msgstr "Загрузить демо-данные"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_lang__code
@@ -21139,7 +21145,7 @@ msgstr "Другое"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__type__other
 msgid "Other Address"
-msgstr ""
+msgstr "Другой адрес"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_extra
@@ -23302,7 +23308,7 @@ msgstr "Продажи"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "Sales & Purchase"
-msgstr ""
+msgstr "Продажи и закупки"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_expense

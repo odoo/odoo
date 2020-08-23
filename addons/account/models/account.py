@@ -1647,7 +1647,12 @@ class AccountTax(models.Model):
                         incl_fixed_amount += tax_amount
                         # Avoid unecessary re-computation
                         cached_tax_amounts[i] = tax_amount
-                    if store_included_tax_total:
+                    # In case of a zero tax, do not store the base amount since the tax amount will
+                    # be zero anyway. Group and Python taxes have an amount of zero, so do not take
+                    # them into account.
+                    if store_included_tax_total and (
+                        tax.amount or tax.amount_type not in ("percent", "division", "fixed")
+                    ):
                         total_included_checkpoints[i] = base
                         store_included_tax_total = False
                 i -= 1

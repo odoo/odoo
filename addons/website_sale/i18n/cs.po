@@ -33,7 +33,7 @@ msgstr "\" kategorie."
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.option_collapse_categories_recursive
 msgid "#{'Unfold' if c.id in category.parents_and_self.ids else 'Fold'}"
-msgstr ""
+msgstr "#{'Rozbalit' if c.id in category.parents_and_self.ids else 'Sbalit'}"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
@@ -1387,6 +1387,17 @@ msgid ""
 "will respond to any DMCA take down notices received and you will take down "
 "the content."
 msgstr ""
+"Pokud váš web nebo mobilní aplikace umožňují uživatelům vytvářet obsah a "
+"zveřejňovat tento obsah ostatním uživatelům, v části <b>Obsah</b> budou "
+"uživatelé informováni o tom, že vlastní práva na obsah, který vytvořili. "
+"<br/>Klauzule “Obsah” obvykle uvádí, že vám uživatelé musí dát (vývojář webu"
+" nebo mobilní aplikace) licenci, abyste mohli tento obsah sdílet na svém "
+"webu / mobilní aplikaci a zpřístupnit jej ostatním uživatelům. <br/>Protože "
+"obsah vytvořený uživateli je veřejný ostatním uživatelům, doložka o oznámení"
+" DMCA (nebo Sekce Porušení autorských práv) je užitečná pro informování "
+"uživatelů a autorů autorských práv, že pokud se zjistí, že jakýkoli obsah "
+"porušuje autorská práva, odpovíte na všechna obdržená oznámení o odebrání "
+"podle zákona DMCA a obsah odstraníte."
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__image_1920
@@ -1661,7 +1672,7 @@ msgstr "Není definován žádný produkt"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "No product defined in category \""
-msgstr ""
+msgstr "Není definován žádný produkt v kategorii \""
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.website_sale_visitor_product_action
@@ -1819,6 +1830,8 @@ msgid ""
 "Order Lines to be displayed on the website. They should not be used for "
 "computation purpose."
 msgstr ""
+"Řádky, které se mají zobrazit na webu. Neměly by být použity pro účely "
+"výpočtu."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.short_cart_summary
@@ -2195,6 +2208,8 @@ msgstr ""
 msgid ""
 "Provided video URL for '%s' is not valid. Please enter a valid video URL."
 msgstr ""
+"Zadaná adresa videa pro  „%s“ není platná. Zadejte prosím platnou adresu "
+"videa."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_search_view_website
@@ -2978,7 +2993,7 @@ msgstr "Produktová kategorie webu"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_public_category_form_view
 msgid "Website Public Categories"
-msgstr ""
+msgstr "Veřejné kategorie webu"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__website_sequence
@@ -3061,7 +3076,7 @@ msgstr ""
 #: code:addons/website_sale/models/product.py:0
 #, python-format
 msgid "With this action, '%s' website would not have any pricelist available."
-msgstr ""
+msgstr "Při této akci by web „%s“ neměl k dispozici žádný ceník."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
@@ -3234,7 +3249,7 @@ msgstr "ml-2"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "mt-2 ml-md-2"
-msgstr ""
+msgstr "mt-2 ml-md-2"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address

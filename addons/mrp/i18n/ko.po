@@ -534,6 +534,17 @@ msgid "Archived"
 msgstr "보존"
 
 #. module: mrp
+#: code:addons/mrp/models/mrp_production.py:0
+#, python-format
+msgid ""
+"At least one work order has a quantity produced lower than the quantity "
+"produced in the manufacturing order. You must complete the work orders "
+"before posting the inventory."
+msgstr ""
+"하나 이상의 작업 지시서에 제조 주문에서 생산된 수량보다 적게 생산된 수량이 있습니다. 재고를 전기하기 전에 작업 지시서를 완료해야 "
+"합니다."
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 msgid "At the creation of a Manufacturing Order."
 msgstr "제조 주문서를 만들 때."

@@ -26,7 +26,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-6">
+                <div class="col-6" style="padding-right: 0px;">
                     <t t-if="not pre_printed_report">
                         <!-- (1) Nombre de Fantasia -->
                         <!-- (2) Apellido y Nombre o Razon Social -->
@@ -43,7 +43,7 @@
                             header_address.zip,
                             header_address.country_id and header_address.country_id.name] if item])"/><span t-if="header_address.phone"> - </span><span t-if="header_address.phone" style="white-space: nowrap;" t-esc="'Tel: ' + header_address.phone"/>
                         <br/>
-                        <span t-att-style="'color: %s;' % o.company_id.primary_color" t-esc="' - '.join([item for item in [header_address.website.replace('https://', '').replace('http://', ''), header_address.email] if item])"/>
+                        <span t-att-style="'color: %s;' % o.company_id.primary_color" t-esc="' - '.join([item for item in [(header_address.website or '').replace('https://', '').replace('http://', ''), header_address.email] if item])"/>
                     </t>
                 </div>
                 <div class="col-6 text-right" style="padding-left: 0px;">
@@ -173,7 +173,7 @@
                     <!-- IDENTIFICACION (ADQUIRIENTE-LOCATARIO-PRESTARIO) -->
 
                     <!-- (14) Apellido uy Nombre: Denominicacion o Razon Soclial -->
-                    <strong>Customer: </strong><span t-field="o.partner_id.name"/>
+                    <strong>Customer: </strong><span t-field="o.partner_id.commercial_partner_id.name"/>
 
                     <!-- (15) Domicilio Comercial -->
                     <br/>
@@ -346,7 +346,7 @@
                     <!-- IDENTIFICACION (ADQUIRIENTE-LOCATARIO-PRESTARIO) -->
 
                     <!-- (14) Apellido uy Nombre: Denominicacion o Razon Soclial -->
-                    <strong>Customer: </strong><span t-field="o.partner_id.name"/>
+                    <strong>Customer: </strong><span t-field="o.partner_id.commercial_partner_id.name"/>
 
                     <!-- (15) Domicilio Comercial -->
                     <br/>

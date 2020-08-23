@@ -928,6 +928,21 @@ class MrpProduction(models.Model):
 
     def post_inventory(self):
         for order in self:
+            # In case the routing allows multiple WO running at the same time, it is possible that
+            # the quantity produced in one of the workorders is lower than the quantity produced in
+            # the MO.
+            if order.product_id.tracking != "none" and any(
+                wo.state not in ["done", "cancel"]
+                and float_compare(wo.qty_produced, order.qty_produced, precision_rounding=order.product_uom_id.rounding) == -1
+                for wo in order.workorder_ids
+            ):
+                raise UserError(
+                    _(
+                        "At least one work order has a quantity produced lower than the quantity produced in the manufacturing order. "
+                        + "You must complete the work orders before posting the inventory."
+                    )
+                )
+
             moves_not_to_do = order.move_raw_ids.filtered(lambda x: x.state == 'done')
             moves_to_do = order.move_raw_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
             for move in moves_to_do.filtered(lambda m: m.product_qty == 0.0 and m.quantity_done > 0):

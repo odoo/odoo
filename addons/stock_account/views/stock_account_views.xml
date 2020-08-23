@@ -90,6 +90,7 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">[('product_id.type', '=', 'product')]</field>
             <field name="context">{'search_default_group_by_product_id': 1}</field>
+            <field name="target">current</field>
             <field name="search_view_id" ref="view_inventory_valuation_search"/>
         </record>
         <menuitem id="menu_valuation" name="Inventory Valuation" parent="stock.menu_warehouse_report" sequence="110" action="action_stock_inventory_valuation"/>

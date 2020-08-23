@@ -52,7 +52,7 @@ class PaymentAcquirerStripe(models.Model):
 
         self._add_available_payment_method_types(stripe_session_data, tx_values)
 
-        tx_values['session_id'] = self._create_stripe_session(stripe_session_data)
+        tx_values['session_id'] = self.with_context(stripe_manual_payment=True)._create_stripe_session(stripe_session_data)
 
         return tx_values
 

@@ -6,7 +6,7 @@
      © 2015 Carlos Liébana - Factor Libre
      © 2015 Albert Cabedo - GAFIC consultores
      © 2015 Vicent Cubells
-     © 2013-2016 Pedro M. Baeza
+     © 2013-2020 Pedro M. Baeza
      © 2020 Harald Panten - Sygel Technology
      License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
 <odoo>
@@ -678,9 +678,10 @@
         <field name="type_tax_use">purchase</field>
         <field name="name">Retenciones IRPF (Trabajadores) dinerarios</field>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
-        <field name="amount" eval="-21"/>
+        <!-- Obtained from https://www.agenciatributaria.es/AEAT.internet/Inicio/La_Agencia_Tributaria/Campanas/Retenciones/Cuadro_informativo_tipos_de_retencion_aplicables__2020_.shtml -->
+        <field name="amount" eval="-15"/>
         <field name="amount_type">percent</field>
-        <field name="tax_group_id" ref="tax_group_retenciones_21"/>
+        <field name="tax_group_id" ref="tax_group_retenciones_15"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 100,
@@ -1774,11 +1775,73 @@
     <record id="account_tax_template_p_iva0_nd" model="account.tax.template">
         <field name="description"/> <!-- for resetting the value on existing DBs -->
         <field name="type_tax_use">purchase</field>
-        <field name="name">IVA Soportado no deducible</field>
+        <field name="name">21% IVA Soportado no deducible</field>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
         <field name="amount" eval="21"/>
         <field name="amount_type">percent</field>
         <field name="tax_group_id" ref="tax_group_iva_21"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+    </record>
+    <record id="account_tax_template_p_iva10_nd" model="account.tax.template">
+        <field name="type_tax_use">purchase</field>
+        <field name="name">10% IVA Soportado no deducible</field>
+        <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
+        <field name="amount" eval="10"/>
+        <field name="amount_type">percent</field>
+        <field name="tax_group_id" ref="tax_group_iva_10"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+    </record>
+    <record id="account_tax_template_p_iva4_nd" model="account.tax.template">
+        <field name="type_tax_use">purchase</field>
+        <field name="name">4% IVA Soportado no deducible</field>
+        <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
+        <field name="amount" eval="4"/>
+        <field name="amount_type">percent</field>
+        <field name="tax_group_id" ref="tax_group_iva_4"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 100,
@@ -3094,11 +3157,12 @@
     <record id="account_tax_template_p_irpf21t" model="account.tax.template">
         <field name="description"/> <!-- for resetting the value on existing DBs -->
         <field name="type_tax_use">purchase</field>
-        <field name="name">Retenciones IRPF 21% (Trabajadores)</field>
+        <field name="name">Retenciones IRPF (Trabajadores)</field>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
-        <field name="amount" eval="-21"/>
+        <!-- Obtained from https://www.agenciatributaria.es/AEAT.internet/Inicio/La_Agencia_Tributaria/Campanas/Retenciones/Cuadro_informativo_tipos_de_retencion_aplicables__2020_.shtml -->
+        <field name="amount" eval="-15"/>
         <field name="amount_type">percent</field>
-        <field name="tax_group_id" ref="tax_group_retenciones_21"/>
+        <field name="tax_group_id" ref="tax_group_retenciones_15"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 100,
@@ -3236,9 +3300,10 @@
         <field name="type_tax_use">purchase</field>
         <field name="name">Retenciones IRPF (Trabajadores) en especie</field>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
-        <field name="amount" eval="-21"/>
+        <!-- Obtained from https://www.agenciatributaria.es/AEAT.internet/Inicio/La_Agencia_Tributaria/Campanas/Retenciones/Cuadro_informativo_tipos_de_retencion_aplicables__2020_.shtml -->
+        <field name="amount" eval="-15"/>
         <field name="amount_type">percent</field>
-        <field name="tax_group_id" ref="tax_group_retenciones_21"/>
+        <field name="tax_group_id" ref="tax_group_retenciones_15"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 100,

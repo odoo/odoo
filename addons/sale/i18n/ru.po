@@ -4,7 +4,6 @@
 # 
 # Translators:
 # Disaster Disasterov <mobarbitr@gmail.com>, 2019
-# Vitalius Sharkhun <al070572sva@gmail.com>, 2019
 # sorin Rusu <to.rusu.sorin@gmail.com>, 2019
 # Максим Дронь <dronmax@gmail.com>, 2019
 # Андрей Гусев <gaussgss@gmail.com>, 2019
@@ -21,6 +20,7 @@
 # Anton Ilchenko <anton.wmt@gmail.com>, 2019
 # Ivan Yelizariev <yelizariev@it-projects.info>, 2020
 # Denis Knotko <denis_knotko@yahoo.com>, 2020
+# Denis Baranov <baranov@itlibertas.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -28,7 +28,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:22+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Denis Knotko <denis_knotko@yahoo.com>, 2020\n"
+"Last-Translator: Denis Baranov <baranov@itlibertas.com>, 2020\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -420,7 +420,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Down Payments</span>"
-msgstr "<span class=\"o_form_label\">скачать платежи</span>"
+msgstr "<span class=\"o_form_label\">Авансовые платежи</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -498,7 +498,7 @@ msgstr "<strong class=\"d-block mb-1\">счета</strong>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<strong class=\"d-block mb-1\">Shipping Address:</strong>"
-msgstr ""
+msgstr "<strong class=\"d-block mb-1\">Адрес доставки</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -514,12 +514,12 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<strong>Expiration Date:</strong>"
-msgstr "<strong>Дата оканчания:</strong>"
+msgstr "<strong>Дата окончания:</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Expiration:</strong>"
-msgstr ""
+msgstr "<strong>Срок действия:</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -536,7 +536,7 @@ msgstr "<strong>Дата Заказа:</strong>"
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<strong>Quotation Date:</strong>"
-msgstr "<strong>Дата оферты:</strong>"
+msgstr "<strong>Дата предложения:</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -547,7 +547,7 @@ msgstr "<strong>Продавец:</strong>"
 #: model_terms:ir.ui.view,arch_db:sale.report_invoice_document_inherit_sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Shipping Address:</strong>"
-msgstr ""
+msgstr "<strong>Адрес доставки</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -559,7 +559,7 @@ msgstr "<strong>подпись</strong>"
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content_totals_table
 msgid "<strong>Subtotal</strong>"
-msgstr "<strong>Промежуточный итог</strong>"
+msgstr "<strong>Подытог</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -1577,7 +1577,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__validity_date
 msgid "Expiration"
-msgstr ""
+msgstr "Срок действия"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
@@ -1953,7 +1953,7 @@ msgstr "Выставление счёта"
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Invoicing Address:"
-msgstr ""
+msgstr "Адрес для выставления счёта:"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__invoice_policy
@@ -1971,7 +1971,7 @@ msgstr "Цель фактурирования"
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Invoicing and Shipping Address:"
-msgstr ""
+msgstr "Адрес для выставления счёта и доставки:"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_is_follower
@@ -2105,7 +2105,7 @@ msgstr "Блокировать"
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__group_auto_done_setting
 #: model:res.groups,name:sale.group_auto_done_setting
 msgid "Lock Confirmed Sales"
-msgstr "Заблокировать подтверждены продажи"
+msgstr "Заблокировать подтвержденные заказы продаж"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__state__done
@@ -2233,7 +2233,7 @@ msgstr "Мои заказы"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
 msgid "My Quotations"
-msgstr "Мои ценовые предложения"
+msgstr "Мои коммерческие предложения"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_line_filter
@@ -2387,8 +2387,8 @@ msgid ""
 "Once the quotation is confirmed by the customer, it becomes a sales "
 "order.<br> You will be able to create an invoice and collect the payment."
 msgstr ""
-"Как только коммерческое предложение подтверждена клиентом, она становится "
-"заказом на продажу. <br> Вы сможете создать счет-фактуру и получить платеж."
+"Как только коммерческое предложение подтверждено клиентом, оно становится "
+"заказом на продажу. <br> Вы сможете создать счёт и получить платеж."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders
@@ -2810,7 +2810,7 @@ msgstr "Варианты продукта"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Product used for down payments"
-msgstr "Товар используемый для авансовых платежей"
+msgstr "Продукт используемый для авансовых платежей"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.product_template_action
@@ -3002,7 +3002,7 @@ msgstr "Ссылка на документ который создал запр�
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_advance_payment_inv__advance_payment_method__delivered
 msgid "Regular invoice"
-msgstr ""
+msgstr "Обычный счёт"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -3012,7 +3012,7 @@ msgstr "Отклонить эту коммерческое предложени�
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__remaining_validity_days
 msgid "Remaining Days Before Expiration"
-msgstr ""
+msgstr "До истечение срока действия (дней)"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_sale_report
@@ -4239,7 +4239,7 @@ msgid ""
 "existing one."
 msgstr ""
 "Напишите имя своего клиента, чтобы создать его «на лету», или выберите "
-"существующее."
+"существующего."
 
 #. module: sale
 #. openerp-web

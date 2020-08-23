@@ -33,11 +33,13 @@ msgid ""
 "\"\n"
 "                    (ID:"
 msgstr ""
+"\"\n"
+"                    (ID:"
 
 #. module: base_automation
 #: model:mail.template,body_html:base_automation.test_mail_template_automation
 msgid "<div>Email automation</div>"
-msgstr ""
+msgstr "<div>Emailová automatizácia</div>"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__help
@@ -88,7 +90,7 @@ msgstr "Pridať odberateľov"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__filter_domain
 msgid "Apply on"
-msgstr ""
+msgstr "Použiť"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_search
@@ -98,7 +100,7 @@ msgstr "Archivovaný"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__is_assigned_to_admin
 msgid "Assigned to admin user"
-msgstr ""
+msgstr "Priradené správcovi"
 
 #. module: base_automation
 #: model:ir.model,name:base_automation.model_base_automation
@@ -115,12 +117,12 @@ msgstr "Automatizované akcie"
 #. module: base_automation
 #: model:ir.model,name:base_automation.model_base_automation_line_test
 msgid "Automated Rule Line Test"
-msgstr ""
+msgstr "Automatizovaný test pravidla"
 
 #. module: base_automation
 #: model:ir.model,name:base_automation.model_base_automation_lead_test
 msgid "Automated Rule Test"
-msgstr ""
+msgstr "Automatizovaný test pravidiel"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_tree
@@ -132,55 +134,56 @@ msgstr "Automatizácia"
 #: model:ir.cron,cron_name:base_automation.ir_cron_data_base_automation_check
 #: model:ir.cron,name:base_automation.ir_cron_data_base_automation_check
 msgid "Base Action Rule: check and execute"
-msgstr ""
+msgstr "Základné pravidlo akcie: skontrolujte a vykonajte"
 
 #. module: base_automation
 #: model:base.automation,name:base_automation.test_rule_recursive
 #: model:ir.actions.server,name:base_automation.test_rule_recursive_ir_actions_server
 msgid "Base Automation: test recursive rule"
-msgstr ""
+msgstr "Základná automatizácia: testovacie rekurzívne pravidlo"
 
 #. module: base_automation
 #: model:base.automation,name:base_automation.test_rule_on_create
 #: model:ir.actions.server,name:base_automation.test_rule_on_create_ir_actions_server
 msgid "Base Automation: test rule on create"
-msgstr ""
+msgstr "Základná automatizácia: testovacie pravidlo pri vytvorení"
 
 #. module: base_automation
 #: model:base.automation,name:base_automation.test_rule_on_recompute
 #: model:ir.actions.server,name:base_automation.test_rule_on_recompute_ir_actions_server
 msgid "Base Automation: test rule on recompute"
-msgstr ""
+msgstr "Základná automatizácia: testovacie pravidlo na rekompute"
 
 #. module: base_automation
 #: model:base.automation,name:base_automation.test_rule_on_line
 #: model:ir.actions.server,name:base_automation.test_rule_on_line_ir_actions_server
 msgid "Base Automation: test rule on secondary model"
-msgstr ""
+msgstr "Základná automatizácia: testovacie pravidlo pre sekundárny model"
 
 #. module: base_automation
 #: model:base.automation,name:base_automation.test_rule_on_write
 #: model:ir.actions.server,name:base_automation.test_rule_on_write_ir_actions_server
 msgid "Base Automation: test rule on write"
-msgstr ""
+msgstr "Základná automatizácia: testovacie pravidlo pri zápise"
 
 #. module: base_automation
 #: model:base.automation,name:base_automation.test_rule_on_write_check_context
 #: model:ir.actions.server,name:base_automation.test_rule_on_write_check_context_ir_actions_server
 msgid "Base Automation: test rule on write check context"
 msgstr ""
+"Základná automatizácia: testovacie pravidlo v kontexte kontroly zápisu"
 
 #. module: base_automation
 #: model:base.automation,name:base_automation.test_rule_with_trigger
 #: model:ir.actions.server,name:base_automation.test_rule_with_trigger_ir_actions_server
 msgid "Base Automation: test rule with trigger"
-msgstr ""
+msgstr "Základná automatizácia: testovacie pravidlo so spustením"
 
 #. module: base_automation
 #: model:base.automation,name:base_automation.test_rule_on_write_recompute_send_email
 #: model:ir.actions.server,name:base_automation.test_rule_on_write_recompute_send_email_ir_actions_server
 msgid "Base Automation: test send an email"
-msgstr ""
+msgstr "Základná automatizácia: test pošlite e-mail"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_change
@@ -200,17 +203,17 @@ msgstr "Pred aktualizáciou domény"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__binding_model_id
 msgid "Binding Model"
-msgstr ""
+msgstr "Väzbový model"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__binding_type
 msgid "Binding Type"
-msgstr ""
+msgstr "Typ väzby"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__binding_view_types
 msgid "Binding View Types"
-msgstr ""
+msgstr "Typy záväzných pohľadov"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation_lead_test__state__cancel
@@ -278,6 +281,9 @@ msgid ""
 "                                    You can put a negative number if you need a delay before the\n"
 "                                    trigger date, like sending a reminder 15 minutes before a meeting."
 msgstr ""
+"Oneskorenie po dátume spustenia.\n"
+"Ak potrebujete oneskorenie pred zadaním čísla, môžete zadať záporné číslo\n"
+"dátum spustenia, napríklad odoslanie pripomienky 15 minút pred schôdzou."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_date_range
@@ -299,7 +305,7 @@ msgstr "Demo"
 #: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
 #, python-format
 msgid "Disable Action"
-msgstr ""
+msgstr "Zakázať činnosť"
 
 #. module: base_automation
 #. openerp-web
@@ -311,6 +317,10 @@ msgid ""
 "                    as you are effectively disabling a customization that may set\n"
 "                    important and/or required fields."
 msgstr ""
+"Zakázanie tejto automatizovanej akcie vám umožní pokračovať v pracovnom postupe\n"
+"ale všetky údaje vytvorené po tomto môžu byť potenciálne poškodené,\n"
+"pretože efektívne deaktivujete prispôsobenie, ktoré sa môže nastaviť\n"
+"dôležité a / alebo povinné polia."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__display_name
@@ -334,7 +344,7 @@ msgstr "Typ splatnosti"
 #: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
 #, python-format
 msgid "Edit action"
-msgstr ""
+msgstr "Upraviť akciu"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__template_id
@@ -544,6 +554,8 @@ msgid ""
 "Provide the field used to link the newly created record on the record on "
 "used by the server action."
 msgstr ""
+"Zadajte pole použité na prepojenie novovytvoreného záznamu so záznamom "
+"použitým akciou servera."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__code
@@ -577,11 +589,12 @@ msgid ""
 "Setting a value makes this action available in the sidebar for the given "
 "model."
 msgstr ""
+"Nastavenie hodnoty sprístupní túto akciu na bočnom paneli daného modelu."
 
 #. module: base_automation
 #: model_terms:ir.actions.act_window,help:base_automation.base_automation_act
 msgid "Setup a new automated automation"
-msgstr ""
+msgstr "Nastavenie novej automatizovanej automatizácie"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__state
@@ -606,7 +619,7 @@ msgstr "Cieľový model"
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__activity_user_field_name
 msgid "Technical name of the user on the record"
-msgstr ""
+msgstr "Technické meno používateľa v zázname"
 
 #. module: base_automation
 #: code:addons/base_automation/models/base_automation.py:0
@@ -615,6 +628,8 @@ msgid ""
 "The \"%(trigger_value)s\" %(trigger_label)s can only be used with the "
 "\"%(state_value)s\" action type"
 msgstr ""
+" \"%(trigger_value)s\" %(trigger_label)s cmôže byť použitý iba s "
+"\"%(state_value)s\" typ akcie"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trigger_field_ids
@@ -622,6 +637,8 @@ msgid ""
 "The action will be triggered if and only if one of these fields is "
 "updated.If empty, all fields are watched."
 msgstr ""
+"Akcia sa spustí iba vtedy, ak je aktualizované jedno z týchto polí. Ak sú "
+"prázdne, sledujú sa všetky polia."
 
 #. module: base_automation
 #. openerp-web
@@ -631,11 +648,13 @@ msgid ""
 "The error occurred during the execution of the automated action\n"
 "                    \""
 msgstr ""
+"Počas vykonávania automatizovanej akcie sa vyskytla chyba\n"
+"                    \""
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trigger
 msgid "Trigger Condition"
-msgstr ""
+msgstr "Spúšťací stav"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_date_id
@@ -654,6 +673,14 @@ msgid ""
 "- 'Add Followers': add followers to a record (Discuss)\n"
 "- 'Create Next Activity': create an activity (Discuss)"
 msgstr ""
+"Typ akcie servera. K dispozícii sú nasledujúce hodnoty:\n"
+"- 'Execute Python Code': blok pythonového kódu, ktorý bude vykonaný\n"
+"- „Vytvoriť“: vytvorenie nového záznamu s novými hodnotami\n"
+"- „Aktualizovať záznam“: aktualizovať hodnoty záznamu\n"
+"- „Vykonať niekoľko akcií“: definuje akciu, ktorá spustí niekoľko ďalších akcií servera\n"
+"- „Poslať e-mail“: automaticky odošle e-mail (Diskusia)\n"
+"- „Pridať sledovateľov“: pridajte sledovateľov do záznamu (Diskusia)\n"
+"- „Vytvoriť ďalšiu aktivitu“: vytvoriť aktivitu (Diskusia)"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__usage
@@ -668,6 +695,10 @@ msgid ""
 " 'Generic User From Record' to specify the field name of the user to choose "
 "on the record."
 msgstr ""
+"Použite 'Špecifického používateľa' pre priradenie toho istého používateľa "
+"pri ďalšej aktivite. Pomocou položky „Generic User From Record“ (Všeobecný "
+"používateľ zo záznamu) môžete určiť názov poľa, ktoré má užívateľ zvoliť v "
+"zázname."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_date_calendar_id
@@ -683,6 +714,11 @@ msgid ""
 "                opportunity which still has status pending after 14 days might\n"
 "                trigger an automatic reminder email."
 msgstr ""
+"Použite automatické akcie na automatické spustenie akcií pre\n"
+"rôzne obrazovky. Príklad: potenciálny zákazník vytvorený konkrétnym používateľom môže\n"
+"byť automaticky nastavený na konkrétny predajný tím alebo\n"
+"obchodný prípad, ktorá má stále čakajúci stav aj po 14 dňoch\n"
+"spustiť e-mail s automatickým pripomenutím."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test__user_id
@@ -708,7 +744,7 @@ msgstr "Varovanie"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trigger_field_ids
 msgid "Watched fields"
-msgstr ""
+msgstr "Sledované polia"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_date_calendar_id
@@ -734,6 +770,8 @@ msgid ""
 "When should the condition be triggered.\n"
 "                                  If present, will be checked by the scheduler. If empty, will be checked at creation and update."
 msgstr ""
+"Kedy by sa mala spustiť podmienka.\n"
+"Ak existuje, bude skontrolovaný plánovačom. Ak je prázdny, bude skontrolovaný pri vytváraní a aktualizácii."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__active
@@ -757,6 +795,7 @@ msgstr ""
 msgid ""
 "You can ask an administrator to disable or correct this automated action."
 msgstr ""
+"Môžete požiadať správcu, aby túto automatickú akciu zakázal alebo opravil."
 
 #. module: base_automation
 #. openerp-web
@@ -764,3 +803,5 @@ msgstr ""
 #, python-format
 msgid "You can disable this automated action or edit it to solve the issue."
 msgstr ""
+"Túto automatickú akciu môžete zakázať alebo ju upraviť, aby ste problém "
+"vyriešili."

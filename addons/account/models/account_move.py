@@ -343,11 +343,11 @@ class AccountMove(models.Model):
                     self.partner_id = False
                     return {'warning': warning}
 
-        if self.is_sale_document(include_receipts=True) and self.partner_id.property_payment_term_id:
-            self.invoice_payment_term_id = self.partner_id.property_payment_term_id
+        if self.is_sale_document(include_receipts=True) and self.partner_id:
+            self.invoice_payment_term_id = self.partner_id.property_payment_term_id or self.invoice_payment_term_id
             new_term_account = self.partner_id.commercial_partner_id.property_account_receivable_id
-        elif self.is_purchase_document(include_receipts=True) and self.partner_id.property_supplier_payment_term_id:
-            self.invoice_payment_term_id = self.partner_id.property_supplier_payment_term_id
+        elif self.is_purchase_document(include_receipts=True) and self.partner_id:
+            self.invoice_payment_term_id = self.partner_id.property_supplier_payment_term_id or self.invoice_payment_term_id
             new_term_account = self.partner_id.commercial_partner_id.property_account_payable_id
         else:
             new_term_account = None
@@ -1385,9 +1385,10 @@ class AccountMove(models.Model):
             # At this point we only want to keep the taxes with a zero amount since they do not
             # generate a tax line.
             for line in move.line_ids:
-                for tax in line.tax_ids.flatten_taxes_hierarchy().filtered(lambda t: t.amount == 0.0):
-                    res.setdefault(tax.tax_group_id, {'base': 0.0, 'amount': 0.0})
-                    res[tax.tax_group_id]['base'] += tax_balance_multiplicator * (line.amount_currency if line.currency_id else line.balance)
+                for tax in line.tax_ids.flatten_taxes_hierarchy():
+                    if tax.tax_group_id not in res:
+                        res.setdefault(tax.tax_group_id, {'base': 0.0, 'amount': 0.0})
+                        res[tax.tax_group_id]['base'] += tax_balance_multiplicator * (line.amount_currency if line.currency_id else line.balance)
 
             res = sorted(res.items(), key=lambda l: l[0].sequence)
             move.amount_by_group = [(
@@ -3207,7 +3208,7 @@ class AccountMoveLine(models.Model):
         whether or not it comes from a refund operation.
         This is overridden by pos in order to treat returns properly.
         """
-        return aml.move_id.type in ('in_refund', 'out_refund') and -1 or 1
+        return aml.move_id.type in ('in_refund', 'out_refund')
 
     # -------------------------------------------------------------------------
     # CONSTRAINT METHODS
