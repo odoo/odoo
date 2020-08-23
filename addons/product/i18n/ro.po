@@ -6,8 +6,8 @@
 # Martin Trigaux, 2018
 # Cozmin Candea <office@terrabit.ro>, 2018
 # Dorin Hongu <dhongu@gmail.com>, 2020
-# Hongu Cosmin <cosmin513@gmail.com>, 2020
 # Foldi Robert <foldirobert@nexterp.ro>, 2020
+# Hongu Cosmin <cosmin513@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-03-29 10:09+0000\n"
 "PO-Revision-Date: 2018-08-24 09:23+0000\n"
-"Last-Translator: Foldi Robert <foldirobert@nexterp.ro>, 2020\n"
+"Last-Translator: Hongu Cosmin <cosmin513@gmail.com>, 2020\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -49,7 +49,7 @@ msgstr "%s %% discount"
 #: code:addons/product/models/product_pricelist.py:464
 #, python-format
 msgid "%s %% discount and %s surcharge"
-msgstr ""
+msgstr "%s %% reducere și %s suprataxă"
 
 #. module: product
 #: code:addons/product/models/product_template.py:357
@@ -101,7 +101,7 @@ msgstr "<span class=\"o_stat_text\"> Produse</span>"
 #: model_terms:ir.ui.view,arch_db:product.report_simple_barcode
 #: model_terms:ir.ui.view,arch_db:product.report_simple_label
 msgid "<span class=\"text-muted\">No barcode available</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\">Fără cod de bare valabil</span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -172,6 +172,8 @@ msgid ""
 "A price is a set of sales prices or rules to compute the price of sales order lines based on products, product categories, dates and ordered quantities.\n"
 "                This is the perfect tool to handle several pricings, seasonal discounts, etc."
 msgstr ""
+"Un preț este un set de prețuri sau reguli de vânzare pentru a calcula prețul liniilor de comenzi de vânzare în funcție de produse, categorii de produse, date și cantități comandate.\n"
+"Acesta este instrumentul perfect pentru a gestiona mai multe prețuri, reduceri sezoniere, etc"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__type
@@ -241,6 +243,8 @@ msgid ""
 "Allows to manage different prices based on rules per category of customers.\n"
 "                Example: 10% for retailers, promotion of 5 EUR on this product, etc."
 msgstr ""
+"Permite gestionarea prețurilor diferite pe baza regulilor pe categorii de clienți.\n"
+"Exemplu: 10% pentru comercianți cu amănuntul, promoție de 5 EUR la acest produs etc."
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_2
@@ -542,7 +546,7 @@ msgstr "Cost"
 #: model:ir.model.fields,field_description:product.field_product_product__cost_currency_id
 #: model:ir.model.fields,field_description:product.field_product_template__cost_currency_id
 msgid "Cost Currency"
-msgstr ""
+msgstr "Cost Monedă "
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_template__standard_price
@@ -690,12 +694,14 @@ msgid ""
 "Default unit of measure used for purchase orders. It must be in the same "
 "category as the default unit of measure."
 msgstr ""
+"Unitatea de măsură implicită folosită pentru comenzile de achiziție. Acesta "
+"trebuie să fie în aceeași categorie cu unitatea de măsură implicită."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__seller_ids
 #: model:ir.model.fields,help:product.field_product_template__seller_ids
 msgid "Define vendor pricelists."
-msgstr ""
+msgstr "Definire Preț Listă Vânzător "
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__delay
@@ -797,7 +803,7 @@ msgstr "Dată sfârșit"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__date_end
 msgid "End date for this vendor price"
-msgstr ""
+msgstr "Data de încheiere a acestui preț de vânzător"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__date_end
@@ -868,6 +874,8 @@ msgid ""
 "For the rule to apply, bought/sold quantity must be greater than or equal to the minimum quantity specified in this field.\n"
 "Expressed in the default unit of measure of the product."
 msgstr ""
+"Pentru ca regula să se aplice, cantitatea cumpărată / vândută trebuie să fie mai mare sau egală cu cantitatea minimă specificată în acest câmp.\n"
+" Exprimat în unitatea de măsură implicită a produsului."
 
 #. module: product
 #: selection:product.pricelist.item,compute_price:0
@@ -894,13 +902,13 @@ msgstr "Informații generale"
 #: model:ir.model.fields,help:product.field_product_product__packaging_ids
 #: model:ir.model.fields,help:product.field_product_template__packaging_ids
 msgid "Gives the different ways to package the same product."
-msgstr ""
+msgstr "Oferă diferite modalități de a ambala același produs."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__sequence
 #: model:ir.model.fields,help:product.field_product_template__sequence
 msgid "Gives the sequence order when displaying a product list"
-msgstr ""
+msgstr "Oferă ordinea secvenței atunci când se afișează o listă de produse"
 
 #. module: product
 #: selection:product.pricelist.item,applied_on:0
