@@ -1,15 +1,15 @@
---- http_old.py	2020-02-27 10:56:47.236000000 +0100
-+++ http_new.py	2020-02-27 10:58:30.737536611 +0100
-@@ -763,7 +763,7 @@
-         if request.httprequest.method == 'OPTIONS' and request.endpoint and request.endpoint.routing.get('cors'):
+--- http_old.py	2020-08-24 10:12:59.962991214 +0200
++++ http_new.py	2020-08-24 10:18:12.747156571 +0200
+@@ -761,7 +761,7 @@
+         if self._is_cors_preflight(request.endpoint):
              headers = {
                  'Access-Control-Max-Age': 60 * 60 * 24,
--                'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept'
-+                'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept, X-Debug-Mode'
+-                'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept, Authorization'
++                'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept, Authorization, X-Debug-Mode'
              }
              return Response(status=200, headers=headers)
  
-@@ -1497,7 +1497,7 @@
+@@ -1507,7 +1507,7 @@
      """
      httprequest = httprequest or request.httprequest
  
