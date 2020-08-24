@@ -863,7 +863,7 @@ MockServer.include({
                 message_ids: messageIDs,
                 type: "deletion",
             };
-            const metaData = [dbName, 'res.partner'];
+            const metaData = [dbName, 'res.partner', this.currentPartnerId];
             const notification = [metaData, notifData];
             this._widget.call('bus_service', 'trigger', 'notification', [notification]);
         } else if (decision === 'accept') {
