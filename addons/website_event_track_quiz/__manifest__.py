@@ -25,6 +25,7 @@
         'views/event_menus.xml',
         'views/event_quiz_templates.xml',
         'views/event_track_templates_page.xml',
+        'views/event_event_views.xml',
         'views/event_type_views.xml'
     ],
     'demo': [
