@@ -17,10 +17,13 @@ registerInstancePatchModel('mail.messaging_notification_handler', 'im_livechat/s
      */
     _handleNotificationChannelTypingStatus(data) {
         const { channelId, partner_id } = data;
-        const channel = this.env.models['mail.thread'].insert({
+        const channel = this.env.models['mail.thread'].findFromIdentifyingData({
             id: channelId,
             model: 'mail.channel',
         });
+        if (!channel) {
+            return;
+        }
         let partnerId;
         if (partner_id === this.env.messaging.publicPartner.id) {
             // Some shenanigans that this is a typing notification
