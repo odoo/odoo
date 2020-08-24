@@ -172,6 +172,20 @@ class ModelManager {
     }
 
     /**
+     * Gets the unique record of provided model that matches the given
+     * identifying data, if it exists.
+     * @see `_createRecordLocalId` for criteria of identification.
+     *
+     * @param {mail.model} Model class
+     * @param {Object} data
+     * @returns {mail.model|undefined}
+     */
+    findFromIdentifyingData(Model, data) {
+        const localId = Model._createRecordLocalId(data);
+        return Model.get(localId);
+    }
+
+    /**
      * This method returns the record of provided model that matches provided
      * local id. Useful to convert a local id to a record.
      * Note that even if there's a record in the system having provided local
@@ -785,8 +799,7 @@ class ModelManager {
         const dataList = isMulti ? data : [data];
         const records = [];
         for (const data of dataList) {
-            const localId = Model._createRecordLocalId(data);
-            let record = Model.get(localId);
+            let record = Model.findFromIdentifyingData(data);
             if (!record) {
                 record = this._create(Model, data);
             } else {

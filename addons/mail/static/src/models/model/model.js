@@ -111,6 +111,19 @@ function factory() {
         }
 
         /**
+         * Gets the unique record that matches the given identifying data, if it
+         * exists.
+         * @see `_createRecordLocalId` for criteria of identification.
+         *
+         * @static
+         * @param {Object} data
+         * @returns {mail.model|undefined}
+         */
+        static findFromIdentifyingData(data) {
+            return this.env.modelManager.findFromIdentifyingData(this, data);
+        }
+
+        /**
          * This method returns the record of this model that matches provided
          * local id. Useful to convert a local id to a record. Note that even
          * if there's a record in the system having provided local id, if the
