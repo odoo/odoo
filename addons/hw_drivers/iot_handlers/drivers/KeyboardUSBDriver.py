@@ -56,11 +56,7 @@ class KeyboardUSBDriver(Driver):
             if (self.dev.idVendor == device.info.vendor) and (self.dev.idProduct == device.info.product):
                 self.input_device = device
 
-        device_name = self._device_name.lower()
-        is_scanner = self.load_is_scanner()
-        scanner_name = ['barcode', 'scanner', 'reader']
-
-        self._set_device_type('scanner') if is_scanner.get('is_scanner') else self._set_device_type()
+        self._set_device_type('scanner') if self._is_scanner() else self._set_device_type()
 
     @classmethod
     def supported(cls, device):
@@ -228,20 +224,18 @@ class KeyboardUSBDriver(Driver):
             layout = {'layout': 'us'}
         self._change_keyboard_layout(layout)
 
-    def load_is_scanner(self):
+    def _is_scanner(self):
         """Read the device type from the saved filed and set it as current type.
-        If no file or no device type is found we use 'us' by default.
+        If no file or no device type is found we try to detect it automatically.
         """
-        check_scanner = False
-        if any(x in device_name for x in scanner_name) or self.dev.interface_protocol == '0':
-            check_scanner = True
+        device_name = self._device_name.lower()
+        scanner_name = ['barcode', 'scanner', 'reader']
+        is_scanner = any(x in device_name for x in scanner_name) or self.dev.interface_protocol == '0'
 
         file_path = Path.home() / 'odoo-keyboard-is-scanner.conf'
         if file_path.exists():
             data = json.loads(file_path.read_text())
-            is_scanner = data.get(self.device_identifier, {'is_scanner': check_scanner})
-        else:
-            is_scanner = {'is_scanner': check_scanner}
+            is_scanner = data.get(self.device_identifier, {}).get('is_scanner', is_scanner)
         return is_scanner
 
     def _keyboard_input(self, scancode):
