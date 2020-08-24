@@ -69,7 +69,7 @@ def _predict_nextval(self, seq_id):
                        WHERE sequencename = %s),
                       is_called
                FROM {}""")
-    params = []
+    params = [seqname]
     if self.env.cr._cnx.server_version < 100000:
         query = sql.SQL("SELECT last_value, increment_by, is_called FROM {}")
         params = []
@@ -97,7 +97,9 @@ class IrSequence(models.Model):
         '''Return number from ir_sequence row when no_gap implementation,
         and number from postgres sequence when standard implementation.'''
         for seq in self:
-            if seq.implementation != 'standard':
+            if not seq.id:
+                seq.number_next_actual = 0
+            elif seq.implementation != 'standard':
                 seq.number_next_actual = seq.number_next
             else:
                 seq_id = "%03d" % seq.id
