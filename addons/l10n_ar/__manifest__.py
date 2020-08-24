@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'Argentina - Accounting',
+    'icon': '/base/static/img/country_flags/ar.png',
     'version': "3.0",
     'description': """
 Functional

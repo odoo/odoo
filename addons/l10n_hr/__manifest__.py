@@ -10,6 +10,7 @@
 
 {
     "name": "Croatia - Accounting (RRIF 2012)",
+    'icon': '/base/static/img/country_flags/hr.png',
     "description": """
 Croatian localisation.
 ======================

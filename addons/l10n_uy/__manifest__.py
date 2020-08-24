@@ -3,6 +3,7 @@
 
 {
     'name': 'Uruguay - Accounting',
+    'icon': '/base/static/img/country_flags/uy.png',
     'version': '0.1',
     'author': 'Uruguay l10n Team, Guillem Barba',
     'category': 'Accounting/Localizations/Account Charts',

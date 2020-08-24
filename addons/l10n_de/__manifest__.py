@@ -3,6 +3,7 @@
 
 {
     'name': 'Germany - Accounting',
+    'icon': '/base/static/img/country_flags/de.png',
     'author': 'openbig.org',
     'website': 'http://www.openbig.org',
     'category': 'Accounting/Localizations',

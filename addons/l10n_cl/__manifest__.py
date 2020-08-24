@@ -3,6 +3,7 @@
 # Copyright (c) 2019 - Blanco Martín & Asociados. https://www.bmya.cl
 {
     'name': 'Chile - Accounting',
+    'icon': '/base/static/img/country_flags/cl.png',
     'version': "3.0",
     'description': """
 Chilean accounting chart and tax localization.

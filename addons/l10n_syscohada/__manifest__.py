@@ -8,6 +8,7 @@
     'name' : 'OHADA - Accounting',
     'author' : 'Baamtu Senegal',
     'category': 'Accounting/Localizations/Account Charts',
+    'icon': '/l10n_syscohada/static/description/icon.jpeg',
     'description': """
 This module implements the accounting chart for OHADA area.
 ===========================================================

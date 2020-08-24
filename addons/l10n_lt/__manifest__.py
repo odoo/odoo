@@ -3,6 +3,7 @@
 # See LICENSE file for full copyright and licensing details.
 {
     'name': "Lithuania - Accounting",
+    'icon': '/base/static/img/country_flags/lt.png',
     'version': '1.0.0',
     'description': """
         Chart of Accounts (COA) Template for Lithuania's Accounting.
