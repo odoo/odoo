@@ -191,8 +191,15 @@ class HolidaysAllocation(models.Model):
             if period_start <= start_date:
                 period_start = start_date
 
-            worked = holiday.employee_id._get_work_days_data(period_start, period_end, domain=[('holiday_id.holiday_status_id.unpaid', '=', True), ('time_type', '=', 'leave')])['days']
-            left = holiday.employee_id._get_leave_days_data(period_start, period_end, domain=[('holiday_id.holiday_status_id.unpaid', '=', True), ('time_type', '=', 'leave')])['days']
+            employee = holiday.employee_id
+            worked = employee._get_work_days_data_batch(
+                period_start, period_end,
+                domain=[('holiday_id.holiday_status_id.unpaid', '=', True), ('time_type', '=', 'leave')]
+            )[employee.id]['days']
+            left = employee._get_leave_days_data_batch(
+                period_start, period_end,
+                domain=[('holiday_id.holiday_status_id.unpaid', '=', True), ('time_type', '=', 'leave')]
+            )[employee.id]['days']
             prorata = worked / (left + worked) if worked else 0
 
             days_to_give = holiday.number_per_interval
@@ -200,7 +207,7 @@ class HolidaysAllocation(models.Model):
                 # As we encode everything in days in the database we need to convert
                 # the number of hours into days for this we use the
                 # mean number of hours set on the employee's calendar
-                days_to_give = days_to_give / (holiday.employee_id.resource_calendar_id.hours_per_day or HOURS_PER_DAY)
+                days_to_give = days_to_give / (employee.resource_calendar_id.hours_per_day or HOURS_PER_DAY)
 
             values['number_of_days'] = holiday.number_of_days + days_to_give * prorata
             if holiday.accrual_limit > 0:
