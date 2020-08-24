@@ -100,7 +100,17 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <t t-foreach="docs['lines']" t-as="line"><tr>
+                        <tr t-if="docs['lines'] and not any(line['document_in'] or line['replenishment_filled'] for line in docs['lines'])">
+                            <td>Inventory On Hand</td>
+                            <td/>
+                            <td t-if="docs['multiple_product']"/>
+                            <td class="text-right">0</td>
+                            <td/>
+                            <td/>
+                            <td/>
+                            <td/>
+                        </tr>
+                        <tr t-foreach="docs['lines']" t-as="line">
                             <td t-attf-class="#{line['is_late'] and 'o_grid_warning'}">
                                 <a t-if="line['document_in']"
                                     t-attf-href="#" t-esc="line['document_in'].name"
@@ -108,16 +118,15 @@
                                     t-att-res-model="line['document_in']._name"
                                     t-att-res-id="line['document_in'].id"/>
                                 <t t-elif="line['replenishment_filled']">
-                                    <t t-if="line['document_out']">Current Stock</t>
+                                    <t t-if="line['document_out']">Inventory On Hand</t>
                                     <t t-else="">Free Stock</t>
                                 </t>
-                                <t t-elif="line['replenishment_filled']" t-esc="'Current Stock'"/>
-                                <span t-else="" class="text-muted" t-esc="'Not Available'"/>
+                                <span t-else="" class="text-muted">Not Available</span>
                             </td>
                             <td t-esc="line['receipt_date'] or ''"
                                 t-attf-class="#{line['is_late'] and 'o_grid_warning'}"/>
                             <td t-if="docs['multiple_product']" t-esc="line['product']['display_name']"/>
-                            <td t-esc="line['quantity']" class="text-right"/>
+                            <td class="text-right"><t t-if="not line['replenishment_filled']">- </t><t t-esc="line['quantity']"/></td>
                             <td t-esc="line['uom_id'].name" groups="uom.group_uom"/>
                             <td t-attf-class="#{not line['replenishment_filled'] and 'o_grid_warning'}">
                                 <a t-if="line['document_out']"
@@ -128,7 +137,7 @@
                             </td>
                             <td t-esc="line['delivery_date'] or ''"
                                 t-attf-class="#{not line['replenishment_filled'] and 'o_grid_warning'}"/>
-                        </tr></t>
+                        </tr>
                     </tbody>
                     <thead>
                         <tr class="o_forecasted_row">
@@ -136,30 +145,16 @@
                             <td t-esc="docs['virtual_available']" class="text-right"/>
                             <td t-esc="docs['uom']" groups="uom.group_uom"/>
                         </tr>
-                        <tr t-if="docs['qty']['in']" class="bg-light">
-                            <td colspan="2">Pending Incoming Documents</td>
-                            <td t-esc="docs['qty']['in']" class="text-right"/>
-                            <td t-esc="docs['uom']"  groups="uom.group_uom"/>
-                        </tr>
                     </thead>
                     <tbody t-if="docs['qty']['in']">
                         <tr t-if="docs['draft_picking_qty']['in']" name="draft_picking_in">
-                            <td colspan="2">Draft Transfer</td>
+                            <td colspan="2">Incoming Draft Transfer</td>
                             <td t-esc="docs['draft_picking_qty']['in']" class="text-right"/>
                             <td t-esc="docs['uom']" groups="uom.group_uom"/>
                         </tr>
-                    </tbody>
-                    <thead t-if="docs['qty']['out']">
-                        <tr class="bg-light">
-                            <td colspan="2">Pending Outgoing Documents</td>
-                            <td t-esc="docs['qty']['out']" class="text-right"/>
-                            <td t-esc="docs['uom']"  groups="uom.group_uom"/>
-                        </tr>
-                    </thead>
-                    <tbody t-if="docs['qty']['out']">
                         <tr t-if="docs['draft_picking_qty']['out']" name="draft_picking_out">
-                            <td colspan="2">Draft Transfer</td>
-                            <td t-esc="docs['draft_picking_qty']['out']" class="text-right"/>
+                            <td colspan="2">Outgoing Draft Transfer</td>
+                            <td t-esc="-docs['draft_picking_qty']['out']" class="text-right"/>
                             <td t-esc="docs['uom']" groups="uom.group_uom"/>
                         </tr>
                     </tbody>
