@@ -15,6 +15,7 @@ from odoo.exceptions import UserError
 from odoo.osv import expression
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, format_datetime
 from odoo.tools.float_utils import float_compare, float_is_zero, float_round
+from odoo.tools.misc import format_date
 
 
 class PickingType(models.Model):
@@ -400,24 +401,20 @@ class Picking(models.Model):
         for picking in self:
             picking.delay_alert_date = delay_alert_date_data.get(picking.id, False)
 
-    @api.depends('move_lines', 'state')
+    @api.depends('move_lines', 'state', 'picking_type_code', 'move_lines.forecast_availability', 'move_lines.forecast_expected_date')
     def _compute_products_availability(self):
         self.products_availability = False
         self.products_availability_state = 'available'
         pickings = self.filtered(lambda picking: picking.state not in ['cancel', 'draft', 'done'] and picking.picking_type_code == 'outgoing')
+        pickings.products_availability = _('Available')
         for picking in pickings:
-            forecast_data = []
-            for move in picking.move_lines:
-                if move.json_forecast:
-                    forecast_data.append(json.loads(move.json_forecast))
-            picking.products_availability = 'Available'
-            forecast_data.sort(key=lambda line: line.get('sortingDate', ''), reverse=True)
-            if len(forecast_data) > 0 and forecast_data[0].get('sortingDate', False):
-                picking.products_availability = _('Exp %s', forecast_data[0]['expectedDate'])
-                picking.products_availability_state = 'late' if forecast_data[0]['isLate'] else 'expected'
-            elif any(not data.get('reservedAvailability', False) for data in forecast_data):
-                picking.products_availability = 'Not Available'
-                picking.products_availability_state = 'late'
+            forecast_date = max(picking.move_lines.filtered('forecast_expected_date').mapped('forecast_expected_date'), default=False)
+            if any(float_compare(move.forecast_availability, move.product_qty, move.product_id.uom_id.rounding) == -1 for move in picking.move_lines):
+                picking.components_availability = _('Not Available')
+                picking.components_availability_state = 'late'
+            elif forecast_date:
+                picking.components_availability = _('Exp %s', format_date(self.env, forecast_date))
+                picking.components_availability_state = 'late' if picking.date_deadline < forecast_date else 'expected'
 
     @api.depends('picking_type_id.show_operations')
     def _compute_show_operations(self):

@@ -378,7 +378,9 @@
                                     <field name="is_quantity_done_editable" invisible="1"/>
                                     <field name="product_uom_qty" string="Demand" attrs="{'column_invisible': [('parent.immediate_transfer', '=', True)], 'readonly': ['|', ('is_initial_demand_editable', '=', False), '&amp;', '&amp;', ('show_operations', '=', True), ('is_locked', '=', True), ('is_initial_demand_editable', '=', False)]}"/>
                                     <field name="reserved_availability" string="Reserved" attrs="{'column_invisible': (['|','|', ('parent.state','=', 'done'), ('parent.picking_type_code', 'in', ['incoming', 'outgoing']), ('parent.immediate_transfer', '=', True)])}"/>
-                                    <field name="json_forecast" string="Reserved" attrs="{'column_invisible': ['|', ('parent.picking_type_code', '!=', 'outgoing'), ('parent.state','=', 'done')]}" widget="forecast_widget"/>
+                                    <field name="product_qty" invisible="1" readonly="1"/>
+                                    <field name="forecast_expected_date" invisible="1" />
+                                    <field name="forecast_availability" string="Reserved" attrs="{'column_invisible': ['|', ('parent.picking_type_code', '!=', 'outgoing'), ('parent.state','=', 'done')]}" widget="forecast_widget"/>
                                     <field name="quantity_done" string="Done" attrs="{'readonly': [('is_quantity_done_editable', '=', False)]}"/>
                                     <field name="product_uom" attrs="{'readonly': [('state', '!=', 'draft'), ('additional', '=', False)]}" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="uom.group_uom"/>
                                     <field name="lot_ids" widget="many2many_tags"
@@ -411,7 +413,9 @@
                                         <field name="is_quantity_done_editable" invisible="1"/>
                                         <field name="product_uom_qty" attrs="{'invisible': [('parent.immediate_transfer', '=', True)], 'readonly': [('is_initial_demand_editable', '=', False)]}"/>
                                         <field name="reserved_availability" string="Reserved" attrs="{'invisible': (['|','|', ('parent.state','=', 'done'), ('parent.picking_type_code', 'in', ['outgoing', 'incoming']), ('parent.immediate_transfer', '=', True)])}"/>
-                                        <field name="json_forecast" string="Reserved" attrs="{'column_invisible': ['|', ('parent.picking_type_code', '!=', 'outgoing'), ('parent.state','=', 'done')]}" widget="forecast_widget"/>
+                                        <field name="product_qty" invisible="1" readonly="1"/>
+                                        <field name="forecast_expected_date" invisible="1"/>
+                                        <field name="forecast_availability" string="Reserved" attrs="{'invisible': ['|', ('parent.picking_type_code', '!=', 'outgoing'), ('parent.state','=', 'done')]}" widget="forecast_widget"/>
                                         <field name="quantity_done" string="Done" attrs="{'readonly': [('is_quantity_done_editable', '=', False)]}"/>
                                         <field name="product_uom" attrs="{'readonly': [('state', '!=', 'draft'), ('additional', '=', False)]}" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="uom.group_uom"/>
                                         <field name="description_picking" string="Description"/>
