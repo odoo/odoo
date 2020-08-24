@@ -117,6 +117,7 @@ class MockModels {
                     body: { string: "Contents", type: 'html', default: "<p></p>" },
                     channel_ids: { string: "Channels", type: 'many2many', relation: 'mail.channel' },
                     date: { string: "Date", type: 'datetime' },
+                    email_from: { string: "From", type: 'char' },
                     history_partner_ids: { string: "Partners with History", type: 'many2many', relation: 'res.partner' },
                     id: { string: "Id", type: 'integer' },
                     is_discussion: { string: "Discussion", type: 'boolean' },
@@ -169,11 +170,19 @@ class MockModels {
                 },
                 records: [],
             },
+            'res.country': {
+                fields: {
+                    code: { string: "Code", type: 'char' },
+                    name: { string: "Name", type: 'char' },
+                },
+                records: [],
+            },
             'res.partner': {
                 fields: {
                     active: { string: "Active", type: 'boolean', default: true },
                     activity_ids: { string: "Activities", type: 'one2many', relation: 'mail.activity' },
                     contact_address_complete: { string: "Address", type: 'char' },
+                    country_id: { string: "Country", type: 'many2one', relation: 'res.country' },
                     description: { string: 'description', type: 'text' },
                     display_name: { string: "Displayed name", type: "char" },
                     email: { type: 'char' },
@@ -192,6 +201,7 @@ class MockModels {
                 fields: {
                     active: { string: "Active", type: 'boolean', default: true },
                     display_name: { string: "Display name", type: "char" },
+                    im_status: { string: "IM Status", type: 'char' },
                     name: { string: "Name", type: 'char' },
                     partner_id: { string: "Related partners", type: 'many2one', relation: 'res.partner' },
                 },

@@ -52,6 +52,34 @@ class TestGetMailChannel(TransactionCase):
             channel_operator_ids = [channel_operator[0] for channel_operator in channel_operators]
             self.assertTrue(all(partner_id in channel_operator_ids for partner_id in self.operators.mapped('partner_id').ids))
 
+    def test_channel_get_livechat_visitor_info(self):
+        belgium = self.env.ref('base.be')
+        public_user = self.env.ref('base.public_user')
+        test_user = self.env['res.users'].create({'name': 'Roger', 'login': 'roger', 'country_id': belgium.id})
+
+        # ensure visitor info are correct with anonymous
+        channel_info = self.livechat_channel.with_user(public_user)._open_livechat_mail_channel(anonymous_name='Visitor 22', country_id=belgium.id)
+        visitor_info = channel_info['livechat_visitor']
+        self.assertFalse(visitor_info['id'])
+        self.assertEqual(visitor_info['name'], "Visitor 22")
+        self.assertEqual(visitor_info['country'], (20, "Belgium"))
+
+        # ensure visitor info are correct with real user
+        channel_info = self.livechat_channel.with_user(test_user)._open_livechat_mail_channel(anonymous_name='whatever', user_id=test_user.id)
+        visitor_info = channel_info['livechat_visitor']
+        self.assertEqual(visitor_info['id'], test_user.partner_id.id)
+        self.assertEqual(visitor_info['name'], "Roger")
+        self.assertEqual(visitor_info['country'], (20, "Belgium"))
+
+        # ensure visitor info are correct when operator is testing himself
+        operator = self.operators[0]
+        channel_info = self.livechat_channel.with_user(operator)._open_livechat_mail_channel(anonymous_name='whatever', previous_operator_id=operator.partner_id.id, user_id=operator.id)
+        self.assertEqual(channel_info['operator_pid'], (operator.partner_id.id, "Michel"))
+        visitor_info = channel_info['livechat_visitor']
+        self.assertEqual(visitor_info['id'], operator.partner_id.id)
+        self.assertEqual(visitor_info['name'], "Michel")
+        self.assertFalse(visitor_info['country'])
+
     def _open_livechat_mail_channel(self):
         mail_channels = []
 

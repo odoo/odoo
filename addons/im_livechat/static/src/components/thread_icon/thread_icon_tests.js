@@ -42,13 +42,12 @@ QUnit.module('thread_icon_tests.js', {
 QUnit.test('livechat: public website visitor is typing', async function (assert) {
     assert.expect(4);
 
-    // channel that will be used for testing the typing feature
     this.data['mail.channel'].records.push({
-        channel_type: 'livechat', // channel is expected to be livechat
-        id: 20, // random unique id, will be referenced in the test
-        livechat_visitor: {
-            name: "Visitor 20", // random name, will be asserted during the test
-        },
+        anonymous_name: "Visitor 20",
+        channel_type: 'livechat',
+        id: 20,
+        livechat_operator_id: this.data.currentPartnerId,
+        members: [this.data.currentPartnerId, this.data.publicPartnerId],
     });
     await this.start();
     const thread = this.env.models['mail.thread'].find(thread =>
