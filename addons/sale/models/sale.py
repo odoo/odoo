@@ -472,14 +472,20 @@ class SaleOrder(models.Model):
             .default_get(['journal_id'])['journal_id'])
         if not journal_id:
             raise UserError(_('Please define an accounting sales journal for this company.'))
-        vinvoice = self.env['account.invoice'].new({'partner_id': self.partner_invoice_id.id, 'type': 'out_invoice'})
+        AccountInvoice = self.env['account.invoice']
+        vals = AccountInvoice.default_get(AccountInvoice._fields.keys())
+        vals.update({
+            'partner_id': self.partner_invoice_id.id,
+            'type': 'out_invoice',
+            'company_id': company_id,
+        })
+        vinvoice = AccountInvoice.new(vals)
         # Get partner extra fields
         vinvoice._onchange_partner_id()
         invoice_vals = vinvoice._convert_to_write(vinvoice._cache)
         invoice_vals.update({
             'name': (self.client_order_ref or '')[:2000],
             'origin': self.name,
-            'type': 'out_invoice',
             'account_id': self.partner_invoice_id.property_account_receivable_id.id,
             'partner_shipping_id': self.partner_shipping_id.id,
             'journal_id': journal_id,
@@ -487,7 +493,6 @@ class SaleOrder(models.Model):
             'comment': self.note,
             'payment_term_id': self.payment_term_id.id,
             'fiscal_position_id': self.fiscal_position_id.id or self.partner_invoice_id.property_account_position_id.id,
-            'company_id': company_id,
             'user_id': self.user_id and self.user_id.id,
             'team_id': self.team_id.id,
             'transaction_ids': [(6, 0, self.transaction_ids.ids)],
