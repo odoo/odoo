@@ -260,33 +260,41 @@ const afterNextRender = (function () {
 function beforeEach(self) {
     const data = MockModels.generateData();
 
+    data.partnerRootId = 2;
     data['res.partner'].records.push({
         active: false,
         display_name: "OdooBot",
-        id: 2,
+        id: data.partnerRootId,
     });
-    data.partnerRootId = 2;
 
+    data.currentPartnerId = 3;
     data['res.partner'].records.push({
         display_name: "Your Company, Mitchell Admin",
-        id: 3,
+        id: data.currentPartnerId,
         name: "Mitchell Admin",
     });
-    data.currentPartnerId = 3;
+    data.currentUserId = 2;
     data['res.users'].records.push({
         display_name: "Your Company, Mitchell Admin",
-        id: 2,
+        id: data.currentUserId,
         name: "Mitchell Admin",
         partner_id: data.currentPartnerId,
     });
-    data.currentUserId = 2;
 
+    data.publicPartnerId = 4;
     data['res.partner'].records.push({
         active: false,
         display_name: "Public user",
-        id: 4,
+        id: data.publicPartnerId,
     });
-    data.publicPartnerId = 4;
+    data.publicUserId = 3;
+    data['res.users'].records.push({
+        active: false,
+        display_name: "Public user",
+        id: data.publicUserId,
+        name: "Public user",
+        partner_id: data.publicPartnerId,
+    });
 
     const originals = {
         '_.debounce': _.debounce,
