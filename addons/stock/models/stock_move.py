@@ -404,7 +404,7 @@ class StockMove(models.Model):
                 total_availability = self.env['stock.quant']._get_available_quantity(move.product_id, move.location_id) if move.product_id else 0.0
                 move.availability = min(move.product_qty, total_availability)
 
-    @api.depends('product_id', 'picking_type_id', 'picking_id', 'reserved_availability', 'priority')
+    @api.depends('product_id', 'picking_type_id', 'picking_id', 'reserved_availability', 'priority', 'state')
     def _compute_json_forecast(self):
         self.json_forecast = False
         if not any(self._ids):
@@ -412,14 +412,14 @@ class StockMove(models.Model):
             return
         # compute
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
-        not_product_moves = self.filtered(lambda move: move.product_id.type == 'product')
+        not_product_moves = self.filtered(lambda move: move.product_id.type != 'product')
         for move in not_product_moves:
             reserved_availability = float_repr(move.reserved_availability, precision)
             move.json_forecast = json.dumps({'reservedAvailability': reserved_availability})
         outgoing_unreserved_moves_per_warehouse = defaultdict(lambda: self.env['stock.move'])
         for move in (self - not_product_moves):
             picking_type = move.picking_type_id or move.picking_id.picking_type_id
-            is_unreserved = float_is_zero(move.reserved_availability, precision_rounding=move.product_uom.rounding)
+            is_unreserved = move.state in ('confirmed', 'partially_available')
             if picking_type.code in self._consuming_picking_types():
                 if is_unreserved:
                     outgoing_unreserved_moves_per_warehouse[picking_type.warehouse_id] |= move
@@ -438,22 +438,20 @@ class StockMove(models.Model):
             forecast_lines = self.env['report.stock.report_product_product_replenishment']\
                 ._get_report_lines(None, product_variant_ids, wh_location_ids)
             for move in moves:
-                found = [l for l in forecast_lines if l["move_out"] == move and l["replenishment_filled"] is True]
-                if found:
-                    move_ins = list(filter(lambda report_line: report_line['move_in'], found))
-                    # If the move is linked to multiple ingoing moves, take only the last one to have the worst expected date.
-                    if len(move_ins):
-                        found = [move_ins[-1]]
-                    # The move is replenished but there's no expected date -> take from stock
-                    if found[0]["receipt_date_short"] is False:
+                lines = [l for l in forecast_lines if l["move_out"] == move and l["replenishment_filled"] is True]
+                if lines:
+                    move_ins_lines = list(filter(lambda report_line: report_line['move_in'], lines))
+                    # The move is replenished but there's no move in -> take from stock
+                    if not move_ins_lines:
                         reserved_availability = float_repr(move.reserved_availability, precision)
                         move.json_forecast = json.dumps({'reservedAvailability': reserved_availability})
                     else:
+                        expected_date = max(m['move_in'].date for m in move_ins_lines)
                         move.json_forecast = json.dumps({
-                            'sortingDate': format_date(self.env, found[0]['move_in'].date, date_format='yyyy-MM-dd'),
-                            'expectedDate': found[0]["receipt_date_short"],
-                            'isLate': found[0]["is_late"],
-                            'replenishmentFilled': found[0]["replenishment_filled"]
+                            'reservedAvailability': float_repr(move.reserved_availability, precision) if move.state == 'partially_available' else False,
+                            'sortingDate': fields.Datetime.to_string(expected_date),
+                            'expectedDate': format_date(self.env, expected_date),
+                            'isLate': any(m["is_late"] for m in move_ins_lines),
                         })
                 else:
                     move.json_forecast = json.dumps({'expectedDate': None})

@@ -372,25 +372,21 @@ class SaleOrderLine(models.Model):
         # compute
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         for so_line in self:
+            # If all related stock move is available => reservedAvailability = Available
             if any(move.state == 'done' for move in so_line.move_ids) or not so_line.move_ids.picking_id:
                 qty_delivered = float_repr(so_line.qty_delivered, precision)
                 so_line.json_forecast = json.dumps({'reservedAvailability': qty_delivered})
+            elif all(move.state == 'assigned' for move in so_line.move_ids):
+                so_line.json_forecast = json.dumps({'reservedAvailability': _("Available")})
             else:
-                # For waiting deliveries, take the info from the report line.
-                delivery = so_line.move_ids.picking_id.filtered(lambda picking: picking.state in ['confirmed', 'waiting'])
-                if delivery.exists():
-                    moves_to_process = so_line.move_ids.filtered(lambda move: move.id in delivery.move_lines.ids and move.state not in ['cancel', 'done'])
-                    if moves_to_process.exists():
-                        so_line.json_forecast = moves_to_process[0].json_forecast
-                else:
-                    # For assigned deliveries, take the delivery's date.
-                    delivery = so_line.move_ids.picking_id.filtered(lambda picking: picking.state == 'assigned')
-                    if delivery.exists():
-                        date_expected = delivery.scheduled_date
-                        so_line.json_forecast = json.dumps({
-                            'expectedDate': format_date(self.env, date_expected),
-                            'isLate': date_expected > so_line.order_id.expected_date,
-                        })
+                move_json_forecast = so_line.move_ids.mapped("json_forecast")
+                move_datetimes_expected = [json.loads(m).get('sortingDate') for m in move_json_forecast]
+                datetime_expected = fields.Datetime.to_datetime(max(move_datetimes_expected)) if move_datetimes_expected else False
+                so_deadline = self.order_id.commitment_date or so_line._expected_date() or False
+                so_line.json_forecast = json.dumps({
+                    'expectedDate': format_date(self.env, datetime_expected.date()) if datetime_expected else False,
+                    'isLate': datetime_expected > so_deadline if datetime_expected and so_deadline else datetime_expected is False,
+                })
 
     @api.depends('product_id')
     def _compute_qty_delivered_method(self):
