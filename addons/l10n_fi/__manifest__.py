@@ -3,6 +3,7 @@
 
 {
     "name": "Finnish Localization",
+    'icon': '/base/static/img/country_flags/fi.png',
     "version": "13.0.1",
     "author": "Avoin.Systems, "
               "Tawasta, "

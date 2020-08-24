@@ -19,6 +19,7 @@
 
 {
     'name': 'Guatemala - Accounting',
+    'icon': '/base/static/img/country_flags/gt.png',
     'version': '3.0',
     'category': 'Accounting/Localizations/Account Charts',
     'description': """

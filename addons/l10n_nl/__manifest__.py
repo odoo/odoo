@@ -5,6 +5,7 @@
 
 {
     'name': 'Netherlands - Accounting',
+    'icon': '/base/static/img/country_flags/nl.png',
     'version': '3.0',
     'category': 'Accounting/Localizations/Account Charts',
     'author': 'Onestein',

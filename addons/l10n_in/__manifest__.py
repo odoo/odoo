@@ -3,6 +3,7 @@
 
 {
     'name': 'Indian - Accounting',
+    'icon': '/base/static/img/country_flags/in.png',
     'version': '2.0',
     'description': """
 Indian Accounting: Chart of Account.

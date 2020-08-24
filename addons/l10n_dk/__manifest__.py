@@ -3,6 +3,7 @@
 
 {
     'name': 'Denmark - Accounting',
+    'icon': '/base/static/img/country_flags/dk.png',
     'version': '1.0',
     'author': 'Odoo House ApS',
     'website': 'https://odoohouse.dk',
