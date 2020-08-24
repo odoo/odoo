@@ -33,6 +33,7 @@
 
 {
     'name': 'Germany SKR03 - Accounting',
+    'icon': '/base/static/img/country_flags/de.png',
     'version': '3.0',
     'author': 'openbig.org',
     'website': 'http://www.openbig.org',

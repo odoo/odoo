@@ -5,6 +5,7 @@
 
 {
     "name": "Bolivia - Accounting",
+    'icon': '/base/static/img/country_flags/bo.png',
     "version": "2.0",
     "description": """
 Bolivian accounting chart and tax localization.

@@ -10,6 +10,7 @@
 
 {
     "name": "Romania - Accounting",
+    'icon': '/base/static/img/country_flags/ro.png',
     "author": "Fekete Mihai (NextERP Romania SRL)",
     "website": "https://www.nexterp.ro",
     'category': 'Accounting/Localizations/Account Charts',

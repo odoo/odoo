@@ -5,6 +5,7 @@
 
 {
     'name' : 'Poland - Accounting',
+    'icon': '/base/static/img/country_flags/pl.png',
     'version' : '2.0',
     'author' : 'Grzegorz Grzelak (OpenGLOBE)',
     'website': 'http://www.openglobe.pl',
