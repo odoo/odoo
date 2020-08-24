@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <template id="account.terms_back_in_edit_mode" name="Back to edit mode">
-        <div t-ignore="true" class="text-center">
-            <t t-if="custom_html" t-raw="custom_html"/>
-            <t t-else="">This is a preview of your Terms &amp; Conditions.</t>
-            <a t-att-href="backend_url"><i class="fa fa-arrow-right mr-1"/>Back to settings</a>
+        <div id="terms_conditions" t-ignore="true" class="text-center">
+            <span>This is a preview of your Terms &amp; Conditions.</span>
+            <a id="settings" href="#"><i class="fa fa-arrow-right mr-1"/>Back to settings</a>
         </div>
         <button type="button" class="close" data-dismiss="alert" aria-label="Close"> &#215; </button>
     </template>
@@ -12,9 +11,7 @@
     <template id="terms_page" name="Terms &amp; Conditions">
         <t t-call="web.frontend_layout">
             <t t-set="o_portal_fullwidth_alert" groups="account.group_account_manager">
-                <t t-call="account.terms_back_in_edit_mode">
-                    <t t-set="backend_url" t-value="'/web#model=res.config.settings&amp;view_type=form&amp;id='"/>
-                </t>
+                <t t-call="account.terms_back_in_edit_mode"/>
             </t>
             <div class="oe_structure" id="oe_structure_terms_conditions"/>
                 <div class="container oe_website_terms_conditions">
