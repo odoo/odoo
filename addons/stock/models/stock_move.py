@@ -176,7 +176,10 @@ class StockMove(models.Model):
     next_serial = fields.Char('First SN')
     next_serial_count = fields.Integer('Number of SN')
     orderpoint_id = fields.Many2one('stock.warehouse.orderpoint', 'Original Reordering Rule', check_company=True)
+    # TODO : remove `json_forecast` in master, use forcast_ fields instead
     json_forecast = fields.Char('JSON data for the forecast widget', compute='_compute_json_forecast')
+    forecast_availability = fields.Float('Forcast Availability', compute='_compute_json_forecast', digits='Product Unit of Measure')
+    forecast_expected_date = fields.Datetime('Forcasted Expected date', compute='_compute_json_forecast')
     lot_ids = fields.Many2many('stock.production.lot', compute='_compute_lot_ids', inverse='_set_lot_ids', string='Serial Numbers', readonly=False)
 
     @api.onchange('product_id', 'picking_type_id')
@@ -405,30 +408,24 @@ class StockMove(models.Model):
                 total_availability = self.env['stock.quant']._get_available_quantity(move.product_id, move.location_id) if move.product_id else 0.0
                 move.availability = min(move.product_qty, total_availability)
 
-    @api.depends('product_id', 'picking_type_id', 'picking_id', 'reserved_availability', 'priority')
+    @api.depends('product_id', 'picking_type_id', 'picking_id', 'reserved_availability', 'priority', 'state', 'product_uom_qty')
     def _compute_json_forecast(self):
+        """ Compute forecasted information of the related product by warehouse."""
         self.json_forecast = False
-        if not any(self._ids):
-            # onchange
-            return
-        # compute
-        precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
-        not_product_moves = self.filtered(lambda move: move.product_id.type == 'product')
+        self.forecast_availability = False
+        self.forecast_expected_date = False
+
+        not_product_moves = self.filtered(lambda move: move.product_id.type != 'product')
         for move in not_product_moves:
-            reserved_availability = float_repr(move.reserved_availability, precision)
-            move.json_forecast = json.dumps({'reservedAvailability': reserved_availability})
+            move.forecast_availability = move.product_qty
         outgoing_unreserved_moves_per_warehouse = defaultdict(lambda: self.env['stock.move'])
         for move in (self - not_product_moves):
             picking_type = move.picking_type_id or move.picking_id.picking_type_id
-            is_unreserved = float_is_zero(move.reserved_availability, precision_rounding=move.product_uom.rounding)
-            if picking_type.code in self._consuming_picking_types():
-                if is_unreserved:
-                    outgoing_unreserved_moves_per_warehouse[picking_type.warehouse_id] |= move
-                else:
-                    reserved_availability = float_repr(move.reserved_availability, precision)
-                    move.json_forecast = json.dumps({'reservedAvailability': reserved_availability})
-        if not outgoing_unreserved_moves_per_warehouse:
-            return
+            is_unreserved = move.state in ('waiting', 'confirmed', 'partially_available')
+            if picking_type.code in self._consuming_picking_types() and is_unreserved:
+                outgoing_unreserved_moves_per_warehouse[picking_type.warehouse_id] |= move
+            elif picking_type.code in self._consuming_picking_types():
+                move.forecast_availability = move.reserved_availability
 
         for warehouse, moves in outgoing_unreserved_moves_per_warehouse.items():
             product_variant_ids = moves.product_id.ids
@@ -439,25 +436,13 @@ class StockMove(models.Model):
             forecast_lines = self.env['report.stock.report_product_product_replenishment']\
                 ._get_report_lines(None, product_variant_ids, wh_location_ids)
             for move in moves:
-                found = [l for l in forecast_lines if l["move_out"] == move and l["replenishment_filled"] is True]
-                if found:
-                    move_ins = list(filter(lambda report_line: report_line['move_in'], found))
-                    # If the move is linked to multiple ingoing moves, take only the last one to have the worst expected date.
-                    if len(move_ins):
-                        found = [move_ins[-1]]
-                    # The move is replenished but there's no expected date -> take from stock
-                    if found[0]["receipt_date_short"] is False:
-                        reserved_availability = float_repr(move.reserved_availability, precision)
-                        move.json_forecast = json.dumps({'reservedAvailability': reserved_availability})
-                    else:
-                        move.json_forecast = json.dumps({
-                            'sortingDate': format_date(self.env, found[0]['move_in'].date, date_format='yyyy-MM-dd'),
-                            'expectedDate': found[0]["receipt_date_short"],
-                            'isLate': found[0]["is_late"],
-                            'replenishmentFilled': found[0]["replenishment_filled"]
-                        })
-                else:
-                    move.json_forecast = json.dumps({'expectedDate': None})
+                lines = [l for l in forecast_lines if l["move_out"] == move._origin and l["replenishment_filled"] is True]
+                if lines:
+                    move.forecast_availability = sum(m['quantity'] for m in lines)
+                    move_ins_lines = list(filter(lambda report_line: report_line['move_in'], lines))
+                    if move_ins_lines:
+                        expected_date = max(m['move_in'].date for m in move_ins_lines)
+                        move.forecast_expected_date = expected_date
 
     def _set_date_deadline(self, new_deadline):
         # Handle the propagation of `date_deadline` fields (up and down stream - only update by up/downstream documents)
