@@ -59,15 +59,16 @@ QUnit.module('Views', {
                     type: {string: "type", type: "integer"},
                     event_type_id: {string: "Event_Type", type: "many2one", relation: 'event_type'},
                     color:  {string: "Color", type: "integer", related: 'event_type_id.color'},
+                    is_hatched: {string: "Hatched", type: "boolean"}
                 },
                 records: [
-                    {id: 1, user_id: session.uid, partner_id: 1, name: "event 1", start: "2016-12-11 00:00:00", stop: "2016-12-11 00:00:00", allday: false, partner_ids: [1,2,3], type: 1},
-                    {id: 2, user_id: session.uid, partner_id: 1, name: "event 2", start: "2016-12-12 10:55:05", stop: "2016-12-12 14:55:05", allday: false, partner_ids: [1,2], type: 3},
-                    {id: 3, user_id: 4, partner_id: 4, name: "event 3", start: "2016-12-12 15:55:05", stop: "2016-12-12 16:55:05", allday: false, partner_ids: [1], type: 2},
-                    {id: 4, user_id: session.uid, partner_id: 1, name: "event 4", start: "2016-12-14 15:55:05", stop: "2016-12-14 18:55:05", allday: true, partner_ids: [1], type: 2},
-                    {id: 5, user_id: 4, partner_id: 4, name: "event 5", start: "2016-12-13 15:55:05", stop: "2016-12-20 18:55:05", allday: false, partner_ids: [2,3], type: 2},
-                    {id: 6, user_id: session.uid, partner_id: 1, name: "event 6", start: "2016-12-18 08:00:00", stop: "2016-12-18 09:00:00", allday: false, partner_ids: [3], type: 3},
-                    {id: 7, user_id: session.uid, partner_id: 1, name: "event 7", start: "2016-11-14 08:00:00", stop: "2016-11-16 17:00:00", allday: false, partner_ids: [2], type: 1},
+                    {id: 1, user_id: session.uid, partner_id: 1, name: "event 1", start: "2016-12-11 00:00:00", stop: "2016-12-11 00:00:00", allday: false, partner_ids: [1,2,3], type: 1, is_hatched: false},
+                    {id: 2, user_id: session.uid, partner_id: 1, name: "event 2", start: "2016-12-12 10:55:05", stop: "2016-12-12 14:55:05", allday: false, partner_ids: [1,2], type: 3, is_hatched: false},
+                    {id: 3, user_id: 4, partner_id: 4, name: "event 3", start: "2016-12-12 15:55:05", stop: "2016-12-12 16:55:05", allday: false, partner_ids: [1], type: 2, is_hatched: true},
+                    {id: 4, user_id: session.uid, partner_id: 1, name: "event 4", start: "2016-12-14 15:55:05", stop: "2016-12-14 18:55:05", allday: true, partner_ids: [1], type: 2, is_hatched: false},
+                    {id: 5, user_id: 4, partner_id: 4, name: "event 5", start: "2016-12-13 15:55:05", stop: "2016-12-20 18:55:05", allday: false, partner_ids: [2,3], type: 2, is_hatched: true},
+                    {id: 6, user_id: session.uid, partner_id: 1, name: "event 6", start: "2016-12-18 08:00:00", stop: "2016-12-18 09:00:00", allday: false, partner_ids: [3], type: 3, is_hatched: true},
+                    {id: 7, user_id: session.uid, partner_id: 1, name: "event 7", start: "2016-11-14 08:00:00", stop: "2016-11-16 17:00:00", allday: false, partner_ids: [2], type: 1, is_hatched: false},
                 ],
                 check_access_rights: function () {
                     return Promise.resolve(true);
@@ -3681,7 +3682,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('correctly display year view', async function (assert) {
-        assert.expect(27);
+        assert.expect(28);
 
         const calendar = await createCalendarView({
             View: CalendarView,
@@ -3700,6 +3701,7 @@ QUnit.module('Views', {
                 >
                     <field name="partner_ids" write_model="filter_partner" write_field="partner_id"/>
                     <field name="partner_id" filters="1" invisible="1"/>
+                    <field name="is_hatched" invisible="1" />
                 </calendar>`,
             archs: archs,
             viewOptions: {
@@ -3715,6 +3717,9 @@ QUnit.module('Views', {
         );
         assert.containsN(calendar.el, '.fc-bgevent', 7,
             'There should be 6 events displayed but there is 1 split on 2 weeks');
+
+            assert.containsN(calendar.el, '.o_calendar_hatched', 3,
+                'There should be 3 events that are hatched')
 
         async function clickDate(date) {
             const el = calendar.el.querySelector(`.fc-day-top[data-date="${date}"]`);
