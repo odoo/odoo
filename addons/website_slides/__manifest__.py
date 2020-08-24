@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'eLearning',
-    'version': '2.2',
+    'version': '2.3',
     'sequence': 125,
     'summary': 'Manage and publish an eLearning platform',
     'website': 'https://www.odoo.com/page/slides',
