@@ -49,7 +49,14 @@
             }
 
             @media screen and (min-width: 1400px) {
-                max-width: none;
+                // return to bootstrap value for col-lg-9 / 10 breakpoint if screen is big enough
+                &.col-lg-9 {
+                    max-width: 75%;
+                }
+
+                &.col-lg-10 {
+                    max-width: 83.33333333%;
+                }
             }
         }
 
