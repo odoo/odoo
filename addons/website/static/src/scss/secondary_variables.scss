@@ -14,8 +14,6 @@ $-first-font-name: nth(map-keys($o-theme-font-configs), 1);
 }
 
 @function o-add-font-config($values) {
-    $original-values: $values;
-
     @each $alias, $key in $o-font-aliases-to-keys {
         $font-name: map-get($values, $key);
         $font-config: o-safe-get($o-theme-font-configs, $font-name, ());
@@ -23,10 +21,7 @@ $-first-font-name: nth(map-keys($o-theme-font-configs), 1);
         $type-font-properties: o-safe-get($font-properties, $alias, ());
         $values: map-merge($values, $type-font-properties);
     }
-
-    // Reforce the properties which already had a set values in the original
-    // $values map.
-    @return map-merge($values, o-map-omit($original-values));
+    @return $values;
 }
 
 // By default, most website palette values are null. Each null value is
@@ -34,10 +29,14 @@ $-first-font-name: nth(map-keys($o-theme-font-configs), 1);
 // palette.
 $-website-values-default: o-safe-nth($o-website-values-palettes, $o-website-values-palette-number, ());
 $-website-values-default: map-merge($o-base-website-values-palette, o-map-omit($-website-values-default));
-$-actual-user-website-values-palette: map-merge($-website-values-default, o-map-omit($o-user-website-values));
+$o-user-website-values: o-map-omit($o-user-website-values);
+$-actual-user-website-values-palette: map-merge($-website-values-default, $o-user-website-values);
 // Default font selection + User font selection have been merged, now need to
 // add the right associated font default config
 $-actual-user-website-values-palette: o-add-font-config($-actual-user-website-values-palette);
+// Reforce the properties which already had a set values in the user map (the
+// font properties override the default palette values but not the user ones)
+$-actual-user-website-values-palette: map-merge($-actual-user-website-values-palette, $o-user-website-values);
 $o-website-values-palettes: append($o-website-values-palettes, $-actual-user-website-values-palette);
 
 // Enable last website values palette, which is now the user customized one
