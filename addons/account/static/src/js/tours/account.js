@@ -7,7 +7,6 @@ var tour = require('web_tour.tour');
 var _t = core._t;
 
 tour.register('account_tour', {
-    skip_enabled: true,
     url: "/web",
 }, [
     ...tour.stepUtils.goToAppSteps('account.menu_finance', _t('Send invoices to your customers in no time with the <b>Invoicing app</b>.')),
