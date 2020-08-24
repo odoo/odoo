@@ -1,7 +1,7 @@
 odoo.define('point_of_sale.NumberBuffer', function(require) {
     'use strict';
 
-    const { Component, useState } = owl;
+    const { Component } = owl;
     const { EventBus } = owl.core;
     const { onMounted, onWillUnmount, useExternalListener } = owl.hooks;
     const { useListener } = require('web.custom_hooks');
@@ -48,15 +48,17 @@ odoo.define('point_of_sale.NumberBuffer', function(require) {
      *   - set(val)
      *   - reset()
      *   - getFloat()
+     *   - capture()
      *
      * Note
      * ====
-     * - No need to instantiate as it is a single created before exporting in this module.
+     * - No need to instantiate as it is a singleton created before exporting in this module.
      *
      * Possible Improvements
      * =====================
      * - Relieve the buffer from responsibility of handling `Enter` and other control keys.
      * - Make the constants (ALLOWED_KEYS, etc.) more configurable.
+     * - Write more integration tests. NumberPopup can be used as test component.
      */
     class NumberBuffer extends EventBus {
         constructor() {
@@ -89,6 +91,19 @@ odoo.define('point_of_sale.NumberBuffer', function(require) {
             this.trigger('buffer-update', this.state.buffer);
         }
         /**
+         * Calling this function, we immediately invoke the `handler` method
+         * that handles the contents of the input events buffer (`eventsBuffer`).
+         * This is helpful when we don't want to wait for the timeout that
+         * is supposed to invoke the handler.
+         */
+        capture() {
+            if (this.handler) {
+                clearTimeout(this._timeout);
+                this.handler();
+                delete this.handler;
+            }
+        }
+        /**
          * @returns {number} float equivalent of the value of buffer
          */
         getFloat() {
@@ -107,11 +122,15 @@ odoo.define('point_of_sale.NumberBuffer', function(require) {
          * @param {Object} config Use to setup the buffer
          * @param {String|null} config.decimalPoint The decimal character.
          * @param {String|null} config.triggerAtEnter Event triggered when 'Enter' key is pressed.
+         * @param {String|null} config.triggerAtEsc Event triggered when 'Esc' key is pressed.
          * @param {String|null} config.triggerAtInput Event triggered for every accepted input.
          * @param {String|null} config.nonKeyboardInputEvent Also listen to a non-keyboard input event
          *      that carries a payload of { key }. The key is checked if it is a valid input. If valid,
          *      the number buffer is modified just as it is modified when a keyboard key is pressed.
          * @param {Boolean} config.useWithBarcode Whether this buffer is used with barcode.
+         * @emits config.triggerAtEnter when 'Enter' key is pressed.
+         * @emits config.triggerAtEsc when 'Esc' key is pressed.
+         * @emits config.triggerAtInput when an input is accepted.
          */
         use(config) {
             this.eventsBuffer = [];
@@ -120,7 +139,7 @@ odoo.define('point_of_sale.NumberBuffer', function(require) {
             onMounted(() => {
                 this.bufferHolderStack.push({
                     component: currentComponent,
-                    state: config.state ? config.state : useState({ buffer: '' }),
+                    state: config.state ? config.state : { buffer: '' },
                     config,
                 });
                 this._setUp();
@@ -160,6 +179,7 @@ odoo.define('point_of_sale.NumberBuffer', function(require) {
                 clearTimeout(this._timeout);
                 this.eventsBuffer.push(event);
                 this._timeout = setTimeout(handler, this.maxTimeBetweenKeys);
+                this.handler = handler
             };
         }
         _onInput(keyAccessor) {

@@ -224,7 +224,6 @@ odoo.define('point_of_sale.tour.ProductScreenTourMethods', function (require) {
                 res.push(...this._do.pressNumpad('Price'));
                 res.push(...this._check.modeIsActive('Price'));
                 res.push(...this._do.pressNumpad(unitPrice.toString().split('').join(' ')));
-                res.push(...this._check.selectedOrderlineHas(productName, '1.0', unitPrice));
                 res.push(...this._do.pressNumpad('Qty'));
                 res.push(...this._check.modeIsActive('Qty'));
             }

@@ -150,10 +150,11 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
 
             NumberBuffer.reset();
         }
-        async _setNumpadMode(event) {
+        _setNumpadMode(event) {
             const { mode } = event.detail;
-            this.state.numpadMode = mode;
+            NumberBuffer.capture();
             NumberBuffer.reset();
+            this.state.numpadMode = mode;
         }
         async _updateSelectedOrderline(event) {
             if(this.state.numpadMode === 'quantity' && this.env.pos.disallowLineQuantityChange()) {
