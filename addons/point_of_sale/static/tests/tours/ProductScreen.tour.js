@@ -40,9 +40,7 @@ odoo.define('point_of_sale.tour.ProductScreen', function (require) {
     ProductScreen.check.selectedOrderlineHas('Desk Organizer', '12.0', '61.2');
     ProductScreen.do.pressNumpad('3');
     ProductScreen.check.selectedOrderlineHas('Desk Organizer', '123.0', '627.3');
-    ProductScreen.do.pressNumpad('.');
-    ProductScreen.check.selectedOrderlineHas('Desk Organizer', '123.0', '627.3');
-    ProductScreen.do.pressNumpad('5 0');
+    ProductScreen.do.pressNumpad('. 5');
     ProductScreen.check.selectedOrderlineHas('Desk Organizer', '123.5', '629.85');
     ProductScreen.do.pressNumpad('Price');
     ProductScreen.do.pressNumpad('1');
