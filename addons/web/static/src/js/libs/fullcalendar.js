@@ -64,6 +64,8 @@ odoo.define('/web/static/src/js/libs/fullcalendar.js', function () {
                     this.el.classList.add('fc-readonly-year-view');
                 }
                 this.months = [];
+                const currentMonthNumber = (new Date()).getMonth();
+                let currentMonthEl = undefined;
                 for (let monthNumber = 0; monthNumber < 12; monthNumber++) {
                     const monthDate = new Date(this.currentDate.getFullYear(), monthNumber);
                     const monthShortName = moment(monthDate).format('MMM').toLowerCase();
@@ -76,6 +78,13 @@ odoo.define('/web/static/src/js/libs/fullcalendar.js', function () {
                     const calendar = this._createMonthCalendar(el, monthDate);
                     this.months.push({ el, calendar });
                     calendar.render();
+                    if (monthNumber === currentMonthNumber) {
+                        currentMonthEl = el;
+                    }
+                }
+
+                if (currentMonthEl !== undefined) {
+                    currentMonthEl.scrollIntoView();
                 }
             }
             /**
