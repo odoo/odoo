@@ -53,12 +53,6 @@
                 <xpath expr="//field[@name='order_line']/tree/field[@name='analytic_tag_ids']" position="after">
                     <field name="route_id" groups="stock.group_adv_location" options="{'no_create': True}" optional="hide"/>
                 </xpath>
-                <xpath expr="//field[@name='order_line']/tree/field[@name='qty_delivered']" position="attributes">
-                    <attribute name="attrs">{'column_invisible': [('parent.state', 'not in', ['cancel', 'done'])]}</attribute>
-                </xpath>
-                <xpath expr="//field[@name='order_line']/tree/field[@name='qty_delivered']" position="after">
-                    <field name="json_forecast" string="Delivered" widget="forecast_widget" attrs="{'column_invisible': [('parent.state', 'in', ['cancel', 'done'])]}"/>
-                </xpath>
            </field>
         </record>
 
@@ -100,13 +94,14 @@
             <field name="inherit_id" ref="sale.view_order_form"/>
             <field name="model">sale.order</field>
             <field name="arch" type="xml">
-                <xpath expr="//page/field[@name='order_line']/tree/field[@name='product_uom_qty']" position="after">
+                <xpath expr="//page/field[@name='order_line']/tree/field[@name='qty_delivered']" position="after">
                     <!-- below fields are used in the widget qty_at_date_widget -->
                     <field name="product_type" invisible="1"/>
                     <field name="virtual_available_at_date" invisible="1"/>
                     <field name="qty_available_today" invisible="1"/>
                     <field name="free_qty_today" invisible="1"/>
                     <field name="scheduled_date" invisible="1"/>
+                    <field name="forecast_expected_date" invisible="1"/>
                     <field name="warehouse_id" invisible="1"/>
                     <field name="qty_to_deliver" invisible="1"/>
                     <field name="is_mto" invisible="1"/>
