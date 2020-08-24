@@ -114,14 +114,10 @@ class Event(models.Model):
 
     @api.depends("event_type_id", "website_menu", "community_menu")
     def _compute_community_menu(self):
-        """ At type onchange: synchronize. At website_menu update: synchronize. """
+        """ Set False in base module. Sub modules will add their own logic
+        (meet or track_quiz). """
         for event in self:
-            if event.event_type_id and event.event_type_id != event._origin.event_type_id:
-                event.community_menu = event.event_type_id.community_menu
-            elif event.website_menu and event.website_menu != event._origin.website_menu or not event.community_menu:
-                event.community_menu = True
-            elif not event.website_menu:
-                event.community_menu = False
+            event.community_menu = False
 
     @api.depends("event_type_id", "website_menu")
     def _compute_menu_register_cta(self):
@@ -129,7 +125,7 @@ class Event(models.Model):
         for event in self:
             if event.event_type_id and event.event_type_id != event._origin.event_type_id:
                 event.menu_register_cta = event.event_type_id.menu_register_cta
-            elif event.website_menu and event.website_menu != event._origin.website_menu or not event.menu_register_cta:
+            elif event.website_menu and (event.website_menu != event._origin.website_menu or not event.menu_register_cta):
                 event.menu_register_cta = True
             elif not event.website_menu:
                 event.menu_register_cta = False
