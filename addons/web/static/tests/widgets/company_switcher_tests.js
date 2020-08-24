@@ -1,22 +1,29 @@
 odoo.define('web.SwitchCompanyMenu_tests', function (require) {
 "use strict";
 
-var SwitchCompanyMenu = require('web.SwitchCompanyMenu');
-var testUtils = require('web.test_utils');
+const SwitchCompanyMenu = require('web.SwitchCompanyMenu');
+const testUtils = require('web.test_utils');
+
+const addMockEnvironmentOwl = testUtils.mock.addMockEnvironmentOwl;
 
 
 async function createSwitchCompanyMenu(params) {
     params = params || {};
-    var target = params.debug ? document.body :  $('#qunit-fixture');
-    var menu = new SwitchCompanyMenu();
-    await testUtils.mock.addMockEnvironment(menu, params);
-    await menu.appendTo(target)
-    return menu
+    const target = params.debug ? document.body :  document.querySelector('#qunit-fixture');
+    const menu = new SwitchCompanyMenu();
+    const cleanUp = await addMockEnvironmentOwl(menu, params);
+    await menu.mount(target)
+    const destroy = menu.destroy;
+    menu.destroy = function () {
+        cleanUp();
+        destroy.call(this, ...arguments);
+    };
+    return menu;
 }
 
 
 async function initMockCompanyMenu(assert, params) {
-    var menu = await createSwitchCompanyMenu({
+    const menu = await createSwitchCompanyMenu({
         session: {
             ...params.session,
             setCompanies: function (mainCompanyId, companyIds) {
@@ -24,22 +31,22 @@ async function initMockCompanyMenu(assert, params) {
                 assert.equal(_.intersection(companyIds, params.asserCompanies[0]).length, params.asserCompanies[0].length, params.asserCompanies[1]);
             },
         }
-    })
-    await testUtils.dom.click(menu.$('.dropdown-toggle'));  // open company switcher dropdown
+    });
+    await testUtils.dom.click(menu.el.querySelector('.dropdown-toggle'));  // open company switcher dropdown
     return menu
 }
 
 async function testSwitchCompany(assert, params) {
     assert.expect(2);
-    var menu = await initMockCompanyMenu(assert, params);
-    await testUtils.dom.click(menu.$(`div[data-company-id=${params.company}] div.log_into`));
+    const menu = await initMockCompanyMenu(assert, params);
+    await testUtils.dom.click(menu.el.querySelector(`div[data-company-id="${params.company}"] div.log_into`));
     menu.destroy();
 }
 
 async function testToggleCompany(assert, params) {
     assert.expect(2);
-    var menu = await initMockCompanyMenu(assert, params);
-    await testUtils.dom.click(menu.$(`div[data-company-id=${params.company}] div.toggle_company`));
+    const menu = await initMockCompanyMenu(assert, params);
+    await testUtils.dom.click(menu.el.querySelector(`div[data-company-id="${params.company}"] div.toggle_company`));
     menu.destroy();
 }
 
@@ -67,14 +74,28 @@ QUnit.module('widgets', {
 
         QUnit.test("Company switcher basic rendering", async function (assert) {
             assert.expect(6);
-            var menu = await createSwitchCompanyMenu({ session: this.session_mock_multi });
-            assert.equal(menu.$('.company_label:contains(Company 1)').length, 1, "it should display Company 1")
-            assert.equal(menu.$('.company_label:contains(Company 2)').length, 1, "it should display Company 2")
-            assert.equal(menu.$('.company_label:contains(Company 3)').length, 1, "it should display Company 3")
 
-            assert.equal(menu.$('div[data-company-id=1] .fa-check-square').length, 1, "Company 1 should be checked")
-            assert.equal(menu.$('div[data-company-id=2] .fa-square-o').length, 1, "Company 2 should not be checked")
-            assert.equal(menu.$('div[data-company-id=3] .fa-check-square').length, 1, "Company 3 should be checked")
+            const menu = await createSwitchCompanyMenu({ session: this.session_mock_multi });
+            const company1 = [].filter.call(menu.el.querySelectorAll(".company_label"), (el) => {
+                return el.childNodes && [...el.childNodes].find((n) => n.nodeValue?.match("Company 1"));
+            })
+            assert.strictEqual(company1.length, 1, "it should display Company 1");
+            const company2 = [].filter.call(menu.el.querySelectorAll(".company_label"), (el) => {
+                return el.childNodes && [...el.childNodes].find((n) => n.nodeValue?.match("Company 2"));
+            })
+            assert.strictEqual(company2.length, 1, "it should display Company 2");
+            const company3 = [].filter.call(menu.el.querySelectorAll(".company_label"), (el) => {
+                return el.childNodes && [...el.childNodes].find((n) => n.nodeValue?.match("Company 3"));
+            })
+            assert.strictEqual(company3.length, 1, "it should display Company 3");
+
+            assert.containsOnce(menu, 'div[data-company-id="1"] .fa-check-square',
+                "Company 1 should be checked")
+            assert.containsOnce(menu, 'div[data-company-id="2"] .fa-square-o',
+                "Company 2 should not be checked")
+            assert.containsOnce(menu, 'div[data-company-id="3"] .fa-check-square',
+                "Company 3 should be checked")
+
             menu.destroy();
         });
     });

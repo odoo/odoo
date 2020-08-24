@@ -1,127 +1,132 @@
-odoo.define('web.SwitchCompanyMenu', function(require) {
-"use strict";
-
-/**
- * When Odoo is configured in multi-company mode, users should obviously be able
- * to switch their interface from one company to the other.  This is the purpose
- * of this widget, by displaying a dropdown menu in the systray.
- */
-
-var config = require('web.config');
-var core = require('web.core');
-var session = require('web.session');
-var SystrayMenu = require('web.SystrayMenu');
-var Widget = require('web.Widget');
-
-var _t = core._t;
-
-var SwitchCompanyMenu = Widget.extend({
-    template: 'SwitchCompanyMenu',
-    events: {
-        'click .dropdown-item[data-menu] div.log_into': '_onSwitchCompanyClick',
-        'keydown .dropdown-item[data-menu] div.log_into': '_onSwitchCompanyClick',
-        'click .dropdown-item[data-menu] div.toggle_company': '_onToggleCompanyClick',
-        'keydown .dropdown-item[data-menu] div.toggle_company': '_onToggleCompanyClick',
-    },
-    // force this item to be the first one to the left of the UserMenu in the systray
-    sequence: 1,
-    /**
-     * @override
-     */
-    init: function () {
-        this._super.apply(this, arguments);
-        this.isMobile = config.device.isMobile;
-        this._onSwitchCompanyClick = _.debounce(this._onSwitchCompanyClick, 1500, true);
-    },
+odoo.define("web.SwitchCompanyMenu", function (require) {
+    "use strict";
 
     /**
-     * @override
+     * When Odoo is configured in multi-company mode, users should obviously be able
+     * to switch their interface from one company to the other.  This is the purpose
+     * of this widget, by displaying a dropdown menu in the systray.
      */
-    willStart: function () {
-        var self = this;
-        this.allowed_company_ids = String(session.user_context.allowed_company_ids)
-                                    .split(',')
-                                    .map(function (id) {return parseInt(id);});
-        this.user_companies = session.user_companies.allowed_companies;
-        this.current_company = this.allowed_company_ids[0];
-        this.current_company_name = _.find(session.user_companies.allowed_companies, function (company) {
-            return company[0] === self.current_company;
-        })[1];
-        return this._super.apply(this, arguments);
-    },
 
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
+    const config = require("web.config");
+    const session = require("web.session");
+    const SystrayMenu = require("web.SystrayMenu");
 
-    /**
-     * @private
-     * @param {MouseEvent|KeyEvent} ev
-     */
-    _onSwitchCompanyClick: function (ev) {
-        if (ev.type == 'keydown' && ev.which != $.ui.keyCode.ENTER && ev.which != $.ui.keyCode.SPACE) {
-            return;
+    class SwitchCompanyMenu extends owl.Component {
+        /**
+         * @override
+         */
+        constructor() {
+            super(...arguments);
+            this.isMobile = config.device.isMobile;
+            this._onSwitchCompanyClick = _.debounce(this._onSwitchCompanyClick, 1500, true);
         }
-        ev.preventDefault();
-        ev.stopPropagation();
-        var dropdownItem = $(ev.currentTarget).parent();
-        var dropdownMenu = dropdownItem.parent();
-        var companyID = dropdownItem.data('company-id');
-        var allowed_company_ids = this.allowed_company_ids;
-        if (dropdownItem.find('.fa-square-o').length) {
-            // 1 enabled company: Stay in single company mode
-            if (this.allowed_company_ids.length === 1) {
-                if (this.isMobile) {
-                    dropdownMenu = dropdownMenu.parent();
-                }
-                dropdownMenu.find('.fa-check-square').removeClass('fa-check-square').addClass('fa-square-o');
-                dropdownItem.find('.fa-square-o').removeClass('fa-square-o').addClass('fa-check-square');
-                allowed_company_ids = [companyID];
-            } else { // Multi company mode
-                allowed_company_ids.push(companyID);
-                dropdownItem.find('.fa-square-o').removeClass('fa-square-o').addClass('fa-check-square');
+
+        /**
+         * @override
+         */
+        willStart() {
+            const self = this;
+            this.allowed_company_ids = String(session.user_context.allowed_company_ids)
+                .split(",")
+                .map(function (id) {
+                    return parseInt(id);
+                });
+            this.user_companies = session.user_companies.allowed_companies;
+            this.current_company = this.allowed_company_ids[0];
+            this.current_company_name = _.find(session.user_companies.allowed_companies, function (
+                company
+            ) {
+                return company[0] === self.current_company;
+            })[1];
+            return super.willStart(...arguments);
+        }
+
+        //--------------------------------------------------------------------------
+        // Handlers
+        //--------------------------------------------------------------------------
+
+        /**
+         * @private
+         * @param {MouseEvent|KeyEvent} ev
+         */
+        _onSwitchCompanyClick(ev) {
+            if (
+                ev.type === "keydown" &&
+                ev.which !== $.ui.keyCode.ENTER &&
+                ev.which !== $.ui.keyCode.SPACE
+            ) {
+                return;
             }
+            const dropdownItem = ev.currentTarget.parentElement;
+            let dropdownMenu = dropdownItem.parentElement;
+            const companyID = parseInt(dropdownItem.getAttribute("data-company-id"));
+            let allowedCompanyIds = this.allowed_company_ids;
+            if (dropdownItem.querySelector(".fa-square-o")) {
+                // 1 enabled company: Stay in single company mode
+                if (this.allowed_company_ids.length === 1) {
+                    if (this.isMobile) {
+                        dropdownMenu = dropdownMenu.parentElement;
+                    }
+                    dropdownMenu.querySelector(".fa-check-square").classList.add("fa-square-o");
+                    dropdownMenu
+                        .querySelector(".fa-check-square")
+                        .classList.remove("fa-check-square");
+                    dropdownItem.querySelector(".fa-square-o").classList.add("fa-check-square");
+                    dropdownItem.querySelector(".fa-square-o").classList.remove("fa-square-o");
+                    allowedCompanyIds = [companyID];
+                } else {
+                    // Multi company mode
+                    allowedCompanyIds.push(companyID);
+                    dropdownItem.querySelector(".fa-square-o").classList.add("fa-check-square");
+                    dropdownItem.querySelector(".fa-square-o").classList.remove("fa-square-o");
+                }
+            }
+            ev.currentTarget.setAttribute("aria-pressed", "true");
+            session.setCompanies(companyID, allowedCompanyIds);
         }
-        $(ev.currentTarget).attr('aria-pressed', 'true');
-        session.setCompanies(companyID, allowed_company_ids);
-    },
 
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
+        //--------------------------------------------------------------------------
+        // Handlers
+        //--------------------------------------------------------------------------
 
-    /**
-     * @private
-     * @param {MouseEvent|KeyEvent} ev
-     */
-    _onToggleCompanyClick: function (ev) {
-        if (ev.type == 'keydown' && ev.which != $.ui.keyCode.ENTER && ev.which != $.ui.keyCode.SPACE) {
-            return;
+        /**
+         * @private
+         * @param {MouseEvent|KeyEvent} ev
+         */
+        _onToggleCompanyClick(ev) {
+            if (
+                ev.type === "keydown" &&
+                ev.which !== $.ui.keyCode.ENTER &&
+                ev.which !== $.ui.keyCode.SPACE
+            ) {
+                return;
+            }
+            const dropdownItem = ev.currentTarget.parentElement;
+            const companyID = parseInt(dropdownItem.getAttribute("data-company-id"));
+            const allowedCompanyIds = this.allowed_company_ids;
+            const currentCompanyId = allowedCompanyIds[0];
+            if (dropdownItem.querySelector(".fa-square-o")) {
+                allowedCompanyIds.push(companyID);
+                dropdownItem.querySelector(".fa-square-o").classList.add("fa-check-square");
+                dropdownItem.querySelector(".fa-square-o").classList.remove("fa-square-o");
+                ev.currentTarget.setAttribute("aria-checked", "true");
+            } else {
+                allowedCompanyIds.splice(allowedCompanyIds.indexOf(companyID), 1);
+                dropdownItem.querySelector(".fa-check-square").classList.add("fa-square-o");
+                dropdownItem.querySelector(".fa-check-square").classList.remove("fa-check-square");
+                ev.currentTarget.setAttribute("aria-checked", "false");
+            }
+            session.setCompanies(currentCompanyId, allowedCompanyIds);
         }
-        ev.preventDefault();
-        ev.stopPropagation();
-        var dropdownItem = $(ev.currentTarget).parent();
-        var companyID = dropdownItem.data('company-id');
-        var allowed_company_ids = this.allowed_company_ids;
-        var current_company_id = allowed_company_ids[0];
-        if (dropdownItem.find('.fa-square-o').length) {
-            allowed_company_ids.push(companyID);
-            dropdownItem.find('.fa-square-o').removeClass('fa-square-o').addClass('fa-check-square');
-            $(ev.currentTarget).attr('aria-checked', 'true');
-        } else {
-            allowed_company_ids.splice(allowed_company_ids.indexOf(companyID), 1);
-            dropdownItem.find('.fa-check-square').addClass('fa-square-o').removeClass('fa-check-square');
-            $(ev.currentTarget).attr('aria-checked', 'false');
-        }
-        session.setCompanies(current_company_id, allowed_company_ids);
-    },
+    }
 
-});
+    SwitchCompanyMenu.template = "SwitchCompanyMenu";
+    // force this item to be the first one to the left of the UserMenu in the systray
+    SwitchCompanyMenu.sequence = 1;
 
-if (session.display_switch_company_menu) {
-    SystrayMenu.Items.push(SwitchCompanyMenu);
-}
+    if (session.display_switch_company_menu) {
+        SystrayMenu.Items.push(SwitchCompanyMenu);
+    }
 
-return SwitchCompanyMenu;
-
+    return SwitchCompanyMenu;
 });

@@ -1738,19 +1738,36 @@
     <a role="menuitem" href="#" data-menu="logout" class="dropdown-item">Log out</a>
 </t>
 
-<t t-name="SwitchCompanyMenu">
+<t t-name="SwitchCompanyMenu" owl="1">
     <li class="o_switch_company_menu">
-        <a role="button" class="dropdown-toggle o-no-caret" data-toggle="dropdown" data-display="static" aria-expanded="false" href="#" title="Dropdown menu">
-            <span t-attf-class="#{widget.isMobile ? 'fa fa-building-o' : 'oe_topbar_name'}">
-                <t t-if="!widget.isMobile"><t t-esc="widget.current_company_name"/></t>
+        <a
+            role="button"
+            class="dropdown-toggle o-no-caret"
+            data-toggle="dropdown"
+            data-display="static"
+            aria-expanded="false"
+            href="#"
+            title="Dropdown menu">
+            <span t-attf-class="{{isMobile ? 'fa fa-building-o' : 'oe_topbar_name'}}">
+                <t t-if="!isMobile"><t t-esc="current_company_name"/></t>
             </span>
         </a>
         <div class="dropdown-menu dropdown-menu-right" role="menu">
-            <t t-foreach="widget.user_companies" t-as="company">
-                <div class="dropdown-item d-flex py-0 px-0" data-menu="company" t-att-data-company-id="company[0]">
-                    <t t-set="is_allowed" t-value="widget.allowed_company_ids.includes(company[0])"/>
-                    <t t-set="is_current" t-value="company[0] === widget.current_company"/>
-                    <div role="menuitemcheckbox" t-att-aria-checked="is_allowed" t-att-aria-label="company[1]" tabindex="0" class="ml-auto pl-3 pr-3 border border-top-0 border-left-0 border-bottom-0 toggle_company o_py">
+            <t t-foreach="user_companies" t-as="company" t-key="company[0]">
+                <div
+                    class="dropdown-item d-flex py-0 px-0"
+                    data-menu="company"
+                    t-att-data-company-id="company[0]">
+                    <t t-set="is_allowed" t-value="allowed_company_ids.includes(company[0])"/>
+                    <t t-set="is_current" t-value="company[0] === current_company"/>
+                    <div
+                        role="menuitemcheckbox"
+                        t-att-aria-checked="is_allowed"
+                        t-att-aria-label="company[1]"
+                        tabindex="0"
+                        class="ml-auto pl-3 pr-3 border border-top-0 border-left-0 border-bottom-0 toggle_company o_py"
+                        t-on-click.prevent.stop="_onToggleCompanyClick"
+                        t-on-keydown.prevent.stop="_onToggleCompanyClick">
                         <span style="height: 2rem;">
                             <t t-if="is_allowed">
                                 <i class="fa fa-fw fa-check-square pt-2"></i>
@@ -1760,7 +1777,15 @@
                             </t>
                         </span>
                     </div>
-                    <div role="button" t-att-aria-pressed="is_current" aria-label="Switch to this company" tabindex="0" class="d-flex flex-grow-1 align-items-center py-0 log_into pl-3 o_py" t-att-style="is_current ? 'background-color: lightgrey;' : ''">
+                    <div
+                        role="button"
+                        t-att-aria-pressed="is_current"
+                        aria-label="Switch to this company"
+                        tabindex="0"
+                        class="d-flex flex-grow-1 align-items-center py-0 log_into pl-3 o_py"
+                        t-att-style="is_current ? 'background-color: lightgrey;' : ''"
+                        t-on-click.prevent.stop="_onSwitchCompanyClick"
+                        t-on-keydown.prevent.stop="_onSwitchCompanyClick">
                         <t t-if="is_allowed">
                             <span class='mr-3 company_label'>
                                 <t t-esc="company[1]"/>
