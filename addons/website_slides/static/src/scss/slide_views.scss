@@ -7,6 +7,11 @@ $o-kanban-large-record-width: 400px;
     .o_kanban_record {
         width: $o-kanban-large-record-width;
     }
+    .o_kanban_slides_card_manage_pane {
+        > div {
+            @include o-kanban-dashboard-dropdown-link;
+        }
+    }
 }
 
 table.o_section_list_view tr.o_data_row.o_is_section {

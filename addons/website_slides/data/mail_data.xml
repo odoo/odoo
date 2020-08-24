@@ -63,6 +63,38 @@
             <field name="auto_delete" eval="True"/>
         </record>
 
+        <!-- Completed Channel Message -->
+        <record id="mail_template_channel_completed" model="mail.template">
+            <field name="name">Completed Course</field>
+            <field name="model_id" ref="model_slide_channel_partner"/>
+            <field name="subject">Congratulation! You completed ${object.channel_id.name}</field>
+            <field name="email_from">${(object.channel_id.user_id.email_formatted or object.channel_id.user_id.company_id.catchall_formatted) | safe}</field>
+            <field name="partner_to">${object.partner_id.id}</field>
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px;">
+                    <div style="margin: 0px; padding: 0px; font-size: 13px;">
+                        <p style="margin: 0px;">Hello ${object.partner_id.name},</p><br/>
+                        <p><b>Congratulations!</b></p>
+                        <p>You've completed the course <b>${object.channel_id.name}</b></p>
+                        <p>Check out the other available courses.</p><br/>
+
+                        <div style="margin: 16px 8px 16px 8px; text-align: center;">
+                            <a href="/slides/all" style="background-color: #875a7b; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;">
+                                Explore courses
+                            </a>
+                        </div>
+                        Enjoy this exclusive content!
+                        % if object.channel_id.user_id.signature
+                            <br />
+                            ${object.channel_id.user_id.signature | safe}
+                        % endif
+                    </div>
+                </div>
+            </field>
+            <field name="auto_delete" eval="True"/>
+            <field name="lang">${object.partner_id.lang}</field>
+        </record>
+
         <!-- Channel subtypes -->
         <record id="mt_channel_slide_published" model="mail.message.subtype">
             <field name="name">Presentation Published</field>
