@@ -42,15 +42,12 @@ QUnit.module('thread_textual_typing_status_tests.js', {
 QUnit.test('receive visitor typing status "is typing"', async function (assert) {
     assert.expect(2);
 
-    // channel that will be used for testing the typing feature
     this.data['mail.channel'].records.push({
-        // channel is expected to be livechat, but channel_type set only for
-        // consistency, not actually useful in the scope of this test
+        anonymous_name: "Visitor 20",
         channel_type: 'livechat',
-        id: 20, // random unique id, will be referenced in the test
-        livechat_visitor: {
-            name: "Visitor 20", // random name, will be asserted during the test
-        },
+        id: 20,
+        livechat_operator_id: this.data.currentPartnerId,
+        members: [this.data.currentPartnerId, this.data.publicPartnerId],
     });
     await this.start();
     const thread = this.env.models['mail.thread'].find(thread =>

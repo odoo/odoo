@@ -607,12 +607,13 @@ function factory(dependencies) {
         tracking_value_ids: attr({
             default: [],
         }),
-
         /**
-         * All channels that this message is linked to (from server message
-         * format).
+         * All channels containing this message on the server.
+         * Equivalent of python field `channel_ids`.
          */
-        serverChannels: many2many('mail.thread'),
+        serverChannels: many2many('mail.thread', {
+            inverse: 'messagesAsServerChannel',
+        }),
     };
 
     Message.modelName = 'mail.message';
