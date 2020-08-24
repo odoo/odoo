@@ -144,9 +144,10 @@ function factory(dependencies) {
             last_message_id,
             partner_id,
         }) {
-            const channel = this.env.models['mail.thread'].find(thread =>
-                thread.id === channelId && thread.model === 'mail.channel'
-            );
+            const channel = this.env.models['mail.thread'].findFromIdentifyingData({
+                id: channelId,
+                model: 'mail.channel',
+            });
             if (!channel) {
                 // for example seen from another browser, the current one has no
                 // knowledge of the channel
@@ -198,10 +199,10 @@ function factory(dependencies) {
             const message = this.env.models['mail.message'].insert(convertedData);
 
             // join the corresponding channel if necessary
-            const channel = this.env.models['mail.thread'].find(thread =>
-                thread.id === channelId &&
-                thread.model === 'mail.channel'
-            );
+            const channel = this.env.models['mail.thread'].findFromIdentifyingData({
+                id: channelId,
+                model: 'mail.channel',
+            });
             if (!channel || !channel.isPinned) {
                 this.env.models['mail.thread'].joinChannel(channelId);
             }
@@ -275,9 +276,10 @@ function factory(dependencies) {
             last_message_id,
             partner_id,
         }) {
-            const channel = this.env.models['mail.thread'].find(thread =>
-                thread.id === channelId && thread.model === 'mail.channel'
-            );
+            const channel = this.env.models['mail.thread'].findFromIdentifyingData({
+                id: channelId,
+                model: 'mail.channel',
+            });
             if (!channel) {
                 // for example seen from another browser, the current one has no
                 // knowledge of the channel
@@ -327,10 +329,13 @@ function factory(dependencies) {
             is_typing,
             partner_id,
         }) {
-            const channel = this.env.models['mail.thread'].insert({
+            const channel = this.env.models['mail.thread'].findFromIdentifyingData({
                 id: channelId,
                 model: 'mail.channel',
             });
+            if (!channel) {
+                return;
+            }
             const partner = this.env.models['mail.partner'].insert({ id: partner_id });
             if (partner === this.env.messaging.currentPartner) {
                 // Ignore management of current partner is typing notification.
@@ -444,10 +449,7 @@ function factory(dependencies) {
         _handleNotificationPartnerChannel(data) {
             const convertedData = this.env.models['mail.thread'].convertData(data);
 
-            let channel = this.env.models['mail.thread'].find(thread =>
-                thread.id === convertedData.id &&
-                thread.model === 'mail.channel'
-            );
+            let channel = this.env.models['mail.thread'].findFromIdentifyingData(convertedData);
             const wasCurrentPartnerMember = (
                 channel &&
                 channel.members.includes(this.env.messaging.currentPartner)

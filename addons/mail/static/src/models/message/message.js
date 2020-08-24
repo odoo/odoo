@@ -63,16 +63,14 @@ function factory(dependencies) {
                 data2.body = data.body;
             }
             if ('channel_ids' in data && data.channel_ids) {
-                // AKU FIXME: side-effect of calling convert...
-                const channelList = [];
-                for (const channelId of data.channel_ids) {
-                    const channel = this.env.models['mail.thread'].insert({
-                        id: channelId,
-                        model: 'mail.channel',
-                    });
-                    channelList.push(channel);
-                }
-                data2.serverChannels = [['replace', channelList]];
+                const channels = data.channel_ids
+                    .map(channelId =>
+                        this.env.models['mail.thread'].findFromIdentifyingData({
+                            id: channelId,
+                            model: 'mail.channel',
+                        })
+                    ).filter(channel => !!channel);
+                data2.serverChannels = [['replace', channels]];
             }
             if ('date' in data && data.date) {
                 data2.date = moment(str_to_datetime(data.date));
