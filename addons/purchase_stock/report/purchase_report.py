@@ -5,7 +5,7 @@ import re
 
 from odoo import api, fields, models
 from odoo.exceptions import UserError
-from odoo.osv.expression import expression
+from odoo.osv.expression import expression, AND
 
 
 class PurchaseReport(models.Model):
@@ -50,16 +50,18 @@ class PurchaseReport(models.Model):
             res = [{}]
 
         if avg_receipt_delay:
-            query = """ SELECT AVG(receipt_delay.po_receipt_delay)::decimal(16,2) AS avg_receipt_delay
-                          FROM (
-                              SELECT extract(epoch from age(po.effective_date, po.date_planned))/(24*60*60) AS po_receipt_delay
-                              FROM purchase_order po
-                              WHERE po.id IN (
-                                  SELECT "purchase_report"."order_id" FROM %s WHERE %s)
-                              ) AS receipt_delay
+            query = """ SELECT AVG(extract(epoch from age(po.effective_date,po.date_planned))/(24*60*60))::decimal(16,2) AS avg_receipt_delay
+                        FROM purchase_order po
+                        WHERE id in (SELECT "purchase_report"."order_id" as id from %s WHERE %s)
                     """
 
-            subdomain = domain + [('company_id', '=', self.env.company.id), ('effective_date', '!=', False)]
+            # Ensure access rules are correctly applied (Partial copy of models.py/_apply_ir_rules)
+            # In standard, only applies multi-company ir_rule.
+            rules_domain = self.env["ir.rule"]._compute_domain(self._name, 'read') if not self.env.su else []
+            subdomain = AND([
+                domain,
+                AND([rules_domain, [('effective_date', '!=', False)]]),
+            ])
             subtables, subwhere, subparams = expression(subdomain, self).query.get_sql()
 
             self.env.cr.execute(query % (subtables, subwhere), subparams)

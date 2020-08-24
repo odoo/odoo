@@ -9,7 +9,7 @@ import re
 
 from odoo import api, fields, models, tools
 from odoo.exceptions import UserError
-from odoo.osv.expression import expression
+from odoo.osv.expression import expression, AND
 
 
 class PurchaseReport(models.Model):
@@ -179,16 +179,19 @@ class PurchaseReport(models.Model):
             res = [{}]
 
         if avg_days_to_purchase:
-            query = """ SELECT AVG(days_to_purchase.po_days_to_purchase)::decimal(16,2) AS avg_days_to_purchase
-                          FROM (
-                              SELECT extract(epoch from age(po.date_approve,po.create_date))/(24*60*60) AS po_days_to_purchase
-                              FROM purchase_order po
-                              WHERE po.id IN (
-                                  SELECT "purchase_report"."order_id" FROM %s WHERE %s)
-                              ) AS days_to_purchase
+
+            query = """ SELECT AVG(extract(epoch from age(po.date_approve,po.create_date))/(24*60*60))::decimal(16,2) AS avg_days_to_purchase
+                        FROM purchase_order po
+                        WHERE id in (SELECT "purchase_report"."order_id" FROM %s WHERE %s)
                     """
 
-            subdomain = domain + [('company_id', '=', self.env.company.id), ('date_approve', '!=', False)]
+            # Ensure access rules are correctly applied (Partial copy of models.py/_apply_ir_rules)
+            # In standard, only applies multi-company ir_rule.
+            rules_domain = self.env["ir.rule"]._compute_domain(self._name, 'read') if not self.env.su else []
+            subdomain = AND([
+                domain,
+                AND([rules_domain, [('date_approve', '!=', False)]]),
+            ])
             subtables, subwhere, subparams = expression(subdomain, self).query.get_sql()
 
             self.env.cr.execute(query % (subtables, subwhere), subparams)
