@@ -57,7 +57,7 @@
                     <attribute name="attrs">{'column_invisible': [('parent.state', 'not in', ['cancel', 'done'])]}</attribute>
                 </xpath>
                 <xpath expr="//field[@name='order_line']/tree/field[@name='qty_delivered']" position="after">
-                    <field name="json_forecast" string="Delivered" widget="forecast_widget" attrs="{'column_invisible': [('parent.state', 'in', ['cancel', 'done'])]}"/>
+                    <field name="json_forecast" string="Delivered" widget="forecast_widget" attrs="{'column_invisible': [('parent.state', '!=', 'sale')]}"/>
                 </xpath>
            </field>
         </record>
