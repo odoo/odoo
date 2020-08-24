@@ -5,13 +5,13 @@
         <field name="model">event.type</field>
         <field name="inherit_id" ref="website_event.event_type_view_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//div[@name='website_menu']" position='after'>
+            <xpath expr="//div[@id='community-menu']" position='after'>
                 <div class="row mt16" attrs="{'invisible': [('website_menu', '=', False)]}">
                     <label class="col-lg-4" for="meeting_room_allow_creation"/> <field name="meeting_room_allow_creation"/>
                 </div>
             </xpath>
             <xpath expr="//div[@id='community-menu']" position="attributes">
-                <attribute name="groups"></attribute>
+                <attribute name="attrs">{'invisible': [('website_menu', '=', False)]}</attribute>
             </xpath>
         </field>
     </record>
