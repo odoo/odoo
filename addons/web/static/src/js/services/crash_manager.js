@@ -11,6 +11,7 @@ odoo.define('web.CrashManager', function (require) {
 
 const AbstractService = require('web.AbstractService');
 var ajax = require('web.ajax');
+const BrowserDetection = require('web.BrowserDetection');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
 var ErrorDialogRegistry = require('web.ErrorDialogRegistry');
@@ -26,14 +27,6 @@ window.addEventListener('unhandledrejection', ev =>
 );
 
 let active = true;
-
-// Note: we already have this function in browser_detection.js but browser_detection.js
-// is in assets_backend while crash_managere.js is in common so it will have dependency
-// of file browser_detection.js which will not be available in frontend, so copy function here
-const isBrowserChrome = function () {
-    return $.browser.chrome && // depends on jquery 1.x, removed in jquery 2 and above
-        navigator.userAgent.toLocaleLowerCase().indexOf('edge') === -1; // as far as jquery is concerned, Edge is chrome
-};
 
 /**
  * An extension of Dialog Widget to render the warnings and errors on the website.
@@ -103,6 +96,7 @@ var CrashManager = AbstractService.extend({
             'odoo.exceptions.ValidationError': _lt("Validation Error"),
         };
 
+        this.browserDetection = new BrowserDetection();
         this._super.apply(this, arguments);
 
         // crash manager integration
@@ -155,7 +149,7 @@ var CrashManager = AbstractService.extend({
                 // In particular, Chrome formats the contents of Error.stack
                 // https://v8.dev/docs/stack-trace-api#compatibility
                 let traceback;
-                if (isBrowserChrome()) {
+                if (self.browserDetection.isBrowserChrome()) {
                     traceback = ev.reason.stack;
                 } else {
                     traceback = `${_t("Error:")} ${ev.reason.message}\n${ev.reason.stack}`;
