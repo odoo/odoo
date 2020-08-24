@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+<template id="event_layout" inherit_id="website_event.layout">
+    <xpath expr="//div[@id='wrap']" position="attributes">
+        <attribute name="t-attf-class">o_wevent_event js_event #{'o_wevent_hide_sponsors' if hide_sponsors else ''}</attribute>
+    </xpath>
+</template>
+
 <template name="Sponsors" id="event_sponsor" customize_show="True" inherit_id="website_event.layout">
     <xpath expr="//div[@id='wrap']" position="inside">
-        <div class="container mt32 mb16 d-print-none" t-if="event.sponsor_ids">
+        <div class="container mt32 mb16 d-none d-md-block d-print-none" t-if="event.sponsor_ids">
             <div t-attf-class="d-flex flex-wrap mb-5 #{'' if (len(event.sponsor_ids) > 10) else 'justify-content-md-center'}">
                 <t t-foreach="event.sponsor_ids" t-as="sponsor">
                     <t t-if="sponsor.url">

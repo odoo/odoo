@@ -39,7 +39,7 @@
                         t-options="{'widget': 'duration', 'digital': False, 'unit': 'minute', 'round': 'minute'}"/>
                 </span>
                 <span t-else="">
-                    starts at
+                    starts on
                     <span t-field="track.event_id.with_context(tz=track.event_id.date_tz).date_begin"
                         t-options="{'format': 'long', 'tz_name': track.event_id.date_tz, 'hide_seconds': True}"/>
                 </span>
@@ -53,7 +53,7 @@
             </div>
         </div>
         <!-- TRACK DESCRIPTION -->
-        <div class="o_wesession_track_main_description">
+        <div class="o_wesession_track_main_description overflow-auto">
             <div class="mx-3 pt-3 mb-3 d-flex justify-content-between flex-column flex-md-row">
                 <div class="d-flex flex-column">
                     <span class="h4 mb-0" t-esc="track.name"/>
