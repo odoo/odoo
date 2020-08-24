@@ -56,7 +56,7 @@ function factory(dependencies) {
         /**
          * @private
          * @param {Object[]} notifications
-         * @param {Array} notifications[i][0] meta-data of the notification.
+         * @param {Array|string} notifications[i][0] meta-data of the notification.
          * @param {string} notifications[i][0][0] name of database this
          *   notification comes from.
          * @param {string} notifications[i][0][1] type of notification.
@@ -68,20 +68,25 @@ function factory(dependencies) {
         async _handleNotifications(notifications) {
             const filteredNotifications = this._filterNotificationsOnUnsubscribe(notifications);
             const proms = filteredNotifications.map(notification => {
-                const [[, model, id], data] = notification;
+                const [channel, message] = notification;
+                if (typeof channel === 'string') {
+                    // uuid notification, only for (livechat) public handler
+                    return;
+                }
+                const [, model, id] = channel;
                 switch (model) {
                     case 'ir.needaction':
-                        return this._handleNotificationNeedaction(data);
+                        return this._handleNotificationNeedaction(message);
                     case 'mail.channel':
                         return this._handleNotificationChannel(Object.assign({
                             channelId: id,
-                        }, data));
+                        }, message));
                     case 'res.partner':
                         if (id !== this.env.messaging.currentPartner.id) {
                             // ignore broadcast to other partners
                             return;
                         }
-                        return this._handleNotificationPartner(Object.assign({}, data));
+                        return this._handleNotificationPartner(Object.assign({}, message));
                     default:
                         console.warn(`mail.messaging_notification_handler: Unhandled notification "${model}"`);
                         return;
