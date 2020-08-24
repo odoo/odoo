@@ -28,7 +28,8 @@ class MailTemplate(models.Model):
                     continue
 
                 attachment = doc.attachment_id
-                record_data.setdefault('attachments', [])
-                record_data['attachments'].append((attachment.name, attachment.datas))
+                if attachment:
+                    record_data.setdefault('attachments', [])
+                    record_data['attachments'].append((attachment.name, attachment.datas))
 
         return res
