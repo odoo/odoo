@@ -239,6 +239,16 @@ class Theme(models.AbstractModel):
     def disable_view(self, xml_id):
         self._toggle_view(xml_id, False)
 
+    @api.model
+    def enable_header_off_canvas(self):
+        """ Enabling off canvas require to enable quite a lot of template so
+            this shortcut was made to make it easier.
+        """
+        self.enable_view("website.option_header_off_canvas")
+        self.enable_view("website.option_header_off_canvas_template_header_hamburger")
+        self.enable_view("website.option_header_off_canvas_template_header_sidebar")
+        self.enable_view("website.option_header_off_canvas_template_header_hamburger_full")
+
 
 class IrUiView(models.Model):
     _inherit = 'ir.ui.view'
