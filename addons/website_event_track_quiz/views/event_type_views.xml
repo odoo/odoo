@@ -1,12 +1,12 @@
 <?xml version="1.0"?>
 <odoo><data>
     <record id="event_type_view_form" model="ir.ui.view">
-        <field name="name">event.type.view.form.inherit.meet</field>
+        <field name="name">event.type.view.form.inherit.track.quiz</field>
         <field name="model">event.type</field>
         <field name="inherit_id" ref="website_event.event_type_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//div[@id='community-menu']" position="attributes">
-                <attribute name="groups"></attribute>
+                <attribute name="attrs">{'invisible': [('website_menu', '=', False)]}</attribute>
             </xpath>
         </field>
     </record>

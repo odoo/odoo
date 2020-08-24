@@ -63,13 +63,23 @@ class TestEventWebsiteTrack(TestWebsiteEventCommon):
         self._assert_website_menus(event, set(['Location', 'Register', 'Community']))
 
         event.write({'website_track_proposal': True})
+        self.assertFalse(event.website_track)
+        self.assertTrue(event.website_track_proposal)
+        self._assert_website_menus(event, set(['Location', 'Register', 'Community', 'Talk Proposals']))
+
+        event.write({'website_track': True})
         self.assertTrue(event.website_track)
         self.assertTrue(event.website_track_proposal)
         self._assert_website_menus(event, set(['Location', 'Register', 'Community', 'Talks', 'Agenda', 'Talk Proposals']))
 
     @users('user_eventmanager')
     def test_write_menu(self):
-        event = self.env['event.event'].browse(self.event_0.id)
+        event = self.env['event.event'].create({
+            'name': 'TestEvent',
+            'date_begin': fields.Datetime.to_string(datetime.today() + timedelta(days=1)),
+            'date_end': fields.Datetime.to_string(datetime.today() + timedelta(days=15)),
+            'website_menu': False,
+        })
         self.assertFalse(event.menu_id)
         event.write({
             'website_menu': True,

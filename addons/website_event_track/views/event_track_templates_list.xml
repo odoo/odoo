@@ -38,7 +38,7 @@
                     <!-- Optional wishlist filter -->
                     <li t-if="option_track_wishlist" class="nav-item dropdown mr-2 my-1">
                         <a href="#" role="button" class="btn dropdown-toggle" data-toggle="dropdown">
-                            <i class="fa fa-folder-open"/> Wishlist
+                            <i class="fa fa-folder-open"/> Favorites
                         </a>
                         <div class="dropdown-menu">
                             <a t-att-href="'/event/%s/track?%s' % (
@@ -53,7 +53,7 @@
                                     keep_query('*', search_wishlist='1')
                                 )"
                                 t-attf-class="dropdown-item d-flex align-items-center justify-content-between #{'active' if search_wishlist else ''}">
-                                Wishlisted
+                                Favorites
                             </a>
                         </div>
                     </li>

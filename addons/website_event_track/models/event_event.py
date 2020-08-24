@@ -37,17 +37,17 @@ class Event(models.Model):
         for event in self:
             event.sponsor_count = result.get(event.id, 0)
 
-    @api.depends('event_type_id', 'website_menu', 'website_track_proposal')
+    @api.depends('event_type_id', 'website_menu')
     def _compute_website_track(self):
         """ Propagate event_type configuration (only at change); otherwise propagate
         website_menu updated value. Also force True is track_proposal changes. """
         for event in self:
             if event.event_type_id and event.event_type_id != event._origin.event_type_id:
                 event.website_track = event.event_type_id.website_track
-            elif event.website_menu != event._origin.website_menu or not event.website_menu or not event.website_track:
-                event.website_track = event.website_menu
-            elif event.website_track_proposal and not event.website_track:
+            elif event.website_menu and (event.website_menu != event._origin.website_menu or not event.website_track):
                 event.website_track = True
+            elif not event.website_menu:
+                event.website_track = False
 
     @api.depends('event_type_id', 'website_track')
     def _compute_website_track_proposal(self):
@@ -80,9 +80,9 @@ class Event(models.Model):
     def _update_website_menus(self, menus_update_by_field=None):
         super(Event, self)._update_website_menus(menus_update_by_field=menus_update_by_field)
         for event in self:
-            if (not menus_update_by_field) or (event in menus_update_by_field.get('website_track')):
+            if event.menu_id and (not menus_update_by_field or event in menus_update_by_field.get('website_track')):
                 event._update_website_menu_entry('website_track', 'track_menu_ids', '_get_track_menu_entries')
-            if (not menus_update_by_field) or (event in menus_update_by_field.get('website_track_proposal')):
+            if event.menu_id and (not menus_update_by_field or event in menus_update_by_field.get('website_track_proposal')):
                 event._update_website_menu_entry('website_track_proposal', 'track_proposal_menu_ids', '_get_track_proposal_menu_entries')
 
     def _get_menu_type_field_matching(self):
@@ -104,7 +104,7 @@ class Event(models.Model):
         self.ensure_one()
         return [
             (_('Talks'), '/event/%s/track' % slug(self), False, 10, 'track'),
-            (_('Agenda'), '/event/%s/agenda' % slug(self), False, 70, False)
+            (_('Agenda'), '/event/%s/agenda' % slug(self), False, 70, 'track')
         ]
 
     def _get_track_proposal_menu_entries(self):
