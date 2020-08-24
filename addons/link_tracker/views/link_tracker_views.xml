@@ -26,7 +26,7 @@
             <field name="name">link.tracker.view.form</field>
             <field name="model">link.tracker</field>
             <field name="arch" type="xml">
-                <form string="Website Link" duplicate="0">
+                <form string="Website Link" duplicate="0" create="0">
                     <sheet>
                         <div class="oe_button_box" name="button_box">
                             <button type="object" icon="fa-sign-out" name="action_visit_page"
@@ -58,7 +58,7 @@
             <field name="name">link.tracker.view.tree</field>
             <field name="model">link.tracker</field>
             <field name="arch" type="xml">
-                <tree string="Links" sample="1">
+                <tree string="Links" sample="1" create="0">
                     <field name="create_date"/>
                     <field name="title"/>
                     <field name="label"/>
@@ -115,7 +115,7 @@
             <field name="name">link.tracker.click.view.form</field>
             <field name="model">link.tracker.click</field>
             <field name="arch" type="xml">
-                <form string="Link Click">
+                <form string="Link Click" create="0">
                     <sheet>
                         <group>
                             <field name="link_id"/>
@@ -131,7 +131,7 @@
             <field name="name">link.tracker.click.view.tree</field>
             <field name="model">link.tracker.click</field>
             <field name="arch" type="xml">
-                <tree string="Links Clicks">
+                <tree string="Links Clicks" create="0">
                     <field name="link_id"/>
                     <field name="ip"/>
                     <field name="country_id"/>
