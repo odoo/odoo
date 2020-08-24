@@ -133,12 +133,16 @@ QUnit.test('list activity widget with no activity', async function (assert) {
 QUnit.test('list activity widget with activities', async function (assert) {
     assert.expect(7);
 
-    const lastUserIndex = this.data['res.users'].records.length - 1;
-    this.data['res.users'].records[lastUserIndex].activity_ids = [1, 4];
-    this.data['res.users'].records[lastUserIndex].activity_state = 'today';
-    this.data['res.users'].records[lastUserIndex].activity_summary = 'Call with Al';
-    this.data['res.users'].records[lastUserIndex].activity_type_id = 3;
-    this.data['res.users'].records[lastUserIndex].activity_type_icon = 'fa-phone';
+    const currentUser = this.data['res.users'].records.find(user =>
+        user.id === this.data.currentUserId
+    );
+    Object.assign(currentUser, {
+        activity_ids: [1, 4],
+        activity_state: 'today',
+        activity_summary: 'Call with Al',
+        activity_type_id: 3,
+        activity_type_icon: 'fa-phone',
+    });
 
     this.data['res.users'].records.push({
         id: 44,
@@ -179,13 +183,17 @@ QUnit.test('list activity widget with activities', async function (assert) {
 QUnit.test('list activity widget with exception', async function (assert) {
     assert.expect(5);
 
-    const lastUserIndex = this.data['res.users'].records.length - 1;
-    this.data['res.users'].records[lastUserIndex].activity_ids = [1];
-    this.data['res.users'].records[lastUserIndex].activity_state = 'today';
-    this.data['res.users'].records[lastUserIndex].activity_summary = 'Call with Al';
-    this.data['res.users'].records[lastUserIndex].activity_type_id = 3;
-    this.data['res.users'].records[lastUserIndex].activity_exception_decoration = 'warning';
-    this.data['res.users'].records[lastUserIndex].activity_exception_icon = 'fa-warning';
+    const currentUser = this.data['res.users'].records.find(user =>
+        user.id === this.data.currentUserId
+    );
+    Object.assign(currentUser, {
+        activity_ids: [1],
+        activity_state: 'today',
+        activity_summary: 'Call with Al',
+        activity_type_id: 3,
+        activity_exception_decoration: 'warning',
+        activity_exception_icon: 'fa-warning',
+    });
 
     const { widget: list } = await start({
         hasView: true,
@@ -213,11 +221,15 @@ QUnit.test('list activity widget with exception', async function (assert) {
 QUnit.test('list activity widget: open dropdown', async function (assert) {
     assert.expect(10);
 
-    const lastUserIndex = this.data['res.users'].records.length - 1;
-    this.data['res.users'].records[lastUserIndex].activity_ids = [1, 4];
-    this.data['res.users'].records[lastUserIndex].activity_state = 'today';
-    this.data['res.users'].records[lastUserIndex].activity_summary = 'Call with Al';
-    this.data['res.users'].records[lastUserIndex].activity_type_id = 3;
+    const currentUser = this.data['res.users'].records.find(user =>
+        user.id === this.data.currentUserId
+    );
+    Object.assign(currentUser, {
+        activity_ids: [1, 4],
+        activity_state: 'today',
+        activity_summary: 'Call with Al',
+        activity_type_id: 3,
+    });
     this.data['mail.activity'].records.push(
         {
             id: 1,
@@ -225,8 +237,8 @@ QUnit.test('list activity widget: open dropdown', async function (assert) {
             date_deadline: moment().format("YYYY-MM-DD"), // now
             can_write: true,
             state: "today",
-            user_id: 2,
-            create_uid: 2,
+            user_id: this.data.currentUserId,
+            create_uid: this.data.currentUserId,
             activity_type_id: 3,
         },
         {
@@ -235,13 +247,13 @@ QUnit.test('list activity widget: open dropdown', async function (assert) {
             date_deadline: moment().add(1, 'day').format("YYYY-MM-DD"), // tomorrow
             can_write: true,
             state: "planned",
-            user_id: 2,
-            create_uid: 2,
+            user_id: this.data.currentUserId,
+            create_uid: this.data.currentUserId,
             activity_type_id: 1,
         }
     );
 
-    const { widget: list } = await start({
+    const { env, widget: list } = await start({
         hasView: true,
         View: ListView,
         model: 'res.users',
@@ -254,10 +266,15 @@ QUnit.test('list activity widget: open dropdown', async function (assert) {
         mockRPC: function (route, args) {
             assert.step(args.method || route);
             if (args.method === 'action_feedback') {
-                this.data['res.users'].records[lastUserIndex].activity_ids = [4];
-                this.data['res.users'].records[lastUserIndex].activity_state = 'planned';
-                this.data['res.users'].records[lastUserIndex].activity_summary = 'Meet FP';
-                this.data['res.users'].records[lastUserIndex].activity_type_id = 1;
+                const currentUser = this.data['res.users'].records.find(user =>
+                    user.id === env.messaging.currentUser.id
+                );
+                Object.assign(currentUser, {
+                    activity_ids: [4],
+                    activity_state: 'planned',
+                    activity_summary: 'Meet FP',
+                    activity_type_id: 1,
+                });
                 return Promise.resolve();
             }
             return this._super(route, args);
@@ -299,8 +316,10 @@ QUnit.test('list activity widget: open dropdown', async function (assert) {
 QUnit.test('list activity exception widget with activity', async function (assert) {
     assert.expect(3);
 
-    const lastUserIndex = this.data['res.users'].records.length - 1;
-    this.data['res.users'].records[lastUserIndex].activity_ids = [1];
+    const currentUser = this.data['res.users'].records.find(user =>
+        user.id === this.data.currentUserId
+    );
+    currentUser.activity_ids = [1];
     this.data['res.users'].records.push({
         id: 13,
         message_attachment_count: 3,
@@ -390,8 +409,8 @@ QUnit.test('fieldmany2many tags email', function (assert) {
     assert.expect(13);
     var done = assert.async();
 
-    const lastUserIndex = this.data['res.users'].records.length - 1;
-    this.data['res.users'].records[lastUserIndex].timmy = [12, 14];
+    const user11 = this.data['res.users'].records.find(user => user.id === 11);
+    user11.timmy = [12, 14];
 
     // the modals need to be closed before the form view rendering
     start({
@@ -451,8 +470,8 @@ QUnit.test('fieldmany2many tags email', function (assert) {
 QUnit.test('fieldmany2many tags email (edition)', async function (assert) {
     assert.expect(15);
 
-    const lastUserIndex = this.data['res.users'].records.length - 1;
-    this.data['res.users'].records[lastUserIndex].timmy = [12];
+    const user11 = this.data['res.users'].records.find(user => user.id === 11);
+    user11.timmy = [12];
 
     var { widget: form } = await start({
         hasView: true,
@@ -512,12 +531,12 @@ QUnit.test('fieldmany2many tags email (edition)', async function (assert) {
 QUnit.test('many2many_tags_email widget can load more than 40 records', async function (assert) {
     assert.expect(3);
 
-    const lastUserIndex = this.data['res.users'].records.length - 1;
+    const user11 = this.data['res.users'].records.find(user => user.id === 11);
     this.data['res.users'].fields.partner_ids = { string: "Partner", type: "many2many", relation: 'res.users' };
-    this.data['res.users'].records[lastUserIndex].partner_ids = [];
+    user11.partner_ids = [];
     for (let i = 100; i < 200; i++) {
         this.data['res.users'].records.push({ id: i, display_name: `partner${i}` });
-        this.data['res.users'].records[lastUserIndex].partner_ids.push(i);
+        user11.partner_ids.push(i);
     }
 
     const { widget: form } = await start({

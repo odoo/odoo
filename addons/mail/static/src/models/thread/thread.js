@@ -779,7 +779,12 @@ function factory(dependencies) {
                 partner !== this.env.messaging.currentPartner
             );
             if (correspondents.length === 1) {
+                // 2 members chat
                 return [['link', correspondents[0]]];
+            }
+            if (this.members.length === 1) {
+                // chat with oneself
+                return [['link', this.members[0]]];
             }
             return [['unlink']];
         }
@@ -1359,6 +1364,13 @@ function factory(dependencies) {
          */
         messages: many2many('mail.message', {
             inverse: 'threads',
+        }),
+        /**
+         * All messages that are contained on this channel on the server.
+         * Equivalent to the inverse of python field `channel_ids`.
+         */
+        messagesAsServerChannel: many2many('mail.message', {
+            inverse: 'serverChannels',
         }),
         messageSeenIndicators: one2many('mail.message_seen_indicator', {
             inverse: 'thread',
