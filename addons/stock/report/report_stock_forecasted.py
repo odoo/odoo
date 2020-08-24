@@ -124,8 +124,6 @@ class ReplenishmentReport(models.AbstractModel):
             'uom_id': product.uom_id,
             'receipt_date': format_datetime(self.env, move_in.date, timezone, 'medium') if move_in else False,
             'delivery_date': format_datetime(self.env, move_out.date, timezone, 'medium') if move_out else False,
-            'receipt_date_short': format_date(self.env, move_in.date) if move_in else False,
-            'delivery_date_short': format_date(self.env, move_out.date) if move_out else False,
             'is_late': is_late,
             'quantity': quantity,
             'move_out': move_out,
@@ -168,10 +166,10 @@ class ReplenishmentReport(models.AbstractModel):
                         lines.append(self._prepare_report_line(taken_from_in, move_in=in_[1], move_out=out))
                         ins_per_product[out.product_id.id][index][0] -= taken_from_in
                         if ins_per_product[out.product_id.id][index][0] <= 0:
-                            index_to_remove.insert(0, index)
+                            index_to_remove.append(index)
                         if float_is_zero(demand, precision_rounding=product.uom_id.rounding):
                             break
-                    for index in index_to_remove:
+                    for index in index_to_remove[::-1]:
                         ins_per_product[out.product_id.id].pop(index)
                 # Not reconciled.
                 if not float_is_zero(demand, precision_rounding=product.uom_id.rounding):
