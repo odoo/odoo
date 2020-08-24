@@ -77,6 +77,10 @@ function factory(dependencies) {
                             channelId: id,
                         }, data));
                     case 'res.partner':
+                        if (id !== this.env.messaging.currentPartner.id) {
+                            // ignore broadcast to other partners
+                            return;
+                        }
                         return this._handleNotificationPartner(Object.assign({}, data));
                     default:
                         console.warn(`mail.messaging_notification_handler: Unhandled notification "${model}"`);
