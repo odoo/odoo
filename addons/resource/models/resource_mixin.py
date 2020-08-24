@@ -53,7 +53,18 @@ class ResourceMixin(models.AbstractModel):
         default['resource_calendar_id'] = resource.calendar_id.id
         return super(ResourceMixin, self).copy_data(default)
 
+    # YTI TODO: Remove me in master
     def _get_work_days_data(self, from_datetime, to_datetime, compute_leaves=True, calendar=None, domain=None):
+        self.ensure_one()
+        return self._get_work_days_data_batch(
+            from_datetime,
+            to_datetime,
+            compute_leaves=compute_leaves,
+            calendar=calendar,
+            domain=domain
+        )[self.id]
+
+    def _get_work_days_data_batch(self, from_datetime, to_datetime, compute_leaves=True, calendar=None, domain=None):
         """
             By default the resource calendar is used, but it can be
             changed using the `calendar` argument.
@@ -64,24 +75,44 @@ class ResourceMixin(models.AbstractModel):
             Returns a dict {'days': n, 'hours': h} containing the
             quantity of working time expressed as days and as hours.
         """
-        resource = self.resource_id
-        calendar = calendar or self.resource_calendar_id
+        resources = self.mapped('resource_id')
+        mapped_employees = {e.resource_id.id: e.id for e in self}
+        result = {}
 
         # naive datetimes are made explicit in UTC
         from_datetime = timezone_datetime(from_datetime)
         to_datetime = timezone_datetime(to_datetime)
 
-        day_total = calendar._get_day_total(from_datetime, to_datetime, resource)
+        mapped_resources = defaultdict(lambda: self.env['resource.resource'])
+        for record in self:
+            mapped_resources[calendar or record.resource_calendar_id] |= record.resource_id
 
-        # actual hours per day
-        if compute_leaves:
-            intervals = calendar._work_intervals(from_datetime, to_datetime, resource, domain)
-        else:
-            intervals = calendar._attendance_intervals(from_datetime, to_datetime, resource)
+        for calendar, calendar_resources in mapped_resources.items():
+            day_total = calendar._get_resources_day_total(from_datetime, to_datetime, calendar_resources)
 
-        return calendar._get_days_data(intervals, day_total)
+            # actual hours per day
+            if compute_leaves:
+                intervals = calendar._work_intervals_batch(from_datetime, to_datetime, calendar_resources, domain)
+            else:
+                intervals = calendar._attendance_intervals_batch(from_datetime, to_datetime, calendar_resources)
 
+            for calendar_resource in calendar_resources:
+                result[calendar_resource.id] = calendar._get_days_data(intervals[calendar_resource.id], day_total[calendar_resource.id])
+
+        # convert "resource: result" into "employee: result"
+        return {mapped_employees[r.id]: result[r.id] for r in resources} 
+
+    # YTI TODO: Remove me in master
     def _get_leave_days_data(self, from_datetime, to_datetime, calendar=None, domain=None):
+        self.ensure_one()
+        return self._get_leave_days_data_batch(
+            from_datetime,
+            to_datetime,
+            calendar=calendar,
+            domain=domain
+        )[self.id]
+
+    def _get_leave_days_data_batch(self, from_datetime, to_datetime, calendar=None, domain=None):
         """
             By default the resource calendar is used, but it can be
             changed using the `calendar` argument.
@@ -92,20 +123,33 @@ class ResourceMixin(models.AbstractModel):
             Returns a dict {'days': n, 'hours': h} containing the number of leaves
             expressed as days and as hours.
         """
-        resource = self.resource_id
-        calendar = calendar or self.resource_calendar_id
+        resources = self.mapped('resource_id')
+        mapped_employees = {e.resource_id.id: e.id for e in self}
+        result = {}
 
         # naive datetimes are made explicit in UTC
         from_datetime = timezone_datetime(from_datetime)
         to_datetime = timezone_datetime(to_datetime)
 
-        day_total = calendar._get_day_total(from_datetime, to_datetime, resource)
+        mapped_resources = defaultdict(lambda: self.env['resource.resource'])
+        for record in self:
+            mapped_resources[calendar or record.resource_calendar_id] |= record.resource_id
 
-        # compute actual hours per day
-        attendances = calendar._attendance_intervals(from_datetime, to_datetime, resource)
-        leaves = calendar._leave_intervals(from_datetime, to_datetime, resource, domain)
+        for calendar, calendar_resources in mapped_resources.items():
+            day_total = calendar._get_resources_day_total(from_datetime, to_datetime, calendar_resources)
 
-        return calendar._get_days_data(attendances & leaves, day_total)
+            # compute actual hours per day
+            attendances = calendar._attendance_intervals_batch(from_datetime, to_datetime, calendar_resources)
+            leaves = calendar._leave_intervals_batch(from_datetime, to_datetime, calendar_resources, domain)
+
+            for calendar_resource in calendar_resources:
+                result[calendar_resource.id] = calendar._get_days_data(
+                    attendances[calendar_resource.id] & leaves[calendar_resource.id],
+                    day_total[calendar_resource.id]
+                )
+
+        # convert "resource: result" into "employee: result"
+        return {mapped_employees[r.id]: result[r.id] for r in resources}
 
     def list_work_time_per_day(self, from_datetime, to_datetime, calendar=None, domain=None):
         """
@@ -127,7 +171,7 @@ class ResourceMixin(models.AbstractModel):
         if not to_datetime.tzinfo:
             to_datetime = to_datetime.replace(tzinfo=utc)
 
-        intervals = calendar._work_intervals(from_datetime, to_datetime, resource, domain)
+        intervals = calendar._work_intervals_batch(from_datetime, to_datetime, resource, domain)[resource.id]
         result = defaultdict(float)
         for start, stop, meta in intervals:
             result[start.date()] += (stop - start).total_seconds() / 3600
@@ -153,8 +197,8 @@ class ResourceMixin(models.AbstractModel):
         if not to_datetime.tzinfo:
             to_datetime = to_datetime.replace(tzinfo=utc)
 
-        attendances = calendar._attendance_intervals(from_datetime, to_datetime, resource)
-        leaves = calendar._leave_intervals(from_datetime, to_datetime, resource, domain)
+        attendances = calendar._attendance_intervals_batch(from_datetime, to_datetime, resource)[resource.id]
+        leaves = calendar._leave_intervals_batch(from_datetime, to_datetime, resource, domain)[resource.id]
         result = []
         for start, stop, leave in (leaves & attendances):
             hours = (stop - start).total_seconds() / 3600

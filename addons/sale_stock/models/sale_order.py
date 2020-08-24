@@ -237,7 +237,7 @@ class SaleOrderLine(models.Model):
         # We first loop over the SO lines to group them by warehouse and schedule
         # date in order to batch the read of the quantities computed field.
         for line in self:
-            if not line.display_qty_widget:
+            if not (line.product_id and line.display_qty_widget):
                 continue
             line.warehouse_id = line.order_id.warehouse_id
             if line.order_id.commitment_date:
