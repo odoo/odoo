@@ -373,6 +373,9 @@ font[class*='bg-'] {
 .o_bg_video_loading {
     @include o-position-absolute(0, 0 ,0 ,0);
 }
+.o_background_video, .parallax {
+    @extend %o-we-background-layer-parent;
+}
 
 // Probably outdated
 // Lists
@@ -487,6 +490,7 @@ table.table_desc tr td {
     // Controls
     .carousel-control-prev,
     .carousel-control-next {
+        position: absolute;
         cursor: pointer;
         width: 8%;
         opacity: 1;
@@ -513,8 +517,12 @@ table.table_desc tr td {
         }
     }
     // Indicators
-    .carousel-indicators li:hover:not(.active) {
-        background-color: rgba(255,255,255,.8);
+    .carousel-indicators {
+        position: absolute;
+
+        li:hover:not(.active) {
+            background-color: rgba(255,255,255,.8);
+        }
     }
 
     // Default
