@@ -24,27 +24,27 @@ var discoverTalkSteps = function (talkName, fromList, reminderOn, toggleReminder
     }
     if (reminderOn) {
         steps = steps.concat([{
-            content: "Check Reminder is on",
+            content: "Check Favorite is on",
             trigger: 'div.o_wetrack_js_reminder i.fa-bell',
-            extra_trigger: 'span.o_wetrack_js_reminder_text:contains("Reminder On")',
+            extra_trigger: 'span.o_wetrack_js_reminder_text:contains("Favorite On")',
             run: function () {}, // it's a check
         }]);
     }
     else {
         steps = steps.concat([{
-            content: "Check Reminder is Off",
-            trigger: 'span.o_wetrack_js_reminder_text:contains("Set Reminder")',
+            content: "Check Favorite is Off",
+            trigger: 'span.o_wetrack_js_reminder_text:contains("Set Favorite")',
             run: function () {}, // it's a check
         }]);
         if (toggleReminder) {
             steps = steps.concat([{
-                content: "Set Reminder",
+                content: "Set Favorite",
                 trigger: 'span.o_wetrack_js_reminder_text',
                 run: 'click',
             }, {
-                content: "Check Reminder is On",
+                content: "Check Favorite is On",
                 trigger: 'div.o_wetrack_js_reminder i.fa-bell',
-                extra_trigger: 'span.o_wetrack_js_reminder_text:contains("Reminder On")',
+                extra_trigger: 'span.o_wetrack_js_reminder_text:contains("Favorite On")',
                 run: function () {}, // it's a check
             }]);
         }
