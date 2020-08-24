@@ -42,6 +42,7 @@ const CountdownWidget = publicWidget.Widget.extend({
         this._initTimeDiff();
 
         this._render();
+        this.$el.removeClass('d-none');
 
         this.setInterval = setInterval(this._render.bind(this), 1000);
         return this._super(...arguments);
@@ -55,6 +56,7 @@ const CountdownWidget = publicWidget.Widget.extend({
         this.$('.s_countdown_end_message').addClass('d-none');
         this.$('.s_countdown_text_wrapper').remove();
         this.$('.s_countdown_canvas_wrapper').removeClass('d-none');
+        this.$el.addClass('d-none');
 
         clearInterval(this.setInterval);
         this._super(...arguments);
