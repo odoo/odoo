@@ -643,14 +643,16 @@ class AccountRoot(models.Model):
             SELECT DISTINCT ASCII(code) * 1000 + ASCII(SUBSTRING(code,2,1)) AS id,
                    LEFT(code,2) AS name,
                    ASCII(code) AS parent_id,
-                   company_id
+                   NULL::int AS company_id
             FROM account_account WHERE code IS NOT NULL
+            GROUP BY code
             UNION ALL
             SELECT DISTINCT ASCII(code) AS id,
                    LEFT(code,1) AS name,
                    NULL::int AS parent_id,
-                   company_id
+                   NULL::int AS company_id
             FROM account_account WHERE code IS NOT NULL
+            GROUP BY code
             )''' % (self._table,)
         )
 
