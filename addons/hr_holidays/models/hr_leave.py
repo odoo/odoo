@@ -136,7 +136,11 @@ class HolidaysRequest(models.Model):
 
     employee_id = fields.Many2one(
         'hr.employee', string='Employee', index=True, readonly=True, ondelete="restrict",
+<<<<<<< HEAD
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, default=_default_employee, tracking=True)
+=======
+        states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, default=_default_employee, tracking=True, domain=_employee_id_domain)
+>>>>>>> 492a60f8d22... temp
     tz_mismatch = fields.Boolean(compute='_compute_tz_mismatch')
     tz = fields.Selection(_tz_get, compute='_compute_tz')
     department_id = fields.Many2one(
@@ -376,15 +380,21 @@ class HolidaysRequest(models.Model):
         elif self.request_unit_custom:
             hour_from = self.date_from.time()
             hour_to = self.date_to.time()
-            compensated_request_date_from = self._adjust_date_based_on_tz(self.request_date_from, hour_from)
-            compensated_request_date_to = self._adjust_date_based_on_tz(self.request_date_to, hour_to)
+            compensated_request_date_from = self._adjust_date_based_on_tz(self.request_date_from, hour_from)    
+            compensated_request_date_to = self._adjust_date_based_on_tz(self.request_date_to, hour_to)  
         else:
             hour_from = float_to_time(attendance_from.hour_from)
             hour_to = float_to_time(attendance_to.hour_to)
 
+<<<<<<< HEAD
         self.date_from = timezone(self.tz).localize(datetime.combine(compensated_request_date_from, hour_from)).astimezone(UTC).replace(tzinfo=None)
         self.date_to = timezone(self.tz).localize(datetime.combine(compensated_request_date_to, hour_to)).astimezone(UTC).replace(tzinfo=None)
 
+=======
+        date_from = timezone(self.tz).localize(datetime.combine(compensated_request_date_from, hour_from)).astimezone(UTC).replace(tzinfo=None)
+        date_to = timezone(self.tz).localize(datetime.combine(compensated_request_date_to, hour_to)).astimezone(UTC).replace(tzinfo=None)
+        self.update({'date_from': date_from, 'date_to': date_to})
+>>>>>>> 492a60f8d22... temp
         self._onchange_leave_dates()
 
     @api.onchange('request_unit_half')
@@ -451,7 +461,10 @@ class HolidaysRequest(models.Model):
             self.number_of_days = 0
 
     @api.depends('tz')
+<<<<<<< HEAD
     @api.depends_context('uid')
+=======
+>>>>>>> 492a60f8d22... temp
     def _compute_tz_mismatch(self):
         for leave in self:
             leave.tz_mismatch = leave.tz != self.env.user.tz
@@ -459,6 +472,7 @@ class HolidaysRequest(models.Model):
     @api.depends('request_unit_custom', 'employee_id', 'holiday_type', 'department_id.company_id.resource_calendar_id.tz', 'mode_company_id.resource_calendar_id.tz')
     def _compute_tz(self):
         for leave in self:
+<<<<<<< HEAD
             if leave.request_unit_custom:
                 tz = 'UTC' # custom -> already in UTC
             elif leave.holiday_type == 'employee':
@@ -468,6 +482,19 @@ class HolidaysRequest(models.Model):
             elif leave.holiday_type == 'company':
                 tz = leave.mode_company_id.resource_calendar_id.tz
             leave.tz = tz or self.env.company.resource_calendar_id.tz or self.env.user.tz or 'UTC'
+=======
+            tz = None
+            if leave.request_unit_custom:
+                tz = 'UTC'  # custom -> already in UTC
+            elif leave.holiday_type == 'employee':
+                tz = leave.employee_id.tz
+            elif leave.holiday_type == 'department':
+                tz = leave.department_id.company_id.resource_calendar_id.tz
+            elif leave.holiday_type == 'company':
+                tz = leave.mode_company_id.resource_calendar_id.tz
+            tz = tz or self.env.user.company_id.resource_calendar_id.tz or self.env.user.tz or 'UTC'
+            leave.tz = tz
+>>>>>>> 492a60f8d22... temp
 
     @api.depends('number_of_days')
     def _compute_number_of_days_display(self):
