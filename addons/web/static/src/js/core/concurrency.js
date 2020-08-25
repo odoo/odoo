@@ -120,7 +120,7 @@ return {
          */
         add: function (promise) {
             if (this.currentDef) {
-                this.currentDef.reject();
+                this._reject();
             }
             var rejection;
             var res = new Promise(function (resolve, reject) {
@@ -131,9 +131,15 @@ return {
             });
 
             this.currentDef = res;
-            this.currentDef.reject = rejection;
+            this._rejectFn = rejection;
             return res;
+        },
+        _reject(rejectObject) {
+            if (this._rejectFn) {
+                this._rejectFn(rejectObject);
+            }
         }
+
     }),
     /**
      * A (Odoo) mutex is a primitive for serializing computations.  This is
