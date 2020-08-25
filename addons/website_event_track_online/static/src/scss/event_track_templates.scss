@@ -1,3 +1,9 @@
+// small hack to hide sponsors on specific views
+.o_wevent_hide_sponsors .container.mt32.mb16.d-none.d-md-block.d-print-none {
+    // Not a very accurate way to target the 'sponsors' block -> improve in master
+    display: none !important;
+}
+
 /*
  * EVENT TOOL: REMINDER WIDGET
  */
@@ -21,6 +27,7 @@
         }
     }
 }
+
 
 /*
  * AGENDA
@@ -121,6 +128,7 @@
                 }
 
             }
+            // Remove me in master
             &.event_color_0 {
                 background-color: rgba(211, 211, 211, 0.5);
             }

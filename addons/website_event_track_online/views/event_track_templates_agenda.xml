@@ -116,16 +116,22 @@
                         <t t-set="tracks" t-value="time_slots[day][time_slot].get(location, {})"/>
                         <t t-if="tracks">
                             <t t-foreach="tracks" t-as="track">
+                                <t t-set="_classes"
+                                    t-value="'text-center %s %s %s' % (
+                                        'event_color_%s' % (track.color) if track.color else 'bg-100',
+                                        'event_track' if track else '',
+                                        'o_location_size_%d' % len(locations),
+                                    )"/>
                                 <t t-if="track.location_id and track.location_id == location">
                                     <td t-att-rowspan="tracks[track]['rowspan']"
-                                        t-attf-class="text-center event_color_#{track.color} #{track and 'event_track' or ''} o_location_size_#{len(locations)}">
+                                        t-att-class="_classes">
                                         <t t-call="website_event_track_online.agenda_main_track"/>
                                     </td>
                                 </t>
                                 <t t-else="">
                                     <td t-att-colspan="len(locations)-1"
                                         t-att-rowspan="tracks[track]['rowspan']"
-                                        t-attf-class="text-center event_color_#{track.color} #{track and 'event_track' or ''} o_location_size_#{len(locations)}">
+                                        t-att-class="_classes">
                                         <t t-call="website_event_track_online.agenda_main_track"/>
                                     </td>
                                 </t>
@@ -150,7 +156,7 @@
 
 <template id="agenda_main_track" name="Track Agenda: Track">
     <div class="d-flex flex-column h-100">
-        <div class="d-flex justify-content-end flex-wrap-reverse o_weagenda_track_badges">
+        <div class="d-flex justify-content-end flex-wrap-reverse align-items-center o_weagenda_track_badges">
             <small t-if="not track.website_published and user_event_manager and track.stage_id.is_accepted"
                    title="Unpublished"
                    class="ml-1 badge badge-danger o_wevent_online_badge_unpublished">Unpublished</small>
