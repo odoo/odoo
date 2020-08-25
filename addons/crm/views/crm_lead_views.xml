@@ -322,10 +322,10 @@
             <field name="model">crm.lead</field>
             <field name="priority">10</field>
             <field name="arch" type="xml">
-                <tree string="Leads" sample="1">
+                <tree string="Leads" sample="1" multi_edit="1">
                     <field name="date_deadline" invisible="1"/>
                     <field name="create_date" optional="hide"/>
-                    <field name="name" string="Lead"/>
+                    <field name="name" string="Lead" readonly="1"/>
                     <field name="contact_name" optional="hide"/>
                     <field name="partner_name" optional="hide"/>
                     <field name="email_from" optional="show"/>
@@ -335,7 +335,7 @@
                     <field name="state_id" optional="hide"/>
                     <field name="country_id" optional="show"/>
                     <field name="partner_id" invisible="1"/>
-                    <field name="user_id" optional="show"  widget="many2one_avatar_user"/>
+                    <field name="user_id" optional="show"  widget="many2one_avatar_user" domain="[('share', '=', False)]"/>
                     <field name="team_id" optional="show"/>
                     <field name="active" invisible="1"/>
                     <field name="probability" invisible="1"/>
@@ -647,10 +647,10 @@
             <field name="model">crm.lead</field>
             <field name="priority">1</field>
             <field name="arch" type="xml">
-                <tree string="Opportunities" sample="1">
+                <tree string="Opportunities" sample="1" multi_edit="1">
                     <field name="date_deadline" invisible="1"/>
                     <field name="create_date" optional="hide"/>
-                    <field name="name" string="Opportunity"/>
+                    <field name="name" string="Opportunity" readonly="1"/>
                     <field name="partner_id" optional="hide"/>
                     <field name="contact_name" optional="show"/>
                     <field name="email_from"/>
@@ -659,7 +659,7 @@
                     <field name="city" optional="hide"/>
                     <field name="state_id" optional="hide"/>
                     <field name="country_id" optional="hide"/>
-                    <field name="user_id" widget="many2one_avatar_user" optional="show"/>
+                    <field name="user_id" widget="many2one_avatar_user" optional="show" domain="[('share', '=', False)]"/>
                     <field name="team_id" optional="show"/>
                     <field name="priority" optional="hide"/>
                     <field name="activity_ids" widget="list_activity"/>
