@@ -28,6 +28,9 @@ class ReturnPicking(models.TransientModel):
     move_dest_exists = fields.Boolean('Chained Move Exists', readonly=True)
     original_location_id = fields.Many2one('stock.location')
     parent_location_id = fields.Many2one('stock.location')
+    return_picking_type_id = fields.Many2one(
+        comodel_name='stock.picking.type',
+    )
     location_id = fields.Many2one(
         'stock.location', 'Return Location',
         domain="['|', ('id', '=', original_location_id), ('return_location', '=', True)]")
@@ -78,10 +81,13 @@ class ReturnPicking(models.TransientModel):
                 res.update({'parent_location_id': picking.picking_type_id.warehouse_id and picking.picking_type_id.warehouse_id.view_location_id.id or picking.location_id.location_id.id})
             if 'original_location_id' in fields:
                 res.update({'original_location_id': picking.location_id.id})
+            return_picking_type = picking.picking_type_id.return_picking_type_id
+            if 'return_picking_type_id' in fields:
+                res['return_picking_type_id'] = return_picking_type.id
             if 'location_id' in fields:
                 location_id = picking.location_id.id
-                if picking.picking_type_id.return_picking_type_id.default_location_dest_id.return_location:
-                    location_id = picking.picking_type_id.return_picking_type_id.default_location_dest_id.id
+                if return_picking_type.default_location_dest_id.return_location:
+                    location_id = return_picking_type.default_location_dest_id.id
                 res['location_id'] = location_id
         return res
 
@@ -108,7 +114,7 @@ class ReturnPicking(models.TransientModel):
             return_move.move_dest_ids.filtered(lambda m: m.state not in ('done', 'cancel'))._do_unreserve()
 
         # create new picking for returned products
-        picking_type_id = self.picking_id.picking_type_id.return_picking_type_id.id or self.picking_id.picking_type_id.id
+        picking_type_id = self.return_picking_type_id.id or self.picking_id.picking_type_id.id
         new_picking = self.picking_id.copy({
             'move_lines': [],
             'picking_type_id': picking_type_id,
