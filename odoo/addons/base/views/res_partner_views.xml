@@ -37,26 +37,34 @@
             <field name="help">Manage the contact titles you want to have available in your system and the way you want to print them in letters and other documents. Some example: Mr., Mrs. </field>
         </record>
 
+        <!-- PARTNER TREE VIEW + MUTI_EDIT: VISIBLE FIELDS WITH ONCHANGE ON BASE/PARTNER
+             VIEW WON'T BE EDITABLE ON "MULTI_EDIT" MODE:
+                - parent_id
+                - country_id
+                - state_id
+                - company_type
+                - company_id
+        -->
         <!-- Partner -->
         <record id="view_partner_tree" model="ir.ui.view">
             <field name="name">res.partner.tree</field>
             <field name="model">res.partner</field>
             <field eval="8" name="priority"/>
             <field name="arch" type="xml">
-                <tree string="Contacts" sample="1">
+                <tree string="Contacts" sample="1" multi_edit="1">
                     <field name="display_name" string="Name"/>
                     <field name="function" invisible="1"/>
                     <field name="phone" class="o_force_ltr" optional="show"/>
                     <field name="email" optional="show"/>
-                    <field name="user_id" optional="show" widget="many2one_avatar_user"/>
+                    <field name="user_id" optional="show" widget="many2one_avatar_user" domain="[('share', '=', False)]"/>
                     <field name="city" optional="show"/>
-                    <field name="state_id" optional="hide"/>
-                    <field name="country_id" optional="show"/>
-                    <field name="vat" optional="hide"/>
+                    <field name="state_id" optional="hide" readonly="1"/>
+                    <field name="country_id" optional="show" readonly="1"/>
+                    <field name="vat" optional="hide" readonly="1"/>
                     <field name="category_id" optional="hide" widget="many2many_tags" options="{'color_field': 'color'}"/>
-                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="company_id" groups="base.group_multi_company" readonly="1"/>
                     <field name="is_company" invisible="1"/>
-                    <field name="parent_id" invisible="1"/>
+                    <field name="parent_id" invisible="1" readonly="1"/>
                     <field name="active" invisible="1"/>
                 </tree>
             </field>
