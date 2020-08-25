@@ -212,7 +212,11 @@ class account_payment(models.Model):
                 self.partner_bank_account_id = self.partner_id.commercial_partner_id.bank_ids[0]
             else:
                 self.partner_bank_account_id = False
-        return {'domain': {'partner_bank_account_id': [('partner_id', 'in', [self.partner_id.id, self.partner_id.commercial_partner_id.id])]}}
+        if self.payment_type == 'inbound' and self.invoice_ids:
+            partner_ids = [self.invoice_ids[0].company_id.partner_id.id, self.invoice_ids[0].company_id.partner_id.commercial_partner_id.id]
+        else:
+            partner_ids = [self.partner_id.id, self.partner_id.commercial_partner_id.id]
+        return {'domain': {'partner_bank_account_id': [('partner_id', 'in', partner_ids)]}}
 
     @api.onchange('payment_type')
     def _onchange_payment_type(self):
