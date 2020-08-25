@@ -191,6 +191,7 @@ class Partner(models.Model):
         ], string='Address Type',
         default='contact',
         help="Invoice & Delivery addresses are used in sales orders. Private addresses are only visible by authorized users.")
+    # address fields
     street = fields.Char()
     street2 = fields.Char()
     zip = fields.Char(change_default=True)
