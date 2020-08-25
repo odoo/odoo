@@ -6,6 +6,16 @@ from . import models
 from . import wizard
 from . import report
 
+def pre_init_hook(cr):
+    env = api.Environment(cr, SUPERUSER_ID, {})
+    terms_conditions = env['ir.config_parameter'].get_param('account.use_invoice_terms')
+    if not terms_conditions:
+        env['ir.config_parameter'].set_param('account.use_invoice_terms', True)
+    companies = env['res.company'].search([])
+    for company in companies:
+        company.terms_type = 'html'
+        company.invoice_terms = True
+
 
 def uninstall_hook(cr, registry):
     ''' Need to reenable the `product` pricelist multi-company rule that were
