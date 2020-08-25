@@ -403,7 +403,7 @@ publicWidget.registry.autohideMenu = publicWidget.Widget.extend({
         this.$topMenu = this.$('#top_menu');
         this.noAutohide = this.$el.is('.o_no_autohide_menu');
         if (!this.noAutohide) {
-            await wUtils.onceAllImagesLoaded(this.$('.navbar'), this.$('.o_mega_menu, .o_offcanvas_logo_container'));
+            await wUtils.onceAllImagesLoaded(this.$('.navbar'), this.$('.o_mega_menu, .o_offcanvas_logo_container, .dropdown-menu .o_lang_flag'));
 
             // The previous code will make sure we wait for images to be fully
             // loaded before initializing the auto more menu. But in some cases,

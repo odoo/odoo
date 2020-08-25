@@ -257,6 +257,10 @@
                         </t>
                     </t>
                 </div>
+                <!-- Language Selector -->
+                <t t-call="website.placeholder_header_language_selector">
+                    <t t-set="_div_classes" t-value="'ml-2'"/>
+                </t>
                 <!-- Button -->
                 <div class="oe_structure" id="oe_structure_header_default_1"/>
             </div>
@@ -314,6 +318,10 @@
                 <!-- Navbar Toggler -->
                 <t t-call="website.navbar_toggler">
                     <t t-set="_toggler_class" t-value="'order-first mr-auto'"/>
+                </t>
+                <!-- Language Selector -->
+                <t t-call="website.placeholder_header_language_selector">
+                    <t t-set="_div_classes" t-value="'ml-2'"/>
                 </t>
                 <!-- Button -->
                 <div class="oe_structure" id="oe_structure_header_hamburger_1"/>
@@ -439,6 +447,10 @@
                 <t t-call="website.navbar_toggler">
                     <t t-set="_toggler_class" t-value="'my-3'"/>
                 </t>
+                <!-- Language Selector -->
+                <t t-call="website.placeholder_header_language_selector">
+                    <t t-set="_div_classes" t-value="'ml-2'"/>
+                </t>
                 <!-- Navbar Collapse -->
                 <div id="top_menu_collapse" class="collapse navbar-collapse flex-wrap">
                     <div class="oe_structure w-100" id="oe_structure_header_vertical_3"/>
@@ -530,6 +542,10 @@
                 <t t-call="website.placeholder_header_brand"/>
                 <!-- Navbar Toggler -->
                 <t t-call="website.navbar_toggler"/>
+                <!-- Language Selector -->
+                <t t-call="website.placeholder_header_language_selector">
+                    <t t-set="_div_classes" t-value="'ml-2'"/>
+                </t>
                 <!-- Navbar Collapse -->
                 <div id="top_menu_collapse" class="collapse navbar-collapse flex-column align-self-stretch align-items-stretch">
                     <t t-call="website.navbar_nav">
@@ -639,6 +655,10 @@
                 </div>
                 <!-- Navbar Toggler -->
                 <t t-call="website.navbar_toggler"/>
+                <!-- Language Selector -->
+                <t t-call="website.placeholder_header_language_selector">
+                    <t t-set="_div_classes" t-value="'ml-2'"/>
+                </t>
                  <!-- Navbar Collapse -->
                 <div id="top_menu_collapse" class="collapse navbar-collapse">
                     <t t-call="website.navbar_nav">
@@ -704,6 +724,10 @@
                 <t t-call="website.placeholder_header_brand"/>
                 <!-- Navbar Toggler -->
                 <t t-call="website.navbar_toggler"/>
+                <!-- Language Selector -->
+                <t t-call="website.placeholder_header_language_selector">
+                    <t t-set="_div_classes" t-value="'ml-2'"/>
+                </t>
                 <!-- Navbar Collapse -->
                 <div id="top_menu_collapse" class="collapse navbar-collapse ml-lg-3">
                     <t t-call="website.navbar_nav">
@@ -785,6 +809,10 @@
                 <t t-call="website.placeholder_header_brand"/>
                 <!-- Navbar Toggler -->
                 <t t-call="website.navbar_toggler"/>
+                <!-- Language Selector -->
+                <t t-call="website.placeholder_header_language_selector">
+                    <t t-set="_div_classes" t-value="'ml-2'"/>
+                </t>
                 <!-- Navbar Collapse -->
                 <div id="top_menu_collapse" class="collapse navbar-collapse ml-lg-3">
                     <t t-call="website.navbar_nav">
@@ -836,6 +864,10 @@
                         <t t-set="_dropdown_menu_class" t-value="'dropdown-menu-right'"/>
                     </t>
                 </ul>
+                <!-- Language Selector -->
+                <t t-call="website.placeholder_header_language_selector">
+                    <t t-set="_div_classes" t-value="'ml-2'"/>
+                </t>
             </div>
         </div>
         <div id="top_menu_container" class="container mt-n4">
@@ -931,6 +963,10 @@
                         <t t-set="_link_class" t-value="'nav-link'"/>
                     </t>
                 </ul>
+                <!-- Language Selector -->
+                <t t-call="website.placeholder_header_language_selector">
+                    <t t-set="_div_classes" t-value="'ml-2'"/>
+                </t>
             </div>
         </nav>
     </xpath>
@@ -974,6 +1010,10 @@
                         </li>
                     </t>
                 </div>
+                <!-- Language Selector -->
+                <t t-call="website.placeholder_header_language_selector">
+                    <t t-set="_div_classes" t-value="'ml-2'"/>
+                </t>
             </div>
         </nav>
     </xpath>
@@ -1010,10 +1050,14 @@
             <div id="top_menu_container" class="container">
                 <!-- Brand -->
                 <t t-call="website.placeholder_header_brand"/>
-                <!-- Navbar Toggler -->
-                <t t-call="website.navbar_toggler">
-                    <t t-set="_toggler_class" t-value="'o_header_hamburger_full_toggler ml-auto'"/>
-                </t>
+                <div class="d-flex align-items-center ml-auto">
+                    <!-- Language Selector -->
+                    <t t-call="website.placeholder_header_language_selector"/>
+                    <!-- Navbar Toggler -->
+                    <t t-call="website.navbar_toggler">
+                        <t t-set="_toggler_class" t-value="'o_header_hamburger_full_toggler ml-2'"/>
+                    </t>
+                </div>
             </div>
             <!-- Navbar Collapse -->
             <div id="top_menu_collapse" class="collapse navbar-collapse">
@@ -1086,10 +1130,14 @@
             <div id="top_menu_container" class="container">
                 <!-- Brand -->
                 <t t-call="website.placeholder_header_brand"/>
-                <!-- Navbar Toggler -->
-                <t t-call="website.navbar_toggler">
-                    <t t-set="_toggler_class" t-value="'ml-auto'"/>
-                </t>
+                <div class="d-flex align-items-center ml-auto">
+                    <!-- Language Selector -->
+                    <t t-call="website.placeholder_header_language_selector"/>
+                    <!-- Navbar Toggler -->
+                    <t t-call="website.navbar_toggler">
+                        <t t-set="_toggler_class" t-value="'ml-2'"/>
+                    </t>
+                </div>
                 <!-- Navbar Collapse -->
                 <div id="top_menu_collapse" class="collapse navbar-collapse">
                     <t t-set="_nav_class" t-value="'text-right'"/>
@@ -1780,8 +1828,8 @@
 <!-- Alternative extension of the language_selector to make it look like an -->
 <!-- inline list instead of a dropdown -->
 <template id="language_selector_inline" inherit_id="website.language_selector" primary="True">
-    <xpath expr="//*[hasclass('js_language_selector')]" position="attributes">
-        <attribute name="class" remove="dropup" separator=" "/>
+    <xpath expr="//*[contains(@t-attf-class, 'js_language_selector')]" position="attributes">
+        <attribute name="t-attf-class" remove="dropup" separator=" "/>
     </xpath>
     <xpath expr="//*[hasclass('dropdown-toggle')]" position="replace"/>
     <xpath expr="//*[hasclass('dropdown-menu')]" position="attributes">
@@ -1800,6 +1848,34 @@
         <t t-call="website.language_selector_add_language">
             <t t-set="dropdown" t-value="False"/>
         </t>
+    </xpath>
+</template>
+
+<template id="placeholder_header_language_selector" name="Placeholder Header Language Selector"/>
+
+<template id="header_language_selector" inherit_id="website.placeholder_header_language_selector" name="Header Language Selector" active="False">
+    <xpath expr="." position="inside">
+        <t id="header_language_selector_call" t-call="portal.language_selector">
+            <t t-set="_div_classes" t-value="(_div_classes or '') + ' dropdown'"/>
+        </t>
+    </xpath>
+</template>
+
+<template id="header_language_selector_inline" name="Header Language Selector Inline" inherit_id="website.header_language_selector" active="False">
+    <xpath expr="//t[@id='header_language_selector_call']" position="replace">
+        <t id="header_language_selector_call" t-call="website.language_selector_inline"/>
+    </xpath>
+</template>
+
+<template id="header_language_selector_flag" name="Header Language Selector Flag" inherit_id="website.header_language_selector" active="True">
+    <xpath expr="//t[@id='header_language_selector_call']" position="before">
+        <t t-set="flags" t-value="True"/>
+    </xpath>
+</template>
+
+<template id="header_language_selector_no_text" name="Header Language Selector No Text" inherit_id="website.header_language_selector" active="False">
+    <xpath expr="//t[@id='header_language_selector_call']" position="before">
+        <t t-set="no_text" t-value="True"/>
     </xpath>
 </template>
 

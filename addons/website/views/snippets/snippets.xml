@@ -784,6 +784,17 @@
          data-no-check="true"
          groups="website.group_website_designer">
         <we-checkbox string="Sign In" data-customize-website-views="portal.user_sign_in" data-reload="/"/>
+        <we-select string="Language Selector" data-reload="/">
+            <we-button data-name="header_language_selector_none_opt"
+                       data-customize-website-views="">None</we-button>
+            <we-button data-customize-website-views="website.header_language_selector">Dropdown</we-button>
+            <we-button data-customize-website-views="website.header_language_selector, website.header_language_selector_inline">Inline</we-button>
+        </we-select>
+        <we-select string="⌙ Label" data-dependencies="!header_language_selector_none_opt" data-reload="/">
+            <we-button data-customize-website-views="">Text</we-button>
+            <we-button data-customize-website-views="website.header_language_selector_flag, website.header_language_selector_no_text">Flag</we-button>
+            <we-button data-customize-website-views="website.header_language_selector_flag">Flag and Text</we-button>
+        </we-select>
     </div>
 
     <!-- Footer - Colors & Layouts -->
