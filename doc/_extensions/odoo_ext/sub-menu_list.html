@@ -6,3 +6,15 @@
 <li><a href="https://odoo.com/slides">eLearning</a></li>
 <li><a href="https://www.odoo.com/page/odoo-white-paper">White Papers</a></li>
 <li><a href="https://www.odoo.com/page/legal">Legal</a></li>
+
+{%- if pagename != "search" and builder != "singlehtml" %}
+<li id="searchbox" style="display: none; margin: 0 0 0 10px;" role="search">
+    <form class="search form-inline input-group-sm" action="{{ pathto('search') }}" method="get">
+        <input type="text" class="form-control" name="q" id="q" placeholder="Search..." />
+        <input type="hidden" name="area" value="default" />
+        <input type="hidden" name="check_keywords" value="yes" />
+        <button type="submit" value="Go" class="btn btn-default btn-sm">Go</button>
+    </form>
+</li>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+{%- endif %}
