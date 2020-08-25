@@ -1,10 +1,20 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import api, SUPERUSER_ID
+from odoo import api, SUPERUSER_ID, _
 from . import controllers
 from . import models
 from . import wizard
 from . import report
+
+def pre_init_hook(cr):
+    env = api.Environment(cr, SUPERUSER_ID, {})
+    terms_conditions = env['ir.config_parameter'].get_param('account.use_invoice_terms')
+    if not terms_conditions:
+        env['ir.config_parameter'].set_param('account.use_invoice_terms', True)
+    companies = env['res.company'].search([])
+    for company in companies:
+        company.terms_type = 'html'
+        company.invoice_terms = _('Terms & Conditions: %s/terms', company.get_base_url())
 
 
 def uninstall_hook(cr, registry):

@@ -33,5 +33,6 @@
     'qweb': ['static/src/xml/*.xml'],
     'installable': True,
     'application': True,
+    'pre_init_hook': 'pre_init_hook',
     'uninstall_hook': 'uninstall_hook',
 }
