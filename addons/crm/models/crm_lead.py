@@ -1159,6 +1159,7 @@ class Lead(models.Model):
     @api.multi
     def _notify_get_reply_to(self, default=None, records=None, company=None, doc_names=None):
         """ Override to set alias of lead and opportunities to their sales team if any. """
+        company = company or self.env.user.company_id
         aliases = self.mapped('team_id').sudo()._notify_get_reply_to(default=default, records=None, company=company, doc_names=None)
         res = {lead.id: aliases.get(lead.team_id.id) for lead in self}
         leftover = self.filtered(lambda rec: not rec.team_id)

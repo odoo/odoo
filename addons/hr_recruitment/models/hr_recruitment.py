@@ -355,6 +355,7 @@ class Applicant(models.Model):
     @api.multi
     def _notify_get_reply_to(self, default=None, records=None, company=None, doc_names=None):
         """ Override to set alias of applicants to their job definition if any. """
+        company = company or self.env.user.company_id
         aliases = self.mapped('job_id')._notify_get_reply_to(default=default, records=None, company=company, doc_names=None)
         res = {app.id: aliases.get(app.job_id.id) for app in self}
         leftover = self.filtered(lambda rec: not rec.job_id)
