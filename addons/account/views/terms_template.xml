@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-    <template id="account.account_terms_conditions_setting_banner" name="Back to edit mode">
+    <template id="account.account_terms_conditions_setting_banner" name="Account Terms and Conditions Setting Banner">
         <div id="terms_conditions" t-ignore="true" class="text-center">
             <span>This is a preview of your Terms &amp; Conditions.</span>
             <a t-att-href="backend_url"><i class="fa fa-arrow-right mr-1"/>Back to settings</a>
@@ -18,7 +18,7 @@
             <div class="oe_structure" id="oe_structure_terms_conditions"/>
                 <div class="container oe_website_terms_conditions">
                     <div id="o_terms_conditions">
-                        <div t-field="company.invoice_terms_html" itemprop="description"/>
+                        <div t-field="company.invoice_terms_html"/>
                     </div>
                 </div>
         </t>

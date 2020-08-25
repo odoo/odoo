@@ -10,6 +10,7 @@ from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tools.misc import formatLang, get_lang
 from odoo.osv import expression
 from odoo.tools import float_is_zero, float_compare
+from odoo.addons.http_routing.models.ir_http import url_for
 
 
 
@@ -380,7 +381,9 @@ class SaleOrder(models.Model):
 
         if self.env['ir.config_parameter'].sudo().get_param('account.use_invoice_terms'):
             if self.env.company.terms_type == 'html' and self.env.company.invoice_terms_html:
-                values['note'] = _('Terms & Conditions: %s/%s/terms', self.get_base_url(), self.partner_id.lang)
+                # arj fixme use for_url here
+                partner_tc_url = url_for('/terms', partner_user.lang)
+                values['note'] = _('Terms & Conditions: %s', partner_tc_url)
             elif self.env.company.invoice_terms:
                 values['note'] = self.with_context(lang=self.partner_id.lang).env.company.invoice_terms
         if not self.env.context.get('not_self_saleperson') or not self.team_id:

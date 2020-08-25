@@ -104,7 +104,7 @@ class ResConfigSettings(models.TransientModel):
                                      readonly=False)
     terms_type = fields.Selection(
         related='company_id.terms_type', readonly=False)
-    preview_ready = fields.Boolean(string="Display preview button")
+    preview_ready = fields.Boolean(string="Display preview button", store=False)
 
     use_invoice_terms = fields.Boolean(
         string='Default Terms & Conditions',
