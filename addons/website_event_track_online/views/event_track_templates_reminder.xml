@@ -15,6 +15,7 @@
         <i t-att-class="'fa fa-bell%s inactive_color_%s' % ('' if track.is_reminder_on else '-o', 'dark' if reminder_light and not light_theme else 'light')"
            t-att-data-track-id="track.id"
            t-att-title="title"
+           t-att-data-is-reminder-light="reminder_light"
            t-att-data-reminder-on="bool(track.is_reminder_on)"></i>
         <span t-if="not reminder_light" class="o_wetrack_js_reminder_text">
             <t t-if="not track.is_reminder_on">
