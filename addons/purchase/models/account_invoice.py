@@ -74,7 +74,7 @@ class AccountInvoice(models.Model):
             'analytic_tag_ids': line.analytic_tag_ids.ids,
             'invoice_line_tax_ids': invoice_line_tax_ids.ids
         }
-        account = invoice_line.get_invoice_line_account('in_invoice', line.product_id, line.order_id.fiscal_position_id, self.env.user.company_id)
+        account = invoice_line.with_context(purchase_line_id=line.id).get_invoice_line_account('in_invoice', line.product_id, line.order_id.fiscal_position_id, self.env.user.company_id)
         if account:
             data['account_id'] = account.id
         return data
