@@ -155,6 +155,7 @@
                 <header>
                     <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" placeholder="Tags"/>
                     <field name="stage_id" domain="[('user_id','=',uid)]" widget="statusbar" options="{'clickable': '1'}"/>
+                    <field name="stage_ids" invisible="1"/>
                 </header>
                 <sheet>
                   <field name="memo" type="html" class="oe_memo" default_focus="1" options="{'resizable': false}"/>

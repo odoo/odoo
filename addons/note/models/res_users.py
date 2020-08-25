@@ -3,7 +3,7 @@
 
 import logging
 
-from odoo import api, models, modules, _
+from odoo import api, fields, models, modules, _
 
 _logger = logging.getLogger(__name__)
 
@@ -11,6 +11,8 @@ _logger = logging.getLogger(__name__)
 class Users(models.Model):
     _name = 'res.users'
     _inherit = ['res.users']
+
+    note_stage_ids = fields.One2many('note.stage', 'user_id')
 
     @api.model_create_multi
     def create(self, vals_list):
