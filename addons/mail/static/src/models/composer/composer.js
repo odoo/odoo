@@ -182,7 +182,7 @@ function factory(dependencies) {
                 thread.loadNewMessages();
             }
             for (const threadView of this.thread.threadViews) {
-                threadView.addComponentHint('current-partner-just-posted-message', messageId);
+                threadView.addComponentHint('current-partner-just-posted-message', { messageId });
             }
             this._reset();
         }
