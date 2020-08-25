@@ -1617,6 +1617,44 @@ QUnit.test('chat window with a thread: keep scroll position in message list on f
     );
 });
 
+QUnit.test('chat window should scroll to the newly posted message just after posting it', async function (assert) {
+    assert.expect(1);
+
+    this.data['mail.channel'].records.push({
+        id: 20,
+        is_minimized: true,
+        state: 'open',
+    });
+    for (let i = 0; i < 10; i++) {
+        this.data['mail.message'].records.push({
+            channel_ids: [20],
+            model: 'mail.channel',
+            res_id: 20,
+        });
+    }
+    await this.start();
+
+    // Set content of the composer of the chat window
+    await afterNextRender(() => {
+        document.querySelector('.o_ComposerTextInput_textarea').focus();
+        document.execCommand('insertText', false, 'WOLOLO');
+    });
+    // Send a new message in the chatwindow to trigger the scroll
+    await afterNextRender(() =>
+        triggerEvent(
+            document.querySelector('.o_ChatWindow .o_ComposerTextInput_textarea'),
+            'keydown',
+            { key: 'Enter' },
+        )
+    );
+    const messageList = document.querySelector('.o_MessageList');
+    assert.strictEqual(
+        messageList.scrollHeight - messageList.scrollTop,
+        messageList.clientHeight,
+        "chat window should scroll to the newly posted message just after posting it"
+    );
+});
+
 QUnit.test('[technical] chat window: composer state conservation on toggle home menu when folded', async function (assert) {
     // technical as show/hide home menu simulation are involved and home menu implementation
     // have side-effects on DOM that may make chat window components not work
