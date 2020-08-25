@@ -903,6 +903,16 @@ class Home(http.Controller):
 
         return request.redirect(self._login_redirect(uid))
 
+    @http.route('/web/health', type='http', auth='none', save_session=False)
+    def health(self):
+        data = json.dumps({
+            'status': 'pass',
+        })
+        headers = [('Content-Type', 'application/json'),
+                   ('Cache-Control', 'no-store')]
+        return request.make_response(data, headers)
+
+
 class WebClient(http.Controller):
 
     @http.route('/web/webclient/locale/<string:lang>', type='http', auth="none")
