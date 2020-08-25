@@ -67,7 +67,8 @@
 
         // background color-based for new styling
         .event_color_0 {
-            @extend .bg-100;
+            // bg-100 background but DO NOT extend bg-100 as it messes with text-muted colors
+            background-color: #F8F9FA;
         }
         .event_color_1 {
             background-color: rgba(240, 96, 80, 0.2);
