@@ -78,6 +78,7 @@ var EpsonPrinter = core.Class.extend(PrinterMixin, {
     send_printing_job: function () {
         if (this.printer) {
             this.printer.send();
+            return true;
         }
     },
 
