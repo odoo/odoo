@@ -168,6 +168,32 @@ class ReturnPicking(models.TransientModel):
         new_picking.action_assign()
         return new_picking.id, picking_type_id
 
+    @api.onchange('location_id')
+    def onchange_location_id(self):
+        """When the destination for the return picking changes,
+        search a return picking type that matches the selected location."""
+        self.ensure_one()
+        picking_type_model = self.env['stock.picking.type']
+
+        default_return_picking_type_id = self.default_get(['return_picking_type_id'])['return_picking_type_id']
+        default_return_picking_type = picking_type_model.browse(default_return_picking_type_id)
+        # If the default return picking type matches the selected location,
+        # do not search further
+        return_picking_type = picking_type_model.browse()
+        if default_return_picking_type.default_location_dest_id == self.location_id:
+            return_picking_type = default_return_picking_type
+        else:
+            return_picking_types = picking_type_model.search([]) \
+                .mapped('return_picking_type_id')
+            for picking_type in return_picking_types:
+                return_location = picking_type.default_location_dest_id
+                if return_location.return_location:
+                    return_picking_type = picking_type
+                    break
+
+        # Fallback on default value
+        self.return_picking_type_id = return_picking_type or default_return_picking_type
+
     def create_returns(self):
         for wizard in self:
             new_picking_id, pick_type_id = wizard._create_returns()
