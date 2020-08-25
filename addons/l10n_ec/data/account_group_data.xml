@@ -1,0 +1,679 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="ec1" model="account.group">
+            <field name="code_prefix">1</field>
+            <field name="name">ACTIVO</field>
+        </record>
+
+        <record id="ec11" model="account.group">
+            <field name="code_prefix">101</field>
+            <field name="name">ACTIVO CORRIENTE</field>
+            <field name="parent_id" ref="ec1"/>
+        </record>
+
+        <record id="ec1101" model="account.group">
+            <field name="code_prefix">1101</field>
+            <field name="name">EFECTIVO Y EQUIVALENTES AL EFECTIVO</field>
+            <field name="parent_id" ref="ec11"/>
+        </record>
+
+        <record id="ec110101" model="account.group">
+            <field name="code_prefix">110101</field>
+            <field name="name">EFECTIVO</field>
+            <field name="parent_id" ref="ec1101"/>
+        </record>
+
+        <record id="ec110102" model="account.group">
+            <field name="code_prefix">110102</field>
+            <field name="name">BANCOS</field>
+            <field name="parent_id" ref="ec1101"/>
+        </record>
+
+        <record id="ec110103" model="account.group">
+            <field name="code_prefix">110103</field>
+            <field name="name">TRANSFERENCIAS</field>
+            <field name="parent_id" ref="ec1101"/>
+        </record>
+
+        <record id="ec110104" model="account.group">
+            <field name="code_prefix">110104</field>
+            <field name="name">VALORES EN CUSTODIA</field>
+            <field name="parent_id" ref="ec1101"/>
+        </record>
+
+        <record id="ec1102" model="account.group">
+            <field name="code_prefix">1102</field>
+            <field name="name">ACTIVOS FINANCIEROS</field>
+            <field name="parent_id" ref="ec11"/>
+        </record>
+
+        <record id="ec110205" model="account.group">
+            <field name="code_prefix">110205</field>
+            <field name="name">DOCUMENTOS Y CUENTAS POR COBRAR CLIENTE NO RELACIONADOS</field>
+            <field name="parent_id" ref="ec1102"/>
+        </record>
+
+        <record id="ec11020501" model="account.group">
+            <field name="code_prefix">11020501</field>
+            <field name="name">DOCUMENTOS Y CUENTAS POR COBRAR CLIENTE NO RELACIONADOS DE ACTIVIDADES ORDINARIAS QUE NO GENEREN INTERESES</field>
+            <field name="parent_id" ref="ec110205"/>
+        </record>
+
+        <record id="ec110206" model="account.group">
+            <field name="code_prefix">110206</field>
+            <field name="name">DOCUMENTOS Y CUENTAS POR COBRAR CLIENTE RELACIONADOS</field>
+            <field name="parent_id" ref="ec1102"/>
+        </record>
+
+        <record id="ec110207" model="account.group">
+            <field name="code_prefix">110207</field>
+            <field name="name">CUENTAS POR COBRAR EMPLEADOS</field>
+            <field name="parent_id" ref="ec1102"/>
+        </record>
+
+        <record id="ec1103" model="account.group">
+            <field name="code_prefix">1103</field>
+            <field name="name">INVENTARIOS</field>
+            <field name="parent_id" ref="ec11"/>
+        </record>
+
+        <record id="ec1104" model="account.group">
+            <field name="code_prefix">1104</field>
+            <field name="name">SERVICIOS Y OTROS PAGOS ANTICIPADOS</field>
+            <field name="parent_id" ref="ec11"/>
+        </record>
+
+        <record id="ec110404" model="account.group">
+            <field name="code_prefix">110404</field>
+            <field name="name">OTROS ANTICIPOS ENTREGADOS</field>
+            <field name="parent_id" ref="ec1104"/>
+        </record>
+
+        <record id="ec1105" model="account.group">
+            <field name="code_prefix">1105</field>
+            <field name="name">ACTIVOS POR IMPUESTOS CORRIENTES</field>
+            <field name="parent_id" ref="ec11"/>
+        </record>
+
+        <record id="ec110501" model="account.group">
+            <field name="code_prefix">110501</field>
+            <field name="name">CREDITO TRIBUTARIO A FAVOR DE LA EMPRESA(IVA)</field>
+            <field name="parent_id" ref="ec1105"/>
+        </record>
+
+        <record id="ec12" model="account.group">
+            <field name="code_prefix">12</field>
+            <field name="name">ACTIVO NO CORRIENTE</field>
+            <field name="parent_id" ref="ec1"/>
+        </record>
+
+        <record id="ec1201" model="account.group">
+            <field name="code_prefix">1201</field>
+            <field name="name">PROPIEDADES, PLANTA Y EQUIPO</field>
+            <field name="parent_id" ref="ec12"/>
+        </record>
+
+        <record id="ec120112" model="account.group">
+            <field name="code_prefix">120112</field>
+            <field name="name">DEPRECIACION ACUMULADA PROPIEDADES, PLANTA Y EQUIPO</field>
+            <field name="parent_id" ref="ec1201"/>
+        </record>
+
+        <record id="ec120113" model="account.group">
+            <field name="code_prefix">120113</field>
+            <field name="name">DETERIORO ACUMULADO DE PROPIEDADES, PLANTA Y EQUIPO</field>
+            <field name="parent_id" ref="ec1201"/>
+        </record>
+
+        <record id="ec1202" model="account.group">
+            <field name="code_prefix">1202</field>
+            <field name="name">PROPIEDADES DE INVERSION</field>
+            <field name="parent_id" ref="ec12"/>
+        </record>
+
+        <record id="ec1203" model="account.group">
+            <field name="code_prefix">1203</field>
+            <field name="name">ACTIVOS BIOLOGICOS</field>
+            <field name="parent_id" ref="ec12"/>
+        </record>
+
+        <record id="ec1204" model="account.group">
+            <field name="code_prefix">1204</field>
+            <field name="name">ACTIVO INTANGIBLE</field>
+            <field name="parent_id" ref="ec12"/>
+        </record>
+
+        <record id="ec1205" model="account.group">
+            <field name="code_prefix">1205</field>
+            <field name="name">ACTIVOS POR IMPUESTOS DIFERIDOS</field>
+            <field name="parent_id" ref="ec12"/>
+        </record>
+
+        <record id="ec1206" model="account.group">
+            <field name="code_prefix">1206</field>
+            <field name="name">ACTIVOS FINANCIEROS NO CORRIENTES</field>
+            <field name="parent_id" ref="ec12"/>
+        </record>
+
+        <record id="ec1207" model="account.group">
+            <field name="code_prefix">1207</field>
+            <field name="name">OTROS ACTIVOS NO CORRIENTES</field>
+            <field name="parent_id" ref="ec12"/>
+        </record>
+
+        <record id="ec2" model="account.group">
+            <field name="code_prefix">2</field>
+            <field name="name">PASIVO</field>
+        </record>
+
+        <record id="ec21" model="account.group">
+            <field name="code_prefix">21</field>
+            <field name="name">PASIVO CORRIENTE</field>
+            <field name="parent_id" ref="ec2"/>
+        </record>
+
+        <record id="ec2103" model="account.group">
+            <field name="code_prefix">2103</field>
+            <field name="name">CUENTAS Y DOCUMENTOS POR PAGAR</field>
+            <field name="parent_id" ref="ec21"/>
+        </record>
+
+        <record id="ec2104" model="account.group">
+            <field name="code_prefix">2104</field>
+            <field name="name">OBLIGACIONES CON INSTITUCIONES FINANCIERAS</field>
+            <field name="parent_id" ref="ec21"/>
+        </record>
+
+        <record id="ec2105" model="account.group">
+            <field name="code_prefix">2105</field>
+            <field name="name">PROVISIONES</field>
+            <field name="parent_id" ref="ec21"/>
+        </record>
+
+        <record id="ec210501" model="account.group">
+            <field name="code_prefix">210501</field>
+            <field name="name">PROVISIONES LOCALES</field>
+            <field name="parent_id" ref="ec2105"/>
+        </record>
+
+        <record id="ec21050101" model="account.group">
+            <field name="code_prefix">21050101</field>
+            <field name="name">PROVISIONES A FAVOR DE LOS EMPLEADOS</field>
+            <field name="parent_id" ref="ec210501"/>
+        </record>
+
+        <record id="ec2107" model="account.group">
+            <field name="code_prefix">2107</field>
+            <field name="name">OTRAS OBLIGACIONES CORRIENTES</field>
+            <field name="parent_id" ref="ec21"/>
+        </record>
+
+        <record id="ec210701" model="account.group">
+            <field name="code_prefix">210701</field>
+            <field name="name">OTRAS OBLIGACIONES CORRIENTES CON LA ADMINISTRACION TRIBUTARIA</field>
+            <field name="parent_id" ref="ec2107"/>
+        </record>
+
+        <record id="ec210703" model="account.group">
+            <field name="code_prefix">210703</field>
+            <field name="name">OTRAS OBLIGACIONES CORRIENTES CON EL IESS</field>
+            <field name="parent_id" ref="ec2107"/>
+        </record>
+
+        <record id="ec210704" model="account.group">
+            <field name="code_prefix">210704</field>
+            <field name="name">OTRAS OBLIGACIONES CORRIENTES POR BENEFICIOS DE LEY A EMPLEADOS</field>
+            <field name="parent_id" ref="ec2107"/>
+        </record>
+
+        <record id="ec2112" model="account.group">
+            <field name="code_prefix">2112</field>
+            <field name="name">PORCION CORRIENTE DE PROVISIONES POR BENEFICIOS A EMPLEADOS</field>
+            <field name="parent_id" ref="ec21"/>
+        </record>
+
+        <record id="ec2113" model="account.group">
+            <field name="code_prefix">2113</field>
+            <field name="name">OTROS PASIVOS CORRIENTES</field>
+            <field name="parent_id" ref="ec21"/>
+        </record>
+
+        <record id="ec2114" model="account.group">
+            <field name="code_prefix">2114</field>
+            <field name="name">OBLIGACIONES TRIBUTARIAS</field>
+            <field name="parent_id" ref="ec21"/>
+        </record>
+
+        <record id="ec211401" model="account.group">
+            <field name="code_prefix">211401</field>
+            <field name="name">IMPUESTOS</field>
+            <field name="parent_id" ref="ec2114"/>
+        </record>
+
+        <record id="ec21140101" model="account.group">
+            <field name="code_prefix">21140101</field>
+            <field name="name">IVA COBRADO</field>
+            <field name="parent_id" ref="ec211401"/>
+        </record>
+
+        <record id="ec21140102" model="account.group">
+            <field name="code_prefix">21140102</field>
+            <field name="name">RETENCIONES DE LA FUENTE</field>
+            <field name="parent_id" ref="ec211401"/>
+        </record>
+
+        <record id="ec21140103" model="account.group">
+            <field name="code_prefix">21140103</field>
+            <field name="name">RETENCIONES DE IVA</field>
+            <field name="parent_id" ref="ec211401"/>
+        </record>
+
+        <record id="ec22" model="account.group">
+            <field name="code_prefix">22</field>
+            <field name="name">PASIVO NO CORRIENTE</field>
+            <field name="parent_id" ref="ec2"/>
+        </record>
+
+        <record id="ec2202" model="account.group">
+            <field name="code_prefix">2202</field>
+            <field name="name">CUENTAS Y DOCUMENTOS POR PAGAR</field>
+            <field name="parent_id" ref="ec22"/>
+        </record>
+
+        <record id="ec2203" model="account.group">
+            <field name="code_prefix">2203</field>
+            <field name="name">OBLIGACIONES CON INSTITUCIONES FINANCIERAS</field>
+            <field name="parent_id" ref="ec22"/>
+        </record>
+
+        <record id="ec2204" model="account.group">
+            <field name="code_prefix">2204</field>
+            <field name="name">CUENTAS POR PAGAR DIVERSAS/RELACIONADAS</field>
+            <field name="parent_id" ref="ec22"/>
+        </record>
+
+        <record id="ec2207" model="account.group">
+            <field name="code_prefix">2207</field>
+            <field name="name">PROVISIONES POR BENEFICIOS A EMPLEADOS</field>
+            <field name="parent_id" ref="ec22"/>
+        </record>
+
+        <record id="ec2209" model="account.group">
+            <field name="code_prefix">2209</field>
+            <field name="name">PASIVO DIFERIDO</field>
+            <field name="parent_id" ref="ec22"/>
+        </record>
+
+        <record id="ec3" model="account.group">
+            <field name="code_prefix">3</field>
+            <field name="name">PATRIMONIO NETO</field>
+        </record>
+
+        <record id="ec31" model="account.group">
+            <field name="code_prefix">31</field>
+            <field name="name">CAPITAL</field>
+            <field name="parent_id" ref="ec3"/>
+        </record>
+
+        <record id="ec34" model="account.group">
+            <field name="code_prefix">34</field>
+            <field name="name">RESERVAS</field>
+            <field name="parent_id" ref="ec3"/>
+        </record>
+
+        <record id="ec35" model="account.group">
+            <field name="code_prefix">35</field>
+            <field name="name">OTROS RESULTADOS INTEGRALES</field>
+            <field name="parent_id" ref="ec3"/>
+        </record>
+
+        <record id="ec36" model="account.group">
+            <field name="code_prefix">36</field>
+            <field name="name">RESULTADOS ACUMULADOS</field>
+            <field name="parent_id" ref="ec3"/>
+        </record>
+
+        <record id="ec37" model="account.group">
+            <field name="code_prefix">37</field>
+            <field name="name">RESULTADOS DEL EJERCICIO</field>
+            <field name="parent_id" ref="ec3"/>
+        </record>
+
+        <record id="ec4" model="account.group">
+            <field name="code_prefix">4</field>
+            <field name="name">INGRESOS</field>
+        </record>
+
+        <record id="ec41" model="account.group">
+            <field name="code_prefix">41</field>
+            <field name="name">INGRESOS DE ACTIVIDADES ORDINARIAS</field>
+            <field name="parent_id" ref="ec4"/>
+        </record>
+
+        <record id="ec4101" model="account.group">
+            <field name="code_prefix">4101</field>
+            <field name="name">VENTA DE BIENES</field>
+            <field name="parent_id" ref="ec41"/>
+        </record>
+
+        <record id="ec4102" model="account.group">
+            <field name="code_prefix">4102</field>
+            <field name="name">PRESTACION DE SERVICIOS</field>
+            <field name="parent_id" ref="ec41"/>
+        </record>
+
+        <record id="ec43" model="account.group">
+            <field name="code_prefix">43</field>
+            <field name="name">OTROS INGRESOS</field>
+            <field name="parent_id" ref="ec4"/>
+        </record>
+
+        <record id="ec4305" model="account.group">
+            <field name="code_prefix">4305</field>
+            <field name="name">OTRAS RENTAS</field>
+            <field name="parent_id" ref="ec43"/>
+        </record>
+
+        <record id="ec5" model="account.group">
+            <field name="code_prefix">5</field>
+            <field name="name">EGRESOS</field>
+        </record>
+
+        <record id="ec51" model="account.group">
+            <field name="code_prefix">51</field>
+            <field name="name">COSTO DE VENTAS Y PRODUCCION</field>
+            <field name="parent_id" ref="ec5"/>
+        </record>
+
+        <record id="ec5101" model="account.group">
+            <field name="code_prefix">5101</field>
+            <field name="name">MATERIALES UTILIZADOS O PRODUCTOS VENDIDOS</field>
+            <field name="parent_id" ref="ec51"/>
+        </record>
+
+        <record id="ec5102" model="account.group">
+            <field name="code_prefix">5102</field>
+            <field name="name">MANO DE OBRA DIRECTA</field>
+            <field name="parent_id" ref="ec51"/>
+        </record>
+
+        <record id="ec510201" model="account.group">
+            <field name="code_prefix">510201</field>
+            <field name="name">SUELDOS, SALARIOS Y DEMAS REMUNERACIONES</field>
+            <field name="parent_id" ref="ec5102"/>
+        </record>
+
+        <record id="ec510202" model="account.group">
+            <field name="code_prefix">510202</field>
+            <field name="name">GASTO PLANES DE BENEFICIOS A EMPLEADOS</field>
+            <field name="parent_id" ref="ec5102"/>
+        </record>
+
+        <record id="ec51020205" model="account.group">
+            <field name="code_prefix">51020205</field>
+            <field name="name">OTROS GASTOS DE PLANES DE BENEFICIOS A EMPLEADOS</field>
+            <field name="parent_id" ref="ec510202"/>
+        </record>
+
+        <record id="ec510203" model="account.group">
+            <field name="code_prefix">510203</field>
+            <field name="name">APORTES A LA SEGURIDAD SOCIAL</field>
+            <field name="parent_id" ref="ec5102"/>
+        </record>
+
+        <record id="ec510204" model="account.group">
+            <field name="code_prefix">510204</field>
+            <field name="name">BENEFICIOS SOCIALES E INDEMNIZACIONES</field>
+            <field name="parent_id" ref="ec5102"/>
+        </record>
+
+        <record id="ec5103" model="account.group">
+            <field name="code_prefix">5103</field>
+            <field name="name">MANO DE OBRA INDIRECTA</field>
+            <field name="parent_id" ref="ec51"/>
+        </record>
+
+        <record id="ec510301" model="account.group">
+            <field name="code_prefix">510301</field>
+            <field name="name">SUELDOS, SALARIOS Y DEMAS REMUNERACIONES</field>
+            <field name="parent_id" ref="ec5103"/>
+        </record>
+
+        <record id="ec510302" model="account.group">
+            <field name="code_prefix">510302</field>
+            <field name="name">GASTO PLANES DE BENEFICIOS A EMPLEADOS</field>
+            <field name="parent_id" ref="ec5103"/>
+        </record>
+
+        <record id="ec51030205" model="account.group">
+            <field name="code_prefix">51030205</field>
+            <field name="name">OTROS GASTOS DE PLANES DE BENEFICIOS A EMPLEADOS</field>
+            <field name="parent_id" ref="ec510302"/>
+        </record>
+
+        <record id="ec510303" model="account.group">
+            <field name="code_prefix">510303</field>
+            <field name="name">APORTES A LA SEGURIDAD SOCIAL (incluido fondo de reserva)</field>
+            <field name="parent_id" ref="ec5103"/>
+        </record>
+
+        <record id="ec510304" model="account.group">
+            <field name="code_prefix">510304</field>
+            <field name="name">BENEFICIOS SOCIALES E INDEMNIZACIONES</field>
+            <field name="parent_id" ref="ec5103"/>
+        </record>
+
+        <record id="ec5104" model="account.group">
+            <field name="code_prefix">5104</field>
+            <field name="name">OTROS COSTOS INDIRECTOS DE FABRICACION</field>
+            <field name="parent_id" ref="ec51"/>
+        </record>
+
+        <record id="ec510401" model="account.group">
+            <field name="code_prefix">510401</field>
+            <field name="name">DEPRECIACION PROPIEDADES, PLANTA Y EQUIPO</field>
+            <field name="parent_id" ref="ec5104"/>
+        </record>
+
+        <record id="ec510403" model="account.group">
+            <field name="code_prefix">510403</field>
+            <field name="name">DETERIORO DE PROPIEDAD, PLANTA Y EQUIPO</field>
+            <field name="parent_id" ref="ec5104"/>
+        </record>
+
+        <record id="ec510408" model="account.group">
+            <field name="code_prefix">510408</field>
+            <field name="name">OTROS COSTOS DE PRODUCCION</field>
+            <field name="parent_id" ref="ec5104"/>
+        </record>
+
+        <record id="ec52" model="account.group">
+            <field name="code_prefix">52</field>
+            <field name="name">GASTOS</field>
+            <field name="parent_id" ref="ec5"/>
+        </record>
+
+        <record id="ec5201" model="account.group">
+            <field name="code_prefix">5201</field>
+            <field name="name">GASTOS DE VENTAS</field>
+            <field name="parent_id" ref="ec52"/>
+        </record>
+
+        <record id="ec520101" model="account.group">
+            <field name="code_prefix">520101</field>
+            <field name="name">SUELDOS, SALARIOS Y DEMAS REMUNERACIONES</field>
+            <field name="parent_id" ref="ec5201"/>
+        </record>
+
+        <record id="ec520102" model="account.group">
+            <field name="code_prefix">520102</field>
+            <field name="name">APORTES A LA SEGURIDAD SOCIAL (incluido fondo de reserva)</field>
+            <field name="parent_id" ref="ec5201"/>
+        </record>
+
+        <record id="ec520103" model="account.group">
+            <field name="code_prefix">520103</field>
+            <field name="name">BENEFICIOS SOCIALES E INDEMNIZACIONES</field>
+            <field name="parent_id" ref="ec5201"/>
+        </record>
+
+        <record id="ec520104" model="account.group">
+            <field name="code_prefix">520104</field>
+            <field name="name">GASTO PLANES DE BENEFICIOS A EMPLEADOS</field>
+            <field name="parent_id" ref="ec5201"/>
+        </record>
+
+        <record id="ec52010405" model="account.group">
+            <field name="code_prefix">52010405</field>
+            <field name="name">OTROS GASTOS DE PLANES DE BENEFICIOS A EMPLEADOS</field>
+            <field name="parent_id" ref="ec520104"/>
+        </record>
+
+        <record id="ec520118" model="account.group">
+            <field name="code_prefix">520118</field>
+            <field name="name">AGUA, ENERGIA, LUZ, Y TELECOMUNICACIONES</field>
+            <field name="parent_id" ref="ec5201"/>
+        </record>
+
+        <record id="ec520121" model="account.group">
+            <field name="code_prefix">520121</field>
+            <field name="name">DEPRECIACIONES</field>
+            <field name="parent_id" ref="ec5201"/>
+        </record>
+
+        <record id="ec52012101" model="account.group">
+            <field name="code_prefix">52012101</field>
+            <field name="name">PROPIEDADES, PLANTA Y EQUIPO</field>
+            <field name="parent_id" ref="ec520121"/>
+        </record>
+
+        <record id="ec520122" model="account.group">
+            <field name="code_prefix">520122</field>
+            <field name="name">AMORTIZACIONES</field>
+            <field name="parent_id" ref="ec5201"/>
+        </record>
+
+        <record id="ec520123" model="account.group">
+            <field name="code_prefix">520123</field>
+            <field name="name">GASTO DETERIORO</field>
+            <field name="parent_id" ref="ec5201"/>
+        </record>
+
+        <record id="ec52012301" model="account.group">
+            <field name="code_prefix">52012301</field>
+            <field name="name">PROPIEDADES, PLANTA Y EQUIPO</field>
+            <field name="parent_id" ref="ec520123"/>
+        </record>
+
+        <record id="ec520127" model="account.group">
+            <field name="code_prefix">520127</field>
+            <field name="name">OTROS GASTOS</field>
+            <field name="parent_id" ref="ec5201"/>
+        </record>
+
+        <record id="ec5202" model="account.group">
+            <field name="code_prefix">5202</field>
+            <field name="name">GASTOS ADMINISTRATIVOS</field>
+            <field name="parent_id" ref="ec52"/>
+        </record>
+
+        <record id="ec520201" model="account.group">
+            <field name="code_prefix">520201</field>
+            <field name="name">SUELDOS, SALARIOS Y DEMAS REMUNERACIONES</field>
+            <field name="parent_id" ref="ec5202"/>
+        </record>
+
+        <record id="ec520202" model="account.group">
+            <field name="code_prefix">520202</field>
+            <field name="name">APORTES A LA SEGURIDAD SOCIAL</field>
+            <field name="parent_id" ref="ec5202"/>
+        </record>
+
+        <record id="ec520203" model="account.group">
+            <field name="code_prefix">520203</field>
+            <field name="name">BENEFICIOS SOCIALES E INDEMNIZACIONES</field>
+            <field name="parent_id" ref="ec5202"/>
+        </record>
+
+        <record id="ec520204" model="account.group">
+            <field name="code_prefix">520204</field>
+            <field name="name">GASTO PLANES DE BENEFICIOS A EMPLEADOS</field>
+            <field name="parent_id" ref="ec5202"/>
+        </record>
+
+        <record id="ec520218" model="account.group">
+            <field name="code_prefix">520218</field>
+            <field name="name">AGUA, ENERGIA, LUZ, Y TELECOMUNICACIONES</field>
+            <field name="parent_id" ref="ec5202"/>
+        </record>
+
+        <record id="ec520220" model="account.group">
+            <field name="code_prefix">520220</field>
+            <field name="name">IMPUESTOS, CONTRIBUCIONES Y OTROS</field>
+            <field name="parent_id" ref="ec5202"/>
+        </record>
+
+        <record id="ec520221" model="account.group">
+            <field name="code_prefix">520221</field>
+            <field name="name">DEPRECIACIONES</field>
+            <field name="parent_id" ref="ec5202"/>
+        </record>
+
+        <record id="ec52022101" model="account.group">
+            <field name="code_prefix">52022101</field>
+            <field name="name">PROPIEDADES, PLANTA Y EQUIPO</field>
+            <field name="parent_id" ref="ec520221"/>
+        </record>
+
+        <record id="ec520222" model="account.group">
+            <field name="code_prefix">520222</field>
+            <field name="name">AMORTIZACIONES</field>
+            <field name="parent_id" ref="ec5202"/>
+        </record>
+
+        <record id="ec520223" model="account.group">
+            <field name="code_prefix">520223</field>
+            <field name="name">GASTO DETERIORO</field>
+            <field name="parent_id" ref="ec5202"/>
+        </record>
+
+        <record id="ec52022301" model="account.group">
+            <field name="code_prefix">52022301</field>
+            <field name="name">PROPIEDADES, PLANTA Y EQUIPO</field>
+            <field name="parent_id" ref="ec520223"/>
+        </record>
+
+        <record id="ec520228" model="account.group">
+            <field name="code_prefix">520228</field>
+            <field name="name">OTROS GASTOS</field>
+            <field name="parent_id" ref="ec5202"/>
+        </record>
+
+        <record id="ec52022818" model="account.group">
+            <field name="code_prefix">52022818</field>
+            <field name="name">GND GASTOS NO DEDUCIBLES</field>
+            <field name="parent_id" ref="ec520228"/>
+        </record>
+
+        <record id="ec5203" model="account.group">
+            <field name="code_prefix">5203</field>
+            <field name="name">GASTOS FINANCIEROS</field>
+            <field name="parent_id" ref="ec52"/>
+        </record>
+
+        <record id="ec5204" model="account.group">
+            <field name="code_prefix">5204</field>
+            <field name="name">OTROS GASTOS</field>
+            <field name="parent_id" ref="ec52"/>
+        </record>
+
+        <record id="ec520402" model="account.group">
+            <field name="code_prefix">520402</field>
+            <field name="name">OTROS</field>
+            <field name="parent_id" ref="ec5204"/>
+        </record>
+
+    </data>
+</odoo>
