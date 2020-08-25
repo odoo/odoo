@@ -27,7 +27,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
                     'product_qty': 5.0,
                     'product_uom': cls.product_id_1.uom_po_id.id,
                     'price_unit': 500.0,
-                    'date_planned': datetime.today().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+                    'date_planned': datetime.today().replace(hour=9).strftime(DEFAULT_SERVER_DATETIME_FORMAT),
                 }),
                 (0, 0, {
                     'name': cls.product_id_2.name,
@@ -35,7 +35,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
                     'product_qty': 5.0,
                     'product_uom': cls.product_id_2.uom_po_id.id,
                     'price_unit': 250.0,
-                    'date_planned': datetime.today().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+                    'date_planned': datetime.today().replace(hour=9).strftime(DEFAULT_SERVER_DATETIME_FORMAT),
                 })],
         }
 
@@ -213,11 +213,11 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         self.assertEqual(po1.picking_ids[-1].move_lines.product_qty, 10)
 
     def test_update_date_planned(self):
+        today = datetime.today().replace(hour=9, microsecond=0)
+        tomorrow = datetime.today().replace(hour=9, microsecond=0) + timedelta(days=1)
         po = self.env['purchase.order'].create(self.po_vals)
         po.button_confirm()
 
-        today = datetime.today().replace(microsecond=0)
-        tomorrow = datetime.today().replace(microsecond=0) + timedelta(days=1)
         # update first line
         po._update_date_planned_for_lines([(po.order_line[0], tomorrow)])
         self.assertEqual(po.order_line[0].date_planned, tomorrow)
