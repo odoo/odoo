@@ -165,6 +165,9 @@
         .o_colorpicker > ul {
             @include o-tag-colorpicker;
             white-space: normal;
+            li > .o_hide_in_kanban label {
+                line-height: $o-line-height-base;
+            }
         }
 
         @for $size from 1 through length($o-colors) {
