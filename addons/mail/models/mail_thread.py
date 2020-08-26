@@ -1844,8 +1844,8 @@ class MailThread(models.AbstractModel):
         self._message_set_main_attachment_id(values['attachment_ids'])
 
         if values['author_id'] and values['message_type'] != 'notification' and not self._context.get('mail_create_nosubscribe'):
-            # if self.env['res.partner'].browse(values['author_id']).active:  # we dont want to add odoobot/inactive as a follower
-            self._message_subscribe([values['author_id']])
+            if self.env['res.partner'].browse(values['author_id']).active:  # we dont want to add odoobot/inactive as a follower
+                self._message_subscribe([values['author_id']])
 
         self._message_post_after_hook(new_message, values)
         self._notify_thread(new_message, values, **notif_kwargs)
@@ -2769,11 +2769,11 @@ class MailThread(models.AbstractModel):
 
         if udpated_fields:
             doc_data = [(model, [updated_values[fname] for fname in fnames]) for model, fnames in updated_relation.items()]
-            res = self.env['mail.followers']._get_subscription_data(doc_data, None, None, include_pshare=True)
-            for fid, rid, pid, cid, subtype_ids, pshare in res:
+            res = self.env['mail.followers']._get_subscription_data(doc_data, None, None, include_pshare=True, include_active=True)
+            for fid, rid, pid, cid, subtype_ids, pshare, active in res:
                 sids = [parent[sid] for sid in subtype_ids if parent.get(sid)]
                 sids += [sid for sid in subtype_ids if sid not in parent and sid in def_ids or sid in int_ids]
-                if pid:
+                if pid and active:  # auto subscribe only active partners
                     new_partners[pid] = (set(sids) & set(all_ids)) - set(int_ids) if pshare else set(sids) & set(all_ids)
                 if cid:
                     new_channels[cid] = (set(sids) & set(all_ids)) - set(int_ids)

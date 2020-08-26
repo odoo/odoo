@@ -187,6 +187,22 @@ class AdvancedFollowersTest(TestMailCommon):
         """ Creator of records are automatically added as followers """
         self.assertEqual(self.test_track.message_partner_ids, self.user_employee.partner_id)
 
+    def test_auto_subscribe_inactive(self):
+        """ Test inactive are not added as followers in automated subscription """
+        self.test_track.user_id = False
+        self.user_admin.active = False
+        self.user_admin.flush()
+        self.partner_admin.active = False
+        self.partner_admin.flush()
+
+        self.test_track.with_user(self.user_admin).message_post(body='Coucou hibou', message_type='comment')
+        self.assertEqual(self.test_track.message_partner_ids, self.user_employee.partner_id)
+        self.assertEqual(self.test_track.message_follower_ids.partner_id, self.user_employee.partner_id)
+
+        self.test_track.write({'user_id': self.user_admin.id})
+        self.assertEqual(self.test_track.message_partner_ids, self.user_employee.partner_id)
+        self.assertEqual(self.test_track.message_follower_ids.partner_id, self.user_employee.partner_id)
+
     def test_auto_subscribe_post(self):
         """ People posting a message are automatically added as followers """
         self.test_track.with_user(self.user_admin).message_post(body='Coucou hibou', message_type='comment')
@@ -221,13 +237,20 @@ class AdvancedFollowersTest(TestMailCommon):
            automatically create subscription with matching subtypes
          * subscribing to a sub-record as creator applies default subtype values
          * portal user should not have access to internal subtypes
+
+        Inactive partners should not be auto subscribed.
         """
         container = self.env['mail.test.container'].with_context(self._test_context).create({
             'name': 'Project-Like',
         })
 
-        container.message_subscribe(partner_ids=[self.partner_portal.id])
-        self.assertEqual(container.message_partner_ids, self.partner_portal)
+        container.message_subscribe(partner_ids=(self.partner_portal | self.partner_admin).ids)
+        self.assertEqual(container.message_partner_ids, self.partner_portal | self.partner_admin)
+
+        self.user_admin.active = False
+        self.user_admin.flush()
+        self.partner_admin.active = False
+        self.partner_admin.flush()
 
         sub1 = self.env['mail.test.track'].with_user(self.user_employee).create({
             'name': 'Task-Like Test',
@@ -238,6 +261,7 @@ class AdvancedFollowersTest(TestMailCommon):
         external_defaults = all_defaults.filtered(lambda subtype: not subtype.internal)
 
         self.assertEqual(sub1.message_partner_ids, self.partner_portal | self.user_employee.partner_id)
+        self.assertEqual(sub1.message_follower_ids.partner_id, self.partner_portal | self.user_employee.partner_id)
         self.assertEqual(
             sub1.message_follower_ids.filtered(lambda fol: fol.partner_id == self.partner_portal).subtype_ids,
             external_defaults | self.sub_umb1)
