@@ -3,7 +3,7 @@
 
 from psycopg2 import IntegrityError
 
-from odoo.tests import tagged
+from odoo.tests import tagged, users
 from odoo.addons.test_mail.tests.common import TestMailCommon
 from odoo.tools.misc import mute_logger
 
@@ -17,13 +17,20 @@ class BaseFollowersTest(TestMailCommon):
         cls._create_portal_user()
         cls._create_channel_listener()
 
+        # allow employee to update partners
+        cls.user_employee.write({'groups_id': [(4, cls.env.ref('base.group_partner_manager').id)]})
+
         Subtype = cls.env['mail.message.subtype']
-        cls.mt_mg_def = Subtype.create({'name': 'mt_mg_def', 'default': True, 'res_model': 'mail.test.simple'})
-        cls.mt_cl_def = Subtype.create({'name': 'mt_cl_def', 'default': True, 'res_model': 'mail.test.container'})
+        # global
         cls.mt_al_def = Subtype.create({'name': 'mt_al_def', 'default': True, 'res_model': False})
-        cls.mt_mg_nodef = Subtype.create({'name': 'mt_mg_nodef', 'default': False, 'res_model': 'mail.test.simple'})
         cls.mt_al_nodef = Subtype.create({'name': 'mt_al_nodef', 'default': False, 'res_model': False})
-        cls.mt_mg_def_int = cls.env['mail.message.subtype'].create({'name': 'mt_mg_def', 'default': True, 'res_model': 'mail.test.simple', 'internal': True})
+        # mail.test.simple
+        cls.mt_mg_def = Subtype.create({'name': 'mt_mg_def', 'default': True, 'res_model': 'mail.test.simple'})
+        cls.mt_mg_nodef = Subtype.create({'name': 'mt_mg_nodef', 'default': False, 'res_model': 'mail.test.simple'})
+        cls.mt_mg_def_int = Subtype.create({'name': 'mt_mg_def', 'default': True, 'res_model': 'mail.test.simple', 'internal': True})
+        # mail.test.container
+        cls.mt_cl_def = Subtype.create({'name': 'mt_cl_def', 'default': True, 'res_model': 'mail.test.container'})
+
         cls.default_group_subtypes = Subtype.search([('default', '=', True), '|', ('res_model', '=', 'mail.test.simple'), ('res_model', '=', False)])
         cls.default_group_subtypes_portal = Subtype.search([('internal', '=', False), ('default', '=', True), '|', ('res_model', '=', 'mail.test.simple'), ('res_model', '=', False)])
 
@@ -126,6 +133,27 @@ class BaseFollowersTest(TestMailCommon):
             partner_ids=[self.user_employee.partner_id.id, self.user_admin.partner_id.id],
             channel_ids=[self.channel_listen.id]
         )
+
+    @users('employee')
+    def test_followers_inactive(self):
+        """ Test standard API does not subscribe inactive partners """
+        customer = self.env['res.partner'].create({
+            'name': 'Valid Lelitre',
+            'email': 'valid.lelitre@agrolait.com',
+            'country_id': self.env.ref('base.be').id,
+            'mobile': '0456001122',
+            'active': False,
+        })
+        document = self.env['mail.test.simple'].browse(self.test_record.id)
+        self.assertEqual(document.message_partner_ids, self.env['res.partner'])
+        document.message_subscribe(partner_ids=(self.partner_portal | customer).ids)
+        self.assertEqual(document.message_partner_ids, self.partner_portal)
+        self.assertEqual(document.message_follower_ids.partner_id, self.partner_portal)
+
+        # works through low-level API
+        document._message_subscribe(partner_ids=(self.partner_portal | customer).ids)
+        self.assertEqual(document.message_partner_ids, self.partner_portal, 'No active test: customer not visible')
+        self.assertEqual(document.message_follower_ids.partner_id, self.partner_portal | customer)
 
 
 class AdvancedFollowersTest(TestMailCommon):
