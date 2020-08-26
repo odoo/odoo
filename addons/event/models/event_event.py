@@ -523,6 +523,19 @@ class EventEvent(models.Model):
         default = dict(default or {}, name=_("%s (copy)") % (self.name))
         return super(EventEvent, self).copy(default)
 
+    @api.model
+    def _get_mail_message_access(self, res_ids, operation, model_name=None):
+        if (
+            operation == 'create'
+            and self.env.user.has_group('event.group_event_registration_desk')
+            and (not model_name or model_name == 'event.event')
+        ):
+            # allow the registration desk users to post messages on Event
+            # can not be done with "_mail_post_access" otherwise public user will be
+            # able to post on published Event (see website_event)
+            return 'read'
+        return super(EventEvent, self)._get_mail_message_access(res_ids, operation, model_name)
+
     def _sync_required_computed(self, values):
         # TODO: See if the change to seats_limited affects this ?
         """ Call compute fields in cache to find missing values for required fields

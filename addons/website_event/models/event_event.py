@@ -315,8 +315,9 @@ class Event(models.Model):
 
         :param menu_type: type of menu. Mainly used for inheritance purpose
           allowing more fine-grain tuning of menus. """
+        self.check_access_rights('write')
         if not url:
-            self.env['ir.ui.view'].with_context(_force_unlink=True).search([('name', '=', name + ' ' + self.name)]).unlink()
+            self.env['ir.ui.view'].with_context(_force_unlink=True).sudo().search([('name', '=', name + ' ' + self.name)]).unlink()
             page_result = self.env['website'].sudo().new_page(name + ' ' + self.name, template=xml_id, ispage=False)
             url = "/event/" + slug(self) + "/page" + page_result['url']  # url contains starting "/"
         website_menu = self.env['website.menu'].sudo().create({
