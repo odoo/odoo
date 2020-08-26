@@ -1114,8 +1114,8 @@ class GroupCalls:
         """
         func_args = self._func_args
         while func_args:
-            func = next(iter(func_args))
-            args = func_args.pop(func)
+            func_repr = next(iter(func_args))
+            func, args = func_args.pop(func_repr)
             func(*args)
 
     def add(self, func, *types):
@@ -1124,10 +1124,10 @@ class GroupCalls:
         yet, the list of arguments is made up by invoking the given types.
         """
         try:
-            return self._func_args[func]
+            return self._func_args[repr(func)][1]
         except KeyError:
-            args = self._func_args[func] = [type_() for type_ in types]
-            return args
+            self._func_args[repr(func)] = func, [type_() for type_ in types]
+            return self._func_args[repr(func)][1]
 
     def clear(self):
         """ Remove all callbacks from self. """
