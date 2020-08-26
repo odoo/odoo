@@ -310,6 +310,18 @@ odoo.define("web/static/src/js/views/search_panel_model_extension.js", function 
                 category.errorMsg = error_msg;
                 values = [];
             }
+
+            // If field type is selection, reorder values by registered selection order
+            // Used for the Search Panel on the left
+            // Task Id 2317536
+            const field = this.config.fields[category.fieldName]
+            if (field.type == "selection") {
+                const states = field.selection.map(f => f[0]);
+                values = sortBy(values, val => {
+                    return states.indexOf(val.id);
+                });
+            }
+
             if (category.hierarchize) {
                 category.parentField = parentField;
             }

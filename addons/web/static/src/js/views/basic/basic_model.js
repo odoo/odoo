@@ -636,6 +636,20 @@ var BasicModel = AbstractModel.extend({
             value: element.value,
             viewType: element.viewType,
         };
+
+        // If field type is selection, reorder values by registered selection order
+        // Used in Tree & Kanban views
+        // Task Id 2317536
+        if (element.groupedBy.length > 0) {
+            const field = element.fields[element.groupedBy[0]];
+            if (field !== undefined && field.type === "selection") {
+                const states = field.selection.map(f => f[1]);
+                list.data = _.sortBy(list.data, val => {
+                    return states.indexOf(val.value);
+                });
+            }
+        }
+
         if (element.fieldsInfo) {
             list.fieldsInfo = element.fieldsInfo;
         }
