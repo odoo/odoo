@@ -89,7 +89,7 @@ odoo.define('pos_restaurant.TipScreen', function (require) {
             this.goNextScreen();
         }
         goNextScreen() {
-            this.env.pos.get_order().finalize();
+            this.env.pos.delete_current_order();
             const { name, props } = this.nextScreen;
             this.showScreen(name, props);
         }

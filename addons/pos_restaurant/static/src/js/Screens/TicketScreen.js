@@ -99,7 +99,7 @@ odoo.define('pos_restaurant.TicketScreen', function (require) {
                             args: [serverId, tip_line.export_as_JSON()],
                         });
                     }
-                    order.finalize();
+                    order.destroy({ reason: 'abandon' });
                     return true;
                 } catch (error) {
                     const { confirmed } = await this.showPopup('ConfirmPopup', {
