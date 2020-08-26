@@ -201,6 +201,7 @@ class Page(models.Model):
     def write(self, vals):
         if 'url' in vals and not vals['url'].startswith('/'):
             vals['url'] = '/' + vals['url']
+        self.clear_caches()  # write on page == write on view that invalid cache
         return super(Page, self).write(vals)
 
     def get_website_meta(self):
@@ -215,3 +216,20 @@ class Page(models.Model):
         if self.cache_key_expr:  # e.g. (request.session.geoip.get('country_code'),)
             cache_key += safe_eval(self.cache_key_expr, {'request': req})
         return cache_key
+
+    def _get_cache_response(self, cache_key):
+        """ Return the cached response corresponding to ``self`` and ``cache_key``.
+        Raise a KeyError if the item is not in cache.
+        """
+        # HACK: we use the same LRU as ormcache to take advantage from its
+        # distributed invalidation, but we don't explicitly use ormcache
+        return self.pool._Registry__cache[('website.page', _cached_response, self.id, cache_key)]
+
+    def _set_cache_response(self, cache_key, response):
+        """ Put in cache the given response. """
+        self.pool._Registry__cache[('website.page', _cached_response, self.id, cache_key)] = response
+
+
+# this is just a dummy function to be used as ormcache key
+def _cached_response():
+    pass
