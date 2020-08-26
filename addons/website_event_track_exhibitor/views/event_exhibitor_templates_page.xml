@@ -89,13 +89,12 @@
                 <span t-elif="sponsor.partner_id.image_512" t-field="sponsor.partner_id.image_512" class="o_wevent_online_page_avatar"
                     t-options="{'widget': 'image', 'max-width': '96'}"/>
             </div>
-            <div class="px-3 pt-3 d-flex flex-row justify-content-between position-relative">
+            <div class="o_wevent_sponsor px-3 pt-3 d-flex flex-row justify-content-between position-relative">
                 <div class="d-flex flex-column">
                     <div class="d-flex align-items-center">
                         <span t-field="sponsor.name" class="h4 mb-0"/>
-                        <div t-if="sponsor.sponsor_type_id.display_ribbon_style and sponsor.sponsor_type_id.display_ribbon_style != 'no_ribbon'" class="ribbon-wrapper">
-                            <div t-field="sponsor.sponsor_type_id" t-attf-class="ribbon ribbon_#{sponsor.sponsor_type_id.name}"/>
-                        </div>
+                        <span t-if="sponsor.sponsor_type_id.display_ribbon_style and sponsor.sponsor_type_id.display_ribbon_style != 'no_ribbon'"
+                              t-field="sponsor.sponsor_type_id" t-attf-class="o_ribbon o_ribbon_right ribbon_#{sponsor.sponsor_type_id.name}"/>
                     </div>
                     <span t-field="sponsor.subtitle" class="text-muted mb-3"/>
                     <div t-if="sponsor.url" class="d-flex text-break align-items-baseline">
