@@ -130,10 +130,10 @@ class AccountMove(models.Model):
     def _post(self, soft=True):
         # OVERRIDE
         # Set the electronic document to be posted and post immediately for synchronous formats.
-        res = super()._post(soft=soft)
+        posted = super()._post(soft=soft)
 
         edi_document_vals_list = []
-        for move in self:
+        for move in posted:
             for edi_format in move.journal_id.edi_format_ids:
                 is_edi_needed = move.is_invoice(include_receipts=False) and edi_format._is_required_for_invoice(move)
 
@@ -152,8 +152,8 @@ class AccountMove(models.Model):
                         })
 
         self.env['account.edi.document'].create(edi_document_vals_list)
-        self.edi_document_ids._process_documents_no_web_services()
-        return res
+        posted.edi_document_ids._process_documents_no_web_services()
+        return posted
 
     def button_cancel(self):
         # OVERRIDE
