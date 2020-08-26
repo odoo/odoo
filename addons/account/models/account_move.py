@@ -2121,6 +2121,8 @@ class AccountMove(models.Model):
             elif line_vals.get('tax_repartition_line_id'):
                 # Tax line.
                 invoice_repartition_line = self.env['account.tax.repartition.line'].browse(line_vals['tax_repartition_line_id'])
+                if invoice_repartition_line not in tax_repartition_lines_mapping:
+                    raise UserError(_("It seems that the taxes have been modified since the creation of the journal entry. You should create the credit note manually instead."))
                 refund_repartition_line = tax_repartition_lines_mapping[invoice_repartition_line]
 
                 # Find the right account.
