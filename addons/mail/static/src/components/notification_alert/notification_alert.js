@@ -1,4 +1,4 @@
-odoo.define('mail_bot/static/src/components/notification_alert/notification_alert.js', function (require) {
+odoo.define('mail/static/src/components/notification_alert/notification_alert.js', function (require) {
 'use strict';
 
 const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
@@ -44,7 +44,7 @@ class NotificationAlert extends Component {
 
 Object.assign(NotificationAlert, {
     props: {},
-    template: 'mail_bot.NotificationAlert',
+    template: 'mail.NotificationAlert',
 });
 
 return NotificationAlert;
