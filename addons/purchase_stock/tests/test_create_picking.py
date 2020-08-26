@@ -431,7 +431,31 @@ class TestCreatePicking(common.TestProductCommon):
         """ In order to check deadline date of the delivery order is changed and the planned date not."""
 
         # Create Delivery Order and with propagate date and minimum delta
+<<<<<<< HEAD
         delivery_order, purchase_order = self.create_delivery_order()
+=======
+        delivery_order, purchase_order = self.create_delivery_order(True, 5)
+
+        # check po is created or not
+        self.assertTrue(purchase_order, 'No purchase order created.')
+
+        purchase_order_line = purchase_order.order_line
+
+        # change scheduled date of po line.
+        purchase_order_line.write({'date_planned': purchase_order_line.date_planned + timedelta(days=5)})
+
+        # Now check scheduled date of delivery order is changed or not.
+        self.assertEqual(purchase_order_line.date_planned, delivery_order.scheduled_date.replace(second=0),
+            'Delivery order schedule date should be change as we have set date propagate.')
+
+    def test_06_no_propagate_date(self):
+        """ In order to check scheduled date of the delivery order is changed based
+            stock rules without propagate date and minimum delta.
+        """
+
+        # Create Delivery Order and without propagate date and minimum delta
+        delivery_order, purchase_order = self.create_delivery_order(False, 5)
+>>>>>>> dfcc4549e86... temp
 
         # check po is created or not
         self.assertTrue(purchase_order, 'No purchase order created.')

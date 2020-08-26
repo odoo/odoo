@@ -350,7 +350,13 @@ class PurchaseOrderLine(models.Model):
         if not moves_to_update:
             moves_to_update = self.move_dest_ids.filtered(lambda m: m.state not in ('done', 'cancel'))
         for move in moves_to_update:
+<<<<<<< HEAD
             move.date_deadline = new_date + relativedelta(days=move.company_id.po_lead)
+=======
+            delta_days = (new_date - move.date_expected).total_seconds() / 86400
+            if abs(round(delta_days * 60) / 60) >= self.propagate_date_minimum_delta:
+                move.date_expected = move.date_expected + relativedelta.relativedelta(days=delta_days)
+>>>>>>> dfcc4549e86... temp
 
     def _create_or_update_picking(self):
         for line in self:
