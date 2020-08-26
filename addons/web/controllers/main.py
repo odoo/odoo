@@ -994,7 +994,7 @@ class DataSet(openerpweb.Controller):
             args[context_id] = c
 
         return self._call_kw(req, model, method, args, {})
-    
+
     def _call_kw(self, req, model, method, args, kwargs):
         for i in xrange(len(args)):
             if isinstance(args[i], common.nonliterals.BaseContext):
@@ -1042,7 +1042,7 @@ class DataSet(openerpweb.Controller):
     @openerpweb.jsonrequest
     def call(self, req, model, method, args, domain_id=None, context_id=None):
         return self.call_common(req, model, method, args, domain_id, context_id)
-    
+
     @openerpweb.jsonrequest
     def call_kw(self, req, model, method, args, kwargs):
         return self._call_kw(req, model, method, args, kwargs)

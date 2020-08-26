@@ -63,30 +63,8 @@ class project(osv.osv):
                            LEFT JOIN project_user_rel rel ON rel.project_id = project.analytic_account_id
                            WHERE (account.user_id = %s or rel.uid = %s)"""%(user, user))
                 return [(r[0]) for r in cr.fetchall()]
-        return super(project, self).search(cr, 1, args, offset=offset, limit=limit, order=order,
+        return super(project, self).search(cr, user, args, offset=offset, limit=limit, order=order,
                                            context=context, count=count)
-
-    # Override of standard read() method, to force visibility of all project.project
-    def read(self, cr, uid, ids, fields=None, context=None, load='', **kwargs):
-        if isinstance(ids, (int,long)):
-            ids = [ids]
-
-        projects = []
-        projects_admin = super(project, self).read(cr, 1, ids, fields, context) or []
-        for id in ids:
-            try:
-                # try to read each intervention with uid
-                projects.append(super(project, self).read(cr, uid, id, fields, context))
-            except:
-                continue
-
-        if projects_admin != projects and isinstance(projects, list):
-            # get list of all id read by uid
-            ids_user = list(map(lambda x: x['id'], projects))
-            # add all interventions that can't be read by uid
-            projects.extend(list(filter(lambda x: x['id'] not in ids_user, projects_admin)))
-
-        return projects
 
     def _complete_name(self, cr, uid, ids, name, args, context=None):
         res = {}
@@ -273,7 +251,7 @@ class project(osv.osv):
             message = _("The project '%s' has been opened.") % name
             self.log(cr, uid, id, message)
         return res
-    
+
     def map_tasks(self, cr, uid, old_project_id, new_project_id, context=None):
         """ copy and map tasks from old to new project """
         if context is None:
@@ -544,7 +522,7 @@ class task(osv.osv):
             if domain[0] == 'project_id' and (not isinstance(domain[2], str)):
                 id = isinstance(domain[2], list) and domain[2][0] or domain[2]
                 if id and isinstance(id, (long, int)):
-                    if obj_project.read(cr, user, id, ['state'])[0]['state'] == 'template':
+                    if obj_project.read(cr, user, id, ['state'])['state'] == 'template':
                         args.append(('active', '=', False))
         return super(task, self).search(cr, user, args, offset=offset, limit=limit, order=order, context=context, count=count)
 
@@ -937,7 +915,7 @@ class task(osv.osv):
         for attachment_id in attachment_ids:
             new_attachment_ids.append(attachment.copy(cr, uid, attachment_id, default={'res_id': delegated_task_id}, context=context))
         return new_attachment_ids
-        
+
 
     def do_delegate(self, cr, uid, ids, delegate_data={}, context=None):
         """
@@ -968,7 +946,7 @@ class task(osv.osv):
                 self.do_pending(cr, uid, [task.id], context=context)
             elif delegate_data['state'] == 'done':
                 self.do_close(cr, uid, [task.id], context=context)
-            
+
             message = _("The task '%s' has been delegated to %s.") % (delegate_data['name'], delegate_data['user_id'][1])
             self.log(cr, uid, task.id, message)
             delegated_tasks[task.id] = delegated_task_id
@@ -1066,7 +1044,7 @@ class task(osv.osv):
             new_stage = vals.get('type_id')
             vals_reset_kstate = dict(vals, kanban_state='normal')
             for t in self.browse(cr, uid, ids, context=context):
-                write_vals = vals_reset_kstate if t.type_id != new_stage else vals 
+                write_vals = vals_reset_kstate if t.type_id != new_stage else vals
                 super(task,self).write(cr, uid, [t.id], write_vals, context=context)
             result = True
         else:
@@ -1203,7 +1181,7 @@ class project_task_history(osv.osv):
         for history in self.browse(cr, uid, ids, context=context):
             cr.execute('''select
                     id
-                from 
+                from
                     project_task_history
                 where
                     task_id=%s and
@@ -1259,4 +1237,3 @@ class project_task_history_cumulative(osv.osv):
         )
         """)
 project_task_history_cumulative()
-
