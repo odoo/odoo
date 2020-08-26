@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from functools import partial
 from datetime import datetime, timedelta
 
-from odoo.tests import HttpCase, new_test_user, tagged
+from odoo.addons.mail.tests.common import mail_new_test_user
+from odoo.tests import HttpCase, tagged
 from odoo.tools import mute_logger
 
 
@@ -29,18 +29,17 @@ class TestWebsiteEventAccess(HttpCase):
             'date_end': datetime.today() + timedelta(days=1),
         }])
 
-        event_new_test_user = partial(new_test_user, context={'mail_create_nolog': True, 'mail_create_nosubscribe': True, 'mail_notrack': True, 'no_reset_password': True})
-        self.event_manager = event_new_test_user(
+        self.event_manager = mail_new_test_user(
             self.env, name='Gandalf le blanc', login='event_manager', password='event_manager', email='event.manager@example.com',
             groups='event.group_event_manager,base.group_user'
         )
 
-        self.event_user = event_new_test_user(
+        self.event_user = mail_new_test_user(
             self.env, name='Frodon Sacquet', login='event_user', password='event_user', email='event.user@example.com',
             groups='event.group_event_user,base.group_user'
         )
 
-        self.portal_user = event_new_test_user(
+        self.portal_user = mail_new_test_user(
             self.env, name='Smeagol', login='user_portal', password='user_portal', email='portal@example.com',
             groups='base.group_portal'
         )
