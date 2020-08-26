@@ -682,10 +682,18 @@ body.editor_enable.editor_has_snippets {
                     }
                 }
             }
+            .o_we_pager_header {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+
+                & > b {
+                    padding: $o-we-sidebar-content-field-label-spacing;
+                }
+            }
             .o_we_pager_controls {
                 display: flex;
                 align-items: center;
-                padding: $o-we-sidebar-content-field-label-spacing;
             }
             .o_we_pager_next, .o_we_pager_prev {
                 padding: $o-we-sidebar-content-field-label-spacing;
@@ -1717,9 +1725,9 @@ we-select.o_we_shape_menu {
             width: 100%;
         }
         .o_we_shape_btn_content {
+            @extend %o-preview-alpha-background;
             width: 100%;
             height: 75px;
-            background-color: lightgray; // Must be a color which can make all shapes appear
         }
     }
 }
