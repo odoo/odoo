@@ -24,7 +24,7 @@ class TestEventCrmFlow(TestEventCrmCommon):
         self.assertEqual(self.event_customer.phone, '0485112233')
         self.assertFalse(self.event_customer.mobile)
 
-    @users('user_eventmanager')
+    @users('user_eventregistrationdesk')
     def test_event_crm_flow_batch_create(self):
         """ Test attendee- and order-based registrations creation. Event-based
         creation mimics a simplified website_event flow where grouping is done
@@ -58,7 +58,7 @@ class TestEventCrmFlow(TestEventCrmCommon):
         # ensuring filtering out worked also at description level
         self.assertNotIn('invalid@not.example.com', lead.description)
 
-    @users('user_eventmanager')
+    @users('user_eventregistrationdesk')
     def test_event_crm_flow_batch_update(self):
         """ Test update of contact or description fields that leads to lead
         update. """
@@ -96,7 +96,7 @@ class TestEventCrmFlow(TestEventCrmCommon):
         # ensuring filtering out worked also at description level
         self.assertNotIn('invalid@not.example.com', lead.description)
 
-    @users('user_eventmanager')
+    @users('user_eventregistrationdesk')
     def test_event_crm_flow_per_attendee_single(self):
         self.assert_initial_data()
 
@@ -145,3 +145,24 @@ class TestEventCrmFlow(TestEventCrmCommon):
         })
         self.assertEqual(len(self.event_0.registration_ids), 4)
         self.assertLeadConvertion(self.test_rule_attendee, registration, partner=None)
+
+    @users('user_eventregistrationdesk')
+    def test_event_crm_trigger_done(self):
+        """Test the case when the "crm.lead.rule" is executed when we write on the
+        registration state. """
+        registration = self.env['event.registration'].create({
+            'partner_id': self.event_customer.id,
+            'email': 'trigger.test@not.test.example.com',
+            'phone': False,
+            'mobile': '0456112233',
+            'event_id': self.event_0.id,
+        })
+
+        leads = self.env['crm.lead'].sudo().search([
+            ('registration_ids', 'in', registration.ids),
+        ])
+        self.assertFalse(leads, 'The lead must not be created yet')
+
+        registration.action_set_done()
+
+        self.assertLeadConvertion(self.test_rule_order_done, registration)
