@@ -153,7 +153,7 @@ class CustomerPortal(CustomerPortal):
         # default filter by value
         if not filterby:
             filterby = 'all'
-        domain = searchbar_filters[filterby]['domain']
+        domain = searchbar_filters.get(filterby, searchbar_filters.get('all'))['domain']
 
         # default group by value
         if not groupby:
