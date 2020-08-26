@@ -13,15 +13,15 @@ class WebsiteVisitor(models.Model):
         help="Main identity")
     event_registration_ids = fields.One2many(
         'event.registration', 'visitor_id', string='Event Registrations',
-        groups="event.group_event_user")
+        groups="event.group_event_registration_desk")
     event_registration_count = fields.Integer(
         '# Registrations', compute='_compute_event_registration_count',
-        groups="event.group_event_user")
+        groups="event.group_event_registration_desk")
     event_registered_ids = fields.Many2many(
         'event.event', string="Registered Events",
         compute="_compute_event_registered_ids", compute_sudo=True,
         search="_search_event_registered_ids",
-        groups="event.group_event_user")
+        groups="event.group_event_registration_desk")
 
     @api.depends('event_registration_ids')
     def _compute_event_registration_count(self):
