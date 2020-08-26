@@ -3,6 +3,8 @@
 
 import logging
 import poplib
+from ssl import SSLError
+from socket import gaierror, timeout
 from imaplib import IMAP4, IMAP4_SSL
 from poplib import POP3, POP3_SSL
 
@@ -124,7 +126,15 @@ odoo_mailgate: "|/path/to/odoo-mailgate.py --host=localhost -u %(uid)d -p PASSWO
             try:
                 connection = server.connect()
                 server.write({'state': 'done'})
-            except Exception as err:
+            except UnicodeError as e:
+                raise UserError(_("Invalid server name !\n %s", tools.ustr(e)))
+            except (gaierror, timeout, IMAP4.abort) as e:
+                raise UserError(_("No response received. Check server information.\n %s", tools.ustr(e)))
+            except (IMAP4.error, poplib.error_proto) as err:
+                raise UserError(_("Server replied with following exception:\n %s", tools.ustr(err)))
+            except SSLError as e:
+                raise UserError(_("An SSL exception occurred. Check SSL/TLS configuration on server port.\n %s", tools.ustr(e)))
+            except (OSError, Exception) as err:
                 _logger.info("Failed to connect to %s server %s.", server.server_type, server.name, exc_info=True)
                 raise UserError(_("Connection test failed: %s", tools.ustr(err)))
             finally:
