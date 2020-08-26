@@ -5,7 +5,8 @@ import socket
 
 from odoo.addons.test_mail.data.test_mail_data import \
     MAIL_TEMPLATE, MAIL_TEMPLATE_PLAINTEXT, MAIL_MULTIPART_MIXED, MAIL_MULTIPART_MIXED_TWO, \
-    MAIL_MULTIPART_IMAGE, MAIL_SINGLE_BINARY, MAIL_EML_ATTACHMENT, MAIL_XHTML
+    MAIL_MULTIPART_IMAGE, MAIL_SINGLE_BINARY, MAIL_EML_ATTACHMENT, MAIL_ATTACHMENT_BAD_ENCODING, \
+    MAIL_XHTML
 from odoo.addons.test_mail.tests.common import BaseFunctionalTest, MockEmails
 from odoo.addons.test_mail.tests.common import mail_new_test_user
 from odoo.tools import mute_logger, formataddr
@@ -90,6 +91,12 @@ class TestMailgateway(BaseFunctionalTest, MockEmails):
         """ Test that the parsing of mail with embedded emails as eml(msg) which generates empty attachments, can be processed.
         """
         self.env['mail.thread'].message_process('mail.channel', MAIL_EML_ATTACHMENT)
+
+    @mute_logger('odoo.addons.mail.models.mail_thread')
+    def test_message_parse_attachment_bad_encoding(self):
+        """ Test that the parsing of mail with bad encoding attachment content-id, can be processed.
+        """
+        self.env['mail.thread'].message_process('mail.channel', MAIL_ATTACHMENT_BAD_ENCODING)
 
     @mute_logger('odoo.addons.mail.models.mail_thread')
     def test_message_parse_xhtml(self):
