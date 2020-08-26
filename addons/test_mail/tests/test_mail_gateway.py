@@ -57,6 +57,11 @@ class TestEmailParsing(BaseFunctionalTest, MockEmails):
         mail = self.format(test_mail_data.MAIL_EML_ATTACHMENT, email_from='"Sylvie Lelitre" <test.sylvie.lelitre@agrolait.com>', to='generic@test.com')
         self.env['mail.thread'].message_parse(email.message_from_string(pycompat.to_text(mail)))
 
+    def test_message_parse_attachment_bad_encoding(self):
+        # Test that the parsing of mail with bad encoding attachment content-id, can be processed.
+        mail = self.format(test_mail_data.MAIL_ATTACHMENT_BAD_ENCODING, email_from='"Sylvie Lelitre" <test.sylvie.lelitre@agrolait.com>', to='generic@test.com')
+        self.env['mail.thread'].message_parse(email.message_from_string(pycompat.to_text(mail)))
+
     def test_message_parse_plaintext(self):
         """ Incoming email in plaintext should be stored as html """
         mail = self.format(test_mail_data.MAIL_TEMPLATE_PLAINTEXT, email_from='"Sylvie Lelitre" <test.sylvie.lelitre@agrolait.com>', to='generic@test.com')
