@@ -7,7 +7,8 @@
             <field name="model">im_livechat.report.channel</field>
             <field name="arch" type="xml">
                 <pivot string="Livechat Support Statistics" disable_linking="True" sample="1">
-                    <field name="technical_name" type="row"/>
+                    <field name="livechat_channel_id" type="col"/>
+                    <field name="start_date" type="row" interval="month"/>
                     <field name="duration" type="measure"/>
                     <field name="nbr_message" type="measure"/>
                 </pivot>
@@ -19,7 +20,7 @@
             <field name="model">im_livechat.report.channel</field>
             <field name="arch" type="xml">
                 <graph string="Livechat Support Statistics" sample="1" disable_linking="1">
-                    <field name="technical_name"/>
+                    <field name="livechat_channel_id"/>
                     <field name="nbr_message" type="measure"/>
                 </graph>
             </field>
