@@ -84,12 +84,11 @@ class Inventory(models.Model):
         default = dict(default or {}, name=name)
         return super(Inventory, self).copy_data(default)
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=False)
+    def _unlink_if_draft_or_cancel(self):
         for inventory in self:
-            if (inventory.state not in ('draft', 'cancel')
-               and not self.env.context.get(MODULE_UNINSTALL_FLAG, False)):
+            if inventory.state not in ('draft', 'cancel'):
                 raise UserError(_('You can only delete a draft inventory adjustment. If the inventory adjustment is not done, you can cancel it.'))
-        return super(Inventory, self).unlink()
 
     def action_validate(self):
         if not self.exists():

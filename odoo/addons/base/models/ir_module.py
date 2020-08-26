@@ -312,12 +312,13 @@ class Module(models.Model):
         for module in self:
             module.has_iap = bool(module.id) and 'iap' in module.upstream_dependencies(exclude_states=('',)).mapped('name')
 
-    def unlink(self):
-        if not self:
-            return True
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_installed(self):
         for module in self:
             if module.state in ('installed', 'to upgrade', 'to remove', 'to install'):
                 raise UserError(_('You are trying to remove a module that is installed or will be installed.'))
+
+    def unlink(self):
         self.clear_caches()
         return super(Module, self).unlink()
 

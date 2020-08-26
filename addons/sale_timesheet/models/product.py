@@ -68,11 +68,11 @@ class ProductTemplate(models.Model):
             self.invoice_policy = 'order'
         return res
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_master_data(self):
         time_product = self.env.ref('sale_timesheet.time_product')
         if time_product.product_tmpl_id in self:
             raise ValidationError(_('The %s product is required by the Timesheet app and cannot be archived/deleted.') % time_product.name)
-        return super(ProductTemplate, self).unlink()
 
     def write(self, vals):
         # timesheet product can't be archived
@@ -92,11 +92,11 @@ class ProductProduct(models.Model):
         self.ensure_one()
         return self.type == 'service' and self.service_policy == 'delivered_timesheet'
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_master_data(self):
         time_product = self.env.ref('sale_timesheet.time_product')
         if time_product in self:
             raise ValidationError(_('The %s product is required by the Timesheet app and cannot be archived/deleted.') % time_product.name)
-        return super(ProductProduct, self).unlink()
 
     def write(self, vals):
         # timesheet product can't be archived

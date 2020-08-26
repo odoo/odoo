@@ -207,11 +207,11 @@ class PurchaseOrder(models.Model):
             vals['name'] = self.env['ir.sequence'].next_by_code('purchase.order', sequence_date=seq_date) or '/'
         return super(PurchaseOrder, self).create(vals)
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=False)
+    def _unlink_if_cancelled(self):
         for order in self:
             if not order.state == 'cancel':
                 raise UserError(_('In order to delete a purchase order, you must cancel it first.'))
-        return super(PurchaseOrder, self).unlink()
 
     def copy(self, default=None):
         ctx = dict(self.env.context)
@@ -970,11 +970,11 @@ class PurchaseOrderLine(models.Model):
                 line._track_qty_received(values['qty_received'])
         return super(PurchaseOrderLine, self).write(values)
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_purchase_or_done(self):
         for line in self:
             if line.order_id.state in ['purchase', 'done']:
                 raise UserError(_('Cannot delete a purchase order line which is in state \'%s\'.') % (line.state,))
-        return super(PurchaseOrderLine, self).unlink()
 
     @api.model
     def _get_date_planned(self, seller, po=False):

@@ -96,10 +96,10 @@ class StockScrap(models.Model):
             self.location_id = False
             self.scrap_location_id = False
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_done(self):
         if 'done' in self.mapped('state'):
             raise UserError(_('You cannot delete a scrap which is done.'))
-        return super(StockScrap, self).unlink()
 
     def _prepare_move_values(self):
         self.ensure_one()
