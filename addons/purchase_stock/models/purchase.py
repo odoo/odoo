@@ -377,7 +377,7 @@ class PurchaseOrderLine(models.Model):
             moves_to_update = self.move_dest_ids.filtered(lambda m: m.state not in ('done', 'cancel'))
         for move in moves_to_update:
             delta_days = (new_date - move.date_expected).total_seconds() / 86400
-            if abs(delta_days) >= self.propagate_date_minimum_delta:
+            if abs(round(delta_days * 60) / 60) >= self.propagate_date_minimum_delta:
                 move.date_expected = move.date_expected + relativedelta.relativedelta(days=delta_days)
 
     def _create_or_update_picking(self):
