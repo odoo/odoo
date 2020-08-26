@@ -63,11 +63,11 @@ class MaintenanceEquipmentCategory(models.Model):
         for category in self:
             category.maintenance_count = mapped_data.get(category.id, 0)
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_contains_maintenance_requests(self):
         for category in self:
             if category.equipment_ids or category.maintenance_ids:
                 raise UserError(_("You cannot delete an equipment category containing equipments or maintenance requests."))
-        return super(MaintenanceEquipmentCategory, self).unlink()
 
     def _alias_get_creation_values(self):
         values = super(MaintenanceEquipmentCategory, self)._alias_get_creation_values()

@@ -124,14 +124,14 @@ class UoM(models.Model):
             values['factor'] = factor_inv and (1.0 / factor_inv) or 0.0
         return super(UoM, self).write(values)
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_master_data(self):
         locked_uoms = self._filter_protected_uoms()
         if locked_uoms:
             raise UserError(_(
                 "The following units of measure are used by the system and cannot be deleted: %s\nYou can archive them instead.",
                 ", ".join(locked_uoms.mapped('name')),
             ))
-        return super().unlink()
 
     @api.model
     def name_create(self, name):

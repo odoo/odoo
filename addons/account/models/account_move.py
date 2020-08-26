@@ -1866,10 +1866,12 @@ class AccountMove(models.Model):
 
         return res
 
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_posted_before(self):
+        if not self._context.get('force_delete') and any(move.posted_before for move in self):
+            raise UserError(_("You cannot delete an entry which has been posted once."))
+
     def unlink(self):
-        for move in self:
-            if move.posted_before and not self._context.get('force_delete'):
-                raise UserError(_("You cannot delete an entry which has been posted once."))
         self.line_ids.unlink()
         return super(AccountMove, self).unlink()
 
@@ -3952,12 +3954,14 @@ class AccountMoveLine(models.Model):
         # I can't even
         return name == 'tracking' or super()._valid_field_parameter(field, name)
 
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_posted(self):
+        # Prevent deleting lines on posted entries
+        if not self._context.get('force_delete') and any(m.state == 'posted' for m in self.move_id):
+            raise UserError(_('You cannot delete an item linked to a posted entry.'))
+
     def unlink(self):
         moves = self.mapped('move_id')
-
-        # Prevent deleting lines on posted entries
-        if not self.env.context.get('force_delete', False) and any(m.state == 'posted' for m in moves):
-            raise UserError(_('You cannot delete an item linked to a posted entry.'))
 
         # Check the lines are not reconciled (partially or not).
         self._check_reconciliation()

@@ -403,11 +403,14 @@ class Project(models.Model):
             'context': self.env.context,
         }
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_contains_tasks(self):
         # Check project is empty
         for project in self.with_context(active_test=False):
             if project.tasks:
                 raise UserError(_('You cannot delete a project containing tasks. You can either archive it or first delete all of its tasks.'))
+
+    def unlink(self):
         # Delete the empty related analytic account
         analytic_accounts_to_delete = self.env['account.analytic.account']
         for project in self:
@@ -1141,11 +1144,11 @@ class Task(models.Model):
             return {'date_end': fields.Datetime.now()}
         return {'date_end': False}
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_recurring(self):
         if any(self.mapped('recurrence_id')):
             # TODO: show a dialog to stop the recurrence
             raise UserError(_('You cannot delete recurring tasks. Please disable the recurrence first.'))
-        return super().unlink()
 
     # ---------------------------------------------------
     # Subtasks

@@ -89,6 +89,9 @@ class TestSaleService(TestCommonSaleTimesheet):
 
         self.assertEqual(self.sale_order.tasks_count, 2, "Adding a new service line on a confirmer SO should create a new task.")
 
+        # delete timesheets before deleting the task, so as to trigger the error
+        # about linked sales order lines and not the one about linked timesheets
+        task.timesheet_ids.unlink()
         # not possible to delete a task linked to a SOL
         with self.assertRaises(ValidationError):
             task.unlink()

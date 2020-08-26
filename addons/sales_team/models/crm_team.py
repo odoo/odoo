@@ -97,7 +97,8 @@ class CrmTeam(models.Model):
             self._add_members_to_favorites()
         return res
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_default(self):
         default_teams = [
             self.env.ref('sales_team.salesteam_website_sales'),
             self.env.ref('sales_team.pos_sales_team'),
@@ -106,7 +107,6 @@ class CrmTeam(models.Model):
         for team in self:
             if team in default_teams:
                 raise UserError(_('Cannot delete default team "%s"', team.name))
-        return super(CrmTeam,self).unlink()
 
     # ------------------------------------------------------------
     # ACTIONS

@@ -255,11 +255,11 @@ class HrExpense(models.Model):
     # ORM Overrides
     # ----------------------------------------
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_posted_or_approved(self):
         for expense in self:
             if expense.state in ['done', 'approved']:
                 raise UserError(_('You cannot delete a posted or approved expense.'))
-        return super(HrExpense, self).unlink()
 
     def write(self, vals):
         if 'tax_ids' in vals or 'analytic_account_id' in vals or 'account_id' in vals:
@@ -874,11 +874,11 @@ class HrExpenseSheet(models.Model):
         sheet.activity_update()
         return sheet
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_posted_or_paid(self):
         for expense in self:
             if expense.state in ['post', 'done']:
                 raise UserError(_('You cannot delete a posted or paid expense.'))
-        super(HrExpenseSheet, self).unlink()
 
     # --------------------------------------------
     # Mail Thread

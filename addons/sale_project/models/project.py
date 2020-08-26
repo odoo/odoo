@@ -68,10 +68,10 @@ class ProjectTask(models.Model):
                         product_name=task.sale_line_id.product_id.name,
                     ))
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_linked_so(self):
         if any(task.sale_line_id for task in self):
             raise ValidationError(_('You have to unlink the task from the sale order item in order to delete it.'))
-        return super().unlink()
 
     # ---------------------------------------------------
     # Actions
