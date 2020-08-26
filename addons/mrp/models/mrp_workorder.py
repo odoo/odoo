@@ -544,7 +544,7 @@ class MrpWorkorder(models.Model):
         else:
             if self.date_planned_start > start_date:
                 vals['date_planned_start'] = start_date
-            if self.date_planned_finished < start_date:
+            if self.date_planned_finished and self.date_planned_finished < start_date:
                 vals['date_planned_finished'] = start_date
             return self.write(vals)
 
