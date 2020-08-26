@@ -5,6 +5,36 @@ odoo.define('google_drive.ActionMenus', function (require) {
     const DropdownMenuItem = require('web.DropdownMenuItem');
 
     /**
+     * Fetches the google drive action menu item props. To do so this function
+     * is given its parent props and env, as well as the RPC function bound to
+     * the parent context.
+     * Note that we use the bound RPC to benefit from its added behaviour (see
+     * web/component_extension).
+     * @param {Object} props
+     * @param {number[]} props.activeIds
+     * @param {Object} props.context
+     * @param {Object} env
+     * @param {Object} env.action The current action
+     * @param {Object} env.view The current view
+     * @param {Function} rpc Bound to the ActionMenus context
+     * @returns {Object | boolean} item props or false
+     */
+    async function googleDrivePropsGetter(props, env, rpc) {
+        const [activeId] = props.activeIds;
+        const { context } = props;
+        if (env.view.type !== "form" || !activeId) {
+            return false;
+        }
+        const items = await rpc({
+            args: [env.action.res_model, activeId],
+            context,
+            method: 'get_google_drive_config',
+            model: 'google.drive.config',
+        });
+        return Boolean(items.length) && { activeId, context, items };
+    }
+
+    /**
      * Google drive menu
      *
      * This component is actually a set of list items used to enrich the ActionMenus's
@@ -14,32 +44,6 @@ odoo.define('google_drive.ActionMenus', function (require) {
      * @extends DropdownMenuItem
      */
     class GoogleDriveMenu extends DropdownMenuItem {
-
-        async willStart() {
-            if (this.env.view.type === "form" && this.props.activeIds[0]) {
-                this.gdriveItems = await this._getGoogleDocItems();
-            } else {
-                this.gdriveItems = [];
-            }
-        }
-
-        //---------------------------------------------------------------------
-        // Private
-        //---------------------------------------------------------------------
-
-        /**
-         * @private
-         * @returns {Promise<Object[]>}
-         */
-        async _getGoogleDocItems() {
-            const items = await this.rpc({
-                args: [this.env.action.res_model, this.props.activeIds[0]],
-                context: this.props.context,
-                method: 'get_google_drive_config',
-                model: 'google.drive.config',
-            });
-            return items;
-        }
 
         //---------------------------------------------------------------------
         // Handlers
@@ -51,7 +55,7 @@ odoo.define('google_drive.ActionMenus', function (require) {
          * @returns {Promise}
          */
         async _onGoogleDocItemClick(itemId) {
-            const resID = this.props.activeIds[0];
+            const resID = this.props.activeId;
             const domain = [['id', '=', itemId]];
             const fields = ['google_drive_resource_id', 'google_drive_client_id'];
             const configs = await this.rpc({
@@ -71,19 +75,18 @@ odoo.define('google_drive.ActionMenus', function (require) {
         }
     }
     GoogleDriveMenu.props = {
-        activeIds: Array,
+        activeId: Number,
         context: Object,
+        items: {
+            type: Array,
+            element: Object,
+        },
     };
     GoogleDriveMenu.template = 'GoogleDriveMenu';
 
     ActionMenus.registry.add('google-drive-menu', {
         Component: GoogleDriveMenu,
-        getProps(parentProps) {
-            return {
-                activeIds: parentProps.activeIds,
-                context: parentProps.context,
-            };
-        },
+        getProps: googleDrivePropsGetter,
     });
 
     return GoogleDriveMenu;
