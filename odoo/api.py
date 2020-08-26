@@ -37,6 +37,7 @@ _logger = logging.getLogger(__name__)
 #  - method._returns: set by @returns, specifies return model
 #  - method._onchange: set by @onchange, specifies onchange fields
 #  - method.clear_cache: set by @ormcache, used to clear the cache
+#  - method._ondelete: set by @ondelete, used to raise errors for unlink operations
 #
 # On wrapping method only:
 #  - method._api: decorator function, used for re-applying decorator
@@ -128,6 +129,65 @@ def constrains(*args):
 
     """
     return attrsetter('_constrains', args)
+
+
+def ondelete(*, at_uninstall):
+    """
+    Mark a method to be executed during :meth:`~odoo.models.BaseModel.unlink`.
+
+    The goal of this decorator is to allow client-side errors when unlinking
+    records if, from a business point of view, it does not make sense to delete
+    such records. For instance, a user should not be able to delete a validated
+    sales order.
+
+    While this could be implemented by simply overriding the method ``unlink``
+    on the model, it has the drawback of not being compatible with module
+    uninstallation. When uninstalling the module, the override could raise user
+    errors, but we shouldn't care because the module is being uninstalled, and
+    thus **all** records related to the module should be removed anyway.
+
+    This means that by overriding ``unlink``, there is a big chance that some
+    tables/records may remain as leftover data from the uninstalled module. This
+    leaves the database in an inconsistent state. Moreover, there is a risk of
+    conflicts if the module is ever reinstalled on that database.
+
+    Methods decorated with ``@ondelete`` should raise an error following some
+    conditions, and by convention, the method should be named either
+    ``_unlink_if_<condition>`` or ``_unlink_except_<not_condition>``.
+
+    .. code-block:: python
+
+        @api.ondelete(at_uninstall=False)
+        def _unlink_if_user_inactive(self):
+            if any(user.active for user in self):
+                raise UserError("Can't delete an active user!")
+
+        # same as above but with _unlink_except_* as method name
+        @api.ondelete(at_uninstall=False)
+        def _unlink_except_active_user(self):
+            if any(user.active for user in self):
+                raise UserError("Can't delete an active user!")
+
+    :param bool at_uninstall: Whether the decorated method should be called if
+        the module that implements said method is being uninstalled. Should
+        almost always be ``False``, so that module uninstallation does not
+        trigger those errors.
+
+    .. danger::
+        The parameter ``at_uninstall`` should only be set to ``True`` if the
+        check you are implementing also applies when uninstalling the module.
+
+        For instance, it doesn't matter if when uninstalling ``sale``, validated
+        sales orders are being deleted because all data pertaining to ``sale``
+        should be deleted anyway, in that case ``at_uninstall`` should be set to
+        ``False``.
+
+        However, it makes sense to prevent the removal of the default language
+        if no other languages are installed, since deleting the default language
+        will break a lot of basic behavior. In this case, ``at_uninstall``
+        should be set to ``True``.
+    """
+    return attrsetter('_ondelete', at_uninstall)
 
 
 def onchange(*args):
