@@ -68,15 +68,14 @@ function factory(dependencies) {
             if (inboxMailbox) {
                 counter += inboxMailbox.counter;
             }
-            if (!this.messaging) {
-                // compute after delete
-                return counter;
-            }
             if (this.messaging.notificationGroupManager) {
                 counter += this.messaging.notificationGroupManager.groups.reduce(
                     (total, group) => total + group.notifications.length,
                     0
                 );
+            }
+            if (this.messaging.isNotificationPermissionDefault()) {
+                counter++;
             }
             return counter;
         }

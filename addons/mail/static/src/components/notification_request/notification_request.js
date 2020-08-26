@@ -1,4 +1,4 @@
-odoo.define('mail_bot/static/src/components/notification_request/notification_request.js', function (require) {
+odoo.define('mail/static/src/components/notification_request/notification_request.js', function (require) {
 'use strict';
 
 const components = {
@@ -74,7 +74,11 @@ class NotificationRequest extends Component {
         if (def) {
             def.then(this._handleResponseNotificationPermission.bind(this));
         }
-        this.trigger('o-odoobot-request-clicked');
+
+        const device = this.env.messaging.device;
+        if (!device.isMobile) {
+            this.env.messaging.messagingMenu.close();
+        }
     }
 
 }
@@ -82,7 +86,7 @@ class NotificationRequest extends Component {
 Object.assign(NotificationRequest, {
     components,
     props: {},
-    template: 'mail_bot.NotificationRequest',
+    template: 'mail.NotificationRequest',
 });
 
 return NotificationRequest;
