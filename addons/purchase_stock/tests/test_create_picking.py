@@ -3,6 +3,7 @@
 
 from datetime import date, datetime, timedelta
 
+from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.product.tests import common
 from odoo.tests import Form
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
@@ -15,15 +16,15 @@ class TestCreatePicking(common.TestProductCommon):
         self.partner_id = self.env['res.partner'].create({'name': 'Wood Corner Partner'})
         self.product_id_1 = self.env['product.product'].create({'name': 'Large Desk'})
         self.product_id_2 = self.env['product.product'].create({'name': 'Conference Chair'})
-        res_users_purchase_user = self.env.ref('purchase.group_purchase_user')
 
-        Users = self.env['res.users'].with_context({'no_reset_password': True, 'mail_create_nosubscribe': True})
-        self.user_purchase_user = Users.create({
-            'name': 'Pauline Poivraisselle',
-            'login': 'pauline',
-            'email': 'pur@example.com',
-            'notification_type': 'inbox',
-            'groups_id': [(6, 0, [res_users_purchase_user.id])]})
+        self.user_purchase_user = mail_new_test_user(
+            self.env,
+            name='Pauline Poivraisselle',
+            login='pauline',
+            email='pur@example.com',
+            notification_type='inbox',
+            groups='purchase.group_purchase_user',
+        )
 
         self.po_vals = {
             'partner_id': self.partner_id.id,
