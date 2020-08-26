@@ -50,15 +50,28 @@ class SaleOrder(models.Model):
             order.is_abandoned_cart = bool(domain)
 
     def _search_abandoned_cart(self, operator, value):
-        abandoned_delay = self.website_id and self.website_id.cart_abandoned_delay or 1.0
-        abandoned_datetime = fields.Datetime.to_string(datetime.utcnow() - relativedelta(hours=abandoned_delay))
-        abandoned_domain = expression.normalize_domain([
-            ('date_order', '<=', abandoned_datetime),
-            ('team_id.team_type', '=', 'website'),
-            ('state', '=', 'draft'),
-            ('partner_id', '!=', self.env.ref('base.public_partner').id),
-            ('order_line', '!=', False)
-        ])
+        query = '''
+        SELECT main.id
+        FROM(
+            SELECT 
+                so.id,
+                so.date_order + COALESCE(web.cart_abandoned_delay, 1) * INTERVAL '1 hour' AS date_abandoned
+            FROM
+                sale_order so
+            JOIN website web ON (web.id = so.website_id)
+            JOIN crm_team team ON (team.id = so.team_id)
+            WHERE
+                team.team_type = 'website'
+                AND state = 'draft'
+                AND date_order IS NOT NULL
+                AND website_id IS NOT NULL
+                AND partner_id != %s
+            ) AS main
+        WHERE
+            main.date_abandoned < Now()'''
+        self.env.cr.execute(query, (self.env.ref('base.public_partner').id,))
+        sale_ids = [r['id'] for r in self.env.cr.dictfetchall()]
+        abandoned_domain = expression.normalize_domain([('id', 'in', sale_ids)])
         # is_abandoned domain possibilities
         if (operator not in expression.NEGATIVE_TERM_OPERATORS and value) or (operator in expression.NEGATIVE_TERM_OPERATORS and not value):
             return abandoned_domain
