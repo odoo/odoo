@@ -30,6 +30,7 @@
         'views/event_sponsor_views.xml',
         'views/event_event_views.xml',
         'views/event_type_views.xml',
+        'views/res_config_settings_view.xml',
         'views/website_visitor_views.xml',
         'views/event_menus.xml',
     ],
