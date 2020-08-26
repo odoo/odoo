@@ -71,10 +71,6 @@ exports.PosModel = Backbone.Model.extend({
         this.order_sequence = 1;
         window.posmodel = this;
 
-        // Object mapping the order's name (which contains the uid) to it's server_id after
-        // validation (order paid then sent to the backend).
-        this.validated_orders_name_server_id_map = {};
-
         // Extract the config id from the url.
         var given_config = new RegExp('[\?&]config_id=([^&#]*)').exec(window.location.href);
         this.config_id = given_config && given_config[1] && parseInt(given_config[1]) || false;
@@ -101,12 +97,17 @@ exports.PosModel = Backbone.Model.extend({
         this.get('orders').on('add remove change', update_client, this);
         this.on('change:selectedOrder', update_client, this);
 
+        this.beforeLoadServerData();
+
         // We fetch the backend data on the server asynchronously. this is done only when the pos user interface is launched,
         // Any change on this data made on the server is thus not reflected on the point of sale until it is relaunched.
         // when all the data has loaded, we compute some stuff, and declare the Pos ready to be used.
         this.ready = this.load_server_data().then(function(){
             return self.after_load_server_data();
         });
+    },
+    beforeLoadServerData() {
+        this.db.registerNameSpace('server_ids');
     },
     after_load_server_data: function(){
         this.load_orders();
@@ -765,7 +766,7 @@ exports.PosModel = Backbone.Model.extend({
      * Only if tho order has orderlines.
      */
     load_orders: function(){
-        var jsons = this.db.get_unpaid_orders();
+        var jsons = this.get_orders_to_load();
         var orders = [];
 
         for (var i = 0; i < jsons.length; i++) {
@@ -797,9 +798,11 @@ exports.PosModel = Backbone.Model.extend({
             this.get('orders').add(orders);
         }
     },
-
+    get_orders_to_load() {
+        return this.db.get_unpaid_orders();
+    },
     set_start_order: function(){
-        var orders = this.get('orders').models;
+        var orders = this.get('orders').models.filter(order => !order.finalized);
 
         if (orders.length && !this.get('selectedOrder')) {
             this.set('selectedOrder',orders[0]);
@@ -1048,7 +1051,7 @@ exports.PosModel = Backbone.Model.extend({
         return this._save_to_server(orders, options).then(function (server_ids) {
             self.set_synch('connected');
             for (let i = 0; i < server_ids.length; i++) {
-                self.validated_orders_name_server_id_map[server_ids[i].pos_reference] = server_ids[i].id;
+                self.db.server_ids.setItem(server_ids[i].pos_reference, server_ids[i].id);
             }
             return _.pluck(server_ids, 'id');
         }).catch(function(error){
@@ -2664,7 +2667,7 @@ exports.Order = Backbone.Model.extend({
         }
 
         // Tag this order as 'locked' if it is already paid.
-        this.locked = ['paid', 'done', 'invoiced'].includes(json.state);
+        this.locked = ['paid', 'done', 'invoiced'].includes(json.state) || json.finalized;
         this.state = json.state;
         this.amount_return = json.amount_return;
         this.account_move = json.account_move;
@@ -2672,6 +2675,8 @@ exports.Order = Backbone.Model.extend({
         this.isFromClosedSession = json.is_session_closed;
         this.is_tipped = json.is_tipped || false;
         this.tip_amount = json.tip_amount || 0;
+        this.screen_data = json.screen_data || {};
+        this.finalized = json.finalized;
     },
     export_as_JSON: function() {
         var orderLines, paymentLines;
@@ -2704,6 +2709,8 @@ exports.Order = Backbone.Model.extend({
             to_invoice: this.to_invoice ? this.to_invoice : false,
             is_tipped: this.is_tipped || false,
             tip_amount: this.tip_amount || 0,
+            screen_data: this.screen_data || {},
+            finalized: this.finalized,
         };
         if (!this.is_paid && this.user_id) {
             json.user_id = this.user_id;

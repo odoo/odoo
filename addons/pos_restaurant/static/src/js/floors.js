@@ -94,6 +94,13 @@ models.Order = models.Order.extend({
 // if there is none.
 var _super_posmodel = models.PosModel.prototype;
 models.PosModel = models.PosModel.extend({
+    get_orders_to_load() {
+        return [..._super_posmodel.get_orders_to_load.call(this), ...this.db.orders_to_tip.getItems()];
+    },
+    beforeLoadServerData: function() {
+        _super_posmodel.beforeLoadServerData.call(this);
+        this.db.registerNameSpace('orders_to_tip');
+    },
     after_load_server_data: async function() {
         var res = await _super_posmodel.after_load_server_data.call(this);
         if (this.config.iface_floorplan) {

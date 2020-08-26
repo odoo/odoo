@@ -3,6 +3,8 @@ odoo.define('point_of_sale.DB', function (require) {
 
 var core = require('web.core');
 var utils = require('web.utils');
+const SimpleCollectionDB = require('point_of_sale.SimpleCollectionDB');
+
 /* The PosDB holds reference to data that is either
  * - static: does not change between pos reloads
  * - persistent : must stay between reloads ( orders )
@@ -545,7 +547,38 @@ var PosDB = core.Class.extend({
     },
     get_cashier: function() {
         return this.load('cashier');
-    }
+    },
+    getName: function() {
+        return this.name;
+    },
+    /**
+     * With the introduction of `SimpleCollectionDB`, we now have the
+     * following API. This free us from rewriting getters/setters/removers
+     * for different types of data we stored in `PosDB`.
+     *
+     * ```
+     * // Sample Usage:
+     * const db = PosDB();
+     * db.registerNameSpace('falseOrders');
+     * db.registerNameSpace('falseProducts');
+     * // db now has 'falseOrders' and 'falseProducts' fields which
+     * // can be used to store data like so:
+     * db.falseOrders.setItem('fOrder1', { product_id: 1, price: 1 });
+     * db.falseOrders.setItem('fOrder2', { product_id: 2, price: 2 });
+     * db.falseProducts.setItem('fProduct1', { name: 'x', id: 1 });
+     * db.falseProducts.setItem('fProduct2', { name: 'y', id: 2 });
+     * // And of course, we have the getters.
+     * console.log(db.falseOrders.getItem('fOrder1'));
+     * // logs { product_id: 1, price: 1 }
+     * console.log(db.falseProducts.getItems());
+     * // logs [{ name: 'x', id: 1 }, { name: 'y', id: 2 }];
+     * // You can also use `getKeys()`, `removeItem()`, `clearItems()`,
+     * // see `SimpleCollectionDB`.
+     * ```
+     */
+    registerNameSpace: function(name) {
+        this[name] = new SimpleCollectionDB(this.getName.bind(this), name);
+    },
 });
 
 return PosDB;

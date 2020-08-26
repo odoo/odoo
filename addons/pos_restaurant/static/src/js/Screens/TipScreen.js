@@ -13,6 +13,8 @@ odoo.define('pos_restaurant.TipScreen', function (require) {
             this._totalAmount = this.currentOrder.get_total_with_tax();
         }
         mounted () {
+            const order = this.currentOrder;
+            this.env.pos.db.orders_to_tip.setItem(order.name, order.export_as_JSON());
             this.printTipReceipt();
         }
         get overallAmountStr() {
@@ -38,7 +40,7 @@ odoo.define('pos_restaurant.TipScreen', function (require) {
         async validateTip() {
             const amount = parse.float(this.state.inputTipAmount) || 0;
             const order = this.env.pos.get_order();
-            const serverId = this.env.pos.validated_orders_name_server_id_map[order.name];
+            const serverId = this.env.pos.db.server_ids.getItem(order.name);
 
             if (!serverId) {
                 this.showPopup('ErrorPopup', {
@@ -86,6 +88,9 @@ odoo.define('pos_restaurant.TipScreen', function (require) {
                 model: 'pos.order',
                 args: [serverId, tip_line.export_as_JSON()],
             });
+
+            this.env.pos.db.server_ids.removeItem(order.name);
+            this.env.pos.db.orders_to_tip.removeItem(order.name);
             this.goNextScreen();
         }
         goNextScreen() {

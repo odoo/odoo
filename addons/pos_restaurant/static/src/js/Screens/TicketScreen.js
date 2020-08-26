@@ -68,13 +68,15 @@ odoo.define('pos_restaurant.TicketScreen', function (require) {
                 // set tip in each order
                 for (const order of this.filteredOrderList) {
                     const tipAmount = parse.float(order.uiState.TipScreen.state.inputTipAmount || '0');
-                    const serverId = this.env.pos.validated_orders_name_server_id_map[order.name];
+                    const serverId = this.env.pos.db.server_ids.getItem(order.name);
                     if (!serverId) {
                         console.warn(`${order.name} is not yet sync. Sync it to server before setting a tip.`);
                     } else {
                         const result = await this.setTip(order, serverId, tipAmount);
                         if (!result) break;
                     }
+                    this.env.pos.db.orders_to_tip.removeItem(order.name);
+                    this.env.pos.db.server_ids.removeItem(order.name);
                 }
             }
             async setTip(order, serverId, amount) {
