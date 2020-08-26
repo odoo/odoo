@@ -71,10 +71,19 @@ odoo.define('web.test_utils_create', function (require) {
         const userContext = params.context && params.context.user_context || {};
         const actionManager = new ActionManager(widget, userContext);
 
+        // Override the ActionMenus registry unless told otherwise.
+        let actionMenusRegistry = ActionMenus.registry;
+        if (params.actionMenusRegistry !== true) {
+            ActionMenus.registry = new Registry();
+        }
+
         const originalDestroy = ActionManager.prototype.destroy;
         actionManager.destroy = function () {
             actionManager.destroy = originalDestroy;
             widget.destroy();
+            if (params.actionMenusRegistry !== true) {
+                ActionMenus.registry = actionMenusRegistry;
+            }
         };
         const fragment = document.createDocumentFragment();
         await actionManager.appendTo(fragment);
