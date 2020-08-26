@@ -226,6 +226,37 @@ class TestChannelFeatures(TestMailCommon):
         self.assertEqual(test_channel_group.channel_partner_ids, self.env['res.partner'])
         self.assertEqual(self.test_channel.channel_partner_ids, self.user_employee.partner_id | test_partner)
 
+    def test_channel_get(self):
+        current_user = self.env['res.users'].create({
+            "login": "adam",
+            "name": "Jonas",
+        })
+        current_user = current_user.with_user(current_user)
+        current_partner = current_user.partner_id
+        other_partner = self.test_partner
+
+        # `channel_get` should return a new channel the first time a partner is given
+        initial_channel_info = current_user.env['mail.channel'].channel_get(partners_to=other_partner.ids)
+        self.assertEqual(set(p['id'] for p in initial_channel_info['members']), {current_partner.id, other_partner.id})
+
+        # `channel_get` should return the existing channel every time the same partner is given
+        same_channel_info = current_user.env['mail.channel'].channel_get(partners_to=other_partner.ids)
+        self.assertEqual(same_channel_info['id'], initial_channel_info['id'])
+
+        # `channel_get` should return the existing channel when the current partner is given together with the other partner
+        together_channel_info = current_user.env['mail.channel'].channel_get(partners_to=(current_partner + other_partner).ids)
+        self.assertEqual(together_channel_info['id'], initial_channel_info['id'])
+
+        # `channel_get` should return a new channel the first time just the current partner is given,
+        # even if a channel containing the current partner together with other partners already exists
+        solo_channel_info = current_user.env['mail.channel'].channel_get(partners_to=current_partner.ids)
+        self.assertNotEqual(solo_channel_info['id'], initial_channel_info['id'])
+        self.assertEqual(set(p['id'] for p in solo_channel_info['members']), {current_partner.id})
+
+        # `channel_get` should return the existing channel every time the current partner is given
+        same_solo_channel_info = current_user.env['mail.channel'].channel_get(partners_to=current_partner.ids)
+        self.assertEqual(same_solo_channel_info['id'], solo_channel_info['id'])
+
 
 @tagged('moderation')
 class TestChannelModeration(TestMailCommon):

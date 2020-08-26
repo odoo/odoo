@@ -625,42 +625,49 @@ class Channel(models.Model):
             only the given partners.
             :param partners_to : list of res.partner ids to add to the conversation
             :param pin : True if getting the channel should pin it for the current user
-            :returns a channel header, or False if the users_to was False
-            :rtype : dict
+            :returns: channel_info of the created or existing channel
+            :rtype: dict
         """
-        if partners_to:
+        if self.env.user.partner_id.id not in partners_to:
             partners_to.append(self.env.user.partner_id.id)
-            # determine type according to the number of partner in the channel
-            self.env.cr.execute("""
-                SELECT P.channel_id
-                FROM mail_channel C, mail_channel_partner P
-                WHERE P.channel_id = C.id
-                    AND C.public LIKE 'private'
-                    AND P.partner_id IN %s
-                    AND C.channel_type LIKE 'chat'
-                GROUP BY P.channel_id
-                HAVING ARRAY_AGG(DISTINCT P.partner_id ORDER BY P.partner_id) = %s
-            """, (tuple(partners_to), sorted(list(partners_to)),))
-            result = self.env.cr.dictfetchall()
-            if result:
-                # get the existing channel between the given partners
-                channel = self.browse(result[0].get('channel_id'))
-                # pin up the channel for the current partner
-                if pin:
-                    self.env['mail.channel.partner'].search([('partner_id', '=', self.env.user.partner_id.id), ('channel_id', '=', channel.id)]).write({'is_pinned': True})
-            else:
-                # create a new one
-                channel = self.create({
-                    'channel_partner_ids': [(4, partner_id) for partner_id in partners_to],
-                    'public': 'private',
-                    'channel_type': 'chat',
-                    'email_send': False,
-                    'name': ', '.join(self.env['res.partner'].sudo().browse(partners_to).mapped('name')),
-                })
-                # broadcast the channel header to the other partner (not me)
-                channel._broadcast(partners_to)
-            return channel.channel_info()[0]
-        return False
+        # determine type according to the number of partner in the channel
+        self.flush()
+        self.env.cr.execute("""
+            SELECT P.channel_id
+            FROM mail_channel C, mail_channel_partner P
+            WHERE P.channel_id = C.id
+                AND C.public LIKE 'private'
+                AND P.partner_id IN %s
+                AND C.channel_type LIKE 'chat'
+                AND NOT EXISTS (
+                    SELECT *
+                    FROM mail_channel_partner P2
+                    WHERE P2.channel_id = C.id
+                        AND P2.partner_id NOT IN %s
+                )
+            GROUP BY P.channel_id
+            HAVING ARRAY_AGG(DISTINCT P.partner_id ORDER BY P.partner_id) = %s
+            LIMIT 1
+        """, (tuple(partners_to), tuple(partners_to), sorted(list(partners_to)),))
+        result = self.env.cr.dictfetchall()
+        if result:
+            # get the existing channel between the given partners
+            channel = self.browse(result[0].get('channel_id'))
+            # pin up the channel for the current partner
+            if pin:
+                self.env['mail.channel.partner'].search([('partner_id', '=', self.env.user.partner_id.id), ('channel_id', '=', channel.id)]).write({'is_pinned': True})
+        else:
+            # create a new one
+            channel = self.create({
+                'channel_partner_ids': [(4, partner_id) for partner_id in partners_to],
+                'public': 'private',
+                'channel_type': 'chat',
+                'email_send': False,
+                'name': ', '.join(self.env['res.partner'].sudo().browse(partners_to).mapped('name')),
+            })
+            # broadcast the channel header to the other partner (not me)
+            channel._broadcast(partners_to)
+        return channel.channel_info()[0]
 
     @api.model
     def channel_get_and_minimize(self, partners_to):
