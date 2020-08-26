@@ -22,7 +22,7 @@ class ProductTemplate(models.Model):
         ('receive', 'On received quantities'),
     ], string="Control Policy", help="On ordered quantities: Control bills based on ordered quantities.\n"
         "On received quantities: Control bills based on received quantities.", default="receive")
-    purchase_line_warn = fields.Selection(WARNING_MESSAGE, 'Purchase Order Line', help=WARNING_HELP, required=True, default="no-message")
+    purchase_line_warn = fields.Selection(WARNING_MESSAGE, 'Purchase Order Line Warning', help=WARNING_HELP, required=True, default="no-message")
     purchase_line_warn_msg = fields.Text('Message for Purchase Order Line')
 
     def _compute_purchased_product_qty(self):
