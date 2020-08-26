@@ -1943,6 +1943,7 @@ var FieldBinaryImage = AbstractFieldBinary.extend({
                             this.hide();
                         }
                         core.bus.on('keydown', this, this.hide);
+                        core.bus.on('click', this, this.hide);
                     },
                     beforeAttach: function () {
                         this.$flyout.css({ width: '512px', height: '512px' });
