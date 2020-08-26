@@ -5,6 +5,7 @@ odoo.define('web.action_menus_tests', function (require) {
     const Registry = require('web.Registry');
     const testUtils = require('web.test_utils');
 
+    const { Component } = owl;
     const cpHelpers = testUtils.controlPanel;
     const { createComponent } = testUtils;
 
@@ -82,6 +83,25 @@ odoo.define('web.action_menus_tests', function (require) {
             await cpHelpers.toggleActionMenu(actionMenus, "Print");
 
             assert.containsNone(actionMenus, '.o_dropdown_menu');
+
+            actionMenus.destroy();
+        });
+
+        QUnit.test("empty action menus", async function (assert) {
+            assert.expect(1);
+
+            ActionMenus.registry.add("test", { Component, getProps: () => false });
+            this.props.items = {};
+
+            const actionMenus = await createComponent(ActionMenus, {
+                env: {
+                    action: this.action,
+                    view: this.view,
+                },
+                props: this.props,
+            });
+
+            assert.containsNone(actionMenus, ".o_cp_action_menus > *");
 
             actionMenus.destroy();
         });
