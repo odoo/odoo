@@ -3,7 +3,9 @@
 
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
+
 from odoo import fields
+from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.stock.tests.common import TestStockCommon
 from odoo.tests.common import Form
 
@@ -474,12 +476,13 @@ class TestStockProductionLot(TestStockCommon):
         """ Try to edit removal_date with the inventory mode.
         """
         user_group_stock_manager = self.env.ref('stock.group_stock_manager')
-        self.demo_user = self.env['res.users'].with_context({'no_reset_password': True, 'mail_create_nosubscribe': True}).create({
-            'name': 'Demo user',
-            'login': 'userdemo',
-            'email': 'd.d@example.com',
-            'groups_id': [(6, 0, [user_group_stock_manager.id])]
-        })
+        self.demo_user = mail_new_test_user(
+            self.env,
+            name='Demo user',
+            login='userdemo',
+            email='d.d@example.com',
+            groups='stock.group_stock_manager',
+        )
         lot_form = Form(self.LotObj)
         lot_form.name = 'LOT001'
         lot_form.product_id = self.apple_product

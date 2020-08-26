@@ -7,9 +7,7 @@ from unittest.mock import patch
 from odoo import exceptions
 from odoo.addons.iap.tools import iap_tools
 from odoo.addons.crm_iap_lead_enrich.models.iap_enrich_api import IapEnrichAPI
-from odoo.tests import common, new_test_user
-
-crm_new_test_user = partial(new_test_user, context={'mail_create_nolog': True, 'mail_create_nosubscribe': True, 'mail_notrack': True, 'no_reset_password': True})
+from odoo.tests import common
 
 
 class MockIAPEnrich(common.BaseCase):
@@ -51,14 +49,3 @@ class MockIAPEnrich(common.BaseCase):
                 yield
         finally:
             pass
-
-
-class CrmCase(common.SavepointCase):
-
-    @classmethod
-    def setUpClass(cls):
-        super(CrmCase, cls).setUpClass()
-
-        cls.sales_manager = crm_new_test_user(
-            cls.env, login='sales_manager', groups='base.group_user,sales_team.group_sale_manager',
-            name='Martine SalesManager', email='"Martine SalesManager" <martine@example.com>')

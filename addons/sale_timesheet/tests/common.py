@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.sale.tests.common import TestSaleCommon
 
 
@@ -10,26 +11,26 @@ class TestCommonSaleTimesheet(TestSaleCommon):
     def setUpClass(cls, chart_template_ref=None):
         super().setUpClass(chart_template_ref=chart_template_ref)
 
-        group_employee = cls.env.ref('base.group_user')
-        Users = cls.env['res.users'].with_context({'no_reset_password': True, 'mail_create_nosubscribe': True, 'mail_create_nolog': True})
-        cls.user_employee_company_B = Users.create({
-            'name': 'Gregor Clegane Employee',
-            'login': 'gregor',
-            'email': 'gregor@example.com',
-            'notification_type': 'email',
-            'groups_id': [(6, 0, [group_employee.id])],
-            'company_id': cls.company_data_2['company'].id,
-            'company_ids': [cls.company_data_2['company'].id],
-        })
-        cls.user_manager_company_B = Users.create({
-            'name': 'Cersei Lannister Manager',
-            'login': 'cersei',
-            'email': 'cersei@example.com',
-            'notification_type': 'email',
-            'groups_id': [(6, 0, [group_employee.id])],
-            'company_id': cls.company_data_2['company'].id,
-            'company_ids': [cls.company_data_2['company'].id, cls.env.company.id],
-        })
+        cls.user_employee_company_B = mail_new_test_user(
+            cls.env,
+            name='Gregor Clegane Employee',
+            login='gregor',
+            email='gregor@example.com',
+            notification_type='email',
+            groups='base.group_user',
+            company_id=cls.company_data_2['company'].id,
+            company_ids=[cls.company_data_2['company'].id],
+        )
+        cls.user_manager_company_B = mail_new_test_user(
+            cls.env,
+            name='Cersei Lannister Manager',
+            login='cersei',
+            email='cersei@example.com',
+            notification_type='email',
+            groups='base.group_user',
+            company_id=cls.company_data_2['company'].id,
+            company_ids=[cls.company_data_2['company'].id, cls.env.company.id],
+        )
 
         cls.employee_user = cls.env['hr.employee'].create({
             'name': 'Employee User',
