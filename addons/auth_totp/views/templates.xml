@@ -7,8 +7,8 @@
     <template id="auth_totp_form">
         <t t-call="web.login_layout">
             <t t-set="disable_footer">1</t>
-            <h5 class="card-title">Two-factor Authentication</h5>
             <div class="oe_login_form">
+                <h5 class="card-title">Two-factor Authentication</h5>
                 <form method="POST" action="" class="">
                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                     <input type="hidden" name="redirect" t-att-value="redirect"/>
