@@ -586,7 +586,7 @@ class AccountJournal(models.Model):
         if not alias_name:
             alias_name = self.name
             if self.company_id != self.env.ref('base.main_company'):
-                alias_name += '-' + str(self.company_id.name)
+                alias_name += '-' + re.sub("[^\w!#$%&'*+/=?^`{|}~\-]", '', str(self.company_id.name))
         return {
             'alias_defaults': {'type': 'in_invoice', 'company_id': self.company_id.id},
             'alias_parent_thread_id': self.id,
