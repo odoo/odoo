@@ -1129,7 +1129,7 @@ class AccountJournal(models.Model):
         if not alias_name:
             alias_name = self.name
             if self.company_id != self.env.ref('base.main_company'):
-                alias_name += '-' + str(self.company_id.name)
+                alias_name += '-' + re.sub("[^\w!#$%&'*+/=?^`{|}~\-]", '', str(self.company_id.name))
         return {
             'alias_defaults': {'move_type': type == 'purchase' and 'in_invoice' or 'out_invoice', 'company_id': self.company_id.id, 'journal_id': self.id},
             'alias_parent_thread_id': self.id,
