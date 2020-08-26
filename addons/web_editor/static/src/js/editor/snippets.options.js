@@ -1680,7 +1680,6 @@ const SelectPagerUserValueWidget = SelectUserValueWidget.extend({
 
         this.pageNum = document.createElement('span');
         this.currentPage = 0;
-        this._updatePageNum();
 
         const next = document.createElement('i');
         next.classList.add('o_we_pager_next', 'fa', 'fa-chevron-right');
@@ -1691,9 +1690,16 @@ const SelectPagerUserValueWidget = SelectUserValueWidget.extend({
         pagerControls.appendChild(this.pageNum);
         pagerControls.appendChild(next);
 
+        this.pageName = document.createElement('b');
+        const pagerHeader = document.createElement('div');
+        pagerHeader.classList.add('o_we_pager_header');
+        pagerHeader.appendChild(this.pageName);
+        pagerHeader.appendChild(pagerControls);
+
         await _super(...arguments);
         this.menuEl.classList.add('o_we_has_pager');
-        $(this.menuEl).prepend(pagerControls);
+        $(this.menuEl).prepend(pagerHeader);
+        this._updatePage();
     },
 
     //--------------------------------------------------------------------------
@@ -1705,9 +1711,11 @@ const SelectPagerUserValueWidget = SelectUserValueWidget.extend({
      *
      * @private
      */
-    _updatePageNum() {
+    _updatePage() {
         this.pages.forEach((page, i) => page.classList.toggle('active', i === this.currentPage));
         this.pageNum.textContent = `${this.currentPage + 1}/${this.numPages}`;
+        const activePage = this.pages.find((page, i) => i === this.currentPage);
+        this.pageName.textContent = activePage.getAttribute('string');
     },
 
     //--------------------------------------------------------------------------
@@ -1724,7 +1732,7 @@ const SelectPagerUserValueWidget = SelectUserValueWidget.extend({
         ev.stopPropagation();
         const delta = ev.target.matches('.o_we_pager_next') ? 1 : -1;
         this.currentPage = (this.currentPage + this.numPages + delta) % this.numPages;
-        this._updatePageNum();
+        this._updatePage();
     },
     /**
      * @override
@@ -1735,7 +1743,7 @@ const SelectPagerUserValueWidget = SelectUserValueWidget.extend({
             const currentPage = this.pages.indexOf(activeButton.el.closest('we-select-page'));
             if (currentPage !== -1) {
                 this.currentPage = currentPage;
-                this._updatePageNum();
+                this._updatePage();
             }
         }
         return this._super(...arguments);
