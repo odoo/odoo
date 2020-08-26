@@ -1,8 +1,8 @@
-odoo.define('mail_bot/static/src/widgets/notification_alert/notification_alert.js', function (require) {
+odoo.define('mail/static/src/widgets/notification_alert/notification_alert.js', function (require) {
 "use strict";
 
 const components = {
-    NotificationAlert: require('mail_bot/static/src/components/notification_alert/notification_alert.js'),
+    NotificationAlert: require('mail/static/src/components/notification_alert/notification_alert.js'),
 };
 
 const { ComponentWrapper, WidgetAdapterMixin } = require('web.OwlCompatibility');

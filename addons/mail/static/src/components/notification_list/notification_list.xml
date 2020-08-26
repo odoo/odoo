@@ -30,7 +30,13 @@
                             notificationGroupLocalId="notification.notificationGroup.localId"
                         />
                     </t>
-                    <t name="separatorCondition" t-if="!notification_last">
+                    <t t-if="notification.type === 'odoobotRequest'">
+                        <NotificationRequest
+                            class="o_NotificationList_notificationRequest"
+                            t-att-class="{ 'o-mobile': env.messaging.device.isMobile }"
+                        />
+                    </t>
+                    <t t-if="!notification_last">
                         <div class="o_NotificationList_separator"/>
                     </t>
                 </t>
