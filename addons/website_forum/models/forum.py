@@ -727,10 +727,13 @@ class Post(models.Model):
         _logger.info('User %s marked as spams (in batch): %s' % (self.env.uid, spams))
         return spams.mark_as_offensive(reason_id)
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=False)
+    def _unlink_if_enough_karma(self):
         for post in self:
             if not post.can_unlink:
                 raise AccessError(_('%d karma required to unlink a post.', post.karma_unlink))
+
+    def unlink(self):
         # if unlinking an answer with accepted answer: remove provided karma
         for post in self:
             if post.is_correct:

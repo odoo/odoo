@@ -448,9 +448,13 @@ class AccountAccount(models.Model):
 
         return super(AccountAccount, self).write(vals)
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_contains_journal_items(self):
         if self.env['account.move.line'].search([('account_id', 'in', self.ids)], limit=1):
             raise UserError(_('You cannot perform this action on an account that contains journal items.'))
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_account_set_on_customer(self):
         #Checking whether the account is set as a property to any Partner or not
         values = ['account.account,%s' % (account_id,) for account_id in self.ids]
         partner_prop_acc = self.env['ir.property'].sudo().search([('value_reference', 'in', values)], limit=1)
@@ -459,7 +463,6 @@ class AccountAccount(models.Model):
             raise UserError(
                 _('You cannot remove/deactivate the account %s which is set on a customer or vendor.', account_name)
             )
-        return super(AccountAccount, self).unlink()
 
     def action_read_account(self):
         self.ensure_one()

@@ -226,15 +226,15 @@ class Channel(models.Model):
 
         return channels
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_all_employee_channel(self):
         # Delete mail.channel
         try:
             all_emp_group = self.env.ref('mail.channel_all_employees')
         except ValueError:
             all_emp_group = None
-        if all_emp_group and all_emp_group in self and not self._context.get(MODULE_UNINSTALL_FLAG):
+        if all_emp_group and all_emp_group in self:
             raise UserError(_('You cannot delete those groups, as the Whole Company group is required by other modules.'))
-        return super(Channel, self).unlink()
 
     def write(self, vals):
         # First checks if user tries to modify moderation fields and has not the right to do it.

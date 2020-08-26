@@ -329,10 +329,14 @@ class AccountBankStatement(models.Model):
                     ))
         return True
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=False)
+    def _unlink_only_if_open(self):
         for statement in self:
             if statement.state != 'open':
                 raise UserError(_('In order to delete a bank statement, you must first cancel it to delete related journal items.'))
+
+    def unlink(self):
+        for statement in self:
             # Explicitly unlink bank statement lines so it will check that the related journal entries have been deleted first
             statement.line_ids.unlink()
             # Some other bank statements might be link to this one, so in that case we have to switch the previous_statement_id

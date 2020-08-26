@@ -29,8 +29,8 @@ class PosCategory(models.Model):
             return res
         return [(cat.id, " / ".join(reversed(get_names(cat)))) for cat in self]
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_session_open(self):
         if self.search_count([('id', 'in', self.ids)]):
             if self.env['pos.session'].sudo().search_count([('state', '!=', 'closed')]):
                 raise UserError(_('You cannot delete a point of sale category while a session is still opened.'))
-        return super(PosCategory, self).unlink()

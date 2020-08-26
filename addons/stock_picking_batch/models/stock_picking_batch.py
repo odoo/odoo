@@ -140,10 +140,10 @@ class StockPickingBatch(models.Model):
                 batch_without_picking_type.picking_type_id = picking.picking_type_id.id
         return res
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=False)
+    def _unlink_if_draft(self):
         if any(batch.state != 'draft' for batch in self):
             raise UserError(_("You can only delete draft batch transfers."))
-        return super().unlink()
 
     def onchange(self, values, field_name, field_onchange):
         """Override onchange to NOT to update all scheduled_date on pickings when

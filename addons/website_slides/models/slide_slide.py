@@ -467,9 +467,12 @@ class Slide(models.Model):
         rec.sequence = 0
         return rec
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_already_taken(self):
         if self.question_ids and self.channel_id.channel_partner_ids:
             raise UserError(_("People already took this quiz. To keep course progression it should not be deleted."))
+
+    def unlink(self):
         for category in self.filtered(lambda slide: slide.is_category):
             category.channel_id._move_category_slides(category, False)
         super(Slide, self).unlink()

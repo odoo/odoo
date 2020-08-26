@@ -290,7 +290,8 @@ class Lang(models.Model):
         self.clear_caches()
         return res
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=True)
+    def _unlink_except_default_lang(self):
         for language in self:
             if language.code == 'en_US':
                 raise UserError(_("Base Language 'en_US' can not be deleted."))
@@ -299,6 +300,9 @@ class Lang(models.Model):
                 raise UserError(_("You cannot delete the language which is the user's preferred language."))
             if language.active:
                 raise UserError(_("You cannot delete the language which is Active!\nPlease de-activate the language first."))
+
+    def unlink(self):
+        for language in self:
             self.env['ir.translation'].search([('lang', '=', language.code)]).unlink()
         self.clear_caches()
         return super(Lang, self).unlink()

@@ -25,12 +25,12 @@ class AccountAnalyticAccount(models.Model):
             if record.project_ids:
                 raise UserError(_('You cannot change the company of an analytic account if it is related to a project.'))
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_existing_tasks(self):
         projects = self.env['project.project'].search([('analytic_account_id', 'in', self.ids)])
         has_tasks = self.env['project.task'].search_count([('project_id', 'in', projects.ids)])
         if has_tasks:
             raise UserError(_('Please remove existing tasks in the project linked to the accounts you want to delete.'))
-        return super(AccountAnalyticAccount, self).unlink()
 
     def action_view_projects(self):
         kanban_view_id = self.env.ref('project.view_project_kanban').id

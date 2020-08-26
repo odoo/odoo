@@ -10,7 +10,7 @@ class AccountAnalyticLine(models.Model):
 
     holiday_id = fields.Many2one("hr.leave", string='Leave Request')
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_linked_leave(self):
         if any(line.holiday_id for line in self):
             raise UserError(_('You cannot delete timesheet lines attached to a leaves. Please cancel the leaves instead.'))
-        return super(AccountAnalyticLine, self).unlink()
