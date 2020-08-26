@@ -11,6 +11,7 @@ from . import event_track_tag
 from . import event_track_tag_category
 from . import event_track_visitor
 from . import event_type
+from . import res_config_settings
 from . import website
 from . import website_event_menu
 from . import website_menu
