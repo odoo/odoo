@@ -21,6 +21,16 @@ function factory(dependencies) {
         //----------------------------------------------------------------------
 
         /**
+         * @returns {boolean}
+         */
+        isNotificationPermissionDefault() {
+            const windowNotification = this.env.browser.Notification;
+            return windowNotification
+                ? windowNotification.permission === 'default'
+                : false;
+        }
+
+        /**
          * Open the form view of the record with provided id and model.
          *
          * @param {Object} param0
