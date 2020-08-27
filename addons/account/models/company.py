@@ -85,7 +85,6 @@ class ResCompany(models.Model):
     qr_code = fields.Boolean(string='Display QR-code on invoices')
 
     invoice_is_email = fields.Boolean('Email by default', default=True)
-    invoice_is_print = fields.Boolean('Print by default', default=True)
 
     #Fields of the setup step for opening move
     account_opening_move_id = fields.Many2one(string='Opening Journal Entry', comodel_name='account.move', help="The journal entry containing the initial balance of all this company's accounts.")
