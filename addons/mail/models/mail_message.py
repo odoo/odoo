@@ -1167,15 +1167,15 @@ class Message(models.Model):
     def _get_reply_to(self, values):
         """ Return a specific reply_to for the document """
         model = values.get('model', self._context.get('default_model'))
-        res_id = values.get('res_id', self._context.get('default_res_id'))
+        res_id = values.get('res_id', self._context.get('default_res_id')) or False
         email_from = values.get('email_from')
         message_type = values.get('message_type')
         records = None
         if self.is_thread_message({'model': model, 'res_id': res_id, 'message_type': message_type}):
             records = self.env[model].browse([res_id])
         else:
-            res_id = False
-        return self.env['mail.thread']._notify_get_reply_to_on_records(default=email_from, records=records)[res_id]
+            records = self.env[model] if model else self.env['mail.thread']
+        return records._notify_get_reply_to(default=email_from)[res_id]
 
     @api.model
     def _get_message_id(self, values):
