@@ -286,7 +286,13 @@ class ProductTemplate(models.Model):
             product = self.env['product.product'].browse(combination_info['product_id']) or self
 
             tax_display = self.env.user.has_group('account.group_show_line_subtotals_tax_excluded') and 'total_excluded' or 'total_included'
-            taxes = partner.property_account_position_id.map_tax(product.sudo().taxes_id.filtered(lambda x: x.company_id == company_id), product, partner)
+            default_taxes = product.sudo().taxes_id.filtered(lambda x: x.company_id == company_id)
+            if not default_taxes:
+                default_taxes = company_id.account_sale_tax_id
+            #TODO: automatic fiscal positions
+            if not partner.property_account_position_id:
+                pass
+            taxes = partner.property_account_position_id.map_tax(default_taxes, product, partner)
 
             # The list_price is always the price of one.
             quantity_1 = 1
