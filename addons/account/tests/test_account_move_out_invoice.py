@@ -1837,6 +1837,22 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'invoice_payment_state': 'paid',
         })
 
+    def test_out_invoice_create_refund_auto_post(self):
+        self.invoice.auto_post = True
+
+        frozen_today = fields.Date.from_string('2019-01-01')
+        with patch.object(fields.Date, 'today', lambda *args, **kwargs: frozen_today), patch.object(fields.Date, 'context_today', lambda *args, **kwargs: frozen_today):
+
+            move_reversal = self.env['account.move.reversal'].with_context(active_model="account.move", active_ids=self.invoice.ids).create({
+                'date': fields.Date.from_string('2019-02-01'),
+                'reason': 'no reason',
+                'refund_method': 'modify',
+            })
+            reversal = move_reversal.reverse_moves()
+            new_invoice = self.env['account.move'].browse(reversal['res_id'])
+
+            self.assertRecordValues(new_invoice, [{'state': 'draft'}])
+
     def test_out_invoice_create_1(self):
         # Test creating an account_move with the least information.
         move = self.env['account.move'].create({
