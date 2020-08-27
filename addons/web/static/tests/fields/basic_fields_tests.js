@@ -5633,6 +5633,29 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.test('float_toggle widget in kanban view(readonly) with option force_button', async function (assert) {
+        assert.expect(2);
+
+        var kanban = await createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban>' +
+                    '<templates><t t-name="kanban-box">' +
+                        '<div>' +
+                        '<field name="qux" widget="float_toggle" options="{\'force_button\': true}"/>' +
+                        '</div>' +
+                    '</t>' +
+                '</templates></kanban>',
+            domain: [['id', 'in', [1]]],
+        });
+        assert.containsOnce(kanban, 'button.o_field_float_toggle', "should have rendered toggle button");
+        const value = kanban.$('button.o_field_float_toggle').text();
+        await testUtils.dom.click(kanban.$('button.o_field_float_toggle'));
+        assert.notEqual(kanban.$('button.o_field_float_toggle').text(), value, "qux field value should be changed");
+        kanban.destroy();
+    });
+
 
     QUnit.module('PhoneWidget');
 
