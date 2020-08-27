@@ -1395,6 +1395,34 @@ exports.PosModel = Backbone.Model.extend({
     getCurrencySymbol() {
         return this.currency ? this.currency.symbol : '$';
     },
+    /**
+     * Round amount based on pos currency.
+     */
+    roundAmount(amount) {
+        return round_di(amount, this.currency.decimals || 2);
+    },
+    /**
+     * Round amount based on pos currency but return as string.
+     */
+    roundAmountStr(amount) {
+        return this.roundAmount(amount).toFixed(this.currency.decimals || 2);
+    },
+    /**
+     * Compares two amounts with precision based on currency.
+     * Inspired by float_compare.
+     */
+    amountCompare(amount1, amount2) {
+        const decimals = this.currency.decimals || 2;
+        const rounding = this.currency.rounding || 0.01;
+        const diff = round_di(amount1 - amount2, decimals);
+        if (Math.abs(diff) < rounding) {
+            return 0;
+        } else if (diff < 0) {
+            return -1;
+        } else {
+            return 1;
+        }
+    }
 });
 
 /**

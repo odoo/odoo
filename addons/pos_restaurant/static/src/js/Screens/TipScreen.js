@@ -60,7 +60,7 @@ odoo.define('pos_restaurant.TipScreen', function (require) {
                 return;
             }
 
-            if (amount > 0.25 * this.totalAmount) {
+            if (this.env.pos.amountCompare(amount, 0.25 * this.totalAmount) > 0) {
                 const { confirmed } = await this.showPopup('ConfirmPopup', {
                     title: 'Are you sure?',
                     body: `${this.env.pos.format_currency(
@@ -152,6 +152,10 @@ odoo.define('pos_restaurant.TipScreen', function (require) {
                     ),
                 });
             }
+        }
+
+        setInputTipAmount(tip) {
+            this.state.inputTipAmount = this.env.pos.roundAmountStr(tip.amount);
         }
     }
     TipScreen.template = 'pos_restaurant.TipScreen';
