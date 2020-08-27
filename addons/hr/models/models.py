@@ -16,5 +16,5 @@ class BaseModel(models.AbstractModel):
                 employee = self.env['hr.employee'].search([('user_id.email', 'ilike', email_address)], limit=1)
             if not employee:
                 return _('restricted to employees')
-            return True
+            return False
         return super(BaseModel, self)._alias_get_error_message(message, message_dict, alias)
