@@ -13,22 +13,13 @@ class PosPayment(models.Model):
     _inherit = 'pos.payment'
 
     def _update_payment_line_for_tip(self, tip_amount):
-        """Capture the correct amount when a tip is set."""
+        """Capture the payment when a tip is set."""
         res = super(PosPayment, self)._update_payment_line_for_tip(tip_amount)
         if self.payment_method_id.use_payment_terminal == 'adyen':
-            self._adyen_capture_tip(True)
+            self._adyen_capture()
         return res
 
-    def _adyen_capture_tip(self, adjust_authorisation=False):
-        endpoint = 'https://pal-live.adyen.com/pal/servlet/Payment/v52/'
-        if self.payment_method_id.adyen_test_mode:
-            endpoint = 'https://pal-test.adyen.com/pal/servlet/Payment/v52/'
-
-        headers = {
-            'x-api-key': self.payment_method_id.adyen_api_key,
-            'Content-Type': 'application/json'
-        }
-
+    def _adyen_capture(self):
         data = {
             'originalReference': self.transaction_id,
             'modificationAmount': {
@@ -38,15 +29,10 @@ class PosPayment(models.Model):
             'merchantAccount': self.payment_method_id.adyen_merchant_account,
         }
 
-        if adjust_authorisation:
-            endpoint += 'adjustAuthorisation'
-            data['additionalData'] = {
-                'industryUsage':'DelayedCharge'
-            }
-        else:
-            endpoint += 'capture'
-
-        req = requests.post(endpoint, data=json.dumps(data), headers=headers, timeout=TIMEOUT)
-
-        if not req.ok:
-            raise Exception('An error occured while capturing the payment')
+        return self.payment_method_id.proxy_adyen_request(
+            data,
+            self.payment_method_id.adyen_test_mode,
+            self.payment_method_id.adyen_api_key,
+            'https://pal-test.adyen.com/pal/servlet/Payment/v52/capture',
+            'https://pal-live.adyen.com/pal/servlet/Payment/v52/capture',
+        )

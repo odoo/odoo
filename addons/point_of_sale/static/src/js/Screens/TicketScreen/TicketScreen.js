@@ -103,6 +103,9 @@ odoo.define('point_of_sale.TicketScreen', function (require) {
         getCustomer(order) {
             return order.get_client_name();
         }
+        getCardholderName(order) {
+            return order.get_cardholder_name();
+        }
         getEmployee(order) {
             return order.employee.name;
         }
@@ -117,6 +120,9 @@ odoo.define('point_of_sale.TicketScreen', function (require) {
             return order
                 .get_paymentlines()
                 .some((payment) => payment.is_electronic() && payment.get_payment_status() === 'done');
+        }
+        showCardholderName() {
+            return this.env.pos.payment_methods.some(method => method.use_payment_terminal);
         }
         get searchBarConfig() {
             return {
@@ -152,11 +158,17 @@ odoo.define('point_of_sale.TicketScreen', function (require) {
          * @returns Record<string, (models.Order) => string>
          */
         get _searchFields() {
-            return {
+            var fields = {
                 'Receipt Number': (order) => order.name,
                 Date: (order) => moment(order.creation_date).format('YYYY-MM-DD hh:mm A'),
                 Customer: (order) => order.get_client_name(),
             };
+
+            if (this.showCardholderName()) {
+                fields['Cardholder Name'] = (order) => order.get_cardholder_name();
+            }
+
+            return fields;
         }
         /**
          * Maps the order screen params to order status.

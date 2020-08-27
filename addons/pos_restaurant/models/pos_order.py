@@ -95,6 +95,7 @@ class PosOrder(models.Model):
             'pos_order_id',
             'payment_method_id',
             'card_type',
+            'cardholder_name',
             'transaction_id',
             'payment_status'
             ]

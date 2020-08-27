@@ -16,6 +16,7 @@
                         <div class="col start wide">Date</div>
                         <div class="col start wide">Receipt Number</div>
                         <div class="col start">Customer</div>
+                        <div class="col start wide" t-if="showCardholderName()">Cardholder Name</div>
                         <div class="col start">Employee</div>
                         <div class="col end">Total</div>
                         <div class="col start narrow">Status</div>
@@ -31,6 +32,9 @@
                             </div>
                             <div class="col start">
                                 <t t-esc="getCustomer(order)"></t>
+                            </div>
+                            <div t-if="showCardholderName()" class="col start">
+                                <t t-esc="getCardholderName(order)"></t>
                             </div>
                             <div class="col start">
                                 <t t-esc="getEmployee(order)"></t>
