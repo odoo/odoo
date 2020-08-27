@@ -55,7 +55,6 @@ class TestSwissQR(AccountTestInvoicingCommon):
         )
         invoice = (
             self.env['account.move']
-            .with_context(default_type='out_invoice')
             .create(
                 {
                     'move_type': 'out_invoice',
