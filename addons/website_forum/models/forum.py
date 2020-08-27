@@ -505,14 +505,14 @@ class Post(models.Model):
         return post
 
     @api.model
-    def get_mail_message_access(self, res_ids, operation, model_name=None):
-        # XDO FIXME: to be correctly fixed with new get_mail_message_access and filter access rule
+    def _get_mail_message_access(self, res_ids, operation, model_name=None):
+        # XDO FIXME: to be correctly fixed with new _get_mail_message_access and filter access rule
         if operation in ('write', 'unlink') and (not model_name or model_name == 'forum.post'):
             # Make sure only author or moderator can edit/delete messages
             for post in self.browse(res_ids):
                 if not post.can_edit:
                     raise AccessError(_('%d karma required to edit a post.', post.karma_edit))
-        return super(Post, self).get_mail_message_access(res_ids, operation, model_name=model_name)
+        return super(Post, self)._get_mail_message_access(res_ids, operation, model_name=model_name)
 
     def write(self, vals):
         trusted_keys = ['active', 'is_correct', 'tag_ids']  # fields where security is checked manually
