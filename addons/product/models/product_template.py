@@ -68,7 +68,7 @@ class ProductTemplate(models.Model):
     list_price = fields.Float(
         'Sales Price', default=1.0,
         digits='Product Price',
-        help="Price at which the product is sold to customers.", index=True)
+        help="Price at which the product is sold to customers.")
     # lst_price: catalog price for template, but including extra for variants
     lst_price = fields.Float(
         'Public Price', related='list_price', readonly=False,
@@ -175,16 +175,15 @@ class ProductTemplate(models.Model):
         self.cost_currency_id = self.env.company.currency_id.id
 
     def _compute_template_price(self):
-        prices = self._compute_template_price_no_inverse()
+        prices = self._compute_template_price_no_inverse(self._context.get('pricelist'))
         for template in self:
             template.price = prices.get(template.id, 0.0)
 
-    def _compute_template_price_no_inverse(self):
+    def _compute_template_price_no_inverse(self, pricelist_id_or_name=None):
         """The _compute_template_price writes the 'list_price' field with an inverse method
         This method allows computing the price without writing the 'list_price'
         """
         prices = {}
-        pricelist_id_or_name = self._context.get('pricelist')
         if pricelist_id_or_name:
             pricelist = None
             partner = self.env.context.get('partner')

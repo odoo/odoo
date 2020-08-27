@@ -130,6 +130,18 @@
                             </div>
                         </div>
                     </div>
+                    <div class="col-12 col-lg-6 o_setting_box" id="realtime_computation_setting" title="This adds the choice of a currency on pricelists." attrs="{'invisible': [('group_product_pricelist', '=', False)]}">
+                        <div class="o_setting_left_pane">
+                            <field name="price_realtime_computation"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="price_realtime_computation"/>
+                            <span class="fa fa-lg fa-globe" title="Values set here are website-specific." groups="website.group_multi_website"/>
+                            <div class="text-muted">
+                                The computation of the price based on pricelists in real-time allows you to have a proper sorting by price. Note that this is costly and can slow down your eCommerce if you have too much products.
+                            </div>
+                        </div>
+                    </div>
                     <div class="col-12 col-lg-6 o_setting_box" id="multicurrencies_setting" title="This adds the choice of a currency on pricelists.">
                         <div class="o_setting_left_pane">
                             <field name="group_multi_currency"/>

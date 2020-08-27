@@ -183,6 +183,46 @@ class ormcache_multi(ormcache):
         return result
 
 
+class ormcache_multi_self(ormcache):
+    """ This LRU cache decorator is a variant of :class:`ormcache`. Upon call,
+    self.ids is iterated on, and every value leads to a cache
+    entry under its own key.
+    """
+
+    def lookup(self, method, *args, **kwargs):
+        d, key0, counter = self.lru(args[0])
+        base_key = key0 + self.key(*args, **kwargs)
+        ids = args[0].ids
+        result = {}
+        missed = []
+
+        # first take what is available in the cache
+        for i in ids:
+            key = base_key + (i,)
+            try:
+                result[i] = d[key]
+                counter.hit += 1
+            except Exception:
+                counter.miss += 1
+                missed.append(i)
+
+        if missed:
+            # call the method for the ids that were not in the cache; note that
+            # thanks to decorator(), the multi argument will be bound and passed
+            # positionally in args.
+            args = list(args)
+            args[0] = args[0].filtered(lambda item: item.id in missed)
+
+            result.update(method(*args, **kwargs))
+
+            # store those new results back in the cache
+            for i in missed:
+                key = base_key + (i,)
+                d[key] = result[i]
+
+        return result
+
+
 class dummy_cache(object):
     """ Cache decorator replacement to actually do no caching. """
     def __init__(self, *l, **kw):

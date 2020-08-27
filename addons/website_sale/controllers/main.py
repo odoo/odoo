@@ -268,39 +268,43 @@ class WebsiteSale(http.Controller):
             url = "/shop/category/%s" % slug(category)
 
         if search_product:
-            compare_product = search_product[0]
-            product_currency = compare_product.currency_id
-            compute_currency = self._get_compute_currency(product_currency, pricelist.currency_id)
-
-            where, args = expression.expression(domain, Product).to_sql()
-            query = 'SELECT MIN("list_price") as min_list_price, MAX("list_price") as max_list_price FROM "product_template" WHERE %s'
-            request.env.cr.execute(query % where, args)
-            result = request.env.cr.dictfetchall()[0]
-            available_min_price = compute_currency(result.get('min_list_price'))
-            available_max_price = compute_currency(result.get('max_list_price'))
-
             if min_price or max_price:
-                compute_inverse_currency = self._get_compute_currency(pricelist.currency_id, product_currency)
                 if min_price:
                     try:
                         min_price = float(min_price)
                         post['min_price'] = min_price
-                        # remove the rounding as the curency compute can have imprecision
-                        domain = expression.AND([domain, [('list_price', '>=', compute_inverse_currency(min_price) - pricelist.currency_id.rounding)]])
                     except ValueError:
                         min_price = 0
                 if max_price:
                     try:
                         max_price = float(max_price)
                         post['max_price'] = max_price
-                        # add the rounding as the curency compute can have imprecision
-                        domain = expression.AND([domain, [('list_price', '<=', compute_inverse_currency(max_price) + pricelist.currency_id.rounding)]])
                     except ValueError:
                         max_price = 0
+            prices = []
+            if request.website.price_realtime_computation:
+                prices = search_product.mapped('price')
+                price_factor = 1
+            else:
+                prices = search_product.mapped('list_price')
+                product_currency = search_product[0].currency_id
+                compute_currency = self._get_compute_currency(product_currency, pricelist.currency_id)
+                price_factor = compute_currency(1)
+
+            available_min_price = min(prices)
+            available_max_price = max(prices)
+
+            def _check_in_price_range(product):
+                price_to_compare = product.price or product.lst_price if request.website.price_realtime_computation else product.lst_price
+                price_to_compare = price_factor * price_to_compare
+                return (not min_price or (float(min_price) <= price_to_compare)) and \
+                       (not max_price or (price_to_compare <= float(max_price)))
+
+            search_product = search_product.filtered(lambda product: _check_in_price_range(product))
         else:
             available_max_price = available_min_price = 0
 
-        product_count = search_product.search_count(domain)
+        product_count = len(search_product)
         pager = request.website.pager(url=url, total=product_count, page=page, step=ppg, scope=7, url_args=post)
         offset = pager['offset']
         products = search_product[offset: offset + ppg]

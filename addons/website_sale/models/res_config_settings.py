@@ -38,6 +38,8 @@ class ResConfigSettings(models.TransientModel):
                                                   default=_default_recovery_mail_template, related='website_id.cart_recovery_mail_template_id', readonly=False)
     cart_abandoned_delay = fields.Float("Abandoned Delay", help="Number of hours after which the cart is considered abandoned.",
                                         default=1.0, related='website_id.cart_abandoned_delay', readonly=False)
+    price_realtime_computation = fields.Boolean("Real-time Computation", help='The computation of the price based on pricelists in real-time allows you to have a proper sorting by price.',
+                                                    related='website_id.price_realtime_computation', readonly=False)
 
     @api.model
     def get_values(self):
@@ -78,3 +80,8 @@ class ResConfigSettings(models.TransientModel):
             self.update({
                 'group_product_pricelist': True,
             })
+
+    def set_values(self):
+        super(ResConfigSettings, self).set_values()
+        if not self.group_product_pricelist:
+            self.env['website'].get_current_website().price_realtime_computation = False

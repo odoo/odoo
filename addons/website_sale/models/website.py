@@ -49,6 +49,8 @@ class Website(models.Model):
     shop_ppr = fields.Integer(default=4, string="Number of grid columns on the shop")
 
     shop_extra_field_ids = fields.One2many('website.sale.extra.field', 'website_id', string='E-Commerce Extra Fields')
+    price_realtime_computation = fields.Boolean("Real-time Computation",
+                                                help='The computation of the price based on pricelists in real-time allows you to have a proper sorting by price.')
 
     @api.depends('all_pricelist_ids')
     def _compute_pricelist_ids(self):

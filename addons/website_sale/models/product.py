@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models, tools, _
 from odoo.exceptions import ValidationError, UserError
 from odoo.addons.http_routing.models.ir_http import slug
 from odoo.addons.website.models import ir_http
@@ -198,6 +198,18 @@ class ProductTemplate(models.Model):
              "Customize and enable 'eCommerce categories' to view all eCommerce categories.")
 
     product_template_image_ids = fields.One2many('product.image', 'product_tmpl_id', string="Extra Product Media", copy=True)
+
+    def _compute_template_price(self):
+        if self.env['website'].get_current_website().price_realtime_computation:
+            prices = self._compute_template_price_no_inverse_cached(self._context.get('pricelist'))
+            for template in self:
+                template.price = prices.get(template.id, 0.0)
+        else:
+            super(ProductTemplate, self)._compute_template_price()
+
+    @tools.ormcache_multi_self('pricelist_id_or_name')
+    def _compute_template_price_no_inverse_cached(self, pricelist_id_or_name=None):
+        return self._compute_template_price_no_inverse(pricelist_id_or_name)
 
     def _has_no_variant_attributes(self):
         """Return whether this `product.template` has at least one no_variant
