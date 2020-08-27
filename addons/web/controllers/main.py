@@ -1353,6 +1353,27 @@ class DataSet(http.Controller):
 
 class View(http.Controller):
 
+    @http.route('/web/view/create_custom', type='json', auth="user")
+    def create_custom(self, view_id, arch):
+        """
+        Create a custom view
+
+        :param int view_id: the id of the source view
+        :param str arch: the arch of the custom view
+        :returns: dict with two keys: result (the acknowledged operation, set
+                  to True) and id (the new custom view ID)
+        """
+        custom_view = request.env['ir.ui.view.custom'].create({
+            'user_id': request.session.uid,
+            'ref_id': view_id,
+            'arch': arch,
+        })
+
+        return {
+            'result': True,
+            'id': custom_view.id,
+        }
+
     @http.route('/web/view/edit_custom', type='json', auth="user")
     def edit_custom(self, custom_id, arch):
         """

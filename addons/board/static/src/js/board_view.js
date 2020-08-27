@@ -32,6 +32,7 @@ var BoardController = FormController.extend({
     init: function (parent, model, renderer, params) {
         this._super.apply(this, arguments);
         this.customViewID = params.customViewID;
+        this.viewID = params.viewID;
     },
 
     //--------------------------------------------------------------------------
@@ -60,13 +61,36 @@ var BoardController = FormController.extend({
     _saveDashboard: function () {
         var board = this.renderer.getBoard();
         var arch = QWeb.render('DashBoard.xml', _.extend({}, board));
-        return this._rpc({
-                route: '/web/view/edit_custom',
-                params: {
-                    custom_id: this.customViewID,
-                    arch: arch,
-                }
-            }).then(dataManager.invalidate.bind(dataManager));
+        if(this.customViewID === undefined) {
+            this._createCustomView(arch);
+        } else {
+            this._editCustomView(arch);
+        }
+    },
+
+    _editCustomView: function (arch) {
+        this._rpc({
+            route: '/web/view/edit_custom',
+            params: {
+                custom_id: this.customViewID,
+                arch: arch,
+            }
+        }).then(dataManager.invalidate.bind(dataManager));
+    },
+
+    _createCustomView: function (arch) {
+        var boardController = this;
+
+        this._rpc({
+            route: 'web/view/create_custom',
+            params: {
+                view_id: this.viewID,
+                arch: arch,
+            }
+        }).then(function(args) {
+            boardController.customViewID = args.id;
+            dataManager.invalidate.bind(dataManager);
+        });
     },
 
     //--------------------------------------------------------------------------
@@ -438,6 +462,7 @@ var BoardView = FormView.extend({
     init: function (viewInfo) {
         this._super.apply(this, arguments);
         this.controllerParams.customViewID = viewInfo.custom_view_id;
+        this.controllerParams.viewID = viewInfo.view_id;
     },
 });
 
