@@ -381,11 +381,15 @@ models.PosModel = models.PosModel.extend({
 var _super_paymentline = models.Paymentline.prototype;
 models.Paymentline = models.Paymentline.extend({
     /**
-     * Override this method to be able to show the tip screen which allow
+     * Override this method to be able to show the 'Adjust Authorisation' button
+     * on a validated payment_line and to show the tip screen which allow
      * tipping even after payment. By default, this returns true for all
      * non-cash payment.
      */
-    canBeTipped: function() {
+    canBeAdjusted: function() {
+        if (this.payment_method.payment_terminal) {
+            return this.payment_method.payment_terminal.canBeAdjusted(this.cid);
+        }
         return !this.payment_method.is_cash_count;
     },
 });

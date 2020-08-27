@@ -73,6 +73,13 @@ odoo.define('pos_restaurant.TicketScreen', function (require) {
             }
             async setTip(order, serverId, amount) {
                 try {
+                    const paymentline = order.get_paymentlines()[0];
+                    if (paymentline.payment_method.payment_terminal) {
+                        paymentline.amount += amount;
+                        this.env.pos.set_order(order, {silent: true});
+                        await paymentline.payment_method.payment_terminal.send_payment_adjust(paymentline.cid);
+                    }
+
                     if (!amount) {
                         await this.setNoTip();
                     } else {

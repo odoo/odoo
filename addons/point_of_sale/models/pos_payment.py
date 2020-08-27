@@ -25,6 +25,7 @@ class PosPayment(models.Model):
     session_id = fields.Many2one('pos.session', string='Session', related='pos_order_id.session_id', store=True)
     company_id = fields.Many2one('res.company', string='Company', related='pos_order_id.company_id')
     card_type = fields.Char('Type of card used')
+    cardholder_name = fields.Char('Cardholder Name')
     transaction_id = fields.Char('Payment Transaction ID')
     payment_status = fields.Char('Payment Status')
     ticket = fields.Char('Payment Receipt Info')
@@ -46,6 +47,7 @@ class PosPayment(models.Model):
             'amount': payment.amount,
             'payment_status': payment.payment_status,
             'card_type': payment.card_type,
+            'cardholder_name': payment.cardholder_name,
             'transaction_id': payment.transaction_id,
             'ticket': payment.ticket,
             'is_change': payment.is_change,

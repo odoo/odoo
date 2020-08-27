@@ -220,6 +220,9 @@ odoo.define('point_of_sale.tests.PaymentScreen', function (require) {
                 this.payment_status = 'pending';
                 this.can_be_reversed = false;
             }
+            canBeAdjusted() {
+                return false;
+            }
             setPaymentStatus(status) {
                 this.payment_status = status;
                 this.trigger('change');

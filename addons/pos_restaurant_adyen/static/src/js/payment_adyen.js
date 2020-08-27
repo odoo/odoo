@@ -8,21 +8,41 @@ odoo.define('pos_restaurant_adyen.payment', function (require) {
         _adyen_pay_data: function () {
             var data = this._super();
 
-            if (this.pos.config.set_tip_after_payment) {
+            if (data.SaleToPOIRequest.PaymentRequest.SaleData.SaleToAcquirerData) {
+                data.SaleToPOIRequest.PaymentRequest.SaleData.SaleToAcquirerData += "&authorisationType=PreAuth";
+            } else {
                 data.SaleToPOIRequest.PaymentRequest.SaleData.SaleToAcquirerData = "authorisationType=PreAuth";
             }
     
             return data;
         },
-    });
 
-    var paymentline_super = models.Paymentline.prototype;
-    models.Paymentline = models.Paymentline.extend({
-        canBeTipped: function () {
-            if (this.payment_method.use_payment_terminal === 'adyen') {
-                return ['mc', 'visa', 'amex', 'discover'].includes(this.card_type);
-            }
-            return paymentline_super.canBeTipped.apply(this);
+        send_payment_adjust: function (cid) {
+            var order = this.pos.get_order();
+            var line = order.get_paymentline(cid);
+            var data = {
+                originalReference: line.transaction_id,
+                modificationAmount: {
+                    value: parseInt(line.amount * Math.pow(10, this.pos.currency.decimals)),
+                    currency: this.pos.currency.name,
+                },
+                merchantAccount: this.payment_method.adyen_merchant_account,
+                additionalData: {
+                    industryUsage: 'DelayedCharge',
+                },
+            };
+
+            return this._call_adyen(
+                data,
+                'https://pal-test.adyen.com/pal/servlet/Payment/v52/adjustAuthorisation',
+                'https://pal-live.adyen.com/pal/servlet/Payment/v52/adjustAuthorisation',
+            );
         },
+
+        canBeAdjusted: function (cid) {
+            var order = this.pos.get_order();
+            var line = order.get_paymentline(cid);
+            return ['mc', 'visa', 'amex', 'discover'].includes(line.card_type);
+        }
     });
 });
