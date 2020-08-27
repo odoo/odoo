@@ -2212,12 +2212,6 @@ class IrModelData(models.Model):
             if record.exists():
                 module = xmlid.split('.', 1)[0]
                 record = record.with_context(module=module)
-                if record._name == 'ir.model.fields' and not module.startswith('test_'):
-                    _logger.warning(
-                        "Deleting field %s.%s (hint: fields should be"
-                        " explicitly removed by an upgrade script)",
-                        record.model, record.name,
-                    )
                 record.unlink()
             else:
                 bad_imd_ids.append(id)
