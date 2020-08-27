@@ -631,75 +631,6 @@ class TestReconciliationExec(TestAccountReconciliationCommon):
 
         self.assertTrue(receivable_line.matched_debit_ids)
 
-    def test_reconciliation_revert_future(self):
-        company = self.company
-        company.tax_cash_basis_journal_id = self.cash_basis_journal
-        tax_cash_basis10percent = self.tax_cash_basis.copy({'amount': 10})
-        self.tax_waiting_account.reconcile = True
-        tax_waiting_account10 = self.tax_waiting_account.copy({
-            'name': 'TAX WAIT 10',
-            'code': 'TWAIT1',
-        })
-
-        AccountMoveLine = self.env['account.move.line'].with_context(check_move_validity=False)
-
-        # Purchase
-        purchase_move = self.env['account.move'].create({
-            'name': 'invoice',
-            'journal_id': self.purchase_journal.id,
-        })
-
-        purchase_payable_line0 = AccountMoveLine.create({
-            'account_id': self.account_rsa.id,
-            'credit': 175,
-            'move_id': purchase_move.id,
-        })
-
-        AccountMoveLine.create({
-            'name': 'expenseTaxed 10%',
-            'account_id': self.expense_account.id,
-            'debit': 50,
-            'move_id': purchase_move.id,
-            'tax_ids': [(4, tax_cash_basis10percent.id, False)],
-        })
-        tax_line0 = AccountMoveLine.create({
-            'name': 'TaxLine0',
-            'account_id': tax_waiting_account10.id,
-            'debit': 5,
-            'move_id': purchase_move.id,
-            'tax_repartition_line_id': tax_cash_basis10percent.invoice_repartition_line_ids.filtered(lambda x: x.repartition_type == 'tax').id,
-            'tax_base_amount': 50,
-        })
-        AccountMoveLine.create({
-            'name': 'expenseTaxed 20%',
-            'account_id': self.expense_account.id,
-            'debit': 100,
-            'move_id': purchase_move.id,
-            'tax_ids': [(4, self.tax_cash_basis.id, False)],
-        })
-        tax_line1 = AccountMoveLine.create({
-            'name': 'TaxLine1',
-            'account_id': self.tax_waiting_account.id,
-            'debit': 20,
-            'move_id': purchase_move.id,
-            'tax_repartition_line_id': self.tax_cash_basis.invoice_repartition_line_ids.filtered(lambda x: x.repartition_type == 'tax').id,
-            'tax_base_amount': 100,
-        })
-        purchase_move.action_post()
-
-        reverse_date = fields.Date.context_today(purchase_move) + timedelta(days=+7)
-        revertWidget = self.env['account.move.reversal'].create({
-            'move_ids': [(6, 0, [purchase_move.id])],
-            'date': reverse_date,
-            'reason': ['cancel'],
-        })
-        action = revertWidget.reverse_moves();
-        reverse_move = self.env['account.move'].search([('reversed_entry_id', '=', purchase_move.id)])
-        self.assertEqual(len(reverse_move), 1)
-        self.assertEqual(reverse_move.state, 'draft')
-        self.assertEqual(reverse_move.auto_post, True)
-        self.assertEqual(reverse_move.date, reverse_date)
-
     def test_reconciliation_with_currency(self):
         #reconciliation on an account having a foreign currency being
         #the same as the company one
@@ -829,7 +760,6 @@ class TestReconciliationExec(TestAccountReconciliationCommon):
                         |   202.59 (225.00)  INV 2  > Done in foreign
                         |   372.10 (413.25)  PAYMENT > Done in domestic (the 413.25 is virtual, non stored)
                         |    17.78  (19.75)  WriteOff > Done in domestic (the 19.75 is virtual, non stored)
-
         Reconciliation should be full
         Invoices should be marked as paid
         """
@@ -898,7 +828,6 @@ class TestReconciliationExec(TestAccountReconciliationCommon):
                         |   202.59 (225.00)  INV 2  > Done in foreign
                         |   372.10 (413.25)  PAYMENT > Done in domestic (the 413.25 is virtual, non stored)
                         |    83.31  (92.52)  WriteOff > Done in domestic (the 92.52 is virtual, non stored)
-
         Reconciliation should be full
         Invoices should be marked as paid
         """
@@ -976,7 +905,6 @@ class TestReconciliationExec(TestAccountReconciliationCommon):
                         |   250.00 (250.00)  INV 2  > Done in foreign
                         |   314.07 (314.07)  PAYMENT > Done in domestic (foreign non stored)
                         |    35.93  (60.93)  WriteOff > Done in domestic (foreign non stored). WriteOff is included in payment
-
         Reconciliation should be full, without exchange difference
         Invoices should be marked as paid
         """
@@ -1173,7 +1101,6 @@ class TestReconciliationExec(TestAccountReconciliationCommon):
                           |   5384.43 (5979.95)  PAYMENT > Done in domestic (foreign non stored)
                           |      0.05    (0.00)  WriteOff > Done in domestic (foreign non stored). WriteOff is included in payment,
                                                                 so, the amount in currency is irrelevant
-
         Reconciliation should be full, without exchange difference
         Invoices should be marked as paid
         """
