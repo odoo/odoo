@@ -391,8 +391,13 @@ class Channel(models.Model):
             author = self.env['res.partner'].browse(message_dict.get('author_id', False))
             if not author or author not in self.channel_partner_ids:
                 return _('restricted to channel members')
+<<<<<<< HEAD
             return True
         return super(Channel, self)._alias_check_contact(message, message_dict, alias)
+=======
+            return False
+        return super(Channel, self)._alias_get_error_message(message, message_dict, alias)
+>>>>>>> 0f51c39c0e0... temp
 
     def init(self):
         self._cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = %s', ('mail_channel_partner_seen_message_id_idx',))
