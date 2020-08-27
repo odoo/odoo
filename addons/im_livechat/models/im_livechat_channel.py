@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import ast
 import base64
 import random
 import re
 
-from odoo import api, fields, models, modules
+from odoo import api, fields, models, modules, _
+from odoo.osv import expression
 
 
 class ImLivechatChannel(models.Model):
@@ -99,7 +101,14 @@ class ImLivechatChannel(models.Model):
         """
         self.ensure_one()
         action = self.env['ir.actions.act_window'].for_xml_id('im_livechat', 'rating_rating_action_view_livechat_rating')
-        action['domain'] = [('parent_res_id', '=', self.id), ('parent_res_model', '=', 'im_livechat.channel')]
+        action['name'] = _('Ratings of %s') % (self.name,)
+        action_context = ast.literal_eval(action['context']) if action['context'] else {}
+        action_context.update(self._context)
+        action_context.pop('group_by', None)
+        action['context'] = action_context
+        action_domain = ast.literal_eval(action['domain']) if action['domain'] else []
+        action_domain = expression.AND([action_domain, [('parent_res_name', '=', self.name)]])
+        action['domain'] = action_domain
         return action
 
     # --------------------------
