@@ -65,14 +65,7 @@ class SaleOrder(models.Model):
     @api.depends('timesheet_ids', 'company_id.timesheet_encode_uom_id')
     def _compute_timesheet_total_duration(self):
         for sale_order in self:
-            duration_list = []
-            for timesheet in sale_order.timesheet_ids:
-                timesheet_uom = timesheet.product_uom_id or timesheet.company_id.project_time_mode_id
-                if timesheet_uom != sale_order.timesheet_encode_uom_id and timesheet_uom.category_id == sale_order.timesheet_encode_uom_id.category_id:
-                    duration_list.append(timesheet_uom._compute_quantity(timesheet.unit_amount, sale_order.timesheet_encode_uom_id))
-                else:
-                    duration_list.append(timesheet.unit_amount)
-            sale_order.timesheet_total_duration = sum(duration_list)
+            sale_order.timesheet_total_duration = sum(sale_order.timesheet_ids.mapped('unit_amount'))
 
     @api.onchange('project_id')
     def _onchange_project_id(self):
