@@ -45,80 +45,76 @@
         </we-title>
     </div>
 
-    <we-collapse>
-        <t t-set="filter_label">Filter</t>
-        <we-select t-att-string="indent and (' ⌙ %s' % filter_label) or filter_label">
-            <we-button data-gl-filter="">None</we-button>
-            <we-button data-gl-filter="blur">Blur</we-button>
-            <we-button data-gl-filter="1977">1977</we-button>
-            <we-button data-gl-filter="aden">Aden</we-button>
-            <we-button data-gl-filter="brannan">Brannan</we-button>
-            <we-button data-gl-filter="earlybird">EarlyBird</we-button>
-            <we-button data-gl-filter="inkwell">Inkwell</we-button>
-            <we-button data-gl-filter="maven">Maven</we-button>
-            <we-button data-gl-filter="toaster">Toaster</we-button>
-            <we-button data-gl-filter="walden">Walden</we-button>
-            <we-button data-gl-filter="valencia">Valencia</we-button>
-            <we-button data-gl-filter="xpro">Xpro</we-button>
-            <we-button data-gl-filter="custom" data-name="custom_glfilter_opt">Custom</we-button>
+    <t t-set="filter_label">Filter</t>
+    <we-select t-att-string="indent and (' ⌙ %s' % filter_label) or filter_label">
+        <we-button data-gl-filter="">None</we-button>
+        <we-button data-gl-filter="blur">Blur</we-button>
+        <we-button data-gl-filter="1977">1977</we-button>
+        <we-button data-gl-filter="aden">Aden</we-button>
+        <we-button data-gl-filter="brannan">Brannan</we-button>
+        <we-button data-gl-filter="earlybird">EarlyBird</we-button>
+        <we-button data-gl-filter="inkwell">Inkwell</we-button>
+        <we-button data-gl-filter="maven">Maven</we-button>
+        <we-button data-gl-filter="toaster">Toaster</we-button>
+        <we-button data-gl-filter="walden">Walden</we-button>
+        <we-button data-gl-filter="valencia">Valencia</we-button>
+        <we-button data-gl-filter="xpro">Xpro</we-button>
+        <we-button data-gl-filter="custom" data-name="custom_glfilter_opt">Custom</we-button>
+    </we-select>
+    <t t-set="color_label">Color</t>
+    <t t-set="saturation_label">Saturation</t>
+    <t t-set="contrast_label">Contrast</t>
+    <t t-set="brightness_label">Brightness</t>
+    <t t-set="sepia_label">Sepia</t>
+    <t t-set="blur_label">Blur</t>
+    <we-row t-att-string="indent and ('  ⌙ %s' % color_label) or ('⌙ %s' % color_label)">
+        <we-select data-filter-property="blend" data-dependencies="custom_glfilter_opt">
+            <we-button data-custom-filter="normal">Normal</we-button>
+            <we-button data-custom-filter="overlay">overlay</we-button>
+            <we-button data-custom-filter="screen">screen</we-button>
+            <we-button data-custom-filter="multiply">multiply</we-button>
+            <we-button data-custom-filter="lighter">add</we-button>
+            <we-button data-custom-filter="exclusion">exclusion</we-button>
+            <we-button data-custom-filter="darken">darken</we-button>
+            <we-button data-custom-filter="lighten">lighten</we-button>
         </we-select>
-        <t t-set="color_label">Color</t>
-        <t t-set="saturation_label">Saturation</t>
-        <t t-set="contrast_label">Contrast</t>
-        <t t-set="brightness_label">Brightness</t>
-        <t t-set="sepia_label">Sepia</t>
-        <t t-set="blur_label">Blur</t>
-        <we-row t-att-string="indent and ('  ⌙ %s' % color_label) or ('⌙ %s' % color_label)">
-            <we-select data-filter-property="blend" data-dependencies="custom_glfilter_opt">
-                <we-button data-custom-filter="normal">Normal</we-button>
-                <we-button data-custom-filter="overlay">overlay</we-button>
-                <we-button data-custom-filter="screen">screen</we-button>
-                <we-button data-custom-filter="multiply">multiply</we-button>
-                <we-button data-custom-filter="lighter">add</we-button>
-                <we-button data-custom-filter="exclusion">exclusion</we-button>
-                <we-button data-custom-filter="darken">darken</we-button>
-                <we-button data-custom-filter="lighten">lighten</we-button>
-            </we-select>
-            <we-colorpicker data-dependencies="custom_glfilter_opt" data-custom-filter="" data-filter-property="filterColor" data-excluded="common, theme"/>
-        </we-row>
-        <we-range t-att-string="indent and ('  ⌙ %s' % saturation_label) or ('⌙ %s' % saturation_label)"
-                data-dependencies="custom_glfilter_opt"
-                data-custom-filter=""
-                data-filter-property="saturation"
-                data-min="-100"
-                data-step="10"/>
-        <we-range t-att-string="indent and ('  ⌙ %s' % contrast_label) or ('⌙ %s' % contrast_label)"
-                data-dependencies="custom_glfilter_opt"
-                data-custom-filter=""
-                data-filter-property="contrast"
-                data-min="-100"
-                data-step="10"/>
-        <we-range t-att-string="indent and ('  ⌙ %s' % brightness_label) or ('⌙ %s' % brightness_label)"
-                data-dependencies="custom_glfilter_opt"
-                data-custom-filter=""
-                data-filter-property="brightness"
-                data-min="-100"
-                data-step="10"/>
-        <we-range t-att-string="indent and ('  ⌙ %s' % sepia_label) or ('⌙ %s' % sepia_label)"
-                data-dependencies="custom_glfilter_opt"
-                data-custom-filter=""
-                data-filter-property="sepia"
-                data-step="5"/>
-        <we-range t-att-string="indent and ('  ⌙ %s' % blur_label) or ('⌙ %s' % blur_label)"
-                data-dependencies="custom_glfilter_opt"
-                data-custom-filter=""
-                data-filter-property="blur"
-                data-max="2000"
-                data-step="100"/>
-    </we-collapse>
+        <we-colorpicker data-dependencies="custom_glfilter_opt" data-custom-filter="" data-filter-property="filterColor" data-excluded="common, theme"/>
+    </we-row>
+    <we-range t-att-string="indent and ('  ⌙ %s' % saturation_label) or ('⌙ %s' % saturation_label)"
+            data-dependencies="custom_glfilter_opt"
+            data-custom-filter=""
+            data-filter-property="saturation"
+            data-min="-100"
+            data-step="10"/>
+    <we-range t-att-string="indent and ('  ⌙ %s' % contrast_label) or ('⌙ %s' % contrast_label)"
+            data-dependencies="custom_glfilter_opt"
+            data-custom-filter=""
+            data-filter-property="contrast"
+            data-min="-100"
+            data-step="10"/>
+    <we-range t-att-string="indent and ('  ⌙ %s' % brightness_label) or ('⌙ %s' % brightness_label)"
+            data-dependencies="custom_glfilter_opt"
+            data-custom-filter=""
+            data-filter-property="brightness"
+            data-min="-100"
+            data-step="10"/>
+    <we-range t-att-string="indent and ('  ⌙ %s' % sepia_label) or ('⌙ %s' % sepia_label)"
+            data-dependencies="custom_glfilter_opt"
+            data-custom-filter=""
+            data-filter-property="sepia"
+            data-step="5"/>
+    <we-range t-att-string="indent and ('  ⌙ %s' % blur_label) or ('⌙ %s' % blur_label)"
+            data-dependencies="custom_glfilter_opt"
+            data-custom-filter=""
+            data-filter-property="blur"
+            data-max="2000"
+            data-step="100"/>
 
-    <we-collapse>
-        <t t-set="width_label">Width</t>
-        <we-select t-att-string="indent and (' ⌙ %s' % width_label) or width_label" data-name="width_select_opt"/>
+    <t t-set="width_label">Width</t>
+    <we-select t-att-string="indent and (' ⌙ %s' % width_label) or width_label" data-name="width_select_opt"/>
 
-        <t t-set="quality_label">Quality</t>
-        <we-range t-att-string="indent and (' ⌙ %s' % quality_label) or quality_label" data-set-quality=""/>
-    </we-collapse>
+    <t t-set="quality_label">Quality</t>
+    <we-range t-att-string="indent and (' ⌙ %s' % quality_label) or quality_label" data-set-quality=""/>
 
     <div class="o_we_image_weight d-none"><small/><b/></div>
 </template>
@@ -180,22 +176,20 @@
              t-att-data-selector="selector"
              t-att-data-exclude="exclude"
              t-att-data-target="target">
-            <we-collapse>
-                <we-row string=" ⌙ Position"><!-- &emsp; -->
-                    <we-select data-no-preview="true">
-                        <we-button data-background-type="cover">Cover</we-button>
-                        <we-button data-background-type="repeat-pattern" data-name="background_repeat_opt">Repeat pattern</we-button>
-                    </we-select>
-                    <we-button title="Background Position" data-background-position-overlay="true" data-no-preview="true">
-                        <i class="fa fa-fw fa-crosshairs"/>
-                    </we-button>
-                </we-row>
-                <we-multi data-css-property="background-size" data-dependencies="background_repeat_opt">
-                    <!-- &emsp; -->
-                    <we-input string="  ⌙ Width" data-select-style="auto" placeholder="auto" data-unit="px"/>
-                    <we-input string="  ⌙ Height" data-select-style="auto" placeholder="auto" data-unit="px"/>
-                </we-multi>
-            </we-collapse>
+            <we-row string=" ⌙ Position"><!-- &emsp; -->
+                <we-select data-no-preview="true">
+                    <we-button data-background-type="cover">Cover</we-button>
+                    <we-button data-background-type="repeat-pattern" data-name="background_repeat_opt">Repeat pattern</we-button>
+                </we-select>
+                <we-button title="Background Position" data-background-position-overlay="true" data-no-preview="true">
+                    <i class="fa fa-fw fa-crosshairs"/>
+                </we-button>
+            </we-row>
+            <we-multi data-css-property="background-size" data-dependencies="background_repeat_opt">
+                <!-- &emsp; -->
+                <we-input string="  ⌙ Width" data-select-style="auto" placeholder="auto" data-unit="px"/>
+                <we-input string="  ⌙ Height" data-select-style="auto" placeholder="auto" data-unit="px"/>
+            </we-multi>
         </div>
 
         <div data-js="BackgroundOptimize"
@@ -223,129 +217,127 @@
              t-att-data-selector="selector"
              t-att-data-exclude="exclude"
              t-att-data-target="target">
-            <we-collapse>
-                <we-select-pager class="o_we_shape_menu" string="⌙ Shape" data-dependencies="!shape_none_opt" data-name="bg_shape_opt">
-                    <!-- Invisible None button to be used for select's placeholder text -->
-                    <we-button data-shape="" data-name="shape_none_opt"/>
-                    <we-select-page string="Origins">
-                        <we-button data-shape="web_editor/Origins/01" data-select-label="Origins 01"/>
-                        <we-button data-shape="web_editor/Origins/02" data-select-label="Origins 02"/>
-                        <we-button data-shape="web_editor/Origins/03" data-select-label="Origins 03"/>
-                        <we-button data-shape="web_editor/Origins/04" data-select-label="Origins 04"/>
-                        <we-button data-shape="web_editor/Origins/05" data-select-label="Origins 05"/>
-                        <we-button data-shape="web_editor/Origins/06" data-select-label="Origins 06"/>
-                        <we-button data-shape="web_editor/Origins/07" data-select-label="Origins 07"/>
-                        <we-button data-shape="web_editor/Origins/08" data-select-label="Origins 08"/>
-                        <we-button data-shape="web_editor/Origins/09" data-select-label="Origins 09"/>
-                        <we-button data-shape="web_editor/Origins/10" data-select-label="Origins 10"/>
-                        <we-button data-shape="web_editor/Origins/11" data-select-label="Origins 11"/>
-                        <we-button data-shape="web_editor/Origins/12" data-select-label="Origins 12"/>
-                        <we-button data-shape="web_editor/Origins/13" data-select-label="Origins 13"/>
-                        <we-button data-shape="web_editor/Origins/14" data-select-label="Origins 14"/>
-                        <we-button data-shape="web_editor/Origins/15" data-select-label="Origins 15"/>
-                    </we-select-page>
-                    <we-select-page string="Blocks">
-                        <we-button data-shape="web_editor/Blocks/01" data-select-label="Blocks 01"/>
-                        <we-button data-shape="web_editor/Blocks/02" data-select-label="Blocks 02"/>
-                        <we-button data-shape="web_editor/Blocks/03" data-select-label="Blocks 03"/>
-                        <we-button data-shape="web_editor/Blocks/04" data-select-label="Blocks 04"/>
-                    </we-select-page>
-                    <we-select-page string="Wavy">
-                        <we-button data-shape="web_editor/Wavy/01" data-select-label="Wavy 01"/>
-                        <we-button data-shape="web_editor/Wavy/02" data-select-label="Wavy 02"/>
-                        <we-button data-shape="web_editor/Wavy/03" data-select-label="Wavy 03"/>
-                        <we-button data-shape="web_editor/Wavy/04" data-select-label="Wavy 04"/>
-                        <we-button data-shape="web_editor/Wavy/05" data-select-label="Wavy 05"/>
-                        <we-button data-shape="web_editor/Wavy/06" data-select-label="Wavy 06"/>
-                        <we-button data-shape="web_editor/Wavy/07" data-select-label="Wavy 07"/>
-                        <we-button data-shape="web_editor/Wavy/08" data-select-label="Wavy 08"/>
-                        <we-button data-shape="web_editor/Wavy/09" data-select-label="Wavy 09"/>
-                        <we-button data-shape="web_editor/Wavy/10" data-select-label="Wavy 10"/>
-                        <we-button data-shape="web_editor/Wavy/11" data-select-label="Wavy 11"/>
-                        <we-button data-shape="web_editor/Wavy/12" data-select-label="Wavy 12"/>
-                        <we-button data-shape="web_editor/Wavy/13" data-select-label="Wavy 13"/>
-                        <we-button data-shape="web_editor/Wavy/14" data-select-label="Wavy 14"/>
-                        <we-button data-shape="web_editor/Wavy/15" data-select-label="Wavy 15"/>
-                        <we-button data-shape="web_editor/Wavy/16" data-select-label="Wavy 16"/>
-                        <we-button data-shape="web_editor/Wavy/17" data-select-label="Wavy 17"/>
-                        <we-button data-shape="web_editor/Wavy/18" data-select-label="Wavy 18"/>
-                        <we-button data-shape="web_editor/Wavy/19" data-select-label="Wavy 19"/>
-                        <we-button data-shape="web_editor/Wavy/20" data-select-label="Wavy 20"/>
-                        <we-button data-shape="web_editor/Wavy/21" data-select-label="Wavy 21"/>
-                        <we-button data-shape="web_editor/Wavy/22" data-select-label="Wavy 22"/>
-                        <we-button data-shape="web_editor/Wavy/23" data-select-label="Wavy 23"/>
-                    </we-select-page>
-                    <we-select-page string="Blobs">
-                        <we-button data-shape="web_editor/Blobs/01" data-select-label="Blobs 01"/>
-                        <we-button data-shape="web_editor/Blobs/02" data-select-label="Blobs 02"/>
-                        <we-button data-shape="web_editor/Blobs/03" data-select-label="Blobs 03"/>
-                        <we-button data-shape="web_editor/Blobs/04" data-select-label="Blobs 04"/>
-                        <we-button data-shape="web_editor/Blobs/05" data-select-label="Blobs 05"/>
-                        <we-button data-shape="web_editor/Blobs/06" data-select-label="Blobs 06"/>
-                        <we-button data-shape="web_editor/Blobs/07" data-select-label="Blobs 07"/>
-                        <we-button data-shape="web_editor/Blobs/08" data-select-label="Blobs 08"/>
-                        <we-button data-shape="web_editor/Blobs/09" data-select-label="Blobs 09"/>
-                        <we-button data-shape="web_editor/Blobs/10" data-select-label="Blobs 10"/>
-                        <we-button data-shape="web_editor/Blobs/11" data-select-label="Blobs 11"/>
-                        <we-button data-shape="web_editor/Blobs/12" data-select-label="Blobs 12"/>
-                    </we-select-page>
-                    <we-select-page string="Rainy">
-                        <we-button data-shape="web_editor/Rainy/01" data-select-label="Rainy 01"/>
-                        <we-button data-shape="web_editor/Rainy/02" data-select-label="Rainy 02"/>
-                        <we-button data-shape="web_editor/Rainy/03" data-select-label="Rainy 03"/>
-                        <we-button data-shape="web_editor/Rainy/04" data-select-label="Rainy 04"/>
-                        <we-button data-shape="web_editor/Rainy/05" data-select-label="Rainy 05"/>
-                        <we-button data-shape="web_editor/Rainy/06" data-select-label="Rainy 06"/>
-                        <we-button data-shape="web_editor/Rainy/07" data-select-label="Rainy 07"/>
-                        <we-button data-shape="web_editor/Rainy/08" data-select-label="Rainy 08"/>
-                        <we-button data-shape="web_editor/Rainy/09" data-select-label="Rainy 09"/>
-                    </we-select-page>
-                    <we-select-page string="Zigs">
-                        <we-button data-shape="web_editor/Zigs/01" data-select-label="Zigs 01"/>
-                        <we-button data-shape="web_editor/Zigs/02" data-select-label="Zigs 02"/>
-                        <we-button data-shape="web_editor/Zigs/03" data-select-label="Zigs 03"/>
-                        <we-button data-shape="web_editor/Zigs/04" data-select-label="Zigs 04"/>
-                        <we-button data-shape="web_editor/Zigs/05" data-select-label="Zigs 05"/>
-                    </we-select-page>
-                    <we-select-page string="Bold">
-                        <we-button data-shape="web_editor/Bold/01" data-select-label="Bold 01"/>
-                        <we-button data-shape="web_editor/Bold/02" data-select-label="Bold 02"/>
-                        <we-button data-shape="web_editor/Bold/03" data-select-label="Bold 03"/>
-                        <we-button data-shape="web_editor/Bold/04" data-select-label="Bold 04"/>
-                        <we-button data-shape="web_editor/Bold/05" data-select-label="Bold 05"/>
-                        <we-button data-shape="web_editor/Bold/06" data-select-label="Bold 06"/>
-                        <we-button data-shape="web_editor/Bold/07" data-select-label="Bold 07"/>
-                        <we-button data-shape="web_editor/Bold/08" data-select-label="Bold 08"/>
-                        <we-button data-shape="web_editor/Bold/09" data-select-label="Bold 09"/>
-                        <we-button data-shape="web_editor/Bold/10" data-select-label="Bold 10"/>
-                        <we-button data-shape="web_editor/Bold/11" data-select-label="Bold 11"/>
-                        <we-button data-shape="web_editor/Bold/12" data-select-label="Bold 12"/>
-                    </we-select-page>
-                    <we-select-page string="Airy">
-                        <we-button data-shape="web_editor/Airy/01" data-select-label="Airy 01"/>
-                        <we-button data-shape="web_editor/Airy/02" data-select-label="Airy 02"/>
-                        <we-button data-shape="web_editor/Airy/03" data-select-label="Airy 03"/>
-                        <we-button data-shape="web_editor/Airy/04" data-select-label="Airy 04"/>
-                        <we-button data-shape="web_editor/Airy/05" data-select-label="Airy 05"/>
-                        <we-button data-shape="web_editor/Airy/06" data-select-label="Airy 06"/>
-                        <we-button data-shape="web_editor/Airy/07" data-select-label="Airy 07"/>
-                        <we-button data-shape="web_editor/Airy/08" data-select-label="Airy 08"/>
-                        <we-button data-shape="web_editor/Airy/09" data-select-label="Airy 09"/>
-                        <we-button data-shape="web_editor/Airy/10" data-select-label="Airy 10"/>
-                        <we-button data-shape="web_editor/Airy/11" data-select-label="Airy 11"/>
-                        <we-button data-shape="web_editor/Airy/12" data-select-label="Airy 12"/>
-                        <we-button data-shape="web_editor/Airy/13" data-select-label="Airy 13"/>
-                        <we-button data-shape="web_editor/Airy/14" data-select-label="Airy 14"/>
-                    </we-select-page>
-                </we-select-pager>
-                <we-row string=" ⌙ Flip"><!-- &emsp; -->
-                    <we-button data-flip-x="true" data-no-preview="true" data-dependencies="!shape_none_opt"><i class="fa fa-fw fa-arrows-h"/></we-button>
-                    <we-button data-flip-y="true" data-no-preview="true" data-dependencies="!shape_none_opt"><i class="fa fa-fw fa-arrows-v"/></we-button>
-                </we-row>
-                <we-row string=" ⌙ Colors" data-name="colors">
-                    <we-colorpicker data-select-style="" data-css-property="background-color" data-color-prefix="bg-" data-apply-to=".o_we_shape"/>
-                </we-row>
-            </we-collapse>
+            <we-select-pager class="o_we_shape_menu" string="⌙ Shape" data-dependencies="!shape_none_opt" data-name="bg_shape_opt">
+                <!-- Invisible None button to be used for select's placeholder text -->
+                <we-button data-shape="" data-name="shape_none_opt"/>
+                <we-select-page string="Origins">
+                    <we-button data-shape="web_editor/Origins/01" data-select-label="Origins 01"/>
+                    <we-button data-shape="web_editor/Origins/02" data-select-label="Origins 02"/>
+                    <we-button data-shape="web_editor/Origins/03" data-select-label="Origins 03"/>
+                    <we-button data-shape="web_editor/Origins/04" data-select-label="Origins 04"/>
+                    <we-button data-shape="web_editor/Origins/05" data-select-label="Origins 05"/>
+                    <we-button data-shape="web_editor/Origins/06" data-select-label="Origins 06"/>
+                    <we-button data-shape="web_editor/Origins/07" data-select-label="Origins 07"/>
+                    <we-button data-shape="web_editor/Origins/08" data-select-label="Origins 08"/>
+                    <we-button data-shape="web_editor/Origins/09" data-select-label="Origins 09"/>
+                    <we-button data-shape="web_editor/Origins/10" data-select-label="Origins 10"/>
+                    <we-button data-shape="web_editor/Origins/11" data-select-label="Origins 11"/>
+                    <we-button data-shape="web_editor/Origins/12" data-select-label="Origins 12"/>
+                    <we-button data-shape="web_editor/Origins/13" data-select-label="Origins 13"/>
+                    <we-button data-shape="web_editor/Origins/14" data-select-label="Origins 14"/>
+                    <we-button data-shape="web_editor/Origins/15" data-select-label="Origins 15"/>
+                </we-select-page>
+                <we-select-page string="Blocks">
+                    <we-button data-shape="web_editor/Blocks/01" data-select-label="Blocks 01"/>
+                    <we-button data-shape="web_editor/Blocks/02" data-select-label="Blocks 02"/>
+                    <we-button data-shape="web_editor/Blocks/03" data-select-label="Blocks 03"/>
+                    <we-button data-shape="web_editor/Blocks/04" data-select-label="Blocks 04"/>
+                </we-select-page>
+                <we-select-page string="Wavy">
+                    <we-button data-shape="web_editor/Wavy/01" data-select-label="Wavy 01"/>
+                    <we-button data-shape="web_editor/Wavy/02" data-select-label="Wavy 02"/>
+                    <we-button data-shape="web_editor/Wavy/03" data-select-label="Wavy 03"/>
+                    <we-button data-shape="web_editor/Wavy/04" data-select-label="Wavy 04"/>
+                    <we-button data-shape="web_editor/Wavy/05" data-select-label="Wavy 05"/>
+                    <we-button data-shape="web_editor/Wavy/06" data-select-label="Wavy 06"/>
+                    <we-button data-shape="web_editor/Wavy/07" data-select-label="Wavy 07"/>
+                    <we-button data-shape="web_editor/Wavy/08" data-select-label="Wavy 08"/>
+                    <we-button data-shape="web_editor/Wavy/09" data-select-label="Wavy 09"/>
+                    <we-button data-shape="web_editor/Wavy/10" data-select-label="Wavy 10"/>
+                    <we-button data-shape="web_editor/Wavy/11" data-select-label="Wavy 11"/>
+                    <we-button data-shape="web_editor/Wavy/12" data-select-label="Wavy 12"/>
+                    <we-button data-shape="web_editor/Wavy/13" data-select-label="Wavy 13"/>
+                    <we-button data-shape="web_editor/Wavy/14" data-select-label="Wavy 14"/>
+                    <we-button data-shape="web_editor/Wavy/15" data-select-label="Wavy 15"/>
+                    <we-button data-shape="web_editor/Wavy/16" data-select-label="Wavy 16"/>
+                    <we-button data-shape="web_editor/Wavy/17" data-select-label="Wavy 17"/>
+                    <we-button data-shape="web_editor/Wavy/18" data-select-label="Wavy 18"/>
+                    <we-button data-shape="web_editor/Wavy/19" data-select-label="Wavy 19"/>
+                    <we-button data-shape="web_editor/Wavy/20" data-select-label="Wavy 20"/>
+                    <we-button data-shape="web_editor/Wavy/21" data-select-label="Wavy 21"/>
+                    <we-button data-shape="web_editor/Wavy/22" data-select-label="Wavy 22"/>
+                    <we-button data-shape="web_editor/Wavy/23" data-select-label="Wavy 23"/>
+                </we-select-page>
+                <we-select-page string="Blobs">
+                    <we-button data-shape="web_editor/Blobs/01" data-select-label="Blobs 01"/>
+                    <we-button data-shape="web_editor/Blobs/02" data-select-label="Blobs 02"/>
+                    <we-button data-shape="web_editor/Blobs/03" data-select-label="Blobs 03"/>
+                    <we-button data-shape="web_editor/Blobs/04" data-select-label="Blobs 04"/>
+                    <we-button data-shape="web_editor/Blobs/05" data-select-label="Blobs 05"/>
+                    <we-button data-shape="web_editor/Blobs/06" data-select-label="Blobs 06"/>
+                    <we-button data-shape="web_editor/Blobs/07" data-select-label="Blobs 07"/>
+                    <we-button data-shape="web_editor/Blobs/08" data-select-label="Blobs 08"/>
+                    <we-button data-shape="web_editor/Blobs/09" data-select-label="Blobs 09"/>
+                    <we-button data-shape="web_editor/Blobs/10" data-select-label="Blobs 10"/>
+                    <we-button data-shape="web_editor/Blobs/11" data-select-label="Blobs 11"/>
+                    <we-button data-shape="web_editor/Blobs/12" data-select-label="Blobs 12"/>
+                </we-select-page>
+                <we-select-page string="Rainy">
+                    <we-button data-shape="web_editor/Rainy/01" data-select-label="Rainy 01"/>
+                    <we-button data-shape="web_editor/Rainy/02" data-select-label="Rainy 02"/>
+                    <we-button data-shape="web_editor/Rainy/03" data-select-label="Rainy 03"/>
+                    <we-button data-shape="web_editor/Rainy/04" data-select-label="Rainy 04"/>
+                    <we-button data-shape="web_editor/Rainy/05" data-select-label="Rainy 05"/>
+                    <we-button data-shape="web_editor/Rainy/06" data-select-label="Rainy 06"/>
+                    <we-button data-shape="web_editor/Rainy/07" data-select-label="Rainy 07"/>
+                    <we-button data-shape="web_editor/Rainy/08" data-select-label="Rainy 08"/>
+                    <we-button data-shape="web_editor/Rainy/09" data-select-label="Rainy 09"/>
+                </we-select-page>
+                <we-select-page string="Zigs">
+                    <we-button data-shape="web_editor/Zigs/01" data-select-label="Zigs 01"/>
+                    <we-button data-shape="web_editor/Zigs/02" data-select-label="Zigs 02"/>
+                    <we-button data-shape="web_editor/Zigs/03" data-select-label="Zigs 03"/>
+                    <we-button data-shape="web_editor/Zigs/04" data-select-label="Zigs 04"/>
+                    <we-button data-shape="web_editor/Zigs/05" data-select-label="Zigs 05"/>
+                </we-select-page>
+                <we-select-page string="Bold">
+                    <we-button data-shape="web_editor/Bold/01" data-select-label="Bold 01"/>
+                    <we-button data-shape="web_editor/Bold/02" data-select-label="Bold 02"/>
+                    <we-button data-shape="web_editor/Bold/03" data-select-label="Bold 03"/>
+                    <we-button data-shape="web_editor/Bold/04" data-select-label="Bold 04"/>
+                    <we-button data-shape="web_editor/Bold/05" data-select-label="Bold 05"/>
+                    <we-button data-shape="web_editor/Bold/06" data-select-label="Bold 06"/>
+                    <we-button data-shape="web_editor/Bold/07" data-select-label="Bold 07"/>
+                    <we-button data-shape="web_editor/Bold/08" data-select-label="Bold 08"/>
+                    <we-button data-shape="web_editor/Bold/09" data-select-label="Bold 09"/>
+                    <we-button data-shape="web_editor/Bold/10" data-select-label="Bold 10"/>
+                    <we-button data-shape="web_editor/Bold/11" data-select-label="Bold 11"/>
+                    <we-button data-shape="web_editor/Bold/12" data-select-label="Bold 12"/>
+                </we-select-page>
+                <we-select-page string="Airy">
+                    <we-button data-shape="web_editor/Airy/01" data-select-label="Airy 01"/>
+                    <we-button data-shape="web_editor/Airy/02" data-select-label="Airy 02"/>
+                    <we-button data-shape="web_editor/Airy/03" data-select-label="Airy 03"/>
+                    <we-button data-shape="web_editor/Airy/04" data-select-label="Airy 04"/>
+                    <we-button data-shape="web_editor/Airy/05" data-select-label="Airy 05"/>
+                    <we-button data-shape="web_editor/Airy/06" data-select-label="Airy 06"/>
+                    <we-button data-shape="web_editor/Airy/07" data-select-label="Airy 07"/>
+                    <we-button data-shape="web_editor/Airy/08" data-select-label="Airy 08"/>
+                    <we-button data-shape="web_editor/Airy/09" data-select-label="Airy 09"/>
+                    <we-button data-shape="web_editor/Airy/10" data-select-label="Airy 10"/>
+                    <we-button data-shape="web_editor/Airy/11" data-select-label="Airy 11"/>
+                    <we-button data-shape="web_editor/Airy/12" data-select-label="Airy 12"/>
+                    <we-button data-shape="web_editor/Airy/13" data-select-label="Airy 13"/>
+                    <we-button data-shape="web_editor/Airy/14" data-select-label="Airy 14"/>
+                </we-select-page>
+            </we-select-pager>
+            <we-row string=" ⌙ Flip"><!-- &emsp; -->
+                <we-button data-flip-x="true" data-no-preview="true" data-dependencies="!shape_none_opt"><i class="fa fa-fw fa-arrows-h"/></we-button>
+                <we-button data-flip-y="true" data-no-preview="true" data-dependencies="!shape_none_opt"><i class="fa fa-fw fa-arrows-v"/></we-button>
+            </we-row>
+            <we-row string=" ⌙ Colors" data-name="colors">
+                <we-colorpicker data-select-style="" data-css-property="background-color" data-color-prefix="bg-" data-apply-to=".o_we_shape"/>
+            </we-row>
         </div>
     </t>
 </template>
