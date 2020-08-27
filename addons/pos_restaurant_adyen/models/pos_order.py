@@ -7,10 +7,10 @@ from odoo import models
 class PosOrder(models.Model):
     _inherit = 'pos.order'
 
-    def set_no_tip(self):
-        """Capture the Adyen payment when no tip is set."""
-        self.ensure_one()
-        payment_line = self.payment_ids.filtered(lambda line: not line.is_change)[0]
-        if payment_line.payment_method_id.use_payment_terminal == 'adyen':
-            payment_line._adyen_capture_tip()
-        return super(PosOrder, self).set_no_tip()
+    def action_pos_order_paid(self):
+        res = super(PosOrder, self).action_pos_order_paid()
+        if not self.config_id.set_tip_after_payment:
+            payment_lines = self.payment_ids.filtered(lambda line: line.payment_method_id.use_payment_terminal == 'adyen')
+            for payment_line in payment_lines:
+                payment_line._adyen_capture()
+        return res

@@ -75,6 +75,12 @@ odoo.define('pos_restaurant.TipScreen', function (require) {
             order.set_tip(amount);
             order.finalized = true;
 
+            const paymentline = this.env.pos.get_order().get_paymentlines()[0];
+            if (paymentline.payment_method.payment_terminal) {
+                paymentline.amount += amount;
+                await paymentline.payment_method.payment_terminal.send_payment_adjust(paymentline.cid);
+            }
+
             // set_tip calls add_product which sets the new line as the selected_orderline
             const tip_line = order.selected_orderline;
             await this.rpc({
