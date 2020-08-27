@@ -118,6 +118,9 @@ odoo.define('pos_restaurant.TicketScreen', function (require) {
                     args: [serverId],
                 });
             }
+            hideDeleteButton(order) {
+                return super.hideDeleteButton(order) || this.getStatus(order) === 'Tipping';
+            }
         };
 
     Registries.Component.extend(TicketScreen, PosResTicketScreen);
