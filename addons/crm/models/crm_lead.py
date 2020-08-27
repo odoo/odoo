@@ -635,6 +635,9 @@ class Lead(models.Model):
         # Do not assign to an archived user
         if not self.user_id.active:
             default['user_id'] = False
+        if not self.env.user.has_group('crm.group_use_recurring_revenues'):
+            default['recurring_revenue'] = 0
+            default['recurring_plan'] = False
         return super(Lead, self.with_context(context)).copy(default=default)
 
     @api.model
