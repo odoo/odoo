@@ -4,7 +4,7 @@ odoo.define('mail/static/src/models/message/message.js', function (require) {
 const emojis = require('mail.emojis');
 const { registerNewModel } = require('mail/static/src/model/model_core.js');
 const { attr, many2many, many2one, one2many } = require('mail/static/src/model/model_field.js');
-const { addLink, parseAndTransform } = require('mail.utils');
+const { addLink, htmlToTextContentInline, parseAndTransform } = require('mail.utils');
 
 const { str_to_datetime } = require('web.time');
 
@@ -353,6 +353,18 @@ function factory(dependencies) {
          * @private
          * @returns {boolean}
          */
+        _computeIsBodyEqualSubtypeDescription() {
+            if (!this.body || !this.subtype_description) {
+                return false;
+            }
+            const inlineBody = htmlToTextContentInline(this.body);
+            return inlineBody.toLowerCase() === this.subtype_description.toLowerCase();
+        }
+
+        /**
+         * @private
+         * @returns {boolean}
+         */
         _computeIsModeratedByCurrentPartner() {
             return (
                 this.moderation_status === 'pending_moderation' &&
@@ -478,6 +490,34 @@ function factory(dependencies) {
             dependencies: [
                 'author',
                 'messagingCurrentPartner',
+            ],
+        }),
+        /**
+         * States whether `body` and `subtype_description` contain similar
+         * values.
+         *
+         * This is necessary to avoid displaying both of them together when they
+         * contain duplicate information. This will especially happen with
+         * messages that are posted automatically at the creation of a record
+         * (messages that serve as tracking messages). They do have hard-coded
+         * "record created" body while being assigned a subtype with a
+         * description that states the same information.
+         *
+         * Fixing newer messages is possible by not assigning them a duplicate
+         * body content, but the check here is still necessary to handle
+         * existing messages.
+         *
+         * Limitations:
+         * - A translated subtype description might not match a non-translatable
+         *   body created by a user with a different language.
+         * - Their content might be mostly but not exactly the same.
+         */
+        isBodyEqualSubtypeDescription: attr({
+            compute: '_computeIsBodyEqualSubtypeDescription',
+            default: false,
+            dependencies: [
+                'body',
+                'subtype_description',
             ],
         }),
         isModeratedByCurrentPartner: attr({
