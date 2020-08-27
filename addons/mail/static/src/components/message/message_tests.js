@@ -108,7 +108,8 @@ QUnit.test('basic rendering', async function (assert) {
         1,
         "message should display the content"
     );
-    assert.strictEqual(messageEl.querySelector(`:scope .o_Message_content`).innerHTML,
+    assert.strictEqual(
+        messageEl.querySelector(`:scope .o_Message_content`).innerHTML,
         "<p>Test</p>",
         "message should display the correct content"
     );
@@ -735,6 +736,50 @@ QUnit.test('prevent attachment delete on non-authored message', async function (
         document.body,
         '.o_Attachment_asideItemUnlink',
         "delete attachment button should not be printed"
+    );
+});
+
+QUnit.test('subtype description should be displayed if it is different than body', async function (assert) {
+    assert.expect(2);
+
+    await this.start();
+    const message = this.env.models['mail.message'].create({
+        body: "<p>Hello</p>",
+        id: 100,
+        subtype_description: 'Bonjour',
+    });
+    await this.createMessageComponent(message);
+    assert.containsOnce(
+        document.body,
+        '.o_Message_content',
+        "message should have content"
+    );
+    assert.strictEqual(
+        document.querySelector(`.o_Message_content`).textContent,
+        "HelloBonjour",
+        "message content should display both body and subtype description when they are different"
+    );
+});
+
+QUnit.test('subtype description should not be displayed if it is similar to body', async function (assert) {
+    assert.expect(2);
+
+    await this.start();
+    const message = this.env.models['mail.message'].create({
+        body: "<p>Hello</p>",
+        id: 100,
+        subtype_description: 'hello',
+    });
+    await this.createMessageComponent(message);
+    assert.containsOnce(
+        document.body,
+        '.o_Message_content',
+        "message should have content"
+    );
+    assert.strictEqual(
+        document.querySelector(`.o_Message_content`).textContent,
+        "Hello",
+        "message content should display only body when subtype description is similar"
     );
 });
 
