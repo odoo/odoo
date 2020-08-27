@@ -71,9 +71,6 @@ class AccountMoveReversal(models.TransientModel):
             'auto_post': True if reverse_date > fields.Date.context_today(self) else False,
         }
 
-    def _reverse_moves_post_hook(self, moves):
-        return
-
     def reverse_moves(self):
         self.ensure_one()
         moves = self.move_ids
@@ -83,28 +80,31 @@ class AccountMoveReversal(models.TransientModel):
         for move in moves:
             default_values_list.append(self._prepare_default_reversal(move))
 
-        # Handle reverse method.
-        if self.refund_method == 'cancel':
-            if any(vals.get('auto_post', False) for vals in default_values_list):
-                new_moves = moves._reverse_moves(default_values_list)
-            else:
-                new_moves = moves._reverse_moves(default_values_list, cancel=True)
-        elif self.refund_method == 'modify':
-            moves._reverse_moves(default_values_list, cancel=True)
-            moves_vals_list = []
-            for move in moves.with_context(include_business_fields=True):
-                moves_vals_list.append(move.copy_data({
-                    'date': self.date if self.date_mode == 'custom' else move.date,
-                })[0])
-            new_moves = self.env['account.move'].create(moves_vals_list)
-        elif self.refund_method == 'refund':
-            new_moves = moves._reverse_moves(default_values_list)
-        else:
-            return
+        batches = [
+            [self.env['account.move'], [], True],   # Moves to be cancelled by the reverses.
+            [self.env['account.move'], [], False],  # Others.
+        ]
+        for move, default_vals in zip(moves, default_values_list):
+            is_auto_post = bool(default_vals.get('auto_post'))
+            is_cancel_needed = not is_auto_post and self.refund_method in ('cancel', 'modify')
+            batch_index = 0 if is_cancel_needed else 1
+            batches[batch_index][0] |= move
+            batches[batch_index][1].append(default_vals)
 
-        self.new_move_ids = new_moves
-        if new_moves:
-            self._reverse_moves_post_hook(new_moves)
+        # Handle reverse method.
+        moves_to_redirect = self.env['account.move']
+        for moves, default_values_list, is_cancel_needed in batches:
+            new_moves = moves._reverse_moves(default_values_list, cancel=is_cancel_needed)
+
+            if self.refund_method == 'modify':
+                moves_vals_list = []
+                for move in moves.with_context(include_business_fields=True):
+                    moves_vals_list.append(move.copy_data({'date': self.date if self.date_mode == 'custom' else move.date})[0])
+                new_moves = self.env['account.move'].create(moves_vals_list)
+
+            moves_to_redirect |= new_moves
+
+        self.new_move_ids = moves_to_redirect
 
         # Create action.
         action = {
@@ -112,14 +112,14 @@ class AccountMoveReversal(models.TransientModel):
             'type': 'ir.actions.act_window',
             'res_model': 'account.move',
         }
-        if len(new_moves) == 1:
+        if len(moves_to_redirect) == 1:
             action.update({
                 'view_mode': 'form',
-                'res_id': new_moves.id,
+                'res_id': moves_to_redirect.id,
             })
         else:
             action.update({
                 'view_mode': 'tree,form',
-                'domain': [('id', 'in', new_moves.ids)],
+                'domain': [('id', 'in', moves_to_redirect.ids)],
             })
         return action
