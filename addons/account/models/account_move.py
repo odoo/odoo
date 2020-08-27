@@ -6,6 +6,7 @@ from odoo.tools import float_compare, date_utils, email_split, email_re
 from odoo.tools.misc import formatLang, format_date, get_lang
 
 from datetime import date, timedelta
+from collections import defaultdict
 from itertools import zip_longest
 from hashlib import sha256
 from json import dumps
@@ -1004,20 +1005,70 @@ class AccountMove(models.Model):
             domain = [('company_id', '=', m.company_id.id), ('type', '=?', m.invoice_filter_type_domain)]
             m.suitable_journal_ids = self.env['account.journal'].search(domain)
 
-    @api.depends('posted_before', 'state', 'highest_name')
+    @api.depends('posted_before', 'state', 'journal_id', 'date')
     def _compute_name(self):
-        for record in self.sorted(lambda m: (m.date, m.ref or '', m.id)):
-            if record.name and not record.posted_before:
-                # Never been posted, but had a name set
-                record.name = '/'
-            if not record.name or record.name == '/':
-                if not record.posted_before and not record.highest_name:
-                    # First name of the period for the journal, no name yet
-                    record._set_next_sequence()
-                elif record.state == 'posted':
-                    # No name yet but has been posted
-                    record._set_next_sequence()
-            record.name = record.name or '/'
+        def journal_key(move):
+            return (move.journal_id, move.journal_id.refund_sequence and move.move_type)
+
+        def date_key(move):
+            return (move.date.year, move.date.month)
+
+        grouped = defaultdict(  # key: journal_id, move_type
+            lambda: defaultdict(  # key: first adjacent (date.year, date.month)
+                lambda: {
+                    'records': self.env['account.move'],
+                    'format': False,
+                    'format_values': False,
+                    'reset': False
+                }
+            )
+        )
+        highest_name = self[0]._get_last_sequence() if self else False
+
+        # Group the moves by journal and month
+        for move in self.sorted(lambda m: (m.date, m.ref or '', m.id)):
+            if not highest_name and move == self[0] and not move.posted_before:
+                # In the form view, we need to compute a default sequence so that the user can edit
+                # it. We only check the first move as an approximation (enough for new in form view)
+                pass
+            elif (move.name and move.name != '/') or move.state != 'posted':
+                # Has already a name or is not posted, we don't add to a batch
+                continue
+            if not grouped[journal_key(move)][date_key(move)]['records']:
+                # Compute all the values needed to sequence this whole group
+                move._set_next_sequence()
+                format, format_values = move._get_sequence_format_param(move.name)
+                reset = move._deduce_sequence_number_reset(move.name)
+                grouped[journal_key(move)][date_key(move)]['format'] = format
+                grouped[journal_key(move)][date_key(move)]['format_values'] = format_values
+                grouped[journal_key(move)][date_key(move)]['reset'] = reset
+            grouped[journal_key(move)][date_key(move)]['records'] += move
+
+        # Fusion the groups depending on the sequence reset and the format used because `seq` is
+        # the same counter for multiple groups that might be spread in multiple months.
+        final_batches = []
+        for journal_group in grouped.values():
+            for date_group in journal_group.values():
+                if not final_batches or final_batches[-1]['format'] != date_group['format']:
+                    final_batches += [date_group]
+                elif date_group['reset'] == 'never':
+                    final_batches[-1]['records'] += date_group['records']
+                elif (
+                    date_group['reset'] == 'year'
+                    and final_batches[-1]['records'][0].date.year == date_group['records'][0].date.year
+                ):
+                    final_batches[-1]['records'] += date_group['records']
+                else:
+                    final_batches += [date_group]
+
+        # Give the name based on previously computed values
+        for batch in final_batches:
+            for move in batch['records']:
+                move.name = batch['format'].format(**batch['format_values'])
+                batch['format_values']['seq'] += 1
+            batch['records']._compute_split_sequence()
+
+        self.filtered(lambda m: not m.name).name = '/'
 
     @api.depends('journal_id', 'date')
     def _compute_highest_name(self):
