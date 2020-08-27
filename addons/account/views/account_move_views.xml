@@ -867,7 +867,7 @@
                                                     'required': [('display_type', 'not in', ('line_section', 'line_note'))],
                                                     'invisible': [('display_type', 'in', ('line_section', 'line_note'))],
                                                }"
-                                               domain="[('company_id', '=', parent.company_id)]" />
+                                               domain="[('deprecated', '=', False), ('company_id', '=', parent.company_id)]" />
                                         <field name="partner_id"
                                                domain="['|', ('parent_id', '=', False), ('is_company', '=', True)]"
                                                attrs="{'column_invisible': [('parent.type', '!=', 'entry')]}"/>
