@@ -1262,7 +1262,8 @@ var FieldFloatToggle = AbstractField.extend({
 
         this.formatType = 'float_factor';
 
-        if (this.mode === 'edit') {
+        // force the button to work in readonly mode
+        if (this.mode === 'edit' || this.nodeOptions.force_button) {
             this.tagName = 'button';
         }
 
@@ -1352,8 +1353,9 @@ var FieldFloatToggle = AbstractField.extend({
      * @param {OdooEvent} ev
      */
     _onClick: function(ev) {
-        if (this.mode === 'edit') {
-            ev.stopPropagation(); // only stop propagation in edit mode
+        // force the button to work in readonly mode
+        if (this.mode === 'edit' || this.nodeOptions.force_button) {
+            ev.stopPropagation();
             var next_val = this._nextValue();
             next_val = field_utils.format['float'](next_val);
             this._setValue(next_val); // will be parsed in _setValue
