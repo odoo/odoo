@@ -14,11 +14,6 @@ class PosRestaurantAdyenController(AdyenController):
 
     @http.route()
     def adyen_notification(self, **post):
-        if post.get('eventCode') == 'AUTHORISATION_ADJUSTMENT':
-            ref = post.get('originalReference')
-            payment = request.env['pos.payment'].sudo().search([('transaction_id', '=', ref)], limit=1)
-            if payment and post.get('success') == 'true':
-                payment._adyen_capture_tip()
-            else:
-                _logger.warning('Authorisation adjustment for transaction_id %s failed', ref)
+        if post.get('eventCode') in ['CAPTURE', 'AUTHORISATION_ADJUSTMENT'] and post.get('success') != 'true':
+                _logger.warning('%s for transaction_id %s failed', post.get('eventCode'), post.get('originalReference'))
         return super(PosRestaurantAdyenController, self).adyen_notification(**post)
