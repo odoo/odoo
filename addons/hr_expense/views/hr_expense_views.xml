@@ -82,6 +82,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//tree" position="attributes">
                     <attribute name="js_class">hr_expense_tree_dashboard</attribute>
+                    <attribute name="class">hr_expense</attribute>
                 </xpath>
             </field>
         </record>
@@ -188,7 +189,7 @@
             <field name="name">hr.expense.kanban</field>
             <field name="model">hr.expense</field>
             <field name="arch" type="xml">
-                <kanban class="o_kanban_mobile" js_class="hr_expense_kanban" sample="1">
+                <kanban class="o_kanban_mobile hr_expense" js_class="hr_expense_kanban" sample="1">
                     <field name="name"/>
                     <field name="employee_id"/>
                     <field name="total_amount"/>
