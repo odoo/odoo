@@ -574,38 +574,6 @@ class MailThread(models.AbstractModel):
     def _track_template(self, changes):
         return dict()
 
-    @api.model
-    def static_message_track(self, record, tracked_fields, initial):
-        """ For a given record, fields to check (tuple column name, column info)
-        and initial values, return a structure that is a tuple containing :
-         - a set of updated column names
-         - a list of ORM (0, 0, values) commands to create 'mail.tracking.value'
-        This static method is usefull when you don't want to inherit from mail.thread but
-        you want to use '_message_track()' method.
-        """
-        record.ensure_one()
-        changes = set()  # contains onchange tracked fields that changed
-        tracking_value_ids = []
-
-        # generate tracked_values data structure: {'col_name': {col_info, new_value, old_value}}
-        for col_name, col_info in tracked_fields.items():
-            if col_name not in initial:
-                continue
-            initial_value = initial[col_name]
-            new_value = record[col_name]
-
-            if new_value != initial_value and (new_value or initial_value):  # because browse null != False
-                tracking_sequence = getattr(record._fields[col_name], 'tracking',
-                                            getattr(record._fields[col_name], 'track_sequence', 100))  # backward compatibility with old parameter name
-                if tracking_sequence is True:
-                    tracking_sequence = 100
-                tracking = record.env['mail.tracking.value'].create_tracking_values(initial_value, new_value, col_name, col_info, tracking_sequence, record._name)
-                if tracking:
-                    tracking_value_ids.append([0, 0, tracking])
-                changes.add(col_name)
-
-        return changes, tracking_value_ids
-
     def message_track(self, tracked_fields, initial_values):
         """ Track updated values. Comparing the initial and current values of
         the fields given in tracked_fields, it generates a message containing
@@ -624,7 +592,7 @@ class MailThread(models.AbstractModel):
         tracking = dict()
         for record in self:
             try:
-                tracking[record.id] = record._message_track(tracked_fields, initial_values[record.id])
+                tracking[record.id] = record._mail_track(tracked_fields, initial_values[record.id])
             except MissingError:
                 continue
 
@@ -647,13 +615,6 @@ class MailThread(models.AbstractModel):
                 record._message_log(tracking_value_ids=tracking_value_ids)
 
         return tracking
-
-    def _message_track(self, tracked_fields, initial):
-        """ For a given record, fields to check (tuple column name, column info)
-        and initial values, return a structure that is a tuple containing :
-         - a set of updated column names
-         - a list of ORM (0, 0, values) commands to create 'mail.tracking.value' """
-        return self.static_message_track(self, tracked_fields, initial)
 
     def _track_subtype(self, init_values):
         """ Give the subtypes triggered by the changes on the record according
@@ -835,13 +796,10 @@ class MailThread(models.AbstractModel):
                 obj = self.env[alias.alias_parent_model_id.model].browse(alias.alias_parent_thread_id)
             else:
                 obj = self.env[model]
-            if hasattr(obj, '_alias_check_contact'):
-                error_code = obj._alias_check_contact(message, message_dict, alias)
-            else:
-                error_code = self.env['mail.alias.mixin']._alias_check_contact_on_record(obj, message, message_dict, alias)
-            if error_code is not True:
+            error_message = obj._alias_get_error_message(message, message_dict, alias)
+            if error_message:
                 self._routing_warn(
-                    _('alias %(name)s: %(error)s', name=alias.alias_name, error=error_code or _('unknown error')),
+                    _('alias %(name)s: %(error)s', name=alias.alias_name, error=error_message or _('unknown error')),
                     message_id,
                     route,
                     False
@@ -1479,30 +1437,6 @@ class MailThread(models.AbstractModel):
     # ------------------------------------------------------
     # RECIPIENTS MANAGEMENT TOOLS
     # ------------------------------------------------------
-
-    @api.model
-    def _message_get_default_recipients_on_records(self, records):
-        """ Generic implementation for finding default recipient to mail on
-        a recordset. ``_message_get_default_recipients`` may be defined to
-        implement custom behavior. """
-        if hasattr(records, '_message_get_default_recipients'):
-            return records._message_get_default_recipients()
-
-        res = {}
-        for record in records:
-            recipient_ids, email_to, email_cc = [], False, False
-            if 'partner_id' in record and record.partner_id:
-                recipient_ids.append(record.partner_id.id)
-            elif 'email_normalized' in record and record.email_normalized:
-                email_to = record.email_normalized
-            elif 'email_from' in record and record.email_from:
-                email_to = record.email_from
-            elif 'partner_email' in record and record.partner_email:
-                email_to = record.partner_email
-            elif 'email' in record and record.email:
-                email_to = record.email
-            res[record.id] = {'partner_ids': recipient_ids, 'email_to': email_to, 'email_cc': email_cc}
-        return res
 
     def _message_add_suggested_recipient(self, result, partner=None, email=None, reason=''):
         """ Called by _message_get_suggested_recipients, to add a suggested
@@ -2636,90 +2570,6 @@ class MailThread(models.AbstractModel):
                 result.append(group_data)
 
         return result
-
-    def _notify_get_reply_to(self, default=None, records=None, company=None, doc_names=None):
-        """ Returns the preferred reply-to email address when replying to a thread
-        on documents. Documents are either given by self it this method is called
-        as a true multi method on a record set or can be given using records to
-        have a generic implementation available for all models.
-        Reply-to is formatted like "MyCompany MyDocument <reply.to@domain>".
-        Heuristic it the following:
-         * search for specific aliases as they always have priority; it is limited
-           to aliases linked to documents (like project alias for task for example);
-         * use catchall address;
-         * use default;
-        This method works on documents
-         * as a true multi method for models inheriting from mail.thread; call
-           ``records._notify_get_reply_to(...)``;
-         * as a generic implementation if records are given; call ``MailThread.
-           _notify_get_reply_to(records=records, ...)``;
-         * as a generic implementation is self is a void mail.thread record set
-           meaning catchall is computed; call ``MailThread._notify_get_reply_to
-           (records=None)``;
-        Tweak this method on a specific model by overriding if it inherits from
-        mail.thread. An example would be tasks taking their reply-to alias from
-        their project.
-        :param default: default email if no alias or catchall is found;
-        :param records: record_set if self if a generic mail.thread record allowing
-          generic implementation of finding reply-to;
-        :param company: used to compute company name part of the from name; provide
-          it if already known, otherwise fall back on user company;
-        :param doc_names: dict(res_id, doc_name) used to compute doc name part of
-          the from name; provide it if already known to avoid queries, otherwise
-          name_get on document will be performed;
-        :return result: dictionary. Keys are record IDs and value is formatted
-          like an email "Company_name Document_name <reply_to@email>"/
-        """
-        _records = self if self and self._name != 'mail.thread' else records
-        model = _records._name if _records and _records._name != 'mail.thread' else False
-        res_ids = _records.ids if _records and model else []
-        _res_ids = res_ids or [False]  # always have a default value located in False
-
-        alias_domain = self.env['ir.config_parameter'].sudo().get_param("mail.catchall.domain")
-        result = dict.fromkeys(_res_ids, False)
-        result_email = dict()
-        doc_names = doc_names if doc_names else dict()
-
-        if alias_domain:
-            if model and res_ids:
-                if not doc_names:
-                    doc_names = dict((rec.id, rec.display_name) for rec in _records)
-
-                mail_aliases = self.env['mail.alias'].sudo().search([
-                    ('alias_parent_model_id.model', '=', model),
-                    ('alias_parent_thread_id', 'in', res_ids),
-                    ('alias_name', '!=', False)])
-                # take only first found alias for each thread_id, to match order (1 found -> limit=1 for each res_id)
-                for alias in mail_aliases:
-                    result_email.setdefault(alias.alias_parent_thread_id, '%s@%s' % (alias.alias_name, alias_domain))
-
-            # left ids: use catchall
-            left_ids = set(_res_ids) - set(result_email)
-            if left_ids:
-                catchall = self.env['ir.config_parameter'].sudo().get_param("mail.catchall.alias")
-                if catchall:
-                    result_email.update(dict((rid, '%s@%s' % (catchall, alias_domain)) for rid in left_ids))
-
-            # compute name of reply-to - TDE tocheck: quotes and stuff like that
-            company_name = company.name if company else self.env.company.name
-            for res_id in result_email.keys():
-                name = '%s%s%s' % (company_name, ' ' if doc_names.get(res_id) else '', doc_names.get(res_id, ''))
-                result[res_id] = tools.formataddr((name, result_email[res_id]))
-
-        left_ids = set(_res_ids) - set(result_email)
-        if left_ids:
-            result.update(dict((res_id, default) for res_id in left_ids))
-
-        return result
-
-    @api.model
-    def _notify_get_reply_to_on_records(self, default=None, records=None, company=None, doc_names=None):
-        """ Generic wrapper on ``_notify_get_reply_to`` checking mail.thread inheritance
-        and allowing to call model-specific implementation in a one liner. This
-        method should not be overridden. """
-        if records and hasattr(records, '_notify_get_reply_to'):
-            return records._notify_get_reply_to(default=default, company=company, doc_names=doc_names)
-        return self._notify_get_reply_to(default=default, records=records, company=company, doc_names=doc_names)
 
     def _notify_email_recipient_values(self, recipient_ids):
         """ Format email notification recipient values to store on the notification
