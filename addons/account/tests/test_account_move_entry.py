@@ -434,9 +434,10 @@ class TestAccountMove(AccountTestInvoicingCommon):
             init_move.name = sequence_init
             next_moves.name = False
             next_moves._compute_name()
-            self.assertEqual(next_move.name, sequence_next)
-            self.assertEqual(next_move_month.name, sequence_next_month)
-            self.assertEqual(next_move_year.name, sequence_next_year)
+            self.assertEqual(
+                [next_move.name, next_move_month.name, next_move_year.name],
+                [sequence_next, sequence_next_month, sequence_next_year],
+            )
 
     def test_journal_next_sequence(self):
         prefix = "TEST_ORDER/2016/"
