@@ -514,10 +514,10 @@ class Message(models.Model):
         model_record_ids = _generate_model_record_ids(message_values, document_related_candidate_ids)
         for model, doc_ids in model_record_ids.items():
             DocumentModel = self.env[model]
-            if hasattr(DocumentModel, 'get_mail_message_access'):
-                check_operation = DocumentModel.get_mail_message_access(doc_ids, operation)  ## why not giving model here?
+            if hasattr(DocumentModel, '_get_mail_message_access'):
+                check_operation = DocumentModel._get_mail_message_access(doc_ids, operation)  ## why not giving model here?
             else:
-                check_operation = self.env['mail.thread'].get_mail_message_access(doc_ids, operation, model_name=model)
+                check_operation = self.env['mail.thread']._get_mail_message_access(doc_ids, operation, model_name=model)
             records = DocumentModel.browse(doc_ids)
             records.check_access_rights(check_operation)
             mids = records.browse(doc_ids)._filter_access_rules(check_operation)
