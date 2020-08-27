@@ -386,13 +386,13 @@ class Channel(models.Model):
             })
         return message
 
-    def _alias_check_contact(self, message, message_dict, alias):
+    def _alias_get_error_message(self, message, message_dict, alias):
         if alias.alias_contact == 'followers' and self.ids:
             author = self.env['res.partner'].browse(message_dict.get('author_id', False))
             if not author or author not in self.channel_partner_ids:
                 return _('restricted to channel members')
             return True
-        return super(Channel, self)._alias_check_contact(message, message_dict, alias)
+        return super(Channel, self)._alias_get_error_message(message, message_dict, alias)
 
     def init(self):
         self._cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = %s', ('mail_channel_partner_seen_message_id_idx',))
