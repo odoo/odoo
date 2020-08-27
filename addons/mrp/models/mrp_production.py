@@ -315,7 +315,7 @@ class MrpProduction(models.Model):
 
     def _set_date_deadline(self):
         for production in self:
-            (self.move_raw_ids | self.move_finished_ids).date_deadline = production.date_deadline
+            (production.move_raw_ids | production.move_finished_ids).date_deadline = production.date_deadline
 
     def _compute_is_planned(self):
         for production in self:
