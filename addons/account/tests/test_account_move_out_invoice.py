@@ -6,6 +6,7 @@ from odoo import fields
 from odoo.exceptions import UserError
 
 from unittest.mock import patch
+from datetime import timedelta
 
 
 @tagged('post_install', '-at_install')
@@ -1838,20 +1839,20 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         })
 
     def test_out_invoice_create_refund_auto_post(self):
-        self.invoice.auto_post = True
+        self.invoice.action_post()
 
-        frozen_today = fields.Date.from_string('2019-01-01')
-        with patch.object(fields.Date, 'today', lambda *args, **kwargs: frozen_today), patch.object(fields.Date, 'context_today', lambda *args, **kwargs: frozen_today):
+        move_reversal = self.env['account.move.reversal'].with_context(active_model="account.move", active_ids=self.invoice.ids).create({
+            'date': fields.Date.today() + timedelta(days=7),
+            'reason': 'no reason',
+            'refund_method': 'modify',
+        })
+        move_reversal.reverse_moves()
+        refund = self.env['account.move'].search([('type', '=', 'out_refund'), ('company_id', '=', self.invoice.company_id.id)])
 
-            move_reversal = self.env['account.move.reversal'].with_context(active_model="account.move", active_ids=self.invoice.ids).create({
-                'date': fields.Date.from_string('2019-02-01'),
-                'reason': 'no reason',
-                'refund_method': 'modify',
-            })
-            reversal = move_reversal.reverse_moves()
-            new_invoice = self.env['account.move'].browse(reversal['res_id'])
-
-            self.assertRecordValues(new_invoice, [{'state': 'draft'}])
+        self.assertRecordValues(refund, [{
+            'state': 'draft',
+            'auto_post': True,
+        }])
 
     def test_out_invoice_create_1(self):
         # Test creating an account_move with the least information.
