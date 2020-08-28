@@ -51,10 +51,10 @@ class Message extends Component {
             const author = message ? message.author : undefined;
             const partnerRoot = this.env.messaging.partnerRoot;
             const originThread = message ? message.originThread : undefined;
-            const threadViewer = this.env.models['mail.thread_viewer'].get(props.threadViewerLocalId);
-            const thread = threadViewer ? threadViewer.thread : undefined;
-            const threadStringifiedDomain = threadViewer
-                ? threadViewer.stringifiedDomain
+            const threadView = this.env.models['mail.thread_view'].get(props.threadViewLocalId);
+            const thread = threadView ? threadView.thread : undefined;
+            const threadStringifiedDomain = threadView
+                ? threadView.stringifiedDomain
                 : undefined;
             return {
                 attachments: message
@@ -63,7 +63,7 @@ class Message extends Component {
                 author: author ? author.__state : undefined,
                 hasMessageCheckbox: message ? message.hasCheckbox : false,
                 isDeviceMobile: this.env.messaging.device.isMobile,
-                isMessageChecked: message && threadViewer
+                isMessageChecked: message && threadView
                     ? message.isChecked(thread, threadStringifiedDomain)
                     : false,
                 message: message ? message.__state : undefined,
@@ -71,7 +71,7 @@ class Message extends Component {
                 originThread: originThread ? originThread.__state : undefined,
                 partnerRoot: partnerRoot ? partnerRoot.__state : undefined,
                 thread: thread ? thread.__state : undefined,
-                threadViewer: threadViewer ? threadViewer.__state : undefined,
+                threadView: threadView ? threadView.__state : undefined,
             };
         }, {
             compareDepth: {
@@ -268,10 +268,10 @@ class Message extends Component {
     }
 
     /**
-     * @returns {mail.thread_viewer}
+     * @returns {mail.thread_view}
      */
-    get threadViewer() {
-        return this.env.models['mail.thread_viewer'].get(this.props.threadViewerLocalId);
+    get threadView() {
+        return this.env.models['mail.thread_view'].get(this.props.threadViewLocalId);
     }
 
     /**
@@ -411,7 +411,7 @@ class Message extends Component {
      * @private
      */
     _onChangeCheckbox() {
-        this.message.toggleCheck(this.threadViewer.thread, this.threadViewer.stringifiedDomain);
+        this.message.toggleCheck(this.threadView.thread, this.threadView.stringifiedDomain);
     }
 
     /**
@@ -601,7 +601,7 @@ Object.assign(Message, {
         isSelected: Boolean,
         isSquashed: Boolean,
         messageLocalId: String,
-        threadViewerLocalId: {
+        threadViewLocalId: {
             type: String,
             optional: true,
         },
