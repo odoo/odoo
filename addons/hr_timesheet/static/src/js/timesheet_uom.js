@@ -111,6 +111,16 @@ if (widgetName === 'float_toggle') {
 }
 fieldRegistry.add('timesheet_uom', FieldTimesheetUom);
 
+// widget timesheet_uom_no_toggle is the same as timesheet_uom but without toggle.
+// We can modify easly huge amount of days.
+let FieldTimesheetUomWithoutToggle = null;
+if (widgetName === 'float_toggle') {
+    FieldTimesheetUomWithoutToggle = FieldTimesheetFactor;
+} else {
+    FieldTimesheetUomWithoutToggle = FieldTimesheetTime;
+}
+fieldRegistry.add('timesheet_uom_no_toggle', FieldTimesheetUomWithoutToggle);
+
 
 // bind the formatter and parser method, and tweak the options
 const _tweak_options = function(options) {
@@ -127,6 +137,18 @@ fieldUtils.format.timesheet_uom = function(value, field, options) {
 };
 
 fieldUtils.parse.timesheet_uom = function(value, field, options) {
+    options = _tweak_options(options || {});
+    const parser = fieldUtils.parse[FieldTimesheetUom.prototype.formatType];
+    return parser(value, field, options);
+};
+
+fieldUtils.format.timesheet_uom_no_toggle = function(value, field, options) {
+    options = _tweak_options(options || {});
+    const formatter = fieldUtils.format[FieldTimesheetUom.prototype.formatType];
+    return formatter(value, field, options);
+};
+
+fieldUtils.parse.timesheet_uom_no_toggle = function(value, field, options) {
     options = _tweak_options(options || {});
     const parser = fieldUtils.parse[FieldTimesheetUom.prototype.formatType];
     return parser(value, field, options);

@@ -83,22 +83,16 @@
                     <page string="Timesheets" id="timesheets_tab" attrs="{'invisible': [('allow_timesheets', '=', False)]}">
                         <group>
                             <group>
-                                <label for="planned_hours" string="Initially Planned Hours" attrs="{'invisible': [('encode_uom_in_days', '=', True)]}"/>
-                                <field name="planned_hours" widget="float_time" attrs="{'invisible': [('encode_uom_in_days', '=', True)]}" nolabel="1" />
-                                <label for="planned_hours" string="Initially Planned Days" attrs="{'invisible': [('encode_uom_in_days', '=', False)]}"/>
-                                <field name="planned_hours" widget="timesheet_factor" attrs="{'invisible': [('encode_uom_in_days', '=', False)]}" nolabel="1" />
-                                <label for="subtask_planned_hours" groups="project.group_subtask_project" string="Sub-tasks Planned Hours"
-                                       attrs="{'invisible': ['|', '|', ('allow_subtasks', '=', False), ('subtask_count', '=', 0), ('encode_uom_in_days', '=', True)]}"/>
-                                <span class="o_row" groups="project.group_subtask_project"
-                                     attrs="{'invisible': ['|', '|', ('allow_subtasks', '=', False), ('subtask_count', '=', 0), ('encode_uom_in_days', '=', True)]}">
-                                    <field name="subtask_planned_hours" widget="float_time"/>
-                                </span>
-                                <label for="subtask_planned_hours" groups="project.group_subtask_project" string="Sub-tasks Planned Days"
-                                       attrs="{'invisible': ['|', '|', ('allow_subtasks', '=', False), ('subtask_count', '=', 0), ('encode_uom_in_days', '=', False)]}"/>
-                                <div class="o_row" groups="project.group_subtask_project"
-                                     attrs="{'invisible': ['|', '|', ('allow_subtasks', '=', False), ('subtask_count', '=', 0), ('encode_uom_in_days', '=', False)]}">
-                                    <field name="subtask_planned_hours" widget="timesheet_uom"/>
+                                <div class="o_td_label">
+                                    <label for="planned_hours" string="Initially Planned Hours" attrs="{'invisible': [('encode_uom_in_days', '=', True)]}"/>
+                                    <label for="planned_hours" string="Initially Planned Days" attrs="{'invisible': [('encode_uom_in_days', '=', False)]}"/>
                                 </div>
+                                <field name="planned_hours" widget="timesheet_uom_no_toggle" nolabel="1"/>
+                                <div class="o_td_label" groups="project.group_subtask_project" attrs="{'invisible': ['|', ('allow_subtasks', '=', False), ('subtask_count', '=', 0)]}">
+                                    <label for="subtask_planned_hours" string="Sub-tasks Planned Hours" attrs="{'invisible': [('encode_uom_in_days', '=', True)]}"/>
+                                    <label for="subtask_planned_hours" string="Sub-tasks Planned Days" attrs="{'invisible': [('encode_uom_in_days', '=', False)]}"/>
+                                </div>
+                                <field name="subtask_planned_hours" widget="timesheet_uom_no_toggle" nolabel="1" groups="project.group_subtask_project" attrs="{'invisible': ['|', ('allow_subtasks', '=', False), ('subtask_count', '=', 0)]}"/>
                             </group>
                             <group>
                                 <field name="progress" widget="progressbar"/>
@@ -213,7 +207,7 @@
             <field name="arch" type="xml">
                 <field name="company_id" position="after">
                     <field name="allow_subtasks" invisible="1"/>
-                    <field name="planned_hours" widget="timesheet_uom" sum="Initially Planned Hours" optional="hide"/>
+                    <field name="planned_hours" widget="timesheet_uom_no_toggle" sum="Initially Planned Hours" optional="hide"/>
                     <field name="effective_hours" widget="timesheet_uom" sum="Effective Hours" optional="show"/>
                     <field name="remaining_hours" widget="timesheet_uom" sum="Remaining Hours" optional="hide" decoration-danger="progress &gt;= 100" decoration-warning="progress &gt;= 80 and progress &lt; 100"/>
                     <field name="subtask_effective_hours" widget="timesheet_uom" attrs="{'invisible' : [('allow_subtasks', '=', False)]}" optional="hide"/>
