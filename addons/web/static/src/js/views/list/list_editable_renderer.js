@@ -574,7 +574,7 @@ ListRenderer.include({
         const relativeWidths = [];
         this.columns.forEach(column => {
             const th = this._getColumnHeader(column);
-            if (th.offsetParent === null) {
+            if (th === null || th.offsetParent === null) {
                 relativeWidths.push(false);
             } else {
                 const width = this._getColumnWidth(column);
