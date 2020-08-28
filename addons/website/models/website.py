@@ -880,7 +880,10 @@ class Website(models.Model):
             Returns a tuple (name, url, icon).
             Where icon can be a module name, or a path
         """
-        suggested_controllers = [(_('Homepage'), url_for('/'), 'website')]
+        suggested_controllers = [
+            (_('Homepage'), url_for('/'), 'website'),
+            (_('Contact Us'), url_for('/contactus'), 'website_crm'),
+        ]
         return suggested_controllers
 
     @api.model
