@@ -585,6 +585,7 @@ class TestMailgateway(TestMailCommon):
     @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models')
     def test_message_route_bounce(self):
         """Incoming email: bounce  using bounce alias: no record creation """
+<<<<<<< HEAD
         with self.mock_mail_gateway():
             new_recs = self.format_and_process(
                 MAIL_TEMPLATE, self.partner_1.email_formatted,
@@ -597,10 +598,24 @@ class TestMailgateway(TestMailCommon):
             )
         self.assertFalse(new_recs)
         self.assertNotSentEmail()
+=======
+        new_recs = self.format_and_process(
+            MAIL_TEMPLATE, self.partner_1.email_formatted,
+            '%s+%s-%s-%s@%s' % (
+                self.alias_bounce, self.fake_email.id,
+                self.fake_email.model, self.fake_email.res_id,
+                self.alias_domain
+            ),
+            subject='Should bounce',
+        )
+        self.assertFalse(new_recs)
+        self.assertEqual(len(self._mails), 0, 'message_process: incoming bounce produces no mails')
+>>>>>>> 47705b8a1ab... temp
 
     @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models')
     def test_message_route_bounce_other_recipients(self):
         """Incoming email: bounce processing: bounce should be computed even if not first recipient """
+<<<<<<< HEAD
         with self.mock_mail_gateway():
             new_recs = self.format_and_process(
                 MAIL_TEMPLATE, self.partner_1.email_formatted,
@@ -614,11 +629,26 @@ class TestMailgateway(TestMailCommon):
             )
         self.assertFalse(new_recs)
         self.assertNotSentEmail()
+=======
+        new_recs = self.format_and_process(
+            MAIL_TEMPLATE, self.partner_1.email_formatted,
+            '%s@%s, %s+%s-%s-%s@%s' % (
+                self.alias.alias_name, self.alias_domain,
+                self.alias_bounce, self.fake_email.id,
+                self.fake_email.model, self.fake_email.res_id,
+                self.alias_domain
+            ),
+            subject='Should bounce',
+        )
+        self.assertFalse(new_recs)
+        self.assertEqual(len(self._mails), 0, 'message_process: incoming bounce produces no mails')
+>>>>>>> 47705b8a1ab... temp
 
     @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
     def test_message_route_write_to_catchall(self):
         """ Writing directly to catchall should bounce """
         # Test: no group created, email bounced
+<<<<<<< HEAD
         with self.mock_mail_gateway():
             record = self.format_and_process(
                 MAIL_TEMPLATE, self.partner_1.email_formatted,
@@ -626,11 +656,22 @@ class TestMailgateway(TestMailCommon):
                 subject='Should Bounce')
         self.assertFalse(record)
         self.assertSentEmail('"MAILER-DAEMON" <bounce.test@test.com>', ['whatever-2a840@postmaster.twitter.com'], subject='Re: Should Bounce')
+=======
+        record = self.format_and_process(MAIL_TEMPLATE, self.email_from, '%s@%s' % (self.alias_catchall, self.alias_domain), subject='Should Bounce')
+        self.assertFalse(record)
+        self.assertEqual(len(self._mails), 1,
+                         'message_process: writing directly to catchall should bounce')
+        # Test bounce email
+        self.assertEqual(self._mails[0].get('subject'), 'Re: Should Bounce')
+        self.assertEqual(self._mails[0].get('email_to')[0], 'whatever-2a840@postmaster.twitter.com')
+        self.assertEqual(self._mails[0].get('email_from'), 'MAILER-DAEMON <%s@%s>' % (self.alias_bounce, self.alias_domain))
+>>>>>>> 47705b8a1ab... temp
 
     @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models')
     def test_message_route_write_to_catchall_other_recipients_first(self):
         """ Writing directly to catchall and a valid alias should take alias """
         # Test: no group created, email bounced
+<<<<<<< HEAD
         with self.mock_mail_gateway():
             record = self.format_and_process(
                 MAIL_TEMPLATE, self.partner_1.email_formatted,
@@ -641,11 +682,23 @@ class TestMailgateway(TestMailCommon):
         self.assertEqual(len(record), 1, 'message_process: a new mail.test should have been created')
         # No bounce email
         self.assertNotSentEmail()
+=======
+        record = self.format_and_process(
+            MAIL_TEMPLATE, self.partner_1.email_formatted,
+            '%s@%s, %s@%s' % (self.alias_catchall, self.alias_domain, self.alias.alias_name, self.alias_domain),
+            subject='Catchall Not Blocking'
+        )
+        # Test: one group created
+        self.assertEqual(len(record), 1, 'message_process: a new mail.test should have been created')
+        # No bounce email
+        self.assertEqual(len(self._mails), 0)
+>>>>>>> 47705b8a1ab... temp
 
     @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models')
     def test_message_route_write_to_catchall_other_recipients_second(self):
         """ Writing directly to catchall and a valid alias should take alias """
         # Test: no group created, email bounced
+<<<<<<< HEAD
         with self.mock_mail_gateway():
             record = self.format_and_process(
                 MAIL_TEMPLATE, self.partner_1.email_formatted,
@@ -656,6 +709,17 @@ class TestMailgateway(TestMailCommon):
         self.assertEqual(len(record), 1, 'message_process: a new mail.test should have been created')
         # No bounce email
         self.assertNotSentEmail()
+=======
+        record = self.format_and_process(
+            MAIL_TEMPLATE, self.partner_1.email_formatted,
+            '%s@%s, %s@%s' % (self.alias.alias_name, self.alias_domain, self.alias_catchall, self.alias_domain),
+            subject='Catchall Not Blocking'
+        )
+        # Test: one group created
+        self.assertEqual(len(record), 1, 'message_process: a new mail.test should have been created')
+        # No bounce email
+        self.assertEqual(len(self._mails), 0)
+>>>>>>> 47705b8a1ab... temp
 
     @mute_logger('odoo.addons.mail.models.mail_thread')
     def test_message_process_bounce_alias(self):
