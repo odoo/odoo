@@ -6,7 +6,7 @@
             <div class="screen-content">
                 <div class="controls">
                     <div class="buttons">
-                        <button t-if="showNewTicketButton" class="highlight" t-on-click="createNewOrder">New Ticket</button>
+                        <button t-if="showNewTicketButton" class="highlight" t-on-click="createNewOrder">New Order</button>
                         <button class="discard" t-on-click="trigger('close-screen')">Discard</button>
                     </div>
                     <SearchBar config="searchBarConfig" placeholder="'Search Tickets...'" />
