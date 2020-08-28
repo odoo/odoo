@@ -57,7 +57,7 @@ QUnit.module('Views', {
                     allday: {string: "allday", type: "boolean"},
                     partner_ids: {string: "attendees", type: "one2many", relation: 'partner', default: [[6, 0, [1]]]},
                     type: {string: "type", type: "integer"},
-                    event_type_id: {string: "Event_Type", type: "many2one", relation: 'event_type'},
+                    event_type_id: {string: "Event Type", type: "many2one", relation: 'event_type'},
                     color:  {string: "Color", type: "integer", related: 'event_type_id.color'},
                     is_hatched: {string: "Hatched", type: "boolean"}
                 },
@@ -2190,7 +2190,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('Add filters and specific color', async function (assert) {
-        assert.expect(5);
+        assert.expect(6);
 
         this.data.event.records.push(
             {id: 8, user_id: 4, partner_id: 1, name: "event 8", start: "2016-12-11 09:00:00", stop: "2016-12-11 10:00:00", allday: false, partner_ids: [1,2,3], event_type_id: 3, color: 4},
@@ -2219,8 +2219,9 @@ QUnit.module('Views', {
 
         assert.containsN(calendar, '.o_calendar_filter', 2, "should display 2 filters");
 
-        var $typeFilter =  calendar.$('.o_calendar_filter:has(h5:contains(Event_Type))');
+        var $typeFilter =  calendar.$('.o_calendar_filter:has(h5:contains(Event Type))');
         assert.ok($typeFilter.length, "should display 'Event Type' filter");
+        assert.containsOnce($typeFilter, '#o_cw_filter_collapse_EventType', "Id should be equals to o_cw_filter_collapse_EventType for 'Event Type'");
         assert.containsN($typeFilter, '.o_calendar_filter_item', 3, "should display 3 filter items for 'Event Type'");
 
         assert.containsOnce($typeFilter, '.o_calendar_filter_item[data-value=3].o_cw_filter_color_4', "Filter for event type 3 must have the color 4");
