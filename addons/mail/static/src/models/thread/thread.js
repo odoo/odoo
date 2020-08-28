@@ -502,9 +502,9 @@ function factory(dependencies) {
                 (device.isMobile && this.model === 'mail.box')
             ) {
                 if (resetDiscussDomain) {
-                    discuss.threadViewer.update({ stringifiedDomain: '[]' });
+                    discuss.threadView.update({ stringifiedDomain: '[]' });
                 }
-                discuss.threadViewer.update({ thread: [['link', this]] });
+                discuss.threadView.update({ thread: [['link', this]] });
             } else {
                 this.env.messaging.chatWindowManager.openThread(this, { mode: chatWindowMode });
             }
@@ -519,7 +519,7 @@ function factory(dependencies) {
         openExpanded() {
             const discuss = this.env.messaging.discuss;
             if (['mail.channel', 'mail.box'].includes(this.model)) {
-                discuss.threadViewer.update({ thread: [['link', this]] });
+                discuss.threadView.update({ thread: [['link', this]] });
                 this.env.bus.trigger('do-action', {
                     action: 'mail.action_discuss',
                     options: {
@@ -763,8 +763,8 @@ function factory(dependencies) {
          * @returns {mail.chat_window[]}
          */
         _computeChatWindows() {
-            const chatWindowViewers = this.viewers.filter(viewer => !!viewer.chatWindow);
-            return [['replace', chatWindowViewers.map(viewer => viewer.chatWindow)]];
+            const chatWindowThreadViews = this.threadViews.filter(threadView => !!threadView.chatWindow);
+            return [['replace', chatWindowThreadViews.map(threadView => threadView.chatWindow)]];
         }
 
         /**
@@ -1194,7 +1194,7 @@ function factory(dependencies) {
         channel_type: attr(),
         chatWindows: one2many('mail.chat_window', {
             compute: '_computeChatWindows',
-            dependencies: ['viewersChatWindow'],
+            dependencies: ['threadViewsChatWindow'],
         }),
         composer: one2one('mail.composer', {
             /**
@@ -1472,11 +1472,11 @@ function factory(dependencies) {
             dependencies: ['orderedOtherTypingMembers'],
         }),
         uuid: attr(),
-        viewers: one2many('mail.thread_viewer', {
+        threadViews: one2many('mail.thread_view', {
             inverse: 'thread',
         }),
-        viewersChatWindow: many2many('mail.chat_window', {
-            related: 'viewers.chatWindow',
+        threadViewsChatWindow: many2many('mail.chat_window', {
+            related: 'threadViews.chatWindow',
         }),
     };
 

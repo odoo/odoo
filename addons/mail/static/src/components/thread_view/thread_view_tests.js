@@ -1,8 +1,8 @@
-odoo.define('mail/static/src/components/thread_viewer/thread_viewer_tests.js', function (require) {
+odoo.define('mail/static/src/components/thread_view/thread_view_tests.js', function (require) {
 'use strict';
 
 const components = {
-    ThreadViewer: require('mail/static/src/components/thread_viewer/thread_viewer.js'),
+    ThreadView: require('mail/static/src/components/thread_view/thread_view.js'),
 };
 const {
     afterEach,
@@ -15,18 +15,18 @@ const {
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
-QUnit.module('thread_viewer', {}, function () {
-QUnit.module('thread_viewer_tests.js', {
+QUnit.module('thread_view', {}, function () {
+QUnit.module('thread_view_tests.js', {
     beforeEach() {
         beforeEach(this);
 
         /**
-         * @param {mail.thread_viewer} threadViewer
+         * @param {mail.thread_view} threadView
          * @param {Object} [otherProps={}]
          * @param {Object} [param2={}]
          * @param {boolean} [param2.isFixedSize=false]
          */
-        this.createThreadViewerComponent = async (threadViewer, otherProps = {}, { isFixedSize = false } = {}) => {
+        this.createThreadViewComponent = async (threadView, otherProps = {}, { isFixedSize = false } = {}) => {
             let target;
             if (isFixedSize) {
                 // needed to allow scrolling in some tests
@@ -41,8 +41,8 @@ QUnit.module('thread_viewer_tests.js', {
             } else {
                 target = this.widget.el;
             }
-            const props = Object.assign({ threadViewerLocalId: threadViewer.localId }, otherProps);
-            await createRootComponent(this, components.ThreadViewer, { props, target });
+            const props = Object.assign({ threadViewLocalId: threadView.localId }, otherProps);
+            await createRootComponent(this, components.ThreadView, { props, target });
         };
 
         this.start = async params => {
@@ -81,10 +81,10 @@ QUnit.test('dragover files on thread with composer', async function (assert) {
         name: "General",
         public: 'public',
     });
-    const threadViewer = this.env.models['mail.thread_viewer'].create({ thread: [['link', thread]] });
-    await this.createThreadViewerComponent(threadViewer, { hasComposer: true });
+    const threadView = this.env.models['mail.thread_view'].create({ thread: [['link', thread]] });
+    await this.createThreadViewComponent(threadView, { hasComposer: true });
     await afterNextRender(() =>
-        dragenterFiles(document.querySelector('.o_ThreadViewer'))
+        dragenterFiles(document.querySelector('.o_ThreadView'))
     );
     assert.ok(
         document.querySelector('.o_Composer_dropZone'),
@@ -122,8 +122,8 @@ QUnit.test('message list desc order', async function (assert) {
         name: "General",
         public: 'public',
     });
-    const threadViewer = this.env.models['mail.thread_viewer'].create({ thread: [['link', thread]] });
-    await this.createThreadViewerComponent(threadViewer, { order: 'desc' }, { isFixedSize: true });
+    const threadView = this.env.models['mail.thread_view'].create({ thread: [['link', thread]] });
+    await this.createThreadViewComponent(threadView, { order: 'desc' }, { isFixedSize: true });
     const messageItems = document.querySelectorAll(`.o_MessageList_item`);
     assert.notOk(
         messageItems[0].classList.contains("o_MessageList_loadMore"),
@@ -141,8 +141,8 @@ QUnit.test('message list desc order', async function (assert) {
 
     // scroll to bottom
     await afterNextRender(() => {
-        document.querySelector(`.o_ThreadViewer_messageList`).scrollTop =
-            document.querySelector(`.o_ThreadViewer_messageList`).scrollHeight;
+        document.querySelector(`.o_ThreadView_messageList`).scrollTop =
+            document.querySelector(`.o_ThreadView_messageList`).scrollHeight;
     });
     assert.strictEqual(
         document.querySelectorAll(`.o_Message`).length,
@@ -151,7 +151,7 @@ QUnit.test('message list desc order', async function (assert) {
     );
 
     await afterNextRender(() => {
-        document.querySelector(`.o_ThreadViewer_messageList`).scrollTop = 0;
+        document.querySelector(`.o_ThreadView_messageList`).scrollTop = 0;
     });
     assert.strictEqual(
         document.querySelectorAll(`.o_Message`).length,
@@ -190,8 +190,8 @@ QUnit.test('message list asc order', async function (assert) {
         name: "General",
         public: 'public',
     });
-    const threadViewer = this.env.models['mail.thread_viewer'].create({ thread: [['link', thread]] });
-    await this.createThreadViewerComponent(threadViewer, { order: 'asc' }, { isFixedSize: true });
+    const threadView = this.env.models['mail.thread_view'].create({ thread: [['link', thread]] });
+    await this.createThreadViewComponent(threadView, { order: 'asc' }, { isFixedSize: true });
     const messageItems = document.querySelectorAll(`.o_MessageList_item`);
     assert.notOk(
         messageItems[messageItems.length - 1].classList.contains("o_MessageList_loadMore"),
@@ -209,7 +209,7 @@ QUnit.test('message list asc order', async function (assert) {
 
     // scroll to top
     await afterNextRender(() => {
-        document.querySelector(`.o_ThreadViewer_messageList`).scrollTop = 0;
+        document.querySelector(`.o_ThreadView_messageList`).scrollTop = 0;
     });
     assert.strictEqual(
         document.querySelectorAll(`.o_Message`).length,
@@ -219,8 +219,8 @@ QUnit.test('message list asc order', async function (assert) {
 
     // scroll to bottom
     await afterNextRender(() => {
-        document.querySelector(`.o_ThreadViewer_messageList`).scrollTop =
-            document.querySelector(`.o_ThreadViewer_messageList`).scrollHeight;
+        document.querySelector(`.o_ThreadView_messageList`).scrollTop =
+            document.querySelector(`.o_ThreadView_messageList`).scrollHeight;
     });
     assert.strictEqual(
         document.querySelectorAll(`.o_Message`).length,
@@ -283,8 +283,8 @@ QUnit.test('mark channel as fetched when a new message is loaded and as seen whe
         model: 'mail.channel',
     });
 
-    const threadViewer = this.env.models['mail.thread_viewer'].create({ thread: [['link', thread]] });
-    await this.createThreadViewerComponent(threadViewer, { hasComposer: true });
+    const threadView = this.env.models['mail.thread_view'].create({ thread: [['link', thread]] });
+    await this.createThreadViewComponent(threadView, { hasComposer: true });
     const notifications = [
         [['myDB', 'mail.channel', 100], {
             channelId: 100,
@@ -307,7 +307,7 @@ QUnit.test('mark channel as fetched when a new message is loaded and as seen whe
     await afterNextRender(() => thread.composer.focus());
     assert.verifySteps(
         ['rpc:channel_seen'],
-        "Channel should have been marked as seen after threadViewer got the focus"
+        "Channel should have been marked as seen after threadView got the focus"
     );
 });
 
@@ -353,8 +353,8 @@ QUnit.test('mark channel as fetched and seen when a new message is loaded if com
         model: 'mail.channel',
     });
 
-    const threadViewer = this.env.models['mail.thread_viewer'].create({ thread: [['link', thread]] });
-    await this.createThreadViewerComponent(threadViewer, { hasComposer: true });
+    const threadView = this.env.models['mail.thread_view'].create({ thread: [['link', thread]] });
+    await this.createThreadViewComponent(threadView, { hasComposer: true });
     const notifications = [
         [['myDB', 'mail.channel', 100], {
             channelId: 100,
@@ -392,8 +392,8 @@ QUnit.test('show message subject if thread is mailing channel', async function (
         name: "General",
         public: 'public',
     });
-    const threadViewer = this.env.models['mail.thread_viewer'].create({ thread: [['link', thread]] });
-    await this.createThreadViewerComponent(threadViewer);
+    const threadView = this.env.models['mail.thread_view'].create({ thread: [['link', thread]] });
+    await this.createThreadViewComponent(threadView);
 
     assert.containsOnce(
         document.body,
