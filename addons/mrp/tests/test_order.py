@@ -1118,6 +1118,69 @@ class TestMrpOrder(TestMrpCommon):
         details_operation_form.save()
         mo2.button_mark_done()
 
+    def test_product_produce_uom(self):
+        """ Produce a finished product tracked by serial number. Set another
+        UoM on the bom. The produce wizard should keep the UoM of the product (unit)
+        and quantity = 1."""
+        dozen = self.env.ref('uom.product_uom_dozen')
+        unit = self.env.ref('uom.product_uom_unit')
+        plastic_laminate = self.env['product.product'].create({
+            'name': 'Plastic Laminate',
+            'type': 'product',
+            'uom_id': unit.id,
+            'uom_po_id': unit.id,
+            'tracking': 'serial',
+        })
+        ply_veneer = self.env['product.product'].create({
+            'name': 'Ply Veneer',
+            'type': 'product',
+            'uom_id': unit.id,
+            'uom_po_id': unit.id,
+        })
+        bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': plastic_laminate.product_tmpl_id.id,
+            'product_uom_id': unit.id,
+            'sequence': 1,
+            'bom_line_ids': [(0, 0, {
+                'product_id': ply_veneer.id,
+                'product_qty': 1,
+                'product_uom_id': unit.id,
+                'sequence': 1,
+            })]
+        })
+
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = plastic_laminate
+        mo_form.bom_id = bom
+        mo_form.product_uom_id = dozen
+        mo_form.product_qty = 1
+        mo = mo_form.save()
+
+        final_product_lot = self.env['stock.production.lot'].create({
+            'name': 'lot1',
+            'product_id': plastic_laminate.id,
+            'company_id': self.env.company.id,
+        })
+
+        mo.action_confirm()
+        mo.action_assign()
+        self.assertEqual(mo.move_raw_ids.product_qty, 12, '12 units should be reserved.')
+
+        # produce product
+        mo_form = Form(mo)
+        mo_form.qty_producing = 1/12.0
+        mo_form.lot_producing_id = final_product_lot
+        mo = mo_form.save()
+
+        move_line_raw = mo.move_raw_ids.mapped('move_line_ids').filtered(lambda m: m.qty_done)
+        self.assertEqual(move_line_raw.qty_done, 1)
+        self.assertEqual(move_line_raw.product_uom_id, unit, 'Should be 1 unit since the tracking is serial.')
+
+        mo._post_inventory()
+        move_line_finished = mo.move_finished_ids.mapped('move_line_ids').filtered(lambda m: m.qty_done)
+        self.assertEqual(move_line_finished.qty_done, 1)
+        self.assertEqual(move_line_finished.product_uom_id, unit, 'Should be 1 unit since the tracking is serial.')
+
     def test_product_type_service_1(self):
         # Create finished product
         finished_product = self.env['product.product'].create({

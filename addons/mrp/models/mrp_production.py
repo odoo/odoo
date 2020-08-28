@@ -1060,6 +1060,17 @@ class MrpProduction(models.Model):
                 production.consumption = production.bom_id.consumption
             if not production.move_raw_ids:
                 raise UserError(_("Add some materials to consume before marking this MO as to do."))
+            # In case of Serial number tracking, force the UoM to the UoM of product
+            if production.product_tracking == 'serial' and production.product_uom_id != production.product_id.uom_id:
+                production.write({
+                    'product_qty': production.product_uom_id._compute_quantity(production.product_qty, production.product_id.uom_id),
+                    'product_uom_id': production.product_id.uom_id
+                })
+                for move_finish in production.move_finished_ids.filtered(lambda m: m.product_id == production.product_id):
+                    move_finish.write({
+                        'product_uom_qty': move_finish.product_uom._compute_quantity(move_finish.product_uom_qty, move_finish.product_id.uom_id),
+                        'product_uom': move_finish.product_id.uom_id
+                    })
             production.move_raw_ids._adjust_procure_method()
             (production.move_raw_ids | production.move_finished_ids)._action_confirm()
             production.workorder_ids._action_confirm()
@@ -1316,12 +1327,7 @@ class MrpProduction(models.Model):
             finish_moves = order.move_finished_ids.filtered(lambda m: m.product_id == order.product_id and m.state not in ('done', 'cancel'))
             # the finish move can already be completed by the workorder.
             if not finish_moves.quantity_done:
-                if order.product_tracking == 'serial':
-                    uom = order.product_id.uom_id
-                    finish_moves.quantity_done = order.product_uom_id._compute_quantity(order.qty_producing, uom, round='HALF-UP')
-                    finish_moves.move_line_ids.product_uom_id = uom
-                else:
-                    finish_moves.quantity_done = float_round(order.qty_producing - order.qty_produced, precision_rounding=order.product_uom_id.rounding, rounding_method='HALF-UP')
+                finish_moves.quantity_done = float_round(order.qty_producing - order.qty_produced, precision_rounding=order.product_uom_id.rounding, rounding_method='HALF-UP')
                 finish_moves.move_line_ids.lot_id = order.lot_producing_id
             order._cal_price(moves_to_do)
 
