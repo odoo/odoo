@@ -33,13 +33,6 @@ class MessagingMenu extends Component {
             };
         });
 
-        /**
-         * Reference of the new message input in mobile. Useful to include it
-         * and autocomplete menu as "inside" the messaging menu, to prevent
-         * closing the messaging menu otherwise.
-         */
-        this._mobileNewMessageInputRef = useRef('mobileNewMessageInput');
-
         // bind since passed as props
         this._onMobileNewMessageInputSelect = this._onMobileNewMessageInputSelect.bind(this);
         this._onMobileNewMessageInputSource = this._onMobileNewMessageInputSource.bind(this);
@@ -121,20 +114,14 @@ class MessagingMenu extends Component {
         // in mobile: keeps the messaging menu open in background
         // TODO: maybe need to move this to a mobile component?
         // task-2089887
-        if (
-            this.env.messaging.device.isMobile &&
-            this.env.messaging.chatWindowManager.hasVisibleChatWindows
-        ) {
+        if (this.env.messaging.device.isMobile) {
             return;
         }
         // ignore click inside the menu
         if (this.el.contains(ev.target)) {
             return;
         }
-        const input = this._mobileNewMessageInputRef.comp;
-        if (input && input.contains(ev.target)) {
-            return;
-        }
+        // in all other cases: close the messaging menu when clicking outside
         this.messagingMenu.close();
     }
 
@@ -194,21 +181,7 @@ class MessagingMenu extends Component {
      * @param {integer} ui.item.id
      */
     _onMobileNewMessageInputSelect(ev, ui) {
-        const partnerId = ui.item.id;
-        const partner = this.env.models['mail.partner'].find(partner => partner.id === partnerId);
-        const chat = partner.correspondentThreads.find(thread => thread.channel_type === 'chat');
-        if (chat) {
-            chat.open();
-        } else {
-            this.env.models['mail.thread'].createChannel({
-                autoselect: true,
-                partnerId,
-                type: 'chat',
-            });
-        }
-        if (!this.env.messaging.device.isMobile) {
-            this.messagingMenu.close();
-        }
+        this.env.messaging.openChat({ partnerId: ui.item.id });
     }
 
     /**
@@ -244,20 +217,6 @@ class MessagingMenu extends Component {
     _onSelectMobileNavbarTab(ev) {
         ev.stopPropagation();
         this.messagingMenu.update({ activeTabId: ev.detail.tabId });
-    }
-
-    /**
-     * @private
-     * @param {CustomEvent} ev
-     * @param {Object} ev.detail
-     * @param {mail.thread} ev.detail.thread
-     */
-    _onSelectThread(ev) {
-        ev.stopPropagation();
-        ev.detail.thread.open();
-        if (!this.env.messaging.device.isMobile) {
-            this.messagingMenu.close();
-        }
     }
 
 }

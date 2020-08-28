@@ -82,6 +82,10 @@ class ComposerTextInput extends Component {
         return this.env._t("Write something...");
     }
 
+    focus() {
+        this._textareaRef.el.focus();
+    }
+
     focusout() {
         this.saveStateInStore();
         this._textareaRef.el.blur();
@@ -155,10 +159,6 @@ class ComposerTextInput extends Component {
             this.composer.textInputCursorEnd
         );
         this._updateHeight();
-        if (this.composer.isDoFocus) {
-            this._textareaRef.el.focus();
-            this.composer.update({ isDoFocus: false });
-        }
     }
 
     /**
@@ -273,7 +273,7 @@ class ComposerTextInput extends Component {
                     if (this.composer.activeSuggestedPartner) {
                         this.composer.insertMentionedPartner(this.composer.activeSuggestedPartner);
                         this.composer.closeMentionSuggestions();
-                        this.composer.focus();
+                        this.focus();
                     }
                 }
                 break;
@@ -322,7 +322,7 @@ class ComposerTextInput extends Component {
     _onPartnerMentionSuggestionClicked(ev) {
         this.composer.insertMentionedPartner(ev.detail.partner);
         this.composer.closeMentionSuggestions();
-        this.composer.focus();
+        this.focus();
     }
 
     /**

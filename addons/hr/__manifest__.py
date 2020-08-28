@@ -46,5 +46,8 @@
     'installable': True,
     'application': True,
     'auto_install': False,
-    'qweb': ['static/src/xml/hr_templates.xml'],
+    'qweb': [
+        'static/src/bugfix/bugfix.xml',
+        'static/src/xml/hr_templates.xml',
+    ],
 }

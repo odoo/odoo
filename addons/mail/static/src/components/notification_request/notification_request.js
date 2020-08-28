@@ -74,9 +74,7 @@ class NotificationRequest extends Component {
         if (def) {
             def.then(this._handleResponseNotificationPermission.bind(this));
         }
-
-        const device = this.env.messaging.device;
-        if (!device.isMobile) {
+        if (!this.env.messaging.device.isMobile) {
             this.env.messaging.messagingMenu.close();
         }
     }

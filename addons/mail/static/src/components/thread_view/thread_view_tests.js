@@ -304,7 +304,7 @@ QUnit.test('mark channel as fetched when a new message is loaded and as seen whe
         "Channel should have been fetched but not seen yet"
     );
 
-    await afterNextRender(() => thread.composer.focus());
+    await afterNextRender(() => document.querySelector('.o_ComposerTextInput_textarea').focus());
     assert.verifySteps(
         ['rpc:channel_seen'],
         "Channel should have been marked as seen after threadView got the focus"
@@ -355,6 +355,8 @@ QUnit.test('mark channel as fetched and seen when a new message is loaded if com
 
     const threadView = this.env.models['mail.thread_view'].create({ thread: [['link', thread]] });
     await this.createThreadViewComponent(threadView, { hasComposer: true });
+
+    document.querySelector('.o_ComposerTextInput_textarea').focus();
     const notifications = [
         [['myDB', 'mail.channel', 100], {
             channelId: 100,

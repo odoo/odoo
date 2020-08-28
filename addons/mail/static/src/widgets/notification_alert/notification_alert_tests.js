@@ -36,7 +36,7 @@ QUnit.module('notification_alert_tests.js', {
 QUnit.skip('notification_alert widget: display blocked notification alert', async function (assert) {
     // FIXME: Test should work, but for some reasons OWL always flags the
     // component as not mounted, even though it is in the DOM and it's state
-    // is good for rendering...
+    // is good for rendering... task-227947
     assert.expect(1);
 
     await this.start({

@@ -141,9 +141,6 @@ class MessageList extends Component {
                 case 'more-messages-loaded':
                     this._adjustFromMoreMessagesLoaded(hint);
                     break;
-                default:
-                    this.threadView.markComponentHintProcessed(hint);
-                    break;
             }
         }
         this._willPatchSnapshot = undefined;
@@ -552,7 +549,6 @@ Object.assign(MessageList, {
         hasMessageCheckbox: false,
         hasScrollAdjust: true,
         hasSquashCloseMessages: false,
-        haveMessagesAuthorRedirect: false,
         haveMessagesMarkAsReadIcon: false,
         haveMessagesReplyIcon: false,
         order: 'asc',
@@ -560,7 +556,6 @@ Object.assign(MessageList, {
     props: {
         hasMessageCheckbox: Boolean,
         hasSquashCloseMessages: Boolean,
-        haveMessagesAuthorRedirect: Boolean,
         haveMessagesMarkAsReadIcon: Boolean,
         haveMessagesReplyIcon: Boolean,
         hasScrollAdjust: Boolean,

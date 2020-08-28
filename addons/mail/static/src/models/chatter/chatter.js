@@ -36,6 +36,10 @@ function factory(dependencies) {
         // Public
         //----------------------------------------------------------------------
 
+        focus() {
+            this.update({ isDoFocus: true });
+        }
+
         async refresh() {
             const thread = this.thread;
             if (!thread || thread.isTemporary) {
@@ -76,18 +80,14 @@ function factory(dependencies) {
 
         showLogNote() {
             this.update({ isComposerVisible: true });
-            this.thread.composer.update({
-                isDoFocus: true,
-                isLog: true,
-            });
+            this.thread.composer.update({ isLog: true });
+            this.focus();
         }
 
         showSendMessage() {
             this.update({ isComposerVisible: true });
-            this.thread.composer.update({
-                isDoFocus: true,
-                isLog: false,
-            });
+            this.thread.composer.update({ isLog: false });
+            this.focus();
         }
 
         toggleActivityBoxVisibility() {
@@ -309,6 +309,12 @@ function factory(dependencies) {
             compute: '_computeIsDisabled',
             default: false,
             dependencies: ['threadId'],
+        }),
+        /**
+         * Determine whether this chatter should be focused at next render.
+         */
+        isDoFocus: attr({
+            default: false,
         }),
         isShowingAttachmentsLoading: attr({
             default: false,

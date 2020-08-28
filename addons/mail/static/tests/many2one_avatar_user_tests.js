@@ -3,7 +3,6 @@ odoo.define('mail.Many2OneAvatarUserTests', function (require) {
 
 const { afterEach, beforeEach, start } = require('mail/static/src/utils/test_utils.js');
 
-const FormView = require('web.FormView');
 const KanbanView = require('web.KanbanView');
 const ListView = require('web.ListView');
 const { Many2OneAvatarUser } = require('mail.Many2OneAvatarUser');
@@ -89,45 +88,6 @@ QUnit.module('mail', {}, function () {
         ]);
 
         list.destroy();
-    });
-
-    QUnit.test('many2one_avatar_user widget: click on self', async function (assert) {
-        assert.expect(4);
-
-        const { widget: form } = await start({
-            hasView: true,
-            View: FormView,
-            model: 'foo',
-            data: this.data,
-            arch: '<form><field name="user_id" widget="many2one_avatar_user"/></form>',
-            mockRPC(route, args) {
-                if (args.method === 'read') {
-                    assert.step(`read ${args.model} ${args.args[0]}`);
-                }
-                return this._super(...arguments);
-            },
-            session: {
-                uid: 23,
-            },
-            res_id: 4,
-        });
-
-        mock.intercept(form, 'call_service', (ev) => {
-            if (ev.data.service === 'notification') {
-                assert.step(`display notification "${ev.data.args[0].message}"`);
-            }
-        }, true);
-
-        assert.strictEqual(form.$('.o_field_widget[name=user_id]').text().trim(), 'Yoshi');
-
-        await dom.click(form.$('.o_m2o_avatar'));
-
-        assert.verifySteps([
-            'read foo 4',
-            'display notification "You cannot chat with yourself"',
-        ]);
-
-        form.destroy();
     });
 
     QUnit.test('many2one_avatar_user widget in kanban view', async function (assert) {

@@ -4,6 +4,7 @@ odoo.define('mail/static/src/components/follower/follower_tests.js', function (r
 const components = {
     Follower: require('mail/static/src/components/follower/follower.js'),
 };
+const { makeDeferred } = require('mail/static/src/utils/deferred/deferred.js');
 const {
     afterEach,
     afterNextRender,
@@ -141,8 +142,8 @@ QUnit.test('click on channel follower details', async function (assert) {
         assert.step('do_action');
         assert.strictEqual(
             payload.action.res_id,
-            1,
-            "The redirect action should redirect to the right res id (1)"
+            10,
+            "The redirect action should redirect to the right res id (10)"
         );
         assert.strictEqual(
             payload.action.res_model,
@@ -155,7 +156,8 @@ QUnit.test('click on channel follower details', async function (assert) {
             "The redirect action should be of type 'ir.actions.act_window'"
         );
     });
-
+    this.data['res.partner'].records.push({ id: 100 });
+    this.data['mail.channel'].records.push({ id: 10 });
     await this.start({
         env: { bus },
     });
@@ -164,7 +166,7 @@ QUnit.test('click on channel follower details', async function (assert) {
         model: 'res.partner',
     });
     const follower = await this.env.models['mail.follower'].create({
-        channel: [['insert', { id: 1, model: 'mail.channel', name: "channel" }]],
+        channel: [['insert', { id: 10, model: 'mail.channel', name: "channel" }]],
         followedThread: [['link', thread]],
         id: 2,
         isActive: true,
@@ -192,6 +194,7 @@ QUnit.test('click on channel follower details', async function (assert) {
 QUnit.test('click on partner follower details', async function (assert) {
     assert.expect(7);
 
+    const openFormDef = makeDeferred();
     const bus = new Bus();
     bus.on('do-action', null, payload => {
         assert.step('do_action');
@@ -210,8 +213,9 @@ QUnit.test('click on partner follower details', async function (assert) {
             "ir.actions.act_window",
             "The redirect action should be of type 'ir.actions.act_window'"
         );
+        openFormDef.resolve();
     });
-
+    this.data['res.partner'].records.push({ id: 100 });
     await this.start({
         env: { bus },
     });
@@ -243,6 +247,7 @@ QUnit.test('click on partner follower details', async function (assert) {
     );
 
     document.querySelector('.o_Follower_details').click();
+    await openFormDef;
     assert.verifySteps(
         ['do_action'],
         "clicking on follower should redirect to partner form view"
@@ -302,6 +307,7 @@ QUnit.test('click on edit follower', async function (assert) {
 QUnit.test('edit follower and close subtype dialog', async function (assert) {
     assert.expect(6);
 
+    this.data['res.partner'].records.push({ id: 100 });
     await this.start({
         hasDialog: true,
         async mockRPC(route, args) {

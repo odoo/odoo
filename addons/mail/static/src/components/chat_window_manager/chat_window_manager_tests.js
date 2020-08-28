@@ -255,6 +255,128 @@ QUnit.test('chat window new message: fold', async function (assert) {
     );
 });
 
+QUnit.test('open chat from "new message" chat window should open chat in place of this "new message" chat window', async function (assert) {
+    /**
+     * InnerWith computation uses following info:
+     * ([mocked] global window width: @see `mail/static/src/utils/test_utils.js:start()` method)
+     * (others: @see mail/static/src/models/chat_window_manager/chat_window_manager.js:visual)
+     *
+     * - chat window width: 325px
+     * - start/end/between gap width: 10px/10px/5px
+     * - hidden menu width: 200px
+     * - global width: 1920px
+     *
+     * Enough space for 3 visible chat windows:
+     *  10 + 325 + 5 + 325 + 5 + 325 + 10 = 1000 < 1920
+     */
+    assert.expect(11);
+
+    this.data['res.partner'].records.push({ id: 131, name: "Partner 131" });
+    this.data['res.users'].records.push({ partner_id: 131 });
+    this.data['mail.channel'].records.push(
+        { is_minimized: true },
+        { is_minimized: true },
+    );
+    const imSearchDef = makeDeferred();
+    await this.start({
+        env: {
+            browser: {
+                innerWidth: 1920,
+            },
+        },
+        async mockRPC(route, args) {
+            const res = await this._super(...arguments);
+            if (args.method === 'im_search') {
+                imSearchDef.resolve();
+            }
+            return res;
+        }
+    });
+    assert.containsN(
+        document.body,
+        '.o_ChatWindow',
+        2,
+        "should have 2 chat windows initially"
+    );
+    assert.containsNone(
+        document.body,
+        '.o_ChatWindow.o-new-message',
+        "should not have any 'new message' chat window initially"
+    );
+
+    // open "new message" chat window
+    await afterNextRender(() =>
+        document.querySelector(`.o_MessagingMenu_toggler`).click()
+    );
+    await afterNextRender(() =>
+        document.querySelector(`.o_MessagingMenu_newMessageButton`).click()
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_ChatWindow.o-new-message',
+        "should have 'new message' chat window after clicking 'new message' in messaging menu"
+    );
+    assert.containsN(
+        document.body,
+        '.o_ChatWindow',
+        3,
+        "should have 3 chat window after opening 'new message' chat window",
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_ChatWindow_newMessageFormInput',
+        "'new message' chat window should have new message form input"
+    );
+    assert.hasClass(
+        document.querySelector('.o_ChatWindow[data-visible-index="2"]'),
+        'o-new-message',
+        "'new message' chat window should be the last chat window initially",
+    );
+
+    await afterNextRender(() =>
+        document.querySelector('.o_ChatWindow[data-visible-index="2"] .o_ChatWindowHeader_commandShiftRight').click()
+    );
+    assert.hasClass(
+        document.querySelector('.o_ChatWindow[data-visible-index="1"]'),
+        'o-new-message',
+        "'new message' chat window should have moved to the middle after clicking shift previous",
+    );
+
+    // search for a user in "new message" autocomplete
+    document.execCommand('insertText', false, "131");
+    document.querySelector(`.o_ChatWindow_newMessageFormInput`)
+        .dispatchEvent(new window.KeyboardEvent('keydown'));
+    document.querySelector(`.o_ChatWindow_newMessageFormInput`)
+        .dispatchEvent(new window.KeyboardEvent('keyup'));
+    // Wait for search RPC to be resolved. The following await lines are
+    // necessary because autocomplete is an external lib therefore it is not
+    // possible to use `afterNextRender`.
+    await imSearchDef;
+    await nextAnimationFrame();
+    const link = document.querySelector('.ui-autocomplete .ui-menu-item a');
+    assert.ok(
+        link,
+        "should have autocomplete suggestion after typing on 'new message' input"
+    );
+    assert.strictEqual(
+        link.textContent,
+        "Partner 131",
+        "autocomplete suggestion should target the partner matching search term"
+    );
+
+    await afterNextRender(() => link.click());
+    assert.containsNone(
+        document.body,
+        '.o_ChatWindow.o-new-message',
+        "should have removed the 'new message' chat window after selecting a partner"
+    );
+    assert.strictEqual(
+        document.querySelector('.o_ChatWindow[data-visible-index="1"] .o_ChatWindowHeader_name').textContent,
+        "Partner 131",
+        "chat window with selected partner should be opened in position where 'new message' chat window was, which is in the middle"
+    );
+});
+
 QUnit.test('chat window: basic rendering', async function (assert) {
     assert.expect(11);
 
@@ -1351,7 +1473,7 @@ QUnit.test('chat window: switch on TAB', async function (assert) {
     );
 });
 
-QUnit.test('chat window: TAB cycle with 3 open chat windows', async function (assert) {
+QUnit.test('chat window: TAB cycle with 3 open chat windows [REQUIRE FOCUS]', async function (assert) {
     /**
      * InnerWith computation uses following info:
      * ([mocked] global window width: @see `mail/static/src/utils/test_utils.js:start()` method)
