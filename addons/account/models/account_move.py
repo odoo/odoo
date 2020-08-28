@@ -1709,10 +1709,9 @@ class AccountMove(models.Model):
         return res
 
     def unlink(self):
-        for move in self:
-            if move.name != '/' and not self._context.get('force_delete'):
-                raise UserError(_("You cannot delete an entry which has been posted once."))
-            move.line_ids.unlink()
+        if not self._context.get('force_delete') and self.filtered(lambda move: move.name != '/'):
+            raise UserError(_("You cannot delete an entry which has been posted once."))
+        self.mapped('line_ids').unlink()
         return super(AccountMove, self).unlink()
 
     @api.depends('name', 'state')
