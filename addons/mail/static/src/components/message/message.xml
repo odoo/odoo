@@ -18,7 +18,7 @@
                 <div class="o_Message_sidebar" t-att-class="{ 'o-message-squashed': props.isSquashed }">
                     <t t-if="!props.isSquashed">
                         <div class="o_Message_authorAvatarContainer o_Message_sidebarItem">
-                            <img class="o_Message_authorAvatar rounded-circle" t-att-class="{ o_Message_authorRedirect: hasAuthorRedirect, o_redirect: hasAuthorRedirect }" t-att-src="avatar" t-on-click="_onClickAuthor" t-att-title="hasAuthorRedirect ? 'Open chat' : ''" alt=""/>
+                            <img class="o_Message_authorAvatar rounded-circle" t-att-class="{ o_Message_authorRedirect: hasAuthorOpenChat, o_redirect: hasAuthorOpenChat }" t-att-src="avatar" t-on-click="_onClickAuthorAvatar" t-att-title="hasAuthorOpenChat ? OPEN_CHAT : ''" alt="Avatar"/>
                             <t t-if="message.author and message.author.im_status">
                                 <PartnerImStatusIcon
                                     class="o_Message_partnerImStatusIcon"
@@ -58,7 +58,7 @@
                     <t t-if="!props.isSquashed">
                         <div class="o_Message_header">
                             <t t-if="message.author">
-                                <div class="o_Message_authorName" t-att-class="hasAuthorRedirect ? 'o_Message_authorRedirect o_redirect' : ''" t-on-click="_onClickAuthor" t-att-title="hasAuthorRedirect ? 'Open chat' : ''">
+                                <div class="o_Message_authorName o_Message_authorRedirect o_redirect" t-on-click="_onClickAuthorName" title="Open profile">
                                     <t t-esc="message.author.nameOrDisplayName"/>
                                 </div>
                             </t>

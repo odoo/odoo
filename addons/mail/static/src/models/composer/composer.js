@@ -38,10 +38,6 @@ function factory(dependencies) {
             }
         }
 
-        focus() {
-            this.update({ isDoFocus: true });
-        }
-
         /**
          * Inserts text content in text input based on selection.
          *
@@ -604,9 +600,6 @@ function factory(dependencies) {
             dependencies: [
                 'allSuggestedPartners',
             ],
-            default: false,
-        }),
-        isDoFocus: attr({
             default: false,
         }),
         /**

@@ -133,6 +133,9 @@ function factory(dependencies) {
          */
         static convertData(data) {
             const data2 = {};
+            if ('model' in data) {
+                data2.model = data.model;
+            }
             if ('channel_type' in data) {
                 data2.channel_type = data.channel_type;
                 data2.model = 'mail.channel';
@@ -249,82 +252,6 @@ function factory(dependencies) {
         }
 
         /**
-         * Create a channel, which is a special kind of thread on model
-         * 'mail.channel' with multiple members.
-         *
-         * @static
-         * @param {Object} param0
-         * @param {boolean} [param0.autoselect=false] if set, when channel
-         *   has been created, it auto-open the channel. This opens in discuss
-         *   or chat window, depending on whether discuss is open or not.
-         * @param {string} [param0.autoselectChatWindowMode]
-         * @param {string} param0.name
-         * @param {integer} [param0.partnerId]
-         * @param {string} [param0.public]
-         * @param {string} param0.type
-         */
-        static async createChannel({
-            autoselect = false,
-            autoselectChatWindowMode,
-            name,
-            partnerId,
-            public: publicStatus,
-            type,
-        }) {
-            const device = this.env.messaging.device;
-            // TODO FIX: potential duplicate chat task-2276490
-            const data = await this.env.services.rpc({
-                model: 'mail.channel',
-                method: type === 'chat' ? 'channel_get' : 'channel_create',
-                args: type === 'chat' ? [[partnerId]] : [name, publicStatus],
-                kwargs: {
-                    context: Object.assign({}, this.env.session.user_content, {
-                        isMobile: device.isMobile,
-                    }),
-                }
-            });
-            const thread = this.insert(this.convertData(data));
-            if (autoselect) {
-                thread.open({ chatWindowMode: autoselectChatWindowMode });
-            }
-        }
-
-        /**
-         * Join a channel. This channel may not yet exists in the store.
-         *
-         * @static
-         * @param {integer} channelId
-         * @param {Object} [param1={}]
-         * @param {boolean} [param1.autoselect=false]
-         */
-        static async joinChannel(channelId, { autoselect = false } = {}) {
-            let channel = this.find(thread =>
-                thread.id === channelId &&
-                thread.model === 'mail.channel'
-            );
-            if (channel && channel.isPinned) {
-                return;
-            }
-            const data = await this.env.services.rpc({
-                model: 'mail.channel',
-                method: 'channel_join_and_get_info',
-                args: [[channelId]]
-            });
-            // We just joined the channel because of the previous rpc
-            // the main assumption here is that we didn't have the channel
-            // in memory. If we did though, clear the pending state and
-            // let the server's data be the master
-            const convertedData = Object.assign(
-                { isPendingPinned: undefined },
-                this.convertData(data),
-            );
-            channel = this.insert(convertedData);
-            if (autoselect) {
-                channel.open({ resetDiscussDomain: true });
-            }
-        }
-
-        /**
          * Load the previews of the specified threads. Basically, it fetches the
          * last messages, since they are used to display inline content of them.
          *
@@ -346,6 +273,119 @@ function factory(dependencies) {
             this.env.models['mail.message'].insert(channelPreviews.filter(p => p.last_message).map(
                 channelPreview => this.env.models['mail.message'].convertData(channelPreview.last_message)
             ));
+        }
+
+        /**
+         * Performs the `channel_info` RPC on `mail.channel`.
+         *
+         * @static
+         * @param {Object} param0
+         * @param {integer[]} param0.ids list of id of channels
+         * @returns {mail.thread[]}
+         */
+        static async performRpcChannelInfo({ ids }) {
+            const channelInfos = await this.env.services.rpc({
+                model: 'mail.channel',
+                method: 'channel_info',
+                args: [ids],
+            });
+            const channels = this.env.models['mail.thread'].insert(
+                channelInfos.map(channelInfo => this.env.models['mail.thread'].convertData(channelInfo))
+            );
+            // manually force recompute of counter
+            this.env.messaging.messagingMenu.update();
+            return channels;
+        }
+
+        /**
+         * Performs the `channel_create` RPC on `mail.channel`.
+         *
+         * @static
+         * @param {Object} param0
+         * @param {string} param0.name
+         * @param {string} [param0.privacy]
+         * @returns {mail.thread} the created channel
+         */
+        static async performRpcCreateChannel({ name, privacy }) {
+            const device = this.env.messaging.device;
+            const data = await this.env.services.rpc({
+                model: 'mail.channel',
+                method: 'channel_create',
+                args: [name, privacy],
+                kwargs: {
+                    context: Object.assign({}, this.env.session.user_content, {
+                        // optimize the return value by avoiding useless queries
+                        // in non-mobile devices
+                        isMobile: device.isMobile,
+                    }),
+                },
+            });
+            return this.env.models['mail.thread'].insert(
+                this.env.models['mail.thread'].convertData(data)
+            );
+        }
+
+        /**
+         * Performs the `channel_get` RPC on `mail.channel`.
+         *
+         * `openChat` is preferable in business code because it will avoid the
+         * RPC if the chat already exists.
+         *
+         * @static
+         * @param {Object} param0
+         * @param {integer[]} param0.partnerIds
+         * @param {boolean} [param0.pinForCurrentPartner]
+         * @returns {mail.thread|undefined} the created or existing chat
+         */
+        static async performRpcCreateChat({ partnerIds, pinForCurrentPartner }) {
+            const device = this.env.messaging.device;
+            // TODO FIX: potential duplicate chat task-2276490
+            const data = await this.env.services.rpc({
+                model: 'mail.channel',
+                method: 'channel_get',
+                kwargs: {
+                    context: Object.assign({}, this.env.session.user_content, {
+                        // optimize the return value by avoiding useless queries
+                        // in non-mobile devices
+                        isMobile: device.isMobile,
+                    }),
+                    partners_to: partnerIds,
+                    pin: pinForCurrentPartner,
+                },
+            });
+            if (!data) {
+                return;
+            }
+            return this.env.models['mail.thread'].insert(
+                this.env.models['mail.thread'].convertData(data)
+            );
+        }
+
+        /**
+         * Performs the `channel_join_and_get_info` RPC on `mail.channel`.
+         *
+         * @static
+         * @param {Object} param0
+         * @param {integer} param0.channelId
+         * @returns {mail.thread} the channel that was joined
+         */
+        static async performRpcJoinChannel({ channelId }) {
+            const device = this.env.messaging.device;
+            const data = await this.env.services.rpc({
+                model: 'mail.channel',
+                method: 'channel_join_and_get_info',
+                args: [[channelId]],
+                kwargs: {
+                    context: Object.assign({}, this.env.session.user_content, {
+                        // optimize the return value by avoiding useless queries
+                        // in non-mobile devices
+                        isMobile: device.isMobile,
+                    }),
+                },
+            });
+            return this.env.models['mail.thread'].insert(
+                this.env.models['mail.thread'].convertData(data)
+            );
         }
 
         /**
@@ -453,7 +493,7 @@ function factory(dependencies) {
          *
          * Only makes sense if pendingFoldState is set to the desired value.
          */
-        async notifyFoldStateToServer() {
+        notifyFoldStateToServer() {
             // method is called from _updateAfter so it cannot be async
             this.env.services.rpc({
                 model: 'mail.channel',
@@ -469,75 +509,67 @@ function factory(dependencies) {
          * Notify server to leave the current channel. Useful for cross-tab
          * and cross-device chat window state synchronization.
          *
-         * Only makes sense if pendingServerState is set to 'unpin'.
+         * Only makes sense if isPendingPinned is set to the desired value.
          */
-        notifyUnPinToServer() {
+        notifyPinStateToServer() {
             // method is called from _updateAfter so it cannot be async
-            this.env.services.rpc({
-                model: 'mail.channel',
-                method: 'execute_command',
-                args: [[this.id], 'leave']
-            });
+            if (this.isPendingPinned) {
+                this.env.services.rpc({
+                    model: 'mail.channel',
+                    method: 'channel_pin',
+                    kwargs: {
+                        uuid: this.uuid,
+                        pinned: true,
+                    },
+                }, { shadow: true });
+            } else {
+                this.env.services.rpc({
+                    model: 'mail.channel',
+                    method: 'execute_command',
+                    args: [[this.id], 'leave']
+                }, { shadow: true });
+            }
         }
 
         /**
-         * Open provided thread, either in discuss app or as a chat window.
+         * Opens this thread either as form view, in discuss app, or as a chat
+         * window. The thread will be opened in an "active" matter, which will
+         * interrupt current user flow.
          *
-         * @param {Object} param0
-         * @param {string} [param0.chatWindowMode='last_visible']
-         * @param {boolean} [param0.resetDiscussDomain=false]
+         * @param {Object} [param0]
+         * @param {boolean} [param0.expanded=false]
          */
-        open({ chatWindowMode = 'last_visible', resetDiscussDomain = false } = {}) {
-            const device = this.env.messaging.device;
-            const discuss = this.env.messaging.discuss;
-            const messagingMenu = this.env.messaging.messagingMenu;
+        async open({ expanded = false } = {}) {
+            // check if thread must be opened in form view
             if (!['mail.box', 'mail.channel'].includes(this.model)) {
-                this.env.messaging.openDocument({
+                return this.env.messaging.openDocument({
                     id: this.id,
                     model: this.model,
                 });
             }
+            // check if thread must be opened in discuss
+            const device = this.env.messaging.device;
+            const discuss = this.env.messaging.discuss;
             if (
-                (!device.isMobile && discuss.isOpen) ||
-                (device.isMobile && this.model === 'mail.box')
+                (!device.isMobile && (discuss.isOpen || expanded)) ||
+                this.model === 'mail.box'
             ) {
-                if (resetDiscussDomain) {
-                    discuss.threadView.update({ stringifiedDomain: '[]' });
-                }
-                discuss.threadView.update({ thread: [['link', this]] });
-            } else {
-                this.env.messaging.chatWindowManager.openThread(this, { mode: chatWindowMode });
+                return discuss.openThread(this);
             }
-            if (!device.isMobile) {
-                messagingMenu.close();
-            }
+            // thread must be opened in chat window
+            return this.env.messaging.chatWindowManager.openThread(this, {
+                makeActive: true,
+            });
         }
 
         /**
-         * Open this thread in an expanded way, that is not in a chat window.
+         * Opens the most appropriate view that is a profile for this thread.
          */
-        openExpanded() {
-            const discuss = this.env.messaging.discuss;
-            if (['mail.channel', 'mail.box'].includes(this.model)) {
-                discuss.threadView.update({ thread: [['link', this]] });
-                this.env.bus.trigger('do-action', {
-                    action: 'mail.action_discuss',
-                    options: {
-                        clear_breadcrumbs: false,
-                        active_id: discuss.threadToActiveId(this),
-                        on_reverse_breadcrumb: () => discuss.close(),
-                    },
-                });
-            } else {
-                this.env.bus.trigger('do-action', {
-                    action: {
-                        type: 'ir.actions.act_window',
-                        res_model: this.model,
-                        views: [[false, 'form']],
-                        res_id: this.id,
-                    },
-                });
-            }
+        async openProfile() {
+            return this.env.messaging.openDocument({
+                id: this.id,
+                model: this.model,
+            });
         }
 
         /**
@@ -756,15 +788,6 @@ function factory(dependencies) {
             const allAttachments = [...new Set(this.originThreadAttachments.concat(this.attachments))]
                 .sort((a1, a2) => a1.id < a2.id ? 1 : -1);
             return [['replace', allAttachments]];
-        }
-
-        /**
-         * @private
-         * @returns {mail.chat_window[]}
-         */
-        _computeChatWindows() {
-            const chatWindowThreadViews = this.threadViews.filter(threadView => !!threadView.chatWindow);
-            return [['replace', chatWindowThreadViews.map(threadView => threadView.chatWindow)]];
         }
 
         /**
@@ -1088,10 +1111,10 @@ function factory(dependencies) {
                 this.update({ pendingFoldState: undefined });
             }
             if (
-                this.isPendingPinned === false &&
+                this.isPendingPinned !== undefined &&
                 previous.isPendingPinned !== this.isPendingPinned
             ) {
-                this.notifyUnPinToServer();
+                this.notifyPinStateToServer();
             }
             if (
                 this.isServerPinned === this.isPendingPinned
@@ -1110,16 +1133,14 @@ function factory(dependencies) {
                 // the process
                 return;
             }
-            if (this.foldState !== 'closed' && this.chatWindows.length === 0) {
-                // condition to avoid crash during destroy
-                if (this.env.messaging.chatWindowManager) {
-                    this.env.messaging.chatWindowManager.openThread(this);
-                }
+            if (!this.env.messaging.chatWindowManager) {
+                // avoid crash during destroy
+                return;
             }
-            if (this.foldState === 'closed' && this.chatWindows.length > 0) {
-                for (const chatWindow of this.chatWindows) {
-                    chatWindow.close();
-                }
+            if (this.foldState !== 'closed') {
+                this.env.messaging.chatWindowManager.openThread(this);
+            } else {
+                this.env.messaging.chatWindowManager.closeThread(this);
             }
         }
 
@@ -1192,18 +1213,8 @@ function factory(dependencies) {
             isCausal: true,
         }),
         channel_type: attr(),
-        chatWindows: one2many('mail.chat_window', {
-            compute: '_computeChatWindows',
-            dependencies: ['threadViewsChatWindow'],
-        }),
         composer: one2one('mail.composer', {
-            /**
-             * FIXME With this, whenever client is aware of new thread, this will
-             * (almost) always focus its composer when displayed. This shouldn't be
-             * the case, instead auto-focus of composer is flow-specific.
-             * See task-2277537
-             */
-            default: [['create', { isDoFocus: true }]],
+            default: [['create']],
             inverse: 'thread',
             isCausal: true,
         }),
@@ -1474,9 +1485,6 @@ function factory(dependencies) {
         uuid: attr(),
         threadViews: one2many('mail.thread_view', {
             inverse: 'thread',
-        }),
-        threadViewsChatWindow: many2many('mail.chat_window', {
-            related: 'threadViews.chatWindow',
         }),
     };
 
