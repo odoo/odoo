@@ -96,7 +96,6 @@ def publish(args, pub_type, extensions):
 
         if os.path.islink(latest_abspath):
             os.unlink(latest_abspath)
-
         os.symlink(release_abspath, latest_abspath)
 
         return release_path
@@ -388,17 +387,18 @@ class KVM(object):
     def start(self):
         kvm_cmd = [
             "kvm",
-            "-cpu", "core2duo",
+            "-cpu", "Skylake-Client,hypervisor=on,hle=off,rtm=off",
             "-smp", "2,sockets=2,cores=1,threads=1",
-            "-net", "nic,model=rtl8139",
+            "-net", "nic,model=e1000e,macaddr=52:54:00:d3:38:5e",
             "-net", "user,hostfwd=tcp:127.0.0.1:10022-:22,hostfwd=tcp:127.0.0.1:18069-:8069,hostfwd=tcp:127.0.0.1:15432-:5432",
-            "-m", "1024",
+            "-m", "2048",
             "-drive", "file=%s,snapshot=on" % self.image,
-            "-nographic"
+            "-nographic",
+            "-serial", "none",
         ]
         logging.info("Starting kvm: {}".format(" ".join(kvm_cmd)))
         self.kvm_proc = subprocess.Popen(kvm_cmd)
-        time.sleep(50)
+        time.sleep(60)  # give some time to the VM to start, otherwise the SSH server may not be ready
         signal.alarm(2400)
         signal.signal(signal.SIGALRM, self.timeout)
         try:
@@ -422,7 +422,7 @@ class KVM(object):
     def rsync(self, rsync_args, options=['--delete', '--exclude', '.git', '--exclude', '.tx', '--exclude', '__pycache__']):
         cmd = [
             'rsync',
-            '-rt',
+            '-a',
             '-e', 'ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -p 10022 -i %s' % self.ssh_key
         ]
         cmd.extend(options)
@@ -437,7 +437,7 @@ class KVMWinBuildExe(KVM):
     def run(self):
         logging.info('Start building Windows package')
         with open(os.path.join(self.args.build_dir, 'setup/win32/Makefile.version'), 'w') as f:
-            f.write("VERSION=%s\n" % VERSION.replace('~', '_').replace('+', ''))
+            f.write("VERSION=%s.%s\n" % (VERSION.replace('~', '_').replace('+', ''), TSTAMP))
         with open(os.path.join(self.args.build_dir, 'setup/win32/Makefile.python'), 'w') as f:
             f.write("PYTHON_VERSION=%s\n" % self.args.vm_winxp_python_version)
         with open(os.path.join(self.args.build_dir, 'setup/win32/Makefile.servicename'), 'w') as f:
@@ -456,11 +456,11 @@ class KVMWinBuildExe(KVM):
 class KVMWinTestExe(KVM):
     def run(self):
         logging.info('Start testing Windows package')
-        setup_path = glob("%s/openerp-server-setup-*.exe" % self.args.build_dir)[0]
+        setup_path = glob("%s/odoo_setup_*.exe" % self.args.build_dir)[0]
         setupfile = setup_path.split('/')[-1]
-        setupversion = setupfile.split('openerp-server-setup-')[1].split('.exe')[0]
+        setupversion = setupfile.split('odoo_setup_')[1].split('.exe')[0]
 
-        self.rsync(['"%s"' % setup_path, '%s@127.0.0.1:' % self.login])
+        self.rsync(['%s' % setup_path, '%s@127.0.0.1:' % self.login])
         self.ssh("TEMP=/tmp ./%s /S" % setupfile)
         self.ssh('PGPASSWORD=openpgpwd /cygdrive/c/"Program Files"/"Odoo %s"/PostgreSQL/bin/createdb.exe -e -U openpg mycompany' % setupversion)
         self.ssh('netsh advfirewall set publicprofile state off')
@@ -471,8 +471,6 @@ class KVMWinTestExe(KVM):
 
 def build_exe(args):
     KVMWinBuildExe(args).start()
-    shutil.copy(glob('%s/openerp*.exe' % args.build_dir)[0], '%s/odoo_%s.%s.exe' % (args.build_dir, VERSION, TSTAMP))
-
 
 def test_exe(args):
     if args.test:
@@ -496,7 +494,7 @@ def parse_args():
     ap.add_argument("--vm-winxp-image", default='/home/odoo/vm/win1036/win10_winpy36.qcow2', help="%(default)s")
     ap.add_argument("--vm-winxp-ssh-key", default='/home/odoo/vm/win1036/id_rsa', help="%(default)s")
     ap.add_argument("--vm-winxp-login", default='Naresh', help="Windows login %(default)s")
-    ap.add_argument("--vm-winxp-python-version", default='3.7.4', help="Windows Python version installed in the VM (default: %(default)s)")
+    ap.add_argument("--vm-winxp-python-version", default='3.7.7', help="Windows Python version installed in the VM (default: %(default)s)")
 
     ap.add_argument("-t", "--test", action="store_true", default=False, help="Test built packages")
     ap.add_argument("-s", "--sign", action="store_true", default=False, help="Sign Debian package / generate Rpm repo")
