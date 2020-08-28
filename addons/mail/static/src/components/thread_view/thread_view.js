@@ -132,7 +132,6 @@ Object.assign(ThreadView, {
         hasComposer: false,
         hasMessageCheckbox: false,
         hasSquashCloseMessages: false,
-        haveMessagesAuthorRedirect: false,
         haveMessagesMarkAsReadIcon: false,
         haveMessagesReplyIcon: false,
         order: 'asc',
@@ -168,7 +167,6 @@ Object.assign(ThreadView, {
             optional: true,
         },
         hasSquashCloseMessages: Boolean,
-        haveMessagesAuthorRedirect: Boolean,
         haveMessagesMarkAsReadIcon: Boolean,
         haveMessagesReplyIcon: Boolean,
         order: {

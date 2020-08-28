@@ -64,6 +64,16 @@ function factory(dependencies) {
         }
 
         /**
+         * Opens the most appropriate view that is a profile for this follower.
+         */
+        async openProfile() {
+            if (this.partner) {
+                return this.partner.openProfile();
+            }
+            return this.channel.openProfile();
+        }
+
+        /**
          * Remove this follower from its related thread.
          */
         async remove() {

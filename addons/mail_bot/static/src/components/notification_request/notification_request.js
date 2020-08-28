@@ -74,7 +74,9 @@ class NotificationRequest extends Component {
         if (def) {
             def.then(this._handleResponseNotificationPermission.bind(this));
         }
-        this.trigger('o-odoobot-request-clicked');
+        if (!this.env.messaging.device.isMobile) {
+            this.env.messaging.messagingMenu.close();
+        }
     }
 
 }

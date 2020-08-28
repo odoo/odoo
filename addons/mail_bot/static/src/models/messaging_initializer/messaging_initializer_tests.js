@@ -24,10 +24,10 @@ QUnit.module('messaging_initializer_tests.js', {
 });
 
 
-QUnit.test('OdooBot initialized after 2 minutes', async function (assert) {
+QUnit.test('OdooBot initialized at init', async function (assert) {
     // TODO this test should be completed in combination with
     // implementing _mockMailChannelInitOdooBot task-2300480
-    assert.expect(3);
+    assert.expect(2);
 
     await this.start({
         env: {
@@ -35,7 +35,6 @@ QUnit.test('OdooBot initialized after 2 minutes', async function (assert) {
                 odoobot_initialized: false,
             },
         },
-        hasTimeControl: true,
         async mockRPC(route, args) {
             if (args.method === 'init_odoobot') {
                 assert.step('init_odoobot');
@@ -44,16 +43,9 @@ QUnit.test('OdooBot initialized after 2 minutes', async function (assert) {
         },
     });
 
-    await this.env.testUtils.advanceTime(119 * 1000);
-    assert.verifySteps(
-        [],
-        "should not have initialized OdooBot after 1 minute 59 seconds"
-    );
-
-    await this.env.testUtils.advanceTime(1 * 1000);
     assert.verifySteps(
         ['init_odoobot'],
-        "should have initialized OdooBot after 2 minutes"
+        "should have initialized OdooBot at init"
     );
 });
 

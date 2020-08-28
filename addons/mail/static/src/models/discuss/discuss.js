@@ -38,24 +38,35 @@ function factory(dependencies) {
             this.update({ isOpen: false });
         }
 
+        focus() {
+            this.update({ isDoFocus: true });
+        }
+
         /**
          * @param {Event} ev
          * @param {Object} ui
          * @param {Object} ui.item
          * @param {integer} ui.item.id
          */
-        handleAddChannelAutocompleteSelect(ev, ui) {
-            if (ui.item.special) {
-                this.env.models['mail.thread'].createChannel({
-                    autoselect: true,
-                    name: this.addingChannelValue,
-                    public: ui.item.special,
-                    type: 'channel',
-                });
-            } else {
-                this.env.models['mail.thread'].joinChannel(ui.item.id, { autoselect: true });
-            }
+        async handleAddChannelAutocompleteSelect(ev, ui) {
+            const name = this.addingChannelValue;
             this.clearIsAddingItem();
+            if (ui.item.special) {
+                const channel = await this.async(() =>
+                    this.env.models['mail.thread'].performRpcCreateChannel({
+                        name,
+                        privacy: ui.item.special,
+                    })
+                );
+                channel.open();
+            } else {
+                const channel = await this.async(() =>
+                    this.env.models['mail.thread'].performRpcJoinChannel({
+                        channelId: ui.item.id,
+                    })
+                );
+                channel.open();
+            }
         }
 
         /**
@@ -106,20 +117,7 @@ function factory(dependencies) {
          * @param {integer} ui.item.id
          */
         handleAddChatAutocompleteSelect(ev, ui) {
-            const partnerId = ui.item.id;
-            const partner = this.env.models['mail.partner'].find(partner =>
-                partner.id === partnerId
-            );
-            const chat = partner.correspondentThreads.find(thread => thread.channel_type === 'chat');
-            if (chat) {
-                this.threadView.update({ thread: [['link', chat]] });
-            } else {
-                this.env.models['mail.thread'].createChannel({
-                    autoselect: true,
-                    partnerId,
-                    type: 'chat',
-                });
-            }
+            this.env.messaging.openChat({ partnerId: ui.item.id });
             this.clearIsAddingItem();
         }
 
@@ -160,11 +158,31 @@ function factory(dependencies) {
             if (!thread) {
                 return;
             }
+            thread.open();
+        }
+
+
+        /**
+         * Opens the given thread in Discuss, and opens Discuss if necessary.
+         *
+         * @param {mail.thread} thread
+         */
+        async openThread(thread) {
             this.threadView.update({
                 stringifiedDomain: '[]',
                 thread: [['link', thread]],
             });
-            thread.open({ resetDiscussDomain: true });
+            this.focus();
+            if (!this.isOpen) {
+                this.env.bus.trigger('do-action', {
+                    action: 'mail.action_discuss',
+                    options: {
+                        active_id: this.threadToActiveId(this),
+                        clear_breadcrumbs: false,
+                        on_reverse_breadcrumb: () => this.close(),
+                    },
+                });
+            }
         }
 
         /**
@@ -189,7 +207,7 @@ function factory(dependencies) {
             this.replyingToMessageOriginThreadComposer.update({
                 isLog: !message.is_discussion && !message.is_notification
             });
-            this.replyingToMessageOriginThreadComposer.focus();
+            this.focus();
         }
 
         /**
@@ -380,6 +398,12 @@ function factory(dependencies) {
             compute: '_computeIsAddingChat',
             default: false,
             dependencies: ['isOpen'],
+        }),
+        /**
+         * Determine whether this discuss should be focused at next render.
+         */
+        isDoFocus: attr({
+            default: false,
         }),
         /**
          * Whether the discuss app is open or not. Useful to determine
