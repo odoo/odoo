@@ -815,7 +815,7 @@ QUnit.test('Form view not scrolled when switching record', async function (asser
     await afterNextRender(async () => {
         controllerContentEl.scrollTop = controllerContentEl.scrollHeight - controllerContentEl.offsetHeight;
         await triggerEvent(
-            document.querySelector('.o_ThreadViewer_messageList'),
+            document.querySelector('.o_ThreadView_messageList'),
             'scroll'
         );
     });

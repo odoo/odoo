@@ -325,8 +325,8 @@ QUnit.test('chat window: basic rendering', async function (assert) {
         "should have part to display thread content inside chat window"
     );
     assert.ok(
-        chatWindow.querySelector(`:scope .o_ChatWindow_thread`).classList.contains('o_ThreadViewer'),
-        "thread viewer part should use component ThreadViewer"
+        chatWindow.querySelector(`:scope .o_ChatWindow_thread`).classList.contains('o_ThreadView'),
+        "thread part should use component ThreadView"
     );
 });
 
@@ -391,7 +391,7 @@ QUnit.test('chat window: fold', async function (assert) {
     assert.containsOnce(
         document.body,
         '.o_ChatWindow_thread',
-        "chat window should have a thread viewer"
+        "chat window should have a thread"
     );
     assert.verifySteps(['rpc:channel_fold/open']);
 
@@ -401,7 +401,7 @@ QUnit.test('chat window: fold', async function (assert) {
     assert.containsNone(
         document.body,
         '.o_ChatWindow_thread',
-        "chat window should not have any thread viewer"
+        "chat window should not have any thread"
     );
 
     // Unfold chat window
@@ -410,7 +410,7 @@ QUnit.test('chat window: fold', async function (assert) {
     assert.containsOnce(
         document.body,
         '.o_ChatWindow_thread',
-        "chat window should have a thread viewer"
+        "chat window should have a thread"
     );
 });
 
@@ -730,23 +730,23 @@ QUnit.test('[technical] chat window: scroll conservation on toggle home menu', a
         document.querySelector(`.o_MessagingMenu_dropdownMenu .o_NotificationList_preview`).click()
     );
     // Set a scroll position to chat window
-    document.querySelector(`.o_ThreadViewer_messageList`).scrollTop = 142;
+    document.querySelector(`.o_ThreadView_messageList`).scrollTop = 142;
     assert.strictEqual(
-        document.querySelector(`.o_ThreadViewer_messageList`).scrollTop,
+        document.querySelector(`.o_ThreadView_messageList`).scrollTop,
         142,
         "chat window initial scrollTop should be 142px"
     );
 
     await afterNextRender(() => this.hideHomeMenu());
     assert.strictEqual(
-        document.querySelector(`.o_ThreadViewer_messageList`).scrollTop,
+        document.querySelector(`.o_ThreadView_messageList`).scrollTop,
         142,
         "chat window scrollTop should still be the same after home menu is hidden"
     );
 
     await afterNextRender(() => this.showHomeMenu());
     assert.strictEqual(
-        document.querySelector(`.o_ThreadViewer_messageList`).scrollTop,
+        document.querySelector(`.o_ThreadView_messageList`).scrollTop,
         142,
         "chat window scrollTop should still be the same after home menu is shown"
     );
@@ -1471,9 +1471,9 @@ QUnit.test('chat window with a thread: keep scroll position in message list on f
         document.querySelector(`.o_NotificationList_preview`).click()
     );
     // Set a scroll position to chat window
-    document.querySelector(`.o_ThreadViewer_messageList`).scrollTop = 142;
+    document.querySelector(`.o_ThreadView_messageList`).scrollTop = 142;
     assert.strictEqual(
-        document.querySelector(`.o_ThreadViewer_messageList`).scrollTop,
+        document.querySelector(`.o_ThreadView_messageList`).scrollTop,
         142,
         "verify chat window initial scrollTop"
     );
@@ -1482,14 +1482,14 @@ QUnit.test('chat window with a thread: keep scroll position in message list on f
     await afterNextRender(() => document.querySelector('.o_ChatWindow_header').click());
     assert.containsNone(
         document.body,
-        ".o_ThreadViewer",
-        "chat window should be folded so no thread viewer should be present"
+        ".o_ThreadView",
+        "chat window should be folded so no ThreadView should be present"
     );
 
     // unfold chat window
     await afterNextRender(() => document.querySelector('.o_ChatWindow_header').click());
     assert.strictEqual(
-        document.querySelector(`.o_ThreadViewer_messageList`).scrollTop,
+        document.querySelector(`.o_ThreadView_messageList`).scrollTop,
         142,
         "chat window scrollTop should still be the same when chat window is unfolded"
     );
@@ -1600,9 +1600,9 @@ QUnit.test('[technical] chat window with a thread: keep scroll position in messa
         document.querySelector(`.o_MessagingMenu_dropdownMenu .o_NotificationList_preview`).click()
     );
     // Set a scroll position to chat window
-    document.querySelector(`.o_ThreadViewer_messageList`).scrollTop = 142;
+    document.querySelector(`.o_ThreadView_messageList`).scrollTop = 142;
     assert.strictEqual(
-        document.querySelector(`.o_ThreadViewer_messageList`).scrollTop,
+        document.querySelector(`.o_ThreadView_messageList`).scrollTop,
         142,
         "should have scrolled to 142px"
     );
@@ -1613,7 +1613,7 @@ QUnit.test('[technical] chat window with a thread: keep scroll position in messa
     // unfold chat window
     await afterNextRender(() => document.querySelector('.o_ChatWindow_header').click());
     assert.strictEqual(
-        document.querySelector(`.o_ThreadViewer_messageList`).scrollTop,
+        document.querySelector(`.o_ThreadView_messageList`).scrollTop,
         142,
         "chat window scrollTop should still be the same after home menu is hidden"
     );
@@ -1625,7 +1625,7 @@ QUnit.test('[technical] chat window with a thread: keep scroll position in messa
     // unfold chat window
     await afterNextRender(() => document.querySelector('.o_ChatWindow_header').click());
     assert.strictEqual(
-        document.querySelector(`.o_ThreadViewer_messageList`).scrollTop,
+        document.querySelector(`.o_ThreadView_messageList`).scrollTop,
         142,
         "chat window scrollTop should still be the same after home menu is shown"
     );
