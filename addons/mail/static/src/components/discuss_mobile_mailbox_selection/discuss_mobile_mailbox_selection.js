@@ -74,7 +74,7 @@ class DiscussMobileMailboxSelection extends Component {
      */
     _onClick(ev) {
         const { mailbox } = ev.currentTarget.dataset;
-        this.discuss.threadViewer.update({ thread: [['link', mailbox]] });
+        this.discuss.threadView.update({ thread: [['link', mailbox]] });
     }
 
 }
