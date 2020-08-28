@@ -875,7 +875,6 @@ exports.PosModel = Backbone.Model.extend({
     render_html_for_customer_facing_display: function () {
         var self = this;
         var order = this.get_order();
-        var rendered_html = this.config.customer_facing_display_html;
 
         // If we're using an external device like the IoT Box, we
         // cannot get /web/image?model=product.product because the
@@ -896,43 +895,12 @@ exports.PosModel = Backbone.Model.extend({
             });
         }
 
-        // when all images are loaded in product.image_base64
         return Promise.all(get_image_promises).then(function () {
-            var rendered_order_lines = "";
-            var rendered_payment_lines = "";
-            var order_total_with_tax = self.format_currency(0);
-
-            if (order) {
-                rendered_order_lines = QWeb.render('CustomerFacingDisplayOrderLines', {
-                    'orderlines': order.get_orderlines(),
-                    'pos': self,
-                });
-                rendered_payment_lines = QWeb.render('CustomerFacingDisplayPaymentLines', {
-                    'order': order,
-                    'pos': self,
-                });
-                order_total_with_tax = self.format_currency(order.get_total_with_tax());
-            }
-
-            var $rendered_html = $(rendered_html);
-            $rendered_html.find('.pos_orderlines_list').html(rendered_order_lines);
-            $rendered_html.find('.pos-total').find('.pos_total-amount').html(order_total_with_tax);
-            var pos_change_title = $rendered_html.find('.pos-change_title').text();
-            $rendered_html.find('.pos-paymentlines').html(rendered_payment_lines);
-            $rendered_html.find('.pos-change_title').text(pos_change_title);
-
-            // prop only uses the first element in a set of elements,
-            // and there's no guarantee that
-            // customer_facing_display_html is wrapped in a single
-            // root element.
-            rendered_html = _.reduce($rendered_html, function (memory, current_element) {
-                return memory + $(current_element).prop('outerHTML');
-            }, ""); // initial memory of ""
-
-            rendered_html = QWeb.render('CustomerFacingDisplayHead', {
-                origin: window.location.origin
-            }) + rendered_html;
-            return rendered_html;
+            return QWeb.render('CustomerFacingDisplayOrder', {
+                pos: self.env.pos,
+                origin: window.location.origin,
+                order: order,
+            });
         });
     },
 
