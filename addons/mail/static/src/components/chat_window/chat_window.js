@@ -167,20 +167,15 @@ class ChatWindow extends Component {
      * @param {Object} ui.item
      * @param {integer} ui.item.id
      */
-    _onAutocompleteSelect(ev, ui) {
-        const partnerId = ui.item.id;
-        const partner = this.env.models['mail.partner'].find(partner => partner.id === partnerId);
-        const chat = partner.correspondentThreads.find(thread => thread.channel_type === 'chat');
-        if (chat) {
-            chat.open({ chatWindowMode: 'from_new_message' });
-        } else {
-            this.env.models['mail.thread'].createChannel({
-                autoselect: true,
-                autoselectChatWindowMode: 'from_new_message',
-                partnerId,
-                type: 'chat',
-            });
+    async _onAutocompleteSelect(ev, ui) {
+        const chat = await this.env.messaging.getChat({ partnerId: ui.item.id });
+        if (!chat) {
+            return;
         }
+        this.env.messaging.chatWindowManager.openThread(chat, {
+            makeActive: true,
+            replaceNewMessage: true,
+        });
     }
 
     /**
@@ -223,6 +218,12 @@ class ChatWindow extends Component {
             return;
         }
         if (this.chatWindow.isFocused) {
+            return;
+        }
+        if (isEventHandled(ev, 'Message.authorOpenChat')) {
+            return;
+        }
+        if (isEventHandled(ev, 'Message.authorOpenProfile')) {
             return;
         }
         this.chatWindow.focus();
