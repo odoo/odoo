@@ -503,8 +503,8 @@ class MailThread(models.AbstractModel):
         fnames = self._get_tracked_fields().intersection(fields)
         if not fnames:
             return
-        func = self.browse()._finalize_tracking
-        [initial_values] = self.env.cr.precommit.add(func, dict)
+        self.env.cr.precommit.add(self._finalize_tracking)
+        initial_values = self.env.cr.precommit.data.setdefault(f'mail.tracking.{self._name}', {})
         for record in self:
             if not record.id:
                 continue
@@ -517,16 +517,17 @@ class MailThread(models.AbstractModel):
         """ Prevent any tracking of fields on ``self``. """
         if not self._get_tracked_fields():
             return
-        func = self.browse()._finalize_tracking
-        [initial_values] = self.env.cr.precommit.add(func, dict)
+        self.env.cr.precommit.add(self._finalize_tracking)
+        initial_values = self.env.cr.precommit.data.setdefault(f'mail.tracking.{self._name}', {})
         # disable tracking by setting initial values to None
         for id_ in self.ids:
             initial_values[id_] = None
 
-    def _finalize_tracking(self, initial_values):
+    def _finalize_tracking(self):
         """ Generate the tracking messages for the records that have been
         prepared with ``_prepare_tracking``.
         """
+        initial_values = self.env.cr.precommit.data.pop(f'mail.tracking.{self._name}', {})
         ids = [id_ for id_, vals in initial_values.items() if vals]
         if not ids:
             return
