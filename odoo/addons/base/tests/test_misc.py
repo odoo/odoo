@@ -272,36 +272,54 @@ class TestFormatLangDate(TransactionCase):
         self.assertEqual(misc.format_time(lang.with_context(lang='zh_CN').env, time_part, time_format='medium', lang_code='fr_FR'), '16:30:22')
 
 
-class TestGroupCalls(BaseCase):
-    def test_callbacks(self):
+class TestCallbacks(BaseCase):
+    def test_callback(self):
         log = []
+        callbacks = misc.Callbacks()
 
+        # add foo
         def foo():
             log.append("foo")
 
-        def bar(items):
-            log.extend(items)
-            callbacks.add(baz)
-
-        def baz():
-            log.append("baz")
-
-        callbacks = misc.GroupCalls()
         callbacks.add(foo)
-        callbacks.add(bar, list)[0].append(1)
-        callbacks.add(bar, list)[0].append(2)
-        self.assertEqual(log, [])
 
-        callbacks()
-        self.assertEqual(log, ["foo", 1, 2, "baz"])
+        # add bar
+        @callbacks.add
+        def bar():
+            log.append("bar")
 
-        callbacks()
-        self.assertEqual(log, ["foo", 1, 2, "baz"])
+        # add foo again
+        callbacks.add(foo)
 
-        callbacks.add(bar, list)[0].append(3)
-        callbacks.clear()
-        callbacks()
-        self.assertEqual(log, ["foo", 1, 2, "baz"])
+        # this should call foo(), bar(), foo()
+        callbacks.run()
+        self.assertEqual(log, ["foo", "bar", "foo"])
+
+        # this should do nothing
+        callbacks.run()
+        self.assertEqual(log, ["foo", "bar", "foo"])
+
+    def test_aggregate(self):
+        log = []
+        callbacks = misc.Callbacks()
+
+        # register foo once
+        @callbacks.add
+        def foo():
+            log.append(callbacks.data["foo"])
+
+        # aggregate data
+        callbacks.data.setdefault("foo", []).append(1)
+        callbacks.data.setdefault("foo", []).append(2)
+        callbacks.data.setdefault("foo", []).append(3)
+
+        # foo() is called once
+        callbacks.run()
+        self.assertEqual(log, [[1, 2, 3]])
+        self.assertFalse(callbacks.data)
+
+        callbacks.run()
+        self.assertEqual(log, [[1, 2, 3]])
 
 
 class TestRemoveAccents(BaseCase):
