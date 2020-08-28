@@ -147,7 +147,7 @@ model::
 Model fields
 ------------
 
-Fields are used to define what the model can store and where. Fields are
+Fields are used to define what the model can store. Fields are
 defined as attributes on the model class::
 
     from odoo import models, fields

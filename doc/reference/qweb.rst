@@ -277,6 +277,8 @@ to create. The value to set can be provided in two ways:
   .. note:: using the result of this operation is a significant use-case for
             the ``raw`` directive.
 
+.. _reference/qweb/sub-templates:
+
 calling sub-templates
 =====================
 

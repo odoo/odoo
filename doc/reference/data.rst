@@ -264,6 +264,8 @@ section of the view, and allowing a few *optional* attributes:
 CSV data files
 ==============
 
+.. _reference/data/csvdatafiles:
+
 XML data files are flexible and self-descriptive, but very verbose when
 creating a number of simple records of the same model in bulk.
 

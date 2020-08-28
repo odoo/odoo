@@ -13,63 +13,158 @@ Both mechanisms are linked to specific users through *groups*: a user belongs
 to any number of groups, and security mechanisms are associated to groups,
 thus applying security mechamisms to users.
 
+.. class:: res.groups
+
+    .. attribute:: name
+
+        serves as user-readable identification for the group (spells out the
+        role / purpose of the group)
+
+    .. attribute:: category_id
+
+        The *module category*, serves to associate groups with an Odoo App
+        (~a set of related business models) and convert them into an exclusive
+        selection in the user form.
+
+        .. todo:: clarify & document special cases & relationship between
+                  groups & categories better
+
+    .. attribute:: implied_ids
+
+        Other groups to set on the user alongside this one. This is a
+        convenience pseudo-inheritance relationship: it's possible to
+        explicitely remove implied groups from a user without removing the
+        implier.
+
+    .. attribute:: comment
+
+        Additional notes on the group e.g.
+
 .. _reference/security/acl:
 
-Access Control
-==============
+Access Rights
+=============
 
-Managed by the ``ir.model.access`` records, defines access to a whole model.
+*Grants* access to an entire model for a given set of operations. If no access
+rights matches an operation on a model for a user (through their group), the
+user doesn't have access.
 
-Each access control has a model to which it grants permissions, the
-permissions it grants and optionally a group.
+Access rights are additive, a user's accesses are the union of the accesses
+they get through all their groups e.g. given a user who is part of group A
+granting read and create access and a group B granting update access, the user
+will have all three of create, read, and update.
 
-Access controls are additive, for a given model a user has access all
-permissions granted to any of its groups: if the user belongs to one group
-which allows writing and another which allows deleting, they can both write
-and delete.
+.. class:: ir.model.access
 
-If no group is specified, the access control applies to all users, otherwise
-it only applies to the members of the given group.
+    .. attribute:: name
 
-Available permissions are creation (``perm_create``), searching and reading
-(``perm_read``), updating existing records (``perm_write``) and deleting
-existing records (``perm_unlink``)
+        The purpose or role of the group.
+
+    .. attribute:: model_id
+
+        The model whose access the ACL controls.
+
+    .. attribute:: group_id
+
+        The :class:`res.groups` to which the accesses are granted, an empty
+        :attr:`group_id` means the ACL is granted to *every user*
+        (non-employees e.g. portal or public users).
+
+    The :samp:`perm_{method}` attributes grant the corresponding CRUD access
+    when set, they are all unset by default.
+
+    .. attribute:: perm_create
+    .. attribute:: perm_read
+    .. attribute:: perm_write
+    .. attribute:: perm_unlink
 
 .. _reference/security/rules:
 
-Record Rules
+Access Rules
 ============
 
-Record rules are conditions that records must satisfy for an operation
-(create, read, update or delete) to be allowed. It is applied record-by-record
-after access control has been applied.
+Record rules are *conditions* which must be satisfied in order for an operation
+to be allowed. Record rules are evaluated record-by-record, following access
+rights.
 
-A record rule has:
+Access rules are default-allow: if access rights grant access and no rule
+applies to the operation and model for the user, the access is granted.
 
-* a model on which it applies
-* a set of permissions to which it applies (e.g. if ``perm_read`` is set, the
-  rule will only be checked when reading a record)
-* a set of user groups to which the rule applies, if no group is specified
-  the rule is *global*
-* a :ref:`domain <reference/orm/domains>` used to check whether a given record
-  matches the rule (and is accessible) or does not (and is not accessible).
-  The domain is evaluated with two variables in context: ``user`` is the
-  current user's record and ``time`` is the `time module`_
+.. class:: ir.rule
 
-Global rules and group rules (rules restricted to specific groups versus
-groups applying to all users) are used quite differently:
+    .. attribute:: name
 
-* Global rules are subtractive, they *must all* be matched for a record to be
-  accessible
-* Group rules are additive, if *any* of them matches (and all global rules
-  match) then the record is accessible
+        The description of the rule.
 
-This means the first *group rule* restricts access, but any further
-*group rule* expands it, while *global rules* can only ever restrict access
-(or have no effect).
+    .. attribute:: model_id
 
-.. warning:: record rules do not apply to the Superuser account
-    :class: aphorism
+        The model to which the rule applies.
+
+    .. attribute:: groups
+
+        The :class:`res.groups` to which access is granted (or not). Multiple
+        groups can be specified. If no group is specified, the rule is *global*
+        which is treated differently than "group" rules (see below).
+
+    .. attribute:: global
+
+        Computed on the basis of :attr:`groups`, provides easy access to the
+        global status (or not) of the rule.
+
+    .. attribute:: domain_force
+
+        A predicate specified as a :ref:`domain <reference/orm/domains>`, the
+        rule allows the selected operations if the domain matches the record,
+        and forbids it otherwise.
+
+        The domain is a *python expression* which can use the following
+        variables:
+
+        ``time``
+            Python's :mod:`python:time` module.
+        ``user``
+            The current user, as a singleton recordset.
+        ``company_id``
+            The current user's currently selected company as a single company id
+            (not a recordset).
+        ``company_ids``
+            All the companies to which the current user has access as a list of
+            company ids (not a recordset), see
+            :ref:`howto/company/security` for more details.
+
+    The :samp:`perm_{method}` have completely different semantics than for
+    :class:`ir.model.access`: for rules, they specify which operation the rules
+    applies *for*. If an operation is not selected, then the rule is not checked
+    for it, as if the rule did not exist.
+
+    All operations are selected by default.
+
+    .. attribute:: perm_create
+    .. attribute:: perm_read
+    .. attribute:: perm_write
+    .. attribute:: perm_unlink
+
+.. _reference/security/rules/global:
+
+Global rules versus group rules
+-------------------------------
+
+There is a large difference between global and group rules in how they compose
+and combine:
+
+* Global rules *intersect*, if two global rules apply then *both* must be
+  satisfied for the access to be granted, this means adding global rules always
+  restricts access further.
+* Group rules *unify*, if two group rules apply then *either* can be
+  satisfied for the access to be granted. This means adding group rules can
+  expand access, but not beyond the bounds defined by global rules.
+* The global and group rulesets *intersect*, which means the first group rule
+  being added to a given global ruleset will restrict access.
+
+.. danger::
+
+    Creating multiple global rules is risky as it's possible to create
+    non-overlapping rulesets, which will remove all access.
 
 .. _reference/security/fields:
 
