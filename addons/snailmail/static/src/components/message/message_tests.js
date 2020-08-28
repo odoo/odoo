@@ -46,7 +46,7 @@ QUnit.test('Sent', async function (assert) {
     assert.expect(8);
 
     await this.start();
-    const threadViewer = this.env.models['mail.thread_viewer'].create({
+    const threadView = this.env.models['mail.thread_view'].create({
         thread: [['create', {
             id: 11,
             model: 'mail.channel',
@@ -60,10 +60,10 @@ QUnit.test('Sent', async function (assert) {
             notification_status: 'sent',
             notification_type: 'snail',
         }]],
-        originThread: [['link', threadViewer.thread]],
+        originThread: [['link', threadView.thread]],
     });
     await this.createMessageComponent(message, {
-        threadViewerLocalId: threadViewer.localId
+        threadViewLocalId: threadView.localId
     });
 
     assert.containsOnce(
@@ -116,7 +116,7 @@ QUnit.test('Canceled', async function (assert) {
     assert.expect(8);
 
     await this.start();
-    const threadViewer = this.env.models['mail.thread_viewer'].create({
+    const threadView = this.env.models['mail.thread_view'].create({
         thread: [['create', {
             id: 11,
             model: 'mail.channel',
@@ -130,10 +130,10 @@ QUnit.test('Canceled', async function (assert) {
             notification_status: 'canceled',
             notification_type: 'snail',
         }]],
-        originThread: [['link', threadViewer.thread]],
+        originThread: [['link', threadView.thread]],
     });
     await this.createMessageComponent(message, {
-        threadViewerLocalId: threadViewer.localId
+        threadViewLocalId: threadView.localId
     });
 
     assert.containsOnce(
@@ -186,7 +186,7 @@ QUnit.test('Pending', async function (assert) {
     assert.expect(8);
 
     await this.start();
-    const threadViewer = this.env.models['mail.thread_viewer'].create({
+    const threadView = this.env.models['mail.thread_view'].create({
         thread: [['create', {
             id: 11,
             model: 'mail.channel',
@@ -200,10 +200,10 @@ QUnit.test('Pending', async function (assert) {
             notification_status: 'ready',
             notification_type: 'snail',
         }]],
-        originThread: [['link', threadViewer.thread]],
+        originThread: [['link', threadView.thread]],
     });
     await this.createMessageComponent(message, {
-        threadViewerLocalId: threadViewer.localId
+        threadViewLocalId: threadView.localId
     });
 
     assert.containsOnce(
@@ -263,7 +263,7 @@ QUnit.test('No Price Available', async function (assert) {
             return this._super(...arguments);
         },
     });
-    const threadViewer = this.env.models['mail.thread_viewer'].create({
+    const threadView = this.env.models['mail.thread_view'].create({
         thread: [['create', {
             id: 11,
             model: 'mail.channel',
@@ -278,10 +278,10 @@ QUnit.test('No Price Available', async function (assert) {
             notification_status: 'exception',
             notification_type: 'snail',
         }]],
-        originThread: [['link', threadViewer.thread]],
+        originThread: [['link', threadView.thread]],
     });
     await this.createMessageComponent(message, {
-        threadViewerLocalId: threadViewer.localId
+        threadViewLocalId: threadView.localId
     });
 
     assert.containsOnce(
@@ -349,7 +349,7 @@ QUnit.test('Credit Error', async function (assert) {
             return this._super(...arguments);
         },
     });
-    const threadViewer = this.env.models['mail.thread_viewer'].create({
+    const threadView = this.env.models['mail.thread_view'].create({
         thread: [['create', {
             id: 11,
             model: 'mail.channel',
@@ -364,10 +364,10 @@ QUnit.test('Credit Error', async function (assert) {
             notification_status: 'exception',
             notification_type: 'snail',
         }]],
-        originThread: [['link', threadViewer.thread]],
+        originThread: [['link', threadView.thread]],
     });
     await this.createMessageComponent(message, {
-        threadViewerLocalId: threadViewer.localId
+        threadViewLocalId: threadView.localId
     });
 
     assert.containsOnce(
@@ -440,7 +440,7 @@ QUnit.test('Trial Error', async function (assert) {
             return this._super(...arguments);
         },
     });
-    const threadViewer = this.env.models['mail.thread_viewer'].create({
+    const threadView = this.env.models['mail.thread_view'].create({
         thread: [['create', {
             id: 11,
             model: 'mail.channel',
@@ -455,10 +455,10 @@ QUnit.test('Trial Error', async function (assert) {
             notification_status: 'exception',
             notification_type: 'snail',
         }]],
-        originThread: [['link', threadViewer.thread]],
+        originThread: [['link', threadView.thread]],
     });
     await this.createMessageComponent(message, {
-        threadViewerLocalId: threadViewer.localId
+        threadViewLocalId: threadView.localId
     });
 
     assert.containsOnce(
@@ -539,7 +539,7 @@ QUnit.test('Format Error', async function (assert) {
     });
 
     await this.start({ env: { bus } });
-    const threadViewer = this.env.models['mail.thread_viewer'].create({
+    const threadView = this.env.models['mail.thread_view'].create({
         thread: [['create', {
             id: 11,
             model: 'mail.channel',
@@ -554,10 +554,10 @@ QUnit.test('Format Error', async function (assert) {
             notification_status: 'exception',
             notification_type: 'snail',
         }]],
-        originThread: [['link', threadViewer.thread]],
+        originThread: [['link', threadView.thread]],
     });
     await this.createMessageComponent(message, {
-        threadViewerLocalId: threadViewer.localId
+        threadViewLocalId: threadView.localId
     });
 
     assert.containsOnce(
@@ -627,11 +627,11 @@ QUnit.test('Missing Required Fields', async function (assert) {
     await this.start({
         env: { bus },
     });
-    const threadViewer = this.env.models['mail.thread_viewer'].create({
+    const threadView = this.env.models['mail.thread_view'].create({
         thread: [['insert', { id: 20, model: 'res.partner' }]],
     });
     const message = this.env.models['mail.message'].find(message => message.id === 10);
-    await this.createMessageComponent(message, { threadViewerLocalId: threadViewer.localId });
+    await this.createMessageComponent(message, { threadViewLocalId: threadView.localId });
 
     assert.containsOnce(
         document.body,

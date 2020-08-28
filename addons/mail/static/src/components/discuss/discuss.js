@@ -10,7 +10,7 @@ const components = {
     ModerationDiscardDialog: require('mail/static/src/components/moderation_discard_dialog/moderation_discard_dialog.js'),
     ModerationRejectDialog: require('mail/static/src/components/moderation_reject_dialog/moderation_reject_dialog.js'),
     NotificationList: require('mail/static/src/components/notification_list/notification_list.js'),
-    ThreadViewer: require('mail/static/src/components/thread_viewer/thread_viewer.js'),
+    ThreadView: require('mail/static/src/components/thread_view/thread_view.js'),
 };
 const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
 
@@ -27,16 +27,16 @@ class Discuss extends Component {
         useStore(props => {
             const discuss = this.env.messaging && this.env.messaging.discuss;
             return {
-                checkedMessages: discuss ? discuss.threadViewer.checkedMessages.map(message => message.__state) : [],
+                checkedMessages: discuss ? discuss.threadView.checkedMessages.map(message => message.__state) : [],
                 discuss: discuss ? discuss.__state : undefined,
                 isDeviceMobile: this.env.messaging && this.env.messaging.device.isMobile,
                 isMessagingInitialized: this.env.isMessagingInitialized(),
                 thread: discuss && discuss.thread ? discuss.thread.__state : undefined,
-                threadCache: (discuss && discuss.threadViewer && discuss.threadViewer.threadCache)
-                    ? discuss.threadViewer.threadCache.__state
+                threadCache: (discuss && discuss.threadView && discuss.threadView.threadCache)
+                    ? discuss.threadView.threadCache.__state
                     : undefined,
-                uncheckedMessages: discuss && discuss.threadViewer
-                    ? discuss.threadViewer.uncheckedMessages.map(message => message.__state)
+                uncheckedMessages: discuss && discuss.threadView
+                    ? discuss.threadView.uncheckedMessages.map(message => message.__state)
                     : [],
             };
         }, {
@@ -76,12 +76,12 @@ class Discuss extends Component {
         if (
             this.discuss.thread &&
             this.discuss.thread === this.env.messaging.inbox &&
-            this._lastThreadCache === this.discuss.threadViewer.threadCache.localId &&
+            this._lastThreadCache === this.discuss.threadView.threadCache.localId &&
             this._lastThreadCounter > 0 && this.discuss.thread.counter === 0
         ) {
             this.trigger('o-show-rainbow-man');
         }
-        this._activeThreadCache = this.discuss.threadViewer.threadCache;
+        this._activeThreadCache = this.discuss.threadView.threadCache;
         this._updateLocalStoreProps();
     }
 
@@ -149,8 +149,8 @@ class Discuss extends Component {
          * rainbox man on inbox.
          */
         this._lastThreadCache = (
-            this.discuss.threadViewer.threadCache &&
-            this.discuss.threadViewer.threadCache.localId
+            this.discuss.threadView.threadCache &&
+            this.discuss.threadView.threadCache.localId
         );
         /**
          * Locally tracked store props `threadCounter`.
@@ -255,7 +255,7 @@ class Discuss extends Component {
      * @param {mail.thread} ev.detail.thread
      */
     _onSelectThread(ev) {
-        this.discuss.threadViewer.update({ thread: [['link', ev.detail.thread]] });
+        this.discuss.threadView.update({ thread: [['link', ev.detail.thread]] });
     }
 
     /**

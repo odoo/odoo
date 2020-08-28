@@ -113,7 +113,7 @@
         'static/src/components/thread_preview/thread_preview.xml',
         'static/src/components/thread_textual_typing_status/thread_textual_typing_status.xml',
         'static/src/components/thread_typing_icon/thread_typing_icon.xml',
-        'static/src/components/thread_viewer/thread_viewer.xml',
+        'static/src/components/thread_view/thread_view.xml',
         'static/src/widgets/common.xml',
         'static/src/widgets/discuss/discuss.xml',
         'static/src/widgets/discuss_invite_partner_dialog/discuss_invite_partner_dialog.xml',

@@ -4,7 +4,7 @@ odoo.define('mail/static/src/components/chat_window/chat_window.js', function (r
 const components = {
     AutocompleteInput: require('mail/static/src/components/autocomplete_input/autocomplete_input.js'),
     ChatWindowHeader: require('mail/static/src/components/chat_window_header/chat_window_header.js'),
-    ThreadViewer: require('mail/static/src/components/thread_viewer/thread_viewer.js'),
+    ThreadView: require('mail/static/src/components/thread_view/thread_view.js'),
 };
 const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
 const { isEventHandled } = require('mail/static/src/utils/utils.js');
@@ -134,7 +134,7 @@ class ChatWindow extends Component {
      * @private
      */
     _saveThreadScrollTop() {
-        this.chatWindow.threadViewer.saveThreadCacheScrollPositionsAsInitial(
+        this.chatWindow.threadView.saveThreadCacheScrollPositionsAsInitial(
             this._threadRef.comp.getScrollTop()
         );
     }

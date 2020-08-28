@@ -22,7 +22,7 @@
                 />
                 <t t-if="!chatWindow.isFolded">
                     <t t-if="chatWindow.thread">
-                        <ThreadViewer
+                        <ThreadView
                             class="o_ChatWindow_thread"
                             composerAttachmentsDetailsMode="'card'"
                             hasComposer="chatWindow.thread.model !== 'mail.box' and (!chatWindow.thread.mass_mailing or env.messaging.device.isMobile)"
@@ -30,7 +30,7 @@
                             hasComposerSendButton="env.messaging.device.isMobile"
                             hasSquashCloseMessages="chatWindow.thread.model !== 'mail.box'"
                             haveMessagesAuthorRedirect="chatWindow.thread.channel_type !== 'chat'"
-                            threadViewerLocalId="chatWindow.threadViewer.localId"
+                            threadViewLocalId="chatWindow.threadView.localId"
                             t-on-focusin="_onFocusinThread"
                             t-ref="thread"
                         />

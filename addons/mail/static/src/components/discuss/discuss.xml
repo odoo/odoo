@@ -22,10 +22,10 @@
                     </div>
                 </t>
                 <t t-if="discuss.hasModerationDiscardDialog">
-                    <ModerationDiscardDialog messageLocalIds="discuss.threadViewer.checkedMessages.map(message => message.localId)" t-on-dialog-closed="_onDialogClosedModerationDiscard"/>
+                    <ModerationDiscardDialog messageLocalIds="discuss.threadView.checkedMessages.map(message => message.localId)" t-on-dialog-closed="_onDialogClosedModerationDiscard"/>
                 </t>
                 <t t-if="discuss.hasModerationRejectDialog">
-                    <ModerationRejectDialog messageLocalIds="discuss.threadViewer.checkedMessages.map(message => message.localId)" t-on-dialog-closed="_onDialogClosedModerationReject"/>
+                    <ModerationRejectDialog messageLocalIds="discuss.threadView.checkedMessages.map(message => message.localId)" t-on-dialog-closed="_onDialogClosedModerationReject"/>
                 </t>
             </t>
         </div>
@@ -49,7 +49,7 @@
             </div>
         </t>
         <t t-if="(env.messaging.device.isMobile and discuss.activeMobileNavbarTabId === 'mailbox' and discuss.thread and discuss.thread.model === 'mail.box') or (!env.messaging.device.isMobile and discuss.thread)">
-            <ThreadViewer
+            <ThreadView
                 class="o_Discuss_thread"
                 t-att-class="{ 'o-mobile': env.messaging.device.isMobile }"
                 composerAttachmentsDetailsMode="'card'"
@@ -64,7 +64,7 @@
                 selectedMessageLocalId="
                     discuss.replyingToMessage and
                     discuss.replyingToMessage.localId"
-                threadViewerLocalId="discuss.threadViewer.localId"
+                threadViewLocalId="discuss.threadView.localId"
                 t-on-o-rendered="_onThreadRendered"
             />
         </t>

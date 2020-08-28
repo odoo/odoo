@@ -98,7 +98,7 @@ function factory(dependencies) {
             if (!chatWindow) {
                 chatWindow = this.env.models['mail.chat_window'].create({
                     manager: [['link', this]],
-                    threadViewer: [['create', {
+                    threadView: [['create', {
                         thread: [['link', thread]],
                     }]],
                 });

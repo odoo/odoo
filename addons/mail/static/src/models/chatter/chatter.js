@@ -232,7 +232,7 @@ function factory(dependencies) {
                     id: getMessageNextTemporaryId(),
                     isTemporary: true,
                 });
-                this.threadViewer.update({ thread: [['link', thread]] });
+                this.threadView.update({ thread: [['link', thread]] });
                 for (const cache of thread.caches) {
                     cache.update({ messages: [['link', message]] });
                 }
@@ -242,7 +242,7 @@ function factory(dependencies) {
                     id: this.threadId,
                     model: this.threadModel,
                 });
-                this.threadViewer.update({ thread: [['link', thread]] });
+                this.threadView.update({ thread: [['link', thread]] });
             }
         }
 
@@ -321,14 +321,14 @@ function factory(dependencies) {
             dependencies: ['activitiesState'],
         }),
         thread: many2one('mail.thread', {
-            related: 'threadViewer.thread',
+            related: 'threadView.thread',
         }),
         threadAttachmentCount: attr({
             default: 0,
         }),
         threadId: attr(),
         threadModel: attr(),
-        threadViewer: one2one('mail.thread_viewer', {
+        threadView: one2one('mail.thread_view', {
             default: [['create']],
         }),
         todayActivities: one2many('mail.activity', {

@@ -106,7 +106,7 @@ function factory(dependencies) {
         unfold() {
             if (this.thread) {
                 this.thread.update({ pendingFoldState: 'open' });
-                this.threadViewer.addComponentHint('chat-window-unfolded');
+                this.threadView.addComponentHint('chat-window-unfolded');
             } else {
                 this.update({ _isFolded: false });
             }
@@ -237,20 +237,20 @@ function factory(dependencies) {
          * @private
          */
         async _onHideHomeMenu() {
-            if (!this.threadViewer) {
+            if (!this.threadView) {
                 return;
             }
-            this.threadViewer.addComponentHint('home-menu-hidden');
+            this.threadView.addComponentHint('home-menu-hidden');
         }
 
         /**
          * @private
          */
         async _onShowHomeMenu() {
-            if (!this.threadViewer) {
+            if (!this.threadView) {
                 return;
             }
-            this.threadViewer.addComponentHint('home-menu-shown');
+            this.threadView.addComponentHint('home-menu-shown');
         }
 
         /**
@@ -333,7 +333,7 @@ function factory(dependencies) {
             ],
         }),
         thread: many2one('mail.thread', {
-            related: 'threadViewer.thread',
+            related: 'threadView.thread',
         }),
         threadDisplayName: attr({
             related: 'thread.displayName',
@@ -341,7 +341,7 @@ function factory(dependencies) {
         threadFoldState: attr({
             related: 'thread.foldState',
         }),
-        threadViewer: one2one('mail.thread_viewer', {
+        threadView: one2one('mail.thread_view', {
             inverse: 'chatWindow',
         }),
         /**

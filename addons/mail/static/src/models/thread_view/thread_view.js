@@ -1,4 +1,4 @@
-odoo.define('mail/static/src/models/thread_viewer/thread_viewer.js', function (require) {
+odoo.define('mail/static/src/models/thread_view/thread_view.js', function (require) {
 'use strict';
 
 const { registerNewModel } = require('mail/static/src/model/model_core.js');
@@ -7,7 +7,7 @@ const { attr, many2many, many2one, one2one } = require('mail/static/src/model/mo
 
 function factory(dependencies) {
 
-    class ThreadViewer extends dependencies['mail.model'] {
+    class ThreadView extends dependencies['mail.model'] {
 
         /**
          * @override
@@ -25,7 +25,7 @@ function factory(dependencies) {
          * This function register a hint for the component related to this
          * record. Hints are information on changes around this viewer that
          * make require adjustment on the component. For instance, if this
-         * thread viewer initiated a thread cache load and it now has become
+         * ThreadView initiated a thread cache load and it now has become
          * loaded, then it may need to auto-scroll to last message.
          *
          * @param {string} hintType name of the hint. Used to determine what's
@@ -114,7 +114,7 @@ function factory(dependencies) {
          * @returns {boolean}
          */
         _computeThreadShouldBeSetAsSeen() {
-            // FIXME condition should not be on "composer is focused" but "thread viewer is active"
+            // FIXME condition should not be on "composer is focused" but "threadView is active"
             // See task-2277543
             const lastMessageIsVisible = this.lastVisibleMessage &&
                 this.lastVisibleMessage === this.lastMessage;
@@ -196,9 +196,9 @@ function factory(dependencies) {
 
     }
 
-    ThreadViewer.fields = {
+    ThreadView.fields = {
         chatWindow: one2one('mail.chat_window', {
-            inverse: 'threadViewer',
+            inverse: 'threadView',
         }),
         checkedMessages: many2many('mail.message', {
             related: 'threadCache.checkedMessages',
@@ -234,8 +234,8 @@ function factory(dependencies) {
             related: 'thread.lastMessage',
         }),
         /**
-         * Most recent message in the current thread viewer that has been shown
-         * to the current partner.
+         * Most recent message in this ThreadView that has been shown to the
+         * current partner.
          */
         lastVisibleMessage: many2one('mail.message'),
         messages: many2many('mail.message', {
@@ -245,7 +245,7 @@ function factory(dependencies) {
             default: '[]',
         }),
         thread: many2one('mail.thread', {
-            inverse: 'viewers',
+            inverse: 'threadViews',
         }),
         threadCache: many2one('mail.thread_cache', {
             compute: '_computeThreadCache',
@@ -293,11 +293,11 @@ function factory(dependencies) {
         }),
     };
 
-    ThreadViewer.modelName = 'mail.thread_viewer';
+    ThreadView.modelName = 'mail.thread_view';
 
-    return ThreadViewer;
+    return ThreadView;
 }
 
-registerNewModel('mail.thread_viewer', factory);
+registerNewModel('mail.thread_view', factory);
 
 });

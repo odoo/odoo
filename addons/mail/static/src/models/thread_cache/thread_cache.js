@@ -56,8 +56,8 @@ function factory(dependencies) {
                 args: [domain],
                 kwargs: this._getFetchMessagesKwargs(),
             }, { shadow: true }));
-            for (const viewer of this.thread.viewers) {
-                viewer.addComponentHint('more-messages-loaded');
+            for (const threadView of this.thread.threadViews) {
+                threadView.addComponentHint('more-messages-loaded');
             }
             this._handleMessagesLoaded(messagesData);
         }
@@ -292,8 +292,8 @@ function factory(dependencies) {
                 isLoading: false,
                 isLoadingMore: false,
             });
-            for (const viewer of this.thread.viewers) {
-                viewer.handleThreadCacheLoaded(this);
+            for (const threadView of this.thread.threadViews) {
+                threadView.handleThreadCacheLoaded(this);
             }
         }
 

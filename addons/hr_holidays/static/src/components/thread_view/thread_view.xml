@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.ThreadView" t-inherit-mode="extension">
+        <xpath expr="//*[@name='loadingCondition']" position="before">
+            <t t-if="threadView.thread.correspondent and threadView.thread.correspondent.out_of_office_date_end">
+                <div class="o_ThreadView_outOfOffice alert alert-primary" t-esc="getOutOfOfficeText()" role="alert"/>
+            </t>
+        </xpath>
+    </t>
+</templates>

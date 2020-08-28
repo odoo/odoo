@@ -6,7 +6,7 @@ const components = {
     AttachmentBox: require('mail/static/src/components/attachment_box/attachment_box.js'),
     ChatterTopbar: require('mail/static/src/components/chatter_topbar/chatter_topbar.js'),
     Composer: require('mail/static/src/components/composer/composer.js'),
-    ThreadViewer: require('mail/static/src/components/thread_viewer/thread_viewer.js'),
+    ThreadView: require('mail/static/src/components/thread_view/thread_view.js'),
 };
 const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
 
