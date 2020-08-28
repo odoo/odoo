@@ -3,7 +3,6 @@ from odoo.addons.account.tests.account_test_classes import AccountingTestCase
 from odoo.exceptions import UserError
 from odoo.tests import Form, tagged
 import time
-from datetime import timedelta
 import unittest
 
 
@@ -1941,75 +1940,6 @@ class TestReconciliationExec(TestReconciliation):
             reverted_expected = reverted.line_ids.filtered(lambda l: l.account_id == inv_line.account_id)
             self.assertEqual(len(reverted_expected), 1)
             self.assertEqual(reverted_expected.full_reconcile_id, inv_line.full_reconcile_id)
-
-    def test_reconciliation_revert_future(self):
-        company = self.env.ref('base.main_company')
-        company.tax_cash_basis_journal_id = self.cash_basis_journal
-        tax_cash_basis10percent = self.tax_cash_basis.copy({'amount': 10})
-        self.tax_waiting_account.reconcile = True
-        tax_waiting_account10 = self.tax_waiting_account.copy({
-            'name': 'TAX WAIT 10',
-            'code': 'TWAIT1',
-        })
-
-        AccountMoveLine = self.env['account.move.line'].with_context(check_move_validity=False)
-
-        # Purchase
-        purchase_move = self.env['account.move'].create({
-            'name': 'invoice',
-            'journal_id': self.purchase_journal.id,
-        })
-
-        purchase_payable_line0 = AccountMoveLine.create({
-            'account_id': self.account_rsa.id,
-            'credit': 175,
-            'move_id': purchase_move.id,
-        })
-
-        AccountMoveLine.create({
-            'name': 'expenseTaxed 10%',
-            'account_id': self.expense_account.id,
-            'debit': 50,
-            'move_id': purchase_move.id,
-            'tax_ids': [(4, tax_cash_basis10percent.id, False)],
-        })
-        tax_line0 = AccountMoveLine.create({
-            'name': 'TaxLine0',
-            'account_id': tax_waiting_account10.id,
-            'debit': 5,
-            'move_id': purchase_move.id,
-            'tax_repartition_line_id': tax_cash_basis10percent.invoice_repartition_line_ids.filtered(lambda x: x.repartition_type == 'tax').id,
-            'tax_base_amount': 50,
-        })
-        AccountMoveLine.create({
-            'name': 'expenseTaxed 20%',
-            'account_id': self.expense_account.id,
-            'debit': 100,
-            'move_id': purchase_move.id,
-            'tax_ids': [(4, self.tax_cash_basis.id, False)],
-        })
-        tax_line1 = AccountMoveLine.create({
-            'name': 'TaxLine1',
-            'account_id': self.tax_waiting_account.id,
-            'debit': 20,
-            'move_id': purchase_move.id,
-            'tax_repartition_line_id': self.tax_cash_basis.invoice_repartition_line_ids.filtered(lambda x: x.repartition_type == 'tax').id,
-            'tax_base_amount': 100,
-        })
-        purchase_move.post()
-
-        reverse_date = fields.Date.today() + timedelta(days=+7)
-        revertWidget = self.env['account.move.reversal'].create({
-            'move_id': purchase_move.id,
-            'date': reverse_date,
-            'reason': ['cancel'],
-        })
-        action = revertWidget.reverse_moves();
-        reverse_move = self.env['account.move'].search([('reversed_entry_id', '=', purchase_move.id)])
-        self.assertEqual(len(reverse_move), 1)
-        self.assertEqual(reverse_move.state, 'draft')
-        self.assertEqual(reverse_move.auto_post, True)
-        self.assertEqual(reverse_move.date, reverse_date)
 
     def test_reconciliation_cash_basis_foreign_currency_low_values(self):
         journal = self.env['account.journal'].create({
