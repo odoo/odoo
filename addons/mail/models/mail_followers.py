@@ -193,7 +193,7 @@ FROM mail_channel channel WHERE channel.id IN %s """
             res = []
         return res
 
-    def _get_subscription_data(self, doc_data, pids, cids, include_pshare=False):
+    def _get_subscription_data(self, doc_data, pids, cids, include_pshare=False, include_active=False):
         """ Private method allowing to fetch follower data from several documents of a given model.
         Followers can be filtered given partner IDs and channel IDs.
 
@@ -202,6 +202,7 @@ FROM mail_channel channel WHERE channel.id IN %s """
         :param pids: optional partner to filter; if None take all, otherwise limitate to pids
         :param cids: optional channel to filter; if None take all, otherwise limitate to cids
         :param include_pshare: optional join in partner to fetch their share status
+        :param include_active: optional join in partner to fetch their active flag
 
         :return: list of followers data which is a list of tuples containing
           follower ID,
@@ -210,6 +211,7 @@ FROM mail_channel channel WHERE channel.id IN %s """
           channel ID (void if partner_id),
           followed subtype IDs,
           share status of partner (void id channel_id, returned only if include_pshare is True)
+          active flag status of partner (void id channel_id, returned only if include_active is True)
         """
         # base query: fetch followers of given documents
         where_clause = ' OR '.join(['fol.res_model = %s AND fol.res_id IN %s'] * len(doc_data))
@@ -231,17 +233,20 @@ FROM mail_channel channel WHERE channel.id IN %s """
             where_clause += "AND (%s)" % " OR ".join(sub_where)
 
         query = """
-SELECT fol.id, fol.res_id, fol.partner_id, fol.channel_id, array_agg(subtype.id)%s
+SELECT fol.id, fol.res_id, fol.partner_id, fol.channel_id, array_agg(subtype.id)%s%s
 FROM mail_followers fol
 %s
 LEFT JOIN mail_followers_mail_message_subtype_rel fol_rel ON fol_rel.mail_followers_id = fol.id
 LEFT JOIN mail_message_subtype subtype ON subtype.id = fol_rel.mail_message_subtype_id
 WHERE %s
-GROUP BY fol.id%s""" % (
+GROUP BY fol.id%s%s""" % (
             ', partner.partner_share' if include_pshare else '',
-            'LEFT JOIN res_partner partner ON partner.id = fol.partner_id' if include_pshare else '',
+            ', partner.active' if include_active else '',
+            'LEFT JOIN res_partner partner ON partner.id = fol.partner_id' if (include_pshare or include_active) else '',
             where_clause,
-            ', partner.partner_share' if include_pshare else '')
+            ', partner.partner_share' if include_pshare else '',
+            ', partner.active' if include_active else ''
+        )
         self.env.cr.execute(query, tuple(where_params))
         return self.env.cr.fetchall()
 
