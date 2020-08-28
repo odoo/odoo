@@ -2116,7 +2116,7 @@ QUnit.test('message origin redirect to channel', async function (assert) {
 });
 
 QUnit.test('redirect to author (open chat)', async function (assert) {
-    assert.expect(9);
+    assert.expect(7);
 
     // expected correspondent, with a random unique id that will be used to link
     // partner to chat and a random name that will be asserted in the test
@@ -2141,13 +2141,6 @@ QUnit.test('redirect to author (open chat)', async function (assert) {
             author_id: 7,
             channel_ids: [1],
             id: 100,
-            model: 'mail.channel',
-            res_id: 1,
-        },
-        {
-            author_id: this.data.currentPartnerId,
-            channel_ids: [1],
-            id: 101,
             model: 'mail.channel',
             res_id: 1,
         }
@@ -2187,19 +2180,13 @@ QUnit.test('redirect to author (open chat)', async function (assert) {
     );
     assert.strictEqual(
         document.querySelectorAll(`.o_Discuss_thread .o_Message`).length,
-        2,
-        "should have 2 messages"
+        1,
+        "should have 1 message"
     );
     const msg1 = document.querySelector(`
         .o_Discuss_thread
         .o_Message[data-message-local-id="${
             this.env.models['mail.message'].find(message => message.id === 100).localId
-        }"]
-    `);
-    const msg2 = document.querySelector(`
-        .o_Discuss_thread
-        .o_Message[data-message-local-id="${
-            this.env.models['mail.message'].find(message => message.id === 101).localId
         }"]
     `);
     assert.strictEqual(
@@ -2210,15 +2197,6 @@ QUnit.test('redirect to author (open chat)', async function (assert) {
     assert.ok(
         msg1.querySelector(`:scope .o_Message_authorAvatar`).classList.contains('o_redirect'),
         "message1 should have redirect to author"
-    );
-    assert.strictEqual(
-        msg2.querySelectorAll(`:scope .o_Message_authorAvatar`).length,
-        1,
-        "message2 should have author image"
-    );
-    assert.notOk(
-        msg2.querySelector(`:scope .o_Message_authorAvatar`).classList.contains('o_redirect'),
-        "message2 should not have redirect to author (self-author)"
     );
 
     await afterNextRender(() =>

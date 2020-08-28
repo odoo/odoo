@@ -364,6 +364,7 @@ QUnit.test('different mail.channel are not grouped', async function (assert) {
     // they are linked to different channels, even though the model is the same.
     assert.expect(6);
 
+    this.data['mail.channel'].records.push({ id: 31 }, { id: 32 });
     this.data['mail.message'].records.push(
         // first message that is expected to have a failure
         {

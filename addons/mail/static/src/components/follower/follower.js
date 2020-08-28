@@ -43,10 +43,7 @@ class Follower extends Component {
     _onClickDetails(ev) {
         ev.preventDefault();
         ev.stopPropagation();
-        this.env.messaging.openDocument({
-            id: this.follower.resId,
-            model: this.follower.resModel,
-        });
+        this.follower.openProfile();
     }
 
     /**
