@@ -123,9 +123,7 @@ class ChatWindowHiddenMenu extends Component {
      */
     _onClickedChatWindow(ev) {
         const chatWindow = ev.detail.chatWindow;
-        chatWindow.makeVisible();
-        chatWindow.unfold();
-        chatWindow.focus();
+        chatWindow.makeActive();
         this.env.messaging.chatWindowManager.closeHiddenMenu();
     }
 

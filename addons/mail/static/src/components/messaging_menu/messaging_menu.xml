@@ -46,7 +46,6 @@
                                     select="_onMobileNewMessageInputSelect"
                                     source="_onMobileNewMessageInputSource"
                                     t-on-o-hide="_onHideMobileNewMessage"
-                                    t-ref="mobileNewMessageInput"
                                 />
                             </t>
                         </div>
@@ -54,7 +53,6 @@
                             class="o_MessagingMenu_notificationList"
                             t-att-class="{ 'o-mobile': env.messaging.device.isMobile }"
                             filter="messagingMenu.activeTabId"
-                            t-on-o-select-thread="_onSelectThread"
                         />
                         <t t-if="env.messaging.device.isMobile">
                             <MobileMessagingNavbar
