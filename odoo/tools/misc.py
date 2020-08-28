@@ -1084,54 +1084,72 @@ class LastOrderedSet(OrderedSet):
         OrderedSet.add(self, elem)
 
 
-class GroupCalls:
-    """ A collection of callbacks with support for aggregated arguments.  Upon
-    call, every registered function is called once with positional arguments.
-    When registering a function, a tuple of positional arguments is returned, so
-    that the caller can modify the arguments in place.  This allows to
-    accumulate some data to process once::
+class Callbacks:
+    """ A simple queue of callback functions.  Upon run, every function is
+    called (in addition order), and the queue is emptied.
 
-        callbacks = GroupCalls()
+        callbacks = Callbacks()
 
-        # register print (by default with a list)
-        [args] = callbacks.register(print, list)
-        args.append(42)
+        # add foo
+        def foo():
+            print("foo")
 
-        # add an element to the list to print
-        [args] = callbacks.register(print, list)
-        args.append(43)
+        callbacks.add(foo)
 
-        # print "[42, 43]"
-        callbacks()
+        # add bar
+        callbacks.add
+        def bar():
+            print("bar")
+
+        # add foo again
+        callbacks.add(foo)
+
+        # call foo(), bar(), foo(), then clear the callback queue
+        callbacks.run()
+
+    The queue also provides a ``data`` dictionary, that may be freely used to
+    store anything, but is mostly aimed at aggregating data for callbacks.  The
+    dictionary is automatically cleared by ``run()`` once all callback functions
+    have been called.
+
+        # register foo to process aggregated data
+        @callbacks.add
+        def foo():
+            print(sum(callbacks.data['foo']))
+
+        callbacks.data.setdefault('foo', []).append(1)
+        ...
+        callbacks.data.setdefault('foo', []).append(2)
+        ...
+        callbacks.data.setdefault('foo', []).append(3)
+
+        # call foo(), which prints 6
+        callbacks.run()
+
+    Given the global nature of ``data``, the keys should identify in a unique
+    way the data being stored.  It is recommended to use strings with a
+    structure like ``"{module}.{feature}"``.
     """
+    __slots__ = ['_funcs', 'data']
+
     def __init__(self):
-        self._func_args = {}            # {func: args}
+        self._funcs = []
+        self.data = {}
 
-    def __call__(self):
-        """ Call all the registered functions (in first addition order) with
-        their respective arguments.  Only recurrent functions remain registered
-        after the call.
-        """
-        func_args = self._func_args
-        while func_args:
-            func = next(iter(func_args))
-            args = func_args.pop(func)
-            func(*args)
+    def add(self, func):
+        """ Add the given function. """
+        self._funcs.append(func)
 
-    def add(self, func, *types):
-        """ Register the given function, and return the tuple of positional
-        arguments to call the function with.  If the function is not registered
-        yet, the list of arguments is made up by invoking the given types.
-        """
-        try:
-            return self._func_args[func]
-        except KeyError:
-            args = self._func_args[func] = [type_() for type_ in types]
-            return args
+    def run(self):
+        """ Call all the functions (in addition order), then clear. """
+        for func in self._funcs:
+            func()
+        self.clear()
 
     def clear(self):
-        """ Remove all callbacks from self. """
-        self._func_args.clear()
+        """ Remove all callbacks and data from self. """
+        self._funcs.clear()
+        self.data.clear()
 
 
 class IterableGenerator:
