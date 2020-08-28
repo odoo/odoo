@@ -6,6 +6,8 @@
 Getting Started
 ===============
 
+Core training:
+
 .. toctree::
     :maxdepth: 2
 
@@ -25,3 +27,5 @@ Getting Started
     rdtraining/other_module
     rdtraining/qwebintro
     rdtraining/guidelines_pr
+
+Advanced topics:

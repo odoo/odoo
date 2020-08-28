@@ -4,8 +4,8 @@
 Finally, Some UI To Play With
 =============================
 
-Import Data Files (XML)
-=======================
+Data Files (XML)
+================
 
 Actions
 =======

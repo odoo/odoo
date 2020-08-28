@@ -17,8 +17,10 @@ List Decoration
 Special Fields
 ==============
 
-Fancy Widgets
-=============
+Widgets
+=======
+
+Talk about standard widgets.
 
 Stat Buttons
 ============
