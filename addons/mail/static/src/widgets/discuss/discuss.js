@@ -192,7 +192,7 @@ const DiscussWidget = AbstractAction.extend({
             this.$buttons
                 .find('.o_widget_Discuss_controlPanelButtonMarkAllRead')
                 .removeClass('o_hidden')
-                .prop('disabled', this.discuss.threadViewer.messages.length === 0);
+                .prop('disabled', this.discuss.threadView.messages.length === 0);
         } else {
             this.$buttons
                 .find('.o_widget_Discuss_controlPanelButtonMarkAllRead')
@@ -206,7 +206,7 @@ const DiscussWidget = AbstractAction.extend({
             this.$buttons
                 .find('.o_unstar_all')
                 .removeClass('o_hidden')
-                .prop('disabled', this.discuss.threadViewer.messages.length === 0);
+                .prop('disabled', this.discuss.threadView.messages.length === 0);
         } else {
             this.$buttons
                 .find('.o_unstar_all')
@@ -243,13 +243,13 @@ const DiscussWidget = AbstractAction.extend({
         const $unselectAll = this.$buttons.find('.o_widget_Discuss_controlPanelButtonUnselectAll');
 
         if (
-            this.discuss.threadViewer.checkedMessages.length > 0 ||
-            this.discuss.threadViewer.uncheckedMessages.length > 0
+            this.discuss.threadView.checkedMessages.length > 0 ||
+            this.discuss.threadView.uncheckedMessages.length > 0
         ) {
             $selectAll.removeClass('o_hidden');
-            $selectAll.toggleClass('disabled', this.discuss.threadViewer.uncheckedMessages.length === 0);
+            $selectAll.toggleClass('disabled', this.discuss.threadView.uncheckedMessages.length === 0);
             $unselectAll.removeClass('o_hidden');
-            $unselectAll.toggleClass('disabled', this.discuss.threadViewer.checkedMessages.length === 0);
+            $unselectAll.toggleClass('disabled', this.discuss.threadView.checkedMessages.length === 0);
         } else {
             $selectAll.addClass('o_hidden');
             $selectAll.addClass('disabled');
@@ -260,8 +260,8 @@ const DiscussWidget = AbstractAction.extend({
         // Moderation Actions
         const $moderationButtons = this.$buttons.find('.o_widget_Discuss_controlPanelButtonModeration');
         if (
-            this.discuss.threadViewer.checkedMessages.length > 0 &&
-            this.discuss.threadViewer.checkedMessages.filter(
+            this.discuss.threadView.checkedMessages.length > 0 &&
+            this.discuss.threadView.checkedMessages.filter(
                 message => !message.isModeratedByCurrentPartner
             ).length === 0
         ) {
@@ -326,7 +326,7 @@ const DiscussWidget = AbstractAction.extend({
      */
     _onClickModerationAccept() {
         this.env.models['mail.message'].moderate(
-            this.discuss.threadViewer.checkedMessages,
+            this.discuss.threadView.checkedMessages,
             'accept'
         );
     },
@@ -371,7 +371,7 @@ const DiscussWidget = AbstractAction.extend({
      * @param {Object} searchQuery
      */
     _onSearch: function (searchQuery) {
-        this.discuss.threadViewer.update({
+        this.discuss.threadView.update({
             stringifiedDomain: JSON.stringify(searchQuery.domain),
         });
     },

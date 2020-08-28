@@ -112,7 +112,7 @@ function factory(dependencies) {
             );
             const chat = partner.correspondentThreads.find(thread => thread.channel_type === 'chat');
             if (chat) {
-                this.threadViewer.update({ thread: [['link', chat]] });
+                this.threadView.update({ thread: [['link', chat]] });
             } else {
                 this.env.models['mail.thread'].createChannel({
                     autoselect: true,
@@ -160,7 +160,7 @@ function factory(dependencies) {
             if (!thread) {
                 return;
             }
-            this.threadViewer.update({
+            this.threadView.update({
                 stringifiedDomain: '[]',
                 thread: [['link', thread]],
             });
@@ -303,8 +303,8 @@ function factory(dependencies) {
             ) {
                 thread = this.messaging.inbox;
             }
-            if (thread && this.threadViewer && thread !== this.thread) {
-                this.threadViewer.update({ thread: [['link', thread]] });
+            if (thread && this.threadView && thread !== this.thread) {
+                this.threadView.update({ thread: [['link', thread]] });
             }
         }
     }
@@ -453,7 +453,7 @@ function factory(dependencies) {
             default: "",
         }),
         thread: many2one('mail.thread', {
-            related: 'threadViewer.thread',
+            related: 'threadView.thread',
         }),
         threadId: attr({
             related: 'thread.id',
@@ -461,7 +461,7 @@ function factory(dependencies) {
         threadModel: attr({
             related: 'thread.model',
         }),
-        threadViewer: one2one('mail.thread_viewer', {
+        threadView: one2one('mail.thread_view', {
             default: [['create']],
             isCausal: true,
         }),
