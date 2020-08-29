@@ -1,0 +1,69 @@
+/* Copyright 2016, 2018 Openworx.
+ * License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). */
+
+/* App Sidebar Panel */
+
+$odoo-sidebar-width: 180px;
+
+.app-sidebar-panel {
+	flex: 0 0 $odoo-sidebar-width;	
+    background-color: $gray-base;
+    height: 100% !important;
+    overflow-y: auto;
+    @media (max-width: 768px) {
+      display: none;
+    }
+}
+
+/* @media (min-width: 768px) {
+	.o_menu_apps {
+		display: none !important;
+	}
+} */
+
+//.app-sidebar-panel:hover {
+//    @include o-flex(0, 0, $odoo-sidebar-width);
+//}
+
+.app-sidebar {
+    white-space: nowrap;
+    padding: 0;
+    .app-sidebar-menu {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    >li {
+        display: block;
+        margin: 0;
+        padding: 0;
+        border: 0px;
+        >a {
+            display: block;
+            position: relative;
+            margin: 0;
+            border: 0px;
+            padding: 8px 15px;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 300;
+            color: $gray-lighter;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    }
+        > li:hover > a{
+	    background: darken(#0099ff, 15%);
+	    color: #fff;
+        }
+    }
+}
+
+.app-sidebar-menuitem {
+    width: 23px;
+    height: 22px;
+    margin-right: 5px;
+}
+
+.toggle-sidebar {
+    margin-left: 0px - $odoo-sidebar-width;
+}

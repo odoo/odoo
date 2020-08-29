@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    Copyright 2016 LasLabs Inc.
+    @author Dave Lasley <dave@laslabs.com>
+    License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).
+-->
+
+<odoo>
+    <template id="assets_backend" name="Open Mobile Assets" inherit_id="web.assets_backend">
+        <xpath expr=".">
+            <link rel="stylesheet"
+                  href="/ow_web_responsive/static/src/css/web_responsive.scss"
+                  />
+            <script type="application/javascript"
+                    src="/ow_web_responsive/static/src/js/web_responsive.js"
+                    />
+        </xpath>
+    </template>
+</odoo>

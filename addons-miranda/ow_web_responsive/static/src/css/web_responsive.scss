@@ -1,0 +1,569 @@
+/* Copyright 2018 Tecnativa - Jairo Llopis
+ * License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). */
+
+@mixin full-screen-dropdown {
+    border: none;
+    box-shadow: none;
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - #{$o-navbar-height});
+    max-height: calc(100vh - #{$o-navbar-height});
+    position: fixed;
+    width: 100vw;
+    z-index: 100;
+    // Inline style will override our `top`, so we need !important here
+    top: $o-navbar-height !important;
+    transform: none !important;
+}
+
+// Support for long titles
+@include media-breakpoint-up(md) {
+    .o_form_view .oe_button_box + .oe_title,
+    .o_form_view .oe_button_box + .oe_avatar + .oe_title {
+        /* Button-box has a hardcoded width of 132px per button and have three columns */
+        width: calc(100% - 450px);
+    }
+}
+
+// Main navbar (with apps menu, user menu, debug menu...)
+@include media-breakpoint-down(sm) {
+    .o_main_navbar {
+        // This allows to have a sane layout for mobiles
+        display: flex;
+
+        // Remove clutter to only have small icons that fit in a small screen
+        > .dropdown {
+            display: flex;
+
+            .navbar-toggler {
+                color: white;
+            }
+
+            .o_menu_sections,
+            .o_menu_systray,
+            {
+                padding: 0;
+            }
+        }
+
+        // Whitespace before systray icons
+        .o_menu_systray {
+            margin-left: auto;
+        }
+
+        // Hide big things
+        .o_menu_brand,
+        .o_menu_sections,
+        .oe_topbar_name,
+        {
+            display: none;
+        }
+
+        // Fix toggler button padding
+        .o-menu-toggle {
+            cursor: pointer;
+            padding: 0 $o-horizontal-padding;
+        }
+
+        // Custom fullscreen layout when showing submenus
+        .o_menu_sections.show {
+            @include full-screen-dropdown();
+            background-color: $dropdown-bg;
+
+            .show {
+                display: flex;
+                flex-direction: column;
+
+                .dropdown-menu {
+                    margin-left: 1rem;
+                    min-width: auto;
+                    width: calc(100vw - 2rem);
+                }
+            }
+
+            > li,
+            .o_menu_entry_lvl_1,
+            .o_menu_header_lvl_1,
+            {
+                // Homogeneous background color
+                background-color: $dropdown-bg;
+                color: $dropdown-link-color;
+
+                &:hover {
+                    background-color: $dropdown-link-hover-bg;
+                    color: $dropdown-link-hover-color;
+                }
+
+                // Disable the .o-no-caret class effect, to display the caret
+                &.o-no-caret::after {
+                    content: "";
+                }
+
+                // Fix a strange glitch leaving headers invisible
+                .dropdown-header {
+                    color: $dropdown-header-color;
+                }
+            }
+        }
+
+        // Custom fullscreen layout for systray items
+        .o_mail_systray_dropdown.show {
+            @include full-screen-dropdown();
+
+            // Fix stretchy images
+            .o_mail_preview_image {
+                align-items: center;
+                display: flex;
+                flex-direction: row;
+
+                img {
+                    display: block;
+                    height: auto;
+                }
+            }
+        }
+
+        // Higher height for dropdown items, for those with sausage fingers
+        .dropdown-menu .dropdown-item {
+            padding: {
+                bottom: 0.5rem;
+                top: 0.5rem;
+            }
+        }
+    }
+}
+
+// Iconized full screen apps menu
+.o_menu_apps {
+
+    .search-input:focus {
+        border-color: $o-brand-primary;
+    }
+
+    .dropdown-menu.show {
+        @include full-screen-dropdown();
+
+        // Display apps in a grid
+        align-content: flex-start;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+
+        @include media-breakpoint-up(lg) {
+            padding: {
+                left: 20vw;
+                right: 20vw;
+            }
+        }
+
+        .o_app {
+            align-items: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+
+            // Size depends on screen
+            width: 33.33333333%;
+            @include media-breakpoint-up(sm) {
+                width: 25%;
+            }
+            @include media-breakpoint-up(md) {
+                width: 16.6666666%;
+            }
+        }
+
+        // Hide app icons when searching
+        .has-results ~ .o_app {
+            display: none;
+        }
+
+        .o-app-icon {
+            height: auto;
+            max-width: 7rem;
+        }
+
+        // Search input for menus
+        .form-row {
+            width: 100%;
+        }
+
+        .o-menu-search-result {
+            align-items: center;
+            background-position: left;
+            background-repeat: no-repeat;
+            background-size: contain;
+            cursor: pointer;
+            display: flex;
+            padding-left: 3rem;
+            white-space: normal;
+        }
+
+        // Allow to scroll only on results, keeping static search box above
+        .search-container.has-results {
+            height: 100%;
+
+            .search-input {
+                height: 3em;
+            }
+
+            .search-results {
+                height: calc(100% - 3em);
+                overflow: auto;
+            }
+        }
+    }
+}
+
+// Scroll all but top bar
+html .o_web_client .o_action_manager .o_action {
+    @include media-breakpoint-down(sm) {
+        overflow: auto;
+
+        .o_content {
+            overflow: visible;
+        }
+    }
+
+    max-width: 100%;
+}
+
+// Control panel (breadcrumbs, search box, buttons...)
+@include media-breakpoint-down(sm) {
+    .o_control_panel {
+        // Arrange buttons to use space better
+        .breadcrumb,
+        .o_cp_buttons,
+        .o_cp_left,
+        .o_cp_right,
+        .o_cp_searchview,
+        {
+            flex: 1 1 100%;
+            @include media-breakpoint-up(md) {
+                flex-basis: 50%;
+            }
+        }
+
+        .breadcrumb {
+            flex-basis: 80%;
+        }
+
+        .o_cp_searchview,
+        .o_cp_right,
+        {
+            flex-basis: 10%;
+        }
+
+        .o_cp_left {
+            flex-basis: 50%;
+            white-space: nowrap;
+        }
+
+        .o_cp_pager {
+            white-space: nowrap;
+        }
+
+        // Hide all but 2 last breadcrumbs, and render 2nd-to-last as arrow
+        .breadcrumb-item {
+            &:not(.active) {
+                padding-left: 0;
+            }
+
+            &::before {
+                content: none;
+                padding-right: 0;
+            }
+
+            &:nth-last-of-type(1n+3) {
+                display: none;
+            }
+
+            &:nth-last-of-type(2) {
+                &::before {
+                    color: var(--primary);
+                    content: "\f048"; // .fa-step-backward
+                    cursor: pointer;
+                    font-family: FontAwesome;
+                }
+
+                a {
+                    display: none;
+                }
+            }
+        }
+
+        // Ellipsize long breadcrumbs
+        .breadcrumb {
+            max-width: 100%;
+            text-overflow: ellipsis;
+        }
+
+        // Empty sidebar should not break layout
+        .o_cp_sidebar:blank {
+            display: none;
+        }
+
+        // In case you install `mail`, there is a mess on BS vs inline styles
+        // we need to fix
+        .o_cp_buttons .btn.d-block:not(.d-none) {
+            display: inline-block !important;
+        }
+
+        // Dropdown with buttons to switch the view type
+        .o_cp_switch_buttons.show {
+            .dropdown-menu {
+                align-content: center;
+                display: flex;
+                flex-direction: row;
+                justify-content: space-around;
+                padding: 0;
+
+                .btn {
+                    border: {
+                        bottom: 0;
+                        radius: 0;
+                        top: 0;
+                    }
+                }
+            }
+        }
+    }
+}
+
+// Normal views
+.o_content, .modal-content {
+    max-width: 100%;
+
+    // Form views
+    .o_form_view {
+        .o_form_sheet {
+            max-width: calc(100% - 32px);
+            overflow-x: auto;
+        }
+
+        .oe_chatter {
+            padding-top: 0;
+        }
+
+        // Sticky statusbar
+        .o_form_statusbar {
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+
+        // Support for long title (with ellipsis)
+        .oe_title {
+            span.o_field_widget {
+                max-width: 100%;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                overflow: hidden;
+                width: initial;
+            }
+            span:active {
+                white-space: normal;
+            }
+        }
+
+        @include media-breakpoint-down(sm) {
+            min-width: auto;
+
+            // More buttons border
+            .oe_button_box {
+                .o_dropdown_more {
+                    button:last-child {
+                        border-right: 1px solid gray('400');
+                    }
+                }
+            }
+
+            // Avoid overflow on forms with title and/or button box
+            .oe_title,
+            {
+                max-width: 100%;
+            }
+
+            .oe_button_box + .oe_title,
+            .oe_button_box + .oe_avatar + .oe_title {
+                width: 100%;
+            }
+
+            // Avoid overflow on modals
+            .o_form_sheet {
+                min-width: auto;
+            }
+
+            // Render website inputs properly in phones
+            .o_group .o_field_widget.o_text_overflow {
+                // Overrides another !important
+                width: auto !important;
+            }
+
+            // Make all input groups vertical
+            .o_group_col_6 {
+                width: 100%;
+            }
+
+            // Statusbar buttons dropdown for mobiles
+            .o_statusbar_buttons_dropdown {
+                border: {
+                    bottom: 0;
+                    radius: 0;
+                    top: 0;
+                }
+                height: 100%;
+            }
+            .o_statusbar_buttons > .btn {
+                border-radius: 0;
+                border: 0;
+                width: 100%;
+                margin-bottom: 0.2rem;
+
+                &:last-child {
+                    margin-bottom: 0;
+                }
+            }
+
+            .o_statusbar_status {
+                // Arrow from rightmost button exceeds allowed width
+                .o_arrow_button:first-child::before {
+                    content: none;
+                    display: none;
+                }
+            }
+
+            // Full width in form sheets
+            .o_form_sheet,
+            .oe_chatter,
+            {
+                min-width: auto;
+                max-width: 98%;
+            }
+
+            // Settings pages
+            .app_settings_block {
+                .row {
+                    margin: 0;
+                }
+            }
+
+            .o_chatter {
+                padding-top: initial;
+
+                // Display send button on small screens
+                .o_thread_composer {
+                    padding-left: $o-mail-thread-avatar-size*0.5;
+
+                    .o_composer_button_send {
+                        display: initial !important; // Forced in core
+                    }
+                    .o_chatter_avatar {
+                        display: none;
+                    }
+                }
+
+                .o_chatter_topbar {
+                    height: auto;
+                    flex-wrap: wrap-reverse;
+
+                    > .o_topbar_right_area {
+                        flex: 1 0 auto;
+                        flex-wrap: wrap;
+                        max-width: 100%;
+
+                        // Display followers on small screens
+                        .o_followers {
+                            display: initial !important; // Forced in core
+
+                            @include media-breakpoint-down(xs) {
+                                padding-bottom: 50px;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // Sided chatter, if user wants
+    .o_chatter_position_sided & {
+        @include media-breakpoint-up(lg) {
+            .o_form_view:not(.o_form_nosheet) {
+                display: flex;
+                flex-flow: row nowrap;
+                height: 100%;
+
+                .o_form_sheet_bg {
+                    flex: 1 1 auto;
+                    overflow: auto;
+
+                    > .o_form_sheet {
+                        min-width: unset;
+                    }
+                }
+
+                .o_chatter {
+                    border-left: 1px solid gray('400');
+                    flex: 0 0 35%;
+                    max-width: initial;
+                    min-width: initial;
+                    overflow: auto;
+
+                    .o_chatter_header_container {
+                        padding-top: $grid-gutter-width * 0.5;
+                        top: 0;
+                        position: sticky;
+                        background-color: $o-view-background-color;
+                        z-index: 1;
+                        overflow-x: auto;
+
+                        // Scrollable input text to avoid hide conversation & buttons
+                        .o_composer_text_field {
+                            max-height: 120px;
+                            overflow-y: auto !important; /* Forced because Odoo uses inline style */
+                        }
+                        .o_attachments_list {
+                            overflow: auto;
+                            max-height: $o-mail-attachment-image-size * 3;
+                            margin-top: 0.4em;
+                        }
+                        .o_attachments_previews {
+                            overflow: auto;
+                            max-height: $o-mail-attachment-image-size * 6;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+// Sticky Header & Footer in List View
+.o_list_view {
+    .table-responsive  {
+        .o_list_table {
+            // th & td are here for compatibility with chrome
+            thead, thead tr:nth-child(1) th {
+                position: sticky;
+                top: 0;
+                z-index: 1;
+            }
+            thead tr:nth-child(1) th {
+                background-color: $o-list-footer-bg-color;
+            }
+            tfoot, tfoot tr:nth-child(1) td {
+                position: sticky;
+                bottom: 0;
+            }
+            tfoot tr:nth-child(1) td {
+                background-color: $o-list-footer-bg-color;
+            }
+        }
+    }
+}
+
+// Waiting Cursor
+.oe_wait {
+  cursor: progress;
+}

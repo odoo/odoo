@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Copyright 2017 LasLabs Inc.
+    Copyright 2018 Alexandre Díaz
+    Copyright 2018 Tecnativa - Jairo Llopis
+    License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).
+-->
+
+<templates id="form_view" xml:space="preserve">
+
+    <!-- Template for buttons that display only the icon in xs -->
+    <t t-name="ow_web_responsive.icon_button">
+        <i t-attf-class="fa fa-#{icon}"
+           t-att-title="label"/>
+        <span class="d-none d-sm-inline" t-esc="label"/>
+    </t>
+
+    <t t-name="ow_web_responsive.MenuStatusbarButtons">
+        <div class="dropdown">
+            <button class="o_statusbar_buttons_dropdown btn btn-secondary dropdown-toggle"
+                    type="button"
+                    data-toggle="dropdown"
+                    aria-haspopup="true"
+                    aria-expanded="false">
+                <t t-call="ow_web_responsive.icon_button">
+                    <t t-set="icon" t-value="'cogs'"/>
+                    <t t-set="label">Quick actions</t>
+                </t>
+            </button>
+            <!-- A div.o_statusbar_buttons.dropdown-menu
+                 is appended here from JS -->
+        </div>
+    </t>
+
+    <t t-extend="FormView.buttons">
+        <!-- Change "Edit" button hotkey to "E" -->
+        <t t-jquery=".o_form_button_edit" t-operation="attributes">
+            <attribute name="accesskey">e</attribute>
+        </t>
+
+        <!-- Change "Discard" button hotkey to "D" -->
+        <t t-jquery=".o_form_button_cancel" t-operation="attributes">
+            <attribute name="accesskey">d</attribute>
+        </t>
+
+        <!-- Add responsive icons to buttons -->
+        <t t-jquery=".o_form_button_edit" t-operation="inner">
+            <t t-call="ow_web_responsive.icon_button">
+                <t t-set="icon" t-value="'pencil'"/>
+                <t t-set="label">Edit</t>
+            </t>
+        </t>
+
+        <t t-jquery=".o_form_button_create" t-operation="inner">
+            <t t-call="ow_web_responsive.icon_button">
+                <t t-set="icon" t-value="'plus'"/>
+                <t t-set="label">Create</t>
+            </t>
+        </t>
+
+        <t t-jquery=".o_form_button_save" t-operation="inner">
+            <t t-call="ow_web_responsive.icon_button">
+                <t t-set="icon" t-value="'check'"/>
+                <t t-set="label">Save</t>
+            </t>
+        </t>
+
+        <t t-jquery=".o_form_button_cancel" t-operation="inner">
+            <t t-call="ow_web_responsive.icon_button">
+                <t t-set="icon" t-value="'times'"/>
+                <t t-set="label">Discard</t>
+            </t>
+        </t>
+    </t>
+
+    <t t-extend="KanbanView.buttons">
+        <!-- Add responsive icons to buttons -->
+        <t t-jquery="button" t-operation="inner">
+            <t t-call="ow_web_responsive.icon_button">
+                <t t-set="icon" t-value="'plus'"/>
+                <t t-set="label" t-value="create_text || _t('Create')"/>
+            </t>
+        </t>
+    </t>
+
+    <t t-extend="ListView.buttons">
+        <!-- Change "Discard" button hotkey to "D" -->
+        <t t-jquery=".o_list_button_discard" t-operation="attributes">
+            <attribute name="accesskey">d</attribute>
+        </t>
+
+        <!-- Add responsive icons to buttons -->
+        <t t-jquery=".o_list_button_add" t-operation="inner">
+            <t t-call="ow_web_responsive.icon_button">
+                <t t-set="icon" t-value="'plus'"/>
+                <t t-set="label">Create</t>
+            </t>
+        </t>
+
+        <t t-jquery=".o_list_button_save" t-operation="inner">
+            <t t-call="ow_web_responsive.icon_button">
+                <t t-set="icon" t-value="'check'"/>
+                <t t-set="label">Save</t>
+            </t>
+        </t>
+
+        <t t-jquery=".o_list_button_discard" t-operation="inner">
+            <t t-call="ow_web_responsive.icon_button">
+                <t t-set="icon" t-value="'times'"/>
+                <t t-set="label">Discard</t>
+            </t>
+        </t>
+    </t>
+
+    <t t-extend="Sidebar">
+        <!-- Replace some common sections by icons in mobile -->
+        <t t-jquery=".o_dropdown_toggler_btn t[t-esc='section.label']"
+           t-operation="replace">
+            <t t-set="label" t-value="section.label"/>
+            <t t-if="section.name == 'files'">
+                <t t-call="ow_web_responsive.icon_button">
+                    <t t-set="icon" t-value="'paperclip'"/>
+                </t>
+            </t>
+            <t t-elif="section.name == 'print'">
+                <t t-call="ow_web_responsive.icon_button">
+                    <t t-set="icon" t-value="'print'"/>
+                </t>
+            </t>
+            <t t-elif="section.name == 'other'">
+                <t t-call="ow_web_responsive.icon_button">
+                    <t t-set="icon" t-value="'wrench'"/>
+                </t>
+            </t>
+            <t t-else="">
+                <span t-esc="label"/>
+            </t>
+        </t>
+    </t>
+
+    <t t-extend="mail.Chatter">
+        <t t-jquery=".o_chatter_topbar" t-operation="replace">
+            <div class="o_chatter_header_container">
+                <div class="o_chatter_topbar">
+                    <div class="o_topbar_right_area"/>
+                </div>
+            </div>
+        </t>
+    </t>
+
+</templates>

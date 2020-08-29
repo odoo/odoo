@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2017-2018 Tecnativa - Jairo Llopis
+     License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). -->
+
+<template>
+    <t t-extend="Menu">
+        <t t-jquery=".o_menu_apps" t-operation="after">
+            <!-- Hamburger button to show submenus in sm screens -->
+            <button class="o-menu-toggle d-md-none"
+                    data-toggle="collapse"
+                    data-target=".o_main_navbar .o_menu_sections">
+                <i class="fa fa-bars"/>
+            </button>
+        </t>
+    </t>
+</template>
