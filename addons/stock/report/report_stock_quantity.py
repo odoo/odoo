@@ -33,7 +33,7 @@ SELECT
         WHEN (whs.id IS NOT NULL AND whd.id IS NULL) OR ls.usage = 'transit' THEN 'out'
         WHEN (whs.id IS NULL AND whd.id IS NOT NULL) OR ld.usage = 'transit' THEN 'in'
     END AS state,
-    m.date_expected::date AS date,
+    m.date::date AS date,
     CASE
         WHEN (whs.id IS NOT NULL AND whd.id IS NULL) OR ls.usage = 'transit' THEN -product_qty
         WHEN (whs.id IS NULL AND whd.id IS NOT NULL) OR ld.usage = 'transit' THEN product_qty
@@ -83,7 +83,7 @@ SELECT
     GENERATE_SERIES(
     CASE
         WHEN m.state = 'done' THEN (now() at time zone 'utc')::date - interval '3month'
-        ELSE m.date_expected::date
+        ELSE m.date::date
     END,
     CASE
         WHEN m.state != 'done' THEN (now() at time zone 'utc')::date + interval '3 month'

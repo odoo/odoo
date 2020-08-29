@@ -273,8 +273,7 @@ class FleetVehicle(models.Model):
             domain = []
         else:
             domain = ['|', ('name', operator, name), ('driver_id.name', operator, name)]
-        rec = self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
-        return models.lazy_name_get(self.browse(rec).with_user(name_get_uid))
+        return self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
 
     def return_action_to_open(self):
         """ This opens the xml view specified in xml_id for the current vehicle """

@@ -1,10 +1,12 @@
 odoo.define('mail/static/src/components/chat_window_manager/chat_window_manager_tests.js', function (require) {
 'use strict';
 
+const { makeDeferred } = require('mail/static/src/utils/deferred/deferred.js');
 const {
     afterEach,
     afterNextRender,
     beforeEach,
+    nextAnimationFrame,
     start,
 } = require('mail/static/src/utils/test_utils.js');
 
@@ -60,6 +62,39 @@ QUnit.module('chat_window_manager_tests.js', {
     afterEach() {
         afterEach(this);
     },
+});
+
+QUnit.test('[technical] messaging not created', async function (assert) {
+    /**
+     * Creation of messaging in env is async due to generation of models being
+     * async. Generation of models is async because it requires parsing of all
+     * JS modules that contain pieces of model definitions.
+     *
+     * Time of having no messaging is very short, almost imperceptible by user
+     * on UI, but the display should not crash during this critical time period.
+     */
+    assert.expect(2);
+
+    const messagingBeforeCreationDeferred = makeDeferred();
+    await this.start({
+        messagingBeforeCreationDeferred,
+        waitUntilMessagingCondition: 'none',
+    });
+    assert.containsOnce(
+        document.body,
+        '.o_ChatWindowManager',
+        "should have chat window manager even when messaging is not yet created"
+    );
+
+    // simulate messaging being created
+    messagingBeforeCreationDeferred.resolve();
+    await nextAnimationFrame();
+
+    assert.containsOnce(
+        document.body,
+        '.o_ChatWindowManager',
+        "should still contain chat window manager after messaging has been created"
+    );
 });
 
 QUnit.test('initial mount', async function (assert) {
@@ -220,6 +255,128 @@ QUnit.test('chat window new message: fold', async function (assert) {
     );
 });
 
+QUnit.test('open chat from "new message" chat window should open chat in place of this "new message" chat window', async function (assert) {
+    /**
+     * InnerWith computation uses following info:
+     * ([mocked] global window width: @see `mail/static/src/utils/test_utils.js:start()` method)
+     * (others: @see mail/static/src/models/chat_window_manager/chat_window_manager.js:visual)
+     *
+     * - chat window width: 325px
+     * - start/end/between gap width: 10px/10px/5px
+     * - hidden menu width: 200px
+     * - global width: 1920px
+     *
+     * Enough space for 3 visible chat windows:
+     *  10 + 325 + 5 + 325 + 5 + 325 + 10 = 1000 < 1920
+     */
+    assert.expect(11);
+
+    this.data['res.partner'].records.push({ id: 131, name: "Partner 131" });
+    this.data['res.users'].records.push({ partner_id: 131 });
+    this.data['mail.channel'].records.push(
+        { is_minimized: true },
+        { is_minimized: true },
+    );
+    const imSearchDef = makeDeferred();
+    await this.start({
+        env: {
+            browser: {
+                innerWidth: 1920,
+            },
+        },
+        async mockRPC(route, args) {
+            const res = await this._super(...arguments);
+            if (args.method === 'im_search') {
+                imSearchDef.resolve();
+            }
+            return res;
+        }
+    });
+    assert.containsN(
+        document.body,
+        '.o_ChatWindow',
+        2,
+        "should have 2 chat windows initially"
+    );
+    assert.containsNone(
+        document.body,
+        '.o_ChatWindow.o-new-message',
+        "should not have any 'new message' chat window initially"
+    );
+
+    // open "new message" chat window
+    await afterNextRender(() =>
+        document.querySelector(`.o_MessagingMenu_toggler`).click()
+    );
+    await afterNextRender(() =>
+        document.querySelector(`.o_MessagingMenu_newMessageButton`).click()
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_ChatWindow.o-new-message',
+        "should have 'new message' chat window after clicking 'new message' in messaging menu"
+    );
+    assert.containsN(
+        document.body,
+        '.o_ChatWindow',
+        3,
+        "should have 3 chat window after opening 'new message' chat window",
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_ChatWindow_newMessageFormInput',
+        "'new message' chat window should have new message form input"
+    );
+    assert.hasClass(
+        document.querySelector('.o_ChatWindow[data-visible-index="2"]'),
+        'o-new-message',
+        "'new message' chat window should be the last chat window initially",
+    );
+
+    await afterNextRender(() =>
+        document.querySelector('.o_ChatWindow[data-visible-index="2"] .o_ChatWindowHeader_commandShiftRight').click()
+    );
+    assert.hasClass(
+        document.querySelector('.o_ChatWindow[data-visible-index="1"]'),
+        'o-new-message',
+        "'new message' chat window should have moved to the middle after clicking shift previous",
+    );
+
+    // search for a user in "new message" autocomplete
+    document.execCommand('insertText', false, "131");
+    document.querySelector(`.o_ChatWindow_newMessageFormInput`)
+        .dispatchEvent(new window.KeyboardEvent('keydown'));
+    document.querySelector(`.o_ChatWindow_newMessageFormInput`)
+        .dispatchEvent(new window.KeyboardEvent('keyup'));
+    // Wait for search RPC to be resolved. The following await lines are
+    // necessary because autocomplete is an external lib therefore it is not
+    // possible to use `afterNextRender`.
+    await imSearchDef;
+    await nextAnimationFrame();
+    const link = document.querySelector('.ui-autocomplete .ui-menu-item a');
+    assert.ok(
+        link,
+        "should have autocomplete suggestion after typing on 'new message' input"
+    );
+    assert.strictEqual(
+        link.textContent,
+        "Partner 131",
+        "autocomplete suggestion should target the partner matching search term"
+    );
+
+    await afterNextRender(() => link.click());
+    assert.containsNone(
+        document.body,
+        '.o_ChatWindow.o-new-message',
+        "should have removed the 'new message' chat window after selecting a partner"
+    );
+    assert.strictEqual(
+        document.querySelector('.o_ChatWindow[data-visible-index="1"] .o_ChatWindowHeader_name').textContent,
+        "Partner 131",
+        "chat window with selected partner should be opened in position where 'new message' chat window was, which is in the middle"
+    );
+});
+
 QUnit.test('chat window: basic rendering', async function (assert) {
     assert.expect(11);
 
@@ -290,8 +447,8 @@ QUnit.test('chat window: basic rendering', async function (assert) {
         "should have part to display thread content inside chat window"
     );
     assert.ok(
-        chatWindow.querySelector(`:scope .o_ChatWindow_thread`).classList.contains('o_ThreadViewer'),
-        "thread viewer part should use component ThreadViewer"
+        chatWindow.querySelector(`:scope .o_ChatWindow_thread`).classList.contains('o_ThreadView'),
+        "thread part should use component ThreadView"
     );
 });
 
@@ -356,7 +513,7 @@ QUnit.test('chat window: fold', async function (assert) {
     assert.containsOnce(
         document.body,
         '.o_ChatWindow_thread',
-        "chat window should have a thread viewer"
+        "chat window should have a thread"
     );
     assert.verifySteps(['rpc:channel_fold/open']);
 
@@ -366,7 +523,7 @@ QUnit.test('chat window: fold', async function (assert) {
     assert.containsNone(
         document.body,
         '.o_ChatWindow_thread',
-        "chat window should not have any thread viewer"
+        "chat window should not have any thread"
     );
 
     // Unfold chat window
@@ -375,7 +532,7 @@ QUnit.test('chat window: fold', async function (assert) {
     assert.containsOnce(
         document.body,
         '.o_ChatWindow_thread',
-        "chat window should have a thread viewer"
+        "chat window should have a thread"
     );
 });
 
@@ -695,23 +852,23 @@ QUnit.test('[technical] chat window: scroll conservation on toggle home menu', a
         document.querySelector(`.o_MessagingMenu_dropdownMenu .o_NotificationList_preview`).click()
     );
     // Set a scroll position to chat window
-    document.querySelector(`.o_ThreadViewer_messageList`).scrollTop = 142;
+    document.querySelector(`.o_ThreadView_messageList`).scrollTop = 142;
     assert.strictEqual(
-        document.querySelector(`.o_ThreadViewer_messageList`).scrollTop,
+        document.querySelector(`.o_ThreadView_messageList`).scrollTop,
         142,
         "chat window initial scrollTop should be 142px"
     );
 
     await afterNextRender(() => this.hideHomeMenu());
     assert.strictEqual(
-        document.querySelector(`.o_ThreadViewer_messageList`).scrollTop,
+        document.querySelector(`.o_ThreadView_messageList`).scrollTop,
         142,
         "chat window scrollTop should still be the same after home menu is hidden"
     );
 
     await afterNextRender(() => this.showHomeMenu());
     assert.strictEqual(
-        document.querySelector(`.o_ThreadViewer_messageList`).scrollTop,
+        document.querySelector(`.o_ThreadView_messageList`).scrollTop,
         142,
         "chat window scrollTop should still be the same after home menu is shown"
     );
@@ -1316,7 +1473,7 @@ QUnit.test('chat window: switch on TAB', async function (assert) {
     );
 });
 
-QUnit.test('chat window: TAB cycle with 3 open chat windows', async function (assert) {
+QUnit.test('chat window: TAB cycle with 3 open chat windows [REQUIRE FOCUS]', async function (assert) {
     /**
      * InnerWith computation uses following info:
      * ([mocked] global window width: @see `mail/static/src/utils/test_utils.js:start()` method)
@@ -1436,9 +1593,9 @@ QUnit.test('chat window with a thread: keep scroll position in message list on f
         document.querySelector(`.o_NotificationList_preview`).click()
     );
     // Set a scroll position to chat window
-    document.querySelector(`.o_ThreadViewer_messageList`).scrollTop = 142;
+    document.querySelector(`.o_ThreadView_messageList`).scrollTop = 142;
     assert.strictEqual(
-        document.querySelector(`.o_ThreadViewer_messageList`).scrollTop,
+        document.querySelector(`.o_ThreadView_messageList`).scrollTop,
         142,
         "verify chat window initial scrollTop"
     );
@@ -1447,14 +1604,14 @@ QUnit.test('chat window with a thread: keep scroll position in message list on f
     await afterNextRender(() => document.querySelector('.o_ChatWindow_header').click());
     assert.containsNone(
         document.body,
-        ".o_ThreadViewer",
-        "chat window should be folded so no thread viewer should be present"
+        ".o_ThreadView",
+        "chat window should be folded so no ThreadView should be present"
     );
 
     // unfold chat window
     await afterNextRender(() => document.querySelector('.o_ChatWindow_header').click());
     assert.strictEqual(
-        document.querySelector(`.o_ThreadViewer_messageList`).scrollTop,
+        document.querySelector(`.o_ThreadView_messageList`).scrollTop,
         142,
         "chat window scrollTop should still be the same when chat window is unfolded"
     );
@@ -1565,9 +1722,9 @@ QUnit.test('[technical] chat window with a thread: keep scroll position in messa
         document.querySelector(`.o_MessagingMenu_dropdownMenu .o_NotificationList_preview`).click()
     );
     // Set a scroll position to chat window
-    document.querySelector(`.o_ThreadViewer_messageList`).scrollTop = 142;
+    document.querySelector(`.o_ThreadView_messageList`).scrollTop = 142;
     assert.strictEqual(
-        document.querySelector(`.o_ThreadViewer_messageList`).scrollTop,
+        document.querySelector(`.o_ThreadView_messageList`).scrollTop,
         142,
         "should have scrolled to 142px"
     );
@@ -1578,7 +1735,7 @@ QUnit.test('[technical] chat window with a thread: keep scroll position in messa
     // unfold chat window
     await afterNextRender(() => document.querySelector('.o_ChatWindow_header').click());
     assert.strictEqual(
-        document.querySelector(`.o_ThreadViewer_messageList`).scrollTop,
+        document.querySelector(`.o_ThreadView_messageList`).scrollTop,
         142,
         "chat window scrollTop should still be the same after home menu is hidden"
     );
@@ -1590,7 +1747,7 @@ QUnit.test('[technical] chat window with a thread: keep scroll position in messa
     // unfold chat window
     await afterNextRender(() => document.querySelector('.o_ChatWindow_header').click());
     assert.strictEqual(
-        document.querySelector(`.o_ThreadViewer_messageList`).scrollTop,
+        document.querySelector(`.o_ThreadView_messageList`).scrollTop,
         142,
         "chat window scrollTop should still be the same after home menu is shown"
     );

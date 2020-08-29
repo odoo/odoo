@@ -33,15 +33,9 @@ class TestMassMailing(TestMailFullCommon):
         </a>
     </p>
 </div>'''
-        jinja_html_preview = self.env['mail.render.mixin']._generate_preview(jinja_html)
-        self.assertIn('Hello ${object.name}', jinja_html_preview)
-        self.assertIn('Here are your personal links', jinja_html_preview)
-        self.assertIn('External link', jinja_html_preview)
-        self.assertIn('Internal link', jinja_html_preview)
-        self.assertIn('Unsubscribe link', jinja_html_preview)
-        self.assertIn('View link', jinja_html_preview)
 
         mailing.write({
+            'preview': 'Hi ${object.name} :)',
             'body_html': jinja_html,
             'mailing_model_id': self.env['ir.model']._get('mailing.test.optout').id,
         })
@@ -70,7 +64,7 @@ class TestMassMailing(TestMailFullCommon):
                 email = self._find_sent_mail_wemail(recipient.email_normalized)
                 # preview correctly integrated rendered jinja
                 self.assertIn(
-                    'Hello %s Here are your personal links External link Internal link Unsubscribe link View link' % recipient.name,
+                    'Hi %s :)' % recipient.name,
                     email['body'])
                 # rendered unsubscribe
                 self.assertIn(

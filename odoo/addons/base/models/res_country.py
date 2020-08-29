@@ -10,24 +10,6 @@ from odoo.tools.translate import _
 _logger = logging.getLogger(__name__)
 
 
-@api.model
-def location_name_search(self, name='', args=None, operator='ilike', limit=100):
-    if args is None:
-        args = []
-
-    records = self.browse()
-    if len(name) == 2:
-        records = self.search([('code', 'ilike', name)] + args, limit=limit)
-
-    search_domain = [('name', operator, name)]
-    if records:
-        search_domain.append(('id', 'not in', records.ids))
-    records += self.search(search_domain + args, limit=limit)
-
-    # the field 'display_name' calls name_get() to get its value
-    return models.lazy_name_get(records)
-
-
 class Country(models.Model):
     _name = 'res.country'
     _description = 'Country'
@@ -77,7 +59,20 @@ class Country(models.Model):
             'The code of the country must be unique !')
     ]
 
-    name_search = location_name_search
+    def _name_search(self, name='', args=None, operator='ilike', limit=100, name_get_uid=None):
+        if args is None:
+            args = []
+
+        ids = []
+        if len(name) == 2:
+            ids = list(self._search([('code', 'ilike', name)] + args, limit=limit))
+
+        search_domain = [('name', operator, name)]
+        if ids:
+            search_domain.append(('id', 'not in', ids))
+        ids += list(self._search(search_domain + args, limit=limit))
+
+        return ids
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -133,8 +128,12 @@ class CountryState(models.Model):
             domain = [('name', operator, name)]
 
         first_state_ids = self._search(expression.AND([first_domain, args]), limit=limit, access_rights_uid=name_get_uid) if first_domain else []
-        state_ids = first_state_ids + [state_id for state_id in self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid) if not state_id in first_state_ids]
-        return models.lazy_name_get(self.browse(state_ids).with_user(name_get_uid))
+        return list(first_state_ids) + [
+            state_id
+            for state_id in self._search(expression.AND([domain, args]),
+                                         limit=limit, access_rights_uid=name_get_uid)
+            if state_id not in first_state_ids
+        ]
 
     def name_get(self):
         result = []

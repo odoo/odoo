@@ -43,10 +43,6 @@
                                 <field name="time_cycle" invisible="1"/>
                                 <field name="company_id" groups="base.group_multi_company" />
                             </group>
-                            <group>
-                                <field name="batch" widget="radio"/>
-                                <field name="batch_size" attrs="{'invisible': [('batch', '=', 'no')]}"/>
-                            </group>
                         </group>
                         <notebook>
                             <page string="Work Sheet" name="worksheet">

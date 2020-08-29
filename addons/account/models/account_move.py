@@ -171,8 +171,13 @@ class AccountMove(models.Model):
     country_code = fields.Char(related='company_id.country_id.code', readonly=True)
     user_id = fields.Many2one(string='User', related='invoice_user_id',
         help='Technical field used to fit the generic behavior in mail templates.')
-    is_move_sent = fields.Boolean(readonly=True, default=False, copy=False,
-        help="It indicates that the invoice/payment has been sent.")
+    is_move_sent = fields.Boolean(
+        readonly=True,
+        default=False,
+        copy=False,
+        tracking=True,
+        help="It indicates that the invoice/payment has been sent.",
+    )
     partner_bank_id = fields.Many2one('res.partner.bank', string='Recipient Bank',
         help='Bank Account Number to which the invoice will be paid. A Company bank account if this is a Customer Invoice or Vendor Credit Note, otherwise a Partner bank account number.',
         check_company=True)
@@ -391,11 +396,11 @@ class AccountMove(models.Model):
                     self.partner_id = False
                     return {'warning': warning}
 
-        if self.is_sale_document(include_receipts=True) and self.partner_id.property_payment_term_id:
-            self.invoice_payment_term_id = self.partner_id.property_payment_term_id
+        if self.is_sale_document(include_receipts=True) and self.partner_id:
+            self.invoice_payment_term_id = self.partner_id.property_payment_term_id or self.invoice_payment_term_id
             new_term_account = self.partner_id.commercial_partner_id.property_account_receivable_id
-        elif self.is_purchase_document(include_receipts=True) and self.partner_id.property_supplier_payment_term_id:
-            self.invoice_payment_term_id = self.partner_id.property_supplier_payment_term_id
+        elif self.is_purchase_document(include_receipts=True) and self.partner_id:
+            self.invoice_payment_term_id = self.partner_id.property_supplier_payment_term_id or self.invoice_payment_term_id
             new_term_account = self.partner_id.commercial_partner_id.property_account_payable_id
         else:
             new_term_account = None
@@ -1038,10 +1043,10 @@ class AccountMove(models.Model):
             reference_move = self.search(domain + [('date', '<=', self.date)], order='date desc', limit=1) or self.search(domain, order='date asc', limit=1)
             sequence_number_reset = self._deduce_sequence_number_reset(reference_move.name)
             if sequence_number_reset == 'year':
-                where_string += " AND date_trunc('year', date) = date_trunc('year', %(date)s) "
+                where_string += " AND date_trunc('year', date::timestamp without time zone) = date_trunc('year', %(date)s) "
                 param['date'] = self.date
             elif sequence_number_reset == 'month':
-                where_string += " AND date_trunc('month', date) = date_trunc('month', %(date)s) "
+                where_string += " AND date_trunc('month', date::timestamp without time zone) = date_trunc('month', %(date)s) "
                 param['date'] = self.date
 
         if self.journal_id.refund_sequence:
@@ -1397,9 +1402,10 @@ class AccountMove(models.Model):
             # At this point we only want to keep the taxes with a zero amount since they do not
             # generate a tax line.
             for line in move.line_ids:
-                for tax in line.tax_ids.flatten_taxes_hierarchy().filtered(lambda t: t.amount == 0.0):
-                    res.setdefault(tax.tax_group_id, {'base': 0.0, 'amount': 0.0})
-                    res[tax.tax_group_id]['base'] += tax_balance_multiplicator * (line.amount_currency if line.currency_id else line.balance)
+                for tax in line.tax_ids.flatten_taxes_hierarchy():
+                    if tax.tax_group_id not in res:
+                        res.setdefault(tax.tax_group_id, {'base': 0.0, 'amount': 0.0})
+                        res[tax.tax_group_id]['base'] += tax_balance_multiplicator * (line.amount_currency if line.currency_id else line.balance)
 
             res = sorted(res.items(), key=lambda l: l[0].sequence)
             move.amount_by_group = [(
@@ -1425,8 +1431,8 @@ class AccountMove(models.Model):
         for move in self:
             if move._affect_tax_report() and move.company_id.tax_lock_date and move.date and move.date <= move.company_id.tax_lock_date:
                 move.tax_lock_date_message = _(
-                    "The accounting date is prior to the tax lock date which is set on %s. "
-                    "Then, this will be moved to the next available one during the invoice validation.",
+                    "The accounting date is set prior to the tax lock date which is set on %s. "
+                    "Hence, the accounting date will be changed to the next available date when posting.",
                     format_date(self.env, move.company_id.tax_lock_date))
             else:
                 move.tax_lock_date_message = False
@@ -1790,15 +1796,15 @@ class AccountMove(models.Model):
             return self.env.ref('account.mt_invoice_validated')
         return super(AccountMove, self)._track_subtype(init_values)
 
-    def _get_creation_message(self):
+    def _creation_message(self):
         # OVERRIDE
         if not self.is_invoice(include_receipts=True):
-            return super()._get_creation_message()
+            return super()._creation_message()
         return {
             'out_invoice': _('Invoice Created'),
-            'out_refund': _('Refund Created'),
+            'out_refund': _('Credit Note Created'),
             'in_invoice': _('Vendor Bill Created'),
-            'in_refund': _('Credit Note Created'),
+            'in_refund': _('Refund Created'),
             'out_receipt': _('Sales Receipt Created'),
             'in_receipt': _('Purchase Receipt Created'),
         }[self.move_type]
@@ -2082,7 +2088,7 @@ class AccountMove(models.Model):
                         mapping[inv_rep_line] = ref_rep_line
             return mapping
 
-        move_vals = self.with_context(include_business_fields=True).copy_data(default=default_values)[0]
+        move_vals = self.with_context(include_business_fields=True,active_test=False).copy_data(default=default_values)[0]
 
         tax_repartition_lines_mapping = compute_tax_repartition_lines_mapping(move_vals)
 
@@ -2116,6 +2122,8 @@ class AccountMove(models.Model):
             elif line_vals.get('tax_repartition_line_id'):
                 # Tax line.
                 invoice_repartition_line = self.env['account.tax.repartition.line'].browse(line_vals['tax_repartition_line_id'])
+                if invoice_repartition_line not in tax_repartition_lines_mapping:
+                    raise UserError(_("It seems that the taxes have been modified since the creation of the journal entry. You should create the credit note manually instead."))
                 refund_repartition_line = tax_repartition_lines_mapping[invoice_repartition_line]
 
                 # Find the right account.
@@ -2235,11 +2243,13 @@ class AccountMove(models.Model):
 
         # Create the invoice.
         values = {
+            'name': '/',  # we have to give the name otherwise it will be set to the mail's subject
             'invoice_source_email': from_mail_addresses[0],
             'partner_id': partners and partners[0].id or False,
         }
         move_ctx = self.with_context(default_move_type=custom_values['move_type'], default_journal_id=custom_values['journal_id'])
         move = super(AccountMove, move_ctx).message_new(msg_dict, custom_values=values)
+        move._compute_name()  # because the name is given, we need to recompute in case it is the first invoice of the journal
 
         # Assign followers.
         all_followers_ids = set(partner.id for partner in followers + senders + partners if is_internal_partner(partner))
@@ -2736,7 +2746,7 @@ class AccountMoveLine(models.Model):
     account_internal_group = fields.Selection(related='account_id.user_type_id.internal_group', string="Internal Group", readonly=True)
     account_root_id = fields.Many2one(related='account_id.root_id', string="Account Root", store=True, readonly=True)
     sequence = fields.Integer(default=10)
-    name = fields.Text(string='Label', tracking=True)
+    name = fields.Char(string='Label', tracking=True)
     quantity = fields.Float(string='Quantity',
         default=1.0, digits='Product Unit of Measure',
         help="The optional quantity expressed by this line, eg: number of product sold. "
@@ -2797,9 +2807,9 @@ class AccountMoveLine(models.Model):
              " are displayed). By default all new journal items are directly exigible, but with the feature cash_basis"
              " on taxes, some will become exigible only when the payment is recorded.")
     tax_repartition_line_id = fields.Many2one(comodel_name='account.tax.repartition.line',
-        string="Originator Tax Repartition Line", ondelete='restrict', readonly=True,
+        string="Originator Tax Distribution Line", ondelete='restrict', readonly=True,
         check_company=True,
-        help="Tax repartition line that caused the creation of this move line, if any")
+        help="Tax distribution line that caused the creation of this move line, if any")
     tax_tag_ids = fields.Many2many(string="Tags", comodel_name='account.account.tag', ondelete='restrict',
         help="Tags assigned to this line by the tax creating it, if any. It determines its impact on financial reports.", tracking=True)
     tax_audit = fields.Char(string="Tax Audit String", compute="_compute_tax_audit", store=True,
@@ -2870,7 +2880,7 @@ class AccountMoveLine(models.Model):
                     currency_id = company_currency_id
                     AND
                     ROUND(debit - credit - amount_currency, 2) = 0
-                )                
+                )
             )''',
             "The amount expressed in the secondary currency must be positive when account is debited and negative when "
             "account is credited. If the currency is the same as the one from the company, this amount must strictly "
@@ -3010,17 +3020,18 @@ class AccountMoveLine(models.Model):
         for record in self:
             record.analytic_account_id = (record._origin or record).analytic_account_id
             record.analytic_tag_ids = (record._origin or record).analytic_tag_ids
-            rec = self.env['account.analytic.default'].account_get(
-                product_id=record.product_id.id,
-                partner_id=record.partner_id.commercial_partner_id.id or record.move_id.partner_id.commercial_partner_id.id,
-                account_id=record.account_id.id,
-                user_id=record.env.uid,
-                date=record.date_maturity,
-                company_id=record.move_id.company_id.id
-            )
-            if rec and not record.exclude_from_invoice_tab:
-                record.analytic_account_id = rec.analytic_id
-                record.analytic_tag_ids = rec.analytic_tag_ids
+            if not record.exclude_from_invoice_tab:
+                rec = self.env['account.analytic.default'].account_get(
+                    product_id=record.product_id.id,
+                    partner_id=record.partner_id.commercial_partner_id.id or record.move_id.partner_id.commercial_partner_id.id,
+                    account_id=record.account_id.id,
+                    user_id=record.env.uid,
+                    date=record.date_maturity,
+                    company_id=record.move_id.company_id.id
+                )
+                if rec:
+                    record.analytic_account_id = rec.analytic_id
+                    record.analytic_tag_ids = rec.analytic_tag_ids
 
     def _get_price_total_and_subtotal(self, price_unit=None, quantity=None, discount=None, currency=None, product=None, partner=None, taxes=None, move_type=None):
         self.ensure_one()
@@ -3705,16 +3716,16 @@ class AccountMoveLine(models.Model):
         for move_id, modified_lines in move_initial_values.items():
             tmp_move = {move_id: []}
             for line in self.filtered(lambda l: l.move_id.id == move_id):
-                tracked_field = self.env['mail.thread'].static_message_track(line, ref_fields, modified_lines) # Return a tuple like (changed field, ORM command)
+                changes, tracking_value_ids = line._mail_track(ref_fields, modified_lines) # Return a tuple like (changed field, ORM command)
                 tmp = {'line_id': line.id}
-                if len(tracked_field[1]) > 0:
-                    selected_field = tracked_field[1][0][2] # Get the last element of the tuple in the list of ORM command. (changed, [(0, 0, THIS)])
+                if tracking_value_ids:
+                    selected_field = tracking_value_ids[0][2] # Get the last element of the tuple in the list of ORM command. (changed, [(0, 0, THIS)])
                     tmp.update({
                         **{'field_name': selected_field.get('field_desc')},
                         **self._get_formated_values(selected_field)
                     })
-                elif len(tracked_field[0]):
-                    field_name = line._fields[tracked_field[0].pop()].string # Get the field name
+                elif changes:
+                    field_name = line._fields[changes.pop()].string # Get the field name
                     tmp.update({
                         'error': True,
                         'field_error': field_name

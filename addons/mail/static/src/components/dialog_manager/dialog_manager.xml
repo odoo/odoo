@@ -3,11 +3,13 @@
 
     <t t-name="mail.DialogManager" owl="1">
         <div class="o_DialogManager">
-            <t t-foreach="env.messaging.dialogManager.dialogs" t-as="dialog" t-key="dialog.localId">
-                <Dialog
-                    class="o_DialogManager_dialog"
-                    dialogLocalId="dialog.localId"
-                />
+            <t t-if="env.messaging">
+                <t t-foreach="env.messaging.dialogManager.dialogs" t-as="dialog" t-key="dialog.localId">
+                    <Dialog
+                        class="o_DialogManager_dialog"
+                        dialogLocalId="dialog.localId"
+                    />
+                </t>
             </t>
         </div>
     </t>

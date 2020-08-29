@@ -61,6 +61,13 @@ odoo.define('point_of_sale.tour.TicketScreenTourMethods', function (require) {
                 },
             ];
         }
+        settleTips() {
+            return [
+                {
+                    trigger: '.ticket-screen .buttons .settle-tips',
+                },
+            ];
+        }
     }
 
     class Check {

@@ -50,5 +50,4 @@ class TestUi(TestPosHrHttpCommon):
             "/pos/web?config_id=%d" % self.main_pos_config.id,
             "PosHrTour",
             login="admin",
-            step_delay=50,
         )

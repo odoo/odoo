@@ -72,7 +72,7 @@ class Job(models.Model):
                 result[attachment.res_id] |= attachment
 
         for job in self:
-            job.document_ids = result[job.id]
+            job.document_ids = result.get(job.id, False)
             job.documents_count = len(job.document_ids)
 
     def _compute_all_application_count(self):

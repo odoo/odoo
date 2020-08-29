@@ -35,7 +35,7 @@
             <field name="name">report.membership.pivot</field>
             <field name="model">report.membership</field>
             <field name="arch" type="xml">
-                <pivot string="Membership" disable_linking="True">
+                <pivot string="Membership" disable_linking="True" sample="1">
                     <field name="membership_id" type="row"/>
                     <field name="start_date" interval="month" type="col"/>
                     <field name="quantity" type="measure"/>

@@ -137,7 +137,7 @@
         <field name="name">stock.quant.pivot</field>
         <field name="model">stock.quant</field>
         <field name="arch" type="xml">
-            <pivot string="Inventory">
+            <pivot string="Inventory" sample="1">
                 <field name="product_id" type="row"/>
                 <field name="location_id" type="col"/>
                 <field name="quantity" type="measure"/>
@@ -160,6 +160,7 @@
         <field name="name">Inventory</field>
         <field name="model_id" ref="model_stock_quant"/>
         <field name="state">code</field>
+        <field name="groups_id" eval="[(4, ref('stock.group_stock_user'))]"/>
         <field name="code">
             action = model.with_context(
                 search_default_internal_loc=1,

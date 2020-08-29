@@ -782,43 +782,25 @@ options.registry.OptionsTab = options.Class.extend({
         });
     },
     /**
-     * @todo use scss customization instead (like for user colors)
      * @see this.selectClass for parameters
      */
-    async customizeBodyBg(previewMode, widgetValue, params) {
-        const xmlID = 'website.option_custom_body_image';
-        if (widgetValue) {
-            await this._rpc({
-                model: 'ir.model.data',
-                method: 'get_object_reference',
-                args: xmlID.split('.'),
-            }).then(data => {
-                return this._rpc({
-                    model: 'ir.ui.view',
-                    method: 'save',
-                    args: [
-                        data[1],
-                        `#wrapwrap { background-image: url("${widgetValue}"); }`,
-                        '//style',
-                    ],
-                });
-            });
-        } else {
-            await this._customizeWebsiteViews('', {possibleValues: ['', xmlID]});
+    async customizeBodyBgType(previewMode, widgetValue, params) {
+        if (widgetValue === 'NONE') {
+            this.bodyImageType = 'image';
+            return this.customizeBodyBg(previewMode, '', params);
         }
-
-        await this._reloadBundles();
+        // TODO improve: hack to click on external image picker
+        this.bodyImageType = widgetValue;
+        const widget = this._requestUserValueWidgets(params.imagepicker)[0];
+        widget.$el.click();
     },
     /**
-     * @see this.selectClass for parameters
+     * @override
      */
-    async enableImagepicker(previewMode, widgetValue, params) {
-        if (widgetValue) {
-            // TODO improve: here we make a hack so that a hidden imagepicker
-            // widget opens...
-            const widget = this._requestUserValueWidgets(widgetValue)[0];
-            widget.$el.click();
-        }
+    async customizeBodyBg(previewMode, widgetValue, params) {
+        // TODO improve: customize two variables at the same time...
+        await this.customizeWebsiteVariable(previewMode, this.bodyImageType, {variable: 'body-image-type'});
+        await this.customizeWebsiteVariable(previewMode, widgetValue ? `'${widgetValue}'` : '', {variable: 'body-image'});
     },
     /**
      * @see this.selectClass for parameters
@@ -940,10 +922,12 @@ options.registry.OptionsTab = options.Class.extend({
      * @override
      */
     async _computeWidgetState(methodName, params) {
-        if (methodName === 'customizeBodyBg') {
-            const bgURL = $('#wrapwrap').css('background-image');
-            const srcValueWrapper = /url\(['"]*|['"]*\)|^none$/g;
-            return bgURL && bgURL.replace(srcValueWrapper, '') || '';
+        if (methodName === 'customizeBodyBgType') {
+            const bgImage = $('#wrapwrap').css('background-image');
+            if (bgImage === 'none') {
+                return "NONE";
+            }
+            return weUtils.getCSSVariableValue('body-image-type');
         }
         return this._super(...arguments);
     },
@@ -987,20 +971,6 @@ options.registry.OptionsTab = options.Class.extend({
 });
 
 options.registry.ThemeColors = options.registry.OptionsTab.extend({
-    events: Object.assign({}, options.registry.OptionsTab.prototype.events, {
-        'click .o_color_combinations_edition we-toggler': '_onCCTogglerClick',
-        // FIXME investigate why using 'click' does not work *anymore* but those
-        // foldable areas will be made more robust and standard with the new UI.
-        'mouseup .o_cc_subheadings_toggler_icon': '_onCCHeadingsTogglerClick',
-    }),
-
-    /**
-     * @constructor
-     */
-    init() {
-        this._super(...arguments);
-        this._showCCSubHeadings = {};
-    },
     /**
      * @override
      */
@@ -1034,31 +1004,6 @@ options.registry.ThemeColors = options.registry.OptionsTab.extend({
     /**
      * @override
      */
-    async _computeWidgetVisibility(widgetName, params) {
-        if (params.shUid) {
-            return !!this._showCCSubHeadings[params.shUid];
-        }
-        return this._super(...arguments);
-    },
-    /**
-     * @override
-     */
-    async _renderOriginalXML($xml) {
-        const uiFragment = await this._super(...arguments);
-
-        uiFragment.querySelectorAll('.o_cc_subheadings_toggler').forEach(headingsEl => {
-            const togglerEl = document.createElement('span');
-            togglerEl.classList.add('o_cc_subheadings_toggler_icon', 'o_we_fold_icon', 'fa', 'fa-caret-right');
-            togglerEl.setAttribute('role', 'button');
-            const titleEl = headingsEl.querySelector('we-title');
-            titleEl.insertBefore(togglerEl, titleEl.firstChild);
-        });
-
-        return uiFragment;
-    },
-    /**
-     * @override
-     */
     async _renderCustomXML(uiFragment) {
         const paletteSelectorEl = uiFragment.querySelector('[data-variable="color-palettes-number"]');
         const style = window.getComputedStyle(document.documentElement);
@@ -1077,63 +1022,17 @@ options.registry.ThemeColors = options.registry.OptionsTab.extend({
             paletteSelectorEl.appendChild(btnEl);
         }
 
-        const ccEl = uiFragment.querySelector('.o_color_combinations_edition');
         for (let i = 1; i <= 5; i++) {
-            const togglerEl = document.createElement('we-toggler');
-            togglerEl.classList.add('pt-0', 'pb-0', 'pl-0');
-            const divEl = document.createElement('div');
+            const collapseEl = document.createElement('we-collapse');
             const ccPreviewEl = $(qweb.render('web_editor.color.combination.preview'))[0];
             ccPreviewEl.classList.add('text-center', `o_cc${i}`);
-            divEl.appendChild(ccPreviewEl);
-            togglerEl.appendChild(divEl);
-            ccEl.appendChild(togglerEl);
-
-            const collapseEl = document.createElement('we-collapse');
-            const editionEl = $(qweb.render('website.color_combination_edition', {number: i}))[0];
-            collapseEl.appendChild(editionEl);
-            ccEl.appendChild(collapseEl);
-        }
-    },
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onCCTogglerClick(ev) {
-        const ccTogglerEls = this.el.querySelectorAll('.o_color_combinations_edition we-toggler');
-        for (const el of ccTogglerEls) {
-            if (el !== ev.currentTarget) {
-                el.classList.remove('active');
+            collapseEl.appendChild(ccPreviewEl);
+            const editionEls = $(qweb.render('website.color_combination_edition', {number: i}));
+            for (const el of editionEls) {
+                collapseEl.appendChild(el);
             }
+            uiFragment.appendChild(collapseEl);
         }
-        ev.currentTarget.classList.toggle('active');
-    },
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onCCHeadingsTogglerClick(ev) {
-        const togglerEl = ev.currentTarget;
-        const collapseEl = togglerEl.closest('we-collapse').querySelector('.o_cc_subheadings_collapse');
-        const show = togglerEl.classList.contains('fa-caret-right');
-        const parentEl = togglerEl.closest('we-select');
-        togglerEl.classList.toggle('fa-caret-right', !show);
-        togglerEl.classList.toggle('fa-caret-down', show);
-        parentEl.classList.toggle('active', show);
-        this._showCCSubHeadings[collapseEl.dataset.uid] = show;
-        // FIXME big hack to rerender the interface (all the foldable code is
-        // a hack currently anyway, it needs to be generic)
-        this.trigger_up('snippet_edition_request', {exec: async () => {
-            return new Promise(resolve => setTimeout(() => {
-                this.trigger_up('snippet_option_update', {
-                    onSuccess: () => resolve(),
-                });
-            }));
-        }});
     },
 });
 
@@ -1867,7 +1766,7 @@ options.registry.collapse = options.Class.extend({
     },
 });
 
-options.registry.Header = options.Class.extend({
+options.registry.HeaderLogo = options.Class.extend({
 
     //--------------------------------------------------------------------------
     // Private
@@ -1885,6 +1784,36 @@ options.registry.Header = options.Class.extend({
             return !this.$('.navbar-brand').hasClass('d-none');
         }
         return this._super(...arguments);
+    },
+});
+
+options.registry.HeaderTemplate = options.Class.extend({
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    async _renderOriginalXML($xml) {
+        const uiFragment = await this._super(...arguments);
+
+        const widgets = this._requestUserValueWidgets('header_alignment_opt', 'header_hamburger_type_opt');
+        for (const widget of widgets) {
+            const titleEl = widget.el.querySelector('we-title');
+            const spanEl1 = document.createElement('span');
+            spanEl1.textContent = " (+ ";
+            titleEl.appendChild(spanEl1);
+            const iconEl = document.createElement('i');
+            iconEl.classList.add('fa', 'fa-mobile');
+            titleEl.appendChild(iconEl);
+            const spanEl2 = document.createElement('span');
+            spanEl2.textContent = ")";
+            titleEl.appendChild(spanEl2);
+        }
+
+        return uiFragment;
     },
 });
 
@@ -2220,12 +2149,12 @@ options.registry.Box = options.Class.extend({
      */
     setShadow(previewMode, widgetValue, params) {
         this.$target.toggleClass(params.shadowClass, !!widgetValue);
-        if (widgetValue) {
-            const inset = widgetValue === 'inset' ? widgetValue : '';
-            const values = this.$target.css('box-shadow').replace('inset', '') + ` ${inset}`;
-            this.$target[0].style.setProperty('box-shadow', values, 'important');
-        } else {
-            this.$target.css('box-shadow', '');
+        const defaultShadow = this._getDefaultShadow(widgetValue, params.shadowClass);
+        console.log(defaultShadow);
+        this.$target[0].style.setProperty('box-shadow', defaultShadow, 'important');
+        if (widgetValue === 'outset') {
+            // In this case, the shadowClass is enough
+            this.$target[0].style.setProperty('box-shadow', '');
         }
     },
 
@@ -2238,7 +2167,8 @@ options.registry.Box = options.Class.extend({
      */
     _computeWidgetState(methodName, params) {
         if (methodName === 'setShadow') {
-            if (!this.$target[0].classList.contains(params.shadowClass)) {
+            const shadowValue = this.$target.css('box-shadow');
+            if (!shadowValue || shadowValue === 'none') {
                 return '';
             }
             return this.$target.css('box-shadow').includes('inset') ? 'inset' : 'outset';
@@ -2251,6 +2181,66 @@ options.registry.Box = options.Class.extend({
     async _computeWidgetVisibility(widgetName, params) {
         if (widgetName === 'fake_inset_shadow_opt') {
             return false;
+        }
+        return this._super(...arguments);
+    },
+    /**
+     * @private
+     * @param {string} type
+     * @param {string} shadowClass
+     * @returns {string}
+     */
+    _getDefaultShadow(type, shadowClass) {
+        const el = document.createElement('div');
+        if (type) {
+            el.classList.add(shadowClass);
+        }
+        document.body.appendChild(el);
+        switch (type) {
+            case 'outset': {
+                return $(el).css('box-shadow');
+            }
+            case 'inset': {
+                return $(el).css('box-shadow') + ' inset';
+            }
+        }
+        el.remove();
+        return '';
+    }
+});
+
+options.registry.HeaderBox = options.registry.Box.extend({
+
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    async selectStyle(previewMode, widgetValue, params) {
+        if ((params.variable || params.color)
+                && ['border-width', 'border-style', 'border-color', 'border-radius', 'box-shadow'].includes(params.cssProperty)) {
+            if (previewMode) {
+                return;
+            }
+            if (params.cssProperty === 'border-color') {
+                return this.customizeWebsiteColor(previewMode, widgetValue, params);
+            }
+            return this.customizeWebsiteVariable(previewMode, widgetValue, params);
+        }
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    async setShadow(previewMode, widgetValue, params) {
+        if (params.variable) {
+            if (previewMode) {
+                return;
+            }
+            const defaultShadow = this._getDefaultShadow(widgetValue, params.shadowClass);
+            return this.customizeWebsiteVariable(previewMode, defaultShadow || 'none', params);
         }
         return this._super(...arguments);
     },

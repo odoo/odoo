@@ -232,9 +232,8 @@ class SaleOrder(models.Model):
     signed_by = fields.Char('Signed By', help='Name of the person that signed the SO.', copy=False)
     signed_on = fields.Datetime('Signed On', help='Date of the signature.', copy=False)
 
-    commitment_date = fields.Datetime('Delivery Date',
-                                      states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
-                                      copy=False, readonly=True,
+    commitment_date = fields.Datetime('Delivery Date', copy=False,
+                                      states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
                                       help="This is the delivery date promised to the customer. "
                                            "If set, the delivery order will be scheduled based on "
                                            "this date rather than product lead times.")
@@ -337,7 +336,7 @@ class SaleOrder(models.Model):
             return self.env.ref('sale.mt_order_sent')
         return super(SaleOrder, self)._track_subtype(init_values)
 
-    @api.onchange('partner_shipping_id', 'partner_id')
+    @api.onchange('partner_shipping_id', 'partner_id', 'company_id')
     def onchange_partner_shipping_id(self):
         """
         Trigger the change of fiscal position when the shipping address is modified.
@@ -522,8 +521,7 @@ class SaleOrder(models.Model):
                     args or [],
                     ['|', ('name', operator, name), ('partner_id.name', operator, name)]
                 ])
-                order_ids = self._search(domain, limit=limit, access_rights_uid=name_get_uid)
-                return models.lazy_name_get(self.browse(order_ids).with_user(name_get_uid))
+                return self._search(domain, limit=limit, access_rights_uid=name_get_uid)
         return super(SaleOrder, self)._name_search(name, args=args, operator=operator, limit=limit, name_get_uid=name_get_uid)
 
     def _prepare_invoice(self):
@@ -1061,6 +1059,9 @@ Reason(s) of this behavior could be:
         if optional_values:
             down_payments_section_line.update(optional_values)
         return down_payments_section_line
+
+    def add_option_to_order_with_taxcloud(self):
+        self.ensure_one()
 
 
 class SaleOrderLine(models.Model):

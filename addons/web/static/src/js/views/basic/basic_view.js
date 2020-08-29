@@ -184,7 +184,7 @@ var BasicView = AbstractView.extend({
             var def;
             if (fieldNames.length) {
                 if (model.isNew(record.id)) {
-                    def = model.applyDefaultValues(record.id, {}, {
+                    def = model.generateDefaultValues(record.id, {
                         fieldNames: fieldNames,
                         viewType: viewType,
                     });

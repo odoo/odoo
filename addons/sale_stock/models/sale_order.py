@@ -112,6 +112,11 @@ class SaleOrder(models.Model):
                         You should probably update the partner on this document.""") % addresses
                 picking.activity_schedule('mail.mail_activity_data_warning', note=message, user_id=self.env.user.id)
 
+        if values.get('commitment_date'):
+            # protagate commitment_date as the deadline of the related stock move.
+            # TODO: Log a note on each down document
+            self.order_line.move_ids.date_deadline = fields.Datetime.to_datetime(values.get('commitment_date'))
+
         res = super(SaleOrder, self).write(values)
         if values.get('order_line') and self.state == 'sale':
             for order in self:
@@ -294,7 +299,7 @@ class SaleOrderLine(models.Model):
         # We first loop over the SO lines to group them by warehouse and schedule
         # date in order to batch the read of the quantities computed field.
         for line in self:
-            if not line.display_qty_widget:
+            if not (line.product_id and line.display_qty_widget):
                 continue
             if line.order_id.commitment_date:
                 date = line.order_id.commitment_date
@@ -367,7 +372,7 @@ class SaleOrderLine(models.Model):
         # compute
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         for so_line in self:
-            if any(move.state == 'done' for move in so_line.move_ids):
+            if any(move.state == 'done' for move in so_line.move_ids) or not so_line.move_ids.picking_id:
                 qty_delivered = float_repr(so_line.qty_delivered, precision)
                 so_line.json_forecast = json.dumps({'reservedAvailability': qty_delivered})
             else:
@@ -433,6 +438,9 @@ class SaleOrderLine(models.Model):
         res = super(SaleOrderLine, self).write(values)
         if lines:
             lines._action_launch_stock_rule(previous_product_uom_qty)
+        if 'customer_lead' in values and self.state == 'sale' and not self.order_id.commitment_date:
+            # Propagate deadline on related stock move
+            self.move_ids.date_deadline = self.order_id.date_order + timedelta(days=self.customer_lead or 0.0)
         return res
 
     @api.depends('order_id.state')
@@ -496,23 +504,20 @@ class SaleOrderLine(models.Model):
         """
         values = super(SaleOrderLine, self)._prepare_procurement_values(group_id)
         self.ensure_one()
-        date_planned = self.order_id.date_order\
-            + timedelta(days=self.customer_lead or 0.0) - timedelta(days=self.order_id.company_id.security_lead)
+        # Use the delivery date if there is else use date_order and lead time
+        date_deadline = self.order_id.commitment_date or (self.order_id.date_order + timedelta(days=self.customer_lead or 0.0))
+        date_planned = date_deadline - timedelta(days=self.order_id.company_id.security_lead)
         values.update({
             'group_id': group_id,
             'sale_line_id': self.id,
             'date_planned': date_planned,
+            'date_deadline': date_deadline,
             'route_ids': self.route_id,
             'warehouse_id': self.order_id.warehouse_id or False,
             'partner_id': self.order_id.partner_shipping_id.id,
             'product_description_variants': self._get_sale_order_line_multiline_description_variants(),
             'company_id': self.order_id.company_id,
         })
-        for line in self.filtered("order_id.commitment_date"):
-            date_planned = fields.Datetime.from_string(line.order_id.commitment_date) - timedelta(days=line.order_id.company_id.security_lead)
-            values.update({
-                'date_planned': fields.Datetime.to_string(date_planned),
-            })
         return values
 
     def _get_qty_procurement(self, previous_product_uom_qty=False):

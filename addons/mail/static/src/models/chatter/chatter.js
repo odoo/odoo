@@ -27,14 +27,18 @@ function factory(dependencies) {
         /**
          * @override
          */
-        delete() {
+        _willDelete() {
             this._stopAttachmentsLoading();
-            super.delete();
+            return super._willDelete(...arguments);
         }
 
         //----------------------------------------------------------------------
         // Public
         //----------------------------------------------------------------------
+
+        focus() {
+            this.update({ isDoFocus: true });
+        }
 
         async refresh() {
             const thread = this.thread;
@@ -76,18 +80,14 @@ function factory(dependencies) {
 
         showLogNote() {
             this.update({ isComposerVisible: true });
-            this.thread.composer.update({
-                isDoFocus: true,
-                isLog: true,
-            });
+            this.thread.composer.update({ isLog: true });
+            this.focus();
         }
 
         showSendMessage() {
             this.update({ isComposerVisible: true });
-            this.thread.composer.update({
-                isDoFocus: true,
-                isLog: false,
-            });
+            this.thread.composer.update({ isLog: false });
+            this.focus();
         }
 
         toggleActivityBoxVisibility() {
@@ -232,7 +232,7 @@ function factory(dependencies) {
                     id: getMessageNextTemporaryId(),
                     isTemporary: true,
                 });
-                this.threadViewer.update({ thread: [['link', thread]] });
+                this.threadView.update({ thread: [['link', thread]] });
                 for (const cache of thread.caches) {
                     cache.update({ messages: [['link', message]] });
                 }
@@ -242,7 +242,7 @@ function factory(dependencies) {
                     id: this.threadId,
                     model: this.threadModel,
                 });
-                this.threadViewer.update({ thread: [['link', thread]] });
+                this.threadView.update({ thread: [['link', thread]] });
             }
         }
 
@@ -310,6 +310,12 @@ function factory(dependencies) {
             default: false,
             dependencies: ['threadId'],
         }),
+        /**
+         * Determine whether this chatter should be focused at next render.
+         */
+        isDoFocus: attr({
+            default: false,
+        }),
         isShowingAttachmentsLoading: attr({
             default: false,
         }),
@@ -321,14 +327,14 @@ function factory(dependencies) {
             dependencies: ['activitiesState'],
         }),
         thread: many2one('mail.thread', {
-            related: 'threadViewer.thread',
+            related: 'threadView.thread',
         }),
         threadAttachmentCount: attr({
             default: 0,
         }),
         threadId: attr(),
         threadModel: attr(),
-        threadViewer: one2one('mail.thread_viewer', {
+        threadView: one2one('mail.thread_view', {
             default: [['create']],
         }),
         todayActivities: one2many('mail.activity', {

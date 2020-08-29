@@ -48,15 +48,27 @@ class QWeb(models.AbstractModel):
     # compile directives
 
     def _compile_node(self, el, options):
-        if options.get('snippet-key') == options['template']:
-            # Get the path of the template's content
-            path = options['root'].getpath(el).replace('/t', '')
-            # Only append the template key on template's first node.
-            # If it already has a data-snippet it is a saved snippet.
-            # Do not override it.
-            size = len(path.split('/'))
-            if size == 2 and 'data-snippet' not in el.attrib:
-                el.attrib['data-snippet'] = options['template'].split('.', 1)[-1]
+        snippet_key = options.get('snippet-key')
+        if snippet_key == options['template'] \
+                or options.get('snippet-sub-call-key') == options['template']:
+            # Get the path of element to only consider the first node of the
+            # snippet template content (ignoring all ancestors t elements which
+            # are not t-call ones)
+            nb_real_elements_in_hierarchy = 0
+            node = el
+            while node is not None and nb_real_elements_in_hierarchy < 2:
+                if node.tag != 't' or 't-call' in node.attrib:
+                    nb_real_elements_in_hierarchy += 1
+                node = node.getparent()
+            if nb_real_elements_in_hierarchy == 1:
+                # The first node might be a call to a sub template
+                sub_call = el.get('t-call')
+                if sub_call:
+                    el.set('t-call-options', f"{{'snippet-key': '{snippet_key}', 'snippet-sub-call-key': '{sub_call}'}}")
+                # If it already has a data-snippet it is a saved snippet.
+                # Do not override it.
+                elif 'data-snippet' not in el.attrib:
+                    el.attrib['data-snippet'] = snippet_key.split('.', 1)[-1]
 
         return super()._compile_node(el, options)
 

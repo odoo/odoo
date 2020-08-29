@@ -4,6 +4,7 @@ odoo.define('web.kanban_tests', function (require) {
 var AbstractField = require('web.AbstractField');
 const Domain = require('web.Domain');
 var fieldRegistry = require('web.field_registry');
+const FormRenderer = require("web.FormRenderer");
 var KanbanColumnProgressBar = require('web.KanbanColumnProgressBar');
 var kanbanExamplesRegistry = require('web.kanban_examples_registry');
 var KanbanRenderer = require('web.KanbanRenderer');
@@ -551,10 +552,10 @@ QUnit.module('Views', {
             'web_read_group', // initial read_group
             '/web/dataset/search_read', // initial search_read (first column)
             '/web/dataset/search_read', // initial search_read (second column)
-            'default_get', // quick create
+            'onchange', // quick create
             'name_create', // should perform a name_create to create the record
             'read', // read the created record
-            'default_get', // reopen the quick create automatically
+            'onchange', // reopen the quick create automatically
         ]);
 
         kanban.destroy();
@@ -625,11 +626,11 @@ QUnit.module('Views', {
             '/web/dataset/search_read', // initial search_read (first column)
             '/web/dataset/search_read', // initial search_read (second column)
             'load_views', // form view in quick create
-            'default_get', // quick create
+            'onchange', // quick create
             'create', // should perform a create to create the record
             'read', // read the created record
             'load_views', // form view in quick create (is actually in cache)
-            'default_get', // reopen the quick create automatically
+            'onchange', // reopen the quick create automatically
         ]);
 
         kanban.destroy();
@@ -682,10 +683,10 @@ QUnit.module('Views', {
             'web_read_group', // initial read_group
             '/web/dataset/search_read', // initial search_read (first column)
             '/web/dataset/search_read', // initial search_read (second column)
-            'default_get', // quick create
+            'onchange', // quick create
             'name_create', // should perform a name_create to create the record
             'read', // read the created record
-            'default_get', // reopen the quick create automatically
+            'onchange', // reopen the quick create automatically
         ]);
 
         kanban.destroy();
@@ -750,18 +751,18 @@ QUnit.module('Views', {
             '/web/dataset/search_read', // initial search_read (first column)
             '/web/dataset/search_read', // initial search_read (second column)
             'load_views', // form view in quick create
-            'default_get', // quick create
+            'onchange', // quick create
             'create', // should perform a create to create the record
             'read', // read the created record
             'load_views', // form view in quick create (is actually in cache)
-            'default_get', // reopen the quick create automatically
+            'onchange', // reopen the quick create automatically
         ]);
 
         kanban.destroy();
     });
 
     QUnit.test('quick create record with default values and onchanges', async function (assert) {
-        assert.expect(11);
+        assert.expect(10);
 
         this.data.partner.fields.int_field.default = 4;
         this.data.partner.onchanges = {
@@ -814,8 +815,7 @@ QUnit.module('Views', {
             '/web/dataset/search_read', // initial search_read (first column)
             '/web/dataset/search_read', // initial search_read (second column)
             'load_views', // form view in quick create
-            'default_get', // quick create
-            'onchange', // default_get's onchange
+            'onchange', // quick create
             'onchange', // onchange due to 'foo' field change
         ]);
 
@@ -897,6 +897,42 @@ QUnit.module('Views', {
         assert.hasClass(kanban.$('.o_status').first(),'o_status_green',
             "Kanban state should be done (Green)");
         kanban.destroy();
+    });
+
+    QUnit.test('window resize should not change quick create form size', async function (assert) {
+        assert.expect(2);
+
+        testUtils.mock.patch(FormRenderer, {
+            start: function () {
+                this._super.apply(this, arguments);
+                window.addEventListener("resize", this._applyFormSizeClass.bind(this));
+            },
+
+        });
+        const kanban = await createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban on_create="quick_create">' +
+                        '<field name="bar"/>' +
+                        '<templates><t t-name="kanban-box">' +
+                        '<div><field name="foo"/></div>' +
+                    '</t></templates></kanban>',
+            groupBy: ['bar'],
+        });
+
+        // click to add an element and cancel the quick creation by pressing ESC
+        await testUtils.dom.click(kanban.el.querySelector('.o_kanban_header .o_kanban_quick_add i'));
+
+        const quickCreate = kanban.el.querySelector('.o_kanban_quick_create');
+        assert.hasClass(quickCreate.querySelector('.o_form_view'), "o_xxs_form_view");
+
+        // trigger window resize explicitly to call _applyFormSizeClass
+        window.dispatchEvent(new Event('resize'));
+        assert.hasClass(quickCreate.querySelector('.o_form_view'), 'o_xxs_form_view');
+
+        kanban.destroy();
+        testUtils.mock.unpatch(FormRenderer);
     });
 
     QUnit.test('quick create record: cancel and validate without using the buttons', async function (assert) {
@@ -3713,6 +3749,61 @@ QUnit.module('Views', {
         await kanban.update({groupBy: []});
         assert.doesNotHaveClass(kanban.$('.o_kanban_view'), 'o_kanban_grouped');
 
+        kanban.destroy();
+    });
+
+    QUnit.test('no content helper when archive all records in kanban group', async function (assert) {
+        assert.expect(3);
+
+        // add active field on partner model to have archive option
+        this.data.partner.fields.active = {string: 'Active', type: 'boolean', default: true};
+        // remove last records to have only one column
+        this.data.partner.records = this.data.partner.records.slice(0, 3);
+
+        const kanban = await createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: `<kanban class="o_kanban_test">
+                        <field name="active"/>
+                        <field name="bar"/>
+                        <templates>
+                            <t t-name="kanban-box">
+                               <div><field name="foo"/></div>
+                            </t>
+                        </templates>
+                    </kanban>`,
+            viewOptions: {
+                action: {
+                    help: '<p class="hello">click to add a partner</p>'
+                }
+            },
+            groupBy: ['bar'],
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/call_kw/partner/action_archive') {
+                    const partnerIDS = args.args[0];
+                    const records = this.data.partner.records;
+                    _.each(partnerIDS, function (partnerID) {
+                        _.find(records, function (record) {
+                            return record.id === partnerID;
+                        }).active = false;
+                    });
+                    return Promise.resolve();
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        // check that the (unique) column contains 3 records
+        assert.containsN(kanban, '.o_kanban_group:last .o_kanban_record', 3);
+
+        // archive the records of the last column
+        testUtils.kanban.toggleGroupSettings($(kanban.el.querySelector('.o_kanban_group'))); // we should change the helper
+        await testUtils.dom.click(kanban.el.querySelector('.o_kanban_group .o_column_archive_records'));
+        assert.containsOnce(document.body, '.modal');
+        await testUtils.modal.clickButton('Ok');
+        // check no content helper is exist
+        assert.containsOnce(kanban, '.o_view_nocontent');
         kanban.destroy();
     });
 
@@ -6826,6 +6917,45 @@ QUnit.module('Views', {
         const kanbanRecords = kanban.el.querySelectorAll('.o_kanban_record:not(.o_kanban_ghost)');
         assert.deepEqual([...kanbanRecords].map(r => r.innerText),
             ['$ 1750.00', '$ 1500.00', '2000.00 €', '$ 2222.00']);
+
+        kanban.destroy();
+    });
+
+    QUnit.test("quick create: keyboard navigation to buttons", async function (assert) {
+        assert.expect(2);
+
+        const kanban = await createView({
+            arch: `
+                <kanban on_create="quick_create">
+                    <field name="bar"/>
+                    <templates>
+                        <div t-name="kanban-box">
+                            <field name="display_name"/>
+                        </div>
+                    </templates>
+                </kanban>`,
+            data: this.data,
+            groupBy: ["bar"],
+            model: "partner",
+            View: KanbanView,
+        });
+
+        // Open quick create
+        await testUtils.kanban.clickCreate(kanban);
+
+        assert.containsOnce(kanban, ".o_kanban_group:first .o_kanban_quick_create");
+
+        const $displayName = kanban.$(".o_kanban_quick_create .o_field_widget[name=display_name]");
+
+        // Fill in mandatory field
+        await testUtils.fields.editInput($displayName, "aaa");
+        // Tab -> goes to first primary button
+        await testUtils.dom.triggerEvent($displayName, "keydown", {
+            keyCode: $.ui.keyCode.TAB,
+            which: $.ui.keyCode.TAB,
+        });
+
+        assert.hasClass(document.activeElement, "btn btn-primary o_kanban_add");
 
         kanban.destroy();
     });

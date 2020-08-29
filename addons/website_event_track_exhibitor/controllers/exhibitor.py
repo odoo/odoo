@@ -6,12 +6,12 @@ from random import randint, sample
 from werkzeug.exceptions import NotFound, Forbidden
 
 from odoo import exceptions, http
-from odoo.addons.website_event_track.controllers.main import WebsiteEventTrackController
+from odoo.addons.website_event_track.controllers.event_track import EventTrackController
 from odoo.http import request
 from odoo.osv import expression
 
 
-class ExhibitorController(WebsiteEventTrackController):
+class ExhibitorController(EventTrackController):
 
     def _get_event_sponsors_base_domain(self, event):
         search_domain_base = [
@@ -72,7 +72,7 @@ class ExhibitorController(WebsiteEventTrackController):
         sponsors = request.env['event.sponsor'].sudo().search(search_domain)
         sponsors_all = request.env['event.sponsor'].sudo().search(search_domain_base)
         sponsor_types = sponsors_all.mapped('sponsor_type_id')
-        sponsor_countries = sponsors_all.mapped('partner_id.country_id')
+        sponsor_countries = sponsors_all.mapped('partner_id.country_id').sorted('name')
         # organize sponsors into categories to help display
         sponsor_categories = dict()
         for sponsor in sponsors:
@@ -108,7 +108,8 @@ class ExhibitorController(WebsiteEventTrackController):
     # FRONTEND FORM
     # ------------------------------------------------------------
 
-    @http.route(['/event/<model("event.event"):event>/exhibitor/<model("event.sponsor"):sponsor>'], type='http', auth="public", website=True, sitemap=False)
+    @http.route(['''/event/<model("event.event", "[('exhibitor_menu', '=', True)]"):event>/exhibitor/<model("event.sponsor", "[('event_id', '=', event.id)]"):sponsor>'''],
+                type='http', auth="public", website=True, sitemap=True)
     def event_exhibitor(self, event, sponsor, **options):
         if not event.can_access_from_current_website():
             raise NotFound()

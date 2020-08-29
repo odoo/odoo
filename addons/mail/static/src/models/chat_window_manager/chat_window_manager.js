@@ -70,6 +70,19 @@ function factory(dependencies) {
             this.update({ isHiddenMenuOpen: false });
         }
 
+        /**
+         * Closes all chat windows related to the given thread.
+         *
+         * @param {mail.thread} thread
+         */
+        closeThread(thread) {
+            for (const chatWindow of this.chatWindows) {
+                if (chatWindow.thread === thread) {
+                    chatWindow.close();
+                }
+            }
+        }
+
         openHiddenMenu() {
             this.update({ isHiddenMenuOpen: true });
         }
@@ -81,42 +94,36 @@ function factory(dependencies) {
                     manager: [['link', this]],
                 });
             }
-            newMessageChatWindow.makeVisible();
-            newMessageChatWindow.unfold();
-            newMessageChatWindow.focus();
+            newMessageChatWindow.makeActive();
         }
 
         /**
          * @param {mail.thread} thread
          * @param {Object} [param1={}]
-         * @param {string} [param1.mode]
+         * @param {boolean} [param1.makeActive=false]
+         * @param {boolean} [param1.replaceNewMessage=false]
          */
-        openThread(thread, { mode } = {}) {
-            let chatWindow = this.env.models['mail.chat_window'].find(chatWindow =>
+        openThread(thread, { makeActive = false, replaceNewMessage = false } = {}) {
+            let chatWindow = this.chatWindows.find(chatWindow =>
                 chatWindow.thread === thread
             );
             if (!chatWindow) {
                 chatWindow = this.env.models['mail.chat_window'].create({
                     manager: [['link', this]],
-                    threadViewer: [['create', {
+                    threadView: [['create', {
                         thread: [['link', thread]],
                     }]],
                 });
             }
-            if (mode === 'last_visible' && !chatWindow.isVisible) {
-                chatWindow.makeVisible();
-                chatWindow.unfold();
-                chatWindow.focus();
+            if (thread.foldState === 'closed') {
+                thread.update({ pendingFoldState: 'open' });
             }
-            if (mode === 'from_new_message') {
-                if (!this.newMessageChatWindow) {
-                    throw new Error('Cannot open thread in chat window in mode "from_new_message" without any new message chat window');
-                }
+            if (replaceNewMessage && this.newMessageChatWindow) {
                 this.swap(chatWindow, this.newMessageChatWindow);
                 this.newMessageChatWindow.close();
-                chatWindow.makeVisible();
-                chatWindow.unfold();
-                chatWindow.focus();
+            }
+            if (makeActive) {
+                chatWindow.makeActive();
             }
         }
 

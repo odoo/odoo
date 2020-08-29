@@ -16,16 +16,14 @@ import odoo.modules.db
 import odoo.modules.graph
 import odoo.modules.migration
 import odoo.modules.registry
-import odoo.tools as tools
-
-from odoo import api, SUPERUSER_ID
-from odoo.modules.module import adapt_version, initialize_sys_path, load_openerp_module
+from .. import SUPERUSER_ID, api, tools
+from .module import adapt_version, initialize_sys_path, load_openerp_module
 
 _logger = logging.getLogger(__name__)
 _test_logger = logging.getLogger('odoo.tests')
 
 
-def load_data(cr, idref, mode, kind, package, report):
+def load_data(cr, idref, mode, kind, package):
     """
 
     kind: data, demo, test, init_xml, update_xml, demo_xml.
@@ -68,14 +66,14 @@ def load_data(cr, idref, mode, kind, package, report):
             noupdate = False
             if kind in ('demo', 'demo_xml') or (filename.endswith('.csv') and kind in ('init', 'init_xml')):
                 noupdate = True
-            tools.convert_file(cr, package.name, filename, idref, mode, noupdate, kind, report)
+            tools.convert_file(cr, package.name, filename, idref, mode, noupdate, kind)
     finally:
         if kind in ('demo', 'test'):
             threading.currentThread().testing = False
 
     return bool(filename)
 
-def load_demo(cr, package, idref, mode, report=None):
+def load_demo(cr, package, idref, mode):
     """
     Loads demo data for the specified package.
     """
@@ -85,7 +83,7 @@ def load_demo(cr, package, idref, mode, report=None):
     try:
         _logger.info("Module %s: loading demo", package.name)
         with cr.savepoint(flush=False):
-            load_data(cr, idref, mode, kind='demo', package=package, report=report)
+            load_data(cr, idref, mode, kind='demo', package=package)
         return True
     except Exception as e:
         # If we could not install demo data for this module
@@ -131,20 +129,6 @@ def load_module_graph(cr, graph, status=None, perform_checks=True,
        :param skip_modules: optional list of module names (packages) which have previously been loaded and can be skipped
        :return: list of modules that were installed or updated
     """
-    def load_test(idref, mode):
-        cr.execute("SAVEPOINT load_test_data_file")
-        try:
-            # return `None` if `load_data` didn't load any file
-            return load_data(cr, idref, mode, 'test', package, report) or None
-        except Exception:
-            _test_logger.exception(
-                'module %s: an exception occurred in a test', package.name)
-            return False
-        finally:
-            cr.execute("ROLLBACK TO SAVEPOINT load_test_data_file")
-            # avoid keeping stale xml_id, etc. in cache
-            odoo.registry(cr.dbname).clear_caches()
-
     if models_to_check is None:
         models_to_check = set()
 
@@ -234,8 +218,8 @@ def load_module_graph(cr, graph, status=None, perform_checks=True,
             if package.state == 'to upgrade':
                 # upgrading the module information
                 module.write(module.get_values_from_terp(package.data))
-            load_data(cr, idref, mode, kind='data', package=package, report=report)
-            demo_loaded = package.dbdemo = load_demo(cr, package, idref, mode, report)
+            load_data(cr, idref, mode, kind='data', package=package)
+            demo_loaded = package.dbdemo = load_demo(cr, package, idref, mode)
             cr.execute('update ir_module_module set demo=%s where id=%s', (demo_loaded, module_id))
             module.invalidate_cache(['demo'])
 
@@ -264,17 +248,27 @@ def load_module_graph(cr, graph, status=None, perform_checks=True,
             cr.commit()
 
         updating = tools.config.options['init'] or tools.config.options['update']
+        test_time = test_queries = 0
+        test_results = None
         if tools.config.options['test_enable'] and (needs_update or not updating):
             env = api.Environment(cr, SUPERUSER_ID, {})
-            if not needs_update:
-                registry.setup_models(cr)
-            report.record_result(load_test(idref, mode))
-            # Python tests
-            env['ir.http']._clear_routing_map()     # force routing map to be rebuilt
-            report.record_result(odoo.modules.module.run_unit_tests(module_name))
-            # tests may have reset the environment
-            env = api.Environment(cr, SUPERUSER_ID, {})
-            module = env['ir.module.module'].browse(module_id)
+            loader = odoo.tests.loader
+            suite = loader.make_suite(module_name, 'at_install')
+            if suite.countTestCases():
+                if not needs_update:
+                    registry.setup_models(cr)
+                # Python tests
+                env['ir.http']._clear_routing_map()     # force routing map to be rebuilt
+
+                tests_t0, tests_q0 = time.time(), odoo.sql_db.sql_counter
+                test_results = loader.run_suite(suite, module_name)
+                report.update(test_results)
+                test_time = time.time() - tests_t0
+                test_queries = odoo.sql_db.sql_counter - tests_q0
+
+                # tests may have reset the environment
+                env = api.Environment(cr, SUPERUSER_ID, {})
+                module = env['ir.module.module'].browse(module_id)
 
         if needs_update:
             processed_modules.append(package.name)
@@ -291,11 +285,25 @@ def load_module_graph(cr, graph, status=None, perform_checks=True,
                     delattr(package, kind)
             module.flush()
 
-        _logger.log(module_log_level, "Module %s loaded in %.2fs, %s queries (+%s extra)",
-                    module_name,
-                    time.time() - module_t0,
-                    cr.sql_log_count - module_cursor_query_count,
-                    odoo.sql_db.sql_counter - module_extra_query_count)  # extra queries: testes, notify, any other closed cursor
+        extra_queries = odoo.sql_db.sql_counter - module_extra_query_count - test_queries
+        extras = []
+        if test_queries:
+            extras.append(f'+{test_queries} test')
+        if extra_queries:
+            extras.append(f'+{extra_queries} other')
+        _logger.log(
+            module_log_level, "Module %s loaded in %.2fs%s, %s queries%s",
+            module_name, time.time() - module_t0,
+            f' (incl. {test_time:.2f}s test)' if test_time else '',
+            cr.sql_log_count - module_cursor_query_count,
+            f' ({", ".join(extras)})' if extras else ''
+        )
+        if test_results and not test_results.wasSuccessful():
+            _logger.error(
+                "Module %s: %d failures, %d errors of %d tests",
+                module_name, len(test_results.failures), len(test_results.errors),
+                test_results.testsRun
+            )
 
     _logger.runbot("%s modules loaded in %.2fs, %s queries (+%s extra)",
                    len(graph),
@@ -542,10 +550,10 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
                 except Exception as e:
                     _logger.warning('invalid custom view(s) for model %s: %s', model, tools.ustr(e))
 
-        if report.failures:
-            _logger.error('At least one test failed when loading the modules.')
-        else:
+        if report.wasSuccessful():
             _logger.info('Modules loaded.')
+        else:
+            _logger.error('At least one test failed when loading the modules.')
 
         # STEP 8: call _register_hook on every model
         env = api.Environment(cr, SUPERUSER_ID, {})

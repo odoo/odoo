@@ -97,7 +97,7 @@ class ResCompany(models.Model):
     account_setup_fy_data_state = fields.Selection(ONBOARDING_STEP_STATES, string="State of the onboarding fiscal year step", default='not_done')
     account_setup_coa_state = fields.Selection(ONBOARDING_STEP_STATES, string="State of the onboarding charts of account step", default='not_done')
     account_onboarding_invoice_layout_state = fields.Selection(ONBOARDING_STEP_STATES, string="State of the onboarding invoice layout step", default='not_done')
-    account_onboarding_sample_invoice_state = fields.Selection(ONBOARDING_STEP_STATES, string="State of the onboarding sample invoice step", default='not_done')
+    account_onboarding_create_invoice_state = fields.Selection(ONBOARDING_STEP_STATES, string="State of the onboarding create invoice step", default='not_done')
     account_onboarding_sale_tax_state = fields.Selection(ONBOARDING_STEP_STATES, string="State of the onboarding sale tax step", default='not_done')
 
     # account dashboard onboarding
@@ -168,7 +168,7 @@ class ResCompany(models.Model):
         return [
             'base_onboarding_company_state',
             'account_onboarding_invoice_layout_state',
-            'account_onboarding_sample_invoice_state',
+            'account_onboarding_create_invoice_state',
         ]
 
     def get_and_update_account_dashboard_onboarding_state(self):
@@ -437,67 +437,8 @@ class ResCompany(models.Model):
         return action
 
     @api.model
-    def _get_sample_invoice(self):
-        """ Get a sample invoice or create one if it does not exist. """
-        # use current user as partner
-        partner = self.env.user.partner_id
-
-        company_id = self.env.company.id
-        # try to find an existing sample invoice
-        sample_invoice = self.env['account.move'].search(
-            [('company_id', '=', company_id),
-             ('partner_id', '=', partner.id)], limit=1)
-
-        if len(sample_invoice) == 0:
-            # If there are no existing accounts or no journal, fail
-            account = self.env.company.get_chart_of_accounts_or_fail()
-
-            journal = self.env['account.journal'].search([('company_id', '=', company_id)], limit=1)
-            if len(journal) == 0:
-                action = self.env.ref('account.action_account_journal_form')
-                msg = _("We cannot find any journal for this company. You should create one."
-                        "\nPlease go to Configuration > Journals.")
-                raise RedirectWarning(msg, action.id, _("Go to the journal configuration"))
-
-            account = journal.default_credit_account_id or account
-            sample_invoice = self.env['account.move'].with_context(default_move_type='out_invoice', default_journal_id=journal.id).create({
-                'payment_reference': _('Sample invoice'),
-                'partner_id': partner.id,
-                'invoice_line_ids': [
-                    (0, 0, {
-                        'name': _('Sample invoice line name'),
-                        'account_id': account.id,
-                        'quantity': 2,
-                        'price_unit': 199.99,
-                    }),
-                    (0, 0, {
-                        'name': _('Sample invoice line name 2'),
-                        'account_id': account.id,
-                        'quantity': 1,
-                        'price_unit': 25.0,
-                    }),
-                ],
-            })
-        return sample_invoice
-
-    @api.model
-    def action_open_account_onboarding_sample_invoice(self):
-        """ Onboarding step for sending a sample invoice. Open a window to compose an email,
-            with the edi_invoice_template message loaded by default. """
-        sample_invoice = self._get_sample_invoice()
-        template = self.env.ref('account.email_template_edi_invoice', False)
-        action = self.env["ir.actions.actions"]._for_xml_id("account.action_open_account_onboarding_sample_invoice")
-        action['context'] = {
-            'default_res_id': sample_invoice.id,
-            'default_use_template': bool(template),
-            'default_template_id': template and template.id or False,
-            'default_model': 'account.move',
-            'default_composition_mode': 'comment',
-            'mark_invoice_as_sent': True,
-            'custom_layout': 'mail.mail_notification_borders',
-            'force_email': True,
-            'mail_notify_author': True,
-        }
+    def action_open_account_onboarding_create_invoice(self):
+        action = self.env["ir.actions.actions"]._for_xml_id("account.action_open_account_onboarding_create_invoice")
         return action
 
     def action_save_onboarding_invoice_layout(self):

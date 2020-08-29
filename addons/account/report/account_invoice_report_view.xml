@@ -5,7 +5,7 @@
          <field name="name">account.invoice.report.pivot</field>
          <field name="model">account.invoice.report</field>
          <field name="arch" type="xml">
-             <pivot string="Invoices Analysis" disable_linking="True">
+             <pivot string="Invoices Analysis" disable_linking="True" sample="1">
                  <field name="product_categ_id" type="col"/>
                  <field name="invoice_date" type="row"/>
                  <field name="price_subtotal" type="measure"/>

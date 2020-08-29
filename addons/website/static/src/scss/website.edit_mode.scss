@@ -28,6 +28,13 @@ $-editor-messages-margin-x: 2%;
     &:focus, &[data-oe-type] {
         min-height: 0.8em;
         min-width: 8px;
+
+        // TODO this feature just needs to be reviewed to not have to make
+        // exceptions such as this
+        &#o_footer_scrolltop_wrapper {
+            min-height: 0;
+            min-width: 0;
+        }
     }
     &.o_is_inline_editable {
         display: inline-block;
@@ -162,5 +169,22 @@ body.editor_enable.editor_has_snippets {
     .o_header_affixed {
         left: $o-we-sidebar-width !important;
         top: var(--o-we-toolbar-height) !important;
+    }
+}
+
+.editor_enable {
+    @if o-website-value('header-template') == 'sidebar' {
+        #wrapwrap > header {
+            @if o-website-value('hamburger-position') != 'right' {
+                left: $o-we-sidebar-width;
+            }
+        }
+    }
+    @if o-website-value('hamburger-type') == 'off-canvas' {
+        #top_menu_collapse {
+            &.collapsing, &.show {
+                left: $o-we-sidebar-width;
+            }
+        }
     }
 }

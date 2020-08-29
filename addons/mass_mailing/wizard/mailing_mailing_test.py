@@ -24,7 +24,7 @@ class TestMassMailing(models.TransientModel):
         mass_mail_layout = self.env.ref('mass_mailing.mass_mailing_mail_layout')
         for test_mail in test_emails:
             # Convert links in absolute URLs before the application of the shortener
-            body = mailing._prepend_preview(mailing.body_html)
+            body = mailing._prepend_preview(mailing.body_html, mailing.preview)
             body = self.env['mail.render.mixin']._replace_local_links(body)
             body = tools.html_sanitize(body, sanitize_attributes=True, sanitize_style=True)
             mail_values = {

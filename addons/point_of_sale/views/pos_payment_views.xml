@@ -13,6 +13,7 @@
                         <field name="pos_order_id" />
                         <field name="payment_method_id" />
                         <field name="card_type" attrs="{'invisible': [('card_type', '=', False)]}"/>
+                        <field name="cardholder_name" attrs="{'invisible': [('cardholder_name', '=', False)]}"/>
                         <field name="transaction_id" attrs="{'invisible': [('transaction_id', '=', False)]}"/>
                         <field name="session_id" />
                     </group>

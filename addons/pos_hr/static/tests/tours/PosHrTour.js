@@ -19,7 +19,9 @@ odoo.define('point_of_sale.tour.PosHr', function (require) {
     SelectionPopup.check.hasSelectionItem('Mitchell Admin');
     SelectionPopup.do.clickItem('Pos Employee1');
     NumberPopup.check.isShown();
-    NumberPopup.do.pressNumpad('2 5 8 1');
+    NumberPopup.do.pressNumpad('2 5');
+    NumberPopup.check.inputShownIs('••');
+    NumberPopup.do.pressNumpad('8 1');
     NumberPopup.check.inputShownIs('••••');
     NumberPopup.do.clickConfirm();
     ErrorPopup.check.isShown();
@@ -27,7 +29,9 @@ odoo.define('point_of_sale.tour.PosHr', function (require) {
     PosHr.do.clickLoginButton();
     SelectionPopup.do.clickItem('Pos Employee1');
     NumberPopup.check.isShown();
-    NumberPopup.do.pressNumpad('2 5 8 0');
+    NumberPopup.do.pressNumpad('2 5');
+    NumberPopup.check.inputShownIs('••');
+    NumberPopup.do.pressNumpad('8 0');
     NumberPopup.check.inputShownIs('••••');
     NumberPopup.do.clickConfirm();
     ProductScreen.check.isShown();
@@ -36,7 +40,13 @@ odoo.define('point_of_sale.tour.PosHr', function (require) {
     SelectionPopup.do.clickItem('Mitchell Admin');
     PosHr.check.cashierNameIs('Mitchell Admin');
     PosHr.do.clickLockButton();
-    PosHr.exec.login('Pos Employee2', '1234');
+    PosHr.do.clickLoginButton();
+    SelectionPopup.do.clickItem('Pos Employee2');
+    NumberPopup.do.pressNumpad('1 2');
+    NumberPopup.check.inputShownIs('••');
+    NumberPopup.do.pressNumpad('3 4');
+    NumberPopup.check.inputShownIs('••••');
+    NumberPopup.do.clickConfirm();
     ProductScreen.check.isShown();
 
     Tour.register('PosHrTour', { test: true, url: '/pos/web' }, getSteps());

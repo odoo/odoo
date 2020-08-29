@@ -11,7 +11,7 @@ const _t = core._t;
 
 const CountdownWidget = publicWidget.Widget.extend({
     selector: '.s_countdown',
-    xmlDependencies: ['/website/static/src/xml/website.s_countdown.xml'],
+    xmlDependencies: ['/website/static/src/snippets/s_countdown/000.xml'],
     disabledInEditableMode: false,
 
     /**

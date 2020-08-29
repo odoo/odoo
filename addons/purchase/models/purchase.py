@@ -18,7 +18,7 @@ class PurchaseOrder(models.Model):
     _name = "purchase.order"
     _inherit = ['mail.thread', 'mail.activity.mixin', 'portal.mixin']
     _description = "Purchase Order"
-    _order = 'date_order desc, id desc'
+    _order = 'priority desc, date_order desc, id desc'
 
     @api.depends('order_line.price_total')
     def _amount_all(self):
@@ -71,6 +71,8 @@ class PurchaseOrder(models.Model):
     }
 
     name = fields.Char('Order Reference', required=True, index=True, copy=False, default='New')
+    priority = fields.Selection(
+        [('0', 'Normal'), ('1', 'Urgent')], 'Priority', default='0', index=True)
     origin = fields.Char('Source Document', copy=False,
         help="Reference of the document that generated this purchase order "
              "request (e.g. a sales order)")
@@ -161,8 +163,7 @@ class PurchaseOrder(models.Model):
         domain = []
         if name:
             domain = ['|', ('name', operator, name), ('partner_ref', operator, name)]
-        purchase_order_ids = self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
-        return models.lazy_name_get(self.browse(purchase_order_ids).with_user(name_get_uid))
+        return self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
 
     @api.depends('date_order', 'currency_id', 'company_id', 'company_id.currency_id')
     def _compute_currency_rate(self):
@@ -406,7 +407,7 @@ class PurchaseOrder(models.Model):
         self.write({'state': 'purchase'})
 
     def button_done(self):
-        self.write({'state': 'done'})
+        self.write({'state': 'done', 'priority': '0'})
 
     def _add_supplier_to_product(self):
         # Add the partner in the supplier list of the product if the supplier is not registered for
@@ -756,7 +757,7 @@ class PurchaseOrderLine(models.Model):
     sequence = fields.Integer(string='Sequence', default=10)
     product_qty = fields.Float(string='Quantity', digits='Product Unit of Measure', required=True)
     product_uom_qty = fields.Float(string='Total Quantity', compute='_compute_product_uom_qty', store=True)
-    date_planned = fields.Datetime(string='Scheduled Date', index=True,
+    date_planned = fields.Datetime(string='Delivery Date', index=True,
         help="Delivery date expected from vendor. This date respectively defaults to vendor pricelist lead time then today's date.")
     taxes_id = fields.Many2many('account.tax', string='Taxes', domain=['|', ('active', '=', False), ('active', '=', True)])
     product_uom = fields.Many2one('uom.uom', string='Unit of Measure', domain="[('category_id', '=', product_uom_category_id)]")
@@ -952,7 +953,7 @@ class PurchaseOrderLine(models.Model):
             date_planned = date_order + relativedelta(days=seller.delay if seller else 0)
         else:
             date_planned = datetime.today() + relativedelta(days=seller.delay if seller else 0)
-        return self._convert_to_last_minute_of_day(date_planned)
+        return self._convert_to_middle_of_day(date_planned)
 
     @api.depends('product_id', 'date_order')
     def _compute_analytic_id_and_tag_ids(self):
@@ -973,7 +974,7 @@ class PurchaseOrderLine(models.Model):
             return
 
         # Reset date, price and quantity since _onchange_quantity will provide default values
-        self.date_planned = self.order_id.date_planned or self._convert_to_last_minute_of_day(datetime.today())
+        self.date_planned = self.order_id.date_planned or self._convert_to_middle_of_day(datetime.today())
         self.price_unit = self.product_qty = 0.0
 
         self._product_id_change()
@@ -1163,11 +1164,11 @@ class PurchaseOrderLine(models.Model):
             'order_id': po.id,
         }
 
-    def _convert_to_last_minute_of_day(self, date):
+    def _convert_to_middle_of_day(self, date):
         """Return a datetime which is the last minute of the input date(time)
         according to order user's time zone, convert to UTC time.
         """
-        return timezone(self.order_id.user_id.tz or 'UTC').localize(datetime.combine(date, time.max)).astimezone(UTC).replace(tzinfo=None, microsecond=0, second=0)
+        return timezone(self.order_id.user_id.tz or self.company_id.partner_id.tz or 'UTC').localize(datetime.combine(date, time(12))).astimezone(UTC).replace(tzinfo=None)
 
     def _update_date_planned(self, updated_date):
         self.date_planned = updated_date

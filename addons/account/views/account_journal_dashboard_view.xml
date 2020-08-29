@@ -12,6 +12,7 @@
                 <field name="kanban_dashboard"/>
                 <field name="activity_ids"/>
                 <field name="activity_state"/>
+                <field name="alias_domain"/>
                 <templates>
                     <t t-name="kanban-box">
                         <div t-attf-class="#{!selection_mode ? kanban_color(record.color.raw_value) : ''}">
@@ -37,7 +38,7 @@
                                 <div class="o_primary">
                                     <a type="object" name="open_action"><field name="name"/></a>
                                 </div>
-                                <div class="o_secondary" t-att-title="dashboard.title" t-if="alias_id != ''">
+                                <div class="o_secondary" t-att-title="dashboard.title" t-if="journal_type == 'purchase' &amp;&amp; record.alias_domain.raw_value">
                                     <field name="alias_id"/>
                                 </div>
                             </div>
@@ -214,12 +215,12 @@
                     </t>
 
                     <t t-name="JournalMiscelaneous">
-                        <div class="col-12 col-sm-5 mb-3 mb-sm-0 o_kanban_primary_left">
+                        <div class="col-12 col-sm-4 mb-3 mb-sm-0 o_kanban_primary_left">
                             <button type="object" name="action_create_new" class="btn btn-primary" groups="account.group_account_invoice">
                                 <span>New Entry</span>
                             </button>
                         </div>
-                        <div class="col-12 col-sm-7 o_kanban_primary_right">
+                        <div class="col-12 col-sm-8 o_kanban_primary_right">
                             <field name="json_activity_data" widget="kanban_vat_activity"/>
                             <t t-if="dashboard.number_to_check > 0">
                                 <div class="row">

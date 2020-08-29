@@ -102,8 +102,9 @@
                                 <group>
                                     <group name="communication" string="Communication">
                                         <field string="Allow Rating" name="allow_comment"/>
-                                        <field name="publish_template_id" domain="[('model','=','slide.slide')]" groups="base.group_no_one"/>
+                                        <field name="publish_template_id" domain="[('model','=','slide.slide')]"/>
                                         <field name="share_template_id" domain="[('model','=','slide.slide')]" groups="base.group_no_one"/>
+                                        <field name="completed_template_id"/>
                                     </group>
                                     <group name="display" string="Display">
                                         <field name="visibility" widget="radio"/>
@@ -214,20 +215,26 @@
                                     <a role="button" class="dropdown-toggle o-no-caret btn" data-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
                                         <span class="fa fa-ellipsis-v" aria-hidden="false"/>
                                     </a>
-                                    <div class="dropdown-menu" role="menu">
-                                        <ul class="oe_kanban_colorpicker" data-field="color"/>
-                                        <t t-if="widget.deletable">
-                                            <a class="dropdown-item" role="menuitem" type="delete">Delete</a>
-                                        </t>
-                                        <a class="dropdown-item" role="menuitem" type="edit">
-                                            Edit
-                                        </a>
-                                        <a class="dropdown-item" name="action_view_slides" role="menuitem" type="object">
-                                            Lessons
-                                        </a>
-                                        <a class="dropdown-item" name="action_channel_invite" role="menuitem" type="object">
-                                            Invite
-                                        </a>
+                                    <div class="o_kanban_card_manage_pane dropdown-menu" role="menu">
+                                        <div role="menuitem" aria-haspopup="true" class="o_no_padding_kanban_colorpicker">
+                                            <ul class="oe_kanban_colorpicker" data-field="color" role="popup"/>
+                                        </div>
+                                        <div class="o_kanban_slides_card_manage_pane">
+                                            <t t-if="widget.deletable">
+                                                <div role="menuitem">
+                                                    <a class="dropdown-item" type="delete">Delete</a>
+                                                </div>
+                                            </t>
+                                            <div role="menuitem">
+                                                <a type="edit">Edit</a>
+                                            </div>
+                                            <div role="menuitem">
+                                                <a name="action_view_slides" type="object">Lessons</a>
+                                            </div>
+                                            <div role="menuitem" name="action_channel_invite">
+                                                <a name="action_channel_invite" type="object">Invite</a>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="o_kanban_card_header">

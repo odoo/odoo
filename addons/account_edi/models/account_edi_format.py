@@ -33,11 +33,16 @@ class AccountEdiFormat(models.Model):
     def create(self, vals_list):
         edi_formats = super().create(vals_list)
 
+        # activate by default on journal
         journals = self.env['account.journal'].search([])
         for journal in journals:
             for edi_format in edi_formats:
                 if edi_format._is_compatible_with_journal(journal):
                     journal.edi_format_ids += edi_format
+
+        # activate cron
+        if any(edi_format._needs_web_services() for edi_format in edi_formats):
+            self.env.ref('account_edi.ir_cron_edi_network').active = True
 
         return edi_formats
 
@@ -334,11 +339,14 @@ class AccountEdiFormat(models.Model):
         for file_data in self._decode_attachment(attachment):
             for edi_format in self:
                 res = False
-                if file_data['type'] == 'xml':
-                    res = edi_format._create_invoice_from_xml_tree(file_data['filename'], file_data['xml_tree'])
-                elif file_data['type'] == 'pdf':
-                    res = edi_format._create_invoice_from_pdf_reader(file_data['filename'], file_data['pdf_reader'])
-                    file_data['pdf_reader'].streamS.close()
+                try:
+                    if file_data['type'] == 'xml':
+                        res = edi_format._create_invoice_from_xml_tree(file_data['filename'], file_data['xml_tree'])
+                    elif file_data['type'] == 'pdf':
+                        res = edi_format._create_invoice_from_pdf_reader(file_data['filename'], file_data['pdf_reader'])
+                        file_data['pdf_reader'].stream.close()
+                except Exception as e:
+                    _logger.exception("Error importing attachment \"%s\" as invoice with format \"%s\"", file_data['filename'], edi_format.name, str(e))
                 if res:
                     if 'extract_state' in res:
                         # Bypass the OCR to prevent overwriting data when an EDI was succesfully imported.
@@ -356,11 +364,14 @@ class AccountEdiFormat(models.Model):
         for file_data in self._decode_attachment(attachment):
             for edi_format in self:
                 res = False
-                if file_data['type'] == 'xml':
-                    res = edi_format._update_invoice_from_xml_tree(file_data['filename'], file_data['xml_tree'], invoice)
-                elif file_data['type'] == 'pdf':
-                    res = edi_format._update_invoice_from_pdf_reader(file_data['filename'], file_data['pdf_reader'], invoice)
-                    file_data['pdf_reader'].stream.close()
+                try:
+                    if file_data['type'] == 'xml':
+                        res = edi_format._update_invoice_from_xml_tree(file_data['filename'], file_data['xml_tree'], invoice)
+                    elif file_data['type'] == 'pdf':
+                        res = edi_format._update_invoice_from_pdf_reader(file_data['filename'], file_data['pdf_reader'], invoice)
+                        file_data['pdf_reader'].stream.close()
+                except Exception as e:
+                    _logger.exception("Error importing attachment \"%s\" as invoice with format \"%s\"", file_data['filename'], edi_format.name, str(e))
                 if res:
                     if 'extract_state' in res:
                         # Bypass the OCR to prevent overwriting data when an EDI was succesfully imported.

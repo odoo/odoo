@@ -45,6 +45,27 @@
                 <div class="article din" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id">
                     <div class="header_address">
                         <t t-if="address">
+                            <div class="company_invoice_address">
+                                <t t-if="company.name">
+                                    <span t-field="company.name"/> &#8226;
+                                </t>
+                                <t t-if="company.street">
+                                    <span t-field="company.street"/> &#8226;
+                                </t>
+                                <t t-if="company.street2">
+                                    <span t-field="company.street2"/> &#8226;
+                                </t>
+                                <t t-if="company.zip">
+                                    <span t-field="company.zip"/> &#8226;
+                                </t>
+                                <t t-if="company.city">
+                                    <span t-field="company.city"/> &#8226;
+                                </t>
+                                <t t-if="company.country_id">
+                                    <span t-field="company.country_id.name"/>
+                                </t>
+                                <hr class="company_invoice_line" />
+                            </div>
                             <div name="invoice_address" class="invoice_address">
                                 <t t-raw="address"/>
                             </div>
@@ -56,6 +77,7 @@
                             <div>
                                 <strong t-field="company.partner_id.name"/>
                             </div>
+
                             <span t-field="company.partner_id"
                                 t-options='{"widget": "contact", "fields": ["address"], "no_marker": true}'/>
                             <t t-if="information_block">

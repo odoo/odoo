@@ -9,7 +9,7 @@ from dateutil.relativedelta import relativedelta
 
 import odoo
 from odoo import api, fields, models, tools, _
-from odoo.addons.iap import jsonrpc
+from odoo.addons.iap.tools import iap_tools
 from odoo.addons.crm.models import crm_stage
 from odoo.exceptions import ValidationError
 
@@ -323,7 +323,7 @@ class CRMRevealRule(models.Model):
             'account_token': account_token.account_token,
             'data': server_payload
         }
-        result = jsonrpc(endpoint, params=params, timeout=300)
+        result = iap_tools.iap_jsonrpc(endpoint, params=params, timeout=300)
         for res in result.get('reveal_data', []):
             if not res.get('not_found'):
                 lead = self._create_lead_from_response(res)
@@ -365,7 +365,7 @@ class CRMRevealRule(models.Model):
             'people_data': result.get('people_data'),
         })
         lead.message_post_with_view(
-            'partner_autocomplete.enrich_service_information',
+            'iap_mail.enrich_company',
             values=template_values,
             subtype_id=self.env.ref('mail.mt_note').id
         )

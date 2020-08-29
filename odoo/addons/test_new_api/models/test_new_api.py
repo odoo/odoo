@@ -244,7 +244,7 @@ class MultiLine(models.Model):
 
     multi = fields.Many2one('test_new_api.multi', ondelete='cascade')
     name = fields.Char()
-    partner = fields.Many2one('res.partner')
+    partner = fields.Many2one(related='multi.partner', store=True)
     tags = fields.Many2many('test_new_api.multi.tag')
 
 
@@ -592,6 +592,33 @@ class ComputeOnchangeLine(models.Model):
     foo = fields.Char()
     record_id = fields.Many2one('test_new_api.compute.onchange',
                                 required=True, ondelete='cascade')
+
+
+class ComputeUnassigned(models.Model):
+    _name = 'test_new_api.compute.unassigned'
+    _description = "Model with computed fields left unassigned"
+
+    foo = fields.Char()
+    bar = fields.Char(compute='_compute_bar')
+    bare = fields.Char(compute='_compute_bare', readonly=False)
+    bars = fields.Char(compute='_compute_bars', store=True)
+    bares = fields.Char(compute='_compute_bares', readonly=False, store=True)
+
+    @api.depends('foo')
+    def _compute_bar(self):
+        pass
+
+    @api.depends('foo')
+    def _compute_bare(self):
+        pass
+
+    @api.depends('foo')
+    def _compute_bars(self):
+        pass
+
+    @api.depends('foo')
+    def _compute_bares(self):
+        pass
 
 
 class ModelBinary(models.Model):

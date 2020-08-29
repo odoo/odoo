@@ -11,31 +11,23 @@ function factory(dependencies) {
         /**
          * @override
          */
-        static create(data) {
-            const chatWindow = super.create(data);
-            chatWindow._onShowHomeMenu.bind(chatWindow);
-            chatWindow._onHideHomeMenu.bind(chatWindow)
+        _created() {
+            const res = super._created(...arguments);
+            this._onShowHomeMenu.bind(this);
+            this._onHideHomeMenu.bind(this);
 
-            chatWindow.env.messagingBus.on(
-                'hide_home_menu',
-                chatWindow,
-                chatWindow._onHideHomeMenu
-            );
-            chatWindow.env.messagingBus.on(
-                'show_home_menu',
-                chatWindow,
-                chatWindow._onShowHomeMenu
-            );
-            return chatWindow;
+            this.env.messagingBus.on('hide_home_menu', this, this._onHideHomeMenu);
+            this.env.messagingBus.on('show_home_menu', this, this._onShowHomeMenu);
+            return res;
         }
 
         /**
          * @override
          */
-        delete() {
+        _willDelete() {
             this.env.messagingBus.off('hide_home_menu', this, this._onHideHomeMenu);
             this.env.messagingBus.off('show_home_menu', this, this._onShowHomeMenu);
-            super.delete();
+            return super._willDelete(...arguments);
         }
 
         //----------------------------------------------------------------------
@@ -55,7 +47,7 @@ function factory(dependencies) {
 
         expand() {
             if (this.thread) {
-                this.thread.openExpanded();
+                this.thread.open({ expanded: true });
             }
         }
 
@@ -90,9 +82,23 @@ function factory(dependencies) {
         }
 
         /**
-         * Assume that this chat window was hidden before-hand.
+         * Makes this chat window active, which consists of making it visible,
+         * unfolding it, and focusing it.
+         */
+        makeActive() {
+            this.makeVisible();
+            this.unfold();
+            this.focus();
+        }
+
+        /**
+         * Makes this chat window visible by swapping it with the last visible
+         * chat window, or do nothing if it is already visible.
          */
         makeVisible() {
+            if (this.isVisible) {
+                return;
+            }
             const lastVisible = this.manager.lastVisible;
             this.manager.swap(this, lastVisible);
         }
@@ -114,7 +120,7 @@ function factory(dependencies) {
         unfold() {
             if (this.thread) {
                 this.thread.update({ pendingFoldState: 'open' });
-                this.threadViewer.addComponentHint('chat-window-unfolded');
+                this.threadView.addComponentHint('chat-window-unfolded');
             } else {
                 this.update({ _isFolded: false });
             }
@@ -165,6 +171,17 @@ function factory(dependencies) {
                 return thread.foldState === 'folded';
             }
             return this._isFolded;
+        }
+
+        /**
+         * @private
+         * @returns {boolean}
+         */
+        _computeIsVisible() {
+            if (!this.manager) {
+                return false;
+            }
+            return this.manager.allOrderedVisible.includes(this);
         }
 
         /**
@@ -245,20 +262,20 @@ function factory(dependencies) {
          * @private
          */
         async _onHideHomeMenu() {
-            if (!this.threadViewer) {
+            if (!this.threadView) {
                 return;
             }
-            this.threadViewer.addComponentHint('home-menu-hidden');
+            this.threadView.addComponentHint('home-menu-hidden');
         }
 
         /**
          * @private
          */
         async _onShowHomeMenu() {
-            if (!this.threadViewer) {
+            if (!this.threadView) {
                 return;
             }
-            this.threadViewer.addComponentHint('home-menu-shown');
+            this.threadView.addComponentHint('home-menu-shown');
         }
 
         /**
@@ -324,6 +341,17 @@ function factory(dependencies) {
             ],
             default: false,
         }),
+        /**
+         * Whether this chat window is visible or not. Should be considered
+         * read-only. Setting this value manually will not make it visible.
+         * @see `makeVisible`
+         */
+        isVisible: attr({
+            compute: '_computeIsVisible',
+            dependencies: [
+                'managerAllOrderedVisible',
+            ],
+        }),
         manager: many2one('mail.chat_window_manager', {
             inverse: 'chatWindows',
         }),
@@ -341,7 +369,7 @@ function factory(dependencies) {
             ],
         }),
         thread: many2one('mail.thread', {
-            related: 'threadViewer.thread',
+            related: 'threadView.thread',
         }),
         threadDisplayName: attr({
             related: 'thread.displayName',
@@ -349,7 +377,7 @@ function factory(dependencies) {
         threadFoldState: attr({
             related: 'thread.foldState',
         }),
-        threadViewer: one2one('mail.thread_viewer', {
+        threadView: one2one('mail.thread_view', {
             inverse: 'chatWindow',
         }),
         /**

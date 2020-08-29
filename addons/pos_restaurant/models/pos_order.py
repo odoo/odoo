@@ -95,6 +95,7 @@ class PosOrder(models.Model):
             'pos_order_id',
             'payment_method_id',
             'card_type',
+            'cardholder_name',
             'transaction_id',
             'payment_status'
             ]
@@ -211,6 +212,14 @@ class PosOrder(models.Model):
             "tip_amount": tip_line.price_subtotal_incl,
             "amount_total": self.amount_total + tip_line.price_subtotal_incl,
             "amount_paid": self.amount_paid + tip_line.price_subtotal_incl,
+        })
+
+    def set_no_tip(self):
+        """Override this method to introduce action when setting no tip."""
+        self.ensure_one()
+        self.write({
+            "is_tipped": True,
+            "tip_amount": 0,
         })
 
     @api.model

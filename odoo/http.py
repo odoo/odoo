@@ -313,6 +313,9 @@ class WebRequest(object):
         # callers to check & look at)
         raise exception.with_traceback(None) from new_cause
 
+    def _is_cors_preflight(self, endpoint):
+        return False
+
     def _call_function(self, *args, **kwargs):
         request = self
         if self.endpoint.routing['type'] != self._request_type:
@@ -751,11 +754,14 @@ class HttpRequest(WebRequest):
         except werkzeug.exceptions.HTTPException as e:
             return e
 
+    def _is_cors_preflight(self, endpoint):
+        return request.httprequest.method == 'OPTIONS' and endpoint and endpoint.routing.get('cors')
+
     def dispatch(self):
-        if request.httprequest.method == 'OPTIONS' and request.endpoint and request.endpoint.routing.get('cors'):
+        if self._is_cors_preflight(request.endpoint):
             headers = {
                 'Access-Control-Max-Age': 60 * 60 * 24,
-                'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept'
+                'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept, Authorization'
             }
             return Response(status=200, headers=headers)
 
@@ -992,14 +998,14 @@ class OpenERPSession(sessions.Session):
         uid = odoo.registry(db)['res.users'].authenticate(db, login, password, env)
         self.pre_uid = uid
 
-        user = request.env(user=uid)['res.users'].browse(uid)
-        if not user._mfa_url():
-            self.finalize()
-
         self.rotate = True
         self.db = db
         self.login = login
         request.disable_db = False
+
+        user = request.env(user=uid)['res.users'].browse(uid)
+        if not user._mfa_url():
+            self.finalize()
 
         return uid
 

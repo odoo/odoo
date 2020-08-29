@@ -111,7 +111,7 @@
         <field name="name">hr.attendance.pivot</field>
         <field name="model">hr.attendance</field>
         <field name="arch" type="xml">
-            <pivot string="Attendance">
+            <pivot string="Attendance" sample="1">
                 <field name="employee_id" type="row"/>
                 <field name="check_in" type="col"/>
                 <field name="worked_hours" type="measure" widget="float_time"/>

@@ -2385,9 +2385,11 @@ exports.Paymentline = Backbone.Model.extend({
         this.order = options.order;
         this.amount = 0;
         this.selected = false;
+        this.cashier_receipt = '';
         this.ticket = '';
         this.payment_status = '';
         this.card_type = '';
+        this.cardholder_name = '';
         this.transaction_id = '';
 
         if (options.json) {
@@ -2407,6 +2409,7 @@ exports.Paymentline = Backbone.Model.extend({
         this.payment_status = json.payment_status;
         this.ticket = json.ticket;
         this.card_type = json.card_type;
+        this.cardholder_name = json.cardholder_name;
         this.transaction_id = json.transaction_id;
         this.is_change = json.is_change;
     },
@@ -2456,6 +2459,17 @@ exports.Paymentline = Backbone.Model.extend({
     },
 
     /**
+    * Set info to be printed on the cashier receipt. value should
+    * be compatible with both the QWeb and ESC/POS receipts.
+    *
+    * @param {string} value - receipt info
+    */
+    set_cashier_receipt: function (value) {
+        this.cashier_receipt = value;
+        this.trigger('change', this);
+    },
+
+    /**
      * Set additional info to be printed on the receipts. value should
      * be compatible with both the QWeb and ESC/POS receipts.
      *
@@ -2476,6 +2490,7 @@ exports.Paymentline = Backbone.Model.extend({
             payment_status: this.payment_status,
             ticket: this.ticket,
             card_type: this.card_type,
+            cardholder_name: this.cardholder_name,
             transaction_id: this.transaction_id,
         };
     },
@@ -2535,6 +2550,9 @@ exports.Order = Backbone.Model.extend({
                 emailSuccessful: null,
                 emailNotice: '',
             }),
+            TipScreen: new Context({
+                inputTipAmount: '',
+            })
         };
 
         if (options.json) {
@@ -2877,6 +2895,7 @@ exports.Order = Backbone.Model.extend({
                     lines[i].set_unit_price(tip);
                     lines[i].set_lst_price(tip);
                     lines[i].price_manually_set = true;
+                    lines[i].order.tip_amount = tip;
                     return;
                 }
             }
@@ -3311,6 +3330,10 @@ exports.Order = Backbone.Model.extend({
     get_client_name: function(){
         var client = this.get('client');
         return client ? client.name : "";
+    },
+    get_cardholder_name: function(){
+        var card_payment_line = this.paymentlines.find(pl => pl.cardholder_name);
+        return card_payment_line ? card_payment_line.cardholder_name : "";
     },
     /* ---- Screen Status --- */
     // the order also stores the screen status, as the PoS supports

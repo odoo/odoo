@@ -17,7 +17,7 @@ itself is performed by wkhtmltopdf_.
 Reports are declared using a :ref:`report action <reference/actions/report>`,
 and a :ref:`reference/reports/templates` for the action to use.
 
-It useful or necessary, it is possible to specify a
+If useful or necessary, it is possible to specify a
 :ref:`reference/reports/paper_formats` for the report report.
 
 .. _reference/reports/templates:
@@ -35,7 +35,7 @@ Report templates will always provide the following variables:
     record for the current ``user``'s company
 ``website``
     the current website object, if any (this item can be present but ``None``)
-``wen_base_url``
+``web_base_url``
     the base url for the webserver
 ``context_timestamp``
     a function taking :class:`python:datetime.datetime` in UTC\ [#unzoned]_ and

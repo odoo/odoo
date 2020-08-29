@@ -5,7 +5,7 @@
          <field name="name">sale.report.pivot</field>
          <field name="model">sale.report</field>
          <field name="arch" type="xml">
-             <pivot string="Sales Analysis" disable_linking="True">
+             <pivot string="Sales Analysis" disable_linking="True" sample="1">
                  <field name="team_id" type="col"/>
                  <field name="date" interval="month" type="row"/>
                  <field name="price_subtotal" type="measure"/>

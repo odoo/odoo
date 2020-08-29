@@ -183,7 +183,7 @@ def exp_drop(db_name):
         _drop_conn(cr, db_name)
 
         try:
-            cr.execute(sql.SQL('DROP DATABASE {}').format(db_name))
+            cr.execute(sql.SQL('DROP DATABASE {}').format(sql.Identifier(db_name)))
         except Exception as e:
             _logger.info('DROP DB: %s failed:\n%s', db_name, e)
             raise Exception("Couldn't drop database %s: %s" % (db_name, e))

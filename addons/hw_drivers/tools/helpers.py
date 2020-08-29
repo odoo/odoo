@@ -1,21 +1,22 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import netifaces
-from pathlib import Path
 import datetime
-from OpenSSL import crypto
-import urllib3
+from importlib import util
 import io
 import json
 import logging
+import netifaces
+from OpenSSL import crypto
 import os
+from pathlib import Path
 import subprocess
+import urllib3
 import zipfile
 from threading import Thread
 import time
 
-from odoo import _
+from odoo import _, http
 from odoo.modules.module import get_resource_path
 
 _logger = logging.getLogger(__name__)
@@ -231,6 +232,24 @@ def download_iot_handlers(auto=True):
         except Exception as e:
             _logger.error('Could not reach configured server')
             _logger.error('A error encountered : %s ' % e)
+
+def load_iot_handlers():
+    """
+    This method loads local files: 'odoo/addons/hw_drivers/iot_handlers/drivers' and
+    'odoo/addons/hw_drivers/iot_handlers/interfaces'
+    And execute these python drivers and interfaces
+    """
+    for directory in ['interfaces', 'drivers']:
+        path = get_resource_path('hw_drivers', 'iot_handlers', directory)
+        filesList = os.listdir(path)
+        for file in filesList:
+            path_file = os.path.join(path, file)
+            spec = util.spec_from_file_location(file, path_file)
+            if spec:
+                module = util.module_from_spec(spec)
+                spec.loader.exec_module(module)
+    http.addons_manifest = {}
+    http.root = http.Root()
 
 def odoo_restart(delay):
     IR = IoTRestart(delay)

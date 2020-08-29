@@ -833,7 +833,7 @@ QUnit.module('ActionManager', {
         assert.verifySteps([
             '/web/action/load',
             'load_views',
-            'default_get',
+            'onchange',
         ]);
 
         actionManager.destroy();
@@ -2062,7 +2062,7 @@ QUnit.module('ActionManager', {
         assert.verifySteps([
             '/web/action/load', // action 5
             'load_views',
-            'default_get',
+            'onchange',
             '/web/action/load', // action 2
             '/web/action/run',
             'close handler',
@@ -2863,7 +2863,7 @@ QUnit.module('ActionManager', {
             '/web/action/load',
             'load_views',
             '/web/dataset/search_read', // list
-            'default_get', // form
+            'onchange', // form
             '/web/dataset/search_read', // list
         ]);
 
@@ -3649,7 +3649,7 @@ QUnit.module('ActionManager', {
     });
 
     QUnit.test('execute action from dirty, new record, and come back', async function (assert) {
-        assert.expect(19);
+        assert.expect(17);
 
         this.data.partner.fields.bar.default = 1;
         this.archs['partner,false,form'] = '<form>' +
@@ -3710,13 +3710,11 @@ QUnit.module('ActionManager', {
             '/web/action/load', // action 3
             'load_views', // views of action 3
             '/web/dataset/search_read', // list
-            'default_get', // form (create)
-            'name_get', // m2o in form
+            'onchange', // form (create)
             'get_formview_action', // click on m2o
             'load_views', // form view of dynamic action
             'read', // form
-            'default_get', // form (create)
-            'name_get', // m2o in form
+            'onchange', // form (create)
         ]);
 
         actionManager.destroy();
@@ -3791,7 +3789,7 @@ QUnit.module('ActionManager', {
         assert.verifySteps([
             '/web/action/load',
             'load_views',
-            'default_get',
+            'onchange',
         ]);
 
         actionManager.destroy();

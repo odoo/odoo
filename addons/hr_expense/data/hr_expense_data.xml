@@ -11,4 +11,7 @@
             <field name="can_be_expensed" eval="True"/>
         </record>
     </data>
+    <data>
+        <function model="ir.config_parameter" name="set_param" eval="('hr_expense.use_mailgateway', True)"/>
+    </data>
 </odoo>

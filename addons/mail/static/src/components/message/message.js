@@ -11,6 +11,7 @@ const components = {
     PartnerImStatusIcon: require('mail/static/src/components/partner_im_status_icon/partner_im_status_icon.js'),
 };
 const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
+const { markEventHandled } = require('mail/static/src/utils/utils.js');
 const { timeFromNow } = require('mail.utils');
 
 const { _lt } = require('web.core');
@@ -51,10 +52,10 @@ class Message extends Component {
             const author = message ? message.author : undefined;
             const partnerRoot = this.env.messaging.partnerRoot;
             const originThread = message ? message.originThread : undefined;
-            const threadViewer = this.env.models['mail.thread_viewer'].get(props.threadViewerLocalId);
-            const thread = threadViewer ? threadViewer.thread : undefined;
-            const threadStringifiedDomain = threadViewer
-                ? threadViewer.stringifiedDomain
+            const threadView = this.env.models['mail.thread_view'].get(props.threadViewLocalId);
+            const thread = threadView ? threadView.thread : undefined;
+            const threadStringifiedDomain = threadView
+                ? threadView.stringifiedDomain
                 : undefined;
             return {
                 attachments: message
@@ -63,7 +64,7 @@ class Message extends Component {
                 author: author ? author.__state : undefined,
                 hasMessageCheckbox: message ? message.hasCheckbox : false,
                 isDeviceMobile: this.env.messaging.device.isMobile,
-                isMessageChecked: message && threadViewer
+                isMessageChecked: message && threadView
                     ? message.isChecked(thread, threadStringifiedDomain)
                     : false,
                 message: message ? message.__state : undefined,
@@ -71,7 +72,7 @@ class Message extends Component {
                 originThread: originThread ? originThread.__state : undefined,
                 partnerRoot: partnerRoot ? partnerRoot.__state : undefined,
                 thread: thread ? thread.__state : undefined,
-                threadViewer: threadViewer ? threadViewer.__state : undefined,
+                threadView: threadView ? threadView.__state : undefined,
             };
         }, {
             compareDepth: {
@@ -156,19 +157,18 @@ class Message extends Component {
     }
 
     /**
-     * Determine whether author redirect feature is enabled on message.
-     * Click on message author should redirect to author.
+     * Determines whether author open chat feature is enabled on message.
      *
      * @returns {boolean}
      */
-    get hasAuthorRedirect() {
-        if (!this.props.hasAuthorRedirect) {
-            return false;
-        }
+    get hasAuthorOpenChat() {
         if (!this.message.author) {
             return false;
         }
-        if (this.message.author === this.env.messaging.currentPartner) {
+        if (
+            this.message.originThread &&
+            this.message.originThread.correspondent === this.message.author
+        ) {
             return false;
         }
         return true;
@@ -237,6 +237,13 @@ class Message extends Component {
     }
 
     /**
+     * @returns {string}
+     */
+    get OPEN_CHAT() {
+        return this.env._t("Open chat");
+    }
+
+    /**
      * Make this message viewable in its enclosing scroll environment (usually
      * message list).
      *
@@ -245,7 +252,7 @@ class Message extends Component {
      * @param {string} [param0.block='end']
      * @returns {Promise}
      */
-    async scrollIntoView({ behavior='auto', block='end' }={}) {
+    async scrollIntoView({ behavior = 'auto', block = 'end' } = {}) {
         this.el.scrollIntoView({
             behavior,
             block,
@@ -268,10 +275,10 @@ class Message extends Component {
     }
 
     /**
-     * @returns {mail.thread_viewer}
+     * @returns {mail.thread_view}
      */
-    get threadViewer() {
-        return this.env.models['mail.thread_viewer'].get(this.props.threadViewerLocalId);
+    get threadView() {
+        return this.env.models['mail.thread_view'].get(this.props.threadViewLocalId);
     }
 
     /**
@@ -411,7 +418,7 @@ class Message extends Component {
      * @private
      */
     _onChangeCheckbox() {
-        this.message.toggleCheck(this.threadViewer.thread, this.threadViewer.stringifiedDomain);
+        this.message.toggleCheck(this.threadView.thread, this.threadView.stringifiedDomain);
     }
 
     /**
@@ -419,23 +426,33 @@ class Message extends Component {
      * @param {MouseEvent} ev
      */
     _onClick(ev) {
+        if (ev.target.closest('.o_channel_redirect')) {
+            this.env.messaging.openProfile({
+                id: Number(ev.target.dataset.oeId),
+                model: 'mail.channel',
+            });
+            // avoid following dummy href
+            ev.preventDefault();
+            return;
+        }
         if (ev.target.closest('.o_mention')) {
-            this.env.messaging.redirect({
+            this.env.messaging.openProfile({
                 id: Number(ev.target.dataset.oeId),
                 model: ev.target.dataset.oeModel,
             });
+            // avoid following dummy href
             ev.preventDefault();
             return;
         }
         if (ev.target.closest('.o_mail_redirect')) {
-            this.env.messaging.redirect({
+            this.env.messaging.openProfile({
                 id: Number(ev.target.dataset.oeId),
                 model: ev.target.dataset.oeModel,
             });
+            // avoid following dummy href
             ev.preventDefault();
             return;
         }
-        ev.stopPropagation();
         this.state.isClicked = !this.state.isClicked;
     }
 
@@ -443,17 +460,24 @@ class Message extends Component {
      * @private
      * @param {MouseEvent} ev
      */
-    _onClickAuthor(ev) {
-        if (!this.hasAuthorRedirect) {
+    _onClickAuthorAvatar(ev) {
+        if (!this.hasAuthorOpenChat) {
             return;
         }
+        markEventHandled(ev, 'Message.authorOpenChat');
+        this.message.author.openChat();
+    }
+
+    /**
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onClickAuthorName(ev) {
         if (!this.message.author) {
             return;
         }
-        this.env.messaging.redirect({
-            id: this.message.author.id,
-            model: this.message.author.model,
-        });
+        markEventHandled(ev, 'Message.authorOpenProfile');
+        this.message.author.openProfile();
     }
 
     /**
@@ -514,11 +538,9 @@ class Message extends Component {
      * @param {MouseEvent} ev
      */
     _onClickOriginThread(ev) {
+        // avoid following dummy href
         ev.preventDefault();
-        this.env.messaging.redirect({
-            id: this.message.originThread.id,
-            model: this.message.originThread.model,
-        });
+        this.message.originThread.open();
     }
 
     /**
@@ -581,7 +603,6 @@ class Message extends Component {
 Object.assign(Message, {
     components,
     defaultProps: {
-        hasAuthorRedirect: false,
         hasCheckbox: false,
         hasMarkAsReadIcon: false,
         hasReplyIcon: false,
@@ -594,14 +615,13 @@ Object.assign(Message, {
             optional: true,
             validate: prop => ['auto', 'card', 'hover', 'none'].includes(prop),
         },
-        hasAuthorRedirect: Boolean,
         hasCheckbox: Boolean,
         hasMarkAsReadIcon: Boolean,
         hasReplyIcon: Boolean,
         isSelected: Boolean,
         isSquashed: Boolean,
         messageLocalId: String,
-        threadViewerLocalId: {
+        threadViewLocalId: {
             type: String,
             optional: true,
         },

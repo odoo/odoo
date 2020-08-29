@@ -7,7 +7,7 @@ from odoo.addons.base.tests.common import HttpCaseWithUserDemo, HttpCaseWithUser
 from odoo.addons.event_crm.tests.common import TestEventCrmCommon
 from odoo.addons.sales_team.tests.common import TestSalesCommon
 from odoo.addons.website.tests.test_website_visitor import MockVisitor
-from odoo.addons.website_event_online.tests.common import EventDtPatcher
+from odoo.addons.website_event.tests.common import EventDtPatcher
 
 
 class TestEventFullCommon(TestEventCrmCommon, TestSalesCommon, EventDtPatcher, MockVisitor):
@@ -245,6 +245,16 @@ class TestWEventCommon(HttpCaseWithUserDemo, HttpCaseWithUserPortal, EventDtPatc
             'event_id': self.event.id,
             'stage_id': self.env.ref('website_event_track.event_track_stage3').id,
             'date': self.reference_now - timedelta(minutes=30),
+            'duration': 0.75,
+            'is_published': True,
+            'user_id': self.user_admin.id,
+            'partner_id': self.event_speaker.id,
+        })
+        self.track_2 = self.env['event.track'].create({
+            'name': 'Our Last Day Together !',
+            'event_id': self.event.id,
+            'stage_id': self.env.ref('website_event_track.event_track_stage3').id,
+            'date': self.reference_now + timedelta(days=1),
             'duration': 0.75,
             'is_published': True,
             'user_id': self.user_admin.id,

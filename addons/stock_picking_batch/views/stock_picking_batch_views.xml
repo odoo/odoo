@@ -51,6 +51,8 @@
                 <field name="lot_id" groups="stock.group_production_lot" attrs="{'readonly': [('tracking', 'not in', ['lot', 'serial'])]}"/>
                 <field name="location_id"/>
                 <field name="location_dest_id"/>
+                <field name="package_id" groups="stock.group_tracking_lot"/>
+                <field name="result_package_id" groups="stock.group_tracking_lot"/>
                 <field name="product_uom_qty" readonly="1"/>
                 <field name="product_uom_id" options="{'no_create': True}"
                     groups="uom.group_uom" readonly="1" force_save="1"/>
@@ -102,10 +104,14 @@
                             <field name="picking_type_id"/>
                             <field name="company_id" groups="base.group_multi_company" attrs="{'readonly': [('picking_ids', '!=', [])]}" force_save="1"/>
                         </group>
+                        <group>
+                            <field name="scheduled_date"/>
+                        </group>
                     </group>
                     <notebook>
                         <page string="Detailed Operations" attrs="{'invisible': [('state', '=', 'draft')]}">
                             <field name="move_line_ids" context="{'tree_view_ref': 'stock_picking_batch.view_move_line_tree'}"/>
+                            <button class="oe_highlight" name="action_put_in_pack" type="object" string="Put in Pack" attrs="{'invisible': [('state', 'in', ('draft', 'done', 'cancel'))]}" groups="stock.group_tracking_lot"/>
                         </page>
                         <page string="Operations" attrs="{'invisible': [('state', '=', 'draft')]}">
                             <field name="move_ids" context="{'tree_view_ref': 'stock_picking_batch.view_picking_move_tree_inherited'}"/>
@@ -140,6 +146,7 @@
         <field name="arch" type="xml">
             <tree string="Stock Batch Transfer" multi_edit="1" sample="1">
                 <field name="name" decoration-bf="1"/>
+                <field name="scheduled_date"/>
                 <field name="user_id" widget="many2one_avatar_user"/>
                 <field name="company_id" groups="base.group_multi_company"/>
                 <field name="state" widget="badge" decoration-success="state == 'done'" decoration-info="state in ('draft', 'in_progress')"/>
@@ -165,8 +172,11 @@
                                 <field name="state" widget="label_selection"/>
                             </div>
                             <div class="o_kanban_record_bottom">
-                                <div class="oe_kanban_bottom_left"/>
+                                <div class="oe_kanban_bottom_left">
+                                    <field name="picking_type_id"/>
+                                </div>
                                 <div class="oe_kanban_bottom_right">
+                                    <field name="scheduled_date" widget="date"/>
                                     <field name="user_id" widget="many2one_avatar_user"/>
                                 </div>
                             </div>

@@ -97,16 +97,17 @@ QUnit.module('Views', {
                     product_id: {string: "Product", type: "many2one", relation: 'product', store: true},
                     color_id: {string: "Color", type: "many2one", relation: 'color'},
                     date: {string: "Date", type: 'date', store: true, sortable: true},
+                    revenue: {string: "Revenue", type: 'integer', store: true},
                 },
                 records: [
-                    {id: 1, foo: 3, bar: true, product_id: 37, date: "2016-01-01"},
-                    {id: 2, foo: 53, bar: true, product_id: 37, color_id: 7, date: "2016-01-03"},
-                    {id: 3, foo: 2, bar: true, product_id: 37, date: "2016-03-04"},
-                    {id: 4, foo: 24, bar: false, product_id: 37, date: "2016-03-07"},
-                    {id: 5, foo: 4, bar: false, product_id: 41, date: "2016-05-01"},
+                    {id: 1, foo: 3, bar: true, product_id: 37, date: "2016-01-01", revenue: 1},
+                    {id: 2, foo: 53, bar: true, product_id: 37, color_id: 7, date: "2016-01-03", revenue: 2},
+                    {id: 3, foo: 2, bar: true, product_id: 37, date: "2016-03-04", revenue: 3},
+                    {id: 4, foo: 24, bar: false, product_id: 37, date: "2016-03-07", revenue: 4},
+                    {id: 5, foo: 4, bar: false, product_id: 41, date: "2016-05-01", revenue: 5},
                     {id: 6, foo: 63, bar: false, product_id: 41},
                     {id: 7, foo: 42, bar: false, product_id: 41},
-                    {id: 8, foo: 48, bar: false, product_id: 41, date: "2016-04-01"},
+                    {id: 8, foo: 48, bar: false, product_id: 41, date: "2016-04-01", revenue: 8},
                 ]
             },
             product: {
@@ -1212,6 +1213,47 @@ QUnit.module('Views', {
             pageX: rectangle.left + point.x,
             pageY: rectangle.top + point.y
         });
+
+        graph.destroy();
+    });
+
+    QUnit.test('graph view without invisible attribute on field', async function (assert) {
+        assert.expect(4);
+
+        const graph = await createView({
+            View: GraphView,
+            model: "foo",
+            data: this.data,
+            arch: `<graph string="Partners"></graph>`,
+        });
+
+        await testUtils.dom.click(graph.$('.btn-group:first button'));
+        assert.containsN(graph, 'li.o_menu_item', 3,
+            "there should be three menu item in the measures dropdown (count, revenue and foo)");
+        assert.containsOnce(graph, 'li.o_menu_item a:contains("Revenue")');
+        assert.containsOnce(graph, 'li.o_menu_item a:contains("Foo")');
+        assert.containsOnce(graph, 'li.o_menu_item a:contains("Count")');
+
+        graph.destroy();
+    });
+
+    QUnit.test('graph view with invisible attribute on field', async function (assert) {
+        assert.expect(2);
+
+        const graph = await createView({
+            View: GraphView,
+            model: "foo",
+            data: this.data,
+            arch: `
+                <graph string="Partners">
+                    <field name="revenue" invisible="1"/>
+                </graph>`,
+        });
+
+        await testUtils.dom.click(graph.$('.btn-group:first button'));
+        assert.containsN(graph, 'li.o_menu_item', 2,
+            "there should be only two menu item in the measures dropdown (count and foo)");
+        assert.containsNone(graph, 'li.o_menu_item a:contains("Revenue")');
 
         graph.destroy();
     });

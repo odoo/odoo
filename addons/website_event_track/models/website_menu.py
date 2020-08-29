@@ -18,9 +18,6 @@ class WebsiteMenu(models.Model):
             # agenda page that has also menu_type='track'
             if event_menu.menu_type == 'track' and '/track' in event_menu.menu_id.url:
                 to_update.append('website_track')
-            for menu_type, fname in event_menu.event_id._get_menu_type_field_matching().items():
-                if event_menu.menu_type == menu_type:
-                    to_update.append(fname)
 
         # call super that resumes the unlink of menus entries (including website event menus)
         res = super(WebsiteMenu, self).unlink()

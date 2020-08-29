@@ -8,11 +8,188 @@ const modifierFields = [
     'filter',
     'quality',
     'mimetype',
+    'glFilter',
     'originalId',
     'originalSrc',
     'resizeWidth',
     'aspectRatio',
 ];
+
+// webgl color filters
+const _applyAll = (result, filter, filters) => {
+    filters.forEach(f => {
+        if (f[0] === 'blend') {
+            const cv = f[1];
+            const ctx = result.getContext('2d');
+            ctx.globalCompositeOperation = f[2];
+            ctx.globalAlpha = f[3];
+            ctx.drawImage(cv, 0, 0);
+            ctx.globalCompositeOperation = 'source-over';
+            ctx.globalAlpha = 1.0;
+        } else {
+            filter.addFilter(...f);
+        }
+    });
+};
+let applyAll;
+
+const glFilters = {
+    blur: filter => filter.addFilter('blur', 10),
+
+    '1977': (filter, cv) => {
+        const ctx = cv.getContext('2d');
+        ctx.fillStyle = 'rgb(243, 106, 188)';
+        ctx.fillRect(0, 0, cv.width, cv.height);
+        applyAll(filter, [
+            ['blend', cv, 'screen', .3],
+            ['brightness', .1],
+            ['contrast', .1],
+            ['saturation', .3],
+        ]);
+    },
+
+    aden: (filter, cv) => {
+        const ctx = cv.getContext('2d');
+        ctx.fillStyle = 'rgb(66, 10, 14)';
+        ctx.fillRect(0, 0, cv.width, cv.height);
+        applyAll(filter, [
+            ['blend', cv, 'darken', .2],
+            ['brightness', .2],
+            ['contrast', -.1],
+            ['saturation', -.15],
+            ['hue', 20],
+        ]);
+    },
+
+    brannan: (filter, cv) => {
+        const ctx = cv.getContext('2d');
+        ctx.fillStyle = 'rgb(161, 44, 191)';
+        ctx.fillRect(0, 0, cv.width, cv.height);
+        applyAll(filter, [
+            ['blend', cv, 'lighten', .31],
+            ['sepia', .5],
+            ['contrast', .4],
+        ]);
+    },
+
+    earlybird: (filter, cv) => {
+        const ctx = cv.getContext('2d');
+        const gradient = ctx.createRadialGradient(
+            cv.width / 2, cv.height / 2, 0,
+            cv.width / 2, cv.height / 2, Math.hypot(cv.width, cv.height) / 2
+        );
+        gradient.addColorStop(.2, '#D0BA8E');
+        gradient.addColorStop(1, '#1D0210');
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, cv.width, cv.height);
+        applyAll(filter, [
+            ['blend', cv, 'overlay', .2],
+            ['sepia', .2],
+            ['contrast', -.1],
+        ]);
+    },
+
+    inkwell: (filter, cv) => {
+        applyAll(filter, [
+            ['sepia', .3],
+            ['brightness', .1],
+            ['contrast', -.1],
+            ['desaturateLuminance'],
+        ]);
+    },
+
+    // Needs hue blending mode for perfect reproduction. Close enough?
+    maven: (filter, cv) => {
+        applyAll(filter, [
+            ['sepia', .25],
+            ['brightness', -.05],
+            ['contrast', -.05],
+            ['saturation', .5],
+        ]);
+    },
+
+    toaster: (filter, cv) => {
+        const ctx = cv.getContext('2d');
+        const gradient = ctx.createRadialGradient(
+            cv.width / 2, cv.height / 2, 0,
+            cv.width / 2, cv.height / 2, Math.hypot(cv.width, cv.height) / 2
+        );
+        gradient.addColorStop(0, '#0F4E80');
+        gradient.addColorStop(1, '#3B003B');
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, cv.width, cv.height);
+        applyAll(filter, [
+            ['blend', cv, 'screen', .5],
+            ['brightness', -.1],
+            ['contrast', .5],
+        ]);
+    },
+
+    walden: (filter, cv) => {
+        const ctx = cv.getContext('2d');
+        ctx.fillStyle = '#CC4400';
+        ctx.fillRect(0, 0, cv.width, cv.height);
+        applyAll(filter, [
+            ['blend', cv, 'screen', .3],
+            ['sepia', .3],
+            ['brightness', .1],
+            ['saturation', .6],
+            ['hue', 350],
+        ]);
+    },
+
+    valencia: (filter, cv) => {
+        const ctx = cv.getContext('2d');
+        ctx.fillStyle = '#3A0339';
+        ctx.fillRect(0, 0, cv.width, cv.height);
+        applyAll(filter, [
+            ['blend', cv, 'exclusion', .5],
+            ['sepia', .08],
+            ['brightness', .08],
+            ['contrast', .08],
+        ]);
+    },
+
+    xpro: (filter, cv) => {
+        const ctx = cv.getContext('2d');
+        const gradient = ctx.createRadialGradient(
+            cv.width / 2, cv.height / 2, 0,
+            cv.width / 2, cv.height / 2, Math.hypot(cv.width, cv.height) / 2
+        );
+        gradient.addColorStop(.4, '#E0E7E6');
+        gradient.addColorStop(1, '#2B2AA1');
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, cv.width, cv.height);
+        applyAll(filter, [
+            ['blend', cv, 'color-burn', .7],
+            ['sepia', .3],
+        ]);
+    },
+
+    custom: (filter, cv, filterOptions) => {
+        const options = Object.assign({
+            blend: 'normal',
+            filterColor: '',
+            blur: '0',
+            desaturateLuminance: '0',
+            saturation: '0',
+            contrast: '0',
+            brightness: '0',
+            sepia: '0',
+        }, JSON.parse(filterOptions || "{}"));
+        const filters = [];
+        if (options.filterColor) {
+            const ctx = cv.getContext('2d');
+            ctx.fillStyle = options.filterColor;
+            ctx.fillRect(0, 0, cv.width, cv.height);
+            filters.push(['blend', cv, options.blend, 1]);
+        }
+        delete options.blend;
+        delete options.filterColor;
+        filters.push(...Object.entries(options).map(([filter, amount]) => [filter, parseInt(amount) / 100]));
+        applyAll(filter, filters);
+    },
+};
 /**
  * Applies data-attributes modifications to an img tag and returns a dataURL
  * containing the result. This function does not modify the original image.
@@ -22,10 +199,21 @@ const modifierFields = [
  */
 async function applyModifications(img) {
     const data = Object.assign({
+        glFilter: '',
         filter: '#0000',
         quality: '95',
     }, img.dataset);
-    let {width, height, resizeWidth, quality, filter, mimetype, originalSrc} = data;
+    let {
+        width,
+        height,
+        resizeWidth,
+        quality,
+        filter,
+        mimetype,
+        originalSrc,
+        glFilter,
+        filterOptions,
+    } = data;
     [width, height, resizeWidth] = [width, height, resizeWidth].map(s => parseFloat(s));
     quality = parseInt(quality);
 
@@ -43,6 +231,18 @@ async function applyModifications(img) {
     result.height = croppedImg.height * result.width / croppedImg.width;
     const ctx = result.getContext('2d');
     ctx.drawImage(croppedImg, 0, 0, croppedImg.width, croppedImg.height, 0, 0, result.width, result.height);
+
+    // GL filter
+    if (glFilter) {
+        const glf = new window.WebGLImageFilter();
+        const cv = document.createElement('canvas');
+        cv.width = result.width;
+        cv.height = result.height;
+        applyAll = _applyAll.bind(null, result);
+        glFilters[glFilter](glf, cv, filterOptions);
+        const filtered = glf.apply(result);
+        ctx.drawImage(filtered, 0, 0, filtered.width, filtered.height, 0, 0, result.width, result.height);
+    }
 
     // Color filter
     ctx.fillStyle = filter || '#0000';

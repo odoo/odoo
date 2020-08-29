@@ -158,12 +158,12 @@ class TestFrontend(odoo.tests.HttpCase):
 
         self.pos_config.with_user(self.env.ref('base.user_admin')).open_session_cb(check_coa=False)
 
-        self.start_tour("/pos/web?config_id=%d" % self.pos_config.id, 'pos_restaurant_sync', login="admin", step_delay=50)
+        self.start_tour("/pos/web?config_id=%d" % self.pos_config.id, 'pos_restaurant_sync', login="admin")
 
         self.assertEqual(1, self.env['pos.order'].search_count([('amount_total', '=', 4.4), ('state', '=', 'draft')]))
         self.assertEqual(1, self.env['pos.order'].search_count([('amount_total', '=', 4.4), ('state', '=', 'paid')]))
 
-        self.start_tour("/pos/web?config_id=%d" % self.pos_config.id, 'pos_restaurant_sync_second_login', login="admin", step_delay=50)
+        self.start_tour("/pos/web?config_id=%d" % self.pos_config.id, 'pos_restaurant_sync_second_login', login="admin")
 
         self.assertEqual(0, self.env['pos.order'].search_count([('amount_total', '=', 4.4), ('state', '=', 'draft')]))
         self.assertEqual(1, self.env['pos.order'].search_count([('amount_total', '=', 2.2), ('state', '=', 'draft')]))
@@ -171,9 +171,9 @@ class TestFrontend(odoo.tests.HttpCase):
 
     def test_02_others(self):
         self.pos_config.with_user(self.env.ref('base.user_admin')).open_session_cb(check_coa=False)
-        self.start_tour("/pos/web?config_id=%d" % self.pos_config.id, 'SplitBillScreenTour', login="admin", step_delay=50)
-        self.start_tour("/pos/web?config_id=%d" % self.pos_config.id, 'ControlButtonsTour', login="admin", step_delay=50)
-        self.start_tour("/pos/web?config_id=%d" % self.pos_config.id, 'FloorScreenTour', login="admin", step_delay=50)
+        self.start_tour("/pos/web?config_id=%d" % self.pos_config.id, 'SplitBillScreenTour', login="admin")
+        self.start_tour("/pos/web?config_id=%d" % self.pos_config.id, 'ControlButtonsTour', login="admin")
+        self.start_tour("/pos/web?config_id=%d" % self.pos_config.id, 'FloorScreenTour', login="admin")
 
     def test_03_order_management_integration(self):
         self.pos_config.write({'manage_orders': True})

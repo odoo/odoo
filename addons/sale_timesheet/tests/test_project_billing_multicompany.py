@@ -16,15 +16,17 @@ class TestProjectBillingMulticompany(TestCommonSaleTimesheet):
         cls.project_non_billable = Project.create({
             'name': "Non Billable Project",
             'allow_timesheets': True,
-            'billable_type': 'no',
+            'allow_billable': True,
+            'bill_type': 'customer_project',
             'company_id': cls.env.company.id,
         })
 
     def test_makeBillable_multiCompany(self):
         wizard = self.env['project.create.sale.order'].with_context(allowed_company_ids=[self.company_data_2['company'].id, self.env.company.id], company_id=self.company_data_2['company'].id, active_id=self.project_non_billable.id, active_model='project.project').create({
-            'product_id': self.product_delivery_timesheet3.id,  # product creates new Timesheet in new Project
-            'price_unit': self.product_delivery_timesheet3.list_price,
-            'billable_type': 'project_rate',
+            'line_ids': [(0, 0, {
+                'product_id': self.product_delivery_timesheet3.id,  # product creates new Timesheet in new Project
+                'price_unit': self.product_delivery_timesheet3.list_price
+            })],
             'partner_id': self.partner_a.id,
         })
 

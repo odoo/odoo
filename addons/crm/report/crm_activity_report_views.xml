@@ -16,7 +16,7 @@
             <field name="name">crm.activity.report.pivot</field>
             <field name="model">crm.activity.report</field>
             <field name="arch" type="xml">
-                <pivot string="Activities Analysis" disable_linking="True">
+                <pivot string="Activities Analysis" disable_linking="True" sample="1">
                     <field name="mail_activity_type_id" type="col"/>
                     <field name="date" interval="month" type="row"/>
                 </pivot>

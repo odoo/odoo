@@ -6,7 +6,7 @@ const components = {
     AttachmentBox: require('mail/static/src/components/attachment_box/attachment_box.js'),
     ChatterTopbar: require('mail/static/src/components/chatter_topbar/chatter_topbar.js'),
     Composer: require('mail/static/src/components/composer/composer.js'),
-    ThreadViewer: require('mail/static/src/components/thread_viewer/thread_viewer.js'),
+    ThreadView: require('mail/static/src/components/thread_view/thread_view.js'),
 };
 const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
 
@@ -37,19 +37,18 @@ class Chatter extends Component {
                 attachments: 1,
             },
         });
-        this._threadRef = useRef('thread');
+        /**
+         * Reference of the composer. Useful to focus it.
+         */
+        this._composerRef = useRef('composer');
     }
 
     mounted() {
-        if (this.chatter.thread) {
-            this._notifyRendered();
-        }
+        this._update();
     }
 
     patched() {
-        if (this.chatter.thread) {
-            this._notifyRendered();
-        }
+        this._update();
     }
 
     //--------------------------------------------------------------------------
@@ -75,6 +74,22 @@ class Chatter extends Component {
             attachments: this.chatter.thread.allAttachments,
             thread: this.chatter.thread.localId,
         });
+    }
+
+    /**
+     * @private
+     */
+    _update() {
+        if (this.chatter.thread) {
+            this._notifyRendered();
+        }
+        if (this.chatter.isDoFocus) {
+            this.chatter.update({ isDoFocus: false });
+            const composer = this._composerRef.comp;
+            if (composer) {
+                composer.focus();
+            }
+        }
     }
 
     //--------------------------------------------------------------------------

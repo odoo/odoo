@@ -112,4 +112,4 @@ class TestSaleExpectedDate(ValuationReconciliationTestCommon):
         commitment_date = fields.Datetime.from_string(new_order.commitment_date)
         right_date = commitment_date - security_delay
         for line in new_order.order_line:
-            self.assertEqual(line.move_ids[0].date_expected, right_date, "The expected date for the Stock Move is wrong")
+            self.assertEqual(line.move_ids[0].date, right_date, "The expected date for the Stock Move is wrong")

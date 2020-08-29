@@ -38,10 +38,6 @@ function factory(dependencies) {
             }
         }
 
-        focus() {
-            this.update({ isDoFocus: true });
-        }
-
         /**
          * Inserts text content in text input based on selection.
          *
@@ -185,8 +181,8 @@ function factory(dependencies) {
                 );
                 thread.loadNewMessages();
             }
-            for (const threadViewer of this.thread.viewers) {
-                threadViewer.addComponentHint('current-partner-just-posted-message', messageId);
+            for (const threadView of this.thread.threadViews) {
+                threadView.addComponentHint('current-partner-just-posted-message', messageId);
             }
             this._reset();
         }
@@ -294,7 +290,10 @@ function factory(dependencies) {
          * @returns {boolean}
          */
         _computeCanPostMessage() {
-            return this.textInputContent || this.attachments.length !== 0;
+            if (!this.textInputContent && this.attachments.length === 0) {
+                return false;
+            }
+            return !this.hasUploadingAttachment;
         }
 
         /**
@@ -317,6 +316,14 @@ function factory(dependencies) {
          */
         _computeHasSuggestedPartners() {
             return this.allSuggestedPartners.length > 0;
+        }
+
+        /**
+         * @private
+         * @returns {boolean}
+         */
+        _computeHasUploadingAttachment() {
+            return this.attachments.some(attachment => attachment.isTemporary);
         }
 
         /**
@@ -540,10 +547,21 @@ function factory(dependencies) {
         attachments: many2many('mail.attachment', {
             inverse: 'composers',
         }),
+        /**
+         * This field watches the uploading (= temporary) status of attachments
+         * linked to this composer.
+         *
+         * Useful to determine whether there are some attachments that are being
+         * uploaded.
+         */
+        attachmentsAreTemporary: attr({
+            related: 'attachments.isTemporary',
+        }),
         canPostMessage: attr({
             compute: '_computeCanPostMessage',
             dependencies: [
                 'attachments',
+                'hasUploadingAttachment',
                 'textInputContent',
             ],
             default: false,
@@ -563,6 +581,17 @@ function factory(dependencies) {
                 'mainSuggestedPartners',
             ],
         }),
+        /**
+         * This field determines whether some attachments linked to this
+         * composer are being uploaded.
+         */
+        hasUploadingAttachment: attr({
+            compute: '_computeHasUploadingAttachment',
+            dependencies: [
+                'attachments',
+                'attachmentsAreTemporary',
+            ],
+        }),
         hasFocus: attr({
             default: false,
         }),
@@ -571,9 +600,6 @@ function factory(dependencies) {
             dependencies: [
                 'allSuggestedPartners',
             ],
-            default: false,
-        }),
-        isDoFocus: attr({
             default: false,
         }),
         /**

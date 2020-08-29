@@ -197,16 +197,12 @@ QUnit.module('relational_fields', {
     });
 
     QUnit.test('do not call name_get if display_name already known', async function (assert) {
-        // default_get only returns the id for many2one fields
-        // onchange returns an array with the id and the display_name
-        // thus, when an onchange is performed, there is no need to call
-        // name_get as the display_name is alreay available
-        assert.expect(6);
+        assert.expect(4);
 
         this.data.partner.fields.product_id.default = 37;
         this.data.partner.onchanges = {
             trululu: function (obj) {
-                obj.trululu = [1, 'first record'];
+                obj.trululu = 1;
             },
         };
 
@@ -223,11 +219,7 @@ QUnit.module('relational_fields', {
 
         assert.strictEqual(form.$('.o_field_widget[name=trululu] input').val(), 'first record');
         assert.strictEqual(form.$('.o_field_widget[name=product_id] input').val(), 'xphone');
-        assert.verifySteps([
-            'default_get on partner',
-            'onchange on partner',
-            'name_get on product',
-        ]);
+        assert.verifySteps(['onchange on partner']);
 
         form.destroy();
     });
@@ -530,9 +522,9 @@ QUnit.module('relational_fields', {
         assert.verifySteps([
             'read partner',
             'read turtle',
-            'default_get turtle',
+            'onchange turtle',
             'onchange partner',
-            'default_get turtle',
+            'onchange turtle',
             'onchange partner',
         ]);
         form.destroy();
@@ -2784,7 +2776,7 @@ QUnit.module('relational_fields', {
         this.data.partner.fields.reference.default = 'product,37';
         this.data.partner.onchanges = {
             int_field: function (obj) {
-                if (obj.int_field !== 0) {
+                if (obj.int_field) {
                     obj.reference = 'partner_type,' + obj.int_field;
                 }
             },

@@ -145,7 +145,7 @@ class CustomerPortal(CustomerPortal):
                 return request.redirect(order_sudo.get_portal_url())
 
             try:
-                updated_date = line._convert_to_last_minute_of_day(datetime.strptime(date_str, '%Y-%m-%d'))
+                updated_date = line._convert_to_middle_of_day(datetime.strptime(date_str, '%Y-%m-%d'))
             except ValueError:
                 continue
 

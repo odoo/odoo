@@ -117,8 +117,7 @@ class PartnerCategory(models.Model):
             # Be sure name_search is symetric to name_get
             name = name.split(' / ')[-1]
             args = [('name', operator, name)] + args
-        partner_category_ids = self._search(args, limit=limit, access_rights_uid=name_get_uid)
-        return models.lazy_name_get(self.browse(partner_category_ids).with_user(name_get_uid))
+        return self._search(args, limit=limit, access_rights_uid=name_get_uid)
 
 
 class PartnerTitle(models.Model):
@@ -192,6 +191,7 @@ class Partner(models.Model):
         ], string='Address Type',
         default='contact',
         help="Invoice & Delivery addresses are used in sales orders. Private addresses are only visible by authorized users.")
+    # address fields
     street = fields.Char()
     street2 = fields.Char()
     zip = fields.Char(change_default=True)
@@ -797,12 +797,8 @@ class Partner(models.Model):
                 query += ' limit %s'
                 where_clause_params.append(limit)
             self.env.cr.execute(query, where_clause_params)
-            partner_ids = [row[0] for row in self.env.cr.fetchall()]
+            return [row[0] for row in self.env.cr.fetchall()]
 
-            if partner_ids:
-                return models.lazy_name_get(self.browse(partner_ids))
-            else:
-                return []
         return super(Partner, self)._name_search(name, args, operator=operator, limit=limit, name_get_uid=name_get_uid)
 
     @api.model

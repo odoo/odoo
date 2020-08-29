@@ -762,22 +762,6 @@ var BasicRenderer = AbstractRenderer.extend(WidgetAdapterMixin, {
         return $el;
     },
     /**
-     * Renders the nocontent helper.
-     *
-     * This method is a helper for renderers that want to display a help
-     * message when no content is available.
-     *
-     * @private
-     * @returns {jQueryElement}
-     */
-    _renderNoContentHelper: function () {
-        var $noContent =
-            $('<div>').html(this.noContentHelp).addClass('o_nocontent_help');
-        return $('<div>')
-            .addClass('o_view_nocontent')
-            .append($noContent);
-    },
-    /**
      * Instantiate custom widgets
      *
      * @private

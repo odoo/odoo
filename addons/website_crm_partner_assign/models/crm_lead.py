@@ -30,7 +30,7 @@ class CrmLead(models.Model):
         fields += ['partner_latitude', 'partner_longitude', 'partner_assigned_id', 'date_partner_assign']
         return super(CrmLead, self)._merge_data(fields)
 
-    @api.onchange("partner_assigned_id")
+    @api.depends("partner_assigned_id")
     def _compute_date_partner_assign(self):
         for lead in self:
             if not lead.partner_assigned_id:

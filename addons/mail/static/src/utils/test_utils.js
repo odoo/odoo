@@ -260,33 +260,41 @@ const afterNextRender = (function () {
 function beforeEach(self) {
     const data = MockModels.generateData();
 
+    data.partnerRootId = 2;
     data['res.partner'].records.push({
         active: false,
         display_name: "OdooBot",
-        id: 2,
+        id: data.partnerRootId,
     });
-    data.partnerRootId = 2;
 
+    data.currentPartnerId = 3;
     data['res.partner'].records.push({
         display_name: "Your Company, Mitchell Admin",
-        id: 3,
+        id: data.currentPartnerId,
         name: "Mitchell Admin",
     });
-    data.currentPartnerId = 3;
+    data.currentUserId = 2;
     data['res.users'].records.push({
         display_name: "Your Company, Mitchell Admin",
-        id: 2,
+        id: data.currentUserId,
         name: "Mitchell Admin",
         partner_id: data.currentPartnerId,
     });
-    data.currentUserId = 2;
 
+    data.publicPartnerId = 4;
     data['res.partner'].records.push({
         active: false,
         display_name: "Public user",
-        id: 4,
+        id: data.publicPartnerId,
     });
-    data.publicPartnerId = 4;
+    data.publicUserId = 3;
+    data['res.users'].records.push({
+        active: false,
+        display_name: "Public user",
+        id: data.publicUserId,
+        name: "Public user",
+        partner_id: data.publicPartnerId,
+    });
 
     const originals = {
         '_.debounce': _.debounce,
@@ -368,6 +376,7 @@ async function createRootComponent(self, Component, { props = {}, target }) {
  *   is set: provide data that is passed to discuss widget (= client action) as
  *   2nd positional argument.
  * @param {Object} [param0.env={}]
+ * @param {function} [param0.mockFetch]
  * @param {function} [param0.mockRPC]
  * @param {boolean} [param0.hasActionManager=false] if set, use
  *   createActionManager.
@@ -382,6 +391,9 @@ async function createRootComponent(self, Component, { props = {}, target }) {
  *     `env.testUtils`.
  * @param {boolean} [param0.hasView=false] if set, use createView to create a
  *   view instead of a generic widget.
+ * @param {Deferred|Promise} [param0.messagingBeforeCreationDeferred=Promise.resolve()]
+ *   Deferred that let tests block messaging creation and simulate resolution.
+ *   Useful for testing working components when messaging is not yet created.
  * @param {string} [param0.model] makes only sense when `param0.hasView` is set:
  *   the model to use in createView.
  * @param {integer} [param0.res_id] makes only sense when `param0.hasView` is set:
@@ -392,8 +404,21 @@ async function createRootComponent(self, Component, { props = {}, target }) {
  *   the View class to use in createView.
  * @param {Object} [param0.viewOptions] makes only sense when `param0.hasView`
  *   is set: the view options to use in createView.
- * @param {boolean} [param0.waitUntilMessagingInitialized=true]
+ * @param {string} [param0.waitUntilMessagingCondition='initialized'] Determines
+ *   the condition of messaging when this function is resolved.
+ *   Supported values: ['none', 'created', 'initialized'].
+ *   - 'none': the function resolves regardless of whether messaging is created.
+ *   - 'created': the function resolves when messaging is created, but
+ *     regardless of whether messaging is initialized.
+ *   - 'initialized' (default): the function resolves when messaging is
+ *     initialized.
+ *   To guarantee messaging is not created, test should pass a pending deferred
+ *   as param of `messagingBeforeCreationDeferred`. To make sure messaging is
+ *   not initialized, test should mock RPC `mail/init_messaging` and block its
+ *   resolution.
  * @param {...Object} [param0.kwargs]
+ * @throws {Error} in case some provided parameters are wrong, such as
+ *   `waitUntilMessagingCondition`.
  * @returns {Object}
  */
 async function start(param0 = {}) {
@@ -412,8 +437,12 @@ async function start(param0 = {}) {
         hasMessagingMenu = false,
         hasTimeControl = false,
         hasView = false,
-        waitUntilMessagingInitialized = true,
+        messagingBeforeCreationDeferred = Promise.resolve(),
+        waitUntilMessagingCondition = 'initialized',
     } = param0;
+    if (!['none', 'created', 'initialized'].includes(waitUntilMessagingCondition)) {
+        throw Error(`Unknown parameter value ${waitUntilMessagingCondition} for 'waitUntilMessaging'.`);
+    }
     delete param0.env;
     delete param0.hasActionManager;
     delete param0.hasChatWindow;
@@ -535,9 +564,6 @@ async function start(param0 = {}) {
     }
 
     testEnv = Component.env;
-    Object.assign(testEnv, {
-        modelManager: new ModelManager(testEnv),
-    });
 
     /**
      * Components cannot use web.bus, because they cannot use
@@ -567,19 +593,31 @@ async function start(param0 = {}) {
         null,
         () => testEnv.messagingBus.trigger('will_show_home_menu')
     );
-    testEnv.modelManager.start(testEnv);
-    /**
-     * Create the messaging singleton record.
-     */
-    testEnv.messaging = testEnv.models['mail.messaging'].create();
-    testEnv.messaging.start().then(() =>
-        testEnv.messagingInitializedDeferred.resolve()
-    );
 
     const result = { env: testEnv, mockServer, widget };
 
-    if (waitUntilMessagingInitialized) {
-        // env key only accessible after MessagingService has started
+    messagingBeforeCreationDeferred.then(async () => {
+        /**
+         * Some models require session data, like locale text direction
+         * (depends on fully loaded translation).
+         */
+        await env.session.is_bound;
+
+        testEnv.modelManager = new ModelManager(testEnv);
+        testEnv.modelManager.start();
+        /**
+         * Create the messaging singleton record.
+         */
+        testEnv.messaging = testEnv.models['mail.messaging'].create();
+        testEnv.messaging.start().then(() =>
+            testEnv.messagingInitializedDeferred.resolve()
+        );
+        testEnv.messagingCreatedPromise.resolve();
+    });
+    if (waitUntilMessagingCondition === 'created') {
+        await testEnv.messagingCreatedPromise;
+    }
+    if (waitUntilMessagingCondition === 'initialized') {
         await testEnv.messagingInitializedDeferred;
     }
 

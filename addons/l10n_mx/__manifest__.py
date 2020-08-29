@@ -34,7 +34,7 @@ With this module you will have:
         "account",
     ],
     "data": [
-        "data/account_tag_data.xml",
+        "data/account.account.tag.csv",
         "data/l10n_mx_chart_data.xml",
         "data/account.account.template.csv",
         "data/l10n_mx_chart_post_data.xml",
