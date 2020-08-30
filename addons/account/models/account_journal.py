@@ -672,7 +672,7 @@ class AccountJournal(models.Model):
         self.env['account.move.line'].check_access_rights('read')
 
         if not self.default_account_id:
-            return 0.0
+            return 0.0, 0
 
         domain = (domain or []) + [
             ('account_id', 'in', tuple(self.default_account_id.ids)),
