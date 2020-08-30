@@ -1,0 +1,38 @@
+// ------------------------------------------------------------------
+// Layout
+// ------------------------------------------------------------------
+
+.o_ThreadView {
+    display: flex;
+    position: relative;
+    flex-flow: column;
+    overflow: auto;
+}
+
+.o_ThreadView_composer {
+    flex: 0 0 auto;
+}
+
+.o_ThreadView_loading {
+    display: flex;
+    align-self: center;
+    flex: 1 1 auto;
+    align-items: center;
+}
+
+.o_ThreadView_messageList {
+    flex: 1 1 auto;
+}
+
+// ------------------------------------------------------------------
+// Style
+// ------------------------------------------------------------------
+
+.o_ThreadView {
+    background-color: gray('100');
+
+}
+
+.o_ThreadView_loadingIcon {
+    margin-right: 3px;
+}

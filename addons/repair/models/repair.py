@@ -22,7 +22,7 @@ class Repair(models.Model):
 
     name = fields.Char(
         'Repair Reference',
-        default=lambda self: self.env['ir.sequence'].next_by_code('repair.order'),
+        default='/',
         copy=False, required=True,
         states={'confirmed': [('readonly', True)]})
     product_id = fields.Many2one(
@@ -39,7 +39,7 @@ class Repair(models.Model):
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
     partner_id = fields.Many2one(
         'res.partner', 'Customer',
-        index=True, states={'confirmed': [('readonly', True)]}, check_company=True,
+        index=True, states={'confirmed': [('readonly', True)]}, check_company=True, change_default=True,
         help='Choose partner for whom the order will be invoiced and delivered. You can find a partner by its Name, TIN, Email or Internal Reference.')
     address_id = fields.Many2one(
         'res.partner', 'Delivery Address',
@@ -203,6 +203,12 @@ class Repair(models.Model):
                 raise UserError(_('You can not delete a repair order which is linked to an invoice which has been posted once.'))
         return super().unlink()
 
+    @api.model
+    def create(self, vals):
+        if vals.get('name', '/') == '/':
+            vals['name'] = self.env['ir.sequence'].next_by_code('repair.order') or '/'
+        return super(Repair, self).create(vals)
+
     def button_dummy(self):
         # TDE FIXME: this button is very interesting
         return True
@@ -332,6 +338,7 @@ class Repair(models.Model):
                 invoice_vals = {
                     'move_type': 'out_invoice',
                     'partner_id': partner_invoice.id,
+                    'partner_shipping_id': repair.address_id.id,
                     'currency_id': currency.id,
                     'narration': narration,
                     'line_ids': [],
@@ -340,6 +347,8 @@ class Repair(models.Model):
                     'invoice_line_ids': [],
                     'fiscal_position_id': fpos.id
                 }
+                if partner_invoice.property_payment_term_id:
+                    invoice_vals['invoice_payment_term_id'] = partner_invoice.property_payment_term_id.id
                 current_invoices_list.append(invoice_vals)
             else:
                 # if group == True: concatenate invoices by partner and currency
@@ -360,7 +369,7 @@ class Repair(models.Model):
 
                 account = operation.product_id.product_tmpl_id._get_product_accounts()['income']
                 if not account:
-                    raise UserError(_('No account defined for product "%s".') % operation.product_id.name)
+                    raise UserError(_('No account defined for product "%s".', operation.product_id.name))
 
                 invoice_line_vals = {
                     'name': name,
@@ -402,7 +411,7 @@ class Repair(models.Model):
 
                 account = fee.product_id.product_tmpl_id._get_product_accounts()['income']
                 if not account:
-                    raise UserError(_('No account defined for product "%s".') % fee.product_id.name)
+                    raise UserError(_('No account defined for product "%s".', fee.product_id.name))
 
                 invoice_line_vals = {
                     'name': name,
@@ -683,7 +692,10 @@ class RepairLine(models.Model):
         product = self.product_id
         self.name = product.display_name
         if product.description_sale:
-            self.name += '\n' + product.description_sale
+            if partner:
+                self.name += '\n' + self.product_id.with_context(lang=partner.lang).description_sale
+            else:
+                self.name += '\n' + self.product_id.description_sale
         self.product_uom = product.uom_id.id
         if self.type != 'remove':
             if partner:
@@ -762,10 +774,16 @@ class RepairFee(models.Model):
         if partner and self.product_id:
             fpos = self.env['account.fiscal.position'].get_fiscal_position(partner_invoice.id, delivery_id=self.repair_id.address_id.id)
             self.tax_id = fpos.map_tax(self.product_id.taxes_id, self.product_id, partner).ids
-        self.name = self.product_id.display_name
+        if partner:
+            self.name = self.product_id.with_context(lang=partner.lang).display_name
+        else:
+            self.name = self.product_id.display_name
         self.product_uom = self.product_id.uom_id.id
         if self.product_id.description_sale:
-            self.name += '\n' + self.product_id.description_sale
+            if partner:
+                self.name += '\n' + self.product_id.with_context(lang=partner.lang).description_sale
+            else:
+                self.name += '\n' + self.product_id.description_sale
 
         warning = False
         if not pricelist:

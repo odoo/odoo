@@ -7,18 +7,14 @@
             <field name="inherit_id" ref="account.account_invoice_send_wizard_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//div[@name='mail_form']" position='before'>
-                    <div name="edi_format_option">
+                    <div name="edi_format_option" attrs="{'invisible':[('edi_format_ids', '=', [])]}">
                         <group>
                             <label for="edi_format_ids"/>
                             <div class="oe_inline">
                                 <field name="edi_format_ids"
                                         nolabel="1"
                                         widget="many2many_tags" 
-                                        placeholder="You can set default electronic invoicing formats on the journal"
-                                        attrs="{'invisible':[('edi_format_ids', '=', [])]}"/>
-                                <div attrs="{'invisible':[('edi_format_ids', '!=', [])]}">
-                                    <i>Please, set electronic invoicing formats on the journal</i>
-                                </div>
+                                        placeholder="You can set default electronic invoicing formats on the journal"/>
                             </div>
                         </group>
                     </div>

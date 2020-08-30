@@ -123,7 +123,7 @@ class ResUsers(models.Model):
             invite_partner = user.create_uid.partner_id
             if invite_partner:
                 # notify invite user that new user is connected
-                title = _("%s connected") % user.name
+                title = _("%s connected", user.name)
                 message = _("This is his first connection. Wish him welcome")
                 self.env['bus.bus'].sendone(
                     (self._cr.dbname, 'res.partner', invite_partner.id),
@@ -196,7 +196,7 @@ class ResUsers(models.Model):
 
         for user in self:
             if not user.email:
-                raise UserError(_("Cannot send email: user %s has no email address.") % user.name)
+                raise UserError(_("Cannot send email: user %s has no email address.", user.name))
             # TDE FIXME: make this template technical (qweb)
             with self.env.cr.savepoint():
                 force_send = not(self.env.context.get('import_file', False))

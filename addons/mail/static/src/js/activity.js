@@ -213,7 +213,6 @@ var BasicActivity = AbstractField.extend({
     /**
      * @private
      * @param {integer} id
-     * @param {integer} previousActivityTypeID
      * @param {function} callback
      * @return {Promise}
      */
@@ -544,6 +543,7 @@ var BasicActivity = AbstractField.extend({
 // -----------------------------------------------------------------------------
 // Activities Widget for Form views ('mail_activity' widget)
 // -----------------------------------------------------------------------------
+// FIXME seems to still be needed in some cases like systray
 var Activity = BasicActivity.extend({
     className: 'o_mail_activity',
     events: _.extend({}, BasicActivity.prototype.events, {
@@ -768,6 +768,7 @@ const ListActivity = KanbanActivity.extend({
     fieldDependencies: _.extend({}, KanbanActivity.prototype.fieldDependencies, {
         activity_summary: {type: 'char'},
         activity_type_id: {type: 'many2one', relation: 'mail.activity.type'},
+        activity_type_icon: {type: 'char'},
     }),
     label: _lt('Next Activity'),
 
@@ -794,6 +795,9 @@ const ListActivity = KanbanActivity.extend({
                           this.recordData.activity_type_id.data.display_name;
             }
             this.$('.o_activity_summary').text(text);
+        }
+        if (this.recordData.activity_type_icon) {
+            this.el.querySelector('.o_activity_btn > span').classList.replace('fa-clock-o', this.recordData.activity_type_icon);
         }
     },
 
@@ -855,7 +859,6 @@ var ActivityException = AbstractField.extend({
 });
 
 field_registry
-    .add('mail_activity', Activity)
     .add('kanban_activity', KanbanActivity)
     .add('list_activity', ListActivity)
     .add('activity_exception', ActivityException);

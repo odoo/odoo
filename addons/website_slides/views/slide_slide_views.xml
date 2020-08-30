@@ -144,8 +144,8 @@
                         </notebook>
                     </sheet>
                     <div class="oe_chatter">
-                        <field name="message_follower_ids" widget="mail_followers"/>
-                        <field name="message_ids" widget="mail_thread"/>
+                        <field name="message_follower_ids"/>
+                        <field name="message_ids"/>
                     </div>
                 </form>
             </field>
@@ -169,7 +169,8 @@
             <field name="arch" type="xml">
                 <kanban edit="false" group_create="0"
                     records_draggable="0"
-                    class="o_slide_kanban">
+                    class="o_slide_kanban"
+                    sample="1">
                     <field name="id"/>
                     <field name="channel_id"/>
                     <field name="slide_type"/>
@@ -238,7 +239,7 @@
             <field name="name">slide.slide.tree</field>
             <field name="model">slide.slide</field>
             <field name="arch" type="xml">
-                <tree string="Contents">
+                <tree string="Contents" sample="1">
                     <field name="name"/>
                     <field name="website_id" groups="website.group_multi_website"/>
                     <field name="active" invisible="1"/>
@@ -277,7 +278,7 @@
             <field name="name">slide.slide.view.graph</field>
             <field name="model">slide.slide</field>
             <field name="arch" type="xml">
-                <graph string="Graph of Contents" stacked="False">
+                <graph string="Graph of Contents" stacked="False" sample="1">
                     <field name="channel_id" type="row"/>
                     <field name="slide_type" type="col"/>
                     <field name="total_views" type="measure"/>
@@ -289,7 +290,7 @@
             <field name="name">slide.slide.view.pivot</field>
             <field name="model">slide.slide</field>
             <field name="arch" type="xml">
-                <pivot>
+                <pivot sample="1">
                     <field name="channel_id" type="row"/>
                     <field name="total_views" type="measure"/>
                 </pivot>
@@ -315,6 +316,13 @@
             <field name="res_model">slide.slide</field>
             <field name="view_mode">graph,tree,form,pivot</field>
             <field name="view_id" ref="slide_slide_view_graph"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No data yet!
+                </p><p>
+                    Create new content for your eLearning
+                </p>
+            </field>
         </record>
     </data>
 </odoo>

@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from datetime import datetime
+from datetime import datetime, time
 from dateutil.relativedelta import relativedelta
 from itertools import groupby
+from pytz import timezone, UTC
 from werkzeug.urls import url_encode
 
 from odoo import api, fields, models, SUPERUSER_ID, _
@@ -17,7 +18,7 @@ class PurchaseOrder(models.Model):
     _name = "purchase.order"
     _inherit = ['mail.thread', 'mail.activity.mixin', 'portal.mixin']
     _description = "Purchase Order"
-    _order = 'date_order desc, id desc'
+    _order = 'priority desc, date_order desc, id desc'
 
     @api.depends('order_line.price_total')
     def _amount_all(self):
@@ -70,6 +71,8 @@ class PurchaseOrder(models.Model):
     }
 
     name = fields.Char('Order Reference', required=True, index=True, copy=False, default='New')
+    priority = fields.Selection(
+        [('0', 'Normal'), ('1', 'Urgent')], 'Priority', default='0', index=True)
     origin = fields.Char('Source Document', copy=False,
         help="Reference of the document that generated this purchase order "
              "request (e.g. a sales order)")
@@ -106,10 +109,8 @@ class PurchaseOrder(models.Model):
         ('invoiced', 'Fully Billed'),
     ], string='Billing Status', compute='_get_invoiced', store=True, readonly=True, copy=False, default='no')
     date_planned = fields.Datetime(
-        string='Receipt Date', index=True, copy=False,
+        string='Receipt Date', index=True, copy=False, compute='_compute_date_planned', store=True, readonly=False,
         help="Delivery date promised by vendor. This date is used to determine expected arrival of products.")
-    expected_date = fields.Datetime("Expected Date", compute='_compute_expected_date', store=True,
-        help="Delivery date expected by vendor, computed from the minimum lead time of the order lines.")
     date_calendar_start = fields.Datetime(compute='_compute_date_calendar_start', readonly=True, store=True)
 
     amount_untaxed = fields.Monetary(string='Untaxed Amount', store=True, readonly=True, compute='_amount_all', tracking=True)
@@ -130,10 +131,8 @@ class PurchaseOrder(models.Model):
     mail_reminder_confirmed = fields.Boolean("Reminder Confirmed", default=False, readonly=True, copy=False, help="True if the reminder email is confirmed by the vendor.")
     mail_reception_confirmed = fields.Boolean("Reception Confirmed", default=False, readonly=True, copy=False, help="True if PO reception is confirmed by the vendor.")
 
-    receipt_reminder_email = fields.Boolean('Receipt Reminder Email', related='partner_id.receipt_reminder_email', readonly=False,
-        help='Automatically send a reminder email to your vendors before receipt')
-    reminder_date_before_receipt = fields.Integer('Days Before Receipt', related='partner_id.reminder_date_before_receipt', readonly=False,
-        help="Number of days to send reminder email before the promised receipt date")
+    receipt_reminder_email = fields.Boolean('Receipt Reminder Email', related='partner_id.receipt_reminder_email', readonly=False)
+    reminder_date_before_receipt = fields.Integer('Days Before Receipt', related='partner_id.reminder_date_before_receipt', readonly=False)
 
     @api.constrains('company_id', 'order_line')
     def _check_order_line_company_id(self):
@@ -141,7 +140,12 @@ class PurchaseOrder(models.Model):
             companies = order.order_line.product_id.company_id
             if companies and companies != order.company_id:
                 bad_products = order.order_line.product_id.filtered(lambda p: p.company_id and p.company_id != order.company_id)
-                raise ValidationError((_("Your quotation contains products from company %s whereas your quotation belongs to company %s. \n Please change the company of your quotation or remove the products from other companies (%s).") % (', '.join(companies.mapped('display_name')), order.company_id.display_name, ', '.join(bad_products.mapped('display_name')))))
+                raise ValidationError(_(
+                    "Your quotation contains products from company %(product_company)s whereas your quotation belongs to company %(quote_company)s. \n Please change the company of your quotation or remove the products from other companies (%(bad_products)s).",
+                    product_company=', '.join(companies.mapped('display_name')),
+                    quote_company=order.company_id.display_name,
+                    bad_products=', '.join(bad_products.mapped('display_name')),
+                ))
 
     def _compute_access_url(self):
         super(PurchaseOrder, self)._compute_access_url()
@@ -159,8 +163,7 @@ class PurchaseOrder(models.Model):
         domain = []
         if name:
             domain = ['|', ('name', operator, name), ('partner_ref', operator, name)]
-        purchase_order_ids = self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
-        return models.lazy_name_get(self.browse(purchase_order_ids).with_user(name_get_uid))
+        return self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
 
     @api.depends('date_order', 'currency_id', 'company_id', 'company_id.currency_id')
     def _compute_currency_rate(self):
@@ -168,11 +171,14 @@ class PurchaseOrder(models.Model):
             order.currency_rate = self.env['res.currency']._get_conversion_rate(order.company_id.currency_id, order.currency_id, order.company_id, order.date_order)
 
     @api.depends('order_line.date_planned')
-    def _compute_expected_date(self):
-        """ expected_date = the earliest date_planned across all order lines. """
+    def _compute_date_planned(self):
+        """ date_planned = the earliest date_planned across all order lines. """
         for order in self:
-            dates_list = order.order_line.filtered(lambda x: not x.display_type).mapped('date_planned')
-            order.expected_date = fields.Datetime.to_string(min(dates_list)) if dates_list else False
+            dates_list = order.order_line.filtered(lambda x: not x.display_type and x.date_planned).mapped('date_planned')
+            if dates_list:
+                order.date_planned = fields.Datetime.to_string(min(dates_list))
+            else:
+                order.date_planned = False
 
     @api.depends('name', 'partner_ref')
     def name_get(self):
@@ -218,6 +224,17 @@ class PurchaseOrder(models.Model):
                     date=line.order_id.date_order and line.order_id.date_order.date(), uom_id=line.product_uom)
                 line.date_planned = line._get_date_planned(seller)
         return new_po
+
+    def onchange(self, values, field_name, field_onchange):
+        """Override onchange to NOT to update all date_planned on PO lines when
+        date_planned on PO is updated by the change of date_planned on PO lines.
+        """
+        result = super(PurchaseOrder, self).onchange(values, field_name, field_onchange)
+        if field_name == 'order_line' and 'value' in result:
+            for line in result['value'].get('order_line', []):
+                if line[0] < 2 and 'date_planned' in line[2]:
+                    del line[2]['date_planned']
+        return result
 
     def _track_subtype(self, init_values):
         self.ensure_one()
@@ -273,7 +290,7 @@ class PurchaseOrder(models.Model):
             # Block if partner only has warning but parent company is blocked
             if partner.purchase_warn != 'block' and partner.parent_id and partner.parent_id.purchase_warn == 'block':
                 partner = partner.parent_id
-            title = _("Warning for %s") % partner.name
+            title = _("Warning for %s", partner.name)
             message = partner.purchase_warn_msg
             warning = {
                 'title': title,
@@ -390,7 +407,7 @@ class PurchaseOrder(models.Model):
         self.write({'state': 'purchase'})
 
     def button_done(self):
-        self.write({'state': 'done'})
+        self.write({'state': 'done', 'priority': '0'})
 
     def _add_supplier_to_product(self):
         # Add the partner in the supplier list of the product if the supplier is not registered for
@@ -445,6 +462,7 @@ class PurchaseOrder(models.Model):
             if order.invoice_status != 'to invoice':
                 continue
 
+            order = order.with_company(order.company_id)
             pending_section = None
             # Invoice values.
             invoice_vals = order._prepare_invoice()
@@ -503,7 +521,6 @@ class PurchaseOrder(models.Model):
         """Prepare the dict of values to create the new invoice for a purchase order.
         """
         self.ensure_one()
-        self = self.with_company(self.company_id)
         move_type = self._context.get('default_move_type', 'in_invoice')
         journal = self.env['account.move'].with_context(default_move_type=move_type)._get_default_journal()
         if not journal:
@@ -523,7 +540,7 @@ class PurchaseOrder(models.Model):
             'invoice_origin': self.name,
             'invoice_payment_term_id': self.payment_term_id.id,
             'invoice_line_ids': [],
-            'company_id': self.company_id
+            'company_id': self.company_id.id,
         }
         return invoice_vals
 
@@ -539,7 +556,7 @@ class PurchaseOrder(models.Model):
             self.sudo()._read(['invoice_ids'])
             invoices = self.invoice_ids
 
-        action = self.env.ref('account.action_move_in_invoice_type')
+        action = self.env.ref('account.action_move_in_invoice_type').sudo()
         result = action.read()[0]
         # choose the view_mode accordingly
         if len(invoices) > 1:
@@ -603,8 +620,8 @@ class PurchaseOrder(models.Model):
         result['my_to_send'] = po.search_count([('state', '=', 'draft'), ('user_id', '=', self.env.uid)])
         result['all_waiting'] = po.search_count([('state', '=', 'sent'), ('date_order', '>=', fields.Datetime.now())])
         result['my_waiting'] = po.search_count([('state', '=', 'sent'), ('date_order', '>=', fields.Datetime.now()), ('user_id', '=', self.env.uid)])
-        result['all_late'] = po.search_count([('state', '=', 'sent'), ('date_order', '<', fields.Datetime.now())])
-        result['my_late'] = po.search_count([('state', '=', 'sent'), ('date_order', '<', fields.Datetime.now()), ('user_id', '=', self.env.uid)])
+        result['all_late'] = po.search_count([('state', 'in', ['draft', 'sent', 'to approve']), ('date_order', '<', fields.Datetime.now())])
+        result['my_late'] = po.search_count([('state', 'in', ['draft', 'sent', 'to approve']), ('date_order', '<', fields.Datetime.now()), ('user_id', '=', self.env.uid)])
 
         # Calculated values ('avg order value', 'avg days to purchase', and 'total last 7 days') note that 'avg order value' and
         # 'total last 7 days' takes into account exchange rate and current company's currency's precision. Min of currency precision
@@ -628,23 +645,39 @@ class PurchaseOrder(models.Model):
 
         return result
 
-    @api.model
-    def _send_reminder_mail(self):
-        if not self.user_has_groups('purchase.group_send_reminder') and not self.receipt_reminder_email:
+    def _send_reminder_mail(self, send_single=False):
+        if not self.user_has_groups('purchase.group_send_reminder'):
             return
 
         template = self.env.ref('purchase.email_template_edi_purchase_reminder', raise_if_not_found=False)
         if template:
-            for order in self._get_orders_to_remind():
-                date = order.date_planned or order.expected_date
-                if date and (date - relativedelta(days=order.reminder_date_before_receipt)).date() == datetime.today().date():
+            orders = self if send_single else self._get_orders_to_remind()
+            for order in orders:
+                date = order.date_planned
+                if date and (send_single or (date - relativedelta(days=order.reminder_date_before_receipt)).date() == datetime.today().date()):
                     order.with_context(is_reminder=True).message_post_with_template(template.id, email_layout_xmlid="mail.mail_notification_paynow", composition_mode='comment')
+
+    def send_reminder_preview(self):
+        if not self.user_has_groups('purchase.group_send_reminder') and not self.receipt_reminder_email:
+            return
+
+        template = self.env.ref('purchase.email_template_edi_purchase_reminder', raise_if_not_found=False)
+        if template and self.env.user.email:
+            for order in self:
+                template.with_context(is_reminder=True).send_mail(
+                    order.id,
+                    force_send=True,
+                    raise_exception=False,
+                    email_values={'email_to': self.env.user.email, 'recipient_ids': []},
+                    notif_layout="mail.mail_notification_paynow")
+            return {'toast_message': _("A sample email has been sent to %s.") % self.env.user.email}
 
     @api.model
     def _get_orders_to_remind(self):
         """When auto sending a reminder mail, only send for unconfirmed purchase
         order and not all products are service."""
         return self.search([
+            ('receipt_reminder_email', '=', True),
             ('state', 'in', ['purchase', 'done']),
             ('mail_reminder_confirmed', '=', False)
         ]).filtered(lambda p: p.mapped('order_line.product_id.product_tmpl_id.type') != ['service'])
@@ -655,7 +688,7 @@ class PurchaseOrder(models.Model):
         if confirm_type in ['reminder', 'reception']:
             param = url_encode({
                 'confirm': confirm_type,
-                'confirmed_date': (self.date_planned or self.expected_date).date(),
+                'confirmed_date': self.date_planned and self.date_planned.date(),
             })
             return self.get_portal_url(query_string='&%s' % param)
         return self.get_portal_url()
@@ -670,7 +703,7 @@ class PurchaseOrder(models.Model):
         for order in self:
             if order.state in ['purchase', 'done'] and not order.mail_reminder_confirmed:
                 order.mail_reminder_confirmed = True
-                date = confirmed_date or (self.date_planned or self.expected_date).date()
+                date = confirmed_date or self.date_planned.date()
                 order.message_post(body="%s confirmed the receipt will take place on %s." % (order.partner_id.name, date))
 
     def _confirm_reception_mail(self):
@@ -680,25 +713,39 @@ class PurchaseOrder(models.Model):
                 order.message_post(body="The order receipt has been acknowledged by %s." % order.partner_id.name)
 
     def _update_date_planned_for_lines(self, updated_dates):
-        if updated_dates:
-            note = self._compose_note(updated_dates)
-            self.activity_schedule(
-                'mail.mail_activity_data_warning',
-                summary="Date Updated",
-                note=note,
-                user_id=self.user_id.id
-            )
+        # create or update the activity
+        activity = self.env['mail.activity'].search([
+            ('summary', '=', _('Date Updated')),
+            ('res_model_id', '=', 'purchase.order'),
+            ('res_id', '=', self.id),
+            ('user_id', '=', self.user_id.id)], limit=1)
+        if activity:
+            self._update_update_date_activity(updated_dates, activity)
+        else:
+            self._create_update_date_activity(updated_dates)
 
-            for line, date in updated_dates:
-                line._update_date_planned(date)
+        # update the date on PO line
+        for line, date in updated_dates:
+            line._update_date_planned(date)
 
-    def _compose_note(self, updated_dates):
-        """Helper method for creating log note when user update scheduled date
-        on portal website."""
+    def _create_update_date_activity(self, updated_dates):
         note = _('<p> %s modified receipt dates for the following products:</p>') % self.partner_id.name
         for line, date in updated_dates:
-            note += _('<p> &nbsp; - %s from %s to %s </p>') % (line.product_id.display_name, line.date_planned, date)
-        return note
+            note += _('<p> &nbsp; - %s from %s to %s </p>') % (line.product_id.display_name, line.date_planned.date(), date.date())
+        activity = self.activity_schedule(
+            'mail.mail_activity_data_warning',
+            summary=_("Date Updated"),
+            user_id=self.user_id.id
+        )
+        # add the note after we post the activity because the note can be soon
+        # changed when updating the date of the next PO line. So instead of
+        # sending a mail with incomplete note, we send one with no note.
+        activity.note = note
+        return activity
+
+    def _update_update_date_activity(self, updated_dates, activity):
+        for line, date in updated_dates:
+            activity.note += _('<p> &nbsp; - %s from %s to %s </p>') % (line.product_id.display_name, line.date_planned.date(), date.date())
 
 
 class PurchaseOrderLine(models.Model):
@@ -710,7 +757,7 @@ class PurchaseOrderLine(models.Model):
     sequence = fields.Integer(string='Sequence', default=10)
     product_qty = fields.Float(string='Quantity', digits='Product Unit of Measure', required=True)
     product_uom_qty = fields.Float(string='Total Quantity', compute='_compute_product_uom_qty', store=True)
-    date_planned = fields.Datetime(string='Scheduled Date', index=True,
+    date_planned = fields.Datetime(string='Delivery Date', index=True,
         help="Delivery date expected from vendor. This date respectively defaults to vendor pricelist lead time then today's date.")
     taxes_id = fields.Many2many('account.tax', string='Taxes', domain=['|', ('active', '=', False), ('active', '=', True)])
     product_uom = fields.Many2one('uom.uom', string='Unit of Measure', domain="[('category_id', '=', product_uom_category_id)]")
@@ -866,13 +913,19 @@ class PurchaseOrderLine(models.Model):
 
     def write(self, values):
         if 'display_type' in values and self.filtered(lambda line: line.display_type != values.get('display_type')):
-            raise UserError("You cannot change the type of a purchase order line. Instead you should delete the current line and create a new line of the proper type.")
+            raise UserError(_("You cannot change the type of a purchase order line. Instead you should delete the current line and create a new line of the proper type."))
 
         if 'product_qty' in values:
             for line in self:
                 if line.order_id.state == 'purchase':
                     line.order_id.message_post_with_view('purchase.track_po_line_template',
                                                          values={'line': line, 'product_qty': values['product_qty']},
+                                                         subtype_id=self.env.ref('mail.mt_note').id)
+        if 'qty_received' in values:
+            for line in self:
+                if values['qty_received'] != line.qty_received and line.order_id.state == 'purchase':
+                    line.order_id.message_post_with_view('purchase.track_po_line_qty_received_template',
+                                                         values={'line': line, 'qty_received': values['qty_received']},
                                                          subtype_id=self.env.ref('mail.mt_note').id)
         return super(PurchaseOrderLine, self).write(values)
 
@@ -897,9 +950,10 @@ class PurchaseOrderLine(models.Model):
         """
         date_order = po.date_order if po else self.order_id.date_order
         if date_order:
-            return date_order + relativedelta(days=seller.delay if seller else 0)
+            date_planned = date_order + relativedelta(days=seller.delay if seller else 0)
         else:
-            return datetime.today() + relativedelta(days=seller.delay if seller else 0)
+            date_planned = datetime.today() + relativedelta(days=seller.delay if seller else 0)
+        return self._convert_to_middle_of_day(date_planned)
 
     @api.depends('product_id', 'date_order')
     def _compute_analytic_id_and_tag_ids(self):
@@ -920,7 +974,7 @@ class PurchaseOrderLine(models.Model):
             return
 
         # Reset date, price and quantity since _onchange_quantity will provide default values
-        self.date_planned = self.order_id.date_planned or datetime.today().strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+        self.date_planned = self.order_id.date_planned or self._convert_to_middle_of_day(datetime.today())
         self.price_unit = self.product_qty = 0.0
 
         self._product_id_change()
@@ -953,7 +1007,7 @@ class PurchaseOrderLine(models.Model):
         product_info = self.product_id
 
         if product_info.purchase_line_warn != 'no-message':
-            title = _("Warning for %s") % product_info.name
+            title = _("Warning for %s", product_info.name)
             message = product_info.purchase_line_warn_msg
             warning['title'] = title
             warning['message'] = message
@@ -1109,6 +1163,12 @@ class PurchaseOrderLine(models.Model):
             'taxes_id': [(6, 0, taxes_id.ids)],
             'order_id': po.id,
         }
+
+    def _convert_to_middle_of_day(self, date):
+        """Return a datetime which is the last minute of the input date(time)
+        according to order user's time zone, convert to UTC time.
+        """
+        return timezone(self.order_id.user_id.tz or self.company_id.partner_id.tz or 'UTC').localize(datetime.combine(date, time(12))).astimezone(UTC).replace(tzinfo=None)
 
     def _update_date_planned(self, updated_date):
         self.date_planned = updated_date

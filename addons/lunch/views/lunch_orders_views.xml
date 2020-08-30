@@ -31,6 +31,9 @@
         <field name="model">lunch.order</field>
         <field name="arch" type="xml">
             <tree string="Order lines Tree" create="false" edit="false" decoration-muted="state == 'cancelled'" class="o_lunch_list">
+                <header>
+                    <button name="action_confirm" type="object" string="Receive"/>
+                </header>
                 <field name='date'/>
                 <field name='supplier_id' invisible='1'/>
                 <field name='product_id'/>
@@ -107,7 +110,7 @@
         <field name="name">lunch.order.pivot</field>
         <field name="model">lunch.order</field>
         <field name="arch" type="xml">
-            <pivot>
+            <pivot sample="1">
                 <field name="date" type="col"/>
                 <field name="supplier_id" type="row"/>
             </pivot>
@@ -118,7 +121,7 @@
         <field name="name">lunch.order.graph</field>
         <field name="model">lunch.order</field>
         <field name="arch" type="xml">
-            <graph>
+            <graph sample="1">
                 <field name="product_id" type="col"/>
             </graph>
         </field>

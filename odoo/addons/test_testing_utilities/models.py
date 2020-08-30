@@ -280,12 +280,26 @@ class ReqBool(models.Model):
 
     f_bool = fields.Boolean(required=True)
 
+class O2MChangesParent(models.Model):
+    _name = _description = 'o2m_changes_parent'
+
+    name = fields.Char()
+    line_ids = fields.One2many('o2m_changes_children', 'parent_id')
+
+    @api.onchange('name')
+    def _onchange_name(self):
+        for line in self.line_ids:
+            line.line_ids = [(2, l.id, False) for l in line.line_ids] + [
+                (0, 0, {'v': 0, 'vv': 0})
+            ]
+
 class O2MChangesChildren(models.Model):
     _name = _description = 'o2m_changes_children'
 
     name = fields.Char()
     v = fields.Integer()
     line_ids = fields.One2many('o2m_changes_children.lines', 'parent_id')
+    parent_id = fields.Many2one('o2m_changes_parent')
 
     @api.onchange('v')
     def _onchange_v(self):

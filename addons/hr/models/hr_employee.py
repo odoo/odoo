@@ -36,6 +36,7 @@ class HrEmployeePrivate(models.Model):
     user_id = fields.Many2one('res.users', 'User', related='resource_id.user_id', store=True, readonly=False)
     user_partner_id = fields.Many2one(related='user_id.partner_id', related_sudo=False, string="User's partner")
     active = fields.Boolean('Active', related='resource_id.active', default=True, store=True, readonly=False)
+    company_id = fields.Many2one('res.company',required=True)
     # private partner
     address_home_id = fields.Many2one(
         'res.partner', 'Address', help='Enter here the private address of the employee, not the one linked to your company.',
@@ -81,15 +82,17 @@ class HrEmployeePrivate(models.Model):
     visa_expire = fields.Date('Visa Expire Date', groups="hr.group_hr_user", tracking=True)
     additional_note = fields.Text(string='Additional Note', groups="hr.group_hr_user", tracking=True)
     certificate = fields.Selection([
+        ('graduate', 'Graduate'),
         ('bachelor', 'Bachelor'),
         ('master', 'Master'),
+        ('doctor', 'Doctor'),
         ('other', 'Other'),
     ], 'Certificate Level', default='other', groups="hr.group_hr_user", tracking=True)
     study_field = fields.Char("Field of Study", groups="hr.group_hr_user", tracking=True)
     study_school = fields.Char("School", groups="hr.group_hr_user", tracking=True)
     emergency_contact = fields.Char("Emergency Contact", groups="hr.group_hr_user", tracking=True)
     emergency_phone = fields.Char("Emergency Phone", groups="hr.group_hr_user", tracking=True)
-    km_home_work = fields.Integer(string="Km Home-Work", groups="hr.group_hr_user", tracking=True)
+    km_home_work = fields.Integer(string="Home-Work Distance", groups="hr.group_hr_user", tracking=True)
 
     image_1920 = fields.Image(default=_default_image)
     phone = fields.Char(related='address_home_id.phone', related_sudo=False, string="Private Phone", groups="hr.group_hr_user")
@@ -195,7 +198,7 @@ class HrEmployeePrivate(models.Model):
     @api.onchange('user_id')
     def _onchange_user(self):
         if self.user_id:
-            self.update(self._sync_user(self.user_id))
+            self.update(self._sync_user(self.user_id, bool(self.image_1920)))
             if not self.name:
                 self.name = self.user_id.name
 
@@ -204,12 +207,13 @@ class HrEmployeePrivate(models.Model):
         if self.resource_calendar_id and not self.tz:
             self.tz = self.resource_calendar_id.tz
 
-    def _sync_user(self, user):
+    def _sync_user(self, user, employee_has_image=False):
         vals = dict(
-            image_1920=user.image_1920,
             work_email=user.email,
             user_id=user.id,
         )
+        if not employee_has_image:
+            vals['image_1920'] = user.image_1920
         if user.tz:
             vals['tz'] = user.tz
         return vals
@@ -218,10 +222,15 @@ class HrEmployeePrivate(models.Model):
     def create(self, vals):
         if vals.get('user_id'):
             user = self.env['res.users'].browse(vals['user_id'])
-            vals.update(self._sync_user(user))
+            vals.update(self._sync_user(user, vals.get('image_1920') == self._default_image()))
             vals['name'] = vals.get('name', user.name)
         employee = super(HrEmployeePrivate, self).create(vals)
-        url = '/web#%s' % url_encode({'action': 'hr.plan_wizard_action', 'active_id': employee.id, 'active_model': 'hr.employee'})
+        url = '/web#%s' % url_encode({
+            'action': 'hr.plan_wizard_action',
+            'active_id': employee.id,
+            'active_model': 'hr.employee',
+            'menu_id': self.env.ref('hr.menu_hr_root').id,
+        })
         employee._message_log(body=_('<b>Congratulations!</b> May I recommend you to setup an <a href="%s">onboarding plan?</a>') % (url))
         if employee.department_id:
             self.env['mail.channel'].sudo().search([
@@ -235,7 +244,8 @@ class HrEmployeePrivate(models.Model):
             if account_id:
                 self.env['res.partner.bank'].browse(account_id).partner_id = vals['address_home_id']
         if vals.get('user_id'):
-            vals.update(self._sync_user(self.env['res.users'].browse(vals['user_id'])))
+            # Update the profile pictures with user, except if provided 
+            vals.update(self._sync_user(self.env['res.users'].browse(vals['user_id']), bool(vals.get('image_1920'))))
         res = super(HrEmployeePrivate, self).write(vals)
         if vals.get('department_id') or vals.get('user_id'):
             department_id = vals['department_id'] if vals.get('department_id') else self[:1].department_id.id

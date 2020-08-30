@@ -143,7 +143,7 @@ publicWidget.registry.crmPartnerAssign = publicWidget.Widget.extend({
             method: 'update_lead_portal',
             args: [[parseInt($('.edit_opp_form .opportunity_id').val())], {
                 date_deadline: this._parse_date($('.edit_opp_form .date_deadline').val()),
-                planned_revenue: parseFloat($('.edit_opp_form .planned_revenue').val()),
+                expected_revenue: parseFloat($('.edit_opp_form .expected_revenue').val()),
                 probability: parseFloat($('.edit_opp_form .probability').val()),
                 activity_type_id: parseInt($('.edit_opp_form .next_activity').find(':selected').attr('data')),
                 activity_summary: $('.edit_opp_form .activity_summary').val(),

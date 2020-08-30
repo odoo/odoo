@@ -30,8 +30,10 @@ class Project(models.Model):
     def _plan_prepare_values(self):
         currency = self.env.company.currency_id
         uom_hour = self.env.ref('uom.product_uom_hour')
+        company_uom = self.env.company.timesheet_encode_uom_id
+        is_uom_day = company_uom == self.env.ref('uom.product_uom_day')
         hour_rounding = uom_hour.rounding
-        billable_types = ['non_billable', 'non_billable_project', 'billable_time', 'billable_fixed']
+        billable_types = ['non_billable', 'non_billable_project', 'billable_time', 'non_billable_timesheet', 'billable_fixed']
 
         values = {
             'projects': self,
@@ -39,13 +41,14 @@ class Project(models.Model):
             'timesheet_domain': [('project_id', 'in', self.ids)],
             'profitability_domain': [('project_id', 'in', self.ids)],
             'stat_buttons': self._plan_get_stat_button(),
+            'is_uom_day': is_uom_day,
         }
 
         #
         # Hours, Rates and Profitability
         #
         dashboard_values = {
-            'hours': dict.fromkeys(billable_types + ['total'], 0.0),
+            'time': dict.fromkeys(billable_types + ['total'], 0.0),
             'rates': dict.fromkeys(billable_types + ['total'], 0.0),
             'profit': {
                 'invoiced': 0.0,
@@ -58,8 +61,12 @@ class Project(models.Model):
         # hours from non-invoiced timesheets that are linked to canceled so
         canceled_hours_domain = [('project_id', 'in', self.ids), ('timesheet_invoice_type', '!=', False), ('so_line.state', '=', 'cancel')]
         total_canceled_hours = sum(self.env['account.analytic.line'].search(canceled_hours_domain).mapped('unit_amount'))
-        dashboard_values['hours']['canceled'] = float_round(total_canceled_hours, precision_rounding=hour_rounding)
-        dashboard_values['hours']['total'] += float_round(total_canceled_hours, precision_rounding=hour_rounding)
+        canceled_hours = float_round(total_canceled_hours, precision_rounding=hour_rounding)
+        if is_uom_day:
+            # convert time from hours to days
+            canceled_hours = round(uom_hour._compute_quantity(canceled_hours, company_uom, raise_if_failure=False), 2)
+        dashboard_values['time']['canceled'] = canceled_hours
+        dashboard_values['time']['total'] += canceled_hours
 
         # hours (from timesheet) and rates (by billable type)
         dashboard_domain = [('project_id', 'in', self.ids), ('timesheet_invoice_type', '!=', False), '|', ('so_line', '=', False), ('so_line.state', '!=', 'cancel')]  # force billable type
@@ -67,12 +74,17 @@ class Project(models.Model):
         dashboard_total_hours = sum([data['unit_amount'] for data in dashboard_data]) + total_canceled_hours
         for data in dashboard_data:
             billable_type = data['timesheet_invoice_type']
-            dashboard_values['hours'][billable_type] = float_round(data.get('unit_amount'), precision_rounding=hour_rounding)
-            dashboard_values['hours']['total'] += float_round(data.get('unit_amount'), precision_rounding=hour_rounding)
+            amount = float_round(data.get('unit_amount'), precision_rounding=hour_rounding)
+            if is_uom_day:
+                # convert time from hours to days
+                amount = round(uom_hour._compute_quantity(amount, company_uom, raise_if_failure=False), 2)
+            dashboard_values['time'][billable_type] = amount
+            dashboard_values['time']['total'] += amount
             # rates
             rate = round(data.get('unit_amount') / dashboard_total_hours * 100, 2) if dashboard_total_hours else 0.0
             dashboard_values['rates'][billable_type] = rate
             dashboard_values['rates']['total'] += rate
+        dashboard_values['time']['total'] = round(dashboard_values['time']['total'], 2)
 
         # rates from non-invoiced timesheets that are linked to canceled so
         dashboard_values['rates']['canceled'] = float_round(100 * total_canceled_hours / (dashboard_total_hours or 1), precision_rounding=hour_rounding)
@@ -128,6 +140,7 @@ class Project(models.Model):
                 non_billable_project=0.0,
                 non_billable=0.0,
                 billable_time=0.0,
+                non_billable_timesheet=0.0,
                 billable_fixed=0.0,
                 canceled=0.0,
                 total=0.0,
@@ -140,6 +153,7 @@ class Project(models.Model):
                 non_billable_project=0.0,
                 non_billable=0.0,
                 billable_time=0.0,
+                non_billable_timesheet=0.0,
                 billable_fixed=0.0,
                 canceled=0.0,
                 total=0.0,
@@ -148,6 +162,11 @@ class Project(models.Model):
         # compute total
         for employee_id, vals in repartition_employee.items():
             repartition_employee[employee_id]['total'] = sum([vals[inv_type] for inv_type in [*billable_types, 'canceled']])
+            if is_uom_day:
+                # convert all times from hours to days
+                for time_type in ['non_billable_project', 'non_billable', 'billable_time', 'non_billable_timesheet', 'billable_fixed', 'canceled', 'total']:
+                    if repartition_employee[employee_id][time_type]:
+                        repartition_employee[employee_id][time_type] = round(uom_hour._compute_quantity(repartition_employee[employee_id][time_type], company_uom, raise_if_failure=False), 2)
         hours_per_employee = [repartition_employee[employee_id]['total'] for employee_id in repartition_employee]
         values['repartition_employee_max'] = (max(hours_per_employee) if hours_per_employee else 1) or 1
         values['repartition_employee'] = repartition_employee
@@ -166,6 +185,8 @@ class Project(models.Model):
             return False
 
         uom_hour = self.env.ref('uom.product_uom_hour')
+        company_uom = self.env.company.timesheet_encode_uom_id
+        is_uom_day = company_uom and company_uom == self.env.ref('uom.product_uom_day')
 
         # build SQL query and fetch raw data
         query, query_params = self._table_rows_sql_query()
@@ -243,11 +264,18 @@ class Project(models.Model):
             timesheet_forecast_table_rows.append(sale_order_row)
             for sale_line_row_key, sale_line_row in rows_sale_line.items():
                 if sale_order_id == sale_line_row_key[0]:
+                    sale_order_row[0]['has_children'] = True
                     timesheet_forecast_table_rows.append(sale_line_row)
                     for employee_row_key, employee_row in rows_employee.items():
                         if sale_order_id == employee_row_key[0] and sale_line_row_key[1] == employee_row_key[1] and employee_row_key[2] in employees.ids:
+                            sale_line_row[0]['has_children'] = True
                             timesheet_forecast_table_rows.append(employee_row)
 
+        if is_uom_day:
+            # convert all values from hours to days
+            for row in timesheet_forecast_table_rows:
+                for index in range(1, len(row)):
+                    row[index] = round(uom_hour._compute_quantity(row[index], company_uom, raise_if_failure=False), 2)
         # complete table data
         return {
             'header': self._table_header(),
@@ -362,7 +390,7 @@ class Project(models.Model):
                 task_order_line_ids = [ol['sale_line_id'][0] for ol in task_order_line_ids]
 
             if self.env.user.has_group('sales_team.group_sale_salesman'):
-                if not self.sale_line_id and not task_order_line_ids:
+                if self.bill_type == 'customer_project' and self.allow_billable and not self.sale_order_id:
                     actions.append({
                         'label': _("Create a Sales Order"),
                         'type': 'action',
@@ -413,7 +441,8 @@ class Project(models.Model):
 
         # if only one project, add it in the context as default value
         tasks_domain = [('project_id', 'in', self.ids)]
-        tasks_context = self.env.context
+        tasks_context = self.env.context.copy()
+        tasks_context.pop('search_default_name', False)
         late_tasks_domain = [('project_id', 'in', self.ids), ('date_deadline', '<', fields.Date.to_string(fields.Date.today())), ('date_end', '=', False)]
         overtime_tasks_domain = [('project_id', 'in', self.ids), ('overtime', '>', 0), ('planned_hours', '>', 0)]
 
@@ -516,7 +545,7 @@ def _to_action_data(model=None, *, action=None, views=None, res_id=None, domain=
     # pass in either action or (model, views)
     if action:
         assert model is None and views is None
-        act = clean_action(action.read()[0])
+        act = clean_action(action.read()[0], env=action.env)
         model = act['res_model']
         views = act['views']
     # FIXME: search-view-id, possibly help?

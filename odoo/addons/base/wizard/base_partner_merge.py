@@ -41,9 +41,12 @@ class MergePartnerAutomatic(models.TransientModel):
         res = super(MergePartnerAutomatic, self).default_get(fields)
         active_ids = self.env.context.get('active_ids')
         if self.env.context.get('active_model') == 'res.partner' and active_ids:
-            res['state'] = 'selection'
-            res['partner_ids'] = [(6, 0, active_ids)]
-            res['dst_partner_id'] = self._get_ordered_partner(active_ids)[-1].id
+            if 'state' in fields:
+                res['state'] = 'selection'
+            if 'partner_ids' in fields:
+                res['partner_ids'] = [(6, 0, active_ids)]
+            if 'dst_partner_id' in fields:
+                res['dst_partner_id'] = self._get_ordered_partner(active_ids)[-1].id
         return res
 
     # Group by
@@ -311,19 +314,23 @@ class MergePartnerAutomatic(models.TransientModel):
 
         # Make the company of all related users consistent with destination partner company
         if dst_partner.company_id:
-            for user in partner_ids.mapped('user_ids'):
-                user.sudo().write({'company_ids': [(6, 0, [dst_partner.company_id.id])],
-                            'company_id': dst_partner.company_id.id})
+            partner_ids.mapped('user_ids').sudo().write({
+                'company_ids': [(4, dst_partner.company_id.id)],
+                'company_id': dst_partner.company_id.id
+            })
 
         # call sub methods to do the merge
         self._update_foreign_keys(src_partners, dst_partner)
         self._update_reference_fields(src_partners, dst_partner)
         self._update_values(src_partners, dst_partner)
 
-        _logger.info('(uid = %s) merged the partners %r with %s', self._uid, src_partners.ids, dst_partner.id)
+        self._log_merge_operation(src_partners, dst_partner)
 
         # delete source partner, since they are merged
         src_partners.unlink()
+
+    def _log_merge_operation(self, src_partners, dst_partner):
+        _logger.info('(uid = %s) merged the partners %r with %s', self._uid, src_partners.ids, dst_partner.id)
 
     # ----------------------------------------
     # Helpers

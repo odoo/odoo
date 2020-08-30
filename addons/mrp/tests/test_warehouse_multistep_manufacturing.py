@@ -133,6 +133,7 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
             warehouse.manufacture_steps = 'pbm_sam'
             warehouse.delivery_steps = 'pick_pack_ship'
         self.warehouse.flush()
+        self.env.ref('stock.route_warehouse0_mto').active = True
         self.env['stock.quant']._update_available_quantity(self.raw_product, self.warehouse.lot_stock_id, 4.0)
         picking_customer = self.env['stock.picking'].create({
             'location_id': self.warehouse.wh_output_stock_loc_id.id,
@@ -184,13 +185,9 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
         self.assertEqual(production_order.reservation_state, 'assigned')
         self.assertEqual(picking_stock_postprod.state, 'waiting')
 
-        produce_form = Form(self.env['mrp.product.produce'].with_context({
-            'active_id': production_order.id,
-            'active_ids': [production_order.id],
-        }))
+        produce_form = Form(production_order)
         produce_form.qty_producing = production_order.product_qty
-        product_produce = produce_form.save()
-        product_produce.do_produce()
+        production_order = produce_form.save()
         production_order.button_mark_done()
 
         self.assertFalse(sum(self.env['stock.quant']._gather(self.raw_product, self.warehouse.pbm_loc_id).mapped('quantity')))

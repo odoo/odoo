@@ -27,6 +27,8 @@ var Tip = Widget.extend({
      *  - position [String] tip's position ('top', 'right', 'left' or 'bottom'), default 'right'
      *  - width [int] the width in px of the tip when opened, default 270
      *  - space [int] space in px between anchor and tip, default 10
+     *  - hidden [boolean] if true, the tip won't be visible (but the handlers will still be
+     *    bound on the anchor, so that the tip is consumed if the user clicks on it)
      *  - overlay [Object] x and y values for the number of pixels the mouseout detection area
      *    overlaps the opened tip, default {x: 50, y: 50}
      */
@@ -89,12 +91,14 @@ var Tip = Widget.extend({
         this._bind_anchor_events();
         this._updatePosition(true);
 
+        this.$el.toggleClass('d-none', !!this.info.hidden);
         this.$el.css("opacity", 1);
         core.bus.on("resize", this, _.debounce(function () {
             if (this.tip_opened) {
                 this._to_bubble_mode(true);
+            } else {
+                this._reposition();
             }
-            this._reposition();
         }, 500));
 
         return this._super.apply(this, arguments);
@@ -103,6 +107,9 @@ var Tip = Widget.extend({
         this._unbind_anchor_events();
         clearTimeout(this.timerIn);
         clearTimeout(this.timerOut);
+        // clear this timeout so that we won't call _updatePosition after we
+        // destroy the widget and leave an undesired bubble.
+        clearTimeout(this._transitionEndTimer);
 
         // Do not remove the parent class if it contains other tooltips
         const _removeParentClass = $el => {
@@ -116,11 +123,15 @@ var Tip = Widget.extend({
         return this._super.apply(this, arguments);
     },
     update: function ($anchor) {
+        // We unbind/rebind events on each update because we support widgets
+        // detaching and re-attaching nodes to their DOM element without keeping
+        // the initial event handlers, with said node being potential tip
+        // anchors (e.g. FieldMonetary > input element).
+        this._unbind_anchor_events();
         if (!$anchor.is(this.$anchor)) {
-            this._unbind_anchor_events();
             this._setupAnchor($anchor);
-            this._bind_anchor_events();
         }
+        this._bind_anchor_events();
         if (!this.$el) {
             // Ideally this case should not happen but this is still possible,
             // as update may be called before the `start` method is called.
@@ -153,6 +164,9 @@ var Tip = Widget.extend({
      * @param {boolean} [forceReposition=false]
      */
     _updatePosition: function (forceReposition = false) {
+        if (this.info.hidden) {
+            return;
+        }
         let halfHeight = 0;
         if (this.initialPosition === 'right' || this.initialPosition === 'left') {
             halfHeight = this.$anchor.innerHeight() / 2;
@@ -205,15 +219,17 @@ var Tip = Widget.extend({
             // important to only remove/add the class when necessary to not
             // notify a DOM mutation which could retrigger this function.
             const $oldLocation = this.$el.parent();
-            if (!$location.is($oldLocation)) {
-                $oldLocation.removeClass('o_tooltip_parent');
-                const cssPosition = $location.css("position");
-                if (cssPosition === "static" || cssPosition === "relative") {
-                    $location.addClass("o_tooltip_parent");
+            if (!this.tip_opened) {
+                if (!$location.is($oldLocation)) {
+                    $oldLocation.removeClass('o_tooltip_parent');
+                    const cssPosition = $location.css("position");
+                    if (cssPosition === "static" || cssPosition === "relative") {
+                        $location.addClass("o_tooltip_parent");
+                    }
+                    this.$el.appendTo($location);
                 }
-                this.$el.appendTo($location);
+                this._reposition();
             }
-            this._reposition();
         }
     },
     _get_ideal_location: function ($anchor = this.$anchor) {

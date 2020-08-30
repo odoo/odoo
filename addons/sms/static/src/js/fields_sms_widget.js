@@ -1,11 +1,9 @@
 odoo.define('sms.sms_widget', function (require) {
 "use strict";
 
-var basicFields = require('web.basic_fields');
 var core = require('web.core');
 var fieldRegistry = require('web.field_registry');
-
-var FieldText = basicFields.FieldText;
+var FieldTextEmojis = require('mail.field_text_emojis');
 
 var _t = core._t;
 /**
@@ -13,8 +11,9 @@ var _t = core._t;
  * the number of SMS and the number of characters. This text is computed every
  * time the user changes the body.
  */
-var SmsWidget = FieldText.extend({
+var SmsWidget = FieldTextEmojis.extend({
     className: 'o_field_text',
+    enableEmojis: false,
     /**
      * @constructor
      */
@@ -23,6 +22,17 @@ var SmsWidget = FieldText.extend({
         this.nbrChar = 0;
         this.nbrSMS = 0;
         this.encoding = 'GSM7';
+        this.enableEmojis = !!this.nodeOptions.enable_emojis;
+    },
+    
+    /**
+     * @override
+     *"This will add the emoji dropdown to a target field (controlled by the "enableEmojis" attribute)
+     */
+    on_attach_callback: function () {
+        if (this.enableEmojis) {
+            this._super.apply(this, arguments);
+        }
     },
 
     //--------------------------------------------------------------------------

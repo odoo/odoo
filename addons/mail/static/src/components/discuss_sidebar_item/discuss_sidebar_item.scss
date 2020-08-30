@@ -1,0 +1,107 @@
+// ------------------------------------------------------------------
+// Layout
+// ------------------------------------------------------------------
+
+.o_DiscussSidebarItem {
+    display: flex;
+    align-items: center;
+    padding: map-get($spacers, 1) 0;
+
+    &:hover .o_DiscussSidebarItem_commands {
+        display: flex;
+    }
+}
+
+.o_DiscussSidebarItem_activeIndicator {
+    width: $o-mail-discuss-sidebar-active-indicator-width;
+    align-self: stretch;
+}
+
+.o_DiscussSidebarItem_command {
+    margin-left: 3px;
+    margin-right: 3px;
+
+    &:first-child {
+        margin-left: 0px;
+    }
+
+    &:last-child {
+        margin-right: 0px;
+    }
+}
+
+.o_DiscussSidebarItem_commands {
+    display: none;
+}
+
+.o_DiscussSidebarItem_item {
+    margin-left: 3px;
+    margin-right: 3px;
+
+    &:first-child {
+        margin-left: 0px;
+        margin-right: $o-mail-discuss-sidebar-active-indicator-margin-right;
+    }
+
+    &:last-child {
+        margin-right: $o-mail-discuss-sidebar-scrollbar-width;
+    }
+}
+
+.o_DiscussSidebarItem_name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    &.o-editable {
+        margin-left: $o-mail-discuss-sidebar-active-indicator-width + $o-mail-discuss-sidebar-active-indicator-margin-right;
+        margin-right: $o-mail-discuss-sidebar-scrollbar-width;
+    }
+}
+
+.o_DiscussSidebarItem_nameInput {
+    width: 100%;
+}
+
+// ------------------------------------------------------------------
+// Style
+// ------------------------------------------------------------------
+
+.o_DiscussSidebarItem {
+    cursor: pointer;
+
+    &:hover {
+        background-color: darken(gray('900'), 5%);
+    }
+
+    &.o-starred-box {
+        .o_DiscussSidebarItem_counter {
+            border-color: gray('600');
+            background-color: gray('600');
+        }
+    }
+}
+
+.o_DiscussSidebarItem_activeIndicator.o-item-active {
+    background-color: $o-brand-primary;
+}
+
+.o_DiscussSidebarItem_command:not(:hover) {
+    color: gray('600');
+}
+
+.o_DiscussSidebarItem_counter {
+    background-color: $o-brand-primary;
+}
+
+.o_DiscussSidebarItem_name {
+
+    &.o-item-unread {
+        font-weight: bold;
+    }
+}
+
+.o_DiscussSidebarItem_nameInput {
+    outline: none;
+    border: none;
+    border-radius: 2px;
+}

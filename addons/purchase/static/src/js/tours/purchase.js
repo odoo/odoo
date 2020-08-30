@@ -44,7 +44,7 @@ tour.register('purchase_tour' , {
 }, {
     trigger: ".o_list_button_add",
     extra_trigger: ".o_purchase_order",
-    content: _t("Let's create your first request for quotation. <br/><i>Note that colored buttons usually point to the next logical actions.</i>"),
+    content: _t("Let's create your first request for quotation."),
     position: "bottom",
 }, {
     trigger: ".o_form_editable .o_field_many2one[name='partner_id']",
@@ -61,7 +61,7 @@ tour.register('purchase_tour' , {
 }, {
     trigger: ".o_field_x2many_list_row_add > a",
     extra_trigger: ".o_field_many2one[name='partner_id'] .o_external_button",
-    content: _t("Click here to add some products or services to your quotation."),
+    content: _t("Add some products or services to your quotation."),
     position: "bottom",
 }, {
     trigger: ".o_field_widget[name=product_id], .o_field_widget[name=product_template_id]",

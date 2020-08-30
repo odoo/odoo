@@ -13,11 +13,12 @@ from odoo.tools import mute_logger
 @odoo.tests.tagged('post_install', '-at_install', 'external', '-standard')
 class BuckarooCommon(PaymentAcquirerCommon):
 
-    def setUp(self):
-        super(BuckarooCommon, self).setUp()
+    @classmethod
+    def setUpClass(cls, chart_template_ref=None):
+        super().setUpClass(chart_template_ref=chart_template_ref)
         # get the buckaroo account
-        self.buckaroo = self.env.ref('payment.payment_acquirer_buckaroo')
-        self.buckaroo.write({
+        cls.buckaroo = cls.env.ref('payment.payment_acquirer_buckaroo')
+        cls.buckaroo.write({
             'brq_websitekey': 'dummy',
             'brq_secretkey': 'dummy',
             'state': 'test',

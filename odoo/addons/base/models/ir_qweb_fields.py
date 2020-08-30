@@ -3,7 +3,7 @@ import base64
 import re
 from collections import OrderedDict
 from io import BytesIO
-from odoo import api, fields, models, _
+from odoo import api, fields, models, _, _lt
 from PIL import Image
 import babel
 import babel.dates
@@ -222,6 +222,7 @@ class DateTimeConverter(models.AbstractModel):
         options = super(DateTimeConverter, self).get_available_options()
         options.update(
             format=dict(type='string', string=_('Pattern to format')),
+            tz_name=dict(type='char', string=_('Optional timezone name')),
             time_only=dict(type='boolean', string=_('Display only the time')),
             hide_seconds=dict(type='boolean', string=_('Hide seconds')),
             date_only=dict(type='boolean', string=_('Display only the date')),
@@ -242,6 +243,11 @@ class DateTimeConverter(models.AbstractModel):
 
         value = fields.Datetime.context_timestamp(self, value)
 
+        if options.get('tz_name'):
+            tzinfo = babel.dates.get_timezone(options['tz_name'])
+        else:
+            tzinfo = None
+
         if 'format' in options:
             pattern = options['format']
         else:
@@ -259,10 +265,12 @@ class DateTimeConverter(models.AbstractModel):
 
         if options.get('time_only'):
             format_func = babel.dates.format_time
+            return pycompat.to_text(format_func(value, format=pattern, locale=locale))
         if options.get('date_only'):
             format_func = babel.dates.format_date
+            return pycompat.to_text(format_func(value, format=pattern, locale=locale))
 
-        return pycompat.to_text(format_func(value, format=pattern, locale=locale))
+        return pycompat.to_text(format_func(value, format=pattern, tzinfo=tzinfo, locale=locale))
 
 
 class TextConverter(models.AbstractModel):
@@ -465,13 +473,13 @@ class MonetaryConverter(models.AbstractModel):
 
 
 TIMEDELTA_UNITS = (
-    ('year',   3600 * 24 * 365),
-    ('month',  3600 * 24 * 30),
-    ('week',   3600 * 24 * 7),
-    ('day',    3600 * 24),
-    ('hour',   3600),
-    ('minute', 60),
-    ('second', 1)
+    ('year',   _lt('year'),   3600 * 24 * 365),
+    ('month',  _lt('month'),  3600 * 24 * 30),
+    ('week',   _lt('week'),   3600 * 24 * 7),
+    ('day',    _lt('day'),    3600 * 24),
+    ('hour',   _lt('hour'),   3600),
+    ('minute', _lt('minute'), 60),
+    ('second', _lt('second'), 1)
 )
 
 
@@ -513,17 +521,32 @@ class DurationConverter(models.AbstractModel):
     @api.model
     def get_available_options(self):
         options = super(DurationConverter, self).get_available_options()
-        unit = [[u[0], _(u[0])] for u in TIMEDELTA_UNITS]
+        unit = [(value, str(label)) for value, label, ratio in TIMEDELTA_UNITS]
         options.update(
             digital=dict(type="boolean", string=_('Digital formatting')),
             unit=dict(type="selection", params=unit, string=_('Date unit'), description=_('Date unit used for comparison and formatting'), default_value='second', required=True),
             round=dict(type="selection", params=unit, string=_('Rounding unit'), description=_("Date unit used for the rounding. The value must be smaller than 'hour' if you use the digital formatting."), default_value='second'),
+            format=dict(
+                type="selection",
+                params=[
+                    ('long', _('Long')),
+                    ('short', _('Short')),
+                    ('narrow', _('Narrow'))],
+                string=_('Format'),
+                description=_("Formatting: long, short, narrow (not used for digital)"),
+                default_value='long'
+            ),
+            add_direction=dict(
+                type="boolean",
+                string=_("Add direction"),
+                description=_("Add directional information (not used for digital)")
+            ),
         )
         return options
 
     @api.model
     def value_to_html(self, value, options):
-        units = dict(TIMEDELTA_UNITS)
+        units = {unit: duration for unit, label, duration in TIMEDELTA_UNITS}
 
         locale = babel.Locale.parse(self.user_lang().code)
         factor = units[options.get('unit', 'second')]
@@ -537,7 +560,7 @@ class DurationConverter(models.AbstractModel):
         sections = []
 
         if options.get('digital'):
-            for unit, secs_per_unit in TIMEDELTA_UNITS:
+            for unit, label, secs_per_unit in TIMEDELTA_UNITS:
                 if secs_per_unit > 3600:
                     continue
                 v, r = divmod(r, secs_per_unit)
@@ -551,12 +574,17 @@ class DurationConverter(models.AbstractModel):
         if value < 0:
             r = -r
             sections.append(u'-')
-        for unit, secs_per_unit in TIMEDELTA_UNITS:
+        for unit, label, secs_per_unit in TIMEDELTA_UNITS:
             v, r = divmod(r, secs_per_unit)
             if not v:
                 continue
             section = babel.dates.format_timedelta(
-                v*secs_per_unit, threshold=1, locale=locale)
+                v*secs_per_unit,
+                granularity=round_to,
+                add_direction=options.get('add_direction'),
+                format=options.get('format', 'long'),
+                threshold=1,
+                locale=locale)
             if section:
                 sections.append(section)
 

@@ -65,6 +65,7 @@ class ProductCategory(models.Model):
         main_category = self.env.ref('product.product_category_all')
         if main_category in self:
             raise UserError(_("You cannot delete this product category, it is the default generic category."))
+        return super().unlink()
 
 
 class ProductProduct(models.Model):
@@ -313,7 +314,12 @@ class ProductProduct(models.Model):
                 '&', ('product_id', '=', product.id), ('applied_on', '=', '0_product_variant')]
             product.pricelist_item_count = self.env['product.pricelist.item'].search_count(domain)
 
-    @api.onchange('uom_id', 'uom_po_id')
+    @api.onchange('uom_id')
+    def _onchange_uom_id(self):
+        if self.uom_id:
+            self.uom_po_id = self.uom_id.id
+
+    @api.onchange('uom_po_id')
     def _onchange_uom(self):
         if self.uom_id and self.uom_po_id and self.uom_id.category_id != self.uom_po_id.category_id:
             self.uom_po_id = self.uom_id
@@ -501,15 +507,15 @@ class ProductProduct(models.Model):
             positive_operators = ['=', 'ilike', '=ilike', 'like', '=like']
             product_ids = []
             if operator in positive_operators:
-                product_ids = self._search([('default_code', '=', name)] + args, limit=limit, access_rights_uid=name_get_uid)
+                product_ids = list(self._search([('default_code', '=', name)] + args, limit=limit, access_rights_uid=name_get_uid))
                 if not product_ids:
-                    product_ids = self._search([('barcode', '=', name)] + args, limit=limit, access_rights_uid=name_get_uid)
+                    product_ids = list(self._search([('barcode', '=', name)] + args, limit=limit, access_rights_uid=name_get_uid))
             if not product_ids and operator not in expression.NEGATIVE_TERM_OPERATORS:
                 # Do not merge the 2 next lines into one single search, SQL search performance would be abysmal
                 # on a database with thousands of matching products, due to the huge merge+unique needed for the
                 # OR operator (and given the fact that the 'name' lookup results come from the ir.translation table
                 # Performing a quick memory merge of ids in Python will give much better performance
-                product_ids = self._search(args + [('default_code', operator, name)], limit=limit)
+                product_ids = list(self._search(args + [('default_code', operator, name)], limit=limit))
                 if not limit or len(product_ids) < limit:
                     # we may underrun the limit because of dupes in the results, that's fine
                     limit2 = (limit - len(product_ids)) if limit else False
@@ -521,12 +527,12 @@ class ProductProduct(models.Model):
                     ['&', ('default_code', '=', False), ('name', operator, name)],
                 ])
                 domain = expression.AND([args, domain])
-                product_ids = self._search(domain, limit=limit, access_rights_uid=name_get_uid)
+                product_ids = list(self._search(domain, limit=limit, access_rights_uid=name_get_uid))
             if not product_ids and operator in positive_operators:
                 ptrn = re.compile('(\[(.*?)\])')
                 res = ptrn.search(name)
                 if res:
-                    product_ids = self._search([('default_code', '=', res.group(2))] + args, limit=limit, access_rights_uid=name_get_uid)
+                    product_ids = list(self._search([('default_code', '=', res.group(2))] + args, limit=limit, access_rights_uid=name_get_uid))
             # still no results, partner in context: search on supplier info as last hope to find something
             if not product_ids and self._context.get('partner_id'):
                 suppliers_ids = self.env['product.supplierinfo']._search([
@@ -538,14 +544,16 @@ class ProductProduct(models.Model):
                     product_ids = self._search([('product_tmpl_id.seller_ids', 'in', suppliers_ids)], limit=limit, access_rights_uid=name_get_uid)
         else:
             product_ids = self._search(args, limit=limit, access_rights_uid=name_get_uid)
-        return models.lazy_name_get(self.browse(product_ids).with_user(name_get_uid))
+        return product_ids
 
     @api.model
     def view_header_get(self, view_id, view_type):
-        res = super(ProductProduct, self).view_header_get(view_id, view_type)
         if self._context.get('categ_id'):
-            return _('Products: ') + self.env['product.category'].browse(self._context['categ_id']).name
-        return res
+            return _(
+                'Products: %(category)s',
+                category=self.env['product.category'].browse(self.env.context['categ_id']).name,
+            )
+        return super().view_header_get(view_id, view_type)
 
     def open_pricelist_rules(self):
         self.ensure_one()
@@ -578,7 +586,7 @@ class ProductProduct(models.Model):
     def _prepare_sellers(self, params=False):
         # This search is made to avoid retrieving seller_ids from the cache.
         return self.env['product.supplierinfo'].search([('product_tmpl_id', '=', self.product_tmpl_id.id),
-                                                        ('name.active', '=', True)]).sorted(lambda s: (s.sequence, -s.min_qty, s.price))
+                                                        ('name.active', '=', True)]).sorted(lambda s: (s.sequence, -s.min_qty, s.price, s.id))
 
     def _select_seller(self, partner_id=False, quantity=0.0, date=None, uom_id=False, params=False):
         self.ensure_one()
@@ -670,9 +678,6 @@ class ProductProduct(models.Model):
 
         See `_is_combination_possible` for more information.
 
-        This will always exclude variants for templates that have `no_variant`
-        attributes because the variant itself will not be the full combination.
-
         :param parent_combination: combination from which `self` is an
             optional or accessory product.
         :type parent_combination: recordset `product.template.attribute.value`
@@ -681,7 +686,7 @@ class ProductProduct(models.Model):
         :rtype: bool
         """
         self.ensure_one()
-        return self.product_tmpl_id._is_combination_possible(self.product_template_attribute_value_ids, parent_combination=parent_combination)
+        return self.product_tmpl_id._is_combination_possible(self.product_template_attribute_value_ids, parent_combination=parent_combination, ignore_no_variant=True)
 
     def toggle_active(self):
         """ Archiving related product.template if there is only one active product.product """

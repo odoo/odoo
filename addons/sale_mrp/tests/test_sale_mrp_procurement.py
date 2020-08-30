@@ -10,6 +10,7 @@ from odoo.tools import mute_logger
 class TestSaleMrpProcurement(TransactionCase):
 
     def test_sale_mrp(self):
+        self.env.ref('stock.route_warehouse0_mto').active = True
         warehouse0 = self.env.ref('stock.warehouse0')
         # In order to test the sale_mrp module in OpenERP, I start by creating a new product 'Slider Mobile'
         # I define product category Mobile Products Sellable.
@@ -73,7 +74,7 @@ class TestSaleMrpProcurement(TransactionCase):
         to avoid generating multiple deliveries
         to the customer location
         """
-
+        self.env.ref('stock.route_warehouse0_mto').active = True
         # Create warehouse
         self.customer_location = self.env['ir.model.data'].xmlid_to_res_id('stock.stock_location_customers')
         warehouse_form = Form(self.env['stock.warehouse'])

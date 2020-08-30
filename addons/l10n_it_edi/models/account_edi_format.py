@@ -20,6 +20,17 @@ DEFAULT_FACTUR_ITALIAN_DATE_FORMAT = '%Y-%m-%d'
 class AccountEdiFormat(models.Model):
     _inherit = 'account.edi.format'
 
+    def _is_embedding_to_invoice_pdf_needed(self):
+        # OVERRIDE
+        self.ensure_one()
+        return True if self.code == 'fattura_pa' else super()._is_embedding_to_invoice_pdf_needed()
+
+    def _is_compatible_with_journal(self, journal):
+        self.ensure_one()
+        if self.code != 'fattura_pa':
+            return super()._is_compatible_with_journal(journal)
+        return False  # edi does not support generic export
+
     def _check_filename_is_fattura_pa(self, filename):
         return re.search("([A-Z]{2}[A-Za-z0-9]{2,28}_[A-Za-z0-9]{0,5}.(xml.p7m|xml))", filename)
 
@@ -67,7 +78,7 @@ class AccountEdiFormat(models.Model):
             elif elements and elements[0].text and elements[0].text == 'TD04':
                 self_ctx = invoice.with_context(default_move_type='in_refund')
             else:
-                _logger.info(_('Document type not managed: %s.') % (elements[0].text))
+                _logger.info('Document type not managed: %s.', elements[0].text)
 
             # type must be present in the context to get the right behavior of the _default_journal method (account.move).
             # journal_id must be present in the context to get the right behavior of the _default_account method (account.move.line).
@@ -83,13 +94,13 @@ class AccountEdiFormat(models.Model):
             else:
                 company = self.env.company
                 if elements:
-                    _logger.info(_('Company not found with codice fiscale: %s. The company\'s user is set by default.') % elements[0].text)
+                    _logger.info('No company found with codice fiscale: %s. The user\'s company is set by default.', elements[0].text)
                 else:
-                    _logger.info(_('Company not found. The company\'s user is set by default.'))
+                    _logger.info('Company not found. The user\'s company is set by default.')
 
             if not self.env.is_superuser():
                 if self.env.company != company:
-                    raise UserError(_("You can only import invoice concern your current company: %s") % self.env.company.display_name)
+                    raise UserError(_("You can only import invoice concern your current company: %s", self.env.company.display_name))
 
             # Refund type.
             # TD01 == invoice
@@ -375,9 +386,9 @@ class AccountEdiFormat(models.Model):
                                     discount["seq"] = invoice_line_form.sequence + 1
 
                                     if total_discount_amount < 0:
-                                        discount["name"] = _('DISCOUNT: ') + invoice_line_form.name
+                                        discount["name"] = _('DISCOUNT: %s', invoice_line_form.name)
                                     else:
-                                        discount["name"] = _('EXTRA CHARGE: ') + invoice_line_form.name
+                                        discount["name"] = _('EXTRA CHARGE: %s', invoice_line_form.name)
                                     discount["amount"] = total_discount_amount
                                     discount["tax"] = []
                                     for tax in invoice_line_form.tax_ids:

@@ -19,7 +19,7 @@
     'license': 'LGPL-3',
     'author': "Focusate",
     'website': "http://www.focusate.eu",
-    'category': 'Accounting/Localizations',
+    'category': 'Accounting/Localizations/Account Charts',
     'depends': [
         'l10n_multilang',
     ],

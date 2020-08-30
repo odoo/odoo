@@ -28,7 +28,7 @@ class TestPrintCheck(AccountTestInvoicingCommon):
 
         self.company_data['default_journal_bank'].write({
             'check_manual_sequencing': True,
-            'check_next_number': 42,
+            'check_next_number': '00042',
         })
 
         # Create 10 customer invoices.
@@ -39,7 +39,7 @@ class TestPrintCheck(AccountTestInvoicingCommon):
             'invoice_date': '2017-01-01',
             'invoice_line_ids': [(0, 0, {'product_id': self.product_a.id, 'price_unit': 100.0})]
         } for i in range(nb_invoices_to_test)])
-        out_invoices.post()
+        out_invoices.action_post()
 
         # Create a single payment.
         payment = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=out_invoices.ids).create({
@@ -69,7 +69,7 @@ class TestPrintCheck(AccountTestInvoicingCommon):
 
         self.company_data['default_journal_bank'].write({
             'check_manual_sequencing': True,
-            'check_next_number': 42,
+            'check_next_number': '00042',
         })
 
         # Create 10 refunds.
@@ -80,7 +80,7 @@ class TestPrintCheck(AccountTestInvoicingCommon):
             'invoice_date': '2017-01-01',
             'invoice_line_ids': [(0, 0, {'product_id': self.product_a.id, 'price_unit': 100.0})]
         } for i in range(nb_invoices_to_test)])
-        out_refunds.post()
+        out_refunds.action_post()
 
         # Create a single payment.
         payment = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=out_refunds.ids).create({

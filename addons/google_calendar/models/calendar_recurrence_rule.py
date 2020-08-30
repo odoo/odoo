@@ -16,9 +16,9 @@ class RecurrenceRule(models.Model):
     # Don't sync by default. Sync only when the recurrence is applied
     need_sync = fields.Boolean(default=False)
 
-    def _apply_recurrence(self):
+    def _apply_recurrence(self, specific_values_creation=None, no_send_edit=False):
         events = self.calendar_event_ids
-        detached_events = super()._apply_recurrence()
+        detached_events = super()._apply_recurrence(specific_values_creation, no_send_edit)
 
         google_service = GoogleCalendarService(self.env['google.service'])
 
@@ -87,7 +87,7 @@ class RecurrenceRule(models.Model):
         return synced_recurrences
 
     def _get_sync_domain(self):
-        return [('calendar_event_ids.partner_id.user_ids', 'in', self.env.user.id)]
+        return [('calendar_event_ids.user_id', '=', self.env.user.id)]
 
     @api.model
     def _odoo_values(self, google_recurrence, default_reminders=()):

@@ -146,7 +146,7 @@ class StockQuant(models.Model):
         """
         if self._is_inventory_mode() and 'inventory_quantity' in vals:
             allowed_fields = self._get_inventory_fields_create()
-            if any([field for field in vals.keys() if field not in allowed_fields]):
+            if any(field for field in vals.keys() if field not in allowed_fields):
                 raise UserError(_("Quant's creation is restricted, you can't do this operation."))
             inventory_quantity = vals.pop('inventory_quantity')
 
@@ -189,12 +189,12 @@ class StockQuant(models.Model):
 
     def write(self, vals):
         """ Override to handle the "inventory mode" and create the inventory move. """
-        if self._is_inventory_mode() and 'inventory_quantity' in vals:
+        allowed_fields = self._get_inventory_fields_write()
+        if self._is_inventory_mode() and any(field for field in allowed_fields if field in vals.keys()):
             if any(quant.location_id.usage == 'inventory' for quant in self):
                 # Do nothing when user tries to modify manually a inventory loss
                 return
-            allowed_fields = self._get_inventory_fields_write()
-            if any([field for field in vals.keys() if field not in allowed_fields]):
+            if any(field for field in vals.keys() if field not in allowed_fields):
                 raise UserError(_("Quant's editing is restricted, you can't do this operation."))
             self = self.sudo()
             return super(StockQuant, self).write(vals)
@@ -202,7 +202,7 @@ class StockQuant(models.Model):
 
     def action_view_stock_moves(self):
         self.ensure_one()
-        action = self.env.ref('stock.stock_move_line_action').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("stock.stock_move_line_action")
         action['domain'] = [
             ('product_id', '=', self.product_id.id),
             '|',
@@ -244,7 +244,7 @@ class StockQuant(models.Model):
     def check_location_id(self):
         for quant in self:
             if quant.location_id.usage == 'view':
-                raise ValidationError(_('You cannot take products from or deliver products to a location of type "view".'))
+                raise ValidationError(_('You cannot take products from or deliver products to a location of type "view" (%s).') % quant.location_id.name)
 
     @api.model
     def _get_removal_strategy(self, product_id, location_id):
@@ -456,12 +456,12 @@ class StockQuant(models.Model):
             # if we want to reserve
             available_quantity = self._get_available_quantity(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=strict)
             if float_compare(quantity, available_quantity, precision_rounding=rounding) > 0:
-                raise UserError(_('It is not possible to reserve more products of %s than you have in stock.') % product_id.display_name)
+                raise UserError(_('It is not possible to reserve more products of %s than you have in stock.', product_id.display_name))
         elif float_compare(quantity, 0, precision_rounding=rounding) < 0:
             # if we want to unreserve
             available_quantity = sum(quants.mapped('reserved_quantity'))
             if float_compare(abs(quantity), available_quantity, precision_rounding=rounding) > 0:
-                raise UserError(_('It is not possible to unreserve more products of %s than you have in stock.') % product_id.display_name)
+                raise UserError(_('It is not possible to unreserve more products of %s than you have in stock.', product_id.display_name))
         else:
             return reserved_quants
 
@@ -605,7 +605,7 @@ class StockQuant(models.Model):
         ctx = dict(self.env.context or {})
         ctx.pop('group_by', None)
         action = {
-            'name': _('Update Quantity'),
+            'name': _('Stock On Hand'),
             'view_type': 'tree',
             'view_mode': 'list',
             'res_model': 'stock.quant',
@@ -712,8 +712,13 @@ class QuantPackage(models.Model):
             move_line_to_modify.write({'package_id': False})
             package.mapped('quant_ids').sudo().write({'package_id': False})
 
+        # Quant clean-up, mostly to avoid multiple quants of the same product. For example, unpack
+        # 2 packages of 50, then reserve 100 => a quant of -50 is created at transfer validation.
+        self.env['stock.quant']._merge_quants()
+        self.env['stock.quant']._unlink_zero_quants()
+
     def action_view_picking(self):
-        action = self.env.ref('stock.action_picking_tree_all').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("stock.action_picking_tree_all")
         domain = ['|', ('result_package_id', 'in', self.ids), ('package_id', 'in', self.ids)]
         pickings = self.env['stock.move.line'].search(domain).mapped('picking_id')
         action['domain'] = [('id', 'in', pickings.ids)]

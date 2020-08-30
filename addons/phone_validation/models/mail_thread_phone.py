@@ -106,9 +106,9 @@ class PhoneMixin(models.AbstractModel):
 
     def _assert_phone_field(self):
         if not hasattr(self, "_phone_get_number_fields"):
-            raise UserError(_('Invalid primary phone field on model %s') % self._name)
+            raise UserError(_('Invalid primary phone field on model %s', self._name))
         if not any(fname in self and self._fields[fname].type == 'char' for fname in self._phone_get_number_fields()):
-            raise UserError(_('Invalid primary phone field on model %s') % self._name)
+            raise UserError(_('Invalid primary phone field on model %s', self._name))
 
     def _phone_get_number_fields(self):
         """ This method returns the fields to use to find the number to use to

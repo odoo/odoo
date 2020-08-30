@@ -9,12 +9,14 @@ from odoo.tools.translate import html_translate
 from odoo.osv import expression
 
 
-class ProductStyle(models.Model):
-    _name = "product.style"
-    _description = 'Product Style'
+class ProductRibbon(models.Model):
+    _name = "product.ribbon"
+    _description = 'Product ribbon'
 
-    name = fields.Char(string='Style Name', required=True)
-    html_class = fields.Char(string='HTML Classes')
+    html = fields.Char(string='Ribbon html', required=True)
+    bg_color = fields.Char(string='Ribbon background color', required=False)
+    text_color = fields.Char(string='Ribbon text color', required=False)
+    html_class = fields.Char(string='Ribbon class', required=True, default='')
 
 
 class ProductPricelist(models.Model):
@@ -186,7 +188,7 @@ class ProductTemplate(models.Model):
         help='Accessories show up when the customer reviews the cart before payment (cross-sell strategy).')
     website_size_x = fields.Integer('Size X', default=1)
     website_size_y = fields.Integer('Size Y', default=1)
-    website_style_ids = fields.Many2many('product.style', string='Styles')
+    website_ribbon_id = fields.Many2one('product.ribbon', string='Ribbon')
     website_sequence = fields.Integer('Website Sequence', help="Determine the display order in the Website E-commerce",
                                       default=lambda self: self._default_website_sequence(), copy=False)
     public_categ_ids = fields.Many2many(
@@ -281,7 +283,7 @@ class ProductTemplate(models.Model):
             product = self.env['product.product'].browse(combination_info['product_id']) or self
 
             tax_display = self.user_has_groups('account.group_show_line_subtotals_tax_excluded') and 'total_excluded' or 'total_included'
-            fpos = self.env['account.fiscal.position'].get_fiscal_position(partner.id)
+            fpos = self.env['account.fiscal.position'].get_fiscal_position(partner.id).sudo()
             taxes = fpos.map_tax(product.sudo().taxes_id.filtered(lambda x: x.company_id == company_id), product, partner)
 
             # The list_price is always the price of one.
@@ -372,7 +374,8 @@ class ProductTemplate(models.Model):
     def _compute_website_url(self):
         super(ProductTemplate, self)._compute_website_url()
         for product in self:
-            product.website_url = "/shop/product/%s" % slug(product)
+            if product.id:
+                product.website_url = "/shop/%s" % slug(product)
 
     # ---------------------------------------------------------
     # Rating Mixin API

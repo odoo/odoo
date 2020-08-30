@@ -1,46 +1,8 @@
 odoo.define('web.test_utils_control_panel', function (require) {
     "use strict";
 
-    const { click, triggerEvent, getNode } = require('web.test_utils_dom');
+    const { click, findItem, getNode, triggerEvent } = require('web.test_utils_dom');
     const { editInput, editSelect, editAndTrigger } = require('web.test_utils_fields');
-
-    //-------------------------------------------------------------------------
-    // Private functions
-    //-------------------------------------------------------------------------
-
-    /**
-     * Helper method to retrieve a distinct item from a collection of elements defined
-     * by the given 'selector' string. It can either be the index of the item or its
-     * inner text.
-     * @private
-     * @param {HTMLElement} el
-     * @param {string} selector
-     * @param {(number|string)} elFinder
-     */
-    function findItem(el, selector, elFinder) {
-        const elements = [...el.querySelectorAll(selector)];
-        if (!elements.length) {
-            throw new Error(`No element found with selector "${selector}".`);
-        }
-        switch (typeof elFinder) {
-            case 'number':
-                const element = elements[elFinder];
-                if (!element) {
-                    throw new Error(`No element with selector "${selector}" at index ${elFinder}.`);
-                }
-                return element;
-            case 'string':
-                const stringMatch = elements.find(
-                    e => e.innerText.trim().toLowerCase() === elFinder.toLowerCase()
-                );
-                if (!stringMatch) {
-                    throw new Error(`No element with selector "${selector}" containing "${elFinder}".`);
-                }
-                return stringMatch;
-            default:
-                throw new Error(`Invalid provided element finder: must be a number|string|function.`);
-        }
-    }
 
     //-------------------------------------------------------------------------
     // Exported functions
@@ -52,7 +14,7 @@ odoo.define('web.test_utils_control_panel', function (require) {
      * @returns {Promise}
      */
     async function toggleMenu(el, menuFinder) {
-        const menu = findItem(getNode(el), `.o_dropdown > button`, menuFinder);
+        const menu = findItem(el, `.o_dropdown > button`, menuFinder);
         await click(menu);
     }
 
@@ -62,7 +24,7 @@ odoo.define('web.test_utils_control_panel', function (require) {
      * @returns {Promise}
      */
     async function toggleMenuItem(el, itemFinder) {
-        const item = findItem(getNode(el), `.o_menu_item > a`, itemFinder);
+        const item = findItem(el, `.o_menu_item > a`, itemFinder);
         await click(item);
     }
 
@@ -73,7 +35,7 @@ odoo.define('web.test_utils_control_panel', function (require) {
      * @returns {Promise}
      */
     async function toggleMenuItemOption(el, itemFinder, optionFinder) {
-        const item = findItem(getNode(el), `.o_menu_item > a`, itemFinder);
+        const item = findItem(el, `.o_menu_item > a`, itemFinder);
         const option = findItem(item.parentNode, '.o_item_option > a', optionFinder);
         await click(option);
     }
@@ -84,7 +46,7 @@ odoo.define('web.test_utils_control_panel', function (require) {
      * @returns {boolean}
      */
     function isItemSelected(el, itemFinder) {
-        const item = findItem(getNode(el), `.o_menu_item > a`, itemFinder);
+        const item = findItem(el, `.o_menu_item > a`, itemFinder);
         return item.classList.contains('selected');
     }
 
@@ -95,7 +57,7 @@ odoo.define('web.test_utils_control_panel', function (require) {
      * @returns {boolean}
      */
     function isOptionSelected(el, itemFinder, optionFinder) {
-        const item = findItem(getNode(el), `.o_menu_item > a`, itemFinder);
+        const item = findItem(el, `.o_menu_item > a`, itemFinder);
         const option = findItem(item.parentNode, '.o_item_option > a', optionFinder);
         return option.classList.contains('selected');
     }
@@ -217,7 +179,7 @@ odoo.define('web.test_utils_control_panel', function (require) {
      * @returns {Promise}
      */
     async function deleteFavorite(el, favoriteFinder) {
-        const favorite = findItem(getNode(el), `.o_favorite_menu .o_menu_item`, favoriteFinder);
+        const favorite = findItem(el, `.o_favorite_menu .o_menu_item`, favoriteFinder);
         await click(favorite.querySelector('i.fa-trash-o'));
     }
 
@@ -245,7 +207,7 @@ odoo.define('web.test_utils_control_panel', function (require) {
      * @returns {Promise}
      */
     async function removeFacet(el, facetFinder = 0) {
-        const facet = findItem(getNode(el), `.o_searchview .o_searchview_facet`, facetFinder);
+        const facet = findItem(el, `.o_searchview .o_searchview_facet`, facetFinder);
         await click(facet.querySelector('.o_facet_remove'));
     }
 
@@ -275,7 +237,7 @@ odoo.define('web.test_utils_control_panel', function (require) {
      * @returns {Promise}
      */
     async function toggleActionMenu(el, menuFinder = "Action") {
-        const dropdown = findItem(getNode(el), `.o_cp_action_menus button`, menuFinder);
+        const dropdown = findItem(el, `.o_cp_action_menus button`, menuFinder);
         await click(dropdown);
     }
 

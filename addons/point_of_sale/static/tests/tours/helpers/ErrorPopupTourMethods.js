@@ -26,5 +26,5 @@ odoo.define('point_of_sale.tour.ErrorPopupTourMethods', function (require) {
         }
     }
 
-    return { Do, Check, ErrorPopup: createTourMethods('ErrorPopup', Do, Check) };
+    return createTourMethods('ErrorPopup', Do, Check);
 });

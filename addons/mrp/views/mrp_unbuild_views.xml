@@ -48,7 +48,7 @@
             <field name="name">mrp.unbuild.kanban</field>
             <field name="model">mrp.unbuild</field>
             <field name="arch" type="xml">
-                <kanban class="o_kanban_mobile">
+                <kanban class="o_kanban_mobile" sample="1">
                     <field name="name"/>
                     <field name="product_id"/>
                     <field name="product_qty"/>
@@ -123,9 +123,9 @@
                         </group>
                     </sheet>
                     <div class="oe_chatter">
-                        <field name="message_follower_ids" widget="mail_followers"/>
-                        <field name="activity_ids" widget="mail_activity"/>
-                        <field name="message_ids" widget="mail_thread"/>
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
                     </div>
                 </form>
             </field>
@@ -174,7 +174,7 @@
             <field name="name">mrp.unbuild.tree</field>
             <field name="model">mrp.unbuild</field>
             <field name="arch" type="xml">
-                <tree>
+                <tree sample="1">
                     <field name="name" decoration-bf="1"/>
                     <field name="product_id"/>
                     <field name="bom_id"/>

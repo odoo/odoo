@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import base64
-from collections import defaultdict
+from collections import defaultdict, OrderedDict
 from decorator import decorator
 from operator import attrgetter
 import importlib
@@ -177,8 +177,10 @@ class Module(models.Model):
             if not module.name:
                 module.description_html = False
                 continue
-            path = modules.get_module_resource(module.name, 'static/description/index.html')
-            if path:
+            module_path = modules.get_module_path(module.name, display_warning=False)  # avoid to log warning for fake community module
+            if module_path:
+                path = modules.check_resource_path(module_path, 'static/description/index.html')
+            if module_path and path:
                 with tools.file_open(path, 'rb') as desc_file:
                     doc = desc_file.read()
                     html = lxml.html.document_fromstring(doc)
@@ -242,8 +244,10 @@ class Module(models.Model):
             if module.icon:
                 path_parts = module.icon.split('/')
                 path = modules.get_module_resource(path_parts[1], *path_parts[2:])
-            else:
+            elif module.id:
                 path = modules.module.get_module_icon(module.name)
+            else:
+                path = ''
             if path:
                 with tools.file_open(path, 'rb') as image_file:
                     module.icon_image = base64.b64encode(image_file.read())
@@ -306,7 +310,7 @@ class Module(models.Model):
 
     def _compute_has_iap(self):
         for module in self:
-            module.has_iap = 'iap' in module.upstream_dependencies(exclude_states=('',)).mapped('name')
+            module.has_iap = bool(module.id) and 'iap' in module.upstream_dependencies(exclude_states=('',)).mapped('name')
 
     def unlink(self):
         if not self:
@@ -580,8 +584,9 @@ class Module(models.Model):
             # during execution, the lock won't be released until timeout.
             self._cr.execute("SELECT * FROM ir_cron FOR UPDATE NOWAIT")
         except psycopg2.OperationalError:
-            raise UserError(_("The server is busy right now, module operations are not possible at"
-                              " this time, please try again later."))
+            raise UserError(_("Odoo is currently processing a scheduled action.\n"
+                              "Module operations are not possible at this time, "
+                              "please try again later or contact your system administrator."))
         function(self)
 
         self._cr.commit()
@@ -799,7 +804,7 @@ class Module(models.Model):
                     content = response.content
                 except Exception:
                     _logger.exception('Failed to fetch module %s', module_name)
-                    raise UserError(_('The `%s` module appears to be unavailable at the moment, please try again later.') % module_name)
+                    raise UserError(_('The `%s` module appears to be unavailable at the moment, please try again later.', module_name))
                 else:
                     zipfile.ZipFile(io.BytesIO(content)).extractall(tmp)
                     assert os.path.isdir(os.path.join(tmp, module_name))
@@ -926,7 +931,8 @@ class Module(models.Model):
     @api.model
     def search_panel_select_range(self, field_name, **kwargs):
         if field_name == 'category_id':
-            domain = [('module_ids', '!=', False)]
+            enable_counters = kwargs.get('enable_counters', False)
+            domain = [('parent_id', '=', False), ('child_ids.module_ids', '!=', False)]
 
             excluded_xmlids = [
                 'base.module_category_website_theme',
@@ -943,20 +949,32 @@ class Module(models.Model):
                 excluded_category_ids.append(categ.id)
 
             if excluded_category_ids:
-                domain = expression.AND([domain, [
-                    ('id', 'not in', excluded_category_ids),
-                    ('parent_id', 'not in', excluded_category_ids),
-                ]])
-            categories = self.env['ir.module.category'].search(domain)
-            categories = categories | categories.mapped('parent_id')
+                domain = expression.AND([
+                    domain,
+                    [('id', 'not in', excluded_category_ids)],
+                ])
 
-            comodel_domain = [('id', 'in', categories.ids)]
+            Module = self.env['ir.module.module']
+            records = self.env['ir.module.category'].search_read(domain, ['display_name'], order="sequence")
 
-            return super(Module, self).search_panel_select_range(
-                field_name,
-                comodel_domain=comodel_domain,
-                **kwargs
-            )
+            values_range = OrderedDict()
+            for record in records:
+                record_id = record['id']
+                if enable_counters:
+                    model_domain = expression.AND([
+                        kwargs.get('search_domain', []),
+                        kwargs.get('category_domain', []),
+                        kwargs.get('filter_domain', []),
+                        [('category_id', 'child_of', record_id), ('category_id', 'not in', excluded_category_ids)]
+                    ])
+                    record['__count'] = Module.search_count(model_domain)
+                values_range[record_id] = record
+
+            return {
+                'parent_field': 'parent_id',
+                'values': list(values_range.values()),
+            }
+
         return super(Module, self).search_panel_select_range(field_name, **kwargs)
 
 

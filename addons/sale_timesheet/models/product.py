@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+import threading
+
+from odoo import api, fields, models, _
+from odoo.exceptions import ValidationError
 
 
 class ProductTemplate(models.Model):
@@ -16,13 +19,12 @@ class ProductTemplate(models.Model):
         ('timesheet', 'Timesheets on project (one fare per SO/Project)'),
     ], ondelete={'timesheet': 'set default'})
     # override domain
-    project_id = fields.Many2one(domain="[('billable_type', '=', 'no'), ('allow_timesheets', 'in', [service_policy == 'delivered_timesheet' or '', True])]")
-    project_template_id = fields.Many2one(domain="[('billable_type', '=', 'no'), ('allow_timesheets', 'in', [service_policy == 'delivered_timesheet' or '', True])]")
+    project_id = fields.Many2one(domain="[('allow_billable', '=', True), ('bill_type', '=', 'customer_task'), ('allow_timesheets', 'in', [service_policy == 'delivered_timesheet' or '', True])]")
+    project_template_id = fields.Many2one(domain="[('allow_billable', '=', True), ('bill_type', '=', 'customer_project'), ('allow_timesheets', 'in', [service_policy == 'delivered_timesheet' or '', True])]")
 
     def _default_visible_expense_policy(self):
         visibility = self.user_has_groups('project.group_project_user')
         return visibility or super(ProductTemplate, self)._default_visible_expense_policy()
-
 
     def _compute_visible_expense_policy(self):
         super(ProductTemplate, self)._compute_visible_expense_policy()
@@ -67,6 +69,21 @@ class ProductTemplate(models.Model):
             self.invoice_policy = 'order'
         return res
 
+    def unlink(self):
+        time_product = self.env.ref('sale_timesheet.time_product')
+        if time_product.product_tmpl_id in self:
+            raise ValidationError(_('The %s product is required by the Timesheet app and cannot be archived/deleted.') % time_product.name)
+        return super(ProductTemplate, self).unlink()
+
+    def write(self, vals):
+        # timesheet product can't be archived
+        test_mode = getattr(threading.currentThread(), 'testing', False) or self.env.registry.in_test_mode()
+        if not test_mode and 'active' in vals and not vals['active']:
+            time_product = self.env.ref('sale_timesheet.time_product')
+            if time_product.product_tmpl_id in self:
+                raise ValidationError(_('The %s product is required by the Timesheet app and cannot be archived/deleted.') % time_product.name)
+        return super(ProductTemplate, self).write(vals)
+
 
 class ProductProduct(models.Model):
     _inherit = 'product.product'
@@ -75,3 +92,18 @@ class ProductProduct(models.Model):
         """ Check if the product is a delivered timesheet """
         self.ensure_one()
         return self.type == 'service' and self.service_policy == 'delivered_timesheet'
+
+    def unlink(self):
+        time_product = self.env.ref('sale_timesheet.time_product')
+        if time_product in self:
+            raise ValidationError(_('The %s product is required by the Timesheet app and cannot be archived/deleted.') % time_product.name)
+        return super(ProductProduct, self).unlink()
+
+    def write(self, vals):
+        # timesheet product can't be archived
+        test_mode = getattr(threading.currentThread(), 'testing', False) or self.env.registry.in_test_mode()
+        if not test_mode and 'active' in vals and not vals['active']:
+            time_product = self.env.ref('sale_timesheet.time_product')
+            if time_product in self:
+                raise ValidationError(_('The %s product is required by the Timesheet app and cannot be archived/deleted.') % time_product.name)
+        return super(ProductProduct, self).write(vals)

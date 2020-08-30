@@ -12,6 +12,21 @@ odoo.define('point_of_sale.tour.ReceiptScreenTourMethods', function (require) {
                 },
             ];
         }
+        setEmail(email) {
+            return [
+                {
+                    trigger: '.receipt-screen .input-email input',
+                    run: `text ${email}`,
+                },
+            ];
+        }
+        clickSend(isHighlighted = true) {
+            return [
+                {
+                    trigger: `.receipt-screen .input-email .send${isHighlighted ? '.highlight' : ''}`,
+                },
+            ];
+        }
     }
 
     class Check {
@@ -35,25 +50,30 @@ odoo.define('point_of_sale.tour.ReceiptScreenTourMethods', function (require) {
             ];
         }
 
-        changeIs(amount) {
+        totalAmountContains(value) {
             return [
                 {
-                    content: `check if change field is visible`,
-                    trigger: `.receipt-screen .change-value`,
+                    trigger: `.receipt-screen .top-content h1:contains("${value}")`,
                     run: () => {},
                 },
+            ];
+        }
+
+        emailIsSuccessful() {
+            return [
                 {
-                    content: `change amount should be ${amount}`,
-                    trigger: `.receipt-screen .change-value:contains("${amount}")`,
+                    trigger: `.receipt-screen .notice.successful`,
                     run: () => {},
                 },
             ];
         }
     }
 
-    return {
-        Do,
-        Check,
-        ReceiptScreen: createTourMethods('ReceiptScreen', Do, Check),
-    };
+    class Execute {
+        nextOrder() {
+            return [...this._check.isShown(), ...this._do.clickNextOrder()];
+        }
+    }
+
+    return createTourMethods('ReceiptScreen', Do, Check, Execute);
 });

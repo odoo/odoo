@@ -5,6 +5,7 @@
     'name': 'Time Off',
     'version': '1.5',
     'category': 'Human Resources/Time Off',
+    'sequence': 85,
     'summary': 'Allocate time off and follow time off requests',
     'website': 'https://www.odoo.com/page/leaves',
     'description': """
@@ -55,6 +56,10 @@ A synchronization with an internal agenda (Meetings of the CRM module) is also p
         'data/hr_holidays_demo.xml',
     ],
     'qweb': [
+        'static/src/bugfix/bugfix.xml',
+        'static/src/components/partner_im_status_icon/partner_im_status_icon.xml',
+        'static/src/components/thread_icon/thread_icon.xml',
+        'static/src/components/thread_view/thread_view.xml',
         'static/src/xml/*.xml',
     ],
     'installable': True,

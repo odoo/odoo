@@ -36,6 +36,10 @@ class StockMove(models.Model):
         #rslt += invoices.mapped('reverse_entry_ids')
         return rslt
 
+    def _get_source_document(self):
+        res = super()._get_source_document()
+        return self.sale_line_id.order_id or res
+
     def _assign_picking_post_process(self, new=False):
         super(StockMove, self)._assign_picking_post_process(new=new)
         if new:
@@ -131,7 +135,7 @@ class ProductionLot(models.Model):
 
     def action_view_so(self):
         self.ensure_one()
-        action = self.env.ref('sale.action_orders').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("sale.action_orders")
         action['domain'] = [('id', 'in', self.mapped('sale_order_ids.id'))]
         action['context'] = dict(self._context, create=False)
         return action

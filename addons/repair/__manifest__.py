@@ -5,7 +5,7 @@
 {
     'name': 'Repairs',
     'version': '1.0',
-    'sequence': 200,
+    'sequence': 230,
     'category': 'Inventory/Inventory',
     'summary': 'Repair damaged products',
     'description': """

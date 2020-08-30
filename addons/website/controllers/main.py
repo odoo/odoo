@@ -19,7 +19,7 @@ import odoo
 from odoo import http, models, fields, _
 from odoo.http import request
 from odoo.tools import OrderedSet
-from odoo.addons.http_routing.models.ir_http import slug, _guess_mimetype
+from odoo.addons.http_routing.models.ir_http import slug, slugify, _guess_mimetype
 from odoo.addons.web.controllers.main import Binary
 from odoo.addons.portal.controllers.portal import pager as portal_pager
 from odoo.addons.portal.controllers.web import Home
@@ -95,16 +95,21 @@ class Website(Home):
     # while portal users are redirected to the frontend by default
     # ------------------------------------------------------
 
-    @http.route(website=True, auth="public", sitemap=False)
-    def web_login(self, redirect=None, *args, **kw):
-        response = super(Website, self).web_login(redirect=redirect, *args, **kw)
+    def _login_redirect(self, uid, redirect=None):
+        """ Redirect regular users (employees) to the backend) and others to
+        the frontend
+        """
         if not redirect and request.params['login_success']:
-            if request.env['res.users'].browse(request.uid).has_group('base.group_user'):
+            if request.env['res.users'].browse(uid).has_group('base.group_user'):
                 redirect = b'/web?' + request.httprequest.query_string
             else:
                 redirect = '/my'
-            return http.redirect_with_hash(redirect)
-        return response
+        return super()._login_redirect(uid, redirect=redirect)
+
+    # Force website=True + auth='public', required for login form layout
+    @http.route(website=True, auth="public", sitemap=False)
+    def web_login(self, *args, **kw):
+        return super().web_login(*args, **kw)
 
     # ------------------------------------------------------
     # Business
@@ -264,6 +269,21 @@ class Website(Home):
             ]
         }
 
+    @http.route('/website/snippet/filters', type='json', auth='public', website=True)
+    def get_dynamic_filter(self, filter_id, template_key, limit=None, search_domain=None):
+        dynamic_filter = request.env['website.snippet.filter'].sudo().search(
+            [('id', '=', filter_id)] + request.website.website_domain()
+        )
+        return dynamic_filter and dynamic_filter.render(template_key, limit, search_domain) or ''
+
+    @http.route('/website/snippet/filter_templates', type='json', auth='public', website=True)
+    def get_dynamic_snippet_templates(self, filter_id=False):
+        # todo: if filter_id.model -> filter template
+        templates = request.env['ir.ui.view'].sudo().search_read(
+            [['key', 'ilike', '.dynamic_filter_template_'], ['type', '=', 'qweb']], ['key', 'name']
+        )
+        return templates
+
     # ------------------------------------------------------
     # Edit
     # ------------------------------------------------------
@@ -391,8 +411,14 @@ class Website(Home):
         fields = ['website_meta_title', 'website_meta_description', 'website_meta_keywords', 'website_meta_og_img']
         if res_model == 'website.page':
             fields.extend(['website_indexed', 'website_id'])
-        res = request.env[res_model].browse(res_id).read(fields)[0]
+
+        record = request.env[res_model].browse(res_id)
+        res = record._read_format(fields)[0]
         res['has_social_default_image'] = request.website.has_social_default_image
+
+        if res_model not in ('website.page', 'ir.ui.view') and 'seo_name' in record:  # allow custom slugify
+            res['seo_name_default'] = slugify(record.display_name)  # default slug, if seo_name become empty
+            res['seo_name'] = record.seo_name and slugify(record.seo_name) or ''
         return res
 
     @http.route(['/google<string(length=16):key>.html'], type='http', auth="public", website=True, sitemap=False)
@@ -410,6 +436,12 @@ class Website(Home):
                 raise werkzeug.exceptions.NotFound()
 
         return request.make_response("google-site-verification: %s" % request.website.google_search_console)
+
+    @http.route('/website/google_maps_api_key', type='json', auth='public', website=True)
+    def google_maps_api_key(self):
+        return json.dumps({
+            'google_maps_api_key': request.website.google_maps_api_key or ''
+        })
 
     # ------------------------------------------------------
     # Themes

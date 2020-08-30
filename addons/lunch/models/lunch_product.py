@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import base64
 
-from odoo import api, fields, models
-
+from odoo import api, fields, models, _
+from odoo.exceptions import UserError
+from odoo.modules.module import get_module_resource
 from odoo.tools import formatLang
 
 
@@ -12,8 +14,13 @@ class LunchProductCategory(models.Model):
     _inherit = 'image.mixin'
     _description = 'Lunch Product Category'
 
+    @api.model
+    def _default_image(self):
+        image_path = get_module_resource('lunch', 'static/img', 'lunch.png')
+        return base64.b64encode(open(image_path, 'rb').read())
+
     name = fields.Char('Product Category', required=True, translate=True)
-    company_id = fields.Many2one('res.company', default=lambda self: self.env.company)
+    company_id = fields.Many2one('res.company')
     currency_id = fields.Many2one('res.currency', related='company_id.currency_id')
     topping_label_1 = fields.Char('Extra 1 Label', required=True, default='Extras')
     topping_label_2 = fields.Char('Extra 2 Label', required=True, default='Beverages')
@@ -34,6 +41,8 @@ class LunchProductCategory(models.Model):
         ('1_more', 'One or More'),
         ('1', 'Only One')], 'Extra 3 Quantity', default='0_more', required=True)
     product_count = fields.Integer(compute='_compute_product_count', help="The number of products related to this category")
+    active = fields.Boolean(string='Active', default=True)
+    image_1920 = fields.Image(default=_default_image)
 
     def _compute_product_count(self):
         product_data = self.env['lunch.product'].read_group([('category_id', 'in', self.ids)], ['category_id'], ['category_id'])
@@ -60,6 +69,16 @@ class LunchProductCategory(models.Model):
                 topping_values.update({'topping_category': 3})
         return super(LunchProductCategory, self).write(vals)
 
+    def toggle_active(self):
+        """ Archiving related lunch product """
+        res = super().toggle_active()
+        Product = self.env['lunch.product'].with_context(active_test=False)
+        all_products = Product.search([('category_id', 'in', self.ids)])
+        for category in self:
+            all_products.filtered(
+                lambda p: p.category_id == category and p.active != category.active
+            ).toggle_active()
+        return res
 
 class LunchTopping(models.Model):
     """"""
@@ -88,16 +107,22 @@ class LunchProduct(models.Model):
     _description = 'Lunch Product'
     _inherit = 'image.mixin'
     _order = 'name'
+    _check_company_auto = True
 
     name = fields.Char('Product Name', required=True, translate=True)
-    category_id = fields.Many2one('lunch.product.category', 'Product Category', required=True)
+    category_id = fields.Many2one('lunch.product.category', 'Product Category', check_company=True, required=True)
     description = fields.Text('Description', translate=True)
     price = fields.Float('Price', digits='Account', required=True)
-    supplier_id = fields.Many2one('lunch.supplier', 'Vendor', required=True)
+    supplier_id = fields.Many2one('lunch.supplier', 'Vendor', check_company=True, required=True)
     active = fields.Boolean(default=True)
 
-    company_id = fields.Many2one('res.company', related='supplier_id.company_id', store=True)
+    company_id = fields.Many2one('res.company', related='supplier_id.company_id', readonly=False, store=True)
     currency_id = fields.Many2one('res.currency', related='company_id.currency_id')
 
     new_until = fields.Date('New Until')
-    favorite_user_ids = fields.Many2many('res.users', 'lunch_product_favorite_user_rel', 'product_id', 'user_id')
+    favorite_user_ids = fields.Many2many('res.users', 'lunch_product_favorite_user_rel', 'product_id', 'user_id', check_company=True)
+
+    def toggle_active(self):
+        if self.filtered(lambda product: not product.active and not product.category_id.active):
+            raise UserError(_("The product category is archived. The user have to unarchive the category or change the category of the product."))
+        return super().toggle_active()

@@ -53,16 +53,21 @@ return session.is_bound.then(function () {
                     return false;
                 }
 
+                if (mutation.type === 'characterData') {
+                    return true;
+                }
+
                 if (mutation.type === 'childList') {
                     // If it is a modification to the DOM hierarchy, only
                     // consider the addition/removal of tracked nodes.
                     for (const nodes of [mutation.addedNodes, mutation.removedNodes]) {
                         for (const node of nodes) {
-                            if (!_isTrackedNode(node)) {
-                                return false;
+                            if (_isTrackedNode(node)) {
+                                return true;
                             }
                         }
                     }
+                    return false;
                 } else if (mutation.type === 'attributes') {
                     // Get old and new value of the attribute. Note: as we
                     // compute the new value after a setTimeout, this might not
@@ -129,7 +134,7 @@ return session.is_bound.then(function () {
         const observer = new MutationObserver(mutations => {
             clearTimeout(mutationTimer);
             currentMutations.push(...mutations);
-            mutationTimer = setTimeout(() => _processMutations(), 500);
+            mutationTimer = setTimeout(() => _processMutations(), 750);
         });
 
         // Now that the observer is configured, we have to start it when needed.
@@ -143,6 +148,7 @@ return session.is_bound.then(function () {
                                 childList: true,
                                 subtree: true,
                                 attributeOldValue: true,
+                                characterData: true,
                             });
                         }
                         resolve();

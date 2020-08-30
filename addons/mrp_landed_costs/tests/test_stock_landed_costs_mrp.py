@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import ValuationReconciliationTestCommon
+from odoo.tests import tagged, Form
 
-from odoo.tests import Form
-from odoo.addons.stock_account.tests.common import StockAccountTestCommon
 
-
-class TestStockLandedCostsMrp(StockAccountTestCommon):
+@tagged('post_install', '-at_install')
+class TestStockLandedCostsMrp(ValuationReconciliationTestCommon):
 
     @classmethod
     def setUpClass(cls):
@@ -16,7 +16,7 @@ class TestStockLandedCostsMrp(StockAccountTestCommon):
         cls.picking_type_in_id = cls.env.ref('stock.picking_type_in')
         cls.picking_type_out_id = cls.env.ref('stock.picking_type_out')
         cls.supplier_location_id = cls.env.ref('stock.stock_location_suppliers')
-        cls.stock_location_id = cls.env.ref('stock.stock_location_stock')
+        cls.stock_location_id = cls.company_data['default_warehouse'].lot_stock_id
         cls.customer_location_id = cls.env.ref('stock.stock_location_customers')
         cls.categ_all = cls.env.ref('product.product_category_all')
         # Create product refrigerator & oven
@@ -37,16 +37,12 @@ class TestStockLandedCostsMrp(StockAccountTestCommon):
             'type': 'product',
             'categ_id': cls.categ_all.id
         })
-        cls.routing_1 = cls.env['mrp.routing'].create({
-            'name': 'Simple Line',
-        })
         cls.uom_unit = cls.env.ref('uom.product_uom_unit')
         cls.bom_refri = cls.env['mrp.bom'].create({
             'product_id': cls.product_refrigerator.id,
             'product_tmpl_id': cls.product_refrigerator.product_tmpl_id.id,
             'product_uom_id': cls.uom_unit.id,
             'product_qty': 1.0,
-            'routing_id': cls.routing_1.id,
             'type': 'normal',
         })
         cls.bom_refri_line1 = cls.env['mrp.bom.line'].create({
@@ -68,8 +64,8 @@ class TestStockLandedCostsMrp(StockAccountTestCommon):
 
         cls.product_refrigerator.categ_id.property_cost_method = 'fifo'
         cls.product_refrigerator.categ_id.property_valuation = 'real_time'
-        cls.product_refrigerator.categ_id.property_stock_account_input_categ_id = cls.o_expense
-        cls.product_refrigerator.categ_id.property_stock_account_output_categ_id = cls.o_income
+        cls.product_refrigerator.categ_id.property_stock_account_input_categ_id = cls.company_data['default_account_stock_in']
+        cls.product_refrigerator.categ_id.property_stock_account_output_categ_id = cls.company_data['default_account_stock_out']
 
         # Create service type product 1.Labour 2.Brokerage 3.Transportation 4.Packaging
         cls.landed_cost = cls.env['product.product'].create({
@@ -121,13 +117,10 @@ class TestStockLandedCostsMrp(StockAccountTestCommon):
         self.assertEqual(first_move.product_qty, 2.0)
 
         # produce product
-        produce_form = Form(self.env['mrp.product.produce'].with_user(self.allow_user).with_context({
-            'active_id': man_order.id,
-            'active_ids': [man_order.id],
-        }))
-        produce_form.qty_producing = 2.0
-        produce_wizard = produce_form.save()
-        produce_wizard.do_produce()
+        mo_form = Form(man_order.with_user(self.allow_user))
+        mo_form.qty_producing = 2
+        man_order = mo_form.save()
+
 
         man_order.button_mark_done()
 

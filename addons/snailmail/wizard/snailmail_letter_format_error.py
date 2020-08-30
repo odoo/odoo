@@ -5,18 +5,14 @@ class SnailmailLetterFormatError(models.TransientModel):
     _name = 'snailmail.letter.format.error'
     _description = 'Format Error Sending a Snailmail Letter'
 
-    message_id = fields.Many2one('mail.message')
-    snailmail_cover = fields.Boolean(string='Add a Cover Page')
-
-    @api.model
-    def default_get(self, fields):
-        res = super(SnailmailLetterFormatError, self).default_get(fields)
-        snailmail_cover = self.env.company.snailmail_cover
-        res.update({
-            'message_id': self.env.context.get('message_id'),
-            'snailmail_cover': snailmail_cover,
-        })
-        return res
+    message_id = fields.Many2one(
+        'mail.message',
+        default=lambda self: self.env.context.get('message_id', None),
+    )
+    snailmail_cover = fields.Boolean(
+        string='Add a Cover Page',
+        default=lambda self: self.env.company.snailmail_cover,
+    )
 
     def update_resend_action(self):
         self.env.company.write({'snailmail_cover': self.snailmail_cover})

@@ -65,16 +65,20 @@
     <xpath expr="." position="inside">
         <div data-js="NavTabs" data-selector="section.s_tabs">
             <we-button data-add-tab=""
-                        data-no-preview="true"
-                        class="fa fa-fw fa-plus"
-                        title="Add Tab"
-                        aria-label="Add Tab"/>
+                       data-no-preview="true"
+                       class="o_we_text_success ml-0"
+                       title="Add Tab"
+                       aria-label="Add Tab">
+                <i class="fa fa-fw fa-plus"/>
+            </we-button>
             <we-button data-remove-tab=""
-                        data-name="remove_tab_opt"
-                        data-no-preview="true"
-                        class="fa fa-fw fa-minus"
-                        title="Remove Tab"
-                        aria-label="Remove Tab"/>
+                       data-name="remove_tab_opt"
+                       data-no-preview="true"
+                       class="o_we_text_danger mr-3"
+                       title="Remove Tab"
+                       aria-label="Remove Tab">
+                <i class="fa fa-fw fa-minus"/>
+            </we-button>
         </div>
         <div data-js="NavTabsStyle" data-selector="section" data-target=".s_tabs_main">
             <we-select string="Style">
@@ -98,17 +102,17 @@
             </we-select>
             <we-select string="Fill and justify" data-apply-to=".s_tabs_nav:first .nav" data-dependencies="horizontal_opt">
                 <we-button data-select-class="">Regular</we-button>
-                <we-button data-select-class="nav-fill">Fill</we-button>
-                <we-button data-select-class="nav-justified">Justified</we-button>
+                <we-button data-select-class="nav-fill">Full Width</we-button>
+                <we-button data-select-class="nav-justified">Equal Widths</we-button>
             </we-select>
             <we-divider/>
-            <we-select string="Transition" data-apply-to=".s_tabs_content:first">
-                <we-button data-select-class="">No Slide Effect</we-button>
-                <we-button data-select-class="s_tabs_slide_up">Slide Up</we-button>
-                <we-button data-select-class="s_tabs_slide_down">Slide Down</we-button>
-                <we-button data-select-class="s_tabs_slide_left">Slide Left</we-button>
-                <we-button data-select-class="s_tabs_slide_right">Slide Right</we-button>
-            </we-select>
+            <we-button-group string="Slide" data-apply-to=".s_tabs_content:first">
+                <we-button title="Slide Left" data-select-class="s_tabs_slide_left"><i class="fa fa-fw fa-long-arrow-left"/></we-button>
+                <we-button title="Slide Up" data-select-class="s_tabs_slide_up"><i class="fa fa-fw fa-long-arrow-up"/></we-button>
+                <we-button title="Slide Down" data-select-class="s_tabs_slide_down"><i class="fa fa-fw fa-long-arrow-down"/></we-button>
+                <we-button title="Slide Right" data-select-class="s_tabs_slide_right"><i class="fa fa-fw fa-long-arrow-right"/></we-button>
+                <we-button title="No Slide Effect" data-select-class=""><i class="fa fa-fw fa-ban"/></we-button>
+            </we-button-group>
         </div>
     </xpath>
 </template>

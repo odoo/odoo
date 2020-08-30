@@ -62,7 +62,7 @@
                                     </div>
                                     <label for="standard_price" groups="base.group_user" attrs="{'invisible': [('product_variant_count', '&gt;', 1), ('is_product_variant', '=', False)]}"/>
                                     <div name="standard_price_uom" groups="base.group_user" attrs="{'invisible': [('product_variant_count', '&gt;', 1), ('is_product_variant', '=', False)]}" class="o_row">
-                                        <field name="standard_price" widget='monetary' options="{'currency_field': 'cost_currency_id'}"/>
+                                        <field name="standard_price" widget='monetary' options="{'currency_field': 'cost_currency_id', 'field_digits': True}"/>
                                         <span groups="uom.group_uom" class="oe_read_only">per
                                             <field name="uom_name"/>
                                         </span>
@@ -117,9 +117,9 @@
                     </notebook>
                 </sheet>
                 <div class="oe_chatter">
-                    <field name="message_follower_ids" widget="mail_followers"/>
-                    <field name="activity_ids" widget="mail_activity"/>
-                    <field name="message_ids" widget="mail_thread"/>
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
                 </div>
             </form>
         </field>
@@ -297,7 +297,7 @@
             <field name="model">product.product</field>
             <field eval="7" name="priority"/>
             <field name="arch" type="xml">
-                <tree string="Product Variants" multi_edit="1" duplicate="false">
+                <tree string="Product Variants" multi_edit="1" duplicate="false" sample="1">
                     <field name="default_code" optional="show" readonly="1"/>
                     <field name="barcode" optional="hide" readonly="1"/>
                     <field name="name" readonly="1"/>
@@ -354,7 +354,7 @@
             <field name="name">Product Kanban</field>
             <field name="model">product.product</field>
             <field name="arch" type="xml">
-                <kanban>
+                <kanban sample="1">
                     <field name="id"/>
                     <field name="lst_price"/>
                     <field name="activity_state"/>
@@ -681,6 +681,13 @@
         <field name="res_model">product.supplierinfo</field>
         <field name="view_mode">tree,form,kanban</field>
         <field name="context">{'visible_product_tmpl_id':False}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a vendor pricelist
+            </p><p>
+                Register the prices requested by your vendors for each product, based on the quantity and the period.
+            </p>
+        </field>
     </record>
 
     <record id="action_product_price_list_report" model="ir.actions.server">

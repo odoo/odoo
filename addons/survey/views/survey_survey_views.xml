@@ -149,9 +149,9 @@
                     </notebook>
                 </sheet>
                 <div class="oe_chatter">
-                    <field name="message_follower_ids" widget="mail_followers"/>
-                    <field name="activity_ids" widget="mail_activity"/>
-                    <field name="message_ids" widget="mail_thread"/>
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
                 </div>
             </form>
         </field>
@@ -160,7 +160,7 @@
         <field name="name">Tree view for survey</field>
         <field name="model">survey.survey</field>
         <field name="arch" type="xml">
-            <tree string="Survey">
+            <tree string="Survey" sample="1">
                 <field name="active" invisible="1"/>
                 <field name="certification" invisible="1"/>
                 <field name="title"/>
@@ -179,7 +179,7 @@
         <field name="name">Kanban view for survey</field>
         <field name="model">survey.survey</field>
         <field name="arch" type="xml">
-            <kanban>
+            <kanban sample="1">
                 <field name="state" />
                 <field name="title" />
                 <field name="answer_done_count" />

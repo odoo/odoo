@@ -32,14 +32,12 @@ class WebsiteAccount(CustomerPortal):
             ('type', '=', 'opportunity')
         ]
 
-    def _prepare_portal_layout_values(self):
-        values = super(WebsiteAccount, self)._prepare_portal_layout_values()
-        lead_count = request.env['crm.lead'].search_count(self.get_domain_my_lead(request.env.user))
-        opp_count = request.env['crm.lead'].search_count(self.get_domain_my_opp(request.env.user))
-        values.update({
-            'lead_count': lead_count,
-            'opp_count': opp_count,
-        })
+    def _prepare_home_portal_values(self, counters):
+        values = super()._prepare_home_portal_values(counters)
+        if 'lead_count' in counters:
+            values['lead_count'] = request.env['crm.lead'].search_count(self.get_domain_my_lead(request.env.user))
+        if 'opp_count' in counters:
+            values['opp_count'] = request.env['crm.lead'].search_count(self.get_domain_my_opp(request.env.user))
         return values
 
     @http.route(['/my/leads', '/my/leads/page/<int:page>'], type='http', auth="user", website=True)
@@ -60,7 +58,7 @@ class WebsiteAccount(CustomerPortal):
         order = searchbar_sortings[sortby]['order']
 
         # archive groups - Default Group By 'create_date'
-        archive_groups = self._get_archive_groups('crm.lead', domain)
+        archive_groups = self._get_archive_groups('crm.lead', domain) if values.get('my_details') else []
         if date_begin and date_end:
             domain += [('create_date', '>', date_begin), ('create_date', '<=', date_end)]
         # pager
@@ -109,7 +107,7 @@ class WebsiteAccount(CustomerPortal):
             'date': {'label': _('Newest'), 'order': 'create_date desc'},
             'name': {'label': _('Name'), 'order': 'name'},
             'contact_name': {'label': _('Contact Name'), 'order': 'contact_name'},
-            'revenue': {'label': _('Expected Revenue'), 'order': 'planned_revenue desc'},
+            'revenue': {'label': _('Expected Revenue'), 'order': 'expected_revenue desc'},
             'probability': {'label': _('Probability'), 'order': 'probability desc'},
             'stage': {'label': _('Stage'), 'order': 'stage_id'},
         }
@@ -126,7 +124,7 @@ class WebsiteAccount(CustomerPortal):
             CrmLead = CrmLead.with_context(active_test=False)
 
         # archive groups - Default Group By 'create_date'
-        archive_groups = self._get_archive_groups('crm.lead', domain)
+        archive_groups = self._get_archive_groups('crm.lead', domain) if values.get('my_details') else []
         if date_begin and date_end:
             domain += [('create_date', '>', date_begin), ('create_date', '<=', date_end)]
         # pager
@@ -301,6 +299,7 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage):
 
         values = {
             'countries': countries,
+            'country_all': country_all,
             'current_country': country,
             'grades': grades,
             'current_grade': grade,

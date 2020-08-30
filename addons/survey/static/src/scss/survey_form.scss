@@ -343,19 +343,36 @@ nav#oe_main_menu_navbar {
 .o_survey_session_leaderboard {
     font-size: 1.4rem;
 
-    .o_survey_session_leaderboard_item {
-        line-height: 1.8rem;
+    .o_survey_session_leaderboard_container {
+        height: calc(2.8rem * 15);
+    }
 
-        .o_survey_session_leaderboard_index {
-            width: 9.5rem;
+    .o_survey_session_leaderboard_item {
+        line-height: 2.4rem;
+        width: 100%;
+        transition: top ease-in-out .3s;
+
+        .o_survey_session_leaderboard_score {
+            width: 6.5rem;
             padding-top: .2rem;
+            height: 2.8rem;
+        }
+
+        .o_survey_session_leaderboard_bar, .o_survey_session_leaderboard_bar_question {
+            height: 2.8rem;
         }
 
         .o_survey_session_leaderboard_bar {
-            min-width: 90px;
-            height: 2.2rem;
+            min-width: 3rem;
             background-color: #007A77;
-            transition: width ease 1.5s;
+            z-index: 2;
+        }
+
+        .o_survey_session_leaderboard_bar_question_score {
+            top: .2rem;
+            right: .5rem;
+            width: 20rem;
+            z-index: 1;
         }
 
         .o_survey_session_leaderboard_name {

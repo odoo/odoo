@@ -454,7 +454,7 @@ class StockMove(models.Model):
                 'stock_valuation_layer_ids': [(6, None, [svl_id])],
                 'move_type': 'entry',
             })
-            new_account_move.post()
+            new_account_move._post()
 
     def _account_entry_move(self, qty, description, svl_id, cost):
         """ Accounting Valuation Entries """

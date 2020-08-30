@@ -5,7 +5,7 @@
             <field name="name">rating.rating.tree</field>
             <field name="model">rating.rating</field>
             <field name="arch" type="xml">
-                <tree string="Rating" create="false" edit="false">
+                <tree string="Rating" create="false" edit="false" sample="1">
                     <field name="res_name"/>
                     <field name="parent_res_name"/>
                     <field name="rated_partner_id"/>
@@ -54,7 +54,7 @@
             <field name="name">rating.rating.kanban</field>
             <field name="model">rating.rating</field>
             <field name="arch" type="xml">
-                <kanban create="false">
+                <kanban create="false" sample="1">
                     <field name="rating"/>
                     <field name="res_name"/>
                     <field name="feedback"/>
@@ -103,7 +103,7 @@
             <field name="name">rating.rating.pivot</field>
             <field name="model">rating.rating</field>
             <field name="arch" type="xml">
-                <pivot string="Rating Average" display_quantity="true">
+                <pivot string="Rating Average" display_quantity="true" sample="1">
                     <field name="rated_partner_id" type="row"/>
                     <field name="create_date" type="col"/>
                     <field name="rating" type="measure"/>
@@ -115,7 +115,7 @@
            <field name="name">rating.rating.graph</field>
            <field name="model">rating.rating</field>
            <field name="arch" type="xml">
-                <graph string="Rating Average" type="bar">
+                <graph string="Rating Average" type="bar" sample="1">
                     <field name="create_date" type="row"/>
                     <field name="rating" type="measure"/>
                 </graph>
@@ -138,6 +138,8 @@
                     <filter string="Highly dissatisfied" name="rating_unhappy" domain="[('rating_text', '=', 'highly_dissatisfied')]"/>
                     <separator/>
                     <filter string="My Ratings" name="my_ratings" domain="[('rated_partner_id.user_ids', 'in', [uid])]"/>
+                    <separator/>
+                    <filter name="filter_create_date" date="create_date"/>
                     <group expand="0" string="Group By">
                         <filter string="Rated User" name="responsible" context="{'group_by':'rated_partner_id'}"/>
                         <filter string="Customer" name="customer" context="{'group_by':'partner_id'}"/>

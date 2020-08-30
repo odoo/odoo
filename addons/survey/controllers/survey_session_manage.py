@@ -147,7 +147,7 @@ class UserInputSession(http.Controller):
             return ''
 
         return request.env.ref('survey.user_input_session_leaderboard')._render({
-            'animate_width': True,
+            'animate': True,
             'leaderboard': survey._prepare_leaderboard_values()
         })
 

@@ -4,6 +4,7 @@ odoo.define('point_of_sale.ClientListScreen', function(require) {
     const { debounce } = owl.utils;
     const PosComponent = require('point_of_sale.PosComponent');
     const Registries = require('point_of_sale.Registries');
+    const { useListener } = require('web.custom_hooks');
 
     /**
      * Render this screen using `showTempScreen` to select client.
@@ -23,6 +24,10 @@ odoo.define('point_of_sale.ClientListScreen', function(require) {
     class ClientListScreen extends PosComponent {
         constructor() {
             super(...arguments);
+            useListener('click-save', () => this.env.bus.trigger('save-customer'));
+            useListener('click-edit', () => this.editClient());
+            useListener('save-changes', this.saveChanges);
+
             // We are not using useState here because the object
             // passed to useState converts the object and its contents
             // to Observer proxy. Not sure of the side-effects of making
@@ -31,7 +36,7 @@ odoo.define('point_of_sale.ClientListScreen', function(require) {
             this.state = {
                 query: null,
                 selectedClient: this.props.client,
-                detailIsShown: Boolean(this.props.client),
+                detailIsShown: false,
                 isEditMode: false,
                 editModeProps: {
                     partner: {
@@ -45,8 +50,13 @@ odoo.define('point_of_sale.ClientListScreen', function(require) {
 
         // Lifecycle hooks
         back() {
-            this.props.resolve({ confirmed: false, payload: false });
-            this.trigger('close-temp-screen');
+            if(this.state.detailIsShown) {
+                this.state.detailIsShown = false;
+                this.render();
+            } else {
+                this.props.resolve({ confirmed: false, payload: false });
+                this.trigger('close-temp-screen');
+            }
         }
         confirm() {
             this.props.resolve({ confirmed: true, payload: this.state.selectedClient });
@@ -66,7 +76,7 @@ odoo.define('point_of_sale.ClientListScreen', function(require) {
             }
         }
         get isNextButtonVisible() {
-            return this.state.selectedClient ? !this.state.isEditMode : false;
+            return this.state.selectedClient ? true : false;
         }
         /**
          * Returns the text and command of the next button.
@@ -75,10 +85,7 @@ odoo.define('point_of_sale.ClientListScreen', function(require) {
         get nextButton() {
             if (!this.props.client) {
                 return { command: 'set', text: 'Set Customer' };
-            } else if (
-                this.props.client &&
-                this.props.client === this.state.selectedClient
-            ) {
+            } else if (this.props.client && this.props.client === this.state.selectedClient) {
                 return { command: 'deselect', text: 'Deselect Customer' };
             } else {
                 return { command: 'set', text: 'Change Customer' };
@@ -102,12 +109,18 @@ odoo.define('point_of_sale.ClientListScreen', function(require) {
         clickClient(event) {
             let partner = event.detail.client;
             if (this.state.selectedClient === partner) {
-                this.state.detailIsShown = !this.state.detailIsShown;
+                this.state.selectedClient = null;
             } else {
                 this.state.selectedClient = partner;
-                this.state.detailIsShown = true;
             }
-            this.deactivateEditMode();
+            this.render();
+        }
+        editClient() {
+            this.state.editModeProps = {
+                partner: this.state.selectedClient,
+            };
+            this.state.detailIsShown = true;
+            this.render();
         }
         clickNext() {
             this.state.selectedClient = this.nextButton.command === 'set' ? this.state.selectedClient : null;
@@ -117,6 +130,7 @@ odoo.define('point_of_sale.ClientListScreen', function(require) {
             const { isNewClient } = event.detail;
             this.state.isEditMode = true;
             this.state.detailIsShown = true;
+            this.state.isNewClient = isNewClient;
             if (!isNewClient) {
                 this.state.editModeProps = {
                     partner: this.state.selectedClient,
@@ -143,7 +157,8 @@ odoo.define('point_of_sale.ClientListScreen', function(require) {
                 });
                 await this.env.pos.load_new_partners();
                 this.state.selectedClient = this.env.pos.db.get_partner_by_id(partnerId);
-                this.deactivateEditMode();
+                this.state.detailIsShown = false;
+                this.render();
             } catch (error) {
                 if (error.message.code < 0) {
                     await this.showPopup('OfflineErrorPopup', {

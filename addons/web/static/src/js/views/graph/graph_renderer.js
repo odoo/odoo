@@ -54,6 +54,7 @@ var MAX_LEGEND_LENGTH = 4 * (Math.max(1, config.device.size_class));
 
 return AbstractRenderer.extend({
     className: "o_graph_renderer",
+    sampleDataTargets: ['.o_graph_canvas_container'],
     /**
      * @override
      * @param {Widget} parent
@@ -74,12 +75,6 @@ return AbstractRenderer.extend({
         this.chartId = _.uniqueId('chart');
         this.$legendTooltip = null;
         this.$tooltip = null;
-    },
-    /**
-     * @override
-     */
-    updateState: function () {
-        return this._super.apply(this, arguments);
     },
     /**
      * Chart.js does not need the canvas to be in dom in order
@@ -754,10 +749,8 @@ return AbstractRenderer.extend({
      * immediately, then we render the chart when the widget is in the DOM.
      *
      * @override
-     * @private
-     * @returns {Promise} The _super promise is actually resolved immediately
      */
-    _render: function () {
+    async _renderView() {
         if (this.chart) {
             this.chart.destroy();
         }
@@ -770,9 +763,30 @@ return AbstractRenderer.extend({
         }
         var dataPoints = this._filterDataPoints();
         dataPoints = this._sortDataPoints(dataPoints);
-        if (!dataPoints.length && this.state.mode !== 'pie') {
-            this.$el.append(qweb.render('View.NoContentHelper'));
-        } else if (this.isInDOM) {
+        if (this.isInDOM) {
+            this._renderTitle();
+
+            // detect if some pathologies are still present after the filtering
+            if (this.state.mode === 'pie') {
+                const someNegative = dataPoints.some(dataPt => dataPt.value < 0);
+                const somePositive = dataPoints.some(dataPt => dataPt.value > 0);
+                if (someNegative && somePositive) {
+                    const context = {
+                        title: _t("Invalid data"),
+                        description: [
+                            _t("Pie chart cannot mix positive and negative numbers. "),
+                            _t("Try to change your domain to only display positive results")
+                        ].join("")
+                    };
+                    this._renderNoContentHelper(context);
+                    return;
+                }
+            }
+
+            if (this.state.isSample && !this.isEmbedded) {
+                this._renderNoContentHelper();
+            }
+
             // only render the graph if the widget is already in the DOM (this
             // happens typically after an update), otherwise, it will be
             // rendered when the widget will be attached to the DOM (see
@@ -793,10 +807,7 @@ return AbstractRenderer.extend({
             } else if (this.state.mode === 'pie') {
                 this._renderPieChart(dataPoints);
             }
-
-            this._renderTitle();
         }
-        return this._super.apply(this, arguments);
     },
     /**
      * create bar chart.
@@ -892,38 +903,10 @@ return AbstractRenderer.extend({
      */
     _renderPieChart: function (dataPoints) {
         var self = this;
-
-        // try to see if some pathologies are still present after the filtering
-        var allNegative = true;
-        var someNegative = false;
-        var allZero = true;
-        dataPoints.forEach(function (datapt) {
-            allNegative = allNegative && (datapt.value < 0);
-            someNegative = someNegative || (datapt.value < 0);
-            allZero = allZero && (datapt.value === 0);
-        });
-        if (someNegative && !allNegative) {
-            this.$el.empty();
-            this.$el.append(qweb.render('View.NoContentHelper', {
-                title: _t("Invalid data"),
-                description: _t("Pie chart cannot mix positive and negative numbers. " +
-                    "Try to change your domain to only display positive results"),
-            }));
-            return;
-        }
-        if (allZero && !this.isEmbedded && this.state.origins.length === 1) {
-            this.$el.empty();
-            this.$el.append(qweb.render('View.NoContentHelper', {
-                title: _t("Invalid data"),
-                description: _t("Pie chart cannot display all zero numbers.. " +
-                    "Try to change your domain to display positive results"),
-            }));
-            return;
-        }
-
         // prepare data
         var data = {};
         var colors = [];
+        const allZero = dataPoints.every(dataPt => dataPt.value === 0);
         if (allZero) {
             // add fake data to display a pie chart with a grey zone associated
             // with every origin

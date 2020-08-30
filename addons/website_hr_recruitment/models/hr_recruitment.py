@@ -32,6 +32,13 @@ class Applicant(models.Model):
     def website_form_input_filter(self, request, values):
         if 'partner_name' in values:
             values.setdefault('name', '%s\'s Application' % values['partner_name'])
+        if values.get('job_id'):
+            stage = self.env['hr.recruitment.stage'].sudo().search([
+                ('fold', '=', False),
+                '|', ('job_ids', '=', False), ('job_ids', '=', values['job_id']),
+            ], order='sequence asc', limit=1)
+            if stage:
+                values['stage_id'] = stage.id
         return values
 
 
@@ -54,3 +61,6 @@ class Job(models.Model):
     def set_open(self):
         self.write({'website_published': False})
         return super(Job, self).set_open()
+
+    def get_backend_menu_id(self):
+        return self.env.ref('hr_recruitment.menu_hr_recruitment_root').id

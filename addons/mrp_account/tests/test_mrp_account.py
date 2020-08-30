@@ -1,16 +1,120 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.mrp.tests.test_workorder_operation import TestWorkOrderProcessCommon
+from odoo.addons.mrp.tests.common import TestMrpCommon
 from odoo.tests import Form
 
 
-class TestMrpAccount(TestWorkOrderProcessCommon):
+class TestMrpAccount(TestMrpCommon):
 
     @classmethod
     def setUpClass(cls):
         super(TestMrpAccount, cls).setUpClass()
+        cls.source_location_id = cls.stock_location_14.id
+        cls.warehouse = cls.env.ref('stock.warehouse0')
+        # setting up alternative workcenters
+        cls.wc_alt_1 = cls.env['mrp.workcenter'].create({
+            'name': 'Nuclear Workcenter bis',
+            'capacity': 3,
+            'time_start': 9,
+            'time_stop': 5,
+            'time_efficiency': 80,
+        })
+        cls.wc_alt_2 = cls.env['mrp.workcenter'].create({
+            'name': 'Nuclear Workcenter ter',
+            'capacity': 1,
+            'time_start': 10,
+            'time_stop': 5,
+            'time_efficiency': 85,
+        })
+        cls.product_4.uom_id = cls.uom_unit
+        cls.planning_bom = cls.env['mrp.bom'].create({
+            'product_id': cls.product_4.id,
+            'product_tmpl_id': cls.product_4.product_tmpl_id.id,
+            'product_uom_id': cls.uom_unit.id,
+            'product_qty': 4.0,
+            'consumption': 'flexible',
+            'operation_ids': [
+                (0, 0, {'name': 'Gift Wrap Maching', 'workcenter_id': cls.workcenter_1.id, 'time_cycle': 15, 'sequence': 1}),
+            ],
+            'type': 'normal',
+            'bom_line_ids': [
+                (0, 0, {'product_id': cls.product_2.id, 'product_qty': 2}),
+                (0, 0, {'product_id': cls.product_1.id, 'product_qty': 4})
+            ]})
+        cls.dining_table = cls.env['product.product'].create({
+            'name': 'Table (MTO)',
+            'type': 'product',
+            'tracking': 'serial',
+        })
+        cls.product_table_sheet = cls.env['product.product'].create({
+            'name': 'Table Top',
+            'type': 'product',
+            'tracking': 'serial',
+        })
+        cls.product_table_leg = cls.env['product.product'].create({
+            'name': 'Table Leg',
+            'type': 'product',
+            'tracking': 'lot',
+        })
+        cls.product_bolt = cls.env['product.product'].create({
+            'name': 'Bolt',
+            'type': 'product',
+        })
+        cls.product_screw = cls.env['product.product'].create({
+            'name': 'Screw',
+            'type': 'product',
+        })
 
+        cls.mrp_workcenter = cls.env['mrp.workcenter'].create({
+            'name': 'Assembly Line 1',
+            'resource_calendar_id': cls.env.ref('resource.resource_calendar_std').id,
+        })
+        cls.mrp_bom_desk = cls.env['mrp.bom'].create({
+            'product_tmpl_id': cls.dining_table.product_tmpl_id.id,
+            'product_uom_id': cls.env.ref('uom.product_uom_unit').id,
+            'sequence': 3,
+            'consumption': 'flexible',
+            'operation_ids': [
+                (0, 0, {'workcenter_id': cls.mrp_workcenter.id, 'name': 'Manual Assembly'}),
+            ],
+        })
+        cls.mrp_bom_desk.write({
+            'bom_line_ids': [
+                (0, 0, {
+                    'product_id': cls.product_table_sheet.id,
+                    'product_qty': 1,
+                    'product_uom_id': cls.env.ref('uom.product_uom_unit').id,
+                    'sequence': 1,
+                    'operation_id': cls.mrp_bom_desk.operation_ids.id}),
+                (0, 0, {
+                    'product_id': cls.product_table_leg.id,
+                    'product_qty': 4,
+                    'product_uom_id': cls.env.ref('uom.product_uom_unit').id,
+                    'sequence': 2,
+                    'operation_id': cls.mrp_bom_desk.operation_ids.id}),
+                (0, 0, {
+                    'product_id': cls.product_bolt.id,
+                    'product_qty': 4,
+                    'product_uom_id': cls.env.ref('uom.product_uom_unit').id,
+                    'sequence': 3,
+                    'operation_id': cls.mrp_bom_desk.operation_ids.id}),
+                (0, 0, {
+                    'product_id': cls.product_screw.id,
+                    'product_qty': 10,
+                    'product_uom_id': cls.env.ref('uom.product_uom_unit').id,
+                    'sequence': 4,
+                    'operation_id': cls.mrp_bom_desk.operation_ids.id}),
+            ]
+        })
+        cls.mrp_workcenter_1 = cls.env['mrp.workcenter'].create({
+            'name': 'Drill Station 1',
+            'resource_calendar_id': cls.env.ref('resource.resource_calendar_std').id,
+        })
+        cls.mrp_workcenter_3 = cls.env['mrp.workcenter'].create({
+            'name': 'Assembly Line 1',
+            'resource_calendar_id': cls.env.ref('resource.resource_calendar_std').id,
+        })
         cls.categ_standard = cls.env['product.category'].create({
             'name': 'STANDARD',
             'property_cost_method': 'standard'
@@ -66,24 +170,20 @@ class TestMrpAccount(TestWorkOrderProcessCommon):
         })
         inventory.action_validate
         bom = self.mrp_bom_desk.copy()
-        bom.routing_id = False # TODO: extend the test later with the necessary operations
+        bom.operation_ids = False
         production_table_form = Form(self.env['mrp.production'])
         production_table_form.product_id = self.dining_table
         production_table_form.bom_id = bom
-        production_table_form.product_qty = 5.0
+        production_table_form.product_qty = 1
         production_table = production_table_form.save()
 
         production_table.extra_cost = 20
         production_table.action_confirm()
 
-        produce_form = Form(self.env['mrp.product.produce'].with_context({
-            'active_id': production_table.id,
-            'active_ids': [production_table.id],
-        }))
-        produce_form.qty_producing = 1.0
-        produce_wizard = produce_form.save()
-        produce_wizard.do_produce()
-        production_table.post_inventory()
+        mo_form = Form(production_table)
+        mo_form.qty_producing = 1
+        production_table = mo_form.save()
+        production_table._post_inventory()
         move_value = production_table.move_finished_ids.filtered(lambda x: x.state == "done").stock_valuation_layer_ids.value
 
         # 1 table head at 20 + 4 table leg at 15 + 4 bolt at 10 + 10 screw at 10 + 1*20 (extra cost)

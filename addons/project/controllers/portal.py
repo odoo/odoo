@@ -15,10 +15,12 @@ from odoo.osv.expression import OR
 
 class CustomerPortal(CustomerPortal):
 
-    def _prepare_portal_layout_values(self):
-        values = super(CustomerPortal, self)._prepare_portal_layout_values()
-        values['project_count'] = request.env['project.project'].search_count([])
-        values['task_count'] = request.env['project.task'].search_count([])
+    def _prepare_home_portal_values(self, counters):
+        values = super()._prepare_home_portal_values(counters)
+        if 'project_count' in counters:
+            values['project_count'] = request.env['project.project'].search_count([])
+        if 'task_count' in counters:
+            values['task_count'] = request.env['project.task'].search_count([])
         return values
 
     # ------------------------------------------------------------
@@ -46,7 +48,7 @@ class CustomerPortal(CustomerPortal):
         order = searchbar_sortings[sortby]['order']
 
         # archive groups - Default Group By 'create_date'
-        archive_groups = self._get_archive_groups('project.project', domain)
+        archive_groups = self._get_archive_groups('project.project', domain) if values.get('my_details') else []
         if date_begin and date_end:
             domain += [('create_date', '>', date_begin), ('create_date', '<=', date_end)]
         # projects count
@@ -158,7 +160,7 @@ class CustomerPortal(CustomerPortal):
             groupby = 'project'
 
         # archive groups - Default Group By 'create_date'
-        archive_groups = self._get_archive_groups('project.task', domain)
+        archive_groups = self._get_archive_groups('project.task', domain) if values.get('my_details') else []
         if date_begin and date_end:
             domain += [('create_date', '>', date_begin), ('create_date', '<=', date_end)]
 

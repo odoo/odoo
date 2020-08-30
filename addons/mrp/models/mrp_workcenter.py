@@ -192,7 +192,7 @@ class MrpWorkcenter(models.Model):
         return super(MrpWorkcenter, self).write(vals)
 
     def action_work_order(self):
-        action = self.env.ref('mrp.action_work_orders').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("mrp.action_work_orders")
         return action
 
     def _get_unavailability_intervals(self, start_datetime, end_datetime):
@@ -333,7 +333,7 @@ class MrpWorkcenterProductivity(models.Model):
                 d2 = fields.Datetime.from_string(blocktime.date_end)
                 diff = d2 - d1
                 if (blocktime.loss_type not in ('productive', 'performance')) and blocktime.workcenter_id.resource_calendar_id:
-                    r = blocktime.workcenter_id._get_work_days_data(d1, d2)['hours']
+                    r = blocktime.workcenter_id._get_work_days_data_batch(d1, d2)[blocktime.workcenter_id.id]['hours']
                     blocktime.duration = round(r * 60, 2)
                 else:
                     blocktime.duration = round(diff.total_seconds() / 60.0, 2)

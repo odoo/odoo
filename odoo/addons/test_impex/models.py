@@ -50,8 +50,7 @@ for name, field in MODELS:
         @api.model
         def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
             if isinstance(name, str) and name.split(':')[0] == self._name:
-                record_ids = self._search([('value', operator, int(name.split(':')[1]))], access_rights_uid=name_get_uid)
-                return models.lazy_name_get(self.browse(record_ids).with_user(name_get_uid))
+                return self._search([('value', operator, int(name.split(':')[1]))], access_rights_uid=name_get_uid)
             else:
                 return []
 
@@ -63,6 +62,7 @@ class One2ManyChild(models.Model):
 
     parent_id = fields.Many2one('export.one2many')
     str = fields.Char()
+    m2o = fields.Many2one('export.integer')
     value = fields.Integer()
 
     def name_get(self):
@@ -71,8 +71,7 @@ class One2ManyChild(models.Model):
     @api.model
     def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
         if isinstance(name, str) and name.split(':')[0] == self._name:
-            record_ids = self._search([('value', operator, int(name.split(':')[1]))], access_rights_uid=name_get_uid)
-            return models.lazy_name_get(self.browse(record_ids).with_user(name_get_uid))
+            return self._search([('value', operator, int(name.split(':')[1]))], access_rights_uid=name_get_uid)
         else:
             return []
 
@@ -129,8 +128,7 @@ class Many2ManyChild(models.Model):
     @api.model
     def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
         if isinstance(name, str) and name.split(':')[0] == self._name:
-            record_ids = self._search([('value', operator, int(name.split(':')[1]))], access_rights_uid=name_get_uid)
-            return models.lazy_name_get(self.browse(record_ids).with_user(name_get_uid))
+            return self._search([('value', operator, int(name.split(':')[1]))], access_rights_uid=name_get_uid)
         else:
             return []
 
@@ -164,3 +162,15 @@ class OnlyOne(models.Model):
         ('value_unique', 'unique (value)', "The value must be unique"),
         ('pair_unique', 'unique (value2, value3)', "The values must be unique"),
     ]
+
+class InheritsParent(models.Model):
+    _name = _description = 'export.inherits.parent'
+
+    value_parent = fields.Integer()
+
+class InheritsChild(models.Model):
+    _name = _description = 'export.inherits.child'
+    _inherits = {'export.inherits.parent': 'parent_id'}
+
+    parent_id = fields.Many2one('export.inherits.parent', required=True, ondelete='cascade')
+    value = fields.Integer()

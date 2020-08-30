@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.account.tests.common import AccountTestCommon
+from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import ValuationReconciliationTestCommon
 from odoo.tests import common, Form
 from odoo.exceptions import UserError
 from odoo.tools import mute_logger, float_compare
@@ -9,24 +9,23 @@ from odoo.tools import mute_logger, float_compare
 
 # these tests create accounting entries, and therefore need a chart of accounts
 @common.tagged('post_install', '-at_install')
-class TestSaleMrpFlow(AccountTestCommon):
+class TestSaleMrpFlow(ValuationReconciliationTestCommon):
 
     @classmethod
-    def setUpClass(cls):
-        super(TestSaleMrpFlow, cls).setUpClass()
+    def setUpClass(cls, chart_template_ref=None):
+        super().setUpClass(chart_template_ref=chart_template_ref)
+        cls.env.ref('stock.route_warehouse0_mto').active = True
+
         # Useful models
         cls.StockMove = cls.env['stock.move']
         cls.UoM = cls.env['uom.uom']
         cls.MrpProduction = cls.env['mrp.production']
         cls.Inventory = cls.env['stock.inventory']
         cls.InventoryLine = cls.env['stock.inventory.line']
-        cls.ProductProduce = cls.env['mrp.product.produce']
         cls.ProductCategory = cls.env['product.category']
 
         cls.categ_unit = cls.env.ref('uom.product_uom_categ_unit')
         cls.categ_kgm = cls.env.ref('uom.product_uom_categ_kgm')
-        cls.stock_location = cls.env.ref('stock.stock_location_stock')
-        cls.warehouse = cls.env.ref('stock.warehouse0')
 
         cls.uom_kg = cls.env['uom.uom'].search([('category_id', '=', cls.categ_kgm.id), ('uom_type', '=', 'reference')], limit=1)
         cls.uom_kg.write({
@@ -233,8 +232,8 @@ class TestSaleMrpFlow(AccountTestCommon):
 
         # Create product A, B, C, D.
         # --------------------------
-        route_manufacture = self.warehouse.manufacture_pull_id.route_id
-        route_mto = self.warehouse.mto_pull_id.route_id
+        route_manufacture = self.company_data['default_warehouse'].manufacture_pull_id.route_id
+        route_mto = self.company_data['default_warehouse'].mto_pull_id.route_id
         product_a = self._create_product('Product A', self.uom_unit, routes=[route_manufacture, route_mto])
         product_c = self._create_product('Product C', self.uom_kg)
         product_b = self._create_product('Product B', self.uom_dozen, routes=[route_manufacture, route_mto])
@@ -417,7 +416,7 @@ class TestSaleMrpFlow(AccountTestCommon):
             'product_id': product_c.id,
             'product_uom_id': self.uom_kg.id,
             'product_qty': 20,
-            'location_id': self.stock_location.id})
+            'location_id': self.company_data['default_warehouse'].lot_stock_id.id})
         inventory.action_validate()
 
         # --------------------------------------------------
@@ -432,15 +431,10 @@ class TestSaleMrpFlow(AccountTestCommon):
         # produce product D.
         # ------------------
 
-        produce_form = Form(self.ProductProduce.with_context({
-            'active_id': mnf_product_d.id,
-            'active_ids': [mnf_product_d.id],
-        }))
-        produce_form.qty_producing = 20
-        produce_d = produce_form.save()
-        # produce_d.on_change_qty()
-        produce_d.do_produce()
-        mnf_product_d.post_inventory()
+        mo_form = Form(mnf_product_d)
+        mo_form.qty_producing = 20
+        mnf_product_d = mo_form.save()
+        mnf_product_d._post_inventory()
 
         # Check state of manufacturing order.
         self.assertEqual(mnf_product_d.state, 'done', 'Manufacturing order should still be in progress state.')
@@ -470,7 +464,7 @@ class TestSaleMrpFlow(AccountTestCommon):
             'product_id': product_c.id,
             'product_uom_id': self.uom_kg.id,
             'product_qty': 27.5025,
-            'location_id': self.stock_location.id})
+            'location_id': self.company_data['default_warehouse'].lot_stock_id.id})
         inventory.action_validate()
 
         # Assign product to manufacturing order of product A.
@@ -487,13 +481,10 @@ class TestSaleMrpFlow(AccountTestCommon):
         # Produce product A.
         # ------------------
 
-        produce_form = Form(self.ProductProduce.with_context({
-            'active_id': mnf_product_a.id,
-            'active_ids': [mnf_product_a.id],
-        }))
-        produce_a = produce_form.save()
-        produce_a.do_produce()
-        mnf_product_a.post_inventory()
+        mo_form = Form(mnf_product_a)
+        mo_form.qty_producing = mo_form.product_qty
+        mnf_product_a = mo_form.save()
+        mnf_product_a._post_inventory()
         # Check state of manufacturing order product A.
         self.assertEqual(mnf_product_a.state, 'done', 'Manufacturing order should still be in the progress state.')
         # Check product A avaialble quantity should be 120.
@@ -509,7 +500,7 @@ class TestSaleMrpFlow(AccountTestCommon):
             'categ_id': self.env.ref('product.product_category_all').id,
         })
         # Remove the MTO route as purchase is not installed and since the procurement removal the exception is directly raised
-        product.write({'route_ids': [(6, 0, [self.warehouse.manufacture_pull_id.route_id.id])]})
+        product.write({'route_ids': [(6, 0, [self.company_data['default_warehouse'].manufacture_pull_id.route_id.id])]})
 
         product_wood_panel = self.env['product.product'].create({
             'name': 'Wood Panel',
@@ -541,7 +532,8 @@ class TestSaleMrpFlow(AccountTestCommon):
         # if `delivery` module is installed, a default property is set for the carrier to use
         # However this will lead to an extra line on the SO (the delivery line), which will force
         # the SO to have a different flow (and `invoice_state` value)
-        partner.property_delivery_carrier_id = False
+        if 'property_delivery_carrier_id' in partner:
+            partner.property_delivery_carrier_id = False
 
         f = Form(self.env['sale.order'])
         f.partner_id = partner
@@ -598,7 +590,7 @@ class TestSaleMrpFlow(AccountTestCommon):
             'factor': 1,
             'uom_type': 'bigger',
             'rounding': 1.0})
-        self.company = self.env.ref('base.main_company')
+        self.company = self.company_data['company']
         self.company.anglo_saxon_accounting = True
         self.partner = self.env['res.partner'].create({'name': 'My Test Partner'})
         self.category = self.env.ref('product.product_category_1').copy({'name': 'Test category','property_valuation': 'real_time', 'property_cost_method': 'fifo'})
@@ -634,14 +626,17 @@ class TestSaleMrpFlow(AccountTestCommon):
                 'uom_id': self.uom_unit.id,
                 'categ_id': self.category.id,
                 'standard_price': 10})
-        self.env['stock.quant'].create({
+
+        # Create quants with sudo to avoid:
+        # "You are not allowed to create 'Quants' (stock.quant) records. No group currently allows this operation."
+        self.env['stock.quant'].sudo().create({
             'product_id': self.component1.id,
-            'location_id': self.env.ref('stock.stock_location_stock').id,
+            'location_id': self.company_data['default_warehouse'].lot_stock_id.id,
             'quantity': 6.0,
         })
-        self.env['stock.quant'].create({
+        self.env['stock.quant'].sudo().create({
             'product_id': self.component2.id,
-            'location_id': self.env.ref('stock.stock_location_stock').id,
+            'location_id': self.company_data['default_warehouse'].lot_stock_id.id,
             'quantity': 3.0,
         })
         self.bom = self.env['mrp.bom'].create({
@@ -691,7 +686,7 @@ class TestSaleMrpFlow(AccountTestCommon):
         with move_form.invoice_line_ids.edit(0) as line_form:
             line_form.quantity = 2.0
         self.invoice = move_form.save()
-        self.invoice.post()
+        self.invoice.action_post()
         aml = self.invoice.line_ids
         aml_expense = aml.filtered(lambda l: l.is_anglo_saxon_line and l.debit > 0)
         aml_output = aml.filtered(lambda l: l.is_anglo_saxon_line and l.credit > 0)
@@ -713,7 +708,7 @@ class TestSaleMrpFlow(AccountTestCommon):
 
         # Updating the quantities in stock to prevent
         # a 'Not enough inventory' warning message.
-        stock_location = self.env.ref('stock.stock_location_stock')
+        stock_location = self.company_data['default_warehouse'].lot_stock_id
         self.env['stock.quant']._update_available_quantity(self.component_a, stock_location, 20)
         self.env['stock.quant']._update_available_quantity(self.component_b, stock_location, 10)
         self.env['stock.quant']._update_available_quantity(self.component_c, stock_location, 30)
@@ -833,7 +828,7 @@ class TestSaleMrpFlow(AccountTestCommon):
 
         # Updating the quantities in stock to prevent
         # a 'Not enough inventory' warning message.
-        stock_location = self.env.ref('stock.stock_location_stock')
+        stock_location = self.company_data['default_warehouse'].lot_stock_id
         self.env['stock.quant']._update_available_quantity(self.component_a, stock_location, 56)
         self.env['stock.quant']._update_available_quantity(self.component_b, stock_location, 28)
         self.env['stock.quant']._update_available_quantity(self.component_c, stock_location, 84)
@@ -1169,7 +1164,7 @@ class TestSaleMrpFlow(AccountTestCommon):
 
         # Updating the quantities in stock to prevent
         # a 'Not enough inventory' warning message.
-        stock_location = self.env.ref('stock.stock_location_stock')
+        stock_location = self.company_data['default_warehouse'].lot_stock_id
         self.env['stock.quant']._update_available_quantity(component_uom_unit, stock_location, 240)
         self.env['stock.quant']._update_available_quantity(component_uom_dozen, stock_location, 10)
         self.env['stock.quant']._update_available_quantity(component_uom_kg, stock_location, 0.03)
@@ -1356,11 +1351,11 @@ class TestSaleMrpFlow(AccountTestCommon):
 
         stock_location_components = self.env['stock.location'].create({
             'name': 'Shelf 1',
-            'location_id': self.env.ref('stock.warehouse0').lot_stock_id.id,
+            'location_id': self.company_data['default_warehouse'].lot_stock_id.id,
         })
         stock_location_14 = self.env['stock.location'].create({
             'name': 'Shelf 2',
-            'location_id': self.env.ref('stock.warehouse0').lot_stock_id.id,
+            'location_id': self.company_data['default_warehouse'].lot_stock_id.id,
         })
 
         kit_1 = self._create_product('Kit1', self.uom_unit)
@@ -1388,7 +1383,7 @@ class TestSaleMrpFlow(AccountTestCommon):
             'rule_ids': [(0, 0, {
                 'name': 'Shelf1 -> Customer',
                 'action': 'pull',
-                'picking_type_id': self.ref('stock.picking_type_in'),
+                'picking_type_id': self.company_data['default_warehouse'].in_type_id.id,
                 'location_src_id': stock_location_components.id,
                 'location_id': self.ref('stock.stock_location_customers'),
             })],
@@ -1400,7 +1395,7 @@ class TestSaleMrpFlow(AccountTestCommon):
             'rule_ids': [(0, 0, {
                 'name': 'Shelf2 -> Customer',
                 'action': 'pull',
-                'picking_type_id': self.ref('stock.picking_type_in'),
+                'picking_type_id': self.company_data['default_warehouse'].in_type_id.id,
                 'location_src_id': stock_location_14.id,
                 'location_id': self.ref('stock.stock_location_customers'),
             })],
@@ -1412,8 +1407,8 @@ class TestSaleMrpFlow(AccountTestCommon):
             'route_ids': [(4, route_shelf2.id)]})
 
         # Set enough quantities to make 1 kit_uom_in_kit in WH1
-        self.env['stock.quant']._update_available_quantity(component_shelf1, self.env.ref('stock.warehouse0').lot_stock_id, 15)
-        self.env['stock.quant']._update_available_quantity(component_shelf2, self.env.ref('stock.warehouse0').lot_stock_id, 10)
+        self.env['stock.quant']._update_available_quantity(component_shelf1, self.company_data['default_warehouse'].lot_stock_id, 15)
+        self.env['stock.quant']._update_available_quantity(component_shelf2, self.company_data['default_warehouse'].lot_stock_id, 10)
 
         # Creating a sale order for 5 kits and confirming it
         order_form = Form(self.env['sale.order'])
@@ -1496,8 +1491,8 @@ class TestSaleMrpFlow(AccountTestCommon):
         self.assertEqual(move_component_kg.product_uom_qty, 0.583)
 
     def test_product_type_service_1(self):
-        route_manufacture = self.warehouse.manufacture_pull_id.route_id.id
-        route_mto = self.warehouse.mto_pull_id.route_id.id
+        route_manufacture = self.company_data['default_warehouse'].manufacture_pull_id.route_id.id
+        route_mto = self.company_data['default_warehouse'].mto_pull_id.route_id.id
         self.uom_unit = self.env.ref('uom.product_uom_unit')
 
         # Create finished product
@@ -1545,8 +1540,8 @@ class TestSaleMrpFlow(AccountTestCommon):
 
         Cancel the delivery and the production order. Then duplicate
         the delivery. Another production order should be created."""
-        route_manufacture = self.warehouse.manufacture_pull_id.route_id.id
-        route_mto = self.warehouse.mto_pull_id.route_id.id
+        route_manufacture = self.company_data['default_warehouse'].manufacture_pull_id.route_id.id
+        route_mto = self.company_data['default_warehouse'].mto_pull_id.route_id.id
         self.uom_unit = self.env.ref('uom.product_uom_unit')
 
         # Create finished product
@@ -1599,8 +1594,8 @@ class TestSaleMrpFlow(AccountTestCommon):
 
         Cancel the production order and the delivery. Then duplicate
         the delivery. Another production order should be created."""
-        route_manufacture = self.warehouse.manufacture_pull_id.route_id.id
-        route_mto = self.warehouse.mto_pull_id.route_id.id
+        route_manufacture = self.company_data['default_warehouse'].manufacture_pull_id.route_id.id
+        route_mto = self.company_data['default_warehouse'].mto_pull_id.route_id.id
         self.uom_unit = self.env.ref('uom.product_uom_unit')
 
         # Create finished product

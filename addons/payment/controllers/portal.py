@@ -10,6 +10,7 @@ import werkzeug
 
 from odoo import http, _
 from odoo.http import request
+from odoo.osv import expression
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, consteq, ustr
 from odoo.tools.float_utils import float_repr
 from datetime import datetime, timedelta
@@ -207,14 +208,6 @@ class WebsitePayment(http.Controller):
                 cid = user.company_id.id
         else:
             cid = user.company_id.id
-        acquirer_domain = [('state', 'in', ['enabled', 'test']), ('company_id', '=', cid)]
-
-        if acquirer_id:
-            acquirers = env['payment.acquirer'].browse(int(acquirer_id))
-        if order_id:
-            acquirers = env['payment.acquirer'].search(acquirer_domain)
-        if not acquirers:
-            acquirers = env['payment.acquirer'].search(acquirer_domain)
 
         # Check partner
         if not user._is_public():
@@ -233,13 +226,27 @@ class WebsitePayment(http.Controller):
             'error_msg': kw.get('error_msg')
         })
 
+        acquirer_domain = ['&', ('state', 'in', ['enabled', 'test']), ('company_id', '=', cid)]
+        if partner_id:
+            partner = request.env['res.partner'].browse([partner_id])
+            acquirer_domain = expression.AND([
+            acquirer_domain,
+            ['|', ('country_ids', '=', False), ('country_ids', 'in', [partner.sudo().country_id.id])]
+        ])
+        if acquirer_id:
+            acquirers = env['payment.acquirer'].browse(int(acquirer_id))
+        if order_id:
+            acquirers = env['payment.acquirer'].search(acquirer_domain)
+        if not acquirers:
+            acquirers = env['payment.acquirer'].search(acquirer_domain)
+
         # s2s mode will always generate a token, which we don't want for public users
         valid_flows = ['form', 's2s'] if not user._is_public() else ['form']
         values['acquirers'] = [acq for acq in acquirers if acq.payment_flow in valid_flows]
         if partner_id:
             values['pms'] = request.env['payment.token'].search([
                 ('acquirer_id', 'in', acquirers.ids),
-                ('partner_id', '=', partner_id)
+                ('partner_id', 'child_of', partner.commercial_partner_id.id)
             ])
         else:
             values['pms'] = []

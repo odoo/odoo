@@ -8,6 +8,7 @@ import re
 import subprocess
 import sys
 import time
+import warnings
 
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
@@ -20,7 +21,7 @@ except ImportError:
     jingtrang = None
 
 import odoo
-from . import assertion_report, pycompat
+from . import pycompat
 from .config import config
 from .misc import file_open, unquote, ustr, SKIPPED_ELEMENT_TYPES
 from .translate import _
@@ -288,6 +289,7 @@ form: module.record_id""" % (xml_id,)
 
         xml_id = rec.get('id','')
         self._test_xml_id(xml_id)
+        warnings.warn(f"The <report> tag is deprecated, use a <record> tag for {xml_id!r}.", DeprecationWarning)
 
         if rec.get('groups'):
             g_names = rec.get('groups','').split(',')
@@ -327,6 +329,7 @@ form: module.record_id""" % (xml_id,)
         name = rec.get('name')
         xml_id = rec.get('id','')
         self._test_xml_id(xml_id)
+        warnings.warn("The <act_window> tag is deprecated, use a <record> for {xml_id!r}.", DeprecationWarning)
         view_id = False
         if rec.get('view_id'):
             view_id = self.id_get(rec.get('view_id'))
@@ -416,7 +419,7 @@ form: module.record_id""" % (xml_id,)
         data = dict(xml_id=xid, values=res, noupdate=self.noupdate)
         self.env['ir.actions.act_window']._load_records([data], self.mode == 'update')
 
-    def _tag_menuitem(self, rec):
+    def _tag_menuitem(self, rec, parent=None):
         rec_id = rec.attrib["id"]
         self._test_xml_id(rec_id)
 
@@ -430,11 +433,12 @@ form: module.record_id""" % (xml_id,)
         if rec.get('sequence'):
             values['sequence'] = int(rec.get('sequence'))
 
-        if rec.get('parent'):
+        if parent is not None:
+            values['parent_id'] = parent
+        elif rec.get('parent'):
             values['parent_id'] = self.id_get(rec.attrib['parent'])
-        else:
-            if rec.get('web_icon'):
-                values['web_icon'] = rec.attrib['web_icon']
+        elif rec.get('web_icon'):
+            values['web_icon'] = rec.attrib['web_icon']
 
 
         if rec.get('name'):
@@ -472,7 +476,9 @@ form: module.record_id""" % (xml_id,)
             'values': values,
             'noupdate': self.noupdate,
         }
-        self.env['ir.ui.menu']._load_records([data], self.mode == 'update')
+        menu = self.env['ir.ui.menu']._load_records([data], self.mode == 'update')
+        for child in rec.iterchildren('menuitem'):
+            self._tag_menuitem(child, parent=menu.id)
 
     def _tag_record(self, rec):
         rec_model = rec.get("model")
@@ -685,14 +691,11 @@ form: module.record_id""" % (xml_id,)
     def noupdate(self):
         return self._noupdate[-1]
 
-    def __init__(self, cr, module, idref, mode, report=None, noupdate=False, xml_filename=None):
+    def __init__(self, cr, module, idref, mode, noupdate=False, xml_filename=None):
         self.mode = mode
         self.module = module
         self.envs = [odoo.api.Environment(cr, SUPERUSER_ID, {})]
         self.idref = {} if idref is None else idref
-        if report is None:
-            report = assertion_report.assertion_report()
-        self.assertion_report = report
         self._noupdate = [noupdate]
         self.xml_filename = xml_filename
         self._tags = {
@@ -712,7 +715,7 @@ form: module.record_id""" % (xml_id,)
         self._tag_root(de)
     DATA_ROOTS = ['odoo', 'data', 'openerp']
 
-def convert_file(cr, module, filename, idref, mode='update', noupdate=False, kind=None, report=None, pathname=None):
+def convert_file(cr, module, filename, idref, mode='update', noupdate=False, kind=None, pathname=None):
     if pathname is None:
         pathname = os.path.join(module, filename)
     ext = os.path.splitext(filename)[1].lower()
@@ -723,7 +726,7 @@ def convert_file(cr, module, filename, idref, mode='update', noupdate=False, kin
         elif ext == '.sql':
             convert_sql_import(cr, fp)
         elif ext == '.xml':
-            convert_xml_import(cr, module, fp, idref, mode, noupdate, report)
+            convert_xml_import(cr, module, fp, idref, mode, noupdate)
         elif ext == '.js':
             pass # .js files are valid but ignored here.
         else:
@@ -788,5 +791,5 @@ def convert_xml_import(cr, module, xmlfile, idref=None, mode='init', noupdate=Fa
         xml_filename = xmlfile
     else:
         xml_filename = xmlfile.name
-    obj = xml_import(cr, module, idref, mode, report=report, noupdate=noupdate, xml_filename=xml_filename)
+    obj = xml_import(cr, module, idref, mode, noupdate=noupdate, xml_filename=xml_filename)
     obj.parse(doc.getroot())

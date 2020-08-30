@@ -488,6 +488,7 @@ ActionManager.include({
             // can't switch to an unknown view
             return Promise.reject();
         }
+
         var currentController = this.getCurrentController();
         var index;
         if (currentController.actionID !== action.jsID) {
@@ -546,7 +547,7 @@ ActionManager.include({
                     return Promise.resolve(controller.widget.willRestore()).then(function () {
                         viewOptions = _.extend({}, viewOptions, {
                             breadcrumbs: self._getBreadcrumbs(self.controllerStack.slice(0, index)),
-                            shouldUpdateControlPanel: true,
+                            shouldUpdateSearchComponents: true,
                         });
                         return controller.widget.reload(viewOptions).then(function () {
                             return controller;
@@ -692,7 +693,6 @@ ActionManager.include({
             if (config.device.isMobile && actionData.mobile) {
                 options = Object.assign({}, options, actionData.mobile);
             }
-            action.flags = _.extend({}, action.flags, {searchPanelDefaultNoFilter: true});
             return self.doAction(action, options).then(ev.data.on_success, ev.data.on_fail);
         });
     },

@@ -35,7 +35,12 @@ class SaleOrder(models.Model):
             companies = order.sale_order_option_ids.product_id.company_id
             if companies and companies != order.company_id:
                 bad_products = order.sale_order_option_ids.product_id.filtered(lambda p: p.company_id and p.company_id != order.company_id)
-                raise ValidationError((_("Your quotation contains products from company %s whereas your quotation belongs to company %s. \n Please change the company of your quotation or remove the products from other companies (%s).") % (', '.join(companies.mapped('display_name')), order.company_id.display_name, ', '.join(bad_products.mapped('display_name')))))
+                raise ValidationError(_(
+                    "Your quotation contains products from company %(product_company)s whereas your quotation belongs to company %(quote_company)s. \n Please change the company of your quotation or remove the products from other companies (%(bad_products)s).",
+                    product_company=', '.join(companies.mapped('display_name')),
+                    quote_company=order.company_id.display_name,
+                    bad_products=', '.join(bad_products.mapped('display_name')),
+                ))
 
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
@@ -245,6 +250,9 @@ class SaleOrderOption(models.Model):
         order_line._compute_tax_id()
 
         self.write({'line_id': order_line.id})
+        if sale_order:
+            sale_order.add_option_to_order_with_taxcloud()
+
 
     def _get_values_to_add_to_order(self):
         self.ensure_one()

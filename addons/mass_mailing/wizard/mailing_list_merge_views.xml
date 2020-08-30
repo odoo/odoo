@@ -26,8 +26,12 @@
         </field>
     </record>
 
-    <act_window id="mailing_list_merge_action" name="Merge Selected Mailing Lists"
-        res_model="mailing.list.merge"
-        binding_model="mailing.list" binding_views="list"
-        view_mode="form" target="new"/>
+    <record id="mailing_list_merge_action" model="ir.actions.act_window">
+        <field name="name">Merge Selected Mailing Lists</field>
+        <field name="res_model">mailing.list.merge</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="model_mailing_list"/>
+        <field name="binding_view_types">list</field>
+    </record>
 </odoo>

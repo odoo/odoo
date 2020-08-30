@@ -135,25 +135,27 @@ class Meeting(models.Model):
         time_str = to_text(date.strftime(format_time))
 
         if zallday:
-            display_time = _("AllDay , %s") % (date_str)
+            display_time = _("AllDay , %(day)s", day=date_str)
         elif zduration < 24:
             duration = date + timedelta(minutes=round(zduration*60))
             duration_time = to_text(duration.strftime(format_time))
-            display_time = _(u"%s at (%s To %s) (%s)") % (
-                date_str,
-                time_str,
-                duration_time,
-                timezone,
+            display_time = _(
+                u"%(day)s at (%(start)s To %(end)s) (%(timezone)s)",
+                day=date_str,
+                start=time_str,
+                end=duration_time,
+                timezone=timezone,
             )
         else:
             dd_date = to_text(date_deadline.strftime(format_date))
             dd_time = to_text(date_deadline.strftime(format_time))
-            display_time = _(u"%s at %s To\n %s at %s (%s)") % (
-                date_str,
-                time_str,
-                dd_date,
-                dd_time,
-                timezone,
+            display_time = _(
+                u"%(date_start)s at %(time_start)s To\n %(date_end)s at %(time_end)s (%(timezone)s)",
+                date_start=date_str,
+                time_start=time_str,
+                date_end=dd_date,
+                time_end=dd_time,
+                timezone=timezone,
             )
         return display_time
 
@@ -219,9 +221,9 @@ class Meeting(models.Model):
     #redifine message_ids to remove autojoin to avoid search to crash in get_recurrent_ids
     message_ids = fields.One2many(auto_join=False)
 
-    user_id = fields.Many2one('res.users', 'Owner', default=lambda self: self.env.user)
+    user_id = fields.Many2one('res.users', 'Responsible', default=lambda self: self.env.user)
     partner_id = fields.Many2one(
-        'res.partner', string='Responsible', related='user_id.partner_id', readonly=True)
+        'res.partner', string='Responsible Contact', related='user_id.partner_id', readonly=True)
     active = fields.Boolean(
         'Active', default=True,
         help="If the active field is set to false, it will allow you to hide the event alarm information without removing it.")
@@ -242,6 +244,7 @@ class Meeting(models.Model):
     recurrency = fields.Boolean('Recurrent', help="Recurrent Event")
     recurrence_id = fields.Many2one(
         'calendar.recurrence', string="Recurrence Rule", index=True)
+    follow_recurrence = fields.Boolean(default=False) # Indicates if an event follows the recurrence, i.e. is not an exception
     recurrence_update = fields.Selection([
         ('self_only', "This event"),
         ('future_events', "This and following events"),
@@ -322,7 +325,7 @@ class Meeting(models.Model):
         # its recomputation. To avoid this we manually mark the field as computed.
         duration_field = self._fields['duration']
         self.env.remove_to_compute(duration_field, self)
-        for event in self.filtered('duration'):
+        for event in self:
             # Round the duration (in hours) to the minute to avoid weird situations where the event
             # stops at 4:19:59, later displayed as 4:19.
             event.stop = event.start + timedelta(minutes=round((event.duration or 1.0) * 60))
@@ -353,15 +356,23 @@ class Meeting(models.Model):
     @api.constrains('start', 'stop', 'start_date', 'stop_date')
     def _check_closing_date(self):
         for meeting in self:
-            if meeting.start and meeting.stop and meeting.stop < meeting.start:
+            if not meeting.allday and meeting.start and meeting.stop and meeting.stop < meeting.start:
                 raise ValidationError(
                     _('The ending date and time cannot be earlier than the starting date and time.') + '\n' +
-                    _("Meeting '%s' starts '%s' and ends '%s'") % (meeting.name, meeting.start, meeting.stop)
+                    _("Meeting '%(name)s' starts '%(start_datetime)s' and ends '%(end_datetime)s'",
+                      name=meeting.name,
+                      start_datetime=meeting.start,
+                      end_datetime=meeting.stop
+                    )
                 )
-            if meeting.start_date and meeting.stop_date and meeting.stop_date < meeting.start_date:
+            if meeting.allday and meeting.start_date and meeting.stop_date and meeting.stop_date < meeting.start_date:
                 raise ValidationError(
                     _('The ending date cannot be earlier than the starting date.') + '\n' +
-                    _("Meeting '%s' starts '%s' and ends '%s'") % (meeting.name, meeting.start_date, meeting.stop_date)
+                    _("Meeting '%(name)s' starts '%(start_datetime)s' and ends '%(end_datetime)s'",
+                      name=meeting.name,
+                      start_datetime=meeting.start,
+                      end_datetime=meeting.stop
+                    )
                 )
 
     ####################################################
@@ -549,7 +560,7 @@ class Meeting(models.Model):
                 recurrence_vals += [dict(values, base_event_id=event.id, calendar_event_ids=[(4, event.id)])]
             elif future:
                 to_update |= event.recurrence_id._split_from(event, values)
-        self.recurrency = True
+        self.write({'recurrency': True, 'follow_recurrence': True})
         to_update |= self.env['calendar.recurrence'].create(recurrence_vals)
         return to_update._apply_recurrence()
 
@@ -619,6 +630,10 @@ class Meeting(models.Model):
 
         if 'partner_ids' in values:
             values['attendee_ids'] = self._attendees_values(values['partner_ids'])
+
+        if (not recurrence_update_setting or recurrence_update_setting == 'self_only' and len(self) == 1) and 'follow_recurrence' not in values:
+            if any({field: values.get(field) for field in self.env['calendar.event']._get_time_fields() if field in values}):
+                values['follow_recurrence'] = False
 
         previous_attendees = self.attendee_ids
 
@@ -692,9 +707,11 @@ class Meeting(models.Model):
         recurring_vals = [vals for vals in vals_list if vals.get('recurrency')]
         other_vals = [vals for vals in vals_list if not vals.get('recurrency')]
         events = super().create(other_vals)
+
         for vals in recurring_vals:
 
             recurrence_values = {field: vals.pop(field) for field in recurrence_fields if field in vals}
+            vals['follow_recurrence'] = True
             event = super().create(vals)
             events |= event
             if vals.get('recurrency'):
@@ -764,7 +781,10 @@ class Meeting(models.Model):
         grouped_fields = set(group_field.split(':')[0] for group_field in groupby)
         private_fields = grouped_fields - self._get_public_fields()
         if not self.env.su and private_fields:
-            raise AccessError(_("Grouping by %s is not allowed." % ', '.join([self._fields[field_name].string for field_name in private_fields])))
+            raise AccessError(_(
+                "Grouping by %s is not allowed.",
+                ', '.join([self._fields[field_name].string for field_name in private_fields])
+            ))
         return super(Meeting, self).read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
 
     def unlink(self):

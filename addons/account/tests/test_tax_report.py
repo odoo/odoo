@@ -165,7 +165,7 @@ class TaxReportTest(AccountTestInvoicingCommon):
                 (0, 0, {'quantity': 1, 'price_unit': 42, 'tax_ids': [(6, 0, test_tax.ids)]}),
             ],
         })
-        test_invoice.post()
+        test_invoice.action_post()
 
         self.assertTrue(any(line.tax_tag_ids == self.tax_report_line_1_55.tag_ids[0] for line in test_invoice.line_ids), "The test invoice should contain a tax line with tag 55")
         tag_name_before = self.tax_report_line_1_55.tag_name

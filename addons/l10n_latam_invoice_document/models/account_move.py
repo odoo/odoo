@@ -118,11 +118,11 @@ class AccountMove(models.Model):
         remaining.l10n_latam_amount_untaxed = False
         remaining.l10n_latam_tax_ids = [(5, 0)]
 
-    def post(self):
+    def _post(self, soft=True):
         for rec in self.filtered(lambda x: x.l10n_latam_use_documents and (not x.name or x.name == '/')):
             if rec.move_type in ('in_receipt', 'out_receipt'):
                 raise UserError(_('We do not accept the usage of document types on receipts yet. '))
-        return super().post()
+        return super()._post(soft)
 
     @api.constrains('name', 'journal_id', 'state')
     def _check_unique_sequence_number(self):
@@ -141,13 +141,16 @@ class AccountMove(models.Model):
         without_doc_type = validated_invoices.filtered(lambda x: not x.l10n_latam_document_type_id)
         if without_doc_type:
             raise ValidationError(_(
-                'The journal require a document type but not document type has been selected on invoices %s.' % (
-                    without_doc_type.ids)))
+                'The journal require a document type but not document type has been selected on invoices %s.',
+                without_doc_type.ids
+            ))
         without_number = validated_invoices.filtered(
             lambda x: not x.l10n_latam_document_number and x.l10n_latam_manual_document_number)
         if without_number:
-            raise ValidationError(_('Please set the document number on the following invoices %s.' % (
-                without_number.ids)))
+            raise ValidationError(_(
+                'Please set the document number on the following invoices %s.',
+                without_number.ids
+            ))
 
     @api.constrains('move_type', 'l10n_latam_document_type_id')
     def _check_invoice_type_document_type(self):
@@ -156,9 +159,9 @@ class AccountMove(models.Model):
             invoice_type = rec.move_type
             if internal_type in ['debit_note', 'invoice'] and invoice_type in ['out_refund', 'in_refund'] and \
                rec.l10n_latam_document_type_id.code != '99':
-                raise ValidationError(_('You can not use a %s document type with a refund invoice') % internal_type)
+                raise ValidationError(_('You can not use a %s document type with a refund invoice', internal_type))
             elif internal_type == 'credit_note' and invoice_type in ['out_invoice', 'in_invoice']:
-                raise ValidationError(_('You can not use a %s document type with a invoice') % (internal_type))
+                raise ValidationError(_('You can not use a %s document type with a invoice', internal_type))
 
     def _get_l10n_latam_documents_domain(self):
         self.ensure_one()
@@ -233,4 +236,3 @@ class AccountMove(models.Model):
             ]
             if rec.search(domain):
                 raise ValidationError(_('Vendor bill number must be unique per vendor and company.'))
-

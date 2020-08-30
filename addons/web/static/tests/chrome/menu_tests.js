@@ -13,7 +13,7 @@ odoo.define('web.menu_tests', function (require) {
         QUnit.test('Systray on_attach_callback is called', async function (assert) {
             assert.expect(4);
 
-            const parent = testUtils.createParent({});
+            const parent = await testUtils.createParent({});
 
             // Add some widgets to the systray
             const Widget1 = Widget.extend({
@@ -22,7 +22,7 @@ odoo.define('web.menu_tests', function (require) {
             const Widget2 = Widget.extend({
                 on_attach_callback: () => assert.step('on_attach_callback widget2')
             });
-            SystrayMenu.Items = [Widget1, Widget2]
+            SystrayMenu.Items = [Widget1, Widget2];
 
             testUtils.mock.patch(SystrayMenu, {
                 on_attach_callback: function () {

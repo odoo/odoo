@@ -188,15 +188,15 @@ var FormController = BasicController.extend({
      * @override
      * @private
      **/
-    _getActionMenuItems: function () {
+    _getActionMenuItems: function (state) {
         if (!this.hasActionMenus || this.mode === 'edit') {
             return null;
         }
         const props = this._super(...arguments);
-        const activeField = this.model.getActiveField(this.initialState);
+        const activeField = this.model.getActiveField(state);
         const otherActionItems = [];
         if (this.archiveEnabled && activeField) {
-            if (this.initialState.data[activeField]) {
+            if (state.data[activeField]) {
                 otherActionItems.push({
                     description: _t("Archive"),
                     callback: () => {
@@ -248,7 +248,7 @@ var FormController = BasicController.extend({
             for (var k = 0; k < changedFields.length; k++) {
                 var field = fields[changedFields[k]];
                 var fieldData = data[changedFields[k]];
-                if (field.translate && fieldData) {
+                if (field.translate && fieldData && fieldData !== '<p><br></p>') {
                     alertFields[changedFields[k]] = field;
                 }
             }

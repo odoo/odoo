@@ -26,6 +26,7 @@ var EventAdditionalTourSteps = require('event.event_steps');
 
 tour.register('event_tour', {
     url: '/web',
+    rainbowManMessage: _t("Great! Now all you have to do is wait for your attendees to show up!"),
 }, [tour.stepUtils.showAppsMenuItem(), {
     trigger: '.o_app[data-menu-xmlid="event.event_main_menu"]',
     content: _t("Ready to <b>organize events</b> in a few minutes? Let's get started!"),
@@ -55,20 +56,6 @@ tour.register('event_tour', {
     trigger: 'div[name="event_ticket_ids"] .o_field_x2many_list_row_add a',
     content: _t("Ticket types allow you to distinguish your attendees. Let's <b>create</b> a new one."),
 }, {
-    trigger: '.nav-item a:contains("Communication")',
-    content: _t("Let's make sure attendees do not forget to show up! Create an <b>automated reminder</b>."),
-}, {
-    trigger: 'div[name="event_mail_ids"] .o_field_x2many_list_row_add a',
-    content: _t("Click <b>Add a line</b> to schedule a communication."),
-}, {
-    trigger: 'div[name="template_id"] > div > input[type="text"]',
-    content: _t("Here, you can choose the content that will be sent out. To filter the results, start typing <b>Reminder</b>."),
-    position: 'top',
-}, {
-    trigger: 'ul.ui-autocomplete a:contains("Reminder")',
-    content: _t('Let\'s select this template'),
-    width: 160,
-}, {
     trigger: '.o_form_button_save',
     content: _t("Awesome! Now, let's <b>save</b> your changes."),
     position: 'bottom',
@@ -95,6 +82,7 @@ tour.register('event_tour', {
 }, {
     trigger: 'button.o_kanban_add',
     content: _t("Click <b>add</b> to create a new stage."),
+    position: 'bottom',
     width: 200,
     run: 'click',
 }].filter(Boolean));

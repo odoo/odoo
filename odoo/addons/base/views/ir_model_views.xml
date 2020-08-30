@@ -18,7 +18,13 @@
                 </form>
             </field>
         </record>
-        <act_window context="{'model_id': active_id}" id="act_menu_create" name="Create Menu" res_model="wizard.ir.model.menu.create" target="new" view_mode="form"/>
+        <record id="act_menu_create" model="ir.actions.act_window">
+            <field name="name">Create Menu</field>
+            <field name="res_model">wizard.ir.model.menu.create</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="context">{'model_id': active_id}</field>
+        </record>
 
         <!-- model -->
         <record id="view_model_form" model="ir.ui.view">

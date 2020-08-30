@@ -74,10 +74,10 @@ class ImLivechatChannel(models.Model):
 
     @api.depends('channel_ids')
     def _compute_nbr_channel(self):
-        channels = self.env['mail.channel'].search([('livechat_channel_id', 'in', self.ids)])
-        channel_count = dict.fromkeys(self.ids, 0)
-        for channel in channels.filtered(lambda c: c.channel_message_ids):
-            channel_count[channel.livechat_channel_id.id] += 1
+        data = self.env['mail.channel'].read_group([
+            ('livechat_channel_id', 'in', self._ids),
+            ('channel_message_ids', '!=', False)], ['__count'], ['livechat_channel_id'], lazy=False)
+        channel_count = {x['livechat_channel_id'][0]: x['__count'] for x in data}
         for record in self:
             record.nbr_channel = channel_count.get(record.id, 0)
 
@@ -98,7 +98,7 @@ class ImLivechatChannel(models.Model):
             :returns : the ir.action 'action_view_rating' with the correct domain
         """
         self.ensure_one()
-        action = self.env['ir.actions.act_window'].for_xml_id('im_livechat', 'rating_rating_action_view_livechat_rating')
+        action = self.env['ir.actions.act_window']._for_xml_id('im_livechat.rating_rating_action_view_livechat_rating')
         action['domain'] = [('parent_res_id', '=', self.id), ('parent_res_model', '=', 'im_livechat.channel')]
         return action
 

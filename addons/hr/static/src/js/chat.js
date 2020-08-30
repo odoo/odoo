@@ -11,6 +11,8 @@ odoo.define('hr.employee_chat', function (require) {
     var KanbanRenderer = require('web.KanbanRenderer');
     var KanbanRecord = require('web.KanbanRecord');
 
+    const { Component } = owl;
+
     // CHAT MIXIN
     var ChatMixin = {
         /**
@@ -20,12 +22,7 @@ odoo.define('hr.employee_chat', function (require) {
             var self = this;
             return this._super.apply(this, arguments).then(function () {
                 var $chat_button = self.$el.find('.o_employee_chat_btn');
-                if (self.state.context.uid === self.state.data.user_id.res_id) { // Hide the button for yourself
-                    $chat_button.hide();
-                }
-                else {
-                    $chat_button.off('click').on('click', self._onOpenChat.bind(self));
-                }
+                $chat_button.off('click').on('click', self._onOpenChat.bind(self));
             });
         },
 
@@ -34,12 +31,11 @@ odoo.define('hr.employee_chat', function (require) {
             return this._super();
         },
 
-        _onOpenChat: function(ev) {
+        _onOpenChat: function (ev) {
             ev.preventDefault();
             ev.stopImmediatePropagation();
-            this.trigger_up('open_chat', {
-                partner_id: this.state.data.user_partner_id.res_id
-            });
+            const env = Component.env;
+            env.messaging.openChat({ employeeId: this.state.data.id });
             return true;
         },
     };
@@ -47,19 +43,9 @@ odoo.define('hr.employee_chat', function (require) {
     // USAGE OF CHAT MIXIN IN FORM VIEWS
     var EmployeeFormRenderer = FormRenderer.extend(ChatMixin);
 
-    var EmployeeFormController = FormController.extend({
-        custom_events: _.extend({}, FormController.prototype.custom_events, {
-            open_chat: '_onOpenChat'
-        }),
-
-        _onOpenChat: function (ev) {
-            this.call('mail_service', 'openDMChatWindow', ev.data.partner_id);
-        },
-    });
-
     var EmployeeFormView = FormView.extend({
         config: _.extend({}, FormView.prototype.config, {
-            Controller: EmployeeFormController,
+            Controller: FormController,
             Renderer: EmployeeFormRenderer
         }),
     });
@@ -75,19 +61,9 @@ odoo.define('hr.employee_chat', function (require) {
         }),
     });
 
-    var EmployeeKanbanController = KanbanController.extend({
-        custom_events: _.extend({}, KanbanController.prototype.custom_events, {
-            open_chat: '_onOpenChat'
-        }),
-
-        _onOpenChat: function (ev) {
-            this.call('mail_service', 'openDMChatWindow', ev.data.partner_id);
-        },
-    });
-
     var EmployeeKanbanView = KanbanView.extend({
         config: _.extend({}, KanbanView.prototype.config, {
-            Controller: EmployeeKanbanController,
+            Controller: KanbanController,
             Renderer: EmployeeKanbanRenderer
         }),
     });

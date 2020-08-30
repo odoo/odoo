@@ -41,6 +41,7 @@ class account_journal(models.Model):
                     act_type.category as activity_category,
                     act.date_deadline,
                     m.date,
+                    m.ref,
                     CASE WHEN act.date_deadline < CURRENT_DATE THEN 'late' ELSE 'future' END as status
                 FROM account_move m
                     LEFT JOIN mail_activity act ON act.res_id = m.id
@@ -60,10 +61,8 @@ class account_journal(models.Model):
                     'date': odoo_format_date(self.env, activity.get('date_deadline'))
                 }
                 if activity.get('activity_category') == 'tax_report' and activity.get('res_model') == 'account.move':
-                    if self.env['account.move'].browse(activity.get('res_id')).company_id.account_tax_periodicity == 'monthly':
-                        act['name'] += ' (' + format_date(activity.get('date'), 'MMM', locale=get_lang(self.env).code) + ')'
-                    else:
-                        act['name'] += ' (' + format_date(activity.get('date'), 'QQQ', locale=get_lang(self.env).code) + ')'
+                    act['name'] = activity.get('ref')
+
                 activities.append(act)
             journal.json_activity_data = json.dumps({'activities': activities})
 
@@ -263,7 +262,7 @@ class account_journal(models.Model):
             self.env.cr.execute(query, query_args)
             query_results_drafts = self.env.cr.dictfetchall()
 
-            today = fields.Date.today()
+            today = fields.Date.context_today(self)
             query = '''
                 SELECT
                     (CASE WHEN move_type IN ('out_refund', 'in_refund') THEN -1 ELSE 1 END) * amount_residual AS amount_total,
@@ -373,7 +372,7 @@ class account_journal(models.Model):
             cur = self.env['res.currency'].browse(result.get('currency'))
             company = self.env['res.company'].browse(result.get('company_id')) or self.env.company
             rslt_count += 1
-            date = result.get('invoice_date') or fields.Date.today()
+            date = result.get('invoice_date') or fields.Date.context_today(self)
 
             amount = result.get('amount_total', 0) or 0
             if cur != target_currency:
@@ -435,28 +434,32 @@ class account_journal(models.Model):
         statement_line_ids = self.env['account.move.line'].search(domain).mapped('statement_line_id')
         return statement_line_ids
 
+    def _select_action_to_open(self):
+        self.ensure_one()
+        if self._context.get('action_name'):
+            return self._context.get('action_name')
+        elif self.type == 'bank':
+            return 'action_bank_statement_tree'
+        elif self.type == 'cash':
+            return 'action_view_bank_statement_tree'
+        elif self.type == 'sale':
+            return 'action_move_out_invoice_type'
+        elif self.type == 'purchase':
+            return 'action_move_in_invoice_type'
+        else:
+            return 'action_move_journal_line'
+
     def open_action(self):
         """return action based on type for related journals"""
-        action_name = self._context.get('action_name')
-
-        # Find action based on journal.
-        if not action_name:
-            if self.type == 'bank':
-                action_name = 'action_bank_statement_tree'
-            elif self.type == 'cash':
-                action_name = 'action_view_bank_statement_tree'
-            elif self.type == 'sale':
-                action_name = 'action_move_out_invoice_type'
-            elif self.type == 'purchase':
-                action_name = 'action_move_in_invoice_type'
-            else:
-                action_name = 'action_move_journal_line'
+        self.ensure_one()
+        action_name = self._select_action_to_open()
 
         # Set 'account.' prefix if missing.
         if '.' not in action_name:
             action_name = 'account.%s' % action_name
 
-        action = self.env.ref(action_name).read()[0]
+        action = self.env["ir.actions.act_window"]._for_xml_id(action_name)
+
         context = self._context.copy()
         if 'context' in action and type(action['context']) == str:
             context.update(ast.literal_eval(action['context']))
@@ -521,12 +524,16 @@ class account_journal(models.Model):
         action['context'] = ctx
         if ctx.get('use_domain', False):
             action['domain'] = isinstance(ctx['use_domain'], list) and ctx['use_domain'] or ['|', ('journal_id', '=', self.id), ('journal_id', '=', False)]
-            action['name'] += ' for journal ' + self.name
+            action['name'] = _(
+                "%(action)s for journal %(journal)s",
+                action=action["name"],
+                journal=self.name,
+            )
         return action
 
     def create_bank_statement(self):
         """return action to create a bank statements. This button should be called only on journals with type =='bank'"""
-        action = self.env.ref('account.action_bank_statement_tree').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("account.action_bank_statement_tree")
         action.update({
             'views': [[False, 'form']],
             'context': "{'default_journal_id': " + str(self.id) + "}",

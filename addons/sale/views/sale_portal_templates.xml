@@ -18,17 +18,17 @@
         </xpath>
     </template>
 
-    <template id="portal_my_home_sale" name="Portal My Home : sales entries" inherit_id="portal.portal_my_home" priority="20">
+    <template id="portal_my_home_sale" name="Show Quotations / Sales Orders" customize_show="True" inherit_id="portal.portal_my_home" priority="20">
         <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
-            <t t-if="quotation_count" t-call="portal.portal_docs_entry">
+            <t t-call="portal.portal_docs_entry">
                 <t t-set="title">Quotations</t>
                 <t t-set="url" t-value="'/my/quotes'"/>
-                <t t-set="count" t-value="quotation_count"/>
+                <t t-set="placeholder_count" t-value="'quotation_count'"/>
             </t>
-            <t t-if="order_count" t-call="portal.portal_docs_entry">
+            <t t-call="portal.portal_docs_entry">
                 <t t-set="title">Sales Orders</t>
                 <t t-set="url" t-value="'/my/orders'"/>
-                <t t-set="count" t-value="order_count"/>
+                <t t-set="placeholder_count" t-value="'order_count'"/>
             </t>
         </xpath>
     </template>

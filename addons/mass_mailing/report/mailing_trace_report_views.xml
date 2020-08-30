@@ -4,7 +4,7 @@
             <field name="name">mailing.trace.report.view.pivot</field>
             <field name="model">mailing.trace.report</field>
             <field name="arch" type="xml">
-                <pivot string="Mass Mailing Statistics" disable_linking="True">
+                <pivot string="Mass Mailing Statistics" disable_linking="True" sample="1">
                     <field name="campaign" type="row"/>
                     <field name="sent" type="measure"/>
                     <field name="delivered" type="measure"/>
@@ -20,7 +20,7 @@
             <field name="name">mailing.trace.report.view.graph</field>
             <field name="model">mailing.trace.report</field>
             <field name="arch" type="xml">
-                <graph string="Mass Mailing Statistics">
+                <graph string="Mass Mailing Statistics" sample="1">
                     <field name="campaign"/>
                     <field name="sent" type="measure"/>
                 </graph>
@@ -34,6 +34,7 @@
                 <search string="Mass Mailing Statistics">
                     <field name="name" string="Mailing"/>
                     <field name="campaign" string="Campaign" groups="mass_mailing.group_mass_mailing_campaign"/>
+                    <filter name="filter_scheduled_date" date="scheduled_date"/>
                     <group expand="0" string="Extended Filters...">
                         <field name="scheduled_date"/>
                     </group>

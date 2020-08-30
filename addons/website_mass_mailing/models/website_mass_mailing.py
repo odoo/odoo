@@ -9,7 +9,7 @@ class MassMailingPopup(models.Model):
     _description = "Mailing list popup"
 
     def _default_popup_content(self):
-        return self.env['ir.ui.view']._render_template('website_mass_mailing.s_newsletter_block')
+        return self.env['ir.ui.view']._render_template('website_mass_mailing.s_newsletter_subscribe_popup_content')
 
     mailing_list_id = fields.Many2one('mailing.list')
     website_id = fields.Many2one('website')

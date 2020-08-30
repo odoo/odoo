@@ -1,0 +1,19 @@
+// ------------------------------------------------------------------
+// Layout
+// ------------------------------------------------------------------
+
+.o_AttachmentList {
+    display: flex;
+    flex-flow: wrap;
+    justify-content: flex-start;
+    margin: map-get($spacers, 1);
+}
+
+/* Avoid overflow of long attachment text */
+.o_AttachmentList_attachment {
+    margin-bottom: map-get($spacers, 1);
+    margin-top: map-get($spacers, 1);
+    margin-inline-end: map-get($spacers, 1);
+    margin-inline-start: map-get($spacers, 0);
+    max-width: 100%;
+}

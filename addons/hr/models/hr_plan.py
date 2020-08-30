@@ -34,24 +34,24 @@ class HrPlanActivityType(models.Model):
     def get_responsible_id(self, employee):
         if self.responsible == 'coach':
             if not employee.coach_id:
-                raise UserError(_('Coach of employee %s is not set.') % employee.name)
+                raise UserError(_('Coach of employee %s is not set.', employee.name))
             responsible = employee.coach_id.user_id
             if not responsible:
-                raise UserError(_('User of coach of employee %s is not set.') % employee.name)
+                raise UserError(_('User of coach of employee %s is not set.', employee.name))
         elif self.responsible == 'manager':
             if not employee.parent_id:
-                raise UserError(_('Manager of employee %s is not set.') % employee.name)
+                raise UserError(_('Manager of employee %s is not set.', employee.name))
             responsible = employee.parent_id.user_id
             if not responsible:
-                raise UserError(_('User of manager of employee %s is not set.') % employee.name)
+                raise UserError(_('User of manager of employee %s is not set.', employee.name))
         elif self.responsible == 'employee':
             responsible = employee.user_id
             if not responsible:
-                raise UserError(_('User linked to employee %s is required.') % employee.name)
+                raise UserError(_('User linked to employee %s is required.', employee.name))
         elif self.responsible == 'other':
             responsible = self.responsible_id
             if not responsible:
-                raise UserError(_('No specific user given on activity %s.') % self.activity_type_id.name)
+                raise UserError(_('No specific user given on activity %s.', self.activity_type_id.name))
         return responsible
 
 

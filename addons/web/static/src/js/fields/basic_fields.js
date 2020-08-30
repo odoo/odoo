@@ -262,7 +262,7 @@ var InputField = DebouncedField.extend({
         var inputAttrs = { placeholder: this.attrs.placeholder || "" };
         var inputVal;
         if (this.nodeOptions.isPassword) {
-            inputAttrs = _.extend(inputAttrs, { type: 'password', autocomplete: 'new-password' });
+            inputAttrs = _.extend(inputAttrs, { type: 'password', autocomplete: this.attrs.autocomplete || 'new-password' });
             inputVal = this.value || '';
         } else {
             inputAttrs = _.extend(inputAttrs, { type: 'text', autocomplete: this.attrs.autocomplete || 'none'});
@@ -633,6 +633,9 @@ var FieldDateRange = InputField.extend({
         if (this.$pickerContainer) {
             this.$pickerContainer.remove();
         }
+        if (this._onScroll) {
+            window.removeEventListener('scroll', this._onScroll, true);
+        }
         this._super.apply(this, arguments);
     },
 
@@ -695,6 +698,8 @@ var FieldDateRange = InputField.extend({
 
         this.$el.daterangepicker(this.dateRangePickerOptions);
         this.$el.on('apply.daterangepicker', this._applyChanges.bind(this));
+        this.$el.on('show.daterangepicker', this._onDateRangePickerShow.bind(this));
+        this.$el.on('hide.daterangepicker', this._onDateRangePickerHide.bind(this));
         this.$el.off('keyup.daterangepicker');
         this.$pickerContainer = this.$el.data('daterangepicker').container;
 
@@ -710,6 +715,34 @@ var FieldDateRange = InputField.extend({
         this.$pickerContainer.on('focusin.bs.modal', 'select', function (ev) {
             ev.stopPropagation();
         });
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Unbind the scroll event handler when the daterangepicker is closed.
+     *
+     * @private
+     */
+    _onDateRangePickerHide() {
+        if (this._onScroll) {
+            window.removeEventListener('scroll', this._onScroll, true);
+        }
+    },
+    /**
+     * Bind the scroll event handle when the daterangepicker is open.
+     *
+     * @private
+     */
+    _onDateRangePickerShow() {
+        this._onScroll = ev => {
+            if (!this.$pickerContainer.get(0).contains(ev.target)) {
+                this.$el.data('daterangepicker').hide();
+            }
+        };
+        window.addEventListener('scroll', this._onScroll, true);
     },
 });
 
@@ -829,6 +862,25 @@ var FieldDate = InputField.extend({
     _renderEdit: function () {
         this.datewidget.setValue(this.value);
         this.$input = this.datewidget.$input;
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Confirm the value on hit enter and re-render
+     *
+     * @private
+     * @override
+     * @param {KeyboardEvent} ev
+     */
+    async _onKeydown(ev) {
+        this._super(...arguments);
+        if (ev.which === $.ui.keyCode.ENTER) {
+            await this._setValue(this.$input.val());
+            this._render();
+        }
     },
 });
 
@@ -1254,7 +1306,14 @@ var FieldFloatToggle = AbstractField.extend({
             this._setValue(next_val); // will be parsed in _setValue
         }
     },
-
+    /**
+     * For float toggle fields, 0 is a valid value.
+     *
+     * @override
+     */
+    isSet: function () {
+        return this.value === 0 || this._super(...arguments);
+    },
 });
 
 var FieldPercentage = FieldFloat.extend({
@@ -1680,7 +1739,7 @@ var AbstractFieldBinary = AbstractField.extend({
     },
     on_file_uploaded: function (size, name) {
         if (size === false) {
-            this.do_warn(_t("File Upload"), _t("There was a problem while uploading your file"));
+            this.do_warn(false, _t("There was a problem while uploading your file"));
             // TODO: use crashmanager
             console.warn("Error while uploading file : ", name);
         } else {
@@ -1823,7 +1882,7 @@ var FieldBinaryImage = AbstractFieldBinary.extend({
 
         $img.one('error', function () {
             $img.attr('src', self.placeholder);
-            self.do_warn(_t("Image"), _t("Could not display the selected image."));
+            self.do_warn(false, _t("Could not display the selected image"));
         });
 
         return this._super.apply(this, arguments);
@@ -1879,7 +1938,9 @@ var FieldBinaryImage = AbstractFieldBinary.extend({
                     attach: '.o_content',
                     attachToTarget: true,
                     onShow: function () {
-                        if(this.$zoom.height() < 256 && this.$zoom.width() < 256) {
+                        var zoomHeight = Math.ceil(this.$zoom.height());
+                        var zoomWidth = Math.ceil(this.$zoom.width());
+                        if( zoomHeight < 128 && zoomWidth < 128) {
                             this.hide();
                         }
                         core.bus.on('keydown', this, this.hide);
@@ -1963,7 +2024,7 @@ var FieldBinaryFile = AbstractFieldBinary.extend({
     },
     on_save_as: function (ev) {
         if (!this.value) {
-            this.do_warn(_t("Save As..."), _t("The field is empty, there's nothing to save !"));
+            this.do_warn(false, _t("The field is empty, there's nothing to save."));
             ev.stopPropagation();
         } else if (this.res_id) {
             framework.blockUI();
@@ -2643,7 +2704,7 @@ var FieldProgressBar = AbstractField.extend({
             // Cover all numbers with parseFloat
             parsedValue = field_utils.parse.float($input.val());
         } catch (error) {
-            this.do_warn(_t("Wrong value entered!"), _t("Only Integer or Float Value should be valid."));
+            this.do_warn(false, _t("Please enter a numerical value"));
         }
 
         if (parsedValue !== undefined) {

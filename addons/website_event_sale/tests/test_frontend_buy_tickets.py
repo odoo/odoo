@@ -19,6 +19,7 @@ class TestUi(HttpCaseWithUserDemo):
             'user_id': self.env.ref('base.user_admin').id,
             'date_begin': (Datetime.today() + timedelta(days=5)).strftime('%Y-%m-%d 07:00:00'),
             'date_end': (Datetime.today() + timedelta(days=5)).strftime('%Y-%m-%d 16:30:00'),
+            'website_published': True,
         })
 
         self.env['event.event.ticket'].create([{

@@ -28,7 +28,11 @@ class MailThread(models.AbstractModel):
         self.ensure_one()
         # check token field exists
         if self._mail_post_token_field not in self._fields:
-            raise NotImplementedError(_("Model %s does not support token signature, as it does not have %s field.") % (self._name, self._mail_post_token_field))
+            raise NotImplementedError(_(
+                "Model %(model_name)s does not support token signature, as it does not have %(field_name)s field.",
+                model_name=self._name,
+                field_name=self._mail_post_token_field
+            ))
         # sign token
         secret = self.env["ir.config_parameter"].sudo().get_param("database.secret")
         token = (self.env.cr.dbname, self[self._mail_post_token_field], pid)

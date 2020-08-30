@@ -22,7 +22,7 @@
         <field name="model">mailing.list</field>
         <field name="priority">10</field>
         <field name="arch" type="xml">
-            <tree string="Mailing Lists">
+            <tree string="Mailing Lists" sample="1">
                 <field name="name"/>
                 <field name="create_date"/>
                 <field name="is_public"/>
@@ -97,7 +97,7 @@
         <field name="name">mailing.list.view.kanban</field>
         <field name="model">mailing.list</field>
         <field name="arch" type="xml">
-            <kanban js_class="mass_mailing_list_kanban" class="o_kanban_mobile" on_create="mass_mailing.open_create_mass_mailing_list">
+            <kanban js_class="mass_mailing_list_kanban" class="o_kanban_mobile" on_create="mass_mailing.open_create_mass_mailing_list" sample="1">
                 <field name="name"/>
                 <field name="contact_nbr"/>
                 <field name="active"/>

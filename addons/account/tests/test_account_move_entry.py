@@ -3,7 +3,7 @@ from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged, new_test_user
 from odoo.tests.common import Form
 from odoo import fields
-from odoo.exceptions import ValidationError, UserError
+from odoo.exceptions import ValidationError, UserError, RedirectWarning
 
 from dateutil.relativedelta import relativedelta
 from functools import reduce
@@ -17,7 +17,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
     def setUpClass(cls, chart_template_ref=None):
         super().setUpClass(chart_template_ref=chart_template_ref)
 
-        tax_repartition_line = cls.company_data['default_tax_sale'].invoice_repartition_line_ids\
+        tax_repartition_line = cls.company_data['default_tax_sale'].refund_repartition_line_ids\
             .filtered(lambda line: line.repartition_type == 'tax')
         cls.test_move = cls.env['account.move'].create({
             'move_type': 'entry',
@@ -69,7 +69,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
         self.test_move.line_ids[0].account_id = custom_account
 
     def test_misc_fiscalyear_lock_date_1(self):
-        self.test_move.post()
+        self.test_move.action_post()
 
         # Set the lock date after the journal entry date.
         self.test_move.company_id.fiscalyear_lock_date = fields.Date.from_string('2017-01-01')
@@ -143,7 +143,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
         self.assertEqual(copy_move.date, copy_move.company_id.fiscalyear_lock_date + relativedelta(days=1))
 
     def test_misc_fiscalyear_lock_date_2(self):
-        self.test_move.post()
+        self.test_move.action_post()
 
         # Create a bank statement to get a balance in the suspense account.
         statement = self.env['account.bank.statement'].create({
@@ -156,11 +156,11 @@ class TestAccountMove(AccountTestInvoicingCommon):
         statement.button_post()
 
         # You can't lock the fiscal year if there is some unreconciled statement.
-        with self.assertRaises(ValidationError), self.cr.savepoint():
+        with self.assertRaises(RedirectWarning), self.cr.savepoint():
             self.test_move.company_id.fiscalyear_lock_date = fields.Date.from_string('2017-01-01')
 
     def test_misc_tax_lock_date_1(self):
-        self.test_move.post()
+        self.test_move.action_post()
 
         # Set the tax lock date after the journal entry date.
         self.test_move.company_id.tax_lock_date = fields.Date.from_string('2017-01-01')
@@ -249,7 +249,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
         copy_move = self.test_move.copy()
 
         # /!\ The date is changed automatically to the next available one during the post.
-        copy_move.post()
+        copy_move.action_post()
 
         # You can't change the date to one being in a locked period.
         with self.assertRaises(UserError), self.cr.savepoint():
@@ -297,7 +297,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
         # lines[1] = 'move 1 counterpart line'
         # lines[2] = 'move 1 receivable line'
         # lines[3] = 'move 2 counterpart line'
-        draft_moves.post()
+        draft_moves.action_post()
         lines = draft_moves.mapped('line_ids').sorted('balance')
 
         (lines[0] + lines[2]).reconcile()
@@ -340,14 +340,35 @@ class TestAccountMove(AccountTestInvoicingCommon):
         # You can remove journal items if the related journal entry is still balanced.
         self.test_move.line_ids.unlink()
 
+    def test_sequence_change_date(self):
+        # Check setup
+        self.assertEqual(self.test_move.state, 'draft')
+        self.assertEqual(self.test_move.name, 'MISC/2016/01/0001')
+        self.assertEqual(fields.Date.to_string(self.test_move.date), '2016-01-01')
+
+        # Never posetd, the number must change if we change the date
+        self.test_move.date = '2020-02-02'
+        self.assertEqual(self.test_move.name, 'MISC/2020/02/0001')
+
+        # We don't recompute user's input when posting
+        self.test_move.name = 'MyMISC/2020/0000001'
+        self.test_move.action_post()
+        self.assertEqual(self.test_move.name, 'MyMISC/2020/0000001')
+
+        # Has been posted, and it doesn't change anymore
+        self.test_move.button_draft()
+        self.test_move.date = '2020-01-02'
+        self.test_move.action_post()
+        self.assertEqual(self.test_move.name, 'MyMISC/2020/0000001')
+
     def test_journal_sequence(self):
         self.assertEqual(self.test_move.name, 'MISC/2016/01/0001')
-        self.test_move.post()
+        self.test_move.action_post()
         self.assertEqual(self.test_move.name, 'MISC/2016/01/0001')
 
         copy1 = self.test_move.copy()
         self.assertEqual(copy1.name, '/')
-        copy1.post()
+        copy1.action_post()
         self.assertEqual(copy1.name, 'MISC/2016/01/0002')
 
         copy2 = self.test_move.copy()
@@ -357,7 +378,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
         self.assertEqual(copy2.name, 'MISC2/2016/01/0001')
         with Form(copy2) as move_form:  # It is editable in the form
             move_form.name = 'MyMISC/2099/0001'
-        copy2.post()
+        copy2.action_post()
         self.assertEqual(copy2.name, 'MyMISC/2099/0001')
 
         copy3 = copy2.copy()
@@ -365,23 +386,23 @@ class TestAccountMove(AccountTestInvoicingCommon):
         with self.assertRaises(AssertionError):
             with Form(copy2) as move_form:  # It is not editable in the form
                 move_form.name = 'MyMISC/2099/0002'
-        copy3.post()
+        copy3.action_post()
         self.assertEqual(copy3.name, 'MyMISC/2099/0002')
         copy3.name = 'MISC2/2016/00002'
 
         copy4 = copy2.copy()
-        copy4.post()
-        self.assertEqual(copy4.name, 'MyMISC/2099/0002')
+        copy4.action_post()
+        self.assertEqual(copy4.name, 'MISC2/2016/00003')
 
         copy5 = copy2.copy()
         copy5.date = '2021-02-02'
-        copy5.post()
-        self.assertEqual(copy5.name, 'MyMISC/2021/0001')
+        copy5.action_post()
+        self.assertEqual(copy5.name, 'MISC2/2021/00001')
         copy5.name = 'N\'importe quoi?'
 
         copy6 = copy5.copy()
-        copy6.post()
-        self.assertEqual(copy6.name, '1N\'importe quoi?')
+        copy6.action_post()
+        self.assertEqual(copy6.name, 'N\'importe quoi?1')
 
     def test_journal_sequence_format(self):
         """Test different format of sequences and what it becomes on another period"""
@@ -391,6 +412,8 @@ class TestAccountMove(AccountTestInvoicingCommon):
             ('20190910', '20190911', '20190912', '20190913'),
             ('2019-0910', '2019-0911', '2019-0912', '2017-0001'),
             ('201909-10', '201909-11', '201604-01', '201703-01'),
+            ('20-10-10', '20-10-11', '16-04-01', '17-03-01'),
+            ('2010-10', '2010-11', '2010-12', '2017-01'),
             ('JRNL/2016/00001suffix', 'JRNL/2016/00002suffix', 'JRNL/2016/00003suffix', 'JRNL/2017/00001suffix'),
         ]
         other_moves = self.env['account.move'].search([('journal_id', '=', self.test_move.journal_id.id)]) - self.test_move
@@ -405,7 +428,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
         next_move_month.date = '2016-04-12'
         next_move_year.date = '2017-03-12'
         next_moves = (next_move + next_move_month + next_move_year)
-        next_moves.post()
+        next_moves.action_post()
 
         for sequence_init, sequence_next, sequence_next_month, sequence_next_year in sequences:
             init_move.name = sequence_init
@@ -415,18 +438,51 @@ class TestAccountMove(AccountTestInvoicingCommon):
             self.assertEqual(next_move_month.name, sequence_next_month)
             self.assertEqual(next_move_year.name, sequence_next_year)
 
+    def test_journal_next_sequence(self):
+        prefix = "TEST_ORDER/2016/"
+        self.test_move.name = f"{prefix}1"
+        for c in range(2, 25):
+            copy = self.test_move.copy()
+            copy.name = "/"
+            copy.action_post()
+            self.assertEqual(copy.name, f"{prefix}{c}")
+
+    def test_journal_sequence_multiple_type(self):
+        entry, entry2, invoice, invoice2, refund, refund2 = (self.test_move.copy() for i in range(6))
+        (invoice + invoice2 + refund + refund2).write({
+            'journal_id': self.company_data['default_journal_sale'],
+            'partner_id': 1,
+            'invoice_date': '2016-01-01',
+        })
+        (invoice + invoice2).move_type = 'out_invoice'
+        (refund + refund2).move_type = 'out_refund'
+        all = (entry + entry2 + invoice + invoice2 + refund + refund2)
+        all.name = False
+        all.action_post()
+        self.assertEqual(entry.name, 'MISC/2016/01/0002')
+        self.assertEqual(entry2.name, 'MISC/2016/01/0003')
+        self.assertEqual(invoice.name, 'INV/2016/01/0001')
+        self.assertEqual(invoice2.name, 'INV/2016/01/0002')
+        self.assertEqual(refund.name, 'RINV/2016/01/0001')
+        self.assertEqual(refund2.name, 'RINV/2016/01/0002')
+
     def test_journal_override_sequence_regex(self):
         other_moves = self.env['account.move'].search([('journal_id', '=', self.test_move.journal_id.id)]) - self.test_move
         other_moves.unlink()  # Do not interfere when trying to get the highest name for new periods
-        self.test_move.name = '00000876-G 0002'
+        self.test_move.name = '00000876-G 0002/2020'
         next = self.test_move.copy()
-        next.post()
-        self.assertEqual(next.name, '00000876-G 0003')  # Wait, I didn't want this!
+        next.action_post()
+        self.assertEqual(next.name, '00000876-G 0002/2021')  # Wait, I didn't want this!
 
-        next.journal_id.sequence_override_regex = r'^(?P<prefix1>)(?P<seq>\d*)(?P<suffix>.*)$'
+        next.journal_id.sequence_override_regex = r'^(?P<seq>\d*)(?P<suffix1>.*?)(?P<year>(\d{4})?)(?P<suffix2>)$'
         next.name = '/'
         next._compute_name()
-        self.assertEqual(next.name, '00000877-G 0002')  # Pfew, better!
+        self.assertEqual(next.name, '00000877-G 0002/2020')  # Pfew, better!
+
+        next = next = self.test_move.copy()
+        next.date = "2017-05-02"
+        next.action_post()
+        self.assertEqual(next.name, '00000001-G 0002/2017')
 
     def test_journal_sequence_ordering(self):
         self.test_move.name = 'XMISC/2016/00001'
@@ -441,7 +497,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
         # that entry is actualy the first one of the period, so it already has a name
         # set it to '/' so that it is recomputed at post to be ordered correctly.
         copies[0].name = '/'
-        copies.post()
+        copies.action_post()
 
         # Ordered by date
         self.assertEqual(copies[0].name, 'XMISC/2019/00002')
@@ -463,6 +519,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
         copies[4].name = 'XMISC/2019/10005'
         copies[5].name = 'XMISC/2019/10006'
 
+        copies[4].button_draft()
         copies[4].with_context(force_delete=True).unlink()
         copies[5].button_draft()
 
@@ -508,7 +565,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
         partner = self.env['res.partner'].create({'name': 'Belouga'})
         move.partner_id = partner
 
-        move.post()
+        move.action_post()
         self.assertEqual(move.message_partner_ids, self.env.user.partner_id | existing_partners | partner)
 
     def test_misc_move_onchange(self):
@@ -626,3 +683,13 @@ class TestAccountMove(AccountTestInvoicingCommon):
             {'name': 'included_tax_line',        'debit': 200.0,     'credit': 0.0,      'tax_ids': [],                                  'tax_line_id': self.included_percent_tax.id},
             {'name': 'credit_line_1',            'debit': 0.0,       'credit': 1200.0,   'tax_ids': [],                                  'tax_line_id': False},
         ])
+
+    def test_misc_prevent_unlink_posted_items(self):
+        # You cannot remove journal items if the related journal entry is posted.
+        self.test_move.action_post()
+        with self.assertRaises(UserError), self.cr.savepoint():
+            self.test_move.line_ids.unlink()
+
+        # You can remove journal items if the related journal entry is draft.
+        self.test_move.button_draft()
+        self.test_move.line_ids.unlink()

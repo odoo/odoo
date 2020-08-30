@@ -19,6 +19,27 @@ QUnit.module('core', {}, function () {
         assert.strictEqual(registry.get('foo'), foo);
     });
 
+    QUnit.test('get initial keys', function (assert) {
+        assert.expect(1);
+
+        var registry = new Registry({ a: 1, });
+        assert.deepEqual(
+            registry.keys(),
+            ['a'],
+            "keys on prototype should be returned"
+        );
+    });
+
+    QUnit.test('get initial entries', function (assert) {
+        assert.expect(1);
+
+        var registry = new Registry({ a: 1, });
+        assert.deepEqual(
+            registry.entries(),
+            { a: 1, },
+            "entries on prototype should be returned"
+        );
+    });
 
     QUnit.test('multiget', function (assert) {
         assert.expect(1);
@@ -49,7 +70,21 @@ QUnit.module('core', {}, function () {
         assert.deepEqual(registry.values(), ['bar', 'foo', 'qux']);
     });
 
+    QUnit.test("predicate prevents invalid values", function (assert) {
+        assert.expect(5);
+
+        const predicate = value => typeof value === "number";
+        const registry = new Registry(null, predicate);
+        registry.onAdd((key) => assert.step(key));
+
+        assert.ok(registry.add("age", 23));
+        assert.throws(
+            () => registry.add("name", "Fred"),
+            new Error(`Value of key "name" does not pass the addition predicate.`)
+        );
+        assert.deepEqual(registry.entries(), { age: 23 });
+        assert.verifySteps(["age"]);
+    });
 });
 
 });
-

@@ -365,7 +365,7 @@ odoo.define('website_form_editor.tour', function (require) {
         },
         {
             content:  "Check form is submitted without errors",
-            trigger:  ".alert-success:contains('Your message has been sent successfully.')"
+            trigger:  "#wrap:has(h1:contains('Thank You!'))"
         }
     ]);
 

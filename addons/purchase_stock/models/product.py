@@ -23,6 +23,8 @@ class ProductProduct(models.Model):
     _name = 'product.product'
     _inherit = 'product.product'
 
+    purchase_order_line_ids = fields.One2many('purchase.order.line', 'product_id', help='Technical: used to compute quantities.')
+
     def _get_quantity_in_progress(self, location_ids=False, warehouse_ids=False):
         if not location_ids:
             location_ids = []

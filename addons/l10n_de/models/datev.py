@@ -21,7 +21,7 @@ class AccountTax(models.Model):
 class AccountMove(models.Model):
     _inherit = 'account.move'
 
-    def post(self):
+    def _post(self, soft=True):
         # OVERRIDE to check the invoice lines taxes.
         for invoice in self.filtered(lambda move: move.is_invoice()):
             for line in invoice.invoice_line_ids:
@@ -32,4 +32,4 @@ class AccountMove(models.Model):
                         if tax.id not in account_tax:
                             raise UserError(_('Account %s does not authorize to have tax %s specified on the line. \
                                 Change the tax used in this invoice or remove all taxes from the account') % (account_name, tax.name))
-        return super(AccountMove, self).post()
+        return super()._post(soft)

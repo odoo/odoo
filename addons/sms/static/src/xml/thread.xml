@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<template id="template" xml:space="preserve">
-	<t t-inherit="mail.widget.Thread.Message.MailTooltip" t-inherit-mode="extension">
-        <xpath expr="//span[@name='notification_status']" position="inside">
-            <i t-if="notification.notification_status === 'outgoing'" class='fa fa-clock-o' title="Awaiting Dispatch" role="img" aria-label="Awaiting Dispatch"/>
-        </xpath>
-    </t>
-</template>

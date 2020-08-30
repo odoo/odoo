@@ -514,10 +514,10 @@ class Message(models.Model):
         model_record_ids = _generate_model_record_ids(message_values, document_related_candidate_ids)
         for model, doc_ids in model_record_ids.items():
             DocumentModel = self.env[model]
-            if hasattr(DocumentModel, 'get_mail_message_access'):
-                check_operation = DocumentModel.get_mail_message_access(doc_ids, operation)  ## why not giving model here?
+            if hasattr(DocumentModel, '_get_mail_message_access'):
+                check_operation = DocumentModel._get_mail_message_access(doc_ids, operation)  ## why not giving model here?
             else:
-                check_operation = self.env['mail.thread'].get_mail_message_access(doc_ids, operation, model_name=model)
+                check_operation = self.env['mail.thread']._get_mail_message_access(doc_ids, operation, model_name=model)
             records = DocumentModel.browse(doc_ids)
             records.check_access_rights(check_operation)
             mids = records.browse(doc_ids)._filter_access_rules(check_operation)
@@ -969,7 +969,9 @@ class Message(models.Model):
                     'filename': attachment.name,
                     'name': attachment.name,
                     'mimetype': 'application/octet-stream' if safari and attachment.mimetype and 'video' in attachment.mimetype else attachment.mimetype,
-                    'is_main': main_attachment == attachment
+                    'is_main': main_attachment == attachment,
+                    'res_id': attachment.res_id,
+                    'res_model': attachment.res_model,
                 })
 
             # Tracking values
@@ -1022,11 +1024,13 @@ class Message(models.Model):
         if moderated_channel_ids:
             # Split load moderated and regular messages, as the ORed domain can
             # cause performance issues on large databases.
-            moderated_messages_dom = [('model', '=', 'mail.channel'),
-                                      ('res_id', 'in', moderated_channel_ids),
-                                      '|',
-                                      ('author_id', '=', self.env.user.partner_id.id),
-                                      ('need_moderation', '=', True)]
+            moderated_messages_dom = [
+                ('model', '=', 'mail.channel'),
+                ('res_id', 'in', moderated_channel_ids),
+                '|',
+                ('author_id', '=', self.env.user.partner_id.id),
+                ('moderation_status', '=', 'pending_moderation'),
+            ]
             messages |= self.search(moderated_messages_dom, limit=limit)
             # Truncate the results to `limit`
             messages = messages.sorted(key='id', reverse=True)[:limit]
@@ -1111,17 +1115,15 @@ class Message(models.Model):
         Notifications hold the information about each recipient of a message: if
         the message was successfully sent or if an exception or bounce occurred.
         """
-        return {
-            message.id: {
-                'message_id': message.id,
-                'model_name': message.env['ir.model']._get(message.model).display_name,
-                'res_id': message.res_id,
-                'model': message.model,
-                'last_message_date': message.date,
-                'message_type': message.message_type,
-                'notifications': message.notification_ids._filtered_for_web_client()._notification_format(),
-            } for message in self
-        }
+        return [{
+            'id': message.id,
+            'res_id': message.res_id,
+            'model': message.model,
+            'res_model_name': message.env['ir.model']._get(message.model).display_name,
+            'date': message.date,
+            'message_type': message.message_type,
+            'notifications': message.notification_ids._filtered_for_web_client()._notification_format(),
+        } for message in self]
 
     def _notify_message_notification_update(self):
         """Send bus notifications to update status of notifications in the web
@@ -1165,15 +1167,15 @@ class Message(models.Model):
     def _get_reply_to(self, values):
         """ Return a specific reply_to for the document """
         model = values.get('model', self._context.get('default_model'))
-        res_id = values.get('res_id', self._context.get('default_res_id'))
+        res_id = values.get('res_id', self._context.get('default_res_id')) or False
         email_from = values.get('email_from')
         message_type = values.get('message_type')
         records = None
         if self.is_thread_message({'model': model, 'res_id': res_id, 'message_type': message_type}):
             records = self.env[model].browse([res_id])
         else:
-            res_id = False
-        return self.env['mail.thread']._notify_get_reply_to_on_records(default=email_from, records=records)[res_id]
+            records = self.env[model] if model else self.env['mail.thread']
+        return records._notify_get_reply_to(default=email_from)[res_id]
 
     @api.model
     def _get_message_id(self, values):

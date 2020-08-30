@@ -50,13 +50,14 @@
         </field>
     </record>
 
-    <act_window
-        id="action_crm_send_mass_convert"
-        name="Convert to opportunities"
-        res_model="crm.lead2opportunity.partner.mass"
-        binding_model="crm.lead" binding_views="list"
-        view_mode="form" target="new"
-        context="{}"
-        view_id="view_crm_lead2opportunity_partner_mass"
-    />
+    <record id="action_crm_send_mass_convert" model="ir.actions.act_window">
+        <field name="name">Convert to opportunities</field>
+        <field name="res_model">crm.lead2opportunity.partner.mass</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_crm_lead2opportunity_partner_mass"/>
+        <field name="target">new</field>
+        <field name="context">{}</field>
+        <field name="binding_model_id" ref="model_crm_lead"/>
+        <field name="binding_view_types">list</field>
+    </record>
 </odoo>

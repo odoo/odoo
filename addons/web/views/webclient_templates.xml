@@ -129,10 +129,13 @@
         <script type="text/javascript" src="/web/static/src/js/libs/download.js"></script>
         <script type="text/javascript" src="/web/static/src/js/libs/content-disposition.js"></script>
         <script type="text/javascript" src="/web/static/src/js/libs/underscore.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/libs/fullcalendar.js"></script>
 
+        <script type="text/javascript" src="/web/static/src/js/chrome/keyboard_navigation_mixin.js"></script>
         <script type="text/javascript" src="/web/static/src/js/core/abstract_service.js"></script>
         <script type="text/javascript" src="/web/static/src/js/core/abstract_storage_service.js"></script>
         <script type="text/javascript" src="/web/static/src/js/core/ajax.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/core/browser_detection.js"></script>
         <script type="text/javascript" src="/web/static/src/js/core/bus.js"></script>
         <script type="text/javascript" src="/web/static/src/js/core/custom_hooks.js"></script>
         <script type="text/javascript" src="/web/static/src/js/core/class.js"></script>
@@ -167,9 +170,12 @@
 
         <script type="text/javascript" src="/web/static/src/js/tools/debug_manager.js"></script>
 
+        <script type="text/javascript" src="/web/static/src/js/common_env.js"></script>
+
         <script type="text/javascript" src="/web/static/src/js/widgets/name_and_signature.js"></script>
         <script type="text/javascript" src="/web/static/src/js/widgets/notification.js"></script>
         <script type="text/javascript" src="/web/static/src/js/widgets/rainbow_man.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/core/smooth_scroll_on_drag.js"></script>
         <script type="text/javascript" src="/web/static/src/js/widgets/colorpicker.js"></script>
         <script type="text/javascript" src="/web/static/src/js/widgets/translation_dialog.js"></script>
         <script type="text/javascript" src="/web/static/src/js/libs/zoomodoo.js"></script>
@@ -249,8 +255,6 @@
         <script type="text/javascript" src="/web/static/src/js/chrome/action_manager_act_window.js"></script>
         <script type="text/javascript" src="/web/static/src/js/chrome/action_manager_report.js"/>
         <script type="text/javascript" src="/web/static/src/js/chrome/action_mixin.js"/>
-        <script type="text/javascript" src="/web/static/src/js/core/browser_detection.js"></script>
-        <script type="text/javascript" src="/web/static/src/js/chrome/keyboard_navigation_mixin.js"></script>
         <script type="text/javascript" src="/web/static/src/js/chrome/abstract_web_client.js"></script>
         <script type="text/javascript" src="/web/static/src/js/chrome/web_client.js"></script>
         <script type="text/javascript" src="/web/static/src/js/chrome/root_widget.js"></script>
@@ -320,7 +324,7 @@
         <script type="text/javascript" src="/web/static/src/js/views/basic/basic_renderer.js"></script>
         <script type="text/javascript" src="/web/static/src/js/control_panel/comparison_menu.js"></script>
         <script type="text/javascript" src="/web/static/src/js/control_panel/control_panel.js"></script>
-        <script type="text/javascript" src="/web/static/src/js/control_panel/control_panel_model.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/control_panel/control_panel_model_extension.js"></script>
         <script type="text/javascript" src="/web/static/src/js/control_panel/control_panel_x2many.js"></script>
         <script type="text/javascript" src="/web/static/src/js/control_panel/custom_favorite_item.js"></script>
         <script type="text/javascript" src="/web/static/src/js/control_panel/favorite_menu.js"></script>
@@ -330,11 +334,14 @@
         <script type="text/javascript" src="/web/static/src/js/control_panel/custom_group_by_item.js"></script>
         <script type="text/javascript" src="/web/static/src/js/control_panel/search_bar.js"></script>
         <script type="text/javascript" src="/web/static/src/js/control_panel/search_utils.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/search_panel_model_extension.js"></script>
         <script type="text/javascript" src="/web/static/src/js/views/search_panel.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/action_model.js"></script>
         <script type="text/javascript" src="/web/static/src/js/views/field_manager_mixin.js"></script>
         <script type="text/javascript" src="/web/static/src/js/views/file_upload_mixin.js"></script>
         <script type="text/javascript" src="/web/static/src/js/views/file_upload_progress_bar.js"></script>
         <script type="text/javascript" src="/web/static/src/js/views/file_upload_progress_card.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/sample_server.js"></script>
         <script type="text/javascript" src="/web/static/src/js/views/select_create_controllers_registry.js"></script>
         <script type="text/javascript" src="/web/static/src/js/views/signature_dialog.js"></script>
         <script type="text/javascript" src="/web/static/src/js/views/standalone_field_manager_mixin.js"></script>
@@ -423,6 +430,7 @@
 
     <!-- Do not direcly call this template, call 'conditional_assets_tests' instead -->
     <template id="assets_tests" name="Tests Assets">
+        <script type="text/javascript" src="/web/static/tests/helpers/test_utils_file.js"/>
     </template>
 
     <template id="conditional_assets_tests" name="Tests Assets Bundle">
@@ -457,6 +465,12 @@
         <xpath expr="//head/meta[last()]" position="after">
             <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
         </xpath>
+        <xpath expr="//head" position="inside">
+            <script type="text/javascript">
+                const userTZ = Intl.DateTimeFormat().resolvedOptions().timeZone;
+                document.cookie = `tz=${userTZ}; path=/`;
+            </script>
+        </xpath>
         <xpath expr="//head/link[last()]" position="after">
             <t t-call-assets="web.assets_common" t-js="false"/>
             <t t-call-assets="web.assets_frontend" t-js="false"/>
@@ -481,14 +495,14 @@
                 <main>
                     <t t-raw="0"/>
                 </main>
-                <footer t-if="not no_footer" id="bottom" data-anchor="true" class="bg-light o_footer">
+                <footer t-if="not no_footer" id="bottom" data-anchor="true" t-attf-class="bg-light o_footer">
                     <div id="footer"/>
-                    <div class="o_footer_copyright">
+                    <div t-if="not no_copyright" class="o_footer_copyright">
                         <div class="container py-3">
                             <div class="row">
                                 <div class="col-sm text-center text-sm-left text-muted">
                                     <t t-call="web.debug_icon"/>
-                                    <span>Copyright &amp;copy;</span> <span t-field="res_company.name" itemprop="name">Company name</span>
+                                    <span class="o_footer_copyright_name mr-2">Copyright &amp;copy; Company name</span>
                                 </div>
                                 <div class="col-sm text-center text-sm-right">
                                     <t t-call="web.brand_promotion"/>
@@ -551,7 +565,7 @@
 
     <template id="web.login" name="Login">
         <t t-call="web.login_layout">
-            <form class="oe_login_form" role="form" t-attf-action="/web/login" method="post" onsubmit="this.action = this.action + location.hash">
+            <form class="oe_login_form" role="form" t-attf-action="/web/login" method="post" onsubmit="this.action = '/web/login' + location.hash">
                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
 
                 <div class="form-group field-db" t-if="databases and len(databases) &gt; 1">
@@ -656,8 +670,6 @@
         <script type="text/javascript" src="/web/static/tests/helpers/test_utils.js"></script>
         <script type="text/javascript" src="/web/static/tests/helpers/mock_server.js"></script>
         <script type="text/javascript" src="/web/static/tests/helpers/test_env.js"></script>
-
-        <script type="text/javascript" src="/web/static/tests/component_extension_tests.js"></script>
     </template>
 
     <template id="web.qunit_suite">
@@ -699,6 +711,7 @@
         <script type="text/javascript" src="/web/static/tests/fields/special_fields_tests.js"></script>
         <script type="text/javascript" src="/web/static/tests/fields/upgrade_fields_tests.js"></script>
 
+        <script type="text/javascript" src="/web/static/tests/views/sample_server_tests.js"></script>
         <script type="text/javascript" src="/web/static/tests/views/abstract_controller_tests.js"></script>
         <script type="text/javascript" src="/web/static/tests/views/abstract_view_tests.js"></script>
         <script type="text/javascript" src="/web/static/tests/views/form_tests.js"></script>
@@ -708,6 +721,7 @@
         <script type="text/javascript" src="/web/static/tests/views/kanban_tests.js"></script>
         <script type="text/javascript" src="/web/static/tests/views/calendar_tests.js"></script>
         <script type="text/javascript" src="/web/static/tests/views/qweb_tests.js"></script>
+        <script type="text/javascript" src="/web/static/tests/views/abstract_model_tests.js"></script>
         <script type="text/javascript" src="/web/static/tests/views/basic_model_tests.js"></script>
         <script type="text/javascript" src="/web/static/tests/views/abstract_view_banner_tests.js"></script>
         <script type="text/javascript" src="/web/static/tests/views/kanban_model_tests.js"></script>
@@ -745,7 +759,7 @@
         <script type="text/javascript" src="/web/static/tests/components/action_menus_tests.js"></script>
         <script type="text/javascript" src="/web/static/tests/components/dropdown_menu_tests.js"></script>
 
-        <script type="text/javascript" src="/web/static/tests/control_panel/control_panel_model_tests.js"></script>
+        <script type="text/javascript" src="/web/static/tests/control_panel/control_panel_model_extension_tests.js"></script>
         <script type="text/javascript" src="/web/static/tests/control_panel/control_panel_tests.js"></script>
         <script type="text/javascript" src="/web/static/tests/control_panel/comparison_menu_tests.js"></script>
         <script type="text/javascript" src="/web/static/tests/control_panel/favorite_menu_tests.js"></script>
@@ -767,6 +781,7 @@
         <script type="text/javascript" src="/web/static/tests/helpers/test_utils_tests.js"></script>
 
         <script type="text/javascript" src="/web/static/tests/owl_compatibility_tests.js"></script>
+        <script type="text/javascript" src="/web/static/tests/component_extension_tests.js"></script>
     </template>
 
     <template id="web.qunit_mobile_suite">
@@ -801,9 +816,6 @@
             <t t-set="html_data" t-value="{'style': 'height: 100%;'}"/>
             <t t-set="title">Web Benchmarks</t>
             <t t-set="head">
-                <link type="text/css" rel="stylesheet" href="/web/static/lib/qunit/qunit-2.9.1.css"/>
-                <script type="text/javascript" src="/web/static/lib/qunit/qunit-2.9.1.js"></script>
-                <script type="text/javascript" src="/web/static/tests/helpers/qunit_config.js"></script>
                 <script type="text/javascript" src="/web/static/lib/benchmarkjs/lodash.js"></script>
                 <script type="text/javascript" src="/web/static/lib/benchmarkjs/benchmark.js"></script>
 
@@ -811,30 +823,11 @@
                 <t t-call-assets="web.assets_backend" t-js="false"/>
                 <t t-call-assets="web.assets_common" t-css="false"/>
                 <t t-call-assets="web.assets_backend" t-css="false"/>
-
-                <script type="text/javascript" src="/web/static/tests/helpers/qunit_asserts.js"></script>
+                <t t-call-assets="web.tests_assets" t-js="false"/>
+                <t t-call-assets="web.tests_assets" t-css="false"/>
 
                 <script type="text/javascript">
                     QUnit.config.hidepassed = false;
-
-                    odoo.define('web.WebClientWithoutServices', function (require) {
-                        var WebClient = require('web.WebClient');
-                        var WebClientWithoutServices = WebClient.extend({
-                            /**
-                             * Patch web client so that it is no longer a service provider.
-                             *
-                             * @override
-                             */
-                            _onCallService: function () {},
-                        });
-                        return WebClientWithoutServices;
-                    });
-                    // define the 'web.web_client' module because some other modules require it
-                    odoo.define('web.web_client', function (require) {
-                        var WebClient = require('web.WebClientWithoutServices');
-                        var web_client = new WebClient();
-                        return web_client;
-                    });
                 </script>
 
                 <style>
@@ -851,18 +844,6 @@
                     }
                 </style>
 
-                <script type="text/javascript" src="/web/static/tests/helpers/test_utils_create.js"></script>
-                <script type="text/javascript" src="/web/static/tests/helpers/test_utils_dom.js"></script>
-                <script type="text/javascript" src="/web/static/tests/helpers/test_utils_fields.js"></script>
-                <script type="text/javascript" src="/web/static/tests/helpers/test_utils_form.js"></script>
-                <script type="text/javascript" src="/web/static/tests/helpers/test_utils_graph.js"></script>
-                <script type="text/javascript" src="/web/static/tests/helpers/test_utils_kanban.js"></script>
-                <script type="text/javascript" src="/web/static/tests/helpers/test_utils_mock.js"></script>
-                <script type="text/javascript" src="/web/static/tests/helpers/test_utils_modal.js"></script>
-                <script type="text/javascript" src="/web/static/tests/helpers/test_utils_pivot.js"></script>
-                <script type="text/javascript" src="/web/static/tests/helpers/test_utils.js"></script>
-                <script type="text/javascript" src="/web/static/tests/helpers/mock_server.js"></script>
-
                 <script type="text/javascript" src="/web/static/tests/views/list_benchmarks.js"></script>
                 <script type="text/javascript" src="/web/static/tests/views/kanban_benchmarks.js"></script>
                 <script type="text/javascript" src="/web/static/tests/views/form_benchmarks.js"></script>
@@ -871,6 +852,10 @@
             <div id="qunit"/>
             <div id="qunit-fixture"/>
         </t>
+    </template>
+
+    <template id="web.assets_backend_prod_only">
+        <script type="text/javascript" src="/web/static/src/js/main.js"></script>
     </template>
 
     <template id="web.webclient_bootstrap">
@@ -885,9 +870,8 @@
                 <t t-call-assets="web.assets_backend" t-js="false"/>
                 <t t-call-assets="web.assets_common" t-css="false"/>
                 <t t-call-assets="web.assets_backend" t-css="false"/>
+                <t t-call-assets="web.assets_backend_prod_only" t-css="false"/>
                 <t t-call="web.conditional_assets_tests"/>
-
-                <script type="text/javascript" src="/web/static/src/js/main.js"></script>
             </t>
             <t t-set="head" t-value="head_web + (head or '')"/>
             <t t-set="body_classname" t-value="'o_web_client'"/>

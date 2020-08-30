@@ -125,7 +125,7 @@ class BlogPost(models.Model):
     def _compute_website_url(self):
         super(BlogPost, self)._compute_website_url()
         for blog_post in self:
-            blog_post.website_url = "/blog/%s/post/%s" % (slug(blog_post.blog_id), slug(blog_post))
+            blog_post.website_url = "/blog/%s/%s" % (slug(blog_post.blog_id), slug(blog_post))
 
     def _default_content(self):
         return '''
@@ -215,7 +215,7 @@ class BlogPost(models.Model):
     @api.returns('self', lambda value: value.id)
     def copy_data(self, default=None):
         self.ensure_one()
-        name = _("%s (copy)") % self.name
+        name = _("%s (copy)", self.name)
         default = dict(default or {}, name=name)
         return super(BlogPost, self).copy_data(default)
 

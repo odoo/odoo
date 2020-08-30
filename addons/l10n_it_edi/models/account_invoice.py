@@ -55,12 +55,12 @@ class AccountMove(models.Model):
             invoice.l10n_it_einvoice_id = einvoice
             invoice.l10n_it_einvoice_name = einvoice.name
 
-    def post(self):
+    def _post(self, soft=True):
         # OVERRIDE
-        super(AccountMove, self).post()
+        posted = super()._post(soft)
 
         # Retrieve invoices to generate the xml.
-        invoices_to_export = self.filtered(lambda move:
+        invoices_to_export = posted.filtered(lambda move:
                 move.company_id.country_id == self.env.ref('base.it') and
                 move.is_sale_document() and
                 move.l10n_it_send_state not in ['sent', 'delivered', 'delivered_accepted'])
@@ -84,6 +84,7 @@ class AccountMove(models.Model):
 
         for invoice in invoices_to_send:
             invoice.send_pec_mail()
+        return posted
 
     def _check_before_xml_exporting(self):
         seller = self.company_id
@@ -145,7 +146,7 @@ class AccountMove(models.Model):
 
         for tax_line in self.line_ids.filtered(lambda line: line.tax_line_id):
             if not tax_line.tax_line_id.l10n_it_has_exoneration and tax_line.tax_line_id.amount == 0:
-                raise ValidationError(_("%s has an amount of 0.0, you must indicate the kind of exoneration." % tax_line.name))
+                raise ValidationError(_("%s has an amount of 0.0, you must indicate the kind of exoneration.", tax_line.name))
 
     def invoice_generate_xml(self):
         for invoice in self:
@@ -168,7 +169,7 @@ class AccountMove(models.Model):
                 }
 
             data = b"<?xml version='1.0' encoding='UTF-8'?>" + invoice._export_as_xml()
-            description = _('Italian invoice: %s') % invoice.move_type
+            description = _('Italian invoice: %s', invoice.move_type)
             invoice.edi_document_ids = self.env['ir.attachment'].create({
                 'name': report_name,
                 'res_id': invoice.id,

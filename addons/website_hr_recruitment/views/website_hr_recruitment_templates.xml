@@ -7,6 +7,12 @@
     </xpath>
 </template>
 
+<template id="job_edit_options" inherit_id="website.user_navbar" name="Edit Job Options">
+    <xpath expr="//li[@id='edit-page-menu']" position="after">
+        <t t-if="main_object._name == 'hr.job'" t-set="action" t-value="'hr_recruitment.action_hr_job'"/>
+    </xpath>
+</template>
+
 <template id="index" name="Jobs">
     <t t-call="website.layout">
         <div id="wrap" class="o_website_hr_recruitment_jobs_list bg-100">
@@ -169,7 +175,7 @@
                                             <span class="s_website_form_mark"> *</span>
                                         </label>
                                         <div class="col-sm">
-                                            <input id="recruitment3" type="text" class="form-control s_website_form_input" name="partner_phone" required=""/>
+                                            <input id="recruitment3" type="tel" class="form-control s_website_form_input" name="partner_phone" required=""/>
                                         </div>
                                     </div>
                                 </div>

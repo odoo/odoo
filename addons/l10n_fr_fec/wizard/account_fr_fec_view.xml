@@ -5,12 +5,20 @@
     <field name="model">account.fr.fec</field>
     <field name="arch" type="xml">
         <form string="FEC File Generation">
+            <div class="alert alert-info" role="alert" attrs="{'invisible': [('test_file', '=', True)]}">
+                When you download a FEC file, the lock date is set to the end date.
+                If you want to test the FEC file generation, please tick the test file checkbox.
+            </div>
+            <div class="alert alert-info" role="alert" attrs="{'invisible': [('test_file', '=', False)]}">
+                You are in test mode. The FEC file generation will not set the lock date.
+            </div>
             <notebook>
                 <page string="Options" name="options">
                     <group>
                         <field name="date_from"/>
                         <field name="date_to"/>
-                        <field name="export_type" groups="base.group_no_one"/>
+                        <field name="test_file"/>
+                        <field name="export_type" attrs="{'invisible': [('test_file', '=', False)]}"/>
                     </group>
                 </page>
                 <page string="Technical Info" name="technical_info">

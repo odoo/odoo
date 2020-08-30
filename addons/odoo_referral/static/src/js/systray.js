@@ -51,7 +51,7 @@ odoo.define('systray.systray_odoo_referral', function (require) {
                     var message = _t('A popup window has been blocked. You ' +
                                  'may need to change your browser settings to allow ' +
                                  'popup windows for this page.');
-                    self.do_warn(_t('Warning'), message, true);
+                    self.do_warn(false, message, true);
                 }
             });
         },

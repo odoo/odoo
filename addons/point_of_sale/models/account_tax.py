@@ -20,7 +20,7 @@ class AccountTax(models.Model):
             tax_ids = set([i for sl in [t['tax_ids'] for t in tax_ids] for i in sl])
             if tax_ids & set(self.ids):
                 raise UserError(_(
-                    'It is forbidden to modify a tax used in a POS order not posted. ' +
+                    'It is forbidden to modify a tax used in a POS order not posted. '
                     'You must close the POS sessions before modifying the tax.'
                 ))
         return super(AccountTax, self).write(vals)

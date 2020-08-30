@@ -63,8 +63,8 @@ class FleetVehicle(models.Model):
     odometer = fields.Float(compute='_get_odometer', inverse='_set_odometer', string='Last Odometer',
         help='Odometer measure of the vehicle at the moment of this log')
     odometer_unit = fields.Selection([
-        ('kilometers', 'Kilometers'),
-        ('miles', 'Miles')
+        ('kilometers', 'km'),
+        ('miles', 'mi')
         ], 'Odometer Unit', default='kilometers', help='Unit of the odometer ', required=True)
     transmission = fields.Selection([('manual', 'Manual'), ('automatic', 'Automatic')], 'Transmission', help='Transmission Used by the vehicle')
     fuel_type = fields.Selection([
@@ -204,8 +204,11 @@ class FleetVehicle(models.Model):
         if 'driver_id' in vals and vals['driver_id']:
             res.create_driver_history(vals['driver_id'])
         if 'future_driver_id' in vals and vals['future_driver_id']:
-            future_driver = self.env['res.partner'].browse(vals['future_driver_id'])
-            future_driver.sudo().write({'plan_to_change_car': True})
+            state_waiting_list = self.env.ref('fleet.fleet_vehicle_state_waiting_list', raise_if_not_found=False)
+            states = res.mapped('state_id').ids
+            if not state_waiting_list or state_waiting_list.id not in states:
+                future_driver = self.env['res.partner'].browse(vals['future_driver_id'])
+                future_driver.sudo().write({'plan_to_change_car': True})
         return res
 
     def write(self, vals):
@@ -214,8 +217,11 @@ class FleetVehicle(models.Model):
             self.filtered(lambda v: v.driver_id.id != driver_id).create_driver_history(driver_id)
 
         if 'future_driver_id' in vals and vals['future_driver_id']:
-            future_driver = self.env['res.partner'].browse(vals['future_driver_id'])
-            future_driver.sudo().write({'plan_to_change_car': True})
+            state_waiting_list = self.env.ref('fleet.fleet_vehicle_state_waiting_list', raise_if_not_found=False)
+            states = self.mapped('state_id').ids if 'state_id' not in vals else [vals['state_id']]
+            if not state_waiting_list or state_waiting_list.id not in states:
+                future_driver = self.env['res.partner'].browse(vals['future_driver_id'])
+                future_driver.sudo().write({'plan_to_change_car': True})
 
         res = super(FleetVehicle, self).write(vals)
         if 'active' in vals and not vals['active']:
@@ -267,15 +273,15 @@ class FleetVehicle(models.Model):
             domain = []
         else:
             domain = ['|', ('name', operator, name), ('driver_id.name', operator, name)]
-        rec = self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
-        return models.lazy_name_get(self.browse(rec).with_user(name_get_uid))
+        return self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
 
     def return_action_to_open(self):
         """ This opens the xml view specified in xml_id for the current vehicle """
         self.ensure_one()
         xml_id = self.env.context.get('xml_id')
         if xml_id:
-            res = self.env['ir.actions.act_window'].for_xml_id('fleet', xml_id)
+
+            res = self.env['ir.actions.act_window']._for_xml_id('fleet.%s' % xml_id)
             res.update(
                 context=dict(self.env.context, default_vehicle_id=self.id, group_by=False),
                 domain=[('vehicle_id', '=', self.id)]
@@ -290,7 +296,7 @@ class FleetVehicle(models.Model):
         self.ensure_one()
         copy_context = dict(self.env.context)
         copy_context.pop('group_by', None)
-        res = self.env['ir.actions.act_window'].for_xml_id('fleet', 'fleet_vehicle_costs_action')
+        res = self.env['ir.actions.act_window']._for_xml_id('fleet.fleet_vehicle_costs_action')
         res.update(
             context=dict(copy_context, default_vehicle_id=self.id, search_default_parent_false=True),
             domain=[('vehicle_id', '=', self.id)]

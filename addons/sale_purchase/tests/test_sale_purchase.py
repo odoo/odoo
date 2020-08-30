@@ -2,52 +2,40 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.exceptions import UserError, AccessError
-
+from odoo.tests import tagged
 from odoo.addons.sale_purchase.tests.common import TestCommonSalePurchaseNoChart
 
 
+@tagged('-at_install', 'post_install')
 class TestSalePurchase(TestCommonSalePurchaseNoChart):
 
     @classmethod
-    def setUpClass(cls):
-        super(TestSalePurchase, cls).setUpClass()
-
-        # set up users
-        cls.setUpUsers()
-        group_salemanager = cls.env.ref('sales_team.group_sale_manager')
-        group_salesman = cls.env.ref('sales_team.group_sale_salesman')
-        cls.user_manager.write({'groups_id': [(6, 0, [group_salemanager.id])]})
-        cls.user_employee.write({'groups_id': [(6, 0, [group_salesman.id])]})
-
-        # set up accounts and products and journals
-        cls.setUpAdditionalAccounts()
-        cls.setUpAccountJournal()
-        cls.setUpClassicProducts()
-        cls.setUpServicePurchaseProducts()
+    def setUpClass(cls, chart_template_ref=None):
+        super().setUpClass(chart_template_ref=chart_template_ref)
 
         # create a generic Sale Order with 2 classical products and a purchase service
         SaleOrder = cls.env['sale.order'].with_context(tracking_disable=True)
         cls.sale_order_1 = SaleOrder.create({
-            'partner_id': cls.partner_customer_usd.id,
-            'partner_invoice_id': cls.partner_customer_usd.id,
-            'partner_shipping_id': cls.partner_customer_usd.id,
-            'pricelist_id': cls.pricelist_usd.id,
+            'partner_id': cls.partner_a.id,
+            'partner_invoice_id': cls.partner_a.id,
+            'partner_shipping_id': cls.partner_a.id,
+            'pricelist_id': cls.company_data['default_pricelist'].id,
         })
         cls.sol1_service_deliver = cls.env['sale.order.line'].create({
-            'name': cls.service_deliver.name,
-            'product_id': cls.service_deliver.id,
+            'name': cls.company_data['product_service_delivery'].name,
+            'product_id': cls.company_data['product_service_delivery'].id,
             'product_uom_qty': 1,
-            'product_uom': cls.service_deliver.uom_id.id,
-            'price_unit': cls.service_deliver.list_price,
+            'product_uom': cls.company_data['product_service_delivery'].uom_id.id,
+            'price_unit': cls.company_data['product_service_delivery'].list_price,
             'order_id': cls.sale_order_1.id,
             'tax_id': False,
         })
         cls.sol1_product_order = cls.env['sale.order.line'].create({
-            'name': cls.product_order.name,
-            'product_id': cls.product_order.id,
+            'name': cls.company_data['product_order_no'].name,
+            'product_id': cls.company_data['product_order_no'].id,
             'product_uom_qty': 2,
-            'product_uom': cls.product_order.uom_id.id,
-            'price_unit': cls.product_order.list_price,
+            'product_uom': cls.company_data['product_order_no'].uom_id.id,
+            'price_unit': cls.company_data['product_order_no'].list_price,
             'order_id': cls.sale_order_1.id,
             'tax_id': False,
         })
@@ -62,26 +50,26 @@ class TestSalePurchase(TestCommonSalePurchaseNoChart):
         })
 
         cls.sale_order_2 = SaleOrder.create({
-            'partner_id': cls.partner_customer_usd.id,
-            'partner_invoice_id': cls.partner_customer_usd.id,
-            'partner_shipping_id': cls.partner_customer_usd.id,
-            'pricelist_id': cls.pricelist_usd.id,
+            'partner_id': cls.partner_a.id,
+            'partner_invoice_id': cls.partner_a.id,
+            'partner_shipping_id': cls.partner_a.id,
+            'pricelist_id': cls.company_data['default_pricelist'].id,
         })
         cls.sol2_product_deliver = cls.env['sale.order.line'].create({
-            'name': cls.product_deliver.name,
-            'product_id': cls.product_deliver.id,
+            'name': cls.company_data['product_delivery_no'].name,
+            'product_id': cls.company_data['product_delivery_no'].id,
             'product_uom_qty': 5,
-            'product_uom': cls.product_deliver.uom_id.id,
-            'price_unit': cls.product_deliver.list_price,
+            'product_uom': cls.company_data['product_delivery_no'].uom_id.id,
+            'price_unit': cls.company_data['product_delivery_no'].list_price,
             'order_id': cls.sale_order_2.id,
             'tax_id': False,
         })
         cls.sol2_service_order = cls.env['sale.order.line'].create({
-            'name': cls.service_order.name,
-            'product_id': cls.service_order.id,
+            'name': cls.company_data['product_service_order'].name,
+            'product_id': cls.company_data['product_service_order'].id,
             'product_uom_qty': 6,
-            'product_uom': cls.service_order.uom_id.id,
-            'price_unit': cls.service_order.list_price,
+            'product_uom': cls.company_data['product_service_order'].uom_id.id,
+            'price_unit': cls.company_data['product_service_order'].list_price,
             'order_id': cls.sale_order_2.id,
             'tax_id': False,
         })

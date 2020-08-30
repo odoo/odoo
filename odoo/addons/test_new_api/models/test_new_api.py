@@ -244,7 +244,7 @@ class MultiLine(models.Model):
 
     multi = fields.Many2one('test_new_api.multi', ondelete='cascade')
     name = fields.Char()
-    partner = fields.Many2one('res.partner')
+    partner = fields.Many2one(related='multi.partner', store=True)
     tags = fields.Many2many('test_new_api.multi.tag')
 
 
@@ -379,9 +379,10 @@ class Related(models.Model):
     message_name = fields.Text(related="message.body", related_sudo=False, string='Message Body')
     message_currency = fields.Many2one(related="message.author", string='Message Author')
 
-class ComputeProtected(models.Model):
-    _name = 'test_new_api.compute.protected'
-    _description = 'Test New API Compute Protected'
+
+class ComputeReadonly(models.Model):
+    _name = 'test_new_api.compute.readonly'
+    _description = 'Model with a computed readonly field'
 
     foo = fields.Char(default='')
     bar = fields.Char(compute='_compute_bar', store=True)
@@ -391,9 +392,10 @@ class ComputeProtected(models.Model):
         for record in self:
             record.bar = record.foo
 
+
 class ComputeInverse(models.Model):
     _name = 'test_new_api.compute.inverse'
-    _description = 'Test New API Compute Inversse'
+    _description = 'Model with a computed inversed field'
 
     foo = fields.Char()
     bar = fields.Char(compute='_compute_bar', inverse='_inverse_bar', store=True)
@@ -520,6 +522,19 @@ class ComputeCascade(models.Model):
             record.baz = "<%s>" % (record.bar or "")
 
 
+class ComputeReadWrite(models.Model):
+    _name = 'test_new_api.compute.readwrite'
+    _description = 'Model with a computed non-readonly field'
+
+    foo = fields.Char()
+    bar = fields.Char(compute='_compute_bar', store=True, readonly=False)
+
+    @api.depends('foo')
+    def _compute_bar(self):
+        for record in self:
+            record.bar = record.foo
+
+
 class ComputeOnchange(models.Model):
     _name = 'test_new_api.compute.onchange'
     _description = "Compute method as an onchange"
@@ -577,6 +592,33 @@ class ComputeOnchangeLine(models.Model):
     foo = fields.Char()
     record_id = fields.Many2one('test_new_api.compute.onchange',
                                 required=True, ondelete='cascade')
+
+
+class ComputeUnassigned(models.Model):
+    _name = 'test_new_api.compute.unassigned'
+    _description = "Model with computed fields left unassigned"
+
+    foo = fields.Char()
+    bar = fields.Char(compute='_compute_bar')
+    bare = fields.Char(compute='_compute_bare', readonly=False)
+    bars = fields.Char(compute='_compute_bars', store=True)
+    bares = fields.Char(compute='_compute_bares', readonly=False, store=True)
+
+    @api.depends('foo')
+    def _compute_bar(self):
+        pass
+
+    @api.depends('foo')
+    def _compute_bare(self):
+        pass
+
+    @api.depends('foo')
+    def _compute_bars(self):
+        pass
+
+    @api.depends('foo')
+    def _compute_bares(self):
+        pass
 
 
 class ModelBinary(models.Model):
@@ -1037,3 +1079,29 @@ class SelectionNonStored(models.Model):
         ('foo', "Foo"),
         ('bar', "Bar"),
     ], store=False)
+
+
+# Special classes to ensure the correct usage of a shared cache amongst users.
+# See the method test_shared_cache_computed_field
+class SharedCacheComputeParent(models.Model):
+    _name = 'test_new_api.model_shared_cache_compute_parent'
+    _description = 'model_shared_cache_compute_parent'
+
+    name = fields.Char(string="Task Name")
+    line_ids = fields.One2many(
+        'test_new_api.model_shared_cache_compute_line', 'parent_id', string="Timesheets")
+    total_amount = fields.Integer(compute='_compute_total_amount', store=True, compute_sudo=True)
+
+    @api.depends('line_ids.amount')
+    def _compute_total_amount(self):
+        for parent in self:
+            parent.total_amount = sum(parent.line_ids.mapped('amount'))
+
+
+class ShareCacheComputeLine(models.Model):
+    _name = 'test_new_api.model_shared_cache_compute_line'
+    _description = 'model_shared_cache_compute_line'
+
+    parent_id = fields.Many2one('test_new_api.model_shared_cache_compute_parent')
+    amount = fields.Integer()
+    user_id = fields.Many2one('res.users', default= lambda self: self.env.user)  # Note: There is an ir.rule about this.

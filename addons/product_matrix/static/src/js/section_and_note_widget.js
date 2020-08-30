@@ -76,7 +76,12 @@ SectionAndNoteFieldOne2Many.include({
                 // find one of the SO widget
                 // (not so lines because the grid values are computed on the SO)
                 // and get the grid information from its recordData.
-                var gridInfo = result.find(r => r.recordData.grid).recordData.grid;
+                var gridInfo = result.find(
+                    r => r.recordData.grid && r.recordData.grid.includes("header")
+                ).recordData.grid;
+                // includes "header" is necessary to ensure the correct data is taken
+                // because the grid data isn't correctly updated in all widgets
+                // when in an new record environment.
                 self._openMatrixConfigurator(gridInfo, productTemplateId, editedCellAttributes);
             }
         });

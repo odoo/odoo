@@ -3,6 +3,7 @@
 {
     'name': 'Stripe Payment Acquirer',
     'category': 'Accounting/Payment Acquirers',
+    'sequence': 380,
     'summary': 'Payment Acquirer: Stripe Implementation',
     'version': '1.0',
     'description': """Stripe Payment Acquirer""",

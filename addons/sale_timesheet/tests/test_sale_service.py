@@ -1,24 +1,23 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.sale_timesheet.tests.common import TestCommonSaleTimesheetNoChart
+from odoo.addons.sale_timesheet.tests.common import TestCommonSaleTimesheet
 from odoo.exceptions import UserError, ValidationError
+from odoo.tests import tagged
 
 
-class TestSaleService(TestCommonSaleTimesheetNoChart):
+@tagged('-at_install', 'post_install')
+class TestSaleService(TestCommonSaleTimesheet):
     """ This test suite provide checks for miscellaneous small things. """
 
     @classmethod
-    def setUpClass(cls):
-        super(TestSaleService, cls).setUpClass()
-        # set up
-        cls.setUpEmployees()
-        cls.setUpServiceProducts()
+    def setUpClass(cls, chart_template_ref=None):
+        super().setUpClass(chart_template_ref=chart_template_ref)
 
         cls.sale_order = cls.env['sale.order'].with_context(mail_notrack=True, mail_create_nolog=True).create({
-            'partner_id': cls.partner_customer_usd.id,
-            'partner_invoice_id': cls.partner_customer_usd.id,
-            'partner_shipping_id': cls.partner_customer_usd.id,
+            'partner_id': cls.partner_a.id,
+            'partner_invoice_id': cls.partner_a.id,
+            'partner_shipping_id': cls.partner_a.id,
         })
 
     def test_sale_service(self):
@@ -164,7 +163,7 @@ class TestSaleService(TestCommonSaleTimesheetNoChart):
 
         # invoice SO, and validate invoice
         invoice = self.sale_order._create_invoices()[0]
-        invoice.post()
+        invoice.action_post()
 
         # make task non billable
         task_serv2.write({'sale_line_id': False})
@@ -592,7 +591,6 @@ class TestSaleService(TestCommonSaleTimesheetNoChart):
         project_copy = project.copy()
         self.assertFalse(project_copy.sale_line_id, "Duplicating project should erase its Sale line")
         self.assertFalse(project_copy.sale_order_id, "Duplicating project should erase its Sale order")
-        self.assertEqual(project_copy.billable_type, 'no', "Duplicating project should reset its billable type to none billable")
         self.assertEqual(len(project.tasks), len(project_copy.tasks), "Copied project must have the same number of tasks")
         self.assertFalse(project_copy.tasks.mapped('sale_line_id'), "The tasks of the duplicated project should not have a Sale Line set.")
 

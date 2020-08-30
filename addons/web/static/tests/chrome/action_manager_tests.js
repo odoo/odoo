@@ -19,6 +19,7 @@ var Widget = require('web.Widget');
 
 var createActionManager = testUtils.createActionManager;
 const cpHelpers = testUtils.controlPanel;
+const { xml } = owl.tags;
 
 QUnit.module('ActionManager', {
     beforeEach: function () {
@@ -832,7 +833,7 @@ QUnit.module('ActionManager', {
         assert.verifySteps([
             '/web/action/load',
             'load_views',
-            'default_get',
+            'onchange',
         ]);
 
         actionManager.destroy();
@@ -1882,6 +1883,29 @@ QUnit.module('ActionManager', {
         delete core.action_registry.map.HelloWorldTest;
     });
 
+    QUnit.test('action can use a custom control panel', async function (assert) {
+        assert.expect(1);
+
+        class CustomControlPanel extends owl.Component {}
+        CustomControlPanel.template = xml/* xml */`
+            <div class="custom-control-panel">My custom control panel</div>
+        `
+        const ClientAction = AbstractAction.extend({
+            hasControlPanel: true,
+            config: {
+                ControlPanel: CustomControlPanel
+            },
+        });
+        const actionManager = await createActionManager();
+        core.action_registry.add('HelloWorldTest', ClientAction);
+        await actionManager.doAction('HelloWorldTest');
+        assert.containsOnce(actionManager, '.custom-control-panel',
+            "should have a custom control panel");
+
+        actionManager.destroy();
+        delete core.action_registry.map.HelloWorldTest;
+    });
+
     QUnit.test('breadcrumb is updated on title change', async function (assert) {
         assert.expect(2);
 
@@ -2038,7 +2062,7 @@ QUnit.module('ActionManager', {
         assert.verifySteps([
             '/web/action/load', // action 5
             'load_views',
-            'default_get',
+            'onchange',
             '/web/action/load', // action 2
             '/web/action/run',
             'close handler',
@@ -2839,7 +2863,7 @@ QUnit.module('ActionManager', {
             '/web/action/load',
             'load_views',
             '/web/dataset/search_read', // list
-            'default_get', // form
+            'onchange', // form
             '/web/dataset/search_read', // list
         ]);
 
@@ -3567,9 +3591,6 @@ QUnit.module('ActionManager', {
                 active_id: 1,
                 active_ids: [1],
             },
-            flags: {
-                searchPanelDefaultNoFilter: true,
-            },
         });
         var checkSessionStorage = false;
         var actionManager = await createActionManager({
@@ -3628,7 +3649,7 @@ QUnit.module('ActionManager', {
     });
 
     QUnit.test('execute action from dirty, new record, and come back', async function (assert) {
-        assert.expect(19);
+        assert.expect(17);
 
         this.data.partner.fields.bar.default = 1;
         this.archs['partner,false,form'] = '<form>' +
@@ -3689,13 +3710,11 @@ QUnit.module('ActionManager', {
             '/web/action/load', // action 3
             'load_views', // views of action 3
             '/web/dataset/search_read', // list
-            'default_get', // form (create)
-            'name_get', // m2o in form
+            'onchange', // form (create)
             'get_formview_action', // click on m2o
             'load_views', // form view of dynamic action
             'read', // form
-            'default_get', // form (create)
-            'name_get', // m2o in form
+            'onchange', // form (create)
         ]);
 
         actionManager.destroy();
@@ -3770,7 +3789,7 @@ QUnit.module('ActionManager', {
         assert.verifySteps([
             '/web/action/load',
             'load_views',
-            'default_get',
+            'onchange',
         ]);
 
         actionManager.destroy();
@@ -3825,6 +3844,65 @@ QUnit.module('ActionManager', {
         assert.containsOnce($('.o_technical_modal .modal-footer'), 'button',
             "the modal footer should only contain one button");
 
+        actionManager.destroy();
+    });
+
+    QUnit.test("Button with `close` attribute closes dialog", async function (assert) {
+        assert.expect(2);
+        const actions = [
+            {
+                id: 4,
+                name: "Partners Action 4",
+                res_model: "partner",
+                type: "ir.actions.act_window",
+                views: [[false, "form"]],
+            },
+            {
+                id: 5,
+                name: "Create a Partner",
+                res_model: "partner",
+                target: "new",
+                type: "ir.actions.act_window",
+                views: [["view_ref", "form"]],
+            },
+        ];
+
+        const actionManager = await createActionManager({
+            actions,
+            archs: {
+                "partner,false,form": `
+                    <form>
+                        <header>
+                            <button string="Open dialog" name="5" type="action"/>
+                        </header>
+                    </form>
+                `,
+                "partner,view_ref,form": `
+                    <form>
+                        <footer>
+                            <button string="I close the dialog" name="some_method" type="object" close="1"/>
+                        </footer>
+                    </form>
+                `,
+                "partner,false,search": "<search></search>",
+            },
+            data: this.data,
+            mockRPC: async function (route, args) {
+                if (
+                    route === "/web/dataset/call_button" &&
+                    args.method === "some_method"
+                ) {
+                    return { tag: "display_notification", type: "ir.actions.client" };
+                }
+                return this._super(...arguments);
+            },
+        });
+
+        await actionManager.doAction(4);
+        await testUtils.dom.click(`button[name="5"]`);
+        assert.strictEqual($(".modal").length, 1, "It should display a modal");
+        await testUtils.dom.click(`button[name="some_method"]`);
+        assert.strictEqual($(".modal").length, 0, "It should have closed the modal");
         actionManager.destroy();
     });
 

@@ -11,6 +11,12 @@ odoo.define('point_of_sale.ClientDetailsEdit', function(require) {
             this.intFields = ['country_id', 'state_id', 'property_product_pricelist'];
             this.changes = {};
         }
+        mounted() {
+            this.env.bus.on('save-customer', this, this.saveChanges);
+        }
+        willUnmount() {
+            this.env.bus.off('save-customer', this);
+        }
         get partnerImageUrl() {
             // We prioritize image_1920 in the `changes` field because we want
             // to show the uploaded image without fetching new data from the server.

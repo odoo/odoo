@@ -53,11 +53,16 @@ QUnit.module('mrp', {
 
     QUnit.test("mrp_time_counter: basic rendering", async function (assert) {
         assert.expect(2);
-
+        var data = {
+            foo: {
+                fields: { duration: { string: "Duration", type: "float" } },
+                records: [{id: 1, duration:150.5}]
+            },
+        };
         var form = await createView({
             View: FormView,
-            model: 'partner',
-            data: this.data,
+            model: 'foo',
+            data: data,
             res_id: 1,
             arch:
                 '<form>' +
@@ -66,19 +71,13 @@ QUnit.module('mrp', {
             mockRPC: function (route, args) {
                 if (args.method === 'search_read' && args.model === 'mrp.workcenter.productivity') {
                     assert.ok(true, "the widget should fetch the mrp.workcenter.productivity");
-                    return Promise.resolve([{
-                        date_start: '2017-01-01 08:00:00',
-                        date_end: '2017-01-01 10:00:00',
-                    }, {
-                        date_start: '2017-01-01 12:00:00',
-                        date_end: '2017-01-01 12:30:00',
-                    }]);
+                    return Promise.resolve([]);
                 }
                 return this._super.apply(this, arguments);
             },
         });
 
-        assert.strictEqual(form.$('.o_field_widget[name="duration"]').text(), "02:30:00",
+        assert.strictEqual(form.$('.o_field_widget[name="duration"]').text(), "150:30",
             "the timer should be correctly set");
 
         form.destroy();

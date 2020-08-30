@@ -126,10 +126,11 @@ class Location(models.Model):
         args = args or []
         if operator == 'ilike' and not (name or '').strip():
             domain = []
+        elif operator in expression.NEGATIVE_TERM_OPERATORS:
+            domain = [('barcode', operator, name), ('complete_name', operator, name)]
         else:
             domain = ['|', ('barcode', operator, name), ('complete_name', operator, name)]
-        location_ids = self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
-        return models.lazy_name_get(self.browse(location_ids).with_user(name_get_uid))
+        return self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
 
     def _get_putaway_strategy(self, product):
         ''' Returns the location where the product has to be put, if any compliant putaway strategy is found. Otherwise returns None.'''

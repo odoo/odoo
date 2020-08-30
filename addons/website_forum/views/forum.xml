@@ -152,8 +152,8 @@
                         </notebook>
                     </sheet>
                     <div class="oe_chatter">
-                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
-                        <field name="message_ids" widget="mail_thread"/>
+                        <field name="message_follower_ids" groups="base.group_user"/>
+                        <field name="message_ids"/>
                     </div>
                 </form>
             </field>
@@ -255,8 +255,8 @@
                         </group>
                     </sheet>
                     <div class="oe_chatter">
-                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
-                        <field name="message_ids" widget="mail_thread"/>
+                        <field name="message_follower_ids" groups="base.group_user"/>
+                        <field name="message_ids"/>
                     </div>
                 </form>
             </field>
@@ -276,6 +276,9 @@
                     <filter string="Accepted Answer" name="accepted_answer" domain="[('is_correct' , '!=', False), ('parent_id', '!=', False)]" />
                     <filter string="Answered Posts" name="answered_posts" domain="[('child_count', '!=', 0), ('parent_id', '=', False)]" />
                     <separator/>
+                    <filter name="filter_create_date" date="create_date"/>
+                    <filter name="filter_write_date" date="write_date"/>
+                    <separator/>
                     <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                     <group expand="0" string="Group By">
                         <filter string="Forum" name="forum" domain="[]" context="{'group_by': 'forum_id'}"/>
@@ -290,7 +293,7 @@
             <field name="name">forum.post.graph</field>
             <field name="model">forum.post</field>
             <field name="arch" type="xml">
-                <graph string="Graph of Posts">
+                <graph string="Graph of Posts" sample="1">
                     <field name="write_date" interval="month" type="col" />
                     <field name="forum_id" type="row" />
                 </graph>
@@ -337,8 +340,8 @@
                         </group>
                     </sheet>
                     <div class="oe_chatter">
-                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
-                        <field name="message_ids" widget="mail_thread"/>
+                        <field name="message_follower_ids" groups="base.group_user"/>
+                        <field name="message_ids"/>
                     </div>
                 </form>
             </field>

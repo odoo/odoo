@@ -4,6 +4,8 @@ odoo.define('stock.popover_widget', function (require) {
 var AbstractField = require('web.AbstractField');
 var core = require('web.core');
 var QWeb = core.qweb;
+var Context = require('web.Context');
+var data_manager = require('web.data_manager');
 var fieldRegistry = require('web.field_registry');
 
 /**
@@ -36,6 +38,7 @@ var PopoverWidgetField = AbstractField.extend({
         this.$el.html(QWeb.render(this.buttonTemplape, _.defaults(value, {color: this.color, icon: this.icon})));
         this.$el.find('a').prop('special_click', true);
         this.$popover = $(QWeb.render(value.popoverTemplate || this.popoverTemplate, value));
+        this.$popover.on('click', '.action_open_forecast', this._openForecast.bind(this));
         this.$el.find('a').popover({
             content: this.$popover,
             html: this.html,
@@ -44,6 +47,33 @@ var PopoverWidgetField = AbstractField.extend({
             trigger: this.trigger,
             delay: {'show': 0, 'hide': 100},
         });
+    },
+
+    /**
+     * Redirect to the product graph view.
+     * (Based off of qty_at_date_widget.js method)
+     *
+     * @private
+     * @param {MouseEvent} event
+     * @returns {Promise} action loaded
+     */
+    async _openForecast(ev) {
+        ev.stopPropagation();
+        // Change action context to choose a specific date and product(s)
+        // As grid_anchor is set to now() by default in the data, we need
+        // to load the action first, change the context then launch it via do_action
+        // additional_context cannot replace a context value, only add new
+        const action = await data_manager.load_action('stock.report_stock_quantity_action_product');
+        const additional_context = {
+            grid_anchor: this.recordData.delivery_date_grid,
+            search_default_warehouse_id: [this.recordData.warehouse_id.data.id],
+            search_default_below_warehouse: false
+        };
+        action.context = new Context(action.context, additional_context);
+        action.domain = [
+            ['product_id', '=', this.recordData.product_id.data.id]
+        ];
+        return this.do_action(action);
     },
 
     destroy: function () {

@@ -143,7 +143,7 @@
     </template>
 
     <template id="external_layout_background">
-        <div t-attf-class="o_company_#{company.id}_layout header">
+        <div t-attf-class="o_company_#{company.id}_layout header" t-att-style="report_header_style">
             <div class="o_background_header">
             <div class="float-right">
                 <h3 class="mt0 text-right" t-field="company.report_header"/>
@@ -185,7 +185,7 @@
     </template>
 
     <template id="external_layout_boxed">
-        <div t-attf-class="header o_company_#{company.id}_layout">
+        <div t-attf-class="header o_company_#{company.id}_layout" t-att-style="report_header_style">
             <div class="o_boxed_header">
             <div class="row mb8">
                 <div class="col-6">
@@ -227,7 +227,7 @@
     </template>
 
     <template id="external_layout_clean">
-        <div t-attf-class="header o_company_#{company.id}_layout">
+        <div t-attf-class="header o_company_#{company.id}_layout" t-att-style="report_header_style">
             <div class="o_clean_header">
             <div class="row">
                 <div class="col-6">
@@ -273,7 +273,7 @@
     </template>
 
     <template id="external_layout_standard">
-        <div t-attf-class="header o_company_#{company.id}_layout">
+        <div t-attf-class="header o_company_#{company.id}_layout" t-att-style="report_header_style">
             <div class="row">
                 <div class="col-3 mb4">
                     <img t-if="company.logo" t-att-src="image_data_uri(company.logo)" style="max-height: 45px;" alt="Logo"/>
@@ -387,6 +387,7 @@
 
     <template id="basic_layout">
         <t t-call="web.html_container">
+            <t t-if="not o" t-set="o" t-value="doc"/>
             <div class="article" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id" t-att-data-oe-lang="o and o.env.context.get('lang')">
                 <t t-raw="0"/>
             </div>
@@ -396,6 +397,7 @@
     <!-- Customize the company form view by adding paperformat field as well as demo reports -->
     <!-- Demo reports definition -->
     <template id="preview_internalreport">
+        <t t-set="company" t-value="env.company"/>
         <t t-call="web.html_container">
             <t t-set="o" t-value="res_company"/>
             <t t-call="web.internal_layout">
@@ -406,6 +408,7 @@
         </t>
     </template>
     <template id="preview_externalreport">
+        <t t-set="company" t-value="env.company"/>
         <t t-call="web.html_container">
             <t t-set="o" t-value="res_company"/>
             <t t-call="web.external_layout">
@@ -558,16 +561,22 @@
         </t>
     </template>
 
-    <report id="action_report_internalpreview"
-        model="res.company"
-        name="web.preview_internalreport"
-        file="web.preview_internalreport"
-        string="Preview Internal Report"
-        report_type="qweb-pdf"/>
-    <report id="action_report_externalpreview"
-        model="res.company"
-        name="web.preview_externalreport"
-        file="web.preview_externalreport"
-        string="Preview External Report"
-        report_type="qweb-pdf"/>
+    <record id="action_report_internalpreview" model="ir.actions.report">
+        <field name="name">Preview Internal Report</field>
+        <field name="model">res.company</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">web.preview_internalreport</field>
+        <field name="report_file">web.preview_internalreport</field>
+        <field name="binding_model_id" ref="model_res_company"/>
+        <field name="binding_type">report</field>
+    </record>
+    <record id="action_report_externalpreview" model="ir.actions.report">
+        <field name="name">Preview External Report</field>
+        <field name="model">res.company</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">web.preview_externalreport</field>
+        <field name="report_file">web.preview_externalreport</field>
+        <field name="binding_model_id" ref="model_res_company"/>
+        <field name="binding_type">report</field>
+    </record>
 </odoo>

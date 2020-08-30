@@ -24,6 +24,9 @@ var MrpWorkorderPopover = PopoverWidget.extend({
 
     _render: function () {
         this._super.apply(this, arguments);
+        if (! this.$popover) {
+          return;
+        }
         var self = this;
         this.$popover.find('.action_replan_button').click(function (e) {
             self._onReplanClick(e);

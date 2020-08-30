@@ -3,7 +3,7 @@ odoo.define('base_import.ImportMenu', function (require) {
 
     const DropdownMenuItem = require('web.DropdownMenuItem');
     const FavoriteMenu = require('web.FavoriteMenu');
-    const { useModel } = require('web.model');
+    const { useModel } = require('web/static/src/js/model.js');
 
     /**
      * Import Records menu
@@ -15,7 +15,7 @@ odoo.define('base_import.ImportMenu', function (require) {
     class ImportMenu extends DropdownMenuItem {
         constructor() {
             super(...arguments);
-            this.model = useModel('controlPanelModel');
+            this.model = useModel('searchModel');
         }
 
         //---------------------------------------------------------------------
@@ -30,8 +30,8 @@ odoo.define('base_import.ImportMenu', function (require) {
                 type: 'ir.actions.client',
                 tag: 'import',
                 params: {
-                    model: this.model.modelName,
-                    context: this.model.actionContext,
+                    model: this.model.config.modelName,
+                    context: this.model.config.context,
                 }
             };
             this.trigger('do-action', {action: action});

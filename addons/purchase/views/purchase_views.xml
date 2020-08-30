@@ -111,7 +111,7 @@
             <field name="name">purchase.order.pivot</field>
             <field name="model">purchase.order</field>
             <field name="arch" type="xml">
-                <pivot string="Purchase Order" display_quantity="True">
+                <pivot string="Purchase Order" display_quantity="True" sample="1">
                     <field name="partner_id" type="row"/>
                     <field name="amount_total" type="measure"/>
                 </pivot>
@@ -121,7 +121,7 @@
             <field name="name">purchase.order.graph</field>
             <field name="model">purchase.order</field>
             <field name="arch" type="xml">
-                <graph string="Purchase Order">
+                <graph string="Purchase Order" sample="1">
                     <field name="partner_id"/>
                     <field name="amount_total" type="measure"/>
                 </graph>
@@ -143,7 +143,7 @@
                     <button name="print_quotation" string="Print RFQ" type="object" states="sent" groups="base.group_user"/>
                     <button name="button_confirm" type="object" states="draft" string="Confirm Order" id="draft_confirm"/>
                     <button name="action_rfq_send" states="purchase" string="Send PO by Email" type="object" context="{'send_rfq':False}"/>
-                    <button name="confirm_reminder_mail" string="Confirm Receipt Date" type="object" attrs="{'invisible': ['|', ('state', 'not in', ('purchase', 'done')), ('mail_reminder_confirmed', '=', True)]}"/>
+                    <button name="confirm_reminder_mail" string="Confirm Receipt Date" type="object" attrs="{'invisible': ['|', ('state', 'not in', ('purchase', 'done')), ('mail_reminder_confirmed', '=', True)]}" groups="base.group_no_one"/>
                     <button name="action_create_invoice" string="Create Bill" type="object" context="{'create_bill':True}" attrs="{'invisible': ['|', '|', ('state', 'not in', ('purchase', 'done')), ('invoice_status', 'not in', ('no', 'invoiced')), ('order_line', '=', [])]}"/>
                     <button name="button_draft" states="cancel" string="Set to Draft" type="object" />
                     <button name="button_cancel" states="draft,to approve,sent,purchase" string="Cancel" type="object" />
@@ -164,6 +164,7 @@
                         <span class="o_form_label" attrs="{'invisible': [('state','not in',('draft','sent'))]}">Request for Quotation </span>
                         <span class="o_form_label" attrs="{'invisible': [('state','in',('draft','sent'))]}">Purchase Order </span>
                         <h1>
+                            <field name="priority" widget="priority" class="mr-3"/>
                             <field name="name" readonly="1"/>
                         </h1>
                     </div>
@@ -184,18 +185,19 @@
                                 <span class="text-muted" attrs="{'invisible': [('mail_reception_confirmed','=', False)]}">(confirmed by vendor)</span>
                             </div>
                             <label for="date_planned"/>
-                            <div name="date_planned_and_confirmation">
-                                <div name="date_planned_div" class="o_row">
-                                    <field name="date_planned" attrs="{'readonly': [('state', 'not in', ('draft', 'sent', 'to approve', 'purchase'))]}"/>
-                                    <span name='expected_date_span' class="text-muted" attrs="{'invisible': ['|', ('expected_date', '=', False), ('date_planned', '!=', False)]}">Per line, first on <field name="expected_date" widget="date"/></span>
-                                    <field name="mail_reminder_confirmed" invisible="1"/>
-                                    <span class="text-muted" attrs="{'invisible': [('mail_reminder_confirmed', '=', False)]}">(confirmed by vendor)</span>
-                                </div>
-                                <div name="confirmation" class="oe_edit_only o_row" groups='purchase.group_send_reminder'>
-                                    <field name="receipt_reminder_email"/>
-                                    <span>Ask confirmation</span>
-                                    <field name="reminder_date_before_receipt" attrs="{'readonly': [('receipt_reminder_email', '=', False)]}"/>
-                                    <span> days before</span>
+                            <div name="date_planned_div" class="o_row">
+                                <field name="date_planned" attrs="{'readonly': [('state', 'not in', ('draft', 'sent', 'to approve', 'purchase'))]}"/>
+                                <field name="mail_reminder_confirmed" invisible="1"/>
+                                <span class="text-muted" attrs="{'invisible': [('mail_reminder_confirmed', '=', False)]}">(confirmed by vendor)</span>
+                            </div>
+                            <label for="receipt_reminder_email" invisible='1'/>
+                            <div name="reminder" class="o_row" groups='purchase.group_send_reminder' title="Automatically send a confirmation email to the vendor X days before the expected receipt date, asking him to confirm the exact date.">
+                                <field name="receipt_reminder_email"/>
+                                <span>Ask confirmation</span>
+                                <div class="o_row oe_inline" attrs="{'invisible': [('receipt_reminder_email', '=', False)]}">
+                                    <field name="reminder_date_before_receipt" class="oe_inline"/>
+                                    days before 
+                                    <widget name='toaster_button' button_name="send_reminder_preview" title="Preview the reminder email by sending it to yourself."/>
                                 </div>
                             </div>
                             <field name="origin" attrs="{'invisible': [('origin','=',False)]}"/>
@@ -215,7 +217,7 @@
                                     </control>
                                     <field name="display_type" invisible="1"/>
                                     <field name="currency_id" invisible="1"/>
-                                    <field name="state" invisible="1"/>
+                                    <field name="state" invisible="1" readonly="1"/>
                                     <field name="product_type" invisible="1"/>
                                     <field name="product_uom_category_id" invisible="1"/>
                                     <field name="invoice_lines" invisible="1"/>
@@ -229,7 +231,7 @@
                                         context="{'partner_id':parent.partner_id, 'quantity':product_qty,'uom':product_uom, 'company_id': parent.company_id}"
                                         force_save="1" domain="[('purchase_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"/>
                                     <field name="name" widget="section_and_note_text"/>
-                                    <field name="date_planned" optional="hide" attrs="{'required': [('display_type', '=', False)], 'readonly': [('parent.date_planned', '!=', False)]}" force_save="1"/>
+                                    <field name="date_planned" optional="hide" attrs="{'required': [('display_type', '=', False)]}" force_save="1"/>
                                     <field name="account_analytic_id" optional="hide" context="{'default_partner_id':parent.partner_id}" groups="analytic.group_analytic_accounting" domain="['|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"/>
                                     <field name="analytic_tag_ids" optional="hide" groups="analytic.group_analytic_tags" widget="many2many_tags" options="{'color_field': 'color'}" domain="['|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"/>
                                     <field name="product_qty"/>
@@ -373,9 +375,9 @@
                     </notebook>
                 </sheet>
                 <div class="oe_chatter">
-                    <field name="message_follower_ids" widget="mail_followers"/>
-                    <field name="activity_ids" widget="mail_activity"/>
-                    <field name="message_ids" widget="mail_thread"/>
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
                 </div>
                 </form>
             </field>
@@ -392,15 +394,17 @@
                     <field name="user_id"/>
                     <field name="product_id"/>
                     <filter name="my_purchases" string="My Purchases" domain="[('user_id', '=', uid)]"/>
+                    <filter string="Starred" name="starred" domain="[('priority', '=', '1')]"/>
                     <separator/>
                     <filter name="draft" string="RFQs" domain="[('state', 'in', ('draft', 'sent', 'to approve'))]"/>
+                    <separator/>
                     <filter name="approved" string="Purchase Orders" domain="[('state', 'in', ('purchase', 'done'))]"/>
                     <filter name="to_approve" string="To Approve" domain="[('state', '=', 'to approve')]"/>
                     <separator/>
                     <filter name="order_date" string="Order Date" date="date_order"/>
                     <filter name="draft_rfqs" string="Draft RFQs" domain="[('state', '=', 'draft')]"/>
                     <filter name="waiting_rfqs" string="Waiting RFQs" domain="[('state', '=', 'sent'), ('date_order', '&gt;=', datetime.datetime.now())]"/>
-                    <filter name="late_rfqs" string="Late RFQs" domain="[('state', '=', 'sent'), ('date_order', '&lt;', datetime.datetime.now())]"/>
+                    <filter name="late_rfqs" string="Late RFQs" domain="[('state', 'in', ['draft', 'sent', 'to approve']),('date_order', '&lt;', datetime.datetime.now())]"/>
                     <separator/>
                     <filter invisible="1" string="Late Activities" name="activities_overdue"
                         domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
@@ -432,6 +436,7 @@
                     <field name="user_id"/>
                     <field name="product_id"/>
                     <filter name="my_Orders" string="My Orders" domain="[('user_id', '=', uid)]"/>
+                    <filter string="Starred" name="starred" domain="[('priority', '=', '1')]"/>
                     <separator/>
                     <filter name="unconfirmed" string="Not Acknowledged" domain="[('mail_reception_confirmed', '=', False), ('state', '=', 'purchase')]"/>
                     <filter name="not_invoiced" string="Waiting Bills" domain="[('invoice_status', '=', 'to invoice')]" help="Purchase orders that include lines not invoiced."/>
@@ -464,7 +469,7 @@
             <field name="name">purchase.order.kanban</field>
             <field name="model">purchase.order</field>
             <field name="arch" type="xml">
-                <kanban class="o_kanban_mobile" js_class="purchase_kanban_dashboard">
+                <kanban class="o_kanban_mobile" js_class="purchase_kanban_dashboard" sample="1">
                     <field name="name"/>
                     <field name="partner_id" readonly="1"/>
                     <field name="amount_total"/>
@@ -477,7 +482,8 @@
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_card oe_kanban_global_click">
                                 <div class="o_kanban_record_top mb16">
-                                    <div class="o_kanban_record_headings mt4">
+                                    <field name="priority" widget="priority"/>
+                                    <div class="o_kanban_record_headings ml-1">
                                         <strong class="o_kanban_record_title"><span><t t-esc="record.partner_id.value"/></span></strong>
                                     </div>
                                     <strong><field name="amount_total" widget="monetary"/></strong>
@@ -504,7 +510,8 @@
             <field name="priority" eval="1"/>
             <field name="arch" type="xml">
                 <tree string="Purchase Order" multi_edit="1" decoration-bf="message_unread==True"
-                      decoration-muted="state=='cancel'" decoration-info="state in ('wait','confirmed')">
+                      decoration-muted="state=='cancel'" decoration-info="state in ('wait','confirmed')" sample="1">
+                    <field name="priority" optional="show" widget="priority" nolabel="1"/>
                     <field name="message_unread" invisible="1"/>
                     <field name="partner_ref" optional="hide"/>
                     <field name="name" string="Reference" readonly="1"/>
@@ -534,18 +541,22 @@
             <field name="priority" eval="10"/>
             <field name="arch" type="xml">
                 <tree string="Purchase Order" multi_edit="1" decoration-bf="message_unread==True"
-                      class="o_purchase_order" js_class="purchase_list_dashboard">
+                      class="o_purchase_order" js_class="purchase_list_dashboard" sample="1">
+                    <header>
+                        <button name="action_create_invoice" type="object" string="Create Bills"/>
+                    </header>
+                    <field name="priority" optional="show" widget="priority" nolabel="1"/>
                     <field name="message_unread" invisible="1"/>
                     <field name="partner_ref" optional="hide"/>
                     <field name="name" string="Reference" readonly="1" decoration-bf="1"/>
-                    <field name="date_order" attrs="{'invisible': ['|', '|', ('state', '=', 'purchase'), ('state', '=', 'done'), ('state', '=', 'cancel')]}"
-                        invisible="not context.get('quotation_only', False)" widget="remaining_days" optional="show"/>
                     <field name="date_approve" invisible="context.get('quotation_only', False)" optional="show"/>
                     <field name="partner_id" readonly="1"/>
                     <field name="company_id" readonly="1" options="{'no_create': True}"
                         groups="base.group_multi_company" optional="show"/>
                     <field name="date_planned" invisible="context.get('quotation_only', False)" optional="show"/>
                     <field name="user_id" optional="show" widget="many2one_avatar_user"/>
+                    <field name="date_order" attrs="{'invisible': ['|', '|', ('state', '=', 'purchase'), ('state', '=', 'done'), ('state', '=', 'cancel')]}"
+                        invisible="not context.get('quotation_only', False)" widget="remaining_days" optional="show"/>
                     <field name="activity_ids" widget="list_activity" optional="show"/>
                     <field name="origin" optional="show"/>
                     <field name="amount_untaxed" sum="Total Untaxed amount" string="Untaxed" widget="monetary" optional="hide"/>
@@ -562,16 +573,25 @@
             <field name="name">purchase.order.view.tree</field>
             <field name="model">purchase.order</field>
             <field name="arch" type="xml">
-                <tree decoration-bf="message_unread==True" decoration-muted="state=='cancel'" decoration-info="state in ('wait','confirmed')" string="Purchase Order" class="o_purchase_order">
+                <tree decoration-bf="message_unread==True"
+                    decoration-muted="state=='cancel'"
+                    decoration-info="state in ('wait','confirmed')"
+                    string="Purchase Order"
+                    class="o_purchase_order"
+                    sample="1">
+                    <header>
+                        <button name="action_create_invoice" type="object" string="Create Bills"/>
+                    </header>
+                    <field name="priority" optional="show" widget="priority" nolabel="1"/>
                     <field name="message_unread" invisible="1"/>
                     <field name="partner_ref" optional="hide"/>
                     <field name="name" string="Reference" readonly="1" decoration-bf="1"/>
-                    <field name="date_order" invisible="not context.get('quotation_only', False)" optional="show"/>
                     <field name="date_approve" widget="date" invisible="context.get('quotation_only', False)" optional="show"/>
                     <field name="partner_id"/>
                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" optional="show"/>
                     <field name="date_planned" invisible="context.get('quotation_only', False)" optional="show"/>
                     <field name="user_id" widget="many2one_avatar_user" optional="show"/>
+                    <field name="date_order" invisible="not context.get('quotation_only', False)" optional="show"/>
                     <field name="activity_ids" widget="list_activity" optional="show"/>
                     <field name="origin" optional="show"/>
                     <field name="amount_untaxed" sum="Total Untaxed amount" string="Untaxed" widget="monetary" optional="hide"/>
@@ -613,7 +633,7 @@
               <p class="o_view_nocontent_smiling_face">
                 Create a request for quotation
               </p><p>
-                The requests for quotation are documents that will be sent to your suppliers to request prices for different products you consider buying.
+                Requests for quotation are documents that will be sent to your suppliers to request prices for different products you consider buying.
                 Once an agreement has been found with the supplier, they will be confirmed and turned into purchase orders.
               </p>
             </field>
@@ -727,6 +747,19 @@
         <field name="code">
             if records:
                 action = records.action_create_invoice()
+        </field>
+    </record>
+
+    <record id="action_purchase_send_reminder" model="ir.actions.server">
+        <field name="name">Send Reminder</field>
+        <field name="model_id" ref="purchase.model_purchase_order"/>
+        <field name="binding_model_id" ref="purchase.model_purchase_order"/>
+        <field name='groups_id' eval="[(4, ref('purchase.group_send_reminder'))]"/>
+        <field name="binding_view_types">form</field>
+        <field name="state">code</field>
+        <field name="code">
+            if records:
+                action = records._send_reminder_mail(send_single=True)
         </field>
     </record>
     

@@ -23,6 +23,7 @@ class SeoMetadata(models.AbstractModel):
     website_meta_description = fields.Text("Website meta description", translate=True)
     website_meta_keywords = fields.Char("Website meta keywords", translate=True)
     website_meta_og_img = fields.Char("Website opengraph image")
+    seo_name = fields.Char("Seo name", translate=True)
 
     def _compute_is_seo_optimized(self):
         for record in self:

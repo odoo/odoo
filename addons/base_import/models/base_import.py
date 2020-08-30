@@ -297,7 +297,7 @@ class Import(models.TransientModel):
                         _("Invalid cell value at row %(row)s, column %(col)s: %(cell_value)s") % {
                             'row': rowx,
                             'col': colx,
-                            'cell_value': xlrd.error_text_from_code.get(cell.value, _("unknown error code %s") % cell.value)
+                            'cell_value': xlrd.error_text_from_code.get(cell.value, _("unknown error code %s", cell.value))
                         }
                     )
                 else:
@@ -737,7 +737,7 @@ class Import(models.TransientModel):
             old_value = line[index]
             line[index] = self._remove_currency_symbol(line[index])
             if line[index] is False:
-                raise ValueError(_("Column %s contains incorrect values (value: %s)" % (name, old_value)))
+                raise ValueError(_("Column %s contains incorrect values (value: %s)", name, old_value))
 
     def _infer_separators(self, value, options):
         """ Try to infer the shape of the separators: if there are two
@@ -856,13 +856,13 @@ class Import(models.TransientModel):
             response.raise_for_status()
 
             if response.headers.get('Content-Length') and int(response.headers['Content-Length']) > maxsize:
-                raise ValueError(_("File size exceeds configured maximum (%s bytes)") % maxsize)
+                raise ValueError(_("File size exceeds configured maximum (%s bytes)", maxsize))
 
             content = bytearray()
             for chunk in response.iter_content(DEFAULT_IMAGE_CHUNK_SIZE):
                 content += chunk
                 if len(content) > maxsize:
-                    raise ValueError(_("File size exceeds configured maximum (%s bytes)") % maxsize)
+                    raise ValueError(_("File size exceeds configured maximum (%s bytes)", maxsize))
 
             image = Image.open(io.BytesIO(content))
             w, h = image.size

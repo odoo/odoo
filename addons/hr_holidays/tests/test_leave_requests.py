@@ -168,6 +168,8 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         leave_form.holiday_type = 'department'
         leave_form.department_id = self.hr_dept
         leave_form.holiday_status_id = self.holidays_type_1
+        leave_form.request_date_from = date(2019, 5, 6)
+        leave_form.request_date_to = date(2019, 5, 6)
         leave = leave_form.save()
         leave.action_approve()
         member_ids = self.hr_dept.member_ids.ids

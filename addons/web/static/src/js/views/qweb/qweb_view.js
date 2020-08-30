@@ -51,13 +51,13 @@ var Model = AbstractModel.extend({
     /**
      * get
      */
-    get: function () {
+    __get: function () {
         return this._state;
     },
     /**
      * load
      */
-    load: function (params) {
+    __load: function (params) {
         _.extend(this._state, _.pick(params, ['viewId', 'modelName', 'domain', 'context']));
 
         return this._fetch();
@@ -65,7 +65,7 @@ var Model = AbstractModel.extend({
     /**
      * reload
      */
-    reload: function (_id, params) {
+    __reload: function (_id, params) {
         _.extend(this._state, _.pick(params, ['domain', 'context']));
 
         return this._fetch();

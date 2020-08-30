@@ -36,6 +36,7 @@ odoo.define('web.basic_model_tests', function (require) {
                 },
                 product: {
                     fields: {
+                        display_name: { string: "Product Display Name", type: "char" },
                         name: { string: "Product Name", type: "char" },
                         category: { string: "Category M2M", type: 'many2many', relation: 'partner_type' },
                         active: {string: "Active", type: 'boolean', default: true},
@@ -80,7 +81,9 @@ odoo.define('web.basic_model_tests', function (require) {
         QUnit.module('BasicModel');
 
         QUnit.test('can process x2many commands', async function (assert) {
-            assert.expect(5);
+            assert.expect(6);
+
+            this.data.partner.fields.product_ids.default = [[0, 0, { category: [] }]];
 
             const form = await createView({
                 View: FormView,
@@ -110,22 +113,16 @@ odoo.define('web.basic_model_tests', function (require) {
                 },
                 mockRPC(route, args) {
                     assert.step(args.method);
-                    if (args.method === 'default_get' && args.model === 'partner') {
-                        return Promise.resolve({
-                            product_ids: [
-                                [0, 0, {category: []}],
-                            ]
-                        });
-                    }
                     return this._super.apply(this, arguments);
                 },
             });
 
             assert.verifySteps([
                 'load_views',
-                'default_get',
+                'onchange',
             ]);
             assert.containsOnce(form, '.o_field_x2many_list', 'should have rendered a x2many list');
+            assert.containsOnce(form, '.o_data_row', 'should have added 1 record as default');
             assert.containsOnce(form, '.o_field_x2many_list_row_add', 'should have rendered a x2many add row on list');
             form.destroy();
         });
@@ -136,7 +133,7 @@ odoo.define('web.basic_model_tests', function (require) {
             this.params.fieldNames = ['foo'];
             this.params.context = { active_field: 2 };
 
-            var model = createModel({
+            var model = await createModel({
                 Model: BasicModel,
                 data: this.data,
                 mockRPC: function (route, args) {
@@ -171,7 +168,7 @@ odoo.define('web.basic_model_tests', function (require) {
 
             this.params.res_id = 99;
 
-            var model = createModel({
+            var model = await createModel({
                 Model: BasicModel,
                 data: this.data,
             });
@@ -190,7 +187,7 @@ odoo.define('web.basic_model_tests', function (require) {
 
             this.params.fieldNames = ['foo', 'qux'];
 
-            var model = createModel({
+            var model = await createModel({
                 Model: BasicModel,
                 data: this.data,
             });
@@ -211,7 +208,7 @@ odoo.define('web.basic_model_tests', function (require) {
             this.data.partner.records[1].qux = 1;
 
             this.params.fieldNames = ['qux'];
-            var model = createModel({
+            var model = await createModel({
                 Model: BasicModel,
                 data: this.data,
             });
@@ -238,7 +235,7 @@ odoo.define('web.basic_model_tests', function (require) {
 
             var rpcCount = 0;
 
-            var model = createModel({
+            var model = await createModel({
                 Model: BasicModel,
                 data: this.data,
                 mockRPC: function (route, args) {
@@ -277,7 +274,7 @@ odoo.define('web.basic_model_tests', function (require) {
             this.params.fieldNames = ['foo', 'bar'];
             this.params.context = { hello: 'world' };
 
-            var model = createModel({
+            var model = await createModel({
                 Model: BasicModel,
                 data: this.data,
                 mockRPC: function (route, args) {
@@ -317,7 +314,7 @@ odoo.define('web.basic_model_tests', function (require) {
 
             var rpcCount = 0;
 
-            var model = createModel({
+            var model = await createModel({
                 Model: BasicModel,
                 data: this.data,
                 mockRPC: function (route, args) {
@@ -354,7 +351,7 @@ odoo.define('web.basic_model_tests', function (require) {
 
             this.params.fieldNames = ['foo'];
 
-            var model = createModel({
+            var model = await createModel({
                 Model: BasicModel,
                 data: this.data,
             });
@@ -381,7 +378,7 @@ odoo.define('web.basic_model_tests', function (require) {
             this.data.partner.records[1].product_ids = [37];
             this.params.fieldNames = ['product_ids'];
 
-            var model = createModel({
+            var model = await createModel({
                 Model: BasicModel,
                 data: this.data,
                 mockRPC: function (route, args) {
@@ -461,7 +458,7 @@ odoo.define('web.basic_model_tests', function (require) {
 
             this.params.fieldNames = ['product_id'];
 
-            var model = createModel({
+            var model = await createModel({
                 Model: BasicModel,
                 data: this.data,
                 mockRPC: function (route, args) {
@@ -495,7 +492,7 @@ odoo.define('web.basic_model_tests', function (require) {
 
             this.params.fieldNames = ['foo', 'product_id'];
 
-            var model = createModel({
+            var model = await createModel({
                 Model: BasicModel,
                 data: this.data,
                 mockRPC: function (route, args) {
@@ -524,7 +521,7 @@ odoo.define('web.basic_model_tests', function (require) {
             this.params.fieldNames = ['foo', 'product_id'];
             this.params.res_id = 1;
 
-            var model = createModel({
+            var model = await createModel({
                 Model: BasicModel,
                 data: this.data,
             });
@@ -553,7 +550,7 @@ odoo.define('web.basic_model_tests', function (require) {
                 },
             };
 
-            var model = createModel({
+            var model = await createModel({
                 Model: BasicModel,
                 data: this.data,
             });
@@ -583,7 +580,7 @@ odoo.define('web.basic_model_tests', function (require) {
                 },
             };
 
-            var model = createModel({
+            var model = await createModel({
                 Model: BasicModel,
                 data: this.data,
             });
@@ -615,7 +612,7 @@ odoo.define('web.basic_model_tests', function (require) {
                 },
             };
 
-            var model = createModel({
+            var model = await createModel({
                 Model: BasicModel,
                 data: this.data,
             });
@@ -641,7 +638,7 @@ odoo.define('web.basic_model_tests', function (require) {
             this.params.res_id = undefined;
             this.params.context = { active_field: 2 };
 
-            var model = createModel({
+            var model = await createModel({
                 Model: BasicModel,
                 data: this.data,
                 mockRPC: function (route, args) {
@@ -671,7 +668,7 @@ odoo.define('web.basic_model_tests', function (require) {
             this.params.groupedBy = [];
             this.params.res_id = undefined;
 
-            var model = createModel({
+            var model = await createModel({
                 Model: BasicModel,
                 data: this.data,
                 mockRPC: function (route, args) {
@@ -690,7 +687,7 @@ odoo.define('web.basic_model_tests', function (require) {
             model.destroy();
         });
 
-        QUnit.test('can make a default_record, no onchange', async function (assert) {
+        QUnit.test('can make a default_record with the help of onchange', async function (assert) {
             assert.expect(5);
 
             this.params.context = {};
@@ -698,7 +695,7 @@ odoo.define('web.basic_model_tests', function (require) {
             this.params.res_id = undefined;
             this.params.type = 'record';
 
-            var model = createModel({
+            var model = await createModel({
                 Model: BasicModel,
                 data: this.data,
                 mockRPC: function (route, args) {
@@ -713,8 +710,7 @@ odoo.define('web.basic_model_tests', function (require) {
             assert.deepEqual(record.data.product_ids.data, [], "o2m default should be []");
             assert.deepEqual(record.data.category.data, [], "m2m default should be []");
 
-            assert.verifySteps(['default_get'],
-                "there should be default_get");
+            assert.verifySteps(['onchange']);
 
             model.destroy();
         });
@@ -732,7 +728,7 @@ odoo.define('web.basic_model_tests', function (require) {
             this.params.res_id = undefined;
             this.params.type = 'record';
 
-            var model = createModel({
+            var model = await createModel({
                 Model: BasicModel,
                 data: this.data,
                 mockRPC: function (route, args) {
@@ -755,7 +751,7 @@ odoo.define('web.basic_model_tests', function (require) {
         });
 
         QUnit.test('can make a default_record with default relational values', async function (assert) {
-            assert.expect(7);
+            assert.expect(6);
 
             this.data.partner.fields.product_id.default = 37;
             this.data.partner.fields.product_ids.default = [
@@ -784,7 +780,7 @@ odoo.define('web.basic_model_tests', function (require) {
             };
             this.params.viewType = 'form';
 
-            var model = createModel({
+            var model = await createModel({
                 Model: BasicModel,
                 data: this.data,
                 mockRPC: function (route, args) {
@@ -804,8 +800,7 @@ odoo.define('web.basic_model_tests', function (require) {
             assert.deepEqual(record.data.category.res_ids, [12, 14],
                 "m2m default should be [12, 14]");
 
-            assert.verifySteps(['default_get', 'name_get'],
-                "there should be default_get and name_get");
+            assert.verifySteps(['onchange']);
 
             model.destroy();
         });
@@ -822,7 +817,7 @@ odoo.define('web.basic_model_tests', function (require) {
             this.params.res_id = undefined;
             this.params.type = 'record';
 
-            var model = createModel({
+            var model = await createModel({
                 Model: BasicModel,
                 data: this.data,
                 mockRPC: function (route, args) {
@@ -848,7 +843,7 @@ odoo.define('web.basic_model_tests', function (require) {
             fields.product_id.default = 37;
             fields.other_product_id.default = 41;
 
-            var model = createModel({
+            var model = await createModel({
                 Model: BasicModel,
                 data: this.data,
                 mockRPC: function (route, args) {
@@ -871,7 +866,7 @@ odoo.define('web.basic_model_tests', function (require) {
                 "should have fetched correct name");
             assert.strictEqual(record.data.other_product_id.data.display_name, "xpad",
                 "should have fetched correct name");
-            assert.strictEqual(rpcCount, 2, "should have done 2 rpcs: default_get and 1 name_get");
+            assert.strictEqual(rpcCount, 1, "should have done 1 rpc: onchange");
             model.destroy();
         });
 
@@ -880,7 +875,7 @@ odoo.define('web.basic_model_tests', function (require) {
 
             this.params.fieldNames = ['foo'];
 
-            var model = createModel({
+            var model = await createModel({
                 Model: BasicModel,
                 data: this.data,
             });
@@ -902,7 +897,7 @@ odoo.define('web.basic_model_tests', function (require) {
             this.params.fieldNames = ['category'];
             this.params.res_id = 1;
 
-            var model = createModel({
+            var model = await createModel({
                 Model: BasicModel,
                 data: this.data,
             });
@@ -927,7 +922,7 @@ odoo.define('web.basic_model_tests', function (require) {
 
             this.params.fieldNames = ['foo'];
 
-            var model = createModel({
+            var model = await createModel({
                 Model: BasicModel,
                 data: this.data,
             });
@@ -951,7 +946,7 @@ odoo.define('web.basic_model_tests', function (require) {
             this.params.fieldNames = ['product_id'];
 
             var self = this;
-            var model = createModel({
+            var model = await createModel({
                 Model: BasicModel,
                 data: this.data,
             });
@@ -981,7 +976,7 @@ odoo.define('web.basic_model_tests', function (require) {
             this.params.res_id = undefined;
 
             var filterEnabled = false;
-            var model = createModel({
+            var model = await createModel({
                 Model: BasicModel,
                 data: this.data,
                 mockRPC: function (route, args) {
@@ -1046,7 +1041,7 @@ odoo.define('web.basic_model_tests', function (require) {
             this.params.groupedBy = ['date:month'];
             this.params.res_id = undefined;
 
-            var model = createModel({
+            var model = await createModel({
                 Model: BasicModel,
                 data: this.data,
                 mockRPC: function (route, args) {
@@ -1072,7 +1067,7 @@ odoo.define('web.basic_model_tests', function (require) {
             };
             this.data.partner.records[0].selection = 'a';
 
-            var model = createModel({
+            var model = await createModel({
                 Model: BasicModel,
                 data: this.data,
             });
@@ -1108,7 +1103,7 @@ odoo.define('web.basic_model_tests', function (require) {
             this.params.context = { active_field: 2 };
 
             var id;
-            var model = createModel({
+            var model = await createModel({
                 Model: BasicModel,
                 data: this.data,
                 mockRPC: function (route, args) {
@@ -1146,7 +1141,7 @@ odoo.define('web.basic_model_tests', function (require) {
 
             this.params.fieldNames = ['product_ids'];
 
-            var model = createModel({
+            var model = await createModel({
                 Model: BasicModel,
                 data: this.data,
                 mockRPC: function (route, args) {
@@ -1183,7 +1178,7 @@ odoo.define('web.basic_model_tests', function (require) {
         QUnit.test('create commands on a one2many', async function (assert) {
             assert.expect(3);
 
-            var model = createModel({
+            var model = await createModel({
                 Model: BasicModel,
                 data: this.data,
                 mockRPC: function (route, args) {
@@ -1260,7 +1255,7 @@ odoo.define('web.basic_model_tests', function (require) {
                 type: 'record',
             };
 
-            var model = createModel({
+            var model = await createModel({
                 Model: BasicModel,
                 data: this.data,
                 mockRPC: function (route, args) {
@@ -1297,7 +1292,7 @@ odoo.define('web.basic_model_tests', function (require) {
         QUnit.test('dates are properly loaded and parsed (record)', async function (assert) {
             assert.expect(2);
 
-            var model = createModel({
+            var model = await createModel({
                 Model: BasicModel,
                 data: this.data,
             });
@@ -1309,7 +1304,7 @@ odoo.define('web.basic_model_tests', function (require) {
                 res_id: 1,
             };
 
-            model.load(params).then(function (resultID) {
+            await model.load(params).then(function (resultID) {
                 var record = model.get(resultID);
                 assert.ok(record.data.date instanceof moment,
                     "fetched date field should have been formatted");
@@ -1317,7 +1312,7 @@ odoo.define('web.basic_model_tests', function (require) {
 
             params.res_id = 2;
 
-            model.load(params).then(function (resultID) {
+            await model.load(params).then(function (resultID) {
                 var record = model.get(resultID);
                 assert.strictEqual(record.data.date, false,
                     "unset date field should be false");
@@ -1328,7 +1323,7 @@ odoo.define('web.basic_model_tests', function (require) {
         QUnit.test('dates are properly loaded and parsed (list)', async function (assert) {
             assert.expect(2);
 
-            var model = createModel({
+            var model = await createModel({
                 Model: BasicModel,
                 data: this.data,
             });
@@ -1340,7 +1335,7 @@ odoo.define('web.basic_model_tests', function (require) {
                 type: 'list',
             };
 
-            model.load(params).then(function (resultID) {
+            await model.load(params).then(function (resultID) {
                 var record = model.get(resultID);
                 var firstRecord = record.data[0];
                 var secondRecord = record.data[1];
@@ -1355,7 +1350,7 @@ odoo.define('web.basic_model_tests', function (require) {
         QUnit.test('dates are properly loaded and parsed (default_get)', async function (assert) {
             assert.expect(1);
 
-            var model = createModel({
+            var model = await createModel({
                 Model: BasicModel,
                 data: this.data,
             });
@@ -1367,7 +1362,7 @@ odoo.define('web.basic_model_tests', function (require) {
                 type: 'record',
             };
 
-            model.load(params).then(function (resultID) {
+            await model.load(params).then(function (resultID) {
                 var record = model.get(resultID);
                 assert.strictEqual(record.data.date, false, "date default value should be false");
             });
@@ -1379,7 +1374,7 @@ odoo.define('web.basic_model_tests', function (require) {
 
             this.data.partner.fields.category.default = [12, 14];
 
-            var model = createModel({
+            var model = await createModel({
                 Model: BasicModel,
                 data: this.data,
             });
@@ -1391,7 +1386,7 @@ odoo.define('web.basic_model_tests', function (require) {
                 type: 'record',
             };
 
-            model.load(params).then(function (resultID) {
+            await model.load(params).then(function (resultID) {
                 var record = model.get(resultID);
                 assert.ok(_.isEqual(record.data.category.res_ids, [12, 14]),
                     "category field should have correct default value");
@@ -1401,26 +1396,23 @@ odoo.define('web.basic_model_tests', function (require) {
         });
 
         QUnit.test('default_get: fetch many2one with default (empty & not) inside x2manys', async function (assert) {
-            assert.expect(4);
+            assert.expect(3);
 
+            this.data.partner.fields.category_m2o = {
+                type: 'many2one',
+                relation: 'partner_type',
+            };
             this.data.partner.fields.o2m = {
                 string: "O2M", type: 'one2many', relation: 'partner', default: [
                     [6, 0, []],
-                    [0, 0, { category: false }],
-                    [0, 0, { category: 12 }],
+                    [0, 0, { category_m2o: false, o2m: [] }],
+                    [0, 0, { category_m2o: 12, o2m: [] }],
                 ],
             };
-            this.data.partner.fields.category.type = 'many2one';
 
-            var model = createModel({
+            var model = await createModel({
                 Model: BasicModel,
                 data: this.data,
-                mockRPC: function (route, args) {
-                    if (args.method === 'name_get' && args.model === 'partner_type') {
-                        assert.deepEqual(args.args, [[12]], "should name_get on category 12");
-                    }
-                    return this._super(route, args);
-                },
             });
 
             var params = {
@@ -1432,7 +1424,7 @@ odoo.define('web.basic_model_tests', function (require) {
                             relatedFields: this.data.partner.fields,
                             fieldsInfo: {
                                 list: {
-                                    category: {
+                                    category_m2o: {
                                         relatedFields: { display_name: {} },
                                     },
                                 },
@@ -1449,9 +1441,9 @@ odoo.define('web.basic_model_tests', function (require) {
             var resultID = await model.load(params);
             var record = model.get(resultID);
             assert.strictEqual(record.data.o2m.count, 2, "o2m field should contain 2 records");
-            assert.strictEqual(record.data.o2m.data[0].data.category, false,
+            assert.strictEqual(record.data.o2m.data[0].data.category_m2o, false,
                 "first category field should be empty");
-            assert.strictEqual(record.data.o2m.data[1].data.category.data.display_name, "gold",
+            assert.strictEqual(record.data.o2m.data[1].data.category_m2o.data.display_name, "gold",
                 "second category field should have been correctly fetched");
 
             model.destroy();
@@ -1464,7 +1456,7 @@ odoo.define('web.basic_model_tests', function (require) {
                 string: "O2M", type: 'one2many', relation: 'partner', default: [[6, 0, [1]]],
             };
 
-            var model = createModel({
+            var model = await createModel({
                 Model: BasicModel,
                 data: this.data,
             });
@@ -1510,7 +1502,7 @@ odoo.define('web.basic_model_tests', function (require) {
             this.data.partner.fields.product_id.context = "{'hello': 'world', 'test': foo}";
             this.data.partner.fields.product_id.domain = "[['hello', 'like', 'world'], ['test', 'like', foo]]";
 
-            var model = createModel({
+            var model = await createModel({
                 Model: BasicModel,
                 data: this.data,
             });
@@ -1538,7 +1530,7 @@ odoo.define('web.basic_model_tests', function (require) {
             model.destroy();
 
             // Try again with xml override of field domain and context
-            model = createModel({
+            model = await createModel({
                 Model: BasicModel,
                 data: this.data,
             });
@@ -1585,7 +1577,7 @@ odoo.define('web.basic_model_tests', function (require) {
                 }
             };
 
-            var model = createModel({
+            var model = await createModel({
                 Model: BasicModel,
                 data: this.data,
                 mockRPC: function (route, args) {
@@ -1650,7 +1642,7 @@ odoo.define('web.basic_model_tests', function (require) {
                 }
             };
 
-            var model = createModel({
+            var model = await createModel({
                 Model: BasicModel,
                 data: this.data,
                 mockRPC: function (route, args) {
@@ -1699,7 +1691,7 @@ odoo.define('web.basic_model_tests', function (require) {
         QUnit.test('default_get with one2many values', async function (assert) {
             assert.expect(1);
 
-            var model = createModel({
+            var model = await createModel({
                 Model: BasicModel,
                 data: this.data,
                 mockRPC: function (route, args) {
@@ -1738,7 +1730,7 @@ odoo.define('web.basic_model_tests', function (require) {
             assert.expect(3);
             var rpcCount = 0;
 
-            var model = createModel({
+            var model = await createModel({
                 Model: BasicModel,
                 data: this.data,
                 mockRPC: function (route, args) {
@@ -1773,7 +1765,7 @@ odoo.define('web.basic_model_tests', function (require) {
             assert.expect(5);
             var rpcCount = 0;
 
-            var model = createModel({
+            var model = await createModel({
                 Model: BasicModel,
                 data: this.data,
                 mockRPC: function (route, args) {
@@ -1812,7 +1804,7 @@ odoo.define('web.basic_model_tests', function (require) {
             assert.expect(5);
             var rpcCount = 0;
 
-            var model = createModel({
+            var model = await createModel({
                 Model: BasicModel,
                 data: this.data,
                 mockRPC: function (route, args) {
@@ -1857,7 +1849,7 @@ odoo.define('web.basic_model_tests', function (require) {
             assert.expect(4);
             var rpcCount = 0;
 
-            var model = createModel({
+            var model = await createModel({
                 Model: BasicModel,
                 data: this.data,
                 mockRPC: function (route, args) {
@@ -1888,7 +1880,7 @@ odoo.define('web.basic_model_tests', function (require) {
             assert.expect(2);
             let rpcCount = 0;
 
-            const model = createModel({
+            const model = await createModel({
                 Model: BasicModel,
                 data: this.data,
                 mockRPC: function (route, args) {
@@ -1916,7 +1908,7 @@ odoo.define('web.basic_model_tests', function (require) {
 
             this.data.partner.fields.product_id.context = "{'id': id, 'active_id': active_id, 'active_ids': active_ids, 'active_model': active_model}";
 
-            var model = createModel({
+            var model = await createModel({
                 Model: BasicModel,
                 data: this.data,
             });
@@ -1949,7 +1941,7 @@ odoo.define('web.basic_model_tests', function (require) {
             this.params.fieldNames = ['category'];
             this.params.res_id = 1;
 
-            var model = createModel({
+            var model = await createModel({
                 Model: BasicModel,
                 data: this.data,
                 mockRPC: function (route, args) {
@@ -1958,7 +1950,7 @@ odoo.define('web.basic_model_tests', function (require) {
                 },
             });
 
-            model.load(this.params);
+            await model.load(this.params);
             assert.verifySteps(['read'],
                 "there should be only one read");
             model.destroy();
@@ -1991,12 +1983,12 @@ odoo.define('web.basic_model_tests', function (require) {
                 viewType: 'form',
             };
 
-            var model = createModel({
+            var model = await createModel({
                 Model: BasicModel,
                 data: this.data,
             });
 
-            model.load(params).then(function (resultID) {
+            await model.load(params).then(function (resultID) {
                 var record = model.get(resultID);
                 assert.strictEqual(record.data.product_ids.data[0].data.date, false,
                     "date value should be in data, and should be false");
@@ -2011,7 +2003,7 @@ odoo.define('web.basic_model_tests', function (require) {
             assert.expect(2);
 
             this.data.partner.fields.foo.default = 'default';
-            var model = createModel({
+            var model = await createModel({
                 Model: BasicModel,
                 data: this.data,
             });
@@ -2037,19 +2029,36 @@ odoo.define('web.basic_model_tests', function (require) {
         });
 
         QUnit.test('has a proper evaluation context', async function (assert) {
-            assert.expect(1);
+            assert.expect(6);
 
+            const unpatchDate = testUtils.mock.patchDate(1997, 0, 9, 12, 0, 0);
             this.params.fieldNames = Object.keys(this.data.partner.fields);
             this.params.res_id = 1;
 
-            var model = createModel({
+            var model = await createModel({
                 Model: BasicModel,
                 data: this.data,
             });
 
             var resultID = await model.load(this.params);
-            var record = model.get(resultID);
-            assert.deepEqual(record.evalContext, {
+            const { evalContext } = model.get(resultID);
+            assert.strictEqual(typeof evalContext.datetime, "object");
+            assert.strictEqual(typeof evalContext.relativedelta, "object");
+            assert.strictEqual(typeof evalContext.time, "object");
+            assert.strictEqual(typeof evalContext.context_today, "function");
+            assert.strictEqual(typeof evalContext.tz_offset, "function");
+            const blackListedKeys = [
+                "time",
+                "datetime",
+                "relativedelta",
+                "context_today",
+                "tz_offset",
+            ];
+            // Remove uncomparable values from the evaluation context
+            for (const key of blackListedKeys) {
+                delete evalContext[key];
+            }
+            assert.deepEqual(evalContext, {
                 active: true,
                 active_id: 1,
                 active_ids: [1],
@@ -2058,6 +2067,8 @@ odoo.define('web.basic_model_tests', function (require) {
                 category: [12],
                 current_company_id: false,
                 current_date: moment().format('YYYY-MM-DD'),
+                today: moment().format('YYYY-MM-DD'),
+                now: moment().utc().format('YYYY-MM-DD HH:mm:ss'),
                 date: "2017-01-25",
                 display_name: "first partner",
                 foo: "blip",
@@ -2070,6 +2081,7 @@ odoo.define('web.basic_model_tests', function (require) {
                 x_active: true,
             }, "should use the proper eval context");
             model.destroy();
+            unpatchDate();
         });
 
         QUnit.test('x2manys in contexts and domains are correctly evaluated', async function (assert) {
@@ -2095,7 +2107,7 @@ odoo.define('web.basic_model_tests', function (require) {
             this.params.viewType = 'form';
             this.params.res_id = 1;
 
-            var model = createModel({
+            var model = await createModel({
                 Model: BasicModel,
                 data: this.data,
             });
@@ -2133,7 +2145,7 @@ odoo.define('web.basic_model_tests', function (require) {
             this.params.groupedBy = [];
             this.params.res_id = undefined;
 
-            var model = createModel({
+            var model = await createModel({
                 Model: BasicModel,
                 data: this.data,
                 mockRPC: function (route, args) {
@@ -2164,7 +2176,7 @@ odoo.define('web.basic_model_tests', function (require) {
             this.params.res_id = undefined;
             this.params.type = 'record';
 
-            var model = createModel({
+            var model = await createModel({
                 Model: BasicModel,
                 data: this.data,
                 mockRPC: function (route, args) {
@@ -2175,8 +2187,7 @@ odoo.define('web.basic_model_tests', function (require) {
 
             var recordID = await model.load(this.params);
             recordID = await model.reload(recordID);
-            assert.verifySteps(['default_get', 'default_get'],
-                "two default_get RPCs should have been done");
+            assert.verifySteps(['onchange', 'onchange']);
             var record = model.get(recordID);
             assert.strictEqual(record.data.product_id, false,
                 "m2o default value should be false");
@@ -2196,7 +2207,7 @@ odoo.define('web.basic_model_tests', function (require) {
             this.params.res_id = undefined;
             this.params.type = 'record';
 
-            var model = createModel({
+            var model = await createModel({
                 Model: BasicModel,
                 data: this.data,
             });
@@ -2215,7 +2226,7 @@ odoo.define('web.basic_model_tests', function (require) {
             this.params.res_id = undefined;
             this.params.orderedBy = [{ name: 'display_name', asc: true }];
 
-            var model = createModel({
+            var model = await createModel({
                 Model: BasicModel,
                 data: this.data,
                 mockRPC: function (route) {
@@ -2269,7 +2280,7 @@ odoo.define('web.basic_model_tests', function (require) {
             this.params.res_id = 1;
             this.params.fieldNames = ['foobool', 'foobool2'];
             this.params.fields = this.data.partner.fields;
-            var model = createModel({
+            var model = await createModel({
                 Model: BasicModel,
                 data: this.data,
             });
@@ -2291,7 +2302,7 @@ odoo.define('web.basic_model_tests', function (require) {
             this.data.partner.records[1].product_ids = [37, 38];
             this.params.fieldNames = ['product_ids'];
 
-            var model = createModel({
+            var model = await createModel({
                 Model: BasicModel,
                 data: this.data,
             });
@@ -2341,7 +2352,7 @@ odoo.define('web.basic_model_tests', function (require) {
             this.data.partner.records[1].product_ids = [37, 38];
             this.params.fieldNames = ['product_ids'];
 
-            var model = createModel({
+            var model = await createModel({
                 Model: BasicModel,
                 data: this.data,
             });
@@ -2401,7 +2412,7 @@ odoo.define('web.basic_model_tests', function (require) {
                 },
             };
 
-            var model = createModel({
+            var model = await createModel({
                 Model: BasicModel,
                 data: this.data,
             });
@@ -2448,7 +2459,7 @@ odoo.define('web.basic_model_tests', function (require) {
 
         QUnit.test('identify correct active field', async function(assert) {
             assert.expect(4);
-            var model = createModel({
+            var model = await createModel({
                 Model: BasicModel,
                 data: this.data,
             });

@@ -184,7 +184,7 @@ var BasicView = AbstractView.extend({
             var def;
             if (fieldNames.length) {
                 if (model.isNew(record.id)) {
-                    def = model.applyDefaultValues(record.id, {}, {
+                    def = model.generateDefaultValues(record.id, {
                         fieldNames: fieldNames,
                         viewType: viewType,
                     });
@@ -197,7 +197,8 @@ var BasicView = AbstractView.extend({
                 }
             }
             return Promise.resolve(def).then(function () {
-                return model.get(record.id);
+                const handle = record.id;
+                return { state: model.get(handle), handle };
             });
         }
         return this._super.apply(this, arguments);

@@ -443,8 +443,18 @@ class GettextAlias(object):
                     lang = env['res.users'].context_get()['lang']
         return lang
 
-    def __call__(self, source):
-        return self._get_translation(source)
+    def __call__(self, source, *args, **kwargs):
+        translation = self._get_translation(source)
+        assert not (args and kwargs)
+        if args or kwargs:
+            try:
+                return translation % (args or kwargs)
+            except (TypeError, ValueError, KeyError):
+                bad = translation
+                # fallback: apply to source before logging exception (in case source fails)
+                translation = source % (args or kwargs)
+                _logger.exception('Bad translation %r for string %r', bad, source)
+        return translation
 
     def _get_translation(self, source):
         res = source
@@ -477,7 +487,7 @@ class GettextAlias(object):
         finally:
             if cr and is_new_cr:
                 cr.close()
-        return res
+        return res or ''
 
 
 @functools.total_ordering
@@ -498,14 +508,25 @@ class _lt:
     works as expected (unlike the classic GettextAlias implementation).
     """
 
-    __slots__ = ['_source']
-    def __init__(self, source):
+    __slots__ = ['_source', '_args']
+    def __init__(self, source, *args, **kwargs):
         self._source = source
+        assert not (args and kwargs)
+        self._args = args or kwargs
 
     def __str__(self):
         # Call _._get_translation() like _() does, so that we have the same number
         # of stack frames calling _get_translation()
-        return _._get_translation(self._source)
+        translation = _._get_translation(self._source)
+        if self._args:
+            try:
+                return translation % self._args
+            except (TypeError, ValueError, KeyError):
+                bad = translation
+                # fallback: apply to source before logging exception (in case source fails)
+                translation = self._source % self._args
+                _logger.exception('Bad translation %r for string %r', bad, self._source)
+        return translation
 
     def __eq__(self, other):
         """ Prevent using equal operators
@@ -545,7 +566,7 @@ def TranslationFileReader(source, fileformat='po'):
     if fileformat == 'po':
         return PoFileReader(source)
     _logger.info('Bad file format: %s', fileformat)
-    raise Exception(_('Bad file format: %s') % fileformat)
+    raise Exception(_('Bad file format: %s', fileformat))
 
 class CSVFileReader:
     def __init__(self, source):
@@ -969,7 +990,7 @@ class TranslationModuleReader:
         model = next(iter(records)).model
         if model not in self.env:
             _logger.error("Unable to find object %r", model)
-            return self.browse()
+            return self.env["_unknown"].browse()
 
         if not self.env[model]._translate:
             return self.env[model].browse()

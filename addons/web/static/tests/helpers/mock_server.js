@@ -37,8 +37,18 @@ var MockServer = Class.extend({
             model.records = model.records || [];
 
             for (var i = 0; i < model.records.length; i++) {
-                var record = model.records[i];
-                this._applyDefaults(model, record);
+                const values = model.records[i];
+                // add potentially missing id
+                const id = values.id === undefined
+                    ? this._getUnusedID(modelName) :
+                    values.id;
+                // create a clean object, initial values are passed to write
+                model.records[i] = { id };
+                // ensure initial data goes through proper conversion (x2m, ...)
+                this._applyDefaults(model, values);
+                this._writeRecord(modelName, values, id, {
+                    ensureIntegrity: false,
+                });
             }
         }
 
@@ -95,6 +105,26 @@ var MockServer = Class.extend({
         return fvg;
     },
     /**
+     * Simulates a complete fetch call.
+     *
+     * @param {string} resource
+     * @param {Object} init
+     * @returns {any}
+     */
+    async performFetch(resource, init) {
+        if (this.debug) {
+            console.log(
+                '%c[fetch] request ' + resource, 'color: blue; font-weight: bold;',
+                JSON.parse(JSON.stringify(init))
+            );
+        }
+        const res = await this._performFetch(resource, init);
+        if (this.debug) {
+            console.log('%c[fetch] response' + resource, 'color: blue; font-weight: bold;', res);
+        }
+        return res;
+    },
+    /**
      * Simulate a complete RPC call. This is the main method for this class.
      *
      * This method also log incoming and outgoing data, and stringify/parse data
@@ -136,9 +166,7 @@ var MockServer = Class.extend({
             var message = result && result.message;
             var event = result && result.event;
             var errorString = JSON.stringify(message || false);
-            if (debug) {
-                console.log('%c[rpc] response (error) ' + route, 'color: orange; font-weight: bold;', JSON.parse(errorString));
-            }
+            console.warn('%c[rpc] response (error) ' + route, 'color: orange; font-weight: bold;', JSON.parse(errorString));
             return Promise.reject({message: errorString, event: event || $.Event()});
         });
 
@@ -165,7 +193,8 @@ var MockServer = Class.extend({
             }
             if (!(fieldName in record)) {
                 if ('default' in model.fields[fieldName]) {
-                    record[fieldName] = model.fields[fieldName].default;
+                    const def = model.fields[fieldName].default;
+                    record[fieldName] = typeof def === 'function' ? def.call(this) : def;
                 } else if (_.contains(['one2many', 'many2many'], model.fields[fieldName].type)) {
                     record[fieldName] = [];
                 } else {
@@ -173,6 +202,43 @@ var MockServer = Class.extend({
                 }
             }
         }
+    },
+    /**
+     * Converts an Object representing a record to actual return Object of the
+     * python `onchange` method.
+     * Specifically, it applies `name_get` on many2one's and transforms raw id
+     * list in orm command lists for x2many's.
+     * For x2m fields that add or update records (ORM commands 0 and 1), it is
+     * recursive.
+     *
+     * @private
+     * @param {string} model: the model's name
+     * @param {Object} values: an object representing a record
+     * @returns {Object}
+     */
+    _convertToOnChange(model, values) {
+        Object.entries(values).forEach(([fname, val]) => {
+            const field = this.data[model].fields[fname];
+            if (field.type === 'many2one' && typeof val === 'number') {
+                // implicit name_get
+                const m2oRecord = this.data[field.relation].records.find(r => r.id === val);
+                values[fname] = [val, m2oRecord.display_name];
+            } else if (field.type === 'one2many' || field.type === 'many2many') {
+                // TESTS ONLY
+                // one2many_ids = [1,2,3] is a simpler way to express it than orm commands
+                const isCommandList = val.length && Array.isArray(val[0]);
+                if (!isCommandList) {
+                    values[fname] = [[6, false, val]];
+                } else {
+                    val.forEach(cmd => {
+                        if (cmd[0] === 0 || cmd[0] === 1) {
+                            cmd[2] = this._convertToOnChange(field.relation, cmd[2]);
+                        }
+                    });
+                }
+            }
+        });
+        return values;
     },
     /**
      * helper to evaluate a domain for given field values.
@@ -284,12 +350,14 @@ var MockServer = Class.extend({
                 }
                 modifiers.invisible.push(["state", "not in", states.split(",")]);
             }
+
+            const inListHeader = inTreeView && node.closest('header');
             _.each(modifiersNames, function (a) {
                 var mod = node.getAttribute(a);
                 if (mod) {
                     var pyevalContext = window.py.dict.fromJSON(context || {});
                     var v = pyUtils.py_eval(mod, {context: pyevalContext}) ? true: false;
-                    if (inTreeView && a === 'invisible') {
+                    if (inTreeView && !inListHeader && a === 'invisible') {
                         modifiers.column_invisible = v;
                     } else if (v || !(a in modifiers) || !_.isArray(modifiers[a])) {
                         modifiers[a] = v;
@@ -373,9 +441,11 @@ var MockServer = Class.extend({
      * @private
      * @param {string} model a model name
      * @param {any[]} domain
+     * @param {Object} [params={}]
+     * @param {boolean} [params.active_test=true]
      * @returns {Object[]} a list of records
      */
-    _getRecords: function (model, domain) {
+    _getRecords: function (model, domain, { active_test = true } = {}) {
         if (!_.isArray(domain)) {
             throw new Error("MockServer._getRecords: given domain has to be an array.");
         }
@@ -383,7 +453,7 @@ var MockServer = Class.extend({
         var self = this;
         var records = this.data[model].records;
 
-        if ('active' in this.data[model].fields) {
+        if (active_test && 'active' in this.data[model].fields) {
             // add ['active', '=', true] to the domain if 'active' is not yet present in domain
             var activeInDomain = false;
             _.each(domain, function (subdomain) {
@@ -414,18 +484,15 @@ var MockServer = Class.extend({
                 return criterion;
             });
             records = _.filter(records, function (record) {
-                var fieldValues = _.mapObject(record, function (value) {
-                    return value instanceof Array ? value[0] : value;
-                });
-                return self._evaluateDomain(domain, fieldValues);
+                return self._evaluateDomain(domain, record);
             });
         }
 
         return records;
     },
     /**
-     * Helper function, to find an available ID. The current algorithm is to add
-     * all other IDS.
+     * Helper function, to find an available ID. The current algorithm is to
+     * return the currently highest id + 1.
      *
      * @private
      * @param {string} modelName
@@ -433,9 +500,12 @@ var MockServer = Class.extend({
      */
     _getUnusedID: function (modelName) {
         var model = this.data[modelName];
-        return _.reduce(model.records, function (acc, record){
-            return acc + record.id;
-        }, 1);
+        return model.records.reduce((max, record) => {
+            if (!Number.isInteger(record.id)) {
+                return max;
+            }
+            return Math.max(record.id, max);
+        }, 0) + 1;
     },
     /**
      * Simulate a 'copy' operation, so we simply try to duplicate a record in
@@ -473,7 +543,7 @@ var MockServer = Class.extend({
         var record = {id: id};
         model.records.push(record);
         this._applyDefaults(model, values);
-        this._mockWrite(modelName, [[id], values]);
+        this._writeRecord(modelName, values, id);
         return id;
     },
     /**
@@ -482,27 +552,38 @@ var MockServer = Class.extend({
      * @private
      * @param {string} modelName
      * @param {array[]} args a list with a list of fields in the first position
-     * @param {Object} [kwargs]
+     * @param {Object} [kwargs={}]
      * @param {Object} [kwargs.context] the context to eventually read default
      *   values
      * @returns {Object}
      */
-    _mockDefaultGet: function (modelName, args, kwargs) {
-        var result = {};
-        var fields = args[0];
-        var model = this.data[modelName];
-        _.each(fields, function (name) {
-            var field = model.fields[name];
+    _mockDefaultGet: function (modelName, args, kwargs = {}) {
+        const fields = args[0];
+        const model = this.data[modelName];
+        const result = {};
+        for (const fieldName of fields) {
+            const key = "default_" + fieldName;
+            if (kwargs.context && key in kwargs.context) {
+                result[fieldName] = kwargs.context[key];
+                continue;
+            }
+            const field = model.fields[fieldName];
             if ('default' in field) {
-                result[name] = field.default;
+                result[fieldName] = field.default;
+                continue;
             }
-        });
-        if (kwargs && kwargs.context)
-        _.each(kwargs.context, function (value, key) {
-            if ('default_' === key.slice(0, 8)) {
-                result[key.slice(8)] = value;
+        }
+        for (const fieldName in result) {
+            const field = model.fields[fieldName];
+            if (field.type === "many2one") {
+                const recordExists = this.data[field.relation].records.some(
+                    (r) => r.id === result[fieldName]
+                );
+                if (!recordExists) {
+                    delete result[fieldName];
+                }
             }
-        });
+        }
         return result;
     },
     /**
@@ -528,51 +609,107 @@ var MockServer = Class.extend({
         return modelFields;
     },
     /**
-     * Simulate a call to the search_panel_local_counters method.
-     * A model is added to the params to perform the adequate read_group.
+     * Simulates a call to the server '_search_panel_field_image' method.
      *
+     * @private
      * @param {string} model
-     * @param {string} fieldName the name of a field (type many2one or selection)
+     * @param {string} fieldName
      * @param {Object} kwargs
-     * @param {Array[]} kwargs.category_domain domain generated by categories
-     * @param {Array[]} kwargs.filter_domain domain generated by filters
-     * @param {Array[]} kwargs.group_domain domain generated by the field_name active values
-     *      if field_name is used as a filter
-     * @param {Array[]} kwargs.search_domain base domain of search
-     * @returns {Object}
+     * @see _mockSearchPanelDomainImage()
      */
-    _mockSearchPanelLocalCounters: function (model, fieldName, kwargs) {
+	_mockSearchPanelFieldImage(model, fieldName, kwargs) {
+        const enableCounters = kwargs.enable_counters;
+        const onlyCounters = kwargs.only_counters;
+        const extraDomain = kwargs.extra_domain || [];
+        const normalizedExtra = Domain.prototype.normalizeArray(extraDomain);
+        const noExtra = JSON.stringify(normalizedExtra) === "[]";
+        const modelDomain = kwargs.model_domain || [];
         const countDomain = Domain.prototype.normalizeArray([
-            ...(kwargs.search_domain || []),
-            ...(kwargs.category_domain || []),
-            ...(kwargs.filter_domain || []),
-            ...(kwargs.group_domain  || []),
+            ...modelDomain,
+            ...extraDomain,
+        ]);
+
+        const limit = kwargs.limit;
+        const setLimit = kwargs.set_limit;
+
+        if (onlyCounters) {
+            return this._mockSearchPanelDomainImage(model, fieldName, countDomain, true);
+        }
+
+        const modelDomainImage = this._mockSearchPanelDomainImage(
+            model,
+            fieldName,
+            modelDomain,
+            enableCounters && noExtra,
+            setLimit && limit
+        );
+        if (enableCounters && !noExtra) {
+            const countDomainImage = this._mockSearchPanelDomainImage(
+                model,
+                fieldName,
+                countDomain,
+                true
+            );
+            for (const [id, values] of modelDomainImage.entries()) {
+                const element = countDomainImage.get(id);
+                values.__count = element ? element.__count : 0;
+            }
+        }
+
+        return modelDomainImage;
+    },
+
+    /**
+     * Simulates a call to the server '_search_panel_domain_image' method.
+     *
+     * @private
+     * @param {string} model
+     * @param {Array[]} domain
+     * @param {string} fieldName
+     * @param {boolean} setCount
+     * @returns {Map}
+     */
+    _mockSearchPanelDomainImage: function (model, fieldName, domain, setCount=false, limit=false) {
+        const field = this.data[model].fields[fieldName];
+        let groupIdName;
+        if (field.type === 'many2one') {
+            groupIdName = value => value || [false, undefined];
+            // mockReadGroup does not take care of the condition [fieldName, '!=', false]
+            // in the domain defined below !!!
+        } else if (field.type === 'selection') {
+            const selection = {};
+            for (const [value, label] of this.data[model].fields[fieldName].selection) {
+                selection[value] = label;
+            }
+            groupIdName = value => [value, selection[value]];
+        }
+        domain = Domain.prototype.normalizeArray([
+            ...domain,
             [fieldName, '!=', false],
         ]);
-        const field = this.data[model].fields[fieldName];
-        let getGroupId;
-        if (field.type === 'many2one') {
-            getGroupId = group => group[fieldName][0];
-        } else {
-            getGroupId = group => group[fieldName];
-        }
         const groups = this._mockReadGroup(model, {
-            domain: countDomain,
+            domain,
             fields: [fieldName],
             groupby: [fieldName],
+            limit,
         });
-        const localCounters = {};
+        const domainImage = new Map();
         for (const group of groups) {
-            const groupId = getGroupId(group);
-            localCounters[groupId] = group[fieldName + '_count'];
+            const [id, display_name] = groupIdName(group[fieldName]);
+            const values = { id, display_name };
+            if (setCount) {
+                values.__count = group[fieldName + '_count'];
+            }
+            domainImage.set(id, values);
         }
-        return localCounters;
+        return domainImage;
     },
     /**
-     * Simulate a call to the search_panel_global_counters method.
+     * Simulates a call to the server '_search_panel_global_counters' method.
      *
+     * @private
      * @param {Map} valuesRange
-     * @param {string} parentName
+     * @param {(string|boolean)} parentName 'parent_id' or false
      */
     _mockSearchPanelGlobalCounters: function (valuesRange, parentName) {
         const localCounters = [...valuesRange.keys()].map(id => valuesRange.get(id).__count);
@@ -589,173 +726,402 @@ var MockServer = Class.extend({
         }
     },
     /**
-     * Simulate a call to the `_search_panel_range` method.
-     * The `values_range` object being an OrderedDict in python, we use a map to
-     * have a close behaviour.
+     * Simulates a call to the server '_search_panel_sanitized_parent_hierarchy' method.
+     *
+     * @private
+     * @param {Object[]} records
+     * @param {(string|boolean)} parentName 'parent_id' or false
+     * @param {number[]} ids
+     * @returns {Object[]}
+     */
+    _mockSearchPanelSanitizedParentHierarchy: function (records, parentName, ids) {
+        const getParentId = record => record[parentName] && record[parentName][0];
+        const allowedRecords = {};
+        for (const record of records) {
+            allowedRecords[record.id] = record;
+        }
+        const recordsToKeep = {};
+        for (const id of ids) {
+            const ancestorChain = {};
+            let recordId = id;
+            let chainIsFullyIncluded = true;
+            while (chainIsFullyIncluded && recordId) {
+                const knownStatus = recordsToKeep[recordId];
+                if (knownStatus !== undefined) {
+                    chainIsFullyIncluded = knownStatus;
+                    break;
+                }
+                const record = allowedRecords[recordId];
+                if (record) {
+                    ancestorChain[recordId] = record;
+                    recordId = getParentId(record);
+                } else {
+                    chainIsFullyIncluded = false;
+                }
+            }
+            for (const id in ancestorChain) {
+                recordsToKeep[id] = chainIsFullyIncluded;
+            }
+        }
+        return records.filter(rec => recordsToKeep[rec.id]);
+    },
+    /**
+     * Simulates a call to the server 'search_panel_selection_range' method.
      *
      * @private
      * @param {string} model
      * @param {string} fieldName
-     * @param {Object} [kwargs={}]
-     * @param {Array[]} [kwargs.category_domain] domain generated by categories
-     *      (this parameter is used in search_panel_local_counters)
-     * @param {Array[]} [kwargs.comodel_domain] domain of field values (if relational)
-     *      (this parameter is used in search_panel_local_counters)
-     * @param {Array[]} [kwargs.comodel_field_names] a dict with keys given by field
-     *      names of the comodel of field_name (if relational). The values are functions
-     *      used to process the field names values. They must accept the single
-     *      parameter record (see below).
-     * @param {Array[]} [kwargs.disable_counters] whether to count records by value.
-     *      This is done in search_panel_local_counters
-     * @param {Array[]} [kwargs.filter_domain] domain generated by filters (this
-     *      parameter is used in search_panel_local_counters)
-     * @param {Array[]} [kwargs.search_domain] base domain of search (this parameter
-     *      is used in search_panel_local_counters)
-     * @returns {(Map|undefined)}
+     * @param {Object} kwargs
+     * @returns {Object[]}
      */
-    _mockSearchPanelRange: function (model, fieldName, kwargs = {}) {
-        const field = this.data[model].fields[fieldName];
-        let localCounters = {};
-        if (field.type !== 'many2many' && !kwargs.disable_counters) {
-            localCounters = this._mockSearchPanelLocalCounters(model, fieldName, kwargs);
+    _mockSearchPanelSelectionRange: function (model, fieldName, kwargs) {
+        const enableCounters = kwargs.enable_counters;
+        const expand = kwargs.expand;
+        let domainImage;
+        if (enableCounters || !expand) {
+            const newKwargs = Object.assign({}, kwargs, {
+                only_counters: expand,
+            });
+            domainImage = this._mockSearchPanelFieldImage(model, fieldName, newKwargs);
         }
-        if (['many2one', 'many2many'].includes(field.type)) {
-            const comodelDomain = kwargs.comodel_domain || [];
-            const fieldNames = kwargs.comodelFieldNames || {};
-            fieldNames.display_name = () => null;
-            const records = this._mockSearchRead(field.relation, [comodelDomain, Object.keys(fieldNames)], {});
-            const valuesRange = new Map();
-            for (const record of records) {
-                record.__count = localCounters[record.id] || 0;
-                Object.values(fieldNames).forEach(fn => fn(record));
-                valuesRange.set(record.id, record);
+        if (!expand) {
+            return [...domainImage.values()];
+        }
+        const selection = this.data[model].fields[fieldName].selection;
+        const selectionRange = [];
+        for (const [value, label] of selection) {
+            const values = {
+                id: value,
+                display_name: label,
+            };
+            if (enableCounters) {
+                values.__count = domainImage.get(value) ? domainImage.get(value).__count : 0;
             }
-            return valuesRange;
+            selectionRange.push(values);
         }
-        if (field.type === 'selection') {
-            const valuesRange = new Map();
-            const selection = this.data[model].fields[fieldName].selection;
-            for (const [id, display_name] of selection) {
-                valuesRange.set(id, { id, display_name, __count: localCounters[id] || 0 });
-            }
-            return valuesRange;
-        }
+        return selectionRange;
     },
     /**
-     * Simulate a call to the 'search_panel_select_range' method.
-     * Note that the implementation assumes that 'parent_id' is the field that encodes
-     * the parent relationship.
+     * Simulates a call to the server 'search_panel_select_range' method.
      *
      * @private
      * @param {string} model
      * @param {string[]} args
+     * @param {string} args[fieldName]
      * @param {Object} [kwargs={}]
      * @param {Array[]} [kwargs.category_domain] domain generated by categories
      *      (this parameter is used in _search_panel_range)
      * @param {Array[]} [kwargs.comodel_domain] domain of field values (if relational)
      *      (this parameter is used in _search_panel_range)
-     * @param {boolean} [kwargs.disable_counters] whether to count records by value
+     * @param {boolean} [kwargs.enable_counters] whether to count records by value
+     * @param {Array[]} [kwargs.filter_domain] domain generated by filters
+     * @param {integer} [kwargs.limit] maximal number of values to fetch
      * @param {Array[]} [kwargs.search_domain] base domain of search (this parameter
      *      is used in _search_panel_range)
      * @returns {Object}
      */
-    _mockSearchPanelSelectRange: function (model, [fieldName], kwargs = {}) {
+    _mockSearchPanelSelectRange: function (model, [fieldName], kwargs) {
         const field = this.data[model].fields[fieldName];
         const supportedTypes = ['many2one', 'selection'];
         if (!supportedTypes.includes(field.type)) {
             throw new Error(`Only types ${supportedTypes} are supported for category (found type ${field.type})`);
         }
-        const comodelFieldNames = {};
+
+        const modelDomain = kwargs.search_domain || [];
+        const extraDomain = Domain.prototype.normalizeArray([
+            ...(kwargs.category_domain || []),
+            ...(kwargs.filter_domain || []),
+        ]);
+
+        if (field.type === 'selection') {
+            const newKwargs = Object.assign({}, kwargs, {
+                model_domain: modelDomain,
+                extra_domain: extraDomain,
+            });
+            kwargs.model_domain = modelDomain;
+            return {
+                parent_field: false,
+                values: this._mockSearchPanelSelectionRange(model, fieldName, newKwargs),
+            };
+        }
+
+        const fieldNames = ['display_name'];
+        let hierarchize = 'hierarchize' in kwargs ? kwargs.hierarchize : true;
+        let getParentId;
         let parentName = false;
-        if (field.type === 'many2one') {
-            if (this.data[field.relation].fields.parent_id) {
-                parentName = 'parent_id';
-                comodelFieldNames.parent_id = record => {
-                    if (record.parent_id) {
-                        record.parent_id = record.parent_id[0];
-                    }
-                };
+        if (hierarchize && this.data[field.relation].fields.parent_id) {
+            parentName = 'parent_id'; // in tests, parent field is always 'parent_id'
+            fieldNames.push(parentName);
+            getParentId = record => record.parent_id && record.parent_id[0];
+        } else {
+            hierarchize = false;
+        }
+        let comodelDomain = kwargs.comodel_domain || [];
+        const enableCounters = kwargs.enable_counters;
+        const expand = kwargs.expand;
+        const limit = kwargs.limit;
+        let domainImage;
+        if (enableCounters || !expand) {
+            const newKwargs = Object.assign({}, kwargs, {
+                model_domain: modelDomain,
+                extra_domain: extraDomain,
+                only_counters: expand,
+                set_limit: limit && !(expand || hierarchize || comodelDomain),
+            });
+            domainImage = this._mockSearchPanelFieldImage(model, fieldName, newKwargs);
+        }
+        if (!expand && !hierarchize && !comodelDomain.length) {
+            if (limit && domainImage.size === limit) {
+                return { error_msg: "Too many items to display." };
             }
+            return {
+                parent_field: parentName,
+                values: [...domainImage.values()],
+            };
         }
-        const rangeKwargs = Object.assign({ comodelFieldNames }, kwargs);
-        const valuesRange = this._mockSearchPanelRange(model, fieldName, rangeKwargs);
-        if (parentName && !kwargs.disable_counters) {
-            this._mockSearchPanelGlobalCounters(valuesRange, parentName);
+        let imageElementIds;
+        if (!expand) {
+            imageElementIds = [...domainImage.keys()].map(Number);
+            let condition;
+            if (hierarchize) {
+                const records = this.data[field.relation].records;
+                const ancestorIds = new Set();
+                for (const id of imageElementIds) {
+                    let recordId = id;
+                    let record;
+                    while (recordId) {
+                        ancestorIds.add(recordId);
+                        record = records.find(rec => rec.id === recordId);
+                        recordId = record[parentName];
+                    }
+                }
+                condition = ['id', 'in', [...new Set(ancestorIds)]];
+            } else {
+                condition = ['id', 'in', imageElementIds];
+            }
+            comodelDomain = Domain.prototype.normalizeArray([
+                ...comodelDomain,
+                condition,
+            ]);
         }
+        let comodelRecords = this._mockSearchRead(field.relation, [comodelDomain, fieldNames], { limit });
+
+        if (hierarchize) {
+            const ids = expand ? comodelRecords.map(rec => rec.id) : imageElementIds;
+            comodelRecords = this._mockSearchPanelSanitizedParentHierarchy(comodelRecords, parentName, ids);
+        }
+
+        if (limit && comodelRecords.length === limit) {
+            return { error_msg: "Too many items to display." };
+        }
+        // A map is used to keep the initial order.
+        const fieldRange = new Map();
+        for (const record of comodelRecords) {
+            const values = {
+                id: record.id,
+                display_name: record.display_name,
+            };
+            if (hierarchize) {
+                values[parentName] = getParentId(record);
+            }
+            if (enableCounters) {
+                values.__count = domainImage.get(record.id) ? domainImage.get(record.id).__count : 0;
+            }
+            fieldRange.set(record.id, values);
+        }
+
+        if (hierarchize && enableCounters) {
+            this._mockSearchPanelGlobalCounters(fieldRange, parentName);
+        }
+
         return {
             parent_field: parentName,
-            values: [...valuesRange.values()],
+            values: [...fieldRange.values()],
         };
     },
     /**
-     * Simulate a call to the 'search_panel_select_multi_range' method.
-     * Note that only the many2one and selection cases are handled by this function.
+     * Simulates a call to the server 'search_panel_select_multi_range' method.
      *
+     * @private
      * @param {string} model
      * @param {string[]} args
+     * @param {string} args[fieldName]
      * @param {Object} [kwargs={}]
      * @param {Array[]} [kwargs.category_domain] domain generated by categories
      * @param {Array[]} [kwargs.comodel_domain] domain of field values (if relational)
      *      (this parameter is used in _search_panel_range)
-     * @param {boolean} [kwargs.disable_counters] whether to count records by value
+     * @param {boolean} [kwargs.enable_counters] whether to count records by value
      * @param {Array[]} [kwargs.filter_domain] domain generated by filters
      * @param {string} [kwargs.group_by] extra field to read on comodel, to group
      *      comodel records
      * @param {Array[]} [kwargs.group_domain] dict, one domain for each activated
      *      group for the group_by (if any). Those domains are used to fech accurate
      *      counters for values in each group
+     * @param {integer} [kwargs.limit] maximal number of values to fetch
      * @param {Array[]} [kwargs.search_domain] base domain of search
-     * @returns {Object[]}
+     * @returns {Object}
      */
-    _mockSearchPanelSelectMultiRange: function (model, [fieldName], kwargs = {}) {
+    _mockSearchPanelSelectMultiRange: function (model, [fieldName], kwargs) {
         const field = this.data[model].fields[fieldName];
         const supportedTypes = ['many2one', 'many2many', 'selection'];
         if (!supportedTypes.includes(field.type)) {
             throw new Error(`Only types ${supportedTypes} are supported for filter (found type ${field.type})`);
         }
-        const comodelFieldNames = {};
-        const groupBy = kwargs.group_by || false;
-        if (groupBy && field.type !== 'selection') {
+        let modelDomain = kwargs.search_domain || [];
+        let extraDomain = Domain.prototype.normalizeArray([
+            ...(kwargs.category_domain || []),
+            ...(kwargs.filter_domain || []),
+        ]);
+        if (field.type === 'selection') {
+            const newKwargs = Object.assign({}, kwargs, {
+                model_domain: modelDomain,
+                extra_domain: extraDomain,
+            });
+            return {
+                values: this._mockSearchPanelSelectionRange(model, fieldName, newKwargs),
+            };
+        }
+        const fieldNames = ['display_name'];
+        const groupBy = kwargs.group_by;
+        let groupIdName;
+        if (groupBy) {
             const groupByField = this.data[field.relation].fields[groupBy];
-            let groupIdName;
+            fieldNames.push(groupBy);
             if (groupByField.type === 'many2one') {
-                groupIdName = value => value || [false, "Not Set"];
+                groupIdName = value => value || [false, "Not set"];
             } else if (groupByField.type === 'selection') {
-                const desc = this.data[field.relation].fields[groupBy];
-                const groupBySelection = Object.assign({}, desc.selection);
+                const groupBySelection = Object.assign({}, this.data[field.relation].fields[groupBy].selection);
                 groupBySelection[false] = "Not Set";
                 groupIdName = value => [value, groupBySelection[value]];
             } else {
-                groupIdName = value => value ? [value, value] : [false, "Not Set"];
+                groupIdName = value => value ? [value, value] : [false, "Not set"];
             }
-            comodelFieldNames[groupBy] = record => {
-                const value = record[groupBy];
-                const [group_id, group_name] = groupIdName(value);
-                Object.assign(record, { group_id, group_name });
-                delete record[groupBy];
-            };
         }
-        const rangeKwargs = Object.assign({ comodelFieldNames }, kwargs);
-        const valuesRange = this._mockSearchPanelRange(model, fieldName, rangeKwargs);
-        if (field.type === 'many2many' && !kwargs.disable_counters) {
-            const modelDomain = Domain.prototype.normalizeArray([
-                ...(kwargs.search_domain || []),
-                ...(kwargs.category_domain || []),
-                ...(kwargs.filter_domain || []),
-                [fieldName, '!=', false],
-            ]);
-            const groupDomains = kwargs.group_domain || {};
-            for (const [id, values] of valuesRange.entries()) {
-                let countDomain = Domain.prototype.normalizeArray([...modelDomain, [fieldName, 'in', id]]);
-                if (groupBy && groupDomains) {
-                    const groupId = JSON.stringify(values.group_id);
-                    const extraDomain = groupDomains[groupId] || [];
-                    countDomain = Domain.prototype.normalizeArray([...countDomain, ...extraDomain]);
+        let comodelDomain = kwargs.comodel_domain || [];
+        const enableCounters = kwargs.enable_counters;
+        const expand = kwargs.expand;
+        const limit = kwargs.limit;
+        if (field.type === 'many2many') {
+            const comodelRecords = this._mockSearchRead(field.relation, [comodelDomain, fieldNames], { limit });
+            if (expand && limit && comodelRecords.length === limit) {
+                return { error_msg: "Too many items to display." };
+            }
+
+            const groupDomain = kwargs.group_domain;
+            const fieldRange = [];
+            for (const record of comodelRecords) {
+                const values= {
+                    id: record.id,
+                    display_name: record.display_name,
+                };
+                let groupId;
+                if (groupBy) {
+                    const [gId, gName] = groupIdName(record[groupBy]);
+                    values.group_id = groupId = gId;
+                    values.group_name = gName;
                 }
-                values.__count = this._mockSearchCount(model, [countDomain]);
+                let count;
+                let inImage;
+                if (enableCounters || !expand) {
+                    const searchDomain = Domain.prototype.normalizeArray([
+                        ...modelDomain,
+                        [fieldName, "in", record.id]
+                    ]);
+                    let localExtraDomain = extraDomain;
+                    if (groupBy && groupDomain) {
+                        localExtraDomain = Domain.prototype.normalizeArray([
+                            ...localExtraDomain,
+                            ...(groupDomain[JSON.stringify(groupId)] || []),
+                        ]);
+                    }
+                    const searchCountDomain = Domain.prototype.normalizeArray([
+                        ...searchDomain,
+                        ...localExtraDomain,
+                    ]);
+                    if (enableCounters) {
+                        count = this._mockSearchCount(model, [searchCountDomain]);
+                    }
+                    if (!expand) {
+                        if (
+                            enableCounters &&
+                            JSON.stringify(localExtraDomain) === "[]"
+                        ) {
+                            inImage = count;
+                        } else {
+                            inImage = (this._mockSearch(model, [searchDomain], { limit: 1 })).length;
+                        }
+                    }
+                }
+                if (expand || inImage) {
+                    if (enableCounters) {
+                        values.__count = count;
+                    }
+                    fieldRange.push(values);
+                }
             }
+
+            if (!expand && limit && fieldRange.length === limit) {
+                return { error_msg: "Too many items to display." };
+            }
+
+            return { values: fieldRange };
         }
-        return [...valuesRange.values()];
+
+        if (field.type === 'many2one') {
+            let domainImage;
+            if (enableCounters || !expand) {
+                extraDomain = Domain.prototype.normalizeArray([
+                    ...extraDomain,
+                    ...(kwargs.group_domain || []),
+                ]);
+                modelDomain = Domain.prototype.normalizeArray([
+                    ...modelDomain,
+                    ...(kwargs.group_domain || []),
+                ]);
+                const newKwargs = Object.assign({}, kwargs, {
+                    model_domain: modelDomain,
+                    extra_domain: extraDomain,
+                    only_counters: expand,
+                    set_limit: limit && !(expand || groupBy || comodelDomain),
+                });
+                domainImage = this._mockSearchPanelFieldImage(model, fieldName, newKwargs);
+            }
+            if (!expand && !groupBy && !comodelDomain.length) {
+                if (limit && domainImage.size === limit) {
+                    return { error_msg: "Too many items to display." };
+                }
+                return { values: [...domainImage.values()] };
+            }
+            if (!expand) {
+                const imageElementIds = [...domainImage.keys()].map(Number);
+                comodelDomain = Domain.prototype.normalizeArray([
+                    ...comodelDomain,
+                    ['id', 'in', imageElementIds],
+                ]);
+            }
+            const comodelRecords = this._mockSearchRead(field.relation, [comodelDomain, fieldNames], { limit });
+            if (limit && comodelRecords.length === limit) {
+                return { error_msg: "Too many items to display." };
+            }
+
+            const fieldRange = [];
+            for (const record of comodelRecords) {
+                const values= {
+                    id: record.id,
+                    display_name: record.display_name,
+                };
+                if (groupBy) {
+                    const [groupId, groupName] = groupIdName(record[groupBy]);
+                    values.group_id = groupId;
+                    values.group_name = groupName;
+                }
+                if (enableCounters) {
+                    values.__count = domainImage.get(record.id) ? domainImage.get(record.id).__count : 0;
+                }
+                fieldRange.push(values);
+            }
+            return { values: fieldRange };
+        }
     },
     /**
      * Simulate a call to the '/web/action/load' route
@@ -889,29 +1255,60 @@ var MockServer = Class.extend({
      *
      * @private
      * @param {string} model
-     * @param {string|string[]} args a list of field names, or just a field name
+     * @param {Object} args
+     * @param {Object} args[1] the current record data
+     * @param {string|string[]} [args[2]] a list of field names, or just a field name
+     * @param {Object} args[3] the onchange spec
+     * @param {Object} [kwargs]
      * @returns {Object}
      */
-    _mockOnchange: function (model, args) {
+    _mockOnchange: function (model, args, kwargs) {
+        const currentData = args[1];
+        let fields = args[2];
+        const onChangeSpec = args[3];
         var onchanges = this.data[model].onchanges || {};
-        var record = args[1];
-        var fields = args[2];
-        if (!(fields instanceof Array)) {
+
+        if (fields && !(fields instanceof Array)) {
             fields = [fields];
         }
-        var result = {};
-        _.each(fields, function (field) {
+        const firstOnChange = !fields || !fields.length;
+        const onchangeVals = {};
+        let defaultVals;
+        let nullValues;
+        if (firstOnChange) {
+            const fieldsFromView = Object.keys(onChangeSpec).reduce((acc, fname) => {
+                fname = fname.split('.', 1)[0];
+                if (!acc.includes(fname)) {
+                    acc.push(fname);
+                }
+                return acc;
+            }, []);
+            const defaultingFields = fieldsFromView.filter(fname => !(fname in currentData));
+            defaultVals = this._mockDefaultGet(model, [defaultingFields], kwargs);
+            // It is the new semantics: no field in arguments means we are in
+            // a default_get + onchange situation
+            fields = fieldsFromView;
+            nullValues = {};
+            fields.filter(fName => !Object.keys(defaultVals).includes(fName)).forEach(fName => {
+                nullValues[fName] = false;
+            });
+        }
+        Object.assign(currentData, defaultVals);
+        fields.forEach(field => {
             if (field in onchanges) {
-                var changes = _.clone(record);
+                const changes = Object.assign({}, nullValues, currentData);
                 onchanges[field](changes);
-                _.each(changes, function (value, key) {
-                    if (record[key] !== value) {
-                        result[key] = value;
+                Object.entries(changes).forEach(([key, value]) => {
+                    if (currentData[key] !== value) {
+                        onchangeVals[key] = value;
                     }
                 });
             }
         });
-        return {value: result};
+
+        return {
+            value: this._convertToOnChange(model, Object.assign({}, defaultVals, onchangeVals)),
+        };
     },
     /**
      * Simulate a 'read' operation.
@@ -1399,6 +1796,16 @@ var MockServer = Class.extend({
         return true;
     },
     /**
+     * Dispatches a fetch call to the correct helper function.
+     *
+     * @param {string} resource
+     * @param {Object} init
+     * @returns {any}
+     */
+    _performFetch(resource, init) {
+        throw new Error("Unimplemented resource: " + resource);
+    },
+    /**
      * Dispatch a RPC call to the correct helper function
      *
      * @see performRpc
@@ -1432,9 +1839,6 @@ var MockServer = Class.extend({
             case 'create':
                 return Promise.resolve(this._mockCreate(args.model, args.args[0]));
 
-            case 'default_get':
-                return Promise.resolve(this._mockDefaultGet(args.model, args.args, args.kwargs));
-
             case 'fields_get':
                 return Promise.resolve(this._mockFieldsGet(args.model, args.args));
 
@@ -1457,7 +1861,7 @@ var MockServer = Class.extend({
                 return Promise.resolve(this._mockNameSearch(args.model, args.args, args.kwargs));
 
             case 'onchange':
-                return Promise.resolve(this._mockOnchange(args.model, args.args));
+                return Promise.resolve(this._mockOnchange(args.model, args.args, args.kwargs));
 
             case 'read':
                 return Promise.resolve(this._mockRead(args.model, args.args, args.kwargs));
@@ -1553,24 +1957,34 @@ var MockServer = Class.extend({
      * @param {string} model
      * @param {Object} values
      * @param {integer} id
+     * @param {Object} [params={}]
+     * @param {boolean} [params.ensureIntegrity=true] writing non-existing id
+     *  in many2one field will throw if this param is true
      */
-    _writeRecord: function (model, values, id) {
+    _writeRecord: function (model, values, id, { ensureIntegrity = true } = {}) {
         var self = this;
         var record = _.findWhere(this.data[model].records, {id: id});
         for (var field_changed in values) {
             var field = this.data[model].fields[field_changed];
             var value = values[field_changed];
             if (!field) {
-                console.warn("Mock: Can't write on field '" + field_changed + "' on model '" + model + "' (field is undefined)");
-                continue;
+                throw Error(`Mock: Can't write value "${JSON.stringify(value)}" on field "${field_changed}" on record "${model},${id}" (field is undefined)`);
             }
             if (_.contains(['one2many', 'many2many'], field.type)) {
                 var ids = _.clone(record[field_changed]) || [];
+
+                // fallback to command 6 when given a simple list of ids
+                if (
+                    Array.isArray(value) &&
+                    value.reduce((hasOnlyInt, val) => hasOnlyInt && Number.isInteger(val), true)
+                ) {
+                    value = [[6, 0, value]];
+                }
                 // convert commands
-                _.each(value, function (command) {
+                for (const command of value || []) {
                     if (command[0] === 0) { // CREATE
-                        var id = self._mockCreate(field.relation, command[2]);
-                        ids.push(id);
+                        const newId = self._mockCreate(field.relation, command[2]);
+                        ids.push(newId);
                     } else if (command[0] === 1) { // UPDATE
                         self._mockWrite(field.relation, [[command[1]], command[2]]);
                     } else if (command[0] === 2) { // DELETE
@@ -1584,22 +1998,22 @@ var MockServer = Class.extend({
                     } else if (command[0] === 5) { // DELETE ALL
                         ids = [];
                     } else if (command[0] === 6) { // REPLACE WITH
-                        ids = command[2];
+                        // copy array to avoid leak by reference (eg. of default data)
+                        ids = [...command[2]];
                     } else {
-                        console.error('Command ' + JSON.stringify(command) + ' not supported by the MockServer');
+                        throw Error(`Command "${JSON.stringify(value)}" not supported by the MockServer on field "${field_changed}" on record "${model},${id}"`);
                     }
-                });
+                }
                 record[field_changed] = ids;
             } else if (field.type === 'many2one') {
                 if (value) {
                     var relatedRecord = _.findWhere(this.data[field.relation].records, {
                         id: value
                     });
-                    if (!relatedRecord) {
-                        throw new Error("Wrong id for a many2one");
-                    } else {
-                        record[field_changed] = value;
+                    if (!relatedRecord && ensureIntegrity) {
+                        throw Error(`Wrong id "${JSON.stringify(value)}" for a many2one on field "${field_changed}" on record "${model},${id}"`);
                     }
+                    record[field_changed] = value;
                 } else {
                     record[field_changed] = false;
                 }

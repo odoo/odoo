@@ -38,4 +38,4 @@ class WebsiteUrl(http.Controller):
         if code:
             return request.render("website_links.graphs", code.link_id.read()[0])
         else:
-            return werkzeug.utils.redirect('', 301)
+            return werkzeug.utils.redirect('/', 301)

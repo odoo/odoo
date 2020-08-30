@@ -117,8 +117,7 @@ class PartnerCategory(models.Model):
             # Be sure name_search is symetric to name_get
             name = name.split(' / ')[-1]
             args = [('name', operator, name)] + args
-        partner_category_ids = self._search(args, limit=limit, access_rights_uid=name_get_uid)
-        return models.lazy_name_get(self.browse(partner_category_ids).with_user(name_get_uid))
+        return self._search(args, limit=limit, access_rights_uid=name_get_uid)
 
 
 class PartnerTitle(models.Model):
@@ -192,6 +191,7 @@ class Partner(models.Model):
         ], string='Address Type',
         default='contact',
         help="Invoice & Delivery addresses are used in sales orders. Private addresses are only visible by authorized users.")
+    # address fields
     street = fields.Char()
     street2 = fields.Char()
     zip = fields.Char(change_default=True)
@@ -318,7 +318,7 @@ class Partner(models.Model):
     def copy(self, default=None):
         self.ensure_one()
         chosen_name = default.get('name') if default else ''
-        new_name = chosen_name or _('%s (copy)') % self.name
+        new_name = chosen_name or _('%s (copy)', self.name)
         default = dict(default or {}, name=new_name)
         return super(Partner, self).copy(default)
 
@@ -797,15 +797,12 @@ class Partner(models.Model):
                 query += ' limit %s'
                 where_clause_params.append(limit)
             self.env.cr.execute(query, where_clause_params)
-            partner_ids = [row[0] for row in self.env.cr.fetchall()]
+            return [row[0] for row in self.env.cr.fetchall()]
 
-            if partner_ids:
-                return models.lazy_name_get(self.browse(partner_ids))
-            else:
-                return []
         return super(Partner, self)._name_search(name, args, operator=operator, limit=limit, name_get_uid=name_get_uid)
 
     @api.model
+    @api.returns('self', lambda value: value.id)
     def find_or_create(self, email, assert_valid_email=False):
         """ Find a partner with the given ``email`` or use :py:method:`~.name_create`
         to create a new one.
@@ -889,11 +886,12 @@ class Partner(models.Model):
 
     @api.model
     def view_header_get(self, view_id, view_type):
-        res = super(Partner, self).view_header_get(view_id, view_type)
-        if res: return res
-        if not self._context.get('category_id'):
-            return False
-        return _('Partners: ') + self.env['res.partner.category'].browse(self._context['category_id']).name
+        if self.env.context.get('category_id'):
+            return  _(
+                'Partners: %(category)s',
+                category=self.env['res.partner.category'].browse(self.env.context['category_id']).name,
+            )
+        return super().view_header_get(view_id, view_type)
 
     @api.model
     @api.returns('self')

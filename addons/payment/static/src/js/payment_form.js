@@ -22,6 +22,9 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
      * @override
      */
     start: function () {
+        if(!$('#checkbox_cgv').length){
+            $("#o_payment_form_pay").removeAttr('disabled');
+        }
         var self = this;
         return this._super.apply(this, arguments).then(function () {
             self.options = _.extend(self.$el.data(), self.options);

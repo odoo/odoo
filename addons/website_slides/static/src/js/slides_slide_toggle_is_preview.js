@@ -19,9 +19,9 @@ odoo.define('website_slides.slide.preview', function (require) {
             }).then(function (isPreview) {
                 if (isPreview) {
                     $slideTarget.removeClass('badge-light badge-hide border');
-                    $slideTarget.addClass('badge-success py-1');
+                    $slideTarget.addClass('badge-success');
                 } else {
-                    $slideTarget.removeClass('badge-success py-1');
+                    $slideTarget.removeClass('badge-success');
                     $slideTarget.addClass('badge-light badge-hide border');
                 }
             });

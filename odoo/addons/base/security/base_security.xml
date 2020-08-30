@@ -171,12 +171,41 @@
             <field name="domain_force">[(1,'=',1)]</field>
         </record>
 
+        <record id="res_users_identity_check" model="ir.rule">
+            <field name="name">users can only access their own id check</field>
+            <field name="model_id" ref="model_res_users_identitycheck"/>
+            <field name="domain_force">[('create_uid', '=', user.id)]</field>
+        </record>
+
         <!-- Record Rule For User -->
         <record id="res_users_rule" model="ir.rule">
             <field name="name">user rule</field>
             <field name="model_id" ref="model_res_users"/>
             <field eval="True" name="global"/>
             <field name="domain_force">['|', ('share', '=', False), ('company_ids', 'in', company_ids)]</field>
+        </record>
+
+        <!-- rules for API token -->
+        <record id="api_key_public" model="ir.rule">
+            <field name="name">Public users can't interact with keys at all</field>
+            <field name="model_id" ref="model_res_users_apikeys"/>
+            <field name="domain_force">[(0, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('base.group_public'))]"/>
+        </record>
+        <record id="api_key_user" model="ir.rule">
+            <field name="name">Users can read and delete their own keys</field>
+            <field name="model_id" ref="model_res_users_apikeys"/>
+            <field name="domain_force">[('user_id', '=', user.id)]</field>
+            <field name="groups" eval="[
+                (4, ref('base.group_portal')),
+                (4, ref('base.group_user')),
+            ]"/>
+        </record>
+        <record id="api_key_admin" model="ir.rule">
+            <field name="name">Administrators can view user keys to revoke them</field>
+            <field name="model_id" ref="model_res_users_apikeys"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('base.group_system'))]"/>
         </record>
     </data>
 </odoo>

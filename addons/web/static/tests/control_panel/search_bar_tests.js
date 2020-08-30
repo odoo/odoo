@@ -1,7 +1,8 @@
 odoo.define('web.search_bar_tests', function (require) {
     "use strict";
 
-    const { Model } = require('web.model');
+    const { Model } = require('web/static/src/js/model.js');
+    const Registry = require("web.Registry");
     const SearchBar = require('web.SearchBar');
     const testUtils = require('web.test_utils');
 
@@ -173,22 +174,30 @@ odoo.define('web.search_bar_tests', function (require) {
             assert.expect(9);
 
             const fields = this.data.partner.fields;
-            class MockedControlPanelModel extends Model {
-                getFacets() {
-                    return [];
-                }
-                getFiltersOfType() {
-                    return Object.keys(fields).map((fname, index) => Object.assign({
-                        description: fields[fname].string,
-                        fieldName: fname,
-                        fieldType: fields[fname].type,
-                        id: index,
-                    }, fields[fname]));
+
+            class TestModelExtension extends Model.Extension {
+                get(property) {
+                    switch (property) {
+                        case 'facets':
+                            return [];
+                        case 'filters':
+                            return Object.keys(fields).map((fname, index) => Object.assign({
+                                description: fields[fname].string,
+                                fieldName: fname,
+                                fieldType: fields[fname].type,
+                                id: index,
+                            }, fields[fname]));
+                        default:
+                            break;
+                    }
                 }
             }
+            class MockedModel extends Model { }
+            MockedModel.registry = new Registry({ Test: TestModelExtension, });
+            const searchModel = new MockedModel({ Test: {} });
             const searchBar = await createComponent(SearchBar, {
                 data: this.data,
-                env: { controlPanelModel: new MockedControlPanelModel() },
+                env: { searchModel },
                 props: { fields },
             });
             const input = searchBar.el.querySelector('.o_searchview_input');
@@ -477,7 +486,7 @@ odoo.define('web.search_bar_tests', function (require) {
             const searchInput = actionManager.el.querySelector('.o_searchview_input');
             searchInput.value = "ABC";
             await testUtils.dom.triggerEvent(searchInput, 'input',
-                    { inputType: 'insertFromPaste' });
+                { inputType: 'insertFromPaste' });
             await testUtils.nextTick();
             assert.containsOnce(actionManager, '.o_searchview_autocomplete',
                 "should display autocomplete dropdown menu on paste in search view");
@@ -524,6 +533,54 @@ odoo.define('web.search_bar_tests', function (require) {
                 '[["bar","child_of","rec"]]', // Incomplete string -> Name search
                 '[]',
                 '[["bar","child_of",1]]', // Suggestion select -> Specific ID
+            ]);
+
+            actionManager.destroy();
+        });
+
+        QUnit.test("reference fields are supported in search view", async function (assert) {
+            assert.expect(7);
+
+            this.data.partner.fields.ref = { type: 'reference', string: "Reference" };
+            this.data.partner.records.forEach((record, i) => {
+                record.ref = `ref${String(i).padStart(3, "0")}`;
+            });
+            const archs = Object.assign({}, this.archs, {
+                'partner,false,search': `
+                    <search>
+                        <field name="ref"/>
+                    </search>`,
+            });
+            const actionManager = await createActionManager({
+                actions: this.actions,
+                archs,
+                data: this.data,
+                async mockRPC(route, { domain }) {
+                    if (route === '/web/dataset/search_read') {
+                        assert.step(JSON.stringify(domain));
+                    }
+                    return this._super(...arguments);
+
+                }
+            });
+            await actionManager.doAction(1);
+
+            await cpHelpers.editSearch(actionManager, "ref");
+            await cpHelpers.validateSearch(actionManager);
+
+            assert.containsN(actionManager, ".o_data_row", 5);
+
+            await cpHelpers.removeFacet(actionManager, 0);
+            await cpHelpers.editSearch(actionManager, "ref002");
+            await cpHelpers.validateSearch(actionManager);
+
+            assert.containsOnce(actionManager, ".o_data_row");
+
+            assert.verifySteps([
+                '[]',
+                '[["ref","ilike","ref"]]',
+                '[]',
+                '[["ref","ilike","ref002"]]',
             ]);
 
             actionManager.destroy();

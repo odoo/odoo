@@ -155,11 +155,6 @@ odoo.define('web.ActionMixin', function (require) {
         },
 
         /**
-         * Gives the focus to the action
-         */
-        giveFocus: function () { },
-
-        /**
          * Renders the buttons to append, in most cases, to the control panel (in
          * the bottom left corner). When the action is rendered in a dialog, those
          * buttons might be moved to the dialog's footer.

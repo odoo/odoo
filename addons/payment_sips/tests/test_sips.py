@@ -6,10 +6,11 @@ from odoo.addons.payment.tests.common import PaymentAcquirerCommon
 @tagged('post_install', '-at_install', '-standard', 'external')
 class SipsTest(PaymentAcquirerCommon):
 
-    def setUp(self):
-        super().setUp()
-        self.sips = self.env.ref('payment.payment_acquirer_sips')
-        self.sips.write({
+    @classmethod
+    def setUpClass(cls, chart_template_ref=None):
+        super().setUpClass(chart_template_ref=chart_template_ref)
+        cls.sips = cls.env.ref('payment.payment_acquirer_sips')
+        cls.sips.write({
             'state': 'test',
             'sips_merchant_id': 'dummy_mid',
             'sips_secret': 'dummy_secret',

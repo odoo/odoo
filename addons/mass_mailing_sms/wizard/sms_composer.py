@@ -45,7 +45,7 @@ class SMSComposer(models.TransientModel):
             trace_values['ignored'] = fields.Datetime.now()
         else:
             if self.mass_sms_allow_unsubscribe:
-                sms_values['body'] = '%s\n%s' % (sms_values['body'] or '', _('STOP SMS : %s') % self._get_unsubscribe_url(record.id, trace_code, sms_values['number']))
+                sms_values['body'] = '%s\n%s' % (sms_values['body'] or '', _('STOP SMS : %s', self._get_unsubscribe_url(record.id, trace_code, sms_values['number'])))
         return trace_values
 
     def _get_blacklist_record_ids(self, records, recipients_info):

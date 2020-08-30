@@ -10,12 +10,25 @@ options.registry.SnippetPopup = options.Class.extend({
     start: function () {
         // Note: the link are excluded here so that internal modal buttons do
         // not close the popup as we want to allow edition of those buttons.
-        this.$target.find('.js_close_popup:not(a, .btn)').on('click', ev => {
+        this.$target.on('click.SnippetPopup', '.js_close_popup:not(a, .btn)', ev => {
             ev.stopPropagation();
             this.onTargetHide();
             this.trigger_up('snippet_option_visibility_update', {show: false});
         });
+        this.$target.on('shown.bs.modal.SnippetPopup', () => {
+            this.trigger_up('snippet_option_visibility_update', {show: true});
+        });
+        this.$target.on('hidden.bs.modal.SnippetPopup', () => {
+            this.trigger_up('snippet_option_visibility_update', {show: false});
+        });
         return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    destroy: function () {
+        this._super(...arguments);
+        this.$target.off('.SnippetPopup');
     },
     /**
      * @override
@@ -33,14 +46,26 @@ options.registry.SnippetPopup = options.Class.extend({
      * @override
      */
     onTargetShow: async function () {
-        this.$target.removeClass('d-none');
+        this.$target.modal('show');
+        $(document.body).children('.modal-backdrop:last').addClass('d-none');
     },
     /**
      * @override
      */
     onTargetHide: async function () {
-        this.$target.addClass('d-none');
+        return new Promise(resolve => {
+            const timeoutID = setTimeout(() => {
+                this.$target.off('hidden.bs.modal.popup_on_target_hide');
+                resolve();
+            }, 500);
+            this.$target.one('hidden.bs.modal.popup_on_target_hide', () => {
+                clearTimeout(timeoutID);
+                resolve();
+            });
+            this.$target.modal('hide');
+        });
     },
+
     //--------------------------------------------------------------------------
     // Options
     //--------------------------------------------------------------------------
@@ -56,18 +81,11 @@ options.registry.SnippetPopup = options.Class.extend({
         this.$target.closest('.s_popup').prependTo($container.find('.oe_structure:o_editable').first());
     },
     /**
-     * Switch layout from modal <--> a sticky div
-     *
      * @see this.selectClass for parameters
      */
-    setLayout: function (previewMode, widgetValue, params) {
-        const isModal = widgetValue === 'modal';
-        const isTop = widgetValue === 'fixedTop';
-        this.$target.toggleClass('s_popup_fixed', !isModal);
-        this.$target.toggleClass('s_popup_fixed_top', isTop);
-        this.$target.toggleClass('s_popup_center modal', isModal);
-        this.$target.find('.s_popup_frame').toggleClass('modal-dialog modal-dialog-centered', isModal);
-        this.$target.find('.s_popup_content').toggleClass('modal-content', isModal);
+    setBackdrop(previewMode, widgetValue, params) {
+        const color = widgetValue ? 'var(--black-50)' : '';
+        this.$target[0].style.setProperty('background-color', color, 'important');
     },
 
     //--------------------------------------------------------------------------
@@ -89,33 +107,6 @@ options.registry.SnippetPopup = options.Class.extend({
         switch (methodName) {
             case 'moveBlock':
                 return this.$target.closest('footer').length ? 'moveToFooter' : 'moveToBody';
-            case 'setLayout':
-                if (this.$target.hasClass('s_popup_center')) {
-                    return 'modal';
-                } else if (this.$target.hasClass('s_popup_fixed_top')) {
-                    return 'fixedTop';
-                }
-                return 'fixedBottom';
-        }
-        return this._super(...arguments);
-    },
-});
-
-options.registry.PopupContent = options.Class.extend({
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * Enable bg-color only if "centered AND full-size".
-     * Visibility according to the size is managed by data-dependencies.
-     *
-     * @override
-     */
-    async _computeWidgetVisibility(widgetName, params) {
-        if (widgetName === 'popup_content_colorpicker_opt') {
-            return this.$target.closest('.s_popup_main').hasClass('s_popup_center');
         }
         return this._super(...arguments);
     },

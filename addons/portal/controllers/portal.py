@@ -2,14 +2,16 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
+import functools
 import json
+import logging
 import math
 import re
 
 from werkzeug import urls
 
 from odoo import fields as odoo_fields, http, tools, _, SUPERUSER_ID
-from odoo.exceptions import ValidationError, AccessError, MissingError, UserError
+from odoo.exceptions import ValidationError, AccessError, MissingError, UserError, AccessDenied
 from odoo.http import content_disposition, Controller, request, route
 from odoo.tools import consteq
 
@@ -17,7 +19,7 @@ from odoo.tools import consteq
 # Misc tools
 # --------------------------------------------------
 
-
+_logger = logging.getLogger(__name__)
 def pager(url, total, page=1, step=30, scope=5, url_args=None):
     """ Generate a dict with required value to render `website.pager` template. This method compute
         url, page range to display, ... in the pager.
@@ -141,6 +143,10 @@ class CustomerPortal(Controller):
         return groups
 
     def _prepare_portal_layout_values(self):
+        """Values for /my/* templates rendering.
+
+        Does not include the record counts.
+        """
         # get customer sales rep
         sales_user = False
         partner = request.env.user.partner_id
@@ -152,6 +158,19 @@ class CustomerPortal(Controller):
             'page_name': 'home',
             'archive_groups': [],
         }
+
+    def _prepare_home_portal_values(self, counters):
+        """Values for /my & /my/home routes template rendering.
+
+        Includes the record count for the displayed badges.
+        where 'coutners' is the list of the displayed badges
+        and so the list to compute.
+        """
+        return {}
+
+    @route(['/my/counters'], type='json', auth="user", website=True)
+    def counters(self, counters, **kw):
+        return self._prepare_home_portal_values(counters)
 
     @route(['/my', '/my/home'], type='http', auth="user", website=True)
     def home(self, **kw):
@@ -200,6 +219,46 @@ class CustomerPortal(Controller):
         response = request.render("portal.portal_my_details", values)
         response.headers['X-Frame-Options'] = 'DENY'
         return response
+
+    @route('/my/security', type='http', auth='user', website=True, methods=['GET', 'POST'])
+    def security(self, **post):
+        values = self._prepare_portal_layout_values()
+        values['get_error'] = get_error
+
+        if request.httprequest.method == 'POST':
+            values.update(self._update_password(
+                post['old'].strip(),
+                post['new1'].strip(),
+                post['new2'].strip()
+            ))
+
+        return request.render('portal.portal_my_security', values, headers={
+            'X-Frame-Options': 'DENY'
+        })
+
+    def _update_password(self, old, new1, new2):
+        for k, v in [('old', old), ('new1', new1), ('new2', new2)]:
+            if not v:
+                return {'errors': {'password': {k: _("You cannot leave any password empty.")}}}
+
+        if new1 != new2:
+            return {'errors': {'password': {'new2': _("The new password and its confirmation must be identical.")}}}
+
+        try:
+            request.env['res.users'].change_password(old, new1)
+        except UserError as e:
+            return {'errors': {'password': e.name}}
+        except AccessDenied as e:
+            msg = e.args[0]
+            if msg == AccessDenied().args[0]:
+                msg = _('The old password you provided is incorrect, your password was not changed.')
+            return {'errors': {'password': {'old': msg}}}
+
+        # update session token so the user does not get logged out (cache cleared by passwd change)
+        new_token = request.env.user._compute_session_token(request.session.sid)
+        request.session.session_token = new_token
+
+        return {'success': {'password': True}}
 
     @http.route('/portal/attachment/add', type='http', auth='public', methods=['POST'], website=True)
     def attachment_add(self, name, file, res_model, res_id, access_token=None, **kwargs):
@@ -273,10 +332,10 @@ class CustomerPortal(Controller):
             raise UserError(_("The attachment does not exist or you do not have the rights to access it."))
 
         if attachment_sudo.res_model != 'mail.compose.message' or attachment_sudo.res_id != 0:
-            raise UserError(_("The attachment %s cannot be removed because it is not in a pending state.") % attachment_sudo.name)
+            raise UserError(_("The attachment %s cannot be removed because it is not in a pending state.", attachment_sudo.name))
 
         if attachment_sudo.env['mail.message'].search([('attachment_ids', 'in', attachment_sudo.ids)]):
-            raise UserError(_("The attachment %s cannot be removed because it is linked to a message.") % attachment_sudo.name)
+            raise UserError(_("The attachment %s cannot be removed because it is linked to a message.", attachment_sudo.name))
 
         return attachment_sudo.unlink()
 
@@ -364,12 +423,12 @@ class CustomerPortal(Controller):
 
     def _show_report(self, model, report_type, report_ref, download=False):
         if report_type not in ('html', 'pdf', 'text'):
-            raise UserError(_("Invalid report type: %s") % report_type)
+            raise UserError(_("Invalid report type: %s", report_type))
 
         report_sudo = request.env.ref(report_ref).sudo()
 
         if not isinstance(report_sudo, type(request.env['ir.actions.report'])):
-            raise UserError(_("%s is not the reference of a report") % report_ref)
+            raise UserError(_("%s is not the reference of a report", report_ref))
 
         method_name = '_render_qweb_%s' % (report_type)
         report = getattr(report_sudo, method_name)([model.id], data={'report_type': report_type})[0]
@@ -381,3 +440,15 @@ class CustomerPortal(Controller):
             filename = "%s.pdf" % (re.sub('\W+', '-', model._get_report_base_filename()))
             reporthttpheaders.append(('Content-Disposition', content_disposition(filename)))
         return request.make_response(report, headers=reporthttpheaders)
+
+def get_error(e, path=''):
+    """ Recursively dereferences `path` (a period-separated sequence of dict
+    keys) in `e` (an error dict or value), returns the final resolution IIF it's
+    an str, otherwise returns None
+    """
+    for k in (path.split('.') if path else []):
+        if not isinstance(e, dict):
+            return None
+        e = e.get(k)
+
+    return e if isinstance(e, str) else None

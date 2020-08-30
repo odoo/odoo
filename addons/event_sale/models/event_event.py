@@ -9,8 +9,11 @@ class Event(models.Model):
 
     sale_order_lines_ids = fields.One2many(
         'sale.order.line', 'event_id',
+        groups='sales_team.group_sale_salesman',
         string='All sale order lines pointing to this event')
-    sale_price_subtotal = fields.Monetary(string='Sales (Tax Excluded)', compute='_compute_sale_price_subtotal')
+    sale_price_subtotal = fields.Monetary(
+        string='Sales (Tax Excluded)', compute='_compute_sale_price_subtotal',
+        groups='sales_team.group_sale_salesman')
     currency_id = fields.Many2one(
         'res.currency', string='Currency',
         related='company_id.currency_id', readonly=True)
@@ -31,7 +34,7 @@ class Event(models.Model):
 
     def action_view_linked_orders(self):
         """ Redirects to the orders linked to the current events """
-        sale_order_action = self.env.ref('sale.action_orders').read()[0]
+        sale_order_action = self.env["ir.actions.actions"]._for_xml_id("sale.action_orders")
         sale_order_action.update({
             'domain': [('state', '!=', 'cancel'), ('order_line.event_id', 'in', self.ids)],
             'context': {'create': 0},

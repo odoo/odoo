@@ -2,7 +2,7 @@
 
 {
     'name': 'Lunch',
-    'sequence': 120,
+    'sequence': 300,
     'version': '1.0',
     'depends': ['mail'],
     'category': 'Human Resources/Lunch',

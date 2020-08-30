@@ -155,7 +155,7 @@ def execute_cr(cr, uid, obj, method, *args, **kw):
     odoo.api.Environment.reset()  # clean cache etc if we retry the same transaction
     recs = odoo.api.Environment(cr, uid, {}).get(obj)
     if recs is None:
-        raise UserError(_("Object %s doesn't exist") % obj)
+        raise UserError(_("Object %s doesn't exist", obj))
     result = odoo.api.call_kw(recs, method, args, kw)
     # force evaluation of lazy values before the cursor is closed, as it would
     # error afterwards if the lazy isn't already evaluated (and cached)

@@ -127,6 +127,8 @@
                                 <field name="website_indexed"/>
                                 <field name="is_published"/>
                                 <field name="date_publish"/>
+                                <field name="cache_time" groups="base.group_no_one"/>
+                                <field name="cache_key_expr" groups="base.group_no_one"/>
                             </group>
                         </group>
                         <label for="menu_ids" string="Related Menu Items"/>
@@ -140,12 +142,12 @@
             <field name="name">website.page.list</field>
             <field name="model">website.page</field>
             <field name="arch" type="xml">
-                <tree string="Website Pages" default_order="name">
+                <tree string="Website Pages" default_order="name" multi_edit="1">
                     <field name="name"/>
                     <field name="url"/>
                     <field name="website_id" groups="website.group_multi_website"/>
                     <field name="website_indexed"/>
-                    <field name="is_published" string="Page Published"/>
+                    <field name="is_published" string="Is Published"/>
                     <field name="create_uid" invisible="1"/>
                     <field name="write_uid"/>
                     <field name="write_date"/>
@@ -272,7 +274,7 @@
                     <field name="page_ids" invisible="1" />
                     <field name="first_page_id" attrs="{'invisible': [('page_ids', '=', [])]}" />
                     <field name="visibility" attrs="{'invisible': [('type', '!=', 'qweb')]}" />
-                    <field name="visibility_password_display" attrs="{'invisible': [('visibility', '!=', 'password')]}" password="True"/>
+                    <field name="visibility_password_display" attrs="{'invisible': [('visibility', '!=', 'password')]}" password="True" string="Visibility Password" />
                 </field>
                 <sheet position="before">
                     <header>
@@ -317,13 +319,15 @@
             <field name="model_id" ref="website.model_website"/>
             <field name="state">code</field>
             <field name="code">action = model.action_dashboard_redirect()</field>
+            <field name="groups_id" eval="[(4, ref('base.group_user'))]"/>
         </record>
 
         <record id="ir_actions_server_website_google_analytics" model="ir.actions.server">
-            <field name="name">Website: Dashboard</field>
+            <field name="name">Website: Analytics</field>
             <field name="model_id" ref="website.model_website"/>
             <field name="state">code</field>
-            <field name="code">action = model.env.ref('website.backend_dashboard').read()[0]</field>
+            <field name="code">action = model.env.ref('website.backend_dashboard').sudo().read()[0]</field>
+            <field name="groups_id" eval="[(4, ref('base.group_user'))]"/>
         </record>
 
         <!-- Custom module kanban : install button (even if already installed) which -->

@@ -29,6 +29,9 @@ from odoo.exceptions import CacheMiss
 DATE_LENGTH = len(date.today().strftime(DATE_FORMAT))
 DATETIME_LENGTH = len(datetime.now().strftime(DATETIME_FORMAT))
 
+# hacky-ish way to prevent access to a field through the ORM (except for sudo mode)
+NO_ACCESS='.'
+
 IR_MODELS = (
     'ir.model', 'ir.model.data', 'ir.model.fields', 'ir.model.fields.selection',
     'ir.model.relation', 'ir.model.constraint', 'ir.module.module',
@@ -307,6 +310,9 @@ class Field(MetaField('DummyField', (object,), {})):
         attrs['_modules'] = modules
 
         # initialize ``self`` with ``attrs``
+        if name == 'state':
+            # by default, `state` fields should be reset on copy
+            attrs['copy'] = attrs.get('copy', False)
         if attrs.get('compute'):
             # by default, computed fields are not stored, computed in superuser
             # mode if stored, not copied (unless stored and explicitly not
@@ -833,7 +839,7 @@ class Field(MetaField('DummyField', (object,), {})):
             def add_not_null():
                 # flush values before adding NOT NULL constraint
                 model.flush([self.name])
-                model.pool.post_constraint(sql.set_not_null, model._cr, model._table, self.name)
+                model.pool.post_constraint(apply_required, model, self.name)
 
         elif not self.required and has_notnull:
             sql.drop_not_null(model._cr, model._table, self.name)
@@ -911,7 +917,13 @@ class Field(MetaField('DummyField', (object,), {})):
         if self.compute and (record.id in env.all.tocompute.get(self, ())) \
                 and not env.is_protected(self, record):
             # self must be computed on record
-            recs = record if self.recursive else env.records_to_compute(self)
+            if self.recursive:
+                recs = record
+            else:
+                recs = env.records_to_compute(self)
+                # compute the field on real records only (if 'record' is real)
+                # or new records only (if 'record' is new)
+                recs = recs.filtered(lambda rec: bool(rec.id) == bool(record.id))
             try:
                 self.compute_value(recs)
             except (AccessError, MissingError):
@@ -951,7 +963,14 @@ class Field(MetaField('DummyField', (object,), {})):
                         self.compute_value(recs)
                     except (AccessError, MissingError):
                         self.compute_value(record)
-                    value = env.cache.get(record, self)
+                    try:
+                        value = env.cache.get(record, self)
+                    except CacheMiss:
+                        if self.readonly and not self.store:
+                            raise ValueError("Compute method failed to assign %s.%s" % (record, self.name))
+                        # fallback to null value if compute gives nothing
+                        value = self.convert_to_cache(False, record, validate=False)
+                        env.cache.set(record, self, value)
 
             elif self.type == 'many2one' and self.delegate and not record.id:
                 # parent record of a new record: new record, with the same
@@ -1009,8 +1028,12 @@ class Field(MetaField('DummyField', (object,), {})):
         # retrieve values in cache, and fetch missing ones
         vals = records.env.cache.get_until_miss(records, self)
         while len(vals) < len(records):
-            # trigger prefetching on remaining records, and continue retrieval
-            remaining = records[len(vals):]
+            # It is important to construct a 'remaining' recordset with the
+            # _prefetch_ids of the original recordset, in order to prefetch as
+            # many records as possible. If not done this way, scenarios such as
+            # [rec.line_ids.mapped('name') for rec in recs] would generate one
+            # query per record in `recs`!
+            remaining = records._browse(records.env, records[len(vals):]._ids, records._prefetch_ids)
             self.__get__(first(remaining), type(remaining))
             vals += records.env.cache.get_until_miss(remaining, self)
 
@@ -1576,7 +1599,7 @@ class Html(_String):
         (only a white list of attributes is accepted, default: ``True``)
     :param bool sanitize_attributes: whether to sanitize attributes
         (only a white list of attributes is accepted, default: ``True``)
-    :param bool sanitize_style: whether to sanitize style attributes (default: ``True``)
+    :param bool sanitize_style: whether to sanitize style attributes (default: ``False``)
     :param bool strip_style: whether to strip style attributes
         (removed and therefore not sanitized, default: ``False``)
     :param bool strip_classes: whether to strip classes attributes (default: ``False``)
@@ -2629,9 +2652,13 @@ class Many2one(_Relational):
         """ Remove `records` from the cached values of the inverse fields of `self`. """
         cache = records.env.cache
         record_ids = set(records._ids)
+
+        # align(id) returns a NewId if records are new, a real id otherwise
+        align = (lambda id_: id_) if all(record_ids) else (lambda id_: id_ and NewId(id_))
+
         for invf in records._field_inverses[self]:
             corecords = records.env[self.comodel_name].browse(
-                id_ for id_ in cache.get_values(records, self)
+                align(id_) for id_ in cache.get_values(records, self)
             )
             for corecord in corecords:
                 ids0 = cache.get(corecord, invf, None)
@@ -3155,6 +3182,11 @@ class One2many(_RelationalMulti):
 
         if self.store:
             inverse = self.inverse_name
+
+            # make sure self's inverse is in cache
+            inverse_field = comodel._fields[inverse]
+            for record in records:
+                cache.update(record[self.name], inverse_field, itertools.repeat(record.id))
 
             for recs, commands in records_commands_list:
                 for command in commands:
@@ -3691,6 +3723,16 @@ def prefetch_x2many_ids(record, field):
     records = record.browse(record._prefetch_ids)
     ids_list = record.env.cache.get_values(records, field)
     return unique(id_ for ids in ids_list for id_ in ids)
+
+
+def apply_required(model, field_name):
+    """ Set a NOT NULL constraint on the given field, if necessary. """
+    # At the time this function is called, the model's _fields may have been reset, although
+    # the model's class is still the same. Retrieve the field to see whether the NOT NULL
+    # constraint still applies
+    field = model._fields[field_name]
+    if field.store and field.required:
+        sql.set_not_null(model.env.cr, model._table, field_name)
 
 
 # imported here to avoid dependency cycle issues

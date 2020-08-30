@@ -2,15 +2,16 @@
 <odoo>
 
     <!-- Add action entry in the Action Menu for Events -->
-    <act_window id="calendar_event_act_window_sms_composer_single"
-        name="Send SMS to attendees"
-        binding_model="calendar.event"
-        res_model="sms.composer"
-        view_mode="form"
-        target="new"
-        context="{
+    <record id="calendar_event_act_window_sms_composer_single" model="ir.actions.act_window">
+        <field name="name">Send SMS to attendees</field>
+        <field name="res_model">sms.composer</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{
             'default_composition_mode': 'comment',
             'default_res_id': active_id,
-        }"/>
+        }</field>
+        <field name="binding_model_id" ref="model_calendar_event"/>
+    </record>
 
 </odoo>

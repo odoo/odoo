@@ -188,7 +188,7 @@ class User(models.Model):
     @api.model
     def action_get(self):
         if self.env.user.employee_id:
-            return self.sudo().env.ref('hr.res_users_action_my').read()[0]
+            return self.sudo().env.ref('hr.res_users_action_my').sudo().read()[0]
         return super(User, self).action_get()
 
     @api.depends('employee_ids')
@@ -198,13 +198,7 @@ class User(models.Model):
             user.employee_id = self.env['hr.employee'].search([('id', 'in', user.employee_ids.ids), ('company_id', '=', self.env.company.id)], limit=1)
 
     def _search_company_employee(self, operator, value):
-        employees = self.env['hr.employee'].search([
-            ('name', operator, value),
-            '|',
-            ('company_id', '=', self.env.company.id),
-            ('company_id', '=', False)
-        ], order='company_id ASC')
-        return [('id', 'in', employees.mapped('user_id').ids)]
+        return [('employee_ids', operator, value)]
 
     def action_create_employee(self):
         self.ensure_one()

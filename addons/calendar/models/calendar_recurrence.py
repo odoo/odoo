@@ -71,6 +71,7 @@ BYDAY_SELECTION = [
     ('1', 'First'),
     ('2', 'Second'),
     ('3', 'Third'),
+    ('4', 'Fourth'),
     ('-1', 'Last'),
 ]
 
@@ -124,12 +125,12 @@ class RecurrenceRule(models.Model):
     def _compute_name(self):
         for recurrence in self:
             period = dict(RRULE_TYPE_SELECTION)[recurrence.rrule_type]
-            every = _("Every %s %s, ") % (recurrence.interval, period)
+            every = _("Every %(count)s %(period)s, ", count=recurrence.interval, period=period)
 
             if recurrence.end_type == 'count':
-                end = _("for %s events") % recurrence.count
+                end = _("for %s events", recurrence.count)
             elif recurrence.end_type == 'end_date':
-                end = _("until %s") % recurrence.until
+                end = _("until %s", recurrence.until)
             else:
                 end = ''
 
@@ -140,9 +141,9 @@ class RecurrenceRule(models.Model):
             elif recurrence.rrule_type == 'monthly':
                 if recurrence.month_by == 'day':
                     weekday_label = dict(BYDAY_SELECTION)[recurrence.byday]
-                    on = _("on the %(position)s %(weekday)s, ") % {'position': recurrence.byday, 'weekday': weekday_label}
+                    on = _("on the %(position)s %(weekday)s, ", position=recurrence.byday, weekday=weekday_label)
                 else:
-                    on = _("day %s, ") % recurrence.day
+                    on = _("day %s, ", recurrence.day)
             else:
                 on = ''
             recurrence.name = every + on + end
@@ -184,23 +185,35 @@ class RecurrenceRule(models.Model):
         ranges_to_create = (event_range for event_range in ranges if event_range not in existing_ranges)
         return synced_events, ranges_to_create
 
-    def _apply_recurrence(self):
+    def _apply_recurrence(self, specific_values_creation=None, no_send_edit=False):
         """Create missing events in the recurrence and detach events which no longer
         follow the recurrence rules.
         :return: detached events
         """
         event_vals = []
         keep = self.env['calendar.event']
+        if specific_values_creation is None:
+            specific_values_creation = {}
+
         for recurrence in self.filtered('base_event_id'):
             self.calendar_event_ids |= recurrence.base_event_id
             event = recurrence.base_event_id or recurrence._get_first_event(include_outliers=False)
             duration = event.stop - event.start
-            ranges = set(recurrence._get_ranges(event.start, duration))
+            if specific_values_creation:
+                ranges = set([(x[1], x[2]) for x in specific_values_creation if x[0] == recurrence.id])
+            else:
+                ranges = set(recurrence._get_ranges(event.start, duration))
 
             events_to_keep, ranges = recurrence._reconcile_events(ranges)
             keep |= events_to_keep
             [base_values] = event.copy_data()
-            event_vals += [dict(base_values, start=start, stop=stop, recurrence_id=recurrence.id) for start, stop in ranges]
+            values = []
+            for start, stop in ranges:
+                value = dict(base_values, start=start, stop=stop, recurrence_id=recurrence.id, follow_recurrence=True)
+                if (recurrence.id, start, stop) in specific_values_creation:
+                    value.update(specific_values_creation[(recurrence.id, start, stop)])
+                values += [value]
+            event_vals += values
 
         events = self.calendar_event_ids - keep
         detached_events = self._detach_events(events)
@@ -333,16 +346,14 @@ class RecurrenceRule(models.Model):
         return data
 
     def _get_start_of_period(self, dt):
-        if self.rrule_type == 'daily':
-            start = dt
-        elif self.rrule_type == 'weekly':
+        if self.rrule_type == 'weekly':
             lang = self.env['res.lang']._lang_get(self.env.user.lang)
             week_start = int(lang.week_start)  # lang.week_start ranges from '1' to '7'
             week_start = rrule.weekday(week_start - 1)  # expects an int from 0 to 6
             start = dt + relativedelta(weekday=week_start(-1))
         elif self.rrule_type == 'monthly':
             start = dt + relativedelta(day=1)
-        elif self.rrule_type == 'yearly':
+        else:
             start = dt
         return start
 

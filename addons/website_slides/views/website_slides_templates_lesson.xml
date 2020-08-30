@@ -452,6 +452,7 @@
         t-att-data-next-slide-url="'/slides/slide/%s' % (slug(next_slide)) if next_slide else None"
         t-att-data-channel-id="slide.channel_id.id"
         t-att-data-channel-enroll="slide.channel_id.enroll"
+        t-att-data-channel-requested-access="slide.channel_id.has_requested_access"
         t-att-data-channel-can-upload="slide.channel_id.can_upload"
         t-att-data-signup-allowed="signup_allowed"
         t-att-data-session-answers="session_answers">

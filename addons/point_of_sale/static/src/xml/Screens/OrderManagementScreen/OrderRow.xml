@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="OrderRow" owl="1">
+        <div class="order-row"
+             t-att-class="{ highlight: highlighted, lighter: !props.order.locked }"
+             t-on-click="trigger('click-order', props.order)">
+            <div class="item name"><t t-esc="name" /></div>
+            <div class="item date"><t t-esc="date" /></div>
+            <div class="item customer"><t t-esc="customer" /></div>
+            <div class="item total"><t t-esc="total" /></div>
+        </div>
+    </t>
+
+</templates>

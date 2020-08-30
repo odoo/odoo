@@ -74,7 +74,7 @@ class User(models.Model):
                 with self.pool.cursor() as cr:
                     self.env.user.with_env(self.env(cr=cr)).write({'google_calendar_rtoken': False})
             error_key = error.response.json().get("error", "nc")
-            error_msg = _("Something went wrong during your token generation. Maybe your Authorization Code is invalid or already expired [%s]") % error_key
+            error_msg = _("Something went wrong during your token generation. Maybe your Authorization Code is invalid or already expired [%s]", error_key)
             raise UserError(error_msg)
 
     def _sync_google_calendar(self, calendar_service: GoogleCalendarService):

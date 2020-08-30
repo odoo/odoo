@@ -22,7 +22,7 @@ const ImLivechatChannelFormController = FormController.extend({
             this.$(`[name="${name}"] .o_field_color`).css('background-color', colorValues[name]);
         }
         const result = await this.model.notifyChanges(this.handle, colorValues);
-        this.renderer.updateState(this.model.get(this.handle), { fieldNames: result });
+        this._updateRendererState(this.model.get(this.handle), { fieldNames: result });
     },
 
     //--------------------------------------------------------------------------

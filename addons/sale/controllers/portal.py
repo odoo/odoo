@@ -14,24 +14,22 @@ from odoo.osv import expression
 
 class CustomerPortal(CustomerPortal):
 
-    def _prepare_portal_layout_values(self):
-        values = super(CustomerPortal, self)._prepare_portal_layout_values()
+    def _prepare_home_portal_values(self, counters):
+        values = super()._prepare_home_portal_values(counters)
         partner = request.env.user.partner_id
 
         SaleOrder = request.env['sale.order']
-        quotation_count = SaleOrder.search_count([
-            ('message_partner_ids', 'child_of', [partner.commercial_partner_id.id]),
-            ('state', 'in', ['sent', 'cancel'])
-        ])
-        order_count = SaleOrder.search_count([
-            ('message_partner_ids', 'child_of', [partner.commercial_partner_id.id]),
-            ('state', 'in', ['sale', 'done'])
-        ])
+        if 'quotation_count' in counters:
+            values['quotation_count'] = SaleOrder.search_count([
+                ('message_partner_ids', 'child_of', [partner.commercial_partner_id.id]),
+                ('state', 'in', ['sent', 'cancel'])
+            ])
+        if 'order_count' in counters:
+            values['order_count'] = SaleOrder.search_count([
+                ('message_partner_ids', 'child_of', [partner.commercial_partner_id.id]),
+                ('state', 'in', ['sale', 'done'])
+            ])
 
-        values.update({
-            'quotation_count': quotation_count,
-            'order_count': order_count,
-        })
         return values
 
     #
@@ -60,7 +58,7 @@ class CustomerPortal(CustomerPortal):
             sortby = 'date'
         sort_order = searchbar_sortings[sortby]['order']
 
-        archive_groups = self._get_archive_groups('sale.order', domain)
+        archive_groups = self._get_archive_groups('sale.order', domain) if values.get('my_details') else []
         if date_begin and date_end:
             domain += [('create_date', '>', date_begin), ('create_date', '<=', date_end)]
 
@@ -111,7 +109,7 @@ class CustomerPortal(CustomerPortal):
             sortby = 'date'
         sort_order = searchbar_sortings[sortby]['order']
 
-        archive_groups = self._get_archive_groups('sale.order', domain)
+        archive_groups = self._get_archive_groups('sale.order', domain) if values.get('my_details') else []
         if date_begin and date_end:
             domain += [('create_date', '>', date_begin), ('create_date', '<=', date_end)]
 
@@ -160,7 +158,7 @@ class CustomerPortal(CustomerPortal):
             session_obj_date = request.session.get('view_quote_%s' % order_sudo.id)
             if session_obj_date != now and request.env.user.share and access_token:
                 request.session['view_quote_%s' % order_sudo.id] = now
-                body = _('Quotation viewed by customer %s') % order_sudo.partner_id.name
+                body = _('Quotation viewed by customer %s', order_sudo.partner_id.name)
                 _message_post_helper(
                     "sale.order",
                     order_sudo.id,
@@ -224,6 +222,7 @@ class CustomerPortal(CustomerPortal):
                 'signed_on': fields.Datetime.now(),
                 'signature': signature,
             })
+            request.env.cr.commit()
         except (TypeError, binascii.Error) as e:
             return {'error': _('Invalid signature data.')}
 

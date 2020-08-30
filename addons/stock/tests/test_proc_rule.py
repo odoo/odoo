@@ -77,11 +77,13 @@ class TestProcRule(TransactionCase):
         ])
         self.assertEqual(len(moves.ids), 1, "It should have created a picking from Stock to Output with the original picking as destination")
 
-    def test_rule_propagate_1(self):
+    def test_propagate_deadline_move(self):
+        deadline = datetime.now()
         move_dest = self.env['stock.move'].create({
             'name': 'move_dest',
             'product_id': self.product.id,
             'product_uom': self.uom_unit.id,
+            'date_deadline': deadline,
             'location_id': self.ref('stock.stock_location_output'),
             'location_dest_id': self.ref('stock.stock_location_customers'),
         })
@@ -90,87 +92,74 @@ class TestProcRule(TransactionCase):
             'name': 'move_orig',
             'product_id': self.product.id,
             'product_uom': self.uom_unit.id,
+            'date_deadline': deadline,
             'move_dest_ids': [(4, move_dest.id)],
-            'propagate_date': True,
-            'propagate_date_minimum_delta': 5,
-            'location_id': self.ref('stock.stock_location_stock'),
-            'location_dest_id': self.ref('stock.stock_location_output'),
-        })
-
-        move_dest_initial_date = move_dest.date_expected
-
-        # change above the minimum delta
-        move_orig.date_expected += timedelta(days=6)
-        self.assertAlmostEqual(move_dest.date_expected, move_dest_initial_date + timedelta(days=6), delta=timedelta(seconds=10), msg='date should be propagated as the minimum delta is below')
-
-        # change below the minimum delta
-        move_dest_initial_date = move_dest.date_expected
-        move_orig.date_expected += timedelta(days=4)
-
-        self.assertAlmostEqual(move_dest.date_expected, move_dest_initial_date, delta=timedelta(seconds=10), msg='date should not be propagated as the minimum delta is above')
-
-    def test_rule_propagate_2(self):
-        move_dest = self.env['stock.move'].create({
-            'name': 'move_dest',
-            'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
-            'location_id': self.ref('stock.stock_location_output'),
-            'location_dest_id': self.ref('stock.stock_location_customers'),
-        })
-
-        move_orig = self.env['stock.move'].create({
-            'name': 'move_orig',
-            'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
-            'move_dest_ids': [(4, move_dest.id)],
-            'propagate_date': False,
-            'propagate_date_minimum_delta': 5,
-            'location_id': self.ref('stock.stock_location_stock'),
-            'location_dest_id': self.ref('stock.stock_location_output'),
-        })
-
-        move_dest_initial_date = move_dest.date_expected
-
-        # change below the minimum delta
-        move_orig.date_expected += timedelta(days=4)
-        self.assertAlmostEqual(move_dest.date_expected, move_dest_initial_date, delta=timedelta(seconds=10), msg='date should not be propagated')
-
-        # change above the minimum delta
-        move_orig.date_expected += timedelta(days=2)
-        self.assertAlmostEqual(move_dest.date_expected, move_dest_initial_date, delta=timedelta(seconds=10), msg='date should not be propagated')
-
-    def test_rule_propagate_3(self):
-        move_dest = self.env['stock.move'].create({
-            'name': 'move_dest',
-            'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
-            'location_id': self.ref('stock.stock_location_output'),
-            'location_dest_id': self.ref('stock.stock_location_customers'),
-        })
-
-        move_orig = self.env['stock.move'].create({
-            'name': 'move_orig',
-            'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
-            'move_dest_ids': [(4, move_dest.id)],
-            'propagate_date': True,
-            'propagate_date_minimum_delta': 5,
             'location_id': self.ref('stock.stock_location_stock'),
             'location_dest_id': self.ref('stock.stock_location_output'),
             'quantity_done': 10,
         })
-        move_orig.date_expected -= timedelta(days=6)
-        move_dest_initial_date = move_dest.date_expected
-        move_orig_initial_date = move_orig.date_expected
+        new_deadline = move_orig.date_deadline - timedelta(days=6)
+        move_orig.date_deadline = new_deadline
+        self.assertEqual(move_dest.date_deadline, new_deadline, msg='deadline date should be propagated')
         move_orig._action_done()
-        self.assertAlmostEqual(move_orig.date_expected, move_orig_initial_date, delta=timedelta(seconds=10), msg='schedule date should not be impacted by action_done')
         self.assertAlmostEqual(move_orig.date, datetime.now(), delta=timedelta(seconds=10), msg='date should be now')
-        self.assertAlmostEqual(move_dest.date_expected, move_dest_initial_date + timedelta(days=6), delta=timedelta(seconds=10), msg='date should be propagated')
+        self.assertEqual(move_orig.date_deadline, new_deadline, msg='deadline date should be unchanged')
+        self.assertEqual(move_dest.date_deadline, new_deadline, msg='deadline date should be unchanged')
 
     def test_reordering_rule_1(self):
         warehouse = self.env['stock.warehouse'].search([], limit=1)
         orderpoint_form = Form(self.env['stock.warehouse.orderpoint'])
         orderpoint_form.product_id = self.product
+        orderpoint_form.location_id = warehouse.lot_stock_id
+        orderpoint_form.product_min_qty = 0.0
+        orderpoint_form.product_max_qty = 5.0
+        orderpoint = orderpoint_form.save()
+
+        # get auto-created pull rule from when warehouse is created
+        rule = self.env['stock.rule'].search([
+            ('route_id', '=', warehouse.reception_route_id.id),
+            ('location_id', '=', warehouse.lot_stock_id.id),
+            ('location_src_id', '=', self.env.ref('stock.stock_location_suppliers').id),
+            ('action', '=', 'pull'),
+            ('procure_method', '=', 'make_to_stock'),
+            ('picking_type_id', '=', warehouse.in_type_id.id)])
+
+        # add a delay [i.e. lead days] so procurement will be triggered based on forecasted stock
+        rule.delay = 9.0
+
+        delivery_move = self.env['stock.move'].create({
+            'name': 'Delivery',
+            'date': datetime.today() + timedelta(days=5),
+            'product_id': self.product.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 12.0,
+            'location_id': warehouse.lot_stock_id.id,
+            'location_dest_id': self.ref('stock.stock_location_customers'),
+        })
+        delivery_move._action_confirm()
+        orderpoint._compute_qty()
+        self.env['procurement.group'].run_scheduler()
+
+        receipt_move = self.env['stock.move'].search([
+            ('product_id', '=', self.product.id),
+            ('location_id', '=', self.env.ref('stock.stock_location_suppliers').id)
+        ])
+        self.assertTrue(receipt_move)
+        self.assertEqual(receipt_move.date.date(), date.today())
+        self.assertEqual(receipt_move.product_uom_qty, 17.0)
+
+    def test_reordering_rule_2(self):
+        """Test when not enough product to assign picking, automatically run
+        reordering rule.
+        """
+        self.productA = self.env['product.product'].create({
+            'name': 'Desk Combination',
+            'type': 'product',
+        })
+
+        warehouse = self.env['stock.warehouse'].search([], limit=1)
+        orderpoint_form = Form(self.env['stock.warehouse.orderpoint'])
+        orderpoint_form.product_id = self.productA
         orderpoint_form.location_id = warehouse.lot_stock_id
         orderpoint_form.product_min_qty = 0.0
         orderpoint_form.product_max_qty = 5.0
@@ -187,25 +176,29 @@ class TestProcRule(TransactionCase):
             'picking_type_id': warehouse.in_type_id.id,
         })
 
+        delivery_picking = self.env['stock.picking'].create({
+            'location_id': warehouse.lot_stock_id.id,
+            'location_dest_id': self.ref('stock.stock_location_customers'),
+            'picking_type_id': self.ref('stock.picking_type_out'),
+        })
         delivery_move = self.env['stock.move'].create({
             'name': 'Delivery',
-            'date_expected': datetime.today() + timedelta(days=5),
-            'product_id': self.product.id,
+            'product_id': self.productA.id,
             'product_uom': self.uom_unit.id,
             'product_uom_qty': 12.0,
             'location_id': warehouse.lot_stock_id.id,
             'location_dest_id': self.ref('stock.stock_location_customers'),
+            'picking_id': delivery_picking.id,
         })
-        delivery_move._action_confirm()
-        orderpoint._compute_qty()
-        self.env['procurement.group'].run_scheduler()
+        delivery_picking.action_confirm()
+        delivery_picking.action_assign()
 
         receipt_move = self.env['stock.move'].search([
-            ('product_id', '=', self.product.id),
+            ('product_id', '=', self.productA.id),
             ('location_id', '=', self.env.ref('stock.stock_location_suppliers').id)
         ])
         self.assertTrue(receipt_move)
-        self.assertEqual(receipt_move.date_expected.date(), date.today())
+        self.assertEqual(receipt_move.date.date(), date.today())
         self.assertEqual(receipt_move.product_uom_qty, 17.0)
 
 

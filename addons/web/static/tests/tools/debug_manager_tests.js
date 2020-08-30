@@ -11,7 +11,7 @@ QUnit.module('DebugManager', {}, function () {
     QUnit.test("list: edit view menu item", async function (assert) {
         assert.expect(3);
 
-        var debugManager = createDebugManager();
+        var debugManager = await createDebugManager();
 
         await debugManager.appendTo($('#qunit-fixture'));
 
@@ -43,7 +43,7 @@ QUnit.module('DebugManager', {}, function () {
     QUnit.test("form: Manage Attachments option", async function (assert) {
         assert.expect(3);
 
-        var debugManager = createDebugManager({
+        var debugManager = await createDebugManager({
             intercepts: {
                 do_action: function (event) {
                     assert.deepEqual(event.data.action, {
@@ -126,7 +126,7 @@ QUnit.module('DebugManager', {}, function () {
         });
 
         // Now the real tested component
-        var debugManager = createDebugManager({
+        var debugManager = await createDebugManager({
             data: data,
             mockRPC: function (route, args) {
                 if (route == "/web/dataset/call_kw/ir.default/set") {

@@ -16,9 +16,9 @@ class TestLandedCosts(TestStockLandedCostsCommon):
         # Create picking incoming shipment
         self.picking_in = self.Picking.create({
             'partner_id': self.supplier_id,
-            'picking_type_id': self.picking_type_in_id,
+            'picking_type_id': self.warehouse.in_type_id.id,
             'location_id': self.supplier_location_id,
-            'location_dest_id': self.stock_location_id})
+            'location_dest_id': self.warehouse.lot_stock_id.id})
         self.Move.create({
             'name': self.product_refrigerator.name,
             'product_id': self.product_refrigerator.id,
@@ -26,7 +26,7 @@ class TestLandedCosts(TestStockLandedCostsCommon):
             'product_uom': self.product_refrigerator.uom_id.id,
             'picking_id': self.picking_in.id,
             'location_id': self.supplier_location_id,
-            'location_dest_id': self.stock_location_id})
+            'location_dest_id': self.warehouse.lot_stock_id.id})
         self.Move.create({
             'name': self.product_oven.name,
             'product_id': self.product_oven.id,
@@ -34,12 +34,12 @@ class TestLandedCosts(TestStockLandedCostsCommon):
             'product_uom': self.product_oven.uom_id.id,
             'picking_id': self.picking_in.id,
             'location_id': self.supplier_location_id,
-            'location_dest_id': self.stock_location_id})
+            'location_dest_id': self.warehouse.lot_stock_id.id})
         # Create picking outgoing shipment
         self.picking_out = self.Picking.create({
             'partner_id': self.customer_id,
-            'picking_type_id': self.picking_type_out_id,
-            'location_id': self.stock_location_id,
+            'picking_type_id': self.warehouse.out_type_id.id,
+            'location_id': self.warehouse.lot_stock_id.id,
             'location_dest_id': self.customer_location_id})
         self.Move.create({
             'name': self.product_refrigerator.name,
@@ -47,15 +47,8 @@ class TestLandedCosts(TestStockLandedCostsCommon):
             'product_uom_qty': 2,
             'product_uom': self.product_refrigerator.uom_id.id,
             'picking_id': self.picking_out.id,
-            'location_id': self.stock_location_id,
+            'location_id': self.warehouse.lot_stock_id.id,
             'location_dest_id': self.customer_location_id})
-        self.stock_input_account, self.stock_output_account, self.stock_valuation_account, self.expense_account, self.stock_journal = _create_accounting_data(self.env)
-        self.categ_all.write({
-            'property_stock_account_input_categ_id': self.stock_input_account.id,
-            'property_stock_account_output_categ_id': self.stock_output_account.id,
-            'property_stock_valuation_account_id': self.stock_valuation_account.id,
-            'property_stock_journal': self.stock_journal.id,
-        })
 
     def test_00_landed_costs_on_incoming_shipment(self):
         """ Test landed cost on incoming shipment """
@@ -309,7 +302,6 @@ class TestLandedCostsWithPurchaseAndInv(TestStockValuationLCCommon):
         self.env.company.anglo_saxon_accounting = True
         self.product1.product_tmpl_id.categ_id.property_cost_method = 'fifo'
         self.product1.product_tmpl_id.categ_id.property_valuation = 'real_time'
-        self.product1.product_tmpl_id.invoice_policy = 'delivery'
         self.price_diff_account = self.env['account.account'].create({
             'name': 'price diff account',
             'code': 'price diff account',
@@ -335,7 +327,7 @@ class TestLandedCostsWithPurchaseAndInv(TestStockValuationLCCommon):
         # Check SVL and AML
         svl = self.env['stock.valuation.layer'].search([('stock_move_id', '=', receipt.move_lines.id)])
         self.assertAlmostEqual(svl.value, 455)
-        aml = self.env['account.move.line'].search([('account_id', '=', self.stock_valuation_account.id)])
+        aml = self.env['account.move.line'].search([('account_id', '=', self.company_data['default_account_stock_valuation'].id)])
         self.assertAlmostEqual(aml.debit, 455)
 
         # Create and validate LC
@@ -358,7 +350,7 @@ class TestLandedCostsWithPurchaseAndInv(TestStockValuationLCCommon):
         self.assertAlmostEqual(lc.valuation_adjustment_lines.final_cost, 554)
         svl = self.env['stock.valuation.layer'].search([('stock_move_id', '=', receipt.move_lines.id)], order='id desc', limit=1)
         self.assertAlmostEqual(svl.value, 99)
-        aml = self.env['account.move.line'].search([('account_id', '=', self.stock_valuation_account.id)], order='id desc', limit=1)
+        aml = self.env['account.move.line'].search([('account_id', '=', self.company_data['default_account_stock_valuation'].id)], order='id desc', limit=1)
         self.assertAlmostEqual(aml.debit, 99)
 
         # Create an invoice with the same price
@@ -366,7 +358,7 @@ class TestLandedCostsWithPurchaseAndInv(TestStockValuationLCCommon):
         move_form.partner_id = order.partner_id
         move_form.purchase_id = order
         move = move_form.save()
-        move.post()
+        move.action_post()
 
         # Check nothing was posted in the price difference account
         price_diff_aml = self.env['account.move.line'].search([('account_id','=', self.price_diff_account.id), ('move_id', '=', move.id)])

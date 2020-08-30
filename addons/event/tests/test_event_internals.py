@@ -70,62 +70,24 @@ class TestEventData(TestEventCommon):
         self.assertFalse(event.is_ongoing)
 
     @users('user_eventmanager')
-    def test_event_fields(self):
-        event_type = self.event_type_complex.with_user(self.env.user)
-        event = self.env['event.event'].create({
-            'name': 'Event Update Type',
-            'event_type_id': event_type.id,
-            'date_begin': FieldsDatetime.to_string(datetime.today() + timedelta(days=1)),
-            'date_end': FieldsDatetime.to_string(datetime.today() + timedelta(days=15)),
-        })
-
-        self.assertEqual(event.address_id, self.env.user.company_id.partner_id)
-        # seats: coming from event type configuration
-        self.assertTrue(event.seats_limited)
-        self.assertEqual(event.seats_available, event.event_type_id.seats_max)
-        self.assertEqual(event.seats_unconfirmed, 0)
-        self.assertEqual(event.seats_reserved, 0)
-        self.assertEqual(event.seats_used, 0)
-        self.assertEqual(event.seats_expected, 0)
-
-        # create registration in order to check the seats computation
-        self.assertTrue(event.auto_confirm)
-        for x in range(5):
-            reg = self.env['event.registration'].create({
-                'event_id': event.id,
-                'name': 'reg_open',
-            })
-            self.assertEqual(reg.state, 'open')
-        reg_draft = self.env['event.registration'].create({
-            'event_id': event.id,
-            'name': 'reg_draft',
-        })
-        reg_draft.write({'state': 'draft'})
-        reg_done = self.env['event.registration'].create({
-            'event_id': event.id,
-            'name': 'reg_done',
-        })
-        reg_done.write({'state': 'done'})
-        self.assertEqual(event.seats_available, event.event_type_id.seats_max - 6)
-        self.assertEqual(event.seats_unconfirmed, 1)
-        self.assertEqual(event.seats_reserved, 5)
-        self.assertEqual(event.seats_used, 1)
-        self.assertEqual(event.seats_expected, 7)
-
-    @users('user_eventmanager')
     @mute_logger('odoo.models.unlink')
     def test_event_configuration_from_type(self):
         """ Test data computation of event coming from its event.type template.
         Some one2many notably are duplicated from type configuration and some
         advanced testing is required, notably mail schedulers. """
-
         self.assertEqual(self.env.user.tz, 'Europe/Brussels')
 
-        event_type = self.event_type_complex.with_user(self.env.user)
+        # ------------------------------------------------------------
+        # STARTING DATA
+        # ------------------------------------------------------------
+
+        event_type = self.env['event.type'].browse(self.event_type_complex.id)
         event_type.write({
             'use_mail_schedule': False,
+            'use_ticket': False,
         })
         self.assertEqual(event_type.event_type_mail_ids, self.env['event.type.mail'])
+        self.assertEqual(event_type.event_type_ticket_ids, self.env['event.type.ticket'])
 
         event = self.env['event.event'].create({
             'name': 'Event Update Type',
@@ -136,22 +98,79 @@ class TestEventData(TestEventCommon):
         self.assertFalse(event.seats_limited)
         self.assertFalse(event.auto_confirm)
         self.assertEqual(event.event_mail_ids, self.env['event.mail'])
+        self.assertEqual(event.event_ticket_ids, self.env['event.event.ticket'])
 
+        registration = self._create_registrations(event, 1)
+        self.assertEqual(registration.state, 'draft')  # event is not auto confirm
+
+        # ------------------------------------------------------------
+        # FILL SYNC TEST
+        # ------------------------------------------------------------
+
+        # change template to a one with mails -> fill event as it is void
         event_type.write({
             'use_mail_schedule': True,
             'event_type_mail_ids': [(5, 0), (0, 0, {
                 'interval_nbr': 1, 'interval_unit': 'days', 'interval_type': 'before_event',
-                'template_id': self.env['ir.model.data'].xmlid_to_res_id('event.event_reminder')})]
+                'template_id': self.env['ir.model.data'].xmlid_to_res_id('event.event_reminder')})],
+            'use_ticket': True,
+            'event_type_ticket_ids': [(5, 0), (0, 0, {'name': 'TestRegistration'})],
         })
         event.write({'event_type_id': event_type.id})
         self.assertEqual(event.date_tz, 'Europe/Paris')
         self.assertTrue(event.seats_limited)
         self.assertEqual(event.seats_max, event_type.seats_max)
         self.assertTrue(event.auto_confirm)
+        # check 2many fields being populated
+        self.assertEqual(len(event.event_mail_ids), 1)
         self.assertEqual(event.event_mail_ids.interval_nbr, 1)
         self.assertEqual(event.event_mail_ids.interval_unit, 'days')
         self.assertEqual(event.event_mail_ids.interval_type, 'before_event')
         self.assertEqual(event.event_mail_ids.template_id, self.env.ref('event.event_reminder'))
+        self.assertEqual(len(event.event_ticket_ids), 1)
+        event_ticket1 = event.event_ticket_ids[0]
+        self.assertEqual(event_ticket1.name, 'TestRegistration')
+
+        # ------------------------------------------------------------
+        # RESET TEST
+        # ------------------------------------------------------------
+
+        # link registration to ticket
+        registration.write({'event_ticket_id': event_ticket1.id})
+        self.assertEqual(registration.event_ticket_id, event_ticket1)
+
+        # change template to a void one for mails -> reset event lines that are void
+        # change template to a one with other tickets -> keep line linked to a registration
+        event_type.write({
+            'use_mail_schedule': False,
+            'event_type_mail_ids': [(5, 0)],
+            'event_type_ticket_ids': [(5, 0),
+                                      (0, 0, {'name': 'Registration1'}),
+                                      (0, 0, {'name': 'Registration2'})],
+        })
+        event._compute_event_ticket_ids()
+        event._compute_event_mail_ids()
+        self.assertEqual(event.event_mail_ids, self.env['event.mail'])
+        self.assertEqual(len(event.event_ticket_ids), 3)
+        self.assertEqual(
+            set(event.mapped('event_ticket_ids.name')),
+            set(['TestRegistration', 'Registration1', 'Registration2'])
+        )
+        # registration loose its ticket
+        self.assertEqual(registration.event_ticket_id, event_ticket1)
+
+        # change template to a one with different mails -> reset event
+        event_type.write({
+            'use_mail_schedule': True,
+            'event_type_mail_ids': [(5, 0), (0, 0, {
+                'interval_nbr': 3, 'interval_unit': 'days', 'interval_type': 'after_event',
+                'template_id': self.env['ir.model.data'].xmlid_to_res_id('event.event_reminder')})]
+        })
+        event._compute_event_ticket_ids()
+        event._compute_event_mail_ids()
+        self.assertEqual(len(event.event_mail_ids), 1)
+        self.assertEqual(event.event_mail_ids.interval_nbr, 3)
+        self.assertEqual(event.event_mail_ids.interval_type, 'after_event')
 
     @users('user_eventmanager')
     def test_event_registrable(self):
@@ -234,6 +253,49 @@ class TestEventData(TestEventCommon):
         self.assertTrue(event_2.is_ongoing)
         finished_or_upcoming_event_ids = self.env['event.event']._search([('is_ongoing', '=', False)])
         self.assertNotIn(event_2.id, finished_or_upcoming_event_ids)
+
+    @users('user_eventmanager')
+    def test_event_seats(self):
+        event_type = self.event_type_complex.with_user(self.env.user)
+        event = self.env['event.event'].create({
+            'name': 'Event Update Type',
+            'event_type_id': event_type.id,
+            'date_begin': FieldsDatetime.to_string(datetime.today() + timedelta(days=1)),
+            'date_end': FieldsDatetime.to_string(datetime.today() + timedelta(days=15)),
+        })
+
+        self.assertEqual(event.address_id, self.env.user.company_id.partner_id)
+        # seats: coming from event type configuration
+        self.assertTrue(event.seats_limited)
+        self.assertEqual(event.seats_available, event.event_type_id.seats_max)
+        self.assertEqual(event.seats_unconfirmed, 0)
+        self.assertEqual(event.seats_reserved, 0)
+        self.assertEqual(event.seats_used, 0)
+        self.assertEqual(event.seats_expected, 0)
+
+        # create registration in order to check the seats computation
+        self.assertTrue(event.auto_confirm)
+        for x in range(5):
+            reg = self.env['event.registration'].create({
+                'event_id': event.id,
+                'name': 'reg_open',
+            })
+            self.assertEqual(reg.state, 'open')
+        reg_draft = self.env['event.registration'].create({
+            'event_id': event.id,
+            'name': 'reg_draft',
+        })
+        reg_draft.write({'state': 'draft'})
+        reg_done = self.env['event.registration'].create({
+            'event_id': event.id,
+            'name': 'reg_done',
+        })
+        reg_done.write({'state': 'done'})
+        self.assertEqual(event.seats_available, event.event_type_id.seats_max - 6)
+        self.assertEqual(event.seats_unconfirmed, 1)
+        self.assertEqual(event.seats_reserved, 5)
+        self.assertEqual(event.seats_used, 1)
+        self.assertEqual(event.seats_expected, 7)
 
 
 class TestEventTicketData(TestEventCommon):

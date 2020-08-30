@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
+import json
 import logging
+import pprint
 import werkzeug
 
 from odoo import http
@@ -52,3 +54,9 @@ class StripeController(http.Controller):
     @http.route('/payment/stripe/s2s/process_payment_intent', type='json', auth='public', csrf=False)
     def stripe_s2s_process_payment_intent(self, **post):
         return request.env['payment.transaction'].sudo().form_feedback(post, 'stripe')
+
+    @http.route('/payment/stripe/webhook', type='json', auth='public', csrf=False)
+    def stripe_webhook(self, **kwargs):
+        data = json.loads(request.httprequest.data)
+        request.env['payment.acquirer'].sudo()._handle_stripe_webhook(data)
+        return 'OK'

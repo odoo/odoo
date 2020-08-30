@@ -70,24 +70,6 @@
             </field>
         </record>
 
-        <record id="hr_employee_view_kanban" model="ir.ui.view">
-            <field name="name">hr.employee.view.kanban</field>
-            <field name="model">hr.employee</field>
-            <field name="inherit_id" ref="hr.hr_kanban_view_employees"/>
-            <field name="arch" type="xml">
-                <data>
-                    <xpath expr="//div[hasclass('o_kanban_record_headings')]" position="after">
-                    <field name="contract_warning" invisible="1"/>
-                        <t t-if="record.contract_warning.raw_value">
-                            <i class="fa fa-exclamation-triangle text-danger" role="img"
-                            title="There is something wrong with the contract. Either there is no running contract for this employee or employee's contract is about to expire."
-                            aria-label="There is something wrong with the contract. Either there is no running contract for this employee or employee's contract is about to expire."></i>
-                        </t>
-                    </xpath>
-                </data>
-            </field>
-        </record>
-
         <record id="hr_employee_view_search" model="ir.ui.view">
             <field name="name">hr.employee.view.search</field>
             <field name="model">hr.employee</field>
@@ -195,7 +177,7 @@
                     </group>
                     <notebook>
                         <page string="Contract Details" name="other">
-                            <group string="Notes">
+                            <group name="notes_group" string="Notes">
                                 <field name="notes" nolabel="1"/>
                             </group>
                         </page>
@@ -214,9 +196,9 @@
                     </notebook>
                     </sheet>
                     <div class="oe_chatter">
-                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
-                        <field name="activity_ids" widget="mail_activity"/>
-                        <field name="message_ids" widget="mail_thread"/>
+                        <field name="message_follower_ids" groups="base.group_user"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
                     </div>
                 </form>
             </field>
@@ -226,7 +208,7 @@
             <field name="name">hr.contract.tree</field>
             <field name="model">hr.contract</field>
             <field name="arch" type="xml">
-                <tree string="Contracts" multi_edit="1">
+                <tree string="Contracts" multi_edit="1" sample="1">
                     <field name="name" readonly="1"/>
                     <field name="employee_id" readonly="1" widget="many2one_avatar_employee"/>
                     <field name="job_id"/>
@@ -246,7 +228,7 @@
             <field name="name">hr.contract.kanban</field>
             <field name="model">hr.contract</field>
             <field name="arch" type="xml">
-                <kanban class="o_kanban_small_column" default_order="date_end">
+                <kanban class="o_kanban_small_column" default_order="date_end" sample="1">
                     <field name="employee_id"/>
                     <field name="activity_state"/>
                     <field name="state"/>

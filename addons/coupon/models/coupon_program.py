@@ -139,16 +139,8 @@ class CouponProgram(models.Model):
         else:
             return True
 
-    def _is_valid_product(self, product):
-        # NOTE: if you override this method, think of also overriding _get_valid_products
-        if self.rule_products_domain:
-            domain = ast.literal_eval(self.rule_products_domain) + [('id', '=', product.id)]
-            return bool(self.env['product.product'].search_count(domain))
-        else:
-            return True
-
     def _get_valid_products(self, products):
         if self.rule_products_domain:
-            domain = ast.literal_eval(self.rule_products_domain) + [('id', 'in', products.ids)]
-            return self.env['product.product'].search(domain)
+            domain = ast.literal_eval(self.rule_products_domain)
+            return products.filtered_domain(domain)
         return products

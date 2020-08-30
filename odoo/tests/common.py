@@ -132,7 +132,7 @@ def new_test_user(env, login='', groups='base.group_user', context=None, **kwarg
     if context is None:
         context = {}
 
-    groups_id = [(6, 0, [env.ref(g).id for g in groups.split(',')])]
+    groups_id = [(6, 0, [env.ref(g.strip()).id for g in groups.split(',')])]
     create_values = dict(kwargs, login=login, groups_id=groups_id)
     if not create_values.get('name'):
         create_values['name'] = '%s (%s)' % (login, groups)
@@ -381,7 +381,7 @@ class BaseCase(TreeCase, MetaCase('DummyCase', (object,), {})):
             return self._assertRaises(exception, **kwargs)
 
     @contextmanager
-    def assertQueries(self, expected):
+    def assertQueries(self, expected, flush=True):
         """ Check the queries made by the current cursor. ``expected`` is a list
         of strings representing the expected queries being made. Query strings
         are matched against each other, ignoring case and whitespaces.
@@ -396,9 +396,16 @@ class BaseCase(TreeCase, MetaCase('DummyCase', (object,), {})):
         def get_unaccent_wrapper(cr):
             return lambda x: x
 
+        if flush:
+            self.env.user.flush()
+            self.env.cr.precommit()
+
         with patch('odoo.sql_db.Cursor.execute', execute):
             with patch('odoo.osv.expression.get_unaccent_wrapper', get_unaccent_wrapper):
                 yield actual_queries
+                if flush:
+                    self.env.user.flush()
+                    self.env.cr.precommit()
 
         self.assertEqual(
             len(actual_queries), len(expected),
@@ -1227,15 +1234,14 @@ class ChromeBrowser():
             return m[0]
         return replacer
 
-class HttpCase(TransactionCase):
-    """ Transactional HTTP TestCase with url_open and Chrome headless helpers.
-    """
+
+class HttpCaseCommon(BaseCase):
     registry_test_mode = True
     browser = None
     browser_size = '1366x768'
 
     def __init__(self, methodName='runTest'):
-        super(HttpCase, self).__init__(methodName)
+        super().__init__(methodName)
         # v8 api with correct xmlrpc exception handling.
         self.xmlrpc_url = url_8 = 'http://%s:%d/xmlrpc/2/' % (HOST, odoo.tools.config['http_port'])
         self.xmlrpc_common = xmlrpclib.ServerProxy(url_8 + 'common')
@@ -1243,6 +1249,14 @@ class HttpCase(TransactionCase):
         self.xmlrpc_object = xmlrpclib.ServerProxy(url_8 + 'object')
         cls = type(self)
         cls._logger = logging.getLogger('%s.%s' % (cls.__module__, cls.__name__))
+
+    def setUp(self):
+        super().setUp()
+        if self.registry_test_mode:
+            self.registry.enter_test_mode(self.cr)
+            self.addCleanup(self.registry.leave_test_mode)
+        # setup an url opener helper
+        self.opener = requests.Session()
 
     @classmethod
     def start_browser(cls):
@@ -1256,20 +1270,6 @@ class HttpCase(TransactionCase):
         if cls.browser:
             cls.browser.stop()
             cls.browser = None
-
-    def setUp(self):
-        super(HttpCase, self).setUp()
-        if self.registry_test_mode:
-            self.registry.enter_test_mode(self.cr)
-            self.addCleanup(self.registry.leave_test_mode)
-        # setup a magic session_id that will be rollbacked
-        self.session = odoo.http.root.session_store.new()
-        self.session_id = self.session.sid
-        self.session.db = get_db_name()
-        odoo.http.root.session_store.save(self.session)
-        # setup an url opener helper
-        self.opener = requests.Session()
-        self.opener.cookies['session_id'] = self.session_id
 
     def url_open(self, url, data=None, files=None, timeout=10, headers=None, allow_redirects=True):
         self.env['base'].flush()
@@ -1305,34 +1305,44 @@ class HttpCase(TransactionCase):
         odoo.http.root.session_store.save(self.session)
 
     def authenticate(self, user, password):
-        # stay non-authenticated
-        if user is None:
-            if self.session:
-                odoo.http.root.session_store.delete(self.session)
-            self.browser.delete_cookie('session_id', domain=HOST)
-            return
-
         db = get_db_name()
-        uid = self.registry['res.users'].authenticate(db, user, password, None)
-        env = api.Environment(self.cr, uid, {})
+        if getattr(self, 'session', None):
+            odoo.http.root.session_store.delete(self.session)
 
-        # self.session.authenticate(db, user, password, uid=uid)
-        # OpenERPSession.authenticate accesses the current request, which we
-        # don't have, so reimplement it manually...
-        session = self.session
-
+        self.session = session  = odoo.http.root.session_store.new()
         session.db = db
-        session.uid = uid
-        session.login = user
-        session.session_token = uid and security.compute_session_token(session, env)
-        session.context = dict(env['res.users'].context_get() or {})
-        session.context['uid'] = uid
-        session._fix_lang(session.context)
+
+        if user: # if authenticated
+            uid = self.registry['res.users'].authenticate(db, user, password, {'interactive': False})
+            env = api.Environment(self.cr, uid, {})
+            session.uid = uid
+            session.login = user
+            session.session_token = uid and security.compute_session_token(session, env)
+            session.context = dict(env['res.users'].context_get() or {})
+            session.context['uid'] = uid
+            session._fix_lang(session.context)
 
         odoo.http.root.session_store.save(session)
+        # Reset the opener: turns out when we set cookies['foo'] we're really
+        # setting a cookie on domain='' path='/'.
+        #
+        # But then our friendly neighborhood server might set a cookie for
+        # domain='localhost' path='/' (with the same value) which is considered
+        # a *different* cookie following ours rather than the same.
+        #
+        # When we update our cookie, it's done in-place, so the server-set
+        # cookie is still present and (as it follows ours and is more precise)
+        # very likely to still be used, therefore our session change is ignored.
+        #
+        # An alternative would be to set the cookie to None (unsetting it
+        # completely) or clear-ing session.cookies.
+        self.opener = requests.Session()
+        self.opener.cookies['session_id'] = session.sid
         if self.browser:
             self._logger.info('Setting session cookie in browser')
-            self.browser.set_cookie('session_id', self.session_id, '/', HOST)
+            self.browser.set_cookie('session_id', session.sid, '/', HOST)
+
+        return session
 
     def browser_js(self, url_path, code, ready='', login=None, timeout=60, **kw):
         """ Test js code running in the browser
@@ -1402,13 +1412,23 @@ class HttpCase(TransactionCase):
         `browser_js` can be passed as keyword arguments."""
         step_delay = ', %s' % step_delay if step_delay else ''
         code = kwargs.pop('code', "odoo.startTour('%s'%s)" % (tour_name, step_delay))
-        ready = kwargs.pop('ready', "odoo.__DEBUG__.services['web_tour.tour'].tours.%s.ready" % tour_name)
+        ready = kwargs.pop('ready', "odoo.__DEBUG__.services['web_tour.tour'].tours['%s'].ready" % tour_name)
         res = self.browser_js(url_path=url_path, code=code, ready=ready, **kwargs)
         # some tests read the result after the tour, and as  the tour does not
         # use this environment's cache, invalidate it to fetch the data from the
         # database
         self.env.cache.invalidate()
         return res
+
+
+class HttpCase(HttpCaseCommon, TransactionCase):
+    """ Transactional HTTP TestCase with url_open and Chrome headless helpers.
+    """
+    pass
+
+
+class HttpSavepointCase(HttpCaseCommon, SavepointCase):
+    pass
 
 
 def users(*logins):
@@ -1656,7 +1676,7 @@ class Form(object):
             order.append(fname)
 
             modifiers[fname] = {
-                modifier: domain if isinstance(domain, bool) else normalize_domain(domain)
+                modifier: bool(domain) if isinstance(domain, int) else normalize_domain(domain)
                 for modifier, domain in json.loads(f.get('modifiers', '{}')).items()
             }
             ctx = f.get('context')
@@ -1675,42 +1695,12 @@ class Form(object):
 
     def _init_from_defaults(self, model):
         vals = self._values
-        fields = self._view['fields']
-        def cleanup(k, v):
-            if fields[k]['type'] == 'one2many':
-                return [
-                    # use None as "empty" value for UPDATE instead of {}
-                    (1, c[1], None) if c[0] == 1 and not c[2] else c
-                    for c in v
-                    if c[0] != 6 # o2m default gets a (6) at the start, nonsensical
-                ]
-            elif fields[k]['type'] == 'datetime' and isinstance(v, datetime):
-                return odoo.fields.Datetime.to_string(v)
-            elif fields[k]['type'] == 'date' and isinstance(v, date):
-                return odoo.fields.Datetime.to_string(v)
+        vals.clear()
+        vals['id'] = False
 
-            return v
-        defaults = {
-            k: cleanup(k, v)
-            for k, v in model.default_get(list(fields)).items()
-            if k in fields
-        }
-        vals.update(defaults)
-        # m2m should all be rep'd as command list
-        for k, v in vals.items():
-            if not v:
-                type_ = fields[k]['type']
-                if type_ == 'many2many':
-                    vals[k] = [(6, False, [])]
-                elif type_ == 'one2many':
-                    vals[k] = []
-                elif type_ in ('integer', 'float'):
-                    vals[k] = 0
-
-        # on creation, every field is considered changed by the client
-        # apparently
-        # and fields should be sent in view order, not whatever fields_view_get['fields'].keys() is
-        self._perform_onchange(self._view['fields_ordered'])
+        # call onchange with an empty list of fields; this retrieves default
+        # values, applies onchanges and return the result
+        self._perform_onchange([])
 
     def _init_from_values(self, values):
         self._values.update(
@@ -1909,6 +1899,9 @@ class Form(object):
         """
         values = {}
         for f in fields:
+            if f == 'id':
+                continue
+
             get_modifier = functools.partial(
                 self._get_modifier,
                 f, modmap=view['modifiers'],
@@ -1921,8 +1914,8 @@ class Form(object):
                 if get_modifier('required'):
                     raise AssertionError("{} is a required field ({})".format(f, view['modifiers'][f]))
 
-            # skip unmodified fields unless all_fields (also always ignore id)
-            if f == 'id' or not (all_fields or f in changed):
+            # skip unmodified fields unless all_fields
+            if not (all_fields or f in changed):
                 continue
 
             if get_modifier('readonly'):
@@ -1977,7 +1970,7 @@ class Form(object):
         # skip calling onchange() if there's no trigger on any of the changed
         # fields
         spec = self._view['onchange']
-        if not any(spec[f] for f in fields):
+        if fields and not any(spec[f] for f in fields):
             return
 
         record = self._model.browse(self._values.get('id'))
@@ -1992,7 +1985,7 @@ class Form(object):
         self._values.update(
             (k, self._cleanup_onchange(
                 self._view['fields'][k],
-                v, self._values[k],
+                v, self._values.get(k),
             ))
             for k, v in values.items()
             if k in self._view['fields']
@@ -2067,7 +2060,7 @@ class Form(object):
                         stored = UpdateDict(record_to_values(subfields, record))
 
                     updates = (
-                        (k, self._cleanup_onchange(subfields[k], v, None))
+                        (k, self._cleanup_onchange(subfields[k], v, stored.get(k)))
                         for k, v in command[2].items()
                         if k in subfields
                     )

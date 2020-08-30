@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Events Organization',
-    'version': '1.2',
+    'version': '1.3',
     'website': 'https://www.odoo.com/page/events',
     'category': 'Marketing/Events',
     'summary': 'Trainings, Conferences, Meetings, Exhibitions, Registrations',
@@ -37,6 +37,7 @@ Key Features
     'demo': [
         'data/res_users_demo.xml',
         'data/res_partner_demo.xml',
+        'data/event_demo_misc.xml',
         'data/event_demo.xml',
         'data/event_registration_demo.xml',
     ],

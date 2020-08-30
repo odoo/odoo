@@ -43,12 +43,12 @@ var PaymentAdyen = PaymentInterface.extend({
         return Promise.reject(data); // prevent subsequent onFullFilled's from being called
     },
 
-    _call_adyen: function (data) {
+    _call_adyen: function (data, test_endpoint, live_endpoint) {
         var self = this;
         return rpc.query({
             model: 'pos.payment.method',
             method: 'proxy_adyen_request',
-            args: [data, this.payment_method.adyen_test_mode, this.payment_method.adyen_api_key],
+            args: [data, this.payment_method.adyen_test_mode, this.payment_method.adyen_api_key, test_endpoint, live_endpoint],
         }, {
             // When a payment terminal is disconnected it takes Adyen
             // a while to return an error (~6s). So wait 10 seconds
@@ -207,6 +207,15 @@ var PaymentAdyen = PaymentInterface.extend({
                     var config = self.pos.config;
                     var payment_response = notification.SaleToPOIResponse.PaymentResponse;
                     var payment_result = payment_response.PaymentResult;
+
+                    var cashier_receipt = payment_response.PaymentReceipt.find(function (receipt) {
+                        return receipt.DocumentQualifier == 'CashierReceipt';
+                    });
+
+                    if (cashier_receipt) {
+                        line.set_cashier_receipt(self._convert_receipt_info(cashier_receipt.OutputContent.OutputText));
+                    }
+
                     var customer_receipt = payment_response.PaymentReceipt.find(function (receipt) {
                         return receipt.DocumentQualifier == 'CustomerReceipt';
                     });
@@ -223,6 +232,7 @@ var PaymentAdyen = PaymentInterface.extend({
 
                     line.transaction_id = additional_response.get('pspReference');
                     line.card_type = additional_response.get('cardType');
+                    line.cardholder_name = additional_response.get('cardHolderName') || '';
                     resolve(true);
                 } else {
                     var message = additional_response.get('message');

@@ -155,7 +155,7 @@
                             <page string="Integrations" invisible="1" name="mail_channel_integrations"></page>
                         </notebook>
                         <div class="oe_chatter" groups="base.group_no_one">
-                            <field name="message_follower_ids" widget="mail_followers"/>
+                            <field name="message_follower_ids"/>
                         </div>
                     </sheet>
                 </form>
@@ -197,16 +197,12 @@
             name="Channels" action="mail_channel_action_view"
             groups="base.group_no_one"/>
 
-
-
     <record id="action_discuss" model="ir.actions.client">
-            <field name="name">Discuss</field>
-            <field name="tag">mail.discuss</field>
-            <field name="res_model">mail.channel</field>
-            <field name="params" eval="&quot;{
-                'default_active_id': 'mailbox_inbox'
-            }&quot;"/>
-        </record>
+        <field name="name">Discuss</field>
+        <field name="tag">mail.widgets.discuss</field>
+        <field name="res_model">mail.channel</field>
+        <field name="params" eval="&quot;{ 'default_active_id': 'mail.box_inbox' }&quot;"/>
+    </record>
 
     <menuitem
         id="mail.menu_root_discuss"
@@ -214,7 +210,8 @@
         action="action_discuss"
         web_icon="mail,static/description/icon.png"
         groups="base.group_user"
-        sequence="1"/>
+        sequence="1"
+    />
 
     <!--
         This menuitem will be activated by integrations modules (like github, twitter, ...). It

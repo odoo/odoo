@@ -55,7 +55,7 @@ odoo.define('pos_restaurant.SplitBillScreen', function(require) {
             } else {
                 this._setQuantityOnCurrentOrder();
 
-                this.newOrder.set_screen_data('screen', { name: 'PaymentScreen' });
+                this.newOrder.set_screen_data({ name: 'PaymentScreen' });
 
                 // for the kitchen printer we assume that everything
                 // has already been sent to the kitchen before splitting
@@ -72,7 +72,7 @@ odoo.define('pos_restaurant.SplitBillScreen', function(require) {
                 this.newOrder.set_customer_count(1);
                 const newCustomerCount = this.currentOrder.get_customer_count() - 1;
                 this.currentOrder.set_customer_count(newCustomerCount || 1);
-                this.currentOrder.set_screen_data('screen', { name: 'ProductScreen' });
+                this.currentOrder.set_screen_data({ name: 'ProductScreen' });
 
                 this.env.pos.get('orders').add(this.newOrder);
                 this.env.pos.set('selectedOrder', this.newOrder);

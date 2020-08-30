@@ -45,6 +45,7 @@
             <rng:optional><rng:attribute name="decoration-success"/></rng:optional>
             <rng:optional><rng:attribute name="decoration-warning"/></rng:optional>
             <rng:optional><rng:attribute name="banner_route"/></rng:optional>
+            <rng:optional><rng:attribute name="sample"/></rng:optional>
             <rng:optional>
                 <rng:attribute name="limit">
                     <rng:data type="int"/>
@@ -66,6 +67,11 @@
             <rng:optional><rng:attribute name="expand"/></rng:optional>
             <rng:zeroOrMore>
                 <rng:choice>
+                    <rng:element name="header">
+                        <rng:zeroOrMore>
+                            <rng:ref name="button"/>
+                        </rng:zeroOrMore>
+                    </rng:element>
                     <rng:ref name="control"/>
                     <rng:ref name="field"/>
                     <rng:ref name="separator"/>

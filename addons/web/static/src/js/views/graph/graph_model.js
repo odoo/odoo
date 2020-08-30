@@ -34,8 +34,8 @@ return AbstractModel.extend({
      * @override
      * @returns {Object}
      */
-    get: function () {
-        return _.extend({}, this.chart);
+    __get: function () {
+        return Object.assign({ isSample: this.isSampleModel }, this.chart);
     },
     /**
      * Initial loading.
@@ -57,7 +57,7 @@ return AbstractModel.extend({
      * @returns {Promise} The promise does not return a handle, we don't need
      *   to keep track of various entities.
      */
-    load: function (params) {
+    __load: function (params) {
         var groupBys = params.context.graph_groupbys || params.groupBys;
         this.initialGroupBys = groupBys;
         this.fields = params.fields;
@@ -97,7 +97,7 @@ return AbstractModel.extend({
      * @param {Object} [params.timeRanges]
      * @returns {Promise}
      */
-    reload: function (handle, params) {
+    __reload: function (handle, params) {
         if ('context' in params) {
             this.chart.context = params.context;
             this.chart.groupBy = params.context.graph_groupbys || this.chart.groupBy;
@@ -165,7 +165,12 @@ return AbstractModel.extend({
             this.chart.comparisonFieldIndex = -1;
         }
     },
-
+    /**
+     * @override
+     */
+    _isEmpty() {
+        return this.chart.dataPoints.length === 0;
+    },
     /**
      * Fetch and process graph data.  It is basically a(some) read_group(s)
      * with correct fields for each domain.  We have to do some light processing

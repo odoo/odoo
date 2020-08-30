@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from lxml import etree
+
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError, RedirectWarning
 
@@ -8,7 +10,9 @@ from odoo.exceptions import UserError, ValidationError, RedirectWarning
 class Project(models.Model):
     _inherit = "project.project"
 
-    allow_timesheets = fields.Boolean("Timesheets", default=True, help="Enable timesheeting on the project.")
+    allow_timesheets = fields.Boolean(
+        "Timesheets", compute='_compute_allow_timesheets', store=True, readonly=False,
+        default=True, help="Enable timesheeting on the project.")
     analytic_account_id = fields.Many2one(
         # note: replaces ['|', ('company_id', '=', False), ('company_id', '=', company_id)]
         domain="""[
@@ -16,38 +20,27 @@ class Project(models.Model):
             ('partner_id', '=?', partner_id),
         ]"""
     )
-    allow_timesheet_timer = fields.Boolean(
-        'Timesheet Timer',
-        compute='_compute_allow_timesheet_timer',
-        readonly=False,
-        store=True,
-        help="Use a timer to record timesheets on tasks")
 
     timesheet_ids = fields.One2many('account.analytic.line', 'project_id', 'Associated Timesheets')
     timesheet_encode_uom_id = fields.Many2one('uom.uom', related='company_id.timesheet_encode_uom_id')
     total_timesheet_time = fields.Integer(
         compute='_compute_total_timesheet_time',
         help="Total number of time (in the proper UoM) recorded in the project, rounded to the unit.")
+    encode_uom_in_days = fields.Boolean(compute='_compute_encode_uom_in_days')
 
-    _sql_constraints = [
-        ('timer_only_when_timesheet', "CHECK((allow_timesheets = 'f' AND allow_timesheet_timer = 'f') OR (allow_timesheets = 't'))", 'The timesheet timer can only be activated on project allowing timesheets.'),
-    ]
+    def _compute_encode_uom_in_days(self):
+        self.encode_uom_in_days = self.env.company.timesheet_encode_uom_id == self.env.ref('uom.product_uom_day')
 
-    @api.onchange('analytic_account_id')
-    def _onchange_analytic_account(self):
-        if not self.analytic_account_id and self._origin:
-            self.allow_timesheets = False
+    @api.depends('analytic_account_id')
+    def _compute_allow_timesheets(self):
+        without_account = self.filtered(lambda t: not t.analytic_account_id and t._origin)
+        without_account.update({'allow_timesheets': False})
 
     @api.constrains('allow_timesheets', 'analytic_account_id')
     def _check_allow_timesheet(self):
         for project in self:
             if project.allow_timesheets and not project.analytic_account_id:
-                raise ValidationError(_('To allow timesheet, your project %s should have an analytic account set.' % (project.name,)))
-
-    @api.depends('allow_timesheets')
-    def _compute_allow_timesheet_timer(self):
-        for project in self:
-            project.allow_timesheet_timer = project.allow_timesheets
+                raise ValidationError(_('To allow timesheet, your project %s should have an analytic account set.', project.name))
 
     @api.depends('timesheet_ids')
     def _compute_total_timesheet_time(self):
@@ -61,39 +54,27 @@ class Project(models.Model):
             total_time *= project.timesheet_encode_uom_id.factor
             project.total_timesheet_time = int(round(total_time))
 
-    @api.model
-    def name_create(self, name):
-        """ Create a project with name_create should generate analytic account creation """
-        values = {
-            'name': name,
-            'allow_timesheets': True,
-        }
-        return self.create(values).name_get()[0]
-
-    @api.model
-    def create(self, values):
+    @api.model_create_multi
+    def create(self, vals_list):
         """ Create an analytic account if project allow timesheet and don't provide one
             Note: create it before calling super() to avoid raising the ValidationError from _check_allow_timesheet
         """
-        allow_timesheets = values['allow_timesheets'] if 'allow_timesheets' in values else self.default_get(['allow_timesheets'])['allow_timesheets']
-        if allow_timesheets and not values.get('analytic_account_id'):
-            analytic_account = self._create_analytic_account_from_values(values)
-            values['analytic_account_id'] = analytic_account.id
-        return super(Project, self).create(values)
+        defaults = self.default_get(['allow_timesheets', 'analytic_account_id'])
+        for values in vals_list:
+            allow_timesheets = values.get('allow_timesheets', defaults.get('allow_timesheets'))
+            analytic_account_id = values.get('analytic_account_id', defaults.get('analytic_account_id'))
+            if allow_timesheets and not analytic_account_id:
+                analytic_account = self._create_analytic_account_from_values(values)
+                values['analytic_account_id'] = analytic_account.id
+        return super(Project, self).create(vals_list)
 
     def write(self, values):
         # create the AA for project still allowing timesheet
-        if values.get('allow_timesheets'):
+        if values.get('allow_timesheets') and not values.get('analytic_account_id'):
             for project in self:
-                if not project.analytic_account_id and not values.get('analytic_account_id'):
+                if not project.analytic_account_id:
                     project._create_analytic_account()
-        result = super(Project, self).write(values)
-        if 'allow_timesheet_timer' in values and not values.get('allow_timesheet_timer'):
-            self.with_context(active_test=False).mapped('task_ids').write({
-                'timer_start': False,
-                'timer_pause': False,
-            })
-        return result
+        return super(Project, self).write(values)
 
     @api.model
     def _init_data_analytic_account(self):
@@ -120,7 +101,7 @@ class Project(models.Model):
 
 class Task(models.Model):
     _name = "project.task"
-    _inherit = ["project.task", "timer.mixin"]
+    _inherit = "project.task"
 
     analytic_account_active = fields.Boolean("Active Analytic Account", compute='_compute_analytic_account_active')
     allow_timesheets = fields.Boolean("Allow timesheets", related='project_id.allow_timesheets', help="Timesheets can be logged on this task.", readonly=True)
@@ -131,35 +112,13 @@ class Task(models.Model):
     overtime = fields.Float(compute='_compute_progress_hours', store=True)
     subtask_effective_hours = fields.Float("Sub-tasks Hours Spent", compute='_compute_subtask_effective_hours', store=True, help="Time spent on the sub-tasks (and their own sub-tasks) of this task.")
     timesheet_ids = fields.One2many('account.analytic.line', 'task_id', 'Timesheets')
+    encode_uom_in_days = fields.Boolean(compute='_compute_encode_uom_in_days', default=lambda self: self._uom_in_days())
 
-    # YTI FIXME: Those field seems quite useless
-    timesheet_timer_first_start = fields.Datetime("Timesheet Timer First Use", readonly=True)
-    timesheet_timer_last_stop = fields.Datetime("Timesheet Timer Last Use", readonly=True)
-    display_timesheet_timer = fields.Boolean("Display Timesheet Time", compute='_compute_display_timesheet_timer')
+    def _uom_in_days(self):
+        return self.env.company.timesheet_encode_uom_id == self.env.ref('uom.product_uom_day')
 
-    display_timer_start_secondary = fields.Boolean(compute='_compute_display_timer_buttons')
-
-    @api.depends('display_timesheet_timer', 'timer_start', 'timer_pause', 'total_hours_spent')
-    def _compute_display_timer_buttons(self):
-        for task in self:
-            displays = super()._compute_display_timer_buttons()
-            start_p, start_s, stop, pause, resume = displays['start_p'], displays['start_p'], displays['stop'], displays['pause'], displays['resume']
-            if not task.display_timesheet_timer:
-                start_p, start_s, stop, pause, resume = False, False, False, False, False
-            else:
-                if not task.timer_start:
-                    stop, pause, resume = False, False, False
-                    if not task.total_hours_spent:
-                        start_s = False
-                    else:
-                        start_p = False
-            task.write({
-                'display_timer_start_primary': start_p,
-                'display_timer_start_secondary': start_s,
-                'display_timer_stop': stop,
-                'display_timer_pause': pause,
-                'display_timer_resume': resume,
-            })
+    def _compute_encode_uom_in_days(self):
+        self.encode_uom_in_days = self._uom_in_days()
 
     @api.depends('project_id.analytic_account_id.active')
     def _compute_analytic_account_active(self):
@@ -201,11 +160,6 @@ class Task(models.Model):
         for task in self:
             task.subtask_effective_hours = sum(child_task.effective_hours + child_task.subtask_effective_hours for child_task in task.child_ids)
 
-    @api.depends('allow_timesheets', 'project_id.allow_timesheet_timer', 'analytic_account_active')
-    def _compute_display_timesheet_timer(self):
-        for task in self:
-            task.display_timesheet_timer = task.allow_timesheets and task.project_id.allow_timesheet_timer and task.analytic_account_active
-
     def action_view_subtask_timesheet(self):
         self.ensure_one()
         tasks = self._get_all_subtasks()
@@ -223,7 +177,7 @@ class Task(models.Model):
 
     def write(self, values):
         # a timesheet must have an analytic account (and a project)
-        if 'project_id' in values and self and not values.get('project_id'):
+        if 'project_id' in values and not values.get('project_id') and self._get_timesheet():
             raise UserError(_('This task must be part of a project because there are some timesheets linked to it.'))
         res = super(Task, self).write(values)
 
@@ -239,9 +193,17 @@ class Task(models.Model):
         if self.env.context.get('hr_timesheet_display_remaining_hours'):
             name_mapping = dict(super().name_get())
             for task in self:
-                if task.allow_timesheets and task.planned_hours > 0:
+                if task.allow_timesheets and task.planned_hours > 0 and task.encode_uom_in_days:
+                    days_left = _("(%s days remaining)") % task._convert_hours_to_days(task.remaining_hours)
+                    name_mapping[task.id] = name_mapping.get(task.id, '') + " ‒ " + days_left
+                elif task.allow_timesheets and task.planned_hours > 0:
                     hours, mins = (str(int(duration)).rjust(2, '0') for duration in divmod(abs(task.remaining_hours) * 60, 60))
-                    hours_left = _("(%s%s:%s remaining)") % ('-' if task.remaining_hours < 0 else '', hours, mins)
+                    hours_left = _(
+                        "(%(sign)s%(hours)s:%(minutes)s remaining)",
+                        sign='-' if task.remaining_hours < 0 else '',
+                        hours=hours,
+                        minutes=mins,
+                    )
                     name_mapping[task.id] = name_mapping.get(task.id, '') + " ‒ " + hours_left
             return list(name_mapping.items())
         return super().name_get()
@@ -251,36 +213,23 @@ class Task(models.Model):
         """ Set the correct label for `unit_amount`, depending on company UoM """
         result = super(Task, self)._fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
         result['arch'] = self.env['account.analytic.line']._apply_timesheet_label(result['arch'])
+
+        if view_type == 'tree' and self.env.company.timesheet_encode_uom_id == self.env.ref('uom.product_uom_day'):
+            result['arch'] = self._apply_time_label(result['arch'])
         return result
 
-    def action_timer_start(self):
-        if not self.user_timer_id.timer_start and self.display_timesheet_timer:
-            super(Task, self).action_timer_start()
+    @api.model
+    def _apply_time_label(self, view_arch):
+        doc = etree.XML(view_arch)
+        encoding_uom = self.env.company.timesheet_encode_uom_id
 
-    def action_timer_stop(self):
-        # timer was either running or paused
-        if self.user_timer_id.timer_start and self.display_timesheet_timer:
-            minutes_spent = super().action_timer_stop()
-            minimum_duration = int(self.env['ir.config_parameter'].sudo().get_param('hr_timesheet.timesheet_min_duration', 0))
-            rounding = int(self.env['ir.config_parameter'].sudo().get_param('hr_timesheet.timesheet_rounding', 0))
-            minutes_spent = self._timer_rounding(minutes_spent, minimum_duration, rounding)
-            return self._action_create_timesheet(minutes_spent * 60 / 3600)
-        return False
-
-    def _action_create_timesheet(self, time_spent):
-        return {
-            "name": _("Validate Spent Time"),
-            "type": 'ir.actions.act_window',
-            "res_model": 'project.task.create.timesheet',
-            "views": [[False, "form"]],
-            "target": 'new',
-            "context": {
-                **self.env.context,
-                'active_id': self.id,
-                'active_model': self._name,
-                'default_time_spent': time_spent,
-            },
-        }
+        for node in doc.xpath("//field[@name='planned_hours'][@widget='timesheet_uom'][not(@string)]"):
+            node.set('string', _('Planned %s') % encoding_uom.name or '')
+        for node in doc.xpath("//field[@name='effective_hours'][@widget='timesheet_uom'][not(@string)]"):
+            node.set('string', _('%s Spent') % encoding_uom.name or '')
+        for node in doc.xpath("//field[@name='remaining_hours'][@widget='timesheet_uom'][not(@string)]"):
+            node.set('string', _('Remaining %s') % encoding_uom.name or '')
+        return etree.tostring(doc, encoding='unicode')
 
     def unlink(self):
         """
@@ -299,3 +248,8 @@ class Task(models.Model):
                 warning_msg, self.env.ref('hr_timesheet.timesheet_action_task').id,
                 _('See timesheet entries'), {'active_ids': tasks_with_timesheets.ids})
         return super(Task, self).unlink()
+
+    def _convert_hours_to_days(self, time):
+        uom_hour = self.env.ref('uom.product_uom_hour')
+        uom_day = self.env.ref('uom.product_uom_day')
+        return round(uom_hour._compute_quantity(time, uom_day, raise_if_failure=False), 2)

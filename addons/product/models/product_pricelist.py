@@ -73,7 +73,7 @@ class Pricelist(models.Model):
             # regular search() to apply ACLs - may limit results below limit in some cases
             pricelist_ids = self._search([('id', 'in', ids)], limit=limit, access_rights_uid=name_get_uid)
             if pricelist_ids:
-                return models.lazy_name_get(self.browse(pricelist_ids).with_user(name_get_uid))
+                return pricelist_ids
         return super(Pricelist, self)._name_search(name, args, operator=operator, limit=limit, name_get_uid=name_get_uid)
 
     def _compute_price_rule_multi(self, products_qty_partner, date=False, uom_id=False):
@@ -408,7 +408,7 @@ class PricelistItem(models.Model):
              "Expressed in the default unit of measure of the product.")
     applied_on = fields.Selection([
         ('3_global', 'All Products'),
-        ('2_product_category', ' Product Category'),
+        ('2_product_category', 'Product Category'),
         ('1_product', 'Product'),
         ('0_product_variant', 'Product Variant')], "Apply On",
         default='3_global', required=True,
@@ -519,9 +519,9 @@ class PricelistItem(models.Model):
                         ),
                     )
             elif item.compute_price == 'percentage':
-                item.price = _("%s %% discount") % (item.percent_price)
+                item.price = _("%s %% discount", item.percent_price)
             else:
-                item.price = _("%s %% discount and %s surcharge") % (item.price_discount, item.price_surcharge)
+                item.price = _("%(percentage)s %% discount and %(price)s surcharge", percentage=item.price_discount, price=item.price_surcharge)
 
     @api.onchange('compute_price')
     def _onchange_compute_price(self):

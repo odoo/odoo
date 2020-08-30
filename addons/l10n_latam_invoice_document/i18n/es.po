@@ -4,7 +4,7 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 13.3alpha1+e\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-03-30 18:44+0000\n"
 "PO-Revision-Date: 2020-03-30 18:44+0000\n"
@@ -38,10 +38,10 @@ msgid ""
 "identify the kind of document we are working with. (not only related to "
 "account.move, could be for documents of other models like stock.picking)"
 msgstr ""
-"Análogo a al campo Tipo en la factura pero con mas opciones permitiendo "
-"indentificar el tipo de documento con el que estamos trabajando (no solo "
-"relacionado a la factura, puede ser para documentos de otros modelos como "
-"los movimientos de inventario)."
+"Análogo a account.move.type de Odoo pero con más opciones, permitiendo "
+"identificar el tipo de documento sobre el que estamos trabajando. (no "
+"solamente relativo a account.move, podría ser relativo a otros modelos, como"
+" por ejemplo stock.picking)"
 
 #. module: l10n_latam_invoice_document
 #: model_terms:ir.ui.view,arch_db:l10n_latam_invoice_document.view_document_type_filter
@@ -70,9 +70,13 @@ msgstr "País"
 
 #. module: l10n_latam_invoice_document
 #: model:ir.model.fields,field_description:l10n_latam_invoice_document.field_account_journal__l10n_latam_country_code
-#: model:ir.model.fields,field_description:l10n_latam_invoice_document.field_account_move__l10n_latam_country_code
 msgid "Country Code"
 msgstr "Código País"
+
+#. module: l10n_latam_invoice_document
+#: model:ir.model.fields,field_description:l10n_latam_invoice_document.field_account_move__l10n_latam_country_code
+msgid "Country Code (LATAM)"
+msgstr "Código País (LATAM)"
 
 #. module: l10n_latam_invoice_document
 #: model:ir.model.fields,help:l10n_latam_invoice_document.field_l10n_latam_document_type__country_id
@@ -359,7 +363,7 @@ msgstr ""
 #: code:addons/l10n_latam_invoice_document/models/account_move.py:0
 #, python-format
 msgid "We do not accept the usage of document types on receipts yet. "
-msgstr "Aun no aceptamos el uso de tipos de documentos en  recepciones"
+msgstr "Todavía no aceptamos el uso de tipos de documentos en los recibos."
 
 #. module: l10n_latam_invoice_document
 #: code:addons/l10n_latam_invoice_document/models/account_journal.py:0
@@ -391,5 +395,5 @@ msgid ""
 "You can only reverse documents with legal invoicing documents from Latin America one at a time.\n"
 "Problematic documents: %s"
 msgstr ""
-"Sólo puedes revertir un documento a la vez para aquellos documentos de America Latina.\n"
-"Documentos problemáticos: %s"
+"Solo puede revertir documentos con documentos de facturación legales de Latino américa de uno en uno.\n"
+"Documentos problemáticos:%s"

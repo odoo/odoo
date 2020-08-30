@@ -4,7 +4,7 @@
 {
     'name': 'Forum',
     'category': 'Website/Website',
-    'sequence': 150,
+    'sequence': 265,
     'summary': 'Manage a forum with FAQ and Q&A',
     'version': '1.0',
     'description': """

@@ -11,6 +11,7 @@ var AbstractRenderer = require('web.AbstractRenderer');
 var config = require('web.config');
 var core = require('web.core');
 var dom = require('web.dom');
+const session = require('web.session');
 const utils = require('web.utils');
 var widgetRegistry = require('web.widget_registry');
 
@@ -18,6 +19,7 @@ const { WidgetAdapterMixin } = require('web.OwlCompatibility');
 const FieldWrapper = require('web.FieldWrapper');
 
 var qweb = core.qweb;
+const _t = core._t;
 
 var BasicRenderer = AbstractRenderer.extend(WidgetAdapterMixin, {
     custom_events: {
@@ -98,8 +100,10 @@ var BasicRenderer = AbstractRenderer.extend(WidgetAdapterMixin, {
             if (!canBeSaved) {
                 invalidFields.push(widget.name);
             }
-            widget.$el.toggleClass('o_field_invalid', !canBeSaved);
-            widget.$el.attr('aria-invalid', !canBeSaved);
+            if (widget.el) { // widget may not be started yet
+                widget.$el.toggleClass('o_field_invalid', !canBeSaved);
+                widget.$el.attr('aria-invalid', !canBeSaved);
+            }
         });
         return invalidFields;
     },
@@ -140,7 +144,7 @@ var BasicRenderer = AbstractRenderer.extend(WidgetAdapterMixin, {
      */
     confirmChange: function (state, id, fields, ev) {
         var self = this;
-        this.state = state;
+        this._setState(state);
         var record = this._getRecord(id);
         if (!record) {
             return this._render().then(_.constant([]));
@@ -415,10 +419,14 @@ var BasicRenderer = AbstractRenderer.extend(WidgetAdapterMixin, {
     _getTooltipOptions: function (widget) {
         return {
             title: function () {
-                return qweb.render('WidgetLabel.tooltip', {
-                    debug: config.isDebug(),
-                    widget: widget,
-                });
+                let help = widget.attrs.help || widget.field.help || '';
+                if (session.display_switch_company_menu && widget.field.company_dependent) {
+                    help += (help ? '\n\n' : '') + _t('Values set here are company-specific.');
+                }
+                const debug = config.isDebug();
+                if (help || debug) {
+                    return qweb.render('WidgetLabel.tooltip', { debug, help, widget });
+                }
             }
         };
     },
@@ -449,7 +457,7 @@ var BasicRenderer = AbstractRenderer.extend(WidgetAdapterMixin, {
      * @returns {boolean}
      */
     _hasContent: function () {
-        return this.state.count !== 0;
+        return this.state.count !== 0 && (!('isSample' in this.state) || !this.state.isSample);
     },
     /**
      * Force the resequencing of the records after moving one of them to a given
@@ -640,25 +648,25 @@ var BasicRenderer = AbstractRenderer.extend(WidgetAdapterMixin, {
         return modifiersData.evaluatedModifiers[record.id];
     },
     /**
-     * Render the view
-     *
      * @override
-     * @returns {Promise}
      */
-    _render: function () {
-        var oldAllFieldWidgets = this.allFieldWidgets;
+    async _render() {
+        const oldAllFieldWidgets = this.allFieldWidgets;
         this.allFieldWidgets = {}; // TODO maybe merging allFieldWidgets and allModifiersData into "nodesData" in some way could be great
         this.allModifiersData = [];
-        var oldWidgets = this.widgets;
+        const oldWidgets = this.widgets;
         this.widgets = [];
-        return this._renderView().then(function () {
-            _.each(oldAllFieldWidgets, function (recordWidgets) {
-                _.each(recordWidgets, function (widget) {
-                    widget.destroy();
-                });
-            });
-            _.invoke(oldWidgets, 'destroy');
-        });
+
+        await this._super(...arguments);
+
+        for (const id in oldAllFieldWidgets) {
+            for (const widget of oldAllFieldWidgets[id]) {
+                widget.destroy();
+            }
+        }
+        for (const widget of oldWidgets) {
+            widget.destroy();
+        }
     },
     /**
      * Instantiates the appropriate AbstractField specialization for the given
@@ -752,38 +760,6 @@ var BasicRenderer = AbstractRenderer.extend(WidgetAdapterMixin, {
         });
 
         return $el;
-    },
-    /**
-     * Renders the nocontent helper.
-     *
-     * This method is a helper for renderers that want to display a help
-     * message when no content is available.
-     *
-     * @private
-     * @returns {jQueryElement}
-     */
-    _renderNoContentHelper: function () {
-        var $noContent =
-            $('<div>').html(this.noContentHelp).addClass('o_nocontent_help');
-        return $('<div>')
-            .addClass('o_view_nocontent')
-            .append($noContent);
-    },
-    /**
-     * Actual rendering. Supposed to be overridden by concrete renderers.
-     * The basic responsabilities of _renderView are:
-     * - use the xml arch of the view to render a jQuery representation
-     * - instantiate a widget from the registry for each field in the arch
-     *
-     * Note that the 'state' field should contains all necessary information
-     * for the rendering. The field widgets should be as synchronous as
-     * possible.
-     *
-     * @abstract
-     * @returns {Promise}
-     */
-    _renderView: function () {
-        return Promise.resolve();
     },
     /**
      * Instantiate custom widgets

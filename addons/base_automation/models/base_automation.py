@@ -164,7 +164,7 @@ class BaseAutomation(models.Model):
         if '__action_done' not in self._context:
             self = self.with_context(__action_done={})
         domain = [('model_name', '=', records._name), ('trigger', 'in', triggers)]
-        actions = self.with_context(active_test=True).search(domain)
+        actions = self.with_context(active_test=True).sudo().search(domain)
         return actions.with_env(self.env)
 
     def _get_eval_context(self):
@@ -258,7 +258,7 @@ class BaseAutomation(models.Model):
                         'domain_post': domain_post,
                     }
                     try:
-                        self.action_server_id.with_context(**ctx).run()
+                        self.action_server_id.sudo().with_context(**ctx).run()
                     except Exception as e:
                         self._add_postmortem_action(e)
                         raise e
@@ -304,6 +304,8 @@ class BaseAutomation(models.Model):
             def create(self, vals_list, **kw):
                 # retrieve the action rules to possibly execute
                 actions = self.env['base.automation']._get_actions(self, ['on_create', 'on_create_or_write'])
+                if not actions:
+                    return create.origin(self, vals_list, **kw)
                 # call original method
                 records = create.origin(self.with_env(actions.env), vals_list, **kw)
                 # check postconditions, and execute actions on the records that satisfy them
@@ -318,6 +320,8 @@ class BaseAutomation(models.Model):
             def write(self, vals, **kw):
                 # retrieve the action rules to possibly execute
                 actions = self.env['base.automation']._get_actions(self, ['on_write', 'on_create_or_write'])
+                if not (actions and self):
+                    return write.origin(self, vals, **kw)
                 records = self.with_env(actions.env)
                 # check preconditions on records
                 pre = {action: action._filter_pre(records) for action in actions}
@@ -349,6 +353,9 @@ class BaseAutomation(models.Model):
                 # retrieve the action rules to possibly execute
                 actions = self.env['base.automation']._get_actions(self, ['on_write', 'on_create_or_write'])
                 records = self.filtered('id').with_env(actions.env)
+                if not (actions and records):
+                    _compute_field_value.origin(self, field)
+                    return True
                 # check preconditions on records
                 pre = {action: action._filter_pre(records) for action in actions}
                 # read old values before the update

@@ -15,7 +15,7 @@ FormEditorRegistry.add('create_customer', {
         name: 'email',
         string: 'Your Email',
     }, {
-        type: 'char',
+        type: 'tel',
         name: 'phone',
         string: 'Phone Number',
     }, {

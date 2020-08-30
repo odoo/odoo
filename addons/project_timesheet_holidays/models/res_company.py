@@ -23,27 +23,39 @@ class Company(models.Model):
                     raise ValidationError(_('The Internal Project of a company should be in that company.'))
 
     def init(self):
-        self.search([('leave_timesheet_project_id', '=', False)])._create_leave_project_task()
-
-    @api.model_create_multi
-    def create(self, values):
-        company = super(Company, self).create(values)
-        # use sudo as the user could have the right to create a company
-        # but not to create a project. On the other hand, when the company
-        # is created, it is not in the allowed_company_ids on the env
-        company.sudo()._create_leave_project_task()
-        return company
-
-    def _create_leave_project_task(self):
-        for company in self:
+        for company in self.search([('leave_timesheet_project_id', '=', False)]):
             company = company.with_company(company)
-            if not company.leave_timesheet_project_id:
-                project = company.env['project.project'].sudo().create({
-                    'name': _('Internal Project'),
+            project = company.env['project.project'].search([
+                ('name', '=', _('Internal')),
+                ('allow_timesheets', '=', True),
+                ('company_id', '=', company.id),
+            ], limit=1)
+            if not project:
+                project = company.env['project.project'].create({
+                    'name': _('Internal'),
                     'allow_timesheets': True,
+                    'company_id': company.id,
+                })
+            company.write({
+                'leave_timesheet_project_id': project.id,
+            })
+            if not company.leave_timesheet_task_id:
+                task = company.env['project.task'].create({
+                    'name': _('Time Off'),
+                    'project_id': company.leave_timesheet_project_id.id,
                     'active': False,
                     'company_id': company.id,
                 })
+                company.write({
+                    'leave_timesheet_task_id': task.id,
+                })
+
+    def _create_internal_project_task(self):
+        projects = super()._create_internal_project_task()
+        for project in projects:
+            company = project.company_id
+            company = company.with_company(company)
+            if not company.leave_timesheet_project_id:
                 company.write({
                     'leave_timesheet_project_id': project.id,
                 })

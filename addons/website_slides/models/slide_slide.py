@@ -118,12 +118,12 @@ class Slide(models.Model):
     _description = 'Slides'
     _mail_post_access = 'read'
     _order_by_strategy = {
-        'sequence': 'sequence asc',
+        'sequence': 'sequence asc, id asc',
         'most_viewed': 'total_views desc',
         'most_voted': 'likes desc',
         'latest': 'date_published desc',
     }
-    _order = 'sequence asc, is_category asc'
+    _order = 'sequence asc, is_category asc, id asc'
 
     # description
     name = fields.Char('Title', required=True, translate=True)
@@ -336,7 +336,9 @@ class Slide(models.Model):
             elif record.slide_type == 'video' and record.document_id:
                 if not record.mime_type:
                     # embed youtube video
-                    record.embed_code = '<iframe src="//www.youtube.com/embed/%s?theme=light" allowFullScreen="true" frameborder="0"></iframe>' % (record.document_id)
+                    query = urls.url_parse(record.url).query
+                    query = query + '&theme=light' if query else 'theme=light'
+                    record.embed_code = '<iframe src="//www.youtube.com/embed/%s?%s" allowFullScreen="true" frameborder="0"></iframe>' % (record.document_id, query)
                 else:
                     # embed google doc video
                     record.embed_code = '<iframe src="//drive.google.com/file/d/%s/preview" allowFullScreen="true" frameborder="0"></iframe>' % (record.document_id)
@@ -460,7 +462,17 @@ class Slide(models.Model):
     def unlink(self):
         if self.question_ids and self.channel_id.channel_partner_ids:
             raise UserError(_("People already took this quiz. To keep course progression it should not be deleted."))
+        for category in self.filtered(lambda slide: slide.is_category):
+            category.channel_id._move_category_slides(category, False)
         super(Slide, self).unlink()
+
+    def toggle_active(self):
+        # archiving/unarchiving a channel does it on its slides, too
+        to_archive = self.filtered(lambda slide: slide.active)
+        res = super(Slide, self).toggle_active()
+        if to_archive:
+            to_archive.filtered(lambda slide: not slide.is_category).is_published = False
+        return res
 
     # ---------------------------------------------------------
     # Mail/Rating
@@ -506,11 +518,19 @@ class Slide(models.Model):
             publish_template = slide.channel_id.publish_template_id
             html_body = publish_template.with_context(base_url=base_url)._render_field('body_html', slide.ids)[slide.id]
             subject = publish_template._render_field('subject', slide.ids)[slide.id]
+            # We want to use the 'reply_to' of the template if set. However, `mail.message` will check
+            # if the key 'reply_to' is in the kwargs before calling _get_reply_to. If the value is
+            # falsy, we don't include it in the 'message_post' call.
+            kwargs = {}
+            reply_to = publish_template._render_field('reply_to', slide.ids)[slide.id]
+            if reply_to:
+                kwargs['reply_to'] = reply_to
             slide.channel_id.with_context(mail_create_nosubscribe=True).message_post(
                 subject=subject,
                 body=html_body,
                 subtype_xmlid='website_slides.mt_channel_slide_published',
                 email_layout_xmlid='mail.mail_notification_light',
+                **kwargs,
             )
         return True
 
@@ -528,7 +548,7 @@ class Slide(models.Model):
         mail_ids = []
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         for record in self:
-            template = self.channel_id.share_template_id.with_context(
+            template = record.channel_id.share_template_id.with_context(
                 user=self.env.user,
                 email=email,
                 base_url=base_url,
@@ -793,7 +813,7 @@ class Slide(models.Model):
         if error == 'keyInvalid':
             return _('Your Google API key is invalid, please update it into your settings.\nSettings > Website > Features > API Key')
 
-        return _('Could not fetch data from url. Document or access right not available:\n%s') % error
+        return _('Could not fetch data from url. Document or access right not available:\n%s', error)
 
     @api.model
     def _parse_google_document(self, document_id, only_preview_fields):

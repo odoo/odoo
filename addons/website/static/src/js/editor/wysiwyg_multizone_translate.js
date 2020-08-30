@@ -72,6 +72,7 @@ var AttributeTranslateDialog = Dialog.extend({
 var WysiwygTranslate = WysiwygMultizone.extend({
     custom_events: _.extend({}, WysiwygMultizone.prototype.custom_events || {}, {
         ready_to_save: '_onSave',
+        rte_change: '_onChange',
     }),
 
     /**
@@ -125,7 +126,9 @@ var WysiwygTranslate = WysiwygMultizone.extend({
             self.$editables_attr = self._getEditableArea().filter('.o_translatable_attribute');
             self.$editables_attribute = $('.o_editable_translatable_attribute');
 
-            self.$editables_attribute.on('change', self._onChange.bind(self));
+            self.$editables_attribute.on('change', function () {
+                self.trigger_up('rte_change', {target: this});
+            });
 
             self._markTranslatableNodes();
         });
@@ -199,11 +202,11 @@ var WysiwygTranslate = WysiwygMultizone.extend({
      * @param {Jquery Event} [ev]
      */
     _onChange: function (ev) {
-        var $node = $(ev && ev.target || this._getFocusedEditable());
+        var $node = $(ev.data.target);
         if (!$node.length) {
             return;
         }
-        $node.find('p').each(function () { // remove <p/> element which might have been inserted because of copy-paste
+        $node.find('div,p').each(function () { // remove P,DIV elements which might have been inserted because of copy-paste
             var $p = $(this);
             $p.after($p.html()).remove();
         });

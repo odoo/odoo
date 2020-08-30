@@ -1,22 +1,28 @@
-odoo.define('pos_restaurant.BackToFloorButton', function(require) {
+odoo.define('pos_restaurant.BackToFloorButton', function (require) {
     'use strict';
 
     const PosComponent = require('point_of_sale.PosComponent');
-    const { useListener } = require('web.custom_hooks');
     const Registries = require('point_of_sale.Registries');
+    const { posbus } = require('point_of_sale.utils');
 
     class BackToFloorButton extends PosComponent {
-        constructor() {
-            super(...arguments);
-            useListener('click', this._backToFloorScreen);
+        mounted() {
+            posbus.on('table-set', this, this.render);
+        }
+        willUnmount() {
+            posbus.on('table-set', this);
         }
         get table() {
-            return this.props.table;
+            return (this.env.pos && this.env.pos.table) || null;
         }
         get floor() {
-            return this.props.table.floor;
+            const table = this.table;
+            return table ? table.floor : null;
         }
-        async _backToFloorScreen() {
+        get hasTable() {
+            return this.table !== null;
+        }
+        backToFloorScreen() {
             this.showScreen('FloorScreen', { floor: this.floor });
         }
     }

@@ -16,7 +16,7 @@ odoo.define('web.PivotModel', function (require) {
  * Basicaly the pivot table presents aggregated values for various groups of records
  * in one domain. If a comparison is asked for, two domains are considered.
  *
- * Let us consider a simple example and let us fix the vocabulary:
+ * Let us consider a simple example and let us fix the vocabulary (let us suppose we are in June 2020):
  * ___________________________________________________________________________________________________________________________________________
  * |                    |   Total                                                                                                             |
  * |                    |_____________________________________________________________________________________________________________________|
@@ -24,14 +24,14 @@ odoo.define('web.PivotModel', function (require) {
  * |                    |_______________________________________|______________________________________|______________________________________|
  * |                    |   Sales total                         |  Sales total                         |  Sales total                         |
  * |                    |_______________________________________|______________________________________|______________________________________|
- * |                    |   This Month | Last Month | Variation |  This Month | Last Month | Variation |  This Month | Last Month | Variation |
+ * |                    |   May 2020   | June 2020  | Variation |  May 2020   | June 2020  | Variation |  May 2020   | June 2020  | Variation |
  * |____________________|______________|____________|___________|_____________|____________|___________|_____________|____________|___________|
- * | Total              |    110       |     85     |  29.4%    |     30      |    40      |   -25%    |    140      |    125     |     12%   |
- * |    Europe          |     35       |     25     |    40%    |     30      |    40      |   -25%    |     65      |     65     |      0%   |
- * |        Brussels    |     15       |      0     |   100%    |     30      |    30      |     0%    |     45      |     30     |     50%   |
- * |        Paris       |     20       |     25     |   -20%    |      0      |    10      |  -100%    |     20      |     35     |  -42.8%   |
- * |    North America   |     75       |     60     |    25%    |             |            |           |     75      |     60     |     25%   |
- * |        Washington  |     75       |     60     |    25%    |             |            |           |     75      |     60     |     25%   |
+ * | Total              |     85       |     110    |  29.4%    |     40      |    30      |   -25%    |    125      |    140     |     12%   |
+ * |    Europe          |     25       |     35     |    40%    |     40      |    30      |   -25%    |     65      |     65     |      0%   |
+ * |        Brussels    |      0       |     15     |   100%    |     30      |    30      |     0%    |     30      |     45     |     50%   |
+ * |        Paris       |     25       |     20     |   -20%    |     10      |     0      |  -100%    |     35      |     20     |  -42.8%   |
+ * |    North America   |     60       |     75     |    25%    |             |            |           |     60      |     75     |     25%   |
+ * |        Washington  |     60       |     75     |    25%    |             |            |           |     60      |     75     |     25%   |
  * |____________________|______________|____________|___________|_____________|____________|___________|_____________|____________|___________|
  *
  *
@@ -49,7 +49,7 @@ odoo.define('web.PivotModel', function (require) {
  *
  * The measure is the field 'sales_total'.
  *
- * Two domains are considered: 'This Month' and 'Last Month'.
+ * Two domains are considered: 'May 2020' and 'June 2020'.
  *
  * In the model,
  *
@@ -57,9 +57,9 @@ odoo.define('web.PivotModel', function (require) {
  *      - colGroupBys is the list [sale_team_id]
  *      - measures is the list [sales_total]
  *      - domains is the list [d1, d2] with d1 and d2 domain expressions
- *          for say sale_date in this month and last month, for instance
- *          d1 = [['sale_date', >=, 2019-05-01], ['sale_date', '<', 2019-05-31]]
- *      - origins is the list ['This Month', 'Last Month']
+ *          for say sale_date in May 2020 and June 2020, for instance
+ *          d1 = [['sale_date', >=, 2020-05-01], ['sale_date', '<=', 2020-05-31]]
+ *      - origins is the list ['May 2020', 'June 2020']
  *
  * DATA:
  *
@@ -116,7 +116,7 @@ odoo.define('web.PivotModel', function (require) {
  * A given list is thus of the form [f1,..., fi, g1,..., gj] or better [[f1,...,fi], [g1,...,gj]]
  *
  * For each list of fields possible and each domain considered, one read_group is done
- * and gives results of the form (an exceptions for list [])
+ * and gives results of the form (an exception for list [])
  *
  * g = {
  *  f1: v1, ..., fi: vi,
@@ -132,10 +132,10 @@ odoo.define('web.PivotModel', function (require) {
  * For example, g = {
  *      continent_id: [1, 'Europe']
  *      sale_team_id: [1, 'Sale Team 1']
- *      sales_count: 35,
+ *      sales_count: 25,
  *      __count: 4
  *      __domain: [
- *                  ['sale_date', >=, 2019-05-01], ['sale_date', '<', 2019-05-31],
+ *                  ['sale_date', >=, 2020-05-01], ['sale_date', '<=', 2020-05-31],
  *                  ['continent_id', '=', 1],
  *                  ['sale_team_id', '=', 1]
  *                ]
@@ -256,9 +256,9 @@ odoo.define('web.PivotModel', function (require) {
  *
  *              In the example:
  *                  {
- *                      "[[], []]": [{'sales_total': 110}, {'sales_total': 85}]                      (total/total)
+ *                      "[[], []]": [{'sales_total': 125}, {'sales_total': 140}]                      (total/total)
  *                      ...
- *                      "[[1, 2], [2]]": [{'sales_total': 0}, {'sales_total': 10}]                   (Europe/Paris/Sale Team 2)
+ *                      "[[1, 2], [2]]": [{'sales_total': 10}, {'sales_total': 0}]                   (Europe/Paris/Sale Team 2)
  *                      ...
  *                  }
  *
@@ -325,6 +325,7 @@ var PivotModel = AbstractModel.extend({
     closeGroup: function (groupId, type) {
         var groupBys;
         var expandedGroupBys;
+        let keyPart;
         var group;
         var tree;
         if (type === 'row') {
@@ -332,12 +333,35 @@ var PivotModel = AbstractModel.extend({
             expandedGroupBys = this.data.expandedRowGroupBys;
             tree = this.rowGroupTree;
             group = this._findGroup(this.rowGroupTree, groupId[0]);
+            keyPart = 0;
         } else {
             groupBys = this.data.colGroupBys;
             expandedGroupBys = this.data.expandedColGroupBys;
             tree = this.colGroupTree;
             group = this._findGroup(this.colGroupTree, groupId[1]);
+            keyPart = 1;
         }
+
+        const groupIdPart = groupId[keyPart];
+        const range = groupIdPart.map((_, index) => index);
+        function keep(key) {
+            const idPart = JSON.parse(key)[keyPart];
+            return range.some(index => groupIdPart[index] !== idPart[index]) ||
+                    idPart.length ===  groupIdPart.length;
+        }
+        function omitKeys(object) {
+            const newObject = {};
+            for (const key in object) {
+                if (keep(key)) {
+                    newObject[key] = object[key];
+                }
+            }
+            return newObject;
+        }
+        this.measurements = omitKeys(this.measurements);
+        this.counts = omitKeys(this.counts);
+        this.groupDomains = omitKeys(this.groupDomains);
+
         group.directSubTrees.clear();
         delete group.sortedKeys;
         var newGroupBysLength = this._getTreeHeight(tree) - 1;
@@ -497,7 +521,7 @@ var PivotModel = AbstractModel.extend({
      * @param {boolean} [options.raw=false]
      * @returns {Object}
      */
-    get: function (options) {
+    __get: function (options) {
         options = options || {};
         var raw = options.raw || false;
         var groupBys = this._getGroupBys();
@@ -507,13 +531,16 @@ var PivotModel = AbstractModel.extend({
             domain: this.data.domain,
             fields: this.fields,
             hasData: this._hasData(),
+            isSample: this.isSampleModel,
             measures: this.data.measures,
             origins: this.data.origins,
             rowGroupBys: groupBys.rowGroupBys,
             selectionGroupBys: this._getSelectionGroupBy(groupBys),
+            modelName: this.modelName
         };
         if (!raw && state.hasData) {
             state.table = this._getTable();
+            state.tree = this.rowGroupTree;
         }
         return state;
     },
@@ -544,7 +571,7 @@ var PivotModel = AbstractModel.extend({
      * @param {Object} params.timeRanges
      * @returns {Promise}
      */
-    load: function (params) {
+    __load: function (params) {
         this.initialDomain = params.domain;
         this.initialRowGroupBys = params.context.pivot_row_groupby || params.rowGroupBys;
         this.defaultGroupedBy = params.groupedBy;
@@ -552,6 +579,8 @@ var PivotModel = AbstractModel.extend({
         this.fields = params.fields;
         this.modelName = params.modelName;
         this.groupableFields = params.groupableFields;
+        const measures = this._processMeasures(params.context.pivot_measures) ||
+                            params.measures.map(m => m);
         this.data = {
             expandedRowGroupBys: [],
             expandedColGroupBys: [],
@@ -559,7 +588,7 @@ var PivotModel = AbstractModel.extend({
             context: _.extend({}, session.user_context, params.context),
             groupedBy: params.context.pivot_row_groupby || params.groupedBy,
             colGroupBys: params.context.pivot_column_groupby || params.colGroupBys,
-            measures: this._processMeasures(params.context.pivot_measures) || params.measures,
+            measures,
             timeRanges: params.timeRanges,
         };
         this._computeDerivedParams();
@@ -590,7 +619,7 @@ var PivotModel = AbstractModel.extend({
      * @param {Object} [params.timeRanges]
      * @returns {Promise}
      */
-    reload: function (handle, params) {
+    __reload: function (handle, params) {
         var self = this;
         var oldColGroupBys = this.data.colGroupBys;
         var oldRowGroupBys = this.data.rowGroupBys;
@@ -623,6 +652,11 @@ var PivotModel = AbstractModel.extend({
         if (!_.isEqual(oldColGroupBys, self.data.colGroupBys)) {
             this.data.expandedColGroupBys = [];
         }
+
+        if ('measure' in params) {
+            return this._toggleMeasure(params.measure);
+        }
+
         if (!this._hasData()) {
             return this._loadData();
         }
@@ -665,25 +699,6 @@ var PivotModel = AbstractModel.extend({
         };
 
         this._sortTree(sortFunction, this.rowGroupTree);
-    },
-    /**
-     * Toggle the active state for a given measure, then reload the data
-     * if this turns out to be necessary.
-     *
-     * @param {string} fieldName
-     * @returns {Promise}
-     */
-    toggleMeasure: function (fieldName) {
-        var index = this.data.measures.indexOf(fieldName);
-        if (index !== -1) {
-            this.data.measures.splice(index, 1);
-            // in this case, we already have all data in memory, no need to
-            // actually reload a lesser amount of information
-            return Promise.resolve();
-        } else {
-            this.data.measures.push(fieldName);
-        }
-        return this._loadData();
     },
 
     //--------------------------------------------------------------------------
@@ -763,7 +778,7 @@ var PivotModel = AbstractModel.extend({
             return self.measurements[key][originIndex][measure];
         });
         if (originIndexes.length > 1) {
-            return computeVariation(values[0], values[1]);
+            return computeVariation(values[1], values[0]);
         } else {
             return values[0];
         }
@@ -1245,6 +1260,12 @@ var PivotModel = AbstractModel.extend({
         });
     },
     /**
+     * @override
+     */
+    _isEmpty() {
+        return !this._hasData();
+    },
+    /**
      * Initilize/Reinitialize this.rowGroupTree, colGroupTree, measurements,
      * counts and subdivide the group 'Total' as many times it is necessary.
      * A first subdivision with no groupBy (divisors.slice(0, 1)) is made in
@@ -1396,12 +1417,8 @@ var PivotModel = AbstractModel.extend({
     _computeDerivedParams: function () {
         const { range, rangeDescription, comparisonRange, comparisonRangeDescription } = this.data.timeRanges;
         if (range) {
-            this.data.domains = [this.data.domain.concat(range)];
-            this.data.origins = [rangeDescription];
-            if (comparisonRange) {
-                this.data.domains.push(this.data.domain.concat(comparisonRange));
-                this.data.origins.push(comparisonRangeDescription);
-            }
+            this.data.domains = [this.data.domain.concat(comparisonRange), this.data.domain.concat(range)];
+            this.data.origins = [comparisonRangeDescription, rangeDescription];
         } else {
             this.data.domains = [this.data.domain];
             this.data.origins = [""];
@@ -1431,6 +1448,25 @@ var PivotModel = AbstractModel.extend({
                 self._pruneTree(subTree, oldSubTree);
             }
         });
+    },
+    /**
+     * Toggle the active state for a given measure, then reload the data
+     * if this turns out to be necessary.
+     *
+     * @param {string} fieldName
+     * @returns {Promise}
+     */
+    _toggleMeasure: function (fieldName) {
+        var index = this.data.measures.indexOf(fieldName);
+        if (index !== -1) {
+            this.data.measures.splice(index, 1);
+            // in this case, we already have all data in memory, no need to
+            // actually reload a lesser amount of information
+            return Promise.resolve();
+        } else {
+            this.data.measures.push(fieldName);
+        }
+        return this._loadData();
     },
     /**
      * Extract from a groupBy value a label.

@@ -102,6 +102,8 @@
                     <field name="date"/>
                     <filter string="Draft" name="draft" domain="[('state','=','open')]"/>
                     <filter string="Confirmed" name="confirmed" domain="[('state','=','confirm')]"/>
+                    <separator/>
+                    <filter name="filter_date" date="date"/>
                     <field name="journal_id" domain="[('type', '=', 'bank')]" />
                     <group expand="0" string="Group By">
                         <filter string="Journal" name="journal" context="{'group_by': 'journal_id'}"/>
@@ -126,7 +128,10 @@
                             attrs="{'invisible':['|', '|', ('all_lines_reconciled', '=', False), ('line_ids','=',[]), ('state', '!=', 'posted')]}"/>
                     <button string="Reset to New"
                             name="button_reopen" type="object"
-                            attrs="{'invisible': [('state', '=', 'open')]}"/>
+                            attrs="{'invisible': [('state', '!=', 'posted')]}"/>
+                    <button string="Reset to Processing"
+                            name="button_reprocess" type="object"
+                            attrs="{'invisible': [('state', '!=', 'confirm')]}"/>
                     <button name="%(action_cash_box_out)d" string="Take Money In/Out" type="action" class="oe_highlight" attrs="{'invisible': [('journal_type','!=','cash')]}"/>
                     <field name="state" widget="statusbar" statusbar_visible="open,posted,confirm"/>
                 </header>
@@ -191,6 +196,7 @@
                                     <field name="is_reconciled" invisible="1"/>
                                     <field name="currency_id" invisible="1"/>
                                     <field name="partner_bank_id" invisible="1"/>
+                                    <field name="country_code" invisible="1"/>
 
                                     <!-- Visible fields -->
                                     <field name="sequence" widget="handle"/>
@@ -213,7 +219,7 @@
 
                                     <!-- Buttons -->
                                     <button name="button_undo_reconciliation" type="object"
-                                            attrs="{'invisible': [('is_reconciled', '=', False)]}"
+                                            attrs="{'invisible': [('is_reconciled', '=', False)], 'column_invisible': [('parent.state', '!=', 'posted')]}"
                                             string="Revert reconciliation" icon="fa-undo"/>
                                 </tree>
                             </field>
@@ -229,8 +235,8 @@
                 </sheet>
                 <div class="o_attachment_preview"/>
                 <div class="oe_chatter">
-                    <field name="message_follower_ids" widget="mail_followers"/>
-                    <field name="message_ids" widget="mail_thread"/>
+                    <field name="message_follower_ids"/>
+                    <field name="message_ids"/>
                 </div>
                 </form>
             </field>
@@ -324,16 +330,28 @@
                     <field name="sequence" readonly="1" invisible="1"/>
                     <field name="company_id" invisible="1"/>
                     <field name="journal_id" invisible="1" />
+                    <field name="is_reconciled" invisible="1"/>
+                    <field name="partner_bank_id" invisible="1"/>
+                    <field name="currency_id" invisible="1"/>
 
                     <!-- Displayed fields -->
-                    <field name="statement_id" />
+                    <field name="statement_id" optional="hide"/>
+                    <field name="move_id"/>
                     <field name="date"/>
                     <field name="payment_ref"/>
                     <field name="ref" groups="base.group_no_one"/>
                     <field name="partner_id"/>
                     <field name="amount"/>
+                    <field name="amount_currency" optional="hidden" groups="base.group_multi_currency"/>
+                    <field name="foreign_currency_id" optional="hidden" groups="base.group_multi_currency"/>
+                    <field name="account_number" optional="hidden"/>
                     <field name="transaction_type" optional="hidden"/>
                     <field name="narration" optional="hidden"/>
+
+                    <!-- Buttons -->
+                    <button name="button_undo_reconciliation" type="object"
+                            attrs="{'invisible': [('is_reconciled', '=', False)]}"
+                            string="Revert reconciliation" icon="fa-undo"/>
                 </tree>
             </field>
         </record>
@@ -359,7 +377,7 @@
             <field name="name">account.bank.statement.pivot</field>
             <field name="model">account.bank.statement</field>
             <field name="arch" type="xml">
-                <pivot string="Account Statistics" >
+                <pivot string="Account Statistics" sample="1">
                     <field name="date" type="row"/>
                     <field name="balance_start" type="measure"/>
                     <field name="balance_end" type="measure"/>
@@ -371,7 +389,7 @@
             <field name="name">account.bank.statement.graph</field>
             <field name="model">account.bank.statement</field>
             <field name="arch" type="xml">
-                <graph string="Account Statistics" type="bar">
+                <graph string="Account Statistics" type="bar" sample="1">
                     <field name="date"/>
                     <field name="balance_start" operator="+"/>
                     <field name="balance_end" operator="+"/>

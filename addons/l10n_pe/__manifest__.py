@@ -3,7 +3,7 @@
     'name': 'Peru - Accounting',
     "version": "2.0",
     'summary': "PCGE Simplified",
-    'category': 'Accounting/Localizations',
+    'category': 'Accounting/Localizations/Account Charts',
     'author': 'Vauxoo, Odoo',
     'license': 'LGPL-3',
     'depends': [

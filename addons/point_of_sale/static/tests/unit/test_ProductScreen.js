@@ -65,15 +65,17 @@ odoo.define('point_of_sale.tests.ProductScreen', function (require) {
     });
 
     QUnit.test('NumpadWidget', async function (assert) {
-        assert.expect(23);
+        assert.expect(25);
 
         class Parent extends PosComponent {
             constructor() {
                 super(...arguments);
                 useListener('set-numpad-mode', this.setNumpadMode);
                 useListener('numpad-click-input', this.numpadClickInput);
+                this.state = useState({ mode: 'quantity' });
             }
             setNumpadMode({ detail: { mode } }) {
+                this.state.mode = mode;
                 assert.step(mode);
             }
             numpadClickInput({ detail: { key } }) {
@@ -82,7 +84,7 @@ odoo.define('point_of_sale.tests.ProductScreen', function (require) {
         }
         Parent.env = makePosTestEnv();
         Parent.template = xml/* html */ `
-            <div><NumpadWidget></NumpadWidget></div>
+            <div><NumpadWidget activeMode="state.mode"></NumpadWidget></div>
         `;
 
         const pos = Parent.env.pos;
@@ -93,6 +95,7 @@ odoo.define('point_of_sale.tests.ProductScreen', function (require) {
         // set dummy values in pos.config and pos.get('cashier')
         pos.config = {
             restrict_price_control: false,
+            manual_discount: true
         };
         pos.set('cashier', { role: 'manager' });
 
@@ -161,6 +164,10 @@ odoo.define('point_of_sale.tests.ProductScreen', function (require) {
 
         assert.ok(priceButton.classList.contains('disabled-mode'));
         assert.ok(qtyButton.classList.contains('selected-mode'));
+        // after the cashier is changed, since it is not a manager,
+        // the 'set-numpad-mode' is triggered, setting the mode to
+        // 'quantity'.
+        assert.verifySteps(['quantity']);
 
         // reset old config and cashier values to pos
         pos.config = old_config;
@@ -243,8 +250,10 @@ odoo.define('point_of_sale.tests.ProductScreen', function (require) {
         }
         Parent.env = makePosTestEnv();
         Parent.template = xml/* html */ `
-            <div>
-                <ProductsWidgetControlPanel breadcrumbs="breadcrumbs" subcategories="subcategories" />
+            <div class="pos">
+                <div class="search-bar-portal">
+                    <ProductsWidgetControlPanel breadcrumbs="breadcrumbs" subcategories="subcategories" />
+                </div>
             </div>
         `;
 
@@ -336,7 +345,7 @@ odoo.define('point_of_sale.tests.ProductScreen', function (require) {
             });
         };
 
-        const inputEl = parent.el.querySelector('.searchbox input');
+        const inputEl = parent.el.querySelector('.search-box input');
         await testUtils.dom.triggerEvent(inputEl, 'keyup', { key: 'A' });
         // Triggering keyup event doesn't type the key to the input
         // so we manually assign the value of the input.
@@ -357,7 +366,7 @@ odoo.define('point_of_sale.tests.ProductScreen', function (require) {
         assert.verifySteps(['ABCD']);
 
         // clear the search bar
-        await testUtils.dom.click(parent.el.querySelector('.search-clear.right'));
+        await testUtils.dom.click(parent.el.querySelector('.search-box .clear-icon'));
         await testUtils.nextTick();
         assert.verifySteps(['cleared']);
         assert.ok(inputEl.value === '', 'value of the input element should be empty');

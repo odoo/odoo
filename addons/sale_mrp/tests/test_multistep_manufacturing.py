@@ -10,6 +10,7 @@ class TestMultistepManufacturing(TestMrpCommon):
     def setUp(self):
         super(TestMultistepManufacturing, self).setUp()
 
+        self.env.ref('stock.route_warehouse0_mto').active = True
         self.MrpProduction = self.env['mrp.production']
         # Create warehouse
         warehouse_form = Form(self.env['stock.warehouse'])

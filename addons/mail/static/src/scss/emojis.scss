@@ -1,3 +1,6 @@
+// General variable
+$o-mail-emoji-height: 2rem;
+
 .o_mail_add_emoji {
     float: right;
     margin-bottom: 1rem;
@@ -5,8 +8,8 @@
         .o_mail_emoji {
             cursor: pointer;
             padding: 2px;
-            width: 25px;
-            height: 25px;
+            width: $o-mail-emoji-height;
+            height: $o-mail-emoji-height;
             @include hover-focus() {
                 background-color: grey('100');
             }
@@ -14,11 +17,21 @@
     }
 }
 
+.o_form_view {
+    // Emojis widgets should hide the emoji dropdown button when the field is invisible.
+    // This is necessary because the button is added *after* the main element (and not inside)
+    // (see '_attachEmojisDropdown' for more details)
+    .o_invisible_modifier + .o_mail_add_emoji{
+        display: none !important;
+    }
+}
+
 .o_mail_emojis_dropdown {
-    height: 25px;
+    height: $o-mail-emoji-height;
     width: 40px;
     float: right;
     bottom: 33px;
+    margin-bottom: -$o-mail-emoji-height;
 
     * {
         outline: none!important;

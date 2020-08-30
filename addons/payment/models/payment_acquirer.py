@@ -13,6 +13,7 @@ from odoo.exceptions import ValidationError
 from odoo.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.tools.misc import formatLang
 from odoo.http import request
+from odoo.osv import expression
 
 _logger = logging.getLogger(__name__)
 
@@ -266,8 +267,7 @@ class PaymentAcquirer(models.Model):
             'sequence': 999,
             'type': 'bank',
             'company_id': self.company_id.id,
-            'default_debit_account_id': account.id,
-            'default_credit_account_id': account.id,
+            'default_account_id': account.id,
             # Show the journal on dashboard if the acquirer is published on the website.
             'show_on_dashboard': self.state == 'enabled',
             # Don't show payment methods in the backend.
@@ -343,7 +343,12 @@ class PaymentAcquirer(models.Model):
             company = self.env.company
         if not partner:
             partner = self.env.user.partner_id
-        active_acquirers = self.search([('state', 'in', ['enabled', 'test']), ('company_id', '=', company.id)])
+
+        domain = expression.AND([
+            ['&', ('state', 'in', ['enabled', 'test']), ('company_id', '=', company.id)],
+            ['|', ('country_ids', '=', False), ('country_ids', 'in', [partner.country_id.id])]
+        ])
+        active_acquirers = self.search(domain)
         acquirers = active_acquirers.filtered(lambda acq: (acq.payment_flow == 'form' and acq.view_template_id) or
                                                                (acq.payment_flow == 's2s' and acq.registration_view_template_id))
         return {
@@ -668,7 +673,7 @@ class PaymentTransaction(models.Model):
         self.payment_id = payment
 
         if self.invoice_ids:
-            self.invoice_ids.filtered(lambda move: move.state == 'draft').post()
+            self.invoice_ids.filtered(lambda move: move.state == 'draft')._post()
 
             (payment.line_ids + self.invoice_ids.line_ids)\
                 .filtered(lambda line: line.account_id == payment.destination_account_id and not line.reconciled)\
@@ -808,7 +813,7 @@ class PaymentTransaction(models.Model):
     def _reconcile_after_transaction_done(self):
         # Validate invoices automatically upon the transaction is posted.
         invoices = self.mapped('invoice_ids').filtered(lambda inv: inv.state == 'draft')
-        invoices.post()
+        invoices._post()
 
         # Create & Post the payments.
         for trans in self:
@@ -945,7 +950,7 @@ class PaymentTransaction(models.Model):
     def _check_authorize_state(self):
         failed_tx = self.filtered(lambda tx: tx.state == 'authorized' and tx.acquirer_id.provider not in self.env['payment.acquirer']._get_feature_support()['authorize'])
         if failed_tx:
-            raise exceptions.ValidationError(_('The %s payment acquirers are not allowed to manual capture mode!' % failed_tx.mapped('acquirer_id.name')))
+            raise exceptions.ValidationError(_('The %s payment acquirers are not allowed to manual capture mode!', failed_tx.mapped('acquirer_id.name')))
 
     @api.model
     def create(self, values):
@@ -1085,13 +1090,13 @@ class PaymentTransaction(models.Model):
         return res
 
     def action_capture(self):
-        if any([t.state != 'authorized' for t in self]):
-            raise ValidationError(_('Only transactions having the capture status can be captured.'))
+        if any(t.state != 'authorized' for t in self):
+            raise ValidationError(_('Only transactions having the authorized status can be captured.'))
         for tx in self:
             tx.s2s_capture_transaction()
 
     def action_void(self):
-        if any([t.state != 'authorized' for t in self]):
+        if any(t.state != 'authorized' for t in self):
             raise ValidationError(_('Only transactions having the capture status can be voided.'))
         for tx in self:
             tx.s2s_void_transaction()

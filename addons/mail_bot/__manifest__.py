@@ -3,7 +3,7 @@
 
 {
     'name': 'OdooBot',
-    'version': '1.1',
+    'version': '1.2',
     'category': 'Productivity/Discuss',
     'summary': 'Add OdooBot in discussions',
     'description': "",
@@ -20,6 +20,6 @@
         'data/mailbot_demo.xml',
     ],
     'qweb': [
-        'views/discuss.xml',
+        'static/src/bugfix/bugfix.xml',
     ],
 }

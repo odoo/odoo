@@ -5,7 +5,7 @@ odoo.define('web.FavoriteMenu', function (require) {
     const DropdownMenu = require('web.DropdownMenu');
     const { FACET_ICONS } = require("web.searchUtils");
     const Registry = require('web.Registry');
-    const { useModel } = require('web.model');
+    const { useModel } = require('web/static/src/js/model.js');
 
     /**
      * 'Favorites' menu
@@ -22,7 +22,7 @@ odoo.define('web.FavoriteMenu', function (require) {
         constructor() {
             super(...arguments);
 
-            this.model = useModel('controlPanelModel');
+            this.model = useModel('searchModel');
             this.state.deletedFavorite = false;
         }
 
@@ -41,7 +41,7 @@ odoo.define('web.FavoriteMenu', function (require) {
          * @override
          */
         get items() {
-            const favorites = this.model.getFiltersOfType('favorite');
+            const favorites = this.model.get('filters', f => f.type === 'favorite');
             const registryMenus = this.constructor.registry.values().reduce(
                 (menus, Component) => {
                     if (Component.shouldBeDisplayed(this.env)) {
@@ -91,7 +91,7 @@ odoo.define('web.FavoriteMenu', function (require) {
          * @private
          */
         async _onRemoveFavorite() {
-            await this.model.dispatch('deleteFavorite', this.state.deletedFavorite.id);
+            this.model.dispatch('deleteFavorite', this.state.deletedFavorite.id);
             this.state.deletedFavorite = false;
         }
     }

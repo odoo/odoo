@@ -32,7 +32,7 @@ tags_to_kill = ['base', 'embed', 'frame', 'head', 'iframe', 'link', 'meta',
 tags_to_remove = ['html', 'body']
 
 # allow new semantic HTML5 tags
-allowed_tags = clean.defs.tags | frozenset('article section header footer hgroup nav aside figure main'.split() + [etree.Comment])
+allowed_tags = clean.defs.tags | frozenset('article bdi section header footer hgroup nav aside figure main'.split() + [etree.Comment])
 safe_attrs = clean.defs.safe_attrs | frozenset(
     ['style',
      'data-o-mail-quote',  # quote detection
@@ -255,6 +255,8 @@ def html_sanitize(src, silent=True, sanitize_tags=True, sanitize_attributes=Fals
 
 URL_REGEX = r'(\bhref=[\'"](?!mailto:|tel:|sms:)([^\'"]+)[\'"])'
 TEXT_URL_REGEX = r'https?://[a-zA-Z0-9@:%._\+~#=/-]+(?:\?\S+)?'
+# retrieve inner content of the link
+HTML_TAG_URL_REGEX = URL_REGEX + r'([^<>]*>([^<>]+)<\/)?'
 
 
 def validate_url(url):
@@ -274,7 +276,7 @@ def is_html_empty(html_content):
     """
     if not html_content:
         return True
-    tag_re = re.compile(r'\<\s*\/?(?:p|div|span|br|b|i)\s*\>')
+    tag_re = re.compile(r'\<\s*\/?(?:p|div|span|br|b|i)\s*/?\s*\>')
     return not bool(re.sub(tag_re, '', html_content).strip())
 
 
@@ -425,6 +427,20 @@ def append_content_to_html(html, content, plaintext=True, preserve=False, contai
     if insert_location == -1:
         return '%s%s' % (html, content)
     return '%s%s%s' % (html[:insert_location], content, html[insert_location:])
+
+
+def prepend_html_content(html_body, html_content):
+    """Prepend some HTML content at the beginning of an other HTML content."""
+    html_content = re.sub(r'(?i)(</?(?:html|body|head|!\s*DOCTYPE)[^>]*>)', '', html_content)
+    html_content = html_content.strip()
+
+    insert_index = next(re.finditer(r'<body[^>]*>', html_body), None)
+    if insert_index is None:
+        insert_index = next(re.finditer(r'<html[^>]*>', html_body), None)
+
+    insert_index = insert_index.end() if insert_index else 0
+
+    return html_body[:insert_index] + html_content + html_body[insert_index:]
 
 #----------------------------------------------------------
 # Emails

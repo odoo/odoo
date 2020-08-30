@@ -49,6 +49,8 @@ class PosOrder(models.Model):
             'amount_return':  ui_order['amount_return'],
             'company_id': self.env['pos.session'].browse(ui_order['pos_session_id']).company_id.id,
             'to_invoice': ui_order['to_invoice'] if "to_invoice" in ui_order else False,
+            'is_tipped': ui_order.get('is_tipped', False),
+            'tip_amount': ui_order.get('tip_amount', 0),
         }
 
     @api.model
@@ -58,6 +60,7 @@ class PosOrder(models.Model):
             'payment_date': ui_paymentline['name'],
             'payment_method_id': ui_paymentline['payment_method_id'],
             'card_type': ui_paymentline.get('card_type'),
+            'cardholder_name': ui_paymentline.get('cardholder_name'),
             'transaction_id': ui_paymentline.get('transaction_id'),
             'payment_status': ui_paymentline.get('payment_status'),
             'pos_order_id': order.id,
@@ -177,6 +180,7 @@ class PosOrder(models.Model):
                 'amount': -pos_order['amount_return'],
                 'payment_date': fields.Date.context_today(self),
                 'payment_method_id': cash_payment_method.id,
+                'is_change': True,
             }
             order.add_payment(return_payment_vals)
 
@@ -252,7 +256,8 @@ class PosOrder(models.Model):
     session_move_id = fields.Many2one('account.move', string='Session Journal Entry', related='session_id.move_id', readonly=True, copy=False)
     to_invoice = fields.Boolean('To invoice')
     is_invoiced = fields.Boolean('Is Invoiced', compute='_compute_is_invoiced')
-
+    is_tipped = fields.Boolean('Is this already tipped?', readonly=True)
+    tip_amount = fields.Float(string='Tip Amount', digits=0, readonly=True)
 
     @api.depends('account_move')
     def _compute_is_invoiced(self):
@@ -354,6 +359,15 @@ class PosOrder(models.Model):
             'res_id': self.account_move.id,
         }
 
+    def _is_pos_order_paid(self):
+        return float_is_zero(self._get_rounded_amount(self.amount_total) - self.amount_paid, precision_rounding=self.currency_id.rounding)
+
+    def _get_rounded_amount(self, amount):
+        if self.config_id.cash_rounding:
+            amount = float_round(amount, precision_rounding=self.config_id.rounding_method.rounding, rounding_method=self.config_id.rounding_method.rounding_method)
+        currency = self.currency_id
+        return currency.round(amount) if currency else amount
+
     def action_pos_order_paid(self):
         self.ensure_one()
 
@@ -363,7 +377,7 @@ class PosOrder(models.Model):
             total = float_round(self.amount_total, precision_rounding=self.config_id.rounding_method.rounding, rounding_method=self.config_id.rounding_method.rounding_method)
 
         if not float_is_zero(total - self.amount_paid, precision_rounding=self.currency_id.rounding):
-            raise UserError(_("Order %s is not fully paid.") % self.name)
+            raise UserError(_("Order %s is not fully paid.", self.name))
 
         self.write({'state': 'paid'})
 
@@ -405,7 +419,7 @@ class PosOrder(models.Model):
             message = _("This invoice has been created from the point of sale session: <a href=# data-oe-model=pos.order data-oe-id=%d>%s</a>") % (order.id, order.name)
             new_move.message_post(body=message)
             order.write({'account_move': new_move.id, 'state': 'invoiced'})
-            new_move.sudo().with_company(order.company_id).post()
+            new_move.sudo().with_company(order.company_id)._post()
             moves += new_move
 
         if not moves:
@@ -479,7 +493,7 @@ class PosOrder(models.Model):
             # order. It can be the same session, or if it has been closed the new one that has been opened.
             current_session = order.session_id.config_id.current_session_id
             if not current_session:
-                raise UserError(_('To return product(s), you need to open a session in the POS %s') % order.session_id.config_id.display_name)
+                raise UserError(_('To return product(s), you need to open a session in the POS %s', order.session_id.config_id.display_name))
             refund_order = order.copy({
                 'name': order.name + _(' REFUND'),
                 'session_id': current_session.id,
@@ -533,7 +547,7 @@ class PosOrder(models.Model):
             'mimetype': 'image/jpeg',
         })
         mail_values = {
-            'subject': _('Receipt %s') % name,
+            'subject': _('Receipt %s', name),
             'body_html': message,
             'author_id': self.env.user.partner_id.id,
             'email_from': self.env.company.email or self.env.user.email_formatted,
@@ -569,8 +583,54 @@ class PosOrder(models.Model):
         """
         orders = self.search([('id', 'in', server_ids),('state', '=', 'draft')])
         orders.write({'state': 'cancel'})
+        # TODO Looks like delete cascade is a better solution.
+        orders.mapped('payment_ids').sudo().unlink()
         orders.sudo().unlink()
         return orders.ids
+
+    @api.model
+    def search_paid_order_ids(self, config_id, domain, limit, offset):
+        """Search for 'paid' orders that satisfy the given domain, limit and offset."""
+        default_domain = ['&', ('config_id', '=', config_id), '!', '|', ('state', '=', 'draft'), ('state', '=', 'cancelled')]
+        real_domain = AND([domain, default_domain])
+        ids = self.search(AND([domain, default_domain]), limit=limit, offset=offset).ids
+        totalCount = self.search_count(real_domain)
+        return {'ids': ids, 'totalCount': totalCount}
+
+    def _export_for_ui(self, order):
+        timezone = pytz.timezone(self._context.get('tz') or self.env.user.tz or 'UTC')
+        return {
+            'lines': [[0, 0, line] for line in order.lines.export_for_ui()],
+            'statement_ids': [[0, 0, payment] for payment in order.payment_ids.export_for_ui()],
+            'name': order.pos_reference,
+            'uid': order.pos_reference[6:],
+            'amount_paid': order.amount_paid,
+            'amount_total': order.amount_total,
+            'amount_tax': order.amount_tax,
+            'amount_return': order.amount_return,
+            'pos_session_id': order.session_id.id,
+            'is_session_closed': order.session_id.state == 'closed',
+            'pricelist_id': order.pricelist_id.id,
+            'partner_id': order.partner_id.id,
+            'user_id': order.user_id.id,
+            'sequence_number': order.sequence_number,
+            'creation_date': order.date_order.astimezone(timezone),
+            'fiscal_position_id': order.fiscal_position_id.id,
+            'to_invoice': order.to_invoice,
+            'state': order.state,
+            'account_move': order.account_move.id,
+            'id': order.id,
+            'is_tipped': order.is_tipped,
+            'tip_amount': order.tip_amount,
+        }
+
+    def export_for_ui(self):
+        """ Returns a list of dict with each item having similar signature as the return of
+            `export_as_JSON` of models.Order. This is useful for back-and-forth communication
+            between the pos frontend and backend.
+        """
+        return self.mapped(self._export_for_ui) if self else []
+
 
 class PosOrderLine(models.Model):
     _name = "pos.order.line"
@@ -613,6 +673,7 @@ class PosOrderLine(models.Model):
     pack_lot_ids = fields.One2many('pos.pack.operation.lot', 'pos_order_line_id', string='Lot/serial Number')
     product_uom_id = fields.Many2one('uom.uom', string='Product UoM', related='product_id.uom_id')
     currency_id = fields.Many2one('res.currency', related='order_id.currency_id')
+    full_product_name = fields.Char('Full Product Name')
 
     @api.model
     def _prepare_refund_data(self, refund_order_id):
@@ -702,6 +763,22 @@ class PosOrderLine(models.Model):
         for line in self:
             line.tax_ids_after_fiscal_position = line.order_id.fiscal_position_id.map_tax(line.tax_ids, line.product_id, line.order_id.partner_id)
 
+    def _export_for_ui(self, orderline):
+        return {
+            'qty': orderline.qty,
+            'price_unit': orderline.price_unit,
+            'price_subtotal': orderline.price_subtotal,
+            'price_subtotal_incl': orderline.price_subtotal_incl,
+            'product_id': orderline.product_id.id,
+            'discount': orderline.discount,
+            'tax_ids': [[6, False, orderline.tax_ids.mapped(lambda tax: tax.id)]],
+            'id': orderline.id,
+            'pack_lot_ids': [[0, 0, lot] for lot in orderline.pack_lot_ids.export_for_ui()],
+        }
+
+    def export_for_ui(self):
+        return self.mapped(self._export_for_ui) if self else []
+
 
 class PosOrderLineLot(models.Model):
     _name = "pos.pack.operation.lot"
@@ -713,6 +790,13 @@ class PosOrderLineLot(models.Model):
     lot_name = fields.Char('Lot Name')
     product_id = fields.Many2one('product.product', related='pos_order_line_id.product_id', readonly=False)
 
+    def _export_for_ui(self, lot):
+        return {
+            'lot_name': lot.lot_name,
+        }
+
+    def export_for_ui(self):
+        return self.mapped(self._export_for_ui) if self else []
 
 class ReportSaleDetails(models.AbstractModel):
 

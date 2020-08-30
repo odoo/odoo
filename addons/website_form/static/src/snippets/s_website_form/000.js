@@ -37,7 +37,7 @@ odoo.define('website_form.s_website_form', function (require) {
 
             // Initialize datetimepickers
             var datepickers_options = {
-                minDate: moment({y: 1900}),
+                minDate: moment({ y: 1 }),
                 maxDate: moment({y: 9999, M: 11, d: 31}),
                 calendarWeeks: true,
                 icons: {
@@ -82,7 +82,7 @@ odoo.define('website_form.s_website_form', function (require) {
             this.$target.find('button').off('click');
 
             // Empty imputs
-            this.$target.find('input[type="text"], input[type="email"], input[type="number"], textarea').val('');
+            this.$target.find('input[type="text"], input[type="email"], input[type="number"], input[type="tel"], input[type="url"], textarea').val('');
 
             // Remove saving of the error colors
             this.$target.find('.o_has_error').removeClass('o_has_error').find('.form-control, .custom-select').removeClass('is-invalid');

@@ -373,6 +373,11 @@ var DataImport = AbstractAction.extend({
         this.$form.toggleClass(
             'oe_import_noheaders text-muted',
             !this.$('input.oe_import_has_header').prop('checked'));
+
+        // Clear the input value to allow onchange to be triggered
+        // if the file is the same (for all browsers)
+        self.$('input.oe_import_file').val('');
+
         this._rpc({
                 model: 'base_import.import',
                 method: 'parse_preview',
@@ -738,7 +743,10 @@ var DataImport = AbstractAction.extend({
         return prom;
     },
     onimported: function (event, from, to, results) {
-        this.do_notify(_t("Import completed"), _.str.sprintf(_t("%d records were successfully imported"), results.ids.length));
+        this.do_notify(false, _.str.sprintf(
+            _t("%d records successfully imported"),
+            results.ids.length
+        ));
         this.exit();
     },
     exit: function () {

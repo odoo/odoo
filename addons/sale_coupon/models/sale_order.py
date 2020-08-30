@@ -78,10 +78,10 @@ class SaleOrder(models.Model):
     def _get_reward_values_product(self, program):
         price_unit = self.order_line.filtered(lambda line: program.reward_product_id == line.product_id)[0].price_reduce
 
-        order_lines = (self.order_line - self._get_reward_lines()).filtered(lambda x: program._is_valid_product(x.product_id))
+        order_lines = (self.order_line - self._get_reward_lines()).filtered(lambda x: program._get_valid_products(x.product_id))
         max_product_qty = sum(order_lines.mapped('product_uom_qty')) or 1
         # Remove needed quantity from reward quantity if same reward and rule product
-        if program._is_valid_product(program.reward_product_id):
+        if program._get_valid_products(program.reward_product_id):
             # number of times the program should be applied
             program_in_order = max_product_qty // (program.rule_min_quantity + program.reward_product_quantity)
             # multipled by the reward qty
@@ -89,7 +89,7 @@ class SaleOrder(models.Model):
             # do not give more free reward than products
             reward_product_qty = min(reward_product_qty, self.order_line.filtered(lambda x: x.product_id == program.reward_product_id).product_uom_qty)
             if program.rule_minimum_amount:
-                order_total = sum(line.price_total for line in order_lines.filtered(lambda x: x.product_id != program.reward_product_id))
+                order_total = sum(order_lines.mapped('price_total')) - (program.reward_product_quantity * program.reward_product_id.lst_price)
                 reward_product_qty = min(reward_product_qty, order_total // program.rule_minimum_amount)
         else:
             reward_product_qty = min(max_product_qty, self.order_line.filtered(lambda x: x.product_id == program.reward_product_id).product_uom_qty)
@@ -132,7 +132,7 @@ class SaleOrder(models.Model):
     def _get_reward_values_discount(self, program):
         if program.discount_type == 'fixed_amount':
             return [{
-                'name': _("Discount: ") + program.name,
+                'name': _("Discount: %s", program.name),
                 'product_id': program.discount_line_product_id.id,
                 'price_unit': - self._get_reward_values_discount_fixed_amount(program),
                 'product_uom_qty': 1.0,
@@ -150,7 +150,7 @@ class SaleOrder(models.Model):
                     taxes = self.fiscal_position_id.map_tax(line.tax_id)
 
                     reward_dict[line.tax_id] = {
-                        'name': _("Discount: ") + program.name,
+                        'name': _("Discount: %s", program.name),
                         'product_id': program.discount_line_product_id.id,
                         'price_unit': - discount_line_amount,
                         'product_uom_qty': 1.0,
@@ -174,14 +174,12 @@ class SaleOrder(models.Model):
                     else:
                         taxes = self.fiscal_position_id.map_tax(line.tax_id)
 
-                        tax_name = ""
-                        if len(taxes) == 1:
-                            tax_name = " - " + _("On product with following tax: ") + ', '.join(taxes.mapped('name'))
-                        elif len(taxes) > 1:
-                            tax_name = " - " + _("On product with following taxes: ") + ', '.join(taxes.mapped('name'))
-
                         reward_dict[line.tax_id] = {
-                            'name': _("Discount: ") + program.name + tax_name,
+                            'name': _(
+                                "Discount: %(program)s - On product with following taxes: %(taxes)s",
+                                program=program.name,
+                                taxes=", ".join(taxes.mapped('name')),
+                            ),
                             'product_id': program.discount_line_product_id.id,
                             'price_unit': - discount_line_amount,
                             'product_uom_qty': 1.0,
@@ -265,6 +263,7 @@ class SaleOrder(models.Model):
         self.ensure_one()
         programs = self.env['coupon.program'].search([
             ('promo_code_usage', '=', 'no_code_needed'),
+            '|', ('company_id', '=', self.company_id.id), ('company_id', '=', False),
         ])._filter_programs_from_common_rules(self)
         return programs
 

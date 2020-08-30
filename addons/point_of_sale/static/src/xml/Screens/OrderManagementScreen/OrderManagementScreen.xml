@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="OrderManagementScreen" owl="1">
+        <div class="order-management-screen screen" t-att-class="{ oe_hidden: !props.isShown }">
+            <div t-if="!env.isMobile" class="screen-full-width">
+                <div class="leftpane">
+                    <OrderDetails order="orderManagementContext.selectedOrder" />
+                    <div class="pads">
+                        <div class="control-buttons">
+                            <t t-foreach="controlButtons" t-as="cb" t-key="cb.name">
+                                <t t-component="cb.component" t-key="cb.name" />
+                            </t>
+                        </div>
+                        <div class="subpads">
+                            <ActionpadWidget client="selectedClient" />
+                            <NumpadWidget />
+                        </div>
+                    </div>
+                </div>
+                <div class="rightpane">
+                    <div class="flex-container">
+                        <OrderManagementControlPanel />
+                        <OrderList orders="orders" initHighlightedOrder="orderManagementContext.selectedOrder" />
+                    </div>
+                </div>
+            </div>
+            <MobileOrderManagementScreen t-else="" />
+        </div>
+    </t>
+
+</templates>

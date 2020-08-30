@@ -16,7 +16,6 @@ class PosSession(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
 
     POS_SESSION_STATE = [
-        ('new_session', 'New Session'),
         ('opening_control', 'Opening Control'),  # method action_pos_session_open
         ('opened', 'In Progress'),               # method action_pos_session_closing_control
         ('closing_control', 'Closing Control'),  # method action_pos_session_close
@@ -32,7 +31,7 @@ class PosSession(models.Model):
         index=True)
     name = fields.Char(string='Session ID', required=True, readonly=True, default='/')
     user_id = fields.Many2one(
-        'res.users', string='Responsible',
+        'res.users', string='Opened By',
         required=True,
         index=True,
         readonly=True,
@@ -46,7 +45,7 @@ class PosSession(models.Model):
     state = fields.Selection(
         POS_SESSION_STATE, string='Status',
         required=True, readonly=True,
-        index=True, copy=False, default='new_session')
+        index=True, copy=False, default='opening_control')
 
     sequence_number = fields.Integer(string='Order Sequence Number', help='A sequence number that is incremented with each order', default=1)
     login_number = fields.Integer(string='Login Sequence Number', help='A sequence number that is incremented each time a user resumes the pos session', default=0)
@@ -223,8 +222,7 @@ class PosSession(models.Model):
             res = super(PosSession, self.with_context(ctx).sudo()).create(values)
         else:
             res = super(PosSession, self.with_context(ctx)).create(values)
-        if not pos_config.cash_control:
-            res.action_pos_session_open()
+        res.action_pos_session_open()
 
         return res
 
@@ -248,7 +246,14 @@ class PosSession(models.Model):
             values = {}
             if not session.start_at:
                 values['start_at'] = fields.Datetime.now()
-            values['state'] = 'opened'
+            if session.config_id.cash_control:
+                last_sessions = self.env['pos.session'].search([('config_id', '=', self.config_id.id)]).ids
+                # last session includes the new one already.
+                if len(last_sessions) > 1:
+                    self.cash_register_id.balance_start = self.env['pos.session'].browse(last_sessions[1]).cash_register_id.balance_end_real
+                values['state'] = 'opening_control'
+            else:
+                values['state'] = 'opened'
             session.write(values)
         return True
 
@@ -296,15 +301,21 @@ class PosSession(models.Model):
         self._check_if_no_draft_orders()
         if self.update_stock_at_closing:
             self._create_picking_at_end_of_session()
-        self.with_company(self.company_id)._create_account_move()
+        # Users without any accounting rights won't be able to create the journal entry. If this
+        # case, switch to sudo for creation and posting.
+        sudo = False
+        if (
+            not self.env['account.move'].check_access_rights('create', raise_exception=False)
+            and self.user_has_groups('point_of_sale.group_pos_user')
+        ):
+            sudo = True
+            self.sudo().with_company(self.company_id)._create_account_move()
+        else:
+            self.with_company(self.company_id)._create_account_move()
         if self.move_id.line_ids:
             # Set the uninvoiced orders' state to 'done'
             self.env['pos.order'].search([('session_id', '=', self.id), ('state', '=', 'paid')]).write({'state': 'done'})
         else:
-            # The cash register needs to be confirmed for cash diffs
-            # made thru cash in/out when sesion is in cash_control.
-            if self.config_id.cash_control:
-                self.cash_register_id.button_validate()
             self.move_id.unlink()
         self.write({'state': 'closed'})
         return {
@@ -363,7 +374,7 @@ class PosSession(models.Model):
         data = self._create_stock_output_lines(data)
 
         if account_move.line_ids:
-            account_move.post()
+            account_move._post()
 
         data = self._reconcile_account_move_lines(data)
 
@@ -383,6 +394,7 @@ class PosSession(models.Model):
         sales = defaultdict(amounts)
         taxes = defaultdict(tax_amounts)
         stock_expense = defaultdict(amounts)
+        stock_return = defaultdict(amounts)
         stock_output = defaultdict(amounts)
         rounding_difference = {'amount': 0.0, 'amount_converted': 0.0}
         # Track the receivable lines of the invoiced orders' account moves for reconciliation
@@ -456,9 +468,12 @@ class PosSession(models.Model):
                     for move in stock_moves:
                         exp_key = move.product_id._get_product_accounts()['expense']
                         out_key = move.product_id.categ_id.property_stock_account_output_categ_id
-                        amount = -sum(move.stock_valuation_layer_ids.mapped('value'))
+                        amount = -sum(move.sudo().stock_valuation_layer_ids.mapped('value'))
                         stock_expense[exp_key] = self._update_amounts(stock_expense[exp_key], {'amount': amount}, move.picking_id.date, force_company_currency=True)
-                        stock_output[out_key] = self._update_amounts(stock_output[out_key], {'amount': amount}, move.picking_id.date, force_company_currency=True)
+                        if move.location_id.usage == 'customer':
+                            stock_return[out_key] = self._update_amounts(stock_return[out_key], {'amount': amount}, move.picking_id.date, force_company_currency=True)
+                        else:
+                            stock_output[out_key] = self._update_amounts(stock_output[out_key], {'amount': amount}, move.picking_id.date, force_company_currency=True)
 
                 if self.config_id.cash_rounding:
                     diff = order.amount_paid - order.amount_total
@@ -480,7 +495,10 @@ class PosSession(models.Model):
                     out_key = move.product_id.categ_id.property_stock_account_output_categ_id
                     amount = -sum(move.stock_valuation_layer_ids.mapped('value'))
                     stock_expense[exp_key] = self._update_amounts(stock_expense[exp_key], {'amount': amount}, move.picking_id.date)
-                    stock_output[out_key] = self._update_amounts(stock_output[out_key], {'amount': amount}, move.picking_id.date)
+                    if move.location_id.usage == 'customer':
+                        stock_return[out_key] = self._update_amounts(stock_return[out_key], {'amount': amount}, move.picking_id.date)
+                    else:
+                        stock_output[out_key] = self._update_amounts(stock_output[out_key], {'amount': amount}, move.picking_id.date)
         MoveLine = self.env['account.move.line'].with_context(check_move_validity=False)
 
         data.update({
@@ -492,6 +510,7 @@ class PosSession(models.Model):
             'split_receivables_cash':              split_receivables_cash,
             'combine_receivables_cash':            combine_receivables_cash,
             'invoice_receivables':                 invoice_receivables,
+            'stock_return':                        stock_return,
             'stock_output':                        stock_output,
             'order_account_move_receivable_lines': order_account_move_receivable_lines,
             'rounding_difference':                 rounding_difference,
@@ -609,11 +628,14 @@ class PosSession(models.Model):
         # they are reconciled with output lines in the stock.move's account.move.line
         MoveLine = data.get('MoveLine')
         stock_output = data.get('stock_output')
+        stock_return = data.get('stock_return')
 
         stock_output_vals = defaultdict(list)
         stock_output_lines = {}
-        for output_account, amounts in stock_output.items():
-            stock_output_vals[output_account].append(self._get_stock_output_vals(output_account, amounts['amount'], amounts['amount_converted']))
+        for stock_moves in [stock_output, stock_return]:
+            for account, amounts in stock_moves.items():
+                stock_output_vals[account].append(self._get_stock_output_vals(account, amounts['amount'], amounts['amount_converted']))
+
         for output_account, vals in stock_output_vals.items():
             stock_output_lines[output_account] = MoveLine.create(vals)
 
@@ -634,7 +656,6 @@ class PosSession(models.Model):
             if not self.config_id.cash_control:
                 statement.write({'balance_end_real': statement.balance_end})
             statement.button_post()
-            statement.button_validate()
             all_lines = (
                   split_cash_statement_lines[statement].mapped('move_id.line_ids').filtered(lambda aml: aml.account_id.internal_type == 'receivable')
                 | combine_cash_statement_lines[statement].mapped('move_id.line_ids').filtered(lambda aml: aml.account_id.internal_type == 'receivable')
@@ -645,6 +666,17 @@ class PosSession(models.Model):
             lines_by_account = [all_lines.filtered(lambda l: l.account_id == account) for account in accounts]
             for lines in lines_by_account:
                 lines.reconcile()
+            # We try to validate the statement after the reconciliation is done
+            # because validating the statement requires each statement line to be
+            # reconciled.
+            # Furthermore, if the validation failed, which is caused by unreconciled
+            # cash difference statement line, we just ignore that. Leaving the statement
+            # not yet validated. Manual reconciliation and validation should be made
+            # by the user in the accounting app.
+            try:
+                statement.button_validate()
+            except UserError:
+                pass
 
         # reconcile invoice receivable lines
         for account_id in order_account_move_receivable_lines:
@@ -680,7 +712,14 @@ class PosSession(models.Model):
                     .filtered(lambda t: t.company_id.id == order_line.order_id.company_id.id)
         sign = -1 if order_line.qty >= 0 else 1
         price = sign * order_line.price_unit * (1 - (order_line.discount or 0.0) / 100.0)
-        taxes = tax_ids.compute_all(price_unit=price, quantity=abs(order_line.qty), currency=self.currency_id, is_refund=order_line.qty<0).get('taxes', [])
+        # The 'is_refund' parameter is used to compute the tax tags. Ultimately, the tags are part
+        # of the key used for summing taxes. Since the POS UI doesn't support the tags, inconsistencies
+        # may arise in 'Round Globally'.
+        if self.company_id.tax_calculation_rounding_method == 'round_globally':
+            is_refund = all(line.qty < 0 for line in order_line.order_id.lines)
+        else:
+            is_refund = order_line.qty < 0
+        taxes = tax_ids.compute_all(price_unit=price, quantity=abs(order_line.qty), currency=self.currency_id, is_refund=is_refund).get('taxes', [])
         date_order = order_line.order_id.date_order
         taxes = [{'date_order': date_order, **tax} for tax in taxes]
         return {
@@ -982,6 +1021,16 @@ class PosSession(models.Model):
         action['context']['default_pos_id'] = self.config_id.id
         return action
 
+    def set_cashbox_pos(self, cashbox_value, notes):
+        self.state = 'opened'
+        self.cash_register_id.balance_start = cashbox_value
+        if notes:
+            self.env['mail.message'].create({
+                        'body': notes,
+                        'model': 'account.bank.statement',
+                        'res_id': self.cash_register_id.id,
+                    })
+
     def action_view_order(self):
         return {
             'name': _('Orders'),
@@ -1002,9 +1051,14 @@ class PosSession(models.Model):
         sessions = self.search([('start_at', '<=', (fields.datetime.now() - timedelta(days=7))), ('state', '!=', 'closed')])
         for session in sessions:
             if self.env['mail.activity'].search_count([('res_id', '=', session.id), ('res_model', '=', 'pos.session')]) == 0:
-                session.activity_schedule('point_of_sale.mail_activity_old_session',
-                        user_id=session.user_id.id, note=_("Your PoS Session is open since ") + fields.Date.to_string(session.start_at)
-                        + _(", we advise you to close it and to create a new one."))
+                session.activity_schedule(
+                    'point_of_sale.mail_activity_old_session',
+                    user_id=session.user_id.id,
+                    note=_(
+                        "Your PoS Session is open since %(date)s, we advise you to close it and to create a new one.",
+                        date=session.start_at,
+                    )
+                )
 
     def _warning_balance_closing(self):
         self.ensure_one()

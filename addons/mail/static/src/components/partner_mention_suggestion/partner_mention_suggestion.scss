@@ -1,0 +1,26 @@
+// ------------------------------------------------------------------
+// Layout
+// ------------------------------------------------------------------
+
+.o_PartnerMentionSuggestion {
+    display: flex;
+    width: map-get($sizes, 100);
+    padding: map-get($spacers, 2) map-get($spacers, 4);
+}
+
+.o_PartnerMentionSuggestion_name {
+    padding-inline-end: map-get($spacers, 2);
+}
+
+// ------------------------------------------------------------------
+// Style
+// ------------------------------------------------------------------
+
+.o_PartnerMentionSuggestion_email {
+    font-style: italic;
+    color: $gray-600;
+}
+
+.o_PartnerMentionSuggestion_name {
+    font-weight: $font-weight-bold;
+}

@@ -74,10 +74,10 @@ class SendSMS(models.TransientModel):
         readonly=False, store=True, required=True)
 
     @api.depends('res_ids_count', 'active_domain_count')
-    @api.depends_context('default_composition_mode')
+    @api.depends_context('sms_composition_mode')
     def _compute_composition_mode(self):
         for composer in self:
-            if self.env.context.get('default_composition_mode') == 'guess' or not composer.composition_mode:
+            if self.env.context.get('sms_composition_mode') == 'guess' or not composer.composition_mode:
                 if composer.res_ids_count > 1 or (composer.use_active_domain and composer.active_domain_count > 1):
                     composer.composition_mode = 'mass'
                 else:
@@ -155,7 +155,7 @@ class SendSMS(models.TransientModel):
                 sanitized_numbers = [info['sanitized'] for info in sanitize_res.values() if info['sanitized']]
                 invalid_numbers = [number for number, info in sanitize_res.items() if info['code']]
                 if invalid_numbers:
-                    raise UserError(_('Following numbers are not correctly encoded: %s') % repr(invalid_numbers))
+                    raise UserError(_('Following numbers are not correctly encoded: %s', repr(invalid_numbers)))
                 composer.sanitized_numbers = ','.join(sanitized_numbers)
             else:
                 composer.sanitized_numbers = False
@@ -193,7 +193,7 @@ class SendSMS(models.TransientModel):
             if self.comment_single_recipient and not self.recipient_single_valid:
                 raise UserError(_('Invalid recipient number. Please update it.'))
             elif not self.comment_single_recipient and self.recipient_invalid_count:
-                raise UserError(_('%s invalid recipients') % self.recipient_invalid_count)
+                raise UserError(_('%s invalid recipients', self.recipient_invalid_count))
         self._action_send_sms()
         return False
 

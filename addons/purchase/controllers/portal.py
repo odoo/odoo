@@ -3,10 +3,11 @@
 
 import base64
 from collections import OrderedDict
+from datetime import datetime
 
 from odoo import http
 from odoo.exceptions import AccessError, MissingError
-from odoo.http import request
+from odoo.http import request, Response
 from odoo.tools import image_process
 from odoo.tools.translate import _
 from odoo.addons.portal.controllers.portal import pager as portal_pager, CustomerPortal
@@ -15,11 +16,12 @@ from odoo.addons.web.controllers.main import Binary
 
 class CustomerPortal(CustomerPortal):
 
-    def _prepare_portal_layout_values(self):
-        values = super(CustomerPortal, self)._prepare_portal_layout_values()
-        values['purchase_count'] = request.env['purchase.order'].search_count([
-            ('state', 'in', ['purchase', 'done', 'cancel'])
-        ])
+    def _prepare_home_portal_values(self, counters):
+        values = super()._prepare_home_portal_values(counters)
+        if 'purchase_count' in counters:
+            values['purchase_count'] = request.env['purchase.order'].search_count([
+                ('state', 'in', ['purchase', 'done', 'cancel'])
+            ])
         return values
 
     def _purchase_order_get_page_view_values(self, order, access_token, **kwargs):
@@ -38,12 +40,11 @@ class CustomerPortal(CustomerPortal):
     @http.route(['/my/purchase', '/my/purchase/page/<int:page>'], type='http', auth="user", website=True)
     def portal_my_purchase_orders(self, page=1, date_begin=None, date_end=None, sortby=None, filterby=None, **kw):
         values = self._prepare_portal_layout_values()
-        partner = request.env.user.partner_id
         PurchaseOrder = request.env['purchase.order']
 
         domain = []
 
-        archive_groups = self._get_archive_groups('purchase.order', domain)
+        archive_groups = self._get_archive_groups('purchase.order', domain) if values.get('my_details') else []
         if date_begin and date_end:
             domain += [('create_date', '>', date_begin), ('create_date', '<=', date_end)]
 
@@ -134,17 +135,22 @@ class CustomerPortal(CustomerPortal):
             return request.redirect('/my')
 
         updated_dates = []
-        try:
-            for id_str, date in kw.items():
-                line = order_sudo.order_line.filtered(lambda l: l.id == int(id_str))
-                if not line:
-                    return request.redirect(order_sudo.get_portal_url())
-                updated_dates.append((line, date))
-        except ValueError:
-            return request.redirect(order_sudo.get_portal_url())
+        for id_str, date_str in kw.items():
+            try:
+                line_id = int(id_str)
+            except ValueError:
+                return request.redirect(order_sudo.get_portal_url())
+            line = order_sudo.order_line.filtered(lambda l: l.id == line_id)
+            if not line:
+                return request.redirect(order_sudo.get_portal_url())
+
+            try:
+                updated_date = line._convert_to_middle_of_day(datetime.strptime(date_str, '%Y-%m-%d'))
+            except ValueError:
+                continue
+
+            updated_dates.append((line, updated_date))
 
         if updated_dates:
             order_sudo._update_date_planned_for_lines(updated_dates)
-
-        values = self._purchase_order_get_page_view_values(order_sudo, access_token, **kw)
-        return request.render("purchase.portal_my_purchase_order", values)
+        return Response(status=204)

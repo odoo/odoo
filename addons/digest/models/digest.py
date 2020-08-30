@@ -6,6 +6,7 @@ import pytz
 
 from datetime import datetime, date
 from dateutil.relativedelta import relativedelta
+from werkzeug.urls import url_join
 
 from odoo import api, fields, models, tools, _
 from odoo.addons.base.models.ir_mail_server import MailDeliveryException
@@ -111,20 +112,25 @@ class Digest(models.Model):
                 digest.write({'periodicity': 'weekly'})
             digest.next_run_date = digest._get_next_run_date()
 
-    def _action_send_to_user(self, user, tips_count=1):
+    def _action_send_to_user(self, user, tips_count=1, consum_tips=True):
+        web_base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+
         rendered_body = self.env['mail.render.mixin']._render_template(
             'digest.digest_mail_main',
             'digest.digest',
             self.ids,
             engine='qweb',
             add_context={
+                'title': self.name,
+                'top_button_label': _('Connect'),
+                'top_button_url': url_join(web_base_url, '/web/login'),
                 'company': user.company_id,
                 'user': user,
                 'tips_count': tips_count,
-                'datetime': datetime,  # TDE TEMP FIXME
+                'formatted_date': datetime.today().strftime('%B %d, %Y'),
                 'display_mobile_banner': True,
                 'kpi_data': self.compute_kpis(user.company_id, user),
-                'tips': self.compute_tips(user.company_id, user, tips_count=tips_count),
+                'tips': self.compute_tips(user.company_id, user, tips_count=tips_count, consumed=consum_tips),
                 'preferences': self.compute_preferences(user.company_id, user),
             },
             post_process=True
@@ -156,7 +162,7 @@ class Digest(models.Model):
             try:
                 digest.action_send()
             except MailDeliveryException as e:
-                _logger.warning('MailDeliveryException while sending digest %d. Digest is now scheduled for next cron update.')
+                _logger.warning('MailDeliveryException while sending digest %d. Digest is now scheduled for next cron update.', digest.id)
 
     # ------------------------------------------------------------
     # KPIS
@@ -211,7 +217,7 @@ class Digest(models.Model):
                     continue
                 margin = self._get_margin_value(compute_value, previous_value)
                 if self._fields['%s_value' % field_name].type == 'monetary':
-                    converted_amount = self._format_human_readable_amount(compute_value)
+                    converted_amount = tools.format_decimalized_amount(compute_value)
                     compute_value = self._format_currency_amount(converted_amount, company.currency_id)
                 kpi_values['kpi_col%s' % (col_index + 1)].update({
                     'value': compute_value,
@@ -222,7 +228,7 @@ class Digest(models.Model):
         # filter failed KPIs
         return [kpi for kpi in kpis if kpi['kpi_name'] not in invalid_fields]
 
-    def compute_tips(self, company, user, tips_count=1):
+    def compute_tips(self, company, user, tips_count=1, consumed=True):
         tips = self.env['digest.tip'].search([
             ('user_ids', '!=', user.id),
             '|', ('group_id', 'in', user.groups_id.ids), ('group_id', '=', False)
@@ -231,7 +237,8 @@ class Digest(models.Model):
             self.env['mail.render.mixin']._render_template(tools.html_sanitize(tip.tip_description), 'digest.tip', tip.ids, post_process=True)[tip.id]
             for tip in tips
         ]
-        tips.user_ids += user
+        if consumed:
+            tips.user_ids += user
         return tip_descriptions
 
     def _compute_kpis_actions(self, company, user):
@@ -251,13 +258,13 @@ class Digest(models.Model):
         if self._context.get('digest_slowdown'):
             preferences.append(_("We have noticed you did not connect these last few days so we've automatically switched your preference to weekly Digests."))
         elif self.periodicity == 'daily' and user.has_group('base.group_erp_manager'):
-            preferences.append('%s <a href="/digest/%s/set_periodicity?periodicity=weekly" target="_blank" style="color:#875A7B; font-weight: bold;">%s</a>' % (
+            preferences.append('%s <p><a href="/digest/%s/set_periodicity?periodicity=weekly" target="_blank" style="color:#875A7B; font-weight: bold;">%s</a></p>' % (
                 _('Prefer a broader overview ?'),
                 self.id,
                 _('Switch to weekly Digests')
             ))
         if user.has_group('base.group_erp_manager'):
-            preferences.append('%s <a href="/web#view_type=form&amp;model=%s&amp;id=%s" target="_blank" style="color:#875A7B; font-weight: bold;">%s</a>' % (
+            preferences.append('%s <p><a href="/web#view_type=form&amp;model=%s&amp;id=%s" target="_blank" style="color:#875A7B; font-weight: bold;">%s</a></p>' % (
                 _('Want to customize this email?'),
                 self._name,
                 self.id,
@@ -328,10 +335,3 @@ class Digest(models.Model):
         pre = currency_id.position == 'before'
         symbol = u'{symbol}'.format(symbol=currency_id.symbol or '')
         return u'{pre}{0}{post}'.format(amount, pre=symbol if pre else '', post=symbol if not pre else '')
-
-    def _format_human_readable_amount(self, amount, suffix=''):
-        for unit in ['', 'K', 'M', 'G']:
-            if abs(amount) < 1000.0:
-                return "%3.2f%s%s" % (amount, unit, suffix)
-            amount /= 1000.0
-        return "%.2f%s%s" % (amount, 'T', suffix)

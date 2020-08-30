@@ -40,7 +40,7 @@ class ProductImage(models.Model):
     def _check_valid_video_url(self):
         for image in self:
             if image.video_url and not image.embed_code:
-                raise ValidationError(_("Provided video URL for '%s' is not valid. Please enter a valid video URL.") % image.name)
+                raise ValidationError(_("Provided video URL for '%s' is not valid. Please enter a valid video URL.", image.name))
 
     @api.model_create_multi
     def create(self, vals_list):

@@ -165,7 +165,7 @@ var PagePropertiesDialog = weWidgets.Dialog.extend({
                   }));
 
         var datepickersOptions = {
-            minDate: moment({y: 1900}),
+            minDate: moment({ y: 1 }),
             maxDate: moment().add(200, 'y'),
             calendarWeeks: true,
             icons : {
@@ -797,6 +797,12 @@ var ContentMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
         header_color: function (value) {
             $('#wrapwrap > header').removeClass(this.value)
                                    .addClass(value);
+        },
+        header_visible: function (value) {
+            $('#wrapwrap > header').toggleClass('d-none o_snippet_invisible', !value);
+        },
+        footer_visible: function (value) {
+            $('#wrapwrap > footer').toggleClass('d-none o_snippet_invisible', !value);
         },
     },
 

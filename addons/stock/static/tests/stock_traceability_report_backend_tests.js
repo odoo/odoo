@@ -13,7 +13,7 @@ odoo.define('stock.stock_traceability_report_backend_tests', function (require) 
      * @returns {Promise<StockReportGeneric>}
      */
     async function createStockReportAction(params) {
-        const parent = testUtils.createParent(params);
+        const parent = await testUtils.createParent(params);
         const report = new StockReportGeneric(parent, params.action);
         const target = testUtils.prepareTarget(params.debug);
 

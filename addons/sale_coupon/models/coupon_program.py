@@ -34,7 +34,11 @@ class CouponProgram(models.Model):
         if self.maximum_use_number != 0 and self.order_count >= self.maximum_use_number:
             message = {'error': _('Promo code %s has been expired.') % (coupon_code)}
         elif not self._filter_on_mimimum_amount(order):
-            message = {'error': _('A minimum of %s %s should be purchased to get the reward') % (self.rule_minimum_amount, self.currency_id.name)}
+            message = {'error': _(
+                'A minimum of %(amount)s %(currency)s should be purchased to get the reward',
+                amount=self.rule_minimum_amount,
+                currency=self.currency_id.name
+            )}
         elif self.promo_code and self.promo_code == order.promo_code:
             message = {'error': _('The promo code is already applied on this order')}
         elif not self.promo_code and self in order.no_code_promo_program_ids:
@@ -71,7 +75,8 @@ class CouponProgram(models.Model):
             lines = order.order_line.filtered(lambda line:
                 program.reward_type == 'discount' and
                 (line.product_id == program.discount_line_product_id or
-                line.product_id == program.reward_id.discount_line_product_id
+                line.product_id == program.reward_id.discount_line_product_id or
+                (program.program_type == 'promotion_program' and line.is_reward_line)
             ))
             untaxed_amount = order_amount['amount_untaxed'] - sum([line.price_subtotal for line in lines])
             tax_amount = order_amount['amount_tax'] - sum([line.price_tax for line in lines])
@@ -116,7 +121,7 @@ class CouponProgram(models.Model):
             ordered_rule_products_qty = sum(products_qties[product] for product in valid_products)
             # Avoid program if 1 ordered foo on a program '1 foo, 1 free foo'
             if program.promo_applicability == 'on_current_order' and \
-               program._is_valid_product(program.reward_product_id) and program.reward_type == 'product':
+               program.reward_type == 'product' and program._get_valid_products(program.reward_product_id):
                 ordered_rule_products_qty -= program.reward_product_quantity
             if ordered_rule_products_qty >= program.rule_min_quantity:
                 valid_programs |= program

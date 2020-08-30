@@ -12,6 +12,7 @@ class Inventory(models.Model):
     _name = "stock.inventory"
     _description = "Inventory"
     _order = "date desc, id desc"
+    _inherit = ['mail.thread', 'mail.activity.mixin']
 
     name = fields.Char(
         'Inventory Reference', default="Inventory",
@@ -35,7 +36,7 @@ class Inventory(models.Model):
         ('cancel', 'Cancelled'),
         ('confirm', 'In Progress'),
         ('done', 'Validated')],
-        copy=False, index=True, readonly=True,
+        copy=False, index=True, readonly=True, tracking=True,
         default='draft')
     company_id = fields.Many2one(
         'res.company', 'Company',
@@ -92,8 +93,8 @@ class Inventory(models.Model):
             raise UserError(_("Only a stock manager can validate an inventory adjustment."))
         if self.state != 'confirm':
             raise UserError(_(
-                "You can't validate the inventory '%s', maybe this inventory " +
-                "has been already validated or isn't ready.") % (self.name))
+                "You can't validate the inventory '%s', maybe this inventory "
+                "has been already validated or isn't ready.", self.name))
         inventory_lines = self.line_ids.filtered(lambda l: l.product_id.tracking in ['lot', 'serial'] and not l.prod_lot_id and l.theoretical_qty != l.product_qty)
         lines = self.line_ids.filtered(lambda l: float_compare(l.product_qty, 1, precision_rounding=l.product_uom_id.rounding) > 0 and l.product_id.tracking == 'serial' and l.prod_lot_id)
         if inventory_lines and not lines:
@@ -116,7 +117,11 @@ class Inventory(models.Model):
     def _action_done(self):
         negative = next((line for line in self.mapped('line_ids') if line.product_qty < 0 and line.product_qty != line.theoretical_qty), False)
         if negative:
-            raise UserError(_('You cannot set a negative product quantity in an inventory line:\n\t%s - qty: %s') % (negative.product_id.name, negative.product_qty))
+            raise UserError(_(
+                'You cannot set a negative product quantity in an inventory line:\n\t%s - qty: %s',
+                negative.product_id.display_name,
+                negative.product_qty
+            ))
         self.action_check()
         self.write({'state': 'done'})
         self.post_inventory()
@@ -168,7 +173,6 @@ class Inventory(models.Model):
         self.ensure_one()
         action = {
             'type': 'ir.actions.act_window',
-            'views': [(self.env.ref('stock.stock_inventory_line_tree').id, 'tree')],
             'view_mode': 'tree',
             'name': _('Inventory Lines'),
             'res_model': 'stock.inventory.line',
@@ -190,8 +194,13 @@ class Inventory(models.Model):
                     context['readonly_location_id'] = True
 
         if self.product_ids:
+            # no_create on product_id field
+            action['view_id'] = self.env.ref('stock.stock_inventory_line_tree_no_product_create').id
             if len(self.product_ids) == 1:
                 context['default_product_id'] = self.product_ids[0].id
+        else:
+            # no product_ids => we're allowed to create new products in tree
+            action['view_id'] = self.env.ref('stock.stock_inventory_line_tree').id
 
         action['context'] = context
         action['domain'] = domain
@@ -209,6 +218,9 @@ class Inventory(models.Model):
             'domain': domain,
         }
         return action
+
+    def action_print(self):
+        return self.env.ref('stock.action_report_inventory').report_action(self)
 
     def _get_quantities(self):
         """Return quantities group by product_id, location_id, lot_id, package_id and owner_id

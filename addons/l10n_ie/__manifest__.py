@@ -4,7 +4,7 @@
 {
     'name': 'Ireland - Accounting',
     'version': '1.0',
-    'category': 'Accounting/Localizations',
+    'category': 'Accounting/Localizations/Account Charts',
     'description': """
     This module is for all the Irish SMEs who would like to setup their accounting quickly. The module provides:
 

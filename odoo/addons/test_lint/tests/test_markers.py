@@ -18,7 +18,7 @@ class TestConflictMarkers(lint_case.LintCase):
 
         with open(fullpath_name, 'rb') as f:
             content = f.read()
-            self.assertFalse(any([m in content for m in MARKERS]), 'Conflict markers found in %s' % fullpath_name)
+            self.assertFalse(any(m in content for m in MARKERS), 'Conflict markers found in %s' % fullpath_name)
 
     def test_conflict_markers(self):
         """ Test that there are no conflict markers left in Odoo files """

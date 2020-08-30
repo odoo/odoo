@@ -74,7 +74,7 @@ class MailTemplate(models.Model):
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         default = dict(default or {},
-                       name=_("%s (copy)") % self.name)
+                       name=_("%s (copy)", self.name))
         return super(MailTemplate, self).copy(default=default)
 
     def unlink_action(self):
@@ -88,7 +88,7 @@ class MailTemplate(models.Model):
         view = self.env.ref('mail.email_compose_message_wizard_form')
 
         for template in self:
-            button_name = _('Send Mail (%s)') % template.name
+            button_name = _('Send Mail (%s)', template.name)
             action = ActWindow.create({
                 'name': button_name,
                 'type': 'ir.actions.act_window',
@@ -116,7 +116,7 @@ class MailTemplate(models.Model):
 
         if self.use_default_to or self._context.get('tpl_force_default_to'):
             records = self.env[self.model].browse(res_ids).sudo()
-            default_recipients = self.env['mail.thread']._message_get_default_recipients_on_records(records)
+            default_recipients = records._message_get_default_recipients()
             for res_id, recipients in default_recipients.items():
                 results[res_id].pop('partner_to', None)
                 results[res_id].update(recipients)
@@ -200,7 +200,7 @@ class MailTemplate(models.Model):
                     else:
                         res = report._render([res_id])
                         if not res:
-                            raise UserError(_('Unsupported report type %s found.') % report.report_type)
+                            raise UserError(_('Unsupported report type %s found.', report.report_type))
                         result, format = res
 
                     # TODO in trunk, change return format to binary to match message_post expected format

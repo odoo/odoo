@@ -83,7 +83,7 @@ class PaymentTransaction(models.Model):
                     order.amount_total, self.amount,
                 )
                 order.message_post(
-                    subject=_("Amount Mismatch (%s)") % self.acquirer_id.provider,
+                    subject=_("Amount Mismatch (%s)", self.acquirer_id.provider),
                     body=_("The order was not confirmed despite response from the acquirer (%s): order total is %r but acquirer replied with %r.") % (
                         self.acquirer_id.provider,
                         order.amount_total,
@@ -165,6 +165,7 @@ class PaymentTransaction(models.Model):
     def render_sale_button(self, order, submit_txt=None, render_values=None):
         values = {
             'partner_id': order.partner_id.id,
+            'type': self.type,
         }
         if render_values:
             values.update(render_values)

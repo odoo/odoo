@@ -232,9 +232,8 @@ class SaleOrder(models.Model):
     signed_by = fields.Char('Signed By', help='Name of the person that signed the SO.', copy=False)
     signed_on = fields.Datetime('Signed On', help='Date of the signature.', copy=False)
 
-    commitment_date = fields.Datetime('Delivery Date',
-                                      states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
-                                      copy=False, readonly=True,
+    commitment_date = fields.Datetime('Delivery Date', copy=False,
+                                      states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
                                       help="This is the delivery date promised to the customer. "
                                            "If set, the delivery order will be scheduled based on "
                                            "this date rather than product lead times.")
@@ -263,7 +262,12 @@ class SaleOrder(models.Model):
             companies = order.order_line.product_id.company_id
             if companies and companies != order.company_id:
                 bad_products = order.order_line.product_id.filtered(lambda p: p.company_id and p.company_id != order.company_id)
-                raise ValidationError((_("Your quotation contains products from company %s whereas your quotation belongs to company %s. \n Please change the company of your quotation or remove the products from other companies (%s).") % (', '.join(companies.mapped('display_name')), order.company_id.display_name, ', '.join(bad_products.mapped('display_name')))))
+                raise ValidationError(_(
+                    "Your quotation contains products from company %(product_company)s whereas your quotation belongs to company %(quote_company)s. \n Please change the company of your quotation or remove the products from other companies (%(bad_products)s).",
+                    product_company=', '.join(companies.mapped('display_name')),
+                    quote_company=order.company_id.display_name,
+                    bad_products=', '.join(bad_products.mapped('display_name')),
+                ))
 
     @api.depends('pricelist_id', 'date_order', 'company_id')
     def _compute_currency_rate(self):
@@ -332,7 +336,7 @@ class SaleOrder(models.Model):
             return self.env.ref('sale.mt_order_sent')
         return super(SaleOrder, self)._track_subtype(init_values)
 
-    @api.onchange('partner_shipping_id', 'partner_id')
+    @api.onchange('partner_shipping_id', 'partner_id', 'company_id')
     def onchange_partner_shipping_id(self):
         """
         Trigger the change of fiscal position when the shipping address is modified.
@@ -370,7 +374,7 @@ class SaleOrder(models.Model):
         user_id = partner_user.id
         if not self.env.context.get('not_self_saleperson'):
             user_id = user_id or self.env.uid
-        if self.user_id.id != user_id:
+        if user_id and self.user_id.id != user_id:
             values['user_id'] = user_id
 
         if self.env['ir.config_parameter'].sudo().get_param('account.use_invoice_terms') and self.env.company.invoice_terms:
@@ -449,7 +453,7 @@ class SaleOrder(models.Model):
             lines_to_update.append((1, line.id, {'price_unit': price_unit}))
         self.update({'order_line': lines_to_update})
         self.show_update_pricelist = False
-        self.message_post(body=_("Product prices have been recomputed according to pricelist <b>%s<b> ") % self.pricelist_id.display_name)
+        self.message_post(body=_("Product prices have been recomputed according to pricelist <b>%s<b> ", self.pricelist_id.display_name))
 
     @api.model
     def create(self, vals):
@@ -471,31 +475,23 @@ class SaleOrder(models.Model):
         result = super(SaleOrder, self).create(vals)
         return result
 
-    def _write(self, values):
-        """ Override of private write method in order to generate activities
-        based in the invoice status. As the invoice status is a computed field
-        triggered notably when its lines and linked invoice status changes the
-        flow does not necessarily goes through write if the action was not done
-        on the SO itself. We hence override the _write to catch the computation
-        of invoice_status field. """
-        if self.env.context.get('mail_activity_automation_skip'):
-            return super(SaleOrder, self)._write(values)
+    def _compute_field_value(self, field):
+        super()._compute_field_value(field)
+        if field.name != 'invoice_status' or self.env.context.get('mail_activity_automation_skip'):
+            return
 
-        if 'invoice_status' in values:
-            if values['invoice_status'] == 'upselling':
-                filtered_self = self.search([('id', 'in', self.ids),
-                                             ('user_id', '!=', False),
-                                             ('invoice_status', '!=', 'upselling')])
-                filtered_self.activity_unlink(['sale.mail_act_sale_upsell'])
-                for order in filtered_self:
-                    order.activity_schedule(
-                        'sale.mail_act_sale_upsell',
-                        user_id=order.user_id.id,
-                        note=_("Upsell <a href='#' data-oe-model='%s' data-oe-id='%d'>%s</a> for customer <a href='#' data-oe-model='%s' data-oe-id='%s'>%s</a>") % (
-                            order._name, order.id, order.name,
-                            order.partner_id._name, order.partner_id.id, order.partner_id.display_name))
+        filtered_self = self.filtered(lambda so: so.user_id and so.invoice_status == 'upselling')
+        if not filtered_self:
+            return
 
-        return super(SaleOrder, self)._write(values)
+        filtered_self.activity_unlink(['sale.mail_act_sale_upsell'])
+        for order in filtered_self:
+            order.activity_schedule(
+                'sale.mail_act_sale_upsell',
+                user_id=order.user_id.id,
+                note=_("Upsell <a href='#' data-oe-model='%s' data-oe-id='%d'>%s</a> for customer <a href='#' data-oe-model='%s' data-oe-id='%s'>%s</a>") % (
+                         order._name, order.id, order.name,
+                         order.partner_id._name, order.partner_id.id, order.partner_id.display_name))
 
     def copy_data(self, default=None):
         if default is None:
@@ -525,8 +521,7 @@ class SaleOrder(models.Model):
                     args or [],
                     ['|', ('name', operator, name), ('partner_id.name', operator, name)]
                 ])
-                order_ids = self._search(domain, limit=limit, access_rights_uid=name_get_uid)
-                return models.lazy_name_get(self.browse(order_ids).with_user(name_get_uid))
+                return self._search(domain, limit=limit, access_rights_uid=name_get_uid)
         return super(SaleOrder, self)._name_search(name, args=args, operator=operator, limit=limit, name_get_uid=name_get_uid)
 
     def _prepare_invoice(self):
@@ -536,8 +531,7 @@ class SaleOrder(models.Model):
         a clean extension chain).
         """
         self.ensure_one()
-        self = self.with_company(self.company_id)
-        journal = self.env['account.move'].with_company(self.company_id).with_context(default_move_type='out_invoice')._get_default_journal()
+        journal = self.env['account.move'].with_context(default_move_type='out_invoice')._get_default_journal()
         if not journal:
             raise UserError(_('Please define an accounting sales journal for the company %s (%s).') % (self.company_id.name, self.company_id.id))
 
@@ -574,7 +568,7 @@ class SaleOrder(models.Model):
 
     def action_view_invoice(self):
         invoices = self.mapped('invoice_ids')
-        action = self.env.ref('account.action_move_out_invoice_type').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("account.action_move_out_invoice_type")
         if len(invoices) > 1:
             action['domain'] = [('id', 'in', invoices.ids)]
         elif len(invoices) == 1:
@@ -634,8 +628,9 @@ Reason(s) of this behavior could be:
         invoice_vals_list = []
         invoice_item_sequence = 0
         for order in self:
+            order = order.with_company(order.company_id)
             current_section_vals = None
-            down_payments = self.env['sale.order.line']
+            down_payments = order.env['sale.order.line']
 
             # Invoice values.
             invoice_vals = order._prepare_invoice()
@@ -663,7 +658,7 @@ Reason(s) of this behavior could be:
             # If down payments are present in SO, group them under common section
             if down_payments:
                 invoice_item_sequence += 1
-                down_payments_section = self._prepare_down_payment_section_line(sequence=invoice_item_sequence)
+                down_payments_section = order._prepare_down_payment_section_line(sequence=invoice_item_sequence)
                 invoice_lines_vals.append(down_payments_section)
                 for down_payment in down_payments:
                     invoice_item_sequence += 1
@@ -828,11 +823,17 @@ Reason(s) of this behavior could be:
         """
         # create an analytic account if at least an expense product
         for order in self:
-            if any([expense_policy not in [False, 'no'] for expense_policy in order.order_line.mapped('product_id.expense_policy')]):
+            if any(expense_policy not in [False, 'no'] for expense_policy in order.order_line.mapped('product_id.expense_policy')):
                 if not order.analytic_account_id:
                     order._create_analytic_account()
 
         return True
+
+    def _prepare_confirmation_values(self):
+        return {
+            'state': 'sale',
+            'date_order': fields.Datetime.now()
+        }
 
     def action_confirm(self):
         if self._get_forbidden_state_confirm() & set(self.mapped('state')):
@@ -842,10 +843,7 @@ Reason(s) of this behavior could be:
 
         for order in self.filtered(lambda order: order.partner_id not in order.message_partner_ids):
             order.message_subscribe([order.partner_id.id])
-        self.write({
-            'state': 'sale',
-            'date_order': fields.Datetime.now()
-        })
+        self.write(self._prepare_confirmation_values())
         self._action_confirm()
         if self.env.user.has_group('sale.group_auto_done_setting'):
             self.action_done()
@@ -928,12 +926,12 @@ Reason(s) of this behavior could be:
         '''
         # Ensure the currencies are the same.
         currency = self[0].pricelist_id.currency_id
-        if any([so.pricelist_id.currency_id != currency for so in self]):
+        if any(so.pricelist_id.currency_id != currency for so in self):
             raise ValidationError(_('A transaction can\'t be linked to sales orders having different currencies.'))
 
         # Ensure the partner are the same.
         partner = self[0].partner_id
-        if any([so.partner_id != partner for so in self]):
+        if any(so.partner_id != partner for so in self):
             raise ValidationError(_('A transaction can\'t be linked to sales orders having different partners.'))
 
         # Try to retrieve the acquirer. However, fallback to the token's acquirer.
@@ -965,7 +963,7 @@ Reason(s) of this behavior could be:
 
         # Check a journal is set on acquirer.
         if not acquirer.journal_id:
-            raise ValidationError(_('A journal must be specified for the acquirer %s.' % acquirer.name))
+            raise ValidationError(_('A journal must be specified for the acquirer %s.', acquirer.name))
 
         if not acquirer_id and acquirer:
             vals['acquirer_id'] = acquirer.id
@@ -975,6 +973,7 @@ Reason(s) of this behavior could be:
             'currency_id': currency.id,
             'partner_id': partner.id,
             'sale_order_ids': [(6, 0, self.ids)],
+            'type': self[0]._get_payment_type(),
         })
 
         transaction = self.env['payment.transaction'].create(vals)
@@ -1033,7 +1032,7 @@ Reason(s) of this behavior could be:
 
     def _get_payment_type(self):
         self.ensure_one()
-        return 'form_save' if self.require_payment else 'form'
+        return 'form'
 
     def _get_portal_return_action(self):
         """ Return the action used to display orders when returning from customer portal. """
@@ -1060,6 +1059,9 @@ Reason(s) of this behavior could be:
         if optional_values:
             down_payments_section_line.update(optional_values)
         return down_payments_section_line
+
+    def add_option_to_order_with_taxcloud(self):
+        self.ensure_one()
 
 
 class SaleOrderLine(models.Model):
@@ -1117,6 +1119,8 @@ class SaleOrderLine(models.Model):
                 'price_total': taxes['total_included'],
                 'price_subtotal': taxes['total_excluded'],
             })
+            if self.env.context.get('import_file', False) and not self.env.user.user_has_groups('account.group_account_manager'):
+                line.tax_id.invalidate_cache(['invoice_repartition_line_ids'], [line.tax_id.id])
 
     @api.depends('product_id', 'order_id.state', 'qty_invoiced', 'qty_delivered')
     def _compute_product_updatable(self):
@@ -1229,12 +1233,15 @@ class SaleOrderLine(models.Model):
             order_lines = self.filtered(lambda x: x.order_id == order)
             msg = "<b>" + _("The ordered quantity has been updated.") + "</b><ul>"
             for line in order_lines:
-                msg += "<li> %s:" % (line.product_id.display_name,)
-                msg += "<br/>" + _("Ordered Quantity") + ": %s -> %s <br/>" % (
-                line.product_uom_qty, float(values['product_uom_qty']),)
+                msg += "<li> %s: <br/>" % line.product_id.display_name
+                msg += _(
+                    "Ordered Quantity: %(old_qty)s -> %(new_qty)s",
+                    old_qty=line.product_uom_qty,
+                    new_qty=values["product_uom_qty"]
+                ) + "<br/>"
                 if line.product_id.type in ('consu', 'product'):
-                    msg += _("Delivered Quantity") + ": %s <br/>" % (line.qty_delivered,)
-                msg += _("Invoiced Quantity") + ": %s <br/>" % (line.qty_invoiced,)
+                    msg += _("Delivered Quantity: %s", line.qty_delivered) + "<br/>"
+                msg += _("Invoiced Quantity: %s", line.qty_invoiced) + "<br/>"
             msg += "</ul>"
             order.message_post(body=msg)
 
@@ -1297,7 +1304,7 @@ class SaleOrderLine(models.Model):
     product_uom = fields.Many2one('uom.uom', string='Unit of Measure', domain="[('category_id', '=', product_uom_category_id)]")
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id', readonly=True)
     product_uom_readonly = fields.Boolean(compute='_compute_product_uom_readonly')
-    product_custom_attribute_value_ids = fields.One2many('product.attribute.custom.value', 'sale_order_line_id', string="Custom Values")
+    product_custom_attribute_value_ids = fields.One2many('product.attribute.custom.value', 'sale_order_line_id', string="Custom Values", copy=True)
 
     # M2M holding the values of product.attribute with create_variant field set to 'no_variant'
     # It allows keeping track of the extra_price associated to those attribute values and add them to the SO line description
@@ -1542,7 +1549,7 @@ class SaleOrderLine(models.Model):
             return product.with_context(pricelist=self.order_id.pricelist_id.id).price
         product_context = dict(self.env.context, partner_id=self.order_id.partner_id.id, date=self.order_id.date_order, uom=self.product_uom.id)
 
-        final_price, rule_id = self.order_id.pricelist_id.with_context(product_context).get_product_price_rule(self.product_id, self.product_uom_qty or 1.0, self.order_id.partner_id)
+        final_price, rule_id = self.order_id.pricelist_id.with_context(product_context).get_product_price_rule(product or self.product_id, self.product_uom_qty or 1.0, self.order_id.partner_id)
         base_price, currency = self.with_context(product_context)._get_real_price_currency(product, rule_id, self.product_uom_qty, self.product_uom, self.order_id.pricelist_id.id)
         if currency != self.order_id.pricelist_id.currency_id:
             base_price = currency._convert(
@@ -1593,7 +1600,7 @@ class SaleOrderLine(models.Model):
         result = {}
         warning = {}
         if product.sale_line_warn != 'no-message':
-            title = _("Warning for %s") % product.name
+            title = _("Warning for %s", product.name)
             message = product.sale_line_warn_msg
             warning['title'] = title
             warning['message'] = message

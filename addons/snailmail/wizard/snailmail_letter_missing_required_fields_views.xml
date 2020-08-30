@@ -5,6 +5,8 @@
         <field name="model">snailmail.letter.missing.required.fields</field>
         <field name="arch" type="xml">
             <form>
+                <!-- Field present for correct default_get behavior -->
+                <field name="letter_id" invisible="1"/>
                 <p>The customer address is not complete. Update the address here and re-send the letter.</p>
                 <group>
                     <label for="partner_id" string="Address"/>

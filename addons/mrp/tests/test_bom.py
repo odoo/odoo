@@ -26,8 +26,13 @@ class TestBoM(TestMrpCommon):
             'product_tmpl_id': self.product_7_template.id,
             'product_uom_id': self.uom_unit.id,
             'product_qty': 4.0,
-            'routing_id': self.routing_2.id,
             'type': 'normal',
+        })
+        test_bom.write({
+            'operation_ids': [
+                (0, 0, {'name': 'Cutting Machine', 'workcenter_id': self.workcenter_1.id, 'time_cycle': 12, 'sequence': 1}),
+                (0, 0, {'name': 'Weld Machine', 'workcenter_id': self.workcenter_1.id, 'time_cycle': 18, 'sequence': 2}),
+            ],
         })
         test_bom_l1 = self.env['mrp.bom.line'].create({
             'bom_id': test_bom.id,
@@ -78,8 +83,12 @@ class TestBoM(TestMrpCommon):
             'product_tmpl_id': self.product_5.product_tmpl_id.id,
             'product_uom_id': self.product_5.uom_id.id,
             'product_qty': 1.0,
-            'routing_id': self.routing_1.id,
             'type': 'phantom'
+        })
+        test_bom_1.write({
+            'operation_ids': [
+                (0, 0, {'name': 'Gift Wrap Maching', 'workcenter_id': self.workcenter_1.id, 'time_cycle': 15, 'sequence': 1}),
+            ],
         })
         test_bom_1_l1 = self.env['mrp.bom.line'].create({
             'bom_id': test_bom_1.id,
@@ -92,8 +101,13 @@ class TestBoM(TestMrpCommon):
             'product_tmpl_id': self.product_7_template.id,
             'product_uom_id': self.uom_unit.id,
             'product_qty': 4.0,
-            'routing_id': self.routing_2.id,
             'type': 'normal',
+        })
+        test_bom_2.write({
+            'operation_ids': [
+                (0, 0, {'name': 'Cutting Machine', 'workcenter_id': self.workcenter_1.id, 'time_cycle': 12, 'sequence': 1}),
+                (0, 0, {'name': 'Weld Machine', 'workcenter_id': self.workcenter_1.id, 'time_cycle': 18, 'sequence': 2}),
+            ]
         })
         test_bom_2_l1 = self.env['mrp.bom.line'].create({
             'bom_id': test_bom_2.id,
@@ -143,6 +157,7 @@ class TestBoM(TestMrpCommon):
             'product_tmpl_id': self.product_9.product_tmpl_id.id,
             'product_uom_id': self.product_9.uom_id.id,
             'product_qty': 1.0,
+            'consumption': 'flexible',
             'type': 'normal'
         })
         test_bom_4 = self.env['mrp.bom'].create({
@@ -150,6 +165,7 @@ class TestBoM(TestMrpCommon):
             'product_tmpl_id': self.product_10.product_tmpl_id.id,
             'product_uom_id': self.product_10.uom_id.id,
             'product_qty': 1.0,
+            'consumption': 'flexible',
             'type': 'phantom'
         })
         test_bom_3_l1 = self.env['mrp.bom.line'].create({
@@ -278,6 +294,11 @@ class TestBoM(TestMrpCommon):
         bom_form_crumble.product_uom_id = uom_kg
         bom_crumble = bom_form_crumble.save()
 
+        workcenter = self.env['mrp.workcenter'].create({
+            'costs_hour': 10,
+            'name': 'Deserts Table'
+        })
+
         with Form(bom_crumble) as bom:
             with bom.bom_line_ids.new() as line:
                 line.product_id = butter
@@ -287,31 +308,18 @@ class TestBoM(TestMrpCommon):
                 line.product_id = biscuit
                 line.product_uom_id = uom_kg
                 line.product_qty = 6
-
-        workcenter = self.env['mrp.workcenter'].create({
-            'costs_hour': 10,
-            'name': 'Deserts Table'
-        })
-
-        routing_form = Form(self.env['mrp.routing'])
-        routing_form.name = "Crumble process"
-        routing_crumble = routing_form.save()
-
-        with Form(routing_crumble) as routing:
-            with routing.operation_ids.new() as operation:
+            with bom.operation_ids.new() as operation:
                 operation.workcenter_id = workcenter
                 operation.name = 'Prepare biscuits'
                 operation.time_cycle_manual = 5
-            with routing.operation_ids.new() as operation:
+            with bom.operation_ids.new() as operation:
                 operation.workcenter_id = workcenter
                 operation.name = 'Prepare butter'
                 operation.time_cycle_manual = 3
-            with routing.operation_ids.new() as operation:
+            with bom.operation_ids.new() as operation:
                 operation.workcenter_id = workcenter
                 operation.name = 'Mix manually'
                 operation.time_cycle_manual = 5
-
-        bom_crumble.routing_id = routing_crumble.id
 
         # TEST BOM STRUCTURE VALUE WITH BOM QUANTITY
         report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom_id=bom_crumble.id, searchQty=11, searchVariant=False)
@@ -381,6 +389,13 @@ class TestBoM(TestMrpCommon):
         bom_form_cheese_cake.product_uom_id = self.uom_unit
         bom_cheese_cake = bom_form_cheese_cake.save()
 
+        workcenter_2 = self.env['mrp.workcenter'].create({
+            'name': 'cake mounting',
+            'costs_hour': 20,
+            'time_start': 10,
+            'time_stop': 15
+        })
+
         with Form(bom_cheese_cake) as bom:
             with bom.bom_line_ids.new() as line:
                 line.product_id = cream
@@ -390,29 +405,15 @@ class TestBoM(TestMrpCommon):
                 line.product_id = crumble
                 line.product_uom_id = uom_kg
                 line.product_qty = 5.4
-
-        workcenter_2 = self.env['mrp.workcenter'].create({
-            'name': 'cake mounting',
-            'costs_hour': 20,
-            'time_start': 10,
-            'time_stop': 15
-        })
-
-        routing_form = Form(self.env['mrp.routing'])
-        routing_form.name = "Cheese cake process"
-        routing_cheese = routing_form.save()
-
-        with Form(routing_cheese) as routing:
-            with routing.operation_ids.new() as operation:
+            with bom.operation_ids.new() as operation:
                 operation.workcenter_id = workcenter
                 operation.name = 'Mix cheese and crumble'
                 operation.time_cycle_manual = 10
-            with routing.operation_ids.new() as operation:
+            with bom.operation_ids.new() as operation:
                 operation.workcenter_id = workcenter_2
                 operation.name = 'Cake mounting'
                 operation.time_cycle_manual = 5
 
-        bom_cheese_cake.routing_id = routing_cheese.id
 
         # TEST CHEESE BOM STRUCTURE VALUE WITH BOM QUANTITY
         report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom_id=bom_cheese_cake.id, searchQty=60, searchVariant=False)

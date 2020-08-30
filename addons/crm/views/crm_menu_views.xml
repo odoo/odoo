@@ -25,8 +25,15 @@
         parent="crm_menu_sales"
         sequence="1"/>
     <menuitem
+        id="crm_lead_menu_my_activities"
+        name="My Activities"
+        parent="crm_menu_sales"
+        groups="sales_team.group_sale_manager"
+        sequence="2"/>
+
+    <menuitem
         id="sales_team_menu_team_pipeline"
-        name="Team Pipelines"
+        name="Teams"
         parent="crm_menu_sales"
         action="sales_team.crm_team_salesteams_pipelines_act"
         groups="sales_team.group_sale_manager"
@@ -95,6 +102,13 @@
         parent="crm_menu_config"
         action="sales_team.mail_activity_type_action_config_sales"
         sequence="10"/>
+    <menuitem
+        id="crm_recurring_plan_menu_config"
+        name="Recurring Plans"
+        parent="crm_menu_config"
+        action="crm.crm_recurring_plan_action"
+        sequence="12"
+        groups="crm.group_use_recurring_revenues"/>
     <menuitem
         id="menu_crm_config_lead"
         name="Pipeline"

@@ -64,7 +64,11 @@ class ProjectTask(models.Model):
         for task in self.sudo():
             if task.sale_line_id:
                 if not task.sale_line_id.is_service or task.sale_line_id.is_expense:
-                    raise ValidationError(_('You cannot link the order item %s - %s to this task because it is a re-invoiced expense.' % (task.sale_line_id.order_id.id, task.sale_line_id.product_id.name)))
+                    raise ValidationError(_(
+                        'You cannot link the order item %(order_id)s - %(product_id)s to this task because it is a re-invoiced expense.',
+                        order_id=task.sale_line_id.order_id.id,
+                        product_name=task.sale_line_id.product_id.name,
+                    ))
 
     def unlink(self):
         if any(task.sale_line_id for task in self):
@@ -130,7 +134,7 @@ class ProjectTask(models.Model):
         so_to_confirm.action_confirm()
 
         # redirect create invoice wizard (of the Sales Order)
-        action = self.env.ref('sale.action_view_sale_advance_payment_inv').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("sale.action_view_sale_advance_payment_inv")
         context = literal_eval(action.get('context', "{}"))
         context.update({
             'active_id': self.sale_order_id.id if len(self) == 1 else False,
@@ -139,3 +143,13 @@ class ProjectTask(models.Model):
         })
         action['context'] = context
         return action
+
+class ProjectTaskRecurrence(models.Model):
+    _inherit = 'project.task.recurrence'
+
+    def _new_task_values(self, task):
+        values = super(ProjectTaskRecurrence, self)._new_task_values(task)
+        task = self.sudo().task_ids[0]
+        if not task.is_fsm:
+            values['sale_line_id'] = task.sale_line_id.id
+        return values

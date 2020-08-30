@@ -9,7 +9,7 @@
                     <span class="value">
                         <t t-esc="props.total" />
                     </span>
-                    <div class="subentry">
+                    <div t-if="props.tax" class="subentry">
                         Taxes:
                         <span class="value">
                             <t t-esc="props.tax" />

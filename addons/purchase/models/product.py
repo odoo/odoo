@@ -22,7 +22,7 @@ class ProductTemplate(models.Model):
         ('receive', 'On received quantities'),
     ], string="Control Policy", help="On ordered quantities: Control bills based on ordered quantities.\n"
         "On received quantities: Control bills based on received quantities.", default="receive")
-    purchase_line_warn = fields.Selection(WARNING_MESSAGE, 'Purchase Order Line', help=WARNING_HELP, required=True, default="no-message")
+    purchase_line_warn = fields.Selection(WARNING_MESSAGE, 'Purchase Order Line Warning', help=WARNING_HELP, required=True, default="no-message")
     purchase_line_warn_msg = fields.Text('Message for Purchase Order Line')
 
     def _compute_purchased_product_qty(self):
@@ -40,7 +40,7 @@ class ProductTemplate(models.Model):
         return res
 
     def action_view_po(self):
-        action = self.env.ref('purchase.action_purchase_order_report_all').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("purchase.action_purchase_order_report_all")
         action['domain'] = ['&', ('state', 'in', ['purchase', 'done']), ('product_tmpl_id', 'in', self.ids)]
         action['context'] = {
             'graph_measure': 'qty_ordered',
@@ -71,7 +71,7 @@ class ProductProduct(models.Model):
             product.purchased_product_qty = float_round(purchased_data.get(product.id, 0), precision_rounding=product.uom_id.rounding)
 
     def action_view_po(self):
-        action = self.env.ref('purchase.action_purchase_order_report_all').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("purchase.action_purchase_order_report_all")
         action['domain'] = ['&', ('state', 'in', ['purchase', 'done']), ('product_id', 'in', self.ids)]
         action['context'] = {
             'graph_measure': 'qty_ordered',

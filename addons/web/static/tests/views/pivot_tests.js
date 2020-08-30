@@ -3,6 +3,7 @@ odoo.define('web.pivot_tests', function (require) {
 
 var core = require('web.core');
 var PivotView = require('web.PivotView');
+const PivotController = require("web.PivotController");
 var testUtils = require('web.test_utils');
 var testUtilsDom = require('web.test_utils_dom');
 
@@ -191,7 +192,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('pivot rendering with invisible attribute on field', async function (assert) {
-        assert.expect(2);
+        assert.expect(3);
         // when invisible, a field should neither be an active measure,
         // nor be a selectable measure.
         _.extend(this.data.partner.fields, {
@@ -213,6 +214,9 @@ QUnit.module('Views', {
         assert.containsOnce(pivot, '.o_pivot_measure_row');
         // there should be only one measure besides count, as the other one is invisible
         assert.containsN(pivot, '.o_cp_bottom_left .dropdown-item', 2);
+        // the invisible field souldn't be in the groupable fields neither
+        await testUtils.dom.click(pivot.$('.o_pivot_header_cell_closed:first'));
+        assert.containsNone(pivot, '.o_pivot_field_menu a[data-field="foo2"]');
 
         pivot.destroy();
     });
@@ -477,9 +481,9 @@ QUnit.module('Views', {
         assert.hasClass(pivot.$('table'), 'o_enable_linking',
             "root node should have classname 'o_enable_linking'");
         // here we click on the group corresponding to Total/Total/This Month
-        pivot.$('.o_pivot_cell_value').eq(0).click(); // should trigger a do_action with appropriate domain
+        pivot.$('.o_pivot_cell_value').eq(1).click(); // should trigger a do_action with appropriate domain
         // here we click on the group corresponding to xphone/Total/This Month
-        pivot.$('.o_pivot_cell_value').eq(3).click(); // should trigger a do_action with appropriate domain
+        pivot.$('.o_pivot_cell_value').eq(4).click(); // should trigger a do_action with appropriate domain
 
         unpatchDate();
         pivot.destroy();
@@ -1510,6 +1514,37 @@ QUnit.module('Views', {
         pivot.destroy();
     });
 
+    QUnit.test('clear table cells data after closeGroup', async function (assert) {
+        assert.expect(2);
+
+        const pivot = await createView({
+            View: PivotView,
+            model: "partner",
+            data: this.data,
+            arch: '<pivot/>',
+            groupBy: ['product_id'],
+        });
+
+        await testUtils.dom.click(pivot.el.querySelector('thead .o_pivot_header_cell_closed'));
+        await testUtils.dom.click(pivot.el.querySelectorAll('.o_pivot_field_menu .dropdown-item[data-field="date"]')[0]);
+
+        // close and reopen row groupings after changing value
+        this.data.partner.records.find(r => r.product_id === 37).date = '2016-10-27';
+        await testUtils.dom.click(pivot.el.querySelector('tbody .o_pivot_header_cell_opened'));
+        await testUtils.dom.click(pivot.el.querySelector('tbody .o_pivot_header_cell_closed'));
+        await testUtils.dom.click(pivot.el.querySelector('.o_pivot_field_menu .dropdown-item[data-field="product_id"]'));
+        assert.strictEqual(pivot.el.querySelectorAll('.o_pivot_cell_value')[4].innerText, ''); // xphone December 2016
+
+        // invert axis, and reopen column groupings
+        await testUtils.dom.click(pivot.el.querySelector('.o_cp_buttons .o_pivot_flip_button'));
+        await testUtils.dom.click(pivot.el.querySelector('thead .o_pivot_header_cell_opened'));
+        await testUtils.dom.click(pivot.el.querySelector('thead .o_pivot_header_cell_closed'));
+        await testUtils.dom.click(pivot.el.querySelector('.o_pivot_field_menu .dropdown-item[data-field="product_id"]'));
+        assert.strictEqual(pivot.el.querySelectorAll('.o_pivot_cell_value')[3].innerText, ''); // December 2016 xphone
+
+        pivot.destroy();
+    });
+
     QUnit.test('correctly uses pivot_ keys from the context (at reload)', async function (assert) {
         assert.expect(8);
 
@@ -2017,7 +2052,7 @@ QUnit.module('Views', {
         assert.containsN(pivot, '.o_pivot thead tr:last th', 9,
             "last header row should contains 9 cells (3*[December 2016, November 2016, Variation]");
         var values = [
-            "13", "0", "100%", "0", "19", "-100%", "13", "19", "-31.58%"
+            "19", "0", "-100%", "0", "13", "100%", "19", "13", "-31.58%"
         ];
         assert.strictEqual(getCurrentValues(pivot), values.join());
 
@@ -2025,9 +2060,9 @@ QUnit.module('Views', {
         await testUtils.dom.click(pivot.$('.o_pivot .o_pivot_header_cell_closed').eq(2));
         await testUtils.dom.click(pivot.$('.o_pivot .o_pivot_field_menu a[data-field="product_id"]'));
         values = [
-            "13", "0", "100%", "0", "19", "-100%", "13", "19", "-31.58%",
-            "12", "0", "100%",                     "12", "0" , "100%",
-            "1" , "0", "100%", "0", "19", "-100%", "1" , "19", "-94.74%"
+            "19", "0", "-100%", "0", "13", "100%", "19", "13", "-31.58%",
+            "19", "0", "-100%", "0", "1" , "100%", "19", "1", "-94.74%",
+                                "0", "12", "100%", "0" , "12", "100%"
         ];
         assert.strictEqual(getCurrentValues(pivot), values.join());
 
@@ -2035,26 +2070,26 @@ QUnit.module('Views', {
         await testUtils.dom.click(pivot.$('.o_control_panel div.o_pivot_measures_list a[data-field="foo"]'));
         await testUtils.dom.click(pivot.$('.o_control_panel div.o_pivot_measures_list a[data-field="product_id"]'));
         values = [
-            "2", "0", "100%", "0", "1", "-100%", "2", "1", "100%",
-            "1", "0", "100%",                    "1", "0", "100%",
-            "1", "0", "100%", "0", "1", "-100%", "1", "1", "0%"
+            "1", "0", "-100%", "0", "2", "100%", "1", "2", "100%",
+            "1", "0", "-100%", "0", "1", "100%", "1", "1", "0%",
+                               "0", "1", "100%", "0", "1", "100%"
         ];
         assert.strictEqual(getCurrentValues(pivot), values.join());
 
         await testUtils.dom.click(pivot.$('.o_control_panel div.o_pivot_measures_list a[data-field="__count"]'));
         await testUtils.dom.click(pivot.$('.o_control_panel div.o_pivot_measures_list a[data-field="product_id"]'));
         values = [
-            "2", "0", "100%", "0", "2", "-100%", "2", "2", "0%",
-            "1", "0", "100%",                    "1", "0", "100%",
-            "1", "0", "100%", "0", "2", "-100%", "1", "2", "-50%"
+            "2", "0", "-100%", "0", "2", "100%", "2", "2", "0%",
+            "2", "0", "-100%", "0", "1", "100%", "2", "1", "-50%",
+                               "0", "1", "100%", "0", "1", "100%"
         ];
         assert.strictEqual(getCurrentValues(pivot), values.join());
 
         await testUtils.dom.clickFirst(pivot.$('.o_pivot .o_pivot_header_cell_opened'));
         values = [
             "2", "2", "0%",
-            "1", "0", "100%",
-            "1", "2", "-50%"
+            "2", "1", "-50%",
+            "0", "1", "100%"
         ];
         assert.strictEqual(getCurrentValues(pivot), values.join());
 
@@ -2148,12 +2183,12 @@ QUnit.module('Views', {
         assert.verifySteps([
             // col group headers
             '["Total",""]',
-            '["December 2016","November 2016"]',
+            '["November 2016","December 2016"]',
             // measure headers
             '["Foo","Foo","Foo"]',
             // origin headers
-            '["December 2016","November 2016","Variation","December 2016","November 2016"' +
-                ',"Variation","December 2016","November 2016","Variation"]',
+            '["November 2016","December 2016","Variation","November 2016","December 2016"' +
+                ',"Variation","November 2016","December 2016","Variation"]',
             // number of 'measures'
             '1',
             // number of 'origins'
@@ -2216,9 +2251,9 @@ QUnit.module('Views', {
         await cpHelpers.toggleMenuItem(pivot, 'Date: Previous period');
 
         var values = [
-            "4", "0", "100%",
-            "2", "0", "100%",
-            "2", "0", "100%"
+            "0", "4", "100%",
+            "0", "2", "100%",
+            "0", "2", "100%"
         ];
         assert.strictEqual(getCurrentValues(pivot), values.join(','));
         assert.strictEqual(pivot.$('.o_pivot_header_cell_closed').length, 3,
@@ -2265,70 +2300,96 @@ QUnit.module('Views', {
 
         // initial sanity check
         var values = [
-            "12", "17", "-29.41%", "1", "2", "-50%" , "13", "19", "-31.58%",
-            "12", "0" , "100%",                       "12", "0" , "100%",
-                                   "1", "0", "100%" , "1" , "0" , "100%",
-            "0" , "17", "-100%",                      "0" , "17", "-100%",
-                                   "0", "2", "-100%", "0" , "2" , "-100%"
+            "17", "12", "-29.41%", "2", "1", "-50%", "19", "13", "-31.58%",
+            "17", "0", "-100%",                      "17", "0", "-100%",
+                                   "2", "0", "-100%", "2", "0", "-100%",
+            "0", "12" , "100%",                       "0", "12" , "100%",
+                                   "0", "1", "100%" , "0" , "1" , "100%"
         ];
         assert.strictEqual(getCurrentValues(pivot), values.join());
 
         // click on 'Foo' in column Total/Company (should sort by the period of interest, ASC)
         await testUtils.dom.click(pivot.$('.o_pivot_measure_row').eq(0));
         values = [
-            "12", "17", "-29.41%", "1", "2", "-50%" , "13", "19", "-31.58%",
-                                   "1", "0", "100%" , "1" , "0" , "100%",
-            "0" , "17", "-100%",                      "0" , "17", "-100%",
-                                   "0", "2", "-100%", "0" , "2" , "-100%",
-            "12", "0" , "100%",                       "12", "0" , "100%"
+            "17", "12", "-29.41%", "2", "1", "-50%" , "19", "13", "-31.58%",
+                                   "2", "0", "-100%", "2", "0", "-100%",
+            "0", "12", "100%",                        "0", "12", "100%",
+                                   "0", "1", "100%", "0", "1", "100%",
+            "17", "0", "-100%",                      "17", "0", "-100%"
         ];
         assert.strictEqual(getCurrentValues(pivot), values.join());
 
         // click again on 'Foo' in column Total/Company (should sort by the period of interest, DESC)
         await testUtils.dom.click(pivot.$('.o_pivot_measure_row').eq(0));
         values = [
-            "12", "17", "-29.41%", "1", "2", "-50%" , "13", "19", "-31.58%",
-            "12", "0" , "100%",                       "12", "0" , "100%",
-                                   "1", "0", "100%" , "1" , "0" , "100%",
-            "0" , "17", "-100%",                      "0" , "17", "-100%",
-                                   "0", "2", "-100%", "0" , "2" , "-100%"
+            "17", "12", "-29.41%", "2", "1", "-50%", "19", "13", "-31.58%",
+            "17", "0", "-100%",                      "17", "0", "-100%",
+                                   "2", "0", "-100%", "2", "0", "-100%",
+            "0", "12", "100%",                       "0", "12", "100%",
+                                   "0", "1", "100%", "0", "1", "100%"
         ];
         assert.strictEqual(getCurrentValues(pivot), values.join());
 
         // click on 'This Month' in column Total/Individual/Foo
         await testUtils.dom.click(pivot.$('.o_pivot_origin_row').eq(3));
         values = [
-            "12", "17", "-29.41%", "1", "2", "-50%",  "13", "19", "-31.58%",
-            "12", "0",  "100%",                       "12", "0" , "100%",
-            "0",  "17", "-100%",                      "0",  "17", "-100%",
-                                   "0", "2", "-100%", "0" , "2" , "-100%",
-                                   "1", "0", "100%",  "1" , "0",  "100%"
+            "17", "12", "-29.41%", "2", "1", "-50%", "19", "13", "-31.58%",
+            "17", "0", "-100%",                      "17", "0", "-100%",
+            "0", "12", "100%",                       "0", "12" , "100%",
+                                   "0", "1", "100%", "0", "1", "100%",
+                                   "2", "0", "-100%",  "2", "0",  "-100%"
         ];
         assert.strictEqual(getCurrentValues(pivot), values.join());
 
         // click on 'Previous Period' in column Total/Individual/Foo
         await testUtils.dom.click(pivot.$('.o_pivot_origin_row').eq(4));
         values = [
-            "12", "17", "-29.41%", "1", "2", "-50%",  "13", "19", "-31.58%",
-            "12", "0",  "100%",                       "12", "0" , "100%",
-                                   "1", "0", "100%",  "1" , "0",  "100%",
-            "0",  "17", "-100%",                      "0",  "17", "-100%",
-                                   "0", "2", "-100%", "0" , "2" , "-100%"
+            "17", "12", "-29.41%", "2", "1", "-50%", "19", "13", "-31.58%",
+            "17", "0", "-100%",                      "17", "0", "-100%",
+                                   "2", "0", "-100%", "2", "0", "-100%",
+            "0", "12", "100%",                       "0", "12", "100%",
+                                   "0", "1", "100%", "0", "1", "100%"
         ];
         assert.strictEqual(getCurrentValues(pivot), values.join());
 
         // click on 'Variation' in column Total/Foo
         await testUtils.dom.click(pivot.$('.o_pivot_origin_row').eq(8));
         values = [
-            "12", "17", "-29.41%", "1", "2", "-50%",  "13", "19", "-31.58%",
-            "0",  "17", "-100%",                      "0",  "17", "-100%",
-                                   "0", "2", "-100%", "0" , "2" , "-100%",
-            "12", "0",  "100%",                       "12", "0" , "100%",
-                                   "1", "0", "100%",  "1" , "0",  "100%"
+            "17", "12", "-29.41%", "2", "1", "-50%",  "19", "13", "-31.58%",
+            "17",  "0", "-100%",                      "17",  "0", "-100%",
+                                   "2", "0", "-100%", "2" , "0" , "-100%",
+            "0", "12",  "100%",                       "0", "12" , "100%",
+                                   "0", "1", "100%",  "0" , "1",  "100%"
         ];
         assert.strictEqual(getCurrentValues(pivot), values.join());
 
         unpatchDate();
+        pivot.destroy();
+    });
+
+    QUnit.test('Click on the measure list but not on a menu item', async function (assert) {
+        assert.expect(2);
+
+        const pivot = await createView({
+            View: PivotView,
+            model: "partner",
+            data: this.data,
+            arch: `<pivot/>`,
+        });
+
+        // open the "Measures" menu
+        await testUtils.dom.click(pivot.el.querySelector('.o_cp_buttons button'));
+
+        // click on the divider in the "Measures" menu does not crash
+        await testUtils.dom.click(pivot.el.querySelector('.o_pivot_measures_list .dropdown-divider'));
+        // the menu should still be open
+        assert.isVisible(pivot.el.querySelector('.o_pivot_measures_list'));
+
+        // click on the measure list but not on a menu item or the separator
+        await testUtils.dom.click(pivot.el.querySelector('.o_pivot_measures_list'));
+        // the menu should still be open
+        assert.isVisible(pivot.el.querySelector('.o_pivot_measures_list'));
+
         pivot.destroy();
     });
 
@@ -2368,7 +2429,7 @@ QUnit.module('Views', {
                 if (route === '/web/dataset/search_read') {
                     assert.step('search_read');
                     const domain = args.domain;
-                    assert.deepEqual(domain, [['customer', '=', 1], ['foo', '=', 12]],
+                    assert.deepEqual(domain, ['&', ['customer', '=', 1], ['foo', '=', 12]],
                         'list domain is correct');
                 }
                 return this._super.apply(this, arguments);
@@ -2438,11 +2499,13 @@ QUnit.module('Views', {
 
         // initial sanity check
         var values = [
-            "12", "17", "-29.41%", "1", "2", "-50%" , "13", "19", "-31.58%",
-            "12", "0" , "100%",                       "12", "0" , "100%",
-                                   "1", "0", "100%" , "1" , "0" , "100%",
-            "0" , "17", "-100%",                      "0" , "17", "-100%",
-                                   "0", "2", "-100%", "0" , "2" , "-100%"
+            "17", "12", "-29.41%", "2", "1", "-50%", "19", "13", "-31.58%",
+            "17", "0", "-100%",                      "17", "0", "-100%",
+                                   "2", "0", "-100%", "2", "0", "-100%",
+            "0", "12", "100%",                       "0", "12", "100%",
+                                   "0", "1", "100%", "0", "1", "100%",
+
+
         ];
         assert.strictEqual(getCurrentValues(pivot), values.join());
 
@@ -2450,9 +2513,9 @@ QUnit.module('Views', {
         await testUtils.dom.click(pivot.$buttons.find('.o_pivot_flip_button'));
 
         values = [
-            "12", "0",  "100%", "1",  "0",  "100%", "0",  "17", "-100%", "0",  "2",  "-100%", "13", "19", "-31.58%",
-            "12", "0",  "100%",                     "0",  "17", "-100%",                      "12", "17", "-29.41%",
-                                "1",  "0",  "100%" ,                      "0",  "2",  "-100%", "1",  "2",  "-50%"
+            "17", "0", "-100%", "2", "0", "-100%", "0", "12", "100%", "0", "1", "100%", "19", "13", "-31.58%",
+            "17", "0", "-100%",                    "0", "12", "100%",                   "17", "12", "-29.41%",
+                                "2", "0", "-100%",                    "0",  "1", "100%", "2",  "1",  "-50%"
         ];
         assert.strictEqual(getCurrentValues(pivot), values.join());
 
@@ -2546,7 +2609,7 @@ QUnit.module('Views', {
             pivot.$('th').slice(0, 7).text(),
             [
                 '', 'Total',                                                '',
-                    '2016-12-15', '2016-12-17', '2016-11-22', '2016-11-03',
+                    '2016-11-22', '2016-11-03', '2016-12-15', '2016-12-17',
             ].join(''),
             "The col headers should be as expected"
         );
@@ -2634,8 +2697,6 @@ QUnit.module('Views', {
 
     QUnit.test('group bys added via control panel and expand Header do not stack', async function (assert) {
         assert.expect(8);
-
-        delete this.data.partner.fields.date;
 
         var pivot = await createView({
             View: PivotView,
@@ -2832,6 +2893,135 @@ QUnit.module('Views', {
         assert.ok(pivot.$('tbody tr:contains("2019-12-14") [type="checkbox"]').is(':checked'), 'first column contains checkbox and value should be ticked');
         assert.strictEqual(pivot.$('tbody tr:contains("2019-05-14")').length, 1, 'There should be a second column');
         assert.notOk(pivot.$('tbody tr:contains("2019-05-14") [type="checkbox"]').is(':checked'), "second column should have checkbox that is not checked by default");
+
+        pivot.destroy();
+    });
+
+    QUnit.test('Allow to add behaviour to buttons on pivot', async function (assert) {
+        assert.expect(2);
+
+        let _testButtons = (ev) => {
+            if ($(ev.target).hasClass("o_pivot_flip_button")) {
+                assert.step("o_pivot_flip_button")
+            }
+        }
+
+        PivotController.include({
+            _addIncludedButtons: async function (ev) {
+                await this._super(...arguments);
+                _testButtons(ev);
+            },
+        });
+
+        const pivot = await createView({
+            View: PivotView,
+            model: "partner",
+            data: this.data,
+            arch: '<pivot>' +
+                        '<field name="date" type="row" interval="day"/>' +
+                        '<field name="bar" type="col"/>' +
+                '</pivot>',
+        });
+        await testUtils.dom.click(pivot.$buttons.find('.o_pivot_flip_button'));
+        assert.verifySteps(["o_pivot_flip_button"]);
+        _testButtons = () => true;
+        pivot.destroy();
+    });
+
+    QUnit.test('empty pivot view with action helper', async function (assert) {
+        assert.expect(4);
+
+        const pivot = await createView({
+            View: PivotView,
+            model: "partner",
+            data: this.data,
+            arch: `
+                <pivot>
+                    <field name="product_id" type="measure"/>
+                    <field name="date" interval="month" type="col"/>
+                </pivot>`,
+            domain: [['id', '<', 0]],
+            viewOptions: {
+                action: {
+                    help: '<p class="abc">click to add a foo</p>'
+                }
+            },
+        });
+
+        assert.containsOnce(pivot, '.o_view_nocontent .abc');
+        assert.containsNone(pivot, 'table');
+
+        await pivot.reload({ domain: [] });
+
+        assert.containsNone(pivot, '.o_view_nocontent .abc');
+        assert.containsOnce(pivot, 'table');
+
+        pivot.destroy();
+    });
+
+    QUnit.test('empty pivot view with sample data', async function (assert) {
+        assert.expect(7);
+
+        const pivot = await createView({
+            View: PivotView,
+            model: "partner",
+            data: this.data,
+            arch: `
+                <pivot sample="1">
+                    <field name="product_id" type="measure"/>
+                    <field name="date" interval="month" type="col"/>
+                </pivot>`,
+            domain: [['id', '<', 0]],
+            viewOptions: {
+                action: {
+                    help: '<p class="abc">click to add a foo</p>'
+                }
+            },
+        });
+
+        assert.hasClass(pivot.el, 'o_view_sample_data');
+        assert.containsOnce(pivot, '.o_view_nocontent .abc');
+        assert.containsOnce(pivot, 'table.o_sample_data_disabled');
+
+        await pivot.reload({ domain: [] });
+
+        assert.doesNotHaveClass(pivot.el, 'o_view_sample_data');
+        assert.containsNone(pivot, '.o_view_nocontent .abc');
+        assert.containsOnce(pivot, 'table');
+        assert.doesNotHaveClass(pivot.$('table'), 'o_sample_data_disabled');
+
+        pivot.destroy();
+    });
+
+    QUnit.test('non empty pivot view with sample data', async function (assert) {
+        assert.expect(7);
+
+        const pivot = await createView({
+            View: PivotView,
+            model: "partner",
+            data: this.data,
+            arch: `
+                <pivot sample="1">
+                    <field name="product_id" type="measure"/>
+                    <field name="date" interval="month" type="col"/>
+                </pivot>`,
+            viewOptions: {
+                action: {
+                    help: '<p class="abc">click to add a foo</p>'
+                }
+            },
+        });
+
+        assert.doesNotHaveClass(pivot.el, 'o_view_sample_data');
+        assert.containsNone(pivot, '.o_view_nocontent .abc');
+        assert.containsOnce(pivot, 'table');
+        assert.doesNotHaveClass(pivot.$('table'), 'o_sample_data_disabled');
+
+        await pivot.reload({ domain: [['id', '<', 0]] });
+
+        assert.doesNotHaveClass(pivot.el, 'o_view_sample_data');
+        assert.containsOnce(pivot, '.o_view_nocontent .abc');
+        assert.containsNone(pivot, 'table');
 
         pivot.destroy();
     });

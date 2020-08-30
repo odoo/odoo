@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import json
 from collections import defaultdict
 from datetime import datetime
 from itertools import groupby
@@ -12,9 +13,10 @@ from dateutil import relativedelta
 
 from odoo import SUPERUSER_ID, _, api, fields, models
 from odoo.exceptions import UserError
-from odoo.tools.float_utils import float_compare, float_is_zero, float_round
+from odoo.tools.float_utils import float_compare, float_is_zero, float_repr, float_round
+from odoo.tools.misc import format_date
 
-PROCUREMENT_PRIORITIES = [('0', 'Not urgent'), ('1', 'Normal'), ('2', 'Urgent'), ('3', 'Very Urgent')]
+PROCUREMENT_PRIORITIES = [('0', 'Normal'), ('1', 'Urgent')]
 
 
 class StockMove(models.Model):
@@ -29,20 +31,20 @@ class StockMove(models.Model):
 
     name = fields.Char('Description', index=True, required=True)
     sequence = fields.Integer('Sequence', default=10)
-    priority = fields.Selection(PROCUREMENT_PRIORITIES, 'Priority', default='1')
+    priority = fields.Selection(
+        PROCUREMENT_PRIORITIES, 'Priority', default='0',
+        compute="_compute_priority", store=True, index=True)
     create_date = fields.Datetime('Creation Date', index=True, readonly=True)
     date = fields.Datetime(
-        'Date', default=fields.Datetime.now, index=True, required=True,
-        states={'done': [('readonly', True)]},
-        help="Move date: scheduled date until move is done, then date of actual move processing")
+        'Date Scheduled', default=fields.Datetime.now, index=True, required=True,
+        help="Scheduled date until move is done, then date of actual move processing")
+    date_deadline = fields.Datetime(
+        "Deadline", readonly=True,
+        help="Date Promise to the customer on the top level document (SO/PO)")
     company_id = fields.Many2one(
         'res.company', 'Company',
         default=lambda self: self.env.company,
         index=True, required=True)
-    date_expected = fields.Datetime(
-        'Expected Date', default=fields.Datetime.now, index=True, required=True,
-        states={'done': [('readonly', True)]},
-        help="Scheduled date for the processing of this move")
     product_id = fields.Many2one(
         'product.product', 'Product',
         check_company=True,
@@ -131,12 +133,7 @@ class StockMove(models.Model):
     propagate_cancel = fields.Boolean(
         'Propagate cancel and split', default=True,
         help='If checked, when this move is cancelled, cancel the linked move too')
-    propagate_date = fields.Boolean(string="Propagate Rescheduling",
-        help='The rescheduling is propagated to the next move.')
-    propagate_date_minimum_delta = fields.Integer(string='Reschedule if Higher Than',
-        help='The change must be higher than this value to be propagated')
-    delay_alert = fields.Boolean('Alert if Delay')
-    delay_alert_date = fields.Datetime('Delay Alert Date', help='Process at this date to be on time')
+    delay_alert_date = fields.Datetime('Delay Alert Date', help='Process at this date to be on time', compute="_compute_delay_alert_date", store=True)
     picking_type_id = fields.Many2one('stock.picking.type', 'Operation Type', check_company=True)
     inventory_id = fields.Many2one('stock.inventory', 'Inventory', check_company=True)
     move_line_ids = fields.One2many('stock.move.line', 'move_id')
@@ -178,11 +175,14 @@ class StockMove(models.Model):
     next_serial = fields.Char('First SN')
     next_serial_count = fields.Integer('Number of SN')
     orderpoint_id = fields.Many2one('stock.warehouse.orderpoint', 'Original Reordering Rule', check_company=True)
+    json_forecast = fields.Char('JSON data for the forecast widget', compute='_compute_json_forecast')
+    lot_ids = fields.Many2many('stock.production.lot', compute='_compute_lot_ids', inverse='_set_lot_ids', string='Serial Numbers', readonly=False)
 
     @api.onchange('product_id', 'picking_type_id')
     def onchange_product(self):
         if self.product_id:
-            self.description_picking = self.product_id._get_description(self.picking_type_id)
+            product = self.product_id.with_context(lang=self.picking_id.partner_id.lang or self.env.user.lang)
+            self.description_picking = product._get_description(self.picking_type_id)
 
     @api.depends('has_tracking', 'picking_type_id.use_create_lots', 'picking_type_id.use_existing_lots', 'state')
     def _compute_display_assign_serial(self):
@@ -194,6 +194,11 @@ class StockMove(models.Model):
                 not move.picking_type_id.use_existing_lots
             )
 
+    @api.depends('picking_id.priority')
+    def _compute_priority(self):
+        for move in self:
+            move.priority = move.picking_id.priority or '0'
+
     @api.depends('picking_id.is_locked')
     def _compute_is_locked(self):
         for move in self:
@@ -202,7 +207,7 @@ class StockMove(models.Model):
             else:
                 move.is_locked = False
 
-    @api.depends('product_id', 'has_tracking')
+    @api.depends('product_id', 'has_tracking', 'move_line_ids')
     def _compute_show_details_visible(self):
         """ According to this field, the button that calls `action_show_details` will be displayed
         to work on a move from its picking form view, or not.
@@ -216,10 +221,12 @@ class StockMove(models.Model):
         for move in self:
             if not move.product_id:
                 move.show_details_visible = False
+            elif len(move.move_line_ids) > 1:
+                move.show_details_visible = True
             else:
                 move.show_details_visible = (((consignment_enabled and move.picking_id.picking_type_id.code != 'incoming') or
                                              show_details_visible or move.has_tracking != 'none') and
-                                             (move.state != 'draft' or (move.picking_id.immediate_transfer and move.state == 'draft')) and
+                                             move._show_details_in_draft() and
                                              move.picking_id.picking_type_id.show_operations is False)
 
     def _compute_show_reserved_availability(self):
@@ -280,9 +287,24 @@ class StockMove(models.Model):
         """ This will return the move lines to consider when applying _quantity_done_compute on a stock.move.
         In some context, such as MRP, it is necessary to compute quantity_done on filtered sock.move.line."""
         self.ensure_one()
-        return self.move_line_ids or self.move_line_nosuggest_ids
+        if self.picking_type_id.show_reserved is False:
+            return self.move_line_nosuggest_ids
+        return self.move_line_ids
 
-    @api.depends('move_line_ids.qty_done', 'move_line_ids.product_uom_id', 'move_line_nosuggest_ids.qty_done')
+    @api.depends('move_orig_ids.date', 'move_orig_ids.state', 'state', 'date')
+    def _compute_delay_alert_date(self):
+        for move in self:
+            if move.state in ('done', 'cancel'):
+                move.delay_alert_date = False
+                continue
+            prev_moves = move.move_orig_ids.filtered(lambda m: m.state not in ('done', 'cancel') and m.date)
+            prev_max_date = max(prev_moves.mapped("date"), default=False)
+            if prev_max_date and prev_max_date > move.date:
+                move.delay_alert_date = prev_max_date
+            else:
+                move.delay_alert_date = False
+
+    @api.depends('move_line_ids.qty_done', 'move_line_ids.product_uom_id', 'move_line_nosuggest_ids.qty_done', 'picking_type_id')
     def _quantity_done_compute(self):
         """ This field represents the sum of the move lines `qty_done`. It allows the user to know
         if there is still work to do.
@@ -292,28 +314,36 @@ class StockMove(models.Model):
         field will be used in `_action_done` in order to know if the move will need a backorder or
         an extra move.
         """
-        move_lines = self.env['stock.move.line']
-        for move in self:
-            move_lines |= move._get_move_lines()
+        if not any(self._ids):
+            # onchange
+            for move in self:
+                quantity_done = 0
+                for move_line in move._get_move_lines():
+                    quantity_done += move_line.product_uom_id._compute_quantity(
+                        move_line.qty_done, move.product_uom, round=False)
+                move.quantity_done = quantity_done
+        else:
+            # compute
+            move_lines = self.env['stock.move.line']
+            for move in self:
+                move_lines |= move._get_move_lines()
 
-        data = self.env['stock.move.line'].read_group(
-            [('id', 'in', move_lines.ids)],
-            ['move_id', 'product_uom_id', 'qty_done'], ['move_id', 'product_uom_id'],
-            lazy=False
-        )
-
-        rec = defaultdict(list)
-        for d in data:
-            rec[d['move_id'][0]] += [(d['product_uom_id'][0], d['qty_done'])]
-
-        # In case we are in an onchange, move.id is a NewId, not an integer. Therefore, there is no
-        # match in the rec dictionary. By using move.ids[0] we get the correct integer value.
-        for move in self:
-            uom = move.product_uom
-            move.quantity_done = sum(
-                self.env['uom.uom'].browse(line_uom_id)._compute_quantity(qty, uom, round=False)
-                for line_uom_id, qty in rec.get(move.ids[0] if move.ids else move.id, [])
+            data = self.env['stock.move.line'].read_group(
+                [('id', 'in', move_lines.ids)],
+                ['move_id', 'product_uom_id', 'qty_done'], ['move_id', 'product_uom_id'],
+                lazy=False
             )
+
+            rec = defaultdict(list)
+            for d in data:
+                rec[d['move_id'][0]] += [(d['product_uom_id'][0], d['qty_done'])]
+
+            for move in self:
+                uom = move.product_uom
+                move.quantity_done = sum(
+                    self.env['uom.uom'].browse(line_uom_id)._compute_quantity(qty, uom, round=False)
+                     for line_uom_id, qty in rec.get(move.ids[0] if move.ids else move.id, [])
+                )
 
     def _quantity_done_set(self):
         quantity_done = self[0].quantity_done  # any call to create will invalidate `move.quantity_done`
@@ -327,7 +357,12 @@ class StockMove(models.Model):
             elif len(move_lines) == 1:
                 move_lines[0].qty_done = quantity_done
             else:
-                raise UserError(_("Cannot set the done quantity from this stock move, work directly with the move lines."))
+                # Bypass the error if we're trying to write the same value.
+                ml_quantity_done = 0
+                for move_line in move_lines:
+                    ml_quantity_done += move_line.product_uom_id._compute_quantity(move_line.qty_done, move.product_uom, round=False)
+                if float_compare(quantity_done, ml_quantity_done, precision_rounding=move.product_uom.rounding) != 0:
+                    raise UserError(_("Cannot set the done quantity from this stock move, work directly with the move lines."))
 
     def _set_product_qty(self):
         """ The meaning of product_qty field changed lately and is now a functional field computing the quantity
@@ -342,10 +377,19 @@ class StockMove(models.Model):
         and is represented by the aggregated `product_qty` on the linked move lines. If the move
         is force assigned, the value will be 0.
         """
-        result = {data['move_id'][0]: data['product_qty'] for data in
-            self.env['stock.move.line'].read_group([('move_id', 'in', self.ids)], ['move_id','product_qty'], ['move_id'])}
-        for rec in self:
-            rec.reserved_availability = rec.product_id.uom_id._compute_quantity(result.get(rec.id, 0.0), rec.product_uom, rounding_method='HALF-UP')
+        if not any(self._ids):
+            # onchange
+            for move in self:
+                reserved_availability = sum(move.move_line_ids.mapped('product_qty'))
+                move.reserved_availability = move.product_id.uom_id._compute_quantity(
+                    reserved_availability, move.product_uom, rounding_method='HALF-UP')
+        else:
+            # compute
+            result = {data['move_id'][0]: data['product_qty'] for data in
+                      self.env['stock.move.line'].read_group([('move_id', 'in', self.ids)], ['move_id', 'product_qty'], ['move_id'])}
+            for move in self:
+                move.reserved_availability = move.product_id.uom_id._compute_quantity(
+                    result.get(move.id, 0.0), move.product_uom, rounding_method='HALF-UP')
 
     @api.depends('state', 'product_id', 'product_qty', 'location_id')
     def _compute_product_availability(self):
@@ -359,6 +403,95 @@ class StockMove(models.Model):
             else:
                 total_availability = self.env['stock.quant']._get_available_quantity(move.product_id, move.location_id) if move.product_id else 0.0
                 move.availability = min(move.product_qty, total_availability)
+
+    @api.depends('product_id', 'picking_type_id', 'picking_id', 'reserved_availability', 'priority')
+    def _compute_json_forecast(self):
+        self.json_forecast = False
+        if not any(self._ids):
+            # onchange
+            return
+        # compute
+        precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+        not_product_moves = self.filtered(lambda move: move.product_id.type == 'product')
+        for move in not_product_moves:
+            reserved_availability = float_repr(move.reserved_availability, precision)
+            move.json_forecast = json.dumps({'reservedAvailability': reserved_availability})
+        outgoing_unreserved_moves_per_warehouse = defaultdict(lambda: self.env['stock.move'])
+        for move in (self - not_product_moves):
+            picking_type = move.picking_type_id or move.picking_id.picking_type_id
+            is_unreserved = float_is_zero(move.reserved_availability, precision_rounding=move.product_uom.rounding)
+            if picking_type.code in self._consuming_picking_types():
+                if is_unreserved:
+                    outgoing_unreserved_moves_per_warehouse[picking_type.warehouse_id] |= move
+                else:
+                    reserved_availability = float_repr(move.reserved_availability, precision)
+                    move.json_forecast = json.dumps({'reservedAvailability': reserved_availability})
+        if not outgoing_unreserved_moves_per_warehouse:
+            return
+
+        for warehouse, moves in outgoing_unreserved_moves_per_warehouse.items():
+            product_variant_ids = moves.product_id.ids
+            wh_location_ids = [loc['id'] for loc in self.env['stock.location'].search_read(
+                [('id', 'child_of', warehouse.view_location_id.id)],
+                ['id'],
+            )]
+            forecast_lines = self.env['report.stock.report_product_product_replenishment']\
+                ._get_report_lines(None, product_variant_ids, wh_location_ids)
+            for move in moves:
+                found = [l for l in forecast_lines if l["move_out"] == move and l["replenishment_filled"] is True]
+                if found:
+                    move_ins = list(filter(lambda report_line: report_line['move_in'], found))
+                    # If the move is linked to multiple ingoing moves, take only the last one to have the worst expected date.
+                    if len(move_ins):
+                        found = [move_ins[-1]]
+                    # The move is replenished but there's no expected date -> take from stock
+                    if found[0]["receipt_date_short"] is False:
+                        reserved_availability = float_repr(move.reserved_availability, precision)
+                        move.json_forecast = json.dumps({'reservedAvailability': reserved_availability})
+                    else:
+                        move.json_forecast = json.dumps({
+                            'sortingDate': format_date(self.env, found[0]['move_in'].date, date_format='yyyy-MM-dd'),
+                            'expectedDate': found[0]["receipt_date_short"],
+                            'isLate': found[0]["is_late"],
+                            'replenishmentFilled': found[0]["replenishment_filled"]
+                        })
+                else:
+                    move.json_forecast = json.dumps({'expectedDate': None})
+
+    def _set_date_deadline(self):
+        # Handle the propagation of `date_deadline` fields (up and down stream - only update by up/downstream documents)
+        for move in self:
+            move_linked = (move.move_dest_ids | move.move_orig_ids).filtered(lambda m: m.state not in ('done', 'cancel'))
+            move_linked.filtered(lambda m: m.date_deadline != move.date_deadline).date_deadline = move.date_deadline
+
+    @api.depends('move_line_ids', 'move_line_ids.lot_id', 'move_line_ids.qty_done')
+    def _compute_lot_ids(self):
+        for move in self:
+            if move.picking_type_id.show_reserved is False:
+                move.lot_ids = move.move_line_nosuggest_ids.filtered(lambda ml: ml.lot_id and not float_is_zero(ml.qty_done, precision_rounding=ml.product_uom_id.rounding)).lot_id
+            else:
+                move.lot_ids = move.move_line_ids.filtered(lambda ml: ml.lot_id and not float_is_zero(ml.qty_done, precision_rounding=ml.product_uom_id.rounding)).lot_id
+
+    def _set_lot_ids(self):
+        for move in self:
+            move_lines_commands = []
+            if move.picking_type_id.show_reserved is False:
+                mls = move.move_line_nosuggest_ids
+            else:
+                mls = move.move_line_ids
+            mls = mls.filtered(lambda ml: ml.lot_id)
+            for ml in mls:
+                if ml.lot_id not in move.lot_ids:
+                    move_lines_commands.append((2, ml.id))
+            ls = move.move_line_ids.lot_id
+            for lot in move.lot_ids:
+                if lot not in ls:
+                    move_line_vals = self._prepare_move_line_vals(quantity=0)
+                    move_line_vals['lot_id'] = lot.id
+                    move_line_vals['lot_name'] = lot.name
+                    move_line_vals['qty_done'] = 1
+                    move_lines_commands.append((0, 0, move_line_vals))
+            move.write({'move_line_ids': move_lines_commands})
 
     @api.constrains('product_uom')
     def _check_uom(self):
@@ -421,34 +554,17 @@ class StockMove(models.Model):
                 # When editing the initial demand, directly run again action assign on receipt moves.
                 receipt_moves_to_reassign |= move_to_unreserve.filtered(lambda m: m.location_id.usage == 'supplier')
                 receipt_moves_to_reassign |= (self - move_to_unreserve).filtered(lambda m: m.location_id.usage == 'supplier' and m.state in ('partially_available', 'assigned'))
-
-        # Handle the propagation of `date_expected` and `date` fields.
-        propagated_date_field = False
-        if vals.get('date_expected'):
-            propagated_date_field = 'date_expected'
-        elif vals.get('state', '') == 'done' and vals.get('date'):
-            propagated_date_field = 'date'
-        if propagated_date_field:
-            new_date = fields.Datetime.to_datetime(vals.get(propagated_date_field))
-            for move in self:
-                move_dest_ids = move.move_dest_ids.filtered(lambda m: m.state not in ('done', 'cancel'))
-                delta_days = (new_date - move.date_expected).total_seconds() / 86400
-                if move.propagate_date and abs(delta_days) >= move.propagate_date_minimum_delta and move_dest_ids:
-                    for move_dest in move_dest_ids:
-                        # We want to propagate a negative delta, but not propagate an expected date
-                        # in the past.
-                        new_move_date = max(move_dest.date_expected + relativedelta.relativedelta(days=delta_days or 0), fields.Datetime.now())
-                        move_dest.date_expected = new_move_date
-                    move_dest_ids.filtered(lambda m: m.delay_alert)._propagate_date_log_note(move)
-                if move.delay_alert:
-                    move._delay_alert_check(new_date)
         res = super(StockMove, self).write(vals)
-        if vals.get('date_expected'):
-            for move in self:
-                if move.state not in ('done', 'cancel'):
-                    move.date = move.date_expected
+        if 'date_deadline' in vals:
+            self._set_date_deadline()
         if receipt_moves_to_reassign:
             receipt_moves_to_reassign._action_assign()
+        return res
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        res = super().create(vals_list)
+        res.filtered('date_deadline')._set_date_deadline()
         return res
 
     def _delay_alert_get_documents(self):
@@ -463,17 +579,15 @@ class StockMove(models.Model):
         return list(self.mapped('picking_id'))
 
     def _propagate_date_log_note(self, move_orig):
-        """Post a delay alert log note on the documents linked to `self`.
-
-        :param move_orig: the stock move triggering the delay alert on the next document
-        """
+        """Post a deadline change alert log note on the documents linked to `self`."""
+        # TODO : get the end document (PO/SO/MO)
         doc_orig = move_orig._delay_alert_get_documents()
         documents = self._delay_alert_get_documents()
         if not documents or not doc_orig:
             return
 
-        msg = _("The scheduled date has been automatically updated due to a delay on <a href='#' data-oe-model='%s' data-oe-id='%s'>%s</a>.") % (doc_orig[0]._name, doc_orig[0].id, doc_orig[0].name)
-        msg_subject = _("Scheduled date update due to delay on %s") % doc_orig[0].name
+        msg = _("The deadline has been automatically updated due to a delay on <a href='#' data-oe-model='%s' data-oe-id='%s'>%s</a>.") % (doc_orig[0]._name, doc_orig[0].id, doc_orig[0].name)
+        msg_subject = _("Deadline updates due to delay on %s", doc_orig[0].name)
         # write the message on each document
         for doc in documents:
             last_message = doc.message_ids[:1]
@@ -482,56 +596,6 @@ class StockMove(models.Model):
                 continue
             odoobot_id = self.env['ir.model.data'].xmlid_to_res_id("base.partner_root")
             doc.message_post(body=msg, author_id=odoobot_id, subject=msg_subject)
-
-    def _delay_alert_check(self, new_date=None):
-        """Set an alert on late moves by using the `delay_alert_date` field.
-        The alert is always on the move that cannot be done because its preceding moves are late.
-
-        :param new_date: the new expected date, to set when calling this method before `create` or `write`
-        :param new_date: datetime, optional
-        """
-        self.ensure_one()
-        if self.state in ('done', 'cancel'):
-            return
-
-        if new_date is None:
-            new_date = self.date_expected
-
-        # Check if `self` is scheduled after the next moves. If so, the next moves are late.
-        next_done_moves = self.browse()
-        next_nondone_moves = self.browse()
-        next_moves_dates = []
-        for move in self.move_dest_ids:
-            if move.state == 'done':
-                next_done_moves |= move
-            elif move.state != 'cancel':
-                next_nondone_moves |= move
-        next_moves_dates += next_done_moves.mapped('date')
-        next_moves_dates += next_nondone_moves.mapped('date_expected')
-        if next_moves_dates:
-            next_moves_date = min(next_moves_dates)
-            if new_date > next_moves_date:
-                next_nondone_moves.write({'delay_alert_date': new_date})
-            else:
-                next_nondone_moves.write({'delay_alert_date': False})
-
-        # Check if `self` is scheduled before the previous moves. If so, `self` if late.
-        previous_done_moves = self.browse()
-        previous_nondone_moves = self.browse()
-        previous_moves_dates = []
-        for move in self.move_orig_ids:
-            if move.state == 'done':
-                previous_done_moves |= move
-            elif move.state != 'cancel':
-                previous_nondone_moves |= move
-        previous_moves_dates += previous_done_moves.mapped('date')
-        previous_moves_dates += previous_nondone_moves.mapped('date_expected')
-        if previous_moves_dates:
-            previous_moves_date = max(previous_moves_dates)
-            if new_date < previous_moves_date:
-                self.write({'delay_alert_date': previous_moves_date})
-            else:
-                self.write({'delay_alert_date': False})
 
     def action_show_details(self):
         """ Returns an action that will open a form view (in a popup) allowing to work on all the
@@ -586,7 +650,7 @@ class StockMove(models.Model):
         """ Opens a wizard to assign SN's name on each move lines.
         """
         self.ensure_one()
-        action = self.env.ref('stock.act_assign_serial_numbers').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("stock.act_assign_serial_numbers")
         action['context'] = {
             'default_product_id': self.product_id.id,
             'default_move_id': self.id,
@@ -678,8 +742,7 @@ class StockMove(models.Model):
         origin = '/'.join(set(self.filtered(lambda m: m.origin).mapped('origin')))
         return {
             'product_uom_qty': sum(self.mapped('product_uom_qty')),
-            'date': min(self.mapped('date')),
-            'date_expected': min(self.mapped('date_expected')) if self.mapped('picking_id').move_type == 'direct' else max(self.mapped('date_expected')),
+            'date': min(self.mapped('date')) if self.mapped('picking_id').move_type == 'direct' else max(self.mapped('date')),
             'move_dest_ids': [(4, m.id) for m in self.mapped('move_dest_ids')],
             'move_orig_ids': [(4, m.id) for m in self.mapped('move_orig_ids')],
             'state': state,
@@ -691,8 +754,7 @@ class StockMove(models.Model):
         return [
             'product_id', 'price_unit', 'procure_method', 'location_id', 'location_dest_id',
             'product_uom', 'restrict_partner_id', 'scrapped', 'origin_returned_move_id',
-            'package_level_id', 'propagate_cancel', 'propagate_date', 'propagate_date_minimum_delta',
-            'delay_alert', 'description_picking'
+            'package_level_id', 'propagate_cancel', 'description_picking', 'date_deadline'
         ]
 
     @api.model
@@ -701,8 +763,7 @@ class StockMove(models.Model):
         return [
             move.product_id.id, move.price_unit, move.procure_method, move.location_id, move.location_dest_id,
             move.product_uom.id, move.restrict_partner_id.id, move.scrapped, move.origin_returned_move_id.id,
-            move.package_level_id.id, move.propagate_cancel, move.propagate_date, move.propagate_date_minimum_delta,
-            move.delay_alert, move.description_picking
+            move.package_level_id.id, move.propagate_cancel, move.description_picking
         ]
 
     def _clean_merged(self):
@@ -796,6 +857,29 @@ class StockMove(models.Model):
         self.name = product.partner_ref
         self.product_uom = product.uom_id.id
 
+    @api.onchange('lot_ids')
+    def _onchange_lot_ids(self):
+        used_lots = self.env['stock.move.line'].search([
+            ('company_id', '=', self.company_id.id),
+            ('product_id', '=', self.product_id.id),
+            ('lot_id', 'in', self.lot_ids.ids),
+            ('move_id', '!=', self._origin.id),
+            ('state', '!=', 'cancel')
+        ])
+
+        counter = self.env['stock.move.line'].search_count([
+            ('company_id', '=', self.company_id.id),
+            ('product_id', '=', self.product_id.id),
+            ('move_id', '=', self._origin.id),
+            ('lot_id', '=', False),
+            ('lot_name', '!=', False),
+        ])
+        self.update({'quantity_done': len(self.lot_ids) + counter})
+        if used_lots:
+            return {
+                'warning': {'title': _('Warning'), 'message': _('Existing Serial numbers (%s). Please correct the serial numbers encoded.') % ','.join(used_lots.lot_id.mapped('display_name'))}
+            }
+
     @api.onchange('move_line_ids', 'move_line_nosuggest_ids')
     def onchange_move_line_ids(self):
         if not self.picking_type_id.use_create_lots:
@@ -823,6 +907,15 @@ class StockMove(models.Model):
                     self.update({'move_line_ids': move_lines_commands})
                 else:
                     self.update({'move_line_nosuggest_ids': move_lines_commands})
+                existing_lots = self.env['stock.production.lot'].search([
+                    ('company_id', '=', self.company_id.id),
+                    ('product_id', '=', self.product_id.id),
+                    ('name', 'in', split_lines),
+                ])
+                if existing_lots:
+                    return {
+                        'warning': {'title': _('Warning'), 'message': _('Existing Serial Numbers (%s). Please correct the serial numbers encoded.') % ','.join(existing_lots.mapped('display_name'))}
+                    }
                 break
 
     @api.onchange('product_uom')
@@ -989,6 +1082,8 @@ class StockMove(models.Model):
 
         to_assign = {}
         for move in self:
+            if move.state != 'draft':
+                continue
             # if the move is preceeded, then it's waiting (if preceeding move is done, then action_assign has been called already and its state is already available)
             if move.move_orig_ids:
                 move_waiting |= move
@@ -1043,7 +1138,8 @@ class StockMove(models.Model):
                 group_id = False
         return {
             'product_description_variants': self.description_picking and self.description_picking.replace(self.product_id._get_description(self.picking_type_id), ''),
-            'date_planned': self.date_expected,
+            'date_planned': self.date,
+            'date_deadline': self.date_deadline,
             'move_dest_ids': self,
             'group_id': group_id,
             'route_ids': self.route_ids,
@@ -1063,6 +1159,7 @@ class StockMove(models.Model):
             'location_id': self.location_id.id,
             'location_dest_id': location_dest_id,
             'picking_id': self.picking_id.id,
+            'company_id': self.company_id.id,
         }
         if quantity:
             uom_quantity = self.product_id.uom_id._compute_quantity(quantity, self.product_uom, rounding_method='HALF-UP')
@@ -1297,7 +1394,6 @@ class StockMove(models.Model):
         self.write({
             'state': 'cancel',
             'move_orig_ids': [(5, 0, 0)],
-            'delay_alert_date': False,
             'procure_method': 'make_to_stock',
         })
         return True
@@ -1392,15 +1488,6 @@ class StockMove(models.Model):
                 # Need to do some kind of conversion here
                 qty_split = move.product_uom._compute_quantity(move.product_uom_qty - move.quantity_done, move.product_id.uom_id, rounding_method='HALF-UP')
                 new_move = move._split(qty_split)
-                for move_line in move.move_line_ids:
-                    if move_line.product_qty and move_line.qty_done:
-                        # FIXME: there will be an issue if the move was partially available
-                        # By decreasing `product_qty`, we free the reservation.
-                        # FIXME: if qty_done > product_qty, this could raise if nothing is in stock
-                        try:
-                            move_line.write({'product_uom_qty': move_line.qty_done})
-                        except UserError:
-                            pass
                 move._unreserve_initial_demand(new_move)
                 if cancel_backorder:
                     self.env['stock.move'].browse(new_move)._action_cancel()
@@ -1413,7 +1500,7 @@ class StockMove(models.Model):
             if len(result_package.quant_ids.filtered(lambda q: not float_is_zero(abs(q.quantity) + abs(q.reserved_quantity), precision_rounding=q.product_uom_id.rounding)).mapped('location_id')) > 1:
                 raise UserError(_('You cannot move the same package content more than once in the same transfer or split the same package into two location.'))
         picking = moves_todo.mapped('picking_id')
-        moves_todo.write({'state': 'done', 'date': fields.Datetime.now(), 'delay_alert_date': False})
+        moves_todo.write({'state': 'done', 'date': fields.Datetime.now()})
 
         move_dests_per_company = defaultdict(lambda: self.env['stock.move'])
         for move_dest in moves_todo.move_dest_ids:
@@ -1513,6 +1600,17 @@ class StockMove(models.Model):
                 else:
                     move.state = 'confirmed'
 
+    @api.model
+    def _consuming_picking_types(self):
+        return ['outgoing']
+
+    def _get_source_document(self):
+        """ Return the move's document, used by `report.stock.report_product_product_replenishment`
+        and must be overrided to add more document type in the report.
+        """
+        self.ensure_one()
+        return self.picking_id or False
+
     def _get_upstream_documents_and_responsibles(self, visited):
         if self.move_orig_ids and any(m.state not in ('done', 'cancel') for m in self.move_orig_ids):
             result = set()
@@ -1525,13 +1623,8 @@ class StockMove(models.Model):
         else:
             return [(self.picking_id, self.product_id.responsible_id, visited)]
 
-    def _set_quantity_done(self, qty):
-        """
-        Set the given quantity as quantity done on the move through the move lines. The method is
-        able to handle move lines with a different UoM than the move (but honestly, this would be
-        looking for trouble...).
-        @param qty: quantity in the UoM of move.product_uom
-        """
+    def _set_quantity_done_prepare_vals(self, qty):
+        res = []
         for ml in self.move_line_ids:
             ml_qty = ml.product_uom_qty - ml.qty_done
             if float_compare(ml_qty, 0, precision_rounding=ml.product_uom_id.rounding) <= 0:
@@ -1548,17 +1641,40 @@ class StockMove(models.Model):
             # Assign qty_done and explicitly round to make sure there is no inconsistency between
             # ml.qty_done and qty.
             taken_qty = float_round(taken_qty, precision_rounding=ml.product_uom_id.rounding)
-            ml.qty_done += taken_qty
+            res.append((1, ml.id, {'qty_done': ml.qty_done + taken_qty}))
             if ml.product_uom_id != self.product_uom:
                 taken_qty = ml.product_uom_id._compute_quantity(ml_qty, self.product_uom, round=False)
             qty -= taken_qty
 
             if float_compare(qty, 0.0, precision_rounding=self.product_uom.rounding) <= 0:
                 break
+
+        for ml in self.move_line_ids:
+            if float_is_zero(ml.product_uom_qty, precision_rounding=ml.product_uom_id.rounding) and float_is_zero(ml.qty_done, precision_rounding=ml.product_uom_id.rounding):
+                res.append((2, ml.id))
+
         if float_compare(qty, 0.0, precision_rounding=self.product_uom.rounding) > 0:
-            vals = self._prepare_move_line_vals(quantity=0)
-            vals['qty_done'] = qty
-            ml = self.env['stock.move.line'].create(vals)
+            if self.product_id.tracking != 'serial':
+                vals = self._prepare_move_line_vals(quantity=0)
+                vals['qty_done'] = qty
+                res.append((0, 0, vals))
+            else:
+                uom_qty = self.product_uom._compute_quantity(qty, self.product_id.uom_id)
+                for i in range(0, int(uom_qty)):
+                    vals = self._prepare_move_line_vals(quantity=0)
+                    vals['qty_done'] = 1
+                    vals['product_uom_id'] = self.product_id.uom_id.id
+                    res.append((0, 0, vals))
+        return res
+
+    def _set_quantity_done(self, qty):
+        """
+        Set the given quantity as quantity done on the move through the move lines. The method is
+        able to handle move lines with a different UoM than the move (but honestly, this would be
+        looking for trouble...).
+        @param qty: quantity in the UoM of move.product_uom
+        """
+        self.move_line_ids = self._set_quantity_done_prepare_vals(qty)
 
     def _adjust_procure_method(self):
         """ This method will try to apply the procure method MTO on some moves if
@@ -1610,3 +1726,7 @@ class StockMove(models.Model):
                 mtso_free_qties_by_loc[move.location_id][move.product_id.id] -= needed_qty
             else:
                 move.procure_method = 'make_to_order'
+
+    def _show_details_in_draft(self):
+        self.ensure_one()
+        return self.state != 'draft' or (self.picking_id.immediate_transfer and self.state == 'draft')

@@ -2,10 +2,10 @@ $-editor-messages-margin-x: 2%;
 %o-editor-messages {
     width: 100% - $-editor-messages-margin-x * 2; // Need to be forced here to avoid flickering
     margin: 20px $-editor-messages-margin-x;
-    border: 2px dashed $o-we-color-text-normal;
-    padding: 112px 0px;
+    border: 2px dashed #999999;
+    padding: 12px 0px;
     text-align: center;
-    color: $o-we-color-text-normal;
+    color: #999999;
 
     &:before {
         content: attr(data-editor-message);
@@ -28,6 +28,13 @@ $-editor-messages-margin-x: 2%;
     &:focus, &[data-oe-type] {
         min-height: 0.8em;
         min-width: 8px;
+
+        // TODO this feature just needs to be reviewed to not have to make
+        // exceptions such as this
+        &#o_footer_scrolltop_wrapper {
+            min-height: 0;
+            min-width: 0;
+        }
     }
     &.o_is_inline_editable {
         display: inline-block;
@@ -46,11 +53,9 @@ $-editor-messages-margin-x: 2%;
     }
 
     &.oe_structure.oe_empty, &[data-oe-type=html], .oe_structure.oe_empty {
-        &:empty {
+        &#wrap:empty, &#wrap > .oe_drop_zone.oe_insert:not(.oe_vertical):only-child {
             @extend %o-editor-messages;
-            &.oe_structure_small {
-                padding: 15px 0px;
-            }
+            padding: 112px 0px;
         }
         > .oe_drop_zone.oe_insert:not(.oe_vertical):only-child {
             @extend %o-editor-messages;
@@ -135,8 +140,8 @@ table.editorbar-panel {
     }
 }
 
-.editor_enable .js_language_selector {
-    display: none;
+.editor_enable .o_add_language {
+    display: none !important;
 }
 
 // Facebook Page
@@ -150,21 +155,12 @@ table.editorbar-panel {
 }
 
 // s_popup in edit mode
-.editor_has_snippets {
-    .s_popup_main {
-        z-index: 1000 !important;
-        left: $o-we-sidebar-width !important;
-        top: var(--o-we-toolbar-height) !important;
-
-        &.s_popup_fixed {
-            .s_popup_full .s_popup_content {
-               left: $o-we-sidebar-width !important;
-            }
-        }
-        &.s_popup_fixed_top {
-            .s_popup_content {
-                top: var(--o-we-toolbar-height) !important;
-            }
+body.editor_enable.editor_has_snippets {
+    .s_popup .modal {
+        top: var(--o-we-toolbar-height);
+        background-color: transparent;
+        &.fade .modal-dialog {
+            transform: none;
         }
     }
 }
@@ -173,5 +169,22 @@ table.editorbar-panel {
     .o_header_affixed {
         left: $o-we-sidebar-width !important;
         top: var(--o-we-toolbar-height) !important;
+    }
+}
+
+.editor_enable {
+    @if o-website-value('header-template') == 'sidebar' {
+        #wrapwrap > header {
+            @if o-website-value('hamburger-position') != 'right' {
+                left: $o-we-sidebar-width;
+            }
+        }
+    }
+    @if o-website-value('hamburger-type') == 'off-canvas' {
+        #top_menu_collapse {
+            &.collapsing, &.show {
+                left: $o-we-sidebar-width;
+            }
+        }
     }
 }

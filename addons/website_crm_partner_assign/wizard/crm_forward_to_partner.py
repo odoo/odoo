@@ -32,15 +32,15 @@ class CrmLeadForwardToPartner(models.TransientModel):
 
     @api.model
     def default_get(self, fields):
-        template = self.env.ref('website_crm_partner_assign.email_template_lead_forward_mail', False)
-
         res = super(CrmLeadForwardToPartner, self).default_get(fields)
         active_ids = self.env.context.get('active_ids')
-        default_composition_mode = self.env.context.get('default_composition_mode')
-        res['assignation_lines'] = []
-        if template:
-            res['body'] = template.body_html
+        if 'body' in fields:
+            template = self.env.ref('website_crm_partner_assign.email_template_lead_forward_mail', False)
+            if template:
+                res['body'] = template.body_html
         if active_ids:
+            default_composition_mode = self.env.context.get('default_composition_mode')
+            res['assignation_lines'] = []
             leads = self.env['crm.lead'].browse(active_ids)
             if default_composition_mode == 'mass_mail':
                 partner_assigned_dict = leads.search_geo_partner()
@@ -69,7 +69,7 @@ class CrmLeadForwardToPartner(models.TransientModel):
             if no_email:
                 raise UserError(_('Set an email address for the partner(s): %s') % ", ".join(no_email))
         if self.forward_type == 'single' and not self.partner_id.email:
-            raise UserError(_('Set an email address for the partner %s') % self.partner_id.name)
+            raise UserError(_('Set an email address for the partner %s', self.partner_id.name))
 
         partners_leads = {}
         for lead in self.assignation_lines:

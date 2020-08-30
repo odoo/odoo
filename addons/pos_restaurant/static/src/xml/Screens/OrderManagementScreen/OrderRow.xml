@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="OrderRow" t-inherit="point_of_sale.OrderRow" t-inherit-mode="extension" owl="1">
+        <xpath expr="//div[hasclass('order-row')]//div[hasclass('customer')]" position="after">
+            <div t-if="env.pos.config.module_pos_restaurant" class="item table">
+                <t t-esc="table" />
+            </div>
+        </xpath>
+    </t>
+
+</templates>

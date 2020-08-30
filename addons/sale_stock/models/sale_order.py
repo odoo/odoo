@@ -8,7 +8,10 @@ from collections import defaultdict
 
 from odoo import api, fields, models, _
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, float_compare, float_round
+from odoo.tools.float_utils import float_repr
+from odoo.tools.misc import format_date
 from odoo.exceptions import UserError
+
 
 _logger = logging.getLogger(__name__)
 
@@ -109,6 +112,11 @@ class SaleOrder(models.Model):
                         You should probably update the partner on this document.""") % addresses
                 picking.activity_schedule('mail.mail_activity_data_warning', note=message, user_id=self.env.user.id)
 
+        if values.get('commitment_date'):
+            # protagate commitment_date as the deadline of the related stock move.
+            # TODO: Log a note on each down document
+            self.order_line.move_ids.date_deadline = fields.Datetime.to_datetime(values.get('commitment_date'))
+
         res = super(SaleOrder, self).write(values)
         if values.get('order_line') and self.state == 'sale':
             for order in self:
@@ -177,7 +185,7 @@ class SaleOrder(models.Model):
         of given sales order ids. It can either be a in a list or in a form
         view, if there is only one delivery order to show.
         '''
-        action = self.env.ref('stock.action_picking_tree_all').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("stock.action_picking_tree_all")
 
         pickings = self.mapped('picking_ids')
         if len(pickings) > 1:
@@ -263,10 +271,11 @@ class SaleOrderLine(models.Model):
     scheduled_date = fields.Datetime(compute='_compute_qty_at_date')
     free_qty_today = fields.Float(compute='_compute_qty_at_date')
     qty_available_today = fields.Float(compute='_compute_qty_at_date')
-    warehouse_id = fields.Many2one('stock.warehouse', compute='_compute_qty_at_date')
+    warehouse_id = fields.Many2one(related='order_id.warehouse_id')
     qty_to_deliver = fields.Float(compute='_compute_qty_to_deliver')
     is_mto = fields.Boolean(compute='_compute_is_mto')
     display_qty_widget = fields.Boolean(compute='_compute_qty_to_deliver')
+    json_forecast = fields.Char('JSON data for the forecast widget', compute='_compute_json_forecast')
 
     @api.depends('product_id', 'product_uom_qty', 'qty_delivered', 'state')
     def _compute_qty_to_deliver(self):
@@ -278,7 +287,7 @@ class SaleOrderLine(models.Model):
             else:
                 line.display_qty_widget = False
 
-    @api.depends('product_id', 'customer_lead', 'product_uom_qty', 'product_uom', 'order_id.warehouse_id', 'order_id.commitment_date')
+    @api.depends('product_id', 'customer_lead', 'product_uom_qty', 'product_uom', 'order_id.commitment_date')
     def _compute_qty_at_date(self):
         """ Compute the quantity forecasted of product at delivery date. There are
         two cases:
@@ -290,9 +299,8 @@ class SaleOrderLine(models.Model):
         # We first loop over the SO lines to group them by warehouse and schedule
         # date in order to batch the read of the quantities computed field.
         for line in self:
-            if not line.display_qty_widget:
+            if not (line.product_id and line.display_qty_widget):
                 continue
-            line.warehouse_id = line.order_id.warehouse_id
             if line.order_id.commitment_date:
                 date = line.order_id.commitment_date
             else:
@@ -327,7 +335,6 @@ class SaleOrderLine(models.Model):
         remaining.scheduled_date = False
         remaining.free_qty_today = False
         remaining.qty_available_today = False
-        remaining.warehouse_id = False
 
     @api.depends('product_id', 'route_id', 'order_id.warehouse_id', 'product_id.route_ids')
     def _compute_is_mto(self):
@@ -355,6 +362,35 @@ class SaleOrderLine(models.Model):
                 line.is_mto = True
             else:
                 line.is_mto = False
+
+    @api.depends('move_ids', 'order_id.expected_date', 'qty_delivered')
+    def _compute_json_forecast(self):
+        self.json_forecast = False
+        if not any(self._ids):
+            # onchange
+            return
+        # compute
+        precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+        for so_line in self:
+            if any(move.state == 'done' for move in so_line.move_ids) or not so_line.move_ids.picking_id:
+                qty_delivered = float_repr(so_line.qty_delivered, precision)
+                so_line.json_forecast = json.dumps({'reservedAvailability': qty_delivered})
+            else:
+                # For waiting deliveries, take the info from the report line.
+                delivery = so_line.move_ids.picking_id.filtered(lambda picking: picking.state in ['confirmed', 'waiting'])
+                if delivery.exists():
+                    moves_to_process = so_line.move_ids.filtered(lambda move: move.id in delivery.move_lines.ids and move.state not in ['cancel', 'done'])
+                    if moves_to_process.exists():
+                        so_line.json_forecast = moves_to_process[0].json_forecast
+                else:
+                    # For assigned deliveries, take the delivery's date.
+                    delivery = so_line.move_ids.picking_id.filtered(lambda picking: picking.state == 'assigned')
+                    if delivery.exists():
+                        date_expected = delivery.scheduled_date
+                        so_line.json_forecast = json.dumps({
+                            'expectedDate': format_date(self.env, date_expected),
+                            'isLate': date_expected > so_line.order_id.expected_date,
+                        })
 
     @api.depends('product_id')
     def _compute_qty_delivered_method(self):
@@ -402,6 +438,9 @@ class SaleOrderLine(models.Model):
         res = super(SaleOrderLine, self).write(values)
         if lines:
             lines._action_launch_stock_rule(previous_product_uom_qty)
+        if 'customer_lead' in values and self.state == 'sale' and not self.order_id.commitment_date:
+            # Propagate deadline on related stock move
+            self.move_ids.date_deadline = self.order_id.date_order + timedelta(days=self.customer_lead or 0.0)
         return res
 
     @api.depends('order_id.state')
@@ -465,23 +504,20 @@ class SaleOrderLine(models.Model):
         """
         values = super(SaleOrderLine, self)._prepare_procurement_values(group_id)
         self.ensure_one()
-        date_planned = self.order_id.date_order\
-            + timedelta(days=self.customer_lead or 0.0) - timedelta(days=self.order_id.company_id.security_lead)
+        # Use the delivery date if there is else use date_order and lead time
+        date_deadline = self.order_id.commitment_date or (self.order_id.date_order + timedelta(days=self.customer_lead or 0.0))
+        date_planned = date_deadline - timedelta(days=self.order_id.company_id.security_lead)
         values.update({
             'group_id': group_id,
             'sale_line_id': self.id,
             'date_planned': date_planned,
+            'date_deadline': date_deadline,
             'route_ids': self.route_id,
             'warehouse_id': self.order_id.warehouse_id or False,
             'partner_id': self.order_id.partner_shipping_id.id,
             'product_description_variants': self._get_sale_order_line_multiline_description_variants(),
             'company_id': self.order_id.company_id,
         })
-        for line in self.filtered("order_id.commitment_date"):
-            date_planned = fields.Datetime.from_string(line.order_id.commitment_date) - timedelta(days=line.order_id.company_id.security_lead)
-            values.update({
-                'date_planned': fields.Datetime.to_string(date_planned),
-            })
         return values
 
     def _get_qty_procurement(self, previous_product_uom_qty=False):
@@ -584,7 +620,13 @@ class SaleOrderLine(models.Model):
             return {
                 'warning': {
                     'title': _('Warning'),
-                    'message': _("This product is packaged by %.2f %s. You should sell %.2f %s.") % (pack.qty, default_uom.name, newqty, self.product_uom.name),
+                    'message': _(
+                        "This product is packaged by %(pack_size).2f %(pack_name)s. You should sell %(quantity).2f %(unit)s.",
+                        pack_size=pack.qty,
+                        pack_name=default_uom.name,
+                        quantity=newqty,
+                        unit=self.product_uom.name
+                    ),
                 },
             }
         return {}

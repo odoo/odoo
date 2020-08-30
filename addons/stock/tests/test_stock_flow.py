@@ -1328,7 +1328,7 @@ class TestStockFlow(TestStockCommon):
         # Set the quantity done on the pack operation
         move_in.move_line_ids.qty_done = 3.0
         # Put in a pack
-        picking_in.put_in_pack()
+        picking_in.action_put_in_pack()
         # Get the new package
         picking_in_package = move_in.move_line_ids.result_package_id
         # Validate picking
@@ -1723,8 +1723,7 @@ class TestStockFlow(TestStockCommon):
             'location_id': self.stock_location,
             'location_dest_id': self.customer_location})
 
-        with self.assertRaises(UserError):
-            move_mto_alone._action_confirm()
+        move_mto_alone._action_confirm()
         move_with_ancestors._action_confirm()
         other_move._action_confirm()
 
@@ -1732,7 +1731,7 @@ class TestStockFlow(TestStockCommon):
         move_with_ancestors._do_unreserve()
         other_move._do_unreserve()
 
-        self.assertEqual(move_mto_alone.state, "draft")
+        self.assertEqual(move_mto_alone.state, "waiting")
         self.assertEqual(move_with_ancestors.state, "waiting")
         self.assertEqual(other_move.state, "confirmed")
 

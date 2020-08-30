@@ -63,26 +63,24 @@ class ServerActions(models.Model):
             if action.state == 'next_activity' and not action.model_id.is_mail_thread:
                 raise ValidationError(_("A next activity can only be planned on models that use the chatter"))
 
-    @api.model
-    def run_action_followers_multi(self, action, eval_context=None):
-        Model = self.env[action.model_name]
+    def _run_action_followers_multi(self, eval_context=None):
+        Model = self.env[self.model_name]
         if self.partner_ids or self.channel_ids and hasattr(Model, 'message_subscribe'):
             records = Model.browse(self._context.get('active_ids', self._context.get('active_id')))
             records.message_subscribe(self.partner_ids.ids, self.channel_ids.ids)
         return False
 
-    @api.model
-    def _is_recompute(self, action):
+    def _is_recompute(self):
         """When an activity is set on update of a record,
         update might be triggered many times by recomputes.
         When need to know it to skip these steps.
         Except if the computed field is supposed to trigger the action
         """
-        records = self.env[action.model_name].browse(
+        records = self.env[self.model_name].browse(
             self._context.get('active_ids', self._context.get('active_id')))
-        old_values = action._context.get('old_values')
+        old_values = self._context.get('old_values')
         if old_values:
-            domain_post = action._context.get('domain_post')
+            domain_post = self._context.get('domain_post')
             tracked_fields = []
             if domain_post:
                 for leaf in domain_post:
@@ -98,39 +96,39 @@ class ServerActions(models.Model):
                     return True
         return False
 
-    @api.model
-    def run_action_email(self, action, eval_context=None):
+    def _run_action_email(self, eval_context=None):
         # TDE CLEANME: when going to new api with server action, remove action
-        if not action.template_id or not self._context.get('active_id') or self._is_recompute(action):
+        if not self.template_id or not self._context.get('active_id') or self._is_recompute():
             return False
         # Clean context from default_type to avoid making attachment
         # with wrong values in subsequent operations
         cleaned_ctx = dict(self.env.context)
         cleaned_ctx.pop('default_type', None)
         cleaned_ctx.pop('default_parent_id', None)
-        action.template_id.with_context(cleaned_ctx).send_mail(self._context.get('active_id'), force_send=False, raise_exception=False)
+        self.template_id.with_context(cleaned_ctx).send_mail(self._context.get('active_id'), force_send=False,
+                                                             raise_exception=False)
         return False
 
-    @api.model
-    def run_action_next_activity(self, action, eval_context=None):
-        if not action.activity_type_id or not self._context.get('active_id') or self._is_recompute(action):
+    def _run_action_next_activity(self, eval_context=None):
+        if not self.activity_type_id or not self._context.get('active_id') or self._is_recompute():
             return False
 
-        records = self.env[action.model_name].browse(self._context.get('active_ids', self._context.get('active_id')))
+        records = self.env[self.model_name].browse(self._context.get('active_ids', self._context.get('active_id')))
 
         vals = {
-            'summary': action.activity_summary or '',
-            'note': action.activity_note or '',
-            'activity_type_id': action.activity_type_id.id,
+            'summary': self.activity_summary or '',
+            'note': self.activity_note or '',
+            'activity_type_id': self.activity_type_id.id,
         }
-        if action.activity_date_deadline_range > 0:
-            vals['date_deadline'] = fields.Date.context_today(action) + relativedelta(**{action.activity_date_deadline_range_type: action.activity_date_deadline_range})
+        if self.activity_date_deadline_range > 0:
+            vals['date_deadline'] = fields.Date.context_today(self) + relativedelta(**{
+                self.activity_date_deadline_range_type: self.activity_date_deadline_range})
         for record in records:
             user = False
-            if action.activity_user_type == 'specific':
-                user = action.activity_user_id
-            elif action.activity_user_type == 'generic' and action.activity_user_field_name in record:
-                user = record[action.activity_user_field_name]
+            if self.activity_user_type == 'specific':
+                user = self.activity_user_id
+            elif self.activity_user_type == 'generic' and self.activity_user_field_name in record:
+                user = record[self.activity_user_field_name]
             if user:
                 vals['user_id'] = user.id
             record.activity_schedule(**vals)

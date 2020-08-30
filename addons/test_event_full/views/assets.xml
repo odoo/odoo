@@ -1,0 +1,8 @@
+<?xml version="1.0" ?>
+<odoo><data>
+    <template id="assets_tests" inherit_id="web.assets_tests" name="Full Event Tests Assets">
+        <xpath expr="//script[last()]" position="after">
+            <script type="text/javascript" src="/test_event_full/static/src/js/tours/wevent_register_tour.js"/>
+        </xpath>
+    </template>
+</data></odoo>

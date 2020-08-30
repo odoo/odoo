@@ -2,24 +2,31 @@
 <odoo>
 <data>
 
-<template id="report_location_barcode">
+<template id="report_generic_barcode">
     <t t-call="web.html_container">
-      <div t-foreach="[[docs[x:x+2], docs[x+2:x+4]] for x in range(0, len(docs), 4)]" t-as="page_docs" class="page article page_stock_location_barcodes">
+      <div t-foreach="[[docs[x:x+2], docs[x+2:x+4]] for x in range(0, len(docs), 4)]" t-as="page_docs" class="page article">
+        <t t-if="title">
+          <h2 style="text-align: center; font-size: 3em"><t t-esc="title"/></h2>
+        </t>
         <table height="1000">
             <t t-foreach="page_docs" t-as="page_row">
-            <tr>
-              <t t-foreach="page_row" t-as="o">
-                <t t-if="o.barcode"><t t-set="content" t-value="o.barcode"/></t>
-                <t t-if="not o.barcode"><t t-set="content" t-value="o.name"/></t>
-                <td>
-                <img class="barcode" t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s&amp;humanreadable=1' % ('Code128', content, 600, 100)" alt="Barcode"/>
-                </td>
-              </t>
-            </tr>
+              <tr>
+                <t t-foreach="page_row" t-as="o">
+                  <td>
+                    <div style="text-align: center; font-size: 2em"><span t-field="o.name"/></div>
+                    <img t-if="o.barcode" class="barcode" t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s&amp;humanreadable=1' % ('Code128', o.barcode, 600, 150)" alt="Barcode"/>
+                  </td>
+                </t>
+              </tr>
             </t>
         </table>
       </div>
     </t>
+</template>
+
+<template id="report_location_barcode">
+    <t t-set="title">Locations</t>
+    <t t-call="stock.report_generic_barcode"/>
 </template>
 </data>
 </odoo>

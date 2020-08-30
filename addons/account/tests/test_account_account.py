@@ -52,7 +52,7 @@ class TestAccountAccount(AccountTestInvoicingCommon):
                 }),
             ],
         })
-        move.post()
+        move.action_post()
 
         self.assertRecordValues(move.line_ids, [
             {'reconciled': False, 'amount_residual': 0.0, 'amount_residual_currency': 0.0},
@@ -115,7 +115,7 @@ class TestAccountAccount(AccountTestInvoicingCommon):
                 }),
             ],
         })
-        move.post()
+        move.action_post()
 
         # Set the account as reconcile and partially reconcile something.
         account.reconcile = True

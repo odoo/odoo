@@ -108,7 +108,10 @@ class IrHttp(models.AbstractModel):
             request.uid = request.session.uid
 
     @classmethod
-    def _authenticate(cls, auth_method='user'):
+    def _authenticate(cls, endpoint):
+        auth_method = endpoint.routing["auth"]
+        if request._is_cors_preflight(endpoint):
+            auth_method = 'none'
         try:
             if request.session.uid:
                 try:
@@ -194,7 +197,12 @@ class IrHttp(models.AbstractModel):
                 return serve
 
         # Don't handle exception but use werkzeug debugger if server in --dev mode
-        if 'werkzeug' in tools.config['dev_mode'] and not isinstance(exception, werkzeug.exceptions.NotFound):
+        # Don't intercept JSON request to respect the JSON Spec and return exception as JSON
+        # "The Response is expressed as a single JSON Object, with the following members:
+        #   jsonrpc, result, error, id"
+        if ('werkzeug' in tools.config['dev_mode']
+                and not isinstance(exception, werkzeug.exceptions.NotFound)
+                and request._request_type != 'json'):
             raise exception
 
         try:
@@ -215,7 +223,7 @@ class IrHttp(models.AbstractModel):
 
         # check authentication level
         try:
-            auth_method = cls._authenticate(func.routing["auth"])
+            auth_method = cls._authenticate(func)
         except Exception as e:
             return cls._handle_exception(e)
 

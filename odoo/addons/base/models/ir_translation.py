@@ -137,9 +137,9 @@ class IrTranslationImport(object):
         cr.execute(""" INSERT INTO %s(name, lang, res_id, src, type, value, module, state, comments)
                        SELECT name, lang, res_id, src, type, value, module, state, comments
                        FROM %s
-                       WHERE %s
+                       WHERE %%s OR noupdate is true
                        ON CONFLICT DO NOTHING;
-                   """ % (self._model_table, self._table, 'noupdate IS TRUE' if self._overwrite else 'TRUE'))
+                   """ % (self._model_table, self._table), [not self._overwrite])
         count += cr.rowcount
 
         if self._debug:
@@ -547,7 +547,7 @@ class IrTranslation(models.Model):
                         continue
                     value2 = field.translate({val: src}.get, value1)
                     if value2 != value0:
-                        raise ValidationError(_("Translation is not valid:\n%s") % val)
+                        raise ValidationError(_("Translation is not valid:\n%s", val))
 
     @api.model_create_multi
     def create(self, vals_list):

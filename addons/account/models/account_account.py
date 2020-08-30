@@ -35,14 +35,14 @@ class AccountAccountType(models.Model):
 class AccountAccount(models.Model):
     _name = "account.account"
     _description = "Account"
-    _order = "code, company_id"
+    _order = "is_off_balance, code, company_id"
     _check_company_auto = True
 
     @api.constrains('internal_type', 'reconcile')
     def _check_reconcile(self):
         for account in self:
             if account.internal_type in ('receivable', 'payable') and account.reconcile == False:
-                raise ValidationError(_('You cannot have a receivable/payable account that is not reconcilable. (account code: %s)') % account.code)
+                raise ValidationError(_('You cannot have a receivable/payable account that is not reconcilable. (account code: %s)', account.code))
 
     @api.constrains('user_type_id')
     def _check_user_type_id(self):
@@ -52,9 +52,9 @@ class AccountAccount(models.Model):
             if res.get('company_id_count', 0) >= 2:
                 account_unaffected_earnings = self.search([('company_id', '=', res['company_id'][0]),
                                                            ('user_type_id', '=', data_unaffected_earnings.id)])
-                raise ValidationError(_('You cannot have more than one account with "Current Year Earnings" as type. (accounts: %s)') % [a.code for a in account_unaffected_earnings])
+                raise ValidationError(_('You cannot have more than one account with "Current Year Earnings" as type. (accounts: %s)', [a.code for a in account_unaffected_earnings]))
 
-    name = fields.Char(required=True, index=True)
+    name = fields.Char(string="Account Name", required=True, index=True)
     currency_id = fields.Many2one('res.currency', string='Account Currency',
         help="Forces all moves for this account to have this account currency.")
     code = fields.Char(size=64, required=True, index=True)
@@ -76,12 +76,15 @@ class AccountAccount(models.Model):
     company_id = fields.Many2one('res.company', string='Company', required=True, readonly=True,
         default=lambda self: self.env.company)
     tag_ids = fields.Many2many('account.account.tag', 'account_account_account_tag', string='Tags', help="Optional tags you may want to assign for custom reporting")
-    group_id = fields.Many2one('account.group', compute='_compute_account_group', store=True)
+    group_id = fields.Many2one('account.group', compute='_compute_account_group', store=True, readonly=False)
     root_id = fields.Many2one('account.root', compute='_compute_account_root', store=True)
     allowed_journal_ids = fields.Many2many('account.journal', string="Allowed Journals", help="Define in which journals this account can be used. If empty, can be used in all journals.")
 
-    opening_debit = fields.Monetary(string="Opening debit", compute='_compute_opening_debit_credit', inverse='_set_opening_debit', help="Opening debit value for this account.")
-    opening_credit = fields.Monetary(string="Opening credit", compute='_compute_opening_debit_credit', inverse='_set_opening_credit', help="Opening credit value for this account.")
+    opening_debit = fields.Monetary(string="Opening Debit", compute='_compute_opening_debit_credit', inverse='_set_opening_debit', help="Opening debit value for this account.")
+    opening_credit = fields.Monetary(string="Opening Credit", compute='_compute_opening_debit_credit', inverse='_set_opening_credit', help="Opening credit value for this account.")
+    opening_balance = fields.Monetary(string="Opening Balance", compute='_compute_opening_debit_credit', help="Opening balance value for this account.")
+
+    is_off_balance = fields.Boolean(compute='_compute_is_off_balance', default=False, store=True, readonly=True)
 
     _sql_constraints = [
         ('code_company_uniq', 'unique (code,company_id)', 'The code of the account must be unique per company !')
@@ -122,8 +125,7 @@ class AccountAccount(models.Model):
         self.env['account.account'].flush(['currency_id'])
         self.env['account.journal'].flush([
             'currency_id',
-            'default_debit_account_id',
-            'default_credit_account_id',
+            'default_account_id',
             'payment_debit_account_id',
             'payment_credit_account_id',
             'suspense_account_id',
@@ -133,9 +135,7 @@ class AccountAccount(models.Model):
             FROM account_account account
             JOIN res_company company ON company.id = account.company_id
             JOIN account_journal journal ON
-                journal.default_debit_account_id = account.id
-                OR
-                journal.default_credit_account_id = account.id
+                journal.default_account_id = account.id
             WHERE account.id IN %s
             AND journal.type IN ('bank', 'cash')
             AND journal.currency_id IS NOT NULL
@@ -146,7 +146,11 @@ class AccountAccount(models.Model):
         if res:
             account = self.env['account.account'].browse(res[0])
             journal = self.env['account.journal'].browse(res[1])
-            raise ValidationError(_("The foreign currency set on the journal '%s' and the account '%s' must be the same.") % (journal.display_name, account.display_name))
+            raise ValidationError(_(
+                "The foreign currency set on the journal '%(journal)s' and the account '%(account)s' must be the same.",
+                journal=journal.display_name,
+                account=account.display_name
+            ))
 
     @api.constrains('company_id')
     def _check_company_consistency(self):
@@ -174,7 +178,7 @@ class AccountAccount(models.Model):
             SELECT account.id
             FROM account_account account
             JOIN account_account_type acc_type ON account.user_type_id = acc_type.id
-            JOIN account_journal journal ON journal.default_credit_account_id = account.id OR journal.default_debit_account_id = account.id
+            JOIN account_journal journal ON journal.default_account_id = account.id
             WHERE account.id IN %s
             AND acc_type.type IN ('receivable', 'payable')
             AND journal.type IN ('sale', 'purchase')
@@ -220,17 +224,30 @@ class AccountAccount(models.Model):
         raise UserError(_('Cannot generate an unused account code.'))
 
     def _compute_opening_debit_credit(self):
+        if not self:
+            return
+        self.env.cr.execute("""
+            SELECT line.account_id,
+                   SUM(line.balance) AS balance,
+                   SUM(line.debit) AS debit,
+                   SUM(line.credit) AS credit
+              FROM account_move_line line
+              JOIN res_company comp ON comp.id = line.company_id
+             WHERE line.move_id = comp.account_opening_move_id
+               AND line.account_id IN %s
+             GROUP BY line.account_id
+        """, [tuple(self.ids)])
+        result = {r['account_id']: r for r in self.env.cr.dictfetchall()}
         for record in self:
-            opening_debit = opening_credit = 0.0
-            if record.company_id.account_opening_move_id:
-                for line in self.env['account.move.line'].search([('account_id', '=', record.id),
-                                                                 ('move_id','=', record.company_id.account_opening_move_id.id)]):
-                    if line.debit:
-                        opening_debit += line.debit
-                    elif line.credit:
-                        opening_credit += line.credit
-            record.opening_debit = opening_debit
-            record.opening_credit = opening_credit
+            res = result.get(record.id) or {'debit': 0, 'credit': 0, 'balance': 0}
+            record.opening_debit = res['debit']
+            record.opening_credit = res['credit']
+            record.opening_balance = res['balance']
+
+    @api.depends('internal_group')
+    def _compute_is_off_balance(self):
+        for account in self:
+            account.is_off_balance = account.internal_group == "off_balance"
 
     def _set_opening_debit(self):
         self._set_opening_debit_credit(self.opening_debit, 'debit')
@@ -292,6 +309,8 @@ class AccountAccount(models.Model):
         """If we're creating a new account through a many2one, there are chances that we typed the account code
         instead of its name. In that case, switch both fields values.
         """
+        if 'name' not in default_fields and 'code' not in default_fields:
+            return super().default_get(default_fields)
         default_name = self._context.get('default_name')
         default_code = self._context.get('default_code')
         if default_name and not default_code:
@@ -312,8 +331,7 @@ class AccountAccount(models.Model):
             domain = ['|', ('code', '=ilike', name.split(' ')[0] + '%'), ('name', operator, name)]
             if operator in expression.NEGATIVE_TERM_OPERATORS:
                 domain = ['&', '!'] + domain[1:]
-        account_ids = self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
-        return models.lazy_name_get(self.browse(account_ids).with_user(name_get_uid))
+        return self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
 
     @api.onchange('user_type_id')
     def _onchange_user_type_id(self):
@@ -436,7 +454,7 @@ class AccountAccount(models.Model):
         if partner_prop_acc:
             account_name = partner_prop_acc.get_by_record().display_name
             raise UserError(
-                _('You cannot remove/deactivate the account %s which is set on a customer or vendor.') % account_name
+                _('You cannot remove/deactivate the account %s which is set on a customer or vendor.', account_name)
             )
         return super(AccountAccount, self).unlink()
 
@@ -505,8 +523,7 @@ class AccountGroup(models.Model):
         else:
             criteria_operator = ['|'] if operator not in expression.NEGATIVE_TERM_OPERATORS else ['&', '!']
             domain = criteria_operator + [('code_prefix_start', '=ilike', name + '%'), ('name', operator, name)]
-        group_ids = self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
-        return models.lazy_name_get(self.browse(group_ids).with_user(name_get_uid))
+        return self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
 
     @api.constrains('code_prefix_start', 'code_prefix_end')
     def _constraint_prefix_overlap(self):

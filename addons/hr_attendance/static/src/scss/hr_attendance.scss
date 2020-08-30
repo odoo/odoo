@@ -8,8 +8,8 @@
     &.oe_hr_attendance_status_green {
         color: theme-color('success');
     }
-    &.oe_hr_attendance_status_red {
-        color: theme-color('danger');
+    &.oe_hr_attendance_status_orange {
+        color: theme-color('warning');
     }
 }
 
@@ -53,11 +53,35 @@
     text-align: center;
     position: relative;
     background-color: fade-out(white, 0.1);
+    &.o_barcode_main {
+        font-family: 'Lato', sans-serif;
+        width: 100%;
+        text-align: center;
+        background-color: #fff;
+        padding: 3em;
+        img {
+            width: 115px;
+            height: 60px;
+        }
+        .o_hr_attendance_kiosk_welcome_row img {
+            max-width: inherit;
+        }
+        @include media-breakpoint-down(sm) {
+            h2 {
+                margin-left: -10px;
+                margin-right: -10px;
+            }
+        }
+    }
 
     @include media-breakpoint-down(sm) {
         overflow: hidden;
         padding: 0 2em 2em;
         flex: 1 0 auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
     }
 
     @include media-breakpoint-up(md) {
@@ -74,11 +98,6 @@
         @include media-breakpoint-up(md) {
             display: flex;
             align-items: center;
-        }
-        @include media-breakpoint-down(md) {
-            > div {
-                margin-bottom: 20px;
-            }
         }
 
         img {
@@ -187,7 +206,7 @@
 
     img.o_hr_attendance_kiosk_company_image {
         overflow:hidden; // prevent margins colapsing with h1
-        margin: 1rem 0 4rem;
+        margin: 1rem 0 2rem;
         width: 200px;
     }
 

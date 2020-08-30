@@ -40,6 +40,14 @@ USER odoo
 """ % {'group_id': os.getgid(), 'user_id': os.getuid()}
 
 
+class OdooTestTimeoutError(Exception):
+    pass
+
+
+class OdooTestError(Exception):
+    pass
+
+
 def run_cmd(cmd, chdir=None, timeout=None):
     logging.info("Running command %s", cmd)
     return subprocess.run(cmd, cwd=chdir, timeout=timeout)
@@ -60,12 +68,12 @@ def _rpc_count_modules(addr='http://127.0.0.1', port=8069, dbname='mycompany'):
         )
         if toinstallmodules:
             logging.error("Package test: FAILED. Not able to install dependencies of base.")
-            raise Exception("Installation of package failed")
+            raise OdooTestError("Installation of package failed")
         else:
             logging.info("Package test: successfuly installed %s modules" % len(modules))
     else:
         logging.error("Package test: FAILED. Not able to install base.")
-        raise Exception("Package test: FAILED. Not able to install base.")
+        raise OdooTestError("Package test: FAILED. Not able to install base.")
 
 
 def publish(args, pub_type, extensions):
@@ -119,7 +127,7 @@ def gen_deb_package(args, published_files):
         shutil.copy(pub_file_path, temp_path)
 
     commands = [
-        (['dpkg-scanpackages', '.'], "Packages"),  # Generate Packages file
+        (['dpkg-scanpackages', '--multiversion', '.'], "Packages"),  # Generate Packages file
         (['dpkg-scansources', '.'], "Sources"),  # Generate Sources file
         (['apt-ftparchive', 'release', '.'], "Release")  # Generate Release file
     ]
@@ -184,14 +192,6 @@ def _prepare_build_dir(args, win32=False):
 
 
 #  Docker stuffs
-class OdooTestTimeoutError(Exception):
-    pass
-
-
-class OdooTestError(Exception):
-    pass
-
-
 class Docker():
     """Base Docker class. Must be inherited by specific Docker builder class"""
     arch = None
@@ -265,8 +265,10 @@ class Docker():
         while self.is_running() and (time.time() - start_time) < INSTALL_TIMEOUT:
             time.sleep(5)
             if os.path.exists(os.path.join(args.build_dir, 'odoo.pid')):
-                _rpc_count_modules(port=self.exposed_port)
-                self.stop()
+                try:
+                    _rpc_count_modules(port=self.exposed_port)
+                finally:
+                    self.stop()
                 return
         if self.is_running():
             self.stop()

@@ -26,10 +26,9 @@ class ServerActions(models.Model):
             if action.state == 'sms' and not action.model_id.is_mail_thread:
                 raise ValidationError(_("Sending SMS can only be done on a mail.thread model"))
 
-    @api.model
-    def run_action_sms_multi(self, action, eval_context=None):
+    def _run_action_sms_multi(self, eval_context=None):
         # TDE CLEANME: when going to new api with server action, remove action
-        if not action.sms_template_id or self._is_recompute(action):
+        if not self.sms_template_id or self._is_recompute():
             return False
 
         records = eval_context.get('records') or eval_context.get('record')
@@ -40,8 +39,8 @@ class ServerActions(models.Model):
             default_res_model=records._name,
             default_res_ids=records.ids,
             default_composition_mode='mass',
-            default_template_id=action.sms_template_id.id,
-            default_mass_keep_log=action.sms_mass_keep_log,
+            default_template_id=self.sms_template_id.id,
+            default_mass_keep_log=self.sms_mass_keep_log,
         ).create({})
         composer.action_send_sms()
         return False

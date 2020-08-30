@@ -22,7 +22,7 @@ class BaseUpdateTranslations(models.TransientModel):
     def _get_lang_name(self, lang_code):
         lang = self.env['res.lang']._lang_get(lang_code)
         if not lang:
-            raise UserError(_('No language with code "%s" exists') % lang_code)
+            raise UserError(_('No language with code "%s" exists', lang_code))
         return lang.name
 
     def act_update(self):

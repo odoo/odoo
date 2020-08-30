@@ -13,7 +13,7 @@ FormEditorRegistry.add('create_lead', {
         name: 'contact_name',
         string: 'Your Name',
     }, {
-        type: 'char',
+        type: 'tel',
         name: 'phone',
         string: 'Phone Number',
     }, {

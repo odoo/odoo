@@ -48,7 +48,7 @@
                                     </div>
                                     <div t-if="record.count_mo_late.raw_value > 0" class="row">
                                         <div class="col-9">
-                                            <a class="oe_kanban_stock_picking_type_list" name="%(mrp_production_action_picking_deshboard)d" type="action" context="{'search_default_late': 1, 'default_picking_type_id': active_id}">
+                                            <a class="oe_kanban_stock_picking_type_list" name="%(mrp_production_action_picking_deshboard)d" type="action" context="{'search_default_planning_issues': 1, 'default_picking_type_id': active_id}">
                                                 Late
                                             </a>
                                         </div>

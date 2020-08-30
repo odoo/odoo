@@ -1,0 +1,12 @@
+<odoo>
+    <record id="ir_cron_edi_network" model="ir.cron">
+        <field name="name">EDI : Perform web services operations</field>
+        <field name="model_id" ref="model_account_edi_document"/>
+        <field name="state">code</field>
+        <field name="code">model.search([('state', 'in', ('to_send', 'to_cancel'))])._process_documents_web_services(job_count=20)</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">minutes</field>
+        <field name="numbercall">-1</field>
+        <field name="active">False</field>
+    </record>
+</odoo>

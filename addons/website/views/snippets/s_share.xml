@@ -10,7 +10,7 @@
         <a href="https://twitter.com/intent/tweet?text={title}&amp;url={url}" t-attf-class="s_share_twitter #{_link_classes}" target="_blank">
             <i t-attf-class="fa fa-twitter #{not _link_classes and 'rounded shadow-sm'}"/>
         </a>
-        <a href="http://www.linkedin.com/shareArticle?mini=true&amp;url={url}&amp;title={title}&amp;" t-attf-class="s_share_linkedin #{_link_classes}" target="_blank">
+        <a href="http://www.linkedin.com/sharing/share-offsite/?url={url}" t-attf-class="s_share_linkedin #{_link_classes}" target="_blank">
             <i t-attf-class="fa fa-linkedin #{not _link_classes and 'rounded shadow-sm'}"/>
         </a>
         <a href="whatsapp://send?text={title}&amp;url={url}" t-attf-class="s_share_whatsapp #{_link_classes}" target="_blank">

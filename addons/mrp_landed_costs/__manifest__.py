@@ -11,7 +11,7 @@ and decide the split of these costs among their stock moves in order to
 take them into account in your stock valuation.
     """,
     'depends': ['stock_landed_costs', 'mrp'],
-    'category': 'Operations/Inventory',
+    'category': 'Manufacturing/Manufacturing',
     'data': [
         'views/stock_landed_cost_views.xml',
     ],

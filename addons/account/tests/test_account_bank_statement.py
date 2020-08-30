@@ -1,254 +1,11 @@
 # -*- coding: utf-8 -*-
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
-from odoo.addons.account.tests.common import AccountTestCommon
 from odoo.tests import tagged
 from odoo.tests.common import Form
 from odoo.exceptions import ValidationError, UserError
 from odoo import fields
 
 from unittest.mock import patch
-
-
-@tagged('post_install', '-at_install')
-class TestBankStatement(AccountTestCommon):
-
-    def setUp(self):
-        super(TestBankStatement, self).setUp()
-        self.bs_model = self.env['account.bank.statement']
-        self.bsl_model = self.env['account.bank.statement.line']
-        self.partner = self.env['res.partner'].create({'name': 'test'})
-        self.journal = self.env['account.journal'].create({
-            'name': 'BnkJournal',
-            'type': 'bank'
-        })
-        self.journal2 = self.env['account.journal'].create({
-            'name': 'BnkJournal2',
-            'type': 'bank'
-        })
-        self.cashjournal = self.env['account.journal'].create({
-            'name': 'CashJournal',
-            'type': 'cash'
-        })
-        self.number = 1
-
-    def create_bank_statement(self, date, line_amount, balance_end_real=False, journal=False):
-        vals = {
-            'name': 'BNK' + str(self.number),
-            'date': date,
-            'line_ids': [(0, 0, {
-                'payment_ref': '_',
-                'amount': line_amount,
-            })],
-            'journal_id': journal or self.journal.id
-        }
-        if balance_end_real:
-            vals['balance_end_real'] = balance_end_real
-        self.number += 1
-        return self.bs_model.create(vals)
-
-    def test_compute_balance_end_real_with_lines(self):
-        bnk1 = self.create_bank_statement('2019-01-02', 100)
-        self.assertEqual(bnk1.balance_start, 0)
-        # Balance is automatically computed when creating statement with the lines
-        self.assertEqual(bnk1.balance_end_real, 100)
-        self.assertEqual(bnk1.balance_end, 100)
-
-    def test_compute_balance_end_real_without_lines(self):
-        vals = {
-            'name': 'BNK' + str(self.number),
-            'date': '2019-01-01',
-            'journal_id': self.journal.id
-        }
-        bnk1 = self.bs_model.create(vals)
-        self.assertEqual(bnk1.balance_start, 0)
-        self.assertEqual(bnk1.balance_end_real, 0)
-        self.assertEqual(bnk1.balance_end, 0)
-        # Add a line
-        self.bsl_model.create({
-            'payment_ref': '_',
-            'amount': 10,
-            'statement_id': bnk1.id
-        })
-        self.assertEqual(bnk1.balance_start, 0)
-        # balance_end_real should not have changed
-        self.assertEqual(bnk1.balance_end_real, 0)
-        # Compute balance should have been computed
-        self.assertEqual(bnk1.balance_end, 10)
-
-    def test_create_new_statement(self):
-        # Create first statement on 1/1/2019
-        bnk1 = self.create_bank_statement('2019-01-02', 100)
-        self.assertEqual(bnk1.balance_start, 0)
-        # Balance is automatically computed when creating statement with the lines
-        self.assertEqual(bnk1.balance_end_real, 100)
-        self.assertEqual(bnk1.balance_end, 100)
-        self.assertEqual(bnk1.previous_statement_id.id, False)
-
-        # Create a new statement after that one
-        bnk2 = self.create_bank_statement('2019-01-10', 50)
-        self.assertEqual(bnk2.balance_start, 100)
-        self.assertEqual(bnk2.balance_end_real, 150)
-        self.assertEqual(bnk2.balance_end, 150)
-        self.assertEqual(bnk2.previous_statement_id.id, bnk1.id)
-
-        # Create new statement with given ending balance
-        bnk3 = self.create_bank_statement('2019-01-15', 25, 200)
-        self.assertEqual(bnk3.balance_end_real, 200)
-        self.assertEqual(bnk3.balance_start, 150)
-        self.assertEqual(bnk3.balance_end, 175)
-        self.assertEqual(bnk3.previous_statement_id.id, bnk2.id)
-
-        bnk4 = self.create_bank_statement('2019-01-03', 100)
-        self.assertEqual(bnk4.balance_start, 100)
-        self.assertEqual(bnk4.balance_end_real, 200)
-        self.assertEqual(bnk4.balance_end, 200)
-        self.assertEqual(bnk4.previous_statement_id.id, bnk1.id)
-        # Bnk2 should have changed its previous statement
-        self.assertEqual(bnk2.previous_statement_id.id, bnk4.id)
-        # The starting balance and balance_end_real should have been recomputed
-        self.assertEqual(bnk2.balance_start, 200)
-        self.assertEqual(bnk2.balance_end_real, 250)
-        self.assertEqual(bnk2.balance_end, 250)
-        # The starting balance and balance_end_real of next entries should also have been recomputed
-        # and since we are propagating an update, the balance_end_real should have been recomputed to
-        # the correct value
-        self.assertEqual(bnk3.balance_start, 250)
-        self.assertEqual(bnk3.balance_end_real, 200) # This should not have been recomputed as this is the last of the chain
-        self.assertEqual(bnk3.balance_end, 275)
-        bnk3.balance_end_real = 275 # Correct ending balance
-
-        # Change date of bank stmt4 to be the last
-        self.assertEqual(bnk4.balance_end_real, 200) #Check balance before moving it to the last
-        bnk4.date = '2019-01-20'
-        self.assertEqual(bnk1.previous_statement_id.id, False)
-        self.assertEqual(bnk2.previous_statement_id.id, bnk1.id)
-        self.assertEqual(bnk3.previous_statement_id.id, bnk2.id)
-        self.assertEqual(bnk4.previous_statement_id.id, bnk3.id)
-        self.assertEqual(bnk1.balance_start, 0)
-        self.assertEqual(bnk2.balance_start, 100)
-        self.assertEqual(bnk3.balance_start, 150)
-        self.assertEqual(bnk4.balance_start, 175)
-        self.assertEqual(bnk1.balance_end_real, 100)
-        self.assertEqual(bnk2.balance_end_real, 150)
-        self.assertEqual(bnk3.balance_end_real, 175)
-        self.assertEqual(bnk4.balance_end_real, 200) # This should not have change
-        bnk4.balance_end_real = 275 # Correct ending balance
-
-        # Move bnk3 to first position
-        bnk3.date = '2019-01-01'
-        self.assertEqual(bnk3.previous_statement_id.id, False)
-        self.assertEqual(bnk1.previous_statement_id.id, bnk3.id)
-        self.assertEqual(bnk2.previous_statement_id.id, bnk1.id)
-        self.assertEqual(bnk4.previous_statement_id.id, bnk2.id)
-        self.assertEqual(bnk3.balance_start, 0)
-        self.assertEqual(bnk1.balance_start, 25)
-        self.assertEqual(bnk2.balance_start, 125)
-        self.assertEqual(bnk4.balance_start, 175)
-        self.assertEqual(bnk3.balance_end_real, 25)
-        self.assertEqual(bnk1.balance_end_real, 125)
-        self.assertEqual(bnk2.balance_end_real, 175)
-        self.assertEqual(bnk4.balance_end_real, 275)
-
-        # Change bnk1 and bnk2
-        bnk1.date = '2019-01-11'
-        self.assertEqual(bnk3.previous_statement_id.id, False)
-        self.assertEqual(bnk2.previous_statement_id.id, bnk3.id)
-        self.assertEqual(bnk1.previous_statement_id.id, bnk2.id)
-        self.assertEqual(bnk4.previous_statement_id.id, bnk1.id)
-        self.assertEqual(bnk3.balance_start, 0)
-        self.assertEqual(bnk2.balance_start, 25)
-        self.assertEqual(bnk1.balance_start, 75)
-        self.assertEqual(bnk4.balance_start, 175)
-        self.assertEqual(bnk3.balance_end_real, 25)
-        self.assertEqual(bnk2.balance_end_real, 75)
-        self.assertEqual(bnk1.balance_end_real, 175)
-        self.assertEqual(bnk4.balance_end_real, 275)
-
-    def test_create_statements_in_different_journal(self):
-        # Bank statement create in two different journal should not link with each other
-        bnk1 = self.create_bank_statement('2019-01-01', 100, 100)
-        bnk2 = self.create_bank_statement('2019-01-10', 50)
-
-        bnk1other = self.create_bank_statement('2019-01-02', 20, 20, self.journal2.id)
-        bnk2other = self.create_bank_statement('2019-01-12', 10, False, self.journal2.id)
-
-        self.assertEqual(bnk1.previous_statement_id.id, False)
-        self.assertEqual(bnk2.previous_statement_id.id, bnk1.id)
-        self.assertEqual(bnk1.balance_start, 0)
-        self.assertEqual(bnk2.balance_start, 100)
-        self.assertEqual(bnk2.balance_end_real, 150)
-
-        self.assertEqual(bnk1other.previous_statement_id.id, False)
-        self.assertEqual(bnk2other.previous_statement_id.id, bnk1other.id)
-        self.assertEqual(bnk1other.balance_start, 0)
-        self.assertEqual(bnk2other.balance_start, 20)
-        self.assertEqual(bnk2other.balance_end_real, 30)
-
-    def test_statement_cash_journal(self):
-        # Entry in cash journal should not recompute the balance_end_real
-        cash1 = self.create_bank_statement('2019-01-01', 100, 100, self.cashjournal.id)
-        cash2 = self.create_bank_statement('2019-01-03', 100, False, self.cashjournal.id)
-        self.assertEqual(cash1.balance_start, 0)
-        self.assertEqual(cash1.balance_end_real, 100)
-        self.assertEqual(cash2.balance_start, 100)
-        self.assertEqual(cash2.balance_end_real, 0)
-        cash2.balance_end_real = 1000
-        self.assertEqual(cash2.balance_end_real, 1000)
-        # add cash entry in between, should recompute starting balance of cash2 entry but not ending balance
-        cash3 = self.create_bank_statement('2019-01-02', 100, 200, self.cashjournal.id)
-        self.assertEqual(cash3.balance_start, 100)
-        self.assertEqual(cash3.balance_end_real, 200)
-        self.assertEqual(cash2.balance_start, 200)
-        self.assertEqual(cash2.balance_end_real, 1000)
-
-    def test_is_valid_balance_start(self):
-        bnk1 = self.create_bank_statement('2019-01-01', 100, 100.0000001)
-        bnk2 = self.create_bank_statement('2019-01-10', 50)
-        bnk2.write({'balance_start': 100})
-        self.assertTrue(bnk2.is_valid_balance_start)
-        bnk2.write({'balance_start': 100.01})
-        self.assertFalse(bnk2.is_valid_balance_start)
-
-    def test_unlink_bank_statement(self):
-        bnk1 = self.create_bank_statement('2019-01-02', 100)
-        bnk2 = self.create_bank_statement('2019-01-10', 50)
-        bnk3 = self.create_bank_statement('2019-01-15', 25)
-        bnk4 = self.create_bank_statement('2019-01-21', 100)
-        bnk5 = self.create_bank_statement('2019-01-22', 100)
-        self.assertEqual(bnk1.previous_statement_id.id, False)
-        self.assertEqual(bnk2.previous_statement_id.id, bnk1.id)
-        self.assertEqual(bnk3.previous_statement_id.id, bnk2.id)
-        self.assertEqual(bnk4.previous_statement_id.id, bnk3.id)
-        self.assertEqual(bnk5.previous_statement_id.id, bnk4.id)
-        self.assertEqual(bnk1.balance_start, 0)
-        self.assertEqual(bnk1.balance_end_real, 100)
-        self.assertEqual(bnk2.balance_start, 100)
-        self.assertEqual(bnk2.balance_end_real, 150)
-        self.assertEqual(bnk3.balance_start, 150)
-        self.assertEqual(bnk3.balance_end_real, 175)
-        self.assertEqual(bnk4.balance_start, 175)
-        self.assertEqual(bnk4.balance_end_real, 275)
-        self.assertEqual(bnk5.balance_start, 275)
-        self.assertEqual(bnk5.balance_end_real, 375)
-
-        # Delete bnk2 and check that previous_statement_id and balance are correct
-        bnk2.unlink()
-        self.assertEqual(bnk1.previous_statement_id.id, False)
-        self.assertEqual(bnk3.previous_statement_id.id, bnk1.id)
-        self.assertEqual(bnk4.previous_statement_id.id, bnk3.id)
-        self.assertEqual(bnk5.previous_statement_id.id, bnk4.id)
-        self.assertEqual(bnk3.balance_start, 100)
-        self.assertEqual(bnk3.balance_end_real, 125)
-        self.assertEqual(bnk4.balance_start, 125)
-        self.assertEqual(bnk4.balance_end_real, 225)
-        self.assertEqual(bnk5.balance_start, 225)
-        self.assertEqual(bnk5.balance_end_real, 375) # Ending balance of last statement should not have changed
-
-        # Delete bnk1 bnk3 and bnk4 at the same time and check that balance are correct
-        (bnk1 + bnk3 + bnk4).unlink()
-        self.assertEqual(bnk5.previous_statement_id.id, False)
-        self.assertEqual(bnk5.balance_start, 0)
-        self.assertEqual(bnk5.balance_end_real, 375) # Ending balance of last statement should not have changed
 
 
 class TestAccountBankStatementCommon(AccountTestInvoicingCommon):
@@ -278,6 +35,272 @@ class TestAccountBankStatementCommon(AccountTestInvoicingCommon):
         cls.currency_2 = cls.currency_data['currency']
         cls.currency_3 = cls.currency_data_2['currency']
         cls.currency_4 = cls.currency_data_3['currency']
+
+    def assertBankStatementLine(self, statement_line, expected_statement_line_vals, expected_move_line_vals):
+        self.assertRecordValues(statement_line, [expected_statement_line_vals])
+        self.assertRecordValues(statement_line.line_ids.sorted('balance'), expected_move_line_vals)
+
+
+@tagged('post_install', '-at_install')
+class TestAccountBankStatement(TestAccountBankStatementCommon):
+
+    # -------------------------------------------------------------------------
+    # TESTS about the statement model.
+    # -------------------------------------------------------------------------
+
+    def test_starting_ending_balance_chaining(self):
+        # Create first statement on 2019-01-02.
+        bnk1 = self.env['account.bank.statement'].create({
+            'name': 'BNK1',
+            'date': '2019-01-02',
+            'journal_id': self.company_data['default_journal_bank'].id,
+            'line_ids': [(0, 0, {'payment_ref': '/', 'amount': 100.0})],
+        })
+        self.assertRecordValues(bnk1, [{
+            'balance_start': 0.0,
+            'balance_end_real': 100.0,
+            'balance_end': 100.0,
+            'previous_statement_id': False,
+        }])
+
+        # Create a new statement after that one.
+        bnk2 = self.env['account.bank.statement'].create({
+            'name': 'BNK2',
+            'date': '2019-01-10',
+            'journal_id': self.company_data['default_journal_bank'].id,
+            'line_ids': [(0, 0, {'payment_ref': '/', 'amount': 50.0})],
+        })
+        self.assertRecordValues(bnk2, [{
+            'balance_start': 100.0,
+            'balance_end_real': 150.0,
+            'balance_end': 150.0,
+            'previous_statement_id': bnk1.id,
+        }])
+
+        # Create new statement with given ending balance.
+        bnk3 = self.env['account.bank.statement'].create({
+            'name': 'BNK3',
+            'date': '2019-01-15',
+            'journal_id': self.company_data['default_journal_bank'].id,
+            'line_ids': [(0, 0, {'payment_ref': '/', 'amount': 25.0})],
+            'balance_end_real': 200.0,
+        })
+        self.assertRecordValues(bnk3, [{
+            'balance_start': 150.0,
+            'balance_end_real': 200.0,
+            'balance_end': 175.0,
+            'previous_statement_id': bnk2.id,
+        }])
+
+        # Create new statement with a date right after BNK1.
+        bnk4 = self.env['account.bank.statement'].create({
+            'name': 'BNK4',
+            'date': '2019-01-03',
+            'journal_id': self.company_data['default_journal_bank'].id,
+            'line_ids': [(0, 0, {'payment_ref': '/', 'amount': 100.0})],
+        })
+        self.assertRecordValues(bnk4, [{
+            'balance_start': 100.0,
+            'balance_end_real': 200.0,
+            'balance_end': 200.0,
+            'previous_statement_id': bnk1.id,
+        }])
+
+        # BNK2/BNK3 should have changed their previous statements.
+        self.assertRecordValues(bnk2, [{
+            'balance_start': 200.0,
+            'balance_end_real': 250.0,
+            'balance_end': 250.0,
+            'previous_statement_id': bnk4.id,
+        }])
+        self.assertRecordValues(bnk3, [{
+            'balance_start': 250.0,
+            'balance_end_real': 200.0,
+            'balance_end': 275.0,
+            'previous_statement_id': bnk2.id,
+        }])
+
+        # Correct the ending balance of BNK3.
+        bnk3.balance_end_real = 275
+
+        # Change date of BNK4 to be the last.
+        bnk4.date = '2019-01-20'
+        self.assertRecordValues(bnk1, [{
+            'balance_start': 0.0,
+            'balance_end_real': 100.0,
+            'balance_end': 100.0,
+            'previous_statement_id': False,
+        }])
+        self.assertRecordValues(bnk2, [{
+            'balance_start': 100.0,
+            'balance_end_real': 150.0,
+            'balance_end': 150.0,
+            'previous_statement_id': bnk1.id,
+        }])
+        self.assertRecordValues(bnk3, [{
+            'balance_start': 150.0,
+            'balance_end_real': 175.0,
+            'balance_end': 175.0,
+            'previous_statement_id': bnk2.id,
+        }])
+        self.assertRecordValues(bnk4, [{
+            'balance_start': 175.0,
+            'balance_end_real': 200.0,
+            'balance_end': 275.0,
+            'previous_statement_id': bnk3.id,
+        }])
+
+        # Correct the ending balance of BNK4.
+        bnk4.balance_end_real = 275
+
+        # Move BNK3 to first position.
+        bnk3.date = '2019-01-01'
+        self.assertRecordValues(bnk3, [{
+            'balance_start': 0.0,
+            'balance_end_real': 25.0,
+            'balance_end': 25.0,
+            'previous_statement_id': False,
+        }])
+        self.assertRecordValues(bnk1, [{
+            'balance_start': 25.0,
+            'balance_end_real': 125.0,
+            'balance_end': 125.0,
+            'previous_statement_id': bnk3.id,
+        }])
+        self.assertRecordValues(bnk2, [{
+            'balance_start': 125.0,
+            'balance_end_real': 175.0,
+            'balance_end': 175.0,
+            'previous_statement_id': bnk1.id,
+        }])
+        self.assertRecordValues(bnk4, [{
+            'balance_start': 175.0,
+            'balance_end_real': 275.0,
+            'balance_end': 275.0,
+            'previous_statement_id': bnk2.id,
+        }])
+
+        # Move BNK1 to the third position.
+        bnk1.date = '2019-01-11'
+        self.assertRecordValues(bnk3, [{
+            'balance_start': 0.0,
+            'balance_end_real': 25.0,
+            'balance_end': 25.0,
+            'previous_statement_id': False,
+        }])
+        self.assertRecordValues(bnk2, [{
+            'balance_start': 25.0,
+            'balance_end_real': 75.0,
+            'balance_end': 75.0,
+            'previous_statement_id': bnk3.id,
+        }])
+        self.assertRecordValues(bnk1, [{
+            'balance_start': 75.0,
+            'balance_end_real': 175.0,
+            'balance_end': 175.0,
+            'previous_statement_id': bnk2.id,
+        }])
+        self.assertRecordValues(bnk4, [{
+            'balance_start': 175.0,
+            'balance_end_real': 275.0,
+            'balance_end': 275.0,
+            'previous_statement_id': bnk1.id,
+        }])
+
+        # Delete BNK3 and BNK1.
+        (bnk3 + bnk1).unlink()
+        self.assertRecordValues(bnk2, [{
+            'balance_start': 0.0,
+            'balance_end_real': 50.0,
+            'balance_end': 50.0,
+            'previous_statement_id': False,
+        }])
+        self.assertRecordValues(bnk4, [{
+            'balance_start': 50.0,
+            'balance_end_real': 275.0,
+            'balance_end': 150.0,
+            'previous_statement_id': bnk2.id,
+        }])
+
+    def test_statements_different_journal(self):
+        # Create statements in bank journal.
+        bnk1_1 = self.env['account.bank.statement'].create({
+            'name': 'BNK1_1',
+            'date': '2019-01-01',
+            'journal_id': self.company_data['default_journal_bank'].id,
+            'line_ids': [(0, 0, {'payment_ref': '/', 'amount': 100.0})],
+            'balance_end_real': 100.0,
+        })
+        bnk1_2 = self.env['account.bank.statement'].create({
+            'name': 'BNK1_2',
+            'date': '2019-01-10',
+            'journal_id': self.company_data['default_journal_bank'].id,
+            'line_ids': [(0, 0, {'payment_ref': '/', 'amount': 50.0})],
+        })
+
+        # Create statements in cash journal.
+        bnk2_1 = self.env['account.bank.statement'].create({
+            'name': 'BNK2_1',
+            'date': '2019-01-02',
+            'journal_id': self.company_data['default_journal_cash'].id,
+            'line_ids': [(0, 0, {'payment_ref': '/', 'amount': 20.0})],
+            'balance_end_real': 20.0,
+        })
+        bnk2_2 = self.env['account.bank.statement'].create({
+            'name': 'BNK2_2',
+            'date': '2019-01-12',
+            'journal_id': self.company_data['default_journal_cash'].id,
+            'line_ids': [(0, 0, {'payment_ref': '/', 'amount': 10.0})],
+        })
+        self.assertRecordValues(bnk1_1, [{
+            'balance_start': 0.0,
+            'balance_end_real': 100.0,
+            'balance_end': 100.0,
+            'previous_statement_id': False,
+        }])
+        self.assertRecordValues(bnk1_2, [{
+            'balance_start': 100.0,
+            'balance_end_real': 150.0,
+            'balance_end': 150.0,
+            'previous_statement_id': bnk1_1.id,
+        }])
+        self.assertRecordValues(bnk2_1, [{
+            'balance_start': 0.0,
+            'balance_end_real': 20.0,
+            'balance_end': 20.0,
+            'previous_statement_id': False,
+        }])
+        self.assertRecordValues(bnk2_2, [{
+            'balance_start': 20.0,
+            'balance_end_real': 0.0,
+            'balance_end': 30.0,
+            'previous_statement_id': bnk2_1.id,
+        }])
+
+    def test_cash_statement_with_difference(self):
+        ''' A cash statement always creates an additional line to store the cash difference towards the ending balance.
+        '''
+        statement = self.env['account.bank.statement'].create({
+            'name': 'test_statement',
+            'date': '2019-01-01',
+            'journal_id': self.company_data['default_journal_cash'].id,
+            'balance_end_real': 100.0,
+        })
+
+        statement.button_post()
+
+        self.assertRecordValues(statement.line_ids, [{
+            'amount': 100.0,
+            'is_reconciled': True,
+        }])
+
+
+@tagged('post_install', '-at_install')
+class TestAccountBankStatementLine(TestAccountBankStatementCommon):
+
+    @classmethod
+    def setUpClass(cls, chart_template_ref=None):
+        super().setUpClass(chart_template_ref=chart_template_ref)
 
         cls.statement = cls.env['account.bank.statement'].create({
             'name': 'test_statement',
@@ -312,7 +335,7 @@ class TestAccountBankStatementCommon(AccountTestInvoicingCommon):
             'name': cls.statement_line.payment_ref,
             'partner_id': cls.statement_line.partner_id.id,
             'currency_id': cls.currency_2.id,
-            'account_id': cls.statement.journal_id.default_debit_account_id.id,
+            'account_id': cls.statement.journal_id.default_account_id.id,
             'debit': 1250.0,
             'credit': 0.0,
             'amount_currency': 2500.0,
@@ -327,14 +350,6 @@ class TestAccountBankStatementCommon(AccountTestInvoicingCommon):
             'credit': 1250.0,
             'amount_currency': -2500.0,
         }
-
-    def assertBankStatementLine(self, statement_line, expected_statement_line_vals, expected_move_line_vals):
-        self.assertRecordValues(statement_line, [expected_statement_line_vals])
-        self.assertRecordValues(statement_line.line_ids.sorted('balance'), expected_move_line_vals)
-
-
-@tagged('post_install', '-at_install')
-class TestAccountBankStatement(TestAccountBankStatementCommon):
 
     # -------------------------------------------------------------------------
     # TESTS about the statement line model.
@@ -493,7 +508,7 @@ class TestAccountBankStatement(TestAccountBankStatementCommon):
             120.0,              80.0,
             self.currency_2,    self.currency_1,
             {'debit': 80.0,     'credit': 0.0,      'amount_currency': 120.0,       'currency_id': self.currency_2.id},
-            {'debit': 0.0,      'credit': 80.0,     'amount_currency': 0.0,         'currency_id': False},
+            {'debit': 0.0,      'credit': 80.0,     'amount_currency': -80.0,       'currency_id': self.currency_1.id},
         )
 
     def test_edition_journal_curr_1_statement_curr_2(self):
@@ -516,9 +531,153 @@ class TestAccountBankStatement(TestAccountBankStatementCommon):
         self._test_edition_customer_and_supplier_flows(
             80.0,               0.0,
             self.currency_1,    False,
-            {'debit': 80.0,     'credit': 0.0,      'amount_currency': 0.0,         'currency_id': False},
-            {'debit': 0.0,      'credit': 80.0,     'amount_currency': 0.0,         'currency_id': False},
+            {'debit': 80.0,     'credit': 0.0,      'amount_currency': 80.0,        'currency_id': self.currency_1.id},
+            {'debit': 0.0,      'credit': 80.0,     'amount_currency': -80.0,       'currency_id': self.currency_1.id},
         )
+
+    def test_zero_amount_journal_curr_1_statement_curr_2(self):
+        self.bank_journal_2.currency_id = self.currency_1
+
+        statement = self.env['account.bank.statement'].with_context(skip_check_amounts_currencies=True).create({
+            'name': 'test_statement',
+            'date': '2019-01-01',
+            'journal_id': self.bank_journal_2.id,
+            'line_ids': [
+                (0, 0, {
+                    'date': '2019-01-01',
+                    'payment_ref': 'line_1',
+                    'partner_id': self.partner_a.id,
+                    'foreign_currency_id': self.currency_2.id,
+                    'amount': 0.0,
+                    'amount_currency': 10.0,
+                }),
+            ],
+        })
+
+        self.assertRecordValues(statement.line_ids.move_id.line_ids, [
+            {'debit': 0.0,      'credit': 0.0,      'amount_currency': 10.0,        'currency_id': self.currency_2.id},
+            {'debit': 0.0,      'credit': 0.0,      'amount_currency': -10.0,       'currency_id': self.currency_2.id},
+        ])
+
+    def test_zero_amount_currency_journal_curr_1_statement_curr_2(self):
+        self.bank_journal_2.currency_id = self.currency_1
+
+        statement = self.env['account.bank.statement'].with_context(skip_check_amounts_currencies=True).create({
+            'name': 'test_statement',
+            'date': '2019-01-01',
+            'journal_id': self.bank_journal_2.id,
+            'line_ids': [
+                (0, 0, {
+                    'date': '2019-01-01',
+                    'payment_ref': 'line_1',
+                    'partner_id': self.partner_a.id,
+                    'foreign_currency_id': self.currency_2.id,
+                    'amount': 10.0,
+                    'amount_currency': 0.0,
+                }),
+            ],
+        })
+
+        self.assertRecordValues(statement.line_ids.move_id.line_ids, [
+            {'debit': 10.0,     'credit': 0.0,      'amount_currency': 0.0,         'currency_id': self.currency_2.id},
+            {'debit': 0.0,      'credit': 10.0,     'amount_currency': 0.0,         'currency_id': self.currency_2.id},
+        ])
+
+    def test_zero_amount_journal_curr_2_statement_curr_1(self):
+        self.bank_journal_2.currency_id = self.currency_2
+
+        statement = self.env['account.bank.statement'].with_context(skip_check_amounts_currencies=True).create({
+            'name': 'test_statement',
+            'date': '2019-01-01',
+            'journal_id': self.bank_journal_2.id,
+            'line_ids': [
+                (0, 0, {
+                    'date': '2019-01-01',
+                    'payment_ref': 'line_1',
+                    'partner_id': self.partner_a.id,
+                    'foreign_currency_id': self.currency_1.id,
+                    'amount': 0.0,
+                    'amount_currency': 10.0,
+                }),
+            ],
+        })
+
+        self.assertRecordValues(statement.line_ids.move_id.line_ids, [
+            {'debit': 10.0,     'credit': 0.0,      'amount_currency': 0.0,         'currency_id': self.currency_2.id},
+            {'debit': 0.0,      'credit': 10.0,     'amount_currency': -10.0,       'currency_id': self.currency_1.id},
+        ])
+
+    def test_zero_amount_currency_journal_curr_2_statement_curr_1(self):
+        self.bank_journal_2.currency_id = self.currency_2
+
+        statement = self.env['account.bank.statement'].with_context(skip_check_amounts_currencies=True).create({
+            'name': 'test_statement',
+            'date': '2019-01-01',
+            'journal_id': self.bank_journal_2.id,
+            'line_ids': [
+                (0, 0, {
+                    'date': '2019-01-01',
+                    'payment_ref': 'line_1',
+                    'partner_id': self.partner_a.id,
+                    'foreign_currency_id': self.currency_1.id,
+                    'amount': 10.0,
+                    'amount_currency': 0.0,
+                }),
+            ],
+        })
+
+        self.assertRecordValues(statement.line_ids.move_id.line_ids, [
+            {'debit': 0.0,      'credit': 0.0,      'amount_currency': 10.0,        'currency_id': self.currency_2.id},
+            {'debit': 0.0,      'credit': 0.0,      'amount_currency': 0.0,         'currency_id': self.currency_1.id},
+        ])
+
+    def test_zero_amount_journal_curr_2_statement_curr_3(self):
+        self.bank_journal_2.currency_id = self.currency_2
+
+        statement = self.env['account.bank.statement'].with_context(skip_check_amounts_currencies=True).create({
+            'name': 'test_statement',
+            'date': '2019-01-01',
+            'journal_id': self.bank_journal_2.id,
+            'line_ids': [
+                (0, 0, {
+                    'date': '2019-01-01',
+                    'payment_ref': 'line_1',
+                    'partner_id': self.partner_a.id,
+                    'foreign_currency_id': self.currency_3.id,
+                    'amount': 0.0,
+                    'amount_currency': 10.0,
+                }),
+            ],
+        })
+
+        self.assertRecordValues(statement.line_ids.move_id.line_ids, [
+            {'debit': 0.0,      'credit': 0.0,      'amount_currency': 0.0,         'currency_id': self.currency_2.id},
+            {'debit': 0.0,      'credit': 0.0,      'amount_currency': -10.0,       'currency_id': self.currency_3.id},
+        ])
+
+    def test_zero_amount_currency_journal_curr_2_statement_curr_3(self):
+        self.bank_journal_2.currency_id = self.currency_2
+
+        statement = self.env['account.bank.statement'].with_context(skip_check_amounts_currencies=True).create({
+            'name': 'test_statement',
+            'date': '2019-01-01',
+            'journal_id': self.bank_journal_2.id,
+            'line_ids': [
+                (0, 0, {
+                    'date': '2019-01-01',
+                    'payment_ref': 'line_1',
+                    'partner_id': self.partner_a.id,
+                    'foreign_currency_id': self.currency_3.id,
+                    'amount': 10.0,
+                    'amount_currency': 0.0,
+                }),
+            ],
+        })
+
+        self.assertRecordValues(statement.line_ids.move_id.line_ids, [
+            {'debit': 5.0,      'credit': 0.0,      'amount_currency': 10.0,        'currency_id': self.currency_2.id},
+            {'debit': 0.0,      'credit': 5.0,      'amount_currency': 0.0,         'currency_id': self.currency_3.id},
+        ])
 
     def test_constraints(self):
         def assertStatementLineConstraint(statement_vals, statement_line_vals):
@@ -582,7 +741,7 @@ class TestAccountBankStatement(TestAccountBankStatementCommon):
             {
                 'debit': 1.0,
                 'credit': 0,
-                'account_id': self.bank_journal_2.default_debit_account_id.id,
+                'account_id': self.bank_journal_2.default_account_id.id,
                 'move_id': st_line.move_id.id,
             },
             {
@@ -602,7 +761,7 @@ class TestAccountBankStatement(TestAccountBankStatementCommon):
 
         # You can't set the journal entry in an unconsistent state.
         with self.assertRaises(UserError), self.cr.savepoint():
-            st_line.move_id.post()
+            st_line.move_id.action_post()
 
     def test_statement_line_move_onchange_1(self):
         ''' Test the consistency between the account.bank.statement.line and the generated account.move.lines
@@ -776,7 +935,7 @@ class TestAccountBankStatement(TestAccountBankStatementCommon):
                 ],
             },
         ])
-        test_invoices.post()
+        test_invoices.action_post()
         statement.button_post()
         counterpart_lines = test_invoices.mapped('line_ids').filtered(lambda line: line.account_internal_type in ('receivable', 'payable'))
 
@@ -890,7 +1049,7 @@ class TestAccountBankStatement(TestAccountBankStatementCommon):
             120.0,              80.0,               -120.0,
             self.currency_2,    self.currency_1,    self.currency_2,
             {'debit': 80.0,     'credit': 0.0,      'amount_currency': 120.0,       'currency_id': self.currency_2.id},
-            {'debit': 0.0,      'credit': 80.0,     'amount_currency': 0.0,         'currency_id': False},
+            {'debit': 0.0,      'credit': 80.0,     'amount_currency': -80.0,       'currency_id': self.currency_1.id},
         )
 
     def test_reconciliation_journal_curr_2_statement_curr_3_counterpart_curr_2(self):
@@ -945,8 +1104,8 @@ class TestAccountBankStatement(TestAccountBankStatementCommon):
         self._test_reconciliation_customer_and_supplier_flows(
             80.0,               0.0,                -480.0,
             self.currency_1,    False,              self.currency_3,
-            {'debit': 80.0,     'credit': 0.0,      'amount_currency': 0.0,         'currency_id': False},
-            {'debit': 0.0,      'credit': 80.0,     'amount_currency': 0.0,         'currency_id': False},
+            {'debit': 80.0,     'credit': 0.0,      'amount_currency': 80.0,        'currency_id': self.currency_1.id},
+            {'debit': 0.0,      'credit': 80.0,     'amount_currency': -80.0,       'currency_id': self.currency_1.id},
         )
 
     def test_reconciliation_journal_curr_2_statement_curr_1_counterpart_curr_1(self):
@@ -954,7 +1113,7 @@ class TestAccountBankStatement(TestAccountBankStatementCommon):
             120.0,              80.0,               -80.0,
             self.currency_2,    self.currency_1,    self.currency_1,
             {'debit': 80.0,     'credit': 0.0,      'amount_currency': 120.0,       'currency_id': self.currency_2.id},
-            {'debit': 0.0,      'credit': 80.0,     'amount_currency': 0.0,         'currency_id': False},
+            {'debit': 0.0,      'credit': 80.0,     'amount_currency': -80.0,       'currency_id': self.currency_1.id},
         )
 
     def test_reconciliation_journal_curr_2_statement_curr_3_counterpart_curr_1(self):
@@ -985,8 +1144,8 @@ class TestAccountBankStatement(TestAccountBankStatementCommon):
         self._test_reconciliation_customer_and_supplier_flows(
             80.0,               0.0,                -80.0,
             self.currency_1,    False,              self.currency_1,
-            {'debit': 80.0,     'credit': 0.0,      'amount_currency': 0.0,         'currency_id': False},
-            {'debit': 0.0,      'credit': 80.0,     'amount_currency': 0.0,         'currency_id': False},
+            {'debit': 80.0,     'credit': 0.0,      'amount_currency': 80.0,        'currency_id': self.currency_1.id},
+            {'debit': 0.0,      'credit': 80.0,     'amount_currency': -80.0,       'currency_id': self.currency_1.id},
         )
 
     def test_reconciliation_statement_line_state(self):
@@ -1039,7 +1198,7 @@ class TestAccountBankStatement(TestAccountBankStatementCommon):
                 }),
             ]
         })
-        test_move.post()
+        test_move.action_post()
 
         test_line_1 = test_move.line_ids.filtered(lambda line: line.account_id == receivable_acc_1)
         test_line_2 = test_move.line_ids.filtered(lambda line: line.account_id == receivable_acc_2)
@@ -1244,7 +1403,7 @@ class TestAccountBankStatement(TestAccountBankStatementCommon):
                 }),
             ]
         })
-        test_move.post()
+        test_move.action_post()
 
         test_line_1 = test_move.line_ids.filtered(lambda line: line.name == 'test line 1')
         test_line_2 = test_move.line_ids.filtered(lambda line: line.name == 'test line 2')

@@ -19,7 +19,7 @@ class UtmCampaign(models.Model):
             campaign.mailing_sms_count = len(campaign.mailing_sms_ids)
 
     def action_create_mass_sms(self):
-        action = self.env.ref('mass_mailing.action_create_mass_mailings_from_campaign').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("mass_mailing.action_create_mass_mailings_from_campaign")
         action['context'] = {
             'default_campaign_id': self.id,
             'default_mailing_type': 'sms',
@@ -30,7 +30,7 @@ class UtmCampaign(models.Model):
         return action
 
     def action_redirect_to_mailing_sms(self):
-        action = self.env.ref('mass_mailing_sms.mailing_mailing_action_sms').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("mass_mailing_sms.mailing_mailing_action_sms")
         action['context'] = {
             'default_campaign_id': self.id,
             'default_mailing_type': 'sms',

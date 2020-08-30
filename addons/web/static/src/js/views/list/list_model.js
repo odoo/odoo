@@ -25,7 +25,7 @@ odoo.define('web.ListModel', function (require) {
          * @override
          * @see _readGroupExtraFields
          */
-        get: function () {
+        __get: function () {
             var result = this._super.apply(this, arguments);
             var dp = result && this.localData[result.id];
             if (dp && dp.groupData) {

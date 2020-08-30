@@ -8,6 +8,7 @@ import logging
 import pytz
 
 from odoo import api, exceptions, fields, models, _
+from odoo.osv import expression
 
 from odoo.tools.misc import clean_context
 from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
@@ -162,6 +163,7 @@ class MailActivity(models.Model):
         'res.users', 'Assigned to',
         default=lambda self: self.env.user,
         index=True, required=True)
+    request_partner_id = fields.Many2one('res.partner', string='Requesting Partner')
     state = fields.Selection([
         ('overdue', 'Overdue'),
         ('today', 'Today'),
@@ -228,16 +230,20 @@ class MailActivity(models.Model):
     @api.onchange('activity_type_id')
     def _onchange_activity_type_id(self):
         if self.activity_type_id:
-            self.summary = self.activity_type_id.summary
-            # Date.context_today is correct because date_deadline is a Date and is meant to be
-            # expressed in user TZ
-            base = fields.Date.context_today(self)
-            if self.activity_type_id.delay_from == 'previous_activity' and 'activity_previous_deadline' in self.env.context:
-                base = fields.Date.from_string(self.env.context.get('activity_previous_deadline'))
-            self.date_deadline = base + relativedelta(**{self.activity_type_id.delay_unit: self.activity_type_id.delay_count})
+            if self.activity_type_id.summary:
+                self.summary = self.activity_type_id.summary
+            self.date_deadline = self._calculate_date_deadline(self.activity_type_id)
             self.user_id = self.activity_type_id.default_user_id or self.env.user
             if self.activity_type_id.default_description:
                 self.note = self.activity_type_id.default_description
+
+    def _calculate_date_deadline(self, activity_type):
+        # Date.context_today is correct because date_deadline is a Date and is meant to be
+        # expressed in user TZ
+        base = fields.Date.context_today(self)
+        if activity_type.delay_from == 'previous_activity' and 'activity_previous_deadline' in self.env.context:
+            base = fields.Date.from_string(self.env.context.get('activity_previous_deadline'))
+        return base + relativedelta(**{activity_type.delay_unit: activity_type.delay_count})
 
     @api.onchange('recommended_activity_type_id')
     def _onchange_recommended_activity_type_id(self):
@@ -430,7 +436,9 @@ class MailActivity(models.Model):
                 record.message_notify(
                     partner_ids=activity.user_id.partner_id.ids,
                     body=body,
-                    subject=_('%s: %s assigned to you') % (activity.res_name, activity.summary or activity.activity_type_id.name),
+                    subject=_('%(activity_name)s: %(summary)s assigned to you',
+                        activity_name=activity.res_name,
+                        summary=activity.summary or activity.activity_type_id.name),
                     record_name=activity.res_name,
                     model_description=model_description,
                     email_layout_xmlid='mail.mail_notification_light',
@@ -615,7 +623,7 @@ class MailActivityMixin(models.AbstractModel):
     Activities come with a new JS widget for the form view. It is integrated in the
     Chatter widget although it is a separate widget. It displays activities linked
     to the current record and allow to schedule, edit and mark done activities.
-    Use widget="mail_activity" on activity_ids field in form view to use it.
+    Just include field activity_ids in the div.oe-chatter to use it.
 
     There is also a kanban widget defined. It defines a small widget to integrate
     in kanban vignettes. It allow to manage activities directly from the kanban
@@ -664,10 +672,11 @@ class MailActivityMixin(models.AbstractModel):
         related='activity_ids.activity_type_id', readonly=False,
         search='_search_activity_type_id',
         groups="base.group_user")
+    activity_type_icon = fields.Char('Activity Type Icon', related='activity_ids.icon')
     activity_date_deadline = fields.Date(
         'Next Activity Deadline',
         compute='_compute_activity_date_deadline', search='_search_activity_date_deadline',
-        readonly=True, store=False,
+        compute_sudo=False, readonly=True, store=False,
         groups="base.group_user")
     activity_summary = fields.Char(
         'Next Activity Summary',
@@ -781,6 +790,38 @@ class MailActivityMixin(models.AbstractModel):
             )
         return True
 
+    def activity_search(self, act_type_xmlids='', user_id=None, additional_domain=None):
+        """ Search automated activities on current record set, given a list of activity
+        types xml IDs. It is useful when dealing with specific types involved in automatic
+        activities management.
+
+        :param act_type_xmlids: list of activity types xml IDs
+        :param user_id: if set, restrict to activities of that user_id;
+        :param additional_domain: if set, filter on that domain;
+        """
+        if self.env.context.get('mail_activity_automation_skip'):
+            return False
+
+        Data = self.env['ir.model.data'].sudo()
+        activity_types_ids = [type_id for type_id in (Data.xmlid_to_res_id(xmlid, raise_if_not_found=False) for xmlid in act_type_xmlids) if type_id]
+        if not any(activity_types_ids):
+            return False
+
+        domain = [
+            '&', '&', '&',
+            ('res_model', '=', self._name),
+            ('res_id', 'in', self.ids),
+            ('automated', '=', True),
+            ('activity_type_id', 'in', activity_types_ids)
+        ]
+
+        if user_id:
+            domain = expression.AND([domain, [('user_id', '=', user_id)]])
+        if additional_domain:
+            domain = expression.AND([domain, additional_domain])
+
+        return self.env['mail.activity'].search(domain)
+
     def activity_schedule(self, act_type_xmlid='', date_deadline=None, summary='', note='', **act_values):
         """ Schedule an activity on each record of the current record set.
         This method allow to provide as parameter act_type_xmlid. This is an
@@ -864,16 +905,7 @@ class MailActivityMixin(models.AbstractModel):
         activity_types_ids = [act_type_id for act_type_id in activity_types_ids if act_type_id]
         if not any(activity_types_ids):
             return False
-        domain = [
-            '&', '&', '&',
-            ('res_model', '=', self._name),
-            ('res_id', 'in', self.ids),
-            ('automated', '=', True),
-            ('activity_type_id', 'in', activity_types_ids)
-        ]
-        if user_id:
-            domain = ['&'] + domain + [('user_id', '=', user_id)]
-        activities = self.env['mail.activity'].search(domain)
+        activities = self.activity_search(act_type_xmlids, user_id=user_id)
         if activities:
             write_vals = {}
             if date_deadline:
@@ -894,16 +926,7 @@ class MailActivityMixin(models.AbstractModel):
         activity_types_ids = [act_type_id for act_type_id in activity_types_ids if act_type_id]
         if not any(activity_types_ids):
             return False
-        domain = [
-            '&', '&', '&',
-            ('res_model', '=', self._name),
-            ('res_id', 'in', self.ids),
-            ('automated', '=', True),
-            ('activity_type_id', 'in', activity_types_ids)
-        ]
-        if user_id:
-            domain = ['&'] + domain + [('user_id', '=', user_id)]
-        activities = self.env['mail.activity'].search(domain)
+        activities = self.activity_search(act_type_xmlids, user_id=user_id)
         if activities:
             activities.action_feedback(feedback=feedback)
         return True
@@ -919,14 +942,5 @@ class MailActivityMixin(models.AbstractModel):
         activity_types_ids = [act_type_id for act_type_id in activity_types_ids if act_type_id]
         if not any(activity_types_ids):
             return False
-        domain = [
-            '&', '&', '&',
-            ('res_model', '=', self._name),
-            ('res_id', 'in', self.ids),
-            ('automated', '=', True),
-            ('activity_type_id', 'in', activity_types_ids)
-        ]
-        if user_id:
-            domain = ['&'] + domain + [('user_id', '=', user_id)]
-        self.env['mail.activity'].search(domain).unlink()
+        self.activity_search(act_type_xmlids, user_id=user_id).unlink()
         return True

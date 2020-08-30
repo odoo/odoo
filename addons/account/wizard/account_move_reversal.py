@@ -41,9 +41,12 @@ class AccountMoveReversal(models.TransientModel):
 
         if any(move.state != "posted" for move in move_ids):
             raise UserError(_('You can only reverse posted moves.'))
-        res['company_id'] = move_ids.company_id.id or self.env.company.id
-        res['move_ids'] = [(6, 0, move_ids.ids)]
-        res['refund_method'] = (len(move_ids) > 1 or move_ids.move_type == 'entry') and 'cancel' or 'refund'
+        if 'company_id' in fields:
+            res['company_id'] = move_ids.company_id.id or self.env.company.id
+        if 'move_ids' in fields:
+            res['move_ids'] = [(6, 0, move_ids.ids)]
+        if 'refund_method' in fields:
+            res['refund_method'] = (len(move_ids) > 1 or move_ids.move_type == 'entry') and 'cancel' or 'refund'
         return res
 
     @api.depends('move_ids')
@@ -57,7 +60,9 @@ class AccountMoveReversal(models.TransientModel):
     def _prepare_default_reversal(self, move):
         reverse_date = self.date if self.date_mode == 'custom' else move.date
         return {
-            'ref': _('Reversal of: %s, %s') % (move.name, self.reason) if self.reason else _('Reversal of: %s') % (move.name),
+            'ref': _('Reversal of: %(move_name)s, %(reason)s', move_name=move.name, reason=self.reason) 
+                   if self.reason
+                   else _('Reversal of: %s', move.name),
             'date': reverse_date,
             'invoice_date': move.is_invoice(include_receipts=True) and (self.date or move.date) or False,
             'journal_id': self.journal_id and self.journal_id.id or move.journal_id.id,
@@ -65,6 +70,9 @@ class AccountMoveReversal(models.TransientModel):
             'invoice_user_id': move.invoice_user_id.id,
             'auto_post': True if reverse_date > fields.Date.context_today(self) else False,
         }
+
+    def _reverse_moves_post_hook(self, moves):
+        return
 
     def reverse_moves(self):
         self.ensure_one()
@@ -77,7 +85,7 @@ class AccountMoveReversal(models.TransientModel):
 
         # Handle reverse method.
         if self.refund_method == 'cancel':
-            if any([vals.get('auto_post', False) for vals in default_values_list]):
+            if any(vals.get('auto_post', False) for vals in default_values_list):
                 new_moves = moves._reverse_moves(default_values_list)
             else:
                 new_moves = moves._reverse_moves(default_values_list, cancel=True)
@@ -95,6 +103,8 @@ class AccountMoveReversal(models.TransientModel):
             return
 
         self.new_move_ids = new_moves
+        if new_moves:
+            self._reverse_moves_post_hook(new_moves)
 
         # Create action.
         action = {

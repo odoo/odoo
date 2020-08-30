@@ -206,6 +206,28 @@ class MailRenderMixin(models.AbstractModel):
             html = self.env['mail.render.mixin']._replace_local_links(html)
         return html
 
+    @api.model
+    def _prepend_preview(self, html, preview):
+        """ Prepare the email body before sending. Add the text preview at the
+        beginning of the mail. The preview text is displayed bellow the mail
+        subject of most mail client (gmail, outlook...).
+
+        :param html: html content for which we want to prepend a preview
+        :param preview: the preview to add before the html content
+        :return: html with preprended preview
+        """
+        if preview:
+            preview = preview.strip()
+
+        if preview:
+            html_preview = f"""
+                <div style="display:none;font-size:1px;height:0px;width:0px;opacity:0;">
+                  {tools.html_escape(preview)}
+                </div>
+            """
+            return tools.prepend_html_content(html, html_preview)
+        return html
+
     # ------------------------------------------------------------
     # RENDERING
     # ------------------------------------------------------------
@@ -316,7 +338,7 @@ class MailRenderMixin(models.AbstractModel):
                 render_result = template.render(variables)
             except Exception as e:
                 _logger.info("Failed to render template : %s" % e, exc_info=True)
-                raise UserError(_("Failed to render template : %s") % e)
+                raise UserError(_("Failed to render template : %s", e))
             if render_result == u"False":
                 render_result = u""
             results[record.id] = render_result

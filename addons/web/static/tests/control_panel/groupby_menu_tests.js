@@ -26,7 +26,7 @@ odoo.define('web.groupby_menu_tests', function (require) {
 
             assert.expect(1);
             const params = {
-                cpStoreConfig: { searchMenuTypes },
+                cpModelConfig: { searchMenuTypes },
                 cpProps: { fields: {}, searchMenuTypes },
             };
             const controlPanel = await createControlPanel(params);
@@ -40,7 +40,7 @@ odoo.define('web.groupby_menu_tests', function (require) {
             assert.expect(5);
 
             const params = {
-                cpStoreConfig: { searchMenuTypes },
+                cpModelConfig: { searchMenuTypes },
                 cpProps: { fields: this.fields, searchMenuTypes },
             };
             const controlPanel = await createControlPanel(params);
@@ -67,7 +67,7 @@ odoo.define('web.groupby_menu_tests', function (require) {
                     <filter string="Groupby Foo" name="gb_foo" context="{'group_by': 'foo'}"/>
                 </search>`;
             const params = {
-                cpStoreConfig: { viewInfo: { arch, fields: this.fields }, searchMenuTypes },
+                cpModelConfig: { arch, fields: this.fields, searchMenuTypes },
                 cpProps: { fields: this.fields, searchMenuTypes },
             };
             const controlPanel = await createControlPanel(params);
@@ -90,7 +90,7 @@ odoo.define('web.groupby_menu_tests', function (require) {
                     <filter string="Groupby Foo" name="gb_foo" context="{'group_by': 'foo'}"/>
                 </search>`;
             const params = {
-                cpStoreConfig: { viewInfo: { arch, fields: this.fields }, searchMenuTypes },
+                cpModelConfig: {arch, fields: this.fields, searchMenuTypes },
                 cpProps: { fields: this.fields, searchMenuTypes },
                 search: function (searchQuery) {
                     const { groupBy } = searchQuery;
@@ -125,7 +125,7 @@ odoo.define('web.groupby_menu_tests', function (require) {
                     <filter string="Groupby Foo" name="gb_foo" context="{'group_by': 'foo'}"/>
                 </search>`;
             const params = {
-                cpStoreConfig: { viewInfo: { arch, fields: this.fields }, searchMenuTypes },
+                cpModelConfig: { arch, fields: this.fields, searchMenuTypes },
                 cpProps: { fields: this.fields, searchMenuTypes },
             };
             const controlPanel = await createControlPanel(params);
@@ -147,10 +147,11 @@ odoo.define('web.groupby_menu_tests', function (require) {
                     <filter string="Groupby Foo" name="gb_foo" context="{'group_by': 'foo'}"/>
                 </search>`;
             const params = {
-                cpStoreConfig: {
-                    viewInfo: { arch, fields: this.fields },
+                cpModelConfig: {
+                    arch,
+                    fields: this.fields,
                     searchMenuTypes,
-                    actionContext: { search_default_gb_foo: 1 }
+                    context: { search_default_gb_foo: 1 }
                 },
                 cpProps: { fields: this.fields, searchMenuTypes },
                 search: function (searchQuery) {
@@ -189,10 +190,11 @@ odoo.define('web.groupby_menu_tests', function (require) {
                     <filter string="Date" name="date" context="{'group_by': 'date_field:week'}"/>
                 </search>`;
             const params = {
-                cpStoreConfig: {
-                    viewInfo: { arch, fields: this.fields },
+                cpModelConfig: {
+                    arch,
+                    fields: this.fields,
                     searchMenuTypes,
-                    actionContext: { search_default_date: 1 }
+                    context: { search_default_date: 1 }
                 },
                 cpProps: { fields: this.fields, searchMenuTypes },
                 search: function (searchQuery) {
@@ -251,10 +253,11 @@ odoo.define('web.groupby_menu_tests', function (require) {
                     <filter string="Foo" name="foo" context="{'group_by': 'foo'}"/>
                 </search>`;
             const params = {
-                cpStoreConfig: {
-                    viewInfo: { arch, fields: this.fields },
+                cpModelConfig: {
+                    arch,
+                    fields: this.fields,
                     searchMenuTypes,
-                    actionContext: { search_default_bar: 1 }
+                    context: { search_default_bar: 1 }
                 },
                 cpProps: { fields: this.fields, searchMenuTypes },
             };
@@ -309,7 +312,7 @@ odoo.define('web.groupby_menu_tests', function (require) {
                 id: { sortable: true, string: 'ID', type: 'integer' }
             };
             const params = {
-                cpStoreConfig: { searchMenuTypes },
+                cpModelConfig: { searchMenuTypes },
                 cpProps: { fields, searchMenuTypes },
             };
             const controlPanel = await createControlPanel(params);
@@ -332,7 +335,7 @@ odoo.define('web.groupby_menu_tests', function (require) {
                 id: { sortable: true, string: 'ID', type: 'integer' }
             };
             const params = {
-                cpStoreConfig: { viewInfo: { fields }, searchMenuTypes },
+                cpModelConfig: { fields, searchMenuTypes },
                 cpProps: { fields, searchMenuTypes },
                 search: function (searchQuery) {
                     const { groupBy } = searchQuery;
@@ -363,10 +366,11 @@ odoo.define('web.groupby_menu_tests', function (require) {
                     <filter string="Date" name="date" context="{'group_by': 'date_field:week'}"/>
                 </search>`;
             const params = {
-                cpStoreConfig: {
-                    viewInfo: { arch, fields: this.fields },
+                cpModelConfig: {
+                    arch,
+                    fields: this.fields,
                     searchMenuTypes,
-                    actionContext: { search_default_birthday: 2, search_default_date: 1 }
+                    context: { search_default_birthday: 2, search_default_date: 1 }
                 },
                 cpProps: { fields: this.fields, searchMenuTypes },
             };
@@ -391,8 +395,9 @@ odoo.define('web.groupby_menu_tests', function (require) {
                     <filter string="Bar" name="superName" context="{'group_by': 'bar'}"/>
                 </search>`;
             const params = {
-                cpStoreConfig: {
-                    viewInfo: { arch, fields: this.fields },
+                cpModelConfig: {
+                    arch,
+                    fields: this.fields,
                     searchMenuTypes,
                 },
                 cpProps: { fields: this.fields, searchMenuTypes },
@@ -453,10 +458,11 @@ odoo.define('web.groupby_menu_tests', function (require) {
                     <filter string="Date" name="date" context="{'group_by': 'foo'}"/>
                 </search>`;
             const params = {
-                cpStoreConfig: {
-                    viewInfo: { arch, fields: this.fields },
+                cpModelConfig: {
+                    arch,
+                    fields: this.fields,
                     searchMenuTypes,
-                    actionContext: { search_default_birthday: false, search_default_foo: 0 }
+                    context: { search_default_birthday: false, search_default_foo: 0 }
                 },
                 cpProps: { fields: this.fields, searchMenuTypes },
             };

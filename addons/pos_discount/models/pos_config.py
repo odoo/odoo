@@ -10,7 +10,7 @@ class PosConfig(models.Model):
     iface_discount = fields.Boolean(string='Order Discounts', help='Allow the cashier to give discounts on the whole order.')
     discount_pc = fields.Float(string='Discount Percentage', help='The default discount percentage', default=10.0)
     discount_product_id = fields.Many2one('product.product', string='Discount Product',
-        domain="[('available_in_pos', '=', True), ('sale_ok', '=', True)]", help='The product used to model the discount.')
+        domain="[('sale_ok', '=', True)]", help='The product used to model the discount.')
 
     @api.onchange('company_id','module_pos_discount')
     def _default_discount_product_id(self):
@@ -19,6 +19,12 @@ class PosConfig(models.Model):
 
     @api.model
     def _default_discount_value_on_module_install(self):
-        configs = self.env['pos.config'].search([]).filtered(lambda c: not c.current_session_id)
-        for conf in configs:
+        configs = self.env['pos.config'].search([])
+        open_configs = (
+            self.env['pos.session']
+            .search(['|', ('state', '!=', 'closed'), ('rescue', '=', True)])
+            .mapped('config_id')
+        )
+        # Do not modify configs where an opened session exists.
+        for conf in (configs - open_configs):
             conf._default_discount_product_id()

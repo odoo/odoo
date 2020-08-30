@@ -37,6 +37,7 @@
                     <field name="company_has_template" invisible="1"/>
                     <field name="allowed_pricelist_ids" invisible="1"/>
                     <field name="has_active_session" invisible="1"/>
+                    <field name="show_allow_invoicing_alert" invisible="1"/>
                     <div class="oe_title" id="title">
                         <label for="name" class="oe_edit_only"/>
                         <h1><field name="name"/></h1>
@@ -71,7 +72,7 @@
                                 <field name="module_pos_hr" attrs="{'readonly': [('has_active_session','=', True)]}"/>
                             </div>
                             <div class="o_setting_right_pane" id="login_with_employees">
-                                <span class="o_form_label">Login with Employees</span>
+                                <span class="o_form_label">Authorized Employees</span>
                                 <div class="text-muted">
                                     Use employee credentials to log in to the PoS session and switch cashier
                                 </div>
@@ -81,6 +82,31 @@
                     </div>
                     <h2 name="order">PoS Interface</h2>
                     <div class="row mt16 o_settings_container">
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="manage_orders" />
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="manage_orders" />
+                                <div class="text-muted">
+                                    Reprint receipt, refund and exchange orders
+                                </div>
+                                <div class="o_notification_alert alert alert-warning" attrs="{'invisible':[('show_allow_invoicing_alert', '=', False)]}" role="alert">
+                                    Allow invoicing of paid orders by activating 'Invoicing' in the 'Bills &amp; Receipts' section.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box" groups="product.group_product_variant" >
+                            <div class="o_setting_left_pane">
+                                <field name="product_configurator" />
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="product_configurator" />
+                                <div class="text-muted">
+                                    Select product attributes
+                                </div>
+                            </div>
+                        </div>
                         <div id="category_reference" class="col-12 col-lg-6 o_setting_box">
                             <div class="o_setting_left_pane">
                                 <field name="iface_display_categ_images"/>
@@ -102,7 +128,7 @@
                             <div class="o_setting_right_pane">
                                 <label for="limit_categories"/>
                                 <div class="text-muted">
-                                    Available Product Categories
+                                    Pick which product categories are available
                                 </div>
                                 <div class="content-group mt16" attrs="{'invisible': [('limit_categories', '=', False)]}">
                                     <field name="iface_available_categ_ids" widget="many2many_tags" attrs="{'readonly': [('has_active_session','=', True)]}"/>
@@ -156,9 +182,9 @@
                                 <field name="is_posbox"/>
                             </div>
                             <div class="o_setting_right_pane">
-                                <label for="is_posbox" string="IoT Box Devices"/>
+                                <label for="is_posbox" string="IoT Box"/>
                                 <div class="text-muted mb16">
-                                    Connect devices to your PoS through an IoT Box
+                                    Connect devices using an IoT Box
                                 </div>
                                 <div class="content-group pos_iot_config" attrs="{'invisible' : [('is_posbox', '=', False)]}">
                                     <div class="row">
@@ -194,9 +220,9 @@
                                 <field name="other_devices"/>
                             </div>
                             <div class="o_setting_right_pane">
-                                <label for="other_devices" string="Connect Devices"/>
+                                <label for="other_devices" string="Direct Devices"/>
                                 <div class="text-muted mb16">
-                                    Connect devices to your PoS
+                                    Connect devices to your PoS directly without an IoT Box
                                 </div>
                             </div>
                         </div>
@@ -204,9 +230,9 @@
                             <div class="o_setting_left_pane">
                             </div>
                             <div class="o_setting_right_pane">
-                                <span class="o_form_label">Barcode Scanner</span>
+                                <span class="o_form_label">Barcodes</span>
                                 <div class="text-muted">
-                                    Set barcodes to scan products, customer cards, etc.
+                                    Use barcodes to scan products, customer cards, etc.
                                 </div>
                                 <div class="content-group mt16 row">
                                     <label for="barcode_nomenclature_id" string="Barcode Nomenclature" class="col-lg-3 o_light_label"/>
@@ -313,6 +339,17 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="col-xs-12 col-lg-6 o_setting_box" >
+                            <div class="o_setting_left_pane">
+                                <field name="manual_discount"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="manual_discount"/>
+                                <div class="text-muted">
+                                    Allow discounts per line
+                                </div>
+                            </div>
+                        </div>
                         <div class="col-12 col-lg-6 o_setting_box">
                             <div class="o_setting_left_pane">
                                 <field name="module_pos_loyalty" widget="upgrade_boolean" nolabel="1"/>
@@ -372,26 +409,9 @@
                                 <div class="text-muted">
                                     Control cash box at opening and closing
                                 </div>
-                                <div class="content-group mt16" attrs="{'invisible': [('cash_control', '=', False)]}">
-                                    <div class="row mt16">
-                                        <label string="Default Opening" for="default_cashbox_id" class="col-lg-3 o_light_label" />
-                                        <field name="default_cashbox_id" domain="[('is_a_template', '=', True)]" context="{'default_is_a_template': True, 'current_currency_id': currency_id}"/>
-                                    </div>
-                                </div>
                                 <div attrs="{'invisible': [('cash_control', '=', False)]}">
                                     <label for="amount_authorized_diff" string="Authorized Difference" class="font-weight-normal"/>
                                     <field name="amount_authorized_diff"/>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-12 col-lg-6 o_setting_box">
-                            <div class="o_setting_left_pane">
-                                <field name="iface_precompute_cash"/>
-                            </div>
-                            <div class="o_setting_right_pane">
-                                <label for="iface_precompute_cash"/>
-                                <div class="text-muted">
-                                    Prefill amount paid with the exact due amount
                                 </div>
                             </div>
                         </div>
@@ -407,11 +427,9 @@
                                     Accept customer tips or convert their change to a tip
                                 </div>
                                 <div class="content-group" attrs="{'invisible': [('iface_tipproduct', '=', False)]}">
-                                    <div class="mt16">
+                                    <div class="mt16" id="tip_product">
                                         <label string="Tip Product" for="tip_product_id" class="o_light_label"/>
-                                        <field name="tip_product_id"
-                                               domain="[('available_in_pos', '=', True)]"
-                                               context="{'default_available_in_pos': True}"/>
+                                        <field name="tip_product_id"/>
                                     </div>
                                 </div>
                             </div>
@@ -463,22 +481,6 @@
                                 <div class="content-group mt16" attrs="{'invisible' : ['|', ('iface_print_auto', '=', False), '&amp;', ('is_posbox', '=', False), ('other_devices', '=', False)]}">
                                     <div>
                                         <field name="iface_print_skip_screen" class="oe_inline"/><span class="oe_inline"><b>Skip Preview Screen</b></span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-12 col-lg-6 o_setting_box pos_reprint_receipt">
-                            <div class="o_setting_left_pane">
-                                <field name='module_pos_reprint'/>
-                            </div>
-                            <div class="o_setting_right_pane">
-                                <label for="module_pos_reprint"/>
-                                <div class="text-muted">
-                                    Allow cashier to reprint receipts
-                                </div>
-                                <div class="content-group" attrs="{'invisible': [('module_pos_reprint', '=', False)]}">
-                                    <div class="mt16" id="btn_use_pos_reprint">
-                                        <button string="Save" type="object" name="execute" class="oe_highlight"/>
                                     </div>
                                 </div>
                             </div>
@@ -548,7 +550,6 @@
         <field name="arch" type="xml">
             <tree string="Point of Sale Configuration">
                 <field name="name" />
-                <field name="picking_type_id"/>
                 <field name="company_id"  options="{'no_create': True}" groups="base.group_multi_company"/>
             </tree>
         </field>
@@ -591,9 +592,9 @@
         <field name="search_view_id" ref="view_pos_config_search" />
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
-                Create a new PoS config
+                Create a new PoS
             </p><p>
-                Configure at least one Point of Sale to be able to sell through the PoS interface.
+                Configure at least one Point of Sale.
             </p>
         </field>
     </record>

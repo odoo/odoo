@@ -24,7 +24,7 @@ class EventTemplateTicket(models.Model):
         digits='Product Price', readonly=False, store=True)
     price_reduce = fields.Float(
         string="Price Reduce", compute="_compute_price_reduce",
-        digits='Product Price')
+        compute_sudo=True, digits='Product Price')
 
     @api.depends('product_id')
     def _compute_price(self):
@@ -47,7 +47,7 @@ class EventTemplateTicket(models.Model):
     def _compute_price_reduce(self):
         for ticket in self:
             product = ticket.product_id
-            discount = product.lst_price and (product.lst_price - product.price) / product.lst_price or 0.0
+            discount = (product.lst_price - product.price) / product.lst_price if product.lst_price else 0.0
             ticket.price_reduce = (1.0 - discount) * ticket.price
 
     def _init_column(self, column_name):
@@ -97,14 +97,16 @@ class EventTicket(models.Model):
     _order = "event_id, price"
 
     # product
-    price_reduce_taxinc = fields.Float(string='Price Reduce Tax inc', compute='_compute_price_reduce_taxinc')
+    price_reduce_taxinc = fields.Float(
+        string='Price Reduce Tax inc', compute='_compute_price_reduce_taxinc',
+        compute_sudo=True)
 
     def _compute_price_reduce_taxinc(self):
-        for record in self:
+        for event in self:
             # sudo necessary here since the field is most probably accessed through the website
-            tax_ids = record.sudo().product_id.taxes_id.filtered(lambda r: r.company_id == record.event_id.company_id)
-            taxes = tax_ids.compute_all(record.price_reduce, record.event_id.company_id.currency_id, 1.0, product=record.product_id)
-            record.price_reduce_taxinc = taxes['total_included']
+            tax_ids = event.product_id.taxes_id.filtered(lambda r: r.company_id == event.event_id.company_id)
+            taxes = tax_ids.compute_all(event.price_reduce, event.event_id.company_id.currency_id, 1.0, product=event.product_id)
+            event.price_reduce_taxinc = taxes['total_included']
 
     @api.depends('product_id.active')
     def _compute_sale_available(self):

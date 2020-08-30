@@ -62,7 +62,7 @@
                             class="o_group_by_menu"
                             fields="fields"
                         />
-                        <ComparisonMenu t-if="props.searchMenuTypes.includes('comparison') and model.getFiltersOfType('comparison').length"
+                        <ComparisonMenu t-if="props.searchMenuTypes.includes('comparison') and model.get('filters', f => f.type === 'comparison').length"
                             class="o_comparison_menu"
                         />
                         <FavoriteMenu t-if="props.searchMenuTypes.includes('favorite')"
@@ -461,12 +461,13 @@
 <t t-name="web.OwlDialog" owl="1">
     <Portal target="'body'">
         <div class="o_dialog" t-on-focus="_onFocus" t-on-click="_onClick">
-            <div t-if="props.backdrop" class="modal-backdrop show" t-on-click="_onBackdropClick"/>
             <div role="dialog" class="modal"
                 tabindex="-1"
                 t-att-class="{ o_technical_modal: props.technical, o_modal_full: props.fullscreen }"
+                t-att-data-backdrop="'' + props.backdrop"
                 t-ref="modal"
                 t-on-close_dialog.stop="_close"
+                t-on-click="_onBackdropClick"
                 >
                 <div class="modal-dialog" t-att-class="size">
                     <div class="modal-content" t-att-class="props.contentClass">
@@ -554,15 +555,15 @@
 
 <t t-name="web.SearchBar" owl="1">
     <div class="o_searchview_input_container">
-        <div t-foreach="model.getFacets()" t-as="facet" t-key="facet_index"
+        <div t-foreach="model.get('facets')" t-as="facet" t-key="facet_index"
             tabindex="0"
             class="o_searchview_facet"
             role="img"
             aria-label="search"
             t-on-keydown="_onFacetKeydown(facet, facet_index)"
             >
-            <span t-if="facet.title" class="o_searchview_facet_label" t-esc="facet.title"/>
-            <span t-else="" t-attf-class="o_searchview_facet_label {{ facet.icon }}"/>
+            <span t-if="facet.icon" t-attf-class="o_searchview_facet_label {{ facet.icon }}"/>
+            <span t-else="" class="o_searchview_facet_label" t-esc="facet.title"/>
             <div class="o_facet_values">
                 <t t-foreach="facet.values" t-as="facetValue" t-key="facetValue_index">
                     <span t-if="!facetValue_first" class="o_facet_values_sep" t-esc="facet.separator"/>
@@ -603,7 +604,7 @@
                 </a>
                 <a href="#" t-on-click.prevent="">
                     <t t-if="src.label" t-esc="src.label"/>
-                    <t t-elif="['date', 'datetime'].includes(props.fields[src.fieldName].type)">
+                    <t t-elif="['date', 'datetime'].includes(src.type)">
                         <t>Search <em t-esc="src.description"/> at: <strong t-esc="state.inputValue"/></t>
                     </t>
                     <t t-else="">Search <em t-esc="src.description"/> for: <strong t-esc="state.inputValue"/></t>
@@ -624,6 +625,7 @@
             title="env._t('Action')"
             items="actionItems"
             icon="'fa fa-cog'"
+            closeOnSelected="true"
         />
     </div>
 </t>
@@ -651,8 +653,8 @@
     <div class="oe_tooltip_string" t-if="widget.string" role="tooltip">
         <t t-esc="widget.string"/> <t t-if="debug and widget.nolabel">(nolabel)</t>
     </div>
-    <p t-if="widget.attrs.help || widget.field.help" class="oe_tooltip_help" role="tooltip">
-        <t t-esc="widget.attrs.help || widget.field.help"/>
+    <p t-if="help" class="oe_tooltip_help" role="tooltip">
+        <t t-esc="help"/>
     </p>
     <ul t-if="debug" class="oe_tooltip_technical" role="tooltip">
         <li data-item="field" t-if="widget.name">
@@ -801,17 +803,9 @@
     </div>
 </div>
 
-<div t-name="View.NoContentHelper" class="o_view_nocontent" role="alert">
+<div t-name="web.ActionHelper" class="o_view_nocontent" owl="1">
     <div class="o_nocontent_help">
-        <p class="o_view_nocontent_empty_folder">
-            <t t-if="title" t-esc="title"/>
-            <t t-else="1">No data to display</t>
-        </p>
-        <p>
-            <t t-if="description" t-esc="description"/>
-            <t t-else="1">Try to add some records, or make sure that there is no
-                active filter in the search bar.</t>
-        </p>
+        <t t-raw="noContentHelp"/>
     </div>
 </div>
 
@@ -1245,7 +1239,8 @@
             class="o_datepicker_input o_input datetimepicker-input"
             t-att-name="widget.name"
             t-att-placeholder="placeholder"
-            t-attf-data-target="##{datepickerID}"/>
+            t-attf-data-target="##{datepickerID}"
+            autocomplete="off"/>
         <span class="o_datepicker_button"/>
     </div>
 </t>

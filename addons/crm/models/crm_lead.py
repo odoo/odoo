@@ -3,10 +3,11 @@
 
 import logging
 import threading
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from psycopg2 import sql
 
 from odoo import api, fields, models, tools, SUPERUSER_ID
+from odoo.osv import expression
 from odoo.tools.translate import _
 from odoo.tools import email_re, email_split
 from odoo.exceptions import UserError, AccessError
@@ -37,7 +38,7 @@ CRM_LEAD_FIELDS_TO_MERGE = [
     'partner_name',
     'phone',
     'probability',
-    'planned_revenue',
+    'expected_revenue',
     'street',
     'street2',
     'zip',
@@ -46,6 +47,24 @@ CRM_LEAD_FIELDS_TO_MERGE = [
     'email_from',
     'email_cc',
     'website']
+
+# Subset of partner fields: sync any of those
+PARTNER_FIELDS_TO_SYNC = [
+    'mobile',
+    'title',
+    'function',
+    'website',
+]
+
+# Subset of partner fields: sync all or none to avoid mixed addresses
+PARTNER_ADDRESS_FIELDS_TO_SYNC = [
+    'street',
+    'street2',
+    'city',
+    'zip',
+    'state_id',
+    'country_id',
+]
 
 # Those values have been determined based on benchmark to minimise
 # computation time, number of transaction and transaction time.
@@ -67,7 +86,9 @@ class Lead(models.Model):
     _primary_email = 'email_from'
 
     # Description
-    name = fields.Char('Opportunity', index=True, required=True)
+    name = fields.Char(
+        'Opportunity', index=True, required=True,
+        compute='_compute_name', readonly=False, store=True)
     user_id = fields.Many2one('res.users', string='Salesperson', index=True, tracking=True, default=lambda self: self.env.user)
     user_email = fields.Char('User Email', related='user_id.email', readonly=True)
     user_login = fields.Char('User Login', related='user_id.login', readonly=True)
@@ -95,13 +116,25 @@ class Lead(models.Model):
         ('red', 'Next activity late'),
         ('green', 'Next activity is planned')], string='Kanban State',
         compute='_compute_kanban_state')
+    activity_date_deadline_my = fields.Date(
+        'My Activities Deadline', compute='_compute_activity_date_deadline_my',
+        search='_search_activity_date_deadline_my', compute_sudo=False,
+        readonly=True, store=False, groups="base.group_user")
     tag_ids = fields.Many2many(
         'crm.tag', 'crm_tag_rel', 'lead_id', 'tag_id', string='Tags',
         help="Classify and analyze your lead/opportunity categories like: Training, Service")
     color = fields.Integer('Color Index', default=0)
     # Opportunity specific
-    planned_revenue = fields.Monetary('Expected Revenue', currency_field='company_currency', tracking=True)
-    expected_revenue = fields.Monetary('Prorated Revenue', currency_field='company_currency', store=True, compute="_compute_expected_revenue")
+    expected_revenue = fields.Monetary('Expected Revenue', currency_field='company_currency', tracking=True)
+    prorated_revenue = fields.Monetary('Prorated Revenue', currency_field='company_currency', store=True, compute="_compute_prorated_revenue")
+    recurring_revenue = fields.Monetary('Recurring Revenues', currency_field='company_currency', groups="crm.group_use_recurring_revenues")
+    recurring_plan = fields.Many2one('crm.recurring.plan', string="Recurring Plan", groups="crm.group_use_recurring_revenues")
+    recurring_revenue_monthly = fields.Monetary('Expected MRR', currency_field='company_currency', store=True,
+                                               compute="_compute_recurring_revenue_monthly",
+                                               groups="crm.group_use_recurring_revenues")
+    recurring_revenue_monthly_prorated = fields.Monetary('Prorated MRR', currency_field='company_currency', store=True,
+                                               compute="_compute_recurring_revenue_monthly_prorated",
+                                               groups="crm.group_use_recurring_revenues")
     company_currency = fields.Many2one("res.currency", string='Currency', related='company_id.currency_id', readonly=True)
     # Dates
     date_closed = fields.Datetime('Closed Date', readonly=True, copy=False)
@@ -174,6 +207,7 @@ class Lead(models.Model):
         ('check_probability', 'check(probability >= 0 and probability <= 100)', 'The probability of closing the deal should be between 0% and 100%!')
     ]
 
+    @api.depends('activity_date_deadline')
     def _compute_kanban_state(self):
         today = date.today()
         for lead in self:
@@ -185,6 +219,26 @@ class Lead(models.Model):
                 else:
                     kanban_state = 'red'
             lead.kanban_state = kanban_state
+
+    @api.depends('activity_ids.date_deadline')
+    @api.depends_context('uid')
+    def _compute_activity_date_deadline_my(self):
+        todo_activities = []
+        if self.ids:
+            todo_activities = self.env['mail.activity'].search([
+                ('user_id', '=', self._uid),
+                ('res_model', '=', self._name),
+                ('res_id', 'in', self.ids)
+            ], order='date_deadline ASC')
+
+        for record in self:
+            record.activity_date_deadline_my = next(
+                (activity.date_deadline for activity in todo_activities if activity.res_id == record.id),
+                False
+            )
+
+    def _search_activity_date_deadline_my(self, operator, operand):
+        return ['&', ('activity_ids.user_id', '=', self._uid), ('activity_ids.date_deadline', operator, operand)]
 
     @api.depends('user_id', 'type')
     def _compute_team_id(self):
@@ -240,6 +294,12 @@ class Lead(models.Model):
             lead.day_close = abs((date_close - date_create).days)
 
     @api.depends('partner_id')
+    def _compute_name(self):
+        for lead in self:
+            if not lead.name and lead.partner_id and lead.partner_id.name:
+                lead.name = _("%s's opportunity") % lead.partner_id.name
+
+    @api.depends('partner_id')
     def _compute_partner_id_values(self):
         """ compute the new values when partner_id has changed """
         for lead in self:
@@ -248,7 +308,7 @@ class Lead(models.Model):
     @api.depends('partner_id.email')
     def _compute_email_from(self):
         for lead in self:
-            if lead.partner_id and lead.partner_id.email != lead.email_from:
+            if lead.partner_id.email and lead.partner_id.email != lead.email_from:
                 lead.email_from = lead.partner_id.email
 
     def _inverse_email_from(self):
@@ -259,8 +319,13 @@ class Lead(models.Model):
     @api.depends('partner_id.phone')
     def _compute_phone(self):
         for lead in self:
-            if lead.partner_id and lead.phone != lead.partner_id.phone:
+            if lead.partner_id.phone and lead.phone != lead.partner_id.phone:
                 lead.phone = lead.partner_id.phone
+
+    def _phone_get_country(self):
+        if self.partner_id.country_id:
+            return self.partner_id.country_id
+        return super()._phone_get_country()
 
     def _inverse_phone(self):
         for lead in self:
@@ -314,10 +379,20 @@ class Lead(models.Model):
                 if was_automated:
                     lead.probability = lead.automated_probability
 
-    @api.depends('planned_revenue', 'probability')
-    def _compute_expected_revenue(self):
+    @api.depends('expected_revenue', 'probability')
+    def _compute_prorated_revenue(self):
         for lead in self:
-            lead.expected_revenue = round((lead.planned_revenue or 0.0) * (lead.probability or 0) / 100.0, 2)
+            lead.prorated_revenue = round((lead.expected_revenue or 0.0) * (lead.probability or 0) / 100.0, 2)
+
+    @api.depends('recurring_revenue', 'recurring_plan.number_of_months')
+    def _compute_recurring_revenue_monthly(self):
+        for lead in self:
+            lead.recurring_revenue_monthly = (lead.recurring_revenue or 0.0) / (lead.recurring_plan.number_of_months or 1)
+
+    @api.depends('recurring_revenue_monthly', 'probability')
+    def _compute_recurring_revenue_monthly_prorated(self):
+        for lead in self:
+            lead.recurring_revenue_monthly_prorated = (lead.recurring_revenue_monthly or 0.0) * (lead.probability or 0) / 100.0
 
     def _compute_meeting_count(self):
         if self.ids:
@@ -333,8 +408,9 @@ class Lead(models.Model):
     @api.depends('email_from', 'phone', 'partner_id')
     def _compute_ribbon_message(self):
         for lead in self:
+            partner_formatted_phone = lead.partner_id.phone and self.phone_format(lead.partner_id.phone)
             will_write_email = lead.partner_id and lead.email_from != lead.partner_id.email
-            will_write_phone = lead.partner_id and lead.phone != lead.partner_id.phone
+            will_write_phone = lead.partner_id and lead.phone != partner_formatted_phone
 
             if will_write_email and will_write_phone:
                 lead.ribbon_message = _('By saving this change, the customer email and phone number will also be updated.')
@@ -381,26 +457,29 @@ class Lead(models.Model):
             self.mobile = self.phone_format(self.mobile)
 
     def _prepare_values_from_partner(self, partner):
-        """ Get a dictionary with values coming from customer information to
-        copy on a lead. Email_from and phone fields get the current lead
-        values to avoid being reset if customer has no value for them. """
+        """ Get a dictionary with values coming from partner information to
+        copy on a lead. Non-address fields get the current lead
+        values to avoid being reset if partner has no value for them. """
+
+        # Sync all address fields from partner, or none, to avoid mixing them.
+        if any(partner[f] for f in PARTNER_ADDRESS_FIELDS_TO_SYNC):
+            values = {f: partner[f] for f in PARTNER_ADDRESS_FIELDS_TO_SYNC}
+        else:
+            values = {f: self[f] for f in PARTNER_ADDRESS_FIELDS_TO_SYNC}
+
+        # For other fields, get the info from the partner, but only if set
+        values.update({f: partner[f] or self[f] for f in PARTNER_FIELDS_TO_SYNC})
+
+        # Fields with specific logic
         partner_name = partner.parent_id.name
         if not partner_name and partner.is_company:
             partner_name = partner.name
-        return {
-            'partner_name': partner_name,
-            'contact_name': partner.name if not partner.is_company else False,
-            'title': partner.title.id,
-            'street': partner.street,
-            'street2': partner.street2,
-            'city': partner.city,
-            'state_id': partner.state_id.id,
-            'country_id': partner.country_id.id,
-            'mobile': partner.mobile,
-            'zip': partner.zip,
-            'function': partner.function,
-            'website': partner.website,
-        }
+        contact_name = False if partner.is_company else partner.name
+        values.update({
+            'partner_name': partner_name or self.partner_name,
+            'contact_name': contact_name or self.contact_name,
+        })
+        return self._convert_to_write(values)
 
     # ------------------------------------------------------------
     # ORM
@@ -445,6 +524,86 @@ class Lead(models.Model):
             self._update_probability()
 
         return write_result
+
+    @api.model
+    def search(self, args, offset=0, limit=None, order=None, count=False):
+        """ Override to support ordering on activity_date_deadline_my.
+
+        Ordering through web client calls search_read with an order parameter set.
+        Search_read then calls search. In this override we therefore override search
+        to intercept a search without count with an order on activity_date_deadline_my.
+        In that case we do the search in two steps.
+
+        First step: fill with deadline-based results
+
+          * Perform a read_group on my activities to get a mapping lead_id / deadline
+            Remember date_deadline is required, we always have a value for it. Only
+            the earliest deadline per lead is kept.
+          * Search leads linked to those activities that also match the asked domain
+            and order from the original search request.
+          * Results of that search will be at the top of returned results. Use limit
+            None because we have to search all leads linked to activities as ordering
+            on deadline is done in post processing.
+          * Reorder them according to deadline asc or desc depending on original
+            search ordering. Finally take only a subset of those leads to fill with
+            results matching asked offset / limit.
+
+        Second step: fill with other results. If first step does not gives results
+        enough to match offset and limit parameters we fill with a search on other
+        leads. We keep the asked domain and ordering while filtering out already
+        scanned leads to keep a coherent results.
+
+        All other search and search_read are left untouched by this override to avoid
+        side effects. Search_count is not affected by this override.
+        """
+        if count or not order or 'activity_date_deadline_my' not in order:
+            return super(Lead, self).search(args, offset=offset, limit=limit, order=order, count=count)
+        order_items = [order_item.strip().lower() for order_item in (order or self._order).split(',')]
+
+        # Perform a read_group on my activities to get a mapping lead_id / deadline
+        # Remember date_deadline is required, we always have a value for it. Only
+        # the earliest deadline per lead is kept.
+        activity_asc = any('activity_date_deadline_my asc' in item for item in order_items)
+        my_lead_activities = self.env['mail.activity'].read_group(
+            [('res_model', '=', self._name), ('user_id', '=', self.env.uid)],
+            ['res_id', 'date_deadline:min'],
+            ['res_id'],
+            orderby='date_deadline ASC'
+        )
+        my_lead_mapping = dict((item['res_id'], item['date_deadline']) for item in my_lead_activities)
+        my_lead_ids = list(my_lead_mapping.keys())
+        my_lead_domain = expression.AND([[('id', 'in', my_lead_ids)], args])
+        my_lead_order = ', '.join(item for item in order_items if 'activity_date_deadline_my' not in item)
+
+        # Search leads linked to those activities and order them. See docstring
+        # of this method for more details.
+        search_res = super(Lead, self).search(my_lead_domain, offset=0, limit=None, order=my_lead_order, count=count)
+        my_lead_ids_ordered = sorted(search_res.ids, key=lambda lead_id: my_lead_mapping[lead_id], reverse=not activity_asc)
+        # keep only requested window (offset + limit, or offset+)
+        my_lead_ids_keep = my_lead_ids_ordered[offset:(offset + limit)] if limit else my_lead_ids_ordered[offset:]
+        # keep list of already skipped lead ids to exclude them from future search
+        my_lead_ids_skip = my_lead_ids_ordered[:(offset + limit)] if limit else my_lead_ids_ordered
+
+        # do not go further if limit is achieved
+        if limit and len(my_lead_ids_keep) >= limit:
+            return self.browse(my_lead_ids_keep)
+
+        # Fill with remaining leads. If a limit is given, simply remove count of
+        # already fetched. Otherwise keep none. If an offset is set we have to
+        # reduce it by already fetch results hereabove. Order is updated to exclude
+        # activity_date_deadline_my when calling super() .
+        lead_limit = (limit - len(my_lead_ids_keep)) if limit else None
+        if offset:
+            lead_offset = max((offset - len(search_res), 0))
+        else:
+            lead_offset = 0
+        lead_order = ', '.join(item for item in order_items if 'activity_date_deadline_my' not in item)
+
+        other_lead_res = super(Lead, self).search(
+            expression.AND([[('id', 'not in', my_lead_ids_skip)], args]),
+            offset=lead_offset, limit=lead_limit, order=lead_order, count=count
+        )
+        return self.browse(my_lead_ids_keep) + other_lead_res
 
     def _update_probability(self):
         lead_probabilities = self.sudo()._pls_get_naive_bayes_probabilities()
@@ -585,14 +744,34 @@ class Lead(models.Model):
         self.ensure_one()
         self.action_set_won()
 
-        if self.user_id and self.team_id and self.planned_revenue:
+        message = self._get_rainbowman_message()
+        if message:
+            return {
+                'effect': {
+                    'fadeout': 'slow',
+                    'message': message,
+                    'img_url': '/web/image/%s/%s/image_1024' % (self.team_id.user_id._name, self.team_id.user_id.id) if self.team_id.user_id.image_1024 else '/web/static/src/img/smile.svg',
+                    'type': 'rainbow_man',
+                }
+            }
+        return True
+
+    def get_rainbowman_message(self):
+        self.ensure_one()
+        if self.stage_id.is_won:
+            return self._get_rainbowman_message()
+        return False
+
+    def _get_rainbowman_message(self):
+        message = False
+        if self.user_id and self.team_id and self.expected_revenue:
             query = """
                 SELECT
                     SUM(CASE WHEN user_id = %(user_id)s THEN 1 ELSE 0 END) as total_won,
-                    MAX(CASE WHEN date_closed >= CURRENT_DATE - INTERVAL '30 days' AND user_id = %(user_id)s THEN planned_revenue ELSE 0 END) as max_user_30,
-                    MAX(CASE WHEN date_closed >= CURRENT_DATE - INTERVAL '7 days' AND user_id = %(user_id)s THEN planned_revenue ELSE 0 END) as max_user_7,
-                    MAX(CASE WHEN date_closed >= CURRENT_DATE - INTERVAL '30 days' AND team_id = %(team_id)s THEN planned_revenue ELSE 0 END) as max_team_30,
-                    MAX(CASE WHEN date_closed >= CURRENT_DATE - INTERVAL '7 days' AND team_id = %(team_id)s THEN planned_revenue ELSE 0 END) as max_team_7
+                    MAX(CASE WHEN date_closed >= CURRENT_DATE - INTERVAL '30 days' AND user_id = %(user_id)s THEN expected_revenue ELSE 0 END) as max_user_30,
+                    MAX(CASE WHEN date_closed >= CURRENT_DATE - INTERVAL '7 days' AND user_id = %(user_id)s THEN expected_revenue ELSE 0 END) as max_user_7,
+                    MAX(CASE WHEN date_closed >= CURRENT_DATE - INTERVAL '30 days' AND team_id = %(team_id)s THEN expected_revenue ELSE 0 END) as max_team_30,
+                    MAX(CASE WHEN date_closed >= CURRENT_DATE - INTERVAL '7 days' AND team_id = %(team_id)s THEN expected_revenue ELSE 0 END) as max_team_7
                 FROM crm_lead
                 WHERE
                     type = 'opportunity'
@@ -609,35 +788,24 @@ class Lead(models.Model):
                                         'team_id': self.team_id.id})
             query_result = self.env.cr.dictfetchone()
 
-            message = False
             if query_result['total_won'] == 1:
                 message = _('Go, go, go! Congrats for your first deal.')
-            elif query_result['max_team_30'] == self.planned_revenue:
+            elif query_result['max_team_30'] == self.expected_revenue:
                 message = _('Boom! Team record for the past 30 days.')
-            elif query_result['max_team_7'] == self.planned_revenue:
+            elif query_result['max_team_7'] == self.expected_revenue:
                 message = _('Yeah! Deal of the last 7 days for the team.')
-            elif query_result['max_user_30'] == self.planned_revenue:
+            elif query_result['max_user_30'] == self.expected_revenue:
                 message = _('You just beat your personal record for the past 30 days.')
-            elif query_result['max_user_7'] == self.planned_revenue:
+            elif query_result['max_user_7'] == self.expected_revenue:
                 message = _('You just beat your personal record for the past 7 days.')
-
-            if message:
-                return {
-                    'effect': {
-                        'fadeout': 'slow',
-                        'message': message,
-                        'img_url': '/web/image/%s/%s/image_1024' % (self.team_id.user_id._name, self.team_id.user_id.id) if self.team_id.user_id.image_1024 else '/web/static/src/img/smile.svg',
-                        'type': 'rainbow_man',
-                    }
-                }
-        return True
+        return message
 
     def action_schedule_meeting(self):
         """ Open meeting's calendar view to schedule meeting on current opportunity.
             :return dict: dictionary value for created Meeting view
         """
         self.ensure_one()
-        action = self.env.ref('calendar.action_calendar_event').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("calendar.action_calendar_event")
         partner_ids = self.env.user.partner_id.ids
         if self.partner_id:
             partner_ids.append(self.partner_id.id)
@@ -649,6 +817,20 @@ class Lead(models.Model):
             'default_name': self.name,
         }
         return action
+
+    def action_snooze(self):
+        self.ensure_one()
+        today = date.today()
+        my_next_activity = self.activity_ids.filtered(lambda activity: activity.user_id == self.env.user)[:1]
+        if my_next_activity:
+            if my_next_activity.date_deadline < today:
+                date_deadline = today + timedelta(days=7)
+            else:
+                date_deadline = my_next_activity.date_deadline + timedelta(days=7)
+            my_next_activity.write({
+                'date_deadline': date_deadline
+            })
+        return True
 
     # ------------------------------------------------------------
     # BUSINESS
@@ -780,7 +962,11 @@ class Lead(models.Model):
             for message in opportunity.message_ids:
                 message.write({
                     'res_id': self.id,
-                    'subject': _("From %s : %s") % (opportunity.name, message.subject)
+                    'subject': _(
+                        "From %(source_name)s : %(source_subject)s",
+                        source_name=opportunity.name,
+                        source_subject=message.subject
+                    )
                 })
         return True
 
@@ -835,6 +1021,9 @@ class Lead(models.Model):
         if len(self.ids) <= 1:
             raise UserError(_('Please select more than one element (lead or opportunity) from the list view.'))
 
+        if len(self.ids) > 5 and not self.env.is_superuser():
+            raise UserError(_("To prevent data loss, Leads and Opportunities can only be merged by groups of 5."))
+
         opportunities = self._sort_by_confidence_level(reverse=True)
 
         # get SORTED recordset of head and tail, and complete list
@@ -887,11 +1076,12 @@ class Lead(models.Model):
         """
         new_team_id = team_id if team_id else self.team_id.id
         upd_values = {
-            'partner_id': customer.id if customer else False,
             'type': 'opportunity',
             'date_open': fields.Datetime.now(),
             'date_conversion': fields.Datetime.now(),
         }
+        if customer != self.partner_id:
+            upd_values['partner_id'] = customer.id if customer else False
         if not self.stage_id:
             stage = self._stage_find(team_id=new_team_id)
             upd_values['stage_id'] = stage.id
@@ -1000,10 +1190,12 @@ class Lead(models.Model):
             res['lang'] = self.lang_id.code
         return res
 
-    def _find_matching_partner(self):
+    def _find_matching_partner(self, email_only=False):
         """ Try to find a matching partner with available information on the
-        lead, using notably customer's name, email, phone, ...
+        lead, using notably customer's name, email, ...
 
+        :param email_only: Only find a matching based on the email. To use
+            for automatic process where ilike based on name can be too dangerous
         :return: partner browse record
         """
         self.ensure_one()
@@ -1012,7 +1204,7 @@ class Lead(models.Model):
         if not partner and self.email_from:
             partner = self.env['res.partner'].search([('email', '=', self.email_from)], limit=1)
 
-        if not partner:
+        if not partner and not email_only:
             # search through the existing partners based on the lead's partner or contact name
             # to be aligned with _create_customer, search on lead's name as last possibility
             for customer_potential_name in [self[field_name] for field_name in ['partner_name', 'contact_name', 'name'] if self[field_name]]:
@@ -1077,7 +1269,7 @@ class Lead(models.Model):
         if self._context.get('default_type') == 'lead':
             help_title = _('Create a new lead')
         else:
-            help_title = _('Create an opportunity in your pipeline')
+            help_title = _('Create an opportunity to start playing with your pipeline.')
         alias_record = self.env['mail.alias'].search([
             ('alias_name', '!=', False),
             ('alias_name', '!=', ''),
@@ -1087,8 +1279,8 @@ class Lead(models.Model):
         ], limit=1)
         if alias_record and alias_record.alias_domain and alias_record.alias_name:
             email = '%s@%s' % (alias_record.alias_name, alias_record.alias_domain)
-            email_link = "<a href='mailto:%s'>%s</a>" % (email, email)
-            sub_title = _('or send an email to %s') % (email_link)
+            email_link = "<b><a href='mailto:%s'>%s</a></b>" % (email, email)
+            sub_title = _('Use the top left <i>Create</i> button, or send an email to %s to test the email gateway.') % (email_link)
         return '<p class="o_view_nocontent_smiling_face">%s</p><p class="oe_view_nocontent_alias">%s</p>' % (help_title, sub_title)
 
     # ------------------------------------------------------------
@@ -1173,6 +1365,11 @@ class Lead(models.Model):
             through message_process.
             This override updates the document according to the email.
         """
+
+        # remove external users
+        if self.env.user.has_group('base.group_portal'):
+            self = self.with_context(default_user_id=False)
+
         # remove default author when going through the mail gateway. Indeed we
         # do not want to explicitly set user_id to False; however we do not
         # want the gateway user to be responsible if no other responsible is

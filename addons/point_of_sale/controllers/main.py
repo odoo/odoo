@@ -6,6 +6,7 @@ import werkzeug.utils
 from odoo import http
 from odoo.http import request
 from odoo.osv.expression import AND
+from odoo.tools import convert
 
 _logger = logging.getLogger(__name__)
 
@@ -25,13 +26,25 @@ class PosController(http.Controller):
         :returns: object -- The rendered pos session.
         """
         domain = [
-                ('state', '=', 'opened'),
+                ('state', 'in', ['opening_control', 'opened']),
                 ('user_id', '=', request.session.uid),
                 ('rescue', '=', False)
                 ]
         if config_id:
             domain = AND([domain,[('config_id', '=', int(config_id))]])
         pos_session = request.env['pos.session'].sudo().search(domain, limit=1)
+
+        # The same POS session can be opened by a different user => search without restricting to
+        # current user. Note: the config must be explicitly given to avoid fallbacking on a random
+        # session.
+        if not pos_session and config_id:
+            domain = [
+                ('state', 'in', ['opening_control', 'opened']),
+                ('rescue', '=', False),
+                ('config_id', '=', int(config_id)),
+            ]
+            pos_session = request.env['pos.session'].sudo().search(domain, limit=1)
+
         if not pos_session:
             return werkzeug.utils.redirect('/web#action=point_of_sale.action_client_pos_menu')
         # The POS only work in one company, so we enforce the one of the session in the context
@@ -64,3 +77,7 @@ class PosController(http.Controller):
         pdf, _ = request.env.ref('point_of_sale.sale_details_report').with_context(date_start=date_start, date_stop=date_stop)._render_qweb_pdf(r)
         pdfhttpheaders = [('Content-Type', 'application/pdf'), ('Content-Length', len(pdf))]
         return request.make_response(pdf, headers=pdfhttpheaders)
+
+    @http.route('/pos/load_onboarding_data', type='json', auth='user')
+    def load_onboarding_data(self):
+        convert.convert_file(request.env.cr, 'point_of_sale', 'data/point_of_sale_onboarding.xml', None, mode='init', kind='data')

@@ -33,7 +33,7 @@ class ResCompany(models.Model):
     def action_open_sale_onboarding_payment_acquirer(self):
         """ Called by onboarding panel above the quotation list."""
         self.env.company.get_chart_of_accounts_or_fail()
-        action = self.env.ref('sale.action_open_sale_onboarding_payment_acquirer_wizard').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("sale.action_open_sale_onboarding_payment_acquirer_wizard")
         return action
 
     def _get_sample_sales_order(self):
@@ -94,7 +94,7 @@ class ResCompany(models.Model):
 
         self.action_close_sale_quotation_onboarding()
 
-        action = self.env.ref('sale.action_orders').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("sale.action_orders")
         action.update({
             'views': [[self.env.ref('sale.view_order_form').id, 'form']],
             'view_mode': 'form',

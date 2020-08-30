@@ -61,12 +61,16 @@ import threading
 from inspect import currentframe
 
 
-def flush_env(cr):
-    """ Retrieve and flush an environment corresponding to the given cursor """
+def flush_env(cr, *, clear=True):
+    """ Retrieve and flush an environment corresponding to the given cursor.
+        Also clear the environment if ``clear`` is true.
+    """
     for env in list(Environment.envs):
         # don't flush() on another cursor or with a RequestUID
         if env.cr is cr and (isinstance(env.uid, int) or env.uid is None):
             env['base'].flush()
+            if clear:
+                env.clear()         # clear remaining new records to compute
             break
 
 def clear_env(cr):
@@ -106,14 +110,14 @@ class BaseCursor:
         """context manager entering in a new savepoint"""
         name = uuid.uuid1().hex
         if flush:
-            flush_env(self)
+            flush_env(self, clear=False)
             self.precommit()
             self.prerollback.clear()
         self.execute('SAVEPOINT "%s"' % name)
         try:
             yield
             if flush:
-                flush_env(self)
+                flush_env(self, clear=False)
                 self.precommit()
                 self.prerollback.clear()
         except Exception:

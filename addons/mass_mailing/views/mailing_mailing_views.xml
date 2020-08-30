@@ -12,6 +12,8 @@
                             domain="[('user_id', '=', uid)]"
                             help="Mailings that are assigned to me"/>
                     <separator/>
+                    <filter name="filter_sent_date" date="sent_date"/>
+                    <separator/>
                     <filter name="inactive" string="Archived" domain="[('active', '=', False)]"/>
                     <group expand="0" string="Group By">
                         <filter string="Status" name="group_state" context="{'group_by': 'state'}"/>
@@ -28,7 +30,7 @@
             <field name="model">mailing.mailing</field>
             <field name="priority">10</field>
             <field name="arch" type="xml">
-                <tree string="Mailings">
+                <tree string="Mailings" sample="1">
                     <field name="state" invisible="1"/>
                     <field name="subject" attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"/>
                     <field name="mailing_type" invisible="1"/>
@@ -64,7 +66,7 @@
 
                         <field name="state" readonly="1" widget="statusbar"/>
                     </header>
-                    <div class="alert alert-info text-center" role="alert" attrs="{'invisible': ['&amp;','&amp;','&amp;',('sent', '=', 0),('ignored', '=', 0),('scheduled', '=', 0),('failed', '=', 0)]}">
+                    <div class="alert alert-info text-center" role="alert" attrs="{'invisible': ['|','&amp;','&amp;','&amp;',('state', '!=', 'in_queue'),('sent', '=', 0),('ignored', '=', 0),('scheduled', '=', 0),('failed', '=', 0)]}">
                         <div attrs="{'invisible': [('ignored', '=', 0)]}">
                             <button class="btn-link py-0"
                                     name="action_view_traces_ignored"
@@ -85,7 +87,7 @@
                                 </strong>
                             </button>
                         </div>
-                        <div attrs="{'invisible': ['&amp;', ('sent', '=', 0), ('state', 'in', ('draft', 'test'))]}">
+                        <div attrs="{'invisible': ['&amp;', ('sent', '=', 0), ('state', 'in', ('draft', 'test', 'in_queue'))]}">
                             <button class="btn-link py-0"
                                     name="action_view_traces_sent"
                                     type="object">
@@ -105,13 +107,14 @@
                                 </strong>
                             </button>
                         </div>
+                        <div attrs="{'invisible': [('state', '!=', 'in_queue')]}">
+                            <strong>
+                                <span name="next_departure_text">This mailing is scheduled for </span>
+                                <field name="next_departure" class="oe_inline"/>.
+                            </strong>
+                        </div>
                     </div>
-                    <div class="alert alert-info text-center" attrs="{'invisible': [('state', '!=', 'in_queue')]}" role="alert">
-                        <strong>
-                            <span name="next_departure_text">This mailing is scheduled for </span>
-                            <field name="next_departure" class="oe_inline"/>.
-                        </strong>
-                    </div>
+
                     <sheet>
                         <div class="oe_button_box" name="button_box">
                             <button name="action_view_delivered"
@@ -157,6 +160,7 @@
                             <field name="mailing_type" widget="radio" options="{'horizontal': true}" invisible="1"
                                 attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"/>
                             <field name="subject" string="Subject" attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}" widget="char_emojis" placeholder="e.g. New Sale on all T-shirts"/>
+                            <field name="preview" string="Preview Text" attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}" widget="char_emojis" placeholder="e.g. Check it out before it's too late!"/>
                             <label for="mailing_model_id" string="Recipients"/>
                             <div name="mailing_model_id_container">
                                 <div class="row">
@@ -277,9 +281,9 @@
                         </notebook>
                     </sheet>
                     <div class="oe_chatter">
-                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
-                        <field name="message_ids" widget="mail_thread"/>
-                        <field name="activity_ids" widget="mail_activity"/>
+                        <field name="message_follower_ids" groups="base.group_user"/>
+                        <field name="message_ids"/>
+                        <field name="activity_ids"/>
                     </div>
                 </form>
             </field>
@@ -289,7 +293,7 @@
             <field name="name">mailing.mailing.kanban</field>
             <field name="model">mailing.mailing</field>
             <field name="arch" type="xml">
-                <kanban default_group_by="state" quick_create="false">
+                <kanban default_group_by="state" quick_create="false" sample="1">
                     <field name='state' readonly="1"/>
                     <field name='email_from' readonly="1"/>
                     <field name='color'/>
@@ -406,7 +410,7 @@
             <field name="name">mailing.mailing.graph</field>
             <field name="model">mailing.mailing</field>
             <field name="arch" type="xml">
-                <graph string="Mailing" type="bar">
+                <graph string="Mailing" type="bar" sample="1">
                     <field name="state" type="row"/>
                 </graph>
             </field>

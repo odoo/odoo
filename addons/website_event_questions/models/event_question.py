@@ -46,7 +46,7 @@ class EventQuestion(models.Model):
           (Along with secondary pivot and tree views)
         - A tree view showing textual answers values for text_box questions. """
         self.ensure_one()
-        action = self.env.ref('website_event_questions.action_event_registration_report').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("website_event_questions.action_event_registration_report")
         action['domain'] = [('question_id', '=', self.id)]
         if self.question_type == 'simple_choice':
             action['views'] = [(False, 'graph'), (False, 'pivot'), (False, 'tree')]

@@ -77,8 +77,19 @@ class Partner(models.Model):
     def schedule_meeting(self):
         partner_ids = self.ids
         partner_ids.append(self.env.user.partner_id.id)
-        action = self.env.ref('calendar.action_calendar_event').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("calendar.action_calendar_event")
         action['context'] = {
             'default_partner_ids': partner_ids,
         }
+        return action
+
+    def action_view_opportunity(self):
+        '''
+        This function returns an action that displays the opportunities from partner.
+        '''
+        action = self.env.ref('crm.crm_lead_opportunities').read()[0]
+        if self.is_company:
+            action['domain'] = [('partner_id.commercial_partner_id.id', '=', self.id)]
+        else:
+            action['domain'] = [('partner_id.id', '=', self.id)]
         return action

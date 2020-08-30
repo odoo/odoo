@@ -52,7 +52,8 @@ class Website(models.Model):
         return def_lang_id or self._active_languages()[0]
 
     name = fields.Char('Website Name', required=True)
-    domain = fields.Char('Website Domain')
+    domain = fields.Char('Website Domain',
+        help='Will be prefixed by http in canonical URLs if no scheme is specified')
     country_group_ids = fields.Many2many('res.country.group', 'website_country_group_rel', 'website_id', 'country_group_id',
                                          string='Country Groups', help='Used when multiple websites have the same domain.')
     company_id = fields.Many2one('res.company', string="Company", default=lambda self: self.env.company, required=True)
@@ -283,7 +284,7 @@ class Website(models.Model):
                 copy_menu(submenu, new_menu)
         for website in self:
             new_top_menu = top_menu.copy({
-                'name': _('Top Menu for Website %s') % website.id,
+                'name': _('Top Menu for Website %s', website.id),
                 'website_id': website.id,
             })
             for submenu in top_menu.child_id:
@@ -407,7 +408,7 @@ class Website(models.Model):
         for page in pages:
             dependencies.setdefault(page_key, [])
             dependencies[page_key].append({
-                'text': _('Page <b>%s</b> contains a link to this page') % page.url,
+                'text': _('Page <b>%s</b> contains a link to this page', page.url),
                 'item': page.name,
                 'link': page.url,
             })
@@ -435,7 +436,7 @@ class Website(models.Model):
             menu_key = _('Menus')
         for menu in menus:
             dependencies.setdefault(menu_key, []).append({
-                'text': _('This page is in the menu <b>%s</b>') % menu.name,
+                'text': _('This page is in the menu <b>%s</b>', menu.name),
                 'link': '/web#id=%s&view_type=form&model=website.menu' % menu.id,
                 'item': menu.name,
             })
@@ -471,7 +472,7 @@ class Website(models.Model):
         for p in pages:
             dependencies.setdefault(page_key, [])
             dependencies[page_key].append({
-                'text': _('Page <b>%s</b> is calling this file') % p.url,
+                'text': _('Page <b>%s</b> is calling this file', p.url),
                 'item': p.name,
                 'link': p.url,
             })
@@ -654,7 +655,7 @@ class Website(models.Model):
 
     @api.model
     def is_public_user(self):
-        return request.env.user.id == request.website.user_id.id
+        return request.env.user.id == request.website._get_cached('user_id')
 
     @api.model
     def viewref(self, view_id, raise_if_not_found=True):
@@ -904,8 +905,8 @@ class Website(models.Model):
     @api.model
     def action_dashboard_redirect(self):
         if self.env.user.has_group('base.group_system') or self.env.user.has_group('website.group_website_designer'):
-            return self.env.ref('website.backend_dashboard').read()[0]
-        return self.env.ref('website.action_website').read()[0]
+            return self.env["ir.actions.actions"]._for_xml_id("website.backend_dashboard")
+        return self.env["ir.actions.actions"]._for_xml_id("website.action_website")
 
     def button_go_website(self):
         self._force()

@@ -14,7 +14,7 @@ odoo.define('web.owl_dialog_tests', function (require) {
         QUnit.module('OwlDialog');
 
         QUnit.test("Rendering of all props", async function (assert) {
-            assert.expect(26);
+            assert.expect(35);
 
             class SubComponent extends Component {
                 // Handlers
@@ -69,7 +69,6 @@ odoo.define('web.owl_dialog_tests', function (require) {
             }
 
             // Basic layout with default properties
-            assert.containsOnce(dialog, '.modal-backdrop.show');
             assert.containsOnce(dialog, '.modal.o_technical_modal');
             assert.hasClass(dialog.querySelector('.modal .modal-dialog'), 'modal-lg');
             assert.containsOnce(dialog, '.modal-header > button.close');
@@ -80,15 +79,30 @@ odoo.define('web.owl_dialog_tests', function (require) {
             // Backdrop (default: 'static')
             // Static backdrop click should focus first button
             // => we need to reset that property
-            await testUtils.dom.click(dialog.querySelector('.modal-backdrop'));
+            dialog.querySelector('.btn-primary').blur(); // Remove the focus explicitely
+            assert.containsNone(document.body, '.modal-backdrop'); // No backdrop *element* for Odoo modal...
+            assert.notEqual(window.getComputedStyle(dialog.querySelector('.modal')).backgroundColor, 'rgba(0, 0, 0, 0)'); // ... but a non transparent modal
+            await testUtils.dom.click(dialog.querySelector('.modal'));
             assert.strictEqual(document.activeElement, dialog.querySelector('.btn-primary'),
                 "Button should be focused when clicking on backdrop");
+            assert.verifySteps([]); // Ensure not closed
+            dialog.querySelector('.btn-primary').blur(); // Remove the focus explicitely
 
             await changeProps('backdrop', false);
-            assert.containsNone(document.body, '.modal-backdrop');
+            assert.containsNone(document.body, '.modal-backdrop'); // No backdrop *element* for Odoo modal...
+            assert.strictEqual(window.getComputedStyle(dialog.querySelector('.modal')).backgroundColor, 'rgba(0, 0, 0, 0)');
+            await testUtils.dom.click(dialog.querySelector('.modal'));
+            assert.notEqual(document.activeElement, dialog.querySelector('.btn-primary'),
+                "Button should not be focused when clicking on backdrop 'false'");
+            assert.verifySteps([]); // Ensure not closed
 
             await changeProps('backdrop', true);
-            await testUtils.dom.click(dialog.querySelector('.modal-backdrop'));
+            assert.containsNone(document.body, '.modal-backdrop'); // No backdrop *element* for Odoo modal...
+            assert.notEqual(window.getComputedStyle(dialog.querySelector('.modal')).backgroundColor, 'rgba(0, 0, 0, 0)'); // ... but a non transparent modal
+            await testUtils.dom.click(dialog.querySelector('.modal'));
+            assert.notEqual(document.activeElement, dialog.querySelector('.btn-primary'),
+                "Button should not be focused when clicking on backdrop 'true'");
+            assert.verifySteps(['dialog_closed']);
 
             // Dialog class (default: '')
             await changeProps('contentClass', 'my_dialog_class');
@@ -144,7 +158,7 @@ odoo.define('web.owl_dialog_tests', function (require) {
                 "Subcomponent should match with its given text");
             await testUtils.dom.click(dialog.querySelector('.o_subcomponent'));
 
-            assert.verifySteps(['dialog_closed', 'button_clicked', 'subcomponent_clicked']);
+            assert.verifySteps(['button_clicked', 'subcomponent_clicked']);
 
             parent.destroy();
         });

@@ -35,7 +35,7 @@ class IrFilters(models.Model):
 
     def copy(self, default=None):
         self.ensure_one()
-        default = dict(default or {}, name=_('%s (copy)') % self.name)
+        default = dict(default or {}, name=_('%s (copy)', self.name))
         return super(IrFilters, self).copy(default)
 
     def _get_eval_domain(self):

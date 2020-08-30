@@ -14,15 +14,16 @@ from odoo.addons.payment_alipay.controllers.main import AlipayController
 @odoo.tests.tagged('post_install', '-at_install', 'external', '-standard')
 class AlipayTest(PaymentAcquirerCommon):
 
-    def setUp(self):
-        super(AlipayTest, self).setUp()
+    @classmethod
+    def setUpClass(cls, chart_template_ref=None):
+        super().setUpClass(chart_template_ref=chart_template_ref)
 
-        self.currency_yuan = self.env['res.currency'].search([('name', '=', 'CNY'),
+        cls.currency_yuan = cls.env['res.currency'].search([('name', '=', 'CNY'),
                                                               '|',
                                                               ('active', '=', True),
                                                               ('active', '=', False)], limit=1)
-        self.alipay = self.env.ref('payment.payment_acquirer_alipay')
-        self.alipay.write({
+        cls.alipay = cls.env.ref('payment.payment_acquirer_alipay')
+        cls.alipay.write({
             'alipay_merchant_partner_id': 'dummy',
             'alipay_md5_signature_key': 'dummy',
             'alipay_seller_email': 'dummy',

@@ -7,7 +7,8 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='enroll']" position="after">
                 <field name="product_id"
-                    attrs="{'invisible': [('enroll', '!=', 'payment')], 'required': [('enroll', '=', 'payment')]}" />
+                    attrs="{'invisible': [('enroll', '!=', 'payment')], 'required': [('enroll', '=', 'payment')]}"
+                    context="{'default_type': 'service', 'default_invoice_policy': 'order', 'default_purchase_ok': False, 'default_sale_ok': True, 'default_website_published': True}"/>
             </xpath>
             <xpath expr="//button[@name='action_redirect_to_members']" position="after">
                 <button name="action_view_sales"
