@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+    	<record id="action_account_moves_all_inherit_id" model="ir.actions.act_window">
+            <field name="name">Apuntes contables</field>
+            <field name="res_model">account.move.line</field>
+            <field name="domain">[('display_type', 'not in', ('line_section', 'line_note')), ('move_id.state', '!=', 'cancel')]</field>
+            <field name="view_mode">tree,pivot,graph,form,kanban</field>
+            <field name="context">{'group_by': 'account_id','journal_type':'general', 'search_default_posted':1}</field>
+        </record>
+
+    	<record id="account_inherit_miranda_form" model="ir.ui.view">
+	        <field name="name">account_inherit_miranda_form</field>
+	        <field name="model">account.account</field>
+	        <field name="inherit_id" ref="account.view_account_form"/>
+	        <field name="arch" type="xml">
+	            <xpath expr="//field[@name='deprecated']" position="after">
+	            	<field name="depreciation"/>
+	            </xpath>
+	        </field>
+	    </record>
+
+    	<record id="action_account_inherit_form" model="ir.actions.act_window">
+            <field name="name">Listado de cuentas</field>
+            <field name="res_model">account.account</field>
+            <field name="view_mode">tree,kanban,form</field>
+            <field name="search_view_id" ref="account.view_account_search"/>
+            <field name="view_id" ref="account.view_account_list"/>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Agregar una cuenta nueva
+              </p><p>
+                Una cuenta es parte de un libro mayor que permite a su empresa
+				para registrar todo tipo de transacciones de débito y crédito.
+				Las empresas presentan sus cuentas anuales en dos partes principales:
+				balance y cuenta de resultados (pérdidas y ganancias
+				cuenta). Las cuentas anuales de una empresa son requeridas por ley.
+				para revelar cierta cantidad de información.
+              </p>
+            </field>
+        </record>
+
+    	<menuitem id="root_accounting_plan_list" name="Contabilidad Miranda" web_icon="account_miranda,static/description/icon.png"/>
+
+    	<menuitem id="menu_accounting_plan_list_act" parent="root_accounting_plan_list" name="Listado de cuentas" action="action_account_inherit_form" sequence="0"/>
+
+    	<menuitem id="menu_accounting_move_inherit_id" parent="root_accounting_plan_list" name="Apuntes contables" action="action_account_moves_all_inherit_id" sequence="1"/>
+
+    </data>
+</odoo>
