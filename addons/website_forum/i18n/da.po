@@ -17,6 +17,7 @@
 # Sanne Kristensen <sanne@vkdata.dk>, 2019
 # JonathanStein <jstein@image.dk>, 2020
 # Walther Barnett <wba@miracle.dk>, 2020
+# Mads Søndergaard, 2020
 # 
 msgid ""
 msgstr ""
@@ -24,7 +25,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-03-29 10:10+0000\n"
 "PO-Revision-Date: 2018-08-24 09:34+0000\n"
-"Last-Translator: Walther Barnett <wba@miracle.dk>, 2020\n"
+"Last-Translator: Mads Søndergaard, 2020\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -82,7 +83,7 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_forum_form
 msgid "(votes - 1) **"
-msgstr ""
+msgstr "(stemmer - 1) **"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_forum_form
@@ -94,7 +95,7 @@ msgstr "/ (dage + 2) **"
 #: code:addons/website_forum/static/src/xml/website_forum_share_templates.xml:29
 #, python-format
 msgid "45% of questions shared"
-msgstr ""
+msgstr "45% af spørgsmål delt"
 
 #. module: website_forum
 #. openerp-web
@@ -144,6 +145,8 @@ msgid ""
 "<b>Answers should not add or expand questions</b>. Instead either edit the "
 "question or add a question comment."
 msgstr ""
+"<b>Svar bør ikke tilføje eller udvide spørgsmål</b>. Rediger spørgsmålet "
+"eller tilføj en spørgsmåls kommentar i stedet."
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
@@ -158,6 +161,8 @@ msgid ""
 "<b>Answers should not comment other answers</b>. Instead add a comment on "
 "the other answers."
 msgstr ""
+"<b>Svar bør ikke kommentere på andre svar</b>. Tilføj i stedet en kommentar "
+"til det andet svar."
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
@@ -176,6 +181,10 @@ msgid ""
 "to include links to other questions or answers providing relevant additional"
 " information."
 msgstr ""
+"<b>Svar bør ikke bare pege på andre spørgsmål</b>. Tilføj i stedet et "
+"spørgsmåls kommentar indikation \"Mulig kopi af...\". Dog er det okay at "
+"inkludere links til andre spørgsmål eller svar, ved angivelse af relevant "
+"yderligere information."
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
@@ -205,6 +214,10 @@ msgid ""
 "Links are welcome, but should be complementary to answer, referring sources "
 "or additional reading."
 msgstr ""
+"<b>Svar bør ikke bare angive et link til en løsning</b>. Angiv i stedet "
+"løsningens beskrivelse i dit svar, selv hvis det er kopier/sæt ind. Links er"
+" velkomne, men bør være støtte svaret; henvisning til kilder, yderligere "
+"læsning."
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
@@ -301,6 +314,9 @@ msgid ""
 "                    Flagged\n"
 "                </small>"
 msgstr ""
+"<small class=\"text-muted\">\n"
+"                    Anmeldt\n"
+"                </small>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_detail_full
@@ -499,13 +515,13 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_template_new_answer
 msgid "A new answer on"
-msgstr ""
+msgstr "Et nyt svar til"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_template_new_question
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_template_validation
 msgid "A new question"
-msgstr ""
+msgstr "Et nyt spørgsmål"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.tag
@@ -533,7 +549,7 @@ msgstr "Acceptér et svar på egne spørgsmål"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_answer_accept_all
 msgid "Accept an answer to all questions"
-msgstr ""
+msgstr "Accepter et svar for alle spørgsmål"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_answers
@@ -543,12 +559,12 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_search
 msgid "Accepted Answer"
-msgstr ""
+msgstr "Accepteret svar"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_gen_answer_accept
 msgid "Accepting an answer"
-msgstr ""
+msgstr "Acceptere et svar"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__message_needaction
@@ -587,6 +603,9 @@ msgid ""
 "After posting the user will be proposed to share its question or answer on "
 "social networks, enabling social network propagation of the forum content."
 msgstr ""
+"Efter en bruger har lavet et indlæg, vil de blive foreslået at dele dets "
+"spørgsmål eller svar på sociale netværk, hvilket gør formering af fora "
+"indhold via sociale medier muligt."
 
 #. module: website_forum
 #: code:addons/website_forum/controllers/main.py:203
@@ -598,7 +617,7 @@ msgstr "Alle"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__allow_bump
 msgid "Allow Bump"
-msgstr ""
+msgstr "Tillad bump"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
@@ -631,7 +650,7 @@ msgstr "Svar nedstemt"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_gen_answer_flagged
 msgid "Answer flagged"
-msgstr ""
+msgstr "Svar anmeldt"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_answer
@@ -641,7 +660,7 @@ msgstr "Besvar spørgsmål"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_gen_answer_upvote
 msgid "Answer upvoted"
-msgstr ""
+msgstr "Svar stemt for"
 
 #. module: website_forum
 #: model:gamification.badge,description:website_forum.badge_a_4
@@ -656,7 +675,7 @@ msgstr "Svaret er blevet stemt op 4 gange"
 #. module: website_forum
 #: model:gamification.badge,description:website_forum.badge_a_3
 msgid "Answer voted up 6 times"
-msgstr ""
+msgstr "Svar stemt for 6 gange"
 
 #. module: website_forum
 #: model:gamification.badge,description:website_forum.badge_a_5
@@ -681,7 +700,7 @@ msgstr "Besvaret af"
 #. module: website_forum
 #: model:gamification.badge,description:website_forum.badge_a_8
 msgid "Answered own question with at least 4 up votes"
-msgstr ""
+msgstr "Besvarede eget spørgsmål med mindst 4 stemmer for"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__child_ids
@@ -758,7 +777,7 @@ msgstr "Stillede et spørgsmål med mindst 500 visninger"
 #. module: website_forum
 #: model:gamification.badge,description:website_forum.badge_q_7
 msgid "Asked first question with at least one up vote"
-msgstr ""
+msgstr "Stillede første spørgsmål med mindst én stemme for"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__create_date
@@ -790,7 +809,7 @@ msgstr "Forfatter"
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_p_1
 msgid "Autobiographer"
-msgstr ""
+msgstr "Autobiographer"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.edit_profile
@@ -812,7 +831,7 @@ msgstr ""
 #: code:addons/website_forum/controllers/main.py:414
 #, python-format
 msgid "Bad Request"
-msgstr ""
+msgstr "Dårlig efterspørgsel"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_res_users__badge_ids
@@ -844,34 +863,34 @@ msgstr ""
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_res_users__bronze_badge
 msgid "Bronze badges count"
-msgstr ""
+msgstr "Bronze emble antal"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__bump_date
 msgid "Bumped on"
-msgstr ""
+msgstr "Bumpet den"
 
 #. module: website_forum
 #. openerp-web
 #: code:addons/website_forum/static/src/xml/website_forum_share_templates.xml:34
 #, python-format
 msgid "By sharing you answer, you will get additional"
-msgstr ""
+msgstr "Ved at dele dit svar, modtager du yderligere"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__can_accept
 msgid "Can Accept"
-msgstr ""
+msgstr "Kan acceptere"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__can_answer
 msgid "Can Answer"
-msgstr ""
+msgstr "Kan besvare"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__can_ask
 msgid "Can Ask"
-msgstr ""
+msgstr "Kan spørge"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__can_post
@@ -881,22 +900,22 @@ msgstr "Kan bekræftes automatisk"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__can_close
 msgid "Can Close"
-msgstr ""
+msgstr "Kan lukke"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__can_comment
 msgid "Can Comment"
-msgstr ""
+msgstr "Kan kommentere"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__can_comment_convert
 msgid "Can Convert to Comment"
-msgstr ""
+msgstr "Kan omdanne til kommentar"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__can_downvote
 msgid "Can Downvote"
-msgstr ""
+msgstr "Kan nedstemme"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__can_edit
@@ -906,32 +925,32 @@ msgstr "Kan redigeres"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__can_flag
 msgid "Can Flag"
-msgstr ""
+msgstr "Kan anmelde"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__can_moderate
 msgid "Can Moderate"
-msgstr ""
+msgstr "Kan moderere"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__can_unlink
 msgid "Can Unlink"
-msgstr ""
+msgstr "Kan aflinke"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__can_upvote
 msgid "Can Upvote"
-msgstr ""
+msgstr "Kan stemme for"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__can_view
 msgid "Can View"
-msgstr ""
+msgstr "Kan se"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_edit_retag
 msgid "Change question tags"
-msgstr ""
+msgstr "Ændre spørgsmål tags"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_badges
@@ -945,12 +964,15 @@ msgid ""
 "given answer. The popup will offer to share it on social networks. When "
 "shared, a question is bumped at the top of the forum."
 msgstr ""
+"Marker denne boks for at vise en pop-up for indlæg ældre end 10 dage uden "
+"nogle svar. Pop-up'en vil tilbyde at dele dem på sociale netværk. Når de "
+"bliver delt, vil et spørgsmål bumpes til toppen af forummet."
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_p_4
 #: model:gamification.challenge,name:website_forum.challenge_chief_commentator
 msgid "Chief Commentator"
-msgstr ""
+msgstr "Hoved kommentator"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.edit_profile
@@ -974,7 +996,7 @@ msgstr "Klik <em>fortsæt</em> for at oprette et forum"
 #: code:addons/website_forum/static/src/js/website_tour_forum.js:73
 #, python-format
 msgid "Click here to accept this answer."
-msgstr ""
+msgstr "Klik her for at acceptere dette svar."
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.header
@@ -1170,7 +1192,7 @@ msgstr "Oprettelsesdato"
 #. module: website_forum
 #: model_terms:ir.actions.act_window,help:website_forum.action_forum_post
 msgid "Create a new forum post"
-msgstr ""
+msgstr "Opret et nyt forum indlæg"
 
 #. module: website_forum
 #: model_terms:ir.actions.act_window,help:website_forum.forum_tag_action
@@ -1207,7 +1229,7 @@ msgstr "Oprettet den"
 #: model:gamification.badge,name:website_forum.badge_q_4
 #: model:gamification.challenge,name:website_forum.challenge_favorite_question_1
 msgid "Credible Question"
-msgstr ""
+msgstr "Troværdigt spørgsmål"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_5
@@ -1242,22 +1264,22 @@ msgstr "Slet"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_unlink_all
 msgid "Delete all posts"
-msgstr ""
+msgstr "Slet alle indlæg"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_unlink_own
 msgid "Delete own posts"
-msgstr ""
+msgstr "Slet egne indlæg"
 
 #. module: website_forum
 #: model:gamification.badge,description:website_forum.badge_23
 msgid "Deleted own post with 3 or more downvotes"
-msgstr ""
+msgstr "Slettet eget indlæg med 3 nedstemninger eller mere"
 
 #. module: website_forum
 #: model:gamification.badge,description:website_forum.badge_6
 msgid "Deleted own post with 3 or more upvotes"
-msgstr ""
+msgstr "Slettede"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__description
@@ -1275,7 +1297,7 @@ msgstr "Design velkomstbesked"
 #: model:gamification.challenge.line,name:website_forum.line_disciplined
 #: model:gamification.goal.definition,name:website_forum.definition_disciplined
 msgid "Disciplined"
-msgstr ""
+msgstr "Disciplineret"
 
 #. module: website_forum
 #: selection:forum.forum,default_post_type:0 selection:forum.post,post_type:0
@@ -1362,7 +1384,7 @@ msgstr "Redaktør"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_editor
 msgid "Editor Features: image and links"
-msgstr ""
+msgstr "Redigeringsfunktioner: billeder og links"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.edit_profile
@@ -1393,18 +1415,18 @@ msgstr "Eksternt link"
 #: model:gamification.badge,name:website_forum.badge_q_3
 #: model:gamification.challenge,name:website_forum.challenge_famous_question
 msgid "Famous Question"
-msgstr ""
+msgstr "Berømt spørgsmål"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__favourite_count
 msgid "Favorite Count"
-msgstr ""
+msgstr "Favorit antal"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_q_5
 #: model:gamification.challenge,name:website_forum.challenge_favorite_question_5
 msgid "Favorite Question"
-msgstr ""
+msgstr "Favorit spørgsmål"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__favourite_ids
@@ -1442,39 +1464,39 @@ msgstr "Filter"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
 msgid "Filter on"
-msgstr ""
+msgstr "Filtrer på"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__relevancy_post_vote
 msgid "First Relevance Parameter"
-msgstr ""
+msgstr "Første relevans parameter"
 
 #. module: website_forum
 #: model:gamification.badge,description:website_forum.badge_5
 msgid "First downvote"
-msgstr ""
+msgstr "Første nedstemning"
 
 #. module: website_forum
 #: model:gamification.badge,description:website_forum.badge_7
 msgid "First edit"
-msgstr ""
+msgstr "Første redigering"
 
 #. module: website_forum
 #: model:gamification.badge,description:website_forum.badge_31
 msgid "First upvote"
-msgstr ""
+msgstr "Første stemme for"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_answers
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "Flag"
-msgstr ""
+msgstr "Anmeld"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_flag
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__karma_flag
 msgid "Flag a post as offensive"
-msgstr ""
+msgstr "Anmeld et indlæg som stødende"
 
 #. module: website_forum
 #: selection:forum.post,state:0
@@ -1482,12 +1504,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_forum.post_answers
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "Flagged"
-msgstr ""
+msgstr "Anmeldt"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__flag_user_id
 msgid "Flagged by"
-msgstr ""
+msgstr "Anmeldt af"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
@@ -1551,7 +1573,7 @@ msgstr "Forum"
 #: model:ir.model.fields,field_description:website_forum.field_gamification_badge__level
 #: model:ir.model.fields,field_description:website_forum.field_gamification_badge_user__level
 msgid "Forum Badge Level"
-msgstr ""
+msgstr "Forum Emblem niveau"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.res_users_view_form_preference
@@ -1587,36 +1609,36 @@ msgstr "Forumindstillinger"
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_forum_tag
 msgid "Forum Tag"
-msgstr ""
+msgstr "Forum tag"
 
 #. module: website_forum
 #: model:ir.actions.act_window,name:website_forum.action_forum_forum
 #: model:ir.ui.menu,name:website_forum.menu_forum_global
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_forum_list
 msgid "Forums"
-msgstr ""
+msgstr "Fora"
 
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_gamification_badge
 msgid "Gamification Badge"
-msgstr ""
+msgstr "Gamificerings emblem"
 
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_gamification_challenge
 msgid "Gamification Challenge"
-msgstr ""
+msgstr "Gamificering udfordring"
 
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_gamification_badge_user
 msgid "Gamification User Badge"
-msgstr ""
+msgstr "Gamificering Bruger emblem"
 
 #. module: website_forum
 #. openerp-web
 #: code:addons/website_forum/static/src/js/website_tour_forum.js:33
 #, python-format
 msgid "Give your question title."
-msgstr ""
+msgstr "Giv dit spørgsmål en titel."
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.badge
@@ -1719,7 +1741,7 @@ msgstr ""
 #. module: website_forum
 #: selection:gamification.challenge,category:0
 msgid "Human Resources / Engagement"
-msgstr ""
+msgstr "HR / Engagement"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__id
@@ -1756,6 +1778,8 @@ msgstr "Hvis afkrydset har nogle beskeder en leveringsfejl"
 msgid ""
 "If the author has not enough karma, a nofollow attribute is added to links"
 msgstr ""
+"Hvis en forfatter ikke har tilstrækkelig karma, tilføjet en nofollow "
+"attribut til links"
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
@@ -1771,6 +1795,9 @@ msgid ""
 "            users having a high karma can see closed posts to moderate\n"
 "            them."
 msgstr ""
+"Hvis du lukker dette indlæg, vil den blive skjult fra de fleste brugere. Kun\n"
+"            brugere med høj karma kan se lukkede indlæg for at modrere\n"
+"            dem"
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
@@ -1789,13 +1816,15 @@ msgid ""
 "            users having a high karma can see offensive posts to moderate\n"
 "            them."
 msgstr ""
+"Hvis du markere dette indlæg som stødende, vil den blive skjult fra de fleste brugere. Kun\n"
+"            brugere med høj karma kan se stødende indlæg, for at moderere dem"
 
 #. module: website_forum
 #. openerp-web
 #: code:addons/website_forum/static/src/js/website_tour_forum.js:43
 #, python-format
 msgid "Insert tags related to your question."
-msgstr ""
+msgstr "Indsæt tags relateret til dit spørgsmål."
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.new_question
@@ -1824,7 +1853,7 @@ msgstr "Er besvaret"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__can_display_biography
 msgid "Is the author's biography visible from his post"
-msgstr ""
+msgstr "Er forfatterens biografi synlig fra hans indlæg"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.header
@@ -1847,17 +1876,17 @@ msgstr "Karma"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_forum_form
 msgid "Karma Gains"
-msgstr ""
+msgstr "Karma modtaget"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_forum_form
 msgid "Karma Related Rights"
-msgstr ""
+msgstr "Karma relateret rettigheder"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__karma_close
 msgid "Karma to close"
-msgstr ""
+msgstr "Karma for at lukke"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__karma_comment
@@ -1877,7 +1906,7 @@ msgstr "Karma til at redigere"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__karma_unlink
 msgid "Karma to unlink"
-msgstr ""
+msgstr "Karma for at aflinke"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.header
@@ -1917,7 +1946,7 @@ msgstr "Sidst opdateret den"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
 msgid "Last activity date"
-msgstr ""
+msgstr "Sidste aktivitets dato"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.header
@@ -1927,7 +1956,7 @@ msgstr ""
 #. module: website_forum
 #: model:gamification.badge,description:website_forum.badge_25
 msgid "Left 10 answers with score of 10 or more"
-msgstr ""
+msgstr "Efterlod 10 svar med en score på 10 eller mere"
 
 #. module: website_forum
 #: selection:forum.forum,default_post_type:0
@@ -1953,7 +1982,7 @@ msgstr "Primær vedhæftning"
 #: model_terms:ir.ui.view,arch_db:website_forum.close_post
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
 msgid "Mark as offensive"
-msgstr ""
+msgstr "Marker som stødende"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__message_has_error
@@ -1972,7 +2001,7 @@ msgstr "Beskeder"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_moderate
 msgid "Moderate posts"
-msgstr ""
+msgstr "Moderer indlæg"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.header
@@ -1982,12 +2011,12 @@ msgstr ""
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 msgid "More over:"
-msgstr ""
+msgstr "Ydermere:"
 
 #. module: website_forum
 #: selection:forum.forum,default_order:0
 msgid "Most Voted"
-msgstr ""
+msgstr "Mest stemte"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
@@ -1997,7 +2026,7 @@ msgstr "Mest besvaret"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
 msgid "Most voted"
-msgstr ""
+msgstr "Mest stemte"
 
 #. module: website_forum
 #. openerp-web
@@ -2006,6 +2035,7 @@ msgstr ""
 msgid ""
 "Move this question to the top of the list by sharing it on social networks."
 msgstr ""
+"Flyt dette spørgsmål til toppen af listen ved at dele den på sociale medier."
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__user_vote
@@ -2022,7 +2052,7 @@ msgstr "Navn"
 #: model_terms:ir.ui.view,arch_db:website_forum.user_votes
 #: model_terms:ir.ui.view,arch_db:website_forum.vote
 msgid "Negative vote"
-msgstr ""
+msgstr "Negativ stemme"
 
 #. module: website_forum
 #: model:mail.message.subtype,description:website_forum.mt_answer_new
@@ -2088,7 +2118,7 @@ msgstr ""
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_dofollow
 msgid "Nofollow links"
-msgstr ""
+msgstr "Nofollow links"
 
 #. module: website_forum
 #: code:addons/website_forum/models/forum.py:511
@@ -2100,7 +2130,7 @@ msgstr ""
 #: model:gamification.badge,name:website_forum.badge_q_2
 #: model:gamification.challenge,name:website_forum.challenge_notable_question
 msgid "Notable Question"
-msgstr ""
+msgstr "Bemærkelsesværdig spørgsmål"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__message_needaction_counter
@@ -2134,7 +2164,7 @@ msgstr "Antal fejl"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__count_flagged_posts
 msgid "Number of flagged posts"
-msgstr ""
+msgstr "Antal af anmeldte indlæg"
 
 #. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_forum_forum__message_needaction_counter
@@ -2216,12 +2246,12 @@ msgstr "Afventer"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.header
 msgid "People"
-msgstr ""
+msgstr "Personer"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__plain_content
 msgid "Plain Content"
-msgstr ""
+msgstr "Almindelig indhold"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.edit_post
@@ -2245,25 +2275,25 @@ msgstr "Populær spørgsmål"
 #: model:gamification.challenge.line,name:website_forum.line_popular_question
 #: model:gamification.goal.definition,name:website_forum.definition_popular_question
 msgid "Popular Question (150)"
-msgstr ""
+msgstr "Populære spørgsmål (150)"
 
 #. module: website_forum
 #: model:gamification.challenge.line,name:website_forum.line_notable_question
 #: model:gamification.goal.definition,name:website_forum.definition_notable_question
 msgid "Popular Question (250)"
-msgstr ""
+msgstr "Populære spørgsmål (250)"
 
 #. module: website_forum
 #: model:gamification.challenge.line,name:website_forum.line_famous_question
 #: model:gamification.goal.definition,name:website_forum.definition_famous_question
 msgid "Popular Question (500)"
-msgstr ""
+msgstr "Populære spørgsmål (500)"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_votes
 #: model_terms:ir.ui.view,arch_db:website_forum.vote
 msgid "Positive vote"
-msgstr ""
+msgstr "Positiv stemme"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_vote__post_id
@@ -2277,12 +2307,12 @@ msgstr "Bogfør"
 #: model_terms:ir.ui.view,arch_db:website_forum.post_answer
 #: model_terms:ir.ui.view,arch_db:website_forum.post_reply
 msgid "Post Answer"
-msgstr ""
+msgstr "Opret svar"
 
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_forum_post_reason
 msgid "Post Closing Reason"
-msgstr ""
+msgstr "Skriv lukningsårsag"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_answer
@@ -2303,12 +2333,12 @@ msgstr ""
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_forum_post_vote
 msgid "Post Vote"
-msgstr ""
+msgstr "Skriv stem"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.new_question
 msgid "Post Your Question"
-msgstr ""
+msgstr "Skriv dit svar"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.new_discussion
@@ -2318,7 +2348,7 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.close_post
 msgid "Post:"
-msgstr ""
+msgstr "Skriv:"
 
 #. module: website_forum
 #: model:gamification.badge,description:website_forum.badge_p_2
@@ -2334,7 +2364,7 @@ msgstr "Skrev 100 kommentarer"
 #: code:addons/website_forum/models/forum.py:448
 #, python-format
 msgid "Posting answer on a [Deleted] or [Closed] question is not possible."
-msgstr ""
+msgstr "At besvære et [Slettet] eller [Lukket] spørgsmål er ikke muligt."
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__post_ids
@@ -2484,7 +2514,7 @@ msgstr "Årsag"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_reason__reason_type
 msgid "Reason Type"
-msgstr ""
+msgstr "Grund type"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.close_post
@@ -2494,7 +2524,7 @@ msgstr "Årsag:"
 #. module: website_forum
 #: model:gamification.badge,description:website_forum.badge_a_1
 msgid "Received at least 3 upvote for an answer for the first time"
-msgstr ""
+msgstr "Modtog mindst 3 stemmer for, for et svar den første gang"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
@@ -2526,7 +2556,7 @@ msgstr "Relevans"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_forum_form
 msgid "Relevance Computation"
-msgstr ""
+msgstr "Relevance udregning"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
@@ -2579,7 +2609,7 @@ msgstr "Gem"
 #: model:gamification.challenge.line,name:website_forum.line_scholar
 #: model:gamification.goal.definition,name:website_forum.definition_scholar
 msgid "Scholar"
-msgstr ""
+msgstr "Akademiker"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_search
@@ -2589,7 +2619,7 @@ msgstr "Søg i indlæg"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__relevancy_time_decay
 msgid "Second Relevance Parameter"
-msgstr ""
+msgstr "Anden relevans parameter"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_template_new_answer
@@ -2619,7 +2649,7 @@ msgstr "Vælg dette menupunkt for at oprette et nyt forum."
 #: model:gamification.challenge.line,name:website_forum.line_self_learner
 #: model:gamification.goal.definition,name:website_forum.definition_self_learner
 msgid "Self-Learner"
-msgstr ""
+msgstr "Slev-studerende"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_answers
@@ -2638,7 +2668,7 @@ msgstr ""
 #. module: website_forum
 #: selection:gamification.challenge,category:0
 msgid "Settings / Gamification Tools"
-msgstr ""
+msgstr "Indstillinger / Gamificering værktøjer"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
@@ -2661,6 +2691,8 @@ msgid ""
 "Share this content to increase your chances to be featured on the front page"
 " and attract more visitors."
 msgstr ""
+"Del dette indhold for at forøge dine changer for at blive fremhævet på "
+"forsiden, og tiltrække flere besøgende."
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__allow_share
@@ -2676,7 +2708,7 @@ msgstr ""
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_res_users__silver_badge
 msgid "Silver badges count"
-msgstr ""
+msgstr "Sølv emblemer antal"
 
 #. module: website_forum
 #. openerp-web
@@ -2690,7 +2722,7 @@ msgstr "Beklager, du skal være logget ind for at udføre denne handling"
 #: code:addons/website_forum/static/src/js/website_forum.js:101
 #, python-format
 msgid "Sorry you must be logged to flag a post"
-msgstr ""
+msgstr "Undskyld, men du skal være logget ind for at anmelde et indlæg"
 
 #. module: website_forum
 #. openerp-web
@@ -2709,14 +2741,14 @@ msgstr "Beklager, anonyme brugere kan ikke vælge korrekt svar."
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.404
 msgid "Sorry, this question is not available anymore."
-msgstr ""
+msgstr "Undskyld, men dette spørgsmål er ikke tilgængeligt mere."
 
 #. module: website_forum
 #. openerp-web
 #: code:addons/website_forum/static/src/js/website_forum.js:145
 #, python-format
 msgid "Sorry, you cannot vote for your own posts"
-msgstr ""
+msgstr "Undskyld, men du kan ikke stemme på dine egne indlæg"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
@@ -2737,13 +2769,13 @@ msgstr "Status"
 #: model:gamification.badge,name:website_forum.badge_q_6
 #: model:gamification.challenge,name:website_forum.challenge_stellar_question_25
 msgid "Stellar Question"
-msgstr ""
+msgstr "Stjernespørgsmål"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_q_7
 #: model:gamification.challenge,name:website_forum.challenge_student
 msgid "Student"
-msgstr ""
+msgstr "Studeren"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.header
@@ -2757,7 +2789,7 @@ msgstr ""
 #: model:gamification.challenge.line,name:website_forum.line_supporter
 #: model:gamification.goal.definition,name:website_forum.definition_supporter
 msgid "Supporter"
-msgstr ""
+msgstr "Supporter"
 
 #. module: website_forum
 #: model:ir.actions.act_window,name:website_forum.forum_tag_action
@@ -2791,7 +2823,7 @@ msgstr "Tags"
 #: model:gamification.challenge.line,name:website_forum.line_taxonomist
 #: model:gamification.goal.definition,name:website_forum.definition_taxonomist
 msgid "Taxonomist"
-msgstr ""
+msgstr "Taksonom"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_a_1
@@ -2808,6 +2840,10 @@ msgid ""
 "trigger a write on write_date and therefore bump the post. Directly writing "
 "on write_date is currently not supported and this field is a workaround."
 msgstr ""
+"Teknisk felt der gør det muligt at bumpe et spørgsmål. At skrive noget i "
+"dette felt til forårsage en tilskrivning på write_date, og derfor bumpe "
+"indlægget. Det er i øjeblikket ikke muligt at skrive direkte i write_date, "
+"hvorfor dette felt bruges som en midlertidig løsning."
 
 #. module: website_forum
 #. openerp-web
@@ -2865,6 +2901,8 @@ msgid ""
 "This community is for professionals and enthusiasts of our products and services.\n"
 "                                        <br>Share and discuss the best content and new marketing ideas, build your professional profile and become a better marketer together."
 msgstr ""
+"Dette community er for professionelle og entusiaster af vores produkter og tjenester.\n"
+"                                           <br>Del og diskuter det bedste indhold og nye marketing ideeer, opbygdin professionelle profil, og bliv bedre til marketing, sammen."
 
 #. module: website_forum
 #: code:addons/website_forum/models/forum.py:51
@@ -2875,6 +2913,9 @@ msgid ""
 "services. Share and discuss the best content and new marketing ideas, build "
 "your professional profile and become a better marketer together."
 msgstr ""
+"Dette community er for professionelle og entusiaster af vores produkter og "
+"tjenester. Del og diskuter det bedste indhold og nye marketing ideer, opbyg "
+"din professionelle profil, og bliv bedre til marketing, sammen."
 
 #. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_forum_forum__relevancy_post_vote
@@ -2883,6 +2924,9 @@ msgid ""
 "represents number of votes for a post, and 'days' is number of days since "
 "the post creation"
 msgstr ""
+"Denne formel bruges til at sortere  efter relevans. Variablen 'stemmer' "
+"repræsenterer antallet af stemmer på et indlæg, og 'dage' er antallet af "
+"dage siden indlægget blev oprettet."
 
 #. module: website_forum
 #: code:addons/website_forum/models/forum.py:411
@@ -2893,21 +2937,21 @@ msgstr "Dette forum tillader ikke %s"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.header
 msgid "This forum has been archived."
-msgstr ""
+msgstr "Dette forum er blevet arkiveret."
 
 #. module: website_forum
 #. openerp-web
 #: code:addons/website_forum/static/src/js/website_forum.js:111
 #, python-format
 msgid "This post can not be flagged"
-msgstr ""
+msgstr "Dette indlæg kan ikke anmeldes"
 
 #. module: website_forum
 #. openerp-web
 #: code:addons/website_forum/static/src/js/website_forum.js:106
 #, python-format
 msgid "This post is already flagged"
-msgstr ""
+msgstr "Dette indlæg er allerede anmeldt"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
@@ -2959,7 +3003,7 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "Toggle favorite status"
-msgstr ""
+msgstr "Aktiver favorit status"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__vote_count
@@ -2969,7 +3013,7 @@ msgstr "Total antal stemmer"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.header
 msgid "Trending"
-msgstr ""
+msgstr "Populært"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__post_type
@@ -2999,12 +3043,12 @@ msgstr "Ubesvaret"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_comment_unlink_all
 msgid "Unlink all comments"
-msgstr ""
+msgstr "Fjern link til alle kommentare"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_comment_unlink_own
 msgid "Unlink own comments"
-msgstr ""
+msgstr "Fjern link til egne kommentare"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__message_unread
@@ -3038,31 +3082,31 @@ msgstr "Opdateret af"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_upvote
 msgid "Upvote"
-msgstr ""
+msgstr "Stem for"
 
 #. module: website_forum
 #: model:gamification.challenge.line,name:website_forum.line_student
 #: model:gamification.goal.definition,name:website_forum.definition_student
 msgid "Upvoted question (1)"
-msgstr ""
+msgstr "Stemt for spørgsmål (1)"
 
 #. module: website_forum
 #: model:gamification.challenge.line,name:website_forum.line_great_question
 #: model:gamification.goal.definition,name:website_forum.definition_great_question
 msgid "Upvoted question (15)"
-msgstr ""
+msgstr "Stemt for spørgsmål (15)"
 
 #. module: website_forum
 #: model:gamification.challenge.line,name:website_forum.line_nice_question
 #: model:gamification.goal.definition,name:website_forum.definition_nice_question
 msgid "Upvoted question (4)"
-msgstr ""
+msgstr "Stemt for spørgsmål (4)"
 
 #. module: website_forum
 #: model:gamification.challenge.line,name:website_forum.line_good_question
 #: model:gamification.goal.definition,name:website_forum.definition_good_question
 msgid "Upvoted question (6)"
-msgstr ""
+msgstr "Stemt for spørgsmål (6)"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_vote__user_id
@@ -3120,7 +3164,7 @@ msgstr "Stemmer"
 #. module: website_forum
 #: selection:forum.post,state:0
 msgid "Waiting Validation"
-msgstr ""
+msgstr "Venter på validering"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
@@ -3130,7 +3174,7 @@ msgstr "Afventer validering"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_res_users__forum_waiting_posts_count
 msgid "Waiting post"
-msgstr ""
+msgstr "Venter på indlæg"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.new_link
@@ -3201,7 +3245,7 @@ msgstr "Velkomstbesked"
 #. module: website_forum
 #: model_terms:forum.forum,welcome_message:website_forum.forum_help
 msgid "Welcome!"
-msgstr ""
+msgstr "Velkommen!"
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
@@ -3256,12 +3300,12 @@ msgstr ""
 #: code:addons/website_forum/models/forum.py:438
 #, python-format
 msgid "You cannot create recursive forum posts."
-msgstr ""
+msgstr "Du kan ikke oprette rekursive fora indlæg"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_answer
 msgid "You cannot post an empty answer"
-msgstr ""
+msgstr "Du kan ikke skrive et tomt svar"
 
 #. module: website_forum
 #: code:addons/website_forum/models/forum.py:953
@@ -3296,7 +3340,7 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_reply
 msgid "Your Reply"
-msgstr ""
+msgstr "Dit svar"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.faq
@@ -3366,12 +3410,12 @@ msgstr "indeholder krænkende eller onde bemærkninger"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.faq
 msgid "delete any comment"
-msgstr ""
+msgstr "slet enhver kommentar"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.faq
 msgid "delete any question or answer"
-msgstr ""
+msgstr "slet ethvert spørgsmål eller svar"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.faq
@@ -3381,12 +3425,12 @@ msgstr "slet egen kommentar"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.faq
 msgid "downvote"
-msgstr ""
+msgstr "stem ned"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_1
 msgid "duplicate post"
-msgstr ""
+msgstr "kopier indlæg"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.new_link
@@ -3396,17 +3440,17 @@ msgstr "f.eks. https://www.odoo.com"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.faq
 msgid "edit any post, view offensive flags"
-msgstr ""
+msgstr "rediger ethvert indlæg, se anmeldelser om stødende indhold"
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 msgid "every answer is equally valid: “What’s your favorite ______?”"
-msgstr ""
+msgstr "ethvert svar er lige så gyldig: \"Hvad er din favorit ____?\""
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.faq
 msgid "flag offensive, close own questions"
-msgstr ""
+msgstr "anmeld stødende, luk egne spørgsmål"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.header
@@ -3421,7 +3465,7 @@ msgstr "følger(e)"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "for reason:"
-msgstr ""
+msgstr "på grund af:"
 
 #. module: website_forum
 #: selection:gamification.badge,level:0
@@ -3444,16 +3488,18 @@ msgid ""
 "has been posted and require your validation. Click here to access the "
 "question :"
 msgstr ""
+"er blevet posteret og kræver din godkendes. Klik her for at tilgå "
+"spørgsmålet :"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_template_new_answer
 msgid "has been posted. Click here to access the post :"
-msgstr ""
+msgstr "er blevet posteret. Klik her for at tilgå indlægget :"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_template_new_question
 msgid "has been posted. Click here to access the question :"
-msgstr ""
+msgstr "er blevet posteret. Klik her for at tilgå spørgsmålet :"
 
 #. module: website_forum
 #. openerp-web
@@ -3465,17 +3511,17 @@ msgstr "her"
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 msgid "how to configure or customize Odoo to specific business needs,"
-msgstr ""
+msgstr "hvordan man konfigurere og tilpasser Odoo til specifikke finansbehov,"
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 msgid "how to develop modules for your own need,"
-msgstr ""
+msgstr "hvordan man udvikler moduler til egne behov,"
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 msgid "how to install Odoo on a specific infrastructure,"
-msgstr ""
+msgstr "hvordan man installere Odoo på en specifik infrastruktur,"
 
 #. module: website_forum
 #. openerp-web
@@ -3485,26 +3531,30 @@ msgid ""
 "if your\n"
 "        answer is selected as the right one. See what you can do with karma"
 msgstr ""
+"hvis dit\n"
+"       svar vælges som det korrekte. Se hvad du kan bruge din karma til"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_13
 msgid "inappropriate and unacceptable statements"
-msgstr ""
+msgstr "upassende eller uacceptable udsagn"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.faq
 msgid "insert text link, upload files"
-msgstr ""
+msgstr "indsæt tekst link, upload filer"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_11
 msgid "insulting and offensive language"
-msgstr ""
+msgstr "provokerende eller stødende sprog"
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 msgid "it is a rant disguised as a question: “______ sucks, am I right?”"
 msgstr ""
+"er det triade skjult som et spørgsmål: \"_____ er forfærdelig, har jeg "
+"ret?\""
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_detail_full
@@ -3536,17 +3586,17 @@ msgstr ""
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_4
 msgid "not a real post"
-msgstr ""
+msgstr "ikke et rigtigt indlæg"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_6
 msgid "not relevant or out dated"
-msgstr ""
+msgstr "ikke relevant eller uddateret"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_2
 msgid "off-topic or not relevant"
-msgstr ""
+msgstr "udenfor emne eller irrelevant"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_template_new_question
@@ -3564,16 +3614,18 @@ msgid ""
 "on social networks get an answer within\n"
 "        5 hours. Questions shared on two social networks have"
 msgstr ""
+"få svar indenfor 5 timer på \n"
+"      sociale netværk. Spørgsmål delt på to sociale netværk har"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.header
 msgid "post"
-msgstr ""
+msgstr "postér"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_15
 msgid "racist and hate speech"
-msgstr ""
+msgstr "racistisk og hadefuldt sprog"
 
 #. module: website_forum
 #: selection:gamification.badge,level:0
@@ -3583,12 +3635,12 @@ msgstr "sølv"
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_8
 msgid "spam or advertising"
-msgstr ""
+msgstr "spam eller reklame"
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 msgid "specific questions about Odoo service offers, etc."
-msgstr ""
+msgstr "specifikke spørgsmål om Odoo tjenesteydelser, osv."
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
@@ -3596,6 +3648,8 @@ msgid ""
 "there is no actual problem to be solved: “I’m curious if other people feel "
 "like I do.”"
 msgstr ""
+"der er intet problem der skal løses: \"Jeg er nysgerrig om hvorvidt andre "
+"folk har det på samme måde som mig.\""
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_14
@@ -3615,7 +3669,7 @@ msgstr ""
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_9
 msgid "too localized"
-msgstr ""
+msgstr "for lokaliseret"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_3
@@ -3653,6 +3707,8 @@ msgid ""
 "we are being asked an open-ended, hypothetical question: “What if ______ "
 "happened?”"
 msgstr ""
+"vi bliver stillet et åbent, hypotetisk spørgsmål: \"Hvad hvis _______ "
+"skete?\""
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_detail_full
@@ -3663,6 +3719,7 @@ msgstr "Hjemmeside"
 #: model_terms:forum.forum,faq:website_forum.forum_help
 msgid "what's the best way to use Odoo for a specific business need,"
 msgstr ""
+"hvad er den bedste måde at bruge Odoo til et specifikt forretnings behov,"
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
@@ -3670,8 +3727,10 @@ msgid ""
 "your answer is provided along with the question, and you expect more "
 "answers: “I use ______ for ______, what do you use?”"
 msgstr ""
+"dit svar gives sammen med spørgsmålet, og du forventer flere svar: \"Jeg "
+"bruger _____ til ____, hvad bruger du?\""
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.faq
 msgid "your biography can be seen as tooltip"
-msgstr ""
+msgstr "din biografi kan ses som et tooltip"
