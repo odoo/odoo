@@ -12,8 +12,8 @@
 # Sanne Kristensen <sanne@vkdata.dk>, 2018
 # Ejner Sønniksen <ejner@vkdata.dk>, 2019
 # JonathanStein <jstein@image.dk>, 2020
-# Mads Søndergaard, 2020
 # Preben Lisby <preben.lisby@gmail.com>, 2020
+# Mads Søndergaard, 2020
 # 
 msgid ""
 msgstr ""
@@ -21,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-09 10:31+0000\n"
 "PO-Revision-Date: 2018-08-24 09:17+0000\n"
-"Last-Translator: Preben Lisby <preben.lisby@gmail.com>, 2020\n"
+"Last-Translator: Mads Søndergaard, 2020\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1132,6 +1132,8 @@ msgid ""
 "If set, this Sales Team will be used for sales and assignations related to "
 "this partner"
 msgstr ""
+"Hvis angivet, vil dette salgsteam blive brugt for salg og tilskrivninger "
+"relateret til denne partner"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__is_blacklisted
@@ -1157,7 +1159,7 @@ msgstr "Importer og synkroniser"
 #: code:addons/crm/models/crm_lead.py:1230
 #, python-format
 msgid "Import Template for Leads & Opportunities"
-msgstr ""
+msgstr "Importér skabelon for potentielle kunder & muligheder"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lost_reason_view_search
@@ -1203,12 +1205,12 @@ msgstr "Kanban status"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_digest_digest__kpi_crm_lead_created_value
 msgid "Kpi Crm Lead Created Value"
-msgstr ""
+msgstr "KPI CRM Potentiel kunde oprettet værdi"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_digest_digest__kpi_crm_opportunities_won_value
 msgid "Kpi Crm Opportunities Won Value"
-msgstr ""
+msgstr "KPI CRM Muligheder vundet værdi"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__date_action_last
@@ -1382,6 +1384,9 @@ msgid ""
 "Linked partner (optional). Usually created when converting the lead. You can"
 " find a partner by its Name, TIN, Email or Internal Reference."
 msgstr ""
+"Forbundet partner (valgfri). Normalvis oprettet når en potentiel kunde "
+"omdannes. Du kan finde en partner via Navn, TIN-nummer, Email, eller Intern "
+"reference."
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:1122
@@ -1429,7 +1434,7 @@ msgstr "Lav tilbud"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__generate_lead_from_alias
 msgid "Manual Assignation of Emails"
-msgstr ""
+msgstr "Manuel tildeling af emails"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -1762,6 +1767,11 @@ msgid ""
 "mainly used by the sales manager in order to do the periodic review with the"
 " channels of the sales pipeline."
 msgstr ""
+"Muligheders Analyse giver dig øjeblikkelig adgang til dine muligheder med "
+"information så som forventet indtægt, planlagte omkostninger, missede "
+"deadlines, eller antallet af interaktioner per mulighed. Denne rapport "
+"bruges primært af salgs ledere, for at udføre den periodiske gennemgang med "
+"kanalerne af salgs pipelinen."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__opportunities_amount
@@ -1880,7 +1890,7 @@ msgstr "Kunde er blacklisted"
 #. module: crm
 #: model:ir.model,name:crm.model_crm_partner_binding
 msgid "Partner linking/binding in CRM wizard"
-msgstr ""
+msgstr "Partner forbinding i CRM guide"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__partner_id
@@ -2346,6 +2356,8 @@ msgid ""
 "The email address associated with this channel. New emails received will "
 "automatically create new leads assigned to the channel."
 msgstr ""
+"Email adressen forbundet med denne kanal. Nye emails modtaget vil automatisk"
+" oprette nye potentielle kunder, tildelt kanalen."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__dashboard_graph_model
@@ -2387,6 +2399,8 @@ msgstr ""
 msgid ""
 "This bar allows to filter the opportunities based on scheduled activities."
 msgstr ""
+"Denne bar gør det muligt at filtrere muligheder baseret på planlagte "
+"aktiviteter."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__campaign_id
@@ -2563,6 +2577,12 @@ msgid ""
 "qualified, the lead can be converted into a business opportunity and/or a "
 "new customer in your address book."
 msgstr ""
+"Brug potentielle kunder hvis du har behov for et kvalificerende skridt, for "
+"at oprette en mulighed eller en kunde. Det kan være et visitkort du modtog, "
+"en kontakt formular udfyldt på din hjemmeside, eller en fil over "
+"ukvalificerede udsigter du importerer, osv. Når det er kvalificeret, kan den"
+" potentielle kunde omdannes til en forretnings mulighed og/eller en ny kunde"
+" i din adresse bog."
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_lost_reason_action
@@ -2690,7 +2710,7 @@ msgstr "Vundne salgmuligheder"
 #: code:addons/crm/models/crm_lead.py:402
 #, python-format
 msgid "Yeah! Deal of the last 7 days for the team."
-msgstr ""
+msgstr "Yes! Aftaler for de sidste 7 dage for holdet."
 
 #. module: crm
 #: code:addons/crm/models/crm_team.py:122
@@ -2771,7 +2791,7 @@ msgstr "eller send en e-mail til %s"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage__team_count
 msgid "team_count"
-msgstr ""
+msgstr "team_count"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:952
