@@ -22,9 +22,9 @@
 # Simon Andersen <simon@vkdata.dk>, 2019
 # lhmflexerp <lhm@flexerp.dk>, 2019
 # Walther Barnett <wba@miracle.dk>, 2020
+# Preben Lisby <preben.lisby@gmail.com>, 2020
 # Sanne Kristensen <sanne@vkdata.dk>, 2020
 # Mads Søndergaard, 2020
-# Preben Lisby <preben.lisby@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -32,7 +32,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-14 07:33+0000\n"
 "PO-Revision-Date: 2018-08-24 09:14+0000\n"
-"Last-Translator: Preben Lisby <preben.lisby@gmail.com>, 2020\n"
+"Last-Translator: Mads Søndergaard, 2020\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -819,9 +819,9 @@ msgid ""
 "posted. Those will be posted automatically after performing the bank "
 "reconciliation."
 msgstr ""
-"En betalings journal indskrivning genereret i en journal konfigureret til at"
-" postere kun når betalinger er afstemt med en kontoudtog kan ikke posteres "
-"manuelt. Disse vil blive posteret automatisk efter konto-afstemningen."
+"En betalingsjournal genereret i en journal konfigureret til at postere når "
+"betalinger er afstemt med et kontoudtog kan ikke posteres manuelt. Disse vil"
+" blive posteret automatisk efter kontoafstemningen."
 
 #. module: account
 #: code:addons/account/models/reconciliation_widget.py:681
@@ -854,7 +854,7 @@ msgstr "En valgt linje var allerede udlignet med en kontobevægelse."
 #. module: account
 #: sql_constraint:account.fiscal.position.tax:0
 msgid "A tax fiscal position could be defined only one time on same taxes."
-msgstr "En skats finansposition kan kun defineres én gang på samme skat."
+msgstr "En moms finansposition kan kun defineres én gang på samme moms"
 
 #. module: account
 #: code:addons/account/models/res_users.py:17
@@ -865,9 +865,9 @@ msgid ""
 "either in 'Tax-Included' or in 'Tax-Excluded' mode\n"
 "(or switch twice the mode if you are already in the desired one)."
 msgstr ""
-"En bruger kan ikke have både B2B skat og B2C skat.\n"
-"Du skal gå i Generelle Indstillinger og vælge at vise Produkt Priser enten \"Med Skat\" eller \"Uden Skat\" tilstand.\n"
-"(eller skift tilstand to gange hvis du allerede er i den ønskede)."
+"En bruger kan ikke have både B2B momsog B2C moms.\n"
+"Du skal gå i Generelle Indstillinger og vælge at vise Produkt Priser enten \"Med moms\" eller \"Uden moms\" tilstand.\n"
+"(eller skifte tilstand to gange hvis du allerede anvender den ønskede)."
 
 #. module: account
 #: model:res.groups,name:account.group_warning_account
@@ -1899,6 +1899,8 @@ msgid ""
 "Answers do not go in the original document discussion thread. This has an "
 "impact on the generated message-id."
 msgstr ""
+"Svar hører ikke til i den originale dokument diskussions tråd. Dette har en "
+"indvirkning på det genererede besked-id."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__tax_exigible
@@ -2029,6 +2031,8 @@ msgid ""
 "Attachments are linked to a document through model / res_id and to the "
 "message through this field."
 msgstr ""
+"Vedhæftninger er linket til et dokument via model / res_id samt til beskeden"
+" via dette felt."
 
 #. module: account
 #: selection:res.company,fiscalyear_last_month:0
@@ -2052,7 +2056,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__author_avatar
 msgid "Author's avatar"
-msgstr ""
+msgstr "Forfatters avatar"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.invoice_supplier_form
@@ -3149,7 +3153,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__composition_mode
 msgid "Composition mode"
-msgstr ""
+msgstr "Kompositions tilstand"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -3738,6 +3742,8 @@ msgstr "Nuværende årsindtjening"
 #: model:ir.model.fields,help:account.field_account_invoice_send__starred
 msgid "Current user has a starred notification linked to this message"
 msgstr ""
+"Nuværende bruger har en stjerne-markeret notifikation linket til denne "
+"besked"
 
 #. module: account
 #: selection:account.abstract.payment,partner_type:0
@@ -4165,6 +4171,9 @@ msgid ""
 "used by itself, however it can still be used in a group. 'adjustment' is "
 "used to perform tax adjustment."
 msgstr ""
+"Bestemmer hvor momsen kan vælges. Note: \"ingen\" betyder at momsen ikke kan"
+" bruges alene, men kan godt bruges i en gruppe. 'adjustment' anvendes til at"
+" foretage momsjusteringer"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__difference
@@ -4313,6 +4322,8 @@ msgid ""
 "Do not keep a copy of the email in the document communication history (mass "
 "mailing only)"
 msgstr ""
+"Behold ikke en kopi af emailen, i dokument kommunikations historikken (kun "
+"masse emails)"
 
 #. module: account
 #: selection:res.company,account_dashboard_onboarding_state:0
@@ -4465,6 +4476,8 @@ msgid ""
 "Email address of the sender. This field is set when no matching partner is "
 "found and replaces the author_id field in the chatter."
 msgstr ""
+"Email adresse tilhørende afsender. Dette felt er sat når ingen matchende "
+"partner kan findes, og erstatter author_id feltet i chatter'en."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__invoice_is_email
@@ -5567,7 +5580,7 @@ msgstr "Information"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_send__parent_id
 msgid "Initial thread message."
-msgstr ""
+msgstr "Første tråd besked."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__property_stock_account_input_categ_id
@@ -6630,7 +6643,7 @@ msgstr "Diverse"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__mail_activity_type_id
 msgid "Mail Activity Type"
-msgstr ""
+msgstr "Mail aktivitetstype"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__mailing_list_ids
@@ -6751,7 +6764,7 @@ msgstr "Kampagne på nyhedsbreve"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__mass_mailing_name
 msgid "Mass Mailing Name"
-msgstr ""
+msgstr "Navn på mailudsendelse"
 
 #. module: account
 #: selection:account.reconcile.model,match_label:0
@@ -6834,7 +6847,7 @@ msgstr "Besked leveringsfejl"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__record_name
 msgid "Message Record Name"
-msgstr ""
+msgstr "Besked datasæt navn"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__invoice_warn_msg
@@ -6854,7 +6867,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_send__message_id
 msgid "Message unique identifier"
-msgstr ""
+msgstr "Besked unik IF"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__message_id
@@ -6889,12 +6902,12 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__moderator_id
 msgid "Moderated By"
-msgstr ""
+msgstr "Modereret af"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__moderation_status
 msgid "Moderation Status"
-msgstr ""
+msgstr "Modereringsstatus"
 
 #. module: account
 #. openerp-web
@@ -6990,7 +7003,7 @@ msgstr "Navn"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_send__record_name
 msgid "Name get of the related document."
-msgstr ""
+msgstr "Hent navn for relateret dokument."
 
 #. module: account
 #. openerp-web
@@ -7018,7 +7031,7 @@ msgstr "Kræver handling"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__need_moderation
 msgid "Need moderation"
-msgstr ""
+msgstr "Behov for moderering"
 
 #. module: account
 #. openerp-web
@@ -7701,7 +7714,7 @@ msgstr "Partnertype"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__needaction_partner_ids
 msgid "Partners with Need Action"
-msgstr ""
+msgstr "Partnere med Kræver handling"
 
 #. module: account
 #: code:addons/account/models/account_journal_dashboard.py:95
@@ -8611,6 +8624,8 @@ msgid ""
 "Reply email address. Setting the reply_to bypasses the automatic thread "
 "creation."
 msgstr ""
+"Besvarelses email adresse. Angivelsen af reply_to forbigår den automatiske "
+"tråd oprettelse."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__reply_to
@@ -11093,11 +11108,13 @@ msgid ""
 "Tracked values are stored in a separate model. This field allow to "
 "reconstruct the tracking and to generate statistics on the model."
 msgstr ""
+"Sporede værdier opbevares i en separat model. Dette felt gør det muligt at "
+"genoprettet sporingen, samt at generere statistikker for modellen."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__tracking_value_ids
 msgid "Tracking values"
-msgstr ""
+msgstr "Sporingsværdier"
 
 #. module: account
 #. openerp-web
@@ -11665,7 +11682,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_send__is_log
 msgid "Whether the message is an internal note (comment mode only)"
-msgstr ""
+msgstr "Hvorvidt beskeden er en intern note (kun kommentar tilstand)"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__show_on_dashboard
