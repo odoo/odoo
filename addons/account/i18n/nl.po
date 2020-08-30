@@ -26,6 +26,7 @@
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2020
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2020
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2020
+# Julia van Orsouw <Julia@vanorsouw-consultancy.nl>, 2020
 # 
 msgid ""
 msgstr ""
@@ -33,7 +34,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-08-21 13:09+0000\n"
 "PO-Revision-Date: 2016-08-05 12:55+0000\n"
-"Last-Translator: Gunther Clauwaert <gclauwae@hotmail.com>, 2020\n"
+"Last-Translator: Julia van Orsouw <Julia@vanorsouw-consultancy.nl>, 2020\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -55,16 +56,26 @@ msgid ""
 "        e.g 200 * (1 - 10%) = 180 (price included)\n"
 "        "
 msgstr ""
+"\n"
+"    - Groep van BTW's: de BTW is een set van sub BTW's.\n"
+"    - Vast: Het BTW bedrag is gelijk ongeacht de prijs.\n"
+"    - Percentage van prijs: Het BTW bedrag is een percentage van de prijs:\n"
+"        Bijv. 100 * (1 + 10%) = 110 (niet inbegrepen in de prijs)\n"
+"        Bijv. 110 / (1 + 10%) = 100 (Percentage van de prijs)\n"
+"    - Percentage van de prijs is inclusief BTW: Het BTW bedrag is een gedeelte van de prijs:\n"
+"        Bijv. 180 / (1 - 10%) = 200 (exclusief BTW)\n"
+"        Bijv. 200 * (1 - 10%) = 180 (inclusief BTW)\n"
+"        "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_invoices_count
 msgid "# Reconciled Invoices"
-msgstr ""
+msgstr "# Afgeletterde facturen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statements_count
 msgid "# Reconciled Statements"
-msgstr ""
+msgstr "# Afgeletterde Bankafschriften"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__code_digits
@@ -106,6 +117,8 @@ msgid ""
 "%(amount)s %(currency_symbol)s (%(debit_credit)s) from %(link)s, "
 "<strong>%(account_source_name)s</strong>"
 msgstr ""
+"%(amount)s %(currency_symbol)s (%(debit_credit)s) van %(link)s, "
+"<strong>%(account_source_name)s</strong>"
 
 #. module: account
 #: code:addons/account/wizard/account_transfer_wizard.py:0
@@ -115,12 +128,15 @@ msgid ""
 "<strong>%(account_source_name)s</strong> were transferred to "
 "<strong>%(account_target_name)s</strong> by %(link)s"
 msgstr ""
+"%(amount)s %(currency_symbol)s (%(debit_credit)s) van "
+"<strong>%(account_source_name)s</strong> is overgezet naar "
+"<strong>%(account_target_name)s</strong> door %(link)s"
 
 #. module: account
 #: code:addons/account/wizard/account_accrual_accounting.py:0
 #, python-format
 msgid "%d moves"
-msgstr ""
+msgstr "%d boekingen"
 
 #. module: account
 #: code:addons/account/models/account_tax.py:0
@@ -148,7 +164,7 @@ msgstr "%s (afronding)"
 #: code:addons/account/models/sequence_mixin.py:0
 #, python-format
 msgid "%s is not a stored field"
-msgstr ""
+msgstr "%s is geen opgeslagen veld"
 
 #. module: account
 #: model:ir.actions.report,print_report_name:account.account_invoices
@@ -164,7 +180,7 @@ msgstr "-> Zie de deels afgepunte boekingen"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid ". You might want to put a higher number here."
-msgstr ""
+msgstr ". Misschien wilt u hier een hoger nummer neerzetten."
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_15days
@@ -217,6 +233,22 @@ msgid ""
 "    </p>\n"
 "</div>\n"
 msgstr ""
+"<?xml version=\"1.0\"?>\n"
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Beste${object.partner_id.name}<br/><br/>\n"
+"        Bedankt voor uw betaling\n"
+"        Hierbij sturen wij u het afschrift van de betaling <strong>${(object.name or '').replace('/','-')}</strong> voor het bedrag van\n"
+"        <strong>${format_amount(object.amount, object.currency_id)}</strong> van ${object.company_id.name}.\n"
+"        <br/><br/>\n"
+"        Twijfel zeker niet om ons te contacteren indien u nog verdere vragen heeft.\n"
+"        <br/><br/>\n"
+"        Met vriendelijke groeten,<br/>\n"
+"        % if user and user.signature:\n"
+"        ${user.signature | safe}\n"
+"        % endif\n"
+"    </p>\n"
+"</div>\n"
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_invoice
@@ -6586,6 +6618,14 @@ msgid ""
 msgstr ""
 "Het is vereist om een rekening en dagboek te specifiëren om een afschrijving"
 " te kunnen aanmaken."
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"It seems that the taxes have been modified since the creation of the journal"
+" entry. You should create the credit note manually instead."
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
