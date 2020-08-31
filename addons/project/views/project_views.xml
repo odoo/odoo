@@ -614,7 +614,7 @@
             <field name="model">project.task</field>
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
-                <form string="Task" class="o_form_project_tasks">
+                <form string="Task" class="o_form_project_tasks" js_class="project_form">
                     <field name="allow_subtasks" invisible="1" />
                     <field name="is_closed" invisible="1" />
                     <field name="allow_recurring_tasks" invisible="1" />
@@ -909,7 +909,7 @@
             <field name="model">project.task</field>
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
-                <tree string="Tasks" multi_edit="1" sample="1">
+                <tree string="Tasks" multi_edit="1" sample="1" js_class="project_list">
                     <field name="message_needaction" invisible="1" readonly="1"/>
                     <field name="is_closed" invisible="1" />
                     <field name="sequence" invisible="1" readonly="1"/>
@@ -923,6 +923,7 @@
                     <field name="date_deadline" optional="hide" widget="remaining_days" attrs="{'invisible': [('is_closed', '=', True)]}"/>
                     <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                     <field name="stage_id" invisible="context.get('set_visible',False)" optional="show" readonly="1"/>
+                    <field name="recurrence_id" invisible="1" />
                 </tree>
             </field>
         </record>
