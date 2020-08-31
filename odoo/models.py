@@ -946,6 +946,8 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         mode = self._context.get('mode', 'init')
         current_module = self._context.get('module', '__import__')
         noupdate = self._context.get('noupdate', False)
+        nodelete = self._context.get('nodelete', False)
+
         # add current module in context for the conversion of xml ids
         self = self.with_context(_import_current_module=current_module)
 
@@ -997,7 +999,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 return
 
             data_list = [
-                dict(xml_id=xid, values=vals, info=info, noupdate=noupdate)
+                dict(xml_id=xid, values=vals, info=info, noupdate=noupdate, nodelete=nodelete)
                 for xid, vals, info in batch
             ]
             batch.clear()
@@ -3146,6 +3148,7 @@ Fields:
             * write_date: date of the last change to the record
             * xmlid: XML ID to use to refer to this record (if there is one), in format ``module.name``
             * noupdate: A boolean telling if the record will be updated or not
+            * nodelete: A boolean telling if the record deletion is allowed
         """
 
         IrModelData = self.env['ir.model.data'].sudo()
@@ -3153,15 +3156,21 @@ Fields:
             res = self.sudo().read(LOG_ACCESS_COLUMNS)
         else:
             res = [{'id': x} for x in self.ids]
-        xml_data = dict((x['res_id'], x) for x in IrModelData.search_read([('model', '=', self._name),
-                                                                           ('res_id', 'in', self.ids)],
-                                                                          ['res_id', 'noupdate', 'module', 'name'],
-                                                                          order='id',
-                                                                          limit=1))
+        xml_data = dict(
+            (x['res_id'], x)
+            for x in IrModelData.search_read([
+                ('model', '=', self._name),
+                ('res_id', 'in', self.ids)],
+                ['res_id', 'noupdate', 'nodelete', 'module', 'name'],
+                order='id',
+                limit=1,
+            )
+        )
         for r in res:
             value = xml_data.get(r['id'], {})
             r['xmlid'] = '%(module)s.%(name)s' % value if value else False
             r['noupdate'] = value.get('noupdate', False)
+            r['nodelete'] = value.get('nodelete', False)
         return res
 
     def get_base_url(self):
@@ -3354,6 +3363,11 @@ Fields:
         dom = self.env['ir.rule']._compute_domain(self._name, operation)
         return self.sudo().filtered_domain(dom or [])
 
+    def _nodelete_message(self):
+        # VFE TODO extension in targeted models
+        # detailed message, propose to archive if active field, ...
+        return _("The following records cannot be deleted %s.", ', '.join(self.mapped('display_name')))
+
     def unlink(self):
         """ unlink()
 
@@ -3366,6 +3380,9 @@ Fields:
         """
         if not self:
             return True
+
+        # when uninstalling a module, do not block or raise useless errors
+        force_unlink = self.env.context.get('_force_unlink', False)
 
         self.check_access_rights('unlink')
         self._check_concurrency()
@@ -3399,12 +3416,6 @@ Fields:
                 if Property.search([('res_id', '=', False), ('value_reference', 'in', refs)], limit=1):
                     raise UserError(_('Unable to delete this document because it is used as a default property'))
 
-                # Delete the records' properties.
-                Property.search([('res_id', 'in', refs)]).unlink()
-
-                query = "DELETE FROM %s WHERE id IN %%s" % self._table
-                cr.execute(query, (sub_ids,))
-
                 # Removing the ir_model_data reference if the record being deleted
                 # is a record created by xml/csv file, as these are not connected
                 # with real database foreign keys, and would be dangling references.
@@ -3414,7 +3425,19 @@ Fields:
                 # side-effects during admin calls.
                 data = Data.search([('model', '=', self._name), ('res_id', 'in', sub_ids)])
                 if data:
+                    if not force_unlink:
+                        undeletable = data.filtered_domain([('nodelete', '=', True)])
+                        if undeletable:
+                            import pudb; pudb.set_trace();
+                            undeletable_recs = self.browse(set(undeletable.mapped('res_id')))
+                            raise UserError(undeletable_recs._nodelete_message())
                     ir_model_data_unlink |= data
+
+                # Delete the records' properties.
+                Property.search([('res_id', 'in', refs)]).unlink()
+
+                query = "DELETE FROM %s WHERE id IN %%s" % self._table
+                cr.execute(query, (sub_ids,))
 
                 # For the same reason, remove the defaults having some of the
                 # records as value
@@ -4074,11 +4097,14 @@ Fields:
     def _load_records(self, data_list, update=False):
         """ Create or update records of this model, and assign XMLIDs.
 
-            :param data_list: list of dicts with keys `xml_id` (XMLID to
-                assign), `noupdate` (flag on XMLID), `values` (field values)
-            :param update: should be ``True`` when upgrading a module
+        :param list data_list: list of dicts with keys
+            `xml_id` (XMLID to assign),
+            `noupdate` (flag on XMLID),
+            `nodelete` (flag on XMLID),
+            `values` (field values),
+        :param bool update: should be ``True`` when upgrading a module
 
-            :return: the records corresponding to ``data_list``
+        :return: the records corresponding to ``data_list``
         """
         original_self = self.browse()
         # records created during installation should not display messages
@@ -4116,7 +4142,7 @@ Fields:
             if not row:
                 to_create.append(data)
                 continue
-            d_id, d_module, d_name, d_model, d_res_id, d_noupdate, r_id = row
+            d_id, d_module, d_name, d_model, d_res_id, d_noupdate, d_nodelete, r_id = row
             record = self.browse(d_res_id)
             if r_id:
                 data['record'] = record
@@ -4124,6 +4150,9 @@ Fields:
                 if not (update and d_noupdate):
                     to_update.append(data)
             else:
+                # VFE TODO force unlink of imd,
+                # the record was deleted and will be recreated anyway.
+                # Maybe log sthg???
                 imd.browse(d_id).unlink()
                 to_create.append(data)
 
@@ -4151,6 +4180,7 @@ Fields:
                             'xml_id': f"{data['xml_id']}_{parent_model.replace('.', '_')}",
                             'record': record[parent_field],
                             'noupdate': data.get('noupdate', False),
+                            'nodelete': data.get('nodelete', False),
                         })
                 imd_data_list.append(data)
 

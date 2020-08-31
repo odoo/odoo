@@ -88,6 +88,7 @@ CREATE TABLE ir_model_data (
     write_date timestamp without time zone DEFAULT (now() at time zone 'UTC'),
     write_uid integer,
     noupdate boolean DEFAULT False,
+    nodelete boolean DEFAULT False,
     name varchar NOT NULL,
     module varchar NOT NULL,
     model varchar NOT NULL,

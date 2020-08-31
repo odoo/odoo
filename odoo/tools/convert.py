@@ -308,7 +308,7 @@ form: module.record_id""" % (xml_id,)
             res['paperformat_id'] = pf_id
 
         xid = self.make_xml_id(xml_id)
-        data = dict(xml_id=xid, values=res, noupdate=self.noupdate)
+        data = dict(xml_id=xid, values=res, noupdate=self.noupdate, nodelete=self.nodelete)
         report = self.env['ir.actions.report']._load_records([data], self.mode == 'update')
         self.idref[xml_id] = report.id
 
@@ -416,7 +416,7 @@ form: module.record_id""" % (xml_id,)
             if views is not None:
                 res['binding_view_types'] = views
         xid = self.make_xml_id(xml_id)
-        data = dict(xml_id=xid, values=res, noupdate=self.noupdate)
+        data = dict(xml_id=xid, values=res, noupdate=self.noupdate, nodelete=self.nodelete)
         self.env['ir.actions.act_window']._load_records([data], self.mode == 'update')
 
     def _tag_menuitem(self, rec, parent=None):
@@ -475,6 +475,9 @@ form: module.record_id""" % (xml_id,)
             'xml_id': self.make_xml_id(rec_id),
             'values': values,
             'noupdate': self.noupdate,
+            'nodelete': self.nodelete,
+            # VFE enforce nodelete for root menus ?
+            # and/or for all customs menus ?
         }
         menu = self.env['ir.ui.menu']._load_records([data], self.mode == 'update')
         for child in rec.iterchildren('menuitem'):
@@ -572,7 +575,7 @@ form: module.record_id""" % (xml_id,)
                         f_val = str2bool(f_val)
             res[f_name] = f_val
 
-        data = dict(xml_id=xid, values=res, noupdate=self.noupdate)
+        data = dict(xml_id=xid, values=res, noupdate=self.noupdate, nodelete=self.nodelete)
         record = model._load_records([data], self.mode == 'update')
         if rec_id:
             self.idref[rec_id] = record.id
@@ -669,6 +672,7 @@ form: module.record_id""" % (xml_id,)
 
             self.envs.append(self.get_env(el))
             self._noupdate.append(nodeattr2bool(el, 'noupdate', self.noupdate))
+            self._nodelete.append(nodeattr2bool(el, 'nodelete', self.nodelete))
             try:
                 f(rec)
             except ParseError:
@@ -681,6 +685,7 @@ form: module.record_id""" % (xml_id,)
                 ))
             finally:
                 self._noupdate.pop()
+                self._nodelete.pop()
                 self.envs.pop()
 
     @property
@@ -691,12 +696,17 @@ form: module.record_id""" % (xml_id,)
     def noupdate(self):
         return self._noupdate[-1]
 
-    def __init__(self, cr, module, idref, mode, noupdate=False, xml_filename=None):
+    @property
+    def nodelete(self):
+        return self._nodelete[-1]
+
+    def __init__(self, cr, module, idref, mode, noupdate=False, xml_filename=None, nodelete=False):
         self.mode = mode
         self.module = module
         self.envs = [odoo.api.Environment(cr, SUPERUSER_ID, {})]
         self.idref = {} if idref is None else idref
         self._noupdate = [noupdate]
+        self._nodelete = [nodelete]
         self.xml_filename = xml_filename
         self._tags = {
             'record': self._tag_record,
@@ -715,18 +725,18 @@ form: module.record_id""" % (xml_id,)
         self._tag_root(de)
     DATA_ROOTS = ['odoo', 'data', 'openerp']
 
-def convert_file(cr, module, filename, idref, mode='update', noupdate=False, kind=None, pathname=None):
+def convert_file(cr, module, filename, idref, mode='update', noupdate=False, kind=None, pathname=None, nodelete=False):
     if pathname is None:
         pathname = os.path.join(module, filename)
     ext = os.path.splitext(filename)[1].lower()
 
     with file_open(pathname, 'rb') as fp:
         if ext == '.csv':
-            convert_csv_import(cr, module, pathname, fp.read(), idref, mode, noupdate)
+            convert_csv_import(cr, module, pathname, fp.read(), idref, mode, noupdate, nodelete)
         elif ext == '.sql':
             convert_sql_import(cr, fp)
         elif ext == '.xml':
-            convert_xml_import(cr, module, fp, idref, mode, noupdate)
+            convert_xml_import(cr, module, fp, idref, mode, noupdate, nodelete)
         elif ext == '.js':
             pass # .js files are valid but ignored here.
         else:
@@ -735,8 +745,7 @@ def convert_file(cr, module, filename, idref, mode='update', noupdate=False, kin
 def convert_sql_import(cr, fp):
     cr.execute(fp.read())
 
-def convert_csv_import(cr, module, fname, csvcontent, idref=None, mode='init',
-        noupdate=False):
+def convert_csv_import(cr, module, fname, csvcontent, idref=None, mode='init', noupdate=False, nodelete=False):
     '''Import csv file :
         quote: "
         delimiter: ,
@@ -762,6 +771,7 @@ def convert_csv_import(cr, module, fname, csvcontent, idref=None, mode='init',
         'install_module': module,
         'install_filename': fname,
         'noupdate': noupdate,
+        'nodelete': nodelete,
     }
     env = odoo.api.Environment(cr, SUPERUSER_ID, context)
     result = env[model].load(fields, datas)
@@ -770,7 +780,7 @@ def convert_csv_import(cr, module, fname, csvcontent, idref=None, mode='init',
         warning_msg = "\n".join(msg['message'] for msg in result['messages'])
         raise Exception(_('Module loading %s failed: file %s could not be processed:\n %s') % (module, fname, warning_msg))
 
-def convert_xml_import(cr, module, xmlfile, idref=None, mode='init', noupdate=False, report=None):
+def convert_xml_import(cr, module, xmlfile, idref=None, mode='init', noupdate=False, report=None, nodelete=False):
     doc = etree.parse(xmlfile)
     schema = os.path.join(config['root_path'], 'import_xml.rng')
     relaxng = etree.RelaxNG(etree.parse(schema))
@@ -791,5 +801,5 @@ def convert_xml_import(cr, module, xmlfile, idref=None, mode='init', noupdate=Fa
         xml_filename = xmlfile
     else:
         xml_filename = xmlfile.name
-    obj = xml_import(cr, module, idref, mode, noupdate=noupdate, xml_filename=xml_filename)
+    obj = xml_import(cr, module, idref, mode, noupdate=noupdate, xml_filename=xml_filename, nodelete=nodelete)
     obj.parse(doc.getroot())

@@ -511,6 +511,7 @@ class O2MIdMapper(models.AbstractModel):
         if not import_module: # not an import -> bail
             return recs
         noupdate = self.env.context.get('noupdate', False)
+        nodelete = self.env.context.get('nodelete', False)
 
         xids = (v.get('id') for v in vals_list)
         self.env['ir.model.data']._update_xmlids([
@@ -519,6 +520,7 @@ class O2MIdMapper(models.AbstractModel):
                 'record': rec,
                 # note: this is not used when updating o2ms above...
                 'noupdate': noupdate,
+                'nodelete': nodelete,
             }
             for rec, xid in zip(recs, xids)
             if xid and isinstance(xid, str)
