@@ -33,12 +33,17 @@ class ProductTemplate(models.Model):
              "With this option, a validated expense can be re-invoice to a customer at its cost or sales price.")
     visible_expense_policy = fields.Boolean("Re-Invoice Policy visible", compute='_compute_visible_expense_policy', default=lambda self: self._default_visible_expense_policy())
     sales_count = fields.Float(compute='_compute_sales_count', string='Sold')
+    visible_qty_configurator = fields.Boolean("Quantity visible in configurator", compute='_compute_visible_qty_configurator')
     invoice_policy = fields.Selection([
         ('order', 'Ordered quantities'),
         ('delivery', 'Delivered quantities')], string='Invoicing Policy',
         help='Ordered Quantity: Invoice quantities ordered by the customer.\n'
              'Delivered Quantity: Invoice quantities delivered to the customer.',
         default='order')
+
+    def _compute_visible_qty_configurator(self):
+        for product_template in self:
+            product_template.visible_qty_configurator = True
 
     @api.depends('name')
     def _compute_visible_expense_policy(self):
