@@ -782,6 +782,7 @@ class HrExpenseSheet(models.Model):
     department_id = fields.Many2one('hr.department', compute='_compute_from_employee_id', store=True, readonly=False, copy=False, string='Department', states={'post': [('readonly', True)], 'done': [('readonly', True)]})
     is_multiple_currency = fields.Boolean("Handle lines with different currencies", compute='_compute_is_multiple_currency')
     can_reset = fields.Boolean('Can Reset', compute='_compute_can_reset')
+    can_approve = fields.Boolean('Can Approve', compute='_compute_can_approve')
 
     _sql_constraints = [
         ('journal_id_required_posted', "CHECK((state IN ('post', 'done') AND journal_id IS NOT NULL) OR (state NOT IN ('post', 'done')))", 'The journal must be set on posted expense'),
@@ -821,6 +822,13 @@ class HrExpenseSheet(models.Model):
         is_expense_user = self.user_has_groups('hr_expense.group_hr_expense_team_approver')
         for sheet in self:
             sheet.can_reset = is_expense_user if is_expense_user else sheet.employee_id.user_id == self.env.user
+
+    @api.depends_context('uid')
+    def _compute_can_approve(self):
+        is_approver = self.user_has_groups('hr_expense.group_hr_expense_team_approver, hr_expense.group_hr_expense_user')
+        is_manager = self.user_has_groups('hr_expense.group_hr_expense_manager')
+        for sheet in self:
+            sheet.can_approve = is_manager or (is_approver and sheet.employee_id.user_id != self.env.user)
 
     @api.depends('employee_id')
     def _compute_from_employee_id(self):

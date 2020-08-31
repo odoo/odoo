@@ -566,9 +566,14 @@
             <field name="arch" type="xml">
                 <form string="Expense Reports" class="o_expense_sheet">
                 <field name="can_reset" invisible="1"/>
+                <field name="can_approve" invisible="1"/>
                  <header>
                     <button name="action_submit_sheet" states="draft" string="Submit to Manager" type="object" class="oe_highlight o_expense_sheet_submit"/>
-                    <button name="approve_expense_sheets" states="submit" string="Approve" type="object" groups="hr_expense.group_hr_expense_team_approver" class="oe_highlight o_expense_sheet_approve"/>
+                    <button name="approve_expense_sheets"
+                            string="Approve"
+                            type="object"
+                            attrs="{'invisible': ['|', ('can_approve', '=', False), ('state', '!=', 'submit')]}"
+                            class="oe_highlight o_expense_sheet_approve"/>
                     <button name="action_sheet_move_create"
                             string="Post Journal Entries"
                             type="object"
