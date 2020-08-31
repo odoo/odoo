@@ -162,6 +162,7 @@ class AccountMove(models.Model):
 
         self.edi_document_ids.filtered(lambda doc: doc.attachment_id).write({'state': 'to_cancel', 'error': False})
         self.edi_document_ids.filtered(lambda doc: not doc.attachment_id).write({'state': 'cancelled', 'error': False})
+        self.edi_document_ids._process_documents_no_web_services()
 
         return res
 
