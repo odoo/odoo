@@ -74,34 +74,47 @@ class AccountEdiDocument(models.Model):
         Invoices are processed before payments.
         """
         def _postprocess_post_edi_results(documents, edi_result):
+            attachments_to_unlink = self.env['ir.attachment']
             for document in documents:
                 move = document.move_id
                 move_result = edi_result.get(move, {})
                 if move_result.get('attachment'):
+                    old_attachment = document.attachment_id
                     document.write({
                         'attachment_id': move_result['attachment'].id,
                         'state': 'sent',
                         'error': False,
                     })
+                    if not old_attachment.res_model or not old_attachment.res_id:
+                        attachments_to_unlink |= old_attachment
                 else:
                     document.error = move_result.get('error', _("Error when processing the journal entry."))
 
+            # Attachments that are not explicitly linked to a business model could be removed because they are not
+            # supposed to have any traceability from the user.
+            attachments_to_unlink.unlink()
+
         def _postprocess_cancel_edi_results(documents, edi_result):
             invoice_ids_to_cancel = set()  # Avoid duplicates
+            attachments_to_unlink = self.env['ir.attachment']
             for document in documents:
                 move = document.move_id
                 move_result = edi_result.get(move, {})
                 if move_result.get('success'):
+                    old_attachment = document.attachment_id
                     document.write({
                         'state': 'cancelled',
                         'error': False,
                         'attachment_id': False,
                     })
 
-                    # The user requested a cancellation of the EDI and it has been approved. Then, the invoice
-                    # can be safely cancelled.
                     if move.is_invoice(include_receipts=True) and move.state == 'posted':
+                        # The user requested a cancellation of the EDI and it has been approved. Then, the invoice
+                        # can be safely cancelled.
                         invoice_ids_to_cancel.add(move.id)
+
+                    if not old_attachment.res_model or not old_attachment.res_id:
+                        attachments_to_unlink |= old_attachment
 
                 else:
                     document.error = move_result.get('error') or _("Error when cancelling the journal entry.")
@@ -110,6 +123,10 @@ class AccountEdiDocument(models.Model):
                 invoices = self.env['account.move'].browse(list(invoice_ids_to_cancel))
                 invoices.button_draft()
                 invoices.button_cancel()
+
+            # Attachments that are not explicitly linked to a business model could be removed because they are not
+            # supposed to have any traceability from the user.
+            attachments_to_unlink.unlink()
 
         test_mode = self._context.get('edi_test_mode', False)
 

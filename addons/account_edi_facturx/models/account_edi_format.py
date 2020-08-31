@@ -112,8 +112,6 @@ class AccountEdiFormat(models.Model):
         return self.env['ir.attachment'].create({
             'name': xml_name,
             'datas': base64.encodebytes(xml_content),
-            'res_model': 'account.move',
-            'res_id': invoice._origin.id,
             'mimetype': 'application/xml'
         })
 
