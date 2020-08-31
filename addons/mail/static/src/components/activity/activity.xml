@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.Activity" owl="1">
-        <div class="o_Activity">
+        <div class="o_Activity" t-on-click="_onClick">
             <t t-if="activity">
                 <div class="o_Activity_sidebar">
                     <div class="o_Activity_user">

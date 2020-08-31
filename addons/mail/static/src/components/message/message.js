@@ -435,22 +435,15 @@ class Message extends Component {
             ev.preventDefault();
             return;
         }
-        if (ev.target.closest('.o_mention')) {
-            this.env.messaging.openProfile({
-                id: Number(ev.target.dataset.oeId),
-                model: ev.target.dataset.oeModel,
-            });
-            // avoid following dummy href
-            ev.preventDefault();
-            return;
-        }
-        if (ev.target.closest('.o_mail_redirect')) {
-            this.env.messaging.openProfile({
-                id: Number(ev.target.dataset.oeId),
-                model: ev.target.dataset.oeModel,
-            });
-            // avoid following dummy href
-            ev.preventDefault();
+        if (ev.target.tagName === 'A') {
+            if (ev.target.dataset.oeId && ev.target.dataset.oeModel) {
+                this.env.messaging.openProfile({
+                    id: Number(ev.target.dataset.oeId),
+                    model: ev.target.dataset.oeModel,
+                });
+                // avoid following dummy href
+                ev.preventDefault();
+            }
             return;
         }
         this.state.isClicked = !this.state.isClicked;
