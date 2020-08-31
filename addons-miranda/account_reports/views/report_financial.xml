@@ -1,0 +1,408 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+
+<template id="footnotes_template">
+    <t t-foreach="footnotes" t-as="footnote">
+        <p class="footnote" t-att-id="'footnote' + str(footnote.get('number'))" t-att-data-id="footnote.get('id')">
+            <span class='text'><t t-esc="str(footnote.get('number')) + '. ' + str(footnote.get('text'))"/></span>
+            <span class='o_account_reports_footnote_icons'><i class="fa fa-fw fa-trash-o" role="img" aria-label="Delete" title="Delete"></i></span>
+        </p>
+    </t>
+</template>
+
+<template id="line_caret_options">
+    <li t-if="line['caret_options'] == 'account.account'"><a role="menuitem" tabindex="-1" t-att-data-id="line['id']" action="open_general_ledger" class="dropdown-item">General Ledger</a></li>
+    <li t-if="line['caret_options'] == 'account.account'"><a role="menuitem" tabindex="-1" t-att-data-id="line['id']" t-att-data-financial_group_line_id="line.get('model') == 'account.financial.html.report' and line.get('parent_id')" action="open_journal_items" class="dropdown-item">Journal Items</a></li>
+    <li t-if="line['caret_options'] == 'account.invoice.out'">
+      <a role="menuitem" tabindex="-1" t-att-data-id="line['id']" t-att-data-model="line.get('model', 'account.move.line')" t-att-data-action-context="line.get('action_context')" data-object="account.move" action="open_document" class="dropdown-item">View Invoice</a>
+    </li>
+    <li t-if="line['caret_options'] == 'account.invoice.in'">
+      <a role="menuitem" tabindex="-1" t-att-data-id="line['id']" t-att-data-model="line.get('model', 'account.move.line')" t-att-data-action-context="line.get('action_context')" data-object="account.move" action="open_document" class="dropdown-item" >View Bill</a>
+    </li>
+    <li t-if="line['caret_options'] == 'account.payment'">
+      <a role="menuitem" tabindex="-1" t-att-data-id="line['id']" t-att-data-model="line.get('model', 'account.move.line')" t-att-data-action-context="line.get('action_context')" data-object="account.payment" action="open_document" class="dropdown-item">View Payment</a>
+    </li>
+    <li t-if="line['caret_options'] == 'account.tax'">
+      <a role="menuitem" tabindex="-1" t-att-data-id="line['id']" action="open_tax" class="dropdown-item">Audit</a>
+    </li>
+    <li t-if="line['caret_options'] == 'account.tax.report.line'">
+      <a role="menuitem" tabindex="-1" t-att-data-id="line['id']" action="tax_tag_template_open_aml" class="dropdown-item">Audit</a>
+    </li>
+    <li t-if="line['caret_options'] == 'tax.report.line'">
+      <a role="menuitem" tabindex="-1" t-att-data-id="line['id']" action="open_tax_report_line" class="dropdown-item">Audit</a>
+    </li>
+    <li t-if="line['caret_options'] == 'account.bank.statement.line'"><a role="menuitem" tabindex="-1" t-att-data-id="line['id']" t-att-data-model="line.get('model', 'account.move.line')" data-object="account.bank.statement" action="open_document" class="dropdown-item">View Bank Statement</a></li>
+    <li t-if="line['caret_options'] == 'account.analytic.account'">
+        <a role="menuitem" tabindex="-1" t-att-data-id="line['id']" action="open_analytic_entries" class="dropdown-item">Analytic Entries</a>
+    </li>
+    <li t-if="line['caret_options'] == 'res.partner'" role="presentation"><a role="menuitem" tabindex="-1" t-att-data-id="line['id']" t-att-data-model="line.get('model', 'res.partner')" data-object="res.partner" action="open_document" class="dropdown-item">View Partner</a></li>
+</template>
+
+<template id="filter_info_template">
+    <div class="row print_only" style='margin-top: 20px; margin-bottom: 10px;'>
+        <div class="col-4">
+            <t t-if="options.get('date') and options['date'].get('string')"><t t-esc="options['date']['string']"/></t>
+            <t t-if="not options.get('multi_company')">
+                <br/><t t-esc="report.get('company_name')"/>
+            </t>
+            <t t-if="options.get('multi_company')">
+                <br/>Companies:
+                <t t-set="company_value" t-value="'All'"/>
+                <t t-foreach="options['multi_company']" t-as="c">
+                    <t t-if="c.get('selected') == True">
+                        <t t-set="company_value" t-value="''"/>
+                        "<t t-esc="c.get('name')"/>"
+                    </t>
+                </t>
+                <t t-esc="company_value"/>
+            </t>
+        </div>
+        <div class="col-4">
+            <div class="col-12">
+                <t t-if="options.get('multi_company')">
+                    Companies:
+                    <t t-set="company_value" t-value="'All'"/>
+                    <t t-foreach="options['multi_company']" t-as="c">
+                        <t t-if="c.get('selected') == True">
+                            <t t-set="company_value" t-value="''"/>
+                            <t t-esc="c.get('name')"/>
+                        </t>
+                    </t>
+                    <t t-esc="company_value"/>
+                </t>
+            </div>
+            <div class="col-12">
+                <t t-if="options.get('journals')">
+                    Journals:
+                    <t t-set="journal_value" t-value="'All'"/>
+                    <t t-foreach="options['journals']" t-as="j">
+                        <t t-if="j.get('selected') == True">
+                            <t t-set="journal_value" t-value="''"/>
+                            <t t-esc="j.get('code')"/>
+                        </t>
+                    </t>
+                    <t t-esc="journal_value"/>
+                </t>
+            <t t-if="options.get('analytic_account_ids')">
+                <br/>
+                Analytic Accounts:
+                <t t-foreach="options['analytic_account_ids']" t-as="acc">
+                    <t t-esc="acc.get('name')"/>
+                </t>
+            </t>
+            </div>
+            <div class="col-12">
+                <t t-if="options.get('analytic_accounts') != None">
+                    Analytic Accounts:
+                    <t t-set="analytic_account_value" t-value="'All'"/>
+                    <t t-foreach="options['selected_analytic_account_names']" t-as="analytic_account_name">
+                        <t t-set="analytic_account_value" t-value="''"/>
+                        <t t-esc="analytic_account_name"/>
+                    </t>
+                    <t t-esc="analytic_account_value"/>
+                </t>
+            </div>
+            <div class="col-12">
+                <t t-if="options.get('analytic_tags') != None">
+                    Analytic Tags:
+                    <t t-set="analytic_tag_value" t-value="'All'"/>
+                    <t t-foreach="options['selected_analytic_tag_names']" t-as="analytic_tag_name">
+                        <t t-set="analytic_tag_value" t-value="''"/>
+                        <t t-esc="analytic_tag_name"/>
+                    </t>
+                    <t t-esc="analytic_tag_value"/>
+                </t>
+            </div>
+            <div class="col-12">
+                <t t-if="options.get('partner_ids') != None">
+                    Partners:
+                    <t t-set="res_partner_value" t-value="'All'"/>
+                    <t t-foreach="options['selected_partner_ids']" t-as="partner_name">
+                        <t t-set="res_partner_value" t-value="''"/>
+                        <t t-esc="partner_name"/>
+                    </t>
+                    <t t-esc="res_partner_value"/>
+                </t>
+            </div>
+            <div class="col-12">
+                <t t-if="options.get('partner_categories') != None">
+                    Partner Categories:
+                    <t t-set="res_partner_category_value" t-value="'All'"/>
+                    <t t-foreach="options['selected_partner_categories']" t-as="partner_category_name">
+                        <t t-set="res_partner_category_value" t-value="''"/>
+                        <t t-esc="partner_category_name"/>
+                    </t>
+                    <t t-esc="res_partner_category_value"/>
+                </t>
+            </div>
+            <div class="col-12">
+                <t t-if="options.get('ir_filters') != None">
+                    Filter:
+                    <t t-set="selected_filter_name" t-value="'None'"/>
+                    <t t-foreach="options['ir_filters']" t-as="current_filter">
+                        <t t-if="current_filter['selected']">
+                            <t t-set="selected_filter_name" t-value="current_filter['name']"/>
+                        </t>
+                    </t>
+                    <t t-esc="selected_filter_name"/>
+                </t>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template id="line_template">
+    <t t-foreach="lines['lines']" t-as="line">
+        <t t-set="trclass" t-value="''"/>
+        <t t-set="domainClass" t-value="'o_account_reports_domain_line_2'"/>
+        <t t-if="not line.get('caret_options')">
+            <t t-set="trclass" t-value="'o_account_reports_default_style'"/>
+            <t t-if="line.get('level') != None">
+                <t t-set="trclass" t-value="'o_account_reports_level'+str(line['level'])"/>
+            </t>
+        </t>
+        <t t-if="line.get('caret_options')">
+            <t t-if="line.get('level')">
+                <t t-set="domainClass" t-value="'o_account_reports_domain_line_'+str(line['level'])"/>
+            </t>
+        </t>
+
+        <tr t-attf-class="#{trclass} #{line.get('class', '')} #{'o_js_account_report_parent_row_unfolded' if line.get('unfolded', False) else ''}"
+            t-att-data-pagebreak="'before' if (line.get('page_break') and context.get('print_mode')) else None"
+            t-att-data-parent-id="line.get('parent_id', False)"
+            t-att-style="line.get('style', '')">
+            <td t-att-data-id="line['id']" t-att-class="'o_account_report_line o_account_report_line_indent ' + (line.get('unfoldable') and 'js_account_report_foldable o_foldable_total' or '')" t-att-data-unfolded="line.get('unfolded', False)" t-att-colspan="line.get('colspan', '1')"
+            t-att-data-offset="line.get('offset', False)" t-att-data-progress="line.get('progress', False)" t-att-data-remaining="line.get('remaining', False)"
+            >
+                    <t t-if="line.get('unfoldable')">
+                        <span t-att-data-id="line['id']" class="o_account_reports_caret_icon">
+                            <i class="fa fa-caret-down" t-if="line.get('unfolded')" role="img" aria-label="Unfolded" title="Unfolded"/>
+                            <i class="fa fa-caret-right" t-if="not line.get('unfolded')" role="img" aria-label="Folded" title="Folded"/>
+                        </span>
+                    </t>
+                    <t t-elif="not line.get('caret_options')">
+                        <span t-att-data-id="line['id']" class="o_account_reports_caret_icon">
+                            <i class="fa fa-caret-right invisible" role="img" aria-label="Unfolded" title="Unfolded"/>
+                        </span>
+                    </t>
+                    <t t-if="not line.get('caret_options')">
+                            <span class="account_report_line_name" t-att-title="line.get('title_hover')">
+                                <a t-if="line.get('action_id')" t-att-data-id="line['id']" t-att-data-action-id="line['action_id']" t-att-action="line.get('action', 'execute_action')">
+                                    <t t-esc="line.get('name')"/>
+                                </a>
+                                <t t-if="not line.get('action_id')" t-esc="line.get('name')"/>
+                                <span class="js_account_report_line_footnote" t-att-data-id="line['id']">
+                                    <sup t-if="line.get('footnote')"><b class="o_account_reports_footnote_sup"><a t-att-href="'#footnote'+line['footnote']"></a><t t-esc="line['footnote']"/></b></sup>
+                                </span>
+                            </span>
+                    </t>
+                    <t t-if="line.get('caret_options')">
+                        <t t-if="not context.get('print_mode')">
+                            <div class="dropdown">
+                                <a class="dropdown-toggle" data-toggle="dropdown" href='#'>
+                                    <span t-att-data-id="line['id']" t-att-class="domainClass" t-att-title="line.get('title_hover')">
+                                        <t t-esc="line.get('name')"/>
+                                    </span>
+                                </a>
+                                <span class="js_account_report_line_footnote" t-att-data-id="line['id']"><sup t-if="line.get('footnote')"><b class="o_account_reports_footnote_sup"><a t-att-href="'#footnote'+line['footnote']"></a><t t-esc="line['footnote']"/></b></sup></span>
+                                <div class="dropdown-menu o_account_reports_domain_dropdown" role="menu">
+                                    <t t-call="account_reports.line_caret_options"/>
+                                    <a role="menuitem" tabindex="-1" t-att-data-id="line['id']" class="dropdown-item js_account_reports_add_footnote">Annotate</a>
+                                </div>
+                            </div>
+                        </t>
+                        <t t-else="">
+                            <span t-att-data-id="line['id']" t-att-class="domainClass" t-att-title="line.get('title_hover')">
+                                <t t-esc="line.get('name')"/>
+                            </span>
+                            <span class="js_account_report_line_footnote" t-att-data-id="line['id']"><sup t-if="line.get('footnote')"><b class="o_account_reports_footnote_sup"><a t-att-href="'#footnote'+line['footnote']"></a><t t-esc="line['footnote']"/></b></sup></span>
+                        </t>
+                    </t>
+            </td>
+            <t t-set="column_index" t-value="0"/>
+            <t t-foreach="line.get('columns')" t-as="column">
+                <t t-set="hierarchies_enabled" t-value="len(lines.get('columns_header', [])) > 1"/>
+                <td t-att-class="'o_account_report_line ' + (column.get('class', lines.get('columns_header')[-1][column_index+line.get('colspan', 1)].get('class', '')) + (line.get('unfoldable') and ' o_foldable_total' or '')) + ('' if hierarchies_enabled else ' o_account_report_line_indent')" t-att-style="column.get('style', lines.get('columns_header')[-1][column_index+line.get('colspan', 1)].get('style', ''))">
+                    <span class="o_account_report_column_value" t-att-title="column.get('title')">
+                        <t t-esc="column.get('name')"/>
+                    </span>
+                </td>
+                <t t-set="column_index" t-value="column_index + 1"/>
+            </t>
+        </tr>
+    </t>
+</template>
+
+<template id="main_table_header">
+    <t t-if="len(lines.get('columns_header', [])) > 1">
+        <thead class="o_account_reports_header_hierarchy">
+            <t t-foreach="lines.get('columns_header')" t-as="header_line">
+                <tr>
+                    <t t-foreach="header_line" t-as="header">
+                        <th t-att-colspan="header.get('colspan')" t-att-title="header.get('title')" t-att-data-toggle="header.get('data-toggle')">
+                            <t t-esc="header.get('name')"/>
+                        </th>
+                    </t>
+                </tr>
+            </t>
+            <!-- Empty <tr> to create a bottom border on the above
+                 <tr>. Necessary due to "border-collapse: collapse;" on the
+                 table. -->
+            <tr><th t-att-colspan="len(lines.get('columns_header')[-1])"></th></tr>
+        </thead>
+    </t>
+    <t t-else="">
+        <thead>
+            <tr class="o_account_report_column_header">
+                <t t-foreach="lines.get('columns_header')[0]" t-as="column_header">
+                    <th t-att-class="'o_account_report_column_header ' + (column_header.get('class', ''))" t-att-style="column_header.get('style', '')"
+                        t-att-title="column_header.get('title')">
+                        <t t-raw="column_header.get('name')"/>
+                    </th>
+                </t>
+            </tr>
+        </thead>
+    </t>
+</template>
+
+<template id="main_template">
+    <div class='o_account_reports_body'>
+        <div class="alert alert-info text-center mb-0 no_print" t-if="not options.get('all_entries') and options.get('unposted_in_period')">
+            <span>There are <a action="open_unposted_moves">unposted Journal Entries</a> prior or included in this period</span>
+        </div>
+        <div class="o_account_reports_page o_account_reports_no_print">
+
+            <div class="o_account_reports_header">
+                <div class="print_only"><h2><t t-esc="report.get('name')"></t></h2></div>
+                <t t-if="model._name == 'account.general.ledger'">
+                    <div class="o_account_reports_filter_input_wrapper no_print">
+                        <span class="searchIcon"><i class="fa fa-search" role="img" aria-label="Search" title="Search"></i></span>
+                        <input class="o_account_reports_filter_input" type="text" placeholder="Search account" />
+                    </div>
+                </t>
+                <t t-call="account_reports.filter_info_template"/>
+            </div>
+            <div class="o_account_reports_summary"/>
+            <div class="table-responsive">
+                <table class="o_account_reports_table table-hover">
+                    <t t-call="{{model._get_templates()['main_table_header_template']}}"/>
+                    <tbody>
+                        <t t-if="lines.get('lines')">
+                            <t t-call="{{model._get_templates()['line_template']}}"/>
+                        </t>
+                    </tbody>
+                </table>
+            </div>
+            <div class="js_account_report_footnotes"/>
+        </div>
+    </div>
+</template>
+
+<!-- Aged partner balance templates -->
+<template id="template_aged_partner_balance_line_report" inherit_id="account_reports.line_template" primary="True">
+    <xpath expr="//span[hasclass('o_account_reports_caret_icon')]" position="before">
+        <t t-if="line.get('trust') == 'good'">
+            <span class="fa fa-circle color-green trust-partner" role="img" aria-label="Balance is good" title="Balance is good"></span>
+        </t>
+        <t t-if="line.get('trust') == 'bad'">
+            <span class="fa fa-circle color-red trust-partner" role="img" aria-label="Balance is bad" title="Balance is bad"></span>
+        </t>
+        <t t-if="line.get('trust') == 'normal'">
+            <span class="fa fa-circle color-transparent trust-partner" role="img" aria-label="Balance is normal" title="Balance is normal"></span>
+        </t>
+    </xpath>
+    <xpath expr="//*[hasclass('dropdown-menu')]" position="inside">
+        <a role="menuitem" tabindex="-1" t-att-data-id="line['id']" t-att-parent-id="line['parent_id']" class="o_change_expected_date dropdown-item">Change expected payment date</a>
+    </xpath>
+</template>
+
+<template id="template_aged_partner_balance_report" inherit_id="account_reports.main_template" primary="True">
+    <xpath expr="//table" position="attributes">
+        <attribute name="class">o_account_reports_table table-striped table-hover</attribute>
+    </xpath>
+</template>
+
+<!-- Business Statements Aged receivable templates  -->
+ <template id="line_template_aged_receivable_report" inherit_id="account_reports.template_aged_partner_balance_line_report" primary="True">
+     <xpath expr="//span[hasclass('account_report_line_name')]" position="inside">
+        &amp;nbsp;<a t-if="'partner_id' in line and line.get('unfolded')" t-att-data-partner_id="line.get('partner_id')" action="action_partner_reconcile" class="no_print oe_link_reports">Reconcile</a>
+     </xpath>
+ </template>
+
+ <!-- Business Statements Aged Payable templates -->
+ <template id="line_template_aged_payable_report" inherit_id="account_reports.template_aged_partner_balance_line_report" primary="True">
+     <xpath expr="//span[hasclass('account_report_line_name')]" position="inside">
+        &amp;nbsp;<a t-if="'partner_id' in line and line.get('unfolded')" t-att-data-partner_id="line.get('partner_id')" action="action_partner_reconcile" class="no_print oe_link_reports">Reconcile</a>
+     </xpath>
+ </template>
+
+<!-- partner and general ledger templates -->
+<template id="line_template_partner_ledger_report" inherit_id="account_reports.line_template" primary="True">
+    <xpath expr="//span[hasclass('o_account_reports_caret_icon')]" position="before">
+        <t t-if="line.get('trust') == 'good'">
+            <span class="fa fa-circle color-green trust-partner" role="img" aria-label="Partner ledger is good" title="Partner ledger is good"></span>
+        </t>
+        <t t-if="line.get('trust') == 'bad'">
+            <span class="fa fa-circle color-red trust-partner" role="img" aria-label="Partner ledger is bad" title="Partner ledger is bad"></span>
+        </t>
+        <t t-if="line.get('trust') == 'normal'">
+            <span class="fa fa-circle color-transparent trust-partner" role="img" aria-label="Partner ledger is normal" title="Partner ledger is normal"></span>
+        </t>
+    </xpath>
+    <xpath expr="//span[hasclass('account_report_line_name')]" position="inside">
+       &amp;nbsp;<a t-if="'partner_id' in line and line.get('unfolded')" t-att-data-partner_id="line.get('partner_id')" action="action_partner_reconcile" class="no_print oe_link_reports">Reconcile</a>
+    </xpath>
+</template>
+<template id="line_template_general_ledger_report" inherit_id="account_reports.line_template" primary="True">
+    <xpath expr="//span[hasclass('account_report_line_name')]" position="inside">
+        &amp;nbsp;<a t-if="'hierarchy' not in str(line.get('id')) and line.get('unfolded')" t-att-data-id="line.get('id')" action="view_all_journal_items" class="no_print oe_link_reports"> ⇒ journal items</a>
+    </xpath>
+    <xpath expr="//div[hasclass('o_account_reports_domain_dropdown')]/*[last()]" position="before">
+        <t t-if="line['caret_options'] != 'account.tax' and line['caret_options'] != 'account.account'"><a role="menuitem" tabindex="-1" t-att-data-id="line['id']" action="open_document" class="dropdown-item">View Journal Entry</a></t>
+    </xpath>
+</template>
+
+
+<!-- trial balance templates -->
+<template id="template_coa_table_header" inherit_id="account_reports.main_table_header" primary="True">
+    <xpath expr="//thead//tr[hasclass('o_account_report_column_header')]" position="before">
+        <tr>
+            <th t-att-class="'o_account_report_column_header'" colspan="1"/>
+            <th t-att-class="'o_account_report_column_header text-center'" colspan="2">Initial Balance</th>
+            <t t-foreach="model.reverse(options['comparison'].get('periods'))" t-as="column_header">
+                <th t-att-class="'o_account_report_column_header text-center'" colspan="2">
+                    <t t-esc="column_header.get('string')"/>
+                </th>
+            </t>
+            <th t-att-class="'o_account_report_column_header text-center'" colspan="2">
+                <t t-esc="options['date'].get('string')"/>
+            </th>
+            <th t-att-class="'o_account_report_column_header text-center'" colspan="2">Total</th>
+        </tr>
+    </xpath>
+</template>
+
+<!-- stylesheets -->
+<template id="assets_financial_report">
+    <t t-call="web._assets_helpers"/>
+    <t t-call="web._assets_bootstrap"/>
+    <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/fonts.scss"/>
+    <link rel="stylesheet" type="text/scss" href="/account_reports/static/src/scss/account_financial_report.scss"/>
+    <link rel="stylesheet" type="text/scss" href="/account_reports/static/src/scss/account_report_print.scss"/>
+</template>
+
+<!-- This template is only used when printing a financial report to a PDF output -->
+<template id="print_template">
+    <t t-raw="'&lt;base href=%s&gt;' % base_url"/>
+    <html>
+        <head>
+            <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+            <t t-call-assets="account_reports.assets_financial_report" t-js="False"/>
+        </head>
+        <body class="o_account_reports_body_print">
+        </body>
+    </html>
+</template>
+</data>
+</odoo>

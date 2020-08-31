@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <record id="account_activity_view_form_popup" model="ir.ui.view">
+        <field name="name">mail.activity.form.inherit.account.tax</field>
+        <field name="model">mail.activity</field>
+        <field name="inherit_id" ref="mail.mail_activity_view_form_popup"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_done']" position="attributes">
+                  <attribute name="attrs">{'invisible': ['|', ('activity_category', '=', 'tax_report'), ('force_next', '=', True)]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='note']" position="attributes">
+                  <attribute name="attrs">{'invisible': [('activity_category', '=', 'tax_report')]}</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_move_form_vat_return" model="ir.ui.view">
+        <field name="name">account.move.form.vat.return</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="after">
+                <field name="is_tax_closing" invisible="1"/>
+                <div class="alert alert-info text-center" attrs="{'invisible': ['|', ('is_tax_closing', '!=', True),  ('state', '!=', 'draft')]}" role="alert">
+                    Proposition of tax closing journal entry.
+                    <button class="btn btn-link" string="-> Refresh" name="refresh_tax_entry" type="object" groups="account.group_account_invoice" style="padding: 0; vertical-align=baseline;"/>
+                </div>
+                <field name="tax_report_control_error" invisible="1"/>
+                <div class="alert alert-warning text-center" attrs="{'invisible': ['|', ('is_tax_closing', '!=', True),  ('tax_report_control_error', '!=', True)]}" role="alert">
+                    Some controls failed
+                </div>
+            </xpath>
+            <xpath expr="//div[hasclass('oe_button_box')]/button" position="before">
+                <button name="action_open_tax_report"
+                    class="oe_stat_button"
+                    icon="fa-book"
+                    type="object"
+                    string="Tax Report"
+                    attrs="{'invisible': [('is_tax_closing', '!=', True)]}">
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

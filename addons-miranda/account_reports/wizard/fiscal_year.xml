@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="setup_financial_year_opening_form" model="ir.ui.view">
+        <field name="name">account.financial.year.op.setup.wizard.form</field>
+        <field name="model">account.financial.year.op</field>
+        <field name="inherit_id" ref="account.setup_financial_year_opening_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet/group" position="inside">
+                <group string="Tax Return Periodicity">
+                    <field name="account_tax_periodicity" string="Periodicity"/>
+                    <label for="account_tax_periodicity_reminder_day"/>
+                    <div>
+                        <field name="account_tax_periodicity_reminder_day" class="text-center oe_inline" string="Reminder" no_label="1" style="width: 40px !important;"/> days after period
+                    </div>
+                    <field name="account_tax_periodicity_journal_id" string="Journal"/>
+                    <button name="%(account.action_tax_group)d" icon="fa-arrow-right" type="action" string="Configure your tax accounts" class="btn-link" colspan="2"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

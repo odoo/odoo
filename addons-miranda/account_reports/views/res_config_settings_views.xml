@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.account.reports</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <div id="dynamic_report" position="attributes">
+                <attribute name="attrs">{'invisible': [('module_account_reports', '!=', False)]}</attribute>
+            </div>
+            <div id="fiscalyear" position="after">
+                <div class="col-lg-6 o_setting_box" id="account_tax_periodicity">
+                    <div class="o_setting_left_pane"/>
+                    <div class="o_setting_right_pane">
+                        <span class="o_form_label">Tax Return Periodicity</span>
+                        <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." role="img" aria-label="Values set here are company-specific." groups="base.group_multi_company"/>
+                        <div class="text-muted">
+                            How often tax returns have to be made
+                        </div>
+                        <div class="content-group">
+                            <div class="row mt16">
+                                <label string="Periodicity" for="account_tax_periodicity" class="col-lg-3 o_light_label"/>
+                                <field name="account_tax_periodicity"/>
+                            </div>
+                            <div class="row">
+                                <label string="Reminder" for="account_tax_periodicity_reminder_day" class="col-lg-3 o_light_label"/>
+                                <div class="content-group">
+                                    <field name="account_tax_periodicity_reminder_day" class="text-center oe_inline" /> days after period
+                                </div>
+                            </div>
+                            <div class="row">
+                                <label string="Journal" for="account_tax_periodicity_journal_id" class="col-lg-3 o_light_label"/>
+                                <field name="account_tax_periodicity_journal_id" attrs="{'required': [('has_chart_of_accounts', '=', True)]}"/>
+                            </div>
+                            <div class="mt8">
+                                <button name="%(account.action_tax_group)d" icon="fa-arrow-right" type="action" string="Configure your tax accounts" class="btn-link"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="analytic" position="after">
+                <h2 groups="account.group_account_user" attrs="{'invisible': [('module_account_reports', '=', False)]}">Reporting</h2>
+                <div class="row mt16 o_settings_container" id="account_reports_settings"
+                     groups="account.group_account_user" attrs="{'invisible': [('module_account_reports', '=', False)]}">
+                    <div class="col-12 col-lg-6 o_setting_box" title="This allows you to choose the position of totals in your financial reports.">
+                        <div class="o_setting_left_pane">
+                            <field name="totals_below_sections"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="totals_below_sections"/>
+                            <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company"/>
+                            <div class="text-muted">
+                                When ticked, totals and subtotals appear below the sections of the report
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane"/>
+                        <div class="o_setting_right_pane">
+                            <button name="%(account.action_check_hash_integrity)d" type="action" string="Download the Data Inalterability Check Report" class="oe_link" id="action_hash_integrity"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </field>
+    </record>
+
+</odoo>

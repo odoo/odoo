@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates>
+
+    <t t-name="accountReports.footnote_dialog">
+        <form role="form">
+            <textarea name="note" rows='4' class="js_account_reports_footnote_note" t-att-data-line="id" placeholder="Insert foot note here"><t t-esc="text"/></textarea>
+        </form>
+    </t>
+
+    <t t-name="accountReports.buttons">
+        <t t-foreach="buttons" t-as="button">
+            <button type="button" class="btn btn-primary" t-att-action="button.action"><t t-esc="button.name"/></button>
+        </t>
+    </t>
+
+    <div t-name='paymentDateForm'>
+        <form role="form">
+            <label for="expectedDate">Expected Payment Date</label>
+            <div class='o_account_reports_payment_date_picker' />
+            <input type="hidden" id='target_id' t-att-value='target_id' />
+        </form>
+    </div>
+
+    <div t-name='m2mWidgetTable' class="o_form_view">
+        <table class="o_group o_inner_group">
+            <tr t-foreach="fields" t-as="field">
+                <td class="o_td_label"><label class="o_form_label" t-esc="fields[field].label"/></td>
+                <td t-att-id="field + '_field'" style="min-width:200px;"/>
+            </tr>
+        </table>
+    </div>
+
+</templates>

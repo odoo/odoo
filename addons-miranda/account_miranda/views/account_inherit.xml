@@ -47,5 +47,19 @@
 
     	<menuitem id="menu_accounting_move_inherit_id" parent="root_accounting_plan_list" name="Apuntes contables" action="action_account_moves_all_inherit_id" sequence="1"/>
 
+    	<menuitem id="menu_accounting_movements_id" parent="root_accounting_plan_list" name="Movimientos" sequence="2"/>
+
+    	<menuitem id="menu_accounting_invoice_out_movements_id" parent="menu_accounting_movements_id" name="Facturas cliente" action="account.action_move_out_invoice_type" sequence="0"/>
+
+    	<menuitem id="menu_accounting_invoice_in_movements_id" parent="menu_accounting_movements_id" name="Facturas proveedor" action="account.action_move_in_invoice_type" sequence="1"/>
+
+    	<menuitem id="menu_accounting_invoice_in_movements_id" parent="menu_accounting_movements_id" name="Facturas proveedor" action="account.action_move_in_invoice_type" sequence="2"/>
+
+    	<menuitem id="menu_accounting_payment_movements_id" parent="menu_accounting_movements_id" name="Plazos de pago" action="account.action_payment_term_form" sequence="2"/>
+
+    	<menuitem id="menu_accounting_report_inherit_id" parent="root_accounting_plan_list" name="Informes" sequence="3"/>
+
+    	<menuitem id="menu_accounting_report_balance_general_id" parent="menu_accounting_report_inherit_id" name="Balance general" action="account_reports.account_financial_html_report_action_2" sequence="1"/>
+
     </data>
 </odoo>

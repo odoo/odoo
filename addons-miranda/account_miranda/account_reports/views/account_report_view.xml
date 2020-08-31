@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Account Reports Configuration -->
+        <record id="view_account_financial_report_form" model="ir.ui.view">
+            <field name="name">account.financial.html.report.form</field>
+            <field name="model">account.financial.html.report</field>
+            <field name="arch" type="xml">
+                <form string="Account Report">
+                    <sheet>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1><field name="name"/></h1>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </div>
+                        <group string="Report Definition">
+                            <group>
+                                <field name="date_range"/>
+                                <field name="tax_report"/>
+                            </group>
+                            <group>
+                                <field name="debit_credit"/>
+                                <field name="generated_menu_id"/>
+                            </group>
+                        </group>
+                        <group string="Available Filters &amp; Options">
+                            <group>
+                                <field name="comparison"/>
+                                <field name="unfold_all_filter"/>
+                                <field name="hierarchy_option"/>
+                            </group>
+                            <group>
+                                <field name="show_journal_filter"/>
+                                <field name="analytic" groups="analytic.group_analytic_accounting"/>
+                                <field name="applicable_filters_ids" widget="many2many_tags" context="{'default_model_id': 'account.move.line'}"/>
+                            </group>
+                        </group>
+                        <group string="Report Lines">
+                            <field name="line_ids" nolabel="1"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="view_account_financial_report_tree" model="ir.ui.view">
+            <field name="name">account.financial.html.report.tree</field>
+            <field name="model">account.financial.html.report</field>
+            <field name="arch" type="xml">
+                <tree string="Account Report">
+                    <field name="name"/>
+                    <field name="parent_id"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                </tree>
+            </field>
+        </record>
+        <record id="action_account_financial_report_tree" model="ir.actions.act_window">
+            <field name="name">Financial Reports</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">account.financial.html.report</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'account_reports.usr_created': True}</field>
+            <field name="view_id" ref="view_account_financial_report_tree"/>
+        </record>
+
+        <record id="view_account_financial_report_line_form" model="ir.ui.view">
+            <field name="name">account.financial.html.report.line.form</field>
+            <field name="model">account.financial.html.report.line</field>
+            <field name="arch" type="xml">
+                <form string="Report Line">
+                    <group>
+                      <group string="Main Info">
+                        <field name="name"/>
+                        <field name="code"/>
+                        <field name="sequence"/>
+                        <field name="parent_id"/>
+                      </group>
+                      <group string="Computation">
+                        <field name="formulas"/>
+                        <field name="domain"/>
+                        <field name="groupby"/>
+                        <field name="special_date_changer"/>
+                      </group>
+                      <group string="Cosmetics">
+                        <field name="level"/>
+                        <field name="green_on_positive"/>
+                        <field name="figure_type"/>
+                        <field name="show_domain"/>
+                        <field name="print_on_new_page"/>
+                        <field name="hide_if_zero"/>
+                        <field name="hide_if_empty"/>
+                      </group>
+                      <group string="Children Lines">
+                        <field name="children_ids" nolabel="1"/>
+                      </group>
+                    </group>
+                </form>
+            </field>
+        </record>
+        <record id="view_account_financial_report_line_tree" model="ir.ui.view">
+            <field name="name">account.financial.html.report.line.tree</field>
+            <field name="model">account.financial.html.report.line</field>
+            <field name="arch" type="xml">
+                <tree string="Report Lines">
+                    <field name="sequence" widget="handle"/>
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="level"/>
+                    <field name="figure_type"/>
+                </tree>
+            </field>
+        </record>
+        <menuitem id="menu_account_financial_reports_tree" name="Financial Reports" parent="account.account_management_menu" action="account_reports.action_account_financial_report_tree" groups="base.group_no_one"/>
+
+    </data>
+</odoo>

@@ -12,7 +12,7 @@
     'category': 'Account',
     'version': '1.0',
     'depends': [ 
-        'account',
+        'account','account_reports','stock','purchase','sale_management',
     ],
     'data': [
         'views/account_inherit.xml'

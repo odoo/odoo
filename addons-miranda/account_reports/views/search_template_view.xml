@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+
+    <template id="search_template_date_filter">
+        <a type="button" class="dropdown-toggle" data-toggle="dropdown">
+            <span class="fa fa-calendar" title="Dates" role="img" aria-label="Dates"/>
+            <t t-if="options['date'].get('string') and options['date'].get('filter') != 'custom'"><t t-esc="options['date']['string']"/></t>
+            <t t-if="options['date'].get('filter') == 'custom'">
+                <t t-if="options['date']['mode'] == 'single'">Date: <span class="js_format_date"><t t-esc="options['date']['date_to']"/></span></t>
+                <t t-if="options['date']['mode'] == 'range'">From: <span class="js_format_date"><t t-esc="options['date']['date_from']"/></span> <br/><span class="o_reports_date_to">to: <span class="js_format_date"><t t-esc="options['date']['date_to']"/></span></span></t>
+            </t>
+        </a>
+        <div class="dropdown-menu o_filters_menu" role="menu">
+            <t t-if="options['date']['mode'] == 'single'">
+                <a role="menuitem" class="dropdown-item js_account_report_date_filter" title="Today" data-filter="today">Today</a>
+                <a role="menuitem" class="dropdown-item js_account_report_date_filter" title="End of Last Month" data-filter="last_month">End of Last Month</a>
+                <a role="menuitem" class="dropdown-item js_account_report_date_filter" title="End of Last Quarter" data-filter="last_quarter">End of Last Quarter</a>
+                <a role="menuitem" class="dropdown-item js_account_report_date_filter" title="End of Last Financial Year" data-filter="last_year">End of Last Financial Year</a>
+            </t>
+            <t t-if="options['date']['mode'] == 'range'">
+                <a role="menuitem" class="dropdown-item js_account_report_date_filter" title="This Month" data-filter="this_month">This Month</a>
+                <a role="menuitem" class="dropdown-item js_account_report_date_filter" title="This Quarter" data-filter="this_quarter">This Quarter</a>
+                <a role="menuitem" class="dropdown-item js_account_report_date_filter" title="This Financial Year" data-filter="this_year">This Financial Year</a>
+                <div role="separator" class="dropdown-divider"></div>
+                <a role="menuitem" class="dropdown-item js_account_report_date_filter" title="Last Month" data-filter="last_month">Last Month</a>
+                <a role="menuitem" class="dropdown-item js_account_report_date_filter" title="Last Quarter" data-filter="last_quarter">Last Quarter</a>
+                <a role="menuitem" class="dropdown-item js_account_report_date_filter" title="Last Financial Year" data-filter="last_year">Last Financial Year</a>
+            </t>
+            <div role="separator" class="dropdown-divider"></div>
+            <a role="menuitem" class="dropdown-item js_foldable_trigger o_closed_menu" data-filter='custom_filter_date'>Custom</a>
+            <div class="o_foldable_menu o_closed_menu o_account_report_search" data-filter='custom_filter_date'>
+                <t t-if="options['date']['mode'] == 'range'">
+                    <label class="custom-date" for="date_from">Start Date :</label>
+                    <div class="form-group custom-date">
+                        <div class='o_datepicker js_account_reports_datetimepicker' t-att-data-default-value="options['date']['date_from']">
+                            <input type='text' class="o_datepicker_input" name="date_from" />
+                            <span class="o_datepicker_button"/>
+                        </div>
+                    </div>
+                </t>
+                <label class="custom-date" for="date_to" t-if="options['date']['mode'] == 'single'">End Date :</label>
+                <label class="custom-date" for="date_to" t-if="options['date']['mode'] == 'range'">Date :</label>
+                <div class="form-group custom-date">
+                    <div class='o_datepicker js_account_reports_datetimepicker' t-att-data-default-value="options['date']['date_to']">
+                        <input type='text' class="o_datepicker_input" name="date_to" />
+                        <span class="o_datepicker_button"/>
+                    </div>
+                </div>
+                <button type="button" class="btn btn-primary js_account_report_date_filter" data-filter="custom">Apply</button>
+            </div>
+        </div>
+    </template>
+
+    <template id="search_template_comparison">
+        <a type="button" class="dropdown-toggle" data-toggle="dropdown">
+            <span class="fa fa-bar-chart"/> Comparison:
+            <t t-if="options['comparison'].get('string') and options['comparison'].get('filter') != 'custom'"><t t-esc="options['comparison']['string']"/></t>
+            <t t-if="options['comparison'].get('filter') == 'custom'">
+                <t t-if="options['date']['mode'] == 'range'"><span class="o_reports_date_to"><span class="js_format_date"><t t-esc="options['comparison']['date_from']"/></span></span> <span class="o_reports_date_to"> - <span class="js_format_date"><t t-esc="options['comparison']['date_to']"/></span></span></t>
+                <t t-if="options['date']['mode'] == 'single'">Date: <span class="js_format_date"><t t-esc="options['comparison']['date_to']"/></span></t>
+            </t>
+        </a>
+        <div class="dropdown-menu o_filters_menu" role="menu">
+            <a role="menuitem" title="No Comparison" data-filter="no_comparison" class="dropdown-item js_account_report_date_cmp_filter">No Comparison</a>
+            <div role="separator" class="dropdown-divider"></div>
+            <a role="menuitem" class="dropdown-item js_foldable_trigger o_closed_menu" data-filter='previous_period_filter'>Previous Period</a>
+            <div class="o_foldable_menu o_closed_menu o_account_report_search" data-filter='previous_period_filter'>
+                <label for="periods_number">Number of periods :</label><br />
+                <input type="number" name="periods_number" t-att-value="options['comparison'].get('number_period')"/><br />
+                <button type="button" class="btn btn-primary js_account_report_date_cmp_filter" data-filter='previous_period'>Apply</button>
+            </div>
+            <div role="separator" class="dropdown-divider"></div>
+            <a role="menuitem" class="dropdown-item js_foldable_trigger o_closed_menu" data-filter='same_last_year_filter'>Same Period Last Year</a>
+            <li class="o_foldable_menu o_closed_menu o_account_report_search" data-filter='same_last_year_filter'>
+                <label for="periods_number">Number of periods :</label><br />
+                <input type="number" name="periods_number" t-att-value="options['comparison'].get('number_period')"/><br />
+                <button type="button" class="btn btn-primary js_account_report_date_cmp_filter" data-filter='same_last_year'>Apply</button>
+            </li>
+            <div role="separator" class="dropdown-divider"></div>
+            <a role="menuitem" class="dropdown-item js_foldable_trigger o_closed_menu" data-filter='custom_cmp_filter'>Custom</a>
+            <div class="o_foldable_menu o_closed_menu o_account_report_search" data-filter='custom_cmp_filter'>
+                <t t-if="options['date']['mode'] == 'range'">
+                    <label class="custom-date" for="date_from_cmp">Start Date :</label>
+                    <div class="form-group custom-date">
+                        <div class='o_datepicker js_account_reports_datetimepicker' t-att-data-default-value="options['comparison']['date_from']">
+                            <input type='text' class="o_datepicker_input" name="date_from_cmp" />
+                            <span class="o_datepicker_button"/>
+                        </div>
+                    </div>
+                </t>
+                <label class="custom-date" for="date_to_cmp" t-if="options['date']['mode'] == 'range'">End Date :</label>
+                <label class="custom-date" for="date_to_cmp" t-if="options['date']['mode'] == 'single'">Date :</label>
+                <div class="form-group custom-date">
+                    <div class='o_datepicker js_account_reports_datetimepicker' t-att-data-default-value="options['comparison']['date_to']">
+                        <input type='text' class="o_datepicker_input" name="date_to_cmp" />
+                        <span class="o_datepicker_button"/>
+                    </div>
+                </div>
+                <button type="button" class="btn btn-primary js_account_report_date_cmp_filter" data-filter='custom'>Apply</button>
+            </div>
+        </div>
+    </template>
+
+    <template id="search_template_extra_options">
+        <a type="button" class="dropdown-toggle" data-toggle="dropdown">
+            <span class="fa fa-filter"/> Options:
+            <t t-if="options.get('all_entries') != None" groups="account.group_account_user">
+                <t t-if="options['all_entries']">With Draft Entries</t>
+                <t t-if="not options['all_entries']">Posted Entries Only</t>
+            </t>
+            <t t-if="options.get('unreconciled') != None">
+                <t t-if="options.get('all_entries') != None">,</t>
+                <t t-if="options['unreconciled']">Only Show Unreconciled Entries</t>
+            </t>
+        </a>
+        <div class="dropdown-menu o_filters_menu" role="menu">
+            <a role="menuitem" class="dropdown-item js_account_report_bool_filter" t-if="options.get('all_entries') != None" title="Include unposted entries" data-filter="all_entries" groups="account.group_account_user">Include Unposted Entries</a>
+            <a role="menuitem" class="dropdown-item js_account_report_bool_filter" t-if="options.get('hierarchy') != None" title="Hierarchy" data-filter="hierarchy">Hierarchy and Subtotals</a>
+            <a role="menuitem" class="dropdown-item js_account_report_bool_filter" t-if="options.get('unreconciled') != None" title="Unreconciled" data-filter="unreconciled">Only Show Unreconciled Entries</a>
+            <a role="menuitem" class="dropdown-item js_account_report_bool_filter" t-if="options.get('unfold_all') != None" title="Unfold" data-filter="unfold_all">Unfold All</a>
+        </div>
+    </template>
+
+    <template id="search_template_journals">
+        <a type="button" class="dropdown-toggle" data-toggle="dropdown">
+            <span class="fa fa-book"/>
+            Journals:
+            <t t-set="selected_journals" t-value="options.get('name_journal_group') or ', '.join(journal.get('code') for journal in options['journals'] if journal.get('selected'))"/>
+            <t t-if="selected_journals">
+                <t t-esc="selected_journals"/>
+            </t>
+            <t t-else="">
+                All
+            </t>
+        </a>
+        <div class="dropdown-menu o_filters_menu" role="menu">
+            <t t-foreach="options['journals']" t-as="j">
+                <t t-if="j.get('id') == 'divider'">
+                    <div role="separator" class="dropdown-divider"/>
+                    <b role="menuitem" class="ml4 dropdown-item-text"><t t-esc="j.get('name')"/></b>
+                    <div role="separator" class="dropdown-divider"/>
+                </t>
+                <t t-if="j.get('id') != 'divider'">
+                    <t t-if="j.get('id') == 'group'">
+                        <a role="menuitem" class="dropdown-item js_account_report_group_choice_filter" data-filter="journals" t-att-data-id="j.get('id')" t-att-data-member-ids="j.get('ids')">
+                            <t t-esc="j.get('name')"/>
+                        </a>
+                    </t>
+                    <t t-else="">
+                        <a role="menuitem" class="dropdown-item js_account_report_choice_filter" t-att-title="j.get('name')+ '-' + j.get('code')" t-att-data-id="j.get('id')" data-filter="journals">
+                            <t t-esc="j.get('name')"/>
+                        </a>
+                    </t>
+                </t>
+            </t>
+        </div>
+    </template>
+
+    <template id="search_template_account_type">
+        <a type="button" class="dropdown-toggle" data-toggle="dropdown">
+            <span class="fa fa-user"/>
+            Account:
+            <t t-set="account_value" t-value="'Both'"/>
+            <t t-foreach="options['account_type']" t-as="a">
+                <t t-if="a.get('selected') == True">
+                    <t t-set="account_value" t-value="''"/>
+                    <t t-esc="a.get('name')"/>
+                </t>
+            </t>
+            <t t-esc="account_value"/>
+        </a>
+        <div class="dropdown-menu o_filters_menu" role="menu">
+            <t t-foreach="options['account_type']" t-as="a">
+                <a role="menuitem" class="dropdown-item js_account_report_choice_filter" t-att-title="a.get('name')" t-att-data-id="a.get('id')" data-filter="account_type"><t t-esc="a.get('name')"/></a>
+            </t>
+        </div>
+    </template>
+
+    <template id="search_template_analytic">
+        <a t-if="options.get('analytic')" type="button" class="dropdown-toggle account_analytic_filter" data-toggle="dropdown">
+            <span class="fa fa-folder-open"/> Analytic
+        </a>
+        <ul class="dropdown-menu o_filters_menu" role="menu">
+            <li class="o_account_report_search js_account_analytic_m2m"/>
+        </ul>
+    </template>
+
+    <template id="search_template_ir_filters">
+        <a type="button" class="dropdown-toggle" data-toggle="dropdown">
+            <span class="fa fa-filter"/>
+            Filters:
+            <t t-set="filter_name" t-value="'None'"/>
+            <t t-foreach="options['ir_filters']" t-as="ir_filter">
+                <t t-if="ir_filter['selected']">
+                    <t t-set="filter_name" t-value="ir_filter['name']"/>
+                </t>
+            </t>
+            <t t-esc="filter_name"/>
+        </a>
+        <div class="dropdown-menu o_filters_menu" role="menu">
+            <t t-foreach="options['ir_filters']" t-as="ir_filter">
+                <a t-att-title="ir_filter['name']"
+                    t-att-data-id="ir_filter['id']"
+                    data-filter="ir_filters"
+                    class="dropdown-item js_account_report_choice_filter"
+                    role="menuitem">
+                    <t t-esc="ir_filter['name']"/>
+                </a>
+            </t>
+            <div class="dropdown-divider" role="separator"></div>
+        </div>
+    </template>
+
+    <template id="search_template_partner">
+        <a t-if="options.get('partner')" type="button" class="dropdown-toggle account_partner_filter" data-toggle="dropdown">
+            <span class="fa fa-folder-open"/> Partners
+        </a>
+        <ul class="dropdown-menu o_filters_menu" role="menu">
+            <li class="o_account_report_search js_account_partner_m2m"/>
+        </ul>
+    </template>
+
+    <template id="search_template">
+        <div class="btn-group o_dropdown o_account_reports_filter_date" t-if="options.get('date') != None">
+            <t t-call="account_reports.search_template_date_filter"/>
+        </div>
+        <div class="btn-group o_dropdown o_account_reports_filter_date_cmp" t-if="options.get('comparison') != None">
+            <t t-call="account_reports.search_template_comparison"/>
+        </div>
+        <div class="btn-group o_dropdown o_account_reports_filter_journals" t-if="options.get('journals') != None">
+            <t t-call="account_reports.search_template_journals"/>
+        </div>
+        <div class="btn-group o_dropdown o_account_reports_filter_account_type" t-if="options.get('account_type') != None">
+            <t t-call="account_reports.search_template_account_type"/>
+        </div>
+        <div class="btn-group o_dropdown o_account_reports_filter_analytic" t-if="options.get('analytic') != None or options.get('analytic_tags') != None">
+            <t t-call="account_reports.search_template_analytic"/>
+        </div>
+        <div class="btn-group o_dropdown o_account_reports_filter_ir_filters" t-if="options.get('ir_filters') != None">
+            <t t-call="account_reports.search_template_ir_filters"/>
+        </div>
+        <div class="btn-group o_dropdown o_account_reports_filter_partner" t-if="options.get('partner')">
+            <t t-call="account_reports.search_template_partner"/>
+        </div>
+        <div id="extra_options_dropdown" class="btn-group o_dropdown o_account_reports_filter_bool" t-if="options.get('cash_basis') != None or options.get('all_entries') != None or options.get('unfold_all') != None">
+            <t t-call="account_reports.search_template_extra_options"/>
+        </div>
+    </template>
+
+    <template id="search_template_extra_options_generic_tax_report" inherit_id="account_reports.search_template_extra_options" primary="True">
+        <xpath expr="//div[@role='menu']" position="inside">
+            <a role="menuitem" class="dropdown-item js_account_report_bool_filter" t-if="options.get('tax_grids') != None" title="Group amounts by tax grid" data-filter="tax_grids" groups="account.group_account_user">Use Tax Grid</a>
+        </xpath>
+    </template>
+
+    <template id="search_template_generic_tax_report" inherit_id="account_reports.search_template" primary="True">
+        <xpath expr="//div[@id='extra_options_dropdown']/t" position="replace">
+            <t t-call="account_reports.search_template_extra_options_generic_tax_report"/>
+        </xpath>
+    </template>
+
+
+    </data>
+</odoo>
