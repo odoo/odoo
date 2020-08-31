@@ -13,6 +13,8 @@ Fetch the sources & configure Git
 Run the server
 ==============
 
+the database created should be called ``rd-demo``
+
 The developer mode
 ==================
 
