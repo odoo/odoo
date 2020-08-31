@@ -71,10 +71,19 @@ class AccountEdiTestCommon(AccountTestInvoicingCommon):
             expected_etree = self.with_applied_xpath(expected_etree, applied_xpath)
         self.assertXmlTreeEqual(current_etree, expected_etree)
 
-    def _process_documents_web_services(self, moves):
+    def _process_documents_web_services(self, moves, formats_to_return=None):
+        """ Generates and returns EDI files for the specified moves.
+        formats_to_return is an optional parameter used to pass a set of codes from
+        the formats we want to return the files for (in case we want to test specific formats).
+        Other formats will still generate documents, they simply won't be returned.
+        """
         moves.edi_document_ids.with_context(edi_test_mode=True)._process_documents_web_services()
 
-        attachments = moves.edi_document_ids.attachment_id
+        documents_to_return = moves.edi_document_ids
+        if formats_to_return != None:
+            documents_to_return = documents_to_return.filtered(lambda x: x.edi_format_id.code in formats_to_return)
+
+        attachments = documents_to_return.attachment_id
 
         data_str_list = []
         for attachment in attachments.with_context(bin_size=False):
