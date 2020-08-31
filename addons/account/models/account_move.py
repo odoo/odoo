@@ -2403,11 +2403,16 @@ class AccountMove(models.Model):
                     user_id=move.journal_id.sale_activity_user_id.id or move.invoice_user_id.id,
                 )
 
+        customer_count, supplier_count = defaultdict(int), defaultdict(int)
         for move in to_post:
             if move.is_sale_document():
-                move.partner_id._increase_rank('customer_rank')
+                customer_count[move.partner_id] += 1
             elif move.is_purchase_document():
-                move.partner_id._increase_rank('supplier_rank')
+                supplier_count[move.partner_id] += 1
+        for partner, count in customer_count.items():
+            partner._increase_rank('customer_rank', count)
+        for partner, count in supplier_count.items():
+            partner._increase_rank('supplier_rank', count)
 
         # Trigger action for paid invoices in amount is zero
         to_post.filtered(
