@@ -1134,7 +1134,6 @@ class PaymentToken(models.Model):
     """
         @TBE: stolen shamelessly from there https://www.paypal.com/us/selfhelp/article/why-is-there-a-$1.95-charge-on-my-card-statement-faq554
         Most of them are ~1.50€s
-        TODO: See this with @AL & @DBO
     """
     VALIDATION_AMOUNTS = {
         'CAD': 2.45,
