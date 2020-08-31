@@ -3,6 +3,7 @@
 
 from odoo import http, _
 from odoo.http import request
+from odoo.addons.rating.models.rating import RATING_LIMIT_SATISFIED, RATING_LIMIT_OK, RATING_LIMIT_MIN
 from odoo.addons.im_livechat.controllers.main import LivechatController
 
 
@@ -36,8 +37,7 @@ class WebsiteLivechat(LivechatController):
         ratings_per_partner = {partner_id: dict(great=0, okay=0, bad=0)
                                for partner_id in ratings.mapped('rated_partner_id.id')}
         total_ratings_per_partner = dict.fromkeys(ratings.mapped('rated_partner_id.id'), 0)
-        rating_texts = {10: 'great', 5: 'okay', 1: 'bad'}
-
+        rating_texts = {RATING_LIMIT_SATISFIED: 'great', RATING_LIMIT_OK: 'okay', RATING_LIMIT_MIN: 'bad'}
         for rating in ratings:
             partner_id = rating.rated_partner_id.id
             ratings_per_partner[partner_id][rating_texts[rating.rating]] += 1
