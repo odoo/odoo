@@ -2141,7 +2141,7 @@ class AccountMove(models.Model):
                         mapping[inv_rep_line] = ref_rep_line
             return mapping
 
-        move_vals = self.with_context(include_business_fields=True,active_test=False).copy_data(default=default_values)[0]
+        move_vals = self.with_context(include_business_fields=True).copy_data(default=default_values)[0]
 
         tax_repartition_lines_mapping = compute_tax_repartition_lines_mapping(move_vals)
 
