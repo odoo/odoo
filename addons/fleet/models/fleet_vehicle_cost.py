@@ -6,6 +6,7 @@ from odoo.exceptions import UserError
 
 from dateutil.relativedelta import relativedelta
 
+
 class FleetVehicleLogContract(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _name = 'fleet.vehicle.log.contract'
@@ -112,7 +113,7 @@ class FleetVehicleLogContract(models.Model):
                 'fleet.mail_act_fleet_contract_to_renew', contract.expiration_date,
                 user_id=contract.user_id.id)
 
-        expired_contracts = self.search([('state', 'not in', ['expired', 'closed']), ('expiration_date', '<',fields.Date.today() )])
+        expired_contracts = self.search([('state', 'not in', ['expired', 'closed']), ('expiration_date', '<', fields.Date.today())])
         expired_contracts.write({'state': 'expired'})
 
         futur_contracts = self.search([('state', 'not in', ['futur', 'closed']), ('start_date', '>', fields.Date.today())])
@@ -123,6 +124,7 @@ class FleetVehicleLogContract(models.Model):
 
     def run_scheduler(self):
         self.scheduler_manage_contract_expiration()
+
 
 class FleetVehicleLogServices(models.Model):
     _name = 'fleet.vehicle.log.services'

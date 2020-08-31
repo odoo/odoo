@@ -26,15 +26,12 @@
                             type="action"
                             groups="hr_contract.group_hr_contract_manager">
                             <div attrs="{'invisible' : [('first_contract_date', '=', False)]}" class="o_stat_info">
-                                <span class="o_stat_text text-success" attrs="{'invisible' : [('contract_warning', '=', True)]}" title="In Contract Since"> In Contract Since</span>
+                                <span class="o_stat_text">Contract</span>
                                 <span class="o_stat_value text-success" attrs="{'invisible' : [('contract_warning', '=', True)]}">
                                     <field name="first_contract_date" readonly="1"/>
                                 </span>
-                                <span class="o_stat_text text-danger" attrs="{'invisible' : [('contract_warning', '=', False)]}" title="In Contract Since">
-                                    In Contract Since
-                                </span>
                                 <span class="o_stat_value text-danger" attrs="{'invisible' : [('contract_warning', '=', False)]}">
-                                    <field name="first_contract_date" readonly="1"/>
+                                    <field name="contract_expiration_date" readonly="1"/>
                                 </span>
                             </div>
                             <div attrs="{'invisible' : [('first_contract_date', '!=', False)]}" class="o_stat_info">
