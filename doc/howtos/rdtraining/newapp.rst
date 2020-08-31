@@ -61,23 +61,25 @@ suggest you first create the folder ``/home/<user>/src/custom``. In this folder 
 A module must contain at least 2 files: the ``__manifest__.py`` file and a ``__init__.py`` file.
 The ``__init__.py`` file can remain empty for now, so we'll come back to it in the next chapter.
 The ``__manifest__.py`` file, on the other hand, must describe our module and cannot remain empty.
+Its only required field is the ``name``, but it usually contains much more information.
 
 Take a look at the
 `CRM file <https://github.com/odoo/odoo/blob/fc92728fb2aa306bf0e01a7f9ae1cfa3c1df0e10/addons/crm/__manifest__.py#L1-L67>`__
-as an example. On top of providing the description of the module, it lists its dependencies
-(``depends``). A dependency means that the Odoo framework will ensure that these are installed
-before our module is installed. Moreover, if one of the dependency is uninstalled our module will
-also be uninstalled. Think about your favorite Linux distribution packaging tool (``apt``, ``yum``,
-``pacman``...): Odoo works in the same fashion.
+as an example. On top of providing the description of the module (``name``, ``category``,
+``summary``, ``website``...), it lists its dependencies (``depends``). A dependency means that the
+Odoo framework will ensure that these are installed before our module is installed. Moreover, if
+one of the dependency is uninstalled our module will also be uninstalled. Think about your favorite
+Linux distribution packaging tool (``apt``, ``yum``, ``pacman``...): Odoo works in the same fashion.
 
-.. exercise:: Create the required addon files
+.. exercise:: Creation the required addon files
 
     Create the following folders and files:
 
     - ``/home/<user>/src/custom/estate/__init__.py``
     - ``/home/<user>/src/custom/estate/__manifest__.py``
 
-    The module should have a name, and depends on the two framework modules: ``base`` and ``web``.
+    The ``__manifest__.py`` file should only define the name and the dependencies of our modules.
+    Two framework modules are necessary: ``base`` and ``web``.
 
 
 Restart the Odoo server and add the ``custom`` folder to the ``addons-path``:
