@@ -739,9 +739,7 @@ QUnit.test('read more links becomes read less after being clicked', async functi
         "read more/less link should contain 'read more' as text"
     );
 
-    await afterNextRender(() => {
-        document.querySelector('.o_Message_readMoreLess').click();
-    });
+    document.querySelector('.o_Message_readMoreLess').click();
     assert.strictEqual(
         document.querySelector('.o_Message_readMoreLess').textContent,
         'read less',
