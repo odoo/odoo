@@ -17,7 +17,7 @@ from psycopg2.extensions import TransactionRollbackError
 import werkzeug
 from werkzeug.utils import escape as _escape
 
-from odoo.tools import pycompat, freehash
+from odoo.tools import pycompat, freehash, frozendict
 
 import builtins
 builtin_defaults = {name: getattr(builtins, name) for name in dir(builtins)}
@@ -206,26 +206,6 @@ def foreach_iterator(base_ctx, enum, name):
 _FORMAT_REGEX = re.compile(
     # ( ruby-style )|(  jinja-style  )
     r'(?:#\{(.+?)\})|(?:\{\{(.+?)\}\})')
-
-
-class frozendict(dict):
-    """ An implementation of an immutable dictionary. """
-    def __delitem__(self, key):
-        raise NotImplementedError("'__delitem__' not supported on frozendict")
-    def __setitem__(self, key, val):
-        raise NotImplementedError("'__setitem__' not supported on frozendict")
-    def clear(self):
-        raise NotImplementedError("'clear' not supported on frozendict")
-    def pop(self, key, default=None):
-        raise NotImplementedError("'pop' not supported on frozendict")
-    def popitem(self):
-        raise NotImplementedError("'popitem' not supported on frozendict")
-    def setdefault(self, key, default=None):
-        raise NotImplementedError("'setdefault' not supported on frozendict")
-    def update(self, *args, **kwargs):
-        raise NotImplementedError("'update' not supported on frozendict")
-    def __hash__(self):
-        return hash(frozenset((key, freehash(val)) for key, val in self.items()))
 
 
 ####################################
