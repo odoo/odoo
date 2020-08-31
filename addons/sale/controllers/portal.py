@@ -263,7 +263,7 @@ class CustomerPortal(CustomerPortal):
 
         return request.redirect(order_sudo.get_portal_url(query_string=query_string))
 
-    # note dbo: website_sale code
+    # note: website_sale code
     @http.route(['/my/orders/<int:order_id>/transaction/'], type='json', auth="public", website=True)
     def payment_transaction_token(self, acquirer_id, order_id, save_token=False, access_token=None, **kwargs):
         """ Json method that creates a payment.transaction, used to create a

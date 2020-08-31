@@ -64,7 +64,7 @@ class TestSaleOrder(TestSaleCommon):
         """ Test the sales order flow (invoicing and quantity updates)
             - Invoice repeatedly while varrying delivered quantities and check that invoice are always what we expect
         """
-        # DBO TODO: validate invoice and register payments
+        # TODO?: validate invoice and register payments
         self.sale_order.order_line.read(['name', 'price_unit', 'product_uom_qty', 'price_total'])
 
         self.assertEqual(self.sale_order.amount_total, 1240.0, 'Sale: total amount is wrong')
