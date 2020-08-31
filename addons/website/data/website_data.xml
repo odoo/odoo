@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <data>
         <!-- split between ir_ui_view & website_page record to keep external_id on ir_ui_view -->
         <record id="homepage" model="ir.ui.view">
             <field name="name">Home</field>
@@ -65,7 +64,6 @@
                 </t>
             </field>
         </record>
-    </data>
 
     <template id="cookie_policy" name="Cookie Policy">
         <t t-call="website.layout">
@@ -226,20 +224,27 @@
             <field name="sequence" type="int">60</field>
         </record>
 
-        <record id="default_website" model="website">
-            <field name="name">My Website</field>
-            <field name="domain"></field>
-            <field name="company_id" ref="base.main_company"/>
-            <field name="user_id" ref="base.public_user"/>
-            <!-- Correct homepage will be set during bootstraping -->
-        </record>
+        <data nodelete="1">
+            <record id="default_website" model="website">
+                <field name="name">My Website</field>
+                <field name="domain"></field>
+                <field name="company_id" ref="base.main_company"/>
+                <field name="user_id" ref="base.public_user"/>
+                <!-- Correct homepage will be set during bootstraping -->
+            </record>
 
-        <!-- Open website on install -->
-        <record id="action_website" model="ir.actions.act_url">
-            <field name="name">Website</field>
-            <field name="url">/</field>
-            <field name="target">self</field>
-        </record>
+            <!-- Open website on install -->
+            <record id="action_website" model="ir.actions.act_url">
+                <field name="name">Website</field>
+                <field name="url">/</field>
+                <field name="target">self</field>
+            </record>
+
+            <record id="group_multi_website" model="res.groups">
+                <field name="name">Multi-website</field>
+                <field name="category_id" ref="base.module_category_hidden"/>
+            </record>
+        </data>
         <record id="base.open_menu" model="ir.actions.todo">
             <field name="action_id" ref="action_website"/>
             <field name="state">open</field>
@@ -770,11 +775,5 @@
             <field name="website_id" ref="website.default_website"/>
         </record>
 
-    </data>
-    <data>
-        <record id="group_multi_website" model="res.groups">
-            <field name="name">Multi-website</field>
-            <field name="category_id" ref="base.module_category_hidden"/>
-        </record>
     </data>
 </odoo>

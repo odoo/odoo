@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<odoo>
-    <data noupdate="1">
+<odoo noupdate="1" nodelete="1">
         <!--
         Resource: uom.category
         -->
@@ -19,6 +18,7 @@
         <record id="product_uom_categ_vol" model="uom.category">
             <field name="name">Volume</field>
         </record>
+
        <!--
             Resource: uom.uom
         -->
@@ -160,5 +160,5 @@
             <field name="factor_inv">28.3168</field>
             <field name="uom_type">bigger</field>
         </record>
-    </data>
+
 </odoo>
