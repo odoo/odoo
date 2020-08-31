@@ -3,7 +3,7 @@
 
 from psycopg2 import IntegrityError
 
-from odoo.tests import tagged
+from odoo.tests import tagged, users
 from odoo.addons.test_mail.tests.common import TestMailCommon
 from odoo.tools.misc import mute_logger
 
@@ -17,13 +17,20 @@ class BaseFollowersTest(TestMailCommon):
         cls._create_portal_user()
         cls._create_channel_listener()
 
+        # allow employee to update partners
+        cls.user_employee.write({'groups_id': [(4, cls.env.ref('base.group_partner_manager').id)]})
+
         Subtype = cls.env['mail.message.subtype']
-        cls.mt_mg_def = Subtype.create({'name': 'mt_mg_def', 'default': True, 'res_model': 'mail.test.simple'})
-        cls.mt_cl_def = Subtype.create({'name': 'mt_cl_def', 'default': True, 'res_model': 'mail.test.container'})
+        # global
         cls.mt_al_def = Subtype.create({'name': 'mt_al_def', 'default': True, 'res_model': False})
-        cls.mt_mg_nodef = Subtype.create({'name': 'mt_mg_nodef', 'default': False, 'res_model': 'mail.test.simple'})
         cls.mt_al_nodef = Subtype.create({'name': 'mt_al_nodef', 'default': False, 'res_model': False})
-        cls.mt_mg_def_int = cls.env['mail.message.subtype'].create({'name': 'mt_mg_def', 'default': True, 'res_model': 'mail.test.simple', 'internal': True})
+        # mail.test.simple
+        cls.mt_mg_def = Subtype.create({'name': 'mt_mg_def', 'default': True, 'res_model': 'mail.test.simple'})
+        cls.mt_mg_nodef = Subtype.create({'name': 'mt_mg_nodef', 'default': False, 'res_model': 'mail.test.simple'})
+        cls.mt_mg_def_int = Subtype.create({'name': 'mt_mg_def', 'default': True, 'res_model': 'mail.test.simple', 'internal': True})
+        # mail.test.container
+        cls.mt_cl_def = Subtype.create({'name': 'mt_cl_def', 'default': True, 'res_model': 'mail.test.container'})
+
         cls.default_group_subtypes = Subtype.search([('default', '=', True), '|', ('res_model', '=', 'mail.test.simple'), ('res_model', '=', False)])
         cls.default_group_subtypes_portal = Subtype.search([('internal', '=', False), ('default', '=', True), '|', ('res_model', '=', 'mail.test.simple'), ('res_model', '=', False)])
 
@@ -127,6 +134,27 @@ class BaseFollowersTest(TestMailCommon):
             channel_ids=[self.channel_listen.id]
         )
 
+    @users('employee')
+    def test_followers_inactive(self):
+        """ Test standard API does not subscribe inactive partners """
+        customer = self.env['res.partner'].create({
+            'name': 'Valid Lelitre',
+            'email': 'valid.lelitre@agrolait.com',
+            'country_id': self.env.ref('base.be').id,
+            'mobile': '0456001122',
+            'active': False,
+        })
+        document = self.env['mail.test.simple'].browse(self.test_record.id)
+        self.assertEqual(document.message_partner_ids, self.env['res.partner'])
+        document.message_subscribe(partner_ids=(self.partner_portal | customer).ids)
+        self.assertEqual(document.message_partner_ids, self.partner_portal)
+        self.assertEqual(document.message_follower_ids.partner_id, self.partner_portal)
+
+        # works through low-level API
+        document._message_subscribe(partner_ids=(self.partner_portal | customer).ids)
+        self.assertEqual(document.message_partner_ids, self.partner_portal, 'No active test: customer not visible')
+        self.assertEqual(document.message_follower_ids.partner_id, self.partner_portal | customer)
+
 
 class AdvancedFollowersTest(TestMailCommon):
     @classmethod
@@ -158,6 +186,22 @@ class AdvancedFollowersTest(TestMailCommon):
     def test_auto_subscribe_create(self):
         """ Creator of records are automatically added as followers """
         self.assertEqual(self.test_track.message_partner_ids, self.user_employee.partner_id)
+
+    def test_auto_subscribe_inactive(self):
+        """ Test inactive are not added as followers in automated subscription """
+        self.test_track.user_id = False
+        self.user_admin.active = False
+        self.user_admin.flush()
+        self.partner_admin.active = False
+        self.partner_admin.flush()
+
+        self.test_track.with_user(self.user_admin).message_post(body='Coucou hibou', message_type='comment')
+        self.assertEqual(self.test_track.message_partner_ids, self.user_employee.partner_id)
+        self.assertEqual(self.test_track.message_follower_ids.partner_id, self.user_employee.partner_id)
+
+        self.test_track.write({'user_id': self.user_admin.id})
+        self.assertEqual(self.test_track.message_partner_ids, self.user_employee.partner_id)
+        self.assertEqual(self.test_track.message_follower_ids.partner_id, self.user_employee.partner_id)
 
     def test_auto_subscribe_post(self):
         """ People posting a message are automatically added as followers """
@@ -193,13 +237,20 @@ class AdvancedFollowersTest(TestMailCommon):
            automatically create subscription with matching subtypes
          * subscribing to a sub-record as creator applies default subtype values
          * portal user should not have access to internal subtypes
+
+        Inactive partners should not be auto subscribed.
         """
         container = self.env['mail.test.container'].with_context(self._test_context).create({
             'name': 'Project-Like',
         })
 
-        container.message_subscribe(partner_ids=[self.partner_portal.id])
-        self.assertEqual(container.message_partner_ids, self.partner_portal)
+        container.message_subscribe(partner_ids=(self.partner_portal | self.partner_admin).ids)
+        self.assertEqual(container.message_partner_ids, self.partner_portal | self.partner_admin)
+
+        self.user_admin.active = False
+        self.user_admin.flush()
+        self.partner_admin.active = False
+        self.partner_admin.flush()
 
         sub1 = self.env['mail.test.track'].with_user(self.user_employee).create({
             'name': 'Task-Like Test',
@@ -210,6 +261,7 @@ class AdvancedFollowersTest(TestMailCommon):
         external_defaults = all_defaults.filtered(lambda subtype: not subtype.internal)
 
         self.assertEqual(sub1.message_partner_ids, self.partner_portal | self.user_employee.partner_id)
+        self.assertEqual(sub1.message_follower_ids.partner_id, self.partner_portal | self.user_employee.partner_id)
         self.assertEqual(
             sub1.message_follower_ids.filtered(lambda fol: fol.partner_id == self.partner_portal).subtype_ids,
             external_defaults | self.sub_umb1)
