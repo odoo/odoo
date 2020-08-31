@@ -694,13 +694,13 @@ class IrActionsReport(models.Model):
             data = {}
         data.setdefault('report_type', 'pdf')
 
-        # access the report details with sudo() but evaluation context as sudo(False)
+        # access the report details with sudo() but evaluation context as current user
         self_sudo = self.sudo()
 
         # In case of test environment without enough workers to perform calls to wkhtmltopdf,
         # fallback to render_html.
         if (tools.config['test_enable'] or tools.config['test_file']) and not self.env.context.get('force_report_rendering'):
-            return self_sudo._render_qweb_html(res_ids, data=data)
+            return self._render_qweb_html(res_ids, data=data)
 
         # As the assets are generated during the same transaction as the rendering of the
         # templates calling them, there is a scenario where the assets are unreachable: when
@@ -791,7 +791,7 @@ class IrActionsReport(models.Model):
             data = {}
         data.setdefault('report_type', 'text')
         data = self._get_rendering_context(docids, data)
-        return self._render_template(self.report_name, data), 'text'
+        return self._render_template(self.sudo().report_name, data), 'text'
 
     @api.model
     def _render_qweb_html(self, docids, data=None):
@@ -801,7 +801,7 @@ class IrActionsReport(models.Model):
             data = {}
         data.setdefault('report_type', 'html')
         data = self._get_rendering_context(docids, data)
-        return self._render_template(self.report_name, data), 'html'
+        return self._render_template(self.sudo().report_name, data), 'html'
 
     @api.model
     def _get_rendering_context_model(self):
@@ -810,23 +810,23 @@ class IrActionsReport(models.Model):
 
     @api.model
     def _get_rendering_context(self, docids, data):
+        # access the report details with sudo() but evaluation context as current user
+        self_sudo = self.sudo()
+
         # If the report is using a custom model to render its html, we must use it.
         # Otherwise, fallback on the generic html rendering.
-        report_model = self._get_rendering_context_model()
+        report_model = self_sudo._get_rendering_context_model()
 
         data = data and dict(data) or {}
 
 
         if report_model is not None:
-            # _render_ may be executed in sudo but evaluation context as real user
-            report_model = report_model.sudo(False)
             data.update(report_model._get_report_values(docids, data=data))
         else:
-            # _render_ may be executed in sudo but evaluation context as real user
-            docs = self.env[self.model].sudo(False).browse(docids)
+            docs = self.env[self_sudo.model].browse(docids)
             data.update({
                 'doc_ids': docids,
-                'doc_model': self.model,
+                'doc_model': self_sudo.model,
                 'docs': docs,
             })
         return data
