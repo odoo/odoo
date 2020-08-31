@@ -86,5 +86,7 @@ class AccountMoveLine(models.Model):
                 company_id=record.move_id.company_id.id
             )
             if rec and not record.exclude_from_invoice_tab:
-                record.analytic_account_id = rec.analytic_id
-                record.analytic_tag_ids = rec.analytic_tag_ids
+                if not record.analytic_account_id:
+                    record.analytic_account_id = rec.analytic_id
+                if not record.analytic_tag_ids:
+                    record.analytic_tag_ids = rec.analytic_tag_ids
