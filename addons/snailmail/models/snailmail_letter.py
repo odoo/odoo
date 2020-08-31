@@ -6,7 +6,7 @@ import datetime
 
 from odoo import fields, models, api, _, tools
 from odoo.addons.iap import jsonrpc
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 from odoo.tools.safe_eval import safe_eval
 
 DEFAULT_ENDPOINT = 'https://iap-snailmail.odoo.com'
@@ -316,3 +316,9 @@ class SnailmailLetter(models.Model):
                     ('write_date', '<', limit_date_str),
         ])
         letters_canceled.unlink()
+        
+    @api.constrains('partner_id')
+    def _check_partner_country(self):
+        for letter in self:
+            if not letter.partner_id.country_id:
+                raise ValidationError(_('The country of this partner (%s) should be set.') % (letter.partner_id.display_name))
