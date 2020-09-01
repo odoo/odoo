@@ -511,6 +511,23 @@
     padding: 1.5rem;
 }
 
+.tip-screen .pos-receipt-container {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    margin: 0;
+}
+
+@media print {
+    .tip-screen .pos-receipt-container {
+        display: block;
+    }
+    .tip-screen .pos-receipt-container * {
+        visibility: visible;
+    }
+}
+
 .pos-receipt .tip-form {
     padding-top: 0.75rem;
     padding-bottom: 0.75rem;
