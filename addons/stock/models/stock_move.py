@@ -459,11 +459,25 @@ class StockMove(models.Model):
                 else:
                     move.json_forecast = json.dumps({'expectedDate': None})
 
-    def _set_date_deadline(self):
+    def _set_date_deadline(self, new_deadline):
         # Handle the propagation of `date_deadline` fields (up and down stream - only update by up/downstream documents)
+        already_propagate_ids = self.env.context.get('date_deadline_propagate_ids', set()) | set(self.ids)
+        self = self.with_context(date_deadline_propagate_ids=already_propagate_ids)
         for move in self:
-            move_linked = (move.move_dest_ids | move.move_orig_ids).filtered(lambda m: m.state not in ('done', 'cancel'))
-            move_linked.filtered(lambda m: m.date_deadline != move.date_deadline).date_deadline = move.date_deadline
+            moves_to_update = (move.move_dest_ids | move.move_orig_ids)
+            if move.date_deadline:
+                delta = move.date_deadline - fields.Datetime.to_datetime(new_deadline)
+            else:
+                delta = 0
+            for move_update in moves_to_update:
+                if move_update.state in ('done', 'cancel'):
+                    continue
+                if move_update.id in already_propagate_ids:
+                    continue
+                if move_update.date_deadline and delta:
+                    move_update.date_deadline -= delta
+                else:
+                    move_update.date_deadline = new_deadline
 
     @api.depends('move_line_ids', 'move_line_ids.lot_id', 'move_line_ids.qty_done')
     def _compute_lot_ids(self):
@@ -555,17 +569,11 @@ class StockMove(models.Model):
                 # When editing the initial demand, directly run again action assign on receipt moves.
                 receipt_moves_to_reassign |= move_to_unreserve.filtered(lambda m: m.location_id.usage == 'supplier')
                 receipt_moves_to_reassign |= (self - move_to_unreserve).filtered(lambda m: m.location_id.usage == 'supplier' and m.state in ('partially_available', 'assigned'))
-        res = super(StockMove, self).write(vals)
         if 'date_deadline' in vals:
-            self._set_date_deadline()
+            self._set_date_deadline(vals.get('date_deadline'))
+        res = super(StockMove, self).write(vals)
         if receipt_moves_to_reassign:
             receipt_moves_to_reassign._action_assign()
-        return res
-
-    @api.model_create_multi
-    def create(self, vals_list):
-        res = super().create(vals_list)
-        res.filtered('date_deadline')._set_date_deadline()
         return res
 
     def _delay_alert_get_documents(self):

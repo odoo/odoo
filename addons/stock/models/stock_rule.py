@@ -266,6 +266,7 @@ class StockRule(models.Model):
         date_scheduled = fields.Datetime.to_string(
             fields.Datetime.from_string(values['date_planned']) - relativedelta(days=self.delay or 0)
         )
+        date_deadline = values.get('date_deadline') and (fields.Datetime.to_datetime(values['date_deadline']) - relativedelta(days=self.delay or 0)) or False
         partner = self.partner_address_id or (values.get('group_id', False) and values['group_id'].partner_id)
         if partner:
             product_id = product_id.with_context(lang=partner.lang or self.env.user.lang)
@@ -298,7 +299,7 @@ class StockRule(models.Model):
             'route_ids': [(4, route.id) for route in values.get('route_ids', [])],
             'warehouse_id': self.propagate_warehouse_id.id or self.warehouse_id.id,
             'date': date_scheduled,
-            'date_deadline': values.get('date_deadline'),
+            'date_deadline': date_deadline,
             'propagate_cancel': self.propagate_cancel,
             'description_picking': picking_description,
             'priority': values.get('priority', "0"),

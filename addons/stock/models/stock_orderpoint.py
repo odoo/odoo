@@ -387,6 +387,7 @@ class StockWarehouseOrderpoint(models.Model):
         return {
             'route_ids': self.route_id,
             'date_planned': date_planned,
+            'date_deadline': date or False,
             'warehouse_id': self.warehouse_id,
             'orderpoint_id': self,
             'group_id': group or self.group_id,
