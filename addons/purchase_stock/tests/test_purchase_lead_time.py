@@ -48,6 +48,9 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
             we create two procurements for the two different product with same vendor
             and different Delivery Lead Time."""
 
+        company = self.env.ref('base.main_company')
+        company.write({'po_lead': 0.00})
+
         # Make procurement request from product_1's form view, create procurement and check it's state
         date_planned1 = fields.Datetime.to_string(fields.datetime.now() + timedelta(days=10))
         self._create_make_procurement(self.product_1, 10.00, date_planned=date_planned1)
@@ -99,6 +102,9 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
         """ In order to check dates, set product's Delivery Lead Time
             and warehouse route's delay."""
 
+        company = self.env.ref('base.main_company')
+        company.write({'po_lead': 1.00})
+
         # Update warehouse_1 with Incoming Shipments 3 steps
         self.warehouse_1.write({'reception_steps': 'three_steps'})
 
@@ -115,6 +121,7 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
             {
                 'warehouse_id': self.warehouse_1,
                 'date_planned': date_planned,  # 10 days added to current date of procurement to get future schedule date and order date of purchase order.
+                'date_deadline': date_planned,  # 10 days added to current date of procurement to get future schedule date and order date of purchase order.
                 'rule_id': self.warehouse_1.buy_pull_id,
                 'group_id': False,
                 'route_ids': [],
@@ -122,16 +129,15 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
         )])
 
         # Confirm purchase order
-
         purchase = self.env['purchase.order.line'].search([('product_id', '=', self.product_1.id)], limit=1).order_id
         purchase.button_confirm()
 
         # Check order date of purchase order
-        order_date = fields.Datetime.from_string(date_planned) - timedelta(days=self.product_1.seller_ids.delay + rule_delay)
+        order_date = fields.Datetime.from_string(date_planned) - timedelta(days=self.product_1.seller_ids.delay + rule_delay + company.po_lead)
         self.assertEqual(purchase.date_order, order_date, 'Order date should be equal to: Date of the procurement order - Delivery Lead Time(supplier and pull rules).')
 
         # Check scheduled date of purchase order
-        schedule_date = order_date + timedelta(days=self.product_1.seller_ids.delay + rule_delay)
+        schedule_date = order_date + timedelta(days=self.product_1.seller_ids.delay + rule_delay + company.po_lead)
         self.assertEqual(date_planned, str(schedule_date), 'Schedule date should be equal to: Order date of Purchase order + Delivery Lead Time(supplier and pull rules).')
 
         # Check the picking crated or not
@@ -139,12 +145,23 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
 
         # Check scheduled date of Internal Type shipment
         incoming_shipment1 = self.env['stock.picking'].search([('move_lines.product_id', 'in', (self.product_1.id, self.product_2.id)), ('picking_type_id', '=', self.warehouse_1.int_type_id.id), ('location_id', '=', self.warehouse_1.wh_input_stock_loc_id.id), ('location_dest_id', '=', self.warehouse_1.wh_qc_stock_loc_id.id)])
-        incoming_shipment1_date = order_date + timedelta(days=self.product_1.seller_ids.delay)
+        incoming_shipment1_date = order_date + timedelta(days=self.product_1.seller_ids.delay + company.po_lead)
         self.assertEqual(incoming_shipment1.scheduled_date, incoming_shipment1_date, 'Schedule date of Internal Type shipment for input stock location should be equal to: schedule date of purchase order + push rule delay.')
+        self.assertEqual(incoming_shipment1.date_deadline, incoming_shipment1_date)
+        old_deadline1 = incoming_shipment1.date_deadline
 
         incoming_shipment2 = self.env['stock.picking'].search([('picking_type_id', '=', self.warehouse_1.int_type_id.id), ('location_id', '=', self.warehouse_1.wh_qc_stock_loc_id.id), ('location_dest_id', '=', self.warehouse_1.lot_stock_id.id)])
         incoming_shipment2_date = schedule_date - timedelta(days=incoming_shipment2.move_lines[0].rule_id.delay)
         self.assertEqual(incoming_shipment2.scheduled_date, incoming_shipment2_date, 'Schedule date of Internal Type shipment for quality control stock location should be equal to: schedule date of Internal type shipment for input stock location + push rule delay..')
+        self.assertEqual(incoming_shipment2.date_deadline, incoming_shipment2_date)
+        old_deadline2 = incoming_shipment2.date_deadline
+
+        # Modify the date_planned of the purchase -> propagate the deadline
+        purchase_form = Form(purchase)
+        purchase_form.date_planned = purchase.date_planned + timedelta(days=1)
+        purchase_form.save()
+        self.assertEqual(incoming_shipment2.date_deadline, old_deadline2 + timedelta(days=1), 'Deadline should be propagate')
+        self.assertEqual(incoming_shipment1.date_deadline, old_deadline1 + timedelta(days=1), 'Deadline should be propagate')
 
     def test_merge_po_line(self):
         """Change that merging po line for same procurement is done."""
@@ -194,6 +211,8 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
 
     def test_merge_po_line_3(self):
         """Change merging po line if same procurement is done depending on custom values."""
+        company = self.env.ref('base.main_company')
+        company.write({'po_lead': 0.00})
         # Create procurement order of product_1
         ProcurementGroup = self.env['procurement.group']
         procurement_values = {
@@ -241,6 +260,8 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
         self.assertEqual(purchase_order.picking_ids[0].move_ids_without_package.filtered(lambda x: x.product_uom_qty == 10).description_picking, order_line_description + "Color (Green)", 'wrong description in picking')
 
     def test_reordering_days_to_purchase(self):
+        company = self.env.ref('base.main_company')
+        company.write({'po_lead': 0.00})
         self.patcher = patch('odoo.addons.stock.models.stock_orderpoint.fields.Date', wraps=fields.Date)
         self.mock_date = self.patcher.start()
 
