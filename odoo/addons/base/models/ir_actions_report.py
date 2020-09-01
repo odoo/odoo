@@ -145,7 +145,7 @@ class IrActionsReport(models.Model):
 
     def _get_readable_fields(self):
         return super()._get_readable_fields() | {
-            "params", "report_name", "report_type", "target",
+            "report_name", "report_type", "target",
         }
 
     def associated_view(self):
