@@ -256,32 +256,30 @@ Some attributes are available on all fields, here are the most common ones:
     expected_price            required
     ========================= =========================
 
-After restarting the server, the schema both fields should be not nullable.
-
-Default values
---------------
-
-Any field can be given a default value. In the field definition, add the option
-``default=X`` where ``X`` is either a Python literal value (boolean, integer,
-float, string), or a function taking a recordset and returning a value::
-
-    name = fields.Char(default="Unknown")
-    date_start = fields.Date("Date Start", default=lambda self: fields.Date.today())
-
-.. exercise:: Active objects – Default values
-
-    * Define the start_date default value as today (see
-      :class:`~odoo.fields.Date`).
-    * Add a field ``active`` in the class Session, and set sessions as active by
-      default.
-
+After restarting the server, both fields should be not nullable.
 
 Reserved Fields
 ---------------
 
-Special Fields
---------------
+As noticed previously, extra fields were added to the table ``estate_property``.
+Odoo creates a few fields in all models\ [#autofields]_. These fields are
+managed by the system and shouldn't be written to. They can be read if
+useful or necessary:
 
+:attr:`~odoo.fields.Model.id` (:class:`~odoo.fields.Id`)
+    The unique identifier for a record in its model.
+:attr:`~odoo.fields.Model.create_date` (:class:`~odoo.fields.Datetime`)
+    Creation date of the record.
+:attr:`~odoo.fields.Model.create_uid` (:class:`~odoo.fields.Many2one`)
+    User who created the record.
+:attr:`~odoo.fields.Model.write_date` (:class:`~odoo.fields.Datetime`)
+    Last modification date of the record.
+:attr:`~odoo.fields.Model.write_uid` (:class:`~odoo.fields.Many2one`)
+    user who last modified the record.
+
+
+.. [#autofields] it is possible to :ref:`disable the automatic creation of some
+                 fields <reference/fields/automatic/log_access>`
 .. [#rawsql] writing raw SQL queries is possible, but requires care as it
              bypasses all Odoo authentication and security mechanisms.
 
