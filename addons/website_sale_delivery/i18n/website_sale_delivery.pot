@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.4\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-12 11:33+0000\n"
-"PO-Revision-Date: 2019-08-12 11:33+0000\n"
+"POT-Creation-Date: 2020-09-01 07:29+0000\n"
+"PO-Revision-Date: 2020-09-01 07:29+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -26,6 +26,11 @@ msgid ""
 "A description of the Product that you want to communicate to your customers."
 " This description will be copied to every Sales Order, Delivery Order and "
 "Customer Invoice/Credit Note"
+msgstr ""
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier__can_publish
+msgid "Can Publish"
 msgstr ""
 
 #. module: website_sale_delivery
@@ -74,6 +79,13 @@ msgid "Description for Online Quotations"
 msgstr ""
 
 #. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier__display_name
+#: model:ir.model.fields,field_description:website_sale_delivery.field_res_country__display_name
+#: model:ir.model.fields,field_description:website_sale_delivery.field_sale_order__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: website_sale_delivery
 #: model_terms:ir.ui.view,arch_db:website_sale_delivery.res_config_settings_view_form
 msgid "Easypost Shipping Methods"
 msgstr ""
@@ -85,10 +97,22 @@ msgstr ""
 
 #. module: website_sale_delivery
 #. openerp-web
-#: code:addons/website_sale_delivery/static/src/js/website_sale_delivery.js:92
+#: code:addons/website_sale_delivery/static/src/js/website_sale_delivery.js:0
 #: model_terms:ir.ui.view,arch_db:website_sale_delivery.payment_delivery_methods
 #, python-format
 msgid "Free"
+msgstr ""
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier__id
+#: model:ir.model.fields,field_description:website_sale_delivery.field_res_country__id
+#: model:ir.model.fields,field_description:website_sale_delivery.field_sale_order__id
+msgid "ID"
+msgstr ""
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier__is_published
+msgid "Is Published"
 msgstr ""
 
 #. module: website_sale_delivery
@@ -97,6 +121,13 @@ msgstr ""
 msgid ""
 "It seems that a delivery method is not compatible with your address. Please "
 "refresh the page and try again."
+msgstr ""
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier____last_update
+#: model:ir.model.fields,field_description:website_sale_delivery.field_res_country____last_update
+#: model:ir.model.fields,field_description:website_sale_delivery.field_sale_order____last_update
+msgid "Last Modified on"
 msgstr ""
 
 #. module: website_sale_delivery
@@ -110,6 +141,11 @@ msgstr ""
 #. module: website_sale_delivery
 #: model_terms:ir.ui.view,arch_db:website_sale_delivery.view_delivery_carrier_search_inherit_website_sale_delivery
 msgid "Published"
+msgstr ""
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier__website_id
+msgid "Restrict publishing to this website."
 msgstr ""
 
 #. module: website_sale_delivery
@@ -130,7 +166,7 @@ msgid "Shipping Methods"
 msgstr ""
 
 #. module: website_sale_delivery
-#: code:addons/website_sale_delivery/controllers/main.py:71
+#: code:addons/website_sale_delivery/controllers/main.py:0
 #, python-format
 msgid "Sorry, we are unable to ship your order"
 msgstr ""
@@ -141,8 +177,28 @@ msgid "The amount without tax."
 msgstr ""
 
 #. module: website_sale_delivery
+#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier__website_url
+msgid "The full URL to access the document through the website."
+msgstr ""
+
+#. module: website_sale_delivery
 #: model_terms:ir.ui.view,arch_db:website_sale_delivery.res_config_settings_view_form
 msgid "USPS Shipping Methods"
+msgstr ""
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier__website_published
+msgid "Visible on current website"
+msgstr ""
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier__website_id
+msgid "Website"
+msgstr ""
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier__website_url
+msgid "Website URL"
 msgstr ""
 
 #. module: website_sale_delivery

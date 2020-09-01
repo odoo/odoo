@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.3\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-21 10:47+0000\n"
-"PO-Revision-Date: 2020-04-21 10:47+0000\n"
+"POT-Creation-Date: 2020-09-01 07:29+0000\n"
+"PO-Revision-Date: 2020-09-01 07:29+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -67,6 +67,11 @@ msgid "Busy"
 msgstr ""
 
 #. module: website_livechat
+#: model:ir.model.fields,field_description:website_livechat.field_im_livechat_channel__can_publish
+msgid "Can Publish"
+msgstr ""
+
+#. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.res_config_settings_view_form
 msgid "Channel"
 msgstr ""
@@ -92,6 +97,16 @@ msgid "Discussion Channel"
 msgstr ""
 
 #. module: website_livechat
+#: model:ir.model.fields,field_description:website_livechat.field_im_livechat_channel__display_name
+#: model:ir.model.fields,field_description:website_livechat.field_ir_http__display_name
+#: model:ir.model.fields,field_description:website_livechat.field_mail_channel__display_name
+#: model:ir.model.fields,field_description:website_livechat.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:website_livechat.field_website__display_name
+#: model:ir.model.fields,field_description:website_livechat.field_website_visitor__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
 msgid "Great"
 msgstr ""
@@ -107,21 +122,33 @@ msgid "Happy face"
 msgstr ""
 
 #. module: website_livechat
-#. openerp-web
-#: code:addons/website_livechat/static/src/xml/thread.xml:0
-#, python-format
-msgid "History"
+#: model:ir.model.fields,field_description:website_livechat.field_im_livechat_channel__id
+#: model:ir.model.fields,field_description:website_livechat.field_ir_http__id
+#: model:ir.model.fields,field_description:website_livechat.field_mail_channel__id
+#: model:ir.model.fields,field_description:website_livechat.field_res_config_settings__id
+#: model:ir.model.fields,field_description:website_livechat.field_website__id
+#: model:ir.model.fields,field_description:website_livechat.field_website_visitor__id
+msgid "ID"
 msgstr ""
 
 #. module: website_livechat
-#. openerp-web
-#: code:addons/website_livechat/static/src/xml/thread.xml:0
-#, python-format
-msgid "Lang"
+#: model:ir.model.fields,field_description:website_livechat.field_im_livechat_channel__is_published
+msgid "Is Published"
 msgstr ""
 
 #. module: website_livechat
-#: model:website.menu,name:website_livechat.menu_livechat
+#: model:ir.model.fields,field_description:website_livechat.field_im_livechat_channel____last_update
+#: model:ir.model.fields,field_description:website_livechat.field_ir_http____last_update
+#: model:ir.model.fields,field_description:website_livechat.field_mail_channel____last_update
+#: model:ir.model.fields,field_description:website_livechat.field_res_config_settings____last_update
+#: model:ir.model.fields,field_description:website_livechat.field_website____last_update
+#: model:ir.model.fields,field_description:website_livechat.field_website_visitor____last_update
+msgid "Last Modified on"
+msgstr ""
+
+#. module: website_livechat
+#: code:addons/website_livechat/models/website.py:0
+#, python-format
 msgid "Live Support"
 msgstr ""
 
@@ -171,22 +198,8 @@ msgid "Not rated yet"
 msgstr ""
 
 #. module: website_livechat
-#. openerp-web
-#: code:addons/website_livechat/static/src/xml/thread.xml:0
-#, python-format
-msgid "Offline"
-msgstr ""
-
-#. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
 msgid "Okay"
-msgstr ""
-
-#. module: website_livechat
-#. openerp-web
-#: code:addons/website_livechat/static/src/xml/thread.xml:0
-#, python-format
-msgid "Online"
 msgstr ""
 
 #. module: website_livechat
@@ -249,6 +262,11 @@ msgid "The Team"
 msgstr ""
 
 #. module: website_livechat
+#: model:ir.model.fields,help:website_livechat.field_im_livechat_channel__website_url
+msgid "The full URL to access the document through the website."
+msgstr ""
+
+#. module: website_livechat
 #: code:addons/website_livechat/models/mail_channel.py:0
 #, python-format
 msgid "The visitor"
@@ -265,22 +283,13 @@ msgid "There are no ratings for this channel for now."
 msgstr ""
 
 #. module: website_livechat
+#: model:ir.model.fields,field_description:website_livechat.field_im_livechat_channel__website_published
+msgid "Visible on current website"
+msgstr ""
+
+#. module: website_livechat
 #: model:ir.model.fields,field_description:website_livechat.field_mail_channel__livechat_visitor_id
 msgid "Visitor"
-msgstr ""
-
-#. module: website_livechat
-#. openerp-web
-#: code:addons/website_livechat/static/src/xml/thread.xml:0
-#, python-format
-msgid "Visitor is connected"
-msgstr ""
-
-#. module: website_livechat
-#. openerp-web
-#: code:addons/website_livechat/static/src/xml/thread.xml:0
-#, python-format
-msgid "Visitor is offline"
 msgstr ""
 
 #. module: website_livechat
@@ -299,10 +308,7 @@ msgid "Visitors"
 msgstr ""
 
 #. module: website_livechat
-#. openerp-web
-#: code:addons/website_livechat/static/src/xml/thread.xml:0
 #: model:ir.model,name:website_livechat.model_website
-#, python-format
 msgid "Website"
 msgstr ""
 
@@ -314,6 +320,11 @@ msgstr ""
 #. module: website_livechat
 #: model:ir.model.fields,field_description:website_livechat.field_website__channel_id
 msgid "Website Live Chat Channel"
+msgstr ""
+
+#. module: website_livechat
+#: model:ir.model.fields,field_description:website_livechat.field_im_livechat_channel__website_url
+msgid "Website URL"
 msgstr ""
 
 #. module: website_livechat

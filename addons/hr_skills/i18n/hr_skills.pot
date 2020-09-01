@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.1\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-12-16 08:45+0000\n"
-"PO-Revision-Date: 2019-12-16 08:45+0000\n"
+"POT-Creation-Date: 2020-09-01 07:28+0000\n"
+"PO-Revision-Date: 2020-09-01 07:28+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -78,12 +78,15 @@ msgid "Description"
 msgstr ""
 
 #. module: hr_skills
+#: model:ir.model.fields,field_description:hr_skills.field_hr_employee__display_name
+#: model:ir.model.fields,field_description:hr_skills.field_hr_employee_public__display_name
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill__display_name
 #: model:ir.model.fields,field_description:hr_skills.field_hr_resume_line__display_name
 #: model:ir.model.fields,field_description:hr_skills.field_hr_resume_line_type__display_name
 #: model:ir.model.fields,field_description:hr_skills.field_hr_skill__display_name
 #: model:ir.model.fields,field_description:hr_skills.field_hr_skill_level__display_name
 #: model:ir.model.fields,field_description:hr_skills.field_hr_skill_type__display_name
+#: model:ir.model.fields,field_description:hr_skills.field_res_users__display_name
 msgid "Display Name"
 msgstr ""
 
@@ -100,22 +103,28 @@ msgid "Employee"
 msgstr ""
 
 #. module: hr_skills
+#: model:ir.model.fields,field_description:hr_skills.field_hr_employee__id
+#: model:ir.model.fields,field_description:hr_skills.field_hr_employee_public__id
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill__id
 #: model:ir.model.fields,field_description:hr_skills.field_hr_resume_line__id
 #: model:ir.model.fields,field_description:hr_skills.field_hr_resume_line_type__id
 #: model:ir.model.fields,field_description:hr_skills.field_hr_skill__id
 #: model:ir.model.fields,field_description:hr_skills.field_hr_skill_level__id
 #: model:ir.model.fields,field_description:hr_skills.field_hr_skill_type__id
+#: model:ir.model.fields,field_description:hr_skills.field_res_users__id
 msgid "ID"
 msgstr ""
 
 #. module: hr_skills
+#: model:ir.model.fields,field_description:hr_skills.field_hr_employee____last_update
+#: model:ir.model.fields,field_description:hr_skills.field_hr_employee_public____last_update
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill____last_update
 #: model:ir.model.fields,field_description:hr_skills.field_hr_resume_line____last_update
 #: model:ir.model.fields,field_description:hr_skills.field_hr_resume_line_type____last_update
 #: model:ir.model.fields,field_description:hr_skills.field_hr_skill____last_update
 #: model:ir.model.fields,field_description:hr_skills.field_hr_skill_level____last_update
 #: model:ir.model.fields,field_description:hr_skills.field_hr_skill_type____last_update
+#: model:ir.model.fields,field_description:hr_skills.field_res_users____last_update
 msgid "Last Modified on"
 msgstr ""
 
@@ -280,13 +289,13 @@ msgstr ""
 #. module: hr_skills
 #: code:addons/hr_skills/models/hr_skills.py:0
 #, python-format
-msgid "The skill %s and skill type %s doesn't match"
+msgid "The skill %(name)s and skill type %(type)s doesn't match"
 msgstr ""
 
 #. module: hr_skills
 #: code:addons/hr_skills/models/hr_skills.py:0
 #, python-format
-msgid "The skill level %s is not valid for skill type: %s "
+msgid "The skill level %(level)s is not valid for skill type: %(type)s"
 msgstr ""
 
 #. module: hr_skills
