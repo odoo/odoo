@@ -124,7 +124,10 @@ class MailActivity(models.Model):
     def _default_activity_type_id(self):
         ActivityType = self.env["mail.activity.type"]
         activity_type_todo = self.env.ref('mail.mail_activity_data_todo', raise_if_not_found=False)
-        current_model_id = self.default_get(['res_model_id', 'res_model'])['res_model_id']
+        default_vals = self.default_get(['res_model_id', 'res_model'])
+        if not default_vals.get('res_model_id'):
+            return ActivityType
+        current_model_id = default_vals['res_model_id']
         if activity_type_todo and activity_type_todo.active and (activity_type_todo.res_model_id.id == current_model_id or not activity_type_todo.res_model_id):
             return activity_type_todo
         activity_type_model = ActivityType.search([('res_model_id', '=', current_model_id)], limit=1)
