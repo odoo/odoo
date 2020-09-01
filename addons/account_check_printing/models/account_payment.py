@@ -26,6 +26,7 @@ class AccountPayment(models.Model):
         help="The selected journal is configured to print check numbers. If your pre-printed check paper already has numbers "
              "or if the current numbering is wrong, you can change it in the journal configuration page.",
     )
+    payment_method_id = fields.Many2one(index=True)
 
     @api.constrains('check_number', 'journal_id')
     def _constrains_check_number(self):
