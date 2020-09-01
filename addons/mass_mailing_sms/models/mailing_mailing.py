@@ -233,8 +233,55 @@ class Mailing(models.Model):
 
             composer = self.env['sms.composer'].with_context(active_id=False).create(mailing._send_sms_get_composer_values(res_ids))
             composer._action_send_sms()
-            mailing.write({'state': 'done', 'sent_date': fields.Datetime.now()})
+            mailing.write({
+                'state': 'done',
+                'sent_date': fields.Datetime.now(),
+                'kpi_mail_required': not mailing.sent_date,
+                })
         return True
+
+    # ------------------------------------------------------
+    # STATISTICS
+    # ------------------------------------------------------
+
+    def _prepare_statistics_email_values(self):
+        """Return some statistics that will be displayed in the mailing statistics email.
+
+        Each item in the returned list will be displayed as a table, with a title and
+        1, 2 or 3 columns.
+        """
+        values = super(Mailing, self)._prepare_statistics_email_values()
+        if self.mailing_type == 'sms':
+            mailing_type = self._get_pretty_mailing_type()
+            values['title'] = _('24H Stats of %(mailing_type)s "%(mailing_name)s"',
+                                mailing_type=mailing_type,
+                                mailing_name=self.subject
+                               )
+            values['kpi_data'][0] = {
+                'kpi_fullname': _('Report for %(expected)i %(mailing_type)s Sent',
+                                  expected=self.expected,
+                                  mailing_type=mailing_type
+                                 ),
+                'kpi_col1': {
+                    'value': f'{self.received_ratio}%',
+                    'col_subtitle': _('RECEIVED (%i)', self.delivered),
+                },
+                'kpi_col2': {
+                    'value': f'{self.clicks_ratio}%',
+                    'col_subtitle': _('CLICKED (%i)', self.clicked),
+                },
+                'kpi_col3': {
+                    'value': f'{self.bounced_ratio}%',
+                    'col_subtitle': _('BOUNCED (%i)', self.bounced),
+                },
+                'kpi_action': None,
+            }
+        return values
+
+    def _get_pretty_mailing_type(self):
+        if self.mailing_type == 'sms':
+            return _('SMS Text Message')
+        return super(Mailing, self)._get_pretty_mailing_type()
 
     # --------------------------------------------------
     # TOOLS

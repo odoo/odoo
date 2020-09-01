@@ -693,6 +693,7 @@ class MassMailing(models.Model):
     # ------------------------------------------------------
     # STATISTICS
     # ------------------------------------------------------
+
     def _action_send_statistics(self):
         """Send an email to the responsible of each finished mailing with the statistics."""
         self.kpi_mail_required = False
@@ -700,13 +701,18 @@ class MassMailing(models.Model):
         for mailing in self:
             user = mailing.user_id
             mailing = mailing.with_context(lang=user.lang or self._context.get('lang'))
+            mailing_type = mailing._get_pretty_mailing_type()
 
             link_trackers = self.env['link.tracker'].search(
                 [('mass_mailing_id', '=', mailing.id)]
             ).sorted('count', reverse=True)
             link_trackers_body = self.env['ir.qweb']._render(
                 'mass_mailing.mass_mailing_kpi_link_trackers',
-                {'object': mailing, 'link_trackers': link_trackers},
+                {
+                    'object': mailing,
+                    'link_trackers': link_trackers,
+                    'mailing_type': mailing_type,
+                },
             )
 
             rendered_body = self.env['ir.qweb']._render(
@@ -726,7 +732,10 @@ class MassMailing(models.Model):
             )
 
             mail_values = {
-                'subject': _('24H Stats of mailing "%s"') % mailing.subject,
+                'subject': _('24H Stats of %(mailing_type)s "%(mailing_name)s"',
+                             mailing_type=self._get_pretty_mailing_type(),
+                             mailing_name=mailing.subject
+                            ),
                 'email_from': user.email_formatted,
                 'email_to': user.email_formatted,
                 'body_html': full_mail,
@@ -742,6 +751,28 @@ class MassMailing(models.Model):
         1, 2 or 3 columns.
         """
         self.ensure_one()
+        mailing_type = self._get_pretty_mailing_type()
+        kpi = {}
+        if self.mailing_type == 'mail':
+            kpi = {
+                'kpi_fullname': _('Engagement on %(expected)i %(mailing_type)s Sent',
+                                  expected=self.expected,
+                                  mailing_type=mailing_type
+                                 ),
+                'kpi_col1': {
+                    'value': f'{self.received_ratio}%',
+                    'col_subtitle': _('RECEIVED (%i)', self.delivered),
+                },
+                'kpi_col2': {
+                    'value': f'{self.opened_ratio}%',
+                    'col_subtitle': _('OPENED (%i)', self.opened),
+                },
+                'kpi_col3': {
+                    'value': f'{self.replied_ratio}%',
+                    'col_subtitle': _('REPLIED (%i)', self.replied),
+                },
+                'kpi_action': None,
+            }
 
         random_tip = self.env['digest.tip'].search(
             [('group_id.category_id', '=', self.env.ref('base.module_category_marketing_email_marketing').id)]
@@ -756,28 +787,19 @@ class MassMailing(models.Model):
         web_base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
 
         return {
-            'title': _('24H Stats of mailing'),
-            'sub_title': '"%s"' % self.subject,
+            'title': _('24H Stats of %(mailing_type)s "%(mailing_name)s"',
+                       mailing_type=mailing_type,
+                       mailing_name=self.subject
+                       ),
             'top_button_label': _('More Info'),
             'top_button_url': url_join(web_base_url, f'/web#id={self.id}&model=mailing.mailing&view_type=form'),
             'kpi_data': [
+                kpi,
                 {
-                    'kpi_fullname': _('Engagement on %i Emails Sent') % self.sent,
-                    'kpi_action': None,
-                    'kpi_col1': {
-                        'value': f'{self.received_ratio}%',
-                        'col_subtitle': '%s (%i)' % (_('RECEIVED'), self.delivered),
-                    },
-                    'kpi_col2': {
-                        'value': f'{self.opened_ratio}%',
-                        'col_subtitle': '%s (%i)' % (_('OPENED'), self.opened),
-                    },
-                    'kpi_col3': {
-                        'value': f'{self.replied_ratio}%',
-                        'col_subtitle': '%s (%i)' % (_('REPLIED'), self.replied),
-                    },
-                }, {
-                    'kpi_fullname': _('Business Benefits on %i Emails Sent') % self.sent,
+                    'kpi_fullname': _('Business Benefits on %(expected)i %(mailing_type)s Sent',
+                                       expected=self.expected,
+                                       mailing_type=mailing_type
+                                     ),
                     'kpi_action': None,
                     'kpi_col1': {},
                     'kpi_col2': {},
@@ -787,6 +809,10 @@ class MassMailing(models.Model):
             'tips': [random_tip] if random_tip else False,
             'formatted_date': formatted_date,
         }
+
+    def _get_pretty_mailing_type(self):
+        if self.mailing_type == 'mail':
+            return _('Emails')
 
     # ------------------------------------------------------
     # TOOLS

@@ -3,7 +3,7 @@
     <data noupdate="1">
         <!-- Cron that process the mass mailing queue -->
         <record id="ir_cron_mass_mailing_queue" model="ir.cron">
-            <field name="name">Email Marketing: Process queue</field>
+            <field name="name">Mail Marketing: Process queue</field>
             <field name="model_id" ref="model_mailing_mailing"/>
             <field name="state">code</field>
             <field name="code">model._process_mass_mailing_queue()</field>
