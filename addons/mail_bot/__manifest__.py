@@ -9,6 +9,7 @@
     'description': "",
     'website': 'https://www.odoo.com/page/discuss',
     'depends': ['mail'],
+    'auto_install': True,
     'installable': True,
     'application': False,
     'data': [
