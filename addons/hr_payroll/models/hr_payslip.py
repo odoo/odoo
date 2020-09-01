@@ -601,3 +601,11 @@ class HrPayslipRun(models.Model):
     @api.multi
     def close_payslip_run(self):
         return self.write({'state': 'close'})
+    
+    @api.multi
+    def unlink(self):
+        if any(self.filtered(lambda payslip_run: payslip_run.state not in ('draft'))):
+            raise UserError(_('You cannot delete a payslip batch which is not draft!'))
+        if any(self.mapped('slip_ids').filtered(lambda payslip: payslip.state not in ('draft','cancel'))):
+            raise UserError(_('You cannot delete a payslip which is not draft or cancelled!'))
+        return super(HrPayslipRun, self).unlink()
