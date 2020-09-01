@@ -1720,11 +1720,19 @@
     </div>
 </t>
 
-<t t-name="UserMenu">
+<t t-name="UserMenu" owl="1">
     <li class="o_user_menu">
-        <a role="button" class="dropdown-toggle o-no-caret" data-toggle="dropdown" data-display="static" aria-expanded="false" href="#">
-            <img class="rounded-circle oe_topbar_avatar" t-att-src="_s + '/web/static/src/img/user_menu_avatar.png'" alt="User"/>
-            <span class="oe_topbar_name"/>
+        <a
+            role="button"
+            class="dropdown-toggle o-no-caret"
+            data-toggle="dropdown"
+            data-display="static"
+            aria-expanded="false"
+            href="#">
+            <img
+                class="rounded-circle oe_topbar_avatar"
+                src="/web/static/src/img/user_menu_avatar.png"
+                alt="User"/> <span class="oe_topbar_name"/>
         </a>
         <div class="dropdown-menu dropdown-menu-right" role="menu">
             <t t-call="UserMenu.Actions"/>
@@ -1732,13 +1740,38 @@
     </li>
 </t>
 
-<t t-name="UserMenu.Actions">
-    <a role="menuitem" href="#" data-menu="documentation" class="dropdown-item">Documentation</a>
-    <a role="menuitem" href="#" data-menu="support" class="dropdown-item">Support</a>
+<t t-name="UserMenu.Actions" owl="1">
+    <a
+        role="menuitem"
+        href="#"
+        data-menu="documentation"
+        class="dropdown-item"
+        t-on-click="_onClickMenu">Documentation</a>
+    <a
+        role="menuitem"
+        href="#"
+        data-menu="support"
+        class="dropdown-item"
+        t-on-click="_onClickMenu">Support</a>
     <div role="separator" class="dropdown-divider"/>
-    <a role="menuitem" href="#" data-menu="settings" class="dropdown-item">Preferences</a>
-    <a role="menuitem" href="#" data-menu="account" class="dropdown-item">My Odoo.com account</a>
-    <a role="menuitem" href="#" data-menu="logout" class="dropdown-item">Log out</a>
+    <a
+        role="menuitem"
+        href="#"
+        data-menu="settings"
+        class="dropdown-item"
+        t-on-click.prevent="_onClickMenu">Preferences</a>
+    <a
+        role="menuitem"
+        href="#"
+        data-menu="account"
+        class="dropdown-item"
+        t-on-click="_onClickMenu">My Odoo.com account</a>
+    <a
+        role="menuitem"
+        href="#"
+        data-menu="logout"
+        class="dropdown-item"
+        t-on-click="_onClickMenu">Log out</a>
 </t>
 
 <t t-name="SwitchCompanyMenu">

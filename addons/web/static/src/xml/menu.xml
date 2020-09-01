@@ -95,104 +95,123 @@
     </t>
 </t>
 
-<t t-extend="UserMenu.Actions">
-    <t t-jquery=".dropdown-divider" t-operation="before">
-        <a role="menuitem" href="#" data-menu="shortcuts" class="dropdown-item d-none d-md-inline-block">Shortcuts</a>
-    </t>
+<t
+    t-name="UserMenu.Actions.Shortcut"
+    t-inherit="UserMenu.Actions"
+    t-inherit-mode="extension"
+    owl="1">
+    <xpath expr="//div[contains(@class, 'dropdown-divider')]" position="before">
+        <a
+            role="menuitem"
+            href="#"
+            data-menu="shortcuts"
+            class="dropdown-item d-none d-md-inline-block"
+            t-on-click.prevent="_onClickMenu">Shortcuts</a>
+        <t t-call="UserMenu.shortcuts"/>
+    </xpath>
 </t>
 
-<div t-name="UserMenu.shortcuts">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="offset-md-2 col-md-8">
-                <table class="o_shortcut_table text-center">
-                    <thead>
-                        <tr>
-                            <th style="width:50%;">Description</th>
-                            <th style="width:25%;" class="text-center">Windows/Linux</th>
-                            <th style="width:25%;" class="text-center">Mac</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td align="left">Save a record</td>
-                            <td>
-                                <span class="o_key">Alt</span> + <span class="o_key">s</span>
-                            </td>
-                            <td>
-                                <span class="o_key">Control</span> + <span class="o_key">Alt</span> + <span class="o_key">s</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td align="left">Edit a record</td>
-                            <td>
-                                <span class="o_key">Alt</span> + <span class="o_key">a</span>
-                            </td>
-                            <td>
-                                <span class="o_key">Control</span> + <span class="o_key">Alt</span> + <span class="o_key">a</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td align="left">Discard a record modification</td>
-                            <td>
-                                <span class="o_key">Alt</span> + <span class="o_key">j</span>
-                            </td>
-                            <td>
-                                <span class="o_key">Control</span> + <span class="o_key">Alt</span> + <span class="o_key">j</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td align="left">Create a new record</td>
-                            <td>
-                                <span class="o_key">Alt</span> + <span class="o_key">c</span>
-                            </td>
-                            <td>
-                                <span class="o_key">Control</span> + <span class="o_key">Alt</span> + <span class="o_key">c</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td align="left">Open to list view</td>
-                            <td>
-                                <span class="o_key">Alt</span> + <span class="o_key">l</span>
-                            </td>
-                            <td>
-                                <span class="o_key">Control</span> + <span class="o_key">Alt</span> + <span class="o_key">l</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td align="left">Open to kanban view</td>
-                            <td>
-                                <span class="o_key">Alt</span> + <span class="o_key">k</span>
-                            </td>
-                            <td>
-                                <span class="o_key">Control</span> + <span class="o_key">Alt</span> + <span class="o_key">k</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td align="left">Open the previous record</td>
-                            <td>
-                                <span class="o_key">Alt</span> + <span class="o_key">p</span>
-                            </td>
-                            <td>
-                                <span class="o_key">Control</span> + <span class="o_key">Alt</span> + <span class="o_key">p</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td align="left">Open the next record</td>
-                            <td>
-                                <span class="o_key">Alt</span> + <span class="o_key">n</span>
-                            </td>
-                            <td>
-                                <span class="o_key">Control</span> + <span class="o_key">Alt</span> + <span class="o_key">n</span>
-                            </td>
-                        </tr>
-
-                    </tbody>
-                </table>
+<t t-name="UserMenu.shortcuts" owl="1">
+    <Dialog
+        t-if="state.showShortcuts"
+        size="'large'"
+        contentClass="'o_act_window'"
+        title="env._t('Keyboard Shortcuts')"
+        t-on-dialog-closed.stop="_onCloseShortcuts"
+        >
+        <div>
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="offset-md-2 col-md-8">
+                        <table class="o_shortcut_table text-center">
+                            <thead>
+                                <tr>
+                                    <th style="width:50%;">Description</th>
+                                    <th style="width:25%;" class="text-center">Windows/Linux</th>
+                                    <th style="width:25%;" class="text-center">Mac</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td align="left">Save a record</td>
+                                    <td>
+                                        <span class="o_key">Alt</span> + <span class="o_key">s</span>
+                                    </td>
+                                    <td>
+                                        <span class="o_key">Control</span> + <span class="o_key">Alt</span> + <span class="o_key">s</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td align="left">Edit a record</td>
+                                    <td>
+                                        <span class="o_key">Alt</span> + <span class="o_key">a</span>
+                                    </td>
+                                    <td>
+                                        <span class="o_key">Control</span> + <span class="o_key">Alt</span> + <span class="o_key">a</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td align="left">Discard a record modification</td>
+                                    <td>
+                                        <span class="o_key">Alt</span> + <span class="o_key">j</span>
+                                    </td>
+                                    <td>
+                                        <span class="o_key">Control</span> + <span class="o_key">Alt</span> + <span class="o_key">j</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td align="left">Create a new record</td>
+                                    <td>
+                                        <span class="o_key">Alt</span> + <span class="o_key">c</span>
+                                    </td>
+                                    <td>
+                                        <span class="o_key">Control</span> + <span class="o_key">Alt</span> + <span class="o_key">c</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td align="left">Open to list view</td>
+                                    <td>
+                                        <span class="o_key">Alt</span> + <span class="o_key">l</span>
+                                    </td>
+                                    <td>
+                                        <span class="o_key">Control</span> + <span class="o_key">Alt</span> + <span class="o_key">l</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td align="left">Open to kanban view</td>
+                                    <td>
+                                        <span class="o_key">Alt</span> + <span class="o_key">k</span>
+                                    </td>
+                                    <td>
+                                        <span class="o_key">Control</span> + <span class="o_key">Alt</span> + <span class="o_key">k</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td align="left">Open the previous record</td>
+                                    <td>
+                                        <span class="o_key">Alt</span> + <span class="o_key">p</span>
+                                    </td>
+                                    <td>
+                                        <span class="o_key">Control</span> + <span class="o_key">Alt</span> + <span class="o_key">p</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td align="left">Open the next record</td>
+                                    <td>
+                                        <span class="o_key">Alt</span> + <span class="o_key">n</span>
+                                    </td>
+                                    <td>
+                                        <span class="o_key">Control</span> + <span class="o_key">Alt</span> + <span class="o_key">n</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-</div>
+    </Dialog>
+</t>
 
 <t t-extend="FormSelection">
     <t t-jquery=".dropdown-menu.state">$(this).addClass("dropdown-menu-right");</t>
