@@ -158,6 +158,10 @@
 
 <!-- Tracks: List-based display -->
 <template id="tracks_display_list" name="Tracks: List Display">
+    <div t-if="tracks">
+        <h1>Book your talks</h1>
+        <h4 class="mb-5">Plan your experience by adding your favorites talks to your wishlist</h4>
+    </div>
     <div t-if="tracks" class="o_wesession_list mb-3">
         <ul class="list-unstyled">
             <li t-foreach="tracks_by_day" t-as="tracks_info"
@@ -184,60 +188,97 @@
                     <hr class="mt-2 pb-1 mb-1"/>
                 </div>
                 <!-- DAY TRACKS LIST -->
-                <div t-foreach="tracks" t-as="track" class="row mt8 o_wesession_list_item">
-                    <div class="col-md-7">
-                        <span class="h5 mb0">
-                            <a t-if="track.is_published or user_event_manager"
-                                t-att-href="track.website_url">
-                                <span t-field="track.name"/>
-                            </a>
-                            <t t-else="">
-                                <span t-field="track.name"/>
-                            </t>
-                            <span t-if="not track.is_published and user_event_manager"
-                                class="badge badge-danger ml-2 o_wevent_online_badge_unpublished">
-                                Unpublished
-                            </span>
-                        </span>
-                        <div class="text-muted">
-                            <span class="text-muted" t-esc="track.partner_name"/>
-                            <t t-if="track.partner_name"> &amp;bull; </t>
-                            <span t-esc="track.duration"
-                                t-options="{'widget': 'duration', 'digital': False, 'format': 'short', 'unit': 'hour', 'round': 'minute'}"/>
-                        </div>
+                <div t-foreach="tracks" t-as="track"
+                    t-att-class="'o_wesession_list_item px-2 py-2 event_color_%d' % (track.color)">
+                    <!-- Side information in a floating div (desktop only) -->
+                    <div t-if="not event.is_done and (not track.date or today_tz &lt;= tracks_date) and option_track_wishlist"
+                        class="float-right d-none d-md-block ml-2">
+                        <t t-call="website_event_track.track_widget_reminder">
+                            <t t-set="reminder_small" t-value="False"/>
+                            <t t-set="reminder_light" t-value="False"/>
+                        </t>
                     </div>
-                    <div class="col-md-5">
-                        <div t-if="not event.is_done" class="float-right">
-                            <t t-if="tracks_date and today_tz &lt;= tracks_date">
+                    <div class="row no-gutters">
+                        <!-- Main column: name, speaker -->
+                        <div class="col-md-7">
+                            <!-- Reminder widget: directly in line to gain space, mobile only -->
+                            <div t-if="not event.is_done and (not track.date or today_tz &lt;= tracks_date) and option_track_wishlist"
+                                class="float-right d-block d-md-none ml-2">
+                                <t t-call="website_event_track.track_widget_reminder">
+                                    <t t-set="reminder_small" t-value="True"/>
+                                    <t t-set="reminder_light" t-value="False"/>
+                                </t>
+                            </div>
+                            <span class="h5 mb0">
+                                <a t-if="track.is_published or user_event_manager"
+                                    class="mr-2"
+                                    t-att-href="track.website_url">
+                                    <span t-field="track.name"/>
+                                </a>
+                                <t t-else="">
+                                    <span class="mr-2" t-field="track.name"/>
+                                </t>
+                                <span t-if="not track.is_published and user_event_manager"
+                                    class="badge badge-danger o_wevent_online_badge_unpublished">
+                                    Unpublished
+                                </span>
+                            </span>
+                            <div class="text-muted d-flex align-items-center">
+                                <span class="text-muted" t-esc="track.partner_name"/>
+                                <t t-if="tracks_date and today_tz &lt;= tracks_date">
+                                    <!-- Hour: Live > Remaining > Hour: mobile only -->
+                                    <div class="d-block d-md-none">
+                                        <span t-if="track.partner_name" class="ml-2">&amp;bull;</span>
+                                        <span t-if="track.is_track_live and not track.is_track_done"
+                                            class="badge badge-danger ml-2">Live</span>
+                                        <span t-elif="not track.is_track_done and track.is_track_soon"
+                                            class="ml-2">
+                                            <span t-esc="track.track_start_remaining"
+                                                t-options="{'widget': 'duration', 'digital': False, 'format': 'narrow',
+                                                            'add_direction': True, 'unit': 'second', 'round': 'minute'}"/>
+                                        </span>
+                                        <span t-elif="not track.is_track_done and not track.is_track_soon"
+                                            class="ml-2"
+                                            t-esc="track.date"
+                                            t-options="{'widget': 'datetime', 'time_only': True, 'format': 'short'}"/>
+                                        <span t-else="" class="badge badge-info ml-2">Finished</span>
+                                    </div>
+                                    <!-- Duration (desktop only) -->
+                                    <t t-if="track.duration and not track.is_track_done and not track.is_track_done">
+                                        <span class="d-none d-md-block ml-2">&amp;bull;</span>
+                                        <span class="d-none d-md-block ml-2"
+                                            t-esc="track.duration"
+                                            t-options="{'widget': 'duration', 'digital': False, 'format': 'short', 'unit': 'hour', 'round': 'minute'}"/>
+                                    </t>
+                                </t>
+                            </div>
+                        </div>
+                        <!-- Aside column: date, tags -->
+                        <div class="col-md-5">
+                            <!-- Hour: Live > Remaining > Hour: desktop only -->
+                            <div t-if="tracks_date and today_tz &lt;= tracks_date"
+                                class="d-none d-md-block float-right">
                                 <span t-if="track.is_track_live and not track.is_track_done"
-                                    class="badge badge-danger">Live</span>
-                                <span t-elif="not track.is_track_done and track.is_track_soon">
+                                    class="badge badge-danger ml-2">Live</span>
+                                <span t-elif="not track.is_track_done and track.is_track_soon"
+                                    class="ml-2">
                                     <span t-esc="track.track_start_remaining"
                                         t-options="{'widget': 'duration', 'digital': False, 'format': 'narrow',
                                                     'add_direction': True, 'unit': 'second', 'round': 'minute'}"/>
                                 </span>
-                                <t t-elif="not track.is_track_done and not track.is_track_soon">
-                                    <span
-                                        class="mr-2"
-                                        t-esc="track.date"
-                                        t-options="{'widget': 'datetime', 'time_only': True, 'format': 'short'}"/>
-                                    <t t-if="option_track_wishlist"
-                                        t-call="website_event_track.track_widget_reminder">
-                                        <t t-set="reminder_small" t-value="True"/>
-                                    </t>
+                                <span t-elif="not track.is_track_done and not track.is_track_soon"
+                                    class="ml-2"
+                                    t-esc="track.date"
+                                    t-options="{'widget': 'datetime', 'time_only': True, 'format': 'short'}"/>
+                                <span t-else="" class="badge badge-info ml-2">Finished</span>
+                            </div>
+                            <!-- Tags: desktop only -->
+                            <div class="d-none d-md-block">
+                                <t t-foreach="track.tag_ids" t-as="tag">
+                                    <t t-if="tag.color" t-call="website_event_track.track_tag_badge_link"/>
                                 </t>
-                                <t t-else="">
-                                    <span class="badge badge-info">Finished</span>
-                                </t>
-                            </t>
-                            <t t-elif="not track.date and option_track_wishlist"
-                                t-call="website_event_track_online.track_widget_reminder">
-                                <t t-set="reminder_small" t-value="True"/>
-                            </t>
+                            </div>
                         </div>
-                        <t t-foreach="track.tag_ids" t-as="tag">
-                            <t t-if="tag.color" t-call="website_event_track.track_tag_badge_link"/>
-                        </t>
                     </div>
                 </div>
             </li>

@@ -38,7 +38,7 @@
                     t-options="{'widget': 'duration', 'digital': True, 'unit': 'minute', 'round': 'minute'}"/>.
             </span>
             <span class="my-0" t-else="">
-                starts at
+                starts on
                 <span t-field="sponsor.event_id.with_context(tz=sponsor.event_id.date_tz).date_begin"
                     t-options="{'format': 'medium'}"/> (<t t-esc="sponsor.event_id.date_tz"/>).
             </span>
