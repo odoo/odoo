@@ -13,9 +13,7 @@ odoo.define('pos_restaurant.TipScreen', function (require) {
             this._totalAmount = this.currentOrder.get_total_with_tax();
         }
         mounted () {
-            if (this.env.pos.proxy.printer) {
-                this.printTipReceipt();
-            }
+            this.printTipReceipt();
         }
         get overallAmountStr() {
             const tipAmount = parse.float(this.state.inputTipAmount || '0');
@@ -116,13 +114,38 @@ odoo.define('pos_restaurant.TipScreen', function (require) {
                     data: data,
                     total: this.env.pos.format_currency(this.totalAmount),
                 });
-                const printResult = await this.env.pos.proxy.printer.print_receipt(receipt);
-                if (!printResult.successful) {
-                    await this.showPopup('ErrorPopup', {
-                        title: printResult.message.title,
-                        body: printResult.message.body,
-                    });
+
+                if (this.env.pos.proxy.printer) {
+                    await this._printIoT(receipt);
+                } else {
+                    await this._printWeb(receipt);
                 }
+            }
+        }
+
+        async _printIoT(receipt) {
+            const printResult = await this.env.pos.proxy.printer.print_receipt(receipt);
+            if (!printResult.successful) {
+                await this.showPopup('ErrorPopup', {
+                    title: printResult.message.title,
+                    body: printResult.message.body,
+                });
+            }
+        }
+
+        async _printWeb(receipt) {
+            try {
+                $(this.el).find('.pos-receipt-container').html(receipt);
+                const isPrinted = document.execCommand('print', false, null);
+                if (!isPrinted) window.print();
+            } catch (err) {
+                await this.showPopup('ErrorPopup', {
+                    title: this.env._t('Printing is not supported on some browsers'),
+                    body: this.env._t(
+                        'Printing is not supported on some browsers due to no default printing protocol ' +
+                            'is available. It is possible to print your tickets by making use of an IoT Box.'
+                    ),
+                });
             }
         }
     }
