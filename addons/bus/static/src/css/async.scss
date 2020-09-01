@@ -1,0 +1,39 @@
+.o_ready_job_counter {
+    margin-top: -0.8rem;
+    margin-right: 0;
+    margin-left: -0.6rem;
+    background: #00A09D;
+    color: white;
+    vertical-align: super;
+    font-size: 0.7em;
+}
+
+.o_async_jobs {
+    width: 250px;
+    display: flex;
+    flex-direction: column;
+
+    .o_async_job {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        padding: 0.3em 0;
+
+        &:not(:last-child) {
+            border-bottom: 1px solid gray('400');
+        }
+
+        .o_async_job_state {
+            flex-basis: 0;
+            padding: 0 0.4em;
+        }
+
+        &.o_async_job_succeeded, &.o_async_job_failed {
+            cursor: pointer;
+        }
+    }
+
+    .o_async_jobs_empty {
+        padding: 3px 20px;
+    }
+}

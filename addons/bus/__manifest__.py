@@ -7,7 +7,11 @@
     'depends': ['base', 'web'],
     'data': [
         'views/bus.xml',
+        'views/async.xml',
         'security/ir.model.access.csv',
+    ],
+    'qweb': [
+        'static/xml/async.xml',
     ],
     'installable': True,
 }

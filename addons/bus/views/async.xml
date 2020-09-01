@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="async_assets_backend" name="im assets" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/bus/static/src/js/services/async_service.js"></script>
+            <script type="text/javascript" src="/bus/static/src/js/async_systray.js"></script>
+            <link rel="stylesheet" type="text/scss" href="/bus/static/src/css/async.scss"/>
+        </xpath>
+    </template>
+</odoo>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="bus.systray.AsyncJobSystrayMenu">
+        <li class="o_async_systray_item">
+            <a role="button" href="#" data-toggle="dropdown" data-display="static"
+               t-attf-class="{{ widget.isOpen ? 'show' : '' }} o_async_toggler dropdown-toggle o-no-caret"
+               title="Background tasks">
+                <t t-set="spinner" t-value="widget.aggreatedState()"/>
+                <span t-if="spinner === 'processing'" class="o_async_processing fa fa-spinner fa-spin"/>
+                <span t-elif="spinner === 'pending'" class="o_async_pending fa fa-spinner"/>
+                <span t-elif="spinner === 'finished'" class="o_async_finished fa fa-tasks"/>
+                <t t-set="actionNeededCount" t-value="widget.actionNeededCount()"/>
+                <span t-if="actionNeededCount > 0" t-esc="actionNeededCount" class="o_ready_job_counter badge badge-pill"/>
+            </a>
+            <div t-attf-class="{{ widget.isOpen ? 'show' : '' }} o_async_dropdown dropdown-menu dropdown-menu-right" role="menu">
+
+                <div class="o_async_jobs">
+                    <div class="o_async_jobs_empty" t-if="_.isEmpty(widget.call('async_job', 'getJobs'))">
+                        There is no background task requiring your attention.
+                    </div>
+                    <t t-foreach="Object.values(widget.call('async_job', 'getJobs'))" t-as="job">
+                        <t t-if="job.name">
+                            <t t-call="bus.systray.AsyncJob"/>
+                        </t>
+                    </t>
+                </div>
+            </div>
+        </li>
+    </t>
+
+    <t t-name="bus.systray.AsyncJob">
+        <div t-attf-class="o_async_job o_async_job_{{ job.state }}"
+             t-attf-title="{{ widget.STATE_DATA[job.state].tooltip }}"
+             t-att-data-job-id="job.id">
+            <div class="o_async_job_state">
+                <span t-attf-class="{{ widget.STATE_DATA[job.state].icon }}"/>
+            </div>
+            <div class="o_async_job_name" t-esc="job.name"/>
+        </div>
+    </t>
+</templates>
