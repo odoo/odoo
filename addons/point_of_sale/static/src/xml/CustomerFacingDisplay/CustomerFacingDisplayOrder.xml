@@ -4,7 +4,11 @@
     <t t-name="CustomerFacingDisplayHead">
         <div class="resources">
             <base t-att-href="origin"/>
-            <link href="/point_of_sale/static/src/css/customer_facing_display.css" rel="stylesheet"/>
+            <meta http-equiv="cache-control" content="no-cache" />
+            <meta http-equiv="pragma" content="no-cache" />
+            <link rel="stylesheet" type="text/css" href="/web/static/lib/bootstrap/css/bootstrap.css"/>
+            <link rel="stylesheet" type="text/css" href="/web/static/lib/fontawesome/css/font-awesome.css"/>
+            <link rel="stylesheet" type="text/css" href="/point_of_sale/static/src/css/customer_facing_display.css"/>
         </div>
     </t>
 
@@ -37,9 +41,7 @@
                     <t t-call="CustomerFacingDisplayPaymentLines"/>
 
                     <!-- Odoo Logo -->
-                    <div class="pos-odoo_logo_container">
-                        <img src="/web/static/src/img/logo_inverse_white_206px.png" alt="Odoo Logo"/>
-                    </div>
+                    <div class="pos-odoo_logo_container"/>
                 </div>
             </div>
         </div>
