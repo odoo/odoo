@@ -19,16 +19,18 @@ Object-Relational Mapping
 **Reference**: the documentation related to this topic can be found in the
 :ref:`reference/orm/model` API.
 
-**Goal**: at the end of this section, the table ``estate_property`` is created:
+.. note::
 
-.. code-block:: console
+    **Goal**: at the end of this section, the table ``estate_property`` is created:
 
-    $ psql-d rd-demo
-    rd-demo=# SELECT COUNT(*) FROM estate_property;
-    count 
-    -------
-        0
-    (1 row)
+    .. code-block:: console
+
+        $ psql-d rd-demo
+        rd-demo=# SELECT COUNT(*) FROM estate_property;
+        count
+        -------
+            0
+        (1 row)
 
 A key component of Odoo is the :abbr:`ORM (Object-Relational Mapping)` layer.
 This layer avoids having to write most :abbr:`SQL (Structured Query Language)`
@@ -124,40 +126,42 @@ The ``name`` field is a :class:`~odoo.fields.Char` which will be represented as 
 Types
 -----
 
-**Goal**: at the end of this section, several basic fields are added to the table
-``estate_property``:
+.. note::
 
-.. code-block:: console
+    **Goal**: at the end of this section, several basic fields are added to the table
+    ``estate_property``:
 
-    $ psql -d rd-demo
+    .. code-block:: console
 
-    rd-demo=# \d estate_property;
-                                                Table "public.estate_property"
-        Column       |            Type             | Collation | Nullable |                   Default
-    --------------------+-----------------------------+-----------+----------+---------------------------------------------
-    id                 | integer                     |           | not null | nextval('estate_property_id_seq'::regclass)
-    create_uid         | integer                     |           |          |
-    create_date        | timestamp without time zone |           |          |
-    write_uid          | integer                     |           |          |
-    write_date         | timestamp without time zone |           |          |
-    name               | character varying           |           |          |
-    description        | text                        |           |          |
-    postcode           | character varying           |           |          |
-    date_availability  | date                        |           |          |
-    expected_price     | double precision            |           |          |
-    selling_price      | double precision            |           |          |
-    bedrooms           | integer                     |           |          |
-    living_area        | integer                     |           |          |
-    facades            | integer                     |           |          |
-    garage             | boolean                     |           |          |
-    garden             | boolean                     |           |          |
-    garden_area        | integer                     |           |          |
-    garden_orientation | character varying           |           |          |
-    Indexes:
-        "estate_property_pkey" PRIMARY KEY, btree (id)
-    Foreign-key constraints:
-        "estate_property_create_uid_fkey" FOREIGN KEY (create_uid) REFERENCES res_users(id) ON DELETE SET NULL
-        "estate_property_write_uid_fkey" FOREIGN KEY (write_uid) REFERENCES res_users(id) ON DELETE SET NULL
+        $ psql -d rd-demo
+
+        rd-demo=# \d estate_property;
+                                                    Table "public.estate_property"
+            Column       |            Type             | Collation | Nullable |                   Default
+        --------------------+-----------------------------+-----------+----------+---------------------------------------------
+        id                 | integer                     |           | not null | nextval('estate_property_id_seq'::regclass)
+        create_uid         | integer                     |           |          |
+        create_date        | timestamp without time zone |           |          |
+        write_uid          | integer                     |           |          |
+        write_date         | timestamp without time zone |           |          |
+        name               | character varying           |           |          |
+        description        | text                        |           |          |
+        postcode           | character varying           |           |          |
+        date_availability  | date                        |           |          |
+        expected_price     | double precision            |           |          |
+        selling_price      | double precision            |           |          |
+        bedrooms           | integer                     |           |          |
+        living_area        | integer                     |           |          |
+        facades            | integer                     |           |          |
+        garage             | boolean                     |           |          |
+        garden             | boolean                     |           |          |
+        garden_area        | integer                     |           |          |
+        garden_orientation | character varying           |           |          |
+        Indexes:
+            "estate_property_pkey" PRIMARY KEY, btree (id)
+        Foreign-key constraints:
+            "estate_property_create_uid_fkey" FOREIGN KEY (create_uid) REFERENCES res_users(id) ON DELETE SET NULL
+            "estate_property_write_uid_fkey" FOREIGN KEY (write_uid) REFERENCES res_users(id) ON DELETE SET NULL
 
 
 There are two broad categories of fields: 'simple' fields which are atomic
@@ -207,6 +211,23 @@ a couple of of extra fields were also added to the table. We will come back to t
 Common Attributes
 -----------------
 
+.. note::
+
+    **Goal**: at the end of this section, the fields ``name`` and ``expected_price`` should be
+    not nullable in the table ``estate_property``:
+
+    .. code-block:: console
+
+        rd-demo=# \d estate_property;
+                                                    Table "public.estate_property"
+            Column       |            Type             | Collation | Nullable |                   Default
+        --------------------+-----------------------------+-----------+----------+---------------------------------------------
+        ...
+        name               | character varying           |           | not null |
+        ...
+        expected_price     | double precision            |           | not null |
+        ...
+
 Much like the model itself, its fields can be configured by passing
 configuration attributes as parameters::
 
@@ -223,6 +244,37 @@ Some attributes are available on all fields, here are the most common ones:
     Long-form, provides a help tooltip to users in the UI.
 :attr:`~odoo.fields.Field.index` (``bool``, default: ``False``)
     Requests that Odoo create a `database index`_ on the column.
+
+.. exercise:: Set attributes to existing fields.
+
+    Add the following attributes:
+
+    ========================= =========================
+    Field                     Attribute
+    ========================= =========================
+    name                      required
+    expected_price            required
+    ========================= =========================
+
+After restarting the server, the schema both fields should be not nullable.
+
+Default values
+--------------
+
+Any field can be given a default value. In the field definition, add the option
+``default=X`` where ``X`` is either a Python literal value (boolean, integer,
+float, string), or a function taking a recordset and returning a value::
+
+    name = fields.Char(default="Unknown")
+    date_start = fields.Date("Date Start", default=lambda self: fields.Date.today())
+
+.. exercise:: Active objects – Default values
+
+    * Define the start_date default value as today (see
+      :class:`~odoo.fields.Date`).
+    * Add a field ``active`` in the class Session, and set sessions as active by
+      default.
+
 
 Reserved Fields
 ---------------
