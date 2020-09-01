@@ -652,6 +652,8 @@ class AccountMove(models.Model):
                 continue
 
             tax_base_amount = (-1 if self.is_inbound() else 1) * taxes_map_entry['tax_base_amount']
+            # tax_base_amount field is expressed using the company currency.
+            tax_base_amount = currency._convert(tax_base_amount, self.company_currency_id, self.company_id, self.date or fields.Date.context_today(self))
 
             # Recompute only the tax_base_amount.
             if taxes_map_entry['tax_line'] and recompute_tax_base_amount:
