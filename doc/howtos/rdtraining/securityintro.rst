@@ -118,4 +118,6 @@ Here is an example for our former ``test.model``:
 
 Restart the server, and the warning message should have disappeared!
 
+It's now time to finally :ref:`interact with the UI <howto/rdtraining/firstui>`!
+
 .. [#who] 'who' means which Odoo user

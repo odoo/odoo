@@ -278,6 +278,10 @@ useful or necessary:
     user who last modified the record.
 
 
+Now that we have created our first table, let's
+:ref:`add some security <howto/rdtraining/securityintro>`!
+
+
 .. [#autofields] it is possible to :ref:`disable the automatic creation of some
                  fields <reference/fields/automatic/log_access>`
 .. [#rawsql] writing raw SQL queries is possible, but requires care as it

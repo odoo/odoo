@@ -99,3 +99,5 @@ No, it doesn't appear? Maybe try to remove the default 'Apps' filter ;-)
     filter is on.
 
 You can even install the module! But obviously it's an empty shell, so no menu will appear.
+
+It's all good? If so, let's :ref:`create our first table <howto/rdtraining/basicmodel>`!
