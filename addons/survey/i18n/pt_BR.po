@@ -45,13 +45,13 @@ msgstr "# Perguntas"
 #. module: survey
 #: model:mail.template,subject:survey.email_template_survey
 msgid "${object.title}: Survey"
-msgstr ""
+msgstr "${object.title}: Pesquisa"
 
 #. module: survey
 #: code:addons/survey/models/survey.py:122
 #, python-format
 msgid "%s (copy)"
-msgstr "%s (copy)"
+msgstr "%s (cópia)"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.page
@@ -85,6 +85,19 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Ola<br/><br/>\n"
+"        Estamos realizando uma pesquisa e agradecemos sua resposta.\n"
+"        <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"            <a href=\"__URL__\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                Iniciar Pesquisa\n"
+"            </a>\n"
+"        </div>\n"
+"        Obrigado pela sua participação!\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -159,7 +172,7 @@ msgid ""
 "                    All Data"
 msgstr ""
 "<i class=\"fa fa-list-alt\"/>\n"
-"Todos os Dados"
+"                    Todos os dados"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.result_matrix
@@ -168,7 +181,7 @@ msgid ""
 "                    Data"
 msgstr ""
 "<i class=\"fa fa-list-alt\"/>\n"
-"Dados"
+"                    Dados"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.result_choice
@@ -182,7 +195,7 @@ msgid ""
 "                    Most Common"
 msgstr ""
 "<i class=\"fa fa-list-ol\"/>\n"
-"Mais Comum"
+"                    Mais Comuns"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -210,6 +223,9 @@ msgid ""
 "surveys</span><span class=\"badge badge-secondary only_right_radius filter-"
 "finished\">Finished surveys</span>"
 msgstr ""
+"<span class=\"badge badge-primary only_left_radius filter-all\">Todas "
+"pesquisas</span><span class=\"badge badge-secondary only_right_radius filter-"
+"finished\">Pesquisas concluídas</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.result
@@ -227,6 +243,9 @@ msgid ""
 "surveys</span><span class=\"badge badge-primary only_right_radius filter-"
 "finished\">Finished surveys</span>"
 msgstr ""
+"<span class=\"badge badge-secondary only_left_radius filter-all\">Todas "
+"pesquisas</span><span class=\"badge badge-primary only_right_radius filter-"
+"finished\">Pesquisas concluídas</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.result_number
@@ -246,7 +265,7 @@ msgstr "<span class=\"badge badge-secondary only_left_radius\">Mínimo </span>"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.result_number
 msgid "<span class=\"badge badge-secondary only_left_radius\">Sum </span>"
-msgstr ""
+msgstr "<span class=\"badge badge-secondary only_left_radius\">Soma </span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.result
@@ -259,6 +278,8 @@ msgid ""
 "<span style=\"font-size:1.5em;\" class=\"fa fa-bar-chart-o float-right \" "
 "role=\"img\" aria-label=\"Chart\" title=\"Chart\"/>"
 msgstr ""
+"<span style=\"font-size:1.5em;\" class=\"fa fa-bar-chart-o float-right \" "
+"role=\"img\" aria-label=\"Gráfico\" title=\"Gráfico\"/>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.no_result
@@ -268,12 +289,16 @@ msgid ""
 "                        </span>\n"
 "                        Sorry, No one answered this survey yet"
 msgstr ""
+"<span>\n"
+"                            <i style=\"font-size:1.8em\" class=\"fa fa-users float-right\" role=\"img\" aria-label=\"Sem resposta\" title=\"Sem resposta\"/>\n"
+"                        </span>\n"
+"                        Desculpe, ninguém respondeu a esta pesquisa ainda"
 
 #. module: survey
 #: code:addons/survey/models/survey.py:688
 #, python-format
 msgid "A label must be attached to only one question."
-msgstr ""
+msgstr "Uma etiqueta deve ser anexada a apenas uma pergunta."
 
 #. module: survey
 #: sql_constraint:survey.question:0
@@ -355,11 +380,13 @@ msgid ""
 "Add a list of email of recipients (will not be converted into contacts). "
 "Separated by commas, semicolons or newline..."
 msgstr ""
+"Adicione uma lista de e-mail de destinatários (não será convertido em contatos). "
+"Separado por vírgulas, ponto e vírgula ou nova linha ..."
 
 #. module: survey
 #: model_terms:ir.actions.act_window,help:survey.action_survey_form
 msgid "Add a new survey"
-msgstr ""
+msgstr "Adicionar uma nova pesquisa"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_email_compose_message
@@ -485,7 +512,7 @@ msgstr "Voltar para Pesquisa"
 #. module: survey
 #: model:survey.label,value:survey.choice_1_2_4
 msgid "CRM"
-msgstr "CRM"
+msgstr "CRM/Oportunidades"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_email_compose_message
@@ -875,7 +902,7 @@ msgstr "Adotado como favorito por"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.result_choice
 msgid "Filter question"
-msgstr ""
+msgstr "Perguntar do filtro"
 
 #. module: survey
 #: model:survey.label,value:survey.choice_1_2_3
@@ -1303,7 +1330,7 @@ msgstr "O valor máximo"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.403
 msgid "Maybe you were looking for"
-msgstr ""
+msgstr "Talvez você estivesse procurando por"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__message_has_error
@@ -1378,12 +1405,12 @@ msgstr "Caixa de Texto de Várias Linhas"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Multiple choice with multiple answers"
-msgstr ""
+msgstr "Múltipla escolha com múltiplas respostas"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Multiple choice with one answer"
-msgstr ""
+msgstr "Múltipla escolha com uma resposta"
 
 #. module: survey
 #: selection:survey.question,type:0
@@ -1454,17 +1481,17 @@ msgstr "Próxima página"
 #. module: survey
 #: model_terms:ir.actions.act_window,help:survey.action_survey_page_form
 msgid "No pages found"
-msgstr ""
+msgstr "Nenhuma página encontrada"
 
 #. module: survey
 #: model_terms:ir.actions.act_window,help:survey.action_survey_question_form
 msgid "No questions found"
-msgstr ""
+msgstr "Nenhuma pergunta encontrada"
 
 #. module: survey
 #: model_terms:ir.actions.act_window,help:survey.action_survey_label_form
 msgid "No survey labels found"
-msgstr ""
+msgstr "Nenhum rótulo de pesquisa encontrado"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__no_auto_thread
@@ -1474,7 +1501,7 @@ msgstr "Sem thread para respostas."
 #. module: survey
 #: model_terms:ir.actions.act_window,help:survey.action_survey_user_input_line
 msgid "No user input lines found"
-msgstr ""
+msgstr "Nenhuma linha de entrada do usuário encontrada"
 
 #. module: survey
 #: model:survey.label,value:survey.choice_1_1_4
@@ -1485,7 +1512,7 @@ msgstr "Não, eu só testei"
 #: model_terms:ir.actions.act_window,help:survey.action_selected_survey_user_input
 #: model_terms:ir.actions.act_window,help:survey.action_survey_user_input
 msgid "Nobody has replied to your surveys yet"
-msgstr ""
+msgstr "Ninguém respondeu às suas pesquisas ainda"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.notopen
@@ -1644,7 +1671,7 @@ msgstr "Mensagem Principal"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_user_input_search
 msgid "Partially Completed"
-msgstr ""
+msgstr "Parcialmente completo"
 
 #. module: survey
 #: selection:survey.user_input,state:0
@@ -1878,8 +1905,7 @@ msgstr "Linhas da matriz"
 #. module: survey
 #: model:survey.label,value:survey.frow_2_7_4
 msgid "Running the configuration wizards is a good way to spare time"
-msgstr ""
-"Executando os assistentes de configuração é uma boa maneira de poupar tempo"
+msgstr "Executando os assistentes de configuração é uma boa maneira de poupar tempo"
 
 #. module: survey
 #: model:survey.label,value:survey.choice_1_2_1
@@ -2004,8 +2030,7 @@ msgstr "Mostrar Campo de Comentários"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_search
 msgid "Show all records which has next action date is before today"
-msgstr ""
-"Mostrar todas as gravações em que a próxima data de ação seja antes de hoje."
+msgstr "Mostrar todas as gravações em que a próxima data de ação seja antes de hoje."
 
 #. module: survey
 #: selection:survey.question,type:0
@@ -2016,7 +2041,7 @@ msgstr "Caixa de Texto de Linha Simples"
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line__skipped
 #: model_terms:ir.ui.view,arch_db:survey.result
 msgid "Skipped"
-msgstr "ignorados"
+msgstr "Ignorados"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_mail_compose_message__author_avatar
@@ -2201,7 +2226,7 @@ msgstr "Entradas de Usuário da Pesquisa"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.result_matrix
 msgid "Survey filter"
-msgstr ""
+msgstr "Filtro de pesquisa"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__page_id
@@ -2211,7 +2236,7 @@ msgstr "Página da pesquisa"
 #. module: survey
 #: model:ir.actions.server,name:survey.survey_action_server_clean_test_answers
 msgid "Survey: Clean test answers"
-msgstr ""
+msgstr "Pesquisa: Respostas de teste limpo"
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.action_survey_form
@@ -2233,12 +2258,12 @@ msgstr "Teste"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_user_input_search
 msgid "Test Entries"
-msgstr ""
+msgstr "Entradas de Teste"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__test_entry
 msgid "Test Entry"
-msgstr ""
+msgstr "Entrada de Teste"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_form
@@ -2392,7 +2417,7 @@ msgstr "Essa resposta deve ser um endereço de e-mail"
 #: code:addons/survey/tests/test_survey.py:107
 #, python-format
 msgid "This is not a date"
-msgstr ""
+msgstr "Isto não é um encontro"
 
 #. module: survey
 #: code:addons/survey/models/survey.py:565
@@ -2419,7 +2444,7 @@ msgstr "Esta mensagem será exibida quando a pesquisa estiver concluída"
 #: code:addons/survey/models/survey.py:806
 #, python-format
 msgid "This question cannot be unanswered or skipped."
-msgstr ""
+msgstr "Esta pergunta não pode ficar sem resposta ou ignorada."
 
 #. module: survey
 #: code:addons/survey/models/survey.py:489
@@ -2549,7 +2574,7 @@ msgstr "Contador de Mensagens Não Lidas"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_search
 msgid "Upcoming Activities"
-msgstr ""
+msgstr "Próximas Atividades"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__use_active_domain
@@ -2717,6 +2742,8 @@ msgid ""
 "YYYY-MM-DD\n"
 "                                            <i class=\"fa fa-calendar fa-2x\" role=\"img\" aria-label=\"Calendar\" title=\"Calendar\"/>"
 msgstr ""
+"YYYY-MM-DD\n"
+"                                            <i class=\"fa fa-calendar fa-2x\" role=\"img\" aria-label=\"Calendário\" title=\"Calendário\"/>"
 
 #. module: survey
 #: model:survey.label,value:survey.choice_1_1_1
@@ -2761,8 +2788,7 @@ msgstr ""
 #: code:addons/survey/models/survey.py:315
 #, python-format
 msgid "You cannot send an invitation for a survey that has no questions."
-msgstr ""
-"Você não pode enviar um convite para uma pesquisa que não tem perguntas."
+msgstr "Você não pode enviar um convite para uma pesquisa que não tem perguntas."
 
 #. module: survey
 #: code:addons/survey/models/survey.py:318
