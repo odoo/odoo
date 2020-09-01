@@ -5379,7 +5379,9 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         if onchange in ("1", "true"):
             for method in self._onchange_methods.get(field_name, ()):
+                self._onchange_sender = field_name
                 method_res = method(self)
+                self._onchange_sender = False
                 process(method_res)
             return
 
@@ -5506,6 +5508,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             record = self.new(values)
             # attach ``self`` with a different context (for cache consistency)
             record._origin = self.with_context(__onchange=True)
+            record._onchange_sender = False
 
         # make a snapshot based on the initial values of record
         with env.do_in_onchange():
