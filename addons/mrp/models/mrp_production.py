@@ -315,7 +315,7 @@ class MrpProduction(models.Model):
 
     def _set_date_deadline(self):
         for production in self:
-            (self.move_raw_ids | self.move_finished_ids).date_deadline = production.date_deadline
+            production.move_finished_ids.date_deadline = production.date_deadline
 
     @api.depends("workorder_ids")
     def _compute_is_planned(self):
@@ -706,7 +706,7 @@ class MrpProduction(models.Model):
                 if any(wo.date_planned_start and wo.date_planned_finished for wo in production.workorder_ids):
                     raise UserError(_('You cannot move a manufacturing order once it has a planned workorder, move related workorder(s) instead.'))
             if vals.get('date_planned_start'):
-                production.move_raw_ids.write({'date': production.date_planned_start})
+                production.move_raw_ids.write({'date': production.date_planned_start, 'date_deadline': production.date_planned_start})
             if vals.get('date_planned_finished'):
                 production.move_finished_ids.write({'date': production.date_planned_finished})
             if any(field in ['move_raw_ids', 'move_finished_ids', 'workorder_ids'] for field in vals) and production.state != 'draft':
@@ -717,10 +717,12 @@ class MrpProduction(models.Model):
                         'group_id': production.procurement_group_id.id,
                         'reference': production.name,
                         'date': production.date_planned_start,
+                        'date_deadline': production.date_planned_start
                     })
                     production.move_finished_ids.filtered(lambda move: move.additional and move.date > production.date_planned_finished).write({
                         'reference': production.name,
                         'date': production.date_planned_finished,
+                        'date_deadline': production.date_deadline
                     })
                 production._autoconfirm_production()
                 if production in production_to_replan:
@@ -879,7 +881,7 @@ class MrpProduction(models.Model):
             'sequence': bom_line.sequence if bom_line else 10,
             'name': self.name,
             'date': self.date_planned_start,
-            'date_deadline': self.date_deadline,
+            'date_deadline': self.date_planned_start,
             'bom_line_id': bom_line.id if bom_line else False,
             'picking_type_id': self.picking_type_id.id,
             'product_id': product_id.id,

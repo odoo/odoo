@@ -111,15 +111,15 @@ class TestSaleStockLeadTime(TestSaleCommon, ValuationReconciliationTestCommon):
         # -> Create an SO and confirm it with confirmation Date : 12/18/2018
 
         # -> Pickings : OUT -> Scheduled Date : 01/12/2019, Deadline Date: 01/14/2019
-        #              PACK -> Scheduled Date : 01/07/2019, Deadline Date: 01/14/2019
-        #              PICK -> Scheduled Date : 01/02/2019, Deadline Date: 01/14/2019
+        #              PACK -> Scheduled Date : 01/07/2019, Deadline Date: 01/09/2019
+        #              PICK -> Scheduled Date : 01/02/2019, Deadline Date: 01/04/2019
 
         # -> Now, change commitment_date in the sale order = out_deadline_date + 5 days
 
         # -> Deadline Date should be changed and Scheduled date should be unchanged:
-        #              OUT  -> Deadline Date :  01/19/2019
-        #              PACK -> Deadline Date :  01/19/2019
-        #              PICK -> Deadline Date :  01/19/2019
+        #              OUT  -> Deadline Date : 01/19/2019
+        #              PACK -> Deadline Date : 01/14/2019
+        #              PICK -> Deadline Date : 01/09/2019
 
         # Update company with Sales Safety Days
         self.env.company.security_lead = 2.00
@@ -155,11 +155,11 @@ class TestSaleStockLeadTime(TestSaleCommon, ValuationReconciliationTestCommon):
 
         # Check schedule/deadline date of ship type picking
         out = order.picking_ids.filtered(lambda r: r.picking_type_id == self.company_data['default_warehouse'].out_type_id)
-        deadline_date = order.date_order + timedelta(days=self.test_product_order.sale_delay)
+        deadline_date = order.date_order + timedelta(days=self.test_product_order.sale_delay) - timedelta(days=out.move_lines[0].rule_id.delay)
         self.assertAlmostEqual(
             out.date_deadline, deadline_date, delta=timedelta(seconds=1),
             msg='Deadline date of ship type picking should be equal to: order date + Customer Lead Time - pull rule delay.')
-        out_scheduled_date = deadline_date - timedelta(days=self.env.company.security_lead) - timedelta(days=out.move_lines[0].rule_id.delay)
+        out_scheduled_date = deadline_date - timedelta(days=self.env.company.security_lead)
         self.assertAlmostEqual(
             out.scheduled_date, out_scheduled_date, delta=timedelta(seconds=1),
             msg='Schedule date of ship type picking should be equal to: order date + Customer Lead Time - pull rule delay - security_lead')
@@ -170,6 +170,7 @@ class TestSaleStockLeadTime(TestSaleCommon, ValuationReconciliationTestCommon):
         self.assertAlmostEqual(
             pack.scheduled_date, pack_scheduled_date, delta=timedelta(seconds=1),
             msg='Schedule date of pack type picking should be equal to: Schedule date of ship type picking - pull rule delay.')
+        deadline_date -= timedelta(days=pack.move_lines[0].rule_id.delay)
         self.assertAlmostEqual(
             pack.date_deadline, deadline_date, delta=timedelta(seconds=1),
             msg='Deadline date of pack type picking should be equal to: Deadline date of ship type picking - pull rule delay.')
@@ -180,6 +181,7 @@ class TestSaleStockLeadTime(TestSaleCommon, ValuationReconciliationTestCommon):
         self.assertAlmostEqual(
             pick.scheduled_date, pick_scheduled_date, delta=timedelta(seconds=1),
             msg='Schedule date of pack type picking should be equal to: Schedule date of ship type picking - pull rule delay.')
+        deadline_date -= timedelta(days=pick.move_lines[0].rule_id.delay)
         self.assertAlmostEqual(
             pick.date_deadline, deadline_date, delta=timedelta(seconds=1),
             msg='Deadline date of pack type picking should be equal to: Deadline date of ship type picking - pull rule delay.')
@@ -191,5 +193,7 @@ class TestSaleStockLeadTime(TestSaleCommon, ValuationReconciliationTestCommon):
         # Now check date_deadline of pick, pack and out are forced
         # TODO : add note in case of change of deadline and check
         self.assertEqual(out.date_deadline, new_deadline)
-        self.assertEqual(pick.date_deadline, new_deadline)
+        new_deadline -= timedelta(days=pack.move_lines[0].rule_id.delay)
         self.assertEqual(pack.date_deadline, new_deadline)
+        new_deadline -= timedelta(days=pick.move_lines[0].rule_id.delay)
+        self.assertEqual(pick.date_deadline, new_deadline)
