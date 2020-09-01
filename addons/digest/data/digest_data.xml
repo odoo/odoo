@@ -69,7 +69,6 @@
             }
             .kpi_header {
                 overflow: auto;
-                margin-bottom: 10px;
                 padding-bottom: 10px;
                 border-bottom: 1px solid #eeeeee;
                 font-size: 15px;
@@ -85,11 +84,24 @@
                 float: left;
                 width: 33%;
                 text-align: center;
+                padding-top: 2px;
+            }
+            .kpi_cell_center {
+                border-top: 2px solid #875A7B;
+            }
+            .kpi_cell_border {
+                border-top: 2px solid #00A09D;
             }
             .kpi_value {
                 color: #282f33;
                 font-weight: bold;
                 text-decoration: none;
+            }
+            .kpi_center_col {
+                color: #875A7B;
+            }
+            .kpi_border_col {
+                color: #00A09D;
             }
             .kpi_value_label {
                 display: inline-block;
@@ -342,25 +354,28 @@
                 <span t-esc="kpi_info['kpi_fullname']" style="vertical-align: middle;" />
                 <a t-if="kpi_info['kpi_action']" t-att-href="'/web#action=%s' % kpi_info['kpi_action']"><span class="button" id="button_open_report">Open Report</span></a>
             </div>
-            <div t-if="kpi_info.get('kpi_col1')" class="kpi_cell">
+            <div t-if="kpi_info.get('kpi_col1')" class="kpi_cell kpi_cell_border">
                 <div t-call="digest.digest_tool_kpi" >
                     <t t-set="kpi_value" t-value="kpi_info['kpi_col1']['value']"/>
                     <t t-set="kpi_margin" t-value="kpi_info['kpi_col1'].get('margin')"/>
                     <t t-set="kpi_subtitle" t-value="kpi_info['kpi_col1']['col_subtitle']"/>
+                    <t t-set="kpi_color" t-value="'kpi_border_col'"/>
                 </div>
             </div>
-            <div t-if="kpi_info.get('kpi_col2')" class="kpi_cell">
+            <div t-if="kpi_info.get('kpi_col2')" class="kpi_cell kpi_cell_center">
                 <div t-call="digest.digest_tool_kpi">
                     <div t-set="kpi_value" t-value="kpi_info['kpi_col2']['value']"/>
                     <div t-set="kpi_margin" t-value="kpi_info['kpi_col2'].get('margin')"/>
                     <div t-set="kpi_subtitle" t-value="kpi_info['kpi_col2']['col_subtitle']"/>
+                    <t t-set="kpi_color" t-value="'kpi_center_col'"/>
                 </div>
             </div>
-            <div t-if="kpi_info.get('kpi_col3')" class="kpi_cell">
+            <div t-if="kpi_info.get('kpi_col3')" class="kpi_cell kpi_cell_border">
                 <div t-call="digest.digest_tool_kpi">
                     <div t-set="kpi_value" t-value="kpi_info['kpi_col3']['value']"/>
                     <div t-set="kpi_margin" t-value="kpi_info['kpi_col3'].get('margin')"/>
                     <div t-set="kpi_subtitle" t-value="kpi_info['kpi_col3']['col_subtitle']"/>
+                    <t t-set="kpi_color" t-value="'kpi_border_col'"/>
                 </div>
             </div>
             <div class="kpi_trick" />
@@ -420,7 +435,7 @@
 
     <!-- KPI DISPLAY -->
     <template id="digest_tool_kpi">
-<span t-esc="kpi_value" class="kpi_value" />
+<span t-esc="kpi_value" t-att-class="'kpi_value %s' % kpi_color " />
 <br/>
 <span t-esc="kpi_subtitle" class="kpi_value_label" />
 <div t-if="kpi_margin" class="kpi_margin_margin">
