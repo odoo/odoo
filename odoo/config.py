@@ -1188,6 +1188,7 @@ def load_cli(argv):
                 'dest': option.name,
                 'action': option.action,
                 'help': option.help,
+                'default': argparse.SUPPRESS,
                 **{'nargs': o.nargs for o in (option,) if o.nargs},
                 **{'metavar': o.metavar for o in (option,) if o.metavar},
                 **{'const': o.const for o in (option,) if o.const},
@@ -1232,12 +1233,8 @@ def load_cli(argv):
                 yield e
 
     for opt, val in cli_options.items():
-        # Missing argument, skip
-        if val is None:
-            pass
-
         # Composite argument, parse each item and save the resulting list
-        elif type(val) != str and isinstance(val, Iterable):
+        if type(val) != str and isinstance(val, Iterable):
             val = list(flatten(map(parser(optionmap[opt]), val)))
             # parsing comma separated arguments like "-i base -i web,website"
             # gives a list of CommaOption like [("base",), ("web","website")],
