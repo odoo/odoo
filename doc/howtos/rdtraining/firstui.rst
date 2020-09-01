@@ -4,6 +4,11 @@
 Finally, Some UI To Play With
 =============================
 
+
+After the creation of a new :ref:`model <howto/rdtraining/basicmodel>` and its corresponding
+:ref:`access rights <howto/rdtraining/securityintro>`, it is now time to be able interact in
+the user interface.
+
 Data Files (XML)
 ================
 
