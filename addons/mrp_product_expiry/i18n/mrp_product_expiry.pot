@@ -4,21 +4,16 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.1\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-12-16 08:45+0000\n"
-"PO-Revision-Date: 2019-12-16 08:45+0000\n"
+"POT-Creation-Date: 2020-09-01 07:29+0000\n"
+"PO-Revision-Date: 2020-09-01 07:29+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
-
-#. module: mrp_product_expiry
-#: model:ir.model,name:mrp_product_expiry.model_mrp_abstract_workorder
-msgid "Common code between produce wizards and workorders."
-msgstr ""
 
 #. module: mrp_product_expiry
 #: model_terms:ir.ui.view,arch_db:mrp_product_expiry.confirm_expiry_view_mrp_inherit
@@ -31,7 +26,7 @@ msgid "Confirm Expiry"
 msgstr ""
 
 #. module: mrp_product_expiry
-#: code:addons/mrp_product_expiry/models/mrp_abstract_workorder.py:0
+#: code:addons/mrp_product_expiry/models/mrp_production.py:0
 #, python-format
 msgid "Confirmation"
 msgstr ""
@@ -42,18 +37,31 @@ msgid "Discard"
 msgstr ""
 
 #. module: mrp_product_expiry
-#: model:ir.model.fields,field_description:mrp_product_expiry.field_expiry_picking_confirmation__produce_id
-msgid "Produce"
+#: model:ir.model.fields,field_description:mrp_product_expiry.field_expiry_picking_confirmation__display_name
+#: model:ir.model.fields,field_description:mrp_product_expiry.field_mrp_production__display_name
+msgid "Display Name"
 msgstr ""
 
 #. module: mrp_product_expiry
-#: model:ir.model,name:mrp_product_expiry.model_mrp_product_produce
-msgid "Record Production"
+#: model:ir.model.fields,field_description:mrp_product_expiry.field_expiry_picking_confirmation__id
+#: model:ir.model.fields,field_description:mrp_product_expiry.field_mrp_production__id
+msgid "ID"
 msgstr ""
 
 #. module: mrp_product_expiry
-#: model:ir.model,name:mrp_product_expiry.model_mrp_workorder
-msgid "Work Order"
+#: model:ir.model.fields,field_description:mrp_product_expiry.field_expiry_picking_confirmation____last_update
+#: model:ir.model.fields,field_description:mrp_product_expiry.field_mrp_production____last_update
+msgid "Last Modified on"
+msgstr ""
+
+#. module: mrp_product_expiry
+#: model:ir.model.fields,field_description:mrp_product_expiry.field_expiry_picking_confirmation__production_ids
+msgid "Production"
+msgstr ""
+
+#. module: mrp_product_expiry
+#: model:ir.model,name:mrp_product_expiry.model_mrp_production
+msgid "Production Order"
 msgstr ""
 
 #. module: mrp_product_expiry
@@ -73,6 +81,6 @@ msgstr ""
 #: code:addons/mrp_product_expiry/wizard/confirm_expiry.py:0
 #, python-format
 msgid ""
-"You are going to use the component %s, %s which is expired.\n"
+"You are going to use the component %(product_name)s, %(lot_name)s which is expired.\n"
 "Do you confirm you want to proceed ?"
 msgstr ""

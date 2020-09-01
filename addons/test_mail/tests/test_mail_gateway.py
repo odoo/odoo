@@ -223,19 +223,62 @@ class TestMailgateway(TestMailCommon):
             set(['rosaçée.gif', 'verte!µ.gif', 'orangée.gif']))
 
     def test_message_process_followers(self):
-        pass
-        # TODO : the author of a message post should be added as follower
-        # currently it is not the case as otherwise Administrator would be follower of a lot of stuff
-        # this is a bug with mail_create_nosubscribe -> should be changed in master
-        # self.assertEqual(record.message_partner_ids, self.partner_1,
-        #                  'message_process: recognized email -> added as follower')
+        """ Incoming email: recognized author not archived and not odoobot: added as follower """
+        with self.mock_mail_gateway():
+            record = self.format_and_process(MAIL_TEMPLATE, self.partner_1.email_formatted, 'groups@test.com')
 
-        # TODO : the author of a message post on mail.test should not be added as follower
-        # Test: author (and not recipient) added as follower
-        # self.assertEqual(self.test_public.message_partner_ids, self.partner_1 | self.partner_2,
-        #                  'message_process: after reply, group should have 2 followers')
-        # self.assertEqual(self.test_public.message_channel_ids, self.env['mail.test.container'],
-        #                  'message_process: after reply, group should have 2 followers (0 channels)')
+        self.assertEqual(record.message_ids[0].author_id, self.partner_1,
+                         'message_process: recognized email -> author_id')
+        self.assertEqual(record.message_ids[0].email_from, self.partner_1.email_formatted)
+        self.assertEqual(record.message_follower_ids.partner_id, self.partner_1,
+                         'message_process: recognized email -> added as follower')
+        self.assertEqual(record.message_partner_ids, self.partner_1,
+                         'message_process: recognized email -> added as follower')
+
+        # just an email -> no follower
+        with self.mock_mail_gateway():
+            record2 = self.format_and_process(
+                MAIL_TEMPLATE, self.email_from, 'groups@test.com',
+                subject='Another Email')
+
+        self.assertEqual(record2.message_ids[0].author_id, self.env['res.partner'])
+        self.assertEqual(record2.message_ids[0].email_from, self.email_from)
+        self.assertEqual(record2.message_follower_ids.partner_id, self.env['res.partner'],
+                         'message_process: unrecognized email -> no follower')
+        self.assertEqual(record2.message_partner_ids, self.env['res.partner'],
+                         'message_process: unrecognized email -> no follower')
+
+        # archived partner -> no follower
+        self.partner_1.active = False
+        self.partner_1.flush()
+        with self.mock_mail_gateway():
+            record3 = self.format_and_process(
+                MAIL_TEMPLATE, self.partner_1.email_formatted, 'groups@test.com',
+                subject='Yet Another Email')
+
+        self.assertEqual(record3.message_ids[0].author_id, self.env['res.partner'])
+        self.assertEqual(record3.message_ids[0].email_from, self.partner_1.email_formatted)
+        self.assertEqual(record3.message_follower_ids.partner_id, self.env['res.partner'],
+                         'message_process: unrecognized email -> no follower')
+        self.assertEqual(record3.message_partner_ids, self.env['res.partner'],
+                         'message_process: unrecognized email -> no follower')
+
+
+        # partner_root -> never again
+        odoobot = self.env.ref('base.partner_root')
+        odoobot.active = True
+        odoobot.email = 'odoobot@example.com'
+        with self.mock_mail_gateway():
+            record4 = self.format_and_process(
+                MAIL_TEMPLATE, odoobot.email_formatted, 'groups@test.com',
+                subject='Odoobot Automatic Answer')
+
+        self.assertEqual(record4.message_ids[0].author_id, odoobot)
+        self.assertEqual(record4.message_ids[0].email_from, odoobot.email_formatted)
+        self.assertEqual(record4.message_follower_ids.partner_id, self.env['res.partner'],
+                         'message_process: unrecognized email -> no follower')
+        self.assertEqual(record4.message_partner_ids, self.env['res.partner'],
+                         'message_process: unrecognized email -> no follower')
 
     # --------------------------------------------------
     # Author recognition

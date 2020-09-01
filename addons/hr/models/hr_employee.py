@@ -25,11 +25,6 @@ class HrEmployeePrivate(models.Model):
     _inherit = ['hr.employee.base', 'mail.thread', 'mail.activity.mixin', 'resource.mixin', 'image.mixin']
     _mail_post_access = 'read'
 
-    @api.model
-    def _default_image(self):
-        image_path = get_module_resource('hr', 'static/src/img', 'default_image.png')
-        return base64.b64encode(open(image_path, 'rb').read())
-
     # resource and user
     # required on the resource, make sure required="True" set in the view
     name = fields.Char(string="Employee Name", related='resource_id.name', store=True, readonly=False, tracking=True)
@@ -94,7 +89,7 @@ class HrEmployeePrivate(models.Model):
     emergency_phone = fields.Char("Emergency Phone", groups="hr.group_hr_user", tracking=True)
     km_home_work = fields.Integer(string="Home-Work Distance", groups="hr.group_hr_user", tracking=True)
 
-    image_1920 = fields.Image(default=_default_image)
+    image_1920 = fields.Image()
     phone = fields.Char(related='address_home_id.phone', related_sudo=False, string="Private Phone", groups="hr.group_hr_user")
     # employee in company
     child_ids = fields.One2many('hr.employee', 'parent_id', string='Direct subordinates')
@@ -121,6 +116,12 @@ class HrEmployeePrivate(models.Model):
         ('barcode_uniq', 'unique (barcode)', "The Badge ID must be unique, this one is already assigned to another employee."),
         ('user_uniq', 'unique (user_id, company_id)', "A user cannot be linked to multiple employees in the same company.")
     ]
+
+    def _get_placeholder_filename(self, field=None):
+        image_fields = ['image_%s' % size for size in [1920, 1024, 512, 256, 128]]
+        if field in image_fields:
+            return 'hr/static/src/img/default_image.png'
+        return super()._get_placeholder_filename(field=field)
 
     def name_get(self):
         if self.check_access_rights('read', raise_exception=False):
@@ -198,7 +199,7 @@ class HrEmployeePrivate(models.Model):
     @api.onchange('user_id')
     def _onchange_user(self):
         if self.user_id:
-            self.update(self._sync_user(self.user_id, bool(self.image_1920)))
+            self.update(self._sync_user(self.user_id, (bool(self.image_1920))))
             if not self.name:
                 self.name = self.user_id.name
 
@@ -222,7 +223,7 @@ class HrEmployeePrivate(models.Model):
     def create(self, vals):
         if vals.get('user_id'):
             user = self.env['res.users'].browse(vals['user_id'])
-            vals.update(self._sync_user(user, vals.get('image_1920') == self._default_image()))
+            vals.update(self._sync_user(user, bool(vals.get('image_1920'))))
             vals['name'] = vals.get('name', user.name)
         employee = super(HrEmployeePrivate, self).create(vals)
         url = '/web#%s' % url_encode({
@@ -245,7 +246,8 @@ class HrEmployeePrivate(models.Model):
                 self.env['res.partner.bank'].browse(account_id).partner_id = vals['address_home_id']
         if vals.get('user_id'):
             # Update the profile pictures with user, except if provided 
-            vals.update(self._sync_user(self.env['res.users'].browse(vals['user_id']), bool(vals.get('image_1920'))))
+            vals.update(self._sync_user(self.env['res.users'].browse(vals['user_id']),
+                                        (bool(self.image_1920))))
         res = super(HrEmployeePrivate, self).write(vals)
         if vals.get('department_id') or vals.get('user_id'):
             department_id = vals['department_id'] if vals.get('department_id') else self[:1].department_id.id
