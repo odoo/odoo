@@ -139,14 +139,12 @@ class IrActions(models.Model):
     def _for_xml_id(self, full_xml_id):
         """ Returns the action content for the provided xml_id
 
-        :param module: the module the act_window originates in
         :param xml_id: the namespace-less id of the action (the @id
                        attribute from the XML file)
         :return: A read() view of the ir.actions.action safe for web use
         """
         record = self.env.ref(full_xml_id)
         assert isinstance(self.env[record._name], type(self))
-        # TO CHECK MAT: check groups_id/res_model access?
         action = record.sudo().read()[0]
         return {
             field: value
