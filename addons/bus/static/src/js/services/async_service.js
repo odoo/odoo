@@ -3,7 +3,7 @@ odoo.define('bus.AsyncJobService', function (require) {
 
 const AbstractService = require('web.AbstractService');
 const { serviceRegistry, bus, _lt, _t } = require('web.core');
-const { blockUI, unblockUI } = require("web.framework");
+const framework = require("web.framework");
 const session = require('web.session');
 
 /**
@@ -75,12 +75,17 @@ const AsyncJobService = AbstractService.extend({
         // We take control of the blockUI
         options = options || {}
         options.shadow = true;
-        blockUI();
+        framework.blockUI();
 
         return new Promise((resolve, reject) => {
 
             // Call the async HTTP endpoint, he must return the asyncJobId
             this._rpc(params, options).then(({asyncJobId}) => {
+                if (asyncJobId === undefined) {
+                    framework.unblockUI();
+                    console.error("Missing asyncJobId");
+                    return;
+                }
                 let UIBlocked = true;
                 this._watchedJobs[asyncJobId] = {resolve, reject, UIBlocked};
 
@@ -89,7 +94,7 @@ const AsyncJobService = AbstractService.extend({
                     const job = this._jobs[asyncJobId];
                     const watchedJob = this._watchedJobs[asyncJobId];
                     if (watchedJob && watchedJob[2]) {
-                        unblockUI();
+                        framework.unblockUI();
                         this.do_notify(TASK_CREATED_TITLE, _.str.sprintf(TASK_PROCESSING_CONTENT.toString(), job.name));
                         this._watchedJobs[asyncJobId][2] = false;
                     }
@@ -101,8 +106,9 @@ const AsyncJobService = AbstractService.extend({
                     this._resumeWatchedJob(this._jobs[asyncJobId]);
                 }
             }).catch(error => {
-                unblockUI();
-                this.call('crash_manager', 'rpc_error', error.error);
+                framework.unblockUI();
+                if (error.error)
+                    this.call('crash_manager', 'rpc_error', error.error);
                 reject(error);
             });
         });
@@ -190,7 +196,7 @@ const AsyncJobService = AbstractService.extend({
         delete this._watchedJobs[job.id];
 
         if (UIBlocked) {
-            unblockUI();
+            framework.unblockUI();
         }
         if (job.state === FAILED) {
             this.call('crash_manager', 'rpc_error', job.payload.error);

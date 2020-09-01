@@ -1,16 +1,32 @@
 odoo.define('web.data_export_tests', function (require) {
 "use strict";
 
+const AbstractStorageService = require('web.AbstractStorageService');
+const BusService = require('bus.BusService');
+const CrashManager = require('web.CrashManager').CrashManager;
 const data = require('web.data');
 const framework = require('web.framework');
 const ListView = require('web.ListView');
+const LocalStorageService = require('web.LocalStorageService');
+const RamStorage = require('web.RamStorage');
 const testUtils = require('web.test_utils');
+const {AsyncJobService} = require('bus.AsyncJobService');
 
 const cpHelpers = testUtils.controlPanel;
 const createView = testUtils.createView;
 
+const TestBusService = BusService.extend({
+    TAB_HEARTBEAT_PERIOD: 10,
+    MASTER_TAB_HEARTBEAT_PERIOD: 1,
+});
+
+let LocalStorageServiceMock;
+
 QUnit.module('widgets', {
     beforeEach: function () {
+        LocalStorageServiceMock = AbstractStorageService.extend({storage: new RamStorage()});
+        var self = this;
+        this.pollPromise = null;
         this.data = {
             'partner': {
                 fields: {
@@ -39,40 +55,17 @@ QUnit.module('widgets', {
                 },
                 records: [],
             },
+            'ir.async': {
+                fields: {
+                    name: {string: "Name", type: "char"},
+                    state: {type: "char"},
+                    user_id: {type: "integer"},
+                },
+                records: [],
+            }
         };
         this.mockSession = {
             async user_has_group(g) { return g === 'base.group_allow_export'; }
-        }
-        this.mockDataExportRPCs = function (route) {
-            if (route === '/web/export/formats') {
-                return Promise.resolve([
-                    {tag: 'csv', label: 'CSV'},
-                    {tag: 'xls', label: 'Excel'},
-                ]);
-            }
-            if (route === '/web/export/get_fields') {
-                return Promise.resolve([
-                    {
-                        field_type: "one2many",
-                        string: "Activities",
-                        required: false,
-                        value: "activity_ids/id",
-                        id: "activity_ids",
-                        params: {"model": "mail.activity", "prefix": "activity_ids", "name": "Activities"},
-                        relation_field: "res_id",
-                        children: true,
-                    }, {
-                        children: false,
-                        field_type: 'char',
-                        id: "foo",
-                        relation_field: null,
-                        required: false,
-                        string: 'Foo',
-                        value: "foo",
-                    }
-                ]);
-            }
-            return this._super.apply(this, arguments);
         };
     }
 }, function () {
@@ -83,6 +76,7 @@ QUnit.module('widgets', {
     QUnit.test('exporting all data in list view', async function (assert) {
         assert.expect(8);
 
+        var self = this;
         var blockUI = framework.blockUI;
         var unblockUI = framework.unblockUI;
         framework.blockUI = function () {
@@ -100,15 +94,72 @@ QUnit.module('widgets', {
             viewOptions: {
                 hasActionMenus: true,
             },
-            mockRPC: this.mockDataExportRPCs,
-            session: {
-                ...this.mockSession,
-                get_file: function (params) {
-                    assert.step(params.url);
-                    params.complete();
-                },
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/call_kw/ir.async/search_read') {
+                    return Promise.resolve([]);
+                }
+                if (route === '/longpolling/poll') {
+                    self.pollPromise = testUtils.makeTestPromise();
+                    self.pollPromise.abort = () => {self.pollPromise.resolve([], $.Event())};
+                    return self.pollPromise;
+                }
+                if (route.startsWith('/web/async_export/')) {
+                    assert.step(route);
+                    let fakeJobId = -_.uniqueId();
+                    self.pollPromise.resolve([{
+                        id: _.uniqueId(),
+                        channel: 'asyncTest',
+                        message: {
+                            'type': 'ir.async',
+                            'id': fakeJobId,
+                            'name': '',
+                            'state': 'done'
+                        },
+                    }]);
+                    return Promise.resolve({
+                        'asyncJobId': fakeJobId
+                    });
+                }
+                if (route === '/web/export/formats') {
+                    return Promise.resolve([
+                        {tag: 'csv', label: 'CSV'},
+                        {tag: 'xls', label: 'Excel'},
+                    ]);
+                }
+                if (route === '/web/export/get_fields') {
+                    return Promise.resolve([
+                        {
+                            field_type: "one2many",
+                            string: "Activities",
+                            required: false,
+                            value: "activity_ids/id",
+                            id: "activity_ids",
+                            params: {"model": "mail.activity", "prefix": "activity_ids", "name": "Activities"},
+                            relation_field: "res_id",
+                            children: true,
+                        }, {
+                            children: false,
+                            field_type: 'char',
+                            id: "foo",
+                            relation_field: null,
+                            required: false,
+                            string: 'Foo',
+                            value: "foo",
+                        }
+                    ]);
+                }
+                return this._super.apply(this, arguments);
+            },
+            session: this.mockSession,
+            services: {
+                'async_job': AsyncJobService,
+                'bus_service': TestBusService,
+                'crash_manager': CrashManager,
+                'local_storage': LocalStorageServiceMock,
             },
         });
+
+        list.call('bus_service', 'addChannel', 'asyncTest');
 
 
         await testUtils.dom.click(list.$('thead th.o_list_record_selector input'));
@@ -131,7 +182,7 @@ QUnit.module('widgets', {
         framework.unblockUI = unblockUI;
         assert.verifySteps([
             'block UI',
-            '/web/export/csv',
+            '/web/async_export/csv',
             'unblock UI',
         ]);
     });
@@ -139,6 +190,7 @@ QUnit.module('widgets', {
     QUnit.test('exporting data in list view (multi pages)', async function (assert) {
         assert.expect(4);
 
+        let self = this;
         let expectedData;
         const list = await createView({
             View: ListView,
@@ -149,16 +201,72 @@ QUnit.module('widgets', {
             viewOptions: {
                 hasActionMenus: true,
             },
-            mockRPC: this.mockDataExportRPCs,
-            session: {
-                ...this.mockSession,
-                get_file: function (params) {
-                    const data = JSON.parse(params.data.data);
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/call_kw/ir.async/search_read') {
+                    return Promise.resolve([]);
+                }
+                if (route === '/longpolling/poll') {
+                    self.pollPromise = testUtils.makeTestPromise();
+                    self.pollPromise.abort = () => {self.pollPromise.resolve([], $.Event())};
+                    return self.pollPromise;
+                }
+                if (route.startsWith('/web/async_export/')) {
+                    const data = JSON.parse(args.data);
                     assert.deepEqual({ids: data.ids, domain: data.domain}, expectedData);
-                    params.complete();
-                },
+                    let fakeJobId = -_.uniqueId();
+                    self.pollPromise.resolve([{
+                        id: _.uniqueId(),
+                        channel: 'asyncTest',
+                        message: {
+                            'type': 'ir.async',
+                            'id': fakeJobId,
+                            'name': '',
+                            'state': 'done'
+                        },
+                    }]);
+                    return Promise.resolve({
+                        'asyncJobId': fakeJobId
+                    });
+                }
+                if (route === '/web/export/formats') {
+                    return Promise.resolve([
+                        {tag: 'csv', label: 'CSV'},
+                        {tag: 'xls', label: 'Excel'},
+                    ]);
+                }
+                if (route === '/web/export/get_fields') {
+                    return Promise.resolve([
+                        {
+                            field_type: "one2many",
+                            string: "Activities",
+                            required: false,
+                            value: "activity_ids/id",
+                            id: "activity_ids",
+                            params: {"model": "mail.activity", "prefix": "activity_ids", "name": "Activities"},
+                            relation_field: "res_id",
+                            children: true,
+                        }, {
+                            children: false,
+                            field_type: 'char',
+                            id: "foo",
+                            relation_field: null,
+                            required: false,
+                            string: 'Foo',
+                            value: "foo",
+                        }
+                    ]);
+                }
+                return this._super.apply(this, arguments);
+            },
+            session: this.mockSession,
+            services: {
+                'async_job': AsyncJobService,
+                'bus_service': TestBusService,
+                'crash_manager': CrashManager,
+                'local_storage': LocalStorageServiceMock,
             },
         });
+        list.call('bus_service', 'addChannel', 'asyncTest');
 
         // select all records (first page) and export
         expectedData = {
@@ -212,9 +320,38 @@ QUnit.module('widgets', {
                 hasActionMenus: true,
             },
             session: this.mockSession,
-            mockRPC: this.mockDataExportRPCs,
+            mockRPC: function (route, args) {
+                if (route === '/web/export/formats') {
+                    return Promise.resolve([
+                        {tag: 'csv', label: 'CSV'},
+                        {tag: 'xls', label: 'Excel'},
+                    ]);
+                }
+                if (route === '/web/export/get_fields') {
+                    return Promise.resolve([
+                        {
+                            field_type: "one2many",
+                            string: "Activities",
+                            required: false,
+                            value: "activity_ids/id",
+                            id: "activity_ids",
+                            params: {"model": "mail.activity", "prefix": "activity_ids", "name": "Activities"},
+                            relation_field: "res_id",
+                            children: true,
+                        }, {
+                            children: false,
+                            field_type: 'char',
+                            id: "foo",
+                            relation_field: null,
+                            required: false,
+                            string: 'Foo',
+                            value: "foo",
+                        }
+                    ]);
+                }
+                return this._super.apply(this, arguments);
+            },
         });
-
 
         // Open the export modal
         await testUtils.dom.click(list.$('thead th.o_list_record_selector input'));
@@ -255,9 +392,38 @@ QUnit.module('widgets', {
                 hasActionMenus: true,
             },
             session: this.mockSession,
-            mockRPC: this.mockDataExportRPCs,
+            mockRPC: function (route, args) {
+                if (route === '/web/export/formats') {
+                    return Promise.resolve([
+                        {tag: 'csv', label: 'CSV'},
+                        {tag: 'xls', label: 'Excel'},
+                    ]);
+                }
+                if (route === '/web/export/get_fields') {
+                    return Promise.resolve([
+                        {
+                            field_type: "one2many",
+                            string: "Activities",
+                            required: false,
+                            value: "activity_ids/id",
+                            id: "activity_ids",
+                            params: {"model": "mail.activity", "prefix": "activity_ids", "name": "Activities"},
+                            relation_field: "res_id",
+                            children: true,
+                        }, {
+                            children: false,
+                            field_type: 'char',
+                            id: "foo",
+                            relation_field: null,
+                            required: false,
+                            string: 'Foo',
+                            value: "foo",
+                        }
+                    ]);
+                }
+                return this._super.apply(this, arguments);
+            },
         });
-
 
         // Open the export modal
         await testUtils.dom.click(list.$('thead th.o_list_record_selector input'));
@@ -308,11 +474,13 @@ QUnit.module('widgets', {
                     <field name="bar"/>
                 </tree>`,
             domain: [['bar', '!=', 'glou']],
-            session: {
-                ...this.mockSession,
-                get_file(args) {
-                    let data = JSON.parse(args.data.data);
-                    assert.strictEqual(args.url, '/web/export/xlsx', "should call get_file with the correct url");
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/call_kw/ir.async/search_read') {
+                    return Promise.resolve([]);
+                }
+                if (route.startsWith('/web/async_export/')) {
+                    let data = JSON.parse(args.data);
+                    assert.strictEqual(route, '/web/async_export/xlsx', "should call get_file with the correct url");
                     assert.deepEqual(data, {
                         context: {},
                         model: 'partner',
@@ -328,10 +496,65 @@ QUnit.module('widgets', {
                             label: 'Bar',
                         }]
                     }, "should be called with correct params");
-                    args.complete();
-                },
+                    let fakeJobId = -_.uniqueId();
+                    self.pollPromise.resolve([{
+                        id: _.uniqueId(),
+                        channel: 'asyncTest',
+                        message: {
+                            'type': 'ir.async',
+                            'id': fakeJobId,
+                            'name': '',
+                            'state': 'done'
+                        },
+                    }]);
+                    return Promise.resolve({
+                        'asyncJobId': fakeJobId
+                    });
+                }
+                if (route === '/longpolling/poll') {
+                    self.pollPromise = testUtils.makeTestPromise();
+                    self.pollPromise.abort = () => {self.pollPromise.resolve([], $.Event())};
+                    return self.pollPromise;
+                }
+                if (route === '/web/export/formats') {
+                    return Promise.resolve([
+                        {tag: 'csv', label: 'CSV'},
+                        {tag: 'xls', label: 'Excel'},
+                    ]);
+                }
+                if (route === '/web/export/get_fields') {
+                    return Promise.resolve([
+                        {
+                            field_type: "one2many",
+                            string: "Activities",
+                            required: false,
+                            value: "activity_ids/id",
+                            id: "activity_ids",
+                            params: {"model": "mail.activity", "prefix": "activity_ids", "name": "Activities"},
+                            relation_field: "res_id",
+                            children: true,
+                        }, {
+                            children: false,
+                            field_type: 'char',
+                            id: "foo",
+                            relation_field: null,
+                            required: false,
+                            string: 'Foo',
+                            value: "foo",
+                        }
+                    ]);
+                }
+                return this._super.apply(this, arguments);
+            },
+            session: this.mockSession,
+            services: {
+                'async_job': AsyncJobService,
+                'bus_service': TestBusService,
+                'crash_manager': CrashManager,
+                'local_storage': LocalStorageServiceMock,
             },
         });
+        list.call('bus_service', 'addChannel', 'asyncTest');
 
         // Download
         await testUtils.dom.click(list.$buttons.find('.o_list_export_xlsx'));
@@ -353,11 +576,13 @@ QUnit.module('widgets', {
                 </tree>`,
             groupBy: ['foo', 'bar'],
             domain: [['bar', '!=', 'glou']],
-            session: {
-                ...this.mockSession,
-                get_file(args) {
-                    let data = JSON.parse(args.data.data);
-                    assert.strictEqual(args.url, '/web/export/xlsx', "should call get_file with the correct url");
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/call_kw/ir.async/search_read') {
+                    return Promise.resolve([]);
+                }
+                if (route.startsWith('/web/async_export/')) {
+                    let data = JSON.parse(args.data);
+                    assert.strictEqual(route, '/web/async_export/xlsx', "should call get_file with the correct url");
                     assert.deepEqual(data, {
                         context: {},
                         model: 'partner',
@@ -373,10 +598,65 @@ QUnit.module('widgets', {
                             label: 'Bar',
                         }]
                     }, "should be called with correct params");
-                    args.complete();
-                },
+                    let fakeJobId = -_.uniqueId();
+                    self.pollPromise.resolve([{
+                        id: _.uniqueId(),
+                        channel: 'asyncTest',
+                        message: {
+                            'type': 'ir.async',
+                            'id': fakeJobId,
+                            'name': '',
+                            'state': 'done'
+                        },
+                    }]);
+                    return Promise.resolve({
+                        'asyncJobId': fakeJobId
+                    });
+                }
+                if (route === '/longpolling/poll') {
+                    self.pollPromise = testUtils.makeTestPromise();
+                    self.pollPromise.abort = () => {self.pollPromise.resolve([], $.Event())};
+                    return self.pollPromise;
+                }
+                if (route === '/web/export/formats') {
+                    return Promise.resolve([
+                        {tag: 'csv', label: 'CSV'},
+                        {tag: 'xls', label: 'Excel'},
+                    ]);
+                }
+                if (route === '/web/export/get_fields') {
+                    return Promise.resolve([
+                        {
+                            field_type: "one2many",
+                            string: "Activities",
+                            required: false,
+                            value: "activity_ids/id",
+                            id: "activity_ids",
+                            params: {"model": "mail.activity", "prefix": "activity_ids", "name": "Activities"},
+                            relation_field: "res_id",
+                            children: true,
+                        }, {
+                            children: false,
+                            field_type: 'char',
+                            id: "foo",
+                            relation_field: null,
+                            required: false,
+                            string: 'Foo',
+                            value: "foo",
+                        }
+                    ]);
+                }
+                return this._super.apply(this, arguments);
+            },
+            session: this.mockSession,
+            services: {
+                'async_job': AsyncJobService,
+                'bus_service': TestBusService,
+                'crash_manager': CrashManager,
+                'local_storage': LocalStorageServiceMock,
             },
         });
+        list.call('bus_service', 'addChannel', 'asyncTest');
 
         await testUtils.dom.click(list.$buttons.find('.o_list_export_xlsx'));
 
