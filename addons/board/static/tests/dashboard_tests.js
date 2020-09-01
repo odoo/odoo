@@ -139,6 +139,12 @@ QUnit.test('basic functionality, with one sub action', async function (assert) {
                     'orderedBy is present in the search read when specified on the custom action'
                 );
             }
+            if (route === '/web/view/create_custom') {
+                assert.step('create custom');
+                return Promise.resolve({
+                    id: 1,
+                });
+            }
             if (route === '/web/view/edit_custom') {
                 assert.step('edit custom');
                 return Promise.resolve(true);
@@ -171,7 +177,7 @@ QUnit.test('basic functionality, with one sub action', async function (assert) {
     await testUtils.dom.click(form.$('.oe_fold'));
 
     assert.ok(form.$('.oe_content').is(':visible'), "content is visible again");
-    assert.verifySteps(['load action', 'edit custom', 'edit custom']);
+    assert.verifySteps(['load action', 'create custom', 'edit custom']);
 
     assert.strictEqual($('.modal').length, 0, "should have no modal open");
 
@@ -443,9 +449,11 @@ QUnit.test('can drag and drop a view', async function (assert) {
                     views: [[4, 'list']],
                 });
             }
-            if (route === '/web/view/edit_custom') {
-                assert.step('edit custom');
-                return Promise.resolve(true);
+            if (route === '/web/view/create_custom') {
+                assert.step('create custom');
+                return Promise.resolve({
+                    id: 2,
+                });
             }
             return this._super.apply(this, arguments);
         },
@@ -464,7 +472,7 @@ QUnit.test('can drag and drop a view', async function (assert) {
         "initial action is not in column 0");
     assert.containsOnce(form, 'td.index_1 .oe_action',
         "initial action is in in column 1");
-    assert.verifySteps(['edit custom']);
+    assert.verifySteps(['create custom']);
 
     form.destroy();
 });

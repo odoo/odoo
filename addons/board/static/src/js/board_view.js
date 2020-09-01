@@ -82,7 +82,7 @@ var BoardController = FormController.extend({
         var boardController = this;
 
         this._rpc({
-            route: 'web/view/create_custom',
+            route: '/web/view/create_custom',
             params: {
                 view_id: this.viewID,
                 arch: arch,
