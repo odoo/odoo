@@ -47,7 +47,7 @@ Prepare the addon directory
 **Reference**: the documentation related to this topic can be found in
 :ref:`manifest <reference/module/manifest>`.
 
-**Objective**: the goal of this section is to have Odoo recognize our new module, which will still
+**Goal**: the goal of this section is to have Odoo recognize our new module, which will still
 be an empty shell. It will be listed in the Apps:
 
 .. image:: newapp/media/app_in_list.png

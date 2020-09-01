@@ -19,7 +19,7 @@ Object-Relational Mapping
 **Reference**: the documentation related to this topic can be found in the
 :ref:`reference/orm/model` API.
 
-**Objectives**: at the end of this section, the table ``estate_property`` is created:
+**Goal**: at the end of this section, the table ``estate_property`` is created:
 
 .. code-block:: console
 
@@ -45,6 +45,7 @@ the model in the Odoo system. Here is a minimally complete definition of a
 model::
 
     from odoo import models
+
     class TestModel(models.Model):
         _name = "test.model"
 
@@ -94,7 +95,7 @@ During the startup, you should see the following warnings:
     ...
 
 If this is the case, then you should be good! To be sure, double check with ``psql`` as suggested in
-the **Objectives**.
+the **Goal**.
 
 .. exercise:: Add a description
 
@@ -106,14 +107,122 @@ Model fields
 **Reference**: the documentation related to this topic can be found in the
 :ref:`reference/orm/fields` API.
 
-**Objectives**: at the end of this section, several basic fields are added to the table
-``estate_property``:
+Fields are used to define what the model can store and where. Fields are
+defined as attributes on the model class::
+
+    from odoo import fields, models
+
+    class TestModel(models.Model):
+        _name = "test.model"
+        _description = "Test Model"
+
+        name = fields.Char()
+
+The ``name`` field is a :class:`~odoo.fields.Char` which will be represented as a Python
+``unicode`` and a SQL ``VARCHAR``.
 
 Types
 -----
 
+**Goal**: at the end of this section, several basic fields are added to the table
+``estate_property``:
+
+.. code-block:: console
+
+    $ psql -d rd-demo
+
+    rd-demo=# \d estate_property;
+                                                Table "public.estate_property"
+        Column       |            Type             | Collation | Nullable |                   Default
+    --------------------+-----------------------------+-----------+----------+---------------------------------------------
+    id                 | integer                     |           | not null | nextval('estate_property_id_seq'::regclass)
+    create_uid         | integer                     |           |          |
+    create_date        | timestamp without time zone |           |          |
+    write_uid          | integer                     |           |          |
+    write_date         | timestamp without time zone |           |          |
+    name               | character varying           |           |          |
+    description        | text                        |           |          |
+    postcode           | character varying           |           |          |
+    date_availability  | date                        |           |          |
+    expected_price     | double precision            |           |          |
+    selling_price      | double precision            |           |          |
+    bedrooms           | integer                     |           |          |
+    living_area        | integer                     |           |          |
+    facades            | integer                     |           |          |
+    garage             | boolean                     |           |          |
+    garden             | boolean                     |           |          |
+    garden_area        | integer                     |           |          |
+    garden_orientation | character varying           |           |          |
+    Indexes:
+        "estate_property_pkey" PRIMARY KEY, btree (id)
+    Foreign-key constraints:
+        "estate_property_create_uid_fkey" FOREIGN KEY (create_uid) REFERENCES res_users(id) ON DELETE SET NULL
+        "estate_property_write_uid_fkey" FOREIGN KEY (write_uid) REFERENCES res_users(id) ON DELETE SET NULL
+
+
+There are two broad categories of fields: 'simple' fields which are atomic
+values stored directly in the model's table and 'relational' fields linking
+records (of the same model or of different models).
+
+Example of simple fields are :class:`~odoo.fields.Boolean`,
+:class:`~odoo.fields.Float`, :class:`~odoo.fields.Char`,
+:class:`~odoo.fields.Date` or :class:`~odoo.fields.Selection`.
+
+.. exercise:: Add basic fields to the Real Estate Property table
+
+    Add the following basic fields to the table:
+
+    ========================= =========================
+    Field                     Type
+    ========================= =========================
+    name                      Char
+    description               Text
+    postcode                  Char
+    date_availability         Date
+    expected_price            Float
+    selling_price             Float
+    bedrooms                  Integer
+    living_area               Integer
+    facades                   Integer
+    garage                    Boolean
+    garden                    Boolean
+    garden_area               Integer
+    garden_orientation        Selection
+    ========================= =========================
+
+    The ``garden_orientation`` fields must have 4 options: 'North', 'South', 'East' and 'West'. The
+    selection list is defined as a list of tuples, see
+    `here <https://github.com/odoo/odoo/blob/b0e0035b585f976e912e97e7f95f66b525bc8e43/addons/crm/report/crm_activity_report.py#L31-L34>`__
+    for example.
+
+When the fields are added to the model, restart the server with ``-u estate``
+
+.. code-block:: console
+
+    $ ./odoo-bin --addons-path=../custom,../enterprise/,addons -d rd-demo -u estate
+
+Connect to ``psql`` and check the structure of the table ``estate_property``. You'll notice that
+a couple of of extra fields were also added to the table. We will come back to them later.
+
 Common Attributes
 -----------------
+
+Much like the model itself, its fields can be configured by passing
+configuration attributes as parameters::
+
+    name = field.Char(required=True)
+
+Some attributes are available on all fields, here are the most common ones:
+
+:attr:`~odoo.fields.Field.string` (``unicode``, default: field's name)
+    The label of the field in UI (visible by users).
+:attr:`~odoo.fields.Field.required` (``bool``, default: ``False``)
+    If ``True``, the field can not be empty, it must either have a default
+    value or always be given a value when creating a record.
+:attr:`~odoo.fields.Field.help` (``unicode``, default: ``''``)
+    Long-form, provides a help tooltip to users in the UI.
+:attr:`~odoo.fields.Field.index` (``bool``, default: ``False``)
+    Requests that Odoo create a `database index`_ on the column.
 
 Reserved Fields
 ---------------
@@ -123,3 +232,6 @@ Special Fields
 
 .. [#rawsql] writing raw SQL queries is possible, but requires care as it
              bypasses all Odoo authentication and security mechanisms.
+
+.. _database index:
+    http://use-the-index-luke.com/sql/preface
