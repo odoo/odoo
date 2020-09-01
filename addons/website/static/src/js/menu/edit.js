@@ -68,12 +68,6 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
             $wrap.empty().append(this.$welcomeMessage);
         }
 
-        setTimeout(function () {
-            if ($('.o_tooltip.o_animated').length) {
-                $('.o_tooltip_container').addClass('show');
-            }
-        }, 1000); // ugly hack to wait that tooltip is loaded
-
         return def;
     },
 
