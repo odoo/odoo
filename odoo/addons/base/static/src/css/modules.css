@@ -1,16 +1,20 @@
 
 .oe_module_icon {
     width: 70px;
-    height: 70px;
+    max-height: 70px;
+    max-width: 23%;
     float: left;
 }
 
 .oe_module_desc {
     font-size: 13px;
+    padding-left: 10px;
+    width: 77%;
 }
 
-.oe_module_icon + .oe_module_desc {
-    padding-left: 80px;
+.o_kanban_view .oe_module_vignette.o_kanban_record {
+    align-items: center;
+    display: flex;
 }
 
 .o_modules_kanban.o_kanban_view .o_kanban_record .o_dropdown_kanban {
@@ -54,45 +58,3 @@
     max-width: 70px;
     max-height: 70px;
 }
-
-/*.oe_module_icon {
-    width: 45px;
-    height: 45px;
-    float: left;
-}
-
-.oe_module_desc > h4, .oe_module_desc > .oe_module_name {
-    margin-right: 20px;
-
-    display: block;
-    max-width: 100%;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    vertical-align: top;
-}
-
-.oe_module_desc > h4 {
-    margin-top: 0;
-}
-
-.oe_module_desc {
-    min-width: 0;
-}
-
-.oe_module_name {
-    margin-top: 8px;
-    font-size: small;
-}
-
-
-.oe_module_icon + .oe_module_desc {
-    margin-left: 10px;
-}
-
-.oe_module_action {
-    margin-top: 10px;
-    padding-top: 10px;
-    border-top: 1px solid #F9F9F9;
-    position: relative;
-}*/
