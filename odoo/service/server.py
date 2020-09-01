@@ -423,10 +423,6 @@ class ThreadedServer(CommonServer):
         threads it spawns are not marked daemon).
 
         """
-        # Force call to strptime just before starting the cron thread
-        # to prevent time.strptime AttributeError within the thread.
-        # See: http://bugs.python.org/issue7980
-        datetime.datetime.strptime('2012-01-01', '%Y-%m-%d')
         for i in range(odoo.tools.config['max_cron_threads']):
             def target():
                 self.cron_thread(i)
