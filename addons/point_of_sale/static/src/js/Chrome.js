@@ -86,9 +86,7 @@ odoo.define('point_of_sale.Chrome', function(require) {
         // GETTERS //
 
         get clientScreenButtonIsShown() {
-            return (
-                this.env.pos.config.use_proxy && this.env.pos.config.iface_customer_facing_display
-            );
+            return this.env.pos.config.iface_customer_facing_display;
         }
         /**
          * Startup screen can be based on pos config so the startup screen

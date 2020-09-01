@@ -208,8 +208,8 @@
                                         <field name="iface_cashdrawer"/>
                                     </div>
                                     <div class="row">
-                                        <label string="Customer Display" for="iface_customer_facing_display" class="col-lg-4 o_light_label"/>
-                                        <field name="iface_customer_facing_display"/>
+                                        <label string="Customer Display" for="iface_customer_facing_display_via_proxy" class="col-lg-4 o_light_label"/>
+                                        <field name="iface_customer_facing_display_via_proxy"/>
                                     </div>
                                 </div>
                             </div>
@@ -222,6 +222,17 @@
                                 <label for="other_devices" string="Direct Devices"/>
                                 <div class="text-muted mb16">
                                     Connect devices to your PoS directly without an IoT Box
+                                </div>
+                            </div>
+                        </div>
+                        <div id="customer_display" class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="iface_customer_facing_display_local"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="iface_customer_facing_display_local" string="Customer Display"/>
+                                <div class="text-muted">
+                                    Show checkout to customers through a second display
                                 </div>
                             </div>
                         </div>

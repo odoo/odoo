@@ -299,7 +299,7 @@ exports.PosModel = Backbone.Model.extend({
                                     self.config.iface_electronic_scale ||
                                     self.config.iface_print_via_proxy  ||
                                     self.config.iface_scan_via_proxy   ||
-                                    self.config.iface_customer_facing_display);
+                                    self.config.iface_customer_facing_display_via_proxy);
 
             self.db.set_uuid(self.config.uuid);
             self.set_cashier(self.get_cashier());
@@ -865,7 +865,14 @@ exports.PosModel = Backbone.Model.extend({
     send_current_order_to_customer_facing_display: function() {
         var self = this;
         this.render_html_for_customer_facing_display().then(function (rendered_html) {
-            self.proxy.update_customer_facing_display(rendered_html);
+            if (self.env.pos.customer_display) {
+                var $renderedHtml = $('<div>').html(rendered_html);
+                $(self.env.pos.customer_display.document.body).html($renderedHtml.find('.pos-customer_facing_display'));
+                var orderlines = $(self.env.pos.customer_display.document.body).find('.pos_orderlines_list');
+                orderlines.scrollTop(orderlines.prop("scrollHeight"));
+            } else if (self.env.pos.proxy.posbox_supports_display) {
+                self.proxy.update_customer_facing_display(rendered_html);
+            }
         });
     },
 
