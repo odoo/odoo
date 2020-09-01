@@ -1023,10 +1023,18 @@ class AccountMove(models.Model):
                 }
             )
         )
+<<<<<<< HEAD
         highest_name = self[0]._get_last_sequence() if self else False
 
         # Group the moves by journal and month
         for move in self.sorted(lambda m: (m.date, m.ref or '', m.id)):
+=======
+        self = self.sorted(lambda m: (m.date, m.ref or '', m.id))
+        highest_name = self[0]._get_last_sequence() if self else False
+
+        # Group the moves by journal and month
+        for move in self:
+>>>>>>> 35ec8429b7c... temp
             if not highest_name and move == self[0] and not move.posted_before:
                 # In the form view, we need to compute a default sequence so that the user can edit
                 # it. We only check the first move as an approximation (enough for new in form view)
@@ -1034,6 +1042,7 @@ class AccountMove(models.Model):
             elif (move.name and move.name != '/') or move.state != 'posted':
                 # Has already a name or is not posted, we don't add to a batch
                 continue
+<<<<<<< HEAD
             if not grouped[journal_key(move)][date_key(move)]['records']:
                 # Compute all the values needed to sequence this whole group
                 move._set_next_sequence()
@@ -1043,6 +1052,15 @@ class AccountMove(models.Model):
                 grouped[journal_key(move)][date_key(move)]['format_values'] = format_values
                 grouped[journal_key(move)][date_key(move)]['reset'] = reset
             grouped[journal_key(move)][date_key(move)]['records'] += move
+=======
+            group = grouped[journal_key(move)][date_key(move)]
+            if not group['records']:
+                # Compute all the values needed to sequence this whole group
+                move._set_next_sequence()
+                group['format'], group['format_values'] = move._get_sequence_format_param(move.name)
+                group['reset'] = move._deduce_sequence_number_reset(move.name)
+            group['records'] += move
+>>>>>>> 35ec8429b7c... temp
 
         # Fusion the groups depending on the sequence reset and the format used because `seq` is
         # the same counter for multiple groups that might be spread in multiple months.
@@ -2404,7 +2422,11 @@ class AccountMove(models.Model):
                 )
 
         customer_count, supplier_count = defaultdict(int), defaultdict(int)
+<<<<<<< HEAD
         for move in to_post:
+=======
+        for move in self:
+>>>>>>> 35ec8429b7c... temp
             if move.is_sale_document():
                 customer_count[move.partner_id] += 1
             elif move.is_purchase_document():
