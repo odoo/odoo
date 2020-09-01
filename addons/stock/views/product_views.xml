@@ -26,6 +26,7 @@
         <record model="ir.actions.server" id="action_open_routes">
             <field name="name">Routes</field>
             <field name="model_id" ref="product.model_product_template"/>
+            <field name="groups_id" eval="[(4,ref('stock.group_stock_user'))]"/>
             <field name="state">code</field>
             <field name="code">
                 action = model.action_open_routes_diagram()
