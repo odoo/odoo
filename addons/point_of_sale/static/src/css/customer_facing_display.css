@@ -261,16 +261,12 @@ body .pos-customer_facing_display .pos-payment_info .pos-payment_info_details .p
   line-height: 1.3;
 }
 body .pos-customer_facing_display .pos-payment_info .pos-payment_info_details .pos-odoo_logo_container {
-  text-align: right;
+  background-image: url(/web/static/src/img/logo_inverse_white_206px.png);
+  background-position: right top;
+  background-size: contain;
+  background-repeat: no-repeat;
+  height: 1.5vw;
   margin-top: 10%;
-  -webkit-box-flex: 0 1 auto;
-  -webkit-flex: 0 1 auto;
-  -moz-box-flex: 0 1 auto;
-  -ms-flex: 0 1 auto;
-  flex: 0 1 auto;
-}
-body .pos-customer_facing_display .pos-payment_info .pos-payment_info_details .pos-odoo_logo_container img {
-  max-width: 40px;
 }
 @media all and (orientation: portrait) {
   body .pos-customer_facing_display {
