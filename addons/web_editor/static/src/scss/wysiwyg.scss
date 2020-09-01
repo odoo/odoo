@@ -32,7 +32,7 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
 #web_editor-top-edit {
     @include o-position-absolute(0, 0, auto, 0);
     position: fixed;
-    z-index: $o-we-zindex;
+    z-index: $o-we-zindex + 1;
     height: var(--o-we-toolbar-height);
     background-color: $o-we-bg;
 
