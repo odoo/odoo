@@ -140,6 +140,7 @@ class AccountTestInvoicingCommon(SavepointCase):
             'property_account_receivable_id': cls.company_data['default_account_receivable'].id,
             'property_account_payable_id': cls.company_data['default_account_payable'].id,
             'company_id': False,
+            'email': 'partner_a@test.com',
         })
         cls.partner_b = cls.env['res.partner'].create({
             'name': 'partner_b',
@@ -149,6 +150,7 @@ class AccountTestInvoicingCommon(SavepointCase):
             'property_account_receivable_id': cls.company_data['default_account_receivable'].copy().id,
             'property_account_payable_id': cls.company_data['default_account_payable'].copy().id,
             'company_id': False,
+            'email': 'partner_b@test.com',
         })
 
         # ==== Cash rounding ====
