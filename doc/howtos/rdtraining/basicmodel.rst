@@ -23,7 +23,7 @@ Object-Relational Mapping
 
     **Goal**: at the end of this section, the table ``estate_property`` is created:
 
-    .. code-block:: console
+    .. code-block:: text
 
         $ psql-d rd-demo
         rd-demo=# SELECT COUNT(*) FROM estate_property;
@@ -88,7 +88,7 @@ combination with ``-d``.
 
 During the startup, you should see the following warnings:
 
-.. code-block:: console
+.. code-block:: text
 
     ...
     WARNING rd-demo odoo.models: The model estate.property has no _description
@@ -131,7 +131,7 @@ Types
     **Goal**: at the end of this section, several basic fields are added to the table
     ``estate_property``:
 
-    .. code-block:: console
+    .. code-block:: text
 
         $ psql -d rd-demo
 
