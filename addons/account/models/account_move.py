@@ -1025,10 +1025,11 @@ class AccountMove(models.Model):
                 }
             )
         )
+        self = self.sorted(lambda m: (m.date, m.ref or '', m.id))
         highest_name = self[0]._get_last_sequence() if self else False
 
         # Group the moves by journal and month
-        for move in self.sorted(lambda m: (m.date, m.ref or '', m.id)):
+        for move in self:
             if not highest_name and move == self[0] and not move.posted_before:
                 # In the form view, we need to compute a default sequence so that the user can edit
                 # it. We only check the first move as an approximation (enough for new in form view)
@@ -1036,15 +1037,13 @@ class AccountMove(models.Model):
             elif (move.name and move.name != '/') or move.state != 'posted':
                 # Has already a name or is not posted, we don't add to a batch
                 continue
-            if not grouped[journal_key(move)][date_key(move)]['records']:
+            group = grouped[journal_key(move)][date_key(move)]
+            if not group['records']:
                 # Compute all the values needed to sequence this whole group
                 move._set_next_sequence()
-                format, format_values = move._get_sequence_format_param(move.name)
-                reset = move._deduce_sequence_number_reset(move.name)
-                grouped[journal_key(move)][date_key(move)]['format'] = format
-                grouped[journal_key(move)][date_key(move)]['format_values'] = format_values
-                grouped[journal_key(move)][date_key(move)]['reset'] = reset
-            grouped[journal_key(move)][date_key(move)]['records'] += move
+                group['format'], group['format_values'] = move._get_sequence_format_param(move.name)
+                group['reset'] = move._deduce_sequence_number_reset(move.name)
+            group['records'] += move
 
         # Fusion the groups depending on the sequence reset and the format used because `seq` is
         # the same counter for multiple groups that might be spread in multiple months.
