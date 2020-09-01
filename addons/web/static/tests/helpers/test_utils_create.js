@@ -396,13 +396,15 @@ odoo.define('web.test_utils_create', function (require) {
         }, params.viewOptions);
         // patch the View to handle the groupBy given in params, as we can't give it
         // in init (unlike the domain and context which can be set in the action)
-        testUtilsMock.patch(View, {
-            _updateMVCParams() {
-                this._super(...arguments);
-                this.loadParams.groupedBy = params.groupBy || viewOptions.groupBy || [];
-                testUtilsMock.unpatch(View);
-            },
-        });
+        if (params.groupBy || viewOptions.groupBy) {
+            testUtilsMock.patch(View, {
+                _updateMVCParams() {
+                    this._super(...arguments);
+                    this.loadParams.groupedBy = params.groupBy || viewOptions.groupBy || [];
+                    testUtilsMock.unpatch(View);
+                },
+            });
+        }
         if ('hasSelectors' in params) {
             viewOptions.hasSelectors = params.hasSelectors;
         }
