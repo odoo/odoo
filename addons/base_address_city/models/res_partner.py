@@ -19,6 +19,10 @@ class Partner(models.Model):
             self.city = self.city_id.name
             self.zip = self.city_id.zipcode
             self.state_id = self.city_id.state_id
+        else:
+            self.city = False
+            self.zip = False
+            self.state_id = False
 
     @api.model
     def _fields_view_get_address(self, arch):
