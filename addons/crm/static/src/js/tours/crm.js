@@ -9,6 +9,7 @@ var _t = core._t;
 tour.register('crm_tour', {
     url: "/web",
     rainbowManMessage: _t("Congrats, best of luck catching such big fish! :)"),
+    sequence: 5,
 }, [tour.stepUtils.showAppsMenuItem(), {
     trigger: '.o_app[data-menu-xmlid="crm.crm_menu_root"]',
     content: _t('Ready to boost your sales? Let\'s have a look at your <b>Pipeline</b>.'),
