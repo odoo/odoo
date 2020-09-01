@@ -291,6 +291,9 @@ class configmanager(object):
         group.add_option("--max-cron-threads", dest="max_cron_threads", my_default=2,
                          help="Maximum number of threads processing concurrently cron jobs (default 2).",
                          type="int")
+        group.add_option("--max-async-threads", dest="max_async_threads", my_default=2,
+                         help="Maximum number of threads processing concurrently async jobs (default 2).",
+                         type="int")
         group.add_option("--unaccent", dest="unaccent", my_default=False, action="store_true",
                          help="Try to enable the unaccent extension when creating new databases.")
         group.add_option("--geoip-db", dest="geoip_database", my_default='/usr/share/GeoIP/GeoLite2-City.mmdb',
@@ -319,6 +322,10 @@ class configmanager(object):
                              type="int")
             group.add_option("--limit-time-real-cron", dest="limit_time_real_cron", my_default=-1,
                              help="Maximum allowed Real time per cron job. (default: --limit-time-real). "
+                                  "Set to 0 for no limit. ",
+                             type="int")
+            group.add_option("--limit-time-real-async", dest="limit_time_real_async", my_default=-1,
+                             help="Maximum allowed Real time per async job. (default: --limit-time-real). "
                                   "Set to 0 for no limit. ",
                              type="int")
             group.add_option("--limit-request", dest="limit_request", my_default=8192,
@@ -456,7 +463,8 @@ class configmanager(object):
             'stop_after_init', 'without_demo', 'http_enable', 'syslog',
             'list_db', 'proxy_mode',
             'test_file', 'test_tags',
-            'osv_memory_count_limit', 'osv_memory_age_limit', 'transient_age_limit', 'max_cron_threads', 'unaccent',
+            'osv_memory_count_limit', 'osv_memory_age_limit', 'transient_age_limit', 'unaccent',
+            'max_cron_threads', 'max_async_threads',
             'data_dir',
             'server_wide_modules',
         ]
@@ -464,7 +472,8 @@ class configmanager(object):
         posix_keys = [
             'workers',
             'limit_memory_hard', 'limit_memory_soft',
-            'limit_time_cpu', 'limit_time_real', 'limit_request', 'limit_time_real_cron'
+            'limit_time_cpu', 'limit_time_real', 'limit_request',
+            'limit_time_real_cron', 'limit_time_real_async',
         ]
 
         if os.name == 'posix':

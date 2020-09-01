@@ -19,6 +19,7 @@ import time
 import unittest
 from itertools import chain
 
+import psycopg2
 import psutil
 import werkzeug.serving
 from werkzeug.debug import DebuggedApplication
@@ -57,6 +58,7 @@ import odoo
 from odoo.modules import get_modules
 from odoo.modules.registry import Registry
 from odoo.release import nt_service_name
+from odoo.sql_db import connection_info_for
 from odoo.tools import config
 from odoo.tools import stripped_sys_argv, dumpstacks, log_ormcache_stats
 from ..tests import loader, runner
@@ -374,20 +376,20 @@ class ThreadedServer(CommonServer):
             self.limits_reached_threads.add(threading.currentThread())
 
         for thread in threading.enumerate():
-            if not thread.daemon or getattr(thread, 'type', None) == 'cron':
-                # We apply the limits on cron threads and HTTP requests,
-                # longpolling requests excluded.
+            # We apply the limits on cron threads, async threads and
+            # HTTP requests, longpolling requests excluded.
+            if not thread.daemon or getattr(thread, 'type', None) in ('cron', 'async'):
                 if getattr(thread, 'start_time', None):
                     thread_execution_time = time.time() - thread.start_time
                     thread_limit_time_real = config['limit_time_real']
-                    if (getattr(thread, 'type', None) == 'cron' and
-                            config['limit_time_real_cron'] and config['limit_time_real_cron'] > 0):
-                        thread_limit_time_real = config['limit_time_real_cron']
+                    if config.get('limit_time_real_%s' % thread.type, 0) > 0:
+                        thread_limit_time_real = config['limit_time_real_%s' % thread.type]
                     if thread_limit_time_real and thread_execution_time > thread_limit_time_real:
                         _logger.warning(
                             'Thread %s virtual real time limit (%d/%ds) reached.',
                             thread, thread_execution_time, thread_limit_time_real)
                         self.limits_reached_threads.add(thread)
+
         # Clean-up threads that are no longer alive
         # e.g. threads that exceeded their real time,
         # but which finished before the server could restart.
@@ -431,6 +433,57 @@ class ThreadedServer(CommonServer):
             t.type = 'cron'
             t.start()
             _logger.debug("cron%d started!" % i)
+
+    def async_thread(self, n):
+        from odoo.addons.base.models.ir_async import IrAsync
+        conn = odoo.sql_db.db_connect('postgres')
+
+        with conn.cursor() as cr:
+            pg_conn = cr._cnx
+            cr.execute("LISTEN odoo_async")
+            cr.commit()
+
+            # We assume all databases are notified at startup so we poll
+            # them all once for leftover jobs. When all leftover jobs
+            # are processed, we wait for postgres notifications
+            notified_dbs = [
+                dbname
+                for dbname, registry
+                in odoo.modules.registry.Registry.registries.d.items()
+                if registry.ready
+            ]
+
+            while True:
+
+                # avoid thunderhead effect: On NOTIFY, all workers are
+                # awaken at the same time, the sleep prevents they all
+                # poll the database at the exact same time.
+                time.sleep(n / 100 % .1)
+
+                for dbname in notified_dbs:
+                    _logger.debug("async%d processing db %s", n, dbname)
+                    threading.currentThread().start_time = time.time()
+                    IrAsync._process_jobs(dbname)
+                threading.currentThread().start_time = None
+                _logger.debug("async%d awaiting signal", n)
+                select.select([pg_conn], [], [], SLEEP_INTERVAL)
+                pg_conn.poll()
+
+                # The NOTIFY payload holds the database name where a job
+                # got enqueued
+                notified_dbs = {notify.payload for notify in pg_conn.notifies}
+                pg_conn.notifies.clear()
+
+    def async_spawn(self):
+        for i in range(odoo.tools.config['max_async_threads']):
+            t = threading.Thread(
+                target=self.async_thread,
+                args=(i,),
+                name="odoo.service.async.async%d" % i,
+                daemon=True)
+            t.type = 'async'
+            t.start()
+            _logger.debug("async%d started!", i)
 
     def http_thread(self):
         def app(e, s):
@@ -521,6 +574,7 @@ class ThreadedServer(CommonServer):
             return rc
 
         self.cron_spawn()
+        self.async_spawn()
 
         # Wait for a first signal to be handled. (time.sleep will be interrupted
         # by the signal handler)
