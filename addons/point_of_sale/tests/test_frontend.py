@@ -504,7 +504,7 @@ class TestUi(TestPointOfSaleHttpCommon):
 
     def test_02_pos_with_invoiced(self):
         self.main_pos_config.open_session_cb(check_coa=False)
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'ChromeTour', login="admin", step_delay=50)
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'ChromeTour', login="admin")
         n_invoiced = self.env['pos.order'].search_count([('state', '=', 'invoiced')])
         n_paid = self.env['pos.order'].search_count([('state', '=', 'paid')])
         self.assertEqual(n_invoiced, 1, 'There should be 1 invoiced order.')
@@ -513,13 +513,13 @@ class TestUi(TestPointOfSaleHttpCommon):
     def test_03_order_management(self):
         self.main_pos_config.write({ 'manage_orders': True, 'module_account': True })
         self.main_pos_config.open_session_cb(check_coa=False)
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'OrderManagementScreenTour', login="admin", step_delay=50)
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'OrderManagementScreenTour', login="admin")
 
     def test_04_product_configurator(self):
         self.main_pos_config.write({ 'product_configurator': True })
         self.main_pos_config.open_session_cb(check_coa=False)
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config, 'ProductConfiguratorTour', login="admin", step_delay=50)
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config, 'ProductConfiguratorTour', login="admin")
 
     def test_05_ticket_screen(self):
         self.main_pos_config.open_session_cb(check_coa=False)
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'TicketScreenTour', login="admin", step_delay=50)
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'TicketScreenTour', login="admin")

@@ -49,12 +49,8 @@ odoo.define('pos_restaurant.tour.TipScreenTourMethods', function (require) {
         inputAmountIs(amount) {
             return [
                 {
-                    trigger: `.tip-screen .custom-amount-form input`,
-                    run: function() {
-                        if (this.$anchor.val().indexOf(amount) === -1) {
-                            throw new Error(`".tip-screen .custom-amount-form input" element does not contain ${amount}.`)
-                        };
-                    },
+                    trigger: `.tip-screen .custom-amount-form input[data-amount="${amount}"]`,
+                    run: () => {},
                 }
             ]
         }
