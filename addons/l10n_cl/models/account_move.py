@@ -108,7 +108,7 @@ class AccountMove(models.Model):
 
     def _get_last_sequence_domain(self, relaxed=False):
         where_string, param = super(AccountMove, self)._get_last_sequence_domain(relaxed)
-        if self.company_id.country_id == self.env.ref('base.cl') and self.l10n_latam_use_documents:
+        if self.company_id.country_id == self.env.ref('base.cl') and self.l10n_latam_use_documents and self.is_sale_document():
             journals = self.journal_id.l10n_cl_sequence_ids.filtered(lambda s: s.l10n_latam_document_type_id == self.l10n_latam_document_type_id).l10n_cl_journal_ids.ids
             if len(journals) > 1:
                 where_string.replace("journal_id = %(journal_ids)s", "journal_id in %(journal_ids)s")

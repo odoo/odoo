@@ -50,7 +50,7 @@
 
             <!-- on latam_documents we use document_number to set name -->
             <field name="name" position="attributes">
-                <attribute name="attrs">{'readonly': ['|', ('state', '!=', 'draft'), ('l10n_latam_use_documents', '=', True)]}</attribute>
+                <attribute name="attrs">{'readonly': ['|', ('state', '!=', 'draft'), ('l10n_latam_use_documents', '=', True)], 'invisible': [('l10n_latam_use_documents', '=', True), ('move_type', 'in', ('in_invoice', 'in_refund'))]}</attribute>
             </field>
 
         </field>
