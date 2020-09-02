@@ -14,16 +14,6 @@ odoo.define('web.AbstractRendererOwl', function () {
 
     class AbstractRenderer extends owl.Component {
 
-        constructor() {
-            super(...arguments);
-            // Defines the elements suppressed when in demo data. This must be a list
-            // of DOM selectors matching view elements that will:
-            // 1. receive the 'o_sample_data_disabled' class (greyd out & no user events)
-            // 2. have themselves and any of their focusable children removed from the
-            //    tab navigation
-            this.sampleDataTargets = [];
-        }
-
         mounted() {
             this._suppressFocusableElements();
         }
@@ -34,7 +24,7 @@ odoo.define('web.AbstractRendererOwl', function () {
 
         /**
          * Suppresses 'tabindex' property on any focusable element located inside
-         * root elements defined in the `this.sampleDataTargets` object and assigns
+         * root elements defined in the `sampleDataTargets` object and assigns
          * the 'o_sample_data_disabled' class to these root elements.
          *
          * @private
@@ -47,7 +37,7 @@ odoo.define('web.AbstractRendererOwl', function () {
                 return;
             }
             const rootEls = [];
-            for (const selector of this.sampleDataTargets) {
+            for (const selector of this.constructor.sampleDataTargets) {
                 rootEls.push(...this.el.querySelectorAll(`:scope ${selector}`));
             }
             const focusableEls = new Set(rootEls);
@@ -66,6 +56,13 @@ odoo.define('web.AbstractRendererOwl', function () {
             }
         }
     }
+
+    // Defines the elements suppressed when in demo data. This must be a list
+    // of DOM selectors matching view elements that will:
+    // 1. receive the 'o_sample_data_disabled' class (greyd out & no user events)
+    // 2. have themselves and any of their focusable children removed from the
+    //    tab navigation
+    AbstractRenderer.sampleDataTargets = [];
 
     return AbstractRenderer;
 

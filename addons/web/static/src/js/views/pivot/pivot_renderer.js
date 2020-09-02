@@ -34,7 +34,6 @@ odoo.define('web.PivotRenderer', function (require) {
          */
         constructor() {
             super(...arguments);
-            this.sampleDataTargets = ['table'];
             this.state = useState({
                 activeNodeHeader: {
                     groupId: false,
@@ -197,6 +196,7 @@ odoo.define('web.PivotRenderer', function (require) {
         }
     }
 
+    PivotRenderer.sampleDataTargets = ['table'];
     PivotRenderer.template = 'web.PivotRenderer';
 
     return patchMixin(PivotRenderer);
