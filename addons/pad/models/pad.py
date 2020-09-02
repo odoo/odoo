@@ -22,15 +22,13 @@ class PadCommon(models.AbstractModel):
 
     @api.model
     def pad_is_configured(self):
-        return bool(self.env.company.pad_server)
+        return bool(self.env['ir.config_parameter'].sudo().get_param('pad.pad_server'))
 
     @api.model
     def pad_generate_url(self):
-        company = self.env.user.sudo().company_id
-
         pad = {
-            "server": company.pad_server,
-            "key": company.pad_key,
+            "server": self.env['ir.config_parameter'].sudo().get_param('pad.pad_server'),
+            "key": self.env['ir.config_parameter'].sudo().get_param('pad.pad_key'),
         }
 
         # make sure pad server in the form of http://hostname
@@ -75,8 +73,11 @@ class PadCommon(models.AbstractModel):
 
     @api.model
     def pad_get_content(self, url):
-        company = self.env.user.sudo().company_id
-        myPad = EtherpadLiteClient(company.pad_key, (company.pad_server or '') + '/api')
+        pad = {
+            "server": self.env['ir.config_parameter'].sudo().get_param('pad.pad_server'),
+            "key": self.env['ir.config_parameter'].sudo().get_param('pad.pad_key'),
+        }
+        myPad = EtherpadLiteClient(pad['key'], (pad['server'] or '') + '/api')
         content = ''
         if url:
             split_url = url.split('/p/')
@@ -131,8 +132,11 @@ class PadCommon(models.AbstractModel):
         # Update the pad if the `pad_content_field` is modified
         for k, field in self._fields.items():
             if hasattr(field, 'pad_content_field') and vals.get(field.pad_content_field) and self[k]:
-                company = self.env.user.sudo().company_id
-                myPad = EtherpadLiteClient(company.pad_key, (company.pad_server or '') + '/api')
+                pad = {
+                    "server": self.env['ir.config_parameter'].sudo().get_param('pad.pad_server'),
+                    "key": self.env['ir.config_parameter'].sudo().get_param('pad.pad_key'),
+                }
+                myPad = EtherpadLiteClient(pad['key'], (pad['server'] or '') + '/api')
                 path = self[k].split('/p/')[1]
                 myPad.setHtmlFallbackText(path, vals[field.pad_content_field])
 
