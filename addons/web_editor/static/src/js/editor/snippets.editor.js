@@ -72,6 +72,7 @@ var SnippetEditor = Widget.extend({
 
         this.isTargetParentEditable = this.$target.parent().is(':o_editable');
         this.isTargetMovable = this.isTargetParentEditable && this.isTargetMovable;
+        this.isTargetRemovable = this.isTargetParentEditable && !this.$target.parent().is('[data-oe-type="image"]');
 
         // Initialize move/clone/remove buttons
         if (this.isTargetMovable) {
@@ -106,7 +107,7 @@ var SnippetEditor = Widget.extend({
             $customize.find('.oe_snippet_clone').addClass('d-none');
         }
 
-        if (!this.isTargetParentEditable) {
+        if (!this.isTargetRemovable) {
             this.$el.add($customize).find('.oe_snippet_remove').addClass('d-none');
         }
 
