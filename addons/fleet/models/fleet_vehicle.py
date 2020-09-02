@@ -207,12 +207,21 @@ class FleetVehicle(models.Model):
 
     @api.multi
     def write(self, vals):
-        res = super(FleetVehicle, self).write(vals)
         if 'driver_id' in vals and vals['driver_id']:
+            self._close_driver_history()
             self.create_driver_history(vals['driver_id'])
+        res = super(FleetVehicle, self).write(vals)
+
         if 'active' in vals and not vals['active']:
             self.mapped('log_contracts').write({'active': False})
         return res
+
+    def _close_driver_history(self):
+        self.env['fleet.vehicle.assignation.log'].search([
+            ('vehicle_id', 'in', self.ids),
+            ('driver_id', 'in', self.mapped('driver_id').ids),
+            ('date_end', '=', False)
+        ]).write({'date_end': fields.Date.today()})
 
     def create_driver_history(self, driver_id):
         for vehicle in self:
