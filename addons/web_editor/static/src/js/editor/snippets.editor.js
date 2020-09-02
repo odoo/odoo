@@ -1552,7 +1552,7 @@ var SnippetsMenu = Widget.extend({
             var exclude = $style.data('exclude') || '';
             var target = $style.data('target');
             var noCheck = $style.data('no-check');
-            var optionID = $style.data('js');
+            var optionID = $style.data('js') || $style.data('option-name');  // used in tour js as selector
             var option = {
                 'option': optionID,
                 'base_selector': selector,
