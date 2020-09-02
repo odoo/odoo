@@ -284,5 +284,11 @@
                 <script type="text/javascript" src="/mail/static/src/widgets/form_renderer/form_renderer_tests.js"></script>
             </xpath>
         </template>
+
+        <template id="qunit_mobile_suite" name="mail_qunit_mobile_suite" inherit_id="web.qunit_mobile_suite_tests">
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/mail/static/src/components/discuss_mobile_mailbox_selection/discuss_mobile_mailbox_selection_tests.js"/>
+            </xpath>
+        </template>
     </data>
 </odoo>
