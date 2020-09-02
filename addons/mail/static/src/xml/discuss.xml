@@ -50,18 +50,18 @@
     <!--
         @param {string|integer} activeThreadID
         @param {boolean} isMyselfModerator
-        @param {mail.model.Mailbox} inbox
-        @param {mail.model.Mailbox} starred
-        @param {mail.model.Mailbox|undefined} moderation set if current user is moderator
+        @param {mail.model.Mailbox} [inbox]
+        @param {mail.model.Mailbox} [starred]
+        @param {mail.model.Mailbox} [moderation] set if current user is moderator
     -->
     <t t-name="mail.discuss.SidebarMailboxes">
-        <div t-attf-class="o_mail_discuss_title_main o_mail_discuss_item #{(activeThreadID === 'mailbox_inbox') ? 'o_active': ''}"
+        <div t-if="inbox" t-attf-class="o_mail_discuss_title_main o_mail_discuss_item #{(activeThreadID === 'mailbox_inbox') ? 'o_active': ''}"
                 data-thread-id="mailbox_inbox">
             <span class="o_thread_name"><i class="fa fa-inbox mr8"/>Inbox</span>
             <t t-set="counter" t-value="inbox.getMailboxCounter()"/>
             <t t-call="mail.discuss.SidebarCounter"/>
         </div>
-        <div t-attf-class="o_mail_discuss_title_main o_mail_mailbox_title_starred o_mail_discuss_item #{(activeThreadID === 'mailbox_starred') ? 'o_active': ''}"
+        <div t-if="starred" t-attf-class="o_mail_discuss_title_main o_mail_mailbox_title_starred o_mail_discuss_item #{(activeThreadID === 'mailbox_starred') ? 'o_active': ''}"
                 data-thread-id="mailbox_starred">
             <span class="o_thread_name"><i class="fa fa-star-o mr8"/>Starred</span>
             <t t-set="counter" t-value="starred.getMailboxCounter()"/>
@@ -71,7 +71,7 @@
             data-thread-id="mailbox_history">
             <span class="o_thread_name"><i class="fa fa-history mr8"/>History</span>
         </div>
-        <div t-if="isMyselfModerator" t-attf-class="o_mail_discuss_title_main o_mail_discuss_item #{(activeThreadID == 'mailbox_moderation') ? 'o_active': ''}"
+        <div t-if="isMyselfModerator and moderation" t-attf-class="o_mail_discuss_title_main o_mail_discuss_item #{(activeThreadID == 'mailbox_moderation') ? 'o_active': ''}"
                 data-thread-id="mailbox_moderation">
             <span class="o_thread_name"> <i class="fa fa-envelope mr8"/>Moderation Queue</span>
             <t t-set="counter" t-value="moderation.getMailboxCounter()"/>
