@@ -5330,9 +5330,13 @@ Fields:
 
     @api.model
     def flush(self, fnames=None, records=None):
-        """ Process all the pending recomputations (or at least the given field
-            names `fnames` if present) and flush the pending updates to the
-            database.
+        """ Process all the pending computations (on all models), and flush all
+        the pending updates to the database.
+
+        :param fnames (list<str>): list of field names to flush.  If given,
+            limit the processing to the given fields of the current model.
+        :param records (Model): if given (together with ``fnames``), limit the
+            processing to the given records.
         """
         def process(model, id_vals):
             # group record ids by vals, to update in batch when possible
