@@ -385,6 +385,17 @@ class ImageConverter(models.AbstractModel):
 
         return u'<img src="data:%s;base64,%s">' % (Image.MIME[image.format], value.decode('ascii'))
 
+class ImageUrlConverter(models.AbstractModel):
+    """ ``image_url`` widget rendering, inserts an image tag in the
+    document.
+    """
+    _name = 'ir.qweb.field.image_url'
+    _description = 'Qweb Field Image'
+    _inherit = 'ir.qweb.field.image'
+
+    @api.model
+    def value_to_html(self, value, options):
+        return u'<img src="%s">' % (value)
 
 class MonetaryConverter(models.AbstractModel):
     """ ``monetary`` converter, has a mandatory option
