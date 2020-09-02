@@ -65,7 +65,10 @@ var SystrayMenu = Widget.extend(WidgetAdapterMixin, {
         return this._super.apply(this, arguments).then(function () {
             self.widgets.forEach(function (widget) {
                 if (utils.isComponent(widget.constructor)) {
-                    dom.prepend(self.$el, $(widget.el));
+                    dom.prepend(self.$el, $(widget.el), {
+                        in_DOM: true,
+                        callbacks: [{ widget: widget }],
+                    });
                 } else {
                     dom.prepend(self.$el, widget.$el);
                 }
