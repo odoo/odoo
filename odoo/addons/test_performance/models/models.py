@@ -34,6 +34,13 @@ class LineModel(models.Model):
 
     base_id = fields.Many2one('test_performance.base', required=True, ondelete='cascade')
     value = fields.Integer()
+    tag_ids = fields.Many2many('test_performance.tag')
+    computed_value = fields.Float(compute="_compute_computed_value")
+
+    @api.depends('value')
+    def _compute_computed_value(self):
+        for record in self:
+            record.computed_value = record.value + 1
 
 
 class TagModel(models.Model):
@@ -41,3 +48,9 @@ class TagModel(models.Model):
     _description = 'Test Performance Tag'
 
     name = fields.Char()
+    computed_name = fields.Float(compute="_compute_computed_name")
+
+    @api.depends('name')
+    def _compute_computed_name(self):
+        for record in self:
+            record.computed_name = record.name + "computed"

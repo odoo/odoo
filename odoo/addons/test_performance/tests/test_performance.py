@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import mock
 from collections import defaultdict
 import json
 
@@ -9,6 +10,17 @@ from odoo.tools import pycompat, json_default
 
 
 class TestPerformance(TransactionCase):
+
+    def setUp(self):
+        super(TestPerformance, self).setUp()
+        for record in self.env['test_performance.base'].search([]):
+            # create 10 line with 10 tags
+            for val in range(10):
+                self.env['test_performance.line'].create({
+                    'base_id': record.id,
+                    'value': val,
+                    'tag_ids': [(0, 0, {'name': val}) for val in range(10)],
+                })
 
     @users('__system__', 'demo')
     @warmup
@@ -31,6 +43,67 @@ class TestPerformance(TransactionCase):
             # value_pc must have been prefetched, too
             for record in records:
                 record.value_pc
+
+    @users('__system__', 'demo')
+    @warmup
+    def test_multi_level_relation_preftech(self):
+        """ Test recursive prefetch """
+        records = self.env['test_performance.base'].search([])
+        Tag = self.env["test_performance.tag"]
+        self.assertEqual(len(records), 5)
+
+        # without cache
+        with self.assertQueryCount(__system__=6, demo=6):
+            for record in records:
+                for line in record.line_ids:
+                    for tag in line.tag_ids:
+                        tag.name
+
+        # with cache
+        with self.assertQueryCount(0):
+            for record in records:
+                for line in record.line_ids:
+                    for tag in line.tag_ids:
+                        tag.name
+
+    @users('__system__', 'demo')
+    @warmup
+    def test_filtered_relation_preftech(self):
+        """ Test prefetch on filtered records"""
+        records = self.env['test_performance.base'].search([])
+        Line = self.env["test_performance.line"]
+        self.assertEqual(len(records), 5)
+
+        # ensure that values are in cache for line ids and filter records
+        records.mapped("line_ids")
+        filtered = records.filtered(lambda a: True)
+
+        with mock.patch.object(Line.__class__, '_compute_computed_value') as mocked_compute:
+            for record in filtered:
+                for line in record.line_ids:
+                    line.computed_value
+            self.assertEquals(mocked_compute.call_count, 1)
+
+
+    @users('__system__', 'demo')
+    @warmup
+    def test_filtered_multi_level_relation_preftech(self):
+        """ Test recursive prefetch on filtered records"""
+        records = self.env['test_performance.base'].search([])
+        Tag = self.env["test_performance.tag"]
+        self.assertEqual(len(records), 5)
+
+        # ensure that values are in cache for tag ids and filter records
+        records.mapped("line_ids.tag_ids")
+        filtered = records.filtered(lambda a: True)
+
+        with mock.patch.object(Tag.__class__, '_compute_computed_name') as mocked_compute:
+            for record in filtered:
+                for line in record.line_ids:
+                    for tag in line.tag_ids:
+                        tag.computed_name
+        self.assertEquals(mocked_compute.call_count, 1)
+
 
     @users('__system__', 'demo')
     @warmup

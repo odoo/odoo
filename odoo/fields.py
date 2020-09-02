@@ -1010,6 +1010,18 @@ class Field(MetaField('DummyField', (object,), {})):
             record.ensure_one()
             try:
                 value = record.env.cache.get(record, self)
+                if self.relational and record and value and self.comodel_name not in record._prefetch:
+                    # we get the value from the cache for a relational field
+                    # If the comodel_name is not into the prefetched dict.
+                    # We must ensure to fill this list with all the values in cache
+                    # for all the record ids into the prefetch of the current record model
+                    prefetched_comodel_ids = record._prefetch[self.comodel_name]
+                    for rec in record.browse(record._prefetch[record._name], prefetch=record._prefetch):
+                        try:
+                            v = record.env.cache.get(rec, self)
+                            prefetched_comodel_ids.update(set(v))
+                        except:
+                            continue
             except KeyError:
                 # cache miss, determine value and retrieve it
                 if record.id:
