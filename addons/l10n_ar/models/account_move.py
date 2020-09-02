@@ -198,14 +198,18 @@ class AccountMove(models.Model):
     def _get_starting_sequence(self):
         """ If use documents then will create a new starting sequence using the document type code prefix and the
         journal document number with a 8 padding number """
-        if self.journal_id.l10n_latam_use_documents and self.env.company.country_id == self.env.ref('base.ar'):
+        if (
+            self.journal_id.l10n_latam_use_documents
+            and self.env.company.country_id == self.env.ref('base.ar')
+            and self.is_sale_document()
+        ):
             if self.l10n_latam_document_type_id:
                 return self._get_formatted_sequence()
         return super()._get_starting_sequence()
 
     def _get_last_sequence_domain(self, relaxed=False):
         where_string, param = super(AccountMove, self)._get_last_sequence_domain(relaxed)
-        if self.company_id.country_id == self.env.ref('base.ar') and self.l10n_latam_use_documents:
+        if self.company_id.country_id == self.env.ref('base.ar') and self.l10n_latam_use_documents and self.is_sale_document():
             if not self.journal_id.l10n_ar_share_sequences:
                 where_string += " AND l10n_latam_document_type_id = %(l10n_latam_document_type_id)s"
                 param['l10n_latam_document_type_id'] = self.l10n_latam_document_type_id.id or 0
