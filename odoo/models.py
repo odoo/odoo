@@ -5508,7 +5508,12 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             record = self.new(values)
             # attach ``self`` with a different context (for cache consistency)
             record._origin = self.with_context(__onchange=True)
+            # _onchange_sender is the field name of the current @onchange
+            # propagation bounce
             record._onchange_sender = False
+            # onchange_origin is the name of the first @onchange field
+            # before any other @onchange bounces
+            record._onchange_origin = False
 
         # make a snapshot based on the initial values of record
         with env.do_in_onchange():
@@ -5538,6 +5543,9 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 # apply field-specific onchange methods
                 for name in todo:
                     if field_onchange.get(name):
+                        # store name of the first field before event propagation 
+                        if not record._onchange_origin:
+                            record._onchange_origin = name
                         record._onchange_eval(name, field_onchange[name], result)
                     done.add(name)
 
@@ -5548,6 +5556,8 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                     if name not in done and snapshot0.has_changed(name)
                 ]
 
+            # reset origin before exiting do_in_onchange context
+            record._onchange_origin = False
             # make the snapshot with the final values of record
             snapshot1 = Snapshot(record, nametree)
 
