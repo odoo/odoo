@@ -1955,11 +1955,61 @@ var FieldBinaryImage = AbstractFieldBinary.extend({
     },
 });
 
+var CharImageUrl = AbstractField.extend({
+    className: 'o_field_image',
+    description: _lt("Image"),
+    supportedFieldTypes: ['char'],
+    placeholder: "/web/static/src/img/placeholder.png",
+
+    _renderReadonly: function () {
+        var self = this;
+        const url = this.value;
+        if (url) {
+            var $img = $(qweb.render("FieldBinaryImage-img", {widget: this, url: url}));
+            // override css size attributes (could have been defined in css files)
+            // if specified on the widget
+            const width = this.nodeOptions.size ? this.nodeOptions.size[0] : this.attrs.width;
+            const height = this.nodeOptions.size ? this.nodeOptions.size[1] : this.attrs.height;
+            if (width) {
+                $img.attr('width', width);
+                $img.css('max-width', width + 'px');
+            }
+            if (height) {
+                $img.attr('height', height);
+                $img.css('max-height', height + 'px');
+            }
+            this.$('> img').remove();
+            this.$el.prepend($img);
+
+            $img.one('error', function () {
+                $img.attr('src', self.placeholder);
+                self.displayNotification({
+                    type: 'info',
+                    message: _t("Could not display the specified image url."),
+                });
+            });
+        }
+
+        return this._super.apply(this, arguments);
+    },
+});
+
 var KanbanFieldBinaryImage = FieldBinaryImage.extend({
     // In kanban views, there is a weird logic to determine whether or not a
     // click on a card should open the record in a form view.  This logic checks
     // if the clicked element has click handlers bound on it, and if so, does
     // not open the record (assuming that the click will be handle by someone
+    // else).  In the case of this widget, there are clicks handler but they
+    // only apply in edit mode, which is never the case in kanban views, so we
+    // simply remove them.
+    events: {},
+});
+
+var KanbanCharImageUrl = CharImageUrl.extend({
+    // In kanban views, there is a weird logic to determine whether or not a
+    // click on a card should open the record in a form view.  This logic checks
+    // if the clicked element has click handlers bound on it, and if so, does
+    // not open the record (assuming that the click will be handled by someone
     // else).  In the case of this widget, there are clicks handler but they
     // only apply in edit mode, which is never the case in kanban views, so we
     // simply remove them.
@@ -3539,6 +3589,8 @@ return {
     AbstractFieldBinary: AbstractFieldBinary,
     FieldBinaryImage: FieldBinaryImage,
     KanbanFieldBinaryImage: KanbanFieldBinaryImage,
+    CharImageUrl: CharImageUrl,
+    KanbanCharImageUrl: KanbanCharImageUrl,
     FieldBoolean: FieldBoolean,
     BooleanToggle: BooleanToggle,
     FieldChar: FieldChar,
