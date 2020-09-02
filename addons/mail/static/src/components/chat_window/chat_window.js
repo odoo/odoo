@@ -226,6 +226,9 @@ class ChatWindow extends Component {
         if (isEventHandled(ev, 'Message.authorOpenProfile')) {
             return;
         }
+        if (isEventHandled(ev, 'PartnerImStatusIcon.openChat')) {
+            return;
+        }
         this.chatWindow.focus();
     }
 

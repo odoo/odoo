@@ -7,9 +7,11 @@
                 'o-away': partner and partner.im_status === 'away',
                 'o-background': !props.hasBackground,
                 'o-bot': partner and env.messaging.partnerRoot === partner,
+                'o-has-open-chat': props.hasOpenChat,
                 'o-offline': partner and partner.im_status === 'offline',
                 'o-online': partner and partner.im_status === 'online',
             }"
+            t-on-click="_onClick"
             t-att-data-partner-local-id="partner ? partner.localId : undefined"
         >
             <t t-if="partner" name="rootCondition">

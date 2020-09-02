@@ -166,8 +166,9 @@ class Message extends Component {
             return false;
         }
         if (
-            this.message.originThread &&
-            this.message.originThread.correspondent === this.message.author
+            this.threadView &&
+            this.threadView.thread &&
+            this.threadView.thread.correspondent === this.message.author
         ) {
             return false;
         }
