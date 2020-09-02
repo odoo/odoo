@@ -10,6 +10,24 @@ from odoo.tools.translate import _
 _logger = logging.getLogger(__name__)
 
 
+FLAG_MAPPING = {
+    "GF": "fr",
+    "BV": "no",
+    "BQ": "nl",
+    "GP": "fr",
+    "HM": "au",
+    "YT": "fr",
+    "RE": "fr",
+    "MF": "fr",
+    "UM": "us",
+}
+
+NO_FLAG_COUNTRIES = [
+    "AQ", #Antarctica
+    "SJ", #Svalbard + Jan Mayen : separate jurisdictions : no dedicated flag
+]
+
+
 class Country(models.Model):
     _name = 'res.country'
     _description = 'Country'
@@ -37,7 +55,10 @@ class Country(models.Model):
              "(in reports for example), while this field is used to modify the input form for "
              "addresses.")
     currency_id = fields.Many2one('res.currency', string='Currency')
-    image = fields.Binary(attachment=True)
+    image_url = fields.Char(
+        compute="_compute_image_url", string="Flag",
+        help="Url of static flag image",
+    )
     phone_code = fields.Integer(string='Country Calling Code')
     country_group_ids = fields.Many2many('res.country.group', 'res_country_res_country_group_rel',
                          'res_country_id', 'res_country_group_id', string='Country Groups')
@@ -89,6 +110,15 @@ class Country(models.Model):
     def get_address_fields(self):
         self.ensure_one()
         return re.findall(r'\((.+?)\)', self.address_format)
+
+    @api.depends('code')
+    def _compute_image_url(self):
+        for country in self:
+            if not country.code or country.code in NO_FLAG_COUNTRIES:
+                country.image_url = False
+            else:
+                code = FLAG_MAPPING.get(country.code, country.code.lower())
+                country.image_url = "/base/static/img/country_flags/%s.png" % code
 
 
 class CountryGroup(models.Model):
