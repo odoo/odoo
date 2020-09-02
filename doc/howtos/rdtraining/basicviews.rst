@@ -4,11 +4,217 @@
 Basic Views
 ===========
 
-Tree
+We have seen in the :ref:`previous chapter <howto/rdtraining/firstui>` that Odoo was able to
+generate default views for a given model. In practice, the default view is **never** acceptable
+for a business application.
+
+Views are defined in the XML files along with actions and menus. They are entries of the
+``ir.ui.view`` model.
+
+In our real estate module, we need to organize the fields in a logical way:
+
+- in the list (tree) view, we want to display more than the name
+- in the form view, the fields should be grouped
+- in the search view, we must be able to search on more than the name. Moreover, a filter is
+  created to filter on the 'Available' properties and there is a shortcut to group by postcode.
+
+List
 ====
+
+**Reference**: the documentation related to this topic can be found in
+:ref:`reference/views/list`.
+
+.. note::
+
+    **Goal**: at the end of this section, the list view should look like this:
+
+    .. image:: basicviews/media/list.png
+      :align: center
+      :alt: List view
+
+List views, also called tree views, display records in a tabular form.
+
+Their root element is ``<tree>``. The simplest form of the tree view simply
+lists all the fields to display in the table (each field as a column):
+
+.. code-block:: xml
+
+    <tree string="Tests">
+        <field name="name"/>
+        <field name="last_seen"/>
+    </tree>
+
+A simple example can be found
+`here <https://github.com/odoo/odoo/blob/6da14a3aadeb3efc40f145f6c11fc33314b2f15e/addons/crm/views/crm_lost_reason_views.xml#L46-L54>`__.
+
+.. exercise:: Add a custom list view
+
+    Define a list view for the ``estate.property`` model in the appropriate XML file. Check the
+    **Goal** of the section for the fields to display.
+
+    Tip: do not add the ``editable="bottom"`` attribute that you can find in the example above.
+    We'll come back to it later.
+
+As always, you need to restart the server (do not forget the ``-u`` option) and refresh the browser
+to see the result.
+
+.. warning::
+
+    You will most probably use some copy-paste in this chapter. Always make sure that the ``id``
+    of the view remains unique for each view!
 
 Form
 ====
 
+**Reference**: the documentation related to this topic can be found in
+:ref:`reference/views/form`.
+
+.. note::
+
+    **Goal**: at the end of this section, the form view should look like this:
+
+    .. image:: basicviews/media/form.png
+      :align: center
+      :alt: Form view
+
+Forms are used to create and edit single records.
+
+Their root element is ``<form>``. They are composed of high-level structure
+elements (groups, notebooks) and interactive elements (buttons and fields):
+
+.. code-block:: xml
+
+    <form string="Test">
+        <sheet>
+            <group>
+                <group>
+                    <field name="name"/>
+                </group>
+                <group>
+                    <field name="last_seen"/>
+                </group>
+                <notebook>
+                    <page string="Description">
+                        <field name="description"/>
+                    </page>
+                </notebook>
+            </group>
+        </sheet>
+    </form>
+
+It is possible to use regular HTML tags such as ``div`` and ``h1``, and some ``class`` are
+available to fine-tune the look.
+
+A simple example can be found
+`here <https://github.com/odoo/odoo/blob/6da14a3aadeb3efc40f145f6c11fc33314b2f15e/addons/crm/views/crm_lost_reason_views.xml#L16-L44>`__.
+
+.. exercise:: Add a custom form view
+
+    Define a form view for the ``estate.property`` model in the appropriate XML file. Check the
+    **Goal** of the section for the final design of the page.
+
+This might require some trial and errors before you get to the expected result ;-) It is advised
+to add the fields and the tags one at a time to understand how it works.
+
 Search
 ======
+
+**Reference**: the documentation related to this topic can be found in
+:ref:`reference/views/search`.
+
+.. note::
+
+    **Goal**: at the end of this section, the search view should look like this:
+
+    .. image:: basicviews/media/search_01.png
+      :align: center
+      :alt: Search fields
+
+    .. image:: basicviews/media/search_02.png
+      :align: center
+      :alt: Filter
+
+    .. image:: basicviews/media/search_03.png
+      :align: center
+      :alt: Group By
+
+Search views are slightly different from the list and form views since they don't display
+*content*: although they apply to a specific model, they are used to filter
+other view's content (generally aggregated views such as :ref:`reference/views/list`).
+Beyond that difference in use case, they are defined the same way.
+
+Their root element is ``<search>``. The simplest form of the tree view simply
+lists all the fields a shortcut is needed:
+
+.. code-block:: xml
+
+    <search string="Tests">
+        <field name="name"/>
+        <field name="last_seen"/>
+    </search>
+
+The default search view generated by Odoo provides a shortcut to filter by ``name``. It is very
+common to add the fields on which the user is likely to filter in a customized search view.
+
+Search view ``<field>`` elements can have a ``@filter_domain`` that overrides
+the domain generated for searching on the given field. In the given domain,
+``self`` represents the value entered by the user. In the example below, it is
+used to search on both fields ``name`` and ``description``.
+
+.. exercise:: Add a custom form view
+
+    Define a search view for the ``estate.property`` model in the appropriate XML file. Check the
+    first image of the **Goal** for the list of fields.
+
+After restarting the server, it should be possible to filter on the given fields.
+
+Search views can also contain ``<filter>`` elements, which act as toggles for
+predefined searches. Filters must have one of the following attributes:
+
+- ``domain``: add the given domain to the current search
+- ``context``: add some context to the current search; use the key ``group_by`` to group
+  results on the given field name
+
+A simple example can be found
+`here <https://github.com/odoo/odoo/blob/715a24333bf000d5d98b9ede5155d3af32de067c/addons/delivery/views/delivery_view.xml#L30-L44>`__.
+
+Before going further on the excercise, it is necessary to introduce the concept of 'domain'.
+
+Domains
+-------
+
+**Reference**: the documentation related to this topic can be found in
+:ref:`reference/orm/domains`.
+
+In Odoo, domains are values that encode conditions on
+records. A domain is a  list of criteria used to select a subset of a model's
+records. Each criteria is a triple with a field name, an operator and a value.
+
+For instance, when used on the *Product* model the following domain selects
+all *services* with a unit price over *1000*::
+
+    [('product_type', '=', 'service'), ('unit_price', '>', 1000)]
+
+By default criteria are combined with an implicit AND. The logical operators
+``&`` (AND), ``|`` (OR) and ``!`` (NOT) can be used to explicitly combine
+criteria. They are used in prefix position (the operator is inserted before
+its arguments rather than between). For instance to select products "which are
+services *OR* have a unit price which is *NOT* between 1000 and 2000"::
+
+    ['|',
+        ('product_type', '=', 'service'),
+        '!', '&',
+            ('unit_price', '>=', 1000),
+            ('unit_price', '<', 2000)]
+
+.. exercise:: Add filter and Group By
+
+    The following should be added to the previously created search view:
+
+    - a filter which displays available properties, *i.e.* the state should be 'New' or
+      'Offer Received'.
+    - group results by postcode.
+
+Looking good? At this point, we are already able to create models and design a user interface which
+makes sense business-wise. However, a key component is still missing: the
+:ref:`link between models <howto/rdtraining/relations>`.
