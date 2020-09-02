@@ -28,7 +28,7 @@ class SaleOrderLine(models.Model):
                         ]
                     )
                     if moves and not bom_returned:
-                        line.qty_delivered = line.product_uom_qty
+                        line.qty_delivered = line.qty_delivered_manual or line.product_uom_qty
                     else:
                         line.qty_delivered = 0.0
 
