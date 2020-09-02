@@ -339,6 +339,14 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
     as attribute.
     """
 
+    _depends = {}
+    """dependencies of models backed up by SQL views
+    ``{model_name: field_names}``, where ``field_names`` is an iterable.
+    This is only used to determine the changes to flush to database before
+    executing ``search()`` or ``read_group()``. It won't be used for cache
+    invalidation or recomputing fields.
+    """
+
     # default values for _transient_vacuum()
     _transient_check_count = 0
     _transient_max_count = lazy_classproperty(lambda _: config.get('osv_memory_count_limit'))
@@ -592,6 +600,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         cls._sequence = None
         cls._log_access = cls._auto
         cls._inherits = {}
+        cls._depends = {}
         cls._sql_constraints = {}
 
         for base in reversed(cls.__bases__):
@@ -606,6 +615,9 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 cls._log_access = getattr(base, '_log_access', cls._log_access)
 
             cls._inherits.update(base._inherits)
+
+            for mname, fnames in base._depends.items():
+                cls._depends.setdefault(mname, []).extend(fnames)
 
             for cons in base._sql_constraints:
                 cls._sql_constraints[cons[0]] = cons
@@ -4376,6 +4388,15 @@ Fields:
 
         if self._active_name:
             to_flush[self._name].add(self._active_name)
+
+        # flush model dependencies (recursively)
+        if self._depends:
+            models = [self]
+            while models:
+                model = models.pop()
+                for model_name, field_names in model._depends.items():
+                    to_flush[model_name].update(field_names)
+                    models.append(self.env[model_name])
 
         for model_name, field_names in to_flush.items():
             self.env[model_name].flush(field_names)
