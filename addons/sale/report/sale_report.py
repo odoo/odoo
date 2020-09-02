@@ -58,9 +58,7 @@ class SaleReport(models.Model):
 
     order_id = fields.Many2one('sale.order', 'Order #', readonly=True)
 
-    def _query(self, with_clause='', fields={}, groupby='', from_clause=''):
-        with_ = ("WITH %s" % with_clause) if with_clause else ""
-
+    def _select_sale(self, fields={}):
         select_ = """
             min(l.id) as id,
             l.product_id as product_id,
@@ -101,7 +99,9 @@ class SaleReport(models.Model):
 
         for field in fields.values():
             select_ += field
+        return select_
 
+    def _from_sale(self, from_clause=''):
         from_ = """
                 sale_order_line l
                       join sale_order s on (l.order_id=s.id)
@@ -113,7 +113,9 @@ class SaleReport(models.Model):
                     left join product_pricelist pp on (s.pricelist_id = pp.id)
                 %s
         """ % from_clause
+        return from_
 
+    def _group_by_sale(self, groupby=''):
         groupby_ = """
             l.product_id,
             l.order_id,
@@ -138,8 +140,12 @@ class SaleReport(models.Model):
             l.discount,
             s.id %s
         """ % (groupby)
+        return groupby_
 
-        return '%s (SELECT %s FROM %s WHERE l.product_id IS NOT NULL GROUP BY %s)' % (with_, select_, from_, groupby_)
+    def _query(self, with_clause='', fields={}, groupby='', from_clause=''):
+        with_ = ("WITH %s" % with_clause) if with_clause else ""
+        return '%s (SELECT %s FROM %s WHERE l.product_id IS NOT NULL GROUP BY %s)' % \
+               (with_, self._select_sale(fields), self._from_sale(from_clause), self._group_by_sale(groupby))
 
     def init(self):
         # self._table = sale_report

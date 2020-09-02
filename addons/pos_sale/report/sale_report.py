@@ -19,9 +19,7 @@ class SaleReport(models.Model):
                                             ('pos_done', 'Posted'),
                                             ('invoiced', 'Invoiced')], string='Status', readonly=True)
 
-    def _query(self, with_clause='', fields={}, groupby='', from_clause=''):
-        res = super(SaleReport, self)._query(with_clause, fields, groupby, from_clause)
-
+    def _select_pos(self, fields={}):
         select_ = '''
             MIN(l.id) AS id,
             l.product_id AS product_id,
@@ -68,7 +66,9 @@ class SaleReport(models.Model):
 
         for field in fields.keys():
             select_ += ', NULL AS %s' % (field)
+        return select_
 
+    def _from_pos(self, from_clause=''):
         from_ = '''
             pos_order_line l
                   join pos_order pos on (l.order_id=pos.id)
@@ -80,7 +80,9 @@ class SaleReport(models.Model):
                     LEFT JOIN pos_config config ON (config.id = session.config_id)
                 left join product_pricelist pp on (pos.pricelist_id = pp.id)
         '''
+        return from_
 
+    def _group_by_pos(self, groupby=''):
         groupby_ = '''
             l.order_id,
             l.product_id,
@@ -103,6 +105,11 @@ class SaleReport(models.Model):
             u.factor,
             pos.crm_team_id
         '''
-        current = '(SELECT %s FROM %s GROUP BY %s)' % (select_, from_, groupby_)
+        return groupby_
+
+    def _query(self, with_clause='', fields={}, groupby='', from_clause=''):
+        res = super(SaleReport, self)._query(with_clause, fields, groupby, from_clause)
+        current = '(SELECT %s FROM %s GROUP BY %s)' % \
+                  (self._select_pos(fields), self._from_pos(from_clause), self._group_by_pos(groupby))
 
         return '%s UNION ALL %s' % (res, current)
