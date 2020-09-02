@@ -38,7 +38,7 @@ input[type="range"] {
             border-radius: 45%;
             position: relative;
             background: var(--track-background);
-            --track-background: linear-gradient(to right, transparent var(--low), theme-color('primary') var(--low) var(--high), transparent 0) no-repeat 50% / 100% 35%;
+            --track-background: linear-gradient(to right, transparent var(--low), #{theme-color('primary')} var(--low) var(--high), transparent 0) no-repeat 50% / 100% 35%;
 
             &::-webkit-slider-runnable-track {
                 background: var(--track-background);
