@@ -24,6 +24,9 @@ var _t = core._t;
 // Base64 images for testing purpose
 const MY_IMAGE = 'iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==';
 const PRODUCT_IMAGE = 'R0lGODlhDAAMAKIFAF5LAP/zxAAAANyuAP/gaP///wAAAAAAACH5BAEAAAUALAAAAAAMAAwAAAMlWLPcGjDKFYi9lxKBOaGcF35DhWHamZUW0K4mAbiwWtuf0uxFAgA7';
+const FR_FLAG_URL = '/base/static/img/country_flags/fr.png';
+const EN_FLAG_URL = '/base/static/img/country_flags/gb.png';
+
 
 QUnit.module('fields', {}, function () {
 
@@ -2885,6 +2888,131 @@ QUnit.module('basic_fields', {
             "form view should still be editable");
         assert.hasClass(form.$('.o_field_widget'),'o_field_invalid',
             "image field should be displayed as invalid");
+
+        form.destroy();
+    });
+
+    /**
+     * Same tests than for Image fields, but for Char fields with image_url widget.
+     */
+    QUnit.module('FieldChar-ImageUrlWidget', {
+        beforeEach: function () {
+            // specific sixth partner data for image_url widget tests
+            this.data.partner.records.push({id: 6, bar: false, foo: FR_FLAG_URL, int_field: 5, qux: 0.0, timmy: []});
+        },
+    });
+
+    QUnit.test('image fields are correctly rendered', async function (assert) {
+        assert.expect(6);
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="foo" widget="image_url" options="{\'size\': [90, 90]}"/> ' +
+                '</form>',
+            res_id: 6,
+            async mockRPC(route, args) {
+                if (route === FR_FLAG_URL) {
+                    assert.ok(true, "the correct route should have been called.");
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        assert.hasClass(form.$('div[name="foo"]'), 'o_field_image',
+            "the widget should have the correct class");
+        assert.containsOnce(form, 'div[name="foo"] > img',
+            "the widget should contain an image");
+        assert.hasClass(form.$('div[name="foo"] > img'), 'img-fluid',
+            "the image should have the correct class");
+        assert.hasAttrValue(form.$('div[name="foo"] > img'), 'width', "90",
+            "the image should correctly set its attributes");
+        assert.strictEqual(form.$('div[name="foo"] > img').css('max-width'), "90px",
+            "the image should correctly set its attributes");
+        form.destroy();
+    });
+
+    QUnit.test('image_url widget in subviews are loaded correctly', async function (assert) {
+        assert.expect(6);
+
+        this.data.partner_type.fields.image = {name: 'image', type: 'char'};
+        this.data.partner_type.records[0].image = EN_FLAG_URL;
+        this.data.partner.records[5].timmy = [12];
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="foo" widget="image_url" options="{\'size\': [90, 90]}"/>' +
+                    '<field name="timmy" widget="many2many">' +
+                        '<tree>' +
+                            '<field name="display_name"/>' +
+                        '</tree>' +
+                        '<form>' +
+                            '<field name="image" widget="image_url"/>' +
+                        '</form>' +
+                    '</field>' +
+                '</form>',
+            res_id: 6,
+            async mockRPC(route) {
+                if (route === FR_FLAG_URL) {
+                    assert.step("The view's image should have been fetched");
+                    return 'wow';
+                }
+                if (route === EN_FLAG_URL) {
+                    assert.step("The dialog's image should have been fetched");
+                    return;
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+        assert.verifySteps(["The view's image should have been fetched"]);
+
+        assert.containsOnce(form, 'tr.o_data_row',
+            'There should be one record in the many2many');
+
+        // Actual flow: click on an element of the m2m to get its form view
+        await testUtils.dom.click(form.$('tbody td:contains(gold)'));
+        assert.strictEqual($('.modal').length, 1,
+            'The modal should have opened');
+        assert.verifySteps(["The dialog's image should have been fetched"]);
+
+        form.destroy();
+    });
+
+    QUnit.test('image fields in x2many list are loaded correctly', async function (assert) {
+        assert.expect(2);
+
+        this.data.partner_type.fields.image = {name: 'image', type: 'char'};
+        this.data.partner_type.records[0].image = EN_FLAG_URL;
+        this.data.partner.records[5].timmy = [12];
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="timmy" widget="many2many">' +
+                        '<tree>' +
+                            '<field name="image" widget="image_url"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+            res_id: 6,
+            async mockRPC(route) {
+                if (route === EN_FLAG_URL) {
+                    assert.ok(true, "The list's image should have been fetched");
+                    return;
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        assert.containsOnce(form, 'tr.o_data_row',
+            'There should be one record in the many2many');
 
         form.destroy();
     });
