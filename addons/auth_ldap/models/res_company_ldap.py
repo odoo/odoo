@@ -105,6 +105,9 @@ class CompanyLDAP(models.Model):
 
             # Get rid of (None, attrs) for searchResultReference replies
             results = [i for i in results if i[0]]
+            # sometimes on same uid we receive more than one
+            if len(results) > 1:
+                results = [i for i in results if not i[0].lower().startswith('nsuniqueid')]
             if len(results) == 1:
                 dn = results[0][0]
                 conn = self._connect(conf)
