@@ -1404,7 +1404,7 @@
                 <img t-att-src='image_url' alt="Product image"/>
                 <t t-if="!product.to_weight">
                     <span class="price-tag">
-                        <t t-esc="widget.format_currency(product.get_price(pricelist, 1),'Product Price')"/>
+                        <t t-esc="widget.format_currency(product.get_display_price(pricelist, 1),'Product Price')"/>
                     </span>
                 </t>
                 <t t-if="product.to_weight">
