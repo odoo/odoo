@@ -92,11 +92,11 @@ class EventSponsor(models.Model):
 
                 sponsor.is_in_opening_hours = opening_from <= now_tz < opening_to
 
-    @api.depends('partner_id.country_id.image')
+    @api.depends('partner_id.country_id.image_url')
     def _compute_country_flag_url(self):
         for sponsor in self:
             if sponsor.partner_id.country_id:
-                sponsor.country_flag_url = self.env['website'].image_url(sponsor.partner_id.country_id, 'image', size=256)
+                sponsor.country_flag_url = sponsor.partner_id.country_id.image_url
             else:
                 sponsor.country_flag_url = False
 
