@@ -45,7 +45,7 @@
                         <div class="custom-amount-form">
                             <div class="item label">Amount</div>
                             <div class="item input">
-                                <input type="text" t-model="state.inputTipAmount" />
+                                <input type="text" t-model="state.inputTipAmount" t-att-data-amount="state.inputTipAmount" />
                                 <div class="currency">
                                     <t t-esc="env.pos.getCurrencySymbol()" />
                                 </div>
