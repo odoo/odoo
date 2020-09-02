@@ -143,6 +143,7 @@ odoo.define('web.test_utils', async function (require) {
             toggleFilterMenu: testUtilsControlPanel.toggleFilterMenu,
             toggleAddCustomFilter: testUtilsControlPanel.toggleAddCustomFilter,
             applyFilter: testUtilsControlPanel.applyFilter,
+            addCondition: testUtilsControlPanel.addCondition,
             // GroupByMenu interactions
             toggleGroupByMenu: testUtilsControlPanel.toggleGroupByMenu,
             toggleAddCustomGroup: testUtilsControlPanel.toggleAddCustomGroup,

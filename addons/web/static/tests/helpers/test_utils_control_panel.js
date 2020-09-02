@@ -108,6 +108,14 @@ odoo.define('web.test_utils_control_panel', function (require) {
      * @param {EventTarget} el
      * @returns {Promise}
      */
+    async function addCondition(el) {
+        await click(getNode(el).querySelector(`div.o_add_filter_menu > button.o_add_condition`));
+    }
+
+    /**
+     * @param {EventTarget} el
+     * @returns {Promise}
+     */
     async function toggleGroupByMenu(el) {
         await click(getNode(el).querySelector(`.o_group_by_menu button`));
     }
@@ -319,6 +327,7 @@ odoo.define('web.test_utils_control_panel', function (require) {
         toggleFilterMenu,
         toggleAddCustomFilter,
         applyFilter,
+        addCondition,
         // GroupByMenu interactions
         toggleGroupByMenu,
         toggleAddCustomGroup,
