@@ -501,6 +501,20 @@ var utils = {
         return value.prototype instanceof owl.Component;
     },
     /**
+     * Checks if a keyboard event concerns
+     * the numpad decimal separator key.
+     *
+     * Some countries may emit a comma instead
+     * of a period when this key get pressed.
+     * More info: https://www.iso.org/schema/isosts/v1.0/doc/n-cdf0.html
+     *
+     * @param {KeyboardEvent} ev
+     * @returns {boolean}
+     */
+    isNumpadDecimalSeparatorKey(ev) {
+        return ['.', ','].includes(ev.key) && ev.code === 'NumpadDecimal';
+    },
+    /**
      * Returns whether the given anchor is valid.
      *
      * This test is useful to prevent a crash that would happen if using an invalid

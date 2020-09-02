@@ -246,6 +246,15 @@ var InputField = DebouncedField.extend({
         return this.$input.val();
     },
     /**
+     * By default this only calls a debounced method to notify the outside world
+     * of the changes if the actual value is not the same than the previous one.
+     * @see _doDebouncedAction
+     */
+    _notifyChanges() {
+        this.isDirty = !this._isLastSetValue(this.$input.val());
+        this._doDebouncedAction();
+    },
+    /**
      * Formats an input element for edit mode. This is in a separate function so
      * extending widgets can use it on their input without having input as tagName.
      *
@@ -319,15 +328,13 @@ var InputField = DebouncedField.extend({
         this.lastChangeEvent = event;
     },
     /**
-     * Called when the user is typing text -> By default this only calls a
-     * debounced method to notify the outside world of the changes.
-     * @see _doDebouncedAction
+     * Called when the user is typing text
+     * @see _notifyChanges
      *
      * @private
      */
-    _onInput: function () {
-        this.isDirty = !this._isLastSetValue(this.$input.val());
-        this._doDebouncedAction();
+    _onInput() {
+        this._notifyChanges();
     },
     /**
      * Stops the left/right navigation move event if the cursor is not at the
@@ -507,6 +514,43 @@ var NumericField = InputField.extend({
             }
         }
         return this._super(value, options);
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Replace the decimal separator of the numpad decimal key
+     * by the decimal separator from the user's language setting.
+     *
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onKeydown(ev) {
+        const kbdEvt = ev.originalEvent;
+        if (kbdEvt && utils.isNumpadDecimalSeparatorKey(kbdEvt)) {
+            const inputField = this.$input[0];
+            const curVal = inputField.value;
+            const from = inputField.selectionStart;
+            const to = inputField.selectionEnd;
+            const point = _t.database.parameters.decimal_point;
+
+            // Make sure the correct decimal separator
+            // from the user's settings is inserted
+            inputField.value = curVal.slice(0, from) + point + curVal.slice(to);
+
+            // Put the user caret at the right place
+            inputField.selectionStart = inputField.selectionEnd = from + point.length;
+
+            // Tell the world we made some changes and
+            // return preventing event default behaviour.
+            this._notifyChanges();
+            kbdEvt.preventDefault();
+            return;
+        }
+
+        return this._super(...arguments);
     },
 });
 
