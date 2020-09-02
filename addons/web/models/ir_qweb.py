@@ -21,20 +21,12 @@ class Image(models.AbstractModel):
     _description = 'Qweb Field Image'
     _inherit = 'ir.qweb.field.image'
 
-    @api.model
-    def record_to_html(self, record, field_name, options):
-        assert options['tagName'] != 'img',\
-            "Oddly enough, the root tag of an image field can not be img. " \
-            "That is because the image goes into the tag, or it gets the " \
-            "hose again."
+    def _get_src_urls(self, record, field_name, options):
+        """Considering the rendering options, returns the src and data-zoom-image urls.
 
-        if options.get('qweb_img_raw_data', False):
-            return super(Image, self).record_to_html(record, field_name, options)
-
-        aclasses = ['img', 'img-fluid'] if options.get('qweb_img_responsive', True) else ['img']
-        aclasses += options.get('class', '').split()
-        classes = ' '.join(map(escape, aclasses))
-
+        :return: src, src_zoom urls
+        :rtype: tuple
+        """
         max_size = None
         if options.get('resize'):
             max_size = options.get('resize')
@@ -56,18 +48,36 @@ class Image(models.AbstractModel):
 
         src = '/web/image/%s/%s/%s%s/%s?unique=%s' % (record._name, record.id, options.get('preview_image', field_name), max_size, url_quote(filename), sha)
 
+        src_zoom = None
+        if options.get('zoom') and getattr(record, options['zoom'], None):
+            src_zoom = '/web/image/%s/%s/%s%s/%s?unique=%s' % (record._name, record.id, options['zoom'], max_size, url_quote(filename), sha)
+        elif options.get('zoom'):
+            src_zoom = options['zoom']
+
+        return src, src_zoom
+
+    @api.model
+    def record_to_html(self, record, field_name, options):
+        assert options['tagName'] != 'img',\
+            "Oddly enough, the root tag of an image field can not be img. " \
+            "That is because the image goes into the tag, or it gets the " \
+            "hose again."
+
+        if options.get('qweb_img_raw_data', False):
+            return super(Image, self).record_to_html(record, field_name, options)
+
+        aclasses = ['img', 'img-fluid'] if options.get('qweb_img_responsive', True) else ['img']
+        aclasses += options.get('class', '').split()
+        classes = ' '.join(map(escape, aclasses))
+
+        src, src_zoom = self._get_src_urls(record, field_name, options)
+
         if options.get('alt-field') and getattr(record, options['alt-field'], None):
             alt = escape(record[options['alt-field']])
         elif options.get('alt'):
             alt = options['alt']
         else:
             alt = escape(record.display_name)
-
-        src_zoom = None
-        if options.get('zoom') and getattr(record, options['zoom'], None):
-            src_zoom = '/web/image/%s/%s/%s%s/%s?unique=%s' % (record._name, record.id, options['zoom'], max_size, url_quote(filename), sha)
-        elif options.get('zoom'):
-            src_zoom = options['zoom']
 
         itemprop = None
         if options.get('itemprop'):
@@ -96,3 +106,11 @@ class Image(models.AbstractModel):
         img.append('/>')
 
         return u''.join(img)
+
+class ImageUrlConverter(models.AbstractModel):
+    _description = 'Qweb Field Image'
+    _inherit = 'ir.qweb.field.image_url'
+
+    def _get_src_urls(self, record, field_name, options):
+        image_url = record[options.get('preview_image', field_name)]
+        return image_url, options.get("zoom", None)
