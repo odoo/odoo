@@ -1,7 +1,10 @@
 odoo.define('web.RainbowMan_tests', function (require) {
 "use strict";
 
-var RainbowMan = require('web.RainbowMan');
+const RainbowMan = require('web.RainbowMan');
+const testUtils = require("web.test_utils");
+
+const { createComponent } = testUtils;
 
 QUnit.module('widgets', {}, function () {
 
@@ -13,26 +16,24 @@ QUnit.module('RainbowMan', {
     },
 }, function () {
 
-    QUnit.test("rendering a rainbowman", function (assert) {
-        var done = assert.async();
+    QUnit.test("rendering a rainbowman", async function (assert) {
         assert.expect(2);
 
-        var $target = $("#qunit-fixture");
+        const target = document.querySelector("#qunit-fixture");
 
         // Create and display rainbowman
-        var rainbowman = new RainbowMan(this.data);
-        rainbowman.appendTo($target).then(function () {
-            var $rainbow = rainbowman.$(".o_reward_rainbow");
-            assert.strictEqual($rainbow.length, 1,
-                "Should have displayed rainbow effect");
-
-            assert.ok(rainbowman.$('.o_reward_msg_content').html() === 'Congrats!',
-                "Card on the rainbowman should display 'Congrats!' message");
-
-            rainbowman.destroy();
-            done();
+        const rainbowman = await createComponent(RainbowMan, {
+            props: this.data
         });
+        await rainbowman.mount(target);
+        const rainbow = rainbowman.el.querySelectorAll(".o_reward_rainbow");
+        assert.strictEqual(rainbow.length, 1,
+            "Should have displayed rainbow effect");
 
+        assert.ok(rainbowman.el.querySelector('.o_reward_msg_content').innerText === 'Congrats!',
+            "Card on the rainbowman should display 'Congrats!' message");
+
+        rainbowman.destroy();
     });
 });
 });

@@ -12,6 +12,7 @@ odoo.define('web.AbstractWebClient', function (require) {
  */
 
 var ActionManager = require('web.ActionManager');
+const { ComponentWrapper } = require("web.OwlCompatibility");
 var concurrency = require('web.concurrency');
 var core = require('web.core');
 var config = require('web.config');
@@ -518,7 +519,8 @@ var AbstractWebClient = Widget.extend(KeyboardNavigationMixin, {
         var type = data.type || 'rainbow_man';
         if (type === 'rainbow_man') {
             if (session.show_effect) {
-                new RainbowMan(data).appendTo(this.$el);
+                const rainbowManWrapper = new ComponentWrapper(this, RainbowMan, data);
+                rainbowManWrapper.mount(this.$el[0]);
             } else {
                 // For instance keep title blank, as we don't have title in data
                 this.call('notification', 'notify', {
