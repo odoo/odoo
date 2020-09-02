@@ -8,7 +8,7 @@
             <field name="name">res.country.tree</field>
             <field name="model">res.country</field>
             <field name="arch" type="xml">
-                <tree string="Country">
+                <tree string="Country" create="0" delete="0">
                     <field name="name"/>
                     <field name="code"/>
                 </tree>
@@ -19,7 +19,7 @@
             <field name="name">res.country.form</field>
             <field name="model">res.country</field>
             <field name="arch" type="xml">
-                <form>
+                <form create="0" delete="0">
                     <sheet>
                         <div class="oe_button_box">
                         </div>
