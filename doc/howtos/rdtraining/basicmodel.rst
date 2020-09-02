@@ -258,8 +258,11 @@ Some attributes are available on all fields, here are the most common ones:
 
 After restarting the server, both fields should be not nullable.
 
-Reserved Fields
----------------
+Automatic Fields
+----------------
+
+**Reference**: the documentation related to this topic can be found in
+:ref:`reference/fields/automatic`.
 
 As noticed previously, extra fields were added to the table ``estate_property``.
 Odoo creates a few fields in all models\ [#autofields]_. These fields are
