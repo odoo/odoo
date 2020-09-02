@@ -480,7 +480,7 @@
     </div>
 
     <!-- Mobile display options -->
-    <div data-selector="section .row > div"
+    <div data-option-name="showMobile" data-selector="section .row > div"
          data-exclude=".s_col_no_resize.row > div">
         <we-checkbox string="Shown On Mobile" data-select-class="d-none d-md-block|" data-no-preview="true"/>
     </div>
@@ -1002,7 +1002,7 @@
     </div>
 
     <!-- Min height of section -->
-    <div data-selector="section">
+    <div data-option-name="minHeight" data-selector="section">
         <we-button-group string="Height">
             <we-button data-select-class="" title="Fit content">Auto</we-button>
             <we-button data-select-class="o_half_screen_height" title="Half screen">50%</we-button>
@@ -1031,7 +1031,7 @@
     </div>
 
     <!--  Vertical Alignment -->
-    <div id="row_valign_snippet_option" data-selector=".s_text_image, .s_image_text, .s_three_columns" data-target=".row">
+    <div data-option-name="vAlignment" id="row_valign_snippet_option" data-selector=".s_text_image, .s_image_text, .s_three_columns" data-target=".row">
         <we-button-group string="Vert. Alignment" title="Vertical Alignment">
             <we-button title="Align Top"
                        data-select-class="align-items-start"
