@@ -1057,19 +1057,25 @@ class Field(MetaField('DummyField', (object,), {})):
         """ return the value of field ``self`` on ``record`` """
         if record is None:
             return self         # the field is accessed through the owner class
+        
+        def determine_and_get_value(record, field):
+            try:
+                res = record.env.cache.get(record, field)
+            except KeyError:
+                # cache miss, determine value and retrieve it
+                if record.id:
+                    field.determine_value(record)
+                else:
+                    field.determine_draft_value(record)
+                # recursive call since a relational field can be invalidated
+                # even after being added to cache
+                res = determine_and_get_value(record, field)
+            return res
 
         if record:
             # only a single record may be accessed
             record.ensure_one()
-            try:
-                value = record.env.cache.get(record, self)
-            except KeyError:
-                # cache miss, determine value and retrieve it
-                if record.id:
-                    self.determine_value(record)
-                else:
-                    self.determine_draft_value(record)
-                value = record.env.cache.get(record, self)
+            value = determine_and_get_value(record, self)
         else:
             # null record -> return the null value for this field
             value = self.convert_to_cache(False, record, validate=False)
