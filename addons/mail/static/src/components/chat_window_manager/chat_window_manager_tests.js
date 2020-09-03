@@ -1753,6 +1753,122 @@ QUnit.test('[technical] chat window with a thread: keep scroll position in messa
     );
 });
 
+QUnit.test('chat window does not fetch messages if hidden', async function (assert) {
+    /**
+     * computation uses following info:
+     * ([mocked] global window width: 900px)
+     * (others: @see `mail/static/src/models/chat_window_manager/chat_window_manager.js:visual`)
+     *
+     * - chat window width: 325px
+     * - start/end/between gap width: 10px/10px/5px
+     * - hidden menu width: 200px
+     * - global width: 1080px
+     *
+     * Enough space for 2 visible chat windows, and one hidden chat window:
+     * 3 visible chat windows:
+     *  10 + 325 + 5 + 325 + 5 + 325 + 10 = 1000 > 900
+     * 2 visible chat windows + hidden menu:
+     *  10 + 325 + 5 + 325 + 10 + 200 + 5 = 875 < 900
+     */
+    assert.expect(14);
+
+    // 3 channels are expected to be found in the messaging menu, each with a
+    // random unique id that will be referenced in the test
+    this.data['mail.channel'].records = [
+        {
+            id: 10,
+            is_minimized: true,
+            name: "Channel #10",
+            state: 'open',
+        },
+        {
+            id: 11,
+            is_minimized: true,
+            name: "Channel #11",
+            state: 'open',
+        },
+        {
+            id: 12,
+            is_minimized: true,
+            name: "Channel #12",
+            state: 'open',
+        },
+    ];
+    await this.start({
+        env: {
+            browser: {
+                innerWidth: 900,
+            },
+        },
+        mockRPC(route, args) {
+            if (args.method === 'message_fetch') {
+                // domain should be like [['channel_id', 'in', [X]]] with X the channel id
+                const channel_ids = args.kwargs.domain[0][2];
+                assert.strictEqual(channel_ids.length, 1, "messages should be fetched channel per channel");
+                assert.step(`rpc:message_fetch:${channel_ids[0]}`);
+            }
+            return this._super(...arguments);
+        },
+    });
+
+    assert.containsN(
+        document.body,
+        '.o_ChatWindow',
+        2,
+        "2 chat windows should be visible"
+    );
+    assert.containsNone(
+        document.body,
+        `.o_ChatWindow[data-thread-local-id="${
+            this.env.models['mail.thread'].find(t =>
+                t.model === 'mail.channel' && t.id === 12
+            ).localId
+        }"]`,
+        "chat window for Channel #12 should be hidden"
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_ChatWindowHiddenMenu',
+        "chat window hidden menu should be displayed"
+    );
+    assert.verifySteps(
+        ['rpc:message_fetch:10', 'rpc:message_fetch:11'],
+        "messages should be fetched for the two visible chat windows"
+    );
+
+    await afterNextRender(() =>
+        document.querySelector('.o_ChatWindowHiddenMenu_dropdownToggle').click()
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_ChatWindowHiddenMenu_chatWindowHeader',
+        "1 hidden chat window should be listed in hidden menu"
+    );
+
+    await afterNextRender(() =>
+        document.querySelector('.o_ChatWindowHiddenMenu_chatWindowHeader').click()
+    );
+    assert.containsN(
+        document.body,
+        '.o_ChatWindow',
+        2,
+        "2 chat windows should still be visible"
+    );
+    assert.containsOnce(
+        document.body,
+        `.o_ChatWindow[data-thread-local-id="${
+            this.env.models['mail.thread'].find(t =>
+                t.model === 'mail.channel' && t.id === 12
+            ).localId
+        }"]`,
+        "chat window for Channel #12 should now be visible"
+    );
+    assert.verifySteps(
+        ['rpc:message_fetch:12'],
+        "messages should now be fetched for Channel #12"
+    );
+});
+
 });
 });
 });
