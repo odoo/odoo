@@ -25,7 +25,7 @@ Object-Relational Mapping
 
     .. code-block:: text
 
-        $ psql-d rd-demo
+        $ psql -d rd-demo
         rd-demo=# SELECT COUNT(*) FROM estate_property;
         count
         -------

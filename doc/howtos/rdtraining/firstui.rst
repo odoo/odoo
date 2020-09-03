@@ -180,6 +180,7 @@ Fields, Attributes And View
 Up to now, we were able to generate a default view for our real estate property advertisements.
 In many cases we want to fine tune the view. There are many fine-tunings possible in Odoo, but
 the very first step is usually to make sure that:
+
 - some fields have a default value
 - some fields are read-only
 - some fields are not copied when duplicating the record
