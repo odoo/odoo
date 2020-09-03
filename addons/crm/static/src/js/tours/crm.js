@@ -33,8 +33,9 @@ tour.register('crm_tour', {
         actions.text("Brandon Freeman", this.$anchor.find("input"));
     },
 }, {
-    trigger: ".o_kanban_quick_create .o_field_widget[name='name']",
+    trigger: ".ui-menu-item > a",
     auto: true,
+    in_modal: false,
 }, {
     trigger: '.o_kanban_quick_create .o_field_monetary[name="expected_revenue"] input',
     content: _t("Define here the Expected Revenue of this Opportunity."),
