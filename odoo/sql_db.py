@@ -14,6 +14,7 @@ import itertools
 import logging
 import time
 import uuid
+import warnings
 
 from decorator import decorator
 import psycopg2
@@ -420,6 +421,10 @@ class Cursor(BaseCursor):
             back or committed independently. You may consider the use of a
             dedicated temporary cursor to do some database operation.
         """
+        warnings.warn(
+            "Cursor.after() is deprecated, use Cursor.postcommit.add() instead.",
+            DeprecationWarning,
+        )
         if event == 'commit':
             self.postcommit.add(func)
         elif event == 'rollback':
