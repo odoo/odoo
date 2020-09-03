@@ -117,6 +117,13 @@ class AccountMove(models.Model):
             param['l10n_latam_document_type_id'] = self.l10n_latam_document_type_id.id or 0
         return where_string, param
 
+    def _get_key_compute_name(self):
+        journal_key, date_key = super()._get_key_compute_name()
+        if self.company_id.country_id == self.env.ref('base.cl') and self.l10n_latam_use_documents and self.is_sale_document():
+            journal_key = (self.l10n_latam_document_type_id)
+            date_key = (False)
+        return journal_key, date_key
+
     def _get_name_invoice_report(self, report_xml_id):
         self.ensure_one()
         if self.l10n_latam_use_documents and self.company_id.country_id.code == 'CL':
