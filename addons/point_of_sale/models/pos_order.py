@@ -383,6 +383,27 @@ class PosOrder(models.Model):
 
         return True
 
+    def _prepare_invoice_vals(self):
+        self.ensure_one()
+        timezone = pytz.timezone(self._context.get('tz') or self.env.user.tz or 'UTC')
+        vals = {
+            'payment_reference': self.name,
+            'invoice_origin': self.name,
+            'journal_id': self.session_id.config_id.invoice_journal_id.id,
+            'move_type': 'out_invoice' if self.amount_total >= 0 else 'out_refund',
+            'ref': self.name,
+            'partner_id': self.partner_id.id,
+            'narration': self.note or '',
+            # considering partner's sale pricelist's currency
+            'currency_id': self.pricelist_id.currency_id.id,
+            'invoice_user_id': self.user_id.id,
+            'invoice_date': self.date_order.astimezone(timezone).date(),
+            'fiscal_position_id': self.fiscal_position_id.id,
+            'invoice_line_ids': [(0, None, self._prepare_invoice_line(line)) for line in self.lines],
+            'invoice_cash_rounding_id': self.config_id.rounding_method.id if self.config_id.cash_rounding else False
+        }
+        return vals
+
     def action_pos_order_invoice(self):
         moves = self.env['account.move']
 
@@ -395,23 +416,7 @@ class PosOrder(models.Model):
             if not order.partner_id:
                 raise UserError(_('Please provide a partner for the sale.'))
 
-            timezone = pytz.timezone(self._context.get('tz') or self.env.user.tz or 'UTC')
-            move_vals = {
-                'payment_reference': order.name,
-                'invoice_origin': order.name,
-                'journal_id': order.session_id.config_id.invoice_journal_id.id,
-                'move_type': 'out_invoice' if order.amount_total >= 0 else 'out_refund',
-                'ref': order.name,
-                'partner_id': order.partner_id.id,
-                'narration': order.note or '',
-                # considering partner's sale pricelist's currency
-                'currency_id': order.pricelist_id.currency_id.id,
-                'invoice_user_id': order.user_id.id,
-                'invoice_date': order.date_order.astimezone(timezone).date(),
-                'fiscal_position_id': order.fiscal_position_id.id,
-                'invoice_line_ids': [(0, None, order._prepare_invoice_line(line)) for line in order.lines],
-                'invoice_cash_rounding_id': order.config_id.rounding_method.id if order.config_id.cash_rounding else False
-            }
+            move_vals = order._prepare_invoice_vals()
             new_move = moves.sudo()\
                             .with_company(order.company_id)\
                             .with_context(default_move_type=move_vals['move_type'])\
