@@ -412,7 +412,7 @@ class ResourceCalendar(models.Model):
                     else:
                         dt1 = tz.localize(combine(day, float_to_time(hour_to)))
                         cache_deltas[(tz, day, hour_to)] = dt1
-                    result[resource.id].append((max(start_dt, dt0), min(end_dt, dt1), attendance))
+                    result[resource.id].append((max(cache_dates[(tz, start_dt)], dt0), min(cache_dates[(tz, end_dt)], dt1), attendance))
         return {r.id: Intervals(result[r.id]) for r in resources_list}
 
     def _leave_intervals(self, start_dt, end_dt, resource=None, domain=None, tz=None):
