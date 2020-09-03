@@ -17,8 +17,7 @@ odoo.define('pos_restaurant.tour.TicketScreen', function (require) {
 
     // Deleting the last order in the table brings back to floorscreen
     FloorScreen.do.clickTable('T4');
-    // Clicking ticket button without checking if floor screen is shown causes an error
-    FloorScreen.check.isShown();
+    ProductScreen.check.isShown();
     Chrome.do.clickTicketButton();
     TicketScreen.check.nthRowContains(2, '-0001');
     TicketScreen.do.deleteOrder('-0001');
