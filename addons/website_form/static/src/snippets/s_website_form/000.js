@@ -132,6 +132,20 @@ odoo.define('website_form.s_website_form', function (require) {
                 }
             });
 
+            // force server format if usage of textual month that would not be understood server-side
+            if (time.getLangDatetimeFormat().indexOf('MMM') !== 1) {
+                this.$target.find('.s_website_form_field:not(.s_website_form_custom)')
+                .find('.s_website_form_date, .s_website_form_datetime').each(function () {
+                    var date = $(this).datetimepicker('viewDate').clone().locale('en');
+                    var format = 'YYYY-MM-DD';
+                    if ($(this).hasClass('s_website_form_datetime')) {
+                        date = date.utc();
+                        format = 'YYYY-MM-DD HH:mm:ss';
+                    }
+                    form_values[$(this).find('input').attr('name')] = date.format(format);
+                });
+            }
+
             // Post form and handle result
             ajax.post(this.$target.attr('action') + (this.$target.data('force_action') || this.$target.data('model_name')), form_values)
             .then(function (result_data) {
