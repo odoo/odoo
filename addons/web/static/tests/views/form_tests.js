@@ -2449,6 +2449,28 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('archive action with active field not in view', async function (assert) {
+        assert.expect(2);
+
+        // add active field on partner model, but do not put it in the view
+        this.data.partner.fields.active = {string: 'Active', type: 'char', default: true};
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            res_id: 1,
+            viewOptions: { hasActionMenus: true },
+            arch: '<form><field name="foo"/></form>',
+        });
+
+        await cpHelpers.toggleActionMenu(form);
+        assert.containsNone(form, '.o_cp_action_menus a:contains(Archive)');
+        assert.containsNone(form, '.o_cp_action_menus a:contains(Unarchive)');
+
+        form.destroy();
+    });
+
     QUnit.test('can duplicate a record', async function (assert) {
         assert.expect(3);
 
