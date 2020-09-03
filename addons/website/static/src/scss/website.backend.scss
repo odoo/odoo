@@ -263,7 +263,7 @@
                 width: 100%;
                 padding-bottom: 127%;
                 background-repeat: no-repeat;
-                background-position: center center;
+                background-position: center top;
                 background-size: 40% 32%;
             }
 
@@ -308,6 +308,18 @@
             transform: translateY(-10px);
             border-color: darken($o-theme-kanban-gray, 26%);
             box-shadow: 0 15px 12px -8px rgba(0, 0, 0, .4);
+
+            .o_theme_screenshot {
+                animation: o_theme_screenshot_scroll 4s linear .25s infinite alternate;
+            }
+            @keyframes o_theme_screenshot_scroll {
+                25% {
+                    background-position: center top;
+                }
+                75%, 100% {
+                    background-position: center bottom;
+                }
+            }
 
             .o_button_area {
                 opacity: 1;
