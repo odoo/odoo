@@ -141,6 +141,18 @@ odoo.define('website_form.s_website_form', function (require) {
                 }
             });
 
+            // force server date format usage for existing fields
+            this.$target.find('.s_website_form_field:not(.s_website_form_custom)')
+            .find('.s_website_form_date, .s_website_form_datetime').each(function () {
+                var date = $(this).datetimepicker('viewDate').clone().locale('en');
+                var format = 'YYYY-MM-DD';
+                if ($(this).hasClass('s_website_form_datetime')) {
+                    date = date.utc();
+                    format = 'YYYY-MM-DD HH:mm:ss';
+                }
+                form_values[$(this).find('input').attr('name')] = date.format(format);
+            });
+
             const tokenObj = await this._recaptcha.getToken('website_form');
             if (tokenObj.token) {
                 form_values['recaptcha_token_response'] = tokenObj.token;
