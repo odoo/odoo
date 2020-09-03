@@ -3,6 +3,7 @@ odoo.define('mail/static/src/components/discuss/tests/discuss_tests.js', functio
 
 const BusService = require('bus.BusService');
 
+const { makeDeferred } = require('mail/static/src/utils/deferred/deferred.js');
 const {
     afterEach,
     afterNextRender,
@@ -1115,7 +1116,7 @@ QUnit.test('default thread rendering', async function (assert) {
 });
 
 QUnit.test('initially load messages from inbox', async function (assert) {
-    assert.expect(5);
+    assert.expect(4);
 
     await this.start({
         async mockRPC(route, args) {
@@ -1126,13 +1127,8 @@ QUnit.test('initially load messages from inbox', async function (assert) {
                     30,
                     "should fetch up to 30 messages"
                 );
-                assert.strictEqual(
-                    args.args.length,
-                    1,
-                    "should have a single item in args"
-                );
                 assert.deepEqual(
-                    args.args[0],
+                    args.kwargs.domain,
                     [["needaction", "=", true]],
                     "should fetch needaction messages"
                 );
@@ -1186,7 +1182,7 @@ QUnit.test('auto-select thread in discuss context', async function (assert) {
 });
 
 QUnit.test('load single message from channel initially', async function (assert) {
-    assert.expect(8);
+    assert.expect(7);
 
     // channel expected to be rendered, with a random unique id that will be referenced in the test
     this.data['mail.channel'].records.push({ id: 20 });
@@ -1210,13 +1206,8 @@ QUnit.test('load single message from channel initially', async function (assert)
                     30,
                     "should fetch up to 30 messages"
                 );
-                assert.strictEqual(
-                    args.args.length,
-                    1,
-                    "should have a single item in args"
-                );
                 assert.deepEqual(
-                    args.args[0],
+                    args.kwargs.domain,
                     [["channel_ids", "in", [20]]],
                     "should fetch messages from channel"
                 );
@@ -1829,7 +1820,7 @@ QUnit.test('new messages separator [REQUIRE FOCUS]', async function (assert) {
 });
 
 QUnit.test('restore thread scroll position', async function (assert) {
-    assert.expect(4);
+    assert.expect(5);
     // channels expected to be rendered, with random unique id that will be referenced in the test
     this.data['mail.channel'].records.push({ id: 11 }, { id: 12 });
     for (let i = 1; i <= 25; i++) {
@@ -1839,26 +1830,43 @@ QUnit.test('restore thread scroll position', async function (assert) {
             res_id: 11,
         });
     }
-    for (let i = 1; i <= 25; i++) {
+    for (let i = 1; i <= 24; i++) {
         this.data['mail.message'].records.push({
             channel_ids: [12],
             model: 'mail.channel',
             res_id: 12,
         });
     }
-    await this.start({
-        discuss: {
-            params: {
-                default_active_id: 'mail.channel_11',
+    const messageFetchChannel11Def = makeDeferred();
+    const messageFetchChannel12Def = makeDeferred();
+    await afterNextRender(async () => {
+        await this.start({
+            discuss: {
+                params: {
+                    default_active_id: 'mail.channel_11',
+                },
             },
-        },
+            async mockRPC(route, args) {
+                const res = await this._super(...arguments);
+                // domain should be like [['channel_id', 'in', [X]]] with X the channel id
+                if (route.includes('message_fetch') && args.kwargs.domain[0][2].includes(11)) {
+                    messageFetchChannel11Def.resolve();
+                }
+                if (route.includes('message_fetch') && args.kwargs.domain[0][2].includes(12)) {
+                    messageFetchChannel12Def.resolve();
+                }
+                return res;
+            },
+        });
+        // wait until messages are fetched, ignore other renders that are too early
+        await messageFetchChannel11Def;
     });
     assert.strictEqual(
         document.querySelectorAll(`
             .o_Discuss_thread .o_ThreadView_messageList .o_MessageList_message
         `).length,
         25,
-        "should have 25 messages"
+        "should have 25 messages in channel 11"
     );
 
     // scroll to top of channel11
@@ -1871,8 +1879,13 @@ QUnit.test('restore thread scroll position', async function (assert) {
         "should have scrolled to top of thread"
     );
 
-    // select channel12
-    await afterNextRender(() =>
+    const scrollChannel12Def = makeDeferred();
+    const onScroll = () => {
+        scrollChannel12Def.resolve();
+    };
+    document.addEventListener('o-message-list-scrolled', onScroll);
+    // select channel 12
+    await afterNextRender(async () => {
         document.querySelector(`
             .o_DiscussSidebar_groupChannel
             .o_DiscussSidebar_item[data-thread-local-id="${
@@ -1881,9 +1894,26 @@ QUnit.test('restore thread scroll position', async function (assert) {
                     thread.model === 'mail.channel'
                 ).localId
             }"]
-        `).click()
+        `).click();
+        // wait until messages are fetched, ignore other renders that are too early
+        await messageFetchChannel12Def;
+    });
+    assert.strictEqual(
+        document.querySelectorAll(`
+            .o_Discuss_thread .o_ThreadView_messageList .o_MessageList_message
+        `).length,
+        24,
+        "should have 24 messages in channel 12"
     );
-    // select channel11
+
+    // Ensure scrollIntoView of channel 12 has enough time to complete before
+    // going back to channel 11. Await is needed to prevent the scrollIntoView
+    // initially planned for channel 12 to actually apply on channel 11.
+    // task-2333535
+    await scrollChannel12Def;
+    document.removeEventListener('o-message-list-scrolled', onScroll);
+
+    // select channel 11
     await afterNextRender(() =>
         document.querySelector(`
             .o_DiscussSidebar_groupChannel
@@ -1898,7 +1928,7 @@ QUnit.test('restore thread scroll position', async function (assert) {
     assert.strictEqual(
         document.querySelector(`.o_Discuss_thread .o_ThreadView_messageList`).scrollTop,
         0,
-        "should have recovered scroll position of channel11 (scroll to top)"
+        "should have recovered scroll position of channel 11 (scroll to top)"
     );
 
     // select channel12
@@ -1920,7 +1950,7 @@ QUnit.test('restore thread scroll position', async function (assert) {
     assert.strictEqual(
         messageList.scrollTop + messageList.clientHeight,
         messageList.scrollHeight,
-        "should have recovered scroll position of channel12 (scroll to bottom)"
+        "should have recovered scroll position of channel 12 (scroll to bottom)"
     );
 });
 

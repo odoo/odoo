@@ -110,6 +110,14 @@ function factory(dependencies) {
          * @private
          * @returns {boolean}
          */
+        _computeHasThreadView() {
+            return this.thread && this.hasMessageList;
+        }
+
+        /**
+         * @private
+         * @returns {boolean}
+         */
         _computeIsDisabled() {
             return !this.threadId;
         }
@@ -136,7 +144,7 @@ function factory(dependencies) {
         _prepareAttachmentsLoading() {
             this._isPreparingAttachmentsLoading = true;
             this._attachmentsLoaderTimeout = this.env.browser.setTimeout(() => {
-                this.update({isShowingAttachmentsLoading: true});
+                this.update({ isShowingAttachmentsLoading: true });
                 this._isPreparingAttachmentsLoading = false;
             }, this.env.loadingBaseDelayDuration);
         }
@@ -147,7 +155,7 @@ function factory(dependencies) {
         _stopAttachmentsLoading() {
             this.env.browser.clearTimeout(this._attachmentsLoaderTimeout);
             this._attachmentsLoaderTimeout = null;
-            this.update({isShowingAttachmentsLoading: false});
+            this.update({ isShowingAttachmentsLoading: false });
             this._isPreparingAttachmentsLoading = false;
         }
 
@@ -232,7 +240,7 @@ function factory(dependencies) {
                     id: getMessageNextTemporaryId(),
                     isTemporary: true,
                 });
-                this.threadView.update({ thread: [['link', thread]] });
+                this.update({ thread: [['link', thread]] });
                 for (const cache of thread.caches) {
                     cache.update({ messages: [['link', message]] });
                 }
@@ -242,7 +250,7 @@ function factory(dependencies) {
                     id: this.threadId,
                     model: this.threadModel,
                 });
-                this.threadView.update({ thread: [['link', thread]] });
+                this.update({ thread: [['link', thread]] });
             }
         }
 
@@ -281,6 +289,12 @@ function factory(dependencies) {
             default: true,
         }),
         /**
+         * Determines whether `this` should display a message list.
+         */
+        hasMessageList: attr({
+            default: true,
+        }),
+        /**
          * Whether the message list should manage its scroll.
          * In particular, when the chatter is on the form view's side,
          * then the scroll is managed by the message list.
@@ -290,8 +304,15 @@ function factory(dependencies) {
         hasMessageListScrollAdjust: attr({
             default: false,
         }),
-        hasThread: attr({
-            default: true,
+        /**
+         * Determines whether `this.thread` should be displayed.
+         */
+        hasThreadView: attr({
+            compute: '_computeHasThreadView',
+            dependencies: [
+                'hasMessageList',
+                'thread',
+            ],
         }),
         hasTopbarCloseButton: attr({
             default: false,
@@ -326,16 +347,28 @@ function factory(dependencies) {
             compute: '_computeOverdueActivities',
             dependencies: ['activitiesState'],
         }),
-        thread: many2one('mail.thread', {
-            related: 'threadView.thread',
-        }),
+        /**
+         * Determines the `mail.thread` that should be displayed by `this`.
+         */
+        thread: many2one('mail.thread'),
         threadAttachmentCount: attr({
             default: 0,
         }),
         threadId: attr(),
         threadModel: attr(),
+        /**
+         * States the `mail.thread_view` displaying `this.thread`.
+         */
         threadView: one2one('mail.thread_view', {
+            related: 'threadViewer.threadView',
+        }),
+        /**
+         * Determines the `mail.thread_viewer` managing the display of `this.thread`.
+         */
+        threadViewer: one2one('mail.thread_viewer', {
             default: [['create']],
+            inverse: 'chatter',
+            isCausal: true,
         }),
         todayActivities: one2many('mail.activity', {
             compute: '_computeTodayActivities',

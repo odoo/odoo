@@ -13,7 +13,7 @@ function factory(dependencies) {
          * @override
          */
         _willDelete() {
-            this._stopLoading();
+            this.env.browser.clearTimeout(this._loaderTimeout);
             return super._willDelete(...arguments);
         }
 
@@ -38,16 +38,6 @@ function factory(dependencies) {
             this.update({
                 componentHintList: this.componentHintList.concat([hint]),
             });
-        }
-
-        /**
-         * @param {mail.thread_cache} threadCache
-         */
-        handleThreadCacheLoaded(threadCache) {
-            if (threadCache !== this.threadCache) {
-                return;
-            }
-            this._stopLoading();
         }
 
         /**
@@ -77,33 +67,19 @@ function factory(dependencies) {
             }
         }
 
-        /**
-         * @param {string} scrollTop
-         */
-        saveThreadCacheScrollPositionsAsInitial(scrollTop) {
-            if (!this.threadCache) {
-                return;
-            }
-            this.update({
-                threadCacheInitialScrollPositions: Object.assign({}, this.threadCacheInitialScrollPositions, {
-                    [this.threadCache.localId]: scrollTop,
-                }),
-            });
-        }
-
         //----------------------------------------------------------------------
         // Private
         //----------------------------------------------------------------------
 
         /**
          * @private
-         * @returns {mail.thread_cache|undefined}
+         * @returns {integer|undefined}
          */
-        _computeThreadCache() {
-            if (!this.thread) {
-                return [];
+        _computeThreadCacheInitialScrollPosition() {
+            if (!this.threadCache) {
+                return;
             }
-            return [['link', this.thread.cache(this.stringifiedDomain)]];
+            return this.threadCacheInitialScrollPositions[this.threadCache.localId];
         }
 
         /**
@@ -131,75 +107,37 @@ function factory(dependencies) {
 
         /**
          * @private
-         * @returns {integer|undefined}
          */
-        _computeThreadCacheInitialScrollPosition() {
-            if (!this.threadCache) {
-                return undefined;
-            }
-            return this.threadCacheInitialScrollPositions[this.threadCache.localId];
+        _onThreadCacheChanged() {
+            this.addComponentHint('change-of-thread-cache');
         }
 
         /**
          * @private
          */
-        _prepareLoading() {
-            this._isPreparingLoading = true;
-            this._loaderTimeout = setTimeout(() => {
-                this.isShowingLoading = true;
-                this._isPreparingLoading = false;
-            }, 400);
-        }
-
-        /**
-         * @private
-         */
-        _stopLoading() {
-            clearTimeout(this._loaderTimeout);
-            this._loaderTimeout = null;
-            this.isShowingLoading = false;
-            this._isPreparingLoading = false;
-        }
-
-        /**
-         * @override
-         */
-        _updateAfter(previous) {
-            if (this.thread && this.thread !== previous.thread) {
-                this._stopLoading();
-                if (!this.threadCache.isLoaded && !this.threadCache.isLoading) {
-                    this.threadCache.loadMessages();
+        _onThreadCacheIsLoadingChanged() {
+            if (this.threadCache && this.threadCache.isLoading) {
+                if (!this.isLoading && !this.isPreparingLoading) {
+                    this.update({ isPreparingLoading: true });
+                    this.async(() =>
+                        new Promise(resolve => {
+                            this._loaderTimeout = this.env.browser.setTimeout(resolve, 400);
+                        }
+                    )).then(() => {
+                        const isLoading = this.threadCache
+                            ? this.threadCache.isLoading
+                            : false;
+                        this.update({ isLoading, isPreparingLoading: false });
+                    });
                 }
+                return;
             }
-            if (this.threadCache !== previous.threadCache) {
-                this._stopLoading();
-                this.addComponentHint('change-of-thread-cache');
-            }
-
-            if (
-                this.thread && this.threadCache && this.threadCache.isLoading &&
-                !this.isShowingLoading && !this._isPreparingLoading
-            ) {
-                this._prepareLoading();
-            }
+            this.env.browser.clearTimeout(this._loaderTimeout);
+            this.update({ isLoading: false, isPreparingLoading: false });
         }
-
-        /**
-         * @override
-         */
-        _updateBefore() {
-            return {
-                thread: this.thread,
-                threadCache: this.threadCache,
-            };
-        }
-
     }
 
     ThreadView.fields = {
-        chatWindow: one2one('mail.chat_window', {
-            inverse: 'threadView',
-        }),
         checkedMessages: many2many('mail.message', {
             related: 'threadCache.checkedMessages',
         }),
@@ -230,6 +168,31 @@ function factory(dependencies) {
         hasComposerFocus: attr({
             related: 'composer.hasFocus',
         }),
+        /**
+         * States whether `this.threadCache` is currently loading messages.
+         *
+         * This field is related to `this.threadCache.isLoading` but with a
+         * delay on its update to avoid flickering on the UI.
+         *
+         * It is computed through `_onThreadCacheIsLoadingChanged` and it should
+         * otherwise be considered read-only.
+         */
+        isLoading: attr({
+            default: false,
+        }),
+        /**
+         * States whether `this` is aware of `this.threadCache` currently
+         * loading messages, but `this` is not yet ready to display that loading
+         * on the UI.
+         *
+         * This field is computed through `_onThreadCacheIsLoadingChanged` and
+         * it should otherwise be considered read-only.
+         *
+         * @see `this.isLoading`
+         */
+        isPreparingLoading: attr({
+            default: false,
+        }),
         lastMessage: many2one('mail.message', {
             related: 'thread.lastMessage',
         }),
@@ -241,19 +204,48 @@ function factory(dependencies) {
         messages: many2many('mail.message', {
             related: 'threadCache.messages',
         }),
-        stringifiedDomain: attr({
-            default: '[]',
+        /**
+         * Not a real field, used to trigger `_onThreadCacheChanged` when one of
+         * the dependencies changes.
+         */
+        onThreadCacheChanged: attr({
+            compute: '_onThreadCacheChanged',
+            dependencies: [
+                'threadCache'
+            ],
         }),
+        /**
+         * Not a real field, used to trigger `_onThreadCacheIsLoadingChanged`
+         * when one of the dependencies changes.
+         *
+         * @see `this.isLoading`
+         */
+        onThreadCacheIsLoadingChanged: attr({
+            compute: '_onThreadCacheIsLoadingChanged',
+            dependencies: [
+                'threadCache',
+                'threadCacheIsLoading',
+            ],
+        }),
+        /**
+         * Determines the domain to apply when fetching messages for `this.thread`.
+         */
+        stringifiedDomain: attr({
+            related: 'threadViewer.stringifiedDomain',
+        }),
+        /**
+         * Determines the `mail.thread` currently displayed by `this`.
+         */
         thread: many2one('mail.thread', {
             inverse: 'threadViews',
+            related: 'threadViewer.thread',
         }),
+        /**
+         * States the `mail.thread_cache` currently displayed by `this`.
+         */
         threadCache: many2one('mail.thread_cache', {
-            compute: '_computeThreadCache',
-            dependencies: [
-                'stringifiedDomain',
-                'thread',
-                'threadCaches',
-            ],
+            inverse: 'threadViews',
+            related: 'threadViewer.threadCache',
         }),
         threadCacheInitialScrollPosition: attr({
             compute: '_computeThreadCacheInitialScrollPosition',
@@ -263,17 +255,17 @@ function factory(dependencies) {
             ],
         }),
         /**
+         * Serves as compute dependency.
+         */
+        threadCacheIsLoading: attr({
+            related: 'threadCache.isLoading',
+        }),
+        /**
          * List of saved initial scroll positions of thread caches.
-         * Useful to restore scroll position on changing back to this
-         * thread cache. Note that this is only applied when opening
-         * the thread cache, because scroll position may change fast so
-         * save is already throttled
          */
         threadCacheInitialScrollPositions: attr({
             default: {},
-        }),
-        threadCaches: many2many('mail.thread_cache', {
-            related: 'thread.caches',
+            related: 'threadViewer.threadCacheInitialScrollPositions',
         }),
         /**
          * Not a real field, used to trigger `thread.markAsSeen` when one of
@@ -287,6 +279,12 @@ function factory(dependencies) {
                 'lastVisibleMessage',
                 'threadCache',
             ],
+        }),
+        /**
+         * Determines the `mail.thread_viewer` currently managing `this`.
+         */
+        threadViewer: one2one('mail.thread_viewer', {
+            inverse: 'threadView',
         }),
         uncheckedMessages: many2many('mail.message', {
             related: 'threadCache.uncheckedMessages',

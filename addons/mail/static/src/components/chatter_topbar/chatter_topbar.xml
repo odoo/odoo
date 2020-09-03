@@ -5,7 +5,7 @@
         <div class="o_ChatterTopbar">
             <t t-if="chatter">
                 <div class="o_ChatterTopbar_actions" t-att-class="{'o-has-active-button': chatter.isComposerVisible }">
-                    <t t-if="chatter.hasThread">
+                    <t t-if="chatter.threadView">
                         <button class="btn btn-link o_ChatterTopbar_button o_ChatterTopbar_buttonSendMessage"
                             type="button"
                             t-att-class="{

@@ -30,6 +30,11 @@ function factory(dependencies) {
                     model: 'mail.box',
                     name: this.env._t("Inbox"),
                 }]],
+                moderation: [['create', {
+                    id: 'moderation',
+                    model: 'mail.box',
+                    name: this.env._t("Moderation"),
+                }]],
                 starred: [['create', {
                     id: 'starred',
                     isServerPinned: true,
@@ -37,7 +42,6 @@ function factory(dependencies) {
                     name: this.env._t("Starred"),
                 }]],
             });
-
             const device = this.messaging.device;
             device.start();
             const context = Object.assign({
@@ -199,14 +203,9 @@ function factory(dependencies) {
             this.env.messaging.inbox.update({ counter: needaction_inbox_counter });
             this.env.messaging.starred.update({ counter: starred_counter });
             if (moderation_channel_ids.length > 0) {
-                this.messaging.update({
-                    moderation: [['create', {
-                        counter: moderation_counter,
-                        id: 'moderation',
-                        isServerPinned: true,
-                        model: 'mail.box',
-                        name: this.env._t("Moderation"),
-                    }]],
+                this.messaging.moderation.update({
+                    counter: moderation_counter,
+                    isServerPinned: true,
                 });
             }
         }

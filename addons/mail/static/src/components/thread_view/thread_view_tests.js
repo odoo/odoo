@@ -81,8 +81,11 @@ QUnit.test('dragover files on thread with composer', async function (assert) {
         name: "General",
         public: 'public',
     });
-    const threadView = this.env.models['mail.thread_view'].create({ thread: [['link', thread]] });
-    await this.createThreadViewComponent(threadView, { hasComposer: true });
+    const threadViewer = this.env.models['mail.thread_viewer'].create({
+        hasThreadView: true,
+        thread: [['link', thread]],
+    });
+    await this.createThreadViewComponent(threadViewer.threadView, { hasComposer: true });
     await afterNextRender(() =>
         dragenterFiles(document.querySelector('.o_ThreadView'))
     );
@@ -122,8 +125,11 @@ QUnit.test('message list desc order', async function (assert) {
         name: "General",
         public: 'public',
     });
-    const threadView = this.env.models['mail.thread_view'].create({ thread: [['link', thread]] });
-    await this.createThreadViewComponent(threadView, { order: 'desc' }, { isFixedSize: true });
+    const threadViewer = this.env.models['mail.thread_viewer'].create({
+        hasThreadView: true,
+        thread: [['link', thread]],
+    });
+    await this.createThreadViewComponent(threadViewer.threadView, { order: 'desc' }, { isFixedSize: true });
     const messageItems = document.querySelectorAll(`.o_MessageList_item`);
     assert.notOk(
         messageItems[0].classList.contains("o_MessageList_loadMore"),
@@ -190,8 +196,11 @@ QUnit.test('message list asc order', async function (assert) {
         name: "General",
         public: 'public',
     });
-    const threadView = this.env.models['mail.thread_view'].create({ thread: [['link', thread]] });
-    await this.createThreadViewComponent(threadView, { order: 'asc' }, { isFixedSize: true });
+    const threadViewer = this.env.models['mail.thread_viewer'].create({
+        hasThreadView: true,
+        thread: [['link', thread]],
+    });
+    await this.createThreadViewComponent(threadViewer.threadView, { order: 'asc' }, { isFixedSize: true });
     const messageItems = document.querySelectorAll(`.o_MessageList_item`);
     assert.notOk(
         messageItems[messageItems.length - 1].classList.contains("o_MessageList_loadMore"),
@@ -283,8 +292,11 @@ QUnit.test('mark channel as fetched when a new message is loaded and as seen whe
         model: 'mail.channel',
     });
 
-    const threadView = this.env.models['mail.thread_view'].create({ thread: [['link', thread]] });
-    await this.createThreadViewComponent(threadView, { hasComposer: true });
+    const threadViewer = this.env.models['mail.thread_viewer'].create({
+        hasThreadView: true,
+        thread: [['link', thread]],
+    });
+    await this.createThreadViewComponent(threadViewer.threadView, { hasComposer: true });
     const notifications = [
         [['myDB', 'mail.channel', 100], {
             channelId: 100,
@@ -353,9 +365,11 @@ QUnit.test('mark channel as fetched and seen when a new message is loaded if com
         model: 'mail.channel',
     });
 
-    const threadView = this.env.models['mail.thread_view'].create({ thread: [['link', thread]] });
-    await this.createThreadViewComponent(threadView, { hasComposer: true });
-
+    const threadViewer = this.env.models['mail.thread_viewer'].create({
+        hasThreadView: true,
+        thread: [['link', thread]],
+    });
+    await this.createThreadViewComponent(threadViewer.threadView, { hasComposer: true });
     document.querySelector('.o_ComposerTextInput_textarea').focus();
     const notifications = [
         [['myDB', 'mail.channel', 100], {
@@ -394,8 +408,11 @@ QUnit.test('show message subject if thread is mailing channel', async function (
         name: "General",
         public: 'public',
     });
-    const threadView = this.env.models['mail.thread_view'].create({ thread: [['link', thread]] });
-    await this.createThreadViewComponent(threadView);
+    const threadViewer = this.env.models['mail.thread_viewer'].create({
+        hasThreadView: true,
+        thread: [['link', thread]],
+    });
+    await this.createThreadViewComponent(threadViewer.threadView);
 
     assert.containsOnce(
         document.body,

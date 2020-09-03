@@ -48,7 +48,7 @@
                 />
             </div>
         </t>
-        <t t-if="(env.messaging.device.isMobile and discuss.activeMobileNavbarTabId === 'mailbox' and discuss.thread and discuss.thread.model === 'mail.box') or (!env.messaging.device.isMobile and discuss.thread)">
+        <t t-if="discuss.threadView">
             <ThreadView
                 class="o_Discuss_thread"
                 t-att-class="{ 'o-mobile': env.messaging.device.isMobile }"

@@ -115,12 +115,10 @@ class ChatWindow extends Component {
             isDoFocus: false,
             isFocused: true,
         });
-        if (this.chatWindow.isFolded) {
-            return;
-        }
-        if (!this.chatWindow.thread) {
+        if (this._inputRef.comp) {
             this._inputRef.comp.focus();
-        } else {
+        }
+        if (this._threadRef.comp) {
             this._threadRef.comp.focus();
         }
     }
@@ -134,7 +132,10 @@ class ChatWindow extends Component {
      * @private
      */
     _saveThreadScrollTop() {
-        this.chatWindow.threadView.saveThreadCacheScrollPositionsAsInitial(
+        if (!this._threadRef.comp || !this.chatWindow.threadViewer) {
+            return;
+        }
+        this.chatWindow.threadViewer.saveThreadCacheScrollPositionsAsInitial(
             this._threadRef.comp.getScrollTop()
         );
     }
@@ -248,9 +249,7 @@ class ChatWindow extends Component {
             this.chatWindow.unfold();
             this.chatWindow.focus();
         } else {
-            if (this.chatWindow.thread) {
-                this._saveThreadScrollTop();
-            }
+            this._saveThreadScrollTop();
             this.chatWindow.fold();
         }
     }
@@ -336,12 +335,7 @@ class ChatWindow extends Component {
      * @private
      */
     async _onWillHideHomeMenu() {
-        if (!this.chatWindow.thread) {
-            return;
-        }
-        if (!this.chatWindow.isFolded) {
-            this._saveThreadScrollTop();
-        }
+        this._saveThreadScrollTop();
     }
 
     /**
@@ -353,12 +347,7 @@ class ChatWindow extends Component {
      * @private
      */
     async _onWillShowHomeMenu() {
-        if (!this.chatWindow.thread) {
-            return;
-        }
-        if (!this.chatWindow.isFolded) {
-            this._saveThreadScrollTop();
-        }
+        this._saveThreadScrollTop();
     }
 
 }
