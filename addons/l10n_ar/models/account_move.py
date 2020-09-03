@@ -219,6 +219,16 @@ class AccountMove(models.Model):
                     [('l10n_ar_letter', '=', self.l10n_latam_document_type_id.l10n_ar_letter)]).ids)
         return where_string, param
 
+    def _get_key_compute_name(self):
+        journal_key, date_key = super()._get_key_compute_name()
+        if self.company_id.country_id == self.env.ref('base.ar') and self.l10n_latam_use_documents and self.is_sale_document():
+            if not self.journal_id.l10n_ar_share_sequences:
+                journal_key = self.l10n_latam_document_type_id
+            else:
+                journal_key = self.l10n_latam_document_type_id.l10n_ar_letter
+            date_key = False
+        return journal_key, date_key
+
     def _get_name_invoice_report(self, report_xml_id):
         self.ensure_one()
         if self.l10n_latam_use_documents and self.company_id.country_id.code == 'AR':

@@ -1016,14 +1016,15 @@ class AccountMove(models.Model):
             domain = [('company_id', '=', m.company_id.id), ('type', '=?', m.invoice_filter_type_domain)]
             m.suitable_journal_ids = self.env['account.journal'].search(domain)
 
+    def _get_key_compute_name(self):
+        """Get the set of keys used in _compute_name to batch documents with the same format."""
+        self.ensure_one()
+        journal_key = (self.journal_id, self.journal_id.refund_sequence and self.move_type)
+        date_key = (self.date.year, self.date.month)
+        return journal_key, date_key
+
     @api.depends('posted_before', 'state', 'journal_id', 'date')
     def _compute_name(self):
-        def journal_key(move):
-            return (move.journal_id, move.journal_id.refund_sequence and move.move_type)
-
-        def date_key(move):
-            return (move.date.year, move.date.month)
-
         grouped = defaultdict(  # key: journal_id, move_type
             lambda: defaultdict(  # key: first adjacent (date.year, date.month)
                 lambda: {
@@ -1046,7 +1047,8 @@ class AccountMove(models.Model):
             elif (move.name and move.name != '/') or move.state != 'posted':
                 # Has already a name or is not posted, we don't add to a batch
                 continue
-            group = grouped[journal_key(move)][date_key(move)]
+            journal_key, date_key = move._get_key_compute_name()
+            group = grouped[journal_key][date_key]
             if not group['records']:
                 # Compute all the values needed to sequence this whole group
                 move._set_next_sequence()
