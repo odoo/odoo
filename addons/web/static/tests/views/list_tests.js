@@ -162,6 +162,31 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('on_attach_callback is properly called', async function (assert) {
+        assert.expect(3);
+
+        testUtils.mock.patch(ListRenderer, {
+            on_attach_callback() {
+                assert.step('on_attach_callback');
+                this._super(...arguments);
+            },
+        });
+
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree><field name="display_name"/></tree>',
+        });
+
+        assert.verifySteps(['on_attach_callback']);
+        await list.reload();
+        assert.verifySteps([]);
+
+        testUtils.mock.unpatch(ListRenderer);
+        list.destroy();
+    });
+
     QUnit.test('list with create="0"', async function (assert) {
         assert.expect(2);
 
