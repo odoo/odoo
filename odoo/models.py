@@ -2186,7 +2186,8 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         :param int limit: optional max number of records to return
         :param str orderby: optional ``order by`` specification, for
                              overriding the natural sort ordering of the
-                             groups, see also :py:meth:`~osv.osv.osv.search`
+                             groups, or an empty string for not ordering at all,
+                             see also :py:meth:`~osv.osv.osv.search`
                              (supported only for many2one fields currently)
         :param bool lazy: if true, the results are only grouped by the first groupby and the 
                 remaining groupbys are put in the __context key.  If false, all the groupbys are
@@ -2230,7 +2231,10 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         groupby_list = groupby[:1] if lazy else groupby
         annotated_groupbys = [self._read_group_process_groupby(gb, query) for gb in groupby_list]
         groupby_fields = [g['field'] for g in annotated_groupbys]
-        order = orderby or ','.join([g for g in groupby_list])
+        if orderby is False:
+            order = ','.join([g for g in groupby_list])
+        else:
+            order = orderby or []
         groupby_dict = {gb['groupby']: gb for gb in annotated_groupbys}
 
         self._apply_ir_rules(query, 'read')
@@ -4315,10 +4319,14 @@ Fields:
         Attempt to construct an appropriate ORDER BY clause based on order_spec, which must be
         a comma-separated list of valid field names, optionally followed by an ASC or DESC direction.
 
+        For `order_spec`, you may avoid any ordering passing an empty string, while ``None`` will take
+        the model's default ordering criteria.
+
         :raise ValueError in case order_spec is malformed
         """
         order_by_clause = ''
-        order_spec = order_spec or self._order
+        if order_spec is None:
+            order_spec = self._order
         if order_spec:
             order_by_elements = self._generate_order_by_inner(self._table, order_spec, query)
             if order_by_elements:
@@ -4328,7 +4336,11 @@ Fields:
 
     @api.model
     def _flush_search(self, domain, fields=None, order=None, seen=None):
-        """ Flush all the fields appearing in `domain`, `fields` and `order`. """
+        """ Flush all the fields appearing in `domain`, `fields` and `order`.
+
+        For `order`, you may avoid any ordering passing an empty string, while ``None`` will take
+        the model's default ordering criteria.
+        """
         if seen is None:
             seen = set()
         elif self._name in seen:
@@ -4377,8 +4389,9 @@ Fields:
                     to_flush[model_name].add(model._parent_name)
 
         # flush the order fields
-        order_spec = order or self._order
-        for order_part in order_spec.split(','):
+        order_spec = self._order if order is None else order
+        order_parts = order_spec.split(',') if order_spec else []
+        for order_part in order_parts:
             order_field = order_part.split()[0]
             field = self._fields.get(order_field)
             if field is not None:
