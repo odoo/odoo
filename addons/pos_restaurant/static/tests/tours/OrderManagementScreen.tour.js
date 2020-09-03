@@ -106,7 +106,7 @@ odoo.define('pos_restaurant.tour.OrderManagementScreen', function (require) {
     OrderManagementScreen.check.isShown();
 
     // select order 0004 and check if it is now in T2
-    OrderManagementScreen.do.clickOrder('-0004');
+    OrderManagementScreen.do.clickOrder('-0004', ['table', 'T2']);
     ProductScreen.check.isShown();
     ProductScreen.check.totalAmountIs('278');
     Chrome.check.backToFloorTextIs('Main Floor', 'T2');
