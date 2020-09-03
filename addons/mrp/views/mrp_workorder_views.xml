@@ -160,7 +160,7 @@
                 <page string="Time Tracking" name="time_tracking" groups="mrp.group_mrp_manager">
                     <group>
                         <field name="time_ids" nolabel="1" context="{'default_workcenter_id': workcenter_id, 'default_workorder_id': id}">
-                            <tree>
+                            <tree editable="bottom">
                                 <field name="date_start"/>
                                 <field name="date_end"/>
                                 <field name="duration" widget="float_time" sum="Total duration"/>
