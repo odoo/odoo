@@ -189,7 +189,8 @@ QUnit.test('Notification Sent', async function (assert) {
     assert.expect(9);
 
     await this.start();
-    const threadView = this.env.models['mail.thread_view'].create({
+    const threadViewer = this.env.models['mail.thread_viewer'].create({
+        hasThreadView: true,
         thread: [['create', {
             id: 11,
             model: 'mail.channel',
@@ -204,10 +205,10 @@ QUnit.test('Notification Sent', async function (assert) {
             notification_type: 'email',
             partner: [['insert', { id: 12, name: "Someone" }]],
         }]],
-        originThread: [['link', threadView.thread]],
+        originThread: [['link', threadViewer.thread]],
     });
     await this.createMessageComponent(message, {
-        threadViewLocalId: threadView.localId
+        threadViewLocalId: threadViewer.threadView.localId
     });
 
     assert.containsOnce(
@@ -280,7 +281,8 @@ QUnit.test('Notification Error', async function (assert) {
     });
 
     await this.start({ env: { bus } });
-    const threadView = this.env.models['mail.thread_view'].create({
+    const threadViewer = this.env.models['mail.thread_viewer'].create({
+        hasThreadView: true,
         thread: [['create', {
             id: 11,
             model: 'mail.channel',
@@ -294,10 +296,10 @@ QUnit.test('Notification Error', async function (assert) {
             notification_status: 'exception',
             notification_type: 'email',
         }]],
-        originThread: [['link', threadView.thread]],
+        originThread: [['link', threadViewer.thread]],
     });
     await this.createMessageComponent(message, {
-        threadViewLocalId: threadView.localId
+        threadViewLocalId: threadViewer.threadView.localId
     });
 
     assert.containsOnce(
@@ -346,7 +348,10 @@ QUnit.test("'channel_fetch' notification received is correctly handled", async f
         ],
         model: 'mail.channel',
     });
-    const threadView = this.env.models['mail.thread_view'].create({ thread: [['link', thread]] });
+    const threadViewer = this.env.models['mail.thread_viewer'].create({
+        hasThreadView: true,
+        thread: [['link', thread]],
+    });
     const message = this.env.models['mail.message'].create({
         author: [['link', currentPartner]],
         body: "<p>Test</p>",
@@ -354,7 +359,9 @@ QUnit.test("'channel_fetch' notification received is correctly handled", async f
         originThread: [['link', thread]],
     });
 
-    await this.createMessageComponent(message, { threadViewLocalId: threadView.localId });
+    await this.createMessageComponent(message, {
+        threadViewLocalId: threadViewer.threadView.localId,
+    });
 
     assert.containsOnce(
         document.body,
@@ -402,14 +409,19 @@ QUnit.test("'channel_seen' notification received is correctly handled", async fu
         ],
         model: 'mail.channel',
     });
-    const threadView = this.env.models['mail.thread_view'].create({ thread: [['link', thread]] });
+    const threadViewer = this.env.models['mail.thread_viewer'].create({
+        hasThreadView: true,
+        thread: [['link', thread]],
+    });
     const message = this.env.models['mail.message'].create({
         author: [['link', currentPartner]],
         body: "<p>Test</p>",
         id: 100,
         originThread: [['link', thread]],
     });
-    await this.createMessageComponent(message, { threadViewLocalId: threadView.localId });
+    await this.createMessageComponent(message, {
+        threadViewLocalId: threadViewer.threadView.localId,
+    });
 
     assert.containsOnce(
         document.body,
@@ -457,14 +469,19 @@ QUnit.test("'channel_fetch' notification then 'channel_seen' received  are corre
         ],
         model: 'mail.channel',
     });
-    const threadView = this.env.models['mail.thread_view'].create({ thread: [['link', thread]] });
+    const threadViewer = this.env.models['mail.thread_viewer'].create({
+        hasThreadView: true,
+        thread: [['link', thread]],
+    });
     const message = this.env.models['mail.message'].create({
         author: [['link', currentPartner]],
         body: "<p>Test</p>",
         id: 100,
         originThread: [['link', thread]],
     });
-    await this.createMessageComponent(message, { threadViewLocalId: threadView.localId });
+    await this.createMessageComponent(message, {
+        threadViewLocalId: threadViewer.threadView.localId,
+    });
 
     assert.containsOnce(
         document.body,
@@ -526,25 +543,28 @@ QUnit.test('do not show messaging seen indicator if not authored by me', async f
         partnerSeenInfos: [['create', [
             {
                 id: this.env.session.partner_id,
-                lastFetchedMessage: [['insert', {id: 100}]],
-                partner: [['insert', {id: this.env.messaging.currentPartner.id}]],
+                lastFetchedMessage: [['insert', { id: 100 }]],
+                partner: [['insert', { id: this.env.messaging.currentPartner.id }]],
             },
             {
                 id: 100,
-                lastFetchedMessage: [['insert', {id: 100}]],
+                lastFetchedMessage: [['insert', { id: 100 }]],
                 partner: [['link', author]],
             },
         ]]],
         model: 'mail.channel',
     });
-    const threadView = this.env.models['mail.thread_view'].create({ thread: [['link', thread]] });
+    const threadViewer = this.env.models['mail.thread_viewer'].create({
+        hasThreadView: true,
+        thread: [['link', thread]],
+    });
     const message = this.env.models['mail.message'].insert({
         author: [['link', author]],
         body: "<p>Test</p>",
         id: 100,
         originThread: [['link', thread]],
     });
-    await this.createMessageComponent(message, { threadViewLocalId: threadView.localId });
+    await this.createMessageComponent(message, { threadViewLocalId: threadViewer.threadView.localId });
 
     assert.containsOnce(
         document.body,
@@ -570,11 +590,14 @@ QUnit.test('do not show messaging seen indicator if before last seen by all mess
         id: 11,
         messageSeenIndicators: [['insert', {
             id: this.env.models['mail.message_seen_indicator'].computeId(99, 11),
-            message: [['insert', {id: 99}]],
+            message: [['insert', { id: 99 }]],
         }]],
         model: 'mail.channel',
     });
-    const threadView = this.env.models['mail.thread_view'].create({ thread: [['link', thread]] });
+    const threadViewer = this.env.models['mail.thread_viewer'].create({
+        hasThreadView: true,
+        thread: [['link', thread]],
+    });
     const lastSeenMessage = this.env.models['mail.message'].create({
         author: [['link', currentPartner]],
         body: "<p>You already saw me</p>",
@@ -597,11 +620,13 @@ QUnit.test('do not show messaging seen indicator if before last seen by all mess
             {
                 id: 100,
                 lastSeenMessage: [['link', lastSeenMessage]],
-                partner: [['insert', {id: 100}]],
+                partner: [['insert', { id: 100 }]],
             },
         ]]],
     });
-    await this.createMessageComponent(message, { threadViewLocalId: threadView.localId });
+    await this.createMessageComponent(message, {
+        threadViewLocalId: threadViewer.threadView.localId,
+    });
 
     assert.containsOnce(
         document.body,
@@ -633,30 +658,35 @@ QUnit.test('only show messaging seen indicator if authored by me, after last see
         partnerSeenInfos: [['create', [
             {
                 id: currentPartner.id,
-                lastSeenMessage: [['insert', {id: 100}]],
+                lastSeenMessage: [['insert', { id: 100 }]],
                 partner: [['link', currentPartner]],
             },
             {
                 id: 100,
-                partner: [['insert', {id: 100}]],
-                lastFetchedMessage: [['insert', {id: 100}]],
-                lastSeenMessage: [['insert', {id: 99}]],
+                partner: [['insert', { id: 100 }]],
+                lastFetchedMessage: [['insert', { id: 100 }]],
+                lastSeenMessage: [['insert', { id: 99 }]],
             },
         ]]],
         messageSeenIndicators: [['insert', {
             id: this.env.models['mail.message_seen_indicator'].computeId(100, 11),
-            message: [['insert', {id: 100}]],
+            message: [['insert', { id: 100 }]],
         }]],
         model: 'mail.channel',
     });
-    const threadView = this.env.models['mail.thread_view'].create({ thread: [['link', thread]] });
+    const threadViewer = this.env.models['mail.thread_viewer'].create({
+        hasThreadView: true,
+        thread: [['link', thread]],
+    });
     const message = this.env.models['mail.message'].insert({
         author: [['link', currentPartner]],
         body: "<p>Test</p>",
         id: 100,
         originThread: [['link', thread]],
     });
-    await this.createMessageComponent(message, { threadViewLocalId: threadView.localId });
+    await this.createMessageComponent(message, {
+        threadViewLocalId: threadViewer.threadView.localId,
+    });
 
     assert.containsOnce(
         document.body,

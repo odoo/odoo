@@ -59,7 +59,7 @@ function factory(dependencies) {
                 return;
             }
             // populate some needaction messages on threads.
-            inbox.mainCache.loadMessages();
+            inbox.mainCache.update({ hasToLoadMessages: true });
         }
 
         /**
