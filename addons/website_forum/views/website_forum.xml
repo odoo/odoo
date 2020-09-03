@@ -1641,7 +1641,7 @@
                                                 <div class="custom-control custom-checkbox">
                                                     <input type="checkbox" class="custom-control-input" t-attf-id="country_#{country.id}" t-att-value="country.id"/>
                                                     <label class="custom-control-label" t-attf-for="country_#{country.id}">
-                                                        <span t-field="country.image" t-options='{"widget": "image", "class": "country_flag"}' class="mr-2"/>
+                                                        <span t-field="country.image_url" t-options='{"widget": "image_url", "class": "country_flag"}' class="mr-2"/>
                                                         <span t-esc="country.name"/>
                                                     </label>
                                                 </div>
