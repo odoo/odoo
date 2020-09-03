@@ -195,7 +195,7 @@ var FormController = BasicController.extend({
         const props = this._super(...arguments);
         const activeField = this.model.getActiveField(state);
         const otherActionItems = [];
-        if (this.archiveEnabled && activeField) {
+        if (this.archiveEnabled && activeField in state.data) {
             if (state.data[activeField]) {
                 otherActionItems.push({
                     description: _t("Archive"),
