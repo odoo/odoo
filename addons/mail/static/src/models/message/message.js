@@ -197,6 +197,51 @@ function factory(dependencies) {
                 kwargs: kwargs,
             });
         }
+        /**
+         * Performs the `message_fetch` RPC on `mail.message`.
+         *
+         * @static
+         * @param {Array[]} domain
+         * @param {integer} [limit]
+         * @param {integer[]} [moderated_channel_ids]
+         * @param {Object} [context]
+         * @returns {mail.message[]}
+         */
+        static async performRpcMessageFetch(domain, limit, moderated_channel_ids, context) {
+            const messagesData = await this.env.services.rpc({
+                model: 'mail.message',
+                method: 'message_fetch',
+                kwargs: {
+                    context,
+                    domain,
+                    limit,
+                    moderated_channel_ids,
+                },
+            }, { shadow: true });
+            const messages = this.env.models['mail.message'].insert(messagesData.map(
+                messageData => this.env.models['mail.message'].convertData(messageData)
+            ));
+            // compute seen indicators (if applicable)
+            for (const message of messages) {
+                for (const thread of message.threads) {
+                    if (thread.model !== 'mail.channel' || thread.channel_type === 'channel') {
+                        // disabled on non-channel threads and
+                        // on `channel` channels for performance reasons
+                        continue;
+                    }
+                    thread.update({
+                        messageSeenIndicators: [[
+                            'insert',
+                            {
+                                id: this.env.models['mail.message_seen_indicator'].computeId(message.id, thread.id),
+                                message: [['link', message]],
+                            },
+                        ]],
+                    });
+                }
+            }
+            return messages;
+        }
 
         /**
          * @static

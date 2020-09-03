@@ -77,7 +77,7 @@ function factory(dependencies) {
             if (this.thread) {
                 this.thread.update({ pendingFoldState: 'folded' });
             } else {
-                this.update({ _isFolded: true });
+                this.update({ isFolded: true });
             }
         }
 
@@ -120,15 +120,22 @@ function factory(dependencies) {
         unfold() {
             if (this.thread) {
                 this.thread.update({ pendingFoldState: 'open' });
-                this.threadView.addComponentHint('chat-window-unfolded');
             } else {
-                this.update({ _isFolded: false });
+                this.update({ isFolded: false });
             }
         }
 
         //----------------------------------------------------------------------
         // Private
         //----------------------------------------------------------------------
+
+        /**
+         * @private
+         * @returns {boolean}
+         */
+        _computeHasNewMessageForm() {
+            return this.isVisible && !this.isFolded && !this.thread;
+        }
 
         /**
          * @private
@@ -165,12 +172,28 @@ function factory(dependencies) {
          * @private
          * @returns {boolean}
          */
+        _computeHasThreadView() {
+            return this.isVisible && !this.isFolded && this.thread;
+        }
+
+        /**
+         * @private
+         * @returns {boolean}
+         */
         _computeIsFolded() {
             const thread = this.thread;
             if (thread) {
                 return thread.foldState === 'folded';
             }
-            return this._isFolded;
+            return this.isFolded;
+        }
+
+        /**
+         * @private
+         * @returns {boolean}
+         */
+        _computeIsVisible() {
+            return this.manager.allOrderedVisible.includes(this);
         }
 
         /**
@@ -193,6 +216,22 @@ function factory(dependencies) {
                 return this.thread.displayName;
             }
             return this.env._t("New message");
+        }
+
+        /**
+         * @private
+         * @returns {integer|undefined}
+         */
+        _computeVisibleIndex() {
+            if (!this.manager) {
+                return undefined;
+            }
+            const visible = this.manager.visual.visible;
+            const index = visible.findIndex(visible => visible.chatWindowLocalId === this.localId);
+            if (index === -1) {
+                return undefined;
+            }
+            return index;
         }
 
         /**
@@ -278,33 +317,19 @@ function factory(dependencies) {
             this.threadView.addComponentHint('home-menu-shown');
         }
 
-        /**
-         * @private
-         * @returns {integer|undefined}
-         */
-        _computeVisibleIndex() {
-            if (!this.manager) {
-                return undefined;
-            }
-            const visible = this.manager.visual.visible;
-            const index = visible.findIndex(visible => visible.chatWindowLocalId === this.localId);
-            if (index === -1) {
-                return undefined;
-            }
-            return index;
-        }
     }
 
     ChatWindow.fields = {
         /**
-         * Determine whether the chat window is folded or not, when not
-         * linked to a thread.
-         * Note: this value only make sense for chat window not linked
-         * to a thread. State of chat window of a thread is entirely
-         * based on thread.foldState. @see isFolded .
+         * Determines whether "new message form" should be displayed.
          */
-        _isFolded: attr({
-            default: false,
+        hasNewMessageForm: attr({
+            compute: '_computeHasNewMessageForm',
+            dependencies: [
+                'isFolded',
+                'isVisible',
+                'thread',
+            ],
         }),
         hasShiftLeft: attr({
             compute: '_computeHasShiftLeft',
@@ -317,6 +342,17 @@ function factory(dependencies) {
             default: false,
         }),
         /**
+         * Determines whether `this.thread` should be displayed.
+         */
+        hasThreadView: attr({
+            compute: '_computeHasThreadView',
+            dependencies: [
+                'isFolded',
+                'isVisible',
+                'thread',
+            ],
+        }),
+        /**
          * Determine whether the chat window should be programmatically
          * focused by observed component of chat window. Those components
          * are responsible to unmark this record afterwards, otherwise
@@ -326,18 +362,33 @@ function factory(dependencies) {
             default: false,
         }),
         /**
-         * Determine whether the chat window is focused or not. Useful for
-         * visual clue.
+         * States whether `this` is focused. Useful for visual clue.
          */
         isFocused: attr({
             default: false,
         }),
+        /**
+         * Determines whether `this` is folded.
+         *
+         * Note: writing this value directly only makes sense when `this.thread`
+         * is empty. State of chat window of a thread is entirely based on
+         * `thread.foldState`.
+         */
         isFolded: attr({
             compute: '_computeIsFolded',
             dependencies: [
                 'thread',
                 'threadFoldState',
-                '_isFolded',
+            ],
+            default: false,
+        }),
+        /**
+         * States whether `this` is visible or not.
+         */
+        isVisible: attr({
+            compute: '_computeIsVisible',
+            dependencies: [
+                'managerAllOrderedVisible',
             ],
             default: false,
         }),
@@ -368,17 +419,30 @@ function factory(dependencies) {
                 'threadDisplayName',
             ],
         }),
-        thread: many2one('mail.thread', {
-            related: 'threadView.thread',
-        }),
+        /**
+         * Determines the `mail.thread` that should be displayed by `this`.
+         * If no `mail.thread` is linked, `this` is considered "new message".
+         */
+        thread: many2one('mail.thread'),
         threadDisplayName: attr({
             related: 'thread.displayName',
         }),
         threadFoldState: attr({
             related: 'thread.foldState',
         }),
+        /**
+         * States the `mail.thread_view` displaying `this.thread`.
+         */
         threadView: one2one('mail.thread_view', {
+            related: 'threadViewer.threadView',
+        }),
+        /**
+         * Determines the `mail.thread_viewer` managing the display of `this.thread`.
+         */
+        threadViewer: one2one('mail.thread_viewer', {
+            default: [['create']],
             inverse: 'chatWindow',
+            isCausal: true,
         }),
         /**
          * This field handle the "order" (index) of the visible chatWindow inside the UI.

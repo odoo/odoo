@@ -26,18 +26,17 @@ class Discuss extends Component {
         super(...args);
         useStore(props => {
             const discuss = this.env.messaging && this.env.messaging.discuss;
+            const threadView = discuss && discuss.threadView;
             return {
-                checkedMessages: discuss ? discuss.threadView.checkedMessages.map(message => message.__state) : [],
+                checkedMessages: threadView ? threadView.checkedMessages.map(message => message.__state) : [],
                 discuss: discuss ? discuss.__state : undefined,
                 isDeviceMobile: this.env.messaging && this.env.messaging.device.isMobile,
                 isMessagingInitialized: this.env.isMessagingInitialized(),
                 thread: discuss && discuss.thread ? discuss.thread.__state : undefined,
-                threadCache: (discuss && discuss.threadView && discuss.threadView.threadCache)
-                    ? discuss.threadView.threadCache.__state
+                threadCache: (threadView && threadView.threadCache)
+                    ? threadView.threadCache.__state
                     : undefined,
-                uncheckedMessages: discuss && discuss.threadView
-                    ? discuss.threadView.uncheckedMessages.map(message => message.__state)
-                    : [],
+                uncheckedMessages: threadView ? threadView.uncheckedMessages.map(message => message.__state) : [],
             };
         }, {
             compareDepth: {
@@ -78,12 +77,13 @@ class Discuss extends Component {
         if (
             this.discuss.thread &&
             this.discuss.thread === this.env.messaging.inbox &&
+            this.discuss.threadView &&
             this._lastThreadCache === this.discuss.threadView.threadCache.localId &&
             this._lastThreadCounter > 0 && this.discuss.thread.counter === 0
         ) {
             this.trigger('o-show-rainbow-man');
         }
-        this._activeThreadCache = this.discuss.threadView.threadCache;
+        this._activeThreadCache = this.discuss.threadView && this.discuss.threadView.threadCache;
         this._updateLocalStoreProps();
         this._update();
     }
@@ -170,6 +170,7 @@ class Discuss extends Component {
          * rainbox man on inbox.
          */
         this._lastThreadCache = (
+            this.discuss.threadView &&
             this.discuss.threadView.threadCache &&
             this.discuss.threadView.threadCache.localId
         );
