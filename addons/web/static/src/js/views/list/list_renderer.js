@@ -974,10 +974,10 @@ var ListRenderer = BasicRenderer.extend({
 
             // Append the table to the main element
             self.el.innerHTML = "";
-            dom.append(self.el, tableWrapper, {
-                callbacks: [{ widget: this }],
-                in_DOM: document.body.contains(self.el),
-            });
+            self.el.appendChild(tableWrapper);
+            if (document.body.contains(self.el)) {
+                self.pagers.forEach(pager => pager.on_attach_callback());
+            }
 
             if (self.optionalColumns.length) {
                 self.$el.addClass('o_list_optional_columns');
