@@ -871,9 +871,11 @@
             </div>
         </div>
         <div id="top_menu_container" class="container mt-n4">
-            <nav class="navbar navbar-light navbar-expand-md o_colored_level o_cc shadow-sm rounded pr-2">
+            <nav class="navbar navbar-light navbar-expand-lg o_colored_level o_cc shadow-sm rounded pr-2">
                 <!-- Brand -->
                 <t t-call="website.placeholder_header_brand"/>
+                <!-- Navbar Toggler -->
+                <t t-call="website.navbar_toggler"/>
                 <!-- Navbar Collapse -->
                 <div id="top_menu_collapse" class="collapse navbar-collapse">
                     <t t-call="website.navbar_nav">
@@ -921,7 +923,7 @@
         <div class="oe_structure" id="oe_structure_header_boxed_2">
             <section class="s_text_block" data-snippet="s_text_block" name="Text">
                 <div class="container">
-                     <a href="/contactus" class="btn btn-primary ml-4">Contact Us</a>
+                     <a href="/contactus" class="btn btn-primary ml-lg-4">Contact Us</a>
                 </div>
             </section>
         </div>
