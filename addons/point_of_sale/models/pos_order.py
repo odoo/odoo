@@ -574,7 +574,7 @@ class PosOrder(models.Model):
             })
             mail_values['attachment_ids'] += [(4, attachment.id)]
 
-        mail = self.env['mail.mail'].create(mail_values)
+        mail = self.env['mail.mail'].sudo().create(mail_values)
         mail.send()
 
     @api.model
