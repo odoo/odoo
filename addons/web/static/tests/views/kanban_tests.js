@@ -3728,6 +3728,60 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
+    QUnit.test('nocontent helper after adding a record (kanban with progressbar)', async function (assert) {
+        assert.expect(3);
+
+        const kanban = await createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: `<kanban >
+                    <field name="product_id"/>
+                    <progressbar field="foo" colors='{"yop": "success", "gnap": "warning", "blip": "danger"}' sum_field="int_field"/>
+                    <templates>
+                      <t t-name="kanban-box">
+                        <div><field name="foo"/></div>
+                      </t>
+                    </templates>
+                </kanban>`,
+            groupBy: ['product_id'],
+            domain: [['foo', '=', 'abcd']],
+            mockRPC: function (route, args) {
+                if (args.method === 'web_read_group') {
+                    const result = {
+                        groups: [
+                            { __domain: [['product_id', '=', 3]], product_id_count: 0, product_id: [3, 'hello'] },
+                        ],
+                    };
+                    return Promise.resolve(result);
+                }
+                return this._super.apply(this, arguments);
+            },
+            viewOptions: {
+                action: {
+                    help: "No content helper",
+                },
+            },
+        });
+
+        assert.containsOnce(kanban, '.o_view_nocontent', "the nocontent helper is displayed");
+
+        // add a record
+        await testUtils.dom.click(kanban.$('.o_kanban_quick_add'));
+        await testUtils.fields.editInput(kanban.$('.o_kanban_quick_create .o_input'), 'twilight sparkle');
+        await testUtils.dom.click(kanban.$('button.o_kanban_add'));
+
+        assert.containsNone(kanban, '.o_view_nocontent',
+            "the nocontent helper is not displayed after quick create");
+
+        // cancel quick create
+        await testUtils.dom.click(kanban.$('button.o_kanban_cancel'));
+        assert.containsNone(kanban, '.o_view_nocontent',
+            "the nocontent helper is not displayed after cancelling the quick create");
+
+        kanban.destroy();
+    });
+
     QUnit.test('if view was not grouped at start, it can be grouped and ungrouped', async function (assert) {
         assert.expect(3);
 
