@@ -372,14 +372,13 @@ ColorPaletteWidget.loadDependencies = async function (rpcCapableObj) {
     if (!session.is_website_user) {
         // We can call the colorPalette multiple times but only need 1 rpc
         if (!colorpickerTemplateProm && !qweb.has_template('web_editor.colorpicker')) {
-            colorpickerTemplateProm = rpcCapableObj._rpc({
-                route: '/web_editor/read_template',
-                params: {
-                    viewId: 'web_editor.colorpicker',
-                },
-            }).then(template => {
-                return qweb.add_template('<templates>' + template + '</templates>');
-            });
+            colorpickerTemplateProm = rpcCapableObj
+                ._rpc({
+                    route: "/web_editor/get_colorpicker_template",
+                })
+                .then((template) => {
+                    return qweb.add_template("<templates>" + template + "</templates>");
+                });
         }
         proms.push(colorpickerTemplateProm);
     }

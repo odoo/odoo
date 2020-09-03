@@ -502,8 +502,8 @@ class Web_Editor(http.Controller):
         attachment.generate_access_token()
         return '%s?access_token=%s' % (attachment.image_src, attachment.access_token)
 
-    @http.route('/web_editor/read_template', type='json', auth='user')
-    def read_template(self, viewId, **kwargs):
+    @http.route('/web_editor/get_colorpicker_template', type='json', auth='user')
+    def get_colorpicker_template(self, **kwargs):
         """
         Only system and designer users can access ir.ui.view records.
         An employee, portal or public user should not be able to read a view arch.
@@ -511,6 +511,5 @@ class Web_Editor(http.Controller):
         In web_editor.colorpicker case, user have to read the template,
         so, reading template using sudo permission to overcome this issue.
         """
-        template = request.env['ir.ui.view'].sudo().read_template(viewId)
-        return template
+        return request.env['ir.ui.view'].sudo().read_template("web_editor.colorpicker")
 
