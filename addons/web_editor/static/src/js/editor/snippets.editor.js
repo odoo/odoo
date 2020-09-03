@@ -1828,6 +1828,7 @@ var SnippetsMenu = Widget.extend({
     _makeSnippetDraggable: function ($snippets) {
         var self = this;
         var $toInsert, dropped, $snippet;
+        let scrollValue;
 
         const smoothScrollOptions = this._getScrollOptions({
             jQueryDraggableOptions: {
@@ -1872,6 +1873,7 @@ var SnippetsMenu = Widget.extend({
                         over: function () {
                             if (!dropped) {
                                 dropped = true;
+                                scrollValue = $(this).first().offset().top;
                                 $(this).first().after($toInsert).addClass('d-none');
                                 $toInsert.removeClass('oe_snippet_body');
                             }
@@ -1887,12 +1889,13 @@ var SnippetsMenu = Widget.extend({
                         },
                     });
                 },
-                stop: function (ev, ui) {
+                stop: async function (ev, ui) {
                     $toInsert.removeClass('oe_snippet_body');
 
                     if (!dropped && ui.position.top > 3 && ui.position.left > self.el.getBoundingClientRect().right) {
                         var $el = $.nearest({x: ui.position.left, y: ui.position.top}, '.oe_drop_zone', {container: document.body}).first();
                         if ($el.length) {
+                            scrollValue = $el.offset().top;
                             $el.after($toInsert);
                             dropped = true;
                         }
@@ -1920,6 +1923,7 @@ var SnippetsMenu = Widget.extend({
                         }
 
                         var $target = $toInsert;
+                        await self._scrollToSnippet($target, scrollValue);
 
                         _.defer(function () {
                             self.trigger_up('snippet_dropped', {$target: $target});
@@ -1987,6 +1991,31 @@ var SnippetsMenu = Widget.extend({
         this.$('.o_we_add_snippet_btn').toggleClass('active', tab === this.tabs.BLOCKS);
         this.$('.o_we_customize_snippet_btn').toggleClass('active', tab === this.tabs.OPTIONS)
                                              .prop('disabled', tab !== this.tabs.OPTIONS);
+    },
+    /**
+     * Scroll to the dropped snippet.
+     *
+     * @private
+     * @param {jQuery} [$el] - dropped snippet
+     * @param {integer} [scrollValue] - scrollValue
+     */
+    _scrollToSnippet: function ($el, scrollValue) {
+        // return if it's an inner snippet or if it's dropped in a modal
+        if ($el.get(0).tagName.toLowerCase() !== 'section' || $el.parent().find("[class^='modal-']").length) {
+            return Promise.resolve();
+        }
+        let headerHeight = 0;
+        _.each($('.o_top_fixed_element'), el => headerHeight += $(el).outerHeight());
+        return new Promise(resolve => {
+          $('html, body').animate(
+              {
+                  scrollTop: scrollValue - headerHeight - 50,
+              },
+              700,
+              'swing',
+              resolve,
+          );
+        });
     },
 
     //--------------------------------------------------------------------------
