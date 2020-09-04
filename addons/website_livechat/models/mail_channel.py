@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models, _
+from odoo import api, fields, models, _
 
 
 class MailChannel(models.Model):
@@ -62,6 +62,7 @@ class MailChannel(models.Model):
 
         return message
 
+    @api.returns('mail.message', lambda value: value.id)
     def message_post(self, **kwargs):
         """Override to mark the visitor as still connected.
         If the message sent is not from the operator (so if it's the visitor or
