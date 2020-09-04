@@ -1,6 +1,7 @@
 odoo.define('mail/static/src/widgets/form_renderer/form_renderer_tests.js', function (require) {
 "use strict";
 
+const ChatterContainer = require('mail/static/src/components/chatter_container/chatter_container.js');
 const { makeDeferred } = require('mail/static/src/utils/deferred/deferred.js');
 const {
     afterEach,
@@ -12,9 +13,10 @@ const {
 
 const config = require('web.config');
 const FormView = require('web.FormView');
+const testUtils = require('web.test_utils');
 const {
     dom: { triggerEvent },
-} = require('web.test_utils');
+} = testUtils;
 
 QUnit.module('mail', {}, function () {
 QUnit.module('widgets', {}, function () {
@@ -44,6 +46,7 @@ QUnit.module('form_renderer_tests.js', {
                 this.env = env;
                 this.widget = widget;
             });
+            return this.widget;
         };
     },
     afterEach() {
@@ -851,6 +854,64 @@ QUnit.test('Form view not scrolled when switching record', async function (asser
     assert.strictEqual(controllerContentEl.scrollTop, 0,
         "Form view's scroll position should have been reset when switching back to first record"
     );
+});
+
+QUnit.test('form view with a notebook and a chatter: no flickering', async function (assert) {
+    // The purpose of this test is to ensure that the Chatter doesn't involve a
+    // flickering when the user edit/saves a record while being on another page
+    // that the first one of a notebook, which was the case at some point. To
+    // do so, we manually slow down the Chatter widget, to have an accurate
+    // slot to assert that everything is ok (in real, the Chatter is async
+    // because it is an Owl Component).
+    assert.expect(7);
+
+    const def = testUtils.makeTestPromise();
+    const Chatter = ChatterContainer.components.Chatter;
+    class MockedChatter extends ChatterContainer.components.Chatter {
+        willUpdateProps() {
+            return def;
+        }
+    }
+    ChatterContainer.components.Chatter = MockedChatter;
+    const form = await this.createView({
+        data: this.data,
+        hasView: true,
+        View: FormView,
+        model: 'res.partner',
+        arch: `
+            <form>
+                <sheet>
+                     <notebook>
+                        <page string="Page1">
+                            <field name="name"/>
+                        </page>
+                        <page string="Page2">
+                            <field name="message_attachment_count"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        `,
+    });
+
+    assert.hasClass(form.$('.o_form_view'), 'o_form_editable');
+    assert.hasClass(form.$('.o_notebook .tab-pane:first'), 'active');
+    await testUtils.dom.click(form.$('.o_notebook .o_notebook_headers .nav-item:nth(1) a'));
+    assert.hasClass(form.$('.o_notebook .tab-pane:nth(1)'), 'active');
+
+    await testUtils.form.clickSave(form);
+    assert.hasClass(form.$('.o_form_view'), 'o_form_editable');
+    assert.hasClass(form.$('.o_notebook .tab-pane:nth(1)'), 'active');
+
+    def.resolve();
+    await testUtils.nextTick();
+    assert.hasClass(form.$('.o_form_view'), 'o_form_readonly');
+    assert.hasClass(form.$('.o_notebook .tab-pane:nth(1)'), 'active');
+
+    ChatterContainer.components.Chatter = Chatter;
 });
 
 });

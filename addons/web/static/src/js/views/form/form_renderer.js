@@ -985,40 +985,47 @@ var FormRenderer = BasicRenderer.extend({
     /**
      * Main entry point for the rendering.  From here, we call _renderNode on
      * the root of the arch, then, when every promise (from the field widgets)
-     * are done, it will resolves itself.
+     * are done, it will resolves itself.  Once the view is rendered (async),
+     * we update the DOM and perform several sync operations, like focussing
+     * the adequate widget.
      *
      * @private
      * @override method from BasicRenderer
      * @returns {Promise}
      */
-    _renderView: function () {
-        var self = this;
-
-        // render the form and evaluate the modifiers
-        var defs = [];
+    async _renderView() {
+        const $form = await this.__renderView();
+        this._updateView($form.contents());
+        if (this.state.res_id in this.alertFields) {
+            this.displayTranslationAlert();
+        }
+        if (this.lastActivatedFieldIndex >= 0) {
+            this._activateNextFieldWidget(this.state, this.lastActivatedFieldIndex);
+        }
+        if (this._isInDom) {
+            _.forEach(this.allFieldWidgets, widgets => {
+                _.invoke(widgets, 'on_attach_callback');
+            });
+            _.invoke(this.widgets, 'on_attach_callback');
+        }
+    },
+    /**
+     * Render the form and evaluate the modifiers.  This function is async only
+     * performs the async part of the rendering.  This is the one to override
+     * to add async operations at render time.
+     *
+     * @private
+     * @returns {Promise}
+     */
+    __renderView() {
+        const defs = [];
         this.defs = defs;
         this.inactiveNotebooks = [];
-        var $form = this._renderNode(this.arch).addClass(this.className);
+        const $form = this._renderNode(this.arch).addClass(this.className);
         delete this.defs;
-
-        return Promise.all(defs).then(function () {
-            self._updateView($form.contents());
-            if (self.state.res_id in self.alertFields) {
-                self.displayTranslationAlert();
-            }
-        }).then(function(){
-            if (self.lastActivatedFieldIndex >= 0) {
-                self._activateNextFieldWidget(self.state, self.lastActivatedFieldIndex);
-            }
-            if (self._isInDom) {
-                _.forEach(self.allFieldWidgets, function (widgets){
-                    _.invoke(widgets, 'on_attach_callback');
-                });
-                _.invoke(self.widgets, 'on_attach_callback');
-            }
-        }).guardedCatch(function () {
-            $form.remove();
-        });
+        return Promise.all(defs)
+            .then(() => $form)
+            .guardedCatch(() => $form.remove());
     },
     /**
      * This method is overridden to activate the first notebook page if the

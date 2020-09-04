@@ -155,8 +155,8 @@ FormRenderer.include({
      *
      * @override
      */
-    async _renderView() {
-        await this._super(...arguments);
+    async __renderView() {
+        const $form = await this._super(...arguments);
         if (this._hasChatter()) {
             if (!this._chatterContainerComponent) {
                 this._makeChatterContainerComponent();
@@ -165,6 +165,7 @@ FormRenderer.include({
             }
             await this._mountChatterContainerComponent();
         }
+        return $form;
     },
     /**
      * @private
