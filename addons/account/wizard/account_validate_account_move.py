@@ -8,9 +8,9 @@ class ValidateAccountMove(models.TransientModel):
 
     def validate_move(self):
         context = dict(self._context or {})
-        moves = self.env['account.move'].browse(context.get('active_ids'))
-        move_to_post = moves.filtered(lambda m: m.state == 'draft').sorted(lambda m: (m.date, m.ref or '', m.id))
-        if not move_to_post:
+        moves = self.env['account.move'].search([('journal_id', '=', context.get('active_id')),
+                                                 ('state', '=', 'draft')]).filtered('line_ids')
+        if not moves:
             raise UserError(_('There are no journal items in the draft state to post.'))
-        move_to_post.post()
+        moves.post()
         return {'type': 'ir.actions.act_window_close'}
