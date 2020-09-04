@@ -94,13 +94,13 @@
                             </t>
                             <t t-if="threadView and message.originThread and message.originThread === threadView.thread and message.notifications.length > 0">
                                 <t t-if="message.failureNotifications.length > 0">
-                                    <span class="o_Message_notificationIconContainer o-error" t-on-click="_onClickFailure">
+                                    <span class="o_Message_notificationIconClickable o-error" t-on-click="_onClickFailure">
                                         <i name="failureIcon" class="o_Message_notificationIcon fa fa-envelope"/>
                                     </span>
                                 </t>
                                 <t t-else="">
                                     <Popover>
-                                        <span class="o_Message_notificationIconContainer">
+                                        <span class="o_Message_notificationIconClickable">
                                             <i name="notificationIcon" class="o_Message_notificationIcon fa fa-envelope-o"/>
                                         </span>
                                         <t t-set="opened">
