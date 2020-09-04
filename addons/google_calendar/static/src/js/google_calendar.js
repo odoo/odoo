@@ -16,6 +16,24 @@ const GoogleCalendarModel = CalendarModel.include({
 
     /**
      * @override
+     */
+    init: function () {
+        this._super.apply(this, arguments);
+        this.google_is_sync = true;
+    },
+
+    /**
+     * @override
+     */
+    __get: function () {
+        var result = this._super.apply(this, arguments);
+        result.google_is_sync = this.google_is_sync;
+        return result;
+    },
+
+
+    /**
+     * @override
      * @returns {Promise}
      */
     async _loadCalendar() {
@@ -35,6 +53,7 @@ const GoogleCalendarModel = CalendarModel.include({
     },
 
     _syncGoogleCalendar(shadow = false) {
+        var self = this;
         var context = this.getSession().user_context;
         return this._rpc({
             route: '/google_calendar/sync_data',
@@ -43,7 +62,14 @@ const GoogleCalendarModel = CalendarModel.include({
                 fromurl: window.location.href,
                 local_context: context, // LUL TODO remove this local_context
             }
-        }, {shadow});
+        }, {shadow}).then(function (result) {
+            if (result.status === "need_config_from_admin" || result.status === "need_auth") {
+                self.google_is_sync = false;
+            } else if (result.status === "no_new_event_from_google" || result.status === "need_refresh") {
+                self.google_is_sync = true;
+            }
+            return result
+        });
     },
 })
 
@@ -115,12 +141,16 @@ const GoogleCalendarRenderer = CalendarRenderer.include({
         this._super.apply(this, arguments);
         this.$googleButton = $();
         if (this.model === "calendar.event") {
-            this.$googleButton = $('<button/>', {type: 'button', html: _t("Sync with <b>Google</b>")})
-                                .addClass('o_google_sync_button oe_button btn btn-secondary')
-                                .prepend($('<img/>', {
-                                    src: "/google_calendar/static/src/img/calendar_32.png",
-                                }))
+            if (this.state.google_is_sync) {
+                this.$googleButton = $('<span/>', {html: _t("Synched with Google")})
+                                .addClass('o_google_sync badge badge-pill badge-success')
+                                .prepend($('<i/>', {class: "fa mr-2 fa-check"}))
                                 .appendTo(self.$sidebar);
+            } else {
+                this.$googleButton = $('<button/>', {type: 'button', html: _t("Sync with <b>Google</b>")})
+                                .addClass('o_google_sync_button oe_button btn btn-secondary')
+                                .appendTo(self.$sidebar);
+            }
         }
     },
 
