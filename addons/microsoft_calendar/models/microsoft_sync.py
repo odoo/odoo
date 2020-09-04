@@ -112,7 +112,7 @@ class MicrosoftSync(models.AbstractModel):
             synced.write({self._active_name: False})
             self = self - synced
         elif synced:
-            raise UserError(_("You cannot delete a record synchronized with Microsoft Calendar, archive it instead."))
+            raise UserError(_("You cannot delete a record synchronized with Outlook Calendar, archive it instead."))
         return super().unlink()
 
     @api.model

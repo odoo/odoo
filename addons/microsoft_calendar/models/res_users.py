@@ -39,7 +39,7 @@ class User(models.Model):
         client_secret = get_param('microsoft_calendar_client_secret')
 
         if not client_id or not client_secret:
-            raise UserError(_("The account for the Microsoft Calendar service is not configured."))
+            raise UserError(_("The account for the Outlook Calendar service is not configured."))
 
         headers = {"content-type": "application/x-www-form-urlencoded"}
         data = {
