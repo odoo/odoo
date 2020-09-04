@@ -20,9 +20,53 @@
             <field name="model">im_livechat.report.channel</field>
             <field name="arch" type="xml">
                 <graph string="Livechat Support Statistics" sample="1" disable_linking="1">
-                    <field name="livechat_channel_id"/>
-                    <field name="nbr_message" type="measure"/>
+                    <field name="livechat_channel_id" type="col"/>
+                    <field name="nbr_message" type="row"/>
                 </graph>
+            </field>
+        </record>
+
+        <record id="im_livechat_report_channel_view_tree" model="ir.ui.view">
+            <field name="name">im_livechat.report.channel.tree</field>
+            <field name="model">im_livechat.report.channel</field>
+            <field name="arch" type="xml">
+                <tree string="Livechat Support Statistics" create="false" edit="false" delete="false">
+                    <field name="start_date"/>
+                    <field name="channel_id"/>
+                    <field name="livechat_channel_id"/>
+                    <field name="nbr_message" string="#Messages"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="im_livechat_report_channel_view_form" model="ir.ui.view">
+            <field name="name">im_livechat.report.channel.form</field>
+            <field name="model">im_livechat.report.channel</field>
+            <field name="arch" type="xml">
+                <form create="false" edit="false" delete="false">
+                    <sheet>
+                        <div class="oe_title">
+                            <label for="channel_id"/>
+                            <h1>
+                                <field name="channel_id"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="livechat_channel_id"/>
+                                <field name="partner_id" widget="many2one_avatar"/>
+                                <field name="start_date"/>
+                                <field name="nbr_message" string="#Messages"/>
+                            </group>
+                            <group>
+                                <field name="time_to_answer"/>
+                                <field name="duration" string="Duration (sec)"/>
+                                <field name="days_of_activity"/>
+                                <field name="rating_text"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
             </field>
         </record>
 

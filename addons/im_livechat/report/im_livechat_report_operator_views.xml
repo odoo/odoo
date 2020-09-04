@@ -19,9 +19,52 @@
             <field name="model">im_livechat.report.operator</field>
             <field name="arch" type="xml">
                 <graph string="Livechat Support Statistics" sample="1" disable_linking="1">
-                    <field name="partner_id"/>
-                    <field name="nbr_channel" type="measure"/>
+                    <field name="partner_id" type="col"/>
+                    <field name="nbr_channel" type="row"/>
                 </graph>
+            </field>
+        </record>
+
+        <record id="im_livechat_report_operator_view_tree" model="ir.ui.view">
+            <field name="name">im_livechat.report.operator.tree</field>
+            <field name="model">im_livechat.report.operator</field>
+            <field name="arch" type="xml">
+                <tree string="Livechat Support Statistics" create="false" edit="false" delete="false">
+                    <field name="start_date"/>
+                    <field name="channel_id"/>
+                    <field name="partner_id"/>
+                    <field name="livechat_channel_id"/>
+                    <field name="nbr_channel"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="im_livechat_report_operator_view_form" model="ir.ui.view">
+            <field name="name">im_livechat.report.operator.form</field>
+            <field name="model">im_livechat.report.operator</field>
+            <field name="arch" type="xml">
+                <form create="false" edit="false" delete="false">
+                    <sheet>
+                        <div class="oe_title">
+                            <label for="channel_id"/>
+                            <h1>
+                                <field name="channel_id"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="livechat_channel_id"/>
+                                <field name="partner_id" widget="many2one_avatar"/>
+                                <field name="start_date"/>
+                                <field name="nbr_channel"/>
+                            </group>
+                            <group>
+                                <field name="time_to_answer"/>
+                                <field name="duration" string="Duration (sec)"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
             </field>
         </record>
 
@@ -32,7 +75,7 @@
                 <search string="Search report">
                     <field name="partner_id"/>
                     <filter name="last_24h" string="Last 24h" domain="[('start_date','&gt;', (context_today() - datetime.timedelta(days=1)).strftime('%%Y-%%m-%%d') )]"/>
-                    <filter name="start_date_filter" string="This Week" domain="[
+                    <filter name="start_this_week" string="This Week" domain="[
                         ('start_date', '>=', (datetime.datetime.combine(context_today() + relativedelta(weeks=-1,days=1,weekday=0), datetime.time(0,0,0)).to_utc()).strftime('%Y-%m-%d %H:%M:%S')),
                         ('start_date', '&lt;', (datetime.datetime.combine(context_today() + relativedelta(days=1,weekday=0), datetime.time(0,0,0)).to_utc()).strftime('%Y-%m-%d %H:%M:%S'))]"/>
                     <separator/>
@@ -51,7 +94,7 @@
             <field name="name">Operator Analysis</field>
             <field name="res_model">im_livechat.report.operator</field>
             <field name="view_mode">graph,pivot</field>
-            <field name="context">{"search_default_last_week":1}</field>
+            <field name="context">{"search_default_this_week":1}</field>
             <field name="help">Livechat Support Channel Statistics allows you to easily check and analyse your company livechat session performance. Extract information about the missed sessions, the audiance, the duration of a session, etc.</field>
         </record>
 
