@@ -646,7 +646,7 @@ class WebsiteSlides(WebsiteProfile):
     @http.route(['/slides/channel/leave'], type='json', auth='user', website=True)
     def slide_channel_leave(self, channel_id):
         channel = request.env['slide.channel'].browse(channel_id)
-        channel._remove_membership(request.env.user.partner_id.ids)
+        channel._remove_membership(request.env.user.partner_id.ids, archive=True)
         self._channel_remove_session_answers(channel)
         return True
 

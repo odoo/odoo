@@ -9,6 +9,7 @@
                     <field name="partner_id"/>
                     <field name="partner_email"/>
                     <field name="channel_id"/>
+                    <filter string="Archived" name="archived" domain="[('active', '=', False)]"/>
                 </search>
             </field>
         </record>
@@ -18,12 +19,15 @@
             <field name="model">slide.channel.partner</field>
             <field name="arch" type="xml">
                 <tree string="Attendees" editable="top">
+                    <field name="active" invisible="1"/>
                     <field name="create_date"/>
                     <field name="partner_id" string="Contact"/>
                     <field name="partner_email"/>
                     <field name="channel_id" string="Channel" invisible="context.get('default_channel_id',False)" />
                     <field name="completion" string="Progress" widget="progressbar" />
                     <button name="unlink" title="Remove" icon="fa-times" type="object"/>
+                    <button name="action_archive" title="Archive" icon="fa-archive" type="object" attrs="{'invisible': [('active', '=', False)]}"/>
+                    <button name="action_unarchive" title="Unarchive" icon="fa-undo" type="object" attrs="{'invisible': [('active', '=', True)]}"/>
                 </tree>
             </field>
         </record>
