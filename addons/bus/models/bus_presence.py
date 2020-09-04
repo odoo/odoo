@@ -51,5 +51,6 @@ class BusPresence(models.Model):
             # Hide transaction serialization errors, which can be ignored, the presence update is not essential
             with tools.mute_logger('odoo.sql_db'):
                 presence.write(values)
+                presence.flush()
         # avoid TransactionRollbackError
         self.env.cr.commit() # TODO : check if still necessary
