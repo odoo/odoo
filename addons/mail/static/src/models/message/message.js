@@ -321,6 +321,32 @@ function factory(dependencies) {
         }
 
         /**
+         * @private
+         * @returns {string}
+         */
+        _computeAnonymousName() {
+            return (this.originThread && this.originThread.anonymous_name) || this.env._t("Anonymous");
+        }
+
+        /**
+         * @private
+         * @returns {string}
+         */
+        _computeAvatar() {
+            if (this.author && this.author === this.env.messaging.partnerRoot) {
+                return '/mail/static/src/img/odoobot.png';
+            } else if (this.author) {
+                // TODO FIXME for public user this might not be accessible. task-2223236
+                // we should probably use the correspondig attachment id + access token
+                // or create a dedicated route to get message image, checking the access right of the message
+                return `/web/image/res.partner/${this.author.id}/image_128`;
+            } else if (this.message_type === 'email') {
+                return '/mail/static/src/img/email_icon.png';
+            }
+            return '/mail/static/src/img/smiley/avatar.jpg';
+        }
+
+        /**
          * @returns {boolean}
          */
         _computeFailureNotifications() {
@@ -452,11 +478,23 @@ function factory(dependencies) {
     }
 
     Message.fields = {
+        anonymousName: attr({
+            compute: '_computeAnonymousName',
+            dependencies: [
+                'originThread', 'originThreadAnonymousName',
+            ],
+        }),
         attachments: many2many('mail.attachment', {
             inverse: 'messages',
         }),
         author: many2one('mail.partner', {
             inverse: 'messagesAsAuthor',
+        }),
+        avatar: attr({
+            compute: '_computeAvatar',
+            dependencies: [
+                'author', 'message_type',
+            ],
         }),
         /**
          * This value is meant to be returned by the server
@@ -616,6 +654,9 @@ function factory(dependencies) {
          * Origin thread of this message (if any).
          */
         originThread: many2one('mail.thread'),
+        originThreadAnonymousName: attr({
+            related: 'originThread.anonymous_name',
+        }),
         originThreadIsModeratedByCurrentPartner: attr({
             default: false,
             related: 'originThread.isModeratedByCurrentPartner',

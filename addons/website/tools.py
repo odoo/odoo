@@ -115,6 +115,7 @@ class MockRequest(object):
                 'sale_order_id': kw.get('sale_order_id'),
             },
             'website': kw.get('website'),
+            '_request_type': kw.get('request_type', 'http'),
         })
 
     def __enter__(self):

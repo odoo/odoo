@@ -7,6 +7,8 @@ const components = {
 };
 const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
 
+const patchMixin = require('web.patchMixin');
+
 const { Component } = owl;
 const { useRef } = owl.hooks;
 
@@ -302,6 +304,6 @@ Object.assign(DiscussSidebar, {
     template: 'mail.DiscussSidebar',
 });
 
-return DiscussSidebar;
+return patchMixin(DiscussSidebar);
 
 });
