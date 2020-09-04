@@ -68,7 +68,7 @@ class Multirange {
 
         /* Set default and optionnal values */
         this.input = input;
-        this.rangeWithInput = options.rangeWithInput === false || this.input.classList.contains('range-with-input');
+        this.rangeWithInput = options.rangeWithInput === true || this.input.classList.contains('range-with-input');
         var value = options.value || this.input.getAttribute("value");
         var values = value === null ? [] : value.split(",");
         this.input.min = this.min = options.min || this.input.min || 0;
@@ -90,13 +90,38 @@ class Multirange {
         this.input.value = values[0] || this.min;
         this.ghost.value = values[1] || this.max;
 
+        this.inputTipLocator = document.createElement("div");
+        this.inputTipLocator.classList = "tip-locator";
+        this.ghostTipLocator = document.createElement("div");
+        this.ghostTipLocator.classList = "tip-locator";
+        this.rangeDiv.insertBefore(this.ghostTipLocator, this.input.nextSibling);
+        this.rangeDiv.insertBefore(this.inputTipLocator, this.ghost.nextSibling);
+        this.leftCounter = document.createElement("span");
+        this.leftCounter.classList = "multirange-min";
+        this.rightCounter = document.createElement("span");
+        this.rightCounter.classList = "multirange-max";
+        this.tipLocatorOptions = {
+            container: this.rangeDiv,
+            html: true,
+        };
+        $(this.inputTipLocator).popover(Object.assign(
+            this.tipLocatorOptions,
+            {
+                placement: 'top',
+                content: this.leftCounter
+            })
+        );
+        $(this.ghostTipLocator).popover(Object.assign(
+            this.tipLocatorOptions,
+            {
+                placement: 'bottom',
+                content: this.rightCounter
+            })
+        );
+
+        $(this.inputTipLocator).add($(this.ghostTipLocator)).popover('show');
         /* Add the counterInput */
         if (this.rangeWithInput) {
-            this.leftCounter = document.createElement("span");
-            this.leftCounter.classList = "multirange-min";
-            this.rightCounter = document.createElement("span");
-            this.rightCounter.classList = "multirange-max";
-
             this.leftInput = document.createElement("input");
             this.leftInput.type = "number";
             this.leftInput.style.display = "none";
@@ -108,10 +133,8 @@ class Multirange {
             this.leftInput.classList = "multirange-min";
             this.rightInput.classList = "multirange-max";
 
-            this.rangeDiv.appendChild(this.leftCounter);
-            this.rangeDiv.appendChild(this.leftInput);
-            this.rangeDiv.appendChild(this.rightCounter);
-            this.rangeDiv.appendChild(this.rightInput);
+            this.leftCounter.parentNode.appendChild(this.leftInput);
+            this.rightCounter.parentNode.appendChild(this.rightInput);
         }
 
         /* Define new properties on range input to link it with ghost, especially for Safari compatibility*/
@@ -167,8 +190,8 @@ class Multirange {
         /* Handle range with only one value possible */
         if (this.min === this.max) {
             this.ghost.classList.add("reverse");
-            this.ghost.style.setProperty("--low", "0%");
-            this.ghost.style.setProperty("--high", "100%");
+            this.rangeDiv.style.setProperty("--low", '0%');
+            this.rangeDiv.style.setProperty("--high", '100%');
             this.counterInputUpdate();
             return; // No need to continue, there will be no events.
         }
@@ -200,11 +223,26 @@ class Multirange {
             this.rightInput.addEventListener("focus", this.selectAllFocus.bind(this));
         }
         this.update();
+        $(this.rangeDiv).addClass('visible');
+
     }
 
     update() {
-        this.ghost.style.setProperty("--low", 100 * ((this.input.valueLow - this.min) / (this.max - this.min)) + "%");
-        this.ghost.style.setProperty("--high", 100 * ((this.input.valueHigh - this.min) / (this.max - this.min)) + "%");
+        const low = 100 * (this.input.valueLow - this.min) / (this.max - this.min);
+        const high = 100 * (this.input.valueHigh - this.min) / (this.max - this.min);
+        const tipOffsetLow = 8 - (low * 0.15); // TODO REMOVE THIS COMMENT ... for 20px => 10 - x * 0.2
+        const tipOffsetHigh = 8 - (high * 0.15); // TODO REMOVE THIS COMMENT ... for 16px => 8 - x * 0.15
+        this.rangeDiv.style.setProperty("--low", low + '%');
+        this.rangeDiv.style.setProperty("--high", high + '%');
+        $(this.inputTipLocator).css({
+            'left': `calc(${low}% + (${tipOffsetLow}px))`,
+            'top': '3px'
+        });
+        $(this.ghostTipLocator).css({
+            'left': `calc(${high}% + (${tipOffsetHigh}px))`,
+            'top': '18px'
+        });
+        $(this.inputTipLocator).add($(this.ghostTipLocator)).popover('update');
         this.counterInputUpdate();
     }
 
@@ -305,8 +343,9 @@ publicWidget.registry.WebsiteMultirangeInputs = publicWidget.Widget.extend({
      * @override
      */
     start: function () {
-        multirange.init(this.el);
-        return this._super.apply(this, arguments);
+        return this._super.apply(this, arguments).then(() => {
+            multirange.init(this.el);
+        });
     },
 });
 });

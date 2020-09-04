@@ -1,6 +1,7 @@
 
-input[type="range"] {
+input[type="range"][multiple] {
     pointer-events: none;
+    visibility: hidden;
 
     &::-webkit-slider-thumb{
         pointer-events: auto;
@@ -18,6 +19,12 @@ input[type="range"] {
         margin: 0;
         display: inline-block;
         vertical-align: top;
+
+
+        &::-webkit-slider-thumb {
+            height: 16px;
+            width: 16px;
+        }
 
         &.original {
             position: absolute;
@@ -51,12 +58,12 @@ input[type="range"] {
 }
 .multirange-wrapper {
     position: relative;
+    margin: 3rem 0;
+    visibility: hidden;
+    input[type="range"][multiple] {
+        visibility: initial;
+    }
 }
-.multirange-min {
-    position: relative;
-    left: 0;
-}
-.multirange-max {
+.tip-locator {
     position: absolute;
-    right: 0;
 }
