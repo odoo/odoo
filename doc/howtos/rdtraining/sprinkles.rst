@@ -9,7 +9,7 @@ Inline Views
 
 Attributes and options
 ======================
-(options, attrs, decoration-, optional, filter_domain, default filter, invisible, readonly, editable...)
+(options, attrs, decoration-, optional, filter_domain, default filter, invisible, readonly, editable, menu sequence, editable, _order...)
 
 List Decoration
 ===============
