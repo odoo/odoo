@@ -39,7 +39,7 @@
                             </div>
                             <div class="o_Attachment_actions">
                                 <!-- Remove button -->
-                                <t t-if="props.isEditable and !attachment.isTemporary" t-key="'unlink'">
+                                <t t-if="props.isEditable" t-key="'unlink'">
                                     <div class="o_Attachment_action o_Attachment_actionUnlink"
                                         t-att-class="{
                                             'o-pretty': attachment.isLinkedToComposer,
@@ -75,7 +75,7 @@
                 </t>
                 <!-- Attachment aside -->
                 <t t-if="detailsMode !== 'hover' and (props.isDownloadable or props.isEditable)">
-                    <div class="o_Attachment_aside" t-att-class="{ 'o-has-multiple-action': !attachment.isTemporary and props.isDownloadable and props.isEditable }">
+                    <div class="o_Attachment_aside" t-att-class="{ 'o-has-multiple-action': props.isDownloadable and props.isEditable }">
                         <!-- Uploading icon -->
                         <t t-if="attachment.isTemporary and attachment.isLinkedToComposer">
                             <div class="o_Attachment_asideItem o_Attachment_asideItemUploading" title="Uploading">
@@ -89,7 +89,7 @@
                             </div>
                         </t>
                         <!-- Remove button -->
-                        <t t-if="props.isEditable and !attachment.isTemporary">
+                        <t t-if="props.isEditable">
                             <div class="o_Attachment_asideItem o_Attachment_asideItemUnlink" t-att-class="{ 'o-pretty': attachment.isLinkedToComposer }" t-on-click="_onClickUnlink" title="Remove">
                                 <i class="fa fa-times"/>
                             </div>
