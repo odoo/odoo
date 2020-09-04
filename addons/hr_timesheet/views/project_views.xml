@@ -86,7 +86,7 @@
                                 <label for="planned_hours" string="Initially Planned Hours" attrs="{'invisible': [('encode_uom_in_days', '=', True)]}"/>
                                 <field name="planned_hours" widget="float_time" attrs="{'invisible': [('encode_uom_in_days', '=', True)]}" nolabel="1" />
                                 <label for="planned_hours" string="Initially Planned Days" attrs="{'invisible': [('encode_uom_in_days', '=', False)]}"/>
-                                <field name="planned_hours" widget="timesheet_factor" attrs="{'invisible': [('encode_uom_in_days', '=', False)]}" nolabel="1" />
+                                <field name="planned_hours" widget="timesheet_uom" attrs="{'invisible': [('encode_uom_in_days', '=', False)]}" nolabel="1" />
                                 <label for="subtask_planned_hours" groups="project.group_subtask_project" string="Sub-tasks Planned Hours"
                                        attrs="{'invisible': ['|', '|', ('allow_subtasks', '=', False), ('subtask_count', '=', 0), ('encode_uom_in_days', '=', True)]}"/>
                                 <span class="o_row" groups="project.group_subtask_project"
