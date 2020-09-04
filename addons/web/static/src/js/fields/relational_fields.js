@@ -2959,11 +2959,7 @@ var FieldSelection = AbstractField.extend({
                 style: disabled ? "display: none" : "",
             }));
         }
-        var value = this.value;
-        if (this.field.type === 'many2one' && value) {
-            value = value.data.id;
-        }
-        this.$el.val(JSON.stringify(value));
+        this.$el.val(JSON.stringify(this._getRawValue()));
     },
     /**
      * @override
@@ -2971,6 +2967,14 @@ var FieldSelection = AbstractField.extend({
      */
     _renderReadonly: function () {
         this.$el.empty().text(this._formatValue(this.value));
+        this.$el.attr('raw-value', this._getRawValue());
+    },
+    _getRawValue: function() {
+        var raw_value = this.value;
+        if (this.field.type === 'many2one' && raw_value) {
+            raw_value = raw_value.data.id;
+        }
+        return raw_value;
     },
     /**
      * @override
