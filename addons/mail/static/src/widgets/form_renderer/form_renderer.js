@@ -149,6 +149,12 @@ FormRenderer.include({
         }
         return this._super(...arguments);
     },
+    async _render() {
+        await this._super(...arguments);
+        if (this._hasChatter()) {
+            await this._mountChatterContainerComponent();
+        }
+    },
     /**
      * Overrides the function to render the chatter once the form view is
      * rendered.
@@ -163,7 +169,6 @@ FormRenderer.include({
             } else {
                 await this._updateChatterContainerComponent();
             }
-            await this._mountChatterContainerComponent();
         }
         return $form;
     },
