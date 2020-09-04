@@ -246,7 +246,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
         with self.assertRaises(UserError), self.cr.savepoint():
             self.test_move.button_draft()
 
-        copy_move = self.test_move.copy()
+        copy_move = self.test_move.copy({'date': self.test_move.date})
 
         # /!\ The date is changed automatically to the next available one during the post.
         copy_move.action_post()
@@ -366,12 +366,12 @@ class TestAccountMove(AccountTestInvoicingCommon):
         self.test_move.action_post()
         self.assertEqual(self.test_move.name, 'MISC/2016/01/0001')
 
-        copy1 = self.test_move.copy()
+        copy1 = self.test_move.copy({'date': self.test_move.date})
         self.assertEqual(copy1.name, '/')
         copy1.action_post()
         self.assertEqual(copy1.name, 'MISC/2016/01/0002')
 
-        copy2 = self.test_move.copy()
+        copy2 = self.test_move.copy({'date': self.test_move.date})
         new_journal = self.test_move.journal_id.copy()
         new_journal.code = "MISC2"
         copy2.journal_id = new_journal
@@ -381,7 +381,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
         copy2.action_post()
         self.assertEqual(copy2.name, 'MyMISC/2099/0001')
 
-        copy3 = copy2.copy()
+        copy3 = copy2.copy({'date': copy2.date})
         self.assertEqual(copy3.name, '/')
         with self.assertRaises(AssertionError):
             with Form(copy2) as move_form:  # It is not editable in the form
@@ -390,17 +390,17 @@ class TestAccountMove(AccountTestInvoicingCommon):
         self.assertEqual(copy3.name, 'MyMISC/2099/0002')
         copy3.name = 'MISC2/2016/00002'
 
-        copy4 = copy2.copy()
+        copy4 = copy2.copy({'date': copy2.date})
         copy4.action_post()
         self.assertEqual(copy4.name, 'MISC2/2016/00003')
 
-        copy5 = copy2.copy()
+        copy5 = copy2.copy({'date': copy2.date})
         copy5.date = '2021-02-02'
         copy5.action_post()
         self.assertEqual(copy5.name, 'MISC2/2021/00001')
         copy5.name = 'N\'importe quoi?'
 
-        copy6 = copy5.copy()
+        copy6 = copy5.copy({'date': copy5.date})
         copy6.action_post()
         self.assertEqual(copy6.name, 'N\'importe quoi?1')
 
@@ -443,13 +443,13 @@ class TestAccountMove(AccountTestInvoicingCommon):
         prefix = "TEST_ORDER/2016/"
         self.test_move.name = f"{prefix}1"
         for c in range(2, 25):
-            copy = self.test_move.copy()
+            copy = self.test_move.copy({'date': self.test_move.date})
             copy.name = "/"
             copy.action_post()
             self.assertEqual(copy.name, f"{prefix}{c}")
 
     def test_journal_sequence_multiple_type(self):
-        entry, entry2, invoice, invoice2, refund, refund2 = (self.test_move.copy() for i in range(6))
+        entry, entry2, invoice, invoice2, refund, refund2 = (self.test_move.copy({'date': self.test_move.date}) for i in range(6))
         (invoice + invoice2 + refund + refund2).write({
             'journal_id': self.company_data['default_journal_sale'],
             'partner_id': 1,
@@ -471,7 +471,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
         other_moves = self.env['account.move'].search([('journal_id', '=', self.test_move.journal_id.id)]) - self.test_move
         other_moves.unlink()  # Do not interfere when trying to get the highest name for new periods
         self.test_move.name = '00000876-G 0002/2020'
-        next = self.test_move.copy()
+        next = self.test_move.copy({'date': self.test_move.date})
         next.action_post()
         self.assertEqual(next.name, '00000876-G 0002/2021')  # Wait, I didn't want this!
 
@@ -480,14 +480,14 @@ class TestAccountMove(AccountTestInvoicingCommon):
         next._compute_name()
         self.assertEqual(next.name, '00000877-G 0002/2020')  # Pfew, better!
 
-        next = next = self.test_move.copy()
+        next = next = self.test_move.copy({'date': self.test_move.date})
         next.date = "2017-05-02"
         next.action_post()
         self.assertEqual(next.name, '00000001-G 0002/2017')
 
     def test_journal_sequence_ordering(self):
         self.test_move.name = 'XMISC/2016/00001'
-        copies = reduce((lambda x, y: x+y), [self.test_move.copy() for i in range(6)])
+        copies = reduce((lambda x, y: x+y), [self.test_move.copy({'date': self.test_move.date}) for i in range(6)])
 
         copies[0].date = '2019-03-05'
         copies[1].date = '2019-03-06'
