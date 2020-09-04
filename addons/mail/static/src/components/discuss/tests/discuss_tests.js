@@ -1885,6 +1885,11 @@ QUnit.test('restore thread scroll position', async function (assert) {
         "should have scrolled to top of thread"
     );
 
+    const scrollChannel12Def = makeDeferred();
+    const onScroll = () => {
+        scrollChannel12Def.resolve();
+    };
+    document.addEventListener('o-message-list-scrolled', onScroll);
     // select channel 12
     await afterNextRender(async () => {
         document.querySelector(`
@@ -1911,7 +1916,8 @@ QUnit.test('restore thread scroll position', async function (assert) {
     // going back to channel 11. Await is needed to prevent the scrollIntoView
     // initially planned for channel 12 to actually apply on channel 11.
     // task-2333535
-    await new Promise((resolve) => setTimeout(resolve));
+    await scrollChannel12Def;
+    document.removeEventListener('o-message-list-scrolled', onScroll);
 
     // select channel 11
     await afterNextRender(() =>
