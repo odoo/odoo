@@ -60,6 +60,9 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
      *        sequence will be executed in a non deterministic order).
      * @param {Promise} [options.wait_for]
      *        indicates when the tour can be started
+     * @param {string|function} [options.rainbowManMessage]
+              text or function returning the text displayed under the rainbowman
+              at the end of the tour.
      * @param {Object[]} steps - steps' descriptions, each step being an object
      *                     containing a tip description
      */
@@ -391,8 +394,12 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
         //display rainbow at the end of any tour
         if (this.tours[tour_name].rainbowMan && this.running_tour !== tour_name &&
             this.tours[tour_name].current_step === this.tours[tour_name].steps.length) {
-            const message = this.tours[tour_name].rainbowManMessage ||
-                _t('<strong><b>Good job!</b> You went through all steps of this tour.</strong>');
+            let message = this.tours[tour_name].rainbowManMessage;
+            if (message) {
+                message = typeof message === 'function' ? message() : message;
+            } else {
+                message = _t('<strong><b>Good job!</b> You went through all steps of this tour.</strong>');
+            }
             new RainbowMan({message}).appendTo(this.$body);
         }
         this.tours[tour_name].current_step = 0;
