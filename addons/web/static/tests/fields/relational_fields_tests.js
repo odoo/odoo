@@ -997,7 +997,7 @@ QUnit.module('relational_fields', {
     });
 
     QUnit.test('widget selection, edition and on many2one field', async function (assert) {
-        assert.expect(19);
+        assert.expect(21);
 
         this.data.partner.onchanges = {product_id: function () {}};
         this.data.partner.records[0].product_id = 37;
@@ -1024,10 +1024,14 @@ QUnit.module('relational_fields', {
         assert.containsNone(form.$('.o_form_view'), 'select');
         assert.strictEqual(form.$('.o_field_widget[name=product_id]').text(), 'xphone',
             "should have rendered the many2one field correctly");
+        assert.strictEqual(form.$('.o_field_widget[name=product_id]').attr('raw-value'), '37',
+            "should have set the raw-value attr for many2one field correctly");
         assert.strictEqual(form.$('.o_field_widget[name=trululu]').text(), '',
             "should have rendered the unset many2one field correctly");
         assert.strictEqual(form.$('.o_field_widget[name=color]').text(), 'Red',
             "should have rendered the selection field correctly");
+        assert.strictEqual(form.$('.o_field_widget[name=color]').attr('raw-value'), 'red',
+            "should have set the raw-value attr for selection field correctly");
 
         await testUtils.form.clickEdit(form);
 
