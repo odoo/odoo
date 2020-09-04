@@ -399,7 +399,6 @@
             <field name="model">account.move</field>
             <field name="arch" type="xml">
                 <tree string="Invoices"
-                      banner_route="/account/account_invoice_onboarding"
                       js_class="account_tree"
                       sample="1">
                     <header>
@@ -431,6 +430,18 @@
                     <field name="payment_state" widget="badge" decoration-danger="payment_state in ('not_paid')"  decoration-warning="payment_state in ('partial', 'in_payment')" decoration-success="payment_state in ('paid', 'reversed')" attrs="{'invisible': [('payment_state', 'in', ('invoicing_legacy'))]}"/>
                     <field name="move_type" invisible="context.get('default_move_type', True)"/>
                   </tree>
+            </field>
+        </record>
+
+        <record id="view_out_invoice_tree" model="ir.ui.view">
+            <field name="name">account.out.invoice.tree</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_invoice_tree"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <xpath expr="//tree" position="attributes">
+                    <attribute name="banner_route">/account/account_invoice_onboarding</attribute>
+                </xpath>
             </field>
         </record>
 
@@ -487,7 +498,7 @@
                         <button name="action_post" string="Post" class="oe_highlight"
                                 type="object" groups="account.group_account_invoice"
                                 attrs="{'invisible': ['|', '|', ('state', '!=', 'draft'), ('auto_post', '=', True), ('move_type', '!=', 'entry')]}"/>
-                        <button name="action_post" string="Validate" class="oe_highlight"
+                        <button name="action_post" string="Confirm" class="oe_highlight"
                                 type="object" groups="account.group_account_invoice"
                                 attrs="{'invisible': ['|', '|', ('state', '!=', 'draft'), ('auto_post', '=', True), ('move_type', '=', 'entry')]}"/>
                         <!-- Send (only invoices) -->
@@ -1295,7 +1306,7 @@
             <field name="name">Invoices</field>
             <field name="res_model">account.move</field>
             <field name="view_mode">tree,kanban,form</field>
-            <field name="view_id" ref="view_invoice_tree"/>
+            <field name="view_id" ref="view_out_invoice_tree"/>
             <field name="search_view_id" ref="view_account_invoice_filter"/>
             <field name="domain">[('move_type', '=', 'out_invoice')]</field>
             <field name="context">{'default_move_type': 'out_invoice'}</field>

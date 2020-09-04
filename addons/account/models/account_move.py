@@ -123,9 +123,15 @@ class AccountMove(models.Model):
     name = fields.Char(string='Number', copy=False, compute='_compute_name', readonly=False, store=True, index=True, tracking=True)
     highest_name = fields.Char(compute='_compute_highest_name')
     show_name_warning = fields.Boolean(store=False)
-    date = fields.Date(string='Date', required=True, index=True, readonly=True,
+    date = fields.Date(
+        string='Date',
+        required=True,
+        index=True,
+        readonly=True,
         states={'draft': [('readonly', False)]},
-        default=fields.Date.context_today)
+        copy=False,
+        default=fields.Date.context_today
+    )
     ref = fields.Char(string='Reference', copy=False, tracking=True)
     narration = fields.Text(string='Terms and Conditions')
     state = fields.Selection(selection=[
@@ -3170,7 +3176,7 @@ class AccountMoveLine(models.Model):
             sign = 1
 
         amount_currency = price_subtotal * sign
-        balance = currency._convert(amount_currency, company.currency_id, company, date)
+        balance = currency._convert(amount_currency, company.currency_id, company, date or fields.Date.context_today(self))
         return {
             'amount_currency': amount_currency,
             'currency_id': currency.id,
