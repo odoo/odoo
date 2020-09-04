@@ -219,7 +219,7 @@ QUnit.test('Notification Sent', async function (assert) {
     );
     assert.containsOnce(
         document.body,
-        '.o_Message_notificationIconContainer',
+        '.o_Message_notificationIconClickable',
         "should display the notification icon container"
     );
     assert.containsOnce(
@@ -234,7 +234,7 @@ QUnit.test('Notification Sent', async function (assert) {
     );
 
     await afterNextRender(() => {
-        document.querySelector('.o_Message_notificationIconContainer').click();
+        document.querySelector('.o_Message_notificationIconClickable').click();
     });
     assert.containsOnce(
         document.body,
@@ -310,7 +310,7 @@ QUnit.test('Notification Error', async function (assert) {
     );
     assert.containsOnce(
         document.body,
-        '.o_Message_notificationIconContainer',
+        '.o_Message_notificationIconClickable',
         "should display the notification icon container"
     );
     assert.containsOnce(
@@ -325,7 +325,7 @@ QUnit.test('Notification Error', async function (assert) {
     );
 
     await afterNextRender(() => {
-        document.querySelector('.o_Message_notificationIconContainer').click();
+        document.querySelector('.o_Message_notificationIconClickable').click();
     });
     assert.verifySteps(
         ['do_action'],

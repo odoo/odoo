@@ -1079,20 +1079,27 @@ MockServer.include({
                     'res_model': attachment.res_model,
                 });
             });
-            const notifications = this._getRecords('mail.notification', [
+            const allNotifications = this._getRecords('mail.notification', [
                 ['mail_message_id', '=', message.id],
             ]);
-            const historyPartnerIds = notifications
+            const historyPartnerIds = allNotifications
                 .filter(notification => notification.is_read)
                 .map(notification => notification.res_partner_id);
-            const needactionPartnerIds = notifications
+            const needactionPartnerIds = allNotifications
                 .filter(notification => !notification.is_read)
                 .map(notification => notification.res_partner_id);
+            let notifications = this._mockMailNotification_FilteredForWebClient(
+                allNotifications.map(notification => notification.id)
+            );
+            notifications = this._mockMailNotification_NotificationFormat(
+                notifications.map(notification => notification.id)
+            );
             return Object.assign({}, message, {
                 attachment_ids: formattedAttachments,
                 author_id: formattedAuthor,
                 history_partner_ids: historyPartnerIds,
                 needaction_partner_ids: needactionPartnerIds,
+                notifications,
             });
         });
     },
