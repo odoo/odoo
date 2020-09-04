@@ -8,6 +8,7 @@ const {
     afterEach,
     afterNextRender,
     beforeEach,
+    nextAnimationFrame,
     start,
 } = require('mail/static/src/utils/test_utils.js');
 
@@ -2980,10 +2981,9 @@ QUnit.test('do not post message on non-mailing channel with "SHIFT-Enter" keyboa
         document.querySelector(`.o_ComposerTextInput_textarea`).focus();
         document.execCommand('insertText', false, "Test");
     });
-    await afterNextRender(() => {
-        const kevt = new window.KeyboardEvent('keydown', { key: "Enter", shiftKey: true });
-        document.querySelector('.o_ComposerTextInput_textarea').dispatchEvent(kevt);
-    });
+    const kevt = new window.KeyboardEvent('keydown', { key: "Enter", shiftKey: true });
+    document.querySelector('.o_ComposerTextInput_textarea').dispatchEvent(kevt);
+    await nextAnimationFrame();
     assert.containsNone(
         document.body,
         '.o_Message',
@@ -3088,10 +3088,9 @@ QUnit.test('do not post message on mailing channel with "Enter" keyboard shortcu
         document.querySelector(`.o_ComposerTextInput_textarea`).focus();
         document.execCommand('insertText', false, "Test");
     });
-    await afterNextRender(() => {
-        const kevt = new window.KeyboardEvent('keydown', { key: "Enter" });
-        document.querySelector('.o_ComposerTextInput_textarea').dispatchEvent(kevt);
-    });
+    const kevt = new window.KeyboardEvent('keydown', { key: "Enter" });
+    document.querySelector('.o_ComposerTextInput_textarea').dispatchEvent(kevt);
+    await nextAnimationFrame();
     assert.containsNone(
         document.body,
         '.o_Message',
