@@ -64,7 +64,6 @@
                 <menuitem id="menu_action_account_form" action="action_account_form" groups="account.group_account_readonly" sequence="1"/>
                 <menuitem id="menu_action_tax_form" action="action_tax_form" sequence="2"/>
                 <menuitem id="menu_action_account_journal_form" action="action_account_journal_form" groups="account.group_account_manager" sequence="3"/>
-                <menuitem id="menu_product_product_categories" action="product.product_category_action_form" sequence="3"/>
                 <menuitem id="account_report_folder" name="Reporting" groups="account.group_account_readonly" sequence="4"/>
                 <menuitem id="menu_action_currency_form" action="base.action_currency_form" name="Currencies" groups="base.group_multi_currency" sequence="4"/>
                 <menuitem id="menu_action_account_fiscal_position_form" action="action_account_fiscal_position_form" sequence="5"/>
@@ -72,6 +71,7 @@
             </menuitem>
             <menuitem id="root_payment_menu" name="Payments" groups="account.group_account_manager" sequence="4"/>
             <menuitem id="account_management_menu" name="Management" groups="account.group_account_manager" sequence="5">
+                <menuitem id="menu_product_product_categories" action="product.product_category_action_form" sequence="3"/>
                 <menuitem id="menu_action_rounding_form_view" action="rounding_list_action" groups="account.group_cash_rounding" sequence="4"/>
                 <menuitem id="menu_configure_tax_report" name="Tax Report" action="account.action_configure_tax_report" groups="base.group_no_one" sequence="5"/>
                 <menuitem id="menu_action_analytic_lines_tree" name="Analytic Items" action="analytic.account_analytic_line_action_entries" groups="analytic.group_analytic_accounting" sequence="35"/>
