@@ -1,6 +1,9 @@
-
 .text-muted {
   color: gray('600');
+}
+
+.text-left {
+  text-align: left;
 }
 
 .text-center {
@@ -17,11 +20,16 @@
       text-decoration: none;
       font-weight: bold;
       &:before {
-        content: "X";
+        content: "\00d7";
+        font-size: initial;
       }
     }
     > span {
       margin: auto 0;
     }
+  }
+
+  .o_email_chat_button:after {
+    content:' \27A4';
   }
 }
