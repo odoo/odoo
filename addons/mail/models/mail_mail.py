@@ -254,7 +254,7 @@ class MailMail(models.Model):
                 if raise_exception:
                     # To be consistent and backward compatible with mail_mail.send() raised
                     # exceptions, it is encapsulated into an Odoo MailDeliveryException
-                    raise MailDeliveryException(_('Unable to connect to SMTP Server'), exc)
+                    raise MailDeliveryException(_('Unable to connect to SMTP Server'))
                 else:
                     batch = self.browse(batch_ids)
                     batch.write({'state': 'exception', 'failure_reason': exc})
