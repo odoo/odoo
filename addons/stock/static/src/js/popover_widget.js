@@ -50,8 +50,7 @@ var PopoverWidgetField = AbstractField.extend({
     },
 
     /**
-     * Redirect to the product graph view.
-     * (Based off of qty_at_date_widget.js method)
+     * Redirect to the product forecasted report.
      *
      * @private
      * @param {MouseEvent} event
@@ -59,20 +58,16 @@ var PopoverWidgetField = AbstractField.extend({
      */
     async _openForecast(ev) {
         ev.stopPropagation();
-        // Change action context to choose a specific date and product(s)
-        // As grid_anchor is set to now() by default in the data, we need
-        // to load the action first, change the context then launch it via do_action
-        // additional_context cannot replace a context value, only add new
-        const action = await data_manager.load_action('stock.report_stock_quantity_action_product');
-        const additional_context = {
-            grid_anchor: this.recordData.delivery_date_grid,
-            search_default_warehouse_id: [this.recordData.warehouse_id.data.id],
-            search_default_below_warehouse: false
+        const reportContext = {
+            active_model: 'product.product',
+            active_id: this.recordData.product_id.data.id,
         };
-        action.context = new Context(action.context, additional_context);
-        action.domain = [
-            ['product_id', '=', this.recordData.product_id.data.id]
-        ];
+        const action = await this._rpc({
+            model: reportContext.active_model,
+            method: 'action_product_forecast_report',
+            args: [[reportContext.active_id]],
+        });
+        action.context = new Context(action.context, reportContext);
         return this.do_action(action);
     },
 
