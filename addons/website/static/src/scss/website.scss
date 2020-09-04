@@ -988,6 +988,10 @@ header {
             margin-bottom: $spacer;
         }
     }
+    .navbar-nav {
+        padding-top: $navbar-padding-y;
+        padding-bottom: $navbar-padding-y;
+    }
 } @else if o-website-value('header-template') == 'sidebar' {
     @include media-breakpoint-up(lg) {
         #wrapwrap {
@@ -1158,7 +1162,8 @@ header {
 // Navbar Links Styles
 @if index(('block', 'border-bottom'), o-website-value('header-links-style')) {
     @include media-breakpoint-up(md) {
-        .navbar {
+        .navbar,
+        .navbar-nav {
             padding-top: 0;
             padding-bottom: 0;
         }
