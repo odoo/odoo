@@ -94,7 +94,7 @@ class MrpWorkorder(models.Model):
         help="Expected duration (in minutes)")
     duration = fields.Float(
         'Real Duration', compute='_compute_duration', inverse='_set_duration',
-        readonly=False, store=True)
+        readonly=False, store=True, copy=False)
     duration_unit = fields.Float(
         'Duration Per Unit', compute='_compute_duration',
         readonly=True, store=True)
