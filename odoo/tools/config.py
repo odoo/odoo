@@ -105,8 +105,8 @@ class configmanager(object):
         group.add_option("-c", "--config", dest="config", help="specify alternate config file")
         group.add_option("-s", "--save", action="store_true", dest="save", default=False,
                           help="save configuration to ~/.odoorc (or to ~/.openerp_serverrc if it exists)")
-        group.add_option("-i", "--init", dest="init", help="install one or more modules (comma-separated list, use \"all\" for all modules), requires -d")
-        group.add_option("-u", "--update", dest="update",
+        group.add_option("-i", "--init", dest="init", action="append", help="install one or more modules (comma-separated list, use \"all\" for all modules), requires -d")
+        group.add_option("-u", "--update", dest="update", action="append",
                           help="update one or more modules (comma-separated list, use \"all\" for all modules). Requires -d.")
         group.add_option("--without-demo", dest="without_demo",
                           help="disable loading demo data for modules to be installed (comma-separated, use \"all\" for all modules). Requires -d and -i. Default is %default",
@@ -114,10 +114,9 @@ class configmanager(object):
         group.add_option("-P", "--import-partial", dest="import_partial", my_default='',
                         help="Use this for big data importation, if it crashes you will be able to continue at the current state. Provide a filename to store intermediate importation states.")
         group.add_option("--pidfile", dest="pidfile", help="file where the server pid will be stored")
-        group.add_option("--addons-path", dest="addons_path",
-                         help="specify additional addons paths (separated by commas).",
-                         action="callback", callback=self._check_addons_path, nargs=1, type="string")
-        group.add_option("--load", dest="server_wide_modules", help="Comma-separated list of server-wide modules.", my_default='base,web')
+        group.add_option("--addons-path", dest="addons_path", action="append", type="string",
+                         help="specify additional addons paths (separated by commas).")
+        group.add_option("--load", dest="server_wide_modules", action="append", help="Comma-separated list of server-wide modules.", my_default='base,web')
 
         group.add_option("-D", "--data-dir", dest="data_dir", my_default=_get_default_datadir(),
                          help="Directory where to store Odoo data")
@@ -247,7 +246,7 @@ class configmanager(object):
                          help="import a CSV or a PO file with translations and exit. The '-l' option is required.")
         group.add_option("--i18n-overwrite", dest="overwrite_existing_translations", action="store_true", my_default=False,
                          help="overwrites existing translation terms on updating a module or importing a CSV or a PO file.")
-        group.add_option("--modules", dest="translate_modules",
+        group.add_option("--modules", dest="translate_modules", action="append",
                          help="specify modules to export. Use in combination with --i18n-export")
         parser.add_option_group(group)
 
@@ -260,7 +259,7 @@ class configmanager(object):
 
         # Advanced options
         group = optparse.OptionGroup(parser, "Advanced options")
-        group.add_option('--dev', dest='dev_mode', type="string",
+        group.add_option('--dev', dest='dev_mode', action="append", type="string",
                          help="Enable developer mode. Param: List of options separated by comma. "
                               "Options : all, [pudb|wdb|ipdb|pdb], reload, qweb, werkzeug, xml")
         group.add_option('--shell-interface', dest='shell_interface', type="string",
@@ -323,7 +322,7 @@ class configmanager(object):
                     self.casts[option.dest] = option
 
         # generate default config
-        self._parse_config()
+        self._parse_config(default=True)
 
     def parse_config(self, args=None):
         """ Parse the configuration file (if any) and the command-line
@@ -344,7 +343,7 @@ class configmanager(object):
         odoo.netsvc.init_logger()
         odoo.modules.module.initialize_sys_path()
 
-    def _parse_config(self, args=None):
+    def _parse_config(self, args=None, default=False):
         if args is None:
             args = []
         opt, args = self.parser.parse_args(args)
@@ -372,6 +371,24 @@ class configmanager(object):
         die(not opt.save and opt.config and not os.access(opt.config, os.R_OK),
             "The config file '%s' selected with -c/--config doesn't exist or is not readable, "\
             "use -s/--save if you want to generate it"% opt.config)
+
+        def to_list(value):
+            res = []
+            if value:
+                if isinstance(value, str):
+                    value = value.split(',')
+                for m in value:
+                    res += [x.strip() for x in m.split(',') if x.strip()]
+            return res
+
+        def to_dict(value):
+            if value:
+                value = to_list(value)
+            if value:
+                res = dict.fromkeys(value, 1)
+            else:
+                res = {}
+            return res
 
         # place/search the config file on Win32 near the server installation
         # (../etc from the server)
@@ -463,8 +480,8 @@ class configmanager(object):
             elif isinstance(self.options[arg], pycompat.string_types) and self.casts[arg].type in optparse.Option.TYPE_CHECKER:
                 self.options[arg] = optparse.Option.TYPE_CHECKER[self.casts[arg].type](self.casts[arg], arg, self.options[arg])
 
-        self.options['root_path'] = os.path.abspath(os.path.expanduser(os.path.expandvars(os.path.join(os.path.dirname(__file__), '..'))))
-        if not self.options['addons_path'] or self.options['addons_path']=='None':
+        self.options['root_path'] = self._normalize_path(os.path.join(os.path.dirname(__file__), '..'))
+        if not self.options['addons_path'] or self.options['addons_path'] == 'None':
             default_addons = []
             base_addons = os.path.join(self.options['root_path'], 'addons')
             if os.path.exists(base_addons):
@@ -472,22 +489,24 @@ class configmanager(object):
             main_addons = os.path.abspath(os.path.join(self.options['root_path'], '../addons'))
             if os.path.exists(main_addons):
                 default_addons.append(main_addons)
-            self.options['addons_path'] = ','.join(default_addons)
+            self.options['addons_path'] = default_addons
         else:
-            self.options['addons_path'] = ",".join(
-                    os.path.abspath(os.path.expanduser(os.path.expandvars(x.strip())))
-                      for x in self.options['addons_path'].split(','))
+            self.options['addons_path'] = [
+                    self._normalize_path(x)
+                    for x in to_list(self.options['addons_path'])]
+        
+        self.options['addons_path'] = ','.join(self.options['addons_path'])
 
-        self.options['data_dir'] = os.path.abspath(os.path.expanduser(os.path.expandvars(self.options['data_dir'].strip())))
+        self.options['data_dir'] = self._normalize_path(self.options['data_dir'])
 
-        self.options['init'] = opt.init and dict.fromkeys(opt.init.split(','), 1) or {}
-        self.options['demo'] = (dict(self.options['init'])
+        self.options['init'] = to_dict(opt.init)
+        self.options['demo'] = (self.options['init']
                                 if not self.options['without_demo'] else {})
-        self.options['update'] = opt.update and dict.fromkeys(opt.update.split(','), 1) or {}
-        self.options['translate_modules'] = opt.translate_modules and [m.strip() for m in opt.translate_modules.split(',')] or ['all']
+        self.options['update'] = to_dict(opt.update)
+        self.options['translate_modules'] = to_list(opt.translate_modules) or ['all']
         self.options['translate_modules'].sort()
 
-        dev_split = opt.dev_mode and  [s.strip() for s in opt.dev_mode.split(',')] or []
+        dev_split = to_list(opt.dev_mode)
         self.options['dev_mode'] = 'all' in dev_split and dev_split + ['pdb', 'reload', 'qweb', 'werkzeug', 'xml'] or dev_split
 
         if opt.pg_path:
@@ -502,11 +521,12 @@ class configmanager(object):
         if opt.save:
             self.save()
 
-        conf.addons_paths = self.options['addons_path'].split(',')
+        conf.addons_paths = to_list(self.options['addons_path'])
+        # Dont check default for default addons path
+        if not default:
+            conf.addons_paths = self._check_addons_path(conf.addons_paths)
 
-        conf.server_wide_modules = [
-            m.strip() for m in self.options['server_wide_modules'].split(',') if m.strip()
-        ]
+        conf.server_wide_modules = to_list(self.options['server_wide_modules'])
 
     def _is_addons_path(self, path):
         from odoo.modules.module import MANIFEST_NAMES
@@ -519,18 +539,19 @@ class configmanager(object):
                     return True
         return False
 
-    def _check_addons_path(self, option, opt, value, parser):
-        ad_paths = []
-        for path in value.split(','):
-            path = path.strip()
-            res = os.path.abspath(os.path.expanduser(path))
-            if not os.path.isdir(res):
-                raise optparse.OptionValueError("option %s: no such directory: %r" % (opt, path))
-            if not self._is_addons_path(res):
-                raise optparse.OptionValueError("option %s: The addons-path %r does not seem to a be a valid Addons Directory!" % (opt, path))
-            ad_paths.append(res)
+    def _normalize_path(self, path):
+        return os.path.abspath(os.path.expanduser(os.path.expandvars(path.strip())))
 
-        setattr(parser.values, option.dest, ",".join(ad_paths))
+    def _check_addons_path(self, value):
+        ad_paths = []
+        for path in value:
+            res = self._normalize_path(path)
+            if not os.path.isdir(res):
+                raise ValueError("No such directory: %r" % (path))
+            if not self._is_addons_path(res):
+                raise ValueError("The addons-path %r does not seem to a be a valid Addons Directory!" % (path))
+            ad_paths.append(res)
+        return ad_paths
 
     def _test_enable_callback(self, option, opt, value, parser):
         if not parser.values.test_tags:
