@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import hashlib
 import hmac
 
 from werkzeug import urls
@@ -68,4 +69,4 @@ class MailGroup(models.Model):
                 str(self.id),
                 str(partner_id),
                 action])
-        return hmac.new(secret.encode('utf-8'), data.encode('utf-8')).hexdigest()
+        return hmac.new(secret.encode('utf-8'), data.encode('utf-8'), hashlib.md5).hexdigest()
