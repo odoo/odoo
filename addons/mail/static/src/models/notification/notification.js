@@ -32,7 +32,7 @@ function factory(dependencies) {
                 data2.notification_type = data.notification_type;
             }
             if ('res_partner_id' in data) {
-                if (!data.partner_id) {
+                if (!data.res_partner_id) {
                     data2.partner = [['unlink-all']];
                 } else {
                     data2.partner = [
