@@ -9,6 +9,7 @@ const {
     afterNextRender,
     beforeEach,
     createRootComponent,
+    nextAnimationFrame,
     start,
 } = require('mail/static/src/utils/test_utils.js');
 
@@ -436,10 +437,9 @@ QUnit.test('do not post message with "Enter" keyboard shortcut', async function 
         document.querySelector(`.o_ComposerTextInput_textarea`).focus();
         document.execCommand('insertText', false, "Test");
     });
-    await afterNextRender(() => {
-        const kevt = new window.KeyboardEvent('keydown', { key: "Enter" });
-        document.querySelector('.o_ComposerTextInput_textarea').dispatchEvent(kevt);
-    });
+    const kevt = new window.KeyboardEvent('keydown', { key: "Enter" });
+    document.querySelector('.o_ComposerTextInput_textarea').dispatchEvent(kevt);
+    await nextAnimationFrame();
     assert.containsNone(
         document.body,
         '.o_Message',
