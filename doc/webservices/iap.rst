@@ -396,6 +396,8 @@ JSON-RPC2_ Transaction API
 * Exceptions are returned as JSON-RPC2_ errors, the formal exception name is
   available on ``data.name`` for programmatic manipulation.
 
+.. seealso:: `iap.odoo.com documentation`_ for additional information.
+
 Authorize
 ---------
 
@@ -408,7 +410,7 @@ Authorize
     unavailable to further authorize calls.
 
     Returns a :class:`TransactionToken` identifying the pending transaction
-    which can be used to capture (confirm) or cancel said transaction.
+    which can be used to capture (confirm) or cancel said transaction (`iap.odoo.com documentation`_).
 
     :param ServiceKey key:
     :param UserToken account_token:
@@ -639,5 +641,8 @@ Charging
                 ('name', '=', 'Alderaan'),
             ]).unlink()
 
+
+
 .. _JSON-RPC2: http://www.jsonrpc.org/specification
 .. _Odoo App: https://www.odoo.com/apps
+.. _iap.odoo.com documentation: https://iap.odoo.com/iap/1/documentation
