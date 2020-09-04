@@ -1,6 +1,9 @@
-
 .text-muted {
   color: gray('600');
+}
+
+.text-left {
+  text-align: left;
 }
 
 .text-center {
@@ -11,6 +14,14 @@
   &,* {
     box-sizing: border-box;
   }
+
+  .fa-paper-plane {
+    text-decoration: none;
+    &:before {
+      content: "Send";
+    }
+  }
+
   .o_thread_window_header {
     height: 28px;
     .fa-close {
