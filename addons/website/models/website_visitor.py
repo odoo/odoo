@@ -3,6 +3,7 @@
 
 from datetime import datetime, timedelta
 import uuid
+import pytz
 
 from odoo import fields, models, api, _
 from odoo.addons.base.models.res_partner import _tz_get
@@ -185,7 +186,11 @@ class WebsiteVisitor(models.Model):
             # Cookie associated to a Partner
             visitor = Visitor
 
-        if force_create and not visitor:
+        if visitor and not visitor.timezone:
+            tz = self._get_visitor_timezone()
+            if tz:
+                visitor.timezone = tz
+        if not visitor and force_create:
             visitor = self._create_visitor()
 
         return visitor
@@ -235,6 +240,11 @@ class WebsiteVisitor(models.Model):
             'country_id': country_id,
             'website_id': request.website.id,
         }
+
+        tz = self._get_visitor_timezone()
+        if tz:
+            vals['timezone'] = tz
+
         if not self.env.user._is_public():
             vals['partner_id'] = self.env.user.partner_id.id
             vals['name'] = self.env.user.partner_id.name
@@ -298,3 +308,12 @@ class WebsiteVisitor(models.Model):
                 self.env.cr.execute(query, (date_now, self.id), log_exceptions=False)
         except Exception:
             pass
+
+    def _get_visitor_timezone(self):
+        tz = request.httprequest.cookies.get('tz') if request else None
+        if tz in pytz.all_timezones:
+            return tz
+        elif not self.env.user._is_public():
+            return self.env.user.tz
+        else:
+            return None
