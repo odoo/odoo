@@ -526,6 +526,7 @@ class MessageList extends Component {
         if (!this.threadView || !this.threadView.threadViewer) {
             return;
         }
+        this.trigger('o-message-list-scrolled');
         this.threadView.threadViewer.saveThreadCacheScrollPositionsAsInitial(this.el.scrollTop);
         if (!this._isAutoLoadOnScrollActive) {
             return;
