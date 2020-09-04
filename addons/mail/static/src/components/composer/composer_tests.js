@@ -40,9 +40,10 @@ QUnit.module('composer_tests.js', {
         };
 
         this.start = async params => {
-            const { env, widget } = await start(Object.assign({}, params, {
+            const { afterEvent, env, widget } = await start(Object.assign({}, params, {
                 data: this.data,
             }));
+            this.afterEvent = afterEvent;
             this.env = env;
             this.widget = widget;
         };
@@ -1139,6 +1140,102 @@ QUnit.test('warning on send with shortcut when attempting to post message with s
         ['notification'],
         "should have triggered a notification for inability to post message at the moment (some attachments are still being uploaded)"
     );
+});
+
+QUnit.test('remove an uploading attachment', async function (assert) {
+    assert.expect(4);
+
+    await this.start({
+        async mockFetch(resource, init) {
+            const res = this._super(...arguments);
+            if (resource === '/web/binary/upload_attachment') {
+                // simulates uploading indefinitely
+                await new Promise(() => {});
+            }
+            return res;
+        }
+    });
+    const composer = this.env.models['mail.composer'].create();
+    await this.createComposerComponent(composer);
+    const file = await createFile({
+        content: 'hello, world',
+        contentType: 'text/plain',
+        name: 'text.txt',
+    });
+    await afterNextRender(() =>
+        inputFiles(
+            document.querySelector('.o_FileUploader_input'),
+            [file]
+        )
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_Composer_attachmentList',
+        "should have an attachment list"
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_Composer .o_Attachment',
+        "should have only one attachment"
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_Composer .o_Attachment.o-temporary',
+        "should have an uploading attachment"
+    );
+
+    await afterNextRender(() =>
+        document.querySelector('.o_Attachment_asideItemUnlink').click());
+    assert.containsNone(
+        document.body,
+        '.o_Composer .o_Attachment',
+        "should not have any attachment left after unlinking temporary one"
+    );
+});
+
+QUnit.test('remove an uploading attachment aborts upload', async function (assert) {
+    assert.expect(1);
+
+    await this.start({
+        async mockFetch(resource, init) {
+            const res = this._super(...arguments);
+            if (resource === '/web/binary/upload_attachment') {
+                // simulates uploading indefinitely
+                await new Promise(() => {});
+            }
+            return res;
+        }
+    });
+    const composer = this.env.models['mail.composer'].create();
+    await this.createComposerComponent(composer);
+    const file = await createFile({
+        content: 'hello, world',
+        contentType: 'text/plain',
+        name: 'text.txt',
+    });
+    await afterNextRender(() =>
+        inputFiles(
+            document.querySelector('.o_FileUploader_input'),
+            [file]
+        )
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_Attachment',
+        "should contain an attachment"
+    );
+    const attachmentLocalId = document.querySelector('.o_Attachment').dataset.attachmentLocalId;
+
+    await this.afterEvent({
+        eventName: 'o-attachment-upload-abort',
+        func: () => {
+            document.querySelector('.o_Attachment_asideItemUnlink').click();
+        },
+        message: "attachment upload request should have been aborted",
+        predicate: ({ attachment }) => {
+            return attachment.localId === attachmentLocalId;
+        },
+    });
 });
 
 });
