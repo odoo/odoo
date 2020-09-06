@@ -402,6 +402,8 @@ class IrActionsServer(models.Model):
                                     help="Provide the field used to link the newly created record "
                                          "on the record on used by the server action.")
     fields_lines = fields.One2many('ir.server.object.lines', 'server_id', string='Value Mapping', copy=True)
+    groups_id = fields.Many2many('res.groups', 'ir_act_server_group_rel',
+                                 'act_id', 'gid', string='Groups')
 
     @api.constrains('code')
     def _check_python_code(self):
