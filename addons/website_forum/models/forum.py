@@ -82,10 +82,10 @@ class Forum(models.Model):
     # posts statistics
     post_ids = fields.One2many('forum.post', 'forum_id', string='Posts')
     last_post_id = fields.Many2one('forum.post', compute='_compute_last_post')
-    total_posts = fields.Integer('# Posts', compute='_compute_forum_statistics')
-    total_views = fields.Integer('# Views', compute='_compute_forum_statistics')
-    total_answers = fields.Integer('# Answers', compute='_compute_forum_statistics')
-    total_favorites = fields.Integer('# Favorites', compute='_compute_forum_statistics')
+    total_posts = fields.Integer('# Posts', store=True,compute='_compute_forum_statistics')
+    total_views = fields.Integer('# Views', store=True,compute='_compute_forum_statistics')
+    total_answers = fields.Integer('# Answers', store=True,compute='_compute_forum_statistics')
+    total_favorites = fields.Integer('# Favorites',store=True, compute='_compute_forum_statistics')
     count_posts_waiting_validation = fields.Integer(string="Number of posts waiting for validation", compute='_compute_count_posts_waiting_validation')
     count_flagged_posts = fields.Integer(string='Number of flagged posts', compute='_compute_count_flagged_posts')
     # karma generation
@@ -159,7 +159,8 @@ class Forum(models.Model):
             result[cid]['total_favorites'] += 1 if res_group.get('favourite_count', 0) else 0
 
         for record in self:
-            record.update(result[record.id])
+            if record.id :
+                record.update(result[record.id])
 
     def _compute_count_posts_waiting_validation(self):
         for forum in self:
