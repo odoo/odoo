@@ -210,6 +210,10 @@ corresponding behaviors) are shared between states:
 ``model_id``
     Odoo model linked to the action.
 
+``groups_id``
+    :class:`~odoo.fields.Many2many` field to the groups allowed to view/use
+    the current report
+    
 ``state``
 
 * ``code``: Executes python code given through the ``code`` argument.
