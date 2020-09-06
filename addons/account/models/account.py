@@ -877,7 +877,7 @@ class AccountJournal(models.Model):
         if not alias_name:
             alias_name = self.name
             if self.company_id != self.env.ref('base.main_company'):
-                alias_name += '-' + str(self.company_id.name)
+                alias_name += '-' + re.sub("[^\w!#$%&'*+/=?^`{|}~\-]", '', str(self.company_id.name))
         return {
             'alias_defaults': {'type': type == 'purchase' and 'in_invoice' or 'out_invoice', 'company_id': self.company_id.id, 'journal_id': self.id},
             'alias_parent_thread_id': self.id,
@@ -1191,7 +1191,7 @@ class AccountJournal(models.Model):
                         'suffix': '',
                         'padding': 0,
                         'company_id': journal.company_id.id}
-                    seq = self.env['ir.sequence'].create(vals)
+                    seq = self.env['ir.sequence'].sudo().create(vals)
                     vals_write[seq_field] = seq.id
             if vals_write:
                 journal.write(vals_write)

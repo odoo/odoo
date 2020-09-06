@@ -303,15 +303,16 @@ class MailComposer(models.TransientModel):
             records = self.env[self.model].browse(res_ids)
             reply_to_value = self.env['mail.thread']._notify_get_reply_to_on_records(default=self.email_from, records=records)
 
-        blacklisted_rec_ids = []
+        blacklisted_rec_ids = set()
         if mass_mail_mode and issubclass(type(self.env[self.model]), self.pool['mail.thread.blacklist']):
-            BL_sudo = self.env['mail.blacklist'].sudo()
-            blacklist = set(BL_sudo.search([]).mapped('email'))
+            self.env['mail.blacklist'].flush(['email'])
+            self._cr.execute("SELECT email FROM mail_blacklist")
+            blacklist = {x[0] for x in self._cr.fetchall()}
             if blacklist:
                 targets = self.env[self.model].browse(res_ids).read(['email_normalized'])
                 # First extract email from recipient before comparing with blacklist
-                blacklisted_rec_ids.extend([target['id'] for target in targets
-                                            if target['email_normalized'] and target['email_normalized'] in blacklist])
+                blacklisted_rec_ids.update(target['id'] for target in targets
+                                           if target['email_normalized'] in blacklist)
 
         for res_id in res_ids:
             # static wizard (mail.message) values

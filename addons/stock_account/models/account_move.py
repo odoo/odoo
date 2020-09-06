@@ -25,6 +25,19 @@ class AccountMove(models.Model):
             move_vals['line_ids'] = [vals for vals in move_vals['line_ids'] if not vals[2]['is_anglo_saxon_line']]
         return move_vals
 
+    def copy_data(self, default=None):
+        # OVERRIDE
+        # Don't keep anglo-saxon lines when copying a journal entry.
+        res = super().copy_data(default=default)
+
+        if not self._context.get('move_reverse_cancel'):
+            for copy_vals in res:
+                if 'line_ids' in copy_vals:
+                    copy_vals['line_ids'] = [line_vals for line_vals in copy_vals['line_ids']
+                                             if line_vals[0] != 0 or not line_vals[2]['is_anglo_saxon_line']]
+
+        return res
+
     def post(self):
         # OVERRIDE
 

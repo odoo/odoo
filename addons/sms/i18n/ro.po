@@ -6,6 +6,7 @@
 # Martin Trigaux, 2019
 # Dorin Hongu <dhongu@gmail.com>, 2019
 # Foldi Robert <foldirobert@nexterp.ro>, 2020
+# Hongu Cosmin <cosmin513@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-10-07 07:13+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Foldi Robert <foldirobert@nexterp.ro>, 2020\n"
+"Last-Translator: Hongu Cosmin <cosmin513@gmail.com>, 2020\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -464,7 +465,7 @@ msgstr "În coadă"
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_credit
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__error_code__sms_credit
 msgid "Insufficient Credit"
-msgstr ""
+msgstr "Credit insuficient"
 
 #. module: sms
 #: code:addons/sms/wizard/sms_composer.py:0
@@ -557,7 +558,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_number_missing
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__error_code__sms_number_missing
 msgid "Missing Number"
-msgstr ""
+msgstr "Număr lipsă"
 
 #. module: sms
 #: code:addons/sms/wizard/sms_composer.py:0
@@ -589,7 +590,7 @@ msgstr "Notificare"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_mail_notification__notification_type
 msgid "Notification Type"
-msgstr ""
+msgstr "Tip Notificare"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__sms_number
@@ -630,7 +631,7 @@ msgstr "Expresie Substituenta"
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_composer__composition_mode__comment
 msgid "Post on a document"
-msgstr ""
+msgstr "Postează pe un document"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
@@ -826,7 +827,7 @@ msgstr ""
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__sanitized_numbers
 msgid "Sanitized Number"
-msgstr ""
+msgstr "Număr sancționat"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_sms_view_search
@@ -974,7 +975,7 @@ msgstr "Previzualizare Sablon"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template_preview__lang
 msgid "Template Preview Language"
-msgstr ""
+msgstr "Limbă de previzualizare a șabloanelor"
 
 #. module: sms
 #: model:ir.actions.act_window,name:sms.sms_template_action
@@ -985,7 +986,7 @@ msgstr "Șabloane"
 #: model:ir.model.fields,help:sms.field_sms_template__model_id
 #: model:ir.model.fields,help:sms.field_sms_template_preview__model_id
 msgid "The type of document this template can be used with"
-msgstr ""
+msgstr "Cu tipul de document cu acest șablon se poate utiliza"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_mail_mail__message_type
@@ -1005,6 +1006,14 @@ msgid ""
 "- 'Add Followers': add followers to a record (Discuss)\n"
 "- 'Create Next Activity': create an activity (Discuss)"
 msgstr ""
+"Tipul acțiunii serverului. Sunt disponibile următoarele valori:\n"
+"- „Execute Python Code”: un bloc de cod python care va fi executat\n"
+"- „Create”: creați o înregistrare nouă cu valori noi\n"
+"- 'Update a Record': actualizați valorile unei înregistrări\n"
+"- 'Execute several actions': definiți o acțiune care declanșează mai multe alte acțiuni server\n"
+"- 'Send Email': trimite automat un e-mail (Discută)\n"
+"- 'Add Followers': adăugați adepți într-o înregistrare (Discutați)\n"
+"- 'Create Next Activity': creați o activitate (Discutați)"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_composer__active_domain_count
@@ -1078,7 +1087,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_number_format
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__error_code__sms_number_format
 msgid "Wrong Number Format"
-msgstr ""
+msgstr "Format greșit de număr"
 
 #. module: sms
 #: code:addons/sms/wizard/sms_resend.py:0

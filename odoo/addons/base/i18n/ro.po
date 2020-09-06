@@ -7,9 +7,9 @@
 # Cozmin Candea <office@terrabit.ro>, 2020
 # Fekete Mihai <mihai.fekete@forestandbiomass.ro>, 2020
 # Martin Trigaux, 2020
-# Dorin Hongu <dhongu@gmail.com>, 2020
 # Hongu Cosmin <cosmin513@gmail.com>, 2020
 # Foldi Robert <foldirobert@nexterp.ro>, 2020
+# Dorin Hongu <dhongu@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -17,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-07-23 15:12+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
-"Last-Translator: Foldi Robert <foldirobert@nexterp.ro>, 2020\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2020\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -7136,7 +7136,7 @@ msgstr "Numărul de cont trebuie să fie unic"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_taxcloud
 msgid "Account TaxCloud"
-msgstr ""
+msgstr "Cont TaxCloud"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_account_taxcloud
@@ -11730,7 +11730,7 @@ msgstr "Email gateway"
 #: model:ir.module.category,name:base.module_category_marketing_email_marketing
 #: model:ir.module.module,shortdesc:base.module_mass_mailing
 msgid "Email Marketing"
-msgstr ""
+msgstr "Marketing E-mail"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__signature
@@ -12256,7 +12256,7 @@ msgstr "Stat federal"
 #. module: base
 #: model:ir.actions.act_window,name:base.action_country_state
 msgid "Fed. States"
-msgstr "Judete"
+msgstr "Județe"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_fedex
@@ -12372,7 +12372,7 @@ msgstr "Nume câmp"
 #: model:ir.module.category,name:base.module_category_operations_field_service
 #: model:ir.module.module,shortdesc:base.module_industry_fsm
 msgid "Field Service"
-msgstr ""
+msgstr "Munca de teren"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_industry_fsm_report
@@ -15818,7 +15818,7 @@ msgstr ""
 #. module: base
 #: model:ir.model,name:base.model_ir_mail_server
 msgid "Mail Server"
-msgstr ""
+msgstr "Server Mail"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_mail
@@ -20202,7 +20202,7 @@ msgstr ""
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_html
 msgid "Qweb Field HTML"
-msgstr ""
+msgstr "Qweb Câmp HTLM"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_image
@@ -20217,12 +20217,12 @@ msgstr ""
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_many2one
 msgid "Qweb Field Many to One"
-msgstr ""
+msgstr "Qweb Câmp Many to one"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_monetary
 msgid "Qweb Field Monetary"
-msgstr ""
+msgstr "Qweb Câmp Monetar"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_relative
@@ -20237,12 +20237,12 @@ msgstr ""
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_text
 msgid "Qweb Field Text"
-msgstr ""
+msgstr "Qweb Câmp Text"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_qweb
 msgid "Qweb Field qweb"
-msgstr ""
+msgstr "Qweb Câmp qweb"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_many2many
@@ -20368,7 +20368,7 @@ msgstr "Reguli de înregistrare"
 #: code:addons/models.py:0 code:addons/models.py:0
 #, python-format
 msgid "Records:"
-msgstr ""
+msgstr "Înregistrări:"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_human_resources_recruitment
@@ -22831,7 +22831,7 @@ msgstr "Numele întreg al țării."
 #: model:ir.model.fields,help:base.field_res_partner__user_id
 #: model:ir.model.fields,help:base.field_res_users__user_id
 msgid "The internal user in charge of this contact."
-msgstr ""
+msgstr "Utilizatorul intern responsabil de acest contact."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model__inherited_model_ids
@@ -23548,7 +23548,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_tour
 msgid "Tours"
-msgstr ""
+msgstr "Ture"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mass_mailing_event_track_sms
@@ -23809,6 +23809,14 @@ msgid ""
 "- 'Add Followers': add followers to a record (Discuss)\n"
 "- 'Create Next Activity': create an activity (Discuss)"
 msgstr ""
+"Tipul acțiunii serverului. Sunt disponibile următoarele valori:\n"
+"- „Execute Python Code”: un bloc de cod python care va fi executat\n"
+"- „Create”: creați o înregistrare nouă cu valori noi\n"
+"- 'Update a Record': actualizați valorile unei înregistrări\n"
+"- 'Execute several actions': definiți o acțiune care declanșează mai multe alte acțiuni server\n"
+"- 'Send Email': trimite automat un e-mail (Discută)\n"
+"- 'Add Followers': adăugați adepți într-o înregistrare (Discutați)\n"
+"- 'Create Next Activity': creați o activitate (Discutați)"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_constraint__type
