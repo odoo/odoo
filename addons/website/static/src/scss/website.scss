@@ -1119,7 +1119,7 @@ table.table_desc tr td {
             color: inherit; // Useful when the toggle is active
             pointer-events: none; // hack to prevent clicking on it because dropdown always opened
         }
-        > ul { // remove dropdown-menu default style as it is nested in another one
+        > ul, > .o_mega_menu { // remove dropdown-menu default style as it is nested in another one
             position: static;
             float: none;
             display: block;
@@ -1129,6 +1129,22 @@ table.table_desc tr td {
             border: none;
             box-shadow: none;
         }
+        > .o_mega_menu .row > div { // remove mega menu col-lg-* style
+            max-width: none;
+            flex: auto;
+        }
+    }
+}
+
+// Navbar Dropdown Menu
+header > .navbar > * .dropdown-menu {
+    max-height: 60vh;
+    overflow-y: auto;
+}
+
+header.o_affix_enabled > .navbar > * .dropdown-menu {
+    @include media-breakpoint-down(md) {
+        max-height: 100%;
     }
 }
 

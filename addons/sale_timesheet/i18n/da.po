@@ -11,6 +11,7 @@
 # Pernille Kristensen <pernillekristensen1994@gmail.com>, 2019
 # Sanne Kristensen <sanne@vkdata.dk>, 2019
 # lhmflexerp <lhm@flexerp.dk>, 2019
+# Mads Søndergaard, 2020
 # 
 msgid ""
 msgstr ""
@@ -18,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:22+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: lhmflexerp <lhm@flexerp.dk>, 2019\n"
+"Last-Translator: Mads Søndergaard, 2020\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -105,6 +106,11 @@ msgid ""
 "  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"Ud fra produkt konfiguration kan leveret mængde udregnes automatisk via mekanismen :\n"
+" - Manuel: Kvantiteten angives manuelt på linjen\n"
+" - Analytisk fra udgifter: Kvantiteten er summen af kvantiteten fra posteret udgifter\n"
+" - Timeseddel: Kvantiteten er summen af timer optegnet for opgaver relateret til denne salgslinje\n"
+" - Lager bevægelser: Kvantiteten kommer fra verificerede pluk\n"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__amount_to_invoice
@@ -584,6 +590,9 @@ msgid ""
 "Timesheets on contract: Invoice based on the tracked hours on the related timesheet.\n"
 "Create a task and track hours: Create a task on the sales order validation and track the work hours."
 msgstr ""
+"Angiv manuelt mængder på ordre: Faktura baseret på den manuelt angivne mængde, uden oprettelsen af en analytisk konto.\n"
+"Timesedler på kontrakt: Faktura baseret på de sporede timer på den relateret timeseddel.\n"
+"Opret en opgave og spor timer: Opret en opgave på salgsordre godkendelsen og følg arbejdstimer."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_line__qty_delivered_method
@@ -903,7 +912,7 @@ msgstr "Salgsordre bekræftelsesdato"
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task__sale_line_id
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.view_sale_service_inherit_form2
 msgid "Sales Order Item"
-msgstr ""
+msgstr "Salg ranger varer"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_sale_order_line

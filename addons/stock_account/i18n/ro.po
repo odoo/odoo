@@ -4,9 +4,10 @@
 # 
 # Translators:
 # Cozmin Candea <office@terrabit.ro>, 2019
-# Dorin Hongu <dhongu@gmail.com>, 2020
 # Martin Trigaux, 2020
 # Foldi Robert <foldirobert@nexterp.ro>, 2020
+# Dorin Hongu <dhongu@gmail.com>, 2020
+# Hongu Cosmin <cosmin513@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -14,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Foldi Robert <foldirobert@nexterp.ro>, 2020\n"
+"Last-Translator: Hongu Cosmin <cosmin513@gmail.com>, 2020\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,7 +28,7 @@ msgstr ""
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid "%s changed cost from %s to %s - %s"
-msgstr ""
+msgstr "%s cost schimbat de la %s până la %s - %s"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_chart_template
@@ -75,6 +76,8 @@ msgstr "Activ(a)"
 msgid ""
 "Add additional cost (transport, customs, ...) in the value of the product."
 msgstr ""
+"Adăugați costuri adiționale (transport, personalizare, ...) în valoarea "
+"produsului."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_res_config_settings__module_stock_landed_costs
@@ -83,6 +86,8 @@ msgid ""
 "Affect landed costs on reception operations and split them among products to"
 " update their cost price."
 msgstr ""
+"Afectează costurile adiționate operațiunilor de recepție și le împarte între"
+" produse pentru a-și actualiza prețul de cost."
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
@@ -186,6 +191,8 @@ msgstr "Metodă de cost"
 #, python-format
 msgid "Costing method change for product category %s: from %s to %s."
 msgstr ""
+"Schimbarea metodei de cost pentru categoria de produse %s: de la %s până la "
+"%s."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price__counterpart_account_id
@@ -227,6 +234,8 @@ msgid ""
 "Date at which the accounting entries will be created in case of automated "
 "inventory valuation. If empty, the inventory date will be used."
 msgstr ""
+"Data la care se vor crea intrările contabile în cazul evaluării automatizate"
+" a inventarului. Daca este gol, data din inventar va fi utilizată."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_valuation_layer__uom_id
@@ -252,6 +261,9 @@ msgid ""
 "                                has changed for product template %s: from %s"
 " to %s."
 msgstr ""
+"Datorită unei schimbări a unei categorii a unui produs ( de la %s până la "
+"%s), metoda de calculare s-a schimbat pentru șablonul produsului %s: de la%s"
+" până la %s."
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_cost_method__fifo
@@ -266,7 +278,7 @@ msgstr "Grupează după..."
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_inventory__has_account_moves
 msgid "Has Account Moves"
-msgstr ""
+msgstr "Are mișcări de cont"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price__id
@@ -318,7 +330,7 @@ msgstr "Poziții de stoc"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_account_move_line__is_anglo_saxon_line
 msgid "Is Anglo Saxon Line"
-msgstr ""
+msgstr "Este linia anglo-saxonă"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_move
@@ -361,7 +373,7 @@ msgstr "Ultima actualizare pe"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__stock_valuation_layer_id
 msgid "Linked To"
-msgstr ""
+msgstr "Legat de "
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_valuation__manual_periodic
@@ -392,6 +404,8 @@ msgid ""
 "Please define an expense account for this product: \"%s\" (id:%d) - or for "
 "its category: \"%s\"."
 msgstr ""
+"Vă rugăm să definiți contul de cheltuieli pentru acest produs: \"%s\" "
+"(id:%d) - ori pentru categoria sa: \"%s\"."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price__new_price
@@ -427,7 +441,7 @@ msgstr "Șablon produs"
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid "Product value manually modified (from %s to %s)"
-msgstr ""
+msgstr "Valoarea produsului modificată manual( de la%s până la%s)"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__quantity
@@ -438,7 +452,7 @@ msgstr "Cantitate"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product__quantity_svl
 msgid "Quantity Svl"
-msgstr ""
+msgstr "Cantitate Svl"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_quant
@@ -548,7 +562,7 @@ msgstr "Nivel evaluare stoc"
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_account_move_line__is_anglo_saxon_line
 msgid "Technical field used to retrieve the anglo-saxon lines."
-msgstr ""
+msgstr "Câmpul tehnic folosit pentru a recupera liniile anglo-saxone."
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:0
@@ -567,6 +581,8 @@ msgid ""
 "The move lines are not in a consistent state: some are entering and other "
 "are leaving the company."
 msgstr ""
+"Liniile de mișcare nu sunt într-o stare consistentă: unele intră iar altele "
+"părăsesc compania."
 
 #. module: stock_account
 #: code:addons/stock_account/models/stock_move.py:0
@@ -584,6 +600,8 @@ msgid ""
 "The move lines are not in a consistent states: they do not share the same "
 "origin or destination company."
 msgstr ""
+"Liniile de mișcare nu sunt într-o stare consistentă: nu împărtășesc aceeași "
+"origine sau destinație a companiei."
 
 #. module: stock_account
 #: model_terms:ir.actions.act_window,help:stock_account.stock_valuation_layer_action
@@ -611,6 +629,8 @@ msgid ""
 "Trigger a decrease of the delivered/received quantity in the associated Sale"
 " Order/Purchase Order"
 msgstr ""
+"Declanșează o scădere a cantității livrate/primite în Comanda de "
+"Vânzare/Achiziție asociată."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__unit_cost
@@ -632,7 +652,7 @@ msgstr "Actualizare cost"
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__to_refund
 #: model:ir.model.fields,field_description:stock_account.field_stock_return_picking_line__to_refund
 msgid "Update quantities on SO/PO"
-msgstr ""
+msgstr "Actualizați cantitățile pe SO/PO"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_location__valuation_in_account_id
@@ -681,6 +701,8 @@ msgstr "Nivel evaluare?"
 #, python-format
 msgid "Valuation method change for product category %s: from %s to %s."
 msgstr ""
+"Modificarea metodei de evaluare pentru categoria de produse %s: de la %s "
+"până la %s."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_quant__value
@@ -690,7 +712,7 @@ msgstr "Valoare"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product__value_svl
 msgid "Value Svl"
-msgstr ""
+msgstr "Valoare Svl"
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:0
@@ -704,6 +726,8 @@ msgid ""
 "When automated inventory valuation is enabled on a product, this account "
 "will hold the current value of the products."
 msgstr ""
+"Când este activată evaluarea automatizată a inventarului a unui produs, "
+"acest cont va păstra valoarea curentă a produselor."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_stock_account_input_categ_id
@@ -738,6 +762,9 @@ msgid ""
 "You don't have any input valuation account defined on your product category."
 " You must define one before processing this operation."
 msgstr ""
+"Nu aveți niciun cont de evaluare a intrărilor definit în categoria "
+"dumneavoastră de produse. Trebuie să definiți unu înainte de procedarea "
+"acestei operațiuni."
 
 #. module: stock_account
 #: code:addons/stock_account/models/stock_move.py:0
@@ -746,6 +773,8 @@ msgid ""
 "You don't have any stock journal defined on your product category, check if "
 "you have installed a chart of accounts."
 msgstr ""
+"u aveți niciun jurnal de stoc definit în categoria dvs. de produse, "
+"verificați dacă ați instalat un plan de conturi."
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:0

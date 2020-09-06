@@ -9,6 +9,7 @@
 # Jaroslav Helemik Nemec <nemec@helemik.cz>, 2019
 # Jan Horzinka <jan.horzinka@centrum.cz>, 2019
 # Michal Veselý <michal@veselyberanek.net>, 2019
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2020
 # trendspotter <j.podhorecky@volny.cz>, 2020
 # 
 msgid ""
@@ -1239,7 +1240,7 @@ msgstr "Značka zákazníka"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Customer Signature"
-msgstr ""
+msgstr "Podpis zákazníka"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__deposit_taxes_id
@@ -1361,7 +1362,7 @@ msgstr "Doručovací adresa"
 #: model:ir.model.fields,field_description:sale.field_sale_order__commitment_date
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Delivery Date"
-msgstr "Datum doručení"
+msgstr "Datum dodání "
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_account_move__partner_shipping_id
@@ -2399,12 +2400,12 @@ msgstr "Platba přes internet"
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__portal_confirmation_sign
 #: model:ir.model.fields,field_description:sale.field_sale_order__require_signature
 msgid "Online Signature"
-msgstr ""
+msgstr "Online podpis"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_payment_acquirer_onboarding_wizard__payment_method__digital_signature
 msgid "Online signature"
-msgstr ""
+msgstr "Online podpis"
 
 #. module: sale
 #. openerp-web
@@ -2686,7 +2687,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales__price_subtotal
 msgid "Price Subtotal"
-msgstr ""
+msgstr "Cena mezisoučet "
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales__pricelist_id
@@ -2979,7 +2980,7 @@ msgstr "Odkaz na dokument, který generoval tento požadavek zakázky."
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_advance_payment_inv__advance_payment_method__delivered
 msgid "Regular invoice"
-msgstr ""
+msgstr "Standardní faktura"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -3583,12 +3584,12 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__stripe_publishable_key
 msgid "Stripe Publishable Key"
-msgstr ""
+msgstr "Publikovatelný klíč Stripe"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__stripe_secret_key
 msgid "Stripe Secret Key"
-msgstr ""
+msgstr "Stripe Secret Key"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_subtotal
@@ -3683,6 +3684,8 @@ msgid ""
 "The delivery date is sooner than the expected date.You may be unable to "
 "honor the delivery date."
 msgstr ""
+"Datum dodání je dřívější než očekávané datum. Datum dodání pravděpodobně "
+"nebudete moci dodržet."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_attribute__display_type
@@ -3836,6 +3839,8 @@ msgid ""
 "This is the delivery date promised to the customer. If set, the delivery "
 "order will be scheduled based on this date rather than product lead times."
 msgstr ""
+"Toto je datum dodání slíbené zákazníkovi. Je-li nastavena, bude objednávka "
+"dodání naplánována na základě tohoto data, nikoli na dodací lhůty produktu."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__medium_id

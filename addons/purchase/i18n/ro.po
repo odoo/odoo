@@ -28,6 +28,9 @@ msgid ""
 "Quotation - %s' % (object.name) or                 'Purchase Order - %s' % "
 "(object.name))"
 msgstr ""
+"                 (object.state in ('draft', 'sent') și „Cerere de ofertă - "
+"%s' % (object.name) or                 'Comandă de achiziție - %s' % "
+"(object.name))"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_partner__supplier_invoice_count
@@ -49,17 +52,17 @@ msgstr "${object.company_id.name} Comandă (Ref ${object.name or 'n/a' })"
 #. module: purchase
 #: model:ir.actions.report,print_report_name:purchase.report_purchase_quotation
 msgid "'Request for Quotation - %s' % (object.name)"
-msgstr ""
+msgstr "Cerere de ofertă - %s' % (object.name)"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "3-way matching"
-msgstr ""
+msgstr "Potrivire pe 3 căi"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__module_account_3way_match
 msgid "3-way matching: purchases, receptions and bills"
-msgstr ""
+msgstr "Potrivire pe 3 căi: achiziții, recepții și facturi"
 
 #. module: purchase
 #: model:mail.template,body_html:purchase.email_template_edi_purchase_done
@@ -151,6 +154,8 @@ msgid ""
 "<i class=\"fa fa-fw fa-shopping-cart\" role=\"img\" aria-label=\"Shopping "
 "cart\" title=\"Shopping cart\"/>"
 msgstr ""
+"<i class=\"fa fa-fw fa-shopping-cart\" role=\"img\" aria-label=\"Shopping "
+"cart\" title=\"Shopping cart\"/>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
@@ -158,6 +163,8 @@ msgid ""
 "<span class=\"badge badge-info\"><i class=\"fa fa-fw fa-file-text\"/> "
 "Waiting for Bill</span>"
 msgstr ""
+"<span class=\"badge badge-info\"><i class=\"fa fa-fw fa-file-"
+"text\"/>Așteptare Factură</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
@@ -238,7 +245,7 @@ msgstr "<strong>Produs</strong>"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Purchase Representative:</strong>"
-msgstr ""
+msgstr "<strong>Reprezentant de cumpărare:</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -365,7 +372,7 @@ msgstr "Adaugă o secțiune"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Add several variants to the purchase order from a grid"
-msgstr ""
+msgstr "Adăugați mai multe variante la comanda de achiziție dintr-o grilă"
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_purchase_manager
@@ -412,17 +419,17 @@ msgstr "Număr atașamente"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_account_move__purchase_vendor_bill_id
 msgid "Auto-complete"
-msgstr ""
+msgstr "Completare Automată"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_account_move__purchase_vendor_bill_id
 msgid "Auto-complete from a past bill / purchase order."
-msgstr ""
+msgstr "Completare automată dintr-o factură veche / comandă de achiziții"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_account_move__purchase_id
 msgid "Auto-complete from a past purchase order."
-msgstr ""
+msgstr "Completare automată dintr-o comandă anterioară de achiziție."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -432,7 +439,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__price_average
 msgid "Average Cost"
-msgstr ""
+msgstr "Costul mediu "
 
 #. module: purchase
 #: model:ir.filters,name:purchase.filter_purchase_order_average_delivery_time
@@ -508,6 +515,11 @@ msgid ""
 "product if you directly do a Request for Quotation to one vendor or if you "
 "want a Call for Tenders to compare offers from several vendors."
 msgstr ""
+"Apelurile pentru oferte sunt utilizate atunci când doriți să generați cereri"
+" de oferte la mai mulți furnizori pentru un set de produse. Puteți configura"
+" pe produs dacă efectuați direct o cerere de ofertă unui singur furnizor sau"
+" dacă doriți un apel pentru licitații pentru a compara ofertele de la mai "
+"mulți furnizori."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -525,7 +537,7 @@ msgstr "Anulat(ă)"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "Cancelled Purchase Order #"
-msgstr ""
+msgstr "Comandă de Achiziție Anulată #"
 
 #. module: purchase
 #: code:addons/purchase/models/purchase.py:0
@@ -689,12 +701,12 @@ msgstr "Data la care acest document a fost creat"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__delay
 msgid "Days to Confirm"
-msgstr ""
+msgstr "Zile până la confirmare"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__delay_pass
 msgid "Days to Receive"
-msgstr ""
+msgstr "Zile până la primire"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -708,6 +720,8 @@ msgid ""
 "Depicts the date where the Quotation should be validated and converted into "
 "a purchase order."
 msgstr ""
+"Înfățișează data la care oferta trebuie validată și convertită într-o "
+"comandă deachiziție."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__name
@@ -735,7 +749,7 @@ msgstr "Efectuat"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_company__po_double_validation_amount
 msgid "Double validation amount"
-msgstr ""
+msgstr "Validare Dublă Valoare"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_report__state__draft
@@ -799,6 +813,7 @@ msgstr "Activități viitoare"
 #: model:ir.model.fields.selection,name:purchase.selection__res_company__po_double_validation__two_step
 msgid "Get 2 levels of approvals to confirm a purchase order"
 msgstr ""
+"Obțineți 2 niveluri de aprobări pentru a confirma o comandă de achiziție. "
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -859,6 +874,8 @@ msgid ""
 "If enabled, activates 3-way matching on vendor bills : the items must be "
 "received in order to pay the invoice."
 msgstr ""
+"Dacă este activat, activează potrivirea în trei căi pe facturile "
+"furnizorului: articolele trebuie primite pentru a plăti factura."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -866,6 +883,8 @@ msgid ""
 "If installed, the product variants will be added to purchase orders through "
 "a grid entry."
 msgstr ""
+"Dacă este instalat, variantele de produs vor fi adăugate în comenzi de "
+"achiziție printr-o intrare grilă."
 
 #. module: purchase
 #: code:addons/purchase/models/product.py:0
@@ -987,11 +1006,14 @@ msgstr "Atașament principal"
 msgid ""
 "Make sure you only pay bills for which you received the goods you ordered"
 msgstr ""
+"Asigurați-vă că plătiți doar facturi pentru bunurile primite comandate"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Manage your purchase agreements (call for tenders, blanket orders)"
 msgstr ""
+"Gestionați-vă contractele de achiziție (apelare la licitații, comenzi cu "
+"mențiune)"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order_line__qty_received_method__manual
@@ -1006,7 +1028,7 @@ msgstr "Facturi manuale"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_received_manual
 msgid "Manual Received Qty"
-msgstr ""
+msgstr "Cantitate Manuală Primită"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_company__po_lead
@@ -1016,6 +1038,10 @@ msgid ""
 "Orders for procuring products, they will be scheduled that many days earlier"
 " to cope with unexpected vendor delays."
 msgstr ""
+"Marja de eroare pentru termenele de plată ale vânzătorilor. Când sistemul "
+"generează comenzi de achiziție pentru achiziționarea de produse, acestea vor"
+" fi programate cu multe zile mai devreme, să facă față întârzierilor "
+"neașteptate ale vânzătorilor."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_config_settings__use_po_lead
@@ -1054,18 +1080,20 @@ msgstr "Mesaje"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__po_double_validation_amount
 msgid "Minimum Amount"
-msgstr ""
+msgstr "Cantitatea minimă"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_company__po_double_validation_amount
 #: model:ir.model.fields,help:purchase.field_res_config_settings__po_double_validation_amount
 msgid "Minimum amount for which a double validation is required"
-msgstr ""
+msgstr "Valoare minimă pentru care este necesară o dublă validare"
 
 #. module: purchase
 #: model:ir.model.constraint,message:purchase.constraint_purchase_order_line_accountable_required_fields
 msgid "Missing required fields on accountable purchase order line."
 msgstr ""
+"Lipsesc câmpurile obligatorii de pe linia de comandă responsabilă de "
+"achiziție."
 
 #. module: purchase
 #: model:ir.filters,name:purchase.filter_purchase_order_monthly_purchases
@@ -1173,6 +1201,8 @@ msgid ""
 "On ordered quantities: Control bills based on ordered quantities.\n"
 "On received quantities: Control bills based on received quantities."
 msgstr ""
+"La cantități comandate: Control facturilor pe baza cantităților comandate.\n"
+"La cantitățile primite: Control facturilor pe baza cantităților primite."
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__product_template__purchase_method__receive
@@ -1331,7 +1361,7 @@ msgstr "Produse"
 #: model:ir.model.fields,help:purchase.field_res_company__po_double_validation
 #: model:ir.model.fields,help:purchase.field_res_config_settings__po_double_validation
 msgid "Provide a double validation mechanism for purchases"
-msgstr ""
+msgstr "Oferiți un mecanism de validare dublă pentru achiziții"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_root
@@ -1343,7 +1373,7 @@ msgstr "Achiziție"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__module_purchase_requisition
 msgid "Purchase Agreements"
-msgstr ""
+msgstr "Acorduri Achiziție"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_order_report_all
@@ -1358,6 +1388,10 @@ msgid ""
 "purchase history and performance. From this menu you can track your "
 "negotiation performance, the delivery performance of your vendors, etc."
 msgstr ""
+"Analiza achizițiilor vă permite să verificați și să analizați cu ușurință "
+"istoricul și performanța achizițiilor companiei. Din acest meniu puteți "
+"urmări performanțele dvs. de negociere, performanța de livrare a "
+"furnizorilor dvs. etc."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
@@ -1367,7 +1401,7 @@ msgstr "Descriere achiziție"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__module_purchase_product_matrix
 msgid "Purchase Grid Entry"
-msgstr ""
+msgstr "Intrare Grilă Achiziție"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_company__po_lead
@@ -1400,7 +1434,7 @@ msgstr "Comandă de achiziție"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "Purchase Order #"
-msgstr ""
+msgstr "Comandă de achiziție #"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__po_order_approval
@@ -1411,7 +1445,7 @@ msgstr "Aprobarea comenzii de achiziție"
 #: model:ir.model.fields,field_description:purchase.field_res_partner__purchase_order_count
 #: model:ir.model.fields,field_description:purchase.field_res_users__purchase_order_count
 msgid "Purchase Order Count"
-msgstr ""
+msgstr "Nr. Comenzi de achiziție"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_order_line
@@ -1492,7 +1526,7 @@ msgstr "Avertismente la achiziție"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
 msgid "Purchase orders that have been invoiced."
-msgstr ""
+msgstr "Comenzi de achiziție care au fost facturate."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
@@ -1519,7 +1553,7 @@ msgstr "Achiziții"
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_bill_union
 msgid "Purchases & Bills Union"
-msgstr ""
+msgstr "Uniunea de achiziții și facturi"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__dest_address_id
@@ -1527,6 +1561,8 @@ msgid ""
 "Put an address if you want to deliver directly from the vendor to the "
 "customer. Otherwise, keep empty to deliver to your own company."
 msgstr ""
+"Puneți o adresă dacă doriți să livrați direct de la furnizor către client. "
+"În caz contrar, păstrați-vă gol pentru a vă livra companiei."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__qty_billed
@@ -1541,7 +1577,7 @@ msgstr "Cant. Comandată"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__qty_received
 msgid "Qty Received"
-msgstr ""
+msgstr "Cantitatea primită"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__qty_to_be_billed
@@ -1597,7 +1633,7 @@ msgstr "CdO_${(object.name or '').replace('/','_')}"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "RFQs"
-msgstr ""
+msgstr "RFQs"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.act_res_partner_2_purchase_order
@@ -1607,12 +1643,12 @@ msgstr "Cotații și Achiziții"
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__currency_rate
 msgid "Ratio between the purchase order currency and the company currency"
-msgstr ""
+msgstr "Raport între moneda comenzii de cumpărare și moneda achiziție"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Re-Send by Email"
-msgstr ""
+msgstr "Retrimitere prin E-mail"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__date_planned
@@ -1637,7 +1673,7 @@ msgstr "Metodă Cantitate Primită"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Received Quantity"
-msgstr ""
+msgstr "Cantitate primită"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.track_po_line_template
@@ -1678,6 +1714,8 @@ msgid ""
 "Reference of the document that generated this purchase order request (e.g. a"
 " sales order)"
 msgstr ""
+"Referința documentului care a generat această solicitare de comandă (de "
+"exemplu, o comandă de vânzare)"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__partner_ref
@@ -1686,6 +1724,10 @@ msgid ""
 "matching when you receive the products as this reference is usually written "
 "on the delivery order sent by your vendor."
 msgstr ""
+"Referința comenzii de vânzare sau a ofertei trimise de vânzător. Este "
+"folosit pentru a face potrivirea când primiți produsele, deoarece această "
+"referință este scrisă de obicei pe comanda de livrare trimisă de către "
+"furnizor."
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.purchase_report
@@ -1743,7 +1785,7 @@ msgstr "Caută comandă de achiziție"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_bill_union_filter
 msgid "Search Reference Document"
-msgstr ""
+msgstr "Căutare Document de Referință"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order_line__display_type__line_section
@@ -1758,7 +1800,7 @@ msgstr "Denumire Secțiune (de ex. Produse, servicii)"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__use_po_lead
 msgid "Security Lead Time for Purchase"
-msgstr ""
+msgstr "Perioada de siguranță pentru achiziție"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__access_token
@@ -1924,6 +1966,9 @@ msgid ""
 "difference between a purchase order and its related vendor bill when "
 "validating this vendor bill."
 msgstr ""
+"Acest cont este utilizat în evaluarea automatizată a inventarului pentru a "
+"înregistra diferența de preț între o comandă de cumpărare și factura "
+"furnizorului aferent atunci când se validează această factură de furnizor."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_product_category__property_account_creditor_price_difference_categ
@@ -1931,6 +1976,8 @@ msgid ""
 "This account will be used to value price difference between purchase price "
 "and accounting cost."
 msgstr ""
+"Acest cont va fi utilizat pentru a evalua diferența de preț între prețul de "
+"achiziție și costul contabil."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_partner__property_purchase_currency_id
@@ -1939,6 +1986,8 @@ msgid ""
 "This currency will be used, instead of the default one, for purchases from "
 "the current partner"
 msgstr ""
+"Această monedă va fi utilizată, în locul celei implicite, pentru achizițiile"
+" de la partenerul curent"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_config_settings__default_purchase_method
@@ -1953,7 +2002,7 @@ msgstr ""
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
 msgid "This note is added to purchase orders."
-msgstr ""
+msgstr "Această notă este adăugată la comenzile de achiziție."
 
 #. module: purchase
 #: code:addons/purchase/models/account_invoice.py:0
@@ -1970,7 +2019,7 @@ msgstr "Acestă factură a fost modificată din: %s"
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order
 msgid "This vendor has no purchase order. Create a new RfQ"
-msgstr ""
+msgstr "Acest furnizor nu are nicio comandă de Achiziție. Creați un nou RfQ"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__state__to_approve
@@ -2024,6 +2073,8 @@ msgid ""
 "Unable to cancel this purchase order. You must first cancel the related "
 "vendor bills."
 msgstr ""
+"Nu se poate anula această comandă de achiziție. Mai întâi, trebuie să "
+"anulați facturile furnizorului aferente."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__price_unit
@@ -2099,7 +2150,7 @@ msgstr "Operator"
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_config_settings__company_currency_id
 msgid "Utility field to express amount currency"
-msgstr ""
+msgstr "Câmpul de utilitate pentru a exprima moneda sumei"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -2134,7 +2185,7 @@ msgstr "Facturi furnizor"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Vendor Country"
-msgstr ""
+msgstr "Țară Vânzător"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_pricelist_action2_purchase
@@ -2159,6 +2210,10 @@ msgid ""
 "                    you receive from your vendor according to the draft\n"
 "                    document in Odoo."
 msgstr ""
+"Facturile furnizorilor pot fi generate în prealabil pe baza comenzilor\n"
+"                    e achiziție sau a chitanțelor. Acest lucru vă permite să controlați facturile\n"
+"                    pe care le primiți de la furnizor în conformitate cu proiectul \n"
+"                   de document in Odoo."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__volume
@@ -2253,3 +2308,6 @@ msgid ""
 "You cannot change the type of a purchase order line. Instead you should "
 "delete the current line and create a new line of the proper type."
 msgstr ""
+"Nu puteți modifica tipul unei linii de comandă de achiziție. În schimb, ar "
+"trebui să ștergeți linia curentă și să creați o nouă linie de tipul "
+"potrivit."

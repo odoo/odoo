@@ -54,12 +54,12 @@ class Event(models.Model):
                 for ticket in self.event_type_id.event_ticket_ids]
 
     def _is_event_registrable(self):
-        if super(Event, self)._is_event_registrable():
-            self.ensure_one()
-            return all(self.event_ticket_ids.with_context(active_test=False).mapped(lambda t: t.product_id.active))
-        else:
-            return False
-
+        res = super(Event, self)._is_event_registrable()
+        if res and self.event_ticket_ids:
+            return any(
+                ticket.product_id.active and not ticket.is_expired and (not ticket.seats_max or ticket.seats_available)
+                for ticket in self.event_ticket_ids.with_context(active_test=False))
+        return res
 
 class EventTicket(models.Model):
     _name = 'event.event.ticket'

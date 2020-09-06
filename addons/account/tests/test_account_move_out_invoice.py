@@ -6,6 +6,7 @@ from odoo import fields
 from odoo.exceptions import UserError
 
 from unittest.mock import patch
+from datetime import timedelta
 
 
 @tagged('post_install', '-at_install')
@@ -1836,6 +1837,22 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'ref': 'Reversal of: %s, %s' % (self.invoice.name, move_reversal.reason),
             'invoice_payment_state': 'paid',
         })
+
+    def test_out_invoice_create_refund_auto_post(self):
+        self.invoice.action_post()
+
+        move_reversal = self.env['account.move.reversal'].with_context(active_model="account.move", active_ids=self.invoice.ids).create({
+            'date': fields.Date.today() + timedelta(days=7),
+            'reason': 'no reason',
+            'refund_method': 'modify',
+        })
+        move_reversal.reverse_moves()
+        refund = self.env['account.move'].search([('type', '=', 'out_refund'), ('company_id', '=', self.invoice.company_id.id)])
+
+        self.assertRecordValues(refund, [{
+            'state': 'draft',
+            'auto_post': True,
+        }])
 
     def test_out_invoice_create_1(self):
         # Test creating an account_move with the least information.

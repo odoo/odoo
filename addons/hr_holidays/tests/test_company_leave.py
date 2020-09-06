@@ -6,6 +6,7 @@ from datetime import date, datetime
 from odoo.tests import tagged
 from odoo.tests.common import SavepointCase
 
+
 @tagged('company_leave')
 class TestCompanyLeave(SavepointCase):
     """ Test leaves for a whole company, conflict resolutions """
@@ -278,3 +279,46 @@ class TestCompanyLeave(SavepointCase):
         self.assertEqual(all_leaves[2].date_to, datetime(2020, 1, 10, 16, 0))
         self.assertEqual(all_leaves[2].number_of_days, 1)
         self.assertEqual(all_leaves[2].state, 'validate')
+
+    def test_leave_whole_company_07(self):
+        # Test Case 7: Try to create a bank holidays for a lot of
+        # employees, and check the performances
+        # 100 employees - 15 already on holidays that day
+
+        employees = self.env['hr.employee'].create([{
+            'name': 'Employee %s' % i,
+            'company_id': self.company.id
+        } for i in range(100)])
+
+        leaves = self.env['hr.leave'].create([{
+            'name': 'Holiday - %s' % employee.name,
+            'employee_id': employee.id,
+            'holiday_status_id': self.paid_time_off.id,
+            'request_date_from': date(2020, 3, 29),
+            'request_date_to': date(2020, 4, 1),
+            'number_of_days': 3,
+        } for employee in employees[0:15]])
+        for leave in leaves:
+            leave._onchange_request_parameters()
+
+        company_leave = self.env['hr.leave'].create({
+            'name': 'Bank Holiday',
+            'holiday_type': 'company',
+            'mode_company_id': self.company.id,
+            'holiday_status_id': self.bank_holiday.id,
+            'date_from': date(2020, 4, 1),
+            'request_date_from': date(2020, 4, 1),
+            'date_to': date(2020, 4, 1),
+            'request_date_to': date(2020, 4, 1),
+            'number_of_days': 1,
+        })
+        company_leave._onchange_request_parameters()
+
+        count = 845
+        with self.assertQueryCount(__system__=count, admin=count):
+            # Original query count: 1987
+            # Without tracking/activity context keys: 5154
+            company_leave.action_validate()
+
+        leaves = self.env['hr.leave'].search([('holiday_status_id', '=', self.bank_holiday.id)])
+        self.assertEqual(len(leaves), 102)

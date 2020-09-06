@@ -93,7 +93,8 @@ class ChangeProductionQty(models.TransientModel):
                     wo.duration_expected = (operation.workcenter_id.time_start +
                                  operation.workcenter_id.time_stop +
                                  cycle_number * operation.time_cycle * 100.0 / operation.workcenter_id.time_efficiency)
-                quantity = wo.qty_production - wo.qty_produced
+                production_qty = wo._get_real_uom_qty(wo.qty_production)
+                quantity = production_qty - wo.qty_produced
                 if production.product_id.tracking == 'serial':
                     quantity = 1.0 if not float_is_zero(quantity, precision_digits=precision) else 0.0
                 else:
@@ -102,9 +103,9 @@ class ChangeProductionQty(models.TransientModel):
                     wo.finished_lot_id = False
                     wo._workorder_line_ids().unlink()
                 wo.qty_producing = quantity
-                if wo.qty_produced < wo.qty_production and wo.state == 'done':
+                if wo.qty_produced < production_qty and wo.state == 'done':
                     wo.state = 'progress'
-                if wo.qty_produced == wo.qty_production and wo.state == 'progress':
+                if wo.qty_produced == production_qty and wo.state == 'progress':
                     wo.state = 'done'
                     if wo.next_work_order_id.state == 'pending':
                         wo.next_work_order_id.state = 'ready'
