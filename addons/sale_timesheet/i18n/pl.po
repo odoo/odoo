@@ -16,6 +16,7 @@
 # Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2018
 # Radosław Biegalski <radoslaw.biegalski@openglobe.pl>, 2018
 # Paweł Wodyński <pw@myodoo.pl>, 2019
+# Grzegorz Michrowski <grzegorz.michrowski@openglobe.pl>, 2020
 # 
 msgid ""
 msgstr ""
@@ -23,7 +24,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-14 07:34+0000\n"
 "PO-Revision-Date: 2018-08-24 09:25+0000\n"
-"Last-Translator: Paweł Wodyński <pw@myodoo.pl>, 2019\n"
+"Last-Translator: Grzegorz Michrowski <grzegorz.michrowski@openglobe.pl>, 2020\n"
 "Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -176,7 +177,7 @@ msgstr ""
 #: code:addons/sale_timesheet/controllers/main.py:249
 #, python-format
 msgid "Before"
-msgstr ""
+msgstr "Przed"
 
 #. module: sale_timesheet
 #: selection:account.analytic.line,timesheet_invoice_type:0
@@ -1307,6 +1308,12 @@ msgid ""
 msgstr ""
 "Nie można modyfikować już zafakturowanych kart pracy (powiązanych z "
 "zamówieniami sprzedaży zafakturowanymi według czasu i materiału)."
+
+#. module: sale_timesheet
+#: code:addons/sale_timesheet/models/account.py:76
+#, python-format
+msgid "You can not modify timesheets from different employees"
+msgstr ""
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/wizard/project_create_invoice.py:18
