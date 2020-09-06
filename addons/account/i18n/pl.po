@@ -32,6 +32,7 @@
 # Mariusz, 2020
 # Piotr Szlązak <szlazakpiotr@gmail.com>, 2020
 # Karol Rybak <karolrybak85@gmail.com>, 2020
+# Grzegorz Michrowski <grzegorz.michrowski@openglobe.pl>, 2020
 # Maksym <ms@myodoo.pl>, 2020
 # 
 msgid ""
@@ -66,7 +67,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_invoices_count
 msgid "# Reconciled Invoices"
-msgstr ""
+msgstr "# Uzgodnione Faktury"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statements_count
@@ -87,7 +88,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "#Created by: %s"
-msgstr ""
+msgstr "#Utworzony przez: %s"
 
 #. module: account
 #: model:mail.template,report_name:account.mail_template_data_payment_receipt
@@ -97,7 +98,7 @@ msgstr "${(object.name or '').replace('/','-')}"
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_invoice
 msgid "${object.company_id.name} Invoice (Ref ${object.name or 'n/a'})"
-msgstr ""
+msgstr "${object.company_id.name} Faktura (Odn. ${object.name or 'n/a'})"
 
 #. module: account
 #: model:mail.template,subject:account.mail_template_data_payment_receipt
@@ -187,12 +188,12 @@ msgstr "2 miesiące"
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_21days
 msgid "21 Days"
-msgstr ""
+msgstr "21 Dni"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_30days
 msgid "30 Days"
-msgstr ""
+msgstr "30 Dni"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_advance_60days
@@ -328,6 +329,8 @@ msgid ""
 "<span attrs=\"{'invisible': ['|', ('state', '!=', 'draft'), ('name', '!=', "
 "'/')]}\">Draft</span>"
 msgstr ""
+"<span attrs=\"{'invisible': ['|', ('state', '!=', 'draft'), ('name', '!=', "
+"'/')]}\">Projekt</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_send_wizard_form
@@ -345,6 +348,8 @@ msgid ""
 "<span attrs=\"{'invisible': [('reconciled_invoices_count','&gt;', 1)]}\">Invoice</span>\n"
 "                                <span attrs=\"{'invisible': [('reconciled_invoices_count','&lt;=', 1)]}\">Invoices</span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('reconciled_invoices_count','&gt;', 1)]}\">Faktura</span>\n"
+"                                <span attrs=\"{'invisible': [('reconciled_invoices_count','&lt;=', 1)]}\">Faktury</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -413,6 +418,9 @@ msgid ""
 "('state', '!=', 'draft'), ('invoice_payment_term_id', '!=', False)]}\"> or "
 "</span>"
 msgstr ""
+"<span class=\"o_form_label mx-3 oe_edit_only\" attrs=\"{'invisible': ['|', "
+"('state', '!=', 'draft'), ('invoice_payment_term_id', '!=', False)]}\"> lub "
+"</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -584,7 +592,7 @@ msgstr "<span>Bilans</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>Create</span>"
-msgstr ""
+msgstr "<span>Utwórz</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -639,7 +647,7 @@ msgstr "<span>Ilość</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "<span>Reference</span>"
-msgstr ""
+msgstr "<span>Odniesienie</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -723,7 +731,7 @@ msgstr "<strong>Termin płatności:</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_statement
 msgid "<strong>Ending Balance</strong>"
-msgstr ""
+msgstr "<strong>Saldo końcowe</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_journal
@@ -783,7 +791,7 @@ msgstr "<strong>Źródło:</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_statement
 msgid "<strong>Starting Balance</strong>"
-msgstr ""
+msgstr "<strong>Saldo początkowe</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -2575,7 +2583,7 @@ msgstr ""
 #: code:addons/account/static/src/xml/account_resequence.xml:0
 #, python-format
 msgid "Before"
-msgstr ""
+msgstr "Przed"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -6267,6 +6275,8 @@ msgid ""
 "Invoice_${(object.name or '').replace('/','_')}${object.state == 'draft' and"
 " '_draft' or ''}"
 msgstr ""
+"Faktura_${(object.number or '').replace('/','_')}_${object.state == 'draft' "
+"and 'szkic' or ''}"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
