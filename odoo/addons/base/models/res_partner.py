@@ -734,8 +734,7 @@ class Partner(models.Model):
         """ Override search() to always show inactive children when searching via ``child_of`` operator. The ORM will
         always call search() with a simple domain of the form [('parent_id', 'in', [ids])]. """
         # a special ``domain`` is set on the ``child_ids`` o2m to bypass this logic, as it uses similar domain expressions
-        if len(args) == 1 and len(args[0]) == 3 and args[0][:2] == ('parent_id','in') \
-                and args[0][2] != [False]:
+        if len(args) == 1 and len(args[0]) == 3 and args[0][:2] == ('parent_id', 'in'):
             self = self.with_context(active_test=False)
         return super(Partner, self)._search(args, offset=offset, limit=limit, order=order,
                                             count=count, access_rights_uid=access_rights_uid)
