@@ -26,7 +26,7 @@ Many2one
 
 .. note::
 
-    **Goal**: at the end of this section
+    **Goal**: at the end of this section:
     
     - a new ``estate.property.type`` model is created with the corresponding menu, action and views.
 
@@ -131,7 +131,7 @@ Many2many
 
 .. note::
 
-    **Goal**: at the end of this section
+    **Goal**: at the end of this section:
     
     - a new ``estate.property.tag`` model is created with the corresponding menu and action.
 
@@ -190,7 +190,7 @@ One2many
 
 .. note::
 
-    **Goal**: at the end of this section
+    **Goal**: at the end of this section:
     
     - A new ``estate.property.offer`` model is created with the corresponding form and tree view.
     - Offers are added to the ``estate.property`` model:

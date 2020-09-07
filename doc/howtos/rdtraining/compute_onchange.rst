@@ -21,7 +21,7 @@ Computed Fields
 
 .. note::
 
-    **Goal**: at the end of this section
+    **Goal**: at the end of this section:
 
     - On the property model, the total area and the best offer are computed:
 

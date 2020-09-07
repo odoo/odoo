@@ -24,7 +24,7 @@ Action Type
 
 .. note::
 
-    **Goal**: at the end of this section
+    **Goal**: at the end of this section:
 
     - You can cancel or set a property to sold:
 
