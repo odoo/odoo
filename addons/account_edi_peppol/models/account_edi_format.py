@@ -128,8 +128,7 @@ class AccountEdiFormat(models.Model):
         namespaces = _get_ubl_namespaces()
 
         def _find_value(xpath, element=tree):
-            element = element.xpath(xpath, namespaces=namespaces)
-            return element[0].text if element else None
+            return self._find_value(xpath, element, namespaces)
 
         with Form(invoice.with_context(default_move_type='in_invoice')) as invoice_form:
             # Reference

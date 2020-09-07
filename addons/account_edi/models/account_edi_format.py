@@ -385,6 +385,10 @@ class AccountEdiFormat(models.Model):
     # Import helpers
     ####################################################
 
+    def _find_value(self, xpath, xml_element, namespaces=None):
+        element = xml_element.xpath(xpath, namespaces=namespaces)
+        return element[0].text if element else None
+
     def _retrieve_partner(self, name=None, phone=None, mail=None, vat=None):
         '''Search all partners and find one that matches one of the parameters.
 
@@ -407,7 +411,7 @@ class AccountEdiFormat(models.Model):
         domain = expression.OR(domains)
         return self.env['res.partner'].search(domain, limit=1)
 
-    def _retrieve_product(self, name=None, default_code=None, ean13=None):
+    def _retrieve_product(self, name=None, default_code=None, ean13=None, barcode=None):
         '''Search all products and find one that matches one of the parameters.
 
         :param name:            The name of the product.
@@ -420,6 +424,7 @@ class AccountEdiFormat(models.Model):
             (name, ('name', 'ilike', name)),
             (default_code, ('default_code', '=', default_code)),
             (ean13, ('ean13', '=', ean13)),
+            (barcode, ('barcode', '=', barcode)),
         ):
             if value is not None:
                 domains.append([domain])
