@@ -8,7 +8,7 @@
             <t t-set="no_livechat" t-value="True"/>
         </xpath>
         <xpath expr="//div[@id='wrapwrap']" position="attributes">
-            <attribute name="t-att-style" add="('height: 100%; overflow: auto; background: url(' + '/survey/get_background_image/%s/%s' % (survey.access_token, answer.access_token) + ') no-repeat fixed center; box-shadow: inset 0 0 0 10000px rgba(255,255,255,.7); background-size: cover;') if survey and survey.background_image and answer else 'height: 100%; overflow: auto;'"/>
+            <attribute name="t-att-style" add="(('height: 100%; overflow: auto; background: url(' + '/survey/get_background_image/%s/%s' % (survey.access_token, answer.access_token) + ') no-repeat fixed center; box-shadow: inset 0 0 0 10000px rgba(255,255,255,.7); background-size: cover;') if survey and survey.background_image and answer else 'height: 100%; overflow: auto;')"/>
         </xpath>
         <xpath expr="//head/t[@t-call-assets][last()]" position="after">
             <t t-call-assets="survey.survey_assets" lazy_load="True"/>
@@ -185,7 +185,7 @@
             </t>
 
             <div class="row">
-                <div class="offset-3 col-6 text-center mt16">
+                <div class="col-12 text-center mt16">
                     <button type="submit" t-att-value="'next' if not survey_last else 'finish'" class="btn btn-primary">
                         <t t-if="not survey_last">Continue</t>
                         <t t-else="">Submit</t>
@@ -222,7 +222,7 @@
                 </div>
 
                 <div class="row">
-                    <div class="offset-3 col-6 text-center mt16">
+                    <div class="col-12 text-center mt16">
                         <button type="submit" t-att-value="'next' if not survey_last else 'finish'" class="btn btn-primary">
                             <t t-if="answer.is_session_answer or survey_last">Submit</t>
                             <t t-else="">Continue</t>
@@ -566,7 +566,7 @@
 
     <template id="survey_selection_key">
         <div t-if="useKeySelection" t-att-class="'o_survey_choice_key bg-white rounded %s' % selection_key_class">
-             <span class="o_survey_key text-center position-absolute bg-white rounded-left py-0 pr-4 pl-2"><span class="text-primary text-center text-center w-100 position-relative">Key</span></span>
+             <span class="o_survey_key text-center position-absolute bg-white rounded-left py-0 pl-2"><span class="text-primary text-center text-center w-100 position-relative">Key</span></span>
              <span class="text-primary text-center w-100 position-relative" t-esc="letters[item_idx]"/>
         </div>
     </template>
