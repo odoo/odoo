@@ -53,9 +53,11 @@ registerClassPatchModel('mail.thread', 'im_livechat/static/src/models/thread/thr
                     )
                 );
                 data2.members.push(['link', partner]);
+                data2.correspondent = [['link', partner]];
             } else {
                 const partnerData = this.env.models['mail.partner'].convertData(data.livechat_visitor);
                 data2.members.push(['insert', partnerData]);
+                data2.correspondent = [['insert', partnerData]];
             }
         }
         return data2;
@@ -68,6 +70,16 @@ registerInstancePatchModel('mail.thread', 'im_livechat/static/src/models/thread/
     // Private
     //----------------------------------------------------------------------
 
+    /**
+     * @override
+     */
+    _computeCorrespondent() {
+        if (this.channel_type === 'livechat') {
+            // livechat correspondent never change: always the public member.
+            return [];
+        }
+        return this._super();
+    },
     /**
      * @override
      */
