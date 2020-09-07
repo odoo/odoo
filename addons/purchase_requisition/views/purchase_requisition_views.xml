@@ -189,7 +189,7 @@
                                 <field name="product_id"/>
                                 <field name="product_qty"/>
                                 <field name="qty_ordered"/>
-                                <field name="product_uom_id" groups="uom.group_uom"/>
+                                <field name="product_uom_id" groups="uom.group_uom" attrs="{'required': [('product_id', '!=', False)]}"/>
                                 <field name="schedule_date" groups="base.group_no_one"/>
                                 <field name="account_analytic_id" groups="analytic.group_analytic_accounting"/>
                                 <field name="analytic_tag_ids" groups="analytic.group_analytic_tags" widget="many2many_tags"/>

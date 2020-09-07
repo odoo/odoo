@@ -222,7 +222,7 @@ class ReportAgedPartnerBalance(models.AbstractModel):
             if partner['partner_id']:
                 #browse the partner name and trust field in sudo, as we may not have full access to the record (but we still have to see it in the report)
                 browsed_partner = self.env['res.partner'].sudo().browse(partner['partner_id'])
-                values['name'] = browsed_partner.name and len(browsed_partner.name) >= 45 and browsed_partner.name[0:40] + '...' or browsed_partner.name
+                values['name'] = browsed_partner.name and len(browsed_partner.name) >= 45 and not self.env.context.get('no_format') and browsed_partner.name[0:41] + '...' or browsed_partner.name
                 values['trust'] = browsed_partner.trust
             else:
                 values['name'] = _('Unknown Partner')
