@@ -30,3 +30,6 @@ class ProjectTaskCreateTimesheet(models.TransientModel):
         }
         self.task_id.user_timer_id.unlink()
         return self.env['account.analytic.line'].create(values)
+
+    def action_delete_timesheet(self):
+        self.task_id.user_timer_id.unlink()
