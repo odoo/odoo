@@ -258,7 +258,7 @@ class RatingMixin(models.AbstractModel):
         """ get the statistics of the rating repatition
             :param domain : optional domain of the rating to include/exclude in statistic computation
             :return dictionnary where
-                - key is the the name of the information (stat name)
+                - key is the name of the information (stat name)
                 - value is statistic value : 'percent' contains the repartition in percentage, 'avg' is the average rate
                   and 'total' is the number of rating
         """
