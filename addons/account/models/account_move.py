@@ -3938,6 +3938,8 @@ class AccountMoveLine(models.Model):
         self.ensure_one()
 
     def copy_data(self, default=None):
+        if not all(self.tax_ids.mapped('active')):
+            raise UserError(_("It seems that some taxes have been archived. Please perform the action manually"))
         res = super(AccountMoveLine, self).copy_data(default=default)
 
         for line, values in zip(self, res):
