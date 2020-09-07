@@ -333,6 +333,9 @@ class MessageList extends Component {
             isProcessed = true;
         }
         if (isProcessed) {
+            this.env.messagingBus.trigger('o-component-message-list-thread-cache-changed', {
+                threadViewer: this.threadView.threadViewer,
+            });
             this.threadView.markComponentHintProcessed(hint);
         }
     }
@@ -397,6 +400,9 @@ class MessageList extends Component {
         if (this.props.order === 'asc' && this.props.hasScrollAdjust) {
             this.el.scrollTop = this.el.scrollHeight - scrollHeight + scrollTop;
         }
+        this.env.messagingBus.trigger('o-component-message-list-more-messages-loaded', {
+            threadViewer: this.threadView.threadViewer,
+        });
         this.threadView.markComponentHintProcessed(hint);
     }
 
@@ -526,8 +532,12 @@ class MessageList extends Component {
         if (!this.threadView || !this.threadView.threadViewer) {
             return;
         }
-        this.trigger('o-message-list-scrolled');
-        this.threadView.threadViewer.saveThreadCacheScrollPositionsAsInitial(this.el.scrollTop);
+        const scrollTop = this.el.scrollTop;
+        this.env.messagingBus.trigger('o-component-message-list-scrolled', {
+            scrollTop,
+            threadViewer: this.threadView.threadViewer,
+        });
+        this.threadView.threadViewer.saveThreadCacheScrollPositionsAsInitial(scrollTop);
         if (!this._isAutoLoadOnScrollActive) {
             return;
         }

@@ -3,7 +3,6 @@ odoo.define('mail/static/src/components/discuss/tests/discuss_tests.js', functio
 
 const BusService = require('bus.BusService');
 
-const { makeDeferred } = require('mail/static/src/utils/deferred/deferred.js');
 const {
     afterEach,
     afterNextRender,
@@ -23,11 +22,12 @@ QUnit.module('discuss_tests.js', {
         beforeEach(this);
 
         this.start = async params => {
-            const { env, widget } = await start(Object.assign({}, params, {
+            const { afterEvent, env, widget } = await start(Object.assign({}, params, {
                 autoOpenDiscuss: true,
                 data: this.data,
                 hasDiscuss: true,
             }));
+            this.afterEvent = afterEvent;
             this.env = env;
             this.widget = widget;
         };
@@ -1837,29 +1837,19 @@ QUnit.test('restore thread scroll position', async function (assert) {
             res_id: 12,
         });
     }
-    const messageFetchChannel11Def = makeDeferred();
-    const messageFetchChannel12Def = makeDeferred();
-    await afterNextRender(async () => {
-        await this.start({
-            discuss: {
-                params: {
-                    default_active_id: 'mail.channel_11',
-                },
+    await this.start({
+        discuss: {
+            params: {
+                default_active_id: 'mail.channel_11',
             },
-            async mockRPC(route, args) {
-                const res = await this._super(...arguments);
-                // domain should be like [['channel_id', 'in', [X]]] with X the channel id
-                if (route.includes('message_fetch') && args.kwargs.domain[0][2].includes(11)) {
-                    messageFetchChannel11Def.resolve();
-                }
-                if (route.includes('message_fetch') && args.kwargs.domain[0][2].includes(12)) {
-                    messageFetchChannel12Def.resolve();
-                }
-                return res;
+        },
+        waitUntilEvent: {
+            eventName: 'o-component-message-list-scrolled',
+            message: "should wait until channel 11 scrolled to its last message",
+            predicate: ({ threadViewer }) => {
+                return threadViewer.thread.model === 'mail.channel' && threadViewer.thread.id === 11;
             },
-        });
-        // wait until messages are fetched, ignore other renders that are too early
-        await messageFetchChannel11Def;
+        },
     });
     assert.strictEqual(
         document.querySelectorAll(`
@@ -1869,34 +1859,42 @@ QUnit.test('restore thread scroll position', async function (assert) {
         "should have 25 messages in channel 11"
     );
 
-    // scroll to top of channel11
-    await afterNextRender(() => {
-        document.querySelector(`.o_Discuss_thread .o_ThreadView_messageList`).scrollTop = 0;
+    await this.afterEvent({
+        eventName: 'o-component-message-list-scrolled',
+        func: () => document.querySelector(`.o_Discuss_thread .o_ThreadView_messageList`).scrollTop = 0,
+        message: "should wait until channel 11 changed its scroll position to top",
+        predicate: ({ threadViewer }) => {
+            return threadViewer.thread.model === 'mail.channel' && threadViewer.thread.id === 11;
+        },
     });
     assert.strictEqual(
         document.querySelector(`.o_Discuss_thread .o_ThreadView_messageList`).scrollTop,
         0,
-        "should have scrolled to top of thread"
+        "should have scrolled to top of channel 11",
     );
 
-    const scrollChannel12Def = makeDeferred();
-    const onScroll = () => {
-        scrollChannel12Def.resolve();
-    };
-    document.addEventListener('o-message-list-scrolled', onScroll);
-    // select channel 12
-    await afterNextRender(async () => {
-        document.querySelector(`
-            .o_DiscussSidebar_groupChannel
-            .o_DiscussSidebar_item[data-thread-local-id="${
-                this.env.models['mail.thread'].find(thread =>
-                    thread.id === 12 &&
-                    thread.model === 'mail.channel'
-                ).localId
-            }"]
-        `).click();
-        // wait until messages are fetched, ignore other renders that are too early
-        await messageFetchChannel12Def;
+    // Ensure scrollIntoView of channel 12 has enough time to complete before
+    // going back to channel 11. Await is needed to prevent the scrollIntoView
+    // initially planned for channel 12 to actually apply on channel 11.
+    // task-2333535
+    await this.afterEvent({
+        eventName: 'o-component-message-list-scrolled',
+        func: () => {
+            // select channel 12
+            document.querySelector(`
+                .o_DiscussSidebar_groupChannel
+                .o_DiscussSidebar_item[data-thread-local-id="${
+                    this.env.models['mail.thread'].find(thread =>
+                        thread.id === 12 &&
+                        thread.model === 'mail.channel'
+                    ).localId
+                }"]
+            `).click();
+        },
+        message: "should wait until channel 12 scrolled to its last message",
+        predicate: ({ threadViewer }) => {
+            return threadViewer.thread.model === 'mail.channel' && threadViewer.thread.id === 12;
+        },
     });
     assert.strictEqual(
         document.querySelectorAll(`
@@ -1906,43 +1904,50 @@ QUnit.test('restore thread scroll position', async function (assert) {
         "should have 24 messages in channel 12"
     );
 
-    // Ensure scrollIntoView of channel 12 has enough time to complete before
-    // going back to channel 11. Await is needed to prevent the scrollIntoView
-    // initially planned for channel 12 to actually apply on channel 11.
-    // task-2333535
-    await scrollChannel12Def;
-    document.removeEventListener('o-message-list-scrolled', onScroll);
-
-    // select channel 11
-    await afterNextRender(() =>
-        document.querySelector(`
-            .o_DiscussSidebar_groupChannel
-            .o_DiscussSidebar_item[data-thread-local-id="${
-                this.env.models['mail.thread'].find(thread =>
-                    thread.id === 11 &&
-                    thread.model === 'mail.channel'
-                ).localId
-            }"]
-        `).click()
-    );
+    await this.afterEvent({
+        eventName: 'o-component-message-list-scrolled',
+        func: () => {
+            // select channel 11
+            document.querySelector(`
+                .o_DiscussSidebar_groupChannel
+                .o_DiscussSidebar_item[data-thread-local-id="${
+                    this.env.models['mail.thread'].find(thread =>
+                        thread.id === 11 &&
+                        thread.model === 'mail.channel'
+                    ).localId
+                }"]
+            `).click();
+        },
+        message: "should wait until channel 11 restored its scroll position",
+        predicate: ({ threadViewer }) => {
+            return threadViewer.thread.model === 'mail.channel' && threadViewer.thread.id === 11;
+        },
+    });
     assert.strictEqual(
         document.querySelector(`.o_Discuss_thread .o_ThreadView_messageList`).scrollTop,
         0,
         "should have recovered scroll position of channel 11 (scroll to top)"
     );
 
-    // select channel12
-    await afterNextRender(() =>
-        document.querySelector(`
-            .o_DiscussSidebar_groupChannel
-            .o_DiscussSidebar_item[data-thread-local-id="${
-                this.env.models['mail.thread'].find(thread =>
-                    thread.id === 12 &&
-                    thread.model === 'mail.channel'
-                ).localId
-            }"]
-        `).click()
-    );
+    await this.afterEvent({
+        eventName: 'o-component-message-list-scrolled',
+        func: () => {
+            // select channel 12
+            document.querySelector(`
+                .o_DiscussSidebar_groupChannel
+                .o_DiscussSidebar_item[data-thread-local-id="${
+                    this.env.models['mail.thread'].find(thread =>
+                        thread.id === 12 &&
+                        thread.model === 'mail.channel'
+                    ).localId
+                }"]
+            `).click();
+        },
+        message: "should wait until channel 12 recovered its scroll position",
+        predicate: ({ threadViewer }) => {
+            return threadViewer.thread.model === 'mail.channel' && threadViewer.thread.id === 12;
+        },
+    });
     const messageList = document.querySelector(`
         .o_Discuss_thread
         .o_ThreadView_messageList
