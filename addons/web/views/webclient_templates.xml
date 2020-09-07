@@ -466,12 +466,6 @@
         <xpath expr="//head/meta[last()]" position="after">
             <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
         </xpath>
-        <xpath expr="//head" position="inside">
-            <script type="text/javascript">
-                const userTZ = Intl.DateTimeFormat().resolvedOptions().timeZone;
-                document.cookie = `tz=${userTZ}; path=/`;
-            </script>
-        </xpath>
         <xpath expr="//head/link[last()]" position="after">
             <t t-call-assets="web.assets_common" t-js="false"/>
             <t t-call-assets="web.assets_frontend" t-js="false"/>
@@ -479,6 +473,10 @@
         <xpath expr="//head/script" position="after">
             <script type="text/javascript">
                 odoo.session_info = <t t-raw="json.dumps(request.env['ir.http'].get_frontend_session_info())"/>;
+                if (!/(^|;\s)tz=/.test(document.cookie)) {
+                    const userTZ = Intl.DateTimeFormat().resolvedOptions().timeZone;
+                    document.cookie = `tz=${userTZ}; path=/`;
+                }
             </script>
             <t t-call-assets="web.assets_common_minimal_js" t-css="false" defer_load="True"/>
             <t t-call-assets="web.assets_frontend_minimal_js" t-css="false" defer_load="True"/>
