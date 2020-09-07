@@ -54,10 +54,17 @@ var Tip = Widget.extend({
         this._onAncestorScroll = _.throttle(this._onAncestorScroll, 50);
     },
     /**
+     * Attaches the tip to the provided $anchor and $altAnchor.
+     * $altAnchor is an alternative trigger that can consume the step. The tip is
+     * however only displayed on the $anchor.
+     *
      * @param {jQuery} $anchor the node on which the tip should be placed
+     * @param {jQuery} $altAnchor an alternative node that can consume the step
+     * @return {Promise}
      */
-    attach_to: async function ($anchor) {
-        this._setupAnchor($anchor);
+    attach_to: function ($anchor, $altAnchor) {
+        this._setupAnchor($anchor, $altAnchor);
+
         this.is_anchor_fixed_position = this.$anchor.css("position") === "fixed";
 
         if (this.info.optional === "true") {
@@ -128,14 +135,22 @@ var Tip = Widget.extend({
 
         return this._super.apply(this, arguments);
     },
-    update: function ($anchor) {
+    /**
+     * Updates the $anchor and $altAnchor the tip is attached to.
+     * $altAnchor is an alternative trigger that can consume the step. The tip is
+     * however only displayed on the $anchor.
+     *
+     * @param {jQuery} $anchor the node on which the tip should be placed
+     * @param {jQuery} $altAnchor an alternative node that can consume the step
+     */
+    update: function ($anchor, $altAnchor) {
         // We unbind/rebind events on each update because we support widgets
         // detaching and re-attaching nodes to their DOM element without keeping
         // the initial event handlers, with said node being potential tip
         // anchors (e.g. FieldMonetary > input element).
         this._unbind_anchor_events();
         if (!$anchor.is(this.$anchor)) {
-            this._setupAnchor($anchor);
+            this._setupAnchor($anchor, $altAnchor);
         }
         this._bind_anchor_events();
         if (!this.$el) {
@@ -152,12 +167,16 @@ var Tip = Widget.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * @private
-     * @param {jQuery} $anchor
+     * Sets the $anchor and $altAnchor the tip is attached to.
+     * $altAnchor is an alternative trigger that can consume the step. The tip is
+     * however only displayed on the $anchor.
+     *
+     * @param {jQuery} $anchor the node on which the tip should be placed
+     * @param {jQuery} $altAnchor an alternative node that can consume the step
      */
-    _setupAnchor: function ($anchor) {
+    _setupAnchor: function ($anchor, $altAnchor) {
         this.$anchor = $anchor;
-        this.$actualAnchor = this.$anchor;
+        this.$altAnchor = $altAnchor;
         this.$ideal_location = this._get_ideal_location();
         this.$furtherIdealLocation = this._get_ideal_location(this.$ideal_location);
     },
@@ -214,11 +233,9 @@ var Tip = Widget.extend({
             let $location;
             if (this.viewPortState === 'in') {
                 this.$tooltip_content.html(this.info.content);
-                this.$actualAnchor = this.$anchor;
                 $location = this.$ideal_location;
             } else {
                 this.$tooltip_content.html(this.info.scrollContent);
-                this.$actualAnchor = this.$ideal_location;
                 $location = this.$furtherIdealLocation;
             }
             // Update o_tooltip_parent class and tip DOM location. Note:
@@ -320,37 +337,57 @@ var Tip = Widget.extend({
         this.$el.addClass("o_animated");
     },
     _bind_anchor_events: function () {
+        // The consume_event taken for RunningTourActionHelper is the one of $anchor and not $altAnchor.
         this.consume_event = this.info.consumeEvent || Tip.getConsumeEventType(this.$anchor, this.info.run);
-        this.$consumeEventAnchor = this.$anchor;
-        if (this.consume_event === "drag") {
-            // jQuery-ui draggable triggers 'drag' events on the .ui-draggable element,
-            // but the tip is attached to the .ui-draggable-handle element which may
-            // be one of its children (or the element itself)
-            this.$consumeEventAnchor = this.$anchor.closest('.ui-draggable');
-        } else if (this.consume_event === "input" && !this.$anchor.is('textarea, input')) {
-            this.$consumeEventAnchor = this.$anchor.closest("[contenteditable='true']");
-        } else if (this.consume_event.includes('apply.daterangepicker')) {
-            this.$consumeEventAnchor = this.$anchor.parent().children('.o_field_date_range');
-        } else if (this.consume_event === "sort") {
-            // when an element is dragged inside a sortable container (with classname
-            // 'ui-sortable'), jQuery triggers the 'sort' event on the container
-            this.$consumeEventAnchor = this.$anchor.closest('.ui-sortable');
+        this.$consumeEventAnchors = this._getAnchorAndCreateEvent(this.consume_event, this.$anchor);
+        if (this.$altAnchor.length) {
+            const consumeEvent  = this.info.consumeEvent || Tip.getConsumeEventType(this.$altAnchor, this.info.run);
+            this.$consumeEventAnchors = this.$consumeEventAnchors.add(
+                this._getAnchorAndCreateEvent(consumeEvent, this.$altAnchor)
+            );
         }
-        this.$consumeEventAnchor.on(this.consume_event + ".anchor", (function (e) {
-            if (e.type !== "mousedown" || e.which === 1) { // only left click
-                this.trigger("tip_consumed");
-                this._unbind_anchor_events();
-            }
-        }).bind(this));
         this.$anchor.on('mouseenter.anchor', () => this._to_info_mode());
         this.$anchor.on('mouseleave.anchor', () => this._to_bubble_mode());
 
         this.$scrolableElement = this.$ideal_location.is('html,body') ? $(window) : this.$ideal_location;
         this.$scrolableElement.on('scroll.Tip', () => this._onAncestorScroll());
     },
+    /**
+     * Gets the anchor corresponding to the provided arguments and attaches the
+     * event to the $anchor in order to consume the step accordingly.
+     *
+     * @private
+     * @param {String} consumeEvent
+     * @param {jQuery} $anchor the node on which the tip should be placed
+     * @return {jQuery}
+     */
+    _getAnchorAndCreateEvent: function(consumeEvent, $anchor) {
+        let $consumeEventAnchors = $anchor;
+        if (consumeEvent === "drag") {
+            // jQuery-ui draggable triggers 'drag' events on the .ui-draggable element,
+            // but the tip is attached to the .ui-draggable-handle element which may
+            // be one of its children (or the element itself)
+            $consumeEventAnchors = $anchor.closest('.ui-draggable');
+        } else if (consumeEvent === "input" && !$anchor.is('textarea, input')) {
+            $consumeEventAnchors = $anchor.closest("[contenteditable='true']");
+        } else if (consumeEvent.includes('apply.daterangepicker')) {
+            $consumeEventAnchors = $anchor.parent().children('.o_field_date_range');
+        } else if (consumeEvent === "sort") {
+            // when an element is dragged inside a sortable container (with classname
+            // 'ui-sortable'), jQuery triggers the 'sort' event on the container
+            $consumeEventAnchors = $anchor.closest('.ui-sortable');
+        }
+        $consumeEventAnchors.on(consumeEvent + ".anchor", (function (e) {
+            if (e.type !== "mousedown" || e.which === 1) { // only left click
+                this.trigger("tip_consumed");
+                this._unbind_anchor_events();
+            }
+        }).bind(this));
+        return $consumeEventAnchors;
+    },
     _unbind_anchor_events: function () {
         this.$anchor.off(".anchor");
-        this.$consumeEventAnchor.off(".anchor");
+        this.$consumeEventAnchors.off(".anchor");
         this.$scrolableElement.off('.Tip');
     },
     _get_spaced_inverted_position: function (position) {
