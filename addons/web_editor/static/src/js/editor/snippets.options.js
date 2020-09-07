@@ -3109,7 +3109,11 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
      * @override
      */
     _computeVisibility() {
-        const src = this._getImg().getAttribute('src');
+        const img = this._getImg();
+        if (!['image/jpeg', 'image/png'].includes(img.dataset.mimetype)) {
+            return false;
+        }
+        const src = img.getAttribute('src');
         return src && src !== '/';
     },
     /**
