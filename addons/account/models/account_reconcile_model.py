@@ -273,12 +273,15 @@ class AccountReconcileModel(models.Model):
         new_aml_dicts = []
         for tax_res in res['taxes']:
             tax = self.env['account.tax'].browse(tax_res['id'])
+            balance = tax_res['amount']
 
             new_aml_dicts.append({
                 'account_id': tax_res['account_id'] or base_line_dict['account_id'],
                 'name': tax_res['name'],
                 'partner_id': base_line_dict.get('partner_id'),
-                'balance': tax_res['amount'],
+                'balance': balance,
+                'debit': balance > 0 and balance or 0,
+                'credit': balance < 0 and -balance or 0,
                 'analytic_account_id': tax.analytic and base_line_dict['analytic_account_id'],
                 'analytic_tag_ids': tax.analytic and base_line_dict['analytic_tag_ids'],
                 'tax_exigible': tax_res['tax_exigibility'],
@@ -290,7 +293,13 @@ class AccountReconcileModel(models.Model):
             })
 
             # Handle price included taxes.
-            base_line_dict['balance'] = tax_res['base']
+            base_balance = tax_res['base']
+            base_line_dict.update({
+                'balance': base_balance,
+                'debit': base_balance > 0 and base_balance or 0,
+                'credit': base_balance < 0 and -base_balance or 0,
+            })
+
         base_line_dict['tax_tag_ids'] = [(6, 0, res['base_tags'])]
         return new_aml_dicts
 
@@ -327,6 +336,8 @@ class AccountReconcileModel(models.Model):
             writeoff_line = {
                 'name': line.label or st_line.payment_ref,
                 'balance': balance,
+                'debit': balance > 0 and balance or 0,
+                'credit': balance < 0 and -balance or 0,
                 'account_id': line.account_id.id,
                 'currency_id': False,
                 'analytic_account_id': line.analytic_account_id.id,
@@ -461,6 +472,9 @@ class AccountReconcileModel(models.Model):
                     model_rslt, new_reconciled_aml_ids, new_treated_aml_ids = rec_model._get_rule_result(st_line, candidates, aml_ids_to_exclude, reconciled_amls_ids, partner)
 
                     if model_rslt:
+                        # We inject the selected partner (possibly coming from the rec model)
+                        model_rslt['partner']= partner
+
                         results[st_line.id] = model_rslt
                         reconciled_amls_ids |= new_reconciled_aml_ids
                         aml_ids_to_exclude |= new_treated_aml_ids
@@ -888,14 +902,15 @@ class AccountReconcileModel(models.Model):
         return candidates_by_priority
 
     def _get_writeoff_suggestion_rule_result(self, st_line, partner):
+        # Create write-off lines.
+        lines_vals_list = self._prepare_reconciliation(st_line, partner=partner)
+
         rslt = {
             'model': self,
             'status': 'write_off',
             'aml_ids': [],
+            'write_off_vals': lines_vals_list,
         }
-
-        # Create write-off lines.
-        lines_vals_list = self._prepare_reconciliation(st_line, partner=partner)
 
         # Process auto-reconciliation.
         if lines_vals_list and self.auto_reconcile:
