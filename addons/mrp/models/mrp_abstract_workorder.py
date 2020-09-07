@@ -267,7 +267,7 @@ class MrpAbstractWorkorder(models.AbstractModel):
                     'location_id': production_move.location_id.id,
                     'location_dest_id': location_dest_id,
                 })
-        else:
+        elif production_move:
             rounding = production_move.product_uom.rounding
             production_move._set_quantity_done(
                 float_round(self.qty_producing, precision_rounding=rounding)

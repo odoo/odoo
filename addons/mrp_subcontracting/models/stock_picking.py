@@ -38,13 +38,15 @@ class StockPicking(models.Model):
     # -------------------------------------------------------------------------
 
     def action_done(self):
+        for picking in self:
+            production_move = {move.id: move.move_orig_ids.production_id for move in picking.move_lines}
         res = super(StockPicking, self).action_done()
         productions = self.env['mrp.production']
         for picking in self:
             for move in picking.move_lines:
                 if not move.is_subcontract:
                     continue
-                production = move.move_orig_ids.production_id
+                production = production_move.get(move.id, False) or move.move_orig_ids.production_id
                 if move._has_tracked_subcontract_components():
                     move.move_orig_ids.filtered(lambda m: m.state not in ('done', 'cancel')).move_line_ids.unlink()
                     move_finished_ids = move.move_orig_ids.filtered(lambda m: m.state not in ('done', 'cancel'))
