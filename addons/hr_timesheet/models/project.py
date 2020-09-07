@@ -22,14 +22,18 @@ class Project(models.Model):
     )
 
     timesheet_ids = fields.One2many('account.analytic.line', 'project_id', 'Associated Timesheets')
-    timesheet_encode_uom_id = fields.Many2one('uom.uom', related='company_id.timesheet_encode_uom_id')
+    timesheet_encode_uom_id = fields.Many2one('uom.uom', compute='_compute_timesheet_encode_uom_id')
     total_timesheet_time = fields.Integer(
         compute='_compute_total_timesheet_time',
         help="Total number of time (in the proper UoM) recorded in the project, rounded to the unit.")
     encode_uom_in_days = fields.Boolean(compute='_compute_encode_uom_in_days')
 
+    def _compute_timesheet_encode_uom_id(self):
+        for project in self:
+            project.timesheet_encode_uom_id = self.env['account.analytic.line'].get_encoding_uom_id()
+
     def _compute_encode_uom_in_days(self):
-        self.encode_uom_in_days = self.env.company.timesheet_encode_uom_id == self.env.ref('uom.product_uom_day')
+        self.encode_uom_in_days = self.timesheet_encode_uom_id == self.env.ref('uom.product_uom_day')
 
     @api.depends('analytic_account_id')
     def _compute_allow_timesheets(self):
@@ -98,10 +102,21 @@ class Project(models.Model):
                 warning_msg, self.env.ref('hr_timesheet.timesheet_action_project').id,
                 _('See timesheet entries'), {'active_ids': projects_with_timesheets.ids})
 
+    @api.model
+    def get_encoding_uom_config_id(self):
+        return int(self.env['ir.config_parameter'].sudo().get_param('hr_timesheet.project_time_mode_id'))
+
+    @api.model
+    def get_encoding_uom_id(self):
+        return self.env['uom.uom'].browse(self.get_encoding_uom_config_id())
+
 
 class Task(models.Model):
     _name = "project.task"
     _inherit = "project.task"
+
+    def _default_uom_in_days(self):
+        return self._uom_in_days()
 
     analytic_account_active = fields.Boolean("Active Analytic Account", compute='_compute_analytic_account_active')
     allow_timesheets = fields.Boolean("Allow timesheets", related='project_id.allow_timesheets', help="Timesheets can be logged on this task.", readonly=True)
@@ -112,10 +127,10 @@ class Task(models.Model):
     overtime = fields.Float(compute='_compute_progress_hours', store=True)
     subtask_effective_hours = fields.Float("Sub-tasks Hours Spent", compute='_compute_subtask_effective_hours', store=True, help="Time spent on the sub-tasks (and their own sub-tasks) of this task.")
     timesheet_ids = fields.One2many('account.analytic.line', 'task_id', 'Timesheets')
-    encode_uom_in_days = fields.Boolean(compute='_compute_encode_uom_in_days', default=lambda self: self._uom_in_days())
+    encode_uom_in_days = fields.Boolean(compute='_compute_encode_uom_in_days', default=_default_uom_in_days)
 
     def _uom_in_days(self):
-        return self.env.company.timesheet_encode_uom_id == self.env.ref('uom.product_uom_day')
+        return self.env['account.analytic.line'].get_encoding_uom_config_id() == self.env.ref('uom.product_uom_day').id
 
     def _compute_encode_uom_in_days(self):
         self.encode_uom_in_days = self._uom_in_days()
@@ -214,14 +229,14 @@ class Task(models.Model):
         result = super(Task, self)._fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
         result['arch'] = self.env['account.analytic.line']._apply_timesheet_label(result['arch'])
 
-        if view_type == 'tree' and self.env.company.timesheet_encode_uom_id == self.env.ref('uom.product_uom_day'):
+        if view_type == 'tree' and self.env['account.analytic.line'].get_encoding_uom_config_id() == self.env.ref('uom.product_uom_day').id:
             result['arch'] = self._apply_time_label(result['arch'])
         return result
 
     @api.model
     def _apply_time_label(self, view_arch):
         doc = etree.XML(view_arch)
-        encoding_uom = self.env.company.timesheet_encode_uom_id
+        encoding_uom = self.env['account.analytic.line'].get_encoding_uom_id()
         for node in doc.xpath("//field[@widget='timesheet_uom'][not(@string)] | //field[@widget='timesheet_uom_no_toggle'][not(@string)]"):
             name_with_uom = re.sub(_('Hours') + "|Hours", encoding_uom.name or '', self._fields[node.get('name')]._description_string(self.env), flags=re.IGNORECASE)
             node.set('string', name_with_uom)

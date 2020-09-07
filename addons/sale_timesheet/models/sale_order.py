@@ -16,8 +16,12 @@ class SaleOrder(models.Model):
 
     # override domain
     project_id = fields.Many2one(domain="[('pricing_type', 'in', ('fixed_rate', 'task_rate')), ('analytic_account_id', '!=', False), ('company_id', '=', company_id)]")
-    timesheet_encode_uom_id = fields.Many2one('uom.uom', related='company_id.timesheet_encode_uom_id')
+    timesheet_encode_uom_id = fields.Many2one('uom.uom', compute='_compute_timesheet_encode_uom_id')
     timesheet_total_duration = fields.Integer("Timesheet Total Duration", compute='_compute_timesheet_total_duration', help="Total recorded duration, expressed in the encoding UoM, and rounded to the unit")
+
+    def _compute_timesheet_encode_uom_id(self):
+        for account_analytic_line in self:
+            account_analytic_line.timesheet_encode_uom_id = self.env['account.analytic.line'].get_encoding_uom_config_id()
 
     @api.depends('analytic_account_id.line_ids')
     def _compute_timesheet_ids(self):
@@ -31,7 +35,7 @@ class SaleOrder(models.Model):
                 order.timesheet_ids = []
             order.timesheet_count = len(order.timesheet_ids)
 
-    @api.depends('timesheet_ids', 'company_id.timesheet_encode_uom_id')
+    @api.depends('timesheet_ids')
     def _compute_timesheet_total_duration(self):
         for sale_order in self:
             timesheets = sale_order.timesheet_ids if self.user_has_groups('hr_timesheet.group_hr_timesheet_approver') else sale_order.timesheet_ids.filtered(lambda t: t.user_id.id == self.env.uid)
@@ -135,7 +139,7 @@ class SaleOrderLine(models.Model):
                 name = names.get(line.id)
                 if line.remaining_hours_available:
                     company = self.env.company
-                    encoding_uom = company.timesheet_encode_uom_id
+                    encoding_uom = self.env['account.analytic.line'].get_encoding_uom_id()
                     remaining_time = ''
                     if encoding_uom == uom_hour:
                         hours, minutes = divmod(abs(line.remaining_hours) * 60, 60)
@@ -209,7 +213,7 @@ class SaleOrderLine(models.Model):
     ###########################################
 
     def _convert_qty_company_hours(self, dest_company):
-        company_time_uom_id = dest_company.project_time_mode_id
+        company_time_uom_id = self.env['project.project'].get_encoding_uom_id()
         if self.product_uom.id != company_time_uom_id.id and self.product_uom.category_id.id == company_time_uom_id.category_id.id:
             planned_hours = self.product_uom._compute_quantity(self.product_uom_qty, company_time_uom_id)
         else:

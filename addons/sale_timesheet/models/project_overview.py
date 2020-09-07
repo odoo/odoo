@@ -41,8 +41,8 @@ class Project(models.Model):
     def _plan_prepare_values(self):
         currency = self.env.company.currency_id
         uom_hour = self.env.ref('uom.product_uom_hour')
-        company_uom = self.env.company.timesheet_encode_uom_id
-        is_uom_day = company_uom == self.env.ref('uom.product_uom_day')
+        encoding_uom = self.env['account.analytic.line'].get_encoding_uom_id()
+        is_uom_day = encoding_uom == self.env.ref('uom.product_uom_day')
         hour_rounding = uom_hour.rounding
         billable_types = ['non_billable', 'non_billable_project', 'billable_time', 'non_billable_timesheet', 'billable_fixed']
 
@@ -75,7 +75,7 @@ class Project(models.Model):
         canceled_hours = float_round(total_canceled_hours, precision_rounding=hour_rounding)
         if is_uom_day:
             # convert time from hours to days
-            canceled_hours = round(uom_hour._compute_quantity(canceled_hours, company_uom, raise_if_failure=False), 2)
+            canceled_hours = round(uom_hour._compute_quantity(canceled_hours, encoding_uom, raise_if_failure=False), 2)
         dashboard_values['time']['canceled'] = canceled_hours
         dashboard_values['time']['total'] += canceled_hours
 
@@ -88,7 +88,7 @@ class Project(models.Model):
             amount = float_round(data.get('unit_amount'), precision_rounding=hour_rounding)
             if is_uom_day:
                 # convert time from hours to days
-                amount = round(uom_hour._compute_quantity(amount, company_uom, raise_if_failure=False), 2)
+                amount = round(uom_hour._compute_quantity(amount, encoding_uom, raise_if_failure=False), 2)
             dashboard_values['time'][billable_type] = amount
             dashboard_values['time']['total'] += amount
             # rates
@@ -170,7 +170,7 @@ class Project(models.Model):
                 # convert all times from hours to days
                 for time_type in ['non_billable_project', 'non_billable', 'billable_time', 'non_billable_timesheet', 'billable_fixed', 'canceled', 'total']:
                     if repartition_employee[employee_id][time_type]:
-                        repartition_employee[employee_id][time_type] = round(uom_hour._compute_quantity(repartition_employee[employee_id][time_type], company_uom, raise_if_failure=False), 2)
+                        repartition_employee[employee_id][time_type] = round(uom_hour._compute_quantity(repartition_employee[employee_id][time_type], encoding_uom, raise_if_failure=False), 2)
         hours_per_employee = [repartition_employee[employee_id]['total'] for employee_id in repartition_employee]
         values['repartition_employee_max'] = (max(hours_per_employee) if hours_per_employee else 1) or 1
         values['repartition_employee'] = repartition_employee
@@ -189,8 +189,8 @@ class Project(models.Model):
             return False
 
         uom_hour = self.env.ref('uom.product_uom_hour')
-        company_uom = self.env.company.timesheet_encode_uom_id
-        is_uom_day = company_uom and company_uom == self.env.ref('uom.product_uom_day')
+        encoding_uom = self.env['account.analytic.line'].get_encoding_uom_id()
+        is_uom_day = encoding_uom and encoding_uom == self.env.ref('uom.product_uom_day')
 
         # build SQL query and fetch raw data
         query, query_params = self._table_rows_sql_query()
@@ -279,7 +279,7 @@ class Project(models.Model):
             # convert all values from hours to days
             for row in timesheet_forecast_table_rows:
                 for index in range(1, len(row)):
-                    row[index] = round(uom_hour._compute_quantity(row[index], company_uom, raise_if_failure=False), 2)
+                    row[index] = round(uom_hour._compute_quantity(row[index], encoding_uom, raise_if_failure=False), 2)
         # complete table data
         return {
             'header': self._table_header(),
@@ -537,7 +537,7 @@ class Project(models.Model):
 
         ts_tree = self.env.ref('hr_timesheet.hr_timesheet_line_tree')
         ts_form = self.env.ref('hr_timesheet.hr_timesheet_line_form')
-        if self.env.company.timesheet_encode_uom_id == self.env.ref('uom.product_uom_day'):
+        if self.env['account.analytic.line'].get_encoding_uom_config_id() == self.env.ref('uom.product_uom_day').id:
             timesheet_label = [_('Days'), _('Recorded')]
         else:
             timesheet_label = [_('Hours'), _('Recorded')]

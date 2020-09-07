@@ -14,7 +14,14 @@
         model="project.project"
         name="_init_data_analytic_account"
         eval="[]"/>
-
+    <record id="ir_config_parameter_timesheet_encode_uom_id" model="ir.config_parameter">
+        <field name="key">hr_timesheet.timesheet_encode_uom_id</field>
+        <field name="value" eval="ref('uom.product_uom_hour')"/>
+    </record>
+    <record id="ir_config_parameter_project_time_mode_id" model="ir.config_parameter">
+        <field name="key">hr_timesheet.project_time_mode_id</field>
+        <field name="value" eval="ref('uom.product_uom_hour')"/>
+    </record>
     <record id="ir_config_parameter_timesheet_rounding" model="ir.config_parameter">
         <field name="key">hr_timesheet.timesheet_rounding</field>
         <field name="value">15</field>
