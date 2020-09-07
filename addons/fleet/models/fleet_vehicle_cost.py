@@ -55,7 +55,7 @@ class FleetVehicleLogContract(models.Model):
         ], 'Recurring Cost Frequency', default='monthly', help='Frequency of the recuring cost', required=True)
     service_ids = fields.Many2many('fleet.service.type', string="Included Services")
 
-    @api.depends('vehicle_id', 'cost_subtype_id')
+    @api.depends('vehicle_id.name', 'cost_subtype_id')
     def _compute_contract_name(self):
         for record in self:
             name = record.vehicle_id.name
