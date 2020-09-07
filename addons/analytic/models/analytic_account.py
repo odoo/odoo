@@ -196,4 +196,4 @@ class AccountAnalyticLine(models.Model):
     def _check_company_id(self):
         for line in self:
             if line.account_id.company_id and line.company_id.id != line.account_id.company_id.id:
-                raise ValidationError(_('The selected account belongs to another company that the one you\'re trying to create an analytic item for'))
+                raise ValidationError(_('The selected account belongs to another company than the one you\'re trying to create an analytic item for'))
