@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-01 07:28+0000\n"
-"PO-Revision-Date: 2020-09-01 07:28+0000\n"
+"POT-Creation-Date: 2020-09-07 07:33+0000\n"
+"PO-Revision-Date: 2020-09-07 07:33+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -27,6 +27,7 @@ msgid "Account Invoice Send"
 msgstr ""
 
 #. module: account_edi
+#: model:ir.model,name:account_edi.model_ir_attachment
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__attachment_id
 msgid "Attachment"
 msgstr ""
@@ -76,6 +77,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_edi.field_account_move_line__display_name
 #: model:ir.model.fields,field_description:account_edi.field_account_payment__display_name
 #: model:ir.model.fields,field_description:account_edi.field_ir_actions_report__display_name
+#: model:ir.model.fields,field_description:account_edi.field_ir_attachment__display_name
 #: model:ir.model.fields,field_description:account_edi.field_mail_template__display_name
 msgid "Display Name"
 msgstr ""
@@ -200,6 +202,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_edi.field_account_move_line__id
 #: model:ir.model.fields,field_description:account_edi.field_account_payment__id
 #: model:ir.model.fields,field_description:account_edi.field_ir_actions_report__id
+#: model:ir.model.fields,field_description:account_edi.field_ir_attachment__id
 #: model:ir.model.fields,field_description:account_edi.field_mail_template__id
 msgid "ID"
 msgstr ""
@@ -228,6 +231,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_edi.field_account_move_line____last_update
 #: model:ir.model.fields,field_description:account_edi.field_account_payment____last_update
 #: model:ir.model.fields,field_description:account_edi.field_ir_actions_report____last_update
+#: model:ir.model.fields,field_description:account_edi.field_ir_attachment____last_update
 #: model:ir.model.fields,field_description:account_edi.field_mail_template____last_update
 msgid "Last Modified on"
 msgstr ""
@@ -359,6 +363,13 @@ msgid ""
 "You can't edit the following journal entry %s because an electronic document"
 " has already been sent. Please use the 'Request EDI Cancellation' button "
 "instead."
+msgstr ""
+
+#. module: account_edi
+#: code:addons/account_edi/models/ir_attachment.py:0
+#, python-format
+msgid ""
+"You can't unlink an attachment being an EDI document sent to the government."
 msgstr ""
 
 #. module: account_edi
