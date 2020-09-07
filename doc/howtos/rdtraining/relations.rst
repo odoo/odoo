@@ -103,7 +103,7 @@ In Odoo, there are two models to which we commonly refer to:
     Add a buyer and a salesman on the ``estate.property`` model using the two common models
     mentioned. They should be added in a new tab of the form view, as depicted.
 
-    The default value for the salesman must be the current user.
+    The default value for the salesman must be the current user. The buyer should not be copied.
 
     Tip: to get the default value, check the note below or find an example
     `here <https://github.com/odoo/odoo/blob/5bb8b927524d062be32f92eb326ef64091301de1/addons/crm/models/crm_lead.py#L92>`__.
