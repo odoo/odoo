@@ -531,6 +531,7 @@ class StockQuant(models.Model):
         try:
             with self.env.cr.savepoint():
                 self.env.cr.execute(query)
+                self.invalidate_cache()
         except Error as e:
             _logger.info('an error occured while merging quants: %s', e.pgerror)
 
