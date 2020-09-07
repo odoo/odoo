@@ -1491,7 +1491,7 @@ class StockMove(models.Model):
                 new_move = move._split(qty_split)
                 move._unreserve_initial_demand(new_move)
                 if cancel_backorder:
-                    self.env['stock.move'].browse(new_move)._action_cancel()
+                    self.env['stock.move'].browse(new_move).with_context(moves_todo=moves_todo)._action_cancel()
         moves_todo.mapped('move_line_ids').sorted()._action_done()
         # Check the consistency of the result packages; there should be an unique location across
         # the contained quants.
