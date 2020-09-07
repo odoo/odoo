@@ -8,8 +8,6 @@ const utils = require('web.utils');
 
 function factory(dependencies) {
 
-    let nextPublicId = -1;
-
     class Partner extends dependencies['mail.model'] {
 
         //----------------------------------------------------------------------
@@ -65,12 +63,6 @@ function factory(dependencies) {
             }
 
             return data2;
-        }
-
-        static getNextPublicId() {
-            const id = nextPublicId;
-            nextPublicId -= 1;
-            return id;
         }
 
         /**

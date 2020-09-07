@@ -164,6 +164,16 @@ const DiscussWidget = AbstractAction.extend({
     },
     /**
      * @private
+     * @returns {boolean}
+     */
+    _shouldHaveInviteButton() {
+        return (
+            this.discuss.thread &&
+            this.discuss.thread.channel_type === 'channel'
+        );
+    },
+    /**
+     * @private
      */
     _showRainbowMan() {
         this.trigger_up('show_effect', {
@@ -176,10 +186,7 @@ const DiscussWidget = AbstractAction.extend({
      */
     _updateControlPanel() {
         // Invite
-        if (
-            this.discuss.thread &&
-            this.discuss.thread.channel_type === 'channel'
-        ) {
+        if (this._shouldHaveInviteButton()) {
             this.$buttons.find('.o_invite').removeClass('o_hidden');
         } else {
             this.$buttons.find('.o_invite').addClass('o_hidden');
