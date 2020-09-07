@@ -833,7 +833,7 @@ class ResourceResource(models.Model):
     user_id = fields.Many2one('res.users', string='User', help='Related user name for the resource to manage its access.')
     time_efficiency = fields.Float(
         'Efficiency Factor', default=100, required=True,
-        help="This field is used to calculate the the expected duration of a work order at this work center. For example, if a work order takes one hour and the efficiency factor is 100%, then the expected duration will be one hour. If the efficiency factor is 200%, however the expected duration will be 30 minutes.")
+        help="This field is used to calculate the expected duration of a work order at this work center. For example, if a work order takes one hour and the efficiency factor is 100%, then the expected duration will be one hour. If the efficiency factor is 200%, however the expected duration will be 30 minutes.")
     calendar_id = fields.Many2one(
         "resource.calendar", string='Working Time',
         default=lambda self: self.env.company.resource_calendar_id,

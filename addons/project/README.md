@@ -28,7 +28,7 @@ Work Together
 
 ### Real time chats, document sharing, email integration
 
-Use open chatter to communicate with your team or customers and share comments
+Use the chatter to communicate with your team or customers and share comments
 and documents on tasks and issues. Integrate discussion fast with the email
 integration.
 

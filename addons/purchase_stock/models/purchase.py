@@ -103,7 +103,7 @@ class PurchaseOrder(models.Model):
             for move in order.order_line.mapped('move_ids'):
                 if move.state == 'done':
                     raise UserError(_('Unable to cancel purchase order %s as some receptions have already been done.') % (order.name))
-            # If the product is MTO, change the procure_method of the the closest move to purchase to MTS.
+            # If the product is MTO, change the procure_method of the closest move to purchase to MTS.
             # The purpose is to link the po that the user will manually generate to the existing moves's chain.
             if order.state in ('draft', 'sent', 'to approve', 'purchase'):
                 for order_line in order.order_line:

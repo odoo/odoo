@@ -79,7 +79,7 @@ Reordering rules, procurement and procurement group
 
 Procurements represent needs that need to be solved by a procurement rule.  For example, every sales order line will create a procurement in Customers.  This will be solved by a move for the delivery, which will, in case of a MTO product, create a new procurement (need) in Stock, which will be solved by a purchase order if it also has the buy-route.
 
-It is not required however, to have this need in stock created by a move.  In case of MTS, the move will not create a procurement (need), but the the procurement will originate from a reordering rule created for this product in stock.  
+It is not required however, to have this need in stock created by a move.  In case of MTS, the move will not create a procurement (need), but the procurement will originate from a reordering rule created for this product in stock.  
 
 An reordering rule (= minimum stock rule) applies the following rule: if the virtual stock for the given location is lower than the minimum stock indicated in the rule, the system will automatically propose a procurement to increase the level of virtual stock to the maximum level given in the rule.  We underline that the rule is based on virtual quantities and not just on real quantities. It takes into account the calculation of orders and receipts to come.
 

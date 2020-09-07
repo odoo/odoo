@@ -27,7 +27,7 @@ Odoo's building blocks allow to design modern websites that are not possible
 with traditional WYSIWYG page editors.
 
 Whether it's for products descriptions, blogs or static pages, you don't need
-to be a professioanl designer to create clean contents. Just drag and drop and
+to be a professional designer to create clean contents. Just drag and drop and
 customize predefined building blocks.
 
 Enterprise-Ready, out-of-the-box

@@ -2589,7 +2589,7 @@ class TestRoutes(TestStockCommon):
         ])
         ship, pack, pick = self.env['stock.move'].search([('product_id',  '=', product_a.id)])
 
-        # by default they all the the same `date`
+        # by default they all the same `date`
         self.assertEqual(set((ship + pack + pick).mapped('date')), {pick.date})
 
         # pick - pack - ship
