@@ -72,7 +72,12 @@ class FleetVehicle(models.Model):
         ('diesel', 'Diesel'),
         ('lpg', 'LPG'),
         ('electric', 'Electric'),
-        ('hybrid', 'Hybrid')
+        ('hybrid', 'Hybrid'),
+        ('plug_in_hybrid_diesel', 'Plug-in Hybrid Diesel'),
+        ('plug_in_hybrid_gasoline', 'Plug-in Hybrid Gasoline'),
+        ('full_hybrid_gasoline', 'Full Hybrid Gasoline'),
+        ('cng', 'CNG'),
+        ('hydrogen', 'Hydrogen'),
         ], 'Fuel Type', help='Fuel Used by the vehicle')
     horsepower = fields.Integer()
     horsepower_tax = fields.Float('Horsepower Taxation')
