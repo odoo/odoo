@@ -227,7 +227,7 @@ class SaleOrderOption(models.Model):
         product = self.product_id.with_context(lang=self.order_id.partner_id.lang)
         self.name = product.get_product_multiline_description_sale()
         self.uom_id = self.uom_id or product.uom_id
-        # To compute the dicount a so line is created in cache
+        # To compute the discount a so line is created in cache
         values = self._get_values_to_add_to_order()
         new_sol = self.env['sale.order.line'].new(values)
         new_sol._onchange_discount()
