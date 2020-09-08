@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 from odoo.tools.float_utils import float_compare
+from odoo.exceptions import UserError
 
 
 class AccountMove(models.Model):
@@ -81,6 +82,8 @@ class AccountMove(models.Model):
                                 move.company_id, valuation_date, round=False,
                             )
                             valuation_total_qty += layers_qty
+                        if valuation_total_qty == 0:
+                            raise UserError(_('Odoo is not able to generate the anglo saxon entries. The total valuation of %s is zero.') % _(line.product_id.name))
                         valuation_price_unit = valuation_price_unit_total / valuation_total_qty
                         valuation_price_unit = line.product_id.uom_id._compute_price(valuation_price_unit, line.product_uom_id)
 
