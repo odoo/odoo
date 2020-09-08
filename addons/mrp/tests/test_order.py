@@ -465,7 +465,7 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(line1['qty_done'], 3, "Wrong quantity done")
         self.assertEqual(line2['qty_to_consume'], 12, "Wrong quantity to consume")
         self.assertEqual(line2['qty_done'], 12, "Wrong quantity done")
-        
+
         product_produce = produce_form.save()
         self.assertEqual(len(product_produce.raw_workorder_line_ids), 2, 'You should have produce lines even the consumed products are not tracked.')
         product_produce.do_produce()
@@ -1211,7 +1211,24 @@ class TestMrpOrder(TestMrpCommon):
             line.lot_id = sn
         product_produce = produce_form.save()
         product_produce.do_produce()
-        
+
+    def test_product_produce_12(self):
+        """ Checks that, the production is robust against deletion of finished move."""
+
+        self.stock_location = self.env.ref('stock.stock_location_stock')
+        mo, bom, p_final, p1, p2 = self.generate_mo(qty_final=1)
+        self.assertEqual(len(mo), 1, 'MO should have been created')
+
+        produce_form = Form(self.env['mrp.product.produce'].with_context({
+            'active_id': mo.id,
+            'active_ids': [mo.id],
+        }))
+        produce_form.qty_producing = 1
+        produce_wizard = produce_form.save()
+        # remove the finished move from the available to be updated
+        mo.move_finished_ids._action_done()
+        produce_wizard.do_produce()
+
     def test_product_produce_uom(self):
         """ Produce a finished product tracked by serial number. Set another
         UoM on the bom. The produce wizard should keep the UoM of the product (unit)
