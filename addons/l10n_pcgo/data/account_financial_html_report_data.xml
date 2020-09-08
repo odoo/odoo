@@ -1,0 +1,1911 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <!-- DEBUT BILAN COMPTABLE -->
+    <record id="account_financial_report_l10n_pcgo_bilan" model="account.financial.html.report">
+        <field name="name">Bilan comptable</field>
+        <field name='parent_id' ref='l10n_pcgo.account_reports_fr_statements_menu'/>
+    </record>
+
+    <record id="account_financial_report_line_fr_bilan_actif_passif_total" model="account.financial.html.report.line">
+        <field name="name">ACTIF - PASSIF</field>
+        <field name="code">ACTIF_PASSIF_TOTAL</field>
+        <field name="level" eval="0"/>
+        <field name="sequence" eval="1"/>
+        <field name="financial_report_id" ref="account_financial_report_l10n_pcgo_bilan"/>
+        <field name="formulas">balance = ACTIF_TOT.balance - PASSIF_TOT.balance</field>
+    </record>
+
+    <record id="account_financial_report_fr_bilan_actif_total" model="account.financial.html.report.line">
+        <field name="name">TOTAL ACTIF (I + II + III + IV + V)</field>
+        <field name="code">ACTIF_TOT</field>
+        <field name="level" eval="0"/>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref='account_financial_report_line_fr_bilan_actif_passif_total'/>
+        <field name="formulas">balance = ACTIF_TOATAL_I.balance + ACTIF_TOATAL_II.balance + CHARGES_EXERCICES.balance + PRIMES_EMPRUNTS.balance + ECARTS_ACTIF.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_01_fr_bilan_actif" model="account.financial.html.report.line">
+        <field name="name">Actif</field>
+        <field name="code">ACTIF</field>
+        <field name="level" eval="1" />
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref='account_financial_report_fr_bilan_actif_total'/>
+    </record>
+
+    <record id="account_financial_report_line_02_1_fr_bilan_actif" model="account.financial.html.report.line">
+        <field name="name">Capital souscrit - non appelé</field>
+        <field name="code">CAPITAL_NON_APPELE</field>
+        <field name="level" eval="2" />
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref='account_financial_report_line_01_fr_bilan_actif'/>
+        <field name="domain" eval="[('account_id.code', '=like', '109%')]"/>
+        <field name="formulas">balance = sum.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_02_2_fr_bilan_actif" model="account.financial.html.report.line">
+        <field name="name">Actif immobilisé</field>
+        <field name="code">ACTIF_IMMOBILISE</field>
+        <field name="level" eval="2" />
+        <field name="sequence" eval="2"/>
+        <field name="parent_id" ref='account_financial_report_line_01_fr_bilan_actif'/>
+    </record>
+
+    <record id="account_financial_report_line_02_3_fr_bilan_actif" model="account.financial.html.report.line">
+        <field name="name">Immobilisations incorporelles</field>
+        <field name="code">IMMOBILIS_INCORPO</field>
+        <field name="level" eval="2" />
+        <field name="sequence" eval="3"/>
+        <field name="parent_id" ref='account_financial_report_line_01_fr_bilan_actif'/>
+    </record>
+
+    <record id="account_financial_report_line_03_0_1_brut_fr_bilan_actif" model="account.financial.html.report.line">
+        <field name="name">Frais d'établissement - Brut</field>
+        <field name="code">FRAIS_ETABLISS_BRUT</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref='account_financial_report_line_02_3_fr_bilan_actif'/>
+        <field name="domain" eval="[('account_id.code', '=like', '201%')]"/>
+        <field name="formulas">balance = sum.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_03_0_1_amor_fr_bilan_actif" model="account.financial.html.report.line">
+        <field name="name">Frais d'établissement - Amortissements et provisions (à déduire)</field>
+        <field name="code">FRAIS_ETABLISS_AMOR</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="2"/>
+        <field name="parent_id" ref='account_financial_report_line_02_3_fr_bilan_actif'/>
+        <field name="domain" eval="[('account_id.code', '=like', '2801%')]"/>
+        <field name="formulas">balance = - sum.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_03_0_1_fr_bilan_actif" model="account.financial.html.report.line">
+        <field name="name">Frais d'établissement - NET</field>
+        <field name="code">FRAIS_ETABLISS</field>
+        <field name="level" eval="3" />
+          <field name="sequence" eval="3"/>
+        <field name="parent_id" ref='account_financial_report_line_02_3_fr_bilan_actif'/>
+        <field name="formulas">balance = FRAIS_ETABLISS_BRUT.balance - FRAIS_ETABLISS_AMOR.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_03_0_2_brut_fr_bilan_actif" model="account.financial.html.report.line">
+        <field name="name">Frais de recherche et de développement - Brut</field>
+        <field name="code">FRAIS_DEVELOPEMENT_BRUT</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="4"/>
+        <field name="parent_id" ref='account_financial_report_line_02_3_fr_bilan_actif'/>
+        <field name="domain" eval="[('account_id.code', '=like', '203%')]"/>
+        <field name="formulas">balance = sum.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_03_0_2_amor_fr_bilan_actif" model="account.financial.html.report.line">
+        <field name="name">Frais de recherche et de développement - Amortissements et provisions (à déduire)</field>
+        <field name="code">FRAIS_DEVELOPEMENT_AMOR</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="5"/>
+        <field name="parent_id" ref='account_financial_report_line_02_3_fr_bilan_actif'/>
+        <field name="domain" eval="[('account_id.code', '=like', '2803%')]"/>
+        <field name="formulas">balance = - sum.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_03_0_2_fr_bilan_actif" model="account.financial.html.report.line">
+        <field name="name">Frais de recherche et de développement - NET</field>
+        <field name="code">FRAIS_DEVELOPEMENT</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="6"/>
+        <field name="parent_id" ref='account_financial_report_line_02_3_fr_bilan_actif'/>
+        <field name="formulas">balance = FRAIS_DEVELOPEMENT_BRUT.balance - FRAIS_DEVELOPEMENT_AMOR.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_03_0_3_brut_fr_bilan_actif" model="account.financial.html.report.line">
+        <field name="name">Concessions, brevets, licences, marques, droits et valeurs similaires - Brut</field>
+        <field name="code">CONCESSION_SIMILAIRES_BRUT</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="7"/>
+        <field name="parent_id" ref='account_financial_report_line_02_3_fr_bilan_actif'/>
+        <field name="domain" eval="[('account_id.code', '=like', '205%')]"/>
+        <field name="formulas">balance = sum.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_03_0_3_amor_fr_bilan_actif" model="account.financial.html.report.line">
+        <field name="name">Concessions, brevets, licences, marques, droits et valeurs similaires - Amortissements et provisions (à déduire)</field>
+        <field name="code">CONCESSION_SIMILAIRES_AMOR</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="8"/>
+        <field name="parent_id" ref='account_financial_report_line_02_3_fr_bilan_actif'/>
+        <field name="domain" eval="['|', ('account_id.code', '=like', '2805%'), ('account_id.code', '=like', '2905%')]"/>
+        <field name="formulas">balance = - sum.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_03_0_3_fr_bilan_actif" model="account.financial.html.report.line">
+        <field name="name">Concessions, brevets, licences, marques, droits et valeurs similaires - NET</field>
+        <field name="code">CONCESSION_SIMILAIRES</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="9"/>
+        <field name="parent_id" ref='account_financial_report_line_02_3_fr_bilan_actif'/>
+        <field name="formulas">balance = CONCESSION_SIMILAIRES_BRUT.balance - CONCESSION_SIMILAIRES_AMOR.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_03_0_4_brut_fr_bilan_actif" model="account.financial.html.report.line">
+        <field name="name">Fonds commercial - Brut</field>
+        <field name="code">AUTRES_INCORPO_BRUT</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="10"/>
+        <field name="parent_id" ref='account_financial_report_line_02_3_fr_bilan_actif'/>
+        <field name="domain" eval="['|', ('account_id.code', '=like', '206%'), ('account_id.code', '=like', '207%')]"/>
+        <field name="formulas">balance = sum.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_03_0_4_amor_fr_bilan_actif" model="account.financial.html.report.line">
+        <field name="name">Fonds commercial - Amortissements et provisions (à déduire)</field>
+        <field name="code">AUTRES_INCORPO_AMOR</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="11"/>
+        <field name="parent_id" ref='account_financial_report_line_02_3_fr_bilan_actif'/>
+        <field name="domain" eval="['|', ('account_id.code', '=like', '2807%'), ('account_id.code', '=like', '2907%')]"/>
+        <field name="formulas">balance = - sum.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_03_0_4_fr_bilan_actif" model="account.financial.html.report.line">
+        <field name="name">Fonds commercial - NET</field>
+        <field name="code">AUTRES_INCORPO</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="12"/>
+        <field name="parent_id" ref='account_financial_report_line_02_3_fr_bilan_actif'/>
+        <field name="formulas">balance = AUTRES_INCORPO_BRUT.balance - AUTRES_INCORPO_AMOR.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_03_0_5_brut_fr_bilan_actif" model="account.financial.html.report.line">
+        <field name="name">Autres - Brut</field>
+        <field name="code">FONDS_COMMERCIAL_BRUT</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="13"/>
+        <field name="parent_id" ref='account_financial_report_line_02_3_fr_bilan_actif'/>
+        <field name="domain" eval="[('account_id.code', '=like', '208%')]"/>
+        <field name="formulas">balance = sum.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_03_0_5_amor_fr_bilan_actif" model="account.financial.html.report.line">
+        <field name="name">Autres - Amortissements et provisions (à déduire)</field>
+        <field name="code">FONDS_COMMERCIAL_AMOR</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="14"/>
+        <field name="parent_id" ref='account_financial_report_line_02_3_fr_bilan_actif'/>
+        <field name="domain" eval="['|', ('account_id.code', '=like', '2808%'), ('account_id.code', '=like', '2908%')]"/>
+        <field name="formulas">balance = - sum.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_03_0_5_fr_bilan_actif" model="account.financial.html.report.line">
+        <field name="name">Autres - NET</field>
+        <field name="code">FONDS_COMMERCIAL</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="15"/>
+        <field name="parent_id" ref='account_financial_report_line_02_3_fr_bilan_actif'/>
+        <field name="formulas">balance = FONDS_COMMERCIAL_BRUT.balance - FONDS_COMMERCIAL_AMOR.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_03_0_6_brut_fr_bilan_actif" model="account.financial.html.report.line">
+        <field name="name">Immobilisations incorporelles en cours - Brut</field>
+        <field name="code">IMMOBILIS_COURS_BRUT</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="16"/>
+        <field name="parent_id" ref='account_financial_report_line_02_3_fr_bilan_actif'/>
+        <field name="domain" eval="[('account_id.code', '=like', '232%')]"/>
+        <field name="formulas">balance = sum.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_03_0_6_amor_fr_bilan_actif" model="account.financial.html.report.line">
+        <field name="name">Immobilisations incorporelles en cours - Amortissements et provisions (à déduire)</field>
+        <field name="code">IMMOBILIS_COURS_AMOR</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="17"/>
+        <field name="parent_id" ref='account_financial_report_line_02_3_fr_bilan_actif'/>
+        <field name="domain" eval="[('account_id.code', '=like', '2932%')]"/>
+        <field name="formulas">balance = - sum.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_03_0_6_fr_bilan_actif" model="account.financial.html.report.line">
+        <field name="name">Immobilisations incorporelles en cours - NET</field>
+        <field name="code">IMMOBILIS_COURS</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="18"/>
+        <field name="parent_id" ref='account_financial_report_line_02_3_fr_bilan_actif'/>
+        <field name="formulas">balance = IMMOBILIS_COURS_BRUT.balance - IMMOBILIS_COURS_AMOR.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_03_0_7_brut_fr_bilan_actif" model="account.financial.html.report.line">
+        <field name="name">Avances et acomptes - Brut</field>
+        <field name="code">AVANCES_ACOMPTES_CORPORE_BRUT</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="19"/>
+        <field name="parent_id" ref='account_financial_report_line_02_3_fr_bilan_actif'/>
+        <field name="domain" eval="[('account_id.code', '=like', '237%')]"/>
+        <field name="formulas">balance = sum.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_03_0_7_amor_fr_bilan_actif" model="account.financial.html.report.line">
+        <field name="name">Avances et acomptes - Amortissements et provisions (à déduire)</field>
+        <field name="code">AVANCES_ACOMPTES_CORPORE_AMOR</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="20"/>
+        <field name="parent_id" ref='account_financial_report_line_02_3_fr_bilan_actif'/>
+        <field name="formulas">balance = - sum.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_03_0_7_fr_bilan_actif" model="account.financial.html.report.line">
+        <field name="name">Avances et acomptes - NET</field>
+        <field name="code">AVANCES_ACOMPTES_CORPORE</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="21"/>
+        <field name="parent_id" ref='account_financial_report_line_02_3_fr_bilan_actif'/>
+        <field name="formulas">balance = AVANCES_ACOMPTES_CORPORE_BRUT.balance - AVANCES_ACOMPTES_CORPORE_AMOR.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_02_4_fr_bilan_actif" model="account.financial.html.report.line">
+        <field name="name">Immobilisations corporelles</field>
+        <field name="code">IMMOBILIS_COPORELLES</field>
+        <field name="level" eval="2" />
+        <field name="sequence" eval="4"/>
+        <field name="parent_id" ref='account_financial_report_line_01_fr_bilan_actif'/>
+    </record>
+
+    <record id="account_financial_report_line_03_1_1_brut_fr_bilan_actif" model="account.financial.html.report.line">
+        <field name="name">Terrains - Brut</field>
+        <field name="code">TERRAINS_BRUT</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref='account_financial_report_line_02_4_fr_bilan_actif'/>
+        <field name="domain" eval="['|', ('account_id.code', '=like', '211%'), ('account_id.code', '=like', '212%')]"/>
+        <field name="formulas">balance = sum.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_03_1_1_amor_fr_bilan_actif" model="account.financial.html.report.line">
+        <field name="name">Terrains - Amortissements et provisions (à déduire)</field>
+        <field name="code">TERRAINS_AMOR</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="2"/>
+        <field name="parent_id" ref='account_financial_report_line_02_4_fr_bilan_actif'/>
+        <field name="domain" eval="['|', ('account_id.code', '=like', '2811%'), '|', ('account_id.code', '=like', '2812%'), ('account_id.code', '=like', '2911%')]"/>
+        <field name="formulas">balance = - sum.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_03_1_1_fr_bilan_actif" model="account.financial.html.report.line">
+        <field name="name">Terrains - NET</field>
+        <field name="code">TERRAINS</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="3"/>
+        <field name="parent_id" ref='account_financial_report_line_02_4_fr_bilan_actif'/>
+        <field name="formulas">balance = TERRAINS_BRUT.balance - TERRAINS_AMOR.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_03_1_2_brut_fr_bilan_actif" model="account.financial.html.report.line">
+        <field name="name">Constructions - Brut</field>
+        <field name="code">CONSTRUCTIONS_BRUT</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="4"/>
+        <field name="parent_id" ref='account_financial_report_line_02_4_fr_bilan_actif'/>
+        <field name="domain" eval="['|', ('account_id.code', '=like', '213%'), ('account_id.code', '=like', '214%')]"/>
+        <field name="formulas">balance = sum.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_03_1_2_amor_fr_bilan_actif" model="account.financial.html.report.line">
+        <field name="name">Constructions - Amortissements et provisions (à déduire)</field>
+        <field name="code">CONSTRUCTIONS_AMOR</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="5"/>
+        <field name="parent_id" ref='account_financial_report_line_02_4_fr_bilan_actif'/>
+        <field name="domain" eval="['|', ('account_id.code', '=like', '2813%'), ('account_id.code', '=like', '2814%')]"/>
+        <field name="formulas">balance = - sum.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_03_1_2_fr_bilan_actif" model="account.financial.html.report.line">
+        <field name="name">Constructions - NET</field>
+        <field name="code">CONSTRUCTIONS</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="6"/>
+        <field name="parent_id" ref='account_financial_report_line_02_4_fr_bilan_actif'/>
+        <field name="formulas">balance = CONSTRUCTIONS_BRUT.balance - CONSTRUCTIONS_AMOR.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_03_1_3_brut_fr_bilan_actif" model="account.financial.html.report.line">
+        <field name="name">Installations techniques,matériel et outillage - Brut</field>
+        <field name="code">INSTALLATION_OUTILLAGE_BRUT</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="7"/>
+        <field name="parent_id" ref='account_financial_report_line_02_4_fr_bilan_actif'/>
+        <field name="domain" eval="[('account_id.code', '=like', '215%')]"/>
+        <field name="formulas">balance = sum.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_03_1_3_amor_fr_bilan_actif" model="account.financial.html.report.line">
+        <field name="name">Installations techniques,matériel et outillage - Amortissements et provisions (à déduire)</field>
+        <field name="code">INSTALLATION_OUTILLAGE_AMOR</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="8"/>
+        <field name="parent_id" ref='account_financial_report_line_02_4_fr_bilan_actif'/>
+        <field name="domain" eval="[('account_id.code', '=like', '2815%')]"/>
+        <field name="formulas">balance = - sum.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_03_1_3_fr_bilan_actif" model="account.financial.html.report.line">
+        <field name="name">Installations techniques,matériel et outillage - NET</field>
+        <field name="code">INSTALLATION_OUTILLAGE</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="9"/>
+        <field name="parent_id" ref='account_financial_report_line_02_4_fr_bilan_actif'/>
+        <field name="formulas">balance = INSTALLATION_OUTILLAGE_BRUT.balance - INSTALLATION_OUTILLAGE_AMOR.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_03_1_4_brut_fr_bilan_actif" model="account.financial.html.report.line">
+        <field name="name">Autres - Brut</field>
+        <field name="code">AUTRES_CORPORE_BRUT</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="10"/>
+        <field name="parent_id" ref='account_financial_report_line_02_4_fr_bilan_actif'/>
+        <field name="domain" eval="[('account_id.code', '=like', '218%')]"/>
+        <field name="formulas">balance = sum.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_03_1_4_amor_fr_bilan_actif" model="account.financial.html.report.line">
+        <field name="name">Autres - Amortissements et provisions (à déduire)</field>
+        <field name="code">AUTRES_CORPORE_AMOR</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="11"/>
+        <field name="parent_id" ref='account_financial_report_line_02_4_fr_bilan_actif'/>
+        <field name="domain" eval="['|', ('account_id.code', '=like', '2818%'), ('account_id.code', '=like', '282%')]"/>
+        <field name="formulas">balance = - sum.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_03_1_4_fr_bilan_actif" model="account.financial.html.report.line">
+        <field name="name">Autres - NET</field>
+        <field name="code">AUTRES_CORPORE</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="12"/>
+        <field name="parent_id" ref='account_financial_report_line_02_4_fr_bilan_actif'/>
+        <field name="formulas">balance = AUTRES_CORPORE_BRUT.balance - AUTRES_CORPORE_AMOR.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_03_1_5_brut_fr_bilan_actif" model="account.financial.html.report.line">
+        <field name="name">Immobilisations incorporelles en cours - Brut</field>
+        <field name="code">IMMOBILLIS_COURS_BRUT</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="13"/>
+        <field name="parent_id" ref='account_financial_report_line_02_4_fr_bilan_actif'/>
+        <field name="domain" eval="[('account_id.code', '=like', '231%')]"/>
+        <field name="formulas">balance = sum.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_03_1_5_amor_fr_bilan_actif" model="account.financial.html.report.line">
+        <field name="name">Immobilisations incorporelles en cours - Amortissements et provisions (à déduire)</field>
+        <field name="code">IMMOBILLIS_COURS_AMOR</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="14"/>
+        <field name="parent_id" ref='account_financial_report_line_02_4_fr_bilan_actif'/>
+        <field name="domain" eval="[('account_id.code', '=like', '2931%')]"/>
+        <field name="formulas">balance = - sum.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_03_1_5_fr_bilan_actif" model="account.financial.html.report.line">
+        <field name="name">Immobilisations incorporelles en cours - NET</field>
+        <field name="code">IMMOBILLIS_COURS</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="15"/>
+        <field name="parent_id" ref='account_financial_report_line_02_4_fr_bilan_actif'/>
+        <field name="formulas">balance = IMMOBILLIS_COURS_BRUT.balance - IMMOBILLIS_COURS_AMOR.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_03_1_6_brut_fr_bilan_actif" model="account.financial.html.report.line">
+        <field name="name">Avances et acomptes - Brut</field>
+        <field name="code">AVANCES_ACOMPTES_INCORP_BRUT</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="16"/>
+        <field name="parent_id" ref='account_financial_report_line_02_4_fr_bilan_actif'/>
+        <field name="domain" eval="[('account_id.code', '=like', '238%')]"/>
+        <field name="formulas">balance = sum.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_03_1_6_amor_fr_bilan_actif" model="account.financial.html.report.line">
+        <field name="name">Avances et acomptes - Amortissements et provisions (à déduire)</field>
+        <field name="code">AVANCES_ACOMPTES_INCORP_AMOR</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="17"/>
+        <field name="parent_id" ref='account_financial_report_line_02_4_fr_bilan_actif'/>
+        <field name="formulas">balance = - sum.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_03_1_6_fr_bilan_actif" model="account.financial.html.report.line">
+        <field name="name">Avances et acomptes - NET</field>
+        <field name="code">AVANCES_ACOMPTES_INCORP</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="18"/>
+        <field name="parent_id" ref='account_financial_report_line_02_4_fr_bilan_actif'/>
+        <field name="formulas">balance = AVANCES_ACOMPTES_INCORP_BRUT.balance - AVANCES_ACOMPTES_INCORP_AMOR.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_02_5_fr_bilan_actif" model="account.financial.html.report.line">
+        <field name="name">Immobilisations financières</field>
+        <field name="code">IMMOBILIS_FINANCIERES</field>
+        <field name="level" eval="2" />
+        <field name="sequence" eval="5"/>
+        <field name="parent_id" ref='account_financial_report_line_01_fr_bilan_actif'/>
+    </record>
+
+    <record id="account_financial_report_line_03_2_1b_fr_bilan_actif" model="account.financial.html.report.line">
+        <field name="name">Participations - Brut</field>
+        <field name="code">PARTICIPATIONS_BRUT</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref='account_financial_report_line_02_5_fr_bilan_actif'/>
+        <field name="domain" eval="['|', ('account_id.code', '=like', '261%'), ('account_id.code', '=like', '266%')]"/>
+        <field name="formulas">balance = sum.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_03_2_1a_fr_bilan_actif" model="account.financial.html.report.line">
+        <field name="name">Participations - Amortissements et provisions (à déduire)</field>
+        <field name="code">PARTICIPATIONS_AMOR</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="2"/>
+        <field name="parent_id" ref='account_financial_report_line_02_5_fr_bilan_actif'/>
+        <field name="domain" eval="['|', ('account_id.code', '=like', '2961%'), ('account_id.code', '=like', '2966%')]"/>
+        <field name="formulas">balance = -sum.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_03_2_1_fr_bilan_actif" model="account.financial.html.report.line">
+        <field name="name">Participations - NET</field>
+        <field name="code">PARTICIPATIONS</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="3"/>
+        <field name="parent_id" ref='account_financial_report_line_02_5_fr_bilan_actif'/>
+        <field name="formulas">balance = PARTICIPATIONS_BRUT.balance - PARTICIPATIONS_AMOR.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_03_2_2b_fr_bilan_actif" model="account.financial.html.report.line">
+        <field name="name">Créances rattachées à des participations - Brut</field>
+        <field name="code">CREANCES_PARTICIPATIONS_BRUT</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="4"/>
+        <field name="parent_id" ref='account_financial_report_line_02_5_fr_bilan_actif'/>
+        <field name="domain" eval="['|', ('account_id.code', '=like', '267%'), ('account_id.code', '=like', '268%')]"/>
+        <field name="formulas">balance = sum.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_03_2_2a_fr_bilan_actif" model="account.financial.html.report.line">
+        <field name="name">Créances rattachées à des participations - Amortissements et provisions (à déduire)</field>
+        <field name="code">CREANCES_PARTICIPATIONS_AMOR</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="5"/>
+        <field name="parent_id" ref='account_financial_report_line_02_5_fr_bilan_actif'/>
+        <field name="domain" eval="[('account_id.code', '=like', '2967%')]"/>
+        <field name="formulas">balance = - sum.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_03_2_2_fr_bilan_actif" model="account.financial.html.report.line">
+        <field name="name">Créances rattachées à des participations - NET</field>
+        <field name="code">CREANCES_PARTICIPATIONS</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="6"/>
+        <field name="parent_id" ref='account_financial_report_line_02_5_fr_bilan_actif'/>
+        <field name="formulas">balance = CREANCES_PARTICIPATIONS_BRUT.balance - CREANCES_PARTICIPATIONS_AMOR.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_03_2_3b_fr_bilan_actif" model="account.financial.html.report.line">
+        <field name="name">Titres immobilisés de l'activité de portefeuille - Brut</field>
+        <field name="code">TITRES_PORTEFEUILLE_BRUT</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="7"/>
+        <field name="parent_id" ref='account_financial_report_line_02_5_fr_bilan_actif'/>
+        <field name="domain" eval="[('account_id.code', '=like', '273%')]"/>
+        <field name="formulas">balance = sum.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_03_2_3a_fr_bilan_actif" model="account.financial.html.report.line">
+        <field name="name">Titres immobilisés de l'activité de portefeuille - Amortissements et provisions (à déduire)</field>
+        <field name="code">TITRES_PORTEFEUILLE_AMOR</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="8"/>
+        <field name="parent_id" ref='account_financial_report_line_02_5_fr_bilan_actif'/>
+        <field name="domain" eval="[('account_id.code', '=like', '2973%')]"/>
+        <field name="formulas">balance = - sum.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_03_2_3_fr_bilan_actif" model="account.financial.html.report.line">
+        <field name="name">Titres immobilisés de l'activité de portefeuille - NET</field>
+        <field name="code">TITRES_PORTEFEUILLE</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="9"/>
+        <field name="parent_id" ref='account_financial_report_line_02_5_fr_bilan_actif'/>
+        <field name="formulas">balance = TITRES_PORTEFEUILLE_BRUT.balance - TITRES_PORTEFEUILLE_AMOR.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_03_2_4b_fr_bilan_actif" model="account.financial.html.report.line">
+        <field name="name">Autres titres immobilisés - Brut</field>
+        <field name="code">AUTRES_IMMOBILISES_BRUT</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="10"/>
+        <field name="parent_id" ref='account_financial_report_line_02_5_fr_bilan_actif'/>
+        <field name="domain" eval="['|', ('account_id.code', '=like', '271%'), '|', ('account_id.code', '=like', '272%'), ('account_id.code', '=like', '27682%')]"/>
+        <field name="formulas">balance = sum.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_03_2_4a_fr_bilan_actif" model="account.financial.html.report.line">
+        <field name="name">Autres titres immobilisés - Amortissements et provisions (à déduire)</field>
+        <field name="code">AUTRES_IMMOBILISES_AMOR</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="11"/>
+        <field name="parent_id" ref='account_financial_report_line_02_5_fr_bilan_actif'/>
+        <field name="domain" eval="['|', ('account_id.code', '=like', '2971%'), ('account_id.code', '=like', '2972%')]"/>
+        <field name="formulas">balance = - sum.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_03_2_4_fr_bilan_actif" model="account.financial.html.report.line">
+        <field name="name">Autres titres immobilisés - NET</field>
+        <field name="code">AUTRES_IMMOBILISES</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="12"/>
+        <field name="parent_id" ref='account_financial_report_line_02_5_fr_bilan_actif'/>
+        <field name="formulas">balance = AUTRES_IMMOBILISES_BRUT.balance - AUTRES_IMMOBILISES_AMOR.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_03_2_5b_fr_bilan_actif" model="account.financial.html.report.line">
+        <field name="name">Prêts - Brut</field>
+        <field name="code">PRETS_BRUT</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="13"/>
+        <field name="parent_id" ref='account_financial_report_line_02_5_fr_bilan_actif'/>
+        <field name="domain" eval="['|', ('account_id.code', '=like', '274%'), ('account_id.code', '=like', '27684%')]"/>
+        <field name="formulas">balance = sum.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_03_2_5a_fr_bilan_actif" model="account.financial.html.report.line">
+        <field name="name">Prêts - Amortissements et provisions (à déduire)</field>
+        <field name="code">PRETS_AMOR</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="14"/>
+        <field name="parent_id" ref='account_financial_report_line_02_5_fr_bilan_actif'/>
+        <field name="domain" eval="[('account_id.code', '=like', '2974%')]"/>
+        <field name="formulas">balance = - sum.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_03_2_5_fr_bilan_actif" model="account.financial.html.report.line">
+        <field name="name">Prêts - NET</field>
+        <field name="code">PRETS</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="15"/>
+        <field name="parent_id" ref='account_financial_report_line_02_5_fr_bilan_actif'/>
+        <field name="formulas">balance = PRETS_BRUT.balance - PRETS_AMOR.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_03_2_6b_fr_bilan_actif" model="account.financial.html.report.line">
+        <field name="name">Autres - Brut</field>
+        <field name="code">AUTRES_FINACIAL_BRUT</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="16"/>
+        <field name="parent_id" ref='account_financial_report_line_02_5_fr_bilan_actif'/>
+        <field name="domain" eval="['|', ('account_id.code', '=like', '275%'), '|', ('account_id.code', '=like', '276%'), ('account_id.code', '=like', '277%'), '!', '|', ('account_id.code', '=like', '27682%'), ('account_id.code', '=like', '27684%')]"/>
+        <field name="formulas">balance = sum.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_03_2_6a_fr_bilan_actif" model="account.financial.html.report.line">
+        <field name="name">Autres - Amortissements et provisions (à déduire)</field>
+        <field name="code">AUTRES_FINACIAL_AMOR</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="17"/>
+        <field name="parent_id" ref='account_financial_report_line_02_5_fr_bilan_actif'/>
+        <field name="domain" eval="['|', ('account_id.code', '=like', '2975%'), ('account_id.code', '=like', '2976%')]"/>
+        <field name="formulas">balance = - sum.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_03_2_6_fr_bilan_actif" model="account.financial.html.report.line">
+        <field name="name">Autres - NET</field>
+        <field name="code">AUTRES_FINACIAL</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="18"/>
+        <field name="parent_id" ref='account_financial_report_line_02_5_fr_bilan_actif'/>
+        <field name="formulas">balance = AUTRES_FINACIAL_BRUT.balance - AUTRES_FINACIAL_AMOR.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_02_6_fr_bilan_actif" model="account.financial.html.report.line">
+        <field name="name">Total (I)</field>
+        <field name="code">ACTIF_TOATAL_I</field>
+        <field name="level" eval="2" />
+        <field name="sequence" eval="6"/>
+        <field name="parent_id" ref='account_financial_report_line_01_fr_bilan_actif'/>
+        <field name="formulas">balance = CAPITAL_NON_APPELE.balance + FRAIS_ETABLISS.balance + FRAIS_DEVELOPEMENT.balance + CONCESSION_SIMILAIRES.balance + FONDS_COMMERCIAL.balance + AUTRES_INCORPO.balance + IMMOBILIS_COURS.balance + AVANCES_ACOMPTES_CORPORE.balance + TERRAINS.balance + CONSTRUCTIONS.balance + INSTALLATION_OUTILLAGE.balance + AUTRES_CORPORE.balance + IMMOBILLIS_COURS.balance + AVANCES_ACOMPTES_INCORP.balance + PARTICIPATIONS.balance + CREANCES_PARTICIPATIONS.balance + TITRES_PORTEFEUILLE.balance + AUTRES_IMMOBILISES.balance + PRETS.balance + AUTRES_FINACIAL.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_2_02_1_fr_bilan_actif" model="account.financial.html.report.line">
+        <field name="name">Actif circulant</field>
+        <field name="code">ACTIF_CIRCULANT</field>
+        <field name="level" eval="2" />
+        <field name="sequence" eval="7"/>
+        <field name="parent_id" ref='account_financial_report_line_01_fr_bilan_actif'/>
+    </record>
+
+    <record id="account_financial_report_line_2_02_2_fr_bilan_actif" model="account.financial.html.report.line">
+        <field name="name">Stock en cours</field>
+        <field name="code">STOCK_COURS</field>
+        <field name="level" eval="2" />
+        <field name="sequence" eval="8"/>
+        <field name="parent_id" ref='account_financial_report_line_01_fr_bilan_actif'/>
+    </record>
+
+    <record id="account_financial_report_line_03_3_1b_fr_bilan_actif" model="account.financial.html.report.line">
+        <field name="name">Matières premières et autres approvisionnements - Brut</field>
+        <field name="code">MATIERES_APPROVI_BRUT</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref='account_financial_report_line_2_02_2_fr_bilan_actif'/>
+        <field name="domain" eval="['|', ('account_id.code', '=like', '31%'), ('account_id.code', '=like', '32%')]"/>
+        <field name="formulas">balance = sum.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_03_3_1a_fr_bilan_actif" model="account.financial.html.report.line">
+        <field name="name">Matières premières et autres approvisionnements - Amortissements et provisions (à déduire)</field>
+        <field name="code">MATIERES_APPROVI_AMOR</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="2"/>
+        <field name="parent_id" ref='account_financial_report_line_2_02_2_fr_bilan_actif'/>
+        <field name="domain" eval="['|', ('account_id.code', '=like', '391%'), ('account_id.code', '=like', '392%')]"/>
+        <field name="formulas">balance = - sum.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_03_3_1_fr_bilan_actif" model="account.financial.html.report.line">
+        <field name="name">Matières premières et autres approvisionnements - NET</field>
+        <field name="code">MATIERES_APPROVI</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="3"/>
+        <field name="parent_id" ref='account_financial_report_line_2_02_2_fr_bilan_actif'/>
+        <field name="formulas">balance = MATIERES_APPROVI_BRUT.balance - MATIERES_APPROVI_AMOR.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_03_3_2b_fr_bilan_actif" model="account.financial.html.report.line">
+        <field name="name">En-cours de production [biens et services] - BRUT</field>
+        <field name="code">EN_COURS_PRODUCTION_BRUT</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="4"/>
+        <field name="parent_id" ref='account_financial_report_line_2_02_2_fr_bilan_actif'/>
+        <field name="domain" eval="['|', ('account_id.code', '=like', '33%'), ('account_id.code', '=like', '34%')]"/>
+        <field name="formulas">balance = sum.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_03_3_2a_fr_bilan_actif" model="account.financial.html.report.line">
+        <field name="name">En-cours de production [biens et services] - Amortissements et provisions (à déduire)</field>
+        <field name="code">EN_COURS_PRODUCTION_AMOR</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="5"/>
+        <field name="parent_id" ref='account_financial_report_line_2_02_2_fr_bilan_actif'/>
+        <field name="domain" eval="['|', ('account_id.code', '=like', '393%'), ('account_id.code', '=like', '394%')]"/>
+        <field name="formulas">balance = - sum.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_03_3_2_fr_bilan_actif" model="account.financial.html.report.line">
+        <field name="name">En-cours de production [biens et services] - NET</field>
+        <field name="code">EN_COURS_PRODUCTION</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="6"/>
+        <field name="parent_id" ref='account_financial_report_line_2_02_2_fr_bilan_actif'/>
+        <field name="formulas">balance = EN_COURS_PRODUCTION_BRUT.balance - EN_COURS_PRODUCTION_AMOR.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_03_3_3b_fr_bilan_actif" model="account.financial.html.report.line">
+        <field name="name">Produits intermédiaires et finis - Brut</field>
+        <field name="code">PRODUITS_FINIS_BRUT</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="7"/>
+        <field name="parent_id" ref='account_financial_report_line_2_02_2_fr_bilan_actif'/>
+        <field name="domain" eval="[('account_id.code', '=like', '35%')]"/>
+        <field name="formulas">balance = sum.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_03_3_3as_fr_bilan_actif" model="account.financial.html.report.line">
+        <field name="name">Produits intermédiaires et finis - Amortissements et provisions (à déduire)</field>
+        <field name="code">PRODUITS_FINIS_AMOR</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="8"/>
+        <field name="parent_id" ref='account_financial_report_line_2_02_2_fr_bilan_actif'/>
+        <field name="domain" eval="[('account_id.code', '=like', '395%')]"/>
+        <field name="formulas">balance = - sum.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_03_3_3_fr_bilan_actif" model="account.financial.html.report.line">
+        <field name="name">Produits intermédiaires et finis - NET</field>
+        <field name="code">PRODUITS_FINIS</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="9"/>
+        <field name="parent_id" ref='account_financial_report_line_2_02_2_fr_bilan_actif'/>
+        <field name="formulas">balance = PRODUITS_FINIS_BRUT.balance - PRODUITS_FINIS_AMOR.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_03_3_4b_fr_bilan_actif" model="account.financial.html.report.line">
+        <field name="name">Marchandises - Brut</field>
+        <field name="code">MARCHANDISES_BRUT</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="10"/>
+        <field name="parent_id" ref='account_financial_report_line_2_02_2_fr_bilan_actif'/>
+        <field name="domain" eval="[('account_id.code', '=like', '37%')]"/>
+        <field name="formulas">balance = sum.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_03_3_4a_fr_bilan_actif" model="account.financial.html.report.line">
+        <field name="name">Marchandises - Amortissements et provisions (à déduire)</field>
+        <field name="code">MARCHANDISES_AMOR</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="11"/>
+        <field name="parent_id" ref='account_financial_report_line_2_02_2_fr_bilan_actif'/>
+        <field name="domain" eval="[('account_id.code', '=like', '397%')]"/>
+        <field name="formulas">balance = - sum.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_03_3_4_fr_bilan_actif" model="account.financial.html.report.line">
+        <field name="name">Marchandises - NET</field>
+        <field name="code">MARCHANDISES</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="12"/>
+        <field name="parent_id" ref='account_financial_report_line_2_02_2_fr_bilan_actif'/>
+        <field name="formulas">balance = MARCHANDISES_BRUT.balance - MARCHANDISES_AMOR.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_03_3_5_fr_bilan_actif" model="account.financial.html.report.line">
+        <field name="name">Avances et acomptes versés sur commandes</field>
+        <field name="code">ADVANCES_COMMANDES</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="13"/>
+        <field name="parent_id" ref='account_financial_report_line_2_02_2_fr_bilan_actif'/>
+        <field name="domain" eval="[('account_id.code', '=like', '4091%')]"/>
+        <field name="formulas">balance = sum.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_2_02_3_fr_bilan_actif" model="account.financial.html.report.line">
+        <field name="name">Créances</field>
+        <field name="code">CREANCES</field>
+        <field name="level" eval="2" />
+        <field name="sequence" eval="9"/>
+        <field name="parent_id" ref='account_financial_report_line_01_fr_bilan_actif'/>
+    </record>
+
+    <record id="account_financial_report_line_03_4_1b_fr_bilan_actif" model="account.financial.html.report.line">
+        <field name="name">Clients et comptes rattachés - Brut</field>
+        <field name="code">CREANCES_RATTACHES_BRUT</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref='account_financial_report_line_2_02_3_fr_bilan_actif'/>
+        <field name="domain" eval="['|', ('account_id.code', '=like', '411%'), '|', ('account_id.code', '=like', '413%'), '|', ('account_id.code', '=like', '416%'), '|', ('account_id.code', '=like', '417%'), ('account_id.code', '=like', '418%')]"/>
+        <field name="formulas">balance = sum.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_03_4_1a_fr_bilan_actif" model="account.financial.html.report.line">
+        <field name="name">Clients et comptes rattachés - Amortissements et provisions (à déduire)</field>
+        <field name="code">CREANCES_RATTACHES_AMOR</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="2"/>
+        <field name="parent_id" ref='account_financial_report_line_2_02_3_fr_bilan_actif'/>
+        <field name="domain" eval="[('account_id.code', '=like', '491%')]"/>
+        <field name="formulas">balance = - sum.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_03_4_1_fr_bilan_actif" model="account.financial.html.report.line">
+        <field name="name">Clients et comptes rattachés - NET</field>
+        <field name="code">CREANCES_RATTACHES</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="3"/>
+        <field name="parent_id" ref='account_financial_report_line_2_02_3_fr_bilan_actif'/>
+        <field name="formulas">balance = CREANCES_RATTACHES_BRUT.balance - CREANCES_RATTACHES_AMOR.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_03_4_2b_fr_bilan_actif" model="account.financial.html.report.line">
+        <field name="name">Autres créances - Brut</field>
+        <field name="code">AUTRES_CREANCES_BRUT</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="4"/>
+        <field name="parent_id" ref='account_financial_report_line_2_02_3_fr_bilan_actif'/>
+        <field name="domain" eval="['|', ('account_id.code', '=like', '4096%'), '|', ('account_id.code', '=like', '4097%'), '|', ('account_id.code', '=like', '4098%'), '|', ('account_id.code', '=like', '425%'), '|', ('account_id.code', '=like', '441%'), '|', ('account_id.code', '=like', '462%'), ('account_id.code', '=like', '465%')]"/>
+        <field name="formulas">balance = sum.balance + AUTRES_CREANCES_BRUTD.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_03_4_2bd_fr_bilan_actif" model="account.financial.html.report.line">
+        <field name="name">Autres créances - Brut - Debit</field>
+        <field name="code">AUTRES_CREANCES_BRUTD</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="4"/>
+        <field name="domain" eval="['|', ('account_id.code', '=like', '428%'), '|', ('account_id.code', '=like', '438%'), '|', ('account_id.code', '=like', '443%'), '|', ('account_id.code', '=like', '444%'), '|', ('account_id.code', '=like', '445%'), '|', ('account_id.code', '=like', '448%'), '|', ('account_id.code', '=like', '451%'), '|', ('account_id.code', '=like', '456%'), '|', ('account_id.code', '=like', '467%'), '|', ('account_id.code', '=like', '468%'), ('account_id.code', '=like', '478%'), '!', ('account_id.code', '=like', '4562%')]"/>
+        <field name="formulas">balance = sum_if_pos.balance</field>
+        <field name="groupby">account_id</field>
+        <field name="show_domain">never</field>
+    </record>
+
+    <record id="account_financial_report_line_03_4_2a_fr_bilan_actif" model="account.financial.html.report.line">
+        <field name="name">Autres créances - Amortissements et provisions (à déduire)</field>
+        <field name="code">AUTRES_CREANCES_AMOR</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="5"/>
+        <field name="parent_id" ref='account_financial_report_line_2_02_3_fr_bilan_actif'/>
+        <field name="domain" eval="['|', ('account_id.code', '=like', '495%'), ('account_id.code', '=like', '496%')]"/>
+        <field name="formulas">balance = - sum.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_03_4_2_fr_bilan_actif" model="account.financial.html.report.line">
+        <field name="name">Autres créances - NET</field>
+        <field name="code">AUTRES_CREANCES</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="6"/>
+        <field name="parent_id" ref='account_financial_report_line_2_02_3_fr_bilan_actif'/>
+        <field name="formulas">balance = AUTRES_CREANCES_BRUT.balance - AUTRES_CREANCES_AMOR.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_03_4_3_fr_bilan_actif" model="account.financial.html.report.line">
+        <field name="name">Capital souscrit - appelé , non versé</field>
+        <field name="code">CAPITAL_NON_VERSE</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="7"/>
+        <field name="parent_id" ref='account_financial_report_line_2_02_3_fr_bilan_actif'/>
+        <field name="domain" eval="[('account_id.code', '=like', '4562%')]"/>
+        <field name="formulas">balance = sum.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_2_02_4_fr_bilan_actif" model="account.financial.html.report.line">
+        <field name="name">Valeurs mobilières de placement</field>
+        <field name="code">VALEURS_PLACEMENT</field>
+        <field name="level" eval="2" />
+        <field name="sequence" eval="10"/>
+        <field name="parent_id" ref='account_financial_report_line_01_fr_bilan_actif'/>
+    </record>
+
+    <record id="account_financial_report_line_03_5_1b_fr_bilan_actif" model="account.financial.html.report.line">
+        <field name="name">Actions propres - Brut</field>
+        <field name="code">ACTIONS_PROPRES_BRUT</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref='account_financial_report_line_2_02_4_fr_bilan_actif'/>
+        <field name="domain" eval="[('account_id.code', '=like', '502%')]"/>
+        <field name="formulas">balance = sum.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_03_5_1a_fr_bilan_actif" model="account.financial.html.report.line">
+        <field name="name">Actions propres - Amortissements et provisions (à déduire)</field>
+        <field name="code">ACTIONS_PROPRES_AMOR</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="2"/>
+        <field name="parent_id" ref='account_financial_report_line_2_02_4_fr_bilan_actif'/>
+        <field name="domain" eval="[('account_id.code', '=like', '5903%')]"/>
+        <field name="formulas">balance = - sum.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_03_5_1_fr_bilan_actif" model="account.financial.html.report.line">
+        <field name="name">Actions propres - NET</field>
+        <field name="code">ACTIONS_PROPRES</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="3"/>
+        <field name="parent_id" ref='account_financial_report_line_2_02_4_fr_bilan_actif'/>
+        <field name="formulas">balance = ACTIONS_PROPRES_BRUT.balance - ACTIONS_PROPRES_AMOR.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_03_5_2b_fr_bilan_actif" model="account.financial.html.report.line">
+        <field name="name">Autres titres - Brut</field>
+        <field name="code">AUTRES_TITRES_BRUT</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="4"/>
+        <field name="parent_id" ref='account_financial_report_line_2_02_4_fr_bilan_actif'/>
+        <field name="domain" eval="[('account_id.code', '=like', '50%'), '!', '|', ('account_id.code', '=like', '502%'), ('account_id.code', '=like', '509%')]"/>
+        <field name="formulas">balance = sum.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_03_5_2a_fr_bilan_actif" model="account.financial.html.report.line">
+        <field name="name">Autres titres - Amortissements et provisions (à déduire)</field>
+        <field name="code">AUTRES_TITRES_AMOR</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="5"/>
+        <field name="parent_id" ref='account_financial_report_line_2_02_4_fr_bilan_actif'/>
+        <field name="domain" eval="[('account_id.code', '=like', '590%'), '!', ('account_id.code', '=like', '5903%')]"/>
+        <field name="formulas">balance = sum.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_03_5_2_fr_bilan_actif" model="account.financial.html.report.line">
+        <field name="name">Autres titres - NET</field>
+        <field name="code">AUTRES_TITRES</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="6"/>
+        <field name="parent_id" ref='account_financial_report_line_2_02_4_fr_bilan_actif'/>
+        <field name="formulas">balance = AUTRES_TITRES_BRUT.balance - AUTRES_TITRES_AMOR.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_03_5_3_fr_bilan_actif" model="account.financial.html.report.line">
+        <field name="name">Instruments de trésorerie</field>
+        <field name="code">INSTRMENTS_TRESORERIE</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="7"/>
+        <field name="parent_id" ref='account_financial_report_line_2_02_4_fr_bilan_actif'/>
+        <field name="domain" eval="[('account_id.code', '=like', '52%')]"/>
+        <field name="formulas">balance = sum_if_pos.balance</field>
+        <field name="groupby">account_id</field>
+        <field name="show_domain">never</field>
+    </record>
+
+    <record id="account_financial_report_line_03_5_4_fr_bilan_actif" model="account.financial.html.report.line">
+        <field name="name">Disponibilités</field>
+        <field name="code">DISPONIBILITES</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="8"/>
+        <field name="parent_id" ref='account_financial_report_line_2_02_4_fr_bilan_actif'/>
+        <field name="domain" eval="['|', ('account_id.code', '=like', '511%'), '|', ('account_id.code', '=like', '515%'),  '|', ('account_id.code', '=like', '516%'),  '|', ('account_id.code', '=like', '53%'), ('account_id.code', '=like', '54%')]"/>
+        <field name="formulas">balance = sum.balance + DISPONIBILITES_debit.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_03_5_4d_fr_bilan_actif" model="account.financial.html.report.line">
+        <field name="name">Disponibilités - debit</field>
+        <field name="code">DISPONIBILITES_debit</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="8"/>
+        <field name="domain" eval="['|', ('account_id.code', '=like', '512%'), '|', ('account_id.code', '=like', '514%'), '|', ('account_id.code', '=like', '517%'), ('account_id.code', '=like', '518%'), '!', ('account_id.code', '=like', '5181%')]"/>
+        <field name="formulas">balance = sum_if_pos.balance</field>
+        <field name="groupby">account_id</field>
+        <field name="show_domain">never</field>
+    </record>
+
+    <record id="account_financial_report_line_03_5_5_fr_bilan_actif" model="account.financial.html.report.line">
+        <field name="name">Charges constatés d'avance</field>
+        <field name="code">CHARGES_DAVANCE</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="9"/>
+        <field name="parent_id" ref='account_financial_report_line_2_02_4_fr_bilan_actif'/>
+        <field name="domain" eval="[('account_id.code', '=like', '486%')]"/>
+        <field name="formulas">balance = sum.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_2_02_5_fr_bilan_actif" model="account.financial.html.report.line">
+        <field name="name">Total (II)</field>
+        <field name="code">ACTIF_TOATAL_II</field>
+        <field name="level" eval="2" />
+        <field name="sequence" eval="11"/>
+        <field name="parent_id" ref='account_financial_report_line_01_fr_bilan_actif'/>
+        <field name="formulas">balance = MATIERES_APPROVI.balance + EN_COURS_PRODUCTION.balance + PRODUITS_FINIS.balance + MARCHANDISES.balance + ADVANCES_COMMANDES.balance + CREANCES_RATTACHES.balance + AUTRES_CREANCES.balance + CAPITAL_NON_VERSE.balance + ACTIONS_PROPRES.balance + AUTRES_TITRES.balance + INSTRMENTS_TRESORERIE.balance + DISPONIBILITES.balance + CHARGES_DAVANCE.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_3_02_1_fr_bilan_actif" model="account.financial.html.report.line">
+        <field name="name">Charges à répartir sur plusieurs exercices</field>
+        <field name="code">CHARGES_EXERCICES</field>
+        <field name="level" eval="2" />
+        <field name="sequence" eval="12"/>
+        <field name="parent_id" ref='account_financial_report_line_01_fr_bilan_actif'/>
+        <field name="domain" eval="[('account_id.code', '=like', '481%')]"/>
+        <field name="formulas">balance = sum.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_5_02_1_fr_bilan_actif" model="account.financial.html.report.line">
+        <field name="name">Primes de remboursement des emprunts (IV)</field>
+        <field name="code">PRIMES_EMPRUNTS</field>
+        <field name="level" eval="2" />
+        <field name="sequence" eval="13"/>
+        <field name="parent_id" ref='account_financial_report_line_01_fr_bilan_actif'/>
+        <field name="domain" eval="[('account_id.code', '=like', '169%')]"/>
+        <field name="formulas">balance = sum.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_4_02_1_fr_bilan_actif" model="account.financial.html.report.line">
+        <field name="name">Écarts de conversion actif (V)</field>
+        <field name="code">ECARTS_ACTIF</field>
+        <field name="level" eval="2" />
+        <field name="sequence" eval="14"/>
+        <field name="parent_id" ref='account_financial_report_line_01_fr_bilan_actif'/>
+        <field name="domain" eval="[('account_id.code', '=like', '476%')]"/>
+        <field name="formulas">balance = sum.balance</field>
+    </record>
+
+    <record id="account_financial_report_fr_bilan_passif_total" model="account.financial.html.report.line">
+        <field name="name">TOTAL PASSIF (I + II + III + IV)</field>
+        <field name="code">PASSIF_TOT</field>
+        <field name="level" eval="0"/>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="account_financial_report_line_fr_bilan_actif_passif_total"/>
+        <field name="formulas">balance = PASSIF_TOATAL_I.balance + PASSIF_TOATAL_II.balance + PASSIF_TOATAL_III.balance + ECARTS_PASSIF.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_01_fr_bilan_passif" model="account.financial.html.report.line">
+        <field name="name">Passif</field>
+        <field name="code">PASSIF</field>
+        <field name="level" eval="1" />
+        <field name="sequence" eval="2"/>
+        <field name="parent_id" ref='account_financial_report_fr_bilan_passif_total'/>
+    </record>
+
+    <record id="account_financial_report_line_02_1_fr_bilan_passif" model="account.financial.html.report.line">
+        <field name="name">Capitaux Propres</field>
+        <field name="code">CAPITAUX_PROPRES</field>
+        <field name="level" eval="2" />
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref='account_financial_report_line_01_fr_bilan_passif'/>
+    </record>
+
+    <record id="account_financial_report_line_03_0_1_fr_bilan_passif" model="account.financial.html.report.line">
+        <field name="name">Capital [dont versé...]</field>
+        <field name="code">CAPITAL</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref='account_financial_report_line_02_1_fr_bilan_passif'/>
+        <field name="domain" eval="['|', ('account_id.code', '=like', '101%'), ('account_id.code', '=like', '108%')]"/>
+        <field name="formulas">balance = -sum.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_03_0_2_fr_bilan_passif" model="account.financial.html.report.line">
+        <field name="name">Primes d'émission, de fusion, d'apport</field>
+        <field name="code">PRIMES_DAPPORT</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="2"/>
+        <field name="parent_id" ref='account_financial_report_line_02_1_fr_bilan_passif'/>
+        <field name="domain" eval="[('account_id.code', '=like', '104%')]"/>
+        <field name="formulas">balance = -sum.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_03_0_3_fr_bilan_passif" model="account.financial.html.report.line">
+        <field name="name">Écarts de réévaluation</field>
+        <field name="code">ECARTS_REEVALUTION</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="3"/>
+        <field name="parent_id" ref='account_financial_report_line_02_1_fr_bilan_passif'/>
+        <field name="domain" eval="[('account_id.code', '=like', '105%')]"/>
+        <field name="formulas">balance = -sum.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_03_0_4_fr_bilan_passif" model="account.financial.html.report.line">
+        <field name="name">Écart d'équivalence</field>
+        <field name="code">ECART_EQUIVALENCE</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="4"/>
+        <field name="parent_id" ref='account_financial_report_line_02_1_fr_bilan_passif'/>
+        <field name="domain" eval="[('account_id.code', '=like', '107%')]"/>
+        <field name="formulas">balance = -sum.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_02_2_fr_bilan_passif" model="account.financial.html.report.line">
+        <field name="name">Réserves</field>
+        <field name="code">RESERVES</field>
+        <field name="level" eval="2" />
+        <field name="sequence" eval="2"/>
+        <field name="parent_id" ref='account_financial_report_line_01_fr_bilan_passif'/>
+    </record>
+
+    <record id="account_financial_report_line_03_1_1_fr_bilan_passif" model="account.financial.html.report.line">
+        <field name="name">Réserve légale</field>
+        <field name="code">RESERVE_LEGALE</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref='account_financial_report_line_02_2_fr_bilan_passif'/>
+        <field name="domain" eval="[('account_id.code', '=like', '1061%')]"/>
+        <field name="formulas">balance = -sum.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_03_1_2_fr_bilan_passif" model="account.financial.html.report.line">
+        <field name="name">Réserves statutaires ou contractuelles</field>
+        <field name="code">RESERVE_CONTRACT</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="2"/>
+        <field name="parent_id" ref='account_financial_report_line_02_2_fr_bilan_passif'/>
+        <field name="domain" eval="[('account_id.code', '=like', '1063%')]"/>
+        <field name="formulas">balance = -sum.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_03_1_3_fr_bilan_passif" model="account.financial.html.report.line">
+        <field name="name">Réserves réglementées</field>
+        <field name="code">RESERVE_REGLEMENT</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="3"/>
+        <field name="parent_id" ref='account_financial_report_line_02_2_fr_bilan_passif'/>
+        <field name="domain" eval="['|', ('account_id.code', '=like', '1062%'), ('account_id.code', '=like', '1064%')]"/>
+        <field name="formulas">balance = -sum.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_03_1_4_fr_bilan_passif" model="account.financial.html.report.line">
+        <field name="name">Autres réserves</field>
+        <field name="code">AUTRES_RESERVEs</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="4"/>
+        <field name="parent_id" ref='account_financial_report_line_02_2_fr_bilan_passif'/>
+        <field name="domain" eval="[('account_id.code', '=like', '1068%')]"/>
+        <field name="formulas">balance = -sum.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_03_1_5_fr_bilan_passif" model="account.financial.html.report.line">
+        <field name="name">Report à nouveau</field>
+        <field name="code">REPORT_NOUVEAU</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="5"/>
+        <field name="parent_id" ref='account_financial_report_line_02_2_fr_bilan_passif'/>
+        <field name="domain" eval="['|', ('account_id.code', '=like', '110%'), ('account_id.code', '=like', '119%')]"/>
+        <field name="formulas">balance = -sum.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_03_1_6_fr_bilan_passif" model="account.financial.html.report.line">
+        <field name="name">Résultat de l'exercice</field>
+        <field name="code">RESULT_LEXERCICE</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="6"/>
+        <field name="parent_id" ref='account_financial_report_line_02_2_fr_bilan_passif'/>
+        <field name="domain" eval="[('account_id.user_type_id', '=', ref('account.data_unaffected_earnings'))]" />
+        <field name="formulas">balance = FRCDR_TOT.balance - sum.balance</field>
+        <field name="special_date_changer">from_beginning</field>
+    </record>
+
+    <record id="account_financial_report_line_03_1_7_fr_bilan_passif" model="account.financial.html.report.line">
+        <field name="name">Subventions d'investissement</field>
+        <field name="code">SUBVENTIONS_INVEST</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="7"/>
+        <field name="parent_id" ref='account_financial_report_line_02_2_fr_bilan_passif'/>
+        <field name="domain" eval="['|', ('account_id.code', '=like', '138%'), ('account_id.code', '=like', '131%')]"/>
+        <field name="formulas">balance = -sum.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_03_1_8_fr_bilan_passif" model="account.financial.html.report.line">
+        <field name="name">Provisions réglementées</field>
+        <field name="code">PROVISIONS_REGLEMENT</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="8"/>
+        <field name="parent_id" ref='account_financial_report_line_02_2_fr_bilan_passif'/>
+        <field name="domain" eval="[('account_id.code', '=like', '14%')]"/>
+        <field name="formulas">balance = -sum.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_02_3_fr_bilan_passif" model="account.financial.html.report.line">
+        <field name="name">Total (I)</field>
+        <field name="code">PASSIF_TOATAL_I</field>
+        <field name="level" eval="2" />
+        <field name="sequence" eval="3"/>
+        <field name="parent_id" ref='account_financial_report_line_01_fr_bilan_passif'/>
+        <field name="formulas">balance = CAPITAL.balance + PRIMES_DAPPORT.balance + ECARTS_REEVALUTION.balance + ECART_EQUIVALENCE.balance + RESERVE_LEGALE.balance + RESERVE_CONTRACT.balance + RESERVE_REGLEMENT.balance + AUTRES_RESERVEs.balance + REPORT_NOUVEAU.balance + RESULT_LEXERCICE.balance + SUBVENTIONS_INVEST.balance + PROVISIONS_REGLEMENT.balance</field>
+    </record>
+
+
+    <record id="account_financial_report_line_02_4_fr_bilan_passif" model="account.financial.html.report.line">
+        <field name="name">Provisions</field>
+        <field name="code">PROVISIONS</field>
+        <field name="level" eval="2" />
+        <field name="sequence" eval="4"/>
+        <field name="parent_id" ref='account_financial_report_line_01_fr_bilan_passif'/>
+    </record>
+
+    <record id="account_financial_report_line_03_2_1_fr_bilan_passif" model="account.financial.html.report.line">
+        <field name="name">Provisions pour risques</field>
+        <field name="code">PROVISIONS_RISQUES</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref='account_financial_report_line_02_4_fr_bilan_passif'/>
+        <field name="domain" eval="[('account_id.code', '=like', '151%')]"/>
+        <field name="formulas">balance = -sum.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_03_2_2_fr_bilan_passif" model="account.financial.html.report.line">
+        <field name="name">Provisions pour charges</field>
+        <field name="code">PROVISIONS_CHARGES</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="2"/>
+        <field name="parent_id" ref='account_financial_report_line_02_4_fr_bilan_passif'/>
+        <field name="domain" eval="[('account_id.code', '=like', '15%'), '!', ('account_id.code', '=like', '151%')]"/>
+        <field name="formulas">balance = -sum.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_02_5_fr_bilan_passif" model="account.financial.html.report.line">
+        <field name="name">Total (II)</field>
+        <field name="code">PASSIF_TOATAL_II</field>
+        <field name="level" eval="2" />
+        <field name="sequence" eval="5"/>
+        <field name="parent_id" ref='account_financial_report_line_01_fr_bilan_passif'/>
+        <field name="formulas">balance = PROVISIONS_RISQUES.balance + PROVISIONS_CHARGES.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_02_6_fr_bilan_passif" model="account.financial.html.report.line">
+        <field name="name">Dettes</field>
+        <field name="code">DETTES</field>
+        <field name="level" eval="2" />
+        <field name="sequence" eval="6"/>
+        <field name="parent_id" ref='account_financial_report_line_01_fr_bilan_passif'/>
+    </record>
+
+    <record id="account_financial_report_line_03_3_1_fr_bilan_passif" model="account.financial.html.report.line">
+        <field name="name">Emprunts obligataires convertibles</field>
+        <field name="code">EMPRUNTS_CONVERT</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref='account_financial_report_line_02_6_fr_bilan_passif'/>
+        <field name="domain" eval="['|', ('account_id.code', '=like', '161%'), ('account_id.code', '=like', '16881%')]"/>
+        <field name="formulas">balance = -sum.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_03_3_2_fr_bilan_passif" model="account.financial.html.report.line">
+        <field name="name">Autres emprunts obligataires</field>
+        <field name="code">AUTRES_OBLIGATAIRES</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="2"/>
+        <field name="parent_id" ref='account_financial_report_line_02_6_fr_bilan_passif'/>
+        <field name="domain" eval="['|', ('account_id.code', '=like', '163%'), ('account_id.code', '=like', '16883%')]"/>
+        <field name="formulas">balance = -sum.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_03_3_3_fr_bilan_passif" model="account.financial.html.report.line">
+        <field name="name">Emprunts et dettes auprès des établissements de crédit</field>
+        <field name="code">EMPRUNTS_CREDIT</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="3"/>
+        <field name="parent_id" ref='account_financial_report_line_02_6_fr_bilan_passif'/>
+        <field name="domain" eval="['|', ('account_id.code', '=like', '164%'), '|', ('account_id.code', '=like', '16884%'), ('account_id.code', '=like', '519%')]"/>
+        <field name="formulas">balance = - sum.balance - EMPRUNTS_CREDIT_CREDIT.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_03_3_3c_fr_bilan_passif" model="account.financial.html.report.line">
+        <field name="name">Emprunts et dettes auprès des établissements de crédit - credit</field>
+        <field name="code">EMPRUNTS_CREDIT_CREDIT</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="3"/>
+        <field name="domain" eval="['|', ('account_id.code', '=like', '5181%'), '|', ('account_id.code', '=like', '512%'), '|', ('account_id.code', '=like', '514%'), ('account_id.code', '=like', '517%')]"/>
+        <field name="formulas">balance = sum_if_neg.balance</field>
+        <field name="groupby">account_id</field>
+        <field name="show_domain">never</field>
+    </record>
+
+    <record id="account_financial_report_line_03_3_4_fr_bilan_passif" model="account.financial.html.report.line">
+        <field name="name">Emprunts et dettes financières diverses</field>
+        <field name="code">EMPRUNTS_DIVERSES</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="4"/>
+        <field name="parent_id" ref='account_financial_report_line_02_6_fr_bilan_passif'/>
+        <field name="domain" eval="['|', ('account_id.code', '=like', '165%'), '|', ('account_id.code', '=like', '166%'), '|', ('account_id.code', '=like', '1675%'), '|', ('account_id.code', '=like', '168%'), '|', ('account_id.code', '=like', '17%'), ('account_id.code', '=like', '426%'), '!', '|', ('account_id.code', '=like', '16881%'), '|', ('account_id.code', '=like', '16883%'), ('account_id.code', '=like', '16884%')]"/>
+        <field name="formulas">balance = -sum.balance - EMPRUNTS_DIVERSES_CREDIT.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_03_3_4c_fr_bilan_passif" model="account.financial.html.report.line">
+        <field name="name">Emprunts et dettes financières diverses - credit</field>
+        <field name="code">EMPRUNTS_DIVERSES_CREDIT</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="4"/>
+        <field name="domain" eval="[('account_id.code', '=like', '45%'), '!', ('account_id.code', '=like', '457%')]"/>
+        <field name="formulas">balance = sum_if_neg.balance</field>
+        <field name="groupby">account_id</field>
+        <field name="show_domain">never</field>
+    </record>
+
+    <record id="account_financial_report_line_03_3_5_fr_bilan_passif" model="account.financial.html.report.line">
+        <field name="name">Avances et acomptes reçus sur commandes en cours</field>
+        <field name="code">AVANCES_COURS</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="5"/>
+        <field name="parent_id" ref='account_financial_report_line_02_6_fr_bilan_passif'/>
+        <field name="domain" eval="[('account_id.code', '=like', '4191%')]"/>
+        <field name="formulas">balance = -sum.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_03_3_6_fr_bilan_passif" model="account.financial.html.report.line">
+        <field name="name">Dettes fournisseurs et comptes rattachés</field>
+        <field name="code">DETTES_RATTACHES</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="6"/>
+        <field name="parent_id" ref='account_financial_report_line_02_6_fr_bilan_passif'/>
+        <field name="domain" eval="['|', ('account_id.code', '=like', '403%'), '|', ('account_id.code', '=like', '401%'), ('account_id.code', '=like', '408%')]"/>
+        <field name="formulas">balance = -sum.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_03_3_7_fr_bilan_passif" model="account.financial.html.report.line">
+        <field name="name">Dettes fiscales et sociales</field>
+        <field name="code">DETTES_SOCIALES</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="7"/>
+        <field name="parent_id" ref='account_financial_report_line_02_6_fr_bilan_passif'/>
+        <field name="domain" eval="['|', ('account_id.code', '=like', '421%'), '|', ('account_id.code', '=like', '422%'), '|', ('account_id.code', '=like', '424%'), '|', ('account_id.code', '=like', '427%'), '|', ('account_id.code', '=like', '43%'), '|', ('account_id.code', '=like', '442%'), '|', ('account_id.code', '=like', '446%'), '|', ('account_id.code', '=like', '447%'), ('account_id.code', '=like', '457%')]"/>
+        <field name="formulas">balance = -sum.balance - DETTES_SOCIALES_CREDIT.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_03_3_7c_fr_bilan_passif" model="account.financial.html.report.line">
+        <field name="name">Dettes fiscales et sociales - credit</field>
+        <field name="code">DETTES_SOCIALES_CREDIT</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="7"/>
+        <field name="domain" eval="['|', ('account_id.code', '=like', '428%'), '|', ('account_id.code', '=like', '445%'), '|', ('account_id.code', '=like', '448%'), '|', ('account_id.code', '=like', '443%'), ('account_id.code', '=like', '444%'), '!', ('account_id.code', '=like', '4387%')]"/>
+        <field name="formulas">balance = sum_if_neg.balance</field>
+        <field name="groupby">account_id</field>
+        <field name="show_domain">never</field>
+    </record>
+
+    <record id="account_financial_report_line_03_3_8_fr_bilan_passif" model="account.financial.html.report.line">
+        <field name="name">Dettes sur immobilisations et comptes rattachés</field>
+        <field name="code">DETTES_SUR_RATTACHES</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="8"/>
+        <field name="parent_id" ref='account_financial_report_line_02_6_fr_bilan_passif'/>
+        <field name="domain" eval="['|', ('account_id.code', '=like', '269%'), '|', ('account_id.code', '=like', '279%'), '|', ('account_id.code', '=like', '404%'), ('account_id.code', '=like', '405%')]"/>
+        <field name="formulas">balance = -sum.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_03_3_9_fr_bilan_passif" model="account.financial.html.report.line">
+        <field name="name">Autres dettes</field>
+        <field name="code">AUTRES_DETTES</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="9"/>
+        <field name="parent_id" ref='account_financial_report_line_02_6_fr_bilan_passif'/>
+        <field name="domain" eval="['|', ('account_id.code', '=like', '4196%'), '|', ('account_id.code', '=like', '4197%'), '|', ('account_id.code', '=like', '4198%'), '|', ('account_id.code', '=like', '464%'), ('account_id.code', '=like', '509%')]"/>
+        <field name="formulas">balance = -sum.balance - AUTRES_DETTES_CREDIT.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_03_3_9c_fr_bilan_passif" model="account.financial.html.report.line">
+        <field name="name">Autres dettes</field>
+        <field name="code">AUTRES_DETTES_CREDIT</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="9"/>
+        <field name="domain" eval="['|', ('account_id.code', '=like', '467%'), '|', ('account_id.code', '=like', '4686%'), ('account_id.code', '=like', '478%')]"/>
+        <field name="formulas">balance = sum_if_neg.balance</field>
+        <field name="groupby">account_id</field>
+        <field name="show_domain">never</field>
+    </record>
+
+    <record id="account_financial_report_line_03_3_11_fr_bilan_passif" model="account.financial.html.report.line">
+        <field name="name">Produits constatés d'avance</field>
+        <field name="code">PRODUITS_DAVANCE</field>
+        <field name="level" eval="3" />
+        <field name="sequence" eval="11"/>
+        <field name="parent_id" ref='account_financial_report_line_02_6_fr_bilan_passif'/>
+        <field name="domain" eval="[('account_id.code', '=like', '487%')]"/>
+        <field name="formulas">balance = -sum.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_02_7_fr_bilan_passif" model="account.financial.html.report.line">
+        <field name="name">Total (III)</field>
+        <field name="code">PASSIF_TOATAL_III</field>
+        <field name="level" eval="2" />
+        <field name="sequence" eval="7"/>
+        <field name="parent_id" ref='account_financial_report_line_01_fr_bilan_passif'/>
+        <field name="formulas">balance = EMPRUNTS_CONVERT.balance + AUTRES_OBLIGATAIRES.balance + EMPRUNTS_CREDIT.balance + EMPRUNTS_DIVERSES.balance + AVANCES_COURS.balance + DETTES_RATTACHES.balance + DETTES_SOCIALES.balance + DETTES_SUR_RATTACHES.balance + AUTRES_DETTES.balance + PRODUITS_DAVANCE.balance</field>
+    </record>
+
+    <record id="account_financial_report_line_02_8_fr_bilan_passif" model="account.financial.html.report.line">
+        <field name="name">Écarts de conversion passif (IV)</field>
+        <field name="code">ECARTS_PASSIF</field>
+        <field name="level" eval="2" />
+        <field name="sequence" eval="8"/>
+        <field name="parent_id" ref='account_financial_report_line_01_fr_bilan_passif'/>
+        <field name="domain" eval="[('account_id.code', '=like', '477%')]"/>
+        <field name="formulas">balance = -sum.balance</field>
+    </record>
+    <!--FIN BILAN COMPTABLE  -->
+
+   <!--DEBUT COMPTE DE RESULTATS  -->
+    <record id="account_financial_report_l10n_pcgo_cdr" model="account.financial.html.report">
+        <field name="name">Compte de résultats</field>
+        <field name='parent_id' ref='l10n_pcgo.account_reports_fr_statements_menu'/>
+    </record>
+
+    <record id="account_financial_report_line_01_fr_cdr_tot" model="account.financial.html.report.line">
+        <field name="name">PRODUITS - CHARGES</field>
+        <field name="code">FRCDR_TOT</field>
+        <field name="sequence" eval="1"/>
+        <field name="financial_report_id" ref="account_financial_report_l10n_pcgo_cdr"/>
+        <field name="formulas">balance = FRCDR_PRO.balance - FRCDR_CHA.balance</field>
+        <field name="level" eval="0"/>
+    </record>
+
+    <record id="account_financial_report_line_01_fr_cdr_char" model="account.financial.html.report.line">
+        <field name="name">CHARGES (I + II + III + IV + V + VI)</field>
+        <field name="code">FRCDR_CHA</field>
+        <field name="parent_id" ref='account_financial_report_line_01_fr_cdr_tot'/>
+        <field name="formulas">balance = FRCDR_CHA_EXP.balance + FRCDR16.balance + FRCDR_CHA_FIN.balance + FRCDR_CHA_EXC.balance + FRCDR24.balance + FRCDR25.balance</field>
+        <field name="sequence" eval="1"/>
+        <field name="level" eval="0" />
+    </record>
+
+    <record id="account_financial_report_line_01_fr_cdr_char_exp" model="account.financial.html.report.line">
+        <field name="name">CHARGES D'EXPLOITATION (I)</field>
+        <field name="code">FRCDR_CHA_EXP</field>
+        <field name="parent_id" ref='account_financial_report_line_01_fr_cdr_char'/>
+        <field name="formulas">balance = FRCDRC1.balance + FRCDRC2.balance + FRCDRC3.balance + FRCDRC4.balance + FRCDRC5.balance + FRCDRC8.balance + FRCDRC9.balance + FRCDRC10.balance + FRCDRC11.balance + FRCDRC12.balance + FRCDRC13.balance + FRCDRC14.balance + FRCDRC15.balance</field>
+        <field name="sequence" eval="1"/>
+        <field name="level" eval="1" />
+    </record>
+
+    <record id="account_financial_report_line_fr_cdrc1" model="account.financial.html.report.line">
+        <field name="name">Achats de marchandises</field>
+        <field name="code">FRCDRC1</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref='account_financial_report_line_01_fr_cdr_char_exp'/>
+        <field name="domain" eval="['|', ('account_id.code', '=like', '607%'), ('account_id.code', '=like', '6097%')]" />
+        <field name="formulas">balance = sum.balance</field>
+        <field name="level" eval="2"/>
+    </record>
+
+    <record id="account_financial_report_line_fr_cdrc2" model="account.financial.html.report.line">
+        <field name="name">Achats de Marchandises, variation des stocks</field>
+        <field name="code">FRCDRC2</field>
+        <field name="sequence" eval="2"/>
+        <field name="parent_id" ref='account_financial_report_line_01_fr_cdr_char_exp'/>
+        <field name="domain" eval="[('account_id.code', '=like', '6037%')]" />
+        <field name="formulas">balance = sum.balance</field>
+        <field name="level" eval="2"/>
+    </record>
+
+    <record id="account_financial_report_line_fr_cdrc3" model="account.financial.html.report.line">
+        <field name="name">Achats de matières premières et autres approvisionnements</field>
+        <field name="code">FRCDRC3</field>
+        <field name="sequence" eval="3"/>
+        <field name="parent_id" ref='account_financial_report_line_01_fr_cdr_char_exp'/>
+        <field name="domain" eval="['|', ('account_id.code', '=like', '601%'), '|', ('account_id.code', '=like', '6091%'), '|', ('account_id.code', '=like', '602%'), '|', ('account_id.code', '=like', '6092%'), '|', ('account_id.code', '=like', '6081%'), ('account_id.code', '=like', '6082%')]" />
+        <field name="formulas">balance = sum.balance</field>
+        <field name="level" eval="2"/>
+    </record>
+
+    <record id="account_financial_report_line_fr_cdrc4" model="account.financial.html.report.line">
+        <field name="name">Achats de matières premières et autres approvisionnements, variation des stocks</field>
+        <field name="code">FRCDRC4</field>
+        <field name="sequence" eval="4"/>
+        <field name="parent_id" ref='account_financial_report_line_01_fr_cdr_char_exp'/>
+        <field name="domain" eval="['|', ('account_id.code', '=like', '6031%'), ('account_id.code', '=like', '6032%')]" />
+        <field name="formulas">balance = sum.balance</field>
+        <field name="level" eval="2"/>
+    </record>
+
+    <record id="account_financial_report_line_fr_cdrc5" model="account.financial.html.report.line">
+        <field name="name">Autres achats et charges externes</field>
+        <field name="code">FRCDRC5</field>
+        <field name="sequence" eval="5"/>
+        <field name="parent_id" ref='account_financial_report_line_01_fr_cdr_char_exp'/>
+        <field name="domain" eval="['|', ('account_id.code', '=like', '604%'),  '|', ('account_id.code', '=like', '605%'), '|', ('account_id.code', '=like', '606%'), '|', ('account_id.code', '=like', '6094%'), '|', ('account_id.code', '=like', '6095%'), '|', ('account_id.code', '=like', '6096%'), '|', ('account_id.code', '=like', '61%'),('account_id.code', '=like', '62%')]" />
+        <field name="formulas">balance = sum.balance</field>
+        <field name="level" eval="2"/>
+    </record>
+
+    <record id="account_financial_report_line_fr_cdrc8" model="account.financial.html.report.line">
+        <field name="name">Impôts, taxes et versements assimilés</field>
+        <field name="code">FRCDRC8</field>
+        <field name="sequence" eval="8"/>
+        <field name="parent_id" ref='account_financial_report_line_01_fr_cdr_char_exp'/>
+        <field name="domain" eval="[('account_id.code', '=like', '63%')]" />
+        <field name="formulas">balance = sum.balance</field>
+        <field name="level" eval="2"/>
+    </record>
+
+    <record id="account_financial_report_line_fr_cdrc9" model="account.financial.html.report.line">
+        <field name="name">Salaires et traitements</field>
+        <field name="code">FRCDRC9</field>
+        <field name="sequence" eval="9"/>
+        <field name="parent_id" ref='account_financial_report_line_01_fr_cdr_char_exp'/>
+        <field name="domain" eval="['|', ('account_id.code', '=like', '641%'),  '|', ('account_id.code', '=like', '644%'), '&amp;', ('account_id.code', '=like', '648%')]" />
+        <field name="formulas">balance = sum.balance</field>
+        <field name="level" eval="2"/>
+    </record>
+
+    <record id="account_financial_report_line_fr_cdrc10" model="account.financial.html.report.line">
+        <field name="name">Charges sociales</field>
+        <field name="code">FRCDRC10</field>
+        <field name="sequence" eval="10"/>
+        <field name="parent_id" ref='account_financial_report_line_01_fr_cdr_char_exp'/>
+        <field name="domain" eval="['|', ('account_id.code', '=like', '645%'),  '|', ('account_id.code', '=like', '646%'), '|', ('account_id.code', '=like', '647%'), '|', ('account_id.code', '=like', '649%'), '|', '&amp;', ('account_id.code', '=like', '648%'), ('account_id.tag_ids', '=', False), '&amp;', ('account_id.code', '=like', '648%')]" />
+        <field name="formulas">balance = sum.balance</field>
+        <field name="level" eval="2"/>
+    </record>
+
+    <record id="account_financial_report_line_fr_cdrc11" model="account.financial.html.report.line">
+        <field name="name">Dotation aux amortissements et aux dépréciations, sur immobilisations : dotations aux amortissements</field>
+        <field name="code">FRCDRC11</field>
+        <field name="sequence" eval="11"/>
+        <field name="parent_id" ref='account_financial_report_line_01_fr_cdr_char_exp'/>
+        <field name="domain" eval="['|', ('account_id.code', '=like', '6811%'),  ('account_id.code', '=like', '6812%')]" />
+        <field name="formulas">balance = sum.balance</field>
+        <field name="level" eval="2"/>
+    </record>
+
+    <record id="account_financial_report_line_fr_cdrc12" model="account.financial.html.report.line">
+        <field name="name">Dotation aux amortissements et aux dépréciations, sur immobilisations : dotations aux dépréciations</field>
+        <field name="code">FRCDRC12</field>
+        <field name="sequence" eval="12"/>
+        <field name="parent_id" ref='account_financial_report_line_01_fr_cdr_char_exp'/>
+        <field name="domain" eval="[('account_id.code', '=like', '6816%')]" />
+        <field name="formulas">balance = sum.balance</field>
+        <field name="level" eval="2"/>
+    </record>
+
+    <record id="account_financial_report_line_fr_cdrc13" model="account.financial.html.report.line">
+        <field name="name">Dotation aux amortissements et aux dépréciations, sur actif circulant : dotations aux dépréciations</field>
+        <field name="code">FRCDRC13</field>
+        <field name="sequence" eval="13"/>
+        <field name="parent_id" ref='account_financial_report_line_01_fr_cdr_char_exp'/>
+        <field name="domain" eval="[('account_id.code', '=like', '6817%')]" />
+        <field name="formulas">balance = sum.balance</field>
+        <field name="level" eval="2"/>
+    </record>
+
+    <record id="account_financial_report_line_fr_cdrc14" model="account.financial.html.report.line">
+        <field name="name">Dotations aux provision</field>
+        <field name="code">FRCDRC14</field>
+        <field name="sequence" eval="14"/>
+        <field name="parent_id" ref='account_financial_report_line_01_fr_cdr_char_exp'/>
+        <field name="domain" eval="[('account_id.code', '=like', '6815%')]" />
+        <field name="formulas">balance = sum.balance</field>
+        <field name="level" eval="2"/>
+    </record>
+
+    <record id="account_financial_report_line_fr_cdrc15" model="account.financial.html.report.line">
+        <field name="name">Autres charges</field>
+        <field name="code">FRCDRC15</field>
+        <field name="sequence" eval="15"/>
+        <field name="parent_id" ref='account_financial_report_line_01_fr_cdr_char_exp'/>
+        <field name="domain" eval="[('account_id.code', '=like', '65%'), '!', ('account_id.code', '=like', '655%')]" />
+        <field name="formulas">balance = sum.balance</field>
+        <field name="level" eval="2"/>
+    </record>
+
+    <record id="account_financial_report_line_01_fr_cdr16" model="account.financial.html.report.line">
+        <field name="name">Quotes-parts de résultat sur opérations faites en commun (II)</field>
+        <field name="code">FRCDR16</field>
+        <field name="parent_id" ref='account_financial_report_line_01_fr_cdr_char'/>
+        <field name="domain" eval="[('account_id.code', '=like', '655%')]" />
+        <field name="formulas">balance = sum.balance</field>
+        <field name="sequence" eval="2"/>
+        <field name="level" eval="1" />
+    </record>
+
+    <record id="account_financial_report_line_01_fr_cdr_char_fin" model="account.financial.html.report.line">
+        <field name="name">CHARGES FINANCIERES (III)</field>
+        <field name="code">FRCDR_CHA_FIN</field>
+        <field name="parent_id" ref='account_financial_report_line_01_fr_cdr_char'/>
+        <field name="formulas">balance = FRCDRC17.balance + FRCDRC18.balance + FRCDRC19.balance + FRCDRC20.balance</field>
+        <field name="sequence" eval="3"/>
+        <field name="level" eval="1" />
+    </record>
+
+    <record id="account_financial_report_line_fr_cdrc17" model="account.financial.html.report.line">
+        <field name="name">Dotations aux amortissements, aux dépréciations et aux provisions</field>
+        <field name="code">FRCDRC17</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref='account_financial_report_line_01_fr_cdr_char_fin'/>
+        <field name="domain" eval="[('account_id.code', '=like', '686%')]" />
+        <field name="formulas">balance = sum.balance</field>
+        <field name="level" eval="2"/>
+    </record>
+
+    <record id="account_financial_report_line_fr_cdrc18" model="account.financial.html.report.line">
+        <field name="name">Intérêts et charges assimilées</field>
+        <field name="code">FRCDRC18</field>
+        <field name="sequence" eval="2"/>
+        <field name="parent_id" ref='account_financial_report_line_01_fr_cdr_char_fin'/>
+        <field name="domain" eval="[('account_id.code', '=like', '66%'), '!', ('account_id.code', '=like', '666%'), '!', ('account_id.code', '=like', '667%')]" />
+        <field name="formulas">balance = sum.balance</field>
+        <field name="level" eval="2"/>
+    </record>
+
+    <record id="account_financial_report_line_fr_cdrc19" model="account.financial.html.report.line">
+        <field name="name">Différences négatives de change</field>
+        <field name="code">FRCDRC19</field>
+        <field name="sequence" eval="3"/>
+        <field name="parent_id" ref='account_financial_report_line_01_fr_cdr_char_fin'/>
+        <field name="domain" eval="[('account_id.code', '=like', '666%')]" />
+        <field name="formulas">balance = sum.balance</field>
+        <field name="level" eval="2"/>
+    </record>
+
+    <record id="account_financial_report_line_fr_cdrc20" model="account.financial.html.report.line">
+        <field name="name">Charges nettes sur cessions de valeurs mobilières de placement</field>
+        <field name="code">FRCDRC20</field>
+        <field name="sequence" eval="4"/>
+        <field name="parent_id" ref='account_financial_report_line_01_fr_cdr_char_fin'/>
+        <field name="domain" eval="[('account_id.code', '=like', '667%')]" />
+        <field name="formulas">balance = sum.balance</field>
+        <field name="level" eval="2"/>
+    </record>
+
+    <record id="account_financial_report_line_01_fr_cdr_char_exc" model="account.financial.html.report.line">
+        <field name="name">CHARGES EXCEPTIONNELLES (IV)</field>
+        <field name="code">FRCDR_CHA_EXC</field>
+        <field name="parent_id" ref='account_financial_report_line_01_fr_cdr_char'/>
+        <field name="formulas">balance = FRCDRC21.balance + FRCDRC22.balance + FRCDRC23.balance</field>
+        <field name="sequence" eval="4"/>
+        <field name="level" eval="1" />
+    </record>
+
+    <record id="account_financial_report_line_fr_cdrc21" model="account.financial.html.report.line">
+        <field name="name">Sur opérations de gestion</field>
+        <field name="code">FRCDRC21</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref='account_financial_report_line_01_fr_cdr_char_exc'/>
+        <field name="domain" eval="[('account_id.code', '=like', '671%')]" />
+        <field name="formulas">balance = sum.balance</field>
+        <field name="level" eval="2"/>
+    </record>
+
+    <record id="account_financial_report_line_fr_cdrc22" model="account.financial.html.report.line">
+        <field name="name">Sur opérations en capital</field>
+        <field name="code">FRCDRC22</field>
+        <field name="sequence" eval="2"/>
+        <field name="parent_id" ref='account_financial_report_line_01_fr_cdr_char_exc'/>
+        <field name="domain" eval="['|', ('account_id.code', '=like', '675%'),  ('account_id.code', '=like', '678%')]" />
+        <field name="formulas">balance = sum.balance</field>
+        <field name="level" eval="2"/>
+    </record>
+
+    <record id="account_financial_report_line_fr_cdrc23" model="account.financial.html.report.line">
+        <field name="name">Dotations aux amortissements, aux dépréciations et aux provisions</field>
+        <field name="code">FRCDRC23</field>
+        <field name="sequence" eval="3"/>
+        <field name="parent_id" ref='account_financial_report_line_01_fr_cdr_char_exc'/>
+        <field name="domain" eval="[('account_id.code', '=like', '687%')]" />
+        <field name="formulas">balance = sum.balance</field>
+        <field name="level" eval="2"/>
+    </record>
+
+    <record id="account_financial_report_line_01_fr_cdr24" model="account.financial.html.report.line">
+        <field name="name">Participation des salariés aux résultats (V)</field>
+        <field name="code">FRCDR24</field>
+        <field name="parent_id" ref='account_financial_report_line_01_fr_cdr_char'/>
+        <field name="domain" eval="[('account_id.code', '=like', '691%')]" />
+        <field name="formulas">balance = sum.balance</field>
+        <field name="sequence" eval="5"/>
+        <field name="level" eval="1" />
+    </record>
+
+    <record id="account_financial_report_line_01_fr_cdr25" model="account.financial.html.report.line">
+        <field name="name">Impôts sur les bénéfices (VI)</field>
+        <field name="code">FRCDR25</field>
+        <field name="parent_id" ref='account_financial_report_line_01_fr_cdr_char'/>
+        <field name="domain" eval="[('account_id.code', '=like', '69%'), '!', ('account_id.code', '=like', '691%')]" />
+        <field name="formulas">balance = sum.balance</field>
+        <field name="sequence" eval="6"/>
+        <field name="level" eval="1" />
+    </record>
+
+    <record id="account_financial_report_line_01_fr_cdr_prod" model="account.financial.html.report.line">
+        <field name="name">PRODUITS (I + II + III + IV)</field>
+        <field name="code">FRCDR_PRO</field>
+        <field name="parent_id" ref='account_financial_report_line_01_fr_cdr_tot'/>
+        <field name="formulas">balance = FRCDR_PRO_EXP.balance + FRCDRP8.balance + FRCDR_PRO_FIN.balance + FRCDR_PRO_EXC.balance</field>
+        <field name="sequence" eval="2"/>
+        <field name="level" eval="0" />
+    </record>
+
+    <record id="account_financial_report_line_01_fr_cdr_prod_exp" model="account.financial.html.report.line">
+        <field name="name">PRODUITS D'EXPLOITATION (I) A + B</field>
+        <field name="code">FRCDR_PRO_EXP</field>
+        <field name="parent_id" ref='account_financial_report_line_01_fr_cdr_prod'/>
+        <field name="formulas">balance = FRCDR_PRO_EXP_A.balance + FRCDR_PRO_EXP_B.balance</field>
+        <field name="sequence" eval="1"/>
+        <field name="level" eval="1" />
+    </record>
+
+    <record id="account_financial_report_line_01_fr_cdr_prod_exp_A" model="account.financial.html.report.line">
+        <field name="name">A - Montant net du chiffre d'affaires</field>
+        <field name="code">FRCDR_PRO_EXP_A</field>
+        <field name="parent_id" ref='account_financial_report_line_01_fr_cdr_prod_exp'/>
+        <field name="formulas">balance = FRCDRP1.balance + FRCDRP2.balance</field>
+        <field name="sequence" eval="1"/>
+        <field name="level" eval="2" />
+    </record>
+
+    <record id="account_financial_report_line_fr_cdrp1" model="account.financial.html.report.line">
+        <field name="name">Vente de marchandises</field>
+        <field name="code">FRCDRP1</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref='account_financial_report_line_01_fr_cdr_prod_exp_A'/>
+        <field name="domain" eval="['|', ('account_id.code', '=like', '707%'), ('account_id.code', '=like', '7097%')]" />
+        <field name="formulas">balance = -sum.balance</field>
+        <field name="level" eval="3"/>
+    </record>
+
+    <record id="account_financial_report_line_fr_cdrp2" model="account.financial.html.report.line">
+        <field name="name">Production vendue [biens et services]</field>
+        <field name="code">FRCDRP2</field>
+        <field name="sequence" eval="2"/>
+        <field name="parent_id" ref='account_financial_report_line_01_fr_cdr_prod_exp_A'/>
+        <field name="domain" eval="['|', ('account_id.code', '=like', '701%'), '|', ('account_id.code', '=like', '702%'), '|', ('account_id.code', '=like', '703%'), '|', ('account_id.code', '=like', '704%'), '|', ('account_id.code', '=like', '705%'), '|', ('account_id.code', '=like', '706%'), '|', ('account_id.code', '=like', '7091%'), '|', ('account_id.code', '=like', '7092%'), '|', ('account_id.code', '=like', '7093%'), '|', ('account_id.code', '=like', '7094%'), '|', ('account_id.code', '=like', '7095%'), '|', ('account_id.code', '=like', '7096%'), ('account_id.code', '=like', '708%')]" />
+        <field name="formulas">balance = - sum.balance</field>
+        <field name="level" eval="3"/>
+    </record>
+
+    <record id="account_financial_report_line_01_fr_cdr_prod_exp_B" model="account.financial.html.report.line">
+        <field name="name">B</field>
+        <field name="code">FRCDR_PRO_EXP_B</field>
+        <field name="parent_id" ref='account_financial_report_line_01_fr_cdr_prod_exp'/>
+        <field name="formulas">balance = FRCDRP3.balance + FRCDRP4.balance + FRCDRP5.balance + FRCDRP6.balance + FRCDRP7.balance</field>
+        <field name="sequence" eval="2"/>
+        <field name="level" eval="2" />
+    </record>
+
+    <record id="account_financial_report_line_fr_cdrp3" model="account.financial.html.report.line">
+        <field name="name">Production stockée</field>
+        <field name="code">FRCDRP3</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref='account_financial_report_line_01_fr_cdr_prod_exp_B'/>
+        <field name="domain" eval="[('account_id.code', '=like', '713%')]" />
+        <field name="formulas">balance = -sum.balance</field>
+        <field name="level" eval="3"/>
+    </record>
+
+    <record id="account_financial_report_line_fr_cdrp4" model="account.financial.html.report.line">
+        <field name="name">Production immobilisée</field>
+        <field name="code">FRCDRP4</field>
+        <field name="sequence" eval="2"/>
+        <field name="parent_id" ref='account_financial_report_line_01_fr_cdr_prod_exp_B'/>
+        <field name="domain" eval="[('account_id.code', '=like', '72%')]" />
+        <field name="formulas">balance = -sum.balance</field>
+        <field name="level" eval="3"/>
+    </record>
+
+    <record id="account_financial_report_line_fr_cdrp5" model="account.financial.html.report.line">
+        <field name="name">Subventions d'exploitation</field>
+        <field name="code">FRCDRP5</field>
+        <field name="sequence" eval="3"/>
+        <field name="parent_id" ref='account_financial_report_line_01_fr_cdr_prod_exp_B'/>
+        <field name="domain" eval="[('account_id.code', '=like', '74%')]" />
+        <field name="formulas">balance = -sum.balance</field>
+        <field name="level" eval="3"/>
+    </record>
+
+    <record id="account_financial_report_line_fr_cdrp6" model="account.financial.html.report.line">
+        <field name="name">Reprises sur provisions, dépréciations (et amortissements) et transferts de charges</field>
+        <field name="code">FRCDRP6</field>
+        <field name="sequence" eval="4"/>
+        <field name="parent_id" ref='account_financial_report_line_01_fr_cdr_prod_exp_B'/>
+        <field name="domain" eval="['|', ('account_id.code', '=like', '781%'), ('account_id.code', '=like', '791%')]" />
+        <field name="formulas">balance = -sum.balance</field>
+        <field name="level" eval="3"/>
+    </record>
+
+    <record id="account_financial_report_line_fr_cdrp7" model="account.financial.html.report.line">
+        <field name="name">Autres produits</field>
+        <field name="code">FRCDRP7</field>
+        <field name="sequence" eval="5"/>
+        <field name="parent_id" ref='account_financial_report_line_01_fr_cdr_prod_exp_B'/>
+        <field name="domain" eval="[('account_id.code', '=like', '75%'), '!', ('account_id.code', '=like', '755%')]" />
+        <field name="formulas">balance = -sum.balance</field>
+        <field name="level" eval="3"/>
+    </record>
+
+    <record id="account_financial_report_line_fr_cdrp8" model="account.financial.html.report.line">
+        <field name="name">Quotes-parts de résultat sur opérations faites en commun (II)</field>
+        <field name="code">FRCDRP8</field>
+        <field name="parent_id" ref='account_financial_report_line_01_fr_cdr_prod'/>
+        <field name="domain" eval="[('account_id.code', '=like', '755%')]" />
+        <field name="formulas">balance = -sum.balance</field>
+        <field name="sequence" eval="2"/>
+        <field name="level" eval="1" />
+    </record>
+
+    <record id="account_financial_report_line_01_fr_cdr_prod_fin" model="account.financial.html.report.line">
+        <field name="name">PRODUITS FINANCIERS (III)</field>
+        <field name="code">FRCDR_PRO_FIN</field>
+        <field name="parent_id" ref='account_financial_report_line_01_fr_cdr_prod'/>
+        <field name="formulas">balance = FRCDRP9.balance + FRCDRP10.balance + FRCDRP11.balance + FRCDRP12.balance + FRCDRP13.balance + FRCDRP14.balance</field>
+        <field name="sequence" eval="3"/>
+        <field name="level" eval="1" />
+    </record>
+
+    <record id="account_financial_report_line_fr_cdrp9" model="account.financial.html.report.line">
+        <field name="name">De participation</field>
+        <field name="code">FRCDRP9</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref='account_financial_report_line_01_fr_cdr_prod_fin'/>
+        <field name="domain" eval="[('account_id.code', '=like', '761%')]" />
+        <field name="formulas">balance = - sum.balance</field>
+        <field name="level" eval="2"/>
+    </record>
+
+    <record id="account_financial_report_line_fr_cdrp10" model="account.financial.html.report.line">
+        <field name="name">D'autres valeurs mobilières et créances de l'actif immobilisé</field>
+        <field name="code">FRCDRP10</field>
+        <field name="sequence" eval="2"/>
+        <field name="parent_id" ref='account_financial_report_line_01_fr_cdr_prod_fin'/>
+        <field name="domain" eval="[('account_id.code', '=like', '762%')]" />
+        <field name="formulas">balance = - sum.balance</field>
+        <field name="level" eval="2"/>
+    </record>
+
+    <record id="account_financial_report_line_fr_cdrp11" model="account.financial.html.report.line">
+        <field name="name">Autres intérêts et produits assimilés</field>
+        <field name="code">FRCDRP11</field>
+        <field name="sequence" eval="3"/>
+        <field name="parent_id" ref='account_financial_report_line_01_fr_cdr_prod_fin'/>
+        <field name="domain" eval="['|', ('account_id.code', '=like', '763%'), '|', ('account_id.code', '=like', '764%'), '|', ('account_id.code', '=like', '765%'), ('account_id.code', '=like', '768%')]" />
+        <field name="formulas">balance = - sum.balance</field>
+        <field name="level" eval="2"/>
+    </record>
+
+    <record id="account_financial_report_line_fr_cdrp12" model="account.financial.html.report.line">
+        <field name="name">Reprises sur provisions, dépréciations et transferts de charges</field>
+        <field name="code">FRCDRP12</field>
+        <field name="sequence" eval="4"/>
+        <field name="parent_id" ref='account_financial_report_line_01_fr_cdr_prod_fin'/>
+        <field name="domain" eval="['|', ('account_id.code', '=like', '786%'), ('account_id.code', '=like', '796%')]" />
+        <field name="formulas">balance = - sum.balance</field>
+        <field name="level" eval="2"/>
+    </record>
+
+    <record id="account_financial_report_line_fr_cdrp13" model="account.financial.html.report.line">
+        <field name="name">Différences positives de change</field>
+        <field name="code">FRCDRP13</field>
+        <field name="sequence" eval="5"/>
+        <field name="parent_id" ref='account_financial_report_line_01_fr_cdr_prod_fin'/>
+        <field name="domain" eval="[('account_id.code', '=like', '766%')]" />
+        <field name="formulas">balance = - sum.balance</field>
+        <field name="level" eval="2"/>
+    </record>
+
+    <record id="account_financial_report_line_fr_cdrp14" model="account.financial.html.report.line">
+        <field name="name">Produits nets sur cessions de valeurs mobilières de placement</field>
+        <field name="code">FRCDRP14</field>
+        <field name="sequence" eval="6"/>
+        <field name="parent_id" ref='account_financial_report_line_01_fr_cdr_prod_fin'/>
+        <field name="domain" eval="[('account_id.code', '=like', '767%')]" />
+        <field name="formulas">balance = - sum.balance</field>
+        <field name="level" eval="2"/>
+    </record>
+
+    <record id="account_financial_report_line_01_fr_cdr_prod_exc" model="account.financial.html.report.line">
+        <field name="name">PRODUITS EXCEPTIONNELS (IV)</field>
+        <field name="code">FRCDR_PRO_EXC</field>
+        <field name="parent_id" ref='account_financial_report_line_01_fr_cdr_prod'/>
+        <field name="formulas">balance = FRCDRP15.balance + FRCDRP16.balance + FRCDRP17.balance</field>
+        <field name="sequence" eval="4"/>
+        <field name="level" eval="1" />
+    </record>
+
+    <record id="account_financial_report_line_fr_cdrp15" model="account.financial.html.report.line">
+        <field name="name">Sur opérations de gestion</field>
+        <field name="code">FRCDRP15</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref='account_financial_report_line_01_fr_cdr_prod_exc'/>
+        <field name="domain" eval="[('account_id.code', '=like', '771%')]" />
+        <field name="formulas">balance = - sum.balance</field>
+        <field name="level" eval="2"/>
+    </record>
+
+    <record id="account_financial_report_line_fr_cdrp16" model="account.financial.html.report.line">
+        <field name="name">Sur opérations en capital</field>
+        <field name="code">FRCDRP16</field>
+        <field name="sequence" eval="2"/>
+        <field name="parent_id" ref='account_financial_report_line_01_fr_cdr_prod_exc'/>
+        <field name="domain" eval="['|', ('account_id.code', '=like', '775%'), '|', ('account_id.code', '=like', '777%'), ('account_id.code', '=like', '778%')]" />
+        <field name="formulas">balance = - sum.balance</field>
+        <field name="level" eval="2"/>
+    </record>
+
+    <record id="account_financial_report_line_fr_cdrp17" model="account.financial.html.report.line">
+        <field name="name">Reprises sur provisions, dépréciations et transferts de charges</field>
+        <field name="code">FRCDRP17</field>
+        <field name="sequence" eval="3"/>
+        <field name="parent_id" ref='account_financial_report_line_01_fr_cdr_prod_exc'/>
+        <field name="domain" eval="['|', ('account_id.code', '=like', '787%'), ('account_id.code', '=like', '797%')]" />
+        <field name="formulas">balance = - sum.balance</field>
+        <field name="level" eval="2"/>
+    </record>
+    <!--FIN COMPTE DE RESULTATS  -->
+
+    <!--DEBUT TFT -->
+    <record id="account_financial_report_l10n_pcgo" model="account.financial.html.report">
+        <field name="name">Plan de Taxes France</field>
+        <field name="debit_credit" eval="True"/>
+        <field name="date_range" eval="False" />
+        <field name='parent_id' ref='l10n_pcgo.account_reports_fr_statements_menu'/>
+        <field name="tax_report" eval="1"/>
+    </record>
+
+    <record id="account_financial_report_line_01_fr" model="account.financial.html.report.line">
+        <field name="name">Base H.T. TVA collectée</field>
+        <field name="code">FRTAX01</field>
+        <field name="sequence" eval="1"/>
+        <field name="financial_report_id" ref="account_financial_report_l10n_pcgo"/>
+        <field name="formulas">balance = FRTAX02.balance + FRTAX03.balance + FRTAX04.balance + FRTAX05.balance + FRTAX06.balance + FRTAX07.balance + FRTAX08.balance + FRTAX09.balance</field>
+        <field name="level" eval="0"/>
+        <field name="special_date_changer">strict_range</field>
+    </record>
+
+</odoo>

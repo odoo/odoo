@@ -1,0 +1,398 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data noupdate="1">
+      <record id="TVA_vente_18" model="account.tax.group">
+          <field name="name">TVA 18% (vente)</field>
+          <!-- <field name="applicability">taxes</field> -->
+      </record>
+      <record id="TVA_services_18" model="account.tax.group">
+          <field name="name">TVA 18% (services)</field>
+          <!-- <field name="applicability">taxes</field> -->
+      </record>
+      <record id="TVA_achat_services_18" model="account.tax.group">
+          <field name="name">TVA 18% (achat service)</field>
+          <!-- <field name="applicability">taxes</field> -->
+      </record>
+      <record id="TVA_travaux_18" model="account.tax.group">
+          <field name="name">TVA 18% (travaux)</field>
+          <!-- <field name="applicability">taxes</field> -->
+      </record>
+      <record id="TVA_lasm_18" model="account.tax.group">
+          <field name="name">TVA 18% (lasm)</field>
+          <!-- <field name="applicability">taxes</field> -->
+      </record>
+      <record id="TVA_services_10" model="account.tax.group">
+          <field name="name">TVA 10% (services)</field>
+          <!-- <field name="applicability">taxes</field> -->
+      </record>
+      <record id="TVA_vente_10" model="account.tax.group">
+          <field name="name">TVA 10% (vente)</field>
+          <!-- <field name="applicability">taxes</field> -->
+      </record>
+      <record id="TVA_achat_18" model="account.tax.group">
+          <field name="name">TVA 18% (achat)</field>
+          <!-- <field name="applicability">taxes</field> -->
+      </record>
+      <record id="TVA_immobilisations_18" model="account.tax.group">
+          <field name="name">TVA 18% (immobilisations)</field>
+          <!-- <field name="applicability">taxes</field> -->
+      </record>
+      <record id="TVA_transport_18" model="account.tax.group">
+          <field name="name">TVA 18% (transport)</field>
+          <!-- <field name="applicability">taxes</field> -->
+      </record>
+      <record id="TVA_purchase_services_18" model="account.tax.group">
+          <field name="name">TVA 18% (purchase_services)</field>
+          <!-- <field name="applicability">taxes</field> -->
+      </record>
+      <record id="TVA_purchase_services_10" model="account.tax.group">
+          <field name="name">TVA 10% (purchase_services)</field>
+          <!-- <field name="applicability">taxes</field> -->
+      </record>
+      <record id="TVA_vente_exempt_0" model="account.tax.group">
+          <field name="name">Exonere de TVA</field>
+          <!-- <field name="applicability">taxes</field> -->
+      </record>
+
+      <record model="account.tax.template" id="tva_sale_18">
+          <field name="name">TVA 18% (vente)</field>
+          <field name="chart_template_id" ref="l10n_pcgo_chart_template"/>
+          <field name="amount">18</field>
+          <field name="amount_type">percent</field>
+          <field name="type_tax_use">sale</field>
+          <field name="tax_group_id" ref="TVA_vente_18"/>
+          <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('pcgo_4431'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('pcgo_4431'),
+            }),
+        ]"/>
+      </record>
+
+      <record model="account.tax.template" id="tva_services_18">
+          <field name="name">TVA 18% (services)</field>
+          <field name="chart_template_id" ref="l10n_pcgo_chart_template"/>
+          <field name="amount">18</field>
+          <field name="amount_type">percent</field>
+          <field name="type_tax_use">sale</field>
+          <field name="tax_group_id" ref="TVA_services_18"/>
+          <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('pcgo_4432'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('pcgo_4432'),
+            }),
+        ]"/>
+      </record>
+
+      <record model="account.tax.template" id="tva_travaux_18">
+          <field name="name">TVA 18% (travaux)</field>
+          <field name="chart_template_id" ref="l10n_pcgo_chart_template"/>
+          <field name="amount">18</field>
+          <field name="amount_type">percent</field>
+          <field name="type_tax_use">sale</field>
+          <field name="tax_group_id" ref="TVA_travaux_18"/>
+          <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('pcgo_4433'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('pcgo_4433'),
+            }),
+        ]"/>
+      </record>
+
+      <record model="account.tax.template" id="tva_lasm_18">
+          <field name="name">TVA 18% (lasm)</field>
+          <field name="chart_template_id" ref="l10n_pcgo_chart_template"/>
+          <field name="amount">18</field>
+          <field name="amount_type">percent</field>
+          <field name="type_tax_use">sale</field>
+          <field name="tax_group_id" ref="TVA_lasm_18"/>
+          <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+      </record>
+
+      <record model="account.tax.template" id="tva_services_10">
+          <field name="name">TVA 10% (services)</field>
+          <field name="chart_template_id" ref="l10n_pcgo_chart_template"/>
+          <field name="amount">10</field>
+          <field name="amount_type">percent</field>
+          <field name="type_tax_use">sale</field>
+          <field name="tax_group_id" ref="TVA_services_10"/>
+          <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('pcgo_4433'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('pcgo_4433'),
+            }),
+        ]"/>
+      </record>
+
+      <record model="account.tax.template" id="tva_assets_18">
+          <field name="name">TVA 18% (immobilisations)</field>
+          <field name="chart_template_id" ref="l10n_pcgo_chart_template"/>
+          <field name="amount">18</field>
+          <field name="amount_type">percent</field>
+          <field name="type_tax_use">purchase</field>
+          <field name="tax_group_id" ref="TVA_immobilisations_18"/>
+          <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('pcgo_4451'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('pcgo_4451'),
+            }),
+        ]"/>
+      </record>
+
+      <record model="account.tax.template" id="tva_purchase_18">
+          <field name="name">TVA 18% (achat)</field>
+          <field name="chart_template_id" ref="l10n_pcgo_chart_template"/>
+          <field name="amount">18</field>
+          <field name="amount_type">percent</field>
+          <field name="type_tax_use">purchase</field>
+          <field name="tax_group_id" ref="TVA_achat_18"/>
+          <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('pcgo_4452'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('pcgo_4452'),
+            }),
+        ]"/>
+      </record>
+
+      <record model="account.tax.template" id="tva_transport_18">
+          <field name="name">TVA 18% (transport)</field>
+          <field name="chart_template_id" ref="l10n_pcgo_chart_template"/>
+          <field name="amount">18</field>
+          <field name="amount_type">percent</field>
+          <field name="type_tax_use">purchase</field>
+          <field name="tax_group_id" ref="TVA_transport_18"/>
+          <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('pcgo_4453'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('pcgo_4453'),
+            }),
+        ]"/>
+      </record>
+
+      <record model="account.tax.template" id="tva_purchase_services_18">
+          <field name="name">TVA 18% (achat service)</field>
+          <field name="chart_template_id" ref="l10n_pcgo_chart_template"/>
+          <field name="amount">18</field>
+          <field name="amount_type">percent</field>
+          <field name="type_tax_use">purchase</field>
+          <field name="tax_group_id" ref="TVA_purchase_services_18"/>
+          <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('pcgo_4454'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('pcgo_4454'),
+            }),
+        ]"/>
+      </record>
+
+      <record model="account.tax.template" id="tva_achat_services_10">
+          <field name="name">TVA 10% (achat service taux reduit)</field>
+          <field name="chart_template_id" ref="l10n_pcgo_chart_template"/>
+          <field name="amount">10</field>
+          <field name="amount_type">percent</field>
+          <field name="type_tax_use">purchase</field>
+          <field name="tax_group_id" ref="TVA_purchase_services_10"/>
+          <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('pcgo_4454'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('pcgo_4454'),
+            }),
+        ]"/>
+      </record>
+
+      <record model="account.tax.template" id="tva_exonere">
+          <field name="name">Exonere de TVA (vente)</field>
+          <field name="chart_template_id" ref="l10n_pcgo_chart_template"/>
+          <field name="amount">0</field>
+          <field name="type_tax_use">sale</field>
+          <field name="tax_group_id" ref="TVA_vente_exempt_0"/>
+          <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+      </record>
+
+      <function model="account.chart.template" name="try_loading_for_current_company">
+        <value eval="[ref('l10n_pcgo.l10n_pcgo_chart_template')]"/>
+      </function>
+
+    </data>
+</odoo>
