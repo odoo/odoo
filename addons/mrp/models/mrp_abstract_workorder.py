@@ -244,7 +244,9 @@ class MrpAbstractWorkorder(models.AbstractModel):
             lambda move: move.product_id == self.product_id and
             move.state not in ('done', 'cancel')
         )
-        if production_move and production_move.product_id.tracking != 'none':
+        if not production_move:
+            return
+        if production_move.product_id.tracking != 'none':
             if not self.finished_lot_id:
                 raise UserError(_('You need to provide a lot for the finished product.'))
             move_line = production_move.move_line_ids.filtered(
