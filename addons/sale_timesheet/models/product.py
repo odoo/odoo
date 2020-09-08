@@ -27,12 +27,11 @@ class ProductTemplate(models.Model):
         return visibility or super(ProductTemplate, self)._default_visible_expense_policy()
 
     def _compute_visible_expense_policy(self):
-        super(ProductTemplate, self)._compute_visible_expense_policy()
-
         visibility = self.user_has_groups('project.group_project_user')
         for product_template in self:
             if not product_template.visible_expense_policy:
                 product_template.visible_expense_policy = visibility
+        return super(ProductTemplate, self)._compute_visible_expense_policy()
 
     @api.depends('invoice_policy', 'service_type')
     def _compute_service_policy(self):
