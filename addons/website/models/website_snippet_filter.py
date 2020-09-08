@@ -71,14 +71,21 @@ class WebsiteSnippetFilter(models.Model):
                 order=','.join(literal_eval(filter_sudo.sort)) or None,
                 limit=limit
             )
+            return self._filter_records_to_dict_values(records)
         elif self.action_server_id:
-            records = self.action_server_id.with_context(
+            return self.action_server_id.with_context(
                 dynamic_filter=self,
                 limit=limit,
                 search_domain=search_domain,
+                get_rendering_data_structure=self._get_rendering_data_structure,
             ).sudo().run()
 
-        return self._filter_records_to_dict_values(records)
+    @api.model
+    def _get_rendering_data_structure(self):
+        return {
+            'fields': OrderedDict({}),
+            'image_fields': OrderedDict({}),
+        }
 
     def _filter_records_to_dict_values(self, records):
         """Extract the fields from the data source and put them into a dictionary of values
@@ -99,21 +106,48 @@ class WebsiteSnippetFilter(models.Model):
 
         self.ensure_one()
         values = []
-        model = self.env[self.filter_id.model_id] if self.filter_id else self.env[self.action_server_id.model_id.model]
+        model = self.env[self.filter_id.model_id]
+        Website = self.env['website']
         for record in records:
-            data = {
-                'fields': OrderedDict({}),
-                'image_fields': OrderedDict({}),
-            }
-
+            data = self._get_rendering_data_structure()
             for field_name in self.field_names.split(","):
+                field_name, _, field_widget = field_name.partition(":")
                 field = model._fields.get(field_name)
-                data_type = 'image_fields' if field.type == 'binary' else 'fields'
-                if data_type == 'image_fields' and self.filter_id:
-                    data[data_type][field_name] = self.env['website'].image_url(record, field_name)
+                field_widget = field_widget or field.type
+                if field.type == 'binary':
+                    data['image_fields'][field_name] = Website.image_url(record, field_name)
+                elif field_widget == 'image':
+                    data['image_fields'][field_name] = record[field_name]
+                elif field_widget == 'monetary':
+                    FieldMonetary = self.env['ir.qweb.field.monetary']
+                    model_currency = None
+                    if field.type == 'monetary':
+                        model_currency = record[record[field_name].currency_field]
+                    elif 'currency_id' in model._fields:
+                        model_currency = record['currency_id']
+                    if model_currency:
+                        website_currency = self._get_website_currency()
+                        data['fields'][field_name] = FieldMonetary.value_to_html(
+                            model_currency._convert(
+                                record[field_name],
+                                website_currency,
+                                Website.get_current_website().company_id,
+                                fields.Date.today()
+                            ),
+                            {'display_currency': website_currency}
+                        )
+                    else:
+                        data['fields'][field_name] = record[field_name]
+                elif ('ir.qweb.field.%s' % field_widget) in self.env:
+                    data['fields'][field_name] = self.env[('ir.qweb.field.%s' % field_widget)].record_to_html(record, field_name, {})
                 else:
-                    data[data_type][field_name] = record[field_name]
+                    data['fields'][field_name] = record[field_name]
 
             data['fields']['call_to_action_url'] = 'website_url' in record and record['website_url']
             values.append(data)
         return values
+
+    @api.model
+    def _get_website_currency(self):
+        company = self.env['website'].get_current_website().company_id
+        return company.currency_id
