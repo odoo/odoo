@@ -246,4 +246,41 @@
         <field name="lang">${object.partner_id.lang or ''}</field>
     </record>
 
+    <record id="email_template_data_applicant_not_interested" model="mail.template">
+        <field name="name">Applicant: Not interested anymore</field>
+        <field name="model_id" ref="hr_recruitment.model_hr_applicant"/>
+        <field name="subject">Your Job Application: ${object.job_id.name | safe}</field>
+        <field name="email_to">${(not object.partner_id and object.email_from or '') | safe}</field>
+        <field name="partner_to">${object.partner_id.id or ''}</field>
+        <field name="body_html" type="html">
+<table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+    <tr>
+        <td valign="top">
+            <div style="font-size: 13px; margin: 0px; padding: 0px;">
+                Dear,<br/><br/>
+                We would like to thank you for your interest and your time.<br/>
+                We wish you all the best in your future endeavors.
+                <br/><br/>
+                Best<br/>
+                <div style="font-size: 11px; color: grey;">
+                    % if object.user_id:
+                        -- <br/>
+                        <strong>${object.user_id.name}</strong><br/>
+                        Email: ${object.user_id.email or ''}<br/>
+                        Phone: ${object.user_id.phone or ''}
+                    % else:
+                        -- <br/>
+                        ${object.company_id.name}<br/>
+                        The HR Team<br/>
+                    % endif
+                </div>
+            </div>
+        </td>
+    </tr>
+</table>
+        </field>
+        <field name="auto_delete" eval="True"/>
+        <field name="lang">${object.partner_id.lang or ''}</field>
+    </record>
+
 </data></odoo>
