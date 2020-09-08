@@ -2293,6 +2293,56 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
+    QUnit.test('close a column while quick creating a record', async function (assert) {
+        assert.expect(6);
+
+        const def = testUtils.makeTestPromise();
+        const kanban = await createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+                <kanban on_create="quick_create" quick_create_view="some_view_ref">
+                    <templates><t t-name="kanban-box">
+                        <div><field name="foo"/></div>
+                    </t></templates>
+                </kanban>`,
+            archs: {
+                'partner,some_view_ref,form': '<form><field name="int_field"/></form>',
+            },
+            groupBy: ['product_id'],
+            async mockRPC(route, args) {
+                const result = this._super(...arguments);
+                if (args.method === 'load_views') {
+                    await def;
+                }
+                return result;
+            },
+        });
+
+        assert.containsN(kanban, '.o_kanban_group', 2);
+        assert.containsNone(kanban, '.o_column_folded');
+
+        // click to quick create a new record in the first column (this operation is delayed)
+        await testUtils.dom.click(kanban.$('.o_kanban_group:first .o_kanban_quick_add'));
+
+        assert.containsNone(kanban, '.o_form_view');
+
+        // click to fold the first column
+        await testUtils.kanban.toggleGroupSettings(kanban.$('.o_kanban_group:first'));
+        await testUtils.dom.click(kanban.$('.o_kanban_group:first .o_kanban_toggle_fold'));
+
+        assert.containsOnce(kanban, '.o_column_folded');
+
+        def.resolve();
+        await testUtils.nextTick();
+
+        assert.containsNone(kanban, '.o_form_view');
+        assert.containsOnce(kanban, '.o_column_folded');
+
+        kanban.destroy();
+    });
+
     QUnit.test('quick create record: open on a column while another column has already one', async function (assert) {
         assert.expect(6);
 
