@@ -2980,6 +2980,7 @@ registry.ImageOptimize = ImageHandlerOption.extend({
             this._getImg().dataset.resizeWidth = this.optimizedWidth;
             await this._applyOptions();
             await this.updateUI();
+            this.trigger_up('cover_update');
         }});
     },
     /**
