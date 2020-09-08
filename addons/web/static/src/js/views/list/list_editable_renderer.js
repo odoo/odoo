@@ -419,6 +419,12 @@ ListRenderer.include({
         this.defs = defs;
         _.each(this.columns, function (node, colIndex) {
             var $td = $tds.eq(colIndex);
+
+            // Restrict the list_activity widget as readonly
+            if (node.attrs.widget === "list_activity" && self.isInMultipleRecordEdition(recordID)) {
+                $td[0].classList.add('o_readonly_modifier');
+            }
+
             var $newTd = self._renderBodyCell(record, node, colIndex, options);
 
             // Widgets are unregistered of modifiers data when they are
