@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, tools, exceptions, _
+from odoo import api, fields, models, tools, _
 from odoo.osv import expression
 
 
@@ -103,9 +103,3 @@ class LeaveReport(models.Model):
                 'search_default_validated': True,
             }
         }
-
-    @api.model
-    def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
-        if not self.user_has_groups('hr_holidays.group_hr_holidays_user') and 'name' in groupby:
-            raise exceptions.UserError(_('Such grouping is not allowed.'))
-        return super(LeaveReport, self).read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
