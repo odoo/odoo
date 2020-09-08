@@ -11,6 +11,7 @@ from odoo import SUPERUSER_ID, _, api, fields, models
 from odoo.addons.stock.models.stock_move import PROCUREMENT_PRIORITIES
 from odoo.addons.web.controllers.utils import clean_action
 from odoo.exceptions import UserError, ValidationError
+from odoo.fields import Domain
 from odoo.osv import expression
 from odoo.tools import format_datetime, format_date, groupby, SQL
 from odoo.tools.float_utils import float_compare, float_is_zero
@@ -1051,8 +1052,9 @@ class StockPicking(models.Model):
 
     @api.model
     def _search_delay_alert_date(self, operator, value):
-        late_stock_moves = self.env['stock.move'].search([('delay_alert_date', operator, value)])
-        return [('move_ids', 'in', late_stock_moves.ids)]
+        if Domain.is_negative_operator(operator):
+            return NotImplemented
+        return [('move_ids.delay_alert_date', operator, value)]
 
     @api.onchange('picking_type_id', 'partner_id')
     def _onchange_picking_type(self):
