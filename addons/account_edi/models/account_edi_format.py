@@ -4,6 +4,7 @@
 from odoo import models, fields, api
 from odoo.exceptions import UserError
 from odoo.tools.pdf import OdooPdfFileReader, OdooPdfFileWriter
+from odoo.osv import expression
 
 from lxml import etree
 import base64
@@ -341,9 +342,9 @@ class AccountEdiFormat(models.Model):
                 res = False
                 try:
                     if file_data['type'] == 'xml':
-                        res = edi_format._create_invoice_from_xml_tree(file_data['filename'], file_data['xml_tree'])
+                        res = edi_format.with_company(self.env.company)._create_invoice_from_xml_tree(file_data['filename'], file_data['xml_tree'])
                     elif file_data['type'] == 'pdf':
-                        res = edi_format._create_invoice_from_pdf_reader(file_data['filename'], file_data['pdf_reader'])
+                        res = edi_format.with_company(self.env.company)._create_invoice_from_pdf_reader(file_data['filename'], file_data['pdf_reader'])
                         file_data['pdf_reader'].stream.close()
                 except Exception as e:
                     _logger.exception("Error importing attachment \"%s\" as invoice with format \"%s\"", file_data['filename'], edi_format.name, str(e))
@@ -366,9 +367,9 @@ class AccountEdiFormat(models.Model):
                 res = False
                 try:
                     if file_data['type'] == 'xml':
-                        res = edi_format._update_invoice_from_xml_tree(file_data['filename'], file_data['xml_tree'], invoice)
+                        res = edi_format.with_company(self.env.company)._update_invoice_from_xml_tree(file_data['filename'], file_data['xml_tree'], invoice)
                     elif file_data['type'] == 'pdf':
-                        res = edi_format._update_invoice_from_pdf_reader(file_data['filename'], file_data['pdf_reader'], invoice)
+                        res = edi_format.with_company(self.env.company)._update_invoice_from_pdf_reader(file_data['filename'], file_data['pdf_reader'], invoice)
                         file_data['pdf_reader'].stream.close()
                 except Exception as e:
                     _logger.exception("Error importing attachment \"%s\" as invoice with format \"%s\"", file_data['filename'], edi_format.name, str(e))
@@ -379,3 +380,76 @@ class AccountEdiFormat(models.Model):
                         res.write({'extract_state': 'done'})
                     return res
         return self.env['account.move']
+
+    ####################################################
+    # Import helpers
+    ####################################################
+
+    def _find_value(self, xpath, xml_element, namespaces=None):
+        element = xml_element.xpath(xpath, namespaces=namespaces)
+        return element[0].text if element else None
+
+    def _retrieve_partner(self, name=None, phone=None, mail=None, vat=None):
+        '''Search all partners and find one that matches one of the parameters.
+
+        :param name:    The name of the partner.
+        :param phone:   The phone or mobile of the partner.
+        :param mail:    The mail of the partner.
+        :param vat:     The vat number of the partner.
+        :returns:       A partner or an empty recordset if not found.
+        '''
+        domains = []
+        for value, domain in (
+            (name, [('name', 'ilike', name)]),
+            (phone, expression.OR([[('phone', '=', phone)], [('mobile', '=', phone)]])),
+            (mail, [('email', '=', mail)]),
+            (vat, [('vat', 'like', vat)]),
+        ):
+            if value is not None:
+                domains.append(domain)
+
+        domain = expression.OR(domains)
+        return self.env['res.partner'].search(domain, limit=1)
+
+    def _retrieve_product(self, name=None, default_code=None, ean13=None, barcode=None):
+        '''Search all products and find one that matches one of the parameters.
+
+        :param name:            The name of the product.
+        :param default_code:    The default_code of the product.
+        :param ean13:           The ean13 of the product.
+        :returns:               A product or an empty recordset if not found.
+        '''
+        domains = []
+        for value, domain in (
+            (name, ('name', 'ilike', name)),
+            (default_code, ('default_code', '=', default_code)),
+            (ean13, ('ean13', '=', ean13)),
+            (barcode, ('barcode', '=', barcode)),
+        ):
+            if value is not None:
+                domains.append([domain])
+
+        domain = expression.OR(domains)
+        return self.env['product.product'].search(domain, limit=1)
+
+    def _retrieve_tax(self, amount, type_tax_use):
+        '''Search all taxes and find one that matches all of the parameters.
+
+        :param amount:          The amount of the tax.
+        :param type_tax_use:    The type of the tax.
+        :returns:               A tax or an empty recordset if not found.
+        '''
+        domains = [
+            [('amount', '=', float(amount))],
+            [('type_tax_use', '=', type_tax_use)]
+        ]
+
+        return self.env['account.tax'].search(expression.AND(domains), order='sequence ASC', limit=1)
+
+    def _retrieve_currency(self, code):
+        '''Search all currencies and find one that matches the code.
+
+        :param code: The code of the currency.
+        :returns:    A currency or an empty recordset if not found.
+        '''
+        return self.env['res.currency'].search([('name', '=', code.upper())], limit=1)
