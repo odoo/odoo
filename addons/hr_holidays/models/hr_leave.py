@@ -856,7 +856,7 @@ class HolidaysRequest(models.Model):
         :returns: created `resource.calendar.leaves`
         """
         vals_list = [{
-            'name': leave.name,
+            'name': _("%s: Time Off", leave.employee_id.name),
             'date_from': leave.date_from,
             'holiday_id': leave.id,
             'date_to': leave.date_to,
