@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
-from odoo.exceptions import UserError
+from datetime import timedelta
+
+from odoo import api, fields, models
 
 
 class PosDetailsWizard(models.TransientModel):
@@ -11,21 +12,12 @@ class PosDetailsWizard(models.TransientModel):
 
     def _default_start_date(self):
         """ Find the earliest start_date of the latests sessions """
-        # restrict to configs available to the user
-        config_ids = self.env['pos.config'].search([]).ids
-        # exclude configs has not been opened for 2 days
-        self.env.cr.execute("""
-            SELECT
-            max(start_at) as start,
-            config_id
-            FROM pos_session
-            WHERE config_id = ANY(%s)
-            AND start_at > (NOW() - INTERVAL '2 DAYS')
-            GROUP BY config_id
-        """, (config_ids,))
-        latest_start_dates = [res['start'] for res in self.env.cr.dictfetchall()]
-        # earliest of the latest sessions
-        return latest_start_dates and min(latest_start_dates) or fields.Datetime.now()
+        values = self.env['pos.session']._read_group([
+            ('config_id', '!=', False),
+            ('start_at', '>', self.env.cr.now() - timedelta(days=2))
+        ], groupby=['config_id'], aggregates=['start_at:max'])
+        mapping = dict(values)
+        return (mapping and min(mapping.values())) or self.env.cr.now()
 
     start_date = fields.Datetime(required=True, default=_default_start_date)
     end_date = fields.Datetime(required=True, default=fields.Datetime.now)

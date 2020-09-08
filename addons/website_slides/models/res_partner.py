@@ -42,11 +42,11 @@ class ResPartner(models.Model):
             partner.slide_channel_count = len(slide_channel_ids)
 
     def _search_slide_channel_completed_ids(self, operator, value):
-        cp_done = self.env['slide.channel.partner'].sudo().search([
+        subquery = self.env['slide.channel.partner'].sudo()._search([
             ('channel_id', operator, value),
             ('member_status', '=', 'completed')
         ])
-        return [('id', 'in', cp_done.partner_id.ids)]
+        return [('id', 'in', subquery.subselect('partner_id'))]
 
     def _search_slide_channel_ids(self, operator, value):
         cp_enrolled = self.env['slide.channel.partner'].search([

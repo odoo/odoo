@@ -29,12 +29,12 @@ class MailMessage(models.Model):
     def _search_rating_value(self, operator, operand):
         if Domain.is_negative_operator(operator):
             return NotImplemented
-        ratings = self.env['rating.rating'].sudo().search_fetch([
+        ratings = self.env['rating.rating'].sudo()._search([
             ('rating', operator, operand),
             ('message_id', '!=', False),
-            ("consumed", "=", True),
-        ], ['message_id'])
-        return [('id', 'in', ratings.mapped('message_id').ids)]
+            ('consumed', '=', True),
+        ])
+        return [('id', 'in', ratings.subselect('message_id'))]
 
     def _to_store_defaults(self):
         # sudo: mail.message - guest and portal user can receive rating of accessible message

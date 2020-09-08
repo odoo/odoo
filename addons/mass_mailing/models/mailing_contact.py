@@ -65,8 +65,11 @@ class MailingContact(models.Model):
 
         if 'default_list_ids' in self._context and isinstance(self._context['default_list_ids'], (list, tuple)) and len(self._context['default_list_ids']) == 1:
             [active_list_id] = self._context['default_list_ids']
-            contacts = self.env['mailing.subscription'].search([('list_id', '=', active_list_id)])
-            return [('id', 'in', [record.contact_id.id for record in contacts if record.opt_out])]
+            subscriptions = self.env['mailing.subscription']._search([
+                ('list_id', '=', active_list_id),
+                ('opt_out', '=', True),
+            ])
+            return [('id', 'in', subscriptions.subselect('contact_id'))]
         return expression.FALSE_DOMAIN
 
     @api.depends('first_name', 'last_name')

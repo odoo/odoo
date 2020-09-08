@@ -1353,8 +1353,9 @@ class PosSession(models.Model):
         # reconcile stock output lines
         pickings = self.picking_ids.filtered(lambda p: not p.pos_order_id)
         pickings |= self._get_closed_orders().filtered(lambda o: not o.is_invoiced).mapped('picking_ids')
-        stock_moves = self.env['stock.move'].search([('picking_id', 'in', pickings.ids)])
-        stock_account_move_lines = self.env['account.move'].search([('stock_move_id', 'in', stock_moves.ids)]).mapped('line_ids')
+        stock_account_move_lines = self.env['account.move'].search(
+            [('stock_move_id.picking_id', 'in', pickings.ids)]
+        ).mapped('line_ids')
         for account_id in stock_output_lines:
             ( stock_output_lines[account_id]
             | stock_account_move_lines.filtered(lambda aml: aml.account_id == account_id)
