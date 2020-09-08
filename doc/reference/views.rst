@@ -192,7 +192,12 @@ inherited views.
 
 * ``inherit_id`` :class:`~odoo.fields.Many2one`
 
-  the current view's parent view, unset by default
+  the current view's parent view, unset by default. Specify the parent using
+  the `ref` attribute:
+
+  .. code-block:: xml
+
+      <field name="inherit_id" ref="library.view_book_form"/>
 
 * ``mode`` :class:`~odoo.fields.Selection`: `extension / primary`
 
