@@ -763,7 +763,7 @@
         </template>
         <!-- Dynamic Snippet Data Source -->
         <record id="dynamic_snippet_data_source_country" model="website.snippet.filter">
-            <field name="field_names">name,code,image,phone_code</field>
+            <field name="field_names">name,code,image_url:image,phone_code:char</field>
             <field name="filter_id" ref="website.dynamic_snippet_country_filter"/>
             <field name="limit" eval="16"/>
             <field name="name">Countries</field>
