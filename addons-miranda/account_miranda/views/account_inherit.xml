@@ -61,5 +61,13 @@
 
     	<menuitem id="menu_accounting_report_balance_general_id" parent="menu_accounting_report_inherit_id" name="Balance general" action="account_reports.account_financial_html_report_action_2" sequence="1"/>
 
+        <record model="res.groups" id="group_invisible">
+            <field name="name">Menu INV</field>
+        </record>
+
+        <record id="account.menu_finance" model="ir.ui.menu">
+            <field name="groups_id" eval="[(6, False, [ref('account_miranda.group_invisible')])]"/>
+        </record>
+
     </data>
 </odoo>
