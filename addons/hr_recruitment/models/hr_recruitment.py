@@ -550,4 +550,5 @@ class ApplicantRefuseReason(models.Model):
     _description = 'Refuse Reason of Applicant'
 
     name = fields.Char('Description', required=True, translate=True)
+    template_id = fields.Many2one('mail.template', string='Email Template', domain="[('model', '=', 'hr.applicant')]")
     active = fields.Boolean('Active', default=True)
