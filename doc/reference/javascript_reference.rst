@@ -15,7 +15,6 @@ description into a live application, able to interact with every model and
 records in the database.  It is even possible to use the web client to modify
 the interface of the web client.
 
-
 Overview
 =========
 
