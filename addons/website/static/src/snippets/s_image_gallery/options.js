@@ -57,7 +57,9 @@ options.registry.gallery = options.Class.extend({
      * @override
      */
     onBuilt: function () {
-        this.addImages(false);
+        if (this.$target.find('.o_add_images').length) {
+            this.addImages(false);
+        }
         // TODO should consider the async parts
         this._adaptNavigationIDs();
     },
