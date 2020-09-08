@@ -67,12 +67,15 @@
     <!-- applicant refuse reason -->
         <record id="refuse_reason_1" model="hr.applicant.refuse.reason">
             <field name="name">Doesn't fit the job requirements</field>
+            <field name="template_id" ref="email_template_data_applicant_refuse"/>
         </record>
         <record id="refuse_reason_2" model="hr.applicant.refuse.reason">
             <field name="name">The applicant is not interested anymore</field>
+            <field name="template_id" ref="email_template_data_applicant_not_interested"/>
         </record>
         <record id="refuse_reason_3" model="hr.applicant.refuse.reason">
             <field name="name">The applicant gets a better offer</field>
+            <field name="template_id" ref="email_template_data_applicant_not_interested"/>
         </record>
 
 </data>
