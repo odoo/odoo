@@ -23,13 +23,6 @@ DEFAULT_FACTURX_DATE_FORMAT = '%Y%m%d'
 class AccountEdiFormat(models.Model):
     _inherit = 'account.edi.format'
 
-    def _is_compatible_with_journal(self, journal):
-        self.ensure_one()
-        res = super()._is_compatible_with_journal(journal)
-        if self.code != 'facturx_1_0_05':
-            return res
-        return journal.type == 'sale'
-
     def _post_invoice_edi(self, invoices, test_mode=False):
         self.ensure_one()
         if self.code != 'facturx_1_0_05':
@@ -138,6 +131,9 @@ class AccountEdiFormat(models.Model):
         :returns:       the invoice where the factur-x data was imported.
         """
 
+        def _find_value(xpath, element=tree):
+            return self._find_value(xpath, element, tree.nsmap)
+
         amount_total_import = None
 
         default_move_type = False
@@ -183,19 +179,12 @@ class AccountEdiFormat(models.Model):
 
         # self could be a single record (editing) or be empty (new).
         with Form(invoice.with_context(default_move_type=default_move_type)) as invoice_form:
-            # Partner (first step to avoid warning 'Warning! You must first select a partner.').
             partner_type = invoice_form.journal_id.type == 'purchase' and 'SellerTradeParty' or 'BuyerTradeParty'
-            elements = tree.xpath('//ram:' + partner_type + '/ram:SpecifiedTaxRegistration/ram:ID', namespaces=tree.nsmap)
-            partner = elements and self.env['res.partner'].search([('vat', '=', elements[0].text)], limit=1)
-            if not partner:
-                elements = tree.xpath('//ram:' + partner_type + '/ram:Name', namespaces=tree.nsmap)
-                partner_name = elements and elements[0].text
-                partner = elements and self.env['res.partner'].search([('name', 'ilike', partner_name)], limit=1)
-            if not partner:
-                elements = tree.xpath('//ram:' + partner_type + '//ram:URIID[@schemeID=\'SMTP\']', namespaces=tree.nsmap)
-                partner = elements and self.env['res.partner'].search([('email', '=', elements[0].text)], limit=1)
-            if partner:
-                invoice_form.partner_id = partner
+            invoice_form.partner_id = self._retrieve_partner(
+                name=_find_value('//ram:' + partner_type + '/ram:Name'),
+                mail=_find_value('//ram:' + partner_type + '//ram:URIID[@schemeID=\'SMTP\']'),
+                vat=_find_value('//ram:' + partner_type + '/ram:SpecifiedTaxRegistration/ram:ID'),
+            )
 
             # Reference.
             elements = tree.xpath('//rsm:ExchangedDocument/ram:ID', namespaces=tree.nsmap)
@@ -217,11 +206,9 @@ class AccountEdiFormat(models.Model):
             if elements:
 
                 # Currency.
-                if elements[0].attrib.get('currencyID'):
-                    currency_str = elements[0].attrib['currencyID']
-                    currency = self.env.ref('base.%s' % currency_str.upper(), raise_if_not_found=False)
-                    if currency != self.env.company.currency_id and currency.active:
-                        invoice_form.currency_id = currency
+                currency_str = elements[0].attrib.get('currencyID', None)
+                if currency_str:
+                    invoice_form.currency_id = self._retrieve_currency(currency_str)
 
                     # Store xml total amount.
                     amount_total_import = total_amount * refund_sign
@@ -252,20 +239,14 @@ class AccountEdiFormat(models.Model):
                             invoice_line_form.sequence = int(line_elements[0].text)
 
                         # Product.
-                        line_elements = element.xpath('.//ram:SpecifiedTradeProduct/ram:Name', namespaces=tree.nsmap)
-                        if line_elements:
-                            invoice_line_form.name = line_elements[0].text
-                        line_elements = element.xpath('.//ram:SpecifiedTradeProduct/ram:SellerAssignedID', namespaces=tree.nsmap)
-                        if line_elements and line_elements[0].text:
-                            product = self.env['product.product'].search([('default_code', '=', line_elements[0].text)])
-                            if product:
-                                invoice_line_form.product_id = product
-                        if not invoice_line_form.product_id:
-                            line_elements = element.xpath('.//ram:SpecifiedTradeProduct/ram:GlobalID', namespaces=tree.nsmap)
-                            if line_elements and line_elements[0].text:
-                                product = self.env['product.product'].search([('barcode', '=', line_elements[0].text)])
-                                if product:
-                                    invoice_line_form.product_id = product
+                        name = _find_value('.//ram:SpecifiedTradeProduct/ram:Name', element)
+                        if name:
+                            invoice_line_form.name = name
+                        invoice_line_form.product_id = self._retrieve_product(
+                            default_code=_find_value('.//ram:SpecifiedTradeProduct/ram:SellerAssignedID', element),
+                            name=_find_value('.//ram:SpecifiedTradeProduct/ram:Name', element),
+                            barcode=_find_value('.//ram:SpecifiedTradeProduct/ram:GlobalID', element)
+                        )
 
                         # Quantity.
                         line_elements = element.xpath('.//ram:SpecifiedLineTradeDelivery/ram:BilledQuantity', namespaces=tree.nsmap)
@@ -287,20 +268,16 @@ class AccountEdiFormat(models.Model):
                             invoice_line_form.discount = float(line_elements[0].text)
 
                         # Taxes
-                        line_elements = element.xpath('.//ram:SpecifiedLineTradeSettlement/ram:ApplicableTradeTax/ram:RateApplicablePercent', namespaces=tree.nsmap)
+                        tax_element = element.xpath('.//ram:SpecifiedLineTradeSettlement/ram:ApplicableTradeTax/ram:RateApplicablePercent', namespaces=tree.nsmap)
                         invoice_line_form.tax_ids.clear()
-                        for tax_element in line_elements:
-                            percentage = float(tax_element.text)
-
-                            tax = self.env['account.tax'].search([
-                                ('company_id', '=', invoice_form.company_id.id),
-                                ('amount_type', '=', 'percent'),
-                                ('type_tax_use', '=', invoice_form.journal_id.type),
-                                ('amount', '=', percentage),
-                            ], limit=1)
-
+                        for eline in tax_element:
+                            tax = self._retrieve_tax(
+                                amount=eline.text,
+                                type_tax_use=invoice_form.journal_id.type
+                            )
                             if tax:
                                 invoice_line_form.tax_ids.add(tax)
+
             elif amount_total_import:
                 # No lines in BASICWL.
                 with invoice_form.invoice_line_ids.new() as invoice_line_form:
