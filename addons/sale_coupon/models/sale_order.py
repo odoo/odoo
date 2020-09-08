@@ -78,10 +78,10 @@ class SaleOrder(models.Model):
     def _get_reward_values_product(self, program):
         price_unit = self.order_line.filtered(lambda line: program.reward_product_id == line.product_id)[0].price_reduce
 
-        order_lines = (self.order_line - self._get_reward_lines()).filtered(lambda x: program._is_valid_product(x.product_id))
+        order_lines = (self.order_line - self._get_reward_lines()).filtered(lambda x: program._get_valid_products(x.product_id))
         max_product_qty = sum(order_lines.mapped('product_uom_qty')) or 1
         # Remove needed quantity from reward quantity if same reward and rule product
-        if program._is_valid_product(program.reward_product_id):
+        if program._get_valid_products(program.reward_product_id):
             # number of times the program should be applied
             program_in_order = max_product_qty // (program.rule_min_quantity + program.reward_product_quantity)
             # multipled by the reward qty
@@ -246,15 +246,15 @@ class SaleOrder(models.Model):
         return coupon
 
     def _send_reward_coupon_mail(self):
-        self.ensure_one()
         template = self.env.ref('sale_coupon.mail_template_sale_coupon', raise_if_not_found=False)
         if template:
-            for coupon in self.generated_coupon_ids:
-                self.message_post_with_template(
-                    template.id, composition_mode='comment',
-                    model='sale.coupon', res_id=coupon.id,
-                    email_layout_xmlid='mail.mail_notification_light',
-                )
+            for order in self:
+                for coupon in order.generated_coupon_ids:
+                    order.message_post_with_template(
+                        template.id, composition_mode='comment',
+                        model='sale.coupon', res_id=coupon.id,
+                        email_layout_xmlid='mail.mail_notification_light',
+                    )
 
     def _get_applicable_programs(self):
         """

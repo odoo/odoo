@@ -38,15 +38,16 @@
                                         </td>
                                         <td>
                                            <span t-field="l.user_id.partner_id.name"/>
+                                           <span t-if="not l.user_id.partner_id.name" t-field="l.employee_id"/>
                                         </td>
                                         <td >
                                             <span t-field="l.name" t-options="{'widget': 'text'}"/>
                                         </td>
                                         <td t-if="show_project">
-                                            <span t-field="l.project_id.name"/>
+                                            <span t-field="l.project_id.sudo().name"/>
                                         </td>
                                         <td t-if="show_task">
-                                            <t t-if="l.task_id"><span t-field="l.task_id.name"/></t>
+                                            <t t-if="l.task_id"><span t-field="l.task_id.sudo().name"/></t>
                                         </td>
                                         <td class="text-right">
                                             <span t-field="l.unit_amount" t-options="{'widget': 'duration', 'digital': True, 'unit': 'hour', 'round': 'minute'}"/>
