@@ -29,10 +29,14 @@ class AutomaticEntryWizard(models.TransientModel):
     # change period
     account_type = fields.Selection([('income', 'Revenue'), ('expense', 'Expense')], compute='_compute_account_type', store=True)
     expense_accrual_account = fields.Many2one('account.account', readonly=False,
-        domain="[('company_id', '=', company_id), ('internal_type', 'not in', ('receivable', 'payable'))]",
+        domain="[('company_id', '=', company_id),"
+               "('internal_type', 'not in', ('receivable', 'payable')),"
+               "('is_off_balance', '=', False)]",
         related="company_id.expense_accrual_account_id")
     revenue_accrual_account = fields.Many2one('account.account', readonly=False,
-        domain="[('company_id', '=', company_id), ('internal_type', 'not in', ('receivable', 'payable'))]",
+        domain="[('company_id', '=', company_id),"
+               "('internal_type', 'not in', ('receivable', 'payable')),"
+               "('is_off_balance', '=', False)]",
         related="company_id.revenue_accrual_account_id")
 
     # change account
