@@ -44,6 +44,11 @@ class StockRule(models.Model):
     def _run_buy(self, procurements):
         procurements_by_po_domain = defaultdict(list)
         errors = []
+        # Origins we don't want to appear in the PO source field.
+        origins_to_hide = [
+            _('Manual Replenishment'),
+            _('Replenishment Report'),
+        ]
         for procurement, rule in procurements:
 
             # Get the schedule date in order to find a valid seller
@@ -88,7 +93,7 @@ class StockRule(models.Model):
             procurements, rules = zip(*procurements_rules)
 
             # Get the set of procurement origin for the current domain.
-            origins = set([p.origin for p in procurements])
+            origins = set([p.origin for p in procurements if p.origin not in origins_to_hide])
             # Check if a PO exists for the current domain.
             po = self.env['purchase.order'].sudo().search([dom for dom in domain], limit=1)
             company_id = procurements[0].company_id
