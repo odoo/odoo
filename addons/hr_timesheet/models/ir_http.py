@@ -17,5 +17,5 @@ class Http(models.AbstractModel):
             encoding_uom = company.timesheet_encode_uom_id
 
             result['timesheet_uom'] = encoding_uom.read(['name', 'rounding', 'timesheet_widget'])[0]
-            result['timesheet_uom_factor'] = company.timesheet_encode_uom_id._compute_quantity(1.0, encoding_uom, round=False)  # convert encoding uom into stored uom to get conversion factor
+            result['timesheet_uom_factor'] = company.project_time_mode_id._compute_quantity(1.0, encoding_uom, round=False)  # convert encoding uom into stored uom to get conversion factor
         return result
