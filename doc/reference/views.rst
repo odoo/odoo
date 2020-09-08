@@ -35,7 +35,11 @@ otherwise.
     the current view
 ``inherit_id``
     the current view's parent view, see :ref:`reference/views/inheritance`,
-    unset by default
+    unset by default. Specify the parent using the `ref` attribute:
+
+    .. code-block:: xml
+
+        <field name="inherit_id" ref="library.view_book_form"/>
 ``mode``
     inheritance mode, see :ref:`reference/views/inheritance`. If
     ``inherit_id`` is unset the ``mode`` can only be ``primary``. If
