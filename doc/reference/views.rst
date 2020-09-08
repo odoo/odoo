@@ -44,7 +44,17 @@ otherwise.
     inheritance mode, see :ref:`reference/views/inheritance`. If
     ``inherit_id`` is unset the ``mode`` can only be ``primary``. If
     ``inherit_id`` is set, ``extension`` by default but can be explicitly set
-    to ``primary``
+    to ``primary``.
+
+    An example of where you would want to do that is delegation inheritance.
+    In that case your derived model will be separate from its parent and views
+    matching with one won't match with the other. Suppose you inherit from a view
+    associated with the parent model and want to customize the derived view to
+    show data from the derived model. The ``mode`` of the derived view needs to
+    be set to ``primary``, because it's the base (and maybe only) view for that
+    derived model. Otherwise the :ref:`view matching <reference/views/inheritance/view-matching>`
+    rules won't apply.
+
 ``application``
     website feature defining togglable views. By default, views are always
     applied
@@ -53,6 +63,8 @@ otherwise.
 
 Inheritance
 ===========
+
+.. _reference/views/inheritance/view-matching:
 
 View matching
 -------------
