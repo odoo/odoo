@@ -337,6 +337,7 @@ class AccountPayment(models.Model):
             else:
                 available_payment_methods = pay.journal_id.outbound_payment_method_ids
 
+<<<<<<< HEAD
             # Select the first available one by default.
             if available_payment_methods:
                 pay.payment_method_id = available_payment_methods[0]._origin
@@ -369,6 +370,40 @@ class AccountPayment(models.Model):
                 pay.partner_id = False
             else:
                 pay.partner_id = pay.partner_id
+=======
+    @api.onchange('payment_type')
+    def _onchange_payment_type(self):
+        if not self.invoice_ids and not self.partner_type:
+            # Set default partner type for the payment type
+            if self.payment_type == 'inbound':
+                self.partner_type = 'customer'
+            else:  # -> self.payment_type == 'outbound'
+                self.partner_type = 'supplier'
+        self._onchange_journal()
+        if self.currency_id.is_zero(self.amount) and self.has_invoices:
+            self.payment_difference_handling = 'reconcile'
+
+    @api.onchange('amount', 'currency_id')
+    def _onchange_amount(self):
+        journal_types = ['bank', 'cash']
+        if self.currency_id.is_zero(self.amount) and self.has_invoices:
+            # In case of payment with 0 amount, allow to select a journal of type 'general' like
+            # 'Miscellaneous Operations' and set this journal by default.
+            journal_types = ['general']
+            self.payment_difference_handling = 'reconcile'
+        domain_on_types = [('type', 'in', journal_types)]
+        if self.invoice_ids:
+            domain_on_types.append(('company_id', '=', self.invoice_ids[0].company_id.id))
+        if self.journal_id.type not in journal_types or (self.invoice_ids and self.journal_id.company_id != self.invoice_ids[0].company_id):
+            self.journal_id = self.env['account.journal'].search(domain_on_types + [('company_id', '=', self.env.company.id)], limit=1)
+
+    @api.onchange('currency_id')
+    def _onchange_currency(self):
+        self.amount = abs(self._compute_payment_amount(self.invoice_ids, self.currency_id, self.journal_id, self.payment_date))
+
+        if self.journal_id:  # TODO: only return if currency differ?
+            return
+>>>>>>> 7a59853862c... temp
 
     @api.depends('journal_id', 'partner_id', 'partner_type', 'is_internal_transfer')
     def _compute_destination_account_id(self):
