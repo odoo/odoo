@@ -210,7 +210,7 @@ elements (top-level menu, footer, …)
 
 .. image:: website/layout.png
 
-The website layout also provides support for edition tools: click
+The website layout also provides support for editing tools: click
 :guilabel:`Sign In` (in the top-right), fill the credentials in (``admin`` /
 ``admin`` by default) then click :guilabel:`Log In`.
 
@@ -218,12 +218,12 @@ You're now in Odoo "proper": the administrative interface. For now click on
 the :guilabel:`Website` menu item (top-left corner.
 
 We're back in the website but as an administrator, with access to advanced
-edition features provided by the *website* support:
+editing features provided by the *website* support:
 
 * a template code editor (:menuselection:`Customize --> HTML Editor`) where
   you can see and edit all templates used for the current page
-* the :guilabel:`Edit` button in the top-left switches to "edition mode" where
-  blocks (snippets) and rich text edition are available
+* the :guilabel:`Edit` button in the top-left switches to "editing mode" where
+  blocks (snippets) and rich text editing are available
 * a number of other features such as mobile preview or :abbr:`SEO (Search
   Engine Optimization)`
 
@@ -273,7 +273,7 @@ biography is shared between all teachers, because blocks are added to the
 *template*, and the *biography* template is shared between all teachers, when
 one page is edited they're all edited at the same time.
 
-Field edition
+Field editing
 =============
 
 Data which is specific to a record should be saved on that record, so let us
