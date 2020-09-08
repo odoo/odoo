@@ -115,10 +115,10 @@ class AlarmManager(models.AbstractModel):
         """
         result = []
         # TODO: remove event_maxdelta and if using it
-        if one_date - timedelta(minutes=(missing and 0 or event_maxdelta)) < fields.Datetime.now() + timedelta(seconds=in_the_next_X_seconds):  # if an alarm is possible for this date
+        if one_date - timedelta(minutes=(missing * event_maxdelta)) < fields.Datetime.now() + timedelta(seconds=in_the_next_X_seconds):  # if an alarm is possible for this date
             for alarm in event.alarm_ids:
                 if alarm.alarm_type == alarm_type and \
-                    one_date - timedelta(minutes=(missing and 0 or alarm.duration_minutes)) < fields.Datetime.now() + timedelta(seconds=in_the_next_X_seconds) and \
+                    one_date - timedelta(minutes=(missing * alarm.duration_minutes)) < fields.Datetime.now() + timedelta(seconds=in_the_next_X_seconds) and \
                         (not after or one_date - timedelta(minutes=alarm.duration_minutes) > fields.Datetime.from_string(after)):
                     alert = {
                         'alarm_id': alarm.id,
@@ -134,6 +134,7 @@ class AlarmManager(models.AbstractModel):
 
     @api.model
     def _get_partner_next_mail(self, partners=None):
+        self = self.with_context(mail_notify_force_send=True)
         last_notif_mail = fields.Datetime.to_string(self.env.context.get('lastcall') or fields.Datetime.now())
 
         cron = self.env.ref('calendar.ir_cron_scheduler_alarm', raise_if_not_found=False)
@@ -176,6 +177,7 @@ class AlarmManager(models.AbstractModel):
                 last_found = self.do_check_alarm_for_one_date(in_date_format, meeting, max_delta, 0, 'email', after=last_notif_mail, missing=True)
                 for alert in last_found:
                     self.do_mail_reminder(alert)
+        self = self.with_context(lascall=fields.Datetime.now())
 
     @api.model
     def get_next_notif(self):
