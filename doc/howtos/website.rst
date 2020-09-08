@@ -222,7 +222,7 @@ editing features provided by the *website* support:
 
 * a template code editor (:menuselection:`Customize --> HTML Editor`) where
   you can see and edit all templates used for the current page
-* the :guilabel:`Edit` button in the top-left switches to "edit mode" where
+* the :guilabel:`Edit` button in the top-left switches to "editing mode" where
   blocks (snippets) and rich text editing are available
 * a number of other features such as mobile preview or :abbr:`SEO (Search
   Engine Optimization)`
