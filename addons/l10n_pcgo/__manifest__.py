@@ -20,7 +20,7 @@
         'views/menu_view.xml',
         'data/account_chart_template_data.xml',
         'data/account_tax_data.xml',
-        'data/account_financial_html_report_data.xml',
+        #'data/account_financial_html_report_data.xml',
         'data/l10n_pcgo_chart_data.xml',
     ],
 
