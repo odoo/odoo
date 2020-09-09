@@ -1127,3 +1127,23 @@ class ShareCacheComputeLine(models.Model):
     parent_id = fields.Many2one('test_new_api.model_shared_cache_compute_parent')
     amount = fields.Integer()
     user_id = fields.Many2one('res.users', default= lambda self: self.env.user)  # Note: There is an ir.rule about this.
+
+
+class ComputeContainer(models.Model):
+    _name = _description = 'test_new_api.compute.container'
+
+    name = fields.Char()
+    member_ids = fields.One2many('test_new_api.compute.member', 'container_id')
+
+
+class ComputeMember(models.Model):
+    _name = _description = 'test_new_api.compute.member'
+
+    name = fields.Char()
+    container_id = fields.Many2one('test_new_api.compute.container', compute='_compute_container', store=True)
+
+    @api.depends('name')
+    def _compute_container(self):
+        container = self.env['test_new_api.compute.container']
+        for member in self:
+            member.container_id = container.search([('name', '=', member.name)], limit=1)
