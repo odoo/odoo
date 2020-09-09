@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data>
+
+    <record model="ir.ui.view" id="optesis_cash_form_view">
+      <field name="name">optesis.cash.form</field>
+      <field name="model">optesis.cash</field>
+      <field name="arch" type="xml">
+        <form string="Brouillard de caisse">
+            <header>
+              <button name="action_validate" class="oe_highlight" states="open" string="Valider" type="object"/>
+              <button name="action_close" class="oe_highlight" states="validate" string="Cloturer" type="object"/>
+              <field name="state" widget="statusbar" statusbar_visible="open,validate,close"/>
+            </header>
+            <sheet>
+                <div class="oe_title oe_inline">
+                    <label for="name" class="oe_edit_only"/>
+                    <h1><field name="name" required="1" attrs="{'readonly': [('state', '!=', 'open')]}"/></h1>
+                </div>
+                <group>
+                    <group>
+                        <field name="journal_id"  domain="[('type', '=', 'cash')]" widget="selection" attrs="{'readonly': [('state', '!=', 'open')]}"/>
+                        <field name="date" options="{'datepicker': {'warn_future': true}}" attrs="{'readonly': [('state', '!=', 'open')]}"/>
+                        <field name="accounting_date" groups="base.group_no_one" attrs="{'readonly': [('state', '!=', 'open')]}"/>
+                    </group>
+                    <group>
+                      <label for="balance_start"/>
+                      <div>
+                        <field class="oe_inline" name="balance_start"/>
+                      </div>
+                      <label for="balance_end_real"/>
+                      <div>
+                        <field class="oe_inline" name="balance_end_real"/>
+                      </div>
+                    </group>
+                </group>
+                <notebook>
+                    <page string='Ligne de paiements'>
+                        <field name='payment_lines'  attrs="{'readonly': [('state', '!=', 'open')]}">
+                            <tree editable='bottom'>
+                                <field name='payment_date'/>
+                                <field name='communication'/>
+                                <field name='partner_id'/>
+                                <field name='name'/>                                
+                                <field name='cash_amount' string='Montant de paiement'/>
+                            </tree>
+                        </field>
+                    </page>
+                </notebook>
+                <group class="oe_subtotal_footer oe_right" colspan="2" name="sale_total">
+                  <div class="oe_subtotal_footer_separator oe_inline">
+                    <label for="balance_end"/>
+                    </div>
+                    <field name="balance_end" force_save='1' nolabel="1" class="oe_subtotal_footer_separator"/>
+                </group>
+            </sheet>
+        </form>
+      </field>
+    </record>
+
+    <record model="ir.ui.view" id="tree_view">
+      <field name="name">optesis.cash.tree</field>
+      <field name="model">optesis.cash</field>
+      <field name="arch" type="xml">
+        <tree string="Liste de brouillard de caisse">
+          <field name="name"/>
+          <field name="journal_id"/>
+          <field name="date"/>
+          <field name="accounting_date"/>
+          <field name="balance_start"/>
+          <field name="balance_end_real"/>
+          <field name="state"/>
+        </tree>
+      </field>
+    </record>
+
+  </data>
+</odoo>

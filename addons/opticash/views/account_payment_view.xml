@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data>
+    
+    <record model="ir.ui.view" id="view_account_payment_form_inherit">
+      <field name="name">account.payment.form.inherit</field>
+      <field name="model">account.payment</field>
+      <field name="inherit_id" ref="account.view_account_payment_form"/>
+      <field name="arch" type="xml">
+        <button name="post" position="attributes">
+          <attribute name="name">action_confirm</attribute>
+        </button>
+        <header>
+            <button name="action_approve" class="oe_highlight" states="confirm" string="Approuver" groups="opticash.caisse_group_manager" type="object"/>
+            <button name="action_post" class="oe_highlight" states="approve" string="Comptabiliser" groups="opticash.caisse_group_account" type="object"/>
+            <button name="action_reject" states="confirm"  string="Rejeter" type="object"/>   
+        </header>
+        <field name="state" position="attributes">
+          <attribute name="statusbar_visible">draft,confirm,approve,posted,reconciled,cancelled</attribute>
+        </field>
+        <label  for="amount" position="attributes">
+            <attribute name="attrs">{'invisible':[('payment_type', '=', 'depense')]}</attribute>
+        </label>
+        <field name="amount" position="attributes">
+            <attribute name="attrs">{'invisible':[('payment_type', '=', 'depense')]}</attribute>
+        </field>
+        <field name="partner_id" position="attributes">
+            <attribute name="attrs">{'invisible':[('payment_type', 'not in', ('inbound', 'outbound', 'depense'))]}</attribute>
+        </field>
+        <field name="journal_id" position="attributes">
+            <attribute name="domain">"[('type', '=', 'cash' )]"</attribute>
+        </field>
+        <field name="payment_date" position="after">
+          <field name="cash_id" widget="selection" attrs="{'readonly': [('state', '!=', 'draft')]}" domain="[('state', '!=', 'close' )]"/>
+        </field>
+        <sheet>
+            <notebook attrs="{'invisible':[('payment_type', '!=', 'depense')]}">
+                <page string="Lignes de dépenses">
+                    <field name="expense_lines">
+                        <tree editable="bottom">
+                            <field name="product_id"/>
+                            <field name="name"/>
+                            <field name="account_id"/>
+                            <field name="account_analytic_id"/>
+                            <field name="quantity"/>
+                            <field name="price_unit"/>
+                            <field name="taxes_id" widget="many2many_tags"/>
+                            <field name="price_subtotal"/>
+                        </tree>
+                    </field>
+
+                    <div class="oe_inline">
+                      <field name="tax_line_ids" invisible="1">
+                        <tree editable="bottom" string="Taxes">
+                          <field name="name"/>
+                          <!--Need invisible fields for on_change to create all necessary info -->
+                          <field name="tax_id" invisible="1"/>
+                          <field name="sequence" invisible="1"/>
+                          <field name="manual" invisible="1"/>
+                          <field name="account_id" groups="account.group_account_user"/>
+                          <field name="account_analytic_id" groups="analytic.group_analytic_accounting"/>
+                          <field name="analytic_tag_ids" groups="analytic.group_analytic_tags" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                          <field name="amount"/>
+                          <field name="amount_rounding" invisible="1"/>
+                          <field name="amount_total" invisible="1"/>
+                          <field name="currency_id" invisible="1" force_save="1"/>
+                        </tree>
+                      </field>
+                    </div>
+
+                    <group class="oe_subtotal_footer oe_right">
+                        <field name="amount_untaxed" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                        <field name="amount_tax" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                        <div class="oe_subtotal_footer_separator oe_inline">
+                            <label for="amount_total"/>
+                        </div>
+                        <field name="amount_total"  sting='Montant paiement' readonly="0" nolabel="1" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                    </group>
+                </page>
+            </notebook>
+        </sheet>
+      </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_account_payment_search_inherit">
+      <field name="name">account.payment.search.inherit</field>
+      <field name="model">account.payment</field>
+      <field name="inherit_id" ref="account.view_account_payment_search"/>
+      <field name="arch" type="xml">
+        <xpath expr="//filter[@name='transfers_filter']" position="after">
+            <filter string="Paiement par caisse"  domain="[('cash_id','!=', False)]" name="cash_filter"/>
+        </xpath>
+      </field>
+    </record>
+
+    <record id="view_account_cash_payment_tree" model="ir.ui.view">
+      <field name="name">account.cash.payment.tree</field>
+      <field name="model">account.payment</field>
+      <field name="arch" type="xml">
+        <tree decoration-info="state == 'draft'" decoration-muted="state in ['reconciled', 'cancelled']" edit="false">
+          <field name="payment_date"/>
+          <field name="name"/>
+          <field name="journal_id"/>
+          <field name="payment_method_id"/>
+          <field name="partner_id" string="Vendor"/>
+          <field name="amount" sum="Amount"/>
+          <field name="company_id" groups="base.group_multi_company"/>
+          <field name="state"/>
+          <field name="currency_id" invisible="1"/>
+          <field name="partner_type" invisible="1"/>
+        </tree>
+      </field>
+    </record>
+    
+    <record id="action_account_payments_cash" model="ir.actions.act_window">
+      <field name="name">Paiement par caisse</field>
+      <field name="res_model">account.payment</field>
+      <field name="view_type">form</field>
+      <field name="view_mode">tree,kanban,form,graph</field>
+      <field name="context">{'default_payment_type': 'depense', 'default_partner_type': 'supplier', 'search_default_cash_filter': 1}</field>
+      <field name="domain">[]</field>
+      <field name="view_id" ref="view_account_cash_payment_tree"/>
+      <field name="help" type="html">
+        <p class="o_view_nocontent_smiling_face">
+          Register a payment
+        </p><p>
+          Payments are used to register liquidity movements. You can process those payments by your own means or by using installed facilities.
+        </p>
+      </field>
+    </record>
+
+  </data>
+</odoo>
