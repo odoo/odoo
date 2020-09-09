@@ -303,6 +303,10 @@ class AccountMove(models.Model):
     def create(self, vals):
         move = super(AccountMove, self.with_context(check_move_validity=False, partner_id=vals.get('partner_id'))).create(vals)
         move.assert_balanced()
+
+        if 'line_ids' in vals:
+            move.update_lines_tax_exigibility()
+
         return move
 
     @api.multi
@@ -310,9 +314,25 @@ class AccountMove(models.Model):
         if 'line_ids' in vals:
             res = super(AccountMove, self.with_context(check_move_validity=False)).write(vals)
             self.assert_balanced()
+            self.update_lines_tax_exigibility()
         else:
             res = super(AccountMove, self).write(vals)
+
         return res
+
+    @api.multi
+    def update_lines_tax_exigibility(self):
+        if all(account.user_type_id.type not in {'payable', 'receivable'} for account in self.mapped('line_ids.account_id')):
+            self.line_ids.write({'tax_exigible': True})
+        else:
+            tax_lines_caba = self.line_ids.filtered(lambda x: x.tax_line_id.tax_exigibility == 'on_payment')
+            base_lines_caba = self.line_ids.filtered(lambda x: any(tax.tax_exigibility == 'on_payment'
+                                                                   or (tax.amount_type == 'group'
+                                                                       and 'on_payment' in tax.mapped('children_tax_ids.tax_exigibility'))
+                                                               for tax in x.tax_ids))
+            caba_lines = tax_lines_caba + base_lines_caba
+            caba_lines.write({'tax_exigible': False})
+            (self.line_ids - caba_lines).write({'tax_exigible': True})
 
     @api.multi
     def post(self, invoice=False):
@@ -1225,16 +1245,6 @@ class AccountMoveLine(models.Model):
                 vals['currency_id'] = account.currency_id.id
                 date = vals.get('date') or vals.get('date_maturity') or fields.Date.today()
                 vals['amount_currency'] = account.company_id.currency_id._convert(amount, account.currency_id, account.company_id, date)
-
-            #Toggle the 'tax_exigible' field to False in case it is not yet given and the tax in 'tax_line_id' or one of
-            #the 'tax_ids' is a cash based tax.
-            taxes = False
-            if vals.get('tax_line_id'):
-                taxes = [{'tax_exigibility': self.env['account.tax'].browse(vals['tax_line_id']).tax_exigibility}]
-            if vals.get('tax_ids'):
-                taxes = self.env['account.move.line'].resolve_2many_commands('tax_ids', vals['tax_ids'])
-            if taxes and any([tax['tax_exigibility'] == 'on_payment' for tax in taxes]) and not vals.get('tax_exigible'):
-                vals['tax_exigible'] = False
 
         lines = super(AccountMoveLine, self).create(vals_list)
 
