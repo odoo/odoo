@@ -20,7 +20,7 @@ odoo.define('hr.StandaloneM2OAvatarEmployee', function (require) {
         /**
          * @override
          */
-        willStart() {
+        async willStart() {
             return Promise.all([this._super(...arguments), this._makeAvatarWidget()]);
         },
         /**
