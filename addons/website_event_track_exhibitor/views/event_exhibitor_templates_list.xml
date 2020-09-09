@@ -180,7 +180,7 @@
                         <img class="position-absolute mr-2 mt-2"
                             style="right: 0; top: 0; max-height: 20px;"
                             t-if="sponsor.partner_id.country_id"
-                            t-att-src="website.image_url(sponsor.partner_id.country_id, 'image')"
+                            t-att-src="sponsor.partner_id.country_id.image_url"
                             t-att-alt="sponsor.partner_id.country_id.name"/>
                     </div>
                     <div t-else="" class="o_wesponsor_gradient card-img-top position-relative"
