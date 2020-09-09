@@ -3661,6 +3661,39 @@ var BasicModel = AbstractModel.extend({
         return Object.keys(fieldsInfo && fieldsInfo[viewType] || {});
     },
     /**
+     * Get a subset of a list resource keeping only the props to keep.
+     * This permits to a web_read_group to keep some of the properties
+     * of a previous list if it is still in its results.
+     *
+     * @private
+     * @param {Object} list
+     * @param {boolean} options.onlyGroup true when we only fetched the group's own data
+     * @param {boolean} options.hasSubgroups true when the fetched group has subgroups
+     * @returns {Object} subset of list
+     */
+    _getGroupedListPropsToKeep(list, options) {
+        const { isOpen, offset, id } = list;
+        let propsToKeep = { isOpen, offset, id };
+
+        if (options.onlyGroup || isOpen && options.hasSubgroups) {
+            // If the group is opened and contains subgroups,
+            // also keep its data to keep internal state of
+            // sub-groups
+            // Also keep data if we only reload groups' own data
+            propsToKeep.data = list.data;
+            if (options.onlyGroup) {
+                // keep count and res_ids as in this case the group
+                // won't be search_read again. This situation happens
+                // when using kanban quick_create where the record is manually
+                // added to the datapoint before getting here.
+                propsToKeep.res_ids = list.res_ids;
+                propsToKeep.count = list.count;
+            }
+        }
+
+        return propsToKeep;
+    },
+    /**
      * Get many2one fields names in a datapoint. This is useful in order to
      * fetch their names in the case of a default_get.
      *
@@ -3744,6 +3777,16 @@ var BasicModel = AbstractModel.extend({
 
         }
         return context;
+    },
+    /**
+     * Get the domain for a list resource.
+     *
+     * @private
+     * @param {Object} list
+     * @returns {Array[]} list domain
+     */
+    _getUngroupedListDomain(list) {
+        return list.domain || [];
     },
     /**
      * Invalidates the DataManager's cache if the main model (i.e. the model of
@@ -4603,23 +4646,11 @@ var BasicModel = AbstractModel.extend({
                     if (oldGroup) {
                         delete self.localData[newGroup.id];
                         // restore the internal state of the group
-                        var updatedProps = _.pick(oldGroup, 'isOpen', 'offset', 'id');
-                        if (options.onlyGroups || oldGroup.isOpen && newGroup.groupedBy.length) {
-                            // If the group is opened and contains subgroups,
-                            // also keep its data to keep internal state of
-                            // sub-groups
-                            // Also keep data if we only reload groups' own data
-                            updatedProps.data = oldGroup.data;
-                            if (options.onlyGroups) {
-                                // keep count and res_ids as in this case the group
-                                // won't be search_read again. This situation happens
-                                // when using kanban quick_create where the record is manually
-                                // added to the datapoint before getting here.
-                                updatedProps.res_ids = oldGroup.res_ids;
-                                updatedProps.count = oldGroup.count;
-                            }
-                        }
-                        _.extend(newGroup, updatedProps);
+                        const oldPropsToKeep = self._getGroupedListPropsToKeep(oldGroup, {
+                            onlyGroup: options.onlyGroups,
+                            hasSubgroups: newGroup.groupedBy.length
+                        });
+                        Object.assign(newGroup, oldPropsToKeep);
                         // set the limit such that all previously loaded records
                         // (e.g. if we are coming back to the kanban view from a
                         // form view) are reloaded
@@ -4879,7 +4910,7 @@ var BasicModel = AbstractModel.extend({
                 model: list.model,
                 fields: fieldNames,
                 context: _.extend({}, list.getContext(), {bin_size: true}),
-                domain: list.domain || [],
+                domain: this._getUngroupedListDomain(list),
                 limit: list.limit,
                 offset: list.loadMoreOffset + list.offset,
                 orderBy: list.orderedBy,
