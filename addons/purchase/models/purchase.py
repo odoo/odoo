@@ -701,11 +701,18 @@ class PurchaseOrderLine(models.Model):
 
     def _compute_tax_id(self):
         for line in self:
+<<<<<<< HEAD
             line = line.with_company(line.company_id)
             fpos = line.order_id.fiscal_position_id or line.order_id.fiscal_position_id.get_fiscal_position(line.order_id.partner_id.id)
             # filter taxes by company
             taxes = line.product_id.supplier_taxes_id.filtered(lambda r: r.company_id == line.env.company)
             line.taxes_id = fpos.map_tax(taxes, line.product_id, line.order_id.partner_id)
+=======
+            fpos = line.order_id.fiscal_position_id or line.order_id.partner_id.with_context(force_company=line.company_id.id).property_account_position_id
+            # If company_id is set in the order, always filter taxes by the company
+            taxes = line.product_id.supplier_taxes_id.filtered(lambda r: r.company_id == line.order_id.company_id)
+            line.taxes_id = fpos.map_tax(taxes, line.product_id, line.order_id.partner_id) if fpos else taxes
+>>>>>>> f9bae1783ab... temp
 
     @api.depends('invoice_lines.move_id.state', 'invoice_lines.quantity', 'qty_received', 'product_uom_qty', 'order_id.state')
     def _compute_qty_invoiced(self):
