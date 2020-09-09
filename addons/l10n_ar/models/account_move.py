@@ -295,3 +295,13 @@ class AccountMove(models.Model):
             res += [{'Id': '3', 'BaseImp': vat_base_0, 'Importe': 0.0}]
 
         return res if res else []
+
+    def _get_move_display_name(self, show_ref=False):
+        ''' Helper to get the display name of an invoice depending of its type.
+        :param show_ref:    A flag indicating of the display name must include or not the journal entry reference.
+        :return:            A string representing the invoice.
+        '''
+        self.ensure_one()
+        if self.company_id.country_id == self.env.ref('base.ar') and self.l10n_latam_use_documents and self.is_purchase_document() and self.ref:
+            return self.ref
+        return super()._get_move_display_name(show_ref=show_ref)
