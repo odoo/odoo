@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+  <!-- Menu-->
+  <menuitem id="menu_caisse" name="Caisse" parent="account_accountant.menu_accounting" groups="opticash.caisse_group_user" sequence="3"/>
+
+  <!-- Sous menu-->
+  <act_window id="action_menu_brouillard" name="Brouillard de caisse" res_model="optesis.cash" view_mode="tree,form"/>
+  <menuitem id="menu_brouillard" name="Brouillard de caisse" parent="menu_caisse" action="action_menu_brouillard" sequence="1"/>
+
+  <menuitem id="menu_paiement" name="Paiements" parent="menu_caisse" action="opticash.action_account_payments_cash" sequence="2"/>
+
+</odoo>
