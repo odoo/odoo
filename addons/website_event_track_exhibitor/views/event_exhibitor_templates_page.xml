@@ -116,7 +116,7 @@
                     t-attf-class="text-right d-none d-md-block #{'mr-5' if sponsor.sponsor_type_id.display_ribbon_style and sponsor.sponsor_type_id.display_ribbon_style != 'no_ribbon' else ''}">
                     <img class="img"
                         style="max-height: 36px;"
-                        t-att-src="website.image_url(sponsor.partner_id.country_id, 'image')"
+                        t-att-src="sponsor.partner_id.country_id.image_url"
                         t-att-alt="sponsor.partner_id.country_id.name"/>
                 </a>
             </div>
@@ -146,7 +146,7 @@
                         <div class="d-flex flex-column align-items-center">
                             <img t-if="sponsor_other.partner_id.country_id"
                             class="mr-2 mb-1 o_wesponsor_aside_logo"
-                            t-att-src="website.image_url(sponsor_other.partner_id.country_id, 'image')"
+                            t-att-src="sponsor_other.partner_id.country_id.image_url"
                             t-att-alt="sponsor_other.partner_id.country_id.name"/>
                             <span t-if="sponsor_other.sponsor_type_id.display_ribbon_style not in [False, 'no_ribbon']"
                                 t-att-class="'badge badge-light mr-2 ribbon_%s' % sponsor_other.sponsor_type_id.display_ribbon_style"
