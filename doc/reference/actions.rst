@@ -18,10 +18,6 @@ e.g. button methods. All actions share two mandatory attributes:
 ``name``
     short user-readable description of the action, may be displayed in the
     client's interface
-``binding_model_id``
-    if set, the action is available in the action bar for the given model
-
-    .. note:: For Server Actions, use ``model_id``.
 
 A client can get actions in 4 forms:
 
@@ -44,6 +40,9 @@ attributes used to present an action in an arbitrary model's contextual menu:
 
 ``binding_model_id``
     specifies which model the action is bound to
+
+    .. note:: For Server Actions, use ``model_id``.
+
 ``binding_type``
     specifies the type of binding, which is mostly which contextual menu the
     action will appear under
