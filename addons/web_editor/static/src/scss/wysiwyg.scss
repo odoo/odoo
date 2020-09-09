@@ -250,14 +250,10 @@ body .modal {
                 margin: 1px;
 
                 .o_existing_attachment_optimize, .o_existing_attachment_remove {
-                    background-color: scale-color($card-border-color, $alpha: -50%);
-                    text-shadow: 0 0 1px white;
+                    background-color: rgba(white, 0.4);
                     opacity: 0;
                     cursor: pointer;
-
-                    &:hover {
-                        background-color: $card-border-color;
-                    }
+                    transition: color 0.2s ease;
                 }
 
                 .o_existing_attachment_optimize {
@@ -267,6 +263,7 @@ body .modal {
 
                 .o_existing_attachment_remove {
                     @include o-position-absolute($top: 0, $right: 0);
+                    z-index: 1;
                     border-radius: 0 0 0 2px;
                     &:hover {
                         color: $o-we-color-danger;
