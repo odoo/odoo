@@ -27,8 +27,10 @@ function getMatchedCSSRules(a) {
             }
             if (rules) {
                 for (r = rules.length-1; r >= 0; r--) {
-                    var selectorText = rules[r].selectorText;
-                    if (selectorText &&
+                    var multipleSelectorTexts = rules[r].selectorText.split(/\s*,\s*/);
+                    for (k = 0 ; k < multipleSelectorTexts.length ; k++) {
+                        var selectorText = multipleSelectorTexts[k];
+                        if (selectorText &&
                             rules[r].cssText &&
                             selectorText !== '*' &&
                             selectorText.indexOf(':hover') === -1 &&
@@ -38,9 +40,7 @@ function getMatchedCSSRules(a) {
                             selectorText.indexOf(':link') === -1 &&
                             selectorText.indexOf('::') === -1 &&
                             selectorText.indexOf("'") === -1) {
-                        var st = selectorText.split(/\s*,\s*/);
-                        for (k = 0 ; k < st.length ; k++) {
-                            rulesCache.push({ 'selector': st[k], 'style': rules[r].style });
+                            rulesCache.push({ 'selector': selectorText[k], 'style': rules[r].style });
                         }
                     }
                 }
