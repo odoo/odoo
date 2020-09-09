@@ -8,15 +8,15 @@ Odoo's collaborative and realtime <a href="https://www.odoo.com/page/project-man
 helps your team get work done. Keep track of everything, from the big picture
 to the minute details, from the customer contract to the billing.
 
-Designed to fit your own process
+Designed to Fit Your Own Process
 --------------------------------
 
 Organize projects around your own processes. Work on tasks and issues using the
 kanban view, schedule tasks using the gantt chart and control deadlines in the
-calendar view. Every project may have it's own stages allowing teams to
+calendar view. Every project may have its own stages, allowing teams to
 optimize their job.
 
-Easy to use
+Easy to Use
 -----------
 
 Get organized as fast as you can think. The easy-to-use interface takes no time
@@ -26,13 +26,13 @@ between you and your sweet productive flow.
 Work Together
 -------------
 
-### Real time chats, document sharing, email integration
+### Real-time chats, document sharing, email integration
 
 Use the chatter to communicate with your team or customers and share comments
 and documents on tasks and issues. Integrate discussion fast with the email
 integration.
 
-Talk to others users or customers with the website live chat feature.
+Talk to other users or customers with the website live chat feature.
 
 Collaborative Writing
 ---------------------
@@ -40,7 +40,7 @@ Collaborative Writing
 ### The power of etherpad, inside your tasks
 
 Collaboratively edit the same specifications or meeting minutes right inside
-the application. The incorporated etherpad feature allows several people to
+the application. The integrated etherpad feature allows several people to
 work on the same tasks, at the same time.
 
 This is very efficient for scrum meetings, meeting minutes or complex
@@ -57,7 +57,7 @@ requires your attention.
 Timesheets, Contracts & Invoicing
 ---------------------------------
 
-Projects are automatically integrated with customer contracts allowing you to
+Projects are automatically integrated with customer contracts, allowing you to
 invoice based on time & materials and record timesheets easily.
 
 Track Issues
