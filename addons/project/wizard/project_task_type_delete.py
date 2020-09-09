@@ -13,7 +13,7 @@ class ProjectTaskTypeDelete(models.TransientModel):
 
     project_ids = fields.Many2many('project.project', domain="['|', ('active', '=', False), ('active', '=', True)]", string='Projects', ondelete='cascade')
     stage_ids = fields.Many2many('project.task.type', string='Stages To Delete', ondelete='cascade')
-    tasks_count = fields.Integer('Number of tasks', compute='_compute_tasks_count')
+    tasks_count = fields.Integer('Number of Tasks', compute='_compute_tasks_count')
     stages_active = fields.Boolean(compute='_compute_stages_active')
 
     @api.depends('project_ids')
