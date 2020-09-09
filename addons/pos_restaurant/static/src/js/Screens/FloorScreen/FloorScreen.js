@@ -40,7 +40,9 @@ odoo.define('pos_restaurant.FloorScreen', function (require) {
             this.floorMapRef.el.style.background = this.state.floorBackground;
         }
         mounted() {
-            this.env.pos.set_table(null);
+            if (this.env.pos.table) {
+                this.env.pos.set_table(null);
+            }
             this.floorMapRef.el.style.background = this.state.floorBackground;
             // call _tableLongpolling once then set interval of 5sec.
             this._tableLongpolling();
