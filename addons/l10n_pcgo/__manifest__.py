@@ -5,7 +5,7 @@
 
 {
     'name': 'Syscohada révisé',
-    'version': '2.0.1',
+    'version': '2.0.2',
     'author': 'Optesis',
     'category': 'Localization',
     'description': """
@@ -15,7 +15,7 @@
                     **Credits:** cabinet d'expertise comptable www.kyriex.com.
                     """,
     'website': 'http://www.optesis.com',
-    'depends': ['account','account_accountant','account_reports'],
+    'depends': ['account'],
     'data': [
         'views/menu_view.xml',
         'data/account_chart_template_data.xml',
