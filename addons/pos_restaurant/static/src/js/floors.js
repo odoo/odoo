@@ -252,6 +252,7 @@ models.PosModel = models.PosModel.extend({
         if(!table){
             this.sync_from_server(table, this.get_order_list(), this.get_order_with_uid());
             this.set_order(null);
+            this.table = null;
         } else if (this.order_to_transfer_to_different_table) {
             var order_ids = this.get_order_with_uid();
 
