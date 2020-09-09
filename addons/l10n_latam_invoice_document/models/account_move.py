@@ -25,14 +25,18 @@ class AccountMove(models.Model):
     @api.depends('l10n_latam_document_type_id')
     def _compute_name(self):
         """ Change the way that the use_document moves name is computed:
-
+        * If move use document but does not have document type selected then name = '/' to do not show the name.
+        * If move use document and are numbered manually do not compute name at all (will be set manually)
         * If move use document and is in draft state and has not been posted before we restart name to '/' (this is
            when we change the document type) """
+        without_doc_type = self.filtered(lambda x: x.journal_id.l10n_latam_use_documents and not x.l10n_latam_document_type_id)
+        manual_documents = self.filtered(lambda x: x.journal_id.l10n_latam_use_documents and x.l10n_latam_manual_document_number)
+        (without_doc_type + manual_documents.filtered(lambda x: not x.name or x.name and x.state == 'draft' and not x.posted_before)).name = '/'
         # if we change document or journal and we are in draft and not posted, we clean number so that is recomputed in super
         self.filtered(
             lambda x: x.journal_id.l10n_latam_use_documents and x.l10n_latam_document_type_id
             and not x.l10n_latam_manual_document_number and x.state == 'draft' and not x.posted_before).name = '/'
-        super()._compute_name()
+        super(AccountMove, self - without_doc_type - manual_documents)._compute_name()
 
     @api.depends('l10n_latam_document_type_id', 'journal_id')
     def _compute_l10n_latam_manual_document_number(self):
@@ -46,26 +50,28 @@ class AccountMove(models.Model):
     def _is_manual_document_number(self, journal):
         return True if journal.type == 'purchase' else False
 
-    @api.depends('ref')
+    @api.depends('name')
     def _compute_l10n_latam_document_number(self):
-        recs_with_ref = self.filtered('ref')
-        for rec in recs_with_ref:
-            ref = rec.ref
+        recs_with_name = self.filtered(lambda x: x.name != '/')
+        for rec in recs_with_name:
+            name = rec.name
             doc_code_prefix = rec.l10n_latam_document_type_id.doc_code_prefix
-            if doc_code_prefix and ref:
-                ref = ref.split(" ", 1)[-1]
-            rec.l10n_latam_document_number = ref
-        remaining = self - recs_with_ref
+            if doc_code_prefix and name:
+                name = name.split(" ", 1)[-1]
+            rec.l10n_latam_document_number = name
+        remaining = self - recs_with_name
         remaining.l10n_latam_document_number = False
 
     @api.onchange('l10n_latam_document_type_id', 'l10n_latam_document_number')
     def _inverse_l10n_latam_document_number(self):
         for rec in self.filtered(lambda x: x.l10n_latam_document_type_id and (x.l10n_latam_manual_document_number or not x.highest_name)):
-            if rec.l10n_latam_document_number:
+            if not rec.l10n_latam_document_number:
+                rec.name = '/'
+            else:
                 l10n_latam_document_number = rec.l10n_latam_document_type_id._format_document_number(rec.l10n_latam_document_number)
                 if rec.l10n_latam_document_number != l10n_latam_document_number:
                     rec.l10n_latam_document_number = l10n_latam_document_number
-                rec.ref = "%s %s" % (rec.l10n_latam_document_type_id.doc_code_prefix, l10n_latam_document_number)
+                rec.name = "%s %s" % (rec.l10n_latam_document_type_id.doc_code_prefix, l10n_latam_document_number)
 
     @api.depends('journal_id', 'l10n_latam_document_type_id')
     def _compute_highest_name(self):
@@ -80,7 +86,7 @@ class AccountMove(models.Model):
         return super(AccountMove, self)._deduce_sequence_number_reset(name)
 
     def _get_starting_sequence(self):
-        if self.journal_id.l10n_latam_use_documents and self.is_sale_document():
+        if self.journal_id.l10n_latam_use_documents and not self.l10n_latam_manual_document_number:
             if self.l10n_latam_document_type_id:
                 return "%s 00000000" % (self.l10n_latam_document_type_id.doc_code_prefix)
             # There was no pattern found, propose one
@@ -117,13 +123,13 @@ class AccountMove(models.Model):
                 raise UserError(_('We do not accept the usage of document types on receipts yet. '))
         return super().post()
 
-    @api.constrains('ref', 'move_type', 'partner_id', 'journal_id', 'invoice_date')
+    @api.constrains('name', 'move_type', 'partner_id', 'journal_id', 'invoice_date')
     def _check_duplicate_supplier_reference(self):
         # The constraint doesn't depend on the date like it is the case in general
         latam_bills = self.filtered(lambda x: x.is_purchase_document() and x.l10n_latam_use_documents)
         if latam_bills:
             self.env["account.move"].flush([
-                "ref", "move_type", "company_id", "partner_id", "commercial_partner_id",
+                "name", "move_type", "company_id", "partner_id", "commercial_partner_id",
             ])
             self.env["res.partner"].flush(["commercial_partner_id"])
 
@@ -132,7 +138,7 @@ class AccountMove(models.Model):
                 FROM account_move move
                 JOIN res_partner partner ON partner.id = move.partner_id
                 INNER JOIN account_move move2 ON
-                    move2.ref = move.ref
+                    move2.name = move.name
                     AND move2.company_id = move.company_id
                     AND move2.commercial_partner_id = partner.commercial_partner_id
                     AND move2.move_type = move.move_type
@@ -141,8 +147,8 @@ class AccountMove(models.Model):
             ''', [tuple(latam_bills.ids)])
             duplicated_moves = self.browse([r[0] for r in self._cr.fetchall()])
             if duplicated_moves:
-                raise ValidationError(_('Duplicated vendor reference detected. You probably encoded twice the same vendor bill/credit note:\n%s') % "\n".join(
-                    duplicated_moves.mapped(lambda m: "%(partner)s - %(ref)s" % {'ref': m.ref, 'partner': m.partner_id.display_name})
+                raise ValidationError(_('Duplicated vendor bill detected. You probably encoded twice the same vendor bill/credit note:\n%s') % "\n".join(
+                    duplicated_moves.mapped(lambda m: "%(partner)s - %(name)s" % {'name': m.name, 'partner': m.partner_id.display_name})
                 ))
         return super(AccountMove, self - latam_bills)._check_duplicate_supplier_reference()
 
@@ -234,3 +240,10 @@ class AccountMove(models.Model):
                 group.id,
             ) for group, amounts in res]
         super(AccountMove, self - move_with_doc_type)._compute_invoice_taxes_by_group()
+
+    _sql_constraints = [
+        ('unique_name',
+         """EXCLUDE (name WITH =, journal_id WITH =, move_type WITH =)
+              WHERE (state = 'posted' AND name != '/' and (l10n_latam_document_type_id is Null or move_type not in ('in_refund', 'in_receipt', 'in_invoice')))""",
+         'Posted Journal Entries\' numbers must be unique by journal.'),
+    ]
