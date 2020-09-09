@@ -393,7 +393,10 @@ class WebRequest(object):
         :returns: ASCII token string
         """
         token = self.session.sid
-        max_ts = '' if not time_limit else int(time.time() + time_limit)
+
+        # if no `time_limit` => distant 1y expiry (31536000) so max_ts acts as salt, e.g. vs BREACH
+        max_ts = int(time.time() + (time_limit or 31536000))
+
         msg = '%s%s' % (token, max_ts)
         secret = self.env['ir.config_parameter'].sudo().get_param('database.secret')
         assert secret, "CSRF protection requires a configured database secret"
