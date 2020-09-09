@@ -450,8 +450,17 @@ class SurveyQuestion(models.Model):
             'count': count_data[sug_answer]
             }
             for sug_answer in suggested_answers]
+
+        if len(suggested_answers) < 26:
+            keys = "ABCDEFGHIJKLMNOPQRSTUVWXY"
+        else:
+            keys = [sug.value for sug in suggested_answers]
+        answers_keys = dict.fromkeys(suggested_answers)
+        for i in range(0, len(suggested_answers)):
+            answers_keys[suggested_answers[i]] = keys[i]
+
         graph_data = [{
-            'text': _('Other (see comments)') if not sug_answer else sug_answer.value,
+            'text': _('Other (see comments)') if not sug_answer else answers_keys[sug_answer],
             'count': count_data[sug_answer]
             }
             for sug_answer in suggested_answers]
