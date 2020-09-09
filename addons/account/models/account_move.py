@@ -112,6 +112,7 @@ class AccountMove(models.Model):
         states={'draft': [('readonly', False)]},
         default=fields.Date.context_today)
     ref = fields.Char(string='Reference', copy=False, tracking=True)
+    supplier_ref = fields.Char('Supplier Reference', copy=False, tracking=True)
     narration = fields.Text(string='Terms and Conditions')
     state = fields.Selection(selection=[
             ('draft', 'Draft'),
