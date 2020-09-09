@@ -257,7 +257,7 @@
                 t-att-data-prefill="'/survey/prefill/%s/%s?page_or_question_id=%s' % (survey.access_token, answer.token, page_or_question_id)"
                 t-att-data-validate="'/survey/validate/%s/%s' % (survey.access_token, answer.token)"
                 t-att-data-submit="'/survey/submit/%s/%s' % (survey.access_token, answer.token)">
-            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token(None)"/>
             <input type="hidden" name="token" t-att-value="answer.token" />
 
             <t t-if="survey.questions_layout == 'one_page'">
