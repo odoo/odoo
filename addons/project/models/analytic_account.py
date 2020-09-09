@@ -23,7 +23,7 @@ class AccountAnalyticAccount(models.Model):
     def _check_company_id(self):
         for record in self:
             if record.project_ids:
-                raise UserError(_('You cannot change the company of an analytical account if it is related to a project.'))
+                raise UserError(_('You cannot change the company of an analytic account if it is related to a project.'))
 
     def unlink(self):
         projects = self.env['project.project'].search([('analytic_account_id', 'in', self.ids)])
