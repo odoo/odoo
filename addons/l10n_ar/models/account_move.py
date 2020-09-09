@@ -182,7 +182,7 @@ class AccountMove(models.Model):
         # Avoid that user change the POS number (x.l10n_latam_document_number), The POS number configure in journal it
         # will always be used
         to_review = self.filtered(
-            lambda x: x.company_id.country_id == self.env.ref('base.ar') and x.journal_id.type == 'sale' and x.l10n_latam_document_type_id and x.l10n_latam_document_number and
+            lambda x: x.company_id.country_id == self.env.ref('base.ar') and not x.l10n_latam_manual_document_number and x.l10n_latam_document_type_id and x.l10n_latam_document_number and
             (x.l10n_latam_manual_document_number or not x.highest_name))
         for rec in to_review:
             number = rec.l10n_latam_document_type_id._format_document_number(rec.l10n_latam_document_number)
@@ -201,7 +201,7 @@ class AccountMove(models.Model):
         if (
             self.journal_id.l10n_latam_use_documents
             and self.env.company.country_id == self.env.ref('base.ar')
-            and self.is_sale_document()
+            and not self.l10n_latam_manual_document_number
         ):
             if self.l10n_latam_document_type_id:
                 return self._get_formatted_sequence()
@@ -209,7 +209,7 @@ class AccountMove(models.Model):
 
     def _get_last_sequence_domain(self, relaxed=False):
         where_string, param = super(AccountMove, self)._get_last_sequence_domain(relaxed)
-        if self.company_id.country_id == self.env.ref('base.ar') and self.l10n_latam_use_documents and self.is_sale_document():
+        if self.company_id.country_id == self.env.ref('base.ar') and self.l10n_latam_use_documents and not self.l10n_latam_manual_document_number:
             if not self.journal_id.l10n_ar_share_sequences:
                 where_string += " AND l10n_latam_document_type_id = %(l10n_latam_document_type_id)s"
                 param['l10n_latam_document_type_id'] = self.l10n_latam_document_type_id.id or 0
@@ -221,7 +221,7 @@ class AccountMove(models.Model):
 
     def _get_key_compute_name(self):
         journal_key, date_key = super()._get_key_compute_name()
-        if self.company_id.country_id == self.env.ref('base.ar') and self.l10n_latam_use_documents and self.is_sale_document():
+        if self.company_id.country_id == self.env.ref('base.ar') and self.l10n_latam_use_documents and not self.l10n_latam_manual_document_number:
             if not self.journal_id.l10n_ar_share_sequences:
                 journal_key = (self.l10n_latam_document_type_id)
             else:
@@ -305,3 +305,8 @@ class AccountMove(models.Model):
         if self.company_id.country_id == self.env.ref('base.ar') and self.l10n_latam_use_documents and self.is_purchase_document() and self.ref:
             return self.ref
         return super()._get_move_display_name(show_ref=show_ref)
+
+    def _is_manual_document_number(self):
+        if self.l10n_latam_document_type_id.code in ['60', '61', '63', '64', '68']:
+            return self.is_sale_document()
+        return super()._is_manual_document_number()

@@ -28,23 +28,26 @@ class AccountMove(models.Model):
 
         * If move use document and is in draft state and has not been posted before we restart name to '/' (this is
            when we change the document type) """
+        without_doc_type = self.filtered(lambda x: x.journal_id.l10n_latam_use_documents and not x.l10n_latam_document_type_id)
+        manual_documents = self.filtered(lambda x: x.journal_id.l10n_latam_use_documents and x.l10n_latam_manual_document_number)
+        (without_doc_type + manual_documents.filtered(lambda x: not x.name or x.name and x.state == 'draft' and not x.posted_before)).name = '/'
         # if we change document or journal and we are in draft and not posted, we clean number so that is recomputed in super
         self.filtered(
             lambda x: x.journal_id.l10n_latam_use_documents and x.l10n_latam_document_type_id
             and not x.l10n_latam_manual_document_number and x.state == 'draft' and not x.posted_before).name = '/'
-        super()._compute_name()
+        super(AccountMove, self - without_doc_type - manual_documents)._compute_name()
 
     @api.depends('l10n_latam_document_type_id', 'journal_id')
     def _compute_l10n_latam_manual_document_number(self):
         """ Indicates if this document type uses a sequence or if the numbering is made manually """
         recs_with_journal_id = self.filtered(lambda x: x.journal_id and x.journal_id.l10n_latam_use_documents)
         for rec in recs_with_journal_id:
-            rec.l10n_latam_manual_document_number = self._is_manual_document_number(rec.journal_id)
+            rec.l10n_latam_manual_document_number = rec._is_manual_document_number()
         remaining = self - recs_with_journal_id
         remaining.l10n_latam_manual_document_number = False
 
-    def _is_manual_document_number(self, journal):
-        return True if journal.type == 'purchase' else False
+    def _is_manual_document_number(self):
+        return self.is_purchase_document()
 
     @api.depends('ref', 'name', 'l10n_latam_manual_document_number')
     def _compute_l10n_latam_document_number(self):
@@ -56,10 +59,9 @@ class AccountMove(models.Model):
 
         for rec in self:
             doc_code_prefix = rec.l10n_latam_document_type_id.doc_code_prefix
-            if rec.l10n_latam_manual_document_number and rec.ref:
-                rec.l10n_latam_document_number = parse_document_number(rec.ref, doc_code_prefix)
-            elif not rec.l10n_latam_manual_document_number and rec.name and rec.name != '/':
-                rec.l10n_latam_document_number = parse_document_number(rec.name, doc_code_prefix)
+            field = 'ref' if rec.is_purchase_document() else 'name'
+            if rec.l10n_latam_manual_document_number and rec[field] and rec[field] != '/':
+                rec.l10n_latam_document_number = parse_document_number(rec[field], doc_code_prefix)
             else:
                 rec.l10n_latam_document_number = False
 
@@ -70,7 +72,8 @@ class AccountMove(models.Model):
                 l10n_latam_document_number = rec.l10n_latam_document_type_id._format_document_number(rec.l10n_latam_document_number)
                 if rec.l10n_latam_document_number != l10n_latam_document_number:
                     rec.l10n_latam_document_number = l10n_latam_document_number
-                rec.ref = "%s %s" % (rec.l10n_latam_document_type_id.doc_code_prefix, l10n_latam_document_number)
+                field = 'ref' if rec.is_purchase_document() else 'name'
+                rec[field] = "%s %s" % (rec.l10n_latam_document_type_id.doc_code_prefix, l10n_latam_document_number)
 
     @api.depends('journal_id', 'l10n_latam_document_type_id')
     def _compute_highest_name(self):

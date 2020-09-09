@@ -30,6 +30,7 @@ class AccountJournal(models.Model):
             ('FEERCELP', _('Export Voucher - Billing Plus')),
             ('FEERCEL', _('Export Voucher - Online Invoice')),
             ('CPERCEL', _('Product Coding - Online Voucher')),
+            ('LPROD', _('Liquido Producto')),
         ]
 
     def _get_journal_letter(self, counterpart_partner=False):
@@ -89,6 +90,8 @@ class AccountJournal(models.Model):
         expo_codes = ['19', '20', '21']
         if self.type != 'sale':
             return []
+        elif self.l10n_ar_afip_pos_system == 'LPROD':
+            return ['60', '61']
         elif self.l10n_ar_afip_pos_system == 'II_IM':
             # pre-printed invoice
             return usual_codes + receipt_codes + expo_codes + invoice_m_code + receipt_m_code
