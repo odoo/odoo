@@ -181,22 +181,22 @@ class TestPacking(TestPackingCommon):
             'company_id': picking.company_id.id,
         })
         picking.action_confirm()
-        self.assertEqual(picking.package_level_ids.mapped('location_id.id'), [self.stock_location.id],
+        self.assertEqual(picking.package_level_ids.mapped('location_id.id'), [shelf1_location.id],
                          'The package levels should still in the same location after confirmation.')
         picking.action_assign()
         package_level_reserved = picking.package_level_ids.filtered(lambda pl: pl.state == 'assigned')
         package_level_confirmed = picking.package_level_ids.filtered(lambda pl: pl.state == 'confirmed')
         self.assertEqual(package_level_reserved.location_id.id, shelf1_location.id, 'The reserved package level must be reserved in shelf1')
-        self.assertEqual(package_level_confirmed.location_id.id, self.stock_location.id, 'The not reserved package should keep its location')
+        self.assertEqual(package_level_confirmed.location_id.id, shelf1_location.id, 'The not reserved package should keep its location')
         picking.do_unreserve()
-        self.assertEqual(picking.package_level_ids.mapped('location_id.id'), [self.stock_location.id],
+        self.assertEqual(picking.package_level_ids.mapped('location_id.id'), [shelf1_location.id],
                          'The package levels should have back the original location.')
         picking.package_level_ids.write({'is_done': True})
         picking.action_assign()
         package_level_reserved = picking.package_level_ids.filtered(lambda pl: pl.state == 'assigned')
         package_level_confirmed = picking.package_level_ids.filtered(lambda pl: pl.state == 'confirmed')
         self.assertEqual(package_level_reserved.location_id.id, shelf1_location.id, 'The reserved package level must be reserved in shelf1')
-        self.assertEqual(package_level_confirmed.location_id.id, self.stock_location.id, 'The not reserved package should keep its location')
+        self.assertEqual(package_level_confirmed.location_id.id, shelf1_location.id, 'The not reserved package should keep its location')
         self.assertEqual(picking.package_level_ids.mapped('is_done'), [True, True], 'Both package should still done')
 
     def test_put_in_pack_to_different_location(self):
