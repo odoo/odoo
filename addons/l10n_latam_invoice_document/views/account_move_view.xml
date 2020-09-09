@@ -52,6 +52,15 @@
             <field name="name" position="attributes">
                 <attribute name="attrs">{'readonly': ['|', ('state', '!=', 'draft'), ('l10n_latam_use_documents', '=', True)], 'invisible': [('l10n_latam_use_documents', '=', True), ('move_type', 'in', ('in_invoice', 'in_refund'))]}</attribute>
             </field>
+            <label for="ref" position="attributes">
+                <attribute name="attrs">{'invisible': [('l10n_latam_use_documents', '=', True)]}</attribute>
+            </label>
+            <field name="ref" position="attributes">
+                <attribute name="attrs">{'invisible': [('l10n_latam_use_documents', '=', True)]}</attribute>
+            </field>
+            <field name="name" position="after">
+                <field name="ref" readonly="True" attrs="{'invisible': ['|', ('l10n_latam_use_documents', '=', False), ('move_type', 'not in', ('in_invoice', 'in_refund'))]}"/>
+            </field>
 
         </field>
     </record>

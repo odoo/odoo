@@ -46,17 +46,22 @@ class AccountMove(models.Model):
     def _is_manual_document_number(self, journal):
         return True if journal.type == 'purchase' else False
 
-    @api.depends('ref')
+    @api.depends('ref', 'name', 'l10n_latam_manual_document_number')
     def _compute_l10n_latam_document_number(self):
-        recs_with_ref = self.filtered('ref')
-        for rec in recs_with_ref:
-            ref = rec.ref
+        def parse_document_number(document_number, doc_code_prefix):
+            if doc_code_prefix and document_number:
+                return document_number.split(" ", 1)[-1]
+            else:
+                return document_number
+
+        for rec in self:
             doc_code_prefix = rec.l10n_latam_document_type_id.doc_code_prefix
-            if doc_code_prefix and ref:
-                ref = ref.split(" ", 1)[-1]
-            rec.l10n_latam_document_number = ref
-        remaining = self - recs_with_ref
-        remaining.l10n_latam_document_number = False
+            if rec.l10n_latam_manual_document_number and rec.ref:
+                rec.l10n_latam_document_number = parse_document_number(rec.ref, doc_code_prefix)
+            elif not rec.l10n_latam_manual_document_number and rec.name and rec.name != '/':
+                rec.l10n_latam_document_number = parse_document_number(rec.name, doc_code_prefix)
+            else:
+                rec.l10n_latam_document_number = False
 
     @api.onchange('l10n_latam_document_type_id', 'l10n_latam_document_number')
     def _inverse_l10n_latam_document_number(self):
@@ -80,7 +85,7 @@ class AccountMove(models.Model):
         return super(AccountMove, self)._deduce_sequence_number_reset(name)
 
     def _get_starting_sequence(self):
-        if self.journal_id.l10n_latam_use_documents and self.is_sale_document():
+        if self.journal_id.l10n_latam_use_documents and not self.l10n_latam_manual_document_number:
             if self.l10n_latam_document_type_id:
                 return "%s 00000000" % (self.l10n_latam_document_type_id.doc_code_prefix)
             # There was no pattern found, propose one
