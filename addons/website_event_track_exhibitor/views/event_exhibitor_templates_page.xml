@@ -94,7 +94,7 @@
                     <div class="d-flex align-items-center">
                         <span t-field="sponsor.name" class="h4 mb-0"/>
                         <div t-if="sponsor.sponsor_type_id.display_ribbon_style and sponsor.sponsor_type_id.display_ribbon_style != 'no_ribbon'" class="ribbon-wrapper">
-                            <div t-field="sponsor.sponsor_type_id" t-attf-class="ribbon ribbon_#{sponsor.sponsor_type_id.name}"/>
+                            <div t-field="sponsor.sponsor_type_id" t-attf-class="ribbon ribbon_#{sponsor.sponsor_type_id.display_ribbon_style}"/>
                         </div>
                     </div>
                     <span t-field="sponsor.subtitle" class="text-muted mb-3"/>
