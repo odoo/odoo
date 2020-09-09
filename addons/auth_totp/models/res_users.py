@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import base64
-import hashlib
 import hmac
 import io
 import logging
@@ -8,7 +7,6 @@ import os
 import struct
 import time
 
-import qrcode
 import werkzeug.urls
 
 from odoo import _, api, fields, models
@@ -146,6 +144,7 @@ class TOTPWizard(models.TransientModel):
             ))
 
             data = io.BytesIO()
+            import qrcode
             qrcode.make(url.encode(), box_size=4).save(data, optimise=True, format='PNG')
             w.qrcode = base64.b64encode(data.getvalue()).decode()
 
