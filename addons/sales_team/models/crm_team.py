@@ -203,13 +203,15 @@ class CrmTeam(models.Model):
 
     @api.model
     def create(self, values):
-        team = super(CrmTeam, self.with_context(mail_create_nosubscribe=True)).create(values)
+        self.check_access_rights('create')
+        team = super(CrmTeam, self.sudo().with_context(mail_create_nosubscribe=True)).create(values)
         if values.get('member_ids'):
             team._add_members_to_favorites()
         return team
 
     def write(self, values):
-        res = super(CrmTeam, self).write(values)
+        self.check_access_rights('write')
+        res = super(CrmTeam, self.sudo()).write(values)
         if values.get('member_ids'):
             self._add_members_to_favorites()
         return res
