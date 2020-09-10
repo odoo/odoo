@@ -214,7 +214,7 @@ class AccountMove(models.Model):
             WHERE       move_id in %s
             GROUP BY    move_id
             HAVING      abs(sum(debit) - sum(credit)) > %s
-            """, (tuple(self.ids), 10 ** (-max(5, prec))))
+            """, (tuple(self.ids), 10 ** (-prec)))
         if len(self._cr.fetchall()) != 0:
             raise UserError(_("Cannot create unbalanced journal entry."))
         return True
