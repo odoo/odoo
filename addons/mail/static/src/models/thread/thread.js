@@ -968,6 +968,14 @@ function factory(dependencies) {
          * @private
          * @returns {boolean}
          */
+        _computeIsChatChannel() {
+            return this.channel_type === 'chat';
+        }
+
+        /**
+         * @private
+         * @returns {boolean}
+         */
         _computeIsCurrentPartnerFollowing() {
             return this.followers.some(follower =>
                 follower.partner && follower.partner === this.env.messaging.currentPartner
@@ -1426,6 +1434,19 @@ function factory(dependencies) {
             ],
         }),
         id: attr(),
+        /**
+         * States whether this thread is a `mail.channel` qualified as chat.
+         *
+         * Useful to list chat channels, like in messaging menu with the filter
+         * 'chat'.
+         */
+        isChatChannel: attr({
+            compute: '_computeIsChatChannel',
+            dependencies: [
+                'channel_type',
+            ],
+            default: false,
+        }),
         isCurrentPartnerFollowing: attr({
             compute: '_computeIsCurrentPartnerFollowing',
             default: false,
