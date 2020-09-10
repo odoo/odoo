@@ -5,7 +5,7 @@
             <field name="name">crm.activity.report.graph</field>
             <field name="model">crm.activity.report</field>
             <field name="arch" type="xml">
-                <graph string="Activities Analysis" stacked="True" sample="1">
+                <graph string="Activities Analysis" stacked="True" sample="1" disable_linking="1">
                     <field name="mail_activity_type_id" type="col"/>
                     <field name="date" interval="month" type="row"/>
                 </graph>
