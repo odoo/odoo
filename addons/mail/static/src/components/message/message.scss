@@ -174,12 +174,8 @@
 
     &:hover, &.o-clicked {
 
-        .o_Message_command {
-            display: flex;
-        }
-
         .o_Message_commands {
-            display: flex;
+            opacity: 1;
         }
 
         .o_Message_sidebarItem.o-message-squashed {
@@ -241,8 +237,6 @@
     color: gray('400');
 
     &:not(.o-mobile) {
-        display: none;
-
         &:hover {
             filter: brightness(0.8);
         }
@@ -290,7 +284,7 @@
 }
 
 .o_Message_headerCommands:not(.o-mobile) {
-    display: none;
+    opacity: 0;
 }
 
 .o_Message_originThread {
