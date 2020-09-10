@@ -735,14 +735,21 @@ body.editor_enable.editor_has_snippets {
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
+                background-color: $o-we-sidebar-content-field-dropdown-item-bg;
+                margin-bottom: 1px;
 
                 & > b {
                     padding: $o-we-sidebar-content-field-label-spacing;
+                    color: $o-we-fg-lighter;
                 }
             }
             .o_we_pager_controls {
                 display: flex;
                 align-items: center;
+
+                > span {
+                    margin: 0 $o-we-sidebar-content-field-label-spacing;
+                }
             }
             .o_we_pager_next, .o_we_pager_prev {
                 padding: $o-we-sidebar-content-field-label-spacing;
