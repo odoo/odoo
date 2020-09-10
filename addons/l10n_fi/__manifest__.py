@@ -36,6 +36,9 @@ Set the payment reference type from the Sales Journal.
         'data/account_fiscal_position_template_data.xml',
         'data/account_chart_template_configuration_data.xml'
     ],
+    "demo": [
+        'demo/demo_company.xml',
+    ],
     "active": True,
     "installable": True,
 }
