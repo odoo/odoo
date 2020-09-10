@@ -172,7 +172,11 @@ $i: 1;
 
     // CC Edition
     .o_we_cc_preview_wrapper {
-        border: 1px solid $o-we-sidebar-content-field-dropdown-border-color;
+        // Use box-shadow rather than border-bottom in order to
+        // avoid misalignments in the 'Options' tab.
+        border: 1px solid;
+        border-color: rgba($o-we-item-standup-color-light, .2) $o-we-sidebar-content-field-dropdown-border-color transparent;
+        box-shadow: 0 1px 0 $o-we-item-standup-color-dark;
 
         + .o_we_collapse_toggler {
             height: 35px; // FIXME hardcoded...
