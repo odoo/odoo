@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="mail.ModerationBanDialog" owl="1">
-        <div><!-- TODO FIXME necessary div for useRef, can be removed at next owl update, see https://github.com/odoo/owl/issues/638 -->
         <Dialog contentClass="'o_ModerationBanDialog'" title="CONFIRMATION" size="'medium'" t-ref="dialog">
             <t t-if="messages.length === 1">
                 <p>You are going to ban the following user:</p>
@@ -20,6 +19,5 @@
                 <button class="o-cancel btn btn-secondary" t-on-click="_onClickCancel">Cancel</button>
             </t>
         </Dialog>
-        </div>
     </t>
 </templates>

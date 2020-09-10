@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="mail.ModerationRejectDialog" owl="1">
-        <div><!-- TODO FIXME necessary div for useRef, can be removed at next owl update, see https://github.com/odoo/owl/issues/638 -->
         <Dialog contentClass="'o_ModerationRejectDialog'" title="SEND_EXPLANATION_TO_AUTHOR" size="'medium'" t-ref="dialog">
             <input class="o_ModerationRejectDialog_title form-control" type="text" placeholder="Subject" autofocus="autofocus" t-model="state.title"/>
             <textarea class="o_ModerationRejectDialog_comment form-control mt16" placeholder="Mail Body" t-model="state.comment"/>
@@ -10,6 +9,5 @@
                 <button class="o-cancel btn btn-secondary" t-on-click="_onClickCancel">Cancel</button>
             </t>
         </Dialog>
-        </div>
     </t>
 </templates>
