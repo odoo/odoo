@@ -86,6 +86,12 @@ registerInstancePatchModel('mail.thread', 'im_livechat/static/src/models/thread/
         }
         return this._super();
     },
+    /**
+     * @override
+     */
+    _computeIsChatChannel() {
+        return this.channel_type === 'livechat' || this._super();
+    },
 });
 
 });

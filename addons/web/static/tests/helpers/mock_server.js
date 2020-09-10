@@ -508,6 +508,22 @@ var MockServer = Class.extend({
         }, 0) + 1;
     },
     /**
+     * Simulate a 'call_button' operation from a view.
+     *
+     * @private
+     * @param {Object} param0
+     * @param {Array<integer[]>} param0.args
+     * @param {Object} [param0.kargs]
+     * @param {string} param0.method
+     * @param {string} param0.model
+     * @returns {any}
+     * @throws {Error} in case the call button of provided model/method is not
+     *   implemented.
+     */
+    _mockCallButton({ args, kwargs, method, model }) {
+        throw new Error(`Unimplemented mocked call button on "${model}"/"${method}"`);
+    },
+    /**
      * Simulate a 'copy' operation, so we simply try to duplicate a record in
      * memory
      *
@@ -1820,6 +1836,8 @@ var MockServer = Class.extend({
      */
     _performRpc: function (route, args) {
         switch (route) {
+            case '/web/dataset/call_button':
+                return Promise.resolve(this._mockCallButton(args));
             case '/web/action/load':
                 return Promise.resolve(this._mockLoadAction(args));
 
