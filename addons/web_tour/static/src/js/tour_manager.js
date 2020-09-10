@@ -81,7 +81,7 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
         var options = args.length === 2 ? {} : args[1];
         var steps = last_arg instanceof Array ? last_arg : [last_arg];
         var tour = {
-            name: name,
+            name: options.saveAs || name,
             steps: steps,
             url: options.url,
             rainbowMan: options.rainbowMan === undefined ? true : !!options.rainbowMan,
@@ -98,7 +98,7 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
                 this._consume_tour(name);
             };
         }
-        this.tours[name] = tour;
+        this.tours[tour.name] = tour;
     },
     /**
      * Returns a promise which is resolved once the tour can be started. This
