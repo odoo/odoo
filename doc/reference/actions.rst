@@ -32,6 +32,8 @@ A client can get actions in 4 forms:
 *  A dictionary
       treat as a client action descriptor and execute
 
+.. _reference/bindings:
+
 Bindings
 ========
 
@@ -332,7 +334,14 @@ server actions:
 Report Actions (``ir.actions.report``)
 ======================================
 
-Triggers the printing of a report
+Triggers the printing of a report.
+
+If you define your report through a `<record>` instead of a `<report>` tag and
+want the action to show up in the Print menu of the model's views, you will
+also need to specify ``binding_model_id`` from :ref:`reference/bindings`. It's
+not necessary to set ``binding_type`` to ``report``, since
+``ir.actions.report`` will implicitly default to that.
+
 
 ``name`` (mandatory)
     only useful as a mnemonic/description of the report when looking for one
