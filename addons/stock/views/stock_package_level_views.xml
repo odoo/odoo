@@ -29,7 +29,7 @@
                             <field name="state" invisible="1"/>
                         </tree>
                     </field>
-                    <field name="move_line_ids" attrs="{'invisible': [('state', 'in', ('draft', 'confirmed', 'cancel'))]}">
+                    <field name="move_line_ids" attrs="{'invisible': [('state', 'in', ('confirmed', 'cancel'))]}">
                         <tree>
                             <field name="product_id"/>
                             <field name="lot_id" attrs="{'column_invisible': [('parent.show_lots_m2o', '=', False)]}" groups="stock.group_production_lot"/>
