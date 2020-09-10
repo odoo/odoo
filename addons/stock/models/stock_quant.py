@@ -729,3 +729,6 @@ class QuantPackage(models.Model):
 
     def _get_contained_quants(self):
         return self.env['stock.quant'].search([('package_id', 'in', self.ids)])
+
+    def _allowed_to_move_between_transfers(self):
+        return True

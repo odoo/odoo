@@ -848,9 +848,11 @@ class Picking(models.Model):
                             'move_line_ids': [(6, 0, move_lines_to_pack.ids)],
                             'company_id': picking.company_id.id,
                         })
-                        move_lines_to_pack.write({
-                            'result_package_id': pack.id,
-                        })
+                        # TODO: in master, move package field in `stock` and clean code.
+                        if pack._allowed_to_move_between_transfers():
+                            move_lines_to_pack.write({
+                                'result_package_id': pack.id,
+                            })
                     else:
                         move_lines_in_package_level = move_lines_to_pack.filtered(lambda ml: ml.move_id.package_level_id)
                         move_lines_without_package_level = move_lines_to_pack - move_lines_in_package_level
