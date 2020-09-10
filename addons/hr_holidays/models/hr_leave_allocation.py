@@ -229,7 +229,7 @@ class HolidaysAllocation(models.Model):
         is_officer = self.env.user.has_group('hr_holidays.group_hr_holidays_user')
 
         for allocation in self:
-            if is_officer or allocation.employee_id.user_id == self.env.user or allocation.manager_id == self.env.user:
+            if is_officer or allocation.employee_id.user_id == self.env.user or allocation.employee_id.leave_manager_id == self.env.user:
                 allocation.name = allocation.sudo().private_name
             else:
                 allocation.name = '*****'
@@ -237,7 +237,7 @@ class HolidaysAllocation(models.Model):
     def _inverse_description(self):
         is_officer = self.env.user.has_group('hr_holidays.group_hr_holidays_user')
         for allocation in self:
-            if is_officer or allocation.employee_id.user_id == self.env.user or allocation.manager_id == self.env.user:
+            if is_officer or allocation.employee_id.user_id == self.env.user or allocation.employee_id.leave_manager_id == self.env.user:
                 allocation.sudo().private_name = allocation.name
 
     def _search_description(self, operator, value):
