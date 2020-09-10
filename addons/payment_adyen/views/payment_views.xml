@@ -10,10 +10,16 @@
                 <xpath expr='//group[@name="acquirer"]' position='inside'>
                     <group attrs="{'invisible': [('provider', '!=', 'adyen')]}">
                         <field name="adyen_merchant_account" attrs="{'required':[('provider', '=', 'adyen'), ('state', '!=', 'disabled')]}"/>
-                        <field name="adyen_skin_code" attrs="{'required':[('provider', '=', 'adyen'), ('state', '!=', 'disabled')]}"/>
-                        <field name="adyen_skin_hmac_key" attrs="{'required':[('provider', '=', 'adyen'), ('state', '!=', 'disabled')]}"/>
+                        <field name="adyen_api_key" attrs="{'required':[('provider', '=', 'adyen'), ('state', '!=', 'disabled')]}"/>
+                        <field name="adyen_hmac_key" attrs="{'required':[('provider', '=', 'adyen'), ('state', '!=', 'disabled')]}"/>
+                        <field name="adyen_checkout_api_url" attrs="{'required':[('provider', '=', 'adyen'), ('state', '!=', 'disabled')]}"/>
+                        <field name="adyen_recurring_api_url" attrs="{'required':[('provider', '=', 'adyen'), ('state', '!=', 'disabled')]}"/>
                         <a colspan="2" href="https://www.adyen.com/home/payment-services/online-payments" target="_blank">How to configure your Adyen account?</a>
+                        <!-- TODO DBO update doc -->
                     </group>
+                </xpath>
+                <xpath expr="//field[@name='check_validity']" position="attributes">
+                    <attribute name="invisible">1</attribute>
                 </xpath>
             </field>
         </record>

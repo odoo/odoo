@@ -1,11 +1,12 @@
-# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from lxml import objectify
+from werkzeug import urls
+
+import odoo.tests
 
 from odoo.addons.payment.tests.common import PaymentAcquirerCommon
-from odoo.addons.payment_adyen.controllers.main import AdyenController
-from werkzeug import urls
-import odoo.tests
+from odoo.addons.payment_adyen.models.payment_acquirer import RETURN_URL
 
 
 class AdyenCommon(PaymentAcquirerCommon):
@@ -57,14 +58,11 @@ class AdyenForm(AdyenCommon):
             'skinCode': 'cbqYWvVL',
             'paymentAmount': '1',
             'currencyCode': 'EUR',
-            'resURL': urls.url_join(base_url, AdyenController._return_url),
+            'resURL': urls.url_join(base_url, '/payment/adyen/response'),
         }
 
         # render the button
-        res = adyen.render(
-            'test_ref0', 0.01, self.currency_euro.id,
-            partner_id=None,
-            partner_values=self.buyer_values)
+        res = adyen._render_redirect_form('test_ref0', 0.01, self.currency_euro.id, **self.buyer_values)
 
         # check form result
         tree = objectify.fromstring(res)
