@@ -13,7 +13,7 @@
         'data/payment_acquirer_data.xml',
     ],
     'installable': True,
-    'auto_install': True,
+    'auto_install': False,  # TODO ANV revert
     'post_init_hook': 'create_missing_journal_for_acquirers',
     'uninstall_hook': 'uninstall_hook',
 }
