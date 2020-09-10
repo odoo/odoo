@@ -4,12 +4,21 @@ odoo.define('stock.ReplenishReport', function (require) {
 const clientAction = require('report.client_action');
 const core = require('web.core');
 const dom = require('web.dom');
+const GraphRenderer = require("web/static/src/js/views/graph/graph_renderer");
 const GraphView = require('web.GraphView');
-const session = require('web.session');
 
 const qweb = core.qweb;
 const _t = core._t;
 
+class StockReportGraphRenderer extends GraphRenderer {}
+
+StockReportGraphRenderer.template = "stock.GraphRenderer";
+
+const StockReportGraphView = GraphView.extend({
+    config: Object.assign({}, GraphView.prototype.config, {
+        Renderer: StockReportGraphRenderer,
+    }),
+});
 
 const ReplenishReport = clientAction.extend({
     /**
@@ -56,65 +65,52 @@ const ReplenishReport = clientAction.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Instanciates a chart graph and moves it into the report (which is in the iframe).
+     * @private
+     * @param {Promise<GraphController>} graphPromise
+     * @returns {Promise}
      */
-    _createGraphView: async function () {
-        let viewController;
-        const appendGraph = () => {
-            promController.then(() => {
-                this.iframe.removeEventListener('load', appendGraph);
-                const $reportGraphDiv = $(this.iframe).contents().find('.o_report_graph');
-                dom.append(this.$el, viewController.$el, {
-                    in_DOM: true,
-                    callbacks: [{widget: viewController}],
-                });
-                const renderer = viewController.renderer;
-                // Remove the graph control panel.
-                $('.o_control_panel:last').remove();
-                const $graphPanel = $('.o_graph_controller');
-                $graphPanel.appendTo($reportGraphDiv);
-
-                if (!renderer.state.dataPoints.length) {
-                    // Changes the "No Data" helper message.
-                    const graphHelper = renderer.$('.o_view_nocontent');
-                    const newMessage = qweb.render('View.NoContentHelper', {
-                        description: _t("Try to add some incoming or outgoing transfers."),
-                    });
-                    graphHelper.replaceWith(newMessage);
-                } else {
-                    this.chart = renderer.chart;
-                    // Lame hack to fix the size of the graph.
-                    setTimeout(() => {
-                        this.chart.canvas.height = 300;
-                        this.chart.canvas.style.height = "300px";
-                        this.chart.resize();
-                    }, 1);
-                }
-            });
-        };
-        // Wait the iframe fo append the graph chart and move it into the iframe.
-        this.iframe.addEventListener('load', appendGraph);
-
-        const model = 'report.stock.quantity';
-        const promController = this._rpc({
-            model: model,
-            method: 'fields_view_get',
-            kwargs: {
-                view_type: 'graph',
-            }
-        }).then(viewInfo => {
-            const params = {
-                modelName: model,
-                domain: this._getReportDomain(),
-                hasActionMenus: false,
-            };
-            const graphView = new GraphView(viewInfo, params);
-            return graphView.getController(this);
-        }).then(res => {
-            viewController = res;
-            const fragment = document.createDocumentFragment();
-            return viewController.appendTo(fragment);
+    async _appendGraph(graphPromise) {
+        const graphController = await graphPromise;
+        const iframeDoc = this.iframe.contentDocument;
+        const reportGraphDiv = iframeDoc.querySelector(".o_report_graph");
+        dom.append(reportGraphDiv, graphController.el, {
+            in_DOM: true,
+            callbacks: [{ widget: graphController }],
         });
+    },
+
+    /**
+     * @private
+     * @returns {Promise<GraphController>}
+     */
+    async _createGraphController() {
+        const model = "report.stock.quantity";
+        const viewInfo = await this._rpc({
+            model,
+            method: "fields_view_get",
+            kwargs: { view_type: "graph" }
+        });
+        const params = {
+            domain: this._getReportDomain(),
+            modelName: model,
+            noContentHelp: _t("Try to add some incoming or outgoing transfers."),
+            withControlPanel: false,
+        };
+        const graphView = new StockReportGraphView(viewInfo, params);
+        const graphController = await graphView.getController(this);
+        await graphController.appendTo(document.createDocumentFragment());
+        return graphController;
+    },
+
+    /**
+     * Instantiates a chart graph and moves it into the report's iframe.
+     */
+    _createGraphView() {
+        const graphPromise = this._createGraphController();
+        this.iframe.addEventListener("load",
+            () => this._appendGraph(graphPromise),
+            { once: true }
+        );
     },
 
     /**
