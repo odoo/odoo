@@ -138,6 +138,20 @@ odoo.define('hr_holidays.dashboard.view_custo', function(require) {
             var self = this;
             return this._super.apply(this, arguments).then(function () {
                 self.$el.parent().find('.o_calendar_mini').hide();
+
+                // Check if there is a filter to display on the sidebar
+                // If there is no filter, hide the sidebar
+                const noFilters = !Object.values(self.state.filters).some(f => f.filters.length);
+
+                // Remove the no data sidebar
+                self.$sidebar.find('#o_calendar_filter_no_data').remove();
+                if (noFilters) {
+                    // Show a special sidebar
+                    self.$sidebar.html(QWeb.render('hr_holidays.calendar.sidebar.nofilter', {
+                        title: 'Time Off Type',
+                        description: '(no data)'
+                    }));
+                }
             });
         },
     });
@@ -154,10 +168,14 @@ odoo.define('hr_holidays.dashboard.view_custo', function(require) {
             }).then(function (result) {
                 self.$el.parent().find('.o_calendar_mini').hide();
                 self.$el.parent().find('.o_timeoff_container').remove();
-                var elem = QWeb.render('hr_holidays.dashboard_calendar_header', {
-                    timeoffs: result,
-                });
-                self.$el.before(elem);
+
+                // Do not display header if there is no element to display
+                if (result.length > 0) {
+                    var elem = QWeb.render('hr_holidays.dashboard_calendar_header', {
+                        timeoffs: result,
+                    });
+                    self.$el.before(elem);
+                }
             });
         },
     });
