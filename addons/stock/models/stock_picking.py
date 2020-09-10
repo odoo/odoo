@@ -779,7 +779,7 @@ class Picking(models.Model):
         else:
             for move in self.move_lines:
                 if not move.package_level_id:
-                    if move.state in ('assigned', 'done'):
+                    if move.state == 'assigned' and move.picking_id and not move.picking_id.immediate_transfer or move.state == 'done':
                         if any(not ml.package_level_id for ml in move.move_line_ids):
                             move_ids_without_package |= move
                     else:
@@ -1298,6 +1298,7 @@ class Picking(models.Model):
             picking_move_lines = self.move_line_ids
             if (
                 not self.picking_type_id.show_reserved
+                and not self.immediate_transfer
                 and not self.env.context.get('barcode_view')
             ):
                 picking_move_lines = self.move_line_nosuggest_ids
