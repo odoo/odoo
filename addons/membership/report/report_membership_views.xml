@@ -48,7 +48,7 @@
             <field name="name">report.membership.graph1</field>
             <field name="model">report.membership</field>
             <field name="arch" type="xml">
-                <graph string="Membership">
+                <graph string="Membership" disable_linking="1">
                     <field name="membership_id" type="row"/>
                     <field name="start_date" interval="month" type="col"/>
                     <field name="quantity" type="measure"/>
