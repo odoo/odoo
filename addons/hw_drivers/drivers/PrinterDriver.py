@@ -212,11 +212,23 @@ class PrinterDriver(Driver):
                 - 2: 90dpi x 180 dpi
                 - 3: 90dpi x 90 dpi
             - x: Length in X direction, in bytes, represented as 2 bytes in little endian
+                --> Must be <= 255
             - y: Length in Y direction, in dots, represented as 2 bytes in little endian
         '''
         width_pixels, height_pixels = im.size
         width_bytes = int((width_pixels + 7) / 8)
         print_command = b"\x1d\x76\x30" + b'\x00' + (width_bytes).to_bytes(2, 'little') + height_pixels.to_bytes(2, 'little')
+
+        # There is a height limit when printing images, so we split the image
+        # into slices and print each slice with a separate command.
+        blobs = []
+        slice_offset = 0
+        while slice_offset < height_pixels:
+            slice_height_pixels = min(255, height_pixels - slice_offset)
+            im_slice = im.crop((0, slice_offset, width_pixels, slice_offset + slice_height_pixels))
+            print_command = b"\x1d\x76\x30" + b'\x00' + (width_bytes).to_bytes(2, 'little') + slice_height_pixels.to_bytes(2, 'little')
+            blobs += [print_command + im_slice.tobytes()]
+            slice_offset += slice_height_pixels
 
         '''GS V m
             - GS V: Cut, in hex: "1D 56"
@@ -228,7 +240,7 @@ class PrinterDriver(Driver):
         '''
         cut = b'\x1d\x56' + b'\x41'
 
-        self.print_raw(center + print_command + im.tobytes() + cut + b'\n')
+        self.print_raw(center + b"".join(blobs) + cut + b'\n')
 
     def print_status(self):
         """Prints the status ticket of the IoTBox on the current printer."""
