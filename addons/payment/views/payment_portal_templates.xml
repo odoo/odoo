@@ -1,75 +1,167 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <data>
-    <template id="pay_methods" name="Payment Methods">
-        <t t-call="portal.frontend_layout">
-            <t t-set="additional_title">Payment Methods</t>
-            <div class="wrap">
-                <div class="container">
-                  <div class="row">
-                        <div class="col-md-6">
-                            <ol class="breadcrumb mt8">
-                                <li class="breadcrumb-item"><a href="/my/home"><i class="fa fa-home" role="img" aria-label="Home" title="Home"/></a></li>
-                                <li class="breadcrumb-item">Payment Methods</li>
-                            </ol>
-                        </div>
-                    </div>
-                    <div class="clearfix">
-                        <div class="row">
-                            <div class="col-md-8">
-                                <h3>Manage Payment Methods</h3>
-                                <t t-call="payment.payment_tokens_list">
-                                    <t t-set="acquirers" t-value="acquirers"/>
-                                    <t t-set="mode" t-value="'manage'"/>
-                                </t>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </t>
-    </template>
-
-    <!-- TDE FIXME: was customize_show=True -->
+    
+    <!-- Template integrating a conditional "Manage payment methods" link in /my -->
     <template id="pay_meth_link" inherit_id="portal.portal_layout">
         <xpath expr="//div[hasclass('o_portal_my_details')]" position="inside">
-            <t t-if="request.env['payment.acquirer'].search([('state', 'in', ['enabled', 'test']), ('registration_view_template_id', '!=', False), ('payment_flow', '=', 's2s'), ('company_id', '=', request.env.company.id)])">
-                <div class='manage_payment_method mt16'><a href="/my/payment_method">Manage payment methods</a></div>
+            <t t-set="partner" t-value="request.env.user.partner_id"/>
+            <t t-set="acquirers_allowing_tokenization"
+               t-value="request.env['payment.acquirer']._get_compatible_acquirers(request.env.company.id, partner.id, allow_tokenization=True)"/>
+            <t t-set="existing_tokens" t-value="partner.payment_token_ids + partner.commercial_partner_id.sudo().payment_token_ids"/>
+            <!-- Only show the link if a token can be created or if one already exists -->
+            <t t-if="acquirers_allowing_tokenization or existing_tokens">
+                <div class='manage_payment_method mt16'>
+                    <a href="/my/payment_method">Manage payment methods</a>
+                </div>
             </t>
         </xpath>
     </template>
-
+    
+    <!-- Template managing the display of /website_payment/pay -->
     <template id="pay">
         <t t-call="portal.frontend_layout">
             <t t-set="additional_title">Payment</t>
             <div class="wrap">
-                <div class="container o_website_payment">
-                    <h1>Payment</h1>
-                    <div class="row mt32 mb32">
+                <div class="container">
+                    <!-- Portal breadcrumb -->
+                    <div class="row">
+                        <div class="col-md-6">
+                            <ol class="breadcrumb mt8">
+                                <li class="breadcrumb-item">
+                                    <a href="/my/home">
+                                        <i class="fa fa-home"
+                                           role="img"
+                                           title="Home"
+                                           aria-label="Home"/>
+                                    </a>
+                                </li>
+                                <li class="breadcrumb-item">Payment</li>
+                            </ol>
+                        </div>
+                    </div>
+                    <!-- Payment page -->
+                    <div class="row">
                         <div class="col-lg-7">
-                            <p><b>Reference:</b> <t t-esc="reference"/></p>
-                            <p><b>Amount:</b> <t t-esc="amount" t-options="{'widget': 'monetary', 'display_currency': currency}"/></p>
-                            <t t-call="payment.payment_tokens_list" t-if="reference and amount and currency">
-                                <t t-set="mode" t-value="'payment'"/>
-                                <t t-set="prepare_tx_url" t-value="'/website_payment/transaction/v2/' + str(amount) + '/' + str(currency.id) + '/' + reference + (('/' + str(partner_id)) if partner_id else '')"/>
-                                <t t-set="form_action" t-value="'/website_payment/token/v2/' + str(amount) + '/' + str(currency.id) + '/' + reference + (('/' + str(partner_id)) if partner_id else '')"/>
+                            <t t-if="reference and amount and currency">
+                                <b>Reference:</b> <t t-esc="reference"/><br/>
+                                <b>Amount:</b> <t t-esc="amount"
+                                                  t-options="{'widget': 'monetary',
+                                                              'display_currency': currency}"/>
+                                <div t-if="not partner_id" class="alert alert-danger" role="alert">
+                                    <p>You must be logged in to pay.</p>
+                                </div>
+                                <div t-elif="not acquirers" class="alert alert-danger" role="alert">
+                                    <p>No payment acquirer found.</p>
+                                    <p>Please configure a payment acquirer.</p>
+                                </div>
+                                <t t-else="">
+                                    <t t-call="payment.checkout"/>
+                                </t>
                             </t>
-                            <div t-if="not acquirers" class="alert alert-danger" role="alert">
-                                <p>No payment acquirer found.</p>
-                                <p>Please configure a payment acquirer.</p>
-                            </div>
+                            <t t-elif="not reference">
+                                <div class="alert alert-warning">
+                                    <strong>Warning!</strong> The reference is missing.
+                                </div>
+                            </t>
+                            <t t-elif="not amount">
+                                <div class="alert alert-info">
+                                    There is nothing to pay.
+                                </div>
+                            </t>
+                            <t t-elif="not currency">
+                                <div class="alert alert-warning">
+                                    <strong>Warning!</strong> The currency is missing or incorrect.
+                                </div>
+                            </t>
                         </div>
                     </div>
                 </div>
             </div>
         </t>
     </template>
-
+    
+    <!-- Template managing the display of /my/payment_methods -->
+    <template id="payment_methods" name="Payment Methods">
+        <t t-call="portal.frontend_layout">
+            <t t-set="additional_title">Payment Methods</t>
+            <div class="wrap">
+                <div class="container">
+                    <!-- Portal breadcrumb -->
+                    <div class="row">
+                        <div class="col-md-6">
+                            <ol class="breadcrumb mt8">
+                                <li class="breadcrumb-item">
+                                    <a href="/my/home">
+                                        <i class="fa fa-home"
+                                           role="img"
+                                           title="Home"
+                                           aria-label="Home"/>
+                                    </a>
+                                </li>
+                                <li class="breadcrumb-item">Payment Methods</li>
+                            </ol>
+                        </div>
+                    </div>
+                    <!-- Manage page -->
+                    <div class="row">
+                        <div class="col-lg-7">
+                            <t t-if="acquirers">
+                                <t t-call="payment.manage"/>
+                            </t>
+                            <t t-else="">
+                                <!-- TODO more friendly info div if no compatible acq found -->
+                                <div class="alert alert-danger" role="alert">
+                                    <p>No payment acquirer found.</p>
+                                    <p>Please configure a payment acquirer.</p>
+                                </div>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+    
+    <!-- Template managing the display of /payment/status -->
+    <template id="payment_status" name="Payment Status">
+        <t t-call="portal.frontend_layout">
+            <t t-set="additional_title">Payment Status</t>
+            <div class="wrap">
+                <div class="container">
+                    <!-- Portal breadcrumb -->
+                    <div class="row">
+                        <div class="col-md-6">
+                            <ol class="breadcrumb mt8">
+                                <li class="breadcrumb-item">
+                                    <a href="/my/home">
+                                        <i class="fa fa-home"
+                                           role="img"
+                                           title="Home"
+                                           aria-label="Home"/>
+                                    </a>
+                                </li>
+                                <li class="breadcrumb-item">Payment Status</li>
+                            </ol>
+                        </div>
+                    </div>
+                    <!-- Status page -->
+                    <div name="o_payment_status">
+                        <div name="o_payment_status_content"
+                             class="col-sm-6 col-sm-offset-3">
+                            <!-- The content is generated in JavaScript -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+    
+    <!-- Template managing the display of /website_payment/confirm -->
     <template id="confirm">
         <t t-call="portal.frontend_layout">
             <t t-set="additional_title">Payment</t>
             <div class="wrap">
-                <div class="container o_website_payment">
+                <div class="container">
                     <h1>Payment</h1>
                     <div class="row">
                         <div class="col-lg-6">
@@ -93,14 +185,6 @@
                                         <span name="form_amount" class="form-control" t-esc="tx.amount" t-options="{'widget': 'monetary', 'display_currency': tx.currency_id}"/>
                                     </div>
                                 </div>
-
-                                <div t-if="tx.acquirer_id.qr_code">
-                                    <t t-set="qr_code" t-value="tx.acquirer_id.journal_id.bank_account_id.build_qr_code_url(tx.amount, tx.reference, None, tx.currency_id, tx.partner_id)"/>
-                                    <div class="card-body" t-if="qr_code">
-                                        <h3>Or scan me with your banking app.</h3>
-                                        <img class="border border-dark rounded" t-att-src="qr_code"/>
-                                    </div>
-                                </div>
                                 <div class="row">
                                     <div class="col-md-5 offset-md-3 text-muted">
                                         <span t-field="tx.acquirer_id.image_128" t-att-title="tx.acquirer_id.name" role="img" t-att-aria-label="tx.acquirer_id.name" t-options='{"widget": "image", "style":"max-width: 60px; display: inline-block"}'/>
@@ -118,7 +202,7 @@
         </t>
     </template>
 
-    <template id="payment_confirmation_status">
+    <template id="payment_confirmation_status">  <!-- TODO ANV review -->
         <!--
         Inform the portal user about the transaction status.
 
@@ -131,16 +215,8 @@
             <div t-if="payment_tx_id.acquirer_id.provider == 'transfer' and reference">
                 <b>Communication: </b><span t-esc='reference'/>
             </div>
-
-            <div t-if="payment_tx_id.acquirer_id.qr_code and (payment_tx_id.acquirer_id.provider == 'transfer')">
-                <t t-set="qr_code" t-value="payment_tx_id.acquirer_id.journal_id.bank_account_id.build_qr_code_url(payment_tx_id.amount,payment_tx_id.reference, None, payment_tx_id.currency_id, payment_tx_id.partner_id)"/>
-                <div class="card-body" t-if="qr_code">
-                    <h3>Or scan me with your banking app.</h3>
-                    <img class="border border-dark rounded" t-att-src="qr_code"/>
-                </div>
-            </div>
         </div>
-        <div t-if="payment_tx_id and payment_tx_id.state == 'authorized' and payment_tx_id.acquirer_id.authorize_implemented" class="alert alert-success alert-dismissable" role="alert">
+        <div t-if="payment_tx_id and payment_tx_id.state == 'authorized' and payment_tx_id.acquirer_id.support_authorization" class="alert alert-success alert-dismissable" role="alert">
             <button type="button" class="close" data-dismiss="alert" title="Dismiss" aria-label="Dismiss">&amp;times;</button>
             <!-- Your payment has been authorized. -->
             <span t-if='payment_tx_id.acquirer_id.auth_msg' t-raw="payment_tx_id.acquirer_id.auth_msg"/>
@@ -162,5 +238,4 @@
         </div>
     </template>
 
-    </data>
 </odoo>

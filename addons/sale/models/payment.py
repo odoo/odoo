@@ -42,24 +42,24 @@ class PaymentTransaction(models.Model):
         for trans in self:
             trans.sale_order_ids_nbr = len(trans.sale_order_ids)
 
-    def _log_payment_transaction_sent(self):
-        super(PaymentTransaction, self)._log_payment_transaction_sent()
+    def _log_sent_message(self):
+        super(PaymentTransaction, self)._log_sent_message()
         for trans in self:
-            post_message = trans._get_payment_transaction_sent_message()
+            post_message = trans._get_sent_message()
             for so in trans.sale_order_ids:
                 so.message_post(body=post_message)
 
-    def _log_payment_transaction_received(self):
-        super(PaymentTransaction, self)._log_payment_transaction_received()
+    def _log_received_message(self):
+        super(PaymentTransaction, self)._log_received_message()
         for trans in self.filtered(lambda t: t.provider not in ('manual', 'transfer')):
-            post_message = trans._get_payment_transaction_received_message()
+            post_message = trans._get_received_message()
             for so in trans.sale_order_ids:
                 so.message_post(body=post_message)
 
-    def _set_transaction_pending(self):
-        # Override of '_set_transaction_pending' in the 'payment' module
+    def _set_pending(self):
+        # Override of payment.transaction._set_pending
         # to sent the quotations automatically.
-        super(PaymentTransaction, self)._set_transaction_pending()
+        super(PaymentTransaction, self)._set_pending()
 
         for record in self:
             sales_orders = record.sale_order_ids.filtered(lambda so: so.state in ['draft', 'sent'])
@@ -91,10 +91,10 @@ class PaymentTransaction(models.Model):
                     )
                 )
 
-    def _set_transaction_authorized(self):
-        # Override of '_set_transaction_authorized' in the 'payment' module
+    def _set_authorized(self):
+        # Override of payment.transaction._set_authorized
         # to confirm the quotations automatically.
-        super(PaymentTransaction, self)._set_transaction_authorized()
+        super(PaymentTransaction, self)._set_authorized()
         sales_orders = self.mapped('sale_order_ids').filtered(lambda so: so.state in ('draft', 'sent'))
         for tx in self:
             tx._check_amount_and_confirm_order()
@@ -103,7 +103,7 @@ class PaymentTransaction(models.Model):
         sales_orders._send_order_confirmation_mail()
 
     def _reconcile_after_transaction_done(self):
-        # Override of '_set_transaction_done' in the 'payment' module
+        # Override of payment.transaction._set_done
         # to confirm the quotations automatically and to generate the invoices if needed.
         sales_orders = self.mapped('sale_order_ids').filtered(lambda so: so.state in ('draft', 'sent'))
         for tx in self:
@@ -112,7 +112,7 @@ class PaymentTransaction(models.Model):
         sales_orders._send_order_confirmation_mail()
         # invoice the sale orders if needed
         self._invoice_sale_orders()
-        res = super(PaymentTransaction, self)._reconcile_after_transaction_done()
+        res = super(PaymentTransaction, self)._reconcile_after_done()
         if self.env['ir.config_parameter'].sudo().get_param('sale.automatic_invoice'):
             default_template = self.env['ir.config_parameter'].sudo().get_param('sale.default_email_template')
             if default_template:
@@ -135,11 +135,13 @@ class PaymentTransaction(models.Model):
                 trans.invoice_ids = [(6, 0, invoices.ids)]
 
     @api.model
-    def _compute_reference_prefix(self, values):
-        prefix = super(PaymentTransaction, self)._compute_reference_prefix(values)
-        if not prefix and values and values.get('sale_order_ids'):
-            sale_orders = self.new({'sale_order_ids': values['sale_order_ids']}).sale_order_ids
-            return ','.join(sale_orders.mapped('name'))
+    def _compute_reference_prefix(self, separator, data):
+        prefix = super()._compute_reference_prefix(separator, data)
+        order_ids = data.get('sale_order_ids')
+        if not prefix and order_ids:  # 'order_ids' is in data, and order_ids is not empty
+            orders = self.env['sale.order'].browse(order_ids).exists()
+            if len(orders) == len(order_ids):  # All ids are valid
+                prefix = separator.join(orders.mapped('name'))
         return prefix
 
     def action_view_sales_orders(self):
@@ -162,18 +164,16 @@ class PaymentTransaction(models.Model):
     # Tools for payment
     # --------------------------------------------------
 
-    def render_sale_button(self, order, submit_txt=None, render_values=None):
+    def render_sale_button(self, order):
         values = {
             'partner_id': order.partner_id.id,
             'type': self.type,
         }
-        if render_values:
-            values.update(render_values)
         # Not very elegant to do that here but no choice regarding the design.
         self._log_payment_transaction_sent()
-        return self.acquirer_id.with_context(submit_class='btn btn-primary', submit_txt=submit_txt or _('Pay Now')).sudo().render(
+        return self.acquirer_id.with_context().sudo()._render_redirect_form(
             self.reference,
             order.amount_total,
             order.pricelist_id.currency_id.id,
-            values=values,
+            **values,
         )

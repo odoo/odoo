@@ -1,13 +1,12 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import hashlib
-import hmac
 
 from werkzeug import urls
 
-from odoo import api, fields, models, _
+from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
-from odoo.tools import ustr, consteq, float_compare
+from odoo.tools import float_compare
+
+import odoo.addons.payment.utils as payment_utils
 
 
 class PaymentLinkWizard(models.TransientModel):
@@ -53,10 +52,12 @@ class PaymentLinkWizard(models.TransientModel):
 
     @api.depends('amount', 'description', 'partner_id', 'currency_id')
     def _compute_values(self):
-        secret = self.env['ir.config_parameter'].sudo().get_param('database.secret')
+        db_secret = self.env['ir.config_parameter'].sudo().get_param('database.secret')
         for payment_link in self:
-            token_str = '%s%s%s' % (payment_link.partner_id.id, payment_link.amount, payment_link.currency_id.id)
-            payment_link.access_token = hmac.new(secret.encode('utf-8'), token_str.encode('utf-8'), hashlib.sha256).hexdigest()
+            payment_link.access_token = payment_utils.generate_access_token(
+                db_secret, payment_link.partner_id.id, payment_link.amount,
+                payment_link.currency_id.id
+            )
         # must be called after token generation, obvsly - the link needs an up-to-date token
         self._generate_link()
 
@@ -81,12 +82,3 @@ class PaymentLinkWizard(models.TransientModel):
             if payment_link.company_id:
                 link += '&company_id=%s' % payment_link.company_id.id
             payment_link.link = link
-
-    @api.model
-    def check_token(self, access_token, partner_id, amount, currency_id):
-        secret = self.env['ir.config_parameter'].sudo().get_param('database.secret')
-        token_str = '%s%s%s' % (partner_id, amount, currency_id)
-        correct_token = hmac.new(secret.encode('utf-8'), token_str.encode('utf-8'), hashlib.sha256).hexdigest()
-        if consteq(ustr(access_token), correct_token):
-            return True
-        return False

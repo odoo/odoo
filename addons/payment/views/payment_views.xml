@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-
+    
+        <!-- Acquirer Form View -->
         <record id="acquirer_form" model="ir.ui.view">
             <field name="name">payment.acquirer.form</field>
             <field name="model">payment.acquirer</field>
             <field name="arch" type="xml">
                 <form string="Payment Acquirer">
-                    <field name="fees_implemented" invisible='1'/>
-                    <field name="token_implemented" invisible='1'/>
-                    <field name="authorize_implemented" invisible="1"/>
+                    <field name="support_authorization" invisible="1"/>
+                    <field name="support_fees_computation" invisible='1'/>
+                    <field name="support_tokenization" invisible='1'/>
                     <sheet>
                         <field name="module_id" invisible="1"/>
                         <field name="module_state" invisible="1"/>
@@ -32,7 +33,7 @@
                         </div>
                         <group>
                             <group name="payment_state">
-                                <field name="provider" groups="base.group_no_one" attrs="{'invisible': [('module_id', '!=', False), ('module_state', '!=', 'installed')]}"/>
+                                <field name="provider" groups="base.group_no_one" attrs="{'readonly': [('id', '!=', False)], 'invisible': [('module_id', '!=', False), ('module_state', '!=', 'installed')]}"/>
                                 <field name="state" widget="radio" attrs="{'invisible': [('module_state', '=', 'uninstalled')]}"/>
                                 <field name="company_id" groups="base.group_multi_company" options='{"no_open":True}'/>
                             </group>
@@ -47,13 +48,9 @@
                                     <group string="Payment Form" name="payment_form">
                                         <field name="display_as" placeholder="If not defined, the acquirer name will be used."/>
                                         <field name="payment_icon_ids" widget="many2many_tags"/>
-                                        <field name="save_token" widget="radio" attrs="{'invisible': ['|', ('token_implemented', '=', False), ('payment_flow', '=', 's2s')]}"/>
-                                        <field name="capture_manually" attrs="{'invisible': [('authorize_implemented', '=', False)]}"/>
-                                        <field name="payment_flow" widget="radio" attrs="{'invisible': [('token_implemented', '=', False)]}"/>
-                                        <field name="view_template_id" groups="base.group_no_one"/>
-                                        <field name="registration_view_template_id" groups="base.group_no_one" attrs="{'invisible': [('payment_flow', '!=', 's2s')]}"/>
-                                        <field name="check_validity" attrs="{'invisible': [('payment_flow', '!=', 's2s')]}" groups="base.group_no_one"/>
-                                        <field name="qr_code" attrs="{'invisible': [('provider', '!=', 'transfer')]}"/>
+                                        <field name="allow_tokenization" attrs="{'invisible': [('support_tokenization', '=', False)]}"/>
+                                        <field name="check_validity" attrs="{'invisible': [('support_tokenization', '=', False)]}" groups="base.group_no_one"/>
+                                        <field name="capture_manually" attrs="{'invisible': [('support_authorization', '=', False)]}"/>
                                     </group>
                                     <group string="Availability" name="availability">
                                         <field name="country_ids" widget="many2many_tags" placeholder="Select countries. Leave empty to use everywhere."/>
@@ -64,7 +61,7 @@
                                     </group>
                                 </group>
                             </page>
-                            <page string="Fees" name="fees" attrs="{'invisible': [('fees_implemented', '=', False)]}">
+                            <page string="Fees" name="fees" attrs="{'invisible': [('support_fees_computation', '=', False)]}">
                                 <group name="payment_fees">
                                     <field name="fees_active"/>
                                     <field name="fees_dom_fixed" attrs="{'invisible': [('fees_active', '=', False)]}"/>
@@ -78,7 +75,7 @@
                                 attrs="{'invisible': [('module_id', '=', True), ('module_state', '!=', 'installed')]}">
                                 <group>
                                     <field name="pre_msg"/>
-                                    <field name="auth_msg" attrs="{'invisible': [('authorize_implemented', '=', False)]}"/>
+                                    <field name="auth_msg" attrs="{'invisible': [('support_authorization', '=', False)]}"/>
                                     <field name="pending_msg"/>
                                     <field name="done_msg"/>
                                     <field name="cancel_msg"/>
@@ -231,9 +228,9 @@
                             <group>
                                 <field name="acquirer_id"/>
                                 <field name="provider" invisible="1"/>
-                                <field name="payment_token_id" options="{'no_create': True}"/>
+                                <field name="token_id" options="{'no_create': True}"/>
                                 <field name="acquirer_reference" readonly="1"/>
-                                <field name="date"/>
+                                <field name="last_state_change"/>
                             </group>
                         </group>
                         <group string="Message">
@@ -352,7 +349,7 @@
             <field name="name">Payment Transactions</field>
             <field name="res_model">payment.transaction</field>
             <field name="view_mode">tree,form</field>
-            <field name="domain">[('payment_token_id','=', active_id)]</field>
+            <field name="domain">[('token_id','=', active_id)]</field>
             <field name="context">{'create': False}</field>
         </record>
 
