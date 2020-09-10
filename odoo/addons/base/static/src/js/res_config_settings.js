@@ -307,17 +307,16 @@ var BaseSettingController = FormController.extend({
 
 });
 
-var BaseSettingsModel = BasicModel.extend({
-    /**
-     * @override
-     */
-    save: function (recordID) {
-        var self = this;
-        return this._super.apply(this, arguments).then(function (result) {
-            // we remove here the res_id, because the record should still be
-            // considered new.  We want the web client to always perform a
-            // default_get to fetch the settings anew.
-            delete self.localData[recordID].res_id;
+const BaseSettingsModel = BasicModel.extend({
+    save(recordID, options) {
+        const savePoint = options && options.savePoint;
+        return this._super.apply(this, arguments).then(result => {
+            if (!savePoint && this.localData[recordID].model === 'res.config.settings') {
+                // we remove here the res_id, because the record should still be
+                // considered new.  We want the web client to always perform a
+                // onchange to fetch the settings anew.
+                delete this.localData[recordID].res_id;
+            }
             return result;
         });
     },
