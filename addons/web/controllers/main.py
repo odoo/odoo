@@ -2071,6 +2071,7 @@ class ReportController(http.Controller):
         """
         requestcontent = json.loads(data)
         url, type = requestcontent[0], requestcontent[1]
+        reportname = '???'
         try:
             if type in ['qweb-pdf', 'qweb-text']:
                 converter = 'pdf' if type == 'qweb-pdf' else 'text'
@@ -2109,6 +2110,7 @@ class ReportController(http.Controller):
             else:
                 return
         except Exception as e:
+            _logger.exception("Error while generating report %s", reportname)
             se = _serialize_exception(e)
             error = {
                 'code': 200,
