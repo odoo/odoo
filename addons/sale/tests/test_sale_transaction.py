@@ -37,8 +37,8 @@ class TestSaleTransaction(AccountTestInvoicingCommon):
         - Create manually an invoice for this sale order.
         => The invoice must be paid.
         '''
-        self.transaction._set_transaction_done()
-        self.transaction._post_process_after_done()
+        self.transaction._set_done()
+        self.transaction._finalize_post_processing()
 
         # Assert a posted payment has been generated at this point.
         self.assertTrue(self.transaction.payment_id)
@@ -54,7 +54,7 @@ class TestSaleTransaction(AccountTestInvoicingCommon):
         """Test that a transaction for the incorrect amount does not validate the SO."""
         # modify order total
         self.order.order_line[0].price_unit = 200.0
-        self.transaction._set_transaction_done()
+        self.transaction._set_done()
         with mute_logger('odoo.addons.sale.models.payment'):
-            self.transaction._post_process_after_done()
+            self.transaction._finalize_post_processing()
         self.assertEqual(self.order.state, 'draft', 'a transaction for an incorrect amount should not validate a quote')

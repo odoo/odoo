@@ -36,7 +36,7 @@ tour.register('check_free_delivery', {
         },
         {
             content: "Click on Pay Now",
-            trigger: 'button[id="o_payment_form_pay"]:visible:not(:disabled)',
+            trigger: 'button[id="o_payment_submit_button"]:visible:not(:disabled)',
         },
         {
             content: "Confirmation page should be shown",

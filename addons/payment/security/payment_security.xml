@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo noupdate="1">
 
+<!-- TODO ANV multicomp on all models -->
+<!-- TODO ANV + YTI review ir.model.access rules (need accounting role to read tokens ?) -->
+
     <record id="payment_transaction_user_rule" model="ir.rule">
         <field name="name">Access own payment transaction only</field>
         <field name="model_id" ref="payment.model_payment_transaction"/>
@@ -9,6 +12,7 @@
     </record>
     <record id="payment_token_user_rule" model="ir.rule">
         <field name="name">Access own payment tokens only</field>
+        <!-- TODO YTI with 'childof' those are not your 'own tokens' anymore -->
         <field name="model_id" ref="payment.model_payment_token"/>
         <field name="domain_force">[('partner_id', 'child_of', user.partner_id.commercial_partner_id.id)]</field>
         <field name="groups" eval="[(4, ref('base.group_user')), (4, ref('base.group_portal')), (4, ref('base.group_public'))]"/>

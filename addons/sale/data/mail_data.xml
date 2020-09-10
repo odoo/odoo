@@ -246,8 +246,8 @@
             <tr>
                 <td>
                     <strong>Payment Method:</strong>
-                    % if transaction.payment_token_id:
-                        ${transaction.payment_token_id.name}
+                    % if transaction.token_id:
+                        ${transaction.token_id.name}
                     % else:
                         ${transaction.acquirer_id.name}
                     % endif
