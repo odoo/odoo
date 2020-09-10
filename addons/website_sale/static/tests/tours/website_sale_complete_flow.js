@@ -133,7 +133,7 @@ odoo.define('website_sale_tour.tour', function (require) {
     {
         content: "Pay Now",
         extra_trigger: '#payment_method label:contains("Wire Transfer") input:checked,#payment_method:not(:has("input:radio:visible"))',
-        trigger: 'button[id="o_payment_form_pay"]:visible:not(:disabled)',
+        trigger: 'button[id="o_payment_submit_button"]:visible:not(:disabled)',
     },
     {
         content: "Sign up",
@@ -280,7 +280,7 @@ odoo.define('website_sale_tour.tour', function (require) {
     {
         content: "Pay Now",
         extra_trigger: '#payment_method label:contains("Wire Transfer") input:checked,#payment_method:not(:has("input:radio:visible"))',
-        trigger: 'button[id="o_payment_form_pay"]:visible:not(:disabled)',
+        trigger: 'button[id="o_payment_submit_button"]:visible:not(:disabled)',
     },
     {
         content: "Open Dropdown for See quotation",
@@ -384,6 +384,6 @@ odoo.define('website_sale_tour.tour', function (require) {
     {
         content: "Pay Now",
         extra_trigger: '#payment_method label:contains("Wire Transfer") input:checked,#payment_method:not(:has("input:radio:visible"))',
-        trigger: 'button[id="o_payment_form_pay"]:visible',
+        trigger: 'button[id="o_payment_submit_button"]:visible',
     }]);
 });

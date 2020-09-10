@@ -241,10 +241,10 @@
                                     </p>
                                     <div t-if="pms or acquirers" id="payment_method" class="text-left">
                                         <h3 class="mb24">Pay with</h3>
-                                        <t t-call="payment.payment_tokens_list">
+                                        <t t-call="payment.checkout">
                                             <t t-set="mode" t-value="'payment'"/>
-                                            <t t-set="submit_txt">Pay &amp; Confirm</t>
-                                            <t t-set="icon_class" t-value="'fa-lock'"/>
+                                            <t t-set="submit_button_label">Pay &amp; Confirm</t>
+                                            <t t-set="submit_button_icon_class" t-value="'fa-lock'"/>
                                             <t t-set="form_action" t-value="sale_order.get_portal_url(suffix='/transaction/token')"/>
                                             <t t-set="prepare_tx_url" t-value="sale_order.get_portal_url(suffix='/transaction/')"/>
                                             <t t-set="access_token" t-value="sale_order.access_token"/>
