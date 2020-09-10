@@ -7,6 +7,7 @@ import pytz
 
 from datetime import datetime
 from psycopg2 import IntegrityError
+from werkzeug.exceptions import BadRequest
 
 from odoo import http, SUPERUSER_ID, _
 from odoo.http import request
@@ -19,8 +20,10 @@ from odoo.addons.base.models.ir_qweb_fields import nl2br
 class WebsiteForm(http.Controller):
 
     # Check and insert values from the form on the model <model>
-    @http.route('/website_form/<string:model_name>', type='http', auth="public", methods=['POST'], website=True)
+    @http.route('/website_form/<string:model_name>', type='http', auth="public", methods=['POST'], website=True, csrf=False)
     def website_form(self, model_name, **kwargs):
+        if request.session.uid and not request.validate_csrf(kwargs.get('csrf_token')):
+            raise BadRequest('Session expired (invalid CSRF token)')
         try:
             if request.env['ir.http']._verify_request_recaptcha_token('website_form'):
                 return self._handle_website_form(model_name, **kwargs)
