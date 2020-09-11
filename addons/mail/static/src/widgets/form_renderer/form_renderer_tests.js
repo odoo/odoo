@@ -853,6 +853,75 @@ QUnit.test('Form view not scrolled when switching record', async function (asser
     );
 });
 
+QUnit.test('Attachments that have been unlinked from server should be visually unlinked from record', async function (assert) {
+    // Attachments that have been fetched from a record at certain time and then
+    // removed from the server should be reflected on the UI when the current
+    // partner accesses this record again.
+    assert.expect(2);
+
+    this.data['res.partner'].records.push(
+        { display_name: "Partner1", id: 11 },
+        { display_name: "Partner2", id: 12 }
+    );
+    this.data['ir.attachment'].records.push(
+        {
+           id: 11,
+           mimetype: 'text.txt',
+           res_id: 11,
+           res_model: 'res.partner',
+        },
+        {
+           id: 12,
+           mimetype: 'text.txt',
+           res_id: 11,
+           res_model: 'res.partner',
+        }
+    );
+    await this.createView({
+        data: this.data,
+        hasView: true,
+        // View params
+        View: FormView,
+        model: 'res.partner',
+        res_id: 11,
+        viewOptions: {
+            ids: [11, 12],
+            index: 0,
+        },
+        arch: `
+            <form string="Partners">
+                <sheet>
+                    <field name="name"/>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        `,
+    });
+    assert.strictEqual(
+        document.querySelector('.o_ChatterTopbar_buttonCount').textContent,
+        '2',
+        "Partner1 should have 2 attachments initially"
+    );
+
+    // The attachment links are updated on (re)load,
+    // so using pager is a way to reload the record "Partner1".
+    await afterNextRender(() =>
+        document.querySelector('.o_pager_next').click()
+    );
+    // Simulate unlinking attachment 12 from Partner 1.
+    this.data['ir.attachment'].records.find(a => a.id === 11).res_id = 0;
+    await afterNextRender(() =>
+        document.querySelector('.o_pager_previous').click()
+    );
+    assert.strictEqual(
+        document.querySelector('.o_ChatterTopbar_buttonCount').textContent,
+        '1',
+        "Partner1 should now have 1 attachment after it has been unlinked from server"
+    );
+});
+
 });
 });
 });
