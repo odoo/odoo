@@ -106,7 +106,7 @@ class ReportStockForecat(models.Model):
              LEFT JOIN
              stock_location dest_location ON sm.location_dest_id = dest_location.id
              WHERE
-             sm.state IN ('confirmed','assigned','waiting') and sm.date_expected > CURRENT_DATE and
+             sm.state IN ('confirmed','assigned','waiting','partially_available') and sm.date_expected > CURRENT_DATE and
              ((dest_location.usage = 'internal' AND source_location.usage != 'internal')
               or (source_location.usage = 'internal' AND dest_location.usage != 'internal'))) AS DATE_SEARCH)
              SUB ON (SUB.date IS NOT NULL)
