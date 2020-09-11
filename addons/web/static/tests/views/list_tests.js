@@ -18,6 +18,7 @@ var RamStorage = require('web.RamStorage');
 var testUtils = require('web.test_utils');
 const { patch, unpatch } = require('web.utils');
 var widgetRegistry = require('web.widget_registry');
+const widgetRegistryOwl = require('web.widgetRegistry');
 var Widget = require('web.Widget');
 
 
@@ -8647,6 +8648,8 @@ QUnit.module('Views', {
     });
 
     QUnit.test('basic support for widgets', async function (assert) {
+        // This test could be removed as soon as we drop the support of legacy widgets (see test
+        // below, which is a duplicate of this one, but with an Owl Component instead).
         assert.expect(1);
 
         var MyWidget = Widget.extend({
@@ -8671,6 +8674,30 @@ QUnit.module('Views', {
 
         list.destroy();
         delete widgetRegistry.map.test;
+    });
+
+    QUnit.test('basic support for widgets (being Owl Components)', async function (assert) {
+        assert.expect(1);
+
+        class MyComponent extends owl.Component {
+            get value() {
+                return JSON.stringify(this.props.record.data);
+            }
+        }
+        MyComponent.template = owl.tags.xml`<div t-esc="value"/>`;
+        widgetRegistryOwl.add('test', MyComponent);
+
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree><field name="foo"/><field name="int_field"/><widget name="test"/></tree>',
+        });
+
+        assert.strictEqual(list.$('.o_widget').first().text(), '{"foo":"yop","int_field":10,"id":1}');
+
+        list.destroy();
+        delete widgetRegistryOwl.map.test;
     });
 
     QUnit.test('use the limit attribute in arch', async function (assert) {
