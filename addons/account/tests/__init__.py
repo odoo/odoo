@@ -25,3 +25,4 @@ from . import test_account_fiscal_year
 from . import test_account_all_l10n
 from . import test_reconciliation_matching_rules
 from . import test_reconciliation_heavy_load
+from . import test_payment_term
