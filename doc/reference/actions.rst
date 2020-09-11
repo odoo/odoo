@@ -342,7 +342,7 @@ Triggers the printing of a report
 ``report_type`` (default=qweb-pdf)
     either ``qweb-pdf`` for PDF reports or ``qweb-html`` for HTML
 ``report_name`` (mandatory)
-    the name of your report (which will be the name of the PDF output)
+    the name of the template used to render the report
 ``groups_id``
     :class:`~odoo.fields.Many2many` field to the groups allowed to view/use
     the current report
