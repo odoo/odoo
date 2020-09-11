@@ -691,11 +691,11 @@ class AccountJournal(models.Model):
             FROM ''' + tables + '''
             WHERE ''' + where_clause + '''
         '''
-        self._cr.execute(query, where_params)
 
         company_currency = self.company_id.currency_id
         journal_currency = self.currency_id if self.currency_id and self.currency_id != company_currency else False
 
+        self._cr.execute(query, where_params)
         nb_lines, balance, amount_currency = self._cr.fetchone()
         return amount_currency if journal_currency else balance, nb_lines
 
