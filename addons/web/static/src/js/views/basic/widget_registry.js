@@ -1,6 +1,16 @@
 odoo.define('web.widget_registry', function (require) {
     "use strict";
 
+    ////////////////////////////////////////////////////////////////////////////
+    // /!\ DEPRECATED
+    //
+    // /!\ This registry is deprecated. It is used to register legacy Widgets.
+    // /!\ Use 'web.widgetRegistry' to register Owl Components.
+    // /!\ Existing Widgets will be at some point converted into Owl Components.
+    // /!\ All new code should be directly written using Owl Components.
+    ////////////////////////////////////////////////////////////////////////////
+
+
     // This registry is supposed to contain all custom widgets that will be
     // available in the basic views, with the tag <widget/>.  There are
     // currently no such widget in the web client, but the functionality is
@@ -23,5 +33,5 @@ odoo.define('web.widget_registry', function (require) {
 
     var Registry = require('web.Registry');
 
-    return new Registry();
+    return new Registry(null, (value) => !(value.prototype instanceof owl.Component));
 });

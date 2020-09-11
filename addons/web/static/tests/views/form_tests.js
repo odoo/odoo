@@ -16,6 +16,7 @@ var pyUtils = require('web.py_utils');
 var RamStorage = require('web.RamStorage');
 var testUtils = require('web.test_utils');
 var widgetRegistry = require('web.widget_registry');
+const widgetRegistryOwl = require('web.widgetRegistry');
 var Widget = require('web.Widget');
 
 var _t = core._t;
@@ -7854,6 +7855,8 @@ QUnit.module('Views', {
     });
 
     QUnit.test('basic support for widgets', async function (assert) {
+        // This test could be removed as soon as we drop the support of legacy widgets (see test
+        // below, which is a duplicate of this one, but with an Owl Component instead).
         assert.expect(1);
 
         var MyWidget = Widget.extend({
@@ -7882,6 +7885,35 @@ QUnit.module('Views', {
 
         form.destroy();
         delete widgetRegistry.map.test;
+    });
+
+    QUnit.test('basic support for widgets (being Owl Components)', async function (assert) {
+        assert.expect(1);
+
+        class MyComponent extends owl.Component {
+            get value() {
+                return JSON.stringify(this.props.record.data);
+            }
+        }
+        MyComponent.template = owl.tags.xml`<div t-esc="value"/>`;
+        widgetRegistryOwl.add('test', MyComponent);
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+            <form>
+                <field name="foo"/>
+                <field name="bar"/>
+                <widget name="test"/>
+            </form>`,
+        });
+
+        assert.strictEqual(form.$('.o_widget').text(), '{"foo":"My little Foo Value","bar":false}');
+
+        form.destroy();
+        delete widgetRegistryOwl.map.test;
     });
 
     QUnit.test('attach document widget calls action with attachment ids', async function (assert) {
