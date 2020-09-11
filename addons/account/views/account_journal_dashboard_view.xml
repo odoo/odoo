@@ -37,6 +37,9 @@
                             <div class="o_kanban_card_header_title">
                                 <div class="o_primary">
                                     <a type="object" name="open_action"><field name="name"/></a>
+                                    <t t-if="dashboard.company_count > 1">
+                                        <span groups="base.group_multi_company" class="small">- <field name="company_id"/></span>
+                                    </t>
                                 </div>
                                 <div class="o_secondary" t-att-title="dashboard.title" t-if="journal_type == 'purchase' &amp;&amp; record.alias_domain.raw_value">
                                     <field name="alias_id"/>
