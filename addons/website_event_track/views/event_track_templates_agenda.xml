@@ -89,7 +89,7 @@
 
         <!-- Day Agenda -->
         <div class="o_we_online_agenda">
-        <table id="table_search" class="table table-sm border-0">
+        <table id="table_search" class="table table-sm border-0 h-100">
             <!--Header-->
             <tr>
                 <th class="border-0 bg-white position-sticky"/>
@@ -118,7 +118,7 @@
                                 <t t-set="_classes"
                                     t-value="'text-center %s %s %s' % (
                                         'event_color_%s' % (track.color) if track.color else 'bg-100',
-                                        'event_track' if track else '',
+                                        'event_track h-100' if track else '',
                                         'o_location_size_%d' % len(locations),
                                     )"/>
                                 <t t-if="track.location_id and track.location_id == location">
