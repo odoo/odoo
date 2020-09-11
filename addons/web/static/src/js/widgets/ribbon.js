@@ -1,5 +1,5 @@
-odoo.define('web.ribbon', function (require) {
-    'use strict';
+odoo.define("web.ribbon", function (require) {
+    "use strict";
 
     /**
      * This widget adds a ribbon on the top right side of the form
@@ -15,34 +15,39 @@ odoo.define('web.ribbon', function (require) {
      *        by default.
      */
 
-    var widgetRegistry = require('web.widget_registry');
-    var Widget = require('web.Widget');
+    const widgetRegistry = require("web.widget_registry_owl");
 
-    var RibbonWidget = Widget.extend({
-        template: 'web.ribbon',
-        xmlDependencies: ['/web/static/src/xml/ribbon.xml'],
-
+    class RibbonComponent extends owl.Component {
         /**
-         * @param {Object} options
-         * @param {string} options.attrs.title
-         * @param {string} options.attrs.text same as title
-         * @param {string} options.attrs.tooltip
-         * @param {string} options.attrs.bg_color
+         * @param {Object} props
+         * @param {string} props.node.attrs.title
+         * @param {string} props.node.attrs.text same as title
+         * @param {string} props.node.attrs.tooltip
+         * @param {string} props.node.attrs.bg_color
          */
-        init: function (parent, data, options) {
-            this._super.apply(this, arguments);
-            this.text = options.attrs.title || options.attrs.text;
-            this.tooltip = options.attrs.tooltip;
-            this.className = options.attrs.bg_color ? options.attrs.bg_color : 'bg-success';
+        constructor(parent, props) {
+            super(...arguments);
+            this.text = props.node.attrs.title || props.node.attrs.text;
+            this.tooltip = props.node.attrs.tooltip || "";
+            this.className = props.node.attrs.bg_color ? props.node.attrs.bg_color : "bg-success";
             if (this.text.length > 15) {
-                this.className += ' o_small';
+                this.className += " o_small";
             } else if (this.text.length > 10) {
-                this.className += ' o_medium';
+                this.className += " o_medium";
             }
-        },
-    });
+        }
+        async willStart() {
+            const templates = await owl.utils.loadFile("/web/static/src/xml/ribbon.xml");
+            if (!("web.ribbon" in this.env.qweb.templates)) {
+                this.env.qweb.addTemplates(templates);
+            }
+            await super.willStart(...arguments);
+        }
+    }
 
-    widgetRegistry.add('web_ribbon', RibbonWidget);
+    RibbonComponent.template = "web.ribbon";
 
-    return RibbonWidget;
+    widgetRegistry.add("web_ribbon", RibbonComponent);
+
+    return RibbonComponent;
 });
