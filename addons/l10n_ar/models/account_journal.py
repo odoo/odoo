@@ -124,10 +124,10 @@ class AccountJournal(models.Model):
         """ Do not let to update journal if already have confirmed invoices """
         arg_sale_journals = self.filtered(lambda x: x.company_id.country_id == self.env.ref('base.ar') and
                                           x.type == 'sale' and x._origin.type == 'sale')
-        invoices = self.env['account.move'].search([('journal_id', 'in', arg_sale_journals.ids), ('state', '!=', 'draft')])
+        invoices = self.env['account.move'].search([('journal_id', 'in', arg_sale_journals.ids), ('name', '!=', '/')], limit=1)
         if invoices:
             raise ValidationError(
-                _("You can not change the journal's configuration if journal already have validated invoices") + ' ('
+                _("You can not change the journal's configuration if it already has validated invoices") + ' ('
                 + ', '.join(invoices.mapped('journal_id').mapped('name')) + ')')
 
     def _l10n_ar_create_document_sequences(self):
