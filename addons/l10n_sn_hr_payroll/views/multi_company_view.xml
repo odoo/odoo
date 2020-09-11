@@ -1,0 +1,96 @@
+<?xml version="1.0" ?>
+<odoo>
+    
+    <record id="hr_payslip_input_type_view_form_inherit" model="ir.ui.view">
+        <field name="name">hr.payslip.input.type.view.form.inherit</field>
+        <field name="model">hr.payslip.input.type</field>
+        <field name="inherit_id" ref="hr_payroll.hr_payslip_input_type_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form/sheet/group/group/field[@name='code']" position="after">
+                <field name="company_id"/>
+            </xpath>
+        </field>
+    </record>
+    
+    <record id="hr_salary_rule_form_inherit" model="ir.ui.view">
+        <field name="name">hr.salary.rule.form.inherit</field>
+        <field name="model">hr.salary.rule</field>
+        <field name="inherit_id" ref="hr_payroll.hr_salary_rule_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form/sheet/group/field[@name='appears_on_payslip']" position="after">
+                <field name="company_id"/>
+            </xpath>
+        </field>
+    </record>
+    
+    <record id="hr_payroll_structure_form_inherit" model="ir.ui.view">
+        <field name="name">hr.payroll.structure.form.inherit</field>
+        <field name="model">hr.payroll.structure</field>
+        <field name="inherit_id" ref="hr_payroll.view_hr_employee_grade_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form/sheet/group/group/field[@name='country_id']" position="after">
+                <field name="company_id"/>
+            </xpath>
+        </field>
+    </record>
+    
+    <record id="hr_payroll_structure_type_form_inherit" model="ir.ui.view">
+        <field name="name">hr.payroll.structure.type.form.inherit</field>
+        <field name="model">hr.payroll.structure.type</field>
+        <field name="inherit_id" ref="hr_payroll.hr_payroll_structure_type_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form/sheet/group/group/field[@name='wage_type']" position="after">
+                <field name="company_id"/>
+            </xpath>
+        </field>
+    </record>
+    
+    <record id="hr_salry_rule" model="ir.rule">
+        <field name="name">Salary Rule</field>
+        <field name="model_id" ref="hr_payroll.model_hr_salary_rule"/>
+        <field eval="False" name="global"/>
+        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+<!--         <field name="groups" eval="[(4,ref('base.group_user'))]"/> -->
+    </record>
+    
+    <record id="hr_payroll_structure" model="ir.rule">
+        <field name="name">Payroll Structure</field>
+        <field name="model_id" ref="hr_payroll.model_hr_payroll_structure"/>
+        <field eval="False" name="global"/>
+        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+<!--         <field name="groups" eval="[(4,ref('base.group_user'))]"/> -->
+    </record>
+    
+    <record id="hr_payroll_structure_type" model="ir.rule">
+        <field name="name">Payroll Structure Type</field>
+        <field name="model_id" ref="hr_payroll.model_hr_payroll_structure_type"/>
+        <field eval="False" name="global"/>
+        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+<!--         <field name="groups" eval="[(4,ref('base.group_user'))]"/> -->
+    </record>
+
+    <record id="convention_company" model="ir.rule">
+        <field name="name">Convention of my Company</field>
+        <field name="model_id" ref="optipay.model_optesis_convention"/>
+        <field eval="False" name="global"/>
+        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+<!--         <field name="groups" eval="[(4,ref('base.group_user'))]"/> -->
+    </record>
+
+    <record id="convention_line_company" model="ir.rule">
+        <field name="name">Convention Line of my Company</field>
+        <field name="model_id" ref="optipay.model_line_optesis_convention"/>
+        <field eval="False" name="global"/>
+        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+<!--         <field name="groups" eval="[(4,ref('base.group_user'))]"/> -->
+    </record>
+    
+    <record id="hr_payslip_input_type_company" model="ir.rule">
+        <field name="name">Input Type my Company</field>
+        <field name="model_id" ref="hr_payroll.model_hr_payslip_input_type"/>
+        <field eval="False" name="global"/>
+        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+<!--         <field name="groups" eval="[(4,ref('base.group_user'))]"/> -->
+    </record>
+
+</odoo>

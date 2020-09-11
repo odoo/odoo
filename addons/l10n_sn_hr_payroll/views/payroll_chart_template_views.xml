@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="res_config_settings_view_form_inherit" model="ir.ui.view">
+            <field name="name">res.config.settings.view.form.inherit.payroll</field>
+            <field name="model">res.config.settings</field>
+            <field name="priority" eval="40"/>
+            <field name="inherit_id" ref="hr_payroll.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@id='hr_payroll_localization']" position="after">
+                        <div class="row mt16 o_settings_container" attrs="{'invisible': ['|', '|', '|', '|', ('module_l10n_fr_hr_payroll', '=', True), ('module_l10n_be_hr_payroll', '=', True), ('module_l10n_in_hr_payroll', '=', True), ('company_id', '=', 1)]}">
+                            <div class="col-lg-6 col-12 o_setting_box">
+                                <div class="o_setting_right_pane">
+                                    <span class="o_form_label">Generate SN Payroll Salary Rules</span>
+                                    <div class="text-muted">
+                                        <field name="payroll_chart_template"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                </xpath>
+            </field>
+        </record>
+
+
+        <record id="hr_salary_rule_form_inherit_payroll_template" model="ir.ui.view">
+            <field name="name">res.company.form.inherit</field>
+            <field name="model">res.company</field>
+            <field name="inherit_id" ref="base.view_company_form"/>
+            <field name="arch" type="xml">
+                 <xpath expr="//field[@name='name']" position="after">
+                    <field name="payroll_chart_template" invisible="1"/>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

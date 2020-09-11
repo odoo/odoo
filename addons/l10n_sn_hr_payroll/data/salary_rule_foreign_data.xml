@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data noupdate="1">
+    <record id="hr_payroll_hr_rule_basic_e" model="hr.salary.rule">
+      <field name="name">Salaire de base E</field>
+      <field name="code">C1000</field>
+      <field name="sequence">1000</field>
+      <field name="category_id" ref="hr_payroll.BASIC"/>
+      <field name="amount_select">code</field>
+      <field name="amount_python_compute">result = contract.wage*(worked_days.WORK100.number_of_days)/30</field>
+      <field name="note">La règle du salaire de base </field>
+      <field name="account_debit" ref="l10n_pcgo.pcgo_6621"/>
+      <field name="struct_id" ref="structure_worker_001_sn"/>
+    </record>
+
+     <record id="hr_payroll_rule_sursalaire_e" model="hr.salary.rule">
+      <field name="name">SURSALAIRE E</field>
+      <field name="code">C1010</field>
+      <field name="sequence" eval="1010"/>
+      <field name="category_id" ref="hr_payroll.ALW"/>
+      <field name="condition_select">none</field>
+      <field name="amount_select">fix</field>
+      <field name="quantity">1</field>
+      <field name="amount_fix">687900.00</field>
+      <field name="account_debit" ref="l10n_pcgo.pcgo_6621"/>
+      <field name="struct_id" ref="structure_worker_001_sn"/>
+    </record>
+
+    <record id="hr_payroll_anciennete_e" model="hr.salary.rule">
+      <field name="name">Ancienneté E</field>
+      <field name="code">C1020</field>
+      <field name="sequence" eval="1020"/>
+      <field name="category_id" ref="hr_payroll.ALW"/>
+      <field name="condition_select">python</field>
+      <field name="condition_python">dur = payslip.date_to - contract.dateAnciennete
+if dur.days &gt; 730:
+  result = True
+      </field>
+      <field name="amount_select">code</field>
+      <field name="amount_python_compute">dur = payslip.date_to - contract.dateAnciennete
+result = round((worked_days.WORK100.number_of_days*contract.hourly_wage/30) * 0.01 * (dur.days//365))</field>
+      <field name="account_debit" ref="l10n_pcgo.pcgo_6621"/>
+      <field name="struct_id" ref="structure_worker_001_sn"/>
+    </record>
+
+
+    <record id="hr_rule_total_prime_transport_e" model="hr.salary.rule">
+      <field name="name">Prime de transport E</field>
+      <field name="sequence">1125</field>
+      <field name="code">C1125</field>
+      <field name="category_id" ref="non_imposable"/>
+      <field name="condition_select">none</field>
+      <field name="amount_select">code</field>
+      <field name="amount_python_compute">result = worked_days.WORK100.number_of_days*20800/30</field>
+      <field name="note">Prime de transport</field>
+      <field name="account_debit" ref="l10n_pcgo.pcgo_6634"/>
+      <field name="struct_id" ref="structure_worker_001_sn"/>
+    </record>
+
+
+    <record id="hr_rule_total_indemnite_km_e" model="hr.salary.rule">
+      <field name="name">Indemnité KM E</field>
+      <field name="sequence">1140</field>
+      <field name="code">C1140</field>
+      <field name="category_id" ref="non_imposable"/>
+      <field name="condition_select">none</field>
+      <field name="amount_select">code</field>
+      <field name="amount_python_compute">result = worked_days.WORK100.number_of_days*50000/30</field>
+      <field name="note">Indemnité KM</field>
+      <field name="account_debit" ref="l10n_pcgo.pcgo_6634"/>
+      <field name="struct_id" ref="structure_worker_001_sn"/>
+    </record>
+
+
+    <record id="hr_payroll_rules_alloc_e" model="hr.salary.rule">
+      <field name="category_id" ref="hr_payroll.ALW"/>
+      <field name="name">Allocation Congés E</field>
+      <field name="code">C1060</field>
+      <field name="appears_on_payslip">True</field>
+      <field name="sequence">1060</field>
+      <field name="condition_select">python</field>
+      <field name="condition_python">if contract.alloc_conges != 0:
+  result = True
+      </field>
+      <field name="amount_select">code</field>
+      <field name="amount_python_compute">cumul_days = contract.nbj_aquis + contract.company_id.nbj_alloue
+cumul_amount = round(contract.alloc_conges + (categories.BASE + categories.INDM)/12)
+if cumul_days >= contract.nbj_travail:
+    result = round((cumul_amount * contract.nbj_pris) / contract.company_id.nbj_travail)
+else:
+    result = round((cumul_amount * contract.nbj_pris) / cumul_days)
+      </field>
+      <field name="account_debit" ref="l10n_pcgo.pcgo_6623"/>
+      <field name="struct_id" ref="structure_worker_001_sn"/>
+    </record>
+
+  </data>
+</odoo>

@@ -1,0 +1,1320 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data noupdate="0">
+      
+      
+      <!-- Structure Type -->
+        <record id="structure_type_employee_sn" model="hr.payroll.structure.type">
+            <field name="name">Employee SN</field>
+            <field name="country_id" eval="False"/>
+        </record>
+      
+      <!--salary rule struct-->
+      <record id="structure_worker_001_sn" model="hr.payroll.structure">
+            <field name="name">Worker Pay SN</field>
+            <field name="type_id" ref="structure_type_employee_sn"/>
+            <field name="regular_pay" eval="True"/>
+            <field name="country_id" eval="False"/>
+        </record>
+      
+
+    <record id="hr_payroll.BASIC" model="hr.salary.rule.category">
+      <field name="name">Salaire de base</field>
+      <field name="code">BASE</field>
+      <field name="parent_id" eval="False"/>
+    </record>
+
+    <record id="hr_payroll.ALW" model="hr.salary.rule.category">
+      <field name="name">INDEMNITE</field>
+      <field name="code">INDM</field>
+      <field name="parent_id" eval="False"/>
+    </record>
+
+    <record id="hr_payroll.GROSS" model="hr.salary.rule.category">
+      <field name="name">BRUT</field>
+      <field name="code">BRUT</field>
+      <field name="parent_id" eval="False"/>
+    </record>
+
+    <record id="hr_payroll.DED" model="hr.salary.rule.category">
+      <field name="name">Deduction</field>
+      <field name="code">DED</field>
+      <field name="parent_id" eval="False"/>
+    </record>
+
+    <record id="hr_payroll.NET" model="hr.salary.rule.category">
+      <field name="name">Net</field>
+      <field name="code">NET</field>
+      <field name="parent_id" eval="False"/>
+    </record>
+
+    <record id="hr_payroll.COMP" model="hr.salary.rule.category">
+      <field name="name">Cotisations Patronales</field>
+      <field name="code">COMP</field>
+      <field name="parent_id" eval="False"/>
+    </record>
+
+    <record id="TOTAL" model="hr.salary.rule.category">
+      <field name="name">Cout total pour l'entreprise</field>
+      <field name="code">TOTAL</field>
+      <field name="parent_id" eval="False"/>
+    </record>
+
+    <record id="C_IMP" model="hr.salary.rule.category">
+      <field name="name">Cumul Imposable</field>
+      <field name="code">C_IMP</field>
+      <field name="parent_id" eval="False"/>
+    </record>
+
+    <record id="C_IMPAN" model="hr.salary.rule.category">
+      <field name="name">Cumul Imposable Annuel</field>
+      <field name="code">C_IMPAN</field>
+      <field name="parent_id" eval="False"/>
+    </record>
+
+    <record id="C_IMPDED" model="hr.salary.rule.category">
+      <field name="name">Cumul Imposable Aprés Déduction</field>
+      <field name="code">C_IMPDED</field>
+      <field name="parent_id" eval="False"/>
+    </record>
+
+    <record id="RETENUES" model="hr.salary.rule.category">
+      <field name="name">Total Retenues</field>
+      <field name="code">RETENUES</field>
+      <field name="parent_id" eval="False"/>
+    </record>
+
+    <record id="SALC" model="hr.salary.rule.category">
+      <field name="name">Charges Salariales</field>
+      <field name="code">SALC</field>
+      <field name="parent_id" ref="RETENUES"/>
+    </record>
+
+    <record id="DEDIRPP" model="hr.salary.rule.category">
+      <field name="name">Déduction d'impôt</field>
+      <field name="code">DEDIRPP</field>
+      <field name="parent_id" eval="False"/>
+    </record>
+
+    <record id="DEDIRPPS" model="hr.salary.rule.category">
+      <field name="name">Total Déduction d'impôt</field>
+      <field name="code">CRED</field>
+      <field name="parent_id" eval="False"/>
+    </record>
+
+    <record id="PREV" model="hr.salary.rule.category">
+      <field name="name">Cotisations Prevoyance Patronales</field>
+      <field name="code">PREV</field>
+      <field name="parent_id" ref="hr_payroll.COMP"/>
+    </record>
+
+    <record id="SECU" model="hr.salary.rule.category">
+      <field name="name">Plafond de Securite Sociale</field>
+      <field name="code">SECU</field>
+      <field name="parent_id" eval="False"/>
+    </record>
+
+    <record id="other_totals" model="hr.salary.rule.category">
+      <field name="name">Autres totaux</field>
+      <field name="code">COMP</field>
+      <field name="parent_id" eval="False"/>
+    </record>
+
+    <record id="ipres" model="hr.salary.rule.category">
+      <field name="name">Ipres</field>
+      <field name="code">IPRES</field>
+      <field name="parent_id" eval="False"/>
+    </record>
+
+    <record id="base_fiscal" model="hr.salary.rule.category">
+      <field name="name">Base Fiscal</field>
+      <field name="code">BFISC</field>
+      <field name="parent_id" eval="False"/>
+    </record>
+
+    <record id="impot_sur_revenu" model="hr.salary.rule.category">
+      <field name="name">Impot sur revenu</field>
+      <field name="code">IR</field>
+      <field name="parent_id" eval="False"/>
+    </record>
+
+    <record id="tranche_impot_sur_revenu" model="hr.salary.rule.category">
+      <field name="name">Tranche impot sur revenu</field>
+      <field name="code">TIR</field>
+      <field name="parent_id" eval="False"/>
+    </record>
+
+    <record id="brut_annuel" model="hr.salary.rule.category">
+      <field name="name">Brut annuel</field>
+      <field name="code">BRUTA</field>
+      <field name="parent_id" eval="False"/>
+    </record>
+
+    <record id="tranche_trimf" model="hr.salary.rule.category">
+      <field name="name">Tranche Trimf</field>
+      <field name="code">T_TRIMF</field>
+      <field name="parent_id" eval="False"/>
+    </record>
+
+    <record id="trimf" model="hr.salary.rule.category">
+      <field name="name">TRIMF</field>
+      <field name="code">TRIMF</field>
+      <field name="parent_id" eval="False"/>
+    </record>
+
+    <record id="non_imposable" model="hr.salary.rule.category">
+      <field name="name">Non imposable</field>
+      <field name="code">NOIMP</field>
+      <field name="parent_id" eval="False"/>
+    </record>
+
+    <record id="cumul_tranche_imposable" model="hr.salary.rule.category">
+      <field name="name">Cumul tranche impot</field>
+      <field name="code">CTIR</field>
+      <field name="parent_id" eval="False"/>
+    </record>
+
+    <record id="hs" model="hr.salary.rule.category">
+      <field name="name">HS</field>
+      <field name="code">HS</field>
+      <field name="parent_id" eval="False"/>
+    </record>
+
+    <record id="provision" model="hr.salary.rule.category">
+      <field name="name">Provision</field>
+      <field name="code">PRV</field>
+      <field name="parent_id" eval="False"/>
+    </record>
+
+    <record id="avantage_nature" model="hr.salary.rule.category">
+      <field name="name">Avantages en Nature</field>
+      <field name="code">AVN</field>
+      <field name="parent_id" eval="False"/>
+    </record>
+
+    <record id="TOTALCOMP" model="hr.salary.rule.category">
+      <field name="name">Total Charges Patronales</field>
+      <field name="code">TOTALCOMP</field>
+      <field name="parent_id" eval="False"/>
+    </record>
+
+    <!-- Contribution Register -->
+
+    <record id="hr_CNSS_register" model="res.partner">
+      <field name="name">La Caisse Nationale de Sécurité Sociale</field>
+    </record>
+
+    <record id="hr_prevoyance_register" model="res.partner">
+      <field name="name">Organisme de prevoyance</field>
+    </record>
+
+    <record id="hr_VRS_register" model="res.partner">
+      <field name="name">VRS</field>
+    </record>
+
+
+    <!-- HR SALARY RULES-->
+    <record id="hr_payroll_hr_rule_basic" model="hr.salary.rule">
+      <field name="name">Salaire de base</field>
+      <field name="code">C1000</field>
+      <field name="sequence">1000</field>
+      <field name="category_id" ref="hr_payroll.BASIC"/>
+      <field name="amount_select">code</field>
+      <field name="amount_python_compute">result = contract.wage*(worked_days.WORK100.number_of_days)/30</field>
+      <field name="note">La règle du salaire de base </field>
+      <field name="struct_id" ref="structure_worker_001_sn"/>
+    </record>
+
+    <record id="hr_payroll_rules_alloc" model="hr.salary.rule">
+      <field name="category_id" ref="hr_payroll.ALW"/>
+      <field name="name">Allocation Congés</field>
+      <field name="code">C1060</field>
+      <field name="appears_on_payslip">True</field>
+      <field name="sequence">1060</field>
+      <field name="condition_select">python</field>
+      <field name="condition_python">if contract.alloc_conges != 0:
+  result = True
+      </field>
+      <field name="amount_select">code</field>
+      <field name="amount_python_compute">result = round(contract.alloc_conges)
+      </field>
+      <field name="struct_id" ref="structure_worker_001_sn"/>
+    </record>
+
+      
+      
+      
+    <record id="hr_rule_total_prime_transport" model="hr.salary.rule">
+      <field name="name">Prime de transport</field>
+      <field name="sequence">1125</field>
+      <field name="code">C1125</field>
+      <field name="category_id" ref="non_imposable"/>
+      <field name="condition_select">none</field>
+      <field name="amount_select">code</field>
+      <field name="amount_python_compute">result = worked_days.WORK100.number_of_days*20800/30</field>
+      <field name="note">Prime de transport</field>
+      <field name="struct_id" ref="structure_worker_001_sn"/>
+    </record>
+
+    <record id="hr_rule_total_indemnite_km" model="hr.salary.rule">
+      <field name="name">Indemnité KM</field>
+      <field name="sequence">1140</field>
+      <field name="code">C1100</field>
+      <field name="category_id" ref="non_imposable"/>
+      <field name="condition_select">none</field>
+      <field name="amount_select">code</field>
+      <field name="amount_python_compute">result = worked_days.WORK100.number_of_days*50000/30</field>
+      <field name="note">Indemnité KM</field>
+      <field name="struct_id" ref="structure_worker_001_sn"/>
+    </record>
+
+    <!--Provision used whithout Allocation conges-->
+    <record id="hr_payroll_hr_rule_brut" model="hr.salary.rule">
+      <field name="name">Salaire Brut</field>
+      <field name="code">C1148</field>
+      <field name="sequence">1148</field>
+      <field name="category_id" ref="hr_payroll.GROSS"/>
+      <field name="condition_select">none</field>
+      <field name="amount_select">code</field>
+      <field name="amount_python_compute">result = round(categories.BASE + categories.INDM + categories.NOIMP + categories.HS)</field>
+      <field name="appears_on_payslip" eval="True"/>
+      <field name="note">la valeur du salaire Brut se base sur la somme du salaire de base et les indemnités tout en faisant la soustraction des déductions.</field>
+      <field name="struct_id" ref="structure_worker_001_sn"/>
+    </record>
+
+    <record id="hr_rule_ipres_rg" model="hr.salary.rule">
+      <field name="name">Ipres RG</field>
+      <field name="sequence">2030</field>
+      <field name="code">C2030</field>
+      <field name="category_id" ref="SALC"/>
+      <field name="condition_select">none</field>
+      <field name="amount_select">percentage</field>
+      <field name="amount_percentage_base">min((categories.BRUT - categories.NOIMP),360000)</field>
+      <field name="amount_percentage">5.6</field>
+      <field name="note">Ipres RG</field>
+      <field name="partner_id" ref="hr_prevoyance_register"/>
+      <field name="struct_id" ref="structure_worker_001_sn"/>
+    </record>
+
+    <record id="hr_rule_ipres_rg_pat" model="hr.salary.rule">
+      <field name="name">Ipres RG Pat</field>
+      <field name="code">C2031</field>
+      <field name="sequence">2031</field>
+      <field name="category_id" ref="hr_payroll.COMP"/>
+      <field name="condition_select">none</field>
+      <field name="amount_select">percentage</field>
+      <field name="amount_percentage_base">min((categories.BRUT - categories.NOIMP),360000)</field>
+      <field name="amount_percentage">8.4</field>
+      <field name="note">Ipres RG Patronale</field>
+      <field name="partner_id" ref="hr_prevoyance_register"/>
+      <field name="struct_id" ref="structure_worker_001_sn"/>
+    </record>
+
+    <record id="hr_rule_ipres_rc" model="hr.salary.rule">
+      <field name="name">Ipres RC</field>
+      <field name="sequence">2040</field>
+      <field name="code">C2040</field>
+      <field name="category_id" ref="SALC"/>
+      <field name="condition_select">none</field>
+      <field name="amount_select">percentage</field>
+      <field name="amount_percentage_base">min(categories.BRUT - categories.NOIMP,1080000)</field>
+      <field name="amount_percentage">2.4</field>
+      <field name="note">Ipres RC</field>
+      <field name="partner_id" ref="hr_prevoyance_register"/>
+      <field name="struct_id" ref="structure_worker_001_sn"/>
+    </record>
+
+    <record id="hr_rule_ipres_rc_pat" model="hr.salary.rule">
+      <field name="name">Ipres RC Pat</field>
+      <field name="code">C2041</field>
+      <field name="sequence">2041</field>
+      <field name="category_id" ref="hr_payroll.COMP"/>
+      <field name="condition_select">none</field>
+      <field name="amount_select">percentage</field>
+      <field name="amount_percentage_base">min(categories.BRUT - categories.NOIMP,1080000)</field>
+      <field name="amount_percentage">3.6</field>
+      <field name="note">Ipres RC Patronale</field>
+      <field name="partner_id" ref="hr_prevoyance_register"/>
+      <field name="struct_id" ref="structure_worker_001_sn"/>
+    </record>
+
+    <record id="hr_payroll_prestations_familiale" model="hr.salary.rule">
+      <field name="category_id" ref="hr_payroll.COMP"/>
+      <field name="name">Prestations Familiales</field>
+      <field name="code">C2010</field>
+      <field name="sequence">2010</field>
+      <field name="condition_select">none</field>
+      <field name="amount_select">percentage</field>
+      <field name="amount_percentage_base">min(63000,categories.BRUT)</field>
+      <field name="amount_percentage">7</field>
+      <field name="struct_id" ref="structure_worker_001_sn"/>
+    </record>
+
+
+    <record id="hr_payroll_rules_accident" model="hr.salary.rule">
+      <field name="category_id" ref="hr_payroll.COMP"/>
+      <field name="name">Accident de travail</field>
+      <field name="code">C2020</field>
+      <field name="sequence">2020</field>
+      <field name="condition_select">none</field>
+      <field name="amount_select">percentage</field>
+      <field name="amount_percentage_base">min(63000,categories.BRUT)</field>
+      <field name="amount_percentage">3</field>
+      <field name="note">C'est la valeur d'accident de travail qui se base sur la valeur de salaire "Brut". Elle doit être réglée chaque trimestre .Cette valeur appartient à la rubrique "Cotisations Patronales" </field>
+      <field name="struct_id" ref="structure_worker_001_sn"/>
+    </record>
+
+      <record id="hr_payroll_rules_cfce" model="hr.salary.rule">
+      <field name="category_id" ref="hr_payroll.COMP"/>
+      <field name="name">CFCE</field>
+      <field name="code">C2000</field>
+      <field name="sequence">2000</field>
+      <field name="condition_select">none</field>
+      <field name="amount_select">percentage</field>
+      <field name="amount_percentage_base">categories.BRUT - categories.NOIMP</field>
+      <field name="amount_percentage">3</field>
+      <!--<field name="amount_python_compute">result = round((categories.BRUT - categories.NOIMP)*3/100)</field>--> <!--3% -->
+      <field name="partner_id" ref="hr_VRS_register"/>
+      <field name="struct_id" ref="structure_worker_001_sn"/>
+    </record>
+
+    <record id="hr_rule_total_charges_patronales" model="hr.salary.rule">
+      <field name="name">Total Charges Patronales</field>
+      <field name="sequence">3010</field>
+      <field name="code">C3010</field>
+      <field name="category_id" ref="TOTALCOMP"/>
+      <field name="appears_on_payslip" eval="False"/>
+      <field name="condition_select">none</field>
+      <field name="amount_select">code</field>
+      <field name="amount_python_compute">result = round(categories.COMP)</field>
+      <field name="note">la somme des charges patronales.</field>
+      <field name="struct_id" ref="structure_worker_001_sn"/>
+    </record>
+
+    <record id="hr_rule_total" model="hr.salary.rule">
+      <field name="name">Cout total pour l'entreprise</field>
+      <field name="sequence">3020</field>
+      <field name="code">C3020</field>
+      <field name="category_id" ref="TOTAL"/>
+      <field name="appears_on_payslip" eval="False"/>
+      <field name="condition_select">none</field>
+      <field name="amount_select">code</field>
+      <field name="amount_python_compute">result = round(categories.BRUT + categories.COMP)</field>
+      <field name="note">le coût total de l'entreprise qui est la somme du salaire brut et les cotistaions patronales. </field>
+      <field name="struct_id" ref="structure_worker_001_sn"/>
+    </record>
+
+    <record id="hr_payroll_rules_tranche_2" model="hr.salary.rule">
+      <field name="category_id" ref="tranche_impot_sur_revenu"/>
+      <field name="name">2eme Tranche</field>
+      <field name="code">C2100</field>
+      <field name="appears_on_payslip">False</field>
+      <field name="sequence">2100</field>
+      <field name="amount_select">code</field>
+      <field name="amount_python_compute">if categories.BFISC &lt; 125000 and categories.BFISC &gt; 52500:
+  result=round((categories.BFISC - 52500)*0.2)
+else:
+  if categories.BFISC &gt; 125000:
+    result=14500
+  else:
+    result=0
+      </field>
+      <field name="struct_id" ref="structure_worker_001_sn"/>
+    </record>
+
+    <record id="hr_payroll_rules_tranche_3" model="hr.salary.rule">
+      <field name="category_id" ref="tranche_impot_sur_revenu"/>
+      <field name="name">3eme Tranche</field>
+      <field name="code">C2101</field>
+      <field name="appears_on_payslip">False</field>
+      <field name="sequence">2101</field>
+      <field name="amount_select">code</field>
+      <field name="amount_python_compute">if categories.BFISC &lt; 333333 and categories.BFISC &gt; 125000:
+    result=round((categories.BFISC - 125000)*0.3)
+else:
+  if categories.BFISC &gt; 333333:
+    result=62500
+  else:
+    result=0
+      </field>
+      <field name="struct_id" ref="structure_worker_001_sn"/>
+    </record>
+
+    <record id="hr_payroll_rules_tranche_4" model="hr.salary.rule">
+      <field name="category_id" ref="tranche_impot_sur_revenu"/>
+      <field name="name">4eme Tranche</field>
+      <field name="code">C2102</field>
+      <field name="appears_on_payslip">False</field>
+      <field name="sequence">2102</field>
+      <field name="amount_select">code</field>
+      <field name="amount_python_compute">if categories.BFISC &lt; 666667 and categories.BFISC &gt; 333333:
+    result=round((categories.BFISC - 333333)*0.35)
+else:
+    if categories.BFISC &gt; 666667 :
+      result=116667
+    else:
+      result=0
+      </field>
+      <field name="struct_id" ref="structure_worker_001_sn"/>
+    </record>
+
+    <record id="hr_payroll_rules_tranche_5" model="hr.salary.rule">
+      <field name="category_id" ref="tranche_impot_sur_revenu"/>
+      <field name="name">5eme Tranche</field>
+      <field name="code">C2103</field>
+      <field name="appears_on_payslip">False</field>
+      <field name="sequence">2103</field>
+      <field name="amount_select">code</field>
+      <field name="amount_python_compute">if categories.BFISC &lt;= 1125000 and categories.BFISC &gt; 666667:
+    result=round((categories.BFISC - 666667)*0.37)
+else:
+    if categories.BFISC &gt; 1125000:
+      result=169583
+    else:
+      result=0
+      </field>
+      <field name="struct_id" ref="structure_worker_001_sn"/>
+    </record>
+
+    <record id="hr_payroll_rules_tranche_6" model="hr.salary.rule">
+      <field name="category_id" ref="tranche_impot_sur_revenu"/>
+      <field name="name">6eme Tranche</field>
+      <field name="code">C2104</field>
+      <field name="appears_on_payslip">False</field>
+      <field name="sequence">2104</field>
+      <field name="amount_select">code</field>
+      <field name="amount_python_compute">if categories.BFISC &gt; 1125000:
+    result=round((categories.BFISC - 1125000)*0.4)
+else:
+    result=0
+      </field>
+      <field name="struct_id" ref="structure_worker_001_sn"/>
+    </record>
+
+    <record id="hr_payroll_rules_base_fical_apres_abattement" model="hr.salary.rule">
+      <field name="category_id" ref="base_fiscal"/>
+      <field name="name">Base fiscal après abattement</field>
+      <field name="code">C1210</field>
+      <field name="appears_on_payslip">False</field>
+      <field name="sequence">1210</field>
+      <field name="condition_select">none</field>
+      <field name="amount_select">code</field>
+      <field name="amount_python_compute">abattement = min(categories.C_IMP*0.3, 75000)
+result = categories.C_IMP - abattement
+      </field>
+      <field name="struct_id" ref="structure_worker_001_sn"/>
+    </record>
+
+    <record id="hr_payroll_rules_red_1" model="hr.salary.rule">
+      <field name="category_id" ref="DEDIRPP"/>
+      <field name="name">Réduction 1</field>
+      <field name="code">C2120</field>
+      <field name="appears_on_payslip">False</field>
+      <field name="sequence">2120</field>
+      <field name="amount_select">code</field>
+      <field name="amount_python_compute">if employee.ir == 1.5:
+  if (categories.CTIR*0.1) &lt; 8333:
+     result = 8333
+  elif (categories.CTIR*0.1) &gt; 25000:
+    result = 25000
+  else:
+    result = round(categories.CTIR*0.1)
+else:
+   result = 0
+      </field>
+      <field name="struct_id" ref="structure_worker_001_sn"/>
+    </record>
+
+    <record id="hr_payroll_rules_red_2" model="hr.salary.rule">
+      <field name="category_id" ref="DEDIRPP"/>
+      <field name="name">Réduction 2</field>
+      <field name="code">C2121</field>
+      <field name="appears_on_payslip">False</field>
+      <field name="sequence">2121</field>
+      <field name="amount_select">code</field>
+      <field name="amount_python_compute">if employee.ir == 2:
+  if (categories.CTIR*0.15) &lt; 16666.66666666667:
+    result = 16666.66666666667
+  elif (categories.CTIR*0.15) &gt; 54166.66666666667:
+    result = 54166.66666666667
+  else:
+    result = categories.CTIR*0.15
+else:
+  result=0
+      </field>
+      <field name="struct_id" ref="structure_worker_001_sn"/>
+    </record>
+
+    <record id="hr_payroll_rules_red_3" model="hr.salary.rule">
+      <field name="category_id" ref="DEDIRPP"/>
+      <field name="name">Réduction 3</field>
+      <field name="code">C2122</field>
+      <field name="appears_on_payslip">False</field>
+      <field name="sequence">2122</field>
+      <field name="amount_select">code</field>
+      <field name="amount_python_compute">if employee.ir == 2.5:
+  if (categories.CTIR*0.2) &lt; 25000:
+    result = 25000
+  elif (categories.CTIR*0.2) &gt; 91666.66666666667:
+    result = 91666.66666666667
+  else:
+    result = categories.CTIR*0.2
+else:
+  result=0
+      </field>
+      <field name="struct_id" ref="structure_worker_001_sn"/>
+    </record>
+
+    <record id="hr_payroll_rules_red_4" model="hr.salary.rule">
+      <field name="category_id" ref="DEDIRPP"/>
+      <field name="name">Réduction 4</field>
+      <field name="code">C2123</field>
+      <field name="appears_on_payslip">False</field>
+      <field name="sequence">2123</field>
+      <field name="amount_select">code</field>
+      <field name="amount_python_compute">if employee.ir == 3:
+  if (categories.CTIR*0.25) &lt; 33333.33333333333:
+    result = 33333.33333333333
+  elif (categories.CTIR*0.25) &gt; 137500:
+    result = 137500
+  else:
+    result = categories.CTIR*0.25
+else:
+  result=0
+      </field>
+      <field name="struct_id" ref="structure_worker_001_sn"/>
+    </record>
+
+    <record id="hr_payroll_rules_red_5" model="hr.salary.rule">
+      <field name="category_id" ref="DEDIRPP"/>
+      <field name="name">Réduction 5</field>
+      <field name="code">C2124</field>
+      <field name="appears_on_payslip">False</field>
+      <field name="sequence">2124</field>
+      <field name="amount_select">code</field>
+      <field name="amount_python_compute">if employee.ir == 3.5:
+  if (categories.CTIR*0.3) &lt; 41666.66666666667:
+    result = 41666.66666666667
+  elif (categories.CTIR*0.3) &gt; 169166.6666666667:
+    result = 169166.6666666667
+  else:
+    result = categories.CTIR*0.3
+else:
+  result=0
+      </field>
+      <field name="struct_id" ref="structure_worker_001_sn"/>
+    </record>
+
+    <record id="hr_payroll_rules_red_6" model="hr.salary.rule">
+      <field name="category_id" ref="DEDIRPP"/>
+      <field name="name">Réduction 6</field>
+      <field name="code">C2125</field>
+      <field name="appears_on_payslip">False</field>
+      <field name="sequence">2125</field>
+      <field name="amount_select">code</field>
+      <field name="amount_python_compute">if employee.ir == 4:
+  if (categories.CTIR*0.35) &lt; 50000:
+    result = 50000
+  elif (categories.CTIR*0.35) &gt; 207500:
+    result = 207500
+  else:
+    result = categories.CTIR*0.35
+else:
+  result = 0
+      </field>
+      <field name="struct_id" ref="structure_worker_001_sn"/>
+    </record>
+
+
+    <record id="hr_payroll_rules_red_7" model="hr.salary.rule">
+      <field name="category_id" ref="DEDIRPP"/>
+      <field name="name">Réduction 7</field>
+      <field name="code">C2126</field>
+      <field name="appears_on_payslip">False</field>
+      <field name="sequence">2126</field>
+      <field name="amount_select">code</field>
+      <field name="amount_python_compute">if employee.ir == 4.5:
+  if (categories.CTIR*0.4) &lt; 58333.33333:
+    result = 58333.33333
+  elif (categories.CTIR*0.4) &gt; 229583.3333:
+    result = 229583.3333
+  else:
+    result = categories.CTIR*0.4
+else:
+  result = 0
+      </field>
+      <field name="struct_id" ref="structure_worker_001_sn"/>
+    </record>
+
+    <record id="hr_payroll_rules_red_8" model="hr.salary.rule">
+      <field name="category_id" ref="DEDIRPP"/>
+      <field name="name">Réduction 8</field>
+      <field name="code">C2127</field>
+      <field name="appears_on_payslip">False</field>
+      <field name="sequence">2127</field>
+      <field name="amount_select">code</field>
+      <field name="amount_python_compute">if employee.ir == 5:
+  if (categories.CTIR*0.45) &lt; 66666.66667:
+    result = 66666.66667
+  elif (categories.CTIR*0.45) &gt; 265000:
+    result = 265000
+  else:
+    result = categories.CTIR*0.45
+else:
+  result = 0
+      </field>
+      <field name="struct_id" ref="structure_worker_001_sn"/>
+    </record>
+
+    <record id="hr_payroll_rules_ir" model="hr.salary.rule">
+      <field name="category_id" ref="impot_sur_revenu"/>
+      <field name="appears_on_payslip" eval="False"/>
+      <field name="name">IR</field>
+      <field name="code">C2140</field>
+      <field name="sequence">2140</field>
+      <field name="condition_select">none</field>
+      <field name="amount_select">code</field>
+      <field name="amount_python_compute">if (categories.TIR - categories.CRED) &gt; 0:
+  result = round(categories.TIR - categories.CRED)
+else:
+  result=0
+      </field>
+      <field name="struct_id" ref="structure_worker_001_sn"/>
+    </record>
+
+    <record id="hr_rule_total_deduction_impot" model="hr.salary.rule">
+      <field name="name">Total Déductions d'impôt </field>
+      <field name="sequence">2130</field>
+      <field name="category_id" ref="DEDIRPPS"/>
+      <field name="code">C2130</field>
+      <field name="condition_select">none</field>
+      <field name="amount_select">code</field>
+      <field name="amount_python_compute">if categories.DEDIRPP &lt; 0:
+  result=0
+else:
+  result = round(categories.DEDIRPP)
+      </field>
+      <field name="appears_on_payslip" eval="False"/>
+      <field name="note">Cette règle représente la somme de toutes les déductions d'impôt que le salarié peut subir.</field>
+      <field name="struct_id" ref="structure_worker_001_sn"/>
+    </record>
+
+    <record id="hr_payroll_rules_trimf" model="hr.salary.rule">
+      <field name="category_id" ref="hr_payroll.DED"/>
+      <field name="name">Trimf</field>
+      <field name="code">C2050</field>
+      <field name="sequence">2050</field>
+      <field name="condition_select">python</field>
+      <field name="condition_python">
+if payslip.date_from.month != 12:
+  result = True
+else:
+  if employee.payslip_count > 11:
+      result = False
+  else:
+      result = True
+      </field>
+      <field name="amount_select">code</field>
+      <field name="amount_python_compute">if categories.C_IMP &lt; 50000:
+  result = employee.trimf*75
+else:
+  if categories.C_IMP &lt; 83333:
+    result = employee.trimf*300
+  else:
+    if categories.C_IMP &lt; 166667:
+      result = employee.trimf*400
+    else:
+      if categories.C_IMP &lt; 583334:
+        result = employee.trimf*1000
+      else:
+        if categories.C_IMP &lt; 1000000:
+          result = employee.trimf*1500
+        else:
+          result = employee.trimf*3000
+      </field>
+      <field name="partner_id" ref="hr_VRS_register"/>
+      <field name="struct_id" ref="structure_worker_001_sn"/>
+    </record>
+
+    <record id="hr_rule_total_retenues" model="hr.salary.rule">
+      <field name="name">Total Retenues</field>
+      <field name="sequence">3000</field>
+      <field name="category_id" ref="RETENUES"/>
+      <field name="code">C3000</field>
+      <field name="condition_select">none</field>
+      <field name="amount_select">code</field>
+      <field name="appears_on_payslip" eval="False"/>
+      <field name="amount_python_compute">result = round(categories.DED+categories.SALC+categories.IR)</field>
+      <field name="note">Cette règle mais en valeur la somme de toutes les retenues.</field>
+      <field name="struct_id" ref="structure_worker_001_sn"/>
+    </record>
+
+    <record id="hr_payroll_rule_net" model="hr.salary.rule">
+      <field name="name">Net</field>
+      <field name="code">C5000</field>
+      <field name="sequence" eval="5000"/>
+      <field name="category_id" ref="hr_payroll.NET"/>
+      <field name="condition_select">none</field>
+      <field name="amount_select">code</field>
+      <field name="amount_python_compute">result = round(categories.BRUT - categories.DED - categories.SALC)</field>
+      <field name="note">C'est le salaire Net qui est le salaire Brut - toutes les retenues </field>
+      <field name="struct_id" ref="structure_worker_001_sn"/>
+    </record>
+
+    <record id="hr_payroll_rule_ir_regul" model="hr.salary.rule">
+      <field name="name">IR REGUL</field>
+      <field name="code">C2160</field>
+      <field name="sequence" eval="2160"/>
+      <field name="category_id" ref="impot_sur_revenu"/>
+      <field name="appears_on_payslip" eval="False"/>
+      <field name="condition_select">python</field>
+      <field name="condition_python">if payslip.date_from.month != 12:
+    result = True
+else:
+    if employee.payslip_count > 11:
+        result = False
+    else:
+        result = True
+      </field>
+      <field name="amount_select">fix</field>
+      <field name="quantity">1</field>
+      <field name="amount_fix">0.00</field>
+      <field name="note">C'est le regule de l'IR </field>
+      <field name="struct_id" ref="structure_worker_001_sn"/>
+    </record>
+
+    <record id="hr_payroll_rule_ir_recal" model="hr.salary.rule">
+      <field name="name">IR RECAL</field>
+      <field name="code">C2150</field>
+      <field name="sequence" eval="2150"/>
+      <field name="category_id" ref="impot_sur_revenu"/>
+      <field name="appears_on_payslip" eval="False"/>
+      <field name="condition_select">python</field>
+      <field name="condition_python">if payslip.date_from.month != 12:
+    result = True
+else:
+    if employee.payslip_count > 11:
+        result = False
+    else:
+        result = True
+      </field>
+      <field name="amount_select">fix</field>
+      <field name="quantity">1</field>
+      <field name="amount_fix">0.00</field>
+      <field name="note">C'est l'IR recalculé</field>
+      <field name="struct_id" ref="structure_worker_001_sn"/>
+    </record>
+
+    <record id="hr_payroll_rule_ir_fin" model="hr.salary.rule">
+      <field name="name">Impot sur le revenu</field>
+      <field name="code">C2170</field>
+      <field name="sequence" eval="2170"/>
+      <field name="category_id" ref="hr_payroll.DED"/>
+      <field name="condition_select">none</field>
+      <field name="amount_select">fix</field>
+      <field name="quantity">1</field>
+      <field name="amount_fix">0.00</field>
+      <field name="note">C'est l'IR final</field>
+      <field name="partner_id" ref="hr_VRS_register"/>
+      <field name="struct_id" ref="structure_worker_001_sn"/>
+    </record>
+
+    <record id="hr_payroll_rule_sursalaire" model="hr.salary.rule">
+      <field name="name">SURSALAIRE</field>
+      <field name="code">C1010</field>
+      <field name="sequence" eval="1010"/>
+      <field name="category_id" ref="hr_payroll.ALW"/>
+      <field name="condition_select">none</field>
+      <field name="amount_select">fix</field>
+      <field name="quantity">1</field>
+      <field name="amount_fix">0</field>
+      <field name="struct_id" ref="structure_worker_001_sn"/>
+    </record>
+
+    <record id="hr_payroll_anciennete" model="hr.salary.rule">
+      <field name="name">Ancienneté</field>
+      <field name="code">C1020</field>
+      <field name="sequence" eval="1020"/>
+      <field name="category_id" ref="hr_payroll.ALW"/>
+      <field name="condition_select">python</field>
+      <field name="condition_python">dur = payslip.date_to - contract.dateAnciennete
+if dur.days &gt; 730:
+  result = True
+      </field>
+      <field name="amount_select">code</field>
+      <field name="amount_python_compute">dur = payslip.date_to - contract.dateAnciennete
+result = round((worked_days.WORK100.number_of_days*contract.wage/30) * 0.01 * (dur.days//365))</field>
+      <field name="struct_id" ref="structure_worker_001_sn"/>
+    </record>
+
+    <record id="hr_payroll_rule_brut_imposable" model="hr.salary.rule">
+      <field name="name">BRUT Imposable</field>
+      <field name="code">C1200</field>
+      <field name="sequence" eval="1200"/>
+      <field name="category_id" ref="C_IMP"/>
+      <field name="condition_select">none</field>
+      <field name="amount_select">code</field>
+      <field name="amount_python_compute">result = categories.BRUT + categories.AVN - categories.NOIMP</field>
+      <field name="struct_id" ref="structure_worker_001_sn"/>
+    </record>
+
+    <record id="hr_payroll_rule_impot_progressif" model="hr.salary.rule">
+      <field name="name">Impot progressif</field>
+      <field name="code">C2110</field>
+      <field name="sequence" eval="2110"/>
+      <field name="category_id" ref="cumul_tranche_imposable"/>
+      <field name="appears_on_payslip" eval="False"/>
+      <field name="condition_select">none</field>
+      <field name="amount_select">code</field>
+      <field name="amount_python_compute">result = round(categories.TIR)</field>
+      <field name="struct_id" ref="structure_worker_001_sn"/>
+    </record>
+
+    <record id="hr_payroll_retenu_car_plan" model="hr.salary.rule">
+      <field name="name">RETENUE CAR PLAN</field>
+      <field name="code">C2520</field>
+      <field name="sequence" eval="2520"/>
+      <field name="category_id" ref="hr_payroll.DED"/>
+      <field name="condition_select">none</field>
+      <field name="amount_select">fix</field>
+      <field name="quantity">1</field>
+      <field name="amount_fix">0.00</field>
+      <field name="struct_id" ref="structure_worker_001_sn"/>
+    </record>
+
+    <record id="hr_payroll_assurance_sante" model="hr.salary.rule">
+      <field name="name">ASSURANCE SANTE</field>
+      <field name="code">C2500</field>
+      <field name="sequence" eval="2500"/>
+      <field name="category_id" ref="hr_payroll.DED"/>
+      <field name="condition_select">none</field>
+      <field name="amount_select">fix</field>
+      <field name="quantity">1</field>
+      <field name="amount_fix">7700.00</field>
+      <field name="struct_id" ref="structure_worker_001_sn"/>
+    </record>
+
+    <record id="hr_payroll_avance_tabaski" model="hr.salary.rule">
+      <field name="name">Avance tabaski</field>
+      <field name="code">C1070</field>
+      <field name="sequence" eval="1070"/>
+      <field name="category_id" ref="hr_payroll.ALW"/>
+      <field name="condition_select">none</field>
+      <field name="amount_select">fix</field>
+      <field name="quantity">1</field>
+      <field name="amount_fix">15000.00</field>
+      <field name="struct_id" ref="structure_worker_001_sn"/>
+    </record>
+
+    <record id="hr_payroll_retraite_complementaire" model="hr.salary.rule">
+      <field name="name">Retraite complémentaire</field>
+      <field name="code">C2042</field>
+      <field name="sequence" eval="2042"/>
+      <field name="category_id" ref="SALC"/>
+      <field name="condition_select">none</field>
+      <field name="amount_select">code</field>
+      <field name="amount_python_compute">result = round(categories.C_IMP*3.33/100)</field> <!--3.3300% -->
+      <field name="struct_id" ref="structure_worker_001_sn"/>
+    </record>
+
+    <record id="hr_payroll_retraite_complementaire" model="hr.salary.rule">
+      <field name="name">Retraite complémentaire Pat</field>
+      <field name="code">C2043</field>
+      <field name="sequence" eval="2043"/>
+      <field name="category_id" ref="hr_payroll.COMP"/>
+      <field name="condition_select">none</field>
+      <field name="amount_select">code</field>
+      <field name="amount_python_compute">result = round(categories.C_IMP*6.67/100)</field> <!--6.67% -->
+      <field name="amount_percentage_base">categories.C_IMP</field>
+      <field name="struct_id" ref="structure_worker_001_sn"/>
+    </record>
+
+
+    <record id="hr_payroll_avance_tabaski" model="hr.salary.rule">
+      <field name="name">Prime  de logement</field>
+      <field name="code">C1030</field>
+      <field name="sequence" eval="1030"/>
+      <field name="category_id" ref="hr_payroll.ALW"/>
+      <field name="condition_select">none</field>
+      <field name="amount_select">fix</field>
+      <field name="quantity">1</field>
+      <field name="amount_fix">0.0</field>
+      <field name="struct_id" ref="structure_worker_001_sn"/>
+    </record>
+
+    <record id="hr_payroll_provision_retraite" model="hr.salary.rule">
+      <field name="name">Provision retraite</field>
+      <field name="code">C1147</field>
+      <field name="sequence" eval="1147"/>
+      <field name="category_id" ref="provision"/>
+      <field name="condition_select">none</field>
+      <field name="amount_select">fix</field>
+      <field name="quantity">1</field>
+      <field name="amount_fix">0.00</field>
+      <field name="struct_id" ref="structure_worker_001_sn"/>
+    </record>
+
+    <record id="hr_payroll_indemnite_retraite" model="hr.salary.rule">
+      <field name="category_id" ref="non_imposable"/>
+      <field name="name">Indemnité retraite</field>
+      <field name="code">C1120</field>
+      <field name="appears_on_payslip">False</field>
+      <field name="sequence">1120</field>
+      <field name="condition_select">python</field>
+      <field name="condition_python">if contract.motif and contract.motif == 'retraite':
+  result = True
+      </field>
+      <field name="amount_select">fix</field>
+      <field name="quantity">1</field>
+      <field name="amount_fix">0.00</field>
+      <field name="struct_id" ref="structure_worker_001_sn"/>
+    </record>
+
+    <record id="hr_payroll_provision_fin_contrat" model="hr.salary.rule">
+      <field name="category_id" ref="provision"/>
+      <field name="name">Provision Fin de contrat</field>
+      <field name="code">C1160</field>
+      <field name="appears_on_payslip">False</field>
+      <field name="sequence">1160</field>
+      <field name="condition_select">python</field>
+      <field name="condition_python">if contract.date_end and not contract.motif:
+  result = True
+      </field>
+      <field name="amount_select">code</field>
+      <field name="amount_python_compute">result = round(C1148*7/100)</field>
+      <field name="struct_id" ref="structure_worker_001_sn"/>
+    </record>
+
+    <record id="hr_payroll_indemnite_fin_contrat" model="hr.salary.rule">
+      <field name="category_id" ref="hr_payroll.ALW"/>
+      <field name="name">Indemnité Fin de contrat</field>
+      <field name="code">C1131</field>
+      <field name="appears_on_payslip">False</field>
+      <field name="sequence">1131</field>
+      <field name="condition_select">python</field>
+      <field name="condition_python">if contract.motif and contract.motif == 'fin':
+  result = True
+      </field>
+      <field name="amount_select">code</field>
+      <field name="amount_python_compute">result = round(contract.cumul_provision_fin_contrat + (categories.BASE + categories.INDM + categories.NOIMP)*7/100)</field>
+      <field name="struct_id" ref="structure_worker_001_sn"/>
+    </record>
+
+    <record id="hr_payroll_indemnite_licencienment" model="hr.salary.rule">
+      <field name="category_id" ref="non_imposable"/>
+      <field name="name">Indemnité de licenciement</field>
+      <field name="code">C1145</field>
+      <field name="appears_on_payslip">False</field>
+      <field name="sequence">1145</field>
+      <field name="condition_select">python</field>
+      <field name="condition_python">if contract.motif and contract.motif == 'licenciement':
+  result = True
+      </field>
+      <field name="amount_select">fix</field>
+      <field name="quantity">1</field>
+      <field name="amount_fix">0.00</field>
+      <field name="struct_id" ref="structure_worker_001_sn"/>
+    </record>
+
+    <record id="hr_payroll_indemnite_deces" model="hr.salary.rule">
+      <field name="category_id" ref="non_imposable"/>
+      <field name="name">Indemnité de décès</field>
+      <field name="code">C1146</field>
+      <field name="appears_on_payslip">False</field>
+      <field name="sequence">1146</field>
+      <field name="condition_select">python</field>
+      <field name="condition_python">if contract.motif and contract.motif == 'deces':
+  result = True
+      </field>
+      <field name="amount_select">fix</field>
+      <field name="quantity">1</field>
+      <field name="amount_fix">0.00</field>
+      <field name="struct_id" ref="structure_worker_001_sn"/>
+    </record>
+
+    <!--Provision used whitout Allocation Conges -->
+    <record id="hr_payroll_provision_conge" model="hr.salary.rule">
+      <field name="name">Provision congés</field>
+      <field name="code">C1150</field>
+      <field name="sequence" eval="1150"/>
+      <field name="category_id" ref="provision"/>
+      <field name="condition_select">python</field>
+      <field name="condition_python">if contract.alloc_conges == 0:
+  result = True
+      </field>
+      <field name="amount_select">code</field>
+      <field name="amount_python_compute">result= round((categories.BASE+categories.INDM)/12)</field>
+      <field name="struct_id" ref="structure_worker_001_sn"/>
+    </record>
+
+    <!--Provision used whith Allocation Conges for removing amount of Allocation Congés -->
+    <record id="hr_payroll_provision_conge_bis" model="hr.salary.rule">
+      <field name="name">Provision congés</field>
+      <field name="code">C1150</field>
+      <field name="sequence" eval="1150"/>
+      <field name="category_id" ref="provision"/>
+      <field name="condition_select">python</field>
+      <field name="condition_python">if contract.alloc_conges != 0:
+  result = True
+      </field>
+      <field name="amount_select">code</field>
+      <field name="amount_python_compute">result= round((categories.BASE+categories.INDM - C1060)/12)</field>
+      <field name="struct_id" ref="structure_worker_001_sn"/>
+    </record>
+
+    <record id="hr_payroll_rule_prime_treize_mois" model="hr.salary.rule">
+      <field name="name">Prime 13ème Mois</field>
+      <field name="code">C1015</field>
+      <field name="sequence" eval="1015"/>
+      <field name="category_id" ref="hr_payroll.ALW"/>
+      <field name="condition_select">none</field>
+      <field name="amount_select">code</field>
+      <field name="amount_python_compute">year = ''
+nbj = payslip.env['hr.payslip'].get_worked_days_per_year(employee.id,year)
+result =(nbj/365)*categories.BASE + C1010 if nbj != 0 else 0
+      </field>
+      <field name="note">Prime 13ème Mois</field>
+      <field name="struct_id" ref="structure_worker_001_sn"/>
+    </record>
+
+
+    <record id="hr_payroll_rules_hs_15" model="hr.salary.rule">
+      <field name="category_id" ref="hs"/>
+      <field name="active" eval="False"/>
+      <field name="name">HS 15%</field>
+      <field name="code">HS15</field>
+      <field name="sequence">1021</field>
+      <field name="appears_on_payslip">True</field>
+      <field name="condition_select">python</field>
+      <field name="condition_python">if inputs.HS15.amount !=0:
+  result = True
+      </field>
+      <field name="amount_select">code</field>
+      <field name="amount_python_compute">result = inputs.HS15.amount*1.15*(categories.BASE + categories.INDM)/173.3333
+      </field>
+      <field name="struct_id" ref="structure_worker_001_sn"/>
+    </record>
+
+      
+    <record id="hr_payroll_rules_hs_40" model="hr.salary.rule">
+      <field name="category_id" ref="hs"/>
+        <field name="active" eval="False"/>
+      <field name="name">HS 40%</field>
+      <field name="code">HS40</field>
+      <field name="sequence">1022</field>
+      <field name="appears_on_payslip">True</field>
+      <field name="condition_select">python</field>
+      <field name="condition_python">if inputs.HS40.amount !=0:
+  result = True
+      </field>
+      <field name="amount_select">code</field>
+      <field name="amount_python_compute">result = inputs.HS40.amount*1.4*(categories.BASE + categories.INDM)/173.3333
+      </field>
+      <field name="struct_id" ref="structure_worker_001_sn"/>
+    </record>
+
+
+    <record id="hr_payroll_rules_hs_60" model="hr.salary.rule">
+      <field name="category_id" ref="hs"/>
+        <field name="active" eval="False"/>
+      <field name="name">HS 60%</field>
+      <field name="code">HS60</field>
+      <field name="sequence">1023</field>
+      <field name="appears_on_payslip">True</field>
+      <field name="condition_select">python</field>
+      <field name="condition_python">if inputs.HS60.amount !=0:
+  result = True
+      </field>
+      <field name="amount_select">code</field>
+      <field name="amount_python_compute">result = inputs.HS60.amount*1.6*(categories.BASE + categories.INDM)/173.3333
+      </field>
+      <field name="struct_id" ref="structure_worker_001_sn"/>
+    </record>
+
+    <record id="hr_payroll_rules_hs_100" model="hr.salary.rule">
+      <field name="category_id" ref="hs"/>
+        <field name="active" eval="False"/>
+      <field name="name">HS 100%</field>
+      <field name="code">HS100</field>
+      <field name="sequence">1024</field>
+      <field name="appears_on_payslip">True</field>
+      <field name="condition_select">python</field>
+      <field name="condition_python">if inputs.HS100.amount !=0:
+  result = True
+      </field>
+      <field name="amount_select">code</field>
+      <field name="amount_python_compute">result = inputs.HS100.amount*2*(categories.BASE + categories.INDM)/173.3333
+      </field>
+      <field name="struct_id" ref="structure_worker_001_sn"/>
+    </record>
+
+    <record id="hr_payroll_solde_conge" model="hr.salary.rule">
+      <field name="category_id" ref="hr_payroll.ALW"/>
+      <field name="name">Soldes conges</field>
+      <field name="code">C1051</field>
+      <field name="sequence">1051</field>
+      <field name="condition_select">python</field>
+      <field name="condition_python">if contract.motif:
+  result = True
+      </field>
+      <field name="amount_select">code</field>
+      <field name="amount_python_compute">result = contract.cumul_mensuel</field>
+      <field name="struct_id" ref="structure_worker_001_sn"/>
+    </record>
+
+    <record id="hr_payroll_avantage_nature" model="hr.salary.rule">
+      <field name="category_id" ref="avantage_nature"/>
+      <field name="name">Avantages en nature</field>
+      <field name="code">C1090</field>
+      <field name="sequence">1090</field>
+      <field name="condition_select">none</field>
+      <field name="amount_select">fix</field>
+      <field name="quantity">1</field>
+      <field name="amount_fix">0.0</field>
+      <field name="struct_id" ref="structure_worker_001_sn"/>
+    </record>
+
+
+    <record id="hr_payroll_rules_ir_annuel" model="hr.salary.rule">
+      <field name="category_id" ref="impot_sur_revenu"/>
+      <field name="appears_on_payslip" eval="False"/>
+      <field name="name">IR ANNUEL</field>
+      <field name="code">C2161</field>
+      <field name="sequence">2161</field>
+      <field name="condition_select">python</field>
+      <field name="condition_python">if employee.payslip_count > 11 and payslip.date_from.month == 12:
+  result = True
+else:
+  result = False
+      </field>
+      <field name="amount_select">fix</field>
+      <field name="quantity">1</field>
+      <field name="amount_fix">0.0</field>
+      <field name="struct_id" ref="structure_worker_001_sn"/>
+    </record>
+
+    <record id="hr_payroll_rules_cumul_ir" model="hr.salary.rule">
+      <field name="category_id" ref="impot_sur_revenu"/>
+      <field name="appears_on_payslip" eval="False"/>
+      <field name="name">CUMUL IR</field>
+      <field name="code">C2162</field>
+      <field name="sequence">2162</field>
+      <field name="condition_select">python</field>
+      <field name="condition_python">if employee.payslip_count > 11 and payslip.date_from.month == 12:
+  result = True
+else:
+  result = False
+      </field>
+      <field name="amount_select">fix</field>
+      <field name="quantity">1</field>
+      <field name="amount_fix">0.0</field>
+      <field name="struct_id" ref="structure_worker_001_sn"/>
+    </record>
+
+    <record id="hr_payroll_rules_regul_ir_annuel" model="hr.salary.rule">
+      <field name="category_id" ref="impot_sur_revenu"/>
+      <field name="appears_on_payslip" eval="False"/>
+      <field name="name">REGUL IR ANNUEL</field>
+      <field name="code">C2163</field>
+      <field name="sequence">2163</field>
+      <field name="condition_select">python</field>
+      <field name="condition_python">if employee.payslip_count > 11 and payslip.date_from.month == 12:
+  result = True
+else:
+  result = False
+      </field>
+      <field name="amount_select">code</field>
+      <field name="amount_python_compute">result = C2162 - C2161</field>
+      <field name="struct_id" ref="structure_worker_001_sn"/>
+    </record>
+
+
+    <record id="hr_payroll_rules_cumul_trimf" model="hr.salary.rule">
+      <field name="category_id" ref="trimf"/>
+      <field name="appears_on_payslip" eval="False"/>
+      <field name="name">Cumul Trimf</field>
+      <field name="code">C2047</field>
+      <field name="sequence">2047</field>
+      <field name="condition_select">python</field>
+      <field name="condition_python">if employee.payslip_count > 11 and payslip.date_from.month == 12:
+  result = True
+else:
+  result = False
+      </field>
+      <field name="amount_select">fix</field>
+      <field name="quantity">1</field>
+      <field name="amount_fix">0.0</field>
+      <field name="struct_id" ref="structure_worker_001_sn"/>
+    </record>
+
+    <record id="hr_payroll_rules_trimf_annuelle" model="hr.salary.rule">
+      <field name="category_id" ref="trimf"/>
+      <field name="appears_on_payslip" eval="False"/>
+      <field name="name">Trimf Annuelle</field>
+      <field name="code">C2048</field>
+      <field name="sequence">2048</field>
+      <field name="condition_select">python</field>
+      <field name="condition_python">if employee.payslip_count > 11 and payslip.date_from.month == 12:
+  result = True
+else:
+  result = False
+      </field>
+      <field name="amount_select">fix</field>
+      <field name="quantity">1</field>
+      <field name="amount_fix">0.0</field>
+      <field name="struct_id" ref="structure_worker_001_sn"/>
+    </record>
+
+    <record id="hr_payroll_rules_regul_trimf" model="hr.salary.rule">
+      <field name="category_id" ref="trimf"/>
+      <field name="appears_on_payslip" eval="False"/>
+      <field name="name">Regul Trimf</field>
+      <field name="code">C2049</field>
+      <field name="sequence">2049</field>
+      <field name="condition_select">python</field>
+      <field name="condition_python">if employee.payslip_count > 11 and payslip.date_from.month == 12:
+  result = True
+else:
+  result = False
+      </field>
+      <field name="amount_select">code</field>
+      <field name="amount_python_compute">result = C2047 - C2048</field>
+      <field name="struct_id" ref="structure_worker_001_sn"/>
+    </record>
+
+    <record id="hr_payroll_rules_trimf_bis" model="hr.salary.rule">
+      <field name="category_id" ref="hr_payroll.DED"/>
+      <field name="name">Trimf</field>
+      <field name="code">C2050</field>
+      <field name="sequence">2050</field>
+      <field name="condition_select">python</field>
+      <field name="condition_python">if employee.payslip_count > 11 and payslip.date_from.month == 12:
+  result = True
+else:
+  result = False
+      </field>
+      <field name="amount_select">code</field>
+      <field name="amount_python_compute">trimf_val = 0
+if categories.C_IMP &lt; 50000:
+  trimf_val = employee.trimf*75
+else:
+  if categories.C_IMP &lt; 83333:
+    trimf_val = employee.trimf*300
+  else:
+    if categories.C_IMP &lt; 166667:
+      trimf_val = employee.trimf*400
+    else:
+      if categories.C_IMP &lt; 583334:
+        trimf_val = employee.trimf*1000
+      else:
+        if categories.C_IMP &lt; 1000000:
+          trimf_val = employee.trimf*1500
+        else:
+          trimf_val = employee.trimf*3000
+result = trimf_val - C2049
+      </field>
+      <field name="partner_id" ref="hr_VRS_register"/>
+      <field name="struct_id" ref="structure_worker_001_sn"/>
+    </record>
+  </data>
+</odoo>
