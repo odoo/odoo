@@ -117,6 +117,9 @@
                                     class="font-weight-bold" view-type="form"
                                     t-att-res-model="line['document_in']._name"
                                     t-att-res-id="line['document_in'].id"/>
+                                <t t-elif="line['reservation']">
+                                    Reserved from stock
+                                </t>
                                 <t t-elif="line['replenishment_filled']">
                                     <t t-if="line['document_out']">Inventory On Hand</t>
                                     <t t-else="">Free Stock</t>
