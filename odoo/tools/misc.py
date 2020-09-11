@@ -1133,7 +1133,7 @@ class Callbacks:
     __slots__ = ['_funcs', 'data']
 
     def __init__(self):
-        self._funcs = []
+        self._funcs = collections.deque()
         self.data = {}
 
     def add(self, func):
@@ -1141,8 +1141,10 @@ class Callbacks:
         self._funcs.append(func)
 
     def run(self):
-        """ Call all the functions (in addition order), then clear. """
-        for func in self._funcs:
+        """ Call all the functions (in addition order), then clear associated data.
+        """
+        while self._funcs:
+            func = self._funcs.popleft()
             func()
         self.clear()
 
