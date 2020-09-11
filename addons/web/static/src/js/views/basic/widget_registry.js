@@ -23,5 +23,5 @@ odoo.define('web.widget_registry', function (require) {
 
     var Registry = require('web.Registry');
 
-    return new Registry();
+    return new Registry(null, (value) => !(value.prototype instanceof owl.Component));
 });

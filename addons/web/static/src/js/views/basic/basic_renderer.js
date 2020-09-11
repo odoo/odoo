@@ -13,10 +13,12 @@ var core = require('web.core');
 var dom = require('web.dom');
 const session = require('web.session');
 const utils = require('web.utils');
-var widgetRegistry = require('web.widget_registry');
+const widgetRegistry = require('web.widget_registry');
+const widgetRegistryOwl = require("web.widget_registry_owl");
 
 const { WidgetAdapterMixin } = require('web.OwlCompatibility');
 const FieldWrapper = require('web.FieldWrapper');
+const WidgetWrapper = require("web.WidgetWrapper");
 
 var qweb = core.qweb;
 const _t = core._t;
@@ -798,13 +800,27 @@ var BasicRenderer = AbstractRenderer.extend(WidgetAdapterMixin, {
      * @returns {jQueryElement}
      */
     _renderWidget: function (record, node) {
-        var Widget = widgetRegistry.get(node.attrs.name);
-        var widget = new Widget(this, record, node);
+        const Widget = widgetRegistryOwl.get(node.attrs.name) || widgetRegistry.get(node.attrs.name);
+        const legacy = !(Widget.prototype instanceof owl.Component);
+        let widget;
+        if (legacy) {
+            widget = new Widget(this, record, node);
+        } else {
+            widget = new WidgetWrapper(this, Widget, {
+                record,
+                node,
+            });
+        }
 
         this.widgets.push(widget);
 
         // Prepare widget rendering and save the related promise
-        var def = widget._widgetRenderAndInsert(function () {});
+        let def;
+        if (legacy) {
+            def = widget._widgetRenderAndInsert(function () {});
+        } else {
+            def = widget.mount(document.createDocumentFragment());
+        }
         this.defs.push(def);
         var $el = $('<div>');
 
