@@ -19,7 +19,7 @@ class Partner(models.Model):
     def default_get(self, fields):
         rec = super(Partner, self).default_get(fields)
         active_model = self.env.context.get('active_model')
-        if active_model == 'crm.lead':
+        if active_model == 'crm.lead' and len(self.env.context.get('active_ids', [])) <= 1:
             lead = self.env[active_model].browse(self.env.context.get('active_id')).exists()
             if lead:
                 rec.update(
