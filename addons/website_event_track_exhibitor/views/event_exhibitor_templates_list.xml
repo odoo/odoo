@@ -154,7 +154,7 @@
         itemscope="itemscope" itemtype="http://schema.org/Event">
         <div class="h-100 row no-gutters">
             <t t-set="sponsor_image_url" t-value="sponsor.website_image_url"/>
-            <header t-att-class="'overflow-hidden col-12 rounded-top position-static %s' % ('bg-secondary' if not sponsor_image_url else 'bg-light')">
+            <header t-att-class="'overflow-hidden col-12 rounded-top position-static %s' % ('bg-secondary' if not sponsor_image_url else '')">
 
                 <small t-if="not sponsor.is_published" class="o_wesponsor_card_header_badge bg-danger">
                     <i class="fa fa-ban mr-2"/>Unpublished
