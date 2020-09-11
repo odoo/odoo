@@ -15,14 +15,14 @@ website pages need another tool to be created with more flexibility: a templatin
 
 You might already be familiar with existing engines such as Jinja (Python), ERB (Ruby) or
 Twig (PHP). Odoo comes with its own built-in engine: :ref:`reference/qweb`.
-QWeb is the primary templating engine used by Odoo. It is an XML templating engine and used
+Qweb is the primary templating engine used by Odoo. It is an XML templating engine and used
 mostly to generate HTML fragments and pages.
-
-Kanban views define the structure of each card as a mix of form elements
-(including basic HTML) and :ref:`reference/qweb`.
 
 Concrete Example: A Kanban View
 ===============================
+
+Kanban views define the structure of each card as a mix of form elements
+(including basic HTML) and Qweb.
 
 .. _templating:
     https://en.wikipedia.org/wiki/Template_processor
