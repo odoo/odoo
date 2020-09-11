@@ -40,15 +40,18 @@ class ConnectionManager(Thread):
             }
         }
 
-        urllib3.disable_warnings()
-        req = requests.post('https://iot-proxy.odoo.com/odoo-enterprise/iot/connect-box', json=data, verify=False)
-        result = req.json().get('result', {})
-
-        if all(key in result for key in ['pairing_code', 'pairing_uuid']):
-            self.pairing_code = result['pairing_code']
-            self.pairing_uuid = result['pairing_uuid']
-        elif all(key in result for key in ['url', 'token', 'db_uuid', 'enterprise_code']):
-            self._connect_to_server(result['url'], result['token'], result['db_uuid'], result['enterprise_code'])
+        try:
+            urllib3.disable_warnings()
+            req = requests.post('https://iot-proxy.odoo.com/odoo-enterprise/iot/connect-box', json=data, verify=False)
+            result = req.json().get('result', {})
+            if all(key in result for key in ['pairing_code', 'pairing_uuid']):
+                self.pairing_code = result['pairing_code']
+                self.pairing_uuid = result['pairing_uuid']
+            elif all(key in result for key in ['url', 'token', 'db_uuid', 'enterprise_code']):
+                self._connect_to_server(result['url'], result['token'], result['db_uuid'], result['enterprise_code'])
+        except Exception as e:
+            _logger.error('Could not reach iot-proxy.odoo.com')
+            _logger.error('A error encountered : %s ' % e)
 
     def _connect_to_server(self, url, token, db_uuid, enterprise_code):
         if db_uuid and enterprise_code:
