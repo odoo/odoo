@@ -527,8 +527,7 @@
          data-selector="[data-oe-expression='res_company.partner_id']"
          data-no-check="true"/>
 
-    <div data-js="HeaderTemplate"
-         data-selector="#wrapwrap > header"
+    <div data-selector="#wrapwrap > header"
          data-no-check="true"
          groups="website.group_website_designer">
         <we-select string="Template" data-variable="header-template" data-reload="/">
@@ -602,39 +601,6 @@
                   data-unit="px"
                   data-save-unit="rem"/>
 
-        <!-- Generic alignment option controling all the template at once. -->
-        <!-- Currently needed to be this way as the SCSS variable controls -->
-        <!-- the mobile alignement which is the same for all templates. -->
-        <we-select string="⌙ Alignment"
-                   data-name="header_alignment_opt"
-                   data-variable="hamburger-position"
-                   data-reload="/">
-            <we-button data-customize-website-views="" data-customize-website-variable="'left'">Left</we-button>
-            <we-button data-customize-website-views="website.template_header_default_align_center, website.template_header_hamburger_align_center" data-customize-website-variable="'center'">Center</we-button>
-            <we-button data-customize-website-views="website.template_header_default_align_right, website.template_header_hamburger_align_right" data-customize-website-variable="'right'">Right</we-button>
-        </we-select>
-
-        <!-- Generic Hamburger Options (mobile or not) -->
-        <we-select string="⌙ Hamburger Type"
-                   data-name="header_hamburger_type_opt"
-                   data-variable="hamburger-type"
-                   data-reload="/">
-            <we-button data-customize-website-variable="'default'"
-                       data-customize-website-views="">Default</we-button>
-            <we-button data-name="off_canvas_menu_opt"
-                       data-customize-website-variable="'off-canvas'"
-                       data-customize-website-views="website.option_header_off_canvas, website.option_header_off_canvas_template_header_hamburger, website.option_header_off_canvas_template_header_sidebar, website.option_header_off_canvas_template_header_hamburger_full">Off-Canvas</we-button>
-        </we-select>
-        <we-select string=" ⌙ Logo" data-dependencies="off_canvas_menu_opt" data-reload="/">
-            <we-button data-customize-website-views="">Text</we-button>
-            <we-button data-customize-website-views="website.option_header_off_canvas_logo_show">Image</we-button>
-        </we-select>
-
-        <we-row string="Font">
-            <we-fontfamilypicker data-variable="navbar-font"/>
-            <we-input data-customize-website-variable="null" data-variable="header-font-size" data-unit="px" data-save-unit="rem"/>
-        </we-row>
-
         <we-row string="Colors">
             <we-colorpicker data-customize-website-color="" data-color="menu"
                             data-with-combinations="true"/>
@@ -663,29 +629,9 @@
         </t>
     </div>
 
-    <div data-js="HeaderLogo"
-         data-selector="#wrapwrap > header"
+    <div data-selector="#wrapwrap > header"
          data-no-check="true"
          groups="website.group_website_designer">
-
-        <we-select string="Logo" data-reload="/">
-            <we-button data-customize-website-views="" data-name="option_header_brand_none">None</we-button>
-            <we-button data-customize-website-views="website.option_header_brand_name">Text</we-button>
-            <we-button data-customize-website-views="website.option_header_brand_logo">Image</we-button>
-        </we-select>
-        <we-input string="⌙ Height"
-                  data-dependencies="!option_header_brand_none"
-                  data-customize-website-variable="null"
-                  data-variable="logo-height"
-                  data-unit="px"
-                  data-save-unit="rem"/>
-        <we-input string="⌙ Height (Scrolled)"
-                  data-name="option_logo_height_scrolled"
-                  data-customize-website-variable="null"
-                  data-variable="fixed-logo-height"
-                  data-unit="px"
-                  data-save-unit="rem"
-                  data-dependencies="!header_effect_scroll_opt"/>
 
         <we-select string="Scroll Effect" data-dependencies="!header_sidebar_opt">
             <t t-set="header_effect_standard_label">Standard</t>
@@ -739,8 +685,70 @@
                <small t-esc='header_effect_fadeout_label'/>
             </we-button>
         </we-select>
+    </div>
 
-        <we-select string="Menu Style" data-variable="header-links-style" data-reload="/">
+    <div data-js="TopMenuVisibility"
+         data-selector="[data-main-object^='website.page('] #wrapwrap > header"
+         data-no-check="true">
+        <we-select string="Header Position" id="option_header_visibility" data-no-preview="true">
+            <we-button data-visibility="transparent">Over The Content</we-button>
+            <we-button data-name="regular_header_visibility_opt"
+                       data-visibility="regular">Regular</we-button>
+            <we-button data-visibility="hidden">Hidden</we-button>
+        </we-select>
+    </div>
+
+    <div data-js="topMenuColor"
+         data-selector="[data-main-object^='website.page('] #wrapwrap > header"
+         data-no-check="true">
+        <we-colorpicker string="⌙ Background"
+            id="option_header_transparent_color"
+            data-select-style="true"
+            data-css-property="background-color"
+            data-color-prefix="bg-"
+            data-excluded="theme, common, custom"/>
+    </div>
+
+    <!-- Header > Navbar Options -->
+    <div data-js="HeaderNavbar"
+         data-selector="#wrapwrap > header > nav"
+         data-no-check="true"
+         groups="website.group_website_designer">
+        <!-- Generic alignment option controling all the template at once. -->
+        <!-- Currently needed to be this way as the SCSS variable controls -->
+        <!-- the mobile alignement which is the same for all templates. -->
+        <we-select string="Alignment"
+                   data-name="header_alignment_opt"
+                   data-variable="hamburger-position"
+                   data-reload="/">
+            <we-button data-customize-website-views="" data-customize-website-variable="'left'">Left</we-button>
+            <we-button data-customize-website-views="website.template_header_default_align_center, website.template_header_hamburger_align_center" data-customize-website-variable="'center'">Center</we-button>
+            <we-button data-customize-website-views="website.template_header_default_align_right, website.template_header_hamburger_align_right" data-customize-website-variable="'right'">Right</we-button>
+        </we-select>
+
+        <!-- Generic Hamburger Options (mobile or not) -->
+        <we-select string="Hamburger Type"
+                   data-name="header_hamburger_type_opt"
+                   data-variable="hamburger-type"
+                   data-reload="/">
+            <we-button data-customize-website-variable="'default'"
+                       data-customize-website-views="">Default</we-button>
+            <we-button data-name="off_canvas_menu_opt"
+                       data-customize-website-variable="'off-canvas'"
+                       data-customize-website-views="website.option_header_off_canvas, website.option_header_off_canvas_template_header_hamburger, website.option_header_off_canvas_template_header_sidebar, website.option_header_off_canvas_template_header_hamburger_full">Off-Canvas</we-button>
+        </we-select>
+
+        <we-select string="⌙ Off-Canvas Logo" data-dependencies="off_canvas_menu_opt" data-reload="/">
+            <we-button data-customize-website-views="">Text</we-button>
+            <we-button data-customize-website-views="website.option_header_off_canvas_logo_show">Image</we-button>
+        </we-select>
+
+        <we-row string="Font">
+            <we-fontfamilypicker data-variable="navbar-font"/>
+            <we-input data-customize-website-variable="null" data-variable="header-font-size" data-unit="px" data-save-unit="rem"/>
+        </we-row>
+
+        <we-select string="Links Style" data-variable="header-links-style" data-reload="/">
             <we-button data-name="option_header_navbar_links_default"
                        data-customize-website-views=""
                        data-customize-website-variable="'default'">Default</we-button>
@@ -766,34 +774,27 @@
                        data-customize-website-views="website.header_hoverable_dropdown">On Hover</we-button>
             <we-button data-select-class="" data-name="header_dropdown_on_click_opt">On Click</we-button>
         </we-select>
-    </div>
 
-    <div data-js="TopMenuVisibility"
-        data-selector="[data-main-object^='website.page('] #wrapwrap > header"
-        data-no-check="true">
-        <we-select string="Page Visibility" id="option_header_visibility" data-no-preview="true">
-            <we-button data-name="regular_header_visibility_opt"
-                       data-visibility="regular">Regular</we-button>
-            <we-button data-visibility="transparent">Transparent</we-button>
-            <we-button data-visibility="hidden">Hidden</we-button>
+        <we-select string="Logo type" data-reload="/">
+            <we-button data-customize-website-views="" data-name="option_header_brand_none">None</we-button>
+            <we-button data-customize-website-views="website.option_header_brand_name">Text</we-button>
+            <we-button data-customize-website-views="website.option_header_brand_logo">Image</we-button>
         </we-select>
-    </div>
+        <we-input string="⌙ Height"
+                  data-dependencies="!option_header_brand_none"
+                  data-customize-website-variable="null"
+                  data-variable="logo-height"
+                  data-unit="px"
+                  data-save-unit="rem"/>
+        <we-input string="⌙ Height (Scrolled)"
+                  data-name="option_logo_height_scrolled"
+                  data-customize-website-variable="null"
+                  data-variable="fixed-logo-height"
+                  data-unit="px"
+                  data-save-unit="rem"
+                  data-dependencies="!header_effect_scroll_opt"/>
 
-    <div data-js="topMenuColor"
-         data-selector="[data-main-object^='website.page('] #wrapwrap > header"
-         data-no-check="true">
-        <we-colorpicker string="Transparent color"
-            id="option_header_transparent_color"
-            data-select-style="true"
-            data-css-property="background-color"
-            data-color-prefix="bg-"
-            data-excluded="theme, common, custom"/>
-    </div>
-
-    <div data-selector="#wrapwrap > header"
-         data-no-check="true"
-         groups="website.group_website_designer">
-        <we-checkbox string="Sign In" data-customize-website-views="portal.user_sign_in" data-reload="/"/>
+        <we-checkbox string="Show Sign In" data-customize-website-views="portal.user_sign_in" data-reload="/"/>
         <we-select string="Language Selector" data-reload="/">
             <we-button data-name="header_language_selector_none_opt"
                        data-customize-website-views="">None</we-button>
