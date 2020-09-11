@@ -361,6 +361,18 @@
             </field>
         </record>
 
+        <record id="hr_expense_actions_all_graph" model="ir.actions.act_window.view">
+            <field name="view_mode">graph</field>
+            <field name="view_id" ref="hr_expense.hr_expense_view_graph"/>
+            <field name="act_window_id" ref="hr_expense_actions_all"/>
+        </record>
+
+        <record id="hr_expense_actions_all_pivot" model="ir.actions.act_window.view">
+            <field name="view_mode">pivot</field>
+            <field name="view_id" ref="hr_expense.hr_expense_view_pivot"/>
+            <field name="act_window_id" ref="hr_expense_actions_all"/>
+        </record>
+
         <record id="hr_expense_actions_all_tree" model="ir.actions.act_window.view">
             <field name="view_mode">tree</field>
             <field name="view_id" ref="hr_expense_view_expenses_analysis_tree"/>
