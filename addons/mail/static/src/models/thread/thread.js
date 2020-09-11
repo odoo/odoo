@@ -418,11 +418,13 @@ function factory(dependencies) {
                 fields: ['id', 'name', 'mimetype'],
                 orderBy: [{ name: 'id', asc: false }],
             }));
-            for (const attachmentData of attachmentsData) {
-                this.env.models['mail.attachment'].insert(Object.assign({
-                    originThread: [['link', this]],
-                }, this.env.models['mail.attachment'].convertData(attachmentData)));
-            }
+            this.update({
+                originThreadAttachments: [['insert-and-replace',
+                    attachmentsData.map(data =>
+                        this.env.models['mail.attachment'].convertData(data)
+                    )
+                ]],
+            });
             this.update({ areAttachmentsLoaded: true });
         }
 
