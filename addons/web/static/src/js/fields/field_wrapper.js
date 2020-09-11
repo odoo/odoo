@@ -75,9 +75,6 @@ odoo.define('web.FieldWrapper', function (require) {
         // Getters
         //----------------------------------------------------------------------
 
-        get $el() {
-            return $(this.el);
-        }
         get fieldDependencies() {
             return this.Component.fieldDependencies;
         }

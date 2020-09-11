@@ -518,6 +518,14 @@ odoo.define('web.OwlCompatibility', function () {
             this._mountArgs = arguments;
             return super.mount(...arguments);
         }
+
+        //----------------------------------------------------------------------
+        // Getters
+        //----------------------------------------------------------------------
+
+        get $el() {
+            return $(this.el);
+        }
     }
     ComponentWrapper.template = xml`<t t-component="Component" t-props="props" t-ref="component"/>`;
 
