@@ -85,9 +85,9 @@
         <div class="ml-3">
             <div class="float-left pt-3">
                 <span t-if="sponsor.image_512" t-field="sponsor.image_512" class="o_wevent_online_page_avatar"
-                    t-options="{'widget': 'image', 'class': 'rounded-circle', 'max-width': '96'}"/>
+                    t-options="{'widget': 'image', 'max-width': '96'}"/>
                 <span t-elif="sponsor.partner_id.image_512" t-field="sponsor.partner_id.image_512" class="o_wevent_online_page_avatar"
-                    t-options="{'widget': 'image', 'class': 'rounded-circle', 'max-width': '96'}"/>
+                    t-options="{'widget': 'image', 'max-width': '96'}"/>
             </div>
             <div class="px-3 pt-3 d-flex flex-row justify-content-between position-relative">
                 <div class="d-flex flex-column">
