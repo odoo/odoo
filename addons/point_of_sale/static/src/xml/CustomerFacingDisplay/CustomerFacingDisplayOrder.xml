@@ -33,7 +33,7 @@
                             <span class="total-amount-formatting">TOTAL</span>
                         </div>
                         <div>
-                            <span class="pos_total-amount" t-esc="pos.format_currency(order.get_total_with_tax())"/>
+                            <span class="pos_total-amount" t-esc="pos.format_currency(order and order.get_total_with_tax() || 0)"/>
                         </div>
                     </div>
 
@@ -56,32 +56,36 @@
                 <div>Price</div>
             </div>
             <div class="pos_orderlines_list">
-                <div t-foreach="order.get_orderlines()" t-as="orderline" class="pos_orderlines_item">
-                    <div><div t-attf-style="background-image:url(#{orderline.product.image_base64})"/></div>
-                    <div t-esc="orderline.get_full_product_name()"/>
-                    <div t-esc="orderline.get_quantity_str()"/>
-                    <div t-esc="pos.format_currency(orderline.get_display_price())"/>
-                </div>
+                <t t-if="order">
+                    <div t-foreach="order.get_orderlines()" t-as="orderline" class="pos_orderlines_item">
+                        <div><div t-attf-style="background-image:url(#{orderline.product.image_base64})"/></div>
+                        <div t-esc="orderline.get_full_product_name()"/>
+                        <div t-esc="orderline.get_quantity_str()"/>
+                        <div t-esc="pos.format_currency(orderline.get_display_price())"/>
+                    </div>
+                </t>
             </div>
         </div>
     </t>
 
     <t t-name="CustomerFacingDisplayPaymentLines">
         <div class="pos-paymentlines">
-            <t t-foreach="order.get_paymentlines()" t-as="paymentline">
-                <div>
-                    <span><t t-esc="paymentline.name"/>:</span>
-                </div>
-                <div>
-                    <span t-esc="pos.format_currency(paymentline.get_amount())"/>
-                </div>
+            <t t-if="order">
+                <t t-foreach="order.get_paymentlines()" t-as="paymentline">
+                    <div>
+                        <span><t t-esc="paymentline.name"/>:</span>
+                    </div>
+                    <div>
+                        <span t-esc="pos.format_currency(paymentline.get_amount())"/>
+                    </div>
+                </t>
             </t>
 
             <div>
                 <span class="pos-change_title">Change</span>
             </div>
             <div>
-                <span class="pos-change_amount" t-esc="pos.format_currency(order.get_change())"/>
+                <span class="pos-change_amount" t-esc="pos.format_currency(order and order.get_change() || 0)"/>
             </div>
         </div>
     </t>
