@@ -169,16 +169,11 @@
 
             <div class="o_wslides_course_main">
                 <t t-set="channel_frontend_tags" t-value="channel.tag_ids.filtered(lambda tag: tag.color)"/>
-                <!-- ========== TRAINING COURSE ========== -->
-                <div t-if="channel.channel_type == 'training'" class="container">
-                    <div class="row">
-                        <!-- Training Sidebar -->
-                        <div class="col-12 col-md-4 col-lg-3 mt-3 mt-md-0">
-                            <t t-call="website_slides.course_sidebar"/>
-                        </div>
+                <div class="container mb-5">
 
-                        <!-- Training Content -->
-                        <div class="col-12 col-md-8 col-lg-9">
+                    <!-- Row top tabs -->
+                    <div class="row">
+                        <div class="col-12 col-md-8 offset-md-4 offset-lg-3 col-lg-9">
                             <ul class="nav nav-tabs o_wslides_nav_tabs flex-nowrap" role="tablist" id="profile_extra_info_tablist">
                                 <li class="nav-item">
                                     <a t-att-class="'nav-link %s' % ('active' if active_tab == 'home' else '')"
@@ -187,7 +182,7 @@
                                         <i class="fa fa-home"/> Course
                                     </a>
                                 </li>
-                                <li t-if="channel.allow_comment" class="nav-item o_wslides_course_header_nav_review_training">
+                                <li t-if="channel.allow_comment" class="nav-item o_wslides_course_header_nav_review">
                                     <a t-att-class="'nav-link %s' % ('active' if active_tab == 'review' else '')"
                                         id="review-tab" data-toggle="pill" href="#review" role="tab" aria-controls="review"
                                         t-att-aria-selected="'true' if active_tab == 'review' else 'false'">
@@ -195,84 +190,81 @@
                                     </a>
                                 </li>
                             </ul>
+                        </div>
+                    </div>
 
-                            <div class="tab-content py-4 o_wslides_tabs_content mb-4" id="courseMainTabContent">
-                                <div t-att-class="'tab-pane fade %s' % ('show active' if active_tab == 'home' else '')" id="home" role="tabpanel" aria-labelledby="home-tab">
-                                    <div class="mb-2 pt-1">
-                                        <t t-if="channel_frontend_tags">
-                                            <t t-foreach="channel_frontend_tags" t-as="channel_tag">
-                                                <span t-attf-class="badge o_wslides_channel_tag #{'o_tag_color_'+str(channel_tag.color)}" t-esc="channel_tag.name"/>
+                    <!-- Row with content -->
+                    <div class="row">
+                        <!-- ========== SIDEBAR ========== -->
+                        <div class="col-12 col-md-4 col-lg-3 mt-3 mt-md-0 px-0 px-md-3">
+                            <t t-call="website_slides.course_sidebar"/>
+                        </div>
+
+                        <div t-att-class="'col-12 col-md-8 col-lg-9'">
+                            <!-- ========== NAVBAR ========== -->
+                            <div t-if="channel.channel_type == 'documentation' and channel.is_member" class="ml-md-n3 mr-sm-n2 mr-md-0">
+                                <div t-att-class="'tab-pane fade %s' % ('show active' if active_tab == 'home' else '')" role="tabpanel" aria-labelledby="home-tab">
+                                    <t t-call="website_slides.course_slides_cards_navbar"/>
+                                </div>
+                            </div>
+                            <div class="row d-block">
+                                <!-- ========== TRAINING CONTENT ========== -->
+                                <t t-if="channel.channel_type == 'training'">
+                                    <div class="tab-content py-4 o_wslides_tabs_content mb-3" id="courseMainTabContent">
+                                        <div t-att-class="'tab-pane fade %s' % ('show active' if active_tab == 'home' else '')" id="home" role="tabpanel" aria-labelledby="home-tab">
+                                            <div class="mb-2 pt-1">
+                                                <t t-if="channel.tag_ids">
+                                                    <t t-foreach="channel.tag_ids" t-as="channel_tag">
+                                                        <span t-attf-class="badge o_wslides_channel_tag #{'o_tag_color_'+str(channel_tag.color)}" t-esc="channel_tag.name"/>
+                                                    </t>
+                                                </t>
+                                                <a t-if="channel.can_upload"
+                                                    class="o_wslides_js_channel_tag_add border badge badge-light font-weight-normal py-1 m-1"
+                                                    role="button"
+                                                    aria-label="Add Tag"
+                                                    href="#"
+                                                    t-att-data-channel-id="channel.id"
+                                                    t-att-data-channel-tag-ids="channel.tag_ids.ids">
+                                                    <span>Add Tag</span>
+                                                 </a>
+                                            </div>
+                                            <t t-if="channel.channel_type == 'training'" t-call="website_slides.course_slides_list"/>
+                                        </div>
+                                        <div t-if="channel.allow_comment" t-att-class="'tab-pane fade %s' % ('show active' if active_tab == 'review' else '')" id="review" role="tabpanel" aria-labelledby="review-tab">
+                                            <t t-call="portal.message_thread">
+                                                <t t-set="object" t-value="channel"/>
+                                                <t t-set="hash" t-value="message_post_hash"/>
+                                                <t t-set="pid" t-value="message_post_pid"/>
+                                                <t t-set="display_rating" t-value="True"/>
+                                                <t t-set="disable_composer" t-value="True"/>
                                             </t>
-                                        </t>
-                                        <a t-if="channel.can_upload"
-                                            class="o_wslides_js_channel_tag_add border badge badge-light font-weight-normal py-1 m-1"
-                                            role="button"
-                                            aria-label="Add Tag"
-                                            href="#"
-                                            t-att-data-channel-id="channel.id"
-                                            t-att-data-channel-tag-ids="channel.tag_ids.ids">
-                                            <span>Add Tag</span>
-                                         </a>
+                                        </div>
                                     </div>
-                                    <t t-if="channel.channel_type == 'training'" t-call="website_slides.course_slides_list"/>
-                                </div>
-                                <div t-if="channel.allow_comment" t-att-class="'tab-pane fade %s' % ('show active' if active_tab == 'review' else '')" id="review" role="tabpanel" aria-labelledby="review-tab">
-                                    <t t-call="portal.message_thread">
-                                        <t t-set="object" t-value="channel"/>
-                                        <t t-set="hash" t-value="message_post_hash"/>
-                                        <t t-set="pid" t-value="message_post_pid"/>
-                                        <t t-set="display_rating" t-value="True"/>
-                                        <t t-set="disable_composer" t-value="True"/>
-                                    </t>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                                </t>
 
-                <!-- ========== DOCUMENTATION COURSE ========== -->
-                <t t-if="channel.channel_type == 'documentation'">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-12 col-md-8 offset-md-4 col-lg-9 offset-lg-3">
-                                <ul class="nav nav-tabs o_wslides_nav_tabs o_wslides_doc_nav_tabs flex-nowrap" role="tablist" id="profile_extra_info_tablist">
-                                    <li class="nav-item">
-                                        <a t-att-class="'nav-link %s' % ('active' if active_tab == 'home' else '')"
-                                            id="home-tab" data-toggle="pill" href="#home" role="tab" aria-controls="home"
-                                            t-att-aria-selected="'true' if active_tab == 'home' else 'false'">
-                                            <i class="fa fa-home"/>
-                                            Course
-                                        </a>
-                                    </li>
-                                    <li t-if="channel.allow_comment" class="nav-item o_wslides_course_header_nav_review_documentation">
-                                        <a t-att-class="'nav-link %s' % ('active' if active_tab == 'review' else '')"
-                                            id="review-tab" data-toggle="pill" href="#review" role="tab" aria-controls="review"
-                                            t-att-aria-selected="'true' if active_tab == 'review' else 'false'">
-                                            Reviews<t t-if="rating_count"> (<t t-esc="rating_count"/>)</t>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="tab-content pb-5" id="courseMainTabContent">
-                        <div t-att-class="'tab-pane fade %s' % ('show active' if active_tab == 'home' else '')" id="home" role="tabpanel" aria-labelledby="home-tab">
-                            <t t-if="channel.channel_type == 'documentation'" t-call="website_slides.course_slides_cards"/>
-                        </div>
-                        <div t-if="channel.allow_comment" t-att-class="'tab-pane fade %s' % ('show active' if active_tab == 'review' else '')" id="review" role="tabpanel" aria-labelledby="review-tab">
-                            <div class="container pt-4">
-                                <t t-call="portal.message_thread">
-                                    <t t-set="object" t-value="channel"/>
-                                    <t t-set="hash" t-value="message_post_hash"/>
-                                    <t t-set="pid" t-value="message_post_pid"/>
-                                    <t t-set="display_rating" t-value="True"/>
-                                    <t t-set="disable_composer" t-value="True"/>
+                                <!-- ========== DOCUMENTATION CONTENT ========== -->
+                                <t t-if="channel.channel_type == 'documentation'">
+                                    <div class="tab-content pb-5" id="courseMainTabContent">
+                                        <div t-att-class="'tab-pane fade %s' % ('show active' if active_tab == 'home' else '')" id="home" role="tabpanel" aria-labelledby="home-tab">
+                                            <t t-call="website_slides.course_slides_cards"/>
+                                        </div>
+                                        <div t-if="channel.allow_comment" t-att-class="'tab-pane fade %s' % ('show active' if active_tab == 'review' else '')" id="review" role="tabpanel" aria-labelledby="review-tab">
+                                            <div class="container pt-4">
+                                                <t t-call="portal.message_thread">
+                                                    <t t-set="object" t-value="channel"/>
+                                                    <t t-set="hash" t-value="message_post_hash"/>
+                                                    <t t-set="pid" t-value="message_post_pid"/>
+                                                    <t t-set="display_rating" t-value="True"/>
+                                                    <t t-set="disable_composer" t-value="True"/>
+                                                </t>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </t>
                             </div>
                         </div>
                     </div>
-                </t>
+                </div>
             </div>
         </div>
 
@@ -283,8 +275,8 @@
 </template>
 
 <template id="course_sidebar" name="Course Sidebar (infos, CTA)">
-    <!-- Training-only: Channel sidebar (aka general information + CTAs) -->
-    <div class="o_wslides_course_sidebar bg-white px-3 py-2 py-md-3 mb-3 mb-md-5">
+    <!-- Channel sidebar (aka general information + CTAs) -->
+    <div class="o_wslides_course_sidebar bg-white px-3 py-2 py-md-3 mb-3">
 
         <div class="o_wslides_sidebar_top d-flex justify-content-between">
             <div class="o_wslides_js_course_join flex-grow-1">
@@ -332,7 +324,7 @@
                         <i class="fa fa-check"/>
                         <i class="fa fa-times"/>
                     </button>
-                    <div class="d-flex align-items-center pt-3">
+                    <div t-if="channel.channel_type == 'training'" class="d-flex align-items-center pt-3">
                         <t t-if="channel.completed">
                             <span class="badge badge-pill badge-success py-1 px-2 mx-auto" style="font-size: 1em"><i class="fa fa-check"/> Completed</span>
                         </t>
@@ -347,12 +339,15 @@
                     </div>
                 </t>
             </div>
-            <button t-attf-class="btn d-md-none bg-white ml-1 border #{'alert' if channel.is_member else ''} #{'align-self-start' if channel.is_member or channel.enroll == 'invite' else 'align-self-end'}" type="button" data-toggle="collapse" data-target="#o_wslides_sidebar_collapse" aria-expanded="false" aria-controls="o_wslides_sidebar_collapse">More info</button>
+            <button t-attf-class="btn d-md-none bg-white ml-1 border #{'alert' if channel.is_member else ''}
+                    #{'align-self-start' if channel.is_member or channel.enroll == 'invite' else 'align-self-end'}"
+                    type="button" data-toggle="collapse" data-target="#o_wslides_sidebar_collapse" aria-expanded="false"
+                    aria-controls="o_wslides_sidebar_collapse">More info</button>
         </div>
 
         <div id="o_wslides_sidebar_collapse" class="collapse d-md-block">
             <table class="table table-sm mt-3">
-                <tr t-if="channel.user_id">
+                <tr t-if="channel.user_id and (not channel.is_member or channel.channel_type == 'training')">
                     <th class="border-top-0">Responsible</th>
                     <td class="border-top-0"><span t-field="channel.user_id"/></td>
                 </tr>
@@ -360,17 +355,17 @@
                     <th class="border-top-0">Last Update</th>
                     <td class="border-top-0"><t t-esc="channel.slide_last_update" t-options="{'widget': 'date'}"/></td>
                 </tr>
-                <tr t-if="channel.total_time">
+                <tr t-if="channel.total_time and (not channel.is_member or channel.channel_type == 'training')">
                     <th class="border-top-0">Completion Time</th>
                     <td class="border-top-0"><t class="font-weight-bold" t-esc="channel.total_time" t-options="{'widget': 'duration', 'unit': 'hour', 'round': 'minute'}"/></td>
                 </tr>
-                <tr>
+                <tr t-if="not channel.is_member or channel.channel_type == 'training'">
                     <th>Members</th>
                     <td><t t-esc="channel.members_count"/></td>
                 </tr>
             </table>
 
-            <div class="mt-3">
+            <div t-if="not channel.is_member or channel.channel_type == 'training'" class="mt-3">
                 <button role="button" class="btn btn-link btn-block" title="Share Channel"
                     aria-label="Share Channel"
                     data-toggle="modal" t-att-data-target="'#slideChannelShareModal_%s' % channel.id">
@@ -382,14 +377,14 @@
 </template>
 
 <template id="course_slides_list" name="Training Course content: list">
-    <div class="mb-5 o_wslides_slides_list" t-att-data-channel-id="channel.id">
+    <div class="o_wslides_slides_list" t-att-data-channel-id="channel.id">
 
         <ul class="o_wslides_js_slides_list_container list-unstyled">
             <t t-set="j" t-value="0"/>
             <t t-foreach="category_data" t-as="category">
                 <t t-set="category_id" t-value="category['id'] if category['id'] else None"/>
 
-                <li t-if="category['total_slides'] or channel.can_publish" t-att-class="'o_wslides_slide_list_category o_wslides_js_list_item mb-2' if category_id else 'mt-4'" t-att-data-slide-id="category_id" t-att-data-category-id="category_id">
+                <li t-if="category['total_slides'] or channel.can_publish" t-att-class="'o_wslides_slide_list_category o_wslides_js_list_item mb-2' if category_id else ''" t-att-data-slide-id="category_id" t-att-data-category-id="category_id">
                     <div t-att-data-category-id="category_id"
                          t-att-class="'o_wslides_slide_list_category_header position-relative d-flex justify-content-between align-items-center mt8 %s %s' % ('bg-white shadow-sm border-bottom-0' if category_id else 'border-0', 'o_wslides_js_category py-0' if channel.can_upload else 'py-2')">
                         <div t-att-class="'d-flex align-items-center pl-3 %s' % ('o_wslides_slides_list_drag' if channel.can_publish else '')">
@@ -422,7 +417,7 @@
                             </a>
                         </div>
                     </div>
-                    <ul t-att-data-category-id="category_id" class="list-unstyled pb-1 border-top">
+                    <ul t-att-data-category-id="category_id" t-att-class="'list-unstyled %s' % ('pb-1 border-top' if category['slides'] else '')">
                         <li class="o_wslides_slides_list_slide o_not_editable border-0"/>
                         <li class="o_wslides_js_slides_list_empty border-0"/>
 
@@ -609,11 +604,11 @@
     </div>
 </template>
 
-<template id="course_slides_cards" name="Documentation Course content: cards / categories">
-    <div class="o_wslides_lesson_nav mb-4 border-bottom">
-        <div class="container">
+<template id="course_slides_cards_navbar" name="Documentation Course navbar">
+    <div class="o_wslides_lesson_nav mb-4">
+        <div class="container pr-sm-2 pr-md-0">
             <div class="row">
-                <nav class="navbar navbar-expand-lg navbar-light col d-flex align-items-start">
+                <nav class="navbar navbar-expand-lg navbar-light col d-flex align-items-start mx-0 border-nav-xs border-nav-sm">
                     <a class="navbar-brand d-lg-none" href="#">Filter &amp; order</a>
 
                     <div class="form-inline ml-auto d-lg-none" t-if="search_slide_type or search">
@@ -627,7 +622,7 @@
                     </button>
 
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                        <ul class="navbar-nav mr-lg-auto align-items-lg-center">
+                        <ul class="navbar-nav mr-lg-auto align-items-lg-center text-nowrap">
 
                             <t t-set="slide_type_keys" t-value="slide_types.keys()"/>
                             <t t-foreach="slide_type_keys" t-as="slide_type_key">
@@ -652,9 +647,9 @@
                             </t>
                         </ul>
 
-                        <ul class="navbar-nav mr-auto">
+                        <ul class="navbar-nav mr-auto text-nowrap">
                             <li class="nav-item dropdown ml-lg-auto">
-                                <a class="nav-link dropdown-toggle dropdown-toggle align-items-center d-flex" type="button" id="slidesChannelDropdownSort"
+                                <a class="nav-link dropdown-toggle align-items-center d-flex" type="button" id="slidesChannelDropdownSort"
                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="#">
                                     <b>Order by</b>
                                     <span class="d-none d-xl-inline">:
@@ -675,8 +670,8 @@
                             </li>
                         </ul>
 
-                        <div class="form-inline mr-3 d-none d-lg-inline-block">
-                            <a t-if="search_slide_type or search" t-att-href="'/slides/%s' % (slug(channel))" class="btn btn-sm btn-info ml-1">
+                        <div t-if="search_slide_type or search" class="form-inline mr-3 d-none d-lg-inline-block text-nowrap">
+                            <a t-att-href="'/slides/%s' % (slug(channel))" class="btn btn-sm btn-info ml-1">
                                 <i class="fa fa-eraser mr-1"/>Clear filters
                             </a>
                         </div>
@@ -696,9 +691,11 @@
             </div>
         </div>
     </div>
+</template>
 
+<template id="course_slides_cards" name="Documentation Course content: cards / categories">
     <div class="container">
-        <div class="row">
+        <div class="row mt-3">
             <div class="mb-2 pt-1 text-left col">
                 <t t-if="channel_frontend_tags">
                     <t t-foreach="channel_frontend_tags" t-as="channel_tag">
@@ -712,7 +709,7 @@
                     href="#"
                     t-att-data-channel-id="channel.id"
                     t-att-data-channel-tag-ids="channel.tag_ids.ids">
-                    <i class="fa fa-plus mr-1"/><span>Add Tag</span>
+                    <span>Add Tag</span>
                 </a>
             </div>
 

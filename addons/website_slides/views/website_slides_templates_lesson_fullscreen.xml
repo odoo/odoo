@@ -3,6 +3,7 @@
 
 <!-- Slide template for the fullscreen mode -->
 <template id="slide_fullscreen" name="Fullscreen">
+    <t t-set="is_training_channel" t-value="slide.channel_id.channel_type == 'training'"/>
     <t t-set="head">
         <link rel="canonical" t-att-href="slide.website_url" />
     </t>
@@ -19,7 +20,7 @@
                         <i class="fa fa-bars"/><span class="d-none d-md-inline-block ml-1">Lessons</span>
                     </a>
                     <a class="o_wslides_fs_review d-flex align-items-center px-3" t-att-href="slide.channel_id.website_url + '?active_tab=review'" title="Reviews" t-if="slide.channel_id.allow_comment">
-                        <i class="fa fa-pencil"/><span class="d-none d-md-inline-block ml-1">Write a review</span>
+                        <i class="fa fa-pencil d-inline-block"/><span class="d-none d-md-inline-block ml-1">Write a review</span>
                     </a>
                     <a class="o_wslides_fs_share d-flex align-items-center px-3" href="#" title="Share">
                         <i class="fa fa-share-alt"/><span class="d-none d-md-inline-block ml-1">Share</span>
@@ -44,7 +45,7 @@
                             <a class="h5 d-block mb-1" t-attf-href="/slides/#{slug(slide.channel_id)}">
                                 <span t-field="slide.channel_id.name"/>
                             </a>
-                            <div t-if="not is_public_user" class="d-flex align-items-center">
+                            <div t-if="not is_public_user and is_training_channel" class="d-flex align-items-center">
                                 <t t-if="slide.channel_id.completed">
                                     <span class="badge badge-pill badge-success py-1 px-2" style="font-size: 1em"><i class="fa fa-check"/> Completed</span>
                                 </t>
