@@ -13,5 +13,7 @@ class SaleOrderLine(models.Model):
         for order in orders:
             reassign = order.picking_ids.filtered(lambda x: x.state=='confirmed' or (x.state in ['waiting', 'assigned'] and not x.printed))
             if reassign:
+                # Trigger the Scheduler for Pickings
+                reassign.action_confirm()
                 reassign.action_assign()
         return res
