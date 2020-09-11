@@ -41,9 +41,10 @@ These three fields are
 in the ``res.country.state`` model.
 
 By convention, a file importing data is located in the ``data`` folder of a module. When the data
-is related to security, it is located in the ``security`` folder. Moreover, such
-file must be declared in the ``__manifest__.py`` file, in the ``data`` list. In our example, the
-file is defined
+is related to security, it is located in the ``security`` folder. When the data is related to
+views and actions (we will come back to that later),  it is located in the ``views`` folder.
+Moreover, such file must be declared in the ``__manifest__.py`` file, in the ``data``
+list. In our example, the file is defined
 `in the manifest of the base module <https://github.com/odoo/odoo/blob/e8697f609372cd61b045c4ee2c7f0fcfb496f58a/odoo/addons/base/__manifest__.py#L29>`__.
 
 Finally, note that the content of the data files is only loaded when a module is installed or

@@ -28,6 +28,7 @@ convenient to use an XML file.
 The XML files must be added in the same folders than the CSV files, and defined similarly in the
 ``__manifest__.py``. The content of the data files is also loaded when a module is installed or
 updated, sequencially. Therefore, all remarks made for the CSV files holds true for the XML files.
+When the data we add is linked to views, we add it in the ``views`` folder.
 
 In this chapter, we will load our first action and menus though an XML file. Actions and menus are
 regular records in database.
