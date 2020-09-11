@@ -65,7 +65,8 @@ class Graph(dict):
             if info and info['installable']:
                 packages.append((module, info)) # TODO directly a dict, like in get_modules_with_version
             elif module != 'studio_customization':
-                _logger.warning('module %s: not installable, skipped', module)
+                level = logging.RUNBOT if module.startswith('test_') else logging.WARNING
+                _logger.log(level, 'module %s: not installable, skipped', module)
 
         dependencies = dict([(p, info['depends']) for p, info in packages])
         current, later = set([p for p, info in packages]), set()
