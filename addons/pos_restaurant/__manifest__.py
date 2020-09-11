@@ -42,6 +42,7 @@ This module adds several features to the Point of Sale that are specific to rest
         'static/src/xml/Screens/SplitBillScreen/SplitOrderline.xml',
         'static/src/xml/Screens/ReceiptScreen/OrderReceipt.xml',
         'static/src/xml/Screens/ProductScreen/Orderline.xml',
+        'static/src/xml/Screens/PaymentScreen/PaymentScreen.xml',
         'static/src/xml/Screens/PaymentScreen/PaymentScreenElectronicPayment.xml',
         'static/src/xml/Screens/FloorScreen/FloorScreen.xml',
         'static/src/xml/Screens/FloorScreen/EditBar.xml',

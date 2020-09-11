@@ -74,7 +74,7 @@
                 xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
                 xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
                 <cbc:ID t-esc="line._origin.id"/>
-                <cbc:Note t-if="line.discount" t-esc="_('Discount (%s %)') % line.discount"/>
+                <cbc:Note t-if="line.discount">Discount (<t t-esc='line.discount'/> %)</cbc:Note>
                 <cbc:InvoicedQuantity t-esc="line.quantity"/>
                 <cbc:LineExtensionAmount
                     t-att-currencyID="line.currency_id.name or invoice.currency_id.name"

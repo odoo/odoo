@@ -72,12 +72,23 @@ publicWidget.registry.websiteEventTrackReminder = publicWidget.Widget.extend({
 
     _updateDisplay: function () {
         var $trackLink = this.$el.find('i');
+        var isReminderLight = $trackLink.data('isReminderLight');
         if (this.reminderOn) {
             $trackLink.addClass('fa-bell').removeClass('fa-bell-o');
             $trackLink.attr('title', _t('Favorite On'));
+
+            if (!isReminderLight) {
+                this.$el.addClass('btn-primary');
+                this.$el.removeClass('btn-outline-primary');
+            }
         } else {
             $trackLink.addClass('fa-bell-o').removeClass('fa-bell');
             $trackLink.attr('title', _t('Set Favorite'));
+
+            if (!isReminderLight) {
+                this.$el.removeClass('btn-primary');
+                this.$el.addClass('btn-outline-primary');
+            }
         }
     },
 

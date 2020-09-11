@@ -35,6 +35,43 @@
         </field>
     </record>
 
+    <record model="ir.ui.view" id="view_stock_quant_form_editable">
+        <field name="name">stock.quant.form.editable</field>
+        <field name="model">stock.quant</field>
+        <field eval="11" name="priority"/>
+        <field name="arch" type="xml">
+            <form string="Inventory Valuation" create="false" edit="false" delete="false">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="tracking" invisible="1"/>
+                            <field name="product_id" readonly="0" options="{'no_create': True}"/>
+                            <field name="location_id" readonly="0" options="{'no_create': True}"/>
+                            <field name="lot_id" groups="stock.group_production_lot"
+                                attrs="{'readonly': [('tracking', 'not in', ['serial', 'lot'])], 'required': [('tracking', '!=', 'none')]}"
+                                context="{'default_product_id': product_id, 'default_company_id': company_id}"/>
+                            <field name="package_id" readonly="0" groups="stock.group_tracking_lot"/>
+                            <field name="owner_id" readonly="0" groups="stock.group_tracking_owner" options="{'no_create': True}"/>
+                            <field name='company_id' groups="base.group_multi_company"/>
+                        </group>
+                        <group>
+                            <label for="inventory_quantity" string="Quantity On Hand"/>
+                            <div class="o_row">
+                                <field name="inventory_quantity"/>
+                                <field name="product_uom_id" groups="uom.group_uom"/>
+                            </div>
+                            <label for="reserved_quantity" string="Quantity Reserved"/>
+                            <div class="o_row">
+                                <field name="reserved_quantity"/>
+                                <field name="product_uom_id" groups="uom.group_uom"/>
+                            </div>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
     <record model="ir.ui.view" id="view_stock_quant_form">
         <field name="name">stock.quant.form</field>
         <field name="model">stock.quant</field>

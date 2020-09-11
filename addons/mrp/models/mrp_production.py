@@ -102,7 +102,7 @@ class MrpProduction(models.Model):
     lot_producing_id = fields.Many2one(
         'stock.production.lot', string='Lot/Serial Number', copy=False,
         domain="[('product_id', '=', product_id), ('company_id', '=', company_id)]", check_company=True)
-    qty_producing = fields.Float(string="Quantity Producing", copy=False)
+    qty_producing = fields.Float(string="Quantity Producing", digits='Product Unit of Measure', copy=False)
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
     product_uom_qty = fields.Float(string='Total Quantity', compute='_compute_product_uom_qty', store=True)
     picking_type_id = fields.Many2one(
@@ -229,8 +229,7 @@ class MrpProduction(models.Model):
     scrap_ids = fields.One2many('stock.scrap', 'production_id', 'Scraps')
     scrap_count = fields.Integer(compute='_compute_scrap_move_count', string='Scrap Move')
     is_locked = fields.Boolean('Is Locked', default=_get_default_is_locked, copy=False)
-    is_planned = fields.Boolean('Its Operations are Planned', compute="_compute_is_planned")
-    is_partially_planned = fields.Boolean('One operation is Planned', compute="_compute_is_planned")
+    is_planned = fields.Boolean('Its Operations are Planned', compute="_compute_is_planned", store=True)
 
     show_final_lots = fields.Boolean('Show Final Lots', compute='_compute_show_lots')
     production_location_id = fields.Many2one('stock.location', "Production Location", compute="_compute_production_location", store=True)
@@ -256,6 +255,7 @@ class MrpProduction(models.Model):
         ('available', 'Available'),
         ('expected', 'Expected'),
         ('late', 'Late')], compute='_compute_components_availability')
+    show_lot_ids = fields.Boolean('Display the serial number shortcut on the moves', compute='_compute_show_lot_ids')
 
     @api.depends('product_id', 'bom_id', 'company_id')
     def _compute_allowed_product_ids(self):
@@ -317,14 +317,13 @@ class MrpProduction(models.Model):
         for production in self:
             (self.move_raw_ids | self.move_finished_ids).date_deadline = production.date_deadline
 
+    @api.depends("workorder_ids")
     def _compute_is_planned(self):
         for production in self:
             if production.workorder_ids:
-                production.is_planned = all(wo.date_planned_start and wo.date_planned_finished for wo in production.workorder_ids)
-                production.is_partially_planned = any(wo.date_planned_start and wo.date_planned_finished for wo in production.workorder_ids if production.state != 'draft')
+                production.is_planned = any(wo.date_planned_start and wo.date_planned_finished for wo in production.workorder_ids)
             else:
                 production.is_planned = False
-                production.is_partially_planned = False
 
     @api.depends('move_raw_ids.delay_alert_date')
     def _compute_delay_alert_date(self):
@@ -490,7 +489,7 @@ class MrpProduction(models.Model):
             any_quantity_done = any(m.quantity_done > 0 for m in order.move_raw_ids)
 
             order.unreserve_visible = not any_quantity_done and already_reserved
-            order.reserve_visible = (order.is_planned or order.state in ('confirmed', 'progress', 'to_close')) and any(move.product_uom_qty and move.state in ['confirmed', 'partially_available'] for move in order.move_raw_ids)
+            order.reserve_visible = order.state in ('confirmed', 'progress', 'to_close') and any(move.product_uom_qty and move.state in ['confirmed', 'partially_available'] for move in order.move_raw_ids)
 
     @api.depends('workorder_ids.state', 'move_finished_ids', 'move_finished_ids.quantity_done')
     def _get_produced_qty(self):
@@ -519,6 +518,11 @@ class MrpProduction(models.Model):
     def _compute_show_lock(self):
         for order in self:
             order.show_lock = self.env.user.has_group('mrp.group_locked_by_default') and order.id is not False and order.state not in {'cancel', 'draft'}
+
+    @api.depends('state','move_raw_ids')
+    def _compute_show_lot_ids(self):
+        for order in self:
+            order.show_lot_ids = order.state != 'draft' and any(m.product_id.tracking == 'serial' for m in order.move_raw_ids)
 
     _sql_constraints = [
         ('name_uniq', 'unique(name, company_id)', 'Reference must be unique per Company!'),
@@ -699,7 +703,7 @@ class MrpProduction(models.Model):
             if 'date_planned_start' in vals and not self.env.context.get('force_date', False):
                 if production.state in ['done', 'cancel']:
                     raise UserError(_('You cannot move a manufacturing order once it is cancelled or done.'))
-                if production.is_partially_planned:
+                if any(wo.date_planned_start and wo.date_planned_finished for wo in production.workorder_ids):
                     raise UserError(_('You cannot move a manufacturing order once it has a planned workorder, move related workorder(s) instead.'))
             if vals.get('date_planned_start'):
                 production.move_raw_ids.write({'date': production.date_planned_start})
@@ -972,6 +976,8 @@ class MrpProduction(models.Model):
 
         if moves_to_confirm:
             moves_to_confirm._action_confirm()
+            # run scheduler for moves forecasted to not have enough in stock
+            moves_to_confirm._trigger_scheduler()
 
         self.workorder_ids.filtered(lambda w: w.state not in ['done', 'cancel'])._action_confirm()
 
@@ -1056,9 +1062,22 @@ class MrpProduction(models.Model):
                 production.consumption = production.bom_id.consumption
             if not production.move_raw_ids:
                 raise UserError(_("Add some materials to consume before marking this MO as to do."))
+            # In case of Serial number tracking, force the UoM to the UoM of product
+            if production.product_tracking == 'serial' and production.product_uom_id != production.product_id.uom_id:
+                production.write({
+                    'product_qty': production.product_uom_id._compute_quantity(production.product_qty, production.product_id.uom_id),
+                    'product_uom_id': production.product_id.uom_id
+                })
+                for move_finish in production.move_finished_ids.filtered(lambda m: m.product_id == production.product_id):
+                    move_finish.write({
+                        'product_uom_qty': move_finish.product_uom._compute_quantity(move_finish.product_uom_qty, move_finish.product_id.uom_id),
+                        'product_uom': move_finish.product_id.uom_id
+                    })
             production.move_raw_ids._adjust_procure_method()
             (production.move_raw_ids | production.move_finished_ids)._action_confirm()
             production.workorder_ids._action_confirm()
+            # run scheduler for moves forecasted to not have enough in stock
+            production.move_raw_ids._trigger_scheduler()
         return True
 
     def action_assign(self):
@@ -1312,12 +1331,7 @@ class MrpProduction(models.Model):
             finish_moves = order.move_finished_ids.filtered(lambda m: m.product_id == order.product_id and m.state not in ('done', 'cancel'))
             # the finish move can already be completed by the workorder.
             if not finish_moves.quantity_done:
-                if order.product_tracking == 'serial':
-                    uom = order.product_id.uom_id
-                    finish_moves.quantity_done = order.product_uom_id._compute_quantity(order.qty_producing, uom, round='HALF-UP')
-                    finish_moves.move_line_ids.product_uom_id = uom
-                else:
-                    finish_moves.quantity_done = float_round(order.qty_producing - order.qty_produced, precision_rounding=order.product_uom_id.rounding, rounding_method='HALF-UP')
+                finish_moves.quantity_done = float_round(order.qty_producing - order.qty_produced, precision_rounding=order.product_uom_id.rounding, rounding_method='HALF-UP')
                 finish_moves.move_line_ids.lot_id = order.lot_producing_id
             order._cal_price(moves_to_do)
 
@@ -1424,6 +1438,10 @@ class MrpProduction(models.Model):
         productions_not_to_backorder._post_inventory(cancel_backorder=True)
         productions_to_backorder._post_inventory(cancel_backorder=False)
         backorders = productions_to_backorder._generate_backorder_productions()
+
+        # if completed products make other confirmed/partially_available moves available, assign them
+        done_move_finished_ids = (productions_to_backorder.move_finished_ids | productions_not_to_backorder.move_finished_ids).filtered(lambda m: m.state == 'done')
+        done_move_finished_ids._trigger_assign()
 
         # Moves without quantity done are not posted => set them as done instead of canceling. In
         # case the user edits the MO later on and sets some consumed quantity on those, we do not

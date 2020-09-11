@@ -13,11 +13,14 @@ _logger = logging.getLogger(__name__)
 
 class PosController(http.Controller):
 
-    @http.route('/pos/web', type='http', auth='user')
+    @http.route(['/pos/web', '/pos/ui'], type='http', auth='user')
     def pos_web(self, config_id=False, **k):
         """Open a pos session for the given config.
 
         The right pos session will be selected to open, if non is open yet a new session will be created.
+
+        /pos/ui and /pos/web both can be used to acces the POS. On the SaaS,
+        /pos/ui uses HTTPS while /pos/web uses HTTP.
 
         :param debug: The debug mode to load the session in.
         :type debug: str.
@@ -56,7 +59,7 @@ class PosController(http.Controller):
         }
         return request.render('point_of_sale.index', qcontext=context)
 
-    @http.route('/pos/web/tests', type='http', auth="user")
+    @http.route('/pos/ui/tests', type='http', auth="user")
     def test_suite(self, mod=None, **kwargs):
         domain = [
             ('state', '=', 'opened'),

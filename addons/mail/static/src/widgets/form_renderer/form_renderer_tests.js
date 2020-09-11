@@ -468,9 +468,17 @@ QUnit.test('chatter updating', async function (assert) {
         { display_name: "first partner", id: 11 },
         { display_name: "second partner", id: 12 }
     );
+    const messageFetchChannelDef = makeDeferred();
     await this.createView({
         data: this.data,
         hasView: true,
+        async mockRPC(route, args) {
+            const res = await this._super(...arguments);
+            if (route.includes('message_fetch')) {
+                messageFetchChannelDef.resolve();
+            }
+            return res;
+        },
         // View params
         View: FormView,
         model: 'res.partner',
@@ -501,8 +509,10 @@ QUnit.test('chatter updating', async function (assert) {
         "there should be no message"
     );
 
-    await afterNextRender(() => {
+    await afterNextRender(async () => {
         document.querySelector('.o_pager_next').click();
+        // wait until messages are fetched, ignore other renders that are too early
+        await messageFetchChannelDef;
     });
     assert.containsOnce(
         document.body,
@@ -739,9 +749,7 @@ QUnit.test('read more links becomes read less after being clicked', async functi
         "read more/less link should contain 'read more' as text"
     );
 
-    await afterNextRender(() => {
-        document.querySelector('.o_Message_readMoreLess').click();
-    });
+    document.querySelector('.o_Message_readMoreLess').click();
     assert.strictEqual(
         document.querySelector('.o_Message_readMoreLess').textContent,
         'read less',

@@ -321,6 +321,12 @@ function beforeEach(self) {
 }
 
 function afterEach(self) {
+    if (self.env) {
+        self.env.bus.off('hide_home_menu', null);
+        self.env.bus.off('show_home_menu', null);
+        self.env.bus.off('will_hide_home_menu', null);
+        self.env.bus.off('will_show_home_menu', null);
+    }
     // The components must be destroyed before the widget, because the
     // widget might destroy the models before destroying the components,
     // and the components might still rely on messaging (or other) record(s).
@@ -404,6 +410,11 @@ async function createRootComponent(self, Component, { props = {}, target }) {
  *   the View class to use in createView.
  * @param {Object} [param0.viewOptions] makes only sense when `param0.hasView`
  *   is set: the view options to use in createView.
+ * @param {Object} [param0.waitUntilEvent]
+ * @param {String} [param0.waitUntilEvent.eventName]
+ * @param {String} [param0.waitUntilEvent.message]
+ * @param {function} [param0.waitUntilEvent.predicate]
+ * @param {integer} [param0.waitUntilEvent.timeoutDelay]
  * @param {string} [param0.waitUntilMessagingCondition='initialized'] Determines
  *   the condition of messaging when this function is resolved.
  *   Supported values: ['none', 'created', 'initialized'].
@@ -438,6 +449,7 @@ async function start(param0 = {}) {
         hasTimeControl = false,
         hasView = false,
         messagingBeforeCreationDeferred = Promise.resolve(),
+        waitUntilEvent,
         waitUntilMessagingCondition = 'initialized',
     } = param0;
     if (!['none', 'created', 'initialized'].includes(waitUntilMessagingCondition)) {
@@ -594,39 +606,95 @@ async function start(param0 = {}) {
         () => testEnv.messagingBus.trigger('will_show_home_menu')
     );
 
-    const result = { env: testEnv, mockServer, widget };
-
-    messagingBeforeCreationDeferred.then(async () => {
-        /**
-         * Some models require session data, like locale text direction
-         * (depends on fully loaded translation).
-         */
-        await env.session.is_bound;
-
-        testEnv.modelManager = new ModelManager(testEnv);
-        testEnv.modelManager.start();
-        /**
-         * Create the messaging singleton record.
-         */
-        testEnv.messaging = testEnv.models['mail.messaging'].create();
-        testEnv.messaging.start().then(() =>
-            testEnv.messagingInitializedDeferred.resolve()
-        );
-        testEnv.messagingCreatedPromise.resolve();
-    });
-    if (waitUntilMessagingCondition === 'created') {
-        await testEnv.messagingCreatedPromise;
-    }
-    if (waitUntilMessagingCondition === 'initialized') {
-        await testEnv.messagingInitializedDeferred;
-    }
-
-    if (mountCallbacks.length > 0) {
-        await afterNextRender(async () => {
-            await Promise.all(mountCallbacks.map(callback => callback({ selector, widget })));
+    /**
+     * Returns a promise resolved after the expected event is received.
+     *
+     * @param {Object} param0
+     * @param {string} param0.eventName event to wait
+     * @param {function} param0.func function which, when called, is expected to
+     *  trigger the event
+     * @param {string} [param0.message] assertion message
+     * @param {function} [param0.predicate] predicate called with event data.
+     *  If not provided, only the event name has to match.
+     * @param {number} [param0.timeoutDelay=5000] how long to wait at most in ms
+     * @returns {Promise}
+     */
+    const afterEvent = (async ({ eventName, func, message, predicate, timeoutDelay = 5000 }) => {
+        // Set up the timeout to reject if the event is not triggered.
+        let timeoutNoEvent;
+        const timeoutProm = new Promise((resolve, reject) => {
+            timeoutNoEvent = setTimeout(() => {
+                let error = message
+                    ? new Error(message)
+                    : new Error(`Timeout: the event ${eventName} was not triggered.`);
+                console.error(error);
+                reject(error);
+            }, timeoutDelay);
         });
+        // Set up the promise to resolve if the event is triggered.
+        const eventProm = new Promise(resolve => {
+            testEnv.messagingBus.on(eventName, null, data => {
+                if (!predicate || predicate(data)) {
+                    resolve();
+                }
+            });
+        });
+        // Start the function expected to trigger the event after the
+        // promise has been registered to not miss any potential event.
+        const funcRes = func();
+        // Make them race (first to resolve/reject wins).
+        await Promise.race([eventProm, timeoutProm]);
+        clearTimeout(timeoutNoEvent);
+        // If the event is triggered before the end of the async function,
+        // ensure the function finishes its job before returning.
+        await funcRes;
+    });
+
+    const result = {
+        afterEvent,
+        env: testEnv,
+        mockServer,
+        widget,
+    };
+
+    const start = async () => {
+        messagingBeforeCreationDeferred.then(async () => {
+            /**
+             * Some models require session data, like locale text direction
+             * (depends on fully loaded translation).
+             */
+            await env.session.is_bound;
+
+            testEnv.modelManager = new ModelManager(testEnv);
+            testEnv.modelManager.start();
+            /**
+             * Create the messaging singleton record.
+             */
+            testEnv.messaging = testEnv.models['mail.messaging'].create();
+            testEnv.messaging.start().then(() =>
+                testEnv.messagingInitializedDeferred.resolve()
+            );
+            testEnv.messagingCreatedPromise.resolve();
+        });
+        if (waitUntilMessagingCondition === 'created') {
+            await testEnv.messagingCreatedPromise;
+        }
+        if (waitUntilMessagingCondition === 'initialized') {
+            await testEnv.messagingInitializedDeferred;
+        }
+
+        if (mountCallbacks.length > 0) {
+            await afterNextRender(async () => {
+                await Promise.all(mountCallbacks.map(callback => callback({ selector, widget })));
+            });
+        }
+        returnCallbacks.forEach(callback => callback(result));
+    };
+    if (waitUntilEvent) {
+        await afterEvent(Object.assign({ func: start }, waitUntilEvent));
+    } else {
+        await start();
     }
-    returnCallbacks.forEach(callback => callback(result));
     return result;
 }
 

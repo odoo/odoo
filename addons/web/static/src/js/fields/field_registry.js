@@ -43,7 +43,9 @@ registry
     .add('CopyClipboardText', basic_fields.TextCopyClipboard)
     .add('CopyClipboardChar', basic_fields.CharCopyClipboard)
     .add('image', basic_fields.FieldBinaryImage)
+    .add('image_url', basic_fields.CharImageUrl)
     .add('kanban.image', basic_fields.KanbanFieldBinaryImage)
+    .add('kanban.image_url', basic_fields.KanbanCharImageUrl)
     .add('binary', basic_fields.FieldBinaryFile)
     .add('pdf_viewer', basic_fields.FieldPdfViewer)
     .add('monetary', basic_fields.FieldMonetary)
@@ -94,5 +96,6 @@ registry
 // Special fields
 registry
     .add('timezone_mismatch', special_fields.FieldTimezoneMismatch)
-    .add('report_layout', special_fields.FieldReportLayout);
+    .add('report_layout', special_fields.FieldReportLayout)
+    .add('iframe_wrapper', special_fields.IframeWrapper)
 });

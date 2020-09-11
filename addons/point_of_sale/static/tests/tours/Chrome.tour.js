@@ -99,5 +99,5 @@ odoo.define('point_of_sale.tour.Chrome', function (require) {
     PaymentScreen.do.clickValidate();
     ReceiptScreen.check.isShown();
 
-    Tour.register('ChromeTour', { test: true, url: '/pos/web' }, getSteps());
+    Tour.register('ChromeTour', { test: true, url: '/pos/ui' }, getSteps());
 });

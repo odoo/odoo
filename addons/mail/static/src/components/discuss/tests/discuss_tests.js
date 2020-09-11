@@ -7,6 +7,7 @@ const {
     afterEach,
     afterNextRender,
     beforeEach,
+    nextAnimationFrame,
     start,
 } = require('mail/static/src/utils/test_utils.js');
 
@@ -21,11 +22,12 @@ QUnit.module('discuss_tests.js', {
         beforeEach(this);
 
         this.start = async params => {
-            const { env, widget } = await start(Object.assign({}, params, {
+            const { afterEvent, env, widget } = await start(Object.assign({}, params, {
                 autoOpenDiscuss: true,
                 data: this.data,
                 hasDiscuss: true,
             }));
+            this.afterEvent = afterEvent;
             this.env = env;
             this.widget = widget;
         };
@@ -1114,7 +1116,7 @@ QUnit.test('default thread rendering', async function (assert) {
 });
 
 QUnit.test('initially load messages from inbox', async function (assert) {
-    assert.expect(5);
+    assert.expect(4);
 
     await this.start({
         async mockRPC(route, args) {
@@ -1125,13 +1127,8 @@ QUnit.test('initially load messages from inbox', async function (assert) {
                     30,
                     "should fetch up to 30 messages"
                 );
-                assert.strictEqual(
-                    args.args.length,
-                    1,
-                    "should have a single item in args"
-                );
                 assert.deepEqual(
-                    args.args[0],
+                    args.kwargs.domain,
                     [["needaction", "=", true]],
                     "should fetch needaction messages"
                 );
@@ -1185,7 +1182,7 @@ QUnit.test('auto-select thread in discuss context', async function (assert) {
 });
 
 QUnit.test('load single message from channel initially', async function (assert) {
-    assert.expect(8);
+    assert.expect(7);
 
     // channel expected to be rendered, with a random unique id that will be referenced in the test
     this.data['mail.channel'].records.push({ id: 20 });
@@ -1209,13 +1206,8 @@ QUnit.test('load single message from channel initially', async function (assert)
                     30,
                     "should fetch up to 30 messages"
                 );
-                assert.strictEqual(
-                    args.args.length,
-                    1,
-                    "should have a single item in args"
-                );
                 assert.deepEqual(
-                    args.args[0],
+                    args.kwargs.domain,
                     [["channel_ids", "in", [20]]],
                     "should fetch messages from channel"
                 );
@@ -1828,7 +1820,7 @@ QUnit.test('new messages separator [REQUIRE FOCUS]', async function (assert) {
 });
 
 QUnit.test('restore thread scroll position', async function (assert) {
-    assert.expect(4);
+    assert.expect(5);
     // channels expected to be rendered, with random unique id that will be referenced in the test
     this.data['mail.channel'].records.push({ id: 11 }, { id: 12 });
     for (let i = 1; i <= 25; i++) {
@@ -1838,7 +1830,7 @@ QUnit.test('restore thread scroll position', async function (assert) {
             res_id: 11,
         });
     }
-    for (let i = 1; i <= 25; i++) {
+    for (let i = 1; i <= 24; i++) {
         this.data['mail.message'].records.push({
             channel_ids: [12],
             model: 'mail.channel',
@@ -1851,67 +1843,111 @@ QUnit.test('restore thread scroll position', async function (assert) {
                 default_active_id: 'mail.channel_11',
             },
         },
+        waitUntilEvent: {
+            eventName: 'o-component-message-list-scrolled',
+            message: "should wait until channel 11 scrolled to its last message",
+            predicate: ({ threadViewer }) => {
+                return threadViewer.thread.model === 'mail.channel' && threadViewer.thread.id === 11;
+            },
+        },
     });
     assert.strictEqual(
         document.querySelectorAll(`
             .o_Discuss_thread .o_ThreadView_messageList .o_MessageList_message
         `).length,
         25,
-        "should have 25 messages"
+        "should have 25 messages in channel 11"
     );
 
-    // scroll to top of channel11
-    await afterNextRender(() => {
-        document.querySelector(`.o_Discuss_thread .o_ThreadView_messageList`).scrollTop = 0;
+    await this.afterEvent({
+        eventName: 'o-component-message-list-scrolled',
+        func: () => document.querySelector(`.o_Discuss_thread .o_ThreadView_messageList`).scrollTop = 0,
+        message: "should wait until channel 11 changed its scroll position to top",
+        predicate: ({ threadViewer }) => {
+            return threadViewer.thread.model === 'mail.channel' && threadViewer.thread.id === 11;
+        },
     });
     assert.strictEqual(
         document.querySelector(`.o_Discuss_thread .o_ThreadView_messageList`).scrollTop,
         0,
-        "should have scrolled to top of thread"
+        "should have scrolled to top of channel 11",
     );
 
-    // select channel12
-    await afterNextRender(() =>
-        document.querySelector(`
-            .o_DiscussSidebar_groupChannel
-            .o_DiscussSidebar_item[data-thread-local-id="${
-                this.env.models['mail.thread'].find(thread =>
-                    thread.id === 12 &&
-                    thread.model === 'mail.channel'
-                ).localId
-            }"]
-        `).click()
+    // Ensure scrollIntoView of channel 12 has enough time to complete before
+    // going back to channel 11. Await is needed to prevent the scrollIntoView
+    // initially planned for channel 12 to actually apply on channel 11.
+    // task-2333535
+    await this.afterEvent({
+        eventName: 'o-component-message-list-scrolled',
+        func: () => {
+            // select channel 12
+            document.querySelector(`
+                .o_DiscussSidebar_groupChannel
+                .o_DiscussSidebar_item[data-thread-local-id="${
+                    this.env.models['mail.thread'].find(thread =>
+                        thread.id === 12 &&
+                        thread.model === 'mail.channel'
+                    ).localId
+                }"]
+            `).click();
+        },
+        message: "should wait until channel 12 scrolled to its last message",
+        predicate: ({ threadViewer }) => {
+            return threadViewer.thread.model === 'mail.channel' && threadViewer.thread.id === 12;
+        },
+    });
+    assert.strictEqual(
+        document.querySelectorAll(`
+            .o_Discuss_thread .o_ThreadView_messageList .o_MessageList_message
+        `).length,
+        24,
+        "should have 24 messages in channel 12"
     );
-    // select channel11
-    await afterNextRender(() =>
-        document.querySelector(`
-            .o_DiscussSidebar_groupChannel
-            .o_DiscussSidebar_item[data-thread-local-id="${
-                this.env.models['mail.thread'].find(thread =>
-                    thread.id === 11 &&
-                    thread.model === 'mail.channel'
-                ).localId
-            }"]
-        `).click()
-    );
+
+    await this.afterEvent({
+        eventName: 'o-component-message-list-scrolled',
+        func: () => {
+            // select channel 11
+            document.querySelector(`
+                .o_DiscussSidebar_groupChannel
+                .o_DiscussSidebar_item[data-thread-local-id="${
+                    this.env.models['mail.thread'].find(thread =>
+                        thread.id === 11 &&
+                        thread.model === 'mail.channel'
+                    ).localId
+                }"]
+            `).click();
+        },
+        message: "should wait until channel 11 restored its scroll position",
+        predicate: ({ threadViewer }) => {
+            return threadViewer.thread.model === 'mail.channel' && threadViewer.thread.id === 11;
+        },
+    });
     assert.strictEqual(
         document.querySelector(`.o_Discuss_thread .o_ThreadView_messageList`).scrollTop,
         0,
-        "should have recovered scroll position of channel11 (scroll to top)"
+        "should have recovered scroll position of channel 11 (scroll to top)"
     );
 
-    // select channel12
-    await afterNextRender(() =>
-        document.querySelector(`
-            .o_DiscussSidebar_groupChannel
-            .o_DiscussSidebar_item[data-thread-local-id="${
-                this.env.models['mail.thread'].find(thread =>
-                    thread.id === 12 &&
-                    thread.model === 'mail.channel'
-                ).localId
-            }"]
-        `).click()
-    );
+    await this.afterEvent({
+        eventName: 'o-component-message-list-scrolled',
+        func: () => {
+            // select channel 12
+            document.querySelector(`
+                .o_DiscussSidebar_groupChannel
+                .o_DiscussSidebar_item[data-thread-local-id="${
+                    this.env.models['mail.thread'].find(thread =>
+                        thread.id === 12 &&
+                        thread.model === 'mail.channel'
+                    ).localId
+                }"]
+            `).click();
+        },
+        message: "should wait until channel 12 recovered its scroll position",
+        predicate: ({ threadViewer }) => {
+            return threadViewer.thread.model === 'mail.channel' && threadViewer.thread.id === 12;
+        },
+    });
     const messageList = document.querySelector(`
         .o_Discuss_thread
         .o_ThreadView_messageList
@@ -1919,7 +1955,7 @@ QUnit.test('restore thread scroll position', async function (assert) {
     assert.strictEqual(
         messageList.scrollTop + messageList.clientHeight,
         messageList.scrollHeight,
-        "should have recovered scroll position of channel12 (scroll to bottom)"
+        "should have recovered scroll position of channel 12 (scroll to bottom)"
     );
 });
 
@@ -2846,8 +2882,10 @@ QUnit.test('post a simple message', async function (assert) {
     );
 
     // insert some HTML in editable
-    document.querySelector(`.o_ComposerTextInput_textarea`).focus();
-    document.execCommand('insertText', false, "Test");
+    await afterNextRender(() => {
+        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
+        document.execCommand('insertText', false, "Test");
+    });
     assert.strictEqual(
         document.querySelector(`.o_ComposerTextInput_textarea`).value,
         "Test",
@@ -2855,8 +2893,7 @@ QUnit.test('post a simple message', async function (assert) {
     );
 
     await afterNextRender(() =>
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keydown', { key: 'Enter' }))
+        document.querySelector('.o_Composer_buttonSend').click()
     );
     assert.verifySteps(['message_post']);
     assert.strictEqual(
@@ -2884,6 +2921,185 @@ QUnit.test('post a simple message', async function (assert) {
         message.querySelector(`:scope .o_Message_content`).textContent,
         "Test",
         "new message in thread should have content typed from composer text input"
+    );
+});
+
+QUnit.test('post message on non-mailing channel with "Enter" keyboard shortcut', async function (assert) {
+    assert.expect(2);
+
+    // channel expected to be found in the sidebar
+    // with a random unique id that will be referenced in the test
+    this.data['mail.channel'].records.push({ id: 20, mass_mailing: false });
+    await this.start({
+        discuss: {
+            params: {
+                default_active_id: 'mail.channel_20',
+            },
+        },
+    });
+    assert.containsNone(
+        document.body,
+        '.o_Message',
+        "should not have any message initially in channel"
+    );
+
+    // insert some HTML in editable
+    await afterNextRender(() => {
+        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
+        document.execCommand('insertText', false, "Test");
+    });
+    await afterNextRender(() => {
+        const kevt = new window.KeyboardEvent('keydown', { key: "Enter" });
+        document.querySelector('.o_ComposerTextInput_textarea').dispatchEvent(kevt);
+    });
+    assert.containsOnce(
+        document.body,
+        '.o_Message',
+        "should now have single message in channel after posting message from pressing 'Enter' in text input of composer"
+    );
+});
+
+QUnit.test('do not post message on non-mailing channel with "SHIFT-Enter" keyboard shortcut', async function (assert) {
+    // Note that test doesn't assert SHIFT-Enter makes a newline, because this
+    // default browser cannot be simulated with just dispatching
+    // programmatically crafted events...
+    assert.expect(2);
+
+    // channel expected to be found in the sidebar
+    // with a random unique id that will be referenced in the test
+    this.data['mail.channel'].records.push({ id: 20, mass_mailing: true });
+    await this.start({
+        discuss: {
+            params: {
+                default_active_id: 'mail.channel_20',
+            },
+        },
+    });
+    assert.containsNone(
+        document.body,
+        '.o_Message',
+        "should not have any message initially in channel"
+    );
+
+    // insert some HTML in editable
+    await afterNextRender(() => {
+        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
+        document.execCommand('insertText', false, "Test");
+    });
+    const kevt = new window.KeyboardEvent('keydown', { key: "Enter", shiftKey: true });
+    document.querySelector('.o_ComposerTextInput_textarea').dispatchEvent(kevt);
+    await nextAnimationFrame();
+    assert.containsNone(
+        document.body,
+        '.o_Message',
+        "should still not have any message in channel after pressing 'Shift-Enter' in text input of composer"
+    );
+});
+
+QUnit.test('post message on mailing channel with "CTRL-Enter" keyboard shortcut', async function (assert) {
+    assert.expect(2);
+
+    // channel expected to be found in the sidebar
+    // with a random unique id that will be referenced in the test
+    this.data['mail.channel'].records.push({ id: 20, mass_mailing: true });
+    await this.start({
+        discuss: {
+            params: {
+                default_active_id: 'mail.channel_20',
+            },
+        },
+    });
+    assert.containsNone(
+        document.body,
+        '.o_Message',
+        "should not have any message initially in channel"
+    );
+
+    // insert some HTML in editable
+    await afterNextRender(() => {
+        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
+        document.execCommand('insertText', false, "Test");
+    });
+    await afterNextRender(() => {
+        const kevt = new window.KeyboardEvent('keydown', { ctrlKey: true, key: "Enter" });
+        document.querySelector('.o_ComposerTextInput_textarea').dispatchEvent(kevt);
+    });
+    assert.containsOnce(
+        document.body,
+        '.o_Message',
+        "should now have single message in channel after posting message from pressing 'CTRL-Enter' in text input of composer"
+    );
+});
+
+QUnit.test('post message on mailing channel with "META-Enter" keyboard shortcut', async function (assert) {
+    assert.expect(2);
+
+    // channel expected to be found in the sidebar
+    // with a random unique id that will be referenced in the test
+    this.data['mail.channel'].records.push({ id: 20, mass_mailing: true });
+    await this.start({
+        discuss: {
+            params: {
+                default_active_id: 'mail.channel_20',
+            },
+        },
+    });
+    assert.containsNone(
+        document.body,
+        '.o_Message',
+        "should not have any message initially in channel"
+    );
+
+    // insert some HTML in editable
+    await afterNextRender(() => {
+        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
+        document.execCommand('insertText', false, "Test");
+    });
+    await afterNextRender(() => {
+        const kevt = new window.KeyboardEvent('keydown', { key: "Enter", metaKey: true });
+        document.querySelector('.o_ComposerTextInput_textarea').dispatchEvent(kevt);
+    });
+    assert.containsOnce(
+        document.body,
+        '.o_Message',
+        "should now have single message in channel after posting message from pressing 'META-Enter' in text input of composer"
+    );
+});
+
+QUnit.test('do not post message on mailing channel with "Enter" keyboard shortcut', async function (assert) {
+    // Note that test doesn't assert Enter makes a newline, because this
+    // default browser cannot be simulated with just dispatching
+    // programmatically crafted events...
+    assert.expect(2);
+
+    // channel expected to be found in the sidebar
+    // with a random unique id that will be referenced in the test
+    this.data['mail.channel'].records.push({ id: 20, mass_mailing: true });
+    await this.start({
+        discuss: {
+            params: {
+                default_active_id: 'mail.channel_20',
+            },
+        },
+    });
+    assert.containsNone(
+        document.body,
+        '.o_Message',
+        "should not have any message initially in mailing channel"
+    );
+
+    // insert some HTML in editable
+    await afterNextRender(() => {
+        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
+        document.execCommand('insertText', false, "Test");
+    });
+    const kevt = new window.KeyboardEvent('keydown', { key: "Enter" });
+    document.querySelector('.o_ComposerTextInput_textarea').dispatchEvent(kevt);
+    await nextAnimationFrame();
+    assert.containsNone(
+        document.body,
+        '.o_Message',
+        "should still not have any message in mailing channel after pressing 'Enter' in text input of composer"
     );
 });
 
@@ -3205,11 +3421,12 @@ QUnit.test('reply to message from inbox (message linked to document)', async fun
         "composer text input should be auto-focus"
     );
 
-    await afterNextRender(() => {
-        document.execCommand('insertText', false, "Test");
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keydown', { key: 'Enter' }));
-    });
+    await afterNextRender(() =>
+        document.execCommand('insertText', false, "Test")
+    );
+    await afterNextRender(() =>
+        document.querySelector('.o_Composer_buttonSend').click()
+    );
     assert.verifySteps(['message_post']);
     assert.notOk(
         document.querySelector('.o_Composer'),

@@ -57,5 +57,5 @@ odoo.define('point_of_sale.tour.ReceiptScreen', function (require) {
     ReceiptScreen.check.totalAmountContains('$ 30.00 + $ 1.00 tip');
     ReceiptScreen.do.clickNextOrder();
 
-    Tour.register('ReceiptScreenTour', { test: true, url: '/pos/web' }, getSteps());
+    Tour.register('ReceiptScreenTour', { test: true, url: '/pos/ui' }, getSteps());
 });

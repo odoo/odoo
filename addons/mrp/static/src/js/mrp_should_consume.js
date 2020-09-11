@@ -20,8 +20,7 @@ const MrpShouldConsume = FieldFloat.extend({
     init: function (parent, name, params) {
         this._super.apply(this, arguments);
         this.displayShouldConsume = !['done', 'draft', 'cancel'].includes(params.data.state);
-        const options = {'digits': [false, 3]};
-        this.should_consume_qty = field_utils.format.float(params.data.should_consume_qty, false, options);
+        this.should_consume_qty = field_utils.format.float(params.data.should_consume_qty, params.fields.should_consume_qty, this.nodeOptions);
     },
 
     //--------------------------------------------------------------------------

@@ -52,17 +52,6 @@ class MessageList extends Component {
          */
         this._loadMoreRef = useRef('loadMore');
         /**
-         * Tracked last thread cache rendered. Useful to determine scroll
-         * position on patch if it is on the same thread cache or not.
-         */
-        this._renderedThreadCache = null;
-        /**
-         * Tracked last selected message. Useful to determine when patch comes
-         * from a message selection on a given thread cache, so that it
-         * auto-scroll to that message.
-         */
-        this._selectedMessage = null;
-        /**
          * Snapshot computed during willPatch, which is used by patched.
          */
         this._willPatchSnapshot = undefined;
@@ -121,13 +110,13 @@ class MessageList extends Component {
      * fixed height, which is the case for the moment.
      */
     async adjustFromComponentHints() {
+        if (!this.threadView) {
+            return;
+        }
         for (const hint of this.threadView.componentHintList) {
             switch (hint.type) {
                 case 'change-of-thread-cache':
                     this._adjustFromChangeOfThreadCache(hint);
-                    break;
-                case 'chat-window-unfolded':
-                    this._adjustFromChatWindowUnfolded(hint);
                     break;
                 case 'current-partner-just-posted-message':
                     this._adjustFromCurrentPartnerJustPostedMessage(hint);
@@ -344,6 +333,9 @@ class MessageList extends Component {
             isProcessed = true;
         }
         if (isProcessed) {
+            this.env.messagingBus.trigger('o-component-message-list-thread-cache-changed', {
+                threadViewer: this.threadView.threadViewer,
+            });
             this.threadView.markComponentHintProcessed(hint);
         }
     }
@@ -408,6 +400,9 @@ class MessageList extends Component {
         if (this.props.order === 'asc' && this.props.hasScrollAdjust) {
             this.el.scrollTop = this.el.scrollHeight - scrollHeight + scrollTop;
         }
+        this.env.messagingBus.trigger('o-component-message-list-more-messages-loaded', {
+            threadViewer: this.threadView.threadViewer,
+        });
         this.threadView.markComponentHintProcessed(hint);
     }
 
@@ -427,6 +422,9 @@ class MessageList extends Component {
      * @private
      */
     _checkMostRecentMessageIsVisible() {
+        if (!this.threadView) {
+            return;
+        }
         const thread = this.threadView.thread;
         const threadCache = this.threadView.threadCache;
         const lastMessageIsVisible =
@@ -531,7 +529,15 @@ class MessageList extends Component {
             // could be unmounted in the meantime (due to throttled behavior)
             return;
         }
-        this.threadView.saveThreadCacheScrollPositionsAsInitial(this.el.scrollTop);
+        if (!this.threadView || !this.threadView.threadViewer) {
+            return;
+        }
+        const scrollTop = this.el.scrollTop;
+        this.env.messagingBus.trigger('o-component-message-list-scrolled', {
+            scrollTop,
+            threadViewer: this.threadView.threadViewer,
+        });
+        this.threadView.threadViewer.saveThreadCacheScrollPositionsAsInitial(scrollTop);
         if (!this._isAutoLoadOnScrollActive) {
             return;
         }

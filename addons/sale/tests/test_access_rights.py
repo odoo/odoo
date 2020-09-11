@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.addons.sale.tests.common import TestSaleCommon
 from odoo.exceptions import AccessError, UserError, ValidationError
-from odoo.tests import tagged
+from odoo.tests import HttpCase, tagged
 
 
 @tagged('post_install', '-at_install')
@@ -122,3 +122,59 @@ class TestAccessRights(TestSaleCommon):
         # Employee can't delete the SO
         with self.assertRaises(AccessError):
             self.order.with_user(self.company_data['default_user_employee']).unlink()
+
+@tagged('post_install', '-at_install')
+class TestAccessRightsControllers(HttpCase):
+
+    def test_access_controller(self):
+
+        portal_so = self.env.ref("sale.portal_sale_order_2").sudo()
+        portal_so._portal_ensure_token()
+        token = portal_so.access_token
+
+        private_so = self.env.ref("sale.sale_order_1")
+
+        self.authenticate(None, None)
+
+        # Test public user can't print an order without a token
+        req = self.url_open(
+            url='/my/orders/%s?report_type=pdf' % portal_so.id,
+            allow_redirects=False,
+        )
+        self.assertEqual(req.status_code, 302)
+
+        # or with a random token
+        req = self.url_open(
+            url='/my/orders/%s?access_token=%s&report_type=pdf' % (
+                portal_so.id,
+                "foo",
+            ),
+            allow_redirects=False,
+        )
+        self.assertEqual(req.status_code, 302)
+
+        # but works fine with the right token
+        req = self.url_open(
+            url='/my/orders/%s?access_token=%s&report_type=pdf' % (
+                portal_so.id,
+                token,
+            ),
+            allow_redirects=False,
+        )
+        self.assertEqual(req.status_code, 200)
+
+        self.authenticate("portal", "portal")
+
+        # do not need the token when logged in
+        req = self.url_open(
+            url='/my/orders/%s?report_type=pdf' % portal_so.id,
+            allow_redirects=False,
+        )
+        self.assertEqual(req.status_code, 200)
+
+        # but still can't access another order
+        req = self.url_open(
+            url='/my/orders/%s?report_type=pdf' % private_so.id,
+            allow_redirects=False,
+        )
+        self.assertEqual(req.status_code, 302)

@@ -846,7 +846,7 @@ class HrExpenseSheet(models.Model):
     @api.constrains('expense_line_ids', 'company_id')
     def _check_expense_lines_company(self):
         for sheet in self:
-            if not all(expense.company_id == sheet.company_id for expense in sheet.expense_line_ids):
+            if any(expense.company_id != sheet.company_id for expense in sheet.expense_line_ids):
                 raise ValidationError(_('An expense report must contain only lines from the same company.'))
 
     @api.model

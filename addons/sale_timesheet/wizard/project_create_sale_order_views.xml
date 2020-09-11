@@ -25,12 +25,15 @@
                     <field name="line_ids" nolabel="1" attrs="{'required': [('pricing_type', '=', 'employee_rate')]}">
                         <tree editable="bottom">
                             <field name="employee_id" options="{'no_create_edit': True, 'no_create': True}" attrs="{'column_invisible': [('parent.pricing_type', '=', 'fixed_rate')], 'required': [('parent.pricing_type', '=', 'employee_rate')]}"/>
-                            <field name="sale_line_id" options="{'no_create_edit': True, 'no_create': True}" domain="[('is_service', '=', True), ('order_id', '=', parent.sale_order_id)]" attrs="{'column_invisible': ['|', ('parent.link_selection', '!=', 'link'), ('parent.pricing_type', '=', 'fixed_rate')], 'required': ['&amp;', ('parent.link_selection', '=', 'link'), ('parent.pricing_type', '=', 'employee_rate')]}"/>
+                            <field name="sale_line_id" options="{'no_create_edit': True, 'no_create': True, 'no_open': True}" domain="[('is_service', '=', True), ('order_id', '=', parent.sale_order_id)]" attrs="{'column_invisible': ['|', ('parent.link_selection', '!=', 'link'), ('parent.pricing_type', '=', 'fixed_rate')], 'required': ['&amp;', ('parent.link_selection', '=', 'link'), ('parent.pricing_type', '=', 'employee_rate')]}"/>
                             <field name="product_id" options="{'no_create_edit': True, 'no_create': True}" attrs="{'column_invisible': [('parent.link_selection', '=', 'link')], 'required': [('parent.link_selection', '!=', 'link')]}"/>
                             <field name="price_unit" widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}" attrs="{'readonly': [('parent.link_selection', '=', 'link')]}"/>
                             <field name="currency_id" invisible="1"/>
                         </tree>
                     </field>
+                </group>
+                <group attrs="{'invisible': [('info_invoice', '=', False)]}">
+                    <field name="info_invoice" nolabel="1"/>
                 </group>
                 <footer>
                     <button string="Link to Sales Order" type="object" name="action_link_sale_order" class="oe_highlight" attrs="{'invisible': [('link_selection', '!=', 'link')]}"/>

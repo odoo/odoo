@@ -204,6 +204,13 @@ class NewId(object):
             "<NewId 0x%x>" % id(self)
         )
 
+    def __str__(self):
+        if self.origin or self.ref:
+            id_part = repr(self.origin or self.ref)
+        else:
+            id_part = hex(id(self))
+        return "NewId_%s" % id_part
+
 
 def origin_ids(ids):
     """ Return an iterator over the origin ids corresponding to ``ids``.
@@ -5897,7 +5904,7 @@ Fields:
 
         first_call = not names
 
-        if not all(name in self._fields for name in names):
+        if any(name not in self._fields for name in names):
             return {}
 
         def PrefixTree(model, dotnames):

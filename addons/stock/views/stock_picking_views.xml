@@ -114,7 +114,7 @@
             <field name="view_mode">tree,form</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
-                    Create a new transfer
+                    No transfer found. Let's create one!
                 </p><p>
                     Transfers allow you to move products from one location to another.
                 </p>
@@ -253,7 +253,7 @@
                     <button name="button_scrap" type="object" string="Scrap" attrs="{'invisible': ['|', '&amp;', ('picking_type_code', '=', 'incoming'), ('state', '!=', 'done'), '&amp;', ('picking_type_code', '=', 'outgoing'), ('state', '=', 'done')]}"/>
                     <button name="action_toggle_is_locked" attrs="{'invisible': ['|', ('state', 'in', ('draft','cancel')), ('is_locked', '=', False)]}" string="Unlock" groups="stock.group_stock_manager" type="object" help="If the picking is unlocked you can edit initial demand (for a draft picking) or done quantities (for a done picking)."/>
                     <button name="action_toggle_is_locked" attrs="{'invisible': [('is_locked', '=', True)]}" string="Lock" groups="stock.group_stock_manager" type="object"/>
-                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,partially_available,assigned,done" />
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,assigned,done" />
                     <button name="action_cancel" attrs="{'invisible': [('state', 'not in', ('assigned', 'confirmed', 'partially_available', 'draft', 'waiting'))]}" string="Cancel" groups="base.group_user" type="object"/>
                 </header>
                 <sheet>
@@ -503,7 +503,7 @@
             <field name="search_view_id" ref="view_picking_internal_search"/>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
-                    Create a new transfer
+                    No transfer found. Let's create one!
                 </p><p>
                     Transfers allow you to move products from one location to another.
                 </p>
@@ -547,7 +547,7 @@
             <field name="search_view_id" ref="view_picking_internal_search"/>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
-                    Create a new transfer
+                    No transfer found. Let's create one!
                 </p><p>
                     Transfers allow you to move products from one location to another.
                 </p>
@@ -564,7 +564,7 @@
             <field name="search_view_id" ref="view_picking_internal_search"/>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
-                    Create a new transfer
+                    No transfer found. Let's create one!
                 </p><p>
                     Transfers allow you to move products from one location to another.
                 </p>
@@ -581,7 +581,7 @@
             <field name="search_view_id" ref="view_picking_internal_search"/>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
-                    Create a new transfer
+                    No transfer found. Let's create one!
                 </p><p>
                     Transfers allow you to move products from one location to another.
                 </p>
@@ -598,7 +598,7 @@
             <field name="search_view_id" ref="view_picking_internal_search"/>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
-                    Create a new transfer
+                    No transfer found. Let's create one!
                 </p><p>
                     Transfers allow you to move products from one location to another.
                 </p>
@@ -615,7 +615,7 @@
             <field name="search_view_id" ref="view_picking_internal_search"/>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
-                    Create a new transfer
+                    No transfer found. Let's create one!
                 </p>
                 <p>
                     Transfers allow you to move products from one location to another.
@@ -638,7 +638,7 @@
             <field name="search_view_id" ref="view_picking_internal_search"/>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
-                    Create a new transfer
+                    No transfer found. Let's create one!
                 </p>
                 <p>
                     Transfers allow you to move products from one location to another.
