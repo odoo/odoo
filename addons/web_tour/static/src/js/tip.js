@@ -409,7 +409,7 @@ var Tip = Widget.extend({
             mbLeft -= (this.content_width - this.init_width);
         }
         if (!posVertical && overflow || this.info.position === "top") {
-            mbTop -= (this.content_height - this.init_height);
+            mbTop -= (this.viewPortState === 'down') ? this.init_height - 5 : (this.content_height - this.init_height);
         }
 
 
