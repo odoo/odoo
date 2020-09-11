@@ -65,7 +65,6 @@
             left: 0;
         }
         td {
-            height: 0px;
             border: 0px;
 
             @for $size from 1 through 20 {
@@ -80,6 +79,7 @@
             }
 
             &.active {
+                z-index: 1;
                 position: sticky;
                 left: 0;
                 min-width: 100px;
@@ -111,6 +111,12 @@
             }
             &.o_we_agenda_time_slot_main, &.o_we_agenda_time_slot_half {
                 padding: 0;
+                position: relative;
+                > div {
+                    position: absolute;
+                    top: 0;
+                    width: 100%;
+                }
             }
             &.o_we_agenda_time_slot_main > div {
                 padding: 0.3em;
@@ -121,10 +127,18 @@
                 border-top: 1px dashed lightgrey;
             }
             &.event_track {
+                position: relative;
                 padding: 0;
+                &::before {
+                    content: "";
+                    display: block;
+                    width: 100%;
+                    position: absolute;
+                    top: 0;
+                    border-top: 1px solid lightgrey;
+                }
                 > div {
                     padding: 0.3em;
-                    border-top: 1px solid lightgrey;
                 }
 
             }
