@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
 
             <xpath expr="//page/field[@name='order_line']/.." position="after">
-                <page string="Optional Products" name="optional_products" attrs="{'invisible': [('state', 'not in', ['draft', 'sent'])]}">
+                <page string="Optional Products" name="optional_products" attrs="{'invisible': [('state', 'not in', ['draft', 'sent'])]}" groups="sale_management.group_sale_order_template">
                     <field name="sale_order_option_ids" mode="tree,form,kanban">
                         <form string="Optional Products">
                             <group>
