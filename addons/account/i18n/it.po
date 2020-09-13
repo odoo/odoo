@@ -25,8 +25,8 @@
 # Marco Calcagni <mcalcagni@dinamicheaziendali.it>, 2019
 # Paolo Valier, 2019
 # Luana Andronico <andronicoluana@gmail.com>, 2019
-# Simone Sanfilippo <s.sanfilippo@hinge16.eu>, 2019
 # Lorenzo Battistini <lb@takobi.online>, 2020
+# Simone Sanfilippo <s.sanfilippo@hinge16.eu>, 2020
 # Sergio Zanchetta <primes2h@gmail.com>, 2020
 # 
 msgid ""
@@ -54,7 +54,7 @@ msgid ""
 msgstr ""
 " * Lo stato «Bozza» viene usato in presenza di una nuova fattura non ancora confermata.\n"
 " * Lo stato «Aperta» si usa quando alla fattura creata viene assegnato un numero. Lo stato permane finché non viene pagata.\n"
-" * Lo stato «In pagamento» è usato quando i pagamenti sono stati generati in un registro contabile per l'intero ammontare della fattura, ma alcune registrazioni non sono ancora state riconciliate con la banca.\n"
+" * Lo stato «In pagamento» è usato quando i pagamenti sono stati confermati, in un registro contabile, per l'intero ammontare della fattura, ma alcune registrazioni non sono ancora state riconciliate con la banca.\n"
 " * Lo stato «Pagata» è impostato automaticamente dopo il pagamento della fattura, a prescindere dalla riconciliazione delle relative registrazioni contabili.\n"
 " * Lo stato «Annullata» viene usato quando l'utente annulla una fattura."
 
@@ -831,9 +831,9 @@ msgid ""
 "posted. Those will be posted automatically after performing the bank "
 "reconciliation."
 msgstr ""
-"Non è possibile confermare registrazioni di pagamento manuali su registri "
-"configurati per la generazione automatica dopo una riconciliazione bancaria."
-" Vengono confermate automaticamente dopo la riconciliazione."
+"Impossibile confermare registrazioni di pagamento manuali su registri "
+"configurati per la generazione automatica dopo una riconciliazione. Vengono "
+"confermate automaticamente dopo la riconciliazione bancaria."
 
 #. module: account
 #: code:addons/account/models/reconciliation_widget.py:681
@@ -2307,7 +2307,7 @@ msgstr "Estratto conto bancario %s"
 #. module: account
 #: model:ir.model,name:account.model_account_bank_statement_cashbox
 msgid "Bank Statement Cashbox"
-msgstr ""
+msgstr "Estratti conto bancari"
 
 #. module: account
 #: model:ir.model,name:account.model_account_bank_statement_closebalance
@@ -7467,7 +7467,7 @@ msgstr ""
 #: code:addons/account/models/account_payment.py:599
 #, python-format
 msgid "Only a draft payment can be posted."
-msgstr "Può essere confermato solo un pagamento in bozza."
+msgstr "Solo un pagamento in bozza può essere confermato."
 
 #. module: account
 #: code:addons/account/models/chart_template.py:185
@@ -7483,7 +7483,7 @@ msgid ""
 "example."
 msgstr ""
 "Solo gli utenti con ruolo \"Consulente\" possono modificare conti con data "
-"antecedente o pari a questa. Usato ad esempio per bloccare un periodo "
+"antecedente o pari a questa. Usarla, ad esempio, per bloccare un periodo "
 "all'interno di un anno fiscale aperto."
 
 #. module: account
