@@ -10,7 +10,11 @@
                 <field name="l10n_latam_internal_type" invisible="1"/>
             </form>
             <field name="ref" position="attributes">
+<<<<<<< HEAD
                 <attribute name="attrs">{'invisible': [('move_type', '=', 'out_invoice'), ('l10n_latam_internal_type', '!=', 'debit_note')], 'required': [('l10n_latam_internal_type', '=', 'debit_note')]}</attribute>
+=======
+                <attribute name="attrs">{'invisible': [('type', '=', 'out_invoice'), ('l10n_latam_internal_type', '!=', 'debit_note')]}</attribute>
+>>>>>>> ffd578f0c07... temp
             </field>
         </field>
     </record>
