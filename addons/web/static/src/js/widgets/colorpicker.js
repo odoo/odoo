@@ -82,7 +82,7 @@ var ColorpickerWidget = Widget.extend({
         if (rgba) {
             this._updateRgba(rgba.red, rgba.green, rgba.blue, rgba.opacity);
         }
-        this.previewActive = true;
+        this.previewActive = this.options.previewActive || false;
         return this._super.apply(this, arguments);
     },
     /**

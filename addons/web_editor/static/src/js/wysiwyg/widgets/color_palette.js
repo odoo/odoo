@@ -142,6 +142,7 @@ const ColorPaletteWidget = Widget.extend({
         }
         this.colorPicker = new ColorpickerWidget(this, {
             defaultColor: defaultColor,
+            previewActive: true,
         });
         await this.colorPicker.prependTo($colorSection);
         return res;
