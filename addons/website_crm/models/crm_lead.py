@@ -12,17 +12,19 @@ class Lead(models.Model):
 
     @api.depends('visitor_ids.page_ids')
     def _compute_visitor_page_count(self):
-        self.flush(['visitor_ids'])
-        sql = """ SELECT l.id as lead_id, count(*) as page_view_count
-                    FROM crm_lead l
-                    JOIN crm_lead_website_visitor_rel lv ON l.id = lv.crm_lead_id
-                    JOIN website_visitor v ON v.id = lv.website_visitor_id
-                    JOIN website_track p ON p.visitor_id = v.id
-                    WHERE l.id in %s
-                    GROUP BY l.id"""
-        self.env.cr.execute(sql, (tuple(self.ids),))
-        page_data = self.env.cr.dictfetchall()
-        mapped_data = {data['lead_id']: data['page_view_count'] for data in page_data}
+        mapped_data = {}
+        if self.ids:
+            self.flush(['visitor_ids'])
+            sql = """ SELECT l.id as lead_id, count(*) as page_view_count
+                        FROM crm_lead l
+                        JOIN crm_lead_website_visitor_rel lv ON l.id = lv.crm_lead_id
+                        JOIN website_visitor v ON v.id = lv.website_visitor_id
+                        JOIN website_track p ON p.visitor_id = v.id
+                        WHERE l.id in %s
+                        GROUP BY l.id"""
+            self.env.cr.execute(sql, (tuple(self.ids),))
+            page_data = self.env.cr.dictfetchall()
+            mapped_data = {data['lead_id']: data['page_view_count'] for data in page_data}
         for lead in self:
             lead.visitor_page_count = mapped_data.get(lead.id, 0)
 

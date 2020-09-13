@@ -145,7 +145,11 @@ class IrActionsReport(models.Model):
 
     def _get_readable_fields(self):
         return super()._get_readable_fields() | {
-            "params", "report_name", "report_type", "target",
+            "report_name", "report_type", "target",
+            # these two are not real fields of ir.actions.report but are
+            # expected in the route /report/<converter>/<reportname> and must
+            # not be removed by clean_action
+            "context", "data",
         }
 
     def associated_view(self):
@@ -819,7 +823,6 @@ class IrActionsReport(models.Model):
 
         data = data and dict(data) or {}
 
-
         if report_model is not None:
             data.update(report_model._get_report_values(docids, data=data))
         else:
@@ -866,7 +869,7 @@ class IrActionsReport(models.Model):
 
         discard_logo_check = self.env.context.get('discard_logo_check')
         if self.env.is_admin() and not self.env.company.external_report_layout_id and config and not discard_logo_check:
-            action = self.env["ir.actions.actions"]._for_xml_id("base.action_base_document_layout_configurator")
+            action = self.env["ir.actions.actions"]._for_xml_id("web.action_base_document_layout_configurator")
             ctx = action.get('context')
             py_ctx = json.loads(ctx) if ctx else {}
             report_action['close_on_report_download'] = True

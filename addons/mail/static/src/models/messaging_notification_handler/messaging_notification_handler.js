@@ -155,6 +155,10 @@ function factory(dependencies) {
                 // knowledge of the channel
                 return;
             }
+            if (channel.channel_type === 'channel') {
+                // disabled on `channel` channels for performance reasons
+                return;
+            }
             channel.update({
                 partnerSeenInfos: [['insert',
                     {
@@ -259,7 +263,11 @@ function factory(dependencies) {
                         message,
                     });
                 }
-                channel.markAsFetched();
+                if (channel.model === 'mail.channel' && channel.channel_type !== 'channel') {
+                    // disabled on non-channel threads and
+                    // on `channel` channels for performance reasons
+                    channel.markAsFetched();
+                }
                 // (re)open chat on receiving new message
                 if (channel.channel_type !== 'channel') {
                     this.env.messaging.chatWindowManager.openThread(channel);
@@ -301,6 +309,10 @@ function factory(dependencies) {
             if (!channel) {
                 // for example seen from another browser, the current one has no
                 // knowledge of the channel
+                return;
+            }
+            if (channel.channel_type === 'channel') {
+                // disabled on `channel` channels for performance reasons
                 return;
             }
             const lastMessage = this.env.models['mail.message'].insert({id: last_message_id});

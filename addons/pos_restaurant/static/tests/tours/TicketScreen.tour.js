@@ -17,6 +17,7 @@ odoo.define('pos_restaurant.tour.TicketScreen', function (require) {
 
     // Deleting the last order in the table brings back to floorscreen
     FloorScreen.do.clickTable('T4');
+    ProductScreen.check.isShown();
     Chrome.do.clickTicketButton();
     TicketScreen.check.nthRowContains(2, '-0001');
     TicketScreen.do.deleteOrder('-0001');
@@ -40,5 +41,5 @@ odoo.define('pos_restaurant.tour.TicketScreen', function (require) {
     ProductScreen.check.totalAmountIs('2.0');
     Chrome.check.backToFloorTextIs('Main Floor', 'T2');
 
-    Tour.register('PosResTicketScreenTour', { test: true, url: '/pos/web' }, getSteps());
+    Tour.register('PosResTicketScreenTour', { test: true, url: '/pos/ui' }, getSteps());
 });

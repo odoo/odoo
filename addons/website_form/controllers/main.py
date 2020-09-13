@@ -84,17 +84,6 @@ class WebsiteForm(http.Controller):
     def boolean(self, field_label, field_input):
         return bool(field_input)
 
-    def date(self, field_label, field_input):
-        lang = request.env['ir.qweb.field'].user_lang()
-        return datetime.strptime(field_input, lang.date_format).strftime(DEFAULT_SERVER_DATE_FORMAT)
-
-    def datetime(self, field_label, field_input):
-        lang = request.env['ir.qweb.field'].user_lang()
-        strftime_format = (u"%s %s" % (lang.date_format, lang.time_format))
-        user_tz = pytz.timezone(request.context.get('tz') or request.env.user.tz or 'UTC')
-        dt = user_tz.localize(datetime.strptime(field_input, strftime_format)).astimezone(pytz.utc)
-        return dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
-
     def binary(self, field_label, field_input):
         return base64.b64encode(field_input.read())
 
@@ -108,8 +97,8 @@ class WebsiteForm(http.Controller):
         'char': identity,
         'text': identity,
         'html': identity,
-        'date': date,
-        'datetime': datetime,
+        'date': identity,
+        'datetime': identity,
         'many2one': integer,
         'one2many': one2many,
         'many2many':many2many,

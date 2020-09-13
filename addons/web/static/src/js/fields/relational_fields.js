@@ -27,7 +27,7 @@ var KanbanRecord = require('web.KanbanRecord');
 var KanbanRenderer = require('web.KanbanRenderer');
 var ListRenderer = require('web.ListRenderer');
 const { ComponentWrapper, WidgetAdapterMixin } = require('web.OwlCompatibility');
-const { sprintf } = require("web.utils");
+const { sprintf, toBoolElse } = require("web.utils");
 
 const { escape } = owl.utils;
 var _t = core._t;
@@ -1365,6 +1365,7 @@ var FieldX2Many = AbstractField.extend(WidgetAdapterMixin, {
                 addCreateLine: this._hasCreateLine(),
                 addTrashIcon: this._hasTrashIcon(),
                 isMany2Many: this.isMany2Many,
+                no_open: this.isReadonly && toBoolElse(arch.attrs.no_open || '', false),
                 columnInvisibleFields: this.currentColInvisibleFields,
             });
         }
@@ -2959,11 +2960,7 @@ var FieldSelection = AbstractField.extend({
                 style: disabled ? "display: none" : "",
             }));
         }
-        var value = this.value;
-        if (this.field.type === 'many2one' && value) {
-            value = value.data.id;
-        }
-        this.$el.val(JSON.stringify(value));
+        this.$el.val(JSON.stringify(this._getRawValue()));
     },
     /**
      * @override
@@ -2971,6 +2968,14 @@ var FieldSelection = AbstractField.extend({
      */
     _renderReadonly: function () {
         this.$el.empty().text(this._formatValue(this.value));
+        this.$el.attr('raw-value', this._getRawValue());
+    },
+    _getRawValue: function() {
+        var raw_value = this.value;
+        if (this.field.type === 'many2one' && raw_value) {
+            raw_value = raw_value.data.id;
+        }
+        return raw_value;
     },
     /**
      * @override

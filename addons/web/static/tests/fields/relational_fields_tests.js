@@ -441,6 +441,29 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('prevent the dialog in readonly x2many tree view with option no_open True', async function (assert) {
+        assert.expect(2);
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<field name="turtles">' +
+                            '<tree editable="bottom" no_open="True">' +
+                                '<field name="turtle_foo"/>' +
+                            '</tree>' +
+                        '</field>' +
+                    '</sheet>' +
+                 '</form>',
+            res_id: 1,
+        });
+        assert.containsOnce(form, '.o_data_row:contains("blip")', "There should be one record in x2many list view")
+        await testUtils.dom.click(form.$('.o_data_row:first'));
+        assert.strictEqual($('.modal-dialog').length, 0, "There is should be no dialog open on click of readonly list row");
+        form.destroy();
+    });
+
     QUnit.test('delete a record while adding another one in a multipage', async function (assert) {
         // in a many2one with at least 2 pages, add a new line. Delete the line above it.
         // (the onchange makes it so that the virtualID is inserted in the middle of the currentResIDs.)
@@ -997,7 +1020,7 @@ QUnit.module('relational_fields', {
     });
 
     QUnit.test('widget selection, edition and on many2one field', async function (assert) {
-        assert.expect(19);
+        assert.expect(21);
 
         this.data.partner.onchanges = {product_id: function () {}};
         this.data.partner.records[0].product_id = 37;
@@ -1024,10 +1047,14 @@ QUnit.module('relational_fields', {
         assert.containsNone(form.$('.o_form_view'), 'select');
         assert.strictEqual(form.$('.o_field_widget[name=product_id]').text(), 'xphone',
             "should have rendered the many2one field correctly");
+        assert.strictEqual(form.$('.o_field_widget[name=product_id]').attr('raw-value'), '37',
+            "should have set the raw-value attr for many2one field correctly");
         assert.strictEqual(form.$('.o_field_widget[name=trululu]').text(), '',
             "should have rendered the unset many2one field correctly");
         assert.strictEqual(form.$('.o_field_widget[name=color]').text(), 'Red',
             "should have rendered the selection field correctly");
+        assert.strictEqual(form.$('.o_field_widget[name=color]').attr('raw-value'), 'red',
+            "should have set the raw-value attr for selection field correctly");
 
         await testUtils.form.clickEdit(form);
 

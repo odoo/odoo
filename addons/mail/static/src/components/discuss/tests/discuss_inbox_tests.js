@@ -312,11 +312,12 @@ QUnit.test('"reply to" composer should log note if message replied to is a note'
         "Send button text should be 'Log'"
     );
 
-    await afterNextRender(() => {
-        document.execCommand('insertText', false, "Test");
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keydown', { key: 'Enter' }));
-    });
+    await afterNextRender(() =>
+        document.execCommand('insertText', false, "Test")
+    );
+    await afterNextRender(() =>
+        document.querySelector('.o_Composer_buttonSend').click()
+    );
     assert.verifySteps(['message_post']);
 });
 
@@ -363,11 +364,12 @@ QUnit.test('"reply to" composer should send message if message replied to is not
         "Send button text should be 'Send'"
     );
 
-    await afterNextRender(() => {
-        document.execCommand('insertText', false, "Test");
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keydown', { key: 'Enter' }));
-    });
+    await afterNextRender(() =>
+        document.execCommand('insertText', false, "Test")
+    );
+    await afterNextRender(() =>
+        document.querySelector('.o_Composer_buttonSend').click()
+    );
     assert.verifySteps(['message_post']);
 });
 

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-01 07:28+0000\n"
-"PO-Revision-Date: 2020-09-01 07:28+0000\n"
+"POT-Creation-Date: 2020-09-07 07:33+0000\n"
+"PO-Revision-Date: 2020-09-07 07:33+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -1422,6 +1422,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse_orderpoint__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_warn_insufficient_qty_unbuild__display_name
 msgid "Display Name"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production__show_lot_ids
+msgid "Display the serial number shortcut on the moves"
 msgstr ""
 
 #. module: mrp
@@ -4008,7 +4013,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__time_efficiency
 msgid ""
-"This field is used to calculate the the expected duration of a work order at"
+"This field is used to calculate the expected duration of a work order at"
 " this work center. For example, if a work order takes one hour and the "
 "efficiency factor is 100%, then the expected duration will be one hour. If "
 "the efficiency factor is 200%, however the expected duration will be 30 "
@@ -4095,8 +4100,9 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter__time_cycle_manual
 msgid ""
-"Time in minutes. Is the time used in manual mode, or the first time supposed"
-" in real time when there are not any work orders yet."
+"Time in minutes:"
+"- In manual mode, time used"
+"- In automatic mode, supposed first time when there aren't any work orders yet"
 msgstr ""
 
 #. module: mrp

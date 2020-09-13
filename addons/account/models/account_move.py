@@ -123,9 +123,15 @@ class AccountMove(models.Model):
     name = fields.Char(string='Number', copy=False, compute='_compute_name', readonly=False, store=True, index=True, tracking=True)
     highest_name = fields.Char(compute='_compute_highest_name')
     show_name_warning = fields.Boolean(store=False)
-    date = fields.Date(string='Date', required=True, index=True, readonly=True,
+    date = fields.Date(
+        string='Date',
+        required=True,
+        index=True,
+        readonly=True,
         states={'draft': [('readonly', False)]},
-        default=fields.Date.context_today)
+        copy=False,
+        default=fields.Date.context_today
+    )
     ref = fields.Char(string='Reference', copy=False, tracking=True)
     narration = fields.Text(string='Terms and Conditions')
     state = fields.Selection(selection=[
@@ -652,6 +658,8 @@ class AccountMove(models.Model):
                 continue
 
             tax_base_amount = (-1 if self.is_inbound() else 1) * taxes_map_entry['tax_base_amount']
+            # tax_base_amount field is expressed using the company currency.
+            tax_base_amount = currency._convert(tax_base_amount, self.company_currency_id, self.company_id, self.date or fields.Date.context_today(self))
 
             # Recompute only the tax_base_amount.
             if taxes_map_entry['tax_line'] and recompute_tax_base_amount:
@@ -1023,10 +1031,11 @@ class AccountMove(models.Model):
                 }
             )
         )
+        self = self.sorted(lambda m: (m.date, m.ref or '', m.id))
         highest_name = self[0]._get_last_sequence() if self else False
 
         # Group the moves by journal and month
-        for move in self.sorted(lambda m: (m.date, m.ref or '', m.id)):
+        for move in self:
             if not highest_name and move == self[0] and not move.posted_before:
                 # In the form view, we need to compute a default sequence so that the user can edit
                 # it. We only check the first move as an approximation (enough for new in form view)
@@ -1034,15 +1043,13 @@ class AccountMove(models.Model):
             elif (move.name and move.name != '/') or move.state != 'posted':
                 # Has already a name or is not posted, we don't add to a batch
                 continue
-            if not grouped[journal_key(move)][date_key(move)]['records']:
+            group = grouped[journal_key(move)][date_key(move)]
+            if not group['records']:
                 # Compute all the values needed to sequence this whole group
                 move._set_next_sequence()
-                format, format_values = move._get_sequence_format_param(move.name)
-                reset = move._deduce_sequence_number_reset(move.name)
-                grouped[journal_key(move)][date_key(move)]['format'] = format
-                grouped[journal_key(move)][date_key(move)]['format_values'] = format_values
-                grouped[journal_key(move)][date_key(move)]['reset'] = reset
-            grouped[journal_key(move)][date_key(move)]['records'] += move
+                group['format'], group['format_values'] = move._get_sequence_format_param(move.name)
+                group['reset'] = move._deduce_sequence_number_reset(move.name)
+            group['records'] += move
 
         # Fusion the groups depending on the sequence reset and the format used because `seq` is
         # the same counter for multiple groups that might be spread in multiple months.
@@ -1266,15 +1273,11 @@ class AccountMove(models.Model):
 
             to_write = []
 
-            if move.currency_id != move.company_id.currency_id:
-                amount_currency = abs(move.amount_total)
-                balance = move.currency_id._convert(amount_currency, move.company_currency_id, move.company_id, move.date)
-            else:
-                balance = abs(move.amount_total)
-                amount_currency = 0.0
+            amount_currency = abs(move.amount_total)
+            balance = move.currency_id._convert(amount_currency, move.company_currency_id, move.company_id, move.date)
 
             for line in move.line_ids:
-                if float_compare(abs(line.balance), balance, precision_rounding=move.currency_id.rounding) != 0:
+                if not line.currency_id.is_zero(balance - abs(line.balance)):
                     to_write.append((1, line.id, {
                         'debit': line.balance > 0.0 and balance or 0.0,
                         'credit': line.balance < 0.0 and balance or 0.0,
@@ -2139,7 +2142,7 @@ class AccountMove(models.Model):
                         mapping[inv_rep_line] = ref_rep_line
             return mapping
 
-        move_vals = self.with_context(include_business_fields=True,active_test=False).copy_data(default=default_values)[0]
+        move_vals = self.with_context(include_business_fields=True).copy_data(default=default_values)[0]
 
         tax_repartition_lines_mapping = compute_tax_repartition_lines_mapping(move_vals)
 
@@ -2229,7 +2232,7 @@ class AccountMove(models.Model):
                 'move_type': reverse_type_map[move.move_type],
                 'reversed_entry_id': move.id,
             })
-            move_vals_list.append(move._reverse_move_vals(default_values, cancel=cancel))
+            move_vals_list.append(move.with_context(move_reverse_cancel=cancel)._reverse_move_vals(default_values, cancel=cancel))
 
         reverse_moves = self.env['account.move'].create(move_vals_list)
         for move, reverse_move in zip(self, reverse_moves.with_context(check_move_validity=False)):
@@ -2519,6 +2522,10 @@ class AccountMove(models.Model):
         ctx = dict(
             default_model='account.move',
             default_res_id=self.id,
+            # For the sake of consistency we need a default_res_model if
+            # default_res_id is set. Not renaming default_model as it can
+            # create many side-effects.
+            default_res_model='account.move',
             default_use_template=bool(template),
             default_template_id=template and template.id or False,
             default_composition_mode='comment',
@@ -3165,7 +3172,7 @@ class AccountMoveLine(models.Model):
             sign = 1
 
         amount_currency = price_subtotal * sign
-        balance = currency._convert(amount_currency, company.currency_id, company, date)
+        balance = currency._convert(amount_currency, company.currency_id, company, date or fields.Date.context_today(self))
         return {
             'amount_currency': amount_currency,
             'currency_id': currency.id,
@@ -4475,6 +4482,7 @@ class AccountMoveLine(models.Model):
 
     def copy_data(self, default=None):
         res = super(AccountMoveLine, self).copy_data(default=default)
+
         for line, values in zip(self, res):
             # Don't copy the name of a payment term line.
             if line.move_id.is_invoice() and line.account_id.user_type_id.type in ('receivable', 'payable'):

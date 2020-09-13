@@ -106,7 +106,7 @@ odoo.define('pos_restaurant.tour.OrderManagementScreen', function (require) {
     OrderManagementScreen.check.isShown();
 
     // select order 0004 and check if it is now in T2
-    OrderManagementScreen.do.clickOrder('-0004');
+    OrderManagementScreen.do.clickOrder('-0004', ['table', 'T2']);
     ProductScreen.check.isShown();
     ProductScreen.check.totalAmountIs('278');
     Chrome.check.backToFloorTextIs('Main Floor', 'T2');
@@ -120,5 +120,5 @@ odoo.define('pos_restaurant.tour.OrderManagementScreen', function (require) {
     ProductScreen.check.totalAmountIs('44');
     Chrome.check.backToFloorTextIs('Main Floor', 'T2');
 
-    Tour.register('PosResOrderManagementScreenTour', { test: true, url: '/pos/web' }, getSteps());
+    Tour.register('PosResOrderManagementScreenTour', { test: true, url: '/pos/ui' }, getSteps());
 });

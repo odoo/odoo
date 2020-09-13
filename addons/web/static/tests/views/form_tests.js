@@ -2449,6 +2449,28 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('archive action with active field not in view', async function (assert) {
+        assert.expect(2);
+
+        // add active field on partner model, but do not put it in the view
+        this.data.partner.fields.active = {string: 'Active', type: 'char', default: true};
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            res_id: 1,
+            viewOptions: { hasActionMenus: true },
+            arch: '<form><field name="foo"/></form>',
+        });
+
+        await cpHelpers.toggleActionMenu(form);
+        assert.containsNone(form, '.o_cp_action_menus a:contains(Archive)');
+        assert.containsNone(form, '.o_cp_action_menus a:contains(Unarchive)');
+
+        form.destroy();
+    });
+
     QUnit.test('can duplicate a record', async function (assert) {
         assert.expect(3);
 
@@ -8599,6 +8621,38 @@ QUnit.module('Views', {
         assert.strictEqual(form.$('.o_field_widget[name=display_name]').text(), 'changed');
         assert.containsNone(document.body, '.modal',
             "should not display the 'Changes will be discarded' dialog");
+
+        form.destroy();
+    });
+
+    QUnit.test('call canBeRemoved twice', async function (assert) {
+        assert.expect(4);
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form><field name="display_name"/><field name="foo"/></form>',
+            res_id: 1,
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        assert.containsOnce(form, '.o_form_editable');
+        await testUtils.fields.editInput(form.$('.o_field_widget[name=foo]'), 'some value');
+
+        form.canBeRemoved();
+        await testUtils.nextTick();
+        assert.containsOnce(document.body, '.modal');
+
+        form.canBeRemoved();
+        await testUtils.nextTick();
+        assert.containsOnce(document.body, '.modal');
+
+        await testUtils.dom.click($('.modal .modal-footer .btn-secondary'));
+
+        assert.containsNone(document.body, '.modal');
 
         form.destroy();
     });

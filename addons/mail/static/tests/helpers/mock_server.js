@@ -1,6 +1,8 @@
 odoo.define('mail.MockServer', function (require) {
 "use strict";
 
+const { nextAnimationFrame } = require('mail/static/src/utils/test_utils.js');
+
 const MockServer = require('web.MockServer');
 
 MockServer.include({
@@ -197,6 +199,9 @@ MockServer.include({
             return this._mockMailMessageMarkAllAsRead(domain);
         }
         if (args.model === 'mail.message' && args.method === 'message_fetch') {
+            // TODO FIXME delay RPC until next potential render as a workaround
+            // to issue https://github.com/odoo/owl/pull/724
+            await nextAnimationFrame();
             const domain = args.args[0] || args.kwargs.domain;
             const limit = args.args[1] || args.kwargs.limit;
             const moderated_channel_ids = args.args[2] || args.kwargs.moderated_channel_ids;

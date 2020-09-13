@@ -3,6 +3,7 @@
 
     <t t-name="pos_restaurant.TipScreen" owl="1">
         <div class="tip-screen screen">
+            <div class="pos-receipt-container"/>
             <div class="screen-content">
                 <div class="top-content">
                     <span class="button back" t-on-click="showScreen('FloorScreen')">
@@ -45,7 +46,7 @@
                         <div class="custom-amount-form">
                             <div class="item label">Amount</div>
                             <div class="item input">
-                                <input type="text" t-model="state.inputTipAmount" />
+                                <input type="text" t-model="state.inputTipAmount" t-att-data-amount="state.inputTipAmount" />
                                 <div class="currency">
                                     <t t-esc="env.pos.getCurrencySymbol()" />
                                 </div>

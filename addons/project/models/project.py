@@ -586,7 +586,7 @@ class Task(models.Model):
         compute='_compute_project_id', store=True, readonly=False,
         index=True, tracking=True, check_company=True, change_default=True)
     planned_hours = fields.Float("Initially Planned Hours", help='Time planned to achieve this task (including its sub-tasks).', tracking=True)
-    subtask_planned_hours = fields.Float("Sub-tasks Planned Hours", compute='_compute_subtask_planned_hours', help="Sum of the planned hours of all the sub-tasks linked to this task. Usually less or equal to the initially planned hours of this task.")
+    subtask_planned_hours = fields.Float("Sub-tasks Planned Hours", compute='_compute_subtask_planned_hours', help="Sum of the time planned of all the sub-tasks linked to this task. Usually less or equal to the initially time planned of this task.")
     user_id = fields.Many2one('res.users',
         string='Assigned to',
         default=lambda self: self.env.uid,

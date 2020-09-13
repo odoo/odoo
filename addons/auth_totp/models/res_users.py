@@ -1,28 +1,29 @@
 # -*- coding: utf-8 -*-
 import base64
-import hashlib
+import functools
 import hmac
 import io
 import logging
 import os
+import re
 import struct
 import time
 
-import qrcode
 import werkzeug.urls
 
 from odoo import _, api, fields, models
 from odoo.addons.base.models.res_users import check_identity
 from odoo.exceptions import AccessDenied, UserError
-from odoo.http import request
+from odoo.http import request, db_list
 
 _logger = logging.getLogger(__name__)
 
+compress = functools.partial(re.sub, r'\s', '')
 class Users(models.Model):
     _inherit = 'res.users'
 
     totp_secret = fields.Char(copy=False, groups=fields.NO_ACCESS)
-    totp_enabled = fields.Boolean(string="TOTP enabled", compute='_compute_totp_enabled')
+    totp_enabled = fields.Boolean(string="Two-factor authentication", compute='_compute_totp_enabled')
 
     def __init__(self, pool, cr):
         init_res = super().__init__(pool, cr)
@@ -51,46 +52,58 @@ class Users(models.Model):
 
     def _totp_check(self, code):
         sudo = self.sudo()
-        key = base64.b32decode(sudo.totp_secret.upper())
+        key = base64.b32decode(sudo.totp_secret)
         match = TOTP(key).match(code)
         if match is None:
-            _logger.info("2FA check: FAIL for '%s' (#%s)", self.login, self.id)
+            _logger.info("2FA check: FAIL for %s %r", self, self.login)
             raise AccessDenied()
-        _logger.info("2FA check: SUCCESS for '%s' (#%s)", self.login, self.id)
+        _logger.info("2FA check: SUCCESS for %s %r", self, self.login)
 
     def _totp_try_setting(self, secret, code):
         if self.totp_enabled or self != self.env.user:
-            _logger.info("2FA enable: REJECT for '%s' (#%s)", self.login, self.id)
+            _logger.info("2FA enable: REJECT for %s %r", self, self.login)
             return False
 
-        match = TOTP(base64.b32decode(secret.upper())).match(code)
+        secret = compress(secret).upper()
+        match = TOTP(base64.b32decode(secret)).match(code)
         if match is None:
-            _logger.info("2FA enable: REJECT CODE for '%s' (#%s)", self.login, self.id)
+            _logger.info("2FA enable: REJECT CODE for %s %r", self, self.login)
             return False
 
         self.sudo().totp_secret = secret
         if request:
+            self.flush()
             # update session token so the user does not get logged out (cache cleared by change)
             new_token = self.env.user._compute_session_token(request.session.sid)
             request.session.session_token = new_token
 
-        _logger.info("2FA enable: SUCCESS for '%s' (#%s)", self.login, self.id)
+        _logger.info("2FA enable: SUCCESS for %s %r", self, self.login)
         return True
 
     @check_identity
     def totp_disable(self):
+        logins = ', '.join(map(repr, self.mapped('login')))
         if not (self == self.env.user or self.env.user._is_admin() or self.env.su):
-            _logger.info("2FA disable: REJECT for '%s' (#%s) by uid #%s", self.login, self.id, self.env.user.id)
+            _logger.info("2FA disable: REJECT for %s (%s) by uid #%s", self, logins, self.env.user.id)
             return False
 
         self.sudo().write({'totp_secret': False})
         if request and self == self.env.user:
+            self.flush()
             # update session token so the user does not get logged out (cache cleared by change)
             new_token = self.env.user._compute_session_token(request.session.sid)
             request.session.session_token = new_token
 
-        _logger.info("2FA disable: SUCCESS for '%s' (#%s) by uid #%s", self.login, self.id, self.env.user.id)
-        return {'type': 'ir.actions.act_window_close'}
+        _logger.info("2FA disable: SUCCESS for %s (%s) by uid #%s", self, logins, self.env.user.id)
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'type': 'warning',
+                'message': _("Two-factor authentication disabled for user(s) %s", logins),
+                'next': {'type': 'ir.actions.act_window_close'},
+            }
+        }
 
     @check_identity
     def totp_enable_wizard(self):
@@ -101,9 +114,12 @@ class Users(models.Model):
             raise UserError(_("Two-factor authentication already enabled"))
 
         secret_bytes_count = TOTP_SECRET_SIZE // 8
+        secret = base64.b32encode(os.urandom(secret_bytes_count)).decode()
+        # format secret in groups of 4 characters for readability
+        secret = ' '.join(map(''.join, zip(*[iter(secret)]*4)))
         w = self.env['auth_totp.wizard'].create({
             'user_id': self.id,
-            'secret': base64.b32encode(os.urandom(secret_bytes_count)).decode(),
+            'secret': secret,
         })
         return {
             'type': 'ir.actions.act_window',
@@ -125,18 +141,20 @@ class TOTPWizard(models.TransientModel):
         attachment=False, store=True, readonly=True,
         compute='_compute_qrcode',
     )
-    code = fields.Char(string="Verification Code", placeholder="6-digit code", size=6)
+    code = fields.Char(string="Verification Code", size=7)
 
     @api.depends('user_id.login', 'user_id.company_id.display_name', 'secret')
     def _compute_qrcode(self):
+        # TODO: make "issuer" configurable through config parameter?
+        global_issuer = request and request.httprequest.host.split(':', 1)[0]
         for w in self:
-            label = '{0.company_id.display_name}:{0.login}'.format(w.user_id)
+            issuer = global_issuer or w.user_id.company_id.display_name
             w.url = url = werkzeug.urls.url_unparse((
                 'otpauth', 'totp',
-                werkzeug.urls.url_quote(label, safe=''),
+                werkzeug.urls.url_quote(f'{issuer}:{w.user_id.login}', safe=':'),
                 werkzeug.urls.url_encode({
-                    'secret': w.secret,
-                    'issuer': w.user_id.company_id.display_name,
+                    'secret': compress(w.secret),
+                    'issuer': issuer,
                     # apparently a lowercase hash name is anathema to google
                     # authenticator (error) and passlib (no token)
                     'algorithm': ALGORITHM.upper(),
@@ -146,18 +164,27 @@ class TOTPWizard(models.TransientModel):
             ))
 
             data = io.BytesIO()
+            import qrcode
             qrcode.make(url.encode(), box_size=4).save(data, optimise=True, format='PNG')
             w.qrcode = base64.b64encode(data.getvalue()).decode()
 
     @check_identity
     def enable(self):
         try:
-            c = int(self.code)
+            c = int(compress(self.code))
         except ValueError:
             raise UserError(_("The verification code should only contain numbers"))
         if self.user_id._totp_try_setting(self.secret, c):
             self.secret = '' # empty it, because why keep it until GC?
-            return {'type': 'ir.actions.act_window_close'}
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'type': 'success',
+                    'message': _("Two-factor authentication is now enabled."),
+                    'next': {'type': 'ir.actions.act_window_close'},
+                }
+            }
         raise UserError(_('Verification failed, please double-check the 6-digit code'))
 
 # 160 bits, as recommended by HOTP RFC 4226, section 4, R6.
