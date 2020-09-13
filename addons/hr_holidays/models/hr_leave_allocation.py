@@ -149,7 +149,7 @@ class HolidaysAllocation(models.Model):
          "(holiday_type='department' AND department_id IS NOT NULL) or "
          "(holiday_type='company' AND mode_company_id IS NOT NULL))",
          "The employee, department, company or employee category of this request is missing. Please make sure that your user login is linked to an employee."),
-        ('duration_check', "CHECK ( number_of_days >= 0 )", "The number of days must be greater than 0."),
+        ('duration_check', "CHECK ( number_of_days > 0 )", "The number of days must be greater than 0."),
         ('number_per_interval_check', "CHECK(number_per_interval > 0)", "The number per interval should be greater than 0"),
         ('interval_number_check', "CHECK(interval_number > 0)", "The interval number should be greater than 0"),
     ]
