@@ -674,10 +674,11 @@ form: module.record_id""" % (xml_id,)
             except ParseError:
                 raise
             except Exception as e:
-                raise ParseError('while parsing %s:%s, near\n%s' % (
+                raise ParseError('While parsing %s:%s, near\n%s, \n the error is: \n %s' % (
                     rec.getroottree().docinfo.URL,
                     rec.sourceline,
-                    etree.tostring(rec, encoding='unicode').rstrip()
+                    etree.tostring(rec, encoding='unicode').rstrip(),
+                    repr(e),
                 ))
             finally:
                 self._noupdate.pop()
