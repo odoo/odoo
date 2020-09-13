@@ -10211,7 +10211,7 @@ msgstr ""
 #: code:addons/account/models/company.py:94
 #, python-format
 msgid "The lock date for advisors is irreversible and can't be removed."
-msgstr ""
+msgstr "Låse datoen for rådgivere er uigenkaldelig, og kan ikke fjernes."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line_move_id
@@ -10240,6 +10240,7 @@ msgstr "Navnet, der vil blive brugt på kontobevægelseslinjer"
 msgid ""
 "The new lock date for advisors must be set after the previous lock date."
 msgstr ""
+"Den nye låse dato for rådgivere skal sættes til efter den forrige låse dato."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_refund_sequence_number_next
@@ -10741,6 +10742,9 @@ msgid ""
 "in order to avoid the reconciliation process on it later on. The statement "
 "line will simply create a counterpart on this account"
 msgstr ""
+"Dette tekniske felt kan bruges ved oprettelse/importen af en udtogs linje, "
+"til at undgå afstemning af den senere. Udtogs linjen vil blot oprette en "
+"modpart på denne konto"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_validate_account_move
@@ -11025,12 +11029,12 @@ msgstr "Type"
 #. module: account
 #: selection:account.cash.rounding,rounding_method:0
 msgid "UP"
-msgstr ""
+msgstr "OP"
 
 #. module: account
 #: selection:account.journal,bank_statements_source:0
 msgid "Undefined Yet"
-msgstr ""
+msgstr "Endnu ikke defineret"
 
 #. module: account
 #: code:addons/account/models/company.py:367
@@ -11164,12 +11168,12 @@ msgstr "Brug Anglo-Saxon bogføringsmetode"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company_tax_exigibility
 msgid "Use Cash Basis"
-msgstr ""
+msgstr "Brug kontant basis"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings_module_account_sepa_direct_debit
 msgid "Use SEPA Direct Debit"
-msgstr ""
+msgstr "Brug SEPA Direkt debit"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal_journal_id
@@ -11233,6 +11237,10 @@ msgid ""
 "should be reset to zero at each new fiscal year (like expenses, revenue..) "
 "should not have this option set."
 msgstr ""
+"Brugt i rapporter til at vide, om vi bør tage højde for journalposteringer "
+"helt fra begyndelsen, i stedet for kun fra begyndelsen af finansåret. Konto "
+"typer der bør nulstilles hvert finansår (så som udgifter, indtægter..) bør "
+"ikke have denne mulighed anvendt."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_reference
@@ -11240,6 +11248,9 @@ msgid ""
 "Used to hold the reference of the external mean that created this statement "
 "(name of imported file, reference of online synchronization...)"
 msgstr ""
+"Brugt til at indeholde henvisningen til det eksterne gennemsnit der "
+"oprettede denne erklæring (navn på importeret fil, henvisning af online "
+"synkronisering...)"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_sequence
@@ -11700,6 +11711,9 @@ msgid ""
 "You cannot define stricter conditions on advisors than on users. Please make"
 " sure that the lock date on advisor is set before the lock date for users."
 msgstr ""
+"Du kan ikke definere strengere krav for rådgivere end for brugere. Tjek "
+"venligst at låse datoen for rådgivere er sat til før låse datoen for "
+"brugere."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:613
@@ -11772,6 +11786,8 @@ msgid ""
 "You cannot have a receivable/payable account that is not reconcilable. "
 "(account code: %s)"
 msgstr ""
+"Du kan ikke have en modtage/betale konto som ikke kan afstemmes. (konto "
+"kode: %s)"
 
 #. module: account
 #: code:addons/account/models/company.py:109
@@ -11780,6 +11796,9 @@ msgid ""
 "You cannot lock a period that is not finished yet. Please make sure that the"
 " lock date for advisors is not set after the last day of the previous month."
 msgstr ""
+"Du kan ikke låse en periode som ikke er defineret endnu. Tjek venligst at "
+"låse datoen for rådgivere ikke er sat til efter den sidste dag i forrige "
+"måned."
 
 #. module: account
 #. openerp-web
@@ -11920,6 +11939,9 @@ msgid ""
 " to manage automatically the booking of accounting entries related to "
 "differences between exchange rates."
 msgstr ""
+"Du bør konfigurere 'Valutakurs journalen\" i Regnskabs indstillingerne, for "
+"automatisk at administrere bogføringen af regnskabsposteringer relateret til"
+" differencen mellem valutakurser. "
 
 #. module: account
 #: code:addons/account/models/account_move.py:1886
@@ -11929,6 +11951,9 @@ msgid ""
 "settings, to manage automatically the booking of accounting entries related "
 "to differences between exchange rates."
 msgstr ""
+"Du skal konfigurere 'Indtægt valutakurs konto' i regnskabs indstillinger, "
+"for automatisk at administrere bogføringen af regnskabsposteringer relateret"
+" til differencen mellem valutakurser."
 
 #. module: account
 #: code:addons/account/models/account_move.py:1888
@@ -11938,6 +11963,9 @@ msgid ""
 "settings, to manage automatically the booking of accounting entries related "
 "to differences between exchange rates."
 msgstr ""
+"Du skal konfigurere 'Tab valutakurs konto' i regnskabs indstillinger, for "
+"automatisk at administrere bogføringen af regnskabsposteringer relateret til"
+" differencen mellem valutakurser."
 
 #. module: account
 #: code:addons/account/wizard/pos_box.py:49
@@ -11953,7 +11981,7 @@ msgstr ""
 #: code:addons/account/models/account_cash_rounding.py:33
 #, python-format
 msgid "Please set a positive rounding value."
-msgstr ""
+msgstr "Vær venligt at angive en positiv afrundingsværdi."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_refund
