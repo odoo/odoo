@@ -73,6 +73,36 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Hej ${object.partner_id.name},<br/><br/>\n"
+"        Vi er glade for at kunne fortælle dig, at din ordre er blevet afsendt.\n"
+"        %if object.carrier_tracking_ref:\n"
+"            Din sporings reference er\n"
+"            <strong>\n"
+"            %if object.carrier_tracking_url:\n"
+"                % set multiple_carrier_tracking = object.get_multiple_carrier_tracking()\n"
+"                %if multiple_carrier_tracking:\n"
+"                    % for line in multiple_carrier_tracking:\n"
+"                        <br/><a href=\"${line[1]}\" target=\"_blank\">${line[0]}</a>\n"
+"                    % endfor\n"
+"                %else:\n"
+"                    <a href=\"${object.carrier_tracking_url}\" target=\"_blank\">${object.carrier_tracking_ref}</a>.\n"
+"                %endif\n"
+"            %else:\n"
+"                ${object.carrier_tracking_ref}.\n"
+"            %endif\n"
+"            </strong>\n"
+"        %endif\n"
+"        <br/><br/>\n"
+"        Se venligst din bestillingsordre for yderligere detaljer.<br/><br/>\n"
+"        Mange tak,<br/>\n"
+"        % if user and user.signature:\n"
+"          ${user.signature | safe}\n"
+"        % endif\n"
+"    </p>\n"
+"</div>\n"
+"        "
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_order_form_with_carrier
@@ -101,6 +131,9 @@ msgid ""
 "                    Buy Odoo Enterprise now to get more providers.\n"
 "                </p>"
 msgstr ""
+"<p class=\"o_view_nocontent\">\n"
+"                    Køb Odoo Enterprise nu, og få flere udbydere.\n"
+"                </p>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_delivery_document2
@@ -153,7 +186,7 @@ msgstr "Arkiveret"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order__available_carrier_ids
 msgid "Available Carriers"
-msgstr ""
+msgstr "Tilgængelig leveringsvirksomheder"
 
 #. module: delivery
 #: selection:delivery.carrier,delivery_type:0
@@ -222,7 +255,7 @@ msgstr "Oprettet den"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__debug_logging
 msgid "Debug logging"
-msgstr ""
+msgstr "Fejlfinding logføring"
 
 #. module: delivery
 #. openerp-web
@@ -234,7 +267,7 @@ msgstr ""
 #. module: delivery
 #: model_terms:ir.actions.act_window,help:delivery.action_delivery_carrier_form
 msgid "Define a new delivery method"
-msgstr ""
+msgstr "Definer en ny leveringsmetode"
 
 #. module: delivery
 #: model:product.category,name:delivery.product_category_deliveries
@@ -264,7 +297,7 @@ msgstr "Leveringsinformation"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order__delivery_message
 msgid "Delivery Message"
-msgstr ""
+msgstr "Leverings besked"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__name
@@ -286,14 +319,14 @@ msgstr "Fragtmetoder"
 #. module: delivery
 #: model:ir.model,name:delivery.model_choose_delivery_package
 msgid "Delivery Package Selection Wizard"
-msgstr ""
+msgstr "Levering pakke valg guide"
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_packaging_view
 #: model:ir.ui.menu,name:delivery.menu_delivery_packagings
 #: model_terms:ir.ui.view,arch_db:delivery.product_packaging_delivery_tree
 msgid "Delivery Packages"
-msgstr ""
+msgstr "Levering pakker"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_package__delivery_packaging_id
@@ -314,12 +347,12 @@ msgstr "Levering af produkt"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order__delivery_rating_success
 msgid "Delivery Rating Success"
-msgstr ""
+msgstr "Lever Anmeldelses succes"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Destination Availability"
-msgstr ""
+msgstr "Destination tilgængelighed"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__sequence
@@ -348,7 +381,7 @@ msgstr "Vis navn"
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.act_delivery_trackers_url
 msgid "Display tracking links"
-msgstr ""
+msgstr "Vis sporing links"
 
 #. module: delivery
 #: model_terms:ir.actions.act_window,help:delivery.action_delivery_carrier_form
@@ -378,7 +411,7 @@ msgstr "Miljø"
 #: code:addons/delivery/models/delivery_grid.py:50
 #, python-format
 msgid "Error: this delivery method is not available for this address."
-msgstr ""
+msgstr "Fejl: Denne leveringsmetode er ikke tilgængelig for denne addresse."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order__delivery_price
@@ -417,7 +450,7 @@ msgstr "Gratis levering"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__free_over
 msgid "Free if order amount is above"
-msgstr ""
+msgstr "Gratis hvis der bestilles for over"
 
 #. module: delivery
 #: selection:delivery.carrier,integration_level:0
@@ -523,7 +556,7 @@ msgstr "Længde skal være positiv"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__debug_logging
 msgid "Log requests in order to ease debugging"
-msgstr ""
+msgstr "Log anmodninger for at gør fejlsøgning nemmere"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__margin
@@ -538,7 +571,7 @@ msgstr "Margin kan ikke være lavere end -100%"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Margin on Rate"
-msgstr ""
+msgstr "Margin eller sats"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging__max_weight
@@ -589,6 +622,8 @@ msgstr ""
 #, python-format
 msgid "No price rule matching this order; delivery cost cannot be computed."
 msgstr ""
+"Ingen pris-regel tilhørende denne ordre; leveringsomkostninger kunne ikke "
+"udregnes"
 
 #. module: delivery
 #: model:delivery.carrier,name:delivery.normal_delivery_carrier
@@ -628,7 +663,7 @@ msgstr "Pakkedetaljer"
 #: code:addons/delivery/wizard/choose_delivery_package.py:60
 #, python-format
 msgid "Package too heavy!"
-msgstr ""
+msgstr "Pakke er for tung!"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_quant_package
@@ -760,6 +795,8 @@ msgid ""
 "Shipment sent to carrier %s for shipping with tracking number %s<br/>Cost: "
 "%.2f %s"
 msgstr ""
+"Forsendelse sendt til transportør %s for levering med tracking nummer "
+"%s<br/>Pris: %.2f %s"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__carrier_price
@@ -823,12 +860,14 @@ msgid ""
 "The weight of your package is higher than the maximum weight authorized for "
 "this package type. Please choose another package type."
 msgstr ""
+"Vægten på din pakke er højere end den maksimalt godkendte vægt for denne "
+"pakke type. Vælg venligt en anden slags pakke."
 
 #. module: delivery
 #: code:addons/delivery/models/delivery_grid.py:111
 #, python-format
 msgid "There is no matching delivery rule."
-msgstr ""
+msgstr "Der er ingen tilsvarende leverings regel."
 
 #. module: delivery
 #: model_terms:ir.actions.act_window,help:delivery.action_delivery_carrier_form
@@ -855,7 +894,7 @@ msgstr "Denne procentdel vil blive tilføjet til leveringsprisen."
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_tracking_url_warning_form
 msgid "Trackers URL"
-msgstr ""
+msgstr "Sporings URL"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
@@ -870,7 +909,7 @@ msgstr "Sporings reference"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__carrier_tracking_url
 msgid "Tracking URL"
-msgstr ""
+msgstr "Tracking URL"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_picking
@@ -943,7 +982,7 @@ msgstr "Vægt for afsendelse"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_package__weight_uom_name
 msgid "Weight unit of measure label"
-msgstr ""
+msgstr "Vægtens måleenhed for mærkat"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_stock_quant_package__shipping_weight
@@ -985,7 +1024,7 @@ msgstr "Du kan kun tilføje leveringspriser til ubekræftede tilbud."
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_tracking_url_warning_form
 msgid "You have multiple tracker links, they are available in the chatter."
-msgstr ""
+msgstr "Du har flere sporings links, de er tilgængelige i chatteren."
 
 #. module: delivery
 #: code:addons/delivery/models/stock_picking.py:199
