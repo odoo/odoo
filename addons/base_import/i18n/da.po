@@ -11,6 +11,7 @@
 # Sanne Kristensen <sanne@vkdata.dk>, 2019
 # Ejner Sønniksen <ejner@vkdata.dk>, 2019
 # lhmflexerp <lhm@flexerp.dk>, 2019
+# Mads Søndergaard, 2020
 # 
 msgid ""
 msgstr ""
@@ -18,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-09-23 11:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: lhmflexerp <lhm@flexerp.dk>, 2019\n"
+"Last-Translator: Mads Søndergaard, 2020\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31,21 +32,21 @@ msgstr ""
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "%d records successfully imported..."
-msgstr ""
+msgstr "%d datasæt importeret vellykket..."
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "%d records tested..."
-msgstr ""
+msgstr "%d datasæt afprøvet..."
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "%d records were successfully imported"
-msgstr ""
+msgstr "%d datasæt blev importeret vellykket"
 
 #. module: base_import
 #. openerp-web
@@ -75,6 +76,11 @@ msgid ""
 " transient. If the issue still occurs, try to split the file rather than "
 "import it at once."
 msgstr ""
+"Der opstod et ukendt problem under import (muligvis en tabt forbindelse, "
+"overstigning af data begrænsning, eller overstigning af hukommelses "
+"begrænsninger). Vær venlig at forsøge igen, i tilfælde af at problemet er "
+"forbigående. Hvis problemet stadig forekommer, kan du prøve at dele filen, i"
+" stedet for at importere det hele på én gang."
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base
@@ -89,21 +95,21 @@ msgstr "Basis import"
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_mapping
 msgid "Base Import Mapping"
-msgstr ""
+msgstr "Standard import forbinding"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Batch limit"
-msgstr ""
+msgstr "Parti begrænsning"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "Between rows %d and %d"
-msgstr ""
+msgstr "Mellem række %d og %d"
 
 #. module: base_import
 #. openerp-web
@@ -117,7 +123,7 @@ msgstr "Annullér"
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Click 'Resume' to proceed with the import, resuming at line"
-msgstr ""
+msgstr "Klik 'Genoptag' for at fortsætte importen, med genoptagelse fra linje"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
@@ -134,7 +140,7 @@ msgstr "Kolonne %s indeholder ukorrekte værdier. Fejl i linje %d: %s"
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__column_name
 msgid "Column Name"
-msgstr ""
+msgstr "Kolonne navn"
 
 #. module: base_import
 #. openerp-web
@@ -151,13 +157,14 @@ msgid ""
 "Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: "
 "%(error)s"
 msgstr ""
+"Kunne ikke hente URL: %(url)s [%(field_name)s: L%(line_number)d]: %(error)s"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Create if doesn't exist"
-msgstr ""
+msgstr "Opret vis ikke eksisterende"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__create_uid
@@ -210,6 +217,10 @@ msgid ""
 "Note that the value in the column will be used as the new record's 'name', "
 "and assumes this is sufficient to create the record."
 msgstr ""
+"Opretter nye datasæt hvis de ikke kan findes (i stedet for at importen "
+"mislykkes). Bemærk at værdien i kolonnen vil blive brugt som det nye "
+"datasæts 'navn', og antager, at dette er tilstrækkeligt til at oprette "
+"datasættet."
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_complex__currency_id
@@ -278,7 +289,7 @@ msgstr "Importer ikke"
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "Dot"
-msgstr ""
+msgstr "Prik"
 
 #. module: base_import
 #. openerp-web
@@ -290,14 +301,14 @@ msgstr "Download"
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_complex__dt
 msgid "Dt"
-msgstr ""
+msgstr "Dt"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Due to its large size, the file will be imported by batches."
-msgstr ""
+msgstr "Grundet størrelsen, vil filen blive importeret i bidder."
 
 #. module: base_import
 #. openerp-web
@@ -310,7 +321,7 @@ msgstr "Kodning:"
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "Error Parsing Date [%s:L%d]: %s"
-msgstr ""
+msgstr "Fejl ved læsning af dato [%s:L %d]: %s"
 
 #. module: base_import
 #. openerp-web
@@ -324,7 +335,7 @@ msgstr "Alt ser gyldigt ud."
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Excel files are recommended as fields formatting is automatic."
-msgstr ""
+msgstr "Excel filer er at foretrække, eftersom felter formateres automatisk."
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
@@ -358,12 +369,12 @@ msgstr "Fil type"
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "File size exceeds configured maximum (%s bytes)"
-msgstr ""
+msgstr "Filstørrelse overstiger det angivne maksimum (%s bytes)"
 
 #. module: base_import
 #: model:ir.model.fields,help:base_import.field_base_import_import__file
 msgid "File to check and/or import, raw binary (not base64)"
-msgstr ""
+msgstr "Fil der skal tjekkes og/eller importeres, rå binær (ikke base64)"
 
 #. module: base_import
 #. openerp-web
@@ -371,13 +382,15 @@ msgstr ""
 #, python-format
 msgid "For CSV files, you may need to select the correct separator."
 msgstr ""
+"Du kan blive nødt til at vælge den korrekte separator i forhold til CSV "
+"filer."
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Formatting Options…"
-msgstr ""
+msgstr "Formaterings indstillinger..."
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
@@ -386,6 +399,8 @@ msgid ""
 "Found invalid image data, images should be imported as either URLs or "
 "base64-encoded data."
 msgstr ""
+"Fandt ugyldig billeddata, billede bør importeres enten som URL eller "
+"base64-indkodet data."
 
 #. module: base_import
 #. openerp-web
@@ -425,6 +440,10 @@ msgid ""
 "                field corresponding to the column. This makes imports\n"
 "                simpler especially when the file has many columns."
 msgstr ""
+"Hvis filen indeholder\n"
+"                 kolonne navne, kan Odoo prøve på automatisk at finde de\n"
+"                 tilsvarende felter til kolonnen. Dette gør importen\n"
+"                 enklere, specielt hvis filen har mange kolonner."
 
 #. module: base_import
 #. openerp-web
@@ -434,6 +453,9 @@ msgid ""
 "If the model uses openchatter, history tracking will set up subscriptions "
 "and send notifications during the import, but lead to a slower import."
 msgstr ""
+"Hvis modulet bruger openchatter, vil historik sporingen opsætte "
+"abonnementer, og afsende notifikationer under import, men føre til "
+"langsommere import."
 
 #. module: base_import
 #. openerp-web
@@ -448,7 +470,7 @@ msgstr "Importer"
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Import FAQ"
-msgstr ""
+msgstr "Import Ofte stillede spørgsmål"
 
 #. module: base_import
 #. openerp-web
@@ -462,7 +484,7 @@ msgstr "Importer en fil"
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "Import completed"
-msgstr ""
+msgstr "Import fuldført"
 
 #. module: base_import
 #. openerp-web
@@ -480,12 +502,15 @@ msgid ""
 "may be too big for the system's configuration, try to split it (import less "
 "records per file)."
 msgstr ""
+"Import udløb. Prøv venligst igen. Hvis du fortsat støder på dette problem, "
+"kan filen være for stor til systemets konfiguration; prøv at dele den "
+"(importer færre datasæt per fil)."
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "Invalid cell value at row %(row)s, column %(col)s: %(cell_value)s"
-msgstr ""
+msgstr "Ugyldig celleværdi i række %(row)s, kolonne %(col)s: %(cell_value)s"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import____last_update
@@ -562,7 +587,7 @@ msgstr "Indlæs fil"
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "Load New File"
-msgstr ""
+msgstr "Indlæs ny fil"
 
 #. module: base_import
 #. openerp-web
@@ -587,14 +612,14 @@ msgstr "Navn"
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Need Help?"
-msgstr ""
+msgstr "Brug for hjælp?"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "No Separator"
-msgstr ""
+msgstr "Ingen separator"
 
 #. module: base_import
 #. openerp-web
@@ -618,7 +643,7 @@ msgstr "Overordnet"
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "Relation Fields"
-msgstr ""
+msgstr "Relations felter"
 
 #. module: base_import
 #. openerp-web
@@ -630,7 +655,7 @@ msgstr "Genindlæs fil"
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__res_model
 msgid "Res Model"
-msgstr ""
+msgstr "Res model"
 
 #. module: base_import
 #. openerp-web
@@ -644,7 +669,7 @@ msgstr "CV"
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "Row %d%s"
-msgstr ""
+msgstr "Række %d%s"
 
 #. module: base_import
 #. openerp-web
@@ -652,7 +677,7 @@ msgstr ""
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "See possible values"
-msgstr ""
+msgstr "Se mulige værdier"
 
 #. module: base_import
 #. openerp-web
@@ -680,7 +705,7 @@ msgstr "Adskiller:"
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Show fields of relation fields (advanced)"
-msgstr ""
+msgstr "Vis felter for relations felter (avanceret)"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview__somevalue
@@ -699,7 +724,7 @@ msgstr "Mellemrum"
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Start at line"
-msgstr ""
+msgstr "Start på linje"
 
 #. module: base_import
 #. openerp-web
@@ -718,77 +743,77 @@ msgstr "Test"
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_preview
 msgid "Tests : Base Import Model Preview"
-msgstr ""
+msgstr "Tests : Basis import model forhåndsvisning"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char
 msgid "Tests : Base Import Model, Character"
-msgstr ""
+msgstr "Tests : Basis import model, karakter"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_noreadonly
 msgid "Tests : Base Import Model, Character No readonly"
-msgstr ""
+msgstr "Tests : Basis import model, karakter ikke skrivebeskyttet"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_readonly
 msgid "Tests : Base Import Model, Character readonly"
-msgstr ""
+msgstr "Tests : Basis import model, karakter skrivebeskyttet"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_required
 msgid "Tests : Base Import Model, Character required"
-msgstr ""
+msgstr "Tests : Basis import model, karakter påkrævet"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_states
 msgid "Tests : Base Import Model, Character states"
-msgstr ""
+msgstr "Tests : Basis import model, karakter tilstande"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_stillreadonly
 msgid "Tests : Base Import Model, Character still readonly"
-msgstr ""
+msgstr "Tests : Basis import model, karakter stadig skrivebeskyttet"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_m2o
 msgid "Tests : Base Import Model, Many to One"
-msgstr ""
+msgstr "Tests : Base import model, Mange til Én"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_m2o_related
 msgid "Tests : Base Import Model, Many to One related"
-msgstr ""
+msgstr "Tests : Basis import model, Mange til Én relateret"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_m2o_required
 msgid "Tests : Base Import Model, Many to One required"
-msgstr ""
+msgstr "Tests : Basis import model, Mange til Én påkrævet"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_m2o_required_related
 msgid "Tests : Base Import Model, Many to One required related"
-msgstr ""
+msgstr "Tests : Basis import model, Mange til Én påkrævet relateret"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_o2m
 msgid "Tests : Base Import Model, One to Many"
-msgstr ""
+msgstr "Tests : Basis import model, Én til Mange"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_o2m_child
 msgid "Tests : Base Import Model, One to Many child"
-msgstr ""
+msgstr "Tests : Basis import model, Én til Mange arving"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_complex
 msgid "Tests: Base Import Model Complex"
-msgstr ""
+msgstr "Tests: Basis Import model kompleks"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_float
 msgid "Tests: Base Import Model Float"
-msgstr ""
+msgstr "Tests: Basis import model decimaltal"
 
 #. module: base_import
 #. openerp-web
@@ -805,20 +830,22 @@ msgid ""
 "The first row\n"
 "                         contains the label of the column"
 msgstr ""
+"Den første række\n"
+"                        indeholder mærkatet på kolonnen"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "This file has been successfully imported up to line %d."
-msgstr ""
+msgstr "Denne fil blev importeret til linje %d vellykket."
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "Thousands Separator:"
-msgstr ""
+msgstr "Tusind separator:"
 
 #. module: base_import
 #. openerp-web
@@ -831,7 +858,7 @@ msgstr "Spor historie under import"
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "Unable to load \"{extension}\" file: requires Python module \"{modname}\""
-msgstr ""
+msgstr "Kunne ikke indlæse \"{extension}\" fil: kræver Python modulet \"{modname}\""
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
@@ -867,7 +894,7 @@ msgstr "Værdi"
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_float__value2
 msgid "Value2"
-msgstr ""
+msgstr "Værdi2"
 
 #. module: base_import
 #. openerp-web
@@ -877,6 +904,8 @@ msgid ""
 "Warning: ignores the labels line, empty lines and"
 "                             lines composed only of empty cells"
 msgstr ""
+"Advarsel: Ignorere mærkat linjen, tomme linjer, og linjer kun sammensat af "
+"tomme celler"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
@@ -885,13 +914,15 @@ msgid ""
 "You can not import images via URL, check with your administrator or support "
 "for the reason."
 msgstr ""
+"Du kan ikke importere billede via URL, tjek årsagen med din administrator "
+"eller support."
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "You can test or reload your file before resuming the import."
-msgstr ""
+msgstr "Du kan teste eller genindlæse din fil før genoptagelsen af importen."
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
@@ -904,14 +935,14 @@ msgstr "Du skal konfigurere mindst et felt for at importere"
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "at %d different rows:"
-msgstr ""
+msgstr "på %d forskellige rækker:"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "at row %d%s"
-msgstr ""
+msgstr "på række %d%s"
 
 #. module: base_import
 #. openerp-web
@@ -924,4 +955,4 @@ msgstr "i mellem rækker %d og %d "
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "unknown error code %s"
-msgstr ""
+msgstr "ukendt fejlkode %s"
