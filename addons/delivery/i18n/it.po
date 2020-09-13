@@ -10,7 +10,7 @@
 # Massimo Bianchi <bianchi.massimo@gmail.com>, 2018
 # David Minneci <david@numeko.it>, 2018
 # Niccolò Lubello <nlubello@gmail.com>, 2018
-# mymage <stefano.consolaro@mymage.it>, 2018
+# Stefano Consolaro <stefano.consolaro@mymage.it>, 2018
 # Paolo Valier, 2019
 # Sergio Zanchetta <primes2h@gmail.com>, 2020
 # 
@@ -38,7 +38,7 @@ msgstr "${(object.name or '').replace('/','_')}"
 msgid ""
 "${object.company_id.name} Delivery Order (Ref ${object.name or 'n/a' })"
 msgstr ""
-"${object.company_id.name} Ordine di consegna (Rif. ${object.name or 'n/d' })"
+"${object.company_id.name} Ordine di consegna (rif. ${object.name or 'n/d' })"
 
 #. module: delivery
 #: model:mail.template,body_html:delivery.mail_template_data_delivery_confirmation
@@ -74,6 +74,36 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Spett.le ${object.partner_id.name},<br/><br/>\n"
+"        Siamo lieti di informarLa che il suo ordine è stato spedito.\n"
+"        %if object.carrier_tracking_ref:\n"
+"            Codice tracciabilità:\n"
+"            <strong>\n"
+"            %if object.carrier_tracking_url:\n"
+"                % set multiple_carrier_tracking = object.get_multiple_carrier_tracking()\n"
+"                %if multiple_carrier_tracking:\n"
+"                    % for line in multiple_carrier_tracking:\n"
+"                        <br/><a href=\"${line[1]}\" target=\"_blank\">${line[0]}</a>\n"
+"                    % endfor\n"
+"                %else:\n"
+"                    <a href=\"${object.carrier_tracking_url}\" target=\"_blank\">${object.carrier_tracking_ref}</a>.\n"
+"                %endif\n"
+"            %else:\n"
+"                ${object.carrier_tracking_ref}.\n"
+"            %endif\n"
+"            </strong>\n"
+"        %endif\n"
+"        <br/><br/>\n"
+"        Per ulteriori dettagli consultare l'ordine di consegna allegato.<br/><br/>\n"
+"        Grazie,<br/>\n"
+"        % if user and user.signature:\n"
+"          ${user.signature | safe}\n"
+"        % endif\n"
+"    </p>\n"
+"</div>\n"
+"        "
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_order_form_with_carrier
