@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+import re
 from lxml import etree
 
 from odoo import models, fields, api, _
@@ -222,13 +222,10 @@ class Task(models.Model):
     def _apply_time_label(self, view_arch):
         doc = etree.XML(view_arch)
         encoding_uom = self.env.company.timesheet_encode_uom_id
+        for node in doc.xpath("//field[@widget='timesheet_uom'][not(@string)] | //field[@widget='timesheet_uom_no_toggle'][not(@string)]"):
+            name_with_uom = re.sub(_('Hours') + "|Hours", encoding_uom.name or '', self._fields[node.get('name')]._description_string(self.env), flags=re.IGNORECASE)
+            node.set('string', name_with_uom)
 
-        for node in doc.xpath("//field[@name='planned_hours'][@widget='timesheet_uom'][not(@string)]"):
-            node.set('string', _('Planned %s') % encoding_uom.name or '')
-        for node in doc.xpath("//field[@name='effective_hours'][@widget='timesheet_uom'][not(@string)]"):
-            node.set('string', _('%s Spent') % encoding_uom.name or '')
-        for node in doc.xpath("//field[@name='remaining_hours'][@widget='timesheet_uom'][not(@string)]"):
-            node.set('string', _('Remaining %s') % encoding_uom.name or '')
         return etree.tostring(doc, encoding='unicode')
 
     def unlink(self):

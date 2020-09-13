@@ -50,7 +50,7 @@
                     </header>
                     <field name="attachment_number" invisible="True"/>
                     <field name="date" optional="show"/>
-                    <field name="accounting_date" optional="hide" groups="account.group_account_invoice,account.group_account_readonly"/>
+                    <field name="accounting_date" optional="hide" groups="account.group_account_invoice,account.group_account_readonly" readonly="0"/>
                     <field name="name"/>
                     <field name="employee_id" widget="many2one_avatar_employee"/>
                     <field name="sheet_id" optional="show" invisible="not context.get('show_report', False)" readonly="1"/>
@@ -417,6 +417,17 @@
             </field>
         </record>
 
+        <record id="product_template_search_view_inherit_hr_expense" model="ir.ui.view">
+            <field name="name">product.template.search.view.inherit.hr_expense</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_search_view"/>
+            <field name="arch" type="xml">
+                <filter name="filter_to_purchase" position="after">
+                    <filter string="Can be Expensed" name="filter_to_expense" domain="[('can_be_expensed', '=', True)]"/>
+                </filter>
+            </field>
+        </record>
+
         <record id="product_product_expense_form_view" model="ir.ui.view">
             <field name="name">product.product.expense.form</field>
             <field name="model">product.product</field>
@@ -518,14 +529,14 @@
             <field name="name">hr.expense.sheet.tree</field>
             <field name="model">hr.expense.sheet</field>
             <field name="arch" type="xml">
-                <tree string="Expense Reports" js_class="hr_expense_tree_dashboard_upload" sample="1">
+                <tree string="Expense Reports" multi_edit="1" js_class="hr_expense_tree_dashboard_upload" sample="1">
                     <field name="employee_id" widget="many2one_avatar_employee"/>
                     <field name="accounting_date" optional="show" groups="account.group_account_manager"/>
                     <field name="create_date" optional="hide"/>
                     <field name="name" string="Expense Report"/>
                     <field name="user_id" optional="hide" widget="many2one_avatar_user"/>
                     <field name="company_id" optional="show" groups="base.group_multi_company"/>
-                    <field name="activity_ids" widget="list_activity" optional="show"/>
+                    <field name="activity_ids" widget="list_activity" optional="show" readonly="1"/>
                     <field name="total_amount" optional="show" sum="Total Amount" decoration-bf="True"/>
                     <field name="currency_id" optional="hide"/>
                     <field name="journal_id" optional="hide"/>
@@ -571,7 +582,6 @@
                             context="{'dont_redirect_to_payments': True}"
                             string="Register Payment"
                             groups="account.group_account_invoice"/>
-                    <button name="reset_expense_sheets" string="Reset to Draft" type="object" attrs="{'invisible': ['|', ('can_reset', '=', False), ('state', 'not in', ['submit', 'cancel'])]}"/>
                     <button name="%(hr_expense.hr_expense_refuse_wizard_action)d" states="submit,approve" context="{'hr_expense_refuse_model':'hr.expense.sheet'}" string="Refuse" type="action" groups="hr_expense.group_hr_expense_team_approver" />
                     <button name="reset_expense_sheets" string="Reset to Draft" type="object" attrs="{'invisible': ['|', ('can_reset', '=', False), ('state', 'not in', ['submit', 'cancel'])]}"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,submit,approve,post,done"/>
