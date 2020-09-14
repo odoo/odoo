@@ -145,11 +145,11 @@
                                 <div class="col-10">
                                     <span t-if="record.state.raw_value === 'validate'" class="fa fa-check text-muted" aria-label="validated"/>
                                     <span t-else="" class="fa fa-ban text-muted" aria-label="refused"/>
-                                    <span class="text-muted"><t t-esc="record.state.value"/></span>
+                                    <span t-attf-class="text-muted badge badge-pill text-white #{['validate', 'refused'].indexOf(record.state.raw_value) > -1 ? 'badge-success' : 'badge-danger'} "><t t-esc="record.state.value"/></span>
                                 </div>
                             </div>
                             <div class="o_kanban_record_bottom" t-if="record.can_approve.raw_value">
-                                <div class="oe_kanban_bottom_left">
+                                <div class="oe_kanban_bottom_left d-none d-md-inline">
                                     <button t-if="record.state.raw_value === 'confirm'" name="action_approve" type="object" class="btn btn-primary btn-sm mt8">Approve</button>
                                     <button t-if="record.state.raw_value === 'validate1'" name="action_validate" type="object" class="btn btn-primary btn-sm mt8" groups="hr_holidays.group_hr_holidays_manager">Validate</button>
                                     <button t-if="['confirm', 'validate1'].includes(record.state.raw_value)" name="action_refuse" type="object" class="btn btn-secondary btn-sm mt8">Refuse</button>

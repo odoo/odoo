@@ -96,6 +96,12 @@
             object-fit: cover;
             margin-right: 4px;
         }
+        @include media-breakpoint-down(md) {
+            img.o_m2o_avatar {
+                width: 25px !important;
+                height: 25px !important;
+            }
+        }
     }
 
     // Many2many tags

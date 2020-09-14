@@ -42,3 +42,19 @@
         color: $o-enterprise-primary-color;
     }
 }
+
+.o_content {
+    > .o_kanban_mobile .oe_kanban_global_click {
+        @include media-breakpoint-down(sm){
+            img {
+                min-width: 48px !important;
+                min-height: 48px !important;
+            }
+        }
+    }
+    .o_timeoff_container {
+        @include media-breakpoint-down(md) {
+            display: none !important;
+        }
+    }
+}

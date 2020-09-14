@@ -143,6 +143,8 @@ odoo.define('hr_holidays.dashboard.view_custo', function(require) {
     });
 
     var TimeOffCalendarRenderer = TimeOffPopoverRenderer.extend({
+        template: 'CalendarView.sidebar.filter',
+
         _render: function () {
             var self = this;
             return this._super.apply(this, arguments).then(function () {
@@ -158,6 +160,11 @@ odoo.define('hr_holidays.dashboard.view_custo', function(require) {
                     timeoffs: result,
                 });
                 self.$el.before(elem);
+
+                var elem1 = QWeb.render('hr_holidays.CalendarView', {
+                    timeoffs: result,
+                });
+                self.$el[0].lastElementChild.append(elem1);
             });
         },
     });
