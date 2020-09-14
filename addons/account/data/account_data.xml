@@ -115,17 +115,19 @@
             <field name="description">Invoice Created</field>
         </record>
 
-        <!-- Payment methods -->
-        <record id="account_payment_method_manual_in" model="account.payment.method">
-            <field name="name">Manual</field>
-            <field name="code">manual</field>
-            <field name="payment_type">inbound</field>
-        </record>
-        <record id="account_payment_method_manual_out" model="account.payment.method">
-            <field name="name">Manual</field>
-            <field name="code">manual</field>
-            <field name="payment_type">outbound</field>
-        </record>
+        <data nodelete="1">
+            <!-- Default Payment methods -->
+            <record id="account_payment_method_manual_in" model="account.payment.method">
+                <field name="name">Manual</field>
+                <field name="code">manual</field>
+                <field name="payment_type">inbound</field>
+            </record>
+            <record id="account_payment_method_manual_out" model="account.payment.method">
+                <field name="name">Manual</field>
+                <field name="code">manual</field>
+                <field name="payment_type">outbound</field>
+            </record>
+        </data>
 
         <!-- Account Tax Group -->
         <record id="tax_group_taxes" model="account.tax.group">

@@ -3364,9 +3364,9 @@ Fields:
         return self.sudo().filtered_domain(dom or [])
 
     def _nodelete_message(self):
-        # VFE TODO extension in targeted models
-        # detailed message, propose to archive if active field, ...
-        return _("The following records cannot be deleted %s.", ', '.join(self.mapped('display_name')))
+        if "active" in self._fields:
+            return _("The following records cannot be deleted, archive them instead: %s.", ', '.join(self.mapped('display_name')))
+        return _("The following records cannot be deleted: %s.", ', '.join(self.mapped('display_name')))
 
     def unlink(self):
         """ unlink()
@@ -3428,7 +3428,6 @@ Fields:
                     if not force_unlink:
                         undeletable = data.filtered_domain([('nodelete', '=', True)])
                         if undeletable:
-                            import pudb; pudb.set_trace();
                             undeletable_recs = self.browse(set(undeletable.mapped('res_id')))
                             raise UserError(undeletable_recs._nodelete_message())
                     ir_model_data_unlink |= data

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<odoo>
-    <data noupdate="1">
-        <!-- account.account.type -->
+<odoo noupdate="1" nodelete="1">
+
         <record model="account.account.type" id="data_account_type_receivable">
           <field name="name">Receivable</field>
           <field name="type">receivable</field>
@@ -102,5 +101,5 @@
             <field name="type">other</field>
             <field name="internal_group">off_balance</field>
         </record>
-    </data>
+
 </odoo>
