@@ -23,7 +23,7 @@ odoo.define('board.AddToGoogleSpreadsheetMenu', function (require) {
          * @private
          */
         async _onAddToSpreadsheet() {
-            const searchQuery = this.env.model.get('query');
+            const searchQuery = this.env.searchModel.get('query');
             const listView = this.env.action.views.find(view => view.type === 'list');
             const modelName = this.env.action.res_model;
             const domain = Domain.prototype.arrayToString(searchQuery.domain);
