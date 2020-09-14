@@ -25,25 +25,15 @@ class SalePaymentLink(models.TransientModel):
         return res
 
     def _generate_link(self):
-        """ Override of the base method to add the order_id in the link. """
+        """ Override of the base method to add the sale_order_id in the link. """
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         for payment_link in self:
-            # only add order_id for SOs,
-            # otherwise the controller might try to link it with an unrelated record
-            # NOTE: company_id is not necessary here, we have it in order_id
-            # however, should parsing of the id fail in the controller, let's include
-            # it anyway
+            # The sale_order_id field only makes sense if the document is a sale order
             if payment_link.res_model == 'sale.order':
-                payment_link.link = ('%s/website_payment/pay?reference=%s&amount=%s&currency_id=%s'
-                                    '&partner_id=%s&order_id=%s&company_id=%s&access_token=%s') % (
-                                        base_url,
-                                        urls.url_quote(payment_link.description),
-                                        payment_link.amount,
-                                        payment_link.currency_id.id,
-                                        payment_link.partner_id.id,
-                                        payment_link.res_id,
-                                        payment_link.company_id.id,
-                                        payment_link.access_token
-                                    )
+                payment_link.link = f'{base_url}/payment/pay' \
+                                    f'?reference={urls.url_quote(payment_link.description)}' \
+                                    f'&sale_order_id={payment_link.res_id}' \
+                                    f'&access_token={payment_link.access_token}'
+                # Order-related fields (amount, ...) are retrieved in the controller
             else:
                 super(SalePaymentLink, payment_link)._generate_link()

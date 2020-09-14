@@ -6,7 +6,7 @@
         <xpath expr="//div[hasclass('o_portal_my_details')]" position="inside">
             <t t-set="partner" t-value="request.env.user.partner_id"/>
             <t t-set="acquirers_allowing_tokenization"
-               t-value="request.env['payment.acquirer']._get_compatible_acquirers(request.env.company.id, partner.id, allow_tokenization=True)"/>
+               t-value="request.env['payment.acquirer'].sudo()._get_compatible_acquirers(request.env.company.id, partner.id, allow_tokenization=True)"/>
             <t t-set="existing_tokens" t-value="partner.payment_token_ids + partner.commercial_partner_id.sudo().payment_token_ids"/>
             <!-- Only show the link if a token can be created or if one already exists -->
             <t t-if="acquirers_allowing_tokenization or existing_tokens">
@@ -17,36 +17,30 @@
         </xpath>
     </template>
     
-    <!-- Template managing the display of /website_payment/pay -->
+    <!-- Template managing the display of /payment/pay -->
     <template id="pay">
+        <!-- Variables description:
+            - TODO ANV - TODO
+        -->
         <t t-call="portal.frontend_layout">
-            <t t-set="additional_title">Payment</t>
+            <t t-set="page_title" t-value="'Payment'"/>
+            <t t-set="additional_title"><t t-esc="page_title"/></t>
             <div class="wrap">
                 <div class="container">
                     <!-- Portal breadcrumb -->
-                    <div class="row">
-                        <div class="col-md-6">
-                            <ol class="breadcrumb mt8">
-                                <li class="breadcrumb-item">
-                                    <a href="/my/home">
-                                        <i class="fa fa-home"
-                                           role="img"
-                                           title="Home"
-                                           aria-label="Home"/>
-                                    </a>
-                                </li>
-                                <li class="breadcrumb-item">Payment</li>
-                            </ol>
-                        </div>
-                    </div>
+                    <t t-call="payment.portal_breadcrumb"/>
                     <!-- Payment page -->
                     <div class="row">
                         <div class="col-lg-7">
-                            <t t-if="reference and amount and currency">
-                                <b>Reference:</b> <t t-esc="reference"/><br/>
+                            <t t-if="amount and currency">
+                                <div t-if="partner_is_different" class="alert alert-warning">
+                                    <strong>Warning</strong> Make sure your are logged in as the right partner before making this payment.
+                                </div>
+                                <t t-if="reference_prefix">
+                                    <b>Reference:</b> <t t-esc="reference_prefix"/><br/>
+                                </t>
                                 <b>Amount:</b> <t t-esc="amount"
-                                                  t-options="{'widget': 'monetary',
-                                                              'display_currency': currency}"/>
+                                                  t-options="{'widget': 'monetary', 'display_currency': currency}"/>
                                 <div t-if="not partner_id" class="alert alert-danger" role="alert">
                                     <p>You must be logged in to pay.</p>
                                 </div>
@@ -58,11 +52,6 @@
                                     <t t-call="payment.checkout"/>
                                 </t>
                             </t>
-                            <t t-elif="not reference">
-                                <div class="alert alert-warning">
-                                    <strong>Warning!</strong> The reference is missing.
-                                </div>
-                            </t>
                             <t t-elif="not amount">
                                 <div class="alert alert-info">
                                     There is nothing to pay.
@@ -70,7 +59,7 @@
                             </t>
                             <t t-elif="not currency">
                                 <div class="alert alert-warning">
-                                    <strong>Warning!</strong> The currency is missing or incorrect.
+                                    <strong>Warning</strong> The currency is missing or incorrect.
                                 </div>
                             </t>
                         </div>
@@ -82,26 +71,16 @@
     
     <!-- Template managing the display of /my/payment_methods -->
     <template id="payment_methods" name="Payment Methods">
+        <!-- Variables description:
+            - TODO ANV - TODO
+        -->
         <t t-call="portal.frontend_layout">
-            <t t-set="additional_title">Payment Methods</t>
+            <t t-set="page_title" t-value="'Payment Methods'"/>
+            <t t-set="additional_title"><t t-esc="page_title"/></t>
             <div class="wrap">
                 <div class="container">
                     <!-- Portal breadcrumb -->
-                    <div class="row">
-                        <div class="col-md-6">
-                            <ol class="breadcrumb mt8">
-                                <li class="breadcrumb-item">
-                                    <a href="/my/home">
-                                        <i class="fa fa-home"
-                                           role="img"
-                                           title="Home"
-                                           aria-label="Home"/>
-                                    </a>
-                                </li>
-                                <li class="breadcrumb-item">Payment Methods</li>
-                            </ol>
-                        </div>
-                    </div>
+                    <t t-call="payment.portal_breadcrumb"/>
                     <!-- Manage page -->
                     <div class="row">
                         <div class="col-lg-7">
@@ -124,26 +103,16 @@
     
     <!-- Template managing the display of /payment/status -->
     <template id="payment_status" name="Payment Status">
+        <!-- Variables description:
+            - TODO ANV - TODO
+        -->
         <t t-call="portal.frontend_layout">
-            <t t-set="additional_title">Payment Status</t>
+            <t t-set="page_title" t-value="'Payment Status'"/>
+            <t t-set="additional_title"><t t-esc="page_title"/></t>
             <div class="wrap">
                 <div class="container">
                     <!-- Portal breadcrumb -->
-                    <div class="row">
-                        <div class="col-md-6">
-                            <ol class="breadcrumb mt8">
-                                <li class="breadcrumb-item">
-                                    <a href="/my/home">
-                                        <i class="fa fa-home"
-                                           role="img"
-                                           title="Home"
-                                           aria-label="Home"/>
-                                    </a>
-                                </li>
-                                <li class="breadcrumb-item">Payment Status</li>
-                            </ol>
-                        </div>
-                    </div>
+                    <t t-call="payment.portal_breadcrumb"/>
                     <!-- Status page -->
                     <div name="o_payment_status">
                         <div name="o_payment_status_content"
@@ -156,42 +125,71 @@
         </t>
     </template>
     
-    <!-- Template managing the display of /website_payment/confirm -->
+    <!-- Template managing the display of /payment/confirmation -->
     <template id="confirm">
+        <!-- Variables description:
+            - TODO ANV - TODO
+        -->
         <t t-call="portal.frontend_layout">
-            <t t-set="additional_title">Payment</t>
+            <t t-set="page_title" t-value="'Payment Confirmation'"/>
+            <t t-set="additional_title"><t t-esc="page_title"/></t>
             <div class="wrap">
                 <div class="container">
-                    <h1>Payment</h1>
+                    <!-- Portal breadcrumb -->
+                    <t t-call="payment.portal_breadcrumb"/>
+                    <!-- Confirmation page -->
                     <div class="row">
                         <div class="col-lg-6">
                             <div>
-                                <div t-attf-class="alert alert-#{status}" t-raw="message" role="status"/>
+                                <div t-attf-class="alert alert-#{status}"
+                                     t-raw="message"
+                                     role="status"/>
                                 <div class="form-group row">
-                                    <label for="form_partner_name" class="col-md-3 col-form-label">From</label>
+                                    <label for="form_partner_name" class="col-md-3 col-form-label">
+                                        From
+                                    </label>
                                     <div class="col-md-9">
-                                        <span name="form_partner_name" class="form-control" t-esc="tx.partner_name"/>
+                                        <span name="form_partner_name"
+                                              class="form-control"
+                                              t-esc="tx.partner_name"/>
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label for="form_reference" class="col-md-3 col-form-label">Reference</label>
+                                    <label for="form_reference" class="col-md-3 col-form-label">
+                                        Reference
+                                    </label>
                                     <div class="col-md-9">
-                                        <span name="form_reference" class="form-control" t-esc="tx.reference"/>
+                                        <span name="form_reference"
+                                              class="form-control"
+                                              t-esc="tx.reference"/>
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label for="form_amount" class="col-md-3 col-form-label">Amount</label>
+                                    <label for="form_amount" class="col-md-3 col-form-label">
+                                        Amount
+                                    </label>
                                     <div class="col-md-9">
-                                        <span name="form_amount" class="form-control" t-esc="tx.amount" t-options="{'widget': 'monetary', 'display_currency': tx.currency_id}"/>
+                                        <span name="form_amount"
+                                              class="form-control"
+                                              t-esc="tx.amount"
+                                              t-options="{'widget': 'monetary', 'display_currency': tx.currency_id}"/>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-5 offset-md-3 text-muted">
-                                        <span t-field="tx.acquirer_id.image_128" t-att-title="tx.acquirer_id.name" role="img" t-att-aria-label="tx.acquirer_id.name" t-options='{"widget": "image", "style":"max-width: 60px; display: inline-block"}'/>
-                                        <div>Processed by <t t-esc="tx.acquirer_id.name"/>.</div>
+                                        <span t-field="tx.acquirer_id.image_128"
+                                              t-att-title="tx.acquirer_id.name"
+                                              role="img"
+                                              t-att-aria-label="tx.acquirer_id.name"
+                                              t-options='{"widget": "image", "style":"max-width: 60px; display: inline-block"}'/>
+                                        <div>Processed by <t t-esc="tx.acquirer_id.name"/></div>
                                     </div>
                                     <div class="col-md-4 mt-2 pl-0">
-                                        <a role="button" t-attf-class="btn btn-#{status} float-right" href="/my/home"><i class="fa fa-arrow-circle-right"/> Back to My Account</a>
+                                        <a role="button"
+                                           t-attf-class="btn btn-#{status} float-right"
+                                           href="/my/home"><i class="fa fa-arrow-circle-right"/>
+                                            Back to My Account
+                                        </a>
                                     </div>
                                 </div>
                             </div>
@@ -201,8 +199,29 @@
             </div>
         </t>
     </template>
+    
+    <template id="portal_breadcrumb">
+        <!-- Variables description:
+            - 'page_title' - The title of the breadcrumb item
+        -->
+        <div class="row">
+            <div class="col-md-6">
+                <ol class="breadcrumb mt8">
+                    <li class="breadcrumb-item">
+                        <a href="/my/home">
+                            <i class="fa fa-home"
+                               role="img"
+                               title="Home"
+                               aria-label="Home"/>
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item"><t t-esc="page_title"/></li>
+                </ol>
+            </div>
+        </div>
+    </template>
 
-    <template id="payment_confirmation_status">  <!-- TODO ANV review -->
+    <template id="payment_confirmation_status">
         <!--
         Inform the portal user about the transaction status.
 

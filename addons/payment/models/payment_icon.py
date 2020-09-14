@@ -4,7 +4,6 @@ from odoo import fields, models
 
 
 class PaymentIcon(models.Model):
-
     _name = 'payment.icon'
     _description = 'Payment Icon'
 

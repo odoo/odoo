@@ -17,10 +17,10 @@ class WebsiteSale(main.WebsiteSale):
         return request.redirect(post.get('r', '/shop/cart'))
 
     @http.route(['/shop/payment'], type='http', auth="public", website=True)
-    def payment(self, **post):
+    def shop_payment(self, **post):
         order = request.website.sale_get_order()
         order.recompute_coupon_lines()
-        return super(WebsiteSale, self).payment(**post)
+        return super(WebsiteSale, self).shop_payment(**post)
 
     @http.route(['/shop/cart'], type='http', auth="public", website=True)
     def cart(self, **post):

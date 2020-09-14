@@ -22,6 +22,7 @@ odoo.define('payment_adyen.payment_form', require => {
          * @return {undefined}
          */
         _dropinOnAdditionalDetails: function (state, dropin) {
+            this._hideInputs(); // Only the inputs of the inline form should be used
             this._rpc({
                 route: '/payment/adyen/payment_details',
                 params: {
@@ -50,10 +51,10 @@ odoo.define('payment_adyen.payment_form', require => {
          * Handle the error event of the Adyen drop-in.
          *
          * @private
-         * @param {object} _error - The error in the drop-in
+         * @param {object} error - The error in the drop-in
          * @return {undefined}
          */
-        _dropinOnError: function (_error) {
+        _dropinOnError: function (error) {
             this._displayError(
                 _t("Incorrect Payment Details"),
                 _t("Please verify your payment details.")
@@ -69,29 +70,10 @@ odoo.define('payment_adyen.payment_form', require => {
          * @return {undefined}
          */
         _dropinOnSubmit: function (state, dropin) {
-            // Call the init route to initialize the transaction and retrieve processing values
+            // Call the init route to create the transaction and retrieve processing values
             this._rpc({
                 route: this.txContext.initTxRoute,
-                params: {
-                    'payment_option_id': dropin.acquirerId,
-                    'reference': this.txContext.reference,
-                    'amount': this.txContext.amount !== undefined
-                        ? parseFloat(this.txContext.amount) : null,
-                    'currency_id': this.txContext.currencyId
-                        ? parseInt(this.txContext.currencyId) : null,
-                    'partner_id': this.txContext.partnerId
-                        ? parseInt(this.txContext.partnerId) : undefined,
-                    'order_id': this.txContext.orderId
-                        ? parseInt(this.txContext.orderId) : undefined,
-                    'flow': 'direct',
-                    'tokenization_requested': this.txContext.tokenizationRequested,
-                    'is_validation': this.txContext.isValidation !== undefined
-                        ? this.txContext.isValidation : false,
-                    'landing_route': this.txContext.landingRoute,
-                    'access_token': this.txContext.accessToken
-                        ? this.txContext.accessToken : undefined,
-                    'csrf_token': core.csrf_token,
-                },
+                params: this._prepareInitTxParams('adyen', dropin.acquirerId, 'direct'),
             }).then(processingValues => {
                 this.adyenDropin.reference = processingValues.reference; // Store final reference
                 return this._rpc({
@@ -128,12 +110,12 @@ odoo.define('payment_adyen.payment_form', require => {
          *
          * @override method from payment.payment_form_mixin
          * @private
-         * @param {number} paymentOptionId - The id of the selected payment option
          * @param {string} provider - The provider of the selected payment option's acquirer
+         * @param {number} paymentOptionId - The id of the selected payment option
          * @param {string} flow - The online payment flow of the selected payment option
          * @return {undefined}
          */
-        _prepareInlineForm: function (paymentOptionId, provider, flow) {
+        _prepareInlineForm: function (provider, paymentOptionId, flow) {
             if (provider !== 'adyen') {
                 return this._super(...arguments);
             }
@@ -201,7 +183,7 @@ odoo.define('payment_adyen.payment_form', require => {
                 error.event.preventDefault();
                 this._displayError(
                     _t("Server Error"),
-                    _t("An error occured when displayed this payment form."),
+                    _t("An error occurred when displayed this payment form."),
                     error.message.data.message
                 );
             });
@@ -212,12 +194,12 @@ odoo.define('payment_adyen.payment_form', require => {
          *
          * @override method from payment.payment_form_mixin
          * @private
-         * @param {number} paymentOptionId - The id of the payment option handling the transaction
          * @param {string} provider - The provider of the payment option's acquirer
+         * @param {number} paymentOptionId - The id of the payment option handling the transaction
          * @param {string} flow - The online payment flow of the transaction
          * @return {undefined}
          */
-        _processTx: function (paymentOptionId, provider, flow) {
+        _processPayment: function (provider, paymentOptionId, flow) {
             if (provider !== 'adyen') {
                 return this._super(...arguments);
             }

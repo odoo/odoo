@@ -3,6 +3,7 @@
 import hashlib
 import hmac
 
+from odoo import fields
 from odoo.tools import consteq, float_round, ustr
 
 
@@ -43,7 +44,31 @@ def check_access_token(access_token, secret, *values):
     return access_token and consteq(ustr(access_token), authentic_token)
 
 
-# Transaction context formatting
+# Transaction values formatting
+
+def singularize_reference_prefix(prefix='tx', separator='-', max_length=None):
+    """ Make the prefix more unique by suffixing it with the current datetime.
+
+    When the prefix is a placeholder that would be part of a large sequence of references sharing
+    the same prefix, such as "tx" or "validation", singularizing it allows to make it part of a
+    single-element sequence of transactions. The computation of the full reference will then execute
+    faster by failing to find existing references with a matching prefix.
+
+    If the `max_length` argument is passed, the end of the prefix can be stripped before
+    singularizing to ensure that the result accounts for no more than `max_length` characters.
+
+    :param str prefix: The custom prefix to singularize
+    :param str separator: The custom separator used to separate the prefix from the suffix
+    :param int max_length: The maximum length of the singularized prefix
+    :return: The singularized prefix
+    :rtype: str
+    """
+    if max_length:
+        DATETIME_LENGTH = 14
+        assert max_length >= 1 + len(separator) + DATETIME_LENGTH  # 1 char + separator + datetime
+        prefix = prefix[:max_length-len(separator)-DATETIME_LENGTH]
+    return f'{prefix}{separator}{fields.Datetime.now().strftime("%Y%m%d%H%M%S")}'
+
 
 def convert_to_minor_units(base_amount, currency, arbitrary_decimal_number=None):
     """ Return the amount converted to the minor units of its currency.

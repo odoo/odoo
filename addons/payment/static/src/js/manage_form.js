@@ -95,7 +95,7 @@ odoo.define('payment.manage_form', require => {
                 }).guardedCatch(error => {
                     this._displayError(
                         _t("Server Error"),
-                        _t("We are not able to delete your payment method at the moment."),
+                        _t("We are not able to delete your payment method."),
                         error.message.data.message
                     );
                 });
@@ -188,15 +188,14 @@ odoo.define('payment.manage_form', require => {
             const checkedRadio = $checkedRadios[0];
 
             // Extract contextual values from the radio button
-            const paymentOptionId = this._getPaymentOptionIdFromRadio(checkedRadio);
             const provider = this._getProviderFromRadio(checkedRadio);
+            const paymentOptionId = this._getPaymentOptionIdFromRadio(checkedRadio);
             const flow = this._getPaymentFlowFromRadio(checkedRadio);
 
-            this._disableButton();
+            this._disableButton(true);
             if (flow !== 'token') { // Creation of a new token
                 this.txContext.tokenizationRequested = true;
-                this.txContext.isValidation = true;
-                this._processTx(paymentOptionId, provider, flow);
+                this._processPayment(provider, paymentOptionId, flow);
             } else if (this.txContext.allowTokenSelection) { // Assignation of a token to a record
                 this._assignToken(paymentOptionId);
             }

@@ -1,7 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import datetime
-
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
@@ -9,30 +7,27 @@ from odoo.exceptions import ValidationError
 class AccountPayment(models.Model):
     _inherit = 'account.payment'
 
-    payment_transaction_id = fields.Many2one('payment.transaction', string='Payment Transaction', readonly=True)
+    payment_transaction_id = fields.Many2one(
+        string="Payment Transaction", comodel_name='payment.transaction', readonly=True)
     payment_token_id = fields.Many2one(
-        'payment.token', string="Saved payment token",
-        domain="""[
+        string="Saved Payment Token", comodel_name='payment.token', domain="""[
             (payment_method_code == 'electronic', '=', 1),
             ('company_id', '=', company_id),
             ('acquirer_id.capture_manually', '=', False),
             ('acquirer_id.journal_id', '=', journal_id),
             ('partner_id', 'in', related_partner_ids),
         ]""",
-        help="Note that tokens from acquirers set to only authorize transactions (instead of capturing the amount) are not available.")
-    related_partner_ids = fields.Many2many('res.partner', compute='_compute_related_partners')
-
-    def _get_payment_chatter_link(self):
-        self.ensure_one()
-        return '<a href=# data-oe-model=account.payment data-oe-id=%d>%s</a>' % (self.id, self.name)
+        help="Note that only tokens from acquirers allowing to capture the amount are available.")
+    related_partner_ids = fields.Many2many(
+        comodel_name='res.partner', compute='_compute_related_partners')
 
     @api.depends('partner_id.commercial_partner_id.child_ids')
     def _compute_related_partners(self):
-        for p in self:
-            p.related_partner_ids = (
-                p.partner_id
-              | p.partner_id.commercial_partner_id
-              | p.partner_id.commercial_partner_id.child_ids
+        for payment in self:
+            payment.related_partner_ids = (
+                    payment.partner_id
+                    | payment.partner_id.commercial_partner_id
+                    | payment.partner_id.commercial_partner_id.child_ids
             )._origin
 
     @api.onchange('partner_id', 'payment_method_id', 'journal_id')
@@ -47,58 +42,61 @@ class AccountPayment(models.Model):
             ('acquirer_id.journal_id', '=', self.journal_id.id),
          ], limit=1)
 
-    def _prepare_payment_transaction_vals(self):  # TODO ANV double check values
+    def _get_payment_chatter_link(self):
         self.ensure_one()
-        return {
-            'amount': self.amount,
-            'reference': self.ref,
-            'currency_id': self.currency_id.id,
-            'partner_id': self.partner_id.id,
-            'partner_country_id': self.partner_id.country_id.id,
-            'token_id': self.payment_token_id.id,
-            'acquirer_id': self.payment_token_id.acquirer_id.id,
-            'payment_id': self.id,
-            'operation': 'offline',
-        }
+        return f'<a href=# data-oe-model=account.payment data-oe-id={self.id}>{self.name}</a>'
 
-    def _create_payment_transaction(self, vals=None):
-        for pay in self:
-            if pay.payment_transaction_id:
-                raise ValidationError(_('A payment transaction already exists.'))
-            elif not pay.payment_token_id:
-                raise ValidationError(_('A token is required to create a new payment transaction.'))
+    def _create_payment_transaction(self, **extra_create_values):
+        for payment in self:
+            if payment.payment_transaction_id:
+                raise ValidationError(_("A payment transaction already exists."))
+            elif not payment.payment_token_id:
+                raise ValidationError(_("A token is required to create a new payment transaction."))
 
         transactions = self.env['payment.transaction']
-        for pay in self:
-            transaction_vals = pay._prepare_payment_transaction_vals()
-
-            if vals:
-                transaction_vals.update(vals)
-
+        for payment in self:
+            transaction_vals = payment._prepare_payment_transaction_vals(**extra_create_values)
             transaction = self.env['payment.transaction'].create(transaction_vals)
             transactions += transaction
-
-            # Link the transaction to the payment.
-            pay.payment_transaction_id = transaction
-
+            payment.payment_transaction_id = transaction  # Link the transaction to the payment
         return transactions
+
+    def _prepare_payment_transaction_vals(self, **extra_create_values):
+        self.ensure_one()
+        return {
+            'acquirer_id': self.payment_token_id.acquirer_id.id,
+            'reference': self.ref,
+            'amount': self.amount,
+            'currency_id': self.currency_id.id,
+            'partner_id': self.partner_id.id,
+            'token_id': self.payment_token_id.id,
+            'operation': 'offline',
+            'payment_id': self.id,
+            **extra_create_values,
+        }
 
     def action_post(self):
         # Post the payments "normally" if no transactions are needed.
-        # If not, let the acquirer updates the state.
+        # If not, let the acquirer update the state.
 
-        payments_need_trans = self.filtered(lambda pay: pay.payment_token_id and not pay.payment_transaction_id)
-        transactions = payments_need_trans._create_payment_transaction()
+        payments_need_tx = self.filtered(
+            lambda p: p.payment_token_id and not p.payment_transaction_id
+        )
+        transactions = payments_need_tx._create_payment_transaction()
 
-        res = super(AccountPayment, self - payments_need_trans).action_post()
+        res = super(AccountPayment, self - payments_need_tx).action_post()
 
-        transactions._send_payment_request()
+        transactions._send_payment_request()  # Process the transactions with a payment by token
 
-        # Post payments for issued transactions.
-        transactions._post_process_after_done()
-        payments_trans_done = payments_need_trans.filtered(lambda pay: pay.payment_transaction_id.state == 'done')
-        super(AccountPayment, payments_trans_done).action_post()
-        payments_trans_not_done = payments_need_trans.filtered(lambda pay: pay.payment_transaction_id.state != 'done')
-        payments_trans_not_done.action_cancel()
+        # Post payments for issued transactions
+        transactions._finalize_post_processing()
+        payments_tx_done = payments_need_tx.filtered(
+            lambda p: p.payment_transaction_id.state == 'done'
+        )
+        super(AccountPayment, payments_tx_done).action_post()
+        payments_tx_not_done = payments_need_tx.filtered(
+            lambda p: p.payment_transaction_id.state != 'done'
+        )
+        payments_tx_not_done.action_cancel()
 
         return res

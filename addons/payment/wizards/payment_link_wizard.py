@@ -6,7 +6,7 @@ from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.tools import float_compare
 
-import odoo.addons.payment.utils as payment_utils
+from odoo.addons.payment import utils as payment_utils
 
 
 class PaymentLinkWizard(models.TransientModel):
@@ -70,15 +70,10 @@ class PaymentLinkWizard(models.TransientModel):
     def _generate_link(self):
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         for payment_link in self:
-            link = ('%s/website_payment/pay?reference=%s&amount=%s&currency_id=%s'
-                    '&partner_id=%s&access_token=%s') % (
-                        base_url,
-                        urls.url_quote(payment_link.description),
-                        payment_link.amount,
-                        payment_link.currency_id.id,
-                        payment_link.partner_id.id,
-                        payment_link.access_token
-                    )
-            if payment_link.company_id:
-                link += '&company_id=%s' % payment_link.company_id.id
-            payment_link.link = link
+            payment_link.link = f'{base_url}/payment/pay' \
+                   f'?reference={urls.url_quote(payment_link.description)}' \
+                   f'&amount={payment_link.amount}' \
+                   f'&currency_id={payment_link.currency_id.id}' \
+                   f'&partner_id={payment_link.partner_id.id}' \
+                   f'&company_id={payment_link.company_id.id}' \
+                   f'&access_token={payment_link.access_token}'

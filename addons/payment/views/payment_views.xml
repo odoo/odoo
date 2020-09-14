@@ -132,7 +132,8 @@
                 </kanban>
             </field>
         </record>
-
+    
+        <!-- Acquirer List View -->
         <record id="acquirer_list" model="ir.ui.view">
             <field name="name">payment.acquirer.list</field>
             <field name="model">payment.acquirer</field>
@@ -148,6 +149,7 @@
             </field>
         </record>
 
+        <!-- Acquirer Search View -->
         <record id="acquirer_search" model="ir.ui.view">
             <field name="name">payment.acquirer.search</field>
             <field name="model">payment.acquirer</field>
@@ -180,8 +182,8 @@
             id='payment_acquirer_menu'
             parent='account.root_payment_menu'
             sequence='10' />
-
-        <!-- Payment transactions -->
+    
+        <!-- Transaction Form View -->
         <record id="transaction_form" model="ir.ui.view">
             <field name="name">payment.transaction.form</field>
             <field name="model">payment.transaction</field>
@@ -240,7 +242,8 @@
                 </form>
             </field>
         </record>
-
+    
+        <!-- Transaction List View -->
         <record id="transaction_list" model="ir.ui.view">
             <field name="name">payment.transaction.list</field>
             <field name="model">payment.transaction</field>
@@ -257,7 +260,8 @@
                 </tree>
             </field>
         </record>
-
+    
+        <!-- Transaction Kanban View -->
         <record id="transaction_view_kanban" model="ir.ui.view">
             <field name="name">payment.transaction.kanban</field>
             <field name="model">payment.transaction</field>
@@ -317,8 +321,34 @@
             parent='account.root_payment_menu'
             groups="base.group_no_one"
             sequence='20' />
+    
+        <!-- Token Form View -->
+        <record model='ir.ui.view' id='payment_token_form_view'>
+            <field name='name'>payment.token.form</field>
+            <field name='model'>payment.token</field>
+            <field name='arch' type='xml'>
+                <form string='Payment Tokens' create='false' editable='bottom'>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button class="oe_stat_button" name="%(action_payment_tx_ids)d"
+                                    type="action" icon="fa-money" string="Payments">
+                            </button>
+                        </div>
+                        <group>
+                            <field name="name"/>
+                            <field name='partner_id' />
+                        </group>
+                        <group>
+                            <field name="active" widget='boolean_toggle'/>
+                            <field name='acquirer_id'/>
+                            <field name='acquirer_ref'/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
 
-        <!-- Payment Tokens -->
+        <!-- Token List View -->
         <record model='ir.ui.view' id='payment_token_tree_view'>
             <field name='name'>payment.token.tree</field>
             <field name='model'>payment.token</field>
@@ -332,7 +362,8 @@
                 </tree>
             </field>
         </record>
-
+    
+        <!-- Token Search View -->
         <record id='payment_token_view_search' model='ir.ui.view'>
             <field name='name'>payment.token.search</field>
             <field name='model'>payment.token</field>
@@ -353,31 +384,6 @@
             <field name="context">{'create': False}</field>
         </record>
 
-        <record model='ir.ui.view' id='payment_token_form_view'>
-            <field name='name'>payment.token.form</field>
-            <field name='model'>payment.token</field>
-            <field name='arch' type='xml'>
-                <form string='Payment Tokens' create='false' editable='bottom'>
-                    <sheet>
-                        <div class="oe_button_box" name="button_box">
-                            <button class="oe_stat_button" name="%(action_payment_tx_ids)d"
-                                type="action" icon="fa-money" string="Payments">
-                            </button>
-                        </div>
-                        <group>
-                            <field name="name"/>
-                            <field name='partner_id' />
-                        </group>
-                        <group>
-                            <field name="active" widget='boolean_toggle'/>
-                            <field name='acquirer_id'/>
-                            <field name='acquirer_ref'/>
-                        </group>
-                    </sheet>
-                </form>
-            </field>
-        </record>
-
         <record model='ir.actions.act_window' id='payment_token_action'>
             <field name='name'>Saved Payment Data</field>
             <field name='res_model'>payment.token</field>
@@ -395,7 +401,7 @@
             parent='account.root_payment_menu'
             groups='base.group_no_one'/>
 
-        <!-- Payment icons -->
+        <!-- Icon Form View -->
         <record model="ir.ui.view" id="payment_icon_form_view">
             <field name="name">payment.icon.form</field>
             <field name="model">payment.icon</field>

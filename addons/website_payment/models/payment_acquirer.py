@@ -14,9 +14,7 @@ class PaymentAcquirer(models.Model):
     )
 
     def _get_base_url(self):
-        """ Get the base url of the website on which the payment is made.
-
-        Override of _get_base_url in payment to use the website_id field if set.
+        """ Override of payment to take the `website_id` field into account.
 
         Note: self.ensure_one()
 

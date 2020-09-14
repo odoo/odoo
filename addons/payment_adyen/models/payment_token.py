@@ -5,7 +5,6 @@ from odoo.exceptions import ValidationError, UserError
 
 
 class PaymentToken(models.Model):
-
     _inherit = 'payment.token'
 
     adyen_shopper_reference = fields.Char(
@@ -21,6 +20,8 @@ class PaymentToken(models.Model):
 
         :return: None
         """
+        self.ensure_one()
+
         if self.acquirer_id.provider != 'adyen':
             return super()._handle_deactivation_request()
 
@@ -37,7 +38,7 @@ class PaymentToken(models.Model):
                 method='POST'
             )
         except ValidationError:
-            pass  # Deactivating the token in Odoo comes before removing it from Adyen
+            pass  # Deactivating the token in Odoo is more important than in Adyen
 
     def _handle_activation_request(self):
         """ Raise an error informing the user that tokens managed by Adyen cannot be restored.
@@ -47,6 +48,8 @@ class PaymentToken(models.Model):
         :return: None
         :raise: UserError if the token is managed by Adyen
         """
+        self.ensure_one()
+
         if self.acquirer_id.provider != 'adyen':
             return super()._handle_activation_request()
 
