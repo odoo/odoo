@@ -16,6 +16,7 @@
         'views/assets.xml',
         'views/chat_room_templates.xml',
         'views/chat_room_views.xml',
+        'security/ir.model.access.csv',
     ],
     'application': False,
 }
