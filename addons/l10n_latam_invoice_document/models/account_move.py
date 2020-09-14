@@ -25,43 +25,58 @@ class AccountMove(models.Model):
     @api.depends('l10n_latam_document_type_id')
     def _compute_name(self):
         """ Change the way that the use_document moves name is computed:
-
         * If move use document and is in draft state and has not been posted before we restart name to '/' (this is
            when we change the document type) """
+        without_doc_type = self.filtered(lambda x: x.journal_id.l10n_latam_use_documents and not x.l10n_latam_document_type_id)
+        without_doc_type.filtered(lambda x: not x.name or x.name and x.state == 'draft' and not x.posted_before).name = '/'
         # if we change document or journal and we are in draft and not posted, we clean number so that is recomputed in super
-        self.filtered(
-            lambda x: x.journal_id.l10n_latam_use_documents and x.l10n_latam_document_type_id
-            and not x.l10n_latam_manual_document_number and x.state == 'draft' and not x.posted_before).name = '/'
-        super()._compute_name()
+        self.filtered(lambda x: x.journal_id.l10n_latam_use_documents and x.l10n_latam_document_type_id
+                            and not x.l10n_latam_manual_document_number and x.state == 'draft' and not x.posted_before).name = '/'
+        super(AccountMove, self - without_doc_type)._compute_name()
 
     @api.depends('l10n_latam_document_type_id', 'journal_id')
     def _compute_l10n_latam_manual_document_number(self):
         """ Indicates if this document type uses a sequence or if the numbering is made manually """
+        #TODO: for rec in self:
         recs_with_journal_id = self.filtered(lambda x: x.journal_id and x.journal_id.l10n_latam_use_documents)
         for rec in recs_with_journal_id:
-            rec.l10n_latam_manual_document_number = self._is_manual_document_number(rec.journal_id)
+            rec.l10n_latam_manual_document_number = rec._is_manual_document_number()
         remaining = self - recs_with_journal_id
         remaining.l10n_latam_manual_document_number = False
 
-    def _is_manual_document_number(self, journal):
-        return True if journal.type == 'purchase' else False
+    def _is_manual_document_number(self):
+        return self.is_purchase_document()
 
-    @api.depends('ref')
+    @api.depends('ref', 'name', 'move_type')
     def _compute_l10n_latam_document_number(self):
         for rec in self:
-            ref = rec.ref
+            ref = rec.ref if rec.move_type in ('in_invoice', 'in_refund') else rec.name
             if ref and rec.l10n_latam_document_type_id.doc_code_prefix:
                 ref = ref.split(" ", 1)[-1]
             rec.l10n_latam_document_number = ref
 
-    @api.onchange('l10n_latam_document_type_id', 'l10n_latam_document_number')
+    @api.onchange('l10n_latam_document_type_id', 'l10n_latam_document_number', 'move_type')
+    def _onchange_l10n_latam_document_number(self):
+        for rec in self.filtered(lambda x: x.l10n_latam_document_type_id and (x.l10n_latam_manual_document_number or not x.highest_name)):
+            if rec.l10n_latam_document_number:
+                l10n_latam_document_number = rec.l10n_latam_document_type_id._format_document_number(rec.l10n_latam_document_number)
+                if rec.l10n_latam_document_number != l10n_latam_document_number:
+                    rec.l10n_latam_document_number = l10n_latam_document_number
+                if rec.move_type in ('in_refund', 'in_invoice'):
+                    rec.ref = "%s %s" % (rec.l10n_latam_document_type_id.doc_code_prefix, l10n_latam_document_number)
+                else:
+                    rec.name = "%s %s" % (rec.l10n_latam_document_type_id.doc_code_prefix, l10n_latam_document_number)
+
     def _inverse_l10n_latam_document_number(self):
         for rec in self.filtered(lambda x: x.l10n_latam_document_type_id and (x.l10n_latam_manual_document_number or not x.highest_name)):
             if rec.l10n_latam_document_number:
                 l10n_latam_document_number = rec.l10n_latam_document_type_id._format_document_number(rec.l10n_latam_document_number)
                 if rec.l10n_latam_document_number != l10n_latam_document_number:
                     rec.l10n_latam_document_number = l10n_latam_document_number
-                rec.ref = "%s %s" % (rec.l10n_latam_document_type_id.doc_code_prefix, l10n_latam_document_number)
+                if rec.move_type in ('in_refund', 'in_invoice'):
+                    rec.ref = "%s %s" % (rec.l10n_latam_document_type_id.doc_code_prefix, l10n_latam_document_number)
+                else:
+                    rec.name = "%s %s" % (rec.l10n_latam_document_type_id.doc_code_prefix, l10n_latam_document_number)
 
     @api.depends('journal_id', 'l10n_latam_document_type_id')
     def _compute_highest_name(self):
@@ -81,7 +96,8 @@ class AccountMove(models.Model):
                 return "%s 00000000" % (self.l10n_latam_document_type_id.doc_code_prefix)
             # There was no pattern found, propose one
             return ""
-
+        if self.journal_id.l10n_latam_use_documents and self.is_purchase_document():
+            return "LATAM000000"
         return super(AccountMove, self)._get_starting_sequence()
 
     def _compute_l10n_latam_amount_and_taxes(self):
