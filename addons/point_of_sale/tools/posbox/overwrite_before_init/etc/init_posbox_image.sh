@@ -101,8 +101,9 @@ rm -rfv /usr/share/doc
 # this may be fixed with libusb>2:1.0.11-1, but that's the most recent one in raspbian
 # so we install the latest pyusb that works with this libusb.
 # Even in stretch, we had an error with langid (but worked otherwise)
+# We fixe the version of evdev to 1.2.0 because in 1.3.0 we have a RuntimeError in 'get_event_loop()'
 PIP_TO_INSTALL="
-    evdev \
+    evdev==1.2.0 \
     gatt \
     polib \
     pycups \
