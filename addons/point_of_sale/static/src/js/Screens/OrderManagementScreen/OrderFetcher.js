@@ -15,7 +15,34 @@ odoo.define('point_of_sale.OrderFetcher', function (require) {
             this.totalCount = 0;
         }
         get activeOrders() {
-            return this.searchDomain ? [] : this.comp.env.pos.get('orders').models;
+            const allActiveOrders = this.comp.env.pos.get('orders').models;
+            return this.searchDomain
+                ? allActiveOrders.filter(this._predicateBasedOnSearchDomain.bind(this))
+                : allActiveOrders;
+        }
+        _predicateBasedOnSearchDomain(order) {
+            function check(order, field, searchWord) {
+                searchWord = searchWord.toLowerCase();
+                switch (field) {
+                    case 'pos_reference':
+                        return order.name.toLowerCase().includes(searchWord);
+                    case 'partner_id.display_name':
+                        const client = order.get_client();
+                        return client ? client.name.toLowerCase().includes(searchWord) : false;
+                    case 'date_order':
+                        return moment(order.creation_date).format('YYYY-MM-DD hh:mm A').includes(searchWord);
+                    default:
+                        return false;
+                }
+            }
+            for (let [field, _, searchWord] of (this.searchDomain || []).filter((item) => item !== '|')) {
+                // remove surrounding "%" from `searchWord`
+                searchWord = searchWord.substring(1, searchWord.length - 1);
+                if (check(order, field, searchWord)) {
+                    return true;
+                }
+            }
+            return false;
         }
         get nActiveOrders() {
             return this.activeOrders.length;
@@ -147,20 +174,12 @@ odoo.define('point_of_sale.OrderFetcher', function (require) {
             }
         }
         /**
-         * NOTE: If there is searchDomain, do not show the active orders.
-         * Unless we want the searchDomain to be applicable to the active orders
-         * as well. Don't we?
-         *
          * @param {integer|undefined} id id of the cached order
          * @returns {Array<models.Order>}
          */
         get(id) {
             if (id) return this.cache[id];
-            if (this.searchDomain) {
-                return this.ordersToShow.filter((order) => order.locked);
-            } else {
-                return this.ordersToShow;
-            }
+            return this.ordersToShow;
         }
         setSearchDomain(searchDomain) {
             this.searchDomain = searchDomain;
