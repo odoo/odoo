@@ -8,6 +8,9 @@ const publicWidget = require('web.public.widget');
 const DynamicSnippet = publicWidget.Widget.extend({
     selector: '.s_dynamic_snippet',
     xmlDependencies: ['/website/static/src/snippets/s_dynamic_snippet/000.xml'],
+    read_events: {
+        'click [data-url]': '_onCallToAction',
+    },
     disabledInEditableMode: false,
 
     /**
@@ -48,7 +51,6 @@ const DynamicSnippet = publicWidget.Widget.extend({
     start: function () {
         return this._super.apply(this, arguments)
             .then(() => {
-                this._setupCallToAction(true);
                 this._setupSizeChangedManagement(true);
                 this._render();
                 this._toggleVisibility(true);
@@ -61,7 +63,6 @@ const DynamicSnippet = publicWidget.Widget.extend({
     destroy: function () {
         this._toggleVisibility(false);
         this._setupSizeChangedManagement(false);
-        this._setupCallToAction(false);
         this._clearContent();
         this._super.apply(this, arguments);
     },
@@ -188,22 +189,6 @@ const DynamicSnippet = publicWidget.Widget.extend({
      * @param {Boolean} enable
      * @private
      */
-    _setupCallToAction: function (enable) {
-        if (enable === true) {
-            this.$el.on('click.s_dynamic_snippet', '*[data-url]', function (ev) {
-                if (this.editableMode !== true) {
-                    window.location = $(ev.currentTarget).attr('data-url');
-                }
-            }.bind(this));
-        } else {
-            this.$el.off('.s_dynamic_snippet');
-        }
-    },
-    /**
-     *
-     * @param {Boolean} enable
-     * @private
-     */
     _setupSizeChangedManagement: function (enable) {
         if (enable === true) {
             config.device.bus.on('size_changed', this, this._onSizeChanged);
@@ -224,6 +209,13 @@ const DynamicSnippet = publicWidget.Widget.extend({
     // Handlers
     //--------------------------------------------------------------------------
 
+    /**
+     * Navigates to the call to action url.
+     * @private
+     */
+    _onCallToAction: function (ev) {
+        window.location = $(ev.currentTarget).attr('data-url');
+    },
     /**
      * Called when the size has reached a new bootstrap breakpoint.
      *
