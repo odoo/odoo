@@ -1513,7 +1513,9 @@ options.registry.Parallax = options.Class.extend({
         // there may have been changes in the page that influenced the parallax
         // rendering (new snippets, ...).
         // TODO make this automatic.
-        this._refreshPublicWidgets();
+        if (this.parallaxEl) {
+            this._refreshPublicWidgets();
+        }
     },
     /**
      * @override
