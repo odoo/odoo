@@ -307,7 +307,7 @@
                                     <field name="analytic_account_id" domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]" context="{'default_partner_id': partner_id}" groups="analytic.group_analytic_accounting"/>
                                     <field name="privacy_visibility" widget="radio"/>
                                     <field name="allowed_internal_user_ids" widget="many2many_tags" attrs="{'invisible': [('privacy_visibility', '!=', 'followers')]}"/>
-                                    <field name="allowed_portal_user_ids" widget="many2many_tags" attrs="{'invisible': [('privacy_visibility', '!=', 'portal')]}"/>
+                                    <field name="allowed_portal_user_ids" widget="many2many_tags" options="{'no_create': True}" attrs="{'invisible': [('privacy_visibility', '!=', 'portal')]}"/>
 
                                     <field name="company_id" groups="base.group_multi_company"/>
                                 </group>
