@@ -79,6 +79,11 @@ $-font-numbers: (
     }
 }
 
+// fix Safari iOS backdrop stacking context order issue
+body.modal-open #wrapwrap {
+    overflow-x: visible;
+}
+
 .navbar {
     @if ($o-theme-navbar-font != $o-theme-font) {
         font-family: $o-theme-navbar-font;
