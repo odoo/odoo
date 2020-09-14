@@ -7,7 +7,7 @@
 Functional
 ----------
 
-This module add accounting features for the Argentinian localization, which represent the minimal configuration needed for a company  to operate in Argentina and under the AFIP (Administración Federal de Ingresos Públicos) regulations and guidelines.
+This module add accounting features for the Argentinean localization, which represent the minimal configuration needed for a company  to operate in Argentina and under the AFIP (Administración Federal de Ingresos Públicos) regulations and guidelines.
 
 Follow the next configuration steps for Production:
 
@@ -55,7 +55,7 @@ Master Data:
   * Exento (EX)
   * Monotributo (Mono)
 
-* Argentinian Taxes and Account Tax Groups (VAT taxes with the existing aliquots and other types)
+* Argentinean Taxes and Account Tax Groups (VAT taxes with the existing aliquots and other types)
 * AFIP Responsibility Types
 * Fiscal Positions (in order to map taxes)
 * Legal Documents Types in Argentina
