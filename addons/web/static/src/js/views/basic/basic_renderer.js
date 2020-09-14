@@ -647,6 +647,12 @@ var BasicRenderer = AbstractRenderer.extend(WidgetAdapterMixin, {
 
         return modifiersData.evaluatedModifiers[record.id];
     },
+    recursiveCallMounted(component) {
+        for (const key in component.__owl__.children) {
+            this.recursiveCallMounted(component.__owl__.children[key]);
+        }
+        component.__callMounted();
+    },
     /**
      * @override
      */
@@ -889,6 +895,19 @@ var BasicRenderer = AbstractRenderer.extend(WidgetAdapterMixin, {
         delete this.defs;
 
         return Promise.all(defs);
+    },
+    async updateState(state, params) {
+        await this._super(...arguments);
+        if (!params.noRender) {
+            // re-rendering will destory old widgets and create new instances of field widgets
+            for (const id in this.allFieldWidgets) {
+                for (const widget of this.allFieldWidgets[id]) {
+                    if (widget instanceof owl.Component) {
+                        this.recursiveCallMounted(widget);
+                    }
+                }
+            }
+        }
     },
 
     //--------------------------------------------------------------------------
