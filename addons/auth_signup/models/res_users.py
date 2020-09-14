@@ -164,6 +164,8 @@ class ResUsers(models.Model):
 
     def action_reset_password(self):
         """ create signup token for each user, and send their signup url by email """
+        if self.env.context.get('install_mode', False):
+            return
         if self.filtered(lambda user: not user.active):
             raise UserError(_("You cannot perform this action on an archived user."))
         # prepare reset password signup
