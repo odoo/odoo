@@ -88,7 +88,7 @@ Once again, restart the server and refresh to see the results!
 
 In the real estate module, there are still two missing information we want on a property: the buyer
 and the salesman. The buyer can be any individual, but on the other end the salesman must be an
-employee of the real estate agency (*i.e.* an Odoo user).
+employee of the real estate agency (i.e. an Odoo user).
 
 In Odoo, there are two models to which we commonly refer to:
 
@@ -96,7 +96,7 @@ In Odoo, there are two models to which we commonly refer to:
   even a contact address.
 - ``res.users``: it contains the users of the system. Users can be 'internal': they have
   access to the Odoo backend. Or they can be 'portal': they cannot access the backend, only the
-  frontend (*e.g.* to access their previous orders on the eCommerce).
+  frontend (e.g. to access their previous orders on the eCommerce).
 
 .. exercise:: Add the buyer and the salesman
 
@@ -209,7 +209,7 @@ of offers for a given property: we will use the **one2many** concept.
 
 A one2many virtual relationship, inverse of a many2one. For example, we defined on our test model
 a link to the ``res.partner`` model thanks to the field ``partner_id``. We can defined the inverse
-relation, *i.e.* the list of test models linked to our partner::
+relation, i.e. the list of test models linked to our partner::
 
     test_ids = fields.One2many("test.model", "partner_id" string="Tests")
 

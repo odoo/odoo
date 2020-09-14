@@ -19,7 +19,7 @@ Data Files (XML)
 
 In the :ref:`howto/rdtraining/securityintro` chapter, we added data through a CSV file. The CSV
 format is convenient when the data to load has a simple format. If the format is more complex
-(*e.g.* load the structure of a view or an email template), we use the XML format. For example,
+(e.g. load the structure of a view or an email template), we use the XML format. For example,
 this
 `help field <https://github.com/odoo/odoo/blob/09c59012bf80d2ccbafe21c39e604d6cfda72924/addons/crm/views/crm_lost_reason_views.xml#L61-L69>`__
 contains HTML tags. While it would be possible to load such data through a CSV, it is more

@@ -4,14 +4,33 @@
 Architecture Overview
 =====================
 
-Multi-tier application
-======================
+Multitier application
+=====================
 
+Odoo follows a `multitier architecture`_ architecture, meaning that the presentation, the business
+logic and the data storage are separated. More specifically, it uses a three-tier architecture
+(image from Wikipedia):
+
+.. image:: architecture/media/three_tier.svg
+    :align: center
+    :alt: Three-tier architecture
+
+The presentation tier is a combination of HTML5, JavaScript and CSS. The logic tier is exclusively
+written in Python, while the data tier only supports PostgreSQL as an RDBM.
+
+Depending on the scope of your module, the Odoo development can be done in any of these tiers.
+Therefore, before going further it may be a good idea to refresh your memory if you don't have
+an intermediate level in these topics.
+
+In order to go through this tutorial, you will need very basic HTML knowledge but an intermediate
+level of Python. Advanced topics will require more knowledge in the other subjects. There are
+plenty of tutorials freely accessible, so we cannot really recommend one more than another;
+it all depends on your background.
+
+For reference this is the official `Python tutorial`_.
 
 Odoo modules
 ============
-
-THE FOLLOWING IS JUST A COPY-PASTE OF THE EXISING DOC. IT NEEDS CLEANING.
 
 Both server and client extensions are packaged as *modules* which are
 optionally loaded in a *database*.
@@ -26,11 +45,12 @@ Everything in Odoo thus starts and ends with modules.
 Composition of a module
 -----------------------
 
-An Odoo module can contain a number of elements:
+An Odoo module **can** contain a number of elements:
 
 Business objects
-    Declared as Python classes, these resources are automatically persisted
-    by Odoo based on their configuration
+    A business object (e.g. an invoice) is declared as a Python class. The variables defined in
+    these classes are automatically mapped to database fields thanks to the
+    :abbr:`ORM (Object-Relational Mapping)` layer.
 
 :ref:`Object views <reference/views>`
     Definition of business objects UI display
@@ -44,10 +64,15 @@ Business objects
     * and more
 
 :ref:`Web controllers <reference/controllers>`
-    Handle requests from web browsers
+    Handle requests from web browsers.
 
 Static web data
-    Images, CSS or javascript files used by the web interface or website
+    Images, CSS or JavaScript files used by the web interface or website
+
+None of these elements is mandatory: some modules may only add data files (e.g. contry-specific
+accounting configuration), while others adds business objects. During this training, we will
+create business objects, object views and data files. Web controllers and static web data
+are the topic of advanced trainings.
 
 Module structure
 ----------------
@@ -56,45 +81,20 @@ Each module is a directory within a *module directory*. Module directories
 are specified by using the :option:`--addons-path <odoo-bin --addons-path>`
 option.
 
-.. tip::
-    :class: aphorism
-
-    most command-line options can also be set using :ref:`a configuration
-    file <reference/cmdline/config>`
-
 An Odoo module is declared by its :ref:`manifest <reference/module/manifest>`.
-See the :ref:`manifest documentation <reference/module/manifest>` about it.
 
-A module is also a
-`Python package <http://docs.python.org/2/tutorial/modules.html#packages>`_
+When the Odoo module includes business objects (i.e. Python files), they are organized as a
+`Python package <http://docs.python.org/3/tutorial/modules.html#packages>`_
 with a ``__init__.py`` file, containing import instructions for various Python
 files in the module.
 
-For instance, if the module has a single ``mymodule.py`` file ``__init__.py``
-might contain::
+Ready to start? Before writing actual code, let's go to the
+:ref:`next chapter <howto/rdtraining/setup>` to review the Odoo installation process. Even if
+Odoo is already running on your system, we strongly suggest you go though this chapter
+to make sure we are on the same page to start the development of our new application.
 
-    from . import mymodule
+.. _multitier architecture:
+    https://en.wikipedia.org/wiki/Multitier_architecture
 
-Odoo provides a mechanism to help set up a new module, :ref:`odoo-bin
-<reference/cmdline/server>` has a subcommand :ref:`scaffold
-<reference/cmdline/scaffold>` to create an empty module:
-
-.. code-block:: console
-
-    $ odoo-bin scaffold <module name> <where to put it>
-
-The command creates a subdirectory for your module, and automatically creates a
-bunch of standard files for a module. Most of them simply contain commented code
-or XML. The usage of most of those files will be explained along this tutorial.
-
-.. exercise:: Module creation
-
-    Use the command line above to  create an empty module Open Academy, and
-    install it in Odoo.
-
-    .. only:: solutions
-
-        #. Invoke the command ``odoo-bin scaffold openacademy addons``.
-        #. Adapt the manifest file to your module.
-        #. Don't bother about the other files.
-
+.. _Python tutorial:
+    https://docs.python.org/3.6/tutorial/

@@ -10,7 +10,7 @@ In our real estate module, we want to store the information related to the prope
 (name, description, price, living area...) in a database. The Odoo framework provides tools to
 facilitate the interaction with the database.
 
-Before moving forward on the excercise, make sure the ``estate`` module is installed, *i.e.* it
+Before moving forward on the excercise, make sure the ``estate`` module is installed, i.e. it
 must appear as 'Installed' in the Apps list.
 
 Object-Relational Mapping
@@ -81,7 +81,7 @@ the server, we will add the two parameters ``-d`` and ``-u``:
 
     $ ./odoo-bin --addons-path=../custom,../enterprise/,addons -d rd-demo -u estate
 
-``-u estate`` means that we want to upgrade the ``estate`` module, *i.e.* the ORM will
+``-u estate`` means that we want to upgrade the ``estate`` module, i.e. the ORM will
 apply on database schema changes. In this case, it creates a new table. ``-d rd-demo`` means
 that the upgrade should be performed on the ``rd-demo`` database. ``-u`` should always be used in
 combination with ``-d``.

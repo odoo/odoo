@@ -211,7 +211,7 @@ services *OR* have a unit price which is *NOT* between 1000 and 2000"::
 
     The following should be added to the previously created search view:
 
-    - a filter which displays available properties, *i.e.* the state should be 'New' or
+    - a filter which displays available properties, i.e. the state should be 'New' or
       'Offer Received'.
     - group results by postcode.
 

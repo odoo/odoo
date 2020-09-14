@@ -74,7 +74,7 @@ field whenever some of its dependencies have been modified::
 .. note:: ``self`` is a collection
     :class: aphorism
 
-    The object ``self`` is a *recordset*, *i.e.* an ordered collection of
+    The object ``self`` is a *recordset*, i.e. an ordered collection of
     records. It supports the standard Python operations on collections, like
     ``len(self)`` and ``iter(self)``, plus extra set operations like ``recs1 +
     recs2``.
@@ -202,7 +202,7 @@ smart enough to recompute correctly all the dependencies in the right order... s
 cost of degraded performances.
 
 More generally, performance must always be kept in mind when defining computed fields. The more
-complex is your field to compute (*e.g.* with a lot of dependencies, or when a computed field
+complex is your field to compute (e.g. with a lot of dependencies, or when a computed field
 depends on other computed fields), the more time it will take to compute. Always take some time to
 evaluate the cost of a computated field beforehand: most of the time, it is only when your code
 reaches a production server that you realize it slows down a whole process. Not cool :-(
