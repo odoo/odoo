@@ -14,6 +14,9 @@ odoo.define('point_of_sale.OrderFetcher', function (require) {
             this.cache = {};
             this.totalCount = 0;
         }
+        get activeOrders() {
+            return this.searchDomain ? [] : this.comp.env.pos.get('orders').models;
+        }
         get nActiveOrders() {
             return this.activeOrders.length;
         }
@@ -164,7 +167,6 @@ odoo.define('point_of_sale.OrderFetcher', function (require) {
         }
         setComponent(comp) {
             this.comp = comp;
-            this.activeOrders = this.comp.env.pos.get('orders').models;
             return this;
         }
         setConfigId(configId) {
