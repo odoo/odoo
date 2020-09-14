@@ -275,10 +275,7 @@ class IrModel(models.Model):
                         WHERE type IN ('model', 'model_terms') AND name LIKE %s
                     """, [model.model + ',%'])
             else:
-                # do not warn in the case of a test module
-                module = self.env.context.get('module', '')
-                if not module.startswith('test_'):
-                    _logger.warning('The model %s could not be dropped because it did not exist in the registry.', model.model)
+                _logger.runbot('The model %s could not be dropped because it did not exist in the registry.', model.model)
         return True
 
     def unlink(self):
