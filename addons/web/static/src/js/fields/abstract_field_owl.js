@@ -87,6 +87,8 @@ odoo.define('web.AbstractFieldOwl', function (require) {
             const res = super.__patch(...arguments);
             this.el.setAttribute('name', this.name);
             this.el.classList.add('o_field_widget');
+            // Find better way to fix this issue
+            this._applyDecorations();
             return res;
         }
         /**
