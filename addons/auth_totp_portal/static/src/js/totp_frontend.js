@@ -183,7 +183,6 @@ publicWidget.registry.TOTPButton = publicWidget.Widget.extend({
             document.getElementById('totp_wizard_view').textContent,
             'application/xhtml+xml'
         );
-        console.log(doc);
 
         const xmlBody = doc.querySelector('sheet *');
         const [body, , codeInput] = fixupViewBody(xmlBody, record);

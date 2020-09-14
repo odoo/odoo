@@ -163,8 +163,6 @@ publicWidget.registry.portalSearchPanel = publicWidget.Widget.extend({
     },
 });
 
-const tmpl = ajax.loadXML('/portal/static/src/xml/portal_security.xml', qweb);
-
 /**
  * Wraps an RPC call in a check for the result being an identity check action
  * descriptor. If no such result is found, just returns the wrapped promise's
@@ -184,7 +182,7 @@ function handleCheckIdentity(rpc, wrapped) {
             return r;
         }
         const check_id = r.res_id;
-        return tmpl.then(() => new Promise((resolve, reject) => {
+        return ajax.loadXML('/portal/static/src/xml/portal_security.xml', qweb).then(() => new Promise((resolve, reject) => {
             const d = new Dialog(null, {
                 title: _t("Security Control"),
                 $content: qweb.render('portal.identitycheck'),
