@@ -27,7 +27,7 @@ class HrEmployeeBase(models.AbstractModel):
     work_phone = fields.Char('Work Phone', compute="_compute_phones", store=True, readonly=False)
     mobile_phone = fields.Char('Work Mobile')
     work_email = fields.Char('Work Email')
-    work_location = fields.Char('Work Location')
+    work_location_id = fields.Many2one('work.location', 'Work Location', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     user_id = fields.Many2one('res.users')
     resource_id = fields.Many2one('resource.resource')
     resource_calendar_id = fields.Many2one('resource.calendar', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")

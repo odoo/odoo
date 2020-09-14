@@ -89,6 +89,7 @@
                                 <field name="mobile_phone" widget="phone"/>
                                 <field name="work_phone" widget="phone"/>
                                 <field name="work_email" widget="email"/>
+                                <field name="work_location_id"/>
                                 <field name="company_id" groups="base.group_multi_company"/>
                             </group>
                             <group>
@@ -105,7 +106,7 @@
                                             <field name="address_id"
                                                 context="{'show_address': 1}"
                                                 options='{"always_reload": True, "highlight_first_line": True}'/>
-                                            <field name="work_location"/>
+                                            <field name="work_location_id"/>
                                         </group>
                                         <group name="managers" string="Approvers" class="hide-group-if-empty">
                                             <!-- is overridden in other hr related modules -->
@@ -215,7 +216,7 @@
                     <field name="department_id"/>
                     <field name="job_id"/>
                     <field name="parent_id"/>
-                    <field name="work_location" optional="hide"/>
+                    <field name="work_location_id" optional="hide"/>
                     <field name="coach_id" invisible="1"/>
                 </tree>
             </field>

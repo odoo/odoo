@@ -21,7 +21,7 @@ class User(models.Model):
     category_ids = fields.Many2many(related='employee_id.category_ids', string="Employee Tags", readonly=False, related_sudo=False)
     department_id = fields.Many2one(related='employee_id.department_id', readonly=False, related_sudo=False)
     address_id = fields.Many2one(related='employee_id.address_id', readonly=False, related_sudo=False)
-    work_location = fields.Char(related='employee_id.work_location', readonly=False, related_sudo=False)
+    work_location_id = fields.Many2one(related='employee_id.work_location_id', readonly=False, related_sudo=False)
     employee_parent_id = fields.Many2one(related='employee_id.parent_id', readonly=False, related_sudo=False)
     coach_id = fields.Many2one(related='employee_id.coach_id', readonly=False, related_sudo=False)
     address_home_id = fields.Many2one(related='employee_id.address_home_id', readonly=False, related_sudo=False)
@@ -122,7 +122,7 @@ class User(models.Model):
             'visa_expire',
             'visa_no',
             'work_email',
-            'work_location',
+            'work_location_id',
             'work_phone',
             'certificate',
             'study_field',

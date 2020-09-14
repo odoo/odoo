@@ -24,7 +24,7 @@ class HrEmployeePublic(models.Model):
     mobile_phone = fields.Char(readonly=True)
     work_phone = fields.Char(readonly=True)
     work_email = fields.Char(readonly=True)
-    work_location = fields.Char(readonly=True)
+    work_location_id = fields.Many2one(readonly=True)
     user_id = fields.Many2one(readonly=True)
     resource_id = fields.Many2one(readonly=True)
     resource_calendar_id = fields.Many2one(readonly=True)
