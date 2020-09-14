@@ -9,7 +9,6 @@ _logger = logging.getLogger(__name__)
 
 
 class PaymentToken(models.Model):
-
     _name = 'payment.token'
     _order = 'partner_id, id desc'
     _description = 'Payment Token'
@@ -39,22 +38,22 @@ class PaymentToken(models.Model):
                 acquirer = self.env['payment.acquirer'].browse(values['acquirer_id'])
 
                 # Include acquirer-specific create values
-                values.update(self._get_create_values(values, acquirer.provider))
+                values.update(self._get_specific_create_values(acquirer.provider, values))
             else:
                 pass  # Let psycopg warn about the missing required field
 
         return super().create(values_list)
 
     @api.model
-    def _get_create_values(self, _values, _provider):
+    def _get_specific_create_values(self, provider, values):
         """ Complete the values of the `create` method with acquirer-specific values.
 
         For an acquirer to add its own create values, it must overwrite this method and return a
         dict of values. Acquirer-specific values take precedence over those of the dict of generic
         create values.
 
-        :param dict _values: The original create values
-        :param str _provider: The provider of the acquirer managing the token
+        :param str provider: The provider of the acquirer managing the token
+        :param dict values: The original create values
         :return: The dict of acquirer-specific create values
         :rtype: dict
         """
@@ -73,10 +72,11 @@ class PaymentToken(models.Model):
         # Let acquirers handle activation/deactivation requests
         if 'active' in values:
             for token in self:
+                # Call handlers in sudo mode because a RPC can be the caller of `write`
                 if values['active']:
-                    token._handle_activation_request()
+                    token.sudo()._handle_activation_request()
                 else:
-                    token._handle_deactivation_request()
+                    token.sudo()._handle_deactivation_request()
 
         # Proceed with the toggling of the active state
         return super().write(values)
@@ -124,7 +124,7 @@ class PaymentToken(models.Model):
         Note: self.ensure_one()
 
         :return: The list of information about linked documents
-        :rtype: dict
+        :rtype: list
         """
         self.ensure_one()
         return []

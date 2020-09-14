@@ -11,7 +11,7 @@ from odoo.exceptions import ValidationError
 from odoo.http import request
 from odoo.tools.pycompat import to_text
 
-import odoo.addons.payment.utils as payment_utils
+from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment_adyen.models.payment_acquirer import CURRENCY_DECIMALS
 
 _logger = logging.getLogger(__name__)
@@ -149,8 +149,7 @@ class AdyenController(http.Controller):
         # Handle the payment request response
         _logger.info(f"payment request response:\n{pprint.pformat(response_content)}")
         request.env['payment.transaction'].sudo()._handle_feedback_data(
-            dict(response_content, merchantReference=reference),  # Allow matching the transaction
-            'adyen'
+            'adyen', dict(response_content, merchantReference=reference),  # Match the transaction
         )
         if 'action' in response_content and response_content['action']['type'] == 'redirect':
             tx_sudo.adyen_payment_data = response_content['paymentData']
@@ -187,8 +186,7 @@ class AdyenController(http.Controller):
         # Handle the payment details request response
         _logger.info(f"payment details request response:\n{pprint.pformat(response_content)}")
         request.env['payment.transaction'].sudo()._handle_feedback_data(
-            dict(response_content, merchantReference=reference),  # Allow matching the transaction
-            'adyen'
+            'adyen', dict(response_content, merchantReference=reference),  # Match the transaction
         )
 
         return response_content
@@ -201,7 +199,7 @@ class AdyenController(http.Controller):
                           allow matching the transaction when redirected here.
         """
         # Retrieve the transaction based on the reference included in the return url
-        tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_data(data, 'adyen')
+        tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_data('adyen', data)
         # Overwrite the operation to force the flow to 'redirect'. This is necessary because even
         # thought Adyen is implemented as a direct payment provider, it will redirect the user out
         # of Odoo in some cases. For instance, when a 3DS1 authentication is required, or for
@@ -239,7 +237,7 @@ class AdyenController(http.Controller):
                 _logger.warning(f"ignored notification with missing signature")
                 continue
             acquirer_sudo = request.env['payment.transaction'].sudo()._get_tx_from_data(
-                notification_data, 'adyen'
+                'adyen', notification_data
             ).acquirer_id  # Find the acquirer based on the transaction
             if hmac_signature != to_text(acquirer_sudo._adyen_compute_signature(notification_data)):
                 _logger.warning(f"ignored notification with invalid signature")
@@ -260,7 +258,7 @@ class AdyenController(http.Controller):
 
             # Handle the notification data as a regular feedback
             request.env['payment.transaction'].sudo()._handle_feedback_data(
-                notification_data, 'adyen'
+                'adyen', notification_data
             )
 
         return '[accepted]'  # Acknowledge the notification

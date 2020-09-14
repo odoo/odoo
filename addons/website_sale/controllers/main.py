@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import json
 import logging
-from datetime import datetime
 from werkzeug.exceptions import Forbidden, NotFound
 
 from odoo import fields, http, SUPERUSER_ID, tools, _
@@ -12,7 +11,8 @@ from odoo.addons.http_routing.models.ir_http import slug
 from odoo.addons.payment.controllers.portal import PaymentPostProcessing
 from odoo.addons.website.controllers.main import QueryURL
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
-from odoo.exceptions import ValidationError
+from odoo.exceptions import AccessError, MissingError, ValidationError
+from odoo.addons.portal.controllers import portal
 from odoo.addons.portal.controllers.portal import _build_url_w_params
 from odoo.addons.website.controllers import main
 from odoo.addons.website_form.controllers.main import WebsiteForm
@@ -135,7 +135,7 @@ class Website(main.Website):
             request.session.pop('website_sale_shop_layout_mode', None)
 
 
-class WebsiteSale(http.Controller):
+class WebsiteSale(portal.CustomerPortal):
 
     def _get_pricelist_context(self):
         pricelist_context = dict(request.env.context)
@@ -818,36 +818,40 @@ class WebsiteSale(http.Controller):
     # ------------------------------------------------------
 
     def _get_shop_payment_values(self, order, **kwargs):
-        values = dict(
-            website_sale_order=order,
-            errors=[],
-            partner=order.partner_id,
-            partner_id=order.partner_id.id,
-            order=order,
-            payment_action_id=request.env.ref('payment.action_payment_acquirer').id,
-            init_tx_route='/shop/payment/transaction/',
-            landing_route='/shop/payment/validate',
-        )
-
+        logged_in = not request.env.user._is_public()
         acquirers_sudo = request.env['payment.acquirer'].sudo()._get_compatible_acquirers(
-            order.company_id.id, order.partner_id.id, website_id=request.website.id, order=order
-        )  # In sudo mode to read on the partner and order fields if the user is not logged in
-
-        values['acquirers'] = acquirers_sudo
-        # Fasten loading time for internal users by searching tokens based on the partner hierarchy
-        values['tokens'] = request.env['payment.token'].search(
+            order.company_id.id,
+            order.partner_id.id,
+            currency_id=order.currency_id.id,
+            website_id=request.website.id,
+            order=order
+        )  # In sudo mode to read the fields of acquirers, order and partner (if not logged in)
+        tokens = request.env['payment.token'].search(
             [('acquirer_id', 'in', acquirers_sudo.ids), ('partner_id', '=', order.partner_id.id)]
-        ) if not request.env.user._is_public() else []
-        values['fees_by_acquirer'] = {acq_sudo: acq_sudo._compute_fees(
+        ) if logged_in else []
+        fees_by_acquirer = {acq_sudo: acq_sudo._compute_fees(
             order.amount_total, order.currency_id, order.partner_id.country_id.id
         ) for acq_sudo in acquirers_sudo.filtered('fees_active')}
-        values['reference'] = ''
-        values['amount'] = order.amount_total
-        values['currency'] = order.currency_id
-        values['access_token'] = order.access_token
-        return values
+        return {
+            'website_sale_order': order,
+            'errors': [],
+            'partner': order.partner_id,
+            'order': order,
+            'payment_action_id': request.env.ref('payment.action_payment_acquirer').id,
+            # Payment form common (checkout and manage) values
+            'acquirers': acquirers_sudo,
+            'tokens': tokens,
+            'fees_by_acquirer': fees_by_acquirer,
+            'show_tokenize_input': logged_in,  # Prevent public partner from saving payment methods
+            'amount': order.amount_total,
+            'currency': order.currency_id,
+            'partner_id': order.partner_id.id,
+            'access_token': order._portal_ensure_token(),
+            'init_tx_route': f'/shop/payment/transaction/{order.id}',
+            'landing_route': '/shop/payment/validate',
+        }
 
-    @http.route(['/shop/payment'], type='http', auth="public", website=True, sitemap=False)
+    @http.route('/shop/payment', type='http', auth='public', website=True, sitemap=False)
     # TODO ANV don't show tokenization option if Subs product in cart
     def payment(self, **post):
         """ Payment step. This page proposes several payment means based on available
@@ -873,94 +877,92 @@ class WebsiteSale(http.Controller):
 
         return request.render("website_sale.payment", render_values)
 
-    @http.route(['/shop/payment/transaction/',
-        '/shop/payment/transaction/<int:so_id>',
-        '/shop/payment/transaction/<int:so_id>/<string:access_token>'], type='json', auth="public", website=True)
-    def payment_transaction(self, payment_option_id, tokenization_requested=False, so_id=None, access_token=None, token=None, **kwargs):
-        """ Json method that creates a payment.transaction, used to create a
-        transaction when the user clicks on 'pay now' button. After having
-        created the transaction, the event continues and the user is redirected
-        to the acquirer website. TODO ANV
+    @http.route('/shop/payment/transaction/<int:order_id>', type='json', auth='public', csrf=True)
+    def payment_transaction(  # TODO ANV merge with /website_payment/transaction
+        self, order_id, payment_option_id, amount, currency_id, partner_id, flow,
+        tokenization_requested, landing_route, access_token, **kwargs
+    ):
+        """ Create a draft `payment.transaction` record and return its processing values.
 
-        :param int acquirer_id: id of a payment.acquirer record. If not set the
-                                user is redirected to the checkout page
+        :param int order_id: The sales order to pay, as a `sale.order` id
+        :param int payment_option_id: The payment option handling the transaction, as a
+                                      `payment.acquirer` id or a `payment.token` id
+        :param float amount: The amount to pay in the given currency
+        :param int currency_id: The currency of the transaction, as a `res.currency` id
+        :param int partner_id: The partner making the payment, as a `res.partner` id
+        :param str flow: The online payment flow of the transaction: 'redirect', 'direct' or 'token'
+        :param bool tokenization_requested: Whether the user requested that a token is created
+        :param str landing_route: The route the user is redirected to after the transaction
+        :param str access_token: The access token used to authenticate the request
+        :param dict kwargs: Optional data. Locally processed keys: order_id
+        :return: The mandatory values for the processing of the transaction
+        :rtype: dict
+        :raise: ValidationError if the invoice id or the access token is invalid
         """
-        acquirer_sudo = request.env['payment.acquirer'].browse(payment_option_id).sudo()
-        tokenize = bool(
-            # Public users are not allowed to save tokens as their partner is unknown
-            not request.env.user.sudo()._is_public()
-            # Token is only saved if requested by the user and allowed by the acquirer
-            and tokenization_requested and acquirer_sudo.allow_tokenization
-        )
+        # Check the order id and the access token
+        try:
+            self._document_check_access('sale.order', order_id, access_token)
+        except MissingError as error:
+            raise error
+        except AccessError:
+            raise ValidationError("The access token is missing or invalid.")
 
-        # Retrieve the sale order
-        if so_id:
-            env = request.env['sale.order']
-            domain = [('id', '=', so_id)]
-            if access_token:
-                env = env.sudo()
-                domain.append(('access_token', '=', access_token))
-            order = env.search(domain, limit=1)
-        else:
-            order = request.website.sale_get_order()
-
-        # Ensure there is something to proceed
-        if not order or (order and not order.order_line):
-            return False
-
-        assert order.partner_id.id != request.website.partner_id.id
-
-        # Create transaction
-        vals = {
-            'acquirer_id': payment_option_id,
-            'landing_route': '/shop/payment/validate',
-            'operation': f'online_{kwargs.get("flow", "redirect")}',
-            'tokenize': tokenize,
+        # Prepare the create values that are common to all online payment flows
+        create_tx_values = {
+            'reference': None,  # The reference is computed based on the order id at creation time
+            'amount': amount,
+            'currency_id': currency_id,
+            'partner_id': partner_id,
+            'operation': f'online_{flow}',
+            'landing_route': landing_route,
+            'sale_order_ids': [(6, 0, [order_id])],
         }
 
-        if token:
-            vals['token_id'] = int(token)
+        processing_values = {}  # The generic and acquirer-specific values to process the tx
+        if flow in ['redirect', 'direct']:  # Direct payment or payment with redirection
+            acquirer_sudo = request.env['payment.acquirer'].sudo().browse(payment_option_id)
+            tokenize = bool(
+                # Public users are not allowed to save tokens as their partner is unknown
+                not request.env.user.sudo()._is_public()
+                # Token is only saved if requested by the user and allowed by the acquirer
+                and tokenization_requested and acquirer_sudo.allow_tokenization
+            )
+            tx_sudo = request.env['payment.transaction'].sudo().with_context(lang=None).create({
+                'acquirer_id': acquirer_sudo.id,
+                'tokenize': tokenize,
+                **create_tx_values,
+            })  # In sudo mode to allow writing on callback fields
+            processing_values = tx_sudo._get_processing_values()
+        elif flow == 'token':  # Payment by token
+            token_sudo = request.env['payment.token'].sudo().browse(payment_option_id).exists()
+            if not token_sudo:
+                raise UserError(_("No token token with id %s could be found.", payment_option_id))
+            tx_sudo = request.env['payment.transaction'].sudo().with_context(lang=None).create({
+                'acquirer_id': token_sudo.acquirer_id.id,
+                'token_id': payment_option_id,
+                **create_tx_values,
+            })  # In sudo mode to allow writing on callback fields
+            tx_sudo._send_payment_request()  # Tokens process transactions immediately
+            # The dict of processing values is not filled in token flow since the user is redirected
+            # to the payment process page directly from the client
+        else:
+            raise UserError(
+                _("The payment should either be direct, with redirection, or made by a token.")
+            )
 
-        transaction = order._create_payment_transaction(vals)  # TODO ANV use order._get_vals_...
-
-        # store the new transaction into the transaction list and if there's an old one, we remove it
-        # until the day the ecommerce supports multiple orders at the same time
+        # Store the new transaction into the transaction list and if there's an old one, we remove
+        # it until the day the ecommerce supports multiple orders at the same time.
         last_tx_id = request.session.get('__website_sale_last_tx_id')
         last_tx = request.env['payment.transaction'].browse(last_tx_id).sudo().exists()
         if last_tx:
             PaymentPostProcessing.remove_transactions(last_tx)
-        PaymentPostProcessing.monitor_transactions(transaction)
-        request.session['__website_sale_last_tx_id'] = transaction.id
-        return transaction.render_sale_button(order)
+        request.session['__website_sale_last_tx_id'] = tx_sudo.id
 
-    @http.route('/shop/payment/token', type='http', auth='public', website=True, sitemap=False)  # TODO ANV merge in /shop/payment/transaction
-    def payment_token(self, pm_id=None, **kwargs):
-        """ Method that handles payment using saved tokens
+        # Monitor the transaction to make it available in the portal
+        PaymentPostProcessing.monitor_transactions(tx_sudo)
 
-        :param int pm_id: id of the payment.token that we want to use to pay.
-        """
-        order = request.website.sale_get_order()
-        # do not crash if the user has already paid and try to pay again
-        if not order:
-            return request.redirect('/shop/?error=no_order')
-
-        assert order.partner_id.id != request.website.partner_id.id
-
-        try:
-            pm_id = int(pm_id)
-        except ValueError:
-            return request.redirect('/shop/?error=invalid_token_id')
-
-        # We retrieve the token the user want to use to pay
-        if not request.env['payment.token'].sudo().search_count([('id', '=', pm_id)]):
-            return request.redirect('/shop/?error=token_not_found')
-
-        # Create transaction
-        vals = {'operation': 'online_token', 'token_id': pm_id, 'landing_route': '/shop/payment/validate'}
-
-        tx = order._create_payment_transaction(vals)  # TODO ANV use order._get_vals_... bis
-        PaymentPostProcessing.monitor_transactions(tx)
-        return request.redirect('/payment/status')
+        # TODO ANV there used to be a call to tx._log_sent_message(). See if still necessary
+        return processing_values
 
     @http.route('/shop/payment/get_status/<int:sale_order_id>', type='json', auth="public", website=True)
     def payment_get_status(self, sale_order_id, **post):

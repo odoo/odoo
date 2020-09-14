@@ -6,19 +6,19 @@ import pprint
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
-import odoo.addons.payment.utils as payment_utils
+from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment_adyen.models.payment_acquirer import CURRENCY_DECIMALS
 
 _logger = logging.getLogger(__name__)
 
 
 class PaymentTransaction(models.Model):
-
     _inherit = 'payment.transaction'
 
     adyen_payment_data = fields.Char(
         string="Saved Payment Data",
-        help="Data that must be passed back to Adyen when returning from redirect", readonly=True)
+        help="Data that must be passed back to Adyen when returning from redirect", readonly=True,
+        groups='base.group_system')  # TODO ANV review group
 
     #=== BUSINESS METHODS ===#
 
@@ -33,7 +33,7 @@ class PaymentTransaction(models.Model):
         """
 
         if self.acquirer_id.provider != 'adyen':
-            return super()._get_processing_values()
+            return super()._get_specific_processing_values(processing_values)
 
         converted_amount = payment_utils.convert_to_minor_units(
             self.amount, self.currency_id, CURRENCY_DECIMALS.get(self.currency_id.name)
@@ -48,14 +48,15 @@ class PaymentTransaction(models.Model):
             )
         }
 
-    def _send_payment_request(self, _operation='online'):
+    def _send_payment_request(self):
         """ Request Adyen to execute the payment.
 
-        :param str _operation: The operation of the payment: 'online', 'offline' or 'validation'.
         :return: None
         """
+        super()._send_payment_request()  # Log the 'sent' message
+
         if self.acquirer_id.provider != 'adyen':
-            return super()._send_payment_request(_operation)
+            return
 
         # Make the payment requests to Adyen
         for tx in self:
@@ -94,21 +95,19 @@ class PaymentTransaction(models.Model):
 
             # Handle the payment request response
             _logger.info(f"payment request response:\n{pprint.pformat(response_content)}")
-            tx._handle_feedback_data(response_content, 'adyen')
-
-        return super()._send_payment_request(_operation)
+            tx._handle_feedback_data('adyen', response_content)
 
     @api.model
-    def _get_tx_from_data(self, data, provider):
+    def _get_tx_from_data(self, provider, data):
         """ Find the transaction based on the transaction data.
 
-        :param dict data: The transaction data sent by the acquirer
         :param str provider: The provider of the acquirer that handled the transaction
+        :param dict data: The transaction data sent by the acquirer
         :return: The payment.transaction record if found, else None
         :rtype: recordset or None
         """
         if provider != 'adyen':
-            return super()._get_tx_from_data(data, provider)
+            return super()._get_tx_from_data(provider, data)
 
         # Check that all necessary keys are in feedback data
         reference = data.get('merchantReference')
@@ -164,10 +163,10 @@ class PaymentTransaction(models.Model):
         if tx_status in (
             'ChallengeShopper', 'IdentifyShopper', 'Pending', 'PresentToShopper', 'Received',
             'RedirectShopper'
-        ):  # pending
+        ):  # `pending` state
             if self.state != 'pending':  # Redundant feedbacks can be sent through the webhook
                 self._set_pending()
-        elif tx_status == 'Authorised':  # done
+        elif tx_status == 'Authorised':  # `done` state
             if self.tokenize \
                     and 'recurring.recurringDetailReference' in data.get('additionalData', {}):
                 # Create the token with the data of the payment method  TODO probably factor that out when manage tokens is in da place
@@ -186,10 +185,10 @@ class PaymentTransaction(models.Model):
                 )
             if self.state != 'done':  # Redundant feedbacks can be sent through the webhook
                 self._set_done()
-        elif tx_status == 'Cancelled':  # cancel
+        elif tx_status == 'Cancelled':  # `cancel` state
             if self.state != 'cancel':  # Redundant feedbacks can be sent through the webhook
                 self._set_canceled()
-        else:  # error
+        else:  # `error` state
             if self.state != 'error':  # Redundant feedbacks can be sent through the webhook
                 _logger.info(f"received data with invalid transaction status: {tx_status}")
                 self._set_error("Adyen: " + _(

@@ -57,7 +57,7 @@ odoo.define('website_sale.payment', require => {
         /**
          * Verify that the Terms and Condition checkbox is checked.
          *
-         * @override method from payment.checkout_form
+         * @override method from payment.payment_form_mixin
          * @private
          * @return {boolean} Whether the submit button can be enabled
          */

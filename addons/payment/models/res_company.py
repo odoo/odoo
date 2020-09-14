@@ -2,6 +2,7 @@
 
 from odoo import api, fields, models
 
+# TODO ANV clean
 
 class ResCompany(models.Model):
     _inherit = 'res.company'

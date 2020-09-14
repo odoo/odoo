@@ -5,6 +5,7 @@ import datetime
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
+# TODO ANV clean
 
 class AccountPayment(models.Model):
     _inherit = 'account.payment'

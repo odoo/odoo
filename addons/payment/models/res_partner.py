@@ -2,6 +2,7 @@
 
 from odoo import api, fields, models
 
+# TODO ANV clean
 
 class res_partner(models.Model):
     _name = 'res.partner'

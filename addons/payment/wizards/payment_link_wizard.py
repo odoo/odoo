@@ -6,7 +6,7 @@ from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.tools import float_compare
 
-import odoo.addons.payment.utils as payment_utils
+from odoo.addons.payment import utils as payment_utils
 
 
 class PaymentLinkWizard(models.TransientModel):
