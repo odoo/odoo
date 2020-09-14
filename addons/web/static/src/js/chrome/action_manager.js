@@ -392,6 +392,9 @@ var ActionManager = Widget.extend({
             return dialog.open().opened(function () {
                 self.currentDialogController = controller;
 
+                // Since the buttons are added in the footer, we clear the buttons in the control panel.
+                widget.$el.find('.o_cp_buttons').empty();
+
                 dom.append(dialog.$el, widget.$el, {
                     in_DOM: true,
                     callbacks: [{widget: dialog}, {widget: controller.widget}],
