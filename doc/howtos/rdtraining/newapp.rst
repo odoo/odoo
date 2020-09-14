@@ -57,7 +57,7 @@ Prepare the addon directory
       :alt: The new module appears in the list
 
 The very first step of a module creation is to create a new folder. To ease the development, we
-suggest you first create the folder ``/home/<user>/src/custom``. In this folder we add the folder
+suggest you first create the folder ``/home/$USER/src/custom``. In this folder we add the folder
 ``estate``, which is our module.
 
 A module must contain at least 2 files: the ``__manifest__.py`` file and a ``__init__.py`` file.
@@ -77,8 +77,8 @@ Linux distribution packaging tool (``apt``, ``yum``, ``pacman``...): Odoo works 
 
     Create the following folders and files:
 
-    - ``/home/<user>/src/custom/estate/__init__.py``
-    - ``/home/<user>/src/custom/estate/__manifest__.py``
+    - ``/home/$USER/src/custom/estate/__init__.py``
+    - ``/home/$USER/src/custom/estate/__manifest__.py``
 
     The ``__manifest__.py`` file should only define the name and the dependencies of our modules.
     Two framework modules are necessary: ``base`` and ``web``.

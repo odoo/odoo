@@ -9,8 +9,8 @@ to store business data. In a business application such as Odoo, one of the first
 is to know who\ [#who]_ can access the data. Odoo provides a security mechanism to allow access
 to the data to some groups of users.
 
-The security topic is covered in more details in an appendix. This chapter aims to cover the
-minimum required to use our new module.
+The security topic is covered in more details in :ref:`howto/rdtraining/advanced_B`. This chapter
+aims to cover the minimum required to use our new module.
 
 Data Files (CSV)
 ================

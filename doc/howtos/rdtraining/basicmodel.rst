@@ -168,9 +168,9 @@ There are two broad categories of fields: 'simple' fields which are atomic
 values stored directly in the model's table and 'relational' fields linking
 records (of the same model or of different models).
 
-Example of simple fields are :class:`~odoo.fields.Boolean`,
-:class:`~odoo.fields.Float`, :class:`~odoo.fields.Char`,
-:class:`~odoo.fields.Date` or :class:`~odoo.fields.Selection`.
+Example of simple fields are :class:`~odoo.fields.Boolean`, :class:`~odoo.fields.Float`,
+:class:`~odoo.fields.Char`, :class:`~odoo.fields.Text`, :class:`~odoo.fields.Date`
+or :class:`~odoo.fields.Selection`.
 
 .. exercise:: Add basic fields to the Real Estate Property table
 

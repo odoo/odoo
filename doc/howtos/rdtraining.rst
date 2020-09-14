@@ -9,7 +9,7 @@ Getting Started
 Core training:
 
 .. toctree::
-    :maxdepth: 2
+    :maxdepth: 1
 
     rdtraining/architecture
     rdtraining/setup
@@ -29,3 +29,8 @@ Core training:
     rdtraining/guidelines_pr
 
 Advanced topics:
+
+.. toctree::
+    :maxdepth: 1
+
+    rdtraining/advanced_B
