@@ -25,7 +25,7 @@ tour.register('account_tour', {
     }, {
         trigger: "button[name=document_layout_save]",
         extra_trigger: "a.o_onboarding_step_action[data-method=action_open_base_document_layout]",
-        content: _t("Once everything is as you want it, validate."),
+        content: _t("Once everything is as you want, press SAVE."),
     }, {
         trigger: "a.o_onboarding_step_action[data-method=action_open_account_onboarding_create_invoice]",
         content: _t("Now, we'll create your first invoice."),
@@ -85,6 +85,10 @@ tour.register('account_tour', {
         trigger: "button[name=send_and_print_action]",
         extra_trigger: "[name=move_type][raw-value=out_invoice]",
         content: _t("Let's send the invoice."),
+    }, {
+        trigger: '.o_menu_brand',
+        content: _t('Let’s go back to the dashboard.'),
+        position: 'bottom',
     }
 ]);
 

@@ -19,6 +19,14 @@
                             <group attrs="{'invisible': [('selection', '!=', 'upload')]}">
                                 <field name="attachment_ids" widget="many2many_binary" string="Attach a file" nolabel="1" colspan="2"/>
                             </group>
+                            <group attrs="{'invisible': [('selection', '!=', 'noemail')]}" col="1">
+                                <p>You email server is not set up.</p>
+                                <p>
+                                    <a href="https://www.odoo.com/documentation/user/13.0/discuss/advanced/email_servers.html" target="_blank">
+                                        Learn how to do it.
+                                    </a>
+                                </p>
+                            </group>
                         </group>
                     </sheet>
                     <footer>
