@@ -378,6 +378,11 @@ class Field(MetaField('DummyField', (object,), {})):
             if not (attrs['store'] and not attrs.get('readonly', True)):
                 attrs['copy'] = attrs.get('copy', False)
             attrs['readonly'] = attrs.get('readonly', not attrs.get('inverse'))
+            if not store and attrs.get('default'):
+                default = attrs.get('default')
+                compute = attrs.get('compute')
+                if compute not in ['_compute_repeat']:
+                    _logger.warning("Non stored computed field %s (%s) shouldn't have a default value (%s)", name, compute, default)
         if attrs.get('related'):
             # by default, related fields are not stored, computed in superuser
             # mode, not copied and readonly

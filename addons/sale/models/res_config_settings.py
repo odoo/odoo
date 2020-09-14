@@ -30,11 +30,6 @@ class ResConfigSettings(models.TransientModel):
         config_parameter='sale.default_deposit_product_id',
         help='Default product used for payment advances')
 
-    auth_signup_uninvited = fields.Selection([
-        ('b2b', 'On invitation'),
-        ('b2c', 'Free sign up'),
-    ], string='Customer Account', default='b2b', config_parameter='auth_signup.invitation_scope')
-
     module_delivery = fields.Boolean("Delivery Methods")
     module_delivery_dhl = fields.Boolean("DHL USA Connector")
     module_delivery_fedex = fields.Boolean("FedEx Connector")

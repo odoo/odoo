@@ -656,8 +656,7 @@ class ProductTemplate(models.Model):
     location_id = fields.Many2one('stock.location', 'Location', store=False)
     warehouse_id = fields.Many2one('stock.warehouse', 'Warehouse', store=False)
     has_available_route_ids = fields.Boolean(
-        'Routes can be selected on this product', compute='_compute_has_available_route_ids',
-        default=lambda self: self.env['stock.location.route'].search_count([('product_selectable', '=', True)]))
+        'Routes can be selected on this product', compute='_compute_has_available_route_ids')
     route_ids = fields.Many2many(
         'stock.location.route', 'stock_route_product', 'product_id', 'route_id', 'Routes',
         domain=[('product_selectable', '=', True)],
@@ -684,7 +683,7 @@ class ProductTemplate(models.Model):
 
     @api.depends('type')
     def _compute_has_available_route_ids(self):
-        self.has_available_route_ids = self.env['stock.location.route'].search_count([('product_selectable', '=', True)])
+        self.has_available_route_ids = bool(self.env['stock.location.route'].search([('product_selectable', '=', True)], limit=1))
 
     @api.depends(
         'product_variant_ids.qty_available',

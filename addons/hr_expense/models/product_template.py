@@ -7,7 +7,8 @@ from odoo import api, fields, models
 class ProductTemplate(models.Model):
     _inherit = "product.template"
 
-    can_be_expensed = fields.Boolean(string="Can be Expensed", compute='_compute_can_be_expensed',
+    can_be_expensed = fields.Boolean(
+        string="Can be Expensed", compute='_compute_can_be_expensed',
         store=True, readonly=False, help="Specify whether the product can be selected in an expense.")
 
     @api.model_create_multi
@@ -21,4 +22,7 @@ class ProductTemplate(models.Model):
 
     @api.depends('type')
     def _compute_can_be_expensed(self):
-        self.filtered(lambda p: p.type not in ['consu', 'service']).update({'can_be_expensed': False})
+        expensable_products = self.filtered(lambda p: p.type in ['consu', 'service'])
+        # VFE FIXME for those products, set as can be expensed = p.can_be_expensed ?
+        expensable_products.can_be_expensed = True
+        (self - expensable_products).can_be_expensed = False

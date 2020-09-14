@@ -37,7 +37,7 @@ class ResConfigSettings(models.TransientModel):
     cdn_activated = fields.Boolean(related='website_id.cdn_activated', readonly=False)
     cdn_url = fields.Char(related='website_id.cdn_url', readonly=False)
     cdn_filters = fields.Text(related='website_id.cdn_filters', readonly=False)
-    auth_signup_uninvited = fields.Selection(compute="_compute_auth_signup", inverse="_set_auth_signup")
+    auth_signup_uninvited = fields.Selection(related="website_id.auth_signup_uninvited", readonly=False)
 
     social_twitter = fields.Char(related='website_id.social_twitter', readonly=False)
     social_facebook = fields.Char(related='website_id.social_facebook', readonly=False)
@@ -67,15 +67,6 @@ class ResConfigSettings(models.TransientModel):
 
     google_maps_api_key = fields.Char(related='website_id.google_maps_api_key', readonly=False)
     group_multi_website = fields.Boolean("Multi-website", implied_group="website.group_multi_website")
-
-    @api.depends('website_id.auth_signup_uninvited')
-    def _compute_auth_signup(self):
-        for config in self:
-            config.auth_signup_uninvited = config.website_id.auth_signup_uninvited
-
-    def _set_auth_signup(self):
-        for config in self:
-            config.website_id.auth_signup_uninvited = config.auth_signup_uninvited
 
     @api.depends('website_id')
     def has_google_analytics(self):

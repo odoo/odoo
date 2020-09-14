@@ -44,10 +44,7 @@ class ProductTemplate(models.Model):
 
     @api.depends('name')
     def _compute_visible_expense_policy(self):
-        visibility = self.user_has_groups('analytic.group_analytic_accounting')
-        for product_template in self:
-            product_template.visible_expense_policy = visibility
-
+        self.visible_expense_policy = self.user_has_groups('analytic.group_analytic_accounting')
 
     @api.onchange('sale_ok')
     def _change_sale_ok(self):

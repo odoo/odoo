@@ -9,12 +9,8 @@ class ProductTemplate(models.Model):
 
     @api.depends('can_be_expensed')
     def _compute_visible_expense_policy(self):
+        super(ProductTemplate, self)._compute_visible_expense_policy()
         expense_products = self.filtered(lambda p: p.can_be_expensed)
-        for product_template in self - expense_products:
-            product_template.visible_expense_policy = False
-
-        super(ProductTemplate, expense_products)._compute_visible_expense_policy()
-        visibility = self.user_has_groups('hr_expense.group_hr_expense_user')
-        for product_template in expense_products:
-            if not product_template.visible_expense_policy:
-                product_template.visible_expense_policy = visibility
+        if self.user_has_groups('hr_expense.group_hr_expense_user'):
+            # If not, the value assigned by the super call is the correct one.
+            expense_products.visible_expense_policy = True
