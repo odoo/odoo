@@ -4,7 +4,6 @@ from odoo import models
 
 
 class AccountChartTemplate(models.Model):
-
     _inherit = 'account.chart.template'
 
     def _create_bank_journals(self, company, acc_template_ref):

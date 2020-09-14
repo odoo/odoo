@@ -1,4 +1,3 @@
-// TODO ANV ES6
 odoo.define('payment.post_processing', function (require) {
     'use strict';
 
@@ -77,7 +76,6 @@ odoo.define('payment.post_processing', function (require) {
                 'tx_error': [],
             };
 
-            // TODO allow sepa to override and handle this
             if (display_values_list.length > 0 && ['transfer', 'sepa_direct_debit'].indexOf(display_values_list[0].provider) >= 0) {
                 // In almost every cases there will be a single transaction to display. If there are
                 // more than one transaction, the last one will most likely be the one that was

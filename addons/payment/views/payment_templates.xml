@@ -16,23 +16,21 @@
             - 'default_token_id' - The id of the token that should be pre-selected. Optional
             - 'fees_by_acquirer' - The dict of transaction fees for each acquirer. Optional
             - 'show_tokenize_input' - Whether the option to save the payment method is shown
-            - 'reference' - The custom prefix to compute the full transaction reference
+            - 'reference_prefix' - The custom prefix to compute the full transaction reference
             - 'amount' - The amount to pay
             - 'currency' - The currency of the transaction, as a `res.currency` record
             - 'partner_id' - The id of the partner on behalf of whom the payment should be made
-            - 'order_id' - The id of the related order. Optional
-            - 'access_token' - The access token used to authenticate the partner. Optional
+            - 'access_token' - The access token used to authenticate the partner.
             - 'init_tx_route' - The route to call to create a transaction when the user clicks 'Pay'
             - 'landing_route' - The route the user is redirected to after the transaction
             - 'footer_template_id' - The template id for the submit button. Optional
         -->
         <form name="o_payment_checkout"
               class="o_payment_form mt-3 clearfix"
-              t-att-data-reference="reference"
+              t-att-data-reference-prefix="reference_prefix"
               t-att-data-amount="amount"
               t-att-data-currency-id="currency and currency.id"
               t-att-data-partner-id="partner_id"
-              t-att-data-order-id="order_id"
               t-att-data-access-token="access_token"
               t-att-data-init-tx-route="init_tx_route"
               t-att-data-landing-route="landing_route"
@@ -92,16 +90,18 @@
                     <div t-attf-id="o_payment_inline_form_{{acquirer.id}}"
                          class="card-footer d-none">
                         <!-- === Inline form content (filled by acquirer) === -->
-                        <div class="clearfix">
-                            <t t-set="inline_form_xml_id"
-                               t-value="acquirer.sudo()._get_inline_template_view_xml_id()"/>
-                            <t t-if="inline_form_xml_id" t-call="{{inline_form_xml_id}}">
-                                <t t-set="acquirer_id" t-value="acquirer.id"/>
-                            </t>
-                        </div>
+                        <t t-set="inline_form_xml_id"
+                           t-value="acquirer.sudo().inline_template_view_id.xml_id"/>
+                        <t t-if="inline_form_xml_id">
+                            <div class="clearfix">
+                                <t t-call="{{inline_form_xml_id}}">
+                                    <t t-set="acquirer_id" t-value="acquirer.id"/>
+                                </t>
+                            </div>
+                        </t>
                         <!-- === "Save my payment details" checkbox === -->
-                        <!-- Only shown if partner is known and if the choice is given -->
-                        <label t-att-class="'' if show_tokenize_input and acquirer.allow_tokenization else 'd-none'">
+                        <!-- Only included if partner is known and if the choice is given -->
+                        <label t-if="show_tokenize_input and acquirer.allow_tokenization">
                             <input name="o_payment_save_as_token" type="checkbox"/>
                             Save my payment details
                         </label>
@@ -152,8 +152,9 @@
             - 'acquirers' - The payment acquirers supporting tokenization
             - 'tokens' - The set of payment tokens of the current partner
             - 'default_token_id' - The id of the token that should be pre-selected. Optional
-            - 'reference' - The custom prefix to compute the full transaction reference
+            - 'reference_prefix' - The custom prefix to compute the full transaction reference
             - 'partner_id' - The id of the partner managing the tokens
+            - 'access_token' - The access token used to authenticate the partner.
             - 'init_tx_route' - The route to call to create a card validation transaction when the
                                 user clicks 'Save'
             - 'assign_token_route' - The route to call to assign a token to a record. If set, it
@@ -166,8 +167,9 @@
         -->
         <form name="o_payment_manage"
               class="o_payment_form mt-3 clearfix"
-              t-att-data-reference="reference"
+              t-att-data-reference-prefix="reference_prefix"
               t-att-data-partner-id="partner_id"
+              t-att-data-access-token="access_token"
               t-att-data-init-tx-route="init_tx_route"
               t-att-data-assign-token-route="assign_token_route"
               t-att-data-landing-route="landing_route"
@@ -215,7 +217,7 @@
                         <!-- === Inline form content (filled by acquirer) === -->
                         <div class="clearfix">
                             <t t-set="inline_form_xml_id"
-                               t-value="acquirer.sudo()._get_inline_template_view_xml_id()"/>
+                               t-value="acquirer.sudo().inline_template_view_id.xml_id"/>
                             <t t-if="inline_form_xml_id" t-call="{{inline_form_xml_id}}">
                                 <t t-set="acquirer_id" t-value="acquirer.id"/>
                             </t>

@@ -5,6 +5,7 @@ import datetime
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
+# TODO ANV clean
 
 class AccountPayment(models.Model):
     _inherit = 'account.payment'
@@ -95,7 +96,7 @@ class AccountPayment(models.Model):
         transactions._send_payment_request()
 
         # Post payments for issued transactions.
-        transactions._post_process_after_done()
+        transactions._finalize_post_processing()
         payments_trans_done = payments_need_trans.filtered(lambda pay: pay.payment_transaction_id.state == 'done')
         super(AccountPayment, payments_trans_done).action_post()
         payments_trans_not_done = payments_need_trans.filtered(lambda pay: pay.payment_transaction_id.state != 'done')
