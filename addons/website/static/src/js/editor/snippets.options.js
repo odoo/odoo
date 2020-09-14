@@ -316,7 +316,9 @@ const GPSPicker = InputUserValueWidget.extend({
                 }
             });
         });
-        this.inputEl.value = this._gmapPlace.formatted_address;
+        if (this._gmapPlace) {
+            this.inputEl.value = this._gmapPlace.formatted_address;
+        }
     },
 
     //--------------------------------------------------------------------------
