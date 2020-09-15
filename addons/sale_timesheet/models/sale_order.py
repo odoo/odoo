@@ -38,14 +38,13 @@ class SaleOrder(models.Model):
                 total_time += timesheet.unit_amount * timesheet.product_uom_id.factor_inv
             # Now convert to the proper unit of measure
             total_time *= sale_order.timesheet_encode_uom_id.factor
-            sale_order.timesheet_total_duration = total_time
+            sale_order.timesheet_total_duration = round(total_time)
 
     def action_view_project_ids(self):
         self.ensure_one()
         # redirect to form or kanban view
-        billable_projects = self.project_ids.filtered(lambda project: project.sale_line_id)
-        if len(billable_projects) == 1 and self.env.user.has_group('project.group_project_manager'):
-            action = billable_projects[0].action_view_timesheet_plan()
+        if len(self.project_ids) == 1 and self.project_ids.project_overview and self.env.user.has_group('project.group_project_manager'):
+            action = self.project_ids.action_view_timesheet_plan()
         else:
             action = super().action_view_project_ids()
         return action
