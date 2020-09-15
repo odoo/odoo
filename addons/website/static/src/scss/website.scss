@@ -811,6 +811,21 @@ header {
         }
     }
 
+    // Dropdown menus
+
+    // In mobile there is no need to limit the height...
+    @include media-breakpoint-up(lg) {
+        .navbar .dropdown-menu {
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+    }
+    // ... but we limit the navbar-collapse height
+    .navbar-collapse.show {
+        max-height: 80vh;
+        overflow-y: auto;
+    }
+
     &:not(.o_header_is_scrolled) {
         $-is-hamburger: o-website-value('header-template') == 'hamburger';
         @include media-breakpoint-up(md) {
