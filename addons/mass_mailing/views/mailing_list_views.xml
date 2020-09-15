@@ -47,7 +47,7 @@
                     <div class="oe_title">
                         <label for="name" class="oe_edit_only"/>
                         <h1>
-                            <field name="name" placeholder="e.g. Consumer Newsletter"/>
+                            <field name="name" class="o_text_overflow" placeholder="e.g. Consumer Newsletter"/>
                         </h1>
                     </div>
                     <group>
@@ -107,7 +107,7 @@
                             <div class="o_mass_mailing_kanban_main">
                                 <div class="o_kanban_card_content">
                                     <div class="o_kanban_primary_left">
-                                        <div class="o_primary">
+                                        <div class="o_primary o_text_overflow">
                                             <span><t t-esc="record.name.value"/></span>
                                         </div>
                                     </div>

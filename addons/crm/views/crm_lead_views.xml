@@ -44,7 +44,7 @@
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only" string="Lead" attrs="{'invisible': [('type', '=', 'opportunity')]}"/>
                             <label for="name" class="oe_edit_only" attrs="{'invisible': [('type', '=', 'lead')]}"/>
-                            <h1><field name="name" placeholder="e.g. Product Pricing"/></h1>
+                            <h1><field class="o_text_overflow" name="name" placeholder="e.g. Product Pricing"/></h1>
                             <h2 class="o_row no-gutters align-items-end">
                                 <div class="col" attrs="{'invisible': [('type', '=', 'lead')]}">
                                     <label for="expected_revenue" class="oe_edit_only" />
@@ -504,7 +504,7 @@
                                     </div>
                                 </div>
                                 <div class="oe_kanban_content">
-                                    <div class="o_kanban_record_title">
+                                    <div class="o_kanban_record_title oe_kanban_details">
                                         <strong><field name="name"/></strong>
                                     </div>
                                     <div class="o_kanban_record_subtitle">
@@ -518,7 +518,7 @@
                                         </t>
                                     </div>
                                     <div>
-                                        <span t-if="record.partner_id.value" t-esc="record.partner_id.value"></span>
+                                        <span class="o_text_overflow" t-if="record.partner_id.value" t-esc="record.partner_id.value"></span>
                                     </div>
                                     <div>
                                         <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
