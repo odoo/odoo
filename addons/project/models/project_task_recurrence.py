@@ -214,7 +214,7 @@ class ProjectTaskRecurrence(models.Model):
 
     def _create_next_task(self):
         for recurrence in self:
-            task = self.sudo().task_ids[-1]
+            task = recurrence.sudo().task_ids[-1]
             create_values = recurrence._new_task_values(task)
             new_task = self.env['project.task'].sudo().create(create_values)
             if not new_task.parent_id and task.child_ids:
