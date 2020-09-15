@@ -399,7 +399,7 @@
     <record model="ir.actions.act_window" id="action_hr_job_sources">
         <field name="name">Jobs Sources</field>
         <field name="res_model">hr.recruitment.source</field>
-        <field name="view_mode">tree</field>
+        <field name="view_mode">tree,kanban</field>
         <field name="search_view_id" ref="hr_recruitment_source_view_search"/>
         <field name="context">{'search_default_job_id': [active_id], 'default_job_id': active_id}</field>
         <field name="help" type="html">
@@ -865,6 +865,42 @@ action = act
             parent="menu_hr_recruitment_configuration"
             action="hr_recruitment_degree_action"
             sequence="5" groups="base.group_no_one"/>
+
+    <!-- Source Kanban View -->
+    <record id="hr_recruitment_source_kanban" model="ir.ui.view">
+        <field name="name">hr.recruitment.source.kanban</field>
+        <field name="model">hr.recruitment.source</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile" create="0" sample="1">
+                <field name="job_id"/>
+                <field name="email"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_card oe_kanban_global_click">
+                            <div class="oe_kanban_content">
+                                <div class="o_kanban_record_top">
+                                    <div class="o_kanban_record_headings row">
+                                        <div class="col-3">
+                                            <h3 class="o_kanban_record_title"><field name="source_id"/></h3>
+                                        </div>
+                                        <div class="col-9 text-right">
+                                            <div><field name="job_id"/></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="o_kanban_record_body mt-3">
+                                    <div class="text-right">
+                                        <field name="email" attrs="{'invisible': [('email', '=', False)]}" widget="email"/>
+                                        <button name="create_alias" class="btn btn-primary" type="object" attrs="{'invisible': [('email', '!=', False)]}">Generate Email</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
 
     <!-- Source Tree View -->
     <record model="ir.ui.view" id="hr_recruitment_source_tree">
