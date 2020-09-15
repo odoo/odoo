@@ -141,18 +141,10 @@ var KanbanRenderer = BasicRenderer.extend({
      * Called each time the renderer is attached into the DOM.
      */
     on_attach_callback: function () {
-        this._isInDom = true;
-        _.invoke(this.widgets, 'on_attach_callback');
+        this._super(...arguments);
         if (this.quickCreate) {
             this.quickCreate.on_attach_callback();
         }
-    },
-    /**
-     * Called each time the renderer is detached from the DOM.
-     */
-    on_detach_callback: function () {
-        this._isInDom = false;
-        _.invoke(this.widgets, 'on_detach_callback');
     },
 
     //--------------------------------------------------------------------------
@@ -469,9 +461,6 @@ var KanbanRenderer = BasicRenderer.extend({
                 self.$el.toggleClass('o_kanban_ungrouped', !isGrouped);
                 self.$el.append(fragment);
                 self._toggleNoContentHelper();
-                if (self._isInDom) {
-                    _.invoke(self.widgets, 'on_attach_callback');
-                }
             });
         });
     },

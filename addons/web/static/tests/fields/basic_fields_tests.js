@@ -7606,7 +7606,7 @@ QUnit.module('basic_fields', {
     });
 
     QUnit.test('FieldBadge component with decoration-xxx attributes', async function (assert) {
-        assert.expect(3);
+        assert.expect(6);
 
         const list = await createView({
             View: ListView,
@@ -7618,6 +7618,12 @@ QUnit.module('basic_fields', {
                     <field name="foo" widget="badge" decoration-danger="selection == 'done'" decoration-warning="selection == 'blocked'"/>
                 </list>`,
         });
+
+        assert.containsN(list, '.o_field_badge[name="foo"]', 5);
+        assert.containsOnce(list, '.o_field_badge[name="foo"].bg-danger-light');
+        assert.containsOnce(list, '.o_field_badge[name="foo"].bg-warning-light');
+
+        await list.reload();
 
         assert.containsN(list, '.o_field_badge[name="foo"]', 5);
         assert.containsOnce(list, '.o_field_badge[name="foo"].bg-danger-light');
