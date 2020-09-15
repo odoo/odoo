@@ -219,7 +219,7 @@
                         <field name="kanban_state" widget="state_selection" class="ml-auto float-right"/>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only" string="Event Name"/>
-                            <h1><field name="name" placeholder="e.g. Conference for Architects"/></h1>
+                            <h1><field class="o_text_overflow" name="name" placeholder="e.g. Conference for Architects"/></h1>
                         </div>
                         <group>
                             <group>
@@ -544,13 +544,13 @@
                         <group>
                             <group string="Attendee" name="attendee">
                                 <field name="partner_id" attrs="{'readonly':[('state', '!=', 'draft')]}"/>
-                                <field name="name"/>
+                                <field class="o_text_overflow" name="name"/>
                                 <field name="email"/>
                                 <field name="phone" class="o_force_ltr"/>
                                 <field name="mobile" class="o_force_ltr"/>
                             </group>
                             <group string="Event Information" name="event">
-                                <field name="event_id" attrs="{'readonly': [('state', '!=', 'draft')]}" options="{'no_create': True}"/>
+                                <field class="o_text_overflow" name="event_id" attrs="{'readonly': [('state', '!=', 'draft')]}" options="{'no_create': True}"/>
                                 <field name="event_ticket_id"
                                     domain="[
                                         ('event_id', '=', event_id),
@@ -626,12 +626,12 @@
                                         <div class="oe_kanban_content h-100">
                                             <div class="o_kanban_record_body pt-1 pl-2 h-100 d-flex flex-column">
                                                 <b class="o_kanban_record_title"><field name="name"/></b>
-                                                <field name="event_id" invisible="context.get('default_event_id')" />
-                                                <span attrs="{'invisible': [('partner_id', '=', False)]}">Booked by <field name="partner_id" /></span>
+                                                <field class="o_text_overflow" name="event_id" invisible="context.get('default_event_id')" />
+                                                <span class="o_text_overflow" attrs="{'invisible': [('partner_id', '=', False)]}">Booked by <field name="partner_id" /></span>
                                                 <div id="event_ticket_id" class="o_field_many2manytags o_field_widget d-flex mt-auto">
                                                     <t t-if="record.event_ticket_id.raw_value">
                                                         <div t-attf-class="badge badge-pill o_tag_color_#{(record.event_ticket_id.raw_value % 11) + 1}" >
-                                                            <b><span class="o_badge_text"><t t-esc="record.event_ticket_id.value"/></span></b>
+                                                            <b><span class="o_badge_text o_text_overflow"><t t-esc="record.event_ticket_id.value"/></span></b>
                                                         </div>
                                                     </t>
                                                 </div>

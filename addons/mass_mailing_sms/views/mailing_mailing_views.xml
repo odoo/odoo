@@ -100,7 +100,7 @@
                     For an SMS Text Message, internal Title of the Message.</attribute>
             </xpath>
             <xpath expr="//field[@name='subject']" position="after">
-                <field name="sms_subject" string="Title" attrs="{'invisible': [('mailing_type', '!=', 'sms')], 'readonly': [('state', 'in', ('sending', 'done'))], 'required': [('mailing_type', '=', 'sms')]}"/>
+                <field class="o_text_overflow" name="sms_subject" string="Title" attrs="{'invisible': [('mailing_type', '!=', 'sms')], 'readonly': [('state', 'in', ('sending', 'done'))], 'required': [('mailing_type', '=', 'sms')]}"/>
             </xpath>
             <xpath expr="//page[@name='mail_body']" position="attributes">
                 <attribute name="attrs">{'invisible': [('mailing_type', '!=', 'mail')]}</attribute>
