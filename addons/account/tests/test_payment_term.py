@@ -67,7 +67,7 @@ class TestAccountInvoiceRounding(AccountTestInvoicingCommon):
             ],
         })
 
-        cls.invoice = cls.init_invoice('out_refund')
+        cls.invoice = cls.init_invoice('out_refund', products=cls.product_a+cls.product_b)
 
     def assertPaymentTerm(self, pay_term, invoice_date, dates):
         with Form(self.invoice) as move_form:
