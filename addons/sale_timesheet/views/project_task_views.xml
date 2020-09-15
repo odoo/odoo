@@ -73,11 +73,7 @@
                 <field name="bill_type" attrs="{'invisible': ['|', ('allow_billable', '=', False), ('allow_timesheets', '=', False)], 'required': ['&amp;', ('allow_billable', '=', True), ('allow_timesheets', '=', True)]}" widget="radio"/>
                 <field name="partner_id" attrs="{'invisible': ['|', '|', ('allow_billable', '=', False), ('allow_timesheets', '=', False), ('bill_type', '!=', 'customer_project')], 'required': [('bill_type', '=', 'customer_project')]}"/>
                 <field name="pricing_type" attrs="{'invisible': ['|', '|', ('allow_billable', '=', False), ('allow_timesheets', '=', False), ('bill_type', '!=', 'customer_project')], 'required': ['&amp;', ('allow_billable', '=', True), ('allow_timesheets', '=', True)]}" widget="radio"/>
-                <div class="o_td_label"  attrs="{'invisible': ['|', '|', ('allow_billable', '=', False), ('allow_timesheets', '=', False), '&amp;', ('bill_type', '=', 'customer_project'), ('pricing_type', '=', 'employee_rate')]}">
-                    <label for="timesheet_product_id" string="Default Service" attrs="{'invisible': [('bill_type', '!=', 'customer_task')]}"/>
-                    <label for="timesheet_product_id" string="Service" attrs="{'invisible': [('bill_type', '=', 'customer_task')]}"/>
-                </div>
-                <field name="timesheet_product_id" nolabel="1" attrs="{'invisible': ['|', '|', ('allow_billable', '=', False), ('allow_timesheets', '=', False), '&amp;', ('bill_type', '=', 'customer_project'), ('pricing_type', '=', 'employee_rate')], 'required': ['&amp;', ('allow_billable', '=', True), ('allow_timesheets', '=', True)]}" context="{'default_type': 'service', 'default_service_policy': 'delivered_timesheet', 'default_service_type': 'timesheet'}"/>
+                <field name="timesheet_product_id" string="Service" attrs="{'invisible': ['|', '|', ('allow_billable', '=', False), ('allow_timesheets', '=', False), '&amp;', ('bill_type', '=', 'customer_project'), ('pricing_type', '=', 'employee_rate')], 'required': ['&amp;', ('allow_billable', '=', True), ('allow_timesheets', '=', True)]}" context="{'default_type': 'service', 'default_service_policy': 'delivered_timesheet', 'default_service_type': 'timesheet'}"/>
             </field>
         </field>
     </record>
@@ -91,9 +87,9 @@
                 <field name="allow_billable"/>
                 <field name="warning_employee_rate"/>
             </xpath>
-            <xpath expr="//div[hasclass('o_kanban_card_manage_pane')]" position="after">
+            <xpath expr="//div[hasclass('o_primary')]//span" position="inside">
                 <t t-if="record.warning_employee_rate.raw_value">
-                    <i class="float-right mr-5 mt-1 fa fa-exclamation-triangle text-danger" role="img" title="Some of the employees who are recording time on this project are not linked to any Sales Order Item. This means that their time will be considered as non-billable." aria-label="Some of the employees who are recording time on this project are not linked to any Sales Order Item. This means that their time will be considered as non-billable."/>
+                    <i class="ml-2 fa fa-exclamation-triangle text-danger small" role="img" title="Some of the employees who are recording time on this project are not linked to any Sales Order Item. This means that their time will be considered as non-billable." aria-label="Some of the employees who are recording time on this project are not linked to any Sales Order Item. This means that their time will be considered as non-billable."/>
                 </t>
             </xpath>
             <xpath expr="//a[@name='action_view_account_analytic_line']" position="attributes">
@@ -147,7 +143,7 @@
                 <xpath expr="//field[@name='timesheet_ids']/tree" position="inside">
                     <field name="timesheet_invoice_id" invisible="1"/>
                     <field name="so_line" readonly="1" attrs="{'column_invisible': [('parent.has_multi_sol', '=', False), '|', ('parent.is_project_map_empty', '=', True), ('parent.pricing_type', '!=', 'employee_rate')]}" optional="hide"/>
-                    <field name="non_allow_billable" attrs="{'column_invisible': ['|', '&amp;', ('parent.timesheet_product_id', '=', False), ('parent.sale_line_id', '=', False), '&amp;', '&amp;', ('parent.bill_type', '=', 'customer_project'), ('parent.pricing_type', '=', 'employee_rate'), ('parent.non_allow_billable', '=', True)]}" optional="hide"/>
+                    <field name="non_allow_billable" attrs="{'column_invisible': ['|', '|', ('parent.allow_billable', '=', False), '&amp;', '&amp;', '|', ('parent.bill_type', '!=', 'customer_project'), ('parent.pricing_type', '!=', 'employee_rate'), ('parent.timesheet_product_id', '=', False), ('parent.sale_line_id', '=', False), '&amp;', '&amp;', ('parent.bill_type', '=', 'customer_project'), ('parent.pricing_type', '=', 'employee_rate'), ('parent.non_allow_billable', '=', True)]}" optional="hide"/>
                 </xpath>
             </field>
         </record>
@@ -159,7 +155,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='sale_line_id']" position="attributes">
                     <attribute name="attrs">
-                        {'invisible': ['|', '|', '&amp;', ('sale_order_id', '=', False), ('bill_type', '!=', 'customer_task'), '&amp;', ('bill_type', '=', 'customer_project'), ('pricing_type', '=', 'employee_rate'), ('partner_id', '=', False)]}
+                        {'invisible': ['|', '|', '|', ('allow_billable', '=', False), ('sale_order_id', '=', False), '&amp;', ('bill_type', '=', 'customer_project'), ('pricing_type', '=', 'employee_rate'), ('partner_id', '=', False)]}
                     </attribute>
                     <attribute name="placeholder">Leave empty if non-billable</attribute>
                 </xpath>

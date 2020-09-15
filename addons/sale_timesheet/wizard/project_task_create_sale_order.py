@@ -30,7 +30,7 @@ class ProjectTaskCreateSalesOrder(models.TransientModel):
     link_selection = fields.Selection([('create', 'Create a new sales order'), ('link', 'Link to an existing sales order')], required=True, default='create')
 
     task_id = fields.Many2one('project.task', "Task", domain=[('sale_line_id', '=', False)], help="Task for which we are creating a sales order", required=True)
-    partner_id = fields.Many2one('res.partner', string="Customer", help="Customer of the sales order")
+    partner_id = fields.Many2one('res.partner', string="Customer", help="Customer of the sales order", required=True)
     product_id = fields.Many2one('product.product', domain=[('type', '=', 'service'), ('invoice_policy', '=', 'delivery'), ('service_type', '=', 'timesheet')], string="Service", help="Product of the sales order item. Must be a service invoiced based on timesheets on tasks. The existing timesheet will be linked to this product.", required=True)
     price_unit = fields.Float("Unit Price", help="Unit price of the sales order item.")
     currency_id = fields.Many2one('res.currency', string="Currency", related='product_id.currency_id', readonly=False)
@@ -59,10 +59,8 @@ class ProjectTaskCreateSalesOrder(models.TransientModel):
                 label = _("days")
             if line.link_selection == 'create' and line.price_unit:
                 line.info_invoice = _("%(amount)s %(label)s will be added to the new Sales Order.", amount=unit_amount, label=label)
-            elif line.sale_line_id:
-                line.info_invoice = _("%(amount)s %(label)s will be added to the selected Sales Order.", amount=unit_amount, label=label)
             else:
-                line.info_invoice = False
+                line.info_invoice = _("%(amount)s %(label)s will be added to the selected Sales Order.", amount=unit_amount, label=label)
 
     @api.onchange('product_id')
     def _onchange_product_id(self):
@@ -111,8 +109,6 @@ class ProjectTaskCreateSalesOrder(models.TransientModel):
         if self.task_id.sale_line_id:
             raise UserError(_("The task is already linked to a sales order item."))
 
-        timesheet_with_so_line = self.env['account.analytic.line'].search([('task_id', '=', self.task_id.id), ('so_line', '!=', False), ('project_id', '!=', False)])
-
         # create SO
         sale_order = self.env['sale.order'].create({
             'partner_id': self.partner_id.id,
@@ -131,7 +127,7 @@ class ProjectTaskCreateSalesOrder(models.TransientModel):
             'price_unit': self.price_unit,
             'project_id': self.task_id.project_id.id,  # prevent to re-create a project on confirmation
             'task_id': self.task_id.id,
-            'product_uom_qty': self.task_id.total_hours_spent - round(sum(timesheet_with_so_line.mapped('unit_amount')), 2),
+            'product_uom_qty': round(sum(self.task_id.timesheet_ids.filtered(lambda t: not t.non_allow_billable and not t.so_line).mapped('unit_amount')), 2),
         })
 
         # link task to SOL
