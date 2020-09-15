@@ -1302,7 +1302,7 @@ var SnippetsMenu = Widget.extend({
      * @returns {Promise}
      */
     _updateInvisibleDOM: function () {
-        return this._mutex.exec(() => {
+        return this._execWithLoadingEffect(() => {
             this.invisibleDOMMap = new Map();
             const $invisibleDOMPanelEl = $(this.invisibleDOMPanelEl);
             $invisibleDOMPanelEl.find('.o_we_invisible_entry').remove();
@@ -1345,7 +1345,7 @@ var SnippetsMenu = Widget.extend({
         if ($snippet && !$snippet.is(':visible')) {
             return;
         }
-        return this._mutex.exec(() => {
+        return this._execWithLoadingEffect(() => {
             return new Promise(resolve => {
                 // Take the first parent of the provided DOM (or itself) which
                 // should have an associated snippet editor and create + enable it.
@@ -1398,7 +1398,7 @@ var SnippetsMenu = Widget.extend({
      * @param {boolean} invalidateCache
      */
     _loadSnippetsTemplates: async function (invalidateCache) {
-        return this._mutex.exec(async () => {
+        return this._execWithLoadingEffect(async () => {
             await this._destroyEditors();
             const html = await this.loadSnippets(invalidateCache);
             await this._computeSnippetTemplates(html);
@@ -2020,6 +2020,70 @@ var SnippetsMenu = Widget.extend({
           );
         });
     },
+    /**
+     * @private
+     */
+    _addLoadingEffect() {
+        if (this.currentLoader) {
+            return;
+        }
+        const loaderContainer = document.createElement('div');
+        const loader = document.createElement('i');
+        const loaderContainerClassList = [
+            'd-flex',
+            'h-100',
+            'w-100',
+            'bg-black-50',
+            'position-absolute',
+        ];
+        const loaderClassList = [
+            'fa',
+            'fa-circle-o-notch',
+            'fa-spin',
+            'fa-4x',
+            'w-100',
+            'text-white',
+            'text-center',
+            'position-absolute',
+            'align-self-center',
+        ];
+        loaderContainer.classList.add(...loaderContainerClassList);
+        loader.classList.add(...loaderClassList);
+        loaderContainer.appendChild(loader);
+        this.el.appendChild(loaderContainer);
+        this.currentLoader = loaderContainer;
+    },
+    /**
+     * @private
+     */
+    _removeLoadingEffect() {
+        if (!this.currentLoader) {
+            return;
+        }
+        this.currentLoader.remove();
+        this.currentLoader = undefined;
+    },
+    /**
+     * Adds the action to the mutex queue and sets a loading effect over the
+     * editor to appear if the action takes too much time.
+     * As soon as the mutex is unlocked, the loading effect will be removed.
+     *
+     * @private
+     * @param {function} action
+     * @returns {Promise}
+     */
+    async _execWithLoadingEffect(action) {
+        const mutexExecResult = this._mutex.exec(action);
+        if (!this.loadingTimer) {
+            this.loadingTimer = setTimeout(() => this._addLoadingEffect(), 500);
+            this._mutex.getUnlockedDef().then(() => {
+                clearTimeout(this.loadingTimer);
+                this.loadingTimer = undefined;
+                this._removeLoadingEffect();
+            });
+        }
+        return mutexExecResult;
+    },
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -2177,7 +2241,7 @@ var SnippetsMenu = Widget.extend({
     _onInvisibleEntryClick: async function (ev) {
         ev.preventDefault();
         const $snippet = $(this.invisibleDOMMap.get(ev.currentTarget));
-        const isVisible = await this._mutex.exec(async () => {
+        const isVisible = await this._execWithLoadingEffect(async () => {
             const editor = await this._createSnippetEditor($snippet);
             return editor.toggleTargetVisibility();
         });
@@ -2301,7 +2365,7 @@ var SnippetsMenu = Widget.extend({
         }
         delete data._toMutex;
         ev.stopPropagation();
-        this._mutex.exec(() => {
+        this._execWithLoadingEffect(() => {
             if (data.reloadEditor) {
                 data.reload = false;
                 const oldOnSuccess = data.onSuccess;
@@ -2322,7 +2386,7 @@ var SnippetsMenu = Widget.extend({
      * @param {function} ev.data.exec
      */
     _onSnippetEditionRequest: function (ev) {
-        this._mutex.exec(ev.data.exec);
+        this._execWithLoadingEffect(ev.data.exec);
     },
     /**
      * @private
