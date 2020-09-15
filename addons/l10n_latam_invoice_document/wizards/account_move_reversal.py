@@ -64,7 +64,7 @@ class AccountMoveReversal(models.TransientModel):
         })
         if move.move_type in ('in_invoice', 'in_refund'):
             res.update({'narration': _('Reversal of: %s, %s') % (move.name, self.reason) if self.reason else _('Reversal of: %s') % (move.name)})
-        res.update({'ref': ''})
+        res.update({'ref': False})
         return res
 
     @api.onchange('l10n_latam_document_number', 'l10n_latam_document_type_id')
