@@ -774,7 +774,8 @@ class Task(models.Model):
         self.recurrence_message = False
         for task in self.filtered(lambda t: t.recurring_task and t._is_recurrence_valid()):
             date = fields.Date.today()
-            number_occurrences = min(5, task.repeat_number if task.repeat_type == 'after' else 5)
+            recurrence_left = task.recurrence_id.recurrence_left if task.recurrence_id  else task.repeat_number
+            number_occurrences = min(5, recurrence_left if task.repeat_type == 'after' else 5)
             delta = task.repeat_interval if task.repeat_unit == 'day' else 1
             recurring_dates = self.env['project.task.recurrence']._get_next_recurring_dates(
                 date + timedelta(days=delta),
@@ -790,10 +791,13 @@ class Task(models.Model):
                 task.repeat_month,
                 count=number_occurrences)
             date_format = self.env['res.lang']._lang_get(self.env.user.lang).date_format
-            task.recurrence_message = '<ul>'
-            for date in recurring_dates[:5]:
-                task.recurrence_message += '<li>%s</li>' % date.strftime(date_format)
-            if task.repeat_type == 'after' and task.repeat_number > 5 or task.repeat_type == 'forever' or len(recurring_dates) > 5:
+            if recurrence_left == 0:
+                recurrence_title = _('There are no more occurrences.')
+            else:
+                recurrence_title = _('Next Occurrences:')
+            task.recurrence_message = '<p><span class="fa fa-check-circle"></span> %s</p><ul>' % recurrence_title
+            task.recurrence_message += ''.join(['<li>%s</li>' % date.strftime(date_format) for date in recurring_dates[:5]])
+            if task.repeat_type == 'after' and recurrence_left > 5 or task.repeat_type == 'forever' or len(recurring_dates) > 5:
                 task.recurrence_message += '<li>...</li>'
             task.recurrence_message += '</ul>'
             if task.repeat_type == 'until':
