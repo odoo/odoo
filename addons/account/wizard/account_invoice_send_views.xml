@@ -80,10 +80,10 @@
            <field name="res_model">account.invoice.send</field>
            <field name="view_mode">form</field>
            <field name="target">new</field>
-           <field name="context">{
+           <field name="context" eval="{
                 'default_template_id': ref('account.email_template_edi_invoice'),
                 'mark_invoice_as_sent': True,
-            }</field>
+            }"/>
            <field name="binding_model_id" ref="model_account_move"/>
            <field name="binding_view_types">list</field>
        </record>
