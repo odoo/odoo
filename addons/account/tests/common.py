@@ -46,7 +46,7 @@ class AccountTestInvoicingCommon(SavepointCase):
         cls.cr = cls.env.cr
 
         cls.company_data_2 = cls.setup_company_data('company_2_data', chart_template=chart_template)
-        cls.company_data = cls.setup_company_data('company_1_data', chart_template=chart_template) 
+        cls.company_data = cls.setup_company_data('company_1_data', chart_template=chart_template)
 
         user.write({
             'company_ids': [(6, 0, (cls.company_data['company'] + cls.company_data_2['company']).ids)],
@@ -359,15 +359,29 @@ class AccountTestInvoicingCommon(SavepointCase):
         })
 
     @classmethod
-    def init_invoice(cls, move_type, partner=None, invoice_date=None):
+    def init_invoice(cls, move_type, partner=None, invoice_date=None, post=False, products=[], amounts=[], taxes=None):
         move_form = Form(cls.env['account.move'].with_context(default_move_type=move_type))
         move_form.invoice_date = invoice_date or fields.Date.from_string('2019-01-01')
         move_form.partner_id = partner or cls.partner_a
-        with move_form.invoice_line_ids.new() as line_form:
-            line_form.product_id = cls.product_a
-        with move_form.invoice_line_ids.new() as line_form:
-            line_form.product_id = cls.product_b
-        return move_form.save()
+
+        for product in products:
+            with move_form.invoice_line_ids.new() as line_form:
+                line_form.product_id = product
+                if taxes:
+                    line_form.tax_ids.add(taxes)
+
+        for amount in amounts:
+            with move_form.invoice_line_ids.new() as line_form:
+                line_form.price_unit = amount
+                if taxes:
+                    line_form.tax_ids.add(taxes)
+
+        rslt = move_form.save()
+
+        if post:
+            rslt.action_post()
+
+        return rslt
 
     def assertInvoiceValues(self, move, expected_lines_values, expected_move_values):
         def sort_lines(lines):

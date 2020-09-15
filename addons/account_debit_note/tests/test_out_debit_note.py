@@ -9,7 +9,7 @@ class TestAccountDebitNote(AccountTestInvoicingCommon):
 
     def test_00_debit_note_out_invoice(self):
         """ Debit Note of a regular Customer Invoice"""
-        invoice = self.init_invoice('out_invoice')
+        invoice = self.init_invoice('out_invoice', products=self.product_a+self.product_b)
         invoice.action_post()
         move_debit_note_wiz = self.env['account.debit.note'].with_context(active_model="account.move",
                                                                        active_ids=invoice.ids).create({
@@ -28,7 +28,7 @@ class TestAccountDebitNote(AccountTestInvoicingCommon):
 
     def test_10_debit_note_in_refund(self):
         """ Debit Note of a vendor refund (is a regular vendor bill) """
-        invoice = self.init_invoice('in_refund')
+        invoice = self.init_invoice('in_refund', products=self.product_a+self.product_b)
         invoice.action_post()
         move_debit_note_wiz = self.env['account.debit.note'].with_context(active_model="account.move",
                                                                           active_ids=invoice.ids).create({

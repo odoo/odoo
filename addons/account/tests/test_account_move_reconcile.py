@@ -43,14 +43,14 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             'user_type_id': cls.env.ref('account.data_account_type_revenue').id,
             'company_id': cls.company_data['company'].id,
         })
-        
+
         cls.tax_account_1 = cls.env['account.account'].create({
             'code': 'tax_account_1',
             'name': 'tax_account_1',
             'user_type_id': cls.env.ref('account.data_account_type_revenue').id,
             'company_id': cls.company_data['company'].id,
         })
-        
+
         cls.tax_account_2 = cls.env['account.account'].create({
             'code': 'tax_account_2',
             'name': 'tax_account_2',
@@ -74,6 +74,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             'amount': 33.3333,
             'company_id': cls.company_data['company'].id,
             'cash_basis_transition_account_id': cls.cash_basis_transfer_account.id,
+            'tax_exigibility': 'on_payment',
             'invoice_repartition_line_ids': [
                 (0, 0, {
                     'factor_percent': 100,
@@ -82,7 +83,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                 }),
 
                 (0, 0, {
-                    'factor_percent': 10,
+                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': cls.tax_account_1.id,
                     'tag_ids': [(6, 0, cls.tax_tags[1].ids)],
@@ -96,7 +97,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                 }),
 
                 (0, 0, {
-                    'factor_percent': 10,
+                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': cls.tax_account_1.id,
                     'tag_ids': [(6, 0, cls.tax_tags[3].ids)],
@@ -109,6 +110,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             'amount': 0.0001,
             'company_id': cls.company_data['company'].id,
             'cash_basis_transition_account_id': cls.cash_basis_transfer_account.id,
+            'tax_exigibility': 'on_payment',
             'invoice_repartition_line_ids': [
                 (0, 0, {
                     'factor_percent': 100,
@@ -117,7 +119,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                 }),
 
                 (0, 0, {
-                    'factor_percent': 10,
+                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': cls.tax_account_2.id,
                     'tag_ids': [(6, 0, cls.tax_tags[5].ids)],
@@ -131,7 +133,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                 }),
 
                 (0, 0, {
-                    'factor_percent': 10,
+                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': cls.tax_account_2.id,
                     'tag_ids': [(6, 0, cls.tax_tags[7].ids)],
@@ -171,10 +173,10 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
 
     def assertAmountsGroupByAccount(self, amount_per_account):
         expected_values = {account.id: (account, balance, amount_currency) for account, balance, amount_currency in amount_per_account}
-        
+
         if not expected_values:
             return
-        
+
         self.cr.execute('''
             SELECT
                 line.account_id,
@@ -209,7 +211,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                 SUM(line.balance)
             FROM account_account_tag_account_move_line_rel rel
             JOIN account_move_line line ON line.id = rel.account_move_line_id
-            WHERE line.tax_exigible IS TRUE 
+            WHERE line.tax_exigible IS TRUE
             GROUP BY rel.account_account_tag_id
         ''')
 
@@ -752,9 +754,9 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         })
 
         (cash_basis_move + payment_move).action_post()
-        
+
         # Initial amounts by accounts:
-        
+
         self.assertAmountsGroupByAccount([
             # Account                               Balance     Amount Currency
             (self.cash_basis_transfer_account,      -33.34,     -33.34),
@@ -1633,3 +1635,86 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             (self.tax_tags[4],  -100.0),
             (self.tax_tags[5],  -0.01),
         ])
+
+    def test_caba_mix_reconciliation(self):
+        """ Test the reconciliation of tax lines (when using a reconcilable tax account)
+        for cases mixing taxes exigible on payment and on invoices.
+        """
+
+        # Make the tax account reconcilable
+        self.tax_account_1.reconcile = True
+
+        # Create a tax using the same accounts as the CABA one
+        non_caba_tax = self.env['account.tax'].create({
+            'name': 'tax 20%',
+            'type_tax_use': 'purchase',
+            'company_id': self.company_data['company'].id,
+            'amount': 20,
+            'tax_exigibility': 'on_invoice',
+            'invoice_repartition_line_ids': [
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': self.tax_account_1.id,
+                }),
+            ],
+            'refund_repartition_line_ids': [
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': self.tax_account_1.id,
+                }),
+            ],
+        })
+
+        # Create an invoice with a non-CABA tax
+        non_caba_inv = self.init_invoice('in_invoice', amounts=[1000], post=True, taxes=non_caba_tax)
+
+        # Create an invoice with a CABA tax using the same tax account and pay it
+        caba_inv = self.init_invoice('in_invoice', amounts=[300], post=True, taxes=self.cash_basis_tax_a_third_amount)
+
+        pmt_wizard = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=caba_inv.ids).create({
+            'payment_date': caba_inv.date,
+            'journal_id': self.company_data['default_journal_bank'].id,
+            'payment_method_id': self.env.ref('account.account_payment_method_manual_in').id,
+        })
+        pmt_wizard._create_payments()
+
+        partial_rec = caba_inv.mapped('line_ids.matched_debit_ids')
+        caba_move = self.env['account.move'].search([('tax_cash_basis_rec_id', '=', partial_rec.id)])
+
+        # Create a misc operation with a line on the tax account, for full reconcile of those tax lines
+        misc_move = self.env['account.move'].create({
+            'name': "Misc move",
+            'journal_id': self.company_data['default_journal_misc'].id,
+            'line_ids': [
+                (0, 0, {
+                    'name': 'line 1',
+                    'account_id': self.tax_account_1.id,
+                    'credit': 300,
+                }),
+                (0, 0, {
+                    'name': 'line 2',
+                    'account_id': self.company_data['default_account_expense'].id, # Whatever the account here
+                    'debit': 300,
+                })
+            ],
+        })
+
+        misc_move.action_post()
+
+        lines_to_reconcile = (misc_move + caba_move + non_caba_inv).mapped('line_ids').filtered(lambda x: x.account_id == self.tax_account_1)
+        lines_to_reconcile.reconcile()
+
+        # Check full reconciliation
+        self.assertTrue(all(line.full_reconcile_id for line in lines_to_reconcile), "All tax lines should be fully reconciled")

@@ -10,7 +10,7 @@ class InvoiceGetReferenceTest(AccountTestInvoicingCommon):
     def setUpClass(cls, chart_template_ref='l10n_fi.fi_chart_template'):
         super().setUpClass(chart_template_ref=chart_template_ref)
 
-        cls.invoice = cls.init_invoice('out_invoice')
+        cls.invoice = cls.init_invoice('out_invoice', products=cls.product_a+cls.product_b)
 
     def test_get_reference_finnish_invoice(self):
         self.assertFalse(self.invoice.payment_reference)
