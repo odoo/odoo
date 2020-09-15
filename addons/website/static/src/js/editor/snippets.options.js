@@ -67,6 +67,194 @@ const UrlPickerUserValueWidget = InputUserValueWidget.extend({
     },
 });
 
+const RecordSelection = options.UserValueWidget.extend({
+    tagName: 'we-record-selection',
+    events: Object.assign({}, options.UserValueWidget.prototype.events, {
+        'click .o_remove_record': '_onClickRemoveRecord',
+        'click .o_add_record': '_onClickAddRecord',
+        'click we-button[data-select-record]': '_onClickSelectRecord',
+    }),
+
+    /**
+     * @override
+     */
+    init() {
+        this._super(...arguments);
+        this.isEditing = true;
+        this.records = {};
+        this.selectedRecords = [];
+        this.unselectedRecords = [];
+        this.canCreate = false;
+        this.recordName = 'Records';
+    },
+    /**
+     * @override
+     */
+    async start() {
+        await this._super(...arguments);
+        $(this.containerEl).addClass('flex-sm-column align-items-start');
+    },
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    getValue(methodName) {
+        if (!this._methodsNames.includes(methodName)) {
+            return this._super(...arguments);
+        }
+        return JSON.stringify(this.records);
+    },
+    /**
+     * @override
+     */
+    isContainer: function () {
+        return true;
+    },
+    /**
+     * @override
+     */
+    async setValue(value, methodName) {
+        await this._super(...arguments);
+        if (this._methodsNames.includes(methodName)) {
+            const { records, isEditing } = JSON.parse(value);
+            this.records = records;
+            this.selectedRecords = [];
+            this.unselectedRecords = [];
+            for (const [key, record] of Object.entries(this.records)) {
+                if (record.isSelected) {
+                    this.selectedRecords.push(record);
+                } else {
+                    this.unselectedRecords.push(record);
+                }
+            }
+            this.canCreate = Boolean(this._methodsParams.create);
+            this.isEditing = isEditing;
+            this.recordName = this._methodsParams.record;
+            await this._renderWidget();
+            this.selectionWidget && this.selectionWidget.setValue('', 'selectRecord');
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    async _renderRecordInput() {
+        this.$recordInput && this.$recordInput.remove();
+        if (this.canCreate && this.isEditing) {
+            this.$recordInput = $(qweb.render('website.recordSelectionInput'));
+            await this.$recordInput.appendTo(this.containerEl);
+        }
+    },
+    /**
+     * @private
+     */
+    async _renderSelectedRecords() {
+        this.$selectedRecordsTemplate && this.$selectedRecordsTemplate.remove();
+        this.$selectedRecordsTemplate = $(qweb.render('website.recordSelectionSelectedRecords', {
+            isEditing: this.isEditing,
+            recordName: this.recordName,
+            selectedRecords: this.selectedRecords,
+        }));
+        await this.$selectedRecordsTemplate.appendTo(this.containerEl);
+    },
+    /**
+     * @private
+     */
+    async _renderUnselectedRecords() {
+        this.selectionWidget && this.selectionWidget.destroy();
+        if (!this.unselectedRecords.length) {
+            return;
+        }
+        if (this.isEditing) {
+            const childNodes = [];
+            this.unselectedRecords.forEach(record => {
+                const node = document.createElement('we-button');
+                node.innerText = record.name;
+                node.setAttribute('data-select-record', record.id);
+                childNodes.push(node);
+            });
+            const options = {
+                classes: ['order-2'],
+                dataAttributes: {'selectRecord': ""},
+                tooltip: 'already existing',
+                placeholder: _.str.sprintf(_t("Select an existing %s"), this.recordName),
+                childNodes,
+            };
+            this.selectionWidget = new SelectUserValueWidget(this, _.str.sprintf(_t("Existing %s"), this.recordName), options, this.$target);
+            await this.selectionWidget.appendTo(this.containerEl);
+            this.selectionWidget.setValue('', 'selectRecord');
+        }
+    },
+    /**
+     * @private
+     */
+    async _renderWidget() {
+        await this._renderSelectedRecords();
+        await this._renderUnselectedRecords();
+        await this._renderRecordInput();
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @param {MouseEvent} ev
+     */
+    async _onClickAddRecord(ev) {
+        ev.stopPropagation();
+        const newRecordInput = this.$('.o_record_input');
+        const newRecordName = newRecordInput.val();
+        newRecordInput.val('');
+        if (!newRecordName || !this.canCreate) {
+            return;
+        }
+        const lowerRecordName = newRecordName.toLowerCase();
+        const NameExists = Object.values(this.records).reduce((exists, record) => {
+            return exists || lowerRecordName === record.name.toLowerCase();
+        }, false);
+        if (NameExists) {
+            return this.displayNotification({
+                type: 'warning',
+                message: _t("This record already exists"),
+            });
+        }
+        this.records[newRecordName] = { id: newRecordName, name: newRecordName, isSelected: true };
+        this.notifyValueChange();
+    },
+    /**
+     * @private
+     * @param {MouseEvent} ev
+     */
+    async _onClickRemoveRecord(ev) {
+        ev.stopPropagation();
+        const recordId = $(ev.currentTarget).data('record');
+        this.records[recordId].isSelected = false;
+        this.notifyValueChange();
+    },
+    /**
+     * @private
+     * @param {MouseEvent} ev
+     */
+    async _onClickSelectRecord(ev) {
+        ev.stopPropagation();
+        const recordId = $(ev.currentTarget).attr('data-select-record');
+        if (recordId) {
+            this.records[recordId].isSelected = true;
+            this.notifyValueChange();
+        }
+    },
+});
+
 const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
     xmlDependencies: (SelectUserValueWidget.prototype.xmlDependencies || [])
         .concat(['/website/static/src/xml/website.editor.xml']),
@@ -344,6 +532,7 @@ const GPSPicker = InputUserValueWidget.extend({
 options.userValueWidgetsRegistry['we-urlpicker'] = UrlPickerUserValueWidget;
 options.userValueWidgetsRegistry['we-fontfamilypicker'] = FontFamilyPickerUserValueWidget;
 options.userValueWidgetsRegistry['we-gpspicker'] = GPSPicker;
+options.userValueWidgetsRegistry['we-record-selection'] = RecordSelection;
 
 //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 

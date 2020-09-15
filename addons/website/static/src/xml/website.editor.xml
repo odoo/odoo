@@ -139,4 +139,26 @@
         <div class="mb-2" t-esc="contentText"/>
         <div class="o_ace_editor_container"/>
     </div>
+
+    <!-- record selection user value widget -->
+
+    <div t-name="website.recordSelectionSelectedRecords" class="order-1">
+        <t t-if="selectedRecords.length">
+            <span t-esc="recordName"/>
+            <t t-foreach="selectedRecords" t-as="record">
+                <span class="o_we_record_wrapper">
+                    <span t-raw="record.name" class="o_we_record"/>
+                    <i class="o_remove_record fa fa-minus ml-1 text-success" t-if="isEditing" t-att-data-record="record.id"/>
+                </span>
+            </t>
+        </t>
+    </div>
+
+    <we-input t-name="website.recordSelectionInput" class="o_we_user_value_widget order-3">
+        <we-title>New</we-title>
+        <div>
+            <input type="text" class="o_record_input text-left"/>
+        </div>
+        <we-button title="Confirm" class="o_add_record fa fa-plus ml-1"/>
+    </we-input>
 </templates>
