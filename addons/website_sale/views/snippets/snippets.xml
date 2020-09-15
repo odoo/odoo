@@ -33,6 +33,15 @@
 
 <template id="snippet_options" inherit_id="website.snippet_options" name="e-commerce snippet options">
     <xpath expr="." position="inside">
+        <div data-js="WebsiteSaleProductsFieldSelection" data-selector="#products_grid .o_wsale_products_grid_table_wrapper > table">
+            <we-row string="Field List">
+                <we-button data-name="edit_opt" class="fa fa-pencil" title="Edit" data-edit-list="" data-no-preview="true"/>
+                <we-button data-name="save_opt" class="fa fa-save" title="Save" data-save-list="" data-no-preview="true"/>
+            </we-row>
+            <we-record-selection data-name="field_selection_opt" data-set-fields="" data-record="Fields"/>
+        </div>
+    </xpath>
+    <xpath expr="." position="inside">
         <div data-js="WebsiteSaleGridLayout"
             data-selector="#products_grid .o_wsale_products_grid_table_wrapper > table"
             data-no-check="true">
