@@ -906,7 +906,6 @@ class TestReconciliationExec(TestAccountReconciliationCommon):
         # the other is not subject to tax
 
         company = self.company
-        company.tax_cash_basis_journal_id = self.cash_basis_journal
 
         purchase_move = self.env['account.move'].create({
             'journal_id': self.purchase_journal.id,
@@ -998,7 +997,6 @@ class TestReconciliationExec(TestAccountReconciliationCommon):
         # And partial payment not martching any payment term
 
         company = self.company
-        company.tax_cash_basis_journal_id = self.cash_basis_journal
         tax_cash_basis10percent = self.tax_cash_basis.copy({'amount': 10})
         tax_waiting_account10 = self.tax_waiting_account.copy({
             'name': 'TAX WAIT 10',
@@ -1197,8 +1195,6 @@ class TestReconciliationExec(TestAccountReconciliationCommon):
         """
 
         company = self.company
-        company.country_id = self.ref('base.us')
-        company.tax_cash_basis_journal_id = self.cash_basis_journal
 
         # Purchase
         purchase_move = self.env['account.move'].create({
@@ -1360,8 +1356,6 @@ class TestReconciliationExec(TestAccountReconciliationCommon):
         """
 
         company = self.company
-        company.country_id = self.ref('base.us')
-        company.tax_cash_basis_journal_id = self.cash_basis_journal
 
         # Purchase
         purchase_move = self.env['account.move'].create({
@@ -1500,7 +1494,6 @@ class TestReconciliationExec(TestAccountReconciliationCommon):
 
     def test_reconciliation_cash_basis_revert(self):
         company = self.company
-        company.tax_cash_basis_journal_id = self.cash_basis_journal
         tax_cash_basis10percent = self.tax_cash_basis.copy({'amount': 10})
         self.tax_waiting_account.reconcile = True
         tax_waiting_account10 = self.tax_waiting_account.copy({
@@ -1564,7 +1557,6 @@ class TestReconciliationExec(TestAccountReconciliationCommon):
             self.assertEqual(reverted_expected.full_reconcile_id, inv_line.full_reconcile_id)
 
     def test_reconciliation_cash_basis_foreign_currency_low_values(self):
-        self.company.tax_cash_basis_journal_id = self.cash_basis_journal
         journal = self.env['account.journal'].create({
             'name': 'Bank', 'type': 'bank', 'code': 'THE',
             'currency_id': self.currency_usd_id,
@@ -1624,6 +1616,104 @@ class TestReconciliationExec(TestAccountReconciliationCommon):
         pay_receivable_line1 = payment1.move_line_ids.filtered(lambda l: l.account_id == self.account_rcv)
         self.assertTrue(pay_receivable_line1.reconciled)
         self.assertEqual(pay_receivable_line1.matched_debit_ids, move_caba1.tax_cash_basis_rec_id)
+
+    def test_caba_mix_reconciliation(self):
+        """ Test the reconciliation of tax lines (when using a reconcilable tax account)
+        for cases mixing taxes exigible on payment and on invoices.
+        This test is especially useful to check the implementation of the use case tested by
+        test_reconciliation_cash_basis_foreign_currency_low_values does not have unwanted side effects.
+        """
+
+        # Make the tax account reconcilable
+        self.tax_final_account.reconcile = True
+
+        # Create a tax using the same accounts as the CABA one
+        non_caba_tax = self.env['account.tax'].create({
+            'name': 'tax 20%',
+            'type_tax_use': 'purchase',
+            'company_id': self.tax_cash_basis.company_id.id,
+            'amount': 20,
+            'tax_exigibility': 'on_invoice',
+            'invoice_repartition_line_ids': [
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': self.tax_final_account.id,
+                }),
+            ],
+            'refund_repartition_line_ids': [
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': self.tax_final_account.id,
+                }),
+            ],
+        })
+
+        # Create an invoice with a non-CABA tax
+        non_caba_inv = self._create_invoice(type='in_invoice', invoice_amount=1000, tax=non_caba_tax, auto_validate=True)
+
+        # Create an invoice with a CABA tax using the same tax account and pay it
+        caba_inv = self._create_invoice(type='in_invoice', invoice_amount=500, tax=self.tax_cash_basis, auto_validate=True)
+
+        pmt_wizard = self.env['account.payment.register'].with_context(active_model='account.invoice', active_ids=caba_inv.ids).create({
+            'payment_date': caba_inv.date,
+            'journal_id': self.bank_journal_euro.id,
+            'payment_method_id': self.inbound_payment_method.id,
+        })
+        pmt_wizard.create_payments()
+
+        partial_rec = caba_inv.mapped('line_ids.matched_debit_ids')
+        caba_move = self.env['account.move'].search([('tax_cash_basis_rec_id', '=', partial_rec.id)])
+
+        # Create a misc operation with a line on the tax account, for full reconcile of those tax lines
+        misc_move = self.env['account.move'].create({
+            'name': "Misc move",
+            'journal_id': self.general_journal.id,
+            'line_ids': [
+                (0, 0, {
+                    'name': 'line 1',
+                    'account_id': self.tax_final_account.id,
+                    'credit': 300,
+                }),
+                (0, 0, {
+                    'name': 'line 2',
+                    'account_id': self.expense_account.id, # Whatever the account here
+                    'debit': 300,
+                })
+            ],
+        })
+
+        lines_to_reconcile = (misc_move + caba_move + non_caba_inv).mapped('line_ids').filtered(lambda x: x.account_id == self.tax_final_account)
+        lines_to_reconcile.reconcile()
+
+        # Check full reconciliation
+        self.assertTrue(all(line.full_reconcile_id for line in lines_to_reconcile), "All tax lines should be fully reconciled")
+
+    def test_reconciliation_cash_basis_tags(self):
+        invoice = self._create_invoice(auto_validate=True, tax=self.tax_cash_basis)
+        self.env['account.payment.register'].with_context(active_ids=invoice.ids).create({}).create_payments()
+        partial_rec = invoice.line_ids.filtered(lambda x: x.account_id.user_type_id.type == 'receivable').matched_credit_ids
+        caba_move = self.env['account.move'].search([('tax_cash_basis_rec_id', '=', partial_rec.id)])
+
+        caba_base_line = caba_move.line_ids.filtered(lambda x: x.tax_ids)
+        caba_tax_line = caba_move.line_ids.filtered(lambda x: x.tax_line_id)
+        other_lines = caba_move.line_ids - (caba_base_line + caba_tax_line)
+
+        self.assertRecordValues(caba_base_line + caba_tax_line, [
+          {'tax_tag_ids': self.tax_tag_base.ids},
+          {'tax_tag_ids': self.tax_tag_tax.ids},
+        ])
 
     def test_reconciliation_with_currency(self):
         #reconciliation on an account having a foreign currency being

@@ -966,7 +966,8 @@ class TestAccountReconciliationCommon(AccountTestCommon):
         super(TestAccountReconciliationCommon, cls).setUpClass()
         cls.company = cls.env['res.company'].create({
             'name': 'A test company',
-            'currency_id': cls.env.ref('base.EUR').id
+            'currency_id': cls.env.ref('base.EUR').id,
+            'country_id': cls.env.ref('base.be').id,
         })
         cls.env.user.company_id = cls.company
         # Generate minimal data for my new company
@@ -1062,6 +1063,20 @@ class TestAccountReconciliationCommon(AccountTestCommon):
         })
 
         # Tax Cash Basis
+        cls.company.tax_cash_basis_journal_id = cls.cash_basis_journal
+
+        cls.tax_tag_base = cls.env['account.account.tag'].create({
+            'name': "Base tag",
+            'applicability': 'taxes',
+            'country_id': cls.company.country_id.id,
+        })
+
+        cls.tax_tag_tax = cls.env['account.account.tag'].create({
+            'name': "Tax tag",
+            'applicability': 'taxes',
+            'country_id': cls.company.country_id.id,
+        })
+
         cls.tax_cash_basis = cls.env['account.tax'].create({
             'name': 'cash basis 20%',
             'type_tax_use': 'purchase',
@@ -1074,12 +1089,14 @@ class TestAccountReconciliationCommon(AccountTestCommon):
                     (0,0, {
                         'factor_percent': 100,
                         'repartition_type': 'base',
+                        'tag_ids': [(6, 0, cls.tax_tag_base.ids)],
                     }),
 
                     (0,0, {
                         'factor_percent': 100,
                         'repartition_type': 'tax',
                         'account_id': cls.tax_final_account.id,
+                        'tag_ids': [(6, 0, cls.tax_tag_tax.ids)],
                     }),
                 ],
             'refund_repartition_line_ids': [
@@ -1111,7 +1128,7 @@ class TestAccountReconciliationCommon(AccountTestCommon):
             }
         ])
 
-    def _create_invoice(self, type='out_invoice', invoice_amount=50, currency_id=None, partner_id=None, date_invoice=None, payment_term_id=False, auto_validate=False):
+    def _create_invoice(self, type='out_invoice', invoice_amount=50, currency_id=None, partner_id=None, date_invoice=None, payment_term_id=False, auto_validate=False, tax=None):
         date_invoice = date_invoice or time.strftime('%Y') + '-07-01'
 
         invoice_vals = {
@@ -1123,7 +1140,7 @@ class TestAccountReconciliationCommon(AccountTestCommon):
                 'name': 'product that cost %s' % invoice_amount,
                 'quantity': 1,
                 'price_unit': invoice_amount,
-                'tax_ids': [(6, 0, [])],
+                'tax_ids': [(6, 0, tax and tax.ids or [])],
             })]
         }
 
