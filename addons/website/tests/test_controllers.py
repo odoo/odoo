@@ -41,4 +41,6 @@ class TestControllers(tests.HttpCase):
         suggested_links = resp['result']
         last_modified_history = next(o for o in suggested_links['others'] if o["title"] == "Last modified pages")
         last_modified_values = map(lambda o: o['value'], last_modified_history['values'])
-        self.assertTrue(set(last_modified_values) == set(last_5_url_edited))
+
+        matching_pages = set(map(lambda o: o['value'], suggested_links['matching_pages']))
+        self.assertEqual(set(last_modified_values), set(last_5_url_edited) - matching_pages)
