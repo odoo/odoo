@@ -37,8 +37,8 @@ if ! file_exists *raspios*.img ; then
     unzip raspios.img.zip
 fi
 
-RASPBIAN=$(echo *raspios*.img)
-rsync -avh --progress "${RASPBIAN}" iotbox.img
+RASPIOS=$(echo *raspios*.img)
+rsync -avh --progress "${RASPIOS}" iotbox.img
 
 CLONE_DIR="${OVERWRITE_FILES_BEFORE_INIT_DIR}/home/pi/odoo"
 
@@ -99,10 +99,10 @@ START_OF_ROOT_PARTITION=$(fdisk -l iotbox.img | tail -n 1 | awk '{print $2}')
  echo 'p';                          # print
  echo 'w') | fdisk iotbox.img       # write and quit
 
-LOOP_RASPBIAN=$(kpartx -avs "${RASPBIAN}")
-LOOP_RASPBIAN_ROOT=$(echo "${LOOP_RASPBIAN}" | tail -n 1 | awk '{print $3}')
-LOOP_RASPBIAN_PATH="/dev/${LOOP_RASPBIAN_ROOT::-2}"
-LOOP_RASPBIAN_ROOT="/dev/mapper/${LOOP_RASPBIAN_ROOT}"
+LOOP_RASPIOS=$(kpartx -avs "${RASPIOS}")
+LOOP_RASPIOS_ROOT=$(echo "${LOOP_RASPIOS}" | tail -n 1 | awk '{print $3}')
+LOOP_RASPIOS_PATH="/dev/${LOOP_RASPIOS_ROOT::-2}"
+LOOP_RASPIOS_ROOT="/dev/mapper/${LOOP_RASPIOS_ROOT}"
 
 LOOP_IOT=$(kpartx -avs iotbox.img)
 LOOP_IOT_ROOT=$(echo "${LOOP_IOT}" | tail -n 1 | awk '{print $3}')
@@ -113,7 +113,7 @@ LOOP_IOT_BOOT="/dev/mapper/${LOOP_IOT_BOOT}"
 
 mkfs.ext4 -v "${LOOP_IOT_ROOT}"
 
-dd if="${LOOP_RASPBIAN_ROOT}" of="${LOOP_IOT_ROOT}" bs=4M status=progress
+dd if="${LOOP_RASPIOS_ROOT}" of="${LOOP_IOT_ROOT}" bs=4M status=progress
 
 # resize filesystem
 e2fsck -fv "${LOOP_IOT_ROOT}" # resize2fs requires clean fs
@@ -159,4 +159,4 @@ zerofree -v "${LOOP_IOT_ROOT}" || true
 sleep 10
 
 kpartx -dv "${LOOP_IOT_PATH}"
-kpartx -dv "${LOOP_RASPBIAN_PATH}"
+kpartx -dv "${LOOP_RASPIOS_PATH}"
