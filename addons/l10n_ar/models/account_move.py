@@ -38,7 +38,7 @@ class AccountMove(models.Model):
     @api.constrains('move_type', 'journal_id')
     def _check_moves_use_documents(self):
         """ Do not let to create not invoices entries in journals that use documents """
-        not_invoices = self.filtered(lambda x: x.company_id.country_id == self.env.ref('base.ar') and x.journal_id.type in ['sale', 'purchase'] and x.l10n_latam_use_documents and not x.is_invoice())
+        not_invoices = self.filtered(lambda x: x.company_id.country_id.code == "AR" and x.journal_id.type in ['sale', 'purchase'] and x.l10n_latam_use_documents and not x.is_invoice())
         if not_invoices:
             raise ValidationError(_("The selected Journal can't be used in this transaction, please select one that doesn't use documents as these are just for Invoices."))
 
@@ -49,7 +49,7 @@ class AccountMove(models.Model):
 
     @api.depends('invoice_line_ids', 'invoice_line_ids.product_id', 'invoice_line_ids.product_id.type', 'journal_id')
     def _compute_l10n_ar_afip_concept(self):
-        recs_afip = self.filtered(lambda x: x.company_id.country_id == self.env.ref('base.ar') and x.l10n_latam_use_documents)
+        recs_afip = self.filtered(lambda x: x.company_id.country_id.code == "AR" and x.l10n_latam_use_documents)
         for rec in recs_afip:
             rec.l10n_ar_afip_concept = rec._get_concept()
         remaining = self - recs_afip
@@ -77,7 +77,7 @@ class AccountMove(models.Model):
     def _get_l10n_latam_documents_domain(self):
         self.ensure_one()
         domain = super()._get_l10n_latam_documents_domain()
-        if self.journal_id.company_id.country_id == self.env.ref('base.ar'):
+        if self.journal_id.company_id.country_id.code == "AR":
             letters = self.journal_id._get_journal_letter(counterpart_partner=self.partner_id.commercial_partner_id)
             domain += ['|', ('l10n_ar_letter', '=', False), ('l10n_ar_letter', 'in', letters)]
             codes = self.journal_id._get_journal_codes()
@@ -113,7 +113,7 @@ class AccountMove(models.Model):
 
     @api.onchange('partner_id')
     def _onchange_afip_responsibility(self):
-        if self.company_id.country_id == self.env.ref('base.ar') and self.l10n_latam_use_documents and self.partner_id \
+        if self.company_id.country_id.code == 'AR' and self.l10n_latam_use_documents and self.partner_id \
            and not self.partner_id.l10n_ar_afip_responsibility_type_id:
             return {'warning': {
                 'title': _('Missing Partner Configuration'),
@@ -124,7 +124,7 @@ class AccountMove(models.Model):
     def _onchange_partner_journal(self):
         """ This method is used when the invoice is created from the sale or subscription """
         expo_journals = ['FEERCEL', 'FEEWS', 'FEERCELP']
-        for rec in self.filtered(lambda x: x.company_id.country_id == self.env.ref('base.ar') and x.journal_id.type == 'sale'
+        for rec in self.filtered(lambda x: x.company_id.country_id.code == "AR" and x.journal_id.type == 'sale'
                                  and x.l10n_latam_use_documents and x.partner_id.l10n_ar_afip_responsibility_type_id):
             res_code = rec.partner_id.l10n_ar_afip_responsibility_type_id.code
             domain = [('company_id', '=', rec.company_id.id), ('l10n_latam_use_documents', '=', True), ('type', '=', 'sale')]
@@ -146,7 +146,7 @@ class AccountMove(models.Model):
                 raise RedirectWarning(msg, action.id, _('Go to Journals'))
 
     def _post(self, soft=True):
-        ar_invoices = self.filtered(lambda x: x.company_id.country_id == self.env.ref('base.ar') and x.l10n_latam_use_documents)
+        ar_invoices = self.filtered(lambda x: x.company_id.country_id.code == "AR" and x.l10n_latam_use_documents)
         for rec in ar_invoices:
             rec.l10n_ar_afip_responsibility_type_id = rec.commercial_partner_id.l10n_ar_afip_responsibility_type_id.id
             if rec.company_id.currency_id == rec.currency_id:
@@ -201,14 +201,14 @@ class AccountMove(models.Model):
     def _get_starting_sequence(self):
         """ If use documents then will create a new starting sequence using the document type code prefix and the
         journal document number with a 8 padding number """
-        if self.journal_id.l10n_latam_use_documents and self.env.company.country_id == self.env.ref('base.ar'):
+        if self.journal_id.l10n_latam_use_documents and self.env.company.country_id.code == "AR":
             if self.l10n_latam_document_type_id:
                 return self._get_formatted_sequence()
         return super()._get_starting_sequence()
 
     def _get_last_sequence_domain(self, relaxed=False):
         where_string, param = super(AccountMove, self)._get_last_sequence_domain(relaxed)
-        if self.company_id.country_id == self.env.ref('base.ar') and self.l10n_latam_use_documents:
+        if self.company_id.country_id.code == "AR" and self.l10n_latam_use_documents:
             if not self.journal_id.l10n_ar_share_sequences:
                 where_string += " AND l10n_latam_document_type_id = %(l10n_latam_document_type_id)s"
                 param['l10n_latam_document_type_id'] = self.l10n_latam_document_type_id.id or 0

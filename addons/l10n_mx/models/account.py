@@ -16,7 +16,7 @@ class AccountJournal(models.Model):
         liquidity journal, set the correct tags for the mexican localization.
         '''
         res = super(AccountJournal, self)._prepare_liquidity_account(name, company, currency_id, type)
-        if company.country_id.id == self.env.ref('base.mx').id:
+        if company.country_id.code == "MX":
             mx_tags = self.env['account.account'].mx_search_tags(res.get('code', ''))
             if mx_tags:
                 res.update({
@@ -46,7 +46,7 @@ class AccountAccount(models.Model):
 
     @api.onchange('code')
     def _onchange_code(self):
-        if self.company_id.country_id.id == self.env.ref('base.mx').id and self.code:
+        if self.company_id.country_id.code == "MX" and self.code:
             tags = self.mx_search_tags(self.code)
             self.tag_ids = tags
 
