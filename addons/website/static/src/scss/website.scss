@@ -1314,11 +1314,13 @@ header {
     height: 50px;
     animation: o-anim-heartbeat 2.6s ease-in-out 1s infinite;
 
+    &, &:hover {
+        text-decoration: none;
+    }
     &:focus {
         outline: none;
     }
     &:hover {
-        text-decoration: none;
         animation-iteration-count: 1;
     }
 }
