@@ -195,8 +195,6 @@ options.registry.CoverProperties.include({
 });
 
 options.registry.BlogPostTagSelection = options.Class.extend({
-    xmlDependencies: (options.Class.prototype.xmlDependencies || [])
-        .concat(['/website_blog/static/src/xml/website_blog_tag.xml']),
 
     /**
      * @override
@@ -205,19 +203,18 @@ options.registry.BlogPostTagSelection = options.Class.extend({
         const _super = this._super.bind(this);
 
         this.blogPostID = parseInt(this.$target[0].dataset.blogId);
-        this.isEditingTags = false;
+        this.isEditing = false;
         const tags = await this._rpc({
             model: 'blog.tag',
             method: 'search_read',
             args: [[], ['id', 'name', 'post_ids']],
         });
         this.allTagsByID = {};
-        this.tagIDs = [];
         for (const tag of tags) {
-            this.allTagsByID[tag.id] = tag;
             if (tag['post_ids'].includes(this.blogPostID)) {
-                this.tagIDs.push(tag.id);
+                tag.isSelected = true;
             }
+            this.allTagsByID[tag.id] = tag;
         }
 
         return _super(...arguments);
@@ -226,9 +223,57 @@ options.registry.BlogPostTagSelection = options.Class.extend({
      * @override
      */
     cleanForSave() {
-        if (this.isEditingTags) {
+        if (this.isEditing) {
             this._notifyUpdatedTags();
         }
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     * @private
+     */
+    _computeWidgetState: function (methodName, params) {
+        switch (methodName) {
+            case 'setTags': {
+                return JSON.stringify({
+                    records: this.allTagsByID,
+                    isEditing: this.isEditing,
+                });
+            }
+        }
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     * @private
+     */
+    async _computeWidgetVisibility(widgetName, params) {
+        if (widgetName === 'save_opt') {
+            return this.isEditing;
+        }
+        if (widgetName === 'edit_opt') {
+            return !this.isEditing;
+        }
+        return this._super(...arguments);
+    },
+    /**
+     * @private
+     */
+    _notifyUpdatedTags() {
+        const tags = [];
+        for (const [key, tag] of Object.entries(this.allTagsByID)) {
+            if (tag.isSelected) {
+                tags.push(tag);
+            }
+        }
+        this.trigger_up('set_blog_post_updated_tags', {
+            blogPostID: this.blogPostID,
+            tags,
+        });
     },
 
     //--------------------------------------------------------------------------
@@ -238,132 +283,21 @@ options.registry.BlogPostTagSelection = options.Class.extend({
     /**
      * @see this.selectClass for params
      */
-    editTagList(previewMode, widgetValue, params) {
-        this.isEditingTags = true;
-        this.rerender = true;
+    editList(previewMode, widgetValue, params) {
+        this.isEditing = true;
     },
     /**
-     * Send changes that will be saved in the database.
-     *
      * @see this.selectClass for params
      */
-    saveTagList(previewMode, widgetValue, params) {
-        this.isEditingTags = false;
-        this.rerender = true;
+    saveList(previewMode, widgetValue, params) {
+        this.isEditing = false;
         this._notifyUpdatedTags();
     },
     /**
      * @see this.selectClass for params
      */
-    setNewTagName(previewMode, widgetValue, params) {
-        this.newTagName = widgetValue;
-    },
-    /**
-     * @see this.selectClass for params
-     */
-    confirmNew(previewMode, widgetValue, params) {
-        if (!this.newTagName) {
-            return;
-        }
-        const existing = Object.values(this.allTagsByID).some(tag => tag.name.toLowerCase() === this.newTagName.toLowerCase());
-        if (existing) {
-            return this.displayNotification({
-                type: 'warning',
-                message: _t("This tag already exists"),
-            });
-        }
-        const newTagID = _.uniqueId(NEW_TAG_PREFIX);
-        this.allTagsByID[newTagID] = {
-            'id': newTagID,
-            'name': this.newTagName,
-        };
-        this.tagIDs.push(newTagID);
-        this.newTagName = '';
-        this.rerender = true;
-    },
-    /**
-     * @see this.selectClass for params
-     */
-    addTag(previewMode, widgetValue, params) {
-        const tagID = parseInt(widgetValue);
-        this.tagIDs.push(tagID);
-        this.rerender = true;
-    },
-    /**
-     * @see this.selectClass for params
-     */
-    removeTag(previewMode, widgetValue, params) {
-        this.tagIDs = this.tagIDs.filter(tagID => (`${tagID}` !== widgetValue));
-        if (widgetValue.startsWith(NEW_TAG_PREFIX)) {
-            delete this.allTagsByID[widgetValue];
-        }
-        this.rerender = true;
-    },
-
-    //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     */
-    async updateUI() {
-        if (this.rerender) {
-            this.rerender = false;
-            await this._rerenderXML();
-            return;
-        }
-        return this._super(...arguments);
-    },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     */
-    async _computeWidgetVisibility(widgetName, params) {
-        if (['blog_existing_tag_opt', 'new_tag_input_opt', 'new_tag_button_opt', 'save_tags_opt'].includes(widgetName)) {
-            return this.isEditingTags;
-        }
-        if (widgetName === 'edit_tags_opt') {
-            return !this.isEditingTags;
-        }
-        if (params.optionsPossibleValues['removeTag']) {
-            return this.isEditingTags;
-        }
-        return this._super(...arguments);
-    },
-    /**
-     * @private
-     */
-    _notifyUpdatedTags() {
-        this.trigger_up('set_blog_post_updated_tags', {
-            blogPostID: this.blogPostID,
-            tags: this.tagIDs.map(tagID => this.allTagsByID[tagID]),
-        });
-    },
-    /**
-     * @override
-     */
-    async _renderCustomXML(uiFragment) {
-        const $tagList = $(uiFragment.querySelector('.o_wblog_tag_list'));
-        for (const tagID of this.tagIDs) {
-            const tag = this.allTagsByID[tagID];
-            $tagList.append(qweb.render('website_blog.TagListItem', {
-                tag: tag,
-            }));
-        }
-        const $select = $(uiFragment.querySelector('we-select[data-name="blog_existing_tag_opt"]'));
-        for (const [key, tag] of Object.entries(this.allTagsByID)) {
-            if (this.tagIDs.includes(parseInt(key))) {
-                continue;
-            }
-            $select.prepend(qweb.render('website_blog.TagSelectItem', {
-                tag: tag,
-            }));
-        }
-    },
+     setTags(previewMode, widgetValue, params) {
+        this.allTagsByID = JSON.parse(widgetValue);
+     },
 });
 });
