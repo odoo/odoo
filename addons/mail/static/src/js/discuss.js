@@ -971,13 +971,7 @@ var Discuss = AbstractAction.extend({
 
         // Update control panel before focusing the composer, otherwise
         // focus is on the searchview
-        await this.updateControlPanel({
-            title: '#' + this._thread.getName(),
-            cp_content: {
-                $buttons: this.$buttons,
-            },
-        });
-        this._updateControlPanelButtons(this._thread);
+        await this._updateControlPanel();
 
         // Display and focus the adequate composer, and unselect possibly
         // selected message to prevent sending messages as reply to that
@@ -1100,6 +1094,20 @@ var Discuss = AbstractAction.extend({
         ) {
             this._updateModerationButtons();
         }
+    },
+    /**
+     * Redraws the content of the control panel according to its current thread.
+     * @return {Promise}
+     * @private
+     */
+    async _updateControlPanel() {
+        await this.updateControlPanel({
+            title: '#' + this._thread.getName(),
+            cp_content: {
+                $buttons: this.$buttons,
+            },
+        });
+        this._updateControlPanelButtons(this._thread);
     },
     /**
      * Updates the control panel buttons visibility based on thread type
