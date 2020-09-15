@@ -32,12 +32,12 @@ VERSION=saas-13.4
 VERSION_IOTBOX=20.06
 REPO=https://github.com/odoo/odoo.git
 
-if ! file_exists *raspbian*.img ; then
-    wget 'http://downloads.raspberrypi.org/raspbian_lite/images/raspbian_lite-2020-02-07/2020-02-05-raspbian-buster-lite.zip' -O raspbian.img.zip
-    unzip raspbian.img.zip
+if ! file_exists *raspios*.img ; then
+    wget 'http://downloads.raspberrypi.org/raspios_lite_armhf/images/raspios_lite_armhf-2020-08-24/2020-08-20-raspios-buster-armhf-lite.zip' -O raspios.img.zip
+    unzip raspios.img.zip
 fi
 
-RASPBIAN=$(echo *raspbian*.img)
+RASPBIAN=$(echo *raspios*.img)
 rsync -avh --progress "${RASPBIAN}" iotbox.img
 
 CLONE_DIR="${OVERWRITE_FILES_BEFORE_INIT_DIR}/home/pi/odoo"
