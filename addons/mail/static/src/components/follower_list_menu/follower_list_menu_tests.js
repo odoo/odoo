@@ -365,7 +365,7 @@ QUnit.test('click on remove follower', async function (assert) {
                 assert.step('message_unsubscribe');
                 assert.deepEqual(
                     args.args,
-                    [[100], [self.env.messaging.currentPartner.id]],
+                    [[100], [self.env.messaging.currentPartner.id], []],
                     "message_unsubscribe should be called with right argument"
                 );
             }
