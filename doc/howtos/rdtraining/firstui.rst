@@ -25,7 +25,7 @@ this
 contains HTML tags. While it would be possible to load such data through a CSV, it is more
 convenient to use an XML file.
 
-The XML files must be added in the same folders than the CSV files, and defined similarly in the
+The XML files must be added in the same folders as the CSV files, and defined similarly in the
 ``__manifest__.py``. The content of the data files is also loaded when a module is installed or
 updated, sequencially. Therefore, all remarks made for the CSV files holds true for the XML files.
 When the data we add is linked to views, we add it in the ``views`` folder.
@@ -76,11 +76,12 @@ A minimal action for our ``test.model`` would look like:
 - ``name`` is the name of the action.
 - ``res_model`` is the model to which the action applies.
 - ``view_mode`` are the views which will be available, in this case the list (tree) and form views.
-  We'll see `later <howto/rdtraining/qwebintro>` that there can be other view modes.
+  We'll see :ref:`later <howto/rdtraining/qwebintro>` that there can be other view modes.
 
 Examples can be found everywhere in Odoo, but
 `this one <https://github.com/odoo/odoo/blob/09c59012bf80d2ccbafe21c39e604d6cfda72924/addons/crm/views/crm_lost_reason_views.xml#L57-L70>`__
-is a good example of simple action. It also gives you the structure of an XML data file.
+is a good example of simple action. Pay attention to the structure of the XML data file, you will
+need it in the following exercise.
 
 .. exercise:: Add an action.
 
@@ -153,12 +154,15 @@ structure for our ``test_model_action`` would look like:
         </menuitem>
     </menuitem>
 
+The third menu will get the name of the ``action``.
+
 .. exercise:: Add the menus.
 
     Create the ``estate_menus.xml`` file in the appropriate folder and define it in the
     ``__manifest__.py`` file. Remember the sequential loading of the data files ;-)
 
-    Create the three levels of menus for the ``test_model_action`` action.
+    Create the three levels of menus for the ``estate.property`` action created in the previous
+    exercise. Refer to the **Goal** of the section for the expected result.
 
 Restart the server and **refresh the browser**. You should now see the menus, and you'll even
 be able to create your first real estate property advertisement!
@@ -169,7 +173,7 @@ Fields, Attributes And View
 .. note::
 
     **Goal**: at the end of this section, the selling price should be read-only and the number
-    of bedrooms and the availaibity date is set by default. The latter is not copied when the
+    of bedrooms and the availability date is set by default. The latter is not copied when the
     record is duplicated
 
     .. image:: firstui/media/attribute_and_default.gif
@@ -271,5 +275,5 @@ Note that the default ``active=False`` value was assigned to all existing record
 
 The ``state`` will be used later on for several UI enhancements.
 
-Now that we have able to interact with the UI thanks to the default views, the next step is
+Now that we have are to interact with the UI thanks to the default views, the next step is
 obvious: we want to define :ref:`our own views <howto/rdtraining/basicviews>`.

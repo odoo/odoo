@@ -245,7 +245,7 @@ widgets take the ``options`` attribute in to customize their behavior.
 
 .. exercise:: Widget options
 
-    - Add the appropriate option to the ``property_id`` field to prevent the creation and the
+    - Add the appropriate option to the ``property_type_id`` field to prevent the creation and the
       edition of a property type from the property form view. Have a look at the
       :ref:`Many2one widget documentation <reference/js/widgets>` for more info.
 

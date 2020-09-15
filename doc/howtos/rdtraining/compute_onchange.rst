@@ -49,6 +49,10 @@ To create a computed field, create a field and set its attribute
 method should simply set the value of the field to compute on every record in
 ``self``.
 
+By convention, :attr:`~odoo.fields.Field.compute` are private methods, meaning that they cannot
+be called from the presentation tier, only from the business tier (see
+:ref:`howto/rdtraining/architecture`). Such methods have a name starting with an underscore ``_``.
+
 Dependencies
 ------------
 

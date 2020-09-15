@@ -80,10 +80,8 @@ Python
         :align: center
         :alt: Python constraint
 
-SQL constraints are an efficient way of ensuring data consistency. However, such constrains cannot
-be 'dynamic' in the sense that cross-checking data might not be possible. In our real estate module
-we would like to prevent a selling price lower than 90% of the expected price. To do this, we
-need a Python constraint.
+SQL constraints are an efficient way of ensuring data consistency. However, it may be necessary
+to make more complex checks requiring Python code. In this case, we need a Python constraint.
 
 A Python constraint is defined as a method decorated with
 :func:`~odoo.api.constrains`, and invoked on a recordset. The decorator
@@ -117,11 +115,11 @@ A simple example can be found
         Always use the :meth:`~odoo.tools.float_utils.float_compare` and
         :meth:`~odoo.tools.float_utils.float_is_zero` methods when comparing floats!
 
-Be sure the constraint is triggered every time the selling price or the expected price is changed!
+    Be sure the constraint is triggered every time the selling price or the expected price is changed!
 
 Our real estate module is starting to look good: we added some business logic, and now we make sure
 the data is consistent. However, the user interface is still a bit rough. Let's see how we can
-improve it in the :ref`next chapter <howto/rdtraining/sprinkles>`.
+improve it in the :ref:`next chapter <howto/rdtraining/sprinkles>`.
 
 .. _PostgreSQL's documentation:
 .. _table_constraint:

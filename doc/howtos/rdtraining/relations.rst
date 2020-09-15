@@ -81,8 +81,8 @@ simply::
     :ref:`action and a menu <howto/rdtraining/firstui>`, then
     :ref:`create a view <howto/rdtraining/basicviews>`.
 
-    Tip: do not forget to import any new Python file in ``__init__.py`` and add new data files in
-    ``__manifest.py__`` ;-)
+    Tip: do not forget to import any new Python file in ``__init__.py``, add new data files in
+    ``__manifest.py__``  and add the access rights ;-)
 
 Once again, restart the server and refresh to see the results!
 
@@ -177,7 +177,7 @@ done in a loop::
     - Add the menus as displayed in the **Goal**
     - Add the field ``tag_ids`` on your ``estate.property`` model and it its form and tree views
 
-    Tip: in the view, use the ``widget=many2many_tags`` attribute as done
+    Tip: in the view, use the ``widget="many2many_tags"`` attribute as done
     `here <https://github.com/odoo/odoo/blob/5bb8b927524d062be32f92eb326ef64091301de1/addons/crm_iap_lead_website/views/crm_reveal_views.xml#L36>`__.
     We well cover :ref:`later <howto/rdtraining/sprinkles>` the ``widget`` attribute in more
     details. For now, you can try to add or remove it and see the result ;-)

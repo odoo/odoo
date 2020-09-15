@@ -32,8 +32,8 @@ Object-Relational Mapping
             0
         (1 row)
 
-A key component of Odoo is the :abbr:`ORM (Object-Relational Mapping)` layer.
-This layer avoids having to write most :abbr:`SQL (Structured Query Language)`
+A key component of Odoo is the `ORM`_ layer.
+This layer avoids having to write most `SQL`_
 by hand and provides extensibility and security services\ [#rawsql]_.
 
 Business objects are declared as Python classes extending
@@ -292,3 +292,7 @@ Now that we have created our first table, let's
 
 .. _database index:
     http://use-the-index-luke.com/sql/preface
+.. _ORM:
+    https://en.wikipedia.org/wiki/Object-relational_mapping
+.. _SQL:
+    https://en.wikipedia.org/wiki/SQL
