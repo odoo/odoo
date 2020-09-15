@@ -234,12 +234,12 @@ const UserValueWidget = Widget.extend({
             const buildImgExtensionSwitcher = (from, to) => {
                 const regex = new RegExp(`${from}$`, 'i');
                 return ev => {
-                    const img = ev.currentTarget;
+                    const img = ev.currentTarget.getElementsByTagName("img")[0];
                     img.src = img.src.replace(regex, to);
                 };
             };
-            this.$el.on('mouseenter.img_animate', 'img', buildImgExtensionSwitcher('png', 'gif'));
-            this.$el.on('mouseleave.img_animate', 'img', buildImgExtensionSwitcher('gif', 'png'));
+            this.$el.on('mouseenter.img_animate', buildImgExtensionSwitcher('png', 'gif'));
+            this.$el.on('mouseleave.img_animate', buildImgExtensionSwitcher('gif', 'png'));
         }
     },
     /**
