@@ -1907,6 +1907,21 @@ options.registry.TopMenuVisibility = VisibilityPageOptionUpdate.extend({
      */
     async visibility(previewMode, widgetValue, params) {
         await this._super(...arguments);
+        await this._changeVisibility(widgetValue);
+        // TODO this is hacky but changing the header visibility may have an
+        // effect on features like FullScreenHeight which depend on viewport
+        // size so we simulate a resize.
+        $(window).trigger('resize');
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    async _changeVisibility(widgetValue) {
         const show = (widgetValue !== 'hidden');
         if (!show) {
             return;
@@ -1930,11 +1945,6 @@ options.registry.TopMenuVisibility = VisibilityPageOptionUpdate.extend({
             });
         });
     },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
     /**
      * @override
      */
@@ -2539,6 +2549,7 @@ options.registry.ScrollButton = options.Class.extend({
                 const anchor = document.createElement('a');
                 anchor.classList.add(
                     'o_scroll_button',
+                    'mb-3',
                     'rounded-circle',
                     'align-items-center',
                     'justify-content-center',
@@ -2572,12 +2583,6 @@ options.registry.ScrollButton = options.Class.extend({
                 return !!this.$button.parent().length;
         }
         return this._super(...arguments);
-    },
-    /**
-     * @override
-     */
-    _computeVisibility: function () {
-        return this.$target.is('.o_full_screen_height, .o_half_screen_height');
     },
 });
 
