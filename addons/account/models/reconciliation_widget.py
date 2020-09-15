@@ -774,14 +774,29 @@ class AccountReconciliation(models.AbstractModel):
         # Create writeoff move lines
         if len(new_mv_line_dicts) > 0:
             company_currency = account_move_line[0].account_id.company_id.currency_id
-            same_currency = False
+            single_different_currency = False
             currencies = list(set([aml.currency_id or company_currency for aml in account_move_line]))
+            account_currency = account_move_line[0].account_id.currency_id or company_currency
             if len(currencies) == 1 and currencies[0] != company_currency:
-                same_currency = True
-            # We don't have to convert debit/credit to currency as all values in the reconciliation widget are displayed in company currency
-            # If all the lines are in the same currency, create writeoff entry with same currency also
+                write_off_currency = currencies[0]
+                single_different_currency = True
             for mv_line_dict in new_mv_line_dicts:
-                if not same_currency:
+                if single_different_currency:
+                    # We don't have to convert debit/credit to currency as
+                    # all values in the reconciliation widget are displayed
+                    # in company currency if account_currency is equal to the
+                    # company_currency
+                    if account_currency != company_currency:
+                        # We convert the credit or debit to the company's
+                        # currency if account_currency is NOT equal to the
+                        # company_currency. Then when the write-off is created
+                        # the amount_currency will be auto-filled correctly.
+                        amount_currency = mv_line_dict['debit'] or -1 * mv_line_dict['credit']
+                        debit, credit, amount_currency, currency_id = self.env['account.move.line']._compute_amount_fields(
+                            amount_currency, write_off_currency, company_currency)
+                        mv_line_dict['debit'] = debit
+                        mv_line_dict['credit'] = credit
+                else:
                     mv_line_dict['amount_currency'] = False
                 writeoff_lines += account_move_line._create_writeoff([mv_line_dict])
 
