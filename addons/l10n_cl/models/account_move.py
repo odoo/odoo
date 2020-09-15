@@ -4,6 +4,8 @@ from odoo.exceptions import ValidationError
 from odoo import models, fields, api, _
 from odoo.osv import expression
 
+SII_VAT = '60805000-0'
+
 
 class AccountMove(models.Model):
     _inherit = "account.move"
@@ -19,16 +21,19 @@ class AccountMove(models.Model):
         if (self.journal_id.l10n_latam_use_documents and
                 self.journal_id.company_id.country_id == self.env.ref('base.cl')):
             if self.journal_id.type == 'sale':
-                document_type_ids = self.journal_id.l10n_cl_sequence_ids.mapped('l10n_latam_document_type_id').ids
+                domain = [('country_id', '=', self.env.ref('base.cl').id), ('internal_type', '!=', 'invoice_in')]
+                if self.company_id.partner_id.l10n_cl_sii_taxpayer_type == '1':
+                    domain += [('code', '!=', '71')]   # Companies with VAT Affected doesn't have "Boleta de honorarios Electrónica"
+                document_type_ids = self.env['l10n_latam.document.type'].search(domain).ids
             else:
                 partner_domain = [
                     ('country_id.code', '=', 'CL'),
                     ('internal_type', 'in', ['invoice', 'debit_note', 'credit_note', 'invoice_in'])]
                 if not self.partner_id:
                     pass
-                elif self.partner_id.l10n_cl_sii_taxpayer_type == '1' and self.partner_id_vat != '60805000-0':
+                elif self.partner_id.l10n_cl_sii_taxpayer_type == '1' and self.partner_id_vat != SII_VAT:
                     partner_domain += [('code', 'not in', ['39', '70', '71', '914', '911'])]
-                elif self.partner_id.l10n_cl_sii_taxpayer_type == '1' and self.partner_id_vat == '60805000-0':
+                elif self.partner_id.l10n_cl_sii_taxpayer_type == '1' and self.partner_id_vat == SII_VAT:
                     partner_domain += [('code', 'not in', ['39', '70', '71'])]
                 elif self.partner_id.l10n_cl_sii_taxpayer_type == '2':
                     partner_domain += [('code', 'in', ['70', '71', '56', '61'])]
@@ -61,7 +66,7 @@ class AccountMove(models.Model):
                             'Document types for foreign customers must be export type (codes 110, 111 or 112) or you \
                             should define the customer as an end consumer and use receipts (codes 39 or 41)'))
             if rec.journal_id.type == 'purchase' and rec.journal_id.l10n_latam_use_documents:
-                if vat != '60805000-0' and latam_document_type_code == '914':
+                if vat != SII_VAT and latam_document_type_code == '914':
                     raise ValidationError(_('The DIN document is intended to be used only with RUT 60805000-0'
                                             ' (Tesorería General de La República)'))
                 if not tax_payer_type or not vat:
@@ -96,11 +101,11 @@ class AccountMove(models.Model):
         super()._post(soft)
 
     def _l10n_cl_get_formatted_sequence(self, number=0):
-        return "%s %06d" % (self.l10n_latam_document_type_id.doc_code_prefix, number)
+        return '%s %06d' % (self.l10n_latam_document_type_id.doc_code_prefix, number)
 
     def _get_starting_sequence(self):
         """ If use documents then will create a new starting sequence using the document type code prefix and the
-        journal document number with a 8 padding number """
+        journal document number with a 6 padding number """
         if self.journal_id.l10n_latam_use_documents and self.env.company.country_id == self.env.ref('base.cl'):
             if self.l10n_latam_document_type_id:
                 return self._l10n_cl_get_formatted_sequence()
@@ -109,11 +114,10 @@ class AccountMove(models.Model):
     def _get_last_sequence_domain(self, relaxed=False):
         where_string, param = super(AccountMove, self)._get_last_sequence_domain(relaxed)
         if self.company_id.country_id == self.env.ref('base.cl') and self.l10n_latam_use_documents:
-            journals = self.journal_id.l10n_cl_sequence_ids.filtered(lambda s: s.l10n_latam_document_type_id == self.l10n_latam_document_type_id).l10n_cl_journal_ids.ids
-            if len(journals) > 1:
-                where_string.replace("journal_id = %(journal_ids)s", "journal_id in %(journal_ids)s")
-                param['journal_ids'] = journals
-            where_string += " AND l10n_latam_document_type_id = %(l10n_latam_document_type_id)s "
+            where_string = where_string.replace('journal_id = %(journal_id)s AND', '')
+            where_string += ' AND l10n_latam_document_type_id = %(l10n_latam_document_type_id)s AND ' \
+                            'company_id = %(company_id)s'
+            param['company_id'] = self.company_id.id or False
             param['l10n_latam_document_type_id'] = self.l10n_latam_document_type_id.id or 0
         return where_string, param
 
