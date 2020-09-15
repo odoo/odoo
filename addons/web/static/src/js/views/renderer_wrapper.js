@@ -4,9 +4,18 @@ odoo.define('web.RendererWrapper', function (require) {
     const { ComponentWrapper } = require('web.OwlCompatibility');
 
     class RendererWrapper extends ComponentWrapper {
-        getLocalState() { }
-        setLocalState() { }
-        giveFocus() { }
+        getLocalState() {
+            const renderer = this.componentRef.comp;
+            return renderer ? renderer.getLocalState(...arguments) : undefined;
+        }
+        setLocalState() {
+            const renderer = this.componentRef.comp;
+            return renderer ? renderer.setLocalState(...arguments) : undefined;
+        }
+        giveFocus() {
+            const renderer = this.componentRef.comp;
+            return renderer ? renderer.giveFocus(...arguments) : undefined;
+        }
     }
 
     return RendererWrapper;
