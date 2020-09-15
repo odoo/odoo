@@ -69,11 +69,13 @@
                                     </div>
                                     <field name="company_id" groups="base.group_multi_company"
                                         options="{'no_create': True}"/>
-                                    <field name="uom_id" groups="uom.group_uom" options="{'no_create': True}"/>
-                                    <field name="uom_po_id" groups="uom.group_uom" options="{'no_create': True}"/>
+                                    <field name="uom_id" groups="uom.group_uom" options="{'no_create': True}" domain="[('category_id', 'in', uom_categ_ids)]"/>
+                                    <field name="uom_po_id" groups="uom.group_uom" options="{'no_create': True}" domain="[('category_id', '=', uom_po_categ_id)]"/>
                                     <field name="currency_id" invisible="1"/>
                                     <field name="cost_currency_id" invisible="1"/>
                                     <field name="product_variant_id" invisible="1"/>
+                                    <field name="uom_categ_ids" invisible="1"/>
+                                    <field name="uom_po_categ_id" invisible="1"/>
                                 </group>
                             </group>
                             <group string="Internal Notes">

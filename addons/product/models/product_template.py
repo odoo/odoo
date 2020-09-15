@@ -104,6 +104,8 @@ class ProductTemplate(models.Model):
         'uom.uom', 'Purchase Unit of Measure',
         default=_get_default_uom_id, required=True,
         help="Default unit of measure used for purchase orders. It must be in the same category as the default unit of measure.")
+    uom_categ_ids = fields.Many2many('uom.category', compute='_compute_uom_category_ids')
+    uom_po_categ_id = fields.Many2one('uom.category', 'PO Category', related='uom_id.category_id', store=False, readonly=True)
     company_id = fields.Many2one(
         'res.company', 'Company', index=1)
     packaging_ids = fields.One2many(
@@ -173,6 +175,17 @@ class ProductTemplate(models.Model):
     @api.depends_context('company')
     def _compute_cost_currency_id(self):
         self.cost_currency_id = self.env.company.currency_id.id
+
+    @api.depends('type')
+    def _compute_uom_category_ids(self):
+        for p in self:
+            if p.type == 'service':
+                p.uom_categ_ids = self.env.ref('uom.uom_categ_wtime').ids
+                # Change the default uom from 'Unit' to Hour if the current category_id is not wtime
+                if p.uom_id.category_id not in p.uom_categ_ids:
+                    p.uom_id, p.uom_po_id = self.env.ref('uom.product_uom_hour'), self.env.ref('uom.product_uom_hour')
+            else:
+                p.uom_categ_ids = self.env['uom.category'].search([])
 
     def _compute_template_price(self):
         prices = self._compute_template_price_no_inverse()
