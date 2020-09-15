@@ -1012,10 +1012,12 @@
 
     <!-- Scroll to next section button (only for full height) -->
     <div data-js="ScrollButton" data-selector="section">
-        <we-row string="Scroll down button" class="o_scroll_button_opt">
-            <we-checkbox data-toggle-button="true"
-                data-no-preview="true"
-                data-name="scroll_button_opt"/>
+        <we-checkbox string="Scroll down button"
+                     data-toggle-button="true"
+                     data-no-preview="true"
+                     data-name="scroll_button_opt"/>
+        <!-- &emsp; -->
+        <we-row string=" ⌙ Colors">
             <we-colorpicker
                 data-select-style="true"
                 data-css-property="background-color"
@@ -1028,6 +1030,16 @@
                 data-apply-to=".o_scroll_button"
                 data-dependencies="scroll_button_opt"/>
         </we-row>
+        <we-select string=" ⌙ Spacing"
+                   data-apply-to=".o_scroll_button"
+                   data-dependencies="scroll_button_opt">
+            <we-button data-select-class="">None</we-button>
+            <we-button data-select-class="mb-1">Extra-Small</we-button>
+            <we-button data-select-class="mb-2">Small</we-button>
+            <we-button data-select-class="mb-3">Medium</we-button>
+            <we-button data-select-class="mb-4">Large</we-button>
+            <we-button data-select-class="mb-5">Extra-Large</we-button>
+        </we-select>
     </div>
 
     <!--  Vertical Alignment -->

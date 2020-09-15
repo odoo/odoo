@@ -448,13 +448,9 @@ table.table_desc tr td {
 }
 
 .o_full_screen_height {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
     min-height: 100vh !important;
 }
 .o_half_screen_height {
-    @extend .o_full_screen_height;
     min-height: 55vh !important;
 }
 
@@ -1312,6 +1308,7 @@ header {
 
 // Scroll down button
 .o_scroll_button {
+    @include o-position-absolute(auto, 0, 0, 0);
     display: flex;
     width: 50px;
     height: 50px;
