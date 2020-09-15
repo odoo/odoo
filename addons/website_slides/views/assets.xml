@@ -63,6 +63,12 @@
             <script type="text/javascript" src="/website_slides/static/src/js/slides_embed.js"></script>
         </template>
 
+        <template id="qunit_suite" name="website_slides activity assets" inherit_id="mail.qunit_suite">
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/website_slides/static/src/js/activity_tests.js"></script>
+            </xpath>
+        </template>
+
 
     </data>
 </odoo>

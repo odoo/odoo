@@ -16,6 +16,7 @@ const {
 
 const { Component, useState } = owl;
 const { useRef } = owl.hooks;
+const patchMixin = require("web.patchMixin");
 
 class Activity extends Component {
 
@@ -191,6 +192,6 @@ Object.assign(Activity, {
     template: 'mail.Activity',
 });
 
-return Activity;
+return patchMixin(Activity);
 
 });
