@@ -19,20 +19,7 @@ def create_internal_project(cr, registry):
     admin = env.ref('base.user_admin', raise_if_not_found=False)
     if not admin:
         return
-    project_vals = []
-    for company in env['res.company'].search([]):
-        company = company.with_company(company)
-        project_vals += [{
-            'name': _('Internal'),
-            'allow_timesheets': True,
-            'company_id': company.id,
-            'task_ids': [(0, 0, {
-                'name': name,
-                'company_id': company.id,
-            }) for name in [_('Training'), _('Meeting')]]
-        }]
-    project_ids = env['project.project'].create(project_vals)
-
+    project_ids = env['res.company'].search([])._create_internal_project_task()
     env['account.analytic.line'].create([{
         'name': _("Analysis"),
         'user_id': admin.id,
