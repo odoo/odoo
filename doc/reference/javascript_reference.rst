@@ -2126,43 +2126,43 @@ menu bar.  It can have a control panel, if necessary.  Defining a client action
 can be done in two steps: implementing a new widget, and registering the widget
 in the action registry.
 
-- Implementing a new client action:
-    This is done by creating a widget:
+Implementing a new client action.
+  This is done by creating a widget:
 
-    .. code-block:: javascript
+  .. code-block:: javascript
 
-        var ControlPanelMixin = require('web.ControlPanelMixin');
-        var AbstractAction = require('web.AbstractAction');
+      var ControlPanelMixin = require('web.ControlPanelMixin');
+      var AbstractAction = require('web.AbstractAction');
 
-        var ClientAction = AbstractAction.extend(ControlPanelMixin, {
-            ...
-        });
+      var ClientAction = AbstractAction.extend(ControlPanelMixin, {
+          ...
+      });
 
-    Do not add the controlpanel mixin if you do not need it.  Note that some
-    code is needed to interact with the control panel (via the
-    ``update_control_panel`` method given by the mixin).
+  Do not add the controlpanel mixin if you do not need it.  Note that some
+  code is needed to interact with the control panel (via the
+  ``update_control_panel`` method given by the mixin).
 
-- Registering the client action:
-    As usual, we need to make the web client aware of the mapping between
-    client actions and the actual class:
+Registering the client action.
+  As usual, we need to make the web client aware
+  of the mapping between client actions and the actual class:
 
-    .. code-block:: javascript
+  .. code-block:: javascript
 
-        var core = require('web.core');
+      var core = require('web.core');
 
-        core.action_registry.add('my-custom-action', ClientAction);
+      core.action_registry.add('my-custom-action', ClientAction);
 
 
-    Then, to use the client action in the web client, we need to create a client
-    action record (a record of the model ``ir.actions.client``) with the proper
-    ``tag`` attribute:
+  Then, to use the client action in the web client, we need to create a client
+  action record (a record of the model ``ir.actions.client``) with the proper
+  ``tag`` attribute:
 
-    .. code-block:: xml
+  .. code-block:: xml
 
-        <record id="my_client_action" model="ir.actions.client">
-            <field name="name">Some Name</field>
-            <field name="tag">my-custom-action</field>
-        </record>
+      <record id="my_client_action" model="ir.actions.client">
+          <field name="name">Some Name</field>
+          <field name="tag">my-custom-action</field>
+      </record>
 
 
 Using the control panel mixin
@@ -2174,40 +2174,40 @@ do that, several steps should be done.
 
 - add ControlPanelMixin in the widget:
 
-    .. code-block:: javascript
+  .. code-block:: javascript
 
-        var ControlPanelMixin = require('web.ControlPanelMixin');
+      var ControlPanelMixin = require('web.ControlPanelMixin');
 
-        var MyClientAction = AbstractAction.extend(ControlPanelMixin, {
-            ...
-        });
+      var MyClientAction = AbstractAction.extend(ControlPanelMixin, {
+          ...
+      });
 
 - call the method *update_control_panel* whenever we need to update the control
   panel. For example:
 
-    .. code-block:: javascript
+  .. code-block:: javascript
 
-        var SomeClientAction = Widget.extend(ControlPanelMixin, {
-            ...
-            start: function () {
-                this._renderButtons();
-                this._updateControlPanel();
-                ...
-            },
-            do_show: function () {
-                 ...
-                 this._updateControlPanel();
-            },
-            _renderButtons: function () {
-                this.$buttons = $(QWeb.render('SomeTemplate.Buttons'));
-                this.$buttons.on('click', ...);
-            },
-            _updateControlPanel: function () {
-                this.update_control_panel({
-                    cp_content: {
-                       $buttons: this.$buttons,
-                    },
-             });
+      var SomeClientAction = Widget.extend(ControlPanelMixin, {
+          ...
+          start: function () {
+              this._renderButtons();
+              this._updateControlPanel();
+              ...
+          },
+          do_show: function () {
+              ...
+              this._updateControlPanel();
+          },
+          _renderButtons: function () {
+              this.$buttons = $(QWeb.render('SomeTemplate.Buttons'));
+              this.$buttons.on('click', ...);
+          },
+          _updateControlPanel: function () {
+              this.update_control_panel({
+                  cp_content: {
+                    $buttons: this.$buttons,
+                  },
+          });
 
 For more information, look into the *control_panel.js* file.
 
