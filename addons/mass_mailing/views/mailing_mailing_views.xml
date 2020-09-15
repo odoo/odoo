@@ -158,8 +158,8 @@
                             <field name="active" invisible="1"/>
                             <field name="mailing_type" widget="radio" options="{'horizontal': true}" invisible="1"
                                 attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"/>
-                            <field name="subject" string="Subject" attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}" widget="char_emojis" placeholder="e.g. New Sale on all T-shirts"/>
-                            <field name="preview" string="Preview Text" attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}" widget="char_emojis" placeholder="e.g. Check it out before it's too late!"/>
+                            <field class="o_text_overflow" name="subject" string="Subject" attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}" widget="char_emojis" placeholder="e.g. New Sale on all T-shirts"/>
+                            <field class="o_text_overflow" name="preview" string="Preview Text" attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}" widget="char_emojis" placeholder="e.g. Check it out before it's too late!"/>
                             <label for="mailing_model_id" string="Recipients"/>
                             <div name="mailing_model_id_container">
                                 <div class="row">
@@ -216,7 +216,7 @@
                                 <group>
                                     <group>
                                         <field name="id" invisible="1"/>
-                                        <field name="name" required="False" groups="base.group_no_one" string="Name"/>
+                                        <field name="name" required="False" groups="base.group_no_one" class="o_text_overflow" string="Name"/>
                                         <field name="user_id" domain="[('share', '=', False)]"/>
                                         <field name="email_from" attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"/>
                                         <label for="reply_to"/>
@@ -258,6 +258,7 @@
                                             string="Source"
                                             readonly="1"
                                             required="False"
+                                            class="o_text_overflow"
                                             groups="base.group_no_one"
                                             attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"/>
                                         <field name="medium_id"
@@ -339,7 +340,7 @@
                                                         t-attf-style="width: #{record.delivered.raw_value * 100 / record.expected.raw_value}%"/>
                                                 </div>
                                             </div>
-                                            <h3 class="my-1 o_text_overflow"  attrs="{'invisible': [('sent_date', '!=', False)]}">
+                                            <h3 class="my-1"  attrs="{'invisible': [('sent_date', '!=', False)]}">
                                                 <field name="subject"/>
                                             </h3>
                                             <field name="mailing_type" invisible="1"/>
