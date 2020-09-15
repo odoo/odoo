@@ -126,23 +126,6 @@ class ProjectTask(models.Model):
             operator_new = 'not inselect'
         return [('sale_order_id', operator_new, (query, ()))]
 
-    def action_create_invoice(self):
-        # ensure the SO exists before invoicing, then confirm it
-        so_to_confirm = self.filtered(
-            lambda task: task.sale_order_id and task.sale_order_id.state in ['draft', 'sent']
-        ).mapped('sale_order_id')
-        so_to_confirm.action_confirm()
-
-        # redirect create invoice wizard (of the Sales Order)
-        action = self.env["ir.actions.actions"]._for_xml_id("sale.action_view_sale_advance_payment_inv")
-        context = literal_eval(action.get('context', "{}"))
-        context.update({
-            'active_id': self.sale_order_id.id if len(self) == 1 else False,
-            'active_ids': self.mapped('sale_order_id').ids,
-            'default_company_id': self.company_id.id,
-        })
-        action['context'] = context
-        return action
 
 class ProjectTaskRecurrence(models.Model):
     _inherit = 'project.task.recurrence'

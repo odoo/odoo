@@ -11,7 +11,20 @@
             'default_composition_mode': 'comment',
             'default_res_id': active_id,
         }</field>
-        <field name="binding_model_id" ref="model_calendar_event"/>
+    </record>
+
+    <record id="view_calendar_event_tree_inherited" model="ir.ui.view">
+        <field name="name">calendar.event.tree.calendar_sms</field>
+        <field name="model">calendar.event</field>
+        <field name="inherit_id" ref="calendar.view_calendar_event_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="inside">
+                <header>
+                    <button name="%(calendar_event_act_window_sms_composer_single)d" type="action"
+                            string="Send SMS to attendees"/>
+                </header>
+            </xpath>
+        </field>
     </record>
 
 </odoo>
