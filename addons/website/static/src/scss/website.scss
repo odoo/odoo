@@ -747,7 +747,7 @@ $-transition-duration: 200ms;
     }
 }
 
-// Header templates
+// Header
 header {
     &:not(.o_header_no_transition) {
         .navbar-brand {
@@ -759,6 +759,22 @@ header {
         }
     }
 
+    // Dropdown menus
+
+    // In mobile there is no need to limit the height...
+    @include media-breakpoint-up(lg) {
+        .navbar .dropdown-menu {
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+    }
+    // ... but we limit the navbar-collapse height
+    .navbar-collapse.show {
+        max-height: 80vh;
+        overflow-y: auto;
+    }
+
+    // Header templates
     @include media-breakpoint-up(md) {
         // Allow to center the logo, ignoring the toggler space
         .o_navbar_toggler_container {
