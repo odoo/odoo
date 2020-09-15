@@ -2214,10 +2214,10 @@ menu bar.  It can have a control panel, if necessary.  Defining a client action
 can be done in two steps: implementing a new widget, and registering the widget
 in the action registry.
 
-- Implementing a new client action:
-    This is done by creating a widget:
+Implementing a new client action.
+  This is done by creating a widget:
 
-    .. code-block:: javascript
+  .. code-block:: javascript
 
         var AbstractAction = require('web.AbstractAction');
 
@@ -2226,27 +2226,27 @@ in the action registry.
             ...
         });
 
-- Registering the client action:
-    As usual, we need to make the web client aware of the mapping between
-    client actions and the actual class:
+Registering the client action:
+  As usual, we need to make the web client aware of the mapping between
+  client actions and the actual class:
 
-    .. code-block:: javascript
+  .. code-block:: javascript
 
-        var core = require('web.core');
+      var core = require('web.core');
 
-        core.action_registry.add('my-custom-action', ClientAction);
+      core.action_registry.add('my-custom-action', ClientAction);
 
 
-    Then, to use the client action in the web client, we need to create a client
-    action record (a record of the model ``ir.actions.client``) with the proper
-    ``tag`` attribute:
+  Then, to use the client action in the web client, we need to create a client
+  action record (a record of the model ``ir.actions.client``) with the proper
+  ``tag`` attribute:
 
-    .. code-block:: xml
+  .. code-block:: xml
 
-        <record id="my_client_action" model="ir.actions.client">
-            <field name="name">Some Name</field>
-            <field name="tag">my-custom-action</field>
-        </record>
+      <record id="my_client_action" model="ir.actions.client">
+          <field name="name">Some Name</field>
+          <field name="tag">my-custom-action</field>
+      </record>
 
 
 Using the control panel
@@ -2256,9 +2256,9 @@ By default, the client action does not display a control panel.  In order to
 do that, several steps should be done.
 
 - Set the *hasControlPanel* to *true*.
-    In the widget code:
+  In the widget code:
 
-    .. code-block:: javascript
+  .. code-block:: javascript
 
         var MyClientAction = AbstractAction.extend({
             hasControlPanel: true,
@@ -2279,9 +2279,9 @@ do that, several steps should be done.
             }
 
 - Call the method *updateControlPanel* whenever we need to update the control panel.
-    For example:
+  For example:
 
-    .. code-block:: javascript
+  .. code-block:: javascript
 
         var SomeClientAction = Widget.extend({
             hasControlPanel: true,
