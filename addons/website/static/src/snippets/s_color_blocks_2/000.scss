@@ -1,7 +1,10 @@
 .s_color_blocks_2 {
+    display: flex; // Needed to be able to stretch the inner container so that
+                   // the snippet works with the 50% and 100% height
     .row {
         display: flex;
         flex-flow: row wrap;
+        height: 100%; // Needed for the 50% and 100% height option
 
         // Fix for safari browser as it 'supports' flex but not with the right
         // behavior

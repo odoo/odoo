@@ -244,7 +244,7 @@ list of filtered posts (by date or tag).
                         <t t-set="resize_classes" t-value="set(json.loads(_record.cover_properties).get('resize_class').split(' '))"/>
                         <a t-if="{'o_full_screen_height', 'o_half_screen_height', 'cover_full', 'cover_mid'}.intersection(resize_classes)"
                             id="o_wblog_post_content_jump" href="#o_wblog_post_main"
-                            class="css_editable_mode_hidden justify-content-center align-items-center rounded-circle mx-auto text-decoration-none">
+                            class="css_editable_mode_hidden justify-content-center align-items-center rounded-circle mx-auto mb-5 text-decoration-none">
                             <i class="fa fa-angle-down fa-3x text-white" aria-label="To blog content" title="To blog content"/>
                         </a>
                     </div>
