@@ -48,7 +48,7 @@ var NewContentMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
             $el.data('original-index', index);
             if ($el.data('module-id')) {
                 $el.appendTo($el.parent());
-                $el.find('a i, a p').addClass('text-muted');
+                $el.find('a i, a p').addClass('o_uninstalled_module');
             }
         });
 
@@ -280,8 +280,9 @@ var NewContentMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
                             }
                             // change style to use spinner
                             $i.removeClass()
-                                .addClass('fa fa-spin fa-spinner fa-pulse');
-                            $p.removeClass('text-muted')
+                                .addClass('fa fa-spin fa-spinner fa-pulse')
+                                .css('background-image', 'none');
+                            $p.removeClass('o_uninstalled_module')
                                 .text(_.str.sprintf(self.newContentText.installPleaseWait, name));
                             $el.fadeTo(1000, 1);
                         });
