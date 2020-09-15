@@ -96,7 +96,7 @@ rm -rfv /usr/share/doc
 
 # python-usb in wheezy is too old
 # the latest pyusb from pip does not work either, usb.core.find() never returns
-# this may be fixed with libusb>2:1.0.11-1, but that's the most recent one in raspbian
+# this may be fixed with libusb>2:1.0.11-1, but that's the most recent one in raspios
 # so we install the latest pyusb that works with this libusb.
 # Even in stretch, we had an error with langid (but worked otherwise)
 # We fixe the version of evdev to 1.2.0 because in 1.3.0 we have a RuntimeError in 'get_event_loop()'

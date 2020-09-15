@@ -330,11 +330,11 @@ class IoTboxHomepage(web.Home):
             _logger.error('A error encountered : %s ' % e)
             return Response(str(e), status=500)
 
-    @http.route('/hw_proxy/perform_flashing_download_raspbian', type='http', auth='none')
-    def perform_flashing_download_raspbian(self):
+    @http.route('/hw_proxy/perform_flashing_download_raspios', type='http', auth='none')
+    def perform_flashing_download_raspios(self):
         try:
-            response = subprocess.check_output(['sudo', 'bash', '-c', '. /home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/upgrade.sh; download_raspbian']).decode().split('\n')[-2]
-            if response == 'Error_Raspbian_Download':
+            response = subprocess.check_output(['sudo', 'bash', '-c', '. /home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/upgrade.sh; download_raspios']).decode().split('\n')[-2]
+            if response == 'Error_Raspios_Download':
                 raise Exception(response)
             return Response('success', status=200)
         except subprocess.CalledProcessError as e:
@@ -344,10 +344,10 @@ class IoTboxHomepage(web.Home):
             _logger.error('A error encountered : %s ' % e)
             return Response(str(e), status=500)
 
-    @http.route('/hw_proxy/perform_flashing_copy_raspbian', type='http', auth='none')
-    def perform_flashing_copy_raspbian(self):
+    @http.route('/hw_proxy/perform_flashing_copy_raspios', type='http', auth='none')
+    def perform_flashing_copy_raspios(self):
         try:
-            response = subprocess.check_output(['sudo', 'bash', '-c', '. /home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/upgrade.sh; copy_raspbian']).decode().split('\n')[-2]
+            response = subprocess.check_output(['sudo', 'bash', '-c', '. /home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/upgrade.sh; copy_raspios']).decode().split('\n')[-2]
             if response == 'Error_Iotbox_Download':
                 raise Exception(response)
             return Response('success', status=200)
