@@ -947,9 +947,11 @@ class Import(models.TransientModel):
             for index, column_name in enumerate(columns):
                 if column_name:
                     # Update to latest selected field
-                    exist_records = BaseImportMapping.search([('res_model', '=', self.res_model), ('column_name', '=', column_name)])
-                    if exist_records:
-                        exist_records.write({'field_name': fields[index]})
+                    mapping_domain = [('res_model', '=', self.res_model), ('column_name', '=', column_name)]
+                    column_mapping = BaseImportMapping.search(mapping_domain, limit=1)
+                    if column_mapping:
+                        if column_mapping.field_name != fields[index]:
+                            column_mapping.field_name = fields[index]
                     else:
                         BaseImportMapping.create({
                             'res_model': self.res_model,
