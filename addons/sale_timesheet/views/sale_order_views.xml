@@ -6,9 +6,6 @@
             <field name="inherit_id" ref="sale_project.view_order_form_inherit_sale_project"/>
             <field name="arch" type="xml">
                 <data>
-                    <xpath expr="//button[@name='action_view_project_ids']" position="attributes">
-                        <attribute name="string">Project Overview</attribute>
-                    </xpath>
                     <xpath expr="//button[@name='action_view_invoice']" position="before">
                         <field name="timesheet_count" invisible="1" />
                         <button type="object"
