@@ -11,7 +11,7 @@ class AccountChartTemplate(models.Model):
 
     def _get_fp_vals(self, company, position):
         res = super()._get_fp_vals(company, position)
-        if company.country_id == self.env.ref('base.ar'):
+        if company.country_id.code == "AR":
             res['l10n_ar_afip_responsibility_type_ids'] = [
                 (6, False, position.l10n_ar_afip_responsibility_type_ids.ids)]
         return res
@@ -20,7 +20,7 @@ class AccountChartTemplate(models.Model):
         """ If Argentinian chart, we modify the defaults values of sales journal to be a preprinted journal
         """
         res = super()._prepare_all_journals(acc_template_ref, company, journals_dict=journals_dict)
-        if company.country_id == self.env.ref('base.ar'):
+        if company.country_id.code == "AR":
             for vals in res:
                 if vals['type'] == 'sale':
                     vals.update({
@@ -58,7 +58,7 @@ class AccountChartTemplate(models.Model):
             company_responsibility = company.l10n_ar_afip_responsibility_type_id
             company.write({
                 'l10n_ar_afip_responsibility_type_id': coa_responsibility.id,
-                'country_id': self.env.ref('base.ar').id,
+                'country_id': self.env['res.country'].search([('code', '=', 'AR')]).id,
                 'tax_calculation_rounding_method': 'round_globally',
             })
             # set CUIT identification type (which is the argentinian vat) in the created company partner instead of
