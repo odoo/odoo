@@ -447,7 +447,7 @@ def _get_tests_modules(path, module):
     except ImportError as e:  # will also catch subclass ModuleNotFoundError of P3.6
         # Hide ImportErrors on `tests` sub-module, but display other exceptions
         if pycompat.PY2:
-            if e.message.startswith('No module named') and e.message.endswith("tests"):
+            if e.message.startswith('No module named') and e.message.endswith("tests"): # pylint: disable=exception-message-attribute
                 return []
         else:
             if e.name == modpath + '.tests' and e.msg.startswith('No module named'):
