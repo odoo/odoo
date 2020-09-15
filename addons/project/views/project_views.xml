@@ -445,6 +445,37 @@
             </field>
         </record>
 
+        <record id="project_view_kanban" model="ir.ui.view">
+            <field name="name">project.project.kanban</field>
+            <field name="model">project.project</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile">
+                    <field name="user_id" string="Project Manager"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_content oe_kanban_global_click o_kanban_get_form">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <strong><field name="name" string="Project Name"/></strong>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-8">
+                                        <field name="partner_id" string="Contact"/>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="oe_kanban_bottom_right float-right">
+                                            <field name="user_id" widget="many2one_avatar_user"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
         <record id="project_project_view_form_simplified" model="ir.ui.view">
             <field name="name">project.project.view.form.simplified</field>
             <field name="model">project.project</field>
@@ -731,7 +762,6 @@
                             </group>
                             <group attrs="{'invisible': ['|', ('recurring_task', '=', False), ('recurrence_message', '=', False)]}">
                                 <div class="alert alert-success o_form_project_recurrence_message" role="status">
-                                    <p><span class="fa fa-check-circle"></span> Next Occurrences:</p>
                                     <field name="recurrence_message" widget="html" class="mb-0" />
                                 </div>
                             </group>
