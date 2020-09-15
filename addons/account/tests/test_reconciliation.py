@@ -96,6 +96,18 @@ class TestReconciliation(AccountingTestCase):
         })
 
         # Tax Cash Basis
+        self.tax_tag_base = self.env['account.account.tag'].create({
+            'name': "Base tag",
+            'applicability': 'taxes',
+            'country_id': company.country_id.id,
+        })
+
+        self.tax_tag_tax = self.env['account.account.tag'].create({
+            'name': "Tax tag",
+            'applicability': 'taxes',
+            'country_id': company.country_id.id,
+        })
+
         self.tax_cash_basis = self.env['account.tax'].create({
             'name': 'cash basis 20%',
             'type_tax_use': 'purchase',
@@ -108,12 +120,14 @@ class TestReconciliation(AccountingTestCase):
                     (0,0, {
                         'factor_percent': 100,
                         'repartition_type': 'base',
+                        'tag_ids': [(6, 0, self.tax_tag_base.ids)],
                     }),
 
                     (0,0, {
                         'factor_percent': 100,
                         'repartition_type': 'tax',
                         'account_id': self.tax_final_account.id,
+                        'tag_ids': [(6, 0, self.tax_tag_tax.ids)],
                     }),
                 ],
             'refund_repartition_line_ids': [
@@ -2084,6 +2098,21 @@ class TestReconciliationExec(TestReconciliation):
 
         # Check full reconciliation
         self.assertTrue(all(line.full_reconcile_id for line in lines_to_reconcile), "All tax lines should be fully reconciled")
+
+    def test_reconciliation_cash_basis_tags(self):
+        invoice = self._create_invoice(auto_validate=True, tax=self.tax_cash_basis)
+        self.env['account.payment.register'].with_context(active_ids=invoice.ids).create({}).create_payments()
+        partial_rec = invoice.line_ids.filtered(lambda x: x.account_id.user_type_id.type == 'receivable').matched_credit_ids
+        caba_move = self.env['account.move'].search([('tax_cash_basis_rec_id', '=', partial_rec.id)])
+
+        caba_base_line = caba_move.line_ids.filtered(lambda x: x.tax_ids)
+        caba_tax_line = caba_move.line_ids.filtered(lambda x: x.tax_line_id)
+        other_lines = caba_move.line_ids - (caba_base_line + caba_tax_line)
+
+        self.assertRecordValues(caba_base_line + caba_tax_line, [
+          {'tag_ids': self.tax_tag_base.ids},
+          {'tag_ids': self.tax_tag_tax.ids},
+        ])
 
     def test_reconciliation_with_currency(self):
         #reconciliation on an account having a foreign currency being
