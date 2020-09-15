@@ -58,6 +58,7 @@ The kernel of Odoo, needed for all installation.
         'wizard/base_update_translations_views.xml',
         'wizard/base_partner_merge_views.xml',
         'data/ir_actions_data.xml',
+        'data/ir_actions_report_data.xml',
         'data/ir_demo_failure_data.xml',
         'views/res_company_views.xml',
         'views/res_lang_views.xml',

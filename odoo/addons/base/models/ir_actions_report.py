@@ -9,6 +9,7 @@ from odoo.sql_db import TestCursor
 from odoo.http import request
 from odoo.osv.expression import NEGATIVE_TERM_OPERATORS, FALSE_DOMAIN
 
+import datetime
 import time
 import base64
 import io
@@ -423,11 +424,29 @@ class IrActionsReport(models.Model):
             temporary_files.append(head_file_path)
             files_command_args.extend(['--header-html', head_file_path])
         if footer:
-            foot_file_fd, foot_file_path = tempfile.mkstemp(suffix='.html', prefix='report.footer.tmp.')
-            with closing(os.fdopen(foot_file_fd, 'wb')) as foot_file:
-                foot_file.write(footer)
-            temporary_files.append(foot_file_path)
-            files_command_args.extend(['--footer-html', foot_file_path])
+            IrConfig = self.env['ir.config_parameter'].sudo()
+            dynamic = IrConfig.get_param('report.dynamic.footer').lower() == "true"
+            if dynamic:
+                foot_file_fd, foot_file_path = tempfile.mkstemp(suffix='.html', prefix='report.footer.tmp.')
+                with closing(os.fdopen(foot_file_fd, 'wb')) as foot_file:
+                    foot_file.write(footer)
+                temporary_files.append(foot_file_path)
+                files_command_args.extend(['--footer-html', foot_file_path])
+            else:
+                # Custom footer definition to use instead of the html one
+                additional_spaces = " " * 4  # Compensate body html margin by adding spaces
+                now_datetime = additional_spaces + fields.Datetime.context_timestamp(self, datetime.datetime.now()).strftime(
+                    '%Y-%m-%d %H:%M')
+                company_name = self.env.user.company_id.name or self.env.company.name or ""
+                paging = "[page] / [topage]" + additional_spaces
+                files_command_args.extend(
+                    [
+                        '--footer-left', now_datetime,
+                        '--footer-center', company_name,
+                        '--footer-right', paging,
+                        '--footer-font-size', "10",
+                        '--footer-spacing', "1",
+                    ])
 
         paths = []
         for i, body in enumerate(bodies):
