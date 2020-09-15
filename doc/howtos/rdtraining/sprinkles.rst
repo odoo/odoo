@@ -264,11 +264,15 @@ widgets take the ``options`` attribute in to customize their behavior.
 In the :ref:`howto/rdtraining/firstui` chapter, we saw that reserved fields was used for
 specific behaviors. For example, the ``active`` field is used to automatically filter out
 inactive records. We added the ``state`` as a reserved field as well. It's not time to use it!
+A ``state`` field is used in combination with a ``states`` attribute in the view to display
+buttons conditionally.
 
 .. exercise:: Conditional display of buttons
 
     Use the ``states`` attribute to display the header buttons conditionally as depicted
     in the **Goal**.
+
+    Tip: do not hesitate to search for ``states=`` in the Odoo XML files to get some examples.
 
 More generally, it is possible to make a field ``invisible``, ``readonly`` or ``required`` based
 on the value of other fields thanks to the ``attrs`` attribute. Note that ``invisible`` also applies

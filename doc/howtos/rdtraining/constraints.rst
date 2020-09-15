@@ -93,11 +93,11 @@ raise an exception if its invariant is not satisfied::
 
     ...
 
-    @api.constrains('age')
-    def _check_something(self):
+    @api.constrains('date_end')
+    def _check_date_end(self):
         for record in self:
-            if record.age > 20:
-                raise ValidationError("Your record is too old: %s" % record.age)
+            if record.date_end < fields.Date.today():
+                raise ValidationError("The end date cannot be set in the past")
         # all records passed the test, don't return anything
 
 A simple example can be found
@@ -116,6 +116,9 @@ A simple example can be found
         :meth:`~odoo.tools.float_utils.float_is_zero` methods when comparing floats!
 
     Be sure the constraint is triggered every time the selling price or the expected price is changed!
+
+SQL constrains are usually more efficient than Python constrains. When performance matters, always
+prefer SQL over Python constrains.
 
 Our real estate module is starting to look good: we added some business logic, and now we make sure
 the data is consistent. However, the user interface is still a bit rough. Let's see how we can

@@ -234,6 +234,8 @@ the current time.
     - the default number of bedrooms is 2
     - the default availability date is in 3 months
 
+    Tip: this might help you: :meth:`~odoo.fields.Date.today`
+
 Check that the default value are set as expected.
 
 Reserved Fields

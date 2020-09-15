@@ -55,7 +55,7 @@ A simple example can be found
 
     Tips:
     - do not add the ``editable="bottom"`` attribute that you can find in the example above. We'll
-      come back to it later.
+    come back to it later.
     - some field labels may need to be adapted to match the reference. 
 
 As always, you need to restart the server (do not forget the ``-u`` option) and refresh the browser
