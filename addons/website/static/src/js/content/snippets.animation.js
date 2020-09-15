@@ -941,6 +941,55 @@ registry.anchorSlide = publicWidget.Widget.extend({
     },
 });
 
+registry.FullScreenHeight = publicWidget.Widget.extend({
+    selector: '.o_full_screen_height',
+    disabledInEditableMode: false,
+
+    /**
+     * @override
+     */
+    start() {
+        if (this.$el.outerHeight() > this._computeIdealHeight()) {
+            // Only initialize if taller than the ideal height as some extra css
+            // rules may alter the full-screen-height class behavior in some
+            // cases (blog...).
+            this._adaptSize();
+            $(window).on('resize.FullScreenHeight', _.debounce(() => this._adaptSize(), 250));
+        }
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    destroy() {
+        this._super(...arguments);
+        $(window).off('.FullScreenHeight');
+        this.el.style.setProperty('min-height', '');
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _adaptSize() {
+        const height = this._computeIdealHeight();
+        this.el.style.setProperty('min-height', `${height}px`, 'important');
+    },
+    /**
+     * @private
+     */
+    _computeIdealHeight() {
+        const windowHeight = $(window).outerHeight();
+        // Doing it that way allows to considerer fixed headers, hidden headers,
+        // connected users, ...
+        const mainTopPos = $('#wrapwrap > main')[0].getBoundingClientRect().top;
+        return (windowHeight - mainTopPos);
+    },
+});
+
 registry.ScrollButton = registry.anchorSlide.extend({
     selector: '.o_scroll_button',
 
