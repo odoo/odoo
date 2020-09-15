@@ -499,9 +499,10 @@
         border: 0;
         font-size: 12px;
         user-select: none;
-        background-color: rgba(lightgray, 0.5);;
+        background-color: rgba(lightgray, 0.5);
         font-weight: 500;
         @include o-text-overflow;
+        transition: none; // remove transition to prevent badges from flickering at reload
     }
 }
 
