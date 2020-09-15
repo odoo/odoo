@@ -5915,6 +5915,25 @@ QUnit.module('basic_fields', {
         list.destroy();
     });
 
+    QUnit.test('priority widget with readonly attribute', async function (assert) {
+        assert.expect(1);
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+                <form>
+                    <field name="selection" widget="priority" readonly="1"/>
+                </form>`,
+            res_id: 2,
+        });
+
+        assert.containsN(form, '.o_field_widget.o_priority span', 2,
+            "stars of priority widget should rendered with span tag if readonly");
+
+        form.destroy();
+    });
 
     QUnit.module('StateSelection Widget');
 
