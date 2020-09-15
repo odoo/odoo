@@ -7438,6 +7438,35 @@ QUnit.module('basic_fields', {
 
         list.destroy();
     });
+
+    QUnit.test("FieldBadge component with decoration-xxx attributes and sorting list", async function (assert) {
+        assert.expect(6);
+
+        this.data.partner.fields.foo.sortable = true;
+
+        const list = await createView({
+            View: ListView,
+            model: "partner",
+            data: this.data,
+            arch: `
+                <list>
+                    <field name="selection"/>
+                    <field name="foo" widget="badge" decoration-danger="selection == 'done'" decoration-warning="selection == 'blocked'"/>
+                </list>`,
+        });
+
+        assert.containsN(list, '.o_field_badge[name="foo"]', 5);
+        assert.containsOnce(list, '.o_field_badge[name="foo"].bg-danger-light');
+        assert.containsOnce(list, '.o_field_badge[name="foo"].bg-warning-light');
+
+        // Sorting list view
+        await testUtils.dom.click(list.$('th.o_column_sortable:contains("Foo")'));
+        assert.containsN(list, '.o_field_badge[name="foo"]', 5);
+        assert.containsOnce(list, '.o_field_badge[name="foo"].bg-danger-light');
+        assert.containsOnce(list, '.o_field_badge[name="foo"].bg-warning-light');
+
+        list.destroy();
+    });
 });
 });
 });
