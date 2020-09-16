@@ -55,7 +55,7 @@ from .exceptions import AccessError, MissingError, ValidationError, UserError
 from .osv.query import Query
 from .tools import frozendict, lazy_classproperty, ormcache, \
                    Collector, LastOrderedSet, OrderedSet, IterableGenerator, \
-                   groupby, unique
+                   groupby
 from .tools.config import config
 from .tools.func import frame_codeinfo
 from .tools.misc import CountingStream, clean_context, DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT, get_lang
@@ -217,6 +217,19 @@ def origin_ids(ids):
         Actual ids are returned as is, and ids without origin are not returned.
     """
     return ((id_ or id_.origin) for id_ in ids if (id_ or getattr(id_, "origin", None)))
+
+
+def expand_ids(id0, ids):
+    """ Return an iterator of unique ids from the concatenation of ``[id0]`` and
+        ``ids``, and of the same kind (all real or all new).
+    """
+    yield id0
+    seen = {id0}
+    kind = bool(id0)
+    for id_ in ids:
+        if id_ not in seen and bool(id_) == kind:
+            yield id_
+            seen.add(id_)
 
 
 IdType = (int, str, NewId)
@@ -5621,27 +5634,20 @@ Fields:
         """ Return the cache of ``self``, mapping field names to values. """
         return RecordCache(self)
 
-    @api.model
     def _in_cache_without(self, field, limit=PREFETCH_MAX):
         """ Return records to prefetch that have no value in cache for ``field``
             (:class:`Field` instance), including ``self``.
             Return at most ``limit`` records.
         """
-        # This method returns records that are either all real, or all new.
+        ids = expand_ids(self.id, self._prefetch_ids)
+        ids = self.env.cache.get_missing_ids(self.browse(ids), field)
+        if limit:
+            ids = itertools.islice(ids, limit)
         # Those records are aimed at being either fetched, or computed.  But the
         # method '_fetch_field' is not correct with new records: it considers
         # them as forbidden records, and clears their cache!  On the other hand,
         # compute methods are not invoked with a mix of real and new records for
         # the sake of code simplicity.
-        kind = bool(self.id)
-        recs = self.browse(unique(self._prefetch_ids))
-        ids = [self.id]
-        for record_id in self.env.cache.get_missing_ids(recs - self, field):
-            if bool(record_id) != kind:
-                continue
-            ids.append(record_id)
-            if limit and limit <= len(ids):
-                break
         return self.browse(ids)
 
     @api.model
