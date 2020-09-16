@@ -99,7 +99,7 @@ class Website(Home):
         """ Redirect regular users (employees) to the backend) and others to
         the frontend
         """
-        if not redirect and request.params['login_success']:
+        if not redirect and request.params.get('login_success'):
             if request.env['res.users'].browse(uid).has_group('base.group_user'):
                 redirect = b'/web?' + request.httprequest.query_string
             else:
