@@ -707,6 +707,7 @@ class expression(object):
                         right = comodel._search([(path[1], operator, right)], order='id')
                         operator = 'in'
                     domain = field.determine_domain(model, operator, right)
+                    model._flush_search(domain, order='id')
 
                 for elem in normalize_domain(domain):
                     push(elem, model, alias, internal=True)

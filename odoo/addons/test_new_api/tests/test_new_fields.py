@@ -1047,6 +1047,7 @@ class TestFields(TransactionCaseWithUserDemo):
     def test_25_related_multi(self):
         """ test write() on several related fields based on a common computed field. """
         foo = self.env['test_new_api.foo'].create({'name': 'A', 'value1': 1, 'value2': 2})
+        oof = self.env['test_new_api.foo'].create({'name': 'B', 'value1': 1, 'value2': 2})
         bar = self.env['test_new_api.bar'].create({'name': 'A'})
         self.assertEqual(bar.foo, foo)
         self.assertEqual(bar.value1, 1)
@@ -1056,6 +1057,11 @@ class TestFields(TransactionCaseWithUserDemo):
         bar.write({'value1': 3, 'value2': 4})
         self.assertEqual(foo.value1, 3)
         self.assertEqual(foo.value2, 4)
+
+        # modify 'name', and search on 'foo': this should flush 'name'
+        bar.name = 'B'
+        self.assertEqual(bar.foo, oof)
+        self.assertIn(bar, bar.search([('foo', 'in', oof.ids)]))
 
     def test_26_inherited(self):
         """ test inherited fields. """
