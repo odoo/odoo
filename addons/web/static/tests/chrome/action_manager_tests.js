@@ -1571,6 +1571,16 @@ QUnit.module('ActionManager', {
     QUnit.test('execute a new action while switching to another controller', async function (assert) {
         assert.expect(15);
 
+        /*
+         * This test's bottom line is that a doAction always has priority
+         * over a switch controller (clicking on a record row to go to form view).
+         * In general, the last actionManager's operation has priority because we want
+         * to allow the user to make mistakes, or to rapidly reconsider her next action.
+         * Here we assert that the actionManager's RPC are in order, but a 'read' operation
+         * is expected, with the current implementation, to take place when switching to the form view.
+         * Ultimately the form view's 'read' is superfluous, but can happen at any point of the flow,
+         * except at the very end, which should always be the final action's list's 'search_read'.
+         */
         var def;
         var actionManager = await createActionManager({
             actions: this.actions,
@@ -1578,10 +1588,11 @@ QUnit.module('ActionManager', {
             data: this.data,
             mockRPC: function (route, args) {
                 var result = this._super.apply(this, arguments);
-                assert.step(args.method || route);
                 if (args.method === 'read') {
+                    assert.ok(true, "A 'read' should have been done. Check test's comment though.");
                     return Promise.resolve(def).then(_.constant(result));
                 }
+                assert.step(args.method || route);
                 return result;
             },
         });
@@ -1612,7 +1623,6 @@ QUnit.module('ActionManager', {
             'load_views', // action 3
             '/web/dataset/search_read', // search read of list view of action 3
             '/web/action/load', // action 4
-            'read', // read the opened record of action 3 (this request is blocked)
             'load_views', // action 4
             '/web/dataset/search_read', // search read action 4
         ]);
