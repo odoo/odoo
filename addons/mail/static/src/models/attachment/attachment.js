@@ -2,8 +2,8 @@ odoo.define('mail/static/src/models/attachment/attachment.js', function (require
 'use strict';
 
 const { registerNewModel } = require('mail/static/src/model/model_core.js');
-const { attr, many2many, many2one } = require('mail/static/src/model/model_field.js');
 const { clear } = require('mail/static/src/model/model_field_command.js');
+const { attr, many2many, many2one } = require('mail/static/src/model/model_field_utils.js');
 
 function factory(dependencies) {
 
@@ -27,23 +27,23 @@ function factory(dependencies) {
         static convertData(data) {
             const data2 = {};
             if ('filename' in data) {
-                data2.filename = data.filename;
+                data2.__mfield_filename = data.filename;
             }
             if ('id' in data) {
-                data2.id = data.id;
+                data2.__mfield_id = data.id;
             }
             if ('mimetype' in data) {
-                data2.mimetype = data.mimetype;
+                data2.__mfield_mimetype = data.mimetype;
             }
             if ('name' in data) {
-                data2.name = data.name;
+                data2.__mfield_name = data.name;
             }
 
             // relation
             if ('res_id' in data && 'res_model' in data) {
-                data2.originThread = [['insert', {
-                    id: data.res_id,
-                    model: data.res_model,
+                data2.__mfield_originThread = [['insert', {
+                    __mfield_id: data.res_id,
+                    __mfield_model: data.res_model,
                 }]];
             }
 
@@ -57,8 +57,8 @@ function factory(dependencies) {
             const isMulti = typeof data[Symbol.iterator] === 'function';
             const dataList = isMulti ? data : [data];
             for (const data of dataList) {
-                if (!data.id) {
-                    data.id = getAttachmentNextTemporaryId();
+                if (!data.__mfield_id) {
+                    data.__mfield_id = getAttachmentNextTemporaryId();
                 }
             }
             return super.create(...arguments);
@@ -87,9 +87,9 @@ function factory(dependencies) {
             if (!attachments.includes(attachment)) {
                 return;
             }
-            this.env.messaging.dialogManager.open('mail.attachment_viewer', {
-                attachment: [['link', attachment]],
-                attachments: [['replace', attachments]],
+            this.env.messaging.__mfield_dialogManager(this).open('mail.attachment_viewer', {
+                __mfield_attachment: [['link', attachment]],
+                __mfield_attachments: [['replace', attachments]],
             });
         }
 
@@ -97,14 +97,14 @@ function factory(dependencies) {
          * Remove this attachment globally.
          */
         async remove() {
-            if (!this.isTemporary) {
+            if (!this.__mfield_isTemporary(this)) {
                 await this.async(() => this.env.services.rpc({
                     model: 'ir.attachment',
                     method: 'unlink',
-                    args: [this.id],
+                    args: [this.__mfield_id(this)],
                 }, { shadow: true }));
-            } else if (this.uploadingAbortController) {
-                this.uploadingAbortController.abort();
+            } else if (this.__mfield_uploadingAbortController(this)) {
+                this.__mfield_uploadingAbortController(this).abort();
             }
             this.delete();
         }
@@ -117,7 +117,7 @@ function factory(dependencies) {
          * @override
          */
         static _createRecordLocalId(data) {
-            return `${this.modelName}_${data.id}`;
+            return `${this.modelName}_${data.__mfield_id}`;
         }
 
         /**
@@ -125,16 +125,16 @@ function factory(dependencies) {
          * @returns {mail.composer[]}
          */
         _computeComposers() {
-            if (this.isTemporary) {
+            if (this.__mfield_isTemporary(this)) {
                 return [];
             }
             const relatedTemporaryAttachment = this.env.models['mail.attachment']
                 .find(attachment =>
-                    attachment.filename === this.filename &&
-                    attachment.isTemporary
+                    attachment.__mfield_filename(this) === this.__mfield_filename(this) &&
+                    attachment.__mfield_isTemporary(this)
                 );
             if (relatedTemporaryAttachment) {
-                const composers = relatedTemporaryAttachment.composers;
+                const composers = relatedTemporaryAttachment.__mfield_composers(this);
                 relatedTemporaryAttachment.delete();
                 return [['replace', composers]];
             }
@@ -146,17 +146,17 @@ function factory(dependencies) {
          * @returns {string|undefined}
          */
         _computeDefaultSource() {
-            if (this.fileType === 'image') {
-                return `/web/image/${this.id}?unique=1&amp;signature=${this.checksum}&amp;model=ir.attachment`;
+            if (this.__mfield_fileType(this) === 'image') {
+                return `/web/image/${this.__mfield_id(this)}?unique=1&amp;signature=${this.__mfield_checkSum(this)}&amp;model=ir.attachment`;
             }
-            if (this.fileType === 'application/pdf') {
-                return `/web/static/lib/pdfjs/web/viewer.html?file=/web/content/${this.id}?model%3Dir.attachment`;
+            if (this.__mfield_fileType(this) === 'application/pdf') {
+                return `/web/static/lib/pdfjs/web/viewer.html?file=/web/content/${this.__mfield_id(this)}?model%3Dir.attachment`;
             }
-            if (this.fileType && this.fileType.includes('text')) {
-                return `/web/content/${this.id}?model%3Dir.attachment`;
+            if (this.__mfield_fileType(this) && this.__mfield_fileType(this).includes('text')) {
+                return `/web/content/${this.__mfield_id(this)}?model%3Dir.attachment`;
             }
-            if (this.fileType === 'youtu') {
-                const urlArr = this.url.split('/');
+            if (this.__mfield_fileType(this) === 'youtu') {
+                const urlArr = this.__mfield_url(this).split('/');
                 let token = urlArr[urlArr.length - 1];
                 if (token.includes('watch')) {
                     token = token.split('v=')[1];
@@ -167,8 +167,8 @@ function factory(dependencies) {
                 }
                 return `https://www.youtube.com/embed/${token}`;
             }
-            if (this.fileType === 'video') {
-                return `/web/image/${this.id}?model=ir.attachment`;
+            if (this.__mfield_fileType(this) === 'video') {
+                return `/web/image/${this.__mfield_id(this)}?model=ir.attachment`;
             }
             return clear();
         }
@@ -178,7 +178,7 @@ function factory(dependencies) {
          * @returns {string|undefined}
          */
         _computeDisplayName() {
-            const displayName = this.name || this.filename;
+            const displayName = this.__mfield_name(this) || this.__mfield_filename(this);
             if (displayName) {
                 return displayName;
             }
@@ -190,7 +190,7 @@ function factory(dependencies) {
          * @returns {string|undefined}
          */
         _computeExtension() {
-            const extension = this.filename && this.filename.split('.').pop();
+            const extension = this.__mfield_filename(this) && this.__mfield_filename(this).split('.').pop();
             if (extension) {
                 return extension;
             }
@@ -202,14 +202,14 @@ function factory(dependencies) {
          * @returns {string|undefined}
          */
         _computeFileType() {
-            if (this.type === 'url' && !this.url) {
+            if (this.__mfield_type(this) === 'url' && !this.__mfield_url(this)) {
                 return clear();
-            } else if (!this.mimetype) {
+            } else if (!this.__mfield_mimetype(this)) {
                 return clear();
             }
-            const match = this.type === 'url'
-                ? this.url.match('(youtu|.png|.jpg|.gif)')
-                : this.mimetype.match('(image|video|application/pdf|text)');
+            const match = this.__mfield_type(this) === 'url'
+                ? this.__mfield_url(this).match('(youtu|.png|.jpg|.gif)')
+                : this.__mfield_mimetype(this).match('(image|video|application/pdf|text)');
             if (!match) {
                 return clear();
             }
@@ -224,7 +224,7 @@ function factory(dependencies) {
          * @returns {boolean}
          */
         _computeIsLinkedToComposer() {
-            return this.composers.length > 0;
+            return this.__mfield_composers(this).length > 0;
         }
 
         /**
@@ -232,10 +232,10 @@ function factory(dependencies) {
          * @returns {boolean}
          */
         _computeIsTextFile() {
-            if (!this.fileType) {
+            if (!this.__mfield_fileType(this)) {
                 return false;
             }
-            return this.fileType.includes('text');
+            return this.__mfield_fileType(this).includes('text');
         }
 
         /**
@@ -244,10 +244,10 @@ function factory(dependencies) {
          */
         _computeIsViewable() {
             return (
-                this.mediaType === 'image' ||
-                this.mediaType === 'video' ||
-                this.mimetype === 'application/pdf' ||
-                this.isTextFile
+                this.__mfield_mediaType(this) === 'image' ||
+                this.__mfield_mediaType(this) === 'video' ||
+                this.__mfield_mimetype(this) === 'application/pdf' ||
+                this.__mfield_isTextFile(this)
             );
         }
 
@@ -256,7 +256,7 @@ function factory(dependencies) {
          * @returns {string}
          */
         _computeMediaType() {
-            return this.mimetype && this.mimetype.split('/').shift();
+            return this.__mfield_mimetype(this) && this.__mfield_mimetype(this).split('/').shift();
         }
 
         /**
@@ -264,8 +264,8 @@ function factory(dependencies) {
          * @returns {AbortController|undefined}
          */
         _computeUploadingAbortController() {
-            if (this.isTemporary) {
-                if (!this.uploadingAbortController) {
+            if (this.__mfield_isTemporary(this)) {
+                if (!this.__mfield_uploadingAbortController(this)) {
                     const abortController = new AbortController();
                     abortController.signal.onabort = () => {
                         this.env.messagingBus.trigger('o-attachment-upload-abort', {
@@ -274,104 +274,112 @@ function factory(dependencies) {
                     };
                     return abortController;
                 }
-                return this.uploadingAbortController;
+                return this.__mfield_uploadingAbortController(this);
             }
             return undefined;
         }
     }
 
     Attachment.fields = {
-        activities: many2many('mail.activity', {
-            inverse: 'attachments',
+        __mfield_activities: many2many('mail.activity', {
+            inverse: '__mfield_attachments',
         }),
-        attachmentViewer: many2many('mail.attachment_viewer', {
-            inverse: 'attachments',
+        __mfield_attachmentViewer: many2many('mail.attachment_viewer', {
+            inverse: '__mfield_attachments',
         }),
-        checkSum: attr(),
-        composers: many2many('mail.composer', {
+        __mfield_checkSum: attr(),
+        __mfield_composers: many2many('mail.composer', {
             compute: '_computeComposers',
-            inverse: 'attachments',
+            inverse: '__mfield_attachments',
         }),
-        defaultSource: attr({
+        __mfield_defaultSource: attr({
             compute: '_computeDefaultSource',
             dependencies: [
-                'checkSum',
-                'fileType',
-                'id',
-                'url',
+                '__mfield_checkSum',
+                '__mfield_fileType',
+                '__mfield_id',
+                '__mfield_url',
             ],
         }),
-        displayName: attr({
+        __mfield_displayName: attr({
             compute: '_computeDisplayName',
             dependencies: [
-                'filename',
-                'name',
+                '__mfield_filename',
+                '__mfield_name',
             ],
         }),
-        extension: attr({
+        __mfield_extension: attr({
             compute: '_computeExtension',
-            dependencies: ['filename'],
+            dependencies: [
+                '__mfield_filename',
+            ],
         }),
-        filename: attr(),
-        fileType: attr({
+        __mfield_filename: attr(),
+        __mfield_fileType: attr({
             compute: '_computeFileType',
             dependencies: [
-                'mimetype',
-                'type',
-                'url',
+                '__mfield_mimetype',
+                '__mfield_type',
+                '__mfield_url',
             ],
         }),
-        id: attr(),
-        isLinkedToComposer: attr({
+        __mfield_id: attr(),
+        __mfield_isLinkedToComposer: attr({
             compute: '_computeIsLinkedToComposer',
-            dependencies: ['composers'],
+            dependencies: [
+                '__mfield_composers',
+            ],
         }),
-        isTemporary: attr({
+        __mfield_isTemporary: attr({
             default: false,
         }),
-        isTextFile: attr({
+        __mfield_isTextFile: attr({
             compute: '_computeIsTextFile',
-            dependencies: ['fileType'],
-        }),
-        isViewable: attr({
-            compute: '_computeIsViewable',
             dependencies: [
-                'mediaType',
-                'isTextFile',
-                'mimetype',
+                '__mfield_fileType',
             ],
         }),
-        mediaType: attr({
+        __mfield_isViewable: attr({
+            compute: '_computeIsViewable',
+            dependencies: [
+                '__mfield_mediaType',
+                '__mfield_isTextFile',
+                '__mfield_mimetype',
+            ],
+        }),
+        __mfield_mediaType: attr({
             compute: '_computeMediaType',
-            dependencies: ['mimetype'],
+            dependencies: [
+                '__mfield_mimetype',
+            ],
         }),
-        messages: many2many('mail.message', {
-            inverse: 'attachments',
+        __mfield_messages: many2many('mail.message', {
+            inverse: '__mfield_attachments',
         }),
-        mimetype: attr({
+        __mfield_mimetype: attr({
             default: '',
         }),
-        name: attr(),
-        originThread: many2one('mail.thread', {
-            inverse: 'originThreadAttachments',
+        __mfield_name: attr(),
+        __mfield_originThread: many2one('mail.thread', {
+            inverse: '__mfield_originThreadAttachments',
         }),
-        size: attr(),
-        threads: many2many('mail.thread', {
-            inverse: 'attachments',
+        __mfield_size: attr(),
+        __mfield_threads: many2many('mail.thread', {
+            inverse: '__mfield_attachments',
         }),
-        type: attr(),
         /**
          * Abort Controller linked to the uploading process of this attachment.
          * Useful in order to cancel the in-progress uploading of this attachment.
          */
-        uploadingAbortController: attr({
+        __mfield_uploadingAbortController: attr({
             compute: '_computeUploadingAbortController',
             dependencies: [
-                'isTemporary',
-                'uploadingAbortController',
+                '__mfield_isTemporary',
+                '__mfield_uploadingAbortController',
             ],
         }),
-        url: attr(),
+        __mfield_type: attr(),
+        __mfield_url: attr(),
     };
 
     Attachment.modelName = 'mail.attachment';

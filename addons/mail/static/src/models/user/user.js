@@ -2,7 +2,7 @@ odoo.define('mail/static/src/models/user/user.js', function (require) {
 'use strict';
 
 const { registerNewModel } = require('mail/static/src/model/model_core.js');
-const { attr, one2one } = require('mail/static/src/model/model_field.js');
+const { attr, one2one } = require('mail/static/src/model/model_field_utils.js');
 
 function factory(dependencies) {
 
@@ -13,8 +13,10 @@ function factory(dependencies) {
          */
         _willDelete() {
             if (this.env.messaging) {
-                if (this === this.env.messaging.currentUser) {
-                    this.env.messaging.update({ currentUser: [['unlink']] });
+                if (this === this.env.messaging.__mfield_currentUser(this)) {
+                    this.env.messaging.update({
+                        __mfield_currentUser: [['unlink']],
+                    });
                 }
             }
             return super._willDelete(...arguments);
@@ -32,18 +34,18 @@ function factory(dependencies) {
         static convertData(data) {
             const data2 = {};
             if ('id' in data) {
-                data2.id = data.id;
+                data2.__mfield_id = data.id;
             }
             if ('partner_id' in data) {
                 if (!data.partner_id) {
-                    data2.partner = [['unlink']];
+                    data2.__mfield_partner = [['unlink']];
                 } else {
                     const partnerNameGet = data['partner_id'];
                     const partnerData = {
-                        display_name: partnerNameGet[1],
-                        id: partnerNameGet[0],
+                        __mfield_display_name: partnerNameGet[1],
+                        __mfield_id: partnerNameGet[0],
                     };
-                    data2.partner = [['insert', partnerData]];
+                    data2.__mfield_partner = [['insert', partnerData]];
                 }
             }
             return data2;
@@ -78,7 +80,7 @@ function factory(dependencies) {
          */
         async fetchPartner() {
             return this.env.models['mail.user'].performRpcRead({
-                ids: [this.id],
+                ids: [this.__mfield_id(this)],
                 fields: ['partner_id'],
                 context: { active_test: false },
             });
@@ -92,10 +94,10 @@ function factory(dependencies) {
          * @returns {mail.thread|undefined}
          */
         async getChat() {
-            if (!this.partner) {
+            if (!this.__mfield_partner(this)) {
                 await this.async(() => this.fetchPartner());
             }
-            if (!this.partner) {
+            if (!this.__mfield_partner(this)) {
                 // This user has been deleted from the server or never existed:
                 // - Validity of id is not verified at insert.
                 // - There is no bus notification in case of user delete from
@@ -108,15 +110,15 @@ function factory(dependencies) {
             }
             // in other cases a chat would be valid, find it or try to create it
             let chat = this.env.models['mail.thread'].find(thread =>
-                thread.channel_type === 'chat' &&
-                thread.correspondent === this.partner &&
-                thread.model === 'mail.channel' &&
-                thread.public === 'private'
+                thread.__mfield_channel_type(this) === 'chat' &&
+                thread.__mfield_correspondent(this) === this.__mfield_partner(this) &&
+                thread.__mfield_model(this) === 'mail.channel' &&
+                thread.__mfield_public(this) === 'private'
             );
             if (!chat) {
                 chat = await this.async(() =>
                     this.env.models['mail.thread'].performRpcCreateChat({
-                        partnerIds: [this.partner.id],
+                        partnerIds: [this.__mfield_partner(this).__mfield_id(this)],
                     })
                 );
             }
@@ -155,10 +157,10 @@ function factory(dependencies) {
          * @override
          */
         async openProfile() {
-            if (!this.partner) {
+            if (!this.__mfield_partner(this)) {
                 await this.async(() => this.fetchPartner());
             }
-            if (!this.partner) {
+            if (!this.__mfield_partner(this)) {
                 // This user has been deleted from the server or never existed:
                 // - Validity of id is not verified at insert.
                 // - There is no bus notification in case of user delete from
@@ -169,7 +171,7 @@ function factory(dependencies) {
                 });
                 return;
             }
-            return this.partner.openProfile();
+            return this.__mfield_partner(this).openProfile();
         }
 
         //----------------------------------------------------------------------
@@ -180,7 +182,7 @@ function factory(dependencies) {
          * @override
          */
         static _createRecordLocalId(data) {
-            return `${this.modelName}_${data.id}`;
+            return `${this.modelName}_${data.__mfield_id}`;
         }
 
         /**
@@ -188,7 +190,7 @@ function factory(dependencies) {
          * @returns {string|undefined}
          */
         _computeDisplayName() {
-            return this.display_name || this.partner && this.partner.display_name;
+            return this.__mfield_display_name(this) || this.__mfield_partner(this) && this.__mfield_partner(this).__mfield_display_name(this);
         }
 
         /**
@@ -196,43 +198,43 @@ function factory(dependencies) {
          * @returns {string|undefined}
          */
         _computeNameOrDisplayName() {
-            return this.partner && this.partner.nameOrDisplayName || this.display_name;
+            return this.__mfield_partner(this) && this.__mfield_partner(this).__mfield_nameOrDisplayName(this) || this.__mfield_display_name(this);
         }
     }
 
     User.fields = {
-        id: attr(),
-        display_name: attr({
+        __mfield_id: attr(),
+        __mfield_display_name: attr({
             compute: '_computeDisplayName',
             dependencies: [
-                'display_name',
-                'partnerDisplayName',
+                '__mfield_display_name',
+                '__mfield_partnerDisplayName',
             ],
         }),
-        model: attr({
+        __mfield_model: attr({
             default: 'res.user',
         }),
-        nameOrDisplayName: attr({
+        __mfield_nameOrDisplayName: attr({
             compute: '_computeNameOrDisplayName',
             dependencies: [
-                'display_name',
-                'partnerNameOrDisplayName',
+                '__mfield_display_name',
+                '__mfield_partnerNameOrDisplayName',
             ]
         }),
-        partner: one2one('mail.partner', {
-            inverse: 'user',
+        __mfield_partner: one2one('mail.partner', {
+            inverse: '__mfield_user',
         }),
         /**
          * Serves as compute dependency.
          */
-        partnerDisplayName: attr({
-            related: 'partner.display_name',
+        __mfield_partnerDisplayName: attr({
+            related: '__mfield_partner.__mfield_display_name',
         }),
         /**
          * Serves as compute dependency.
          */
-        partnerNameOrDisplayName: attr({
-            related: 'partner.nameOrDisplayName',
+        __mfield_partnerNameOrDisplayName: attr({
+            related: '__mfield_partner.__mfield_nameOrDisplayName',
         }),
     };
 

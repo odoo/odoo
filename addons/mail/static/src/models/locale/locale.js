@@ -2,7 +2,7 @@ odoo.define('mail/static/src/models/locale/locale.js', function (require) {
 'use strict';
 
 const { registerNewModel } = require('mail/static/src/model/model_core.js');
-const { attr } = require('mail/static/src/model/model_field.js');
+const { attr } = require('mail/static/src/model/model_field_utils.js');
 
 function factory(dependencies) {
 
@@ -23,7 +23,7 @@ function factory(dependencies) {
     }
 
     Locale.fields = {
-        textDirection: attr({
+        __mfield_textDirection: attr({
             compute: '_computeTextDirection',
         }),
     };

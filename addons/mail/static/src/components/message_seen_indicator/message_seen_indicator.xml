@@ -2,12 +2,12 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.MessageSeenIndicator" owl="1">
-        <span class="o_MessageSeenIndicator" t-att-class="{ 'o-all-seen': messageSeenIndicator and messageSeenIndicator.hasEveryoneSeen }" t-att-title="indicatorTitle">
-            <t t-if="messageSeenIndicator and !messageSeenIndicator.isMessagePreviousToLastCurrentPartnerMessageSeenByEveryone">
-                <t t-if="messageSeenIndicator.hasSomeoneFetched or messageSeenIndicator.hasSomeoneSeen">
+        <span class="o_MessageSeenIndicator" t-att-class="{ 'o-all-seen': messageSeenIndicator and messageSeenIndicator.__mfield_hasEveryoneSeen(mself) }" t-att-title="indicatorTitle">
+            <t t-if="messageSeenIndicator and !messageSeenIndicator.__mfield_isMessagePreviousToLastCurrentPartnerMessageSeenByEveryone(mself)">
+                <t t-if="messageSeenIndicator.__mfield_hasSomeoneFetched(mself) or messageSeenIndicator.__mfield_hasSomeoneSeen(mself)">
                     <i class="o_MessageSeenIndicator_icon o-first fa fa-check"/>
                 </t>
-                <t t-if="messageSeenIndicator.hasSomeoneSeen">
+                <t t-if="messageSeenIndicator.__mfield_hasSomeoneSeen(mself)">
                     <i class="o_MessageSeenIndicator_icon o-second fa fa-check"/>
                 </t>
             </t>

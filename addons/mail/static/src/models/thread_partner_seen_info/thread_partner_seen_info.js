@@ -2,7 +2,7 @@ odoo.define('mail/static/src/models/thread_partner_seen_info/thread_partner_seen
 'use strict';
 
 const { registerNewModel } = require('mail/static/src/model/model_core.js');
-const { attr, many2one } = require('mail/static/src/model/model_field.js');
+const { attr, many2one } = require('mail/static/src/model/model_field_utils.js');
 
 function factory(dependencies) {
 
@@ -16,8 +16,11 @@ function factory(dependencies) {
          * @override
          */
         static _createRecordLocalId(data) {
-            const { channelId, partnerId } = data;
-            return `${this.modelName}_${channelId}_${partnerId}`;
+            const {
+                __mfield_channelId,
+                __mfield_partnerId,
+            } = data;
+            return `${this.modelName}_${__mfield_channelId}_${__mfield_partnerId}`;
         }
 
         /**
@@ -25,7 +28,9 @@ function factory(dependencies) {
          * @returns {mail.partner|undefined}
          */
         _computePartner() {
-            return [['insert', { id: this.partnerId }]];
+            return [['insert', {
+                __mfield_id: this.__mfield_partnerId(this),
+            }]];
         }
 
         /**
@@ -34,8 +39,8 @@ function factory(dependencies) {
          */
         _computeThread() {
             return [['insert', {
-                id: this.channelId,
-                model: 'mail.channel',
+                __mfield_id: this.__mfield_channelId(this),
+                __mfield_model: 'mail.channel',
             }]];
         }
 
@@ -59,18 +64,20 @@ function factory(dependencies) {
          * (required fields) should improve and let us just use the relational
          * fields.
          */
-        channelId: attr(),
-        lastFetchedMessage: many2one('mail.message'),
-        lastSeenMessage: many2one('mail.message'),
+        __mfield_channelId: attr(),
+        __mfield_lastFetchedMessage: many2one('mail.message'),
+        __mfield_lastSeenMessage: many2one('mail.message'),
         /**
          * Partner that this seen info is related to.
          *
          * Should not write on this field to update relation, and instead
          * should write on @see partnerId field.
          */
-        partner: many2one('mail.partner', {
+        __mfield_partner: many2one('mail.partner', {
             compute: '_computePartner',
-            dependencies: ['partnerId'],
+            dependencies: [
+                '__mfield_partnerId',
+            ],
         }),
         /**
          * The id of partner this seen info is related to.
@@ -87,17 +94,19 @@ function factory(dependencies) {
          * (required fields) should improve and let us just use the relational
          * fields.
          */
-        partnerId: attr(),
+        __mfield_partnerId: attr(),
         /**
          * Thread (channel) that this seen info is related to.
          *
          * Should not write on this field to update relation, and instead
          * should write on @see channelId field.
          */
-        thread: many2one('mail.thread', {
+        __mfield_thread: many2one('mail.thread', {
             compute: '_computeThread',
-            dependencies: ['channelId'],
-            inverse: 'partnerSeenInfos',
+            dependencies: [
+                '__mfield_channelId',
+            ],
+            inverse: '__mfield_partnerSeenInfos',
         }),
     };
 

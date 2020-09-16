@@ -11,7 +11,7 @@ const components = {
     ThreadTextualTypingStatus: require('mail/static/src/components/thread_textual_typing_status/thread_textual_typing_status.js'),
 };
 const useDragVisibleDropZone = require('mail/static/src/component_hooks/use_drag_visible_dropzone/use_drag_visible_dropzone.js');
-const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
+const useModels = require('mail/static/src/component_hooks/use_models/use_models.js');
 const {
     isEventHandled,
     markEventHandled,
@@ -28,16 +28,7 @@ class Composer extends Component {
     constructor(...args) {
         super(...args);
         this.isDropZoneVisible = useDragVisibleDropZone();
-        useStore(props => {
-            const composer = this.env.models['mail.composer'].get(props.composerLocalId);
-            return {
-                composer: composer ? composer.__state : undefined,
-                isDeviceMobile: this.env.messaging.device.isMobile,
-                thread: composer && composer.thread
-                    ? composer.thread.__state
-                    : undefined,
-            };
-        });
+        useModels();
         /**
          * Reference of the emoji popover. Useful to include emoji popover as
          * contained "inside" the composer.
@@ -105,10 +96,10 @@ class Composer extends Component {
      * @returns {string}
      */
     get currentPartnerAvatar() {
-        const avatar = this.env.messaging.currentUser
+        const avatar = this.env.messaging.__mfield_currentUser(this)
             ? this.env.session.url('/web/image', {
                     field: 'image_128',
-                    id: this.env.messaging.currentUser.id,
+                    id: this.env.messaging.__mfield_currentUser(this).__mfield_id(this),
                     model: 'res.users',
                 })
             : '/web/static/src/img/user_menu_avatar.png';
@@ -119,7 +110,7 @@ class Composer extends Component {
      * Focus the composer.
      */
     focus() {
-        if (this.env.messaging.device.isMobile) {
+        if (this.env.messaging.__mfield_device(this).__mfield_isMobile(this)) {
             this.el.scrollIntoView();
         }
         this._textInputRef.comp.focus();
@@ -140,7 +131,7 @@ class Composer extends Component {
     get hasFooter() {
         return (
             this.props.hasThreadTyping ||
-            this.composer.attachments.length > 0 ||
+            this.composer.__mfield_attachments(this).length > 0 ||
             !this.props.isCompact
         );
     }
@@ -152,8 +143,8 @@ class Composer extends Component {
      */
     get hasHeader() {
         return (
-            (this.props.hasThreadName && this.composer.thread) ||
-            (this.props.hasFollowers && !this.composer.isLog)
+            (this.props.hasThreadName && this.composer.__mfield_thread(this)) ||
+            (this.props.hasFollowers && !this.composer.__mfield_isLog(this))
         );
     }
 
@@ -165,7 +156,7 @@ class Composer extends Component {
      */
     get newAttachmentExtraData() {
         return {
-            composers: [['replace', this.composer]],
+            __mfield_composers: [['replace', this.composer]],
         };
     }
 
@@ -182,8 +173,8 @@ class Composer extends Component {
      * @private
      */
     async _postMessage() {
-        if (!this.composer.canPostMessage) {
-            if (this.composer.hasUploadingAttachment) {
+        if (!this.composer.__mfield_canPostMessage(this)) {
+            if (this.composer.__mfield_hasUploadingAttachment(this)) {
                 this.env.services['notification'].notify({
                     message: this.env._t("Please wait while the file is uploading."),
                     type: 'warning',
@@ -202,7 +193,7 @@ class Composer extends Component {
      */
     _update() {
         if (this._subjectRef.el) {
-            this._subjectRef.el.value = this.composer.subjectContent;
+            this._subjectRef.el.value = this.composer.__mfield_subjectContent(this);
         }
     }
 
@@ -309,7 +300,9 @@ class Composer extends Component {
      * @private
      */
     _onInputSubject() {
-        this.composer.update({ subjectContent: this._subjectRef.el.value });
+        this.composer.update({
+            __mfield_subjectContent: this._subjectRef.el.value,
+        });
     }
 
     /**

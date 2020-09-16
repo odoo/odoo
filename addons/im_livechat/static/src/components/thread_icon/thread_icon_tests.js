@@ -51,8 +51,8 @@ QUnit.test('livechat: public website visitor is typing', async function (assert)
     });
     await this.start();
     const thread = this.env.models['mail.thread'].find(thread =>
-        thread.id === 20 &&
-        thread.model === 'mail.channel'
+        thread.__mfield_id() === 20 &&
+        thread.__mfield_model() === 'mail.channel'
     );
     await this.createThreadIcon(thread);
     assert.containsOnce(
@@ -70,7 +70,7 @@ QUnit.test('livechat: public website visitor is typing', async function (assert)
     await afterNextRender(() => {
         const typingData = {
             info: 'typing_status',
-            partner_id: this.env.messaging.publicPartner.id,
+            partner_id: this.env.messaging.__mfield_publicPartner().__mfield_id(),
             is_typing: true,
         };
         const notification = [[false, 'mail.channel', 20], typingData];

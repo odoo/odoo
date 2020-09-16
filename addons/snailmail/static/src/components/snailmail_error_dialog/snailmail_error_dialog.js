@@ -1,7 +1,7 @@
 odoo.define('snailmail/static/src/components/snailmail_error_dialog/snailmail_error_dialog.js', function (require) {
 'use strict';
 
-const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
+const useModels = require('mail/static/src/component_hooks/use_models/use_models.js');
 
 const Dialog = require('web.OwlDialog');
 
@@ -15,22 +15,7 @@ class SnailmailErrorDialog extends Component {
      */
     constructor(...args) {
         super(...args);
-        useStore(props => {
-            const message = this.env.models['mail.message'].get(props.messageLocalId);
-            const notifications = message ? message.notifications : [];
-            return {
-                message: message ? message.__state : undefined,
-                notifications: notifications.map(notification =>
-                    notification ? notification.__state : undefined
-                ),
-                snailmail_credits_url: this.env.messaging.snailmail_credits_url,
-                snailmail_credits_url_trial: this.env.messaging.snailmail_credits_url_trial,
-            };
-        }, {
-            compareDepth: {
-                notifications: 1,
-            },
-        });
+        useModels();
         // to manually trigger the dialog close event
         this._dialogRef = useRef('dialog');
     }
@@ -44,8 +29,8 @@ class SnailmailErrorDialog extends Component {
      */
     get hasCreditsError() {
         return (
-            this.notification.failure_type === 'sn_credit' ||
-            this.notification.failure_type === 'sn_trial'
+            this.notification.__mfield_failure_type(this) === 'sn_credit' ||
+            this.notification.__mfield_failure_type(this) === 'sn_trial'
         );
     }
 
@@ -61,7 +46,7 @@ class SnailmailErrorDialog extends Component {
      */
     get notification() {
         // Messages from snailmail are considered to have at most one notification.
-        return this.message.notifications[0];
+        return this.message.__mfield_notifications(this)[0];
     }
 
     /**

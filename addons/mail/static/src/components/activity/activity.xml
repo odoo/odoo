@@ -6,17 +6,17 @@
             <t t-if="activity">
                 <div class="o_Activity_sidebar">
                     <div class="o_Activity_user">
-                        <t t-if="activity.assignee">
-                            <img class="o_Activity_userAvatar" t-attf-src="/web/image/res.users/{{ activity.assignee.id }}/image_128" t-att-alt="activity.assignee.nameOrDisplayName"/>
+                        <t t-if="activity.__mfield_assignee(mself)">
+                            <img class="o_Activity_userAvatar" t-attf-src="/web/image/res.users/{{ activity.__mfield_assignee(mself).__mfield_id(mself) }}/image_128" t-att-alt="activity.__mfield_assignee(mself).__mfield_nameOrDisplayName(mself)"/>
                         </t>
                         <div class="o_Activity_iconContainer"
                             t-att-class="{
-                                'bg-success-full': activity.state === 'planned',
-                                'bg-warning-full': activity.state === 'today',
-                                'bg-danger-full': activity.state === 'overdue',
+                                'bg-success-full': activity.__mfield_state(mself) === 'planned',
+                                'bg-warning-full': activity.__mfield_state(mself) === 'today',
+                                'bg-danger-full': activity.__mfield_state(mself) === 'overdue',
                             }"
                         >
-                            <i class="o_Activity_icon fa" t-attf-class="{{ activity.icon }}"/>
+                            <i class="o_Activity_icon fa" t-attf-class="{{ activity.__mfield_icon(mself) }}"/>
                         </div>
                     </div>
                 </div>
@@ -24,25 +24,25 @@
                     <div class="o_Activity_info">
                         <div class="o_Activity_dueDateText"
                             t-att-class="{
-                                'o-default': activity.state === 'default',
-                                'o-overdue': activity.state === 'overdue',
-                                'o-planned': activity.state === 'planned',
-                                'o-today': activity.state === 'today',
+                                'o-default': activity.__mfield_state(mself) === 'default',
+                                'o-overdue': activity.__mfield_state(mself) === 'overdue',
+                                'o-planned': activity.__mfield_state(mself) === 'planned',
+                                'o-today': activity.__mfield_state(mself) === 'today',
                             }"
                         >
                             <t t-esc="delayLabel"/>
                         </div>
-                        <t t-if="activity.summary">
+                        <t t-if="activity.__mfield_summary(mself)">
                             <div class="o_Activity_summary">
                                 <t t-esc="summary"/>
                             </div>
                         </t>
-                        <t t-elif="activity.type">
+                        <t t-elif="activity.__mfield_type(mself)">
                             <div class="o_Activity_summary o_Activity_type">
-                                <t t-esc="activity.type.displayName"/>
+                                <t t-esc="activity.__mfield_type(mself).__mfield_displayName(mself)"/>
                             </div>
                         </t>
-                        <t t-if="activity.assignee">
+                        <t t-if="activity.__mfield_assignee(mself)">
                             <div class="o_Activity_userName">
                                 <t t-esc="assignedUserText"/>
                             </div>
@@ -55,37 +55,37 @@
                     <t t-if="state.areDetailsVisible">
                         <div class="o_Activity_details">
                             <dl class="dl-horizontal">
-                                <t t-if="activity.type">
+                                <t t-if="activity.__mfield_type(mself)">
                                     <dt>Activity type</dt>
                                     <dd class="o_Activity_type">
-                                        <t t-esc="activity.type.displayName"/>
+                                        <t t-esc="activity.__mfield_type(mself).__mfield_displayName(mself)"/>
                                     </dd>
                                 </t>
-                                <t t-if="activity.creator">
+                                <t t-if="activity.__mfield_creator(mself)">
                                     <dt>Created</dt>
                                     <dd class="o_Activity_detailsCreation">
                                         <t t-esc="formattedCreateDatetime"/>
-                                        <img class="o_Activity_detailsUserAvatar o_Activity_detailsCreatorAvatar" t-attf-src="/web/image/res.users/{{ activity.creator.id }}/image_128" t-att-title="activity.creator.nameOrDisplayName" t-att-alt="activity.creator.nameOrDisplayName"/>
+                                        <img class="o_Activity_detailsUserAvatar o_Activity_detailsCreatorAvatar" t-attf-src="/web/image/res.users/{{ activity.__mfield_creator(mself).__mfield_id(mself) }}/image_128" t-att-title="activity.__mfield_creator(mself).__mfield_nameOrDisplayName(mself)" t-att-alt="activity.__mfield_creator(mself).__mfield_nameOrDisplayName(mself)"/>
                                         <span class="o_Activity_detailsCreator">
-                                            <t t-esc="activity.creator.nameOrDisplayName"/>
+                                            <t t-esc="activity.__mfield_creator(mself).__mfield_nameOrDisplayName(mself)"/>
                                         </span>
                                     </dd>
                                 </t>
-                                <t t-if="activity.assignee">
+                                <t t-if="activity.__mfield_assignee(mself)">
                                     <dt>Assigned to</dt>
                                     <dd class="o_Activity_detailsAssignation">
-                                        <img class="o_Activity_detailsUserAvatar o_Activity_detailsAssignationUserAvatar" t-attf-src="/web/image/res.users/{{ activity.assignee.id }}/image_128" t-att-title="activity.assignee.nameOrDisplayName" t-att-alt="activity.assignee.nameOrDisplayName"/>
-                                        <t t-esc="activity.assignee.nameOrDisplayName"/>
+                                        <img class="o_Activity_detailsUserAvatar o_Activity_detailsAssignationUserAvatar" t-attf-src="/web/image/res.users/{{ activity.__mfield_assignee(mself).__mfield_id(mself) }}/image_128" t-att-title="activity.__mfield_assignee(mself).__mfield_nameOrDisplayName(mself)" t-att-alt="activity.__mfield_assignee(mself).__mfield_nameOrDisplayName(mself)"/>
+                                        <t t-esc="activity.__mfield_assignee(mself).__mfield_nameOrDisplayName(mself)"/>
                                     </dd>
                                 </t>
                                 <dt>Due on</dt>
                                 <dd class="o_Activity_detailsDueDate">
                                     <span class="o_Activity_deadlineDateText"
                                         t-att-class="{
-                                            'o-default': activity.state === 'default',
-                                            'o-overdue': activity.state === 'overdue',
-                                            'o-planned': activity.state === 'planned',
-                                            'o-today': activity.state === 'today',
+                                            'o-default': activity.__mfield_state(mself) === 'default',
+                                            'o-overdue': activity.__mfield_state(mself) === 'overdue',
+                                            'o-planned': activity.__mfield_state(mself) === 'planned',
+                                            'o-today': activity.__mfield_state(mself) === 'today',
                                         }"
                                     >
                                         <t t-esc="formattedDeadlineDate"/>
@@ -95,15 +95,15 @@
                         </div>
                     </t>
 
-                    <t t-if="activity.note">
+                    <t t-if="activity.__mfield_note(mself)">
                         <div class="o_Activity_note">
-                            <t t-raw="activity.note"/>
+                            <t t-raw="activity.__mfield_note(mself)"/>
                         </div>
                     </t>
 
-                    <t t-if="activity.mailTemplates.length > 0">
+                    <t t-if="activity.__mfield_mailTemplates(mself).length > 0">
                         <div class="o_Activity_mailTemplates">
-                            <t t-foreach="activity.mailTemplates" t-as="mailTemplate" t-key="mailTemplate.localId">
+                            <t t-foreach="activity.__mfield_mailTemplates(mself)" t-as="mailTemplate" t-key="mailTemplate.localId">
                                 <MailTemplate
                                     class="o_Activity_mailTemplate"
                                     activityLocalId="activity.localId"
@@ -113,9 +113,9 @@
                         </div>
                     </t>
 
-                    <t t-if="activity.canWrite">
+                    <t t-if="activity.__mfield_canWrite(mself)">
                         <div name="tools" class="o_Activity_tools">
-                            <t t-if="activity.category !== 'upload_file'">
+                            <t t-if="activity.__mfield_category(mself) !== 'upload_file'">
                                 <Popover position="'right'" title="MARK_DONE">
                                     <button class="o_Activity_toolButton o_Activity_markDoneButton btn btn-link" t-att-title="MARK_DONE">
                                         <i class="fa fa-check"/> Mark Done
@@ -130,9 +130,9 @@
                                     <i class="fa fa-upload"/> Upload Document
                                 </button>
                                 <FileUploader
-                                    attachmentLocalIds="activity.attachments.map(attachment => attachment.localId)"
-                                    uploadId="activity.res_id"
-                                    uploadModel="activity.res_model"
+                                    attachmentLocalIds="activity.__mfield_attachments(mself).map(attachment => attachment.localId)"
+                                    uploadId="activity.__mfield_res_id(mself)"
+                                    uploadModel="activity.__mfield_res_model(mself)"
                                     t-on-o-attachment-created="_onAttachmentCreated"
                                     t-ref="fileUploader"
                                 />

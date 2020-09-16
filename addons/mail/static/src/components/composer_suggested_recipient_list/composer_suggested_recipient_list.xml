@@ -3,12 +3,12 @@
     <t t-name="mail.ComposerSuggestedRecipientList" owl="1">
         <div class="o_ComposerSuggestedRecipientList">
             <t t-if="thread">
-                <t t-foreach="state.hasShowMoreButton ? thread.suggestedRecipientInfoList : thread.suggestedRecipientInfoList.slice(0,3)" t-as="recipientInfo" t-key="recipientInfo.localId">
+                <t t-foreach="state.hasShowMoreButton ? thread.__mfield_suggestedRecipientInfoList(mself) : thread.__mfield_suggestedRecipientInfoList(mself).slice(0,3)" t-as="recipientInfo" t-key="recipientInfo.localId">
                     <ComposerSuggestedRecipient
                         suggestedRecipientInfoLocalId="recipientInfo.localId"
                     />
                 </t>
-                <t t-if="thread.suggestedRecipientInfoList.length > 3">
+                <t t-if="thread.__mfield_suggestedRecipientInfoList(mself).length > 3">
                     <t t-if="!state.hasShowMoreButton" >
                         <button class="o_ComposerSuggestedRecipientList_showMore btn btn-sm btn-link" t-on-click="_onClickShowMore">
                             Show more

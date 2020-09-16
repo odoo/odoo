@@ -1,7 +1,7 @@
 odoo.define('mail/static/src/components/moderation_reject_dialog/moderation_reject_dialog.js', function (require) {
 'use strict';
 
-const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
+const useModels = require('mail/static/src/component_hooks/use_models/use_models.js');
 
 const Dialog = require('web.OwlDialog');
 
@@ -19,18 +19,7 @@ class ModerationRejectDialog extends Component {
             title: this.env._t("Message Rejected"),
             comment: this.env._t("Your message was rejected by moderator."),
         });
-        useStore(props => {
-            const messages = props.messageLocalIds.map(localId =>
-                this.env.models['mail.message'].get(localId)
-            );
-            return {
-                messages: messages.map(message => message ? message.__state : undefined),
-            };
-        }, {
-            compareDepth: {
-                messages: 1,
-            },
-        });
+        useModels();
         // to manually trigger the dialog close event
         this._dialogRef = useRef('dialog');
     }

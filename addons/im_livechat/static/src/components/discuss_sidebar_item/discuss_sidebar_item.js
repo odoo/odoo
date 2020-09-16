@@ -18,7 +18,7 @@ patch(components.DiscussSidebarItem, 'im_livechat/static/src/components/discuss_
      */
     hasUnpin(...args) {
         const res = this._super(...args);
-        return res || this.thread.channel_type === 'livechat';
+        return res || this.thread.__mfield_channel_type(this) === 'livechat';
     }
 
 });

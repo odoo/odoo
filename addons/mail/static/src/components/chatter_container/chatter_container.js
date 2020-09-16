@@ -4,7 +4,7 @@ odoo.define('mail/static/src/components/chatter_container/chatter_container.js',
 const components = {
     Chatter: require('mail/static/src/components/chatter/chatter.js'),
 };
-const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
+const useModels = require('mail/static/src/component_hooks/use_models/use_models.js');
 
 const { Component } = owl;
 
@@ -25,14 +25,7 @@ class ChatterContainer extends Component {
         super(...args);
         this.chatter = undefined;
         this._wasMessagingInitialized = false;
-        useStore(props => {
-            const isMessagingInitialized = this.env.isMessagingInitialized();
-            if (!this._wasMessagingInitialized && isMessagingInitialized) {
-                this._wasMessagingInitialized = true;
-                this.chatter = this.env.models['mail.chatter'].create(props);
-            }
-            return { isMessagingInitialized };
-        });
+        useModels();
     }
 
     mounted() {
@@ -56,10 +49,33 @@ class ChatterContainer extends Component {
 
     /**
      * @private
+     * @param {Object} props
+     * @returns {Object}
+     */
+    _convertPropsToChatterFields(props) {
+        return {
+            __mfield_activityIds: props.activityIds,
+            __mfield_context: props.context,
+            __mfield_followerIds: props.followerIds,
+            __mfield_hasActivities: props.hasActivities,
+            __mfield_hasFollowers: props.hasFollowers,
+            __mfield_hasMessageList: props.hasMessageList,
+            __mfield_isAttachmentBoxVisible: props.isAttachmentBoxVisible,
+            __mfield_messageIds: props.messageIds,
+            __mfield_threadAttachmentCount: props.threadAttachmentCount,
+            __mfield_threadId: props.threadId,
+            __mfield_threadModel: props.threadModel,
+        };
+    }
+
+    /**
+     * @private
      */
     _update() {
         if (this.chatter) {
-            this.chatter.update(this.props);
+            this.chatter.update(
+                this._convertPropsToChatterFields(this.props)
+            );
         }
     }
 

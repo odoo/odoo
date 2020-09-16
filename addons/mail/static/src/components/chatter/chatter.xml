@@ -8,11 +8,11 @@
                     class="o_Chatter_topbar"
                     chatterLocalId="chatter.localId"
                 />
-                <t t-if="chatter.threadView and chatter.isComposerVisible">
+                <t t-if="chatter.__mfield_threadView(mself) and chatter.__mfield_isComposerVisible(mself)">
                     <Composer
                         class="o_Chatter_composer"
-                        t-att-class="{ 'o-bordered': chatter.hasExternalBorder }"
-                        composerLocalId="chatter.thread.composer.localId"
+                        t-att-class="{ 'o-bordered': chatter.__mfield_hasExternalBorder(mself) }"
+                        composerLocalId="chatter.__mfield_thread(mself).__mfield_composer(mself).localId"
                         hasFollowers="true"
                         hasMentionSuggestionsBelowPosition="true"
                         isCompact="false"
@@ -22,25 +22,25 @@
                         t-ref="composer"
                     />
                 </t>
-                <t t-if="chatter.isAttachmentBoxVisible">
+                <t t-if="chatter.__mfield_isAttachmentBoxVisible(mself)">
                     <AttachmentBox
                         class="o_Chatter_attachmentBox"
-                        threadLocalId="chatter.thread.localId"
+                        threadLocalId="chatter.__mfield_thread(mself).localId"
                     />
                 </t>
-                <t t-if="chatter.thread and chatter.hasActivities and chatter.activities.length > 0">
+                <t t-if="chatter.__mfield_thread(mself) and chatter.__mfield_hasActivities(mself) and chatter.__mfield_activities(mself).length > 0">
                     <ActivityBox
                         class="o_Chatter_activityBox"
                         chatterLocalId="chatter.localId"
                     />
                 </t>
-                <t t-if="chatter.threadView">
+                <t t-if="chatter.__mfield_threadView(mself)">
                     <ThreadView
                         class="o_Chatter_thread"
                         hasComposer="false"
-                        hasScrollAdjust="chatter.hasMessageListScrollAdjust"
+                        hasScrollAdjust="chatter.__mfield_hasMessageListScrollAdjust(mself)"
                         order="'desc'"
-                        threadViewLocalId="chatter.threadView.localId"
+                        threadViewLocalId="chatter.__mfield_threadView(mself).localId"
                         t-ref="thread"
                     />
                 </t>

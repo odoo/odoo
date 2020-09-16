@@ -63,8 +63,8 @@ QUnit.test('mark as read', async function (assert) {
         },
     });
     const thread = this.env.models['mail.thread'].findFromIdentifyingData({
-        id: 11,
-        model: 'mail.channel',
+        __mfield_id: 11,
+        __mfield_model: 'mail.channel',
     });
     await this.createThreadPreviewComponent({ threadLocalId: thread.localId });
     assert.containsOnce(

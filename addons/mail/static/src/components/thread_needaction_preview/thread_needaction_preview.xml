@@ -11,37 +11,37 @@
                 <div class="o_ThreadNeedactionPreview_sidebar">
                     <div class="o_ThreadNeedactionPreview_imageContainer o_ThreadNeedactionPreview_sidebarItem">
                         <img class="o_ThreadNeedactionPreview_image" t-att-src="image()" alt="Thread Image"/>
-                        <t t-if="thread.correspondent and thread.correspondent.im_status">
+                        <t t-if="thread.__mfield_correspondent(mself) and thread.__mfield_correspondent(mself).__mfield_im_status(mself)">
                             <PartnerImStatusIcon
                                 class="o_ThreadNeedactionPreview_partnerImStatusIcon"
                                 t-att-class="{
-                                    'o-mobile': env.messaging.device.isMobile,
+                                    'o-mobile': env.messaging.__mfield_device(mself).__mfield_isMobile(mself),
                                 }"
-                                partnerLocalId="thread.correspondent.localId"
+                                partnerLocalId="thread.__mfield_correspondent(mself).localId"
                             />
                         </t>
                     </div>
                 </div>
                 <div class="o_ThreadNeedactionPreview_content">
                     <div class="o_ThreadNeedactionPreview_header">
-                        <span class="o_ThreadNeedactionPreview_name" t-att-class="{ 'o-mobile': env.messaging.device.isMobile }">
-                            <t t-esc="thread.displayName"/>
+                        <span class="o_ThreadNeedactionPreview_name" t-att-class="{ 'o-mobile': env.messaging.__mfield_device(mself).__mfield_isMobile(mself) }">
+                            <t t-esc="thread.__mfield_displayName(mself)"/>
                         </span>
                         <span class="o_ThreadNeedactionPreview_counter">
-                            (<t t-esc="thread.needactionMessages.length"/>)
+                            (<t t-esc="thread.__mfield_needactionMessages(mself).length"/>)
                         </span>
                         <span class="o-autogrow"/>
-                        <t t-if="thread.lastNeedactionMessage">
+                        <t t-if="thread.__mfield_lastNeedactionMessage(mself)">
                             <span class="o_ThreadNeedactionPreview_date">
-                                <t t-esc="thread.lastNeedactionMessage.date.fromNow()"/>
+                                <t t-esc="thread.__mfield_lastNeedactionMessage(mself).__mfield_date(mself).fromNow()"/>
                             </span>
                         </t>
                     </div>
                     <div class="o_ThreadNeedactionPreview_core">
                         <span class="o_ThreadNeedactionPreview_coreItem o_ThreadNeedactionPreview_inlineText" t-att-class="{ 'o-empty': inlineLastNeedactionMessageBody.length === 0 }">
-                            <t t-if="thread.lastMessage and thread.lastMessage.author">
+                            <t t-if="thread.__mfield_lastMessage(mself) and thread.__mfield_lastMessage(mself).__mfield_author(mself)">
                                 <MessageAuthorPrefix
-                                    messageLocalId="thread.lastMessage.localId"
+                                    messageLocalId="thread.__mfield_lastMessage(mself).localId"
                                     threadLocalId="thread.localId"
                                 />
                             </t>

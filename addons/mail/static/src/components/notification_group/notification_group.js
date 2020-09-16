@@ -1,7 +1,7 @@
 odoo.define('mail/static/src/components/notification_group/notification_group.js', function (require) {
 'use strict';
 
-const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
+const useModels = require('mail/static/src/component_hooks/use_models/use_models.js');
 
 const { Component } = owl;
 const { useRef } = owl.hooks;
@@ -13,12 +13,7 @@ class NotificationGroup extends Component {
      */
     constructor(...args) {
         super(...args);
-        useStore(props => {
-            const group = this.env.models['mail.notification_group'].get(props.notificationGroupLocalId);
-            return {
-                group: group ? group.__state : undefined,
-            };
-        });
+        useModels();
         /**
          * Reference of the "mark as read" button. Useful to disable the
          * top-level click handler when clicking on this specific button.
@@ -41,7 +36,7 @@ class NotificationGroup extends Component {
      * @returns {string|undefined}
      */
     image() {
-        if (this.group.notification_type === 'email') {
+        if (this.group.__mfield_notification_type(this) === 'email') {
             return '/mail/static/src/img/smiley/mailfailure.jpg';
         }
     }
@@ -61,8 +56,8 @@ class NotificationGroup extends Component {
             return;
         }
         this.group.openDocuments();
-        if (!this.env.messaging.device.isMobile) {
-            this.env.messaging.messagingMenu.close();
+        if (!this.env.messaging.__mfield_device(this).__mfield_isMobile(this)) {
+            this.env.messaging.__mfield_messagingMenu(this).close();
         }
     }
 
@@ -72,8 +67,8 @@ class NotificationGroup extends Component {
      */
     _onClickMarkAsRead(ev) {
         this.group.openCancelAction();
-        if (!this.env.messaging.device.isMobile) {
-            this.env.messaging.messagingMenu.close();
+        if (!this.env.messaging.__mfield_device(this).__mfield_isMobile(this)) {
+            this.env.messaging.__mfield_messagingMenu(this).close();
         }
     }
 

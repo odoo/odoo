@@ -4,7 +4,7 @@ odoo.define('mail/static/src/components/composer_suggestion_list/composer_sugges
 const components = {
     ComposerSuggestion: require('mail/static/src/components/composer_suggestion/composer_suggestion.js'),
 };
-const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
+const useModels = require('mail/static/src/component_hooks/use_models/use_models.js');
 
 const { Component } = owl;
 
@@ -15,33 +15,7 @@ class ComposerSuggestionList extends Component {
      */
     constructor(...args) {
         super(...args);
-        useStore(props => {
-            const composer = this.env.models['mail.composer'].get(props.composerLocalId);
-            const activeSuggestedRecord = composer
-                ? composer.activeSuggestedRecord
-                : undefined;
-            const extraSuggestedRecordsList = composer
-                ? composer.extraSuggestedRecordsList
-                : [];
-            const mainSuggestedRecordsList = composer
-                ? composer.mainSuggestedRecordsList
-                : [];
-            return {
-                activeSuggestedRecord: activeSuggestedRecord ? activeSuggestedRecord.__state : undefined,
-                composer: composer ? composer.__state : undefined,
-                extraSuggestedRecordsList: extraSuggestedRecordsList
-                    ? extraSuggestedRecordsList.map(record => record.__state)
-                    : [],
-                mainSuggestedRecordsList: mainSuggestedRecordsList
-                    ? mainSuggestedRecordsList.map(record => record.__state)
-                    : [],
-            };
-        }, {
-            compareDepth: {
-                extraSuggestedRecordsList: 1,
-                mainSuggestedRecordsList: 1,
-            },
-        });
+        useModels();
     }
 
     //--------------------------------------------------------------------------

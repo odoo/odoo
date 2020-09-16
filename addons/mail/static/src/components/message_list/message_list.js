@@ -4,8 +4,8 @@ odoo.define('mail/static/src/components/message_list/message_list.js', function 
 const components = {
     Message: require('mail/static/src/components/message/message.js'),
 };
+const useModels = require('mail/static/src/component_hooks/use_models/use_models.js');
 const useRefs = require('mail/static/src/component_hooks/use_refs/use_refs.js');
-const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
 
 const { Component } = owl;
 const { useRef } = owl.hooks;
@@ -17,24 +17,7 @@ class MessageList extends Component {
      */
     constructor(...args) {
         super(...args);
-        useStore(props => {
-            const threadView = this.env.models['mail.thread_view'].get(props.threadViewLocalId);
-            const thread = threadView ? threadView.thread : undefined;
-            const threadCache = threadView ? threadView.threadCache : undefined;
-            return {
-                isDeviceMobile: this.env.messaging.device.isMobile,
-                messages: threadCache
-                    ? threadCache.orderedMessages.map(message => message.__state)
-                    : [],
-                thread: thread ? thread.__state : undefined,
-                threadCache: threadCache ? threadCache.__state : undefined,
-                threadView: threadView ? threadView.__state : undefined,
-            };
-        }, {
-            compareDepth: {
-                messages: 1,
-            },
-        });
+        useModels();
         this._getRefs = useRefs();
         /**
          * Determine whether the auto-scroll on load is active or not. This
@@ -113,7 +96,7 @@ class MessageList extends Component {
         if (!this.threadView) {
             return;
         }
-        for (const hint of this.threadView.componentHintList) {
+        for (const hint of this.threadView.__mfield_componentHintList(this)) {
             switch (hint.type) {
                 case 'change-of-thread-cache':
                     this._adjustFromChangeOfThreadCache(hint);
@@ -140,7 +123,7 @@ class MessageList extends Component {
      * @returns {string}
      */
     getDateDay(message) {
-        const date = message.date.format('YYYY-MM-DD');
+        const date = message.__mfield_date(this).format('YYYY-MM-DD');
         if (date === moment().format('YYYY-MM-DD')) {
             return this.env._t("Today");
         } else if (
@@ -150,7 +133,7 @@ class MessageList extends Component {
         ) {
             return this.env._t("Yesterday");
         }
-        return message.date.format('LL');
+        return message.__mfield_date(this).format('LL');
     }
 
     /**
@@ -176,7 +159,7 @@ class MessageList extends Component {
      * @returns {mail/static/src/components/message/message.js|undefined}
      */
     messageRefFromId(messageId) {
-        return this.messageRefs.find(ref => ref.message.id === messageId);
+        return this.messageRefs.find(ref => ref.message.__mfield_id(this) === messageId);
     }
 
     /**
@@ -214,7 +197,9 @@ class MessageList extends Component {
                 )
             )
             .map(([refId, ref]) => ref)
-            .sort((ref1, ref2) => (ref1.message.id < ref2.message.id ? -1 : 1));
+            .sort((ref1, ref2) => (
+                ref1.message.__mfield_id(this) < ref2.message.__mfield_id(this) ? -1 : 1)
+            );
         if (this.props.order === 'desc') {
             return ascOrderedMessageRefs.reverse();
         }
@@ -225,11 +210,11 @@ class MessageList extends Component {
      * @returns {mail.message[]}
      */
     get orderedMessages() {
-        const threadCache = this.threadView.threadCache;
+        const threadCache = this.threadView.__mfield_threadCache(this);
         if (this.props.order === 'desc') {
-            return [...threadCache.orderedMessages].reverse();
+            return [...threadCache.__mfield_orderedMessages(this)].reverse();
         }
-        return threadCache.orderedMessages;
+        return threadCache.__mfield_orderedMessages(this);
     }
 
     /**
@@ -251,41 +236,44 @@ class MessageList extends Component {
         if (!this.props.hasSquashCloseMessages) {
             return false;
         }
-        if (Math.abs(message.date.diff(prevMessage.date)) > 60000) {
+        if (Math.abs(message.__mfield_date(this).diff(prevMessage.__mfield_date(this))) > 60000) {
             // more than 1 min. elasped
             return false;
         }
-        if (prevMessage.message_type !== 'comment' || message.message_type !== 'comment') {
+        if (
+            prevMessage.__mfield_message_type(this) !== 'comment' ||
+            message.__mfield_message_type(this) !== 'comment'
+        ) {
             return false;
         }
-        if (prevMessage.author !== message.author) {
+        if (prevMessage.__mfield_author(this) !== message.__mfield_author(this)) {
             // from a different author
             return false;
         }
-        if (prevMessage.originThread !== message.originThread) {
+        if (prevMessage.__mfield_originThread(this) !== message.__mfield_originThread(this)) {
             return false;
         }
         if (
-            prevMessage.moderation_status === 'pending_moderation' ||
-            message.moderation_status === 'pending_moderation'
+            prevMessage.__mfield_moderation_status(this) === 'pending_moderation' ||
+            message.__mfield_moderation_status(this) === 'pending_moderation'
         ) {
             return false;
         }
         if (
-            prevMessage.notifications.length > 0 ||
-            message.notifications.length > 0
+            prevMessage.__mfield_notifications(this).length > 0 ||
+            message.__mfield_notifications(this).length > 0
         ) {
             // visual about notifications is restricted to non-squashed messages
             return false;
         }
-        const prevOriginThread = prevMessage.originThread;
-        const originThread = message.originThread;
+        const prevOriginThread = prevMessage.__mfield_originThread(this);
+        const originThread = message.__mfield_originThread(this);
         if (
             prevOriginThread &&
             originThread &&
-            prevOriginThread.model === originThread.model &&
-            originThread.model !== 'mail.channel' &&
-            prevOriginThread.id !== originThread.id
+            prevOriginThread.__mfield_model(this) === originThread.__mfield_model(this) &&
+            originThread.__mfield_model(this) !== 'mail.channel' &&
+            prevOriginThread.__mfield_id(this) !== originThread.__mfield_id(this)
         ) {
             // messages linked to different document thread
             return false;
@@ -309,20 +297,20 @@ class MessageList extends Component {
      * @param {Object} hint
      */
     async _adjustFromChangeOfThreadCache(hint) {
-        const threadCache = this.threadView.threadCache;
-        if (!threadCache.isLoaded) {
+        const threadCache = this.threadView.__mfield_threadCache(this);
+        if (!threadCache.__mfield_isLoaded(this)) {
             return;
         }
         let isProcessed = false;
-        if (threadCache.messages.length > 0) {
-            if (this.threadView.threadCacheInitialScrollPosition !== undefined) {
+        if (threadCache.__mfield_messages(this).length > 0) {
+            if (this.threadView.__mfield_threadCacheInitialScrollPosition(this) !== undefined) {
                 if (this.props.hasScrollAdjust) {
-                    this.el.scrollTop = this.threadView.threadCacheInitialScrollPosition;
+                    this.el.scrollTop = this.threadView.__mfield_threadCacheInitialScrollPosition(this);
                 }
                 isProcessed = true;
             } else {
-                const lastMessage = threadCache.lastMessage;
-                if (this.messageRefFromId(lastMessage.id)) {
+                const lastMessage = threadCache.__mfield_lastMessage(this);
+                if (this.messageRefFromId(lastMessage.__mfield_id(this))) {
                     if (this.props.hasScrollAdjust) {
                         this._scrollToMostRecentMessage();
                     }
@@ -334,7 +322,7 @@ class MessageList extends Component {
         }
         if (isProcessed) {
             this.env.messagingBus.trigger('o-component-message-list-thread-cache-changed', {
-                threadViewer: this.threadView.threadViewer,
+                threadViewer: this.threadView.__mfield_threadViewer(this),
             });
             this.threadView.markComponentHintProcessed(hint);
         }
@@ -356,10 +344,10 @@ class MessageList extends Component {
      * @param {integer} hint.data.messageId
      */
     async _adjustFromCurrentPartnerJustPostedMessage(hint) {
-        const threadCache = this.threadView.threadCache;
-        if (threadCache.isLoaded && hint.data) {
+        const threadCache = this.threadView.__mfield_threadCache(this);
+        if (threadCache.__mfield_isLoaded(this) && hint.data) {
             const { messageId } = hint.data;
-            const threadCacheMessageIds = threadCache.messages.map(message => message.id);
+            const threadCacheMessageIds = threadCache.__mfield_messages(this).map(message => message.__mfield_id(this));
             if (threadCacheMessageIds.includes(messageId) && this.messageRefFromId(messageId)) {
                 if (this.props.hasScrollAdjust) {
                     await this._scrollToMessage(messageId);
@@ -401,7 +389,7 @@ class MessageList extends Component {
             this.el.scrollTop = this.el.scrollHeight - scrollHeight + scrollTop;
         }
         this.env.messagingBus.trigger('o-component-message-list-more-messages-loaded', {
-            threadViewer: this.threadView.threadViewer,
+            threadViewer: this.threadView.__mfield_threadViewer(this),
         });
         this.threadView.markComponentHintProcessed(hint);
     }
@@ -411,10 +399,10 @@ class MessageList extends Component {
      */
     _adjustScrollFromModel() {
         if (
-            this.threadView.threadCacheInitialScrollPosition !== undefined &&
+            this.threadView.__mfield_threadCacheInitialScrollPosition(this) !== undefined &&
             this.props.hasScrollAdjust
         ) {
-            this.el.scrollTop = this.threadView.threadCacheInitialScrollPosition;
+            this.el.scrollTop = this.threadView.__mfield_threadCacheInitialScrollPosition(this);
         }
     }
 
@@ -425,13 +413,13 @@ class MessageList extends Component {
         if (!this.threadView) {
             return;
         }
-        const thread = this.threadView.thread;
-        const threadCache = this.threadView.threadCache;
+        const thread = this.threadView.__mfield_thread(this);
+        const threadCache = this.threadView.__mfield_threadCache(this);
         const lastMessageIsVisible =
             threadCache &&
-            threadCache.messages.length > 0 &&
+            threadCache.__mfield_messages(this).length > 0 &&
             this.mostRecentMessageRef &&
-            threadCache === thread.mainCache &&
+            threadCache === thread.__mfield_mainCache(this) &&
             this.mostRecentMessageRef.isPartiallyVisible();
         if (lastMessageIsVisible) {
             this.threadView.handleVisibleMessage(this.mostRecentMessageRef.message);
@@ -457,7 +445,7 @@ class MessageList extends Component {
      * @private
      */
     _loadMore() {
-        this.threadView.threadCache.loadMoreMessages();
+        this.threadView.__mfield_threadCache(this).loadMoreMessages();
     }
 
     /**
@@ -529,15 +517,15 @@ class MessageList extends Component {
             // could be unmounted in the meantime (due to throttled behavior)
             return;
         }
-        if (!this.threadView || !this.threadView.threadViewer) {
+        if (!this.threadView || !this.threadView.__mfield_threadViewer(this)) {
             return;
         }
         const scrollTop = this.el.scrollTop;
         this.env.messagingBus.trigger('o-component-message-list-scrolled', {
             scrollTop,
-            threadViewer: this.threadView.threadViewer,
+            threadViewer: this.threadView.__mfield_threadViewer(this),
         });
-        this.threadView.threadViewer.saveThreadCacheScrollPositionsAsInitial(scrollTop);
+        this.threadView.__mfield_threadViewer(this).saveThreadCacheScrollPositionsAsInitial(scrollTop);
         if (!this._isAutoLoadOnScrollActive) {
             return;
         }

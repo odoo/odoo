@@ -6,7 +6,7 @@ const components = {
     FileUploader: require('mail/static/src/components/file_uploader/file_uploader.js'),
     MailTemplate: require('mail/static/src/components/mail_template/mail_template.js'),
 };
-const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
+const useModels = require('mail/static/src/component_hooks/use_models/use_models.js');
 
 const {
     auto_str_to_date,
@@ -27,17 +27,7 @@ class Activity extends Component {
         this.state = useState({
             areDetailsVisible: false,
         });
-        useStore(props => {
-            const activity = this.env.models['mail.activity'].get(props.activityLocalId);
-            return {
-                activity: activity ? activity.__state : undefined,
-                assigneeNameOrDisplayName: (
-                    activity &&
-                    activity.assignee &&
-                    activity.assignee.nameOrDisplayName
-                ),
-            };
-        });
+        useModels();
         /**
          * Reference of the file uploader.
          * Useful to programmatically prompts the browser file uploader.
@@ -60,7 +50,7 @@ class Activity extends Component {
      * @returns {string}
      */
     get assignedUserText() {
-        return _.str.sprintf(this.env._t("for %s"), this.activity.assignee.nameOrDisplayName);
+        return _.str.sprintf(this.env._t("for %s"), this.activity.__mfield_assignee(this).__mfield_nameOrDisplayName(this));
     }
 
     /**
@@ -68,7 +58,7 @@ class Activity extends Component {
      */
     get delayLabel() {
         const today = moment().startOf('day');
-        const momentDeadlineDate = moment(auto_str_to_date(this.activity.dateDeadline));
+        const momentDeadlineDate = moment(auto_str_to_date(this.activity.__mfield_dateDeadline(this)));
         // true means no rounding
         const diff = momentDeadlineDate.diff(today, 'days', true);
         if (diff === 0) {
@@ -88,7 +78,7 @@ class Activity extends Component {
      * @returns {string}
      */
     get formattedCreateDatetime() {
-        const momentCreateDate = moment(auto_str_to_date(this.activity.dateCreate));
+        const momentCreateDate = moment(auto_str_to_date(this.activity.__mfield_dateCreate(this)));
         const datetimeFormat = getLangDatetimeFormat();
         return momentCreateDate.format(datetimeFormat);
     }
@@ -97,7 +87,7 @@ class Activity extends Component {
      * @returns {string}
      */
     get formattedDeadlineDate() {
-        const momentDeadlineDate = moment(auto_str_to_date(this.activity.dateDeadline));
+        const momentDeadlineDate = moment(auto_str_to_date(this.activity.__mfield_dateDeadline(this)));
         const datetimeFormat = getLangDateFormat();
         return momentDeadlineDate.format(datetimeFormat);
     }
@@ -113,7 +103,7 @@ class Activity extends Component {
      * @returns {string}
      */
     get summary() {
-        return _.str.sprintf(this.env._t("“%s”"), this.activity.summary);
+        return _.str.sprintf(this.env._t("“%s”"), this.activity.__mfield_summary(this));
     }
 
     //--------------------------------------------------------------------------

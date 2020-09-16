@@ -1,7 +1,7 @@
 odoo.define('mail/static/src/components/composer_suggestion/composer_suggestion.js', function (require) {
 'use strict';
 
-const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
+const useModels = require('mail/static/src/component_hooks/use_models/use_models.js');
 
 const components = {
     PartnerImStatusIcon: require('mail/static/src/components/partner_im_status_icon/partner_im_status_icon.js'),
@@ -16,12 +16,7 @@ class ComposerSuggestion extends Component {
      */
     constructor(...args) {
         super(...args);
-        useStore(props => {
-            const record = this.env.models[props.modelName].get(props.recordLocalId);
-            return {
-               record: record ? record.__state : undefined,
-            };
-        });
+        useModels();
     }
 
     //--------------------------------------------------------------------------
@@ -76,7 +71,7 @@ class ComposerSuggestion extends Component {
      */
     _onMouseOver(ev) {
         this.composer.update({
-            [this.composer.activeSuggestedRecordName]: [['link', this.record]],
+            [this.composer.__mfield_activeSuggestedRecordName(this)]: [['link', this.record]],
         });
     }
 

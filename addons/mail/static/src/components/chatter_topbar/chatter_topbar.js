@@ -5,7 +5,7 @@ const components = {
     FollowButton: require('mail/static/src/components/follow_button/follow_button.js'),
     FollowerListMenu: require('mail/static/src/components/follower_list_menu/follower_list_menu.js'),
 };
-const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
+const useModels = require('mail/static/src/component_hooks/use_models/use_models.js');
 
 const { Component } = owl;
 
@@ -16,17 +16,7 @@ class ChatterTopbar extends Component {
      */
     constructor(...args) {
         super(...args);
-        useStore(props => {
-            const chatter = this.env.models['mail.chatter'].get(props.chatterLocalId);
-            const thread = chatter ? chatter.thread : undefined;
-            const threadAttachments = thread ? thread.allAttachments : [];
-            return {
-                areThreadAttachmentsLoaded: thread && thread.areAttachmentsLoaded,
-                chatter: chatter ? chatter.__state : undefined,
-                composer: chatter && chatter.composer ? chatter.composer.__state : undefined,
-                threadAttachmentsAmount: threadAttachments.length,
-            };
-        });
+        useModels();
     }
 
     //--------------------------------------------------------------------------
@@ -50,7 +40,7 @@ class ChatterTopbar extends Component {
      */
     _onClickAttachments(ev) {
         this.chatter.update({
-            isAttachmentBoxVisible: !this.chatter.isAttachmentBoxVisible,
+            __mfield_isAttachmentBoxVisible: !this.chatter.__mfield_isAttachmentBoxVisible(this),
         });
     }
 
@@ -67,11 +57,11 @@ class ChatterTopbar extends Component {
      * @param {MouseEvent} ev
      */
     _onClickLogNote(ev) {
-        if (!this.chatter.composer) {
+        if (!this.chatter.__mfield_composer(this)) {
             return;
         }
-        if (this.chatter.isComposerVisible && this.chatter.composer.isLog) {
-            this.chatter.update({ isComposerVisible: false });
+        if (this.chatter.__mfield_isComposerVisible(this) && this.chatter.__mfield_composer(this).__mfield_isLog(this)) {
+            this.chatter.update({ __mfield_isComposerVisible: false });
         } else {
             this.chatter.showLogNote();
         }
@@ -90,8 +80,8 @@ class ChatterTopbar extends Component {
             views: [[false, 'form']],
             target: 'new',
             context: {
-                default_res_id: this.chatter.threadId,
-                default_res_model: this.chatter.threadModel,
+                default_res_id: this.chatter.__mfield_threadId(this),
+                default_res_model: this.chatter.__mfield_threadModel(this),
             },
             res_id: false,
         };
@@ -111,11 +101,11 @@ class ChatterTopbar extends Component {
      * @param {MouseEvent} ev
      */
     _onClickSendMessage(ev) {
-        if (!this.chatter.composer) {
+        if (!this.chatter.__mfield_composer(this)) {
             return;
         }
-        if (this.chatter.isComposerVisible && !this.chatter.composer.isLog) {
-            this.chatter.update({ isComposerVisible: false });
+        if (this.chatter.__mfield_isComposerVisible(this) && !this.chatter.__mfield_composer(this).__mfield_isLog(this)) {
+            this.chatter.update({ __mfield_isComposerVisible: false });
         } else {
             this.chatter.showSendMessage();
         }

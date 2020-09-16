@@ -1,4 +1,4 @@
-odoo.define('mail/static/src/model/model_field.js', function (require) {
+odoo.define('mail/static/src/model/model_field_definition.js', function (require) {
 'use strict';
 
 const { FieldCommand } = require('mail/static/src/model/model_field_command.js');
@@ -14,208 +14,23 @@ class ModelField {
     // Public
     //--------------------------------------------------------------------------
 
-    constructor({
-        compute,
-        default: def,
-        dependencies = [],
-        dependents = [],
-        env,
-        fieldName,
-        fieldType,
-        hashes: extraHashes = [],
-        inverse,
-        isCausal = false,
-        related,
-        relationType,
-        to,
-    } = {}) {
-        const id = _.uniqueId('field_');
-        /**
-         * If set, this field acts as a computed field, and this prop
-         * contains the name of the instance method that computes the value
-         * for this field. This compute method is called on creation of record
-         * and whenever some of its dependencies change. @see dependencies
-         */
-        this.compute = compute;
-        /**
-         * Default value for this field. Used on creation of this field, to
-         * set a value by default.
-         */
-        this.default = def;
-        /**
-         * List of field on current record that this field depends on for its
-         * `compute` method. Useful to determine whether this field should be
-         * registered for recomputation when some record fields have changed.
-         * This list must be declared in model definition, or compute method
-         * is only computed once.
-         */
-        this.dependencies = dependencies;
-        /**
-         * List of fields that are dependent of this field. They should never
-         * be declared, and are automatically generated while processing
-         * declared fields. This is populated by compute `dependencies` and
-         * `related`.
-         */
-        this.dependents = dependents;
-        /**
-         * The messaging env.
-         */
+    constructor(env, { definition, record }) {
+        this.def = definition;
         this.env = env;
-        /**
-         * Name of the field in the definition of fields on model.
-         */
-        this.fieldName = fieldName;
-        /**
-         * Type of this field. 2 types of fields are currently supported:
-         *
-         *   1. 'attribute': fields that store primitive values like integers,
-         *                   booleans, strings, objects, array, etc.
-         *
-         *   2. 'relation': fields that relate to some other records.
-         */
-        this.fieldType = fieldType;
-        /**
-         * List of hashes registered on this field definition. Technical
-         * prop that is specifically used in processing of dependent
-         * fields, useful to clearly identify which fields of a relation are
-         * dependents and must be registered for computed. Indeed, not all
-         * related records may have a field that depends on changed field,
-         * especially when dependency is defined on sub-model on a relation in
-         * a super-model.
-         *
-         * To illustrate the purpose of this hash, suppose following definition
-         * of models and fields:
-         *
-         * - 3 models (A, B, C) and 3 fields (x, y, z)
-         * - A.fields: { x: one2one(C, inverse: x') }
-         * - B extends A
-         * - B.fields: { z: related(x.y) }
-         * - C.fields: { y: attribute }
-         *
-         * Visually:
-         *               x'
-         *          <-----------
-         *        A -----------> C { y }
-         *        ^      x
-         *        |
-         *        | (extends)
-         *        |
-         *        B { z = x.y }
-         *
-         * If z has a dependency on x.y, it means y has a dependent on x'.z.
-         * Note that field z exists on B but not on all A. To determine which
-         * kinds of records in relation x' are dependent on y, y is aware of an
-         * hash on this dependent, and any dependents who has this hash in list
-         * of hashes are actual dependents.
-         */
-        this.hashes = extraHashes.concat([id]);
-        /**
-         * Identification for this field definition. Useful to map a dependent
-         * from a dependency. Indeed, declared field definitions use
-         * 'dependencies' but technical process need inverse as 'dependents'.
-         * Dependencies just need name of fields, but dependents cannot just
-         * rely on inverse field names because these dependents are a subset.
-         */
-        this.id = id;
-        /**
-         * This prop only makes sense in a relational field. This contains
-         * the name of the field name in the inverse relation. This may not
-         * be defined in declared field definitions, but processed relational
-         * field definitions always have inverses.
-         */
-        this.inverse = inverse;
-        /**
-         * This prop only makes sense in a relational field. If set, when this
-         * relation is removed, the related record is automatically deleted.
-         */
-        this.isCausal = isCausal;
-        /**
-         * If set, this field acts as a related field, and this prop contains
-         * a string that references the related field. It should have the
-         * following format: '<relationName>.<relatedFieldName>', where
-         * <relationName> is a relational field name on this model or a parent
-         * model (note: could itself be computed or related), and
-         * <relatedFieldName> is the name of field on the records that are
-         * related to current record from this relation. When there are more
-         * than one record in the relation, it maps all related fields per
-         * record in relation.
-         *
-         * FIXME: currently flatten map due to bug, improvement is planned
-         * see Task-id 2261221
-         */
-        this.related = related;
-        /**
-         * This prop only makes sense in a relational field. Determine which
-         * type of relation there is between current record and other records.
-         * 4 types of relation are supported: 'one2one', 'one2many', 'many2one'
-         * and 'many2many'.
-         */
-        this.relationType = relationType;
-        /**
-         * This prop only makes sense in a relational field. Determine which
-         * model name this relation refers to.
-         */
-        this.to = to;
+        this.id = _.uniqueId('Field_');
+        this.record = record;
+        this._rawVal = undefined;
 
-        if (!this.default && this.fieldType === 'relation') {
-            // default value for relational fields is the empty command
-            this.default = [];
+        if (this.def.fieldType === 'relation') {
+            if (['one2many', 'many2many'].includes(this.def.relationType)) {
+                this._rawVal = new Set();
+            }
         }
     }
 
-    /**
-     * Define an attribute field.
-     *
-     * @param {Object} [options]
-     * @returns {Object}
-     */
-    static attr(options) {
-        return Object.assign({ fieldType: 'attribute' }, options);
-    }
-
-    /**
-     * Define a many2many field.
-     *
-     * @param {string} modelName
-     * @param {Object} [options]
-     * @returns {Object}
-     */
-    static many2many(modelName, options) {
-        return ModelField._relation(modelName, Object.assign({}, options, { relationType: 'many2many' }));
-    }
-
-    /**
-     * Define a many2one field.
-     *
-     * @param {string} modelName
-     * @param {Object} [options]
-     * @returns {Object}
-     */
-    static many2one(modelName, options) {
-        return ModelField._relation(modelName, Object.assign({}, options, { relationType: 'many2one' }));
-    }
-
-    /**
-     * Define a one2many field.
-     *
-     * @param {string} modelName
-     * @param {Object} [options]
-     * @returns {Object}
-     */
-    static one2many(modelName, options) {
-        return ModelField._relation(modelName, Object.assign({}, options, { relationType: 'one2many' }));
-    }
-
-    /**
-     * Define a one2one field.
-     *
-     * @param {string} modelName
-     * @param {Object} [options]
-     * @returns {Object}
-     */
-    static one2one(modelName, options) {
-        return ModelField._relation(modelName, Object.assign({}, options, { relationType: 'one2one' }));
-    }
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
 
     /**
      * Clears the value of this field on the given record. It consists of
@@ -224,154 +39,62 @@ class ModelField {
      * default value. Relational fields are always unlinked before the default
      * is applied.
      *
-     * @param {mail.model} record
      * @param {options} [options]
      * @returns {boolean} whether the value changed for the current field
      */
-    clear(record, options) {
+    clear(options) {
         let hasChanged = false;
-        if (this.fieldType === 'relation') {
-            if (this.parseAndExecuteCommands(record, [['unlink-all']], options)) {
+        if (this.def.fieldType === 'relation') {
+            if (this.parseAndExecuteCommands([['unlink-all']], options)) {
                 hasChanged = true;
             }
         }
-        if (this.parseAndExecuteCommands(record, this.default, options)) {
+        if (this.parseAndExecuteCommands(this.def.default, options)) {
             hasChanged = true;
         }
         return hasChanged;
     }
 
     /**
-     * Combine current field definition with provided field definition and
-     * return the combined field definition. Useful to track list of hashes of
-     * a given field, which is necessary for the working of dependent fields
-     * (computed and related fields).
-     *
-     * @param {ModelField} field
-     * @returns {ModelField}
-     */
-    combine(field) {
-        return new ModelField(Object.assign({}, this, {
-            dependencies: this.dependencies.concat(field.dependencies),
-            hashes: this.hashes.concat(field.hashes),
-        }));
-    }
-
-    /**
-     * Compute method when this field is related.
-     *
-     * @private
-     * @param {mail.model} record
-     */
-    computeRelated(record) {
-        const [relationName, relatedFieldName] = this.related.split('.');
-        const Model = record.constructor;
-        const relationField = Model.__fieldMap[relationName];
-        if (['one2many', 'many2many'].includes(relationField.relationType)) {
-            const newVal = [];
-            for (const otherRecord of record[relationName]) {
-                const OtherModel = otherRecord.constructor;
-                const otherField = OtherModel.__fieldMap[relatedFieldName];
-                const otherValue = otherField.get(otherRecord);
-                if (otherValue) {
-                    if (otherValue instanceof Array) {
-                        // avoid nested array if otherField is x2many too
-                        // TODO IMP task-2261221
-                        for (const v of otherValue) {
-                            newVal.push(v);
-                        }
-                    } else {
-                        newVal.push(otherValue);
-                    }
-                }
-            }
-            if (this.fieldType === 'relation') {
-                return [['replace', newVal]];
-            }
-            return newVal;
-        }
-        const otherRecord = record[relationName];
-        if (otherRecord) {
-            const OtherModel = otherRecord.constructor;
-            const otherField = OtherModel.__fieldMap[relatedFieldName];
-            const newVal = otherField.get(otherRecord);
-            if (this.fieldType === 'relation') {
-                if (newVal) {
-                    return [['replace', newVal]];
-                } else {
-                    return [['unlink-all']];
-                }
-            }
-            return newVal;
-        }
-        if (this.fieldType === 'relation') {
-            return [];
-        }
-    }
-
-    /**
-     * Get the value associated to this field. Relations must convert record
-     * local ids to records.
-     *
-     * @param {mail.model} record
-     * @returns {any}
-     */
-    get(record) {
-        if (this.fieldType === 'attribute') {
-            return this.read(record);
-        }
-        if (this.fieldType === 'relation') {
-            if (['one2one', 'many2one'].includes(this.relationType)) {
-                return this.read(record);
-            }
-            return [...this.read(record)];
-        }
-        throw new Error(`cannot get field with unsupported type ${this.fieldType}.`);
-    }
-
-    /**
      * Parses newVal for command(s) and executes them.
      *
-     * @param {mail.model} record
      * @param {any} newVal
      * @param {Object} [options]
      * @returns {boolean} whether the value changed for the current field
      */
-    parseAndExecuteCommands(record, newVal, options) {
+    parseAndExecuteCommands(newVal, options) {
         if (newVal instanceof FieldCommand) {
             // single command given
-            return newVal.execute(this, record, options);
+            return newVal.execute(this, options);
         }
         if (typeof newVal instanceof Array && newVal[0] instanceof FieldCommand) {
             // multi command given
             let hasChanged = false;
             for (const command of newVal) {
-                if (command.execute(this, record, options)) {
+                if (command.execute(this, options)) {
                     hasChanged = true;
                 }
             }
             return hasChanged;
         }
         // not a command
-        return this.set(record, newVal, options);
+        return this.set(newVal, options);
     }
 
     /**
      * Get the raw value associated to this field. For relations, this means
      * the local id or list of local ids of records in this relational field.
      *
-     * @param {mail.model} record
      * @returns {any}
      */
-    read(record) {
-        return record.__values[this.fieldName];
+    read() {
+        return this.__rawVal;
     }
 
     /**
      * Set a value on this field. The format of the value comes from business
      * code.
      *
-     * @param {mail.model} record
      * @param {any} newVal
      * @param {Object} [options]
      * @param {boolean} [options.hasToUpdateInverse] whether updating the
@@ -380,55 +103,55 @@ class ModelField {
      *  updating the inverse field itself, to avoid unnecessary recursion.
      * @returns {boolean} whether the value changed for the current field
      */
-    set(record, newVal, options) {
-        const currentValue = this.read(record);
-        if (this.fieldType === 'attribute') {
+    set(newVal, options) {
+        const currentValue = this.read();
+        if (this.def.fieldType === 'attribute') {
             if (currentValue === newVal) {
                 return false;
             }
-            record.__values[this.fieldName] = newVal;
+            this.__RawVal = newVal;
             return true;
         }
-        if (this.fieldType === 'relation') {
+        if (this.def.fieldType === 'relation') {
             let hasChanged = false;
             for (const val of newVal) {
                 switch (val[0]) {
                     case 'create':
-                        if (this._setRelationCreate(record, val[1], options)) {
+                        if (this._setRelationCreate(val[1], options)) {
                             hasChanged = true;
                         }
                         break;
                     case 'insert':
-                        if (this._setRelationInsert(record, val[1], options)) {
+                        if (this._setRelationInsert(val[1], options)) {
                             hasChanged = true;
                         }
                         break;
                     case 'insert-and-replace':
-                        if (this._setRelationInsertAndReplace(record, val[1], options)) {
+                        if (this._setRelationInsertAndReplace(val[1], options)) {
                             hasChanged = true;
                         }
                         break;
                     case 'link':
-                        if (this._setRelationLink(record, val[1], options)) {
+                        if (this._setRelationLink(val[1], options)) {
                             hasChanged = true;
                         }
                         break;
                     case 'replace':
                         // TODO IMP replace should not unlink-all (task-2270780)
-                        if (this._setRelationUnlink(record, currentValue, options)) {
+                        if (this._setRelationUnlink(currentValue, options)) {
                             hasChanged = true;
                         }
-                        if (this._setRelationLink(record, val[1], options)) {
+                        if (this._setRelationLink(val[1], options)) {
                             hasChanged = true;
                         }
                         break;
                     case 'unlink':
-                        if (this._setRelationUnlink(record, val[1], options)) {
+                        if (this._setRelationUnlink(val[1], options)) {
                             hasChanged = true;
                         }
                         break;
                     case 'unlink-all':
-                        if (this._setRelationUnlink(record, currentValue, options)) {
+                        if (this._setRelationUnlink(currentValue, options)) {
                             hasChanged = true;
                         }
                         break;
@@ -441,18 +164,6 @@ class ModelField {
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     * @param {string} modelName
-     * @param {Object} [options]
-     */
-    static _relation(modelName, options) {
-        return Object.assign({
-            fieldType: 'relation',
-            to: modelName,
-        }, options);
-    }
 
     /**
      * Converts given value to expected format for x2many processing, which is
@@ -487,15 +198,14 @@ class ModelField {
      * this field.
      *
      * @private
-     * @param {mail.model} record
      * @param {Object|Object[]} data
      * @param {Object} [options]
      * @returns {boolean} whether the value changed for the current field
      */
-    _setRelationCreate(record, data, options) {
-        const OtherModel = this.env.models[this.to];
+    _setRelationCreate(data, options) {
+        const OtherModel = this.env.models[this.def.to];
         const other = this.env.modelManager._create(OtherModel, data);
-        return this._setRelationLink(record, other, options);
+        return this._setRelationLink(other, options);
     }
 
     /**
@@ -505,15 +215,14 @@ class ModelField {
      * this field.
      *
      * @private
-     * @param {mail.model} record
      * @param {Object|Object[]} data
      * @param {Object} [options]
      * @returns {boolean} whether the value changed for the current field
      */
-    _setRelationInsert(record, data, options) {
-        const OtherModel = this.env.models[this.to];
+    _setRelationInsert(data, options) {
+        const OtherModel = this.env.models[this.def.to];
         const other = this.env.modelManager._insert(OtherModel, data);
-        return this._setRelationLink(record, other, options);
+        return this._setRelationLink(other, options);
     }
 
     /**
@@ -522,23 +231,22 @@ class ModelField {
      * records, which themselves must replace value on this field.
      *
      * @private
-     * @param {mail.model} record
      * @param {Object|Object[]} data
      * @param {Object} [options]
      * @returns {boolean} whether the value changed for the current field
      */
-    _setRelationInsertAndReplace(record, data, options) {
+    _setRelationInsertAndReplace(data, options) {
         // unlink must be done before insert:
         // because unlink might trigger delete due to causality and new data
         // shouldn't be deleted just after being inserted
         // TODO IMP insert-and-replace should not unlink-all (task-2270780)
         let hasChanged = false;
-        if (this._setRelationUnlink(record, this.read(record), options)) {
+        if (this._setRelationUnlink(this.read(), options)) {
             hasChanged = true;
         }
-        const OtherModel = this.env.models[this.to];
+        const OtherModel = this.env.models[this.def.to];
         const other = this.env.modelManager._insert(OtherModel, data);
-        if (this._setRelationLink(record, other, options)) {
+        if (this._setRelationLink(other, options)) {
             hasChanged = true;
         }
         return hasChanged;
@@ -552,14 +260,14 @@ class ModelField {
      * @param {Object} [options]
      * @returns {boolean} whether the value changed for the current field
      */
-    _setRelationLink(record, newValue, options) {
-        switch (this.relationType) {
+    _setRelationLink(newValue, options) {
+        switch (this.def.relationType) {
             case 'many2many':
             case 'one2many':
-                return this._setRelationLinkX2Many(record, newValue, options);
+                return this._setRelationLinkX2Many(newValue, options);
             case 'many2one':
             case 'one2one':
-                return this._setRelationLinkX2One(record, newValue, options);
+                return this._setRelationLinkX2One(newValue, options);
         }
     }
 
@@ -567,18 +275,17 @@ class ModelField {
      * Handling of a `set` 'link' of a x2many relational field.
      *
      * @private
-     * @param {mail.model} record
      * @param {mail.model|mail.model[]} newValue
-     * @param {Object} [param2={}]
-     * @param {boolean} [param2.hasToUpdateInverse=true] whether updating the
+     * @param {Object} [param1={}]
+     * @param {boolean} [param1.hasToUpdateInverse=true] whether updating the
      *  current field should also update its inverse field. Typically set to
      *  false only during the process of updating the inverse field itself, to
      *  avoid unnecessary recursion.
      * @returns {boolean} whether the value changed for the current field
      */
-    _setRelationLinkX2Many(record, newValue, { hasToUpdateInverse = true } = {}) {
+    _setRelationLinkX2Many(newValue, { hasToUpdateInverse = true } = {}) {
         const recordsToLink = this._convertX2ManyValue(newValue);
-        const otherRecords = this.read(record);
+        const otherRecords = this.read();
 
         let hasChanged = false;
         for (const recordToLink of recordsToLink) {
@@ -593,7 +300,7 @@ class ModelField {
             if (hasToUpdateInverse) {
                 this.env.modelManager._update(
                     recordToLink,
-                    { [this.inverse]: [['link', record]] },
+                    { [this.def.inverse]: [['link', this.record]] },
                     { hasToUpdateInverse: false }
                 );
             }
@@ -605,31 +312,30 @@ class ModelField {
      * Handling of a `set` 'link' of an x2one relational field.
      *
      * @private
-     * @param {mail.model} record
      * @param {mail.model} recordToLink
-     * @param {Object} [param2={}]
-     * @param {boolean} [param2.hasToUpdateInverse=true] whether updating the
+     * @param {Object} [param1={}]
+     * @param {boolean} [param1.hasToUpdateInverse=true] whether updating the
      *  current field should also update its inverse field. Typically set to
      *  false only during the process of updating the inverse field itself, to
      *  avoid unnecessary recursion.
      * @returns {boolean} whether the value changed for the current field
      */
-    _setRelationLinkX2One(record, recordToLink, { hasToUpdateInverse = true } = {}) {
+    _setRelationLinkX2One(recordToLink, { hasToUpdateInverse = true } = {}) {
         this._verifyRelationalValue(recordToLink);
-        const prevOtherRecord = this.read(record);
+        const prevOtherRecord = this.read();
         // other record already linked, avoid linking twice
         if (prevOtherRecord === recordToLink) {
             return false;
         }
         // unlink to properly update previous inverse before linking new value
-        this._setRelationUnlinkX2One(record, { hasToUpdateInverse });
+        this._setRelationUnlinkX2One({ hasToUpdateInverse });
         // link other record to current record
-        record.__values[this.fieldName] = recordToLink;
+        this._rawVal = recordToLink;
         // link current record to other record
         if (hasToUpdateInverse) {
             this.env.modelManager._update(
                 recordToLink,
-                { [this.inverse]: [['link', record]] },
+                { [this.def.inverse]: [['link', this.record]] },
                 { hasToUpdateInverse: false }
             );
         }
@@ -640,19 +346,18 @@ class ModelField {
      * Set an 'unlink' operation on this relational field.
      *
      * @private
-     * @param {mail.model} record
      * @param {mail.model|mail.model[]} newValue
      * @param {Object} [options]
      * @returns {boolean} whether the value changed for the current field
      */
-    _setRelationUnlink(record, newValue, options) {
-        switch (this.relationType) {
+    _setRelationUnlink(newValue, options) {
+        switch (this.def.relationType) {
             case 'many2many':
             case 'one2many':
-                return this._setRelationUnlinkX2Many(record, newValue, options);
+                return this._setRelationUnlinkX2Many(newValue, options);
             case 'many2one':
             case 'one2one':
-                return this._setRelationUnlinkX2One(record, options);
+                return this._setRelationUnlinkX2One(options);
         }
     }
 
@@ -660,21 +365,20 @@ class ModelField {
      * Handling of a `set` 'unlink' of a x2many relational field.
      *
      * @private
-     * @param {mail.model} record
      * @param {mail.model|mail.model[]} newValue
-     * @param {Object} [param2={}]
-     * @param {boolean} [param2.hasToUpdateInverse=true] whether updating the
+     * @param {Object} [param1={}]
+     * @param {boolean} [param1.hasToUpdateInverse=true] whether updating the
      *  current field should also update its inverse field. Typically set to
      *  false only during the process of updating the inverse field itself, to
      *  avoid unnecessary recursion.
      * @returns {boolean} whether the value changed for the current field
      */
-    _setRelationUnlinkX2Many(record, newValue, { hasToUpdateInverse = true } = {}) {
+    _setRelationUnlinkX2Many(newValue, { hasToUpdateInverse = true } = {}) {
         const recordsToUnlink = this._convertX2ManyValue(
             newValue,
             { hasToVerify: false }
         );
-        const otherRecords = this.read(record);
+        const otherRecords = this.read();
 
         let hasChanged = false;
         for (const recordToUnlink of recordsToUnlink) {
@@ -695,11 +399,11 @@ class ModelField {
                 }
                 this.env.modelManager._update(
                     recordToUnlink,
-                    { [this.inverse]: [['unlink', record]] },
+                    { [this.def.inverse]: [['unlink', this.record]] },
                     { hasToUpdateInverse: false }
                 );
                 // apply causality
-                if (this.isCausal) {
+                if (this.def.isCausal) {
                     this.env.modelManager._delete(recordToUnlink);
                 }
             }
@@ -711,22 +415,21 @@ class ModelField {
      * Handling of a `set` 'unlink' of a x2one relational field.
      *
      * @private
-     * @param {mail.model} record
-     * @param {Object} [param1={}]
-     * @param {boolean} [param1.hasToUpdateInverse=true] whether updating the
+     * @param {Object} [param0={}]
+     * @param {boolean} [param0.hasToUpdateInverse=true] whether updating the
      *  current field should also update its inverse field. Typically set to
      *  false only during the process of updating the inverse field itself, to
      *  avoid unnecessary recursion.
      * @returns {boolean} whether the value changed for the current field
      */
-    _setRelationUnlinkX2One(record, { hasToUpdateInverse = true } = {}) {
-        const otherRecord = this.read(record);
+    _setRelationUnlinkX2One({ hasToUpdateInverse = true } = {}) {
+        const otherRecord = this.read();
         // other record already unlinked, avoid useless processing
         if (!otherRecord) {
             return false;
         }
         // unlink other record from current record
-        record.__values[this.fieldName] = undefined;
+        this._rawVal = undefined;
         // unlink current record from other record
         if (hasToUpdateInverse) {
             if (!otherRecord.exists()) {
@@ -738,11 +441,11 @@ class ModelField {
             }
             this.env.modelManager._update(
                 otherRecord,
-                { [this.inverse]: [['unlink', record]] },
+                { [this.def.inverse]: [['unlink', this.record]] },
                 { hasToUpdateInverse: false }
             );
             // apply causality
-            if (this.isCausal) {
+            if (this.def.isCausal) {
                 this.env.modelManager._delete(otherRecord);
             }
         }
@@ -755,13 +458,12 @@ class ModelField {
      * and it must originates from relational `to` model (or its subclasses).
      *
      * @private
-     * @param {mail.model} record
      * @throws {Error} if record does not satisfy related model
      */
     _verifyRelationalValue(record) {
-        const OtherModel = this.env.models[this.to];
+        const OtherModel = this.env.models[this.def.to];
         if (!OtherModel.get(record.localId, { isCheckingInheritance: true })) {
-            throw Error(`Record ${record.localId} is not valid for relational field ${this.fieldName}.`);
+            throw Error(`Record ${record.localId} is not valid for relational field ${this.def.fieldName}.`);
         }
     }
 

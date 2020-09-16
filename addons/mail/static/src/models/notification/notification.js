@@ -2,7 +2,7 @@ odoo.define('mail/static/src/models/notification/notification.js', function (req
 'use strict';
 
 const { registerNewModel } = require('mail/static/src/model/model_core.js');
-const { attr, many2one } = require('mail/static/src/model/model_field.js');
+const { attr, many2one } = require('mail/static/src/model/model_field_utils.js');
 
 function factory(dependencies) {
 
@@ -20,25 +20,25 @@ function factory(dependencies) {
         static convertData(data) {
             const data2 = {};
             if ('failure_type' in data) {
-                data2.failure_type = data.failure_type;
+                data2.__mfield_failure_type = data.failure_type;
             }
             if ('id' in data) {
-                data2.id = data.id;
+                data2.__mfield_id = data.id;
             }
             if ('notification_status' in data) {
-                data2.notification_status = data.notification_status;
+                data2.__mfield_notification_status = data.notification_status;
             }
             if ('notification_type' in data) {
-                data2.notification_type = data.notification_type;
+                data2.__mfield_notification_type = data.notification_type;
             }
             if ('res_partner_id' in data) {
                 if (!data.res_partner_id) {
-                    data2.partner = [['unlink-all']];
+                    data2.__mfield_partner = [['unlink-all']];
                 } else {
-                    data2.partner = [
+                    data2.__mfield_partner = [
                         ['insert', {
-                            display_name: data.res_partner_id[1],
-                            id: data.res_partner_id[0],
+                            __mfield_display_name: data.res_partner_id[1],
+                            __mfield_id: data.res_partner_id[0],
                         }],
                     ];
                 }
@@ -54,20 +54,20 @@ function factory(dependencies) {
          * @override
          */
         static _createRecordLocalId(data) {
-            return `${this.modelName}_${data.id}`;
+            return `${this.modelName}_${data.__mfield_id}`;
         }
 
     }
 
     Notification.fields = {
-        failure_type: attr(),
-        id: attr(),
-        message: many2one('mail.message', {
-            inverse: 'notifications',
+        __mfield_failure_type: attr(),
+        __mfield_id: attr(),
+        __mfield_message: many2one('mail.message', {
+            inverse: '__mfield_notifications',
         }),
-        notification_status: attr(),
-        notification_type: attr(),
-        partner: many2one('mail.partner'),
+        __mfield_notification_status: attr(),
+        __mfield_notification_type: attr(),
+        __mfield_partner: many2one('mail.partner'),
     };
 
     Notification.modelName = 'mail.notification';

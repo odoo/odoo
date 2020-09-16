@@ -44,15 +44,15 @@ QUnit.test('channel mention suggestion displayed', async function (assert) {
     this.data['mail.channel'].records.push({ id: 20 });
     await this.start();
     const thread = this.env.models['mail.thread'].findFromIdentifyingData({
-        id: 20,
-        model: 'mail.channel',
+        __mfield_id: 20,
+        __mfield_model: 'mail.channel',
     });
     const channel = this.env.models['mail.thread'].create({
-        id: 7,
-        name: "General",
+        __mfield_id: 7,
+        __mfield_name: "General",
     });
     await this.createComposerSuggestion({
-        composerLocalId: thread.composer.localId,
+        composerLocalId: thread.__mfield_composer().localId,
         isActive: true,
         modelName: 'mail.thread',
         recordLocalId: channel.localId,
@@ -71,15 +71,15 @@ QUnit.test('channel mention suggestion correct data', async function (assert) {
     this.data['mail.channel'].records.push({ id: 20 });
     await this.start();
     const thread = this.env.models['mail.thread'].findFromIdentifyingData({
-        id: 20,
-        model: 'mail.channel',
+        __mfield_id: 20,
+        __mfield_model: 'mail.channel',
     });
     const channel = this.env.models['mail.thread'].create({
-        id: 7,
-        name: "General",
+        __mfield_id: 7,
+        __mfield_name: "General",
     });
     await this.createComposerSuggestion({
-        composerLocalId: thread.composer.localId,
+        composerLocalId: thread.__mfield_composer().localId,
         isActive: true,
         modelName: 'mail.thread',
         recordLocalId: channel.localId,
@@ -108,15 +108,15 @@ QUnit.test('partner mention suggestion active', async function (assert) {
     this.data['mail.channel'].records.push({ id: 20 });
     await this.start();
     const thread = this.env.models['mail.thread'].findFromIdentifyingData({
-        id: 20,
-        model: 'mail.channel',
+        __mfield_id: 20,
+        __mfield_model: 'mail.channel',
     });
     const channel = this.env.models['mail.thread'].create({
-        id: 7,
-        name: "General",
+        __mfield_id: 7,
+        __mfield_name: "General",
     });
     await this.createComposerSuggestion({
-        composerLocalId: thread.composer.localId,
+        composerLocalId: thread.__mfield_composer().localId,
         isActive: true,
         modelName: 'mail.thread',
         recordLocalId: channel.localId,

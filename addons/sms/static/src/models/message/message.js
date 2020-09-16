@@ -15,12 +15,12 @@ registerInstancePatchModel('mail.message', 'sms/static/src/models/message/messag
      * @override
      */
     openResendAction() {
-        if (this.message_type === 'sms') {
+        if (this.__mfield_message_type(this) === 'sms') {
             this.env.bus.trigger('do-action', {
                 action: 'sms.sms_resend_action',
                 options: {
                     additional_context: {
-                        default_mail_message_id: this.id,
+                        default_mail_message_id: this.__mfield_id(this),
                     },
                 },
             });

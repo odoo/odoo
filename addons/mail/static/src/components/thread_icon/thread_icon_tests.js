@@ -55,8 +55,8 @@ QUnit.test('chat: correspondent is typing', async function (assert) {
     });
     await this.start();
     const thread = this.env.models['mail.thread'].find(thread =>
-        thread.id === 20 &&
-        thread.model === 'mail.channel'
+        thread.__mfield_id() === 20 &&
+        thread.__mfield_model() === 'mail.channel'
     );
     await this.createThreadIcon(thread);
 

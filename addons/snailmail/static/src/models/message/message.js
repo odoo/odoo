@@ -19,7 +19,7 @@ registerInstancePatchModel('mail.message', 'snailmail/static/src/models/message.
         await this.async(() => this.env.services.rpc({
             model: 'mail.message',
             method: 'cancel_letter',
-            args: [[this.id]],
+            args: [[this.__mfield_id(this)]],
         }));
     },
     /**
@@ -30,7 +30,7 @@ registerInstancePatchModel('mail.message', 'snailmail/static/src/models/message.
             action: 'snailmail.snailmail_letter_format_error_action',
             options: {
                 additional_context: {
-                    message_id: this.id,
+                    message_id: this.__mfield_id(this),
                 },
             },
         });
@@ -42,7 +42,7 @@ registerInstancePatchModel('mail.message', 'snailmail/static/src/models/message.
         const letterIds = await this.async(() => this.env.services.rpc({
             model: 'snailmail.letter',
             method: 'search',
-            args: [[['message_id', '=', this.id]]],
+            args: [[['message_id', '=', this.__mfield_id(this)]]],
         }));
         this.env.bus.trigger('do-action', {
             action: 'snailmail.snailmail_letter_missing_required_fields_action',
@@ -61,7 +61,7 @@ registerInstancePatchModel('mail.message', 'snailmail/static/src/models/message.
         await this.async(() => this.env.services.rpc({
             model: 'mail.message',
             method: 'send_letter',
-            args: [[this.id]],
+            args: [[this.__mfield_id(this)]],
         }));
     },
 });

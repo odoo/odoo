@@ -48,11 +48,11 @@ QUnit.test('livechat: no add attachment button', async function (assert) {
 
     await this.start();
     const thread = this.env.models['mail.thread'].create({
-        channel_type: 'livechat',
-        id: 10,
-        model: 'mail.channel',
+        __mfield_channel_type: 'livechat',
+        __mfield_id: 10,
+        __mfield_model: 'mail.channel',
     });
-    await this.createComposerComponent(thread.composer);
+    await this.createComposerComponent(thread.__mfield_composer());
     assert.containsOnce(document.body, '.o_Composer', "should have a composer");
     assert.containsNone(
         document.body,

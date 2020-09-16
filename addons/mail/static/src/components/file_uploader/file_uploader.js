@@ -1,6 +1,8 @@
 odoo.define('mail/static/src/components/file_uploader/file_uploader.js', function (require) {
 'use strict';
 
+const useModels = require('mail/static/src/component_hooks/use_models/use_models.js');
+
 const core = require('web.core');
 
 const { Component } = owl;
@@ -13,6 +15,7 @@ class FileUploader extends Component {
      */
     constructor(...args) {
         super(...args);
+        useModels();
         this._fileInputRef = useRef('fileInput');
         this._fileUploadId = _.uniqueId('o_FileUploader_fileupload');
         this._onAttachmentUploaded = this._onAttachmentUploaded.bind(this);
@@ -84,9 +87,9 @@ class FileUploader extends Component {
     _createTemporaryAttachments(files) {
         for (const file of files) {
             this._createAttachment({
-                filename: file.name,
-                isTemporary: true,
-                name: file.name
+                __mfield_filename: file.name,
+                __mfield_isTemporary: true,
+                __mfield_name: file.name
             });
         }
     }
@@ -98,15 +101,15 @@ class FileUploader extends Component {
     async _performUpload(files) {
         for (const file of files) {
             const uploadingAttachment = this.env.models['mail.attachment'].find(attachment =>
-                attachment.isTemporary &&
-                attachment.filename === file.name
+                attachment.__mfield_isTemporary(this) &&
+                attachment.__mfield_filename(this) === file.name
             );
 
             try {
                 const response = await this.env.browser.fetch('/web/binary/upload_attachment', {
                     method: 'POST',
                     body: this._createFormData(file),
-                    signal: uploadingAttachment.uploadingAbortController.signal,
+                    signal: uploadingAttachment.__mfield_uploadingAbortController(this).signal,
                 });
                 let html = await response.text();
                 const template = document.createElement('template');
@@ -129,7 +132,10 @@ class FileUploader extends Component {
         for (const file of files) {
             const attachment = this.props.attachmentLocalIds
                 .map(attachmentLocalId => this.env.models['mail.attachment'].get(attachmentLocalId))
-                .find(attachment => attachment.name === file.name && attachment.size === file.size);
+                .find(attachment =>
+                    attachment.__mfield_name(this) === file.name &&
+                    attachment.__mfield_size(this) === file.size
+                );
             // if the files already exits, delete the file before upload
             if (attachment) {
                 attachment.remove();
@@ -156,8 +162,8 @@ class FileUploader extends Component {
                 });
                 const relatedTemporaryAttachments = this.env.models['mail.attachment']
                     .find(attachment =>
-                        attachment.filename === filename &&
-                        attachment.isTemporary
+                        attachment.__mfield_filename(this) === filename &&
+                        attachment.__mfield_isTemporary(this)
                     );
                 for (const attachment of relatedTemporaryAttachments) {
                     attachment.delete();
@@ -169,11 +175,11 @@ class FileUploader extends Component {
             // E.g. in attachment_box_tests.js
             await new Promise(resolve => setTimeout(resolve));
             const attachment = this._createAttachment({
-                filename,
-                id,
-                mimetype,
-                name,
-                size,
+                __mfield_filename: filename,
+                __mfield_id: id,
+                __mfield_mimetype: mimetype,
+                __mfield_name: name,
+                __mfield_size: size,
             });
             this.trigger('o-attachment-created', { attachment });
         }

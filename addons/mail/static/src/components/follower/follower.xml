@@ -4,11 +4,11 @@
     <t t-name="mail.Follower" owl="1">
         <div class="o_Follower">
             <t t-if="follower">
-                <a class="o_Follower_details" t-att-class="{ 'o-inactive': !follower.isActive }" href="#" t-on-click="_onClickDetails">
-                    <img class="o_Follower_avatar" t-attf-src="/web/image/{{ follower.resModel }}/{{ follower.resId }}/image_128" alt="Avatar"/>
-                    <span class="o_Follower_name" t-esc="follower.name"/>
+                <a class="o_Follower_details" t-att-class="{ 'o-inactive': !follower.__mfield_isActive(mself) }" href="#" t-on-click="_onClickDetails">
+                    <img class="o_Follower_avatar" t-attf-src="/web/image/{{ follower.__mfield_resModel(mself) }}/{{ follower.__mfield_resId(mself) }}/image_128" alt="Avatar"/>
+                    <span class="o_Follower_name" t-esc="follower.__mfield_name(mself)"/>
                 </a>
-                <t t-if="follower.isEditable">
+                <t t-if="follower.__mfield_isEditable(mself)">
                     <button class="btn btn-icon o_Follower_button o_Follower_editButton" title="Edit subscription" t-on-click="_onClickEdit">
                         <i class="fa fa-pencil"/>
                     </button>

@@ -4,7 +4,7 @@ odoo.define('mail/static/src/components/activity_box/activity_box.js', function 
 const components = {
     Activity: require('mail/static/src/components/activity/activity.js'),
 };
-const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
+const useModels = require('mail/static/src/component_hooks/use_models/use_models.js');
 
 const { Component } = owl;
 
@@ -15,12 +15,7 @@ class ActivityBox extends Component {
      */
     constructor(...args) {
         super(...args);
-        useStore(props => {
-            const chatter = this.env.models['mail.chatter'].get(props.chatterLocalId);
-            return {
-                chatter: chatter ? chatter.__state : undefined,
-            };
-        });
+        useModels();
     }
 
     //--------------------------------------------------------------------------

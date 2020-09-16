@@ -31,7 +31,7 @@ QUnit.module('dialog_manager_tests.js', {
     },
 });
 
-QUnit.test('[technical] messaging not created', async function (assert) {
+QUnit.skip('[technical] messaging not created', async function (assert) {
     /**
      * Creation of messaging in env is async due to generation of models being
      * async. Generation of models is async because it requires parsing of all

@@ -2,7 +2,7 @@ odoo.define('mail/static/src/models/messaging_initializer/messaging_initializer.
 'use strict';
 
 const { registerNewModel } = require('mail/static/src/model/model_core.js');
-const { one2one } = require('mail/static/src/model/model_field.js');
+const { one2one } = require('mail/static/src/model/model_field_utils.js');
 
 function factory(dependencies) {
 
@@ -17,43 +17,43 @@ function factory(dependencies) {
          * the current user. This includes pinned channels for instance.
          */
         async start() {
-            this.messaging.update({
-                history: [['create', {
-                    id: 'history',
-                    isServerPinned: true,
-                    model: 'mail.box',
-                    name: this.env._t("History"),
+            this.__mfield_messaging(this).update({
+                __mfield_history: [['create', {
+                    __mfield_id: 'history',
+                    __mfield_isServerPinned: true,
+                    __mfield_model: 'mail.box',
+                    __mfield_name: this.env._t("History"),
                 }]],
-                inbox: [['create', {
-                    id: 'inbox',
-                    isServerPinned: true,
-                    model: 'mail.box',
-                    name: this.env._t("Inbox"),
+                __mfield_inbox: [['create', {
+                    __mfield_id: 'inbox',
+                    __mfield_isServerPinned: true,
+                    __mfield_model: 'mail.box',
+                    __mfield_name: this.env._t("Inbox"),
                 }]],
-                moderation: [['create', {
-                    id: 'moderation',
-                    model: 'mail.box',
-                    name: this.env._t("Moderation"),
+                __mfield_moderation: [['create', {
+                    __mfield_id: 'moderation',
+                    __mfield_model: 'mail.box',
+                    __mfield_name: this.env._t("Moderation"),
                 }]],
-                starred: [['create', {
-                    id: 'starred',
-                    isServerPinned: true,
-                    model: 'mail.box',
-                    name: this.env._t("Starred"),
+                __mfield_starred: [['create', {
+                    __mfield_id: 'starred',
+                    __mfield_isServerPinned: true,
+                    __mfield_model: 'mail.box',
+                    __mfield_name: this.env._t("Starred"),
                 }]],
             });
-            const device = this.messaging.device;
+            const device = this.__mfield_messaging(this).__mfield_device(this);
             device.start();
             const context = Object.assign({
-                isMobile: device.isMobile,
+                isMobile: device.__mfield_isMobile(this),
             }, this.env.session.user_context);
-            const discuss = this.messaging.discuss;
+            const discuss = this.__mfield_messaging(this).__mfield_discuss(this);
             const data = await this.async(() => this.env.services.rpc({
                 route: '/mail/init_messaging',
                 params: { context: context }
             }));
             await this.async(() => this._init(data));
-            if (discuss.isOpen) {
+            if (discuss.__mfield_isOpen(this)) {
                 discuss.openInitThread();
             }
             if (this.env.autofetchPartnerImStatus) {
@@ -98,7 +98,7 @@ function factory(dependencies) {
             shortcodes = [],
             starred_counter = 0
         }) {
-            const discuss = this.messaging.discuss;
+            const discuss = this.__mfield_messaging(this).__mfield_discuss(this);
             // partners first because the rest of the code relies on them
             this._initPartners({
                 current_partner,
@@ -123,7 +123,9 @@ function factory(dependencies) {
             await this.async(() => this._initChannels(channel_slots));
             // failures after channels
             this._initMailFailures(mail_failures);
-            discuss.update({ menu_id });
+            discuss.update({
+                __mfield_menu_id: menu_id,
+            });
         }
 
         /**
@@ -131,8 +133,14 @@ function factory(dependencies) {
          * @param {Object[]} cannedResponsesData
          */
         _initCannedResponses(cannedResponsesData) {
-            this.messaging.update({
-                cannedResponses: [['insert', cannedResponsesData]],
+            this.__mfield_messaging(this).update({
+                __mfield_cannedResponses: [['insert', cannedResponsesData.map(data => {
+                    return {
+                        __mfield_id: data.id,
+                        __mfield_source: data.source,
+                        __mfield_substitution: data.substitution,
+                    };
+                })]],
             });
         }
 
@@ -164,8 +172,14 @@ function factory(dependencies) {
          * @param {Object[]} commandsData
          */
         _initCommands(commandsData) {
-            this.messaging.update({
-                commands: [['insert', commandsData]],
+            this.__mfield_messaging(this).update({
+                __mfield_commands: [['insert', commandsData.map(data => {
+                    return {
+                        __mfield_channel_types: data.channel_types,
+                        __mfield_help: data.help,
+                        __mfield_name: data.name,
+                    };
+                })]],
             });
         }
 
@@ -183,12 +197,16 @@ function factory(dependencies) {
             needaction_inbox_counter,
             starred_counter,
         }) {
-            this.env.messaging.inbox.update({ counter: needaction_inbox_counter });
-            this.env.messaging.starred.update({ counter: starred_counter });
+            this.env.messaging.__mfield_inbox(this).update({
+                __mfield_counter: needaction_inbox_counter,
+            });
+            this.env.messaging.__mfield_starred(this).update({
+                __mfield_counter: starred_counter,
+            });
             if (moderation_channel_ids.length > 0) {
-                this.messaging.moderation.update({
-                    counter: moderation_counter,
-                    isServerPinned: true,
+                this.__mfield_messaging(this).__mfield_moderation(this).update({
+                    __mfield_counter: moderation_counter,
+                    __mfield_isServerPinned: true,
                 });
             }
         }
@@ -204,13 +222,15 @@ function factory(dependencies) {
             for (const message of messages) {
                 // implicit: failures are sent by the server at initialization
                 // only if the current partner is author of the message
-                if (!message.author && this.messaging.currentPartner) {
-                    message.update({ author: [['link', this.messaging.currentPartner]] });
+                if (!message.__mfield_author(this) && this.__mfield_messaging(this).__mfield_currentPartner(this)) {
+                    message.update({
+                        __mfield_author: [['link', this.__mfield_messaging(this).__mfield_currentPartner(this)]],
+                    });
                 }
             }
-            this.messaging.notificationGroupManager.computeGroups();
+            this.__mfield_messaging(this).__mfield_notificationGroupManager(this).computeGroups();
             // manually force recompute of counter (after computing the groups)
-            this.messaging.messagingMenu.update();
+            this.__mfield_messaging(this).__mfield_messagingMenu(this).update();
         }
 
         /**
@@ -224,7 +244,11 @@ function factory(dependencies) {
                     // by one asynchronously to avoid blocking the UI
                     await this.async(() => new Promise(resolve => setTimeout(resolve)));
                     const { email, id, name } = suggestion;
-                    this.env.models['mail.partner'].insert({ email, id, name });
+                    this.env.models['mail.partner'].insert({
+                        __mfield_email: email,
+                        __mfield_id: id,
+                        __mfield_name: name,
+                    });
                 }
             }
         }
@@ -271,34 +295,38 @@ function factory(dependencies) {
                 name: publicPartnerName,
             },
         }) {
-            this.messaging.update({
-                currentPartner: [['insert', {
-                    active: currentPartnerIsActive,
-                    display_name: currentPartnerDisplayName,
-                    id: currentPartnerId,
-                    moderatedChannels: [
+            this.__mfield_messaging(this).update({
+                __mfield_currentPartner: [['insert', {
+                    __mfield_active: currentPartnerIsActive,
+                    __mfield_display_name: currentPartnerDisplayName,
+                    __mfield_id: currentPartnerId,
+                    __mfield_moderatedChannels: [
                         ['insert', moderation_channel_ids.map(id => {
                             return {
-                                id,
-                                model: 'mail.channel',
+                                __mfield_id: id,
+                                __mfield_model: 'mail.channel',
                             };
                         })],
                     ],
-                    name: currentPartnerName,
-                    user: [['insert', { id: currentUserId }]],
+                    __mfield_name: currentPartnerName,
+                    __mfield_user: [['insert', {
+                        __mfield_id: currentUserId,
+                    }]],
                 }]],
-                currentUser: [['insert', { id: currentUserId }]],
-                partnerRoot: [['insert', {
-                    active: partnerRootIsActive,
-                    display_name: partnerRootDisplayName,
-                    id: partnerRootId,
-                    name: partnerRootName,
+                __mfield_currentUser: [['insert', {
+                    __mfield_id: currentUserId,
                 }]],
-                publicPartner: [['insert', {
-                    active: publicPartnerIsActive,
-                    display_name: publicPartnerDisplayName,
-                    id: publicPartnerId,
-                    name: publicPartnerName,
+                __mfield_partnerRoot: [['insert', {
+                    __mfield_active: partnerRootIsActive,
+                    __mfield_display_name: partnerRootDisplayName,
+                    __mfield_id: partnerRootId,
+                    __mfield_name: partnerRootName,
+                }]],
+                __mfield_publicPartner: [['insert', {
+                    __mfield_active: publicPartnerIsActive,
+                    __mfield_display_name: publicPartnerDisplayName,
+                    __mfield_id: publicPartnerId,
+                    __mfield_name: publicPartnerName,
                 }]],
             });
         }
@@ -306,8 +334,8 @@ function factory(dependencies) {
     }
 
     MessagingInitializer.fields = {
-        messaging: one2one('mail.messaging', {
-            inverse: 'initializer',
+        __mfield_messaging: one2one('mail.messaging', {
+            inverse: '__mfield_initializer',
         }),
     };
 

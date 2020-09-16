@@ -270,7 +270,7 @@ function factory() {
      * Models should define fields in static prop or getter `fields`.
      * It contains an object with name of field as key and value are objects
      * that define the field. There are some helpers to ease the making of these
-     * objects, @see `mail/static/src/model/model_field.js`
+     * objects, @see `mail/static/src/model/model_field_definition.js`
      *
      * Note: fields of super-class are automatically inherited, therefore a
      * sub-class should (re-)define fields without copying ancestors' fields.

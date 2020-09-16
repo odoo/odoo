@@ -1,7 +1,7 @@
 odoo.define('mail/static/src/components/composer_suggested_recipient/composer_suggested_recipient.js', function (require) {
 'use strict';
 
-const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
+const useModels = require('mail/static/src/component_hooks/use_models/use_models.js');
 
 const { FormViewDialog } = require('web.view_dialogs');
 const { ComponentAdapter } = require('web.OwlCompatibility');
@@ -29,15 +29,7 @@ class ComposerSuggestedRecipient extends Component {
     constructor(...args) {
         super(...args);
         this.id = _.uniqueId('o_ComposerSuggestedRecipient_');
-
-        useStore(props => {
-            const suggestedRecipientInfo = this.env.models['mail.suggested_recipient_info'].get(props.suggestedRecipientLocalId);
-            const partner = suggestedRecipientInfo && suggestedRecipientInfo.partner;
-            return {
-                partner: partner && partner.__state,
-                suggestedRecipientInfo: suggestedRecipientInfo && suggestedRecipientInfo.__state,
-            };
-        });
+        useModels();
         /**
          * Form view dialog class. Useful to reference it in the template.
          */
@@ -83,7 +75,7 @@ class ComposerSuggestedRecipient extends Component {
         }
         return this.env._t(_.str.sprintf(
             "Add as recipient and follower (reason: %s)",
-            this.suggestedRecipientInfo.reason
+            this.suggestedRecipientInfo.__mfield_reason(this)
         ));
     }
 
@@ -110,7 +102,7 @@ class ComposerSuggestedRecipient extends Component {
      */
     _update() {
         if (this._checkboxRef.el && this.suggestedRecipientInfo) {
-            this._checkboxRef.el.checked = this.suggestedRecipientInfo.isSelected;
+            this._checkboxRef.el.checked = this.suggestedRecipientInfo.__mfield_isSelected(this);
         }
     }
 
@@ -123,8 +115,8 @@ class ComposerSuggestedRecipient extends Component {
      */
     _onChangeCheckbox() {
         const isChecked = this._checkboxRef.el.checked;
-        this.suggestedRecipientInfo.update({ isSelected: isChecked });
-        if (!this.suggestedRecipientInfo.partner) {
+        this.suggestedRecipientInfo.update({ __mfield_isSelected: isChecked });
+        if (!this.suggestedRecipientInfo.__mfield_partner(this)) {
             // Recipients must always be partners. On selecting a suggested
             // recipient that does not have a partner, the partner creation form
             // should be opened.
@@ -142,7 +134,7 @@ class ComposerSuggestedRecipient extends Component {
      * @private
      */
     _onDialogSaved() {
-        const thread = this.suggestedRecipientInfo && this.suggestedRecipientInfo.thread;
+        const thread = this.suggestedRecipientInfo && this.suggestedRecipientInfo.__mfield_thread(this);
         if (!thread) {
             return;
         }

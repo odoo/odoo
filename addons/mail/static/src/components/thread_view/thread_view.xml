@@ -2,14 +2,14 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.ThreadView" owl="1">
-        <div class="o_ThreadView" t-att-data-correspondent-id="threadView and threadView.thread and threadView.thread.correspondent and threadView.thread.correspondent.id" t-att-data-thread-local-id="threadView and threadView.thread and threadView.thread.localId">
+        <div class="o_ThreadView" t-att-data-correspondent-id="threadView and threadView.__mfield_thread(mself) and threadView.__mfield_thread(mself).__mfield_correspondent(mself) and threadView.__mfield_thread(mself).__mfield_correspondent(mself).__mfield_id(mself)" t-att-data-thread-local-id="threadView and threadView.__mfield_thread(mself) and threadView.__mfield_thread(mself).localId">
             <t t-if="threadView">
-                <t t-if="threadView.isLoading" name="loadingCondition">
+                <t t-if="threadView.__mfield_isLoading(mself)" name="loadingCondition">
                     <div class="o_ThreadView_loading">
                         <span><i class="o_ThreadView_loadingIcon fa fa-spinner fa-spin" title="Loading..." role="img"/>Loading...</span>
                     </div>
                 </t>
-                <t t-elif="threadView.threadCache.isLoaded or threadView.thread.isTemporary">
+                <t t-elif="threadView.__mfield_threadCache(mself).__mfield_isLoaded(mself) or threadView.__mfield_thread(mself).__mfield_isTemporary(mself)">
                     <MessageList
                         class="o_ThreadView_messageList"
                         hasMessageCheckbox="props.hasMessageCheckbox"
@@ -27,14 +27,14 @@
                     <Composer
                         class="o_ThreadView_composer"
                         attachmentsDetailsMode="props.composerAttachmentsDetailsMode"
-                        composerLocalId="threadView.thread.composer.localId"
+                        composerLocalId="threadView.__mfield_thread(mself).__mfield_composer(mself).localId"
                         hasCurrentPartnerAvatar="props.hasComposerCurrentPartnerAvatar"
                         hasSendButton="props.hasComposerSendButton"
                         hasThreadTyping="props.hasComposerThreadTyping"
-                        isCompact="(threadView.thread.model === 'mail.channel' and threadView.thread.mass_mailing) ? false : undefined"
+                        isCompact="(threadView.__mfield_thread(mself).__mfield_model(mself) === 'mail.channel' and threadView.__mfield_thread(mself).__mfield_mass_mailing(mself)) ? false : undefined"
                         showAttachmentsExtensions="props.showComposerAttachmentsExtensions"
                         showAttachmentsFilenames="props.showComposerAttachmentsFilenames"
-                        textInputSendShortcuts="(threadView.thread.model === 'mail.channel' and threadView.thread.mass_mailing) ? ['ctrl-enter', 'meta-enter'] : ['enter']"
+                        textInputSendShortcuts="(threadView.__mfield_thread(mself).__mfield_model(mself) === 'mail.channel' and threadView.__mfield_thread(mself).__mfield_mass_mailing(mself)) ? ['ctrl-enter', 'meta-enter'] : ['enter']"
                         t-ref="composer"
                     />
                 </t>

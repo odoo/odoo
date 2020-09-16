@@ -6,7 +6,7 @@
             <div class="o_FollowerListMenu_followers" t-ref="dropdown">
                 <button class="o_FollowerListMenu_buttonFollowers btn btn-link" t-att-disabled="props.isDisabled" t-on-click="_onClickFollowersButton" title="Show Followers">
                     <i class="fa fa-user"/>
-                    <span class="o_FollowerListMenu_buttonFollowersCount pl-1" t-esc="thread.followers.length"/>
+                    <span class="o_FollowerListMenu_buttonFollowersCount pl-1" t-esc="thread.__mfield_followers(mself).length"/>
                 </button>
 
                 <t t-if="state.isDropdownOpen">
@@ -17,9 +17,9 @@
                         <a class="o_FollowerListMenu_addChannelsButton dropdown-item" href="#" role="menuitem" t-on-click="_onClickAddChannels">
                             Add Channels
                         </a>
-                        <t t-if="thread.followers.length > 0">
+                        <t t-if="thread.__mfield_followers(mself).length > 0">
                             <div role="separator" class="dropdown-divider"/>
-                            <t t-foreach="thread.followers" t-as="follower" t-key="follower.localId">
+                            <t t-foreach="thread.__mfield_followers(mself)" t-as="follower" t-key="follower.localId">
                                 <Follower
                                     class="o_FollowerMenu_follower dropdown-item"
                                     followerLocalId="follower.localId"

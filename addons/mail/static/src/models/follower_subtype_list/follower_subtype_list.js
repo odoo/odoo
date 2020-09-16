@@ -2,14 +2,14 @@ odoo.define('mail/static/src/models/follower_subtype_list/follower_subtype_list.
 'use strict';
 
 const { registerNewModel } = require('mail/static/src/model/model_core.js');
-const { many2one } = require('mail/static/src/model/model_field.js');
+const { many2one } = require('mail/static/src/model/model_field_utils.js');
 
 function factory(dependencies) {
 
     class FollowerSubtypeList extends dependencies['mail.model'] {}
 
     FollowerSubtypeList.fields = {
-        follower: many2one('mail.follower'),
+        __mfield_follower: many2one('mail.follower'),
     };
 
     FollowerSubtypeList.modelName = 'mail.follower_subtype_list';

@@ -4,20 +4,20 @@
     <t t-name="mail.DiscussSidebarItem" owl="1">
         <div class="o_DiscussSidebarItem"
             t-att-class="{
-                'o-active': thread and discuss.thread === thread,
-                'o-starred-box': thread and thread === env.messaging.starred,
-                'o-unread': thread and thread.localMessageUnreadCounter > 0,
-            }" t-on-click="_onClick" t-att-data-thread-local-id="thread ? thread.localId : undefined" t-att-data-thread-name="thread ? thread.displayName : undefined"
+                'o-active': thread and discuss.__mfield_thread(mself) === thread,
+                'o-starred-box': thread and thread === env.messaging.__mfield_starred(mself),
+                'o-unread': thread and thread.__mfield_localMessageUnreadCounter(mself) > 0,
+            }" t-on-click="_onClick" t-att-data-thread-local-id="thread ? thread.localId : undefined" t-att-data-thread-name="thread ? thread.__mfield_displayName(mself) : undefined"
         >
             <t t-if="thread">
-                <div class=" o_DiscussSidebarItem_activeIndicator o_DiscussSidebarItem_item" t-att-class="{ 'o-item-active': discuss.thread === thread }"/>
+                <div class="o_DiscussSidebarItem_activeIndicator o_DiscussSidebarItem_item" t-att-class="{ 'o-item-active': discuss.__mfield_thread(mself) === thread }"/>
                 <ThreadIcon class="o_DiscussSidebarItem_item" threadLocalId="thread.localId"/>
-                <t t-if="thread.channel_type === 'chat' and discuss.renamingThreads.includes(thread)">
+                <t t-if="thread.__mfield_channel_type(mself) === 'chat' and discuss.__mfield_renamingThreads(mself).includes(thread)">
                     <div class="o_DiscussSidebarItem_item o_DiscussSidebarItem_name o-editable">
                         <EditableText
                             class="o_DiscussSidebarItem_nameInput"
-                            placeholder="thread.correspondent.name"
-                            value="thread.displayName"
+                            placeholder="thread.__mfield_correspondent(mself).__mfield_name(mself)"
+                            value="thread.__mfield_displayName(mself)"
                             t-on-o-cancel="_onCancelRenaming"
                             t-on-o-clicked="_onClickedEditableText"
                             t-on-o-validate="_onValidateEditableText"
@@ -25,27 +25,27 @@
                     </div>
                 </t>
                 <t t-else="">
-                    <div class="o_DiscussSidebarItem_item o_DiscussSidebarItem_name" t-att-class="{ 'o-item-unread': thread.localMessageUnreadCounter > 0 }">
-                        <t t-esc="thread.displayName"/>
+                    <div class="o_DiscussSidebarItem_item o_DiscussSidebarItem_name" t-att-class="{ 'o-item-unread': thread.__mfield_localMessageUnreadCounter(mself) > 0 }">
+                        <t t-esc="thread.__mfield_displayName(mself)"/>
                     </div>
-                    <t t-if="thread.mass_mailing">
+                    <t t-if="thread.__mfield_mass_mailing(mself)">
                         <i class="fa fa-envelope-o" title="Messages are sent by email" role="img"/>
                     </t>
                 </t>
                 <div class="o-autogrow o_DiscussSidebarItem_item"/>
-                <t t-if="thread.model !== 'mail.box'">
+                <t t-if="thread.__mfield_model(mself) !== 'mail.box'">
                     <div class="o_DiscussSidebarItem_commands o_DiscussSidebarItem_item">
-                        <t t-if="thread.channel_type === 'channel'">
+                        <t t-if="thread.__mfield_channel_type(mself) === 'channel'">
                             <div class="fa fa-cog o_DiscussSidebarItem_command o_DiscussSidebarItem_commandSettings" t-on-click="_onClickSettings" title="Channel settings" role="img"/>
-                            <t t-if="!thread.message_needaction_counter and !thread.group_based_subscription">
+                            <t t-if="!thread.__mfield_message_needaction_counter(mself) and !thread.__mfield_group_based_subscription(mself)">
                                 <div class="o_DiscussSidebarItem_command o_DiscussSidebarItem_commandLeave fa fa-times" t-on-click="_onClickLeave" title="Leave this channel" role="img"/>
                             </t>
                         </t>
-                        <t t-if="thread.channel_type === 'chat'">
+                        <t t-if="thread.__mfield_channel_type(mself) === 'chat'">
                             <div class="o_DiscussSidebarItem_command o_DiscussSidebarItem_commandRename fa fa-cog" t-on-click="_onClickRename" title="Rename conversation" role="img"/>
                         </t>
                         <t t-if="hasUnpin()">
-                            <t t-if="!thread.localMessageUnreadCounter">
+                            <t t-if="!thread.__mfield_localMessageUnreadCounter(mself)">
                                 <div class="fa fa-times o_DiscussSidebarItem_command o_DiscussSidebarItem_commandUnpin" t-on-click="_onClickUnpin" title="Unpin conversation" role="img"/>
                             </t>
                         </t>

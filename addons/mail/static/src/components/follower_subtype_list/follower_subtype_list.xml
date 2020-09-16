@@ -7,16 +7,16 @@
                 <div class="modal-content">
                     <header class="modal-header">
                         <h4 class="modal-title">
-                            Edit Subscription of <t t-esc="followerSubtypeList.follower.name"/>
+                            Edit Subscription of <t t-esc="followerSubtypeList.__mfield_follower(mself).__mfield_name(mself)"/>
                         </h4>
                         <i class="o_FollowerSubtypeList_closeButton close fa fa-times" aria-label="Close" t-on-click="_onClickCancel"/>
                     </header>
                     <main class="modal-body">
                         <div class="o_FollowerSubtypeList_subtypes">
-                            <t t-foreach="followerSubtypeList.follower.subtypes" t-as="subtype" t-key="subtype.id">
+                            <t t-foreach="followerSubtypeList.__mfield_follower(mself).__mfield_subtypes(mself)" t-as="subtype" t-key="subtype.__mfield_id(mself)">
                                 <FollowerSubtype
                                     class="o_FollowerSubtypeList_subtype"
-                                    followerLocalId="followerSubtypeList.follower.localId"
+                                    followerLocalId="followerSubtypeList.__mfield_follower(mself).localId"
                                     followerSubtypeLocalId="subtype.localId"
                                 />
                             </t>

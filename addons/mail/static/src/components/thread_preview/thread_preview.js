@@ -5,7 +5,7 @@ const components = {
     MessageAuthorPrefix: require('mail/static/src/components/message_author_prefix/message_author_prefix.js'),
     PartnerImStatusIcon: require('mail/static/src/components/partner_im_status_icon/partner_im_status_icon.js'),
 };
-const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
+const useModels = require('mail/static/src/component_hooks/use_models/use_models.js');
 const mailUtils = require('mail.utils');
 
 const { Component } = owl;
@@ -18,29 +18,7 @@ class ThreadPreview extends Component {
      */
     constructor(...args) {
         super(...args);
-        useStore(props => {
-            const thread = this.env.models['mail.thread'].get(props.threadLocalId);
-            let lastMessageAuthor;
-            let lastMessage;
-            if (thread) {
-                const orderedMessages = thread.orderedMessages;
-                lastMessage = orderedMessages[orderedMessages.length - 1];
-            }
-            if (lastMessage) {
-                lastMessageAuthor = lastMessage.author;
-            }
-            return {
-                isDeviceMobile: this.env.messaging.device.isMobile,
-                lastMessage: lastMessage ? lastMessage.__state : undefined,
-                lastMessageAuthor: lastMessageAuthor
-                    ? lastMessageAuthor.__state
-                    : undefined,
-                thread: thread ? thread.__state : undefined,
-                threadCorrespondent: thread && thread.correspondent
-                    ? thread.correspondent.__state
-                    : undefined,
-            };
-        });
+        useModels();
         /**
          * Reference of the "mark as read" button. Useful to disable the
          * top-level click handler when clicking on this specific button.
@@ -58,10 +36,10 @@ class ThreadPreview extends Component {
      * @returns {string}
      */
     image() {
-        if (this.thread.correspondent) {
-            return `/web/image/res.partner/${this.thread.correspondent.id}/image_128`;
+        if (this.thread.__mfield_correspondent(this)) {
+            return `/web/image/res.partner/${this.thread.__mfield_correspondent(this).__mfield_id(this)}/image_128`;
         }
-        return `/web/image/mail.channel/${this.thread.id}/image_128`;
+        return `/web/image/mail.channel/${this.thread.__mfield_id(this)}/image_128`;
     }
 
     /**
@@ -70,10 +48,10 @@ class ThreadPreview extends Component {
      * @returns {string}
      */
     get inlineLastMessageBody() {
-        if (!this.thread.lastMessage) {
+        if (!this.thread.__mfield_lastMessage(this)) {
             return '';
         }
-        return mailUtils.htmlToTextContentInline(this.thread.lastMessage.prettyBody);
+        return mailUtils.htmlToTextContentInline(this.thread.__mfield_lastMessage(this).__mfield_prettyBody(this));
     }
 
     /**
@@ -98,8 +76,8 @@ class ThreadPreview extends Component {
             return;
         }
         this.thread.open();
-        if (!this.env.messaging.device.isMobile) {
-            this.env.messaging.messagingMenu.close();
+        if (!this.env.messaging.__mfield_device(this).__mfield_isMobile(this)) {
+            this.env.messaging.__mfield_messagingMenu(this).close();
         }
     }
 
@@ -108,8 +86,8 @@ class ThreadPreview extends Component {
      * @param {MouseEvent} ev
      */
     _onClickMarkAsRead(ev) {
-        if (this.thread.lastMessage) {
-            this.thread.markAsSeen(this.thread.lastMessage.id);
+        if (this.thread.__mfield_lastMessage(this)) {
+            this.thread.markAsSeen(this.thread.__mfield_lastMessage(this).__mfield_id(this));
         }
     }
 

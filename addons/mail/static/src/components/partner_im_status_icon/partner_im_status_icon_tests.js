@@ -44,9 +44,9 @@ QUnit.test('initially online', async function (assert) {
 
     await this.start();
     const partner = this.env.models['mail.partner'].create({
-        id: 7,
-        name: "Demo User",
-        im_status: 'online',
+        __mfield_id: 7,
+        __mfield_name: "Demo User",
+        __mfield_im_status: 'online',
     });
     await this.createPartnerImStatusIcon(partner);
     assert.strictEqual(
@@ -71,9 +71,9 @@ QUnit.test('initially offline', async function (assert) {
 
     await this.start();
     const partner = this.env.models['mail.partner'].create({
-        id: 7,
-        name: "Demo User",
-        im_status: 'offline',
+        __mfield_id: 7,
+        __mfield_name: "Demo User",
+        __mfield_im_status: 'offline',
     });
     await this.createPartnerImStatusIcon(partner);
     assert.strictEqual(
@@ -88,9 +88,9 @@ QUnit.test('initially away', async function (assert) {
 
     await this.start();
     const partner = this.env.models['mail.partner'].create({
-        id: 7,
-        name: "Demo User",
-        im_status: 'away',
+        __mfield_id: 7,
+        __mfield_name: "Demo User",
+        __mfield_im_status: 'away',
     });
     await this.createPartnerImStatusIcon(partner);
     assert.strictEqual(
@@ -105,9 +105,9 @@ QUnit.test('change icon on change partner im_status', async function (assert) {
 
     await this.start();
     const partner = this.env.models['mail.partner'].create({
-        id: 7,
-        name: "Demo User",
-        im_status: 'online',
+        __mfield_id: 7,
+        __mfield_name: "Demo User",
+        __mfield_im_status: 'online',
     });
     await this.createPartnerImStatusIcon(partner);
     assert.strictEqual(
@@ -116,21 +116,27 @@ QUnit.test('change icon on change partner im_status', async function (assert) {
         "partner IM status icon should have online status rendering"
     );
 
-    await afterNextRender(() => partner.update({ im_status: 'offline' }));
+    await afterNextRender(() => partner.update({
+        __mfield_im_status: 'offline',
+    }));
     assert.strictEqual(
         document.querySelectorAll(`.o_PartnerImStatusIcon.o-offline`).length,
         1,
         "partner IM status icon should have offline status rendering"
     );
 
-    await afterNextRender(() => partner.update({ im_status: 'away' }));
+    await afterNextRender(() => partner.update({
+        __mfield_im_status: 'away',
+    }));
     assert.strictEqual(
         document.querySelectorAll(`.o_PartnerImStatusIcon.o-away`).length,
         1,
         "partner IM status icon should have away status rendering"
     );
 
-    await afterNextRender(() => partner.update({ im_status: 'online' }));
+    await afterNextRender(() => partner.update({
+        __mfield_im_status: 'online',
+    }));
     assert.strictEqual(
         document.querySelectorAll(`.o_PartnerImStatusIcon.o-online`).length,
         1,

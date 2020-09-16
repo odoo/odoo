@@ -119,7 +119,7 @@ QUnit.test('activity with note layout', async function (assert) {
 
     await this.start();
     const activity = this.env.models['mail.activity'].create({
-        note: 'There is no good or bad note'
+        __mfield_note: 'There is no good or bad note'
     });
     await this.createActivityComponent(activity);
     assert.strictEqual(
@@ -147,8 +147,8 @@ QUnit.test('activity info layout when planned after tomorrow', async function (a
     const fiveDaysFromNow = new Date();
     fiveDaysFromNow.setDate(today.getDate() + 5);
     const activity = this.env.models['mail.activity'].create({
-        dateDeadline: date_to_str(fiveDaysFromNow),
-        state: 'planned',
+        __mfield_dateDeadline: date_to_str(fiveDaysFromNow),
+        __mfield_state: 'planned',
     });
     await this.createActivityComponent(activity);
     assert.strictEqual(
@@ -180,8 +180,8 @@ QUnit.test('activity info layout when planned tomorrow', async function (assert)
     const tomorrow = new Date();
     tomorrow.setDate(today.getDate() + 1);
     const activity = this.env.models['mail.activity'].create({
-        dateDeadline: date_to_str(tomorrow),
-        state: 'planned',
+        __mfield_dateDeadline: date_to_str(tomorrow),
+        __mfield_state: 'planned',
     });
     await this.createActivityComponent(activity);
     assert.strictEqual(
@@ -211,8 +211,8 @@ QUnit.test('activity info layout when planned today', async function (assert) {
     await this.start();
     const today = new Date();
     const activity = this.env.models['mail.activity'].create({
-        dateDeadline: date_to_str(today),
-        state: 'today',
+        __mfield_dateDeadline: date_to_str(today),
+        __mfield_state: 'today',
     });
     await this.createActivityComponent(activity);
     assert.strictEqual(
@@ -244,8 +244,8 @@ QUnit.test('activity info layout when planned yesterday', async function (assert
     const yesterday = new Date();
     yesterday.setDate(today.getDate() - 1);
     const activity = this.env.models['mail.activity'].create({
-        dateDeadline: date_to_str(yesterday),
-        state: 'overdue',
+        __mfield_dateDeadline: date_to_str(yesterday),
+        __mfield_state: 'overdue',
     });
     await this.createActivityComponent(activity);
     assert.strictEqual(
@@ -277,8 +277,8 @@ QUnit.test('activity info layout when planned before yesterday', async function 
     const fiveDaysBeforeNow = new Date();
     fiveDaysBeforeNow.setDate(today.getDate() - 5);
     const activity = this.env.models['mail.activity'].create({
-        dateDeadline: date_to_str(fiveDaysBeforeNow),
-        state: 'overdue',
+        __mfield_dateDeadline: date_to_str(fiveDaysBeforeNow),
+        __mfield_state: 'overdue',
     });
     await this.createActivityComponent(activity);
     assert.strictEqual(
@@ -307,7 +307,7 @@ QUnit.test('activity with a summary layout', async function (assert) {
 
     await this.start();
     const activity = this.env.models['mail.activity'].create({
-        summary: 'test summary',
+        __mfield_summary: 'test summary',
     });
     await this.createActivityComponent(activity);
     assert.strictEqual(
@@ -337,7 +337,10 @@ QUnit.test('activity without summary layout', async function (assert) {
 
     await this.start();
     const activity = this.env.models['mail.activity'].create({
-        type: [['insert', { id: 1, displayName: "Fake type" }]],
+        __mfield_type: [['insert', {
+            __mfield_id: 1,
+            __mfield_displayName: "Fake type",
+        }]],
     });
     await this.createActivityComponent(activity);
     assert.strictEqual(
@@ -375,11 +378,17 @@ QUnit.test('activity details toggle', async function (assert) {
     const tomorrow = new Date();
     tomorrow.setDate(today.getDate() + 1);
     const activity = this.env.models['mail.activity'].create({
-        creator: [['insert', { id: 1, display_name: "Admin" }]],
-        dateCreate: date_to_str(today),
-        dateDeadline: date_to_str(tomorrow),
-        state: 'planned',
-        type: [['insert', { id: 1, displayName: "Fake type" }]],
+        __mfield_creator: [['insert', {
+            __mfield_id: 1,
+            __mfield_display_name: "Admin",
+        }]],
+        __mfield_dateCreate: date_to_str(today),
+        __mfield_dateDeadline: date_to_str(tomorrow),
+        __mfield_state: 'planned',
+        __mfield_type: [['insert', {
+            __mfield_id: 1,
+            __mfield_displayName: "Fake type",
+        }]],
     });
     await this.createActivityComponent(activity);
     assert.strictEqual(
@@ -425,12 +434,21 @@ QUnit.test('activity details layout', async function (assert) {
     const tomorrow = new Date();
     tomorrow.setDate(today.getDate() + 1);
     const activity = this.env.models['mail.activity'].create({
-        assignee: [['insert', { id: 10, display_name: "Pauvre pomme" }]],
-        creator: [['insert', { id: 1, display_name: "Admin" }]],
-        dateCreate: date_to_str(today),
-        dateDeadline: date_to_str(tomorrow),
-        state: 'planned',
-        type: [['insert', { id: 1, displayName: "Fake type" }]],
+        __mfield_assignee: [['insert', {
+            __mfield_id: 10,
+            __mfield_display_name: "Pauvre pomme",
+        }]],
+        __mfield_creator: [['insert', {
+            __mfield_id: 1,
+            __mfield_display_name: "Admin",
+        }]],
+        __mfield_dateCreate: date_to_str(today),
+        __mfield_dateDeadline: date_to_str(tomorrow),
+        __mfield_state: 'planned',
+        __mfield_type: [['insert', {
+            __mfield_id: 1,
+            __mfield_displayName: "Fake type",
+        }]],
     });
     await this.createActivityComponent(activity);
     assert.strictEqual(
@@ -499,7 +517,10 @@ QUnit.test('activity with mail template layout', async function (assert) {
 
     await this.start();
     const activity = this.env.models['mail.activity'].create({
-        mailTemplates: [['insert', { id: 1, name: "Dummy mail template" }]],
+        __mfield_mailTemplates: [['insert', {
+            __mfield_id: 1,
+            __mfield_name: "Dummy mail template",
+        }]],
     });
     await this.createActivityComponent(activity);
     assert.strictEqual(
@@ -583,12 +604,12 @@ QUnit.test('activity with mail template: preview mail', async function (assert) 
 
     await this.start({ env: { bus } });
     const activity = this.env.models['mail.activity'].create({
-        mailTemplates: [['insert', {
-            id: 1,
-            name: "Dummy mail template",
+        __mfield_mailTemplates: [['insert', {
+            __mfield_id: 1,
+            __mfield_name: "Dummy mail template",
         }]],
-        res_id: 42,
-        res_model: 'res.partner',
+        __mfield_res_id: 42,
+        __mfield_res_model: 'res.partner',
     });
     await this.createActivityComponent(activity);
     assert.strictEqual(
@@ -626,11 +647,11 @@ QUnit.test('activity with mail template: send mail', async function (assert) {
         },
     });
     const activity = this.env.models['mail.activity'].create({
-        mailTemplates: [['insert', {
-            id: 1,
-            name: "Dummy mail template",
+        __mfield_mailTemplates: [['insert', {
+            __mfield_id: 1,
+            __mfield_name: "Dummy mail template",
         }]],
-        res_id: 42,
+        __mfield_res_id: 42,
     });
     await this.createActivityComponent(activity);
     assert.strictEqual(
@@ -659,8 +680,8 @@ QUnit.test('activity upload document is available', async function (assert) {
     const tomorrow = new Date();
     tomorrow.setDate(today.getDate() + 1);
     const activity = this.env.models['mail.activity'].create({
-        canWrite: true,
-        category: 'upload_file',
+        __mfield_canWrite: true,
+        __mfield_category: 'upload_file',
     });
     await this.createActivityComponent(activity);
     assert.strictEqual(
@@ -688,8 +709,8 @@ QUnit.test('activity click on mark as done', async function (assert) {
     const tomorrow = new Date();
     tomorrow.setDate(today.getDate() + 1);
     const activity = this.env.models['mail.activity'].create({
-        canWrite: true,
-        category: 'not_upload_file',
+        __mfield_canWrite: true,
+        __mfield_category: 'not_upload_file',
     });
     await this.createActivityComponent(activity);
 
@@ -731,8 +752,8 @@ QUnit.test('activity mark as done popover should focus feedback input on open [R
     const tomorrow = new Date();
     tomorrow.setDate(today.getDate() + 1);
     const activity = this.env.models['mail.activity'].create({
-        canWrite: true,
-        category: 'not_upload_file',
+        __mfield_canWrite: true,
+        __mfield_category: 'not_upload_file',
     });
     await this.createActivityComponent(activity);
 
@@ -792,11 +813,14 @@ QUnit.test('activity click on edit', async function (assert) {
 
     await this.start({ env: { bus } });
     const activity = this.env.models['mail.activity'].create({
-        canWrite: true,
-        id: 12,
-        mailTemplates: [['insert', { id: 1, name: "Dummy mail template" }]],
-        res_id: 42,
-        res_model: 'res.partner',
+        __mfield_canWrite: true,
+        __mfield_id: 12,
+        __mfield_mailTemplates: [['insert', {
+            __mfield_id: 1,
+            __mfield_name: "Dummy mail template",
+        }]],
+        __mfield_res_id: 42,
+        __mfield_res_model: 'res.partner',
     });
     await this.createActivityComponent(activity);
     assert.strictEqual(
@@ -928,14 +952,14 @@ QUnit.test('activity click on cancel', async function (assert) {
         },
     });
     const activity = this.env.models['mail.activity'].create({
-        canWrite: true,
-        id: 12,
-        mailTemplates: [['insert', {
-            id: 1,
-            name: "Dummy mail template",
+        __mfield_canWrite: true,
+        __mfield_id: 12,
+        __mfield_mailTemplates: [['insert', {
+            __mfield_id: 1,
+            __mfield_name: "Dummy mail template",
         }]],
-        res_id: 42,
-        res_model: 'res.partner',
+        __mfield_res_id: 42,
+        __mfield_res_model: 'res.partner',
     });
 
     // Create a parent component to surround the Activity component in order to be able
@@ -946,7 +970,7 @@ QUnit.test('activity click on cancel', async function (assert) {
             useStore(props => {
                 const activity = this.env.models['mail.activity'].get(props.activityLocalId);
                 return {
-                    activity: activity ? activity.__state : undefined,
+                    activity: activity ? activity.__rev : undefined,
                 };
             });
         }
@@ -1008,9 +1032,9 @@ QUnit.test('activity mark done popover close on ESCAPE', async function (assert)
 
     await this.start();
     const activity = this.env.models['mail.activity'].create({
-        canWrite: true,
-        category: 'not_upload_file',
-        id: 12,
+        __mfield_canWrite: true,
+        __mfield_category: 'not_upload_file',
+        __mfield_id: 12,
     });
 
     await this.createActivityComponent(activity);
@@ -1041,9 +1065,9 @@ QUnit.test('activity mark done popover click on discard', async function (assert
 
     await this.start();
     const activity = this.env.models['mail.activity'].create({
-        canWrite: true,
-        category: 'not_upload_file',
-        id: 12,
+        __mfield_canWrite: true,
+        __mfield_category: 'not_upload_file',
+        __mfield_id: 12,
     });
     await this.createActivityComponent(activity);
     await afterNextRender(() => {
@@ -1093,10 +1117,10 @@ QUnit.test('data-oe-id & data-oe-model link redirection on click', async functio
     });
     await this.start({ env: { bus } });
     const activity = this.env.models['mail.activity'].create({
-        canWrite: true,
-        category: 'not_upload_file',
-        id: 12,
-        note: `<p><a href="#" data-oe-id="250" data-oe-model="some.model">some.model_250</a></p>`,
+        __mfield_canWrite: true,
+        __mfield_category: 'not_upload_file',
+        __mfield_id: 12,
+        __mfield_note: `<p><a href="#" data-oe-id="250" data-oe-model="some.model">some.model_250</a></p>`,
     });
     await this.createActivityComponent(activity);
     assert.containsOnce(

@@ -18,11 +18,11 @@
                         t-ref="dropzone"
                     />
                 </t>
-                <t t-if="thread and thread.allAttachments.length > 0">
+                <t t-if="thread and thread.__mfield_allAttachments(mself).length > 0">
                     <AttachmentList
                         class="o_attachmentBox_attachmentList"
                         areAttachmentsDownloadable="true"
-                        attachmentLocalIds="thread.allAttachments.map(attachment => attachment.localId)"
+                        attachmentLocalIds="thread.__mfield_allAttachments(mself).map(attachment => attachment.localId)"
                         attachmentsDetailsMode="'hover'"
                         attachmentsImageSize="'small'"
                         showAttachmentsFilenames="true"
@@ -36,10 +36,10 @@
             </div>
             <t t-if="thread">
                 <FileUploader
-                    attachmentLocalIds="thread.allAttachments.map(attachment => attachment.localId)"
+                    attachmentLocalIds="thread.__mfield_allAttachments(mself).map(attachment => attachment.localId)"
                     newAttachmentExtraData="newAttachmentExtraData"
-                    uploadModel="thread.model"
-                    uploadId="thread.id"
+                    uploadModel="thread.__mfield_model(mself)"
+                    uploadId="thread.__mfield_id(mself)"
                     t-on-o-attachment-created="_onAttachmentCreated"
                     t-ref="fileUploader"
                 />

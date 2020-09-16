@@ -1,7 +1,7 @@
 odoo.define('mail/static/src/components/composer_suggested_recipient_list/composer_suggested_recipient_list.js', function (require) {
 'use strict';
 
-const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
+const useModels = require('mail/static/src/component_hooks/use_models/use_models.js');
 
 const { Component } = owl;
 const { useState } = owl.hooks;
@@ -20,13 +20,7 @@ class ComposerSuggestedRecipientList extends Component {
         this.state = useState({
             hasShowMoreButton: false,
         });
-
-        useStore(props => {
-            const thread = this.env.models['mail.thread'].get(props.threadLocalId);
-            return {
-                thread: thread ? thread.__state : undefined,
-            };
-        });
+        useModels();
     }
 
     //--------------------------------------------------------------------------

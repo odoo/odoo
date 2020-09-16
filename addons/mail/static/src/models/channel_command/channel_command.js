@@ -2,7 +2,7 @@ odoo.define('mail/static/src/models/channel_command/channel_command.js', functio
 'use strict';
 
 const { registerNewModel } = require('mail/static/src/model/model_core.js');
-const { attr } = require('mail/static/src/model/model_field.js');
+const { attr } = require('mail/static/src/model/model_field_utils.js');
 
 function factory(dependencies) {
 
@@ -12,15 +12,15 @@ function factory(dependencies) {
         /**
          * FIXME use this value task-2343850
          */
-        channel_types: attr(),
+        __mfield_channel_types: attr(),
         /**
          *  The command that will be executed.
          */
-        help: attr(),
+        __mfield_help: attr(),
         /**
          *  The keyword to use a specific command.
          */
-        name: attr(),
+        __mfield_name: attr(),
     };
 
     ChannelCommand.modelName = 'mail.channel_command';

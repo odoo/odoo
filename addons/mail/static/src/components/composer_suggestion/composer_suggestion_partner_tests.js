@@ -44,16 +44,16 @@ QUnit.test('partner mention suggestion displayed', async function (assert) {
     this.data['mail.channel'].records.push({ id: 20 });
     await this.start();
     const thread = this.env.models['mail.thread'].findFromIdentifyingData({
-        id: 20,
-        model: 'mail.channel',
+        __mfield_id: 20,
+        __mfield_model: 'mail.channel',
     });
     const partner = this.env.models['mail.partner'].create({
-        id: 7,
-        im_status: 'online',
-        name: "Demo User",
+        __mfield_id: 7,
+        __mfield_im_status: 'online',
+        __mfield_name: "Demo User",
     });
     await this.createComposerSuggestion({
-        composerLocalId: thread.composer.localId,
+        composerLocalId: thread.__mfield_composer().localId,
         isActive: true,
         modelName: 'mail.partner',
         recordLocalId: partner.localId,
@@ -72,17 +72,17 @@ QUnit.test('partner mention suggestion correct data', async function (assert) {
     this.data['mail.channel'].records.push({ id: 20 });
     await this.start();
     const thread = this.env.models['mail.thread'].findFromIdentifyingData({
-        id: 20,
-        model: 'mail.channel',
+        __mfield_id: 20,
+        __mfield_model: 'mail.channel',
     });
     const partner = this.env.models['mail.partner'].create({
-        email: "demo_user@odoo.com",
-        id: 7,
-        im_status: 'online',
-        name: "Demo User",
+        __mfield_email: "demo_user@odoo.com",
+        __mfield_id: 7,
+        __mfield_im_status: 'online',
+        __mfield_name: "Demo User",
     });
     await this.createComposerSuggestion({
-        composerLocalId: thread.composer.localId,
+        composerLocalId: thread.__mfield_composer().localId,
         isActive: true,
         modelName: 'mail.partner',
         recordLocalId: partner.localId,
@@ -126,16 +126,16 @@ QUnit.test('partner mention suggestion active', async function (assert) {
     this.data['mail.channel'].records.push({ id: 20 });
     await this.start();
     const thread = this.env.models['mail.thread'].findFromIdentifyingData({
-        id: 20,
-        model: 'mail.channel',
+        __mfield_id: 20,
+        __mfield_model: 'mail.channel',
     });
     const partner = this.env.models['mail.partner'].create({
-        id: 7,
-        im_status: 'online',
-        name: "Demo User",
+        __mfield_id: 7,
+        __mfield_im_status: 'online',
+        __mfield_name: "Demo User",
     });
     await this.createComposerSuggestion({
-        composerLocalId: thread.composer.localId,
+        composerLocalId: thread.__mfield_composer().localId,
         isActive: true,
         modelName: 'mail.partner',
         recordLocalId: partner.localId,

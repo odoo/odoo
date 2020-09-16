@@ -50,8 +50,8 @@ QUnit.test('receive other member typing status "is typing"', async function (ass
     });
     await this.start();
     const thread = this.env.models['mail.thread'].find(thread =>
-        thread.id === 20 &&
-        thread.model === 'mail.channel'
+        thread.__mfield_id() === 20 &&
+        thread.__mfield_model() === 'mail.channel'
     );
     await this.createThreadTextualTypingStatusComponent(thread);
 
@@ -88,8 +88,8 @@ QUnit.test('receive other member typing status "is typing" then "no longer is ty
     });
     await this.start();
     const thread = this.env.models['mail.thread'].find(thread =>
-        thread.id === 20 &&
-        thread.model === 'mail.channel'
+        thread.__mfield_id() === 20 &&
+        thread.__mfield_model() === 'mail.channel'
     );
     await this.createThreadTextualTypingStatusComponent(thread);
 
@@ -144,8 +144,8 @@ QUnit.test('assume other member typing status becomes "no longer is typing" afte
         hasTimeControl: true,
     });
     const thread = this.env.models['mail.thread'].find(thread =>
-        thread.id === 20 &&
-        thread.model === 'mail.channel'
+        thread.__mfield_id() === 20 &&
+        thread.__mfield_model() === 'mail.channel'
     );
     await this.createThreadTextualTypingStatusComponent(thread);
 
@@ -191,8 +191,8 @@ QUnit.test ('other member typing status "is typing" refreshes 60 seconds timer o
         hasTimeControl: true,
     });
     const thread = this.env.models['mail.thread'].find(thread =>
-        thread.id === 20 &&
-        thread.model === 'mail.channel'
+        thread.__mfield_id() === 20 &&
+        thread.__mfield_model() === 'mail.channel'
     );
     await this.createThreadTextualTypingStatusComponent(thread);
 
@@ -257,8 +257,8 @@ QUnit.test('receive several other members typing status "is typing"', async func
     });
     await this.start();
     const thread = this.env.models['mail.thread'].find(thread =>
-        thread.id === 20 &&
-        thread.model === 'mail.channel'
+        thread.__mfield_id() === 20 &&
+        thread.__mfield_model() === 'mail.channel'
     );
     await this.createThreadTextualTypingStatusComponent(thread);
 

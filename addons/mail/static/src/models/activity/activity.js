@@ -2,8 +2,8 @@ odoo.define('mail/static/src/models/activity/activity/js', function (require) {
 'use strict';
 
 const { registerNewModel } = require('mail/static/src/model/model_core.js');
-const { attr, many2many, many2one } = require('mail/static/src/model/model_field.js');
 const { clear } = require('mail/static/src/model/model_field_command.js');
+const { attr, many2many, many2one } = require('mail/static/src/model/model_field_utils.js');
 
 function factory(dependencies) {
 
@@ -21,7 +21,7 @@ function factory(dependencies) {
             await this.async(() => this.env.services.rpc({
                 model: 'mail.activity',
                 method: 'unlink',
-                args: [[this.id]],
+                args: [[this.__mfield_id()]],
             }));
             this.delete();
         }
@@ -38,78 +38,81 @@ function factory(dependencies) {
         static convertData(data) {
             const data2 = {};
             if ('activity_category' in data) {
-                data2.category = data.activity_category;
+                data2.__mfield_category = data.activity_category;
             }
             if ('can_write' in data) {
-                data2.canWrite = data.can_write;
+                data2.__mfield_canWrite = data.can_write;
             }
             if ('create_data' in data) {
-                data2.dateCreate = data.create_date;
+                data2.__mfield_dateCreate = data.create_date;
             }
             if ('date_deadline' in data) {
-                data2.dateDeadline = data.date_deadline;
+                data2.__mfield_dateDeadline = data.date_deadline;
             }
             if ('force_next' in data) {
-                data2.force_next = data.force_next;
+                data2.__mfield_force_next = data.force_next;
             }
             if ('icon' in data) {
-                data2.icon = data.icon;
+                data2.__mfield_icon = data.icon;
             }
             if ('id' in data) {
-                data2.id = data.id;
+                data2.__mfield_id = data.id;
             }
             if ('note' in data) {
-                data2.note = data.note;
+                data2.__mfield_note = data.note;
             }
             if ('res_id' in data) {
-                data2.res_id = data.res_id;
+                data2.__mfield_res_id = data.res_id;
             }
             if ('res_model' in data) {
-                data2.res_model = data.res_model;
+                data2.__mfield_res_model = data.res_model;
             }
             if ('state' in data) {
-                data2.state = data.state;
+                data2.__mfield_state = data.state;
             }
             if ('summary' in data) {
-                data2.summary = data.summary;
+                data2.__mfield_summary = data.summary;
             }
 
             // relation
             if ('activity_type_id' in data) {
                 if (!data.activity_type_id) {
-                    data2.type = [['unlink-all']];
+                    data2.__mfield_type = [['unlink-all']];
                 } else {
-                    data2.type = [
+                    data2.__mfield_type = [
                         ['insert', {
-                            displayName: data.activity_type_id[1],
-                            id: data.activity_type_id[0],
+                            __mfield_displayName: data.activity_type_id[1],
+                            __mfield_id: data.activity_type_id[0],
                         }],
                     ];
                 }
             }
             if ('create_uid' in data) {
                 if (!data.create_uid) {
-                    data2.creator = [['unlink-all']];
+                    data2.__mfield_creator = [['unlink-all']];
                 } else {
                     data2.creator = [
                         ['insert', {
-                            id: data.create_uid[0],
-                            display_name: data.create_uid[1],
+                            __mfield_id: data.create_uid[0],
+                            __mfield_display_name: data.create_uid[1],
                         }],
                     ];
                 }
             }
             if ('mail_template_ids' in data) {
-                data2.mailTemplates = [['insert', data.mail_template_ids]];
+                data2.__mfield_mailTemplates = [['insert', {
+                    __mfield_id: data.mail_template_ids.id,
+                    __mfield_name: data.mail_template_ids.name,
+                }]];
             }
             if ('user_id' in data) {
                 if (!data.user_id) {
-                    data2.assignee = [['unlink-all']];
+                    data2.__mfield_assignee = [['unlink-all']];
                 } else {
-                    data2.assignee = [
+                    data2.__mfield_assignee = [
                         ['insert', {
-                            id: data.user_id[0],
-                            display_name: data.user_id[1],
+                            __mfield_id: data.user_id[0],
+                            __mfield_display_name: data.user_id[1],
                         }],
                     ];
                 }
@@ -131,10 +134,10 @@ function factory(dependencies) {
                 views: [[false, 'form']],
                 target: 'new',
                 context: {
-                    default_res_id: this.res_id,
-                    default_res_model: this.res_model,
+                    default_res_id: this.__mfield_res_id(this),
+                    default_res_model: this.__mfield_res_model(this),
                 },
-                res_id: this.id,
+                res_id: this.__mfield_id(this),
             };
             this.env.bus.trigger('do-action', {
                 action,
@@ -146,11 +149,11 @@ function factory(dependencies) {
             const [data] = await this.async(() => this.env.services.rpc({
                 model: 'mail.activity',
                 method: 'activity_format',
-                args: [this.id],
+                args: [this.__mfield_id(this)],
             }));
             this.update(this.constructor.convertData(data));
-            if (this.chatter) {
-                this.chatter.refresh();
+            if (this.__mfield_chatter(this)) {
+                this.__mfield_chatter(this).refresh();
             }
         }
 
@@ -160,19 +163,19 @@ function factory(dependencies) {
          * @param {string|boolean} [param0.feedback=false]
          */
         async markAsDone({ attachments = [], feedback = false }) {
-            const attachmentIds = attachments.map(attachment => attachment.id);
+            const attachmentIds = attachments.map(attachment => attachment.__mfield_id(this));
             await this.async(() => this.env.services.rpc({
                 model: 'mail.activity',
                 method: 'action_feedback',
-                args: [[this.id]],
+                args: [[this.__mfield_id(this)]],
                 kwargs: {
                     attachment_ids: attachmentIds,
                     feedback,
                 },
-                context: this.chatter ? this.chatter.context : {},
+                context: this.__mfield_chatter(this) ? this.__mfield_chatter(this).__mfield_context(this) : {},
             }));
-            if (this.chatter) {
-                this.chatter.refresh();
+            if (this.__mfield_chatter(this)) {
+                this.__mfield_chatter(this).refresh();
             }
             this.delete();
         }
@@ -186,12 +189,12 @@ function factory(dependencies) {
             const action = await this.async(() => this.env.services.rpc({
                 model: 'mail.activity',
                 method: 'action_feedback_schedule_next',
-                args: [[this.id]],
+                args: [[this.__mfield_id(this)]],
                 kwargs: { feedback },
             }));
-            const chatter = this.chatter;
+            const chatter = this.__mfield_chatter(this);
             if (chatter) {
-                this.chatter.refresh();
+                this.__mfield_chatter(this).refresh();
             }
             this.delete();
             this.env.bus.trigger('do-action', {
@@ -214,7 +217,7 @@ function factory(dependencies) {
          * @override
          */
         static _createRecordLocalId(data) {
-            return `${this.modelName}_${data.id}`;
+            return `${this.modelName}_${data.__mfield_id}`;
         }
 
         /**
@@ -222,10 +225,13 @@ function factory(dependencies) {
          * @returns {boolean}
          */
         _computeIsCurrentPartnerAssignee() {
-            if (!this.assigneePartner || !this.messagingCurrentPartner) {
+            if (
+                !this.__mfield_assigneePartner(this) ||
+                !this.__mfield_messagingCurrentPartner(this)
+            ) {
                 return false;
             }
-            return this.assigneePartner === this.messagingCurrentPartner;
+            return this.__mfield_assigneePartner(this) === this.__mfield_messagingCurrentPartner(this);
         }
 
         /**
@@ -245,52 +251,52 @@ function factory(dependencies) {
          * @returns {string|undefined}
          */
         _computeNote() {
-            if (this.note === '<p><br></p>') {
+            if (this.__mfield_note(this) === '<p><br></p>') {
                 return clear();
             }
-            return this.note;
+            return this.__mfield_note(this);
         }
     }
 
     Activity.fields = {
-        assignee: many2one('mail.user'),
-        assigneePartner: many2one('mail.partner', {
-            related: 'assignee.partner',
+        __mfield_assignee: many2one('mail.user'),
+        __mfield_assigneePartner: many2one('mail.partner', {
+            related: '__mfield_assignee.__mfield_partner',
         }),
-        attachments: many2many('mail.attachment', {
-            inverse: 'activities',
+        __mfield_attachments: many2many('mail.attachment', {
+            inverse: '__mfield_activities',
         }),
-        canWrite: attr({
+        __mfield_canWrite: attr({
             default: false,
         }),
-        category: attr(),
-        chatter: many2one('mail.chatter', {
-            inverse: 'activities',
+        __mfield_category: attr(),
+        __mfield_chatter: many2one('mail.chatter', {
+            inverse: '__mfield_activities',
         }),
-        creator: many2one('mail.user'),
-        dateCreate: attr(),
-        dateDeadline: attr(),
-        force_next: attr({
+        __mfield_creator: many2one('mail.user'),
+        __mfield_dateCreate: attr(),
+        __mfield_dateDeadline: attr(),
+        __mfield_force_next: attr({
             default: false,
         }),
-        icon: attr(),
-        id: attr(),
-        isCurrentPartnerAssignee: attr({
+        __mfield_icon: attr(),
+        __mfield_id: attr(),
+        __mfield_isCurrentPartnerAssignee: attr({
             compute: '_computeIsCurrentPartnerAssignee',
             default: false,
             dependencies: [
-                'assigneePartner',
-                'messagingCurrentPartner',
+                '__mfield_assigneePartner',
+                '__mfield_messagingCurrentPartner',
             ],
         }),
-        mailTemplates: many2many('mail.mail_template', {
-            inverse: 'activities',
+        __mfield_mailTemplates: many2many('mail.mail_template', {
+            inverse: '__mfield_activities',
         }),
-        messaging: many2one('mail.messaging', {
+        __mfield_messaging: many2one('mail.messaging', {
             compute: '_computeMessaging',
         }),
-        messagingCurrentPartner: many2one('mail.partner', {
-            related: 'messaging.currentPartner',
+        __mfield_messagingCurrentPartner: many2one('mail.partner', {
+            related: '__mfield_messaging.__mfield_currentPartner',
         }),
         /**
          * This value is meant to be returned by the server
@@ -298,18 +304,18 @@ function factory(dependencies) {
          * Do not use this value in a 't-raw' if the activity has been created
          * directly from user input and not from server data as it's not escaped.
          */
-        note: attr({
+        __mfield_note: attr({
             compute: '_computeNote',
             dependencies: [
-                'note',
+                '__mfield_note',
             ],
         }),
-        res_id: attr(),
-        res_model: attr(),
-        state: attr(),
-        summary: attr(),
-        type: many2one('mail.activity_type', {
-            inverse: 'activities',
+        __mfield_res_id: attr(),
+        __mfield_res_model: attr(),
+        __mfield_state: attr(),
+        __mfield_summary: attr(),
+        __mfield_type: many2one('mail.activity_type', {
+            inverse: '__mfield_activities',
         }),
     };
 

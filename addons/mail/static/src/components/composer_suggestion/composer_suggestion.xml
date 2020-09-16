@@ -5,24 +5,24 @@
         <a class="o_ComposerSuggestion dropdown-item" t-att-class="{ 'active': props.isActive }" href="#" role="menuitem" t-on-click="_onClick" t-on-mouseover="_onMouseOver">
             <t t-if="record">
                 <t t-if="isCannedResponse">
-                    <span class="o_ComposerSuggestion_part1"><t t-esc="record.source"/></span>
-                    <span class="o_ComposerSuggestion_part2"><t t-esc="record.substitution"/></span>
+                    <span class="o_ComposerSuggestion_part1"><t t-esc="record.__mfield_source(mself)"/></span>
+                    <span class="o_ComposerSuggestion_part2"><t t-esc="record.__mfield_substitution(mself)"/></span>
                 </t>
                 <t t-if="isChannel">
-                    <span class="o_ComposerSuggestion_part1"><t t-esc="record.name"/></span>
+                    <span class="o_ComposerSuggestion_part1"><t t-esc="record.__mfield_name(mself)"/></span>
                 </t>
                 <t t-if="isCommand">
-                    <span class="o_ComposerSuggestion_part1"><t t-esc="record.name"/></span>
-                    <span class="o_ComposerSuggestion_part2"><t t-esc="record.help"/></span>
+                    <span class="o_ComposerSuggestion_part1"><t t-esc="record.__mfield_name(mself)"/></span>
+                    <span class="o_ComposerSuggestion_part2"><t t-esc="record.__mfield_help(mself)"/></span>
                 </t>
                 <t t-if="isPartner">
                     <PartnerImStatusIcon
                         hasBackground="false"
                         partnerLocalId="record.localId"
                     />
-                    <span class="o_ComposerSuggestion_part1"><t t-esc="record.nameOrDisplayName"/></span>
-                    <t t-if="record.email">
-                        <span class="o_ComposerSuggestion_part2">(<t t-esc="record.email"/>)</span>
+                    <span class="o_ComposerSuggestion_part1"><t t-esc="record.__mfield_nameOrDisplayName(mself)"/></span>
+                    <t t-if="record.__mfield_email(mself)">
+                        <span class="o_ComposerSuggestion_part2">(<t t-esc="record.__mfield_email(mself)"/>)</span>
                     </t>
                 </t>
             </t>

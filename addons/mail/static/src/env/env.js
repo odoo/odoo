@@ -69,7 +69,7 @@ Object.assign(env, {
         if (!this.messaging) {
             return false;
         }
-        return this.messaging.isInitialized;
+        return this.messaging.__mfield_isInitialized();
     },
     /**
      * States whether the environment is in QUnit test or not.

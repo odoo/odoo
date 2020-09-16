@@ -16,8 +16,8 @@ TranslationDataBase.include({
             // In particular if messaging is created before the end of the
             // `load_translations` RPC, the default text direction has to be
             // updated by the received one.
-            Component.env.messaging.locale.update({
-                textDirection: this.parameters.direction,
+            Component.env.messaging.__mfield_locale().update({
+                __mfield_textDirection: this.parameters.direction,
             });
         }
         return res;

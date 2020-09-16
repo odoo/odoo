@@ -2,7 +2,7 @@ odoo.define('mail/static/src/models/suggested_recipient_info/suggested_recipient
 'use strict';
 
 const { registerNewModel } = require('mail/static/src/model/model_core.js');
-const { attr, many2one } = require('mail/static/src/model/model_field.js');
+const { attr, many2one } = require('mail/static/src/model/model_field_utils.js');
 
 function factory(dependencies) {
 
@@ -17,7 +17,10 @@ function factory(dependencies) {
          * @returns {string}
          */
         _computeEmail() {
-            return this.partner && this.partner.email || this.email;
+            return (
+                this.__mfield_partner(this) && this.__mfield_partner(this).__mfield_email(this) ||
+                this.__mfield_email(this)
+            );
         }
 
         /**
@@ -27,7 +30,7 @@ function factory(dependencies) {
          * @returns {boolean}
          */
         _computeIsSelected() {
-            return this.partner ? this.isSelected : false;
+            return this.__mfield_partner(this) ? this.__mfield_isSelected(this) : false;
         }
 
         /**
@@ -35,7 +38,10 @@ function factory(dependencies) {
          * @returns {string}
          */
         _computeName() {
-            return this.partner && this.partner.nameOrDisplayName || this.name;
+            return (
+                this.__mfield_partner(this) && this.__mfield_partner(this).__mfield_nameOrDisplayName(this) ||
+                this.__mfield_name(this)
+            );
         }
 
     }
@@ -46,23 +52,23 @@ function factory(dependencies) {
          * displaying `this`, and also serves as default partner email when
          * creating a new partner from `this`.
          */
-        email: attr({
+        __mfield_email: attr({
             compute: '_computeEmail',
             dependencies: [
-                'email',
-                'partnerEmail',
+                '__mfield_email',
+                '__mfield_partnerEmail',
             ],
         }),
         /**
          * Determines whether `this` will be added to recipients when posting a
          * new message on `this.thread`.
          */
-        isSelected: attr({
+        __mfield_isSelected: attr({
             compute: '_computeIsSelected',
             default: true,
             dependencies: [
-                'isSelected',
-                'partner',
+                '__mfield_isSelected',
+                '__mfield_partner',
             ],
         }),
         /**
@@ -70,39 +76,39 @@ function factory(dependencies) {
          * displaying `this`, and also serves as default partner name when
          * creating a new partner from `this`.
          */
-        name: attr({
+        __mfield_name: attr({
             compute: '_computeName',
             dependencies: [
-                'name',
-                'partnerNameOrDisplayName',
+                '__mfield_name',
+                '__mfield_partnerNameOrDisplayName',
             ],
         }),
         /**
          * Determines the optional `mail.partner` associated to `this`.
          */
-        partner: many2one('mail.partner'),
+        __mfield_partner: many2one('mail.partner'),
         /**
          * Serves as compute dependency.
          */
-        partnerEmail: attr({
-            related: 'partner.email'
+        __mfield_partnerEmail: attr({
+            related: '__mfield_partner.__mfield_email'
         }),
         /**
          * Serves as compute dependency.
          */
-        partnerNameOrDisplayName: attr({
-            related: 'partner.nameOrDisplayName'
+        __mfield_partnerNameOrDisplayName: attr({
+            related: '__mfield_partner.__mfield_nameOrDisplayName'
         }),
         /**
          * Determines why `this` is a suggestion for `this.thread`. It serves as
          * visual clue when displaying `this`.
          */
-        reason: attr(),
+        __mfield_reason: attr(),
         /**
          * Determines the `mail.thread` concerned by `this.`
          */
-        thread: many2one('mail.thread', {
-            inverse: 'suggestedRecipientInfoList',
+        __mfield_thread: many2one('mail.thread', {
+            inverse: '__mfield_suggestedRecipientInfoList',
         }),
     };
 

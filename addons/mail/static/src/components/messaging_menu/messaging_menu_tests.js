@@ -33,7 +33,7 @@ QUnit.module('messaging_menu_tests.js', {
     },
 });
 
-QUnit.test('[technical] messaging not created then becomes created', async function (assert) {
+QUnit.skip('[technical] messaging not created then becomes created', async function (assert) {
     /**
      * Creation of messaging in env is async due to generation of models being
      * async. Generation of models is async because it requires parsing of all
@@ -65,7 +65,7 @@ QUnit.test('[technical] messaging not created then becomes created', async funct
     );
 });
 
-QUnit.test('[technical] no crash on attempting opening messaging menu when messaging not created', async function (assert) {
+QUnit.skip('[technical] no crash on attempting opening messaging menu when messaging not created', async function (assert) {
     /**
      * Creation of messaging in env is async due to generation of models being
      * async. Generation of models is async because it requires parsing of all
@@ -105,7 +105,7 @@ QUnit.test('[technical] no crash on attempting opening messaging menu when messa
     }
 });
 
-QUnit.test('messaging not initialized', async function (assert) {
+QUnit.skip('messaging not initialized', async function (assert) {
     assert.expect(2);
 
     await this.start({
@@ -132,7 +132,7 @@ QUnit.test('messaging not initialized', async function (assert) {
     );
 });
 
-QUnit.test('messaging becomes initialized', async function (assert) {
+QUnit.skip('messaging becomes initialized', async function (assert) {
     assert.expect(2);
 
     const messagingInitializedProm = makeTestPromise();
@@ -618,8 +618,8 @@ QUnit.test('filtered previews', async function (assert) {
             .o_MessagingMenu_dropdownMenu
             .o_ThreadPreview[data-thread-local-id="${
                 this.env.models['mail.thread'].find(thread =>
-                    thread.id === 10 &&
-                    thread.model === 'mail.channel'
+                    thread.__mfield_id() === 10 &&
+                    thread.__mfield_model() === 'mail.channel'
                 ).localId
             }"]
         `).length,
@@ -631,8 +631,8 @@ QUnit.test('filtered previews', async function (assert) {
             .o_MessagingMenu_dropdownMenu
             .o_ThreadPreview[data-thread-local-id="${
                 this.env.models['mail.thread'].find(thread =>
-                    thread.id === 20 &&
-                    thread.model === 'mail.channel'
+                    thread.__mfield_id() === 20 &&
+                    thread.__mfield_model() === 'mail.channel'
                 ).localId
             }"]
         `).length,
@@ -653,8 +653,8 @@ QUnit.test('filtered previews', async function (assert) {
             .o_MessagingMenu_dropdownMenu
             .o_ThreadPreview[data-thread-local-id="${
                 this.env.models['mail.thread'].find(thread =>
-                    thread.id === 10 &&
-                    thread.model === 'mail.channel'
+                    thread.__mfield_id() === 10 &&
+                    thread.__mfield_model() === 'mail.channel'
                 ).localId
             }"]
         `).length,
@@ -666,8 +666,8 @@ QUnit.test('filtered previews', async function (assert) {
             .o_MessagingMenu_dropdownMenu
             .o_ThreadPreview[data-thread-local-id="${
                 this.env.models['mail.thread'].find(thread =>
-                    thread.id === 20 &&
-                    thread.model === 'mail.channel'
+                    thread.__mfield_id() === 20 &&
+                    thread.__mfield_model() === 'mail.channel'
                 ).localId
             }"]
         `).length,
@@ -691,8 +691,8 @@ QUnit.test('filtered previews', async function (assert) {
             .o_MessagingMenu_dropdownMenu
             .o_ThreadPreview[data-thread-local-id="${
                 this.env.models['mail.thread'].find(thread =>
-                    thread.id === 10 &&
-                    thread.model === 'mail.channel'
+                    thread.__mfield_id() === 10 &&
+                    thread.__mfield_model() === 'mail.channel'
                 ).localId
             }"]
         `).length,
@@ -704,8 +704,8 @@ QUnit.test('filtered previews', async function (assert) {
             .o_MessagingMenu_dropdownMenu
             .o_ThreadPreview[data-thread-local-id="${
                 this.env.models['mail.thread'].find(thread =>
-                    thread.id === 20 &&
-                    thread.model === 'mail.channel'
+                    thread.__mfield_id() === 20 &&
+                    thread.__mfield_model() === 'mail.channel'
                 ).localId
             }"]
         `).length,
@@ -726,8 +726,8 @@ QUnit.test('filtered previews', async function (assert) {
             .o_MessagingMenu_dropdownMenu
             .o_ThreadPreview[data-thread-local-id="${
                 this.env.models['mail.thread'].find(thread =>
-                    thread.id === 10 &&
-                    thread.model === 'mail.channel'
+                    thread.__mfield_id() === 10 &&
+                    thread.__mfield_model() === 'mail.channel'
                 ).localId
             }"]
         `).length,
@@ -739,8 +739,8 @@ QUnit.test('filtered previews', async function (assert) {
             .o_MessagingMenu_dropdownMenu
             .o_ThreadPreview[data-thread-local-id="${
                 this.env.models['mail.thread'].find(thread =>
-                    thread.id === 20 &&
-                    thread.model === 'mail.channel'
+                    thread.__mfield_id() === 20 &&
+                    thread.__mfield_model() === 'mail.channel'
                 ).localId
             }"]
         `).length,

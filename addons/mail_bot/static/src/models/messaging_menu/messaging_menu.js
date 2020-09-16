@@ -14,11 +14,11 @@ registerInstancePatchModel('mail.messaging_menu', 'mail_bot/static/src/models/me
      */
     _updateCounter() {
         let counter = this._super();
-        if (!this.messaging) {
+        if (!this.__mfield_messaging(this)) {
             // compute after delete
             return counter;
         }
-        if (this.messaging.isNotificationPermissionDefault()) {
+        if (this.__mfield_messaging(this).isNotificationPermissionDefault()) {
             counter += 1;
         }
         return counter;

@@ -1,7 +1,7 @@
 odoo.define('mail/static/src/components/dialog/dialog.js', function (require) {
 'use strict';
 
-const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
+const useModels = require('mail/static/src/component_hooks/use_models/use_models.js');
 
 const { Component } = owl;
 const { useRef } = owl.hooks;
@@ -19,12 +19,7 @@ class Dialog extends Component {
         this._componentRef = useRef('component');
         this._onClickGlobal = this._onClickGlobal.bind(this);
         this._onKeydownDocument = this._onKeydownDocument.bind(this);
-        useStore(props => {
-            const dialog = this.env.models['mail.dialog'].get(props.dialogLocalId);
-            return {
-                dialog: dialog ? dialog.__state : undefined,
-            };
-        });
+        useModels();
     }
 
     mounted() {

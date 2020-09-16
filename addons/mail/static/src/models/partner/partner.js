@@ -2,7 +2,7 @@ odoo.define('mail/static/src/models/partner/partner.js', function (require) {
 'use strict';
 
 const { registerNewModel } = require('mail/static/src/model/model_core.js');
-const { attr, many2many, many2one, one2many, one2one } = require('mail/static/src/model/model_field.js');
+const { attr, many2many, many2one, one2many, one2one } = require('mail/static/src/model/model_field_utils.js');
 
 const utils = require('web.utils');
 
@@ -24,39 +24,39 @@ function factory(dependencies) {
             const data2 = {};
             if ('country' in data) {
                 if (!data.country) {
-                    data2.country = [['unlink-all']];
+                    data2.__mfield_country = [['unlink-all']];
                 } else {
-                    data2.country = [['insert', {
-                        id: data.country[0],
-                        name: data.country[1],
+                    data2.__mfield_country = [['insert', {
+                        __mfield_id: data.country[0],
+                        __mfield_name: data.country[1],
                     }]];
                 }
             }
             if ('display_name' in data) {
-                data2.display_name = data.display_name;
+                data2.__mfield_display_name = data.display_name;
             }
             if ('email' in data) {
-                data2.email = data.email;
+                data2.__mfield_email = data.email;
             }
             if ('id' in data) {
-                data2.id = data.id;
+                data2.__mfield_id = data.id;
             }
             if ('im_status' in data) {
-                data2.im_status = data.im_status;
+                data2.__mfield_im_status = data.im_status;
             }
             if ('name' in data) {
-                data2.name = data.name;
+                data2.__mfield_name = data.name;
             }
 
             // relation
             if ('user_id' in data) {
                 if (!data.user_id) {
-                    data2.user = [['unlink-all']];
+                    data2.__mfield_user = [['unlink-all']];
                 } else {
-                    data2.user = [
+                    data2.__mfield_user = [
                         ['insert', {
-                            id: data.user_id[0],
-                            display_name: data.user_id[1],
+                            __mfield_id: data.user_id[0],
+                            __mfield_display_name: data.user_id[1],
                         }],
                     ];
                 }
@@ -81,8 +81,8 @@ function factory(dependencies) {
                 _.str.escapeRegExp(utils.unaccent(keyword)),
                 'i'
             );
-            const currentPartner = this.env.messaging.currentPartner;
-            for (const partner of this.all(partner => partner.active)) {
+            const currentPartner = this.env.messaging.__mfield_currentPartner();
+            for (const partner of this.all(partner => partner.__mfield_active())) {
                 if (partners.length < limit) {
                     if (
                         partner !== currentPartner &&
@@ -125,14 +125,20 @@ function factory(dependencies) {
             const userIds = await this.async(() => this.env.services.rpc({
                 model: 'res.users',
                 method: 'search',
-                args: [[['partner_id', '=', this.id]]],
+                args: [[['partner_id', '=', this.__mfield_id(this)]]],
                 kwargs: {
                     context: { active_test: false },
                 },
             }));
-            this.update({ hasCheckedUser: true });
+            this.update({
+                __mfield_hasCheckedUser: true,
+            });
             if (userIds.length > 0) {
-                this.update({ user: [['insert', { id: userIds[0] }]] });
+                this.update({
+                    __mfield_user: [['insert', {
+                        __mfield_id: userIds[0],
+                    }]],
+                });
             }
         }
 
@@ -144,18 +150,18 @@ function factory(dependencies) {
          * @returns {mail.thread|undefined}
          */
         async getChat() {
-            if (!this.user && !this.hasCheckedUser) {
+            if (!this.__mfield_user(this) && !this.__mfield_hasCheckedUser(this)) {
                 await this.async(() => this.checkIsUser());
             }
             // prevent chatting with non-users
-            if (!this.user) {
+            if (!this.__mfield_user(this)) {
                 this.env.services['notification'].notify({
                     message: this.env._t("You can only chat with partners that have a dedicated user."),
                     type: 'info',
                 });
                 return;
             }
-            return this.user.getChat();
+            return this.__mfield_user(this).getChat();
         }
 
         /**
@@ -181,7 +187,7 @@ function factory(dependencies) {
          */
         async openProfile() {
             return this.env.messaging.openDocument({
-                id: this.id,
+                id: this.__mfield_id(this),
                 model: 'res.partner',
             });
         }
@@ -194,7 +200,7 @@ function factory(dependencies) {
          * @override
          */
         static _createRecordLocalId(data) {
-            return `${this.modelName}_${data.id}`;
+            return `${this.modelName}_${data.__mfield_id}`;
         }
 
         /**
@@ -204,10 +210,10 @@ function factory(dependencies) {
         static async _fetchImStatus() {
             let toFetchPartnersLocalIds = [];
             let partnerIdToLocalId = {};
-            const toFetchPartners = this.all(partner => partner.im_status !== null);
+            const toFetchPartners = this.all(partner => partner.__mfield_im_status(this) !== null);
             for (const partner of toFetchPartners) {
                 toFetchPartnersLocalIds.push(partner.localId);
-                partnerIdToLocalId[partner.id] = partner.localId;
+                partnerIdToLocalId[partner.__mfield_id(this)] = partner.localId;
             }
             if (!toFetchPartnersLocalIds.length) {
                 return;
@@ -216,19 +222,24 @@ function factory(dependencies) {
                 route: '/longpolling/im_status',
                 params: {
                     partner_ids: toFetchPartnersLocalIds.map(partnerLocalId =>
-                        this.get(partnerLocalId).id
+                        this.get(partnerLocalId).__mfield_id(this)
                     ),
                 },
             }, { shadow: true });
             for (const { id, im_status } of dataList) {
-                this.insert({ id, im_status });
+                this.insert({
+                    __mfield_id: id,
+                    __mfield_im_status: im_status,
+                });
                 delete partnerIdToLocalId[id];
             }
             // partners with no im_status => set null
             for (const noImStatusPartnerLocalId of Object.values(partnerIdToLocalId)) {
                 const partner = this.get(noImStatusPartnerLocalId);
                 if (partner) {
-                    partner.update({ im_status: null });
+                    partner.update({
+                        __mfield_im_status: null,
+                    });
                 }
             }
         }
@@ -249,7 +260,7 @@ function factory(dependencies) {
          * @returns {string|undefined}
          */
         _computeDisplayName() {
-            return this.display_name || this.user && this.user.display_name;
+            return this.__mfield_display_name(this) || this.__mfield_user(this) && this.__mfield_user(this).__mfield_display_name(this);
         }
 
         /**
@@ -257,71 +268,74 @@ function factory(dependencies) {
          * @returns {string|undefined}
          */
         _computeNameOrDisplayName() {
-            return this.name || this.display_name;
+            return (
+                this.__mfield_name(this) ||
+                this.__mfield_display_name(this)
+            );
         }
 
     }
 
     Partner.fields = {
-        active: attr({
+        __mfield_active: attr({
             default: true,
         }),
-        correspondentThreads: one2many('mail.thread', {
-            inverse: 'correspondent',
+        __mfield_correspondentThreads: one2many('mail.thread', {
+            inverse: '__mfield_correspondent',
         }),
-        country: many2one('mail.country'),
-        display_name: attr({
+        __mfield_country: many2one('mail.country'),
+        __mfield_display_name: attr({
             compute: '_computeDisplayName',
             default: "",
             dependencies: [
-                'display_name',
-                'userDisplayName',
+                '__mfield_display_name',
+                '__mfield_userDisplayName',
             ],
         }),
-        email: attr(),
-        failureNotifications: one2many('mail.notification', {
-            related: 'messagesAsAuthor.failureNotifications',
+        __mfield_email: attr(),
+        __mfield_failureNotifications: one2many('mail.notification', {
+            related: '__mfield_messagesAsAuthor.__mfield_failureNotifications',
         }),
         /**
          * Whether an attempt was already made to fetch the user corresponding
          * to this partner. This prevents doing the same RPC multiple times.
          */
-        hasCheckedUser: attr({
+        __mfield_hasCheckedUser: attr({
             default: false,
         }),
-        id: attr(),
-        im_status: attr(),
-        memberThreads: many2many('mail.thread', {
-            inverse: 'members',
+        __mfield_id: attr(),
+        __mfield_im_status: attr(),
+        __mfield_memberThreads: many2many('mail.thread', {
+            inverse: '__mfield_members',
         }),
-        messagesAsAuthor: one2many('mail.message', {
-            inverse: 'author',
+        __mfield_messagesAsAuthor: one2many('mail.message', {
+            inverse: '__mfield_author',
         }),
-        model: attr({
+        __mfield_model: attr({
             default: 'res.partner',
         }),
         /**
          * Channels that are moderated by this partner.
          */
-        moderatedChannels: many2many('mail.thread', {
-            inverse: 'moderators',
+        __mfield_moderatedChannels: many2many('mail.thread', {
+            inverse: '__mfield_moderators',
         }),
-        name: attr(),
-        nameOrDisplayName: attr({
+        __mfield_name: attr(),
+        __mfield_nameOrDisplayName: attr({
             compute: '_computeNameOrDisplayName',
             dependencies: [
-                'display_name',
-                'name',
+                '__mfield_display_name',
+                '__mfield_name',
             ],
         }),
-        user: one2one('mail.user', {
-            inverse: 'partner',
+        __mfield_user: one2one('mail.user', {
+            inverse: '__mfield_partner',
         }),
         /**
          * Serves as compute dependency.
          */
-        userDisplayName: attr({
-            related: 'user.display_name',
+        __mfield_userDisplayName: attr({
+            related: '__mfield_user.__mfield_display_name',
         }),
     };
 

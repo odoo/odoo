@@ -3,7 +3,7 @@ odoo.define('mail/static/src/models/message/message.js', function (require) {
 
 const emojis = require('mail.emojis');
 const { registerNewModel } = require('mail/static/src/model/model_core.js');
-const { attr, many2many, many2one, one2many } = require('mail/static/src/model/model_field.js');
+const { attr, many2many, many2one, one2many } = require('mail/static/src/model/model_field_utils.js');
 const { addLink, htmlToTextContentInline, parseAndTransform } = require('mail.utils');
 
 const { str_to_datetime } = require('web.time');
@@ -23,7 +23,9 @@ function factory(dependencies) {
          */
         static checkAll(thread, threadStringifiedDomain) {
             const threadCache = thread.cache(threadStringifiedDomain);
-            threadCache.update({ checkedMessages: [['link', threadCache.messages]] });
+            threadCache.update({
+                __mfield_checkedMessages: [['link', threadCache.__mfield_messages()]],
+            });
         }
 
         /**
@@ -35,9 +37,9 @@ function factory(dependencies) {
             const data2 = {};
             if ('attachment_ids' in data) {
                 if (!data.attachment_ids) {
-                    data2.attachments = [['unlink-all']];
+                    data2.__mfield_attachments = [['unlink-all']];
                 } else {
-                    data2.attachments = [
+                    data2.__mfield_attachments = [
                         ['insert-and-replace', data.attachment_ids.map(attachmentData =>
                             this.env.models['mail.attachment'].convertData(attachmentData)
                         )],
@@ -46,97 +48,97 @@ function factory(dependencies) {
             }
             if ('author_id' in data) {
                 if (!data.author_id) {
-                    data2.author = [['unlink-all']];
+                    data2.__mfield_author = [['unlink-all']];
                 } else if (data.author_id[0] !== 0) {
                     // partner id 0 is a hack of message_format to refer to an
                     // author non-related to a partner. display_name equals
                     // email_from, so this is omitted due to being redundant.
-                    data2.author = [
+                    data2.__mfield_author = [
                         ['insert', {
-                            display_name: data.author_id[1],
-                            id: data.author_id[0],
+                            __mfield_display_name: data.author_id[1],
+                            __mfield_id: data.author_id[0],
                         }],
                     ];
                 }
             }
             if ('body' in data) {
-                data2.body = data.body;
+                data2.__mfield_body = data.body;
             }
             if ('channel_ids' in data && data.channel_ids) {
                 const channels = data.channel_ids
                     .map(channelId =>
                         this.env.models['mail.thread'].findFromIdentifyingData({
-                            id: channelId,
-                            model: 'mail.channel',
+                            __mfield_id: channelId,
+                            __mfield_model: 'mail.channel',
                         })
                     ).filter(channel => !!channel);
-                data2.serverChannels = [['replace', channels]];
+                data2.__mfield_serverChannels = [['replace', channels]];
             }
             if ('date' in data && data.date) {
-                data2.date = moment(str_to_datetime(data.date));
+                data2.__mfield_date = moment(str_to_datetime(data.date));
             }
             if ('email_from' in data) {
-                data2.email_from = data.email_from;
+                data2.__mfield_email_from = data.email_from;
             }
             if ('history_partner_ids' in data) {
-                data2.isHistory = data.history_partner_ids.includes(this.env.messaging.currentPartner.id);
+                data2.__mfield_isHistory = data.history_partner_ids.includes(this.env.messaging.__mfield_currentPartner().__mfield_id());
             }
             if ('id' in data) {
-                data2.id = data.id;
+                data2.__mfield_id = data.id;
             }
             if ('is_discussion' in data) {
-                data2.is_discussion = data.is_discussion;
+                data2.__mfield_is_discussion = data.is_discussion;
             }
             if ('is_note' in data) {
-                data2.is_note = data.is_note;
+                data2.__mfield_is_note = data.is_note;
             }
             if ('is_notification' in data) {
-                data2.is_notification = data.is_notification;
+                data2.__mfield_is_notification = data.is_notification;
             }
             if ('message_type' in data) {
-                data2.message_type = data.message_type;
+                data2.__mfield_message_type = data.message_type;
             }
             if ('model' in data && 'res_id' in data && data.model && data.res_id) {
                 const originThreadData = {
-                    id: data.res_id,
-                    model: data.model,
+                    __mfield_id: data.res_id,
+                    __mfield_model: data.model,
                 };
                 if ('record_name' in data && data.record_name) {
-                    originThreadData.name = data.record_name;
+                    originThreadData.__mfield_name = data.record_name;
                 }
                 if ('res_model_name' in data && data.res_model_name) {
-                    originThreadData.model_name = data.res_model_name;
+                    originThreadData.__mfield_model_name = data.res_model_name;
                 }
                 if ('module_icon' in data) {
-                    originThreadData.moduleIcon = data.module_icon;
+                    originThreadData.__mfield_moduleIcon = data.module_icon;
                 }
-                data2.originThread = [['insert', originThreadData]];
+                data2.__mfield_originThread = [['insert', originThreadData]];
             }
             if ('moderation_status' in data) {
-                data2.moderation_status = data.moderation_status;
+                data2.__mfield_moderation_status = data.moderation_status;
             }
             if ('needaction_partner_ids' in data) {
-                data2.isNeedaction = data.needaction_partner_ids.includes(this.env.messaging.currentPartner.id);
+                data2.__mfield_isNeedaction = data.needaction_partner_ids.includes(this.env.messaging.__mfield_currentPartner().__mfield_id());
             }
             if ('notifications' in data) {
-                data2.notifications = [['insert', data.notifications.map(notificationData =>
+                data2.__mfield_notifications = [['insert', data.notifications.map(notificationData =>
                     this.env.models['mail.notification'].convertData(notificationData)
                 )]];
             }
             if ('starred_partner_ids' in data) {
-                data2.isStarred = data.starred_partner_ids.includes(this.env.messaging.currentPartner.id);
+                data2.__mfield_isStarred = data.starred_partner_ids.includes(this.env.messaging.__mfield_currentPartner().__mfield_id());
             }
             if ('subject' in data) {
-                data2.subject = data.subject;
+                data2.__mfield_subject = data.subject;
             }
             if ('subtype_description' in data) {
-                data2.subtype_description = data.subtype_description;
+                data2.__mfield_subtype_description = data.subtype_description;
             }
             if ('subtype_id' in data) {
-                data2.subtype_id = data.subtype_id;
+                data2.__mfield_subtype_id = data.subtype_id;
             }
             if ('tracking_value_ids' in data) {
-                data2.tracking_value_ids = data.tracking_value_ids;
+                data2.__mfield_tracking_value_ids = data.tracking_value_ids;
             }
 
             return data2;
@@ -172,7 +174,7 @@ function factory(dependencies) {
             await this.env.services.rpc({
                 model: 'mail.message',
                 method: 'set_message_done',
-                args: [messages.map(message => message.id)]
+                args: [messages.map(message => message.__mfield_id(this))]
             });
         }
 
@@ -189,7 +191,7 @@ function factory(dependencies) {
          * @param {string} [kwargs.comment]
          */
         static async moderate(messages, decision, kwargs) {
-            const messageIds = messages.map(message => message.id);
+            const messageIds = messages.map(message => message.__mfield_id());
             await this.env.services.rpc({
                 model: 'mail.message',
                 method: 'moderate',
@@ -223,15 +225,18 @@ function factory(dependencies) {
             ));
             // compute seen indicators (if applicable)
             for (const message of messages) {
-                for (const thread of message.threads) {
-                    if (thread.model !== 'mail.channel' || thread.channel_type === 'channel') {
+                for (const thread of message.__mfield_threads()) {
+                    if (
+                        thread.__mfield_model() !== 'mail.channel' ||
+                        thread.__mfield_channel_type() === 'channel'
+                    ) {
                         // disabled on non-channel threads and
                         // on `channel` channels for performance reasons
                         continue;
                     }
                     this.env.models['mail.message_seen_indicator'].insert({
-                        messageId: message.id,
-                        threadId: thread.id,
+                        __mfield_messageId: message.__mfield_id(this),
+                        __mfield_threadId: thread.__mfield_id(this),
                     });
                 }
             }
@@ -245,7 +250,9 @@ function factory(dependencies) {
          */
         static uncheckAll(thread, threadStringifiedDomain) {
             const threadCache = thread.cache(threadStringifiedDomain);
-            threadCache.update({ checkedMessages: [['unlink', threadCache.messages]] });
+            threadCache.update({
+                __mfield_checkedMessages: [['unlink', threadCache.__mfield_messages()]],
+            });
         }
 
         /**
@@ -265,10 +272,10 @@ function factory(dependencies) {
          */
         isChecked(thread, threadStringifiedDomain) {
             // aku todo
-            const relatedCheckedThreadCache = this.checkedThreadCaches.find(
+            const relatedCheckedThreadCache = this.__mfield_checkedThreadCaches(this).find(
                 threadCache => (
-                    threadCache.thread === thread &&
-                    threadCache.stringifiedDomain === threadStringifiedDomain
+                    threadCache.__mfield_thread(this) === thread &&
+                    threadCache.__mfield_stringifiedDomain(this) === threadStringifiedDomain
                 )
             );
             return !!relatedCheckedThreadCache;
@@ -282,7 +289,7 @@ function factory(dependencies) {
             await this.async(() => this.env.services.rpc({
                 model: 'mail.message',
                 method: 'set_message_done',
-                args: [[this.id]]
+                args: [[this.__mfield_id(this)]]
             }));
         }
 
@@ -308,7 +315,7 @@ function factory(dependencies) {
                 action: 'mail.mail_resend_message_action',
                 options: {
                     additional_context: {
-                        mail_message_to_resend: this.id,
+                        mail_message_to_resend: this.__mfield_id(this),
                     },
                 },
             });
@@ -319,7 +326,7 @@ function factory(dependencies) {
          * that Discuss and Inbox are already opened.
          */
         replyTo() {
-            this.env.messaging.discuss.replyToMessage(this);
+            this.env.messaging.__mfield_discuss(this).replyToMessage(this);
         }
 
         /**
@@ -331,10 +338,14 @@ function factory(dependencies) {
          */
         toggleCheck(thread, threadStringifiedDomain) {
             const threadCache = thread.cache(threadStringifiedDomain);
-            if (threadCache.checkedMessages.includes(this)) {
-                threadCache.update({ checkedMessages: [['unlink', this]] });
+            if (threadCache.__mfield_checkedMessages(this).includes(this)) {
+                threadCache.update({
+                    __mfield_checkedMessages: [['unlink', this]],
+                });
             } else {
-                threadCache.update({ checkedMessages: [['link', this]] });
+                threadCache.update({
+                    __mfield_checkedMessages: [['link', this]],
+                });
             }
         }
 
@@ -345,7 +356,7 @@ function factory(dependencies) {
             await this.async(() => this.env.services.rpc({
                 model: 'mail.message',
                 method: 'toggle_message_starred',
-                args: [[this.id]]
+                args: [[this.__mfield_id(this)]]
             }));
         }
 
@@ -357,15 +368,15 @@ function factory(dependencies) {
          * @override
          */
         static _createRecordLocalId(data) {
-            return `${this.modelName}_${data.id}`;
+            return `${this.modelName}_${data.__mfield_id}`;
         }
 
         /**
          * @returns {boolean}
          */
         _computeFailureNotifications() {
-            return [['replace', this.notifications.filter(notifications =>
-                ['exception', 'bounce'].includes(notifications.notification_status)
+            return [['replace', this.__mfield_notifications(this).filter(notifications =>
+                ['exception', 'bounce'].includes(notifications.__mfield_notification_status(this))
             )]];
         }
 
@@ -374,7 +385,7 @@ function factory(dependencies) {
          * @returns {boolean}
          */
         _computeHasCheckbox() {
-            return this.isModeratedByCurrentPartner;
+            return this.__mfield_isModeratedByCurrentPartner(this);
         }
 
         /**
@@ -383,9 +394,9 @@ function factory(dependencies) {
          */
         _computeIsCurrentPartnerAuthor() {
             return !!(
-                this.author &&
-                this.messagingCurrentPartner &&
-                this.messagingCurrentPartner === this.author
+                this.__mfield_author(this) &&
+                this.__mfield_messagingCurrentPartner(this) &&
+                this.__mfield_messagingCurrentPartner(this) === this.__mfield_author(this)
             );
         }
 
@@ -394,11 +405,11 @@ function factory(dependencies) {
          * @returns {boolean}
          */
         _computeIsBodyEqualSubtypeDescription() {
-            if (!this.body || !this.subtype_description) {
+            if (!this.__mfield_body(this) || !this.__mfield_subtype_description(this)) {
                 return false;
             }
-            const inlineBody = htmlToTextContentInline(this.body);
-            return inlineBody.toLowerCase() === this.subtype_description.toLowerCase();
+            const inlineBody = htmlToTextContentInline(this.__mfield_body(this));
+            return inlineBody.toLowerCase() === this.__mfield_subtype_description(this).toLowerCase();
         }
 
         /**
@@ -407,9 +418,9 @@ function factory(dependencies) {
          */
         _computeIsModeratedByCurrentPartner() {
             return (
-                this.moderation_status === 'pending_moderation' &&
-                this.originThread &&
-                this.originThread.isModeratedByCurrentPartner
+                this.__mfield_moderation_status(this) === 'pending_moderation' &&
+                this.__mfield_originThread(this) &&
+                this.__mfield_originThread(this).__mfield_isModeratedByCurrentPartner(this)
             );
         }
 
@@ -426,18 +437,18 @@ function factory(dependencies) {
          * @returns {mail.thread[]}
          */
         _computeNonOriginThreads() {
-            const nonOriginThreads = this.serverChannels.filter(thread => thread !== this.originThread);
-            if (this.isHistory) {
-                nonOriginThreads.push(this.env.messaging.history);
+            const nonOriginThreads = this.__mfield_serverChannels(this).filter(thread => thread !== this.__mfield_originThread(this));
+            if (this.__mfield_isHistory(this)) {
+                nonOriginThreads.push(this.env.messaging.__mfield_history(this));
             }
-            if (this.isNeedaction) {
-                nonOriginThreads.push(this.env.messaging.inbox);
+            if (this.__mfield_isNeedaction(this)) {
+                nonOriginThreads.push(this.env.messaging.__mfield_inbox(this));
             }
-            if (this.isStarred) {
-                nonOriginThreads.push(this.env.messaging.starred);
+            if (this.__mfield_isStarred(this)) {
+                nonOriginThreads.push(this.env.messaging.__mfield_starred(this));
             }
-            if (this.env.messaging.moderation && this.isModeratedByCurrentPartner) {
-                nonOriginThreads.push(this.env.messaging.moderation);
+            if (this.env.messaging.__mfield_moderation(this) && this.__mfield_isModeratedByCurrentPartner(this)) {
+                nonOriginThreads.push(this.env.messaging.__mfield_moderation(this));
             }
             return [['replace', nonOriginThreads]];
         }
@@ -459,8 +470,8 @@ function factory(dependencies) {
                     `(?:^|\\s|<[a-z]*>)(${unicode})(?=\\s|$|</[a-z]*>)`,
                     "g"
                 );
-                const originalBody = this.body;
-                prettyBody = this.body.replace(
+                const originalBody = this.__mfield_body(this);
+                prettyBody = this.__mfield_body(this).replace(
                     regexp,
                     ` <span class="o_mail_emoji">${unicode}</span> `
                 );
@@ -482,9 +493,9 @@ function factory(dependencies) {
          * @returns {mail.thread[]}
          */
         _computeThreads() {
-            const threads = [...this.nonOriginThreads];
-            if (this.originThread) {
-                threads.push(this.originThread);
+            const threads = [...this.__mfield_nonOriginThreads(this)];
+            if (this.__mfield_originThread(this)) {
+                threads.push(this.__mfield_originThread(this));
             }
             return [['replace', threads]];
         }
@@ -492,11 +503,11 @@ function factory(dependencies) {
     }
 
     Message.fields = {
-        attachments: many2many('mail.attachment', {
-            inverse: 'messages',
+        __mfield_attachments: many2many('mail.attachment', {
+            inverse: '__mfield_messages',
         }),
-        author: many2one('mail.partner', {
-            inverse: 'messagesAsAuthor',
+        __mfield_author: many2one('mail.partner', {
+            inverse: '__mfield_messagesAsAuthor',
         }),
         /**
          * This value is meant to be returned by the server
@@ -504,32 +515,36 @@ function factory(dependencies) {
          * Do not use this value in a 't-raw' if the message has been created
          * directly from user input and not from server data as it's not escaped.
          */
-        body: attr({
+        __mfield_body: attr({
             default: "",
         }),
-        checkedThreadCaches: many2many('mail.thread_cache', {
-            inverse: 'checkedMessages',
+        __mfield_checkedThreadCaches: many2many('mail.thread_cache', {
+            inverse: '__mfield_checkedMessages',
         }),
-        date: attr({
+        __mfield_date: attr({
             default: moment(),
         }),
-        email_from: attr(),
-        failureNotifications: one2many('mail.notification', {
+        __mfield_email_from: attr(),
+        __mfield_failureNotifications: one2many('mail.notification', {
             compute: '_computeFailureNotifications',
-            dependencies: ['notificationsStatus'],
+            dependencies: [
+                '__mfield_notificationsStatus',
+            ],
         }),
-        hasCheckbox: attr({
+        __mfield_hasCheckbox: attr({
             compute: '_computeHasCheckbox',
             default: false,
-            dependencies: ['isModeratedByCurrentPartner'],
+            dependencies: [
+                '__mfield_isModeratedByCurrentPartner',
+            ],
         }),
-        id: attr(),
-        isCurrentPartnerAuthor: attr({
+        __mfield_id: attr(),
+        __mfield_isCurrentPartnerAuthor: attr({
             compute: '_computeIsCurrentPartnerAuthor',
             default: false,
             dependencies: [
-                'author',
-                'messagingCurrentPartner',
+                '__mfield_author',
+                '__mfield_messagingCurrentPartner',
             ],
         }),
         /**
@@ -552,113 +567,113 @@ function factory(dependencies) {
          *   body created by a user with a different language.
          * - Their content might be mostly but not exactly the same.
          */
-        isBodyEqualSubtypeDescription: attr({
+        __mfield_isBodyEqualSubtypeDescription: attr({
             compute: '_computeIsBodyEqualSubtypeDescription',
             default: false,
             dependencies: [
-                'body',
-                'subtype_description',
+                '__mfield_body',
+                '__mfield_subtype_description',
             ],
         }),
-        isModeratedByCurrentPartner: attr({
+        __mfield_isModeratedByCurrentPartner: attr({
             compute: '_computeIsModeratedByCurrentPartner',
             default: false,
             dependencies: [
-                'moderation_status',
-                'originThread',
-                'originThreadIsModeratedByCurrentPartner',
+                '__mfield_moderation_status',
+                '__mfield_originThread',
+                '__mfield_originThreadIsModeratedByCurrentPartner',
             ],
         }),
-        isTemporary: attr({
+        __mfield_isTemporary: attr({
             default: false,
         }),
-        isTransient: attr({
+        __mfield_isTransient: attr({
             default: false,
         }),
-        is_discussion: attr({
+        __mfield_is_discussion: attr({
             default: false,
         }),
         /**
          * Determine whether the message was a needaction. Useful to make it
          * present in history mailbox.
          */
-        isHistory: attr({
+        __mfield_isHistory: attr({
             default: false,
         }),
         /**
          * Determine whether the message is needaction. Useful to make it
          * present in inbox mailbox and messaging menu.
          */
-        isNeedaction: attr({
+        __mfield_isNeedaction: attr({
             default: false,
         }),
-        is_note: attr({
+        __mfield_is_note: attr({
             default: false,
         }),
-        is_notification: attr({
+        __mfield_is_notification: attr({
             default: false,
         }),
         /**
          * Determine whether the message is starred. Useful to make it present
          * in starred mailbox.
          */
-        isStarred: attr({
+        __mfield_isStarred: attr({
             default: false,
         }),
-        message_type: attr(),
-        messaging: many2one('mail.messaging', {
+        __mfield_message_type: attr(),
+        __mfield_messaging: many2one('mail.messaging', {
             compute: '_computeMessaging',
         }),
-        messagingCurrentPartner: many2one('mail.partner', {
-            related: 'messaging.currentPartner',
+        __mfield_messagingCurrentPartner: many2one('mail.partner', {
+            related: '__mfield_messaging.__mfield_currentPartner',
         }),
-        messagingHistory: many2one('mail.thread', {
-            related: 'messaging.history',
+        __mfield_messagingHistory: many2one('mail.thread', {
+            related: '__mfield_messaging.__mfield_history',
         }),
-        messagingInbox: many2one('mail.thread', {
-            related: 'messaging.inbox',
+        __mfield_messagingInbox: many2one('mail.thread', {
+            related: '__mfield_messaging.__mfield_inbox',
         }),
-        messagingModeration: many2one('mail.thread', {
-            related: 'messaging.moderation',
+        __mfield_messagingModeration: many2one('mail.thread', {
+            related: '__mfield_messaging.__mfield_moderation',
         }),
-        messagingStarred: many2one('mail.thread', {
-            related: 'messaging.starred',
+        __mfield_messagingStarred: many2one('mail.thread', {
+            related: '__mfield_messaging.__mfield_starred',
         }),
-        moderation_status: attr(),
+        __mfield_moderation_status: attr(),
         /**
          * List of non-origin threads that this message is linked to. This field
          * is read-only.
          */
-        nonOriginThreads: many2many('mail.thread', {
+        __mfield_nonOriginThreads: many2many('mail.thread', {
             compute: '_computeNonOriginThreads',
             dependencies: [
-                'isHistory',
-                'isModeratedByCurrentPartner',
-                'isNeedaction',
-                'isStarred',
-                'messagingHistory',
-                'messagingInbox',
-                'messagingModeration',
-                'messagingStarred',
-                'originThread',
-                'serverChannels',
+                '__mfield_isHistory',
+                '__mfield_isModeratedByCurrentPartner',
+                '__mfield_isNeedaction',
+                '__mfield_isStarred',
+                '__mfield_messagingHistory',
+                '__mfield_messagingInbox',
+                '__mfield_messagingModeration',
+                '__mfield_messagingStarred',
+                '__mfield_originThread',
+                '__mfield_serverChannels',
             ],
         }),
-        notifications: one2many('mail.notification', {
-            inverse: 'message',
+        __mfield_notifications: one2many('mail.notification', {
+            inverse: '__mfield_message',
             isCausal: true,
         }),
-        notificationsStatus: attr({
+        __mfield_notificationsStatus: attr({
             default: [],
-            related: 'notifications.notification_status',
+            related: '__mfield_notifications.__mfield_notification_status',
         }),
         /**
          * Origin thread of this message (if any).
          */
-        originThread: many2one('mail.thread'),
-        originThreadIsModeratedByCurrentPartner: attr({
+        __mfield_originThread: many2one('mail.thread'),
+        __mfield_originThreadIsModeratedByCurrentPartner: attr({
             default: false,
-            related: 'originThread.isModeratedByCurrentPartner',
+            related: '__mfield_originThread.__mfield_isModeratedByCurrentPartner',
         }),
         /**
          * This value is meant to be based on field body which is
@@ -666,33 +681,35 @@ function factory(dependencies) {
          * Do not use this value in a 't-raw' if the message has been created
          * directly from user input and not from server data as it's not escaped.
          */
-        prettyBody: attr({
+        __mfield_prettyBody: attr({
             compute: '_computePrettyBody',
-            dependencies: ['body'],
+            dependencies: [
+                '__mfield_body',
+            ],
         }),
-        subject: attr(),
-        subtype_description: attr(),
-        subtype_id: attr(),
+        __mfield_subject: attr(),
+        __mfield_subtype_description: attr(),
+        __mfield_subtype_id: attr(),
         /**
          * All threads that this message is linked to. This field is read-only.
          */
-        threads: many2many('mail.thread', {
+        __mfield_threads: many2many('mail.thread', {
             compute: '_computeThreads',
             dependencies: [
-                'originThread',
-                'nonOriginThreads',
+                '__mfield_originThread',
+                '__mfield_nonOriginThreads',
             ],
-            inverse: 'messages',
+            inverse: '__mfield_messages',
         }),
-        tracking_value_ids: attr({
+        __mfield_tracking_value_ids: attr({
             default: [],
         }),
         /**
          * All channels containing this message on the server.
          * Equivalent of python field `channel_ids`.
          */
-        serverChannels: many2many('mail.thread', {
-            inverse: 'messagesAsServerChannel',
+        __mfield_serverChannels: many2many('mail.thread', {
+            inverse: '__mfield_messagesAsServerChannel',
         }),
     };
 

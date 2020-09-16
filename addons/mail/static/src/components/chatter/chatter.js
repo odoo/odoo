@@ -8,7 +8,7 @@ const components = {
     Composer: require('mail/static/src/components/composer/composer.js'),
     ThreadView: require('mail/static/src/components/thread_view/thread_view.js'),
 };
-const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
+const useModels = require('mail/static/src/component_hooks/use_models/use_models.js');
 
 const { Component } = owl;
 const { useRef } = owl.hooks;
@@ -20,23 +20,7 @@ class Chatter extends Component {
      */
     constructor(...args) {
         super(...args);
-        useStore(props => {
-            const chatter = this.env.models['mail.chatter'].get(props.chatterLocalId);
-            const thread = chatter ? chatter.thread : undefined;
-            let attachments = [];
-            if (thread) {
-                attachments = thread.allAttachments;
-            }
-            return {
-                attachments: attachments.map(attachment => attachment.__state),
-                chatter: chatter ? chatter.__state : undefined,
-                thread: thread ? thread.__state : undefined,
-            };
-        }, {
-            compareDepth: {
-                attachments: 1,
-            },
-        });
+        useModels();
         /**
          * Reference of the composer. Useful to focus it.
          */
@@ -71,8 +55,8 @@ class Chatter extends Component {
      */
     _notifyRendered() {
         this.trigger('o-chatter-rendered', {
-            attachments: this.chatter.thread.allAttachments,
-            thread: this.chatter.thread.localId,
+            attachments: this.chatter.__mfield_thread(this).__mfield_allAttachments(this),
+            thread: this.chatter.__mfield_thread(this).localId,
         });
     }
 
@@ -80,11 +64,11 @@ class Chatter extends Component {
      * @private
      */
     _update() {
-        if (this.chatter.thread) {
+        if (this.chatter.__mfield_thread(this)) {
             this._notifyRendered();
         }
-        if (this.chatter.isDoFocus) {
-            this.chatter.update({ isDoFocus: false });
+        if (this.chatter.__mfield_isDoFocus(this)) {
+            this.chatter.update({ __mfield_isDoFocus: false });
             const composer = this._composerRef.comp;
             if (composer) {
                 composer.focus();
@@ -100,7 +84,7 @@ class Chatter extends Component {
      * @private
      */
     _onComposerMessagePosted() {
-        this.chatter.update({ isComposerVisible: false });
+        this.chatter.update({ __mfield_isComposerVisible: false });
     }
 
 }

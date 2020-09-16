@@ -6,12 +6,12 @@
             <t t-foreach="orderedMailboxes" t-as="mailbox" t-key="mailbox.localId">
                 <button class="o_DiscussMobileMailboxSelection_button btn"
                     t-att-class="{
-                        'btn-primary': discuss.thread === mailbox,
-                        'btn-secondary': discuss.thread !== mailbox,
-                        'o-active': discuss.thread === mailbox,
+                        'btn-primary': discuss.__mfield_thread(mself) === mailbox,
+                        'btn-secondary': discuss.__mfield_thread(mself) !== mailbox,
+                        'o-active': discuss.__mfield_thread(mself) === mailbox,
                     }" t-on-click="_onClick" t-att-data-mailbox-local-id="mailbox.localId" type="button"
                 >
-                    <t t-esc="mailbox.name"/>
+                    <t t-esc="mailbox.__mfield_name(mself)"/>
                 </button>
             </t>
         </div>

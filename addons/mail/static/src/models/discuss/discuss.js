@@ -2,8 +2,8 @@ odoo.define('mail/static/src/models/discuss.discuss.js', function (require) {
 'use strict';
 
 const { registerNewModel } = require('mail/static/src/model/model_core.js');
-const { attr, many2one, one2many, one2one } = require('mail/static/src/model/model_field.js');
 const { clear } = require('mail/static/src/model/model_field_command.js');
+const { attr, many2one, one2many, one2one } = require('mail/static/src/model/model_field_utils.js');
 
 function factory(dependencies) {
 
@@ -17,30 +17,30 @@ function factory(dependencies) {
          * @param {mail.thread} thread
          */
         cancelThreadRenaming(thread) {
-            this.update({ renamingThreads: [['unlink', thread]] });
+            this.update({ __mfield_renamingThreads: [['unlink', thread]] });
         }
 
         clearIsAddingItem() {
             this.update({
-                addingChannelValue: "",
-                isAddingChannel: false,
-                isAddingChat: false,
+                __mfield_addingChannelValue: "",
+                __mfield_isAddingChannel: false,
+                __mfield_isAddingChat: false,
             });
         }
 
         clearReplyingToMessage() {
-            this.update({ replyingToMessage: [['unlink-all']] });
+            this.update({ __mfield_replyingToMessage: [['unlink-all']] });
         }
 
         /**
          * Close the discuss app. Should reset its internal state.
          */
         close() {
-            this.update({ isOpen: false });
+            this.update({ __mfield_isOpen: false });
         }
 
         focus() {
-            this.update({ isDoFocus: true });
+            this.update({ __mfield_isDoFocus: true });
         }
 
         /**
@@ -50,7 +50,7 @@ function factory(dependencies) {
          * @param {integer} ui.item.id
          */
         async handleAddChannelAutocompleteSelect(ev, ui) {
-            const name = this.addingChannelValue;
+            const name = this.__mfield_addingChannelValue;
             this.clearIsAddingItem();
             if (ui.item.special) {
                 const channel = await this.async(() =>
@@ -78,7 +78,7 @@ function factory(dependencies) {
         async handleAddChannelAutocompleteSource(req, res) {
             const value = req.term;
             const escapedValue = owl.utils.escape(value);
-            this.update({ addingChannelValue: value });
+            this.update({ __mfield_addingChannelValue: value });
             const result = await this.async(() => this.env.services.rpc({
                 model: 'mail.channel',
                 method: 'channel_search_to_join',
@@ -133,9 +133,9 @@ function factory(dependencies) {
                 callback: partners => {
                     const suggestions = partners.map(partner => {
                         return {
-                            id: partner.id,
-                            value: partner.nameOrDisplayName,
-                            label: partner.nameOrDisplayName,
+                            id: partner.__mfield_id(this),
+                            value: partner.__mfield_nameOrDisplayName(this),
+                            label: partner.__mfield_nameOrDisplayName(this),
                         };
                     });
                     res(_.sortBy(suggestions, 'label'));
@@ -151,19 +151,19 @@ function factory(dependencies) {
          * is not yet initialized.
          */
         openInitThread() {
-            const [model, id] = typeof this.initActiveId === 'number'
-                ? ['mail.channel', this.initActiveId]
-                : this.initActiveId.split('_');
+            const [model, id] = typeof this.__mfield_initActiveId(this) === 'number'
+                ? ['mail.channel', this.__mfield_initActiveId(this)]
+                : this.__mfield_initActiveId(this).split('_');
             const thread = this.env.models['mail.thread'].findFromIdentifyingData({
-                id: model !== 'mail.box' ? Number(id) : id,
-                model,
+                __mfield_id: model !== 'mail.box' ? Number(id) : id,
+                __mfield_model: model,
             });
             if (!thread) {
                 return;
             }
             thread.open();
-            if (this.env.messaging.device.isMobile && thread.channel_type) {
-                this.update({ activeMobileNavbarTabId: thread.channel_type });
+            if (this.env.messaging.__mfield_device(this).__mfield_isMobile(this) && thread.__mfield_channel_type(this)) {
+                this.update({ __mfield_activeMobileNavbarTabId: thread.__mfield_channel_type(this) });
             }
         }
 
@@ -175,15 +175,15 @@ function factory(dependencies) {
          */
         async openThread(thread) {
             this.update({
-                stringifiedDomain: '[]',
-                thread: [['link', thread]],
+                __mfield_stringifiedDomain: '[]',
+                __mfield_thread: [['link', thread]],
             });
             this.focus();
-            if (!this.isOpen) {
+            if (!this.__mfield_isOpen(this)) {
                 this.env.bus.trigger('do-action', {
                     action: 'mail.action_discuss',
                     options: {
-                        active_id: this.threadToActiveId(this),
+                        active_id: this.threadToActiveId(this.__mfield_thread(this)),
                         clear_breadcrumbs: false,
                         on_reverse_breadcrumb: () => this.close(),
                     },
@@ -197,7 +197,9 @@ function factory(dependencies) {
          */
         async renameThread(thread, newName) {
             await this.async(() => thread.rename(newName));
-            this.update({ renamingThreads: [['unlink', thread]] });
+            this.update({
+                __mfield_renamingThreads: [['unlink', thread]],
+            });
         }
 
         /**
@@ -207,11 +209,16 @@ function factory(dependencies) {
          * @param {mail.message} message
          */
         replyToMessage(message) {
-            this.update({ replyingToMessage: [['link', message]] });
+            this.update({
+                __mfield_replyingToMessage: [['link', message]],
+            });
             // avoid to reply to a note by a message and vice-versa.
             // subject to change later by allowing subtype choice.
-            this.replyingToMessageOriginThreadComposer.update({
-                isLog: !message.is_discussion && !message.is_notification
+            this.__mfield_replyingToMessageOriginThreadComposer(this).update({
+                __mfield_isLog: (
+                    !message.__mfield_is_discussion(this) &&
+                    !message.__mfield_is_notification(this)
+                ),
             });
             this.focus();
         }
@@ -220,7 +227,9 @@ function factory(dependencies) {
          * @param {mail.thread} thread
          */
         setThreadRenaming(thread) {
-            this.update({ renamingThreads: [['link', thread]] });
+            this.update({
+                __mfield_renamingThreads: [['link', thread]],
+            });
         }
 
         /**
@@ -228,7 +237,7 @@ function factory(dependencies) {
          * @returns {string}
          */
         threadToActiveId(thread) {
-            return `${thread.model}_${thread.id}`;
+            return `${thread.__mfield_model(this)}_${thread.__mfield_id(this)}`;
         }
 
         //----------------------------------------------------------------------
@@ -240,10 +249,10 @@ function factory(dependencies) {
          * @returns {string|undefined}
          */
         _computeActiveId() {
-            if (!this.thread) {
+            if (!this.__mfield_thread(this)) {
                 return clear();
             }
-            return this.threadToActiveId(this.thread);
+            return this.threadToActiveId(this.__mfield_thread(this));
         }
 
         /**
@@ -251,10 +260,10 @@ function factory(dependencies) {
          * @returns {string}
          */
         _computeAddingChannelValue() {
-            if (!this.isOpen) {
+            if (!this.__mfield_isOpen(this)) {
                 return "";
             }
-            return this.addingChannelValue;
+            return this.__mfield_addingChannelValue(this);
         }
 
         /**
@@ -262,14 +271,14 @@ function factory(dependencies) {
          * @returns {boolean}
          */
         _computeHasThreadView() {
-            if (!this.thread || !this.isOpen) {
+            if (!this.__mfield_thread(this) || !this.__mfield_isOpen(this)) {
                 return false;
             }
             if (
-                this.env.messaging.device.isMobile &&
+                this.env.messaging.__mfield_device(this).__mfield_isMobile(this) &&
                 (
-                    this.activeMobileNavbarTabId !== 'mailbox' ||
-                    this.thread.model !== 'mail.box'
+                    this.__mfield_activeMobileNavbarTabId(this) !== 'mailbox' ||
+                    this.__mfield_thread(this).__mfield_model(this) !== 'mail.box'
                 )
             ) {
                 return false;
@@ -282,10 +291,10 @@ function factory(dependencies) {
          * @returns {boolean}
          */
         _computeIsAddingChannel() {
-            if (!this.isOpen) {
+            if (!this.__mfield_isOpen(this)) {
                 return false;
             }
-            return this.isAddingChannel;
+            return this.__mfield_isAddingChannel(this);
         }
 
         /**
@@ -293,10 +302,10 @@ function factory(dependencies) {
          * @returns {boolean}
          */
         _computeIsAddingChat() {
-            if (!this.isOpen) {
+            if (!this.__mfield_isOpen(this)) {
                 return false;
             }
-            return this.isAddingChat;
+            return this.__mfield_isAddingChat(this);
         }
 
         /**
@@ -304,7 +313,7 @@ function factory(dependencies) {
          * @returns {boolean}
          */
         _computeIsReplyingToMessage() {
-            return !!this.replyingToMessage;
+            return !!this.__mfield_replyingToMessage(this);
         }
 
         /**
@@ -314,7 +323,7 @@ function factory(dependencies) {
          * @returns {mail.message|undefined}
          */
         _computeReplyingToMessage() {
-            if (!this.isOpen) {
+            if (!this.__mfield_isOpen(this)) {
                 return [['unlink-all']];
             }
             return [];
@@ -328,20 +337,21 @@ function factory(dependencies) {
          * @returns {mail.thread|undefined}
          */
         _computeThread() {
-            let thread = this.thread;
-            if (this.env.messaging &&
-                this.env.messaging.inbox &&
-                this.env.messaging.device.isMobile &&
-                this.activeMobileNavbarTabId === 'mailbox' &&
-                this.initActiveId !== 'mail.box_inbox' &&
+            let thread = this.__mfield_thread(this);
+            if (
+                this.env.messaging &&
+                this.env.messaging.__mfield_inbox(this) &&
+                this.env.messaging.__mfield_device(this).__mfield_isMobile(this) &&
+                this.__mfield_activeMobileNavbarTabId(this) === 'mailbox' &&
+                this.__mfield_initActiveId(this) !== 'mail.box_inbox' &&
                 !thread
             ) {
                 // After loading Discuss from an arbitrary tab other then 'mailbox',
                 // switching to 'mailbox' requires to also set its inner-tab ;
                 // by default the 'inbox'.
-                return [['replace', this.env.messaging.inbox]];
+                return [['replace', this.env.messaging.__mfield_inbox(this)]];
             }
-            if (!thread || !thread.isPinned) {
+            if (!thread || !thread.__mfield_isPinned(this)) {
                 return [['unlink']];
             }
             return [];
@@ -350,63 +360,65 @@ function factory(dependencies) {
     }
 
     Discuss.fields = {
-        activeId: attr({
+        __mfield_activeId: attr({
             compute: '_computeActiveId',
             dependencies: [
-                'thread',
-                'threadId',
-                'threadModel',
+                '__mfield_thread',
+                '__mfield_threadId',
+                '__mfield_threadModel',
             ],
         }),
         /**
          * Active mobile navbar tab, either 'mailbox', 'chat', or 'channel'.
          */
-        activeMobileNavbarTabId: attr({
+        __mfield_activeMobileNavbarTabId: attr({
             default: 'mailbox',
         }),
         /**
          * Value that is used to create a channel from the sidebar.
          */
-        addingChannelValue: attr({
+        __mfield_addingChannelValue: attr({
             compute: '_computeAddingChannelValue',
             default: "",
-            dependencies: ['isOpen'],
+            dependencies: [
+                '__mfield_isOpen',
+            ],
         }),
         /**
          * Serves as compute dependency.
          */
-        device: one2one('mail.device', {
-            related: 'messaging.device',
+        __mfield_device: one2one('mail.device', {
+            related: '__mfield_messaging.__mfield_device',
         }),
         /**
          * Serves as compute dependency.
          */
-        deviceIsMobile: attr({
-            related: 'device.isMobile',
+        __mfield_deviceIsMobile: attr({
+            related: '__mfield_device.__mfield_isMobile',
         }),
         /**
          * Determine if the moderation discard dialog is displayed.
          */
-        hasModerationDiscardDialog: attr({
+        __mfield_hasModerationDiscardDialog: attr({
             default: false,
         }),
         /**
          * Determine if the moderation reject dialog is displayed.
          */
-        hasModerationRejectDialog: attr({
+        __mfield_hasModerationRejectDialog: attr({
             default: false,
         }),
         /**
          * Determines whether `this.thread` should be displayed.
          */
-        hasThreadView: attr({
+        __mfield_hasThreadView: attr({
             compute: '_computeHasThreadView',
             dependencies: [
-                'activeMobileNavbarTabId',
-                'deviceIsMobile',
-                'isOpen',
-                'thread',
-                'threadModel',
+                '__mfield_activeMobileNavbarTabId',
+                '__mfield_deviceIsMobile',
+                '__mfield_isOpen',
+                '__mfield_thread',
+                '__mfield_threadModel',
             ],
         }),
         /**
@@ -417,135 +429,141 @@ function factory(dependencies) {
          *    {string} <threadModel>_<threadId>
          *    {int} <channelId> with default model of 'mail.channel'
          */
-        initActiveId: attr({
+        __mfield_initActiveId: attr({
             default: 'mail.box_inbox',
         }),
         /**
          * Determine whether current user is currently adding a channel from
          * the sidebar.
          */
-        isAddingChannel: attr({
+        __mfield_isAddingChannel: attr({
             compute: '_computeIsAddingChannel',
             default: false,
-            dependencies: ['isOpen'],
+            dependencies: [
+                '__mfield_isOpen',
+            ],
         }),
         /**
          * Determine whether current user is currently adding a chat from
          * the sidebar.
          */
-        isAddingChat: attr({
+        __mfield_isAddingChat: attr({
             compute: '_computeIsAddingChat',
             default: false,
-            dependencies: ['isOpen'],
+            dependencies: [
+                '__mfield_isOpen',
+            ],
         }),
         /**
          * Determine whether this discuss should be focused at next render.
          */
-        isDoFocus: attr({
+        __mfield_isDoFocus: attr({
             default: false,
         }),
         /**
          * Whether the discuss app is open or not. Useful to determine
          * whether the discuss or chat window logic should be applied.
          */
-        isOpen: attr({
+        __mfield_isOpen: attr({
             default: false,
         }),
-        isReplyingToMessage: attr({
+        __mfield_isReplyingToMessage: attr({
             compute: '_computeIsReplyingToMessage',
             default: false,
-            dependencies: ['replyingToMessage'],
+            dependencies: [
+                '__mfield_replyingToMessage',
+            ],
         }),
-        isThreadPinned: attr({
-            related: 'thread.isPinned',
+        __mfield_isThreadPinned: attr({
+            related: '__mfield_thread.__mfield_isPinned',
         }),
         /**
          * The menu_id of discuss app, received on mail/init_messaging and
          * used to open discuss from elsewhere.
          */
-        menu_id: attr({
+        __mfield_menu_id: attr({
             default: null,
         }),
-        messaging: one2one('mail.messaging', {
-            inverse: 'discuss',
+        __mfield_messaging: one2one('mail.messaging', {
+            inverse: '__mfield_discuss',
         }),
-        messagingInbox: many2one('mail.thread', {
-            related: 'messaging.inbox',
+        __mfield_messagingInbox: many2one('mail.thread', {
+            related: '__mfield_messaging.__mfield_inbox',
         }),
-        renamingThreads: one2many('mail.thread'),
+        __mfield_renamingThreads: one2many('mail.thread'),
         /**
          * The message that is currently selected as being replied to in Inbox.
          * There is only one reply composer shown at a time, which depends on
          * this selected message.
          */
-        replyingToMessage: many2one('mail.message', {
+        __mfield_replyingToMessage: many2one('mail.message', {
             compute: '_computeReplyingToMessage',
             dependencies: [
-                'isOpen',
-                'replyingToMessage',
+                '__mfield_isOpen',
+                '__mfield_replyingToMessage',
             ],
         }),
         /**
          * The thread concerned by the reply feature in Inbox. It depends on the
          * message set to be replied, and should be considered read-only.
          */
-        replyingToMessageOriginThread: many2one('mail.thread', {
-            related: 'replyingToMessage.originThread',
+        __mfield_replyingToMessageOriginThread: many2one('mail.thread', {
+            related: '__mfield_replyingToMessage.__mfield_originThread',
         }),
         /**
          * The composer to display for the reply feature in Inbox. It depends
          * on the message set to be replied, and should be considered read-only.
          */
-        replyingToMessageOriginThreadComposer: one2one('mail.composer', {
-            inverse: 'discussAsReplying',
-            related: 'replyingToMessageOriginThread.composer',
+        __mfield_replyingToMessageOriginThreadComposer: one2one('mail.composer', {
+            inverse: '__mfield_discussAsReplying',
+            related: '__mfield_replyingToMessageOriginThread.__mfield_composer',
         }),
         /**
          * Quick search input value in the discuss sidebar (desktop). Useful
          * to filter channels and chats based on this input content.
          */
-        sidebarQuickSearchValue: attr({
+        __mfield_sidebarQuickSearchValue: attr({
             default: "",
         }),
         /**
          * Determines the domain to apply when fetching messages for `this.thread`.
          */
-        stringifiedDomain: attr({
+        __mfield_stringifiedDomain: attr({
             default: '[]',
         }),
         /**
          * Determines the `mail.thread` that should be displayed by `this`.
          */
-        thread: many2one('mail.thread', {
+        __mfield_thread: many2one('mail.thread', {
             compute: '_computeThread',
             dependencies: [
-                'activeMobileNavbarTabId',
-                'deviceIsMobile',
-                'isThreadPinned',
-                'messaging',
-                'messagingInbox',
-                'thread',
-                'threadModel',
+                '__mfield_activeMobileNavbarTabId',
+                '__mfield_deviceIsMobile',
+                '__mfield_isThreadPinned',
+                '__mfield_messaging',
+                '__mfield_messagingInbox',
+                '__mfield_thread',
+                '__mfield_threadModel',
             ],
         }),
-        threadId: attr({
-            related: 'thread.id',
+        __mfield_threadId: attr({
+            related: '__mfield_thread.__mfield_id',
         }),
-        threadModel: attr({
-            related: 'thread.model',
+        __mfield_threadModel: attr({
+            related: '__mfield_thread.__mfield_model',
         }),
         /**
          * States the `mail.thread_view` displaying `this.thread`.
          */
-        threadView: one2one('mail.thread_view', {
-            related: 'threadViewer.threadView',
+        __mfield_threadView: one2one('mail.thread_view', {
+            related: '__mfield_threadViewer.__mfield_threadView',
         }),
         /**
          * Determines the `mail.thread_viewer` managing the display of `this.thread`.
          */
-        threadViewer: one2one('mail.thread_viewer', {
+        __mfield_threadViewer: one2one('mail.thread_viewer', {
             default: [['create']],
-            inverse: 'discuss',
+            inverse: '__mfield_discuss',
             isCausal: true,
         }),
     };

@@ -1,8 +1,9 @@
 odoo.define('snailmail/static/src/components/snailmail_notification_popover/snailmail_notification_popover.js', function (require) {
 'use strict';
 
+const useModels = require('mail/static/src/component_hooks/use_models/use_models.js');
+
 const { Component } = owl;
-const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
 
 class SnailmailNotificationPopover extends Component {
 
@@ -11,25 +12,14 @@ class SnailmailNotificationPopover extends Component {
      */
     constructor(...args) {
         super(...args);
-        useStore(props => {
-            const message = this.env.models['mail.message'].get(props.messageLocalId);
-            const notifications = message ? message.notifications : [];
-            return {
-                message: message ? message.__state : undefined,
-                notifications: notifications.map(notification => notification ? notification.__state : undefined),
-            };
-        }, {
-            compareDepth: {
-                notifications: 1,
-            },
-        });
+        useModels();
     }
 
     /**
      * @returns {string}
      */
     get iconClass() {
-        switch (this.notification.notification_status) {
+        switch (this.notification.__mfield_notification_status(this)) {
             case 'sent':
                 return 'fa fa-check';
             case 'ready':
@@ -45,7 +35,7 @@ class SnailmailNotificationPopover extends Component {
      * @returns {string}
      */
     get iconTitle() {
-        switch (this.notification.notification_status) {
+        switch (this.notification.__mfield_notification_status(this)) {
             case 'sent':
                 return this.env._t("Sent");
             case 'ready':
@@ -69,7 +59,7 @@ class SnailmailNotificationPopover extends Component {
      */
     get notification() {
         // Messages from snailmail are considered to have at most one notification.
-        return this.message.notifications[0];
+        return this.message.__mfield_notifications(this)[0];
     }
 
 }

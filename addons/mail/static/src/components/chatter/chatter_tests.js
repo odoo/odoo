@@ -53,8 +53,8 @@ QUnit.test('base rendering when chatter has no attachment', async function (asse
     }
     await this.start();
     const chatter = this.env.models['mail.chatter'].create({
-        threadId: 100,
-        threadModel: 'res.partner',
+        __mfield_threadId: 100,
+        __mfield_threadModel: 'res.partner',
     });
     await this.createChatterComponent({ chatter });
     assert.strictEqual(
@@ -80,8 +80,8 @@ QUnit.test('base rendering when chatter has no attachment', async function (asse
     assert.strictEqual(
         document.querySelector(`.o_Chatter_thread`).dataset.threadLocalId,
         this.env.models['mail.thread'].find(thread =>
-            thread.id === 100 &&
-            thread.model === 'res.partner'
+            thread.__mfield_id() === 100 &&
+            thread.__mfield_model() === 'res.partner'
         ).localId,
         "thread should have the right thread local id"
     );
@@ -97,7 +97,7 @@ QUnit.test('base rendering when chatter has no record', async function (assert) 
 
     await this.start();
     const chatter = this.env.models['mail.chatter'].create({
-        threadModel: 'res.partner',
+        __mfield_threadModel: 'res.partner',
     });
     await this.createChatterComponent({ chatter });
     assert.strictEqual(
@@ -121,7 +121,7 @@ QUnit.test('base rendering when chatter has no record', async function (assert) 
         "should have a thread in the chatter"
     );
     assert.ok(
-        chatter.thread.isTemporary,
+        chatter.__mfield_thread().__mfield_isTemporary(),
         "thread should have a temporary thread linked to chatter"
     );
     assert.strictEqual(
@@ -161,8 +161,8 @@ QUnit.test('base rendering when chatter has attachments', async function (assert
     );
     await this.start();
     const chatter = this.env.models['mail.chatter'].create({
-        threadId: 100,
-        threadModel: 'res.partner',
+        __mfield_threadId: 100,
+        __mfield_threadModel: 'res.partner',
     });
     await this.createChatterComponent({ chatter });
     assert.strictEqual(
@@ -202,8 +202,8 @@ QUnit.test('show attachment box', async function (assert) {
     );
     await this.start();
     const chatter = this.env.models['mail.chatter'].create({
-        threadId: 100,
-        threadModel: 'res.partner',
+        __mfield_threadId: 100,
+        __mfield_threadModel: 'res.partner',
     });
     await this.createChatterComponent({ chatter });
     assert.strictEqual(
@@ -248,8 +248,8 @@ QUnit.test('composer show/hide on log note/send message [REQUIRE FOCUS]', async 
     this.data['res.partner'].records.push({ id: 100 });
     await this.start();
     const chatter = this.env.models['mail.chatter'].create({
-        threadId: 100,
-        threadModel: 'res.partner',
+        __mfield_threadId: 100,
+        __mfield_threadModel: 'res.partner',
     });
     await this.createChatterComponent({ chatter });
     assert.strictEqual(
@@ -336,8 +336,8 @@ QUnit.test('should not display user notification messages in chatter', async fun
     });
     await this.start();
     const chatter = this.env.models['mail.chatter'].create({
-        threadId: 100,
-        threadModel: 'res.partner',
+        __mfield_threadId: 100,
+        __mfield_threadModel: 'res.partner',
     });
     await this.createChatterComponent({ chatter });
 
@@ -354,8 +354,8 @@ QUnit.test('post message with "CTRL-Enter" keyboard shortcut', async function (a
     this.data['res.partner'].records.push({ id: 100 });
     await this.start();
     const chatter = this.env.models['mail.chatter'].create({
-        threadId: 100,
-        threadModel: 'res.partner',
+        __mfield_threadId: 100,
+        __mfield_threadModel: 'res.partner',
     });
     await this.createChatterComponent({ chatter });
     assert.containsNone(
@@ -388,8 +388,8 @@ QUnit.test('post message with "META-Enter" keyboard shortcut', async function (a
     this.data['res.partner'].records.push({ id: 100 });
     await this.start();
     const chatter = this.env.models['mail.chatter'].create({
-        threadId: 100,
-        threadModel: 'res.partner',
+        __mfield_threadId: 100,
+        __mfield_threadModel: 'res.partner',
     });
     await this.createChatterComponent({ chatter });
     assert.containsNone(
@@ -425,8 +425,8 @@ QUnit.test('do not post message with "Enter" keyboard shortcut', async function 
     this.data['res.partner'].records.push({ id: 100 });
     await this.start();
     const chatter = this.env.models['mail.chatter'].create({
-        threadId: 100,
-        threadModel: 'res.partner',
+        __mfield_threadId: 100,
+        __mfield_threadModel: 'res.partner',
     });
     await this.createChatterComponent({ chatter });
     assert.containsNone(

@@ -5,7 +5,7 @@ const {
     registerInstancePatchModel,
     registerFieldPatchModel,
 } = require('mail/static/src/model/model_core.js');
-const { attr } = require('mail/static/src/model/model_field.js');
+const { attr } = require('mail/static/src/model/model_field_utils.js');
 
 registerInstancePatchModel('mail.messaging', 'snailmail/static/src/models/messaging/messaging.js', {
     async fetchSnailmailCreditsUrl() {
@@ -15,7 +15,7 @@ registerInstancePatchModel('mail.messaging', 'snailmail/static/src/models/messag
             args: ['snailmail'],
         }));
         this.update({
-            snailmail_credits_url,
+            __mfield_snailmail_credits_url: snailmail_credits_url,
         });
     },
     async fetchSnailmailCreditsUrlTrial() {
@@ -25,14 +25,14 @@ registerInstancePatchModel('mail.messaging', 'snailmail/static/src/models/messag
             args: ['snailmail', '', 0, true],
         }));
         this.update({
-            snailmail_credits_url_trial,
+            __mfield_snailmail_credits_url: snailmail_credits_url_trial,
         });
     },
 });
 
 registerFieldPatchModel('mail.messaging', 'snailmail/static/src/models/messaging/messaging.js', {
-    snailmail_credits_url: attr(),
-    snailmail_credits_url_trial: attr(),
+    __mfield_snailmail_credits_url: attr(),
+    __mfield_snailmail_credits_url_trial: attr(),
 });
 
 });

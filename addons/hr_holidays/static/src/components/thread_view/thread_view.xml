@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
     <t t-inherit="mail.ThreadView" t-inherit-mode="extension">
         <xpath expr="//*[@name='loadingCondition']" position="before">
-            <t t-if="threadView.thread.correspondent and threadView.thread.correspondent.out_of_office_date_end">
+            <t t-if="threadView.__mfield_thread(mself).__mfield_correspondent(mself) and threadView.__mfield_thread(mself).__mfield_correspondent(mself).__mfield_out_of_office_date_end(mself)">
                 <div class="o_ThreadView_outOfOffice alert alert-primary" t-esc="getOutOfOfficeText()" role="alert"/>
             </t>
         </xpath>

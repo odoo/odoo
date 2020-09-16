@@ -2,30 +2,30 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.MessageList" owl="1">
-        <div class="o_MessageList" t-att-class="{ 'o-empty': threadView and threadView.messages.length === 0, 'o-has-message-selection': props.selectedMessageLocalId }" t-on-scroll="_onScroll">
+        <div class="o_MessageList" t-att-class="{ 'o-empty': threadView and threadView.__mfield_messages(mself).length === 0, 'o-has-message-selection': props.selectedMessageLocalId }" t-on-scroll="_onScroll">
             <t t-if="threadView">
                 <!-- No result messages -->
-                <t t-if="threadView.messages.length === 0">
+                <t t-if="threadView.__mfield_messages(mself).length === 0">
                     <div class="o_MessageList_empty o_MessageList_item">
-                        <t t-if="threadView.thread === env.messaging.inbox">
+                        <t t-if="threadView.__mfield_thread(mself) === env.messaging.__mfield_inbox(mself)">
                             <div class="o_MessageList_emptyTitle">
                                 Congratulations, your inbox is empty
                             </div>
                             New messages appear here.
                         </t>
-                        <t t-elif="threadView.thread === env.messaging.starred">
+                        <t t-elif="threadView.__mfield_thread(mself) === env.messaging.__mfield_starred(mself)">
                             <div class="o_MessageList_emptyTitle">
                                 No starred messages
                             </div>
                             You can mark any message as 'starred', and it shows up in this mailbox.
                         </t>
-                        <t t-elif="threadView.thread === env.messaging.history">
+                        <t t-elif="threadView.__mfield_thread(mself) === env.messaging.__mfield_history(mself)">
                             <div class="o_MessageList_emptyTitle o-neutral-face-icon">
                                 No history messages
                             </div>
                             Messages marked as read will appear in the history.
                         </t>
-                        <t t-elif="threadView.thread === env.messaging.moderation">
+                        <t t-elif="threadView.__mfield_thread(mself) === env.messaging.__mfield_moderation(mself)">
                             <div class="o_MessageList_emptyTitle">
                                 You have no messages to moderate.
                             </div>
@@ -37,13 +37,13 @@
                     </div>
                 </t>
                 <!-- LOADING (if order asc)-->
-                <t t-if="props.order === 'asc' and threadView.messages.length > 0">
+                <t t-if="props.order === 'asc' and threadView.__mfield_messages(mself).length > 0">
                     <t t-call="mail.MessageList.loadMore"/>
                 </t>
                 <!-- MESSAGES -->
                 <t t-set="current_day" t-value="0"/>
                 <t t-set="prev_message" t-value="0"/>
-                <t t-if="threadView.thread.model === 'mail.channel' and threadView.thread.localMessageUnreadCounter > 0 and !threadView.thread.lastSeenByCurrentPartnerMessageId">
+                <t t-if="threadView.__mfield_thread(mself).__mfield_model(mself) === 'mail.channel' and threadView.__mfield_thread(mself).__mfield_localMessageUnreadCounter(mself) > 0 and !threadView.__mfield_thread(mself).__mfield_lastSeenByCurrentPartnerMessageId(mself)">
                     <div class="o_MessageList_separator o_MessageList_separatorNewMessages o_MessageList_item" t-att-class="{ 'o-disable-animation': env.disableAnimation }" t-transition="fade">
                         <hr class="o_MessageList_separatorLine o_MessageList_separatorLineNewMessages"/><span class="o_MessageList_separatorLabel o_MessageList_separatorLabelNewMessages">New messages</span>
                     </div>
@@ -75,14 +75,14 @@
                         t-ref="{{ message.localId }}"
                     />
                     <t t-set="prev_message" t-value="message"/>
-                    <t t-if="threadView.thread.model === 'mail.channel' and threadView.thread.localMessageUnreadCounter > 0 and threadView.thread.lastSeenByCurrentPartnerMessageId === message.id">
+                    <t t-if="threadView.__mfield_thread(mself).__mfield_model(mself) === 'mail.channel' and threadView.__mfield_thread(mself).__mfield_localMessageUnreadCounter(mself) > 0 and threadView.__mfield_thread(mself).__mfield_lastSeenByCurrentPartnerMessageId(mself) === message.__mfield_id(mself)">
                         <div class="o_MessageList_separator o_MessageList_separatorNewMessages o_MessageList_item" t-att-class="{ 'o-disable-animation': env.disableAnimation }" t-transition="fade">
                             <hr class="o_MessageList_separatorLine o_MessageList_separatorLineNewMessages"/><span class="o_MessageList_separatorLabel o_MessageList_separatorLabelNewMessages">New messages</span>
                         </div>
                     </t>
                 </t>
                 <!-- LOADING (if order desc)-->
-                <t t-if="props.order === 'desc' and threadView.messages.length > 0">
+                <t t-if="props.order === 'desc' and threadView.__mfield_messages(mself).length > 0">
                     <t t-call="mail.MessageList.loadMore"/>
                 </t>
             </t>
@@ -90,13 +90,13 @@
     </t>
 
     <t t-name="mail.MessageList.loadMore" owl="1">
-        <t t-if="threadView.threadCache.isLoadingMore">
+        <t t-if="threadView.__mfield_threadCache(mself).__mfield_isLoadingMore(mself)">
             <div class="o_MessageList_item o_MessageList_isLoadingMore">
                 <i class="o_MessageList_isLoadingMoreIcon fa fa-spin fa-spinner"/>
                 Loading...
             </div>
         </t>
-        <t t-elif="!threadView.threadCache.isAllHistoryLoaded and !threadView.thread.isTemporary">
+        <t t-elif="!threadView.__mfield_threadCache(mself).__mfield_isAllHistoryLoaded(mself) and !threadView.__mfield_thread(mself).__mfield_isTemporary(mself)">
             <a class="o_MessageList_item o_MessageList_loadMore" href="#" t-on-click="_onClickLoadMore" t-ref="loadMore">
                 Load more
             </a>

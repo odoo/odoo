@@ -5,15 +5,15 @@
         <div class="o_ChatWindowManager">
             <t t-if="env.isMessagingInitialized()">
                 <!-- Note: DOM elements are ordered from left to right -->
-                <t t-if="env.messaging.chatWindowManager.hasHiddenChatWindows">
+                <t t-if="env.messaging.__mfield_chatWindowManager(mself).__mfield_hasHiddenChatWindows(mself)">
                     <ChatWindowHiddenMenu class="o_ChatWindowManager_hiddenMenu"/>
                 </t>
-                <t t-foreach="env.messaging.chatWindowManager.allOrderedVisible" t-as="chatWindow" t-key="chatWindow.localId">
+                <t t-foreach="env.messaging.__mfield_chatWindowManager(mself).__mfield_allOrderedVisible(mself)" t-as="chatWindow" t-key="chatWindow.localId">
                     <ChatWindow
                         chatWindowLocalId="chatWindow.localId"
-                        hasCloseAsBackButton="env.messaging.device.isMobile"
-                        isExpandable="!env.messaging.device.isMobile and !!chatWindow.thread"
-                        isFullscreen="env.messaging.device.isMobile"
+                        hasCloseAsBackButton="env.messaging.__mfield_device(mself).__mfield_isMobile(mself)"
+                        isExpandable="!env.messaging.__mfield_device(mself).__mfield_isMobile(mself) and !!chatWindow.__mfield_thread(mself)"
+                        isFullscreen="env.messaging.__mfield_device(mself).__mfield_isMobile(mself)"
                     />
                 </t>
             </t>

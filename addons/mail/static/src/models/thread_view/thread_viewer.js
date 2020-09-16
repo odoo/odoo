@@ -2,7 +2,7 @@ odoo.define('mail/static/src/models/thread_viewer/thread_viewer.js', function (r
 'use strict';
 
 const { registerNewModel } = require('mail/static/src/model/model_core.js');
-const { attr, many2one, one2one } = require('mail/static/src/model/model_field.js');
+const { attr, many2one, one2one } = require('mail/static/src/model/model_field_utils.js');
 
 function factory(dependencies) {
 
@@ -16,13 +16,17 @@ function factory(dependencies) {
          * @param {string} scrollTop
          */
         saveThreadCacheScrollPositionsAsInitial(scrollTop) {
-            if (!this.threadCache) {
+            if (!this.__mfield_threadCache(this)) {
                 return;
             }
             this.update({
-                threadCacheInitialScrollPositions: Object.assign({}, this.threadCacheInitialScrollPositions, {
-                    [this.threadCache.localId]: scrollTop,
-                }),
+                __mfield_threadCacheInitialScrollPositions: Object.assign(
+                    {},
+                    this.__mfield_threadCacheInitialScrollPositions(this),
+                    {
+                        [this.__mfield_threadCache(this).localId]: scrollTop,
+                    }
+                ),
             });
         }
 
@@ -35,16 +39,16 @@ function factory(dependencies) {
          * @returns {boolean}
          */
         _computeHasThreadView() {
-            if (this.chatter) {
-                return this.chatter.hasThreadView;
+            if (this.__mfield_chatter(this)) {
+                return this.__mfield_chatter(this).__mfield_hasThreadView(this);
             }
-            if (this.chatWindow) {
-                return this.chatWindow.hasThreadView;
+            if (this.__mfield_chatWindow(this)) {
+                return this.__mfield_chatWindow(this).__mfield_hasThreadView(this);
             }
-            if (this.discuss) {
-                return this.discuss.hasThreadView;
+            if (this.__mfield_discuss(this)) {
+                return this.__mfield_discuss(this).__mfield_hasThreadView(this);
             }
-            return this.hasThreadView;
+            return this.__mfield_hasThreadView(this);
         }
 
         /**
@@ -52,16 +56,16 @@ function factory(dependencies) {
          * @returns {string}
          */
         _computeStringifiedDomain() {
-            if (this.chatter) {
+            if (this.__mfield_chatter(this)) {
                 return '[]';
             }
-            if (this.chatWindow) {
+            if (this.__mfield_chatWindow(this)) {
                 return '[]';
             }
-            if (this.discuss) {
-                return this.discuss.stringifiedDomain;
+            if (this.__mfield_discuss(this)) {
+                return this.__mfield_discuss(this).__mfield_stringifiedDomain(this);
             }
-            return this.stringifiedDomain;
+            return this.__mfield_stringifiedDomain(this);
         }
 
         /**
@@ -69,23 +73,23 @@ function factory(dependencies) {
          * @returns {mail.thread|undefined}
          */
          _computeThread() {
-            if (this.chatter) {
-                if (!this.chatter.thread) {
+            if (this.__mfield_chatter(this)) {
+                if (!this.__mfield_chatter(this).__mfield_thread(this)) {
                     return [['unlink']];
                 }
-                return [['link', this.chatter.thread]];
+                return [['link', this.__mfield_chatter(this).__mfield_thread(this)]];
             }
-            if (this.chatWindow) {
-                if (!this.chatWindow.thread) {
+            if (this.__mfield_chatWindow(this)) {
+                if (!this.__mfield_chatWindow(this).__mfield_thread(this)) {
                     return [['unlink']];
                 }
-                return [['link', this.chatWindow.thread]];
+                return [['link', this.__mfield_chatWindow(this).__mfield_thread(this)]];
             }
-            if (this.discuss) {
-                if (!this.discuss.thread) {
+            if (this.__mfield_discuss(this)) {
+                if (!this.__mfield_discuss(this).__mfield_thread(this)) {
                     return [['unlink']];
                 }
-                return [['link', this.discuss.thread]];
+                return [['link', this.__mfield_discuss(this).__mfield_thread(this)]];
             }
             return [];
         }
@@ -95,10 +99,10 @@ function factory(dependencies) {
          * @returns {mail.thread_cache|undefined}
          */
         _computeThreadCache() {
-            if (!this.thread) {
+            if (!this.__mfield_thread(this)) {
                 return [['unlink']];
             }
-            return [['link', this.thread.cache(this.stringifiedDomain)]];
+            return [['link', this.__mfield_thread(this).cache(this.__mfield_stringifiedDomain(this))]];
         }
 
         /**
@@ -106,10 +110,10 @@ function factory(dependencies) {
          * @returns {mail.thread_viewer|undefined}
          */
         _computeThreadView() {
-            if (!this.hasThreadView) {
+            if (!this.__mfield_hasThreadView(this)) {
                 return [['unlink']];
             }
-            if (this.threadView) {
+            if (this.__mfield_threadView(this)) {
                 return [];
             }
             return [['create']];
@@ -122,106 +126,106 @@ function factory(dependencies) {
          * States the `mail.chatter` managing `this`. This field is computed
          * through the inverse relation and should be considered read-only.
          */
-        chatter: one2one('mail.chatter', {
-            inverse: 'threadViewer',
+        __mfield_chatter: one2one('mail.chatter', {
+            inverse: '__mfield_threadViewer',
         }),
         /**
          * Serves as compute dependency.
          */
-        chatterHasThreadView: attr({
-            related: 'chatter.hasThreadView',
+        __mfield_chatterHasThreadView: attr({
+            related: '__mfield_chatter.__mfield_hasThreadView',
         }),
         /**
          * Serves as compute dependency.
          */
-        chatterThread: many2one('mail.thread', {
-            related: 'chatter.thread',
+        __mfield_chatterThread: many2one('mail.thread', {
+            related: '__mfield_chatter.__mfield_thread',
         }),
         /**
          * States the `mail.chat_window` managing `this`. This field is computed
          * through the inverse relation and should be considered read-only.
          */
-        chatWindow: one2one('mail.chat_window', {
-            inverse: 'threadViewer',
+        __mfield_chatWindow: one2one('mail.chat_window', {
+            inverse: '__mfield_threadViewer',
         }),
         /**
          * Serves as compute dependency.
          */
-        chatWindowHasThreadView: attr({
-            related: 'chatWindow.hasThreadView',
+        __mfield_chatWindowHasThreadView: attr({
+            related: '__mfield_chatWindow.__mfield_hasThreadView',
         }),
         /**
          * Serves as compute dependency.
          */
-        chatWindowThread: many2one('mail.thread', {
-            related: 'chatWindow.thread',
+        __mfield_chatWindowThread: many2one('mail.thread', {
+            related: '__mfield_chatWindow.__mfield_thread',
         }),
         /**
          * States the `mail.discuss` managing `this`. This field is computed
          * through the inverse relation and should be considered read-only.
          */
-        discuss: one2one('mail.discuss', {
-            inverse: 'threadViewer',
+        __mfield_discuss: one2one('mail.discuss', {
+            inverse: '__mfield_threadViewer',
         }),
         /**
          * Serves as compute dependency.
          */
-        discussHasThreadView: attr({
-            related: 'discuss.hasThreadView',
+        __mfield_discussHasThreadView: attr({
+            related: '__mfield_discuss.__mfield_hasThreadView',
         }),
         /**
          * Serves as compute dependency.
          */
-        discussStringifiedDomain: attr({
-            related: 'discuss.stringifiedDomain',
+        __mfield_discussStringifiedDomain: attr({
+            related: '__mfield_discuss.__mfield_stringifiedDomain',
         }),
         /**
          * Serves as compute dependency.
          */
-        discussThread: many2one('mail.thread', {
-            related: 'discuss.thread',
+        __mfield_discussThread: many2one('mail.thread', {
+            related: '__mfield_discuss.__mfield_thread',
         }),
         /**
          * Determines whether `this.thread` should be displayed.
          */
-        hasThreadView: attr({
+        __mfield_hasThreadView: attr({
             compute: '_computeHasThreadView',
             default: false,
             dependencies: [
-                'chatterHasThreadView',
-                'chatWindowHasThreadView',
-                'discussHasThreadView',
+                '__mfield_chatterHasThreadView',
+                '__mfield_chatWindowHasThreadView',
+                '__mfield_discussHasThreadView',
             ],
         }),
         /**
          * Determines the domain to apply when fetching messages for `this.thread`.
          */
-        stringifiedDomain: attr({
+        __mfield_stringifiedDomain: attr({
             compute: '_computeStringifiedDomain',
             default: '[]',
             dependencies: [
-                'discussStringifiedDomain',
+                '__mfield_discussStringifiedDomain',
             ],
         }),
         /**
          * Determines the `mail.thread` that should be displayed by `this`.
          */
-        thread: many2one('mail.thread', {
+        __mfield_thread: many2one('mail.thread', {
             compute: '_computeThread',
             dependencies: [
-                'chatterThread',
-                'chatWindowThread',
-                'discussThread',
+                '__mfield_chatterThread',
+                '__mfield_chatWindowThread',
+                '__mfield_discussThread',
             ],
         }),
         /**
          * States the `mail.thread_cache` that should be displayed by `this`.
          */
-        threadCache: many2one('mail.thread_cache', {
+        __mfield_threadCache: many2one('mail.thread_cache', {
             compute: '_computeThreadCache',
             dependencies: [
-                'stringifiedDomain',
-                'thread',
+                '__mfield_stringifiedDomain',
+                '__mfield_thread',
             ],
         }),
         /**
@@ -231,18 +235,18 @@ function factory(dependencies) {
          * the thread cache, because scroll position may change fast so
          * save is already throttled.
          */
-        threadCacheInitialScrollPositions: attr({
+        __mfield_threadCacheInitialScrollPositions: attr({
             default: {},
         }),
         /**
          * States the `mail.thread_view` currently displayed and managed by `this`.
          */
-        threadView: one2one('mail.thread_view', {
+        __mfield_threadView: one2one('mail.thread_view', {
             compute: '_computeThreadView',
             dependencies: [
-                'hasThreadView',
+                '__mfield_hasThreadView',
             ],
-            inverse: 'threadViewer',
+            inverse: '__mfield_threadViewer',
             isCausal: true,
         }),
     };

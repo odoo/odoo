@@ -2,7 +2,7 @@ odoo.define('mail/static/src/models/dialog_manager/dialog_manager.js', function 
 'use strict';
 
 const { registerNewModel } = require('mail/static/src/model/model_core.js');
-const { one2many } = require('mail/static/src/model/model_field.js');
+const { one2many } = require('mail/static/src/model/model_field_utils.js');
 
 function factory(dependencies) {
 
@@ -26,8 +26,8 @@ function factory(dependencies) {
             }
             const record = Model.create(recordData);
             const dialog = this.env.models['mail.dialog'].create({
-                manager: [['link', this]],
-                record: [['link', record]],
+                __mfield_manager: [['link', this]],
+                __mfield_record: [['link', record]],
             });
             return dialog;
         }
@@ -36,8 +36,8 @@ function factory(dependencies) {
 
     DialogManager.fields = {
         // FIXME: dependent on implementation that uses insert order in relations!!
-        dialogs: one2many('mail.dialog', {
-            inverse: 'manager',
+        __mfield_dialogs: one2many('mail.dialog', {
+            inverse: '__mfield_manager',
             isCausal: true,
         }),
     };

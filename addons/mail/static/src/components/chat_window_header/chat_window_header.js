@@ -4,7 +4,7 @@ odoo.define('mail/static/src/components/chat_window_header/chat_window_header.js
 const components = {
     ThreadIcon: require('mail/static/src/components/thread_icon/thread_icon.js'),
 };
-const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
+const useModels = require('mail/static/src/component_hooks/use_models/use_models.js');
 
 const { Component } = owl;
 
@@ -15,15 +15,7 @@ class ChatWindowHeader extends Component {
      */
     constructor(...args) {
         super(...args);
-        useStore(props => {
-            const chatWindow = this.env.models['mail.chat_window'].get(props.chatWindowLocalId);
-            const thread = chatWindow && chatWindow.thread;
-            return {
-                chatWindow: chatWindow ? chatWindow.__state : undefined,
-                isDeviceMobile: this.env.messaging.device.isMobile,
-                thread: thread ? thread.__state : undefined,
-            };
-        });
+        useModels();
     }
 
     //--------------------------------------------------------------------------

@@ -4,7 +4,7 @@ odoo.define('mail/static/src/components/dialog_manager/dialog_manager.js', funct
 const components = {
     Dialog: require('mail/static/src/components/dialog/dialog.js'),
 };
-const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
+const useModels = require('mail/static/src/component_hooks/use_models/use_models.js');
 
 const { Component } = owl;
 
@@ -15,12 +15,7 @@ class DialogManager extends Component {
      */
     constructor(...args) {
         super(...args);
-        useStore(props => {
-            const dialogManager = this.env.messaging && this.env.messaging.dialogManager;
-            return {
-                dialogManager: dialogManager ? dialogManager.__state : undefined,
-            };
-        });
+        useModels();
     }
 
     mounted() {
@@ -47,7 +42,7 @@ class DialogManager extends Component {
              */
             return;
         }
-        if (this.env.messaging.dialogManager.dialogs.length > 0) {
+        if (this.env.messaging.__mfield_dialogManager(this).__mfield_dialogs(this).length > 0) {
             document.body.classList.add('modal-open');
         } else {
             document.body.classList.remove('modal-open');

@@ -10,7 +10,7 @@
             </t>
             <ul class="my-5">
                 <t t-foreach="messages" t-as="message" t-key="message.localId">
-                    <li t-esc="message.email_from"/>
+                    <li t-esc="message.__mfield_email_from(mself)"/>
                 </t>
             </ul>
             <p>Do you confirm the action?</p>

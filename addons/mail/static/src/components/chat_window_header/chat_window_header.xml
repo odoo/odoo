@@ -2,49 +2,49 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.ChatWindowHeader" owl="1">
-        <div class="o_ChatWindowHeader" t-att-class="{ 'o-mobile': env.messaging.device.isMobile }" t-on-click="_onClick">
+        <div class="o_ChatWindowHeader" t-att-class="{ 'o-mobile': env.messaging.__mfield_device(mself).__mfield_isMobile(mself) }" t-on-click="_onClick">
             <t t-if="chatWindow">
                 <t t-if="props.hasCloseAsBackButton">
-                    <div class="o_ChatWindowHeader_command o_ChatWindowHeader_commandBack o_ChatWindowHeader_commandClose" t-att-class="{ 'o-mobile': env.messaging.device.isMobile }" t-on-click="_onClickClose" title="Close conversation">
+                    <div class="o_ChatWindowHeader_command o_ChatWindowHeader_commandBack o_ChatWindowHeader_commandClose" t-att-class="{ 'o-mobile': env.messaging.__mfield_device(mself).__mfield_isMobile(mself) }" t-on-click="_onClickClose" title="Close conversation">
                         <i class="fa fa-arrow-left"/>
                     </div>
                 </t>
-                <t t-if="chatWindow.thread">
+                <t t-if="chatWindow.__mfield_thread(mself)">
                     <ThreadIcon
                         class="o_ChatWindowHeader_icon o_ChatWindowHeader_item"
-                        threadLocalId="chatWindow.thread.localId"
+                        threadLocalId="chatWindow.__mfield_thread(mself).localId"
                     />
                 </t>
-                <div class="o_ChatWindowHeader_item o_ChatWindowHeader_name" t-att-title="chatWindow.name">
-                    <t t-esc="chatWindow.name"/>
+                <div class="o_ChatWindowHeader_item o_ChatWindowHeader_name" t-att-title="chatWindow.__mfield_name(mself)">
+                    <t t-esc="chatWindow.__mfield_name(mself)"/>
                 </div>
-                <t t-if="chatWindow.thread and chatWindow.thread.mass_mailing">
+                <t t-if="chatWindow.__mfield_thread(mself) and chatWindow.__mfield_thread(mself).__mfield_mass_mailing(mself)">
                     <i class="fa fa-envelope-o" title="Messages are sent by email" role="img"/>
                 </t>
-                <t t-if="chatWindow.thread and chatWindow.thread.localMessageUnreadCounter > 0">
+                <t t-if="chatWindow.__mfield_thread(mself) and chatWindow.__mfield_thread(mself).__mfield_localMessageUnreadCounter(mself) > 0">
                     <div class="o_ChatWindowHeader_counter o_ChatWindowHeader_item">
-                        (<t t-esc="chatWindow.thread.localMessageUnreadCounter"/>)
+                        (<t t-esc="chatWindow.__mfield_thread(mself).localMessageUnreadCounter"/>)
                     </div>
                 </t>
                 <div class="o-autogrow"/>
                 <div class="o_ChatWindowHeader_item o_ChatWindowHeader_rightArea">
-                    <t t-if="chatWindow.hasShiftLeft">
-                        <div class="o_ChatWindowHeader_command o_ChatWindowHeader_commandShiftLeft" t-att-class="{ 'o-mobile': env.messaging.device.isMobile }" t-on-click="_onClickShiftLeft" title="Shift left">
+                    <t t-if="chatWindow.__mfield_hasShiftLeft(mself)">
+                        <div class="o_ChatWindowHeader_command o_ChatWindowHeader_commandShiftLeft" t-att-class="{ 'o-mobile': env.messaging.__mfield_device(mself).__mfield_isMobile(mself) }" t-on-click="_onClickShiftLeft" title="Shift left">
                             <i class="fa fa-angle-left"/>
                         </div>
                     </t>
-                    <t t-if="chatWindow.hasShiftRight">
-                        <div class="o_ChatWindowHeader_command o_ChatWindowHeader_commandShiftRight" t-att-class="{ 'o-mobile': env.messaging.device.isMobile }" t-on-click="_onClickShiftRight" title="Shift right">
+                    <t t-if="chatWindow.__mfield_hasShiftRight(mself)">
+                        <div class="o_ChatWindowHeader_command o_ChatWindowHeader_commandShiftRight" t-att-class="{ 'o-mobile': env.messaging.__mfield_device(mself).__mfield_isMobile(mself) }" t-on-click="_onClickShiftRight" title="Shift right">
                             <i class="fa fa-angle-right"/>
                         </div>
                     </t>
                     <t t-if="props.isExpandable">
-                        <div class="o_ChatWindowHeader_command o_ChatWindowHeader_commandExpand" t-att-class="{ 'o-mobile': env.messaging.device.isMobile }" t-on-click="_onClickExpand" title="Open in Discuss">
+                        <div class="o_ChatWindowHeader_command o_ChatWindowHeader_commandExpand" t-att-class="{ 'o-mobile': env.messaging.__mfield_device(mself).__mfield_isMobile(mself) }" t-on-click="_onClickExpand" title="Open in Discuss">
                             <i class="fa fa-expand"/>
                         </div>
                     </t>
                     <t t-if="!props.hasCloseAsBackButton">
-                        <div class="o_ChatWindowHeader_command o_ChatWindowHeader_commandClose" t-att-class="{ 'o-mobile': env.messaging.device.isMobile }" t-on-click="_onClickClose" title="Close chat window">
+                        <div class="o_ChatWindowHeader_command o_ChatWindowHeader_commandClose" t-att-class="{ 'o-mobile': env.messaging.__mfield_device(mself).__mfield_isMobile(mself) }" t-on-click="_onClickClose" title="Close chat window">
                             <i class="fa fa-close"/>
                         </div>
                     </t>

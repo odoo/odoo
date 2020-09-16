@@ -2,7 +2,7 @@ odoo.define('mail/static/src/models/mail_template/mail_template.js', function (r
 'use strict';
 
 const { registerNewModel } = require('mail/static/src/model/model_core.js');
-const { attr, many2many } = require('mail/static/src/model/model_field.js');
+const { attr, many2many } = require('mail/static/src/model/model_field_utils.js');
 
 function factory(dependencies) {
 
@@ -23,10 +23,10 @@ function factory(dependencies) {
                 views: [[false, 'form']],
                 target: 'new',
                 context: {
-                    default_res_id: activity.res_id,
-                    default_model: activity.res_model,
+                    default_res_id: activity.__mfield_res_id(this),
+                    default_model: activity.__mfield_res_model(this),
                     default_use_template: true,
-                    default_template_id: this.id,
+                    default_template_id: this.__mfield_id(this),
                     force_email: true,
                 },
             };
@@ -34,8 +34,8 @@ function factory(dependencies) {
                 action,
                 options: {
                     on_close: () => {
-                        if (activity.chatter) {
-                            activity.chatter.refresh();
+                        if (activity.__mfield_chatter(this)) {
+                            activity.__mfield_chatter(this).refresh();
                         }
                     },
                 },
@@ -47,12 +47,12 @@ function factory(dependencies) {
          */
         async send(activity) {
             await this.async(() => this.env.services.rpc({
-                model: activity.res_model,
+                model: activity.__mfield_res_model(this),
                 method: 'activity_send_mail',
-                args: [[activity.res_id], this.id],
+                args: [[activity.__mfield_res_id(this)], this.__mfield_id(this)],
             }));
-            if (activity.chatter) {
-                activity.chatter.refresh();
+            if (activity.__mfield_chatter(this)) {
+                activity.__mfield_chatter(this).refresh();
             }
         }
 
@@ -64,17 +64,17 @@ function factory(dependencies) {
          * @override
          */
         static _createRecordLocalId(data) {
-            return `${this.modelName}_${data.id}`;
+            return `${this.modelName}_${data.__mfield_id}`;
         }
 
     }
 
     MailTemplate.fields = {
-        activities: many2many('mail.activity', {
-            inverse: 'mailTemplates',
+        __mfield_activities: many2many('mail.activity', {
+            inverse: '__mfield_mailTemplates',
         }),
-        id: attr(),
-        name: attr(),
+        __mfield_id: attr(),
+        __mfield_name: attr(),
     };
 
     MailTemplate.modelName = 'mail.mail_template';

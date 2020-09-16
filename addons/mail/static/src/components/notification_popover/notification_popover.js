@@ -1,8 +1,9 @@
 odoo.define('mail/static/src/components/notification_popover/notification_popover.js', function (require) {
 'use strict';
 
+const useModels = require('mail/static/src/component_hooks/use_models/use_models.js');
+
 const { Component } = owl;
-const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
 
 class NotificationPopover extends Component {
 
@@ -11,25 +12,14 @@ class NotificationPopover extends Component {
      */
     constructor(...args) {
         super(...args);
-        useStore(props => {
-            const notifications = props.notificationLocalIds.map(
-                notificationLocalId => this.env.models['mail.notification'].get(notificationLocalId)
-            );
-            return {
-                notifications: notifications.map(notification => notification ? notification.__state : undefined),
-            };
-        }, {
-            compareDepth: {
-                notifications: 1,
-            },
-        });
+        useModels();
     }
 
     /**
      * @returns {string}
      */
     get iconClass() {
-        switch (this.notification.notification_status) {
+        switch (this.notification.__mfield_notification_status(this)) {
             case 'sent':
                 return 'fa fa-check';
             case 'bounce':
@@ -48,7 +38,7 @@ class NotificationPopover extends Component {
      * @returns {string}
      */
     get iconTitle() {
-        switch (this.notification.notification_status) {
+        switch (this.notification.__mfield_notification_status(this)) {
             case 'sent':
                 return this.env._t("Sent");
             case 'bounce':

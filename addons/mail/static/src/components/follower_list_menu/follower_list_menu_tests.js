@@ -47,8 +47,8 @@ QUnit.test('base rendering not editable', async function (assert) {
 
     await this.start();
     const thread = this.env.models['mail.thread'].create({
-        id: 100,
-        model: 'res.partner',
+        __mfield_id: 100,
+        __mfield_model: 'res.partner',
     });
     await this.createFollowerListMenuComponent(thread, { isDisabled: true });
     assert.containsOnce(
@@ -84,8 +84,8 @@ QUnit.test('base rendering editable', async function (assert) {
 
     await this.start();
     const thread = this.env.models['mail.thread'].create({
-        id: 100,
-        model: 'res.partner',
+        __mfield_id: 100,
+        __mfield_model: 'res.partner',
     });
     await this.createFollowerListMenuComponent(thread);
 
@@ -170,8 +170,8 @@ QUnit.test('click on "add followers" button', async function (assert) {
         env: { bus },
     });
     const thread = this.env.models['mail.thread'].create({
-        id: 100,
-        model: 'res.partner',
+        __mfield_id: 100,
+        __mfield_model: 'res.partner',
     });
     await this.createFollowerListMenuComponent(thread);
 
@@ -288,8 +288,8 @@ QUnit.test('click on "add channels" button', async function (assert) {
         env: { bus },
     });
     const thread = this.env.models['mail.thread'].create({
-        id: 100,
-        model: 'res.partner',
+        __mfield_id: 100,
+        __mfield_model: 'res.partner',
     });
     await this.createFollowerListMenuComponent(thread);
 
@@ -365,7 +365,7 @@ QUnit.test('click on remove follower', async function (assert) {
                 assert.step('message_unsubscribe');
                 assert.deepEqual(
                     args.args,
-                    [[100], [self.env.messaging.currentPartner.id], []],
+                    [[100], [self.env.messaging.__mfield_currentPartner().__mfield_id()], []],
                     "message_unsubscribe should be called with right argument"
                 );
             }
@@ -373,18 +373,18 @@ QUnit.test('click on remove follower', async function (assert) {
         },
     });
     const thread = this.env.models['mail.thread'].create({
-        id: 100,
-        model: 'res.partner',
+        __mfield_id: 100,
+        __mfield_model: 'res.partner',
     });
     await this.env.models['mail.follower'].create({
-        followedThread: [['link', thread]],
-        id: 2,
-        isActive: true,
-        isEditable: true,
-        partner: [['insert', {
-            email: "bla@bla.bla",
-            id: this.env.messaging.currentPartner.id,
-            name: "François Perusse",
+        __mfield_followedThread: [['link', thread]],
+        __mfield_id: 2,
+        __mfield_isActive: true,
+        __mfield_isEditable: true,
+        __mfield_partner: [['insert', {
+            __mfield_email: "bla@bla.bla",
+            __mfield_id: this.env.messaging.__mfield_currentPartner().__mfield_id(),
+            __mfield_name: "François Perusse",
         }]],
     });
     await this.createFollowerListMenuComponent(thread);

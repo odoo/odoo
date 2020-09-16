@@ -4,24 +4,24 @@
     <t t-name="mail.AttachmentViewer" owl="1">
         <div class="o_AttachmentViewer" t-on-click="_onClick" t-on-keydown="_onKeydown" tabindex="0">
             <div class="o_AttachmentViewer_header" t-on-click="_onClickHeader">
-                <t t-if="attachmentViewer.attachment.fileType">
+                <t t-if="attachmentViewer.__mfield_attachment(mself).__mfield_fileType(mself)">
                     <div class="o_AttachmentViewer_headerItem o_AttachmentViewer_icon">
-                        <t t-if="attachmentViewer.attachment.fileType === 'image'">
+                        <t t-if="attachmentViewer.__mfield_attachment(mself).__mfield_fileType(mself) === 'image'">
                             <i class="fa fa-picture-o" role="img" title="Image"/>
                         </t>
-                        <t t-if="attachmentViewer.attachment.fileType === 'application/pdf'">
+                        <t t-if="attachmentViewer.__mfield_attachment(mself).__mfield_fileType(mself) === 'application/pdf'">
                             <i class="fa fa-file-text" role="img" title="PDF file"/>
                         </t>
-                        <t t-if="attachmentViewer.attachment.isTextFile">
+                        <t t-if="attachmentViewer.__mfield_attachment(mself).__mfield_isTextFile(mself)">
                             <i class="fa fa-file-text" role="img" title="Text file"/>
                         </t>
-                        <t t-if="attachmentViewer.attachment.fileType === 'video'">
+                        <t t-if="attachmentViewer.__mfield_attachment(mself).__mfield_fileType(mself) === 'video'">
                             <i class="fa fa-video-camera" role="img" title="Video"/>
                         </t>
                     </div>
                 </t>
                 <div class="o_AttachmentViewer_headerItem o_AttachmentViewer_name">
-                    <t t-esc="attachmentViewer.attachment.displayName"/>
+                    <t t-esc="attachmentViewer.__mfield_attachment(mself).__mfield_displayName(mself)"/>
                 </div>
                 <div class="o_AttachmentViewer_buttonDownload o_AttachmentViewer_headerItem o_AttachmentViewer_headerItemButton" t-on-click="_onClickDownload" role="button" title="Download">
                     <i class="fa fa-download fa-fw" role="img"/>
@@ -31,41 +31,41 @@
                     <i class="fa fa-fw fa-times" role="img"/>
                 </div>
             </div>
-            <div class="o_AttachmentViewer_main" t-att-class="{ o_with_img: attachmentViewer.attachment.fileType === 'image' }" t-on-mousemove="_onMousemoveView">
-                <t t-if="attachmentViewer.attachment.fileType === 'image'">
+            <div class="o_AttachmentViewer_main" t-att-class="{ o_with_img: attachmentViewer.__mfield_attachment(mself).__mfield_fileType(mself) === 'image' }" t-on-mousemove="_onMousemoveView">
+                <t t-if="attachmentViewer.__mfield_attachment(mself).__mfield_fileType(mself) === 'image'">
                     <div class="o_AttachmentViewer_zoomer" t-ref="zoomer">
-                        <t t-if="attachmentViewer.isImageLoading">
+                        <t t-if="attachmentViewer.__mfield_isImageLoading(mself)">
                             <div class="o_AttachmentViewer_loading">
                                 <i class="fa fa-3x fa-circle-o-notch fa-fw fa-spin" role="img" title="Loading"/>
                             </div>
                         </t>
-                        <img class="o_AttachmentViewer_view o_AttachmentViewer_viewImage" t-on-click="_onClickImage" t-on-mousedown="_onMousedownImage" t-on-wheel="_onWheelImage" t-att-src="attachmentViewer.attachment.defaultSource" t-att-style="imageStyle" draggable="false" alt="Viewer" t-ref="image"/>
+                        <img class="o_AttachmentViewer_view o_AttachmentViewer_viewImage" t-on-click="_onClickImage" t-on-mousedown="_onMousedownImage" t-on-wheel="_onWheelImage" t-att-src="attachmentViewer.__mfield_attachment(mself).__mfield_defaultSource(mself)" t-att-style="imageStyle" draggable="false" alt="Viewer" t-ref="image"/>
                     </div>
                 </t>
-                <t t-if="attachmentViewer.attachment.fileType === 'application/pdf'">
-                    <iframe class="o_AttachmentViewer_view o_AttachmentViewer_viewIframe o_AttachmentViewer_viewPdf" t-att-src="attachmentViewer.attachment.defaultSource"/>
+                <t t-if="attachmentViewer.__mfield_attachment(mself).__mfield_fileType(mself) === 'application/pdf'">
+                    <iframe class="o_AttachmentViewer_view o_AttachmentViewer_viewIframe o_AttachmentViewer_viewPdf" t-att-src="attachmentViewer.__mfield_attachment(mself).__mfield_defaultSource(mself)"/>
                 </t>
-                <t t-if="attachmentViewer.attachment.isTextFile">
-                    <iframe class="o_AttachmentViewer_view o_AttachmentViewer_viewIframe o_text" t-att-src="attachmentViewer.attachment.defaultSource"/>
+                <t t-if="attachmentViewer.__mfield_attachment(mself).__mfield_isTextFile(mself)">
+                    <iframe class="o_AttachmentViewer_view o_AttachmentViewer_viewIframe o_text" t-att-src="attachmentViewer.__mfield_attachment(mself).__mfield_defaultSource(mself)"/>
                 </t>
-                <t t-if="attachmentViewer.attachment.fileType === 'youtu'">
-                    <iframe allow="autoplay; encrypted-media" class="o_AttachmentViewer_view o_AttachmentViewer_viewIframe o_AttachmentViewer_youtube" t-att-src="attachmentViewer.attachment.defaultSource" height="315" width="560"/>
+                <t t-if="attachmentViewer.__mfield_attachment(mself).__mfield_fileType(mself) === 'youtu'">
+                    <iframe allow="autoplay; encrypted-media" class="o_AttachmentViewer_view o_AttachmentViewer_viewIframe o_AttachmentViewer_youtube" t-att-src="attachmentViewer.__mfield_attachment(mself).__mfield_defaultSource(mself)" height="315" width="560"/>
                 </t>
-                <t t-if="attachmentViewer.attachment.fileType === 'video'">
+                <t t-if="attachmentViewer.__mfield_attachment(mself).__mfield_fileType(mself) === 'video'">
                     <video class="o_AttachmentViewer_view o_AttachmentViewer_viewVideo" t-on-click="_onClickVideo" controls="controls">
-                        <source t-att-data-type="attachmentViewer.attachment.mimetype" t-att-src="attachmentViewer.attachment.defaultSource"/>
+                        <source t-att-data-type="attachmentViewer.__mfield_attachment(mself).__mfield_mimetype(mself)" t-att-src="attachmentViewer.__mfield_attachment(mself).__mfield_defaultSource(mself)"/>
                     </video>
                 </t>
             </div>
-            <t t-if="attachmentViewer.attachment.fileType === 'image'">
+            <t t-if="attachmentViewer.__mfield_attachment(mself).__mfield_fileType(mself) === 'image'">
                 <div class="o_AttachmentViewer_toolbar" role="toolbar">
                     <div class="o_AttachmentViewer_toolbarButton" t-on-click="_onClickZoomIn" title="Zoom In (+)" role="button">
                         <i class="fa fa-fw fa-plus" role="img"/>
                     </div>
-                    <div class="o_AttachmentViewer_toolbarButton" t-att-class="{ o_disabled: attachmentViewer.scale === 1 }" t-on-click="_onClickZoomReset" role="button" title="Reset Zoom (0)">
+                    <div class="o_AttachmentViewer_toolbarButton" t-att-class="{ o_disabled: attachmentViewer.__mfield_scale(mself) === 1 }" t-on-click="_onClickZoomReset" role="button" title="Reset Zoom (0)">
                         <i class="fa fa-fw fa-search" role="img"/>
                     </div>
-                    <div class="o_AttachmentViewer_toolbarButton" t-att-class="{ o_disabled: attachmentViewer.scale === MIN_SCALE }" t-on-click="_onClickZoomOut" title="Zoom Out (-)" role="button">
+                    <div class="o_AttachmentViewer_toolbarButton" t-att-class="{ o_disabled: attachmentViewer.__mfield_scale(mself) === MIN_SCALE }" t-on-click="_onClickZoomOut" title="Zoom Out (-)" role="button">
                         <i class="fa fa-fw fa-minus" role="img"/>
                     </div>
                     <div class="o_AttachmentViewer_toolbarButton" t-on-click="_onClickRotate" title="Rotate (r)" role="button">
@@ -79,7 +79,7 @@
                     </div>
                 </div>
             </t>
-            <t t-if="attachmentViewer.attachments.length > 1">
+            <t t-if="attachmentViewer.__mfield_attachments(mself).length > 1">
                 <div class="o_AttachmentViewer_buttonNavigation o_AttachmentViewer_buttonNavigationPrevious" t-on-click="_onClickPrevious" title="Previous (Left-Arrow)" role="button">
                     <span class="fa fa-chevron-left" role="img"/>
                 </div>

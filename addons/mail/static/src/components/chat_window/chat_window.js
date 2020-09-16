@@ -6,7 +6,7 @@ const components = {
     ChatWindowHeader: require('mail/static/src/components/chat_window_header/chat_window_header.js'),
     ThreadView: require('mail/static/src/components/thread_view/thread_view.js'),
 };
-const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
+const useModels = require('mail/static/src/component_hooks/use_models/use_models.js');
 const { isEventHandled } = require('mail/static/src/utils/utils.js');
 
 const { Component } = owl;
@@ -19,16 +19,7 @@ class ChatWindow extends Component {
      */
     constructor(...args) {
         super(...args);
-        useStore(props => {
-            const chatWindow = this.env.models['mail.chat_window'].get(props.chatWindowLocalId);
-            const thread = chatWindow ? chatWindow.thread : undefined;
-            return {
-                chatWindow: chatWindow ? chatWindow.__state : undefined,
-                isDeviceMobile: this.env.messaging.device.isMobile,
-                localeTextDirection: this.env.messaging.locale.textDirection,
-                thread: thread ? thread.__state : undefined,
-            };
-        });
+        useModels();
         /**
          * Reference of the header of the chat window.
          * Useful to prevent click on header from wrongly focusing the window.
@@ -98,7 +89,7 @@ class ChatWindow extends Component {
      * @private
      */
     _applyVisibleOffset() {
-        const textDirection = this.env.messaging.locale.textDirection;
+        const textDirection = this.env.messaging.__mfield_locale(this).__mfield_textDirection(this);
         const offsetFrom = textDirection === 'rtl' ? 'left' : 'right';
         const oppositeFrom = offsetFrom === 'right' ? 'left' : 'right';
         this.el.style[offsetFrom] = this.chatWindow.visibleOffset + 'px';
@@ -112,8 +103,8 @@ class ChatWindow extends Component {
      */
     _focus() {
         this.chatWindow.update({
-            isDoFocus: false,
-            isFocused: true,
+            __mfield_isDoFocus: false,
+            __mfield_isFocused: true,
         });
         if (this._inputRef.comp) {
             this._inputRef.comp.focus();
@@ -132,10 +123,10 @@ class ChatWindow extends Component {
      * @private
      */
     _saveThreadScrollTop() {
-        if (!this._threadRef.comp || !this.chatWindow.threadViewer) {
+        if (!this._threadRef.comp || !this.chatWindow.__mfield_threadViewer(this)) {
             return;
         }
-        this.chatWindow.threadViewer.saveThreadCacheScrollPositionsAsInitial(
+        this.chatWindow.__mfield_threadViewer(this).saveThreadCacheScrollPositionsAsInitial(
             this._threadRef.comp.getScrollTop()
         );
     }
@@ -148,7 +139,7 @@ class ChatWindow extends Component {
             // chat window is being deleted
             return;
         }
-        if (this.chatWindow.isDoFocus) {
+        if (this.chatWindow.__mfield_isDoFocus(this)) {
             this._focus();
         }
         this._applyVisibleOffset();
@@ -173,7 +164,7 @@ class ChatWindow extends Component {
         if (!chat) {
             return;
         }
-        this.env.messaging.chatWindowManager.openThread(chat, {
+        this.env.messaging.__mfield_chatWindowManager(this).openThread(chat, {
             makeActive: true,
             replaceNewMessage: true,
         });
@@ -193,9 +184,9 @@ class ChatWindow extends Component {
             callback: (partners) => {
                 const suggestions = partners.map(partner => {
                     return {
-                        id: partner.id,
-                        value: partner.nameOrDisplayName,
-                        label: partner.nameOrDisplayName,
+                        id: partner.__mfield_id(this),
+                        value: partner.__mfield_nameOrDisplayName(this),
+                        label: partner.__mfield_nameOrDisplayName(this),
                     };
                 });
                 res(_.sortBy(suggestions, 'label'));
@@ -218,7 +209,7 @@ class ChatWindow extends Component {
             // handled in _onClickedHeader
             return;
         }
-        if (this.chatWindow.isFocused) {
+        if (this.chatWindow.__mfield_isFocused(this)) {
             return;
         }
         if (isEventHandled(ev, 'Message.authorOpenChat')) {
@@ -242,10 +233,10 @@ class ChatWindow extends Component {
      */
     _onClickedHeader(ev) {
         ev.stopPropagation();
-        if (this.env.messaging.device.isMobile) {
+        if (this.env.messaging.__mfield_device(this).__mfield_isMobile(this)) {
             return;
         }
-        if (this.chatWindow.isFolded) {
+        if (this.chatWindow.__mfield_isFolded(this)) {
             this.chatWindow.unfold();
             this.chatWindow.focus();
         } else {
@@ -266,7 +257,7 @@ class ChatWindow extends Component {
             // prevent crash on destroy
             return;
         }
-        this.chatWindow.update({ isFocused: true });
+        this.chatWindow.update({ __mfield_isFocused: true });
     }
 
     /**
@@ -285,7 +276,7 @@ class ChatWindow extends Component {
             // ignore focus out due to record being deleted
             return;
         }
-        this.chatWindow.update({ isFocused: false });
+        this.chatWindow.update({ __mfield_isFocused: false });
     }
 
     /**

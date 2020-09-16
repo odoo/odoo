@@ -21,63 +21,33 @@ patch(components.DiscussSidebar, 'im_livechat/static/src/components/discuss_side
     quickSearchOrderedAndPinnedLivechatList() {
         const allOrderedAndPinnedLivechats = this.env.models['mail.thread']
             .all(thread =>
-                thread.channel_type === 'livechat' &&
-                thread.isPinned &&
-                thread.model === 'mail.channel'
+                thread.__mfield_channel_type(this) === 'livechat' &&
+                thread.__mfield_isPinned(this) &&
+                thread.__mfield_model(this) === 'mail.channel'
             ).sort((c1, c2) => {
                 // sort by: last message id (desc), id (desc)
-                if (c1.lastMessage && c2.lastMessage) {
-                    return c2.lastMessage.id - c1.lastMessage.id;
+                if (c1.__mfield_lastMessage(this) && c2.__mfield_lastMessage(this)) {
+                    return c2.__mfield_lastMessage(this).__mfield_id(this) - c1.__mfield_lastMessage(this).__mfield_id(this);
                 }
                 // a channel without a last message is assumed to be a new
                 // channel just created with the intent of posting a new
                 // message on it, in which case it should be moved up.
-                if (!c1.lastMessage) {
+                if (!c1.__mfield_lastMessage(this)) {
                     return -1;
                 }
-                if (!c2.lastMessage) {
+                if (!c2.__mfield_lastMessage(this)) {
                     return 1;
                 }
-                return c2.id - c1.id;
+                return c2.__mfield_id(this) - c1.__mfield_id(this);
             });
-        if (!this.discuss.sidebarQuickSearchValue) {
+        if (!this.discuss.__mfield_sidebarQuickSearchValue(this)) {
             return allOrderedAndPinnedLivechats;
         }
-        const qsVal = this.discuss.sidebarQuickSearchValue.toLowerCase();
+        const qsVal = this.discuss.__mfield_sidebarQuickSearchValue(this).toLowerCase();
         return allOrderedAndPinnedLivechats.filter(livechat => {
-            const nameVal = livechat.displayName.toLowerCase();
+            const nameVal = livechat.__mfield_displayName(this).toLowerCase();
             return nameVal.includes(qsVal);
         });
-    },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     */
-    _useStoreCompareDepth() {
-        return Object.assign(this._super(...arguments), {
-            allOrderedAndPinnedLivechats: 1,
-        });
-    },
-    /**
-     * Override to include livechat channels on the sidebar.
-     *
-     * @override
-     */
-    _useStoreSelector(props) {
-        return Object.assign(this._super(...arguments), {
-            allOrderedAndPinnedLivechats: this.env.models['mail.thread']
-                .all(thread =>
-                    thread.channel_type === 'livechat' &&
-                    thread.isPinned &&
-                    thread.model === 'mail.channel'
-                )
-                .map(livechat => livechat.__state),
-            }
-        );
     },
 
 });

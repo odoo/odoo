@@ -47,29 +47,34 @@ QUnit.test('rendering when just one has received the message', async function (a
 
     await this.start();
     const thread = this.env.models['mail.thread'].create({
-        id: 1000,
-        model: 'mail.channel',
-        partnerSeenInfos: [['create', [
+        __mfield_id: 1000,
+        __mfield_model: 'mail.channel',
+        __mfield_partnerSeenInfos: [['create', [
             {
-                channelId: 1000,
-                lastFetchedMessage: [['insert', { id: 100 }]],
-                partnerId: 10,
+                __mfield_channelId: 1000,
+                __mfield_lastFetchedMessage: [['insert', {
+                    __mfield_id: 100,
+                }]],
+                __mfield_partnerId: 10,
             },
             {
-                channelId: 1000,
-                partnerId: 100,
+                __mfield_channelId: 1000,
+                __mfield_partnerId: 100,
             },
         ]]],
-        messageSeenIndicators: [['insert', {
-            channelId: 1000,
-            messageId: 100,
+        __mfield_messageSeenIndicators: [['insert', {
+            __mfield_channelId: 1000,
+            __mfield_messageId: 100,
         }]],
     });
     const message = this.env.models['mail.message'].insert({
-        author: [['insert', { id: this.env.messaging.currentPartner.id, display_name: "Demo User" }]],
-        body: "<p>Test</p>",
-        id: 100,
-        originThread: [['link', thread]],
+        __mfield_author: [['insert', {
+            __mfield_id: this.env.messaging.__mfield_currentPartner().__mfield_id(),
+            __mfield_display_name: "Demo User",
+        }]],
+        __mfield_body: "<p>Test</p>",
+        __mfield_id: 100,
+        __mfield_originThread: [['link', thread]],
     });
     await this.createMessageSeenIndicatorComponent({ message, thread });
     assert.containsOnce(
@@ -94,30 +99,37 @@ QUnit.test('rendering when everyone have received the message', async function (
 
     await this.start();
     const thread = this.env.models['mail.thread'].create({
-        id: 1000,
-        model: 'mail.channel',
-        partnerSeenInfos: [['create', [
+        __mfield_id: 1000,
+        __mfield_model: 'mail.channel',
+        __mfield_partnerSeenInfos: [['create', [
             {
-                channelId: 1000,
-                lastFetchedMessage: [['insert', { id: 100 }]],
-                partnerId: 10,
+                __mfield_channelId: 1000,
+                __mfield_lastFetchedMessage: [['insert', {
+                    __mfield_id: 100,
+                }]],
+                __mfield_partnerId: 10,
             },
             {
-                channelId: 1000,
-                lastFetchedMessage: [['insert', { id: 99 }]],
-                partnerId: 100,
+                __mfield_channelId: 1000,
+                __mfield_lastFetchedMessage: [['insert', {
+                    __mfield_id: 99,
+                }]],
+                __mfield_partnerId: 100,
             },
         ]]],
-        messageSeenIndicators: [['insert', {
-            channelId: 1000,
-            messageId: 100,
+        __mfield_messageSeenIndicators: [['insert', {
+            __mfield_channelId: 1000,
+            __mfield_messageId: 100,
         }]],
     });
     const message = this.env.models['mail.message'].insert({
-        author: [['insert', { id: this.env.messaging.currentPartner.id, display_name: "Demo User" }]],
-        body: "<p>Test</p>",
-        id: 100,
-        originThread: [['link', thread]],
+        __mfield_author: [['insert', {
+            __mfield_id: this.env.messaging.__mfield_currentPartner().__mfield_id(),
+            __mfield_display_name: "Demo User",
+        }]],
+        __mfield_body: "<p>Test</p>",
+        __mfield_id: 100,
+        __mfield_originThread: [['link', thread]],
     });
     await this.createMessageSeenIndicatorComponent({ message, thread });
     assert.containsOnce(
@@ -142,31 +154,40 @@ QUnit.test('rendering when just one has seen the message', async function (asser
 
     await this.start();
     const thread = this.env.models['mail.thread'].create({
-        id: 1000,
-        model: 'mail.channel',
-        partnerSeenInfos: [['create', [
+        __mfield_id: 1000,
+        __mfield_model: 'mail.channel',
+        __mfield_partnerSeenInfos: [['create', [
             {
-                channelId: 1000,
-                lastFetchedMessage: [['insert', { id: 100 }]],
-                lastSeenMessage: [['insert', { id: 100 }]],
-                partnerId: 10,
+                __mfield_channelId: 1000,
+                __mfield_lastFetchedMessage: [['insert', {
+                    __mfield_id: 100,
+                }]],
+                __mfield_lastSeenMessage: [['insert', {
+                    __mfield_id: 100,
+                }]],
+                __mfield_partnerId: 10,
             },
             {
-                channelId: 1000,
-                lastFetchedMessage: [['insert', { id: 99 }]],
-                partnerId: 100,
+                __mfield_channelId: 1000,
+                __mfield_lastFetchedMessage: [['insert', {
+                    __mfield_id: 99,
+                }]],
+                __mfield_partnerId: 100,
             },
         ]]],
-        messageSeenIndicators: [['insert', {
-            channelId: 1000,
-            messageId: 100,
+        __mfield_messageSeenIndicators: [['insert', {
+            __mfield_channelId: 1000,
+            __mfield_messageId: 100,
         }]],
     });
     const message = this.env.models['mail.message'].insert({
-        author: [['insert', { id: this.env.messaging.currentPartner.id, display_name: "Demo User" }]],
-        body: "<p>Test</p>",
-        id: 100,
-        originThread: [['link', thread]],
+        __mfield_author: [['insert', {
+            __mfield_id: this.env.messaging.__mfield_currentPartner(this).__mfield_id(this),
+            __mfield_display_name: "Demo User",
+        }]],
+        __mfield_body: "<p>Test</p>",
+        __mfield_id: 100,
+        __mfield_originThread: [['link', thread]],
     });
     await this.createMessageSeenIndicatorComponent({ message, thread });
     assert.containsOnce(
@@ -192,30 +213,37 @@ QUnit.test('rendering when just one has seen & received the message', async func
 
     await this.start();
     const thread = this.env.models['mail.thread'].create({
-        id: 1000,
-        model: 'mail.channel',
-        partnerSeenInfos: [['create', [
+        __mfield_id: 1000,
+        __mfield_model: 'mail.channel',
+        __mfield_partnerSeenInfos: [['create', [
             {
-                channelId: 1000,
-                lastFetchedMessage: [['insert', { id: 100 }]],
-                lastSeenMessage: [['insert', { id: 100 }]],
-                partnerId: 10,
+                __mfield_channelId: 1000,
+                __mfield_lastFetchedMessage: [['insert', {
+                    __mfield_id: 100,
+                }]],
+                __mfield_lastSeenMessage: [['insert', {
+                    __mfield_id: 100,
+                }]],
+                __mfield_partnerId: 10,
             },
             {
-                channelId: 1000,
-                partnerId: 100,
+                __mfield_channelId: 1000,
+                __mfield_partnerId: 100,
             },
         ]]],
-        messageSeenIndicators: [['insert', {
-            channelId: 1000,
-            messageId: 100,
+        __mfield_messageSeenIndicators: [['insert', {
+            __mfield_channelId: 1000,
+            __mfield_messageId: 100,
         }]],
     });
     const message = this.env.models['mail.message'].insert({
-        author: [['insert', { id: this.env.messaging.currentPartner.id, display_name: "Demo User" }]],
-        body: "<p>Test</p>",
-        id: 100,
-        originThread: [['link', thread]],
+        __mfield_author: [['insert', {
+            __mfield_id: this.env.messaging.__mfield_currentPartner(this).__mfield_id(this),
+            __mfield_display_name: "Demo User",
+        }]],
+        __mfield_body: "<p>Test</p>",
+        __mfield_id: 100,
+        __mfield_originThread: [['link', thread]],
     });
     await this.createMessageSeenIndicatorComponent({ message, thread });
     assert.containsOnce(
@@ -241,32 +269,43 @@ QUnit.test('rendering when just everyone has seen the message', async function (
 
     await this.start();
     const thread = this.env.models['mail.thread'].create({
-        id: 1000,
-        model: 'mail.channel',
-        partnerSeenInfos: [['create', [
+        __mfield_id: 1000,
+        __mfield_model: 'mail.channel',
+        __mfield_partnerSeenInfos: [['create', [
             {
-                channelId: 1000,
-                lastFetchedMessage: [['insert', { id: 100 }]],
-                lastSeenMessage: [['insert', { id: 100 }]],
-                partnerId: 10,
+                __mfield_channelId: 1000,
+                __mfield_lastFetchedMessage: [['insert', {
+                    __mfield_id: 100,
+                }]],
+                __mfield_lastSeenMessage: [['insert', {
+                    __mfield_id: 100,
+                }]],
+                __mfield_partnerId: 10,
             },
             {
-                channelId: 1000,
-                lastFetchedMessage: [['insert', { id: 100 }]],
-                lastSeenMessage: [['insert', { id: 100 }]],
-                partnerId: 100,
+                __mfield_channelId: 1000,
+                __mfield_lastFetchedMessage: [['insert', {
+                    __mfield_id: 100,
+                }]],
+                __mfield_lastSeenMessage: [['insert', {
+                    __mfield_id: 100,
+                }]],
+                __mfield_partnerId: 100,
             },
         ]]],
-        messageSeenIndicators: [['insert', {
-            channelId: 1000,
-            messageId: 100,
+        __mfield_messageSeenIndicators: [['insert', {
+            __mfield_channelId: 1000,
+            __mfield_messageId: 100,
         }]],
     });
     const message = this.env.models['mail.message'].insert({
-        author: [['insert', { id: this.env.messaging.currentPartner.id, display_name: "Demo User" }]],
-        body: "<p>Test</p>",
-        id: 100,
-        originThread: [['link', thread]],
+        __mfield_author: [['insert', {
+            __mfield_id: this.env.messaging.__mfield_currentPartner(this).__mfield_id(this),
+            __mfield_display_name: "Demo User",
+        }]],
+        __mfield_body: "<p>Test</p>",
+        __mfield_id: 100,
+        __mfield_originThread: [['link', thread]],
     });
     await this.createMessageSeenIndicatorComponent({ message, thread });
     assert.containsOnce(

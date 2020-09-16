@@ -64,29 +64,29 @@ QUnit.test('dragover files on thread with composer', async function (assert) {
 
     await this.start();
     const thread = this.env.models['mail.thread'].create({
-        channel_type: 'channel',
-        id: 100,
-        members: [['insert', [
+        __mfield_channel_type: 'channel',
+        __mfield_id: 100,
+        __mfield_members: [['insert', [
             {
-                email: "john@example.com",
-                id: 9,
-                name: "John",
+                __mfield_email: "john@example.com",
+                __mfield_id: 9,
+                __mfield_name: "John",
             },
             {
-                email: "fred@example.com",
-                id: 10,
-                name: "Fred",
+                __mfield_email: "fred@example.com",
+                __mfield_id: 10,
+                __mfield_name: "Fred",
             },
         ]]],
-        model: 'mail.channel',
-        name: "General",
-        public: 'public',
+        __mfield_model: 'mail.channel',
+        __mfield_name: "General",
+        __mfield_public: 'public',
     });
     const threadViewer = this.env.models['mail.thread_viewer'].create({
-        hasThreadView: true,
-        thread: [['link', thread]],
+        __mfield_hasThreadView: true,
+        __mfield_thread: [['link', thread]],
     });
-    await this.createThreadViewComponent(threadViewer.threadView, { hasComposer: true });
+    await this.createThreadViewComponent(threadViewer.__mfield_threadView(), { hasComposer: true });
     await afterNextRender(() =>
         dragenterFiles(document.querySelector('.o_ThreadView'))
     );
@@ -108,29 +108,29 @@ QUnit.test('message list desc order', async function (assert) {
     }
     await this.start();
     const thread = this.env.models['mail.thread'].create({
-        channel_type: 'channel',
-        id: 100,
-        members: [['insert', [
+        __mfield_channel_type: 'channel',
+        __mfield_id: 100,
+        __mfield_members: [['insert', [
             {
-                email: "john@example.com",
-                id: 9,
-                name: "John",
+                __mfield_email: "john@example.com",
+                __mfield_id: 9,
+                __mfield_name: "John",
             },
             {
-                email: "fred@example.com",
-                id: 10,
-                name: "Fred",
+                __mfield_email: "fred@example.com",
+                __mfield_id: 10,
+                __mfield_name: "Fred",
             },
         ]]],
-        model: 'mail.channel',
-        name: "General",
-        public: 'public',
+        __mfield_model: 'mail.channel',
+        __mfield_name: "General",
+        __mfield_public: 'public',
     });
     const threadViewer = this.env.models['mail.thread_viewer'].create({
-        hasThreadView: true,
-        thread: [['link', thread]],
+        __mfield_hasThreadView: true,
+        __mfield_thread: [['link', thread]],
     });
-    await this.createThreadViewComponent(threadViewer.threadView, { order: 'desc' }, { isFixedSize: true });
+    await this.createThreadViewComponent(threadViewer.__mfield_threadView(), { order: 'desc' }, { isFixedSize: true });
     const messageItems = document.querySelectorAll(`.o_MessageList_item`);
     assert.notOk(
         messageItems[0].classList.contains("o_MessageList_loadMore"),
@@ -179,29 +179,29 @@ QUnit.test('message list asc order', async function (assert) {
     }
     await this.start();
     const thread = this.env.models['mail.thread'].create({
-        channel_type: 'channel',
-        id: 100,
-        members: [['insert', [
+        __mfield_channel_type: 'channel',
+        __mfield_id: 100,
+        __mfield_members: [['insert', [
             {
-                email: "john@example.com",
-                id: 9,
-                name: "John",
+                __mfield_email: "john@example.com",
+                __mfield_id: 9,
+                __mfield_name: "John",
             },
             {
-                email: "fred@example.com",
-                id: 10,
-                name: "Fred",
+                __mfield_email: "fred@example.com",
+                __mfield_id: 10,
+                __mfield_name: "Fred",
             },
         ]]],
-        model: 'mail.channel',
-        name: "General",
-        public: 'public',
+        __mfield_model: 'mail.channel',
+        __mfield_name: "General",
+        __mfield_public: 'public',
     });
     const threadViewer = this.env.models['mail.thread_viewer'].create({
-        hasThreadView: true,
-        thread: [['link', thread]],
+        __mfield_hasThreadView: true,
+        __mfield_thread: [['link', thread]],
     });
-    await this.createThreadViewComponent(threadViewer.threadView, { order: 'asc' }, { isFixedSize: true });
+    await this.createThreadViewComponent(threadViewer.__mfield_threadView(), { order: 'asc' }, { isFixedSize: true });
     const messageItems = document.querySelectorAll(`.o_MessageList_item`);
     assert.notOk(
         messageItems[messageItems.length - 1].classList.contains("o_MessageList_loadMore"),
@@ -288,21 +288,21 @@ QUnit.test('mark channel as fetched when a new message is loaded and as seen whe
         }
     });
     const thread = this.env.models['mail.thread'].findFromIdentifyingData({
-        id: 100,
-        model: 'mail.channel',
+        __mfield_id: 100,
+        __mfield_model: 'mail.channel',
     });
     const threadViewer = this.env.models['mail.thread_viewer'].create({
-        hasThreadView: true,
-        thread: [['link', thread]],
+        __mfield_hasThreadView: true,
+        __mfield_thread: [['link', thread]],
     });
-    await this.createThreadViewComponent(threadViewer.threadView, { hasComposer: true });
+    await this.createThreadViewComponent(threadViewer.__mfield_threadView(), { hasComposer: true });
     await afterNextRender(async () => this.env.services.rpc({
         route: '/mail/chat_post',
         params: {
             context: {
                 mockedUserId: 10,
             },
-            uuid: thread.uuid,
+            uuid: thread.__mfield_uuid(),
             message_content: "new message",
         },
     }));
@@ -342,29 +342,29 @@ QUnit.test('mark channel as fetched and seen when a new message is loaded if com
         }
     });
     const thread = this.env.models['mail.thread'].create({
-        id: 100,
-        isServerPinned: true, // just to avoid joinChannel to be called
-        members: [['insert', [
+        __mfield_id: 100,
+        __mfield_isServerPinned: true, // just to avoid joinChannel to be called
+        __mfield_members: [['insert', [
             {
-                email: "john@example.com",
-                id: this.env.messaging.currentPartner.id,
-                name: "John",
+                __mfield_email: "john@example.com",
+                __mfield_id: this.env.messaging.__mfield_currentPartner().__mfield_id(),
+                __mfield_name: "John",
             },
             {
-                email: "fred@example.com",
-                id: 10,
-                name: "Fred",
+                __mfield_email: "fred@example.com",
+                __mfield_id: 10,
+                __mfield_name: "Fred",
             },
         ]]],
-        model: 'mail.channel',
-        serverMessageUnreadCounter: 1, // seen would not be called if not > 0
+        __mfield_model: 'mail.channel',
+        __mfield_serverMessageUnreadCounter: 1, // seen would not be called if not > 0
     });
 
     const threadViewer = this.env.models['mail.thread_viewer'].create({
-        hasThreadView: true,
-        thread: [['link', thread]],
+        __mfield_hasThreadView: true,
+        __mfield_thread: [['link', thread]],
     });
-    await this.createThreadViewComponent(threadViewer.threadView, { hasComposer: true });
+    await this.createThreadViewComponent(threadViewer.__mfield_threadView(), { hasComposer: true });
     document.querySelector('.o_ComposerTextInput_textarea').focus();
     const notifications = [
         [['myDB', 'mail.channel', 100], {
@@ -396,18 +396,18 @@ QUnit.test('show message subject if thread is mailing channel', async function (
     });
     await this.start();
     const thread = this.env.models['mail.thread'].create({
-        channel_type: 'channel',
-        id: 100,
-        mass_mailing: true,
-        model: 'mail.channel',
-        name: "General",
-        public: 'public',
+        __mfield_channel_type: 'channel',
+        __mfield_id: 100,
+        __mfield_mass_mailing: true,
+        __mfield_model: 'mail.channel',
+        __mfield_name: "General",
+        __mfield_public: 'public',
     });
     const threadViewer = this.env.models['mail.thread_viewer'].create({
-        hasThreadView: true,
-        thread: [['link', thread]],
+        __mfield_hasThreadView: true,
+        __mfield_thread: [['link', thread]],
     });
-    await this.createThreadViewComponent(threadViewer.threadView);
+    await this.createThreadViewComponent(threadViewer.__mfield_threadView());
 
     assert.containsOnce(
         document.body,
@@ -438,14 +438,14 @@ QUnit.test('new messages separator on posting message', async function (assert) 
     }];
     await this.start();
     const thread = this.env.models['mail.thread'].findFromIdentifyingData({
-        id: 20,
-        model: 'mail.channel'
+        __mfield_id: 20,
+        __mfield_model: 'mail.channel'
     });
     const threadViewer = this.env.models['mail.thread_viewer'].create({
-        hasThreadView: true,
-        thread: [['link', thread]],
+        __mfield_hasThreadView: true,
+        __mfield_thread: [['link', thread]],
     });
-    await this.createThreadViewComponent(threadViewer.threadView, { hasComposer: true });
+    await this.createThreadViewComponent(threadViewer.__mfield_threadView(), { hasComposer: true });
 
     assert.containsNone(
         document.body,
@@ -503,14 +503,14 @@ QUnit.test('new messages separator on receiving new message', async function (as
     });
     await this.start();
     const thread = this.env.models['mail.thread'].findFromIdentifyingData({
-        id: 20,
-        model: 'mail.channel'
+        __mfield_id: 20,
+        __mfield_model: 'mail.channel'
     });
     const threadViewer = this.env.models['mail.thread_viewer'].create({
-        hasThreadView: true,
-        thread: [['link', thread]],
+        __mfield_hasThreadView: true,
+        __mfield_thread: [['link', thread]],
     });
-    await this.createThreadViewComponent(threadViewer.threadView, { hasComposer: true });
+    await this.createThreadViewComponent(threadViewer.__mfield_threadView(), { hasComposer: true });
 
     assert.containsOnce(
         document.body,
@@ -531,7 +531,7 @@ QUnit.test('new messages separator on receiving new message', async function (as
             context: {
                 mockedUserId: 42,
             },
-            uuid: thread.uuid,
+            uuid: thread.__mfield_uuid(),
             message_content: "hu",
         },
     }));
@@ -550,7 +550,9 @@ QUnit.test('new messages separator on receiving new message', async function (as
     assert.containsOnce(
         document.body,
         `.o_MessageList_separatorNewMessages ~ .o_Message[data-message-local-id="${
-            this.env.models['mail.message'].findFromIdentifyingData({id: 2}).localId
+            this.env.models['mail.message'].findFromIdentifyingData({
+                __mfield_id: 2,
+            }).localId
         }"]`,
         "'new messages' separator should be shown above new message received"
     );
@@ -586,20 +588,23 @@ QUnit.test('basic rendering of canceled notification', async function (assert) {
     });
     await this.start();
     const threadViewer = await this.env.models['mail.thread_viewer'].create({
-        hasThreadView: true,
-        thread: [['insert', {
-            id: 11,
-            model: 'mail.channel',
+        __mfield_hasThreadView: true,
+        __mfield_thread: [['insert', {
+            __mfield_id: 11,
+            __mfield_model: 'mail.channel',
         }]],
     });
     await this.afterEvent({
         eventName: 'o-component-message-list-thread-cache-changed',
         func: () => {
-            this.createThreadViewComponent(threadViewer.threadView);
+            this.createThreadViewComponent(threadViewer.__mfield_threadView());
         },
         message: "thread become loaded with messages",
         predicate: ({ threadViewer }) => {
-            return threadViewer.thread.model === 'mail.channel' && threadViewer.thread.id === 11;
+            return (
+                threadViewer.__mfield_thread().__mfield_model() === 'mail.channel' &&
+                threadViewer.__mfield_thread().__mfield_id() === 11
+            );
         },
     });
 

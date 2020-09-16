@@ -1,7 +1,7 @@
 odoo.define('mail/static/src/components/attachment/attachment.js', function (require) {
 'use strict';
 
-const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
+const useModels = require('mail/static/src/component_hooks/use_models/use_models.js');
 
 const { Component } = owl;
 
@@ -12,12 +12,7 @@ class Attachment extends Component {
      */
     constructor(...args) {
         super(...args);
-        useStore(props => {
-            const attachment = this.env.models['mail.attachment'].get(props.attachmentLocalId);
-            return {
-                attachment: attachment ? attachment.__state : undefined,
-            };
-        });
+        useModels();
     }
 
     //--------------------------------------------------------------------------
@@ -38,11 +33,11 @@ class Attachment extends Component {
      * @returns {string}
      */
     get attachmentUrl() {
-        if (this.attachment.isTemporary) {
+        if (this.attachment.__mfield_isTemporary(this)) {
             return '';
         }
         return this.env.session.url('/web/content', {
-            id: this.attachment.id,
+            id: this.attachment.__mfield_id(this),
             download: true,
         });
     }
@@ -56,7 +51,7 @@ class Attachment extends Component {
         if (this.props.detailsMode !== 'auto') {
             return this.props.detailsMode;
         }
-        if (this.attachment.fileType !== 'image') {
+        if (this.attachment.__mfield_fileType(this) !== 'image') {
             return 'card';
         }
         return 'hover';
@@ -68,7 +63,7 @@ class Attachment extends Component {
      * @returns {string}
      */
     get imageStyle() {
-        if (this.attachment.fileType !== 'image') {
+        if (this.attachment.__mfield_fileType(this) !== 'image') {
             return '';
         }
         if (this.env.isQUnitTest) {
@@ -83,7 +78,7 @@ class Attachment extends Component {
         } else {
             size = '160x160';
         }
-        return `background-image:url(/web/image/${this.attachment.id}/${size}/?crop=true);`;
+        return `background-image:url(/web/image/${this.attachment.__mfield_id(this)}/${size}/?crop=true);`;
     }
 
     //--------------------------------------------------------------------------
@@ -98,7 +93,7 @@ class Attachment extends Component {
      */
     _onClickDownload(ev) {
         ev.stopPropagation();
-        window.location = `/web/content/ir.attachment/${this.attachment.id}/datas?download=true`;
+        window.location = `/web/content/ir.attachment/${this.attachment.__mfield_id(this)}/datas?download=true`;
     }
 
     /**
@@ -108,7 +103,7 @@ class Attachment extends Component {
      * @param {MouseEvent} ev
      */
     _onClickImage(ev) {
-        if (!this.attachment.isViewable) {
+        if (!this.attachment.__mfield_isViewable(this)) {
             return;
         }
         this.env.models['mail.attachment'].view({

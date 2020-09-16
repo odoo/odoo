@@ -12,7 +12,7 @@ const components = {
     NotificationList: require('mail/static/src/components/notification_list/notification_list.js'),
     ThreadView: require('mail/static/src/components/thread_view/thread_view.js'),
 };
-const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
+const useModels = require('mail/static/src/component_hooks/use_models/use_models.js');
 
 const { Component } = owl;
 const { useRef } = owl.hooks;
@@ -24,26 +24,7 @@ class Discuss extends Component {
      */
     constructor(...args) {
         super(...args);
-        useStore(props => {
-            const discuss = this.env.messaging && this.env.messaging.discuss;
-            const threadView = discuss && discuss.threadView;
-            return {
-                checkedMessages: threadView ? threadView.checkedMessages.map(message => message.__state) : [],
-                discuss: discuss ? discuss.__state : undefined,
-                isDeviceMobile: this.env.messaging && this.env.messaging.device.isMobile,
-                isMessagingInitialized: this.env.isMessagingInitialized(),
-                thread: discuss && discuss.thread ? discuss.thread.__state : undefined,
-                threadCache: (threadView && threadView.threadCache)
-                    ? threadView.threadCache.__state
-                    : undefined,
-                uncheckedMessages: threadView ? threadView.uncheckedMessages.map(message => message.__state) : [],
-            };
-        }, {
-            compareDepth: {
-                checkedMessages: 1,
-                uncheckedMessages: 1,
-            },
-        });
+        useModels();
         this._updateLocalStoreProps();
         /**
          * Reference of the composer. Useful to focus it.
@@ -59,10 +40,12 @@ class Discuss extends Component {
     }
 
     mounted() {
-        this.discuss.update({ isOpen: true });
-        if (this.discuss.thread) {
+        this.discuss.update({
+            __mfield_isOpen: true,
+        });
+        if (this.discuss.__mfield_thread(this)) {
             this.trigger('o-push-state-action-manager');
-        } else if (this.env.messaging.isInitialized) {
+        } else if (this.env.messaging.__mfield_isInitialized(this)) {
             this.discuss.openInitThread();
         }
         this._updateLocalStoreProps();
@@ -71,19 +54,19 @@ class Discuss extends Component {
 
     patched() {
         this.trigger('o-update-control-panel');
-        if (this.discuss.thread) {
+        if (this.discuss.__mfield_thread(this)) {
             this.trigger('o-push-state-action-manager');
         }
         if (
-            this.discuss.thread &&
-            this.discuss.thread === this.env.messaging.inbox &&
-            this.discuss.threadView &&
-            this._lastThreadCache === this.discuss.threadView.threadCache.localId &&
-            this._lastThreadCounter > 0 && this.discuss.thread.counter === 0
+            this.discuss.__mfield_thread(this) &&
+            this.discuss.__mfield_thread(this) === this.env.messaging.__mfield_inbox(this) &&
+            this.discuss.__mfield_threadView(this) &&
+            this._lastThreadCache === this.discuss.__mfield_threadView(this).__mfield_threadCache(this).localId &&
+            this._lastThreadCounter > 0 && this.discuss.__mfield_thread(this).counter === 0
         ) {
             this.trigger('o-show-rainbow-man');
         }
-        this._activeThreadCache = this.discuss.threadView && this.discuss.threadView.threadCache;
+        this._activeThreadCache = this.discuss.__mfield_threadView(this) && this.discuss.__mfield_threadView(this).__mfield_threadCache(this);
         this._updateLocalStoreProps();
         this._update();
     }
@@ -116,7 +99,7 @@ class Discuss extends Component {
      * @returns {mail.discuss}
      */
     get discuss() {
-        return this.env.messaging && this.env.messaging.discuss;
+        return this.env.messaging && this.env.messaging.__mfield_discuss(this);
     }
 
     /**
@@ -146,8 +129,10 @@ class Discuss extends Component {
      * @private
      */
     _update() {
-        if (this.discuss.isDoFocus) {
-            this.discuss.update({ isDoFocus: false });
+        if (this.discuss.__mfield_isDoFocus(this)) {
+            this.discuss.update({
+                __mfield_isDoFocus: false,
+            });
             const composer = this._composerRef.comp;
             if (composer) {
                 composer.focus();
@@ -170,17 +155,17 @@ class Discuss extends Component {
          * rainbox man on inbox.
          */
         this._lastThreadCache = (
-            this.discuss.threadView &&
-            this.discuss.threadView.threadCache &&
-            this.discuss.threadView.threadCache.localId
+            this.discuss.__mfield_threadView(this) &&
+            this.discuss.__mfield_threadView(this).__mfield_threadCache(this) &&
+            this.discuss.__mfield_threadView(this).__mfield_threadCache(this).localId
         );
         /**
          * Locally tracked store props `threadCounter`.
          * Useful to display the rainbow man on inbox.
          */
         this._lastThreadCounter = (
-            this.discuss.thread &&
-            this.discuss.thread.counter
+            this.discuss.__mfield_thread(this) &&
+            this.discuss.__mfield_thread(this).__mfield_counter(this)
         );
     }
 
@@ -192,14 +177,18 @@ class Discuss extends Component {
      * @private
      */
     _onDialogClosedModerationDiscard() {
-        this.discuss.update({ hasModerationDiscardDialog: false });
+        this.discuss.update({
+            __mfield_hasModerationDiscardDialog: false,
+        });
     }
 
     /**
      * @private
      */
     _onDialogClosedModerationReject() {
-        this.discuss.update({ hasModerationRejectDialog: false });
+        this.discuss.update({
+            __mfield_hasModerationRejectDialog: false,
+        });
     }
 
     /**
@@ -220,7 +209,7 @@ class Discuss extends Component {
      */
     _onMobileAddItemHeaderInputSelect(ev, ui) {
         const discuss = this.discuss;
-        if (discuss.isAddingChannel) {
+        if (discuss.__mfield_isAddingChannel(this)) {
             discuss.handleAddChannelAutocompleteSelect(ev, ui);
         } else {
             discuss.handleAddChatAutocompleteSelect(ev, ui);
@@ -234,7 +223,7 @@ class Discuss extends Component {
      * @param {function} res
      */
     _onMobileAddItemHeaderInputSource(req, res) {
-        if (this.discuss.isAddingChannel) {
+        if (this.discuss.__mfield_isAddingChannel(this)) {
             this.discuss.handleAddChannelAutocompleteSource(req, res);
         } else {
             this.discuss.handleAddChatAutocompleteSource(req, res);
@@ -248,7 +237,7 @@ class Discuss extends Component {
         this.env.services['notification'].notify({
             message: _.str.sprintf(
                 this.env._t(`Message posted on "%s"`),
-                owl.utils.escape(this.discuss.replyingToMessage.originThread.displayName)
+                owl.utils.escape(this.discuss.__mfield_replyingToMessage(this).__mfield_originThread(this).__mfield_displayName(this))
             ),
             type: 'warning',
         });
@@ -263,11 +252,13 @@ class Discuss extends Component {
      */
     _onSelectMobileNavbarTab(ev) {
         ev.stopPropagation();
-        if (this.discuss.activeMobileNavbarTabId === ev.detail.tabId) {
+        if (this.discuss.__mfield_activeMobileNavbarTabId(this) === ev.detail.tabId) {
             return;
         }
         this.discuss.clearReplyingToMessage();
-        this.discuss.update({ activeMobileNavbarTabId: ev.detail.tabId });
+        this.discuss.update({
+            __mfield_activeMobileNavbarTabId: ev.detail.tabId,
+        });
     }
 
     /**

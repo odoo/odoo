@@ -2,8 +2,8 @@ odoo.define('mail/static/src/models/thread/thread.js', function (require) {
 'use strict';
 
 const { registerNewModel } = require('mail/static/src/model/model_core.js');
-const { attr, many2many, many2one, one2many, one2one } = require('mail/static/src/model/model_field.js');
 const { clear } = require('mail/static/src/model/model_field_command.js');
+const { attr, many2many, many2one, one2many, one2one } = require('mail/static/src/model/model_field_utils.js');
 const throttle = require('mail/static/src/utils/throttle/throttle.js');
 const Timer = require('mail/static/src/utils/timer/timer.js');
 const mailUtils = require('mail.utils');
@@ -123,7 +123,7 @@ function factory(dependencies) {
             const threads = thread ? [thread] : this.env.models['mail.thread'].all();
             threads.map(localThread => {
                 localThread.update({
-                    lastCurrentPartnerMessageSeenByEveryone: localThread._computeLastCurrentPartnerMessageSeenByEveryone(),
+                    __mfield_lastCurrentPartnerMessageSeenByEveryone: localThread._computeLastCurrentPartnerMessageSeenByEveryone(),
                 });
             });
         }
@@ -135,82 +135,88 @@ function factory(dependencies) {
          */
         static convertData(data) {
             const data2 = {
-                messagesAsServerChannel: [],
+                __mfield_messagesAsServerChannel: [],
             };
             if ('model' in data) {
-                data2.model = data.model;
+                data2.__mfield_model = data.model;
             }
             if ('channel_type' in data) {
-                data2.channel_type = data.channel_type;
-                data2.model = 'mail.channel';
+                data2.__mfield_channel_type = data.channel_type;
+                data2.__mfield_model = 'mail.channel';
             }
             if ('create_uid' in data) {
-                data2.creator = [['insert', { id: data.create_uid }]];
+                data2.__mfield_creator = [['insert', {
+                    __mfield_id: data.create_uid,
+                }]];
             }
             if ('custom_channel_name' in data) {
-                data2.custom_channel_name = data.custom_channel_name;
+                data2.__mfield_custom_channel_name = data.custom_channel_name;
             }
             if ('group_based_subscription' in data) {
-                data2.group_based_subscription = data.group_based_subscription;
+                data2.__mfield_group_based_subscription = data.group_based_subscription;
             }
             if ('id' in data) {
-                data2.id = data.id;
+                data2.__mfield_id = data.id;
             }
             if ('is_minimized' in data && 'state' in data) {
-                data2.serverFoldState = data.is_minimized ? data.state : 'closed';
+                data2.__mfield_serverFoldState = data.is_minimized ? data.state : 'closed';
             }
             if ('is_moderator' in data) {
-                data2.is_moderator = data.is_moderator;
+                data2.__mfield_is_moderator = data.is_moderator;
             }
             if ('is_pinned' in data) {
-                data2.isServerPinned = data.is_pinned;
+                data2.__mfield_isServerPinned = data.is_pinned;
                 // FIXME: The following is admittedly odd.
                 // Fixing it should entail a deeper reflexion on the group_based_subscription
                 // and is_pinned functionalities, especially in python.
                 // task-2284357
                 if ('group_based_subscription' in data && data.group_based_subscription) {
-                    data2.isServerPinned = true;
+                    data2.__mfield_isServerPinned = true;
                 }
             }
             if ('last_message' in data && data.last_message) {
-                data2.messagesAsServerChannel.push(['insert', { id: data.last_message.id }]);
-                data2.serverLastMessageId = data.last_message.id;
+                data2.__mfield_messagesAsServerChannel.push(['insert', {
+                    __mfield_id: data.last_message.id,
+                }]);
+                data2.__mfield_serverLastMessageId = data.last_message.id;
             }
             if ('last_message_id' in data && data.last_message_id) {
-                data2.messagesAsServerChannel.push(['insert', { id: data.last_message_id }]);
-                data2.serverLastMessageId = data.last_message_id;
+                data2.__mfield_messagesAsServerChannel.push(['insert', {
+                    __mfield_id: data.last_message_id,
+                }]);
+                data2.__mfield_serverLastMessageId = data.last_message_id;
             }
             if ('mass_mailing' in data) {
-                data2.mass_mailing = data.mass_mailing;
+                data2.__mfield_mass_mailing = data.mass_mailing;
             }
             if ('moderation' in data) {
-                data2.moderation = data.moderation;
+                data2.__mfield_moderation = data.moderation;
             }
             if ('message_needaction_counter' in data) {
-                data2.message_needaction_counter = data.message_needaction_counter;
+                data2.__mfield_message_needaction_counter = data.message_needaction_counter;
             }
             if ('message_unread_counter' in data) {
-                data2.serverMessageUnreadCounter = data.message_unread_counter;
+                data2.__mfield_serverMessageUnreadCounter = data.message_unread_counter;
             }
             if ('name' in data) {
-                data2.name = data.name;
+                data2.__mfield_name = data.name;
             }
             if ('public' in data) {
-                data2.public = data.public;
+                data2.__mfield_public = data.public;
             }
             if ('seen_message_id' in data) {
-                data2.lastSeenByCurrentPartnerMessageId = data.seen_message_id;
+                data2.__mfield_lastSeenByCurrentPartnerMessageId = data.seen_message_id;
             }
             if ('uuid' in data) {
-                data2.uuid = data.uuid;
+                data2.__mfield_uuid = data.uuid;
             }
 
             // relations
             if ('members' in data) {
                 if (!data.members) {
-                    data2.members = [['unlink-all']];
+                    data2.__mfield_members = [['unlink-all']];
                 } else {
-                    data2.members = [
+                    data2.__mfield_members = [
                         ['insert-and-replace', data.members.map(memberData =>
                             this.env.models['mail.partner'].convertData(memberData)
                         )],
@@ -219,7 +225,7 @@ function factory(dependencies) {
             }
             if ('seen_partners_info' in data) {
                 if (!data.seen_partners_info) {
-                    data2.partnerSeenInfos = [['unlink-all']];
+                    data2.__mfield_partnerSeenInfos = [['unlink-all']];
                 } else {
                     /*
                      * FIXME: not optimal to write on relation given the fact that the relation
@@ -227,20 +233,31 @@ function factory(dependencies) {
                      * (here channelId will compute partnerSeenInfo.thread))
                      * task-2336946
                      */
-                    data2.partnerSeenInfos = [
+                    data2.__mfield_partnerSeenInfos = [
                         ['insert-and-replace',
                             data.seen_partners_info.map(
                                 ({ fetched_message_id, partner_id, seen_message_id }) => {
                                     return {
-                                        channelId: data2.id,
-                                        lastFetchedMessage: [fetched_message_id ? ['insert', { id: fetched_message_id }] : ['unlink-all']],
-                                        lastSeenMessage: [seen_message_id ? ['insert', { id: seen_message_id }] : ['unlink-all']],
-                                        partnerId: partner_id,
+                                        __mfield_channelId: data2.id,
+                                        __mfield_lastFetchedMessage: [
+                                            fetched_message_id ?
+                                            ['insert', {
+                                                __mfield_id: fetched_message_id,
+                                            }] :
+                                            ['unlink-all']],
+                                        __mfield_lastSeenMessage: [
+                                            seen_message_id ?
+                                            ['insert', {
+                                                __mfield_id: seen_message_id,
+                                            }] :
+                                            ['unlink-all']],
+                                        __mfield_partnerId: partner_id,
                                     };
-                                })
+                                }
+                            ),
                         ]
                     ];
-                    if (data.id || this.id) {
+                    if (data.id) {
                         const messageIds = data.seen_partners_info.reduce((currentSet, { fetched_message_id, seen_message_id }) => {
                             if (fetched_message_id) {
                                 currentSet.add(fetched_message_id);
@@ -257,12 +274,12 @@ function factory(dependencies) {
                              * (here channelId will compute messageSeenIndicator.thread))
                              * task-2336946
                              */
-                            data2.messageSeenIndicators = [
+                            data2.__mfield_messageSeenIndicators = [
                                 ['insert',
                                     [...messageIds].map(messageId => {
                                        return {
-                                           channelId: data.id || this.id,
-                                           messageId,
+                                           __mfield_channelId: data.id,
+                                           __mfield_messageId: messageId,
                                        };
                                     })
                                 ]
@@ -284,8 +301,8 @@ function factory(dependencies) {
          */
         static async loadPreviews(threads) {
             const channelIds = threads.reduce((list, thread) => {
-                if (thread.model === 'mail.channel') {
-                    return list.concat(thread.id);
+                if (thread.__mfield_model() === 'mail.channel') {
+                    return list.concat(thread.__mfield_id());
                 }
                 return list;
             }, []);
@@ -294,9 +311,12 @@ function factory(dependencies) {
                 method: 'channel_fetch_preview',
                 args: [channelIds],
             }, { shadow: true });
-            this.env.models['mail.message'].insert(channelPreviews.filter(p => p.last_message).map(
-                channelPreview => this.env.models['mail.message'].convertData(channelPreview.last_message)
-            ));
+            this.env.models['mail.message']
+                .insert(channelPreviews.filter(p => p.last_message)
+                .map(channelPreview =>
+                    this.env.models['mail.message'].convertData(channelPreview.last_message)
+                )
+            );
         }
 
 
@@ -336,7 +356,7 @@ function factory(dependencies) {
                 channelInfos.map(channelInfo => this.env.models['mail.thread'].convertData(channelInfo))
             );
             // manually force recompute of counter
-            this.env.messaging.messagingMenu.update();
+            this.env.messaging.__mfield_messagingMenu().update();
             return channels;
         }
 
@@ -370,7 +390,7 @@ function factory(dependencies) {
          * @returns {mail.thread} the created channel
          */
         static async performRpcCreateChannel({ name, privacy }) {
-            const device = this.env.messaging.device;
+            const device = this.env.messaging.__mfield_device();
             const data = await this.env.services.rpc({
                 model: 'mail.channel',
                 method: 'channel_create',
@@ -379,7 +399,7 @@ function factory(dependencies) {
                     context: Object.assign({}, this.env.session.user_content, {
                         // optimize the return value by avoiding useless queries
                         // in non-mobile devices
-                        isMobile: device.isMobile,
+                        isMobile: device.__mfield_isMobile(),
                     }),
                 },
             });
@@ -401,7 +421,7 @@ function factory(dependencies) {
          * @returns {mail.thread|undefined} the created or existing chat
          */
         static async performRpcCreateChat({ partnerIds, pinForCurrentPartner }) {
-            const device = this.env.messaging.device;
+            const device = this.env.messaging.__mfield_device();
             // TODO FIX: potential duplicate chat task-2276490
             const data = await this.env.services.rpc({
                 model: 'mail.channel',
@@ -410,7 +430,7 @@ function factory(dependencies) {
                     context: Object.assign({}, this.env.session.user_content, {
                         // optimize the return value by avoiding useless queries
                         // in non-mobile devices
-                        isMobile: device.isMobile,
+                        isMobile: device.__mfield_isMobile(),
                     }),
                     partners_to: partnerIds,
                     pin: pinForCurrentPartner,
@@ -433,7 +453,7 @@ function factory(dependencies) {
          * @returns {mail.thread} the channel that was joined
          */
         static async performRpcJoinChannel({ channelId }) {
-            const device = this.env.messaging.device;
+            const device = this.env.messaging.__mfield_device();
             const data = await this.env.services.rpc({
                 model: 'mail.channel',
                 method: 'channel_join_and_get_info',
@@ -442,7 +462,7 @@ function factory(dependencies) {
                     context: Object.assign({}, this.env.session.user_content, {
                         // optimize the return value by avoiding useless queries
                         // in non-mobile devices
-                        isMobile: device.isMobile,
+                        isMobile: device.__mfield_isMobile(),
                     }),
                 },
             });
@@ -472,16 +492,20 @@ function factory(dependencies) {
                     const [partner_id, emailInfo, reason] = recipientInfoData;
                     const [name, email] = emailInfo && mailUtils.parseEmail(emailInfo);
                     return {
-                        email,
-                        name,
-                        partner: [partner_id ? ['insert', { id: partner_id }] : ['unlink']],
-                        reason,
+                        __mfield_email: email,
+                        __mfield_name: name,
+                        __mfield_partner: [
+                            partner_id
+                                ? ['insert', { __mfield_id: partner_id }]
+                                : ['unlink']
+                        ],
+                        __mfield_reason: reason,
                     };
                 });
                 this.insert({
-                    id: parseInt(id),
-                    model,
-                    suggestedRecipientInfoList: [['insert-and-replace', recipientInfoList]],
+                    __mfield_id: parseInt(id),
+                    __mfield_model: model,
+                    __mfield_suggestedRecipientInfoList: [['insert-and-replace', recipientInfoList]],
                 });
             }
         }
@@ -491,11 +515,13 @@ function factory(dependencies) {
          * @returns {mail.thread_cache}
          */
         cache(stringifiedDomain = '[]') {
-            let cache = this.caches.find(cache => cache.stringifiedDomain === stringifiedDomain);
+            let cache = this.__mfield_caches(this).find(cache =>
+                cache.__mfield_stringifiedDomain(this) === stringifiedDomain
+            );
             if (!cache) {
                 cache = this.env.models['mail.thread_cache'].create({
-                    stringifiedDomain,
-                    thread: [['link', this]],
+                    __mfield_stringifiedDomain: stringifiedDomain,
+                    __mfield_thread: [['link', this]],
                 });
             }
             return cache;
@@ -510,32 +536,34 @@ function factory(dependencies) {
                 model: 'ir.attachment',
                 method: 'search_read',
                 domain: [
-                    ['res_id', '=', this.id],
-                    ['res_model', '=', this.model],
+                    ['res_id', '=', this.__mfield_id(this)],
+                    ['res_model', '=', this.__mfield_model(this)],
                 ],
                 fields: ['id', 'name', 'mimetype'],
                 orderBy: [{ name: 'id', asc: false }],
             }));
             this.update({
-                originThreadAttachments: [['insert-and-replace',
+                __mfield_originThreadAttachments: [['insert-and-replace',
                     attachmentsData.map(data =>
                         this.env.models['mail.attachment'].convertData(data)
                     )
                 ]],
             });
-            this.update({ areAttachmentsLoaded: true });
+            this.update({
+                __mfield_areAttachmentsLoaded: true,
+            });
         }
 
         /**
          * Fetches suggested recipients.
          */
         async fetchAndUpdateSuggestedRecipients() {
-            if (this.isTemporary) {
+            if (this.__mfield_isTemporary(this)) {
                 return;
             }
             return this.env.models['mail.thread'].performRpcMailGetSuggestedRecipients({
-                model: this.model,
-                res_ids: [this.id],
+                model: this.__mfield_model(this),
+                res_ids: [this.__mfield_id(this)],
             });
         }
 
@@ -544,11 +572,11 @@ function factory(dependencies) {
          */
         async follow() {
             await this.async(() => this.env.services.rpc({
-                model: this.model,
+                model: this.__mfield_model(this),
                 method: 'message_subscribe',
-                args: [[this.id]],
+                args: [[this.__mfield_id(this)]],
                 kwargs: {
-                    partner_ids: [this.env.messaging.currentPartner.id],
+                    partner_ids: [this.env.messaging.__mfield_currentPartner(this).__mfield_id(this)],
                     context: {}, // FIXME empty context to be overridden in session.js with 'allowed_company_ids' task-2243187
                 },
             }));
@@ -560,7 +588,7 @@ function factory(dependencies) {
          * Load new messages on the main cache of this thread.
          */
         loadNewMessages() {
-            this.mainCache.loadNewMessages();
+            this.__mfield_mainCache(this).loadNewMessages();
         }
 
         /**
@@ -570,7 +598,7 @@ function factory(dependencies) {
             await this.async(() => this.env.services.rpc({
                 model: 'mail.channel',
                 method: 'channel_fetched',
-                args: [[this.id]],
+                args: [[this.__mfield_id(this)]],
             }, { shadow: true }));
         }
 
@@ -580,21 +608,21 @@ function factory(dependencies) {
          * @param {integer} messageId the message to be considered as last seen
          */
         async markAsSeen(messageId) {
-            if (this.model !== 'mail.channel') {
+            if (this.__mfield_model(this) !== 'mail.channel') {
                 return;
             }
-            if (this.pendingSeenMessageId && messageId <= this.pendingSeenMessageId) {
+            if (this.__mfield_pendingSeenMessageId(this) && messageId <= this.__mfield_pendingSeenMessageId(this)) {
                 return;
             }
             if (
-                this.lastSeenByCurrentPartnerMessageId &&
-                messageId <= this.lastSeenByCurrentPartnerMessageId
+                this.__mfield_lastSeenByCurrentPartnerMessageId(this) &&
+                messageId <= this.__mfield_lastSeenByCurrentPartnerMessageId(this)
             ) {
                 return;
             }
-            this.update({ pendingSeenMessageId: messageId });
+            this.update({ __mfield_pendingSeenMessageId: messageId });
             return this.env.models['mail.thread'].performRpcChannelSeen({
-                ids: [this.id],
+                ids: [this.__mfield_id(this)],
                 // commands have fake message id that is not integer
                 lastMessageId: Math.floor(messageId),
             });
@@ -605,7 +633,7 @@ function factory(dependencies) {
          */
         async markNeedactionMessagesAsRead() {
             await this.async(() =>
-                this.env.models['mail.message'].markAsRead(this.needactionMessages)
+                this.env.models['mail.message'].markAsRead(this.__mfield_needactionMessages(this))
             );
         }
 
@@ -616,14 +644,14 @@ function factory(dependencies) {
          * @param {string} state
          */
         async notifyFoldStateToServer(state) {
-            if (this.model !== 'mail.channel') {
+            if (this.__mfield_model(this) !== 'mail.channel') {
                 // Server sync of fold state is only supported for channels.
                 return;
             }
-            if (!this.uuid) {
+            if (!this.__mfield_uuid(this)) {
                 return;
             }
-            return this.env.models['mail.thread'].performRpcChannelFold(this.uuid, state);
+            return this.env.models['mail.thread'].performRpcChannelFold(this.__mfield_uuid(this), state);
         }
 
         /**
@@ -634,12 +662,12 @@ function factory(dependencies) {
          */
         notifyPinStateToServer() {
             // method is called from _updateAfter so it cannot be async
-            if (this.isPendingPinned) {
+            if (this.__mfield_isPendingPinned(this)) {
                 this.env.services.rpc({
                     model: 'mail.channel',
                     method: 'channel_pin',
                     kwargs: {
-                        uuid: this.uuid,
+                        uuid: this.__mfield_uuid(this),
                         pinned: true,
                     },
                 }, { shadow: true });
@@ -647,7 +675,7 @@ function factory(dependencies) {
                 this.env.services.rpc({
                     model: 'mail.channel',
                     method: 'execute_command',
-                    args: [[this.id], 'leave']
+                    args: [[this.__mfield_id(this)], 'leave']
                 }, { shadow: true });
             }
         }
@@ -661,30 +689,30 @@ function factory(dependencies) {
          * @param {boolean} [param0.expanded=false]
          */
         async open({ expanded = false } = {}) {
-            const discuss = this.env.messaging.discuss;
+            const discuss = this.env.messaging.__mfield_discuss(this);
             // check if thread must be opened in form view
-            if (!['mail.box', 'mail.channel'].includes(this.model)) {
-                if (expanded || discuss.isOpen) {
+            if (!['mail.box', 'mail.channel'].includes(this.__mfield_model(this))) {
+                if (expanded || discuss.__mfield_isOpen(this)) {
                     // Close chat window because having the same thread opened
                     // both in chat window and as main document does not look
                     // good.
-                    this.env.messaging.chatWindowManager.closeThread(this);
+                    this.env.messaging.__mfield_chatWindowManager(this).closeThread(this);
                     return this.env.messaging.openDocument({
-                        id: this.id,
-                        model: this.model,
+                        id: this.__mfield_id(this),
+                        model: this.__mfield_model(this),
                     });
                 }
             }
             // check if thread must be opened in discuss
-            const device = this.env.messaging.device;
+            const device = this.env.messaging.__mfield_device(this);
             if (
-                (!device.isMobile && (discuss.isOpen || expanded)) ||
-                this.model === 'mail.box'
+                (!device.__mfield_isMobile(this) && (discuss.__mfield_isOpen(this) || expanded)) ||
+                this.__mfield_model(this) === 'mail.box'
             ) {
                 return discuss.openThread(this);
             }
             // thread must be opened in chat window
-            return this.env.messaging.chatWindowManager.openThread(this, {
+            return this.env.messaging.__mfield_chatWindowManager(this).openThread(this, {
                 makeActive: true,
             });
         }
@@ -694,8 +722,8 @@ function factory(dependencies) {
          */
         async openProfile() {
             return this.env.messaging.openDocument({
-                id: this.id,
-                model: this.model,
+                id: this.__mfield_id(this),
+                model: this.__mfield_model(this),
             });
         }
 
@@ -717,26 +745,28 @@ function factory(dependencies) {
          * Refresh followers information from server.
          */
         async refreshFollowers() {
-            if (this.isTemporary) {
-                this.update({ followers: [['unlink-all']] });
+            if (this.__mfield_isTemporary(this)) {
+                this.update({
+                    __mfield_followers: [['unlink-all']],
+                });
                 return;
             }
             const { followers } = await this.async(() => this.env.services.rpc({
                 route: '/mail/read_followers',
                 params: {
-                    res_id: this.id,
-                    res_model: this.model,
+                    res_id: this.__mfield_id(this),
+                    res_model: this.__mfield_model(this),
                 },
             }));
             if (followers.length > 0) {
                 this.update({
-                    followers: [['insert-and-replace', followers.map(data =>
+                    __mfield_followers: [['insert-and-replace', followers.map(data =>
                         this.env.models['mail.follower'].convertData(data))
                     ]],
                 });
             } else {
                 this.update({
-                    followers: [['unlink-all']],
+                    __mfield_followers: [['unlink-all']],
                 });
             }
         }
@@ -768,13 +798,13 @@ function factory(dependencies) {
             this._currentPartnerInactiveTypingTimer.start();
             this._currentPartnerLongTypingTimer.start();
             // Manage typing member relation.
-            const currentPartner = this.env.messaging.currentPartner;
-            const newOrderedTypingMemberLocalIds = this.orderedTypingMemberLocalIds
+            const currentPartner = this.env.messaging.__mfield_currentPartner(this);
+            const newOrderedTypingMemberLocalIds = this.__mfield_orderedTypingMemberLocalIds(this)
                 .filter(localId => localId !== currentPartner.localId);
             newOrderedTypingMemberLocalIds.push(currentPartner.localId);
             this.update({
-                orderedTypingMemberLocalIds: newOrderedTypingMemberLocalIds,
-                typingMembers: [['link', currentPartner]],
+                __mfield_orderedTypingMemberLocalIds: newOrderedTypingMemberLocalIds,
+                __mfield_typingMembers: [['link', currentPartner]],
             });
             // Notify typing status to other members.
             await this._throttleNotifyCurrentPartnerTypingStatus({ isTyping: true });
@@ -794,12 +824,12 @@ function factory(dependencies) {
             );
             this._otherMembersLongTypingTimers.set(partner, timer);
             timer.start();
-            const newOrderedTypingMemberLocalIds = this.orderedTypingMemberLocalIds
+            const newOrderedTypingMemberLocalIds = this.__mfield_orderedTypingMemberLocalIds(this)
                 .filter(localId => localId !== partner.localId);
             newOrderedTypingMemberLocalIds.push(partner.localId);
             this.update({
-                orderedTypingMemberLocalIds: newOrderedTypingMemberLocalIds,
-                typingMembers: [['link', partner]],
+                __mfield_orderedTypingMemberLocalIds: newOrderedTypingMemberLocalIds,
+                __mfield_typingMembers: [['link', partner]],
             });
         }
 
@@ -809,25 +839,27 @@ function factory(dependencies) {
          * @param {string} newName
          */
         async rename(newName) {
-            if (this.channel_type === 'chat') {
+            if (this.__mfield_channel_type(this) === 'chat') {
                 await this.async(() => this.env.services.rpc({
                     model: 'mail.channel',
                     method: 'channel_set_custom_name',
-                    args: [this.id],
+                    args: [this.__mfield_id(this)],
                     kwargs: {
                         name: newName,
                     },
                 }));
             }
-            this.update({ custom_channel_name: newName });
+            this.update({
+                __mfield_custom_channel_name: newName,
+            });
         }
 
         /**
          * Unfollow current partner from this thread.
          */
         async unfollow() {
-            const currentPartnerFollower = this.followers.find(
-                follower => follower.partner === this.env.messaging.currentPartner
+            const currentPartnerFollower = this.__mfield_followers(this).find(
+                follower => follower.__mfield_partner(this) === this.env.messaging.__mfield_currentPartner(this)
             );
             await this.async(() => currentPartnerFollower.remove());
         }
@@ -848,12 +880,12 @@ function factory(dependencies) {
             this._currentPartnerInactiveTypingTimer.clear();
             this._currentPartnerLongTypingTimer.clear();
             // Manage typing member relation.
-            const currentPartner = this.env.messaging.currentPartner;
-            const newOrderedTypingMemberLocalIds = this.orderedTypingMemberLocalIds
+            const currentPartner = this.env.messaging.__mfield_currentPartner(this);
+            const newOrderedTypingMemberLocalIds = this.__mfield_orderedTypingMemberLocalIds(this)
                 .filter(localId => localId !== currentPartner.localId);
             this.update({
-                orderedTypingMemberLocalIds: newOrderedTypingMemberLocalIds,
-                typingMembers: [['unlink', currentPartner]],
+                __mfield_orderedTypingMemberLocalIds: newOrderedTypingMemberLocalIds,
+                __mfield_typingMembers: [['unlink', currentPartner]],
             });
             // Notify typing status to other members.
             if (immediateNotify) {
@@ -873,11 +905,11 @@ function factory(dependencies) {
         unregisterOtherMemberTypingMember(partner) {
             this._otherMembersLongTypingTimers.get(partner).clear();
             this._otherMembersLongTypingTimers.delete(partner);
-            const newOrderedTypingMemberLocalIds = this.orderedTypingMemberLocalIds
+            const newOrderedTypingMemberLocalIds = this.__mfield_orderedTypingMemberLocalIds(this)
                 .filter(localId => localId !== partner.localId);
             this.update({
-                orderedTypingMemberLocalIds: newOrderedTypingMemberLocalIds,
-                typingMembers: [['unlink', partner]],
+                __mfield_orderedTypingMemberLocalIds: newOrderedTypingMemberLocalIds,
+                __mfield_typingMembers: [['unlink', partner]],
             });
         }
 
@@ -885,8 +917,8 @@ function factory(dependencies) {
          * Unsubscribe current user from provided channel.
          */
         unsubscribe() {
-            this.env.messaging.chatWindowManager.closeThread(this);
-            this.update({ isPendingPinned: false });
+            this.env.messaging.__mfield_chatWindowManager(this).closeThread(this);
+            this.update({ __mfield_isPendingPinned: false });
         }
 
         //----------------------------------------------------------------------
@@ -897,12 +929,16 @@ function factory(dependencies) {
          * @override
          */
         static _createRecordLocalId(data) {
-            const { channel_type, id, model } = data;
-            let threadModel = model;
-            if (!threadModel && channel_type) {
+            const {
+                __mfield_channel_type,
+                __mfield_id,
+                __mfield_model,
+            } = data;
+            let threadModel = __mfield_model;
+            if (!threadModel && __mfield_channel_type) {
                 threadModel = 'mail.channel';
             }
-            return `${this.modelName}_${threadModel}_${id}`;
+            return `${this.modelName}_${threadModel}_${__mfield_id}`;
         }
 
         /**
@@ -910,17 +946,17 @@ function factory(dependencies) {
          * @returns {mail.attachment[]}
          */
         _computeAllAttachments() {
-            const allAttachments = [...new Set(this.originThreadAttachments.concat(this.attachments))]
+            const allAttachments = [...new Set(this.__mfield_originThreadAttachments(this).concat(this.__mfield_attachments(this)))]
                 .sort((a1, a2) => {
                     // "uploading" before "uploaded" attachments.
-                    if (!a1.isTemporary && a2.isTemporary) {
+                    if (!a1.__mfield_isTemporary(this) && a2.__mfield_isTemporary(this)) {
                         return 1;
                     }
-                    if (a1.isTemporary && !a2.isTemporary) {
+                    if (a1.__mfield_isTemporary(this) && !a2.__mfield_isTemporary(this)) {
                         return -1;
                     }
                     // "most-recent" before "oldest" attachments.
-                    return Math.abs(a2.id) - Math.abs(a1.id);
+                    return Math.abs(a2.__mfield_id(this)) - Math.abs(a1.__mfield_id(this));
                 });
             return [['replace', allAttachments]];
         }
@@ -930,19 +966,19 @@ function factory(dependencies) {
          * @returns {mail.partner}
          */
         _computeCorrespondent() {
-            if (this.channel_type === 'channel') {
+            if (this.__mfield_channel_type(this) === 'channel') {
                 return [['unlink']];
             }
-            const correspondents = this.members.filter(partner =>
-                partner !== this.env.messaging.currentPartner
+            const correspondents = this.__mfield_members(this).filter(partner =>
+                partner !== this.env.messaging.__mfield_currentPartner(this)
             );
             if (correspondents.length === 1) {
                 // 2 members chat
                 return [['link', correspondents[0]]];
             }
-            if (this.members.length === 1) {
+            if (this.__mfield_members(this).length === 1) {
                 // chat with oneself
-                return [['link', this.members[0]]];
+                return [['link', this.__mfield_members(this)[0]]];
             }
             return [['unlink']];
         }
@@ -952,23 +988,29 @@ function factory(dependencies) {
          * @returns {string}
          */
         _computeDisplayName() {
-            if (this.channel_type === 'chat' && this.correspondent) {
-                return this.custom_channel_name || this.correspondent.nameOrDisplayName;
+            if (
+                this.__mfield_channel_type(this) === 'chat' &&
+                this.__mfield_correspondent(this)
+            ) {
+                return (
+                    this.__mfield_custom_channel_name(this) ||
+                    this.__mfield_correspondent(this).__mfield_nameOrDisplayName(this)
+                );
             }
-            return this.name;
+            return this.__mfield_name(this);
         }
 
         /**
          * @private
          */
         _computeHasSeenIndicators() {
-            if (this.model !== 'mail.channel') {
+            if (this.__mfield_model(this) !== 'mail.channel') {
                 return false;
             }
-            if (this.mass_mailing) {
+            if (this.__mfield_mass_mailing(this)) {
                 return false;
             }
-            return ['chat', 'livechat'].includes(this.channel_type);
+            return ['chat', 'livechat'].includes(this.__mfield_channel_type(this));
         }
 
         /**
@@ -976,7 +1018,7 @@ function factory(dependencies) {
          * @returns {boolean}
          */
         _computeIsChatChannel() {
-            return this.channel_type === 'chat';
+            return this.__mfield_channel_type(this) === 'chat';
         }
 
         /**
@@ -984,8 +1026,9 @@ function factory(dependencies) {
          * @returns {boolean}
          */
         _computeIsCurrentPartnerFollowing() {
-            return this.followers.some(follower =>
-                follower.partner && follower.partner === this.env.messaging.currentPartner
+            return this.__mfield_followers(this).some(follower =>
+                follower.__mfield_partner(this) &&
+                follower.__mfield_partner(this) === this.env.messaging.__mfield_currentPartner(this)
             );
         }
 
@@ -994,13 +1037,13 @@ function factory(dependencies) {
          * @returns {boolean}
          */
         _computeIsModeratedByCurrentPartner() {
-            if (!this.messaging) {
+            if (!this.__mfield_messaging(this)) {
                 return false;
             }
-            if (!this.messaging.currentPartner) {
+            if (!this.__mfield_messaging(this).__mfield_currentPartner(this)) {
                 return false;
             }
-            return this.moderators.includes(this.env.messaging.currentPartner);
+            return this.__mfield_moderators(this).includes(this.env.messaging.__mfield_currentPartner(this));
         }
 
         /**
@@ -1008,7 +1051,11 @@ function factory(dependencies) {
          * @returns {boolean}
          */
         _computeIsPinned() {
-            return this.isPendingPinned !== undefined ? this.isPendingPinned : this.isServerPinned;
+            return (
+                this.__mfield_isPendingPinned(this) !== undefined ?
+                this.__mfield_isPendingPinned(this) :
+                this.__mfield_isServerPinned(this)
+            );
         }
 
         /**
@@ -1016,19 +1063,25 @@ function factory(dependencies) {
          * @returns {mail.message}
          */
         _computeLastCurrentPartnerMessageSeenByEveryone() {
-            if (!this.partnerSeenInfos || !this.orderedMessages) {
+            if (
+                !this.__mfield_partnerSeenInfos(this) ||
+                !this.__mfield_orderedMessages(this)
+            ) {
                 return [['unlink-all']];
             }
             const otherPartnerSeenInfos =
-                this.partnerSeenInfos.filter(partnerSeenInfo =>
-                    partnerSeenInfo.partner !== this.messagingCurrentPartner);
+                this.__mfield_partnerSeenInfos(this).filter(partnerSeenInfo =>
+                    partnerSeenInfo.__mfield_partner(this) !== this.__mfield_messagingCurrentPartner(this)
+                );
             if (otherPartnerSeenInfos.length === 0) {
                 return [['unlink-all']];
             }
 
             const otherPartnersLastSeenMessageIds =
                 otherPartnerSeenInfos.map(partnerSeenInfo =>
-                    partnerSeenInfo.lastSeenMessage ? partnerSeenInfo.lastSeenMessage.id : 0
+                    partnerSeenInfo.__mfield_lastSeenMessage(this) ?
+                    partnerSeenInfo.__mfield_lastSeenMessage(this).__mfield_id(this) :
+                    0
                 );
             if (otherPartnersLastSeenMessageIds.length === 0) {
                 return [['unlink-all']];
@@ -1037,9 +1090,9 @@ function factory(dependencies) {
                 ...otherPartnersLastSeenMessageIds
             );
             const currentPartnerOrderedSeenMessages =
-                this.orderedMessages.filter(message =>
-                    message.author === this.messagingCurrentPartner &&
-                    message.id <= lastMessageSeenByAllId);
+                this.__mfield_orderedMessages(this).filter(message =>
+                    message.__mfield_author(this) === this.__mfield_messagingCurrentPartner(this) &&
+                    message.__mfield_id(this) <= lastMessageSeenByAllId);
 
             if (
                 !currentPartnerOrderedSeenMessages ||
@@ -1058,7 +1111,7 @@ function factory(dependencies) {
             const {
                 length: l,
                 [l - 1]: lastMessage,
-            } = this.orderedMessages;
+            } = this.__mfield_orderedMessages(this);
             if (lastMessage) {
                 return [['link', lastMessage]];
             }
@@ -1070,8 +1123,8 @@ function factory(dependencies) {
          * @returns {mail.message|undefined}
          */
         _computeLastNeedactionMessage() {
-            const orderedNeedactionMessages = this.needactionMessages.sort(
-                (m1, m2) => m1.id < m2.id ? -1 : 1
+            const orderedNeedactionMessages = this.__mfield_needactionMessages(this).sort(
+                (m1, m2) => m1.__mfield_id(this) < m2.__mfield_id(this) ? -1 : 1
             );
             const {
                 length: l,
@@ -1100,30 +1153,33 @@ function factory(dependencies) {
             // trusted are:
             // - we have no last message (and then no messages at all)
             // - the message it used to compute is the last message we know
-            if (this.orderedMessages.length === 0) {
-                return this.serverMessageUnreadCounter;
+            if (this.__mfield_orderedMessages(this).length === 0) {
+                return this.__mfield_serverMessageUnreadCounter(this);
             }
             // from here serverLastMessageId is not undefined because
             // orderedMessages contain at least one message.
-            if (!this.lastSeenByCurrentPartnerMessageId) {
-                return this.serverMessageUnreadCounter;
+            if (!this.__mfield_lastSeenByCurrentPartnerMessageId(this)) {
+                return this.__mfield_serverMessageUnreadCounter(this);
             }
-            const firstMessage = this.orderedMessages[0];
+            const firstMessage = this.__mfield_orderedMessages(this)[0];
             // if the lastSeenByCurrentPartnerMessageId is not known (not fetched), then we
             // need to rely on server value to determine the amount of unread
             // messages until the last message it knew when computing the
             // serverMessageUnreadCounter
-            if (this.lastSeenByCurrentPartnerMessageId < firstMessage.id) {
-                const fetchedNotSeenMessages = this.orderedMessages.filter(message =>
-                    message.id > this.serverLastMessageId
+            if (this.__mfield_lastSeenByCurrentPartnerMessageId(this) < firstMessage.__mfield_id(this)) {
+                const fetchedNotSeenMessages = this.__mfield_orderedMessages(this).filter(message =>
+                    message.__mfield_id(this) > this.__mfield_serverLastMessageId(this)
                 );
-                return this.serverMessageUnreadCounter + fetchedNotSeenMessages.length;
+                return this.__mfield_serverMessageUnreadCounter(this) + fetchedNotSeenMessages.length;
             }
             // lastSeenByCurrentPartnerMessageId is a known message,
             // then we can forget serverMessageUnreadCounter
-            const maxId = Math.max(this.serverLastMessageId, this.lastSeenByCurrentPartnerMessageId);
-            return this.orderedMessages.reduce(
-                (acc, message) => acc + (message.id > maxId ? 1 : 0),
+            const maxId = Math.max(
+                this.__mfield_serverLastMessageId(this),
+                this.__mfield_lastSeenByCurrentPartnerMessageId(this)
+            );
+            return this.__mfield_orderedMessages(this).reduce(
+                (acc, message) => acc + (message.__mfield_id(this) > maxId ? 1 : 0),
                 0
             );
         }
@@ -1141,7 +1197,7 @@ function factory(dependencies) {
          * @returns {mail.message[]}
          */
         _computeNeedactionMessages() {
-            return [['replace', this.messages.filter(message => message.isNeedaction)]];
+            return [['replace', this.__mfield_messages(this).filter(message => message.__mfield_isNeedaction(this))]];
         }
 
         /**
@@ -1149,7 +1205,9 @@ function factory(dependencies) {
          * @returns {mail.message[]}
          */
         _computeOrderedMessages() {
-            return [['replace', this.messages.sort((m1, m2) => m1.id < m2.id ? -1 : 1)]];
+            return [['replace', this.__mfield_messages(this).sort((m1, m2) =>
+                m1.__mfield_id(this) < m2.__mfield_id(this) ? -1 : 1
+            )]];
         }
 
         /**
@@ -1159,8 +1217,8 @@ function factory(dependencies) {
         _computeOrderedOtherTypingMembers() {
             return [[
                 'replace',
-                this.orderedTypingMembers.filter(
-                    member => member !== this.env.messaging.currentPartner
+                this.__mfield_orderedTypingMembers(this).filter(
+                    member => member !== this.env.messaging.__mfield_currentPartner(this)
                 ),
             ]];
         }
@@ -1172,7 +1230,7 @@ function factory(dependencies) {
         _computeOrderedTypingMembers() {
             return [[
                 'replace',
-                this.orderedTypingMemberLocalIds
+                this.__mfield_orderedTypingMemberLocalIds(this)
                     .map(localId => this.env.models['mail.partner'].get(localId))
                     .filter(member => !!member),
             ]];
@@ -1183,26 +1241,26 @@ function factory(dependencies) {
          * @returns {string}
          */
         _computeTypingStatusText() {
-            if (this.orderedOtherTypingMembers.length === 0) {
-                return this.constructor.fields.typingStatusText.default;
+            if (this.__mfield_orderedOtherTypingMembers(this).length === 0) {
+                return this.constructor.fields.__mfield_typingStatusText.default;
             }
-            if (this.orderedOtherTypingMembers.length === 1) {
+            if (this.__mfield_orderedOtherTypingMembers(this).length === 1) {
                 return _.str.sprintf(
                     this.env._t("%s is typing..."),
-                    this.orderedOtherTypingMembers[0].nameOrDisplayName
+                    this.__mfield_orderedOtherTypingMembers(this)[0].__mfield_nameOrDisplayName(this)
                 );
             }
-            if (this.orderedOtherTypingMembers.length === 2) {
+            if (this.__mfield_orderedOtherTypingMembers(this).length === 2) {
                 return _.str.sprintf(
                     this.env._t("%s and %s are typing..."),
-                    this.orderedOtherTypingMembers[0].nameOrDisplayName,
-                    this.orderedOtherTypingMembers[1].nameOrDisplayName
+                    this.__mfield_orderedOtherTypingMembers(this)[0].__mfield_nameOrDisplayName(this),
+                    this.__mfield_orderedOtherTypingMembers(this)[1].__mfield_nameOrDisplayName(this)
                 );
             }
             return _.str.sprintf(
                 this.env._t("%s, %s and more are typing..."),
-                this.orderedOtherTypingMembers[0].nameOrDisplayName,
-                this.orderedOtherTypingMembers[1].nameOrDisplayName
+                this.__mfield_orderedOtherTypingMembers(this)[0].__mfield_nameOrDisplayName(this),
+                this.__mfield_orderedOtherTypingMembers(this)[1].__mfield_nameOrDisplayName(this)
             );
         }
 
@@ -1216,11 +1274,11 @@ function factory(dependencies) {
                 this._forceNotifyNextCurrentPartnerTypingStatus ||
                 isTyping !== this._currentPartnerLastNotifiedIsTyping
             ) {
-                if (this.model === 'mail.channel') {
+                if (this.__mfield_model(this) === 'mail.channel') {
                     await this.async(() => this.env.services.rpc({
                         model: 'mail.channel',
                         method: 'notify_typing',
-                        args: [this.id],
+                        args: [this.__mfield_id(this)],
                         kwargs: { is_typing: isTyping },
                     }, { shadow: true }));
                 }
@@ -1239,17 +1297,17 @@ function factory(dependencies) {
          * @private
          */
         _onServerFoldStateChanged() {
-            if (!this.env.messaging.chatWindowManager) {
+            if (!this.env.messaging.__mfield_chatWindowManager(this)) {
                 // avoid crash during destroy
                 return;
             }
-            if (this.serverFoldState === 'closed') {
-                this.env.messaging.chatWindowManager.closeThread(this, {
+            if (this.__mfield_serverFoldState(this) === 'closed') {
+                this.env.messaging.__mfield_chatWindowManager(this).closeThread(this, {
                     notifyServer: false,
                 });
             } else {
-                this.env.messaging.chatWindowManager.openThread(this, {
-                    isFolded: this.serverFoldState === 'folded',
+                this.env.messaging.__mfield_chatWindowManager(this).openThread(this, {
+                    isFolded: this.__mfield_serverFoldState(this) === 'folded',
                     notifyServer: false,
                 });
             }
@@ -1269,8 +1327,8 @@ function factory(dependencies) {
                 name: this.env._t("Invite Follower"),
                 target: 'new',
                 context: {
-                    default_res_model: this.model,
-                    default_res_id: this.id,
+                    default_res_model: this.__mfield_model(this),
+                    default_res_id: this.__mfield_id(this),
                     mail_invite_follower_channel_only,
                 },
             };
@@ -1286,18 +1344,18 @@ function factory(dependencies) {
          * @override
          */
         _updateAfter(previous) {
-            if (this.model !== 'mail.channel') {
+            if (this.__mfield_model(this) !== 'mail.channel') {
                 // pin state only makes sense on channels
                 return;
             }
             if (
-                this.isPendingPinned !== undefined &&
-                previous.isPendingPinned !== this.isPendingPinned
+                this.__mfield_isPendingPinned(this) !== undefined &&
+                previous.isPendingPinned !== this.__mfield_isPendingPinned(this)
             ) {
                 this.notifyPinStateToServer();
             }
-            if (this.isServerPinned === this.isPendingPinned) {
-                this.update({ isPendingPinned: clear() });
+            if (this.__mfield_isServerPinned(this) === this.__mfield_isPendingPinned(this)) {
+                this.update({ __mfield_isPendingPinned: clear() });
             }
         }
 
@@ -1306,7 +1364,7 @@ function factory(dependencies) {
          */
         _updateBefore() {
             return {
-                isPendingPinned: this.isPendingPinned,
+                isPendingPinned: this.__mfield_isPendingPinned(this),
             };
         }
 
@@ -1340,7 +1398,7 @@ function factory(dependencies) {
          * @param {mail.partner} partner
          */
         async _onOtherMemberLongTypingTimeout(partner) {
-            if (!this.typingMembers.includes(partner)) {
+            if (!this.__mfield_typingMembers(this).includes(partner)) {
                 this._otherMembersLongTypingTimers.delete(partner);
                 return;
             }
@@ -1350,119 +1408,119 @@ function factory(dependencies) {
     }
 
     Thread.fields = {
-        allAttachments: many2many('mail.attachment', {
+        __mfield_allAttachments: many2many('mail.attachment', {
             compute: '_computeAllAttachments',
             dependencies: [
-                'attachments',
-                'originThreadAttachments',
+                '__mfield_attachments',
+                '__mfield_originThreadAttachments',
             ],
         }),
-        areAttachmentsLoaded: attr({
+        __mfield_areAttachmentsLoaded: attr({
             default: false,
         }),
-        attachments: many2many('mail.attachment', {
-            inverse: 'threads',
+        __mfield_attachments: many2many('mail.attachment', {
+            inverse: '__mfield_threads',
         }),
-        caches: one2many('mail.thread_cache', {
-            inverse: 'thread',
+        __mfield_caches: one2many('mail.thread_cache', {
+            inverse: '__mfield_thread',
             isCausal: true,
         }),
-        channel_type: attr(),
+        __mfield_channel_type: attr(),
         /**
          * States the `mail.chat_window` related to `this`. Serves as compute
          * dependency. It is computed from the inverse relation and it should
          * otherwise be considered read-only.
          */
-        chatWindow: one2one('mail.chat_window', {
-            inverse: 'thread',
+        __mfield_chatWindow: one2one('mail.chat_window', {
+            inverse: '__mfield_thread',
         }),
         /**
          * Serves as compute dependency.
          */
-        chatWindowIsFolded: attr({
-            related: 'chatWindow.isFolded',
+        __mfield_chatWindowIsFolded: attr({
+            related: '__mfield_chatWindow.__mfield_isFolded',
         }),
-        composer: one2one('mail.composer', {
+        __mfield_composer: one2one('mail.composer', {
             default: [['create']],
-            inverse: 'thread',
+            inverse: '__mfield_thread',
             isCausal: true,
         }),
-        correspondent: many2one('mail.partner', {
+        __mfield_correspondent: many2one('mail.partner', {
             compute: '_computeCorrespondent',
             dependencies: [
-                'channel_type',
-                'members',
-                'messagingCurrentPartner',
+                '__mfield_channel_type',
+                '__mfield_members',
+                '__mfield_messagingCurrentPartner',
             ],
-            inverse: 'correspondentThreads',
+            inverse: '__mfield_correspondentThreads',
         }),
-        correspondentNameOrDisplayName: attr({
-            related: 'correspondent.nameOrDisplayName',
+        __mfield_correspondentNameOrDisplayName: attr({
+            related: '__mfield_correspondent.__mfield_nameOrDisplayName',
         }),
-        counter: attr({
+        __mfield_counter: attr({
             default: 0,
         }),
-        creator: many2one('mail.user'),
-        custom_channel_name: attr(),
-        displayName: attr({
+        __mfield_creator: many2one('mail.user'),
+        __mfield_custom_channel_name: attr(),
+        __mfield_displayName: attr({
             compute: '_computeDisplayName',
             dependencies: [
-                'channel_type',
-                'correspondent',
-                'correspondentNameOrDisplayName',
-                'custom_channel_name',
-                'name',
+                '__mfield_channel_type',
+                '__mfield_correspondent',
+                '__mfield_correspondentNameOrDisplayName',
+                '__mfield_custom_channel_name',
+                '__mfield_name',
             ],
         }),
-        followersPartner: many2many('mail.partner', {
-            related: 'followers.partner',
+        __mfield_followersPartner: many2many('mail.partner', {
+            related: '__mfield_followers.__mfield_partner',
         }),
-        followers: one2many('mail.follower', {
-            inverse: 'followedThread',
+        __mfield_followers: one2many('mail.follower', {
+            inverse: '__mfield_followedThread',
         }),
-        group_based_subscription: attr({
+        __mfield_group_based_subscription: attr({
             default: false,
         }),
         /**
          * Determine whether this thread has the seen indicators (V and VV)
          * enabled or not.
          */
-        hasSeenIndicators: attr({
+        __mfield_hasSeenIndicators: attr({
             compute: '_computeHasSeenIndicators',
             default: false,
             dependencies: [
-                'channel_type',
-                'mass_mailing',
-                'model',
+                '__mfield_channel_type',
+                '__mfield_mass_mailing',
+                '__mfield_model',
             ],
         }),
-        id: attr(),
+        __mfield_id: attr(),
         /**
          * States whether this thread is a `mail.channel` qualified as chat.
          *
          * Useful to list chat channels, like in messaging menu with the filter
          * 'chat'.
          */
-        isChatChannel: attr({
+        __mfield_isChatChannel: attr({
             compute: '_computeIsChatChannel',
             dependencies: [
-                'channel_type',
+                '__mfield_channel_type',
             ],
             default: false,
         }),
-        isCurrentPartnerFollowing: attr({
+        __mfield_isCurrentPartnerFollowing: attr({
             compute: '_computeIsCurrentPartnerFollowing',
             default: false,
             dependencies: [
-                'followersPartner',
-                'messagingCurrentPartner',
+                '__mfield_followersPartner',
+                '__mfield_messagingCurrentPartner',
             ],
         }),
-        isModeratedByCurrentPartner: attr({
+        __mfield_isModeratedByCurrentPartner: attr({
             compute: '_computeIsModeratedByCurrentPartner',
             dependencies: [
-                'messagingCurrentPartner',
-                'moderators',
+                '__mfield_messagingCurrentPartner',
+                '__mfield_moderators',
             ],
         }),
         /**
@@ -1473,16 +1531,16 @@ function factory(dependencies) {
          * This field can be updated to immediately change the pin state on the
          * interface and to notify the server of the new state.
          */
-        isPendingPinned: attr(),
+        __mfield_isPendingPinned: attr(),
         /**
          * Boolean that determines whether this thread is pinned
          * in discuss and present in the messaging menu.
          */
-        isPinned: attr({
+        __mfield_isPinned: attr({
             compute: '_computeIsPinned',
             dependencies: [
-                'isPendingPinned',
-                'isServerPinned',
+                '__mfield_isPendingPinned',
+                '__mfield_isServerPinned',
             ],
         }),
         /**
@@ -1494,30 +1552,34 @@ function factory(dependencies) {
          * the code handling pin state change from the server should typically
          * update it.
          */
-        isServerPinned: attr({
+        __mfield_isServerPinned: attr({
             default: false,
         }),
-        isTemporary: attr({
+        __mfield_isTemporary: attr({
             default: false,
         }),
-        is_moderator: attr({
+        __mfield_is_moderator: attr({
             default: false,
         }),
-        lastCurrentPartnerMessageSeenByEveryone: many2one('mail.message', {
+        __mfield_lastCurrentPartnerMessageSeenByEveryone: many2one('mail.message', {
             compute: '_computeLastCurrentPartnerMessageSeenByEveryone',
             dependencies: [
-                'partnerSeenInfos',
-                'orderedMessages',
-                'messagingCurrentPartner',
+                '__mfield_partnerSeenInfos',
+                '__mfield_orderedMessages',
+                '__mfield_messagingCurrentPartner',
             ],
         }),
-        lastMessage: many2one('mail.message', {
+        __mfield_lastMessage: many2one('mail.message', {
             compute: '_computeLastMessage',
-            dependencies: ['orderedMessages'],
+            dependencies: [
+                '__mfield_orderedMessages',
+            ],
         }),
-        lastNeedactionMessage: many2one('mail.message', {
+        __mfield_lastNeedactionMessage: many2one('mail.message', {
             compute: '_computeLastNeedactionMessage',
-            dependencies: ['needactionMessages'],
+            dependencies: [
+                '__mfield_needactionMessages',
+            ],
         }),
         /**
          * Last seen message id of the channel by current partner.
@@ -1530,31 +1592,31 @@ function factory(dependencies) {
          * even if corresponding message is deleted. It is basically used to know which
          * messages are before or after it.
          */
-        lastSeenByCurrentPartnerMessageId: attr(),
+        __mfield_lastSeenByCurrentPartnerMessageId: attr(),
         /**
          * Local value of message unread counter, that means it is based on initial server value and
          * updated with interface updates.
          */
-        localMessageUnreadCounter: attr({
+        __mfield_localMessageUnreadCounter: attr({
             compute: '_computeLocalMessageUnreadCounter',
             dependencies: [
-                'lastMessage',
-                'lastSeenByCurrentPartnerMessageId',
-                'orderedMessages',
-                'serverLastMessageId',
-                'serverMessageUnreadCounter',
+                '__mfield_lastMessage',
+                '__mfield_lastSeenByCurrentPartnerMessageId',
+                '__mfield_orderedMessages',
+                '__mfield_serverLastMessageId',
+                '__mfield_serverMessageUnreadCounter',
             ],
         }),
-        mainCache: one2one('mail.thread_cache', {
+        __mfield_mainCache: one2one('mail.thread_cache', {
             compute: '_computeMainCache',
         }),
-        mass_mailing: attr({
+        __mfield_mass_mailing: attr({
             default: false,
         }),
-        members: many2many('mail.partner', {
-            inverse: 'memberThreads',
+        __mfield_members: many2many('mail.partner', {
+            inverse: '__mfield_memberThreads',
         }),
-        message_needaction_counter: attr({
+        __mfield_message_needaction_counter: attr({
             default: 0,
         }),
         /**
@@ -1562,87 +1624,93 @@ function factory(dependencies) {
          * Note that this field is automatically computed by inverse
          * computed field. This field is readonly.
          */
-        messages: many2many('mail.message', {
-            inverse: 'threads',
+        __mfield_messages: many2many('mail.message', {
+            inverse: '__mfield_threads',
         }),
         /**
          * All messages that are contained on this channel on the server.
          * Equivalent to the inverse of python field `channel_ids`.
          */
-        messagesAsServerChannel: many2many('mail.message', {
-            inverse: 'serverChannels',
+        __mfield_messagesAsServerChannel: many2many('mail.message', {
+            inverse: '__mfield_serverChannels',
         }),
-        messageSeenIndicators: one2many('mail.message_seen_indicator', {
-            inverse: 'thread',
+        __mfield_messageSeenIndicators: one2many('mail.message_seen_indicator', {
+            inverse: '__mfield_thread',
             isCausal: true,
         }),
-        messaging: many2one('mail.messaging', {
+        __mfield_messaging: many2one('mail.messaging', {
             compute: '_computeMessaging',
         }),
-        messagingCurrentPartner: many2one('mail.partner', {
-            related: 'messaging.currentPartner',
+        __mfield_messagingCurrentPartner: many2one('mail.partner', {
+            related: '__mfield_messaging.__mfield_currentPartner',
         }),
-        model: attr(),
-        model_name: attr(),
-        moderation: attr({
+        __mfield_model: attr(),
+        __mfield_model_name: attr(),
+        __mfield_moderation: attr({
             default: false,
         }),
         /**
          * Partners that are moderating this thread (only applies to channels).
          */
-        moderators: many2many('mail.partner', {
-            inverse: 'moderatedChannels',
+        __mfield_moderators: many2many('mail.partner', {
+            inverse: '__mfield_moderatedChannels',
         }),
-        moduleIcon: attr(),
-        name: attr(),
-        needactionMessages: many2many('mail.message', {
+        __mfield_moduleIcon: attr(),
+        __mfield_name: attr(),
+        __mfield_needactionMessages: many2many('mail.message', {
             compute: '_computeNeedactionMessages',
-            dependencies: ['messages'],
+            dependencies: [
+                '__mfield_messages',
+            ],
         }),
         /**
          * Not a real field, used to trigger `_onServerFoldStateChanged` when one of
          * the dependencies changes.
          */
-        onServerFoldStateChanged: attr({
+        __mfield_onServerFoldStateChanged: attr({
             compute: '_onServerFoldStateChanged',
             dependencies: [
-                'serverFoldState',
+                '__mfield_serverFoldState',
             ],
         }),
-        orderedMessages: many2many('mail.message', {
+        __mfield_orderedMessages: many2many('mail.message', {
             compute: '_computeOrderedMessages',
-            dependencies: ['messages'],
+            dependencies: [
+                '__mfield_messages',
+            ],
         }),
         /**
          * Ordered typing members on this thread, excluding the current partner.
          */
-        orderedOtherTypingMembers: many2many('mail.partner', {
+        __mfield_orderedOtherTypingMembers: many2many('mail.partner', {
             compute: '_computeOrderedOtherTypingMembers',
-            dependencies: ['orderedTypingMembers'],
+            dependencies: [
+                '__mfield_orderedTypingMembers',
+            ],
         }),
         /**
          * Ordered typing members on this thread. Lower index means this member
          * is currently typing for the longest time. This list includes current
          * partner as typer.
          */
-        orderedTypingMembers: many2many('mail.partner', {
+        __mfield_orderedTypingMembers: many2many('mail.partner', {
             compute: '_computeOrderedTypingMembers',
             dependencies: [
-                'orderedTypingMemberLocalIds',
-                'typingMembers',
+                '__mfield_orderedTypingMemberLocalIds',
+                '__mfield_typingMembers',
             ],
         }),
         /**
          * Technical attribute to manage ordered list of typing members.
          */
-        orderedTypingMemberLocalIds: attr({
+        __mfield_orderedTypingMemberLocalIds: attr({
             default: [],
         }),
-        originThreadAttachments: one2many('mail.attachment', {
-            inverse: 'originThread',
+        __mfield_originThreadAttachments: one2many('mail.attachment', {
+            inverse: '__mfield_originThread',
         }),
-        partnerSeenInfos: one2many('mail.thread_partner_seen_info', {
-            inverse: 'thread',
+        __mfield_partnerSeenInfos: one2many('mail.thread_partner_seen_info', {
+            inverse: '__mfield_thread',
             isCausal: true,
         }),
         /**
@@ -1650,8 +1718,8 @@ function factory(dependencies) {
          * of seen message requested by the client but not yet confirmed by the
          * server.
          */
-        pendingSeenMessageId: attr(),
-        public: attr(),
+        __mfield_pendingSeenMessageId: attr(),
+        __mfield_public: attr(),
         /**
          * Determine the last fold state known by the server, which is the fold
          * state displayed after initialization or when the last pending
@@ -1661,7 +1729,7 @@ function factory(dependencies) {
          * the code handling fold state change from the server should typically
          * update it.
          */
-        serverFoldState: attr({
+        __mfield_serverFoldState: attr({
             default: 'closed',
         }),
         /**
@@ -1669,9 +1737,9 @@ function factory(dependencies) {
          *
          * Useful to compute localMessageUnreadCounter field.
          *
-         * @see localMessageUnreadCounter
+         * @see __mfield_localMessageUnreadCounter
          */
-        serverLastMessageId: attr({
+        __mfield_serverLastMessageId: attr({
             default: 0,
         }),
         /**
@@ -1682,33 +1750,35 @@ function factory(dependencies) {
          * localMessageUnreadCounter instead, which smartly guess the actual
          * message unread counter at all time.
          *
-         * @see localMessageUnreadCounter
+         * @see __mfield_localMessageUnreadCounter
          */
-        serverMessageUnreadCounter: attr({
+        __mfield_serverMessageUnreadCounter: attr({
             default: 0,
         }),
         /**
          * Determines the `mail.suggested_recipient_info` concerning `this`.
          */
-        suggestedRecipientInfoList: one2many('mail.suggested_recipient_info', {
-            inverse: 'thread',
+        __mfield_suggestedRecipientInfoList: one2many('mail.suggested_recipient_info', {
+            inverse: '__mfield_thread',
         }),
         /**
          * Members that are currently typing something in the composer of this
          * thread, including current partner.
          */
-        typingMembers: many2many('mail.partner'),
+        __mfield_typingMembers: many2many('mail.partner'),
         /**
          * Text that represents the status on this thread about typing members.
          */
-        typingStatusText: attr({
+        __mfield_typingStatusText: attr({
             compute: '_computeTypingStatusText',
             default: '',
-            dependencies: ['orderedOtherTypingMembers'],
+            dependencies: [
+                '__mfield_orderedOtherTypingMembers',
+            ],
         }),
-        uuid: attr(),
-        threadViews: one2many('mail.thread_view', {
-            inverse: 'thread',
+        __mfield_uuid: attr(),
+        __mfield_threadViews: one2many('mail.thread_view', {
+            inverse: '__mfield_thread',
         }),
     };
 

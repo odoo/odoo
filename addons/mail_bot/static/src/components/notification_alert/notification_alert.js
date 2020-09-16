@@ -1,7 +1,7 @@
 odoo.define('mail_bot/static/src/components/notification_alert/notification_alert.js', function (require) {
 'use strict';
 
-const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
+const useModels = require('mail/static/src/component_hooks/use_models/use_models.js');
 
 const { Component } = owl;
 
@@ -12,13 +12,7 @@ class NotificationAlert extends Component {
      */
     constructor(...args) {
         super(...args);
-        useStore(props => {
-            const isMessagingInitialized = this.env.isMessagingInitialized();
-            return {
-                isMessagingInitialized,
-                isNotificationBlocked: this.isNotificationBlocked,
-            };
-        });
+        useModels();
     }
 
     //--------------------------------------------------------------------------

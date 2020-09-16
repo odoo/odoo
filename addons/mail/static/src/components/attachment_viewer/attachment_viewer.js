@@ -1,7 +1,7 @@
 odoo.define('mail/static/src/components/attachment_viewer/attachment_viewer.js', function (require) {
 'use strict';
 
-const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
+const useModels = require('mail/static/src/component_hooks/use_models/use_models.js');
 
 const { Component, QWeb } = owl;
 const { useRef } = owl.hooks;
@@ -18,18 +18,7 @@ class AttachmentViewer extends Component {
     constructor(...args) {
         super(...args);
         this.MIN_SCALE = MIN_SCALE;
-        useStore(props => {
-            const attachmentViewer = this.env.models['mail.attachment_viewer'].get(props.localId);
-            return {
-                attachment: attachmentViewer && attachmentViewer.attachment
-                    ? attachmentViewer.attachment.__state
-                    : undefined,
-                attachments: attachmentViewer
-                    ? attachmentViewer.attachments.map(attachment => attachment.__state)
-                    : [],
-                attachmentViewer: attachmentViewer ? attachmentViewer.__state : undefined,
-            };
-        });
+        useModels();
         /**
          * Determine whether the user is currently dragging the image.
          * This is useful to determine whether a click outside of the image
@@ -65,7 +54,7 @@ class AttachmentViewer extends Component {
     mounted() {
         this.el.focus();
         this._handleImageLoad();
-        this._renderedAttachment = this.attachmentViewer.attachment;
+        this._renderedAttachment = this.attachmentViewer.__mfield_attachment(this);
         document.addEventListener('click', this._onClickGlobal);
     }
 
@@ -74,7 +63,7 @@ class AttachmentViewer extends Component {
      */
     patched() {
         this._handleImageLoad();
-        this._renderedAttachment = this.attachmentViewer.attachment;
+        this._renderedAttachment = this.attachmentViewer.__mfield_attachment(this);
     }
 
     willUnmount() {
@@ -100,10 +89,10 @@ class AttachmentViewer extends Component {
     get imageStyle() {
         const attachmentViewer = this.attachmentViewer;
         let style = `transform: ` +
-            `scale3d(${attachmentViewer.scale}, ${attachmentViewer.scale}, 1) ` +
-            `rotate(${attachmentViewer.angle}deg);`;
+            `scale3d(${attachmentViewer.__mfield_scale(this)}, ${attachmentViewer.__mfield_scale(this)}, 1) ` +
+            `rotate(${attachmentViewer.__mfield_angle(this)}deg);`;
 
-        if (attachmentViewer.angle % 180 !== 0) {
+        if (attachmentViewer.__mfield_angle(this) % 180 !== 0) {
             style += `` +
                 `max-height: ${window.innerWidth}px; ` +
                 `max-width: ${window.innerHeight}px;`;
@@ -145,7 +134,7 @@ class AttachmentViewer extends Component {
      * @private
      */
     _download() {
-        const id = this.attachmentViewer.attachment.id;
+        const id = this.attachmentViewer.__mfield_attachment(this).__mfield_id(this);
         this.env.services.navigate(`/web/content/ir.attachment/${id}/datas?download=true`);
     }
 
@@ -157,10 +146,10 @@ class AttachmentViewer extends Component {
      */
     _handleImageLoad() {
         if (
-            this.attachmentViewer.attachment.fileType === 'image' &&
-            this._renderedAttachment !== this.attachmentViewer.attachment
+            this.attachmentViewer.__mfield_attachment(this).__mfield_fileType(this) === 'image' &&
+            this._renderedAttachment !== this.attachmentViewer.__mfield_attachment(this)
         ) {
-            this.attachmentViewer.update({ isImageLoading: true });
+            this.attachmentViewer.update({ __mfield_isImageLoading: true });
             this._imageRef.el.addEventListener('load', ev => this._onLoadImage(ev));
         }
     }
@@ -172,12 +161,12 @@ class AttachmentViewer extends Component {
      */
     _next() {
         const attachmentViewer = this.attachmentViewer;
-        const index = attachmentViewer.attachments.findIndex(attachment =>
-            attachment === attachmentViewer.attachment
+        const index = attachmentViewer.__mfield_attachments(this).findIndex(attachment =>
+            attachment === attachmentViewer.__mfield_attachment(this)
         );
-        const nextIndex = (index + 1) % attachmentViewer.attachments.length;
+        const nextIndex = (index + 1) % attachmentViewer.__mfield_attachments(this).length;
         attachmentViewer.update({
-            attachment: [['link', attachmentViewer.attachments[nextIndex]]],
+            __mfield_attachment: [['link', attachmentViewer.__mfield_attachments(this)[nextIndex]]],
         });
     }
 
@@ -188,14 +177,14 @@ class AttachmentViewer extends Component {
      */
     _previous() {
         const attachmentViewer = this.attachmentViewer;
-        const index = attachmentViewer.attachments.findIndex(attachment =>
-            attachment === attachmentViewer.attachment
+        const index = attachmentViewer.__mfield_attachments(this).findIndex(attachment =>
+            attachment === attachmentViewer.__mfield_attachment(this)
         );
         const nextIndex = index === 0
-            ? attachmentViewer.attachments.length - 1
+            ? attachmentViewer.__mfield_attachments(this).length - 1
             : index - 1;
         attachmentViewer.update({
-            attachment: [['link', attachmentViewer.attachments[nextIndex]]],
+            __mfield_attachment: [['link', attachmentViewer.__mfield_attachments(this)[nextIndex]]],
         });
     }
 
@@ -221,7 +210,7 @@ class AttachmentViewer extends Component {
                     </script>
                 </head>
                 <body onload='onloadImage()'>
-                    <img src="${this.attachmentViewer.attachment.defaultSource}" alt=""/>
+                    <img src="${this.attachmentViewer.__mfield_attachment(this).__mfield_defaultSource(this)}" alt=""/>
                 </body>
             </html>`);
         printWindow.document.close();
@@ -233,7 +222,9 @@ class AttachmentViewer extends Component {
      * @private
      */
     _rotate() {
-        this.attachmentViewer.update({ angle: this.attachmentViewer.angle + 90 });
+        this.attachmentViewer.update({
+            __mfield_angle: this.attachmentViewer.__mfield_angle(this) + 90,
+        });
     }
 
     /**
@@ -260,10 +251,10 @@ class AttachmentViewer extends Component {
      */
     _updateZoomerStyle() {
         const attachmentViewer = this.attachmentViewer;
-        const tx = this._imageRef.el.offsetWidth * attachmentViewer.scale > this._zoomerRef.el.offsetWidth
+        const tx = this._imageRef.el.offsetWidth * attachmentViewer.__mfield_scale(this) > this._zoomerRef.el.offsetWidth
             ? this._translate.x + this._translate.dx
             : 0;
-        const ty = this._imageRef.el.offsetHeight * attachmentViewer.scale > this._zoomerRef.el.offsetHeight
+        const ty = this._imageRef.el.offsetHeight * attachmentViewer.__mfield_scale(this) > this._zoomerRef.el.offsetHeight
             ? this._translate.y + this._translate.dy
             : 0;
         if (tx === 0) {
@@ -285,7 +276,7 @@ class AttachmentViewer extends Component {
      */
     _zoomIn({ scroll = false } = {}) {
         this.attachmentViewer.update({
-            scale: this.attachmentViewer.scale + (scroll ? SCROLL_ZOOM_STEP : ZOOM_STEP),
+            __mfield_scale: this.attachmentViewer.__mfield_scale(this) + (scroll ? SCROLL_ZOOM_STEP : ZOOM_STEP),
         });
         this._updateZoomerStyle();
     }
@@ -298,15 +289,15 @@ class AttachmentViewer extends Component {
      * @param {boolean} [param0.scroll=false]
      */
     _zoomOut({ scroll = false } = {}) {
-        if (this.attachmentViewer.scale === MIN_SCALE) {
+        if (this.attachmentViewer.__mfield_scale(this) === MIN_SCALE) {
             return;
         }
         const unflooredAdaptedScale = (
-            this.attachmentViewer.scale -
+            this.attachmentViewer.__mfield_scale(this) -
             (scroll ? SCROLL_ZOOM_STEP : ZOOM_STEP)
         );
         this.attachmentViewer.update({
-            scale: Math.max(MIN_SCALE, unflooredAdaptedScale),
+            __mfield_scale: Math.max(MIN_SCALE, unflooredAdaptedScale),
         });
         this._updateZoomerStyle();
     }
@@ -317,7 +308,7 @@ class AttachmentViewer extends Component {
      * @private
      */
     _zoomReset() {
-        this.attachmentViewer.update({ scale: 1 });
+        this.attachmentViewer.update({ __mfield_scale: 1 });
         this._updateZoomerStyle();
     }
 
@@ -530,7 +521,7 @@ class AttachmentViewer extends Component {
      */
     _onLoadImage(ev) {
         ev.stopPropagation();
-        this.attachmentViewer.update({ isImageLoading: false });
+        this.attachmentViewer.update({ __mfield_isImageLoading: false });
     }
 
     /**

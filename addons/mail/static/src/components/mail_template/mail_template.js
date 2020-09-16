@@ -1,7 +1,7 @@
 odoo.define('mail/static/src/components/mail_template/mail_template.js', function (require) {
 'use strict';
 
-const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
+const useModels = require('mail/static/src/component_hooks/use_models/use_models.js');
 
 const { Component } = owl;
 
@@ -12,14 +12,7 @@ class MailTemplate extends Component {
      */
     constructor(...args) {
         super(...args);
-        useStore(props => {
-            const activity = this.env.models['mail.activity'].get(props.activityLocalId);
-            const mailTemplate = this.env.models['mail.mail_template'].get(props.mailTemplateLocalId);
-            return {
-                activity: activity ? activity.__state : undefined,
-                mailTemplate: mailTemplate ? mailTemplate.__state : undefined,
-            };
-        });
+        useModels();
     }
 
     //--------------------------------------------------------------------------

@@ -6,6 +6,7 @@ const components = {
     ThreadNeedactionPreview: require('mail/static/src/components/thread_needaction_preview/thread_needaction_preview.js'),
     ThreadPreview: require('mail/static/src/components/thread_preview/thread_preview.js'),
 };
+const useModels = require('mail/static/src/component_hooks/use_models/use_models.js');
 const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
 
 const { Component } = owl;
@@ -17,6 +18,7 @@ class NotificationList extends Component {
      */
     constructor(...args) {
         super(...args);
+        useModels();
         this.storeProps = useStore((...args) => this._useStoreSelector(...args), {
             compareDepth: {
                 // list + notification object created in useStore
@@ -68,24 +70,36 @@ class NotificationList extends Component {
         if (props.filter === 'all') {
             // threads with needactions
             threadNeedactionNotifications = this.env.models['mail.thread']
-                .all(t => t.model !== 'mail.box' && t.needactionMessages.length > 0)
+                .all(t =>
+                    t.__mfield_model(this) !== 'mail.box' &&
+                    t.__mfield_needactionMessages(this).length > 0
+                )
                 .sort((t1, t2) => {
-                    if (t1.needactionMessages.length > 0 && t2.needactionMessages.length === 0) {
+                    if (
+                        t1.__mfield_needactionMessages(this).length > 0 &&
+                        t2.__mfield_needactionMessages(this).length === 0
+                    ) {
                         return -1;
                     }
-                    if (t1.needactionMessages.length === 0 && t2.needactionMessages.length > 0) {
+                    if (
+                        t1.__mfield_needactionMessages(this).length === 0 &&
+                        t2.__mfield_needactionMessages(this).length > 0
+                    ) {
                         return 1;
                     }
-                    if (t1.lastNeedactionMessage && t2.lastNeedactionMessage) {
-                        return t1.lastNeedactionMessage.date.isBefore(t2.lastNeedactionMessage.date) ? 1 : -1;
+                    if (
+                        t1.__mfield_lastNeedactionMessage(this) &&
+                        t2.__mfield_lastNeedactionMessage(this)
+                    ) {
+                        return t1.__mfield_lastNeedactionMessage(this).__mfield_date(this).isBefore(t2.__mfield_lastNeedactionMessage(this).__mfield_date(this)) ? 1 : -1;
                     }
-                    if (t1.lastNeedactionMessage) {
+                    if (t1.__mfield_lastNeedactionMessage(this)) {
                         return -1;
                     }
-                    if (t2.lastNeedactionMessage) {
+                    if (t2.__mfield_lastNeedactionMessage(this)) {
                         return 1;
                     }
-                    return t1.id < t2.id ? -1 : 1;
+                    return t1.__mfield_id(this) < t2.__mfield_id(this) ? -1 : 1;
                 })
                 .map(thread => {
                     return {
@@ -98,22 +112,31 @@ class NotificationList extends Component {
         // thread notifications
         const threadNotifications = threads
             .sort((t1, t2) => {
-                if (t1.localMessageUnreadCounter > 0 && t2.localMessageUnreadCounter === 0) {
+                if (
+                    t1.__mfield_localMessageUnreadCounter(this) > 0 &&
+                    t2.__mfield_localMessageUnreadCounter(this) === 0
+                ) {
                     return -1;
                 }
-                if (t1.localMessageUnreadCounter === 0 && t2.localMessageUnreadCounter > 0) {
+                if (
+                    t1.__mfield_localMessageUnreadCounter(this) === 0 &&
+                    t2.__mfield_localMessageUnreadCounter(this) > 0
+                ) {
                     return 1;
                 }
-                if (t1.lastMessage && t2.lastMessage) {
-                    return t1.lastMessage.date.isBefore(t2.lastMessage.date) ? 1 : -1;
+                if (
+                    t1.__mfield_lastMessage(this) &&
+                    t2.__mfield_lastMessage(this)
+                ) {
+                    return t1.__mfield_lastMessage(this).__mfield_date(this).isBefore(t2.__mfield_lastMessage(this).__mfield_date(this)) ? 1 : -1;
                 }
-                if (t1.lastMessage) {
+                if (t1.__mfield_lastMessage(this)) {
                     return -1;
                 }
-                if (t2.lastMessage) {
+                if (t2.__mfield_lastMessage(this)) {
                     return 1;
                 }
-                return t1.id < t2.id ? -1 : 1;
+                return t1.__mfield_id(this) < t2.__mfield_id(this) ? -1 : 1;
             })
             .map(thread => {
                 return {
@@ -124,10 +147,10 @@ class NotificationList extends Component {
             });
         let notifications = threadNeedactionNotifications.concat(threadNotifications);
         if (props.filter === 'all') {
-            const notificationGroups = this.env.messaging.notificationGroupManager.groups;
+            const notificationGroups = this.env.messaging.__mfield_notificationGroupManager(this).__mfield_groups(this);
             notifications = Object.values(notificationGroups)
                 .sort((group1, group2) =>
-                    group1.date.isAfter(group2.date) ? -1 : 1
+                    group1.__mfield_date(this).isAfter(group2.__mfield_date(this)) ? -1 : 1
                 ).map(notificationGroup => {
                     return {
                         notificationGroup,
@@ -136,7 +159,7 @@ class NotificationList extends Component {
                 }).concat(notifications);
         }
         return {
-            isDeviceMobile: this.env.messaging.device.isMobile,
+            isDeviceMobile: this.env.messaging.__mfield_device(this).__mfield_isMobile(this),
             notifications,
         };
     }
@@ -150,45 +173,57 @@ class NotificationList extends Component {
     _useStoreSelectorThreads(props) {
         if (props.filter === 'mailbox') {
             return this.env.models['mail.thread']
-                .all(thread => thread.isPinned && thread.model === 'mail.box')
+                .all(thread =>
+                    thread.__mfield_isPinned(this) &&
+                    thread.__mfield_model(this) === 'mail.box'
+                )
                 .sort((mailbox1, mailbox2) => {
-                    if (mailbox1 === this.env.messaging.inbox) {
+                    if (mailbox1 === this.env.messaging.__mfield_inbox(this)) {
                         return -1;
                     }
-                    if (mailbox2 === this.env.messaging.inbox) {
+                    if (mailbox2 === this.env.messaging.__mfield_inbox(this)) {
                         return 1;
                     }
-                    if (mailbox1 === this.env.messaging.starred) {
+                    if (mailbox1 === this.env.messaging.__mfield_starred(this)) {
                         return -1;
                     }
-                    if (mailbox2 === this.env.messaging.starred) {
+                    if (mailbox2 === this.env.messaging.__mfield_starred(this)) {
                         return 1;
                     }
-                    const mailbox1Name = mailbox1.displayName;
-                    const mailbox2Name = mailbox2.displayName;
+                    const mailbox1Name = mailbox1.__mfield_displayName(this);
+                    const mailbox2Name = mailbox2.__mfield_displayName(this);
                     mailbox1Name < mailbox2Name ? -1 : 1;
                 });
         } else if (props.filter === 'channel') {
             return this.env.models['mail.thread']
                 .all(thread =>
-                    thread.channel_type === 'channel' &&
-                    thread.isPinned &&
-                    thread.model === 'mail.channel'
+                    thread.__mfield_channel_type(this) === 'channel' &&
+                    thread.__mfield_isPinned(this) &&
+                    thread.__mfield_model(this) === 'mail.channel'
                 )
-                .sort((c1, c2) => c1.displayName < c2.displayName ? -1 : 1);
+                .sort((c1, c2) =>
+                    c1.__mfield_displayName(this) < c2.__mfield_displayName(this) ? -1 : 1
+                );
         } else if (props.filter === 'chat') {
             return this.env.models['mail.thread']
                 .all(thread =>
-                    thread.isChatChannel &&
-                    thread.isPinned &&
-                    thread.model === 'mail.channel'
+                    thread.__mfield_isChatChannel(this) &&
+                    thread.__mfield_isPinned(this) &&
+                    thread.__mfield_model(this) === 'mail.channel'
                 )
-                .sort((c1, c2) => c1.displayName < c2.displayName ? -1 : 1);
+                .sort((c1, c2) =>
+                    c1.__mfield_displayName(this) < c2.__mfield_displayName(this) ? -1 : 1
+                );
         } else if (props.filter === 'all') {
             // "All" filter is for channels and chats
             return this.env.models['mail.thread']
-                .all(thread => thread.isPinned && thread.model === 'mail.channel')
-                .sort((c1, c2) => c1.displayName < c2.displayName ? -1 : 1);
+                .all(thread =>
+                    thread.__mfield_isPinned(this) &&
+                    thread.__mfield_model(this) === 'mail.channel'
+                )
+                .sort((c1, c2) =>
+                    c1.__mfield_displayName(this) < c2.__mfield_displayName(this) ? -1 : 1
+                );
         } else {
             throw new Error(`Unsupported filter ${props.filter}`);
         }

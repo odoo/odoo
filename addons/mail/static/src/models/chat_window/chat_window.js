@@ -2,8 +2,8 @@ odoo.define('mail/static/src/models/chat_window/chat_window.js', function (requi
 'use strict';
 
 const { registerNewModel } = require('mail/static/src/model/model_core.js');
-const { attr, many2one, one2many, one2one } = require('mail/static/src/model/model_field.js');
 const { clear } = require('mail/static/src/model/model_field_command.js');
+const { attr, many2one, one2many, one2one } = require('mail/static/src/model/model_field_utils.js');
 
 function factory(dependencies) {
 
@@ -42,7 +42,7 @@ function factory(dependencies) {
          * @param {boolean} [param0.notifyServer=true]
          */
         close({ notifyServer = true } = {}) {
-            const thread = this.thread;
+            const thread = this.__mfield_thread(this);
             this.delete();
             // Flux specific: 'closed' fold state should only be saved on the
             // server when manually closing the chat window. Delete at destroy
@@ -53,8 +53,8 @@ function factory(dependencies) {
         }
 
         expand() {
-            if (this.thread) {
-                this.thread.open({ expanded: true });
+            if (this.__mfield_thread(this)) {
+                this.__mfield_thread(this).open({ expanded: true });
             }
         }
 
@@ -62,7 +62,9 @@ function factory(dependencies) {
          * Programmatically auto-focus an existing chat window.
          */
         focus() {
-            this.update({ isDoFocus: true });
+            this.update({
+                __mfield_isDoFocus: true,
+            });
         }
 
         focusNextVisibleUnfoldedChatWindow() {
@@ -85,11 +87,11 @@ function factory(dependencies) {
          * @param {boolean} [param0.notifyServer=true]
          */
         fold({ notifyServer = true } = {}) {
-            this.update({ isFolded: true });
+            this.update({ __mfield_isFolded: true });
             // Flux specific: manually folding the chat window should save the
             // new state on the server.
-            if (this.thread && notifyServer) {
-                this.thread.notifyFoldStateToServer('folded');
+            if (this.__mfield_thread(this) && notifyServer) {
+                this.__mfield_thread(this).notifyFoldStateToServer('folded');
             }
         }
 
@@ -110,25 +112,25 @@ function factory(dependencies) {
          * chat window, or do nothing if it is already visible.
          */
         makeVisible() {
-            if (this.isVisible) {
+            if (this.__mfield_isVisible(this)) {
                 return;
             }
-            const lastVisible = this.manager.lastVisible;
-            this.manager.swap(this, lastVisible);
+            const lastVisible = this.__mfield_manager(this).__mfield_lastVisible(this);
+            this.__mfield_manager(this).swap(this, lastVisible);
         }
 
         /**
          * Shift this chat window to the left on screen.
          */
         shiftLeft() {
-            this.manager.shiftLeft(this);
+            this.__mfield_manager(this).shiftLeft(this);
         }
 
         /**
          * Shift this chat window to the right on screen.
          */
         shiftRight() {
-            this.manager.shiftRight(this);
+            this.__mfield_manager(this).shiftRight(this);
         }
 
         /**
@@ -136,11 +138,11 @@ function factory(dependencies) {
          * @param {boolean} [param0.notifyServer=true]
          */
         unfold({ notifyServer = true } = {}) {
-            this.update({ isFolded: false });
+            this.update({ __mfield_isFolded: false });
             // Flux specific: manually opening the chat window should save the
             // new state on the server.
-            if (this.thread && notifyServer) {
-                this.thread.notifyFoldStateToServer('open');
+            if (this.__mfield_thread(this) && notifyServer) {
+                this.__mfield_thread(this).notifyFoldStateToServer('open');
             }
         }
 
@@ -153,7 +155,11 @@ function factory(dependencies) {
          * @returns {boolean}
          */
         _computeHasNewMessageForm() {
-            return this.isVisible && !this.isFolded && !this.thread;
+            return (
+                this.__mfield_isVisible(this) &&
+                !this.__mfield_isFolded(this) &&
+                !this.__mfield_thread(this)
+            );
         }
 
         /**
@@ -161,10 +167,10 @@ function factory(dependencies) {
          * @returns {boolean}
          */
         _computeHasShiftLeft() {
-            if (!this.manager) {
+            if (!this.__mfield_manager(this)) {
                 return false;
             }
-            const allVisible = this.manager.allOrderedVisible;
+            const allVisible = this.__mfield_manager(this).__mfield_allOrderedVisible(this);
             const index = allVisible.findIndex(visible => visible === this);
             if (index === -1) {
                 return false;
@@ -177,10 +183,10 @@ function factory(dependencies) {
          * @returns {boolean}
          */
         _computeHasShiftRight() {
-            if (!this.manager) {
+            if (!this.__mfield_manager(this)) {
                 return false;
             }
-            const index = this.manager.allOrderedVisible.findIndex(visible => visible === this);
+            const index = this.__mfield_manager(this).__mfield_allOrderedVisible(this).findIndex(visible => visible === this);
             if (index === -1) {
                 return false;
             }
@@ -192,7 +198,11 @@ function factory(dependencies) {
          * @returns {boolean}
          */
         _computeHasThreadView() {
-            return this.isVisible && !this.isFolded && this.thread;
+            return (
+                this.__mfield_isVisible(this) &&
+                !this.__mfield_isFolded(this) &&
+                this.__mfield_thread(this)
+            );
         }
 
         /**
@@ -200,11 +210,11 @@ function factory(dependencies) {
          * @returns {boolean}
          */
         _computeIsFolded() {
-            const thread = this.thread;
+            const thread = this.__mfield_thread(this);
             if (thread) {
-                return thread.foldState === 'folded';
+                return thread.__mfield_foldState(this) === 'folded';
             }
-            return this.isFolded;
+            return this.__mfield_isFolded(this);
         }
 
         /**
@@ -212,10 +222,10 @@ function factory(dependencies) {
          * @returns {boolean}
          */
         _computeIsVisible() {
-            if (!this.manager) {
+            if (!this.__mfield_manager(this)) {
                 return false;
             }
-            return this.manager.allOrderedVisible.includes(this);
+            return this.__mfield_manager(this).__mfield_allOrderedVisible(this).includes(this);
         }
 
         /**
@@ -223,8 +233,8 @@ function factory(dependencies) {
          * @returns {string}
          */
         _computeName() {
-            if (this.thread) {
-                return this.thread.displayName;
+            if (this.__mfield_thread(this)) {
+                return this.__mfield_thread(this).__mfield_displayName(this);
             }
             return this.env._t("New message");
         }
@@ -234,10 +244,10 @@ function factory(dependencies) {
          * @returns {integer|undefined}
          */
         _computeVisibleIndex() {
-            if (!this.manager) {
+            if (!this.__mfield_manager(this)) {
                 return clear();
             }
-            const visible = this.manager.visual.visible;
+            const visible = this.__mfield_manager(this).__mfield_visual(this).visible;
             const index = visible.findIndex(visible => visible.chatWindowLocalId === this.localId);
             if (index === -1) {
                 return clear();
@@ -250,10 +260,10 @@ function factory(dependencies) {
          * @returns {integer}
          */
         _computeVisibleOffset() {
-            if (!this.manager) {
+            if (!this.__mfield_manager(this)) {
                 return 0;
             }
-            const visible = this.manager.visual.visible;
+            const visible = this.__mfield_manager(this).__mfield_visual(this).visible;
             const index = visible.findIndex(visible => visible.chatWindowLocalId === this.localId);
             if (index === -1) {
                 return 0;
@@ -273,7 +283,7 @@ function factory(dependencies) {
          * @returns {mail.chat_window|undefined}
          */
         _getNextVisibleUnfoldedChatWindow({ reverse = false } = {}) {
-            const orderedVisible = this.manager.allOrderedVisible;
+            const orderedVisible = this.__mfield_manager(this).__mfield_allOrderedVisible(this);
             /**
              * Return index of next visible chat window of a given visible chat
              * window index. The direction of "next" chat window depends on
@@ -312,20 +322,20 @@ function factory(dependencies) {
          * @private
          */
         async _onHideHomeMenu() {
-            if (!this.threadView) {
+            if (!this.__mfield_threadView(this)) {
                 return;
             }
-            this.threadView.addComponentHint('home-menu-hidden');
+            this.__mfield_threadView(this).addComponentHint('home-menu-hidden');
         }
 
         /**
          * @private
          */
         async _onShowHomeMenu() {
-            if (!this.threadView) {
+            if (!this.__mfield_threadView(this)) {
                 return;
             }
-            this.threadView.addComponentHint('home-menu-shown');
+            this.__mfield_threadView(this).addComponentHint('home-menu-shown');
         }
 
     }
@@ -334,33 +344,37 @@ function factory(dependencies) {
         /**
          * Determines whether "new message form" should be displayed.
          */
-        hasNewMessageForm: attr({
+        __mfield_hasNewMessageForm: attr({
             compute: '_computeHasNewMessageForm',
             dependencies: [
-                'isFolded',
-                'isVisible',
-                'thread',
+                '__mfield_isFolded',
+                '__mfield_isVisible',
+                '__mfield_thread',
             ],
         }),
-        hasShiftLeft: attr({
+        __mfield_hasShiftLeft: attr({
             compute: '_computeHasShiftLeft',
-            dependencies: ['managerAllOrderedVisible'],
+            dependencies: [
+                '__mfield_managerAllOrderedVisible',
+            ],
             default: false,
         }),
-        hasShiftRight: attr({
+        __mfield_hasShiftRight: attr({
             compute: '_computeHasShiftRight',
-            dependencies: ['managerAllOrderedVisible'],
+            dependencies: [
+                '__mfield_managerAllOrderedVisible',
+            ],
             default: false,
         }),
         /**
          * Determines whether `this.thread` should be displayed.
          */
-        hasThreadView: attr({
+        __mfield_hasThreadView: attr({
             compute: '_computeHasThreadView',
             dependencies: [
-                'isFolded',
-                'isVisible',
-                'thread',
+                '__mfield_isFolded',
+                '__mfield_isVisible',
+                '__mfield_thread',
             ],
         }),
         /**
@@ -369,19 +383,19 @@ function factory(dependencies) {
          * are responsible to unmark this record afterwards, otherwise
          * any re-render will programmatically set focus again!
          */
-        isDoFocus: attr({
+        __mfield_isDoFocus: attr({
             default: false,
         }),
         /**
          * States whether `this` is focused. Useful for visual clue.
          */
-        isFocused: attr({
+        __mfield_isFocused: attr({
             default: false,
         }),
         /**
          * Determines whether `this` is folded.
          */
-        isFolded: attr({
+        __mfield_isFolded: attr({
             default: false,
         }),
         /**
@@ -389,50 +403,50 @@ function factory(dependencies) {
          * read-only. Setting this value manually will not make it visible.
          * @see `makeVisible`
          */
-        isVisible: attr({
+        __mfield_isVisible: attr({
             compute: '_computeIsVisible',
             dependencies: [
-                'managerAllOrderedVisible',
+                '__mfield_managerAllOrderedVisible',
             ],
         }),
-        manager: many2one('mail.chat_window_manager', {
-            inverse: 'chatWindows',
+        __mfield_manager: many2one('mail.chat_window_manager', {
+            inverse: '__mfield_chatWindows',
         }),
-        managerAllOrderedVisible: one2many('mail.chat_window', {
-            related: 'manager.allOrderedVisible',
+        __mfield_managerAllOrderedVisible: one2many('mail.chat_window', {
+            related: '__mfield_manager.__mfield_allOrderedVisible',
         }),
-        managerVisual: attr({
-            related: 'manager.visual',
+        __mfield_managerVisual: attr({
+            related: '__mfield_manager.__mfield_visual',
         }),
-        name: attr({
+        __mfield_name: attr({
             compute: '_computeName',
             dependencies: [
-                'thread',
-                'threadDisplayName',
+                '__mfield_thread',
+                '__mfield_threadDisplayName',
             ],
         }),
         /**
          * Determines the `mail.thread` that should be displayed by `this`.
          * If no `mail.thread` is linked, `this` is considered "new message".
          */
-        thread: one2one('mail.thread', {
-            inverse: 'chatWindow',
+        __mfield_thread: one2one('mail.thread', {
+            inverse: '__mfield_chatWindow',
         }),
-        threadDisplayName: attr({
-            related: 'thread.displayName',
+        __mfield_threadDisplayName: attr({
+            related: '__mfield_thread.__mfield_displayName',
         }),
         /**
          * States the `mail.thread_view` displaying `this.thread`.
          */
-        threadView: one2one('mail.thread_view', {
-            related: 'threadViewer.threadView',
+        __mfield_threadView: one2one('mail.thread_view', {
+            related: '__mfield_threadViewer.__mfield_threadView',
         }),
         /**
          * Determines the `mail.thread_viewer` managing the display of `this.thread`.
          */
-        threadViewer: one2one('mail.thread_viewer', {
+        __mfield_threadViewer: one2one('mail.thread_viewer', {
             default: [['create']],
-            inverse: 'chatWindow',
+            inverse: '__mfield_chatWindow',
             isCausal: true,
         }),
         /**
@@ -441,16 +455,18 @@ function factory(dependencies) {
          * Using LTR, the right-most chat window has index 0, and the number is incrementing from right to left.
          * Using RTL, the left-most chat window has index 0, and the number is incrementing from left to right.
          */
-        visibleIndex: attr({
+        __mfield_visibleIndex: attr({
             compute: '_computeVisibleIndex',
             dependencies: [
-                'manager',
-                'managerVisual',
+                '__mfield_manager',
+                '__mfield_managerVisual',
             ],
         }),
-        visibleOffset: attr({
+        __mfield_visibleOffset: attr({
             compute: '_computeVisibleOffset',
-            dependencies: ['managerVisual'],
+            dependencies: [
+                '__mfield_managerVisual',
+            ],
         }),
     };
 

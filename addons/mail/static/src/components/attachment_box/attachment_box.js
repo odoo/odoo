@@ -7,7 +7,7 @@ const components = {
     FileUploader: require('mail/static/src/components/file_uploader/file_uploader.js'),
 };
 const useDragVisibleDropZone = require('mail/static/src/component_hooks/use_drag_visible_dropzone/use_drag_visible_dropzone.js');
-const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
+const useModels = require('mail/static/src/component_hooks/use_models/use_models.js');
 
 const { Component } = owl;
 const { useRef } = owl.hooks;
@@ -20,15 +20,7 @@ class AttachmentBox extends Component {
     constructor(...args) {
         super(...args);
         this.isDropZoneVisible = useDragVisibleDropZone();
-        useStore(props => {
-            const thread = this.env.models['mail.thread'].get(props.threadLocalId);
-            return {
-                attachments: thread
-                    ? thread.allAttachments.map(attachment => attachment.__state)
-                    : [],
-                thread: thread ? thread.__state : undefined,
-            };
-        });
+        useModels();
         /**
          * Reference of the file uploader.
          * Useful to programmatically prompts the browser file uploader.
@@ -48,7 +40,7 @@ class AttachmentBox extends Component {
      */
     get newAttachmentExtraData() {
         return {
-            originThread: [['link', this.thread]],
+            __mfield_originThread: [['link', this.thread]],
         };
     }
 

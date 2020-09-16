@@ -17,7 +17,7 @@ patch(components.NotificationGroup, 'sms/static/src/components/notification_grou
      * @override
      */
     image() {
-        if (this.group.notification_type === 'sms') {
+        if (this.group.__mfield_notification_type(this) === 'sms') {
             return '/sms/static/img/sms_failure.svg';
         }
         return this._super(...arguments);

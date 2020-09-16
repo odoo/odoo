@@ -28,10 +28,10 @@ const PartnerInviteDialog = Dialog.extend({
     init(parent, { activeThreadLocalId, messagingEnv }) {
         const env = messagingEnv;
         const channel = env.models['mail.thread'].get(activeThreadLocalId);
-        this.channelId = channel.id;
+        this.channelId = channel.__mfield_id();
         this.env = env;
         this._super(parent, {
-            title: _.str.sprintf(this.env._t("Invite people to #%s"), channel.displayName),
+            title: _.str.sprintf(this.env._t("Invite people to #%s"), channel.__mfield_displayName()),
             size: 'medium',
             buttons: [{
                 text: this.env._t("Invite"),
@@ -58,9 +58,9 @@ const PartnerInviteDialog = Dialog.extend({
                     status = 'bot';
                 } else {
                     const partner = this.env.models['mail.partner'].find(partner =>
-                        partner.id === item.id
+                        partner.__mfield_id() === item.id
                     );
-                    status = partner.im_status;
+                    status = partner.__mfield_im_status();
                 }
                 const $status = QWeb.render('mail.widgets.UserStatus', { status });
                 return $('<span>').text(item.text).prepend($status);
@@ -70,10 +70,10 @@ const PartnerInviteDialog = Dialog.extend({
                     callback: partners => {
                         let results = partners.map(partner => {
                             return {
-                                id: partner.id,
-                                label: partner.nameOrDisplayName,
-                                text: partner.nameOrDisplayName,
-                                value: partner.nameOrDisplayName,
+                                id: partner.__mfield_id(),
+                                label: partner.__mfield_nameOrDisplayName(),
+                                text: partner.__mfield_nameOrDisplayName(),
+                                value: partner.__mfield_nameOrDisplayName(),
                             };
                         });
                         results = _.sortBy(results, 'label');

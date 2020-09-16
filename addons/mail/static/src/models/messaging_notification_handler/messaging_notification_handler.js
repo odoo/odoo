@@ -2,7 +2,7 @@ odoo.define('mail/static/src/models/messaging_notification_handler/messaging_not
 'use strict';
 
 const { registerNewModel } = require('mail/static/src/model/model_core.js');
-const { one2one } = require('mail/static/src/model/model_field.js');
+const { one2one } = require('mail/static/src/model/model_field_utils.js');
 
 const PREVIEW_MSG_MAX_SIZE = 350; // optimal for native English speakers
 
@@ -80,7 +80,7 @@ function factory(dependencies) {
                     case 'mail.channel':
                         return this._handleNotificationChannel(id, message);
                     case 'res.partner':
-                        if (id !== this.env.messaging.currentPartner.id) {
+                        if (id !== this.env.messaging.__mfield_currentPartner(this).__mfield_id(this)) {
                             // ignore broadcast to other partners
                             return;
                         }
@@ -142,28 +142,30 @@ function factory(dependencies) {
             partner_id,
         }) {
             const channel = this.env.models['mail.thread'].findFromIdentifyingData({
-                id: channelId,
-                model: 'mail.channel',
+                __mfield_id: channelId,
+                __mfield_model: 'mail.channel',
             });
             if (!channel) {
                 // for example seen from another browser, the current one has no
                 // knowledge of the channel
                 return;
             }
-            if (channel.channel_type === 'channel') {
+            if (channel.__mfield_channel_type(this) === 'channel') {
                 // disabled on `channel` channels for performance reasons
                 return;
             }
             this.env.models['mail.thread_partner_seen_info'].insert({
-                channelId: channel.id,
-                lastFetchedMessage: [['insert', { id: last_message_id }]],
-                partnerId: partner_id,
+                __mfield_channelId: channel.__mfield_id(this),
+                __mfield_lastFetchedMessage: [['insert', {
+                    __mfield_id: last_message_id,
+                }]],
+                __mfield_partnerId: partner_id,
             });
             channel.update({
-                messageSeenIndicators: [['insert',
+                __mfield_messageSeenIndicators: [['insert',
                     {
-                        channelId: channel.id,
-                        messageId: last_message_id,
+                        __mfield_channelId: channel.__mfield_id(this),
+                        __mfield_messageId: last_message_id,
                     }
                 ]],
             });
@@ -178,18 +180,18 @@ function factory(dependencies) {
          */
         async _handleNotificationChannelMessage(channelId, messageData) {
             let channel = this.env.models['mail.thread'].findFromIdentifyingData({
-                id: channelId,
-                model: 'mail.channel',
+                __mfield_id: channelId,
+                __mfield_model: 'mail.channel',
             });
             const wasChannelExisting = !!channel;
             const convertedData = this.env.models['mail.message'].convertData(messageData);
             const oldMessage = this.env.models['mail.message'].findFromIdentifyingData(convertedData);
             // locally save old values, as insert would overwrite them
             const oldMessageModerationStatus = (
-                oldMessage && oldMessage.moderation_status
+                oldMessage && oldMessage.__mfield_moderation_status(this)
             );
             const oldMessageWasModeratedByCurrentPartner = (
-                oldMessage && oldMessage.isModeratedByCurrentPartner
+                oldMessage && oldMessage.__mfield_isModeratedByCurrentPartner(this)
             );
 
             // Fetch missing info from channel before going further. Inserting
@@ -202,8 +204,10 @@ function factory(dependencies) {
                     this.env.models['mail.thread'].performRpcChannelInfo({ ids: [channelId] })
                 ))[0];
             }
-            if (!channel.isPinned) {
-                channel.update({ isPendingPinned: true });
+            if (!channel.__mfield_isPinned(this)) {
+                channel.update({
+                    __mfield_isPendingPinned: true,
+                });
             }
 
             const message = this.env.models['mail.message'].insert(convertedData);
@@ -214,17 +218,19 @@ function factory(dependencies) {
             if (oldMessage) {
                 if (
                     oldMessageModerationStatus === 'pending_moderation' &&
-                    message.moderation_status !== 'pending_moderation' &&
+                    message.__mfield_moderation_status(this) !== 'pending_moderation' &&
                     oldMessageWasModeratedByCurrentPartner
                 ) {
-                    const moderation = this.env.messaging.moderation;
-                    moderation.update({ counter: moderation.counter - 1 });
+                    const moderation = this.env.messaging.__mfield_moderation(this);
+                    moderation.update({
+                        __mfield_counter: moderation.__mfield_counter(this) - 1,
+                    });
                 }
                 return;
             }
 
             // If the current partner is author, do nothing else.
-            if (message.author === this.env.messaging.currentPartner) {
+            if (message.__mfield_author(this) === this.env.messaging.__mfield_currentPartner(this)) {
                 return;
             }
 
@@ -234,7 +240,7 @@ function factory(dependencies) {
             // it should not display a notification by incrementing the
             // unread counter.
             if (
-                channel.mass_mailing &&
+                channel.__mfield_mass_mailing(this) &&
                 this.env.session.notification_type === 'email'
             ) {
                 return;
@@ -244,8 +250,8 @@ function factory(dependencies) {
             // Chat from OdooBot is considered disturbing and should only be
             // shown on the menu, but no notification and no thread open.
             const isChatWithOdooBot = (
-                channel.correspondent &&
-                channel.correspondent === this.env.messaging.partnerRoot
+                channel.__mfield_correspondent(this) &&
+                channel.__mfield_correspondent(this) === this.env.messaging.__mfield_partnerRoot(this)
             );
             if (!isChatWithOdooBot) {
                 // Notify if out of focus
@@ -256,14 +262,17 @@ function factory(dependencies) {
                         message,
                     });
                 }
-                if (channel.model === 'mail.channel' && channel.channel_type !== 'channel') {
+                if (
+                    channel.__mfield_model(this) === 'mail.channel' &&
+                    channel.__mfield_channel_type(this) !== 'channel'
+                ) {
                     // disabled on non-channel threads and
                     // on `channel` channels for performance reasons
                     channel.markAsFetched();
                 }
                 // (re)open chat on receiving new message
-                if (channel.channel_type !== 'channel') {
-                    this.env.messaging.chatWindowManager.openThread(channel);
+                if (channel.__mfield_channel_type(this) !== 'channel') {
+                    this.env.messaging.__mfield_chatWindowManager(this).openThread(channel);
                 }
             }
 
@@ -273,7 +282,7 @@ function factory(dependencies) {
                 return;
             }
             // manually force recompute of counter
-            this.messaging.messagingMenu.update();
+            this.__mfield_messaging(this).__mfield_messagingMenu(this).update();
         }
 
         /**
@@ -291,39 +300,41 @@ function factory(dependencies) {
             partner_id,
         }) {
             const channel = this.env.models['mail.thread'].findFromIdentifyingData({
-                id: channelId,
-                model: 'mail.channel',
+                __mfield_id: channelId,
+                __mfield_model: 'mail.channel',
             });
             if (!channel) {
                 // for example seen from another browser, the current one has no
                 // knowledge of the channel
                 return;
             }
-            const lastMessage = this.env.models['mail.message'].insert({id: last_message_id});
+            const lastMessage = this.env.models['mail.message'].insert({
+                __mfield_id: last_message_id,
+            });
             // restrict computation of seen indicator for "non-channel" channels
             // for performance reasons
-            const shouldComputeSeenIndicators = channel.channel_type !== 'channel';
+            const shouldComputeSeenIndicators = channel.__mfield_channel_type(this) !== 'channel';
             const updateData = {};
             if (shouldComputeSeenIndicators) {
                 this.env.models['mail.thread_partner_seen_info'].insert({
-                    channelId: channel.id,
-                    lastSeenMessage: [['link', lastMessage]],
-                    partnerId: partner_id,
+                    __mfield_channelId: channel.__mfield_id(this),
+                    __mfield_lastSeenMessage: [['link', lastMessage]],
+                    __mfield_partnerId: partner_id,
                 });
                 Object.assign(updateData, {
                     // FIXME should no longer use computeId (task-2335647)
-                    messageSeenIndicators: [['insert',
+                    __mfield_messageSeenIndicators: [['insert',
                         {
-                            channelId: channel.id,
-                            messageId: lastMessage.id,
+                            __mfield_channelId: channel.__mfield_id(this),
+                            __mfield_messageId: lastMessage.__mfield_id(this),
                         },
                     ]],
                 });
             }
-            if (this.env.messaging.currentPartner.id === partner_id) {
+            if (this.env.messaging.__mfield_currentPartner(this).__mfield_id(this) === partner_id) {
                 Object.assign(updateData, {
-                    lastSeenByCurrentPartnerMessageId: last_message_id,
-                    pendingSeenMessageId: undefined,
+                    __mfield_lastSeenByCurrentPartnerMessageId: last_message_id,
+                    __mfield_pendingSeenMessageId: undefined,
                 });
             }
             channel.update(updateData);
@@ -334,7 +345,7 @@ function factory(dependencies) {
                 this.env.models['mail.message_seen_indicator'].recomputeSeenValues(channel);
             }
             // manually force recompute of counter
-            this.messaging.messagingMenu.update();
+            this.__mfield_messaging(this).__mfield_messagingMenu(this).update();
         }
 
         /**
@@ -346,25 +357,27 @@ function factory(dependencies) {
          */
         _handleNotificationChannelTypingStatus(channelId, { is_typing, partner_id }) {
             const channel = this.env.models['mail.thread'].findFromIdentifyingData({
-                id: channelId,
-                model: 'mail.channel',
+                __mfield_id: channelId,
+                __mfield_model: 'mail.channel',
             });
             if (!channel) {
                 return;
             }
-            const partner = this.env.models['mail.partner'].insert({ id: partner_id });
-            if (partner === this.env.messaging.currentPartner) {
+            const partner = this.env.models['mail.partner'].insert({
+                __mfield_id: partner_id,
+            });
+            if (partner === this.env.messaging.__mfield_currentPartner(this)) {
                 // Ignore management of current partner is typing notification.
                 return;
             }
             if (is_typing) {
-                if (channel.typingMembers.includes(partner)) {
+                if (channel.__mfield_typingMembers(this).includes(partner)) {
                     channel.refreshOtherMemberTypingMember(partner);
                 } else {
                     channel.registerOtherMemberTypingMember(partner);
                 }
             } else {
-                if (!channel.typingMembers.includes(partner)) {
+                if (!channel.__mfield_typingMembers(this).includes(partner)) {
                     // Ignore no longer typing notifications of members that
                     // are not registered as typing something.
                     return;
@@ -381,18 +394,22 @@ function factory(dependencies) {
             const message = this.env.models['mail.message'].insert(
                 this.env.models['mail.message'].convertData(data)
             );
-            const inboxMailbox = this.env.messaging.inbox;
-            inboxMailbox.update({ counter: inboxMailbox.counter + 1 });
-            for (const thread of message.threads) {
+            const inboxMailbox = this.env.messaging.__mfield_inbox(this);
+            inboxMailbox.update({
+                __mfield_counter: inboxMailbox.__mfield_counter(this) + 1,
+            });
+            for (const thread of message.__mfield_threads(this)) {
                 if (
-                    thread.channel_type === 'channel' &&
-                    message.isNeedaction
+                    thread.__mfield_channel_type(this) === 'channel' &&
+                    message.__mfield_isNeedaction(this)
                 ) {
-                    thread.update({ message_needaction_counter: thread.message_needaction_counter + 1 });
+                    thread.update({
+                        __mfield_message_needaction_counter: thread.__mfield_message_needaction_counter(this) + 1,
+                    });
                 }
             }
             // manually force recompute of counter
-            this.messaging.messagingMenu.update();
+            this.__mfield_messaging(this).__mfield_messagingMenu(this).update();
         }
 
         /**
@@ -413,7 +430,7 @@ function factory(dependencies) {
             } else if (info === 'channel_seen') {
                 return this._handleNotificationChannelSeen(data.channel_id, {
                     last_message_id: data.last_message_id,
-                    partner_id: this.env.messaging.currentPartner.id,
+                    partner_id: this.env.messaging.__mfield_currentPartner(this).__mfield_id(this),
                 });
             } else if (type === 'deletion') {
                 return this._handleNotificationPartnerDeletion(data);
@@ -469,25 +486,27 @@ function factory(dependencies) {
          */
         _handleNotificationPartnerChannel(data) {
             const convertedData = this.env.models['mail.thread'].convertData(
-                Object.assign({ model: 'mail.channel' }, data)
+                Object.assign({
+                    __mfield_model: 'mail.channel',
+                }, data)
             );
 
             let channel = this.env.models['mail.thread'].findFromIdentifyingData(convertedData);
             const wasCurrentPartnerMember = (
                 channel &&
-                channel.members.includes(this.env.messaging.currentPartner)
+                channel.__mfield_members(this).includes(this.env.messaging.__mfield_currentPartner(this))
             );
 
             channel = this.env.models['mail.thread'].insert(convertedData);
             if (
-                channel.channel_type === 'channel' &&
+                channel.__mfield_channel_type(this) === 'channel' &&
                 data.info !== 'creation' &&
                 !wasCurrentPartnerMember
             ) {
                 this.env.services['notification'].notify({
                     message: _.str.sprintf(
                         this.env._t("You have been invited to: %s"),
-                        owl.utils.escape(channel.name)
+                        owl.utils.escape(channel.__mfield_name(this))
                     ),
                     title: this.env._t("Invitation"),
                     type: 'warning',
@@ -495,7 +514,7 @@ function factory(dependencies) {
             }
             // a new thread with unread messages could have been added
             // manually force recompute of counter
-            this.messaging.messagingMenu.update();
+            this.__mfield_messaging(this).__mfield_messagingMenu(this).update();
         }
 
         /**
@@ -504,23 +523,25 @@ function factory(dependencies) {
          * @param {integer[]} param0.messag_ids
          */
         _handleNotificationPartnerDeletion({ message_ids }) {
-            const moderationMailbox = this.env.messaging.moderation;
+            const moderationMailbox = this.env.messaging.__mfield_moderation(this);
             for (const id of message_ids) {
-                const message = this.env.models['mail.message'].find(message => message.id === id);
+                const message = this.env.models['mail.message'].find(message => message.__mfield_id(this) === id);
                 if (message) {
                     if (
-                        message.moderation_status === 'pending_moderation' &&
-                        message.originThread.isModeratedByCurrentPartner
+                        message.__mfield_moderation_status(this) === 'pending_moderation' &&
+                        message.__mfield_originThread(this).__mfield_isModeratedByCurrentPartner(this)
                     ) {
-                        moderationMailbox.update({ counter: moderationMailbox.counter - 1 });
+                        moderationMailbox.update({
+                            __mfield_counter: moderationMailbox.__mfield_counter(this) - 1,
+                        });
                     }
                     message.delete();
                 }
             }
             // deleting message might have deleted notifications, force recompute
-            this.messaging.notificationGroupManager.computeGroups();
+            this.__mfield_messaging(this).__mfield_notificationGroupManager(this).computeGroups();
             // manually force recompute of counter (after computing the groups)
-            this.messaging.messagingMenu.update();
+            this.__mfield_messaging(this).__mfield_messagingMenu(this).update();
         }
 
         /**
@@ -534,13 +555,18 @@ function factory(dependencies) {
                 );
                 // implicit: failures are sent by the server as notification
                 // only if the current partner is author of the message
-                if (!message.author && this.messaging.currentPartner) {
-                    message.update({ author: [['link', this.messaging.currentPartner]] });
+                if (
+                    !message.__mfield_author(this) &&
+                    this.__mfield_messaging(this).__mfield_currentPartner(this)
+                ) {
+                    message.update({
+                        __mfield_author: [['link', this.__mfield_messaging(this).__mfield_currentPartner(this)]],
+                    });
                 }
             }
-            this.messaging.notificationGroupManager.computeGroups();
+            this.__mfield_messaging(this).__mfield_notificationGroupManager(this).computeGroups();
             // manually force recompute of counter (after computing the groups)
-            this.messaging.messagingMenu.update();
+            this.__mfield_messaging(this).__mfield_messagingMenu(this).update();
         }
 
         /**
@@ -550,7 +576,7 @@ function factory(dependencies) {
          * @param {integer[]} [param0.message_ids=[]]
          */
         _handleNotificationPartnerMarkAsRead({ channel_ids, message_ids = [] }) {
-            const inboxMailbox = this.env.messaging.inbox;
+            const inboxMailbox = this.env.messaging.__mfield_inbox(this);
 
             // 1. move messages from inbox to history
             // AKU TODO: flag other caches to invalidate
@@ -561,11 +587,11 @@ function factory(dependencies) {
                 // Furthermore, server should not send back all message_ids marked as read
                 // but something like last read message_id or something like that.
                 // (just imagine you mark 1000 messages as read ... )
-                const message = this.env.models['mail.message'].find(m => m.id === message_id);
+                const message = this.env.models['mail.message'].find(m => m.__mfield_id(this) === message_id);
                 if (message) {
                     message.update({
-                        isNeedaction: false,
-                        isHistory: true,
+                        __mfield_isNeedaction: false,
+                        __mfield_isHistory: true,
                     });
                 }
             }
@@ -575,23 +601,27 @@ function factory(dependencies) {
             if (channel_ids) {
                 channels = channel_ids
                     .map(id => this.env.models['mail.thread'].find(thread =>
-                        thread.id === id &&
-                        thread.model === 'mail.channel'
+                        thread.__mfield_id(this) === id &&
+                        thread.__mfield_model(this) === 'mail.channel'
                     ))
                     .filter(thread => !!thread);
             } else {
                 // flux specific: channel_ids unset means "mark all as read"
                 channels = this.env.models['mail.thread'].all(thread =>
-                    thread.model === 'mail.channel'
+                    thread.__mfield_model(this) === 'mail.channel'
                 );
             }
             for (const channel of channels) {
-                channel.update({ message_needaction_counter: 0 });
+                channel.update({
+                    __mfield_message_needaction_counter: 0,
+                });
             }
-            inboxMailbox.update({ counter: inboxMailbox.counter - message_ids.length });
+            inboxMailbox.update({
+                __mfield_counter: inboxMailbox.__mfield_counter(this) - message_ids.length,
+            });
 
             // manually force recompute of counter
-            this.messaging.messagingMenu.update();
+            this.__mfield_messaging(this).__mfield_messagingMenu(this).update();
         }
 
         /**
@@ -603,12 +633,14 @@ function factory(dependencies) {
             this.env.models['mail.message'].insert(
                 this.env.models['mail.message'].convertData(data)
             );
-            const moderationMailbox = this.env.messaging.moderation;
+            const moderationMailbox = this.env.messaging.__mfield_moderation(this);
             if (moderationMailbox) {
-                moderationMailbox.update({ counter: moderationMailbox.counter + 1 });
+                moderationMailbox.update({
+                    __mfield_counter: moderationMailbox.__mfield_counter(this) + 1,
+                });
             }
             // manually force recompute of counter
-            this.messaging.messagingMenu.update();
+            this.__mfield_messaging(this).__mfield_messagingMenu(this).update();
         }
 
         /**
@@ -618,23 +650,25 @@ function factory(dependencies) {
          * @param {boolean} param0.starred
          */
         _handleNotificationPartnerToggleStar({ message_ids = [], starred }) {
-            const starredMailbox = this.env.messaging.starred;
+            const starredMailbox = this.env.messaging.__mfield_starred(this);
             for (const messageId of message_ids) {
                 const message = this.env.models['mail.message'].find(message =>
-                    message.id === messageId
+                    message.__mfield_id(this) === messageId
                 );
                 if (!message) {
                     continue;
                 }
-                message.update({ isStarred: starred });
+                message.update({
+                    __mfield_isStarred: starred,
+                });
                 if (!starred) {
                     // AKU TODO: flag starred other caches for invalidation
                     // task-2171873
                 }
                 starredMailbox.update({
-                    counter: starred
-                        ? starredMailbox.counter + 1
-                        : starredMailbox.counter -1,
+                    __mfield_counter: starred
+                        ? starredMailbox.__mfield_counter(this) + 1
+                        : starredMailbox.__mfield_counter(this) -1,
                 });
             }
         }
@@ -649,12 +683,12 @@ function factory(dependencies) {
          */
         _handleNotificationPartnerTransientMessage(data) {
             const convertedData = this.env.models['mail.message'].convertData(data);
-            const messageIds = this.env.models['mail.message'].all().map(message => message.id);
-            const partnerRoot = this.env.messaging.partnerRoot;
+            const messageIds = this.env.models['mail.message'].all().map(message => message.__mfield_id(this));
+            const partnerRoot = this.env.messaging.__mfield_partnerRoot(this);
             this.env.models['mail.message'].create(Object.assign(convertedData, {
-                author: [['link', partnerRoot]],
-                id: (messageIds ? Math.max(...messageIds) : 0) + 0.01,
-                isTransient: true,
+                __mfield_author: [['link', partnerRoot]],
+                __mfield_id: (messageIds ? Math.max(...messageIds) : 0) + 0.01,
+                __mfield_isTransient: true,
             }));
         }
 
@@ -664,28 +698,30 @@ function factory(dependencies) {
          */
         _handleNotificationPartnerUnsubscribe(channelId) {
             const channel = this.env.models['mail.thread'].find(thread =>
-                thread.id === channelId &&
-                thread.model === 'mail.channel'
+                thread.__mfield_id(this) === channelId &&
+                thread.__mfield_model(this) === 'mail.channel'
             );
             if (!channel) {
                 return;
             }
             let message;
-            if (channel.correspondent) {
-                const correspondent = channel.correspondent;
+            if (channel.__mfield_correspondent(this)) {
+                const correspondent = channel.__mfield_correspondent(this);
                 message = _.str.sprintf(
                     this.env._t("You unpinned your conversation with <b>%s</b>."),
-                    owl.utils.escape(correspondent.name)
+                    owl.utils.escape(correspondent.__mfield_name(this))
                 );
             } else {
                 message = _.str.sprintf(
                     this.env._t("You unsubscribed from <b>%s</b>."),
-                    owl.utils.escape(channel.name)
+                    owl.utils.escape(channel.__mfield_name(this))
                 );
             }
             // We assume that arriving here the server has effectively
             // unpinned the channel
-            channel.update({ isServerPinned: false });
+            channel.update({
+                __mfield_isServerPinned: false,
+            });
             this.env.services['notification'].notify({
                 message,
                 title: this.env._t("Unsubscribed"),
@@ -711,7 +747,7 @@ function factory(dependencies) {
             if (!chat) {
                 return;
             }
-            this.env.messaging.chatWindowManager.openThread(chat);
+            this.env.messaging.__mfield_chatWindowManager(this).openThread(chat);
         }
 
         /**
@@ -721,14 +757,14 @@ function factory(dependencies) {
          * @param {mail.message} param0.message
          */
         _notifyNewChannelMessageWhileOutOfFocus({ channel, message }) {
-            const author = message.author;
+            const author = message.__mfield_author(this);
             const messaging = this.env.messaging;
             let notificationTitle;
             if (!author) {
                 notificationTitle = this.env._t("New message");
             } else {
-                const authorName = author.nameOrDisplayName;
-                if (channel.channel_type === 'channel') {
+                const authorName = author.__mfield_nameOrDisplayName(this);
+                if (channel.__mfield_channel_type(this) === 'channel') {
                     // hack: notification template does not support OWL components,
                     // so we simply use their template to make HTML as if it comes
                     // from component
@@ -736,7 +772,7 @@ function factory(dependencies) {
                         env: this.env,
                         thread: channel,
                     });
-                    const channelName = owl.utils.escape(channel.displayName);
+                    const channelName = owl.utils.escape(channel.__mfield_displayName(this));
                     const channelNameWithIcon = channelIcon + channelName;
                     notificationTitle = _.str.sprintf(
                         this.env._t("%s from %s"),
@@ -747,23 +783,25 @@ function factory(dependencies) {
                     notificationTitle = owl.utils.escape(authorName);
                 }
             }
-            const notificationContent = message.prettyBody.substr(0, PREVIEW_MSG_MAX_SIZE);
+            const notificationContent = message.__mfield_prettyBody(this).substr(0, PREVIEW_MSG_MAX_SIZE);
             this.env.services['bus_service'].sendNotification(notificationTitle, notificationContent);
-            messaging.update({ outOfFocusUnreadMessageCounter: messaging.outOfFocusUnreadMessageCounter + 1 });
-            const titlePattern = messaging.outOfFocusUnreadMessageCounter === 1
+            messaging.update({
+                __mfield_outOfFocusUnreadMessageCounter: messaging.__mfield_outOfFocusUnreadMessageCounter(this) + 1,
+            });
+            const titlePattern = messaging.__mfield_outOfFocusUnreadMessageCounter(this) === 1
                 ? this.env._t("%d Message")
                 : this.env._t("%d Messages");
             this.env.bus.trigger('set_title_part', {
                 part: '_chat',
-                title: _.str.sprintf(titlePattern, messaging.outOfFocusUnreadMessageCounter),
+                title: _.str.sprintf(titlePattern, messaging.__mfield_outOfFocusUnreadMessageCounter(this)),
             });
         }
 
     }
 
     MessagingNotificationHandler.fields = {
-        messaging: one2one('mail.messaging', {
-            inverse: 'notificationHandler',
+        __mfield_messaging: one2one('mail.messaging', {
+            inverse: '__mfield_notificationHandler',
         }),
     };
 

@@ -2,7 +2,7 @@ odoo.define('mail/static/src/models/notification_group/notification_group.js', f
 'use strict';
 
 const { registerNewModel } = require('mail/static/src/model/model_core.js');
-const { attr, many2one, one2many } = require('mail/static/src/model/model_field.js');
+const { attr, many2one, one2many } = require('mail/static/src/model/model_field_utils.js');
 
 function factory(dependencies) {
 
@@ -16,15 +16,15 @@ function factory(dependencies) {
          * Opens the view that allows to cancel all notifications of the group.
          */
         openCancelAction() {
-            if (this.notification_type !== 'email') {
+            if (this.__mfield_notification_type(this) !== 'email') {
                 return;
             }
             this.env.bus.trigger('do-action', {
                 action: 'mail.mail_resend_cancel_action',
                 options: {
                     additional_context: {
-                        default_model: this.res_model,
-                        unread_counter: this.notifications.length,
+                        default_model: this.__mfield_res_model(this),
+                        unread_counter: this.__mfield_notifications(this).length,
                     },
                 },
             });
@@ -35,8 +35,8 @@ function factory(dependencies) {
          * all the records in the group.
          */
         openDocuments() {
-            if (this.thread) {
-                this.thread.open();
+            if (this.__mfield_thread(this)) {
+                this.__mfield_thread(this).open();
             } else {
                 this._openDocuments();
             }
@@ -51,10 +51,10 @@ function factory(dependencies) {
          * @returns {mail.thread|undefined}
          */
         _computeThread() {
-            if (this.res_id) {
+            if (this.__mfield_res_id(this)) {
                 return [['insert', {
-                    id: this.res_id,
-                    model: this.res_model,
+                    __mfield_id: this.__mfield_res_id(this),
+                    __mfield_model: this.__mfield_res_model(this),
                 }]];
             }
             return [['unlink']];
@@ -64,7 +64,7 @@ function factory(dependencies) {
          * @override
          */
         static _createRecordLocalId(data) {
-            return `${this.modelName}_${data.id}`;
+            return `${this.modelName}_${data.__mfield_id}`;
         }
 
         /**
@@ -73,7 +73,7 @@ function factory(dependencies) {
          * @private
          */
         _openDocuments() {
-            if (this.notification_type !== 'email') {
+            if (this.__mfield_notification_type(this) !== 'email') {
                 return;
             }
             this.env.bus.trigger('do-action', {
@@ -83,35 +83,35 @@ function factory(dependencies) {
                     view_mode: 'kanban,list,form',
                     views: [[false, 'kanban'], [false, 'list'], [false, 'form']],
                     target: 'current',
-                    res_model: this.res_model,
+                    res_model: this.__mfield_res_model(this),
                     domain: [['message_has_error', '=', true]],
                 },
             });
-            if (this.env.messaging.device.isMobile) {
+            if (this.env.messaging.__mfield_device(this).__mfield_isMobile(this)) {
                 // messaging menu has a higher z-index than views so it must
                 // be closed to ensure the visibility of the view
-                this.env.messaging.messagingMenu.close();
+                this.env.messaging.__mfield_messagingMenu(this).close();
             }
         }
 
     }
 
     NotificationGroup.fields = {
-        date: attr(),
-        id: attr(),
-        notification_type: attr(),
-        notifications: one2many('mail.notification'),
-        res_id: attr(),
-        res_model: attr(),
-        res_model_name: attr(),
+        __mfield_date: attr(),
+        __mfield_id: attr(),
+        __mfield_notification_type: attr(),
+        __mfield_notifications: one2many('mail.notification'),
+        __mfield_res_id: attr(),
+        __mfield_res_model: attr(),
+        __mfield_res_model_name: attr(),
         /**
          * Related thread when the notification group concerns a single thread.
          */
-        thread: many2one('mail.thread', {
+        __mfield_thread: many2one('mail.thread', {
             compute: '_computeThread',
             dependencies: [
-                'res_id',
-                'res_model',
+                '__mfield_res_id',
+                '__mfield_res_model',
             ],
         })
     };

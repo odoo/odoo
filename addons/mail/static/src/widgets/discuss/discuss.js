@@ -68,8 +68,10 @@ const DiscussWidget = AbstractAction.extend({
             (this.action.context && this.action.context.active_id) ||
             (this.action.params && this.action.params.default_active_id) ||
             'mail.box_inbox';
-        this.discuss = this.env.messaging.discuss;
-        this.discuss.update({ initActiveId });
+        this.discuss = this.env.messaging.__mfield_discuss();
+        this.discuss.update({
+            __mfield_initActiveId: initActiveId,
+        });
     },
     /**
      * @override {web.AbstractAction}
@@ -97,11 +99,11 @@ const DiscussWidget = AbstractAction.extend({
         this.component = new DiscussComponent();
         this._pushStateActionManagerEventListener = ev => {
             ev.stopPropagation();
-            if (this._lastPushStateActiveThread === this.discuss.thread) {
+            if (this._lastPushStateActiveThread === this.discuss.__mfield_thread()) {
                 return;
             }
             this._pushStateActionManager();
-            this._lastPushStateActiveThread = this.discuss.thread;
+            this._lastPushStateActiveThread = this.discuss.__mfield_thread();
         };
         this._showRainbowManEventListener = ev => {
             ev.stopPropagation();
@@ -159,7 +161,7 @@ const DiscussWidget = AbstractAction.extend({
     _pushStateActionManager() {
         this.actionManager.do_push_state({
             action: this.action.id,
-            active_id: this.discuss.activeId,
+            active_id: this.discuss.__mfield_activeId(),
         });
     },
     /**
@@ -168,8 +170,8 @@ const DiscussWidget = AbstractAction.extend({
      */
     _shouldHaveInviteButton() {
         return (
-            this.discuss.thread &&
-            this.discuss.thread.channel_type === 'channel'
+            this.discuss.__mfield_thread() &&
+            this.discuss.__mfield_thread().__mfield_channel_type() === 'channel'
         );
     },
     /**
@@ -193,14 +195,14 @@ const DiscussWidget = AbstractAction.extend({
         }
         // Mark All Read
         if (
-            this.discuss.threadView &&
-            this.discuss.thread &&
-            this.discuss.thread === this.env.messaging.inbox
+            this.discuss.__mfield_threadView() &&
+            this.discuss.__mfield_thread() &&
+            this.discuss.__mfield_thread() === this.env.messaging.__mfield_inbox()
         ) {
             this.$buttons
                 .find('.o_widget_Discuss_controlPanelButtonMarkAllRead')
                 .removeClass('o_hidden')
-                .prop('disabled', this.discuss.threadView.messages.length === 0);
+                .prop('disabled', this.discuss.__mfield_threadView().__mfield_messages().length === 0);
         } else {
             this.$buttons
                 .find('.o_widget_Discuss_controlPanelButtonMarkAllRead')
@@ -208,14 +210,14 @@ const DiscussWidget = AbstractAction.extend({
         }
         // Unstar All
         if (
-            this.discuss.threadView &&
-            this.discuss.thread &&
-            this.discuss.thread === this.env.messaging.starred
+            this.discuss.__mfield_threadView() &&
+            this.discuss.__mfield_thread() &&
+            this.discuss.__mfield_thread() === this.env.messaging.__mfield_starred()
         ) {
             this.$buttons
                 .find('.o_unstar_all')
                 .removeClass('o_hidden')
-                .prop('disabled', this.discuss.threadView.messages.length === 0);
+                .prop('disabled', this.discuss.__mfield_threadView().__mfield_messages().length === 0);
         } else {
             this.$buttons
                 .find('.o_unstar_all')
@@ -223,8 +225,8 @@ const DiscussWidget = AbstractAction.extend({
         }
         // Mobile: Add channel
         if (
-            this.env.messaging.device.isMobile &&
-            this.discuss.activeMobileNavbarTabId === 'channel'
+            this.env.messaging.__mfield_device().__mfield_isMobile() &&
+            this.discuss.__mfield_activeMobileNavbarTabId() === 'channel'
         ) {
             this.$buttons
                 .find('.o_mobile_new_channel')
@@ -236,8 +238,8 @@ const DiscussWidget = AbstractAction.extend({
         }
         // Mobile: Add message
         if (
-            this.env.messaging.device.isMobile &&
-            this.discuss.activeMobileNavbarTabId === 'chat'
+            this.env.messaging.__mfield_device().__mfield_isMobile() &&
+            this.discuss.__mfield_activeMobileNavbarTabId() === 'chat'
         ) {
             this.$buttons
                 .find('.o_mobile_new_message')
@@ -252,16 +254,16 @@ const DiscussWidget = AbstractAction.extend({
         const $unselectAll = this.$buttons.find('.o_widget_Discuss_controlPanelButtonUnselectAll');
 
         if (
-            this.discuss.threadView &&
+            this.discuss.__mfield_threadView() &&
             (
-                this.discuss.threadView.checkedMessages.length > 0 ||
-                this.discuss.threadView.uncheckedMessages.length > 0
+                this.discuss.__mfield_threadView().__mfield_checkedMessages().length > 0 ||
+                this.discuss.__mfield_threadView().__mfield_uncheckedMessages().length > 0
             )
         ) {
             $selectAll.removeClass('o_hidden');
-            $selectAll.toggleClass('disabled', this.discuss.threadView.uncheckedMessages.length === 0);
+            $selectAll.toggleClass('disabled', this.discuss.__mfield_threadView().__mfield_uncheckedMessages().length === 0);
             $unselectAll.removeClass('o_hidden');
-            $unselectAll.toggleClass('disabled', this.discuss.threadView.checkedMessages.length === 0);
+            $unselectAll.toggleClass('disabled', this.discuss.__mfield_threadView().__mfield_checkedMessages().length === 0);
         } else {
             $selectAll.addClass('o_hidden');
             $selectAll.addClass('disabled');
@@ -272,10 +274,10 @@ const DiscussWidget = AbstractAction.extend({
         // Moderation Actions
         const $moderationButtons = this.$buttons.find('.o_widget_Discuss_controlPanelButtonModeration');
         if (
-            this.discuss.threadView &&
-            this.discuss.threadView.checkedMessages.length > 0 &&
-            this.discuss.threadView.checkedMessages.filter(
-                message => !message.isModeratedByCurrentPartner
+            this.discuss.__mfield_threadView() &&
+            this.discuss.__mfield_threadView().__mfield_checkedMessages().length > 0 &&
+            this.discuss.__mfield_threadView().__mfield_checkedMessages().filter(
+                message => !message.__mfield_isModeratedByCurrentPartner()
             ).length === 0
         ) {
             $moderationButtons.removeClass('o_hidden');
@@ -284,15 +286,18 @@ const DiscussWidget = AbstractAction.extend({
         }
 
         let title;
-        if (this.env.messaging.device.isMobile || !this.discuss.thread) {
+        if (
+            this.env.messaging.__mfield_device().__mfield_isMobile() ||
+            !this.discuss.__mfield_thread()
+        ) {
             title = this.env._t("Discuss");
         } else {
             const prefix =
-                this.discuss.thread.channel_type === 'channel' &&
-                this.discuss.thread.public !== 'private'
+                this.discuss.__mfield_thread().__mfield_channel_type() === 'channel' &&
+                this.discuss.__mfield_thread().__mfield_public() !== 'private'
                 ? '#'
                 : '';
-            title = `${prefix}${this.discuss.thread.displayName}`;
+            title = `${prefix}${this.discuss.__mfield_thread().__mfield_displayName()}`;
         }
 
         this.updateControlPanel({
@@ -312,7 +317,7 @@ const DiscussWidget = AbstractAction.extend({
      */
     _onClickInvite() {
         new InvitePartnerDialog(this, {
-            activeThreadLocalId: this.discuss.thread.localId,
+            activeThreadLocalId: this.discuss.__mfield_thread().localId,
             messagingEnv: this.env,
         }).open();
     },
@@ -326,20 +331,24 @@ const DiscussWidget = AbstractAction.extend({
      * @private
      */
     _onClickMobileNewChannel() {
-        this.discuss.update({ isAddingChannel: true });
+        this.discuss.update({
+            __mfield_isAddingChannel: true,
+        });
     },
     /**
      * @private
      */
     _onClickMobileNewMessage() {
-        this.discuss.update({ isAddingChat: true });
+        this.discuss.update({
+            __mfield_isAddingChat: true,
+        });
     },
     /**
      * @private
      */
     _onClickModerationAccept() {
         this.env.models['mail.message'].moderate(
-            this.discuss.threadView.checkedMessages,
+            this.discuss.__mfield_threadView().__mfield_checkedMessages(),
             'accept'
         );
     },
@@ -347,21 +356,25 @@ const DiscussWidget = AbstractAction.extend({
      * @private
      */
     _onClickModerationDiscard() {
-        this.discuss.update({ hasModerationDiscardDialog: true });
+        this.discuss.update({
+            __mfield_hasModerationDiscardDialog: true,
+        });
     },
     /**
      * @private
      */
     _onClickModerationReject() {
-        this.discuss.update({ hasModerationRejectDialog: true });
+        this.discuss.update({
+            __mfield_hasModerationRejectDialog: true,
+        });
     },
     /**
      * @private
      */
     _onClickSelectAll() {
         this.env.models['mail.message'].checkAll(
-            this.discuss.thread,
-            this.discuss.threadStringifiedDomain
+            this.discuss.__mfield_thread(),
+            this.discuss.__mfield_stringifiedDomain()
         );
     },
     /**
@@ -369,8 +382,8 @@ const DiscussWidget = AbstractAction.extend({
      */
     _onClickUnselectAll() {
         this.env.models['mail.message'].uncheckAll(
-            this.discuss.thread,
-            this.discuss.threadStringifiedDomain
+            this.discuss.__mfield_thread(),
+            this.discuss.__mfield_stringifiedDomain()
         );
     },
     /**
@@ -385,7 +398,7 @@ const DiscussWidget = AbstractAction.extend({
      */
     _onSearch: function (searchQuery) {
         this.discuss.update({
-            stringifiedDomain: JSON.stringify(searchQuery.domain),
+            __mfield_stringifiedDomain: JSON.stringify(searchQuery.domain),
         });
     },
 });

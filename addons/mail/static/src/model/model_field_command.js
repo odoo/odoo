@@ -17,12 +17,11 @@ class FieldCommand {
 
     /**
      * @param {ModelField} field
-     * @param {mail.model} record
      * @param {options} [options]
      * @returns {boolean} whether the value changed for the current field
      */
-    execute(field, record, options) {
-        return this.func(field, record, options);
+    execute(field, options) {
+        return this.func(field, options);
     }
 }
 
@@ -30,8 +29,8 @@ class FieldCommand {
  * Returns a clear command to give to the model manager at create/update.
  */
 function clear() {
-    return new FieldCommand((field, record, options) =>
-        field.clear(record, options)
+    return new FieldCommand((field, options) =>
+        field.clear(options)
     );
 }
 

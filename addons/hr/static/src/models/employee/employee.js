@@ -2,7 +2,7 @@ odoo.define('hr/static/src/models/employee/employee.js', function (require) {
 'use strict';
 
 const { registerNewModel } = require('mail/static/src/model/model_core.js');
-const { attr, one2one } = require('mail/static/src/model/model_field.js');
+const { attr, one2one } = require('mail/static/src/model/model_field_utils.js');
 
 function factory(dependencies) {
 
@@ -20,25 +20,25 @@ function factory(dependencies) {
         static convertData(data) {
             const data2 = {};
             if ('id' in data) {
-                data2.id = data.id;
+                data2.__mfield_id = data.id;
             }
             if ('user_id' in data) {
-                data2.hasCheckedUser = true;
+                data2.__mfield_hasCheckedUser = true;
                 if (!data.user_id) {
-                    data2.user = [['unlink']];
+                    data2.__mfield_user = [['unlink']];
                 } else {
                     const partnerNameGet = data['user_partner_id'];
                     const partnerData = {
-                        display_name: partnerNameGet[1],
-                        id: partnerNameGet[0],
+                        __mfield_display_name: partnerNameGet[1],
+                        __mfield_id: partnerNameGet[0],
                     };
                     const userNameGet = data['user_id'];
                     const userData = {
-                        id: userNameGet[0],
-                        partner: [['insert', partnerData]],
-                        display_name: userNameGet[1],
+                        __mfield_id: userNameGet[0],
+                        __mfield_partner: [['insert', partnerData]],
+                        __mfield_display_name: userNameGet[1],
                     };
-                    data2.user = [['insert', userData]];
+                    data2.__mfield_user = [['insert', userData]];
                 }
             }
             return data2;
@@ -98,7 +98,7 @@ function factory(dependencies) {
          */
         async checkIsUser() {
             return this.env.models['hr.employee'].performRpcRead({
-                ids: [this.id],
+                ids: [this.__mfield_id(this)],
                 fields: ['user_id', 'user_partner_id'],
                 context: { active_test: false },
             });
@@ -112,18 +112,18 @@ function factory(dependencies) {
          * @returns {mail.thread|undefined}
          */
         async getChat() {
-            if (!this.user && !this.hasCheckedUser) {
+            if (!this.__mfield_user(this) && !this.__mfield_hasCheckedUser(this)) {
                 await this.async(() => this.checkIsUser());
             }
             // prevent chatting with non-users
-            if (!this.user) {
+            if (!this.__mfield_user(this)) {
                 this.env.services['notification'].notify({
                     message: this.env._t("You can only chat with employees that have a dedicated user."),
                     type: 'info',
                 });
                 return;
             }
-            return this.user.getChat();
+            return this.__mfield_user(this).getChat();
         }
 
         /**
@@ -149,7 +149,7 @@ function factory(dependencies) {
          */
         async openProfile() {
             return this.env.messaging.openDocument({
-                id: this.id,
+                id: this.__mfield_id(this),
                 model: 'hr.employee.public',
             });
         }
@@ -162,7 +162,7 @@ function factory(dependencies) {
          * @override
          */
         static _createRecordLocalId(data) {
-            return `${this.modelName}_${data.id}`;
+            return `${this.modelName}_${data.__mfield_id}`;
         }
 
     }
@@ -172,25 +172,25 @@ function factory(dependencies) {
          * Whether an attempt was already made to fetch the user corresponding
          * to this employee. This prevents doing the same RPC multiple times.
          */
-        hasCheckedUser: attr({
+        __mfield_hasCheckedUser: attr({
             default: false,
         }),
         /**
          * Unique identifier for this employee.
          */
-        id: attr(),
+        __mfield_id: attr(),
         /**
          * Partner related to this employee.
          */
-        partner: one2one('mail.partner', {
-            inverse: 'employee',
-            related: 'user.partner',
+        __mfield_partner: one2one('mail.partner', {
+            inverse: '__mfield_employee',
+            related: '__mfield_user.__mfield_partner',
         }),
         /**
          * User related to this employee.
          */
-        user: one2one('mail.user', {
-            inverse: 'employee',
+        __mfield_user: one2one('mail.user', {
+            inverse: '__mfield_employee',
         }),
     };
 

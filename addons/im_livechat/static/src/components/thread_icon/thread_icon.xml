@@ -2,12 +2,12 @@
 <templates xml:space="preserve">
     <t t-inherit="mail.ThreadIcon" t-inherit-mode="extension">
         <xpath expr="//*[@name='rootCondition']" position="inside">
-            <t t-elif="thread.channel_type === 'livechat'">
-                <t t-if="thread.orderedOtherTypingMembers.length > 0">
+            <t t-elif="thread.__mfield_channel_type(mself) === 'livechat'">
+                <t t-if="thread.__mfield_orderedOtherTypingMembers(mself).length > 0">
                     <ThreadTypingIcon
                         class="o_ThreadIcon_typing"
                         animation="'pulse'"
-                        title="thread.typingStatusText"
+                        title="thread.__mfield_typingStatusText(mself)"
                     />
                 </t>
                 <t t-else="">

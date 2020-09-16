@@ -4,7 +4,7 @@ odoo.define('mail_bot/static/src/components/notification_request/notification_re
 const components = {
     PartnerImStatusIcon: require('mail/static/src/components/partner_im_status_icon/partner_im_status_icon.js'),
 };
-const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
+const useModels = require('mail/static/src/component_hooks/use_models/use_models.js');
 
 const { Component } = owl;
 
@@ -15,14 +15,7 @@ class NotificationRequest extends Component {
      */
     constructor(...args) {
         super(...args);
-        useStore(props => {
-            return {
-                isDeviceMobile: this.env.messaging.device.isMobile,
-                partnerRoot: this.env.messaging.partnerRoot
-                    ? this.env.messaging.partnerRoot.__state
-                    : undefined,
-            };
-        });
+        useModels();
     }
 
     //--------------------------------------------------------------------------
@@ -35,7 +28,7 @@ class NotificationRequest extends Component {
     getHeaderText() {
         return _.str.sprintf(
             this.env._t("%s has a request"),
-            this.env.messaging.partnerRoot.nameOrDisplayName
+            this.env.messaging.__mfield_partnerRoot(this).__mfield_nameOrDisplayName(this)
         );
     }
 
@@ -52,7 +45,7 @@ class NotificationRequest extends Component {
      */
     _handleResponseNotificationPermission(value) {
         // manually force recompute because the permission is not in the store
-        this.env.messaging.messagingMenu.update();
+        this.env.messaging.__mfield_messagingMenu(this).update();
         if (value !== 'granted') {
             this.env.services['bus_service'].sendNotification(
                 this.env._t("Permission denied"),
@@ -74,8 +67,8 @@ class NotificationRequest extends Component {
         if (def) {
             def.then(this._handleResponseNotificationPermission.bind(this));
         }
-        if (!this.env.messaging.device.isMobile) {
-            this.env.messaging.messagingMenu.close();
+        if (!this.env.messaging.__mfield_device(this).__mfield_isMobile(this)) {
+            this.env.messaging.__mfield_messagingMenu(this).close();
         }
     }
 

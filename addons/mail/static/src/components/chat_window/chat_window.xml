@@ -2,14 +2,14 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.ChatWindow" owl="1">
-        <div class="o_ChatWindow" tabindex="0" t-att-data-visible-index="chatWindow ? chatWindow.visibleIndex : undefined"
+        <div class="o_ChatWindow" tabindex="0" t-att-data-visible-index="chatWindow ? chatWindow.__mfield_visibleIndex(mself) : undefined"
             t-att-class="{
-                'o-focused': chatWindow and chatWindow.isFocused,
-                'o-folded': chatWindow and chatWindow.isFolded,
+                'o-focused': chatWindow and chatWindow.__mfield_isFocused(mself),
+                'o-folded': chatWindow and chatWindow.__mfield_isFolded(mself),
                 'o-fullscreen': props.isFullscreen,
-                'o-mobile': env.messaging.device.isMobile,
-                'o-new-message': chatWindow and !chatWindow.thread,
-            }" t-on-click="_onClick" t-on-keydown="_onKeydown" t-on-focusout="_onFocusout" t-att-data-chat-window-local-id="chatWindow ? chatWindow.localId : undefined" t-att-data-thread-local-id="chatWindow ? (chatWindow.thread ? chatWindow.thread.localId : '') : undefined"
+                'o-mobile': env.messaging.__mfield_device(mself).__mfield_isMobile(mself),
+                'o-new-message': chatWindow and !chatWindow.__mfield_thread(mself),
+            }" t-on-click="_onClick" t-on-keydown="_onKeydown" t-on-focusout="_onFocusout" t-att-data-chat-window-local-id="chatWindow ? chatWindow.localId : undefined" t-att-data-thread-local-id="chatWindow ? (chatWindow.__mfield_thread(mself) ? chatWindow.__mfield_thread(mself).localId : '') : undefined"
         >
             <t t-if="chatWindow">
                 <ChatWindowHeader
@@ -20,20 +20,20 @@
                     t-on-o-clicked="_onClickedHeader"
                     t-ref="header"
                 />
-                <t t-if="chatWindow.threadView">
+                <t t-if="chatWindow.__mfield_threadView(mself)">
                     <ThreadView
                         class="o_ChatWindow_thread"
                         composerAttachmentsDetailsMode="'card'"
-                        hasComposer="chatWindow.thread.model !== 'mail.box' and (!chatWindow.thread.mass_mailing or env.messaging.device.isMobile)"
+                        hasComposer="chatWindow.__mfield_thread(mself).__mfield_model(mself) !== 'mail.box' and (!chatWindow.__mfield_thread(mself).__mfield_mass_mailing(mself) or env.messaging.__mfield_device(mself).__mfield_isMobile(mself))"
                         hasComposerCurrentPartnerAvatar="false"
-                        hasComposerSendButton="env.messaging.device.isMobile"
-                        hasSquashCloseMessages="chatWindow.thread.model !== 'mail.box'"
-                        threadViewLocalId="chatWindow.threadView.localId"
+                        hasComposerSendButton="env.messaging.__mfield_device(mself).__mfield_isMobile(mself)"
+                        hasSquashCloseMessages="chatWindow.__mfield_thread(mself).__mfield_model(mself) !== 'mail.box'"
+                        threadViewLocalId="chatWindow.__mfield_threadView(mself).localId"
                         t-on-focusin="_onFocusinThread"
                         t-ref="thread"
                     />
                 </t>
-                <t t-if="chatWindow.hasNewMessageForm">
+                <t t-if="chatWindow.__mfield_hasNewMessageForm(mself)">
                     <div class="o_ChatWindow_newMessageForm">
                         <span class="o_ChatWindow_newMessageFormLabel">
                             To:

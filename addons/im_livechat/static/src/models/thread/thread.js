@@ -18,8 +18,8 @@ registerClassPatchModel('mail.thread', 'im_livechat/static/src/models/thread/thr
     convertData(data) {
         const data2 = this._super(data);
         if ('livechat_visitor' in data && data.livechat_visitor) {
-            if (!data2.members) {
-                data2.members = [];
+            if (!data2.__mfield_members) {
+                data2.__mfield_members = [];
             }
             // `livechat_visitor` without `id` is the anonymous visitor.
             if (!data.livechat_visitor.id) {
@@ -39,19 +39,21 @@ registerClassPatchModel('mail.thread', 'im_livechat/static/src/models/thread/thr
                  * of polluting the database, it is therefore acceptable and
                  * easier to handle one temporary partner per channel.
                  */
-                data2.members.push(['unlink', this.env.messaging.publicPartner]);
+                data2.__mfield_members.push(['unlink', this.env.messaging.__mfield_publicPartner()]);
                 const partner = this.env.models['mail.partner'].create(
                     Object.assign(
                         this.env.models['mail.partner'].convertData(data.livechat_visitor),
-                        { id: this.env.models['mail.partner'].getNextPublicId() }
+                        {
+                            __mfield_id: this.env.models['mail.partner'].getNextPublicId(),
+                        }
                     )
                 );
-                data2.members.push(['link', partner]);
-                data2.correspondent = [['link', partner]];
+                data2.__mfield_members.push(['link', partner]);
+                data2.__mfield_correspondent = [['link', partner]];
             } else {
                 const partnerData = this.env.models['mail.partner'].convertData(data.livechat_visitor);
-                data2.members.push(['insert', partnerData]);
-                data2.correspondent = [['insert', partnerData]];
+                data2.__mfield_members.push(['insert', partnerData]);
+                data2.__mfield_correspondent = [['insert', partnerData]];
             }
         }
         return data2;
@@ -68,7 +70,7 @@ registerInstancePatchModel('mail.thread', 'im_livechat/static/src/models/thread/
      * @override
      */
     _computeCorrespondent() {
-        if (this.channel_type === 'livechat') {
+        if (this.__mfield_channel_type(this) === 'livechat') {
             // livechat correspondent never change: always the public member.
             return [];
         }
@@ -78,11 +80,11 @@ registerInstancePatchModel('mail.thread', 'im_livechat/static/src/models/thread/
      * @override
      */
     _computeDisplayName() {
-        if (this.channel_type === 'livechat' && this.correspondent) {
-            if (this.correspondent.country) {
-                return `${this.correspondent.nameOrDisplayName} (${this.correspondent.country.name})`;
+        if (this.__mfield_channel_type(this) === 'livechat' && this.__mfield_correspondent(this)) {
+            if (this.__mfield_correspondent(this).__mfield_country(this)) {
+                return `${this.__mfield_correspondent(this).__mfield_nameOrDisplayName(this)} (${this.__mfield_correspondent(this).__mfield_country(this).__mfield_name(this)})`;
             }
-            return this.correspondent.nameOrDisplayName;
+            return this.__mfield_correspondent(this).__mfield_nameOrDisplayName(this);
         }
         return this._super();
     },

@@ -1,7 +1,7 @@
 odoo.define('mail/static/src/components/message_author_prefix/message_author_prefix.js', function (require) {
 'use strict';
 
-const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
+const useModels = require('mail/static/src/component_hooks/use_models/use_models.js');
 
 const { Component } = owl;
 
@@ -12,21 +12,7 @@ class MessageAuthorPrefix extends Component {
      */
     constructor(...args) {
         super(...args);
-        useStore(props => {
-            const message = this.env.models['mail.message'].get(props.messageLocalId);
-            const author = message ? message.author : undefined;
-            const thread = props.threadLocalId
-                ? this.env.models['mail.thread'].get(props.threadLocalId)
-                : undefined;
-            return {
-                author: author ? author.__state : undefined,
-                currentPartner: this.env.messaging.currentPartner
-                    ? this.env.messaging.currentPartner.__state
-                    : undefined,
-                message: message ? message.__state : undefined,
-                thread: thread ? thread.__state : undefined,
-            };
-        });
+        useModels();
     }
 
     //--------------------------------------------------------------------------

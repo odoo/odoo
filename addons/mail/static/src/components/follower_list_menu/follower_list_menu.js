@@ -4,7 +4,7 @@ odoo.define('mail/static/src/components/follower_list_menu/follower_list_menu.js
 const components = {
     Follower: require('mail/static/src/components/follower/follower.js'),
 };
-const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
+const useModels = require('mail/static/src/component_hooks/use_models/use_models.js');
 
 const { Component } = owl;
 const { useRef, useState } = owl.hooks;
@@ -21,18 +21,7 @@ class FollowerListMenu extends Component {
              */
             isDropdownOpen: false,
         });
-        useStore(props => {
-            const thread = this.env.models['mail.thread'].get(props.threadLocalId);
-            const followers = thread ? thread.followers : [];
-            return {
-                followers: followers.map(follower => follower.__state),
-                thread: thread ? thread.__state : undefined,
-            };
-        }, {
-            compareDepth: {
-                followers: 1,
-            },
-        });
+        useModels();
         this._dropdownRef = useRef('dropdown');
         this._onClickCaptureGlobal = this._onClickCaptureGlobal.bind(this);
     }

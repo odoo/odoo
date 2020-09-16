@@ -55,13 +55,13 @@ QUnit.test('mark as read', async function (assert) {
         },
     });
     const thread = this.env.models['mail.thread'].create({
-        id: 11,
-        model: 'mail.channel',
+        __mfield_id: 11,
+        __mfield_model: 'mail.channel',
     });
     this.env.models['mail.message'].create({
-        id: 21,
-        isNeedaction: true,
-        originThread: [['link', thread]],
+        __mfield_id: 21,
+        __mfield_isNeedaction: true,
+        __mfield_originThread: [['link', thread]],
     });
     await this.createThreadNeedactionPreviewComponent({
         threadLocalId: thread.localId,
@@ -99,13 +99,13 @@ QUnit.test('click on preview should mark as read and open the thread', async fun
         },
     });
     const thread = this.env.models['mail.thread'].create({
-        id: 11,
-        model: 'mail.channel',
+        __mfield_id: 11,
+        __mfield_model: 'mail.channel',
     });
     this.env.models['mail.message'].create({
-        id: 21,
-        isNeedaction: true,
-        originThread: [['link', thread]],
+        __mfield_id: 21,
+        __mfield_isNeedaction: true,
+        __mfield_originThread: [['link', thread]],
     });
     await this.createThreadNeedactionPreviewComponent({
         threadLocalId: thread.localId,
@@ -157,13 +157,13 @@ QUnit.test('click on expand from chat window should close the chat window and op
         hasChatWindow: true,
     });
     const thread = this.env.models['mail.thread'].create({
-        id: 11,
-        model: 'res.partner',
+        __mfield_id: 11,
+        __mfield_model: 'res.partner',
     });
     this.env.models['mail.message'].create({
-        id: 21,
-        isNeedaction: true,
-        originThread: [['link', thread]],
+        __mfield_id: 21,
+        __mfield_isNeedaction: true,
+        __mfield_originThread: [['link', thread]],
     });
     await this.createThreadNeedactionPreviewComponent({
         threadLocalId: thread.localId,
@@ -219,13 +219,13 @@ QUnit.test('[technical] opening a non-channel chat window should not call channe
         },
     });
     const thread = this.env.models['mail.thread'].create({
-        id: 11,
-        model: 'mail.channel',
+        __mfield_id: 11,
+        __mfield_model: 'mail.channel',
     });
     this.env.models['mail.message'].create({
-        id: 21,
-        isNeedaction: true,
-        originThread: [['link', thread]],
+        __mfield_id: 21,
+        __mfield_isNeedaction: true,
+        __mfield_originThread: [['link', thread]],
     });
     await this.createThreadNeedactionPreviewComponent({
         threadLocalId: thread.localId,

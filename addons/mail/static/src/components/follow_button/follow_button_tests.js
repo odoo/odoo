@@ -45,8 +45,8 @@ QUnit.test('base rendering not editable', async function (assert) {
 
     await this.start();
     const thread = this.env.models['mail.thread'].create({
-        id: 100,
-        model: 'res.partner',
+        __mfield_id: 100,
+        __mfield_model: 'res.partner',
     });
     await this.createFollowButtonComponent(thread, { isDisabled: true });
     assert.containsOnce(
@@ -70,8 +70,8 @@ QUnit.test('base rendering editable', async function (assert) {
 
     await this.start();
     const thread = this.env.models['mail.thread'].create({
-        id: 100,
-        model: 'res.partner',
+        __mfield_id: 100,
+        __mfield_model: 'res.partner',
     });
     await this.createFollowButtonComponent(thread);
     assert.containsOnce(
@@ -104,8 +104,8 @@ QUnit.test('hover following button', async function (assert) {
     });
     await this.start();
     const thread = this.env.models['mail.thread'].create({
-        id: 100,
-        model: 'res.partner',
+        __mfield_id: 100,
+        __mfield_model: 'res.partner',
     });
     thread.follow();
     await this.createFollowButtonComponent(thread);
@@ -181,8 +181,8 @@ QUnit.test('click on "follow" button', async function (assert) {
         },
     });
     const thread = this.env.models['mail.thread'].create({
-        id: 100,
-        model: 'res.partner',
+        __mfield_id: 100,
+        __mfield_model: 'res.partner',
     });
     await this.createFollowButtonComponent(thread);
     assert.containsOnce(
@@ -236,8 +236,8 @@ QUnit.test('click on "unfollow" button', async function (assert) {
         },
     });
     const thread = this.env.models['mail.thread'].create({
-        id: 100,
-        model: 'res.partner',
+        __mfield_id: 100,
+        __mfield_model: 'res.partner',
     });
     thread.follow();
     await this.createFollowButtonComponent(thread);

@@ -49,30 +49,30 @@ QUnit.test('simplest layout of a followed subtype', async function (assert) {
     await this.start();
 
     const thread = this.env.models['mail.thread'].create({
-        id: 100,
-        model: 'res.partner',
+        __mfield_id: 100,
+        __mfield_model: 'res.partner',
     });
     const follower = this.env.models['mail.follower'].create({
-        channel: [['insert', {
-            id: 1,
-            model: 'mail.channel',
-            name: "François Perusse",
+        __mfield_channel: [['insert', {
+            __mfield_id: 1,
+            __mfield_model: 'mail.channel',
+            __mfield_name: "François Perusse",
         }]],
-        followedThread: [['link', thread]],
-        id: 2,
-        isActive: true,
-        isEditable: true,
+        __mfield_followedThread: [['link', thread]],
+        __mfield_id: 2,
+        __mfield_isActive: true,
+        __mfield_isEditable: true,
     });
     const followerSubtype = this.env.models['mail.follower_subtype'].create({
-        id: 1,
-        isDefault: true,
-        isInternal: false,
-        name: "Dummy test",
-        resModel: 'res.partner'
+        __mfield_id: 1,
+        __mfield_isDefault: true,
+        __mfield_isInternal: false,
+        __mfield_name: "Dummy test",
+        __mfield_resModel: 'res.partner'
     });
     follower.update({
-        selectedSubtypes: [['link', followerSubtype]],
-        subtypes: [['link', followerSubtype]],
+        __mfield_selectedSubtypes: [['link', followerSubtype]],
+        __mfield_subtypes: [['link', followerSubtype]],
     });
     await this.createFollowerSubtypeComponent({
         follower,
@@ -110,28 +110,28 @@ QUnit.test('simplest layout of a not followed subtype', async function (assert) 
     await this.start();
 
     const thread = this.env.models['mail.thread'].create({
-        id: 100,
-        model: 'res.partner',
+        __mfield_id: 100,
+        __mfield_model: 'res.partner',
     });
     const follower = this.env.models['mail.follower'].create({
-        channel: [['insert', {
-            id: 1,
-            model: 'mail.channel',
-            name: "François Perusse",
+        __mfield_channel: [['insert', {
+            __mfield_id: 1,
+            __mfield_model: 'mail.channel',
+            __mfield_name: "François Perusse",
         }]],
-        followedThread: [['link', thread]],
-        id: 2,
-        isActive: true,
-        isEditable: true,
+        __mfield_followedThread: [['link', thread]],
+        __mfield_id: 2,
+        __mfield_isActive: true,
+        __mfield_isEditable: true,
     });
     const followerSubtype = this.env.models['mail.follower_subtype'].create({
-        id: 1,
-        isDefault: true,
-        isInternal: false,
-        name: "Dummy test",
-        resModel: 'res.partner'
+        __mfield_id: 1,
+        __mfield_isDefault: true,
+        __mfield_isInternal: false,
+        __mfield_name: "Dummy test",
+        __mfield_resModel: 'res.partner'
     });
-    follower.update({ subtypes: [['link', followerSubtype]] });
+    follower.update({ __mfield_subtypes: [['link', followerSubtype]] });
     await this.createFollowerSubtypeComponent({
         follower,
         followerSubtype,
@@ -168,28 +168,28 @@ QUnit.test('toggle follower subtype checkbox', async function (assert) {
     await this.start();
 
     const thread = this.env.models['mail.thread'].create({
-        id: 100,
-        model: 'res.partner',
+        __mfield_id: 100,
+        __mfield_model: 'res.partner',
     });
     const follower = this.env.models['mail.follower'].create({
-        channel: [['insert', {
-            id: 1,
-            model: 'mail.channel',
-            name: "François Perusse",
+        __mfield_channel: [['insert', {
+            __mfield_id: 1,
+            __mfield_model: 'mail.channel',
+            __mfield_name: "François Perusse",
         }]],
-        followedThread: [['link', thread]],
-        id: 2,
-        isActive: true,
-        isEditable: true,
+        __mfield_followedThread: [['link', thread]],
+        __mfield_id: 2,
+        __mfield_isActive: true,
+        __mfield_isEditable: true,
     });
     const followerSubtype = this.env.models['mail.follower_subtype'].create({
-        id: 1,
-        isDefault: true,
-        isInternal: false,
-        name: "Dummy test",
-        resModel: 'res.partner'
+        __mfield_id: 1,
+        __mfield_isDefault: true,
+        __mfield_isInternal: false,
+        __mfield_name: "Dummy test",
+        __mfield_resModel: 'res.partner'
     });
-    follower.update({ subtypes: [['link', followerSubtype]] });
+    follower.update({ __mfield_subtypes: [['link', followerSubtype]] });
     await this.createFollowerSubtypeComponent({
         follower,
         followerSubtype,

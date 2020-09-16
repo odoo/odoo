@@ -3,7 +3,7 @@
 
     <t t-inherit="mail.Composer" t-inherit-mode="extension">
         <xpath expr="//*[hasclass('o_Composer_buttonAttachment')]" position="replace">
-            <t t-if="!composer.thread or composer.thread.channel_type !== 'livechat'">$0</t>
+            <t t-if="!composer.__mfield_thread(mself) or composer.__mfield_thread(mself).__mfield_channel_type(mself) !== 'livechat'">$0</t>
         </xpath>
     </t>
 

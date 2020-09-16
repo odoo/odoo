@@ -49,8 +49,8 @@ QUnit.test('base empty rendering', async function (assert) {
 
     await this.start();
     const thread = this.env.models['mail.thread'].create({
-        id: 100,
-        model: 'res.partner',
+        __mfield_id: 100,
+        __mfield_model: 'res.partner',
     });
     await this.createAttachmentBoxComponent(thread);
     assert.strictEqual(
@@ -101,8 +101,8 @@ QUnit.test('base non-empty rendering', async function (assert) {
         },
     });
     const thread = this.env.models['mail.thread'].create({
-        id: 100,
-        model: 'res.partner',
+        __mfield_id: 100,
+        __mfield_model: 'res.partner',
     });
     await thread.fetchAttachments();
     await this.createAttachmentBoxComponent(thread);
@@ -137,8 +137,8 @@ QUnit.test('attachment box: drop attachments', async function (assert) {
 
     await this.start();
     const thread = this.env.models['mail.thread'].create({
-        id: 100,
-        model: 'res.partner',
+        __mfield_id: 100,
+        __mfield_model: 'res.partner',
     });
     await thread.fetchAttachments();
     await this.createAttachmentBoxComponent(thread);
@@ -213,23 +213,23 @@ QUnit.test('view attachments', async function (assert) {
         hasDialog: true,
     });
     const thread = this.env.models['mail.thread'].create({
-        attachments: [
+        __mfield_attachments: [
             ['insert', {
-                id: 143,
-                mimetype: 'text/plain',
-                name: 'Blah.txt'
+                __mfield_id: 143,
+                __mfield_mimetype: 'text/plain',
+                __mfield_name: 'Blah.txt'
             }],
             ['insert', {
-                id: 144,
-                mimetype: 'text/plain',
-                name: 'Blu.txt'
+                __mfield_id: 144,
+                __mfield_mimetype: 'text/plain',
+                __mfield_name: 'Blu.txt'
             }]
         ],
-        id: 100,
-        model: 'res.partner',
+        __mfield_id: 100,
+        __mfield_model: 'res.partner',
     });
     const firstAttachment = this.env.models['mail.attachment'].find(
-        attachment => attachment.id === 143
+        attachment => attachment.__mfield_id() === 143
     );
     await this.createAttachmentBoxComponent(thread);
 

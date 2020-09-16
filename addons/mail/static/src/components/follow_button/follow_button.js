@@ -1,7 +1,7 @@
 odoo.define('mail/static/src/components/follow_button/follow_button.js', function (require) {
 'use strict';
 
-const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
+const useModels = require('mail/static/src/component_hooks/use_models/use_models.js');
 
 const { Component } = owl;
 const { useState } = owl.hooks;
@@ -18,12 +18,7 @@ class FollowButton extends Component {
              */
             isUnfollowButtonHighlighted: false,
         });
-        useStore(props => {
-            const thread = this.env.models['mail.thread'].get(props.threadLocalId);
-            return {
-                thread: thread ? thread.__state : undefined,
-            };
-        });
+        useModels();
     }
 
     //--------------------------------------------------------------------------

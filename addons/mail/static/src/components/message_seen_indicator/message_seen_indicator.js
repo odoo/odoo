@@ -1,7 +1,7 @@
 odoo.define('mail/static/src/components/message_seen_indicator/message_seen_indicator.js', function (require) {
 'use strict';
 
-const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
+const useModels = require('mail/static/src/component_hooks/use_models/use_models.js');
 
 const { Component } = owl;
 
@@ -12,18 +12,7 @@ class MessageSeenIndicator extends Component {
      */
     constructor(...args) {
         super(...args);
-        useStore(props => {
-            const message = this.env.models['mail.message'].get(props.messageLocalId);
-            const thread = this.env.models['mail.thread'].get(props.threadLocalId);
-            const messageSeenIndicator = this.env.models['mail.message_seen_indicator'].find(
-                messageSeenIndicator =>
-                    messageSeenIndicator.message === message &&
-                    messageSeenIndicator.thread === thread
-            );
-            return {
-                messageSeenIndicator: messageSeenIndicator ? messageSeenIndicator.__state : undefined,
-            };
-        });
+        useModels();
     }
 
     //--------------------------------------------------------------------------
@@ -37,12 +26,12 @@ class MessageSeenIndicator extends Component {
         if (!this.messageSeenIndicator) {
             return '';
         }
-        if (this.messageSeenIndicator.hasEveryoneSeen) {
+        if (this.messageSeenIndicator.__mfield_hasEveryoneSeen(this)) {
             return this.env._t("Seen by Everyone");
         }
-        if (this.messageSeenIndicator.hasSomeoneSeen) {
-            const partnersThatHaveSeen = this.messageSeenIndicator.partnersThatHaveSeen.map(
-                partner => partner.name
+        if (this.messageSeenIndicator.__mfield_hasSomeoneSeen(this)) {
+            const partnersThatHaveSeen = this.messageSeenIndicator.__mfield_partnersThatHaveSeen(this).map(
+                partner => partner.__mfield_name(this)
             );
             if (partnersThatHaveSeen.length === 1) {
                 return _.str.sprintf(
@@ -63,12 +52,12 @@ class MessageSeenIndicator extends Component {
                 partnersThatHaveSeen[1]
             );
         }
-        if (this.messageSeenIndicator.hasEveryoneFetched) {
+        if (this.messageSeenIndicator.__mfield_hasEveryoneFetched(this)) {
             return this.env._t("Received by Everyone");
         }
-        if (this.messageSeenIndicator.hasSomeoneFetched) {
-            const partnersThatHaveFetched = this.messageSeenIndicator.partnersThatHaveFetched.map(
-                partner => partner.name
+        if (this.messageSeenIndicator.__mfield_hasSomeoneFetched(this)) {
+            const partnersThatHaveFetched = this.messageSeenIndicator.__mfield_partnersThatHaveFetched(this).map(
+                partner => partner.__mfield_name(this)
             );
             if (partnersThatHaveFetched.length === 1) {
                 return _.str.sprintf(
@@ -104,8 +93,8 @@ class MessageSeenIndicator extends Component {
      */
     get messageSeenIndicator() {
         return this.env.models['mail.message_seen_indicator'].find(messageSeenIndicator =>
-            messageSeenIndicator.message === this.message &&
-            messageSeenIndicator.thread === this.thread
+            messageSeenIndicator.__mfield_message() === this.message &&
+            messageSeenIndicator.__mfield_thread() === this.thread
         );
     }
 

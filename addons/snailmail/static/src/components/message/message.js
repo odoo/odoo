@@ -36,14 +36,14 @@ patch(components.Message, 'snailmail/static/src/components/message/message.js', 
      * @override
      */
     _onClickFailure() {
-        if (this.message.message_type === 'snailmail') {
+        if (this.message.__mfield_message_type(this) === 'snailmail') {
             /**
              * Messages from snailmail are considered to have at most one
              * notification. The failure type of the whole message is considered
              * to be the same as the one from that first notification, and the
              * click action will depend on it.
              */
-            switch (this.message.notifications[0].failure_type) {
+            switch (this.message.__mfield_notifications(this)[0].__mfield_failure_type(this)) {
                 case 'sn_credit':
                     // URL only used in this component, not received at init
                     this.env.messaging.fetchSnailmailCreditsUrl();

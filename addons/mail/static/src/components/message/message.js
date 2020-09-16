@@ -10,7 +10,7 @@ const components = {
     NotificationPopover: require('mail/static/src/components/notification_popover/notification_popover.js'),
     PartnerImStatusIcon: require('mail/static/src/components/partner_im_status_icon/partner_im_status_icon.js'),
 };
-const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
+const useModels = require('mail/static/src/component_hooks/use_models/use_models.js');
 const { markEventHandled } = require('mail/static/src/utils/utils.js');
 const { timeFromNow } = require('mail.utils');
 
@@ -47,38 +47,7 @@ class Message extends Component {
              */
             timeElapsed: null,
         });
-        useStore(props => {
-            const message = this.env.models['mail.message'].get(props.messageLocalId);
-            const author = message ? message.author : undefined;
-            const partnerRoot = this.env.messaging.partnerRoot;
-            const originThread = message ? message.originThread : undefined;
-            const threadView = this.env.models['mail.thread_view'].get(props.threadViewLocalId);
-            const thread = threadView ? threadView.thread : undefined;
-            const threadStringifiedDomain = threadView
-                ? threadView.stringifiedDomain
-                : undefined;
-            return {
-                attachments: message
-                    ? message.attachments.map(attachment => attachment.__state)
-                    : undefined,
-                author: author ? author.__state : undefined,
-                hasMessageCheckbox: message ? message.hasCheckbox : false,
-                isDeviceMobile: this.env.messaging.device.isMobile,
-                isMessageChecked: message && threadView
-                    ? message.isChecked(thread, threadStringifiedDomain)
-                    : false,
-                message: message ? message.__state : undefined,
-                notifications: message ? message.notifications.map(notif => notif.__state) : [],
-                originThread: originThread ? originThread.__state : undefined,
-                partnerRoot: partnerRoot ? partnerRoot.__state : undefined,
-                thread: thread ? thread.__state : undefined,
-                threadView: threadView ? threadView.__state : undefined,
-            };
-        }, {
-            compareDepth: {
-                notifications: 1,
-            },
-        });
+        useModels();
         /**
          * The intent of the reply button depends on the last rendered state.
          */
@@ -132,16 +101,16 @@ class Message extends Component {
      */
     get avatar() {
         if (
-            this.message.author &&
-            this.message.author === this.env.messaging.partnerRoot
+            this.message.__mfield_author(this) &&
+            this.message.__mfield_author(this) === this.env.messaging.__mfield_partnerRoot(this)
         ) {
             return '/mail/static/src/img/odoobot.png';
-        } else if (this.message.author) {
+        } else if (this.message.__mfield_author(this)) {
             // TODO FIXME for public user this might not be accessible. task-2223236
             // we should probably use the correspondig attachment id + access token
             // or create a dedicated route to get message image, checking the access right of the message
-            return `/web/image/res.partner/${this.message.author.id}/image_128`;
-        } else if (this.message.message_type === 'email') {
+            return `/web/image/res.partner/${this.message.__mfield_author(this).__mfield_id(this)}/image_128`;
+        } else if (this.message.__mfield_message_type(this) === 'email') {
             return '/mail/static/src/img/email_icon.png';
         }
         return '/mail/static/src/img/smiley/avatar.jpg';
@@ -153,7 +122,7 @@ class Message extends Component {
      * @returns {string}
      */
     get datetime() {
-        return this.message.date.format(getLangDatetimeFormat());
+        return this.message.__mfield_date(this).format(getLangDatetimeFormat());
     }
 
     /**
@@ -162,13 +131,13 @@ class Message extends Component {
      * @returns {boolean}
      */
     get hasAuthorOpenChat() {
-        if (!this.message.author) {
+        if (!this.message.__mfield_author(this)) {
             return false;
         }
         if (
             this.threadView &&
-            this.threadView.thread &&
-            this.threadView.thread.correspondent === this.message.author
+            this.threadView.__mfield_thread(this) &&
+            this.threadView.__mfield_thread(this).__mfield_correspondent(this) === this.message.__mfield_author(this)
         ) {
             return false;
         }
@@ -179,7 +148,7 @@ class Message extends Component {
      * @returns {mail.attachment[]}
      */
     get imageAttachments() {
-        return this.message.attachments.filter(attachment => attachment.fileType === 'image');
+        return this.message.__mfield_attachments(this).filter(attachment => attachment.__mfield_fileType(this) === 'image');
     }
 
     /**
@@ -234,7 +203,7 @@ class Message extends Component {
      * @returns {mail.attachment[]}
      */
     get nonImageAttachments() {
-        return this.message.attachments.filter(attachment => attachment.fileType !== 'image');
+        return this.message.__mfield_attachments(this).filter(attachment => attachment.__mfield_fileType(this) !== 'image');
     }
 
     /**
@@ -272,7 +241,7 @@ class Message extends Component {
      * @returns {string}
      */
     get shortTime() {
-        return this.message.date.format('hh:mm');
+        return this.message.__mfield_date(this).format('hh:mm');
     }
 
     /**
@@ -286,7 +255,7 @@ class Message extends Component {
      * @returns {Object}
      */
     get trackingValues() {
-        return this.message.tracking_value_ids.map(trackingValue => {
+        return this.message.__mfield_tracking_value_ids(this).map(trackingValue => {
             const value = Object.assign({}, trackingValue);
             value.changed_field = _.str.sprintf(this.env._t("%s:"), value.changed_field);
             if (value.field_type === 'datetime') {
@@ -403,11 +372,11 @@ class Message extends Component {
     _update() {
         this._wasSelected = this.props.isSelected;
         if (!this.state.timeElapsed) {
-            this.state.timeElapsed = timeFromNow(this.message.date);
+            this.state.timeElapsed = timeFromNow(this.message.__mfield_date(this));
         }
         clearInterval(this._intervalId);
         this._intervalId = setInterval(() => {
-            this.state.timeElapsed = timeFromNow(this.message.date);
+            this.state.timeElapsed = timeFromNow(this.message.__mfield_date(this));
         }, 60 * 1000);
     }
 
@@ -419,7 +388,7 @@ class Message extends Component {
      * @private
      */
     _onChangeCheckbox() {
-        this.message.toggleCheck(this.threadView.thread, this.threadView.stringifiedDomain);
+        this.message.toggleCheck(this.threadView.__mfield_thread(this), this.threadView.__mfield_stringifiedDomain(this));
     }
 
     /**
@@ -459,7 +428,7 @@ class Message extends Component {
             return;
         }
         markEventHandled(ev, 'Message.authorOpenChat');
-        this.message.author.openChat();
+        this.message.__mfield_author(this).openChat();
     }
 
     /**
@@ -467,11 +436,11 @@ class Message extends Component {
      * @param {MouseEvent} ev
      */
     _onClickAuthorName(ev) {
-        if (!this.message.author) {
+        if (!this.message.__mfield_author(this)) {
             return;
         }
         markEventHandled(ev, 'Message.authorOpenProfile');
-        this.message.author.openProfile();
+        this.message.__mfield_author(this).openProfile();
     }
 
     /**
@@ -534,7 +503,7 @@ class Message extends Component {
     _onClickOriginThread(ev) {
         // avoid following dummy href
         ev.preventDefault();
-        this.message.originThread.open();
+        this.message.__mfield_originThread(this).open();
     }
 
     /**
@@ -565,7 +534,7 @@ class Message extends Component {
         // before the current handler is executed. Indeed because it does a
         // toggle it needs to take into account the value before the click.
         if (this._wasSelected) {
-            this.env.messaging.discuss.clearReplyingToMessage();
+            this.env.messaging.__mfield_discuss(this).clearReplyingToMessage();
         } else {
             this.message.replyTo();
         }

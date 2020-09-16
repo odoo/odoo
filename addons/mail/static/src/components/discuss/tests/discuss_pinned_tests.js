@@ -39,14 +39,15 @@ QUnit.test('sidebar: pinned channel 1: init with one pinned channel', async func
     await this.start();
     assert.containsOnce(
         document.body,
-        `.o_Discuss_thread[data-thread-local-id="${this.env.messaging.inbox.localId}"]`,
+        `.o_Discuss_thread[data-thread-local-id="${this.env.messaging.__mfield_inbox().localId}"]`,
         "The Inbox is opened in discuss"
     );
     assert.containsOnce(
         document.body,
         `.o_DiscussSidebarItem[data-thread-local-id="${
             this.env.models['mail.thread'].find(thread =>
-                thread.id === 20 && thread.model === 'mail.channel'
+                thread.__mfield_id() === 20 &&
+                thread.__mfield_model() === 'mail.channel'
             ).localId
         }"]`,
         "should have the only channel of which user is member in discuss sidebar"
@@ -62,7 +63,8 @@ QUnit.test('sidebar: pinned channel 2: open pinned channel', async function (ass
     await this.start();
 
     const threadGeneral = this.env.models['mail.thread'].find(thread =>
-        thread.id === 20 && thread.model === 'mail.channel'
+        thread.__mfield_id() === 20 &&
+        thread.__mfield_model() === 'mail.channel'
     );
     await afterNextRender(() =>
         document.querySelector(`.o_DiscussSidebarItem[data-thread-local-id="${
@@ -105,7 +107,8 @@ QUnit.test('sidebar: pinned channel 3: open pinned channel and unpin it', async 
     });
 
     const threadGeneral = this.env.models['mail.thread'].find(thread =>
-        thread.id === 20 && thread.model === 'mail.channel'
+        thread.__mfield_id() === 20 &&
+        thread.__mfield_model() === 'mail.channel'
     );
     await afterNextRender(() =>
         document.querySelector(`.o_DiscussSidebarItem[data-thread-local-id="${
@@ -143,12 +146,13 @@ QUnit.test('sidebar: unpin channel from bus', async function (assert) {
     this.data['mail.channel'].records.push({ id: 20 });
     await this.start();
     const threadGeneral = this.env.models['mail.thread'].find(thread =>
-        thread.id === 20 && thread.model === 'mail.channel'
+        thread.__mfield_id() === 20 &&
+        thread.__mfield_model() === 'mail.channel'
     );
 
     assert.containsOnce(
         document.body,
-        `.o_Discuss_thread[data-thread-local-id="${this.env.messaging.inbox.localId}"]`,
+        `.o_Discuss_thread[data-thread-local-id="${this.env.messaging.__mfield_inbox().localId}"]`,
         "The Inbox is opened in discuss"
     );
     assert.containsOnce(
@@ -172,7 +176,7 @@ QUnit.test('sidebar: unpin channel from bus', async function (assert) {
     // (e.g. from user interaction from another device or browser tab)
     await afterNextRender(() => {
         const notif = [
-            ["dbName", 'res.partner', this.env.messaging.currentPartner.id],
+            ["dbName", 'res.partner', this.env.messaging.__mfield_currentPartner().__mfield_id()],
             {
                 channel_type: 'channel',
                 id: 20,
@@ -212,7 +216,8 @@ QUnit.test('[technical] sidebar: channel group_based_subscription: mandatorily p
     });
     await this.start();
     const threadGeneral = this.env.models['mail.thread'].find(thread =>
-        thread.id === 20 && thread.model === 'mail.channel'
+        thread.__mfield_id() === 20 &&
+        thread.__mfield_model() === 'mail.channel'
     );
     assert.containsOnce(
         document.body,

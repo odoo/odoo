@@ -13,14 +13,14 @@
                     <t t-if="notification.type === 'thread' and notification.thread">
                         <ThreadPreview
                             class="o_NotificationList_preview"
-                            t-att-class="{ 'o-mobile': env.messaging.device.isMobile }"
+                            t-att-class="{ 'o-mobile': env.messaging.__mfield_device(mself).__mfield_isMobile(mself) }"
                             threadLocalId="notification.thread.localId"
                         />
                     </t>
                     <t t-if="notification.type === 'thread_needaction' and notification.thread">
                         <ThreadNeedactionPreview
                             class="o_NotificationList_preview"
-                            t-att-class="{ 'o-mobile': env.messaging.device.isMobile }"
+                            t-att-class="{ 'o-mobile': env.messaging.__mfield_device(mself).__mfield_isMobile(mself) }"
                             threadLocalId="notification.thread.localId"
                         />
                     </t>

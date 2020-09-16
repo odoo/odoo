@@ -4,25 +4,25 @@
         <div class="o_ComposerSuggestedRecipient" t-att-title="ADD_AS_RECIPIENT_AND_FOLLOWER_REASON">
             <t t-if="suggestedRecipientInfo">
                 <div class="custom-control custom-checkbox">
-                    <input t-attf-id="{{ id }}_checkbox" class="custom-control-input" type="checkbox" t-att-checked="suggestedRecipientInfo.isSelected ? 'checked' : undefined" t-on-change="_onChangeCheckbox" t-ref="checkbox" />
+                    <input t-attf-id="{{ id }}_checkbox" class="custom-control-input" type="checkbox" t-att-checked="suggestedRecipientInfo.__mfield_isSelected(mself) ? 'checked' : undefined" t-on-change="_onChangeCheckbox" t-ref="checkbox" />
                     <label class="custom-control-label" t-attf-for="{{ id }}_checkbox">
-                        <t t-if="suggestedRecipientInfo.name">
-                            <t t-esc="suggestedRecipientInfo.name"/>
+                        <t t-if="suggestedRecipientInfo.__mfield_name(mself)">
+                            <t t-esc="suggestedRecipientInfo.__mfield_name(mself)"/>
                         </t>
-                        <t t-if="suggestedRecipientInfo.email">
-                            (<t t-esc="suggestedRecipientInfo.email"/>)
+                        <t t-if="suggestedRecipientInfo.__mfield_email(mself)">
+                            (<t t-esc="suggestedRecipientInfo.__mfield_email(mself)"/>)
                         </t>
                     </label>
                 </div>
-                <t t-if="!suggestedRecipientInfo.partner">
+                <t t-if="!suggestedRecipientInfo.__mfield_partner(mself)">
                     <FormViewDialogComponentAdapter
                         Component="FormViewDialog"
                         params="{
                             context: {
-                                active_id: suggestedRecipientInfo.thread.id,
+                                active_id: suggestedRecipientInfo.__mfield_thread(mself).__mfield_id(mself),
                                 active_model: 'mail.compose.message',
-                                default_email: suggestedRecipientInfo.email,
-                                default_name: suggestedRecipientInfo.name,
+                                default_email: suggestedRecipientInfo.__mfield_email(mself),
+                                default_name: suggestedRecipientInfo.__mfield_name(mself),
                                 force_email: true,
                                 ref: 'compound_context',
                             },

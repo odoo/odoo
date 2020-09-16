@@ -45,10 +45,10 @@ QUnit.test('simplest layout', async function (assert) {
 
     await this.start();
     const attachment = this.env.models['mail.attachment'].create({
-        filename: "test.txt",
-        id: 750,
-        mimetype: 'text/plain',
-        name: "test.txt",
+        __mfield_filename: "test.txt",
+        __mfield_id: 750,
+        __mfield_mimetype: 'text/plain',
+        __mfield_name: "test.txt",
     });
     await this.createAttachmentComponent(attachment, {
         detailsMode: 'none',
@@ -65,7 +65,7 @@ QUnit.test('simplest layout', async function (assert) {
     const attachmentEl = document.querySelector('.o_Attachment');
     assert.strictEqual(
         attachmentEl.dataset.attachmentLocalId,
-        this.env.models['mail.attachment'].find(attachment => attachment.id === 750).localId,
+        this.env.models['mail.attachment'].find(attachment => attachment.__mfield_id() === 750).localId,
         "attachment component should be linked to attachment store model"
     );
     assert.strictEqual(
@@ -115,10 +115,10 @@ QUnit.test('simplest layout + deletable', async function (assert) {
         },
     });
     const attachment = this.env.models['mail.attachment'].create({
-        filename: "test.txt",
-        id: 750,
-        mimetype: 'text/plain',
-        name: "test.txt",
+        __mfield_filename: "test.txt",
+        __mfield_id: 750,
+        __mfield_mimetype: 'text/plain',
+        __mfield_name: "test.txt",
     });
     await this.createAttachmentComponent(attachment, {
         detailsMode: 'none',
@@ -164,10 +164,10 @@ QUnit.test('simplest layout + downloadable', async function (assert) {
 
     await this.start();
     const attachment = this.env.models['mail.attachment'].create({
-        filename: "test.txt",
-        id: 750,
-        mimetype: 'text/plain',
-        name: "test.txt",
+        __mfield_filename: "test.txt",
+        __mfield_id: 750,
+        __mfield_mimetype: 'text/plain',
+        __mfield_name: "test.txt",
     });
     await this.createAttachmentComponent(attachment, {
         detailsMode: 'none',
@@ -213,10 +213,10 @@ QUnit.test('simplest layout + deletable + downloadable', async function (assert)
 
     await this.start();
     const attachment = this.env.models['mail.attachment'].create({
-        filename: "test.txt",
-        id: 750,
-        mimetype: 'text/plain',
-        name: "test.txt",
+        __mfield_filename: "test.txt",
+        __mfield_id: 750,
+        __mfield_mimetype: 'text/plain',
+        __mfield_name: "test.txt",
     });
     await this.createAttachmentComponent(attachment, {
         detailsMode: 'none',
@@ -271,10 +271,10 @@ QUnit.test('layout with card details', async function (assert) {
 
     await this.start();
     const attachment = this.env.models['mail.attachment'].create({
-        filename: "test.txt",
-        id: 750,
-        mimetype: 'text/plain',
-        name: "test.txt",
+        __mfield_filename: "test.txt",
+        __mfield_id: 750,
+        __mfield_mimetype: 'text/plain',
+        __mfield_name: "test.txt",
     });
     await this.createAttachmentComponent(attachment, {
         detailsMode: 'card',
@@ -305,10 +305,10 @@ QUnit.test('layout with card details and filename', async function (assert) {
 
     await this.start();
     const attachment = this.env.models['mail.attachment'].create({
-        filename: "test.txt",
-        id: 750,
-        mimetype: 'text/plain',
-        name: "test.txt",
+        __mfield_filename: "test.txt",
+        __mfield_id: 750,
+        __mfield_mimetype: 'text/plain',
+        __mfield_name: "test.txt",
     });
     await this.createAttachmentComponent(attachment, {
         detailsMode: 'card',
@@ -339,10 +339,10 @@ QUnit.test('layout with card details and extension', async function (assert) {
 
     await this.start();
     const attachment = this.env.models['mail.attachment'].create({
-        filename: "test.txt",
-        id: 750,
-        mimetype: 'text/plain',
-        name: "test.txt",
+        __mfield_filename: "test.txt",
+        __mfield_id: 750,
+        __mfield_mimetype: 'text/plain',
+        __mfield_name: "test.txt",
     });
     await this.createAttachmentComponent(attachment, {
         detailsMode: 'card',
@@ -373,10 +373,10 @@ QUnit.test('layout with card details and filename and extension', async function
 
     await this.start();
     const attachment = this.env.models['mail.attachment'].create({
-        filename: "test.txt",
-        id: 750,
-        mimetype: 'text/plain',
-        name: "test.txt",
+        __mfield_filename: "test.txt",
+        __mfield_id: 750,
+        __mfield_mimetype: 'text/plain',
+        __mfield_name: "test.txt",
     });
     await this.createAttachmentComponent(attachment, {
         detailsMode: 'card',
@@ -407,10 +407,10 @@ QUnit.test('simplest layout with hover details and filename and extension', asyn
 
     await this.start();
     const attachment = this.env.models['mail.attachment'].create({
-        filename: "test.txt",
-        id: 750,
-        mimetype: 'text/plain',
-        name: "test.txt",
+        __mfield_filename: "test.txt",
+        __mfield_id: 750,
+        __mfield_mimetype: 'text/plain',
+        __mfield_name: "test.txt",
     });
     await this.createAttachmentComponent(attachment, {
         detailsMode: 'hover',
@@ -468,10 +468,10 @@ QUnit.test('auto layout with image', async function (assert) {
 
     await this.start();
     const attachment = this.env.models['mail.attachment'].create({
-        filename: "test.png",
-        id: 750,
-        mimetype: 'image/png',
-        name: "test.png",
+        __mfield_filename: "test.png",
+        __mfield_id: 750,
+        __mfield_mimetype: 'image/png',
+        __mfield_name: "test.png",
     });
 
     await this.createAttachmentComponent(attachment, {
@@ -527,10 +527,10 @@ QUnit.test('view attachment', async function (assert) {
         hasDialog: true,
     });
     const attachment = this.env.models['mail.attachment'].create({
-        filename: "test.png",
-        id: 750,
-        mimetype: 'image/png',
-        name: "test.png",
+        __mfield_filename: "test.png",
+        __mfield_id: 750,
+        __mfield_mimetype: 'image/png',
+        __mfield_name: "test.png",
     });
 
     await this.createAttachmentComponent(attachment, {
@@ -561,10 +561,10 @@ QUnit.test('close attachment viewer', async function (assert) {
 
     await this.start({ hasDialog: true });
     const attachment = this.env.models['mail.attachment'].create({
-        filename: "test.png",
-        id: 750,
-        mimetype: 'image/png',
-        name: "test.png",
+        __mfield_filename: "test.png",
+        __mfield_id: 750,
+        __mfield_mimetype: 'image/png',
+        __mfield_name: "test.png",
     });
 
     await this.createAttachmentComponent(attachment, {

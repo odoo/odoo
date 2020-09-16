@@ -44,15 +44,15 @@ QUnit.test('command suggestion displayed', async function (assert) {
     this.data['mail.channel'].records.push({ id: 20 });
     await this.start();
     const thread = this.env.models['mail.thread'].findFromIdentifyingData({
-        id: 20,
-        model: 'mail.channel',
+        __mfield_id: 20,
+        __mfield_model: 'mail.channel',
     });
     const command = this.env.models['mail.channel_command'].create({
-        name: 'whois',
-        help: "Displays who it is",
+        __mfield_name: 'whois',
+        __mfield_help: "Displays who it is",
     });
     await this.createComposerSuggestion({
-        composerLocalId: thread.composer.localId,
+        composerLocalId: thread.__mfield_composer().localId,
         isActive: true,
         modelName: 'mail.channel_command',
         recordLocalId: command.localId,
@@ -71,15 +71,15 @@ QUnit.test('command suggestion correct data', async function (assert) {
     this.data['mail.channel'].records.push({ id: 20 });
     await this.start();
     const thread = this.env.models['mail.thread'].findFromIdentifyingData({
-        id: 20,
-        model: 'mail.channel',
+        __mfield_id: 20,
+        __mfield_model: 'mail.channel',
     });
     const command = this.env.models['mail.channel_command'].create({
-        name: 'whois',
-        help: "Displays who it is",
+        __mfield_name: 'whois',
+        __mfield_help: "Displays who it is",
     });
     await this.createComposerSuggestion({
-        composerLocalId: thread.composer.localId,
+        composerLocalId: thread.__mfield_composer().localId,
         isActive: true,
         modelName: 'mail.channel_command',
         recordLocalId: command.localId,
@@ -118,15 +118,15 @@ QUnit.test('command suggestion active', async function (assert) {
     this.data['mail.channel'].records.push({ id: 20 });
     await this.start();
     const thread = this.env.models['mail.thread'].findFromIdentifyingData({
-        id: 20,
-        model: 'mail.channel',
+        __mfield_id: 20,
+        __mfield_model: 'mail.channel',
     });
     const command = this.env.models['mail.channel_command'].create({
-        name: 'whois',
-        help: "Displays who it is",
+        __mfield_name: 'whois',
+        __mfield_help: "Displays who it is",
     });
     await this.createComposerSuggestion({
-        composerLocalId: thread.composer.localId,
+        composerLocalId: thread.__mfield_composer().localId,
         isActive: true,
         modelName: 'mail.channel_command',
         recordLocalId: command.localId,

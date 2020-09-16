@@ -2,7 +2,7 @@ odoo.define('mail/static/src/models/messaging/messaging.js', function (require) 
 'use strict';
 
 const { registerNewModel } = require('mail/static/src/model/model_core.js');
-const { attr, many2one, one2many, one2one } = require('mail/static/src/model/model_field.js');
+const { attr, many2one, one2many, one2one } = require('mail/static/src/model/model_field_utils.js');
 
 function factory(dependencies) {
 
@@ -22,9 +22,11 @@ function factory(dependencies) {
         async start() {
             this._handleGlobalWindowFocus = this._handleGlobalWindowFocus.bind(this);
             this.env.services['bus_service'].on('window_focus', null, this._handleGlobalWindowFocus);
-            await this.async(() => this.initializer.start());
-            this.notificationHandler.start();
-            this.update({ isInitialized: true });
+            await this.async(() => this.__mfield_initializer(this).start());
+            this.__mfield_notificationHandler(this).start();
+            this.update({
+                __mfield_isInitialized: true,
+            });
         }
 
         //----------------------------------------------------------------------
@@ -44,11 +46,15 @@ function factory(dependencies) {
          */
         async getChat({ partnerId, userId }) {
             if (userId) {
-                const user = this.env.models['mail.user'].insert({ id: userId });
+                const user = this.env.models['mail.user'].insert({
+                    __mfield_id: userId,
+                });
                 return user.getChat();
             }
             if (partnerId) {
-                const partner = this.env.models['mail.partner'].insert({ id: partnerId });
+                const partner = this.env.models['mail.partner'].insert({
+                    __mfield_id: partnerId,
+                });
                 return partner.getChat();
             }
         }
@@ -87,10 +93,10 @@ function factory(dependencies) {
                     res_id: id,
                 },
             });
-            if (this.env.messaging.device.isMobile) {
+            if (this.env.messaging.__mfield_device(this).__mfield_isMobile(this)) {
                 // messaging menu has a higher z-index than views so it must
                 // be closed to ensure the visibility of the view
-                this.env.messaging.messagingMenu.close();
+                this.env.messaging.__mfield_messagingMenu(this).close();
             }
         }
 
@@ -104,15 +110,22 @@ function factory(dependencies) {
          */
         async openProfile({ id, model }) {
             if (model === 'res.partner') {
-                const partner = this.env.models['mail.partner'].insert({ id });
+                const partner = this.env.models['mail.partner'].insert({
+                    __mfield_id: id,
+                });
                 return partner.openProfile();
             }
             if (model === 'res.users') {
-                const user = this.env.models['mail.user'].insert({ id });
+                const user = this.env.models['mail.user'].insert({
+                    __mfield_id: id,
+                });
                 return user.openProfile();
             }
             if (model === 'mail.channel') {
-                let channel = this.env.models['mail.thread'].findFromIdentifyingData({ id, model: 'mail.channel' });
+                let channel = this.env.models['mail.thread'].findFromIdentifyingData({
+                    __mfield_: id,
+                    __mfield_model: 'mail.channel',
+                });
                 if (!channel) {
                     channel = (await this.async(() =>
                         this.env.models['mail.thread'].performRpcChannelInfo({ ids: [id] })
@@ -138,7 +151,9 @@ function factory(dependencies) {
          * @private
          */
         _handleGlobalWindowFocus() {
-            this.update({ outOfFocusUnreadMessageCounter: 0 });
+            this.update({
+                __mfield_outOfFocusUnreadMessageCounter: 0,
+            });
             this.env.bus.trigger('set_title_part', {
                 part: '_chat',
             });
@@ -147,75 +162,75 @@ function factory(dependencies) {
     }
 
     Messaging.fields = {
-        cannedResponses: one2many('mail.canned_response'),
-        chatWindowManager: one2one('mail.chat_window_manager', {
+        __mfield_cannedResponses: one2many('mail.canned_response'),
+        __mfield_chatWindowManager: one2one('mail.chat_window_manager', {
             default: [['create']],
-            inverse: 'messaging',
+            inverse: '__mfield_messaging',
             isCausal: true,
         }),
-        commands: one2many('mail.channel_command'),
-        currentPartner: one2one('mail.partner'),
-        currentUser: one2one('mail.user'),
-        device: one2one('mail.device', {
-            default: [['create']],
-            isCausal: true,
-        }),
-        dialogManager: one2one('mail.dialog_manager', {
+        __mfield_commands: one2many('mail.channel_command'),
+        __mfield_currentPartner: one2one('mail.partner'),
+        __mfield_currentUser: one2one('mail.user'),
+        __mfield_device: one2one('mail.device', {
             default: [['create']],
             isCausal: true,
         }),
-        discuss: one2one('mail.discuss', {
+        __mfield_dialogManager: one2one('mail.dialog_manager', {
             default: [['create']],
-            inverse: 'messaging',
+            isCausal: true,
+        }),
+        __mfield_discuss: one2one('mail.discuss', {
+            default: [['create']],
+            inverse: '__mfield_messaging',
             isCausal: true,
         }),
         /**
          * Mailbox History.
          */
-        history: one2one('mail.thread'),
+        __mfield_history: one2one('mail.thread'),
         /**
          * Mailbox Inbox.
          */
-        inbox: one2one('mail.thread'),
-        initializer: one2one('mail.messaging_initializer', {
+        __mfield_inbox: one2one('mail.thread'),
+        __mfield_initializer: one2one('mail.messaging_initializer', {
             default: [['create']],
-            inverse: 'messaging',
+            inverse: '__mfield_messaging',
             isCausal: true,
         }),
-        isInitialized: attr({
+        __mfield_isInitialized: attr({
             default: false,
         }),
-        locale: one2one('mail.locale', {
+        __mfield_locale: one2one('mail.locale', {
             default: [['create']],
             isCausal: true,
         }),
-        messagingMenu: one2one('mail.messaging_menu', {
+        __mfield_messagingMenu: one2one('mail.messaging_menu', {
             default: [['create']],
-            inverse: 'messaging',
+            inverse: '__mfield_messaging',
             isCausal: true,
         }),
         /**
          * Mailbox Moderation.
          */
-        moderation: one2one('mail.thread'),
-        notificationGroupManager: one2one('mail.notification_group_manager', {
+        __mfield_moderation: one2one('mail.thread'),
+        __mfield_notificationGroupManager: one2one('mail.notification_group_manager', {
             default: [['create']],
             isCausal: true,
         }),
-        notificationHandler: one2one('mail.messaging_notification_handler', {
+        __mfield_notificationHandler: one2one('mail.messaging_notification_handler', {
             default: [['create']],
-            inverse: 'messaging',
+            inverse: '__mfield_messaging',
             isCausal: true,
         }),
-        outOfFocusUnreadMessageCounter: attr({
+        __mfield_outOfFocusUnreadMessageCounter: attr({
             default: 0,
         }),
-        partnerRoot: many2one('mail.partner'),
-        publicPartner: many2one('mail.partner'),
+        __mfield_partnerRoot: many2one('mail.partner'),
+        __mfield_publicPartner: many2one('mail.partner'),
         /**
          * Mailbox Starred.
          */
-        starred: one2one('mail.thread'),
+        __mfield_starred: one2one('mail.thread'),
     };
 
     Messaging.modelName = 'mail.messaging';

@@ -2,7 +2,7 @@ odoo.define('mail/static/src/models/activity_type/activity_type.js', function (r
 'use strict';
 
 const { registerNewModel } = require('mail/static/src/model/model_core.js');
-const { attr, one2many } = require('mail/static/src/model/model_field.js');
+const { attr, one2many } = require('mail/static/src/model/model_field_utils.js');
 
 function factory(dependencies) {
 
@@ -16,17 +16,17 @@ function factory(dependencies) {
          * @override
          */
         static _createRecordLocalId(data) {
-            return `${this.modelName}_${data.id}`;
+            return `${this.modelName}_${data.__mfield_id}`;
         }
 
     }
 
     ActivityType.fields = {
-        activities: one2many('mail.activity', {
-            inverse: 'type',
+        __mfield_activities: one2many('mail.activity', {
+            inverse: '__mfield_type',
         }),
-        displayName: attr(),
-        id: attr(),
+        __mfield_displayName: attr(),
+        __mfield_id: attr(),
     };
 
     ActivityType.modelName = 'mail.activity_type';

@@ -1,7 +1,7 @@
 odoo.define('mail/static/src/components/activity_mark_done_popover/activity_mark_done_popover.js', function (require) {
 'use strict';
 
-const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
+const useModels = require('mail/static/src/component_hooks/use_models/use_models.js');
 
 const { Component } = owl;
 const { useRef } = owl.hooks;
@@ -13,12 +13,7 @@ class ActivityMarkDonePopover extends Component {
      */
     constructor(...args) {
         super(...args);
-        useStore(props => {
-            const activity = this.env.models['mail.activity'].get(props.activityLocalId);
-            return {
-                activity: activity ? activity.__state : undefined,
-            };
-        });
+        useModels();
         this._feedbackTextareaRef = useRef('feedbackTextarea');
     }
 

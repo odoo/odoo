@@ -1,7 +1,7 @@
 odoo.define('mail/static/src/components/composer_text_input/composer_text_input.js', function (require) {
 'use strict';
 
-const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
+const useModels = require('mail/static/src/component_hooks/use_models/use_models.js');
 
 const components = {
     ComposerSuggestionList: require('mail/static/src/components/composer_suggestion_list/composer_suggestion_list.js'),
@@ -21,13 +21,7 @@ class ComposerTextInput extends Component {
      */
     constructor(...args) {
         super(...args);
-        useStore(props => {
-            const composer = this.env.models['mail.composer'].get(props.composerLocalId);
-            return {
-                composer: composer ? composer.__state : undefined,
-                isDeviceMobile: this.env.messaging.device.isMobile,
-            };
-        });
+        useModels();
         /**
          * Last content of textarea from input event. Useful to determine
          * whether the current partner is typing something.
@@ -73,8 +67,8 @@ class ComposerTextInput extends Component {
         if (!this.composer) {
             return "";
         }
-        if (this.composer.thread && this.composer.thread.model !== 'mail.channel') {
-            if (this.composer.isLog) {
+        if (this.composer.__mfield_thread(this) && this.composer.__mfield_thread(this).__mfield_model(this) !== 'mail.channel') {
+            if (this.composer.__mfield_isLog(this)) {
                 return this.env._t("Log an internal note...");
             }
             return this.env._t("Send a message to followers...");
@@ -96,9 +90,9 @@ class ComposerTextInput extends Component {
      */
     saveStateInStore() {
         this.composer.update({
-            textInputContent: this._getContent(),
-            textInputCursorStart: this._getSelectionStart(),
-            textInputCursorEnd: this._getSelectionEnd(),
+            __mfield_textInputContent: this._getContent(),
+            __mfield_textInputCursorStart: this._getSelectionStart(),
+            __mfield_textInputCursorEnd: this._getSelectionEnd(),
         });
     }
 
@@ -153,10 +147,10 @@ class ComposerTextInput extends Component {
      * @private
      */
     _update() {
-        this._textareaRef.el.value = this.composer.textInputContent;
+        this._textareaRef.el.value = this.composer.__mfield_textInputContent(this);
         this._textareaRef.el.setSelectionRange(
-            this.composer.textInputCursorStart,
-            this.composer.textInputCursorEnd
+            this.composer.__mfield_textInputCursorStart(this),
+            this.composer.__mfield_textInputCursorEnd(this)
         );
         this._updateHeight();
     }
@@ -179,14 +173,14 @@ class ComposerTextInput extends Component {
      * @private
      */
     _onFocusinTextarea() {
-        this.composer.update({ hasFocus: true });
+        this.composer.update({ __mfield_hasFocus: true });
     }
 
     /**
      * @private
      */
     _onFocusoutTextarea() {
-        this.composer.update({ hasFocus: false });
+        this.composer.update({ __mfield_hasFocus: false });
     }
 
     /**
@@ -208,7 +202,7 @@ class ComposerTextInput extends Component {
     _onKeydownTextarea(ev) {
         switch (ev.key) {
             case 'Escape':
-                if (this.composer.hasSuggestions) {
+                if (this.composer.__mfield_hasSuggestions(this)) {
                     ev.preventDefault();
                     this.composer.closeSuggestions();
                     markEventHandled(ev, 'ComposerTextInput.closeSuggestions');
@@ -222,7 +216,7 @@ class ComposerTextInput extends Component {
             case 'Home':
             case 'End':
             case 'Tab':
-                if (this.composer.hasSuggestions) {
+                if (this.composer.__mfield_hasSuggestions(this)) {
                     // We use preventDefault here to avoid keys native actions but actions are handled in keyUp
                     ev.preventDefault();
                 }
@@ -239,7 +233,7 @@ class ComposerTextInput extends Component {
      * @param {KeyboardEvent} ev
      */
     _onKeydownTextareaEnter(ev) {
-        if (this.composer.hasSuggestions) {
+        if (this.composer.__mfield_hasSuggestions(this)) {
             ev.preventDefault();
             return;
         }
@@ -260,7 +254,7 @@ class ComposerTextInput extends Component {
             !ev.ctrlKey &&
             !ev.metaKey &&
             !ev.shiftKey &&
-            !this.env.messaging.device.isMobile
+            !this.env.messaging.__mfield_device(this).__mfield_isMobile(this)
         ) {
             this.trigger('o-composer-text-input-send-shortcut');
             ev.preventDefault();
@@ -292,7 +286,7 @@ class ComposerTextInput extends Component {
                 break;
             // ENTER, HOME, END, UP, DOWN, PAGE UP, PAGE DOWN, TAB: check if navigation in mention suggestions
             case 'Enter':
-                if (this.composer.hasSuggestions) {
+                if (this.composer.__mfield_hasSuggestions(this)) {
                     this.composer.insertSuggestion();
                     this.composer.closeSuggestions();
                     this.focus();
@@ -300,28 +294,28 @@ class ComposerTextInput extends Component {
                 break;
             case 'ArrowUp':
             case 'PageUp':
-                if (this.composer.hasSuggestions) {
+                if (this.composer.__mfield_hasSuggestions(this)) {
                     this.composer.setPreviousSuggestionActive();
                 }
                 break;
             case 'ArrowDown':
             case 'PageDown':
-                if (this.composer.hasSuggestions) {
+                if (this.composer.__mfield_hasSuggestions(this)) {
                     this.composer.setNextSuggestionActive();
                 }
                 break;
             case 'Home':
-                if (this.composer.hasSuggestions) {
+                if (this.composer.__mfield_hasSuggestions(this)) {
                     this.composer.setFirstSuggestionActive();
                 }
                 break;
             case 'End':
-                if (this.composer.hasSuggestions) {
+                if (this.composer.__mfield_hasSuggestions(this)) {
                     this.composer.setLastSuggestionActive();
                 }
                 break;
             case 'Tab':
-                if (this.composer.hasSuggestions) {
+                if (this.composer.__mfield_hasSuggestions(this)) {
                     if (ev.shiftKey) {
                         this.composer.setPreviousSuggestionActive();
                     } else {

@@ -1,7 +1,7 @@
 odoo.define('mail/static/src/components/discuss_mobile_mailbox_selection/discuss_mobile_mailbox_selection.js', function (require) {
 'use strict';
 
-const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
+const useModels = require('mail/static/src/component_hooks/use_models/use_models.js');
 
 const { Component } = owl;
 
@@ -12,18 +12,7 @@ class DiscussMobileMailboxSelection extends Component {
      */
     constructor(...args) {
         super(...args);
-        useStore(props => {
-            return {
-                allOrderedAndPinnedMailboxes: this.orderedMailboxes.map(mailbox => mailbox.__state),
-                discussThread: this.env.messaging.discuss.thread
-                    ? this.env.messaging.discuss.thread.__state
-                    : undefined,
-            };
-        }, {
-            compareDepth: {
-                allOrderedAndPinnedMailboxes: 1,
-            },
-        });
+        useModels();
     }
 
     //--------------------------------------------------------------------------
@@ -35,22 +24,25 @@ class DiscussMobileMailboxSelection extends Component {
      */
     get orderedMailboxes() {
         return this.env.models['mail.thread']
-            .all(thread => thread.isPinned && thread.model === 'mail.box')
+            .all(thread =>
+                thread.__mfield_isPinned(this) &&
+                thread.__mfield_model(this) === 'mail.box'
+            )
             .sort((mailbox1, mailbox2) => {
-                if (mailbox1 === this.env.messaging.inbox) {
+                if (mailbox1 === this.env.messaging.__mfield_inbox(this)) {
                     return -1;
                 }
-                if (mailbox2 === this.env.messaging.inbox) {
+                if (mailbox2 === this.env.messaging.__mfield_inbox(this)) {
                     return 1;
                 }
-                if (mailbox1 === this.env.messaging.starred) {
+                if (mailbox1 === this.env.messaging.__mfield_starred(this)) {
                     return -1;
                 }
-                if (mailbox2 === this.env.messaging.starred) {
+                if (mailbox2 === this.env.messaging.__mfield_starred(this)) {
                     return 1;
                 }
-                const mailbox1Name = mailbox1.displayName;
-                const mailbox2Name = mailbox2.displayName;
+                const mailbox1Name = mailbox1.__mfield_displayName(this);
+                const mailbox2Name = mailbox2.__mfield_displayName(this);
                 mailbox1Name < mailbox2Name ? -1 : 1;
             });
     }
@@ -59,7 +51,7 @@ class DiscussMobileMailboxSelection extends Component {
      * @returns {mail.discuss}
      */
     get discuss() {
-        return this.env.messaging && this.env.messaging.discuss;
+        return this.env.messaging && this.env.messaging.__mfield_discuss(this);
     }
 
     //--------------------------------------------------------------------------

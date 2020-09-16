@@ -44,16 +44,16 @@ QUnit.test('canned response suggestion displayed', async function (assert) {
     this.data['mail.channel'].records.push({ id: 20 });
     await this.start();
     const thread = this.env.models['mail.thread'].findFromIdentifyingData({
-        id: 20,
-        model: 'mail.channel',
+        __mfield_id: 20,
+        __mfield_model: 'mail.channel',
     });
     const cannedResponse = this.env.models['mail.canned_response'].create({
-        id: 7,
-        source: 'hello',
-        substitution: "Hello, how are you?",
+        __mfield_id: 7,
+        __mfield_source: 'hello',
+        __mfield_substitution: "Hello, how are you?",
     });
     await this.createComposerSuggestion({
-        composerLocalId: thread.composer.localId,
+        composerLocalId: thread.__mfield_composer().localId,
         isActive: true,
         modelName: 'mail.canned_response',
         recordLocalId: cannedResponse.localId,
@@ -72,16 +72,16 @@ QUnit.test('canned response suggestion correct data', async function (assert) {
     this.data['mail.channel'].records.push({ id: 20 });
     await this.start();
     const thread = this.env.models['mail.thread'].findFromIdentifyingData({
-        id: 20,
-        model: 'mail.channel',
+        __mfield_id: 20,
+        __mfield_model: 'mail.channel',
     });
     const cannedResponse = this.env.models['mail.canned_response'].create({
-        id: 7,
-        source: 'hello',
-        substitution: "Hello, how are you?",
+        __mfield_id: 7,
+        __mfield_source: 'hello',
+        __mfield_substitution: "Hello, how are you?",
     });
     await this.createComposerSuggestion({
-        composerLocalId: thread.composer.localId,
+        composerLocalId: thread.__mfield_composer().localId,
         isActive: true,
         modelName: 'mail.canned_response',
         recordLocalId: cannedResponse.localId,
@@ -120,16 +120,16 @@ QUnit.test('canned response suggestion active', async function (assert) {
     this.data['mail.channel'].records.push({ id: 20 });
     await this.start();
     const thread = this.env.models['mail.thread'].findFromIdentifyingData({
-        id: 20,
-        model: 'mail.channel',
+        __mfield_id: 20,
+        __mfield_model: 'mail.channel',
     });
     const cannedResponse = this.env.models['mail.canned_response'].create({
-        id: 7,
-        source: 'hello',
-        substitution: "Hello, how are you?",
+        __mfield_id: 7,
+        __mfield_source: 'hello',
+        __mfield_substitution: "Hello, how are you?",
     });
     await this.createComposerSuggestion({
-        composerLocalId: thread.composer.localId,
+        composerLocalId: thread.__mfield_composer().localId,
         isActive: true,
         modelName: 'mail.canned_response',
         recordLocalId: cannedResponse.localId,

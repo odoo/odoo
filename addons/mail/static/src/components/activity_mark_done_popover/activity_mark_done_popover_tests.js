@@ -44,9 +44,9 @@ QUnit.test('activity mark done popover simplest layout', async function (assert)
 
     await this.start();
     const activity = this.env.models['mail.activity'].create({
-        canWrite: true,
-        category: 'not_upload_file',
-        id: 12,
+        __mfield_canWrite: true,
+        __mfield_category: 'not_upload_file',
+        __mfield_id: 12,
     });
     await this.createActivityMarkDonePopoverComponent(activity);
 
@@ -87,10 +87,10 @@ QUnit.test('activity with force next mark done popover simplest layout', async f
 
     await this.start();
     const activity = this.env.models['mail.activity'].create({
-        canWrite: true,
-        category: 'not_upload_file',
-        force_next: true,
-        id: 12,
+        __mfield_canWrite: true,
+        __mfield_category: 'not_upload_file',
+        __mfield_force_next: true,
+        __mfield_id: 12,
     });
     await this.createActivityMarkDonePopoverComponent(activity);
 
@@ -148,9 +148,9 @@ QUnit.test('activity mark done popover mark done without feedback', async functi
         },
     });
     const activity = this.env.models['mail.activity'].create({
-        canWrite: true,
-        category: 'not_upload_file',
-        id: 12,
+        __mfield_canWrite: true,
+        __mfield_category: 'not_upload_file',
+        __mfield_id: 12,
     });
     await this.createActivityMarkDonePopoverComponent(activity);
 
@@ -183,9 +183,9 @@ QUnit.test('activity mark done popover mark done with feedback', async function 
         },
     });
     const activity = this.env.models['mail.activity'].create({
-        canWrite: true,
-        category: 'not_upload_file',
-        id: 12,
+        __mfield_canWrite: true,
+        __mfield_category: 'not_upload_file',
+        __mfield_id: 12,
     });
     await this.createActivityMarkDonePopoverComponent(activity);
 
@@ -220,9 +220,9 @@ QUnit.test('activity mark done popover mark done and schedule next', async funct
         },
     });
     const activity = this.env.models['mail.activity'].create({
-        canWrite: true,
-        category: 'not_upload_file',
-        id: 12,
+        __mfield_canWrite: true,
+        __mfield_category: 'not_upload_file',
+        __mfield_id: 12,
     });
     await this.createActivityMarkDonePopoverComponent(activity);
 

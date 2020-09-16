@@ -69,24 +69,24 @@ QUnit.test('openChat: open new chat for user', async function (assert) {
     await this.start();
 
     const existingChat = this.env.models['mail.thread'].find(thread =>
-        thread.channel_type === 'chat' &&
-        thread.correspondent &&
-        thread.correspondent.id === 14 &&
-        thread.model === 'mail.channel' &&
-        thread.public === 'private'
+        thread.__mfield_channel_type() === 'chat' &&
+        thread.__mfield_correspondent() &&
+        thread.__mfield_correspondent().__mfield_id() === 14 &&
+        thread.__mfield_model() === 'mail.channel' &&
+        thread.__mfield_public() === 'private'
     );
     assert.notOk(existingChat, 'a chat should not exist with the target partner initially');
 
     await this.env.messaging.openChat({ partnerId: 14 });
     const chat = this.env.models['mail.thread'].find(thread =>
-        thread.channel_type === 'chat' &&
-        thread.correspondent &&
-        thread.correspondent.id === 14 &&
-        thread.model === 'mail.channel' &&
-        thread.public === 'private'
+        thread.__mfield_channel_type() === 'chat' &&
+        thread.__mfield_correspondent() &&
+        thread.__mfield_correspondent().__mfield_id() === 14 &&
+        thread.__mfield_model() === 'mail.channel' &&
+        thread.__mfield_public() === 'private'
     );
     assert.ok(chat, 'a chat should exist with the target partner');
-    assert.strictEqual(chat.threadViews.length, 1, 'the chat should be displayed in a `mail.thread_view`');
+    assert.strictEqual(chat.__mfield_threadViews().length, 1, 'the chat should be displayed in a `mail.thread_view`');
 });
 
 QUnit.test('openChat: open existing chat for user', async function (assert) {
@@ -102,19 +102,19 @@ QUnit.test('openChat: open existing chat for user', async function (assert) {
     });
     await this.start();
     const existingChat = this.env.models['mail.thread'].find(thread =>
-        thread.channel_type === 'chat' &&
-        thread.correspondent &&
-        thread.correspondent.id === 14 &&
-        thread.model === 'mail.channel' &&
-        thread.public === 'private'
+        thread.__mfield_channel_type() === 'chat' &&
+        thread.__mfield_correspondent() &&
+        thread.__mfield_correspondent().__mfield_id() === 14 &&
+        thread.__mfield_model() === 'mail.channel' &&
+        thread.__mfield_public() === 'private'
     );
     assert.ok(existingChat, 'a chat should initially exist with the target partner');
-    assert.strictEqual(existingChat.threadViews.length, 0, 'the chat should not be displayed in a `mail.thread_view`');
+    assert.strictEqual(existingChat.__mfield_threadViews().length, 0, 'the chat should not be displayed in a `mail.thread_view`');
 
     await this.env.messaging.openChat({ partnerId: 14 });
     assert.ok(existingChat, 'a chat should still exist with the target partner');
-    assert.strictEqual(existingChat.id, 10, 'the chat should be the existing chat');
-    assert.strictEqual(existingChat.threadViews.length, 1, 'the chat should now be displayed in a `mail.thread_view`');
+    assert.strictEqual(existingChat.__mfield_id(), 10, 'the chat should be the existing chat');
+    assert.strictEqual(existingChat.__mfield_threadViews().length, 1, 'the chat should now be displayed in a `mail.thread_view`');
 });
 
 });

@@ -5,7 +5,7 @@ const components = {
     Composer: require('mail/static/src/components/composer/composer.js'),
     MessageList: require('mail/static/src/components/message_list/message_list.js'),
 };
-const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
+const useModels = require('mail/static/src/component_hooks/use_models/use_models.js');
 
 const { Component } = owl;
 const { useRef } = owl.hooks;
@@ -17,7 +17,7 @@ class ThreadView extends Component {
      */
     constructor(...args) {
         super(...args);
-        useStore((...args) => this._useStoreSelector(...args));
+        useModels();
         /**
          * Reference of the composer. Useful to set focus on composer when
          * thread has the focus.
@@ -102,25 +102,6 @@ class ThreadView extends Component {
         if (messageList) {
             messageList.adjustFromComponentHints();
         }
-    }
-
-    /**
-     * Returns data selected from the store.
-     *
-     * @private
-     * @param {Object} props
-     * @returns {Object}
-     */
-    _useStoreSelector(props) {
-        const threadView = this.env.models['mail.thread_view'].get(props.threadViewLocalId);
-        const thread = threadView ? threadView.thread : undefined;
-        const threadCache = threadView ? threadView.threadCache : undefined;
-        return {
-            isDeviceMobile: this.env.messaging.device.isMobile,
-            thread: thread ? thread.__state : undefined,
-            threadCache: threadCache ? threadCache.__state : undefined,
-            threadView: threadView ? threadView.__state : undefined,
-        };
     }
 
 }

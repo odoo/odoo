@@ -5,7 +5,7 @@ const components = {
     EditableText: require('mail/static/src/components/editable_text/editable_text.js'),
     ThreadIcon: require('mail/static/src/components/thread_icon/thread_icon.js'),
 };
-const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
+const useModels = require('mail/static/src/component_hooks/use_models/use_models.js');
 
 const Dialog = require('web.Dialog');
 
@@ -18,15 +18,7 @@ class DiscussSidebarItem extends Component {
      */
     constructor(...args) {
         super(...args);
-        useStore(props => {
-            const thread = this.env.models['mail.thread'].get(props.threadLocalId);
-            const correspondent = thread ? thread.correspondent : undefined;
-            return {
-                correspondent: correspondent ? correspondent.__state : undefined,
-                discuss: this.env.messaging.discuss.__state,
-                thread: thread ? thread.__state : undefined,
-            };
-        });
+        useModels();
     }
 
     //--------------------------------------------------------------------------
@@ -39,12 +31,12 @@ class DiscussSidebarItem extends Component {
      * @returns {integer}
      */
     get counter() {
-        if (this.thread.model === 'mail.box') {
-            return this.thread.counter;
-        } else if (this.thread.channel_type === 'channel') {
-            return this.thread.message_needaction_counter;
-        } else if (this.thread.channel_type === 'chat') {
-            return this.thread.localMessageUnreadCounter;
+        if (this.thread.__mfield_model(this) === 'mail.box') {
+            return this.thread.__mfield_counter(this);
+        } else if (this.thread.__mfield_channel_type(this) === 'channel') {
+            return this.thread.__mfield_message_needaction_counter(this);
+        } else if (this.thread.__mfield_channel_type(this) === 'chat') {
+            return this.thread.__mfield_localMessageUnreadCounter(this);
         }
         return 0;
     }
@@ -53,14 +45,14 @@ class DiscussSidebarItem extends Component {
      * @returns {mail.discuss}
      */
     get discuss() {
-        return this.env.messaging && this.env.messaging.discuss;
+        return this.env.messaging && this.env.messaging.__mfield_discuss(this);
     }
 
     /**
      * @returns {boolean}
      */
     hasUnpin() {
-        return this.thread.channel_type === 'chat';
+        return this.thread.__mfield_channel_type(this) === 'chat';
     }
 
     /**
@@ -136,7 +128,7 @@ class DiscussSidebarItem extends Component {
      */
     async _onClickLeave(ev) {
         ev.stopPropagation();
-        if (this.thread.creator === this.env.messaging.currentUser) {
+        if (this.thread.__mfield_creator(this) === this.env.messaging.__mfield_currentUser(this)) {
             await this._askAdminConfirmation();
         }
         this.thread.unsubscribe();
@@ -160,8 +152,8 @@ class DiscussSidebarItem extends Component {
         return this.env.bus.trigger('do-action', {
             action: {
                 type: 'ir.actions.act_window',
-                res_model: this.thread.model,
-                res_id: this.thread.id,
+                res_model: this.thread.__mfield_model(this),
+                res_id: this.thread.__mfield_id(this),
                 views: [[false, 'form']],
                 target: 'current'
             },

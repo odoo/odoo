@@ -2,7 +2,7 @@ odoo.define('mail/static/src/models/follower_subtype/follower_subtype.js', funct
 'use strict';
 
 const { registerNewModel } = require('mail/static/src/model/model_core.js');
-const { attr } = require('mail/static/src/model/model_field.js');
+const { attr } = require('mail/static/src/model/model_field_utils.js');
 
 function factory(dependencies) {
 
@@ -20,25 +20,25 @@ function factory(dependencies) {
         static convertData(data) {
             const data2 = {};
             if ('default' in data) {
-                data2.isDefault = data.default;
+                data2.__mfield_isDefault = data.default;
             }
             if ('id' in data) {
-                data2.id = data.id;
+                data2.__mfield_id = data.id;
             }
             if ('internal' in data) {
-                data2.isInternal = data.internal;
+                data2.__mfield_isInternal = data.internal;
             }
             if ('name' in data) {
-                data2.name = data.name;
+                data2.__mfield_name = data.name;
             }
             if ('parent_model' in data) {
-                data2.parentModel = data.parent_model;
+                data2.__mfield_parentModel = data.parent_model;
             }
             if ('res_model' in data) {
-                data2.resModel = data.res_model;
+                data2.__mfield_resModel = data.res_model;
             }
             if ('sequence' in data) {
-                data2.sequence = data.sequence;
+                data2.__mfield_sequence = data.sequence;
             }
             return data2;
         }
@@ -51,25 +51,25 @@ function factory(dependencies) {
          * @override
          */
         static _createRecordLocalId(data) {
-            return `${this.modelName}_${data.id}`;
+            return `${this.modelName}_${data.__mfield_id}`;
         }
 
     }
 
     FollowerSubtype.fields = {
-        id: attr(),
-        isDefault: attr({
+        __mfield_id: attr(),
+        __mfield_isDefault: attr({
             default: false,
         }),
-        isInternal: attr({
+        __mfield_isInternal: attr({
             default: false,
         }),
-        name: attr(),
+        __mfield_name: attr(),
         // AKU FIXME: use relation instead
-        parentModel: attr(),
+        __mfield_parentModel: attr(),
         // AKU FIXME: use relation instead
-        resModel: attr(),
-        sequence: attr(),
+        __mfield_resModel: attr(),
+        __mfield_sequence: attr(),
     };
 
     FollowerSubtype.modelName = 'mail.follower_subtype';

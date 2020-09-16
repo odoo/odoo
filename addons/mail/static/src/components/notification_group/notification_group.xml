@@ -12,19 +12,19 @@
                 <div class="o_NotificationGroup_content">
                     <div class="o_NotificationGroup_header">
                         <span class="o_NotificationGroup_name">
-                            <t t-esc="group.res_model_name"/>
+                            <t t-esc="group.__mfield_res_model_name(mself)"/>
                         </span>
                         <span class="o_NotificationGroup_counter">
-                            (<t t-esc="group.notifications.length"/>)
+                            (<t t-esc="group.__mfield_notifications(mself).length"/>)
                         </span>
                         <span class="o-autogrow"/>
                         <span class="o_NotificationGroup_date">
-                            <t t-esc="group.date.fromNow()"/>
+                            <t t-esc="group.__mfield_date(mself).fromNow()"/>
                         </span>
                     </div>
                     <div class="o_NotificationGroup_core">
                         <span class="o_NotificationGroup_coreItem o_NotificationGroup_inlineText">
-                            <t t-if="group.notification_type === 'email'">
+                            <t t-if="group.__mfield_notification_type(mself) === 'email'">
                                 An error occurred when sending an email.
                             </t>
                         </span>

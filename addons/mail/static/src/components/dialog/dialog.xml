@@ -4,11 +4,11 @@
     <t t-name="mail.Dialog" owl="1">
         <div class="o_Dialog">
             <t t-if="dialog">
-                <t t-if="dialog.record">
+                <t t-if="dialog.__mfield_record(mself)">
                     <t
-                        t-component="{{ dialog.record['constructor'].name }}"
+                        t-component="{{ dialog.__mfield_record(self)['constructor'].name }}"
                         class="o_Dialog_component"
-                        t-props="{ localId: dialog.record.localId }"
+                        t-props="{ localId: dialog.__mfield_record(mself).localId }"
                         t-ref="component"
                     />
                 </t>

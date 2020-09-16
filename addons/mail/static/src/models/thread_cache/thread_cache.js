@@ -2,7 +2,7 @@ odoo.define('mail/static/src/models/thread_cache/thread_cache.js', function (req
 'use strict';
 
 const { registerNewModel } = require('mail/static/src/model/model_core.js');
-const { attr, many2many, many2one, one2many } = require('mail/static/src/model/model_field.js');
+const { attr, many2many, many2one, one2many } = require('mail/static/src/model/model_field_utils.js');
 
 function factory(dependencies) {
 
@@ -16,26 +16,37 @@ function factory(dependencies) {
          * @returns {mail.message[]|undefined}
          */
         async loadMoreMessages() {
-            if (this.isAllHistoryLoaded || this.isLoading) {
+            if (
+                this.__mfield_isAllHistoryLoaded(this) ||
+                this.__mfield_isLoading(this)
+            ) {
                 return;
             }
-            if (!this.isLoaded) {
-                this.update({ hasToLoadMessages: true });
+            if (!this.__mfield_isLoaded(this)) {
+                this.update({
+                    __mfield_hasToLoadMessages: true,
+                });
                 return;
             }
-            this.update({ isLoadingMore: true });
-            const messageIds = this.fetchedMessages.map(message => message.id);
+            this.update({
+                __mfield_isLoadingMore: true,
+            });
+            const messageIds = this.__mfield_fetchedMessages(this).map(message => message.__mfield_id(this));
             const limit = 30;
             const fetchedMessages = await this.async(() => this._loadMessages({
                 extraDomain: [['id', '<', Math.min(...messageIds)]],
                 limit,
             }));
-            for (const threadView of this.threadViews) {
+            for (const threadView of this.__mfield_threadViews(this)) {
                 threadView.addComponentHint('more-messages-loaded');
             }
-            this.update({ isLoadingMore: false });
+            this.update({
+                __mfield_isLoadingMore: false,
+            });
             if (fetchedMessages.length < limit) {
-                this.update({ isAllHistoryLoaded: true });
+                this.update({
+                    __mfield_isAllHistoryLoaded: true,
+                });
             }
             return fetchedMessages;
         }
@@ -44,14 +55,16 @@ function factory(dependencies) {
          * @returns {mail.message[]|undefined}
          */
         async loadNewMessages() {
-            if (this.isLoading) {
+            if (this.__mfield_isLoading(this)) {
                 return;
             }
-            if (!this.isLoaded) {
-                this.update({ hasToLoadMessages: true });
+            if (!this.__mfield_isLoaded(this)) {
+                this.update({
+                    __mfield_hasToLoadMessages: true,
+                });
                 return;
             }
-            const messageIds = this.fetchedMessages.map(message => message.id);
+            const messageIds = this.__mfield_fetchedMessages(this).map(message => message.__mfield_id(this));
             return this._loadMessages({
                 extraDomain: [['id', '>', Math.max(...messageIds)]],
                 limit: false,
@@ -67,18 +80,18 @@ function factory(dependencies) {
          */
         static _createRecordLocalId(data) {
             const {
-                stringifiedDomain = '[]',
-                thread: [[commandInsert, thread]],
+                __mfield_stringifiedDomain = '[]',
+                __mfield_thread: [[commandInsert, thread]],
             } = data;
-            return `${this.modelName}_[${thread.localId}]_<${stringifiedDomain}>`;
+            return `${this.modelName}_[${thread.localId}]_<${__mfield_stringifiedDomain}>`;
         }
 
         /**
          * @private
          */
         _computeCheckedMessages() {
-            const messagesWithoutCheckbox = this.checkedMessages.filter(
-                message => !message.hasCheckbox
+            const messagesWithoutCheckbox = this.__mfield_checkedMessages(this).filter(
+                message => !message.__mfield_hasCheckbox(this)
             );
             return [['unlink', messagesWithoutCheckbox]];
         }
@@ -88,12 +101,12 @@ function factory(dependencies) {
          * @returns {mail.message[]}
          */
         _computeFetchedMessages() {
-            if (!this.thread) {
+            if (!this.__mfield_thread(this)) {
                 return [['unlink-all']];
             }
             const toUnlinkMessages = [];
-            for (const message of this.fetchedMessages) {
-                if (!this.thread.messages.includes(message)) {
+            for (const message of this.__mfield_fetchedMessages(this)) {
+                if (!this.__mfield_thread(this).__mfield_messages(this).includes(message)) {
                     toUnlinkMessages.push(message);
                 }
             }
@@ -108,7 +121,7 @@ function factory(dependencies) {
             const {
                 length: l,
                 [l - 1]: lastFetchedMessage,
-            } = this.orderedFetchedMessages;
+            } = this.__mfield_orderedFetchedMessages(this);
             if (!lastFetchedMessage) {
                 return [['unlink']];
             }
@@ -123,7 +136,7 @@ function factory(dependencies) {
             const {
                 length: l,
                 [l - 1]: lastMessage,
-            } = this.orderedMessages;
+            } = this.__mfield_orderedMessages(this);
             if (!lastMessage) {
                 return [['unlink']];
             }
@@ -135,22 +148,22 @@ function factory(dependencies) {
          * @returns {mail.message[]}
          */
         _computeMessages() {
-            if (!this.thread) {
+            if (!this.__mfield_thread(this)) {
                 return [['unlink-all']];
             }
-            let messages = this.fetchedMessages;
-            if (this.stringifiedDomain !== '[]') {
+            let messages = this.__mfield_fetchedMessages(this);
+            if (this.__mfield_stringifiedDomain(this) !== '[]') {
                 // AKU TODO: flag for invalidation if there are newer messages
                 // in thread. task-2171873
                 return [['replace', messages]];
             }
             // main cache: adjust with newer messages
             let newerMessages;
-            if (!this.lastFetchedMessage) {
-                newerMessages = this.thread.messages;
+            if (!this.__mfield_lastFetchedMessage(this)) {
+                newerMessages = this.__mfield_thread(this).__mfield_messages(this);
             } else {
-                newerMessages = this.thread.messages.filter(message =>
-                    message.id > this.lastFetchedMessage.id
+                newerMessages = this.__mfield_thread(this).__mfield_messages(this).filter(message =>
+                    message.__mfield_id(this) > this.__mfield_lastFetchedMessage(this).__mfield_id(this)
                 );
             }
             messages = messages.concat(newerMessages);
@@ -162,7 +175,9 @@ function factory(dependencies) {
          * @returns {mail.message[]}
          */
         _computeOrderedFetchedMessages() {
-            return [['replace', this.fetchedMessages.sort((m1, m2) => m1.id < m2.id ? -1 : 1)]];
+            return [['replace', this.__mfield_fetchedMessages(this).sort((m1, m2) =>
+                m1.__mfield_id(this) < m2.__mfield_id(this) ? -1 : 1
+            )]];
         }
 
         /**
@@ -170,7 +185,9 @@ function factory(dependencies) {
          * @returns {mail.message[]}
          */
         _computeOrderedMessages() {
-            return [['replace', this.messages.sort((m1, m2) => m1.id < m2.id ? -1 : 1)]];
+            return [['replace', this.__mfield_messages(this).sort(
+                (m1, m2) => m1.__mfield_id(this) < m2.__mfield_id(this) ? -1 : 1
+            )]];
         }
 
         /**
@@ -179,11 +196,11 @@ function factory(dependencies) {
          */
         _computeHasToLoadMessages() {
             return (
-                this.thread &&
-                !this.thread.isTemporary &&
-                this.threadViews.length > 0 &&
-                !this.isLoaded &&
-                !this.isLoading
+                this.__mfield_thread(this) &&
+                !this.__mfield_thread(this).__mfield_isTemporary(this) &&
+                this.__mfield_threadViews(this).length > 0 &&
+                !this.__mfield_isLoaded(this) &&
+                !this.__mfield_isLoading(this)
             );
         }
 
@@ -192,8 +209,9 @@ function factory(dependencies) {
          * @returns {mail.message[]}
          */
         _computeUncheckedMessages() {
-            return [['replace', this.messages.filter(
-                message => message.hasCheckbox && !this.checkedMessages.includes(message)
+            return [['replace', this.__mfield_messages(this).filter(
+                message => message.__mfield_hasCheckbox(this) &&
+                !this.__mfield_checkedMessages(this).includes(message)
             )]];
         }
 
@@ -203,26 +221,26 @@ function factory(dependencies) {
          * @returns {Array}
          */
         _extendMessageDomain(domain) {
-            const thread = this.thread;
-            if (thread.model === 'mail.channel') {
-                return domain.concat([['channel_ids', 'in', [thread.id]]]);
-            } else if (thread === this.env.messaging.inbox) {
+            const thread = this.__mfield_thread(this);
+            if (thread.__mfield_model(this) === 'mail.channel') {
+                return domain.concat([['channel_ids', 'in', [thread.__mfield_id(this)]]]);
+            } else if (thread === this.env.messaging.__mfield_inbox(this)) {
                 return domain.concat([['needaction', '=', true]]);
-            } else if (thread === this.env.messaging.starred) {
+            } else if (thread === this.env.messaging.__mfield_starred(this)) {
                 return domain.concat([
-                    ['starred_partner_ids', 'in', [this.env.messaging.currentPartner.id]],
+                    ['starred_partner_ids', 'in', [this.env.messaging.__mfield_currentPartner(this).__mfield_id(this)]],
                 ]);
-            } else if (thread === this.env.messaging.history) {
+            } else if (thread === this.env.messaging.__mfield_history(this)) {
                 return domain.concat([['needaction', '=', false]]);
-            } else if (thread === this.env.messaging.moderation) {
+            } else if (thread === this.env.messaging.__mfield_moderation(this)) {
                 return domain.concat([['moderation_status', '=', 'pending_moderation']]);
             } else {
                 // Avoid to load user_notification as these messages are not
                 // meant to be shown on chatters.
                 return domain.concat([
                     ['message_type', '!=', 'user_notification'],
-                    ['model', '=', thread.model],
-                    ['res_id', '=', thread.id],
+                    ['model', '=', thread.__mfield_model(this)],
+                    ['res_id', '=', thread.__mfield_id(this)],
                 ]);
             }
         }
@@ -235,16 +253,18 @@ function factory(dependencies) {
          * @returns {mail.message[]}
          */
         async _loadMessages({ extraDomain, limit = 30 } = {}) {
-            this.update({ isLoading: true });
-            const searchDomain = JSON.parse(this.stringifiedDomain);
+            this.update({
+                __mfield_isLoading: true,
+            });
+            const searchDomain = JSON.parse(this.__mfield_stringifiedDomain(this));
             let domain = searchDomain.length ? searchDomain : [];
             domain = this._extendMessageDomain(domain);
             if (extraDomain) {
                 domain = extraDomain.concat(domain);
             }
             const context = this.env.session.user_context;
-            const moderated_channel_ids = this.thread.moderation
-                ? [this.thread.id]
+            const moderated_channel_ids = this.__mfield_thread(this).__mfield_moderation(this)
+                ? [this.__mfield_thread(this).__mfield_id(this)]
                 : undefined;
             const messages = await this.async(() =>
                 this.env.models['mail.message'].performRpcMessageFetch(
@@ -255,12 +275,14 @@ function factory(dependencies) {
                 )
             );
             this.update({
-                fetchedMessages: [['link', messages]],
-                isLoaded: true,
-                isLoading: false,
+                __mfield_fetchedMessages: [['link', messages]],
+                __mfield_isLoaded: true,
+                __mfield_isLoading: false,
             });
             if (!extraDomain && messages.length < limit) {
-                this.update({ isAllHistoryLoaded: true });
+                this.update({
+                    __mfield_isAllHistoryLoaded: true,
+                });
             }
             return messages;
         }
@@ -272,7 +294,7 @@ function factory(dependencies) {
          * @private
          */
         _onHasToLoadMessagesChanged() {
-            if (!this.hasToLoadMessages) {
+            if (!this.__mfield_hasToLoadMessages(this)) {
                 return;
             }
             this._loadMessages();
@@ -281,13 +303,13 @@ function factory(dependencies) {
     }
 
     ThreadCache.fields = {
-        checkedMessages: many2many('mail.message', {
+        __mfield_checkedMessages: many2many('mail.message', {
             compute: '_computeCheckedMessages',
             dependencies: [
-                'checkedMessages',
-                'messagesCheckboxes',
+                '__mfield_checkedMessages',
+                '__mfield_messagesCheckboxes',
             ],
-            inverse: 'checkedThreadCaches',
+            inverse: '__mfield_checkedThreadCaches',
         }),
         /**
          * List of messages that have been fetched by this cache.
@@ -305,34 +327,36 @@ function factory(dependencies) {
          * to manage "holes" in message list, while still allowing to display
          * new messages on main cache of thread in real-time.
          */
-        fetchedMessages: many2many('mail.message', {
+        __mfield_fetchedMessages: many2many('mail.message', {
             // adjust with messages unlinked from thread
             compute: '_computeFetchedMessages',
-            dependencies: ['threadMessages'],
+            dependencies: [
+                '__mfield_threadMessages',
+            ],
         }),
         /**
          * Determines whether `this` should load initial messages.
          */
-        hasToLoadMessages: attr({
+        __mfield_hasToLoadMessages: attr({
             compute: '_computeHasToLoadMessages',
             dependencies: [
-                'isLoaded',
-                'isLoading',
-                'thread',
-                'threadIsTemporary',
-                'threadViews',
+                '__mfield_isLoaded',
+                '__mfield_isLoading',
+                '__mfield_thread',
+                '__mfield_threadIsTemporary',
+                '__mfield_threadViews',
             ],
         }),
-        isAllHistoryLoaded: attr({
+        __mfield_isAllHistoryLoaded: attr({
             default: false,
         }),
-        isLoaded: attr({
+        __mfield_isLoaded: attr({
             default: false,
         }),
-        isLoading: attr({
+        __mfield_isLoading: attr({
             default: false,
         }),
-        isLoadingMore: attr({
+        __mfield_isLoadingMore: attr({
             default: false,
         }),
         /**
@@ -342,25 +366,29 @@ function factory(dependencies) {
          * cache (@see lastMessage field for that). @see fetchedMessages field
          * for a deeper explanation about "fetched" messages.
          */
-        lastFetchedMessage: many2one('mail.message', {
+        __mfield_lastFetchedMessage: many2one('mail.message', {
             compute: '_computeLastFetchedMessage',
-            dependencies: ['orderedFetchedMessages'],
+            dependencies: [
+                '__mfield_orderedFetchedMessages',
+            ],
         }),
-        lastMessage: many2one('mail.message', {
+        __mfield_lastMessage: many2one('mail.message', {
             compute: '_computeLastMessage',
-            dependencies: ['orderedMessages'],
+            dependencies: [
+                '__mfield_orderedMessages',
+            ],
         }),
-        messagesCheckboxes: attr({
-            related: 'messages.hasCheckbox',
+        __mfield_messagesCheckboxes: attr({
+            related: '__mfield_messages.__mfield_hasCheckbox',
         }),
         /**
          * List of messages linked to this cache.
          */
-        messages: many2many('mail.message', {
+        __mfield_messages: many2many('mail.message', {
             compute: '_computeMessages',
             dependencies: [
-                'fetchedMessages',
-                'threadMessages',
+                '__mfield_fetchedMessages',
+                '__mfield_threadMessages',
             ],
         }),
         /**
@@ -368,10 +396,10 @@ function factory(dependencies) {
          * This is not a "real" field, its compute function is used to trigger
          * the load of messages at the right time.
          */
-        onHasToLoadMessagesChanged: attr({
+        __mfield_onHasToLoadMessagesChanged: attr({
             compute: '_onHasToLoadMessagesChanged',
             dependencies: [
-                'hasToLoadMessages',
+                '__mfield_hasToLoadMessages',
             ],
         }),
         /**
@@ -381,44 +409,48 @@ function factory(dependencies) {
          * cache (@see orderedMessages field for that). @see fetchedMessages
          * field for deeper explanation about "fetched" messages.
          */
-        orderedFetchedMessages: many2many('mail.message', {
+        __mfield_orderedFetchedMessages: many2many('mail.message', {
             compute: '_computeOrderedFetchedMessages',
-            dependencies: ['fetchedMessages'],
+            dependencies: [
+                '__mfield_fetchedMessages',
+            ],
         }),
         /**
          * Ordered list of messages linked to this cache.
          */
-        orderedMessages: many2many('mail.message', {
+        __mfield_orderedMessages: many2many('mail.message', {
             compute: '_computeOrderedMessages',
-            dependencies: ['messages'],
+            dependencies: [
+                '__mfield_messages',
+            ],
         }),
-        stringifiedDomain: attr({
+        __mfield_stringifiedDomain: attr({
             default: '[]',
         }),
-        thread: many2one('mail.thread', {
-            inverse: 'caches',
+        __mfield_thread: many2one('mail.thread', {
+            inverse: '__mfield_caches',
         }),
         /**
          * Serves as compute dependency.
          */
-        threadIsTemporary: attr({
-            related: 'thread.isTemporary',
+        __mfield_threadIsTemporary: attr({
+            related: '__mfield_thread.__mfield_isTemporary',
         }),
-        threadMessages: many2many('mail.message', {
-            related: 'thread.messages',
+        __mfield_threadMessages: many2many('mail.message', {
+            related: '__mfield_thread.__mfield_messages',
         }),
         /**
          * States the 'mail.thread_view' that are currently displaying `this`.
          */
-        threadViews: one2many('mail.thread_view', {
-            inverse: 'threadCache',
+        __mfield_threadViews: one2many('mail.thread_view', {
+            inverse: '__mfield_threadCache',
         }),
-        uncheckedMessages: many2many('mail.message', {
+        __mfield_uncheckedMessages: many2many('mail.message', {
             compute: '_computeUncheckedMessages',
             dependencies: [
-                'checkedMessages',
-                'messagesCheckboxes',
-                'messages',
+                '__mfield_checkedMessages',
+                '__mfield_messagesCheckboxes',
+                '__mfield_messages',
             ],
         }),
     };

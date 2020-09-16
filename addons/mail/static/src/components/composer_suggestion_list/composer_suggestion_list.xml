@@ -5,22 +5,22 @@
         <div class="o_ComposerSuggestionList" t-att-class="{ 'o-lowPosition': props.isBelow }">
             <div t-att-class="{ 'dropdown': props.isBelow, 'dropup': !props.isBelow }">
                 <div class="o_ComposerSuggestionList_list dropdown-menu show">
-                    <t t-foreach="composer.mainSuggestedRecordsList" t-as="record" t-key="record.localId">
+                    <t t-foreach="composer.__mfield_mainSuggestedRecordsList(mself)" t-as="record" t-key="record.localId">
                         <ComposerSuggestion
                             composerLocalId="props.composerLocalId"
-                            isActive="record === composer.activeSuggestedRecord"
-                            modelName="composer.suggestionModelName"
+                            isActive="record === composer.__mfield_activeSuggestedRecord(mself)"
+                            modelName="composer.__mfield_suggestionModelName(mself)"
                             recordLocalId="record.localId"
                         />
                     </t>
-                    <t t-if="composer.mainSuggestedRecordsList.length > 0 and composer.extraSuggestedRecordsList.length > 0">
+                    <t t-if="composer.__mfield_mainSuggestedRecordsList(mself).length > 0 and composer.__mfield_extraSuggestedRecordsList(mself).length > 0">
                         <div role="separator" class="dropdown-divider"/>
                     </t>
-                    <t t-foreach="composer.extraSuggestedRecordsList" t-as="record" t-key="record.localId">
+                    <t t-foreach="composer.__mfield_extraSuggestedRecordsList(mself)" t-as="record" t-key="record.localId">
                         <ComposerSuggestion
                             composerLocalId="props.composerLocalId"
-                            isActive="record === composer.activeSuggestedRecord"
-                            modelName="composer.suggestionModelName"
+                            isActive="record === composer.__mfield_activeSuggestedRecord(mself)"
+                            modelName="composer.__mfield_suggestionModelName(mself)"
                             recordLocalId="record.localId"
                         />
                     </t>

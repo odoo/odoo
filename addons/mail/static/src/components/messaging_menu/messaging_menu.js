@@ -6,10 +6,9 @@ const components = {
     MobileMessagingNavbar: require('mail/static/src/components/mobile_messaging_navbar/mobile_messaging_navbar.js'),
     NotificationList: require('mail/static/src/components/notification_list/notification_list.js'),
 };
-const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
+const useModels = require('mail/static/src/component_hooks/use_models/use_models.js');
 
 const { Component } = owl;
-const { useRef } = owl.hooks;
 
 class MessagingMenu extends Component {
 
@@ -24,14 +23,7 @@ class MessagingMenu extends Component {
          * item is not considered as a click away from messaging menu in mobile.
          */
         this.id = _.uniqueId('o_messagingMenu_');
-        useStore(props => {
-            return {
-                isDeviceMobile: this.env.messaging && this.env.messaging.device.isMobile,
-                isDiscussOpen: this.env.messaging && this.env.messaging.discuss.isOpen,
-                isMessagingInitialized: this.env.isMessagingInitialized(),
-                messagingMenu: this.env.messaging && this.env.messaging.messagingMenu.__state,
-            };
-        });
+        useModels();
 
         // bind since passed as props
         this._onMobileNewMessageInputSelect = this._onMobileNewMessageInputSelect.bind(this);
@@ -56,14 +48,14 @@ class MessagingMenu extends Component {
      * @returns {mail.discuss}
      */
     get discuss() {
-        return this.env.messaging && this.env.messaging.discuss;
+        return this.env.messaging && this.env.messaging.__mfield_discuss(this);
     }
 
     /**
      * @returns {mail.messaging_menu}
      */
     get messagingMenu() {
-        return this.env.messaging && this.env.messaging.messagingMenu;
+        return this.env.messaging && this.env.messaging.__mfield_messagingMenu(this);
     }
 
     /**
@@ -114,7 +106,7 @@ class MessagingMenu extends Component {
         // in mobile: keeps the messaging menu open in background
         // TODO: maybe need to move this to a mobile component?
         // task-2089887
-        if (this.env.messaging.device.isMobile) {
+        if (this.env.messaging.__mfield_device(this).__mfield_isMobile(this)) {
             return;
         }
         // ignore click inside the menu
@@ -130,7 +122,9 @@ class MessagingMenu extends Component {
      * @param {MouseEvent} ev
      */
     _onClickDesktopTabButton(ev) {
-        this.messagingMenu.update({ activeTabId: ev.currentTarget.dataset.tabId });
+        this.messagingMenu.update({
+            __mfield_activeTabId: ev.currentTarget.dataset.tabId,
+        });
     }
 
     /**
@@ -138,8 +132,8 @@ class MessagingMenu extends Component {
      * @param {MouseEvent} ev
      */
     _onClickNewMessage(ev) {
-        if (!this.env.messaging.device.isMobile) {
-            this.env.messaging.chatWindowManager.openNewMessage();
+        if (!this.env.messaging.__mfield_device(this).__mfield_isMobile(this)) {
+            this.env.messaging.__mfield_chatWindowManager(this).openNewMessage();
             this.messagingMenu.close();
         } else {
             this.messagingMenu.toggleMobileNewMessage();
@@ -196,9 +190,9 @@ class MessagingMenu extends Component {
             callback: partners => {
                 const suggestions = partners.map(partner => {
                     return {
-                        id: partner.id,
-                        value: partner.nameOrDisplayName,
-                        label: partner.nameOrDisplayName,
+                        id: partner.__mfield_id(this),
+                        value: partner.__mfield_nameOrDisplayName(this),
+                        label: partner.__mfield_nameOrDisplayName(this),
                     };
                 });
                 res(_.sortBy(suggestions, 'label'));
@@ -216,7 +210,9 @@ class MessagingMenu extends Component {
      */
     _onSelectMobileNavbarTab(ev) {
         ev.stopPropagation();
-        this.messagingMenu.update({ activeTabId: ev.detail.tabId });
+        this.messagingMenu.update({
+            __mfield_activeTabId: ev.detail.tabId,
+        });
     }
 
 }

@@ -3,8 +3,8 @@ odoo.define('mail/static/src/models/thread_view/thread_view.js', function (requi
 
 const { registerNewModel } = require('mail/static/src/model/model_core.js');
 const { RecordDeletedError } = require('mail/static/src/model/model_errors.js');
-const { attr, many2many, many2one, one2one } = require('mail/static/src/model/model_field.js');
 const { clear } = require('mail/static/src/model/model_field_command.js');
+const { attr, many2many, many2one, one2one } = require('mail/static/src/model/model_field_utils.js');
 
 function factory(dependencies) {
 
@@ -37,7 +37,7 @@ function factory(dependencies) {
         addComponentHint(hintType, hintData) {
             const hint = { data: hintData, type: hintType };
             this.update({
-                componentHintList: this.componentHintList.concat([hint]),
+                __mfield_componentHintList: this.__mfield_componentHintList(this).concat([hint]),
             });
         }
 
@@ -55,7 +55,7 @@ function factory(dependencies) {
                     break;
             }
             this.update({
-                componentHintList: this.componentHintList.filter(filterFun),
+                __mfield_componentHintList: this.__mfield_componentHintList(this).filter(filterFun),
             });
         }
 
@@ -63,8 +63,13 @@ function factory(dependencies) {
          * @param {mail.message} message
          */
         handleVisibleMessage(message) {
-            if (!this.lastVisibleMessage || this.lastVisibleMessage.id < message.id) {
-                this.update({ lastVisibleMessage: [['link', message]] });
+            if (
+                !this.__mfield_lastVisibleMessage(this) ||
+                this.__mfield_lastVisibleMessage(this).__mfield_id(this) < message.__mfield_id(this)
+            ) {
+                this.update({
+                    __mfield_lastVisibleMessage: [['link', message]],
+                });
             }
         }
 
@@ -77,10 +82,10 @@ function factory(dependencies) {
          * @returns {integer|undefined}
          */
         _computeThreadCacheInitialScrollPosition() {
-            if (!this.threadCache) {
+            if (!this.__mfield_threadCache(this)) {
                 return clear();
             }
-            const threadCacheInitialScrollPosition = this.threadCacheInitialScrollPositions[this.threadCache.localId];
+            const threadCacheInitialScrollPosition = this.__mfield_threadCacheInitialScrollPositions(this)[this.__mfield_threadCache(this).localId];
             if (threadCacheInitialScrollPosition !== undefined) {
                 return threadCacheInitialScrollPosition;
             }
@@ -97,10 +102,16 @@ function factory(dependencies) {
         _computeThreadShouldBeSetAsSeen() {
             // FIXME condition should not be on "composer is focused" but "threadView is active"
             // See task-2277543
-            const lastMessageIsVisible = this.lastVisibleMessage &&
-                this.lastVisibleMessage === this.lastMessage;
-            if (lastMessageIsVisible && this.hasComposerFocus && this.thread) {
-                this.thread.markAsSeen(this.lastMessage.id).catch(e => {
+            const lastMessageIsVisible = (
+                this.__mfield_lastVisibleMessage(this) &&
+                this.__mfield_lastVisibleMessage(this) === this.__mfield_lastMessage(this)
+            );
+            if (
+                lastMessageIsVisible &&
+                this.__mfield_hasComposerFocus(this) &&
+                this.__mfield_thread(this)
+            ) {
+                this.__mfield_thread(this).markAsSeen(this.__mfield_lastMessage(this).__mfield_id(this)).catch(e => {
                     // prevent crash when executing compute during destroy
                     if (!(e instanceof RecordDeletedError)) {
                         throw e;
@@ -120,30 +131,44 @@ function factory(dependencies) {
          * @private
          */
         _onThreadCacheIsLoadingChanged() {
-            if (this.threadCache && this.threadCache.isLoading) {
-                if (!this.isLoading && !this.isPreparingLoading) {
-                    this.update({ isPreparingLoading: true });
+            if (
+                this.__mfield_threadCache(this) &&
+                this.__mfield_threadCache(this).__mfield_isLoading(this)
+            ) {
+                if (
+                    !this.__mfield_isLoading(this) &&
+                    !this.__mfield_isPreparingLoading(this)
+                ) {
+                    this.update({
+                        __mfield_isPreparingLoading: true,
+                    });
                     this.async(() =>
                         new Promise(resolve => {
                             this._loaderTimeout = this.env.browser.setTimeout(resolve, 400);
                         }
                     )).then(() => {
-                        const isLoading = this.threadCache
-                            ? this.threadCache.isLoading
+                        const isLoading = this.__mfield_threadCache(this)
+                            ? this.__mfield_threadCache(this).__mfield_isLoading(this)
                             : false;
-                        this.update({ isLoading, isPreparingLoading: false });
+                        this.update({
+                            __mfield_isLoading: isLoading,
+                            __mfield_isPreparingLoading: false,
+                        });
                     });
                 }
                 return;
             }
             this.env.browser.clearTimeout(this._loaderTimeout);
-            this.update({ isLoading: false, isPreparingLoading: false });
+            this.update({
+                __mfield_isLoading: false,
+                __mfield_isPreparingLoading: false,
+            });
         }
     }
 
     ThreadView.fields = {
-        checkedMessages: many2many('mail.message', {
-            related: 'threadCache.checkedMessages',
+        __mfield_checkedMessages: many2many('mail.message', {
+            related: '__mfield_threadCache.__mfield_checkedMessages',
         }),
         /**
          * List of component hints. Hints contain information that help
@@ -163,14 +188,14 @@ function factory(dependencies) {
          *                      message id.
          *   }
          */
-        componentHintList: attr({
+        __mfield_componentHintList: attr({
             default: [],
         }),
-        composer: many2one('mail.composer', {
-            related: 'thread.composer',
+        __mfield_composer: many2one('mail.composer', {
+            related: '__mfield_thread.__mfield_composer',
         }),
-        hasComposerFocus: attr({
-            related: 'composer.hasFocus',
+        __mfield_hasComposerFocus: attr({
+            related: '__mfield_composer.__mfield_hasFocus',
         }),
         /**
          * States whether `this.threadCache` is currently loading messages.
@@ -181,7 +206,7 @@ function factory(dependencies) {
          * It is computed through `_onThreadCacheIsLoadingChanged` and it should
          * otherwise be considered read-only.
          */
-        isLoading: attr({
+        __mfield_isLoading: attr({
             default: false,
         }),
         /**
@@ -194,28 +219,28 @@ function factory(dependencies) {
          *
          * @see `this.isLoading`
          */
-        isPreparingLoading: attr({
+        __mfield_isPreparingLoading: attr({
             default: false,
         }),
-        lastMessage: many2one('mail.message', {
-            related: 'thread.lastMessage',
+        __mfield_lastMessage: many2one('mail.message', {
+            related: '__mfield_thread.__mfield_lastMessage',
         }),
         /**
          * Most recent message in this ThreadView that has been shown to the
          * current partner.
          */
-        lastVisibleMessage: many2one('mail.message'),
-        messages: many2many('mail.message', {
-            related: 'threadCache.messages',
+        __mfield_lastVisibleMessage: many2one('mail.message'),
+        __mfield_messages: many2many('mail.message', {
+            related: '__mfield_threadCache.__mfield_messages',
         }),
         /**
          * Not a real field, used to trigger `_onThreadCacheChanged` when one of
          * the dependencies changes.
          */
-        onThreadCacheChanged: attr({
+        __mfield_onThreadCacheChanged: attr({
             compute: '_onThreadCacheChanged',
             dependencies: [
-                'threadCache'
+                '__mfield_threadCache'
             ],
         }),
         /**
@@ -224,74 +249,74 @@ function factory(dependencies) {
          *
          * @see `this.isLoading`
          */
-        onThreadCacheIsLoadingChanged: attr({
+        __mfield_onThreadCacheIsLoadingChanged: attr({
             compute: '_onThreadCacheIsLoadingChanged',
             dependencies: [
-                'threadCache',
-                'threadCacheIsLoading',
+                '__mfield_threadCache',
+                '__mfield_threadCacheIsLoading',
             ],
         }),
         /**
          * Determines the domain to apply when fetching messages for `this.thread`.
          */
-        stringifiedDomain: attr({
-            related: 'threadViewer.stringifiedDomain',
+        __mfield_stringifiedDomain: attr({
+            related: '__mfield_threadViewer.__mfield_stringifiedDomain',
         }),
         /**
          * Determines the `mail.thread` currently displayed by `this`.
          */
-        thread: many2one('mail.thread', {
-            inverse: 'threadViews',
-            related: 'threadViewer.thread',
+        __mfield_thread: many2one('mail.thread', {
+            inverse: '__mfield_threadViews',
+            related: '__mfield_threadViewer.__mfield_thread',
         }),
         /**
          * States the `mail.thread_cache` currently displayed by `this`.
          */
-        threadCache: many2one('mail.thread_cache', {
-            inverse: 'threadViews',
-            related: 'threadViewer.threadCache',
+        __mfield_threadCache: many2one('mail.thread_cache', {
+            inverse: '__mfield_threadViews',
+            related: '__mfield_threadViewer.__mfield_threadCache',
         }),
-        threadCacheInitialScrollPosition: attr({
+        __mfield_threadCacheInitialScrollPosition: attr({
             compute: '_computeThreadCacheInitialScrollPosition',
             dependencies: [
-                'threadCache',
-                'threadCacheInitialScrollPositions',
+                '__mfield_threadCache',
+                '__mfield_threadCacheInitialScrollPositions',
             ],
         }),
         /**
          * Serves as compute dependency.
          */
-        threadCacheIsLoading: attr({
-            related: 'threadCache.isLoading',
+        __mfield_threadCacheIsLoading: attr({
+            related: '__mfield_threadCache.__mfield_isLoading',
         }),
         /**
          * List of saved initial scroll positions of thread caches.
          */
-        threadCacheInitialScrollPositions: attr({
+        __mfield_threadCacheInitialScrollPositions: attr({
             default: {},
-            related: 'threadViewer.threadCacheInitialScrollPositions',
+            related: '__mfield_threadViewer.__mfield_threadCacheInitialScrollPositions',
         }),
         /**
          * Not a real field, used to trigger `thread.markAsSeen` when one of
          * the dependencies changes.
          */
-        threadShouldBeSetAsSeen: attr({
+        __mfield_threadShouldBeSetAsSeen: attr({
             compute: '_computeThreadShouldBeSetAsSeen',
             dependencies: [
-                'hasComposerFocus',
-                'lastMessage',
-                'lastVisibleMessage',
-                'threadCache',
+                '__mfield_hasComposerFocus',
+                '__mfield_lastMessage',
+                '__mfield_lastVisibleMessage',
+                '__mfield_threadCache',
             ],
         }),
         /**
          * Determines the `mail.thread_viewer` currently managing `this`.
          */
-        threadViewer: one2one('mail.thread_viewer', {
-            inverse: 'threadView',
+        __mfield_threadViewer: one2one('mail.thread_viewer', {
+            inverse: '__mfield_threadView',
         }),
-        uncheckedMessages: many2many('mail.message', {
-            related: 'threadCache.uncheckedMessages',
+        __mfield_uncheckedMessages: many2many('mail.message', {
+            related: '__mfield_threadCache.__mfield_uncheckedMessages',
         }),
     };
 

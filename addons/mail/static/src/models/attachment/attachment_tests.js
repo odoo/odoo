@@ -27,114 +27,114 @@ QUnit.test('create (txt)', async function (assert) {
     assert.expect(9);
 
     await this.start();
-    assert.notOk(this.env.models['mail.attachment'].find(attachment => attachment.id === 750));
+    assert.notOk(this.env.models['mail.attachment'].find(attachment => attachment.__mfield_id() === 750));
 
     const attachment = this.env.models['mail.attachment'].create({
-        filename: "test.txt",
-        id: 750,
-        mimetype: 'text/plain',
-        name: "test.txt",
+        __mfield_filename: "test.txt",
+        __mfield_id: 750,
+        __mfield_mimetype: 'text/plain',
+        __mfield_name: "test.txt",
     });
     assert.ok(attachment);
-    assert.ok(this.env.models['mail.attachment'].find(attachment => attachment.id === 750));
-    assert.strictEqual(this.env.models['mail.attachment'].find(attachment => attachment.id === 750), attachment);
-    assert.strictEqual(attachment.filename, "test.txt");
-    assert.strictEqual(attachment.id, 750);
-    assert.notOk(attachment.isTemporary);
-    assert.strictEqual(attachment.mimetype, 'text/plain');
-    assert.strictEqual(attachment.name, "test.txt");
+    assert.ok(this.env.models['mail.attachment'].find(attachment => attachment.__mfield_id() === 750));
+    assert.strictEqual(this.env.models['mail.attachment'].find(attachment => attachment.__mfield_id() === 750), attachment);
+    assert.strictEqual(attachment.__mfield_filename(), "test.txt");
+    assert.strictEqual(attachment.__mfield_id(), 750);
+    assert.notOk(attachment.__mfield_isTemporary());
+    assert.strictEqual(attachment.__mfield_mimetype(), 'text/plain');
+    assert.strictEqual(attachment.__mfield_name(), "test.txt");
 });
 
 QUnit.test('displayName', async function (assert) {
     assert.expect(5);
 
     await this.start();
-    assert.notOk(this.env.models['mail.attachment'].find(attachment => attachment.id === 750));
+    assert.notOk(this.env.models['mail.attachment'].find(attachment => attachment.__mfield_id() === 750));
 
     const attachment = this.env.models['mail.attachment'].create({
-        filename: "test.txt",
-        id: 750,
-        mimetype: 'text/plain',
-        name: "test.txt",
+        __mfield_filename: "test.txt",
+        __mfield_id: 750,
+        __mfield_mimetype: 'text/plain',
+        __mfield_name: "test.txt",
     });
     assert.ok(attachment);
-    assert.ok(this.env.models['mail.attachment'].find(attachment => attachment.id === 750));
-    assert.strictEqual(attachment, this.env.models['mail.attachment'].find(attachment => attachment.id === 750));
-    assert.strictEqual(attachment.displayName, "test.txt");
+    assert.ok(this.env.models['mail.attachment'].find(attachment => attachment.__mfield_id() === 750));
+    assert.strictEqual(attachment, this.env.models['mail.attachment'].find(attachment => attachment.__mfield_id() === 750));
+    assert.strictEqual(attachment.__mfield_displayName(), "test.txt");
 });
 
 QUnit.test('extension', async function (assert) {
     assert.expect(5);
 
     await this.start();
-    assert.notOk(this.env.models['mail.attachment'].find(attachment => attachment.id === 750));
+    assert.notOk(this.env.models['mail.attachment'].find(attachment => attachment.__mfield_id() === 750));
 
     const attachment = this.env.models['mail.attachment'].create({
-        filename: "test.txt",
-        id: 750,
-        mimetype: 'text/plain',
-        name: "test.txt",
+        __mfield_filename: "test.txt",
+        __mfield_id: 750,
+        __mfield_mimetype: 'text/plain',
+        __mfield_name: "test.txt",
     });
     assert.ok(attachment);
-    assert.ok(this.env.models['mail.attachment'].find(attachment => attachment.id === 750));
-    assert.strictEqual(attachment, this.env.models['mail.attachment'].find(attachment => attachment.id === 750));
-    assert.strictEqual(attachment.extension, 'txt');
+    assert.ok(this.env.models['mail.attachment'].find(attachment => attachment.__mfield_id() === 750));
+    assert.strictEqual(attachment, this.env.models['mail.attachment'].find(attachment => attachment.__mfield_id() === 750));
+    assert.strictEqual(attachment.__mfield_extension(), 'txt');
 });
 
 QUnit.test('fileType', async function (assert) {
     assert.expect(5);
 
     await this.start();
-    assert.notOk(this.env.models['mail.attachment'].find(attachment => attachment.id === 750));
+    assert.notOk(this.env.models['mail.attachment'].find(attachment => attachment.__mfield_id() === 750));
 
     const attachment = this.env.models['mail.attachment'].create({
-        filename: "test.txt",
-        id: 750,
-        mimetype: 'text/plain',
-        name: "test.txt",
+        __mfield_filename: "test.txt",
+        __mfield_id: 750,
+        __mfield_mimetype: 'text/plain',
+        __mfield_name: "test.txt",
     });
     assert.ok(attachment);
-    assert.ok(this.env.models['mail.attachment'].find(attachment => attachment.id === 750));
+    assert.ok(this.env.models['mail.attachment'].find(attachment => attachment.__mfield_id() === 750));
     assert.strictEqual(attachment, this.env.models['mail.attachment'].find(attachment =>
-        attachment.id === 750)
+        attachment.__mfield_id() === 750)
     );
-    assert.strictEqual(attachment.fileType, 'text');
+    assert.strictEqual(attachment.__mfield_fileType(), 'text');
 });
 
 QUnit.test('isTextFile', async function (assert) {
     assert.expect(5);
 
     await this.start();
-    assert.notOk(this.env.models['mail.attachment'].find(attachment => attachment.id === 750));
+    assert.notOk(this.env.models['mail.attachment'].find(attachment => attachment.__mfield_id() === 750));
 
     const attachment = this.env.models['mail.attachment'].create({
-        filename: "test.txt",
-        id: 750,
-        mimetype: 'text/plain',
-        name: "test.txt",
+        __mfield_filename: "test.txt",
+        __mfield_id: 750,
+        __mfield_mimetype: 'text/plain',
+        __mfield_name: "test.txt",
     });
     assert.ok(attachment);
-    assert.ok(this.env.models['mail.attachment'].find(attachment => attachment.id === 750));
-    assert.strictEqual(attachment, this.env.models['mail.attachment'].find(attachment => attachment.id === 750));
-    assert.ok(attachment.isTextFile);
+    assert.ok(this.env.models['mail.attachment'].find(attachment => attachment.__mfield_id() === 750));
+    assert.strictEqual(attachment, this.env.models['mail.attachment'].find(attachment => attachment.__mfield_id() === 750));
+    assert.ok(attachment.__mfield_isTextFile());
 });
 
 QUnit.test('isViewable', async function (assert) {
     assert.expect(5);
 
     await this.start();
-    assert.notOk(this.env.models['mail.attachment'].find(attachment => attachment.id === 750));
+    assert.notOk(this.env.models['mail.attachment'].find(attachment => attachment.__mfield_id() === 750));
 
     const attachment = this.env.models['mail.attachment'].create({
-        filename: "test.txt",
-        id: 750,
-        mimetype: 'text/plain',
-        name: "test.txt",
+        __mfield_filename: "test.txt",
+        __mfield_id: 750,
+        __mfield_mimetype: 'text/plain',
+        __mfield_name: "test.txt",
     });
     assert.ok(attachment);
-    assert.ok(this.env.models['mail.attachment'].find(attachment => attachment.id === 750));
-    assert.strictEqual(attachment, this.env.models['mail.attachment'].find(attachment => attachment.id === 750));
-    assert.ok(attachment.isViewable);
+    assert.ok(this.env.models['mail.attachment'].find(attachment => attachment.__mfield_id() === 750));
+    assert.strictEqual(attachment, this.env.models['mail.attachment'].find(attachment => attachment.__mfield_id() === 750));
+    assert.ok(attachment.__mfield_isViewable());
 });
 
 });

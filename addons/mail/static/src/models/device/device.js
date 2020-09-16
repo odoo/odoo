@@ -2,7 +2,7 @@ odoo.define('mail/static/src/models/device/device.js', function (require) {
 'use strict';
 
 const { registerNewModel } = require('mail/static/src/model/model_core.js');
-const { attr } = require('mail/static/src/model/model_field.js');
+const { attr } = require('mail/static/src/model/model_field_utils.js');
 
 function factory(dependencies) {
 
@@ -48,17 +48,17 @@ function factory(dependencies) {
          */
         _refresh() {
             this.update({
-                globalWindowInnerHeight: this.env.browser.innerHeight,
-                globalWindowInnerWidth: this.env.browser.innerWidth,
-                isMobile: this.env.device.isMobile,
+                __mfield_globalWindowInnerHeight: this.env.browser.innerHeight,
+                __mfield_globalWindowInnerWidth: this.env.browser.innerWidth,
+                __mfield_isMobile: this.env.device.isMobile,
             });
         }
     }
 
     Device.fields = {
-        globalWindowInnerHeight: attr(),
-        globalWindowInnerWidth: attr(),
-        isMobile: attr(),
+        __mfield_globalWindowInnerHeight: attr(),
+        __mfield_globalWindowInnerWidth: attr(),
+        __mfield_isMobile: attr(),
     };
 
     Device.modelName = 'mail.device';

@@ -48,15 +48,19 @@ QUnit.test('base rendering not editable', async function (assert) {
     await this.start();
 
     const thread = this.env.models['mail.thread'].create({
-        id: 100,
-        model: 'res.partner',
+        __mfield_id: 100,
+        __mfield_model: 'res.partner',
     });
     const follower = await this.env.models['mail.follower'].create({
-        channel: [['insert', { id: 1, model: 'mail.channel', name: "François Perusse" }]],
-        followedThread: [['link', thread]],
-        id: 2,
-        isActive: true,
-        isEditable: false,
+        __mfield_channel: [['insert', {
+            __mfield_id: 1,
+            __mfield_model: 'mail.channel',
+            __mfield_name: "François Perusse",
+        }]],
+        __mfield_followedThread: [['link', thread]],
+        __mfield_id: 2,
+        __mfield_isActive: true,
+        __mfield_isEditable: false,
     });
     await this.createFollowerComponent(follower);
     assert.containsOnce(
@@ -91,15 +95,19 @@ QUnit.test('base rendering editable', async function (assert) {
 
     await this.start();
     const thread = this.env.models['mail.thread'].create({
-        id: 100,
-        model: 'res.partner',
+        __mfield_id: 100,
+        __mfield_model: 'res.partner',
     });
     const follower = await this.env.models['mail.follower'].create({
-        channel: [['insert', { id: 1, model: 'mail.channel', name: "François Perusse" }]],
-        followedThread: [['link', thread]],
-        id: 2,
-        isActive: true,
-        isEditable: true,
+        __mfield_channel: [['insert', {
+            __mfield_id: 1,
+            __mfield_model: 'mail.channel',
+            __mfield_name: "François Perusse",
+        }]],
+        __mfield_followedThread: [['link', thread]],
+        __mfield_id: 2,
+        __mfield_isActive: true,
+        __mfield_isEditable: true,
     });
     await this.createFollowerComponent(follower);
     assert.containsOnce(
@@ -162,15 +170,19 @@ QUnit.test('click on channel follower details', async function (assert) {
         env: { bus },
     });
     const thread = this.env.models['mail.thread'].create({
-        id: 100,
-        model: 'res.partner',
+        __mfield_id: 100,
+        __mfield_model: 'res.partner',
     });
     const follower = await this.env.models['mail.follower'].create({
-        channel: [['insert', { id: 10, model: 'mail.channel', name: "channel" }]],
-        followedThread: [['link', thread]],
-        id: 2,
-        isActive: true,
-        isEditable: true,
+        __mfield_channel: [['insert', {
+            __mfield_id: 10,
+            __mfield_model: 'mail.channel',
+            __mfield_name: "channel",
+        }]],
+        __mfield_followedThread: [['link', thread]],
+        __mfield_id: 2,
+        __mfield_isActive: true,
+        __mfield_isEditable: true,
     });
     await this.createFollowerComponent(follower);
     assert.containsOnce(
@@ -220,18 +232,18 @@ QUnit.test('click on partner follower details', async function (assert) {
         env: { bus },
     });
     const thread = this.env.models['mail.thread'].create({
-        id: 100,
-        model: 'res.partner',
+        __mfield_id: 100,
+        __mfield_model: 'res.partner',
     });
     const follower = await this.env.models['mail.follower'].create({
-        followedThread: [['link', thread]],
-        id: 2,
-        isActive: true,
-        isEditable: true,
-        partner: [['insert', {
-            email: "bla@bla.bla",
-            id: this.env.messaging.currentPartner.id,
-            name: "François Perusse",
+        __mfield_followedThread: [['link', thread]],
+        __mfield_id: 2,
+        __mfield_isActive: true,
+        __mfield_isEditable: true,
+        __mfield_partner: [['insert', {
+            __mfield_email: "bla@bla.bla",
+            __mfield_id: this.env.messaging.__mfield_currentPartner().__mfield_id(),
+            __mfield_name: "François Perusse",
         }]],
     });
     await this.createFollowerComponent(follower);
@@ -276,11 +288,11 @@ QUnit.test('click on edit follower', async function (assert) {
         },
     });
     const thread = this.env.models['mail.thread'].create({
-        id: 100,
-        model: 'res.partner',
+        __mfield_id: 100,
+        __mfield_model: 'res.partner',
     });
     await thread.refreshFollowers();
-    await this.createFollowerComponent(thread.followers[0]);
+    await this.createFollowerComponent(thread.__mfield_followers()[0]);
     assert.containsOnce(
         document.body,
         '.o_Follower',
@@ -326,18 +338,18 @@ QUnit.test('edit follower and close subtype dialog', async function (assert) {
         },
     });
     const thread = this.env.models['mail.thread'].create({
-        id: 100,
-        model: 'res.partner',
+        __mfield_id: 100,
+        __mfield_model: 'res.partner',
     });
     const follower = await this.env.models['mail.follower'].create({
-        followedThread: [['link', thread]],
-        id: 2,
-        isActive: true,
-        isEditable: true,
-        partner: [['insert', {
-            email: "bla@bla.bla",
-            id: this.env.session.partner_id,
-            name: "François Perusse",
+        __mfield_followedThread: [['link', thread]],
+        __mfield_id: 2,
+        __mfield_isActive: true,
+        __mfield_isEditable: true,
+        __mfield_partner: [['insert', {
+            __mfield_email: "bla@bla.bla",
+            __mfield_id: this.env.session.partner_id,
+            __mfield_name: "François Perusse",
         }]],
     });
     await this.createFollowerComponent(follower);
