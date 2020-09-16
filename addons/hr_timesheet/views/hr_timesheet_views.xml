@@ -23,6 +23,7 @@
             <field name="arch" type="xml">
                 <tree editable="top" string="Timesheet Activities" sample="1">
                     <field name="date"/>
+                    <field name="employee_id" invisible="1"/>
                     <field name="project_id" required="1" options="{'no_create_edit': True}" context="{'form_view_ref': 'project.project_project_view_form_simplified',}"/>
                     <field name="task_id" optional="show" options="{'no_create_edit': True, 'no_open': True}" widget="task_with_hours" context="{'default_project_id': project_id}" domain="[('project_id', '=', project_id)]"/>
                     <field name="name" optional="show" required="0"/>
@@ -40,8 +41,10 @@
             <field name="mode">primary</field>
             <field name="priority">10</field>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='date']" position="after">
-                    <field name="employee_id" required="1" widget="many2one_avatar_employee"/>
+                <xpath expr="//field[@name='employee_id']" position="attributes">
+                    <attribute name="invisible">0</attribute>
+                    <attribute name="required">1</attribute>
+                    <attribute name="widget">many2one_avatar_employee</attribute>
                 </xpath>
             </field>
         </record>
