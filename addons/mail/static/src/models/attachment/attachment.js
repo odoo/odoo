@@ -96,11 +96,15 @@ function factory(dependencies) {
          * Remove this attachment globally.
          */
         async remove() {
-            await this.async(() => this.env.services.rpc({
-                model: 'ir.attachment',
-                method: 'unlink',
-                args: [this.id],
-            }, { shadow: true }));
+            if (!this.isTemporary) {
+                await this.async(() => this.env.services.rpc({
+                    model: 'ir.attachment',
+                    method: 'unlink',
+                    args: [this.id],
+                }, { shadow: true }));
+            } else if (this.uploadingAbortController) {
+                this.uploadingAbortController.abort();
+            }
             this.delete();
         }
 
@@ -246,6 +250,25 @@ function factory(dependencies) {
             return this.mimetype && this.mimetype.split('/').shift();
         }
 
+        /**
+         * @private
+         * @returns {AbortController|undefined}
+         */
+        _computeUploadingAbortController() {
+            if (this.isTemporary) {
+                if (!this.uploadingAbortController) {
+                    const abortController = new AbortController();
+                    abortController.signal.onabort = () => {
+                        this.env.messagingBus.trigger('o-attachment-upload-abort', {
+                            attachment: this
+                        });
+                    };
+                    return abortController;
+                }
+                return this.uploadingAbortController;
+            }
+            return undefined;
+        }
     }
 
     Attachment.fields = {
@@ -328,6 +351,17 @@ function factory(dependencies) {
             inverse: 'attachments',
         }),
         type: attr(),
+        /**
+         * Abort Controller linked to the uploading process of this attachment.
+         * Useful in order to cancel the in-progress uploading of this attachment.
+         */
+        uploadingAbortController: attr({
+            compute: '_computeUploadingAbortController',
+            dependencies: [
+                'isTemporary',
+                'uploadingAbortController',
+            ],
+        }),
         url: attr(),
     };
 

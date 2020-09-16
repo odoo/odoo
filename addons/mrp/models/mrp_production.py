@@ -13,6 +13,7 @@ from itertools import groupby
 from odoo import api, fields, models, _
 from odoo.exceptions import AccessError, UserError
 from odoo.tools import float_compare, float_round, float_is_zero, format_datetime
+from odoo.tools.misc import format_date
 
 from odoo.addons.stock.models.stock_move import PROCUREMENT_PRIORITIES
 
@@ -288,25 +289,20 @@ class MrpProduction(models.Model):
         for production in self:
             production.mrp_production_backorder_count = len(production.procurement_group_id.mrp_production_ids)
 
-    @api.depends('move_raw_ids', 'state')
+    @api.depends('move_raw_ids', 'state', 'date_planned_start', 'move_raw_ids.forecast_availability', 'move_raw_ids.forecast_expected_date')
     def _compute_components_availability(self):
         self.components_availability = False
         self.components_availability_state = 'available'
         productions = self.filtered(lambda mo: mo.state not in ['cancel', 'draft', 'done'])
+        productions.components_availability = _('Available')
         for production in productions:
-            forecast_data = []
-            for move in production.move_raw_ids:
-                forecast_data.append(json.loads(move.json_forecast))
-            production.components_availability = 'Available'
-            forecast_data.sort(key=lambda line: (
-                line.get('sortingDate', ''),
-            ), reverse=True)
-            if forecast_data[0].get('sortingDate', False):
-                production.components_availability = _('Exp %s', forecast_data[0]['expectedDate'])
-                production.components_availability_state = 'late' if forecast_data[0]['isLate'] else 'expected'
-            elif any(not data.get('reservedAvailability', False) for data in forecast_data):
-                production.components_availability = 'Not Available'
+            forecast_date = max(production.move_raw_ids.filtered('forecast_expected_date').mapped('forecast_expected_date'), default=False)
+            if any(float_compare(move.forecast_availability, move.product_qty, move.product_id.uom_id.rounding) == -1 for move in production.move_raw_ids):
+                production.components_availability = _('Not Available')
                 production.components_availability_state = 'late'
+            elif forecast_date:
+                production.components_availability = _('Exp %s', format_date(self.env, forecast_date))
+                production.components_availability_state = 'late' if forecast_date > production.date_planned_start else 'expected'
 
     @api.depends('move_finished_ids.date_deadline')
     def _compute_date_deadline(self):
@@ -315,7 +311,7 @@ class MrpProduction(models.Model):
 
     def _set_date_deadline(self):
         for production in self:
-            (self.move_raw_ids | self.move_finished_ids).date_deadline = production.date_deadline
+            production.move_finished_ids.date_deadline = production.date_deadline
 
     @api.depends("workorder_ids")
     def _compute_is_planned(self):
@@ -706,7 +702,7 @@ class MrpProduction(models.Model):
                 if any(wo.date_planned_start and wo.date_planned_finished for wo in production.workorder_ids):
                     raise UserError(_('You cannot move a manufacturing order once it has a planned workorder, move related workorder(s) instead.'))
             if vals.get('date_planned_start'):
-                production.move_raw_ids.write({'date': production.date_planned_start})
+                production.move_raw_ids.write({'date': production.date_planned_start, 'date_deadline': production.date_planned_start})
             if vals.get('date_planned_finished'):
                 production.move_finished_ids.write({'date': production.date_planned_finished})
             if any(field in ['move_raw_ids', 'move_finished_ids', 'workorder_ids'] for field in vals) and production.state != 'draft':
@@ -717,10 +713,12 @@ class MrpProduction(models.Model):
                         'group_id': production.procurement_group_id.id,
                         'reference': production.name,
                         'date': production.date_planned_start,
+                        'date_deadline': production.date_planned_start
                     })
                     production.move_finished_ids.filtered(lambda move: move.additional and move.date > production.date_planned_finished).write({
                         'reference': production.name,
                         'date': production.date_planned_finished,
+                        'date_deadline': production.date_deadline
                     })
                 production._autoconfirm_production()
                 if production in production_to_replan:
@@ -879,7 +877,7 @@ class MrpProduction(models.Model):
             'sequence': bom_line.sequence if bom_line else 10,
             'name': self.name,
             'date': self.date_planned_start,
-            'date_deadline': self.date_deadline,
+            'date_deadline': self.date_planned_start,
             'bom_line_id': bom_line.id if bom_line else False,
             'picking_type_id': self.picking_type_id.id,
             'product_id': product_id.id,
