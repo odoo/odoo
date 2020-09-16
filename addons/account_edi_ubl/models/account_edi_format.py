@@ -6,9 +6,7 @@ from odoo.tests.common import Form
 from odoo.exceptions import UserError
 from odoo.osv import expression
 
-from datetime import datetime
 from pathlib import PureWindowsPath
-from xml.sax.saxutils import unescape
 
 import logging
 
