@@ -612,7 +612,127 @@ class SurveyUserInputLine(models.Model):
                     score_proportion = (time_limit - seconds_to_answer) / time_limit
                     answer_score = (answer_score / 2) * (1 + score_proportion)
 
+<<<<<<< HEAD
         return {
             'answer_is_correct': answer_is_correct,
             'answer_score': answer_score
+=======
+    @api.model
+    def save_line_date(self, user_input_id, question, post, answer_tag):
+        vals = {
+            'user_input_id': user_input_id,
+            'question_id': question.id,
+            'survey_id': question.survey_id.id,
+            'skipped': False
+        }
+        if answer_tag in post and post[answer_tag].strip():
+            vals.update({'answer_type': 'date', 'value_date': post[answer_tag]})
+        else:
+            vals.update({'answer_type': None, 'skipped': True})
+        old_uil = self.search([
+            ('user_input_id', '=', user_input_id),
+            ('survey_id', '=', question.survey_id.id),
+            ('question_id', '=', question.id)
+        ])
+        if old_uil:
+            old_uil.write(vals)
+        else:
+            old_uil.create(vals)
+        return True
+
+    @api.model
+    def save_line_datetime(self, user_input_id, question, post, answer_tag):
+        vals = {
+            'user_input_id': user_input_id,
+            'question_id': question.id,
+            'survey_id': question.survey_id.id,
+            'skipped': False
+        }
+        if answer_tag in post and post[answer_tag].strip():
+            vals.update({'answer_type': 'datetime', 'value_datetime': post[answer_tag]})
+        else:
+            vals.update({'answer_type': None, 'skipped': True})
+        old_uil = self.search([
+            ('user_input_id', '=', user_input_id),
+            ('survey_id', '=', question.survey_id.id),
+            ('question_id', '=', question.id)
+        ])
+        if old_uil:
+            old_uil.write(vals)
+        else:
+            old_uil.create(vals)
+        return True
+
+    @api.model
+    def save_line_simple_choice(self, user_input_id, question, post, answer_tag):
+        vals = {
+            'user_input_id': user_input_id,
+            'question_id': question.id,
+            'survey_id': question.survey_id.id,
+            'skipped': False
+        }
+        old_uil = self.search([
+            ('user_input_id', '=', user_input_id),
+            ('survey_id', '=', question.survey_id.id),
+            ('question_id', '=', question.id)
+        ])
+        old_uil.sudo().unlink()
+
+        if answer_tag in post and post[answer_tag].strip():
+            vals.update({'answer_type': 'suggestion', 'value_suggested': int(post[answer_tag])})
+        else:
+            vals.update({'answer_type': None, 'skipped': True})
+
+        # '-1' indicates 'comment count as an answer' so do not need to record it
+        if post.get(answer_tag) and post.get(answer_tag) != '-1':
+            self.create(vals)
+
+        comment_answer = post.pop(("%s_%s" % (answer_tag, 'comment')), '').strip()
+        if comment_answer:
+            vals.pop('answer_score', False)
+            vals.update({'answer_type': 'text', 'value_text': comment_answer, 'skipped': False, 'value_suggested': False})
+            self.create(vals)
+
+        return True
+
+    @api.model
+    def save_line_multiple_choice(self, user_input_id, question, post, answer_tag):
+        vals = {
+            'user_input_id': user_input_id,
+            'question_id': question.id,
+            'survey_id': question.survey_id.id,
+            'skipped': False
+        }
+        old_uil = self.search([
+            ('user_input_id', '=', user_input_id),
+            ('survey_id', '=', question.survey_id.id),
+            ('question_id', '=', question.id)
+        ])
+        old_uil.sudo().unlink()
+
+        ca_dict = dict_keys_startswith(post, answer_tag + '_')
+        comment_answer = ca_dict.pop(("%s_%s" % (answer_tag, 'comment')), '').strip()
+        if len(ca_dict) > 0:
+            for key in ca_dict:
+                # '-1' indicates 'comment count as an answer' so do not need to record it
+                if key != ('%s_%s' % (answer_tag, '-1')):
+                    val = ca_dict[key]
+                    vals.update({'answer_type': 'suggestion', 'value_suggested': bool(val) and int(val)})
+                    self.create(vals)
+        if comment_answer:
+            vals.update({'answer_type': 'text', 'value_text': comment_answer, 'value_suggested': False})
+            self.create(vals)
+        if not ca_dict and not comment_answer:
+            vals.update({'answer_type': None, 'skipped': True})
+            self.create(vals)
+        return True
+
+    @api.model
+    def save_line_matrix(self, user_input_id, question, post, answer_tag):
+        vals = {
+            'user_input_id': user_input_id,
+            'question_id': question.id,
+            'survey_id': question.survey_id.id,
+            'skipped': False
+>>>>>>> c821ce5cd02... temp
         }
