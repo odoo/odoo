@@ -2099,6 +2099,7 @@ var FieldToggleBoolean = AbstractField.extend({
         this.$('i')
             .toggleClass('o_toggle_button_success', !!this.value)
             .toggleClass('text-muted', !this.value);
+        this.$el.prop('disabled', this.mode === 'readonly');
         var title = this.value ? this.attrs.options.active : this.attrs.options.inactive;
         this.$el.attr('title', title);
     },
