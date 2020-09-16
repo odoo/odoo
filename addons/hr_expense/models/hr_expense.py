@@ -743,9 +743,11 @@ class HrExpenseSheet(models.Model):
         return self.env['res.users']
 
     def activity_update(self):
-        for expense_report in self.filtered(lambda hol: hol.state == 'submit'):
-            self.activity_schedule(
-                'hr_expense.mail_act_expense_approval',
-                user_id=expense_report.sudo()._get_responsible_for_approval().id or self.env.user.id)
+        mail_act_expense_approval = self.sudo().env.ref('hr_expense.mail_act_expense_approval', raise_if_not_found=False)
+        if mail_act_expense_approval and mail_act_expense_approval.active:
+            for expense_report in self.filtered(lambda hol: hol.state == 'submit'):
+                self.activity_schedule(
+                    'hr_expense.mail_act_expense_approval',
+                    user_id=expense_report.sudo()._get_responsible_for_approval().id or self.env.user.id)
         self.filtered(lambda hol: hol.state == 'approve').activity_feedback(['hr_expense.mail_act_expense_approval'])
         self.filtered(lambda hol: hol.state == 'cancel').activity_unlink(['hr_expense.mail_act_expense_approval'])
