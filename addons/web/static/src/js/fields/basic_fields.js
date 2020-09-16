@@ -2239,6 +2239,9 @@ var BooleanToggle = FieldBoolean.extend({
      */
     _onClick: function (event) {
         event.stopPropagation();
+        if (this.$el.hasClass('o_readonly_modifier')) {
+            return;
+        }
         this._setValue(!this.value);
         this.$el.closest(".o_data_row").toggleClass('text-muted', this.value);
     },

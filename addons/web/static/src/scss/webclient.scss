@@ -100,7 +100,9 @@ div.o_boolean_toggle.custom-control.custom-checkbox {
             height: ceil($circle-width / 1rem * $o-root-font-size);
             border-radius: 100px;
             background-color: $white;
-            cursor: pointer;
+            &:not(.o_readonly_modifier) {
+                cursor: pointer;
+            }
         }
     }
     > input.custom-control-input:checked + label.custom-control-label {

@@ -376,6 +376,31 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.test('boolean_toggle widget in form view with readonly attribute', function (assert) {
+        assert.expect(4);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form><field name="bar" widget="boolean_toggle" readonly="True"/></form>',
+            res_id: 2,
+        });
+
+        assert.strictEqual(form.$(".o_boolean_toggle").length, 1,
+            "Boolean toggle widget applied to boolean field");
+        assert.strictEqual(form.$('.o_boolean_toggle input:checked').length, 1,
+            "checkbox should be checked");
+        assert.strictEqual(form.$(".o_boolean_toggle.o_readonly_modifier").length, 1,
+            "Boolean toggle contains o_readonly_modifier class");
+
+        form.$('.o_boolean_toggle').click();
+        assert.strictEqual(form.$('.o_boolean_toggle input:checked').length, 1,
+            "checkbox should still be checked");
+
+        form.destroy();
+    });
+
     QUnit.module('FieldToggleButton');
 
     QUnit.test('use toggle_button in list view', function (assert) {
