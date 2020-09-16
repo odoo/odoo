@@ -16,9 +16,7 @@ def _pre_init_mrp(cr):
     """
     cr.execute("""ALTER TABLE "stock_move" ADD COLUMN "is_done" bool;""")
     cr.execute("""UPDATE stock_move
-                     SET is_done=TRUE
-                   WHERE STATE='done'
-                      OR STATE='cancel';""")
+                     SET is_done=COALESCE(state in ('done', 'cancel'), FALSE);""")
 
 def _create_warehouse_data(cr, registry):
     """ This hook is used to add a default manufacture_pull_id, manufacture
