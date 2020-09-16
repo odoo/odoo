@@ -1246,6 +1246,28 @@ QUnit.test('load single message from channel initially', async function (assert)
     );
 });
 
+QUnit.test('open channel from active_id as channel id', async function (assert) {
+    assert.expect(1);
+
+    this.data['mail.channel'].records.push({ id: 20 });
+    await this.start({
+        discuss: {
+            context: {
+                active_id: 20,
+            },
+        }
+    });
+    assert.containsOnce(
+        document.body,
+        `
+            .o_Discuss_thread[data-thread-local-id="${
+                this.env.models['mail.thread'].findFromIdentifyingData({ id: 20, model: 'mail.channel' }).localId
+            }"]
+        `,
+        "should have channel with ID 20 open in Discuss when providing active_id 20"
+    );
+});
+
 QUnit.test('basic rendering of message', async function (assert) {
     // AKU TODO: should be in message-only tests
     assert.expect(13);
