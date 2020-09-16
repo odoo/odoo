@@ -62,13 +62,6 @@ def _auto_install_l10n(env):
         if country_code == 'AU':
             module_list.append('account_reports_cash_basis')
 
-        # SEPA zone countries will be using SEPA
-        sepa_zone = env.ref('base.sepa_zone', raise_if_not_found=False)
-        if sepa_zone:
-            sepa_zone_country_codes = sepa_zone.mapped('country_ids.code')
-            if country_code in sepa_zone_country_codes:
-                module_list.append('account_sepa')
-                module_list.append('account_bank_statement_import_camt')
         module_ids = env['ir.module.module'].search([('name', 'in', module_list), ('state', '=', 'uninstalled')])
         module_ids.sudo().button_install()
 
