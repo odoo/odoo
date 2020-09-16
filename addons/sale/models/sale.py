@@ -410,7 +410,8 @@ class SaleOrder(models.Model):
             return super(SaleOrder, self)._write(values)
 
         if 'invoice_status' in values:
-            if values['invoice_status'] == 'upselling':
+            mail_act_sale_upsell = self.sudo().env.ref('sale.mail_act_sale_upsell', raise_if_not_found=False)
+            if values['invoice_status'] == 'upselling' and mail_act_sale_upsell and mail_act_sale_upsell.active:
                 filtered_self = self.search([('id', 'in', self.ids),
                                              ('user_id', '!=', False),
                                              ('invoice_status', '!=', 'upselling')])
