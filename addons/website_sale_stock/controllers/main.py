@@ -20,7 +20,7 @@ class WebsiteSale(WebsiteSale):
         return super(WebsiteSale, self).get_combination_info_website(product_template_id, product_id, combination, add_qty, **kw)
 
     @http.route()
-    def payment_transaction(self, **kwargs):
+    def payment_transaction(self, *args, **kwargs):
         """ Payment transaction override to double check cart quantities before
         placing the order
         """
@@ -34,4 +34,4 @@ class WebsiteSale(WebsiteSale):
                     values.append(_('You ask for %s products but only %s is available') % (cart_qty, avl_qty if avl_qty > 0 else 0))
         if values:
             raise UserError('. '.join(values) + '.')
-        return super(WebsiteSale, self).payment_transaction(**kwargs)
+        return super(WebsiteSale, self).payment_transaction(*args, **kwargs)
