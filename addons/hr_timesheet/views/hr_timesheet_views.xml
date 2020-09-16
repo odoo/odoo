@@ -23,6 +23,7 @@
             <field name="arch" type="xml">
                 <tree editable="top" string="Timesheet Activities" js_class="timesheet_tree">
                     <field name="date"/>
+                    <field name="employee_id" invisible="1"/>
                     <field name="project_id" required="1" context="{'form_view_ref': 'project.project_project_view_form_simplified',}"/>
                     <field name="task_id" optional="show" widget="task_with_hours" context="{'default_project_id': project_id}" domain="[('project_id', '=', project_id)]"/>
                     <field name="name" optional="show" required="0"/>
@@ -43,8 +44,10 @@
             <field name="mode">primary</field>
             <field name="priority">10</field>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='date']" position="after">
-                    <field name="employee_id" required="1" options='{"no_open": True}'/>
+                <xpath expr="//field[@name='employee_id']" position="attributes">
+                    <attribute name="invisible">0</attribute>
+                    <attribute name="required">1</attribute>
+                    <attribute name="options">{"no_open": True}</attribute>
                 </xpath>
             </field>
         </record>
