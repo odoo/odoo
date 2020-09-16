@@ -2305,10 +2305,10 @@ menu bar.  It can have a control panel, if necessary.  Defining a client action
 can be done in two steps: implementing a new widget, and registering the widget
 in the action registry.
 
-- Implementing a new client action:
-    This is done by creating a widget:
+Implementing a new client action.
+  This is done by creating a widget:
 
-    .. code-block:: javascript
+  .. code-block:: javascript
 
         var AbstractAction = require('web.AbstractAction');
 
@@ -2317,27 +2317,27 @@ in the action registry.
             ...
         });
 
-- Registering the client action:
-    As usual, we need to make the web client aware of the mapping between
-    client actions and the actual class:
+Registering the client action:
+  As usual, we need to make the web client aware of the mapping between
+  client actions and the actual class:
 
-    .. code-block:: javascript
+  .. code-block:: javascript
 
-        var core = require('web.core');
+      var core = require('web.core');
 
-        core.action_registry.add('my-custom-action', ClientAction);
+      core.action_registry.add('my-custom-action', ClientAction);
 
 
-    Then, to use the client action in the web client, we need to create a client
-    action record (a record of the model ``ir.actions.client``) with the proper
-    ``tag`` attribute:
+  Then, to use the client action in the web client, we need to create a client
+  action record (a record of the model ``ir.actions.client``) with the proper
+  ``tag`` attribute:
 
-    .. code-block:: xml
+  .. code-block:: xml
 
-        <record id="my_client_action" model="ir.actions.client">
-            <field name="name">Some Name</field>
-            <field name="tag">my-custom-action</field>
-        </record>
+      <record id="my_client_action" model="ir.actions.client">
+          <field name="name">Some Name</field>
+          <field name="tag">my-custom-action</field>
+      </record>
 
 
 Using the control panel
@@ -2347,56 +2347,56 @@ By default, the client action does not display a control panel.  In order to
 do that, several steps should be done.
 
 - Set the *hasControlPanel* to *true*.
-    In the widget code:
+  In the widget code:
 
-    .. code-block:: javascript
+  .. code-block:: javascript
 
-        var MyClientAction = AbstractAction.extend({
-            hasControlPanel: true,
-            loadControlPanel: true, // default: false
-            ...
-        });
+      var MyClientAction = AbstractAction.extend({
+          hasControlPanel: true,
+          loadControlPanel: true, // default: false
+          ...
+      });
 
-    .. warning::
-        when the ``loadControlPanel`` is set to true, the client action will automatically get the content of a search view or a control panel view.
-        In this case, a model name should be specified like this:
+  .. warning::
+      when the ``loadControlPanel`` is set to true, the client action will automatically get the content of a search view or a control panel view.
+      In this case, a model name should be specified like this:
 
-        .. code-block:: javascript
+      .. code-block:: javascript
 
-            init: function (parent, action, options) {
-                ...
-                this.controlPanelParams.modelName = 'model.name';
-                ...
-            }
+          init: function (parent, action, options) {
+              ...
+              this.controlPanelParams.modelName = 'model.name';
+              ...
+          }
 
 - Call the method *updateControlPanel* whenever we need to update the control panel.
-    For example:
+  For example:
 
-    .. code-block:: javascript
+  .. code-block:: javascript
 
-        var SomeClientAction = Widget.extend({
-            hasControlPanel: true,
-            ...
-            start: function () {
-                this._renderButtons();
-                this._update_control_panel();
-                ...
-            },
-            do_show: function () {
-                 ...
-                 this._update_control_panel();
-            },
-            _renderButtons: function () {
-                this.$buttons = $(QWeb.render('SomeTemplate.Buttons'));
-                this.$buttons.on('click', ...);
-            },
-            _update_control_panel: function () {
-                this.updateControlPanel({
-                    cp_content: {
-                       $buttons: this.$buttons,
-                    },
-                });
-            }
+      var SomeClientAction = Widget.extend({
+          hasControlPanel: true,
+          ...
+          start: function () {
+              this._renderButtons();
+              this._update_control_panel();
+              ...
+          },
+          do_show: function () {
+               ...
+               this._update_control_panel();
+          },
+          _renderButtons: function () {
+              this.$buttons = $(QWeb.render('SomeTemplate.Buttons'));
+              this.$buttons.on('click', ...);
+          },
+          _update_control_panel: function () {
+              this.updateControlPanel({
+                  cp_content: {
+                     $buttons: this.$buttons,
+                  },
+              });
+          }
 
 The ``updateControlPanel`` is the main method to customize the content in controlpanel.
 For more information, look into the `control_panel_renderer.js <https://github.com/odoo/odoo/blob/13.0/addons/web/static/src/js/views/control_panel/control_panel_renderer.js#L130>`_ file.
