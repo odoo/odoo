@@ -1583,7 +1583,8 @@ var BasicModel = AbstractModel.extend({
 
         const field = record.fields[fieldName];
         const coModel = field.type === 'reference' ? data.model : field.relation;
-        if (field.type === 'many2one' && !data.id && data.display_name) {
+        const allowedTypes = ['many2one', 'reference'];
+        if (allowedTypes.includes(field.type) && !data.id && data.display_name) {
             // only display_name given -> do a name_create
             const result = await this._rpc({
                 model: coModel,

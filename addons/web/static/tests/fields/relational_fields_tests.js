@@ -2568,6 +2568,37 @@ QUnit.module('relational_fields', {
 
     QUnit.module('FieldReference');
 
+    QUnit.test('Reference field can quick create models', async function (assert) {
+        assert.expect(8);
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `<form><field name="reference"/></form>`,
+            mockRPC(route, args) {
+                assert.step(args.method || route);
+                return this._super(...arguments);
+            },
+        });
+
+        await testUtils.fields.editSelect(form.$('select'), 'partner');
+        await testUtils.fields.many2one.searchAndClickItem('reference', {search: 'new partner'});
+        await testUtils.form.clickSave(form);
+
+        assert.verifySteps([
+            'onchange',
+            'name_search', // for the select
+            'name_search', // for the spawned many2one
+            'name_create',
+            'create',
+            'read',
+            'name_get'
+        ], "The name_create method should have been called");
+
+        form.destroy();
+    });
+
     QUnit.test('Reference field in modal readonly mode', async function (assert) {
         assert.expect(4);
 
