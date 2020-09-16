@@ -140,7 +140,7 @@ class Message extends Component {
             // TODO FIXME for public user this might not be accessible. task-2223236
             // we should probably use the correspondig attachment id + access token
             // or create a dedicated route to get message image, checking the access right of the message
-            return `/web/image/res.partner/${this.message.author.id}/image_128`;
+            return this.message.author.avatarUrl;
         } else if (this.message.message_type === 'email') {
             return '/mail/static/src/img/email_icon.png';
         }
