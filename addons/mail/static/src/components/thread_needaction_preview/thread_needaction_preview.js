@@ -64,7 +64,7 @@ class ThreadNeedactionPreview extends Component {
             return this.thread.moduleIcon;
         }
         if (this.thread.correspondent) {
-            return `/web/image/res.partner/${this.thread.correspondent.id}/image_128`;
+            return this.thread.correspondent.avatarUrl;
         }
         if (this.thread.model === 'mail.channel') {
             return `/web/image/mail.channel/${this.thread.id}/image_128`;
