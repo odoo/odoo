@@ -35,18 +35,18 @@ can take the following attributes:
 
 ``id``
     the generated record's :term:`external id`
-``name`` (mandatory)
-    only useful as a mnemonic/description of the report when looking for one
-    in a list of some sort
+``string`` (mapping to ``IrActionsReport.name`` field)
+    used as the file name if ``print_report_name`` is not specified.
+    Otherwise, only useful as a mnemonic/description of the report
+    when looking for one in a list of some sort
+``name`` (mandatory) (mapping to ``IrActionsReport.report_name`` field)
+    the name of the template used to render the report
 ``model`` (mandatory)
     the model your report will be about
 ``report_type`` (mandatory)
     either ``qweb-pdf`` for PDF reports or ``qweb-html`` for HTML
-``file``
-    The path to the main report file (depending on Report Type)
-    or empty if the content is in another field
 ``print_report_name``
-    the name of your report (which will be the name of the PDF output)
+    python expression defining the name of the report.
 ``groups``
     :class:`~odoo.fields.Many2many` field to the groups allowed to view/use
     the current report
@@ -68,9 +68,9 @@ Example::
         id="account_invoices"
         model="account.invoice"
         string="Invoices"
-        report_type="qweb-pdf"
         name="account.report_invoice"
-        file="account.report_invoice"
+        report_type="qweb-pdf"
+        print_report_name="object._get_report_filename()"
         attachment_use="True"
         attachment="(object.state in ('open','paid')) and
             ('INV'+(object.number or '').replace('/','')+'.pdf')"
@@ -311,7 +311,7 @@ the function ``_get_report_values`` and pass objects in the ``docargs`` dictiona
 
 Custom fonts
 ============
-If you want to use custom fonts you will need to add your custom font and the related less/CSS to the ``web.reports_assets_common`` assets bundle. 
+If you want to use custom fonts you will need to add your custom font and the related less/CSS to the ``web.reports_assets_common`` assets bundle.
 Adding your custom font(s) to ``web.assets_common`` or ``web.assets_backend`` will not make your font available in QWeb reports.
 
 Example::
