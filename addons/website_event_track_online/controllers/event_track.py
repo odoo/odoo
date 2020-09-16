@@ -266,8 +266,12 @@ class EventTrackOnlineController(WebsiteEventTrackController):
         """ Returns a ServiceWorker javascript file scoped for website_event
         """
         sw_file = get_module_resource('website_event_track_online', 'static/src/js/service_worker.js')
-        with open(sw_file, 'rb') as fp:
+        with open(sw_file, 'r') as fp:
             body = fp.read()
+        js_cdn_url = 'undefined'
+        if request.website.cdn_activated:
+            js_cdn_url = '"%s"' % request.website.cdn_url
+        body = body.replace('__ODOO_CDN_URL__', js_cdn_url)
         response = request.make_response(body, [
             ('Content-Type', 'text/javascript'),
             ('Service-Worker-Allowed', url_for('/event')),
