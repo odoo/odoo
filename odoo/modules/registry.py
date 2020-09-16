@@ -111,6 +111,7 @@ class Registry(Mapping):
         self._fields_by_model = None
         self._post_init_queue = deque()
         self._constraint_queue = deque()
+        self._constraint_definition_queue = {}
 
         # modules fully loaded (maintained during init phase by `loading` module)
         self._init_modules = set()
@@ -305,28 +306,59 @@ class Registry(Mapping):
         """ Register a function to call at the end of :meth:`~.init_models`. """
         self._post_init_queue.append(partial(func, *args, **kwargs))
 
-    def post_constraint(self, func, *args, **kwargs):
-        """ Call the given function, and delay it if it fails during an upgrade. """
+    # FOR the followings funcs 'post_constraint_*' :
+    # Module A may try to apply a constraint and fail but another module B inheriting
+    # from Module A may try to reapply the same constraint and succeed, however the
+    # constraint would already be in the _constraint_queue and would be executed again
+    # at the end of the registry cycle, this would fail (already-existing constraint)
+    # and generate an error, therefore a constraint should only be applied if it's
+    # not already marked as "to be applied".
+
+    def post_constraint_apply_required(self, func, *args, **kwargs):
+        """ Call the given function, check if not already in queue and if not,
+            apply func if necessary, and delay it if it fails during an upgrade. """
         try:
-            if (func, args, kwargs) not in self._constraint_queue:
-                # Module A may try to apply a constraint and fail but another module B inheriting
-                # from Module A may try to reapply the same constraint and succeed, however the
-                # constraint would already be in the _constraint_queue and would be executed again
-                # at the end of the registry cycle, this would fail (already-existing constraint)
-                # and generate an error, therefore a constraint should only be applied if it's
-                # not already marked as "to be applied".
+            if (False, func, args, kwargs) not in self._constraint_queue:
                 func(*args, **kwargs)
         except Exception as e:
             if self._is_install:
                 _schema.error(*e.args)
             else:
                 _schema.info(*e.args)
-                self._constraint_queue.append((func, args, kwargs))
+                self._constraint_queue.append((False, func, args, kwargs))
+
+    def post_constraint_definition(self, func, *args, **kwargs):
+        """ Call the given function with a constraint definition,
+            check if not already in queue;
+            - if in it: append definition to definititon queue
+            - if not: apply func and delay it if it fails during an upgrade."""
+        key = "-".join((args[1], args[2]))
+        try:
+            if (True, func, args[:-1], kwargs) not in self._constraint_queue:
+                func(*args, **kwargs)
+            else:
+                self._constraint_definition_queue[key].append(args[-1])
+        except Exception as e:
+            if self._is_install:
+                _schema.error(*e.args)
+            else:
+                _schema.info(*e.args)
+                self._constraint_queue.append((True, func, args[:-1], kwargs))
+                if key in self._constraint_definition_queue:
+                    self._constraint_definition_queue[key].append(args[-1])
+                else :
+                    self._constraint_definition_queue[key] = [args[-1]]
 
     def finalize_constraints(self):
         """ Call the delayed functions from above. """
         while self._constraint_queue:
-            func, args, kwargs = self._constraint_queue.popleft()
+            const_def, func, args, kwargs = self._constraint_queue.popleft()
+            if const_def:
+                # TODO: Multiple module can override one constraint. We temporarly
+                # take the last one. Maybe apply the last one, if there is an error, stop
+                # and display it; if not, try to apply next definition without displaying errors...?
+                definition = self._constraint_definition_queue.pop("-".join((args[1], args[2])))[-1]
+                args += (definition,)
             try:
                 func(*args, **kwargs)
             except Exception as e:
