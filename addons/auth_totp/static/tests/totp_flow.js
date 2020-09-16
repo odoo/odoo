@@ -4,22 +4,51 @@ odoo.define('auth_totp.tours', function(require) {
 const tour = require('web_tour.tour');
 const ajax = require('web.ajax');
 
+function openDiscussApp() {
+    return [{
+            // goToAppSteps is a big dum-dum designed for interactive tours, it's
+            // not designed to open an arbitrary application from an arbitrary
+            // location so it doesn't know to return to the home in enterprise, this
+            // step handles that: it checks if we're no the home screen (~ if there
+            // are apps displayed which is not quite correct but good enough for us)
+            // and if not clicks the toggle
+            edition: 'enterprise',
+            trigger: 'body',
+            run: function(helpers) {
+                if (!$('.o_app').length) {
+                    helpers.click('.o_main_navbar .o_menu_toggle');
+                }
+            }
+        }, tour.stepUtils.showAppsMenuItem(),{
+            trigger: '.o_app[data-menu-xmlid="mail.menu_root_discuss"]',
+            content: "Go to discuss",
+        }, {
+            content: 'Wait for page',
+            trigger: '.o_menu_brand:contains("Discuss")',
+            run: () => {}
+        }
+    ];
+}
+function openUserProfileAtSecurityTab() {
+    return [{
+        content: 'Open user account menu',
+        trigger: '.o_user_menu .oe_topbar_name',
+        run: 'click',
+    }, {
+        content: "Open preferences / profile screen",
+        trigger: '[data-menu=settings]',
+        run: 'click',
+    }, {
+        content: "Switch to security tab",
+        trigger: 'a[role=tab]:contains("Account Security")',
+        run: 'click',
+    }];
+}
+
 tour.register('totp_tour_setup', {
     test: true,
     url: '/web'
-}, [{
-    content: 'Open user account menu',
-    trigger: '.o_user_menu .oe_topbar_name',
-    run: 'click',
-}, {
-    content: "Open preferences / profile screen",
-    trigger: '[data-menu=settings]',
-    run: 'click',
-}, {
-    content: "Switch to security tab",
-    trigger: 'a[role=tab]:contains("Account Security")',
-    run: 'click',
-}, {
+}, [...openUserProfileAtSecurityTab(), {
     content: "Open totp wizard",
     trigger: 'button[name=totp_enable_wizard]',
 }, {
@@ -48,19 +77,16 @@ tour.register('totp_tour_setup', {
         helpers._text(helpers._get_action_values('input[name=code]'), token);
         helpers._click(helpers._get_action_values('button.btn-primary:contains(Enable)'));
     }
-}, { // re-navigate to the profile as unless hr is installed the preference dialog will close
-    content: 'Open user account menu',
-    trigger: '.o_user_menu .oe_topbar_name',
-    run: 'click',
-}, {
-    content: "Open preferences / profile screen",
-    trigger: '[data-menu=settings]',
-    run: 'click',
-}, {
-    content: "Switch to security tab",
-    trigger: 'a[role=tab]:contains("Account Security")',
-    run: 'click',
-}, {
+},
+// if hr is not installed the preferences dialog will close and we need to
+// reopen it, but if hr is installed then we're already there and a race
+// condition can make it so we thing we've already reopened it while it's
+// rather that we're still on it, then the view resets before the step
+// afterwards and we end up on the wrong tab => first open the settings app to
+// ensure we completely reset the view and only then navigate to the profile
+...openDiscussApp(),
+...openUserProfileAtSecurityTab(),
+{
     content: "Check that the button has changed",
     trigger: 'button:contains(Disable two-factor authentication)',
     run: () => {}
@@ -100,22 +126,12 @@ tour.register('totp_login_enabled', {
     content: "check we're logged in",
     trigger: ".o_user_menu .oe_topbar_name",
     run: () => {}
-}, {
-    // now go and disable totp would be annoying to do in a separate tour
-    // because we'd need to login & totp again as HttpCase.authenticate can't
-    // succeed w/ totp enabled
-    content: 'Open user account menu',
-    trigger: '.o_user_menu .oe_topbar_name',
-    run: 'click',
-}, {
-    content: "Open preferences / profile screen",
-    trigger: '[data-menu=settings]',
-    run: 'click',
-}, {
-    content: "Switch to security tab",
-    trigger: 'a[role=tab]:contains("Account Security")',
-    run: 'click',
-}, {
+},
+// now go and disable totp would be annoying to do in a separate tour
+// because we'd need to login & totp again as HttpCase.authenticate can't
+// succeed w/ totp enabled
+...openUserProfileAtSecurityTab(),
+{
     content: "Open totp wizard",
     trigger: 'button[name=totp_disable]',
 }, {
@@ -129,19 +145,10 @@ tour.register('totp_login_enabled', {
 }, {
     content: "Confirm",
     trigger: "button:contains(Confirm Password)",
-}, {
-    content: "Reopen the preference / profile as we don't know whether HR is installed",
-    trigger: '.o_user_menu .oe_topbar_name',
-    run: 'click',
-}, {
-    content: "Open preferences / profile screen",
-    trigger: '[data-menu=settings]',
-    run: 'click',
-}, {
-    content: "Switch to security tab",
-    trigger: 'a[role=tab]:contains("Account Security")',
-    run: 'click',
-}, {
+},
+...openDiscussApp(),
+...openUserProfileAtSecurityTab(),
+{
     content: "Check that the button has changed",
     trigger: 'button:contains(Enable two-factor authentication)',
     run: () => {}
@@ -164,20 +171,13 @@ tour.register('totp_login_disabled', {
 }, {
     content: "click da button",
     trigger: 'button:contains("Log in")',
-}, { // normally we'd end there but being sure there's no more queries is a
-    // pain in the ass so go and open the profile screen
-    content: 'Open user account menu',
-    trigger: '.o_user_menu .oe_topbar_name',
-    run: 'click',
-}, {
-    content: "Open preferences / profile screen",
-    trigger: '[data-menu=settings]',
-    run: 'click',
-}, {
-    content: "Check the pref screen has opened by looking for the Account Security tab",
-    trigger: 'a[role=tab]:contains("Account Security")',
-    run: () => {}
-}]);
+},
+// normally we'd end the tour here as it's all we care about but there are a
+// bunch of ongoing queries from the loading of the web client which cause
+// issues, so go and open the preferences / profile screen to make sure
+// everything settles down
+...openUserProfileAtSecurityTab(),
+]);
 
 const columns = {};
 tour.register('totp_admin_disables', {
