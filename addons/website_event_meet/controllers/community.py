@@ -77,7 +77,7 @@ class WebsiteEventMeetController(EventCommunityController):
     @http.route("/event/<model('event.event'):event>/meeting_room_create",
                 type="http", auth="public", methods=["POST"], website=True)
     def create_meeting_room(self, event, **post):
-        if not event or not event.can_access_from_current_website() or not event.is_published or not event.meeting_room_allow_creation:
+        if not event or not event.can_access_from_current_website() or (not event.is_published and not request.env.user.user_has_groups('base.group_user')) or not event.meeting_room_allow_creation:
             raise Forbidden()
 
         name = post.get("name")
