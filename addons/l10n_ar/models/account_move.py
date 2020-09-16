@@ -175,7 +175,10 @@ class AccountMove(models.Model):
             })
         return super()._reverse_moves(default_values_list=default_values_list, cancel=cancel)
 
-    @api.onchange('l10n_latam_document_type_id', 'l10n_latam_document_number')
+    # @api.onchange('l10n_latam_document_type_id', 'l10n_latam_document_number')
+    # def _onchange_l10n_latam_document_number(self):
+    #     self._inverse_l10n_latam_document_number()
+
     def _inverse_l10n_latam_document_number(self):
         super()._inverse_l10n_latam_document_number()
 

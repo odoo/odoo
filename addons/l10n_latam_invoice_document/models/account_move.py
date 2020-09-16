@@ -37,7 +37,6 @@ class AccountMove(models.Model):
     @api.depends('l10n_latam_document_type_id', 'journal_id')
     def _compute_l10n_latam_manual_document_number(self):
         """ Indicates if this document type uses a sequence or if the numbering is made manually """
-        #TODO: for rec in self:
         recs_with_journal_id = self.filtered(lambda x: x.journal_id and x.journal_id.l10n_latam_use_documents)
         for rec in recs_with_journal_id:
             rec.l10n_latam_manual_document_number = rec._is_manual_document_number()
@@ -50,22 +49,14 @@ class AccountMove(models.Model):
     @api.depends('ref', 'name', 'move_type')
     def _compute_l10n_latam_document_number(self):
         for rec in self:
-            ref = rec.ref if rec.move_type in ('in_invoice', 'in_refund') else rec.name
+            ref = rec.ref if rec.is_purchase_document() else rec.name
             if ref and rec.l10n_latam_document_type_id.doc_code_prefix:
                 ref = ref.split(" ", 1)[-1]
             rec.l10n_latam_document_number = ref
 
-    @api.onchange('l10n_latam_document_type_id', 'l10n_latam_document_number', 'move_type')
-    def _onchange_l10n_latam_document_number(self):
-        for rec in self.filtered(lambda x: x.l10n_latam_document_type_id and (x.l10n_latam_manual_document_number or not x.highest_name)):
-            if rec.l10n_latam_document_number:
-                l10n_latam_document_number = rec.l10n_latam_document_type_id._format_document_number(rec.l10n_latam_document_number)
-                if rec.l10n_latam_document_number != l10n_latam_document_number:
-                    rec.l10n_latam_document_number = l10n_latam_document_number
-                if rec.move_type in ('in_refund', 'in_invoice'):
-                    rec.ref = "%s %s" % (rec.l10n_latam_document_type_id.doc_code_prefix, l10n_latam_document_number)
-                else:
-                    rec.name = "%s %s" % (rec.l10n_latam_document_type_id.doc_code_prefix, l10n_latam_document_number)
+    # @api.onchange('l10n_latam_document_type_id', 'l10n_latam_document_number', 'move_type')
+    # def _onchange_l10n_latam_document_number(self):
+    #     self._inverse_l10n_latam_document_number()
 
     def _inverse_l10n_latam_document_number(self):
         for rec in self.filtered(lambda x: x.l10n_latam_document_type_id and (x.l10n_latam_manual_document_number or not x.highest_name)):
@@ -73,7 +64,7 @@ class AccountMove(models.Model):
                 l10n_latam_document_number = rec.l10n_latam_document_type_id._format_document_number(rec.l10n_latam_document_number)
                 if rec.l10n_latam_document_number != l10n_latam_document_number:
                     rec.l10n_latam_document_number = l10n_latam_document_number
-                if rec.move_type in ('in_refund', 'in_invoice'):
+                if rec.is_purchase_document():
                     rec.ref = "%s %s" % (rec.l10n_latam_document_type_id.doc_code_prefix, l10n_latam_document_number)
                 else:
                     rec.name = "%s %s" % (rec.l10n_latam_document_type_id.doc_code_prefix, l10n_latam_document_number)
@@ -97,7 +88,7 @@ class AccountMove(models.Model):
             # There was no pattern found, propose one
             return ""
         if self.journal_id.l10n_latam_use_documents and self.is_purchase_document():
-            return "LATAM000000"
+            return (self.move_type == 'in_refund' and "R" or "") + "*000000*"
         return super(AccountMove, self)._get_starting_sequence()
 
     def _compute_l10n_latam_amount_and_taxes(self):
