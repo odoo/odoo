@@ -121,10 +121,9 @@ class AccountJournal(models.Model):
     @api.constrains('type', 'l10n_ar_afip_pos_system', 'l10n_ar_afip_pos_number', 'l10n_ar_share_sequences',
                     'l10n_latam_use_documents')
     def _check_afip_configurations(self):
-        """ Do not let to update journal if already have confirmed invoices """
-        arg_sale_journals = self.filtered(lambda x: x.company_id.country_id == self.env.ref('base.ar') and
-                                          x.type == 'sale' and x._origin.type == 'sale')
-        invoices = self.env['account.move'].search([('journal_id', 'in', arg_sale_journals.ids), ('name', '!=', '/')], limit=1)
+        """ Do not let the user update the journal if it already contains confirmed invoices """
+        journals = self.filtered(lambda x: x.company_id.country_id == self.env.ref('base.ar') and x.type in ['sale', 'purchase'])
+        invoices = self.env['account.move'].search([('journal_id', 'in', journals.ids), ('name', '!=', '/')], limit=1)
         if invoices:
             raise ValidationError(
                 _("You can not change the journal's configuration if it already has validated invoices") + ' ('
