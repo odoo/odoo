@@ -141,12 +141,12 @@ class StockScrap(models.Model):
         return True
 
     def action_get_stock_picking(self):
-        action = self.env.ref('stock.action_picking_tree_all').read([])[0]
+        action = self.env['ir.actions.act_window']._for_xml_id('stock.action_picking_tree_all')
         action['domain'] = [('id', '=', self.picking_id.id)]
         return action
 
     def action_get_stock_move_lines(self):
-        action = self.env.ref('stock.stock_move_line_action').read([])[0]
+        action = self.env['ir.actions.act_window']._for_xml_id('stock.stock_move_line_action')
         action['domain'] = [('move_id', '=', self.move_id.id)]
         return action
 

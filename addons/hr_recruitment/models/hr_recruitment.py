@@ -486,8 +486,7 @@ class Applicant(models.Model):
                     'default_applicant_id': applicant.ids,
                     }
                     
-        employee_action = self.env.ref('hr.open_view_employee_list')
-        dict_act_window = employee_action.read([])[0]
+        dict_act_window = self.env['ir.actions.act_window']._for_xml_id('hr.open_view_employee_list')
         dict_act_window['context'] = employee_data
         return dict_act_window
 
