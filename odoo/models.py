@@ -2568,9 +2568,11 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             if fields_to_compute:
                 @self.pool.post_init
                 def mark_fields_to_compute():
-                    recs = self.with_context(active_test=False).search([])
+                    recs = self.with_context(active_test=False).search([], order='id')
+                    if not recs:
+                        return
                     for field in fields_to_compute:
-                        _logger.info("Storing computed values of %s", field)
+                        _logger.info("Storing computed values of %s.%s", recs._name, field)
                         self.env.add_to_compute(recs._fields[field], recs)
 
         if self._auto:
