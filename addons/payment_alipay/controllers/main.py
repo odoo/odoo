@@ -27,7 +27,7 @@ class AlipayController(http.Controller):
                 _logger.warning('Alipay: unrecognized alipay answer, received %s instead of TRADE_FINISHED/TRADE_SUCCESS and TRADE_CLOSED' % (post['trade_status']))
         if post.get('out_trade_no') and post.get('trade_no'):
             post['reference'] = request.env['payment.transaction'].sudo().search([('reference', '=', post['out_trade_no'])]).reference
-            return request.env['payment.transaction'].sudo().form_feedback(post, 'alipay')
+            return request.env['payment.transaction'].sudo()._handle_feedback_data('alipay', post)
         return False
 
     def _alipay_validate_notification(self, **post):
@@ -43,18 +43,20 @@ class AlipayController(http.Controller):
         response = requests.post(alipay.alipay_get_form_action_url(), val)
         response.raise_for_status()
         _logger.info('Validate alipay Notification %s' % response.text)
-        # After program is executed, the page must print “success” (without quote). If not, Alipay server would keep re-sending notification, until over 24 hour 22 minutes Generally, there are 8 notifications within 25 hours (Frequency: 2m,10m,15m,1h,2h,6h,15h)
+        # After program is executed, the page must print “success” (without quote). If not, Alipay server would
+        # keep re-sending notification, until over 24 hour 22 minutes
+        # Generally, there are 8 notifications within 25 hours (Frequency: 2m,10m,15m,1h,2h,6h,15h).
         if response.text == 'true':
             self._alipay_validate_data(**post)
             return 'success'
         return ""
 
     @http.route('/payment/alipay/return', type='http', auth="public", methods=['GET', 'POST'])
-    def alipay_return(self, **post):
+    def return_from_redirect(self, **post):
         """ Alipay return """
         _logger.info('Beginning Alipay form_feedback with post data %s', pprint.pformat(post))
         self._alipay_validate_data(**post)
-        return werkzeug.utils.redirect('/payment/process')
+        return werkzeug.utils.redirect('/payment/status')
 
     @http.route('/payment/alipay/notify', type='http', auth='public', methods=['POST'], csrf=False)
     def alipay_notify(self, **post):

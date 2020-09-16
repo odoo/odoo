@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <template id="alipay_form">
-        <div>
-            <input type="hidden" name="data_set" t-att-data-action-url="tx_url" data-remove-me=""/>
+    <template id="alipay_redirect_template">
+        <form t-att-action="tx_url" method="post">
             <input type="hidden" name="_input_charset" t-att-value="_input_charset"/>
             <input t-if="service == 'create_forex_trade'" type="hidden" name="currency" t-att-value="currency"/>
             <input type="hidden" name="notify_url" t-att-value="notify_url"/>
@@ -17,6 +16,6 @@
             <input type="hidden" name="sign_type" t-att-value="sign_type"/>
             <input t-if="payment_type" type="hidden" name="payment_type" t-att-value="payment_type"/>
             <input t-if="seller_email" type="hidden" name="seller_email" t-att-value="seller_email"/>
-        </div>
+        </form>
     </template>
 </odoo>

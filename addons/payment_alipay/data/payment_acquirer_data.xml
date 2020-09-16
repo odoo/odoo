@@ -4,6 +4,9 @@
         <field name="name">Alipay</field>
         <field name="provider">alipay</field>
         <field name="company_id" ref="base.main_company"/>
-        <field name="view_template_id" ref="alipay_form"/>
+        <field name="redirect_template_view_id" ref="alipay_redirect_template"/>
+         <field name="support_authorization">False</field>
+        <field name="support_fees_computation">True</field>
+        <field name="support_tokenization">False</field>
     </record>
 </odoo>
