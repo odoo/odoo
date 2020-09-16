@@ -525,6 +525,79 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('custom search on datetime field without value', function (assert) {
+        assert.expect(4);
+
+        this.data.partner.records.push({
+            id: 5,
+            display_name: "Partner 4",
+        }, {
+            id: 6,
+            display_name: "Partner 5",
+        }, {
+            id: 7,
+            display_name: "Partner 6",
+        }, {
+            id: 8,
+            display_name: "Partner 7",
+        }, {
+            id: 9,
+            display_name: "Partner 8",
+        }, {
+            id: 10,
+            display_name: "Partner 9",
+        });
+        this.data.partner.fields.datetime.searchable = true;
+        var searchReadCount = 0;
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<group>' +
+                            '<field name="trululu"/>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+            archs: {
+                'partner,false,list': '<tree><field name="display_name"/></tree>',
+                'partner,false,search': '<search><field name="datetime"/></search>',
+            },
+            res_id: 1,
+            mockRPC: function (route, args) {
+                if (route === "/web/dataset/search_read") {
+                    if (searchReadCount === 1) {
+                        assert.deepEqual(args.domain, [["datetime", "=", false]],
+                            "if datetime value is blank then domain with false value should pass");
+                    }
+                    searchReadCount++;
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        form.$buttons.find('.o_form_button_edit').click();
+        var $dropdown = form.$('.o_field_many2one input').autocomplete('widget');
+        form.$('.o_field_many2one input').click();
+        $dropdown.find('.o_m2o_dropdown_option:contains(Search)').mouseenter().click();  // Open Search More
+
+        assert.strictEqual($('tr.o_data_row').length, 9, "should display 9 records");
+
+        $('.o_searchview_more').click();  // Magnifying class for more filters
+        $('button:contains(Filters)').click();
+        $('.o_add_filter').click();  // Add a custom filter, datetime field is selected
+        assert.strictEqual($('li.o_filter_condition select.o_searchview_extended_prop_field').val(), 'datetime',
+            "datetime field should be selected");
+
+        $('li.o_filter_condition span.o_searchview_extended_prop_value .o_datepicker_input').val("").trigger("change");
+        $('.o_apply_filter').click();
+        assert.strictEqual($('tr.o_data_row').length, 8, "should display 0 records");
+
+        form.destroy();
+    });
+
     QUnit.test('search more pager is reset when doing a new search', function (assert) {
         assert.expect(6);
         for(var i = 10; i < 180; i++) {

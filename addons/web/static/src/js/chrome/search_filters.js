@@ -201,6 +201,9 @@ var DateTime = Field.extend({
      */
     get_value: function (index) {
         // retrieve the datepicker value
+        if (!this["datewidget_" + (index || 0)].getValue()) {
+            return false;
+        }
         var value = this["datewidget_" + (index || 0)].getValue().clone();
         // convert to utc
         return value.add(-this.getSession().getTZOffset(value), 'minutes');
@@ -268,6 +271,9 @@ var DateTime = Field.extend({
      * @return {String} Represents the value in UTC
      */
     _formatMomentToServer: function (momentValue) {
+        if (!momentValue) {
+            return false;
+        }
         return momentValue.locale('en').format(this.serverFormat);
     },
 });
