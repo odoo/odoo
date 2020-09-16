@@ -667,7 +667,10 @@ class MailActivityMixin(models.AbstractModel):
         if isinstance(date_deadline, datetime):
             _logger.warning("Scheduled deadline should be a date (got %s)", date_deadline)
         if act_type_xmlid:
-            activity_type = self.sudo().env.ref(act_type_xmlid)
+            activity_type = self.sudo().env.ref(act_type_xmlid, raise_if_not_found=False)
+            if not activity_type:
+                _logger.error("Can't schedule activity, external ID does not exist in database (%s).", act_type_xmlid)
+                return self.env['mail.activity']
         else:
             activity_type = self.env['mail.activity.type'].sudo().browse(act_values['activity_type_id'])
 
