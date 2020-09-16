@@ -47,7 +47,7 @@ the properties according to their type, in particular to refine the filtering.
 A property can have **one** type, but the same type can be assigned on **many** properties:
 we will use the **many2one** concept.
 
-A many2one is simple link to an other object. For example, in order to define a link to the
+A many2one is a simple link to an other object. For example, in order to define a link to the
 ``res.partner`` on our test model, we could write::
 
     partner_id = fields.Many2one("res.partner", string="Partner")
@@ -72,7 +72,7 @@ simply::
     ========================= ========================= =========================
 
     - Add the menus as displayed in the **Goal**
-    - Add the field ``property_type_id`` on your ``estate.property`` model and it its form, tree
+    - Add the field ``property_type_id`` on your ``estate.property`` model and its form, tree
       and search views
 
     This excercise is a good recap of the previous chapters: you need to create a
@@ -87,8 +87,8 @@ simply::
 Once again, restart the server and refresh to see the results!
 
 In the real estate module, there are still two missing information we want on a property: the buyer
-and the salesman. The buyer can be any individual, but on the other end the salesman must be an
-employee of the real estate agency (i.e. an Odoo user).
+and the salesperson. The buyer can be any individual, but on the other end the salesperson must be
+an employee of the real estate agency (i.e. an Odoo user).
 
 In Odoo, there are two models to which we commonly refer to:
 
@@ -98,12 +98,12 @@ In Odoo, there are two models to which we commonly refer to:
   access to the Odoo backend. Or they can be 'portal': they cannot access the backend, only the
   frontend (e.g. to access their previous orders on the eCommerce).
 
-.. exercise:: Add the buyer and the salesman
+.. exercise:: Add the buyer and the salesperson
 
-    Add a buyer and a salesman on the ``estate.property`` model using the two common models
+    Add a buyer and a salesperson on the ``estate.property`` model using the two common models
     mentioned. They should be added in a new tab of the form view, as depicted.
 
-    The default value for the salesman must be the current user. The buyer should not be copied.
+    The default value for the salesperson must be the current user. The buyer should not be copied.
 
     Tip: to get the default value, check the note below or find an example
     `here <https://github.com/odoo/odoo/blob/5bb8b927524d062be32f92eb326ef64091301de1/addons/crm/models/crm_lead.py#L92>`__.
@@ -121,7 +121,7 @@ In Odoo, there are two models to which we commonly refer to:
     - ``self.env.ref(xml_id)`` returns the record corresponding to an XML id
     - ``self.env[model_name]`` returns an instance of the given model
     
-Let's now have a look at other type of links.
+Let's now have a look at other types of links.
 
 Many2many
 =========
@@ -203,7 +203,7 @@ In our real estate module, we want to define the concept of property offer. A pr
 is an amount a potential buyer offers to the seller. The offer can be lower or higher than the
 expected price.
 
-A offer applies to **one** property, but the same property can have **many** offers:
+An offer applies to **one** property, but the same property can have **many** offers:
 the concept of **many2one** appears once again. However, in this case we want to display the list
 of offers for a given property: we will use the **one2many** concept.
 
@@ -211,9 +211,9 @@ A one2many virtual relationship, inverse of a many2one. For example, we defined 
 a link to the ``res.partner`` model thanks to the field ``partner_id``. We can defined the inverse
 relation, i.e. the list of test models linked to our partner::
 
-    test_ids = fields.One2many("test.model", "partner_id" string="Tests")
+    test_ids = fields.One2many("test.model", "partner_id", string="Tests")
 
-The first parameter is called the ``comodel``, while the second parameter is the field field want to
+The first parameter is called the ``comodel``, while the second parameter is the field we want to
 inverse.
 
 By convention, one2many fields have the ``_ids`` suffix. It behaves as a list of records, meaning

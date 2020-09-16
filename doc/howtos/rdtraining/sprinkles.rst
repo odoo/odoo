@@ -449,6 +449,33 @@ The following exercise might be a bit more difficult than the previous ones sinc
 are able to search examples in the source code on your own. If you are stuck, there is probably
 someone close to you who can help you ;-)
 
+The exercise introduces the concept of :ref:`reference/fields/related`. The easiest way to
+understand it is to consider it as a specific case of a computed field. The following definition
+of the ``description`` field:
+
+.. code-block:: python
+
+        ...
+
+        partner_id = fields.Many2one("res.partner", string="Partner")
+        description = fields.Char(related="partner_id.name")
+
+is equivalent to:
+
+.. code-block:: python
+
+        ...
+
+        partner_id = fields.Many2one("res.partner", string="Partner")
+        description = fields.Char(compute="_compute_description")
+
+        @api.depends("partner_id.name")
+        def _compute_description(self):
+            for record in self:
+                record.description = record.partner_id.name
+
+Every type the partner name is changed, the description is modified.
+
 .. exercise:: Add a stat button on property type
 
     - Add the field ``property_type_id`` on ``estate.property.offer``. We can define it as a

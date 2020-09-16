@@ -7,7 +7,7 @@ Inheritance
 A powerful aspect of Odoo is its modularity. A module is dedicated to a business need, but moreover
 modules can interact one with another. This is useful to extend the functionality of an existing
 module. For example, in out real estate scenario we want to display the list of properties
-of a salesman, directly on the regular user view. 
+of a salesperson, directly on the regular user view.
 
 But before going through the specific Odoo module inheritance, let's see how we can alter the
 behavior of the regular CRUD methods. 
@@ -19,7 +19,7 @@ Python Inheritance
 
     **Goal**: at the end of this section:
 
-    - It is not possible to delete a property which is not new or sold.
+    - It is not possible to delete a property which is not new or canceled.
 
     .. image:: inheritance/media/unlink.gif
         :align: center
@@ -70,6 +70,9 @@ specific business logic::
 The decorator :func:`~odoo.api.model` is only necessary for the :meth:`~odoo.models.Model.create`
 method since the content of the recordset ``self`` is not relevant in the context of a creation.
 
+In Python 3, ``super()`` is equivalent to ``super(TestModel, self)``. The latter may be necessary
+in case you need to call the parent method with a modified recordset.
+
 .. danger::
 
     - It is very important to **always** call ``super()`` to avoid breaking the flow. There are
@@ -97,7 +100,7 @@ Model Inheritance
 **Reference**: the documentation related to this topic can be found in
 :ref:`reference/orm/inheritance`.
 
-In our real estate module, we would like to display the list of properties linked to a salesman,
+In our real estate module, we would like to display the list of properties linked to a salesperson,
 directly in the Settings / Users & Companies / Users form view. To do so, we need a field on the
 ``res.users`` model, adapt the view to add it.
 
@@ -161,7 +164,7 @@ View Inheritance
 
     **Goal**: at the end of this section:
 
-    The list of available properties linked to a salesman is displayed on the user form view
+    The list of available properties linked to a salesperson is displayed on the user form view
 
     .. image:: inheritance/media/users.png
         :align: center
