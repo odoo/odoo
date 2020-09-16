@@ -7,6 +7,23 @@ from . import report
 
 from odoo import api, SUPERUSER_ID
 
+
+def _pre_init_mrp(cr):
+    """ Allow installing MRP in databases with large stock.move / stock.move.line tables (>1M records)
+        - Creating the computed+stored field stock_move.is_done is terribly slow with the ORM and
+          leads to "Out of Memory" crashes
+        - stock.move.line.done_move is a stored+related on the former... """
+    cr.execute("""ALTER TABLE "stock_move" ADD COLUMN "is_done" bool;""")
+    cr.execute("""ALTER TABLE "stock_move_line" ADD COLUMN "done_move" bool;""")
+    cr.execute("""UPDATE stock_move
+                     SET is_done=TRUE
+                   WHERE STATE='done'
+                      OR STATE='cancel';""")
+    cr.execute("""UPDATE stock_move_line
+                     SET done_move=sm.is_done
+                    FROM stock_move sm
+                   WHERE move_id=sm.id;""")
+
 def _create_warehouse_data(cr, registry):
     """ This hook is used to add a default manufacture_pull_id, manufacture
     picking_type on every warehouse. It is necessary if the mrp module is
