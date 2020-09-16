@@ -191,6 +191,14 @@ function factory(dependencies) {
         //----------------------------------------------------------------------
 
         /**
+         * @private
+         * @returns {string}
+         */
+        _computeAvatarUrl() {
+            return `/web/image/res.partner/${this.id}/image_128`;
+        }
+
+        /**
          * @override
          */
         static _createRecordLocalId(data) {
@@ -265,6 +273,12 @@ function factory(dependencies) {
     Partner.fields = {
         active: attr({
             default: true,
+        }),
+        avatarUrl: attr({
+            compute: '_computeAvatarUrl',
+            dependencies: [
+                'id',
+            ],
         }),
         correspondentThreads: one2many('mail.thread', {
             inverse: 'correspondent',

@@ -59,7 +59,7 @@ class ThreadPreview extends Component {
      */
     image() {
         if (this.thread.correspondent) {
-            return `/web/image/res.partner/${this.thread.correspondent.id}/image_128`;
+            return this.thread.correspondent.avatarUrl;
         }
         return `/web/image/mail.channel/${this.thread.id}/image_128`;
     }

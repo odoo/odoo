@@ -18,6 +18,32 @@ MockServer.include({
         return this._super(...arguments);
     },
     /**
+     * Overrides to add visitor information to livechat channels.
+     *
+     * @override
+     */
+    _mockMailChannelChannelInfo(ids, extra_info) {
+        const channelInfos = this._super(...arguments);
+        for (const channelInfo of channelInfos) {
+            const channel = this._getRecords('mail.channel', [['id', '=', channelInfo.id]])[0];
+            if (channel.channel_type === 'livechat' && channelInfo.livechat_visitor_id) {
+                const visitor = this._getRecords('website.visitor', [['id', '=', channelInfo.livechat_visitor_id]])[0];
+                const country = this._getRecords('res.country', [['id', '=', visitor.country_id]])[0];
+                channelInfo.visitor = {
+                    name: visitor.display_name,
+                    country_code: country && country.code,
+                    country_id: country && country.id,
+                    is_connected: visitor.is_connected,
+                    history: visitor.history, // TODO should be computed
+                    website: visitor.website,
+                    lang: visitor.lang,
+                    partner_id: visitor.partner_id,
+                }
+            }
+        }
+        return channelInfos;
+    },
+    /**
      * @private
      * @param {integer[]} ids
      */
