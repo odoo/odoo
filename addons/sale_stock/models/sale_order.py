@@ -53,7 +53,7 @@ class SaleOrder(models.Model):
         super(SaleOrder, self)._compute_expected_date()
         for order in self:
             dates_list = []
-            for line in order.order_line.filtered(lambda x: x.state != 'cancel' and not x._is_delivery()):
+            for line in order.order_line.filtered(lambda x: x.state != 'cancel' and not x._is_delivery() and not x.display_type):
                 dt = line._expected_date()
                 dates_list.append(dt)
             if dates_list:
