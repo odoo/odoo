@@ -26,18 +26,18 @@
                                         <a role="button" class="float-right" t-att-href="'/survey/%s/get_certification' % certificate.survey_id.id">
                                             <i class="fa fa-download" aria-label="Download certification" title="Download Certification"/>
                                         </a>
-                                        <a role="button" class="mr-2" href="#" data-toggle="modal"
-                                             t-att-data-target="'#slideChannelShareModal_%s' % certificate.slide_id.channel_id.id">
+                                        <a role="button" class="mr-2" href="#"
+                                             t-attf-onclick="event.stopPropagation(); $('#slideChannelShareModal_#{certificate.slide_id.channel_id.id}').modal('show');">
                                             <i class="fa fa-share-alt" aria-label="Share" title="Share"/>
                                         </a>
                                     </div>
                                 </div>
                             </div>
-                            <t t-call="website_slides.slide_share_modal">
-                                <t t-set="record" t-value="certificate.slide_id.channel_id"/>
-                            </t>
                         </div>
                     </div>
+                    <t t-call="website_slides.slide_share_modal">
+                        <t t-set="record" t-value="certificate.slide_id.channel_id"/>
+                    </t>
                 </div>
             </div>
         </t>
