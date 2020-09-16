@@ -8,6 +8,7 @@ import psycopg2
 import psycopg2.errorcodes
 
 import odoo
+from odoo.exceptions import UserError
 from odoo.tests import common
 
 ADMIN_USER_ID = common.ADMIN_USER_ID
@@ -93,11 +94,10 @@ class TestIrSequenceNoGap(unittest.TestCase):
         with environment() as env0:
             with environment() as env1:
                 env1.cr._default_log_exceptions = False # Prevent logging a traceback
-                with self.assertRaises(psycopg2.OperationalError) as e:
+                with self.assertRaises(UserError) as e:
                     n0 = env0['ir.sequence'].next_by_code('test_sequence_type_2')
                     self.assertTrue(n0)
                     n1 = env1['ir.sequence'].next_by_code('test_sequence_type_2')
-                self.assertEqual(e.exception.pgcode, psycopg2.errorcodes.LOCK_NOT_AVAILABLE, msg="postgresql returned an incorrect errcode")
 
     @classmethod
     def tearDownClass(cls):
