@@ -60,3 +60,25 @@ $o-we-switch-inactive-color: #F7F7F7 !default;
         }
     }
 }
+
+we-record-selection {
+    .o_we_record {
+        display: inline-block;
+        padding: $o-we-sidebar-content-field-label-spacing / 2;
+        border: $o-we-item-border-width solid $o-we-item-border-color;
+        margin: 1px;
+        border-radius: 5px;
+        background-color: $o-we-bg-darkest;
+
+        + .fa {
+            margin: 0;
+        }
+    }
+    .o_we_record_wrapper {
+        display: inline-block;
+    }
+
+   .o_remove_record {
+        cursor: pointer;
+   }
+}
