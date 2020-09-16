@@ -151,9 +151,9 @@ weSnippetEditor.Class.include({
     /**
      * @private
      */
-    _onThemeTabClick: async function (ev) {
-        this._addTabLoading(this.tabs.THEME);
-        await new Promise(resolve => setTimeout(() => resolve())); // Needed to force the loading to appear... to review with new design
+    async _onThemeTabClick(ev) {
+        // Note: nothing async here but start the loading effect asap
+        this._execWithLoadingEffect(async () => new Promise(resolve => setTimeout(() => resolve(), 0)), false, 0);
 
         if (!this.topFakeOptionEl) {
             let el;

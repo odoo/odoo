@@ -1731,3 +1731,17 @@ we-select.o_we_shape_menu {
         }
     }
 }
+
+.o_we_ui_loading {
+    @include o-position-absolute(0, 0, 0, 0);
+    z-index: $o-we-zindex;
+    background-color: $o-we-sidebar-content-backdrop-bg;
+    color: $o-we-fg-lighter;
+}
+#oe_manipulators > .o_we_ui_loading {
+    // hacky solution to be over the content, ideally that loader should only
+    // be over the content being reloaded (with a covering similar to the editor
+    // overlay covering).
+    position: fixed;
+    left: $o-we-sidebar-width;
+}
