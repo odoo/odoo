@@ -170,6 +170,7 @@ class Message(models.Model):
         if operator not in ('=', '!=', '<', '<=', '>', '>=', 'in', 'not in'):
             return []
         # retrieve all the messages that match with a specific SQL query
+        self.flush(['body'])
         query = """SELECT id FROM "%s" WHERE char_length("body") %s %%s""" % \
                 (self._table, operator)
         self.env.cr.execute(query, (value,))
