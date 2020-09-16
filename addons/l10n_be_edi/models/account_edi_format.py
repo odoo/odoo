@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from odoo import api, models, fields
-from odoo.tools import float_repr
+from odoo import models
 
 import base64
 
@@ -46,18 +45,9 @@ class AccountEdiFormat(models.Model):
         # Create file content.
         xml_content = b"<?xml version='1.0' encoding='UTF-8'?>"
         xml_content += self.env.ref('account_edi_ubl.export_ubl_invoice')._render(invoice._get_ubl_values())
-        vat = invoice.company_id.partner_id.commercial_partner_id.vat
-        xml_name = 'efff-%s%s%s.xml' % (vat or '', '-' if vat else '', invoice.name.replace('/', '_'))  # official naming convention
+        xml_name = '%s.xml' % invoice._get_efff_name()
         return self.env['ir.attachment'].create({
             'name': xml_name,
             'datas': base64.encodebytes(xml_content),
-            'res_model': 'account.move',
-            'res_id': invoice._origin.id,
-            'mimetype': 'application/xml'
+            'mimetype': 'application/xml',
         })
-
-    def _is_embedding_to_invoice_pdf_needed(self):
-        self.ensure_one()
-        if self.code != 'efff_1':
-            return super()._is_embedding_to_invoice_pdf_needed()
-        return False  # ubl must not be embedded to PDF.
