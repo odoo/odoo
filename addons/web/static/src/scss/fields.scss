@@ -224,6 +224,9 @@
 
     // Favorite
     &.o_favorite {
+        &:not(.o_readonly_modifier) {
+            cursor: pointer;
+        }
         i.fa {
             font-size: 16px;
         }

@@ -2115,8 +2115,11 @@ var FavoriteWidget = AbstractField.extend({
      * @private
      */
     _render: function () {
+        var isReadonly = this.record.evalModifiers(this.attrs.modifiers).readonly;
         var tip = this.value ? _t('Remove from Favorites') : _t('Add to Favorites');
-        var template = this.attrs.nolabel ? '<a href="#"><i class="fa %s" title="%s" aria-label="%s" role="img"></i></a>' : '<a href="#"><i class="fa %s" role="img" aria-label="%s"></i> %s</a>';
+        var template = this.attrs.nolabel || isReadonly ?
+            '<a><i class="fa %s" title="%s" aria-label="%s" role="img"></i></a>' :
+            '<a><i class="fa %s" role="img" aria-label="%s"></i> %s</a>';
         this.$el.empty().append(_.str.sprintf(template, this.value ? 'fa-star' : 'fa-star-o', tip, tip));
     },
 
@@ -2133,6 +2136,9 @@ var FavoriteWidget = AbstractField.extend({
     _setFavorite: function (event) {
         event.preventDefault();
         event.stopPropagation();
+        if (this.$el.hasClass('o_readonly_modifier')) {
+            return;
+        }
         this._setValue(!this.value);
     },
 });
