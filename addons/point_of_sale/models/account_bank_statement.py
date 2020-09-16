@@ -23,8 +23,3 @@ class AccountBankStatement(models.Model):
             if bs.pos_session_id:
                 raise UserError(_("You cannot delete a bank statement linked to Point of Sale session."))
         return super( AccountBankStatement, self).unlink()
-
-class AccountBankStatementLine(models.Model):
-    _inherit = 'account.bank.statement.line'
-
-    pos_statement_id = fields.Many2one('pos.order', string="POS statement", ondelete='cascade')
