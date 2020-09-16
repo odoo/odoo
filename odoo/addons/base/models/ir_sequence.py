@@ -3,7 +3,11 @@
 from datetime import datetime, timedelta
 import logging
 import pytz
+<<<<<<< HEAD
 from psycopg2 import sql, OperationalError, errorcodes
+=======
+from psycopg2 import OperationalError, errorcodes
+>>>>>>> d095a4cb0b0... temp
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
@@ -50,12 +54,16 @@ def _select_nextval(cr, seq_name):
     cr.execute("SELECT nextval(%s)", [seq_name])
     return cr.fetchone()
 
-
 def _update_nogap(self, number_increment):
     number_next = self.number_next
     try:
+<<<<<<< HEAD
         self._cr.execute("SELECT number_next FROM %s WHERE id=%%s FOR UPDATE NOWAIT" % self._table, [self.id])
         self._cr.execute("UPDATE %s SET number_next=number_next+%%s WHERE id=%%s " % self._table, (number_increment, self.id))
+=======
+        self._cr.execute("SELECT number_next FROM %s WHERE id=%s FOR UPDATE NOWAIT" % (self._table, self.id))
+        self._cr.execute("UPDATE %s SET number_next=number_next+%s WHERE id=%s " % (self._table, number_increment, self.id))
+>>>>>>> d095a4cb0b0... temp
     except OperationalError as e:
         if e.pgcode == errorcodes.LOCK_NOT_AVAILABLE:
             raise UserError(_("This transaction wasn't executed because another transaction is already using the same no-gap sequence. Please try again later."))
