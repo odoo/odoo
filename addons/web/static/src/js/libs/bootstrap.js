@@ -82,6 +82,20 @@ $.fn.tooltip.Constructor.prototype.show = function () {
     return bootstrapShowFunction.call(this);
 };
 
+/* Bootstrap scrollspy fix for non-body to spy */
+
+const bootstrapSpyRefreshFunction = $.fn.scrollspy.Constructor.prototype.refresh;
+$.fn.scrollspy.Constructor.prototype.refresh = function () {
+    bootstrapSpyRefreshFunction.apply(this, arguments);
+    if (this._scrollElement === window || this._config.method !== 'offset') {
+        return;
+    }
+    const baseScrollTop = this._getScrollTop();
+    for (let i = 0; i < this._offsets.length; i++) {
+        this._offsets[i] += baseScrollTop;
+    }
+};
+
 return {
     makeExtendedSanitizeWhiteList: makeExtendedSanitizeWhiteList,
 };

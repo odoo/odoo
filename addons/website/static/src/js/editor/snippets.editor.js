@@ -100,6 +100,7 @@ weSnippetEditor.Class.include({
         if (!options.offsetElements || !options.offsetElements.$top) {
             const $header = $('#top');
             if ($header.length) {
+                finalOptions.offsetElements = finalOptions.offsetElements || {};
                 finalOptions.offsetElements.$top = $header;
             }
         }

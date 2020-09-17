@@ -1,10 +1,10 @@
 odoo.define('website_blog.website_blog', function (require) {
 'use strict';
 
-var publicWidget = require('web.public.widget');
-require('website.content.snippets.animation');
+const dom = require('web.dom');
+const publicWidget = require('web.public.widget');
 
-publicWidget.registry.websiteBlog = publicWidget.registry.anchorSlide.extend({
+publicWidget.registry.websiteBlog = publicWidget.Widget.extend({
     selector: '.website_blog',
     events: {
         'click #o_wblog_next_container': '_onNextBlogClick',
@@ -93,7 +93,7 @@ publicWidget.registry.websiteBlog = publicWidget.registry.anchorSlide.extend({
      * @param {Function} callback - to be executed after the scroll is performed
      */
     _forumScrollAction: function ($el, duration, callback) {
-        this._scrollTo($el, 'true', duration).then(() => callback());
+        dom.scrollTo($el[0], {duration: duration}).then(() => callback());
     },
 });
 });

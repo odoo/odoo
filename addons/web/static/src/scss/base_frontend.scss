@@ -1,4 +1,9 @@
 // Frontend general
+html, body, #wrapwrap {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
 #wrapwrap {
     // The z-index is useful to prevent that children with a negative z-index
     // go behind the wrapwrap (we create a new stacking context).
@@ -6,8 +11,11 @@
     position: relative;
     display: flex;
     flex-flow: column nowrap;
-    width: 100%;
-    min-height: 100%;
+    // ... we delegate the scroll to that top element instead of the window/body
+    // This is at least needed for the edit mode to not have a double scrollbar
+    // due to the right editor panel (and since we want to minimize the style
+    // difference between edit mode and non-edit mode (wysiwyg)...).
+    overflow: auto;
 
     > * {
         flex: 0 0 auto;
