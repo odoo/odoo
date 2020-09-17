@@ -3,6 +3,7 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
+from odoo.osv.expression import AND, NEGATIVE_TERM_OPERATORS
 from odoo.tools import float_round
 
 from itertools import groupby
@@ -148,6 +149,16 @@ class MrpBom(models.Model):
         if self.env['mrp.production'].search([('bom_id', 'in', self.ids), ('state', 'not in', ['done', 'cancel'])], limit=1):
             raise UserError(_('You can not delete a Bill of Material with running manufacturing orders.\nPlease close or cancel it first.'))
         return super(MrpBom, self).unlink()
+
+    @api.model
+    def _name_search(self, name='', args=None, operator='ilike', limit=100, name_get_uid=None):
+        args = args or []
+        domain = []
+        if (name or '').strip():
+            domain = ['|', (self._rec_name, operator, name), ('code', operator, name)]
+            if operator in NEGATIVE_TERM_OPERATORS:
+                domain = domain[1:]
+        return self._search(AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
 
     @api.model
     def _bom_find_domain(self, product_tmpl=None, product=None, picking_type=None, company_id=False, bom_type=False):
