@@ -263,6 +263,11 @@ body.editor_enable.editor_has_snippets {
         transform: none;
     }
 
+    *::selection {
+        background: lighten($o-we-accent, 9);
+        color: $o-we-bg-darkest;
+    }
+
     #snippets_menu {
         flex: 0 0 auto;
         display: flex;
