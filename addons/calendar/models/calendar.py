@@ -1168,7 +1168,7 @@ class Meeting(models.Model):
         result = []
 
         recurrent_siblings_cache = {i: [] for i in recurrent_ids} # create empty entries to avoid additional queries for missing entries
-        children_ids = super(Meeting, self)._search([('recurrent_id', 'in', recurrent_ids)])
+        children_ids = super(Meeting, self.with_context(active_test=False))._search([('recurrent_id', 'in', recurrent_ids)])
         for item in self.browse(children_ids).read(['recurrent_id']):
             recurrent_siblings_cache[item['recurrent_id']].append(item['id'])
 
