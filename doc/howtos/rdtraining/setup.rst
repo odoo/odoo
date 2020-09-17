@@ -98,7 +98,7 @@ All the Odoo sources will be located in `$HOME/src/`
 
 
 Configure development repository
-------------------
+--------------------------------
 
 To contribute in the Odoo development, you will need to
 `fork the repository <https://guides.github.com/activities/forking/>`__, create a branch in the
