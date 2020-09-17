@@ -595,6 +595,27 @@ class ComputeOnchangeLine(models.Model):
                                 required=True, ondelete='cascade')
 
 
+class ComputeDynamicDepends(models.Model):
+    _name = 'test_new_api.compute.dynamic.depends'
+    _description = "Computed field with dynamic dependencies"
+
+    name1 = fields.Char()
+    name2 = fields.Char()
+    name3 = fields.Char()
+    full_name = fields.Char(compute='_compute_full_name')
+
+    def _get_full_name_fields(self):
+        # the fields to use are stored in a config parameter
+        depends = self.env['ir.config_parameter'].get_param('test_new_api.full_name', '')
+        return depends.split(',') if depends else []
+
+    @api.depends(lambda self: self._get_full_name_fields())
+    def _compute_full_name(self):
+        fnames = self._get_full_name_fields()
+        for record in self:
+            record.full_name = ", ".join(filter(None, (record[fname] for fname in fnames)))
+
+
 class ComputeUnassigned(models.Model):
     _name = 'test_new_api.compute.unassigned'
     _description = "Model with computed fields left unassigned"
