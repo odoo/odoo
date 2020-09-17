@@ -1193,6 +1193,11 @@ body.editor_enable.editor_has_snippets {
             }
             &.active {
                 background-color: $o-we-sidebar-content-fold-block-bg;
+                box-shadow: $o-we-item-standup-top rgba($o-we-item-standup-color-dark, .5), $o-we-item-standup-bottom rgba($o-we-item-standup-color-light, .2);
+
+                we-collapse.active, we-collapse.active .o_we_collapse_toggler {
+                    background-color: $o-we-bg-lighter;
+                }
             }
         }
 
