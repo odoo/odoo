@@ -114,7 +114,7 @@ on the field type.
 
 However, in some cases, we want a specific representation of a field which can be done thanks to
 the ``widget`` attribute. We already used it for the ``tag_ids`` field when we used the
-``widget="many2many_tags"`` attribute. Indeed, when we don't use it the field is displayed as a
+``widget="many2many_tags"`` attribute. In fact, when we don't use it the field is displayed as a
 list.
 
 Each field type has a set of widgets which can be used to fine tune its display. Some widgets also
@@ -150,7 +150,7 @@ Model
 Odoo provides several ways to provide a default order. The most common way to do it is to define
 the ``_order`` attribute directly on the model. This way, the retrieved records will follow
 a deterministic order which will be consistent in all views, but also when records are searched
-programmatically. Indeed, by default there is no order specified, therefore the records will be
+programmatically. By default there is no order specified, therefore the records will be
 retrieved in a non-deterministic order depending on PostgreSQL.
 
 The ``_order`` attribute takes a string containing a list of fields which will be used for sorting.
@@ -239,7 +239,7 @@ Form
       :alt: Form view with sprinkles
 
 In our real estate module, we want to modify the behavior of some fields. For example, we don't
-want to be able to create or edit a property type from the form view. Indeed, we expect the
+want to be able to create or edit a property type from the form view. In fact, we expect the
 types to be handled in their appropriate menu. Moreover, we want to give tag colors. Several field
 widgets take the ``options`` attribute in to customize their behavior.
 

@@ -34,7 +34,7 @@ Python Inheritance
 
 In our real estate module, we never had to develop anything specific feature to be able to do any
 regular CRUD (Create, Retrieve, Update or Delete) action. The Odoo framework provides the necessary
-tools to do it. Indeed, such actions are already included in our model thanks to the classical
+tools to do it. In fact, such actions are already included in our model thanks to the classical
 Python inheritance::
 
     from odoo import fields, models

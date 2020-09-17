@@ -41,7 +41,7 @@ Many2one
         :alt: Property
 
 In our real estate module, we want to define the concept of property type. A property type
-is, for example, a house or an apartment. Indeed, it is a standard business need to categorize
+is, for example, a house or an apartment. It is a standard business need to categorize
 the properties according to their type, in particular to refine the filtering.
 
 A property can have **one** type, but the same type can be assigned on **many** properties:

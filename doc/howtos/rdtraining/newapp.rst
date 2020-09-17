@@ -30,7 +30,7 @@ property: bedrooms, living area, garage, garden...
    :align: center
    :alt: Form view 01
 
-The second tab lists off the offers for the property. Indeed, potential buyers may offer more or
+The second tab lists the offers for the property. Indeed, potential buyers may offer more or
 less than the expected selling price. It is up to the seller to accept an offer.
 
 .. image:: newapp/media/overview_form_view_02.png

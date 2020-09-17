@@ -6,7 +6,7 @@ A Brief History Of QWeb
 
 Up to now, the design of the interface of our real estate module was rather limited. Building
 a list view is straightforward since only the list of fields is necessary. The same holds true
-for the forw view: despite the use of a few tags such as ``<group>`` or ``<page>``, there
+for the form view: despite the use of a few tags such as ``<group>`` or ``<page>``, there
 is very little to do in terms of design.
 
 However, if we want to give a unique look to our application, it is necessary to go a step
@@ -37,8 +37,10 @@ Concrete Example: A Kanban View
 
 In our estate application, we would like to add a Kanban view to display our properties. Kanban
 views are standard Odoo views (such as the form or list view), but their structure is much more
-flexible. Indeed, the structure of each card as a mix of form elements (including basic HTML)
-and QWeb. Their root element is ``<kanban>``. In its simplest form, a Kanban view looks like:
+flexible. In fact, the structure of each card as a mix of form elements (including basic HTML)
+and QWeb. The definition of a Kanban view is similar to the definition of the list and form
+views, except that their root element is ``<kanban>``. In its simplest form, a Kanban view
+looks like:
 
 .. code-block:: xml
 

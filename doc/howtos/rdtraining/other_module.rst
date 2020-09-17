@@ -75,7 +75,7 @@ A practical example can be found
 
 .. exercise:: First step of invoice creation
 
-    - Create a ``estate.property.py`` file in the right folder of the ``estate_account`` module.
+    - Create a ``estate_property.py`` file in the right folder of the ``estate_account`` module.
     - ``_inherit`` the ``estate.property`` model
     - Override ``action_sold`` method (you might have named it differently) to return the ``super``
       call.
@@ -112,8 +112,11 @@ This is enough to create an empty invoice.
     - the ``journal_id`` must be a ``sale`` journal (in doubt, have a look
       `here <https://github.com/odoo/odoo/blob/f1f48cdaab3dd7847e8546ad9887f24a9e2ed4c1/addons/sale/models/sale.py#L534>`__)
 
-    Tip: to create an object, use ``self.env[model_name].create(values)``, where ``values``
-    is a ``dict``.
+    Tips:
+
+    - to create an object, use ``self.env[model_name].create(values)``, where ``values``
+      is a ``dict``.
+    - the ``create`` method doesn't take recordsets as field values.
 
 When a property is set to 'Sold', you should now have a new customer invoice created in
 Invoicing / Customers / Invoices.
