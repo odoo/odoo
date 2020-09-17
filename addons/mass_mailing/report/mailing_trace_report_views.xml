@@ -21,7 +21,7 @@
             <field name="model">mailing.trace.report</field>
             <field name="arch" type="xml">
                 <graph string="Mass Mailing Statistics" disable_linking="1">
-                    <field name="campaign"/>
+                    <field name="name"/>
                     <field name="sent" type="measure"/>
                 </graph>
             </field>
@@ -39,8 +39,8 @@
                         <field name="scheduled_date"/>
                     </group>
                     <group expand="1" string="Group By...">
-                        <filter string="Mass Mailing Campaign" name="mass_mailing_campaign"
-                            domain="[]" context="{'group_by':'campaign'}"/>
+                        <filter string="Mass Mailing Campaign" domain="[]" name="mass_mailing_campaign"
+                            context="{'group_by':'campaign'}" groups="mass_mailing.group_mass_mailing_campaign"/>
                         <filter string="State" domain="[]" name="state"
                             context="{'group_by':'state'}"/>
                         <filter string="Sent By" domain="[]" name="sent_by"
@@ -61,6 +61,20 @@
            <field name="view_mode">graph,pivot</field>
            <field name="help" type="html"><p>Mass Mailing Statistics allows you to check different mailing related information like number of bounced mails, opened mails, replied mails. You can sort out your analysis by different groups to get accurate grained analysis.</p></field>
        </record>
+
+        <record id="mailing_trace_report_action_view_graph" model="ir.actions.act_window.view">
+            <field name="sequence">0</field>
+            <field name="view_mode">graph</field>
+            <field name="act_window_id" ref="mailing_trace_report_action_mail"/>
+            <field name="view_id" ref="mailing_trace_report_view_graph"/>
+        </record>
+
+        <record id="mailing_trace_report_action_view_pivot" model="ir.actions.act_window.view">
+            <field name="sequence">1</field>
+            <field name="view_mode">pivot</field>
+            <field name="act_window_id" ref="mailing_trace_report_action_mail"/>
+            <field name="view_id" ref="mailing_trace_report_view_pivot"/>
+        </record>
 
        <menuitem name="Reporting" id="menu_mass_mailing_report" sequence="99"
             parent="mass_mailing_menu_root"

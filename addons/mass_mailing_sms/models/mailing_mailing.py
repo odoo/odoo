@@ -4,7 +4,7 @@
 import logging
 
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
 
 _logger = logging.getLogger(__name__)
@@ -37,6 +37,13 @@ class Mailing(models.Model):
         'Send Directly', help='Use at your own risks.')
     # opt_out_link
     sms_allow_unsubscribe = fields.Boolean('Include opt-out link', default=False)
+
+    @api.constrains('body_plaintext')
+    def _check_white_spaces(self):
+        """ Check if the body message is only formed by white spaces. If so, warn the user. """
+        for mailing in self:
+            if str(mailing.body_plaintext).isspace():
+                raise ValidationError(_("Your body message can't be only white spaces"))
 
     @api.depends('mailing_type')
     def _compute_medium_id(self):
