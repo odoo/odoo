@@ -2815,3 +2815,17 @@ class TestAutoAssign(TestStockCommon):
         self.assertEqual(move.quantity_done, 3.0)
         move.lot_ids = [(3, lot2.id)]
         self.assertEqual(move.quantity_done, 2.0)
+
+        self.uom_dozen = self.env.ref('uom.product_uom_dozen')
+        move = self.env['stock.move'].create({
+            'name': 'TestReceiveDozen',
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.product_serial.id,
+            'product_uom': self.uom_dozen.id,
+            'picking_type_id': self.env.ref('stock.picking_type_in').id,
+        })
+        move.lot_ids = [(4, lot1.id)]
+        move.lot_ids = [(4, lot2.id)]
+        move.lot_ids = [(4, lot3.id)]
+        self.assertEqual(move.quantity_done, 3.0/12.0)
