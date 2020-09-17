@@ -76,10 +76,8 @@ const BaseAnimatedHeader = animations.Animation.extend({
         this._updateMainPaddingTop();
         this.el.classList.toggle('o_top_fixed_element', this.fixedHeader && this._isShown());
 
-        const bottom = this.el.getBoundingClientRect().bottom
-            || (this.el.nextElementSibling.getBoundingClientRect().top + window.scrollY);
         for (const callback of extraMenuUpdateCallbacks) {
-            callback(bottom);
+            callback();
         }
     },
     /**
@@ -130,6 +128,14 @@ const BaseAnimatedHeader = animations.Animation.extend({
     _toggleFixedHeader: function (useFixed = true) {
         this.fixedHeader = useFixed;
         this.el.classList.toggle('o_header_affixed', useFixed);
+        // Compensate scrollbar
+        if (useFixed) {
+            const scrollableEl = this.$el.parent().closestScrollable()[0];
+            const style = window.getComputedStyle(this.el);
+            this.el.style.setProperty('right', `${parseInt(style['right']) + scrollableEl.offsetWidth - scrollableEl.clientWidth}px`, 'important');
+        } else {
+            this.el.style.removeProperty('right');
+        }
         this._adaptToHeaderChange();
     },
     /**
