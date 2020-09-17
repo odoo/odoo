@@ -3,6 +3,7 @@ odoo.define('pos_six.payment', function (require) {
 
 const { Gui } = require('point_of_sale.Gui');
 var core = require('web.core');
+var chrome = require('point_of_sale.chrome');
 var PaymentInterface = require('point_of_sale.PaymentInterface');
 
 var _t = core._t;
@@ -40,6 +41,7 @@ var PaymentSix = PaymentInterface.extend({
 
         this.terminalListener = new timapi.DefaultTerminalListener();
         this.terminalListener.transactionCompleted = this._onTransactionComplete.bind(this);
+        this.terminalListener.balanceCompleted = this._onBalanceComplete.bind(this);
         this.terminal.addListener(this.terminalListener);
 
         var recipients = [timapi.constants.Recipient.merchant, timapi.constants.Recipient.cardholder];
@@ -83,6 +85,10 @@ var PaymentSix = PaymentInterface.extend({
         return this._sendTransaction(timapi.constants.TransactionType.reversal);
     },
 
+    send_balance: function () {
+        this.terminal.balanceAsync();
+    },
+
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
@@ -113,6 +119,17 @@ var PaymentSix = PaymentInterface.extend({
         }
     },
 
+    _onBalanceComplete: function (event, data) {
+        if (event.exception) {
+            this.pos.gui.show_popup('error',{
+                'title': _t('Balance Failed'),
+                'body':  _t('The balance operation failed.'),
+            });
+        } else {
+            this._printReceipts(data.printData.receipts);
+        }
+    },
+
     _printReceipts: function (receipts) {
         _.forEach(receipts, (receipt) => {
             var value = receipt.value.replace(/\n/g, "<br />");
@@ -140,6 +157,26 @@ var PaymentSix = PaymentInterface.extend({
             this.terminal.transactionAsync(transactionType, amount);
         });
     },
+});
+
+chrome.Chrome.include({
+    // Insert "Send Balance" before Close button
+    widgets: chrome.Chrome.prototype.widgets.splice(_.findIndex(chrome.Chrome.prototype.widgets, i => i.name == 'close_button'), 0, {
+        name:  'balance',
+        widget: chrome.HeaderButtonWidget,
+        append: '.pos-rightheader',
+        condition: function() { return this.pos.payment_methods.some(pm => pm.use_payment_terminal === 'six_tim'); },
+        args: {
+            label: _t('Send Balance'),
+            action: function () {
+                this.pos.payment_methods.map(pm => {
+                    if (pm.use_payment_terminal === 'six_tim') {
+                        pm.payment_terminal.send_balance();
+                    }
+                });
+            }
+        },
+    }) && chrome.Chrome.prototype.widgets,
 });
 
 return PaymentSix;
