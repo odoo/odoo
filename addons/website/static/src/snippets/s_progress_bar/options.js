@@ -3,11 +3,11 @@ odoo.define('website.s_progress_bar_options', function (require) {
 
 const core = require('web.core');
 const utils = require('web.utils');
-const options = require('web_editor.snippets.options');
+const snippetOptions = require('web_editor.snippets.options');
 
 const _t = core._t;
 
-options.registry.progress = options.Class.extend({
+snippetOptions.registry.progress = snippetOptions.SnippetOptionWidget.extend({
 
     //--------------------------------------------------------------------------
     // Options
@@ -18,7 +18,7 @@ options.registry.progress = options.Class.extend({
      *
      * @see this.selectClass for parameters
      */
-    display: function (previewMode, widgetValue, params) {
+    display: async function (previewMode, widgetValue, params) {
         // retro-compatibility
         if (this.$target.hasClass('progress')) {
             this.$target.removeClass('progress');
@@ -38,13 +38,15 @@ options.registry.progress = options.Class.extend({
         } else {
             $text.insertBefore(this.$target.find('.progress'));
         }
+
+        if (previewMode === false) await this._refreshTarget();
     },
     /**
      * Sets the progress bar value.
      *
      * @see this.selectClass for parameters
      */
-    progressBarValue: function (previewMode, widgetValue, params) {
+    progressBarValue: async function (previewMode, widgetValue, params) {
         let value = parseInt(widgetValue);
         value = utils.confine(value, 0, 100);
         const $progressBar = this.$target.find('.progress-bar');
@@ -54,6 +56,8 @@ options.registry.progress = options.Class.extend({
         $progressBarText.text($progressBarText.text().replace(/[0-9]+%/, value + '%'));
         $progressBar.attr("aria-valuenow", value);
         $progressBar.css("width", value + "%");
+
+        if (previewMode === false) await this._refreshTarget();
     },
 
     //--------------------------------------------------------------------------

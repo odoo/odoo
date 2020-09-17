@@ -3,11 +3,11 @@ odoo.define('website_twitter.editor', function (require) {
 
 var core = require('web.core');
 var dom = require('web.dom');
-var sOptions = require('web_editor.snippets.options');
+var snippetOptions = require('web_editor.snippets.options');
 
 var _t = core._t;
 
-sOptions.registry.twitter = sOptions.Class.extend({
+snippetOptions.registry.twitter = snippetOptions.SnippetOptionWidget.extend({
     /**
      * @override
      */

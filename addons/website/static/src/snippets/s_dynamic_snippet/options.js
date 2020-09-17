@@ -1,9 +1,9 @@
 odoo.define('website.s_dynamic_snippet_options', function (require) {
 'use strict';
 
-const options = require('web_editor.snippets.options');
+const snippetOptions = require('web_editor.snippets.options');
 
-const dynamicSnippetOptions = options.Class.extend({
+const dynamicSnippetOptions = snippetOptions.SnippetOptionWidget.extend({
 
     /**
      *
@@ -136,7 +136,7 @@ const dynamicSnippetOptions = options.Class.extend({
     },
 });
 
-options.registry.dynamic_snippet = dynamicSnippetOptions;
+snippetOptions.registry.dynamic_snippet = dynamicSnippetOptions;
 
 return dynamicSnippetOptions;
 });

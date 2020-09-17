@@ -235,7 +235,7 @@ odoo.define('website_form_editor.tour', function (require) {
         },
         {
             content:  "Save the page",
-            trigger:  "button[data-action=save]",
+            trigger:  "button[name=save]",
         },
         {
             content:  "Wait reloading...",

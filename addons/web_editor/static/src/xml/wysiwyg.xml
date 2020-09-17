@@ -460,10 +460,10 @@
     <div t-name="wysiwyg.widgets.link" class="o_link_dialog">
         <div class="row">
             <form class="col-lg-8">
-                <div t-attf-class="form-group row#{widget.needLabel ? '' : ' d-none'}">
+                <div t-attf-class="form-group row#{widget.state.needLabel ? '' : ' d-none'}">
                     <label class="col-form-label col-md-3" for="o_link_dialog_label_input">Link Label</label>
                     <div class="col-md-9">
-                        <input type="text" name="label" class="form-control" id="o_link_dialog_label_input" required="required" t-att-value="widget.data.text"/>
+                        <input type="text" name="label" class="form-control" id="o_link_dialog_label_input" required="required" t-att-value="widget.state.text"/>
                     </div>
                 </div>
                 <div class="form-group row o_url_input">
@@ -521,7 +521,7 @@
                 <div class="form-group row">
                     <div class="offset-md-3 col-md-9">
                         <label class="o_switch">
-                            <input type="checkbox" name="is_new_window" t-att-checked="widget.data.isNewWindow ? 'checked' : undefined"/>
+                            <input type="checkbox" name="is_new_window" t-att-checked="widget.state.isNewWindow ? 'checked' : undefined"/>
                             <span/>
                             Open in new window
                         </label>

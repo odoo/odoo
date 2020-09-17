@@ -3,55 +3,66 @@ odoo.define('website.s_image_gallery_options', function (require) {
 
 var core = require('web.core');
 var weWidgets = require('wysiwyg.widgets');
-var options = require('web_editor.snippets.options');
+var snippetOptions = require('web_editor.snippets.options');
 
 var _t = core._t;
 var qweb = core.qweb;
 
-options.registry.gallery = options.Class.extend({
+snippetOptions.registry.gallery = snippetOptions.SnippetOptionWidget.extend({
     xmlDependencies: ['/website/static/src/snippets/s_image_gallery/000.xml'],
 
     /**
      * @override
      */
-    start: function () {
-        var self = this;
+    start: async function () {
+        const _super = this._super;
 
-        // The snippet should not be editable
-        this.$target.addClass('o_fake_not_editable').attr('contentEditable', false);
+        this._images = this.$('img').get();
 
-        // Make sure image previews are updated if images are changed
-        this.$target.on('save', 'img', function (ev) {
-            var $img = $(ev.currentTarget);
-            var index = self.$target.find('.carousel-item.active').index();
-            self.$('.carousel:first li[data-target]:eq(' + index + ')')
-                .css('background-image', 'url(' + $img.attr('src') + ')');
-        });
+        const galleryStart = async (context) => {
+            // The snippet should not be editable
+            await this.editorHelpers.addClass(context, this.$target[0], 'o_fake_not_editable');
+            await this.editorHelpers.setAttribute(context, this.$target[0], 'contentEditable', 'false');
 
-        // When the snippet is empty, an edition button is the default content
-        // TODO find a nicer way to do that to have editor style
-        this.$target.on('click', '.o_add_images', function (e) {
-            e.stopImmediatePropagation();
-            self.addImages(false);
-        });
+            // Make sure image previews are updated if images are changed
+            this.$target.on('save', 'img', async (ev) => {
+                var $img = $(ev.currentTarget);
+                var index = this.$target.find('.carousel-item.active').index();
+                const $li = this.$('.carousel:first li[data-target]:eq(' + index + ')');
+                await this.editorHelpers.setStyle(context, $li[0], 'background-image', 'url(' + $img.attr('src') + ')');
+            });
 
-        this.$target.on('dropped', 'img', function (ev) {
-            self.mode(null, self.getMode());
-            if (!ev.target.height) {
-                $(ev.target).one('load', function () {
-                    setTimeout(function () {
-                        self.trigger_up('cover_update');
+            // When the snippet is empty, an edition button is the default content
+            // TODO find a nicer way to do that to have editor style
+            this.$target.on('click', '.o_add_images', (e) => {
+                e.stopImmediatePropagation();
+                this.addImages(false);
+            });
+
+            this.$target.on('dropped', 'img', (ev) => {
+                this._setMode(null, this.getMode());
+                if (!ev.target.height) {
+                    $(ev.target).one('load', function () {
+                        setTimeout(function () {
+                            this.trigger_up('cover_update');
+                        });
                     });
-                });
+                }
+            });
+
+            if (!this.$('> div:first-child img').length) {
+                // reset the images to show the "Add images" button.
+                this.removeAllImages()
             }
-        });
+        };
+        await this.wysiwyg.editor.execCommand(galleryStart);
 
         const $container = this.$('> .container, > .container-fluid, > .o_container_small');
         if ($container.find('> *:not(div)').length) {
-            self.mode(null, self.getMode());
+            this._setMode(null, this.getMode());
         }
 
-        return this._super.apply(this, arguments);
+        return _super.apply(this, arguments);
     },
     /**
      * @override
@@ -87,13 +98,13 @@ options.registry.gallery = options.Class.extend({
      *
      * @see this.selectClass for parameters
      */
-    addImages: function (previewMode) {
+    addImages: async function (previewMode) {
         const $images = this.$('img');
         var $container = this.$('> .container, > .container-fluid, > .o_container_small');
         var dialog = new weWidgets.MediaDialog(this, {multiImages: true, onlyImages: true, mediaWidth: 1920});
         var lastImage = _.last(this._getImages());
         var index = lastImage ? this._getIndex(lastImage) : -1;
-        return new Promise(resolve => {
+        await new Promise(resolve => {
             dialog.on('save', this, function (attachments) {
                 for (var i = 0; i < attachments.length; i++) {
                     $('<img/>', {
@@ -106,13 +117,14 @@ options.registry.gallery = options.Class.extend({
                     }).appendTo($container);
                 }
                 if (attachments.length > 0) {
-                    this.mode('reset', this.getMode());
+                    this._setMode('reset', this.getMode());
                     this.trigger_up('cover_update');
                 }
             });
             dialog.on('closed', this, () => resolve());
             dialog.open();
         });
+        await this._refreshTarget();
     },
     /**
      * Allows to change the number of columns when displaying images with a
@@ -120,11 +132,11 @@ options.registry.gallery = options.Class.extend({
      *
      * @see this.selectClass for parameters
      */
-    columns: function (previewMode, widgetValue, params) {
+    columns: async function (previewMode, widgetValue, params) {
         const nbColumns = parseInt(widgetValue || '1');
         this.$target.attr('data-columns', nbColumns);
 
-        this.mode(previewMode, this.getMode(), {}); // TODO improve
+        await this.mode(previewMode, this.getMode(), {}); // TODO improve
     },
     /**
      * Get the image target's layout mode (slideshow, masonry, grid or nomode).
@@ -147,7 +159,7 @@ options.registry.gallery = options.Class.extend({
     /**
      * Displays the images with the "grid" layout.
      */
-    grid: function () {
+    grid: async function (previewMode, widgetValue, params) {
         var imgs = this._getImages();
         var $row = $('<div/>', {class: 'row s_nb_column_fixed'});
         var columns = this._getColumns();
@@ -164,11 +176,12 @@ options.registry.gallery = options.Class.extend({
             }
         });
         this.$target.css('height', '');
+        if (previewMode === false) await this._refreshTarget();
     },
     /**
      * Displays the images with the "masonry" layout.
      */
-    masonry: function () {
+    masonry: async function (previewMode, widgetValue, params) {
         var self = this;
         var imgs = this._getImages();
         var columns = this._getColumns();
@@ -200,30 +213,24 @@ options.registry.gallery = options.Class.extend({
             });
             $lowest.append(imgs.shift());
         }
+        if (previewMode === false) await this._refreshTarget();
     },
     /**
      * Allows to change the images layout. @see grid, masonry, nomode, slideshow
      *
      * @see this.selectClass for parameters
      */
-    mode: function (previewMode, widgetValue, params) {
-        widgetValue = widgetValue || 'slideshow'; // FIXME should not be needed
-        this.$target.css('height', '');
-        this.$target
-            .removeClass('o_nomode o_masonry o_grid o_slideshow')
-            .addClass('o_' + widgetValue);
-        this[widgetValue]();
-        this.trigger_up('cover_update');
-        this._refreshPublicWidgets();
+    mode: async function (previewMode, widgetValue, params) {
+        this._setMode(previewMode, widgetValue, params);
+        if (previewMode === false) await this._refreshTarget();
     },
     /**
      * Displays the images with the standard layout: floating images.
      */
-    nomode: function () {
+    nomode: async function (previewMode, widgetValue, params) {
         var $row = $('<div/>', {class: 'row s_nb_column_fixed'});
         var imgs = this._getImages();
 
-        this._replaceContent($row);
 
         _.each(imgs, function (img) {
             var wrapClass = 'col-lg-3';
@@ -233,6 +240,9 @@ options.registry.gallery = options.Class.extend({
             var $wrap = $('<div/>', {class: wrapClass}).append(img);
             $row.append($wrap);
         });
+
+        this._replaceContent($row);
+        if (previewMode === false) await this._refreshTarget();
     },
     /**
      * Allows to remove all images. Restores the snippet to the way it was when
@@ -240,24 +250,26 @@ options.registry.gallery = options.Class.extend({
      *
      * @see this.selectClass for parameters
      */
-    removeAllImages: function (previewMode) {
-        var $addImg = $('<div>', {
+    removeAllImages: async function () {
+        this._images = [];
+        const $addImg = $('<div>', {
             class: 'alert alert-info css_editable_mode_display text-center',
         });
-        var $text = $('<span>', {
+        const $text = $('<span>', {
             class: 'o_add_images',
             style: 'cursor: pointer;',
             text: _t(" Add Images"),
         });
-        var $icon = $('<i>', {
+        const $icon = $('<i>', {
             class: ' fa fa-plus-circle',
         });
-        this._replaceContent($addImg.append($icon).append($text));
+        this._replaceContent($addImg.append($icon).append($text), false);
+        await this._refreshTarget();
     },
     /**
      * Displays the images with a "slideshow" layout.
      */
-    slideshow: function () {
+    slideshow: async function (previewMode, widgetValue, params) {
         const imageEls = this._getImages();
         const images = _.map(imageEls, img => ({
             // Use getAttribute to get the attribute value otherwise .src
@@ -285,6 +297,8 @@ options.registry.gallery = options.Class.extend({
         // Apply layout animation
         this.$target.off('slide.bs.carousel').off('slid.bs.carousel');
         this.$('li.fa').off('click');
+
+        if (previewMode === false) await this._refreshTarget();
     },
 
     //--------------------------------------------------------------------------
@@ -296,38 +310,38 @@ options.registry.gallery = options.Class.extend({
      *
      * @override
      */
-    notify: function (name, data) {
+    notify: async function (name, data) {
         this._super(...arguments);
         if (name === 'image_removed') {
             data.$image.remove(); // Force the removal of the image before reset
-            this.mode('reset', this.getMode());
+            await this.mode('reset', this.getMode());
         } else if (name === 'image_index_request') {
-            var imgs = this._getImages();
-            var position = _.indexOf(imgs, data.$image[0]);
-            imgs.splice(position, 1);
+            const images = this._getImages(this.$('img').get());
+            let position = _.indexOf(images, data.$image[0]);
+            images.splice(position, 1);
             switch (data.position) {
                 case 'first':
-                    imgs.unshift(data.$image[0]);
+                    images.unshift(data.$image[0]);
                     break;
                 case 'prev':
-                    imgs.splice(position - 1, 0, data.$image[0]);
+                    images.splice(position - 1, 0, data.$image[0]);
                     break;
                 case 'next':
-                    imgs.splice(position + 1, 0, data.$image[0]);
+                    images.splice(position + 1, 0, data.$image[0]);
                     break;
                 case 'last':
-                    imgs.push(data.$image[0]);
+                    images.push(data.$image[0]);
                     break;
             }
-            position = imgs.indexOf(data.$image[0]);
-            _.each(imgs, function (img, index) {
+            position = images.indexOf(data.$image[0]);
+            _.each(images, function (img, index) {
                 // Note: there might be more efficient ways to do that but it is
                 // more simple this way and allows compatibility with 10.0 where
                 // indexes were not the same as positions.
                 $(img).attr('data-index', index);
             });
             const currentMode = this.getMode();
-            this.mode('reset', currentMode);
+            this._setMode('reset', currentMode);
             if (currentMode === 'slideshow') {
                 const $carousel = this.$target.find('.carousel');
                 $carousel.removeClass('slide');
@@ -335,16 +349,17 @@ options.registry.gallery = options.Class.extend({
                 this.$target.find('.carousel-indicators li').removeClass('active');
                 this.$target.find('.carousel-indicators li[data-slide-to="' + position + '"]').addClass('active');
                 this.trigger_up('activate_snippet', {
-                    $snippet: this.$target.find('.carousel-item.active img'),
+                    $element: this.$target.find('.carousel-item.active img'),
                     ifInactiveOptions: true,
                 });
                 $carousel.addClass('slide');
             } else {
                 this.trigger_up('activate_snippet', {
-                    $snippet: data.$image,
+                    $element: data.$image,
                     ifInactiveOptions: true,
                 });
             }
+            await this._refreshTarget();
         }
     },
 
@@ -352,6 +367,23 @@ options.registry.gallery = options.Class.extend({
     // Private
     //--------------------------------------------------------------------------
 
+
+    /**
+     * Allows to change the images layout. @see grid, masonry, nomode, slideshow
+     *
+     * @private
+     * @see this.selectClass for parameters
+     */
+    _setMode: async function (previewMode, widgetValue, params) {
+        widgetValue = widgetValue || 'slideshow'; // FIXME should not be needed
+        this.$target.css('height', '');
+        this.$target
+            .removeClass('o_nomode o_masonry o_grid o_slideshow')
+            .addClass('o_' + widgetValue);
+        this[widgetValue]();
+        this.trigger_up('cover_update');
+        this._refreshPublicWidgets();
+    },
     /**
      * @private
      */
@@ -404,7 +436,7 @@ options.registry.gallery = options.Class.extend({
      * @private
      * @returns {DOMElement[]}
      */
-    _getImages: function () {
+    _getImages: function (imgs) {
         var imgs = this.$('img').get();
         var self = this;
         imgs.sort(function (a, b) {
@@ -438,14 +470,14 @@ options.registry.gallery = options.Class.extend({
      * @param {jQuery} $content
      * @returns {jQuery} the main container of the snippet
      */
-    _replaceContent: function ($content) {
+    _replaceContent: function ($content, inEditor = true) {
         var $container = this.$('> .container, > .container-fluid, > .o_container_small');
         $container.empty().append($content);
         return $container;
     },
 });
 
-options.registry.gallery_img = options.Class.extend({
+snippetOptions.registry.gallery_img = snippetOptions.SnippetOptionWidget.extend({
     /**
      * Rebuilds the whole gallery when one image is removed.
      *

@@ -35,7 +35,7 @@ tour.register("snippet_version", {
     },
 }, {
     content: "Enter edit mode",
-    trigger: 'button[data-action="save"]',
+    trigger: 'button[name="save"]',
 }, {
     content: "Enter edit mode",
     extra_trigger: 'body:not(.editor_enable)',
@@ -59,6 +59,10 @@ tour.register("snippet_version", {
     content: "Edit s_share",
     extra_trigger: 'we-customizeblock-options:contains(Text - Image) .snippet-option-VersionControl  > we-alert',
     trigger: '#wrap.o_editable .s_share',
+    run: async function (actions) {
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+        actions.auto();
+    },
 }, {
     content: "s_share is outdated",
     extra_trigger: 'we-customizeblock-options:contains(Share) .snippet-option-VersionControl > we-alert',

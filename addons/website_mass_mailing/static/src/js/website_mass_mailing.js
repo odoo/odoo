@@ -193,8 +193,8 @@ publicWidget.registry.newsletter_popup = publicWidget.Widget.extend({
             renderFooter: false,
             size: 'medium',
         });
-        this.massMailingPopup.opened().then(function () {
-            var $modal = self.massMailingPopup.$modal;
+        this.massMailingPopup.opened().then(async function () {
+            var $modal = self.$('.modal');
             $modal.find('header button.close').on('mouseup', function (ev) {
                 ev.stopPropagation();
             });
@@ -203,16 +203,15 @@ publicWidget.registry.newsletter_popup = publicWidget.Widget.extend({
             $modal.find('.modal-dialog').addClass('modal-dialog-centered');
             $modal.find('.js_subscribe').data('list-id', self.listID)
                   .find('input.js_subscribe_email').val(email);
+
+            // hack to make the modal editable in the wysiwyg internal architecture
+            const snippetOption = self.$el.data('snippetOption');
+            if (snippetOption) await snippetOption._refreshTarget();
+
             self.trigger_up('widgets_start_request', {
                 editableMode: self.editableMode,
                 $target: $modal,
             });
-        });
-        this.massMailingPopup.on('closed', this, function () {
-            var $modal = self.massMailingPopup.$modal;
-            if ($modal) { // The dialog might have never been opened
-                self.$el.data('content', $modal.find('.modal-body').html());
-            }
         });
     },
     /**

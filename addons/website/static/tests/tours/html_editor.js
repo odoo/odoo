@@ -22,7 +22,7 @@ tour.register('html_editor_multiple_templates', {
         {
             content: "save the page",
             extra_trigger: '#oe_structure_test_ui.o_dirty',
-            trigger: "button[data-action=save]",
+            trigger: "button[name=save]",
         },
         // 2. Edit generic view
         {

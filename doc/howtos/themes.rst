@@ -870,8 +870,8 @@ Great, we successfully created our javascript editor file. This file will contai
 .. code-block:: javascript
 
    odoo.define(function (require) {
-       var options = require('web_editor.snippets.options');
-       options.registry.snippet_testimonial_options = options.Class.extend({
+       var snippetOptions = require('web_editor.snippets.options');
+       snippetOptions.registry.snippet_testimonial_options = snippetOptions.SnippetOptionWidget.extend({
            onFocus: function () {
                alert("On focus!")
            },

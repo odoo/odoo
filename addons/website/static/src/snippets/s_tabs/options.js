@@ -1,29 +1,32 @@
 odoo.define('website.s_tabs_options', function (require) {
 'use strict';
 
-const options = require('web_editor.snippets.options');
+const snippetOptions = require('web_editor.snippets.options');
 
-options.registry.NavTabs = options.Class.extend({
+snippetOptions.registry.NavTabs = snippetOptions.SnippetOptionWidget.extend({
     isTopOption: true,
 
     /**
      * @override
      */
-    start: function () {
+    start: async function () {
         this._findLinksAndPanes();
-        return this._super.apply(this, arguments);
+        await this._super.apply(this, arguments);
+        await this._refreshTarget();
     },
     /**
      * @override
      */
-    onBuilt: function () {
+    onBuilt: async function () {
         this._generateUniqueIDs();
+        await this._refreshTarget();
     },
     /**
      * @override
      */
-    onClone: function () {
+    onClone: async function () {
         this._generateUniqueIDs();
+        this._refreshTarget();
     },
 
     //--------------------------------------------------------------------------
@@ -35,7 +38,8 @@ options.registry.NavTabs = options.Class.extend({
      *
      * @see this.selectClass for parameters
      */
-    addTab: function (previewMode, widgetValue, params) {
+    addTab: async function (previewMode, widgetValue, params) {
+        this._findLinksAndPanes();
         var $activeItem = this.$navLinks.filter('.active').parent();
         var $activePane = this.$tabPanes.filter('.active');
 
@@ -44,17 +48,21 @@ options.registry.NavTabs = options.Class.extend({
         var $tabPane = $activePane.clone().removeClass('active show');
         $navItem.insertAfter($activeItem);
         $tabPane.insertAfter($activePane);
-        this._findLinksAndPanes();
+
+        if (previewMode === false) await this._refreshTarget();
+
         this._generateUniqueIDs();
 
         $navLink.tab('show');
+
     },
     /**
      * Removes the current active tab and its content.
      *
      * @see this.selectClass for parameters
      */
-    removeTab: function (previewMode, widgetValue, params) {
+    removeTab: async function (previewMode, widgetValue, params) {
+        this._findLinksAndPanes();
         var self = this;
 
         var $activeLink = this.$navLinks.filter('.active');
@@ -62,7 +70,7 @@ options.registry.NavTabs = options.Class.extend({
 
         var $next = this.$navLinks.eq((this.$navLinks.index($activeLink) + 1) % this.$navLinks.length);
 
-        return new Promise(resolve => {
+        await new Promise(resolve => {
             $next.one('shown.bs.tab', function () {
                 $activeLink.parent().remove();
                 $activePane.remove();
@@ -71,6 +79,8 @@ options.registry.NavTabs = options.Class.extend({
             });
             $next.tab('show');
         });
+
+        if (previewMode === false) await this._refreshTarget();
     },
 
     //--------------------------------------------------------------------------
@@ -97,6 +107,7 @@ options.registry.NavTabs = options.Class.extend({
      * @private
      */
     _generateUniqueIDs: function () {
+        this._findLinksAndPanes();
         for (var i = 0; i < this.$navLinks.length; i++) {
             var id = _.now() + '_' + _.uniqueId();
             var idLink = 'nav_tabs_link_' + id;
@@ -113,7 +124,7 @@ options.registry.NavTabs = options.Class.extend({
         }
     },
 });
-options.registry.NavTabsStyle = options.Class.extend({
+snippetOptions.registry.NavTabsStyle = snippetOptions.SnippetOptionWidget.extend({
 
     //--------------------------------------------------------------------------
     // Options
@@ -124,7 +135,7 @@ options.registry.NavTabsStyle = options.Class.extend({
      *
      * @see this.selectClass for parameters
      */
-    setStyle: function (previewMode, widgetValue, params) {
+    setStyle: async function (previewMode, widgetValue, params) {
         const $nav = this.$target.find('.s_tabs_nav:first .nav');
         const isPills = widgetValue === 'pills';
         $nav.toggleClass('nav-tabs card-header-tabs', !isPills);
@@ -132,19 +143,23 @@ options.registry.NavTabsStyle = options.Class.extend({
         this.$target.find('.s_tabs_nav:first').toggleClass('card-header', !isPills).toggleClass('mb-3', isPills);
         this.$target.toggleClass('card', !isPills);
         this.$target.find('.s_tabs_content:first').toggleClass('card-body', !isPills);
+
+        if (previewMode === false) await this._refreshTarget();
     },
     /**
      * Horizontal/vertical nav.
      *
      * @see this.selectClass for parameters
      */
-    setDirection: function (previewMode, widgetValue, params) {
+    setDirection: async function (previewMode, widgetValue, params) {
         const isVertical = widgetValue === 'vertical';
         this.$target.toggleClass('row s_col_no_resize s_col_no_bgcolor', isVertical);
         this.$target.find('.s_tabs_nav:first .nav').toggleClass('flex-column', isVertical);
         this.$target.find('.s_tabs_nav:first > .nav-link').toggleClass('py-2', isVertical);
         this.$target.find('.s_tabs_nav:first').toggleClass('col-md-3', isVertical);
         this.$target.find('.s_tabs_content:first').toggleClass('col-md-9', isVertical);
+
+        if (previewMode === false) await this._refreshTarget();
     },
 
     //--------------------------------------------------------------------------

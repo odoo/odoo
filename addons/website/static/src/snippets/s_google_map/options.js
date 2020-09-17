@@ -2,9 +2,9 @@ odoo.define('options.s_google_map_options', function (require) {
 'use strict';
 
 const {_t} = require('web.core');
-const options = require('web_editor.snippets.options');
+const snippetOptions = require('web_editor.snippets.options');
 
-options.registry.GoogleMap = options.Class.extend({
+snippetOptions.registry.GoogleMap = snippetOptions.SnippetOptionWidget.extend({
 
     //--------------------------------------------------------------------------
     // Options

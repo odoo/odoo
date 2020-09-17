@@ -4,7 +4,7 @@ odoo.define('website.tour.rte', function (require) {
 var ajax = require('web.ajax');
 var session = require('web.session');
 var tour = require('web_tour.tour');
-var Wysiwyg = require('web_editor.wysiwyg.root');
+var Wysiwyg = require('web_editor.wysiwyg');
 
 var domReady = new Promise(function (resolve) {
     $(resolve);
@@ -44,12 +44,16 @@ tour.register('rte_translator', {
 }, {
     content: "change content",
     trigger: '#wrap',
-    run: function () {
-        $("#wrap p:first").replaceWith('<p>Write one or <font style="background-color: yellow;">two paragraphs <b>describing</b></font> your product or\
-                <font style="color: rgb(255, 0, 0);">services</font>. To be successful your content needs to be\
-                useful to your <a href="/999">readers</a>.</p> <input placeholder="test translate placeholder"/>\
-                <p>&lt;b&gt;&lt;/b&gt; is an HTML&nbsp;tag &amp; is empty</p>');
-        $("#wrap img").attr("title", "test translate image title");
+    run: async function () {
+        const wysiwyg = $('#wrapwrap').data('wysiwyg');
+        await wysiwyg.editor.execCommand(async (params)=> {
+            await wysiwyg.editorHelpers.replace(params, document.querySelector('#wrap p'),
+                    '<p>Write one or <font style="background-color: yellow;">two paragraphs <b>describing</b></font> your product or\
+                    <font style="color: rgb(255, 0, 0);">services</font>. To be successful your content needs to be\
+                    useful to your <a href="/999">readers</a>.</p> <input placeholder="test translate placeholder"/>\
+                    <p>&lt;b&gt;&lt;/b&gt; is an HTML&nbsp;tag &amp; is empty</p>');
+            await wysiwyg.editorHelpers.setAttribute(params, document.querySelectorAll("#wrap img"), "title", "test translate image title");
+        });
     }
 }, {
     content: "save",
@@ -75,27 +79,30 @@ tour.register('rte_translator', {
 }, {
     content: "translate text",
     trigger: '#wrap p font:first',
-    run: function (action_helper) {
-        action_helper.text('translated french text');
-        Wysiwyg.setRange(this.$anchor.contents()[0], 22);
+    run: async function (action_helper) {
+        const wysiwyg = $('#wrapwrap').data('wysiwyg');
+        await wysiwyg.editorHelpers.text(wysiwyg.editor, document.querySelector('#wrap p font'), 'translated french text');
         this.$anchor.trigger($.Event( "keyup", {key: '_', keyCode: 95}));
         this.$anchor.trigger('input');
     },
 }, {
     content: "translate text with special char",
     trigger: '#wrap input + p span:first',
-    run: function (action_helper) {
+    run: async function (action_helper) {
         action_helper.click();
-        this.$anchor.prepend('&lt;{translated}&gt;');
-        Wysiwyg.setRange(this.$anchor.contents()[0], 0);
+        const element = document.querySelector('#wrap input + p span');
+        const wysiwyg = $('#wrapwrap').data('wysiwyg');
+        await wysiwyg.editorHelpers.text(wysiwyg.editor, element, '<{translated}>' + element.innerText);
         this.$anchor.trigger($.Event( "keyup", {key: '_', keyCode: 95}));
         this.$anchor.trigger('input');
     },
 }, {
     content: "click on input",
     trigger: '#wrap input:first',
-    extra_trigger: '#wrap .o_dirty font:first:contains(translated french text)',
-    run: 'click',
+    extra_trigger: '#wrap font:contains(translated french text)',
+    run: function (action_helper) {
+        $('#wrap input:first').mousedown();
+    },
 }, {
     content: "translate placeholder",
     trigger: 'input:first',
@@ -109,7 +116,7 @@ tour.register('rte_translator', {
     trigger: 'button[data-action=save]',
 }, {
     content: "check: content is translated",
-    trigger: '#wrap p font:first:contains(translated french text)',
+    trigger: '#wrap p font:contains(translated french text)',
     extra_trigger: 'body:not(.o_wait_reload):not(:has(.note-editor)) a[data-action="edit_master"]',
     run: function () {}, // it's a check
 }, {
@@ -144,17 +151,18 @@ tour.register('rte_translator', {
         mousedown.initMouseEvent('mousedown', true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, el);
         el.dispatchEvent(mousedown);
         var mouseup = document.createEvent('MouseEvents');
-        Wysiwyg.setRange(el.childNodes[2], 6, el.childNodes[2], 13);
+        const wysiwyg = $('#wrapwrap').data('wysiwyg');
+        Wysiwyg.setRange(wysiwyg, el.childNodes[2], 6, el.childNodes[2], 13);
         mouseup.initMouseEvent('mouseup', true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, el);
         el.dispatchEvent(mouseup);
     },
 }, {
     content: "underline",
-    trigger: '.note-air-popover button[data-event="underline"]',
+    trigger: 'jw-toolbar jw-button[name="underline"]',
 }, {
     content: "save new change",
     trigger: 'button[data-action=save]',
-    extra_trigger: '#wrap.o_dirty p u',
+    extra_trigger: '#wrap p u',
 
     }, {
     content : "click language dropdown",

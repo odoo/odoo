@@ -4,12 +4,6 @@
 
 // OVERRIDES FOR EDITOR WITH SNIPPETS
 body.editor_enable.editor_has_snippets {
-    padding-right: $o-we-sidebar-width !important;
-
-    #web_editor-top-edit .note-popover .popover {
-        right: $o-we-sidebar-width !important;
-    }
-
     .modal:not(.o_technical_modal) {
         // set z-index so customize options visible on dialog.
         z-index: $o-we-overlay-zindex - 1;
@@ -235,9 +229,6 @@ body.editor_enable.editor_has_snippets {
 #oe_snippets {
     @include o-w-preserve-btn;
 
-    @include o-position-absolute(var(--o-we-toolbar-height), 0, 0, auto);
-    position: fixed;
-    z-index: $o-we-zindex;
     display: flex;
     flex-flow: column nowrap;
     width: $o-we-sidebar-width;
@@ -425,8 +416,32 @@ body.editor_enable.editor_has_snippets {
             width: $o-we-sidebar-content-available-room * .6;
         }
 
-        we-button, we-toggler {
+        we-button, jw-button, we-toggler, input[type=text], input[type=number], select {
             @extend %we-generic-button;
+        }
+
+        jw-button {
+            display: inline-block;
+            box-sizing: border-box;
+            padding: 3px 6px 0;
+            min-width: 28px;
+            text-align: center;
+            &.dropdown-toggle {
+                min-width: 38px;
+                &::after{
+                    margin-left: 3px;
+                }
+            }
+        }
+
+        jw-group {
+            select {
+                min-width: fit-content;
+                display: inline-block;
+            }
+            input {
+                display: inline-block !important;
+            }
         }
 
         we-button.o_we_link {
@@ -692,7 +707,7 @@ body.editor_enable.editor_has_snippets {
                     line-height: $o-we-sidebar-content-field-dropdown-item-height;
                 }
 
-                we-button {
+                we-button, jw-button, input[type=text], input[type=number], select {
                     @include we-icon-button('', $align: left); // Always a padding on the left
                     border: none;
                     background: none;
@@ -778,7 +793,7 @@ body.editor_enable.editor_has_snippets {
                 display: flex;
                 max-width: 100%;
 
-                we-button {
+                we-button, jw-button {
                     padding: 0 $o-we-sidebar-content-field-button-group-button-spacing;
                     border-radius: 0;
 
@@ -808,7 +823,7 @@ body.editor_enable.editor_has_snippets {
         }
 
         // Inputs
-        we-input.o_we_user_value_widget {
+        we-input.o_we_user_value_widget, we-toolbar input {
 
             > div {
                 flex: 0 1 auto;

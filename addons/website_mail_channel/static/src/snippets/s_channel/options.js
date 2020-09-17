@@ -2,12 +2,12 @@ odoo.define('website_mail_channel.s_channel_options', function (require) {
 'use strict';
 
 var core = require('web.core');
-var options = require('web_editor.snippets.options');
+var snippetOptions = require('web_editor.snippets.options');
 var wUtils = require('website.utils');
 
 var _t = core._t;
 
-options.registry.Channel = options.Class.extend({
+snippetOptions.registry.Channel = snippetOptions.SnippetOptionWidget.extend({
     /**
      * @override
      */

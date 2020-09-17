@@ -1,12 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-<template id="wysiwyg_iframe_editor_assets" name="Editor assets for wysiwyg iframe content" groups="base.group_user">
-    <t t-call-assets="web.assets_common"/>
-    <t t-call-assets="web.assets_frontend" t-js="false"/>
-    <t t-call-assets="web_editor.assets_wysiwyg"/>
-</template>
-
 <template id="compiled_assets_wysiwyg" name="Wysiwyg Editor" groups="base.group_user,base.group_portal">
     <t t-call-assets="web_editor.assets_wysiwyg"/>
 </template>
@@ -32,14 +26,10 @@
     <!-- integration -->
 
     <link rel="stylesheet" type="text/scss" href="/web_editor/static/src/scss/wysiwyg.scss"/>
-    <link rel="stylesheet" type="text/scss" href="/web_editor/static/src/scss/wysiwyg_iframe.scss"/>
     <link rel="stylesheet" type="text/scss" href="/web_editor/static/src/scss/wysiwyg_snippets.scss"/>
 
     <script type="text/javascript" src="/web_editor/static/src/js/wysiwyg/fonts.js"/>
     <script type="text/javascript" src="/web_editor/static/src/js/base.js"/>
-    <script type="text/javascript" src="/web_editor/static/src/js/editor/editor.js"/>
-    <script type="text/javascript" src="/web_editor/static/src/js/editor/rte.js"/>
-    <script type="text/javascript" src="/web_editor/static/src/js/editor/rte.summernote.js"/>
     <script type="text/javascript" src="/web_editor/static/src/js/editor/image_processing.js"/>
     <script type="text/javascript" src="/web_editor/static/src/js/editor/custom_colors.js"/>
 
@@ -62,8 +52,6 @@
     <link rel="stylesheet" type="text/css" href="/web_editor/static/lib/jabberwock/jabberwock.css"/>
     <script type="text/javascript" src="/web_editor/static/src/js/wysiwyg/wysiwyg_translate_attributes.js"/>
     <script type="text/javascript" src="/web_editor/static/src/js/wysiwyg/wysiwyg.js"/>
-    <script type="text/javascript" src="/web_editor/static/src/js/wysiwyg/wysiwyg_snippets.js"/>
-    <script type="text/javascript" src="/web_editor/static/src/js/wysiwyg/wysiwyg_iframe.js"/>
 </template>
 
 <template id="assets_summernote" name="Summernote">
@@ -144,7 +132,6 @@
         <script type="text/javascript" src="/web_editor/static/lib/vkbeautify/vkbeautify.0.99.00.beta.js"/>
         <script type="text/javascript" src="/web_editor/static/src/js/common/ace.js"/>
         <script type="text/javascript" src="/web_editor/static/src/js/common/utils.js"/>
-        <script type="text/javascript" src="/web_editor/static/src/js/wysiwyg/root.js"/>
     </xpath>
 </template>
 
@@ -163,7 +150,6 @@
     <xpath expr="script[last()]" position="after">
         <script type="text/javascript" src="/web_editor/static/src/js/frontend/loader.js" />
         <script type="text/javascript" src="/web_editor/static/src/js/backend/field_html.js" />
-        <script type="text/javascript" src="/web_editor/static/src/js/backend/convert_inline.js" />
     </xpath>
 </template>
 
