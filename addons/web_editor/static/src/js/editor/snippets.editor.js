@@ -100,7 +100,7 @@ var SnippetEditor = Widget.extend({
                     },
                 },
             });
-            this.draggableComponent = new SmoothScrollOnDrag(this, this.$el, $('html'), smoothScrollOptions);
+            this.draggableComponent = new SmoothScrollOnDrag(this, this.$el, $().getScrollingElement(), smoothScrollOptions);
         } else {
             this.$('.o_overlay_move_options').addClass('d-none');
             $customize.find('.oe_snippet_clone').addClass('d-none');
@@ -997,8 +997,8 @@ var SnippetsMenu = Widget.extend({
 
         // Hide the active overlay when scrolling.
         // Show it again and recompute all the overlays after the scroll.
-        // TODO: current limitation, suppose that this is the body which scrolls
-        this.$document.on('scroll.snippets_menu', _.throttle(() => {
+        this.$scrollingElement = $().getScrollingElement();
+        this.$scrollingElement.on('scroll.snippets_menu', _.throttle(() => {
             for (const editor of this.snippetEditors) {
                 editor.toggleOverlayVisibility(false);
             }
@@ -1054,6 +1054,7 @@ var SnippetsMenu = Widget.extend({
             this.$snippetEditorArea.remove();
             this.$window.off('.snippets_menu');
             this.$document.off('.snippets_menu');
+            this.$scrollingElement.off('.snippets_menu');
         }
         core.bus.off('deactivate_snippet', this, this._onDeactivateSnippet);
         delete this.cacheSnippetTemplate[this.options.snippets];
@@ -1778,13 +1779,6 @@ var SnippetsMenu = Widget.extend({
      */
     _getScrollOptions(options = {}) {
         return Object.assign({}, options, {
-            offsetElements: Object.assign({
-                $top: $('#web_editor-top-edit'), // TODO should ideally be retrieved another way
-                $left: this.$el,
-            }, options.offsetElements),
-            scrollBoundaries: Object.assign({
-                left: false,
-            }, options.scrollBoundaries),
             jQueryDraggableOptions: Object.assign({
                 appendTo: this.$body,
                 cursor: 'move',
@@ -1954,7 +1948,7 @@ var SnippetsMenu = Widget.extend({
                 },
             },
         });
-        this.draggableComponent = new SmoothScrollOnDrag(this, $snippets, $('html'), smoothScrollOptions);
+        this.draggableComponent = new SmoothScrollOnDrag(this, $snippets, $().getScrollingElement(), smoothScrollOptions);
     },
     /**
      * Adds the 'o_default_snippet_text' class on nodes which contain only
@@ -2005,29 +1999,14 @@ var SnippetsMenu = Widget.extend({
                                              .prop('disabled', tab !== this.tabs.OPTIONS);
     },
     /**
-     * Scroll to the dropped snippet.
+     * Scrolls to given snippet.
      *
      * @private
-     * @param {jQuery} [$el] - dropped snippet
-     * @param {integer} [scrollValue] - scrollValue
+     * @param {jQuery} $el - snippet to scroll to
+     * @return {Promise}
      */
-    _scrollToSnippet: function ($el, scrollValue) {
-        // return if it's an inner snippet or if it's dropped in a modal
-        if ($el.get(0).tagName.toLowerCase() !== 'section' || $el.parent().find("[class^='modal-']").length) {
-            return Promise.resolve();
-        }
-        let headerHeight = 0;
-        _.each($('.o_top_fixed_element'), el => headerHeight += $(el).outerHeight());
-        return new Promise(resolve => {
-          $('html, body').animate(
-              {
-                  scrollTop: scrollValue - headerHeight - 50,
-              },
-              700,
-              'swing',
-              resolve,
-          );
-        });
+    async _scrollToSnippet($el) {
+        return dom.scrollTo($el[0], {extraOffset: 50});
     },
     /**
      * @private
