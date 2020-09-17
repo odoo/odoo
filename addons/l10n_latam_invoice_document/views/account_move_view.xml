@@ -53,16 +53,28 @@
                 <attribute name="attrs">{'readonly': ['|', ('state', '!=', 'draft'), ('l10n_latam_use_documents', '=', True)], 'invisible': [('l10n_latam_use_documents', '=', True), ('move_type', 'in', ('in_invoice', 'in_refund'))]}</attribute>
             </field>
             <label for="ref" position="attributes">
-                <attribute name="attrs">{'invisible': [('l10n_latam_use_documents', '=', True)]}</attribute>
+                <attribute name="attrs">{'invisible': ['|', ('l10n_latam_use_documents', '=', True), ('move_type', 'not in', ('in_invoice', 'in_receipt', 'in_refund'))]}</attribute>
             </label>
             <field name="ref" position="attributes">
-                <attribute name="attrs">{'invisible': [('l10n_latam_use_documents', '=', True)]}</attribute>
+                <attribute name="attrs">{'invisible': ['|', ('l10n_latam_use_documents', '=', True), ('move_type', 'not in', ('in_invoice', 'in_receipt', 'in_refund'))]}</attribute>
             </field>
             <field name="name" position="after">
                 <field name="ref" readonly="True" attrs="{'invisible': ['|', ('l10n_latam_use_documents', '=', False), ('move_type', 'not in', ('in_invoice', 'in_refund'))]}"/>
             </field>
-
         </field>
     </record>
 
+    <record id="view_invoice_tree_latam_inherit" model="ir.ui.view">
+        <field name="name">account.invoice.tree.latam.inherit</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_invoice_tree"/>
+        <field name="arch" type="xml">
+            <field name="name" position="attributes">
+                <attribute name="optional">show</attribute>
+            </field>
+            <field name="ref" position="attributes">
+                <attribute name="optional">show</attribute>
+            </field>
+        </field>
+    </record>
 </odoo>
