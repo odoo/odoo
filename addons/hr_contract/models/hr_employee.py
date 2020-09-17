@@ -15,7 +15,7 @@ class Employee(models.Model):
     calendar_mismatch = fields.Boolean(related='contract_id.calendar_mismatch')
     contracts_count = fields.Integer(compute='_compute_contracts_count', string='Contract Count')
     contract_warning = fields.Boolean(string='Contract Warning', store=True, compute='_compute_contract_warning', groups="hr.group_hr_user")
-    first_contract_date = fields.Date(compute='_compute_first_contract_date', groups="hr.group_hr_user")
+    first_contract_date = fields.Date(compute='_compute_first_contract_date', groups="hr.group_hr_user", store=True)
 
     @api.depends('contract_ids.state')
     def _compute_first_contract_date(self):
@@ -71,3 +71,9 @@ class Employee(models.Model):
                 employee.resource_calendar_id.transfer_leaves_to(employee.contract_id.resource_calendar_id, employee.resource_id)
                 employee.resource_calendar_id = employee.contract_id.resource_calendar_id
         return res
+
+    def action_open_contract_history(self):
+        self.ensure_one()
+        action = self.env["ir.actions.actions"]._for_xml_id('hr_contract.hr_contract_history_view_form_action')
+        action['res_id'] = self.id
+        return action
