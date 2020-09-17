@@ -1816,6 +1816,7 @@ const SnippetOptionWidget = Widget.extend({
         this.ownerDocument = this.$target[0].ownerDocument;
 
         this._userValueWidgets = [];
+        this._actionQueues = new Map();
     },
     /**
      * @override
@@ -2684,9 +2685,34 @@ const SnippetOptionWidget = Widget.extend({
             }
         }
 
+        // Queue action so that we can later skip useless actions.
+        if (!this._actionQueues.get(widget)) {
+            this._actionQueues.set(widget, []);
+        }
+        const currentAction = {previewMode};
+        this._actionQueues.get(widget).push(currentAction);
+
         // Ask a mutexed snippet update according to the widget value change
         const shouldRecordUndo = (!previewMode && !ev.data.isSimulatedEvent);
         this.trigger_up('snippet_edition_request', {exec: async () => {
+            // Filter actions that are counterbalanced by earlier/later actions
+            const actionQueue = this._actionQueues.get(widget).filter(({previewMode}, i, actions) => {
+                const prev = actions[i - 1];
+                const next = actions[i + 1];
+                if (previewMode === true && next && next.previewMode) {
+                    return false;
+                } else if (previewMode === 'reset' && prev && prev.previewMode) {
+                    return false;
+                }
+                return true;
+            });
+            // Skip action if it's been counterbalanced
+            if (!actionQueue.includes(currentAction)) {
+                this._actionQueues.set(widget, actionQueue);
+                return;
+            }
+            this._actionQueues.set(widget, actionQueue.filter(action => action !== currentAction));
+
             if (ev.data.prepare) {
                 ev.data.prepare();
             }
