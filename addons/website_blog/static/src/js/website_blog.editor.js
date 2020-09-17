@@ -63,8 +63,9 @@ odoo.define('website_blog.editor', function (require) {
 
 require('web.dom_ready');
 const {qweb, _t} = require('web.core');
-const options = require('web_editor.snippets.options');
-var WysiwygMultizone = require('web_editor.wysiwyg.multizone');
+const snippetOptions = require('web_editor.snippets.options');
+require('website.editor.snippets.options');
+var Wysiwyg = require('web_editor.wysiwyg');
 
 if (!$('.website_blog').length) {
     return Promise.reject("DOM doesn't contain '.website_blog'");
@@ -72,8 +73,8 @@ if (!$('.website_blog').length) {
 
 const NEW_TAG_PREFIX = 'new-blog-tag-';
 
-WysiwygMultizone.include({
-    custom_events: Object.assign({}, WysiwygMultizone.prototype.custom_events, {
+Wysiwyg.include({
+    custom_events: Object.assign({}, Wysiwyg.prototype.custom_events, {
         'set_blog_post_updated_tags': '_onSetBlogPostUpdatedTags',
     }),
 
@@ -84,13 +85,6 @@ WysiwygMultizone.include({
         this._super(...arguments);
         this.blogTagsPerBlogPost = {};
     },
-    /**
-     * @override
-     */
-    async start() {
-        await this._super(...arguments);
-        $('.js_tweet, .js_comment').off('mouseup').trigger('mousedown');
-    },
 
     //--------------------------------------------------------------------------
     // Public
@@ -99,10 +93,10 @@ WysiwygMultizone.include({
     /**
      * @override
      */
-    async save() {
-        const ret = await this._super(...arguments);
-        await this._saveBlogTags(); // Note: important to be called after save otherwise cleanForSave is not called before
-        return ret;
+    async _saveContent() {
+        return this._super(...arguments).then(() => {
+            return this._saveBlogTags();
+        });
     },
 
     //--------------------------------------------------------------------------
@@ -150,7 +144,7 @@ WysiwygMultizone.include({
     },
 });
 
-options.registry.many2one.include({
+snippetOptions.registry.many2one.include({
 
     //--------------------------------------------------------------------------
     // Private
@@ -175,7 +169,7 @@ options.registry.many2one.include({
     }
 });
 
-options.registry.CoverProperties.include({
+snippetOptions.registry.CoverProperties.include({
     /**
      * @override
      */
@@ -194,8 +188,8 @@ options.registry.CoverProperties.include({
     },
 });
 
-options.registry.BlogPostTagSelection = options.Class.extend({
-    xmlDependencies: (options.Class.prototype.xmlDependencies || [])
+snippetOptions.registry.BlogPostTagSelection = snippetOptions.SnippetOptionWidget.extend({
+    xmlDependencies: (snippetOptions.SnippetOptionWidget.prototype.xmlDependencies || [])
         .concat(['/website_blog/static/src/xml/website_blog_tag.xml']),
 
     /**

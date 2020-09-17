@@ -3,11 +3,11 @@ odoo.define('website_twitter.editor', function (require) {
 
 var core = require('web.core');
 var dom = require('web.dom');
-var sOptions = require('web_editor.snippets.options');
+var snippetOptions = require('web_editor.snippets.options');
 
 var _t = core._t;
 
-sOptions.registry.twitter = sOptions.Class.extend({
+snippetOptions.registry.twitter = snippetOptions.SnippetOptionWidget.extend({
     /**
      * @override
      */
@@ -54,8 +54,9 @@ sOptions.registry.twitter = sOptions.Class.extend({
     /**
      * @override
      */
-    cleanForSave: function () {
+    cleanForSave: async function () {
         this.$target.find('.twitter_timeline').empty();
+        await this.updateChangesInWysiwyg();
     },
     /**
      * @override

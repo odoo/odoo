@@ -29,9 +29,20 @@ tour.register('test_reset_page_view_complete_flow_part1', {
             run: "drag_and_drop #oe_structure_test_website_page",
         },
         {
+            content: "check if the section is dirty",
+            trigger: "#oe_snippets .oe_snippet:has(.s_cover) .oe_snippet_thumbnail:not(.o_we_already_dragging)",
+            run: () => {
+                const wysiwyg = $('#wrapwrap').data('wysiwyg');
+                const node = wysiwyg.editorHelpers.getNodes(document.querySelector('#oe_structure_test_website_page'))[0];
+                if (node.dirty) {
+                    $('#oe_structure_test_website_page').addClass('o_dirty');
+                }
+            },
+        },
+        {
             content: "save the page",
             extra_trigger: '#oe_structure_test_website_page.o_dirty',
-            trigger: "button[data-action=save]",
+            trigger: ".o_we_website_top_actions button[name=save]",
         },
         // 2. Edit that COW'd view in the HTML editor to break it.
         {

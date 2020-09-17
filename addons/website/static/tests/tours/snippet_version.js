@@ -19,6 +19,7 @@ tour.register("snippet_version", {
     run: "drag_and_drop #wrap",
 }, {
     content: "Test t-snippet and t-snippet-call: snippets have data-snippet set",
+    extra_trigger: "#oe_snippets .oe_snippet:has(.s_text_image) .oe_snippet_thumbnail:not(.o_we_already_dragging)",
     trigger: '#oe_snippets .o_panel_body > .oe_snippet.ui-draggable',
     run: function () {
         // Tests done here as all these are not visible on the page
@@ -35,7 +36,7 @@ tour.register("snippet_version", {
     },
 }, {
     content: "Enter edit mode",
-    trigger: 'button[data-action="save"]',
+    trigger: 'button[name="save"]',
 }, {
     content: "Enter edit mode",
     extra_trigger: 'body:not(.editor_enable)',
@@ -59,6 +60,10 @@ tour.register("snippet_version", {
     content: "Edit s_share",
     extra_trigger: 'we-customizeblock-options:contains(Text - Image) .snippet-option-VersionControl  > we-alert',
     trigger: '#wrap.o_editable .s_share',
+    run: async function (actions) {
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+        actions.auto();
+    },
 }, {
     content: "s_share is outdated",
     extra_trigger: 'we-customizeblock-options:contains(Share) .snippet-option-VersionControl > we-alert',

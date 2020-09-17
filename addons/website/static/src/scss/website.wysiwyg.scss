@@ -20,12 +20,8 @@
 }
 
 // EDITOR TOP BAR AND POPOVER
-.o_we_website_top_actions {
-    @include o-position-absolute($top: 0, $right: 0);
-    z-index: ($zindex-fixed + $zindex-modal-backdrop) / 2 + 2; // $o-we-zindex
+#oe_snippets .o_we_website_top_actions {
     display: flex;
-    justify-content: flex-end;
-    width: $o-we-sidebar-width;
     height: $o-we-sidebar-top-height;
     background-color: $o-we-sidebar-tabs-bg;
 
@@ -51,6 +47,9 @@
             outline: none;
             box-shadow: none;
         }
+        .fa {
+            font-size: $o-we-font-size + 5;
+        }
     }
 
     .dropdown-menu {
@@ -65,6 +64,10 @@
 
 .note-statusbar {
     display: none;
+}
+
+table.table-picker {
+    position: absolute !important;
 }
 
 // TRANSLATIONS

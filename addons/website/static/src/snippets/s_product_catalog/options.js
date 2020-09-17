@@ -3,11 +3,11 @@ odoo.define('website.s_product_catalog_options', function (require) {
 'use strict';
 
 const core = require('web.core');
-const options = require('web_editor.snippets.options');
+const snippetOptions = require('web_editor.snippets.options');
 
 const _t = core._t;
 
-options.registry.ProductCatalog = options.Class.extend({
+snippetOptions.registry.ProductCatalog = snippetOptions.SnippetOptionWidget.extend({
 
     //--------------------------------------------------------------------------
     // Options

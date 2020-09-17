@@ -1,10 +1,10 @@
 odoo.define('website.editor', function (require) {
 'use strict';
 
-var weWidgets = require('web_editor.widget');
 var wUtils = require('website.utils');
+var LinkDialog = require('wysiwyg.widgets.LinkDialog');
 
-weWidgets.LinkDialog.include({
+LinkDialog.include({
     /**
      * Allows the URL input to propose existing website pages.
      *

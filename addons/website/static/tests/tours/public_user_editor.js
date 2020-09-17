@@ -12,7 +12,7 @@ publicWidget.registry['public_user_editor_test'] = publicWidget.Widget.extend({
      */
     start: async function () {
         await this._super(...arguments);
-        await wysiwygLoader.load(this, this.el, {});
+        await wysiwygLoader.loadFromTextarea(this, this.el, {});
     },
 });
 });
@@ -25,7 +25,7 @@ const tour = require('web_tour.tour');
 tour.register('public_user_editor', {
     test: true,
 }, [{
-    trigger: 'odoo-wysiwyg-container:has(> .o_public_user_editor_test_textarea:first-child)',
+    trigger: '.o_editor_center:has(>:first-child)',
     run: function () {}, // Simple check
 }]);
 });
