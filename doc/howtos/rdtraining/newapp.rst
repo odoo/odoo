@@ -39,7 +39,7 @@ less than the expected selling price. It is up to the seller to accept an offer.
 
 Here is a quick video showing the workflow of the module.
 
-TODO: video showing features
+Hopfully, this topic will be written soon :-): video showing features
 
 Prepare the addon directory
 ===========================
