@@ -69,8 +69,9 @@
         <field name="model">account.move</field>
         <field name="inherit_id" ref="account.view_invoice_tree"/>
         <field name="arch" type="xml">
-            <field name="name" position="attributes">
-                <attribute name="optional">show</attribute>
+            <field name="name" position="replace">
+                <field name="name" invisible="context.get('default_move_type') in ('in_invoice', 'in_refund')"/>
+                <field name="name" optional="show" invisible="context.get('default_move_type') not in ('in_invoice', 'in_refund')"/>
             </field>
             <field name="ref" position="attributes">
                 <attribute name="optional">show</attribute>
