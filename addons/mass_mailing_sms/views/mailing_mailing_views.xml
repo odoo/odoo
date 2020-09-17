@@ -102,6 +102,9 @@
             <xpath expr="//field[@name='subject']" position="after">
                 <field class="o_text_overflow" name="sms_subject" string="Title" attrs="{'invisible': [('mailing_type', '!=', 'sms')], 'readonly': [('state', 'in', ('sending', 'done'))], 'required': [('mailing_type', '=', 'sms')]}"/>
             </xpath>
+            <xpath expr="//field[@name='preview']" position="attributes">
+                <attribute name="attrs">{'readonly': [('state', 'in', ('sending', 'done'))], 'invisible': [('mailing_type', '!=', 'mail')]}</attribute>
+            </xpath>
             <xpath expr="//page[@name='mail_body']" position="attributes">
                 <attribute name="attrs">{'invisible': [('mailing_type', '!=', 'mail')]}</attribute>
             </xpath>
