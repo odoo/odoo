@@ -11,7 +11,7 @@
     <t t-call-assets="web_editor.assets_wysiwyg"/>
 </template>
 
-<template id="assets_wysiwyg" name="Wysiwyg Editor Assets">
+<template id="web_editor.assets_wysiwyg" name="Wysiwyg Editor Assets">
     <!-- lib -->
 
     <t t-call-assets="web_editor.assets_summernote"/>
@@ -41,6 +41,7 @@
     <script type="text/javascript" src="/web_editor/static/src/js/editor/rte.js"/>
     <script type="text/javascript" src="/web_editor/static/src/js/editor/rte.summernote.js"/>
     <script type="text/javascript" src="/web_editor/static/src/js/editor/image_processing.js"/>
+    <script type="text/javascript" src="/web_editor/static/src/js/editor/custom_colors.js"/>
 
     <!-- widgets & plugins -->
 
@@ -57,13 +58,16 @@
     <script type="text/javascript" src="/web_editor/static/src/js/editor/snippets.options.js"/>
 
     <!-- Launcher -->
-
+    <script type="text/javascript" src="/web_editor/static/lib/jabberwock/jabberwock.js"/>
+    <link rel="stylesheet" type="text/css" href="/web_editor/static/lib/jabberwock/jabberwock.css"/>
+    <script type="text/javascript" src="/web_editor/static/src/js/wysiwyg/wysiwyg_translate_attributes.js"/>
     <script type="text/javascript" src="/web_editor/static/src/js/wysiwyg/wysiwyg.js"/>
     <script type="text/javascript" src="/web_editor/static/src/js/wysiwyg/wysiwyg_snippets.js"/>
     <script type="text/javascript" src="/web_editor/static/src/js/wysiwyg/wysiwyg_iframe.js"/>
 </template>
 
 <template id="assets_summernote" name="Summernote">
+    <script type="text/javascript" src="/web_editor/static/lib/summernote/src/js/enable_summernote.js"/>
     <script type="text/javascript">
         (function () {
             "use strict";
@@ -72,6 +76,7 @@
             var uniqId = 0;
             odoo.__define__ = window.define;
             window.define = function (id) {
+                if (!odoo.__enable_summernote__) return;
                 var args = Array.prototype.slice.call(arguments);
                 var factorie = args.pop();
                 var id = args[0];
@@ -111,6 +116,7 @@
         window.define = odoo.__define__;
         delete odoo.__define__;
         delete odoo.website_next_define;
+        delete odoo.__enable_summernote__;
     </script>
     <link rel="stylesheet" type="text/css" href="/web_editor/static/lib/summernote/src/css/summernote.css"/>
 </template>
@@ -155,6 +161,7 @@
         <link rel="stylesheet" type="text/scss" href="/web_editor/static/src/scss/web_editor.backend.scss"/>
     </xpath>
     <xpath expr="script[last()]" position="after">
+        <script type="text/javascript" src="/web_editor/static/src/js/frontend/loader.js" />
         <script type="text/javascript" src="/web_editor/static/src/js/backend/field_html.js" />
         <script type="text/javascript" src="/web_editor/static/src/js/backend/convert_inline.js" />
     </xpath>
@@ -188,16 +195,23 @@
             odoo.define('web_editor.wysiwyg.root.test', function (require) {
                 'use strict';
                 var WysiwygRoot = require('web_editor.wysiwyg.root');
-                WysiwygRoot.include({
-                    assetLibs: null // We need to add the asset because tests performed overwrites (Dialog, Unbreakable...)
-                });
+                if (WysiwygRoot) {
+                    WysiwygRoot.include({
+                        assetLibs: null // We need to add the asset because tests performed overwrites (Dialog, Unbreakable...)
+                    });
+                }
             });
         </script>
-        <t t-call="web_editor.compiled_assets_wysiwyg"/>
+        <t t-call="web_editor.assets_wysiwyg"/>
 
         <script type="text/javascript" src="/web_editor/static/tests/test_utils.js"/>
         <script type="text/javascript" src="/web_editor/static/tests/field_html_tests.js"/>
     </xpath>
+</template>
+
+<template id="assets_edit_html_field" name="Wysiwyg Editor Assets for html field (style-inline)" groups="base.group_user,base.group_portal">
+    <t t-call-assets="web.assets_common" t-js="false"/>
+    <t t-call-assets="web_editor.assets_wysiwyg" t-js="false"/>
 </template>
 
 <!--
