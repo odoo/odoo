@@ -620,7 +620,11 @@ class Meeting(models.Model):
         # to allow for DST timezone reevaluation
         rset1 = rrule.rrulestr(str(self.rrule), dtstart=event_date.replace(tzinfo=None), forceset=True, ignoretz=True)
 
-        recurring_meetings = self.search([('recurrent_id', '=', self.id), '|', ('active', '=', False), ('active', '=', True)])
+        recurring_meetings_ids = self.env.context.get('recurrent_siblings_cache', {}).get(self.id)
+        if recurring_meetings_ids is not None:
+            recurring_meetings = self.browse(recurring_meetings_ids)
+        else:
+            recurring_meetings = self.with_context(active_test=False).search([('recurrent_id', '=', self.id)])
 
         # We handle a maximum of 50,000 meetings at a time, and clear the cache at each step to
         # control the memory usage.
@@ -1142,12 +1146,19 @@ class Meeting(models.Model):
                 leaf_evaluations = dict([(row['id'], row) for row in self._cr.dictfetchall()])
         result_data = []
         result = []
+
+        recurrent_siblings_cache = {i: [] for i in recurrent_ids} # create empty entries to avoid additional queries for missing entries
+        children_ids = super(Meeting, self.with_context(active_test=False))._search([('recurrent_id', 'in', recurrent_ids)])
+        for item in self.browse(children_ids).read(['recurrent_id']):
+            recurrent_siblings_cache[item['recurrent_id']].append(item['id'])
+
+        recurrent_env = self.with_context(recurrent_siblings_cache=recurrent_siblings_cache).env
         for meeting in self:
             if not meeting.recurrency or not meeting.rrule:
                 result.append(meeting.id)
                 result_data.append(meeting.get_search_fields(order_fields))
                 continue
-            rdates = meeting._get_recurrent_dates_by_event()
+            rdates = meeting.with_env(recurrent_env)._get_recurrent_dates_by_event()
 
             for r_start_date, r_stop_date in rdates:
                 # fix domain evaluation
@@ -1697,6 +1708,8 @@ class Meeting(models.Model):
             res['id'] = calendar_id
             result.append(res)
 
+        recurrent_fields = self._get_recurrent_fields()
+        public_fields = set(recurrent_fields + ['id', 'active', 'allday', 'start', 'stop', 'display_start', 'display_stop', 'duration', 'user_id', 'state', 'interval', 'count', 'recurrent_id', 'recurrent_id_date', 'rrule'])
         for r in result:
             if r['user_id']:
                 user_id = type(r['user_id']) in (tuple, list) and r['user_id'][0] or r['user_id']
@@ -1705,8 +1718,6 @@ class Meeting(models.Model):
                     continue
             if r['privacy'] == 'private':
                 for f in r:
-                    recurrent_fields = self._get_recurrent_fields()
-                    public_fields = list(set(recurrent_fields + ['id', 'active', 'allday', 'start', 'stop', 'display_start', 'display_stop', 'duration', 'user_id', 'state', 'interval', 'count', 'recurrent_id_date', 'rrule']))
                     if f not in public_fields:
                         if isinstance(r[f], list):
                             r[f] = []
