@@ -5,6 +5,7 @@ const {ColorpickerWidget} = require('web.Colorpicker');
 const config = require('web.config');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
+const dom = require('web.dom');
 const weUtils = require('web_editor.utils');
 var options = require('web_editor.snippets.options');
 const wUtils = require('website.utils');
@@ -2504,13 +2505,10 @@ options.registry.SnippetMove = options.Class.extend({
                 break;
         }
         if (params.name === 'move_up_opt' || params.name === 'move_down_opt') {
-            $('html, body').animate(
-                {
-                    scrollTop: this.$target.offset().top - $(window).height() / 2,
-                },
-                500,
-                'linear',
-            );
+            dom.scrollTo(this.$target[0], {
+                extraOffset: 50,
+                easing: 'linear',
+            });
         }
     },
 });
