@@ -663,18 +663,18 @@ class PurchaseOrder(models.Model):
                     order.with_context(is_reminder=True).message_post_with_template(template.id, email_layout_xmlid="mail.mail_notification_paynow", composition_mode='comment')
 
     def send_reminder_preview(self):
-        if not self.user_has_groups('purchase.group_send_reminder') and not self.receipt_reminder_email:
+        self.ensure_one()
+        if not self.user_has_groups('purchase.group_send_reminder'):
             return
 
         template = self.env.ref('purchase.email_template_edi_purchase_reminder', raise_if_not_found=False)
-        if template and self.env.user.email:
-            for order in self:
-                template.with_context(is_reminder=True).send_mail(
-                    order.id,
-                    force_send=True,
-                    raise_exception=False,
-                    email_values={'email_to': self.env.user.email, 'recipient_ids': []},
-                    notif_layout="mail.mail_notification_paynow")
+        if template and self.env.user.email and self.id:
+            template.with_context(is_reminder=True).send_mail(
+                self.id,
+                force_send=True,
+                raise_exception=False,
+                email_values={'email_to': self.env.user.email, 'recipient_ids': []},
+                notif_layout="mail.mail_notification_paynow")
             return {'toast_message': _("A sample email has been sent to %s.") % self.env.user.email}
 
     @api.model
