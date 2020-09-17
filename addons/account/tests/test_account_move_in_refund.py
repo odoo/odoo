@@ -481,7 +481,7 @@ class TestAccountMoveInRefundOnchanges(AccountTestInvoicingCommon):
                 'debit': 0.0,
                 'credit': 96.0,
                 'date_maturity': False,
-                'tax_exigible': True,
+                'tax_exigible': False,
             },
             {
                 'name': child_tax_1.name,
@@ -501,7 +501,7 @@ class TestAccountMoveInRefundOnchanges(AccountTestInvoicingCommon):
                 'debit': 0.0,
                 'credit': 64.0,
                 'date_maturity': False,
-                'tax_exigible': True,
+                'tax_exigible': False,
             },
             {
                 'name': child_tax_2.name,
