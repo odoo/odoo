@@ -2,6 +2,7 @@ odoo.define('web.Menu', function (require) {
 "use strict";
 
 var AppsMenu = require('web.AppsMenu');
+const { ComponentWrapper, WidgetAdapterMixin } = require("web.OwlCompatibility");
 var config = require('web.config');
 var core = require('web.core');
 var dom = require('web.dom');
@@ -14,7 +15,7 @@ SystrayMenu.Items.push(UserMenu);
 
 var QWeb = core.qweb;
 
-var Menu = Widget.extend({
+const Menu = Widget.extend(WidgetAdapterMixin, {
     template: 'Menu',
     menusTemplate: 'Menu.sections',
     events: {
@@ -68,12 +69,11 @@ var Menu = Widget.extend({
         var appsMenuProm = this._appsMenu.appendTo(this.$menu_apps);
 
         // Systray Menu
-        this.systray_menu = new SystrayMenu(this);
-        var systrayMenuProm = this.systray_menu.attachTo(this.$('.o_menu_systray')).then(function() {
-            self.systray_menu.on_attach_callback();  // At this point, we know we are in the DOM
+        this.systray_menu = new ComponentWrapper(this, SystrayMenu, {});
+        const systrayMenuProm = this.systray_menu.mount(this.$('.o_main_navbar')[0]).then(function () {
             dom.initAutoMoreMenu(self.$section_placeholder, {
             maxWidth: function () {
-                return self.$el.width() - (self.$menu_apps.outerWidth(true) + self.$menu_brand_placeholder.outerWidth(true) + self.systray_menu.$el.outerWidth(true));
+                return self.$el.width() - (self.$menu_apps.outerWidth(true) + self.$menu_brand_placeholder.outerWidth(true) + $(self.systray_menu.el).outerWidth(true));
             },
             sizeClass: 'SM',
             });

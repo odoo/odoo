@@ -1,65 +1,53 @@
 odoo.define('web.SystrayMenu', function (require) {
-"use strict";
+    "use strict";
 
-var dom = require('web.dom');
-var Widget = require('web.Widget');
+    const { ComponentAdapter } = require("web.OwlCompatibility");
+    const { useRef } = owl.hooks;
 
-/**
- * The SystrayMenu is the class that manage the list of icons in the top right
- * of the menu bar.
- */
-var SystrayMenu = Widget.extend({
     /**
-     * This widget renders the systray menu. It creates and renders widgets
-     * pushed in instance.web.SystrayItems.
+     * The SystrayMenu is the class that manage the list of icons in the top right
+     * of the menu bar.
      */
-    init: function (parent) {
-        this._super(parent);
-        this.items = [];
-        this.widgets = [];
-    },
-    /**
-     * Instanciate the items and add them into a temporary fragmenet
-     * @override
-     */
-    willStart: function () {
-        var self = this;
-        var proms = [];
-        SystrayMenu.Items = _.sortBy(SystrayMenu.Items, function (item) {
-            return !_.isUndefined(item.prototype.sequence) ? item.prototype.sequence : 50;
-        });
-
-        SystrayMenu.Items.forEach(function (WidgetClass) {
-            var cur_systray_item = new WidgetClass(self);
-            self.widgets.push(cur_systray_item);
-            proms.push(cur_systray_item.appendTo($('<div>')));
-        });
-
-        return this._super.apply(this, arguments).then(function () {
-            return Promise.all(proms);
-        });
-    },
-    on_attach_callback() {
-        this.widgets
-            .filter(widget => widget.on_attach_callback)
-            .forEach(widget => widget.on_attach_callback());
-    },
-    /**
-     * Add the instanciated items, using the object located in this.wisgets
-     */
-    start: function () {
-        var self = this;
-        return this._super.apply(this, arguments).then(function () {
-            self.widgets.forEach(function (widget) {
-                dom.prepend(self.$el, widget.$el);
+    class SystrayMenu extends owl.Component {
+        /**
+         * This widget renders the systray menu. It creates and renders widgets
+         * pushed in instance.web.SystrayItems.
+         */
+        constructor(parent, props) {
+            super(...arguments);
+            this.items = [];
+            this.widgets = [];
+            // forcefully assign 50 as sequence to sort items to decsending order
+            SystrayMenu.Items.forEach((item) => {
+                if (item.prototype.sequence === undefined) {
+                    item.prototype.sequence = 50;
+                }
             });
-        });
-    },
-});
+            SystrayMenu.Items = _.sortBy(SystrayMenu.Items, function (item) {
+                return item.prototype.sequence * -1;
+            });
+            this.SystrayItems = SystrayMenu.Items;
+            this.refs = [];
+            this.SystrayItems.forEach((item, index) => {
+                this.refs.push(useRef(`systrayItem${index}`));
+            });
+        }
+        /**
+         * Instanciate the items and add the instanciated items
+         */
+        async mounted() {
+            await super.mounted(...arguments);
+            // set systray items into this.widgets
+            this.refs.forEach((component) => {
+                this.widgets.push(component.comp.widget);
+            });
+        }
+    }
 
-SystrayMenu.Items = [];
+    SystrayMenu.template = "Systray";
+    SystrayMenu.components = { ComponentAdapter };
+    SystrayMenu.Items = [];
 
-return SystrayMenu;
-
+    return SystrayMenu;
 });
 
