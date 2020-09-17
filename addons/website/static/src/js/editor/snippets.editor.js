@@ -8,17 +8,17 @@ const wSnippetOptions = require('website.editor.snippets.options');
 
 const FontFamilyPickerUserValueWidget = wSnippetOptions.FontFamilyPickerUserValueWidget;
 
-weSnippetEditor.Class.include({
-    xmlDependencies: (weSnippetEditor.Class.prototype.xmlDependencies || [])
+weSnippetEditor.SnippetsMenu.include({
+    xmlDependencies: (weSnippetEditor.SnippetsMenu.prototype.xmlDependencies || [])
         .concat(['/website/static/src/xml/website.editor.xml']),
-    events: _.extend({}, weSnippetEditor.Class.prototype.events, {
+    events: _.extend({}, weSnippetEditor.SnippetsMenu.prototype.events, {
         'click .o_we_customize_theme_btn': '_onThemeTabClick',
     }),
-    custom_events: Object.assign({}, weSnippetEditor.Class.prototype.custom_events, {
+    custom_events: Object.assign({}, weSnippetEditor.SnippetsMenu.prototype.custom_events, {
         'gmap_api_request': '_onGMapAPIRequest',
         'gmap_api_key_request': '_onGMapAPIKeyRequest',
     }),
-    tabs: _.extend({}, weSnippetEditor.Class.prototype.tabs, {
+    tabs: _.extend({}, weSnippetEditor.SnippetsMenu.prototype.tabs, {
         THEME: 'theme',
     }),
     optionsTabStructure: [
@@ -34,7 +34,7 @@ weSnippetEditor.Class.include({
     /**
      * @override
      */
-    _computeSnippetTemplates: function (html) {
+    _computeSnippetTemplates: async function (html) {
         const $html = $(html);
         const fontVariables = _.map($html.find('we-fontfamilypicker[data-variable]'), el => {
             return el.dataset.variable;
@@ -93,20 +93,6 @@ weSnippetEditor.Class.include({
         });
     },
     /**
-     * @override
-     */
-    _getScrollOptions(options = {}) {
-        const finalOptions = this._super(...arguments);
-        if (!options.offsetElements || !options.offsetElements.$top) {
-            const $header = $('#top');
-            if ($header.length) {
-                finalOptions.offsetElements = finalOptions.offsetElements || {};
-                finalOptions.offsetElements.$top = $header;
-            }
-        }
-        return finalOptions;
-    },
-    /**
      * @private
      * @param {OdooEvent} ev
      * @param {string} gmapRequestEventName
@@ -126,7 +112,7 @@ weSnippetEditor.Class.include({
     /**
      * @override
      */
-    _updateLeftPanelContent: function ({content, tab}) {
+    _updateRightPanelContent: function ({content, tab}) {
         this._super(...arguments);
         this.$('.o_we_customize_theme_btn').toggleClass('active', tab === this.tabs.THEME);
     },
@@ -182,7 +168,7 @@ weSnippetEditor.Class.include({
         this.topFakeOptionEl.classList.add('d-none');
         editor.toggleOverlay(false);
 
-        this._updateLeftPanelContent({
+        this._updateRightPanelContent({
             tab: this.tabs.THEME,
         });
     },
