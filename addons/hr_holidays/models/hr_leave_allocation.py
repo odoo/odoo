@@ -150,6 +150,13 @@ class HolidaysAllocation(models.Model):
         ('interval_number_check', "CHECK(interval_number > 0)", "The interval number should be greater than 0"),
     ]
 
+    @api.constrains('holiday_status_id')
+    def _check_allocation_type(self):
+        for rec in self:
+            if rec.env.context.get('force_allocation_type', []) and rec.holiday_status_id.allocation_type == "no":
+                raise ValidationError(
+                    "This time of type \"{0}\" does not require allocation because \"No Allocation Needed\" set in Allocation mode.".format(self.name))
+
     @api.model
     def _update_accrual(self):
         """
