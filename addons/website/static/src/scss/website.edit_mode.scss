@@ -167,7 +167,7 @@ body.editor_enable.editor_has_snippets {
 
 .editor_has_snippets {
     .o_header_affixed {
-        left: $o-we-sidebar-width !important;
+        right: $o-we-sidebar-width !important;
         top: var(--o-we-toolbar-height) !important;
     }
 }
@@ -176,14 +176,14 @@ body.editor_enable.editor_has_snippets {
     @if o-website-value('header-template') == 'sidebar' {
         #wrapwrap > header {
             @if o-website-value('hamburger-position') != 'right' {
-                left: $o-we-sidebar-width;
+                right: $o-we-sidebar-width;
             }
         }
     }
     @if o-website-value('hamburger-type') == 'off-canvas' {
         #top_menu_collapse {
             &.collapsing, &.show {
-                left: $o-we-sidebar-width;
+                right: $o-we-sidebar-width;
             }
         }
     }
