@@ -34,6 +34,7 @@ var PaymentSix = PaymentInterface.extend({
         settings.connectionIPString = this.payment_method.six_terminal_ip;
         settings.connectionIPPort = "80";
         settings.integratorId = "175d97a0-2a88-4413-b920-e90037b582ac";
+        settings.dcc = false;
 
         this.terminal = new timapi.Terminal(settings);
         this.terminal.setPosId(this.pos.pos_session.name);
