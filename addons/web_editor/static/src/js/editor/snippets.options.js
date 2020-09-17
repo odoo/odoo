@@ -907,6 +907,15 @@ const SelectUserValueWidget = BaseSelectionUserValueWidget.extend({
         if (activeButton) {
             this.menuEl.scrollTop = activeButton.el.offsetTop - (this.menuEl.offsetHeight / 2);
         }
+        // Calculate the distance to viewport & check if dropdown will overflow.
+        const distanceToViewportBottom = window.innerHeight - this.menuEl.getBoundingClientRect().top;
+        this.maxHeight = distanceToViewportBottom - 10;
+        let targetMenuEl = this.menuEl;
+        // This will handle the "SelectPagerUserValueWidget" widget that extends "SelectUserValueWidget".
+        if (this.el.classList.contains('o_we_select_pager')) {
+            targetMenuEl = this.el.querySelector("we-select-page");
+        }
+        targetMenuEl.style.maxHeight = _.str.sprintf("%fpx", this.maxHeight);
     },
 });
 

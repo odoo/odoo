@@ -632,6 +632,12 @@ body.editor_enable.editor_has_snippets {
                 &:not(.o_we_has_pager) {
                     max-height: 600px;
                     overflow-y: auto;
+                    border-radius: 3px;
+                    -ms-overflow-style: none;
+                    scrollbar-width: none;
+                    &::-webkit-scrollbar {
+                        display: none;
+                    }
                 }
 
                 > we-title {
