@@ -280,6 +280,15 @@ class TestCRMPLS(TransactionCase):
         self.assertEqual(tools.float_compare(leads[3].probability, 40, 2), 0)
         self.assertEqual(tools.float_compare(leads[8].probability, 2.43, 2), 0)
 
+        # Test modify country_id
+        leads[8].country_id = country_ids[1]
+        self.assertEqual(tools.float_compare(leads[8].automated_probability, 34.38, 2), 0)
+        self.assertEqual(tools.float_compare(leads[8].probability, 34.38, 2), 0)
+
+        leads[8].country_id = country_ids[0]
+        self.assertEqual(tools.float_compare(leads[8].automated_probability, 2.43, 2), 0)
+        self.assertEqual(tools.float_compare(leads[8].probability, 2.43, 2), 0)
+
         # ----------------------------------------------
         # Test tag_id frequencies and probability impact
         # ----------------------------------------------
