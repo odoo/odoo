@@ -195,15 +195,12 @@ class TestTimesheet(TestCommonTimesheet):
         self.assertNotEqual(analytic_project.name, tracked_project.analytic_account_id.name, "The name of the associated AA can be different from the project")
         self.assertEqual(tracked_project.analytic_account_id.project_count, 2, "The AA should be linked to 2 project")
 
-        # analytic linked to projects containing tasks can not be removed
+        # removing analytic accounts linked to projects should not cause an error
         task = self.env['project.task'].create({
             'name': 'task in tracked project',
             'project_id': tracked_project.id,
         })
-        with self.assertRaises(UserError):
-            tracked_project.analytic_account_id.unlink()
-
-        # task can be removed, as there is no timesheet
+        tracked_project.analytic_account_id.unlink()
         task.unlink()
 
         # since both projects linked to the same analytic account are empty (no task), it can be removed
