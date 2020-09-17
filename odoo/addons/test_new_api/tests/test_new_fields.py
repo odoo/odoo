@@ -456,6 +456,18 @@ class TestFields(TransactionCaseWithUserDemo):
         record.foo = "Ho"
         self.assertEqual(record.baz, "<[Ho]>")
 
+    def test_12_dynamic_depends(self):
+        Model = self.registry['test_new_api.compute.dynamic.depends']
+        self.assertEqual(Model.full_name.depends, ())
+
+        # the dependencies of full_name are stored in a config parameter
+        self.env['ir.config_parameter'].set_param('test_new_api.full_name', 'name1,name2')
+
+        # this must re-evaluate the field's dependencies
+        self.env['base'].flush()
+        self.registry.setup_models(self.cr)
+        self.assertEqual(Model.full_name.depends, ('name1', 'name2'))
+
     def test_13_inverse(self):
         """ test inverse computation of fields """
         Category = self.env['test_new_api.category']
