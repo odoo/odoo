@@ -162,7 +162,7 @@ body.editor_enable.editor_has_snippets {
     }
 
     &:not([disabled]) {
-        &.active:not(.o_we_no_toggle), &:hover {
+        &.active:not(.o_we_no_toggle):not(.o_we_checkbox_wrapper), &:hover {
             color: $o-we-sidebar-content-field-pressed-color;
         }
 
@@ -546,7 +546,14 @@ body.editor_enable.editor_has_snippets {
             }
 
             > we-title {
-                margin-top: $o-we-sidebar-content-field-spacing;
+                margin-bottom: $o-we-sidebar-content-field-spacing * -0.5;
+                font-size: $o-we-sidebar-font-size + 1;
+                color: $o-we-fg-lighter;
+                font-weight: 500;
+
+                &:not(:first-child) {
+                    margin-top: $o-we-sidebar-content-field-spacing * 2;
+                }
             }
         }
 
