@@ -17,26 +17,12 @@
     </record>
 
     <!-- Projects -->
-    <record id="account_analytic_account_project_1" model="account.analytic.account">
-        <field name="name">Office Design</field>
-        <field name="code">OD</field>
-        <field name="active" eval="True"/>
-    </record>
-
     <record id="project.project_project_1" model="project.project">
         <field name="allow_timesheets" eval="True"/>
-        <field name="analytic_account_id" ref="account_analytic_account_project_1"/>
-    </record>
-
-    <record id="account_analytic_account_project_2" model="account.analytic.account">
-        <field name="name">Research &amp; Development Project</field>
-        <field name="code">RD</field>
-        <field name="active" eval="True"/>
     </record>
 
     <record id="project.project_project_2" model="project.project">
         <field name="allow_timesheets" eval="True"/>
-        <field name="analytic_account_id" ref="account_analytic_account_project_2"/>
     </record>
 
     <!-- Timesheet Lines -->
