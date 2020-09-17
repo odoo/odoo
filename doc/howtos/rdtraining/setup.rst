@@ -7,14 +7,22 @@ Development Environment Set-up
 There are multiple ways to install Odoo depending on the intended use case.
 
 This documents attempts to describe the installation option for an internal Odoo R&D developer. We
-assume that you are installing your development environment in an Odoo's standard laptop with Linux
-Mint installed and updated. If you another environment is used, you can refer to :ref:`setup/install/source`
+assume that you are installing your development environment on an Odoo's standard laptop with Linux
+Mint installed and updated. At the time of writing, a vanilla Linux Mint 20 (Ubuntu 20.04) was used
+as a starting point.
+
+
+If you another environment is used, you can refer to :ref:`setup/install/source`
+
 
 Fetch the sources & configure Git
 =================================
 
 Install and configure git
 -------------------------
+
+The very first step of the installation process is to install the `git version control system <https://git-scm.com/>`__.
+Indeed, the Odoo source code is managed on GitHub. We then set our name and email:
 
 .. code-block:: console
 
@@ -25,31 +33,29 @@ Install and configure git
 Configure github
 ----------------
 
-To fetch the sources and to contribute in the Odoo's development you will need a GitHub user. If you
-don't have already a GitHub user, we will recommend using your trigram (xyz) followed by '-odoo':
-'xyz-odoo'.
+To fetch the sources and to contribute in the Odoo's development you will need a GitHub user. We
+recommend you using your trigram (xyz) followed by '-odoo': 'xyz-odoo'. If you prefer, you can also
+use your personal GitHub user.
 
 
-The easy way to authenticate to GitHub is to use the ssh connection, using the ssh authentication
+The easy way to authenticate to GitHub is to use the SSH connection, using the SSH authentication
 will allow you to connect to GitHub without supplying your username or password at each visit.
 
 
-The following instructions are based on the official `GitHub documentation`_.
-
-.. _GitHub documentation: https://docs.github.com/en/github/authenticating-to-github/connecting-to-github-with-ssh
+The following instructions are based on the official `GitHub documentation <https://docs.github.com/en/github/authenticating-to-github/connecting-to-github-with-ssh>`__.
 
 
-In your computer:
+Here is a step-by-step procedure to do so:
 
 
 - Generating a new SSH key, adding it to the ssh-agent and copy the SSH key to your clipboard.
 
   .. code-block:: console
 
-    $ ssh-keygen -t rsa -b 4096 -C "xyz@odoo.com"
-    $ ssh-add ~/.ssh/id_rsa
+    $ ssh-keygen -t ed25519 -C "xyz@odoo.com"
+    $ ssh-add ~/.ssh/id_ed25519
     $ sudo apt-get install xclip
-    $ xclip -sel clip < ~/.ssh/id_rsa.pub
+    $ xclip -sel clip < ~/.ssh/id_ed25519.pub
 
 
 In Github:
@@ -57,36 +63,33 @@ In Github:
 
 - In the upper-right corner of any page, click your profile photo, then click Settings
 
-  .. image:: https://docs.github.com/assets/images/help/settings/userbar-account-settings.png
+  .. image:: setup/media/userbar-account-settings.png
 
 - In the user settings sidebar, click SSH and GPG keys.
 
-  .. image:: https://docs.github.com/assets/images/help/settings/settings-sidebar-ssh-keys.png
+  .. image:: setup/media/settings-sidebar-ssh-keys.png
 
 - Click New SSH key or Add SSH key.
 
-  .. image:: https://docs.github.com/assets/images/help/settings/ssh-add-ssh-key.png
+  .. image:: setup/media/ssh-add-ssh-key.png
 
 - In the "Title" field, add a descriptive label for the new key.
 - Paste your key into the "Key" field.
 
-  .. image:: https://docs.github.com/assets/images/help/settings/ssh-key-paste.png
+  .. image:: setup/media/ssh-key-paste.png
 
 - Click Add SSH key.
-
-  .. image:: https://docs.github.com/assets/images/help/settings/ssh-add-key.png
 
 
 Fetch the sources
 -----------------
 
-All the Odoo sources will be located in `/home/$USER/src/`
+All the Odoo sources will be located in `$HOME/src/`
 
 .. code-block:: console
 
-    $ cd /home/$USER
-    $ mkdir src
-    $ cd src
+    $ mkdir -p $HOME/src
+    $ cd $HOME/src
     $ git clone git@github.com:odoo/odoo.git
     $ git clone git@github.com:odoo/enterprise.git
 
@@ -94,20 +97,24 @@ All the Odoo sources will be located in `/home/$USER/src/`
 .. tip:: You may need to ask your manager read rights to fetch the enterprise repository.
 
 
-Configure odoo-dev
+Configure development repository
 ------------------
 
-Odoo-dev is the internal R&D repository, it's in this repository that you will create your working
-branches. This repository is only available if you are working at Odoo.
+To contribute in the Odoo development, you will need to
+`fork the repository <https://guides.github.com/activities/forking/>`__, create a branch in the
+fork with your code and submit a `Pull Request <https://docs.github.com/en/github/getting-started-with-github/github-glossary#pull-request>`__
+to the Odoo repository.
+
+In the case you are lucky enough to work at Odoo, the fork already exists. They are called `odoo-dev/odoo` and `odoo-dev/enterprise`.
 
 .. code-block:: console
 
-    $ cd /home/$USER/src/odoo
+    $ cd  $HOME/src/odoo
     $ git remote add odoo-dev git@github.com:odoo-dev/odoo.git #add odoo-dev as remote
     $ git remote rename origin odoo #change the name of origin (the odoo repository) to odoo
     $ git remote set-url --push odoo no_push #remove the posibilities to push to odoo (you can only push to odoo-dev)
 
-    $ cd /home/$USER/src/enterprise
+    $ cd  $HOME/src/enterprise
     $ git remote add enterprise-dev git@github.com:odoo-dev/enterprise.git
     $ git remote rename origin enterprise
     $ git remote set-url --push enterprise no_push
@@ -124,23 +131,23 @@ These are useful git commands for your every working day.
 
   .. code-block:: console
 
-    $ cd /home/$USER/src/odoo
-    $ git checkout saas-13.5
+    $ cd $HOME/src/odoo
+    $ git checkout 14.0
 
-    $ cd /home/$USER/src/enterprise
-    $ git checkout saas-13.5
+    $ cd $HOME/src/enterprise
+    $ git checkout 14.0
 
 * Fetch and rebase :
 
   .. code-block:: console
 
-    $ cd /home/$USER/src/odoo
-    $ git fetch --all
-    $ git rebase --autostash odoo/saas-13.5
+    $ cd $HOME/src/odoo
+    $ git fetch --all --prune
+    $ git rebase --autostash odoo/14.0
 
-    $ cd /home/$USER/src/enterprise
-    $ git fetch --all
-    $ git rebase --autostash enterprise/saas-13.5
+    $ cd $HOME/src/enterprise
+    $ git fetch --all --prune
+    $ git rebase --autostash enterprise/14.0
 
 
 Install the dependencies
@@ -165,9 +172,7 @@ dependencies before the Python dependencies of Odoo.
 
 .. code-block:: console
 
-    $ sudo apt install python3-pip
-    $ sudo apt install python3-dev libxml2-dev libxslt1-dev libldap2-dev libsasl2-dev
-    $ sudo apt install libssl-dev libpq-dev libjpeg-dev
+    $ sudo apt install python3-pip python3-dev libxml2-dev libxslt1-dev libldap2-dev libsasl2-dev libssl-dev libpq-dev libjpeg-dev
 
 
 Install odoo requirements
@@ -175,7 +180,7 @@ Install odoo requirements
 
 .. code-block:: console
 
-    $ cd /home/$USER/src/odoo
+    $ cd $HOME/src/odoo
     $ pip3 install -r requirements.txt
 
 
@@ -197,6 +202,8 @@ headers and footers.
 Right-to-left interface support
 -------------------------------
 
+In order to support right-to-left (RTL) languages, we need `rtlcss` to convert the CSS files:
+
 .. code-block:: console
 
     $ sudo apt-get install nodejs npm
@@ -205,7 +212,9 @@ Right-to-left interface support
 Install PostgreSQL
 ------------------
 
-Odoo needs a PostgreSQL server to run properly.
+As seen in :ref:`howto/rdtraining/architecture`, Odoo uses PostgreSQL as a RDBM. In the context of a
+development machine, the easiest way is to install it locally. We also create a PostgreSQL user
+corresponding to our current user:
 
 .. code-block:: console
 
@@ -213,7 +222,7 @@ Odoo needs a PostgreSQL server to run properly.
     $ sudo -u postgres createuser -s $USER
 
 
-Some sql useful commands :
+Some useful SQL commands:
 
 .. code-block:: console
 
@@ -236,24 +245,28 @@ Once all dependencies are set up, Odoo can be launched by running odoo-bin, the 
 
 .. code-block:: console
 
-    $ cd src/odoo/
+    $ cd $HOME/src/odoo/
     $ ./odoo-bin --addons-path="addons/,../enterprise/" -d rd-demo
 
 There are multiples :ref:`command-line arguments <reference/cmdline/server>` that you can use to
 configure the server. In this training, you will only need some of them.
 
-* `-d <database>`
-  The database that is going to be used.
+.. option:: -d <database>
 
-* `--addons-path <directories>`
-  Comma-separated list of directories in which modules are stored. These directories are scanned for
-  modules.
+    The database that is going to be used.
 
-* `--limit-time-cpu <limit>`
-  Prevents the worker from using more than <limit> CPU seconds for each request.
+.. option:: --addons-path <directories>
 
-* `--limit-time-real <limit>`
-  Prevents the worker from taking longer than <limit> seconds to process a request.
+    Comma-separated list of directories in which modules are stored. These directories are scanned
+    for modules.
+
+.. option:: --limit-time-cpu <limit>
+
+    Prevents the worker from using more than <limit> CPU seconds for each request.
+
+.. option:: --limit-time-real <limit>
+
+    Prevents the worker from taking longer than <limit> seconds to process a request.
 
 The last two are going to be used to avoid killing the worker when debugging the source code.
 
@@ -268,18 +281,23 @@ The last two are going to be used to avoid killing the worker when debugging the
 
          .. code-block:: console
 
-            $ cd /home/$USER/.local/lib/python3.8/site-packages/
+            $ cd $HOME/.local/lib/python3.8/site-packages/
             $ find -name '*.pyc' -type f -delete
 
 
-Log in to odoo
+Log in to Odoo
 --------------
 
-Open `http://localhost:8069/` at your browser. We recommend you to use: Firefox, Chrome
-(Chromium the open source equivalent) or any other browser with development tools.
+Open `http://localhost:8069/` on your browser. We recommend you to use:
+`Firefox <https://www.mozilla.org/fr/firefox/new/>`__,
+`Chrome <https://www.google.com/intl/fr/chrome/>`__
+(`Chromium <https://www.chromium.org/Home>`__ the open source equivalent) or any other browser with
+development tools.
 
-To log in as the administrator user, you can use the following credentials : email = `admin` ;
-password = `admin`.
+To log in as the administrator user, you can use the following credentials :
+
+* email = `admin`
+* password = `admin`
 
 The developer mode
 ==================
@@ -289,17 +307,15 @@ The Developer or Debug Mode gives you access to extra and advanced tools.
 This will be useful during the whole training, for the rest of the training we will always assume
 that the user is in developer mode.
 
-To activate the developer or debug mode you can follow the steps `here`_.
-
-.. _here: https://www.odoo.com/documentation/user/13.0/general/developer_mode/activate.html
+To activate the developer or debug mode you can follow the steps `here <https://www.odoo.com/documentation/user/general/developer_mode/activate.html>`__.
 
 Extra tools
 ===========
 
-code editor
+Code Editor
 -----------
 If you are working at Odoo, many of your colleagues are using `VSCode`_ (`VSCodium`_ the open source
-equivalent), `Sublime Text`_ or `PyCharm`_. However, you are free to chose your preferred editor.
+equivalent), `Sublime Text`_, `Atom`_ or `PyCharm`_. However, you are free to chose your preferred editor.
 
 Don't forget to configure correctly the linters. Using a linter can help show syntax and semantic
 warnings or errors. Odoo source code tries to respect Python and JavaScript standards, but some of
@@ -318,20 +334,20 @@ For JavaScript, we use ESLinter, and you can find a `configuration file example 
 .. _VSCodium: https://vscodium.com/
 .. _Sublime Text: https://www.sublimetext.com/
 .. _PyCharm: https://www.jetbrains.com/fr-fr/pycharm/download/#section=linux
+.. _Atom: https://atom.io/
 
 Administration tools for PostgreSQL
 -----------------------------------
 
 You can administrate your PostgreSQL databases using the command line as exemplified before or using
-some GUI application as `pgAdmin`_ or `DBeaver`_.
+some GUI application as `pgAdmin <https://www.pgadmin.org/download/pgadmin-4-apt/>`__ or `DBeaver <https://dbeaver.io/>`__.
 
 To connect the GUI application to your database we recommend you to connect using the Unix socket.
-Host name/address = /var/run/postgresql
-Port = 5432
-Username = $Home
 
-.. _pgAdmin: https://www.pgadmin.org/download/pgadmin-4-apt/
-.. _DBeaver: https://dbeaver.io/
+* Host name/address = /var/run/postgresql
+* Port = 5432
+* Username = $USER
+
 
 Python Debugging
 ----------------
@@ -339,9 +355,10 @@ Python Debugging
 When you have a bug, debugging it using print might be enough at first. But, by learning how to use
 a proper debugger, you will gain time.
 
-You can use a classic Python library debugger (`pdb`_, `pudb`_ or `ipdb`_) or you can use your
-editor debugger. In the beginning, to avoid difficult configurations, it's easier if you use a
-library debugger.
+You can use a classic Python library debugger (`pdb <https://docs.python.org/3/library/pdb.html>`__,
+`pudb <https://pypi.org/project/pudb/>`__ or `ipdb <https://pypi.org/project/ipdb/>`__) or you can
+use your editor debugger. In the beginning, to avoid difficult configurations, it's easier if you
+use a library debugger.
 
 In the following example, I'm going to use pdb, but the procedure is the same with the others ones.
 
@@ -349,60 +366,57 @@ In the following example, I'm going to use pdb, but the procedure is the same wi
 
   .. code-block:: console
 
-        pip3 install pdb
+        pip3 install ipdb
 
 - Trigger (breakpoint)
 
   .. code-block:: console
 
-        import pdb; pdb.set_trace()
+        import ipdb; ipdb.set_trace()
 
   Example:
 
-  .. code-block:: console
+  .. code-block:: python
+     :emphasize-lines: 2
 
         def copy(self, default=None):
-            import pudb; pu.db
+            import ipdb; ipdb.set_trace()
             self.ensure_one()
             chosen_name = default.get('name') if default else ''
             new_name = chosen_name or _('%s (copy)') % self.name
             default = dict(default or {}, name=new_name)
             return super(Partner, self).copy(default)
 
-- Commands:
+Here is a list of commands:
 
-    - `h(elp) [command]`
+.. option:: h(elp) [command]
 
       Without argument, print the list of available commands. With a command as argument, print help
       about that command.
 
-    - `w(here)`
+.. option:: w(here)
 
       Print a stack trace, with the most recent frame at the bottom.
 
-    - `d(own)`
+.. option:: d(own)
 
       Move the current frame one level down in the stack trace (to a newer frame).
 
-    - `u(p)`
+.. option:: u(p)
 
       Move the current frame one level up in the stack trace (to an older frame).
 
-    - `n(ext)`
+.. option:: n(ext)
 
       Continue execution until the next line in the current function is reached or it returns.
 
-    - `c(ontinue)`
+.. option:: c(ontinue)
 
       Continue execution, only stop when a breakpoint is encountered.
 
-    - `q(uit)`
+.. option:: q(uit)
 
       Quit from the debugger. The program being executed is aborted.
 
 .. tip:: To avoid killing the worker when debugging, you can add this arguments when launching the
          server ` --limit-time-cpu=9999999999 --limit-time-real=9999999999`
-
-.. _pdb: https://docs.python.org/3/library/pdb.html
-.. _pudb: https://pypi.org/project/pudb/
-.. _ipdb: https://pypi.org/project/ipdb/
