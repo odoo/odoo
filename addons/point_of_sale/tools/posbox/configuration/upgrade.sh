@@ -119,8 +119,8 @@ copy_raspbian () {
     find /home/pi -maxdepth 1 -type f ! -name ".*" -exec cp {} raspbian/home/pi/config/ \;
 
     # download latest IoT Box image and check integrity
-    wget -c 'http://nightly.odoo.com/master/posbox/iotbox/iotbox-latest.zip' -O raspbian/iotbox-latest.zip
-    wget -c 'http://nightly.odoo.com/master/posbox/iotbox/SHA1SUMS.txt' -O raspbian/SHA1SUMS.txt
+    wget -c 'https://nightly.odoo.com/master/iotbox/iotbox-latest.zip' -O raspbian/iotbox-latest.zip
+    wget -c 'https://nightly.odoo.com/master/iotbox/SHA1SUMS.txt' -O raspbian/SHA1SUMS.txt
     cd raspbian/
     CHECK=$(sha1sum -c --ignore-missing SHA1SUMS.txt)
     cd ..
