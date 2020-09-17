@@ -883,7 +883,17 @@ function factory(dependencies) {
          */
         _computeAllAttachments() {
             const allAttachments = [...new Set(this.originThreadAttachments.concat(this.attachments))]
-                .sort((a1, a2) => a1.id < a2.id ? 1 : -1);
+                .sort((a1, a2) => {
+                    // "uploading" before "uploaded" attachments.
+                    if (!a1.isTemporary && a2.isTemporary) {
+                        return 1;
+                    }
+                    if (a1.isTemporary && !a2.isTemporary) {
+                        return -1;
+                    }
+                    // "most-recent" before "oldest" attachments.
+                    return Math.abs(a2.id) - Math.abs(a1.id);
+                });
             return [['replace', allAttachments]];
         }
 
