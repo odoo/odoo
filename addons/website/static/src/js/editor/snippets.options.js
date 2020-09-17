@@ -2133,7 +2133,6 @@ options.registry.Box = options.Class.extend({
     setShadow(previewMode, widgetValue, params) {
         this.$target.toggleClass(params.shadowClass, !!widgetValue);
         const defaultShadow = this._getDefaultShadow(widgetValue, params.shadowClass);
-        console.log(defaultShadow);
         this.$target[0].style.setProperty('box-shadow', defaultShadow, 'important');
         if (widgetValue === 'outset') {
             // In this case, the shadowClass is enough
