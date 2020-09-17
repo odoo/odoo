@@ -1893,7 +1893,7 @@ var SnippetsMenu = Widget.extend({
                 stop: async function (ev, ui) {
                     $toInsert.removeClass('oe_snippet_body');
 
-                    if (!dropped && ui.position.top > 3 && ui.position.left > self.el.getBoundingClientRect().right) {
+                    if (!dropped && ui.position.top > 3 && ui.position.left + ui.helper.outerHeight() < self.el.getBoundingClientRect().left) {
                         var $el = $.nearest({x: ui.position.left, y: ui.position.top}, '.oe_drop_zone', {container: document.body}).first();
                         if ($el.length) {
                             scrollValue = $el.offset().top;

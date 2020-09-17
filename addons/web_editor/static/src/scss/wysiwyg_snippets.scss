@@ -4,10 +4,10 @@
 
 // OVERRIDES FOR EDITOR WITH SNIPPETS
 body.editor_enable.editor_has_snippets {
-    padding-left: $o-we-sidebar-width !important;
+    padding-right: $o-we-sidebar-width !important;
 
     #web_editor-top-edit .note-popover .popover {
-        left: $o-we-sidebar-width !important;
+        right: $o-we-sidebar-width !important;
     }
 
     .modal:not(.o_technical_modal) {
@@ -33,7 +33,7 @@ body.editor_enable.editor_has_snippets {
 // Mobile fix for mass mailing
 @include media-breakpoint-down(md) {
     body.editor_enable.editor_has_snippets {
-        padding-left: inherit !important;
+        padding-right: inherit !important;
 
         #web_editor-top-edit {
             position: initial !important;
@@ -42,7 +42,7 @@ body.editor_enable.editor_has_snippets {
             left: initial !important;
 
             .note-popover .popover {
-                left: 0 !important;
+                right: 0 !important;
             }
         }
     }
@@ -198,14 +198,14 @@ body.editor_enable.editor_has_snippets {
 #oe_snippets {
     @include o-w-preserve-btn;
 
-    @include o-position-absolute(var(--o-we-toolbar-height), auto, 0, 0);
+    @include o-position-absolute(var(--o-we-toolbar-height), 0, 0, auto);
     position: fixed;
     z-index: $o-we-zindex;
     display: flex;
     flex-flow: column nowrap;
     width: $o-we-sidebar-width;
 
-    border-right: $o-we-sidebar-border-width solid $o-we-sidebar-border-color;
+    border-left: $o-we-sidebar-border-width solid $o-we-sidebar-border-color;
     background-color: $o-we-sidebar-bg;
     color: $o-we-sidebar-color;
     font-family: $o-we-font-family;
@@ -213,7 +213,7 @@ body.editor_enable.editor_has_snippets {
     font-weight: 400;
 
     transition: transform 400ms ease 0s;
-    transform: translateX(-100%);
+    transform: translateY(-100%);
 
     &.o_loaded {
         transform: none;
@@ -1742,5 +1742,5 @@ we-select.o_we_shape_menu {
     // be over the content being reloaded (with a covering similar to the editor
     // overlay covering).
     position: fixed;
-    left: $o-we-sidebar-width;
+    right: $o-we-sidebar-width;
 }
