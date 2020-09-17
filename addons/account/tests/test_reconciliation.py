@@ -1341,62 +1341,69 @@ class TestReconciliationExec(TestReconciliation):
         company = self.env.ref('base.main_company')
         company.tax_cash_basis_journal_id = self.cash_basis_journal
 
-        AccountMoveLine = self.env['account.move.line'].with_context(check_move_validity=False)
-
         # Purchase
         purchase_move = self.env['account.move'].create({
             'name': 'purchase',
             'journal_id': self.purchase_journal.id,
+            'line_ids': [
+                (0, 0, {
+                    'account_id': self.account_rsa.id,
+                    'credit': 100,
+                }),
+
+                (0, 0, {
+                    'account_id': self.account_rsa.id,
+                    'credit': 50,
+                }),
+
+                (0, 0, {
+                    'name': 'expensNoTax',
+                    'account_id': self.expense_account.id,
+                    'debit': 50,
+                }),
+
+                (0, 0, {
+                    'name': 'expenseTaxed',
+                    'account_id': self.expense_account.id,
+                    'debit': 83.33,
+                    'tax_ids': [(4, self.tax_cash_basis.id, False)],
+                }),
+
+                (0, 0, {
+                    'name': 'TaxLine',
+                    'account_id': self.tax_waiting_account.id,
+                    'debit': 16.67,
+                    'tax_repartition_line_id': self.tax_cash_basis.invoice_repartition_line_ids.filtered(lambda x: x.repartition_type == 'tax').id,
+                    'tax_base_amount': 83.33,
+                }),
+            ],
         })
 
-        purchase_payable_line0 = AccountMoveLine.create({
-            'account_id': self.account_rsa.id,
-            'credit': 100,
-            'move_id': purchase_move.id,
-        })
-        purchase_payable_line1 = AccountMoveLine.create({
-            'account_id': self.account_rsa.id,
-            'credit': 50,
-            'move_id': purchase_move.id,
-        })
-        AccountMoveLine.create({
-            'name': 'expensNoTax',
-            'account_id': self.expense_account.id,
-            'debit': 50,
-            'move_id': purchase_move.id,
-        })
-        AccountMoveLine.create({
-            'name': 'expenseTaxed',
-            'account_id': self.expense_account.id,
-            'debit': 83.33,
-            'move_id': purchase_move.id,
-            'tax_ids': [(4, self.tax_cash_basis.id, False)],
-        })
-        tax_line = AccountMoveLine.create({
-            'name': 'TaxLine',
-            'account_id': self.tax_waiting_account.id,
-            'debit': 16.67,
-            'move_id': purchase_move.id,
-            'tax_repartition_line_id': self.tax_cash_basis.invoice_repartition_line_ids.filtered(lambda x: x.repartition_type == 'tax').id,
-            'tax_base_amount': 83.33,
-        })
+        purchase_payable_line0 = purchase_move.line_ids.filtered(lambda x: x.account_id.internal_type == 'payable' and x.credit == 100)
+        purchase_payable_line1 = purchase_move.line_ids.filtered(lambda x: x.account_id.internal_type == 'payable' and x.credit == 50)
+        tax_line = purchase_move.line_ids.filtered(lambda x: x.tax_line_id == self.tax_cash_basis)
+
         purchase_move.post()
 
         # Payment Move
         payment_move = self.env['account.move'].create({
             'name': 'payment',
             'journal_id': self.bank_journal_euro.id,
+            'line_ids': [
+                (0, 0, {
+                    'account_id': self.account_rsa.id,
+                    'debit': 150,
+                }),
+
+                (0, 0, {
+                    'account_id': self.account_euro.id,
+                    'credit': 150,
+                }),
+            ],
         })
-        payment_payable_line = AccountMoveLine.create({
-            'account_id': self.account_rsa.id,
-            'debit': 150,
-            'move_id': payment_move.id,
-        })
-        AccountMoveLine.create({
-            'account_id': self.account_euro.id,
-            'credit': 150,
-            'move_id': payment_move.id,
-        })
+
+        payment_payable_line = payment_move.line_ids.filtered(lambda x: x.account_id.internal_type == 'payable')
+
         payment_move.post()
 
         to_reconcile = (purchase_move + payment_move).mapped('line_ids').filtered(lambda l: l.account_id.internal_type == 'payable')
@@ -1465,89 +1472,99 @@ class TestReconciliationExec(TestReconciliation):
             'code': 'TWAIT1',
         })
 
-
-        AccountMoveLine = self.env['account.move.line'].with_context(check_move_validity=False)
-
         # Purchase
         purchase_move = self.env['account.move'].create({
             'name': 'invoice',
             'journal_id': self.purchase_journal.id,
+            'line_ids': [
+                (0, 0, {
+                    'account_id': self.account_rsa.id,
+                    'credit': 105,
+                }),
+
+                (0, 0, {
+                    'account_id': self.account_rsa.id,
+                    'credit': 50,
+                }),
+
+                (0, 0, {
+                    'name': 'expenseTaxed 10%',
+                    'account_id': self.expense_account.id,
+                    'debit': 50,
+                    'tax_ids': [(4, tax_cash_basis10percent.id, False)],
+                }),
+
+                (0, 0, {
+                    'name': 'TaxLine0',
+                    'account_id': tax_waiting_account10.id,
+                    'debit': 5,
+                    'tax_repartition_line_id': tax_cash_basis10percent.invoice_repartition_line_ids.filtered(lambda x: x.repartition_type == 'tax').id,
+                    'tax_base_amount': 50,
+                }),
+
+                (0, 0, {
+                    'name': 'expenseTaxed 20%',
+                    'account_id': self.expense_account.id,
+                    'debit': 83.33,
+                    'tax_ids': [(4, self.tax_cash_basis.id, False)],
+                }),
+
+                (0, 0, {
+                    'name': 'TaxLine1',
+                    'account_id': self.tax_waiting_account.id,
+                    'debit': 16.67,
+                    'tax_repartition_line_id': self.tax_cash_basis.invoice_repartition_line_ids.filtered(lambda x: x.repartition_type == 'tax').id,
+                    'tax_base_amount': 83.33,
+                }),
+            ],
         })
 
-        purchase_payable_line0 = AccountMoveLine.create({
-            'account_id': self.account_rsa.id,
-            'credit': 105,
-            'move_id': purchase_move.id,
-        })
-        purchase_payable_line1 = AccountMoveLine.create({
-            'account_id': self.account_rsa.id,
-            'credit': 50,
-            'move_id': purchase_move.id,
-        })
-        AccountMoveLine.create({
-            'name': 'expenseTaxed 10%',
-            'account_id': self.expense_account.id,
-            'debit': 50,
-            'move_id': purchase_move.id,
-            'tax_ids': [(4, tax_cash_basis10percent.id, False)],
-        })
-        tax_line0 = AccountMoveLine.create({
-            'name': 'TaxLine0',
-            'account_id': tax_waiting_account10.id,
-            'debit': 5,
-            'move_id': purchase_move.id,
-            'tax_repartition_line_id': tax_cash_basis10percent.invoice_repartition_line_ids.filtered(lambda x: x.repartition_type == 'tax').id,
-            'tax_base_amount': 50,
-        })
-        AccountMoveLine.create({
-            'name': 'expenseTaxed 20%',
-            'account_id': self.expense_account.id,
-            'debit': 83.33,
-            'move_id': purchase_move.id,
-            'tax_ids': [(4, self.tax_cash_basis.id, False)],
-        })
-        tax_line1 = AccountMoveLine.create({
-            'name': 'TaxLine1',
-            'account_id': self.tax_waiting_account.id,
-            'debit': 16.67,
-            'move_id': purchase_move.id,
-            'tax_repartition_line_id': self.tax_cash_basis.invoice_repartition_line_ids.filtered(lambda x: x.repartition_type == 'tax').id,
-            'tax_base_amount': 83.33,
-        })
+        purchase_payable_line0 = purchase_move.line_ids.filtered(lambda x: x.account_id == self.account_rsa and x.credit == 105)
+        purchase_payable_line1 = purchase_move.line_ids.filtered(lambda x: x.account_id == self.account_rsa and x.credit == 50)
+        tax_line0 = purchase_move.line_ids.filtered(lambda x: x.tax_line_id == tax_cash_basis10percent)
+        tax_line1 = purchase_move.line_ids.filtered(lambda x: x.tax_line_id == self.tax_cash_basis)
+
         purchase_move.post()
 
         # Payment Move
         payment_move0 = self.env['account.move'].create({
             'name': 'payment',
             'journal_id': self.bank_journal_euro.id,
+            'line_ids': [
+                (0, 0, {
+                    'account_id': self.account_rsa.id,
+                    'debit': 40,
+                }),
+
+                (0, 0, {
+                    'account_id': self.account_euro.id,
+                    'credit': 40,
+                }),
+            ],
         })
-        payment_payable_line0 = AccountMoveLine.create({
-            'account_id': self.account_rsa.id,
-            'debit': 40,
-            'move_id': payment_move0.id,
-        })
-        AccountMoveLine.create({
-            'account_id': self.account_euro.id,
-            'credit': 40,
-            'move_id': payment_move0.id,
-        })
+        payment_payable_line0 = payment_move0.line_ids.filtered(lambda x: x.account_id.internal_type == 'payable')
+
         payment_move0.post()
 
         # Payment Move
         payment_move1 = self.env['account.move'].create({
             'name': 'payment',
             'journal_id': self.bank_journal_euro.id,
+            'line_ids': [
+                (0, 0, {
+                    'account_id': self.account_rsa.id,
+                    'debit': 115,
+                }),
+
+                (0, 0, {
+                    'account_id': self.account_euro.id,
+                    'credit': 115,
+                }),
+            ],
         })
-        payment_payable_line1 = AccountMoveLine.create({
-            'account_id': self.account_rsa.id,
-            'debit': 115,
-            'move_id': payment_move1.id,
-        })
-        AccountMoveLine.create({
-            'account_id': self.account_euro.id,
-            'credit': 115,
-            'move_id': payment_move1.id,
-        })
+
+        payment_payable_line1 = payment_move1.line_ids.filtered(lambda x: x.account_id.internal_type == 'payable')
+
         payment_move1.post()
 
         (purchase_move + payment_move0).mapped('line_ids').filtered(lambda l: l.account_id.internal_type == 'payable').reconcile()
@@ -1697,84 +1714,91 @@ class TestReconciliationExec(TestReconciliation):
         company.country_id = self.ref('base.us')
         company.tax_cash_basis_journal_id = self.cash_basis_journal
 
-        aml_obj = self.env['account.move.line'].with_context(
-            check_move_validity=False)
-
         # Purchase
         purchase_move = self.env['account.move'].create({
             'name': 'purchase',
             'journal_id': self.purchase_journal.id,
+            'line_ids': [
+                (0, 0, {
+                    'name': 'expenseTaxed',
+                    'account_id': self.expense_account.id,
+                    'debit': 106841.65,
+                    'tax_ids': [(4, self.tax_cash_basis.id, False)],
+                    'currency_id': self.currency_usd_id,
+                    'amount_currency': 5301.00,
+                }),
+
+                (0, 0, {
+                    'name': 'TaxLine',
+                    'account_id': self.tax_waiting_account.id,
+                    'debit': 17094.66,
+                    'currency_id': self.currency_usd_id,
+                    'amount_currency': 848.16,
+                    'tax_repartition_line_id': self.tax_cash_basis.invoice_repartition_line_ids.filtered(lambda x: x.repartition_type == 'tax').id,
+                    'tax_base_amount': 106841.65,
+                }),
+
+                (0, 0, {
+                    'name': 'Payable',
+                    'account_id': self.account_rsa.id,
+                    'credit': 123936.31,
+                    'currency_id': self.currency_usd_id,
+                    'amount_currency': -6149.16,
+                }),
+            ],
         })
 
-        aml_obj.create({
-            'name': 'expenseTaxed',
-            'account_id': self.expense_account.id,
-            'debit': 106841.65,
-            'move_id': purchase_move.id,
-            'tax_ids': [(4, self.tax_cash_basis.id, False)],
-            'currency_id': self.currency_usd_id,
-            'amount_currency': 5301.00,
-        })
-        aml_obj.create({
-            'name': 'TaxLine',
-            'account_id': self.tax_waiting_account.id,
-            'debit': 17094.66,
-            'move_id': purchase_move.id,
-            'currency_id': self.currency_usd_id,
-            'amount_currency': 848.16,
-            'tax_repartition_line_id': self.tax_cash_basis.invoice_repartition_line_ids.filtered(lambda x: x.repartition_type == 'tax').id,
-            'tax_base_amount': 106841.65,
-        })
-        purchase_payable_line0 = aml_obj.create({
-            'name': 'Payable',
-            'account_id': self.account_rsa.id,
-            'credit': 123936.31,
-            'move_id': purchase_move.id,
-            'currency_id': self.currency_usd_id,
-            'amount_currency': -6149.16,
-        })
+        purchase_payable_line0 = purchase_move.line_ids.filtered(lambda x: x.account_id.internal_type == 'payable')
+
         purchase_move.post()
 
         # FX 01 Move
         fx_move_01 = self.env['account.move'].create({
             'name': 'FX 01',
             'journal_id': self.fx_journal.id,
+            'line_ids': [
+                (0, 0, {
+                    'account_id': self.account_rsa.id,
+                    'debit': 167.86,
+                    'currency_id': self.currency_usd_id,
+                    'amount_currency': 0.00,
+                }),
+
+                (0, 0, {
+                    'account_id': self.diff_income_account.id,
+                    'credit': 167.86,
+                    'currency_id': self.currency_usd_id,
+                    'amount_currency': 0.00,
+                }),
+            ],
         })
-        fx_01_payable_line = aml_obj.create({
-            'account_id': self.account_rsa.id,
-            'debit': 167.86,
-            'move_id': fx_move_01.id,
-            'currency_id': self.currency_usd_id,
-            'amount_currency': 0.00,
-        })
-        aml_obj.create({
-            'account_id': self.diff_income_account.id,
-            'credit': 167.86,
-            'move_id': fx_move_01.id,
-            'currency_id': self.currency_usd_id,
-            'amount_currency': 0.00,
-        })
+
+        fx_01_payable_line = fx_move_01.line_ids.filtered(lambda x: x.account_id.internal_type == 'payable')
+
         fx_move_01.post()
 
         # Payment Move
         payment_move = self.env['account.move'].create({
             'name': 'payment',
             'journal_id': self.bank_journal_usd.id,
+            'line_ids': [
+                (0, 0, {
+                    'account_id': self.account_rsa.id,
+                    'debit': 123768.45,
+                    'currency_id': self.currency_usd_id,
+                    'amount_currency': 6149.16,
+                }),
+
+                (0, 0, {
+                    'account_id': self.account_usd.id,
+                    'credit': 123768.45,
+                    'currency_id': self.currency_usd_id,
+                    'amount_currency': -6149.16,
+                })
+            ],
         })
-        payment_payable_line = aml_obj.create({
-            'account_id': self.account_rsa.id,
-            'debit': 123768.45,
-            'move_id': payment_move.id,
-            'currency_id': self.currency_usd_id,
-            'amount_currency': 6149.16,
-        })
-        aml_obj.create({
-            'account_id': self.account_usd.id,
-            'credit': 123768.45,
-            'move_id': payment_move.id,
-            'currency_id': self.currency_usd_id,
-            'amount_currency': -6149.16,
-        })
+        payment_payable_line = payment_move.line_ids.filtered(lambda x: x.account_id.internal_type == 'payable')
+
         payment_move.post()
 
         to_reconcile = (
@@ -1870,105 +1894,116 @@ class TestReconciliationExec(TestReconciliation):
         company.country_id = self.ref('base.us')
         company.tax_cash_basis_journal_id = self.cash_basis_journal
 
-        aml_obj = self.env['account.move.line'].with_context(
-            check_move_validity=False)
-
         # Purchase
         purchase_move = self.env['account.move'].create({
             'name': 'purchase',
             'journal_id': self.purchase_journal.id,
+            'line_ids': [
+                (0, 0, {
+                    'name': 'expenseTaxed',
+                    'account_id': self.expense_account.id,
+                    'debit': 106841.65,
+                    'tax_ids': [(4, self.tax_cash_basis.id, False)],
+                    'currency_id': self.currency_usd_id,
+                    'amount_currency': 5301.00,
+                }),
+
+                (0, 0, {
+                    'name': 'TaxLine',
+                    'account_id': self.tax_waiting_account.id,
+                    'debit': 17094.66,
+                    'tax_line_id': self.tax_cash_basis.id,
+                    'currency_id': self.currency_usd_id,
+                    'amount_currency': 848.16,
+                    'tax_repartition_line_id': self.tax_cash_basis.invoice_repartition_line_ids.filtered(lambda x: x.repartition_type == 'tax').id,
+                    'tax_base_amount': 106841.65,
+                }),
+
+                (0, 0, {
+                    'name': 'Payable',
+                    'account_id': self.account_rsa.id,
+                    'credit': 123936.31,
+                    'currency_id': self.currency_usd_id,
+                    'amount_currency': -6149.16,
+                }),
+            ],
         })
 
-        aml_obj.create({
-            'name': 'expenseTaxed',
-            'account_id': self.expense_account.id,
-            'debit': 106841.65,
-            'move_id': purchase_move.id,
-            'tax_ids': [(4, self.tax_cash_basis.id, False)],
-            'currency_id': self.currency_usd_id,
-            'amount_currency': 5301.00,
-        })
-        aml_obj.create({
-            'name': 'TaxLine',
-            'account_id': self.tax_waiting_account.id,
-            'debit': 17094.66,
-            'move_id': purchase_move.id,
-            'tax_repartition_line_id': self.tax_cash_basis.invoice_repartition_line_ids.filtered(lambda x: x.repartition_type == 'tax').id,
-            'tax_base_amount': 106841.65,
-            'currency_id': self.currency_usd_id,
-            'amount_currency': 848.16,
-        })
-        purchase_payable_line0 = aml_obj.create({
-            'name': 'Payable',
-            'account_id': self.account_rsa.id,
-            'credit': 123936.31,
-            'move_id': purchase_move.id,
-            'currency_id': self.currency_usd_id,
-            'amount_currency': -6149.16,
-        })
+        purchase_payable_line0 = purchase_move.line_ids.filtered(lambda x: x.account_id.internal_type == 'payable')
+
         purchase_move.post()
 
         # FX 01 Move
         fx_move_01 = self.env['account.move'].create({
             'name': 'FX 01',
             'journal_id': self.fx_journal.id,
+            'line_ids': [
+                (0, 0, {
+                    'account_id': self.account_rsa.id,
+                    'credit': 1572.96,
+                    'currency_id': self.currency_usd_id,
+                    'amount_currency': 0.00,
+                }),
+
+                (0, 0, {
+                    'account_id': self.diff_expense_account.id,
+                    'debit': 1572.96,
+                    'currency_id': self.currency_usd_id,
+                    'amount_currency': 0.00,
+                }),
+            ],
         })
-        fx_01_payable_line = aml_obj.create({
-            'account_id': self.account_rsa.id,
-            'credit': 1572.96,
-            'move_id': fx_move_01.id,
-            'currency_id': self.currency_usd_id,
-            'amount_currency': 0.00,
-        })
-        aml_obj.create({
-            'account_id': self.diff_expense_account.id,
-            'debit': 1572.96,
-            'move_id': fx_move_01.id,
-            'currency_id': self.currency_usd_id,
-            'amount_currency': 0.00,
-        })
+        fx_01_payable_line = fx_move_01.line_ids.filtered(lambda x: x.account_id.internal_type == 'payable')
+
         fx_move_01.post()
 
         # FX 02 Move
         fx_move_02 = self.env['account.move'].create({
             'name': 'FX 02',
             'journal_id': self.fx_journal.id,
+            'line_ids': [
+                (0, 0, {
+                    'account_id': self.account_rsa.id,
+                    'debit': 1740.82,
+                    'currency_id': self.currency_usd_id,
+                    'amount_currency': 0.00,
+                }),
+
+                (0, 0, {
+                    'account_id': self.diff_income_account.id,
+                    'credit': 1740.82,
+                    'currency_id': self.currency_usd_id,
+                    'amount_currency': 0.00,
+                })
+            ],
         })
-        fx_02_payable_line = aml_obj.create({
-            'account_id': self.account_rsa.id,
-            'debit': 1740.82,
-            'move_id': fx_move_02.id,
-            'currency_id': self.currency_usd_id,
-            'amount_currency': 0.00,
-        })
-        aml_obj.create({
-            'account_id': self.diff_income_account.id,
-            'credit': 1740.82,
-            'move_id': fx_move_02.id,
-            'currency_id': self.currency_usd_id,
-            'amount_currency': 0.00,
-        })
+        fx_02_payable_line = fx_move_02.line_ids.filtered(lambda x: x.account_id.internal_type == 'payable')
+
         fx_move_02.post()
 
         # Payment Move
         payment_move = self.env['account.move'].create({
             'name': 'payment',
             'journal_id': self.bank_journal_usd.id,
+            'line_ids': [
+                (0, 0, {
+                    'account_id': self.account_rsa.id,
+                    'debit': 123768.45,
+                    'currency_id': self.currency_usd_id,
+                    'amount_currency': 6149.16,
+                }),
+
+                (0, 0, {
+                    'account_id': self.account_usd.id,
+                    'credit': 123768.45,
+                    'currency_id': self.currency_usd_id,
+                    'amount_currency': -6149.16,
+                })
+            ],
         })
-        payment_payable_line = aml_obj.create({
-            'account_id': self.account_rsa.id,
-            'debit': 123768.45,
-            'move_id': payment_move.id,
-            'currency_id': self.currency_usd_id,
-            'amount_currency': 6149.16,
-        })
-        aml_obj.create({
-            'account_id': self.account_usd.id,
-            'credit': 123768.45,
-            'move_id': payment_move.id,
-            'currency_id': self.currency_usd_id,
-            'amount_currency': -6149.16,
-        })
+
+        payment_payable_line = payment_move.line_ids.filtered(lambda x: x.account_id.internal_type == 'payable')
+
         payment_move.post()
 
         to_reconcile = (
@@ -2027,50 +2062,52 @@ class TestReconciliationExec(TestReconciliation):
             'code': 'TWAIT1',
         })
 
-        AccountMoveLine = self.env['account.move.line'].with_context(check_move_validity=False)
-
         # Purchase
         purchase_move = self.env['account.move'].create({
             'name': 'invoice',
             'journal_id': self.purchase_journal.id,
+            'line_ids': [
+                (0, 0, {
+                    'account_id': self.account_rsa.id,
+                    'credit': 175,
+                }),
+
+                (0, 0, {
+                    'name': 'expenseTaxed 10%',
+                    'account_id': self.expense_account.id,
+                    'debit': 50,
+                    'tax_ids': [(4, tax_cash_basis10percent.id, False)],
+                }),
+
+                (0, 0, {
+                    'name': 'TaxLine0',
+                    'account_id': tax_waiting_account10.id,
+                    'debit': 5,
+                    'tax_repartition_line_id': tax_cash_basis10percent.invoice_repartition_line_ids.filtered(lambda x: x.repartition_type == 'tax').id,
+                    'tax_base_amount': 50,
+                }),
+
+                (0, 0, {
+                    'name': 'expenseTaxed 20%',
+                    'account_id': self.expense_account.id,
+                    'debit': 100,
+                    'tax_ids': [(4, self.tax_cash_basis.id, False)],
+                }),
+
+                (0, 0, {
+                    'name': 'TaxLine1',
+                    'account_id': self.tax_waiting_account.id,
+                    'debit': 20,
+                    'tax_repartition_line_id': self.tax_cash_basis.invoice_repartition_line_ids.filtered(lambda x: x.repartition_type == 'tax').id,
+                    'tax_base_amount': 100,
+                }),
+            ],
         })
 
-        purchase_payable_line0 = AccountMoveLine.create({
-            'account_id': self.account_rsa.id,
-            'credit': 175,
-            'move_id': purchase_move.id,
-        })
+        purchase_payable_line0 = purchase_move.line_ids.filtered(lambda x: x.account_id.internal_type == 'payable')
+        tax_line0 = purchase_move.line_ids.filtered(lambda x: x.tax_line_id == tax_cash_basis10percent)
+        tax_line1 = purchase_move.line_ids.filtered(lambda x: x.tax_line_id == self.tax_cash_basis)
 
-        AccountMoveLine.create({
-            'name': 'expenseTaxed 10%',
-            'account_id': self.expense_account.id,
-            'debit': 50,
-            'move_id': purchase_move.id,
-            'tax_ids': [(4, tax_cash_basis10percent.id, False)],
-        })
-        tax_line0 = AccountMoveLine.create({
-            'name': 'TaxLine0',
-            'account_id': tax_waiting_account10.id,
-            'debit': 5,
-            'move_id': purchase_move.id,
-            'tax_repartition_line_id': tax_cash_basis10percent.invoice_repartition_line_ids.filtered(lambda x: x.repartition_type == 'tax').id,
-            'tax_base_amount': 50,
-        })
-        AccountMoveLine.create({
-            'name': 'expenseTaxed 20%',
-            'account_id': self.expense_account.id,
-            'debit': 100,
-            'move_id': purchase_move.id,
-            'tax_ids': [(4, self.tax_cash_basis.id, False)],
-        })
-        tax_line1 = AccountMoveLine.create({
-            'name': 'TaxLine1',
-            'account_id': self.tax_waiting_account.id,
-            'debit': 20,
-            'move_id': purchase_move.id,
-            'tax_repartition_line_id': self.tax_cash_basis.invoice_repartition_line_ids.filtered(lambda x: x.repartition_type == 'tax').id,
-            'tax_base_amount': 100,
-        })
         purchase_move.post()
 
         reverted = self.env['account.move'].browse(purchase_move.reverse_moves())
