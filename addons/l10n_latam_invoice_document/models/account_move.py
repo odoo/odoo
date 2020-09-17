@@ -54,9 +54,9 @@ class AccountMove(models.Model):
                 ref = ref.split(" ", 1)[-1]
             rec.l10n_latam_document_number = ref
 
-    # @api.onchange('l10n_latam_document_type_id', 'l10n_latam_document_number', 'move_type')
-    # def _onchange_l10n_latam_document_number(self):
-    #     self._inverse_l10n_latam_document_number()
+    @api.onchange('l10n_latam_document_type_id', 'l10n_latam_document_number', 'move_type')
+    def _onchange_l10n_latam_document_number(self):
+        self._inverse_l10n_latam_document_number()
 
     def _inverse_l10n_latam_document_number(self):
         for rec in self.filtered(lambda x: x.l10n_latam_document_type_id and (x.l10n_latam_manual_document_number or not x.highest_name)):
