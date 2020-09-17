@@ -75,7 +75,10 @@ var RunningTourActionHelper = core.Class.extend({
 
         function trigger_mouse_event($element, type, count) {
             var e = document.createEvent("MouseEvents");
-            e.initMouseEvent(type, true, true, window, count || 0, 0, 0, 0, 0, false, false, false, false, 0, $element[0]);
+            const offset = $element.offset();
+            const elementTop = offset.top + 1;
+            const elementLeft = offset.left + 1;
+            e.initMouseEvent(type, true, true, window, count || 0, elementLeft,  elementTop,  elementLeft,  elementTop, false, false, false, false, 0, $element[0]);
             $element[0].dispatchEvent(e);
         }
     },
@@ -101,10 +104,8 @@ var RunningTourActionHelper = core.Class.extend({
             $selectedOption.prop("selected", true);
             this._click(values);
         } else {
-            values.$element.focusIn();
             values.$element.trigger($.Event( "keydown", {key: '_', keyCode: 95}));
             values.$element.text(text).trigger("input");
-            values.$element.focusInEnd();
             values.$element.trigger($.Event( "keyup", {key: '_', keyCode: 95}));
         }
         values.$element.trigger("change");
@@ -136,9 +137,9 @@ var RunningTourActionHelper = core.Class.extend({
         toCenter.top += $to.outerHeight()/2;
 
         values.$element.trigger($.Event("mouseenter"));
-        values.$element.trigger($.Event("mousedown", {which: 1, pageX: elementCenter.left, pageY: elementCenter.top}));
-        values.$element.trigger($.Event("mousemove", {which: 1, pageX: toCenter.left, pageY: toCenter.top}));
-        values.$element.trigger($.Event("mouseup", {which: 1, pageX: toCenter.left, pageY: toCenter.top}));
+        values.$element.trigger($.Event("mousedown", {which: 1, pageX: elementCenter.left, pageY: elementCenter.top, clientX: elementCenter.left - window.pageXOffset, clientY: elementCenter.top - window.pageYOffset}));
+        values.$element.trigger($.Event("mousemove", {which: 1, pageX: toCenter.left, pageY: toCenter.top, clientX: elementCenter.left - window.pageXOffset, clientY: elementCenter.top - window.pageYOffset}));
+        values.$element.trigger($.Event("mouseup", {which: 1, pageX: toCenter.left, pageY: toCenter.top, clientX: elementCenter.left - window.pageXOffset, clientY: elementCenter.top - window.pageYOffset}));
      },
     _keydown: function (values, keyCodes) {
         while (keyCodes.length) {
