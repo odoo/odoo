@@ -822,7 +822,7 @@
                                                 <field name="quantity"/>
                                                 <field name="product_uom_id" groups="uom.group_uom"/>
                                                 <field name="price_unit"/>
-                                                <field name="discount" groups="base.group_no_one"/>
+                                                <field name="discount" groups="product.group_discount_per_so_line"/>
                                                 <field name="currency_id" invisible="1"/>
                                             </group>
                                             <group>
@@ -867,7 +867,7 @@
                                                     'required': [('display_type', 'not in', ('line_section', 'line_note'))],
                                                     'invisible': [('display_type', 'in', ('line_section', 'line_note'))],
                                                }"
-                                               domain="[('company_id', '=', parent.company_id)]" />
+                                               domain="[('deprecated', '=', False), ('company_id', '=', parent.company_id)]" />
                                         <field name="partner_id"
                                                domain="['|', ('parent_id', '=', False), ('is_company', '=', True)]"
                                                attrs="{'column_invisible': [('parent.type', '!=', 'entry')]}"/>

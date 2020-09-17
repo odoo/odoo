@@ -246,15 +246,15 @@ class SaleOrder(models.Model):
         return coupon
 
     def _send_reward_coupon_mail(self):
-        self.ensure_one()
         template = self.env.ref('sale_coupon.mail_template_sale_coupon', raise_if_not_found=False)
         if template:
-            for coupon in self.generated_coupon_ids:
-                self.message_post_with_template(
-                    template.id, composition_mode='comment',
-                    model='sale.coupon', res_id=coupon.id,
-                    email_layout_xmlid='mail.mail_notification_light',
-                )
+            for order in self:
+                for coupon in order.generated_coupon_ids:
+                    order.message_post_with_template(
+                        template.id, composition_mode='comment',
+                        model='sale.coupon', res_id=coupon.id,
+                        email_layout_xmlid='mail.mail_notification_light',
+                    )
 
     def _get_applicable_programs(self):
         """

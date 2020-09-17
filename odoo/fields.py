@@ -1870,6 +1870,12 @@ class Binary(Field):
     def column_type(self):
         return None if self.attachment else ('bytea', 'bytea')
 
+    def _get_attrs(self, model, name):
+        attrs = super(Binary, self)._get_attrs(model, name)
+        if not attrs.get('store', True):
+            attrs['attachment'] = False
+        return attrs
+
     _description_attachment = property(attrgetter('attachment'))
 
     def convert_to_column(self, value, record, values=None, validate=True):

@@ -8,6 +8,7 @@
 # Jaroslav Helemik Nemec <nemec@helemik.cz>, 2019
 # Michal Veselý <michal@veselyberanek.net>, 2019
 # Martin Trigaux, 2019
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2020
 # trendspotter <j.podhorecky@volny.cz>, 2020
 # 
 msgid ""
@@ -1716,7 +1717,7 @@ msgstr "Příspěvek fóra"
 #: model:ir.actions.act_window,name:website_forum.action_forum_post
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_list
 msgid "Forum Posts"
-msgstr "příspěvky fóra"
+msgstr "Příspěvky fóra"
 
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_forum_tag
@@ -1877,6 +1878,8 @@ msgid ""
 "If this approach is not for you, please respect the community and use "
 "Google+ communities instead."
 msgstr ""
+"Pokud tento přístup není pro vás, respektujte prosím komunitu a použijte "
+"místo toho komunity Google+."
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.close_post
@@ -1885,6 +1888,8 @@ msgid ""
 "            users having a high karma can see closed posts to moderate\n"
 "            them."
 msgstr ""
+"Pokud tento příspěvek zavřete, bude pro většinu uživatelů skryt. Pouze\n"
+"uživatelé, kteří mají vysokou karmu, mohou vidět uzavřené příspěvky a moderovat je."
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
@@ -1895,6 +1900,11 @@ msgid ""
 "motivation is “I would like others to explain ______ to me”, then you are "
 "probably OK."
 msgstr ""
+"Pokud zapadáte do některého z těchto příkladů nebo pokud máte motivaci k "
+"položení otázky „Chtěl bych se zúčastnit diskuse o ______“, neměli byste se "
+"ptát zde, ale na našich seznamech adresátů. Pokud je však vaše motivace "
+"„Chtěl bych, aby mi ostatní vysvětlili ______“, pak jste pravděpodobně v "
+"pořádku."
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.close_post
@@ -1964,7 +1974,7 @@ msgstr "Je jeho životopis viditelný z jeho příspěvku"
 #: code:addons/website_forum/models/forum.py:0
 #, python-format
 msgid "It is not allowed to modify someone else's vote."
-msgstr ""
+msgstr "Není dovoleno měnit hlasování někoho jiného."
 
 #. module: website_forum
 #: code:addons/website_forum/models/forum.py:0
@@ -2094,7 +2104,7 @@ msgstr "Zprávy"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_moderate
 msgid "Moderate posts"
-msgstr ""
+msgstr "Moderovat příspěvky"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.header
@@ -2619,11 +2629,13 @@ msgid ""
 "Questions mode: only one answer allowed\n"
 " Discussions mode: multiple answers allowed"
 msgstr ""
+"Režim otázek: povolena pouze jedna odpověď\n"
+"Režim diskusí: povoleno více odpovědí"
 
 #. module: website_forum
 #: model:ir.ui.menu,name:website_forum.menu_forum_rank_global
 msgid "Ranks"
-msgstr ""
+msgstr "Úrovně"
 
 #. module: website_forum
 #: code:addons/website_forum/models/forum.py:0
@@ -2711,7 +2723,7 @@ msgstr "Omezit publikování na tomto webu."
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.private_profile
 msgid "Return to the forum."
-msgstr ""
+msgstr "Zpět na fórum."
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.404
@@ -2758,7 +2770,7 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_search
 msgid "Search in Post"
-msgstr ""
+msgstr "Hledat v příspěvkách"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
@@ -2991,11 +3003,13 @@ msgid ""
 "The goal of this site is create a relevant knowledge base that would answer "
 "questions related to Odoo."
 msgstr ""
+"Cílem tohoto webu je vytvořit relevantní znalostní základnu, která by "
+"odpovídala na otázky týkající se Odoo."
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "The question has been closed"
-msgstr ""
+msgstr "Otázka byla uzavřena"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.faq
@@ -3016,6 +3030,8 @@ msgid ""
 "This community is for professional and enthusiast users, partners and "
 "programmers."
 msgstr ""
+"Tato komunita je pro profesionální a nadšené uživatele, partnery a "
+"programátory."
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
@@ -3030,6 +3046,8 @@ msgid ""
 "This community is for professionals and enthusiasts of our products and services.\n"
 "                                        <br>Share and discuss the best content and new marketing ideas, build your professional profile and become a better marketer together."
 msgstr ""
+"Tato komunita je pro profesionály a nadšence našich produktů a služeb.\n"
+"<br>Sdílejte a diskutujte o nejlepším obsahu a nových marketingových nápadech, budujte svůj profesionální profil a společně se staňte lepším obchodníkem."
 
 #. module: website_forum
 #: model:forum.forum,description:website_forum.forum_help
@@ -3114,6 +3132,8 @@ msgid ""
 "To prevent your question from being flagged and possibly removed, avoid "
 "asking subjective questions where …"
 msgstr ""
+"Chcete-li zabránit tomu, aby byla vaše otázka označena a případně "
+"odstraněna, vyhýbejte se subjektivním otázkám, kde ..."
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
@@ -3277,7 +3297,7 @@ msgstr "Hlasovat"
 #. module: website_forum
 #: model:ir.model.constraint,message:website_forum.constraint_forum_post_vote_vote_uniq
 msgid "Vote already exists !"
-msgstr ""
+msgstr "Hlasování již existuje!"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__vote_ids
@@ -3679,7 +3699,7 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.tag
 msgid "post"
-msgstr ""
+msgstr "příspěvek"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_15
@@ -3775,7 +3795,7 @@ msgstr ""
 msgid ""
 "we are being asked an open-ended, hypothetical question: “What if ______ "
 "happened?”"
-msgstr ""
+msgstr "dostáváme otevřenou hypotetickou otázku: „Co kdyby se ______ stalo?“"
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help

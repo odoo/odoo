@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Martin Trigaux, 2019
+# Mads Søndergaard, 2020
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-05 09:01+0000\n"
 "PO-Revision-Date: 2019-12-05 12:40+0000\n"
-"Last-Translator: Martin Trigaux, 2019\n"
+"Last-Translator: Mads Søndergaard, 2020\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,7 +29,7 @@ msgstr "Virksomheder"
 #: code:addons/account_lock/models/res_company.py:0
 #, python-format
 msgid "The lock date for advisors is irreversible and can't be removed."
-msgstr ""
+msgstr "Låse datoen for rådgivere er uigenkaldelig, og kan ikke fjernes."
 
 #. module: account_lock
 #: code:addons/account_lock/models/res_company.py:0
@@ -36,18 +37,19 @@ msgstr ""
 msgid ""
 "The new lock date for advisors must be set after the previous lock date."
 msgstr ""
+"Den nye låse dato for rådgivere skal sættes til efter den forrige låse dato."
 
 #. module: account_lock
 #: code:addons/account_lock/models/res_company.py:0
 #, python-format
 msgid "The new tax lock date must be set after the previous lock date."
-msgstr ""
+msgstr "Den nye moms låse dato skal sættes til efter den forrige låse dato."
 
 #. module: account_lock
 #: code:addons/account_lock/models/res_company.py:0
 #, python-format
 msgid "The tax lock date is irreversible and can't be removed."
-msgstr ""
+msgstr "Moms låse datoen er uigenkaldelig og kan ikke fjernes."
 
 #. module: account_lock
 #: code:addons/account_lock/models/res_company.py:0
@@ -56,6 +58,9 @@ msgid ""
 "You cannot define stricter conditions on advisors than on users. Please make"
 " sure that the lock date on advisor is set before the lock date for users."
 msgstr ""
+"Du kan ikke definere strengere krav for rådgivere end for brugere. Tjek "
+"venligst at låse datoen for rådgivere er sat til før låse datoen for "
+"brugere."
 
 #. module: account_lock
 #: code:addons/account_lock/models/res_company.py:0
@@ -64,6 +69,9 @@ msgid ""
 "You cannot lock a period that is not finished yet. Please make sure that the"
 " lock date for advisors is not set after the last day of the previous month."
 msgstr ""
+"Du kan ikke låse en periode som ikke er defineret endnu. Tjek venligst at "
+"låse datoen for rådgivere ikke er sat til efter den sidste dag i forrige "
+"måned."
 
 #. module: account_lock
 #: code:addons/account_lock/models/res_company.py:0
@@ -72,3 +80,5 @@ msgid ""
 "You cannot lock a period that is not finished yet. Please make sure that the"
 " tax lock date is not set after the last day of the previous month."
 msgstr ""
+"Du kan ikke låse en periode der endnu ikke er afsluttet. Tjek venligst at "
+"moms låse datoen ikke er sat til efter den sidste dag i forrige måned."

@@ -212,7 +212,11 @@ class account_payment(models.Model):
                 self.partner_bank_account_id = self.partner_id.commercial_partner_id.bank_ids[0]
             else:
                 self.partner_bank_account_id = False
-        return {'domain': {'partner_bank_account_id': [('partner_id', 'in', [self.partner_id.id, self.partner_id.commercial_partner_id.id])]}}
+        if self.payment_type == 'inbound' and self.invoice_ids:
+            partner_ids = [self.invoice_ids[0].company_id.partner_id.id, self.invoice_ids[0].company_id.partner_id.commercial_partner_id.id]
+        else:
+            partner_ids = [self.partner_id.id, self.partner_id.commercial_partner_id.id]
+        return {'domain': {'partner_bank_account_id': [('partner_id', 'in', partner_ids)]}}
 
     @api.onchange('payment_type')
     def _onchange_payment_type(self):
@@ -259,7 +263,7 @@ class account_payment(models.Model):
         if self.invoice_ids:
             domain_on_types.append(('company_id', '=', self.invoice_ids[0].company_id.id))
         if self.journal_id.type not in journal_types or (self.invoice_ids and self.journal_id.company_id != self.invoice_ids[0].company_id):
-            self.journal_id = self.env['account.journal'].search(domain_on_types, limit=1)
+            self.journal_id = self.env['account.journal'].search(domain_on_types + [('company_id', '=', self.env.company.id)], limit=1)
         return {'domain': {'journal_id': jrnl_filters['domain'] + domain_on_types}}
 
     @api.onchange('currency_id')
@@ -696,7 +700,7 @@ class account_payment(models.Model):
                 # ==== 'inbound' / 'outbound' ====
                 if rec.invoice_ids:
                     (moves[0] + rec.invoice_ids).line_ids \
-                        .filtered(lambda line: not line.reconciled and line.account_id == rec.destination_account_id)\
+                        .filtered(lambda line: not line.reconciled and line.account_id == rec.destination_account_id and not (line.account_id == line.payment_id.writeoff_account_id and line.name == line.payment_id.writeoff_label))\
                         .reconcile()
             elif rec.payment_type == 'transfer':
                 # ==== 'transfer' ====

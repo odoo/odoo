@@ -510,7 +510,7 @@ class MassMailing(models.Model):
             ('model', '=', self.mailing_model_real),
             ('res_id', 'in', res_ids),
             ('mass_mailing_id', '=', self.id)], ['res_id'])
-        done_res_ids = [record['res_id'] for record in already_mailed]
+        done_res_ids = {record['res_id'] for record in already_mailed}
         return [rid for rid in res_ids if rid not in done_res_ids]
 
     def action_send_mail(self, res_ids=None):
