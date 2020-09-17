@@ -5,6 +5,7 @@
             <link rel="stylesheet" type="text/scss" href="/mass_mailing/static/src/scss/mass_mailing.scss"/>
             <link rel="stylesheet" type="text/scss" href="/mass_mailing/static/src/scss/mass_mailing_mobile.scss"/>
             <link rel="stylesheet" href="/mass_mailing/static/src/css/email_template.css"/>
+            <link rel="stylesheet" type="text/scss" href="/mass_mailing/static/src/scss/mass_mailing.ui.scss"/>
 
             <script type="text/javascript" src="/mass_mailing/static/src/js/mass_mailing.js"></script>
             <script type="text/javascript" src="/mass_mailing/static/src/js/mass_mailing_widget.js"></script>
@@ -25,11 +26,13 @@
 
     <template id="assets_mail_themes_edition"> <!-- maybe to remove and convert into a field dumy with attr invisible if the template is not selected -->
         <t t-call="web._assets_helpers"/>
-        <link rel="stylesheet" type="text/scss" href="/mass_mailing/static/src/scss/mass_mailing.ui.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/mass_mailing/static/src/scss/mass_mailing.ui.shadow.scss"/>
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/webclient.scss"/>
     </template>
 
     <template id="iframe_css_assets_edit" groups="base.group_user">
+        <t t-call-assets="web.assets_common" t-js="false"/>
+        <t t-call-assets="web_editor.assets_wysiwyg" t-js="false"/>
         <t t-call-assets="mass_mailing.assets_mail_themes" t-js="false"/>
         <t t-call-assets="mass_mailing.assets_mail_themes_edition" t-js="false"/>
     </template>

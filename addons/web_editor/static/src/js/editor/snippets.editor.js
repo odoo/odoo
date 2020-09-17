@@ -944,6 +944,10 @@ var SnippetsMenu = Widget.extend({
         // Fetch snippet templates and compute it
         defs.push((async () => {
             await this._loadSnippetsTemplates();
+            // todo: remove this hack in master
+            // It exists because we needed to add that nodes in the a template
+            // pre-freeze for integrating the new editor post-freeze.
+            this.$el.find('.o_we_website_top_actions').remove();
             await this._updateInvisibleDOM();
         })());
 
