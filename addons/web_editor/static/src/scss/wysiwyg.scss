@@ -474,6 +474,10 @@ img::selection {
         label {
             display: flex;
             align-items: center;
+
+            &.active {
+                background-color: $o-we-bg-darkest;
+            }
         }
 
         button:not(.btn), label {
