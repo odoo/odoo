@@ -111,6 +111,9 @@
                                 <IdPaese t-esc="get_vat_country(record.commercial_partner_id.vat)"/>
                                 <IdCodice t-esc="get_vat_number(record.commercial_partner_id.vat)"/>
                             </IdFiscaleIVA>
+                            <IdFiscaleIVA t-if="not record.commercial_partner_id.vat and record.commercial_partner_id.country_id.code != 'IT'">
+                                <IdCodice t-esc="'0000000'"/>
+                            </IdFiscaleIVA>
                             <CodiceFiscale t-if="not record.commercial_partner_id.vat" t-esc="record.commercial_partner_id.l10n_it_codice_fiscale"/>
                             <CodiceFiscale t-if="not record.commercial_partner_id.vat and not record.commercial_partner_id.l10n_it_codice_fiscale" t-esc="99999999999"/>
                             <Anagrafica>
