@@ -121,7 +121,7 @@ Let's try it on our module with the following exercise!
 
     - Add the field in the form view as depicted on the first image of the **Goal**.
 
-    Tip: you might give a try to the :meth:`~odoo.models.BaseModel.mapped` method. See
+    Tip: you might want to give a try to the :meth:`~odoo.models.BaseModel.mapped` method. See
     `here <https://github.com/odoo/odoo/blob/f011c9aacf3a3010c436d4e4f408cd9ae265de1b/addons/account/models/account_payment.py#L686>`__
     for a simple example.
 
@@ -157,6 +157,9 @@ In this case Odoo provides the ability to use an ``inverse`` function::
 An example can be found
 `here <https://github.com/odoo/odoo/blob/2ccf0bd0dcb2e232ee894f07f24fdc26c51835f7/addons/crm/models/crm_lead.py#L308-L317>`__.
 
+Note that the ``inverse`` method is only called when saving the record, while the
+``compute`` method is called at each change of the dependencies.
+
 .. exercise:: Compute a validity date for offers
 
     - Add the following fields to the ``estate.property.offer`` model:
@@ -168,9 +171,9 @@ An example can be found
     date_deadline             Date
     ========================= ========================= =========================
 
-    The ``date_deadline`` is a computed field defined as the offer ``create_date`` to which the
-    ``validity`` is added. Define the appropriate inverse function so that the user can set the
-    date or the validity.
+    The ``date_deadline`` is a computed field which is defined as the addition of two fields from
+    the offer: the ``create_date`` and the ``validity``. Define the appropriate inverse function
+    so that the user can set the date or the validity.
 
     Tip: the ``create_date`` is only filled in when the record is created. At creation, you will
     need a fallback to prevent crashing.
@@ -279,11 +282,11 @@ onchanges are not automatically triggered when creating a record programmaticall
 triggered on the form view.
 
 The usual pitfall of computed fields and onchanges is trying to be 'too smart' by adding too much
-logic. This can have the opposite result than expected: the end user is confused about all the
-automation.
+logic. This can have the opposite result of what was expected: the end user is confused about
+all the automation.
 
 Computed fields tend to be easier to debug: such a field is set by a given method, so it's easy to
-track when the value is set. Onchanges, on the other, may be confusing: it is very difficult to
+track when the value is set. Onchanges, on the other hand, may be confusing: it is very difficult to
 be sure of the extent of an onchange. Indeed, several onchange methods may set the same fields: it
 then becomes difficult to track where a value is coming from.
 
