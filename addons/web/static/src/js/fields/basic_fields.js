@@ -160,6 +160,14 @@ var DebouncedField = AbstractField.extend({
      * @returns {*}
      */
     _getValue: function () {},
+    /**
+     * Should make an action on lost focus.
+     *
+     * @abstract
+     * @private
+     * @returns {*}
+     */
+    _onBlur: function () {},
 });
 
 var InputField = DebouncedField.extend({
@@ -169,6 +177,7 @@ var InputField = DebouncedField.extend({
     events: _.extend({}, DebouncedField.prototype.events, {
         'input': '_onInput',
         'change': '_onChange',
+        'blur' : '_onBlur',
     }),
 
     /**
