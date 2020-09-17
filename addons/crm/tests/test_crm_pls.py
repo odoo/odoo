@@ -99,6 +99,8 @@ class TestCRMPLS(TransactionCase):
         # Set the PLS config
         self.env['ir.config_parameter'].sudo().set_param("crm.pls_start_date", "2000-01-01")
         self.env['ir.config_parameter'].sudo().set_param("crm.pls_fields", "country_id,state_id,email_state,phone_state,source_id,tag_ids")
+        self.env['base'].flush()
+        self.registry.setup_models(self.cr)
 
         # set leads as won and lost
         # for Team 1

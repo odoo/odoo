@@ -364,7 +364,7 @@ class Lead(models.Model):
         for lead in self:
             lead.is_automated_probability = tools.float_compare(lead.probability, lead.automated_probability, 2) == 0
 
-    @api.depends('stage_id', 'team_id', 'state_id', 'country_id', 'phone_state', 'email_state', 'source_id', 'lang_id', 'tag_ids')
+    @api.depends(lambda self: ['stage_id', 'team_id'] + self._pls_get_safe_fields())
     def _compute_probabilities(self):
         lead_probabilities = self._pls_get_naive_bayes_probabilities()
         for lead in self:
