@@ -152,6 +152,20 @@
         <field name="kanban_state">blocked</field>
     </record>
 
+    <record id="hr_contract_fpi_previous" model="hr.contract">
+        <field name="name">Audrey Peterson Contract</field>
+        <field name="date_start" eval="'2014-1-1'"/>
+        <field name="date_end" eval="'2014-12-31'"/>
+        <field name="employee_id" ref="hr.employee_fpi"/>
+        <field name="job_id" model="hr.job"
+            eval="obj().env.ref('hr.employee_fpi').job_id.id"/>
+        <field name="department_id" model="hr.department"
+            eval="obj().env.ref('hr.employee_fpi').department_id.id"/>
+        <field eval="3700.0" name="wage"/>
+        <field name="state">close</field>
+        <field name="kanban_state">normal</field>
+    </record>
+
     <record id="hr_contract_fpi" model="hr.contract">
         <field name="name">Audrey Peterson Contract</field>
         <field name="date_start" eval="'2015-1-1'"/>

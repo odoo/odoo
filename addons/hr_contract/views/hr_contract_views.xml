@@ -1,17 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-        <record id="act_hr_employee_2_hr_contract" model="ir.actions.act_window">
-            <field name="name">Contracts</field>
-            <field name="res_model">hr.contract</field>
-            <field name="view_mode">kanban,tree,form</field>
-            <field name="context">{
-                'search_default_employee_id': [active_id],
-                'default_employee_id': active_id,
-                'search_default_group_by_state': 1
-            }</field>
-        </record>
-
         <record id="hr_hr_employee_view_form2" model="ir.ui.view">
             <field name="name">hr.hr.employee.view.form2</field>
             <field name="model">hr.employee</field>
@@ -20,10 +9,10 @@
                 <data>
                     <div name="button_box" position="inside">
                         <field name="contract_warning" invisible="1"/>
-                        <button name="%(act_hr_employee_2_hr_contract)d"
+                        <button name="action_open_contract_history"
                             class="oe_stat_button"
                             icon="fa-book"
-                            type="action"
+                            type="object"
                             groups="hr_contract.group_hr_contract_manager">
                             <div attrs="{'invisible' : [('first_contract_date', '=', False)]}" class="o_stat_info">
                                 <span class="o_stat_text text-success" attrs="{'invisible' : [('contract_warning', '=', True)]}" title="In Contract Since"> In Contract Since</span>
@@ -139,61 +128,62 @@
                         <field name="state" widget="statusbar" options="{'clickable': '1'}"/>
                     </header>
                     <sheet>
-                    <div class="oe_button_box" name="button_box"/>
-                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
-                    <div class="oe_title pr-0" name="title">
-                        <h1 class="d-flex flex-row justify-content-between">
-                            <field name="name" class="text-truncate" placeholder="Contract Reference"/>
-                            <field name="kanban_state" widget="state_selection"/>
-                        </h1>
-                    </div>
-                    <group>
-                        <group>
-                            <field name="active" invisible="1"/>
-                            <field name="employee_id"/>
-                            <field name="department_id"/>
-                            <field name="job_id"/>
-                            <field name="company_id" groups="base.group_multi_company"/>
-                            <field name="company_country_id" invisible="1"/>
-                            <field name="structure_type_id" domain="['|', ('country_id', '=', False), ('country_id', '=', company_country_id)]"/>
-                        </group>
-                        <group name="duration_group">
-                            <field name="date_start"/>
-                            <field name="first_contract_date" attrs="{'invisible': ['|', ('first_contract_date', '=', False), ('first_contract_date', '=', 'date_start')]}"/>
-                            <field name="date_end"/>
-                            <field name="calendar_mismatch" invisible="1"/>
-                            <label for="resource_calendar_id"/>
-                            <div>
-                                <field name="resource_calendar_id" required="1" nolabel="1"/>
-                                <span attrs="{'invisible': ['|', ('calendar_mismatch', '=', False), ('state', '!=', 'open')]}"
-                                    class="fa fa-exclamation-triangle text-danger o_calendar_warning pl-3">
-                                </span>
-                                <span class="o_calendar_warning_tooltip text-danger">
-                                    Calendar Mismatch : The employee's calendar does not match this contract's calendar. This could lead to unexpected behaviors.
-                                </span>
-                            </div>
-                            <field name="hr_responsible_id"/>
-                        </group>
-                    </group>
-                    <notebook>
-                        <page string="Contract Details" name="other">
-                            <group name="notes_group" string="Notes">
-                                <field name="notes" nolabel="1"/>
+                        <div class="oe_button_box" name="button_box"/>
+                        <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                        <div class="oe_title pr-0" name="title">
+                            <h1 class="d-flex flex-row justify-content-between">
+                                <field name="name" class="text-truncate" placeholder="Contract Reference"/>
+                                <field name="kanban_state" widget="state_selection"/>
+                            </h1>
+                            <h2>
+                                <field name="company_id" groups="base.group_multi_company" invisible="1"/>
+                                <field name="employee_id"/>
+                            </h2>
+                        </div>
+                        <group name="top_info">
+                            <group name="top_info_left">
+                                <field name="active" invisible="1"/>
+                                <field name="date_start"/>
+                                <field name="date_end"/>
+                                <field name="company_country_id" invisible="1"/>
+                                <field name="structure_type_id" domain="['|', ('country_id', '=', False), ('country_id', '=', company_country_id)]"/>
+                                <field name="calendar_mismatch" invisible="1"/>
+                                <label for="resource_calendar_id"/>
+                                <div>
+                                    <field name="resource_calendar_id" required="1" nolabel="1"/>
+                                    <span attrs="{'invisible': ['|', ('calendar_mismatch', '=', False), ('state', '!=', 'open')]}"
+                                        class="fa fa-exclamation-triangle text-danger o_calendar_warning pl-3">
+                                    </span>
+                                    <span class="o_calendar_warning_tooltip text-danger">
+                                        Calendar Mismatch : The employee's calendar does not match this contract's calendar. This could lead to unexpected behaviors.
+                                    </span>
+                                </div>
                             </group>
-                        </page>
-                        <page string="Salary Information" name="information">
-                            <group name="main_info">
-                                <group name="salary_and_advantages" string="Monthly Advantages in Cash">
-                                    <label for="wage"/>
-                                    <div class="o_row" name="wage">
-                                        <field name="wage" nolabel="1"/>
-                                        <span>/ month</span>
-                                    </div>
+                            <group name="top_info_right">
+                                <field name="department_id"/>
+                                <field name="job_id"/>
+                                <field name="hr_responsible_id"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Contract Details" name="other">
+                                <group name="notes_group" string="Notes">
+                                    <field name="notes" nolabel="1"/>
                                 </group>
-                                <group string="Yearly Advantages" name="yearly_advantages"/>
-                            </group>
-                        </page>
-                    </notebook>
+                            </page>
+                            <page string="Salary Information" name="information">
+                                <group name="salary_info">
+                                    <group name="salary">
+                                        <label for="wage"/>
+                                        <div class="o_row" name="wage">
+                                            <field name="wage" nolabel="1"/>
+                                            <span>/ month</span>
+                                        </div>
+                                    </group>
+                                    <group name="yearly_advantages"/>
+                                </group>
+                            </page>
+                        </notebook>
                     </sheet>
                     <div class="oe_chatter">
                         <field name="message_follower_ids" groups="base.group_user"/>
@@ -208,7 +198,7 @@
             <field name="name">hr.contract.tree</field>
             <field name="model">hr.contract</field>
             <field name="arch" type="xml">
-                <tree string="Contracts" multi_edit="1" sample="1">
+                <tree string="Contracts" multi_edit="1" sample="1" default_order = 'date_start desc'>
                     <field name="name" readonly="1"/>
                     <field name="employee_id" readonly="1" widget="many2one_avatar_employee"/>
                     <field name="job_id"/>
@@ -295,7 +285,7 @@
             <field name="res_model">hr.contract</field>
             <field name="view_mode">kanban,tree,form,activity</field>
             <field name="domain">[('employee_id', '!=', False)]</field>
-            <field name="context">{'search_default_current':1, 'search_default_group_by_state': 1}</field>
+            <field name="context">{'search_default_group_by_state': 1}</field>
             <field name="search_view_id" ref="hr_contract_view_search"/>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
@@ -312,11 +302,10 @@
 
         <menuitem
             id="hr_menu_contract"
-            name="Contracts"
+            name="All Contracts"
             action="action_hr_contract"
             parent="hr.menu_hr_employee_payroll"
-            sequence="4"
+            sequence="6"
             groups="hr_contract.group_hr_contract_manager"/>
-
 
 </odoo>
