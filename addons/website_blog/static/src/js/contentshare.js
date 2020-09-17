@@ -1,6 +1,8 @@
 odoo.define('website_blog.contentshare', function (require) {
 'use strict';
 
+const dom = require('web.dom');
+
 $.fn.share = function (options) {
     var option = $.extend($.fn.share.defaults, options);
     var selected_text = "";
@@ -39,13 +41,13 @@ $.fn.share = function (options) {
             return $popover_content;
         },
         commentEdition: function () {
-            var positionComment = ($('#o_wblog_post_comments').position()).top - 50;
             $(".o_portal_chatter_composer_form textarea").val('"' + selected_text + '" ').focus();
-            $('html, body').stop().animate({
-                'scrollTop': positionComment
-            }, 500, 'swing', function () {
-                window.location.hash = 'blog_post_comment_quote';
-            });
+            const commentsEl = $('#o_wblog_post_comments')[0];
+            if (commentsEl) {
+                dom.scrollTo(commentsEl).then(() => {
+                    window.location.hash = 'blog_post_comment_quote';
+                });
+            }
         },
         getSelection: function (share) {
             if (window.getSelection) {

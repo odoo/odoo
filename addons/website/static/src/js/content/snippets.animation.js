@@ -8,6 +8,7 @@ odoo.define('website.content.snippets.animation', function (require) {
 var Class = require('web.Class');
 var config = require('web.config');
 var core = require('web.core');
+const dom = require('web.dom');
 var mixins = require('web.mixins');
 var publicWidget = require('web.public.widget');
 var utils = require('web.utils');
@@ -123,12 +124,13 @@ var AnimationEffect = Class.extend(mixins.ParentedMixin, {
         // Initialize the animation startEvents, startTarget, endEvents, endTarget and callbacks
         this._updateCallback = updateCallback;
         this.startEvents = startEvents || 'scroll';
-        this.$startTarget = $($startTarget || window);
+        this.$startTarget = $($startTarget ? $startTarget : this.startEvents === 'scroll' ? $().getScrollingElement()[0] : window);
         if (options.getStateCallback) {
             this._getStateCallback = options.getStateCallback;
-        } else if (this.startEvents === 'scroll' && this.$startTarget[0] === window) {
+        } else if (this.startEvents === 'scroll' && this.$startTarget[0] === $().getScrollingElement()[0]) {
+            const $scrollable = this.$startTarget;
             this._getStateCallback = function () {
-                return window.pageYOffset;
+                return $scrollable.scrollTop();
             };
         } else if (this.startEvents === 'resize' && this.$startTarget[0] === window) {
             this._getStateCallback = function () {
@@ -898,38 +900,19 @@ registry.anchorSlide = publicWidget.Widget.extend({
      * @private
      * @param {jQuery} $el the element to scroll to.
      * @param {string} [scrollValue='true'] scroll value
+     * @returns {Promise}
      */
-    _scrollTo: function ($el, scrollValue = 'true', forcedDelay = undefined) {
-        const _computeScrollTo = () => {
-            const headerHeight = this._computeHeaderHeight();
-            const offset = $el.css('position') !== 'fixed' ? $el.offset().top : $el.position().top;
-            return offset - headerHeight;
-        };
-        const originalScrollTo = _computeScrollTo();
-        return new Promise(resolve => {
-            $('html, body').animate({
-                scrollTop: originalScrollTo,
-            }, {
-                duration: forcedDelay || (scrollValue === 'true' ? 500 : 0),
-                progress: (a, b, remainingMs) => {
-                    const scrollTo = _computeScrollTo();
-                    if (Math.abs(scrollTo - originalScrollTo) >= 1.0) {
-                        $('html, body').stop();
-                        this._scrollTo($el, scrollValue, remainingMs).then(() => resolve());
-                    }
-                },
-                complete: () => resolve(),
-            });
+    async _scrollTo($el, scrollValue = 'true') {
+        return dom.scrollTo($el[0], {
+            duration: scrollValue === 'true' ? 500 : 0,
+            extraOffset: this._computeExtraOffset(),
         });
     },
     /**
      * @private
      */
-    _computeHeaderHeight: function () {
-        let headerHeight = 0;
-        const $navbarFixed = $('.o_top_fixed_element');
-        _.each($navbarFixed, el => headerHeight += $(el).outerHeight());
-        return headerHeight;
+    _computeExtraOffset() {
+        return 0;
     },
 
     //--------------------------------------------------------------------------
