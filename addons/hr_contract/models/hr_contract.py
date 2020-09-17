@@ -23,7 +23,7 @@ class Contract(models.Model):
     job_id = fields.Many2one('hr.job', compute='_compute_employee_contract', store=True, readonly=False,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", string='Job Position')
     date_start = fields.Date('Start Date', required=True, default=fields.Date.today, tracking=True,
-        help="Start date of the contract.")
+        help="Start date of the contract.", index=True)
     date_end = fields.Date('End Date', tracking=True,
         help="End date of the contract (if it's a fixed-term contract).")
     trial_date_end = fields.Date('End of Trial Period',
@@ -44,6 +44,7 @@ class Contract(models.Model):
     company_id = fields.Many2one('res.company', compute='_compute_employee_contract', store=True, readonly=False,
         default=lambda self: self.env.company, required=True)
     company_country_id = fields.Many2one('res.country', string="Company country", related='company_id.country_id', readonly=True)
+    contract_type_id = fields.Many2one('hr.contract.type', "Contract Type")
 
     """
         kanban_state:
@@ -230,3 +231,12 @@ class Contract(models.Model):
         elif 'state' in init_values and self.state == 'close':
             return self.env.ref('hr_contract.mt_contract_close')
         return super(Contract, self)._track_subtype(init_values)
+
+    def action_open_contract_form(self):
+        self.ensure_one()
+        return {
+            "type": "ir.actions.act_window",
+            "res_model": "hr.contract",
+            "views": [[False, "form"]],
+            "res_id": self.id,
+        }
