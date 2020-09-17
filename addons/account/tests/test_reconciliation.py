@@ -1317,6 +1317,11 @@ class TestReconciliationExec(TestReconciliation):
                 }),
             ],
         })
+
+        purchase_payable_line0 = purchase_move.line_ids.filtered(lambda x: x.account_id.internal_type == 'payable' and x.credit == 100)
+        purchase_payable_line1 = purchase_move.line_ids.filtered(lambda x: x.account_id.internal_type == 'payable' and x.credit == 50)
+        tax_line = purchase_move.line_ids.filtered(lambda x: x.tax_line_id == self.tax_cash_basis)
+
         purchase_move.post()
 
         payment_move = self.env['account.move'].create({
@@ -1424,6 +1429,12 @@ class TestReconciliationExec(TestReconciliation):
              }),
             ],
         })
+
+        purchase_payable_line0 = purchase_move.line_ids.filtered(lambda x: x.account_id == self.account_rsa and x.credit == 105)
+        purchase_payable_line1 = purchase_move.line_ids.filtered(lambda x: x.account_id == self.account_rsa and x.credit == 50)
+        tax_line0 = purchase_move.line_ids.filtered(lambda x: x.tax_line_id == tax_cash_basis10percent)
+        tax_line1 = purchase_move.line_ids.filtered(lambda x: x.tax_line_id == self.tax_cash_basis)
+
         purchase_move.post()
 
         payment_move0 = self.env['account.move'].create({
@@ -1621,6 +1632,9 @@ class TestReconciliationExec(TestReconciliation):
                 }),
             ],
         })
+
+        purchase_payable_line0 = purchase_move.line_ids.filtered(lambda x: x.account_id.internal_type == 'payable')
+
         purchase_move.post()
 
         # FX 01 Move
@@ -1784,6 +1798,9 @@ class TestReconciliationExec(TestReconciliation):
                 }),
             ],
         })
+
+        purchase_payable_line0 = purchase_move.line_ids.filtered(lambda x: x.account_id.internal_type == 'payable')
+
         purchase_move.post()
 
         # FX 01 Move
@@ -1900,50 +1917,52 @@ class TestReconciliationExec(TestReconciliation):
             'code': 'TWAIT1',
         })
 
-        AccountMoveLine = self.env['account.move.line'].with_context(check_move_validity=False)
-
         # Purchase
         purchase_move = self.env['account.move'].create({
             'name': 'invoice',
             'journal_id': self.purchase_journal.id,
+            'line_ids': [
+                (0, 0, {
+                    'account_id': self.account_rsa.id,
+                    'credit': 175,
+                }),
+
+                (0, 0, {
+                    'name': 'expenseTaxed 10%',
+                    'account_id': self.expense_account.id,
+                    'debit': 50,
+                    'tax_ids': [(4, tax_cash_basis10percent.id, False)],
+                }),
+
+                (0, 0, {
+                    'name': 'TaxLine0',
+                    'account_id': tax_waiting_account10.id,
+                    'debit': 5,
+                    'tax_repartition_line_id': tax_cash_basis10percent.invoice_repartition_line_ids.filtered(lambda x: x.repartition_type == 'tax').id,
+                    'tax_base_amount': 50,
+                }),
+
+                (0, 0, {
+                    'name': 'expenseTaxed 20%',
+                    'account_id': self.expense_account.id,
+                    'debit': 100,
+                    'tax_ids': [(4, self.tax_cash_basis.id, False)],
+                }),
+
+                (0, 0, {
+                    'name': 'TaxLine1',
+                    'account_id': self.tax_waiting_account.id,
+                    'debit': 20,
+                    'tax_repartition_line_id': self.tax_cash_basis.invoice_repartition_line_ids.filtered(lambda x: x.repartition_type == 'tax').id,
+                    'tax_base_amount': 100,
+                }),
+            ],
         })
 
-        purchase_payable_line0 = AccountMoveLine.create({
-            'account_id': self.account_rsa.id,
-            'credit': 175,
-            'move_id': purchase_move.id,
-        })
+        purchase_payable_line0 = purchase_move.line_ids.filtered(lambda x: x.account_id.internal_type == 'payable')
+        tax_line0 = purchase_move.line_ids.filtered(lambda x: x.tax_line_id == tax_cash_basis10percent)
+        tax_line1 = purchase_move.line_ids.filtered(lambda x: x.tax_line_id == self.tax_cash_basis)
 
-        AccountMoveLine.create({
-            'name': 'expenseTaxed 10%',
-            'account_id': self.expense_account.id,
-            'debit': 50,
-            'move_id': purchase_move.id,
-            'tax_ids': [(4, tax_cash_basis10percent.id, False)],
-        })
-        tax_line0 = AccountMoveLine.create({
-            'name': 'TaxLine0',
-            'account_id': tax_waiting_account10.id,
-            'debit': 5,
-            'move_id': purchase_move.id,
-            'tax_repartition_line_id': tax_cash_basis10percent.invoice_repartition_line_ids.filtered(lambda x: x.repartition_type == 'tax').id,
-            'tax_base_amount': 50,
-        })
-        AccountMoveLine.create({
-            'name': 'expenseTaxed 20%',
-            'account_id': self.expense_account.id,
-            'debit': 100,
-            'move_id': purchase_move.id,
-            'tax_ids': [(4, self.tax_cash_basis.id, False)],
-        })
-        tax_line1 = AccountMoveLine.create({
-            'name': 'TaxLine1',
-            'account_id': self.tax_waiting_account.id,
-            'debit': 20,
-            'move_id': purchase_move.id,
-            'tax_repartition_line_id': self.tax_cash_basis.invoice_repartition_line_ids.filtered(lambda x: x.repartition_type == 'tax').id,
-            'tax_base_amount': 100,
-        })
         purchase_move.post()
 
         reverted = purchase_move._reverse_moves(cancel=True)
