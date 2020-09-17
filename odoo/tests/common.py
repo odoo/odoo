@@ -503,8 +503,20 @@ class ChromeBrowser():
         if self.chrome_pid is not None:
             self._logger.info("Closing chrome headless with pid %s", self.chrome_pid)
             self._websocket_send('Browser.close')
-            self._logger.info("Terminating chrome headless with pid %s", self.chrome_pid)
-            os.kill(self.chrome_pid, signal.SIGTERM)
+            nb_tries = 0
+            while True:
+                if nb_tries > 4:
+                    self._logger.info("Terminating chrome headless with pid %s", self.chrome_pid)
+                    os.kill(self.chrome_pid, signal.SIGTERM)
+                try:
+                    sub_pid, _, _ = os.wait4(self.chrome_pid, os.WNOHANG)
+                    if sub_pid == self.chrome_pid:
+                        break
+                except ChildProcessError:
+                    break  # already terminated
+                nb_tries += 1
+                time.sleep(1)
+
         if self.user_data_dir and os.path.isdir(self.user_data_dir) and self.user_data_dir != '/':
             self._logger.info('Removing chrome user profile "%s"', self.user_data_dir)
             shutil.rmtree(self.user_data_dir, ignore_errors=True)
