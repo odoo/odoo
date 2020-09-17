@@ -1,9 +1,9 @@
 odoo.define('website.s_facebook_page_options', function (require) {
 'use strict';
 
-const options = require('web_editor.snippets.options');
+const snippetOptions = require('web_editor.snippets.options');
 
-options.registry.facebookPage = options.Class.extend({
+snippetOptions.registry.facebookPage = snippetOptions.SnippetOptionWidget.extend({
     /**
      * Initializes the required facebook page data to create the iframe.
      *
@@ -51,7 +51,7 @@ options.registry.facebookPage = options.Class.extend({
      * @see this.selectClass for parameters
      * @param {String} optionName the name of the option to toggle
      */
-    toggleOption: function (previewMode, widgetValue, params) {
+    toggleOption: async function (previewMode, widgetValue, params) {
         let optionName = params.optionName;
         if (optionName.startsWith('tab.')) {
             optionName = optionName.replace('tab.', '');
@@ -74,16 +74,16 @@ options.registry.facebookPage = options.Class.extend({
                 this.fbData[optionName] = widgetValue;
             }
         }
-        return this._markFbElement();
+        return await this._markFbElement();
     },
     /**
      * Sets the facebook page's URL.
      *
      * @see this.selectClass for parameters
      */
-    pageUrl: function (previewMode, widgetValue, params) {
+    pageUrl: async function (previewMode, widgetValue, params) {
         this.fbData.href = widgetValue;
-        return this._markFbElement();
+        return await this._markFbElement();
     },
 
     //--------------------------------------------------------------------------
@@ -96,7 +96,7 @@ options.registry.facebookPage = options.Class.extend({
      * @see this.selectClass for parameters
      */
     _markFbElement: function () {
-        return this._checkURL().then(() => {
+        return this._checkURL().then(async () => {
             // Managing height based on options
             if (this.fbData.tabs) {
                 this.fbData.height = this.fbData.tabs === 'events' ? 300 : 500;
@@ -105,10 +105,10 @@ options.registry.facebookPage = options.Class.extend({
             } else {
                 this.fbData.height = this.fbData.show_facepile ? 225 : 150;
             }
-            _.each(this.fbData, (value, key) => {
-                this.$target.attr('data-' + key, value);
+            for (const [key, value] of Object.entries(this.fbData)) {
+                await this.editorHelpers.setAttribute(this.wysiwyg.editor, this.$target[0], `data-${key}`, value);
                 this.$target.data(key, value);
-            });
+            }
         });
     },
     /**

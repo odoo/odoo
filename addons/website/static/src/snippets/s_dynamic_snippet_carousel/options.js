@@ -1,7 +1,7 @@
 odoo.define('website.s_dynamic_snippet_carousel_options', function (require) {
 'use strict';
 
-const options = require('web_editor.snippets.options');
+const snippetOptions = require('web_editor.snippets.options');
 const s_dynamic_snippet_options = require('website.s_dynamic_snippet_options');
 
 const dynamicSnippetCarouselOptions = s_dynamic_snippet_options.extend({
@@ -22,7 +22,7 @@ const dynamicSnippetCarouselOptions = s_dynamic_snippet_options.extend({
 
 });
 
-options.registry.dynamic_snippet_carousel = dynamicSnippetCarouselOptions;
+snippetOptions.registry.dynamic_snippet_carousel = dynamicSnippetCarouselOptions;
 
 return dynamicSnippetCarouselOptions;
 });
