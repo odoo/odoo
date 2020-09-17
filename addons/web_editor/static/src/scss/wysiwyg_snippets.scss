@@ -4,11 +4,7 @@
 
 // OVERRIDES FOR EDITOR WITH SNIPPETS
 body.editor_enable.editor_has_snippets {
-    padding-right: $o-we-sidebar-width !important;
-
-    #web_editor-top-edit .note-popover .popover {
-        right: $o-we-sidebar-width !important;
-    }
+    position: fixed;
 
     .modal:not(.o_technical_modal) {
         top: 0 !important;
@@ -297,9 +293,6 @@ body.editor_enable.editor_has_snippets {
 #oe_snippets {
     @include o-w-preserve-btn;
 
-    @include o-position-absolute(var(--o-we-toolbar-height), 0, 0, auto);
-    position: fixed;
-    z-index: $o-we-zindex;
     display: flex;
     flex-flow: column nowrap;
     width: $o-we-sidebar-width;
@@ -487,8 +480,88 @@ body.editor_enable.editor_has_snippets {
             width: $o-we-sidebar-content-available-room * .6;
         }
 
-        we-button, we-toggler {
+        we-button, jw-button, we-toggler, input[type=text], input[type=number], select {
             @extend %we-generic-button;
+        }
+
+        jw-button {
+            display: inline-block;
+            box-sizing: border-box;
+            padding: 3px 6px 0;
+            min-width: 28px;
+            text-align: center;
+        }
+        .jw-dropdown{
+            border-radius: 18px;
+            border: 1px solid #000;
+            background-image: url('/web/static/src/img/transparent.png');
+            background-size: 10px auto;
+            jw-button{
+                border: 2px solid #fff;
+                border-radius: 18px;
+                background-color: rgba(255,255,255,0);
+                &:after, &:before{
+                    display:none;
+                }
+            }
+        }
+
+        jw-select {
+            > jw-group {
+                z-index: 1;
+                display: none;
+                position: absolute;
+                left: 0;
+                right: 0;
+                z-index: 1000;
+                margin-top: 8px !important;
+                &:before {
+                    border-color: transparent transparent #444444 transparent;
+                    border-width: 9px;
+                    top: -17px;
+                    border-style: solid;
+                    content: '';
+                    position: absolute;
+                }
+                jw-button {
+                    display: block;
+                    margin: 0 10px 0 15px;
+                    line-height: 28px;
+                    height: 35px;
+                    text-align: left;
+                    padding-left: 24px;
+                    color: #C6C6C6;
+                    border-bottom-width: 0;
+                    &:last-child {
+                        border-bottom-width: 1px;
+                    }
+                    &.active {
+                        background-color: #42424c !important;
+                        box-shadow: none;
+                        &:before {
+                            color: #01bad2;
+                            content: "";
+                            right: auto;
+                            left: 22px;
+                            position: absolute;
+                            font-family: FontAwesome;
+                        }
+                    }
+                }
+            }
+            &[aria-pressed="true"] > jw-group {
+                display: block;
+            }
+        }
+
+        jw-group {
+            select {
+                min-width: fit-content;
+                display: inline-block;
+            }
+            input {
+                display: inline-block !important;
+            }
         }
 
         we-button.o_we_link {
@@ -764,7 +837,7 @@ body.editor_enable.editor_has_snippets {
                     line-height: $o-we-sidebar-content-field-dropdown-item-height;
                 }
 
-                we-button {
+                we-button, jw-button, input[type=text], input[type=number], select {
                     @include we-icon-button('', $align: left); // Always a padding on the left
                     border: none;
                     background: none;
@@ -850,7 +923,7 @@ body.editor_enable.editor_has_snippets {
                 display: flex;
                 max-width: 100%;
 
-                we-button {
+                we-button, jw-button {
                     padding: 0 $o-we-sidebar-content-field-button-group-button-spacing;
                     border-radius: 0;
 
@@ -880,7 +953,7 @@ body.editor_enable.editor_has_snippets {
         }
 
         // Inputs
-        we-input.o_we_user_value_widget {
+        we-input.o_we_user_value_widget, we-toolbar input {
 
             > div {
                 flex: 0 1 auto;
@@ -1502,8 +1575,12 @@ body.editor_enable.editor_has_snippets {
 
 // MANIPULATORS
 #oe_manipulators {
-    position: relative;
+    position: absolute;
     z-index: $o-we-overlay-zindex;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
 
     // SNIPPET MANIPULATORS
     .oe_overlay {
@@ -1514,6 +1591,7 @@ body.editor_enable.editor_has_snippets {
         background: transparent;
         text-align: center;
         transition: opacity 400ms linear 0s;
+        pointer-events: auto;
 
         &.o_overlay_hidden {
             opacity: 0;
@@ -1859,6 +1937,20 @@ body.editor_enable.editor_has_snippets {
     animation: fadeInDownSmall 700ms forwards;
 }
 
+.o_overlay_move_handle {
+    position: absolute;
+    color: $o-we-fg-lighter;
+    background-color: rgba(0,0,0,.7);
+    > .o_move_handle {
+        cursor: move;
+        width: 30px;
+        height: 22px;
+        background-image: url('/web_editor/static/src/img/snippets_options/o_overlay_move_drag.svg');
+        background-position: center;
+        background-repeat: no-repeat;
+    }
+}
+
 // CONTAINER PREVIEW
 .o_container_preview {
     outline: 2px dashed $o-we-handles-accent-color;
@@ -1894,4 +1986,7 @@ we-select.o_we_shape_menu {
     // overlay covering).
     position: fixed;
     right: $o-we-sidebar-width;
+}
+.o_main_sidebar:not(.o_loaded) #oe_snippets {
+    display: none !important;
 }
