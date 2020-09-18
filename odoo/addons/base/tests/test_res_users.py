@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import TransactionCase, Form, tagged
 
 
 class TestUsers(TransactionCase):
@@ -114,3 +114,18 @@ class TestUsers(TransactionCase):
             "On user company change, if its partner_id has already a company_id,"
             "the company_id of the partner_id shall be updated"
         )
+
+@tagged('post_install', '-at_install')
+class TestUsers2(TransactionCase):
+    def test_reified_groups(self):
+        """ The groups handler doesn't use the "real" view with pseudo-fields
+        during installation, so it always works (because it uses the normal
+        groups_id field).
+        """
+        # use the specific views which has the pseudo-fields
+        f = Form(self.env['res.users'], view='base.view_users_form')
+        f.name = "bob"
+        f.login = "bob"
+        user = f.save()
+
+        self.assertIn(self.env.ref('base.group_user'), user.groups_id)
