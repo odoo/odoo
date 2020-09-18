@@ -92,7 +92,10 @@
         }
         notifyCB() { }
         observe(value, parent) {
-            if (value === null || typeof value !== "object" || value instanceof Date) {
+            if (value === null ||
+                typeof value !== "object" ||
+                value instanceof Date ||
+                value instanceof Promise) {
                 // fun fact: typeof null === 'object'
                 return value;
             }
@@ -1358,7 +1361,6 @@
     //------------------------------------------------------------------------------
     // Const/global stuff/helpers
     //------------------------------------------------------------------------------
-    const DISABLED_TAGS = ["input", "textarea", "button", "select", "option", "optgroup"];
     const TRANSLATABLE_ATTRS = ["label", "title", "placeholder", "alt"];
     const lineBreakRE = /[\r\n]/;
     const whitespaceRE = /\s+/g;
@@ -1370,6 +1372,25 @@
     };
     function isComponent(obj) {
         return obj && obj.hasOwnProperty("__owl__");
+    }
+    class VDomArray extends Array {
+        toString() {
+            return vDomToString(this);
+        }
+    }
+    function vDomToString(vdom) {
+        return vdom
+            .map((vnode) => {
+            if (vnode.sel) {
+                const node = document.createElement(vnode.sel);
+                const result = patch(node, vnode);
+                return result.elm.outerHTML;
+            }
+            else {
+                return vnode.text;
+            }
+        })
+            .join("");
     }
     const UTILS = {
         zero: Symbol("zero"),
@@ -1392,22 +1413,8 @@
         addNameSpace(vnode) {
             addNS(vnode.data, vnode.children, vnode.sel);
         },
-        VDomArray: class VDomArray extends Array {
-        },
-        vDomToString: function (vdom) {
-            return vdom
-                .map((vnode) => {
-                if (vnode.sel) {
-                    const node = document.createElement(vnode.sel);
-                    const result = patch(node, vnode);
-                    return result.elm.outerHTML;
-                }
-                else {
-                    return vnode.text;
-                }
-            })
-                .join("");
-        },
+        VDomArray,
+        vDomToString,
         getComponent(obj) {
             while (obj && !isComponent(obj)) {
                 obj = obj.__proto__;
@@ -1735,10 +1742,16 @@
                 }
                 return;
             }
+            if (node.tagName !== "t" && node.hasAttribute("t-call")) {
+                const tCallNode = document.createElement("t");
+                tCallNode.setAttribute("t-call", node.getAttribute("t-call"));
+                node.removeAttribute("t-call");
+                node.prepend(tCallNode);
+            }
             const firstLetter = node.tagName[0];
             if (firstLetter === firstLetter.toUpperCase()) {
                 // this is a component, we modify in place the xml document to change
-                // <SomeComponent ... /> to <t t-component="SomeComponent" ... />
+                // <SomeComponent ... /> to <SomeComponent t-component="SomeComponent" ... />
                 node.setAttribute("t-component", node.tagName);
             }
             else if (node.tagName !== "t" && node.hasAttribute("t-component")) {
@@ -1868,22 +1881,31 @@
             const attrs = [];
             const props = [];
             const tattrs = [];
-            function handleBooleanProps(key, val) {
+            function handleProperties(key, val) {
                 let isProp = false;
-                if (node.nodeName === "input" && key === "checked") {
-                    let type = node.getAttribute("type");
-                    if (type === "checkbox" || type === "radio") {
-                        isProp = true;
-                    }
-                }
-                if (node.nodeName === "option" && key === "selected") {
-                    isProp = true;
-                }
-                if (key === "disabled" && DISABLED_TAGS.indexOf(node.nodeName) > -1) {
-                    isProp = true;
-                }
-                if ((key === "readonly" && node.nodeName === "input") || node.nodeName === "textarea") {
-                    isProp = true;
+                switch (node.nodeName) {
+                    case "input":
+                        let type = node.getAttribute("type");
+                        if (type === "checkbox" || type === "radio") {
+                            if (key === "checked" || key === "indeterminate") {
+                                isProp = true;
+                            }
+                        }
+                        if (key === "value" || key === "readonly" || key === "disabled") {
+                            isProp = true;
+                        }
+                        break;
+                    case "option":
+                        isProp = key === "selected" || key === "disabled";
+                        break;
+                    case "textarea":
+                        isProp = key === "readonly" || key === "disabled";
+                        break;
+                    case "button":
+                    case "select":
+                    case "optgroup":
+                        isProp = key === "disabled";
+                        break;
                 }
                 if (isProp) {
                     props.push(`${key}: _${val}`);
@@ -1921,7 +1943,7 @@
                             name = '"' + name + '"';
                         }
                         attrs.push(`${name}: _${attID}`);
-                        handleBooleanProps(name, attID);
+                        handleProperties(name, attID);
                     }
                 }
                 // dynamic attributes
@@ -1958,7 +1980,7 @@
                         }
                         ctx.addLine(`let _${attID} = ${formattedValue};`);
                         attrs.push(`${attName}: _${attID}`);
-                        handleBooleanProps(attName, attID);
+                        handleProperties(attName, attID);
                     }
                 }
                 if (name.startsWith("t-attf-")) {
@@ -2279,9 +2301,6 @@
             // ------------------------------------------------
             ctx.rootContext.shouldDefineScope = true;
             ctx.rootContext.shouldDefineUtils = true;
-            if (node.nodeName !== "t") {
-                throw new Error("Invalid tag for t-call directive (should be 't')");
-            }
             const subTemplate = node.getAttribute("t-call");
             const nodeTemplate = qweb.templates[subTemplate];
             if (!nodeTemplate) {
@@ -2299,12 +2318,11 @@
             // Step 3: compile t-call body if necessary
             // ------------------------------------------------
             let hasBody = node.hasChildNodes();
-            let protectID;
+            const protectID = ctx.startProtectScope();
             if (hasBody) {
                 // we add a sub scope to protect the ambient scope
                 ctx.addLine(`{`);
                 ctx.indent();
-                protectID = ctx.startProtectScope();
                 const nodeCopy = node.cloneNode(true);
                 for (let attr of ["t-if", "t-else", "t-elif", "t-call"]) {
                     nodeCopy.removeAttribute(attr);
@@ -2324,28 +2342,27 @@
             }
             // Step 4: add the appropriate function call to current component
             // ------------------------------------------------
-            const callingScope = hasBody ? "scope" : "Object.assign(Object.create(context), scope)";
             const parentComponent = `utils.getComponent(context)`;
             const key = ctx.generateTemplateKey();
             const parentNode = ctx.parentNode ? `c${ctx.parentNode}` : "result";
             const extra = `Object.assign({}, extra, {parentNode: ${parentNode}, parent: ${parentComponent}, key: ${key}})`;
             if (ctx.parentNode) {
-                ctx.addLine(`this.constructor.subTemplates['${subId}'].call(this, ${callingScope}, ${extra});`);
+                ctx.addLine(`this.constructor.subTemplates['${subId}'].call(this, scope, ${extra});`);
             }
             else {
                 // this is a t-call with no parentnode, we need to extract the result
                 ctx.rootContext.shouldDefineResult = true;
                 ctx.addLine(`result = []`);
-                ctx.addLine(`this.constructor.subTemplates['${subId}'].call(this, ${callingScope}, ${extra});`);
+                ctx.addLine(`this.constructor.subTemplates['${subId}'].call(this, scope, ${extra});`);
                 ctx.addLine(`result = result[0]`);
             }
             // Step 5: restore previous scope
             // ------------------------------------------------
             if (hasBody) {
-                ctx.stopProtectScope(protectID);
                 ctx.dedent();
                 ctx.addLine(`}`);
             }
+            ctx.stopProtectScope(protectID);
             return true;
         },
     });
@@ -2653,6 +2670,8 @@
         const n = parseFloat(val);
         return isNaN(n) ? val : n;
     };
+    const hasDotAtTheEnd = /\.[\w_]+\s*$/;
+    const hasBracketsAtTheEnd = /\[[^\[]+\]\s*$/;
     QWeb.addDirective({
         name: "model",
         priority: 42,
@@ -2660,14 +2679,41 @@
             const type = node.getAttribute("type");
             let handler;
             let event = fullName.includes(".lazy") ? "change" : "input";
-            // we keep here a reference to the "base expression" (if the expression
-            // is `t-model="some.expr.value", then the base expression is "some.expr").
-            // This is necessary so we can capture it in the handler closure.
-            let expr = ctx.formatExpression(value);
-            const index = expr.lastIndexOf(".");
-            const baseExpr = expr.slice(0, index);
-            ctx.addLine(`let expr${nodeID} = ${baseExpr};`);
-            expr = `expr${nodeID}.${expr.slice(index + 1)}`;
+            // First step: we need to understand the structure of the expression, and
+            // from it, extract a base expression (that we can capture, which is
+            // important because it will be used in a handler later) and a formatted
+            // expression (which uses the captured base expression)
+            //
+            // Also, we support 2 kinds of values: some.expr.value or some.expr[value]
+            // For the first one, we have:
+            // - base expression = scope[some].expr
+            // - expression = exprX.value (where exprX is the var that captures the base expr)
+            // and for the expression with brackets:
+            // - base expression = scope[some].expr
+            // - expression = exprX[keyX] (where exprX is the var that captures the base expr
+            //        and keyX captures scope[value])
+            let expr;
+            let baseExpr;
+            if (hasDotAtTheEnd.test(value)) {
+                // we manage the case where the expr has a dot: some.expr.value
+                const index = value.lastIndexOf(".");
+                baseExpr = value.slice(0, index);
+                ctx.addLine(`let expr${nodeID} = ${ctx.formatExpression(baseExpr)};`);
+                expr = `expr${nodeID}${value.slice(index)}`;
+            }
+            else if (hasBracketsAtTheEnd.test(value)) {
+                // we manage here the case where the expr ends in a bracket expression:
+                //    some.expr[value]
+                const index = value.lastIndexOf("[");
+                baseExpr = value.slice(0, index);
+                ctx.addLine(`let expr${nodeID} = ${ctx.formatExpression(baseExpr)};`);
+                let exprKey = value.trimRight().slice(index + 1, -1);
+                ctx.addLine(`let exprKey${nodeID} = ${ctx.formatExpression(exprKey)};`);
+                expr = `expr${nodeID}[exprKey${nodeID}]`;
+            }
+            else {
+                throw new Error(`Invalid t-model expression: "${value}" (it should be assignable)`);
+            }
             const key = ctx.generateTemplateKey();
             if (node.tagName === "select") {
                 ctx.addLine(`p${nodeID}.props = {value: ${expr}};`);
@@ -3465,13 +3511,21 @@
                 else {
                     if (fiber.shouldPatch) {
                         component.__patch(component.__owl__.vnode, fiber.vnode);
+                        // When updating a Component's props (in directive),
+                        // the component has a pvnode AND should be patched.
+                        // However, its pvnode.elm may have changed if it is a High Order Component
+                        if (component.__owl__.pvnode) {
+                            component.__owl__.pvnode.elm = component.__owl__.vnode.elm;
+                        }
                     }
                     else {
                         component.__patch(document.createElement(fiber.vnode.sel), fiber.vnode);
                         component.__owl__.pvnode.elm = component.__owl__.vnode.elm;
                     }
                 }
-                component.__owl__.currentFiber = null;
+                if (fiber === component.__owl__.currentFiber) {
+                    component.__owl__.currentFiber = null;
+                }
             }
             // insert into the DOM (mount case)
             let inDOM = false;
@@ -3585,7 +3639,7 @@
                         throw new Error(`Missing props '${propName}' (component '${Widget.name}')`);
                     }
                     else {
-                        break;
+                        continue;
                     }
                 }
                 let isValid;
@@ -4092,9 +4146,9 @@
             }
             this.willUnmount();
             __owl__.isMounted = false;
-            if (this.__owl__.currentFiber) {
-                this.__owl__.currentFiber.isCompleted = true;
-                this.__owl__.currentFiber.root.counter = 0;
+            if (__owl__.currentFiber) {
+                __owl__.currentFiber.isCompleted = true;
+                __owl__.currentFiber.root.counter = 0;
             }
             const children = __owl__.children;
             for (let id in children) {
@@ -4249,9 +4303,28 @@
                 // destroyed right now, because they are not in the DOM, and thus we won't
                 // be notified later on (when patching), that they are removed from the DOM
                 for (let childKey in __owl__.children) {
-                    let child = __owl__.children[childKey];
-                    if (!child.__owl__.isMounted && child.__owl__.parentLastFiberId < fiber.id) {
-                        child.destroy();
+                    const child = __owl__.children[childKey];
+                    const childOwl = child.__owl__;
+                    if (!childOwl.isMounted && childOwl.parentLastFiberId < fiber.id) {
+                        // we only do here a "soft" destroy, meaning that we leave the child
+                        // dom node alone, without removing it.  Most of the time, it does not
+                        // matter, because the child component is already unmounted.  However,
+                        // if some of its parent have been unmounted, the child could actually
+                        // still be attached to its parent, and this may be important if we
+                        // want to remount the parent, because the vdom need to match the
+                        // actual DOM
+                        child.__destroy(childOwl.parent);
+                        if (childOwl.pvnode) {
+                            // we remove the key here to make sure that the patching algorithm
+                            // is able to make the difference between this pvnode and an eventual
+                            // other instance of the same component
+                            delete childOwl.pvnode.key;
+                            // Since the component has been unmounted, we do not want to actually
+                            // call a remove hook.  This is pretty important, since the t-component
+                            // directive actually disabled it, so the vdom algorithm will just
+                            // not remove the child elm if we don't remove the hook.
+                            delete childOwl.pvnode.data.hook.remove;
+                        }
                     }
                 }
                 if (!vnode) {
@@ -5195,9 +5268,9 @@
     exports.useState = useState$1;
     exports.utils = utils;
 
-    exports.__info__.version = '1.0.9';
-    exports.__info__.date = '2020-06-09T06:36:43.187Z';
-    exports.__info__.hash = 'c5a2f52';
+    exports.__info__.version = '1.0.10';
+    exports.__info__.date = '2020-10-02T07:33:29.701Z';
+    exports.__info__.hash = 'e73fb46';
     exports.__info__.url = 'https://github.com/odoo/owl';
 
 }(this.owl = this.owl || {}));
