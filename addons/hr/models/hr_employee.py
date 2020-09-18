@@ -284,6 +284,14 @@ class HrEmployeePrivate(models.Model):
             }
         return res
 
+    @api.onchange('company_id')
+    def _onchange_company_id(self):
+        if self._origin:
+            return {'warning': {
+                'title': _("Warning"),
+                'message': _("To avoid multi company issues (loosing the access to your previous contracts, leaves, ...), you should create another employee in the new company instead.")
+            }}
+
     def generate_random_barcode(self):
         for employee in self:
             employee.barcode = '041'+"".join(choice(digits) for i in range(9))
@@ -338,3 +346,4 @@ class HrEmployeePrivate(models.Model):
 
     def _sms_get_number_fields(self):
         return ['mobile_phone']
+
