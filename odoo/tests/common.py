@@ -1701,6 +1701,15 @@ class Form(object):
         # call onchange with an empty list of fields; this retrieves default
         # values, applies onchanges and return the result
         self._perform_onchange([])
+        # fill in whatever fields are still missing with falsy values
+        vals.update(
+            (f, _cleanup_from_default(descr['type'], False))
+            for f, descr in self._view['fields'].items()
+            if f not in vals
+        )
+        # mark all fields as modified (though maybe this should be done on
+        # save when creating for better reliability?)
+        self._changed.update(self._view['fields'])
 
     def _init_from_values(self, values):
         self._values.update(
@@ -1981,7 +1990,7 @@ class Form(object):
             _logger.getChild('onchange').warning("%(title)s %(message)s" % result.get('warning'))
         values = result.get('value', {})
         # mark onchange output as changed
-        self._changed.update(values.keys())
+        self._changed.update(values.keys() & self._view['fields'].keys())
         self._values.update(
             (k, self._cleanup_onchange(
                 self._view['fields'][k],
@@ -2385,16 +2394,21 @@ class M2MProxy(X2MProxy, collections.Sequence):
 
 def record_to_values(fields, record):
     r = {}
-    for f, descr in fields.items():
-        v = record[f]
+    # don't read the id explicitly, not sure why but if any of the "magic" hr
+    # field is read alongside `id` then it blows up e.g.
+    # james.read(['barcode']) works fine but james.read(['id', 'barcode'])
+    # triggers an ACL error on barcode, likewise km_home_work or
+    # emergency_contact or whatever. Since we always get the id anyway, just
+    # remove it from the fields to read
+    to_read = list(fields.keys() - {'id'})
+    for f, v in record.read(to_read)[0].items():
+        descr = fields[f]
         if descr['type'] == 'many2one':
-            assert v._name == descr['relation']
-            v = v.id
+            v = v and v[0]
         elif descr['type'] == 'many2many':
-            assert v._name == descr['relation']
-            v = [(6, 0, v.ids)]
+            v = [(6, 0, v or [])]
         elif descr['type'] == 'one2many':
-            v = [(1, r.id, None) for r in v]
+            v = [(1, r, None) for r in v or []]
         elif descr['type'] == 'datetime' and isinstance(v, datetime):
             v = odoo.fields.Datetime.to_string(v)
         elif descr['type'] == 'date' and isinstance(v, date):
