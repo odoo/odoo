@@ -173,7 +173,7 @@ class PosOrder(models.Model):
                 'name': _('return'),
                 'pos_order_id': order.id,
                 'amount': -pos_order['amount_return'],
-                'payment_date': fields.Date.context_today(self),
+                'payment_date': fields.Datetime.now(),
                 'payment_method_id': cash_payment_method.id,
             }
             order.add_payment(return_payment_vals)
