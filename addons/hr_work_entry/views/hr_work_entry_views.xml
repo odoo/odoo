@@ -88,8 +88,9 @@
         <field name="arch" type="xml">
             <search string="Search Work Entry">
                 <field name="employee_id"/>
+                <field name="department_id"/>
+                <field name="work_entry_type_id"/>
                 <field name="name"/>
-                <filter name="my_work_entries" string="My Entries" domain="[('employee_id.user_id', '=', uid)]"/>
                 <filter name="work_entries_error" string="Conflicting" domain="[('state', '=', 'conflict')]"/>
                 <separator/>
                 <filter name="date_filter" string="Date" date="date_start"/>
@@ -98,6 +99,7 @@
                     ('date_start', '&lt;', (context_today() + relativedelta(months=1)).strftime('%Y-%m-01'))]"/>
                 <separator/>
                 <filter name="group_employee" string="Employee" context="{'group_by': 'employee_id'}"/>
+                <filter name="group_department" string="Department" context="{'group_by': 'department_id'}"/>
                 <filter name="group_work_entry_type" string="Type" context="{'group_by': 'work_entry_type_id'}"/>
                 <filter name="group_start_date" string="Start Date" context="{'group_by': 'date_start'}"/>
                 <separator/>

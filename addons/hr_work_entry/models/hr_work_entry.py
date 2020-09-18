@@ -29,6 +29,7 @@ class HrWorkEntry(models.Model):
     company_id = fields.Many2one('res.company', string='Company', readonly=True, required=True,
         default=lambda self: self.env.company)
     conflict = fields.Boolean('Conflicts', compute='_compute_conflict', store=True)  # Used to show conflicting work entries first
+    department_id = fields.Many2one('hr.department', related='employee_id.department_id', store=True)
 
     _sql_constraints = [
         ('_work_entry_has_end', 'check (date_stop IS NOT NULL)', 'Work entry must end. Please define an end date or a duration.'),
