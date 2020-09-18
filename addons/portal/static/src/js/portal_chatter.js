@@ -278,8 +278,7 @@ var PortalChatter = publicWidget.Widget.extend({
             if (result === true) {
                 $elem.addClass('o_portal_message_internal_on');
                 $elem.removeClass('o_portal_message_internal_off');
-            }
-            else {
+            } else {
                 $elem.addClass('o_portal_message_internal_off');
                 $elem.removeClass('o_portal_message_internal_on');
             }
