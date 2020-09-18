@@ -163,7 +163,6 @@ function clickOnText(snippet, element, position = "bottom") {
         position: position,
         run: "text",
         consumeEvent: "input",
-        optional: "true",
     };
 }
 
