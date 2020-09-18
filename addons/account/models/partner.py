@@ -32,9 +32,9 @@ class AccountFiscalPosition(models.Model):
     auto_apply = fields.Boolean(string='Detect Automatically', help="Apply automatically this fiscal position.")
     vat_required = fields.Boolean(string='VAT required', help="Apply only if partner has a VAT number.")
     country_id = fields.Many2one('res.country', string='Country',
-        help="Apply only if delivery or invoicing country match.")
+        help="Apply only if delivery country matches.")
     country_group_id = fields.Many2one('res.country.group', string='Country Group',
-        help="Apply only if delivery or invoicing country match the group.")
+        help="Apply only if delivery country matches the group.")
     state_ids = fields.Many2many('res.country.state', string='Federal States')
     zip_from = fields.Char(string='Zip Range From')
     zip_to = fields.Char(string='Zip Range To')
