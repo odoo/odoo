@@ -221,6 +221,12 @@ function factory(dependencies) {
                 if (!data.seen_partners_info) {
                     data2.partnerSeenInfos = [['unlink-all']];
                 } else {
+                    /*
+                     * FIXME: not optimal to write on relation given the fact that the relation
+                     * will be (re)computed based on given fields.
+                     * (here channelId will compute partnerSeenInfo.thread))
+                     * task-2336946
+                     */
                     data2.partnerSeenInfos = [
                         ['insert-and-replace',
                             data.seen_partners_info.map(
@@ -245,12 +251,18 @@ function factory(dependencies) {
                             return currentSet;
                         }, new Set());
                         if (messageIds.size > 0) {
+                            /*
+                             * FIXME: not optimal to write on relation given the fact that the relation
+                             * will be (re)computed based on given fields.
+                             * (here channelId will compute messageSeenIndicator.thread))
+                             * task-2336946
+                             */
                             data2.messageSeenIndicators = [
                                 ['insert',
                                     [...messageIds].map(messageId => {
                                        return {
-                                           id: this.env.models['mail.message_seen_indicator'].computeId(messageId, data.id || this.id),
-                                           message: [['insert', { id: messageId }]],
+                                           channelId: data.id || this.id,
+                                           messageId,
                                        };
                                     })
                                 ]

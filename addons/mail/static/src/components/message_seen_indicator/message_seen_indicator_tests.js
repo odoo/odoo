@@ -61,8 +61,8 @@ QUnit.test('rendering when just one has received the message', async function (a
             },
         ]]],
         messageSeenIndicators: [['insert', {
-            id: this.env.models['mail.message_seen_indicator'].computeId(100, 1000),
-            message: [['insert', { id: 100 }]],
+            channelId: 1000,
+            messageId: 100,
         }]],
     });
     const message = this.env.models['mail.message'].insert({
@@ -109,8 +109,8 @@ QUnit.test('rendering when everyone have received the message', async function (
             },
         ]]],
         messageSeenIndicators: [['insert', {
-            id: this.env.models['mail.message_seen_indicator'].computeId(100, 1000),
-            message: [['insert', { id: 100 }]],
+            channelId: 1000,
+            messageId: 100,
         }]],
     });
     const message = this.env.models['mail.message'].insert({
@@ -158,8 +158,8 @@ QUnit.test('rendering when just one has seen the message', async function (asser
             },
         ]]],
         messageSeenIndicators: [['insert', {
-            id: this.env.models['mail.message_seen_indicator'].computeId(100, 1000),
-            message: [['insert', { id: 100 }]],
+            channelId: 1000,
+            messageId: 100,
         }]],
     });
     const message = this.env.models['mail.message'].insert({
@@ -207,8 +207,8 @@ QUnit.test('rendering when just one has seen & received the message', async func
             },
         ]]],
         messageSeenIndicators: [['insert', {
-            id: this.env.models['mail.message_seen_indicator'].computeId(100, 1000),
-            message: [['insert', { id: 100 }]],
+            channelId: 1000,
+            messageId: 100,
         }]],
     });
     const message = this.env.models['mail.message'].insert({
@@ -258,8 +258,8 @@ QUnit.test('rendering when just everyone has seen the message', async function (
             },
         ]]],
         messageSeenIndicators: [['insert', {
-            id: this.env.models['mail.message_seen_indicator'].computeId(100, 1000),
-            message: [['insert', { id: 100 }]],
+            channelId: 1000,
+            messageId: 100,
         }]],
     });
     const message = this.env.models['mail.message'].insert({
