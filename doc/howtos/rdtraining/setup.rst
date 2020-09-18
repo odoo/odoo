@@ -96,6 +96,7 @@ All the Odoo sources will be located in `$HOME/src/`
 
 .. tip:: You may need to ask your manager read rights to fetch the enterprise repository.
 
+.. _howto/rdtraining/setup/development_repository:
 
 Configure development repository
 --------------------------------
