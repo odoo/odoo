@@ -895,16 +895,17 @@ body.editor_enable.editor_has_snippets {
                 > div {
                     display: flex;
                     align-items: center;
-    
+
                     > * {
                         margin: 0 2px;
-                        border: 1px solid $o-we-color-text-normal;
+                        // box-shadow instead of border due to incorrect border rendering when using css transform in Firefox
+                        box-shadow: 0px 0px 0px 1px $o-we-color-text-normal;
                         border-radius: 20%;
                         color: $o-we-color-text-normal;
                         opacity: 0.5;
                         transition: opacity 400ms ease 0s;
                         cursor: pointer;
-    
+
                         &:hover {
                             opacity: 1;
                         }
@@ -916,7 +917,7 @@ body.editor_enable.editor_has_snippets {
                 .o_move_handle {
                     padding: 3px 4px;
                     cursor: move;
-    
+
                     &::before, &::after {
                         content: '\f141';
                         display: block;
