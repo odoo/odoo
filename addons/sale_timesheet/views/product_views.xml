@@ -12,9 +12,6 @@
             <xpath expr="//field[@name='service_type']" position="after">
                 <field name="service_policy" widget="radio" attrs="{'invisible': [('type','!=','service')]}"/>
             </xpath>
-            <xpath expr="//field[@name='project_id']" position="attributes">
-                <attribute name="context">{'default_allow_billable': True}</attribute>
-            </xpath>
         </field>
     </record>
 
