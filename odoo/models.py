@@ -5338,20 +5338,24 @@ Fields:
                     elif comparator == 'not in':
                         ok = all(map(lambda x: x not in data, value))
                     elif comparator == 'not ilike':
+                        data = [(x or "") for x in data]
                         ok = all(map(lambda x: value.lower() not in x.lower(), data))
                     elif comparator == 'ilike':
-                        data = [x.lower() for x in data]
+                        data = [(x or "").lower() for x in data]
                         ok = bool(fnmatch.filter(data, '*'+(value_esc or '').lower()+'*'))
                     elif comparator == 'not like':
+                        data = [(x or "") for x in data]
                         ok = all(map(lambda x: value not in x, data))
                     elif comparator == 'like':
+                        data = [(x or "") for x in data]
                         ok = bool(fnmatch.filter(data, value and '*'+value_esc+'*'))
                     elif comparator == '=?':
                         ok = (value in data) or not value
                     elif comparator in ('=like'):
+                        data = [(x or "") for x in data]
                         ok = bool(fnmatch.filter(data, value_esc))
                     elif comparator in ('=ilike'):
-                        data = [x.lower() for x in data]
+                        data = [(x or "").lower() for x in data]
                         ok = bool(fnmatch.filter(data, value and value_esc.lower()))
                     else:
                         raise ValueError
