@@ -87,7 +87,12 @@ odoo.define('hr_expense.expenses.tree', function (require) {
         }
     };
 
-    var ExpenseListRenderer = ListRenderer.extend(ExpenseDashboardMixin, ExpenseQRCodeMixin);
+    // Expense List Renderer
+    var ExpenseListRenderer = ListRenderer.extend(ExpenseQRCodeMixin);
+
+    // Expense List Renderer with the Header
+    // Used in "My Expenses to Report", "All My Expenses" & "My Reports"
+    var ExpenseListRendererHeader = ExpenseListRenderer.extend(ExpenseDashboardMixin);
 
     var ExpensesListViewDashboardUpload = ListView.extend({
         config: _.extend({}, ListView.prototype.config, {
@@ -96,11 +101,27 @@ odoo.define('hr_expense.expenses.tree', function (require) {
         }),
     });
 
+    // Used in "My Expenses to Report" & "All My Expenses"
+    var ExpensesListViewDashboardUploadHeader = ExpensesListViewDashboardUpload.extend({
+        config: _.extend({}, ExpensesListViewDashboardUpload.prototype.config, {
+            Renderer: ExpenseListRendererHeader,
+        }),
+    });
+
+    // The dashboard view of the expense module
     var ExpensesListViewDashboard = ListView.extend({
         config: _.extend({}, ListView.prototype.config, {
             Renderer: ExpenseListRenderer,
             Controller: ExpensesListController,
         }),
+    });
+
+    // The dashboard view of the expense module with an header
+    // Used in "My Expenses"
+    var ExpensesListViewDashboardHeader = ExpensesListViewDashboard.extend({
+        config: _.extend({}, ExpensesListViewDashboard.prototype.config, {
+            Renderer: ExpenseListRendererHeader,
+        })
     });
 
     var ExpensesKanbanController = KanbanController.extend(DocumentUploadMixin, {
@@ -111,8 +132,11 @@ odoo.define('hr_expense.expenses.tree', function (require) {
         }),
     });
 
-    var ExpenseKanbanRenderer = KanbanRenderer.extend(ExpenseDashboardMixin, ExpenseQRCodeMixin);
+    var ExpenseKanbanRenderer = KanbanRenderer.extend(ExpenseQRCodeMixin);
 
+    var ExpenseKanbanRendererHeader = ExpenseKanbanRenderer.extend(ExpenseDashboardMixin);
+
+    // The kanban view
     var ExpensesKanbanView = KanbanView.extend({
         config: _.extend({}, KanbanView.prototype.config, {
             Controller: ExpensesKanbanController,
@@ -120,7 +144,24 @@ odoo.define('hr_expense.expenses.tree', function (require) {
         }),
     });
 
+    // The kanban view with the Header
+    // Used in "My Expenses to Report", "All My Expenses" & "My Repo
+    var ExpensesKanbanViewHeader = ExpensesKanbanView.extend({
+        config: _.extend({}, ExpensesKanbanView.prototype.config, {
+            Renderer: ExpenseKanbanRendererHeader,
+        })
+    });
+
     viewRegistry.add('hr_expense_tree_dashboard_upload', ExpensesListViewDashboardUpload);
+    // Tree view with the header.
+    // Used in "My Expenses to Report" & "All My Expenses"
+    viewRegistry.add('hr_expense_tree_dashboard_upload_header', ExpensesListViewDashboardUploadHeader);
     viewRegistry.add('hr_expense_tree_dashboard', ExpensesListViewDashboard);
+    // Tree view with the header.
+    // Used in "My Reports"
+    viewRegistry.add('hr_expense_tree_dashboard_header', ExpensesListViewDashboardHeader);
     viewRegistry.add('hr_expense_kanban', ExpensesKanbanView);
+    // Kanban view with the header.
+    // Used in "My Expenses to Report", "All My Expenses" & "My Reports"
+    viewRegistry.add('hr_expense_kanban_header', ExpensesKanbanViewHeader);
 });
