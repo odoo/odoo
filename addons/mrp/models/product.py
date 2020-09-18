@@ -37,6 +37,13 @@ class ProductTemplate(models.Model):
             })
         return super().write(values)
 
+    def action_product_tmpl_forecast_report(self):
+        res = super().action_product_tmpl_forecast_report()
+        kit_components = self._get_components()
+        if kit_components:
+            res['context'] = {'variant_ids': kit_components}
+        return res
+
     def action_used_in_bom(self):
         self.ensure_one()
         action = self.env["ir.actions.actions"]._for_xml_id("mrp.mrp_bom_form_action")
@@ -139,6 +146,13 @@ class ProductProduct(models.Model):
                     elif bom_line.product_id.type == 'product':
                         components.append(bom_line.product_id.id)
         return components
+
+    def action_product_forecast_report(self):
+        res = super().action_product_forecast_report()
+        kit_components = self._get_components()
+        if kit_components:
+            res['context'] = {'variant_ids': kit_components}
+        return res
 
     def action_used_in_bom(self):
         self.ensure_one()

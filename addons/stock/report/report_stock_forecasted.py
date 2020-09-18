@@ -12,8 +12,6 @@ class ReplenishmentReport(models.AbstractModel):
     _description = "Stock Replenishment Report"
 
     def _product_domain(self, product_template_ids, product_variant_ids):
-        if product_template_ids:
-            return [('product_tmpl_id', 'in', product_template_ids)]
         return [('product_id', 'in', product_variant_ids)]
 
     def _move_domain(self, product_template_ids, product_variant_ids, wh_location_ids):
@@ -91,11 +89,15 @@ class ReplenishmentReport(models.AbstractModel):
         if product_template_ids:
             product_templates = self.env['product.template'].browse(product_template_ids)
             res['product_templates'] = product_templates
-            res['product_variants'] = product_templates.product_variant_ids
             res['multiple_product'] = len(product_templates.product_variant_ids) > 1
             res['uom'] = product_templates[:1].uom_id.display_name
             res['quantity_on_hand'] = sum(product_templates.mapped('qty_available'))
             res['virtual_available'] = sum(product_templates.mapped('virtual_available'))
+            if product_variant_ids:
+                res['product_variants'] = self.env['product.product'].browse(product_variant_ids)
+                self.env.context = dict(self.env.context, variant_ids=product_variant_ids)
+            else:
+                res['product_variants'] = product_templates.product_variant_ids
         elif product_variant_ids:
             product_variants = self.env['product.product'].browse(product_variant_ids)
             res['product_templates'] = False

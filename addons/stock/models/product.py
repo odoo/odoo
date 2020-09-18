@@ -800,6 +800,10 @@ class ProductTemplate(models.Model):
         action = self.env["ir.actions.actions"]._for_xml_id('stock.stock_replenishment_product_product_action')
         return action
 
+    def get_components(self):
+        self.ensure_one()
+        return self.ids
+
 class ProductCategory(models.Model):
     _inherit = 'product.category'
 

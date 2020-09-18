@@ -19,6 +19,7 @@ const ReplenishReport = clientAction.extend({
         this._super.apply(this, arguments);
         this.context = action.context;
         this.productId = this.context.active_id;
+        this.extraVariants = this.context.variant_ids || [];
         this.resModel = this.context.active_model || 'product.template';
         const isTemplate = this.resModel === 'product.template';
         this.actionMethod = `action_product_${isTemplate ? 'tmpl_' : ''}forecast_report`;
@@ -142,8 +143,10 @@ const ReplenishReport = clientAction.extend({
             ['state', '=', 'forecast'],
             ['warehouse_id', '=', this.active_warehouse.id],
         ];
-        if (this.resModel === 'product.template') {
+        if ((this.resModel === 'product.template') && !(this.extraVariants)) {
             domain.push(['product_tmpl_id', '=', this.productId]);
+        } else if (this.extraVariants) {
+            domain.push(['product_id', 'in', this.extraVariants]);
         } else if (this.resModel === 'product.product') {
             domain.push(['product_id', '=', this.productId]);
         }

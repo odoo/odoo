@@ -46,7 +46,7 @@ class SaleOrderLine(models.Model):
         """The inventory widget should now be visible in more cases if the product is consumable."""
         super(SaleOrderLine, self)._compute_qty_to_deliver()
         for line in self:
-            if line.state == 'draft' and line.product_type == 'consu':
+            if line.state in ('draft', 'sent', 'sale') and line.product_type == 'consu':
                 components = line.product_id._get_components()
                 if components:
                     line.display_qty_widget = True

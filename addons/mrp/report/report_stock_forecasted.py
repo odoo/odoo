@@ -1,11 +1,24 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models
+from odoo import models, api
 
 
 class ReplenishmentReport(models.AbstractModel):
     _inherit = 'report.stock.report_product_product_replenishment'
+
+    @api.model
+    def _get_report_data(self, product_template_ids=False, product_variant_ids=False):
+        for product in self.env['product.product'].browse(product_variant_ids):
+            kit_components = product._get_components()
+            if kit_components:
+                product_variant_ids.remove(product.id)
+                product_variant_ids += kit_components
+        for template in self.env['product.template'].browse(product_template_ids):
+            kit_components = template._get_components()
+            if kit_components:
+                product_variant_ids += kit_components
+        return super()._get_report_data(product_template_ids=product_template_ids, product_variant_ids=product_variant_ids)
 
     def _move_draft_domain(self, product_template_ids, product_variant_ids, wh_location_ids):
         in_domain, out_domain = super()._move_draft_domain(product_template_ids, product_variant_ids, wh_location_ids)
@@ -35,3 +48,4 @@ class ReplenishmentReport(models.AbstractModel):
         res['qty']['out'] += res['draft_production_qty']['out']
 
         return res
+

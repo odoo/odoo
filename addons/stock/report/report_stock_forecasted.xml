@@ -44,13 +44,14 @@
                             <a href="#" res-model="product.product" view-type="form" t-att-res-id="product_variant.id">
                                 <t t-esc="product_variant.display_name"/>
                             </a>
+                            <t t-if="not product_variant_last"> - </t>
                         </t>
                     </t>
                 </h3>
                 <h6 t-if="docs['product_templates'] and docs['product_variants'] and len(docs['product_templates']) != len(docs['product_variants'])">
                     <t t-foreach="docs['product_variants']" t-as="product_variant">
                         <a href="#" res-model="product.product" view-type="form" t-att-res-id="product_variant.id">
-                            <t t-esc="'[%s]' % product_variant.product_template_attribute_value_ids._get_combination_name()"/>
+                            <t t-esc="'[%s]' % (product_variant.product_template_attribute_value_ids._get_combination_name() or product_variant.name)"/>
                         </a>
                     </t>
                 </h6>
