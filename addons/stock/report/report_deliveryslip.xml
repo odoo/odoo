@@ -69,6 +69,7 @@
                             </tr>
                         </thead>
                         <tbody>
+<<<<<<< HEAD
                         <!-- This part gets complicated with different use cases (additional use cases in extensions of this report):
                                 1. If serial numbers are used and set to print on delivery slip => print lines as is, otherwise group them by overlapping
                                     product + description + uom combinations
@@ -122,6 +123,26 @@
                                         <t t-call="stock.stock_report_delivery_aggregated_move_lines"/>
                                 </t>
                             </t>
+=======
+                            <tr t-foreach="o.move_line_ids" t-as="move_line">
+                                <td>
+                                    <span t-field="move_line.product_id"/>
+                                    <p t-if="move_line.move_id.description_picking != move_line.product_id.name">
+                                        <span t-field="move_line.move_id.description_picking"/>
+                                    </p>
+                                </td>
+                                <td t-if="has_serial_number and move_line.lot_id.name" groups="stock.group_lot_on_delivery_slip">
+                                    <span t-field="move_line.lot_id.name"/>
+                                </td>
+                                <td t-elif="has_serial_number" groups="stock.group_lot_on_delivery_slip">
+                                    <span t-field="move_line.lot_name"/>
+                                </td>
+                                <td class="text-center">
+                                    <span t-field="move_line.qty_done"/>
+                                    <span t-field="move_line.product_uom_id"/>
+                                </td>
+                            </tr>
+>>>>>>> b2919bf18cc... temp
                         </tbody>
                     </table>
                     <t t-set="backorders" t-value="o.backorder_ids.filtered(lambda x: x.state not in ('done', 'cancel'))"/>
