@@ -2287,8 +2287,13 @@ class AccountMove(models.Model):
 
     def js_assign_outstanding_line(self, line_id):
         self.ensure_one()
-        lines = self.env['account.move.line'].browse(line_id)
-        lines += self.line_ids.filtered(lambda line: line.account_id == lines[0].account_id and not line.reconciled)
+        line = self.env['account.move.line'].browse(line_id)
+        if not line.currency_id and self.currency_id != self.company_id.currency_id:
+            amount_currency = self.company_id.currency_id._convert(line.balance, self.currency_id, self.company_id, line.date)
+            line.write({'amount_currency': amount_currency, 'currency_id': self.currency_id.id})
+        if line.payment_id:
+            line.payment_id.write({'invoice_ids': [(4, self.id)]})
+        lines = line + self.line_ids.filtered(lambda l: l.account_id == line.account_id and not l.reconciled)
         return lines.reconcile()
 
     def button_draft(self):

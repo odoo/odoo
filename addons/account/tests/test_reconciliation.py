@@ -803,6 +803,48 @@ class TestReconciliationExec(TestReconciliation):
         full_rec_payable = full_rec_move.line_ids.filtered(lambda l: l.account_id == self.account_rsa)
         self.assertEqual(full_rec_payable.balance, 18.75)
 
+    def test_reconcile_usd_invoice_euro_payment_with_exchange_rate(self):
+        # Use case:
+        # - Company currency in EUR
+        # - Create 2 rates for USD:
+        #   1.0 on 2020-07-01
+        #   0.5 on 2020-08-01
+        # - Create an invoice on 2020-07-01 of 100 USD
+        # - Register a payment on 2018-08-01 of 250 EUR
+        # - Assign credit to invoice
+        # - Residual amount of invoice should be 0
+        self.env['res.currency.rate'].create({
+            'name': time.strftime('%Y') + '-07-01',
+            'rate': 1.0,
+            'currency_id': self.currency_usd_id,
+            'company_id': self.env.ref('base.main_company').id
+        })
+        self.env['res.currency.rate'].create({
+            'name': time.strftime('%Y') + '-08-01',
+            'rate': 0.5,
+            'currency_id': self.currency_usd_id,
+            'company_id': self.env.ref('base.main_company').id
+        })
+        inv = self.create_invoice(invoice_amount=100, currency_id=self.currency_usd_id)
+        payment = self.env['account.payment'].create({
+            'payment_type': 'inbound',
+            'payment_method_id': self.env.ref('account.account_payment_method_manual_in').id,
+            'partner_type': 'customer',
+            'partner_id': self.partner_agrolait_id,
+            'amount': 250,
+            'currency_id': self.currency_euro_id,
+            'journal_id': self.bank_journal_euro.id,
+            'payment_date': time.strftime('%Y') + '-08-01',
+        })
+        payment.post()
+        credit_aml = payment.move_line_ids.filtered('credit')
+        # Check residual before assignation
+        self.assertAlmostEquals(inv.amount_residual, 100)
+
+        # # Assign credit, check residual
+        inv.js_assign_outstanding_line(credit_aml.id)
+        self.assertAlmostEquals(inv.amount_residual, 0)
+
     def test_unreconcile(self):
         # Use case:
         # 2 invoices paid with a single payment. Unreconcile the payment with one invoice, the
