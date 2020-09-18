@@ -812,12 +812,8 @@
          data-no-check="true"
          groups="website.group_website_designer">
 
-        <!-- Colors -->
-        <we-colorpicker string="Colors"
-                        data-customize-website-color="" data-color="footer"
-                        data-with-combinations="true"/>
         <!-- Layouts -->
-        <we-select string="Layout"
+        <we-select string="Template"
             data-variable="footer-template"
             data-reload="/">
             <we-button title="Default"
@@ -853,6 +849,10 @@
                        data-customize-website-variable="'headline'"
                        data-img="/website/static/src/img/snippets_options/footer_template_headline.svg"/>
         </we-select>
+        <!-- Colors -->
+        <we-colorpicker string="Colors"
+                        data-customize-website-color="" data-color="footer"
+                        data-with-combinations="true"/>
         <we-select string="Slideout Effect" data-variable="footer-effect" data-reload="/">
             <we-button string="Regular"
                        data-customize-website-views=""
@@ -908,7 +908,7 @@
         data-selector="[data-main-object^='website.page('] #wrapwrap > footer"
         data-no-check="true"
         groups="website.group_website_designer">
-        <we-checkbox string="Show on this page"
+        <we-checkbox string="Page Visibility"
                      data-name="hide_footer_page_opt"
                      data-visibility="hidden|shown"
                      data-no-preview="true"/>
