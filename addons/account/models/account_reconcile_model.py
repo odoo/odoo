@@ -445,6 +445,12 @@ class AccountReconcileModel(models.Model):
         # First associate with each rec models all the statement lines for which it is applicable
         lines_with_partner_per_model = defaultdict(lambda: [])
         for st_line in st_lines:
+
+            # Statement lines created in old versions could have a residual amount of zero. In that case, don't try to
+            # match anything.
+            if not st_line.amount_residual:
+                continue
+
             mapped_partner = (partner_map and partner_map.get(st_line.id) and self.env['res.partner'].browse(partner_map[st_line.id])) or st_line.partner_id
 
             for rec_model in available_models:
