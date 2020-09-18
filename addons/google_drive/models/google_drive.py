@@ -191,14 +191,15 @@ class GoogleDrive(models.Model):
         return None
 
     def _compute_ressource_id(self):
-        result = {}
         for record in self:
-            word = self._get_key_from_url(record.google_drive_template_url)
-            if word:
-                record.google_drive_resource_id = word
+            if record.google_drive_template_url:
+                word = self._get_key_from_url(record.google_drive_template_url)
+                if word:
+                    record.google_drive_resource_id = word
+                else:
+                    raise UserError(_("Please enter a valid Google Document URL."))
             else:
-                raise UserError(_("Please enter a valid Google Document URL."))
-        return result
+                record.google_drive_resource_id = False
 
     def _compute_client_id(self):
         google_drive_client_id = self.env['ir.config_parameter'].sudo().get_param('google_drive_client_id')
