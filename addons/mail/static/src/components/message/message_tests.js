@@ -590,8 +590,8 @@ QUnit.test('do not show messaging seen indicator if before last seen by all mess
     const thread = this.env.models['mail.thread'].create({
         id: 11,
         messageSeenIndicators: [['insert', {
-            id: this.env.models['mail.message_seen_indicator'].computeId(99, 11),
-            message: [['insert', { id: 99 }]],
+            channelId: 11,
+            messageId: 99,
         }]],
         model: 'mail.channel',
     });
@@ -670,8 +670,8 @@ QUnit.test('only show messaging seen indicator if authored by me, after last see
             },
         ]]],
         messageSeenIndicators: [['insert', {
-            id: this.env.models['mail.message_seen_indicator'].computeId(100, 11),
-            message: [['insert', { id: 100 }]],
+            channelId: 11,
+            messageId: 100,
         }]],
         model: 'mail.channel',
     });
