@@ -205,14 +205,7 @@ odoo.define("web/static/src/js/views/search_panel.js", function (require) {
 
     SearchPanel.props = {
         className: { type: String, optional: 1 },
-        importedState: {
-            type: Object,
-            optional: true,
-            shape: {
-                scrollTop: { type: Number, optional: 1 },
-                expanded: { type: Object, optional: 1 },
-            },
-        },
+        importedState: { type: String, optional: 1 },
         searchModel: Model,
     };
     SearchPanel.template = "web.SearchPanel";
