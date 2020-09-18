@@ -899,12 +899,28 @@ registry.anchorSlide = publicWidget.Widget.extend({
      * @param {jQuery} $el the element to scroll to.
      * @param {string} [scrollValue='true'] scroll value
      */
-    _scrollTo: function ($el, scrollValue = 'true') {
-        const headerHeight = this._computeHeaderHeight();
-        const offset = $el.css('position') !== 'fixed' ? $el.offset().top : $el.position().top;
-        $('html, body').animate({
-            scrollTop: offset - headerHeight,
-        }, scrollValue === 'true' ? 500 : 0);
+    _scrollTo: function ($el, scrollValue = 'true', forcedDelay = undefined) {
+        const _computeScrollTo = () => {
+            const headerHeight = this._computeHeaderHeight();
+            const offset = $el.css('position') !== 'fixed' ? $el.offset().top : $el.position().top;
+            return offset - headerHeight;
+        };
+        const originalScrollTo = _computeScrollTo();
+        return new Promise(resolve => {
+            $('html, body').animate({
+                scrollTop: originalScrollTo,
+            }, {
+                duration: forcedDelay || (scrollValue === 'true' ? 500 : 0),
+                progress: (a, b, remainingMs) => {
+                    const scrollTo = _computeScrollTo();
+                    if (Math.abs(scrollTo - originalScrollTo) >= 1.0) {
+                        $('html, body').stop();
+                        this._scrollTo($el, scrollValue, remainingMs).then(() => resolve());
+                    }
+                },
+                complete: () => resolve(),
+            });
+        });
     },
     /**
      * @private
