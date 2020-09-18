@@ -564,7 +564,7 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
 }
 
 .o_thread_window {
-    z-index: 1002; // to go over the navbar
+    z-index: $zindex-modal - 9; // to go over the navbar
     .o_thread_date_separator {
         display: none;
     }
