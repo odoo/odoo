@@ -162,8 +162,8 @@ function factory(dependencies) {
             channel.update({
                 messageSeenIndicators: [['insert',
                     {
-                        id: this.env.models['mail.message_seen_indicator'].computeId(last_message_id, channel.id),
-                        message: [['insert', {id: last_message_id}]],
+                        channelId: channel.id,
+                        messageId: last_message_id,
                     }
                 ]],
             });
@@ -314,8 +314,8 @@ function factory(dependencies) {
                     // FIXME should no longer use computeId (task-2335647)
                     messageSeenIndicators: [['insert',
                         {
-                            id: this.env.models['mail.message_seen_indicator'].computeId(last_message_id, channel.id),
-                            message: [['link', lastMessage]],
+                            channelId: channel.id,
+                            messageId: lastMessage.id,
                         },
                     ]],
                 });
