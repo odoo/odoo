@@ -74,6 +74,7 @@ const BaseAnimatedHeader = animations.Animation.extend({
      */
     _adaptToHeaderChange: function () {
         this._updateMainPaddingTop();
+        this.el.classList.toggle('o_top_fixed_element', this.fixedHeader && this._isShown());
 
         const bottom = this.el.getBoundingClientRect().bottom
             || (this.el.nextElementSibling.getBoundingClientRect().top + window.scrollY);
@@ -118,12 +119,17 @@ const BaseAnimatedHeader = animations.Animation.extend({
     },
     /**
      * @private
+     */
+    _isShown() {
+        return true;
+    },
+    /**
+     * @private
      * @param {boolean} [useFixed=true]
      */
     _toggleFixedHeader: function (useFixed = true) {
         this.fixedHeader = useFixed;
         this.el.classList.toggle('o_header_affixed', useFixed);
-        this.el.classList.toggle('o_top_fixed_element', useFixed);
         this._adaptToHeaderChange();
     },
     /**
@@ -211,6 +217,12 @@ publicWidget.registry.StandardAffixedHeader = BaseAnimatedHeader.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * @override
+     */
+    _isShown() {
+        return !this.fixedHeader || this.fixedHeaderShow;
+    },
+    /**
      * Called when the window is scrolled
      *
      * @private
@@ -232,6 +244,7 @@ publicWidget.registry.StandardAffixedHeader = BaseAnimatedHeader.extend({
         if (this.fixedHeaderShow !== reachPosScrolled) {
             this.$el.css('transform', reachPosScrolled ? `translate(0, -${this.topGap}px)` : 'translate(0, -100%)');
             this.fixedHeaderShow = reachPosScrolled;
+            this._adaptToHeaderChange();
         }
     },
 });
@@ -294,6 +307,12 @@ const BaseDisappearingHeader = publicWidget.registry.FixedHeader.extend({
      */
     _hideHeader: function () {
         this.$el.trigger('odoo-transitionstart');
+    },
+    /**
+     * @override
+     */
+    _isShown() {
+        return !this.fixedHeader || !this.hiddenHeader;
     },
     /**
      * @private
