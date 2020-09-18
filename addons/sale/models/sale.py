@@ -1326,6 +1326,7 @@ class SaleOrderLine(models.Model):
         digits='Product Unit of Measure')
     qty_invoiced = fields.Float(
         compute='_get_invoice_qty', string='Invoiced Quantity', store=True, readonly=True,
+        compute_sudo=True,
         digits='Product Unit of Measure')
 
     untaxed_amount_invoiced = fields.Monetary("Untaxed Invoiced Amount", compute='_compute_untaxed_amount_invoiced', compute_sudo=True, store=True)
