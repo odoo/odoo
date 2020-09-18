@@ -3703,7 +3703,7 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
         this._handlePreviewState(previewMode, () => {
             const {colorName} = params;
             const {colors: previousColors} = this._getShapeData();
-            const newColor = widgetValue || this._getDefaultColors()[colorName];
+            const newColor = normalizeColor(widgetValue) || this._getDefaultColors()[colorName];
             const newColors = Object.assign(previousColors, {[colorName]: newColor});
             return {colors: newColors};
         });
@@ -3741,7 +3741,7 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
                 const {shape, colors: customColors} = this._getShapeData();
                 const colors = Object.assign(this._getDefaultColors(), customColors);
                 const color = shape && colors[params.colorName];
-                return color ? normalizeColor(color) : '';
+                return color || '';
             }
             case 'flipX': {
                 return this.$target.find('> .o_we_shape.o_we_flip_x').length !== 0;
@@ -3869,7 +3869,7 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
         const defaultColors = this._getDefaultColors();
         const shapeData = Object.assign(this._getShapeData(), newData);
         const areColorsDefault = Object.entries(shapeData.colors).every(([colorName, colorValue]) => {
-            return colorValue === defaultColors[colorName];
+            return colorValue.toLowerCase() === defaultColors[colorName].toLowerCase();
         });
         if (areColorsDefault) {
             delete shapeData.colors;
@@ -3902,7 +3902,7 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
         }
         const queryString = Object.entries(colors)
             .map(([colorName, colorValue]) => {
-                const encodedCol = encodeURIComponent(normalizeColor(colorValue));
+                const encodedCol = encodeURIComponent(colorValue);
                 return `${colorName}=${encodedCol}`;
             }).join('&');
         return `/web_editor/shape/${shape}.svg?${queryString}`;
