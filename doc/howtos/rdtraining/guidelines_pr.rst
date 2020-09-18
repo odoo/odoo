@@ -140,5 +140,11 @@ commits, just copy/paste your commit messagges as the PR message.
 Test on the runbot
 ==================
 
+Odoo has his own Continuous integration (CI) server named `runbot <https://runbot.odoo.com/>`__. All
+the commits, branches and PR will be tested to avoid regressions or breaking the stable versions.
+All the runs that passed the tests will be deployed in their own servers with demo data.
 
+.. exercise:: Play with runbot
 
+    Be free to open runbot and open the last stable version of odoo and check all the available
+    applications and functionalities.
