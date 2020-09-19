@@ -37,11 +37,14 @@ msgid ""
 "product. As defined in your Stripe profile. See: "
 "https://stripe.com/docs/checkout"
 msgstr ""
+"En relativ eller absolut URL der peger på et firkantet billede af dit mærke "
+"eller produkt. Som defineret i din Stripe profil. Se: "
+"https://stripe.com/docs/checkout"
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__stripe_image_url
 msgid "Checkout Image URL"
-msgstr ""
+msgstr "Betalings billede URL"
 
 #. module: payment_stripe
 #. openerp-web
@@ -62,7 +65,7 @@ msgstr "Fejl"
 #: code:addons/payment_stripe/static/src/js/stripe.js:0
 #, python-format
 msgid "Just one more second, We are redirecting you to Stripe..."
-msgstr ""
+msgstr "Bare ét mere sekund, vi omdirigerer dig til Stripe..."
 
 #. module: payment_stripe
 #: model:ir.model,name:payment_stripe.model_payment_acquirer
@@ -72,7 +75,7 @@ msgstr "Betalingsindløser"
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_token__stripe_payment_method
 msgid "Payment Method ID"
-msgstr ""
+msgstr "Betalingsmetode ID"
 
 #. module: payment_stripe
 #: model:ir.model,name:payment_stripe.model_payment_token
@@ -98,6 +101,8 @@ msgid ""
 "Perhaps the problem can be solved by double-checking your credit card "
 "details, or contacting your bank?"
 msgstr ""
+"Måske kan problemet løses ved at doblet-tjekke dine kreditkort oplysninger, "
+"eller ved at kontakte din bank?"
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__provider
@@ -112,12 +117,12 @@ msgstr "Stribe"
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_transaction__stripe_payment_intent
 msgid "Stripe Payment Intent ID"
-msgstr ""
+msgstr "Stripe betalingsformål ID"
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_transaction__stripe_payment_intent_secret
 msgid "Stripe Payment Intent Secret"
-msgstr ""
+msgstr "Strip Betalingsformål hemmelig"
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__stripe_publishable_key
@@ -133,19 +138,19 @@ msgstr "Strip hemmelig nøgle"
 #: code:addons/payment_stripe/models/payment.py:0
 #, python-format
 msgid "Stripe gave us the following info about the problem: '%s'"
-msgstr ""
+msgstr "Stripe gav os følgende informationer om problemet: '%s'"
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment.py:0
 #, python-format
 msgid "Stripe: %s orders found for reference %s"
-msgstr ""
+msgstr "Stripe: %s ordre fundet for reference %s"
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment.py:0
 #, python-format
 msgid "Stripe: no order found for reference %s"
-msgstr ""
+msgstr "Stripe: Ingen ordre fundet for reference %s"
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment.py:0
@@ -154,20 +159,22 @@ msgid ""
 "Unable to convert Stripe customer for SCA compatibility. Is there at least "
 "one card for this customer in the Stripe backend?"
 msgstr ""
+"Kunne ikke omdanne Stripe kunde for SCA kompatibilitet. Er der mindst ét "
+"kort for denne kunde i Stripe back-end'en? "
 
 #. module: payment_stripe
 #. openerp-web
 #: code:addons/payment_stripe/static/src/js/payment_form.js:0
 #, python-format
 msgid "Unable to save card"
-msgstr ""
+msgstr "Kunne ikke gemme kort"
 
 #. module: payment_stripe
 #. openerp-web
 #: code:addons/payment_stripe/static/src/js/payment_form.js:0
 #, python-format
 msgid "We are not able to add your payment method at the moment. "
-msgstr ""
+msgstr "Vi er ikke i stand til at tilføje din betalingsmetode i øjeblikket."
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment.py:0

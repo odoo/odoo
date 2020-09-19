@@ -8,6 +8,7 @@
 # Pernille Kristensen <pernillekristensen1994@gmail.com>, 2019
 # Sanne Kristensen <sanne@vkdata.dk>, 2019
 # lhmflexerp <lhm@flexerp.dk>, 2019
+# Mads Søndergaard, 2020
 # 
 msgid ""
 msgstr ""
@@ -15,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-09-09 12:17+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: lhmflexerp <lhm@flexerp.dk>, 2019\n"
+"Last-Translator: Mads Søndergaard, 2020\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,6 +30,8 @@ msgid ""
 "<span class=\"badge badge-danger\" attrs=\"{'invisible': "
 "[('product_expiry_alert', '=', False)]}\">Expiration Alert</span>"
 msgstr ""
+"<span class=\"badge badge-danger\" attrs=\"{'invisible': "
+"[('product_expiry_alert', '=', False)]}\">Udløbs alarm</span>"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_product_form_expiry
@@ -56,6 +59,8 @@ msgid ""
 "Date to determine the expired lots and serial numbers using the filter "
 "\"Expiration Alerts\"."
 msgstr ""
+"Dato til at afgøre udløbede lots og serienumre via filtret \"Udløbs "
+"advarsler\"."
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_move_form_expiry
@@ -71,12 +76,12 @@ msgstr "Holdbarhedsdato"
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.search_product_lot_filter_inherit_product_expiry
 msgid "Expiration Alerts"
-msgstr ""
+msgstr "Udløbs advarsler"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot__product_expiry_reminded
 msgid "Expiry has been reminded"
-msgstr ""
+msgstr "Udløb er blevet påmindet"
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_stock_production_lot
@@ -88,7 +93,7 @@ msgstr "Lot/serienummer"
 #: model:ir.model.fields,help:product_expiry.field_product_template__alert_time
 msgid ""
 "Number of days before an alert should be raised on the lot/serial number."
-msgstr ""
+msgstr "Antal dage før en advarsel bør gives på lot/serienummeret."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_product__life_time
@@ -97,6 +102,8 @@ msgid ""
 "Number of days before the goods may become dangerous and must not be "
 "consumed. It will be computed on the lot/serial number."
 msgstr ""
+"Antal dage før varer bliver farlige eller ikke må indtages. Vil blive "
+"udregnet på lot/serienummeret."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_product__removal_time
@@ -105,6 +112,8 @@ msgid ""
 "Number of days before the goods should be removed from the stock. It will be"
 " computed on the lot/serial number."
 msgstr ""
+"Antal dage før varer bør fjernes fra lager. Vil blive udregnet på "
+"lot/serienummer."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_product__use_time
@@ -113,6 +122,8 @@ msgid ""
 "Number of days before the goods starts deteriorating, without being "
 "dangerous yet. It will be computed using the lot/serial number."
 msgstr ""
+"Antal dage før varer går i forrådnelse, uden at blive farlige endnu. Vil "
+"blive udregnet på lot/serienumre."
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_procurement_group
@@ -128,7 +139,7 @@ msgstr "Vare advarsels tidspunkt"
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot__product_expiry_alert
 msgid "Product Expiry Alert"
-msgstr ""
+msgstr "Produkt udløbs alarm"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_product_product__life_time
@@ -167,13 +178,13 @@ msgstr "Fjernelsesdato"
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_stock_production_lot__product_expiry_alert
 msgid "The Alert Date has been reached."
-msgstr ""
+msgstr "Advarselsdatoen er nået."
 
 #. module: product_expiry
 #: code:addons/product_expiry/models/production_lot.py:0
 #, python-format
 msgid "The alert date has been reached for this lot/serial number"
-msgstr ""
+msgstr "Advarseldatoen er nået for dette lot/serienummer"
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_stock_production_lot__life_date
@@ -191,6 +202,8 @@ msgid ""
 "This is the date on which the goods with this Serial Number should be "
 "removed from the stock. This date will be used in FEFO removal strategy."
 msgstr ""
+"Dette er datoen hvor varer med dette serienummer bør fjernes fra lageret. "
+"Denne dato vil blive anvendt i FEFO fjernelse strategi."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_stock_production_lot__use_date

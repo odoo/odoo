@@ -535,6 +535,21 @@ msgid ""
 msgstr ""
 
 #. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
+msgid ""
+"<span attrs=\"{'invisible': [('holiday_type', '!=', 'employee')]}\">\n"
+"                        The employee has a different timezone than yours! Here dates and times are displayed in the employee's timezone\n"
+"                    </span>\n"
+"                    <span attrs=\"{'invisible': [('holiday_type', '!=', 'department')]}\">\n"
+"                        The department's company has a different timezone than yours! Here dates and times are displayed in the company's timezone\n"
+"                    </span>\n"
+"                    <span attrs=\"{'invisible': [('holiday_type', '!=', 'company')]}\">\n"
+"                        The company has a different timezone than yours! Here dates and times are displayed in the company's timezone\n"
+"                    </span>\n"
+"                    ("
+msgstr ""
+
+#. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
 msgid "<span class=\"text-muted\">from </span>"
 msgstr ""
@@ -805,12 +820,16 @@ msgid ""
 "Allocation request must be confirmed (\"To Approve\") in order to approve "
 "it."
 msgstr ""
+"Aby bolo možné žiadosť o pridelenie schváliť, musí byť potvrdená "
+"(„Schváliť“)."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 #, python-format
 msgid "Allocation request must be confirmed in order to approve it."
 msgstr ""
+"Allocation request must be confirmed in order to approve it.\n"
+" "
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
@@ -818,6 +837,7 @@ msgstr ""
 msgid ""
 "Allocation request must be confirmed or validated in order to refuse it."
 msgstr ""
+"Ak chcete žiadosť o pridelenie odmietnuť, musíte ju potvrdiť alebo schváliť."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
@@ -835,6 +855,8 @@ msgid ""
 "Allocation request state must be \"Refused\" or \"To Approve\" in order to "
 "reset to Draft."
 msgstr ""
+"Stav žiadosti o pridelenie musí byť „Odmietnuté“ alebo „Schválené“, aby sa "
+"obnovil koncept."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_department__allocation_to_approve_count
@@ -2585,6 +2607,8 @@ msgid ""
 "Time Off Officers allocate time off days to employees (e.g. paid time off).<br>\n"
 "                Employees request allocations to Time Off Officers (e.g. recuperation days)."
 msgstr ""
+"Nadriadení pracovníci pridelujú voľné dni zamestnancom (napr. platené voľno).<br>\n"
+"                Zamestnanci žiadujú o pridelenie nadriadeného pracovníka (napr. dni na zotavenie)."
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_report__leave_type__request
@@ -2620,7 +2644,7 @@ msgstr "Druhé schválenie voľných dní"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_holiday_pivot
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_summary_employee
 msgid "Time Off Summary"
-msgstr "Súhrn voľných dní"
+msgstr "Celkom voľných dní"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_leave_report
@@ -3021,7 +3045,7 @@ msgstr "Nemôžete odstrániť voľné dni, ktoré sa nachádza v %s stave"
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 #, python-format
 msgid "You cannot delete an allocation request which is in %s state."
-msgstr ""
+msgstr "Nemôžete vymazať žiadosť o pridelenie, ktorá je v %s stave."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0

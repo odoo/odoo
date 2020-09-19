@@ -8,7 +8,6 @@
 # Luigi Di Naro <gigidn@gmail.com>, 2019
 # SebastianoPistore <SebastianoPistore.info@protonmail.ch>, 2019
 # maiolif <maiolif@mgftools.com>, 2019
-# Davide Corio <enlightx@gmail.com>, 2019
 # Christian <chris@effeci.info>, 2019
 # Paolo Valier, 2019
 # Martin Trigaux, 2019
@@ -19,7 +18,6 @@
 # 0a243ede81e8afa909e1e8a5469f6f0f_33e3ca1 <267506ad346947b5e4eba05b50cb5ef9_478623>, 2019
 # Léonie Bouchat <lbo@odoo.com>, 2019
 # Stefano Consolaro <stefano.consolaro@mymage.it>, 2019
-# Giulia Puggioni <gpu@odoo.com>, 2020
 # Iacopo Simonelli <lsi@odoo.com>, 2020
 # Sergio Zanchetta <primes2h@gmail.com>, 2020
 # 
@@ -58,7 +56,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event.event_event_report_template_badge
 #: model_terms:ir.ui.view,arch_db:event.event_registration_report_template_badge
 msgid "( <i class=\"fa fa-clock-o\" aria-label=\"Period\" role=\"img\" title=\"Period\"/>"
-msgstr "( <i class=\"fa fa-clock-o\" aria-label=\"Period\" role=\"img\" title=\"Period\"/>"
+msgstr "( <i class=\"fa fa-clock-o\" aria-label=\"Period\" role=\"img\" title=\"Periodo\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
@@ -75,6 +73,8 @@ msgid ""
 "<b>Business Room</b> - To discuss implementation methodologies, best sales "
 "practices, etc."
 msgstr ""
+"<b>Area business</b> - Per discutere metodologie di implementazione, le "
+"migliori pratiche di vendita ecc."
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -82,6 +82,8 @@ msgid ""
 "<b>Technical Rooms</b> - One dedicated to advanced Odoo developers, one for "
 "new developers."
 msgstr ""
+"<b>Aree tecniche</b> - Una è dedicata allo sviluppo avanzato di Odoo, "
+"l'altra ai nuovi sviluppatori."
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -111,7 +113,7 @@ msgstr ""
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid "<b>Workshop Room</b> - Mainly for developers."
-msgstr ""
+msgstr "<b>Area laboratorio</b> - Principalmente per sviluppatori."
 
 #. module: event
 #: model:mail.template,body_html:event.event_registration_mail_template_badge
@@ -146,6 +148,8 @@ msgid ""
 "<i class=\"fa fa-check\" role=\"img\" aria-label=\"Confirm button\" "
 "title=\"Confirm Registration\"/>"
 msgstr ""
+"<i class=\"fa fa-check\" role=\"img\" aria-label=\"Confirm button\" "
+"title=\"Conferma registrazione\"/>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -160,6 +164,8 @@ msgid ""
 "<i class=\"fa fa-level-down\" role=\"img\" aria-label=\"Attended button\" "
 "title=\"Attended the Event\"/>"
 msgstr ""
+"<i class=\"fa fa-level-down\" role=\"img\" aria-label=\"Attended button\" "
+"title=\"Ha partecipato all'evento\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
@@ -176,6 +182,8 @@ msgid ""
 "<i class=\"fa fa-times\" role=\"img\" aria-label=\"Cancel button\" "
 "title=\"Cancel Registration\"/>"
 msgstr ""
+"<i class=\"fa fa-times\" role=\"img\" aria-label=\"Cancel button\" "
+"title=\"Annulla registrazione\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_report_template_badge
@@ -640,12 +648,12 @@ msgstr ""
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.act_event_registration_from_event
 msgid "Add a new attendee"
-msgstr "Aggiungere un nuovo partecipante"
+msgstr "Aggiungi un nuovo partecipante"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_event_view
 msgid "Add a new event"
-msgstr "Aggiungere un nuovo evento"
+msgstr "Aggiungi un nuovo evento"
 
 #. module: event
 #: model:res.groups,name:event.group_event_manager
@@ -667,13 +675,13 @@ msgstr "Dopo l'evento"
 #. module: event
 #: model:event.event,name:event.event_6
 msgid "An unpublished event"
-msgstr "Un Evento non pubblicato"
+msgstr "Un evento non pubblicato"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
 msgid "Archived"
-msgstr "Archiviato"
+msgstr "Archiviati"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
@@ -757,7 +765,7 @@ msgstr "Conferma registrazioni automaticamente"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type__use_mail_schedule
 msgid "Automatically Send Emails"
-msgstr "Invia le e-mail automaticamente"
+msgstr "Invio automatico e-mail"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_available
@@ -787,7 +795,7 @@ msgstr "Parte interna destra del badge"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_event_barcode
 msgid "Barcode"
-msgstr "Codice"
+msgstr "Codice a barre"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_type__before_event
@@ -875,8 +883,7 @@ msgstr "Conferenze per architetti"
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid "Conferences, workshops and trainings will be organized in 6 rooms:"
-msgstr ""
-"Le conferenze, i laboratori e la formazione verranno organizzati in 6 aree:"
+msgstr "Conferenze, laboratori e formazione verranno organizzati in 6 aree:"
 
 #. module: event
 #: model:ir.model,name:event.model_res_config_settings
@@ -1127,12 +1134,12 @@ msgstr "Logo evento"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_mail_form
 msgid "Event Mail Scheduler"
-msgstr "Schedulatore messaggi evento"
+msgstr "Pianificatore e-mail evento"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_mail_tree
 msgid "Event Mail Schedulers"
-msgstr "Schedulatori messaggi evento"
+msgstr "Pianificatori e-mail evento"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
@@ -1198,7 +1205,7 @@ msgstr "Tipo di evento"
 #: model:ir.cron,cron_name:event.event_mail_scheduler
 #: model:ir.cron,name:event.event_mail_scheduler
 msgid "Event: Mail Scheduler"
-msgstr "Evento: schedulatore messaggi"
+msgstr "Evento: pianificatore e-mail"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_view
@@ -1223,7 +1230,7 @@ msgstr "Analisi eventi"
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_mail
 msgid "Events Mail Schedulers"
-msgstr "Schedulatori messaggi eventi"
+msgstr "Pianificatori e-mail eventi"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
@@ -1260,7 +1267,7 @@ msgstr ""
 #. module: event
 #: model:event.type,name:event.event_type_1
 msgid "Exhibition"
-msgstr "Esposizione"
+msgstr "Mostra"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
@@ -1548,7 +1555,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_event_event__address_id
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Location"
-msgstr "Ubicazione"
+msgstr "Luogo"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_report_template_badge
@@ -1565,23 +1572,23 @@ msgstr "E-mail"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__mail_registration_ids
 msgid "Mail Registration"
-msgstr "Registrazione messaggi"
+msgstr "Registrazione e-mail"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__event_mail_ids
 #: model:ir.model.fields,field_description:event.field_event_type__event_type_mail_ids
 msgid "Mail Schedule"
-msgstr "Programma messaggi"
+msgstr "Programma e-mail"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_registration__scheduler_id
 msgid "Mail Scheduler"
-msgstr "Pianificatore messaggi"
+msgstr "Pianificatore e-mail"
 
 #. module: event
 #: model:ir.ui.menu,name:event.menu_event_mail_schedulers
 msgid "Mail Schedulers"
-msgstr "Pianificatori messaggi"
+msgstr "Pianificatori e-mail"
 
 #. module: event
 #: model:ir.model,name:event.model_event_type_mail
@@ -1591,12 +1598,12 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_registration__mail_sent
 msgid "Mail Sent"
-msgstr "Messaggio inviato"
+msgstr "E-mail inviata"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__mail_sent
 msgid "Mail Sent on Event"
-msgstr "Messaggio inviato sull'evento"
+msgstr "E-mail dell'evento inviata"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_main_attachment_id
@@ -1630,8 +1637,7 @@ msgstr "Registrazioni massime"
 msgid ""
 "Maximum attendees number should be greater than minimum attendees number."
 msgstr ""
-"Il massimo di partecipanti dovrebbe essere maggiore del minimo di "
-"partecipanti."
+"Il numero massimo di partecipanti deve essere maggiore del numero minimo."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_has_error
@@ -1653,7 +1659,7 @@ msgstr "Partecipanti minimi"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type__default_registration_min
 msgid "Minimum Registrations"
-msgstr "Iscrizioni minime"
+msgstr "Registrazioni minime"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__mobile
@@ -1727,7 +1733,7 @@ msgstr "Numero di errori"
 #: model:ir.model.fields,help:event.field_res_partner__event_count
 #: model:ir.model.fields,help:event.field_res_users__event_count
 msgid "Number of events the partner has participated."
-msgstr "Numero di eventi a cui il partner ha partecipato."
+msgstr "Numero di eventi a cui ha partecipato il partner."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__message_needaction_counter
@@ -1756,7 +1762,7 @@ msgstr "Obiettivi"
 #: model:event.type,name:event.event_type_data_online
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Online"
-msgstr "In linea"
+msgstr "Online"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__is_online
@@ -1823,7 +1829,7 @@ msgstr "Telefono"
 #. module: event
 #: model:event.type,name:event.event_type_data_physical
 msgid "Physical Event"
-msgstr "Evento reale"
+msgstr "Evento fisico"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -1869,7 +1875,7 @@ msgstr "Iscrizione a questo evento"
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_pivot
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_tree
 msgid "Registration"
-msgstr "Iscrizione"
+msgstr "Registrazione"
 
 #. module: event
 #: model:ir.actions.report,name:event.report_event_registration_badge
@@ -1885,27 +1891,27 @@ msgstr "Data registrazione"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Registration ID"
-msgstr "ID iscrizione"
+msgstr "ID registrazione"
 
 #. module: event
 #: model:ir.model,name:event.model_event_mail_registration
 msgid "Registration Mail Scheduler"
-msgstr "Schedulatore dei messaggi di iscrizione"
+msgstr "Pianificatore e-mail di registrazione"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_mail_form
 msgid "Registration Mails"
-msgstr "Messaggi iscrizione"
+msgstr "E-mail di registrazione"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_website_event_questions
 msgid "Registration Survey"
-msgstr "Sondaggio iscrizione"
+msgstr "Sondaggio registrazione"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_mail_form
 msgid "Registration mail"
-msgstr "Messaggio iscrizione"
+msgstr "E-mail di registrazione"
 
 #. module: event
 #: model:ir.ui.menu,name:event.menu_reporting_events
@@ -1993,7 +1999,7 @@ msgstr "Invia con e-mail"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__done
 msgid "Sent"
-msgstr "Inviato"
+msgstr "Inviata"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type__sequence
@@ -2003,12 +2009,12 @@ msgstr "Sequenza"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Set To Draft"
-msgstr "Imposta \"Bozza\""
+msgstr "Imposta a bozza"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
 msgid "Set To Unconfirmed"
-msgstr "Imposta \"Non confermato\""
+msgstr "Imposta a non confermato"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_configuration
@@ -2019,7 +2025,7 @@ msgstr "Impostazioni"
 #. module: event
 #: model:event.type,name:event.event_type_3
 msgid "Show"
-msgstr "Mostra"
+msgstr "Spettacolo"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
@@ -2035,7 +2041,7 @@ msgstr "Documento origine"
 #. module: event
 #: model:event.type,name:event.event_type_5
 msgid "Sport"
-msgstr ""
+msgstr "Sport"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__date_begin
@@ -2113,7 +2119,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_event_sale
 msgid "Tickets"
-msgstr "Ticket"
+msgstr "Biglietti"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__date_tz
@@ -2140,7 +2146,7 @@ msgstr "Percorsi e agenda"
 #. module: event
 #: model:event.type,name:event.event_type_4
 msgid "Training"
-msgstr "Addestramento"
+msgstr "Formazione"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type_mail__interval_type
@@ -2269,7 +2275,7 @@ msgstr "Settimane"
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid "What's new?"
-msgstr ""
+msgstr "Novità"
 
 #. module: event
 #: code:addons/event/models/event.py:0
@@ -2318,13 +2324,13 @@ msgstr "in %d giorni"
 #: code:addons/event/models/event.py:0
 #, python-format
 msgid "next month"
-msgstr "mese successio"
+msgstr "prossimo mese"
 
 #. module: event
 #: code:addons/event/models/event.py:0
 #, python-format
 msgid "next week"
-msgstr "settimana successiva"
+msgstr "prossima settimana"
 
 #. module: event
 #: code:addons/event/models/event.py:0
