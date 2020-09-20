@@ -39,7 +39,7 @@ msgstr "#Spørgsmål"
 #. module: survey
 #: model:mail.template,subject:survey.email_template_survey
 msgid "${object.title}: Survey"
-msgstr ""
+msgstr "${object.title}: Undersøgelse"
 
 #. module: survey
 #: code:addons/survey/models/survey.py:122
@@ -79,6 +79,19 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Hej<br/><br/>\n"
+"        Vi er i gang med en undersøgelse, og din deltagelse ville være yderst værdsat.\n"
+"        <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"            <a href=\"__URL__\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                Deltag i undersøgelse\n"
+"            </a>\n"
+"        </div>\n"
+"        Tak for din deltagelse!\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -259,6 +272,8 @@ msgid ""
 "<span style=\"font-size:1.5em;\" class=\"fa fa-bar-chart-o float-right \" "
 "role=\"img\" aria-label=\"Chart\" title=\"Chart\"/>"
 msgstr ""
+"<span style=\"font-size\\:1.5em;\" class=\"fa fa-bar-chart-o float-right \" "
+"role=\"img\" aria-label=\"Plan\" title=\"Plan\"/>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.no_result
@@ -268,6 +283,9 @@ msgid ""
 "                        </span>\n"
 "                        Sorry, No one answered this survey yet"
 msgstr ""
+"<span> <i style=\"font-size\\:1.8em\" class=\"fa fa-users float-right\" "
+"role=\"img\" aria-label=\"Intet svar\" title=\"Intet svar\"/> </span> "
+"Desværre, ingen har besvaret denne undersøgelse endnu"
 
 #. module: survey
 #: code:addons/survey/models/survey.py:688
@@ -302,7 +320,7 @@ msgstr "Der er opstået et problem"
 #. module: survey
 #: model:survey.label,value:survey.frow_2_2_4
 msgid "A process is defined for all enterprise flows"
-msgstr ""
+msgstr "En process er defineret for alle enterprise flow"
 
 #. module: survey
 #: sql_constraint:survey.user_input:0
@@ -593,7 +611,7 @@ msgstr "Konfiguration"
 #. module: survey
 #: model:survey.label,value:survey.frow_2_7_2
 msgid "Configuration wizard exists for each important setting"
-msgstr ""
+msgstr "Konfigurations guide eksisterer for hver vigtig indstilling"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -869,7 +887,7 @@ msgstr "Eksisterende kontakter"
 #. module: survey
 #: model:survey.label,value:survey.frow_2_7_3
 msgid "Extra modules proposed are relevant"
-msgstr ""
+msgstr "Ekstra foreslåede moduler er relevante"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__starred_partner_ids
@@ -884,7 +902,7 @@ msgstr "Filtrer spørgsmål"
 #. module: survey
 #: model:survey.label,value:survey.choice_1_2_3
 msgid "Financial Management"
-msgstr ""
+msgstr "Finans administration"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_stage__fold
@@ -943,7 +961,7 @@ msgstr "Indeholder fejl"
 #. module: survey
 #: model:survey.question,question:survey.feedback_3_1
 msgid "How do you contribute or plan to contribute to Odoo?"
-msgstr ""
+msgstr "Hvordan vil du bidrage eller planlægger du at bidrage til Odoo?"
 
 #. module: survey
 #: model:survey.label,value:survey.choice_1_2_6
@@ -953,27 +971,27 @@ msgstr "Personale (HR)"
 #. module: survey
 #: model:survey.label,value:survey.choice_3_1_3
 msgid "I develop new features"
-msgstr ""
+msgstr "Jeg udvikler nye funktioner"
 
 #. module: survey
 #: model:survey.label,value:survey.choice_4_1_4
 msgid "I do not publish my developments"
-msgstr ""
+msgstr "Jeg udgiver ikke mine udviklinger"
 
 #. module: survey
 #: model:survey.label,value:survey.choice_3_1_4
 msgid "I help to translate"
-msgstr ""
+msgstr "Jeg hjælper med at oversætte"
 
 #. module: survey
 #: model:survey.label,value:survey.choice_4_1_3
 msgid "I host them on my own website"
-msgstr ""
+msgstr "Jeg hoster dem på min egen hjemmeside"
 
 #. module: survey
 #: model:survey.label,value:survey.choice_3_1_1
 msgid "I participate to discussion and forums"
-msgstr ""
+msgstr "Jeg deltager i diskussioner og fora"
 
 #. module: survey
 #: model:survey.label,value:survey.choice_4_1_1
@@ -988,7 +1006,7 @@ msgstr "Jeg anvender et andet repository system (SourceForge...)"
 #. module: survey
 #: model:survey.label,value:survey.frow_2_1_3
 msgid "I use the contextual help in Odoo"
-msgstr ""
+msgstr "Jeg anvender den kontekstuelle hjælp i Odoo"
 
 #. module: survey
 #: model:survey.label,value:survey.choice_3_1_5
@@ -1458,7 +1476,7 @@ msgstr "Næste side"
 #. module: survey
 #: model_terms:ir.actions.act_window,help:survey.action_survey_page_form
 msgid "No pages found"
-msgstr ""
+msgstr "Ingen sider fundet"
 
 #. module: survey
 #: model_terms:ir.actions.act_window,help:survey.action_survey_question_form
@@ -1750,7 +1768,7 @@ msgstr "Udgivet"
 #. module: survey
 #: model:survey.label,value:survey.choice_1_2_2
 msgid "Purchases Management"
-msgstr ""
+msgstr "Købs administration"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_label__question_id
@@ -1793,7 +1811,7 @@ msgstr "Spørgsmål til udviklere"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__quizz_mode
 msgid "Quizz Mode"
-msgstr ""
+msgstr "Quizz tilstand"
 
 #. module: survey
 #: selection:survey.question,display_mode:0
@@ -1803,7 +1821,7 @@ msgstr "Radio Buttons"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__rating_value
 msgid "Rating Value"
-msgstr ""
+msgstr "Bedømmelse værdi"
 
 #. module: survey
 #: selection:survey.mail.compose.message,moderation_status:0
@@ -1823,7 +1841,7 @@ msgstr "Relateret dokument model"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__rating_ids
 msgid "Related ratings"
-msgstr ""
+msgstr "Relaterede bedømmelser"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_mail_compose_message__reply_to
@@ -1847,7 +1865,7 @@ msgstr "Ansvarlig bruger"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__result_url
 msgid "Results link"
-msgstr ""
+msgstr "Resultater link"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line__value_suggested_row
@@ -1882,7 +1900,7 @@ msgstr "Rækker i matrikset"
 #. module: survey
 #: model:survey.label,value:survey.frow_2_7_4
 msgid "Running the configuration wizards is a good way to spare time"
-msgstr ""
+msgstr "Afvikling af konfigurations guiden er en god måde at spare tid på"
 
 #. module: survey
 #: model:survey.label,value:survey.choice_1_2_1
@@ -1977,7 +1995,7 @@ msgstr "Rækkefølge"
 #. module: survey
 #: sql_constraint:survey.stage:0
 msgid "Sequence number MUST be a natural"
-msgstr ""
+msgstr "Sekvensnummeret skal være et naturligt tal"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_kanban
@@ -1997,7 +2015,7 @@ msgstr "Del muligheder"
 #. module: survey
 #: selection:survey.mail.compose.message,public:0
 msgid "Share the public web link to your audience."
-msgstr ""
+msgstr "Del det offentlige web link til dit publikum."
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__comments_allowed
@@ -2027,6 +2045,9 @@ msgid ""
 "image, with aspect ratio preserved. Use this field anywhere a small image is"
 " required."
 msgstr ""
+"Lille billede størrelse for denne kontakt. Det omformes automatisk til et "
+"64x64px billede, med billedforholdet bibeholdt. Brug dette felt hvor end et "
+"lille billede påkræves."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.page
@@ -2151,7 +2172,7 @@ msgstr "Undersøgelse mærkat"
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_form
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_tree
 msgid "Survey Page"
-msgstr ""
+msgstr "Undersøgelse side"
 
 #. module: survey
 #: model:ir.model,name:survey.model_survey_question
@@ -2266,12 +2287,12 @@ msgstr "Takke besked"
 #. module: survey
 #: model:survey.label,value:survey.frow_2_5_3
 msgid "The 'Usability/Extended View' group helps in daily work"
-msgstr ""
+msgstr "Brugbarheden/Udvidet visning grupperne hjælper i daglig arbejde"
 
 #. module: survey
 #: model:survey.label,value:survey.frow_2_5_4
 msgid "The 'Usability/Extended View' group hides only optional fields"
-msgstr ""
+msgstr "Brugbarheden/Udvidet visning grupper skjuler kun valgfrie felter"
 
 #. module: survey
 #: code:addons/survey/models/survey.py:819
@@ -2305,6 +2326,8 @@ msgid ""
 "The content of the text don't contain '__URL__'.                     __URL__"
 " is automaticaly converted into the special url of the survey."
 msgstr ""
+"Indholdet af teksten indeholder ikke '__URL__'.                   __URL__ "
+"konverteres automatisk til den særlige URL brugt til undersøgelsen."
 
 #. module: survey
 #: model:survey.label,value:survey.choice_2_4_1
@@ -2314,7 +2337,7 @@ msgstr "Den nuværende struktur i menuen er god"
 #. module: survey
 #: model:survey.label,value:survey.frow_2_5_5
 msgid "The groups set on menu items are relevant"
-msgstr ""
+msgstr "Grupperne angivet på menu artiklerne er relevante"
 
 #. module: survey
 #: model:survey.label,value:survey.choice_2_6_3
@@ -2354,6 +2377,8 @@ msgid ""
 "These questions relate to the ergonomy and ease of use of Odoo. Try to remind your firsts days on Odoo and\n"
 "what have been your difficulties."
 msgstr ""
+"Disse spørgsmål relaterer til ergonomi og brugervenlighed af Odoo. Prøv at mindes dine første dage med Odoo, og\n"
+"hvad du har haft svært ved."
 
 #. module: survey
 #: model:survey.label,value:survey.frow_2_2_2
@@ -2456,6 +2481,8 @@ msgid ""
 "Those security rules are standard and can be used out-of-the-box in most "
 "cases"
 msgstr ""
+"Disse sikkerheds regler er standard og kan bruges som det er, i de fleste "
+"tilfælde"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__title
@@ -2656,7 +2683,7 @@ msgstr "Website kommunikations historik"
 #. module: survey
 #: model:survey.question,question:survey.feedback_2_7
 msgid "What do you think about configuration wizards?"
-msgstr ""
+msgstr "Hvad synes du om konfigurations guiderne?"
 
 #. module: survey
 #: model:survey.question,question:survey.feedback_2_1
@@ -2674,6 +2701,7 @@ msgid ""
 "What do you think about the process views of Odoo, available in the web "
 "client ?"
 msgstr ""
+"Hvad synes du om process visningen fra Odoo, tilgængelig i web klienten ?"
 
 #. module: survey
 #: model:survey.question,question:survey.feedback_2_4
@@ -2684,7 +2712,7 @@ msgstr "Hvad synes du om menustrukturen?"
 #. module: survey
 #: model:survey.question,question:survey.feedback_4_1
 msgid "Where do you develop your new features?"
-msgstr ""
+msgstr "Hvor udvikler du dine nye funktioner?"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_mail_compose_message__is_log
@@ -2702,6 +2730,8 @@ msgid ""
 "YYYY-MM-DD\n"
 "                                            <i class=\"fa fa-calendar fa-2x\" role=\"img\" aria-label=\"Calendar\" title=\"Calendar\"/>"
 msgstr ""
+"ÅÅÅÅ-MM-DD\n"
+"                                           <i class=\"fa fa-calendar fa-2x\" role=\"img\" aria-label=\"Kalender\" title=\"Kalender\"/> "
 
 #. module: survey
 #: model:survey.label,value:survey.choice_1_1_1
