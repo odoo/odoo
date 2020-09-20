@@ -14,6 +14,7 @@ from odoo import api, fields, models, tools, _
 from odoo.exceptions import AccessError, ValidationError, MissingError, UserError
 from odoo.tools import config, human_size, ustr, html_escape
 from odoo.tools.mimetypes import guess_mimetype
+from odoo.osv import expression
 
 _logger = logging.getLogger(__name__)
 
@@ -53,20 +54,33 @@ class IrAttachment(models.Model):
         return config.filestore(self._cr.dbname)
 
     @api.model
+    def _get_storage_domain(self):
+        # domain to retrieve the attachments to migrate
+        return {
+            'db': [('store_fname', '!=', False)],
+            'file': [('db_datas', '!=', False)],
+        }[self._storage()]
+
+    @api.model
     def force_storage(self):
         """Force all attachments to be stored in the currently configured storage"""
         if not self.env.is_admin():
             raise AccessError(_('Only administrators can execute this action.'))
 
-        # domain to retrieve the attachments to migrate
-        domain = {
-            'db': [('store_fname', '!=', False)],
-            'file': [('db_datas', '!=', False)],
-        }[self._storage()]
+        # Migrate only binary attachments and bypass the res_field automatic
+        # filter added in _search override
+        self.search(expression.AND([
+            self._get_storage_domain(),
+            ['&', ('type', '=', 'binary'), '|', ('res_field', '=', False), ('res_field', '!=', False)]
+        ]))._migrate()
 
-        for attach in self.search(domain):
+    def _migrate(self):
+        record_count = len(self)
+        storage = self._storage().upper()
+        for index, attach in enumerate(self):
+            _logger.debug("Migrate attachment %s/%s to %s", index + 1, record_count, storage)
+            # pass mimetype, to avoid recomputation
             attach.write({'raw': attach.raw, 'mimetype': attach.mimetype})
-        return True
 
     @api.model
     def _full_path(self, path):
