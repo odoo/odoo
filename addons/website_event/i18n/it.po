@@ -107,7 +107,7 @@ msgid ""
 "<i class=\"fa fa-cloud\" title=\"It is an online event\" role=\"img\" aria-"
 "label=\"It is an online event\"/>"
 msgstr ""
-"<i class=\"fa fa-cloud\" title=\"It is an online event\" role=\"img\" aria-"
+"<i class=\"fa fa-cloud\" title=\"È un evento online\" role=\"img\" aria-"
 "label=\"It is an online event\"/>"
 
 #. module: website_event
@@ -121,8 +121,8 @@ msgid ""
 "<i class=\"fa fa-flag fa-5x text-muted\" title=\"Local Events\" role=\"img\""
 " aria-label=\"Local Events\"/>"
 msgstr ""
-"<i class=\"fa fa-flag fa-5x text-muted\" title=\"Local Events\" role=\"img\""
-" aria-label=\"Local Events\"/>"
+"<i class=\"fa fa-flag fa-5x text-muted\" title=\"Eventi locali\" "
+"role=\"img\" aria-label=\"Local Events\"/>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_right_country_event
@@ -149,7 +149,7 @@ msgid ""
 "<i class=\"fa fa-map-marker\" title=\"It is a physical event\" role=\"img\" "
 "aria-label=\"It is a physical event\"/>"
 msgstr ""
-"<i class=\"fa fa-map-marker\" title=\"It is a physical event\" role=\"img\" "
+"<i class=\"fa fa-map-marker\" title=\"È un evento fisico\" role=\"img\" "
 "aria-label=\"It is a physical event\"/>"
 
 #. module: website_event
@@ -231,6 +231,11 @@ msgstr "<span>Illimitato</span>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
+msgid "<strong> You ordered more tickets than available seats</strong>"
+msgstr ""
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
 msgid "<strong>Attendees</strong>"
 msgstr "<strong>Partecipanti</strong>"
 
@@ -291,6 +296,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
 msgid "Attendee #%s"
 msgstr "Partecipante n. %s"
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.registration_template
+msgid "Available seats: "
+msgstr ""
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
@@ -368,7 +378,7 @@ msgstr ""
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__website_menu
 msgid "Dedicated Menu"
-msgstr "Menu Dedicato"
+msgstr "Menù dedicato"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_type__website_menu
@@ -420,7 +430,7 @@ msgstr "Luogo dell'Evento"
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__menu_id
 msgid "Event Menu"
-msgstr "Menu Evento"
+msgstr "Menù evento"
 
 #. module: website_event
 #. openerp-web
@@ -432,7 +442,7 @@ msgstr "Nome evento"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.404
 msgid "Event not found!"
-msgstr "Evento non trovato!"
+msgstr "Evento non trovato"
 
 #. module: website_event
 #: model:mail.message.subtype,description:website_event.mt_event_published
@@ -596,7 +606,7 @@ msgstr "I nostri eventi"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_right_photos
 msgid "Our Trainings"
-msgstr "Le nostre formazioni"
+msgstr "I nostri corsi"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_details
@@ -630,7 +640,7 @@ msgstr "Seleziona almeno un biglietto"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.brand_promotion
 msgid "Powered by"
-msgstr "Powered by"
+msgstr "Fornito da"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form_inherit_website

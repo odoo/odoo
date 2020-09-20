@@ -10,6 +10,7 @@
 # Sanne Kristensen <sanne@vkdata.dk>, 2018
 # Martin Trigaux, 2018
 # Jonathan Stein <cgs@image.dk>, 2018
+# Mads Søndergaard, 2020
 # 
 msgid ""
 msgstr ""
@@ -17,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-12-19 08:21+0000\n"
 "PO-Revision-Date: 2018-08-24 09:24+0000\n"
-"Last-Translator: Jonathan Stein <cgs@image.dk>, 2018\n"
+"Last-Translator: Mads Søndergaard, 2020\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -44,6 +45,9 @@ msgid ""
 "                                        this content will appear on the quotation only if this\n"
 "                                        product is put on the quote."
 msgstr ""
+":\n"
+"                                        dette indhold vil kun vises på tilbuddet hvis\n"
+"                                        produktet sættes på tilbuddet."
 
 #. module: sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.so_template
@@ -52,6 +56,9 @@ msgid ""
 "                                        this content will appear on the quotation only if this\n"
 "                                        product is used in the quote."
 msgstr ""
+":\n"
+"dette indhold vil kun vises på tilbuddet hvis\n"
+"produktet sættes på tilbuddet."
 
 #. module: sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.sale_order_portal_content_inherit_sale_quotation_builder
@@ -60,6 +67,9 @@ msgid ""
 "                        this content will appear on the quotation only if this\n"
 "                        product is not removed."
 msgstr ""
+":\n"
+"dette indhold vil kun vises på tilbuddet hvis\n"
+"produktet ikke fjernes."
 
 #. module: sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.so_template
@@ -68,6 +78,9 @@ msgid ""
 "                                    will appear on all quotations using this\n"
 "                                    template."
 msgstr ""
+"<strong>Skabelon sidehoved:</strong> dette indhold\n"
+"                                                 vil vises på alle tilbud der bruger \n"
+"                                                  denne skabelon."
 
 #. module: sale_quotation_builder
 #: model_terms:sale.order.template,website_description:sale_quotation_builder.sale_order_template_default
@@ -81,6 +94,9 @@ msgid ""
 "                                we know that success is all about the\n"
 "                                commitment we put on strong services."
 msgstr ""
+"Som en førende professionel tjeneste virksomhed,\n"
+"                                  ved vi, at succes handler om\n"
+"                                  engagementet vi lægger på stærke services."
 
 #. module: sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.so_template
@@ -111,6 +127,11 @@ msgid ""
 "                                your references, your methodology or\n"
 "                                guarantees, your team, SLA, terms and conditions, etc."
 msgstr ""
+"Gode tilbuds skabeloner vil \n"
+"                                   <strong>booste din succes rate markant</strong>. Den \n"
+"                                    første sektion er typisk om dit firma,\n"
+"                                    dine referencer, din metodik, eller\n"
+"                                    garantier, dit hld, SLA, betingelser og vilkår, osv."
 
 #. module: sale_quotation_builder
 #: model_terms:sale.order.template,website_description:sale_quotation_builder.sale_order_template_default
@@ -120,6 +141,10 @@ msgid ""
 "                        template (from the Configuration menu), all future quotations will\n"
 "                        use this modified template."
 msgstr ""
+"Hvis du redigere et tilbud fra 'Forhåndsvisning' af et tilbud, vil du\n"
+"                           kun opdatere tilbuddet. Hvis du redigere tilbuds skabelonen\n"
+"                           (fra Konfigurations menuen), vil alle fremtidige tilbud\n"
+"                           bruge denne redigerede skabelon."
 
 #. module: sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.brand_promotion
@@ -129,7 +154,7 @@ msgstr "Odoo"
 #. module: sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.brand_promotion
 msgid "Open Source CRM"
-msgstr ""
+msgstr "Open Source CRM"
 
 #. module: sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.so_template
@@ -173,6 +198,9 @@ msgid ""
 "                                stand on; we build it with a relentless\n"
 "                                focus on fabric, performance and craftsmanship."
 msgstr ""
+"Produkt kvalitet er fundamentet vi\n"
+"                               står på; vi bygger det med en ubønhørlig\n"
+"                               fokus på stof, ydelse, og håndværk."
 
 #. module: sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.so_template
@@ -182,12 +210,12 @@ msgstr "Produkt:"
 #. module: sale_quotation_builder
 #: model:ir.model.fields,field_description:sale_quotation_builder.field_product_template__quotation_description
 msgid "Quotation Description"
-msgstr ""
+msgstr "Tilbud beskrivelse"
 
 #. module: sale_quotation_builder
 #: model:ir.model.fields,field_description:sale_quotation_builder.field_product_template__quotation_only_description
 msgid "Quotation Only Description"
-msgstr ""
+msgstr "Kun tilbud beskrivelse"
 
 #. module: sale_quotation_builder
 #: model:ir.model,name:sale_quotation_builder.model_sale_order_template
@@ -197,17 +225,17 @@ msgstr "Tilbudsskabelon"
 #. module: sale_quotation_builder
 #: model:ir.model,name:sale_quotation_builder.model_sale_order_template_line
 msgid "Quotation Template Line"
-msgstr ""
+msgstr "Tilbud skabelon linje"
 
 #. module: sale_quotation_builder
 #: model:ir.model,name:sale_quotation_builder.model_sale_order_template_option
 msgid "Quotation Template Option"
-msgstr ""
+msgstr "Tilbud skabelon indstilling"
 
 #. module: sale_quotation_builder
 #: model:ir.model,name:sale_quotation_builder.model_sale_order_option
 msgid "Sale Options"
-msgstr ""
+msgstr "Salgs indstillinger"
 
 #. module: sale_quotation_builder
 #: model:ir.model,name:sale_quotation_builder.model_sale_order
@@ -228,7 +256,7 @@ msgstr "Salgs- &amp; leveringsbetingelser"
 #: model:ir.model.fields,help:sale_quotation_builder.field_product_template__quotation_only_description
 #: model:ir.model.fields,help:sale_quotation_builder.field_sale_order_template_line__website_description
 msgid "The quotation description (not used on eCommerce)"
-msgstr ""
+msgstr "Tilbud beskrivelsen (ikke anvendt i eHandel)"
 
 #. module: sale_quotation_builder
 #: model:ir.model.fields,help:sale_quotation_builder.field_product_template__quotation_description
@@ -236,6 +264,8 @@ msgid ""
 "This field uses the Quotation Only Description if it is defined, otherwise "
 "it will try to read the eCommerce Description."
 msgstr ""
+"Dette felt bruger Kun tilbud beskrivelsen hvis defineret, ellers vil den "
+"forsøge at læse eHandels beskrivelsen."
 
 #. module: sale_quotation_builder
 #: model_terms:sale.order.template,website_description:sale_quotation_builder.sale_order_template_default
@@ -245,6 +275,10 @@ msgid ""
 "                                application, using the menu: Configuration /\n"
 "                                Quotation Templates."
 msgstr ""
+"Dette er en <strong>prøve tilbuds skabelon</strong>. Du bør\n"
+"                                 tilpasse den til at passe til dine behov fra <i>Salg</i>\n"
+"                                 applikationen, via menuen: Konfiguration /\n"
+"                                 Tilbud skabeloner."
 
 #. module: sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.so_template
@@ -253,6 +287,9 @@ msgid ""
 "                                    <i>Heading 2</i> will be used to generate the\n"
 "                                    table of content automatically."
 msgstr ""
+"Titler med stil <i>Titel 1</i> og\n"
+"                             <i>Titel 2</i> vil anvendes til at generere \n"
+"                             indholdsfortegnelsen automatisk."
 
 #. module: sale_quotation_builder
 #: model_terms:sale.order.template,website_description:sale_quotation_builder.sale_order_template_default
@@ -261,6 +298,9 @@ msgid ""
 "                                set at a fair price so that you will be\n"
 "                                happy to buy them."
 msgstr ""
+"Vi tjekker altid at vores produkter er\n"
+"                               sat til fornuftige priser, som du vil være\n"
+"                               tilfred ved at købe dem til."
 
 #. module: sale_quotation_builder
 #: model:ir.model.fields,field_description:sale_quotation_builder.field_sale_order__website_description
@@ -282,3 +322,8 @@ msgid ""
 "                        on the left is generated automatically using the styles you\n"
 "                        used in your description (heading 1, heading 2, ...)"
 msgstr ""
+"Du kan <strong>angive en beskrivelse per produkt</strong>. Odoo vil\n"
+"                         automatisk oprette et tilbud der anvender beskrivelser\n"
+"                         fra alle produkter i tilbuddet. Indholdsfortegnelsen\n"
+"                         til venstre er genereret automatisk ud fra de stile du\n"
+"                         brugte i din beskrivelse (titel 1, titel 2, ...)"

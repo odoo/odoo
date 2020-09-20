@@ -78,6 +78,13 @@ msgid ""
 " * Done: has been processed, can't be modified or cancelled anymore.\n"
 " * Cancelled: has been cancelled, can't be confirmed anymore."
 msgstr ""
+" * Kladde: endnu ikke bekræftet og vil derfor ikke blive planlagt\n"
+" * Venter på en anden handling: venter på en anden handling før den fortsætter og bliver automatisk tilgængelig (fx i et Make-To-Order flow)\n"
+" * Afventer tilgængelighed: venter stadig på at kommem på lager\n"
+" * Delvis tilgængelig: nogle produkter er tilgængelige og reserverede\n"
+" * Klar til levering: reserverede produkter der afventer bekræftelse\n"
+" * Leveret: er behandlet og ikke længere ændres eller annulleres\n"
+" * Annulleret: er annulleret og kan ikke længere bekræftes"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_picking_form
@@ -124,6 +131,13 @@ msgid ""
 "* Production: Virtual counterpart location for production operations: this location consumes the raw material and produces finished products\n"
 "* Transit Location: Counterpart location that should be used in inter-company or inter-warehouses operations"
 msgstr ""
+"* Forhandler sted: Virtuelt sted der repræsenterer kilden for produkter, der kommer fra dine forhandlere\n"
+"* Vis: Virtuelt sted brugt til at oprette en hierarkisk struktur for dine varehuse, som samler de steder der nedarver fra den ; kan ikke indeholde produkter direkte\n"
+"* Internt sted: Fysisk sted i dit eget varehus,\n"
+"* Kunde sted: Virtuelt sted der repræsenterer destinationen for produkter afsendt til dine kunder\n"
+"* Inventar tab: Virtuelt sted der fungerer som modpart til inventar operationer, brugt til at korrigere lager niveauer (fysiske inventare)\n"
+"* Produktion: virtuel modparts sted for produktions operationer: dette sted forbruger komponenter og producere færdige produkter\n"
+"* Transport steder: Modparts sted der bør bruges ved interne virksomhed- eller varehuse operationer"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
@@ -170,6 +184,8 @@ msgid ""
 "<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Expected date\" "
 "title=\"Expected date\"/>"
 msgstr ""
+"<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Forventet dato\" "
+"title=\"Forventet dato\"/> "
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
@@ -182,6 +198,8 @@ msgid ""
 "<i class=\"fa fa-exclamation-triangle\"/>\n"
 "                                All products could not be reserved. Click on the \"Check Availability\" button to try to reserve products"
 msgstr ""
+"<i class=\"fa fa-exclamation-triangle\"/>\n"
+"                                Ikke alle produkter kunne reserveres. Klik på \"Tjek tilgængelighed\" knappen, for at forsøge at reserver produkter."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_mrp_line
@@ -279,6 +297,8 @@ msgid ""
 "<strong>\n"
 "                                            Product Barcode</strong>"
 msgstr ""
+"<strong>\n"
+"                                            Produkt stregkode</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.message_head
@@ -588,6 +608,8 @@ msgstr "Alle returnerede flytninger"
 msgid ""
 "Allows to suggest the exact location (shelf) where to store the product."
 msgstr ""
+"Gør det muligt at foreslå et fast sted (hylde) hvor produktet skal "
+"opbevares."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_rule_form
@@ -665,7 +687,7 @@ msgstr "Tilknyttede flytninger"
 #. module: stock
 #: selection:stock.quantity.history,compute_at_date:0
 msgid "At a Specific Date"
-msgstr ""
+msgstr "På en specifik dato"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__message_attachment_count
@@ -935,7 +957,7 @@ msgstr "Ændre produkt antal"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Change must be higher than"
-msgstr ""
+msgstr "Skift skal være højere end"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_line__move_id
@@ -994,6 +1016,8 @@ msgstr "Vælg destination"
 msgid ""
 "Choose to analyze the current inventory or from a specific date in the past."
 msgstr ""
+"Vælg for at analysere det nuværende inventar, eller fra en specifik dato i "
+"fortiden."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quantity_history
@@ -1256,7 +1280,7 @@ msgstr "Opret en ny lager bevægelse"
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_picking_tree
 msgid "Create a new stock operation"
-msgstr ""
+msgstr "Opret en ny lager operation"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_orderpoint_form
@@ -1564,7 +1588,7 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:stock.action_picking_type_list
 #: model_terms:ir.actions.act_window,help:stock.stock_picking_action_picking_type
 msgid "Define a new transfer"
-msgstr ""
+msgstr "Definer en ny overførsel"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_warehouse_form
@@ -1682,6 +1706,8 @@ msgid ""
 "Depending on the modules installed, this will allow you to define the route "
 "of the product: whether it will be bought, manufactured, MTO, etc."
 msgstr ""
+"Afhængig af de installerede moduler, giver dette dig mulighed for at "
+"definere varens rute: Om den købes, produceres, MTO, osv."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__name
@@ -1803,7 +1829,7 @@ msgstr "Produkt med rabat"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_lot_on_delivery_slip
 msgid "Display Lots & Serial Numbers"
-msgstr ""
+msgstr "Vis Lot & Serienumre"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_group__display_name
@@ -1879,7 +1905,7 @@ msgstr "Udførte flytninger pr. dato"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Don’t propagate scheduling changes through chains of operations"
-msgstr ""
+msgstr "Former ikke skema ændringer ud gennem kæden af operationer"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_inventory_filter
@@ -1990,7 +2016,7 @@ msgstr "Fast"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_putaway__product_location_ids
 msgid "Fixed Locations Per Product"
-msgstr ""
+msgstr "Faste steder per produkt"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_putaway__fixed_location_ids
@@ -2005,7 +2031,7 @@ msgstr "Fast indkøbsgruppe"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_fixed_putaway_strat
 msgid "Fixed Putaway Strategy on Location"
-msgstr ""
+msgstr "Faste oplagrings strategi for lokation"
 
 #. module: stock
 #. openerp-web
@@ -2602,7 +2628,7 @@ msgstr "Lagre"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_inventory_filter
 msgid "Inventories Date"
-msgstr ""
+msgstr "Inventarer dato"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.quantsact
@@ -2675,7 +2701,7 @@ msgstr "Lager oversigt"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_inventory_filter
 msgid "Inventory Product"
-msgstr ""
+msgstr "Inventar produkt"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory__name
@@ -3270,13 +3296,14 @@ msgstr "Metode"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__propagation_minimum_delta
 msgid "Minimum Delta for Propagation"
-msgstr ""
+msgstr "Minimums delta for formering"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_company__propagation_minimum_delta
 msgid ""
 "Minimum Delta for Propagation of a Date Change on moves linked together"
 msgstr ""
+"Minimums delta for formering af en dato ændring for forbundne bevægelser"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_warehouse_orderpoint
