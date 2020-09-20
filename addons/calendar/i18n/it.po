@@ -13,13 +13,13 @@
 # Cécile Collart <cco@odoo.com>, 2019
 # Pietro Della Notte <pdellanotte@gmail.com>, 2019
 # Manuela Feliciani <mfeliciani@alice.it>, 2019
+# Léonie Bouchat <lbo@odoo.com>, 2019
 # Francesco Garganese <francesco.garganese@aeromnia.aero>, 2019
 # Martin Trigaux, 2019
 # Lorenzo Battistini <lb@takobi.online>, 2019
 # David Minneci <david@numeko.it>, 2019
 # maiolif <maiolif@mgftools.com>, 2019
 # efraimbiffi <eab@odoo.com>, 2019
-# Léonie Bouchat <lbo@odoo.com>, 2019
 # Stefano Consolaro <stefano.consolaro@mymage.it>, 2019
 # Sergio Zanchetta <primes2h@gmail.com>, 2020
 # 
@@ -537,7 +537,7 @@ msgstr "Giorno del mese"
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_alarm__interval__days
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__rrule_type__daily
 msgid "Days"
-msgstr "Giorni"
+msgstr "giorni"
 
 #. module: calendar
 #. openerp-web
@@ -683,7 +683,7 @@ msgstr "Tutti"
 #: code:addons/calendar/models/mail_activity.py:0
 #, python-format
 msgid "Feedback: "
-msgstr "Riscontro:"
+msgstr "Opinione:"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__byday__5
@@ -751,7 +751,7 @@ msgstr "Raggruppa per"
 #: code:addons/calendar/models/calendar.py:0
 #, python-format
 msgid "Group by date is not supported, use the calendar view instead."
-msgstr "Raggruppo per data non supportato, usa la vista calendario."
+msgstr "Raggruppamento per data non supportato, usare la vista calendario."
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_ir_http
@@ -816,7 +816,7 @@ msgstr "Invito per"
 #. module: calendar
 #: model:mail.template,subject:calendar.calendar_template_meeting_invitation
 msgid "Invitation to ${object.event_id.name}"
-msgstr "Invito a ${object.event_id.name}"
+msgstr "Invito per ${object.event_id.name}"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -1188,7 +1188,7 @@ msgstr "Ripeti"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__interval
 msgid "Repeat Every"
-msgstr "Ripeti ogni"
+msgstr "Ripetere ogni"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__final_date
@@ -1198,7 +1198,7 @@ msgstr "Ripeti fino a"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__interval
 msgid "Repeat every (Days/Week/Month/Year)"
-msgstr "Ripeti ogni (giorno/settimana/mese/anno)"
+msgstr "Ripete ogni (giorno/settimana/mese/anno)"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__count
@@ -1249,7 +1249,7 @@ msgstr "Invia e-mail"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__show_as
 msgid "Show Time as"
-msgstr "Mostra come"
+msgstr "Mostrare periodo come"
 
 #. module: calendar
 #. openerp-web
@@ -1272,13 +1272,12 @@ msgstr "Data inizio"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__start_datetime
 msgid "Start DateTime"
-msgstr "Data e ora partenza"
+msgstr "Data e ora inizio"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__start
 msgid "Start date of an event, without time for full days events"
-msgstr ""
-"Data di inizio dell'evento, senza l'ora per gli eventi a giornata completa."
+msgstr "Data di inizio, senza ora, per eventi che durano tutto il giorno"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -1309,8 +1308,7 @@ msgstr "Ferma"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__stop
 msgid "Stop date of an event, without time for full days events"
-msgstr ""
-"Data di termine dell'evento, senza l'ora per gli eventi a giornata completa."
+msgstr "Data di fine, senza ora, per eventi che durano tutto il giorno"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_tree
@@ -1370,14 +1368,14 @@ msgstr ""
 msgid ""
 "The ending date and time cannot be earlier than the starting date and time."
 msgstr ""
-"La data e l'ora di fine devono essere successive alla data e l'ora di "
+"La data e ora di fine non possono essere precedenti alla data e ora di "
 "inizio."
 
 #. module: calendar
 #: code:addons/calendar/models/calendar.py:0
 #, python-format
 msgid "The ending date cannot be earlier than the starting date."
-msgstr "La data di fine deve essere successiva alla data di inizio."
+msgstr "La data di fine non può essere precedente alla data di inizio."
 
 #. module: calendar
 #: code:addons/calendar/models/calendar.py:0
@@ -1435,7 +1433,7 @@ msgstr "Martedì"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__alarm_type
 msgid "Type"
-msgstr "Tipologia"
+msgstr "Tipo"
 
 #. module: calendar
 #. openerp-web
@@ -1500,12 +1498,12 @@ msgstr "giorno feriale"
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__rrule_type__weekly
 msgid "Weeks"
-msgstr "Settimane"
+msgstr "settimane"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__rrule_type__yearly
 msgid "Years"
-msgstr "Anni"
+msgstr "anni"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous

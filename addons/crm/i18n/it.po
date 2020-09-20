@@ -7,6 +7,7 @@
 # Francesco Garganese <francesco.garganese@aeromnia.aero>, 2019
 # SebastianoPistore <SebastianoPistore.info@protonmail.ch>, 2019
 # Christian <chris@effeci.info>, 2019
+# Stefano Consolaro <stefano.consolaro@mymage.it>, 2019
 # Romica Paun <roa@odoo.com>, 2019
 # David Minneci <david@numeko.it>, 2019
 # Léonie Bouchat <lbo@odoo.com>, 2019
@@ -14,8 +15,6 @@
 # Martin Trigaux, 2019
 # Luigi Di Naro <gigidn@gmail.com>, 2019
 # Paolo Valier, 2019
-# Stefano Consolaro <stefano.consolaro@mymage.it>, 2019
-# Simone Sanfilippo <s.sanfilippo@hinge16.eu>, 2019
 # efaOdoo <efa@odoo.com>, 2020
 # Iacopo Simonelli <lsi@odoo.com>, 2020
 # Sergio Zanchetta <primes2h@gmail.com>, 2020
@@ -172,8 +171,8 @@ msgid ""
 "<i class=\"fa fa-gear\" role=\"img\" title=\"Switch to automatic "
 "probability\" aria-label=\"Switch to automatic probability\"/>"
 msgstr ""
-"<i class=\"fa fa-gear\" role=\"img\" title=\"Switch to automatic "
-"probability\" aria-label=\"Switch to automatic probability\"/>"
+"<i class=\"fa fa-gear\" role=\"img\" title=\"Passaggio alla probabilità "
+"automatica\" aria-label=\"Switch to automatic probability\"/>"
 
 #. module: crm
 #: code:addons/crm/models/crm_team.py:0
@@ -214,7 +213,7 @@ msgstr ""
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "<span class=\"oe_grey p-2\"> at </span>"
-msgstr "<span class=\"oe_grey p-2\"> a </span>"
+msgstr "<span class=\"oe_grey p-2\"> al </span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
@@ -479,7 +478,7 @@ msgid ""
 "Classify and analyze your lead/opportunity categories like: Training, "
 "Service"
 msgstr ""
-"Classifica e analizza le categorie di contatto/opportunità come formazione o"
+"Classifica e analizza le categorie di contatto/opportunità come: formazione,"
 " servizio"
 
 #. module: crm
@@ -487,7 +486,7 @@ msgstr ""
 #: code:addons/crm/static/src/js/tours/crm.js:0
 #, python-format
 msgid "Click here to <b>add your opportunity</b>."
-msgstr "Fai clic qui per <b>aggiungere l'opportunità</b>."
+msgstr "Fai clic qui e <b>aggiungi l'opportunità</b>."
 
 #. module: crm
 #. openerp-web
@@ -497,7 +496,7 @@ msgid ""
 "Click here to <b>create your first opportunity</b> and add it to your "
 "pipeline."
 msgstr ""
-"Fai clic qui per <b>creare la tua prima opportunità </b> e aggiungerla al "
+"Fai clic qui e <b>crea la tua prima opportunità </b> aggiungendola al "
 "flusso."
 
 #. module: crm
@@ -900,7 +899,9 @@ msgstr "Nome visualizzato"
 #: code:addons/crm/models/digest.py:0 code:addons/crm/models/digest.py:0
 #, python-format
 msgid "Do not have access, skip this data for user's digest email"
-msgstr "Non hai accesso, salta questi dati per l'e-mail digest dell'utente"
+msgstr ""
+"Accesso non consentito, saltare questi dati nell'e-mail di riepilogo "
+"dell'utente"
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead2opportunity_partner__action__nothing
@@ -1574,7 +1575,7 @@ msgstr "Persa"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_scoring_frequency__lost_count
 msgid "Lost Count"
-msgstr "Conteggio delle opportunità perse"
+msgstr "Numero perse"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_lead_lost_action
@@ -1584,13 +1585,13 @@ msgstr "Conteggio delle opportunità perse"
 #: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Lost Reason"
-msgstr "Motivo della perdita"
+msgstr "Motivo perdita"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_lost_reason_action
 #: model:ir.ui.menu,name:crm.menu_crm_lost_reason
 msgid "Lost Reasons"
-msgstr "Motivi della perdita"
+msgstr "Motivi perdita"
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead__priority__0
@@ -1615,22 +1616,22 @@ msgstr "Assegnazione manuale e-mail"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "Mark Lost"
-msgstr "Imposta a persa"
+msgstr "Segna come persa"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "Mark Won"
-msgstr "Imposta a vinta"
+msgstr "Segna come vinta"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "Mark as Lost"
-msgstr "Imposta a persa"
+msgstr "Segna come persa"
 
 #. module: crm
 #: model:ir.actions.server,name:crm.action_mark_as_lost
 msgid "Mark as lost"
-msgstr "Imposta a persa"
+msgstr "Segna come persa"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -1650,7 +1651,7 @@ msgstr "Media"
 #, python-format
 msgid "Meeting scheduled at '%s'<br> Subject: %s <br> Duration: %s hours"
 msgstr ""
-"Appuntamento pianificato alle '%s'<br> Oggetto: %s <br> Durata: %s ora/e"
+"Appuntamento pianificato alle \"%s\"<br> Oggetto: %s <br> Durata: %s ora/e"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.act_crm_opportunity_calendar_event_new
@@ -2068,7 +2069,7 @@ msgstr "Il partner è nella lista nera"
 #. module: crm
 #: model:ir.model,name:crm.model_crm_partner_binding
 msgid "Partner linking/binding in CRM wizard"
-msgstr "Collegamento / associazione dei partner nella procedura guidata CRM"
+msgstr "Collegamenti / vincoli del partner nella procedura guidata CRM"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__phone
@@ -2634,7 +2635,7 @@ msgstr "Monitoraggio"
 #. module: crm
 #: model:crm.lead.tag,name:crm.categ_oppor6
 msgid "Training"
-msgstr "Addestramento"
+msgstr "Formazione"
 
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_0
@@ -2852,7 +2853,7 @@ msgstr "Vinta"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_scoring_frequency__won_count
 msgid "Won Count"
-msgstr "Conteggio delle opportunità vinte"
+msgstr "Numero vinte"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_users__target_sales_won
