@@ -13,7 +13,7 @@
 # Mateus Lopes <mateus1@gmail.com>, 2017
 # Caio Leonardo Mendes de Sousa <caleozao@gmail.com>, 2017
 # Luiz Carlos de Lima <luiz.carlos@akretion.com.br>, 2017
-# Rodrigo de Almeida Sottomaior Macedo <rmsolucoeseminformatic4@gmail.com>, 2017
+# Rodrigo de Almeida Sottomaior Macedo <rmsolucoeseminformatica@protonmail.com>, 2017
 # Martin Trigaux, 2017
 # Yannick Belot <yannickbh@gmail.com>, 2017
 # danimaribeiro <danimaribeiro@gmail.com>, 2018
@@ -989,7 +989,7 @@ msgstr "Confirmar"
 #: code:addons/point_of_sale/static/src/js/chrome.js:455
 #, python-format
 msgid "Connected, Not Owned"
-msgstr ""
+msgstr "Conectado, não pertence"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1150,7 +1150,7 @@ msgstr "Posição fiscal padrão"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Default Opening"
-msgstr ""
+msgstr "Abertura padrão"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_pricelist_id
@@ -1346,14 +1346,14 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1355
 #, python-format
 msgid "Download Paid Orders"
-msgstr ""
+msgstr "Baixar pedidos pagos"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1357
 #, python-format
 msgid "Download Unpaid Orders"
-msgstr ""
+msgstr "Baixar Pedidos não pagos"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1409,7 +1409,7 @@ msgstr "Ordem vazia"
 #: code:addons/point_of_sale/static/src/js/screens.js:449
 #, python-format
 msgid "Empty Serial/Lot Number"
-msgstr ""
+msgstr "Número de série / lote vazio"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_iface_scan_via_proxy
@@ -1565,6 +1565,11 @@ msgid ""
 "recommended for an easy review of your journal entries when managing lots of"
 " orders."
 msgstr ""
+"Obtenha um item de diário por produto em vez de um item de diário por linha "
+"de recibo. Isso funciona para qualquer pedido anônimo. Se o cliente estiver "
+"definido no pedido, um item de diário será criado para cada linha de "
+"recebimento. Esta opção é recomendada para uma revisão fácil de suas "
+"entradas de diário ao gerenciar muitos pedidos."
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -1625,7 +1630,7 @@ msgstr "Agrupar Itens de Diário"
 #: code:addons/point_of_sale/static/src/js/models.js:135
 #, python-format
 msgid "HTTPS connection to IoT Box failed"
-msgstr ""
+msgstr "Falha na conexão HTTPS com IoT Box"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_product_uom_categ_is_pos_groupable
@@ -1766,7 +1771,7 @@ msgstr "Categoria inicial"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_module_pos_mercury
 msgid "Integrated Card Payments"
-msgstr ""
+msgstr "Pagamentos com cartão integrado"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -1978,12 +1983,12 @@ msgstr "Nome do Lote"
 #: code:addons/point_of_sale/static/src/js/models.js:2371
 #, python-format
 msgid "Lot/Serial Number(s) Required"
-msgstr ""
+msgstr "Número (s) de série / lote necessários"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line_pack_lot_ids
 msgid "Lot/serial Number"
-msgstr ""
+msgstr "Lote/Número Serial "
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_module_pos_loyalty
@@ -2008,6 +2013,8 @@ msgid ""
 "Make sure you are using IoT Box v18.12 or higher. Navigate to %s to accept "
 "the certificate of your IoT Box."
 msgstr ""
+"Certifique-se de usar o IoT Box v18.12 ou superior. Navegue até %spara "
+"aceitar o certificado da sua IoT Box."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_available_pricelist_ids
@@ -2211,7 +2218,7 @@ msgstr "Ok"
 #: code:addons/point_of_sale/static/src/js/screens.js:450
 #, python-format
 msgid "One or more product(s) required serial/lot number."
-msgstr ""
+msgstr "Um ou mais produtos(s) número de série/lote necessários."
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.Onions
@@ -2226,6 +2233,8 @@ msgid ""
 "Only users with Manager access rights for PoS app can modify the product "
 "prices on orders."
 msgstr ""
+"Somente usuários com direitos de acesso de gerente para o aplicativo PoS "
+"podem modificar os preços dos produtos nos pedidos."
 
 #. module: point_of_sale
 #. openerp-web
@@ -2361,7 +2370,7 @@ msgstr "Interface dos Pedidos"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_sequence_line_id
 msgid "Order Line IDs Sequence"
-msgstr ""
+msgstr "Sequência de IDs de linha de pedido"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_lines
@@ -2463,7 +2472,7 @@ msgstr "Vendas do PdV"
 #: code:addons/point_of_sale/models/pos_config.py:350
 #, python-format
 msgid "POS order line %s"
-msgstr ""
+msgstr "Linha de pedido de PDV%s"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
@@ -2621,19 +2630,19 @@ msgstr "Separação"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session_picking_count
 msgid "Picking Count"
-msgstr ""
+msgstr "Resultado da Separação"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "Picking Errors"
-msgstr ""
+msgstr "Erros de Separação"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/screens.js:2034
 #, python-format
 msgid "Please Confirm Large Amount"
-msgstr ""
+msgstr "Confirme a grande quantidade"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:369
@@ -2730,7 +2739,7 @@ msgstr "Configuração do Ponto de Vendas"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_group_pos_manager_id
 msgid "Point of Sale Manager Group"
-msgstr ""
+msgstr "Grupo de gerenciamento de ponto de venda"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_name
@@ -2764,7 +2773,7 @@ msgstr "Sessão do Ponto de Vendas"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_group_pos_user_id
 msgid "Point of Sale User Group"
-msgstr ""
+msgstr "Grupo de usuários de Ponto de Venda"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.product_pos_category_form_view
@@ -2780,28 +2789,28 @@ msgstr "Configuração do PdV"
 #: model:ir.model.fields,field_description:point_of_sale.field_res_partner_pos_order_count
 #: model:ir.model.fields,field_description:point_of_sale.field_res_users_pos_order_count
 msgid "Pos Order Count"
-msgstr ""
+msgstr "Contagem de pedidos Pos"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_pack_operation_lot_pos_order_line_id
 msgid "Pos Order Line"
-msgstr ""
+msgstr "Linha de pedido de PDV"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_pos_session_state
 msgid "Pos Session State"
-msgstr ""
+msgstr "Estado da sessão do PDV"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_pos_session_username
 msgid "Pos Session Username"
-msgstr ""
+msgstr "Nome de usuário da sessão PdV"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_is_posbox
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "PosBox"
-msgstr ""
+msgstr "PosBox"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -2830,7 +2839,7 @@ msgstr "Batatas"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_iface_precompute_cash
 msgid "Prefill Cash Payment"
-msgstr ""
+msgstr "Pré-preencher pagamento em dinheiro"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -2995,7 +3004,7 @@ msgstr "Unidade de Medida do Produto"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_product_uom_categ
 msgid "Product UoM Categories"
-msgstr ""
+msgstr "Categorias UoM do produto"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.product_product_action
@@ -3011,7 +3020,7 @@ msgstr "Preço dos produtos no Recibos"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_iface_tipproduct
 msgid "Product tips"
-msgstr ""
+msgstr "Dicas de produto"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.product_template_action_pos_product
@@ -3047,7 +3056,7 @@ msgstr "Quantidade"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1373
 #, python-format
 msgid "Read Weighing Scale"
-msgstr ""
+msgstr "Leia escala de pesagem"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3103,7 +3112,7 @@ msgstr "Uva vermelha"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1367
 #, python-format
 msgid "Refresh Display"
-msgstr ""
+msgstr "Atualizar exibição"
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_point_rep
@@ -3130,7 +3139,7 @@ msgstr "Responsável"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_restrict_price_control
 msgid "Restrict Price Modifications to Managers"
-msgstr ""
+msgstr "Alteração de preços só pode ser feitas por gerentes."
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -3202,7 +3211,7 @@ msgstr "Salvar"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Save this configuration to see and edit the customer display"
-msgstr ""
+msgstr "Salve esta configuração para ver e editar a exibição do cliente"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3293,7 +3302,7 @@ msgstr "Escolha a lista de preços"
 #: code:addons/point_of_sale/static/src/js/screens.js:2117
 #, python-format
 msgid "Select tax"
-msgstr ""
+msgstr "Selecione imposto"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:249
@@ -3316,7 +3325,7 @@ msgstr "Sequencia numerica "
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1099
 #, python-format
 msgid "Serial/Lot Number"
-msgstr ""
+msgstr "Lote/Número Serial "
 
 #. module: point_of_sale
 #. openerp-web
@@ -3406,7 +3415,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/pos.web_editor.js:33
 #, python-format
 msgid "Set your customized advertisement here"
-msgstr ""
+msgstr "Defina seu anúncio personalizado aqui"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -3416,7 +3425,7 @@ msgstr "Configurações"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_iface_customer_facing_display
 msgid "Show checkout to customers with a remotely-connected screen."
-msgstr ""
+msgstr "Mostre checkout aos clientes com uma tela remotamente conectada."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_group_pricelist_item
@@ -3461,7 +3470,7 @@ msgstr "Alguns pedidos não foram submetidos a"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_pack_operation_lot
 msgid "Specify product lot/serial number in pos order line"
-msgstr ""
+msgstr "Especifique o lote / número de série do produto na linha de pedido"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_details_wizard_start_date
@@ -3510,7 +3519,7 @@ msgstr "Local do Estoque"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Stock location used for the inventory"
-msgstr ""
+msgstr "Local de estoque usado para o inventário"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3621,12 +3630,12 @@ msgstr "ID do Imposto"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_tax_regime
 msgid "Tax Regime"
-msgstr ""
+msgstr "Regime Tributário"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_tax_regime_selection
 msgid "Tax Regime Selection value"
-msgstr ""
+msgstr "Selecione o valor do regime tributário"
 
 #. module: point_of_sale
 #: selection:pos.config,iface_tax_included:0
@@ -3740,6 +3749,8 @@ msgid ""
 "The invoice journal must be in the same currency as the Sales Journal or the"
 " company currency if that is not set."
 msgstr ""
+"O diário de faturas deve estar na mesma moeda que o Diário de vendas ou a "
+"moeda da empresa, se isso não for definido."
 
 #. module: point_of_sale
 #: sql_constraint:pos.session:0
@@ -3750,7 +3761,7 @@ msgstr "O nome desta sessão do PDV deve ser exclusivo!"
 #: model:ir.model.fields,help:point_of_sale.field_res_partner_pos_order_count
 #: model:ir.model.fields,help:point_of_sale.field_res_users_pos_order_count
 msgid "The number of point of sales orders related to this customer"
-msgstr ""
+msgstr "O número de pedidos de ponto de vendas relacionados a este cliente"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3774,6 +3785,8 @@ msgid ""
 "The order has been synchronized earlier. Please make the invoice from the "
 "backend for the order: "
 msgstr ""
+"O pedido foi sincronizado anteriormente. Faça a fatura do backend para o "
+"pedido:"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_iface_precompute_cash
@@ -3781,6 +3794,8 @@ msgid ""
 "The payment input will behave similarily to bank payment input, and will be "
 "prefilled with the exact due amount."
 msgstr ""
+"A entrada de pagamento se comportará de maneira semelhante à entrada de "
+"pagamento bancário e será pré-preenchida com o valor exato devido."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order_config_id
@@ -3840,6 +3855,8 @@ msgid ""
 "The selected pricelists must belong to no company or the company of the "
 "point of sale."
 msgstr ""
+"As listas de preços selecionadas não devem pertencer a nenhuma empresa ou à "
+"empresa do ponto de venda."
 
 #. module: point_of_sale
 #. openerp-web
@@ -3935,6 +3952,8 @@ msgid ""
 "This cashbox line is used by default when opening or closing a balance for "
 "this point of sale"
 msgstr ""
+"Esta linha de caixa é usada por padrão ao abrir ou fechar um saldo para este"
+" ponto de venda"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_account_journal_amount_authorized_diff
@@ -3963,6 +3982,8 @@ msgid ""
 "This field is there to pass the id of the pos manager group to the point of "
 "sale client."
 msgstr ""
+"Este campo existe para passar o id do grupo do gerente de vendas ao cliente "
+"do ponto de venda."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_group_pos_user_id
@@ -3970,6 +3991,8 @@ msgid ""
 "This field is there to pass the id of the pos user group to the point of "
 "sale client."
 msgstr ""
+"Este campo existe para passar a identificação do grupo de usuários PdV para "
+"o cliente ponto de venda."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:595
@@ -4018,7 +4041,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_tip_product_id
 msgid "This product is used as reference on customer receipts."
-msgstr ""
+msgstr "Este produto é usado como referência nos recibos dos clientes."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_sequence_line_id
@@ -4317,7 +4340,7 @@ msgstr "Água"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1366
 #, python-format
 msgid "Weighing"
-msgstr ""
+msgstr "Pesagem"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form

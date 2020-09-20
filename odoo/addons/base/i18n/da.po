@@ -257,6 +257,22 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"\n"
+"Oversigt:\n"
+"---------\n"
+"\n"
+"* Skabelon for kontoplan og moms for virksomheder i Japan.\n"
+"* Dette dækker muligvis ikke alle nødvendige konti for en virksomhed. Det forventes ikke at du tilføjer/fjerner/modificere konti baseret på denne skabelon.\n"
+"\n"
+"Bemærk:\n"
+"-----\n"
+"\n"
+"* Bogføringsgrupperne '内税' (intern moms) og '外税' (ekstern moms) er blevet tilføjet for at håndtere særlige krav som kan komme fra POS implementering. [1]  Under normale omstændigheder, har du muligvis ikke brug for at bruge disse overhovedet.\n"
+"\n"
+"[1] Se https://github.com/odoo/odoo/pull/6470 for detaljer.\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_deferred_revenue
@@ -302,6 +318,12 @@ msgid ""
 "- Kitchen Order Printing: allows you to print orders updates to kitchen or bar printers\n"
 "\n"
 msgstr ""
+"\n"
+"\n"
+"Dette modul tilføjer flere funktioner til Point of Sale, som er specifikke for restaurationsstyring:\n"
+"- Udprintning af regning: Gør dig i stand til at printe en kvittering før bestillingen er betalt\n"
+"- Deling af regning: Gør dig i stand til at dele en bestilling op i flere bestillinger\n"
+"- Udprintning af køkkenbestillinger: Gør dig i stand til at udprinte opdateringer af bestillinger til printere i køkken eller bar.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_discount
@@ -312,6 +334,10 @@ msgid ""
 "sale discount to a customer.\n"
 "\n"
 msgstr ""
+"\n"
+"\n"
+"Dette modul gør kasseren i stand til hurtigt at give procent-baseret\n"
+"rabat til en kunde.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_loyalty
@@ -323,6 +349,10 @@ msgid ""
 "and get rewards.\n"
 "\n"
 msgstr ""
+"\n"
+"\n"
+"Dette modul gør dig i stand til at definere et loyalitetsprogram ved salgsstedet, hvor kunder kan optjene loyalitetspoint\n"
+"og udløse belønninger.\n"
 
 #. module: base
 #: code:addons/model.py:136
@@ -367,6 +397,10 @@ msgid ""
 "        - Track timesheet for task from ticket\n"
 "    "
 msgstr ""
+"\n"
+"        - Tillad at oprette projekt for Helpdesk holdet\n"
+"        - Spor timeseddel for en opgave fra en supportsag\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_tax_python
@@ -379,6 +413,13 @@ msgid ""
 "        \"Python Code\" defines the amount of the tax.\n"
 "        "
 msgstr ""
+"\n"
+"En moms defineret som Python kode, udgøres af to uddrag af Python kode, som bliver kørt i et lokalt miljø, indeholdende data, så som enhedspris, produkt, eller partner.\n"
+"\n"
+"\"Anvendelig kode\" definerer hvorvidt momsen skal anvendes.\n"
+"\n"
+"\"Python kode\" definerer moms mængden.\n"
+"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_reports
@@ -529,6 +570,8 @@ msgid ""
 "        Accounting reports send to HMRC\n"
 "    "
 msgstr ""
+"\n"
+"        Regnskabsrapporter til afsendelse til HMRC"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_extension
@@ -562,6 +605,9 @@ msgid ""
 "        Allow to make call from next activities or with click-to-dial.\n"
 "    "
 msgstr ""
+"\n"
+"Gør det muligt at foretage opkald fra næste aktivitet eller med click-to-dial.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_tax_python
@@ -569,6 +615,8 @@ msgid ""
 "\n"
 "        Allows to use python code to define taxes"
 msgstr ""
+"\n"
+"Brug python kode til at definere moms"
 
 #. module: base
 #: model:ir.module.module,description:base.module_helpdesk_sale_timesheet
@@ -605,6 +653,9 @@ msgid ""
 "        Compute sales tax automatically using TaxCloud based on customer address in United States.\n"
 "    "
 msgstr ""
+"\n"
+"Udregner momsen automatisk ved hjælp af TaxCloud ud fra kundens adresse i USA.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_mx_reports
@@ -629,6 +680,8 @@ msgid ""
 "\n"
 "        Enable a cache on products for a lower POS loading time."
 msgstr ""
+"\n"
+"Aktivér en cache på produkter for at sænke POS start tider."
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_expense_sepa
@@ -646,6 +699,8 @@ msgid ""
 "        Generate Electronic Invoice with Customs Number\n"
 "    "
 msgstr ""
+"\n"
+"Generer elektroniske faktura med toldnumre"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_sepa
@@ -938,6 +993,8 @@ msgid ""
 "    Gantt view for Leaves Dashboard\n"
 "    "
 msgstr ""
+"\n"
+"Gantt visning for bladinstrumentbræt"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_lock
@@ -20709,6 +20766,9 @@ msgid ""
 "image, with aspect ratio preserved. Use this field anywhere a small image is"
 " required."
 msgstr ""
+"Lille billede størrelse for denne kontakt. Det omformes automatisk til et "
+"64x64px billede, med billedforholdet bibeholdt. Brug dette felt hvor end et "
+"lille billede påkræves."
 
 #. module: base
 #: model:res.country,name:base.sb
@@ -22958,7 +23018,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_delivery_ups
 msgid "UPS Bill My Account"
-msgstr ""
+msgstr "UPS Fakturer min konto"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_ups
