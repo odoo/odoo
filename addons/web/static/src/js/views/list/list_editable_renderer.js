@@ -1705,7 +1705,8 @@ ListRenderer.include({
         const resizeHeader = ev => {
             ev.preventDefault();
             ev.stopPropagation();
-            const delta = ev.pageX - initialX;
+            const isRTL = _t.database.parameters.direction === 'rtl';
+            const delta = isRTL ? initialX - ev.pageX : ev.pageX - initialX;
             const newWidth = Math.max(10, initialWidth + delta);
             const tableDelta = newWidth - initialWidth;
             th.style.width = `${newWidth}px`;
