@@ -47,7 +47,7 @@ msgstr ""
 #. module: website_forum
 #: model:mail.template,subject:website_forum.validation_email
 msgid "${object.company_id.name} Forums validation"
-msgstr ""
+msgstr "${object.company_id.name} Forum validering"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.tag
@@ -55,6 +55,8 @@ msgid ""
 "&amp;nbsp;&amp;nbsp;<i class=\"fa fa-times\" title=\"Close\" role=\"img\" "
 "aria-label=\"Close\"/>&amp;nbsp;&amp;nbsp;"
 msgstr ""
+"&amp;nbsp;&amp;nbsp;<i class=\"fa fa-times\" title=\"Luk\" role=\"img\" "
+"aria-label=\"Luk\"/>&amp;nbsp;&amp;nbsp; "
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.header
@@ -72,6 +74,8 @@ msgid ""
 "(Un)archiving a forum automatically (un)archives its posts. Do you want to "
 "proceed?"
 msgstr ""
+"(Af)arkivering af et forum (af)arkiverer automatisk indlæggende på den. Vil "
+"du fortsætte?"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_form
@@ -79,6 +83,8 @@ msgid ""
 "(Un)archiving a post automatically (un)archives its answers. Do you want to "
 "proceed?"
 msgstr ""
+"(Af)arkivering af indlæg (af)arkiverer automatisk dens besvarelser. Vil du "
+"fortsætte?"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_forum_form
@@ -138,6 +144,8 @@ msgid ""
 "<b>Answers should not add or expand questions</b>. Instead\n"
 "    either edit the question or add a comment."
 msgstr ""
+"<b>Svar bør ikke tilføje eller udvide spørgsmål</b>. Istedet\n"
+"    bør du enten redigere spørgsmålet, eller tilføje en kommentar."
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
@@ -154,6 +162,8 @@ msgid ""
 "<b>Answers should not comment other answers</b>. Instead\n"
 "    add a comment on the other answers."
 msgstr ""
+"<b>Svar bør ikke kommenterer andre svar</b>. Istedet\n"
+"bør du tilføje en kommentar til de andre svar."
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
@@ -172,6 +182,11 @@ msgid ""
 "    your answers as they tend to dilute the essence of questions and answers. For\n"
 "    brief discussions please use commenting facility."
 msgstr ""
+"<b>Svar bør ikke starte debatter</b>\n"
+"  Denne community Q&amp;A er ikke en diskussions gruppe. Undgå venligst at afholde debatter i\n"
+"  dine svar, eftersom de har en tendens til at udvande essensen af spørgsmål og svar.\n"
+"For \n"
+"  korte diskussioner bedes du bruge kommenterings faciliteten."
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
@@ -195,6 +210,10 @@ msgid ""
 "    questions or answers providing relevant additional\n"
 "    information."
 msgstr ""
+"<b>Spørgsmål bør ikke pege på andre spørgsmål</b>. Tilføj i stedet en "
+"kommentar der indikere <i>\"Mulig kopi af...\"</i>. Dog er det fint at "
+"inkludere links til andre spørgsmål eller svar, ved angivelse af relevant "
+"yderligere information."
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
@@ -205,6 +224,10 @@ msgid ""
 "    copy/paste. Links are welcome, but should be complementary to\n"
 "    answer, referring sources or additional reading."
 msgstr ""
+"<b>Svar bør ikke bare angive et link til en løsning</b>. Angiv i stedet "
+"løsningens beskrivelse i dit svar, selv hvis det er kopier/sæt ind. Links er"
+" velkomne, men bør være støtte svaret; henvisning til kilder, yderligere "
+"læsning."
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
@@ -226,6 +249,9 @@ msgid ""
 "    search questions by their title or tags.  It’s also OK to\n"
 "    answer your own question."
 msgstr ""
+"<b>Før du spørger - undersøg venligst om det samme spørgsmål er blevet "
+"stillet før.</b> Du kan søge i spørgsmål ud fra deres titel eller tags. Det "
+"er altså OK at besvare dit eget spørgsmål."
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_badges
@@ -243,6 +269,8 @@ msgid ""
 "<b>Please avoid asking questions that are too subjective\n"
 "    and argumentative</b> or not relevant to this community."
 msgstr ""
+"<b>Undgå venligst at stille spørgsmål der er for subjektive eller "
+"argumenterende</b> eller ikke relevant for dette community."
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_answer
@@ -252,6 +280,10 @@ msgid ""
 "        - no need to answer the same question twice. Also, please <b>don't forget to vote</b>\n"
 "        - it really helps to select the best questions and answers!"
 msgstr ""
+"<b>Prøv venligst at give fyldestgørende svar.</b> Hvis du gerne vil kommenterer på spørgsmålet eller svart, så bare\n"
+"         <b>brug kommentar værktøjet.</b> Husk venligst at du kan altid <b>revidere dine svar</b>\n"
+"                - ingen grund til at svare på det samme spørgsmål to gange. Og <b>glem venligst ikke at stemme</b>\n"
+"                - det hjælper virkelig at udpege de bedste spørgsmål og svar! "
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.new_discussion
@@ -269,6 +301,8 @@ msgid ""
 "<b>|</b>\n"
 "                    <span class=\"fa fa-circle badge-gold\" role=\"img\" aria-label=\"Gold badge\" title=\"Gold badge\"/>"
 msgstr ""
+"<b>|</b>\n"
+"                    <span class=\"fa fa-trophy badge-gold ml-2\" role=\"img\" aria-label=\"Gold badge\" title=\"Gold badge\"/>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.header
@@ -278,7 +312,7 @@ msgstr "<i class=\"fa fa-arrow-right\"/> Tilbage til"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.header
 msgid "<i class=\"fa fa-arrow-right\"/> Read Guidelines"
-msgstr ""
+msgstr "<i class=\"fa fa-arrow-right\"/> Læs retningslinjer"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_detail_full
@@ -291,21 +325,25 @@ msgid ""
 "<i class=\"fa fa-cog\" role=\"img\" aria-label=\"Dropdown menu\" "
 "title=\"Dropdown menu\"/>"
 msgstr ""
+"<i class=\"fa fa-cog\" role=\"img\" aria-label=\"Dropdown menu\" "
+"title=\"Dropdown menu\"/>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.edit_profile
 msgid "<i class=\"fa fa-pencil fa-1g float-left\" title=\"Edit\"/>"
 msgstr ""
+"<i class=\"fa fa-pencil fa-1g float-sm-none float-md-left\" "
+"title=\"Rediger\"/> "
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.badge
 msgid "<i class=\"text-muted\"> awarded users</i>"
-msgstr ""
+msgstr "<i class=\"text-muted\"> tildelte brugere</i>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_badges
 msgid "<i class=\"text-muted\">awarded users</i>"
-msgstr ""
+msgstr "<i class=\"text-muted\"> tildelte brugere</i>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_display_post_answer
@@ -329,6 +367,8 @@ msgid ""
 "<span class=\"fa fa-circle badge-bronze ml8\" role=\"img\" aria-"
 "label=\"Bronze badge\" title=\"Bronze badge\"/>"
 msgstr ""
+"<span class=\"fa fa-trophy badge-bronze ml-2\" role=\"img\" aria-"
+"label=\"Bronze badge\" title=\"Bronze badge\"/>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.contact
@@ -336,6 +376,8 @@ msgid ""
 "<span class=\"fa fa-circle badge-bronze\" role=\"img\" aria-label=\"Bronze "
 "badge\" title=\"Bronze badge\"/>"
 msgstr ""
+"<span class=\"fa fa-trophy badge-bronze ml-2\" role=\"img\" aria-"
+"label=\"Bronze badge\" title=\"Bronze badge\"/>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.users
@@ -343,6 +385,8 @@ msgid ""
 "<span class=\"fa fa-circle badge-gold\" role=\"img\" aria-label=\"Gold "
 "badge\" title=\"Gold badge\"/>"
 msgstr ""
+"<span class=\"fa fa-trophy badge-bronze ml-2\" role=\"img\" aria-"
+"label=\"Bronze badge\" title=\"Bronze badge\"/>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.users
@@ -350,6 +394,8 @@ msgid ""
 "<span class=\"fa fa-circle badge-silver ml8\" role=\"img\" aria-"
 "label=\"Silver badge\" title=\"Silver badge\"/>"
 msgstr ""
+"<span class=\"fa fa-circle badge-silver ml8\" role=\"img\" aria-"
+"label=\"Silver badge\" title=\"Silver badge\"/>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.contact
@@ -357,6 +403,8 @@ msgid ""
 "<span class=\"fa fa-circle badge-silver\" role=\"img\" aria-label=\"Silver "
 "badge\" title=\"Silver badge\"/>"
 msgstr ""
+"<span class=\"fa fa-circle badge-silver\" role=\"img\" aria-label=\"Silver "
+"badge\" title=\"Silver badge\"/>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_detail_full
@@ -364,6 +412,8 @@ msgid ""
 "<span class=\"fa fa-thumbs-down\" role=\"img\" aria-label=\"Negative votes\""
 " title=\"Negative votes\"/>"
 msgstr ""
+"<span class=\"fa fa-thumbs-down\" role=\"img\" aria-label=\"Negative "
+"stemmer\" title=\"Negative stemmer\"/> "
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_detail_full
@@ -371,11 +421,13 @@ msgid ""
 "<span class=\"fa fa-thumbs-up\" role=\"img\" aria-label=\"Positive votes\" "
 "title=\"Positive votes\"/>"
 msgstr ""
+"<span class=\"fa fa-thumbs-up\" role=\"img\" aria-label=\"Positive stemmer\""
+" title=\"Positive stemmer\"/> "
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.header
 msgid "<span class=\"sr-only\">Select Post</span>"
-msgstr ""
+msgstr "<span class=\"sr-only\">Vælg indlæg</span>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
@@ -386,7 +438,7 @@ msgstr "<span class=\"text-muted\">(kun et svar pr spørgsmål er tilladt)</span
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_detail_full
 msgid "<span class=\"text-muted\">bio</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\">bio</span>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.close_post
@@ -396,12 +448,12 @@ msgstr "<span class=\"text-muted\">eller</span>"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_detail_full
 msgid "<span class=\"text-muted\">stats</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\">statistikker</span>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "<span> on </span>"
-msgstr ""
+msgstr "<span> på </span>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
@@ -409,6 +461,8 @@ msgid ""
 "<span> • </span>\n"
 "                Flagged"
 msgstr ""
+"<span> • </span>\n"
+"                Markeret"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
@@ -511,6 +565,96 @@ msgid ""
 "</table>\n"
 "            "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- HEADER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr>\n"
+"                    <td valign=\"middle\">\n"
+"                        <span style=\"font-size: 20px; font-weight: bold;\">\n"
+"                            ${object.company_id.name} Forum validering\n"
+"                        </span>\n"
+"                    </td>\n"
+"                    <td valign=\"middle\" align=\"right\">\n"
+"                        <img src=\"/logo.png?company=${user.company_id.id}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${user.company_id.name}\"/>\n"
+"                    </td>\n"
+"                </tr>\n"
+"                <tr>\n"
+"                    <td colspan=\"2\" style=\"text-align:center;\">\n"
+"                        <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;\"/>\n"
+"                    </td>\n"
+"                </tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- CONTENT -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr>\n"
+"                    <td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                        <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"                            Hej ${object.name},<br/><br/>\n"
+"                            Du er blevet inviteret til at godkende din email, for at få adgang til \"${object.company_id.name}\" Spørgsmål og Svar.\n"
+"                            For at godkende din email, bedes du klikke på følgende link:\n"
+"                            <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"                                <a href=\"${ctx.get('token_url')}\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                                    Godkend min konto\n"
+"                                </a>\n"
+"                            </div>\n"
+"                            Tak for din deltagelse!\n"
+"                        </p>\n"
+"                    </td>\n"
+"                </tr>\n"
+"                <tr>\n"
+"                    <td style=\"text-align:center;\">\n"
+"                        <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                    </td>\n"
+"                </tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- FOOTER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\" font-family: 'Verdana Regular'; color: #454748; min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr>\n"
+"                    <td valign=\"middle\" align=\"left\">\n"
+"                         ${user.company_id.name}\n"
+"                    </td>\n"
+"                    <td valign=\"middle\" align=\"right\" style=\"opacity: 0.7;\">\n"
+"                        ${user.company_id.phone}\n"
+"                        % if user.company_id.email:\n"
+"                            | <a href=\"'mailto:%s' % ${user.company_id.email}\" style=\"text-decoration:none; color: #454748;\">\n"
+"                                ${user.company_id.email}\n"
+"                            </a>\n"
+"                        % endif\n"
+"                        % if user.company_id.website:\n"
+"                            | <a href=\"${user.company_id.website}\" style=\"text-decoration:none; color: #454748;\">\n"
+"                                ${user.company_id.website}\n"
+"                            </a>\n"
+"                        % endif\n"
+"                    </td>\n"
+"                </tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"<!-- POWERED BY -->\n"
+"<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
+"        <tr><td style=\"text-align: center; font-size: 13px;\">\n"
+"            I kraft af <a target=\"_blank\" href=\"https://www.odoo.com?utm_source=db&amp;utm_medium=forum\" style=\"color: #875A7B;\">Odoo</a>\n"
+"        </td></tr>\n"
+"    </table>\n"
+"</td></tr>\n"
+"</table>\n"
+"            "
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_template_new_answer
@@ -530,11 +674,13 @@ msgid ""
 "            similar questions. Using the right tags makes it easier for\n"
 "            others to find and answer your question. (Hover the mouse to follow/unfollow tag(s))"
 msgstr ""
+"Et tag er et mærkat der kategoriserer dit spørgsmål med andre,\n"
+"               lignende spørgsmål. Brug af de korrekte tags gør det nemmere for andre at finde og besvare dine spørgsmål. (Hold musen over for følge/ikke følge tag(s))"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.header
 msgid "About This Community"
-msgstr ""
+msgstr "Om dette Community"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
@@ -554,7 +700,7 @@ msgstr "Accepter et svar for alle spørgsmål"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_answers
 msgid "Accept answer"
-msgstr ""
+msgstr "Accepter svar"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_search
@@ -787,7 +933,7 @@ msgstr "Spurgt den"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.header
 msgid "Asked:"
-msgstr ""
+msgstr "Spurgt:"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_gen_question_new
@@ -824,6 +970,7 @@ msgstr "Avatar"
 #: model_terms:ir.ui.view,arch_db:website_forum.new_question
 msgid "Avoid unnecessary introductions (Hi,... Please... Thanks...),"
 msgstr ""
+"Undgå unødvendige introduktioner (Hej,... Venligst... På forhånd tak...),"
 
 #. module: website_forum
 #: code:addons/website_forum/controllers/main.py:343
@@ -848,6 +995,8 @@ msgid ""
 "            you receive badges for being especially helpful. Badges\n"
 "            appear on your profile page, and your posts."
 msgstr ""
+"Udover at indtjene omdømme med dine spørgsmål og svar,\n"
+"                   modtager du også emblemer for at være særlig behjælpelig. Emblemer vises på din profil sige, samt dine indlæg."
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.edit_profile
@@ -858,7 +1007,7 @@ msgstr "Biografi"
 #: model_terms:ir.ui.view,arch_db:website_forum.badge
 #: model_terms:ir.ui.view,arch_db:website_forum.user_badges
 msgid "Bronze badge"
-msgstr ""
+msgstr "Bronze emblem"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_res_users__bronze_badge
@@ -1004,11 +1153,13 @@ msgid ""
 "Click here to send a verification email allowing you to participate to the "
 "forum."
 msgstr ""
+"Klik her for at sende en bekræftelses email, som gør dig i stand til at "
+"deltage i fora."
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.new_question
 msgid "Click to get bad question samples"
-msgstr ""
+msgstr "Klik for at få eksempler på dårlige spørgsmål"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.new_question
@@ -1247,7 +1398,7 @@ msgstr "Standard ordre"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__default_post_type
 msgid "Default Post"
-msgstr ""
+msgstr "Standard indlæg"
 
 #. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_gamification_challenge__category
@@ -1514,7 +1665,7 @@ msgstr "Anmeldt af"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
 msgid "Followed"
-msgstr ""
+msgstr "Fulgt"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_detail_full
@@ -1552,6 +1703,12 @@ msgid ""
 "    for a question or answer per day. The table given at the end explains reputation point\n"
 "    requirements for each type of moderation task."
 msgstr ""
+"For eksempel, hvis du stiller et interessant spørgsmål, eller giver et "
+"hjælpsomt svar, vil dit input blive stemt for. Modsat, hvis dit svar er "
+"misvisende - vil den blive nedstemt. Hver stemme for vil generere 10 point, "
+"og hver stemme imod vil trække 10 point fra. Der er en grænse på 200 point "
+"der kan optjenes på et spørgsmål eller svar per dag. Tabellen vist til sidst"
+" forklarer omdømme point kravene for hver type af modererings opgave."
 
 #. module: website_forum
 #: model:ir.actions.act_url,name:website_forum.action_open_forum
@@ -1737,6 +1894,9 @@ msgid ""
 "'remaining hours' field computed on tasks?, How to configure TPS and TVQ's "
 "canadian taxes?"
 msgstr ""
+"Hvordan opretter man et fysisk lager på en forestående dato?, Hvordan "
+"udregnes 'tilbageværende timer' feltet i opgaver?, Hvordan konfigurere man "
+"TPS og TVQ's canadiske moms?"
 
 #. module: website_forum
 #: selection:gamification.challenge,category:0
@@ -1787,6 +1947,8 @@ msgid ""
 "If this approach is not for you, please respect the community and use Google+\n"
 "    communities instead."
 msgstr ""
+"Hvis denne tilgang ikke er for dig, beder vi dig venligst respektere "
+"communitiet og bruge Google+ communities i stedet for."
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.close_post
@@ -1808,6 +1970,10 @@ msgid ""
 "    However, if your motivation is “I would like others to explain ______ to me”,\n"
 "    then you are probably OK."
 msgstr ""
+"Hvis du passer ind i en af disse eksempler, eller din motivation for at "
+"stille et spørgsmål er \"Jeg vil gerne deltage i en diskussion om _____\", "
+"så bør du ikke spørge her, men på vores mailing liste. Hvis din motivation "
+"derimod er \"Jeg vil gerne få forklaret _____\", er det formentligt OK."
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.close_post
@@ -1832,6 +1998,8 @@ msgid ""
 "Inventory Date Problem, Task remaining hours, Can you help solve solve my "
 "tax computation problem in Canada?"
 msgstr ""
+"Inventar dato problem, tilbageværende opgave timer, kan du hjælpe med at "
+"løse mit moms problem i Canada?"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__user_favourite
@@ -1911,7 +2079,7 @@ msgstr "Karma for at aflinke"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.header
 msgid "Keep Informed"
-msgstr ""
+msgstr "Hold informeret"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum____last_update
@@ -1951,7 +2119,7 @@ msgstr "Sidste aktivitets dato"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.header
 msgid "Last updated:"
-msgstr ""
+msgstr "Sidst opdateret"
 
 #. module: website_forum
 #: model:gamification.badge,description:website_forum.badge_25
@@ -1969,7 +2137,7 @@ msgstr "Link"
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__allow_link
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
 msgid "Links"
-msgstr ""
+msgstr "Links"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__message_main_attachment_id
@@ -2006,7 +2174,7 @@ msgstr "Moderer indlæg"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.header
 msgid "Moderation Tools"
-msgstr ""
+msgstr "Modererings værktøjer"
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
@@ -2113,7 +2281,7 @@ msgstr "Godt spørgsmål"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_all
 msgid "No forum post yet."
-msgstr ""
+msgstr "Intet forum indlæg endnu."
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_dofollow
@@ -2124,7 +2292,7 @@ msgstr "Nofollow links"
 #: code:addons/website_forum/models/forum.py:511
 #, python-format
 msgid "Not enough karma to retag."
-msgstr ""
+msgstr "Ikke nok karma til at gen-tagge."
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_q_2
@@ -2257,6 +2425,7 @@ msgstr "Almindelig indhold"
 #: model_terms:ir.ui.view,arch_db:website_forum.edit_post
 msgid "Please enter a descriptive question (should finish by a '?')"
 msgstr ""
+"Vær venlig at angive et beskrivende spørgsmål (bør afslutte med et '?')"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.edit_profile
@@ -2264,6 +2433,8 @@ msgid ""
 "Please enter a valid email address in order to receive notifications from "
 "answers or comments."
 msgstr ""
+"Vær venlig at angive en gyldig email adresse, for at modtage notifikationer "
+"fra svar og kommentarer. "
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_q_1
@@ -2318,17 +2489,17 @@ msgstr "Skriv lukningsårsag"
 #: model_terms:ir.ui.view,arch_db:website_forum.post_answer
 #: model_terms:ir.ui.view,arch_db:website_forum.post_reply
 msgid "Post Comment"
-msgstr ""
+msgstr "Skriv kommentar"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.new_link
 msgid "Post Title"
-msgstr ""
+msgstr "Skriv titel"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_forum_form
 msgid "Post Types"
-msgstr ""
+msgstr "Skriv typer"
 
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_forum_post_vote
@@ -2343,7 +2514,7 @@ msgstr "Skriv dit svar"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.new_discussion
 msgid "Post Your Topic"
-msgstr ""
+msgstr "Skriv dit emne"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.close_post
@@ -2460,7 +2631,7 @@ msgstr "Spørgsmål skal ikke være tomme."
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.header
 msgid "Question tools"
-msgstr ""
+msgstr "Spørgsmål værktøjer"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_gen_question_upvote
@@ -2654,7 +2825,7 @@ msgstr "Slev-studerende"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_answers
 msgid "Send answer"
-msgstr ""
+msgstr "Send svar"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.new_question
@@ -2682,6 +2853,8 @@ msgid ""
 "            If the community vote on your post, it will get traction by being promoted\n"
 "            in the homepage."
 msgstr ""
+"Del et fantastisk link. Dit indlæg vil vises i \"Nyest\" top-menuen.\n"
+"          Hvis communitiet stemmer på dit indlæg, vil det få moment, og blive fremhævet på hjemmesiden."
 
 #. module: website_forum
 #. openerp-web
@@ -2703,7 +2876,7 @@ msgstr "Muligheder for deling"
 #: model_terms:ir.ui.view,arch_db:website_forum.badge
 #: model_terms:ir.ui.view,arch_db:website_forum.user_badges
 msgid "Silver badge"
-msgstr ""
+msgstr "Sølv emblem"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_res_users__silver_badge
@@ -2781,7 +2954,7 @@ msgstr "Studeren"
 #: model_terms:ir.ui.view,arch_db:website_forum.header
 #: model_terms:ir.ui.view,arch_db:website_forum.new_link
 msgid "Submit a Link"
-msgstr ""
+msgstr "Indsend et link"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_31
@@ -2860,7 +3033,7 @@ msgstr "Den"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
 msgid "The flagged queue is empty."
-msgstr ""
+msgstr "Den markerede kø er tom."
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
@@ -2868,16 +3041,18 @@ msgid ""
 "The goal of this site is create a relevant knowledge base that would answer\n"
 "    questions related to Odoo."
 msgstr ""
+"Formålet med dette site er at oprette en relevant vidensbase som kan besvare"
+" spørgsmål relateret til Odoo."
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
 msgid "The offensive queue is empty."
-msgstr ""
+msgstr "Køen over anstødeligt indhold er tom. "
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
 msgid "The validation queue is empty."
-msgstr ""
+msgstr "Køen over indhold til godkendelse er tom."
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
@@ -2887,6 +3062,10 @@ msgid ""
 "    Such privileges are granted based on user karma level: you will be able to do the same\n"
 "    once your karma gets high enough."
 msgstr ""
+"Derfor kan spørgsmål og svar redigeret som wiki-sider, af erfarne brugere af"
+" dette site, for at forbedre den generelle kvalitet af vidensbase indholdet."
+" Sådanne privilegier gives til brugere baseret på deres karma niveau: Du vil"
+" være i stand til at gøre samme når dit karma bliver højt nok."
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
@@ -2894,6 +3073,8 @@ msgid ""
 "This community is for professional and enthusiast users,\n"
 "    partners and programmers. You can ask questions about:"
 msgstr ""
+"Dette community er for professionelle og entusiast brugere, partnere, og "
+"programmøre. Du kan stille spørgsmål vedrørende:"
 
 #. module: website_forum
 #: model_terms:forum.forum,welcome_message:website_forum.forum_help
@@ -2959,6 +3140,8 @@ msgid ""
 "This post is currently awaiting moderation and not yet published... Do you "
 "want <i>Accept</i> or <i>Reject</i> this post ?"
 msgstr ""
+"Dette indlæg afventer i øjeblikket moderering og er endnu ikke udgivet.<br/>\n"
+"                Vil du <b>Acceptere</b> eller <b>Afvise</b> dette indlæg ?"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.private_profile
@@ -2999,6 +3182,8 @@ msgid ""
 "To prevent your question from being flagged and possibly removed, avoid asking\n"
 "    subjective questions where …"
 msgstr ""
+"For at undgå at dit spørgsmål bliver anmeldt og muligvis fjernet; undgå da "
+"helst at stille subjektive spørgsmål hvor ..."
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
@@ -3028,7 +3213,7 @@ msgstr "URL"
 #. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_forum_post__content_link
 msgid "URL of Link Articles"
-msgstr ""
+msgstr "URL på link artikler"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.new_link
@@ -3124,6 +3309,8 @@ msgid ""
 "Users can answer only once per question. Contributors can edit answers and "
 "mark the right ones."
 msgstr ""
+"Brugere kan kun besvare én gang per spørgsmål. Bidragere kan redigere svar "
+"og markere de rette"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
@@ -3182,6 +3369,8 @@ msgid ""
 "We keep a high level of quality in showcased posts, around 20% of the submited\n"
 "            posts will be featured."
 msgstr ""
+"Vi fastholder et højt kvalitetsniveau i fremviste indlæg, cirka 20% af "
+"indgivne indlæg vil blive fremhævet."
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__website_id
@@ -3250,17 +3439,17 @@ msgstr "Velkommen!"
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 msgid "What kinds of questions can I ask here?"
-msgstr ""
+msgstr "Hvad slags spørgsmål kan jeg stille her?"
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 msgid "What should I avoid in my answers?"
-msgstr ""
+msgstr "Hvad bør jeg undgå i mine svar?"
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 msgid "What should I avoid in my questions?"
-msgstr ""
+msgstr "Hvad bør jeg undgå i mine spørgsmål?"
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
@@ -3270,11 +3459,16 @@ msgid ""
 "    measure of the community trust to him/her. Various moderation tasks are\n"
 "    gradually assigned to the users based on those points."
 msgstr ""
+"Når et spørgsmål eller svar stemmes for, vil brugeren der oprettede "
+"indlægget modtage nogle point, som er kaldet \"karma point\". Disse point "
+"fungere som en slags mål for hvor meget communitiet stoler på personen. "
+"Diverse modererings opgaver tildeles gradvist til brugere baseret på disse "
+"point."
 
 #. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_forum_forum__allow_link
 msgid "When clicking on the post, it redirects to an external link"
-msgstr ""
+msgstr "Ved at klikke på et link, omdirigerer den til et eksternt link"
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
@@ -3287,6 +3481,8 @@ msgid ""
 "You already have one pending post.<br/>\n"
 "            Please wait for a moderator to validate your previous post before continuing."
 msgstr ""
+"Du har allerede et afventende indlæg <br/> \n"
+"             Vent venligst på at en moderator godkender dit tidligere indlæg, før du fortsætter."
 
 #. module: website_forum
 #: code:addons/website_forum/models/forum.py:139
@@ -3311,7 +3507,7 @@ msgstr "Du kan ikke skrive et tomt svar"
 #: code:addons/website_forum/models/forum.py:953
 #, python-format
 msgid "You don't have enough karma to create a new Tag."
-msgstr ""
+msgstr "Du har ikke nok karma til at oprette et nyt tag."
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
@@ -3321,6 +3517,9 @@ msgid ""
 "    questions diminish the usefulness of this site and push\n"
 "    other questions off the front page."
 msgstr ""
+"Du bør kun stille praktiske spørgsmål der kan besvares, baseret på faktiske "
+"problemer du måtte have. Snakkesaglige, åbne spørgsmål forringer "
+"brugbarheden af sitet, og skubber andre spørgsmål væk fra forsiden."
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_answer
@@ -3330,12 +3529,12 @@ msgstr "Dit svar"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.new_discussion
 msgid "Your Discussion Title..."
-msgstr ""
+msgstr "Din diskussions titel..."
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.new_question
 msgid "Your Question Title..."
-msgstr ""
+msgstr "dit spørgsmåls titel..."
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_reply
@@ -3365,7 +3564,7 @@ msgstr "dårlige eksempler"
 #. module: website_forum
 #: selection:gamification.badge,level:0
 msgid "bronze"
-msgstr ""
+msgstr "bronze"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
@@ -3455,7 +3654,7 @@ msgstr "anmeld stødende, luk egne spørgsmål"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.header
 msgid "flagged"
-msgstr ""
+msgstr "Anmeldt"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.header
@@ -3470,17 +3669,17 @@ msgstr "på grund af:"
 #. module: website_forum
 #: selection:gamification.badge,level:0
 msgid "gold"
-msgstr ""
+msgstr "guld"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.new_question
 msgid "good examples"
-msgstr ""
+msgstr "gode eksempeler"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "has been closed"
-msgstr ""
+msgstr "er blevet lukket"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_template_validation
@@ -3571,17 +3770,17 @@ msgstr "karma point"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_detail_full
 msgid "last connection"
-msgstr ""
+msgstr "sidste forbindelse"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_detail_full
 msgid "location"
-msgstr ""
+msgstr "lokation"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_detail_full
 msgid "member since"
-msgstr ""
+msgstr "medlem siden"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_4
@@ -3659,12 +3858,12 @@ msgstr "truende sprog"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.header
 msgid "time"
-msgstr ""
+msgstr "tid"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.header
 msgid "times"
-msgstr ""
+msgstr "tider"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_9

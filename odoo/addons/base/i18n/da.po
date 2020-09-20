@@ -77,6 +77,21 @@ msgid ""
 "        **R..R =** Customer Reference without non-numeric characters, **SSS =** Sequence Number, **DD =** Check Digits\n"
 "    "
 msgstr ""
+"\n"
+"\n"
+"Tilføj struktureret kommunikation til kunde fakturaer.\n"
+"--------------------------------------------\n"
+"\n"
+"Ved brug af BBA struktureret kommunikation simplificeres afstemningen mellem faktura og betalinger.\n"
+"Du kan vælge den strukturerede kommunikation som betalingskommunikation i Fakturering/Regnskabs indstillinger.\n"
+"To algoritmer er foreslået:\n"
+"\n"
+"   1) Tilfældig +++RRR/RRRRR/RRRDD+++\n"
+"       **R..R = ** Tilfældig tal, **DD = **Check tal\n"
+"    2) Dato : +++DOY/YEAR/SSSDD+++\n"
+"         **DOY == **Dag på året, **SSS = **Sekvensnummer, **DD = **Check tal\n"
+"    3) Kundereference +++RRRR/RRRR/SSSDD+++\n"
+"       **R..R = **Kundereference med ikke-numeriske tegn, **SSS = **Sekvens nummer, **DD = **Check tal"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_reprint
@@ -446,6 +461,22 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"\n"
+"Oversigt:\n"
+"---------\n"
+"\n"
+"* Skabelon for kontoplan og moms for virksomheder i Japan.\n"
+"* Dette dækker muligvis ikke alle nødvendige konti for en virksomhed. Det forventes ikke at du tilføjer/fjerner/modificere konti baseret på denne skabelon.\n"
+"\n"
+"Bemærk:\n"
+"-----\n"
+"\n"
+"* Bogføringsgrupperne '内税' (intern moms) og '外税' (ekstern moms) er blevet tilføjet for at håndtere særlige krav som kan komme fra POS implementering. [1]  Under normale omstændigheder, har du muligvis ikke brug for at bruge disse overhovedet.\n"
+"\n"
+"[1] Se https://github.com/odoo/odoo/pull/6470 for detaljer.\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_deferred_revenue
@@ -479,6 +510,9 @@ msgid ""
 "\n"
 "This module adds a custom Sales Team for the point of sale to be able to view and manage your point of sale sales with more ease.\n"
 msgstr ""
+"\n"
+"\n"
+"Dette modul tilføjer et tilpasset Salgsteam for Point of Sale. Dette gør dig i stand til nemmere at se og styre dine Point of Sale salg.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_restaurant
@@ -491,6 +525,12 @@ msgid ""
 "- Kitchen Order Printing: allows you to print orders updates to kitchen or bar printers\n"
 "\n"
 msgstr ""
+"\n"
+"\n"
+"Dette modul tilføjer flere funktioner til Point of Sale, som er specifikke for restaurationsstyring:\n"
+"- Udprintning af regning: Gør dig i stand til at printe en kvittering før bestillingen er betalt\n"
+"- Deling af regning: Gør dig i stand til at dele en bestilling op i flere bestillinger\n"
+"- Udprintning af køkkenbestillinger: Gør dig i stand til at udprinte opdateringer af bestillinger til printere i køkken eller bar.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_discount
@@ -501,6 +541,10 @@ msgid ""
 "sale discount to a customer.\n"
 "\n"
 msgstr ""
+"\n"
+"\n"
+"Dette modul gør kasseren i stand til hurtigt at give procent-baseret\n"
+"rabat til en kunde.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_loyalty
@@ -512,6 +556,10 @@ msgid ""
 "and get rewards.\n"
 "\n"
 msgstr ""
+"\n"
+"\n"
+"Dette modul gør dig i stand til at definere et loyalitetsprogram ved salgsstedet, hvor kunder kan optjene loyalitetspoint\n"
+"og udløse belønninger.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_helpdesk_timesheet
@@ -521,6 +569,10 @@ msgid ""
 "        - Track timesheet for task from ticket\n"
 "    "
 msgstr ""
+"\n"
+"        - Tillad at oprette projekt for Helpdesk holdet\n"
+"        - Spor timeseddel for en opgave fra en supportsag\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_tax_python
@@ -533,6 +585,13 @@ msgid ""
 "        \"Python Code\" defines the amount of the tax.\n"
 "        "
 msgstr ""
+"\n"
+"En moms defineret som Python kode, udgøres af to uddrag af Python kode, som bliver kørt i et lokalt miljø, indeholdende data, så som enhedspris, produkt, eller partner.\n"
+"\n"
+"\"Anvendelig kode\" definerer hvorvidt momsen skal anvendes.\n"
+"\n"
+"\"Python kode\" definerer moms mængden.\n"
+"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_reports
@@ -576,6 +635,10 @@ msgid ""
 "        Also add DATEV export options to general ledger\n"
 "    "
 msgstr ""
+"\n"
+"        Regnskabsrapporter for Tyskland\n"
+"        Indeholder saldo opgørelse, indtægt og tab, moms og partner moms          rapporter\n"
+"    Tilføjer også DATEV eksport muligheder til generel bogføring"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_hu_reports
@@ -643,6 +706,8 @@ msgid ""
 "        Accounting reports for South Africa\n"
 "    "
 msgstr ""
+"\n"
+"        Regnskabsrapporter for Sydafrika"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_es_reports
@@ -695,6 +760,8 @@ msgid ""
 "        Accounting reports for United Arab Emirates\n"
 "    "
 msgstr ""
+"\n"
+"       Regnskabsrapporter for De Forenede Arabiske Emirater"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_uy_reports
@@ -714,6 +781,8 @@ msgid ""
 "        Accounting reports send to HMRC\n"
 "    "
 msgstr ""
+"\n"
+"        Regnskabsrapporter til afsendelse til HMRC"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_mx_reports_closing
@@ -737,6 +806,9 @@ msgid ""
 "        Allow to make call from next activities or with click-to-dial.\n"
 "    "
 msgstr ""
+"\n"
+"Gør det muligt at foretage opkald fra næste aktivitet eller med click-to-dial.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_tax_python
@@ -744,6 +816,8 @@ msgid ""
 "\n"
 "        Allows to use python code to define taxes"
 msgstr ""
+"\n"
+"Brug python kode til at definere moms"
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents
@@ -762,6 +836,9 @@ msgid ""
 "\n"
 "        Auto-complete partner companies' data"
 msgstr ""
+"\n"
+"       Udfyld automatisk partner virksomheds data\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_helpdesk_sale_timesheet
@@ -828,6 +905,9 @@ msgid ""
 "        Compute sales tax automatically using TaxCloud based on customer address in United States.\n"
 "    "
 msgstr ""
+"\n"
+"Udregner momsen automatisk ved hjælp af TaxCloud ud fra kundens adresse i USA.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_partner_autocomplete_address_extended
@@ -835,6 +915,8 @@ msgid ""
 "\n"
 "        Correct address formating when both modules are installed"
 msgstr ""
+"\n"
+"Korrekt adresse formatering når begge moduler er installeret"
 
 #. module: base
 #: model:ir.module.module,description:base.module_product_unspsc
@@ -871,6 +953,8 @@ msgid ""
 "\n"
 "        Enable a cache on products for a lower POS loading time."
 msgstr ""
+"\n"
+"Aktivér en cache på produkter for at sænke POS start tider."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_mx_edi_customs
@@ -880,6 +964,8 @@ msgid ""
 "        Generate Electronic Invoice with Customs Number\n"
 "    "
 msgstr ""
+"\n"
+"Generer elektroniske faktura med toldnummer"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_sepa
@@ -905,6 +991,8 @@ msgid ""
 "        MRP extention of ability to print labels on Zebra thermal printers.\n"
 "    "
 msgstr ""
+"\n"
+"       MRP udvidelse af evnen til at printe mærkater på Zebra termiske printere."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_voip
@@ -932,6 +1020,8 @@ msgid ""
 "\n"
 "        Social media connectors for company settings."
 msgstr ""
+"\n"
+"Sociale medie forbindere for virksomhedsindstillinger"
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_sparse_field
@@ -958,6 +1048,9 @@ msgid ""
 "        social media configuration for any other module that might need it.\n"
 "    "
 msgstr ""
+"\n"
+"Formålet med dette tekniske modul er at udbyde en front til konfiguration af \n"
+"sociale medier for ethvert modul der måtte have behov for det."
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_barcode_quality_control
@@ -1000,6 +1093,8 @@ msgid ""
 "        and its mod 347 report.\n"
 "    "
 msgstr ""
+"\n"
+"Dette modul gør det muligt for brugere at tilføje ejendoms relateret data til den Spanske lokalisering, og generere en mod 347 rapport."
 
 #. module: base
 #: model:ir.module.module,description:base.module_im_support
@@ -1020,6 +1115,8 @@ msgid ""
 "\n"
 "        This module bring templates to produce labels in the Stock app (and derivatives) for Zebra printers. Those devices print thermal barcode label and shipping labels. Printers make label from ZPL script which is built in Odoo."
 msgstr ""
+"\n"
+"       Dette modul medbringer skabeloner til at producere mærkater i Lager app'en (og derivater) for Zebra printere. Disse enheder printer termiske stregkode og forsendelses mærkater. Printere laver mærker fra et ZPL script som er bygget i Odoo."
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_ponto
@@ -1210,6 +1307,8 @@ msgid ""
 "\n"
 "        Zebra printers integration for mrp module"
 msgstr ""
+"\n"
+"        Zebra printer integration for mrp modulet"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_stock_zebra
@@ -1217,6 +1316,8 @@ msgid ""
 "\n"
 "        Zebra printers integration for stock module"
 msgstr ""
+"\n"
+"Zebra printer integration for lager modul"
 
 #. module: base
 #: model:ir.module.module,description:base.module_partner_autocomplete
@@ -1273,6 +1374,9 @@ msgid ""
 "    Configure IoT devices to be used in certain \n"
 "    quality steps for taking measures, taking pictures, ...\n"
 msgstr ""
+"\n"
+"Konfigurer IoT enheder til brug i visse\n"
+" kvalitetstrin, for at tage mål, billeder, ...\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_documentation_examples
@@ -1296,6 +1400,8 @@ msgid ""
 "    Gantt view for Leaves Dashboard\n"
 "    "
 msgstr ""
+"\n"
+"Gantt visning for bladinstrumentbræt"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_lock
@@ -1504,6 +1610,100 @@ msgid ""
 "    file from which you can click on the file to download locally.  This\n"
 "    file can then be uploaded to the bank.\n"
 msgstr ""
+"\n"
+"ABA Kreditoverførsel\n"
+"===================\n"
+"\n"
+"Dette modul muliggør oprettelsen af betalingspartier, som ABA (Australian\n"
+"Bankers Association) tekstfiler. Den genererede 'aba' fil kan uploades til mange Australske banker.\n"
+"\n"
+"Opsætning\n"
+"-----\n"
+"\n"
+"- *Konto > Konfiguration > Faktura > Journaler*\n"
+"\n"
+"    Om nødvendigt, danner en ny journal, eller vælger en eksisterende journal af **Type**\n"
+"    sat til *“Bank”*.\n"
+"\n"
+"    I **Avancerede Indstillinger**, sørg for at ABA Credit Transfer er krydset af.\n"
+"\n"
+"    Under **Bank Account** fanen, indtast **Account Number**.\n"
+"\n"
+"    Under samme fane, sørg for at ABA overførsel informationen er sat op.\n"
+"\n"
+"    **BSB** - Påkrævet, 6 cifre, og vil blive formateret automatisk.\n"
+"\n"
+"    **Finansinstitutions kode** - Påkrævet (angives af banken og kan findes\n"
+"    på Google).  Består af 3 store bogstaver.\n"
+"\n"
+"    **Leverende brugernavn** - Visse banker tillader at dette angives i fri form, men visse banker,\n"
+"    vil muligvis afvise ABA filen, hvis det angivne Leverende brugernavn, ikke er som forventet. Det\n"
+"    må ikke være længere end 26 anslag.\n"
+"\n"
+"    **APCA Identifikationsnummer** - Bruger identifikationsnummer angivet af\n"
+" banken. Det er på 6 cifre.\n"
+"\n"
+"    **Inkluder selvbalancerende transaktion** - Visse institutioner kræver, at den\n"
+"    sidste transaktion, skal være en selvbalancerende transaktion, som bruges til godkendelse.\n"
+"\n"
+"- *Bogføring > Konfiguration > Betalinger > Bankkonti*\n"
+"\n"
+"    Konto vil vises i listen som journal navn.\n"
+"\n"
+"    Redigering vil vise **Kontonummeret**.  Dette er vigtigt, eftersom det bliver brugt i\n"
+"    ABA processen.\n"
+"\n"
+"    **Bank** er valgfri.\n"
+"\n"
+"- *Kontakter > Konfiguration > Bankkonti > Bankkonti*\n"
+"\n"
+"    Betalende konto vil vises i listen som kontonummeret.\n"
+"\n"
+"    **Kontoholder navn** - Kan blive indtastet her, hvis påkrævet. Godkendes typiskt ikke\n"
+"    af bankerne, i ABA filoverførslen, men kan vises på den betalendes \n"
+"kontoudtog, mod betaling.\n"
+"\n"
+"- Leverandør bankkonti kan blive sat op samme sted, men, det er\n"
+"  typisk nemmere at sætte dem op fra partneren fra leverandøren.\n"
+"\n"
+"- *Bogføring > Leverandører > Leverandører*\n"
+"\n"
+"    Under \"Bogføring\" fanen, klik på *\"Vis kontodetaljer\"* fra der, hvor en\n"
+"    leverandør bankkonto kan laves eller redigeres.\n"
+"\n"
+"    **Kontonummer** - Påkrævet, skal være mindre end 9 cifre.\n"
+"\n"
+"    **BSB** - Påkrævet, 6 cifre, vil blive formateret automatisk.\n"
+"\n"
+"    **Kontoholder navn** - Valgfrit.\n"
+"\n"
+"Brug\n"
+"---\n"
+"\n"
+"- Opret en leverandør betaling på normal vis.\n"
+"\n"
+"    Sørg for at **Leverandøren** er en med en gyldig ABA betalingskonto.\n"
+"\n"
+"    Vælg den korrekte **Betalingsjournal** som er sat til ABA betalinger.\n"
+"\n"
+"    Vælg **ABA Kreditoverførsel** radioknappen.\n"
+"\n"
+"    Hvis leverandøren har flere bankkonti, kan det være du skal vælge den korrekte **Modtager bankkonto**. Eller, hvis du betaler en leverandør regning, kan det\n"
+"    kræve den korrekte bankkonto forbundet med den.\n"
+"\n"
+"    Indtast betalingsmængde, osv.\n"
+"\n"
+"- *Leverandører > Betalinger*\n"
+"\n"
+"    Efter betaling(er) er godkendt, vil de være at finde på betalingslisten.\n"
+"\n"
+"    Ved hjælp af filtre eller sortering, vælg de betalinger der skal inkluderes. Under\n"
+"    *Handlinger* vælg *Opret partibetalinger*.\n"
+"\n"
+"- *Leverandører > Partibetalinger*\n"
+"\n"
+"    Når en partibetaling godkendes, vil en ABA fil blive oprettet. Den kan\n"
+" genoprettes. Denne fil kan uploades til banken.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_accountant
@@ -23421,6 +23621,9 @@ msgid ""
 "image, with aspect ratio preserved. Use this field anywhere a small image is"
 " required."
 msgstr ""
+"Lille billede størrelse for denne kontakt. Det omformes automatisk til et "
+"64x64px billede, med billedforholdet bibeholdt. Brug dette felt hvor end et "
+"lille billede påkræves."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_snailmail
