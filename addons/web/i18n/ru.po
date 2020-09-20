@@ -6,7 +6,7 @@
 # Harry <harrierr@mail.ru>, 2018
 # Viktor Pogrebniak <vp@aifil.ru>, 2018
 # Илья Владимирович Кучаев <kuchaev.iv@gmail.com>, 2018
-# Andrey Skabelin, 2018
+# 40e94dbc62066987ac8b4d130a3128f2_58cfc08, 2018
 # Максим Дронь <dronmax@gmail.com>, 2018
 # Gennady Marchenko <gennadym@gmail.com>, 2018
 # Андрей Гусев <gaussgss@gmail.com>, 2018
@@ -3271,7 +3271,15 @@ msgstr ""
 "Тип поля '%s' должен быть many2many и иметь связь с моделью 'ir.attachment'."
 
 #. module: web
-#: code:addons/web/controllers/main.py:1513
+#: code:addons/web/controllers/main.py:1452
+#, python-format
+msgid ""
+"There are too many records (%s records, limit: %s) to export as this format."
+" Consider splitting the export."
+msgstr ""
+
+#. module: web
+#: code:addons/web/controllers/main.py:1522
 #, python-format
 msgid ""
 "There are too many rows (%s rows, limit: 65535) to export as Excel 97-2003 "

@@ -112,7 +112,7 @@ msgstr "<i class=\"fa fa-arrow-right\"/> Tilføj til ordre"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_order_form_with_carrier
 msgid "<i class=\"fa fa-arrow-right\"/> Get rate"
-msgstr ""
+msgstr "<i class=\"fa fa-arrow-right\"/> Få sats"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_order_form_with_carrier
@@ -122,6 +122,10 @@ msgid ""
 "attrs=\"{'invisible':['|','|',('carrier_id','=',False),('state','not "
 "in',('draft','sent')),('delivery_rating_success','=',False)]}\"/>"
 msgstr ""
+"<i class=\"fa fa-check text-success\" role=\"img\" aria-label=\"Bedømmelse "
+"OK\" title=\"Bedømmelse OK\" "
+"attrs=\"{'invisible'\\:['|','|',('carrier_id','=',False),('state','not "
+"in',('draft','sent')),('delivery_rating_success','=',False)]}\"/> "
 
 #. module: delivery
 #: code:addons/delivery/models/delivery_carrier.py:77
@@ -262,7 +266,7 @@ msgstr "Fejlfinding logføring"
 #: code:addons/delivery/static/src/js/delivery_translations.js:13
 #, python-format
 msgid "Debug requests"
-msgstr ""
+msgstr "Fejlfindings anmodninger"
 
 #. module: delivery
 #: model_terms:ir.actions.act_window,help:delivery.action_delivery_carrier_form
@@ -364,7 +368,7 @@ msgstr "Afgør visningsrækkefølge"
 #: code:addons/delivery/static/src/js/delivery_translations.js:14
 #, python-format
 msgid "Disable debug"
-msgstr ""
+msgstr "Deaktiver fejlfinding"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_package_view_form
@@ -399,7 +403,7 @@ msgstr ""
 #: code:addons/delivery/static/src/js/delivery_translations.js:16
 #, python-format
 msgid "Enable debug"
-msgstr ""
+msgstr "Aktiver fejlfinding"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__prod_environment
@@ -501,6 +505,9 @@ msgid ""
 "The shipping is free because the order amount exceeds %.2f.\n"
 "(The actual shipping cost is: %.2f)"
 msgstr ""
+"Info:\n"
+"Leveringen er gratis fordi ordremængden overstiger %.2f.\n"
+"(Den aktuelle leveringsomkostning er: %.2f)"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -615,7 +622,7 @@ msgstr "Fragtfirma er ikke tilføjet denne ordre."
 #: code:addons/delivery/static/src/js/delivery_translations.js:15
 #, python-format
 msgid "No debug"
-msgstr ""
+msgstr "Ingen fejlfinding"
 
 #. module: delivery
 #: code:addons/delivery/models/delivery_grid.py:102
@@ -674,7 +681,7 @@ msgstr "Pakker"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_package__stock_quant_package_id
 msgid "Physical Package"
-msgstr ""
+msgstr "Fysisk pakke"
 
 #. module: delivery
 #: code:addons/delivery/models/sale_order.py:82
@@ -721,7 +728,7 @@ msgstr "Produkt indpakning"
 #: code:addons/delivery/static/src/js/delivery_translations.js:9
 #, python-format
 msgid "Production Environment"
-msgstr ""
+msgstr "Produktions miljø"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__delivery_type
@@ -830,21 +837,21 @@ msgstr "Lager flytning"
 #: code:addons/delivery/static/src/js/delivery_translations.js:12
 #, python-format
 msgid "Switch to production environment"
-msgstr ""
+msgstr "Skift til produktions miljø"
 
 #. module: delivery
 #. openerp-web
 #: code:addons/delivery/static/src/js/delivery_translations.js:10
 #, python-format
 msgid "Switch to test environment"
-msgstr ""
+msgstr "Skift til test miljø"
 
 #. module: delivery
 #. openerp-web
 #: code:addons/delivery/static/src/js/delivery_translations.js:11
 #, python-format
 msgid "Test Environment"
-msgstr ""
+msgstr "Test miljø"
 
 #. module: delivery
 #: model:delivery.carrier,name:delivery.delivery_carrier
@@ -972,7 +979,7 @@ msgstr "Vægt * volumen"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_stock_quant_package__weight
 msgid "Weight computed based on the sum of the weights of the products."
-msgstr ""
+msgstr "Vægt udregnet baseret på summen af vægte på produkter."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__shipping_weight
@@ -987,7 +994,7 @@ msgstr "Vægtens måleenhed for mærkat"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_stock_quant_package__shipping_weight
 msgid "Weight used to compute the price of the delivery (if applicable)."
-msgstr ""
+msgstr "Vægt brugt til at udregne pris på levering (hvis relevant)."
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_package_barcode_delivery

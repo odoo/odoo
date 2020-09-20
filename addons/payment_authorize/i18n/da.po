@@ -30,6 +30,8 @@ msgid ""
 " If you don't have any account, ask your salesperson to grant you a portal "
 "access. "
 msgstr ""
+"Hvis du ikke har nogen konto, skal du spørge din salgsperson om at tildele "
+"dig portal adgang."
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__authorize_login
@@ -39,7 +41,7 @@ msgstr "API Log ind ID"
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__authorize_signature_key
 msgid "API Signature Key"
-msgstr ""
+msgstr "API Signatur nøgle"
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__authorize_transaction_key
@@ -59,7 +61,7 @@ msgstr "Authorize.Net"
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_token__authorize_profile
 msgid "Authorize.net Profile ID"
-msgstr ""
+msgstr "Authorize.net Profil ID"
 
 #. module: payment_authorize
 #: code:addons/payment_authorize/models/payment.py:177
@@ -68,6 +70,8 @@ msgid ""
 "Authorize: received data with missing reference (%s) or trans_id (%s) or "
 "fingerprint (%s)"
 msgstr ""
+"Authorize: Modtag data med manglende reference (%s) eller trans_id (%s) "
+"eller fingeraftryk (%s)"
 
 #. module: payment_authorize
 #: selection:payment.acquirer,provider:0
@@ -77,7 +81,7 @@ msgstr "Buckaroo"
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.authorize_s2s_form
 msgid "CVC"
-msgstr ""
+msgstr "CVC"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.authorize_s2s_form
@@ -97,7 +101,7 @@ msgstr "Udløber (MM / ÅÅ)"
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.acquirer_form_authorize
 msgid "How to get paid with Authorize.Net"
-msgstr ""
+msgstr "Hvordan man bliver betalt med Authorize.net"
 
 #. module: payment_authorize
 #: code:addons/payment_authorize/models/payment.py:292
@@ -106,6 +110,8 @@ msgid ""
 "Invalid token found: the Authorize profile is missing.Please make sure the "
 "token has a valid acquirer reference."
 msgstr ""
+"Ugyldig token fundet: Authorize profilen mangler. Tjek venligst at token'en "
+"har en gyldig modtager reference."
 
 #. module: payment_authorize
 #: selection:payment.acquirer,provider:0
@@ -146,13 +152,13 @@ msgstr "Paypal"
 #: code:addons/payment_authorize/controllers/main.py:66
 #, python-format
 msgid "Please complete your profile. "
-msgstr ""
+msgstr "Vær venlig at fuldføre din profil."
 
 #. module: payment_authorize
 #: code:addons/payment_authorize/controllers/main.py:61
 #, python-format
 msgid "Please sign in to complete the payment."
-msgstr ""
+msgstr "Vær venlig at log in for at fuldføre betalingen."
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__provider
@@ -179,7 +185,7 @@ msgstr "Stribe"
 #: code:addons/payment_authorize/models/payment.py:365
 #, python-format
 msgid "The Customer Profile creation in Authorize.NET failed."
-msgstr ""
+msgstr "Kundeprofil oprettelsen i Authorize.net mislykkedes."
 
 #. module: payment_authorize
 #: code:addons/payment_authorize/controllers/main.py:58
@@ -188,6 +194,8 @@ msgid ""
 "The transaction cannot be processed because some contact details are missing"
 " or invalid: "
 msgstr ""
+"Transaktionen kunne ikke behandles, fordi visse kontakt detaljer mangler, "
+"eller er ugyldige:"
 
 #. module: payment_authorize
 #: model:ir.model.fields,help:payment_authorize.field_payment_token__authorize_profile
@@ -195,6 +203,8 @@ msgid ""
 "This contains the unique reference for this partner/payment token "
 "combination in the Authorize.net backend"
 msgstr ""
+"Dette indeholder den unikke reference for denne partner/betalings token "
+"kombination i Authorize.net back-end'en"
 
 #. module: payment_authorize
 #: model:ir.model.fields,help:payment_authorize.field_payment_token__save_token
