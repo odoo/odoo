@@ -124,7 +124,7 @@
                                             <field name="validation_max_date" attrs="{'invisible': [('question_type', '!=', 'date')]}"/>
                                             <field name="validation_min_datetime" widget="datetime" attrs="{'invisible': [('question_type', '!=', 'datetime')]}"/>
                                             <field name="validation_max_datetime" widget="datetime" attrs="{'invisible': [('question_type', '!=', 'datetime')]}"/>
-                                            <field name="validation_error_msg"/>
+                                            <field name="validation_error_msg" attrs="{'required': [('validation_required', '=', True)]}"/>
                                         </group>
                                     </div>
                                 </div>
