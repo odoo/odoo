@@ -478,6 +478,16 @@ msgid ""
 "                    </span>\n"
 "                    ("
 msgstr ""
+"<span attrs=\"{'invisible': [('holiday_type', '!=', 'employee')]}\">\n"
+"                        У вашого співробітника відрізняється часовий пояс від вашого! Дата та час відображається у часовому поясі співробітника\n"
+"                    </span>\n"
+"                    <span attrs=\"{'invisible': [('holiday_type', '!=', 'department')]}\">\n"
+"                        У відділів компанії відрізняється часовий пояс від вашого! Дата та час відображається у часовому поясі компанії\n"
+"                    </span>\n"
+"                    <span attrs=\"{'invisible': [('holiday_type', '!=', 'company')]}\">\n"
+"                        У компанії відрізняється часовий пояс від вашого! Дата та час відображаються у часовому поясі компанії\n"
+"                    </span>\n"
+"                    ("
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
