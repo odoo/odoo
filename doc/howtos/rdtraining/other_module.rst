@@ -88,7 +88,7 @@ When the override is working, we can move forward and create the invoice. Unfort
 is no easy way to know how to create any given object in Odoo. Most of the time, it is necessary
 to have a look at its model to find the required fields and provide appropriate values.
 
-A good way to learn is to look how other modules do what you want to do. For example, one of
+A good way to learn is to look at how other modules do what you want to do. For example, one of
 the basic flows of Sales is the creation of an invoice from a sales order. That looks like a good
 starting point since it does exactly what we want to do. Take some time to read and understand the
 `_create_invoices <https://github.com/odoo/odoo/blob/f1f48cdaab3dd7847e8546ad9887f24a9e2ed4c1/addons/sale/models/sale.py#L610-L717>`__
@@ -98,7 +98,7 @@ forward on the tutorial.
 To create an invoice, we need the following information:
 
 - a ``partner_id``: the customer
-- a ``move_type`` which has several `possible values <https://github.com/odoo/odoo/blob/f1f48cdaab3dd7847e8546ad9887f24a9e2ed4c1/addons/account/models/account_move.py#L138-L147>`__
+- a ``move_type``: it has several `possible values <https://github.com/odoo/odoo/blob/f1f48cdaab3dd7847e8546ad9887f24a9e2ed4c1/addons/account/models/account_move.py#L138-L147>`__
 - a ``journal_id``: the accounting journal
 
 This is enough to create an empty invoice.
