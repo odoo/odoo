@@ -4,37 +4,10 @@
     <t t-name="mail.ComposerTextInput" owl="1">
         <div class="o_ComposerTextInput">
             <t t-if="composer">
-                <t t-if="composer.hasSuggestedPartners">
-                    <div class="o_ComposerTextInput_mentionDropdown" t-att-class="{ 'o-lowPosition': props.hasMentionSuggestionsBelowPosition }">
-                        <div
-                            t-att-class="{
-                                'dropdown': props.hasMentionSuggestionsBelowPosition,
-                                'dropup': !props.hasMentionSuggestionsBelowPosition,
-                            }"
-                        >
-                            <div class="o_ComposerTextInput_mentionDropdownPropositionList dropdown-menu show">
-                                <t t-foreach="composer.mainSuggestedPartners" t-as="mainSuggestedPartner" t-key="mainSuggestedPartner.localId">
-                                    <PartnerMentionSuggestion
-                                        isActive="mainSuggestedPartner === composer.activeSuggestedPartner"
-                                        partnerLocalId="mainSuggestedPartner.localId"
-                                        t-on-o-partner-mention-suggestion-clicked="_onPartnerMentionSuggestionClicked"
-                                        t-on-o-partner-mention-suggestion-mouse-over="_onPartnerMentionSuggestionMouseOver"
-                                    />
-                                </t>
-                                <t t-if="composer.mainSuggestedPartners.length > 0 and composer.extraSuggestedPartners.length > 0">
-                                    <div role="separator" class="dropdown-divider"/>
-                                </t>
-                                <t t-foreach="composer.extraSuggestedPartners" t-as="extraSuggestedPartner" t-key="extraSuggestedPartner.localId">
-                                    <PartnerMentionSuggestion
-                                        isActive="extraSuggestedPartner === composer.activeSuggestedPartner"
-                                        partnerLocalId="extraSuggestedPartner.localId"
-                                        t-on-o-partner-mention-suggestion-clicked="_onPartnerMentionSuggestionClicked"
-                                        t-on-o-partner-mention-suggestion-mouse-over="_onPartnerMentionSuggestionMouseOver"
-                                    />
-                                </t>
-                            </div>
-                        </div>
-                    </div>
+                <t t-if="composer.hasSuggestions">
+                    <ComposerSuggestionList
+                        composerLocalId="props.composerLocalId"
+                    />
                 </t>
                 <textarea class="o_ComposerTextInput_textarea" t-att-class="{ 'o-composer-is-compact': props.isCompact }" t-esc="composer.textInputContent" t-att-placeholder="textareaPlaceholder" t-on-focusin="_onFocusinTextarea" t-on-focusout="_onFocusoutTextarea" t-on-keydown="_onKeydownTextarea" t-on-keyup="_onKeyupTextarea" t-on-input="_onInputTextarea" t-ref="textarea"/>
             </t>

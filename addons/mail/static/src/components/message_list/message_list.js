@@ -357,8 +357,8 @@ class MessageList extends Component {
      */
     async _adjustFromCurrentPartnerJustPostedMessage(hint) {
         const threadCache = this.threadView.threadCache;
-        const { messageId } = hint.data;
-        if (threadCache.isLoaded) {
+        if (threadCache.isLoaded && hint.data) {
+            const { messageId } = hint.data;
             const threadCacheMessageIds = threadCache.messages.map(message => message.id);
             if (threadCacheMessageIds.includes(messageId) && this.messageRefFromId(messageId)) {
                 if (this.props.hasScrollAdjust) {

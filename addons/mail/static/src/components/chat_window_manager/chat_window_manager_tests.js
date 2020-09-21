@@ -653,16 +653,17 @@ QUnit.test('chat window: close on ESCAPE', async function (assert) {
     );
 
     await afterNextRender(() => {
-        document.execCommand('insertText', false, "@test");
+        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
+        document.execCommand('insertText', false, "@");
         document.querySelector(`.o_ComposerTextInput_textarea`)
             .dispatchEvent(new window.KeyboardEvent('keydown'));
         document.querySelector(`.o_ComposerTextInput_textarea`)
             .dispatchEvent(new window.KeyboardEvent('keyup'));
     });
-    assert.containsOnce(
-        document.body,
-        '.o_ComposerTextInput_mentionDropdownPropositionList',
-        "mention suggestion should be opened after typing @test"
+    assert.hasClass(
+        document.querySelector('.o_ComposerSuggestionList_list'),
+        'show',
+        "should display mention suggestions on typing '@'"
     );
 
     await afterNextRender(() => {
@@ -671,7 +672,7 @@ QUnit.test('chat window: close on ESCAPE', async function (assert) {
     });
     assert.containsNone(
         document.body,
-        '.o_ComposerTextInput_mentionDropdownPropositionList',
+        '.o_ComposerSuggestionList_list',
         "mention suggestion should be closed after pressing escape on mention suggestion"
     );
     assert.containsOnce(

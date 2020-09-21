@@ -1,8 +1,8 @@
-odoo.define('mail/static/src/components/partner_mention_suggestion/partner_mention_suggestion_tests.js', function (require) {
+odoo.define('mail/static/src/components/composer_suggestion/composer_suggestion_partner_tests.js', function (require) {
 'use strict';
 
 const components = {
-    PartnerMentionSuggestion: require('mail/static/src/components/partner_mention_suggestion/partner_mention_suggestion.js'),
+    ComposerSuggestion: require('mail/static/src/components/composer_suggestion/composer_suggestion.js'),
 };
 const {
     afterEach,
@@ -13,14 +13,14 @@ const {
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
-QUnit.module('partner_mention_suggestion', {}, function () {
-QUnit.module('partner_mention_suggestion_tests.js', {
+QUnit.module('composer_suggestion', {}, function () {
+QUnit.module('composer_suggestion_partner_tests.js', {
     beforeEach() {
         beforeEach(this);
 
-        this.createPartnerMentionSuggestion = async partner => {
-            await createRootComponent(this, components.PartnerMentionSuggestion, {
-                props: { isActive: true, partnerLocalId: partner.localId },
+        this.createComposerSuggestion = async props => {
+            await createRootComponent(this, components.ComposerSuggestion, {
+                props,
                 target: this.widget.el,
             });
         };
@@ -41,17 +41,27 @@ QUnit.module('partner_mention_suggestion_tests.js', {
 QUnit.test('partner mention suggestion displayed', async function (assert) {
     assert.expect(1);
 
+    this.data['mail.channel'].records.push({ id: 20 });
     await this.start();
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel',
+    });
     const partner = this.env.models['mail.partner'].create({
         id: 7,
         im_status: 'online',
         name: "Demo User",
     });
-    await this.createPartnerMentionSuggestion(partner);
+    await this.createComposerSuggestion({
+        composerLocalId: thread.composer.localId,
+        isActive: true,
+        modelName: 'mail.partner',
+        recordLocalId: partner.localId,
+    });
 
     assert.containsOnce(
         document.body,
-        `.o_PartnerMentionSuggestion`,
+        `.o_ComposerSuggestion`,
         "Partner mention suggestion should be present"
     );
 });
@@ -59,18 +69,28 @@ QUnit.test('partner mention suggestion displayed', async function (assert) {
 QUnit.test('partner mention suggestion correct data', async function (assert) {
     assert.expect(6);
 
+    this.data['mail.channel'].records.push({ id: 20 });
     await this.start();
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel',
+    });
     const partner = this.env.models['mail.partner'].create({
         email: "demo_user@odoo.com",
         id: 7,
         im_status: 'online',
         name: "Demo User",
     });
-    await this.createPartnerMentionSuggestion(partner);
+    await this.createComposerSuggestion({
+        composerLocalId: thread.composer.localId,
+        isActive: true,
+        modelName: 'mail.partner',
+        recordLocalId: partner.localId,
+    });
 
     assert.containsOnce(
         document.body,
-        '.o_PartnerMentionSuggestion',
+        '.o_ComposerSuggestion',
         "Partner mention suggestion should be present"
     );
     assert.strictEqual(
@@ -80,21 +100,21 @@ QUnit.test('partner mention suggestion correct data', async function (assert) {
     );
     assert.containsOnce(
         document.body,
-        '.o_PartnerMentionSuggestion_name',
+        '.o_ComposerSuggestion_part1',
         "Partner's name should be present"
     );
     assert.strictEqual(
-        document.querySelector(`.o_PartnerMentionSuggestion_name`).textContent,
+        document.querySelector(`.o_ComposerSuggestion_part1`).textContent,
         "Demo User",
         "Partner's name should be displayed"
     );
     assert.containsOnce(
         document.body,
-        '.o_PartnerMentionSuggestion_email',
+        '.o_ComposerSuggestion_part2',
         "Partner's email should be present"
     );
     assert.strictEqual(
-        document.querySelector(`.o_PartnerMentionSuggestion_email`).textContent,
+        document.querySelector(`.o_ComposerSuggestion_part2`).textContent,
         "(demo_user@odoo.com)",
         "Partner's email should be displayed"
     );
@@ -103,22 +123,31 @@ QUnit.test('partner mention suggestion correct data', async function (assert) {
 QUnit.test('partner mention suggestion active', async function (assert) {
     assert.expect(2);
 
+    this.data['mail.channel'].records.push({ id: 20 });
     await this.start();
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel',
+    });
     const partner = this.env.models['mail.partner'].create({
-        email: "demo_user@odoo.com",
         id: 7,
         im_status: 'online',
         name: "Demo User",
     });
-    await this.createPartnerMentionSuggestion(partner);
+    await this.createComposerSuggestion({
+        composerLocalId: thread.composer.localId,
+        isActive: true,
+        modelName: 'mail.partner',
+        recordLocalId: partner.localId,
+    });
 
     assert.containsOnce(
         document.body,
-        '.o_PartnerMentionSuggestion',
+        '.o_ComposerSuggestion',
         "Partner mention suggestion should be displayed"
     );
     assert.hasClass(
-        document.querySelector('.o_PartnerMentionSuggestion'),
+        document.querySelector('.o_ComposerSuggestion'),
         'active',
         "should be active initially"
     );

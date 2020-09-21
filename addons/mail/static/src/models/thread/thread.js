@@ -561,7 +561,11 @@ function factory(dependencies) {
                 return;
             }
             this.update({ pendingSeenMessageId: messageId });
-            return this.env.models['mail.thread'].performRpcChannelSeen({ ids: [this.id], lastMessageId: messageId });
+            return this.env.models['mail.thread'].performRpcChannelSeen({
+                ids: [this.id],
+                // commands have fake message id that is not integer
+                lastMessageId: Math.floor(messageId),
+            });
         }
 
         /**
