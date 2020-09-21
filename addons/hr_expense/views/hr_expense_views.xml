@@ -44,7 +44,7 @@
             <field name="name">hr.expense.tree</field>
             <field name="model">hr.expense</field>
             <field name="arch" type="xml">
-                <tree string="Expenses" multi_edit="1" sample="1">
+                <tree string="Expenses" multi_edit="1" sample="1" js_class="hr_expense_tree_dashboard_upload">
                     <header>
                         <button name="action_submit_expenses" type="object" string="Create Report"/>
                     </header>
@@ -203,7 +203,7 @@
             <field name="name">hr.expense.kanban</field>
             <field name="model">hr.expense</field>
             <field name="arch" type="xml">
-                <kanban class="o_kanban_mobile hr_expense" sample="1">
+                <kanban class="o_kanban_mobile hr_expense" sample="1" js_class="hr_expense_kanban">
                     <field name="name"/>
                     <field name="employee_id"/>
                     <field name="total_amount"/>
