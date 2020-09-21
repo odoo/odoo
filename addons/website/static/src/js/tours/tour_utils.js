@@ -173,7 +173,7 @@ function clickOnText(snippet, element, position = "bottom") {
  */
 function dragNDrop(snippet, position = "bottom") {
     return {
-        trigger: `#oe_snippets .oe_snippet[name="${snippet.name}"] .oe_snippet_thumbnail`,
+        trigger: `#oe_snippets .oe_snippet[name="${snippet.name}"] .oe_snippet_thumbnail:not(.o_we_already_dragging)`,
         extra_trigger: "body.editor_enable.editor_has_snippets",
         moveTrigger: '.oe_drop_zone',
         content: _t(`Drag the <b>${snippet.name}</b> building block and drop it in your page.`),
