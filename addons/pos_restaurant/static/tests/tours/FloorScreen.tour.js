@@ -93,7 +93,7 @@ odoo.define('pos_restaurant.tour.FloorScreen', function (require) {
     // Opening product screen in main floor should go back to main floor
     FloorScreen.do.clickEdit();
     FloorScreen.check.editModeIsActive(false);
-    FloorScreen.check.hasTable('T4');
+    FloorScreen.check.tableIsNotSelected('T4');
     FloorScreen.do.clickTable('T4');
     ProductScreen.check.isShown();
     Chrome.check.backToFloorTextIs('Main Floor', 'T4');
