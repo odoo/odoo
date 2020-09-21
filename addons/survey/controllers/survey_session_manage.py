@@ -236,5 +236,6 @@ class UserInputSession(http.Controller):
             'question_statistics_graph': full_statistics.get('graph_data'),
             'input_line_values': input_line_values,
             'answers_validity': json.dumps(answers_validity),
-            'answer_count': survey.session_question_answer_count
+            'answer_count': survey.session_question_answer_count,
+            'attendees_count': survey.session_answer_count,
         }

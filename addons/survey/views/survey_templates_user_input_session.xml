@@ -76,32 +76,34 @@
             t-att-data-current-screen="'question' if is_scored_question else 'userInputs'"
             t-att-data-show-bar-chart="show_bar_chart"
             t-att-data-show-text-answers="show_text_answers">
-            <div class="p-4 d-flex flex-column o_survey_session_manage_container min-w-75 pt-6">
-                <h3 class="o_survey_session_link_reminder">
+            <div class="o_survey_question_header flex-wrap px-3 w-100 d-flex justify-content-between align-items-center position-absolute">
+                <h3>
                     <span>Go to <a t-att-href="survey.session_link" t-esc="survey.session_link" target="_blank" /></span>
                     <i class="fa fa-copy font-weight-normal ml-3 mr-1 o_survey_session_copy" />
                     <input class="o_survey_session_copy_url d-none" type="text" t-att-value="survey.session_link" />
                 </h3>
+                <h1 t-if="question.is_time_limited" class="o_survey_timer_container">
+                    <span class="o_survey_timer d-inline-block"/>
+                </h1>
+                <div class="text-right d-flex flex-column justify-content-center">
+                    <div t-if="show_bar_chart or show_text_answers">
+                        <div class="progress" title="Attendees are answering the question...">
+                            <div class="progress-bar o_survey_session_progress_small font-weight-bold"
+                                role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                                <span class="px-2">0 / <t t-esc="survey.session_answer_count" /></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container px-4 pb-3 pt96 d-flex flex-column o_survey_session_manage_container">
                 <a role="button"
                     class="font-weight-bold fa fa-chevron-right o_survey_session_navigation o_survey_session_navigation_next p-3" />
                 <a role="button"
                     class="font-weight-bold fa fa-chevron-left o_survey_session_navigation o_survey_session_navigation_previous p-3 d-none" />
                 <div class="o_survey_session_results flex-column flex-grow-1">
                     <div class="row">
-                        <div class="col-lg-8"><h1 t-esc="question.title"></h1></div>
-                        <div class="col-lg-4 text-right d-flex flex-column justify-content-center">
-                            <h1 t-if="question.is_time_limited" class="o_survey_timer_container">
-                                <span class="o_survey_timer d-inline-block"/>
-                            </h1>
-                            <div t-if="show_bar_chart or show_text_answers">
-                                <div class="progress" title="Attendees are answering the question...">
-                                    <div class="progress-bar o_survey_session_progress_small font-weight-bold"
-                                        role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
-                                        <span class="px-2">0 / <t t-esc="survey.session_answer_count" /></span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <div class="col-lg-12"><h1 t-esc="question.title"></h1></div>
                     </div>
                     <div t-attf-class="d-flex flex-column flex-grow-1 #{'justify-content-center' if not show_text_answers else ''} #{'align-items-center' if show_bar_chart else ''}">
                         <!-- Has to stay in 'style' attribute for Chartjs -->
