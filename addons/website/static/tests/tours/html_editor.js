@@ -17,12 +17,19 @@ tour.register('html_editor_multiple_templates', {
             content: "drop a snippet",
             trigger: '#oe_snippets .oe_snippet:has(.s_cover) .oe_snippet_thumbnail',
             // id starting by 'oe_structure..' will actually create an inherited view
-            run: "drag_and_drop #oe_structure_test_ui",
+            run: async (action_helper) => {
+                action_helper.drag_and_drop('#oe_structure_test_ui');
+                // wait the last operation of the editor before saving.
+                $('.o_we_website_top_actions').addClass('action-loading');
+                await new Promise(r => setTimeout(r, 0));
+                await new Promise(r => setTimeout(r, 0));
+                $('.o_we_website_top_actions').removeClass('action-loading');
+            },
         },
         {
             content: "save the page",
             extra_trigger: '#oe_structure_test_ui.o_dirty',
-            trigger: "button[name=save]",
+            trigger: ".o_we_website_top_actions:not('.action-loading') button[name=save]",
         },
         // 2. Edit generic view
         {
