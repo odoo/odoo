@@ -41,7 +41,7 @@ class CrmLead(models.Model):
     def assign_salesman_of_assigned_partner(self):
         salesmans_leads = {}
         for lead in self:
-            if (lead.probability > 0 and lead.probability < 100) or lead.stage_id.sequence == 1:
+            if lead.active and lead.probability < 100:
                 if lead.partner_assigned_id and lead.partner_assigned_id.user_id != lead.user_id:
                     salesmans_leads.setdefault(lead.partner_assigned_id.user_id.id, []).append(lead.id)
 
