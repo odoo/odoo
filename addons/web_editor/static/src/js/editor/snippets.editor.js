@@ -1824,10 +1824,12 @@ var SnippetsMenu = Widget.extend({
         var $toInsert, dropped, $snippet;
         let scrollValue;
 
+        let dragAndDropResolve;
+
         const smoothScrollOptions = this._getScrollOptions({
             jQueryDraggableOptions: {
                 distance: 0,
-                handle: '.oe_snippet_thumbnail',
+                handle: '.oe_snippet_thumbnail:not(.o_we_already_dragging)',
                 helper: function () {
                     const dragSnip = this.cloneNode(true);
                     dragSnip.querySelectorAll('.o_delete_btn').forEach(
@@ -1836,6 +1838,8 @@ var SnippetsMenu = Widget.extend({
                     return dragSnip;
                 },
                 start: function () {
+                    self.$el.find('.oe_snippet_thumbnail').addClass('o_we_already_dragging');
+
                     dropped = false;
                     $snippet = $(this);
                     var $baseBody = $snippet.find('.oe_snippet_body');
@@ -1888,6 +1892,9 @@ var SnippetsMenu = Widget.extend({
                             }
                         },
                     });
+
+                    const prom = new Promise(resolve => dragAndDropResolve = () => resolve());
+                    self._mutex.exec(() => prom);
                 },
                 stop: async function (ev, ui) {
                     $toInsert.removeClass('oe_snippet_body');
@@ -1925,19 +1932,24 @@ var SnippetsMenu = Widget.extend({
                         var $target = $toInsert;
                         await self._scrollToSnippet($target, scrollValue);
 
-                        _.defer(function () {
+                        _.defer(async function () {
                             self.trigger_up('snippet_dropped', {$target: $target});
                             self._disableUndroppableSnippets();
 
-                            self._callForEachChildSnippet($target, function (editor, $snippet) {
+                            dragAndDropResolve();
+
+                            await self._callForEachChildSnippet($target, function (editor, $snippet) {
                                 return editor.buildSnippet();
-                            }).then(function () {
-                                $target.trigger('content_changed');
-                                return self._updateInvisibleDOM();
                             });
+                            $target.trigger('content_changed');
+                            await self._updateInvisibleDOM();
+
+                            self.$el.find('.oe_snippet_thumbnail').removeClass('o_we_already_dragging');
                         });
                     } else {
                         $toInsert.remove();
+                        dragAndDropResolve();
+                        self.$el.find('.oe_snippet_thumbnail').removeClass('o_we_already_dragging');
                     }
                 },
             },
