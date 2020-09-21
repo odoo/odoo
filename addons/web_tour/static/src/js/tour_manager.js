@@ -1,6 +1,7 @@
 odoo.define('web_tour.TourManager', function(require) {
 "use strict";
 
+const { ComponentWrapper } = require("web.OwlCompatibility");
 var core = require('web.core');
 var config = require('web.config');
 var local_storage = require('web.local_storage');
@@ -428,7 +429,8 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
                 message = _t('<strong><b>Good job!</b> You went through all steps of this tour.</strong>');
             }
             const fadeout = this.tours[tour_name].fadeout;
-            new RainbowMan({message, fadeout}).appendTo(this.$body);
+            const rainbowManWrapper = new ComponentWrapper(this, RainbowMan, { message, fadeout });
+            rainbowManWrapper.mount(this.$body[0]);
         }
         this.tours[tour_name].current_step = 0;
         local_storage.removeItem(get_step_key(tour_name));
