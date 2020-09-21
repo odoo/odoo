@@ -23,6 +23,14 @@ class AccountInvoiceSend(models.TransientModel):
         domain="[('model', '=', 'account.move')]"
         )
 
+    # View fields
+    move_types = fields.Char(
+        string='Move types',
+        compute='_compute_move_types',
+        readonly=True,
+        help='Technical field containing a textual representation of the selected move types, '
+             'if multiple. It is used to inform the user in the window in such case.')
+
     @api.model
     def default_get(self, fields):
         res = super(AccountInvoiceSend, self).default_get(fields)
@@ -45,6 +53,24 @@ class AccountInvoiceSend(models.TransientModel):
     def _compute_composition_mode(self):
         for wizard in self:
             wizard.composer_id.composition_mode = 'comment' if len(wizard.invoice_ids) == 1 else 'mass_mail'
+
+    @api.onchange('invoice_ids')
+    def _compute_move_types(self):
+        for wizard in self:
+            move_types = False
+
+            if len(wizard.invoice_ids) > 1:
+                moves = self.env['account.move'].browse(self.env.context.get('active_ids'))
+
+                # Get the move types of all selected moves and see if there is more than one of them.
+                # If so, we'll display a warning on the next window about it.
+                move_types_set = set(m.type_name for m in moves)
+
+                if len(move_types_set) > 1:
+                    move_types = ', '.join(move_types_set)
+
+            wizard.move_types = move_types
+
 
     @api.onchange('template_id')
     def onchange_template_id(self):
