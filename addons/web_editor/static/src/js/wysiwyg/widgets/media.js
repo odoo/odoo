@@ -396,7 +396,7 @@ var FileWidget = SearchableMediaWidget.extend({
         }
         const selected = this.selectedAttachments.concat(mediaAttachments).map(attachment => {
             // Color-customize dynamic SVGs with the primary theme color
-            if (attachment.image_src.startsWith('/web_editor/shape/')) {
+            if (attachment.image_src && attachment.image_src.startsWith('/web_editor/shape/')) {
                 const colorCustomizedURL = new URL(attachment.image_src, window.location.origin);
                 colorCustomizedURL.searchParams.set('c1', getCSSVariableValue('o-color-1'));
                 attachment.image_src = colorCustomizedURL.pathname + colorCustomizedURL.search;
