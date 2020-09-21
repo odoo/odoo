@@ -93,6 +93,7 @@ All the Odoo sources will be located in `$HOME/src/`
     $ git clone git@github.com:odoo/odoo.git
     $ git clone git@github.com:odoo/enterprise.git
 
+.. tip:: Clone the repositories will take a while, enjoy a cup of coffee while waiting.
 
 .. tip:: You may need to ask your manager read rights to fetch the enterprise repository.
 
