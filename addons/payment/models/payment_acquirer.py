@@ -808,7 +808,7 @@ class PaymentTransaction(models.Model):
             trans.payment_id = payment
 
         for company in payments:
-            payments[company].with_context(force_company=company, company_id=company).post()
+            payments[company].with_context(force_company=company, company_id=company).filtered(lambda x: x.state == 'draft').post()
 
     @api.multi
     def _set_transaction_cancel(self):
