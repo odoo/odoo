@@ -32,8 +32,8 @@ Python Inheritance
         :align: center
         :alt: Create
 
-In our real estate module, we never had to develop anything specific feature to be able to do any
-regular CRUD (Create, Retrieve, Update or Delete) action. The Odoo framework provides the necessary
+In our real estate module, we never had to develop anything specific to be able to do the
+regular CRUD (Create, Retrieve, Update or Delete) actions. The Odoo framework provides the necessary
 tools to do it. In fact, such actions are already included in our model thanks to the classical
 Python inheritance::
 
@@ -45,7 +45,7 @@ Python inheritance::
 
         ...
 
-Our ``class TestModel`` inherits from the :class:`~odoo.models.Model` which provides the
+Our ``class TestModel`` inherits from :class:`~odoo.models.Model` which provides
 :meth:`~odoo.models.Model.create`, :meth:`~odoo.models.Model.read`, :meth:`~odoo.models.Model.write`
 and :meth:`~odoo.models.Model.unlink`.
 
@@ -62,10 +62,10 @@ specific business logic::
 
         @api.model
         def create(self, vals):
-        # Do some business logic, modify vals...
-        ...
-        # Then call super to execute the parent method 
-        return super().create(vals)
+            # Do some business logic, modify vals...
+            ...
+            # Then call super to execute the parent method 
+            return super().create(vals)
 
 The decorator :func:`~odoo.api.model` is only necessary for the :meth:`~odoo.models.Model.create`
 method since the content of the recordset ``self`` is not relevant in the context of a creation.
@@ -76,7 +76,7 @@ in case you need to call the parent method with a modified recordset.
 .. danger::
 
     - It is very important to **always** call ``super()`` to avoid breaking the flow. There are
-      only some very specific cases where you don't want to do it.
+      only a few very specific cases where you don't want to do it.
     - Pay attention to **always** return data consistent with the parent method. For example, if
       the parent method returns a ``dict()``, your override must return a ``dict()``.
 
@@ -131,7 +131,7 @@ existing model, meaning we will use the latter. For example::
     class InheritedModel(models.Model):
         _inherit = "inherited.model"
 
-        new_field = fields.Chat(string="New Field")
+        new_field = fields.Char(string="New Field")
 
 A practical example where two fields are added on
 a model can be found
@@ -228,7 +228,7 @@ on the element to be found. Both inheritances below will give the same result.
 The view part inheritance from the previous practical example can be found
 `here <https://github.com/odoo/odoo/blob/691d1f087040f1ec7066e485d19ce3662dfc6501/addons/account_fleet/views/account_move_views.xml#L3-L17>`__.
 
-.. exercise:: Add fields on Users view
+.. exercise:: Add fields on the Users view
 
     Add the ``property_ids`` field on the ``base.view_users_form`` in a new page of the notebook.
 

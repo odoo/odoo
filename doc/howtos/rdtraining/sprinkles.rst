@@ -10,7 +10,7 @@ Our real estate module now makes sense from a business persective: we created
 :ref:`constraints <howto/rdtraining/constraints>`. However, our user interface is still a bit
 rough. We would like to add some colors in the list views or make some fields and buttons disappear
 conditionally. For example, the 'Sold' and 'Cancel' button should disappear when the property
-is sold or canceled since it is not allowed to change the status in this case.
+is sold or canceled since it is not allowed to change the state in this case.
 
 This chapter covers a very small subset of what can be done in the views. Do not hesitate to
 read the reference documentation for a more complete insight.
@@ -40,7 +40,7 @@ In the real estate module, we added the list of offers on a property. We simply 
 The field uses the specific view for ``estate.property.offer``. In some cases, we want to define
 a specific list view which is only used in the context of a form view. For example, we would like
 to display the list of properties linked to a property type. However, we only want to display 3
-fields for clarity: name, expected price, status.
+fields for clarity: name, expected price, state.
 
 To do this, we can define *inline* list views: an inline list view is defined directly inside
 a form view. For example:
@@ -98,7 +98,7 @@ Widgets
 
 .. note::
 
-    **Goal**: at the end of this section, the state of the property is displayed thanks a
+    **Goal**: at the end of this section, the state of the property is displayed thanks to a
     specific widget:
 
     .. image:: sprinkles/media/widget.png
@@ -114,7 +114,7 @@ on the field type.
 
 However, in some cases, we want a specific representation of a field which can be done thanks to
 the ``widget`` attribute. We already used it for the ``tag_ids`` field when we used the
-``widget="many2many_tags"`` attribute. In fact, when we don't use it the field is displayed as a
+``widget="many2many_tags"`` attribute. In fact, when we don't use it, the field is displayed as a
 list.
 
 Each field type has a set of widgets which can be used to fine tune its display. Some widgets also
@@ -147,7 +147,7 @@ list.
 Model
 -----
 
-Odoo provides several ways to provide a default order. The most common way to do it is to define
+Odoo provides several ways to set a default order. The most common way to do it is to define
 the ``_order`` attribute directly on the model. This way, the retrieved records will follow
 a deterministic order which will be consistent in all views, but also when records are searched
 programmatically. By default there is no order specified, therefore the records will be
@@ -199,7 +199,7 @@ logic. For example, In our real estate module we would like to sort the property
 Indeed, it is useful to have the most used types appear at the top of the list. If our real estate
 agency mainly sells houses, it is more convenient to have 'House' appear before 'Apartment'.
 
-To do so, a ``sequence`` field is used in combination with the ``handle`` widget. Obviously, the
+To do so, a ``sequence`` field is used in combination with the ``handle`` widget. Obviously,
 the ``sequence`` field must be the first field in the ``_order`` attribute.
 
 .. exercise:: Manual ordering
@@ -222,7 +222,7 @@ the ``sequence`` field must be the first field in the ``_order`` attribute.
 Attributes and options
 ======================
 
-It would be prohibitive to detail all the available features which allows fine tuning the look of a
+It would be prohibitive to detail all the available features which allow fine tuning the look of a
 view. Therefore, we'll only stick to the most common ones.
 
 Form
@@ -240,7 +240,7 @@ Form
 
 In our real estate module, we want to modify the behavior of some fields. For example, we don't
 want to be able to create or edit a property type from the form view. In fact, we expect the
-types to be handled in their appropriate menu. Moreover, we want to give tag colors. Several field
+types to be handled in their appropriate menu. Moreover, we want to give tags a color. Several field
 widgets take the ``options`` attribute in to customize their behavior.
 
 .. exercise:: Widget options
@@ -263,7 +263,7 @@ widgets take the ``options`` attribute in to customize their behavior.
 
 In the :ref:`howto/rdtraining/firstui` chapter, we saw that reserved fields was used for
 specific behaviors. For example, the ``active`` field is used to automatically filter out
-inactive records. We added the ``state`` as a reserved field as well. It's not time to use it!
+inactive records. We added the ``state`` as a reserved field as well. It's now time to use it!
 A ``state`` field is used in combination with a ``states`` attribute in the view to display
 buttons conditionally.
 
@@ -284,8 +284,8 @@ the conditon in which the property applies. For example:
 .. code-block:: xml
 
     <form>
-        <field name="description" attrs="{'invisible': [('is_partner', '=', False)]}">
-        <field name="is_partner" invisible="1">
+        <field name="description" attrs="{'invisible': [('is_partner', '=', False)]}"/>
+        <field name="is_partner" invisible="1"/>
     </form>
 
 It means that the ``description`` field is invisible when ``is_partner`` is ``False``. It is
@@ -323,7 +323,7 @@ List
       :align: center
       :alt: Editable list
 
-In case model has only a few fields, it can be useful to edit records directly through the list
+In case the model has only a few fields, it can be useful to edit records directly through the list
 view and not open the form view. In the real estate example, there is no need to open a form view
 to add an offer or create a new tag. It can be achieved thanks to the ``editable`` attribute.
 
@@ -335,7 +335,7 @@ On the other hand, when a model has a lot of fields it can be tempting to add to
 list view, making it unclear. An alternative method is to add the fields, but make them optionally
 hidden. It can be achieved thanks to the ``optional`` attribute.
 
-.. exercise:: Make field optional
+.. exercise:: Make a field optional
 
     Make the field ``date_availability`` on the ``estate.property`` list view optional and hidden by
     default.
@@ -368,7 +368,10 @@ The records where ``is_partner`` is ``True`` will be displayed in green.
     - Accepted offers are green
     - The state should not be visible anymore
 
-    Tip: keep in mind that **all** fields used in attributes must be in the view!
+    Tips:
+    - keep in mind that **all** fields used in attributes must be in the view!
+    - if you want to test the color of the "Offer Received" and "Offer Accepted" states, add the
+    field in the form view and change it manually (we'll implement this later). 
 
 Search
 ------
@@ -386,7 +389,7 @@ Search
       :align: center
       :alt: Default filters and domains
 
-Last but not least there are some tweaks we would like to apply when searching. First of all, we
+Last but not least, there are some tweaks we would like to apply when searching. First of all, we
 want to have our 'Available' filter used by default when we access the properties. To do so, we
 need to use the ``search_default_{$name}`` action context, where ``{$name}`` is the filter name.
 It means that we can define which filter must be activated by default at the action level.
@@ -418,7 +421,7 @@ used to search on both fields ``name`` and ``description``.
         </group>
     </search>
 
-.. exercise:: Change living area search
+.. exercise:: Change the living area search
 
     Add a ``filter_domain`` on the living area to include properties with an area larger than the
     given value.
@@ -474,7 +477,7 @@ is equivalent to:
             for record in self:
                 record.description = record.partner_id.name
 
-Every type the partner name is changed, the description is modified.
+Every time the partner name is changed, the description is modified.
 
 .. exercise:: Add a stat button on property type
 

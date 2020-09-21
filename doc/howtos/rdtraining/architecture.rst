@@ -33,7 +33,8 @@ Odoo modules
 ============
 
 Both server and client extensions are packaged as *modules* which are
-optionally loaded in a *database*.
+optionally loaded in a *database*. A module is a collection of functions and data that aim a
+sole purpose.
 
 Odoo modules can either add brand new business logic to an Odoo system, or
 alter and extend existing business logic: a module can be created to add your
