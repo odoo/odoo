@@ -105,6 +105,11 @@ MockServer.include({
             const context = args.context;
             return this._mockRouteMailChatPost(uuid, message_content, context);
         }
+        if (route === '/mail/get_suggested_recipients') {
+            const model = args.model;
+            const res_ids = args.res_ids;
+            return this._mockRouteMailGetSuggestedRecipient(model, res_ids);
+        }
         if (route === '/mail/init_messaging') {
             return this._mockRouteMailInitMessaging();
         }
@@ -186,7 +191,8 @@ MockServer.include({
         if (args.model === 'mail.channel' && args.method === 'message_post') {
             const id = args.args[0];
             const kwargs = args.kwargs;
-            const context = args.context;
+            const context = kwargs.context;
+            delete kwargs.context;
             return this._mockMailChannelMessagePost(id, kwargs, context);
         }
         if (args.model === 'mail.channel' && args.method === 'notify_typing') {
@@ -252,7 +258,8 @@ MockServer.include({
         if (args.method === 'message_post') {
             const id = args.args[0];
             const kwargs = args.kwargs;
-            const context = args.kwargs.context;
+            const context = kwargs.context;
+            delete kwargs.context;
             return this._mockMailThreadMessagePost(args.model, [id], kwargs, context);
         }
         return this._super(route, args);
@@ -310,6 +317,17 @@ MockServer.include({
             },
             context
         );
+    },
+    /**
+     * Simulates `/mail/get_suggested_recipients` route.
+     *
+     * @private
+     * @returns {string} model
+     * @returns {integer[]} res_ids
+     * @returns {Object}
+     */
+    _mockRouteMailGetSuggestedRecipient(model, res_ids) {
+        return this._mockMailThread_MessageGetSuggestedRecipients(model, res_ids);
     },
     /**
      * Simulates the `/mail/init_messaging` route.
@@ -1344,6 +1362,47 @@ MockServer.include({
         }
 
         return [author_id, email_from];
+    },
+    /**
+     * Simulates `_message_add_suggested_recipient` on `mail.thread`.
+     *
+     * @private
+     * @param {string} model
+     * @param {integer[]} ids
+     * @param {Object} result
+     * @param {Object} [param3={}]
+     * @param {string} [param3.email]
+     * @param {integer} [param3.partner]
+     * @param {string} [param3.reason]
+     * @returns {Object}
+     */
+    _mockMailThread_MessageAddSuggestedRecipient(model, ids, result, { email, partner, reason = '' } = {}) {
+        const record = this._getRecords(model, [['id', 'in', 'ids']])[0];
+        // for simplicity
+        result[record.id].push([partner, email, reason]);
+        return result;
+    },
+    /**
+     * Simulates `_message_get_suggested_recipients` on `mail.thread`.
+     *
+     * @private
+     * @param {string} model
+     * @param {integer[]} ids
+     * @returns {Object}
+     */
+    _mockMailThread_MessageGetSuggestedRecipients(model, ids) {
+        const result = ids.reduce((result, id) => result[id] = [], {});
+        const records = this._getRecords(model, [['id', 'in', ids]]);
+        for (const record in records) {
+            if (record.user_id) {
+                const user = this._getRecords('res.users', [['id', '=', record.user_id]]);
+                if (user.partner_id) {
+                    const reason = this.data[model].fields['user_id'].string;
+                    this._mockMailThread_MessageAddSuggestedRecipient(result, user.partner_id, reason);
+                }
+            }
+        }
+        return result;
     },
     /**
      * Simulates `message_post` on `mail.thread`.

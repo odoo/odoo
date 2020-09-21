@@ -89,7 +89,9 @@ function factory(dependencies) {
                 method: 'message_unsubscribe',
                 args: [[this.followedThread.id], partner_ids, channel_ids]
             }));
+            const followedThread = this.followedThread;
             this.delete();
+            followedThread.fetchAndUpdateSuggestedRecipients();
         }
 
         /**
