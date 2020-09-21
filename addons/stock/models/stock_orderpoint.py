@@ -135,6 +135,7 @@ class StockWarehouseOrderpoint(models.Model):
             dummy, lead_days_description = orderpoint.rule_ids._get_lead_days(orderpoint.product_id)
             orderpoint.json_lead_days_popover = dumps({
                 'title': _('Replenishment'),
+                'icon': 'fa-area-chart',
                 'popoverTemplate': 'stock.leadDaysPopOver',
                 'lead_days_date': fields.Date.to_string(orderpoint.lead_days_date),
                 'lead_days_description': lead_days_description,
