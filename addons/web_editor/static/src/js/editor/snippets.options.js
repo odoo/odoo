@@ -4126,7 +4126,7 @@ registry.BackgroundPosition = SnippetOptionWidget.extend({
      * @param {boolean} activate toggle the overlay on (true) or off (false)
      */
     _toggleBgOverlay: function (activate) {
-        if (this.$backgroundOverlay.is('.oe_active') === activate) {
+        if (!this.$backgroundOverlay || this.$backgroundOverlay.is('.oe_active') === activate) {
             return;
         }
 
