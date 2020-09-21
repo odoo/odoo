@@ -92,7 +92,7 @@ class PickingType(models.Model):
                 vals['sequence_id'] = self.env['ir.sequence'].create({
                     'name': _('Sequence') + ' ' + vals['sequence_code'],
                     'prefix': vals['sequence_code'], 'padding': 5,
-                    'company_id': self.env.company.id,
+                    'company_id': vals.get('company_id') or self.env.company.id,
                 }).id
 
         picking_type = super(PickingType, self).create(vals)
