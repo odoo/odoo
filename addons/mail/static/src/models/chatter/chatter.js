@@ -193,6 +193,7 @@ function factory(dependencies) {
             ) {
                 if (this.thread) {
                     this.thread.refreshFollowers();
+                    this.thread.fetchAndUpdateSuggestedRecipients();
                 }
             }
             if (
