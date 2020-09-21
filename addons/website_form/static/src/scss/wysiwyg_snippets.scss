@@ -1,6 +1,10 @@
 #oe_snippets > .o_we_customize_panel we-customizeblock-option {
     we-list {
+        we-title, we-button {
+            margin-top: $o-we-sidebar-content-field-spacing;
+        }
         .oe_we_table_wraper {
+            margin-top: $o-we-sidebar-content-field-spacing;
             max-height: 200px;
             overflow-y: auto;
             table {
@@ -11,6 +15,11 @@
                     color: var(--o-we-color);
                     border: none;
                     width: 100%;
+                }
+                tr {
+                    border: 1px solid rgba(white, 0.1);
+                    border-left: none;
+                    border-right: none;
                 }
                 td {
                     &:first-child, &:last-child {
