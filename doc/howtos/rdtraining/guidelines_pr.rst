@@ -10,7 +10,7 @@ prepare our code, to be shared and learn how to share it.
 Coding guidelines
 =================
 
-We will start refactoring the code to be conformed to the Odoo coding guidelines. The guidelines aim
+We will start refactoring the code to match to the Odoo coding guidelines. The guidelines aim
 to improve the quality of Odoo Apps code.
 
 
@@ -18,32 +18,36 @@ to improve the quality of Odoo Apps code.
 
 .. exercise:: Make it shine
 
-    Refactor your code to respect the coding guidelines. Don’t forget to respect the module
+    Refactor your code to respect the coding guidelines. Don't forget to respect the module
     structure, the variable names, the method name convention, the model attribute order and the
     xml ids.
 
-Your first PR
-=============
+Your first Pull Request (PR)
+============================
 
-Now that your code respect the Odoo code guidelines and it's shiny, less share it with others.
+**The following is intended to be used by Odoo staff members only. All repositories mentioned are
+not accessible by third-party.**
+
+Now that your code respects the Odoo code guidelines and is shiny, let's share it with others.
 
 
 Configure development repository
 --------------------------------
 
-We will start creating a git development environment for the ‘custom’ folder, as we did it in the
-beginning for ‘odoo’ and ‘enterprise’.
+We will start creating a git development environment for the 'custom' folder, as we did it in the
+beginning for 'odoo' and 'enterprise'. The PR will target the `odoo/technical-training-sandbox` repository.
 
-The PR will aim the `odoo/technical-training-sandbox` repository, to do this the first step is to
+To do this the first step is to
 `fork this repository in GitHub <https://guides.github.com/activities/forking/>`__ to create your
 own development repository.
 
-After you successfully create your development repository, we will configure your existing ‘custom’
+After you successfully created your development repository, we will configure your existing `$HOME/src/custom`
 folder to be able to commit your work.
 
 
 .. code-block:: console
 
+    $ cd $HOME/src/custom
     $ git init
     $ git remote add training git@github.com:odoo/technical-training-sandbox.git
     $ git remote add training-dev git@github.com:xyz-odoo/technical-training-sandbox.git #Don't forget to change xyz-odoo to your own GitHub account
@@ -61,7 +65,7 @@ Branch, Commit & Push
 ---------------------
 
 Before creating the PR, a new working branch will be created and used to commit the code. Afterwards
-the branch will be push it to the development repository.
+the branch will be pushed to the development repository.
 
 Create your working branch:
 
@@ -73,8 +77,6 @@ Your branch name must follow the following name strucutre : <targetVersion>-<fea
 
 Example: The branch master-sale-fixes-abc on odoo-dev/odoo is a branch containing fixes for the
 sales app in the odoo/odoo repository to be deployed in master and done by ABC.
-
-.. tip:: Bugfix branch names should follow this pattern: <targetVersion>-opw-<ticket_number>-<trigram>.
 
 Commit your code:
 
@@ -96,8 +98,8 @@ Push your new branch to your developement repository:
 
     $ git push -u master-my_first_branch-xyz
 
-**Warning:** NEVER use `git push --force` (or `git push -f`) in a branch that does not belong to you
-nor in a stable branch. Never, never, never!
+.. warning:: NEVER use `git push --force` (or `git push -f`) in a branch that does not belong to you
+             nor in a stable branch. Never, never, never!
 
 .. tip:: Remember that you can use `git status` at any step to know the current status of your branch
 .. tip:: You can create git alias to short some of theses commands, ask your colleagues around you
@@ -106,7 +108,7 @@ nor in a stable branch. Never, never, never!
 Create your first PR
 --------------------
 
-After you push your branch to your development repository, you will have an output like :
+After pushing your branch to your development repository, the output will look like:
 
 .. code-block:: console
 
@@ -124,11 +126,13 @@ After you push your branch to your development repository, you will have an outp
     * [new branch]      master-my_first_branch-xyz -> master-my_first_branch-xyz
     Branch 'master-my_first_branch-xyz' set up to track remote branch 'master-my_first_branch-xyz' from 'training-dev'.
 
-You can create your first pull request (PR) by either click in the link in the output of the push command.
-Or open in a browser your developement repository `https://github.com/xyz-odoo/technical-training-sandbox`.
-You will find a button to offers you to create a new pull request.
+There are two ways to create the PR:
 
-.. image:: guidelines_pr/media/pr_from_branch.png
+- Click on the link displayed in the output of the push command.
+- Open a browser in your development repository `https://github.com/xyz-odoo/technical-training-sandbox`.
+  A button will suggest the creation of a new pull request.
+
+  .. image:: guidelines_pr/media/pr_from_branch.png
 
 You will notice that your commit message is used as pull request message, this occurs if you have only 1 commit.
 If you have multiple commits, you can make a resume of the commit as PR message, or if you have few
@@ -140,7 +144,7 @@ commits, just copy/paste your commit messagges as the PR message.
 Test on the runbot
 ==================
 
-Odoo has his own Continuous integration (CI) server named `runbot <https://runbot.odoo.com/>`__. All
+Odoo has his own :abbr:`CI (Continuous integration)` server named `runbot <https://runbot.odoo.com/>`__. All
 the commits, branches and PR will be tested to avoid regressions or breaking the stable versions.
 All the runs that passed the tests will be deployed in their own servers with demo data.
 
