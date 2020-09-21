@@ -36,7 +36,7 @@ publicWidget.registry.SurveySessionChart = publicWidget.Widget.extend({
      *
      * @param {Object} questionStatistics object containing chart data (counts / labels / ...)
      */
-    updateChart: function (questionStatistics) {
+    updateChart: function (questionStatistics, newAttendeesCount) {
         if (questionStatistics) {
             this.questionStatistics = this._processQuestionStatistics(questionStatistics);
         }
@@ -51,6 +51,11 @@ publicWidget.registry.SurveySessionChart = publicWidget.Widget.extend({
                 }
                 this.chart.data.datasets[0].data[i] = value;
             }
+
+            if (newAttendeesCount) {
+                this.chart.config.options.scales.yAxes[0].ticks.max = newAttendeesCount + 1;
+            }
+
             this.chart.update();
         }
     },
@@ -157,6 +162,14 @@ publicWidget.registry.SurveySessionChart = publicWidget.Widget.extend({
                 },
                 tooltips: {
                     enabled: false,
+                },
+                layout: {
+                    padding: {
+                        left: 0,
+                        right: 0,
+                        top: 50,
+                        bottom: 0
+                    }
                 }
             },
         };
