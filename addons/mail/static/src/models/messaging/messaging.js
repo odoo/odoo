@@ -2,7 +2,7 @@ odoo.define('mail/static/src/models/messaging/messaging.js', function (require) 
 'use strict';
 
 const { registerNewModel } = require('mail/static/src/model/model_core.js');
-const { attr, many2one, one2one } = require('mail/static/src/model/model_field.js');
+const { attr, many2one, one2many, one2one } = require('mail/static/src/model/model_field.js');
 
 function factory(dependencies) {
 
@@ -158,17 +158,13 @@ function factory(dependencies) {
     }
 
     Messaging.fields = {
-        cannedResponses: attr({
-            default: {},
-        }),
+        cannedResponses: one2many('mail.canned_response'),
         chatWindowManager: one2one('mail.chat_window_manager', {
             default: [['create']],
             inverse: 'messaging',
             isCausal: true,
         }),
-        commands: attr({
-            default: {},
-        }),
+        commands: one2many('mail.channel_command'),
         currentPartner: one2one('mail.partner'),
         currentUser: one2one('mail.user'),
         device: one2one('mail.device', {
