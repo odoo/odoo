@@ -5,6 +5,7 @@ const { registerNewModel } = require('mail/static/src/model/model_core.js');
 const { attr, many2many, many2one, one2many, one2one } = require('mail/static/src/model/model_field.js');
 const throttle = require('mail/static/src/utils/throttle/throttle.js');
 const Timer = require('mail/static/src/utils/timer/timer.js');
+const mailUtils = require('mail.utils');
 
 function factory(dependencies) {
 
@@ -419,6 +420,41 @@ function factory(dependencies) {
         }
 
         /**
+         * Performs RPC on the route `/mail/get_suggested_recipients`.
+         *
+         * @static
+         * @param {Object} param0
+         * @param {string} param0.model
+         * @param {integer[]} param0.res_id
+         */
+        static async performRpcMailGetSuggestedRecipients({ model, res_ids }) {
+            const data = await this.env.services.rpc({
+                route: '/mail/get_suggested_recipients',
+                params: {
+                    model,
+                    res_ids,
+                },
+            });
+            for (const id in data) {
+                const recipientInfoList = data[id].map(recipientInfoData => {
+                    const [partner_id, emailInfo, reason] = recipientInfoData;
+                    const [name, email] = emailInfo && mailUtils.parseEmail(emailInfo);
+                    return {
+                        email,
+                        name,
+                        partner: [partner_id ? ['insert', { id: partner_id }] : ['unlink']],
+                        reason,
+                    };
+                });
+                this.insert({
+                    id: parseInt(id),
+                    model,
+                    suggestedRecipientInfoList: [['insert-and-replace', recipientInfoList]],
+                });
+            }
+        }
+
+        /**
          * @param {string} [stringifiedDomain='[]']
          * @returns {mail.thread_cache}
          */
@@ -459,6 +495,19 @@ function factory(dependencies) {
         }
 
         /**
+         * Fetches suggested recipients.
+         */
+        async fetchAndUpdateSuggestedRecipients() {
+            if (this.isTemporary) {
+                return;
+            }
+            return this.env.models['mail.thread'].performRpcMailGetSuggestedRecipients({
+                model: this.model,
+                res_ids: [this.id],
+            });
+        }
+
+        /**
          * Add current user to provided thread's followers.
          */
         async follow() {
@@ -472,6 +521,7 @@ function factory(dependencies) {
                 },
             }));
             this.refreshFollowers();
+            this.fetchAndUpdateSuggestedRecipients();
         }
 
         /**
@@ -1592,6 +1642,12 @@ function factory(dependencies) {
          */
         serverMessageUnreadCounter: attr({
             default: 0,
+        }),
+        /**
+         * Determines the `mail.suggested_recipient_info` concerning `this`.
+         */
+        suggestedRecipientInfoList: one2many('mail.suggested_recipient_info', {
+            inverse: 'thread',
         }),
         /**
          * Members that are currently typing something in the composer of this
