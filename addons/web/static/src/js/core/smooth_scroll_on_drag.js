@@ -55,7 +55,9 @@ const SmoothScrollOnDrag = Class.extend(mixins.ParentedMixin, {
      * @constructor
      * @param {Object} parent The parent widget that uses this class.
      * @param {jQuery} $element The element the smooth scroll on drag has to be set on.
-     * @param {jQuery} $scrollTarget The element the scroll will be triggered on.
+     * @param {jQuery} $target Container for drop element. $scrollTarget is this closest
+     *        scrollable parent element.
+     * @param {jQuery} $container The element the scroll will be triggered on.
      * @param {Object} [options={}]
      * @param {Object} [options.jQueryDraggableOptions={}] The configuration to be passed to
      *        the jQuery draggable function (all will be passed except scroll which will
@@ -91,19 +93,16 @@ const SmoothScrollOnDrag = Class.extend(mixins.ParentedMixin, {
      *        will be taken into account when triggering scroll at the left side of the
      *        $scrollTarget.
      */
-    init(parent, $element, $scrollTarget, options = {}) {
+    init(parent, $element, $target, options = {}) {
         mixins.ParentedMixin.init.call(this);
         this.setParent(parent);
 
         this.$element = $element;
-        this.$scrollTarget = $scrollTarget;
+        this.$target = $target;
         this.options = options;
 
         // Setting optional options to their default value if not provided
         this.options.jQueryDraggableOptions = this.options.jQueryDraggableOptions || {};
-        if (!this.options.jQueryDraggableOptions.cursorAt) {
-            this.$element.on('mousedown.smooth_scroll', this._onElementMouseDown.bind(this));
-        }
         this.options.scrollOffsetThreshold = this.options.scrollOffsetThreshold || 150;
         this.options.scrollStep = this.options.scrollStep || 20;
         this.options.scrollTimerInterval = this.options.scrollTimerInterval || 5;
@@ -138,7 +137,6 @@ const SmoothScrollOnDrag = Class.extend(mixins.ParentedMixin, {
      */
     destroy: function () {
         mixins.ParentedMixin.destroy.call(this);
-        this.$element.off('.smooth_scroll');
         this._stopSmoothScroll();
     },
 
@@ -252,13 +250,13 @@ const SmoothScrollOnDrag = Class.extend(mixins.ParentedMixin, {
 
         // If this.$scrollTarget is the html tag, we need to take the scroll position in to account
         // as offsets positions are calculated relative to the document (thus <html>).
+        const scrollTargetScrollTop = this.$scrollTarget.scrollTop();
+        const scrollTargetScrollLeft = this.$scrollTarget.scrollLeft();
+        visibleOffset.top -= scrollTargetScrollTop;
+        visibleOffset.left -= scrollTargetScrollLeft;
         if (this.scrollTargetIsDocument) {
-            const scrollTargetScrollTop = this.$scrollTarget.scrollTop();
-            const scrollTargetScrollLeft = this.$scrollTarget.scrollLeft();
-            visibleOffset.top -= scrollTargetScrollTop;
-            visibleOffset.right += scrollTargetScrollLeft;
             visibleOffset.bottom += scrollTargetScrollTop;
-            visibleOffset.left -= scrollTargetScrollLeft;
+            visibleOffset.right += scrollTargetScrollLeft;
         }
 
         const scrollDecelerator = {
@@ -317,20 +315,6 @@ const SmoothScrollOnDrag = Class.extend(mixins.ParentedMixin, {
     //--------------------------------------------------------------------------
 
     /**
-     * Called when mouse button is down on this.$element.
-     * Updates the mouse cursor position variable.
-     *
-     * @private
-     * @param {Object} ev The jQuery mousedown handler event parameter.
-     */
-    _onElementMouseDown(ev) {
-        const elementOffset = $(ev.target).offset();
-        this.options.jQueryDraggableOptions.cursorAt = {
-            top: ev.pageY - elementOffset.top,
-            left: ev.pageX - elementOffset.left,
-        };
-    },
-    /**
      * Called when dragging the element.
      * Updates the position options and call the provided callback if any.
      *
@@ -356,6 +340,20 @@ const SmoothScrollOnDrag = Class.extend(mixins.ParentedMixin, {
      * @param {Function} onDragStartCallBack The jQuery drag callback.
      */
     _onSmoothDragStart(ev, ui, onDragStartCallBack) {
+        const elementOffset = $(ev.target).offset();
+        this.options.jQueryDraggableOptions.cursorAt = {
+            top: ev.pageY - elementOffset.top,
+            left: ev.pageX - elementOffset.left,
+        };
+
+        let scrollTarget = this.$target[0];
+        while (scrollTarget.parentNode && window.getComputedStyle(scrollTarget).overflow !== 'auto') {
+            scrollTarget = scrollTarget.parentNode;
+        }
+        this.$scrollTarget = $(scrollTarget);
+
+        console.log(scrollTarget);
+
         this.scrollTargetIsDocument = this.$scrollTarget.is('html');
         this.scrollTargetIsParent = this.$scrollTarget.get(0).contains(this.$element.get(0));
         this._updatePositionOptions(ui);
