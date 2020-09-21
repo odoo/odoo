@@ -79,6 +79,22 @@ function factory(dependencies) {
         }
 
         /**
+         * @private
+         * @returns {mail.partner[]}
+         */
+        _computeRecipients() {
+            const recipients = [...this.mentionedPartners];
+            if (this.thread) {
+                for (const recipient of this.thread.suggestedRecipientInfoList) {
+                    if (recipient.isSelected) {
+                        recipients.push(recipient.partner);
+                    }
+                }
+            }
+            return [['replace', recipients]];
+        }
+
+        /**
          * Open the full composer modal.
          */
         async openFullComposer() {
@@ -89,8 +105,7 @@ function factory(dependencies) {
                 default_body: mailUtils.escapeAndCompactTextContent(this.textInputContent),
                 default_is_log: this.isLog,
                 default_model: this.thread.model,
-                /* FIXME would need to use suggested_partners here task-2280157 */
-                // default_partner_ids: partnerIds,
+                default_partner_ids: this.recipients.map(partner => partner.id),
                 default_res_id: this.thread.id,
                 mail_post_autofollow: true,
             };
@@ -135,8 +150,11 @@ function factory(dependencies) {
             let postData = {
                 attachment_ids: this.attachments.map(attachment => attachment.id),
                 body,
-                partner_ids: this.mentionedPartners.map(partner => partner.id),
+                context: {
+                    mail_post_autofollow: true,
+                },
                 message_type: 'comment',
+                partner_ids: this.recipients.map(partner => partner.id),
             };
             if (this.subjectContent) {
                 postData.subject = this.subjectContent;
@@ -152,7 +170,7 @@ function factory(dependencies) {
                     model: 'mail.channel',
                     method: command ? 'execute_command' : 'message_post',
                     args: [thread.id],
-                    kwargs: postData
+                    kwargs: postData,
                 }));
             } else {
                 Object.assign(postData, {
@@ -162,12 +180,12 @@ function factory(dependencies) {
                     model: thread.model,
                     method: 'message_post',
                     args: [thread.id],
-                    kwargs: postData
+                    kwargs: postData,
                 }));
                 const [messageData] = await this.async(() => this.env.services.rpc({
                     model: 'mail.message',
                     method: 'message_format',
-                    args: [[messageId]]
+                    args: [[messageId]],
                 }));
                 this.env.models['mail.message'].insert(Object.assign(
                     {},
@@ -184,6 +202,8 @@ function factory(dependencies) {
             for (const threadView of this.thread.threadViews) {
                 threadView.addComponentHint('current-partner-just-posted-message', { messageId });
             }
+            thread.refreshFollowers();
+            thread.fetchAndUpdateSuggestedRecipients();
             this._reset();
         }
 
@@ -612,6 +632,33 @@ function factory(dependencies) {
         mentionedPartners: many2many('mail.partner', {
             compute: '_computeMentionedPartners',
             dependencies: ['textInputContent'],
+        }),
+        /**
+         * Determines the extra `mail.partner` (on top of existing followers)
+         * that will receive the message being composed by `this`, and that will
+         * also be added as follower of `this.thread`.
+         */
+        recipients: many2many('mail.partner', {
+            compute: '_computeRecipients',
+            dependencies: [
+                'mentionedPartners',
+                'threadSuggestedRecipientInfoListIsSelected',
+                // FIXME thread.suggestedRecipientInfoList.partner should be a
+                // dependency, but it is currently impossible to have a related
+                // m2o through a m2m. task-2261221
+            ]
+        }),
+        /**
+         * Serves as compute dependency.
+         */
+        threadSuggestedRecipientInfoList: many2many('mail.suggested_recipient_info', {
+            related: 'thread.suggestedRecipientInfoList',
+        }),
+        /**
+         * Serves as compute dependency.
+         */
+        threadSuggestedRecipientInfoListIsSelected: attr({
+            related: 'threadSuggestedRecipientInfoList.isSelected',
         }),
         /**
          * Composer subject input content.
