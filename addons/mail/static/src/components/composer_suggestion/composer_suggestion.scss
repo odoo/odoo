@@ -2,13 +2,13 @@
 // Layout
 // ------------------------------------------------------------------
 
-.o_PartnerMentionSuggestion {
+.o_ComposerSuggestion {
     display: flex;
     width: map-get($sizes, 100);
     padding: map-get($spacers, 2) map-get($spacers, 4);
 }
 
-.o_PartnerMentionSuggestion_name {
+.o_ComposerSuggestion_part1 {
     padding-inline-end: map-get($spacers, 2);
 }
 
@@ -16,11 +16,11 @@
 // Style
 // ------------------------------------------------------------------
 
-.o_PartnerMentionSuggestion_email {
-    font-style: italic;
-    color: $gray-600;
+.o_ComposerSuggestion_part1 {
+    font-weight: $font-weight-bold;
 }
 
-.o_PartnerMentionSuggestion_name {
-    font-weight: $font-weight-bold;
+.o_ComposerSuggestion_part2 {
+    font-style: italic;
+    color: $gray-600;
 }

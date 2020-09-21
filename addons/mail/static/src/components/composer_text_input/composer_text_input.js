@@ -4,7 +4,7 @@ odoo.define('mail/static/src/components/composer_text_input/composer_text_input.
 const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
 
 const components = {
-    PartnerMentionSuggestion: require('mail/static/src/components/partner_mention_suggestion/partner_mention_suggestion.js'),
+    ComposerSuggestionList: require('mail/static/src/components/composer_suggestion_list/composer_suggestion_list.js'),
 };
 const { markEventHandled } = require('mail/static/src/utils/utils.js');
 
@@ -208,10 +208,10 @@ class ComposerTextInput extends Component {
     _onKeydownTextarea(ev) {
         switch (ev.key) {
             case 'Escape':
-                if (this.composer.hasSuggestedPartners) {
+                if (this.composer.hasSuggestions) {
                     ev.preventDefault();
-                    this.composer.closeMentionSuggestions();
-                    markEventHandled(ev, 'ComposerTextInput.closeMentionSuggestions');
+                    this.composer.closeSuggestions();
+                    markEventHandled(ev, 'ComposerTextInput.closeSuggestions');
                 }
                 break;
             // UP, DOWN, TAB: prevent moving cursor if navigation in mention suggestions
@@ -222,7 +222,7 @@ class ComposerTextInput extends Component {
             case 'Home':
             case 'End':
             case 'Tab':
-                if (this.composer.hasSuggestedPartners) {
+                if (this.composer.hasSuggestions) {
                     // We use preventDefault here to avoid keys native actions but actions are handled in keyUp
                     ev.preventDefault();
                 }
@@ -239,7 +239,7 @@ class ComposerTextInput extends Component {
      * @param {KeyboardEvent} ev
      */
     _onKeydownTextareaEnter(ev) {
-        if (this.composer.hasSuggestedPartners) {
+        if (this.composer.hasSuggestions) {
             ev.preventDefault();
             return;
         }
@@ -292,70 +292,48 @@ class ComposerTextInput extends Component {
                 break;
             // ENTER, HOME, END, UP, DOWN, PAGE UP, PAGE DOWN, TAB: check if navigation in mention suggestions
             case 'Enter':
-                if (this.composer.hasSuggestedPartners) {
-                    if (this.composer.activeSuggestedPartner) {
-                        this.composer.insertMentionedPartner(this.composer.activeSuggestedPartner);
-                        this.composer.closeMentionSuggestions();
-                        this.focus();
-                    }
+                if (this.composer.hasSuggestions) {
+                    this.composer.insertSuggestion();
+                    this.composer.closeSuggestions();
+                    this.focus();
                 }
                 break;
             case 'ArrowUp':
             case 'PageUp':
-                if (this.composer.hasSuggestedPartners) {
-                    this.composer.setPreviousSuggestedPartnerActive();
+                if (this.composer.hasSuggestions) {
+                    this.composer.setPreviousSuggestionActive();
                 }
                 break;
             case 'ArrowDown':
             case 'PageDown':
-                if (this.composer.hasSuggestedPartners) {
-                    this.composer.setNextSuggestedPartnerActive();
+                if (this.composer.hasSuggestions) {
+                    this.composer.setNextSuggestionActive();
                 }
                 break;
             case 'Home':
-                if (this.composer.hasSuggestedPartners) {
-                    this.composer.setFirstSuggestedPartnerActive();
+                if (this.composer.hasSuggestions) {
+                    this.composer.setFirstSuggestionActive();
                 }
                 break;
             case 'End':
-                if (this.composer.hasSuggestedPartners) {
-                    this.composer.setLastSuggestedPartnerActive();
+                if (this.composer.hasSuggestions) {
+                    this.composer.setLastSuggestionActive();
                 }
                 break;
             case 'Tab':
-                if (this.composer.hasSuggestedPartners) {
+                if (this.composer.hasSuggestions) {
                     if (ev.shiftKey) {
-                        this.composer.setPreviousSuggestedPartnerActive();
+                        this.composer.setPreviousSuggestionActive();
                     } else {
-                        this.composer.setNextSuggestedPartnerActive();
+                        this.composer.setNextSuggestionActive();
                     }
                 }
                 break;
             // Otherwise, check if a mention is typed
             default:
                 this.saveStateInStore();
-                this.composer._detectDelimiter();
+                this.composer.detectSuggestionDelimiter();
         }
-    }
-
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onPartnerMentionSuggestionClicked(ev) {
-        this.composer.insertMentionedPartner(ev.detail.partner);
-        this.composer.closeMentionSuggestions();
-        this.focus();
-    }
-
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onPartnerMentionSuggestionMouseOver(ev) {
-        this.composer.update({
-            activeSuggestedPartner: [['link', ev.detail.partner]],
-        });
     }
 
 }

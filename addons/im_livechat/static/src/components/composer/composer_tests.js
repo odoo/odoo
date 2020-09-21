@@ -29,7 +29,7 @@ QUnit.module('composer_tests.js', {
         };
 
         this.start = async params => {
-            let { env, widget } = await start(Object.assign({}, params, {
+            const { env, widget } = await start(Object.assign({}, params, {
                 data: this.data,
             }));
             this.env = env;
@@ -38,13 +38,6 @@ QUnit.module('composer_tests.js', {
     },
     afterEach() {
         afterEach(this);
-        if (this.component) {
-            this.component.destroy();
-        }
-        if (this.widget) {
-            this.widget.destroy();
-        }
-        this.env = undefined;
     },
 });
 
