@@ -5,7 +5,7 @@ odoo.define('web.test.x2many', function (require) {
     var inc;
 
     tour.register('widget_x2many', {
-        url: '/web?debug=assets#action=test_new_api.action_discussions',
+        url: '/web?debug=1#action=test_new_api.action_discussions',
         test: true,
     }, [
     /////////////////////////////////////////////////////////////////////////////////////////////
