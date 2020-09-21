@@ -15,7 +15,7 @@ tour.register("snippet_version", {
     run: "drag_and_drop #wrap",
 }, {
     content: "Drop s_text_image snippet",
-    trigger: '#oe_snippets .oe_snippet:has(.s_text_image) .oe_snippet_thumbnail',
+    trigger: '#oe_snippets .oe_snippet:has(.s_text_image) .oe_snippet_thumbnail:not(.o_we_already_dragging)',
     run: "drag_and_drop #wrap",
 }, {
     content: "Test t-snippet and t-snippet-call: snippets have data-snippet set",
