@@ -1442,7 +1442,11 @@ snippetOptions.registry.layout_column = snippetOptions.SnippetOptionWidget.exten
         const previousNbColumns = this.$('> .row').children().length;
         let $row = this.$('> .row');
         if (!$row.length) {
-            $row = this.$target.contents().wrapAll($('<div class="row"><div class="col-lg-12"/></div>')).parent().parent();
+            const wrapperHtml = '<div class="row"><div class="col-lg-12"/></div>';
+            const context = this.wysiwyg.editor;
+            const target = this.$target[0];
+            const row = await this.editorHelpers.wrapContents(context, target, wrapperHtml);
+            $row = $(this.editorHelpers.getDomNodes(row));
         }
 
         const nbColumns = parseInt(widgetValue);
