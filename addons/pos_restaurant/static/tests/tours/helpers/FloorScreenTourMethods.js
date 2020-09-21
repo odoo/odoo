@@ -140,6 +140,15 @@ odoo.define('pos_restaurant.tour.FloorScreenTourMethods', function (require) {
                 },
             ];
         }
+        tableIsNotSelected(name) {
+            return [
+                {
+                    content: `table '${name}' is not selected`,
+                    trigger: `.floor-map .table:not(.selected) .label:contains("${name}")`,
+                    run: function () {},
+                },
+            ];
+        }
     }
 
     class Execute {}
