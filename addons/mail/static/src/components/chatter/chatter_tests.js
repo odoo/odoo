@@ -323,12 +323,12 @@ QUnit.test('should not display user notification messages in chatter', async fun
     assert.expect(1);
 
     this.data['res.partner'].records.push({ id: 100 });
-    this.data['mail.message'].records = [{
+    this.data['mail.message'].records.push({
         id: 102,
         message_type: 'user_notification',
         model: 'res.partner',
         res_id: 100,
-    }];
+    });
     await this.start();
     const chatter = this.env.models['mail.chatter'].create({
         threadId: 100,

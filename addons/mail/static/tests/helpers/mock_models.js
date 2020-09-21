@@ -170,6 +170,13 @@ class MockModels {
                 },
                 records: [],
             },
+            'mail.shortcode': {
+                fields: {
+                    source: { type: 'char' },
+                    substitution: { type: 'char' },
+                },
+                records: [],
+            },
             'res.country': {
                 fields: {
                     code: { string: "Code", type: 'char' },
