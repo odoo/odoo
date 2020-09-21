@@ -68,7 +68,7 @@ snippetsEditor.SnippetsMenu.include({
      * @param {boolean} show
      */
     toggleMegaMenuSnippets: function (show) {
-        setTimeout(() => this._mutex.exec(this._disableAllSnippetEditors.bind(this)));
+        setTimeout(() => this._enableLastEditor());
 
         $('#snippet_mega_menu').toggleClass('d-none', !show);
     },

@@ -39,7 +39,7 @@ snippetOptions.registry.progress = snippetOptions.SnippetOptionWidget.extend({
             $text.insertBefore(this.$target.find('.progress'));
         }
 
-        if (previewMode === false) await this._refreshTarget();
+        if (previewMode === false) await this._updateChangesInWysiwyg();
     },
     /**
      * Sets the progress bar value.
@@ -57,7 +57,7 @@ snippetOptions.registry.progress = snippetOptions.SnippetOptionWidget.extend({
         $progressBar.attr("aria-valuenow", value);
         $progressBar.css("width", value + "%");
 
-        if (previewMode === false) await this._refreshTarget();
+        if (previewMode === false) await this._updateChangesInWysiwyg();
     },
 
     //--------------------------------------------------------------------------

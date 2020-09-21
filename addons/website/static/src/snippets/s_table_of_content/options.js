@@ -29,7 +29,7 @@ snippetOptions.registry.TableOfContent = snippetOptions.SnippetOptionWidget.exte
             }, 200);
         });
         this.observer.observe(this.$target[0], config);
-        await this._refreshTarget();
+        await this._updateChangesInWysiwyg();
         this._generateNav();
         return _super(...arguments);
     },
@@ -103,7 +103,7 @@ snippetOptions.registry.TableOfContentNavbar = snippetOptions.SnippetOptionWidge
             $mainContent.removeClass('col-lg-9').addClass('col-lg-12');
         }
 
-        if (previewMode === false) await this._refreshTarget(this.$target.parent());
+        if (previewMode === false) await this._updateChangesInWysiwyg(this.$target.parent());
     },
 
     //--------------------------------------------------------------------------

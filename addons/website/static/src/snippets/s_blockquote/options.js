@@ -35,7 +35,7 @@ snippetOptions.registry.Blockquote = snippetOptions.SnippetOptionWidget.extend({
         this.$target.find('.s_blockquote_icon').toggleClass('d-none', widgetValue === 'minimalist');
         this.$target.find('footer').toggleClass('d-none', widgetValue === 'minimalist');
 
-        if (previewMode === false) await this._refreshTarget();
+        if (previewMode === false) await this._updateChangesInWysiwyg();
     },
 });
 });

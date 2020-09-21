@@ -361,7 +361,7 @@ snippetOptions.registry.WebsiteFormEditor = FormEditor.extend({
         if (!this.$target[0].dataset.model_name) {
             proms.push((async () => {
                 await this._applyFormModel();
-                await this._refreshTarget();
+                await this._updateChangesInWysiwyg();
             })());
         }
 
@@ -454,7 +454,7 @@ snippetOptions.registry.WebsiteFormEditor = FormEditor.extend({
         }
         this._addHiddenField(value, fieldName);
 
-        if(previewMode === false) await this._refreshTarget();
+        if(previewMode === false) await this._updateChangesInWysiwyg();
     },
     /**
      * Changes the onSuccess event.
@@ -470,7 +470,7 @@ snippetOptions.registry.WebsiteFormEditor = FormEditor.extend({
             this.showEndMessage = false;
             this.$message.remove();
         }
-        if(previewMode === false) await this._refreshTarget();
+        if(previewMode === false) await this._updateChangesInWysiwyg();
     },
     /**
      * Select the model to create with the form.
@@ -481,7 +481,7 @@ snippetOptions.registry.WebsiteFormEditor = FormEditor.extend({
         }
         await this._applyFormModel(parseInt(value));
         this.rerender = true;
-        if(previewMode === false) await this._refreshTarget();
+        if(previewMode === false) await this._updateChangesInWysiwyg();
     },
     /**
      * @override
@@ -491,7 +491,7 @@ snippetOptions.registry.WebsiteFormEditor = FormEditor.extend({
         if (params.name === 'field_mark_select') {
             this._setLabelsMark();
         }
-        if(previewMode === false) await this._refreshTarget();
+        if(previewMode === false) await this._updateChangesInWysiwyg();
     },
     /**
      * Set the mark string on the form
@@ -499,7 +499,7 @@ snippetOptions.registry.WebsiteFormEditor = FormEditor.extend({
     setMark: async function (previewMode, value, params) {
         this.$target[0].dataset.mark = value.trim();
         this._setLabelsMark();
-        if(previewMode === false) await this._refreshTarget();
+        if(previewMode === false) await this._updateChangesInWysiwyg();
     },
     /**
      * Toggle the recaptcha legal terms
@@ -516,7 +516,7 @@ snippetOptions.registry.WebsiteFormEditor = FormEditor.extend({
             legal.setAttribute('contentEditable', true);
             this.$target.find('.s_website_form_submit').before(legal);
         }
-        if(previewMode === false) await this._refreshTarget();
+        if(previewMode === false) await this._updateChangesInWysiwyg();
     },
 
     //--------------------------------------------------------------------------
@@ -780,7 +780,7 @@ snippetOptions.registry.WebsiteFieldEditor = FieldEditor.extend({
     cleanForSave: async function () {
         this.$target[0].querySelectorAll('#editable_select').forEach(el => el.remove());
         this._renderSelect(true);
-        await this._refreshTarget();
+        await this._updateChangesInWysiwyg();
     },
     /**
      * @override
@@ -829,7 +829,7 @@ snippetOptions.registry.WebsiteFieldEditor = FieldEditor.extend({
         this._setActiveProperties(field);
         await this._replaceField(field);
         this.rerender = true;
-        if(previewMode === false) await this._refreshTarget();
+        if(previewMode === false) await this._updateChangesInWysiwyg();
     },
     /**
      * Replace the current field with the existing field selected.
@@ -843,7 +843,7 @@ snippetOptions.registry.WebsiteFieldEditor = FieldEditor.extend({
         this._setActiveProperties(field);
         await this._replaceField(field);
         this.rerender = true;
-        if(previewMode === false) await this._refreshTarget();
+        if(previewMode === false) await this._updateChangesInWysiwyg();
     },
     /**
      * Set the name of the field on the label
@@ -857,14 +857,14 @@ snippetOptions.registry.WebsiteFieldEditor = FieldEditor.extend({
             }
             this.$target[0].querySelectorAll('.s_website_form_input').forEach(el => el.name = value);
         }
-        if(previewMode === false) await this._refreshTarget();
+        if(previewMode === false) await this._updateChangesInWysiwyg();
     },
     /*
     * Set the placeholder of the input
     */
     setPlaceholder: async function (previewMode, value, params) {
         this._setPlaceholder(value);
-        if(previewMode === false) await this._refreshTarget();
+        if(previewMode === false) await this._updateChangesInWysiwyg();
     },
     /**
      * Replace the field with the same field having the label in a different position.
@@ -874,7 +874,7 @@ snippetOptions.registry.WebsiteFieldEditor = FieldEditor.extend({
         field.formatInfo.labelPosition = value;
         await this._replaceField(field);
         this.rerender = true;
-        if(previewMode === false) await this._refreshTarget();
+        if(previewMode === false) await this._updateChangesInWysiwyg();
     },
     selectType: async function (previewMode, value, params) {
         const field = this._getActiveField();
@@ -894,7 +894,7 @@ snippetOptions.registry.WebsiteFieldEditor = FieldEditor.extend({
             }
         });
         target.dataset.display = value;
-        if(previewMode === false) await this._refreshTarget();
+        if(previewMode === false) await this._updateChangesInWysiwyg();
     },
     /**
      * Set the field as required or not
@@ -907,7 +907,7 @@ snippetOptions.registry.WebsiteFieldEditor = FieldEditor.extend({
             optionName: 'WebsiteFormEditor',
             name: 'field_mark',
         });
-        if(previewMode === false) await this._refreshTarget();
+        if(previewMode === false) await this._updateChangesInWysiwyg();
     },
 
     //----------------------------------------------------------------------
@@ -1288,7 +1288,7 @@ snippetOptions.registry.AddFieldForm = FormEditor.extend({
             $element: $(htmlField),
             saveTarget: true,
         });
-        if(previewMode === false) await this._refreshTarget();
+        if(previewMode === false) await this._updateChangesInWysiwyg();
     },
 });
 
@@ -1312,7 +1312,7 @@ snippetOptions.registry.AddField = FieldEditor.extend({
                 $target: this.$target,
             },
         });
-        if(previewMode === false) await this._refreshTarget();
+        if(previewMode === false) await this._updateChangesInWysiwyg();
     },
 });
 

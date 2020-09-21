@@ -124,7 +124,7 @@ snippetOptions.registry.gallery = snippetOptions.SnippetOptionWidget.extend({
             dialog.on('closed', this, () => resolve());
             dialog.open();
         });
-        await this._refreshTarget();
+        await this._updateChangesInWysiwyg();
     },
     /**
      * Allows to change the number of columns when displaying images with a
@@ -176,7 +176,7 @@ snippetOptions.registry.gallery = snippetOptions.SnippetOptionWidget.extend({
             }
         });
         this.$target.css('height', '');
-        if (previewMode === false) await this._refreshTarget();
+        if (previewMode === false) await this._updateChangesInWysiwyg();
     },
     /**
      * Displays the images with the "masonry" layout.
@@ -213,7 +213,7 @@ snippetOptions.registry.gallery = snippetOptions.SnippetOptionWidget.extend({
             });
             $lowest.append(imgs.shift());
         }
-        if (previewMode === false) await this._refreshTarget();
+        if (previewMode === false) await this._updateChangesInWysiwyg();
     },
     /**
      * Allows to change the images layout. @see grid, masonry, nomode, slideshow
@@ -222,7 +222,7 @@ snippetOptions.registry.gallery = snippetOptions.SnippetOptionWidget.extend({
      */
     mode: async function (previewMode, widgetValue, params) {
         this._setMode(previewMode, widgetValue, params);
-        if (previewMode === false) await this._refreshTarget();
+        if (previewMode === false) await this._updateChangesInWysiwyg();
     },
     /**
      * Displays the images with the standard layout: floating images.
@@ -242,7 +242,7 @@ snippetOptions.registry.gallery = snippetOptions.SnippetOptionWidget.extend({
         });
 
         this._replaceContent($row);
-        if (previewMode === false) await this._refreshTarget();
+        if (previewMode === false) await this._updateChangesInWysiwyg();
     },
     /**
      * Allows to remove all images. Restores the snippet to the way it was when
@@ -264,7 +264,7 @@ snippetOptions.registry.gallery = snippetOptions.SnippetOptionWidget.extend({
             class: ' fa fa-plus-circle',
         });
         this._replaceContent($addImg.append($icon).append($text), false);
-        await this._refreshTarget();
+        await this._updateChangesInWysiwyg();
     },
     /**
      * Displays the images with a "slideshow" layout.
@@ -298,7 +298,7 @@ snippetOptions.registry.gallery = snippetOptions.SnippetOptionWidget.extend({
         this.$target.off('slide.bs.carousel').off('slid.bs.carousel');
         this.$('li.fa').off('click');
 
-        if (previewMode === false) await this._refreshTarget();
+        if (previewMode === false) await this._updateChangesInWysiwyg();
     },
 
     //--------------------------------------------------------------------------
@@ -359,7 +359,7 @@ snippetOptions.registry.gallery = snippetOptions.SnippetOptionWidget.extend({
                     ifInactiveOptions: true,
                 });
             }
-            await this._refreshTarget();
+            await this._updateChangesInWysiwyg();
         }
     },
 

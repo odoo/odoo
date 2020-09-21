@@ -130,7 +130,7 @@ snippetOptions.registry.newsletter_popup = snippetOptions.registry.mailing_list_
             this.$target.data('content', $modal.find('.modal-body').html());
             this.$target.html('');
 
-            await this._refreshTarget();
+            await this._updateChangesInWysiwyg();
         }
     },
     /**

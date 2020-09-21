@@ -92,7 +92,7 @@ var SnippetEditor = Widget.extend({
         this.$snippetBlock.data('snippet-editor', this);
         // The following class is a hack. There is a possibility of the
         // `$snippetBlock` to be destroyed at some point.
-        // For example: The method `_refreshTarget` of an "editor option" migth
+        // For example: The method `_updateChangesInWysiwyg` of an "editor option" migth
         // erase $snippetBlock that are children on the current "editor option".
         // In that case, the editor of the child will be erased with the method
         // `updateCurrentSnippetEditorOverlay` because it's target will not be
@@ -370,7 +370,7 @@ var SnippetEditor = Widget.extend({
 
             await new Promise((resolve) => this.trigger_up('snippet_removed', {onFinish: resolve, context: context}));
             this.destroy();
-            const childs = this.snippetMenu.getChildsSnippetBlock(this.$snippetBlock);
+            const childs = this.snippetMenu.getChildrenSnippetBlock(this.$snippetBlock);
             for (const child of childs) {
                 const snippetEditor = $(child).data('snippet-editor');
                 if (snippetEditor) {
@@ -482,8 +482,6 @@ var SnippetEditor = Widget.extend({
 
         const vNodes = await this.editorHelpers.insertHtml(this.wysiwyg.editor, $clonedContent[0].outerHTML, this.$snippetBlock[0], 'AFTER');
         const $clone = $(this.editorHelpers.getDomNodes(vNodes)[0]);
-
-        // todo: handle history undo in jabberwock
 
         await new Promise(resolve => {
             this.trigger_up('call_for_each_child_snippet', {
@@ -608,7 +606,7 @@ var SnippetEditor = Widget.extend({
     /**
      * Reset the options target in case the reference is outdated.
      *
-     * This can happend with the method `_refreshTarget` on a `SnippetOption`.
+     * This can happend with the method `_updateChangesInWysiwyg` on a `SnippetOption`.
      *
      * @private
      */
@@ -837,7 +835,6 @@ var SnippetEditor = Widget.extend({
     _onRemoveClick: function (ev) {
         ev.preventDefault();
         ev.stopPropagation();
-        // todo: handle history undo in jabberwock
         this.removeSnippet();
     },
     /**
@@ -1149,7 +1146,7 @@ var SnippetsMenu = Widget.extend({
      * - Remove the 'contentEditable' attributes
      */
     cleanForSave: async function () {
-        await this._disableAllSnippetEditors();
+        await this._enableLastEditor();
         this.trigger_up('ready_to_clean_for_save');
         await this._destroyEditors();
     },
@@ -1200,7 +1197,7 @@ var SnippetsMenu = Widget.extend({
      * @param {JQuery} $snippetBlock
      * @returns {JQuery}
      */
-    getChildsSnippetBlock($snippetBlock) {
+    getChildrenSnippetBlock($snippetBlock) {
         return $snippetBlock.add(globalSelector.all($snippetBlock));
     },
     /**
@@ -1461,10 +1458,19 @@ var SnippetsMenu = Widget.extend({
      *
      * @private
      */
-    _disableAllSnippetEditors() {
-        for (const currentSnippetEditor of this.snippetEditors) {
-            currentSnippetEditor.toggleOverlay(false, false);
-        }
+    _enableLastEditor() {
+        this._mutex.exec(() => {
+            // First disable all snippet editors...
+            for (const currentSnippetEditor of this.snippetEditors) {
+                currentSnippetEditor.toggleOverlay(false, false);
+            }
+            // ... then enable the last snippet editor
+            const editorToEnable = this.snippetEditors.find(editor => editor.isSticky());
+            if (editorToEnable) {
+                editorToEnable.toggleOverlay(true, true);
+                editorToEnable.toggleOptions(true);
+            }
+        });
     },
     /**
      * @private
@@ -1506,7 +1512,7 @@ var SnippetsMenu = Widget.extend({
      *                     and/or the callback is async)
      */
     _callForEachChildSnippet: function ($snippetBlock, callback) {
-        const defs = _.map(this.getChildsSnippetBlock($snippetBlock), async (child) => {
+        const defs = _.map(this.getChildrenSnippetBlock($snippetBlock), async (child) => {
             const $childSnippet = $(child);
             const snippetEditor = await this._getSnippetEditor($childSnippet);
             if (snippetEditor) {
@@ -1950,7 +1956,7 @@ var SnippetsMenu = Widget.extend({
                         return;
                     }
 
-                    self._mutex.exec(self._disableAllSnippetEditors.bind(self));
+                    self._enableLastEditor();
                     self._activateInsertionZones($selectorSiblings, $selectorChildren);
 
                     self.$editor.find('.oe_drop_zone').droppable({
@@ -1996,16 +2002,13 @@ var SnippetsMenu = Widget.extend({
 
                         if (prev) {
                             $snippetToInsert.detach();
-                            // todo: handle history in jabberwock
                             $snippetToInsert.insertAfter(prev);
                         } else if (next) {
                             $snippetToInsert.detach();
-                            // todo: handle history in jabberwock
                             $snippetToInsert.insertBefore(next);
                         } else {
                             var $parent = $snippetToInsert.parent();
                             $snippetToInsert.detach();
-                            // todo: handle history in jabberwock
                             $parent.prepend($snippetToInsert);
                         }
 
@@ -2252,7 +2255,7 @@ var SnippetsMenu = Widget.extend({
      * @private
      */
     _onDeactivateSnippet: function () {
-        this._mutex.exec(this._disableAllSnippetEditors.bind(this));
+        this._enableLastEditor();
     },
     /**
      * Called when a snippet has moved in the page.
@@ -2354,14 +2357,14 @@ var SnippetsMenu = Widget.extend({
         if (isVisible) {
             return this._activateSnippet($snippet);
         } else {
-            return this._disableAllSnippetEditors();
+            return this._enableLastEditor();
         }
     },
     /**
      * @private
      */
     _onBlocksTabClick: async function (ev) {
-        await this._mutex.exec(this._disableAllSnippetEditors.bind(this));
+        await this._enableLastEditor();
         this._updateLeftPanelContent({
             content: [],
             tab: this.tabs.BLOCKS,
@@ -2451,7 +2454,7 @@ var SnippetsMenu = Widget.extend({
      * @private
      */
     _onReloadSnippetTemplate: async function (ev) {
-        await this._mutex.exec(this._disableAllSnippetEditors.bind(this));
+        await this._enableLastEdito();
         await this._loadSnippetsTemplates(true);
     },
     /**
@@ -2546,7 +2549,7 @@ var SnippetsMenu = Widget.extend({
      */
     _onSnippetOptionVisibilityUpdate: async function (ev) {
         if (!ev.data.show) {
-            this._mutex.exec(this._disableAllSnippetEditors.bind(this));
+            this._enableLastEditor();
         }
         await this._updateInvisibleDOM(); // Re-render to update status
     },

@@ -12,21 +12,21 @@ snippetOptions.registry.NavTabs = snippetOptions.SnippetOptionWidget.extend({
     start: async function () {
         this._findLinksAndPanes();
         await this._super.apply(this, arguments);
-        await this._refreshTarget();
+        await this._updateChangesInWysiwyg();
     },
     /**
      * @override
      */
     onBuilt: async function () {
         this._generateUniqueIDs();
-        await this._refreshTarget();
+        await this._updateChangesInWysiwyg();
     },
     /**
      * @override
      */
     onClone: async function () {
         this._generateUniqueIDs();
-        this._refreshTarget();
+        this._updateChangesInWysiwyg();
     },
 
     //--------------------------------------------------------------------------
@@ -49,7 +49,7 @@ snippetOptions.registry.NavTabs = snippetOptions.SnippetOptionWidget.extend({
         $navItem.insertAfter($activeItem);
         $tabPane.insertAfter($activePane);
 
-        if (previewMode === false) await this._refreshTarget();
+        if (previewMode === false) await this._updateChangesInWysiwyg();
 
         this._generateUniqueIDs();
 
@@ -80,7 +80,7 @@ snippetOptions.registry.NavTabs = snippetOptions.SnippetOptionWidget.extend({
             $next.tab('show');
         });
 
-        if (previewMode === false) await this._refreshTarget();
+        if (previewMode === false) await this._updateChangesInWysiwyg();
     },
 
     //--------------------------------------------------------------------------
@@ -144,7 +144,7 @@ snippetOptions.registry.NavTabsStyle = snippetOptions.SnippetOptionWidget.extend
         this.$target.toggleClass('card', !isPills);
         this.$target.find('.s_tabs_content:first').toggleClass('card-body', !isPills);
 
-        if (previewMode === false) await this._refreshTarget();
+        if (previewMode === false) await this._updateChangesInWysiwyg();
     },
     /**
      * Horizontal/vertical nav.
@@ -159,7 +159,7 @@ snippetOptions.registry.NavTabsStyle = snippetOptions.SnippetOptionWidget.extend
         this.$target.find('.s_tabs_nav:first').toggleClass('col-md-3', isVertical);
         this.$target.find('.s_tabs_content:first').toggleClass('col-md-9', isVertical);
 
-        if (previewMode === false) await this._refreshTarget();
+        if (previewMode === false) await this._updateChangesInWysiwyg();
     },
 
     //--------------------------------------------------------------------------

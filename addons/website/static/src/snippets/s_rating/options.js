@@ -31,7 +31,7 @@ snippetOptions.registry.Rating = snippetOptions.SnippetOptionWidget.extend({
         delete this.$target[0].dataset.activeCustomIcon;
         delete this.$target[0].dataset.inactiveCustomIcon;
 
-        if (previewMode === false) await this._refreshTarget();
+        if (previewMode === false) await this._updateChangesInWysiwyg();
     },
     /**
      * Allows to select a font awesome icon with media dialog.
@@ -69,7 +69,7 @@ snippetOptions.registry.Rating = snippetOptions.SnippetOptionWidget.extend({
             dialog.open();
         });
 
-        if (previewMode === false) await this._refreshTarget();
+        if (previewMode === false) await this._updateChangesInWysiwyg();
     },
     /**
      * Sets the number of active icons.
@@ -79,7 +79,7 @@ snippetOptions.registry.Rating = snippetOptions.SnippetOptionWidget.extend({
     activeIconsNumber: async function (previewMode, widgetValue, params) {
         this.nbActiveIcons = parseInt(widgetValue);
         this._createIcons();
-        if (previewMode === false) await this._refreshTarget();
+        if (previewMode === false) await this._updateChangesInWysiwyg();
     },
     /**
      * Sets the total number of icons.
@@ -89,7 +89,7 @@ snippetOptions.registry.Rating = snippetOptions.SnippetOptionWidget.extend({
     totalIconsNumber: async function (previewMode, widgetValue, params) {
         this.nbTotalIcons = Math.max(parseInt(widgetValue), 1);
         this._createIcons();
-        if (previewMode === false) await this._refreshTarget();
+        if (previewMode === false) await this._updateChangesInWysiwyg();
     },
 
     //--------------------------------------------------------------------------

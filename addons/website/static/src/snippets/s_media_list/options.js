@@ -25,7 +25,7 @@ snippetOptions.registry.MediaItemLayout = snippetOptions.SnippetOptionWidget.ext
         $image.addClass(`col-lg-${widgetValue}`);
         $content.addClass(`col-lg-${12 - widgetValue}`);
 
-        if (previewMode === false) await this._refreshTarget();
+        if (previewMode === false) await this._updateChangesInWysiwyg();
     },
 
     //--------------------------------------------------------------------------

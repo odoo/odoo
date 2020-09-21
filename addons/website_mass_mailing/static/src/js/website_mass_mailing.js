@@ -206,7 +206,7 @@ publicWidget.registry.newsletter_popup = publicWidget.Widget.extend({
 
             // hack to make the modal editable in the wysiwyg internal architecture
             const snippetOption = self.$el.data('snippetOption');
-            if (snippetOption) await snippetOption._refreshTarget();
+            if (snippetOption) await snippetOption._updateChangesInWysiwyg();
 
             self.trigger_up('widgets_start_request', {
                 editableMode: self.editableMode,
