@@ -18,17 +18,6 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
     }
 }
 
-.editor_enable {
-    padding-top: var(--o-we-toolbar-height) !important;
-
-    .note-popover .popover .popover-body {
-        height: var(--o-we-toolbar-height);
-    }
-    .note-popover .popover  {
-        transform: none;
-    }
-}
-
 #web_editor-top-edit {
     @include o-position-absolute(0, 0, auto, 0);
     position: fixed;
@@ -42,6 +31,10 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
         right: 0 !important;
         border: none !important;
         max-width: none;
+        transform: none;
+    }
+    .note-popover .popover .popover-body {
+        height: var(--o-we-toolbar-height);
     }
 }
 
