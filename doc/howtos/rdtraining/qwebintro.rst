@@ -37,7 +37,7 @@ Concrete Example: A Kanban View
 
 In our estate application, we would like to add a Kanban view to display our properties. Kanban
 views are standard Odoo views (such as the form or list view), but their structure is much more
-flexible. In fact, the structure of each card as a mix of form elements (including basic HTML)
+flexible. In fact, the structure of each card is a mix of form elements (including basic HTML)
 and QWeb. The definition of a Kanban view is similar to the definition of the list and form
 views, except that their root element is ``<kanban>``. In its simplest form, a Kanban view
 looks like:
@@ -72,8 +72,8 @@ Let's break down this example:
     Tip: you must add ``kanban`` in the ``view_mode`` of the corresponding
     ``ir.actions.act_window``.
 
-Once the Kanban view is working, we can make start improving it. If we want to display an element
-conditinally, we can use the ``t-if`` directive (see :ref:`reference/qweb/conditionals`).
+Once the Kanban view is working, we can start improving it. If we want to display an element
+conditionally, we can use the ``t-if`` directive (see :ref:`reference/qweb/conditionals`).
 
 .. code-block:: xml
 
@@ -99,8 +99,8 @@ We added a few things:
   user parameters, the latter is the direct value from a :meth:`~odoo.models.Model.read`.
 
 In the above example, the field ``name`` was added in the ``<templates>`` element, but ``state``
-is outside. When we need the value of a field but not display it in the view it is possible to
-add the it outside of the ``<templates>`` element.
+is outside. When we need the value of a field but not display it in the view, it is possible to
+add it outside of the ``<templates>`` element.
 
 .. exercise:: Improving the Kanban view
 
@@ -125,7 +125,7 @@ view and fine tune it instead of starting from scratch. There are many options a
 available, so... read and learn!
 
 It is now time to give the
-:ref:`final touch to our application and submt it on GitHub <howto/rdtraining/guidelines_pr>`!
+:ref:`final touch to our application and submit it on GitHub <howto/rdtraining/guidelines_pr>`!
 
 .. _templating:
     https://en.wikipedia.org/wiki/Template_processor
