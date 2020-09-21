@@ -40,10 +40,17 @@ tour.register('rte_translator', {
 }, {
     content: "drop a snippet",
     trigger: "#snippet_structure .oe_snippet:eq(1) .oe_snippet_thumbnail",
-    run: 'drag_and_drop #wrap',
+    run: async (action_helper) => {
+        action_helper.drag_and_drop('#wrap');
+        // wait the last operation of the editor before saving.
+        $('#wrap').addClass('action-loading');
+        await new Promise(r => setTimeout(r, 0));
+        await new Promise(r => setTimeout(r, 0));
+        $('#wrap').removeClass('action-loading');
+    },
 }, {
     content: "change content",
-    trigger: '#wrap',
+    trigger: '#wrap:not(.action-loading)',
     run: async function () {
         const wysiwyg = $('#wrapwrap').data('wysiwyg');
         await wysiwyg.editor.execCommand(async (params)=> {
