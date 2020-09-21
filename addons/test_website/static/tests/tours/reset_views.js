@@ -26,12 +26,19 @@ tour.register('test_reset_page_view_complete_flow_part1', {
             content: "drop a snippet",
             trigger: "#oe_snippets .oe_snippet:has(.s_cover) .oe_snippet_thumbnail",
             // id starting by 'oe_structure..' will actually create an inherited view
-            run: "drag_and_drop #oe_structure_test_website_page",
+            run: async (action_helper) => {
+                action_helper.drag_and_drop('#oe_structure_test_website_page');
+                // wait the last operation of the editor before saving.
+                $('.o_we_website_top_actions').addClass('action-loading');
+                await new Promise(r => setTimeout(r, 0));
+                await new Promise(r => setTimeout(r, 0));
+                $('.o_we_website_top_actions').removeClass('action-loading');
+            },
         },
         {
             content: "save the page",
             extra_trigger: '#oe_structure_test_website_page.o_dirty',
-            trigger: ".o_we_website_top_actions button[name=save]",
+            trigger: ".o_we_website_top_actions:not('.action-loading') button[name=save]",
         },
         // 2. Edit that COW'd view in the HTML editor to break it.
         {
