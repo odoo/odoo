@@ -5807,9 +5807,11 @@ registry.BackgroundImage = SnippetOptionWidget.extend({
         if (backgroundURL) {
             parts.url = `url('${backgroundURL}')`;
             this.$target.addClass('oe_img_bg o_bg_img_center');
+            this.$target.css('background-position', 'center center');
         } else {
             delete parts.url;
             this.$target.removeClass('oe_img_bg o_bg_img_center');
+            this.$target.css('background-position', '');
         }
         const combined = backgroundImagePartsToCss(parts);
         this.$target.css('background-image', combined);
@@ -6350,6 +6352,7 @@ registry.BackgroundPosition = SnippetOptionWidget.extend({
      */
     _initOverlay: function () {
         this.$backgroundOverlay = $(qweb.render('web_editor.background_position_overlay'));
+        this.$backgroundOverlayGrid = $(qweb.render('web_editor.background_overlay_grid'));
         this.$overlayContent = this.$backgroundOverlay.find('.o_we_overlay_content');
         this.$overlayBackground = this.$overlayContent.find('.o_overlay_background');
 
@@ -6435,6 +6438,9 @@ registry.BackgroundPosition = SnippetOptionWidget.extend({
             trigger: 'manual',
             container: this.$backgroundOverlay
         });
+
+        // Add 1/3 rule grid
+        this.$backgroundOverlayGrid.appendTo(this.$bgDragger);
 
         // Replace content of overlayBackground, activate the overlay and give it the right dimensions.
         this.$overlayBackground.empty().append(this.$bgDragger);

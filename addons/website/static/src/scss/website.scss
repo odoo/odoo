@@ -408,6 +408,61 @@ font[class*='bg-'] {
     }
 }
 
+
+.o_grid_dashed {
+    border: 0 dashed #eee;
+    display: block;
+    opacity: 0.5;
+    position: absolute;
+
+    &.o_dashed_h {
+        border-bottom-width: 1px;
+        border-top-width: 1px;
+        height: calc(100% / 3);
+        left: 0;
+        top: calc(100% / 3);
+        width: 100%;
+    }
+
+    &.o_dashed_v {
+        border-left-width: 1px;
+        border-right-width: 1px;
+        height: 100%;
+        left: calc(100% / 3);
+        top: 0;
+        width: calc(100% / 3);
+    }
+}
+
+.o_grid_center {
+    display: block;
+    height: 0;
+    left: 50%;
+    opacity: 0.75;
+    position: absolute;
+    top: 50%;
+    width: 0;
+
+    &::before, &::after {
+        background-color: #eee;
+        content: ' ';
+        display: block;
+        position: absolute;
+    }
+    &::before {
+        height: 1px;
+        left: -3px;
+        top: 0;
+        width: 7px;
+    }
+    &::after {
+        height: 7px;
+        left: 0;
+        top: -3px;
+        width: 1px;
+    }
+}
+
 // Background videos
 .o_bg_video_container {
     @extend %o-we-background-layer;
