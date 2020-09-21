@@ -888,6 +888,7 @@ var SnippetsMenu = Widget.extend({
 
         this._notActivableElementsSelector = [
             '#web_editor-top-edit',
+            '.o_we_website_top_actions',
             '#oe_snippets',
             '#oe_manipulators',
             '.o_technical_modal',
@@ -925,6 +926,9 @@ var SnippetsMenu = Widget.extend({
 
         this.customizePanel = document.createElement('div');
         this.customizePanel.classList.add('o_we_customize_panel', 'd-none');
+
+        this.textEditorPanelEl = document.createElement('div');
+        this.textEditorPanelEl.classList.add('o_we_snippet_text_tools');
 
         this.invisibleDOMPanelEl = document.createElement('div');
         this.invisibleDOMPanelEl.classList.add('o_we_invisible_el_panel');
@@ -1651,6 +1655,7 @@ var SnippetsMenu = Widget.extend({
         // Add the computed template and make elements draggable
         this.$el.html($html);
         this.$el.append(this.customizePanel);
+        this.$el.append(this.textEditorPanelEl);
         this.$el.append(this.invisibleDOMPanelEl);
         this._makeSnippetDraggable(this.$snippets);
         this._disableUndroppableSnippets();

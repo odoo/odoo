@@ -48,6 +48,50 @@ body.editor_enable.editor_has_snippets {
     }
 }
 
+// Ugly hack to force ugly rules... while waiting for new editor
+#oe_snippets#oe_snippets .o_we_snippet_text_tools {
+    padding: $o-we-sidebar-content-field-spacing $o-we-sidebar-content-padding-base 0 $o-we-sidebar-content-indent;
+    box-shadow: $o-we-item-standup-top rgba($o-we-item-standup-color-light, .2), $o-we-item-standup-bottom rgba($o-we-item-standup-color-dark, .5);
+    z-index: $o-we-zindex;
+
+    .popover {
+        position: static !important;
+        top: 0 !important;
+        left: 0 !important;
+        transform: none !important;
+        border: none !important;
+    }
+    .popover-body {
+        padding: 0 !important;
+
+        > * {
+            margin-bottom: $o-we-sidebar-content-field-spacing;
+        }
+    }
+    .btn {
+        @extend %we-generic-button;
+    }
+    .btn-group {
+        > .d-none + * {
+            margin-left: 0 !important;
+        }
+    }
+    .note-color {
+        .btn-group {
+            position: static;
+        }
+        .dropdown-menu { // Drop up
+          top: auto;
+          bottom: 100%;
+          margin-top: 0;
+          margin-bottom: $dropdown-spacer;
+        }
+    }
+}
+#o_scroll:not(.d-none) ~ .o_we_snippet_text_tools {
+    padding-right: $o-we-sidebar-blocks-content-spacing;
+    padding-left: $o-we-sidebar-blocks-content-spacing;
+}
 
 .oe_snippet {
     // No root because can be drag and drop (and the helper is in the body)
@@ -264,8 +308,7 @@ body.editor_enable.editor_has_snippets {
     }
 
     > #o_scroll, > .o_we_customize_panel {
-        flex: 1 1 auto;
-        height: 100%;
+        min-height: 0;
         overflow: auto;
     }
 
@@ -1166,6 +1209,7 @@ body.editor_enable.editor_has_snippets {
         flex: 0 0 auto;
         max-height: 220px;
         overflow-y: auto;
+        margin-top: auto;
         padding: $o-we-sidebar-blocks-content-spacing;
         background-color: $o-we-sidebar-blocks-content-bg;
         box-shadow: $o-we-item-standup-top rgba($o-we-item-standup-color-light, .2);
@@ -1185,12 +1229,18 @@ body.editor_enable.editor_has_snippets {
     }
 
     &.o_we_backdrop {
-        > .o_we_customize_panel::after {
-            content: "";
-            @include o-position-absolute(0, 0, 0, 0);
-            display: block;
-            pointer-events: none;
-            background: $o-we-sidebar-content-backdrop-bg;
+        > .o_we_customize_panel {
+            // Ensure the panel takes full height so that an opened dropdown
+            // does not make a scrollbar appear for no reason
+            flex: 1 1 auto;
+
+            &::after {
+                content: "";
+                @include o-position-absolute(0, 0, 0, 0);
+                display: block;
+                pointer-events: none;
+                background: $o-we-sidebar-content-backdrop-bg;
+            }
         }
 
         .o_we_widget_opened {

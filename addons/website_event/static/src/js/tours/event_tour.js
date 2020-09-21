@@ -29,7 +29,7 @@ EventAdditionalTourSteps.include({
                 position: 'bottom',
                 run: 'drag_and_drop #o_wevent_event_main_col',
             }, {
-                trigger: '#web_editor-top-edit button[data-action="save"]',
+                trigger: 'button[data-action="save"]',
                 content: _t("Don't forget to click <b>save</b> when you're done."),
                 position: 'bottom',
             }, {
