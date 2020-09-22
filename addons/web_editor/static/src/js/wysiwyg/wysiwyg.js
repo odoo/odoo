@@ -221,7 +221,7 @@ var Wysiwyg = Widget.extend({
             mode: this._modeConfig,
         }));
 
-        if (config.isDebug('assets') && JWEditorLib.DevTools) {
+        if (Array.isArray(odoo.debug) && config.isDebug('assets') && JWEditorLib.DevTools) {
             this.editor.load(JWEditorLib.DevTools);
         }
         await this.editor.start();
