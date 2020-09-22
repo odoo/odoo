@@ -268,9 +268,6 @@ function factory(dependencies) {
             inverse: 'activities',
         }),
         creator: many2one('mail.user'),
-        creatorPartner: many2one('mail.partner',{
-            related: 'creator.partner',
-        }),
         dateCreate: attr(),
         dateDeadline: attr(),
         force_next: attr({

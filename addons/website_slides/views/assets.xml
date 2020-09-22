@@ -7,7 +7,8 @@
                 <link rel="stylesheet" type="text/scss" href="/website_slides/static/src/scss/slide_views.scss"/>
                 <script type="text/javascript" src="/website_slides/static/src/js/slide_category_one2many.js"/>
                 <script type="text/javascript" src="/website_slides/static/src/js/rating_field_backend.js"/>
-                <script type="text/javascript" src="/website_slides/static/src/js/activity.js"/>
+                <script type="text/javascript" src="/website_slides/static/src/components/activity/activity.js"/>
+                <script type="text/javascript" src="/website_slides/static/src/models/activity/activity.js"/>
             </xpath>
         </template>
 
@@ -63,9 +64,9 @@
             <script type="text/javascript" src="/website_slides/static/src/js/slides_embed.js"></script>
         </template>
 
-        <template id="qunit_suite" name="website_slides activity assets" inherit_id="mail.qunit_suite">
-            <xpath expr="." position="inside">
-                <script type="text/javascript" src="/website_slides/static/src/js/activity_tests.js"></script>
+        <template id="website_slides_tests" name="eLearning tests" inherit_id="web.qunit_suite_tests">
+            <xpath expr="//script[last()]" position="after">
+                <script type="text/javascript" src="/website_slides/static/src/components/activity/activity_tests.js"/>
             </xpath>
         </template>
 
