@@ -448,9 +448,13 @@ table.table_desc tr td {
 }
 
 .o_full_screen_height {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
     min-height: 100vh !important;
 }
 .o_half_screen_height {
+    @extend .o_full_screen_height;
     min-height: 55vh !important;
 }
 
