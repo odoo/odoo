@@ -3,6 +3,7 @@ import ast
 import logging
 import os.path
 import re
+import sys
 import traceback
 
 from collections import OrderedDict, Sized, Mapping
@@ -49,6 +50,18 @@ arg = getattr(ast, 'arg', lambda arg, annotation: ast.Name(id=arg, ctx=ast.Param
 arguments = ast.arguments
 if pycompat.PY2:
     arguments = lambda args, vararg, kwarg, defaults, **kwargs: ast.arguments(args=args, vararg=vararg, kwarg=kwarg, defaults=defaults)
+elif sys.version_info >= (3,8):
+    # Furthermore, python 3.8 added posonlyargs as mandatory argument when constructing an ast.arguments instance
+    # See https://greentreesnakes.readthedocs.io/en/latest/nodes.html#arguments
+    arguments = lambda args, vararg, kwonlyargs, kw_defaults, kwarg, defaults: ast.arguments(
+        posonlyargs=[],
+        args=args,
+        vararg=vararg,
+        kwonlyargs=kwonlyargs,
+        kw_defaults=kw_defaults,
+        kwarg=kwarg,
+        defaults=defaults,
+    )
 ####################################
 ###          qweb tools          ###
 ####################################
