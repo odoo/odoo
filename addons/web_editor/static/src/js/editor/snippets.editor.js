@@ -1478,12 +1478,9 @@ var SnippetsMenu = Widget.extend({
      */
     _loadSnippetsTemplates: async function (invalidateCache) {
         return this._execWithLoadingEffect(async () => {
-            const loadSnippetsTemplates = async (context) => {
-                await this._destroyEditors();
-                const html = await this.loadSnippets(invalidateCache);
-                await this._computeSnippetTemplates(html, context);
-            };
-            await this.options.wysiwyg.editor.execCommand(loadSnippetsTemplates);
+            await this._destroyEditors();
+            const html = await this.loadSnippets(invalidateCache);
+            await this._computeSnippetTemplates(html);
         }, false);
     },
     /**
@@ -1620,7 +1617,7 @@ var SnippetsMenu = Widget.extend({
      * @private
      * @param {string} html
      */
-    _computeSnippetTemplates: async function (html, context) {
+    _computeSnippetTemplates: async function (html) {
         var self = this;
         var $html = $(html);
         var $scroll = $html.siblings('#o_scroll');
@@ -1744,7 +1741,7 @@ var SnippetsMenu = Widget.extend({
         this.$el.append(this.textEditorPanelEl);
         this.$el.append(this.invisibleDOMPanelEl);
         this._makeSnippetDraggable(this.$snippets);
-        await this._disableUndroppableSnippets(context);
+        await this._disableUndroppableSnippets();
 
         this.$el.closest('.o_main_sidebar').addBack().addClass('o_loaded');
         $('body.editor_enable').addClass('editor_has_snippets');
@@ -2552,7 +2549,7 @@ var SnippetsMenu = Widget.extend({
      * @private
      */
     _onSnippetRemoved: async function (ev) {
-        await this._disableUndroppableSnippets(ev.data.context);
+        await this._disableUndroppableSnippets();
         this._updateInvisibleDOM();
         ev.data.onFinish();
     },
