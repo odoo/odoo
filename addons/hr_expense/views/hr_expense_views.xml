@@ -592,7 +592,6 @@
                     <field name="state" widget="statusbar" statusbar_visible="draft,submit,approve,post,done"/>
                 </header>
                 <sheet>
-                    <widget name="web_ribbon" title="Paid" bg_color="bg-success" attrs="{'invisible': [('state', '!=', 'done')]}"/>
                     <div class="oe_button_box" name="button_box">
                         <button name="action_get_attachment_view"
                             class="oe_stat_button"
@@ -601,6 +600,7 @@
                             <field name="attachment_number" widget="statinfo" string="Documents"/>
                         </button>
                     </div>
+                    <widget name="web_ribbon" title="Paid" bg_color="bg-success" attrs="{'invisible': [('state', '!=', 'done')]}"/>
                     <div class="oe_title">
                         <label for="name" class="oe_edit_only"/>
                         <h1>
