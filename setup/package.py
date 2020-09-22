@@ -398,10 +398,10 @@ class KVM(object):
         ]
         logging.info("Starting kvm: {}".format(" ".join(kvm_cmd)))
         self.kvm_proc = subprocess.Popen(kvm_cmd)
-        time.sleep(60)  # give some time to the VM to start, otherwise the SSH server may not be ready
-        signal.alarm(2400)
-        signal.signal(signal.SIGALRM, self.timeout)
         try:
+            self.wait_ssh(30)  # give some time to the VM to start, otherwise the SSH server may not be ready
+            signal.alarm(2400)
+            signal.signal(signal.SIGALRM, self.timeout)
             self.run()
         finally:
             signal.signal(signal.SIGALRM, signal.SIG_DFL)
@@ -413,6 +413,8 @@ class KVM(object):
             'ssh',
             '-o', 'UserKnownHostsFile=/dev/null',
             '-o', 'StrictHostKeyChecking=no',
+            '-o', 'BatchMode=yes',
+            '-o', 'ConnectTimeout=10',
             '-p', '10022',
             '-i', self.ssh_key,
             '%s@127.0.0.1' % self.login,
@@ -428,6 +430,15 @@ class KVM(object):
         cmd.extend(options)
         cmd.extend(rsync_args)
         run_cmd(cmd).check_returncode()
+
+    def wait_ssh(self, n):
+        for i in range(n):
+            try:
+                self.ssh('exit')
+                return
+            except subprocess.CalledProcessError:
+                time.sleep(10)
+        raise Exception('Unable to conncect to the VM')
 
     def run(self):
         pass
