@@ -886,8 +886,16 @@ class ChromeBrowser():
             ffmpeg_path = None
 
         if ffmpeg_path:
-            framerate = int(len(self.screencast_frames) / (self.screencast_frames[-1].get('timestamp') - self.screencast_frames[0].get('timestamp')))
-            r = subprocess.run([ffmpeg_path, '-framerate', str(framerate), '-i', '%s/frame_%%05d.png' % self.screencasts_frames_dir, outfile])
+            nb_frames = len(self.screencast_frames)
+            concat_script_path = os.path.join(self.screencasts_dir, fname.replace('.mp4', '.txt'))
+            with open(concat_script_path, 'w') as concat_file:
+                for i in range(nb_frames):
+                    frame_file_path = os.path.join(self.screencasts_frames_dir, self.screencast_frames[i]['file_path'])
+                    end_time = time.time() if i == nb_frames - 1 else self.screencast_frames[i+1]['timestamp']
+                    duration = end_time - self.screencast_frames[i]['timestamp']
+                    concat_file.write("file '%s'\nduration %s\n" % (frame_file_path, duration))
+                concat_file.write("file '%s'" % frame_file_path)  # needed by the concat plugin
+            r = subprocess.run([ffmpeg_path, '-intra', '-f', 'concat','-safe', '0', '-i', concat_script_path, '-pix_fmt', 'yuv420p', outfile])
             self._logger.log(25, 'Screencast in: %s', outfile)
         else:
             outfile = outfile.strip('.mp4')
@@ -899,7 +907,7 @@ class ChromeBrowser():
             os.makedirs(self.screencasts_dir, exist_ok=True)
             self.screencasts_frames_dir = os.path.join(self.screencasts_dir, 'frames')
             os.makedirs(self.screencasts_frames_dir, exist_ok=True)
-        self._websocket_send('Page.startScreencast', params={'maxWidth': 1024, 'maxHeight': 576})
+        self._websocket_send('Page.startScreencast')
 
     def set_cookie(self, name, value, path, domain):
         params = {'name': name, 'value': value, 'path': path, 'domain': domain}
@@ -969,6 +977,7 @@ class ChromeBrowser():
             elif res:
                 self._logger.debug('chrome devtools protocol event: %s', res)
         self.take_screenshot()
+        self._save_screencast()
         raise ChromeBrowserException('Script timeout exceeded : %s' % (time.time() - start_time))
 
 
