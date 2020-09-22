@@ -631,16 +631,22 @@ function factory(dependencies) {
          * @param {boolean} [param0.expanded=false]
          */
         async open({ expanded = false } = {}) {
+            const discuss = this.env.messaging.discuss;
             // check if thread must be opened in form view
             if (!['mail.box', 'mail.channel'].includes(this.model)) {
-                return this.env.messaging.openDocument({
-                    id: this.id,
-                    model: this.model,
-                });
+                if (expanded || discuss.isOpen) {
+                    // Close chat window because having the same thread opened
+                    // both in chat window and as main document does not look
+                    // good.
+                    this.env.messaging.chatWindowManager.closeThread(this);
+                    return this.env.messaging.openDocument({
+                        id: this.id,
+                        model: this.model,
+                    });
+                }
             }
             // check if thread must be opened in discuss
             const device = this.env.messaging.device;
-            const discuss = this.env.messaging.discuss;
             if (
                 (!device.isMobile && (discuss.isOpen || expanded)) ||
                 this.model === 'mail.box'

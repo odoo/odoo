@@ -171,7 +171,7 @@ QUnit.test('mark as read', async function (assert) {
 QUnit.test('grouped notifications by document', async function (assert) {
     // If some failures linked to a document refers to a same document, a single
     // notification should group all those failures.
-    assert.expect(9);
+    assert.expect(5);
 
     this.data['mail.message'].records.push(
         // first message that is expected to have a failure
@@ -205,31 +205,7 @@ QUnit.test('grouped notifications by document', async function (assert) {
             notification_type: 'email', // expected failure type for email message
         }
     );
-    const bus = new Bus();
-    bus.on('do-action', null, payload => {
-        assert.step('do_action');
-        assert.strictEqual(
-            payload.action.type,
-            'ir.actions.act_window',
-            "action should have the type act_window"
-        );
-        assert.strictEqual(
-            payload.action.res_model,
-            'res.partner',
-            "action should have the group model as res_model"
-        );
-        assert.strictEqual(
-            JSON.stringify(payload.action.views),
-            JSON.stringify([[false, 'form']]),
-            "action should have form view"
-        );
-        assert.strictEqual(
-            payload.action.res_id,
-            31,
-            "action should have the group res_id as res_id"
-        );
-    });
-    await this.start({ env: { bus } });
+    await this.start({ hasChatWindow: true });
     await this.createNotificationListComponent();
 
     assert.containsOnce(
@@ -247,11 +223,19 @@ QUnit.test('grouped notifications by document', async function (assert) {
         "(2)",
         "should have 2 notifications in the group"
     );
+    assert.containsNone(
+        document.body,
+        '.o_ChatWindow',
+        "should have no chat window initially"
+    );
 
-    document.querySelector('.o_NotificationGroup').click();
-    assert.verifySteps(
-        ['do_action'],
-        "should do an action to display the related record"
+    await afterNextRender(() =>
+        document.querySelector('.o_NotificationGroup').click()
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_ChatWindow',
+        "should have opened the thread in a chat window after clicking on it"
     );
 });
 
