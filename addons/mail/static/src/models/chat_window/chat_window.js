@@ -3,6 +3,7 @@ odoo.define('mail/static/src/models/chat_window/chat_window.js', function (requi
 
 const { registerNewModel } = require('mail/static/src/model/model_core.js');
 const { attr, many2one, one2many, one2one } = require('mail/static/src/model/model_field.js');
+const { clear } = require('mail/static/src/model/model_field_command.js');
 
 function factory(dependencies) {
 
@@ -193,14 +194,6 @@ function factory(dependencies) {
          * @returns {boolean}
          */
         _computeIsVisible() {
-            return this.manager.allOrderedVisible.includes(this);
-        }
-
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeIsVisible() {
             if (!this.manager) {
                 return false;
             }
@@ -224,12 +217,12 @@ function factory(dependencies) {
          */
         _computeVisibleIndex() {
             if (!this.manager) {
-                return undefined;
+                return clear();
             }
             const visible = this.manager.visual.visible;
             const index = visible.findIndex(visible => visible.chatWindowLocalId === this.localId);
             if (index === -1) {
-                return undefined;
+                return clear();
             }
             return index;
         }
@@ -383,17 +376,7 @@ function factory(dependencies) {
             default: false,
         }),
         /**
-         * States whether `this` is visible or not.
-         */
-        isVisible: attr({
-            compute: '_computeIsVisible',
-            dependencies: [
-                'managerAllOrderedVisible',
-            ],
-            default: false,
-        }),
-        /**
-         * Whether this chat window is visible or not. Should be considered
+         * States whether `this` is visible or not. Should be considered
          * read-only. Setting this value manually will not make it visible.
          * @see `makeVisible`
          */

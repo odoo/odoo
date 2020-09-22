@@ -3,6 +3,7 @@ odoo.define('mail/static/src/models/thread/thread.js', function (require) {
 
 const { registerNewModel } = require('mail/static/src/model/model_core.js');
 const { attr, many2many, many2one, one2many, one2one } = require('mail/static/src/model/model_field.js');
+const { clear } = require('mail/static/src/model/model_field_command.js');
 const throttle = require('mail/static/src/utils/throttle/throttle.js');
 const Timer = require('mail/static/src/utils/timer/timer.js');
 const mailUtils = require('mail.utils');
@@ -1235,7 +1236,7 @@ function factory(dependencies) {
             if (
                 this.serverFoldState === this.pendingFoldState
             ) {
-                this.update({ pendingFoldState: undefined });
+                this.update({ pendingFoldState: clear() });
             }
             if (
                 this.isPendingPinned !== undefined &&
@@ -1246,7 +1247,7 @@ function factory(dependencies) {
             if (
                 this.isServerPinned === this.isPendingPinned
             ) {
-                this.update({ isPendingPinned: undefined });
+                this.update({ isPendingPinned: clear() });
             }
 
             // TODO FIXME prevent to open/close a channel on mobile when you

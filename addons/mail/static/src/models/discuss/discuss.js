@@ -3,6 +3,7 @@ odoo.define('mail/static/src/models/discuss.discuss.js', function (require) {
 
 const { registerNewModel } = require('mail/static/src/model/model_core.js');
 const { attr, many2one, one2many, one2one } = require('mail/static/src/model/model_field.js');
+const { clear } = require('mail/static/src/model/model_field_command.js');
 
 function factory(dependencies) {
 
@@ -235,7 +236,7 @@ function factory(dependencies) {
          */
         _computeActiveId() {
             if (!this.thread) {
-                return undefined;
+                return clear();
             }
             return this.threadToActiveId(this.thread);
         }

@@ -3,6 +3,7 @@ odoo.define('mail/static/src/models/activity/activity/js', function (require) {
 
 const { registerNewModel } = require('mail/static/src/model/model_core.js');
 const { attr, many2many, many2one } = require('mail/static/src/model/model_field.js');
+const { clear } = require('mail/static/src/model/model_field_command.js');
 
 function factory(dependencies) {
 
@@ -245,7 +246,7 @@ function factory(dependencies) {
          */
         _computeNote() {
             if (this.note === '<p><br></p>') {
-                return undefined;
+                return clear();
             }
             return this.note;
         }
