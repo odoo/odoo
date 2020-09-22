@@ -21,7 +21,7 @@ Fetch the sources & configure git
 Install and configure git
 -------------------------
 
-The very first step of the installation process is to install the `git version control system <https://git-scm.com/>`__.
+The very first step of the installation process is to install the `git version control system <https://git-scm.com/>`__
 as the Odoo source code is managed on GitHub. Once installed, you can set your name and email:
 
 .. code-block:: console
