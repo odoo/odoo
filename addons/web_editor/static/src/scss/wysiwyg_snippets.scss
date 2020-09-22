@@ -1275,19 +1275,22 @@ body.editor_enable.editor_has_snippets {
         }
 
         .o_we_tag {
-            display: inline-block;
-            padding: $o-we-sidebar-content-field-label-spacing;
-            border: $o-we-item-border-width solid $o-we-item-border-color;
+            padding: ($o-we-sidebar-content-field-label-spacing / 2) $o-we-sidebar-content-field-label-spacing;
             border-radius: 5px;
             background-color: $o-we-bg-darkest;
 
             + .fa {
-                margin: 0;
+                margin: 0 0 0 5px;
             }
         }
         .o_we_tag_wrapper {
-            display: inline-block;
-            margin: ($o-we-sidebar-content-field-label-spacing * 1.5) $o-we-sidebar-content-field-label-spacing 0 0;
+            display: inline-flex;
+            margin: $o-we-sidebar-content-field-label-spacing ($o-we-sidebar-content-field-label-spacing / 2) 0 0;
+        }
+        .o_wblog_new_tag {
+            & div, & we-input {
+                width: 100% !important;
+            }
         }
     }
 
