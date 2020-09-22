@@ -56,15 +56,15 @@ folder to be able to commit your work.
     $ git branch master training/master
     $ git checkout master #Two new files will be downloaded README.md and .gitignore
 
-Note that if your work in an already :ref:`Git and GitHub configured folder <howto/rdtraining/setup/development_repository>`
-the previous steps are not needed, this is the case when you will work in 'odoo' or 'enterprise'
-folders.
+Note that if your work is already in a :ref:`Git and GitHub configured folder <howto/rdtraining/setup/development_repository>`
+the previous steps are not needed. This is going to be the case when you will start working in the
+'odoo' or 'enterprise' folders.
 
 
 Branch, Commit & Push
 ---------------------
 
-Before creating the PR, a new working branch will be created and used to commit the code. Afterwards
+Before creating the PR, a new working branch has to be created and used to commit the code. Afterwards
 the branch will be pushed to the development repository.
 
 Create your working branch:
@@ -76,7 +76,7 @@ Create your working branch:
 Your branch name must follow the following name strucutre : <targetVersion>-<feature>-<trigram>
 
 Example: The branch master-sale-fixes-abc on odoo-dev/odoo is a branch containing fixes for the
-sales app in the odoo/odoo repository to be deployed in master and done by ABC.
+sales app in the odoo/odoo repository, to be deployed in master and done by ABC.
 
 Commit your code:
 
@@ -102,13 +102,13 @@ Push your new branch to your developement repository:
              nor in a stable branch. Never, never, never!
 
 .. tip:: Remember that you can use `git status` at any step to know the current status of your branch
-.. tip:: You can create git alias to short some of theses commands, ask your colleagues around you
-         if they use git aliases and inspire you from their work.
+.. tip:: You can create git alias to shorten some of theses commands. Ask your colleagues around you
+         if they use git aliases and get inspired by their work.
 
 Create your first PR
 --------------------
 
-After pushing your branch to your development repository, the output will look like:
+After pushing your branch to your development repository, the output will look like this:
 
 .. code-block:: console
 
@@ -130,12 +130,12 @@ There are two ways to create the PR:
 
 - Click on the link displayed in the output of the push command.
 - Open a browser in your development repository `https://github.com/xyz-odoo/technical-training-sandbox`.
-  A button will suggest the creation of a new pull request.
+  A button will suggest you to create a new pull request.
 
   .. image:: guidelines_pr/media/pr_from_branch.png
 
 You will notice that your commit message is used as pull request message, this occurs if you have only 1 commit.
-If you have multiple commits, you can make a resume of the commit as PR message, or if you have few
+If you have multiple commits, you can make a summary of the commit as PR message. Or, if you have few
 commits, just copy/paste your commit messagges as the PR message.
 
 .. image:: guidelines_pr/media/pr_message.png
@@ -144,11 +144,11 @@ commits, just copy/paste your commit messagges as the PR message.
 Test on the runbot
 ==================
 
-Odoo has his own :abbr:`CI (Continuous integration)` server named `runbot <https://runbot.odoo.com/>`__. All
+Odoo has his its :abbr:`CI (Continuous integration)` server named `runbot <https://runbot.odoo.com/>`__. All
 the commits, branches and PR will be tested to avoid regressions or breaking the stable versions.
-All the runs that passed the tests will be deployed in their own servers with demo data.
+All the runs that pass the tests are deployed on their own server with demo data.
 
 .. exercise:: Play with runbot
 
-    Be free to open runbot and open the last stable version of odoo and check all the available
+    Feel free to go to runbot, open the last stable version of Odoo and check all the available
     applications and functionalities.

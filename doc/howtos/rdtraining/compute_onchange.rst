@@ -183,7 +183,7 @@ Note that the ``inverse`` method is only called when saving the record, while th
 Additional Information
 ----------------------
 
-Computed fields are **not stored** in the database. A side-effect is that it is **not
+By default, computed fields are **not stored** in the database. A side-effect is that it is **not
 possible** to search on the field unless a ``search`` method is defined. This goes beyond the scope
 of the the training, so we won't cover it. An example can be found
 `here <https://github.com/odoo/odoo/blob/f011c9aacf3a3010c436d4e4f408cd9ae265de1b/addons/event/models/event_event.py#L188>`__.
