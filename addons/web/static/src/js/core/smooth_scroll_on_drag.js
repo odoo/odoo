@@ -57,7 +57,6 @@ const SmoothScrollOnDrag = Class.extend(mixins.ParentedMixin, {
      * @param {jQuery} $element The element the smooth scroll on drag has to be set on.
      * @param {jQuery} $target Container for drop element. $scrollTarget is this closest
      *        scrollable parent element.
-     * @param {jQuery} $container The element the scroll will be triggered on.
      * @param {Object} [options={}]
      * @param {Object} [options.jQueryDraggableOptions={}] The configuration to be passed to
      *        the jQuery draggable function (all will be passed except scroll which will
