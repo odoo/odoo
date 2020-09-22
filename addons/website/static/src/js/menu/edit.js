@@ -244,6 +244,22 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
                 'OdooImageWidth75Actionable',
                 'OdooImageWidth100Actionable',
             ],
+            [
+                [
+                    'OdooIconSize1xButton',
+                    'OdooIconSize2xButton',
+                    'OdooIconSize3xButton',
+                    'OdooIconSize4xButton',
+                    'OdooIconSize5xButton',
+                ],
+            ],
+            [
+                'OdooIconRoundedActionable',
+                'OdooIconRoundedCircleActionable',
+                'OdooIconRoundedShadowActionable',
+                'OdooIconRoundedThumbnailActionable',
+                'OdooIconSpinThumbnailActionable',
+            ],
             ['OdooCropActionable', 'OdooTransformActionable'],
             ['OdooDescriptionActionable'],
         ]
