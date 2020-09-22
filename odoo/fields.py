@@ -5,6 +5,7 @@
 
 from collections import defaultdict
 from datetime import date, datetime, time
+from enum import IntEnum
 from operator import attrgetter
 from xmlrpc.client import MAXINT
 import itertools
@@ -41,6 +42,16 @@ _logger = logging.getLogger(__name__)
 _schema = logging.getLogger(__name__[:-7] + '.schema')
 
 Default = object()                      # default value for __init__() methods
+
+# https://www.odoo.com/documentation/master/reference/orm.html#odoo.models.Model.write
+class WriteMode(IntEnum):
+    add_new = 0
+    update_existing = 1
+    delete_existing = 2
+    remove_existing = 3
+    add_existing = 4
+    remove_all = 5
+    replace_all = 6
 
 
 def first(records):
@@ -1006,7 +1017,7 @@ class Field(MetaField('DummyField', (object,), {})):
                 defaults = record.default_get([self.name])
                 if self.name in defaults:
                     # The null value above is necessary to convert x2many field
-                    # values. For instance, converting [(4, id)] accesses the
+                    # values. For instance, converting [(WriteMode.add_existing.value, id)] accesses the
                     # field's current value, then adds the given id. Without an
                     # initial value, the conversion ends up here to determine
                     # the field's value, and generates an infinite recursion.
@@ -2988,6 +2999,34 @@ class _RelationalMulti(_Relational):
         else:
             assert not any(record_ids)
             return self.write_new(records_commands_list)
+
+    def add_new(self, values: dict):
+        """Creates a new record from the provided values then adds it to the set."""
+        return (WriteMode.add_new.value, 0, values)
+
+    def update_existing(self, res_id: int, values: dict):
+        """Updates an existing record. Can not be used in create()."""
+        return (WriteMode.update_existing.value, res_id, values)
+
+    def delete_existing(self, res_id: int):
+        """Removes a record from the set, then deletes it (from the database). Can not be used in create()."""
+        return (WriteMode.delete_existing.value, res_id, 0)
+
+    def remove_existing(self, res_id: int):
+        """Removes a record from the set, but does not delete it. Can not be used in create()."""
+        return (WriteMode.remove_existing.value, res_id, 0)
+
+    def add_existing(self, res_id: int):
+        """Adds an existing record to the set."""
+        return (WriteMode.add_existing.value, res_id, 0)
+
+    def remove_all(self):
+        """Removes all records from the set. Can not be used in create()."""
+        return (WriteMode.remove_all.value, 0, 0)
+
+    def replace_all(self, res_ids: list):
+        """Removes all records from the set, then adds records to the set."""
+        return (WriteMode.replace_all.value, 0, res_ids)
 
 
 class One2many(_RelationalMulti):
