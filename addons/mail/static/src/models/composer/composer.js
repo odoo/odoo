@@ -682,13 +682,23 @@ function factory(dependencies) {
          * @param {string} mentionKeyword
          */
         _updateSuggestedChannelCommands(mentionKeyword) {
+            const commands = this.env.messaging.commands.filter(
+                command => {
+                    if (!this.thread) {
+                        return false;
+                    }
+                    if (!command.name.includes(mentionKeyword)) {
+                        return false;
+                    }
+                    if (command.channel_types) {
+                        return command.channel_types.includes(this.thread.channel_type);
+                    }
+                    return true;
+                }
+            );
+
             this.update({
-                suggestedChannelCommands: [[
-                    'replace',
-                    this.env.messaging.commands.filter(
-                        command => command.name.includes(mentionKeyword)
-                    )
-                ]],
+                suggestedChannelCommands: [['replace', commands]],
             });
 
             if (this.suggestedChannelCommands[0]) {

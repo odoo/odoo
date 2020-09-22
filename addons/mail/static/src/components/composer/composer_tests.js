@@ -673,9 +673,20 @@ QUnit.test('add an emoji after a channel mention', async function (assert) {
 QUnit.test('display command suggestions on typing "/"', async function (assert) {
     assert.expect(2);
 
+    this.data['mail.channel'].records.push({ channel_type: 'channel', id: 20 });
+    this.data['mail.channel_command'].records.push(
+        {
+            channel_types: ["channel"],
+            help: "List users in the current channel",
+            name: "who",
+        },
+    );
     await this.start();
-    const composer = this.env.models['mail.composer'].create();
-    await this.createComposerComponent(composer);
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel',
+    });
+    await this.createComposerComponent(thread.composer);
 
     assert.containsNone(
         document.body,
@@ -697,12 +708,23 @@ QUnit.test('display command suggestions on typing "/"', async function (assert) 
     );
 });
 
-QUnit.test('use a command', async function (assert) {
+QUnit.test('use a command for a specific channel type', async function (assert) {
     assert.expect(4);
 
+    this.data['mail.channel'].records.push({ channel_type: 'channel', id: 20 });
+    this.data['mail.channel_command'].records.push(
+        {
+            channel_types: ["channel"],
+            help: "List users in the current channel",
+            name: "who",
+        },
+    );
     await this.start();
-    const composer = this.env.models['mail.composer'].create();
-    await this.createComposerComponent(composer);
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel',
+    });
+    await this.createComposerComponent(thread.composer);
 
     assert.containsNone(
         document.body,
@@ -739,13 +761,68 @@ QUnit.test('use a command', async function (assert) {
     );
 });
 
+QUnit.test("commands are not displayed when channel types don't match", async function (assert) {
+    assert.expect(3);
+
+    this.data['mail.channel'].records.push({ channel_type: 'chat', id: 20 });
+    this.data['mail.channel_command'].records.push(
+        {
+            channel_types: ["livechat"],
+            help: "See 15 last visited pages",
+            name: "history",
+        },
+    );
+    await this.start();
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel',
+    });
+    await this.createComposerComponent(thread.composer);
+    assert.containsNone(
+        document.body,
+        '.o_ComposerSuggestionList_list',
+        "command suggestions list should not be present"
+    );
+    assert.strictEqual(
+        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        "",
+        "text content of composer should be empty initially"
+    );
+
+    await afterNextRender(() => {
+        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
+        document.execCommand('insertText', false, "/");
+    });
+    await afterNextRender(() => {
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keydown'));
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keyup'));
+    });
+    assert.containsNone(
+        document.body,
+        '.o_ComposerSuggestion',
+        "should not prompt (command) suggestion after typing / (reason: no channel commands in chat channels)"
+    );
+});
+
 QUnit.test('use a command after some text', async function (assert) {
     assert.expect(5);
 
+    this.data['mail.channel'].records.push({ channel_type: 'channel', id: 20 });
+    this.data['mail.channel_command'].records.push(
+        {
+            channel_types: ["channel"],
+            help: "List users in the current channel",
+            name: "who",
+        },
+    );
     await this.start();
-    const composer = this.env.models['mail.composer'].create();
-    await this.createComposerComponent(composer);
-
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel',
+    });
+    await this.createComposerComponent(thread.composer);
     assert.containsNone(
         document.body,
         '.o_ComposerSuggestion',
@@ -792,9 +869,20 @@ QUnit.test('use a command after some text', async function (assert) {
 QUnit.test('add an emoji after a command', async function (assert) {
     assert.expect(5);
 
+    this.data['mail.channel'].records.push({ channel_type: 'channel', id: 20 });
+    this.data['mail.channel_command'].records.push(
+        {
+            channel_types: ["channel"],
+            help: "List users in the current channel",
+            name: "who",
+        },
+    );
     await this.start();
-    const composer = this.env.models['mail.composer'].create();
-    await this.createComposerComponent(composer);
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel',
+    });
+    await this.createComposerComponent(thread.composer);
 
     assert.containsNone(
         document.body,

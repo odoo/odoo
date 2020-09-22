@@ -95,6 +95,14 @@ class MockModels {
                 },
                 records: [],
             },
+            'mail.channel_command': {
+                fields: {
+                    channel_types: { type: 'array' },
+                    help: { type: 'char' },
+                    name: { type: 'char' },
+                },
+                records: [],
+            },
             'mail.followers': {
                 fields: {
                     channel_id: { type: 'integer' },

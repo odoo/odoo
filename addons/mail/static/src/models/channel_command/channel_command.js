@@ -10,7 +10,7 @@ function factory(dependencies) {
 
     ChannelCommand.fields = {
         /**
-         * FIXME use this value task-2343850
+         * Makes only sense for threads on model 'mail.channel'. Type of the channel (e.g. 'chat', 'channel' or 'groups')
          */
         channel_types: attr(),
         /**
