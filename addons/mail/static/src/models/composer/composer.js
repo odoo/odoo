@@ -602,7 +602,15 @@ function factory(dependencies) {
         _getCommandFromText(content) {
             if (content.startsWith('/')) {
                 const firstWord = content.substring(1).split(/\s/)[0];
-                return this.env.messaging.commands.find(command => command.name === firstWord);
+                return this.env.messaging.commands.find(command => {
+                    if (command.name !== firstWord) {
+                        return false;
+                    }
+                    if (command.channel_types) {
+                        return command.channel_types.includes(this.thread.channel_type);
+                    }
+                    return true;
+                });
             }
             return undefined;
         }
@@ -685,15 +693,16 @@ function factory(dependencies) {
          * @param {string} mentionKeyword
          */
         _updateSuggestedChannelCommands(mentionKeyword) {
-            this.update({
-                suggestedChannelCommands: [[
-                    'replace',
-                    this.env.messaging.commands.filter(
-                        command => command.name.includes(mentionKeyword)
-                    )
-                ]],
+            const commands = this.env.messaging.commands.filter(command => {
+                if (!command.name.includes(mentionKeyword)) {
+                    return false;
+                }
+                if (command.channel_types) {
+                    return command.channel_types.includes(this.thread.channel_type);
+                }
+                return true;
             });
-
+            this.update({ suggestedChannelCommands: [['replace', commands]] });
             if (this.suggestedChannelCommands[0]) {
                 this.update({
                     activeSuggestedChannelCommand: [['link', this.suggestedChannelCommands[0]]],
