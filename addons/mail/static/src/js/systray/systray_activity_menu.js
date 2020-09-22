@@ -149,6 +149,8 @@ var ActivityMenu = Widget.extend({
             search_view_id: [false],
             domain: [['activity_user_id', '=', session.uid]],
             context:context,
+        }, {
+            clear_breadcrumbs: true,
         });
     },
     /**
