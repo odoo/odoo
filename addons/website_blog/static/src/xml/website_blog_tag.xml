@@ -4,7 +4,7 @@
 <t t-name="website_blog.TagListItem">
     <div class="o_we_tag_wrapper">
         <span t-raw="tag.name" class="o_we_tag"/>
-        <we-button class="fa fa-minus"
+        <we-button class="fa fa-minus o_we_text_danger o_we_link"
                    t-att-data-remove-tag="tag.id"
                    data-no-preview="true"/>
     </div>
