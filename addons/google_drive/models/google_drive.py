@@ -159,13 +159,14 @@ class GoogleDrive(models.Model):
             raise UserError(_("Creating google drive may only be done by one at a time."))
         # check if a model is configured with a template
         configs = self.search([('model_id', '=', res_model)])
+        eval_context = self.env['ir.actions.actions']._get_eval_context()
         config_values = []
         for config in configs.sudo():
             if config.filter_id:
                 if config.filter_id.user_id and config.filter_id.user_id.id != self.env.user.id:
                     #Private
                     continue
-                domain = [('id', 'in', [res_id])] + safe_eval(config.filter_id.domain)
+                domain = [('id', 'in', [res_id])] + safe_eval(config.filter_id.domain, eval_context)
                 additionnal_context = safe_eval(config.filter_id.context)
                 google_doc_configs = self.env[config.filter_id.model_id].with_context(**additionnal_context).search(domain)
                 if google_doc_configs:
