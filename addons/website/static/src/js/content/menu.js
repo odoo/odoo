@@ -72,6 +72,18 @@ const BaseAnimatedHeader = animations.Animation.extend({
     /**
      * @private
      */
+    _adaptFixedHeaderPosition() {
+        // Compensate scrollbar
+        this.el.style.removeProperty('right');
+        if (this.fixedHeader) {
+            const scrollableEl = this.$el.parent().closestScrollable()[0];
+            const style = window.getComputedStyle(this.el);
+            this.el.style.setProperty('right', `${parseInt(style['right']) + scrollableEl.offsetWidth - scrollableEl.clientWidth}px`, 'important');
+        }
+    },
+    /**
+     * @private
+     */
     _adaptToHeaderChange: function () {
         this._updateMainPaddingTop();
         this.el.classList.toggle('o_top_fixed_element', this.fixedHeader && this._isShown());
@@ -128,14 +140,7 @@ const BaseAnimatedHeader = animations.Animation.extend({
     _toggleFixedHeader: function (useFixed = true) {
         this.fixedHeader = useFixed;
         this.el.classList.toggle('o_header_affixed', useFixed);
-        // Compensate scrollbar
-        if (useFixed) {
-            const scrollableEl = this.$el.parent().closestScrollable()[0];
-            const style = window.getComputedStyle(this.el);
-            this.el.style.setProperty('right', `${parseInt(style['right']) + scrollableEl.offsetWidth - scrollableEl.clientWidth}px`, 'important');
-        } else {
-            this.el.style.removeProperty('right');
-        }
+        this._adaptFixedHeaderPosition();
         this._adaptToHeaderChange();
     },
     /**
@@ -191,6 +196,7 @@ const BaseAnimatedHeader = animations.Animation.extend({
      * @private
      */
     _updateHeaderOnResize: function () {
+        this._adaptFixedHeaderPosition();
         if (document.body.classList.contains('overflow-hidden')
                 && config.device.size_class > config.device.SIZES.SM) {
             document.body.classList.remove('overflow-hidden');
