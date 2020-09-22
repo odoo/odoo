@@ -336,6 +336,16 @@ options.registry.BlogPostTagSelection = options.Class.extend({
         return this._super(...arguments);
     },
     /**
+     * @override
+     */
+    async _computeWidgetState(methodName, params) {
+        if (methodName === 'addTag') {
+            // The related widget allows to select a value but then resets its state to a non-selected value
+            return '';
+        }
+        return this._super(...arguments);
+    },
+    /**
      * @private
      */
     _notifyUpdatedTags() {
