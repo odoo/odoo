@@ -387,7 +387,7 @@ function factory(dependencies) {
          * @returns {boolean}
          */
         _computeIsCurrentPartnerAuthor() {
-            return (
+            return !!(
                 this.author &&
                 this.messagingCurrentPartner &&
                 this.messagingCurrentPartner === this.author
