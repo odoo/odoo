@@ -8,8 +8,11 @@ import re
 import requests
 import werkzeug.urls
 
-from odoo import api, fields, models
+from pytz import timezone
+
+from odoo import api, fields, models, tools
 from odoo.exceptions import RedirectWarning, UserError
+from odoo.tools.safe_eval import safe_eval
 from odoo.tools.translate import _
 
 from odoo.addons.google_account.models.google_service import GOOGLE_TOKEN_ENDPOINT, TIMEOUT
@@ -140,6 +143,17 @@ class GoogleDrive(models.Model):
         return res
 
     @api.model
+    def _get_eval_context(self):
+        """ evaluation context to pass to safe_eval """
+        return {
+            'uid': self._uid,
+            'time': tools.safe_eval.time,
+            'datetime': tools.safe_eval.datetime,
+            'dateutil': tools.safe_eval.dateutil,
+            'timezone': timezone,
+        }
+
+    @api.model
     def get_google_drive_config(self, res_model, res_id):
         '''
         Function called by the js, when no google doc are yet associated with a record, with the aim to create one. It
@@ -159,13 +173,14 @@ class GoogleDrive(models.Model):
             raise UserError(_("Creating google drive may only be done by one at a time."))
         # check if a model is configured with a template
         configs = self.search([('model_id', '=', res_model)])
+        eval_context = self._get_eval_context()
         config_values = []
         for config in configs.sudo():
             if config.filter_id:
                 if config.filter_id.user_id and config.filter_id.user_id.id != self.env.user.id:
                     #Private
                     continue
-                domain = [('id', 'in', [res_id])] + ast.literal_eval(config.filter_id.domain)
+                domain = [('id', 'in', [res_id])] + safe_eval(config.filter_id.domain, eval_context)
                 additionnal_context = ast.literal_eval(config.filter_id.context)
                 google_doc_configs = self.env[config.filter_id.model_id].with_context(**additionnal_context).search(domain)
                 if google_doc_configs:
