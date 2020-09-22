@@ -62,6 +62,7 @@ class account_payment(models.Model):
         "SEPA Credit Transfer: Pay bill from a SEPA Credit Transfer file you submit to your bank. To enable sepa credit transfer, module account_sepa must be installed ")
     payment_method_code = fields.Char(related='payment_method_id.code',
         help="Technical field used to adapt the interface to the payment type selected.", readonly=True)
+    payment_methods_list = fields.One2many('account.payment.method', compute='_compute_payment_methods_list')
 
     partner_type = fields.Selection([('customer', 'Customer'), ('supplier', 'Vendor')], tracking=True, readonly=True, states={'draft': [('readonly', False)]})
     partner_id = fields.Many2one('res.partner', string='Partner', tracking=True, readonly=True, states={'draft': [('readonly', False)]}, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
@@ -166,6 +167,19 @@ class account_payment(models.Model):
             payment_amount = -pay.amount if pay.payment_type == 'outbound' else pay.amount
             pay.payment_difference = pay._compute_payment_amount(pay.invoice_ids, pay.currency_id, pay.journal_id, pay.payment_date) - payment_amount
         (self - draft_payments).payment_difference = 0
+
+    @api.depends('journal_id')
+    def _compute_payment_methods_list(self):
+        for payment in self:
+            if self.journal_id:
+                payment_methods = self.payment_type == 'inbound' and self.journal_id.inbound_payment_method_ids or self.journal_id.outbound_payment_method_ids
+                default_payment_method_id = self.env.context.get('default_payment_method_id')
+                if default_payment_method_id:
+                    # Ensure the domain will accept the provided default value
+                    payment_methods.append(self.env.browse(default_payment_method_id))
+                self.payment_methods_list = payment_methods
+            else:
+                self.payment_methods_list = False
 
     @api.onchange('journal_id')
     def _onchange_journal(self):
