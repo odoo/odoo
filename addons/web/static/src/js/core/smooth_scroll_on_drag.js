@@ -351,8 +351,6 @@ const SmoothScrollOnDrag = Class.extend(mixins.ParentedMixin, {
         }
         this.$scrollTarget = $(scrollTarget);
 
-        console.log(scrollTarget);
-
         this.scrollTargetIsDocument = this.$scrollTarget.is('html');
         this.scrollTargetIsParent = this.$scrollTarget.get(0).contains(this.$element.get(0));
         this._updatePositionOptions(ui);
