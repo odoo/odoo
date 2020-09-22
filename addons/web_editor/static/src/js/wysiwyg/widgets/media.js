@@ -396,7 +396,7 @@ var FileWidget = SearchableMediaWidget.extend({
         }
         const selected = this.selectedAttachments.concat(mediaAttachments).map(attachment => {
             // Color-customize dynamic SVGs with the primary theme color
-            if (attachment.image_src.startsWith('/web_editor/shape/')) {
+            if (attachment.image_src && attachment.image_src.startsWith('/web_editor/shape/')) {
                 const colorCustomizedURL = new URL(attachment.image_src, window.location.origin);
                 colorCustomizedURL.searchParams.set('c1', getCSSVariableValue('o-color-1'));
                 attachment.image_src = colorCustomizedURL.pathname + colorCustomizedURL.search;
@@ -448,7 +448,8 @@ var FileWidget = SearchableMediaWidget.extend({
             }
             href += 'unique=' + img.checksum + '&download=true';
             this.$media.attr('href', href);
-            this.$media.addClass('o_image').attr('title', img.name).attr('data-mimetype', img.mimetype);
+            this.$media.addClass('o_image').attr('title', img.name);
+            this.$media.append($(`<img src="${this._getFileImageUrl(img.mimetype, img.name, this.$media.data('ext'))}"/>`))
         }
 
         this.$media.attr('alt', img.alt || img.description || '');
@@ -515,6 +516,142 @@ var FileWidget = SearchableMediaWidget.extend({
             .prop('disabled', !isURL);
         this.$urlSuccess.toggleClass('d-none', !isURL);
         this.$urlError.toggleClass('d-none', emptyValue || isURL);
+    },
+    /**
+     * Returns the static url of an image representing the given mimetype.
+     *
+     * @see /web/static/src/scss/mimetypes.scss
+     *
+     * @param {string} mimetype
+     * @param {string} [title]
+     * @param {string} [ext]
+     * @returns {string}
+     */
+    _getFileImageUrl: function(mimetype, title, ext) {
+        title = title || '';
+        ext = ext || '';
+        const prefix = '/web/static/src/img/mimetypes';
+        if (mimetype.startsWith('image')) {
+            return `${prefix}/image.svg`;
+        } else if (mimetype.startsWith('audio')) {
+            return `${prefix}/audio.svg`;
+        } else if (
+            mimetype.startsWith('text') ||
+            mimetype.endsWith('rtf')
+        ) {
+            return `${prefix}/text.svg`;
+        } else if (
+            mimetype.includes('octet-stream') ||
+            mimetype.includes('download') ||
+            mimetype.includes('python')
+        ) {
+            return `${prefix}/binary.svg`;
+        } else if (
+            mimetype.startsWith('video') ||
+            title.endsWith('.mp4') ||
+            title.endsWith('.avi')
+        ) {
+            return `${prefix}/video.svg`;
+        } else if (
+            mimetype.endsWith('archive') ||
+            mimetype.endsWith('compressed') ||
+            mimetype.includes('zip') ||
+            mimetype.endsWith('tar') ||
+            mimetype.includes('package')
+        ) {
+            return `${prefix}/archive.svg`;
+        } else if (mimetype === 'application/pdf') {
+            return `${prefix}/pdf.svg`;
+        } else if (
+            mimetype.startsWith('text-master') ||
+            mimetype.includes('document') ||
+            mimetype.includes('msword') ||
+            mimetype.includes('wordprocessing')
+        ) {
+            return `${prefix}/document.svg`;
+        } else if (
+            mimetype.includes('application/xml') ||
+            mimetype.endsWith('html')
+        ) {
+            return `${prefix}/web_code.svg`;
+        } else if (
+            mimetype.endsWith('css') ||
+            mimetype.endsWith('less') ||
+            ext.endsWith('less')
+        ) {
+            return `${prefix}/web_style.svg`;
+        } else if (
+            mimetype.includes('-image') ||
+            mimetype.includes('diskimage') ||
+            ext.endsWith('dmg')
+        ) {
+            return `${prefix}/disk.svg`;
+        } else if (
+            mimetype.endsWith('csv') ||
+            mimetype.includes('vc') ||
+            mimetype.includes('excel') ||
+            mimetype.endsWith('numbers') ||
+            mimetype.endsWith('calc') ||
+            mimetype.includes('mods') ||
+            mimetype.includes('spreadsheet')
+        ) {
+            return `${prefix}/spreadsheet.svg`;
+        } else if (mimetype.startsWith('key')) {
+            return `${prefix}/certificate.svg`;
+        } else if (
+            mimetype.includes('presentation') ||
+            mimetype.includes('keynote') ||
+            mimetype.includes('teacher') ||
+            mimetype.includes('slideshow') ||
+            mimetype.includes('powerpoint')) {
+            return `${prefix}/presentation.svg`;
+        } else if (
+            mimetype.includes('cert') ||
+            mimetype.includes('rules') ||
+            mimetype.includes('pkcs') ||
+            mimetype.endsWith('stl') ||
+            mimetype.endsWith('crl')
+        ) {
+            return `${prefix}/certificate.svg`;
+        } else if (
+            mimetype.includes('-font') ||
+            mimetype.includes('font-') ||
+            ext.endsWith('ttf')
+        ) {
+            return `${prefix}/font.svg`;
+        } else if (mimetype.includes('-dvi')) {
+            return `${prefix}/print.svg`;
+        } else if (
+            mimetype.includes('script') ||
+            mimetype.includes('x-sh') ||
+            ext.includes('bat') ||
+            mimetype.endsWith('bat') ||
+            mimetype.endsWith('cgi') ||
+            mimetype.endsWith('-c') ||
+            mimetype.includes('java') ||
+            mimetype.includes('ruby')
+        ) {
+            return `${prefix}/script.svg`;
+        } else if (mimetype.includes('javascript')) {
+            return `${prefix}/javascript.svg`;
+        } else if (
+            mimetype.includes('calendar') ||
+            mimetype.endsWith('ldif')
+        ) {
+            return `${prefix}/calendar.svg`;
+        } else if (
+            mimetype.endsWith('postscript') ||
+            mimetype.endsWith('cdr') ||
+            mimetype.endsWith('xara') ||
+            mimetype.endsWith('cgm') ||
+            mimetype.endsWith('graphics') ||
+            mimetype.endsWith('draw') ||
+            mimetype.includes('svg')
+        ) {
+            return `${prefix}/vector.svg`;
+        } else {
+            return `${prefix}/unknown.svg`;
+        }
     },
 
     //--------------------------------------------------------------------------
