@@ -47,7 +47,8 @@ ActivityMenu.include({
                 additional_context: {
                     default_mode: 'day',
                     search_default_mymeetings: 1,
-                }
+                },
+               clear_breadcrumbs: true,
             });
         } else {
             this._super.apply(this, arguments);
