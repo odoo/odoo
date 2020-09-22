@@ -3,6 +3,7 @@ odoo.define('mail/static/src/models/attachment/attachment.js', function (require
 
 const { registerNewModel } = require('mail/static/src/model/model_core.js');
 const { attr, many2many, many2one } = require('mail/static/src/model/model_field.js');
+const { clear } = require('mail/static/src/model/model_field_command.js');
 
 function factory(dependencies) {
 
@@ -142,7 +143,7 @@ function factory(dependencies) {
 
         /**
          * @private
-         * @returns {string}
+         * @returns {string|undefined}
          */
         _computeDefaultSource() {
             if (this.fileType === 'image') {
@@ -169,15 +170,19 @@ function factory(dependencies) {
             if (this.fileType === 'video') {
                 return `/web/image/${this.id}?model=ir.attachment`;
             }
-            return undefined;
+            return clear();
         }
 
         /**
          * @private
-         * @returns {string}
+         * @returns {string|undefined}
          */
         _computeDisplayName() {
-            return this.name || this.filename;
+            const displayName = this.name || this.filename;
+            if (displayName) {
+                return displayName;
+            }
+            return clear();
         }
 
         /**
@@ -185,7 +190,11 @@ function factory(dependencies) {
          * @returns {string|undefined}
          */
         _computeExtension() {
-            return this.filename && this.filename.split('.').pop();
+            const extension = this.filename && this.filename.split('.').pop();
+            if (extension) {
+                return extension;
+            }
+            return clear();
         }
 
         /**
@@ -194,15 +203,15 @@ function factory(dependencies) {
          */
         _computeFileType() {
             if (this.type === 'url' && !this.url) {
-                return undefined;
+                return clear();
             } else if (!this.mimetype) {
-                return undefined;
+                return clear();
             }
             const match = this.type === 'url'
                 ? this.url.match('(youtu|.png|.jpg|.gif)')
                 : this.mimetype.match('(image|video|application/pdf|text)');
             if (!match) {
-                return undefined;
+                return clear();
             }
             if (match[1].match('(.png|.jpg|.gif)')) {
                 return 'image';

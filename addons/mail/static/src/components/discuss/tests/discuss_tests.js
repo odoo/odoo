@@ -1834,7 +1834,7 @@ QUnit.test('new messages separator [REQUIRE FOCUS]', async function (assert) {
 });
 
 QUnit.test('restore thread scroll position', async function (assert) {
-    assert.expect(5);
+    assert.expect(6);
     // channels expected to be rendered, with random unique id that will be referenced in the test
     this.data['mail.channel'].records.push({ id: 11 }, { id: 12 });
     for (let i = 1; i <= 25; i++) {
@@ -1871,6 +1871,15 @@ QUnit.test('restore thread scroll position', async function (assert) {
         `).length,
         25,
         "should have 25 messages in channel 11"
+    );
+    const initialMessageList = document.querySelector(`
+        .o_Discuss_thread
+        .o_ThreadView_messageList
+    `);
+    assert.strictEqual(
+        initialMessageList.scrollTop + initialMessageList.clientHeight,
+        initialMessageList.scrollHeight,
+        "should have scrolled to bottom of channel 11 initially"
     );
 
     await this.afterEvent({
