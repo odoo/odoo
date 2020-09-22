@@ -124,7 +124,11 @@ class AccountMove(models.Model):
                 debit_interim_account = accounts['stock_output']
                 credit_expense_account = accounts['expense']
                 if not credit_expense_account:
+<<<<<<< HEAD
                     if self.type == 'out_refund':
+=======
+                    if self.move_type == 'out_refund':
+>>>>>>> cbff81b2342... temp
                         credit_expense_account = self.journal_id.default_credit_account_id
                     else: # out_invoice/out_receipt
                         credit_expense_account = self.journal_id.default_debit_account_id
