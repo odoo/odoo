@@ -237,7 +237,7 @@
                     <br/><strong>Exchange rate: </strong> <span t-field="o.l10n_ar_currency_rate"/>
                 </t>
                 <t t-if="o.l10n_latam_document_type_id.code in ['201', '206', '211']">
-                    <br/><strong>CBU for payment: </strong><span t-esc="o.invoice_partner_bank_id.acc_number or '' if o.invoice_partner_bank_id.acc_type == 'cbu' else ''"/>
+                    <br/><strong>CBU for payment: </strong><span t-esc="o.partner_bank_id.acc_number or '' if o.partner_bank_id.acc_type == 'cbu' else ''"/>
                 </t>
 
             </div>
