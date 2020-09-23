@@ -56,7 +56,7 @@ function factory(dependencies) {
                     data2.user = [
                         ['insert', {
                             id: data.user_id[0],
-                            partnerDisplayName: data.user_id[1],
+                            display_name: data.user_id[1],
                         }],
                     ];
                 }
@@ -246,7 +246,15 @@ function factory(dependencies) {
 
         /**
          * @private
-         * @returns {string}
+         * @returns {string|undefined}
+         */
+        _computeDisplayName() {
+            return this.display_name || this.user && this.user.display_name;
+        }
+
+        /**
+         * @private
+         * @returns {string|undefined}
          */
         _computeNameOrDisplayName() {
             return this.name || this.display_name;
@@ -263,7 +271,12 @@ function factory(dependencies) {
         }),
         country: many2one('mail.country'),
         display_name: attr({
+            compute: '_computeDisplayName',
             default: "",
+            dependencies: [
+                'display_name',
+                'userDisplayName',
+            ],
         }),
         email: attr(),
         failureNotifications: one2many('mail.notification', {
@@ -303,6 +316,12 @@ function factory(dependencies) {
         }),
         user: one2one('mail.user', {
             inverse: 'partner',
+        }),
+        /**
+         * Serves as compute dependency.
+         */
+        userDisplayName: attr({
+            related: 'user.display_name',
         }),
     };
 
