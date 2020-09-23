@@ -155,16 +155,28 @@
     <!-- Page options -->
     <xpath expr="//div[@id='wrapwrap']" position="before">
         <t groups="website.group_website_publisher">
-            <t t-foreach="['header_overlay', 'header_color', 'header_visible', 'footer_visible']" t-as="optionName">
+            <t t-foreach="['header_overlay', 'header_color', 'header_text_color', 'header_visible', 'footer_visible']" t-as="optionName">
                 <input t-if="optionName in main_object" type="hidden" class="o_page_option_data" t-att-name="optionName" t-att-value="main_object[optionName]"/>
             </t>
         </t>
+        <!-- background and text color applied for only overlay header -->
+        <t t-set="header_bg_color" t-value="'header_color' in main_object and main_object.header_color"/>
+        <t t-set="header_text_color" t-value="'header_text_color' in main_object and main_object.header_text_color"/>
     </xpath>
     <xpath expr="//div[@id='wrapwrap']" position="attributes">
         <attribute name="t-attf-class" add="#{'o_header_overlay' if 'header_overlay' in main_object and main_object.header_overlay else ''}" separator=" "/>
     </xpath>
+    <!-- for overlay header background color -->
     <xpath expr="//header" position="attributes">
-        <attribute name="t-attf-class" add="#{main_object.header_color if 'header_color' in main_object else ''}" separator=" "/>
+        <attribute name="t-attf-class" add="#{main_object.header_color if header_bg_color and ('bg-' in main_object.header_color) else ''}" separator=" "/>
+        <!-- applied style for inline css background color -->
+        <attribute name="t-attf-style" add="#{'background-color:' + main_object.header_color + ';' if header_bg_color and ('bg-' not in main_object.header_color) else ''}" separator=" "/>
+    </xpath>
+    <!-- for overlay header text color -->
+    <xpath expr="//header" position="attributes">
+        <attribute  name="t-attf-class" add="#{main_object.header_text_color if header_text_color and ('text-' in main_object.header_text_color) else ''}" separator=" "/>
+        <!-- applied style for inline css text color -->
+        <attribute name="t-attf-style" add="#{'color:' + main_object.header_text_color + ';' if header_text_color and ('text-' not in main_object.header_text_color) else ''}" separator=" "/>
     </xpath>
     <xpath expr="//header" position="attributes">
         <attribute name="t-attf-class" add="#{'d-none o_snippet_invisible' if 'header_visible' in main_object and not main_object.header_visible else ''}" separator=" "/>

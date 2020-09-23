@@ -28,6 +28,8 @@ class Page(models.Model):
     # Page options
     header_overlay = fields.Boolean()
     header_color = fields.Char()
+    # apply text color, when header is over the content
+    header_text_color = fields.Char()
     header_visible = fields.Boolean(default=True)
     footer_visible = fields.Boolean(default=True)
 

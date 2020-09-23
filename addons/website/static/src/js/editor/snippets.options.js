@@ -2072,6 +2072,13 @@ options.registry.TopMenuVisibility = VisibilityPageOptionUpdate.extend({
                 onSuccess: () => resolve(),
             });
         });
+        await new Promise(resolve => {
+            this.trigger_up('action_demand', {
+                actionName: 'toggle_page_option',
+                params: [{name: 'header_text_color', value: ''}],
+                onSuccess: () => resolve(),
+            });
+        });
     },
     /**
      * @override
@@ -2102,10 +2109,12 @@ options.registry.topMenuColor = options.Class.extend({
      */
     selectStyle(previewMode, widgetValue, params) {
         this._super(...arguments);
-        const className = widgetValue ? (params.colorPrefix + widgetValue) : '';
+        if (widgetValue && !ColorpickerWidget.isCSSColor(widgetValue)) {
+            widgetValue = params.colorPrefix + widgetValue;
+        }
         this.trigger_up('action_demand', {
             actionName: 'toggle_page_option',
-            params: [{name: 'header_color', value: className}],
+            params: [{name: params.name, value: widgetValue}],
         });
     },
 
