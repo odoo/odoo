@@ -17,6 +17,7 @@
                             <field name="name" readonly="1"/>
                             <field name="email" attrs="{'readonly': [('parent.partner_readonly', '=', True)]}"/>
                             <field name="message" readonly="1"/>
+                            <field name="partner_id" invisible="1"/>
                             <field name="resend" widget="boolean_toggle"/>
                         </tree>
                     </field>
