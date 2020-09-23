@@ -655,11 +655,14 @@ function factory(dependencies) {
          */
         _handleNotificationPartnerTransientMessage(data) {
             const convertedData = this.env.models['mail.message'].convertData(data);
-            const messageIds = this.env.models['mail.message'].all().map(message => message.id);
+            const lastMessageId = this.env.models['mail.message'].all().reduce(
+                (lastMessageId, message) => Math.max(lastMessageId, message.id),
+                0
+            );
             const partnerRoot = this.env.messaging.partnerRoot;
             const message = this.env.models['mail.message'].create(Object.assign(convertedData, {
                 author: [['link', partnerRoot]],
-                id: (messageIds ? Math.max(...messageIds) : 0) + 0.01,
+                id: lastMessageId + 0.01,
                 isTransient: true,
             }));
             this._notifyThreadViewsMessageReceived(message);

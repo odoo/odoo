@@ -1890,11 +1890,17 @@ QUnit.test('new messages separator [REQUIRE FOCUS]', async function (assert) {
 QUnit.test('restore thread scroll position', async function (assert) {
     assert.expect(6);
     // channels expected to be rendered, with random unique id that will be referenced in the test
-    this.data['mail.channel'].records.push({ id: 11 }, { id: 12 });
+    // FIXME channels are marked as read as there is some race conditions in tests with focus & markAsSeen
+    // -> should be investigated (cf task-2372339)
+    this.data['mail.channel'].records.push(
+        { id: 11, seen_message_id: 35 },
+        { id: 12, seen_message_id: 124 },
+    );
     for (let i = 1; i <= 25; i++) {
         this.data['mail.message'].records.push({
             body: "not empty",
             channel_ids: [11],
+            id: 10 + i,
             model: 'mail.channel',
             res_id: 11,
         });
@@ -1903,6 +1909,7 @@ QUnit.test('restore thread scroll position', async function (assert) {
         this.data['mail.message'].records.push({
             body: "not empty",
             channel_ids: [12],
+            id: 100 + i,
             model: 'mail.channel',
             res_id: 12,
         });

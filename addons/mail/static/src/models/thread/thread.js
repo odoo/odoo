@@ -475,17 +475,35 @@ function factory(dependencies) {
          *
          * @static
          * @param {Object} param0
-         * @param {string} param0.command the command to execute
-         * @param {integer[]} param0.ids list of id of channels
+         * @param {integer} param0.channelId
+         * @param {string} param0.command
+         * @param {Object} [param0.postData={}]
          */
-        static async performRpcExecuteCommand({ command, ids }) {
+        static async performRpcExecuteCommand({ channelId, command, postData = {} }) {
             return this.env.services.rpc({
                 model: 'mail.channel',
                 method: 'execute_command',
-                args: [ids],
-                kwargs: {
-                    command,
-                }
+                args: [[channelId]],
+                kwargs: Object.assign({ command }, postData),
+            });
+        }
+
+        /**
+         * Performs the `message_post` RPC on given threadModel.
+         *
+         * @static
+         * @param {Object} param0
+         * @param {Object} param0.postData
+         * @param {integer} param0.threadId
+         * @param {string} param0.threadModel
+         * @return {integer} the posted message id
+         */
+        static async performRpcMessagePost({ postData, threadId, threadModel }) {
+            return this.env.services.rpc({
+                model: threadModel,
+                method: 'message_post',
+                args: [threadId],
+                kwargs: postData,
             });
         }
 
@@ -615,26 +633,25 @@ function factory(dependencies) {
         /**
          * Mark the specified conversation as read/seen.
          *
-         * @param {integer} messageId the message to be considered as last seen
+         * @param {mail.message} message the message to be considered as last seen.
          */
-        async markAsSeen(messageId) {
+        async markAsSeen(message) {
             if (this.model !== 'mail.channel') {
                 return;
             }
-            if (this.pendingSeenMessageId && messageId <= this.pendingSeenMessageId) {
+            if (this.pendingSeenMessageId && message.id <= this.pendingSeenMessageId) {
                 return;
             }
             if (
                 this.lastSeenByCurrentPartnerMessageId &&
-                messageId <= this.lastSeenByCurrentPartnerMessageId
+                message.id <= this.lastSeenByCurrentPartnerMessageId
             ) {
                 return;
             }
-            this.update({ pendingSeenMessageId: messageId });
+            this.update({ pendingSeenMessageId: message.id });
             return this.env.models['mail.thread'].performRpcChannelSeen({
                 ids: [this.id],
-                // commands have fake message id that is not integer
-                lastMessageId: Math.floor(messageId),
+                lastMessageId: message.id,
             });
         }
 
@@ -677,9 +694,9 @@ function factory(dependencies) {
                     uuid: this.uuid,
                 });
             } else {
-                await this.env.models['mail.thread'].performRpcExecuteCommand({
+                this.env.models['mail.thread'].performRpcExecuteCommand({
+                    channelId: this.id,
                     command: 'leave',
-                    ids: [this.id],
                 });
             }
         }
@@ -1106,7 +1123,7 @@ function factory(dependencies) {
          * @returns {mail.message}
          */
         _computeLastCurrentPartnerMessageSeenByEveryone() {
-            if (!this.partnerSeenInfos || !this.orderedMessages) {
+            if (!this.partnerSeenInfos || !this.orderedNonTransientMessages) {
                 return [['unlink-all']];
             }
             const otherPartnerSeenInfos =
@@ -1127,7 +1144,7 @@ function factory(dependencies) {
                 ...otherPartnersLastSeenMessageIds
             );
             const currentPartnerOrderedSeenMessages =
-                this.orderedMessages.filter(message =>
+                this.orderedNonTransientMessages.filter(message =>
                     message.author === this.messagingCurrentPartner &&
                     message.id <= lastMessageSeenByAllId);
 
@@ -1159,6 +1176,21 @@ function factory(dependencies) {
          * @private
          * @returns {mail.message|undefined}
          */
+        _computeLastNonTransientMessage() {
+            const {
+                length: l,
+                [l - 1]: lastMessage,
+            } = this.orderedNonTransientMessages;
+            if (lastMessage) {
+                return [['link', lastMessage]];
+            }
+            return [['unlink']];
+        }
+
+        /**
+         * @private
+         * @returns {mail.message|undefined}
+         */
         _computeLastNeedactionMessage() {
             const orderedNeedactionMessages = this.needactionMessages.sort(
                 (m1, m2) => m1.id < m2.id ? -1 : 1
@@ -1169,6 +1201,23 @@ function factory(dependencies) {
             } = orderedNeedactionMessages;
             if (lastNeedactionMessage) {
                 return [['link', lastNeedactionMessage]];
+            }
+            return [['unlink']];
+        }
+
+        /**
+         * @private
+         * @returns {mail.message|undefined}
+         */
+        _computeLastTransientMessage() {
+            if (this.orderedMessages.length === 0) {
+                return [['unlink']];
+            }
+            for (let i = this.orderedMessages.length - 1; i >= 0; i--) {
+                const message = this.orderedMessages[i];
+                if (message.isTransient) {
+                    return [['link', message]];
+                }
             }
             return [['unlink']];
         }
@@ -1190,34 +1239,39 @@ function factory(dependencies) {
             // trusted are:
             // - we have no last message (and then no messages at all)
             // - the message it used to compute is the last message we know
-            if (this.orderedMessages.length === 0) {
+            if (this.orderedNonTransientMessages.length === 0) {
                 return this.serverMessageUnreadCounter;
             }
             // from here serverLastMessageId is not undefined because
-            // orderedMessages contain at least one message.
+            // orderedNonTransientMessages contain at least one message.
             if (!this.lastSeenByCurrentPartnerMessageId) {
-                return this.serverMessageUnreadCounter;
+                const amountOfFetchedNotSeenMessages = this.orderedNonTransientMessages.reduce((acc, message) =>
+                    acc + ((message.id > this.serverLastMessageId && message.author !== this.env.messaging.currentPartner) ? 1 : 0),
+                    0,
+                );
+                return this.serverMessageUnreadCounter + amountOfFetchedNotSeenMessages;
             }
             // if server knows more messages than the client knows then we just
             // need to trust him
             if (this.serverLastMessageId > this.lastSeenByCurrentPartnerMessageId) {
                 return this.serverMessageUnreadCounter;
             }
-            const firstMessage = this.orderedMessages[0];
+            const firstMessage = this.orderedNonTransientMessages[0];
             // if the lastSeenByCurrentPartnerMessageId is not known (not fetched), then we
             // need to rely on server value to determine the amount of unread
             // messages until the last message it knew when computing the
             // serverMessageUnreadCounter
             if (this.lastSeenByCurrentPartnerMessageId < firstMessage.id) {
-                const fetchedNotSeenMessages = this.orderedMessages.filter(message =>
-                    message.id > this.serverLastMessageId && message.author !== this.env.messaging.currentPartner
+                const amountOfFetchedNotSeenMessages = this.orderedNonTransientMessages.reduce((acc, message) =>
+                    acc + ((message.id > this.serverLastMessageId && message.author !== this.env.messaging.currentPartner) ? 1 : 0),
+                    0,
                 );
-                return this.serverMessageUnreadCounter + fetchedNotSeenMessages.length;
+                return this.serverMessageUnreadCounter + amountOfFetchedNotSeenMessages;
             }
             // lastSeenByCurrentPartnerMessageId is a known message,
             // then we can forget serverMessageUnreadCounter
             const maxId = this.lastSeenByCurrentPartnerMessageId;
-            return this.orderedMessages.reduce(
+            return this.orderedNonTransientMessages.reduce(
                 (acc, message) => acc + ((message.id > maxId && message.author !== this.env.messaging.currentPartner) ? 1 : 0),
                 0
             );
@@ -1240,11 +1294,39 @@ function factory(dependencies) {
         }
 
         /**
+         * @returns {integer|undefined}
+         * @private
+         */
+        _computeMessageBeforeNewMessageSeparatorId() {
+            if (this.model !== 'mail.channel') {
+                return clear();
+            }
+            if (this.localMessageUnreadCounter === 0) {
+                return clear();
+            }
+            if (!this.lastSeenByCurrentPartnerMessageId) {
+                return this.lastTransientMessage ? this.lastTransientMessage.id : 0;
+            }
+            if (!this.lastTransientMessage) {
+                return this.lastSeenByCurrentPartnerMessageId;
+            }
+            return Math.max(this.lastTransientMessage.id, this.lastSeenByCurrentPartnerMessageId);
+        }
+
+        /**
          * @private
          * @returns {mail.message[]}
          */
         _computeOrderedMessages() {
             return [['replace', this.messages.sort((m1, m2) => m1.id < m2.id ? -1 : 1)]];
+        }
+
+        /**
+         * @private
+         * @returns {mail.message[]}
+         */
+        _computeOrderedNonTransientMessages() {
+            return [['replace', this.orderedMessages.filter(m => !m.isTransient)]];
         }
 
         /**
@@ -1639,11 +1721,14 @@ function factory(dependencies) {
         lastCurrentPartnerMessageSeenByEveryone: many2one('mail.message', {
             compute: '_computeLastCurrentPartnerMessageSeenByEveryone',
             dependencies: [
-                'partnerSeenInfos',
-                'orderedMessages',
                 'messagingCurrentPartner',
+                'orderedNonTransientMessages',
+                'partnerSeenInfos',
             ],
         }),
+        /**
+         * Last message of the thread, could be a transient one.
+         */
         lastMessage: many2one('mail.message', {
             compute: '_computeLastMessage',
             dependencies: ['orderedMessages'],
@@ -1651,6 +1736,13 @@ function factory(dependencies) {
         lastNeedactionMessage: many2one('mail.message', {
             compute: '_computeLastNeedactionMessage',
             dependencies: ['needactionMessages'],
+        }),
+        /**
+         * Last non-transient message.
+         */
+        lastNonTransientMessage: many2one('mail.message', {
+            compute: '_computeLastNonTransientMessage',
+            dependencies: ['orderedNonTransientMessages'],
         }),
         /**
          * Last seen message id of the channel by current partner.
@@ -1665,16 +1757,23 @@ function factory(dependencies) {
          */
         lastSeenByCurrentPartnerMessageId: attr(),
         /**
+         * Last transient message.
+         */
+        lastTransientMessage: many2one('mail.message', {
+            compute: '_computeLastTransientMessage',
+            dependencies: ['orderedMessages'],
+        }),
+        /**
          * Local value of message unread counter, that means it is based on initial server value and
          * updated with interface updates.
          */
         localMessageUnreadCounter: attr({
             compute: '_computeLocalMessageUnreadCounter',
             dependencies: [
-                'lastMessage',
+                'lastNonTransientMessage',
                 'lastSeenByCurrentPartnerMessageId',
                 'messagingCurrentPartner',
-                'orderedMessages',
+                'orderedNonTransientMessages',
                 'serverLastMessageId',
                 'serverMessageUnreadCounter',
             ],
@@ -1687,6 +1786,20 @@ function factory(dependencies) {
         }),
         members: many2many('mail.partner', {
             inverse: 'memberThreads',
+        }),
+        /**
+         * Id of the message after which the new message separator should be placed.
+         * When 0, this means the new message separator has to be placed before
+         * all messages and when undefined, this means no message separator should be shown.
+         */
+        messageBeforeNewMessageSeparatorId: attr({
+            compute: '_computeMessageBeforeNewMessageSeparatorId',
+            dependencies:[
+                'lastSeenByCurrentPartnerMessageId',
+                'lastTransientMessage',
+                'localMessageUnreadCounter',
+                'model',
+            ],
         }),
         message_needaction_counter: attr({
             default: 0,
@@ -1753,9 +1866,26 @@ function factory(dependencies) {
                 'serverFoldState',
             ],
         }),
+        /**
+         * All messages ordered like they are displayed.
+         */
         orderedMessages: many2many('mail.message', {
             compute: '_computeOrderedMessages',
             dependencies: ['messages'],
+        }),
+        /**
+         * Serves as compute dependency. (task-2261221)
+         */
+        orderedMessagesIsTransient: attr({
+            related: 'orderedMessages.isTransient',
+        }),
+        /**
+         * All messages ordered like they are displayed. This field does not
+         * contain transient messages which are not "real" records.
+         */
+        orderedNonTransientMessages: many2many('mail.message', {
+            compute: '_computeOrderedNonTransientMessages',
+            dependencies: ['orderedMessages', 'orderedMessagesIsTransient'],
         }),
         /**
          * Ordered typing members on this thread, excluding the current partner.

@@ -23,8 +23,8 @@ class ThreadPreview extends Component {
             let lastMessageAuthor;
             let lastMessage;
             if (thread) {
-                const orderedMessages = thread.orderedMessages;
-                lastMessage = orderedMessages[orderedMessages.length - 1];
+                const orderedNonTransientMessages = thread.orderedNonTransientMessages;
+                lastMessage = orderedNonTransientMessages[orderedNonTransientMessages.length - 1];
             }
             if (lastMessage) {
                 lastMessageAuthor = lastMessage.author;
@@ -70,10 +70,10 @@ class ThreadPreview extends Component {
      * @returns {string}
      */
     get inlineLastMessageBody() {
-        if (!this.thread.lastMessage) {
+        if (!this.thread.lastNonTransientMessage) {
             return '';
         }
-        return mailUtils.htmlToTextContentInline(this.thread.lastMessage.prettyBody);
+        return mailUtils.htmlToTextContentInline(this.thread.lastNonTransientMessage.prettyBody);
     }
 
     /**
@@ -108,8 +108,8 @@ class ThreadPreview extends Component {
      * @param {MouseEvent} ev
      */
     _onClickMarkAsRead(ev) {
-        if (this.thread.lastMessage) {
-            this.thread.markAsSeen(this.thread.lastMessage.id);
+        if (this.thread.lastNonTransientMessage) {
+            this.thread.markAsSeen(this.thread.lastNonTransientMessage);
         }
     }
 

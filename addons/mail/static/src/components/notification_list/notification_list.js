@@ -105,13 +105,13 @@ class NotificationList extends Component {
                 if (t1.localMessageUnreadCounter === 0 && t2.localMessageUnreadCounter > 0) {
                     return 1;
                 }
-                if (t1.lastMessage && t2.lastMessage) {
-                    return t1.lastMessage.date.isBefore(t2.lastMessage.date) ? 1 : -1;
+                if (t1.lastNonTransientMessage && t2.lastNonTransientMessage) {
+                    return t1.lastNonTransientMessage.date.isBefore(t2.lastNonTransientMessage.date) ? 1 : -1;
                 }
-                if (t1.lastMessage) {
+                if (t1.lastNonTransientMessage) {
                     return -1;
                 }
-                if (t2.lastMessage) {
+                if (t2.lastNonTransientMessage) {
                     return 1;
                 }
                 return t1.id < t2.id ? -1 : 1;

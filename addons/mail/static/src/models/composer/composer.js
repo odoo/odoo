@@ -254,25 +254,34 @@ function factory(dependencies) {
             if (thread.model === 'mail.channel') {
                 const command = this._getCommandFromText(body);
                 Object.assign(postData, {
-                    command: command ? command.name : undefined,
-                    subtype_xmlid: 'mail.mt_comment'
+                    subtype_xmlid: 'mail.mt_comment',
                 });
-                messageId = await this.async(() => this.env.services.rpc({
-                    model: 'mail.channel',
-                    method: command ? 'execute_command' : 'message_post',
-                    args: [thread.id],
-                    kwargs: postData,
-                }));
+                if (command) {
+                    messageId = await this.async(() => this.env.models['mail.thread'].performRpcExecuteCommand({
+                        channelId: thread.id,
+                        command: command.name,
+                        postData,
+                    }));
+                } else {
+                    messageId = await this.async(() =>
+                        this.env.models['mail.thread'].performRpcMessagePost({
+                            postData,
+                            threadId: thread.id,
+                            threadModel: thread.model,
+                        })
+                    );
+                }
             } else {
                 Object.assign(postData, {
                     subtype_xmlid: this.isLog ? 'mail.mt_note' : 'mail.mt_comment',
                 });
-                messageId = await this.async(() => this.env.services.rpc({
-                    model: thread.model,
-                    method: 'message_post',
-                    args: [thread.id],
-                    kwargs: postData,
-                }));
+                messageId = await this.async(() =>
+                    this.env.models['mail.thread'].performRpcMessagePost({
+                        postData,
+                        threadId: thread.id,
+                        threadModel: thread.model,
+                    })
+                );
                 const [messageData] = await this.async(() => this.env.services.rpc({
                     model: 'mail.message',
                     method: 'message_format',

@@ -43,7 +43,7 @@
                 <!-- MESSAGES -->
                 <t t-set="current_day" t-value="0"/>
                 <t t-set="prev_message" t-value="0"/>
-                <t t-if="threadView.thread.model === 'mail.channel' and threadView.thread.localMessageUnreadCounter > 0 and !threadView.thread.lastSeenByCurrentPartnerMessageId">
+                <t t-if="threadView.thread.messageBeforeNewMessageSeparatorId === 0">
                     <div class="o_MessageList_separator o_MessageList_separatorNewMessages o_MessageList_item" t-att-class="{ 'o-disable-animation': env.disableAnimation }" t-transition="fade">
                         <hr class="o_MessageList_separatorLine o_MessageList_separatorLineNewMessages"/><span class="o_MessageList_separatorLabel o_MessageList_separatorLabelNewMessages">New messages</span>
                     </div>
@@ -76,7 +76,7 @@
                             t-ref="{{ message.localId }}"
                         />
                         <t t-set="prev_message" t-value="message"/>
-                        <t t-if="threadView.thread.model === 'mail.channel' and threadView.thread.localMessageUnreadCounter > 0 and threadView.thread.lastSeenByCurrentPartnerMessageId === message.id">
+                        <t t-if="threadView.thread.messageBeforeNewMessageSeparatorId === message.id">
                             <div class="o_MessageList_separator o_MessageList_separatorNewMessages o_MessageList_item" t-att-class="{ 'o-disable-animation': env.disableAnimation }" t-transition="fade">
                                 <hr class="o_MessageList_separatorLine o_MessageList_separatorLineNewMessages"/><span class="o_MessageList_separatorLabel o_MessageList_separatorLabelNewMessages">New messages</span>
                             </div>

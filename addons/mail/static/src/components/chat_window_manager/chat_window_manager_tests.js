@@ -2024,6 +2024,44 @@ QUnit.test('focusing a chat window of a chat should make new message separator d
     );
 });
 
+QUnit.test('unread counter in a chat window is not shown on receiving new transient message even when composer is not focused [REQUIRE FOCUS]', async function (assert) {
+    // The goal of removing the focus is to ensure the thread is not marked as seen automatically.
+    // Indeed that would remove the unread counter no matter what, which is already covered by other tests.
+    // The goal of this test is to cover the conditions specific to transient messages,
+    // and the conditions from focus would otherwise shadow them.
+    assert.expect(2);
+
+    this.data['mail.channel'].records = [
+        {
+            id: 10,
+            is_minimized: true,
+            is_pinned: true,
+            message_unread_counter: 0,
+            name: "test",
+        },
+    ];
+    await this.start();
+
+    document.querySelector('.o_ComposerTextInput_textarea').focus();
+    await afterNextRender(() => document.execCommand('insertText', false, "/who"));
+    await afterNextRender(() => {
+        const kevt = new window.KeyboardEvent('keydown', { key: "Enter" });
+        document.querySelector('.o_ComposerTextInput_textarea').dispatchEvent(kevt);
+        // need to remove focus from text area to avoid channel_seen
+        document.querySelector('.o_Composer_buttonEmojis').focus();
+    });
+    assert.containsOnce(
+        document.body,
+        '.o_Message',
+        "chat window should have a single message (the newly received transient one)"
+    );
+    assert.containsNone(
+        document.body,
+        '.o_ChatWindowHeader_counter',
+        "chat window unread counter should not be shown after receiving a transient message"
+    );
+});
+
 });
 });
 });
