@@ -35,9 +35,9 @@ class RatingParentMixin(models.AbstractModel):
         for item in data:
             parent_id = item['parent_res_id']
             rating = item['rating']
-            if rating >= RATING_LIMIT_SATISFIED:
+            if rating > RATING_LIMIT_OK:
                 grades_per_parent[parent_id]['great'] += item['__count']
-            elif rating > RATING_LIMIT_OK:
+            elif rating > RATING_LIMIT_MIN:
                 grades_per_parent[parent_id]['okay'] += item['__count']
             else:
                 grades_per_parent[parent_id]['bad'] += item['__count']
