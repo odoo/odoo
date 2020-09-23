@@ -3571,6 +3571,44 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
+    QUnit.test('edit a column propagates right context', async function (assert) {
+        assert.expect(4);
+
+        const kanban = await createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban class="o_kanban_test" on_create="quick_create">' +
+                        '<field name="product_id"/>' +
+                        '<templates><t t-name="kanban-box">' +
+                            '<div><field name="foo"/></div>' +
+                        '</t></templates>' +
+                    '</kanban>',
+            groupBy: ['product_id'],
+            archs: {
+                'product,false,form': '<form string="Product"><field name="display_name"/></form>',
+            },
+            session: {user_context: {lang: 'brol'}},
+            mockRPC: function (route, args) {
+                let context;
+                if (route === '/web/dataset/search_read' && args.model === 'partner') {
+                    context = args.context;
+                    assert.strictEqual(context.lang, 'brol',
+                        'lang is present in context for partner operations');
+                }
+                if (args.model === 'product') {
+                    context = args.kwargs.context;
+                    assert.strictEqual(context.lang, 'brol',
+                        'lang is present in context for product operations');
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+        testUtils.kanban.toggleGroupSettings(kanban.$('.o_kanban_group[data-id=5]'));
+        await testUtils.dom.click(kanban.$('.o_kanban_group[data-id=5] .o_column_edit'));
+        kanban.destroy();
+    });
+
     QUnit.test('quick create column should be opened if there is no column', async function (assert) {
         assert.expect(3);
 
