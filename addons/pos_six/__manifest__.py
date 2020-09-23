@@ -11,6 +11,10 @@
         'views/pos_payment_method_views.xml',
         'views/point_of_sale_assets.xml',
     ],
+    'qweb': [
+        'static/src/xml/BalanceButton.xml',
+        'static/src/xml/Chrome.xml',
+    ],
     'depends': ['point_of_sale'],
     'installable': True,
     'license': 'OEEL-1',

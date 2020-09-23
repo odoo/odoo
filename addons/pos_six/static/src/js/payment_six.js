@@ -33,6 +33,7 @@ var PaymentSix = PaymentInterface.extend({
         settings.connectionIPString = this.payment_method.six_terminal_ip;
         settings.connectionIPPort = "80";
         settings.integratorId = "175d97a0-2a88-4413-b920-e90037b582ac";
+        settings.dcc = false;
 
         this.terminal = new timapi.Terminal(settings);
         this.terminal.setPosId(this.pos.pos_session.name);
@@ -40,6 +41,7 @@ var PaymentSix = PaymentInterface.extend({
 
         this.terminalListener = new timapi.DefaultTerminalListener();
         this.terminalListener.transactionCompleted = this._onTransactionComplete.bind(this);
+        this.terminalListener.balanceCompleted = this._onBalanceComplete.bind(this);
         this.terminal.addListener(this.terminalListener);
 
         var recipients = [timapi.constants.Recipient.merchant, timapi.constants.Recipient.cardholder];
@@ -83,6 +85,10 @@ var PaymentSix = PaymentInterface.extend({
         return this._sendTransaction(timapi.constants.TransactionType.reversal);
     },
 
+    send_balance: function () {
+        this.terminal.balanceAsync();
+    },
+
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
@@ -110,6 +116,17 @@ var PaymentSix = PaymentInterface.extend({
             this.terminal.setTransactionData(transactionData);
 
             this.transactionResolve(true);
+        }
+    },
+
+    _onBalanceComplete: function (event, data) {
+        if (event.exception) {
+            Gui.showPopup('ErrorPopup',{
+                'title': _t('Balance Failed'),
+                'body':  _t('The balance operation failed.'),
+            });
+        } else {
+            this._printReceipts(data.printData.receipts);
         }
     },
 
