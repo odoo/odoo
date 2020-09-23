@@ -34,7 +34,7 @@ class Activity extends Component {
                 assigneeNameOrDisplayName: (
                     activity &&
                     activity.assignee &&
-                    activity.assignee.nameOrDisplayName()
+                    activity.assignee.nameOrDisplayName
                 ),
             };
         });
@@ -60,7 +60,7 @@ class Activity extends Component {
      * @returns {string}
      */
     get assignedUserText() {
-        return _.str.sprintf(this.env._t("for %s"), this.activity.assignee.nameOrDisplayName());
+        return _.str.sprintf(this.env._t("for %s"), this.activity.assignee.nameOrDisplayName);
     }
 
     /**
