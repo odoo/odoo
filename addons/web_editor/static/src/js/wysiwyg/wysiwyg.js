@@ -959,11 +959,10 @@ var Wysiwyg = Widget.extend({
                 var attributeTranslation = $node.attr(attr);
                 if (attributeTranslation) {
                     var match = attributeTranslation.match(/<span [^>]*data-oe-translation-id="([0-9]+)"[^>]*>(.*)<\/span>/);
-                    var $translatedAttributeNode = $(attributeTranslation).addClass('d-none o_editable o_editable_translatable_attribute').appendTo('body');
-                    $translatedAttributeNode.data('$node', $node).data('attribute', attr);
-
-                    translation[attr] = $translatedAttributeNode[0];
                     if (match) {
+                        var $translatedAttributeNode = $(attributeTranslation).addClass('d-none o_editable o_editable_translatable_attribute').appendTo('body');
+                        $translatedAttributeNode.data('$node', $node).data('attribute', attr);
+                        translation[attr] = $translatedAttributeNode[0];
                         $node.attr(attr, match[2]);
                     }
                 }
