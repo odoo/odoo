@@ -948,8 +948,8 @@ header {
                 }
             }
 
-            .o_connected_user header:not(.o_header_is_scrolled) &,
-            .o_connected_user header.o_header_affixed & {
+            .o_connected_user:not(.editor_has_snippets) header:not(.o_header_is_scrolled) &,
+            .o_connected_user:not(.editor_has_snippets) header.o_header_affixed & {
                 padding-top: $o-navbar-height !important;
             }
         }
@@ -1042,7 +1042,7 @@ header {
                 }
             }
         }
-        body.o_connected_user #wrapwrap > header {
+        body.o_connected_user:not(.editor_has_snippets) #wrapwrap > header {
             top: $o-navbar-height;
         }
     }
