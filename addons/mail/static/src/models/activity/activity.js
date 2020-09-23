@@ -94,7 +94,7 @@ function factory(dependencies) {
                     data2.creator = [
                         ['insert', {
                             id: data.create_uid[0],
-                            partnerDisplayName: data.create_uid[1],
+                            display_name: data.create_uid[1],
                         }],
                     ];
                 }
@@ -109,7 +109,7 @@ function factory(dependencies) {
                     data2.assignee = [
                         ['insert', {
                             id: data.user_id[0],
-                            partnerDisplayName: data.user_id[1],
+                            display_name: data.user_id[1],
                         }],
                     ];
                 }
