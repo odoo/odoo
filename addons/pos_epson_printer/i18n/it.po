@@ -25,6 +25,8 @@ msgstr ""
 #, python-format
 msgid "An error happened while sending data to the printer. Error code: "
 msgstr ""
+"Si è verificato un errore nell'invio dei dati alla stampante. Codice errore:"
+" "
 
 #. module: pos_epson_printer
 #: model_terms:ir.ui.view,arch_db:pos_epson_printer.pos_iot_config_view_form
@@ -37,7 +39,7 @@ msgstr "Cassa contanti"
 #: code:addons/pos_epson_printer/static/src/js/printers.js:0
 #, python-format
 msgid "Connection to the printer failed"
-msgstr ""
+msgstr "Connessione alla stampante non riuscita"
 
 #. module: pos_epson_printer
 #: model:ir.model.fields,field_description:pos_epson_printer.field_pos_config__epson_printer_ip
@@ -54,7 +56,7 @@ msgstr "Indirizzo IP stampante ricevute Epson"
 #: code:addons/pos_epson_printer/static/src/js/printers.js:0
 #, python-format
 msgid "Epson ePOS Error"
-msgstr ""
+msgstr "Errore Epson ePOS"
 
 #. module: pos_epson_printer
 #: model:ir.model.fields,help:pos_epson_printer.field_pos_config__epson_printer_ip
@@ -69,13 +71,15 @@ msgid ""
 "Please check if the printer is still connected, if the configured IP address"
 " is correct and if your printer supports the ePOS protocol."
 msgstr ""
+"Controllare se la stampante è ancora connessa, se l'indirizzo IP configurato"
+" è corretto e se la stampante supporta il protocollo ePOS."
 
 #. module: pos_epson_printer
 #. openerp-web
 #: code:addons/pos_epson_printer/static/src/js/printers.js:0
 #, python-format
 msgid "Please check if the printer is still connected. Error code: "
-msgstr ""
+msgstr "Controllare se la stampante è ancora connessa. Codice errore: "
 
 #. module: pos_epson_printer
 #: model:ir.model,name:pos_epson_printer.model_pos_config
@@ -88,3 +92,5 @@ msgid ""
 "The Epson receipt printer will be used instead of the receipt printer "
 "connected to the IoT Box."
 msgstr ""
+"Al posto della stampante collegata al box IoT viene usata la stampante "
+"ricevute Epson."

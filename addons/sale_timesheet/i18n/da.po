@@ -42,6 +42,14 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"\n"
+"                <p class=\"o_view_nocontent_smiling_face\">\n"
+"                    Registrer timesedler\n"
+"                </p><p>\n"
+"                    Du kan registrere og følge dine arbejdstimer per projekt hver\n"
+"                    dag. Al tid brugt på et projekt vil blive til en omkostning, og kan genfaktureres til kunder, om nødvendigt.\n"
+"                </p>\n"
+"            "
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_create_sale_order__billable_type
@@ -49,6 +57,8 @@ msgid ""
 "* At Project Rate: All timesheets on the project will be billed at the same rate\n"
 "* At Employee Rate: Timesheets will be billed at a rate defined at employee level"
 msgstr ""
+"* Til Projekt sats: Alle timesedler på projektet vil blive faktureret til samme sats\n"
+"* Til Medarbejder sats: Timesedler vil blive faktureret til en sats, defineret ud på medarbejder basis"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
@@ -88,6 +98,8 @@ msgid ""
 "A billable project should be linked to a Sales Order Item having a Service "
 "product."
 msgstr ""
+"Et projekt der kan faktureres bør være forbundet til en Salgsordre med et "
+"service produkt."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project.py:0
@@ -96,6 +108,8 @@ msgid ""
 "A billable project should be linked to a Sales Order Item that does not come"
 " from an expense or a vendor bill."
 msgstr ""
+"Et projekt der kan faktureres bør være forbundet til en Salgsordre som ikke "
+"kommer fra en udgift eller forhandler regning."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_sale_order_line__qty_delivered_method
@@ -124,6 +138,8 @@ msgid ""
 "An employee cannot be selected more than once in the mapping. Please remove "
 "duplicate(s) and try again."
 msgstr ""
+"En medarbejder kan ikke vælges mere end én gang i kortlægningen. Vær venlig "
+"at fjerne duplikat(er) og forsøg igen."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__analytic_account_id
@@ -145,18 +161,18 @@ msgstr "Analyselinjer"
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__project_project__billable_type__employee_rate
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__project_task__billable_type__employee_rate
 msgid "At Employee Rate"
-msgstr ""
+msgstr "Til Medarbejder sats"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__project_create_sale_order__billable_type__project_rate
 msgid "At Project Rate"
-msgstr ""
+msgstr "Til Projekt sats"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__project_project__billable_type__task_rate
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__project_task__billable_type__task_rate
 msgid "At Task Rate"
-msgstr ""
+msgstr "Til Sags sats"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/wizard/project_create_sale_order.py:0
@@ -172,6 +188,10 @@ msgid ""
 " - At employee rate: each employee log time billed at his rate.\n"
 " - No Billable: track time without invoicing it"
 msgstr ""
+"Til hvilken sats timesedler vil blive faktureret:\n"
+"- Til Sags sats: Al tid brugt på en sag faktureres til sags sats.\n"
+"- Til Medarbejder sats: Hver medarbejder registrere tid, som faktureres til deres individuelle sats.\n"
+"- Kan ikke faktureres: Sporer tid uden at fakturere den"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project_overview.py:0
@@ -249,7 +269,7 @@ msgstr "Virksomhed"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
 msgid "Configure your services"
-msgstr ""
+msgstr "Konfigurer dine tjenester"
 
 #. module: sale_timesheet
 #: model:ir.filters,name:sale_timesheet.ir_filter_project_profitability_report_costs_and_revenues
@@ -401,6 +421,8 @@ msgid ""
 "Employee/Sale Order Item Mapping:\n"
 " Defines to which sales order item an employee's timesheet entry will be linked.By extension, it defines the rate at which an employee's time on the project is billed."
 msgstr ""
+"Medarbejder/Salgsordre forbinding:\n"
+"Definere til hvilken salgsordre en medarbejders timeseddels postering skal forbindes. Yderligere, defineres satsen som medarbejderens tid på projektet faktureres til."
 
 #. module: sale_timesheet
 #: model:project.task.type,name:sale_timesheet.project_stage_fixed
@@ -415,12 +437,12 @@ msgstr "Ydelser med fast pris"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_line__project_id
 msgid "Generated Project"
-msgstr ""
+msgstr "Genereret projekt"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_line__task_id
 msgid "Generated Task"
-msgstr ""
+msgstr "Genereret sag"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_profitability_report_view_search
@@ -472,6 +494,8 @@ msgid ""
 "Includes the time logged from the Timesheet module that is linked to a "
 "project, but not to a task."
 msgstr ""
+"Inkluderer tid logget fra Timeseddel modulet, som er forbundet til et "
+"projekt, men ikke en sag."
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
@@ -479,6 +503,8 @@ msgid ""
 "Includes the time logged into a task which is linked to a cancelled Sales "
 "Order."
 msgstr ""
+"Inkluderer tid logget i en sag, som er forbundet til en annulleret "
+"salgsordre."
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
@@ -486,6 +512,8 @@ msgid ""
 "Includes the time logged into tasks for which you invoice based on ordered "
 "quantities or on milestones."
 msgstr ""
+"Inkludere tiden logget i sager, hvor din fakturere er baseret på ordre "
+"kvantiteter eller milepæle."
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
@@ -493,6 +521,8 @@ msgid ""
 "Includes the time logged into tasks for which you invoice based on "
 "timesheets on tasks."
 msgstr ""
+"Inkludere tid logget i sager, hvor du fakturere baseret på timesedler for "
+"sager."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line__timesheet_invoice_id
@@ -523,7 +553,7 @@ msgstr "Fakturering"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task__is_project_map_empty
 msgid "Is Project map empty"
-msgstr ""
+msgstr "Er projekt kort tomt"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_line__is_service
@@ -544,13 +574,13 @@ msgstr "Journalpost"
 #: model:product.product,name:sale_timesheet.product_service_deliver_timesheet_2
 #: model:product.template,name:sale_timesheet.product_service_deliver_timesheet_2_product_template
 msgid "Junior Architect (Invoice on Timesheets)"
-msgstr ""
+msgstr "Junior Arkitekt (Faktura på timesedler)"
 
 #. module: sale_timesheet
 #: model:product.product,name:sale_timesheet.product_service_deliver_manual
 #: model:product.template,name:sale_timesheet.product_service_deliver_manual_product_template
 msgid "Kitchen Assembly (Milestones)"
-msgstr ""
+msgstr "Køkkenmontering (milepæle)"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice____last_update
@@ -602,7 +632,7 @@ msgstr "Metode til opdatering af leveret antal"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.product_template_view_search_sale_timesheet
 msgid "Milestone services"
-msgstr ""
+msgstr "Milepæle tjenester"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__product_template__service_policy__delivered_manual
@@ -642,7 +672,7 @@ msgstr "Ny"
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__project_project__billable_type__no
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__project_task__billable_type__no
 msgid "No Billable"
-msgstr ""
+msgstr "Kan ikke faktureres"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project_overview.py:0
@@ -704,6 +734,8 @@ msgid ""
 "On Sales order confirmation, this product can generate a project and/or task.         From those, you can track the service you are selling.\n"
 "         'In sale order's project': Will use the sale order's configured project if defined or fallback to         creating a new project based on the selected template."
 msgstr ""
+"På en salgsordre bekræftelse, kan dette produkt generere et projekt og/eller sag. Fra disse, kan du spore de tjenester du sælger.\n"
+"        'I salgsordres projekt': Vil bruge salgsordrens konfigurerede projekt hvis defineret, eller falder tilbage til oprettelsen på et nyt projekt baseret på den valgte skabelon."
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__product_template__service_policy__ordered_timesheet
@@ -739,7 +771,7 @@ msgstr "Produktskabelon"
 #. module: sale_timesheet
 #: model:ir.filters,name:sale_timesheet.ir_filter_project_profitability_report_manager_and_product
 msgid "Product by Customer"
-msgstr ""
+msgstr "Produkt per kunde"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_create_sale_order__product_id
@@ -748,6 +780,8 @@ msgid ""
 "Product of the sales order item. Must be a service invoiced based on "
 "timesheets on tasks."
 msgstr ""
+"Produkt af salgsordren. Skal være en tjeneste faktureret baseret på "
+"timesedler på sager."
 
 #. module: sale_timesheet
 #: model:ir.actions.act_window,name:sale_timesheet.product_template_action_default_services
@@ -816,7 +850,7 @@ msgstr "Projekt profitabilitetsrapport"
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_project_sale_line_employee_map
 msgid "Project Sales line, employee mapping"
-msgstr ""
+msgstr "Projekt salgslinje, medarbejder kortlægning"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_product__project_template_id
@@ -832,12 +866,12 @@ msgstr "Projekt vi opretter en salgsordre til"
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_sale_order_line__project_id
 msgid "Project generated by the sales order item"
-msgstr ""
+msgstr "Projekt genereret af salgsordren"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_create_invoice__project_id
 msgid "Project to make billable"
-msgstr ""
+msgstr "Projekt der skal gøres fakturerbart"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/sale_order.py:0
@@ -854,7 +888,7 @@ msgstr "Projekter anvendt i denne salgsordre."
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "Re-invoiced costs"
-msgstr ""
+msgstr "Genfakturer omkostninger"
 
 #. module: sale_timesheet
 #: model:project.task,legend_done:sale_timesheet.project_task_internal
@@ -882,7 +916,7 @@ msgstr "Salgsordre"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__sale_line_id
 msgid "Sale Order Item"
-msgstr ""
+msgstr "Salgsordre"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__sale_line_id
@@ -892,7 +926,7 @@ msgstr "Salgsordrelinje"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_project__sale_line_employee_ids
 msgid "Sale line/Employee map"
-msgstr ""
+msgstr "Salgslinje/medarbejder kort"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_sale_order
@@ -925,6 +959,8 @@ msgid ""
 "Sales Order item should generate a task and/or a project, depending on the "
 "product settings."
 msgstr ""
+"Salgsordre bør generere en sag og/eller et projekt, afhængig af produkt "
+"indstillingerne."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project_overview.py:0
@@ -941,6 +977,11 @@ msgid ""
 "timesheet entry will be linked to the sales order item defined on the "
 "project."
 msgstr ""
+"Salgsordre hvortil projekt er forbundet. Hvis en medarbejder anfører "
+"timesedler på en sag der ikke har en salgsordre defineret, og hvis denne "
+"medarbejder ikke er i 'Medarbejder/Salgsordre kortlægning\" for projektet, "
+"vil timeseddel posteringen blive forbundet til salgsordren defineret i "
+"projektet."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_task__sale_line_id
@@ -950,6 +991,10 @@ msgid ""
 "Mapping' of the project, the timesheet entry will be linked to this sales "
 "order item."
 msgstr ""
+"Salgsordre hvortil sagen er forbundet. Hvis en medarbejder anfører "
+"timesedler på en sag der ikke har en salgsordre defineret, og hvis denne "
+"medarbejder ikke er i 'Medarbejder/Salgsordre kortlægning\" for projektet, "
+"vil timeseddel posteringen blive forbundet til denne salgsordre."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_project__sale_order_id
@@ -964,7 +1009,7 @@ msgstr "Salgsordre som opgaven er knyttet til."
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_sale_order__project_id
 msgid "Select a non billable project on which tasks can be created."
-msgstr ""
+msgstr "Vælg et ikke-fakturerbart projekt hvor sager kan oprettes."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_product_product__project_id
@@ -973,6 +1018,8 @@ msgid ""
 "Select a non billable project on which tasks can be created. This setting "
 "must be set for each company."
 msgstr ""
+"Vælg et ikke-fakturerbart projekt hvor sager kan oprettes. Denne indstilling"
+" skal angives for hver virksomhed."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_product_product__project_template_id
@@ -981,6 +1028,9 @@ msgid ""
 "Select a non billable project to be the skeleton of the new created project "
 "when selling the current product. Its stages and tasks will be duplicated."
 msgstr ""
+"Vælg et ikke-fakturerbarts projekt til at fungere som skelettet for "
+"oprettelsen af nye projekter, ved salg af nuværende produkt. Dens stadier og"
+" sager vil blive duplikeret."
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
@@ -991,7 +1041,7 @@ msgstr "Sælg servicer og fakturér brugt tid"
 #: model:product.product,name:sale_timesheet.product_service_deliver_timesheet_1
 #: model:product.template,name:sale_timesheet.product_service_deliver_timesheet_1_product_template
 msgid "Senior Architect (Invoice on Timesheets)"
-msgstr ""
+msgstr "Senior Arkitekt (Faktura på timesedler)"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order__product_id
@@ -1039,7 +1089,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_sale_order_line__task_id
 msgid "Task generated by the sales order item"
-msgstr ""
+msgstr "Sag genereret ud fra salgsordren"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project_overview.py:0
@@ -1059,7 +1109,7 @@ msgstr "Opgaver tilknyttet dette salg"
 #: model:ir.model.constraint,message:sale_timesheet.constraint_project_project_sale_order_required_if_sale_line
 msgid ""
 "The Project should be linked to a Sale Order to select an Sale Order Items."
-msgstr ""
+msgstr "Projektet bør forbindes til en Salgsordre for at vælge en Salgsordre."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/wizard/project_create_sale_order.py:0
@@ -1068,6 +1118,8 @@ msgid ""
 "The Sales Order cannot be created because you did not enter some employees that entered timesheets on this project. Please list all the relevant employees before creating the Sales Order.\n"
 "Missing employee(s): %s"
 msgstr ""
+"Salgsordren kunne ikke oprettes, fordi du ikke angav visse medarbejdere der registrerede timesedler på dette projekt. Vær venlig at liste alle relevante medarbejdere før oprettelse af Salgsordren.\n"
+"Manglende medarbejder(e): %s"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/product.py:0
@@ -1076,6 +1128,8 @@ msgid ""
 "The product %s should not have a global project since it will generate a "
 "project."
 msgstr ""
+"Produktet %s bør ikke have et globalt projekt, eftersom det vil generere et "
+"projekt."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/product.py:0
@@ -1084,6 +1138,8 @@ msgid ""
 "The product %s should not have a project nor a project template since it "
 "will not generate project."
 msgstr ""
+"Produktet %s bør ikke have et projekt, eller en projekt skabelon, siden det "
+"vil generere et projekt."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/product.py:0
@@ -1092,6 +1148,8 @@ msgid ""
 "The product %s should not have a project template since it will generate a "
 "task in a global project."
 msgstr ""
+"Produktet %s bør ikke have en produkt skabelon, eftersom det vil generere en"
+" sag i et globalt projekt."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/wizard/project_create_sale_order.py:0
@@ -1103,7 +1161,7 @@ msgstr "Projektet er allerede fakturerbart."
 #: code:addons/sale_timesheet/wizard/project_create_sale_order.py:0
 #, python-format
 msgid "The project is already linked to a sales order item."
-msgstr ""
+msgstr "Dette projekt er allerede linket til en salgsordre."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/wizard/project_create_sale_order.py:0
@@ -1112,6 +1170,8 @@ msgid ""
 "The sales order cannot be created because some timesheets of this project "
 "are already linked to another sales order."
 msgstr ""
+"Salgsordre kan ikke oprettes fordi visse timesedler på dette projekt "
+"allerede er forbundet til en anden salgsordre."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/wizard/project_create_invoice.py:0
@@ -1130,6 +1190,8 @@ msgid ""
 "This cost is based on the \"Timesheet cost\" set in the HR Settings of your "
 "employees."
 msgstr ""
+"Denne omkostning er baseret på \"Timeseddel omkostning\" angivet i HR "
+"indstillingerne for dine ansatte."
 
 #. module: sale_timesheet
 #: model_terms:ir.actions.act_window,help:sale_timesheet.project_profitability_report_action
@@ -1138,6 +1200,10 @@ msgid ""
 "compare the amount to invoice, the ones already invoiced and the project "
 "cost (via timesheet cost of your employees)."
 msgstr ""
+"Denne rapport gør det muligt for dig at analysere profitabiliteten på dine "
+"projekter: sammenlign mængden der skal faktureres, dem som allerede er "
+"faktureret, og projekt omkostningen (via timeseddel omkostning for dine "
+"medarbejdere)."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/sale_order.py:0
@@ -1157,6 +1223,9 @@ msgid ""
 " the task, nor on the project. Please define one to save your timesheet "
 "line."
 msgstr ""
+"Denne timeseddel linje kan ikke faktureres: Der er ikke nogen salgsordre "
+"defineret på sagen eller projektet. Vær venlig at definere en for at gemme "
+"din timeseddel linje."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_sale_order__timesheet_encode_uom_id
@@ -1164,6 +1233,8 @@ msgid ""
 "This will set the unit of measure used to encode timesheet. This will simply provide tools\n"
 "        and widgets to help the encoding. All reporting will still be expressed in hours (default value)."
 msgstr ""
+"Dette vil angive måleenheden brugt til indkode timesedlen. Dette vil blot producere de værktøjer\n"
+"        og widgets som hjælper med indkodningen. Alle rapporter vil stadig blive udskrevet i timer (standardværdi)."
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
@@ -1191,17 +1262,17 @@ msgstr "Timeseddel kostpris"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order__timesheet_encode_uom_id
 msgid "Timesheet Encoding Unit"
-msgstr ""
+msgstr "Timeseddel indkodning enhed"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order__timesheet_total_duration
 msgid "Timesheet Total Duration"
-msgstr ""
+msgstr "Timeseddel samlet varighed"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__timesheet_unit_amount
 msgid "Timesheet Unit Amount"
-msgstr ""
+msgstr "Timeseddel enhed mængde"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order__timesheet_count
@@ -1234,7 +1305,7 @@ msgstr "Timesedler"
 #. module: sale_timesheet
 #: model:ir.actions.act_window,name:sale_timesheet.timesheet_action_billing_report
 msgid "Timesheets By Billing Rate"
-msgstr ""
+msgstr "Timesedler per fakturerings sats"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project.py:0
@@ -1274,11 +1345,13 @@ msgid ""
 "Total amount to invoice on the sales order, including all items (services, "
 "storables, expenses, ...)"
 msgstr ""
+"Samlet mængde til fakturering på salgsordre, inklusiv alle genstande "
+"(tjenester, lagervare, udgifter, ...)"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_sale_order__timesheet_total_duration
 msgid "Total recorded duration, expressed in the encoding UoM"
-msgstr ""
+msgstr "Samlet registreret varighed, udtrykt i den indkodede måleenhed"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_product__service_type
@@ -1297,7 +1370,7 @@ msgstr "Enhedspris"
 #: model:ir.model.fields,help:sale_timesheet.field_project_create_sale_order__price_unit
 #: model:ir.model.fields,help:sale_timesheet.field_project_create_sale_order_line__price_unit
 msgid "Unit price of the sales order item."
-msgstr ""
+msgstr "Enhedspris på salgsordren."
 
 #. module: sale_timesheet
 #: model:product.product,uom_name:sale_timesheet.product_service_deliver_manual
@@ -1332,6 +1405,8 @@ msgid ""
 "What is still to deliver based on sold hours and hours already done. Equals "
 "to sold hours - done hours."
 msgstr ""
+"Hvad der stadig skal leveres, baseret på solgte timer, og allerede fuldførte"
+" timer. Er lig med solgte timer - fuldførte timer."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order_line__wizard_id
@@ -1352,19 +1427,21 @@ msgid ""
 "You can not modify already invoiced timesheets (linked to a Sales order "
 "items invoiced on Time and material)."
 msgstr ""
+"Du kan ikke redigere allerede faktureret timesedler (forbundet til en "
+"Salgsordre faktureret på Tid og materiale)."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/account.py:0
 #, python-format
 msgid "You can not modify timesheets from different employees"
-msgstr ""
+msgstr "Du kan ikke redigere timesedler fra forskellige medarbejdere"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/wizard/project_create_invoice.py:0
 #: code:addons/sale_timesheet/wizard/project_create_sale_order.py:0
 #, python-format
 msgid "You can only apply this action from a project."
-msgstr ""
+msgstr "Du kan kun anvende denne handling fra et projekt."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project.py:0
@@ -1373,6 +1450,8 @@ msgid ""
 "You cannot link the order item %s - %s to this task because it is a re-"
 "invoiced expense."
 msgstr ""
+"Du kan ikke linke produktet %s - %s til denne sag, fordi det er en "
+"genfaktureret udgift."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project.py:0
@@ -1380,3 +1459,5 @@ msgstr ""
 msgid ""
 "You have to unlink the task from the sale order item in order to delete it."
 msgstr ""
+"Du skal fjerne forbindelsen til sagen fra salgsordren for at kunne slette "
+"den."

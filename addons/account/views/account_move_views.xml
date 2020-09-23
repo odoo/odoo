@@ -41,6 +41,7 @@
                                     <group string="Taxes" attrs="{'invisible': [('tax_line_id','=',False), ('tax_ids','=',[])]}">
                                         <field name="tax_line_id" readonly="1" attrs="{'invisible': [('tax_line_id','=',False)]}"/>
                                         <field name="tax_ids" widget="many2many_tags" readonly="1" attrs="{'invisible': [('tax_ids','=',[])]}"/>
+                                        <field name="tax_exigible" attrs="{'readonly':[('parent_state','=','posted')]}"/>
                                         <field name="tax_audit"/>
                                     </group>
                                     <group string="Matching" attrs="{'invisible':[('matched_debit_ids', '=', []),('matched_credit_ids', '=', [])]}">
@@ -822,7 +823,7 @@
                                                 <field name="quantity"/>
                                                 <field name="product_uom_id" groups="uom.group_uom"/>
                                                 <field name="price_unit"/>
-                                                <field name="discount" groups="base.group_no_one"/>
+                                                <field name="discount" groups="product.group_discount_per_so_line"/>
                                                 <field name="currency_id" invisible="1"/>
                                             </group>
                                             <group>

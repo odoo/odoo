@@ -225,21 +225,6 @@ class AccountChartTemplate(models.Model):
         # Install all the templates objects and generate the real objects
         acc_template_ref, taxes_ref = self._install_template(company, code_digits=self.code_digits)
 
-        # Set default cash difference account on company
-        company.write({
-            'default_cash_difference_income_account_id': acc_template_ref.get(self.default_cash_difference_income_account_id.id, False),
-            'default_cash_difference_expense_account_id': acc_template_ref.get(self.default_cash_difference_expense_account_id.id, False),
-        })
-
-        # Set default PoS receivable account in company
-        default_pos_receivable = self.default_pos_receivable_account_id.id
-        if not default_pos_receivable and self.parent_id:
-            default_pos_receivable = self.parent_id.default_pos_receivable_account_id.id
-        if acc_template_ref.get(default_pos_receivable):
-            company.write({
-                'account_default_pos_receivable_account_id': acc_template_ref[default_pos_receivable]
-            })
-
         # Set the transfer account on the company
         company.transfer_account_id = self.env['account.account'].search([
             ('code', '=like', self.transfer_account_code_prefix + '%'), ('company_id', '=', company.id)], limit=1)
@@ -562,6 +547,9 @@ class AccountChartTemplate(models.Model):
                     'account_id': account_ref.get(value['account_id']),
                 })
 
+        # Set the company accounts
+        self._load_company_accounts(account_ref, company)
+
         # Create Journals - Only done for root chart template
         if not self.parent_id:
             self.generate_journals(account_ref, company)
@@ -576,6 +564,23 @@ class AccountChartTemplate(models.Model):
         self.generate_account_reconcile_model(taxes_ref, account_ref, company)
 
         return account_ref, taxes_ref
+
+    def _load_company_accounts(self, account_ref, company):
+        # Set the default accounts on the company
+        accounts = {
+            'default_cash_difference_income_account_id': self.default_cash_difference_income_account_id.id,
+            'default_cash_difference_expense_account_id': self.default_cash_difference_expense_account_id.id,
+            'account_default_pos_receivable_account_id': self.default_pos_receivable_account_id.id,
+        }
+
+        values = {}
+
+        # The loop is to avoid writing when we have no values, thus avoiding erasing the account from the parent
+        for key, account in accounts.items():
+            if account_ref.get(account):
+                values[key] = account_ref.get(account)
+
+        company.write(values)
 
     def create_record_with_xmlid(self, company, template, model, vals):
         return self._create_records_with_xmlid(model, [(template, vals)], company).id

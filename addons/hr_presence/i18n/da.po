@@ -36,6 +36,15 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<?xml version=\"1.0\"?>\n"
+"<div>\n"
+"                    Kære ${object.name},<br/><br/>\n"
+"                    Vi undskylder hvis vi tager fejl, men det ser ud til, at du ikke er på dit kontor, og du har ikke sendt nogen anmodning om at holde fri.<br/>\n"
+"                    Vær venlig at tage de nødvendige handlinger, for at oprette dette fravær.<br/>\n"
+"                    Tøv ikke med at kontakte din leder, eller HR afdelingen.\n"
+"                    <br/>Venlig hilsen,<br/><br/>\n"
+"                </div>\n"
+"            "
 
 #. module: hr_presence
 #: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee__hr_presence_state_display__absent
@@ -47,7 +56,7 @@ msgstr "Fraværende"
 #. module: hr_presence
 #: model:ir.model,name:hr_presence.model_hr_employee_base
 msgid "Basic Employee"
-msgstr ""
+msgstr "Standard ansat"
 
 #. module: hr_presence
 #: model:ir.model,name:hr_presence.model_res_company
@@ -63,7 +72,7 @@ msgstr "Opret e-mail"
 #. module: hr_presence
 #: model:ir.actions.server,name:hr_presence.ir_actions_server_action_open_presence_view
 msgid "Compute presence and open presence view"
-msgstr ""
+msgstr "Udregn tilstedeværelse og åben tilstedeværelses visning"
 
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_res_users_log__create_uid
@@ -75,17 +84,17 @@ msgstr "Opret UID"
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee_base__email_sent
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee_public__email_sent
 msgid "Email Sent"
-msgstr ""
+msgstr "Email afsendt"
 
 #. module: hr_presence
 #: model:ir.ui.menu,name:hr_presence.menu_hr_presence_view
 msgid "Employee Presence"
-msgstr ""
+msgstr "Medarbejder tilstedeværelse"
 
 #. module: hr_presence
 #: model:sms.template,name:hr_presence.sms_template_data_hr_presence
 msgid "Employee: Presence Reminder"
-msgstr ""
+msgstr "Medarbejder: Tilstedeværelse påminder"
 
 #. module: hr_presence
 #: code:addons/hr_presence/models/hr_employee.py:0
@@ -96,18 +105,21 @@ msgid ""
 "Please, take appropriate measures in order to carry out this work absence.\n"
 "Do not hesitate to contact your manager or the human resource department."
 msgstr ""
+"Vi undskylder hvis vi tager fejl, men det ser ud til, at du ikke er på dit kontor, og du har ikke sendt nogen anmodning om at holde fri.4\n"
+"Vær venlig at tage de nødvendige handlinger, for at oprette dette fravær.5\n"
+"Tøv ikke med at kontakte din leder, eller HR afdelingen."
 
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_res_company__hr_presence_last_compute_date
 msgid "Hr Presence Last Compute Date"
-msgstr ""
+msgstr "HR Tilstedeværelse sidste udregnings dato"
 
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee__hr_presence_state_display
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee_base__hr_presence_state_display
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee_public__hr_presence_state_display
 msgid "Hr Presence State Display"
-msgstr ""
+msgstr "HR Tilstedeværelse status visning"
 
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_res_users_log__ip
@@ -119,7 +131,7 @@ msgstr "IP adresse"
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee_base__ip_connected
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee_public__ip_connected
 msgid "Ip Connected"
-msgstr ""
+msgstr "IP Forbundet"
 
 #. module: hr_presence
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_kanban
@@ -131,12 +143,12 @@ msgstr "Mail"
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee_base__manually_set_present
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee_public__manually_set_present
 msgid "Manually Set Present"
-msgstr ""
+msgstr "Manuelt angivet til stede"
 
 #. module: hr_presence
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_search
 msgid "Presence"
-msgstr ""
+msgstr "Tilstedeværelse"
 
 #. module: hr_presence
 #: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee__hr_presence_state_display__present
@@ -153,19 +165,19 @@ msgstr "SMS"
 #. module: hr_presence
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_kanban
 msgid "Set as present"
-msgstr ""
+msgstr "Angiv som til stede"
 
 #. module: hr_presence
 #: code:addons/hr_presence/models/hr_employee.py:0
 #, python-format
 msgid "There is no professional email address for this employee."
-msgstr ""
+msgstr "Der er ingen professionel email adresse på denne medarbejder."
 
 #. module: hr_presence
 #: code:addons/hr_presence/models/hr_employee.py:0
 #, python-format
 msgid "There is no professional mobile for this employee."
-msgstr ""
+msgstr "Der er ingen professionel mobil angivet for denne medarbejder"
 
 #. module: hr_presence
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_kanban
@@ -177,12 +189,12 @@ msgstr "Fri"
 #: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee_base__hr_presence_state_display__to_define
 #: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee_public__hr_presence_state_display__to_define
 msgid "To Define"
-msgstr ""
+msgstr "At definere"
 
 #. module: hr_presence
 #: model:mail.template,subject:hr_presence.mail_template_presence
 msgid "Unexpected Absence"
-msgstr ""
+msgstr "Uventet fravær"
 
 #. module: hr_presence
 #: model:ir.model,name:hr_presence.model_res_users_log
@@ -195,4 +207,4 @@ msgstr "Brugeres log"
 #: code:addons/hr_presence/models/hr_employee.py:0
 #, python-format
 msgid "You don't have the right to do this. Please contact an Administrator."
-msgstr ""
+msgstr "Du har ikke ret til at gøre dette. Kontakt venligst en administrator."

@@ -176,12 +176,29 @@ inherited views.
 
 * ``inherit_id`` :class:`~odoo.fields.Many2one`
 
-  the current view's parent view, unset by default
+  the current view's parent view, unset by default. Specify the parent using
+  the `ref` attribute:
+
+  .. code-block:: xml
+
+      <field name="inherit_id" ref="library.view_book_form"/>
 
 * ``mode`` :class:`~odoo.fields.Selection`: `extension / primary`
 
-  inheritance mode, ``extension``: by default if ``inherit_id`` is set,
+  inheritance mode, ``extension`` by default if ``inherit_id`` is set,
   ``primary`` otherwise.
+
+  An example of where you would want to override ``mode`` while using
+  ``inherit_id`` is delegation inheritance.
+  In that case your derived model will be separate from its parent and views
+  matching with one won't match with the other. Suppose you inherit from a view
+  associated with the parent model and want to customize the derived view to
+  show data from the derived model. The ``mode`` of the derived view needs to
+  be set to ``primary``, because it's the base (and maybe only) view for that
+  derived model. Otherwise the :ref:`view matching <reference/views/inheritance/view-matching>`
+  rules won't apply.
+
+.. _reference/views/inheritance/view-matching:
 
 View matching
 -------------

@@ -155,7 +155,7 @@ class SaleOrderLine(models.Model):
         if self.product_id and self.order_id.sale_order_template_id:
             for line in self.order_id.sale_order_template_id.sale_order_template_line_ids:
                 if line.product_id == self.product_id:
-                    self.name = line.name
+                    self.name = line.name + self._get_sale_order_line_multiline_description_variants()
                     break
         return domain
 

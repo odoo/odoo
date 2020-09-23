@@ -263,7 +263,7 @@ class account_payment(models.Model):
         if self.invoice_ids:
             domain_on_types.append(('company_id', '=', self.invoice_ids[0].company_id.id))
         if self.journal_id.type not in journal_types or (self.invoice_ids and self.journal_id.company_id != self.invoice_ids[0].company_id):
-            self.journal_id = self.env['account.journal'].search(domain_on_types, limit=1)
+            self.journal_id = self.env['account.journal'].search(domain_on_types + [('company_id', '=', self.env.company.id)], limit=1)
         return {'domain': {'journal_id': jrnl_filters['domain'] + domain_on_types}}
 
     @api.onchange('currency_id')

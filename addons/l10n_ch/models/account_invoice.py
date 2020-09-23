@@ -63,18 +63,53 @@ class AccountMove(models.Model):
 
     @api.depends('name', 'invoice_partner_bank_id.l10n_ch_postal', 'invoice_partner_bank_id.acc_number')
     def _compute_l10n_ch_isr_number(self):
-        """ The QRR or ISR reference number is 27 characters long. The first 12 of them
-        contain the postal account number of this ISR's issuer, removing the zeros
-        at the beginning and filling the empty places with zeros on the right if it is
-        too short. The next 14 characters contain an internal reference identifying
-        the invoice. For this, we use the invoice sequence number, removing each
-        of its non-digit characters, and pad the unused spaces on the left of
-        this number with zeros. The last character of the ISR number is the result
-        of a recursive modulo 10 on its first 26 characters.
+        """Generates the ISR or QRR reference
+
+        An ISR references are 27 characters long.
+        QRR is a recycling of ISR for QR-bills. Thus works the same.
+
+        The invoice sequence number is used, removing each of its non-digit characters,
+        and pad the unused spaces on the left of this number with zeros.
+        The last digit is a checksum (mod10r).
+
+        There are 2 types of references:
+
+        * ISR (Postfinance)
+
+            The reference is free but for the last
+            digit which is a checksum.
+            If shorter than 27 digits, it is filled with zeros on the left.
+
+            e.g.
+
+                120000000000234478943216899
+                \________________________/|
+                         1                2
+                (1) 12000000000023447894321689 | reference
+                (2) 9: control digit for identification number and reference
+
+        * ISR-B (Indirect through a bank, requires a customer ID)
+
+            In case of ISR-B The firsts digits (usually 6), contain the customer ID
+            at the Bank of this ISR's issuer.
+            The rest (usually 20 digits) is reserved for the reference plus the
+            control digit.
+            If the [customer ID] + [the reference] + [the control digit] is shorter
+            than 27 digits, it is filled with zeros between the customer ID till
+            the start of the reference.
+
+            e.g.
+
+                150001123456789012345678901
+                \____/\__________________/|
+                   1           2          3
+                (1) 150001 | id number of the customer (size may vary)
+                (2) 12345678901234567890 | reference
+                (3) 1: control digit for identification number and reference
         """
         for record in self:
-            has_qriban = record.invoice_partner_bank_id._is_qr_iban()
-            isr_subscription = record.invoice_partner_bank_id.l10n_ch_postal
+            has_qriban = record.invoice_partner_bank_id and record.invoice_partner_bank_id._is_qr_iban() or False
+            isr_subscription = (record.invoice_partner_bank_id.l10n_ch_postal or '').replace("-", "")  # In case the user put the -
             if (has_qriban or isr_subscription) and record.name:
                 invoice_issuer_ref = (isr_subscription or '').ljust(l10n_ch_ISR_NUMBER_ISSUER_LENGTH, '0')
                 invoice_ref = re.sub('[^\d]', '', record.name)
@@ -110,21 +145,49 @@ class AccountMove(models.Model):
         'invoice_partner_bank_id.l10n_ch_isr_subscription_eur',
         'invoice_partner_bank_id.l10n_ch_isr_subscription_chf')
     def _compute_l10n_ch_isr_optical_line(self):
-        """ The optical reading line of the ISR looks like this :
-                left>isr_ref+ bank_ref>
+        """ Compute the optical line to print on the bottom of the ISR.
 
-           Where:
-           - left is composed of two ciphers indicating the currency (01 for CHF,
-           03 for EUR), followed by ten characters containing the total of the
-           invoice (with the dot between units and cents removed, everything being
-           right-aligned and empty places filled with zeros). After the total,
-           left contains a last cipher, which is the result of a recursive modulo
-           10 function ran over the rest of it.
+        This line is read by an OCR.
+        It's format is:
 
-            - isr_ref is the ISR reference number
+            amount>reference+ creditor>
 
-            - bank_ref is the full postal bank code (aka clearing number) of the
-            bank supporting the ISR (including the zeros).
+        Where:
+
+           - amount: currency and invoice amount
+           - reference: ISR structured reference number
+                - in case of ISR-B contains the Customer ID number
+                - it can also contains a partner reference (of the debitor)
+           - creditor: Subscription number of the creditor
+
+        An optical line can have the 2 following formats:
+
+        * ISR (Postfinance)
+
+            0100003949753>120000000000234478943216899+ 010001628>
+            |/\________/| \________________________/|  \_______/
+            1     2     3          4                5      6
+
+            (1) 01 | currency
+            (2) 0000394975 | amount 3949.75
+            (3) 4 | control digit for amount
+            (5) 12000000000023447894321689 | reference
+            (6) 9: control digit for identification number and reference
+            (7) 010001628: subscription number (01-162-8)
+
+        * ISR-B (Indirect through a bank, requires a customer ID)
+
+            0100000494004>150001123456789012345678901+ 010234567>
+            |/\________/| \____/\__________________/|  \_______/
+            1     2     3    4           5          6      7
+
+            (1) 01 | currency
+            (2) 0000049400 | amount 494.00
+            (3) 4 | control digit for amount
+            (4) 150001 | id number of the customer (size may vary, usually 6 chars)
+            (5) 12345678901234567890 | reference
+            (6) 1: control digit for identification number and reference
+            (7) 010234567: subscription number (01-23456-7)
         """
         for record in self:
             record.l10n_ch_isr_optical_line = ''

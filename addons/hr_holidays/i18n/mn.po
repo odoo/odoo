@@ -10,10 +10,10 @@
 # Martin Trigaux, 2019
 # Khoschuluu Khuderchuluu <khoschuluu@gmail.com>, 2019
 # Munkhbaatar Gombosuren <muuguu17@gmail.com>, 2020
-# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2020
 # Батболд <batbold.ts@gmail.com>, 2020
-# Uuganbayar Batbaatar <uuganaaub33@gmail.com>, 2020
 # tserendavaa tsogtoo <tseegii011929@gmail.com>, 2020
+# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2020
+# Uuganbayar Batbaatar <uuganaaub33@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -21,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:22+0000\n"
 "PO-Revision-Date: 2019-08-26 09:10+0000\n"
-"Last-Translator: tserendavaa tsogtoo <tseegii011929@gmail.com>, 2020\n"
+"Last-Translator: Uuganbayar Batbaatar <uuganaaub33@gmail.com>, 2020\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -53,22 +53,22 @@ msgstr "цаг"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
 msgid "!important &gt;&lt;/td&gt;"
-msgstr "!чухал &gt;&lt;/td&gt;"
+msgstr "!important &gt;&lt;/td&gt;"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
 msgid "!important /&gt;"
-msgstr "!чухал /&gt;"
+msgstr "!important /&gt;"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
 msgid "!important/&gt;"
-msgstr "!чухал/&gt;"
+msgstr "!important/&gt;"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
 msgid "!important; font-size: 10px\" &gt;"
-msgstr "!чухал; font-size: 10px\" &gt;"
+msgstr "!important; font-size: 10px\" &gt;"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -97,19 +97,19 @@ msgstr "%s : %.2f цагууд"
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "%s are only valid between %s and %s"
-msgstr ""
+msgstr "%s нь зөвхөн %s-ээс %s хооронд ашиглах боломжтой"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "%s are only valid starting from %s"
-msgstr ""
+msgstr "%s нь зөвхөн %s-ээс хойш ашиглах боломжтой"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "%s are only valid until %s"
-msgstr ""
+msgstr "%s нь зөвхөн %sхүртэлх хугацаанд ашиглах боломжтой"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
@@ -506,6 +506,9 @@ msgid ""
 "                            Off Till\n"
 "                        </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                            Хүртэл\n"
+"                        </span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.res_users_view_form
@@ -522,7 +525,7 @@ msgstr ""
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
 msgid "<span class=\"o_stat_text\">Group Days Allocated</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Багцын хоногуудыг хуваарилсан</span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
@@ -541,14 +544,29 @@ msgstr ""
 "                                </span>"
 
 #. module: hr_holidays
-#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
-msgid "<span class=\"text-muted\">from </span>"
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
+msgid ""
+"<span attrs=\"{'invisible': [('holiday_type', '!=', 'employee')]}\">\n"
+"                        The employee has a different timezone than yours! Here dates and times are displayed in the employee's timezone\n"
+"                    </span>\n"
+"                    <span attrs=\"{'invisible': [('holiday_type', '!=', 'department')]}\">\n"
+"                        The department's company has a different timezone than yours! Here dates and times are displayed in the company's timezone\n"
+"                    </span>\n"
+"                    <span attrs=\"{'invisible': [('holiday_type', '!=', 'company')]}\">\n"
+"                        The company has a different timezone than yours! Here dates and times are displayed in the company's timezone\n"
+"                    </span>\n"
+"                    ("
 msgstr ""
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
+msgid "<span class=\"text-muted\">from </span>"
+msgstr "<span class=\"text-muted\">эхлэх </span>"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
 msgid "<span class=\"text-muted\">to </span>"
-msgstr ""
+msgstr "<span class=\"text-muted\">дуусах </span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form_manager
@@ -608,12 +626,12 @@ msgstr "Өнөөдөр байхгүй"
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_allocation__allocation_type__accrual
 msgid "Accrual Allocation"
-msgstr ""
+msgstr "Өссөн дүнгээрх хуваарилалт"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
 msgid "Accrual Allocations"
-msgstr "Өссөн хуваарилалт"
+msgstr "Өссөн дүнгээрх хуваарилалт"
 
 #. module: hr_holidays
 #: model:ir.actions.server,name:hr_holidays.hr_leave_allocation_cron_accrual_ir_actions_server
@@ -956,7 +974,7 @@ msgstr "Цэнхэр"
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_holidays_summary_employee__holiday_type__both
 msgid "Both Approved and Confirmed"
-msgstr "Батлагдсан болон Зөвшөөрсөн хоёулаа"
+msgstr "Батлагдсан болон Илгээсэн хоёулаа"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__color_name__brown
@@ -1078,12 +1096,12 @@ msgstr "Тохиргоо"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
 msgid "Confirm"
-msgstr "Батлах"
+msgstr "Илгээх"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_holidays_summary_employee__holiday_type__confirmed
 msgid "Confirmed"
-msgstr "Батлагдсан"
+msgstr "Илгээсэн"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_res_partner
@@ -1724,23 +1742,23 @@ msgstr "Үндсэн хавсралт"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__manager_id
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__manager_id
 msgid "Manager"
-msgstr "Менежер"
+msgstr "Удирдлага"
 
 #. module: hr_holidays
 #: model:ir.actions.server,name:hr_holidays.action_manager_approval
 msgid "Manager Approval"
-msgstr ""
+msgstr "Удирдлагын зөвшөөрөл"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form_manager
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form_manager_approve
 msgid "Manager's Comment"
-msgstr ""
+msgstr "Удирдлагын тайлбар"
 
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_holidays_approvals
 msgid "Managers"
-msgstr "Менежерүүд"
+msgstr "Удирдлагууд"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__max_leaves
@@ -1963,6 +1981,8 @@ msgid ""
 "Number of days of the time off request. Used in the calculation. To manually"
 " correct the duration, use this field."
 msgstr ""
+"Таны ажлын цагийн хуваарийн дагуу тооцсон чөлөөний цагийн тоо. Дэлгэцэнд "
+"харуулах"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_has_error_counter
@@ -2021,6 +2041,8 @@ msgstr ""
 msgid ""
 "Once a time off request is posted, your manager is notified for validation."
 msgstr ""
+"Таны чөлөөний хүсэлт илгээгдэхэд, таны шууд удирдлагад зөвшөөрөл хүссэн "
+"санамж очино."
 
 #. module: hr_holidays
 #. openerp-web
@@ -2034,26 +2056,32 @@ msgstr "Онлайн"
 #, python-format
 msgid "Only a Leave Manager can approve/refuse its own requests."
 msgstr ""
+"Зөвхөн Амралт чөлөөний Менежер эрхтэй хэрэглэгч өөрийн чөлөөний хүсэлтээ "
+"батлах/татгалзах үйлдэл хийх боломжгүй."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "Only a Leave Manager can reset a refused leave."
 msgstr ""
+"Зөвхөн Амралт чөлөөний Менежер эрхтэй хэрэглэгч татгалзсан хүсэлтийг ноорог "
+"болгох боломжтой."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "Only a Leave Manager can reset a started leave."
 msgstr ""
+"Зөвхөн Амралт чөлөөний Менежер эрхтэй хэрэглэгч илгээгдсэн хүсэлтийг ноорог "
+"болгох боломжтой."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "Only a Leave Manager can reset other people leaves."
 msgstr ""
-"Зөвхөн Чөлөөний менежер эрхтэй хэрэглэгч л бусад хүмүүсийн чөлөөний "
-"хүсэлтийг сэргээх боломжтой."
+"Зөвхөн Амралт чөлөөний Менежер эрхтэй хэрэглэгч бусад ажилчдын хүсэлтийг "
+"ноорог болгох боломжтой."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
@@ -2062,23 +2090,24 @@ msgid ""
 "Only a Time off Manager can apply the second approval on allocation "
 "requests."
 msgstr ""
-"Зөвхөн Чөлөө батлах эрхтэй хэрэглэгч чөлөөний хүсэлт дээр хоёр дахь "
-"зөвшөөрлийг гаргах эрхтэй."
+"Зөвхөн Амралт чөлөөний Менежер эрхтэй хэрэглэгч чөлөө хуваарилалтын хоёр "
+"дахь зөвшөөрлийг олгох боломжтой."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 #, python-format
 msgid "Only a time off Manager can approve its own requests."
 msgstr ""
-"Зөвхөн Чөлөө батлах эрхтэй хэрэглэгч л өөрийн хүсэлтийг зөвшөөрөх боломжтой."
+"Зөвхөн Амралт чөлөөний Менежер эрхтэй хэрэглэгч өөрийн хүсэлтээ зөвшөөрөх "
+"боломжтой."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 #, python-format
 msgid "Only a time off Manager can reset other people allocation."
 msgstr ""
-"Зөвхөн Чөлөө батлах эрхтэй хэрэглэгч л бусад хүмүүсийн чөлөөний хүсэлтийг "
-"сэргээх боломжтой."
+"Зөвхөн Амралт чөлөөний Менежер эрхтэй хэрэглэгч бусад ажилсдын чөлөө "
+"хуваарилалтыг ноорог болгох боломжтой."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
@@ -2467,6 +2496,10 @@ msgid ""
 "The status is 'Refused', when an allocation request is refused by manager.\n"
 "The status is 'Approved', when an allocation request is approved by manager."
 msgstr ""
+"Чөлөөний эрх хуваарилалтыг үүсгэхэд 'Илгээхийг хүлээж буй' төлөвт шилжинэ.\n"
+"Чөлөөний эрх хуваарилалтыг илгээхэд 'Зөвшөөрөл хүлээж буй' төлөвт шилжинэ.\n"
+"Чөлөөний эрх хуваарилалтыг Удирдлага түтгэлзүүлвэл 'Түтгэлзүүлсэн' төлөвт шилжинэ.\n"
+"Чөлөөний эрх хуваарилалтыг Удирдлага зөвшөөрвөл 'Зөвшөөрсөн' төлөвт шилжинэ."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
@@ -2704,7 +2737,7 @@ msgstr "Чөлөөний шинжилгээ"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
 msgid "Time off of people you are manager of"
-msgstr ""
+msgstr "Танаас амралт чөлөөний зөвшөөрөл авах боломжтой ажилчид"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
@@ -3026,6 +3059,7 @@ msgid ""
 "You can not set 2 times off that overlaps on the same day for the same "
 "employee."
 msgstr ""
+"Та нэг ажилтны хувьд ижил цаг хугацаанд 2 амралт чөлөө бүртгэх боломжгүй."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
@@ -3046,6 +3080,8 @@ msgid ""
 "You cannot first approve a leave for %s, because you are not his leave "
 "manager"
 msgstr ""
+"Та %s -ын чөлөөний хүсэлтийн эхний зөвшөөрлийг олгох боломжгүй, учир нь та "
+"түүний чөлөөний удирдлага биш байна"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
