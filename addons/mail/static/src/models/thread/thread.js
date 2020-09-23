@@ -287,6 +287,25 @@ function factory(dependencies) {
             ));
         }
 
+
+        /**
+         * Performs the `channel_fold` RPC on `mail.channel`.
+         *
+         * @static
+         * @param {string} uuid
+         * @param {string} state
+         */
+        static async performRpcChannelFold(uuid, state) {
+            return this.env.services.rpc({
+                model: 'mail.channel',
+                method: 'channel_fold',
+                kwargs: {
+                    state,
+                    uuid,
+                }
+            }, { shadow: true });
+        }
+
         /**
          * Performs the `channel_info` RPC on `mail.channel`.
          *
@@ -579,21 +598,13 @@ function factory(dependencies) {
         }
 
         /**
-         * Notify server the fold state of this thread. Useful for cross-tab
-         * and cross-device chat window state synchronization.
+         * Notifies the server of new fold state. Useful for initial,
+         * cross-tab, and cross-device chat window state synchronization.
          *
-         * Only makes sense if pendingFoldState is set to the desired value.
+         * @param {string} state
          */
-        notifyFoldStateToServer() {
-            // method is called from _updateAfter so it cannot be async
-            this.env.services.rpc({
-                model: 'mail.channel',
-                method: 'channel_fold',
-                kwargs: {
-                    uuid: this.uuid,
-                    state: this.pendingFoldState,
-                }
-            }, { shadow: true });
+        async notifyFoldStateToServer(state) {
+            return this.env.models['mail.thread'].performRpcChannelFold(this.uuid, state);
         }
 
         /**
@@ -855,10 +866,8 @@ function factory(dependencies) {
          * Unsubscribe current user from provided channel.
          */
         unsubscribe() {
-            this.update({
-                pendingFoldState: 'closed',
-                isPendingPinned: false,
-            });
+            this.env.messaging.chatWindowManager.closeThread(this);
+            this.update({ isPendingPinned: false });
         }
 
         //----------------------------------------------------------------------
@@ -928,14 +937,6 @@ function factory(dependencies) {
                 return this.custom_channel_name || this.correspondent.nameOrDisplayName;
             }
             return this.name;
-        }
-
-        /**
-         * @private
-         * @returns {string}
-         */
-        _computeFoldState() {
-            return this.pendingFoldState || this.serverFoldState;
         }
 
         /**
@@ -1205,6 +1206,29 @@ function factory(dependencies) {
         }
 
         /**
+         * Handles change of fold state coming from the server. Useful to
+         * synchronize corresponding chat window.
+         *
+         * @private
+         */
+        _onServerFoldStateChanged() {
+            if (!this.env.messaging.chatWindowManager) {
+                // avoid crash during destroy
+                return;
+            }
+            if (this.serverFoldState === 'closed') {
+                this.env.messaging.chatWindowManager.closeThread(this, {
+                    notifyServer: false,
+                });
+            } else {
+                this.env.messaging.chatWindowManager.openThread(this, {
+                    isFolded: this.serverFoldState === 'folded',
+                    notifyServer: false,
+                });
+            }
+        }
+
+        /**
          * @private
          * @param {Object} [param0={}]
          * @param {boolean} [param0.mail_invite_follower_channel_only=false]
@@ -1240,19 +1264,8 @@ function factory(dependencies) {
          */
         _updateAfter(previous) {
             if (this.model !== 'mail.channel') {
-                // fold state only makes sense on channels
+                // pin state only makes sense on channels
                 return;
-            }
-            if (
-                this.pendingFoldState &&
-                previous.pendingFoldState !== this.pendingFoldState
-            ) {
-                this.notifyFoldStateToServer();
-            }
-            if (
-                this.serverFoldState === this.pendingFoldState
-            ) {
-                this.update({ pendingFoldState: clear() });
             }
             if (
                 this.isPendingPinned !== undefined &&
@@ -1260,31 +1273,8 @@ function factory(dependencies) {
             ) {
                 this.notifyPinStateToServer();
             }
-            if (
-                this.isServerPinned === this.isPendingPinned
-            ) {
+            if (this.isServerPinned === this.isPendingPinned) {
                 this.update({ isPendingPinned: clear() });
-            }
-
-            // TODO FIXME prevent to open/close a channel on mobile when you
-            // open/close it on desktop (task-2267593)
-
-            // chat window
-            if (previous.foldState === this.foldState) {
-                // avoid updating chatWindows when not changing foldState
-                // important to avoid issues when thread is in progress of being
-                // opened, because the foldState is updated only at the end of
-                // the process
-                return;
-            }
-            if (!this.env.messaging.chatWindowManager) {
-                // avoid crash during destroy
-                return;
-            }
-            if (this.foldState !== 'closed') {
-                this.env.messaging.chatWindowManager.openThread(this);
-            } else {
-                this.env.messaging.chatWindowManager.closeThread(this);
             }
         }
 
@@ -1293,9 +1283,7 @@ function factory(dependencies) {
          */
         _updateBefore() {
             return {
-                foldState: this.foldState,
                 isPendingPinned: this.isPendingPinned,
-                pendingFoldState: this.pendingFoldState,
             };
         }
 
@@ -1357,6 +1345,20 @@ function factory(dependencies) {
             isCausal: true,
         }),
         channel_type: attr(),
+        /**
+         * States the `mail.chat_window` related to `this`. Serves as compute
+         * dependency. It is computed from the inverse relation and it should
+         * otherwise be considered read-only.
+         */
+        chatWindow: one2one('mail.chat_window', {
+            inverse: 'thread',
+        }),
+        /**
+         * Serves as compute dependency.
+         */
+        chatWindowIsFolded: attr({
+            related: 'chatWindow.isFolded',
+        }),
         composer: one2one('mail.composer', {
             default: [['create']],
             inverse: 'thread',
@@ -1387,22 +1389,6 @@ function factory(dependencies) {
                 'correspondentNameOrDisplayName',
                 'custom_channel_name',
                 'name',
-            ],
-        }),
-        /**
-         * Determine the fold state of the channel on the web client.
-         *
-         * If there is a pending fold state change, it is immediately applied on
-         * the interface to avoid a feeling of unresponsiveness. Otherwise the
-         * last known fold state of the server is used.
-         *
-         * This field must be considered read only.
-         */
-        foldState: attr({
-            compute: '_computeFoldState',
-            dependencies: [
-                'pendingFoldState',
-                'serverFoldState',
             ],
         }),
         followersPartner: many2many('mail.partner', {
@@ -1577,6 +1563,16 @@ function factory(dependencies) {
             compute: '_computeNeedactionMessages',
             dependencies: ['messages'],
         }),
+        /**
+         * Not a real field, used to trigger `_onServerFoldStateChanged` when one of
+         * the dependencies changes.
+         */
+        onServerFoldStateChanged: attr({
+            compute: '_onServerFoldStateChanged',
+            dependencies: [
+                'serverFoldState',
+            ],
+        }),
         orderedMessages: many2many('mail.message', {
             compute: '_computeOrderedMessages',
             dependencies: ['messages'],
@@ -1613,15 +1609,6 @@ function factory(dependencies) {
             inverse: 'thread',
             isCausal: true,
         }),
-        /**
-         * Determine if there is a pending fold state change, which is a change
-         * of fold state requested by the client but not yet confirmed by the
-         * server.
-         *
-         * This field can be updated to immediately change the fold state on the
-         * interface and to notify the server of the new state.
-         */
-        pendingFoldState: attr(),
         /**
          * Determine if there is a pending seen message change, which is a change
          * of seen message requested by the client but not yet confirmed by the

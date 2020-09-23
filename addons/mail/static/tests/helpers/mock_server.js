@@ -660,10 +660,13 @@ MockServer.include({
      */
     _mockMailChannelChannelFold(uuid, state) {
         const channel = this._getRecords('mail.channel', [['uuid', '=', uuid]])[0];
-        this._mockWrite('mail.channel', [channel.id], {
-            is_minimized: state !== 'closed',
-            state,
-        });
+        this._mockWrite('mail.channel', [
+            [channel.id],
+            {
+                is_minimized: state !== 'closed',
+                state,
+            }
+        ]);
         const notifConfirmFold = [
             ["dbName", 'res.partner', this.currentPartnerId],
             this._mockMailChannelChannelInfo([channel.id])[0]
@@ -850,9 +853,10 @@ MockServer.include({
         const channels = this._getRecords('mail.channel', [['id', 'in', ids]]);
         if (commandName === 'leave') {
             for (const channel of channels) {
-                this._mockWrite('mail.channel', [channel.id], {
-                    is_pinned: false,
-                });
+                this._mockWrite('mail.channel', [
+                    [channel.id],
+                    { is_pinned: false },
+                ]);
                 const notifConfirmUnpin = [
                     ["dbName", 'res.partner', this.currentPartnerId],
                     Object.assign({}, channel, { info: 'unsubscribe' })
