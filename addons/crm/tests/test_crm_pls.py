@@ -351,3 +351,28 @@ class TestCRMPLS(TransactionCase):
         self.assertEqual(tools.float_compare(lead_tag_1.automated_probability, 33.69, 2), 0)
         self.assertEqual(tools.float_compare(lead_tag_2.automated_probability, 23.51, 2), 0)
         self.assertEqual(tools.float_compare(lead_tag_1_2.automated_probability, 28.05, 2), 0)
+
+        # set email_state for each lead and update probabilities
+        leads.filtered(lambda lead: lead.id % 2 == 0).email_state = 'correct'
+        leads.filtered(lambda lead: lead.id % 2 == 1).email_state = 'incorrect'
+        Lead._cron_update_automated_probabilities()
+        leads_with_tags.invalidate_cache()
+
+        self.assertEqual(tools.float_compare(leads[3].automated_probability, 4.21, 2), 0)
+        self.assertEqual(tools.float_compare(leads[8].automated_probability, 0.23, 2), 0)
+
+        # remove all pls fields
+        self.env['ir.config_parameter'].sudo().set_param("crm.pls_fields", False)
+        Lead._cron_update_automated_probabilities()
+        leads_with_tags.invalidate_cache()
+
+        self.assertEqual(tools.float_compare(leads[3].automated_probability, 34.38, 2), 0)
+        self.assertEqual(tools.float_compare(leads[8].automated_probability, 50.0, 2), 0)
+
+        # check if the probabilities are the same with the old param
+        self.env['ir.config_parameter'].sudo().set_param("crm.pls_fields", "country_id,state_id,email_state,phone_state,source_id")
+        Lead._cron_update_automated_probabilities()
+        leads_with_tags.invalidate_cache()
+
+        self.assertEqual(tools.float_compare(leads[3].automated_probability, 4.21, 2), 0)
+        self.assertEqual(tools.float_compare(leads[8].automated_probability, 0.23, 2), 0)
