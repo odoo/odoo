@@ -242,6 +242,21 @@ QUnit.test('message list asc order', async function (assert) {
 QUnit.test('mark channel as fetched when a new message is loaded and as seen when focusing composer [REQUIRE FOCUS]', async function (assert) {
     assert.expect(8);
 
+    this.data['res.partner'].records.push({
+        email: "fred@example.com",
+        id: 10,
+        name: "Fred",
+    });
+    this.data['res.users'].records.push({
+        id: 10,
+        partner_id: 10,
+    });
+    this.data['mail.channel'].records.push({
+        channel_type: 'chat',
+        id: 100,
+        is_pinned: true,
+        members: [this.data.currentPartnerId, 10],
+    });
     await this.start({
         mockRPC(route, args) {
             if (args.method === 'channel_fetched') {
@@ -272,44 +287,25 @@ QUnit.test('mark channel as fetched when a new message is loaded and as seen whe
             return this._super(...arguments);
         }
     });
-    const thread = this.env.models['mail.thread'].create({
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
         id: 100,
-        isServerPinned: true, // just to avoid joinChannel to be called
-        members: [['insert', [
-            {
-                email: "john@example.com",
-                id: this.env.messaging.currentPartner.id,
-                name: "John",
-            },
-            {
-                email: "fred@example.com",
-                id: 10,
-                name: "Fred",
-            },
-        ]]],
         model: 'mail.channel',
-        serverMessageUnreadCounter: 1, // seen would not be called if not > 0
     });
-
     const threadViewer = this.env.models['mail.thread_viewer'].create({
         hasThreadView: true,
         thread: [['link', thread]],
     });
     await this.createThreadViewComponent(threadViewer.threadView, { hasComposer: true });
-    const notifications = [
-        [['myDB', 'mail.channel', 100], {
-            channelId: 100,
-            id: 1,
-            body: "<p>fdsfsd</p>",
-            author_id: [10, "Fred"],
-            model: "mail.channel",
-            channel_ids: [100],
-        }]
-    ];
-
-    await afterNextRender(() =>
-        this.widget.call('bus_service', 'trigger', 'notification', notifications)
-    );
+    await afterNextRender(async () => this.env.services.rpc({
+        route: '/mail/chat_post',
+        params: {
+            context: {
+                mockedUserId: 10,
+            },
+            uuid: thread.uuid,
+            message_content: "new message",
+        },
+    }));
     assert.verifySteps(
         ['rpc:channel_fetch'],
         "Channel should have been fetched but not seen yet"
