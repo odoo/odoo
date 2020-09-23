@@ -113,7 +113,10 @@ class AccountMove(models.Model):
 
                 price_unit = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
                 if line.tax_ids:
-                    price_unit = line.tax_ids.compute_all(
+                    # We do not want to round the price unit since :
+                    # - It does not follow the currency precision
+                    # - It may include a discount
+                    price_unit = line.tax_ids.with_context(round=False).compute_all(
                         price_unit, currency=move.currency_id, quantity=1.0, is_refund=move.type == 'in_refund')['total_excluded']
 
                 if float_compare(valuation_price_unit, price_unit, precision_digits=invoice_cur_prec) != 0 \
