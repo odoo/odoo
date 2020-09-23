@@ -6023,6 +6023,14 @@ Fields:
                     else:
                         # x2many fields: serialize value as commands
                         result[name] = commands = [(5,)]
+                        # The purpose of the following line is to enable the prefetching.
+                        # In the loop below, line._prefetch_ids actually depends on the
+                        # value of record[name] in cache (see prefetch_ids on x2many
+                        # fields).  But the cache has been invalidated before calling
+                        # diff(), therefore evaluating line._prefetch_ids with an empty
+                        # cache simply returns nothing, which discards the prefetching
+                        # optimization!
+                        record[name]
                         for line_snapshot in self[name]:
                             line = line_snapshot['<record>']
                             line = line._origin or line
