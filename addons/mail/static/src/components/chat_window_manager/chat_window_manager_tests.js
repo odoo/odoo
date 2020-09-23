@@ -453,9 +453,8 @@ QUnit.test('chat window: basic rendering', async function (assert) {
 });
 
 QUnit.test('chat window: fold', async function (assert) {
-    assert.expect(27);
+    assert.expect(9);
 
-    let foldCall = 0;
     // channel that is expected to be found in the messaging menu
     // with random UUID, will be asserted during the test
     this.data['mail.channel'].records.push({ uuid: 'channel-uuid' });
@@ -463,44 +462,6 @@ QUnit.test('chat window: fold', async function (assert) {
         mockRPC(route, args) {
             if (args.method === 'channel_fold') {
                 assert.step(`rpc:${args.method}/${args.kwargs.state}`);
-                foldCall++;
-                const kwargsKeys = Object.keys(args.kwargs);
-                assert.strictEqual(
-                    args.args.length,
-                    0,
-                    "channel_fold call have no args"
-                );
-                assert.strictEqual(
-                    kwargsKeys.length,
-                    2,
-                    "channel_fold call have exactly 2 kwargs"
-                );
-                assert.ok(
-                    kwargsKeys.includes('state'),
-                    "channel_fold call have 'state' kwargs"
-                );
-                assert.ok(
-                    kwargsKeys.includes('uuid'),
-                    "channel_fold call have 'uuid' kwargs"
-                );
-                assert.strictEqual(
-                    args.kwargs.uuid,
-                    'channel-uuid',
-                    "channel_fold call uuid is from channel 20"
-                );
-                if (foldCall % 2 === 0) {
-                    assert.strictEqual(
-                        args.kwargs.state,
-                        'folded',
-                        "channel_fold call state is 'folded'"
-                    );
-                } else {
-                    assert.strictEqual(
-                        args.kwargs.state,
-                        'open',
-                        "channel_fold call state is 'open'"
-                    );
-                }
             }
             return this._super(...arguments);
         },
@@ -515,11 +476,17 @@ QUnit.test('chat window: fold', async function (assert) {
         '.o_ChatWindow_thread',
         "chat window should have a thread"
     );
-    assert.verifySteps(['rpc:channel_fold/open']);
+    assert.verifySteps(
+        ['rpc:channel_fold/open'],
+        "should sync fold state 'open' with server after opening chat window"
+    );
 
     // Fold chat window
     await afterNextRender(() => document.querySelector(`.o_ChatWindow_header`).click());
-    assert.verifySteps(['rpc:channel_fold/folded']);
+    assert.verifySteps(
+        ['rpc:channel_fold/folded'],
+        "should sync fold state 'folded' with server after folding chat window"
+    );
     assert.containsNone(
         document.body,
         '.o_ChatWindow_thread',
@@ -528,7 +495,10 @@ QUnit.test('chat window: fold', async function (assert) {
 
     // Unfold chat window
     await afterNextRender(() => document.querySelector(`.o_ChatWindow_header`).click());
-    assert.verifySteps(['rpc:channel_fold/open']);
+    assert.verifySteps(
+        ['rpc:channel_fold/open'],
+        "should sync fold state 'open' with server after unfolding chat window"
+    );
     assert.containsOnce(
         document.body,
         '.o_ChatWindow_thread',
@@ -537,9 +507,8 @@ QUnit.test('chat window: fold', async function (assert) {
 });
 
 QUnit.test('chat window: open / close', async function (assert) {
-    assert.expect(24);
+    assert.expect(10);
 
-    let foldCall = 0;
     // channel that is expected to be found in the messaging menu
     // with random UUID, will be asserted during the test
     this.data['mail.channel'].records.push({ uuid: 'channel-uuid' });
@@ -547,64 +516,55 @@ QUnit.test('chat window: open / close', async function (assert) {
         mockRPC(route, args) {
             if (args.method === 'channel_fold') {
                 assert.step(`rpc:channel_fold/${args.kwargs.state}`);
-                foldCall++;
-                const kwargsKeys = Object.keys(args.kwargs);
-                assert.strictEqual(
-                    args.args.length,
-                    0,
-                    "channel_fold call have no args"
-                );
-                assert.strictEqual(
-                    kwargsKeys.length,
-                    2,
-                    "channel_fold call have exactly 2 kwargs"
-                );
-                assert.ok(
-                    kwargsKeys.includes('state'),
-                    "channel_fold call have 'state' kwargs"
-                );
-                assert.ok(
-                    kwargsKeys.includes('uuid'),
-                    "channel_fold call have 'uuid' kwargs"
-                );
-                assert.strictEqual(
-                    args.kwargs.uuid,
-                    'channel-uuid',
-                    "channel_fold call uuid should be correct"
-                );
-                if (foldCall % 2 === 0) {
-                    assert.strictEqual(
-                        args.kwargs.state,
-                        'closed',
-                        "channel_fold call state is 'closed'"
-                    );
-                } else {
-                    assert.strictEqual(
-                        args.kwargs.state,
-                        'open',
-                        "channel_fold call state is 'open'"
-                    );
-                }
             }
             return this._super(...arguments);
         },
     });
+    assert.containsNone(
+        document.body,
+        '.o_ChatWindow',
+        "should not have a chat window initially"
+    );
     await afterNextRender(() => document.querySelector(`.o_MessagingMenu_toggler`).click());
     await afterNextRender(() =>
         document.querySelector(`.o_MessagingMenu_dropdownMenu .o_NotificationList_preview`).click()
     );
-    assert.verifySteps(['rpc:channel_fold/open']);
+    assert.containsOnce(
+        document.body,
+        '.o_ChatWindow',
+        "should have a chat window after clicking on thread preview"
+    );
+    assert.verifySteps(
+        ['rpc:channel_fold/open'],
+        "should sync fold state 'open' with server after opening chat window"
+    );
 
     // Close chat window
     await afterNextRender(() => document.querySelector(`.o_ChatWindowHeader_commandClose`).click());
-    assert.verifySteps(['rpc:channel_fold/closed']);
+    assert.containsNone(
+        document.body,
+        '.o_ChatWindow',
+        "should not have a chat window after closing it"
+    );
+    assert.verifySteps(
+        ['rpc:channel_fold/closed'],
+        "should sync fold state 'closed' with server after closing chat window"
+    );
 
     // Reopen chat window
     await afterNextRender(() => document.querySelector(`.o_MessagingMenu_toggler`).click());
     await afterNextRender(() =>
         document.querySelector(`.o_MessagingMenu_dropdownMenu .o_NotificationList_preview`).click()
     );
-    assert.verifySteps(['rpc:channel_fold/open']);
+    assert.containsOnce(
+        document.body,
+        '.o_ChatWindow',
+        "should have a chat window again after clicking on thread preview again"
+    );
+    assert.verifySteps(
+        ['rpc:channel_fold/open'],
+        "should sync fold state 'open' with server after opening chat window again"
+    );
 });
 
 QUnit.test('chat window: close on ESCAPE', async function (assert) {

@@ -74,11 +74,12 @@ function factory(dependencies) {
          * Closes all chat windows related to the given thread.
          *
          * @param {mail.thread} thread
+         * @param {Object} [options]
          */
-        closeThread(thread) {
+        closeThread(thread, options) {
             for (const chatWindow of this.chatWindows) {
                 if (chatWindow.thread === thread) {
-                    chatWindow.close();
+                    chatWindow.close(options);
                 }
             }
         }
@@ -100,28 +101,42 @@ function factory(dependencies) {
         /**
          * @param {mail.thread} thread
          * @param {Object} [param1={}]
+         * @param {boolean} [param1.isFolded=false]
          * @param {boolean} [param1.makeActive=false]
+         * @param {boolean} [param1.notifyServer=true]
          * @param {boolean} [param1.replaceNewMessage=false]
          */
-        openThread(thread, { makeActive = false, replaceNewMessage = false } = {}) {
+        openThread(thread, {
+            isFolded = false,
+            makeActive = false,
+            notifyServer = true,
+            replaceNewMessage = false
+        } = {}) {
             let chatWindow = this.chatWindows.find(chatWindow =>
                 chatWindow.thread === thread
             );
             if (!chatWindow) {
                 chatWindow = this.env.models['mail.chat_window'].create({
+                    isFolded,
                     manager: [['link', this]],
                     thread: [['link', thread]],
                 });
-            }
-            if (thread.foldState === 'closed') {
-                thread.update({ pendingFoldState: 'open' });
+            } else {
+                chatWindow.update({ isFolded });
             }
             if (replaceNewMessage && this.newMessageChatWindow) {
                 this.swap(chatWindow, this.newMessageChatWindow);
                 this.newMessageChatWindow.close();
             }
             if (makeActive) {
-                chatWindow.makeActive();
+                // avoid double notify at this step, it will already be done at
+                // the end of the current method
+                chatWindow.makeActive({ notifyServer: false });
+            }
+            // Flux specific: notify server of chat window being opened.
+            if (notifyServer) {
+                const foldState = chatWindow.isFolded ? 'folded' : 'open';
+                thread.notifyFoldStateToServer(foldState);
             }
         }
 
