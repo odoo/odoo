@@ -578,7 +578,7 @@ So, you can write ``if some_collection:`` instead of ``if len(some_collection):`
     for element in iterable:
         values.setdefault(element, []).append(other_value)
 
-- As a good developper, document your code (docstring on methods, simple
+- As a good developer, document your code (docstring on methods, simple
   comments for tricky part of code)
 - In additions to these guidelines, you may also find the following link
   interesting: http://python.net/~goodger/projects/pycon/2007/idiomatic/handout.html
@@ -604,14 +604,14 @@ on self to treat each record.
         for record in self:
             record.do_cool_stuff()
 
-For performance issue, when developping a 'stat button' (for instance), do not
+For performance issue, when developing a 'stat button' (for instance), do not
 perform a ``search`` or a ``search_count`` in a loop. It
 is recommended to use ``read_group`` method, to compute all value in only one request.
 
 .. code-block:: python
 
     def _compute_equipment_count(self):
-    """ Count the number of equipement per category """
+    """ Count the number of equipment per category """
         equipment_data = self.env['hr.equipment'].read_group([('category_id', 'in', self.ids)], ['category_id'], ['category_id'])
         mapped_data = dict([(m['category_id'][0], m['category_id_count']) for m in equipment_data])
         for category in self:
