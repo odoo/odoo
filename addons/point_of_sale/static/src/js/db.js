@@ -287,6 +287,8 @@ var PosDB = core.Class.extend({
                                   (partner.country_id ? partner.country_id[1]: '');
                 this.partner_search_string += this._partner_search_string(partner);
             }
+
+            this.partner_search_string = utils.unaccent(this.partner_search_string);
         }
         return updated_count;
     },
@@ -317,7 +319,7 @@ var PosDB = core.Class.extend({
         }
         var results = [];
         for(var i = 0; i < this.limit; i++){
-            var r = re.exec(utils.unaccent(this.partner_search_string));
+            var r = re.exec(this.partner_search_string);
             if(r){
                 var id = Number(r[1]);
                 results.push(this.get_partner_by_id(id));
