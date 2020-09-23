@@ -195,6 +195,16 @@ odoo.define('web.Popover', function () {
         }
 
         /**
+         * Popover must recompute its position when children content changes.
+         *
+         * @private
+         * @param {Event} ev
+         */
+        _onPopoverCompute(ev) {
+            this._compute();
+        }
+
+        /**
          * A resize event will need to 'reposition' the popover close to its
          * target.
          *
