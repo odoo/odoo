@@ -29,7 +29,7 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
         })
         return company_data
 
-    def _create_purchase(self, product, date, quantity=1.0, set_tax=False):
+    def _create_purchase(self, product, date, quantity=1.0, set_tax=False, price_unit=66.0):
         rslt = self.env['purchase.order'].create({
             'partner_id': self.partner_a.id,
             'currency_id': self.currency_data['currency'].id,
@@ -39,7 +39,7 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
                     'product_id': product.id,
                     'product_qty': quantity,
                     'product_uom': product.uom_po_id.id,
-                    'price_unit': 66.0,
+                    'price_unit': price_unit,
                     'date_planned': date,
                     'taxes_id': [(6, 0, product.supplier_taxes_id.ids)] if set_tax else False,
                 })],
@@ -179,6 +179,34 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
         price_diff_line = invoice.line_ids.filtered(lambda l: l.account_id == self.stock_account_product_categ.property_account_creditor_price_difference_categ)
         self.assertTrue(len(price_diff_line) == 1, "A price difference line should be created")
         self.assertAlmostEqual(price_diff_line.price_total, -6100.446)
+
+        picking = self.env['stock.picking'].search([('purchase_id','=',purchase_order.id)])
+        self.check_reconciliation(invoice, picking)
+
+    def test_rounding_price_unit(self):
+        self.env.ref("product.decimal_price").digits = 6
+
+        test_product = self.test_product_delivery
+        date_po_and_delivery = '2018-01-01'
+
+        purchase_order = self._create_purchase(test_product, date_po_and_delivery, quantity=1000000, price_unit=0.0005)
+        self._process_pickings(purchase_order.picking_ids, date=date_po_and_delivery)
+
+        invoice = self._create_invoice_for_po(purchase_order, '2018-01-01')
+
+        # Set a discount
+        move_form = Form(invoice)
+        with move_form.invoice_line_ids.edit(0) as line_form:
+            line_form.price_unit = 0.0006
+        move_form.save()
+
+        invoice.action_post()
+
+        # Check the price difference amount. It's expected that price_unit * qty != price_total.
+        price_diff_line = invoice.line_ids.filtered(lambda l: l.account_id == self.stock_account_product_categ.property_account_creditor_price_difference_categ)
+        self.assertTrue(len(price_diff_line) == 1, "A price difference line should be created")
+        self.assertAlmostEqual(price_diff_line.price_unit, 0.0001)
+        self.assertAlmostEqual(price_diff_line.price_total, 100.0)
 
         picking = self.env['stock.picking'].search([('purchase_id','=',purchase_order.id)])
         self.check_reconciliation(invoice, picking)
