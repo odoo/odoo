@@ -7,7 +7,7 @@
                 <div class="o_Activity_sidebar">
                     <div class="o_Activity_user">
                         <t t-if="activity.assignee">
-                            <img class="o_Activity_userAvatar" t-attf-src="/web/image/res.users/{{ activity.assignee.id }}/image_128" t-att-alt="activity.assignee.nameOrDisplayName()"/>
+                            <img class="o_Activity_userAvatar" t-attf-src="/web/image/res.users/{{ activity.assignee.id }}/image_128" t-att-alt="activity.assignee.nameOrDisplayName"/>
                         </t>
                         <div class="o_Activity_iconContainer"
                             t-att-class="{
@@ -65,17 +65,17 @@
                                     <dt>Created</dt>
                                     <dd class="o_Activity_detailsCreation">
                                         <t t-esc="formattedCreateDatetime"/>
-                                        <img class="o_Activity_detailsUserAvatar o_Activity_detailsCreatorAvatar" t-attf-src="/web/image/res.users/{{ activity.creator.id }}/image_128" t-att-title="activity.creator.nameOrDisplayName()" t-att-alt="activity.creator.nameOrDisplayName()"/>
+                                        <img class="o_Activity_detailsUserAvatar o_Activity_detailsCreatorAvatar" t-attf-src="/web/image/res.users/{{ activity.creator.id }}/image_128" t-att-title="activity.creator.nameOrDisplayName" t-att-alt="activity.creator.nameOrDisplayName"/>
                                         <span class="o_Activity_detailsCreator">
-                                            <t t-esc="activity.creator.nameOrDisplayName()"/>
+                                            <t t-esc="activity.creator.nameOrDisplayName"/>
                                         </span>
                                     </dd>
                                 </t>
                                 <t t-if="activity.assignee">
                                     <dt>Assigned to</dt>
                                     <dd class="o_Activity_detailsAssignation">
-                                        <img class="o_Activity_detailsUserAvatar o_Activity_detailsAssignationUserAvatar" t-attf-src="/web/image/res.users/{{ activity.assignee.id }}/image_128" t-att-title="activity.assignee.nameOrDisplayName()" t-att-alt="activity.assignee.nameOrDisplayName()"/>
-                                        <t t-esc="activity.assignee.nameOrDisplayName()"/>
+                                        <img class="o_Activity_detailsUserAvatar o_Activity_detailsAssignationUserAvatar" t-attf-src="/web/image/res.users/{{ activity.assignee.id }}/image_128" t-att-title="activity.assignee.nameOrDisplayName" t-att-alt="activity.assignee.nameOrDisplayName"/>
+                                        <t t-esc="activity.assignee.nameOrDisplayName"/>
                                     </dd>
                                 </t>
                                 <dt>Due on</dt>

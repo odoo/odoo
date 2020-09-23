@@ -85,17 +85,6 @@ function factory(dependencies) {
         }
 
         /**
-         * @returns {string}
-         */
-        nameOrDisplayName() {
-            const partner = this.partner;
-            if (!partner) {
-                return this.partnerDisplayName;
-            }
-            return partner.nameOrDisplayName;
-        }
-
-        /**
          * Gets the chat between this user and the current user.
          *
          * If a chat is not appropriate, a notification is displayed instead.
@@ -195,25 +184,56 @@ function factory(dependencies) {
         }
 
         /**
-         * @override
+         * @private
+         * @returns {string|undefined}
          */
-        _updateAfter(previous) {
-            if (this.partnerDisplayName && this.partner) {
-                this.partner.update({ display_name: this.partnerDisplayName });
-            }
+        _computeDisplayName() {
+            return this.display_name || this.partner && this.partner.display_name;
         }
 
+        /**
+         * @private
+         * @returns {string|undefined}
+         */
+        _computeNameOrDisplayName() {
+            return this.partner && this.partner.nameOrDisplayName || this.display_name;
+        }
     }
 
     User.fields = {
         id: attr(),
+        display_name: attr({
+            compute: '_computeDisplayName',
+            dependencies: [
+                'display_name',
+                'partnerDisplayName',
+            ],
+        }),
         model: attr({
             default: 'res.user',
+        }),
+        nameOrDisplayName: attr({
+            compute: '_computeNameOrDisplayName',
+            dependencies: [
+                'display_name',
+                'partnerNameOrDisplayName',
+            ]
         }),
         partner: one2one('mail.partner', {
             inverse: 'user',
         }),
-        partnerDisplayName: attr(),
+        /**
+         * Serves as compute dependency.
+         */
+        partnerDisplayName: attr({
+            related: 'partner.display_name',
+        }),
+        /**
+         * Serves as compute dependency.
+         */
+        partnerNameOrDisplayName: attr({
+            related: 'partner.nameOrDisplayName',
+        }),
     };
 
     User.modelName = 'mail.user';

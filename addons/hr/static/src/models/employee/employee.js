@@ -36,7 +36,7 @@ function factory(dependencies) {
                     const userData = {
                         id: userNameGet[0],
                         partner: [['insert', partnerData]],
-                        partnerDisplayName: userNameGet[1],
+                        display_name: userNameGet[1],
                     };
                     data2.user = [['insert', userData]];
                 }
