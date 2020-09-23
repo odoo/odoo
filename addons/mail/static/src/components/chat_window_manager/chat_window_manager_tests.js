@@ -1977,6 +1977,46 @@ QUnit.test('focusing a chat window of a chat should make new message separator d
     );
 });
 
+QUnit.test('[technical] unread counter in a chat window is not shown on receiving new transient message [REQUIRE FOCUS]', async function (assert) {
+    // technical as we need to remove focus from text input to avoid `channel_seen` call
+    assert.expect(3);
+
+    this.data['mail.channel'].records = [
+        {
+            id: 10,
+            is_minimized: true,
+            is_pinned: true,
+            name: "test",
+            message_unread_counter: 0,
+        },
+    ];
+    await this.start();
+    document.querySelector('.o_ComposerTextInput_textarea').focus();
+    await afterNextRender(() => document.execCommand('insertText', false, "/who"));
+    await afterNextRender(() => {
+        const kevt = new window.KeyboardEvent('keydown', { key: "Enter" });
+        document.querySelector('.o_ComposerTextInput_textarea').dispatchEvent(kevt);
+        // need to remove focus from text area to avoid channel_seen
+        document.querySelector('.o_Composer_buttonEmojis').focus();
+    });
+
+    assert.containsOnce(
+        document.body,
+        '.o_ChatWindow',
+        "a chat window should be visible after receiving a new message from a chat"
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_Message',
+        "chat window should have a single message (the newly received transient one)"
+    );
+    assert.containsNone(
+        document.body,
+        '.o_ChatWindowHeader_counter',
+        "chat window unread counter should not be shown after receiving a transient message"
+    );
+});
+
 });
 });
 });

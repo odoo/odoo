@@ -102,9 +102,9 @@ function factory(dependencies) {
             // FIXME condition should not be on "composer is focused" but "threadView is active"
             // See task-2277543
             const lastMessageIsVisible = this.lastVisibleMessage &&
-                this.lastVisibleMessage === this.lastMessage;
+                this.lastVisibleMessage === this.lastNonTransientMessage;
             if (lastMessageIsVisible && this.hasComposerFocus && this.thread) {
-                this.thread.markAsSeen(this.lastMessage.id).catch(e => {
+                this.thread.markAsSeen(this.lastNonTransientMessage.id).catch(e => {
                     // prevent crash when executing compute during destroy
                     if (!(e instanceof RecordDeletedError)) {
                         throw e;
@@ -210,8 +210,8 @@ function factory(dependencies) {
          * hint `message-received`.
          */
         hasAutoScrollOnMessageReceived: attr(),
-        lastMessage: many2one('mail.message', {
-            related: 'thread.lastMessage',
+        lastNonTransientMessage: many2one('mail.message', {
+            related: 'thread.lastNonTransientMessage',
         }),
         /**
          * Most recent message in this ThreadView that has been shown to the
@@ -292,7 +292,7 @@ function factory(dependencies) {
             compute: '_computeThreadShouldBeSetAsSeen',
             dependencies: [
                 'hasComposerFocus',
-                'lastMessage',
+                'lastNonTransientMessage',
                 'lastVisibleMessage',
                 'threadCache',
             ],

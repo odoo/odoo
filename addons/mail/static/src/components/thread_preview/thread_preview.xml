@@ -34,17 +34,17 @@
                             </span>
                         </t>
                         <span class="o-autogrow"/>
-                        <t t-if="thread.lastMessage">
+                        <t t-if="thread.lastNonTransientMessage">
                             <span class="o_ThreadPreview_date" t-att-class="{ 'o-muted': thread.localMessageUnreadCounter === 0 }">
-                                <t t-esc="thread.lastMessage.date.fromNow()"/>
+                                <t t-esc="thread.lastNonTransientMessage.date.fromNow()"/>
                             </span>
                         </t>
                     </div>
                     <div class="o_ThreadPreview_core">
                         <span class="o_ThreadPreview_coreItem o_ThreadPreview_inlineText" t-att-class="{ 'o-empty': inlineLastMessageBody.length === 0 }">
-                            <t t-if="thread.lastMessage and thread.lastMessage.author">
+                            <t t-if="thread.lastNonTransientMessage and thread.lastNonTransientMessage.author">
                                 <MessageAuthorPrefix
-                                    messageLocalId="thread.lastMessage.localId"
+                                    messageLocalId="thread.lastNonTransientMessage.localId"
                                     threadLocalId="thread.localId"
                                 />
                             </t>

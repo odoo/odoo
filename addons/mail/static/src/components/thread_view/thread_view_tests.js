@@ -1001,6 +1001,65 @@ QUnit.test('delete all attachments of a message with tracking fields should stil
     );
 });
 
+QUnit.test('[technical] new messages separator on posting command', async function (assert) {
+    // technical as we need to remove focus from text input to avoid `channel_seen` call
+    assert.expect(4);
+
+    this.data['mail.channel'].records = [{
+        channel_type: 'channel',
+        id: 20,
+        is_pinned: true,
+        message_unread_counter: 0,
+        seen_message_id: 10,
+        name: "General",
+    }];
+    this.data['mail.message'].records.push({
+        body: "first message",
+        channel_ids: [20],
+        id: 10,
+    });
+    await this.start();
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel'
+    });
+    const threadViewer = this.env.models['mail.thread_viewer'].create({
+        hasThreadView: true,
+        thread: [['link', thread]],
+    });
+    await this.createThreadViewComponent(threadViewer.threadView, { hasComposer: true });
+
+    assert.containsOnce(
+        document.body,
+        '.o_Message',
+        "should display one message in thread initially"
+    );
+    assert.containsNone(
+        document.body,
+        '.o_MessageList_separatorNewMessages',
+        "should not display 'new messages' separator"
+    );
+
+    document.querySelector('.o_ComposerTextInput_textarea').focus();
+    await afterNextRender(() => document.execCommand('insertText', false, "/who"));
+    await afterNextRender(() => {
+        // need to remove focus from text area to avoid channel_seen
+        document.querySelector('.o_Composer_buttonSend').focus();
+        document.querySelector('.o_Composer_buttonSend').click();
+    });
+    assert.containsN(
+        document.body,
+        '.o_Message',
+        2,
+        "should display 2 messages (initial & the transient message), after posting a command"
+    );
+    assert.containsNone(
+        document.body,
+        '.o_MessageList_separatorNewMessages',
+        "still no separator shown when current partner posted a command"
+    );
+});
+
 });
 });
 });
