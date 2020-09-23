@@ -137,8 +137,8 @@ odoo.define('web.popover_tests', function (require) {
             await changeProps('position', 'left');
             await testUtils.dom.click('#target');
             assert.ok(
-                pointsTo(document.querySelector('.o_popover'), element, 'top'),
-                "Popover should be top-positioned because it doesn't fit left"
+                pointsTo(document.querySelector('.o_popover'), element, 'right'),
+                "Popover should be right-positioned because it doesn't fit left"
             );
             await testUtils.dom.click('#passiveTarget');
             parent.destroy();
