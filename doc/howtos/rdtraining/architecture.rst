@@ -89,6 +89,14 @@ When an Odoo module includes business objects (i.e. Python files), they are orga
 with a ``__init__.py`` file, containing import instructions for various Python
 files in the module.
 
+Odoo Editions
+=============
+
+Odoo is available in `two versions`_: Odoo Enterprise (licensed & shared sources) and Odoo Community
+(open-source). On top of services such as suport or upgrades, an Enterprise version provide extra
+functionalities to Odoo. From a technical point-of-view, these functionalities are simply
+new modules installed on top of the modules provided by the Community version.
+
 Ready to start? Before writing actual code, let's go to the
 :ref:`next chapter <howto/rdtraining/setup>` to review the Odoo installation process. Even if
 Odoo is already running on your system, we strongly suggest you go through this chapter
@@ -99,3 +107,6 @@ to make sure we are on the same page to start the development of our new applica
 
 .. _Python tutorial:
     https://docs.python.org/3.6/tutorial/
+
+.. _two versions:
+    https://www.odoo.com/page/editions
