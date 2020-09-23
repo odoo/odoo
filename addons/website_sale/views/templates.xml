@@ -754,7 +754,9 @@
                             </t>
                         </div>
                         <div class="col-12 col-xl-auto order-xl-2 d-none d-xl-block">
-                            <t t-call="website_sale.cart_summary"/>
+                            <t t-call="website_sale.cart_summary">
+                                <t t-set="redirect">/shop/extra_info</t>
+                            </t>
                         </div>
                         <div class="col-12 col-xl order-xl-1 oe_cart">
                             <div class="row">
