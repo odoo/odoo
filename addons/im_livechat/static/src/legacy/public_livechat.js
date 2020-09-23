@@ -193,10 +193,10 @@ var LivechatButton = Widget.extend({
                     return;
                 }
                 this._addMessage(notificationData);
-                this._renderMessages();
                 if (this._chatWindow.isFolded() || !this._chatWindow.isAtBottom()) {
                     this._livechat.incrementUnreadCounter();
                 }
+                this._renderMessages();
             }
         }
     },
