@@ -478,8 +478,9 @@ class Track(models.Model):
         track_candidates = track_candidates.sorted(
             lambda track:
                 (track.is_published,
-                 track.is_track_live,
-                 track.track_start_remaining > 0,
+                 track.track_start_remaining == 0  # First get the tracks that started less than 10 minutes ago
+                    and track.track_start_relative < (10*60),
+                 track.track_start_remaining > 0,  # Then the one that will begin later (the sooner come first)
                  -1 * track.track_start_remaining,
                  track.is_reminder_on,
                  not track.wishlisted_by_default,
