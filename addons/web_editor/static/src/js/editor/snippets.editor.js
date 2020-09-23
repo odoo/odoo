@@ -45,7 +45,7 @@ $.ui.plugin.add( "draggable", "intersect", {
     },
     drag: function( event, ui, inst ) {
         if (!inst.$intersectHelpers) {
-            inst.$intersectHelpers = inst.options.intersect.helpers(event, ui, inst);
+            inst.$intersectHelpers = inst.options.intersect.helpers.call(inst.helper, event, ui);
         }
         if (!inst.$intersectHelpers.length) {
             return;
@@ -67,7 +67,7 @@ $.ui.plugin.add( "draggable", "intersect", {
             }
         }
         if (inst.intersectOver && inst.intersectOver[0] !== over) {
-            inst.options.intersect.out(ui, inst.intersectOver[0], inst);
+            inst.options.intersect.out.call(inst.helper, ui, inst.intersectOver[0]);
             inst.intersectOver = null;
         }
         if (over && !inst.intersectOver) {
@@ -78,7 +78,7 @@ $.ui.plugin.add( "draggable", "intersect", {
                 left: box.left,
                 width: box.width,
             }];
-            inst.options.intersect.over(ui, over, inst);
+            inst.options.intersect.over.call(inst.helper, ui, over);
         }
     }
 } );
@@ -1952,7 +1952,8 @@ var SnippetsMenu = Widget.extend({
      */
     _makeSnippetDraggable: function ($snippets) {
         var self = this;
-        var $snippetToInsert, dropped, $snippet;
+        var dragStarted;
+        var dropped;
         let scrollValue;
 
         let dragAndDropResolve;
@@ -1971,9 +1972,19 @@ var SnippetsMenu = Widget.extend({
                 },
                 start: function (ev, ui) {
                     self.$el.find('.oe_snippet_thumbnail').addClass('o_we_already_dragging');
-                    dropped = false;
-                    $snippet = $(this);
+                    const $snippet = $(this);
                     var $baseBody = $snippet.find('.oe_snippet_body');
+
+                    if (dragStarted) {
+                        // If the previous drop are not finished, the position of the current snippet can be wrong.
+                        // And JWEditor can have a mismatch for the redrawing.
+                        $snippet.data('to-insert', $());
+                        return;
+                    }
+                    dragStarted = true;
+
+                    const $snippetToInsert = $baseBody.clone();
+
                     var $selectorSiblings = $();
                     var $selectorChildren = $();
                     for (const option of self.templateOptions) {
@@ -1987,7 +1998,6 @@ var SnippetsMenu = Widget.extend({
                         }
                     }
 
-                    $snippetToInsert = $baseBody.clone();
                     // Color-customize dynamic SVGs in dropped snippets with current theme colors.
                     [...$snippetToInsert.find('img[src^="/web_editor/shape/"]')].forEach(dynamicSvg => {
                         const colorCustomizedURL = new URL(dynamicSvg.getAttribute('src'), window.location.origin);
@@ -2018,8 +2028,11 @@ var SnippetsMenu = Widget.extend({
                             });
                         }
                     }
+
+                    $snippet.data('to-insert', $snippetToInsert);
                 },
                 stop: async function (ev, ui) {
+                    const $snippetToInsert = this.data('to-insert');
                     $snippetToInsert.removeClass('oe_snippet_body');
 
                     if (!dropped && ui.position.top > 3 && ui.position.left + ui.helper.outerHeight() < self.el.getBoundingClientRect().left) {
@@ -2067,7 +2080,7 @@ var SnippetsMenu = Widget.extend({
                             });
 
                             $snippetToInsert.trigger('content_changed');
-                            self._updateInvisibleDOM();
+                            await self._updateInvisibleDOM();
 
                             self.$el.find('.oe_snippet_thumbnail').removeClass('o_we_already_dragging');
                         });
@@ -2076,20 +2089,24 @@ var SnippetsMenu = Widget.extend({
                         dragAndDropResolve();
                         self.$el.find('.oe_snippet_thumbnail').removeClass('o_we_already_dragging');
                     }
+                    dropped = false;
+                    dragStarted = false;
                 },
                 intersect: {
                     helpers: function () {
                         return self.$editor.find('.oe_drop_zone');
                     },
-                    over: function (ui, droppable, inst) {
+                    over: function (ui, droppable) {
                         if (!dropped) {
                             dropped = true;
                             scrollValue = $(droppable).offset().top;
+                            const $snippetToInsert = this.data('to-insert');
                             $(droppable).after($snippetToInsert).addClass('d-none');
                             $snippetToInsert.removeClass('oe_snippet_body');
                         }
                     },
-                    out: function (ui, droppable, inst) {
+                    out: function (ui, droppable) {
+                        const $snippetToInsert = this.data('to-insert');
                         var prev = $snippetToInsert.prev();
                         if (droppable === prev[0]) {
                             dropped = false;
@@ -2706,16 +2723,22 @@ var SnippetsMenu = Widget.extend({
      * @param {JQuery} $snippet
      * @returns {VNode[]}
      */
+
     _insertSnippet: async function ($snippet) {
+        const jwEditor = this.wysiwyg.editor;
         let result;
         const insertSnippet = async (context) => {
+            const layout = jwEditor.plugins.get(this.JWEditorLib.Layout);
+            const domLayout = layout.engines.dom;
+            domLayout.markForRedraw(new Set($snippet.find('*').contents().addBack().add($snippet).get()));
             const position = this._getRelativePosition($snippet[0]);
+            console.log(position);
             if (!position) {
                 throw new Error("Could not find a place to insert the snippet.");
             }
             result = await this.editorHelpers.insertHtml(context, $snippet[0].outerHTML, position[0], position[1]);
         };
-        await this.wysiwyg.editor.execCommand(insertSnippet);
+        await jwEditor.execCommand(insertSnippet);
         return result;
     },
     /**
