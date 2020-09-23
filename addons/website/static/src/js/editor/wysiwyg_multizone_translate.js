@@ -91,6 +91,9 @@ var WysiwygTranslate = WysiwygMultizone.extend({
      */
     start: function () {
         var self = this;
+        // Hacky way to keep the top editor toolbar in translate mode for now
+        this.$webEditorTopEdit = $('<div id="web_editor-top-edit"></div>').prependTo(document.body);
+        this.options.toolbarHandler = this.$webEditorTopEdit;
         this.editor = new (this.Editor)(this, Object.assign({Editor: RTETranslatorWidget}, this.options));
         this.$editor = this.editor.rte.editable();
         var promise = this.editor.prependTo(this.$editor[0].ownerDocument.body);
@@ -132,6 +135,13 @@ var WysiwygTranslate = WysiwygMultizone.extend({
 
             self._markTranslatableNodes();
         });
+    },
+    /**
+     * @override
+     */
+    destroy: function () {
+        this._super(...arguments);
+        this.$webEditorTopEdit.remove();
     },
 
     //--------------------------------------------------------------------------
