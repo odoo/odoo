@@ -503,7 +503,7 @@ class ProcurementGroup(models.Model):
         domain = self._get_moves_to_assign_domain(company_id)
         moves_to_assign = self.env['stock.move'].search(domain, limit=None,
             order='priority desc, date asc')
-        for moves_chunk in split_every(100, moves_to_assign.ids):
+        for moves_chunk in split_every(3000, moves_to_assign.ids):
             self.env['stock.move'].browse(moves_chunk)._action_assign()
             if use_new_cursor:
                 self._cr.commit()
