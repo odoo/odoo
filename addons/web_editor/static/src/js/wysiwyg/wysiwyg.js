@@ -215,7 +215,7 @@ var Wysiwyg = Widget.extend({
             snippetMenuElement: $mainSidebar[0],
             snippetManipulators: $snippetManipulators[0],
             customCommands: Object.assign(customCommands, this.options.customCommands),
-            plugins: this.options.enableWebsite ? [[this.JWEditorLib.OdooField]] : [],
+            plugins: this.options.enableWebsite && !this.options.enableTranslation ? [[this.JWEditorLib.OdooField]] : [],
             source: this.value,
             location: this.options.location || [this.el, 'replace'],
             mode: this._modeConfig,
@@ -1004,8 +1004,9 @@ var Wysiwyg = Widget.extend({
             let previousTranslationId;
             this.zoneMain.descendants(descendant => {
                 const format = descendant.modifiers.find(JWEditorLib.OdooTranslationFormat);
-                const translationId = format && format.translationId;
-                if (translationId && this.editor.mode.is(descendant, 'editable')) {
+                const formatAttributes = format && format.modifiers.find(JWEditorLib.Attributes);
+                const translationId = format && (format.translationId || +formatAttributes.get('data-oe-id'));
+                if (this.editor.mode.is(descendant, 'editable')) {
                     translationContainers[translationId] = translationContainers[translationId] || [];
                     const containers = translationContainers[translationId];
                     if (previousTranslationId !== translationId) {
