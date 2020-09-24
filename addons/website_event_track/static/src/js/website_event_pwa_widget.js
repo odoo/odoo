@@ -80,31 +80,20 @@ odoo.define("website_event_track.website_event_pwa_widget", function (require) {
         //--------------------------------------------------------------------------
 
         /**
-         * Returns the website's language from the URL
-         * 
-         * Note: this method performs a matching against both the simple (eg. "en") and complete (eg. "en_US")
-         *       language formatting in the url. This is required as the cookie always returns the complete
-         *       form but the URL can use both, depending on the language (eg. "en_US" => "en" but "en_UK" => "en_UK").
-         * @private
-         * @return {String}
-         */
-        _getLangPrefix: function () {
-            var lang = utils.get_cookie("frontend_lang");
-            var path = window.location.pathname;
-            var matches = path.match(new RegExp("^\/?(" + lang + "|" + lang.slice(0, 2) + ")\/"));
-            if (lang && matches && matches[1]) {
-                return "/" + matches[1];
-            }
-            return "";
-        },
-
-        /**
          * Returns the PWA's scope
+         *
+         * Note: this method performs a matching to handle URLs with the language prefix.
+         *       Typically this prefix is in the form of "en" or "en_US" but it can also be
+         *       any string using the customization options in the Website's settings.
          * @private
          * @returns {String}
          */
         _getScope: function () {
-            return this._getLangPrefix() + "/event";
+            var matches = window.location.pathname.match(/^(\/(?:event|[^/]+\/event))\/?/);
+            if (matches && matches[1]) {
+                return matches[1];
+            }
+            return "/event";
         },
 
         /**
