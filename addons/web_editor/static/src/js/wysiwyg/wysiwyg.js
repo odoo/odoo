@@ -281,6 +281,39 @@ var Wysiwyg = Widget.extend({
                     });
                 }
             };
+            const onSelectionUpdateColorPreview = (param) => {
+                let color, bgColor = undefined;
+
+                const findColorsIn = (object) => {
+                    const attributes = object.modifiers.find(JWEditorLib.Attributes);
+                    const curentTextStyle = attributes ? attributes.style : false;
+                    if (curentTextStyle && !color) {
+                        color = curentTextStyle.get('color') ;
+                    }
+                    if (curentTextStyle && !bgColor) {
+                        bgColor = curentTextStyle.get('background-color');
+                    }
+                }
+
+                const rangeStart = param.context.range.start
+                const node = rangeStart.nextSibling(node => !(node instanceof JWEditorLib.SeparatorNode) || rangeStart.nextSibling())
+                if(node) {
+                    findColorsIn(node);
+                    if (!color || !bgColor) {
+                        const formats = node.modifiers.filter(JWEditorLib.Format);
+                        for (const format of formats) {
+                            findColorsIn(format)
+                        }
+                    }
+                }
+
+                if(!color) color = "#000";
+                if(!bgColor) bgColor = "rgba(255,255,255,0)";
+
+                this.$toolbar.find(".jw-dropdown-textcolor>jw-button").css("background-color", color);
+                this.$toolbar.find(".jw-dropdown-backgroundcolor>jw-button").css("background-color", bgColor);
+            }
+            this.editor.dispatcher.registerCommandHook('setSelection', onSelectionUpdateColorPreview);
             this.editor.dispatcher.registerCommandHook('@commit', onCommitCheckSnippets);
 
         } else {
@@ -397,7 +430,9 @@ var Wysiwyg = Widget.extend({
             this.editor.execCommand(setCommandId, {color: color});
         }
         if($dropDownToToggle !== undefined) {
-            $dropDownToToggle.find(".dropdown-toggle").dropdown("toggle");
+            const $jwButton = $dropDownToToggle.find(".dropdown-toggle")
+            $jwButton.dropdown("toggle");
+            $jwButton.css("background-color", color);
         }
     },
     async initColorPicker($dropdownNode, setCommandId, unsetCommandId) {

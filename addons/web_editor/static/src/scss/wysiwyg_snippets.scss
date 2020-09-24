@@ -428,10 +428,18 @@ body.editor_enable.editor_has_snippets {
             padding: 3px 6px 0;
             min-width: 28px;
             text-align: center;
-            &.dropdown-toggle {
-                min-width: 38px;
-                &::after{
-                    margin-left: 3px;
+        }
+        .jw-dropdown{
+            border-radius: 18px;
+            border: 1px solid #000;
+            background-image: url('/web/static/src/img/transparent.png');
+            background-size: 10px auto;
+            jw-button{
+                border: 2px solid #fff;
+                border-radius: 18px;
+                background-color: rgba(255,255,255,0);
+                &:after, &:before{
+                    display:none;
                 }
             }
         }
