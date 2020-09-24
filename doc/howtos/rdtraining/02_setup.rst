@@ -217,7 +217,7 @@ In order to support right-to-left (RTL) languages, we need `rtlcss` to convert t
 Install PostgreSQL
 ------------------
 
-As seen in :ref:`howto/rdtraining/01_architecture`, Odoo uses PostgreSQL as a RDBM. In the context of a
+As seen in :ref:`howto/rdtraining/01_architecture`, Odoo uses PostgreSQL as a RDBMS. In the context of a
 development machine, the easiest way is to install it locally. Then, we can create a PostgreSQL user
 corresponding to our current user:
 
@@ -426,4 +426,7 @@ Here is a list of commands:
       Quit the debugger. The program being executed is aborted.
 
 .. tip:: To avoid killing the worker when debugging, you can add this arguments when launching the
-         server ` --limit-time-cpu=9999999999 --limit-time-real=9999999999`
+         server ` --limit-time-cpu=9999 --limit-time-real=9999`
+
+Alright, now that your server is running, it's time to start
+:ref:`writing your own application <howto/rdtraining/03_newapp>`!

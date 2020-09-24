@@ -15,7 +15,7 @@ aims to cover the minimum required to use our new module.
 Data Files (CSV)
 ================
 
-Odoo is a highly data driven system. Although behavior is customized using Python code part of a
+Odoo is a highly data driven system. Although behavior is customized using Python code, part of a
 module's value is in the data it sets up when loaded. One way to load the data is through a CSV
 file. For example, the
 `list of country states <https://github.com/odoo/odoo/blob/master/odoo/addons/base/data/res.country.state.csv>`__
@@ -43,7 +43,7 @@ in the ``res.country.state`` model.
 By convention, a file importing data is located in the ``data`` folder of a module. When the data
 is related to security, it is located in the ``security`` folder. When the data is related to
 views and actions (we will come back to that later),  it is located in the ``views`` folder.
-Moreover, such file must be declared in the ``__manifest__.py`` file, in the ``data``
+Moreover, such files must be declared in the ``__manifest__.py`` file, in the ``data``
 list. In our example, the file is defined
 `in the manifest of the base module <https://github.com/odoo/odoo/blob/e8697f609372cd61b045c4ee2c7f0fcfb496f58a/odoo/addons/base/__manifest__.py#L29>`__.
 
@@ -52,11 +52,11 @@ updated.
 
 .. warning::
 
-    The data files are loaded sequencially following their order in the ``__manifest__.py`` file.
+    The data files are loaded sequentially following their order in the ``__manifest__.py`` file.
     This means that if a data ``A`` refers to another data ``B``, you must make sure that ``B``
     is loaded before ``A``.
 
-    In the case our the country states, you will note that the
+    In the case of the country states, you will note that the
     `list of countries <https://github.com/odoo/odoo/blob/e8697f609372cd61b045c4ee2c7f0fcfb496f58a/odoo/addons/base/__manifest__.py#L22>`__
     is loaded **before** the
     `list of country states <https://github.com/odoo/odoo/blob/e8697f609372cd61b045c4ee2c7f0fcfb496f58a/odoo/addons/base/__manifest__.py#L29>`__.

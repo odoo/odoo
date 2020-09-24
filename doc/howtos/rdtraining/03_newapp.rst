@@ -70,10 +70,11 @@ Take a look at the
 as an example. On top of providing the description of the module (``name``, ``category``,
 ``summary``, ``website``...), it lists its dependencies (``depends``). A dependency means that the
 Odoo framework will ensure that these are installed before our module is installed. Moreover, if
-one of the dependency is uninstalled our module will also be uninstalled. Think about your favorite
-Linux distribution packaging tool (``apt``, ``dnf``, ``pacman``...): Odoo works in the same fashion.
+one of the dependencies is uninstalled, our module and **any other that depends on it will also
+be uninstalled**. Think about your favorite Linux distribution package manager
+(``apt``, ``dnf``, ``pacman``...): Odoo works in the same fashion.
 
-.. exercise:: Creation the required addon files
+.. exercise:: Creation of the required addon files
 
     Create the following folders and files:
 
@@ -90,7 +91,7 @@ Restart the Odoo server and add the ``custom`` folder to the ``addons-path``:
 
     $ ./odoo-bin --addons-path=../custom,../enterprise/,addons
 
-Go to Apps, click on Update Apps List, search for ``estate`` and... tadaaa, you module appears!
+Go to Apps, click on Update Apps List, search for ``estate`` and... tadaaa, your module appears!
 No, it doesn't appear? Maybe try to remove the default 'Apps' filter ;-)
 
 .. exercise:: Make your module an 'App'

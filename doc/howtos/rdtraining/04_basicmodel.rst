@@ -121,7 +121,7 @@ defined as attributes on the model class::
         name = fields.Char()
 
 The ``name`` field is a :class:`~odoo.fields.Char` which will be represented as a Python
-``unicode`` and a SQL ``VARCHAR``.
+unicode ``str`` and a SQL ``VARCHAR``.
 
 Types
 -----
@@ -235,12 +235,12 @@ configuration attributes as parameters::
 
 Some attributes are available on all fields, here are the most common ones:
 
-:attr:`~odoo.fields.Field.string` (``unicode``, default: field's name)
+:attr:`~odoo.fields.Field.string` (``str``, default: field's name)
     The label of the field in UI (visible by users).
 :attr:`~odoo.fields.Field.required` (``bool``, default: ``False``)
     If ``True``, the field can not be empty, it must either have a default
     value or always be given a value when creating a record.
-:attr:`~odoo.fields.Field.help` (``unicode``, default: ``''``)
+:attr:`~odoo.fields.Field.help` (``str``, default: ``''``)
     Long-form, provides a help tooltip to users in the UI.
 :attr:`~odoo.fields.Field.index` (``bool``, default: ``False``)
     Requests that Odoo create a `database index`_ on the column.
@@ -278,7 +278,7 @@ useful or necessary:
 :attr:`~odoo.fields.Model.write_date` (:class:`~odoo.fields.Datetime`)
     Last modification date of the record.
 :attr:`~odoo.fields.Model.write_uid` (:class:`~odoo.fields.Many2one`)
-    user who last modified the record.
+    User who last modified the record.
 
 
 Now that we have created our first table, let's

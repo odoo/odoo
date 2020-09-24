@@ -119,6 +119,15 @@ A simple example can be found
 This might require some trial and errors before you get to the expected result ;-) It is advised
 to add the fields and the tags one at a time to understand how it works.
 
+In order to avoid relaunching the server every time a modification to the view is done, it might
+be convenient to use the ``--dev xml`` parameter when launching the server:
+
+.. code-block:: console
+
+    $ ./odoo-bin --addons-path=../custom,../enterprise/,addons -d rd-demo -u estate --dev xml
+
+This way, you just need to refresh the page.
+
 Search
 ======
 
@@ -146,8 +155,8 @@ Search views are slightly different from the list and form views since they don'
 other view's content (generally aggregated views such as :ref:`reference/views/list`).
 Beyond that difference in use case, they are defined the same way.
 
-Their root element is ``<search>``. The simplest form of the tree view simply
-lists all the fields a shortcut is needed:
+Their root element is ``<search>``. The simplest form of the search view simply
+lists all the fields for which a shortcut is desired:
 
 .. code-block:: xml
 
@@ -185,7 +194,7 @@ Domains
 :ref:`reference/orm/domains`.
 
 In Odoo, domains are values that encode conditions on
-records. A domain is a  list of criteria used to select a subset of a model's
+records. A domain is a list of criteria used to select a subset of a model's
 records. Each criteria is a triple with a field name, an operator and a value.
 
 For instance, when used on the *Product* model the following domain selects

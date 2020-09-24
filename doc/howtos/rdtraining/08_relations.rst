@@ -47,7 +47,7 @@ the properties according to their type, in particular to refine the filtering.
 A property can have **one** type, but the same type can be assigned on **many** properties:
 we will use the **many2one** concept.
 
-A many2one is a simple link to an other object. For example, in order to define a link to the
+A many2one is a simple link to another object. For example, in order to define a link to the
 ``res.partner`` on our test model, we could write::
 
     partner_id = fields.Many2one("res.partner", string="Partner")
@@ -57,9 +57,11 @@ simply::
 
     print(my_test_object.partner_id.name)
 
-.. seealso:: `foreign keys <https://www.postgresql.org/docs/current/tutorial-fk.html>`_
+.. seealso::
 
- In practice, a many2one can be seen as a dropdown list on a form view.
+    `foreign keys <https://www.postgresql.org/docs/current/tutorial-fk.html>`_
+
+In practice, a many2one can be seen as a dropdown list on a form view.
 
 .. exercise:: Add the Real Estate Property Type table
 
@@ -86,9 +88,9 @@ simply::
 
 Once again, restart the server and refresh to see the results!
 
-In the real estate module, there are still two missing information we want on a property: the buyer
-and the salesperson. The buyer can be any individual, but on the other end the salesperson must be
-an employee of the real estate agency (i.e. an Odoo user).
+In the real estate module, there are still two missing pieces of information we want on a property:
+the buyer and the salesperson. The buyer can be any individual, but on the other end the
+salesperson must be an employee of the real estate agency (i.e. an Odoo user).
 
 In Odoo, there are two models to which we commonly refer to:
 
@@ -101,7 +103,8 @@ In Odoo, there are two models to which we commonly refer to:
 .. exercise:: Add the buyer and the salesperson
 
     Add a buyer and a salesperson on the ``estate.property`` model using the two common models
-    mentioned. They should be added in a new tab of the form view, as depicted.
+    mentioned. They should be added in a new tab of the form view, as depicted in the **Goal**
+    section.
 
     The default value for the salesperson must be the current user. The buyer should not be copied.
 
@@ -164,6 +167,10 @@ done in a loop::
     for tax in my_test_object.tax_ids:
         print(tax.name)
 
+A list of records is known as a *recordset*, i.e. an ordered collection of records. It supports
+the standard Python operations on collections, like ``len()`` and ``iter()``, plus extra set
+operations like ``recs1 + recs2``.
+
 .. exercise:: Add the Real Estate Property Tag table
 
     - Create the ``estate.property.tag`` model and add the following field:
@@ -175,12 +182,12 @@ done in a loop::
     ========================= ========================= =========================
 
     - Add the menus as displayed in the **Goal**
-    - Add the field ``tag_ids`` on your ``estate.property`` model and it its form and tree views
+    - Add the field ``tag_ids`` on your ``estate.property`` model and in its form and tree views
 
     Tip: in the view, use the ``widget="many2many_tags"`` attribute as done
     `here <https://github.com/odoo/odoo/blob/5bb8b927524d062be32f92eb326ef64091301de1/addons/crm_iap_lead_website/views/crm_reveal_views.xml#L36>`__.
-    We well cover :ref:`later <howto/rdtraining/12_sprinkles>` the ``widget`` attribute in more
-    details. For now, you can try to add or remove it and see the result ;-)
+    We will cover :ref:`later <howto/rdtraining/12_sprinkles>` the ``widget`` attribute in more
+    detail. For now, you can try to add or remove it and see the result ;-)
 
 One2many
 ========
@@ -208,7 +215,7 @@ the concept of **many2one** appears once again. However, in this case we want to
 of offers for a given property: we will use the **one2many** concept.
 
 A one2many virtual relationship, inverse of a many2one. For example, we defined on our test model
-a link to the ``res.partner`` model thanks to the field ``partner_id``. We can defined the inverse
+a link to the ``res.partner`` model thanks to the field ``partner_id``. We can define the inverse
 relation, i.e. the list of test models linked to our partner::
 
     test_ids = fields.One2many("test.model", "partner_id", string="Tests")
@@ -225,7 +232,7 @@ that accessing the data must be done in a loop::
 .. danger::
 
     Because a :class:`~odoo.fields.One2many` is a virtual relationship,
-    there *must* be a :class:`~odoo.fields.Many2one` field
+    there *must* be a :class:`~odoo.fields.Many2one` field defined in the comodel.
 
 .. exercise:: Add the Real Estate Property Offer table
 
@@ -243,14 +250,14 @@ that accessing the data must be done in a loop::
     - Create a tree and form view with the ``price``, ``partner_id`` and ``status`` fields. No
       need for an action nor a menu.
     - Add the field ``offer_ids`` on your ``estate.property`` model and in its form view as
-      depicted.
+      depicted in the **Goal**.
 
 There are several important things to notice here. First, we don't need an action or a menu for all
 models. Some models are intended to be accessed only through another one. This is the case in our
 exercise: an offer is always accessed through a property.
 
 Second, despite the fact that the ``property_id`` field is required, we did not include it in the
-views. How comes the Odoo knows to which property our offer is linked to? Well that's part of the
+views. How come Odoo knows to which property our offer is linked to? Well that's part of the
 magic of using the Odoo framework: sometimes, things are defined implicitly.
 
 Still alive? This chapter is surely not the easiest one. It introduced a couple of new concepts

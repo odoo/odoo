@@ -16,7 +16,7 @@ logic and the data storage are separated. More specifically, it uses a three-tie
     :alt: Three-tier architecture
 
 The presentation tier is a combination of HTML5, JavaScript and CSS. The logic tier is exclusively
-written in Python, while the data tier only supports PostgreSQL as an RDBM.
+written in Python, while the data tier only supports PostgreSQL as an RDBMS.
 
 Depending on the scope of your module, the Odoo development can be done in any of these tiers.
 Therefore, before going any further, it may be a good idea to refresh your memory if you don't have
@@ -57,7 +57,7 @@ Business objects
     Definition of UI display
 
 :ref:`Data files <reference/data>`
-    XML or CSV files declaring the model metadata:
+    XML or CSV files declaring the model data:
 
     * :ref:`views <reference/views>` or :ref:`reports <reference/reports>`,
     * configuration data (modules parametrization, :ref:`security rules <reference/security>`),
@@ -70,7 +70,7 @@ Business objects
 Static web data
     Images, CSS or JavaScript files used by the web interface or website
 
-None of these elements is mandatory: some modules may only add data files (e.g. contry-specific
+None of these elements is mandatory: some modules may only add data files (e.g. country-specific
 accounting configuration), while others add business objects. During this training, we will
 create business objects, object views and data files. Web controllers and static web data
 are the topic of advanced trainings.

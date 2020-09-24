@@ -27,11 +27,16 @@ convenient to use an XML file.
 
 The XML files must be added in the same folders as the CSV files, and defined similarly in the
 ``__manifest__.py``. The content of the data files is also loaded when a module is installed or
-updated, sequencially. Therefore, all remarks made for the CSV files holds true for the XML files.
+updated, sequentially. Therefore, all remarks made for the CSV files holds true for the XML files.
 When the data we add is linked to views, we add it in the ``views`` folder.
 
 In this chapter, we will load our first action and menus though an XML file. Actions and menus are
 regular records in database.
+
+.. note::
+
+    When performance is important, the CSV format is preferred over the XML format. Indeed, in Odoo
+    loading a CSV file is faster than loading an XML file.
 
 Actions
 =======
@@ -80,7 +85,7 @@ A minimal action for our ``test.model`` would look like:
 
 Examples can be found everywhere in Odoo, but
 `this one <https://github.com/odoo/odoo/blob/09c59012bf80d2ccbafe21c39e604d6cfda72924/addons/crm/views/crm_lost_reason_views.xml#L57-L70>`__
-is a good example of simple action. Pay attention to the structure of the XML data file, you will
+is a good example of a simple action. Pay attention to the structure of the XML data file, you will
 need it in the following exercise.
 
 .. exercise:: Add an action.
@@ -236,7 +241,7 @@ the current time.
 
     Tip: this might help you: :meth:`~odoo.fields.Date.today`
 
-Check that the default value are set as expected.
+Check that the default values are set as expected.
 
 Reserved Fields
 ---------------
