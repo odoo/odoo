@@ -48,8 +48,13 @@ class TrackManifest(http.Controller):
         """ Returns a ServiceWorker javascript file scoped for website_event
         """
         sw_file = get_module_resource('website_event_track', 'static/src/js/service_worker.js')
-        with open(sw_file, 'rb') as fp:
+        with open(sw_file, 'r') as fp:
             body = fp.read()
+        js_cdn_url = 'undefined'
+        if request.website.cdn_activated:
+            cdn_url = request.website.cdn_url.replace('"','%22').replace('\x5c','%5C')
+            js_cdn_url = '"%s"' % cdn_url
+        body = body.replace('__ODOO_CDN_URL__', js_cdn_url)
         response = request.make_response(body, [
             ('Content-Type', 'text/javascript'),
             ('Service-Worker-Allowed', url_for('/event')),
