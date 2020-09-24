@@ -128,8 +128,8 @@ class AccountMove(models.Model):
 
     @api.constrains('line_ids', 'journal_id', 'auto_reverse', 'reverse_date')
     def _validate_move_modification(self):
-        if 'posted' in self.mapped('line_ids.payment_id.state'):
-            raise ValidationError(_("You cannot modify a journal entry linked to a posted payment."))
+        if 'sent' in self.mapped('line_ids.payment_id.state'):
+            raise ValidationError(_("You cannot modify a journal entry linked to a sent payment."))
 
     @api.onchange('journal_id')
     def _onchange_journal_id(self):
