@@ -615,7 +615,7 @@
             <input type="hidden" name="karma_tag_create" t-attf-value="#{forum.karma_tag_create}" id="karma_tag_create"/>
             <textarea name="content" id="content" required="True" class="form-control load_editor"
                     t-att-data-karma="forum.karma_editor">
-                <t t-esc="post.content"/>
+                <t t-esc="post.content" t-if="post.plain_content != 'False\n'"/>
             </textarea>
             <div t-if="not is_answer">
                 <br/>
@@ -832,7 +832,7 @@
                         </t>
                     </div>
                 </div>
-                <div t-if="question.post_type != 'link'"><span t-field="question.content" class="oe_no_empty"/></div>
+                <div t-if="question.post_type != 'link' and question.plain_content != 'False\n'"><span t-field="question.content" class="oe_no_empty"/></div>
 
                 <div class="clearfix">
                     <ul class="pull-right list-inline mb0" id="options">
