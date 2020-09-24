@@ -375,7 +375,7 @@ QUnit.test('activity details toggle', async function (assert) {
     const tomorrow = new Date();
     tomorrow.setDate(today.getDate() + 1);
     const activity = this.env.models['mail.activity'].create({
-        creator: [['insert', { id: 1, partnerDisplayName: "Admin" }]],
+        creator: [['insert', { id: 1, display_name: "Admin" }]],
         dateCreate: date_to_str(today),
         dateDeadline: date_to_str(tomorrow),
         state: 'planned',
@@ -425,8 +425,8 @@ QUnit.test('activity details layout', async function (assert) {
     const tomorrow = new Date();
     tomorrow.setDate(today.getDate() + 1);
     const activity = this.env.models['mail.activity'].create({
-        assignee: [['insert', { id: 10, partnerDisplayName: "Pauvre pomme" }]],
-        creator: [['insert', { id: 1, partnerDisplayName: "Admin" }]],
+        assignee: [['insert', { id: 10, display_name: "Pauvre pomme" }]],
+        creator: [['insert', { id: 1, display_name: "Admin" }]],
         dateCreate: date_to_str(today),
         dateDeadline: date_to_str(tomorrow),
         state: 'planned',

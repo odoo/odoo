@@ -90,7 +90,7 @@ class HrEmployeePrivate(models.Model):
     km_home_work = fields.Integer(string="Home-Work Distance", groups="hr.group_hr_user", tracking=True)
 
     image_1920 = fields.Image()
-    phone = fields.Char(related='address_home_id.phone', related_sudo=False, string="Private Phone", groups="hr.group_hr_user")
+    phone = fields.Char(related='address_home_id.phone', related_sudo=False, readonly=False, string="Private Phone", groups="hr.group_hr_user")
     # employee in company
     child_ids = fields.One2many('hr.employee', 'parent_id', string='Direct subordinates')
     category_ids = fields.Many2many(
@@ -284,6 +284,14 @@ class HrEmployeePrivate(models.Model):
             }
         return res
 
+    @api.onchange('company_id')
+    def _onchange_company_id(self):
+        if self._origin:
+            return {'warning': {
+                'title': _("Warning"),
+                'message': _("To avoid multi company issues (loosing the access to your previous contracts, leaves, ...), you should create another employee in the new company instead.")
+            }}
+
     def generate_random_barcode(self):
         for employee in self:
             employee.barcode = '041'+"".join(choice(digits) for i in range(9))
@@ -338,3 +346,4 @@ class HrEmployeePrivate(models.Model):
 
     def _sms_get_number_fields(self):
         return ['mobile_phone']
+

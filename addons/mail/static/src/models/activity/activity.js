@@ -3,6 +3,7 @@ odoo.define('mail/static/src/models/activity/activity/js', function (require) {
 
 const { registerNewModel } = require('mail/static/src/model/model_core.js');
 const { attr, many2many, many2one } = require('mail/static/src/model/model_field.js');
+const { clear } = require('mail/static/src/model/model_field_command.js');
 
 function factory(dependencies) {
 
@@ -93,7 +94,7 @@ function factory(dependencies) {
                     data2.creator = [
                         ['insert', {
                             id: data.create_uid[0],
-                            partnerDisplayName: data.create_uid[1],
+                            display_name: data.create_uid[1],
                         }],
                     ];
                 }
@@ -108,7 +109,7 @@ function factory(dependencies) {
                     data2.assignee = [
                         ['insert', {
                             id: data.user_id[0],
-                            partnerDisplayName: data.user_id[1],
+                            display_name: data.user_id[1],
                         }],
                     ];
                 }
@@ -245,7 +246,7 @@ function factory(dependencies) {
          */
         _computeNote() {
             if (this.note === '<p><br></p>') {
-                return undefined;
+                return clear();
             }
             return this.note;
         }

@@ -220,6 +220,7 @@ class MailClientExtensionController(http.Controller):
                 if not company: # create and enrich company
                     company, enrichment_info = self._create_company_from_iap(sender_domain)
                     response['enrichment_info'] = enrichment_info
+                partner.write({'parent_id': company})
                 response['partner']['company'] = self._get_company_dict(company)
         else: #no partner found
             response['partner'] = {

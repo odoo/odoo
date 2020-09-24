@@ -1,7 +1,8 @@
 odoo.define('website_blog.website_blog', function (require) {
 'use strict';
 
-var publicWidget = require('web.public.widget');
+const dom = require('web.dom');
+const publicWidget = require('web.public.widget');
 
 publicWidget.registry.websiteBlog = publicWidget.Widget.extend({
     selector: '.website_blog',
@@ -92,14 +93,7 @@ publicWidget.registry.websiteBlog = publicWidget.Widget.extend({
      * @param {Function} callback - to be executed after the scroll is performed
      */
     _forumScrollAction: function ($el, duration, callback) {
-        const $main = $('#wrapwrap > main');
-        var gap = $main.offset().top + parseInt($main.css('padding-top'));
-
-        $('html, body').stop().animate({
-            scrollTop: $el.offset().top - gap
-        }, duration, 'swing', function () {
-            callback();
-        });
+        dom.scrollTo($el[0], {duration: duration}).then(() => callback());
     },
 });
 });

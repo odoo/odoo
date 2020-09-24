@@ -17,7 +17,7 @@ class AccountChartTemplate(models.Model):
         return res
 
     def _prepare_all_journals(self, acc_template_ref, company, journals_dict=None):
-        """ If Argentinian chart, we don't create sales journal as we need more
+        """ If Argentinean chart, we don't create sales journal as we need more
         data to create it properly """
         res = super()._prepare_all_journals(acc_template_ref, company, journals_dict=journals_dict)
         if company.country_id == self.env.ref('base.ar'):
@@ -57,7 +57,7 @@ class AccountChartTemplate(models.Model):
                 'country_id': self.env.ref('base.ar').id,
                 'tax_calculation_rounding_method': 'round_globally',
             })
-            # set CUIT identification type (which is the argentinian vat) in the created company partner instead of
+            # set CUIT identification type (which is the argentinean vat) in the created company partner instead of
             # the default VAT type.
             company.partner_id.l10n_latam_identification_type_id = self.env.ref('l10n_ar.it_cuit')
 

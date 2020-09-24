@@ -4,8 +4,9 @@ odoo.define('website.theme_preview_kanban', function (require) {
 var KanbanController = require('web.KanbanController');
 var KanbanView = require('web.KanbanView');
 var ViewRegistry = require('web.view_registry');
+const ThemePreviewControllerCommon = require('website.theme_preview_form').ThemePreviewControllerCommon;
 
-var ThemePreviewKanbanController = KanbanController.extend({
+var ThemePreviewKanbanController = KanbanController.extend(ThemePreviewControllerCommon, {
     /**
      * @override
      */
@@ -18,6 +19,20 @@ var ThemePreviewKanbanController = KanbanController.extend({
             innerHTML: '<i class="fa fa-close"></i>',
         });
         this._controlPanelWrapper.el.querySelector('.o_cp_top').appendChild(websiteLink);
+    },
+    /**
+     * Called when user click on any button in kanban view.
+     * Targeted buttons are selected using name attribute value.
+     * 
+     * @override
+     */
+    _onButtonClicked: function (ev) {
+        const attrName = ev.data.attrs.name;
+        if (attrName === 'button_choose_theme' || attrName === 'button_refresh_theme') {
+            this._handleThemeAction(ev.data.record.res_id, attrName);
+        } else {
+            this._super(...arguments);
+        }
     },
 });
 

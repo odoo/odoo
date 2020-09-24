@@ -20,12 +20,76 @@ function factory(dependencies) {
         // Public
         //----------------------------------------------------------------------
 
-        closeMentionSuggestions() {
+        closeSuggestions() {
+            if (this.activeSuggestedRecordName) {
+                this.update({
+                    [this.activeSuggestedRecordName]: [['unlink']],
+                });
+            }
+            if (this.extraSuggestedRecordsListName) {
+                this.update({
+                    [this.extraSuggestedRecordsListName]: [['unlink-all']],
+                });
+            }
+            if (this.mainSuggestedRecordsListName) {
+                this.update({
+                    [this.mainSuggestedRecordsListName]: [['unlink-all']],
+                });
+            }
             this.update({
-                activeSuggestedPartner: [['unlink']],
-                extraSuggestedPartners: [['unlink-all']],
-                mainSuggestedPartners: [['unlink-all']],
+                activeSuggestedRecordName: "",
+                extraSuggestedRecordsListName: "",
+                mainSuggestedRecordsListName: "",
+                suggestionDelimiter: "",
             });
+        }
+
+        detectSuggestionDelimiter() {
+            const lastInputChar = this.textInputContent.substring(this.textInputCursorStart - 1, this.textInputCursorStart);
+            const suggestionDelimiters = ['@', ':', '#', '/'];
+            if (suggestionDelimiters.includes(lastInputChar) && !this.hasSuggestions) {
+                this.update({ suggestionDelimiter: lastInputChar });
+            }
+            const mentionKeyword = this._validateMentionKeyword(false);
+            if (mentionKeyword !== false) {
+                switch (this.suggestionDelimiter) {
+                    case '@':
+                        this.update({
+                            activeSuggestedRecordName: "activeSuggestedPartner",
+                            extraSuggestedRecordsListName: "extraSuggestedPartners",
+                            mainSuggestedRecordsListName: "mainSuggestedPartners",
+                            suggestionModelName: "mail.partner",
+                        });
+                        this._updateSuggestedPartners(mentionKeyword);
+                        break;
+                    case ':':
+                        this.update({
+                            activeSuggestedRecordName: "activeSuggestedCannedResponse",
+                            mainSuggestedRecordsListName: "suggestedCannedResponses",
+                            suggestionModelName: "mail.canned_response",
+                        });
+                        this._updateSuggestedCannedResponses(mentionKeyword);
+                        break;
+                    case '/':
+                        this.update({
+                            activeSuggestedRecordName: "activeSuggestedChannelCommand",
+                            mainSuggestedRecordsListName: "suggestedChannelCommands",
+                            suggestionModelName: "mail.channel_command",
+                        });
+                        this._updateSuggestedChannelCommands(mentionKeyword);
+                        break;
+                    case '#':
+                        this.update({
+                            activeSuggestedRecordName: "activeSuggestedChannel",
+                            mainSuggestedRecordsListName: "suggestedChannels",
+                            suggestionModelName: "mail.thread",
+                        });
+                        this._updateSuggestedChannels(mentionKeyword);
+                        break;
+                }
+            } else {
+                this.closeSuggestions();
+            }
         }
 
         /**
@@ -56,26 +120,68 @@ function factory(dependencies) {
             });
         }
 
-        /**
-         * @param {mail.partner} partner
-         */
-        insertMentionedPartner(partner) {
+        insertSuggestion() {
             const cursorPosition = this.textInputCursorStart;
-            const textLeft = this.textInputContent.substring(
+            let textLeft = this.textInputContent.substring(
                 0,
-                this.textInputContent.substring(0, cursorPosition).lastIndexOf('@') + 1
+                this.textInputContent.substring(0, cursorPosition).lastIndexOf(this.suggestionDelimiter) + 1
             );
-            const textRight = this.textInputContent.substring(
+            let textRight = this.textInputContent.substring(
                 cursorPosition,
                 this.textInputContent.length
             );
-            const partnerName = partner.name.replace(/ /g, '\u00a0');
+            if (this.suggestionDelimiter === ':') {
+                textLeft = this.textInputContent.substring(
+                    0,
+                    this.textInputContent.substring(0, cursorPosition).lastIndexOf(this.suggestionDelimiter)
+                );
+                textRight = this.textInputContent.substring(
+                    cursorPosition,
+                    this.textInputContent.length
+                );
+            }
+            let recordReplacement = "";
+            switch (this.activeSuggestedRecordName) {
+                case 'activeSuggestedCannedResponse':
+                    recordReplacement = this[this.activeSuggestedRecordName].substitution;
+                    break;
+                case 'activeSuggestedChannel':
+                    recordReplacement = this[this.activeSuggestedRecordName].name;
+                    this.update({
+                        mentionedChannels: [['link', this[this.activeSuggestedRecordName]]],
+                    });
+                    break;
+                case 'activeSuggestedChannelCommand':
+                    recordReplacement = this[this.activeSuggestedRecordName].name;
+                    break;
+                case 'activeSuggestedPartner':
+                    recordReplacement = this[this.activeSuggestedRecordName].name.replace(/ /g, '\u00a0');
+                    this.update({
+                        mentionedPartners: [['link', this[this.activeSuggestedRecordName]]],
+                    });
+                    break;
+            }
             this.update({
-                mentionedPartners: [['link', partner]],
-                textInputContent: textLeft + partnerName + ' ' + textRight,
-                textInputCursorEnd: textLeft.length + partnerName.length + 1,
-                textInputCursorStart: textLeft.length + partnerName.length + 1,
+                textInputContent: textLeft + recordReplacement + ' ' + textRight,
+                textInputCursorEnd: textLeft.length + recordReplacement.length + 1,
+                textInputCursorStart: textLeft.length + recordReplacement.length + 1,
             });
+        }
+
+        /**
+         * @private
+         * @returns {mail.partner[]}
+         */
+        _computeRecipients() {
+            const recipients = [...this.mentionedPartners];
+            if (this.thread) {
+                for (const recipient of this.thread.suggestedRecipientInfoList) {
+                    if (recipient.isSelected) {
+                        recipients.push(recipient.partner);
+                    }
+                }
+            }
+            return [['replace', recipients]];
         }
 
         /**
@@ -89,8 +195,7 @@ function factory(dependencies) {
                 default_body: mailUtils.escapeAndCompactTextContent(this.textInputContent),
                 default_is_log: this.isLog,
                 default_model: this.thread.model,
-                /* FIXME would need to use suggested_partners here task-2280157 */
-                // default_partner_ids: partnerIds,
+                default_partner_ids: this.recipients.map(partner => partner.id),
                 default_res_id: this.thread.id,
                 mail_post_autofollow: true,
             };
@@ -135,8 +240,12 @@ function factory(dependencies) {
             let postData = {
                 attachment_ids: this.attachments.map(attachment => attachment.id),
                 body,
-                partner_ids: this.mentionedPartners.map(partner => partner.id),
+                channel_ids: this.mentionedChannels.map(channel => channel.id),
+                context: {
+                    mail_post_autofollow: true,
+                },
                 message_type: 'comment',
+                partner_ids: this.recipients.map(partner => partner.id),
             };
             if (this.subjectContent) {
                 postData.subject = this.subjectContent;
@@ -152,7 +261,7 @@ function factory(dependencies) {
                     model: 'mail.channel',
                     method: command ? 'execute_command' : 'message_post',
                     args: [thread.id],
-                    kwargs: postData
+                    kwargs: postData,
                 }));
             } else {
                 Object.assign(postData, {
@@ -162,12 +271,12 @@ function factory(dependencies) {
                     model: thread.model,
                     method: 'message_post',
                     args: [thread.id],
-                    kwargs: postData
+                    kwargs: postData,
                 }));
                 const [messageData] = await this.async(() => this.env.services.rpc({
                     model: 'mail.message',
                     method: 'message_format',
-                    args: [[messageId]]
+                    args: [[messageId]],
                 }));
                 this.env.models['mail.message'].insert(Object.assign(
                     {},
@@ -184,6 +293,8 @@ function factory(dependencies) {
             for (const threadView of this.thread.threadViews) {
                 threadView.addComponentHint('current-partner-just-posted-message', { messageId });
             }
+            thread.refreshFollowers();
+            thread.fetchAndUpdateSuggestedRecipients();
             this._reset();
         }
 
@@ -203,71 +314,91 @@ function factory(dependencies) {
             }
         }
 
-        setFirstSuggestedPartnerActive() {
-            if (!this.allSuggestedPartners[0]) {
-                return;
+        setFirstSuggestionActive() {
+            if (!this[this.mainSuggestedRecordsListName][0]) {
+                if (!this[this.extraSuggestedRecordsListName][0]) {
+                    return;
+                }
+                this.update({
+                    [this.activeSuggestedRecordName]: [['link', this[this.extraSuggestedRecordsListName][0]]],
+                });
+            } else {
+                this.update({
+                    [this.activeSuggestedRecordName]: [['link', this[this.mainSuggestedRecordsListName][0]]],
+                });
             }
-            this.update({
-                activeSuggestedPartner: [['link', this.allSuggestedPartners[0]]],
-            });
         }
 
-        setLastSuggestedPartnerActive() {
-            if (this.allSuggestedPartners.length === 0) {
-                return;
+        setLastSuggestionActive() {
+            if (this[this.extraSuggestedRecordsListName].length === 0) {
+                if (this[this.mainSuggestedRecordsListName].length === 0) {
+                    return;
+                }
+                this.update({
+                    [this.activeSuggestedRecordName]: [[
+                        'link',
+                        this[this.mainSuggestedRecordsListName][this[this.mainSuggestedRecordsListName].length - 1]
+                    ]],
+                });
             }
             this.update({
-                activeSuggestedPartner: [[
+                [this.activeSuggestedRecordName]: [[
                     'link',
-                    this.allSuggestedPartners[this.allSuggestedPartners.length - 1]
+                    this[this.extraSuggestedRecordsListName][this[this.extraSuggestedRecordsListName].length - 1]
                 ]],
             });
         }
 
-        setNextSuggestedPartnerActive() {
-            if (this.allSuggestedPartners.length === 0) {
+        setNextSuggestionActive() {
+            const fullList = this.extraSuggestedRecordsListName ?
+                this[this.mainSuggestedRecordsListName].concat(this[this.extraSuggestedRecordsListName]) :
+                this[this.mainSuggestedRecordsListName];
+            if (fullList.length === 0) {
                 return;
             }
-            const activeSuggestedPartnerIndex = this.allSuggestedPartners.findIndex(
-                suggestedPartner => suggestedPartner === this.activeSuggestedPartner
+            const activeElementIndex = fullList.findIndex(
+                suggestion => suggestion === this[this.activeSuggestedRecordName]
             );
-            if (activeSuggestedPartnerIndex !== this.allSuggestedPartners.length - 1) {
+            if (activeElementIndex !== fullList.length - 1) {
                 this.update({
-                    activeSuggestedPartner: [[
+                    [this.activeSuggestedRecordName]: [[
                         'link',
-                        this.allSuggestedPartners[activeSuggestedPartnerIndex + 1]
+                        fullList[activeElementIndex + 1]
                     ]],
                 });
             } else {
                 this.update({
-                    activeSuggestedPartner: [['link', this.allSuggestedPartners[0]]],
+                    [this.activeSuggestedRecordName]: [['link', fullList[0]]],
                 });
             }
         }
 
-        setPreviousSuggestedPartnerActive() {
-            if (this.allSuggestedPartners.length === 0) {
+        setPreviousSuggestionActive() {
+            const fullList = this.extraSuggestedRecordsListName ?
+                this[this.mainSuggestedRecordsListName].concat(this[this.extraSuggestedRecordsListName]) :
+                this[this.mainSuggestedRecordsListName];
+            if (fullList.length === 0) {
                 return;
             }
-            const activeSuggestedPartnerIndex = this.allSuggestedPartners.findIndex(
-                suggestedPartner => suggestedPartner === this.activeSuggestedPartner
+            const activeElementIndex = fullList.findIndex(
+                suggestion => suggestion === this[this.activeSuggestedRecordName]
             );
-            if (activeSuggestedPartnerIndex === -1) {
+            if (activeElementIndex === -1) {
                 this.update({
-                    activeSuggestedPartner: [['link', this.allSuggestedPartners[0]]]
+                    [this.activeSuggestedRecordName]: [['link', fullList[0]]]
                 });
-            } else if (activeSuggestedPartnerIndex !== 0) {
+            } else if (activeElementIndex !== 0) {
                 this.update({
-                    activeSuggestedPartner: [[
+                    [this.activeSuggestedRecordName]: [[
                         'link',
-                        this.allSuggestedPartners[activeSuggestedPartnerIndex - 1]
+                        fullList[activeElementIndex - 1]
                     ]],
                 });
             } else {
                 this.update({
-                    activeSuggestedPartner: [[
+                    [this.activeSuggestedRecordName]: [[
                         'link',
-                        this.allSuggestedPartners[this.allSuggestedPartners.length - 1]
+                        fullList[fullList.length - 1]
                     ]],
                 });
             }
@@ -279,10 +410,10 @@ function factory(dependencies) {
 
         /**
          * @private
-         * @returns {mail.partner[]}
+         * @returns {mail.model}
          */
-        _computeAllSuggestedPartners() {
-            return [['replace', this.mainSuggestedPartners.concat(this.extraSuggestedPartners)]];
+        _computeActiveSuggestedRecord() {
+            return this[this.activeSuggestedRecordName];
         }
 
         /**
@@ -299,9 +430,7 @@ function factory(dependencies) {
         /**
          * Ensure extraSuggestedPartners does not contain any partner already
          * present in mainSuggestedPartners. This is necessary for the
-         * consistency of suggestion list because allSuggestedPartners is the
-         * union of both but without duplicates (because it is a relational
-         * field).
+         * consistency of suggestion list.
          *
          * @private
          * @returns {mail.partner[]}
@@ -312,10 +441,22 @@ function factory(dependencies) {
 
         /**
          * @private
+         * @returns {mail.model[]}
+         */
+        _computeExtraSuggestedRecordsList() {
+            return this.extraSuggestedRecordsListName
+                ? this[this.extraSuggestedRecordsListName]
+                : [];
+        }
+
+        /**
+         * @private
          * @return {boolean}
          */
-        _computeHasSuggestedPartners() {
-            return this.allSuggestedPartners.length > 0;
+        _computeHasSuggestions() {
+            const hasMainSuggestedRecordsList = this.mainSuggestedRecordsListName ? this[this.mainSuggestedRecordsListName].length > 0 : false;
+            const hasExtraSuggestedRecordsList = this.extraSuggestedRecordsListName ? this[this.extraSuggestedRecordsListName].length > 0 : false;
+            return hasMainSuggestedRecordsList || hasExtraSuggestedRecordsList;
         }
 
         /**
@@ -324,6 +465,16 @@ function factory(dependencies) {
          */
         _computeHasUploadingAttachment() {
             return this.attachments.some(attachment => attachment.isTemporary);
+        }
+
+        /**
+         * @private
+         * @returns {mail.model[]}
+         */
+        _computeMainSuggestedRecordsList() {
+            return this.mainSuggestedRecordsListName
+                ? this[this.mainSuggestedRecordsListName]
+                : [];
         }
 
         /**
@@ -350,18 +501,26 @@ function factory(dependencies) {
         }
 
         /**
-         * Detects if mentions suggestions should be displayed when user is typing
-         * and searches partners based on user's research.
+         * Detects if mentioned channels are still in the composer text input content
+         * and removes them if not.
          *
          * @private
+         * @returns {mail.partner[]}
          */
-        _detectDelimiter() {
-            const mentionKeyword = this._validateMentionKeyword('@', false);
-            if (mentionKeyword !== false) {
-                this._getSuggestedPartners(mentionKeyword);
-            } else {
-                this.closeMentionSuggestions();
+        _computeMentionedChannels() {
+            const inputMentions = this.textInputContent.match(
+                new RegExp("#[^ ]+(?= |&nbsp;|$)", 'g')
+            ) || [];
+            const unmentionedChannels = [];
+            for (const channel of this.mentionedChannels) {
+                let inputMention = inputMentions.find(item => {
+                    return item === ("#" + channel.name).replace(/ /g, '\u00a0');
+                });
+                if (!inputMention) {
+                    unmentionedChannels.push(channel);
+                }
             }
+            return [['unlink', unmentionedChannels]];
         }
 
         /**
@@ -393,28 +552,36 @@ function factory(dependencies) {
          * @returns {string}
          */
         _generateMentionsLinks(body) {
-            if (this.mentionedPartners.length === 0) {
+            if (this.mentionedPartners.length === 0 && this.mentionedChannels.length === 0) {
                 return body;
             }
-            const inputMentions = body.match(new RegExp("@"+'[^ ]+(?= |&nbsp;|$)', 'g'));
+            const inputMentions = body.match(new RegExp("(@|#)" + '[^ ]+(?= |&nbsp;|$)', 'g'));
             const substrings = [];
             let startIndex = 0;
-            for (const i in inputMentions) {
-                const match = inputMentions[i];
+            for (const match of inputMentions) {
+                const suggestionDelimiter = match[0];
                 const matchName = owl.utils.escape(match.substring(1).replace(new RegExp('\u00a0', 'g'), ' '));
                 const endIndex = body.indexOf(match, startIndex) + match.length;
-                const partner = this.mentionedPartners.find(partner =>
-                    partner.name === matchName
+                let field = "mentionedPartners";
+                let model = "res.partner";
+                let cssClass = "o_mail_redirect";
+                if (suggestionDelimiter === "#") {
+                    field = "mentionedChannels";
+                    model = "mail.channel";
+                    cssClass = "o_channel_redirect";
+                }
+                const mention = this[field].find(mention =>
+                    mention.name === matchName
                 );
-                let mentionLink = "@" + matchName;
-                if (partner) {
+                let mentionLink = suggestionDelimiter + matchName;
+                if (mention) {
                     const baseHREF = this.env.session.url('/web');
-                    const href = `href='${baseHREF}#model=res.partner&id=${partner.id}'`;
-                    const attClass = `class='o_mail_redirect'`;
-                    const dataOeId = `data-oe-id='${partner.id}'`;
-                    const dataOeModel = `data-oe-model='res.partner'`;
+                    const href = `href='${baseHREF}#model=${model}&id=${mention.id}'`;
+                    const attClass = `class='${cssClass}'`;
+                    const dataOeId = `data-oe-id='${mention.id}'`;
+                    const dataOeModel = `data-oe-model='${model}'`;
                     const target = `target='_blank'`;
-                    mentionLink = `<a ${href} ${attClass} ${dataOeId} ${dataOeModel} ${target} >@${matchName}</a>`;
+                    mentionLink = `<a ${href} ${attClass} ${dataOeId} ${dataOeModel} ${target} >${suggestionDelimiter}${matchName}</a>`;
                 }
                 substrings.push(body.substring(startIndex, body.indexOf(match, startIndex)));
                 substrings.push(mentionLink);
@@ -438,9 +605,107 @@ function factory(dependencies) {
 
         /**
          * @private
+         */
+        _reset() {
+            this.closeSuggestions();
+            this.update({
+                attachments: [['unlink-all']],
+                mentionedChannels: [['unlink-all']],
+                mentionedPartners: [['unlink-all']],
+                subjectContent: "",
+                textInputContent: '',
+                textInputCursorEnd: 0,
+                textInputCursorStart: 0,
+            });
+        }
+
+        /**
+         * @private
          * @param {string} mentionKeyword
          */
-        async _getSuggestedPartners(mentionKeyword) {
+        _updateSuggestedCannedResponses(mentionKeyword) {
+            this.update({
+                suggestedCannedResponses: [['replace', this.env.messaging.cannedResponses.filter(
+                    cannedResponse => cannedResponse.source.includes(mentionKeyword)
+                )]],
+            });
+
+            if (this.suggestedCannedResponses[0]) {
+                this.update({
+                    activeSuggestedCannedResponse: [['link', this.suggestedCannedResponses[0]]],
+                });
+            } else {
+                this.update({
+                    activeSuggestedCannedResponse: [['unlink']],
+                });
+            }
+        }
+
+        /**
+         * @private
+         * @param {string} mentionKeyword
+         */
+        async _updateSuggestedChannels(mentionKeyword) {
+            const mentions = await this.async(() => this.env.services.rpc(
+                {
+                    model: 'mail.channel',
+                    method: 'get_mention_suggestions',
+                    kwargs: {
+                        limit: 8,
+                        search: mentionKeyword,
+                    },
+                },
+                { shadow: true }
+            ));
+
+            this.update({
+                suggestedChannels: [[
+                    'insert-and-replace',
+                    mentions.map(data =>
+                        this.env.models['mail.thread'].convertData(data))
+                    ]],
+            });
+
+            if (this.suggestedChannels[0]) {
+                this.update({
+                    activeSuggestedChannel: [['link', this.suggestedChannels[0]]],
+                });
+            } else {
+                this.update({
+                    activeSuggestedChannel: [['unlink']],
+                });
+            }
+        }
+
+        /**
+         * @param {string} mentionKeyword
+         */
+        _updateSuggestedChannelCommands(mentionKeyword) {
+            this.update({
+                suggestedChannelCommands: [[
+                    'replace',
+                    this.env.messaging.commands.filter(
+                        command => command.name.includes(mentionKeyword)
+                    )
+                ]],
+            });
+
+            if (this.suggestedChannelCommands[0]) {
+                this.update({
+                    activeSuggestedChannelCommand: [['link', this.suggestedChannelCommands[0]]],
+                });
+            } else {
+                this.update({
+                    activeSuggestedChannelCommand: [['unlink']],
+                });
+            }
+        }
+
+        /**
+         * @private
+         * @param {string} mentionKeyword
+         */
+        async _updateSuggestedPartners(mentionKeyword) {
             const mentions = await this.async(() => this.env.services.rpc(
                 {
                     model: 'res.partner',
@@ -469,9 +734,13 @@ function factory(dependencies) {
                     ]],
             });
 
-            if (this.allSuggestedPartners[0]) {
+            if (this.mainSuggestedPartners[0]) {
                 this.update({
-                    activeSuggestedPartner: [['link', this.allSuggestedPartners[0]]],
+                    activeSuggestedPartner: [['link', this.mainSuggestedPartners[0]]],
+                });
+            } else if (this.extraSuggestedPartners[0]) {
+                this.update({
+                    activeSuggestedPartner: [['link', this.extraSuggestedPartners[0]]],
                 });
             } else {
                 this.update({
@@ -481,46 +750,30 @@ function factory(dependencies) {
         }
 
         /**
-         * @private
-         */
-        _reset() {
-            this.closeMentionSuggestions();
-            this.update({
-                attachments: [['unlink-all']],
-                mentionedPartners: [['unlink-all']],
-                subjectContent: "",
-                textInputContent: "",
-                textInputCursorStart: 0,
-                textInputCursorEnd: 0,
-            });
-        }
-
-        /**
-         * Validates user's current typing as a correct mention keyword
-         * in order to trigger mentions suggestions display.
-         * Returns the mention keyword without the delimiter if it has been validated
-         * and false if not
+         * Validates user's current typing as a correct mention keyword in order
+         * to trigger mentions suggestions display.
+         * Returns the mention keyword without the suggestion delimiter if it
+         * has been validated and false if not.
          *
          * @private
-         * @param {string} delimiter
          * @param {boolean} beginningOnly
          * @returns {string|boolean}
          */
-        _validateMentionKeyword(delimiter, beginningOnly) {
+        _validateMentionKeyword(beginningOnly) {
             const leftString = this.textInputContent.substring(0, this.textInputCursorStart);
 
-            // use position before delimiter because there should be whitespaces
-            // or line feed/carriage return before the delimiter
-            const beforeDelimiterPosition = leftString.lastIndexOf(delimiter) - 1;
-            if (beginningOnly && beforeDelimiterPosition > 0) {
+            // use position before suggestion delimiter because there should be whitespaces
+            // or line feed/carriage return before the suggestion delimiter
+            const beforeSuggestionDelimiterPosition = leftString.lastIndexOf(this.suggestionDelimiter) - 1;
+            if (beginningOnly && beforeSuggestionDelimiterPosition > 0) {
                 return false;
             }
             let searchStr = this.textInputContent.substring(
-                beforeDelimiterPosition,
+                beforeSuggestionDelimiterPosition,
                 this.textInputCursorStart
             );
-            // regex string start with delimiter or whitespace then delimiter
-            const pattern = "^"+delimiter+"|^\\s"+delimiter;
+            // regex string start with suggestion delimiter or whitespace then suggestion delimiter
+            const pattern = "^" + this.suggestionDelimiter + "|^\\s" + this.suggestionDelimiter;
             const regexStart = new RegExp(pattern, 'g');
             // trim any left whitespaces or the left line feed/ carriage return
             // at the beginning of the string
@@ -528,7 +781,7 @@ function factory(dependencies) {
             if (regexStart.test(searchStr) && searchStr.length) {
                 searchStr = searchStr.replace(pattern, '');
                 return !searchStr.includes(' ') && !/[\r\n]/.test(searchStr)
-                    ? searchStr.replace(delimiter, '')
+                    ? searchStr.replace(this.suggestionDelimiter, '')
                     : false;
             }
             return false;
@@ -536,13 +789,22 @@ function factory(dependencies) {
     }
 
     Composer.fields = {
+        activeSuggestedCannedResponse: many2one('mail.canned_response'),
+        activeSuggestedChannel: many2one('mail.thread'),
+        activeSuggestedChannelCommand: many2one('mail.channel_command'),
         activeSuggestedPartner: many2one('mail.partner'),
-        allSuggestedPartners: many2many('mail.partner', {
-            compute: '_computeAllSuggestedPartners',
+        activeSuggestedRecord: attr({
+            compute: '_computeActiveSuggestedRecord',
             dependencies: [
-                'extraSuggestedPartners',
-                'mainSuggestedPartners',
+                'activeSuggestedCannedResponse',
+                'activeSuggestedChannel',
+                'activeSuggestedChannelCommand',
+                'activeSuggestedPartner',
+                'activeSuggestedRecordName',
             ],
+        }),
+        activeSuggestedRecordName: attr({
+           default: "",
         }),
         attachments: many2many('mail.attachment', {
             inverse: 'composers',
@@ -581,6 +843,20 @@ function factory(dependencies) {
                 'mainSuggestedPartners',
             ],
         }),
+        extraSuggestedRecordsList: attr({
+            compute: '_computeExtraSuggestedRecordsList',
+            dependencies: [
+                'extraSuggestedPartners',
+                'extraSuggestedRecordsListName',
+            ],
+        }),
+        /**
+         * Allows to have different model types of mentions through a dynamic process
+         * RPC can provide 2 lists and the second is defined as "extra"
+         */
+        extraSuggestedRecordsListName: attr({
+           default: "",
+        }),
         /**
          * This field determines whether some attachments linked to this
          * composer are being uploaded.
@@ -595,10 +871,16 @@ function factory(dependencies) {
         hasFocus: attr({
             default: false,
         }),
-        hasSuggestedPartners: attr({
-            compute: '_computeHasSuggestedPartners',
+        hasSuggestions: attr({
+            compute: '_computeHasSuggestions',
             dependencies: [
-                'allSuggestedPartners',
+                'extraSuggestedRecordsListName',
+                'extraSuggestedPartners',
+                'mainSuggestedRecordsListName',
+                'mainSuggestedPartners',
+                'suggestedCannedResponses',
+                'suggestedChannelCommands',
+                'suggestedChannels',
             ],
             default: false,
         }),
@@ -608,10 +890,58 @@ function factory(dependencies) {
         isLog: attr({
             default: false,
         }),
+        mainSuggestedRecordsList: attr({
+            compute: '_computeMainSuggestedRecordsList',
+            dependencies: [
+                'mainSuggestedPartners',
+                'mainSuggestedRecordsListName',
+                'suggestedCannedResponses',
+                'suggestedChannelCommands',
+                'suggestedChannels',
+            ],
+        }),
+        /**
+         * Allows to have different model types of mentions through a dynamic process
+         * RPC can provide 2 lists and the first is defined as "main"
+         */
+        mainSuggestedRecordsListName: attr({
+           default: "",
+        }),
         mainSuggestedPartners: many2many('mail.partner'),
+        mentionedChannels: many2many('mail.thread', {
+            compute: '_computeMentionedChannels',
+            dependencies: ['textInputContent'],
+        }),
         mentionedPartners: many2many('mail.partner', {
             compute: '_computeMentionedPartners',
             dependencies: ['textInputContent'],
+        }),
+        /**
+         * Determines the extra `mail.partner` (on top of existing followers)
+         * that will receive the message being composed by `this`, and that will
+         * also be added as follower of `this.thread`.
+         */
+        recipients: many2many('mail.partner', {
+            compute: '_computeRecipients',
+            dependencies: [
+                'mentionedPartners',
+                'threadSuggestedRecipientInfoListIsSelected',
+                // FIXME thread.suggestedRecipientInfoList.partner should be a
+                // dependency, but it is currently impossible to have a related
+                // m2o through a m2m. task-2261221
+            ]
+        }),
+        /**
+         * Serves as compute dependency.
+         */
+        threadSuggestedRecipientInfoList: many2many('mail.suggested_recipient_info', {
+            related: 'thread.suggestedRecipientInfoList',
+        }),
+        /**
+         * Serves as compute dependency.
+         */
+        threadSuggestedRecipientInfoListIsSelected: attr({
+            related: 'threadSuggestedRecipientInfoList.isSelected',
         }),
         /**
          * Composer subject input content.
@@ -619,13 +949,26 @@ function factory(dependencies) {
         subjectContent: attr({
             default: "",
         }),
+        suggestedCannedResponses: many2many('mail.canned_response'),
+        suggestedChannelCommands: many2many('mail.channel_command'),
+        suggestedChannels: many2many('mail.thread'),
+        /**
+         * Special character used to trigger different kinds of suggestions
+         * such as canned responses (:), channels (#), commands (/) and partners (@)
+         */
+        suggestionDelimiter: attr({
+            default: "",
+        }),
+        suggestionModelName: attr({
+           default: "",
+        }),
         textInputContent: attr({
             default: "",
         }),
-        textInputCursorStart: attr({
+        textInputCursorEnd: attr({
             default: 0,
         }),
-        textInputCursorEnd: attr({
+        textInputCursorStart: attr({
             default: 0,
         }),
         thread: one2one('mail.thread', {

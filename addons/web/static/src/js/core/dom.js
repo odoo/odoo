@@ -142,6 +142,12 @@ var dom = {
         }
     },
     /**
+     * @return {HTMLElement}
+     */
+    closestScrollable(el) {
+        return $(el).closestScrollable()[0];
+    },
+    /**
      * jQuery find function behavior is::
      *
      *      $('A').find('A B') <=> $('A A B')
@@ -227,6 +233,26 @@ var dom = {
             e = e.offsetParent;
         }
         return position;
+    },
+    /**
+     * @returns {HTMLElement}
+     */
+    getScrollingElement() {
+        return $().getScrollingElement()[0];
+    },
+    /**
+     * @param {HTMLElement} el
+     * @returns {boolean}
+     */
+    hasScrollableContent(el) {
+        return $(el).hasScrollableContent();
+    },
+    /**
+     * @param {HTMLElement} el
+     * @returns {boolean}
+     */
+    isScrollable(el) {
+        return $(el).isScrollable();
     },
     /**
      * Protects a function which is to be used as a handler by preventing its
@@ -453,6 +479,81 @@ var dom = {
                 .moveStart('character', range.end)
                 .select();
         }
+    },
+    /**
+     * Computes the size by which a scrolling point should be decreased so that
+     * the top fixed elements of the page appear above that scrolling point.
+     *
+     * @returns {number}
+     */
+    scrollFixedOffset() {
+        let size = 0;
+        for (const el of $('.o_top_fixed_element')) {
+            size += $(el).outerHeight();
+        }
+        return size;
+    },
+    /**
+     * @param {HTMLElement} el - the element to stroll to
+     * @param {number} [options] - same as animate of jQuery
+     * @param {number} [options.extraOffset=0]
+     *      extra offset to add on top of the automatic one (the automatic one
+     *      being computed based on fixed header sizes)
+     * @param {number} [options.forcedOffset]
+     *      offset used instead of the automatic one (extraOffset will be
+     *      ignored too)
+     * @return {Promise}
+     */
+    scrollTo(el, options = {}) {
+        const $el = $(el);
+        const $scrollable = $el.parent().closestScrollable();
+        const $topLevelScrollable = $().getScrollingElement();
+        const isTopScroll = $scrollable.is($topLevelScrollable);
+
+        function _computeScrollTop() {
+            const elPosition = $scrollable[0].scrollTop + ($el.offset().top - $scrollable.offset().top);
+            let offset = options.forcedOffset;
+            if (offset === undefined) {
+                offset = (isTopScroll ? dom.scrollFixedOffset() : 0) + (options.extraOffset || 0);
+            }
+            return Math.max(0, elPosition - offset);
+        }
+
+        const originalScrollTop = _computeScrollTop();
+
+        return new Promise(resolve => {
+            const clonedOptions = Object.assign({}, options);
+
+            // During the animation, detect any change needed for the scroll
+            // offset. If any occurs, stop the animation and continuing it to
+            // the new scroll point for the remaining time.
+            // Note: limitation, the animation won't be as fluid as possible if
+            // the easing mode is different of 'linear'.
+            clonedOptions.progress = function (a, b, remainingMs) {
+                if (options.progress) {
+                    options.progress.apply(this, ...arguments);
+                }
+                const newScrollTop = _computeScrollTop();
+                if (Math.abs(newScrollTop - originalScrollTop) <= 1.0) {
+                    return;
+                }
+                $scrollable.stop();
+                dom.scrollTo(el, Object.assign({}, options, {
+                    duration: remainingMs,
+                })).then(() => resolve());
+            };
+
+            // Detect the end of the animation to be able to indicate it to
+            // the caller via the returned Promise.
+            clonedOptions.complete = function () {
+                if (options.complete) {
+                    options.complete.apply(this, ...arguments);
+                }
+                resolve();
+            };
+
+            $scrollable.animate({scrollTop: originalScrollTop}, clonedOptions);
+        });
     },
     /**
      * Creates an automatic 'more' dropdown-menu for a set of navbar items.

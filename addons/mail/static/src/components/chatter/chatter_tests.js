@@ -93,7 +93,7 @@ QUnit.test('base rendering when chatter has no attachment', async function (asse
 });
 
 QUnit.test('base rendering when chatter has no record', async function (assert) {
-    assert.expect(7);
+    assert.expect(8);
 
     await this.start();
     const chatter = this.env.models['mail.chatter'].create({
@@ -133,6 +133,11 @@ QUnit.test('base rendering when chatter has no record', async function (assert) 
         document.querySelector(`.o_Message_content`).textContent,
         "Creating a new record...",
         "should have the 'Creating a new record ...' message"
+    );
+    assert.containsNone(
+        document.body,
+        '.o_MessageList_loadMore',
+        "should not have the 'load more' button"
     );
 });
 
@@ -323,12 +328,12 @@ QUnit.test('should not display user notification messages in chatter', async fun
     assert.expect(1);
 
     this.data['res.partner'].records.push({ id: 100 });
-    this.data['mail.message'].records = [{
+    this.data['mail.message'].records.push({
         id: 102,
         message_type: 'user_notification',
         model: 'res.partner',
         res_id: 100,
-    }];
+    });
     await this.start();
     const chatter = this.env.models['mail.chatter'].create({
         threadId: 100,

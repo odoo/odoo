@@ -4,22 +4,40 @@ odoo.define('auth_totp.tours', function(require) {
 const tour = require('web_tour.tour');
 const ajax = require('web.ajax');
 
+function openRoot() {
+    return [{
+        content: "return to client root to avoid race condition",
+        trigger: 'body',
+        run() {
+            $('body').addClass('wait');
+            window.location = '/web';
+        }
+    }, {
+        content: "wait for client reload",
+        trigger: 'body:not(.wait)',
+        run() {}
+    }];
+}
+function openUserProfileAtSecurityTab() {
+    return [{
+        content: 'Open user account menu',
+        trigger: '.o_user_menu .oe_topbar_name',
+        run: 'click',
+    }, {
+        content: "Open preferences / profile screen",
+        trigger: '[data-menu=settings]',
+        run: 'click',
+    }, {
+        content: "Switch to security tab",
+        trigger: 'a[role=tab]:contains("Account Security")',
+        run: 'click',
+    }];
+}
+
 tour.register('totp_tour_setup', {
     test: true,
     url: '/web'
-}, [{
-    content: 'Open user account menu',
-    trigger: '.o_user_menu .oe_topbar_name',
-    run: 'click',
-}, {
-    content: "Open preferences / profile screen",
-    trigger: '[data-menu=settings]',
-    run: 'click',
-}, {
-    content: "Switch to security tab",
-    trigger: 'a[role=tab]:contains("Account Security")',
-    run: 'click',
-}, {
+}, [...openUserProfileAtSecurityTab(), {
     content: "Open totp wizard",
     trigger: 'button[name=totp_enable_wizard]',
 }, {
@@ -40,27 +58,24 @@ tour.register('totp_tour_setup', {
 }, {
     content: "Get secret from collapsed div",
     trigger: 'a:contains("show the code")',
-    run: async function(helpers) {
+    run(helpers) {
         const secret = this.$anchor.closest('div').find('code').text();
-        const token = await ajax.jsonRpc('/totphook', 'call', {
+        ajax.jsonRpc('/totphook', 'call', {
             secret
+        }).then((token) => {
+            helpers._text(helpers._get_action_values('input[name=code]'), token);
+            helpers._click(helpers._get_action_values('button.btn-primary:contains(Enable)'));
+            $('body').addClass('got-token')
         });
-        helpers._text(helpers._get_action_values('input[name=code]'), token);
-        helpers._click(helpers._get_action_values('button.btn-primary:contains(Enable)'));
     }
-}, { // re-navigate to the profile as unless hr is installed the preference dialog will close
-    content: 'Open user account menu',
-    trigger: '.o_user_menu .oe_topbar_name',
-    run: 'click',
 }, {
-    content: "Open preferences / profile screen",
-    trigger: '[data-menu=settings]',
-    run: 'click',
-}, {
-    content: "Switch to security tab",
-    trigger: 'a[role=tab]:contains("Account Security")',
-    run: 'click',
-}, {
+    content: 'wait for rpc',
+    trigger: 'body.got-token',
+    run() {}
+},
+...openRoot(),
+...openUserProfileAtSecurityTab(),
+{
     content: "Check that the button has changed",
     trigger: 'button:contains(Disable two-factor authentication)',
     run: () => {}
@@ -89,33 +104,24 @@ tour.register('totp_login_enabled', {
 }, {
     content: "input code",
     trigger: 'input[name=totp_token]',
-    run: async function (helpers) {
-        const token = await ajax.jsonRpc('/totphook', 'call', {});
-        helpers._text(helpers._get_action_values(), token);
-        // FIXME: is there a way to put the button as its own step trigger without
-        //        the tour straight blowing through and not waiting for this?
-        helpers._click(helpers._get_action_values('button:contains("Verify")'));
+    run(helpers) {
+        ajax.jsonRpc('/totphook', 'call', {}).then((token) => {
+            helpers._text(helpers._get_action_values(), token);
+            // FIXME: is there a way to put the button as its own step trigger without
+            //        the tour straight blowing through and not waiting for this?
+            helpers._click(helpers._get_action_values('button:contains("Verify")'));
+        });
     }
 }, {
     content: "check we're logged in",
     trigger: ".o_user_menu .oe_topbar_name",
     run: () => {}
-}, {
-    // now go and disable totp would be annoying to do in a separate tour
-    // because we'd need to login & totp again as HttpCase.authenticate can't
-    // succeed w/ totp enabled
-    content: 'Open user account menu',
-    trigger: '.o_user_menu .oe_topbar_name',
-    run: 'click',
-}, {
-    content: "Open preferences / profile screen",
-    trigger: '[data-menu=settings]',
-    run: 'click',
-}, {
-    content: "Switch to security tab",
-    trigger: 'a[role=tab]:contains("Account Security")',
-    run: 'click',
-}, {
+},
+// now go and disable totp would be annoying to do in a separate tour
+// because we'd need to login & totp again as HttpCase.authenticate can't
+// succeed w/ totp enabled
+...openUserProfileAtSecurityTab(),
+{
     content: "Open totp wizard",
     trigger: 'button[name=totp_disable]',
 }, {
@@ -129,19 +135,10 @@ tour.register('totp_login_enabled', {
 }, {
     content: "Confirm",
     trigger: "button:contains(Confirm Password)",
-}, {
-    content: "Reopen the preference / profile as we don't know whether HR is installed",
-    trigger: '.o_user_menu .oe_topbar_name',
-    run: 'click',
-}, {
-    content: "Open preferences / profile screen",
-    trigger: '[data-menu=settings]',
-    run: 'click',
-}, {
-    content: "Switch to security tab",
-    trigger: 'a[role=tab]:contains("Account Security")',
-    run: 'click',
-}, {
+},
+...openRoot(),
+...openUserProfileAtSecurityTab(),
+{
     content: "Check that the button has changed",
     trigger: 'button:contains(Enable two-factor authentication)',
     run: () => {}
@@ -164,20 +161,13 @@ tour.register('totp_login_disabled', {
 }, {
     content: "click da button",
     trigger: 'button:contains("Log in")',
-}, { // normally we'd end there but being sure there's no more queries is a
-    // pain in the ass so go and open the profile screen
-    content: 'Open user account menu',
-    trigger: '.o_user_menu .oe_topbar_name',
-    run: 'click',
-}, {
-    content: "Open preferences / profile screen",
-    trigger: '[data-menu=settings]',
-    run: 'click',
-}, {
-    content: "Check the pref screen has opened by looking for the Account Security tab",
-    trigger: 'a[role=tab]:contains("Account Security")',
-    run: () => {}
-}]);
+},
+// normally we'd end the tour here as it's all we care about but there are a
+// bunch of ongoing queries from the loading of the web client which cause
+// issues, so go and open the preferences / profile screen to make sure
+// everything settles down
+...openUserProfileAtSecurityTab(),
+]);
 
 const columns = {};
 tour.register('totp_admin_disables', {

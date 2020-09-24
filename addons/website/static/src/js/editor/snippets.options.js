@@ -5,6 +5,7 @@ const {ColorpickerWidget} = require('web.Colorpicker');
 const config = require('web.config');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
+const dom = require('web.dom');
 const weUtils = require('web_editor.utils');
 var options = require('web_editor.snippets.options');
 const wUtils = require('website.utils');
@@ -1768,7 +1769,7 @@ options.registry.collapse = options.Class.extend({
     },
 });
 
-options.registry.HeaderLogo = options.Class.extend({
+options.registry.HeaderNavbar = options.Class.extend({
 
     //--------------------------------------------------------------------------
     // Private
@@ -1786,36 +1787,6 @@ options.registry.HeaderLogo = options.Class.extend({
             return !this.$('.navbar-brand').hasClass('d-none');
         }
         return this._super(...arguments);
-    },
-});
-
-options.registry.HeaderTemplate = options.Class.extend({
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     */
-    async _renderOriginalXML($xml) {
-        const uiFragment = await this._super(...arguments);
-
-        const widgets = this._requestUserValueWidgets('header_alignment_opt', 'header_hamburger_type_opt');
-        for (const widget of widgets) {
-            const titleEl = widget.el.querySelector('we-title');
-            const spanEl1 = document.createElement('span');
-            spanEl1.textContent = " (+ ";
-            titleEl.appendChild(spanEl1);
-            const iconEl = document.createElement('i');
-            iconEl.classList.add('fa', 'fa-mobile');
-            titleEl.appendChild(iconEl);
-            const spanEl2 = document.createElement('span');
-            spanEl2.textContent = ")";
-            titleEl.appendChild(spanEl2);
-        }
-
-        return uiFragment;
     },
 });
 
@@ -1907,6 +1878,21 @@ options.registry.TopMenuVisibility = VisibilityPageOptionUpdate.extend({
      */
     async visibility(previewMode, widgetValue, params) {
         await this._super(...arguments);
+        await this._changeVisibility(widgetValue);
+        // TODO this is hacky but changing the header visibility may have an
+        // effect on features like FullScreenHeight which depend on viewport
+        // size so we simulate a resize.
+        $(window).trigger('resize');
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    async _changeVisibility(widgetValue) {
         const show = (widgetValue !== 'hidden');
         if (!show) {
             return;
@@ -1930,11 +1916,6 @@ options.registry.TopMenuVisibility = VisibilityPageOptionUpdate.extend({
             });
         });
     },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
     /**
      * @override
      */
@@ -2152,7 +2133,6 @@ options.registry.Box = options.Class.extend({
     setShadow(previewMode, widgetValue, params) {
         this.$target.toggleClass(params.shadowClass, !!widgetValue);
         const defaultShadow = this._getDefaultShadow(widgetValue, params.shadowClass);
-        console.log(defaultShadow);
         this.$target[0].style.setProperty('box-shadow', defaultShadow, 'important');
         if (widgetValue === 'outset') {
             // In this case, the shadowClass is enough
@@ -2494,13 +2474,10 @@ options.registry.SnippetMove = options.Class.extend({
                 break;
         }
         if (params.name === 'move_up_opt' || params.name === 'move_down_opt') {
-            $('html, body').animate(
-                {
-                    scrollTop: this.$target.offset().top - $(window).height() / 2,
-                },
-                500,
-                'linear',
-            );
+            dom.scrollTo(this.$target[0], {
+                extraOffset: 50,
+                easing: 'linear',
+            });
         }
     },
 });
@@ -2539,6 +2516,7 @@ options.registry.ScrollButton = options.Class.extend({
                 const anchor = document.createElement('a');
                 anchor.classList.add(
                     'o_scroll_button',
+                    'mb-3',
                     'rounded-circle',
                     'align-items-center',
                     'justify-content-center',
@@ -2572,12 +2550,6 @@ options.registry.ScrollButton = options.Class.extend({
                 return !!this.$button.parent().length;
         }
         return this._super(...arguments);
-    },
-    /**
-     * @override
-     */
-    _computeVisibility: function () {
-        return this.$target.is('.o_full_screen_height, .o_half_screen_height');
     },
 });
 

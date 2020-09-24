@@ -170,6 +170,7 @@
                                 data-name="bg_image_opt"
                                 data-dependencies="bg_image_opt"/>
             </we-row>
+            <we-colorpicker string="  ⌙ Dynamic color" data-dynamic-color="true" data-name="dynamic_color_opt"/>
         </div>
 
         <div data-js="BackgroundPosition"
@@ -357,8 +358,12 @@
 
     <div data-js="ImageOptimize"
          data-selector="img">
-         <t t-call="web_editor.snippet_options_image_optimization_widgets"/>
-     </div>
+        <t t-call="web_editor.snippet_options_image_optimization_widgets"/>
+    </div>
+
+    <div data-js="DynamicSvg" data-selector="img">
+        <we-colorpicker string="Dynamic color" data-color="true"/>
+    </div>
 </template>
 
 <!-- default block -->

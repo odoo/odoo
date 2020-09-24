@@ -22,7 +22,7 @@ class ConnectionManager(Thread):
         self.pairing_uuid = False
 
     def run(self):
-        if not helpers.get_odoo_server_url():
+        if not helpers.get_odoo_server_url() and not helpers.access_point():
             end_time = datetime.now() + timedelta(minutes=5)
             while (datetime.now() < end_time):
                 self._connect_box()

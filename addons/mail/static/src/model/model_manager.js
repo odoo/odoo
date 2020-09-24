@@ -594,7 +594,8 @@ class ModelManager {
              */
             const data2 = {};
             for (const field of Model.__fieldList) {
-                if (field.fieldName in data) {
+                // `undefined` should have the same effect as not passing the field
+                if (data[field.fieldName] !== undefined) {
                     data2[field.fieldName] = data[field.fieldName];
                 } else {
                     data2[field.fieldName] = field.default;
@@ -630,7 +631,7 @@ class ModelManager {
         for (const field of Model.__fieldList) {
             if (field.fieldType === 'relation') {
                 // ensure inverses are properly unlinked
-                field.set(record, [['unlink-all']]);
+                field.parseAndExecuteCommands(record, [['unlink-all']]);
             }
         }
         this._hasAnyChangeDuringCycle = true;
@@ -1066,12 +1067,16 @@ class ModelManager {
         const Model = record.constructor;
         let hasChanged = false;
         for (const fieldName of Object.keys(data)) {
+            if (data[fieldName] === undefined) {
+                // `undefined` should have the same effect as not passing the field
+                continue;
+            }
             const field = Model.__fieldMap[fieldName];
             if (!field) {
                 throw new Error(`Cannot create/update record with data unrelated to a field. (model: "${Model.modelName}", non-field attempted update: "${fieldName}")`);
             }
             const newVal = data[fieldName];
-            if (!field.set(record, newVal, options)) {
+            if (!field.parseAndExecuteCommands(record, newVal, options)) {
                 continue;
             }
             hasChanged = true;

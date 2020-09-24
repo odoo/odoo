@@ -223,7 +223,7 @@
 <!-- "Default" template -->
 <template id="template_header_default" inherit_id="website.layout" name="Template Header Default" active="True">
     <xpath expr="//header//nav" position="replace">
-        <nav class="navbar navbar-expand-lg navbar-light o_colored_level o_cc shadow-sm">
+        <nav data-name="Navbar" class="navbar navbar-expand-lg navbar-light o_colored_level o_cc shadow-sm">
             <div id="top_menu_container" class="container justify-content-start justify-content-lg-between">
                 <!-- Brand -->
                 <t t-call="website.placeholder_header_brand">
@@ -295,7 +295,7 @@
 <!-- "Hamburger" template -->
 <template id="template_header_hamburger" inherit_id="website.layout" name="Template Header Hamburger" active="False">
     <xpath expr="//header//nav" position="replace">
-        <nav class="navbar navbar-light o_colored_level o_cc">
+        <nav data-name="Navbar" class="navbar navbar-light o_colored_level o_cc">
             <div id="top_menu_container" class="container">
                 <!-- Brand -->
                 <t t-call="website.placeholder_header_brand">
@@ -429,7 +429,7 @@
 <!-- "Vertical" template -->
 <template id="template_header_vertical" inherit_id="website.layout" name="Template Header Vertical" active="False">
     <xpath expr="//header//nav" position="replace">
-        <nav class="navbar navbar-expand-lg navbar-light flex-lg-column o_colored_level o_cc shadow-sm py-0">
+        <nav data-name="Navbar" class="navbar navbar-expand-lg navbar-light flex-lg-column o_colored_level o_cc shadow-sm py-0">
             <div id="top_menu_container" class="container align-items-center flex-row flex-wrap">
                 <!-- Left -->
                 <div class="o_header_centered_logo">
@@ -536,7 +536,7 @@
 
 <template id="template_header_sidebar" inherit_id="website.layout" name="Template Header Sidebar" active="False">
     <xpath expr="//header//nav" position="replace">
-        <nav class="navbar navbar-expand-lg navbar-light o_colored_level o_cc shadow pb-3">
+        <nav data-name="Navbar" class="navbar navbar-expand-lg navbar-light o_colored_level o_cc shadow pb-3">
             <div id="top_menu_container" class="container h-100">
                 <!-- Brand -->
                 <t t-call="website.placeholder_header_brand"/>
@@ -620,7 +620,7 @@
 
 <template id="template_header_slogan" inherit_id="website.layout" name="Template Header Slogan" active="False">
     <xpath expr="//header//nav" position="replace">
-        <nav class="navbar navbar-expand-lg navbar-light o_colored_level o_cc shadow-sm">
+        <nav data-name="Navbar" class="navbar navbar-expand-lg navbar-light o_colored_level o_cc shadow-sm">
             <div id="top_menu_container" class="container flex-row flex-wrap">
                 <!-- Brand -->
                 <t t-call="website.placeholder_header_brand">
@@ -718,7 +718,7 @@
 <template id="template_header_contact" inherit_id="website.layout" name="Template Header Contact" active="False">
     <xpath expr="//header//nav" position="replace">
         <div class="oe_structure" id="oe_structure_header_contact_1"/>
-        <nav class="navbar navbar-light navbar-expand-lg o_colored_level o_cc shadow-sm">
+        <nav data-name="Navbar" class="navbar navbar-light navbar-expand-lg o_colored_level o_cc shadow-sm">
             <div id="top_menu_container" class="container">
                 <!-- Brand -->
                 <t t-call="website.placeholder_header_brand"/>
@@ -803,7 +803,7 @@
 
 <template id="template_header_minimalist" inherit_id="website.layout" name="Template Header Minimalist" active="False">
     <xpath expr="//header//nav" position="replace">
-        <nav class="navbar navbar-light navbar-expand-md o_colored_level o_cc">
+        <nav data-name="Navbar" class="navbar navbar-light navbar-expand-md o_colored_level o_cc">
             <div id="top_menu_container" class="container flex-wrap">
                 <!-- Brand -->
                 <t t-call="website.placeholder_header_brand"/>
@@ -871,7 +871,7 @@
             </div>
         </div>
         <div id="top_menu_container" class="container mt-n4">
-            <nav class="navbar navbar-light navbar-expand-lg o_colored_level o_cc shadow-sm rounded pr-2">
+            <nav data-name="Navbar" class="navbar navbar-light navbar-expand-lg o_colored_level o_cc shadow-sm rounded pr-2">
                 <!-- Brand -->
                 <t t-call="website.placeholder_header_brand"/>
                 <!-- Navbar Toggler -->
@@ -932,7 +932,7 @@
 
 <template id="template_header_centered_logo" inherit_id="website.layout" name="Template Header Centered Logo" active="False">
     <xpath expr="//header//nav" position="replace">
-        <nav class="navbar navbar-light navbar-expand-lg o_colored_level o_cc">
+        <nav data-name="Navbar" class="navbar navbar-light navbar-expand-lg o_colored_level o_cc">
             <div id="top_menu_container" class="container">
                 <!-- Navbar Toggler -->
                 <t t-call="website.navbar_toggler"/>
@@ -978,7 +978,7 @@
 <template id="template_header_image" inherit_id="website.layout" name="Template Header Image" active="False">
     <xpath expr="//header//nav" position="replace">
         <div class="oe_structure" id="oe_structure_header_image_1"/>
-        <nav class="navbar navbar-light navbar-expand-lg o_colored_level o_cc shadow-sm">
+        <nav data-name="Navbar" class="navbar navbar-light navbar-expand-lg o_colored_level o_cc shadow-sm">
             <div id="top_menu_container" class="container">
                 <!-- Brand -->
                 <t t-call="website.placeholder_header_brand"/>
@@ -1049,7 +1049,7 @@
 
 <template id="template_header_hamburger_full" inherit_id="website.layout" name="Template Header Hambuger Full" active="False">
     <xpath expr="//header//nav" position="replace">
-        <nav class="navbar navbar-light o_colored_level o_cc">
+        <nav data-name="Navbar" class="navbar navbar-light o_colored_level o_cc">
             <div id="top_menu_container" class="container">
                 <!-- Brand -->
                 <t t-call="website.placeholder_header_brand"/>
@@ -1129,7 +1129,7 @@
     <xpath expr="//header//nav" position="replace">
         <!-- Topbar -->
         <div class="oe_structure" id="oe_structure_header_magazine_1"/>
-        <nav class="navbar navbar-light o_colored_level o_cc">
+        <nav data-name="Navbar" class="navbar navbar-light o_colored_level o_cc">
             <div id="top_menu_container" class="container">
                 <!-- Brand -->
                 <t t-call="website.placeholder_header_brand"/>

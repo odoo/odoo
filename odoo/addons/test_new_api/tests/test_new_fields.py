@@ -456,6 +456,18 @@ class TestFields(TransactionCaseWithUserDemo):
         record.foo = "Ho"
         self.assertEqual(record.baz, "<[Ho]>")
 
+    def test_12_dynamic_depends(self):
+        Model = self.registry['test_new_api.compute.dynamic.depends']
+        self.assertEqual(Model.full_name.depends, ())
+
+        # the dependencies of full_name are stored in a config parameter
+        self.env['ir.config_parameter'].set_param('test_new_api.full_name', 'name1,name2')
+
+        # this must re-evaluate the field's dependencies
+        self.env['base'].flush()
+        self.registry.setup_models(self.cr)
+        self.assertEqual(Model.full_name.depends, ('name1', 'name2'))
+
     def test_13_inverse(self):
         """ test inverse computation of fields """
         Category = self.env['test_new_api.category']
@@ -746,6 +758,20 @@ class TestFields(TransactionCaseWithUserDemo):
             'line_ids': [(2, record.line_ids.id), (0, 0, {'subtotal': 1.0})],
         })
         check(1.0)
+
+    def test_20_like(self):
+        """ test filtered_domain() on char fields. """
+        record = self.env['test_new_api.multi.tag'].create({'name': 'Foo'})
+        self.assertTrue(record.filtered_domain([('name', 'like', 'F')]))
+        self.assertTrue(record.filtered_domain([('name', 'ilike', 'f')]))
+
+        record.name = 'Bar'
+        self.assertFalse(record.filtered_domain([('name', 'like', 'F')]))
+        self.assertFalse(record.filtered_domain([('name', 'ilike', 'f')]))
+
+        record.name = False
+        self.assertFalse(record.filtered_domain([('name', 'like', 'F')]))
+        self.assertFalse(record.filtered_domain([('name', 'ilike', 'f')]))
 
     def test_21_date(self):
         """ test date fields """
@@ -1047,6 +1073,7 @@ class TestFields(TransactionCaseWithUserDemo):
     def test_25_related_multi(self):
         """ test write() on several related fields based on a common computed field. """
         foo = self.env['test_new_api.foo'].create({'name': 'A', 'value1': 1, 'value2': 2})
+        oof = self.env['test_new_api.foo'].create({'name': 'B', 'value1': 1, 'value2': 2})
         bar = self.env['test_new_api.bar'].create({'name': 'A'})
         self.assertEqual(bar.foo, foo)
         self.assertEqual(bar.value1, 1)
@@ -1056,6 +1083,11 @@ class TestFields(TransactionCaseWithUserDemo):
         bar.write({'value1': 3, 'value2': 4})
         self.assertEqual(foo.value1, 3)
         self.assertEqual(foo.value2, 4)
+
+        # modify 'name', and search on 'foo': this should flush 'name'
+        bar.name = 'B'
+        self.assertEqual(bar.foo, oof)
+        self.assertIn(bar, bar.search([('foo', 'in', oof.ids)]))
 
     def test_26_inherited(self):
         """ test inherited fields. """

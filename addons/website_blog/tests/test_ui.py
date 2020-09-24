@@ -9,4 +9,11 @@ from odoo import tools
 class TestUi(odoo.tests.HttpCase):
     def test_admin(self):
         self.env['blog.blog'].create({'name': 'Travel'})
+        self.env['ir.attachment'].create({
+            'public': True,
+            'type': 'url',
+            'url': '/web/image/123/transparent.png',
+            'name': 'transparent.png',
+            'mimetype': 'image/png',
+        })
         self.start_tour("/", 'blog', login='admin')

@@ -83,7 +83,7 @@ class Project(models.Model):
     def _compute_warning_employee_rate(self):
         projects = self.filtered(lambda p: p.allow_billable and p.allow_timesheets and p.bill_type == 'customer_project' and p.pricing_type == 'employee_rate')
         tasks = projects.task_ids.filtered(lambda t: not t.non_allow_billable)
-        employees = self.env['account.analytic.line'].read_group([('task_id', 'in', tasks.ids)], ['employee_id', 'project_id'], ['employee_id', 'project_id'], lazy=False)
+        employees = self.env['account.analytic.line'].read_group([('task_id', 'in', tasks.ids), ('non_allow_billable', '=', False)], ['employee_id', 'project_id'], ['employee_id', 'project_id'], lazy=False)
         dict_project_employee = defaultdict(list)
         for line in employees:
             dict_project_employee[line['project_id'][0]] += [line['employee_id'][0]]
@@ -225,7 +225,7 @@ class ProjectTask(models.Model):
         for task in self:
             show = True
             if not task.allow_billable or not task.allow_timesheets or \
-                (task.bill_type != 'customer_task' and not task.timesheet_product_id) or not task.partner_id or \
+                (task.bill_type != 'customer_task' and not task.timesheet_product_id) or (not task.partner_id and task.bill_type != 'customer_task') or \
                 task.sale_order_id or (task.bill_type != 'customer_task' and task.pricing_type != 'employee_rate'):
                 show = False
             task.display_create_order = show
@@ -321,10 +321,12 @@ class ProjectTask(models.Model):
             )
             if values['non_allow_billable']:
                 timesheet_ids.write({'so_line': False})
+                self.sale_line_id = False
             else:
                 # We write project on timesheet lines to call _timesheet_preprocess. This function will set correct the SOL
                 for project in timesheet_ids.project_id:
                     current_timesheet_ids = timesheet_ids.filtered(lambda t: t.project_id == project)
+                    current_timesheet_ids.task_id.update({'sale_line_id': project.sale_line_id.id})
                     for employee in current_timesheet_ids.employee_id:
                         current_timesheet_ids.filtered(lambda t: t.employee_id == employee).write({'project_id': project.id})
 

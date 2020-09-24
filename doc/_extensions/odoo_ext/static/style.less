@@ -30,6 +30,20 @@
     color: @gray-lighter;
   }
 
+  > .o_sub_nav #o_sub-menu #searchbox {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    > form {
+      display: flex;
+      flex-grow: 1;
+      > .form-control {
+        border-radius: 0;
+      }
+    }
+  }
+
   > .o_sub_nav #o_sub-menu .o_breadcrumb {
 
     @media screen and (min-width: @screen-sm-min) {

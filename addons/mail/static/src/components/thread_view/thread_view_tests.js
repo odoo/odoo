@@ -46,9 +46,10 @@ QUnit.module('thread_view_tests.js', {
         };
 
         this.start = async params => {
-            const { env, widget } = await start(Object.assign({}, params, {
+            const { afterEvent, env, widget } = await start(Object.assign({}, params, {
                 data: this.data,
             }));
+            this.afterEvent = afterEvent;
             this.env = env;
             this.widget = widget;
         };
@@ -241,6 +242,21 @@ QUnit.test('message list asc order', async function (assert) {
 QUnit.test('mark channel as fetched when a new message is loaded and as seen when focusing composer [REQUIRE FOCUS]', async function (assert) {
     assert.expect(8);
 
+    this.data['res.partner'].records.push({
+        email: "fred@example.com",
+        id: 10,
+        name: "Fred",
+    });
+    this.data['res.users'].records.push({
+        id: 10,
+        partner_id: 10,
+    });
+    this.data['mail.channel'].records.push({
+        channel_type: 'chat',
+        id: 100,
+        is_pinned: true,
+        members: [this.data.currentPartnerId, 10],
+    });
     await this.start({
         mockRPC(route, args) {
             if (args.method === 'channel_fetched') {
@@ -271,46 +287,25 @@ QUnit.test('mark channel as fetched when a new message is loaded and as seen whe
             return this._super(...arguments);
         }
     });
-    const thread = this.env.models['mail.thread'].create({
-        // FIXME should not be needed, see task-2277537
-        composer: [['create']], // avoid initial focus
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
         id: 100,
-        isServerPinned: true, // just to avoid joinChannel to be called
-        members: [['insert', [
-            {
-                email: "john@example.com",
-                id: this.env.messaging.currentPartner.id,
-                name: "John",
-            },
-            {
-                email: "fred@example.com",
-                id: 10,
-                name: "Fred",
-            },
-        ]]],
-        message_unread_counter: 1, // seen would not be called if not > 0
         model: 'mail.channel',
     });
-
     const threadViewer = this.env.models['mail.thread_viewer'].create({
         hasThreadView: true,
         thread: [['link', thread]],
     });
     await this.createThreadViewComponent(threadViewer.threadView, { hasComposer: true });
-    const notifications = [
-        [['myDB', 'mail.channel', 100], {
-            channelId: 100,
-            id: 1,
-            body: "<p>fdsfsd</p>",
-            author_id: [10, "Fred"],
-            model: "mail.channel",
-            channel_ids: [100],
-        }]
-    ];
-
-    await afterNextRender(() =>
-        this.widget.call('bus_service', 'trigger', 'notification', notifications)
-    );
+    await afterNextRender(async () => this.env.services.rpc({
+        route: '/mail/chat_post',
+        params: {
+            context: {
+                mockedUserId: 10,
+            },
+            uuid: thread.uuid,
+            message_content: "new message",
+        },
+    }));
     assert.verifySteps(
         ['rpc:channel_fetch'],
         "Channel should have been fetched but not seen yet"
@@ -361,8 +356,8 @@ QUnit.test('mark channel as fetched and seen when a new message is loaded if com
                 name: "Fred",
             },
         ]]],
-        message_unread_counter: 1, // seen would not be called if not > 0
         model: 'mail.channel',
+        serverMessageUnreadCounter: 1, // seen would not be called if not > 0
     });
 
     const threadViewer = this.env.models['mail.thread_viewer'].create({
@@ -428,6 +423,366 @@ QUnit.test('show message subject if thread is mailing channel', async function (
         document.querySelector('.o_Message_subject').textContent,
         "Subject: Salutations, voyageur",
         "Subject of the message should be 'Salutations, voyageur'"
+    );
+});
+
+QUnit.test('new messages separator on posting message', async function (assert) {
+    assert.expect(4);
+
+    this.data['mail.channel'].records = [{
+        channel_type: 'channel',
+        id: 20,
+        is_pinned: true,
+        message_unread_counter: 0,
+        name: "General",
+    }];
+    await this.start();
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel'
+    });
+    const threadViewer = this.env.models['mail.thread_viewer'].create({
+        hasThreadView: true,
+        thread: [['link', thread]],
+    });
+    await this.createThreadViewComponent(threadViewer.threadView, { hasComposer: true });
+
+    assert.containsNone(
+        document.body,
+        '.o_MessageList_message',
+        "should have no messages"
+    );
+    assert.containsNone(
+        document.body,
+        '.o_MessageList_separatorNewMessages',
+        "should not display 'new messages' separator"
+    );
+
+    document.querySelector('.o_ComposerTextInput_textarea').focus();
+    await afterNextRender(() => document.execCommand('insertText', false, "hey !"));
+    await afterNextRender(() =>
+        document.querySelector('.o_Composer_buttonSend').click()
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_Message',
+        "should have the message current partner just posted"
+    );
+    assert.containsNone(
+        document.body,
+        '.o_MessageList_separatorNewMessages',
+        "still no separator shown when current partner posted a message"
+    );
+});
+
+QUnit.test('new messages separator on receiving new message', async function (assert) {
+    assert.expect(6);
+
+    this.data['res.partner'].records.push({
+        id:11,
+        name: "Foreigner partner",
+    });
+    this.data['res.users'].records.push({
+        id: 42,
+        name: "Foreigner user",
+        partner_id: 11,
+    });
+    this.data['mail.channel'].records.push({
+        channel_type: 'channel',
+        id: 20,
+        is_pinned: true,
+        message_unread_counter: 0,
+        name: "General",
+        seen_message_id: 1,
+        uuid: 'randomuuid',
+    });
+    this.data['mail.message'].records.push({
+        body: "blah",
+        channel_ids: [20],
+        id: 1,
+    });
+    await this.start();
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel'
+    });
+    const threadViewer = this.env.models['mail.thread_viewer'].create({
+        hasThreadView: true,
+        thread: [['link', thread]],
+    });
+    await this.createThreadViewComponent(threadViewer.threadView, { hasComposer: true });
+
+    assert.containsOnce(
+        document.body,
+        '.o_MessageList_message',
+        "should have an initial message"
+    );
+    assert.containsNone(
+        document.body,
+        '.o_MessageList_separatorNewMessages',
+        "should not display 'new messages' separator"
+    );
+
+    document.querySelector('.o_ComposerTextInput_textarea').blur();
+    // simulate receiving a message
+    await afterNextRender(async () => this.env.services.rpc({
+        route: '/mail/chat_post',
+        params: {
+            context: {
+                mockedUserId: 42,
+            },
+            uuid: thread.uuid,
+            message_content: "hu",
+        },
+    }));
+    assert.containsN(
+        document.body,
+        '.o_Message',
+        2,
+        "should now have 2 messages after receiving a new message"
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_MessageList_separatorNewMessages',
+        "'new messages' separator should be shown"
+    );
+
+    assert.containsOnce(
+        document.body,
+        `.o_MessageList_separatorNewMessages ~ .o_Message[data-message-local-id="${
+            this.env.models['mail.message'].findFromIdentifyingData({id: 2}).localId
+        }"]`,
+        "'new messages' separator should be shown above new message received"
+    );
+
+    await afterNextRender(() => document.querySelector('.o_ComposerTextInput_textarea').focus());
+    assert.containsNone(
+        document.body,
+        '.o_MessageList_separatorNewMessages',
+        "'new messages' separator should no longer be shown as last message has been seen"
+    );
+});
+
+QUnit.test('new messages separator on posting message', async function (assert) {
+    assert.expect(4);
+
+    this.data['mail.channel'].records = [{
+        channel_type: 'channel',
+        id: 20,
+        is_pinned: true,
+        message_unread_counter: 0,
+        name: "General",
+    }];
+    await this.start();
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel'
+    });
+    const threadViewer = this.env.models['mail.thread_viewer'].create({
+        hasThreadView: true,
+        thread: [['link', thread]],
+    });
+    await this.createThreadViewComponent(threadViewer.threadView, { hasComposer: true });
+
+    assert.containsNone(
+        document.body,
+        '.o_MessageList_message',
+        "should have no messages"
+    );
+    assert.containsNone(
+        document.body,
+        '.o_MessageList_separatorNewMessages',
+        "should not display 'new messages' separator"
+    );
+
+    document.querySelector('.o_ComposerTextInput_textarea').focus();
+    await afterNextRender(() => document.execCommand('insertText', false, "hey !"));
+    await afterNextRender(() =>
+        document.querySelector('.o_Composer_buttonSend').click()
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_Message',
+        "should have the message current partner just posted"
+    );
+    assert.containsNone(
+        document.body,
+        '.o_MessageList_separatorNewMessages',
+        "still no separator shown when current partner posted a message"
+    );
+});
+
+QUnit.test('new messages separator on receiving new message', async function (assert) {
+    assert.expect(6);
+
+    this.data['res.partner'].records.push({
+        id:11,
+        name: "Foreigner partner",
+    });
+    this.data['res.users'].records.push({
+        id: 42,
+        name: "Foreigner user",
+        partner_id: 11,
+    });
+    this.data['mail.channel'].records.push({
+        channel_type: 'channel',
+        id: 20,
+        is_pinned: true,
+        message_unread_counter: 0,
+        name: "General",
+        seen_message_id: 1,
+        uuid: 'randomuuid',
+    });
+    this.data['mail.message'].records.push({
+        body: "blah",
+        channel_ids: [20],
+        id: 1,
+    });
+    await this.start();
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel'
+    });
+    const threadViewer = this.env.models['mail.thread_viewer'].create({
+        hasThreadView: true,
+        thread: [['link', thread]],
+    });
+    await this.createThreadViewComponent(threadViewer.threadView, { hasComposer: true });
+
+    assert.containsOnce(
+        document.body,
+        '.o_MessageList_message',
+        "should have an initial message"
+    );
+    assert.containsNone(
+        document.body,
+        '.o_MessageList_separatorNewMessages',
+        "should not display 'new messages' separator"
+    );
+
+    document.querySelector('.o_ComposerTextInput_textarea').blur();
+    // simulate receiving a message
+    await afterNextRender(async () => this.env.services.rpc({
+        route: '/mail/chat_post',
+        params: {
+            context: {
+                mockedUserId: 42,
+            },
+            uuid: thread.uuid,
+            message_content: "hu",
+        },
+    }));
+    assert.containsN(
+        document.body,
+        '.o_Message',
+        2,
+        "should now have 2 messages after receiving a new message"
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_MessageList_separatorNewMessages',
+        "'new messages' separator should be shown"
+    );
+
+    assert.containsOnce(
+        document.body,
+        `.o_MessageList_separatorNewMessages ~ .o_Message[data-message-local-id="${
+            this.env.models['mail.message'].findFromIdentifyingData({id: 2}).localId
+        }"]`,
+        "'new messages' separator should be shown above new message received"
+    );
+
+    await afterNextRender(() => document.querySelector('.o_ComposerTextInput_textarea').focus());
+    assert.containsNone(
+        document.body,
+        '.o_MessageList_separatorNewMessages',
+        "'new messages' separator should no longer be shown as last message has been seen"
+    );
+});
+
+QUnit.test('basic rendering of canceled notification', async function (assert) {
+    assert.expect(8);
+
+    this.data['mail.channel'].records.push({ id: 11 });
+    this.data['res.partner'].records.push({ id: 12, name: "Someone" });
+    this.data['mail.message'].records.push({
+        channel_ids: [11],
+        id: 10,
+        message_type: 'email',
+        model: 'mail.channel',
+        notification_ids: [11],
+        res_id: 11,
+    });
+    this.data['mail.notification'].records.push({
+        failure_type: 'SMTP',
+        id: 11,
+        mail_message_id: 10,
+        notification_status: 'canceled',
+        notification_type: 'email',
+        res_partner_id: 12,
+    });
+    await this.start();
+    const threadViewer = await this.env.models['mail.thread_viewer'].create({
+        hasThreadView: true,
+        thread: [['insert', {
+            id: 11,
+            model: 'mail.channel',
+        }]],
+    });
+    await this.afterEvent({
+        eventName: 'o-component-message-list-thread-cache-changed',
+        func: () => {
+            this.createThreadViewComponent(threadViewer.threadView);
+        },
+        message: "thread become loaded with messages",
+        predicate: ({ threadViewer }) => {
+            return threadViewer.thread.model === 'mail.channel' && threadViewer.thread.id === 11;
+        },
+    });
+
+    assert.containsOnce(
+        document.body,
+        '.o_Message_notificationIconClickable',
+        "should display the notification icon container on the message"
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_Message_notificationIcon',
+        "should display the notification icon on the message"
+    );
+    assert.hasClass(
+        document.querySelector('.o_Message_notificationIcon'),
+        'fa-envelope-o',
+        "notification icon shown on the message should represent email"
+    );
+
+    await afterNextRender(() => {
+        document.querySelector('.o_Message_notificationIconClickable').click();
+    });
+    assert.containsOnce(
+        document.body,
+        '.o_NotificationPopover',
+        "notification popover should be opened after notification has been clicked"
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_NotificationPopover_notificationIcon',
+        "an icon should be shown in notification popover"
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_NotificationPopover_notificationIcon.fa.fa-trash-o',
+        "the icon shown in notification popover should be the canceled icon"
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_NotificationPopover_notificationPartnerName',
+        "partner name should be shown in notification popover"
+    );
+    assert.strictEqual(
+        document.querySelector('.o_NotificationPopover_notificationPartnerName').textContent.trim(),
+        "Someone",
+        "partner name shown in notification popover should be the one concerned by the notification"
     );
 });
 

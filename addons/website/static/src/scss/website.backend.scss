@@ -427,34 +427,16 @@
 
 
 .o_theme_install_loader_container {
-  opacity: 0.85;
-  pointer-events: all;
+    background-color: $o-shadow-color;
+    opacity: 0.95;
+    pointer-events: all;
 }
 .o_theme_install_loader {
-  display: inline-block;
-  position: relative;
-  width: 64px;
-  height: 64px;
-}
-.o_theme_install_loader:after {
-  content: " ";
-  display: block;
-  border-radius: 50%;
-  margin: 6px;
-  border: 26px solid $o-brand-primary;
-  border-color: $o-brand-primary transparent $o-brand-primary transparent;
-  animation: o_theme_install_loader 1.2s infinite;
-}
-@keyframes o_theme_install_loader {
-  0% {
-    transform: rotate(0);
-    animation-timing-function: cubic-bezier(0.55, 0.055, 0.675, 0.19);
-  }
-  50% {
-    transform: rotate(900deg);
-    animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
-  }
-  100% {
-    transform: rotate(1800deg);
-  }
+    position: relative;
+    display: inline-block;
+    width: 400px;
+    height: 220px;
+    background-image: url('/website/static/src/img/theme_loader.gif');
+    background-size: cover;
+    border-radius: 6px;
 }

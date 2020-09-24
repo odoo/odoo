@@ -110,7 +110,7 @@ def check_image():
     """
     Check if the current image of IoT Box is up to date
     """
-    url = 'http://nightly.odoo.com/master/posbox/iotbox/SHA1SUMS.txt'
+    url = 'https://nightly.odoo.com/master/iotbox/SHA1SUMS.txt'
     urllib3.disable_warnings()
     http = urllib3.PoolManager(cert_reqs='CERT_NONE')
     response = http.request('GET', url)

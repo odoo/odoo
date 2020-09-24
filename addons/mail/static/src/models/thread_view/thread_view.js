@@ -4,6 +4,7 @@ odoo.define('mail/static/src/models/thread_view/thread_view.js', function (requi
 const { registerNewModel } = require('mail/static/src/model/model_core.js');
 const { RecordDeletedError } = require('mail/static/src/model/model_errors.js');
 const { attr, many2many, many2one, one2one } = require('mail/static/src/model/model_field.js');
+const { clear } = require('mail/static/src/model/model_field_command.js');
 
 function factory(dependencies) {
 
@@ -77,9 +78,13 @@ function factory(dependencies) {
          */
         _computeThreadCacheInitialScrollPosition() {
             if (!this.threadCache) {
-                return;
+                return clear();
             }
-            return this.threadCacheInitialScrollPositions[this.threadCache.localId];
+            const threadCacheInitialScrollPosition = this.threadCacheInitialScrollPositions[this.threadCache.localId];
+            if (threadCacheInitialScrollPosition !== undefined) {
+                return threadCacheInitialScrollPosition;
+            }
+            return clear();
         }
 
         /**
@@ -95,14 +100,13 @@ function factory(dependencies) {
             const lastMessageIsVisible = this.lastVisibleMessage &&
                 this.lastVisibleMessage === this.lastMessage;
             if (lastMessageIsVisible && this.hasComposerFocus && this.thread) {
-                this.thread.markAsSeen().catch(e => {
+                this.thread.markAsSeen(this.lastMessage.id).catch(e => {
                     // prevent crash when executing compute during destroy
                     if (!(e instanceof RecordDeletedError)) {
                         throw e;
                     }
                 });
             }
-            return true;
         }
 
         /**

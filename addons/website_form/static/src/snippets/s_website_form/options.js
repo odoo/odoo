@@ -1086,7 +1086,7 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
     _addItemToTable: function (id, text) {
         const isCustomField = this._isFieldCustom();
         const draggableEl = document.createElement('we-button');
-        draggableEl.classList.add('o_we_drag_handle', 'fa', 'fa-fw', 'fa-arrows');
+        draggableEl.classList.add('o_we_drag_handle', 'o_we_link', 'fa', 'fa-fw', 'fa-arrows');
         draggableEl.dataset.noPreview = 'true';
         const inputEl = document.createElement('input');
         inputEl.type = 'text';
@@ -1099,7 +1099,7 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
         inputEl.disabled = !isCustomField;
         const trEl = document.createElement('tr');
         const buttonEl = document.createElement('we-button');
-        buttonEl.classList.add('o_we_select_remove_option', 'fa', 'fa-fw', 'fa-minus');
+        buttonEl.classList.add('o_we_select_remove_option', 'o_we_link', 'o_we_text_danger', 'fa', 'fa-fw', 'fa-minus');
         buttonEl.dataset.removeOption = id;
         buttonEl.dataset.noPreview = 'true';
         const draggableTdEl = document.createElement('td');
