@@ -91,6 +91,11 @@ const SmoothScrollOnDrag = Class.extend(mixins.ParentedMixin, {
      * @param {jQuery} [options.offsetElements.$left] Visible left offset element which width
      *        will be taken into account when triggering scroll at the left side of the
      *        $scrollTarget.
+    * @param {Function<jQuery>} [options.dropzones] Function must return a JQuery list of dropzone elements.
+    * @param {Function<ui, droppable>} [options.over] Callback triggered when the draggable element is
+    *         over a dropzone (requiered with options.dropzones).
+    * @param {Function<ui, droppable>} [options.out] Callback triggered when the draggable element is
+    *         no longer above the dropzone (requiered with options.dropzones).
      */
     init(parent, $element, $target, options = {}) {
         mixins.ParentedMixin.init.call(this);
@@ -126,8 +131,8 @@ const SmoothScrollOnDrag = Class.extend(mixins.ParentedMixin, {
         this.options.jQueryDraggableOptions.scroll = false;
         const draggableOptions = Object.assign({}, this.options.jQueryDraggableOptions, {
             start: (ev, ui) => this._onSmoothDragStart(ev, ui, this.options.jQueryDraggableOptions.start),
-            drag: (ev, ui) => this._onSmoothDrag(ev, ui, this.options.jQueryDraggableOptions.drag),
-            stop: (ev, ui) => this._onSmoothDragStop(ev, ui, this.options.jQueryDraggableOptions.stop),
+            drag: (ev, ui, inst) => this._onSmoothDrag(ev, ui, this.options.jQueryDraggableOptions.drag),
+            stop: (ev, ui, inst) => this._onSmoothDragStop(ev, ui, this.options.jQueryDraggableOptions.stop),
         });
         this.$element.draggable(draggableOptions);
     },
@@ -316,6 +321,9 @@ const SmoothScrollOnDrag = Class.extend(mixins.ParentedMixin, {
     /**
      * Called when dragging the element.
      * Updates the position options and call the provided callback if any.
+     * When use dropzones options, call 'over' option when the helper is
+     * over a dropzone and call 'out' when the helper is no longer above
+     * the dropzone.
      *
      * @private
      * @param {Object} ev The jQuery drag handler event parameter.
@@ -326,6 +334,45 @@ const SmoothScrollOnDrag = Class.extend(mixins.ParentedMixin, {
         this._updatePositionOptions(ui);
         if (typeof onDragCallback === 'function') {
             onDragCallback.call(ui.helper, ev, ui);
+        }
+
+        if (this.options.dropzones) {
+            if (!this.$dropzones) {
+                this.$dropzones = this.options.dropzones.call(ui.helper, ev, ui);
+            }
+            if (!this.$dropzones.length) {
+                return;
+            }
+            const draggableBox = ui.helper[0].getBoundingClientRect();
+
+            let over;
+            for (const zone of this.$dropzones.get()) {
+                let box;
+                if (this.overDropzone && this.overDropzone[0] === zone) {
+                    box = this.overDropzone[1];
+                } else {
+                    box = zone.getBoundingClientRect();
+                }
+                if (box.top < draggableBox.top + draggableBox.height && box.top + box.height > draggableBox.top &&
+                    box.left < draggableBox.left + draggableBox.width && box.left + box.width > draggableBox.left) {
+                    over = zone;
+                    break;
+                }
+            }
+            if (this.overDropzone && this.overDropzone[0] !== over) {
+                this.options.out.call(ui.helper, ui, this.overDropzone[0]);
+                this.overDropzone = null;
+            }
+            if (over && !this.overDropzone) {
+                const box = over.getBoundingClientRect();
+                this.overDropzone = [over, {
+                    top: box.top,
+                    height: box.height,
+                    left: box.left,
+                    width: box.width,
+                }];
+                this.options.over.call(ui.helper, ui, over);
+            }
         }
     },
     /**
@@ -346,10 +393,11 @@ const SmoothScrollOnDrag = Class.extend(mixins.ParentedMixin, {
         };
 
         let scrollTarget = this.$target[0];
-        while (scrollTarget.parentNode && window.getComputedStyle(scrollTarget).overflow !== 'auto') {
+        while (scrollTarget && scrollTarget.scrollHeight <= scrollTarget.clientHeight &&
+                ['scroll', 'auto'].includes(scrollTarget.ownerDocument.defaultView.getComputedStyle(scrollTarget).overflow)) {
             scrollTarget = scrollTarget.parentNode;
         }
-        this.$scrollTarget = $(scrollTarget);
+        this.$scrollTarget = scrollTarget ? $(scrollTarget) : this.$target;
 
         this.scrollTargetIsDocument = this.$scrollTarget.is('html');
         this.scrollTargetIsParent = this.$scrollTarget.get(0).contains(this.$element.get(0));
@@ -373,6 +421,8 @@ const SmoothScrollOnDrag = Class.extend(mixins.ParentedMixin, {
         if (typeof onDragEndCallBack === 'function') {
             onDragEndCallBack.call(ui.helper, ev, ui);
         }
+        this.$dropzones = null;
+        this.overDropzone = null;
     },
 });
 

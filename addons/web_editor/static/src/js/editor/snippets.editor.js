@@ -37,53 +37,6 @@ $.extend($.expr[':'], {
     },
 });
 
-
-$.ui.plugin.add( "draggable", "intersect", {
-    start: function( event, ui, inst ) {
-        inst.$intersectHelpers = null;
-        inst.intersectOver = null;
-    },
-    drag: function( event, ui, inst ) {
-        if (!inst.$intersectHelpers) {
-            inst.$intersectHelpers = inst.options.intersect.helpers.call(inst.helper, event, ui);
-        }
-        if (!inst.$intersectHelpers.length) {
-            return;
-        }
-        const draggableBox = ui.helper[0].getBoundingClientRect();
-
-        let over;
-        for (const zone of inst.$intersectHelpers.get()) {
-            let box;
-            if (inst.intersectOver && inst.intersectOver[0] === zone) {
-                box = inst.intersectOver[1];
-            } else {
-                box = zone.getBoundingClientRect();
-            }
-            if (box.top < draggableBox.top + draggableBox.height && box.top + box.height > draggableBox.top &&
-                box.left < draggableBox.left + draggableBox.width && box.left + box.width > draggableBox.left) {
-                over = zone;
-                break;
-            }
-        }
-        if (inst.intersectOver && inst.intersectOver[0] !== over) {
-            inst.options.intersect.out.call(inst.helper, ui, inst.intersectOver[0]);
-            inst.intersectOver = null;
-        }
-        if (over && !inst.intersectOver) {
-            const box = over.getBoundingClientRect();
-            inst.intersectOver = [over, {
-                top: box.top,
-                height: box.height,
-                left: box.left,
-                width: box.width,
-            }];
-            inst.options.intersect.over.call(inst.helper, ui, over);
-        }
-    }
-} );
-
-
 /**
  * Get an array of all the selector tags and their position within their parents.
  */
@@ -202,6 +155,19 @@ var SnippetEditor = Widget.extend({
                             this._onDragAndDropStop(...args);
                         }, 0);
                     },
+                },
+                dropzones: function () {
+                    return self.$editor.find('.oe_drop_zone');
+                },
+                over: function () {
+                    self.$editable.find('.oe_drop_zone.hide').removeClass('hide');
+                    $(this).addClass('hide').first().after(self.$snippetBlock);
+                    self.dropped = true;
+                },
+                out: function () {
+                    $(this).removeClass('hide');
+                    self.$snippetBlock.detach();
+                    self.dropped = false;
                 },
             });
             this.draggableComponent = new SmoothScrollOnDrag(this, this.$el, this.$editor, smoothScrollOptions);
@@ -734,19 +700,6 @@ var SnippetEditor = Widget.extend({
         });
 
         this.$body.addClass('move-important');
-
-        this.$editable.find('.oe_drop_zone').droppable({
-            over: function () {
-                self.$editable.find('.oe_drop_zone.hide').removeClass('hide');
-                $(this).addClass('hide').first().after(self.$snippetBlock);
-                self.dropped = true;
-            },
-            out: function () {
-                $(this).removeClass('hide');
-                self.$snippetBlock.detach();
-                self.dropped = false;
-            },
-        });
     },
     /**
      * Called when the snippet is dropped after being dragged thanks to the
@@ -1972,8 +1925,7 @@ var SnippetsMenu = Widget.extend({
                 },
                 start: function (ev, ui) {
                     self.$el.find('.oe_snippet_thumbnail').addClass('o_we_already_dragging');
-                    const $snippet = $(this);
-                    var $baseBody = $snippet.find('.oe_snippet_body');
+                    var $baseBody = this.find('.oe_snippet_body');
 
                     if (dragStarted) {
                         // If the previous drop are not finished, the position of the current snippet can be wrong.
@@ -2029,7 +1981,7 @@ var SnippetsMenu = Widget.extend({
                         }
                     }
 
-                    $snippet.data('to-insert', $snippetToInsert);
+                    this.data('to-insert', $snippetToInsert);
                 },
                 stop: async function (ev, ui) {
                     const $snippetToInsert = this.data('to-insert');
@@ -2092,29 +2044,27 @@ var SnippetsMenu = Widget.extend({
                     dropped = false;
                     dragStarted = false;
                 },
-                intersect: {
-                    helpers: function () {
-                        return self.$editor.find('.oe_drop_zone');
-                    },
-                    over: function (ui, droppable) {
-                        if (!dropped) {
-                            dropped = true;
-                            scrollValue = $(droppable).offset().top;
-                            const $snippetToInsert = this.data('to-insert');
-                            $(droppable).after($snippetToInsert).addClass('d-none');
-                            $snippetToInsert.removeClass('oe_snippet_body');
-                        }
-                    },
-                    out: function (ui, droppable) {
-                        const $snippetToInsert = this.data('to-insert');
-                        var prev = $snippetToInsert.prev();
-                        if (droppable === prev[0]) {
-                            dropped = false;
-                            $snippetToInsert.detach();
-                            $(droppable).removeClass('d-none');
-                            $snippetToInsert.addClass('oe_snippet_body');
-                        }
-                    },
+            },
+            dropzones: function () {
+                return self.$editor.find('.oe_drop_zone');
+            },
+            over: function (ui, droppable) {
+                if (!dropped) {
+                    dropped = true;
+                    scrollValue = $(droppable).offset().top;
+                    const $snippetToInsert = this.data('to-insert');
+                    $(droppable).after($snippetToInsert).addClass('d-none');
+                    $snippetToInsert.removeClass('oe_snippet_body');
+                }
+            },
+            out: function (ui, droppable) {
+                const $snippetToInsert = this.data('to-insert');
+                var prev = $snippetToInsert.prev();
+                if (droppable === prev[0]) {
+                    dropped = false;
+                    $snippetToInsert.detach();
+                    $(droppable).removeClass('d-none');
+                    $snippetToInsert.addClass('oe_snippet_body');
                 }
             },
         });
@@ -2732,7 +2682,6 @@ var SnippetsMenu = Widget.extend({
             const domLayout = layout.engines.dom;
             domLayout.markForRedraw(new Set($snippet.find('*').contents().addBack().add($snippet).get()));
             const position = this._getRelativePosition($snippet[0]);
-            console.log(position);
             if (!position) {
                 throw new Error("Could not find a place to insert the snippet.");
             }
