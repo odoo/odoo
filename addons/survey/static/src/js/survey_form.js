@@ -117,11 +117,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
                    && letter.match(/[a-z]/i)) {
             var $choiceInput = this.$(`input[data-selection-key=${letter}]`);
             if ($choiceInput.length === 1) {
-                if ($choiceInput.attr('type') === 'radio') {
-                    $choiceInput.prop("checked", true).trigger('change');
-                } else {
-                    $choiceInput.prop("checked", !$choiceInput.prop("checked")).trigger('change');
-                }
+                $choiceInput.prop("checked", !$choiceInput.prop("checked")).trigger('change');
 
                 // Avoid selection key to be typed into the textbox if 'other' is selected by key
                 event.preventDefault();
