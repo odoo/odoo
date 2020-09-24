@@ -76,7 +76,11 @@ var Wysiwyg = Widget.extend({
                     {
                         selector: [node => {
                             const attributes = node.modifiers.find(this.JWEditorLib.Attributes);
-                            return attributes && attributes.classList.has('o_not_editable');
+                            return attributes &&
+                                (
+                                    attributes.classList.has('o_not_editable') ||
+                                    attributes.has('data-oe-readonly')
+                                );
                         }, () => true],
                         properties: {
                             editable: {
@@ -1021,6 +1025,20 @@ var Wysiwyg = Widget.extend({
         $('.dropdown-menu').on('click', '.o_editable', function (ev) {
             ev.stopPropagation();
         });
+
+        // Add a tooltip for not-editable areas
+        $(document.body)
+            .tooltip({
+                selector: '[data-oe-readonly], .o_not_editable',
+                container: 'body',
+                trigger: 'hover',
+                delay: { 'show': 1000, 'hide': 100 },
+                placement: 'bottom',
+                title: _t("Readonly field")
+            })
+            .on('click', function () {
+                $(this).tooltip('hide');
+            });
     },
     /**
      * Save all translation blocks.
@@ -1105,18 +1123,26 @@ var Wysiwyg = Widget.extend({
      * @returns {JQuery}
      */
     _getEditable($element) {
-        return $element.find('[data-oe-model]')
+        const $editable = $element.find('[data-oe-model]')
             .not('.o_not_editable')
             .filter(function () {
                 var $parent = $(this).closest('.o_editable, .o_not_editable');
                 return !$parent.length || $parent.hasClass('o_editable');
             })
             .not('link, script')
-            .not('[data-oe-readonly]')
             .not('img[data-oe-field="arch"], br[data-oe-field="arch"], input[data-oe-field="arch"]')
             .not('.oe_snippet_editor')
             .not('hr, br, input, textarea')
             .add('.o_editable');
+        if (this.options.enableTranslation) {
+            const selector = '[data-oe-translation-id], '+
+                '[data-oe-model][data-oe-id][data-oe-field], ' +
+                '[placeholder*="data-oe-translation-id="], ' +
+                '[title*="data-oe-translation-id="], ' +
+                '[alt*="data-oe-translation-id="]';
+            $editable.filter(':has(' + selector + ')').attr('data-oe-readonly', true);
+        }
+        return $editable.not('[data-oe-readonly]')
     },
     /**
      * Additional binding after start.
