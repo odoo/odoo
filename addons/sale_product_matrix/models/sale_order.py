@@ -110,6 +110,7 @@ class SaleOrder(models.Model):
                 for line in self.order_line.filtered(lambda line: line.product_template_id == product_template):
                     line.product_id_change()
                     line._onchange_discount()
+                    line._onchange_product_id_set_customer_lead()
                     
 
     def _get_matrix(self, product_template):
