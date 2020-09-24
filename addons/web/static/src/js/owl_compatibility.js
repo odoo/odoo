@@ -100,6 +100,22 @@ odoo.define('web.OwlCompatibility', function () {
             this.template = template;
             ComponentAdapter.template = null;
 
+            // studio manually re-renders studio systray item, due to manual re-rendering using
+            // renderElement vnode not get updated, so here does a hack to update it
+            if (!(props.Component.prototype instanceof Component)) {
+                const orignalrenderElement = props.Component.prototype.renderElement;
+                const componentAdapter = this;
+                props.Component.prototype.renderElement = function () {
+                    // on first rendering we will not have this.$el, we need to update vnode on rerednering
+                    if (!this.$el) {
+                        return orignalrenderElement.call(this);
+                    }
+                    orignalrenderElement.call(this);
+                    if (componentAdapter.__owl__.vnode) {
+                        componentAdapter.__owl__.vnode.elm = this.el;
+                    }
+                };
+            }
             this.widget = null; // widget instance, if Component is a legacy widget
         }
 
