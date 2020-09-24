@@ -1,6 +1,21 @@
 odoo.define("website_event_track.website_event_pwa_widget", function (require) {
     "use strict";
 
+    /*
+     * The "deferredPrompt" Promise will resolve only if the "beforeinstallprompt" event
+     * has been triggered. It allows to register this listener as soon as possible
+     * to avoid missed-events (as the browser can trigger it very early in the page lifecycle).
+     */
+    var deferredPrompt = new Promise(function (resolve, reject) {
+        if (!("serviceWorker" in navigator)) {
+            return reject();
+        }
+        window.addEventListener("beforeinstallprompt", function (ev) {
+            ev.preventDefault();
+            resolve(ev);
+        });
+    });
+
     var config = require("web.config");
     var publicWidget = require("web.public.widget");
     var utils = require("web.utils");
@@ -39,19 +54,17 @@ odoo.define("website_event_track.website_event_pwa_widget", function (require) {
          *
          * @override
          */
-        init: function () {
-            this._super.apply(this, arguments);
-            this.beforeInstallPromptHandler = this._onBeforeInstallPrompt.bind(this);
-        },
-
-        /**
-         *
-         * @override
-         */
         start: function () {
-            var superProm = this._super.apply(this, arguments);
-            window.addEventListener("beforeinstallprompt", this.beforeInstallPromptHandler);
-            return superProm.then(this._registerServiceWorker.bind(this)).then(this._prefetch.bind(this));
+            var self = this;
+            return this._super.apply(this, arguments)
+                .then(this._registerServiceWorker.bind(this))
+                .then(function () {
+                    // Don't wait for the prompt's Promise as it may never resolve.
+                    deferredPrompt.then(self._showInstallBanner.bind(self)).catch(function () {
+                        console.log("ServiceWorker not supported");
+                    });
+                })
+                .then(this._prefetch.bind(this));
         },
 
         /**
@@ -59,7 +72,6 @@ odoo.define("website_event_track.website_event_pwa_widget", function (require) {
          * @override
          */
         destroy: function () {
-            window.removeEventListener("beforeinstallprompt", this.beforeInstallPromptHandler);
             this._super.apply(this, arguments);
         },
 
@@ -156,6 +168,9 @@ odoo.define("website_event_track.website_event_pwa_widget", function (require) {
          * @private
          */
         _showInstallBanner: function () {
+            if (!config.device.isMobile) {
+                return;
+            }
             var self = this;
             this.installBanner = new PWAInstallBanner(this);
             this.installBanner.appendTo(this.$el).then(function () {
@@ -173,18 +188,6 @@ odoo.define("website_event_track.website_event_pwa_widget", function (require) {
          * @private
          * @param ev {Event}
          */
-        _onBeforeInstallPrompt: function (ev) {
-            if (!config.device.isMobile) {
-                return;
-            }
-            ev.preventDefault();
-            this.deferredPrompt = ev;
-            this._showInstallBanner();
-        },
-        /**
-         * @private
-         * @param ev {Event}
-         */
         _onPromptCloseBar: function (ev) {
             ev.stopPropagation();
             this._hideInstallBanner();
@@ -195,15 +198,20 @@ odoo.define("website_event_track.website_event_pwa_widget", function (require) {
          */
         _onPromptInstall: function (ev) {
             ev.stopPropagation();
-            this.deferredPrompt.prompt();
             this._hideInstallBanner();
-            this.deferredPrompt.userChoice.then(function (choiceResult) {
-                if (choiceResult.outcome === "accepted") {
-                    console.log("User accepted the install prompt");
-                } else {
-                    console.log("User dismissed the install prompt");
-                }
-            });
+            deferredPrompt.then(function (prompt) {
+                    prompt.prompt();
+                    prompt.userChoice.then(function (choiceResult) {
+                        if (choiceResult.outcome === "accepted") {
+                            console.log("User accepted the install prompt");
+                        } else {
+                            console.log("User dismissed the install prompt");
+                        }
+                    });
+                })
+                .catch(function () {
+                    console.log("ServiceWorker not supported");
+                });
         },
     });
 
