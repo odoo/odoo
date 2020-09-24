@@ -73,13 +73,7 @@ const BaseAnimatedHeader = animations.Animation.extend({
      * @private
      */
     _adaptFixedHeaderPosition() {
-        // Compensate scrollbar
-        this.el.style.removeProperty('right');
-        if (this.fixedHeader) {
-            const scrollableEl = this.$el.parent().closestScrollable()[0];
-            const style = window.getComputedStyle(this.el);
-            this.el.style.setProperty('right', `${parseInt(style['right']) + scrollableEl.offsetWidth - scrollableEl.clientWidth}px`, 'important');
-        }
+        dom.compensateScrollbar(this.el, this.fixedHeader, false, 'right');
     },
     /**
      * @private
