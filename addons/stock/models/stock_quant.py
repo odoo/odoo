@@ -3,11 +3,13 @@
 
 import logging
 
+from collections import defaultdict
 from psycopg2 import Error, OperationalError
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
+from odoo.tools import OrderedSet
 from odoo.tools.float_utils import float_compare, float_is_zero, float_round
 
 _logger = logging.getLogger(__name__)
@@ -89,7 +91,7 @@ class StockQuant(models.Model):
         'Available Quantity',
         help="On hand quantity which hasn't been reserved on a transfer, in the default unit of measure of the product",
         compute='_compute_available_quantity')
-    in_date = fields.Datetime('Incoming Date', readonly=True)
+    in_date = fields.Datetime('Incoming Date', readonly=True, required=True, default=fields.Datetime.now())
     tracking = fields.Selection(related='product_id.tracking', readonly=True)
     on_hand = fields.Boolean('On Hand', store=False, search='_search_on_hand')
 
@@ -259,20 +261,120 @@ class StockQuant(models.Model):
 
     @api.model
     def _get_removal_strategy_order(self, removal_strategy):
+        """ Return a ORM order to sort quant depending of the `removal_strategy` """
         if removal_strategy == 'fifo':
-            return 'in_date ASC NULLS FIRST, id'
+            return 'in_date ASC, id'
         elif removal_strategy == 'lifo':
-            return 'in_date DESC NULLS LAST, id desc'
+            return 'in_date DESC, id DESC'
         raise UserError(_('Removal strategy %s not implemented.') % (removal_strategy,))
 
+    def _gather_multi(self, quants_details):
+        """ Gather sorted related quants depending of quants_details
+        Note that this method decrease the number of query but fetch more data from database than needed.
+
+        :params: quants_details: list of (product, location, lot, package, owner, strict)
+
+        :return: dict({(product, location, lot, package, owner, strict): sorted_quants})
+        """
+        location_ids_set, product_loc_set = set(), set()
+        for (product, location, lot, package, owner, strict) in quants_details:
+            location_ids_set.add(location.id)
+            product_loc_set.add((product, location))
+
+        # Avoid call _get_removal_strategy for duplicate tuple (product, location) => Maybe batch _get_removal_strategy one day
+        removal_dict = {}
+        for product, location in product_loc_set:
+            removal_dict[(product, location)] = self._get_removal_strategy(product, location)
+
+        # by strict and strategy : Store all record related params to batch search by strict and strategy
+        by_strict_strategies = defaultdict(lambda: defaultdict(set))
+        for (product, location, lot, package, owner, strict) in quants_details:
+            removal_strategy = removal_dict[(product, location)]
+            dict_feature = by_strict_strategies[(removal_strategy, strict)]
+            dict_feature["product_ids"].add(product.id)
+            dict_feature["location_ids"].add(location.id)
+            if package:
+                dict_feature["package_ids"].add(package.id)
+            if lot:
+                dict_feature["lot_ids"].add(lot.id)
+            if owner:
+                dict_feature["owner_ids"].add(owner.id)
+
+        all_locations = self.env['stock.location'].browse(list(location_ids_set))
+
+        # Get all child location by location and store in a dict
+        child_of_by_location = {}
+        all_child = set()
+        for loc in all_locations:
+            children = self.env['stock.location'].search([('id', 'child_of', loc.id)])
+            all_child |= set(children.ids)
+            child_of_by_location[loc] = children
+
+        # Get all parent location by location and store in a dict.
+        parent_of_by_location = {}
+        for loc in self.env['stock.location'].browse(list(all_child)):
+            parent_ids = self.env['stock.location'].browse([int(i) for i in loc.parent_path.split('/')[:-1]])
+            parent_of_by_location[loc] = parent_ids & all_locations
+
+        # available_quants_dict = {(removal_strategy, strict) : {<By_feature>: {<record>: quants}}}
+        available_quants_dict = {}
+        for (removal_strategy, strict), dict_feature in by_strict_strategies.items():
+            removal_strategy_order = self._get_removal_strategy_order(removal_strategy)
+            domain = [('product_id', 'in', list(dict_feature['product_ids']))]
+            if strict:
+                domain = expression.AND([[('location_id', 'in', list(dict_feature['location_ids']))], domain])
+                domain = expression.AND([[('lot_id', 'in', list(dict_feature['lot_ids']) + [False])], domain])
+                domain = expression.AND([[('package_id', 'in', list(dict_feature['package_ids']) + [False])], domain])
+                domain = expression.AND([[('owner_id', 'in', list(dict_feature['owner_ids']) + [False])], domain])
+            else:
+                # Can't apply any restriction about lot, package, owner
+                domain = expression.AND([[('location_id', 'child_of', list(dict_feature['location_ids']))], domain])
+
+            multi_quants = self.search(domain, order=removal_strategy_order)
+
+            feature_dict = {key: defaultdict(OrderedSet) for key in ['product', 'location', 'location_child', 'package', 'lot', 'owner']}
+            for quant in multi_quants:
+                feature_dict['product'][quant.product_id].add(quant.id)
+                if strict:  # strict use only 'location' and no strict use only 'location_child'
+                    feature_dict['location'][quant.location_id].add(quant.id)
+                else:
+                    # Add quant to the parent location_child and to location itself
+                    for parent in quant.location_id | parent_of_by_location[quant.location_id]:
+                        feature_dict['location_child'][parent].add(quant.id)
+                feature_dict['package'][quant.package_id or False].add(quant.id)
+                feature_dict['lot'][quant.lot_id or False].add(quant.id)
+                feature_dict['owner'][quant.owner_id or False].add(quant.id)
+
+            new_dict = {}
+            for feature, dict_feature in feature_dict.items():
+                new_dict[feature] = defaultdict(lambda: self.env['stock.quant'], {k: self.env['stock.quant'].browse(list(v)) for k, v in dict_feature.items()})
+            available_quants_dict[(removal_strategy, strict)] = new_dict
+
+        by_details = {}
+        for (product, location, lot, package, owner, strict) in quants_details:
+            removal_strategy = removal_dict[(product, location)]
+            quants = available_quants_dict[(removal_strategy, strict)]['product'][product]
+            if strict:
+                quants &= available_quants_dict[(removal_strategy, strict)]['location'][location]
+                quants &= available_quants_dict[(removal_strategy, strict)]['lot'][lot or False]
+                quants &= available_quants_dict[(removal_strategy, strict)]['package'][package or False]
+                quants &= available_quants_dict[(removal_strategy, strict)]['owner'][owner or False]
+            else:
+                quants &= available_quants_dict[(removal_strategy, strict)]['location_child'][location]
+                if lot:
+                    quants &= available_quants_dict[(removal_strategy, strict)]['lot'][lot]
+                if package:
+                    quants &= available_quants_dict[(removal_strategy, strict)]['package'][package]
+                if owner:
+                    quants &= available_quants_dict[(removal_strategy, strict)]['owner'][owner]
+
+            by_details[(product, location, lot, package, owner, strict)] = quants
+        return by_details
+
     def _gather(self, product_id, location_id, lot_id=None, package_id=None, owner_id=None, strict=False):
-        self.env['stock.quant'].flush(['location_id', 'owner_id', 'package_id', 'lot_id', 'product_id'])
-        self.env['product.product'].flush(['virtual_available'])
         removal_strategy = self._get_removal_strategy(product_id, location_id)
         removal_strategy_order = self._get_removal_strategy_order(removal_strategy)
-        domain = [
-            ('product_id', '=', product_id.id),
-        ]
+        domain = [('product_id', '=', product_id.id)]
         if not strict:
             if lot_id:
                 domain = expression.AND([[('lot_id', '=', lot_id.id)], domain])
@@ -287,20 +389,10 @@ class StockQuant(models.Model):
             domain = expression.AND([[('owner_id', '=', owner_id and owner_id.id or False)], domain])
             domain = expression.AND([[('location_id', '=', location_id.id)], domain])
 
-        # Copy code of _search for special NULLS FIRST/LAST order
-        self.check_access_rights('read')
-        query = self._where_calc(domain)
-        self._apply_ir_rules(query, 'read')
-        from_clause, where_clause, where_clause_params = query.get_sql()
-        where_str = where_clause and (" WHERE %s" % where_clause) or ''
-        query_str = 'SELECT "%s".id FROM ' % self._table + from_clause + where_str + " ORDER BY "+ removal_strategy_order
-        self._cr.execute(query_str, where_clause_params)
-        res = self._cr.fetchall()
-        # No uniquify list necessary as auto_join is not applied anyways...
-        return self.browse([x[0] for x in res])
+        return self.search(domain, order=removal_strategy_order)
 
     @api.model
-    def _get_available_quantity(self, product_id, location_id, lot_id=None, package_id=None, owner_id=None, strict=False, allow_negative=False):
+    def _get_available_quantity(self, product_id, location_id, lot_id=None, package_id=None, owner_id=None, strict=False, allow_negative=False, quants=None):
         """ Return the available quantity, i.e. the sum of `quantity` minus the sum of
         `reserved_quantity`, for the set of quants sharing the combination of `product_id,
         location_id` if `strict` is set to False or sharing the *exact same characteristics*
@@ -316,10 +408,17 @@ class StockQuant(models.Model):
         In the last ones, `strict` should be set to `True`, as we work on a specific set of
         characteristics.
 
+        The optional `quants` param is expected when the quants have been previously calculated so we can avoid
+        unnecessary costly repeat queries.
+
         :return: available quantity as a float
         """
         self = self.sudo()
-        quants = self._gather(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=strict)
+
+        if not quants:
+            quants = self._gather(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=strict)
+        quants = quants.sudo()
+
         rounding = product_id.uom_id.rounding
         if product_id.tracking == 'none':
             available_quantity = sum(quants.mapped('quantity')) - sum(quants.mapped('reserved_quantity'))
@@ -435,7 +534,7 @@ class StockQuant(models.Model):
         return self._get_available_quantity(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=False, allow_negative=True), fields.Datetime.from_string(in_date)
 
     @api.model
-    def _update_reserved_quantity(self, product_id, location_id, quantity, lot_id=None, package_id=None, owner_id=None, strict=False):
+    def _update_reserved_quantity(self, product_id, location_id, quantity, lot_id=None, package_id=None, owner_id=None, strict=False, quants=None):
         """ Increase the reserved quantity, i.e. increase `reserved_quantity` for the set of quants
         sharing the combination of `product_id, location_id` if `strict` is set to False or sharing
         the *exact same characteristics* otherwise. Typically, this method is called when reserving
@@ -444,17 +543,22 @@ class StockQuant(models.Model):
         anything from the stock, so we disable the flag. When editing a move line, we naturally
         enable the flag, to reflect the reservation according to the edition.
 
+        The optional `quants` param is expected when the quants have been previously calculated so we can avoid
+        unnecessary costly repeat queries.
+
         :return: a list of tuples (quant, quantity_reserved) showing on which quant the reservation
             was done and how much the system was able to reserve on it
         """
         self = self.sudo()
         rounding = product_id.uom_id.rounding
-        quants = self._gather(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=strict)
+        if not quants:
+            quants = self._gather(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=strict)
+        quants = quants.sudo()
         reserved_quants = []
 
         if float_compare(quantity, 0, precision_rounding=rounding) > 0:
             # if we want to reserve
-            available_quantity = self._get_available_quantity(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=strict)
+            available_quantity = self._get_available_quantity(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=strict, quants=quants)
             if float_compare(quantity, available_quantity, precision_rounding=rounding) > 0:
                 raise UserError(_('It is not possible to reserve more products of %s than you have in stock.', product_id.display_name))
         elif float_compare(quantity, 0, precision_rounding=rounding) < 0:
