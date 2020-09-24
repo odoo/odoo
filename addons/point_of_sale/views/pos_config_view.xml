@@ -531,6 +531,31 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="col-12 col-lg-6 o_setting_box">
+                          <div class="o_setting_left_pane">
+                              <field name="ship_later"/>
+                          </div>
+                            <div class="o_setting_right_pane">
+                                <label for="ship_later" string="Ship Later"/>
+                                <div class="text-muted">
+                                    Sell products and deliver them later.
+                                </div>
+                                <div attrs="{'invisible' : [('ship_later', '=', False)]}">
+                                    <div>
+                                        <label for="route_id" string="Warehouse" class="font-weight-normal"/>
+                                        <field name="warehouse_id" attrs="{'required': [('ship_later', '=', True)]}"/>
+                                    </div>
+                                    <div groups="stock.group_adv_location">
+                                        <label for="route_id" string="Specific route" class="font-weight-normal"/>
+                                        <field name="route_id"/>
+                                    </div>
+                                    <div>
+                                        <label for="picking_policy" class="font-weight-normal"/>
+                                        <field name="picking_policy" attrs="{'required': [('ship_later', '=', True)]}"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <h2>Accounting</h2>
                     <div class="row mt16 o_settings_container" id="accounting_section">
