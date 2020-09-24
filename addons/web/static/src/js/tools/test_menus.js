@@ -126,9 +126,11 @@
     async function testMenuItem(element){
         if (testedMenus.indexOf(element.dataset.menuXmlid) >= 0) return Promise.resolve(); // Avoid infinite loop
         var menuDescription = element.innerText.trim() + " " + element.dataset.menuXmlid;
+        var menuTimeLimit = 10000;
         console.log("Testing menu", menuDescription);
         testedMenus.push(element.dataset.menuXmlid);
         if (blackListedMenus.includes(element.dataset.menuXmlid)) return Promise.resolve(); // Skip black listed menus
+        if (element.innerText.trim() == 'Settings') menuTimeLimit = 20000;
         var startActionCount = clientActionCount;
         await triggerClick(element, `menu item "${element.innerText.trim()}"`);
         var isModal = false;
@@ -145,7 +147,7 @@
                 return true;
             }
             return startActionCount !== clientActionCount;
-        }).then(function() {
+        }, menuTimeLimit).then(function() {
             if (!isModal) {
                 return testFilters();
             }
@@ -170,7 +172,7 @@
         if (appsMenusOnly === true) {
             return;
         }
-        const switchButtons = document.querySelectorAll('nav.o_cp_switch_buttons > button:not(.active)');
+        const switchButtons = document.querySelectorAll('nav.o_cp_switch_buttons > button.o_switch_view:not(.active):not(.o_map)');
         for (const switchButton of switchButtons) {
             // Only way to get the viewType from the switchButton
             const viewType = [...switchButton.classList]
@@ -228,10 +230,10 @@
      * @param {function} stopCondition a function that returns a boolean
      * @returns {Promise} that is rejected if the timeout is exceeded
      */
-    function waitForCondition(stopCondition) {
+    function waitForCondition(stopCondition, tl=10000) {
         var prom = new Promise(function (resolve, reject) {
             var interval = 250;
-            var timeLimit = 5000;
+            var timeLimit = tl;
 
             function checkCondition() {
                 if (stopCondition()) {
@@ -242,7 +244,7 @@
                         // recursive call until the resolve or the timeout
                         setTimeout(checkCondition, interval);
                     } else {
-                        console.error('Timeout, the clicked element took more than 5 seconds to load');
+                        console.error('Timeout, the clicked element took more than', tl/1000,'seconds to load');
                         reject();
                     }
                 }
