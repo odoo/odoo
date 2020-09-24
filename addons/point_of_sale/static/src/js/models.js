@@ -2664,6 +2664,7 @@ exports.Order = Backbone.Model.extend({
 
         this.temporary = false;     // FIXME
         this.to_invoice = false;    // FIXME
+        this.to_ship = false;
 
         var orderlines = json.lines;
         for (var i = 0; i < orderlines.length; i++) {
@@ -2721,6 +2722,7 @@ exports.Order = Backbone.Model.extend({
             fiscal_position_id: this.fiscal_position ? this.fiscal_position.id : false,
             server_id: this.server_id ? this.server_id : false,
             to_invoice: this.to_invoice ? this.to_invoice : false,
+            to_ship: this.to_ship ? this.to_ship : false,
             is_tipped: this.is_tipped || false,
             tip_amount: this.tip_amount || 0,
         };
@@ -3431,7 +3433,15 @@ exports.Order = Backbone.Model.extend({
         }
         this.fiscal_position = newClientFiscalPosition;
         this.set_pricelist(newClientPricelist);
-    }
+    },
+    /* ---- Ship later --- */
+    set_to_ship: function(to_ship) {
+        this.assert_editable();
+        this.to_ship = to_ship;
+    },
+    is_to_ship: function(){
+        return this.to_ship;
+    },
 });
 
 var OrderCollection = Backbone.Collection.extend({

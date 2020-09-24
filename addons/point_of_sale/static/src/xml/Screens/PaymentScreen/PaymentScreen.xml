@@ -77,6 +77,11 @@
                                         t-on-click="openCashbox">
                                         <i class="fa fa-archive" /> Open Cashbox
                                     </div>
+                                    <div t-if="env.pos.config.ship_later" class="button"
+                                         t-att-class="{ highlight: currentOrder.is_to_ship() }"
+                                         t-on-click="toggleIsToShip()">
+                                        <i class="fa fa-clock-o" /> Ship Later
+                                    </div>
                                 </div>
                             </div>
                         </div>

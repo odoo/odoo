@@ -76,6 +76,9 @@ class PosConfig(models.Model):
     _name = 'pos.config'
     _description = 'Point of Sale Configuration'
 
+    def _default_warehouse_id(self):
+        return self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1).id
+
     def _default_picking_type_id(self):
         return self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1).pos_type_id.id
 
@@ -217,6 +220,15 @@ class PosConfig(models.Model):
     has_active_session = fields.Boolean(compute='_compute_current_session')
     show_allow_invoicing_alert = fields.Boolean(compute="_compute_show_allow_invoicing_alert")
     manual_discount = fields.Boolean(string="Manual Discounts", default=True)
+    ship_later = fields.Boolean(string="Ship Later")
+    warehouse_id = fields.Many2one('stock.warehouse', default=_default_warehouse_id, ondelete='restrict')
+    route_id = fields.Many2one('stock.location.route', string="Spefic route for products delivered later.")
+    picking_policy = fields.Selection([
+        ('direct', 'As soon as possible'),
+        ('one', 'When all products are ready')],
+        string='Shipping Policy', required=True, default='direct',
+        help="If you deliver all products at once, the delivery order will be scheduled based on the greatest "
+        "product lead time. Otherwise, it will be based on the shortest.")
 
     @api.depends('use_pricelist', 'available_pricelist_ids')
     def _compute_allowed_pricelist_ids(self):
