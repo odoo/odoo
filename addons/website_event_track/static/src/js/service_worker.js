@@ -5,6 +5,7 @@ const SYNCABLE_ROUTES = ["/event/track/toggle_reminder"];
 const CACHABLE_ROUTES = ["/web/webclient/version_info"];
 const MAX_CACHE_SIZE = 512 * 1024 * 1024; // 500 MB
 const MAX_CACHE_QUOTA = 0.5;
+const CDN_URL = __ODOO_CDN_URL__; // {string|undefined} the cdn_url configured for the website if activated
 
 const { Store, set, get, del } = idbKeyval;
 const pendingRequestsQueueName = `${PREFIX}-pending-requests`;
@@ -12,6 +13,8 @@ const cacheName = `${PREFIX}-cache`;
 const syncStore = new Store(`${PREFIX}-sync-db`, `${PREFIX}-sync-store`);
 const cacheStore = new Store(`${PREFIX}-cache-db`, `${PREFIX}-cache-store`);
 const offlineRoute = `${self.registration.scope}/offline`;
+const scopeURL = new URL(self.registration.scope);
+const cdnURL = CDN_URL ? (CDN_URL.startsWith("http") ? new URL(CDN_URL) : new URL(`http:${CDN_URL}`)) : undefined;
 
 /**
  *
@@ -147,6 +150,13 @@ const buildEmptyResponse = () => new Response(JSON.stringify({ jsonrpc: "2.0", i
  * @returns {Promise}
  */
 const cacheRequest = async (request, response) => {
+    // only attempts to cache local or cdn delivered urls
+    const url = new URL(request.url);
+    if (url.hostname !== scopeURL.hostname && (!cdnURL || url.hostname !== cdnURL.hostname)) {
+        console.error(`ignoring cache for ${request.url} => ${url.hostname}, local: ${scopeURL.hostname}, cdn: ${cdnURL ? cdnURL.hostname : cdnURL}`);
+        return;
+    }
+
     // don't even attempt to cache:
     //  - error pages (why cache that?)
     //  - non-"basic" response types, which include tracker 1-time opaque requests
