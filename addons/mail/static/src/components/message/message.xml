@@ -165,15 +165,11 @@
                                 <t t-foreach="trackingValues" t-as="value" t-key="value.id">
                                     <li>
                                         <div class="o_Message_trackingValue">
-                                            <div class="o_Message_trackingValueItem" t-esc="value.changed_field"/>
-                                            <t t-if="value.old_value">
-                                                <div class="o_Message_trackingValueItem" t-esc="value.old_value || ((value.field_type !== 'boolean') and '')"/>
-                                                <t t-if="value.old_value !== value.new_value">
-                                                    <div class="o_Message_trackingValueItem fa fa-long-arrow-right" title="Changed" role="img"/>
-                                                </t>
-                                            </t>
+                                            <div class="o_Message_trackingValueFieldName o_Message_trackingValueItem" t-esc="value.changed_field"/>
+                                            <div class="o_Message_trackingValueOldValue o_Message_trackingValueItem" t-esc="value.old_value"/>
                                             <t t-if="value.old_value !== value.new_value">
-                                                <div class="o_Message_trackingValueItem" t-esc="value.new_value || ((value.field_type !== 'boolean') and '')"/>
+                                                <div class="o_Message_trackingValueSeparator o_Message_trackingValueItem fa fa-long-arrow-right" title="Changed" role="img"/>
+                                                <div class="o_Message_trackingValueNewValue o_Message_trackingValueItem" t-esc="value.new_value"/>
                                             </t>
                                         </div>
                                     </li>
