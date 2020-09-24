@@ -250,6 +250,10 @@ class Http(models.AbstractModel):
         # specific page first
         page = request.env['website.page'].sudo().search(published_domain, order='website_id asc', limit=1)
 
+        # redirect withtout trailing /
+        if not page and req_page.endswith("/"):  # / handled by controller
+            return request.redirect(req_page[:-1])
+
         if page:
             # prefetch all menus (it will prefetch website.page too)
             request.website.menu_id
