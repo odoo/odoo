@@ -7,6 +7,7 @@ var time = require('web.time');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
 var dom = require('web.dom');
+var utils = require('web.utils');
 
 var _t = core._t;
 
@@ -35,6 +36,12 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
             self.options = self.$target.find('form').data();
             self.readonly = self.options.readonly;
             self.selectedAnswers = self.options.selectedAnswers;
+
+            // Add Survey cookie to retrieve the survey if you quit the page and restart the survey.
+            if (!utils.get_cookie('survey_' + self.options.surveyToken)) {
+                utils.set_cookie('survey_' + self.options.surveyToken, self.options.answerToken, 60*60*24);
+            }
+
             // Init fields
             if (!self.options.isStartScreen && !self.readonly) {
                 self._initTimer();
@@ -422,6 +429,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
         var selectorsToFadeout = ['.o_survey_form_content'];
         if (options.isFinish) {
             selectorsToFadeout.push('.breadcrumb', '.o_survey_timer');
+            utils.set_cookie('survey_' + self.options.surveyToken, '', -1);  // delete cookie
         }
         self.$(selectorsToFadeout.join(',')).fadeOut(this.fadeInOutDelay, function () {
             resolveFadeOut();
