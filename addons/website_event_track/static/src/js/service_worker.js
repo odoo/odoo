@@ -225,7 +225,7 @@ const matchCache = async (request) => {
  * @param {FetchEvent} param0
  * @returns {Promise<Response>}
  */
-const processFetchEvent = async ({ request }) => {
+const processFetchRequest = async ({ request }) => {
     const requestCopy = request.clone();
     let response;
     try {
@@ -288,11 +288,17 @@ const processPendingRequests = async () => {
  */
 const prefetchUrls = async (urls = []) => {
     const cache = await caches.open(cacheName);
-    let urlsToCache = new Set(urls);
-    for (let url of urlsToCache) {
-        (await cache.match(url)) ? urlsToCache.delete(url) : undefined;
+    const uniqUrls = new Set(urls);
+    for (let url of uniqUrls) {
+        if (await cache.match(url)) {
+            continue;
+        }
+        try {
+            await processFetchRequest({ request: new Request(url) });
+        } catch (error) {
+            console.error(`fail to prefetch ${url} : ${error}`);
+        }
     }
-    return cache.addAll([...urlsToCache]);
 };
 
 /**
@@ -327,7 +333,7 @@ const processMessage = (data) => {
 };
 
 self.addEventListener("fetch", (event) => {
-    event.respondWith(processFetchEvent(event));
+    event.respondWith(processFetchRequest(event));
 });
 
 self.addEventListener("sync", (event) => {
