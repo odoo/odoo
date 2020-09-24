@@ -22,6 +22,7 @@
         font-weight: bold;
         vertical-align: top;
         width: 30%;
+        text-align: left;
     }
     .device-status {
         margin: 6px 0;
@@ -91,7 +92,7 @@
         </tr>
         <tr>
             <td class="heading">Version</td>
-            <td>V19.07 <a class="btn btn-sm float-right" href='/hw_proxy/upgrade/'>update</a></td>
+            <td> {{ version }} <a class="btn btn-sm float-right" href='/hw_proxy/upgrade/'>update</a></td>
         </tr>
         <tr>
             <td class="heading">IP Address</td>
@@ -138,5 +139,8 @@
         <a class="btn" href='/point_of_sale/display'>POS Display</a>
         <a class="btn" style="margin-left: 10px;" href='/remote_connect'>Remote Debug</a>
         <a target="_blank" class="btn" style="margin-left: 10px;" href="http://{{ ip }}:631">Printers server</a>
+        {% if server_status != "Not Configured" %}
+        <a class="btn" style="margin-left: 10px;" href='/list_credential'>Credential</a>
+        {% endif %}
     </div>
 {% endblock %}

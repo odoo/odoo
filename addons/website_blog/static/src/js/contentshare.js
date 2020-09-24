@@ -27,8 +27,10 @@
                     // Shorten the selected text to match the tweet max length
                     // Note: all (non-localhost) urls in a tweet have 23 characters https://support.twitter.com/articles/78124
                     var selectedText = this.getSelection('string').substring(0, option.maxLength - baseLength - 23);
-                    var text = encodeURIComponent(_.str.sprintf(tweet, selectedText, window.location.href));
-                    popover_content += '<a onclick="window.open(\''+option.shareLink+text+'\',\'_'+option.target+'\',\'location=yes,height=570,width=520,scrollbars=yes,status=yes\')"><i class="ml4 mr4 fa fa-twitter fa-lg"/></a>';
+                    var text = btoa(encodeURIComponent(_.str.sprintf(tweet, selectedText, window.location.href)));
+                    popover_content += _.str.sprintf(
+                        "<a onclick=\"window.open('%s' + atob('%s'), '_%s','location=yes,height=570,width=520,scrollbars=yes,status=yes')\"><i class=\"ml4 mr4 fa fa-twitter fa-lg\"/></a>",
+                        option.shareLink, text, option.target);
                 }
                 return popover_content;
             },
@@ -43,10 +45,14 @@
             },
             getSelection : function(share) {
                 if(window.getSelection){
+                    var selection = window.getSelection();
+                    if (!selection || selection.rangeCount === 0) {
+                        return "";
+                    }
                     if (share === 'string') {
-                        return String(window.getSelection().getRangeAt(0)).replace(/\s{2,}/g, ' ');
+                        return String(selection.getRangeAt(0)).replace(/\s{2,}/g, ' ');
                     } else {
-                        return window.getSelection().getRangeAt(0);
+                        return selection.getRangeAt(0);
                     }
                 }
                 else if(document.selection){
@@ -86,7 +92,7 @@
         });
         $.fn.share.init(this);
     };
-    
+
     $.fn.share.defaults = {
         shareLink : "http://twitter.com/intent/tweet?text=",
         minLength  : 5,

@@ -79,11 +79,20 @@
         <xpath expr="//div[@id='picking_info']" position="after">
             <div t-if="i.carrier_tracking_ref">
                 Tracking: <span t-field="i.carrier_id.name"/>
-                <t t-if="i.carrier_tracking_url">
-                    <a t-att-href="i.carrier_tracking_url" target="_blank"><span t-field="i.carrier_tracking_ref"/></a>
+                <t t-set="multiple_carrier_tracking" t-value="i.get_multiple_carrier_tracking()"/>
+                <t t-if="multiple_carrier_tracking">
+                     <t t-foreach="multiple_carrier_tracking" t-as="line">
+                         <a t-att-href="line[1]" target="_blank"><span t-esc="line[0]"/></a>
+                         <span t-if="not line_last"> + </span>
+                     </t>
                 </t>
                 <t t-else="">
-                    <span t-field="i.carrier_tracking_ref"/>
+                    <t t-if="i.carrier_tracking_url">
+                        <a t-att-href="i.carrier_tracking_url" target="_blank"><span t-field="i.carrier_tracking_ref"/></a>
+                    </t>
+                    <t t-else="">
+                        <span t-field="i.carrier_tracking_ref"/>
+                    </t>
                 </t>
             </div>
         </xpath>

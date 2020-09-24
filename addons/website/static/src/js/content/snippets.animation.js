@@ -1044,6 +1044,7 @@ registry.facebookPage = Animation.extend({
         var src = $.param.querystring('https://www.facebook.com/plugins/page.php', params);
         this.$iframe = $('<iframe/>', {
             src: src,
+            class: 'o_temp_auto_element',
             width: params.width,
             height: params.height,
             css: {

@@ -317,6 +317,10 @@ class Department(models.Model):
     note = fields.Text('Note')
     color = fields.Integer('Color Index')
 
+    @api.model
+    def name_create(self, name):
+        return self.create({'name': name}).name_get()[0]
+
     @api.depends('name', 'parent_id.complete_name')
     def _compute_complete_name(self):
         for department in self:

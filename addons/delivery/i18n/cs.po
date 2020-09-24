@@ -7,7 +7,8 @@
 # Ladislav Tomm <tomm@helemik.cz>, 2018
 # Jan Horzinka <jan.horzinka@centrum.cz>, 2018
 # Michal Veselý <michal@veselyberanek.net>, 2018
-# trendspotter <j.podhorecky@volny.cz>, 2019
+# trendspotter <j.podhorecky@volny.cz>, 2020
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2020
 # 
 msgid ""
 msgstr ""
@@ -15,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-14 07:34+0000\n"
 "PO-Revision-Date: 2018-08-24 09:17+0000\n"
-"Last-Translator: trendspotter <j.podhorecky@volny.cz>, 2019\n"
+"Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2020\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -45,7 +46,14 @@ msgid ""
 "            Your tracking reference is\n"
 "            <strong>\n"
 "            %if object.carrier_tracking_url:\n"
-"                <a href=\"${object.carrier_tracking_url}\" target=\"_blank\">${object.carrier_tracking_ref}</a>.\n"
+"                % set multiple_carrier_tracking = object.get_multiple_carrier_tracking()\n"
+"                %if multiple_carrier_tracking:\n"
+"                    % for line in multiple_carrier_tracking:\n"
+"                        <br/><a href=\"${line[1]}\" target=\"_blank\">${line[0]}</a>\n"
+"                    % endfor\n"
+"                %else:\n"
+"                    <a href=\"${object.carrier_tracking_url}\" target=\"_blank\">${object.carrier_tracking_ref}</a>.\n"
+"                %endif\n"
 "            %else:\n"
 "                ${object.carrier_tracking_ref}.\n"
 "            %endif\n"
@@ -375,6 +383,8 @@ msgstr "Odhadovaná dodací cena"
 #: model:ir.model.fields,help:delivery.field_sale_order__carrier_id
 msgid "Fill this field if you plan to invoice the shipping based on picking."
 msgstr ""
+"Vyplňte toto pole, pokud máte v úmyslu fakturovat přepravu na základě "
+"vyzvednutí."
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -401,7 +411,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__free_over
 msgid "Free if order amount is above"
-msgstr ""
+msgstr "Zdarma, pokud je objednávka vyšší"
 
 #. module: delivery
 #: selection:delivery.carrier,integration_level:0
@@ -441,6 +451,8 @@ msgid ""
 "If the order total amount (shipping excluded) is above or equal to this "
 "value, the customer benefits from a free shipping"
 msgstr ""
+"Pokud je celková částka objednávky (bez dopravy) vyšší nebo rovna této "
+"hodnotě, zákazník má benefit z bezplatné dopravy"
 
 #. module: delivery
 #: code:addons/delivery/models/delivery_carrier.py:126
@@ -600,14 +612,14 @@ msgid "Package Code"
 msgstr ""
 
 #. module: delivery
-#: code:addons/delivery/models/stock_picking.py:35
-#: code:addons/delivery/models/stock_picking.py:122
+#: code:addons/delivery/models/stock_picking.py:40
+#: code:addons/delivery/models/stock_picking.py:134
 #, python-format
 msgid "Package Details"
 msgstr ""
 
 #. module: delivery
-#: code:addons/delivery/wizard/choose_delivery_package.py:52
+#: code:addons/delivery/wizard/choose_delivery_package.py:60
 #, python-format
 msgid "Package too heavy!"
 msgstr ""
@@ -656,7 +668,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_move_line
 msgid "Product Moves (Stock Move Line)"
-msgstr ""
+msgstr "Pohyby produktu (trasa pohybu zboží)"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_product_packaging
@@ -734,9 +746,11 @@ msgstr "Číselná řada"
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__prod_environment
 msgid "Set to True if your credentials are certified for production."
 msgstr ""
+"Pokud jsou vaše přihlašovací údaje certifikovány pro výrobu, nastavte na "
+"true."
 
 #. module: delivery
-#: code:addons/delivery/models/stock_picking.py:171
+#: code:addons/delivery/models/stock_picking.py:184
 #, python-format
 msgid ""
 "Shipment sent to carrier %s for shipping with tracking number %s<br/>Cost: "
@@ -752,7 +766,7 @@ msgstr "Cena dopravy"
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_package__shipping_weight
 #: model:ir.model.fields,field_description:delivery.field_stock_quant_package__shipping_weight
 msgid "Shipping Weight"
-msgstr ""
+msgstr "Přepravní váha"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_package_barcode_delivery
@@ -799,7 +813,7 @@ msgid "The Poste"
 msgstr ""
 
 #. module: delivery
-#: code:addons/delivery/wizard/choose_delivery_package.py:53
+#: code:addons/delivery/wizard/choose_delivery_package.py:61
 #, python-format
 msgid ""
 "The weight of your package is higher than the maximum weight authorized for "
@@ -821,6 +835,9 @@ msgid ""
 "                according to your settings; on the sales order (based on the\n"
 "                quotation) or the invoice (based on the delivery orders)."
 msgstr ""
+"Tyto metody umožňují automaticky vypočítat cenu za dodání\n"
+"podle vašich nastavení; na prodejní objednávce (na základě\n"
+"nabídky) nebo faktury (na základě dodacích objednávek)."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_res_partner__property_delivery_carrier_id
@@ -831,7 +848,7 @@ msgstr "Způsob dodání bude použit při fakturaci z naskladnění."
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__margin
 msgid "This percentage will be added to the shipping price."
-msgstr ""
+msgstr "Toto procento bude připočteno k přepravní ceně."
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_tracking_url_warning_form
@@ -948,7 +965,7 @@ msgid "Width must be positive"
 msgstr "Šířka musí být kladné číslo"
 
 #. module: delivery
-#: code:addons/delivery/models/stock_picking.py:222
+#: code:addons/delivery/models/stock_picking.py:236
 #, python-format
 msgid ""
 "You are shipping different packaging types in the same shipment.\n"
@@ -967,12 +984,14 @@ msgid "You have multiple tracker links, they are available in the chatter."
 msgstr ""
 
 #. module: delivery
-#: code:addons/delivery/models/stock_picking.py:185
+#: code:addons/delivery/models/stock_picking.py:199
 #, python-format
 msgid ""
 "Your delivery method has no redirect on courier provider's website to track "
 "this order."
 msgstr ""
+"Váš způsob doručení nemá přesměrování na webu kurýrního poskytovatele, který"
+" by sledoval tuto objednávku."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__zip_from

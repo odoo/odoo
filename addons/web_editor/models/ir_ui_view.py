@@ -71,7 +71,9 @@ class IrUiView(models.Model):
         arch = etree.Element('data')
         xpath = etree.Element('xpath', expr="//*[hasclass('oe_structure')][@id='{}']".format(el.get('id')), position="replace")
         arch.append(xpath)
-        structure = etree.Element(el.tag, attrib=el.attrib)
+        attributes = {k: v for k, v in el.attrib.items() if k not in EDITING_ATTRIBUTES}
+        structure = etree.Element(el.tag, attrib=attributes)
+        structure.text = el.text
         xpath.append(structure)
         for child in el.iterchildren(tag=etree.Element):
             structure.append(copy.deepcopy(child))
@@ -138,11 +140,6 @@ class IrUiView(models.Model):
         # Note: after a standard edition, the tail *must not* be replaced
         if replace_tail:
             root.tail = replacement.tail
-        # update attributes
-        root.attrib.clear()
-        root.attrib.update(replacement.attrib)
-        for attribute in EDITING_ATTRIBUTES:
-            root.attrib.pop(attribute, None)
         # replace all children
         del root[:]
         for child in replacement:
@@ -228,7 +225,7 @@ class IrUiView(models.Model):
     # Used by translation mechanism, SEO and optional templates
 
     @api.model
-    def _views_get(self, view_id, options=True, bundles=False, root=True):
+    def _views_get(self, view_id, options=True, bundles=False, root=True, visited=None):
         """ For a given view ``view_id``, should return:
                 * the view itself
                 * all views inheriting from it, enabled or not
@@ -242,6 +239,8 @@ class IrUiView(models.Model):
             _logger.warning("Could not find view object with view_id '%s'", view_id)
             return self.env['ir.ui.view']
 
+        if visited is None:
+            visited = []
         while root and view.inherit_id:
             view = view.inherit_id
 
@@ -256,8 +255,8 @@ class IrUiView(models.Model):
                 called_view = self._view_obj(child.get('t-call', child.get('t-call-assets')))
             except ValueError:
                 continue
-            if called_view and called_view not in views_to_return:
-                views_to_return += self._views_get(called_view, options=options, bundles=bundles)
+            if called_view and called_view not in views_to_return and called_view.id not in visited:
+                views_to_return += self._views_get(called_view, options=options, bundles=bundles, visited=visited + views_to_return.ids)
 
         if not options:
             return views_to_return
@@ -267,9 +266,10 @@ class IrUiView(models.Model):
         # Keep options in a deterministic order regardless of their applicability
         for extension in extensions.sorted(key=lambda v: v.id):
             # only return optional grandchildren if this child is enabled
-            for ext_view in self._views_get(extension, options=extension.active, root=False):
-                if ext_view not in views_to_return:
-                    views_to_return += ext_view
+            if extension.id not in visited:
+                for ext_view in self._views_get(extension, options=extension.active, root=False, visited=visited + views_to_return.ids):
+                    if ext_view not in views_to_return:
+                        views_to_return += ext_view
         return views_to_return
 
     @api.model

@@ -29,14 +29,16 @@
             <tr><td>{{ driver }}</td></tr>
         {%- endfor %}
     </table>
-    <div style="margin-top: 20px;" class="text-center">
-        <a id="load_driver_btn" class="btn" href='/load_drivers'>Load drivers</a>
-    </div>
-    <div class="text-center font-small" style="margin: 10px auto;">
-        You can clear the drivers configuration
-        <form style="display: inline-block;margin-left: 4px;" action='/drivers_clear'>
-            <input class="btn btn-sm" type="submit" value="Clear"/>
-        </form>
-    </div>
+    {% if server %}
+        <div style="margin-top: 20px;" class="text-center">
+            <a id="load_driver_btn" class="btn" href='/load_drivers'>Load drivers</a>
+        </div>
+        <div class="text-center font-small" style="margin: 10px auto;">
+            You can clear the drivers configuration
+            <form style="display: inline-block;margin-left: 4px;" action='/drivers_clear'>
+                <input class="btn btn-sm" type="submit" value="Clear"/>
+            </form>
+        </div>
+    {% endif %}
     {{ loading_block_ui('Loading Drivers') }}
 {% endblock %}

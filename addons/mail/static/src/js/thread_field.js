@@ -20,16 +20,11 @@ var ThreadField = AbstractField.extend({
      */
     init: function () {
         this._super.apply(this, arguments);
+        this._isMessagingReady = this.call('mail_service', 'isReady');
         // Used to automatically mark document thread as read at the moment we
         // access the document and render the thread.
         this._markAsReadOnNextRender = false;
         this._setDocumentThread();
-    },
-    /**
-     * @override
-     */
-    willStart: function () {
-        return this.alive(this.call('mail_service', 'isReady'));
     },
     /**
      * @override
@@ -113,7 +108,9 @@ var ThreadField = AbstractField.extend({
      */
     _fetchAndRenderThread: function (options) {
         var self = this;
-        if (!this._documentThread) {
+        if (!this._isMessagingReady) {
+            return Promise.resolve();
+        } else if (!this._documentThread) {
             var thread = new CreateModeDocumentThread();
             options = { isCreateMode: true };
             self._threadWidget.render(thread, options);
@@ -159,6 +156,9 @@ var ThreadField = AbstractField.extend({
      * If it is a new document in create mode, unset the document thread.
      */
     _setDocumentThread: function () {
+        if (!this._isMessagingReady) {
+            return;
+        }
         var params = {
             messageIDs: this.value.res_ids,
             name: this.recordData.display_name,

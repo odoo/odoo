@@ -14,7 +14,10 @@
 # Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2018
 # nle_odoo, 2018
 # Tim Siu Lai <tl@roomsfor.hk>, 2019
-# Yoshi Tashiro <tashiro@roomsfor.hk>, 2019
+# 江口 和志 <k_eguchi@enzantrades.co.jp>, 2020
+# Konno Takatsugu <konno@token-express.com>, 2020
+# Hau Dao <hau@quartile.co>, 2020
+# Yoshi Tashiro <tashiro@roomsfor.hk>, 2020
 # 
 msgid ""
 msgstr ""
@@ -22,7 +25,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-14 07:34+0000\n"
 "PO-Revision-Date: 2018-08-24 09:20+0000\n"
-"Last-Translator: Yoshi Tashiro <tashiro@roomsfor.hk>, 2019\n"
+"Last-Translator: Yoshi Tashiro <tashiro@roomsfor.hk>, 2020\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -912,7 +915,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_view_form
 msgid "Auto Subscribe Groups"
-msgstr ""
+msgstr "自動購読グループ"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__group_ids
@@ -1382,7 +1385,7 @@ msgstr ""
 #: code:addons/mail/models/mail_thread.py:400
 #, python-format
 msgid "Create a new %(document)s"
-msgstr ""
+msgstr "新しい%(document)sを作成しましょう"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:392
@@ -1735,7 +1738,7 @@ msgstr "電子メールのコピーを文書の通信履歴に残さないでく
 #: code:addons/mail/static/src/js/chatter.js:498
 #, python-format
 msgid "Do you really want to delete %s?"
-msgstr ""
+msgstr "%s を本当に削除しますか？"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_document_file_kanban
@@ -3074,7 +3077,7 @@ msgstr "既存のmail.messageを知らせるメールが作成されました"
 #: model:ir.cron,cron_name:mail.ir_cron_mail_scheduler_action
 #: model:ir.cron,name:mail.ir_cron_mail_scheduler_action
 msgid "Mail: Email Queue Manager"
-msgstr ""
+msgstr "メール: Eメールキューマネジャー"
 
 #. module: mail
 #: model:ir.actions.server,name:mail.ir_cron_mail_notify_channel_moderators_ir_actions_server
@@ -3110,7 +3113,7 @@ msgstr "主な添付"
 #: code:addons/mail/static/src/xml/thread.xml:9
 #, python-format
 msgid "Manage Messages"
-msgstr ""
+msgstr "メッセージ管理"
 
 #. module: mail
 #. openerp-web
@@ -5019,6 +5022,10 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
+"活動に基づく状態\n"
+"延滞：期限は既に過ぎました\n"
+"当日：活動日は本日です\n"
+"予定：将来の活動。"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview__sub_model_object_field
@@ -5414,7 +5421,7 @@ msgstr ""
 #: code:addons/mail/models/mail_thread.py:2207
 #, python-format
 msgid "Unable to log message, please configure the sender's email address."
-msgstr ""
+msgstr "メッセージを記録することができませんでした。送信者のEメールアドレス設定を確認してください。"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:2172
@@ -5678,7 +5685,7 @@ msgstr ""
 #: code:addons/mail/models/mail_thread.py:752
 #, python-format
 msgid "View %s"
-msgstr ""
+msgstr "%sを見る"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_actions_act_window_view__view_mode
@@ -5861,7 +5868,7 @@ msgstr ""
 #, python-format
 msgid ""
 "You can mark any message as 'starred', and it shows up in this mailbox."
-msgstr ""
+msgstr "メッセージに「スター」のマークを付けると、この受信箱に表示されます。"
 
 #. module: mail
 #: code:addons/mail/models/res_users.py:87
@@ -5882,6 +5889,14 @@ msgid ""
 msgstr "グループ全体が他のモジュールで必要とされるため、これらのグループを削除することはできません。"
 
 #. module: mail
+#: code:addons/mail/models/mail_alias.py:89
+#, python-format
+msgid ""
+"You cannot use anything else than unaccented latin characters in the alias "
+"address."
+msgstr ""
+
+#. module: mail
 #: code:addons/mail/models/mail_channel.py:257
 #, python-format
 msgid ""
@@ -5893,7 +5908,7 @@ msgstr ""
 #: code:addons/mail/models/mail_thread.py:2365
 #, python-format
 msgid "You have been assigned to %s"
-msgstr ""
+msgstr "%sに割り当てられました"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_user_assigned
@@ -5998,12 +6013,12 @@ msgstr ""
 #. module: mail
 #: selection:mail.activity.type,delay_from:0
 msgid "after previous activity deadline"
-msgstr ""
+msgstr "前活動期日後"
 
 #. module: mail
 #: selection:mail.activity.type,delay_from:0
 msgid "after validation date"
-msgstr ""
+msgstr "検証日後"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:1074

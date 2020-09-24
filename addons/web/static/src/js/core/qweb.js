@@ -48,7 +48,7 @@ function preprocess_node() {
             break;
         case Node.ELEMENT_NODE:
             // Element
-            var attr, attrs = ['label', 'title', 'alt', 'placeholder'];
+            var attr, attrs = ['label', 'title', 'alt', 'placeholder', 'aria-label'];
             while ((attr = attrs.pop())) {
                 if (this.attributes[attr]) {
                     this.attributes[attr] = _t(this.attributes[attr]);

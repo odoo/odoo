@@ -23,15 +23,15 @@ Tour.register('bank_statement_reconciliation', {
         {
             content: "open the last line in match mode to test the partial reconciliation",
             extra_trigger: '.o_reconciliation_line:first[data-mode="match"]',
-            trigger: '.o_reconciliation_line:last .cell_label:contains("First")'
+            trigger: '.o_reconciliation_line .cell_label:contains("First 2000 $ of"):contains("/0001"):last'
         },
         {
             content: "click on partial reconcile",
-            trigger: '.o_reconciliation_line:last .accounting_view .do_partial_reconcile_true'
+            trigger: '.o_reconciliation_line:contains("First 2000 $ of"):contains("/0001"):last .accounting_view .do_partial_reconcile_true'
         },
         {
             content: "reconcile the line",
-            trigger: '.o_reconciliation_line:last .o_reconcile:visible',
+            trigger: '.o_reconciliation_line:contains("First 2000 $ of"):contains("/0001"):last .o_reconcile:visible',
         },
 
         // Reconciliation of 'Prepayment'
@@ -81,12 +81,6 @@ Tour.register('bank_statement_reconciliation', {
         {
             content: "reconcile the line with the write-off",
             trigger: '.o_reconciliation_line:nth-child(2) .o_reconcile:visible',
-        },
-
-        // Be done
-        {
-            content: "check the number off validate lines",
-            trigger: '.o_reconciliation .progress-text:contains(3 / 5)'
         },
     ]
 );

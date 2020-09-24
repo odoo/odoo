@@ -236,7 +236,7 @@ class IrTranslation(models.Model):
         '''
         for record in self:
             record.source = record.src
-            if record.type != 'model':
+            if record.type != 'model' or not record.name:
                 continue
             model_name, field_name = record.name.split(',')
             if model_name not in self.env:
@@ -752,7 +752,7 @@ class IrTranslation(models.Model):
             self.insert_missing(fld, rec)
 
         action = {
-            'name': 'Translate',
+            'name': _('Translate'),
             'res_model': 'ir.translation',
             'type': 'ir.actions.act_window',
             'view_mode': 'tree',

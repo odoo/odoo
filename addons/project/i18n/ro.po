@@ -6,6 +6,8 @@
 # Martin Trigaux, 2018
 # Cozmin Candea <office@terrabit.ro>, 2018
 # Dorin Hongu <dhongu@gmail.com>, 2019
+# Hongu Cosmin <cosmin513@gmail.com>, 2020
+# Foldi Robert <foldirobert@nexterp.ro>, 2020
 # 
 msgid ""
 msgstr ""
@@ -13,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-09 10:31+0000\n"
 "PO-Revision-Date: 2018-08-24 09:23+0000\n"
-"Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2019\n"
+"Last-Translator: Foldi Robert <foldirobert@nexterp.ro>, 2020\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,7 +26,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__delay_endings_days
 msgid "# Days to Deadline"
-msgstr ""
+msgstr "# Zile până la termen"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_partner__task_count
@@ -34,12 +36,12 @@ msgstr "# Sarcini"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__working_days_open
 msgid "# Working Days to Assign"
-msgstr ""
+msgstr "# Zile lucrătoare de atribuit"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__working_days_close
 msgid "# Working Days to Close"
-msgstr ""
+msgstr "# Zile lucrătoare până la închidere"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__nbr
@@ -49,12 +51,12 @@ msgstr "# de Sarcini"
 #. module: project
 #: model:mail.template,subject:project.rating_project_request_email_template
 msgid "${object.project_id.company_id.name}: Satisfaction Survey"
-msgstr ""
+msgstr "${object.project_id.company_id.name}: Sondaj Satisfacție"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "% On"
-msgstr ""
+msgstr "% On"
 
 #. module: project
 #: code:addons/project/models/project.py:302
@@ -78,6 +80,8 @@ msgid ""
 "<b>Assign the task</b> to someone. <i>You can create and invite a new user "
 "on the fly.</i>"
 msgstr ""
+"<b>Atribuie sarcina</b> către cineva. <i>Puteți crea și invita un utilizator"
+" nou din mers.</i>"
 
 #. module: project
 #. openerp-web
@@ -85,13 +89,14 @@ msgstr ""
 #, python-format
 msgid "<b>Click the save button</b> to apply your changes to the task."
 msgstr ""
+"<b>Clickpe butonul de salvare</b> pentru a aplica modificările la sarcină."
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/tour.js:71
 #, python-format
 msgid "<b>Star tasks</b> to mark team priorities."
-msgstr ""
+msgstr "<b>Înstelați sarcinile</b> pentru a marca prioritățile echipei."
 
 #. module: project
 #: model:mail.template,body_html:project.rating_project_request_email_template
@@ -171,7 +176,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.rating_index
 msgid "<i class=\"fa fa-arrow-circle-right \"/> See the feedbacks"
-msgstr ""
+msgstr "<i class=\"fa fa-arrow-circle-right \"/> Consultați feedback-urile"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.rating_index
@@ -181,7 +186,7 @@ msgstr "<i class=\"fa fa-calendar\"/> Dată sfârșit :"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "<i class=\"fa fa-comments\" role=\"img\" aria-label=\"Unread Messages\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-comments\" role=\"img\" aria-label=\"Unread Messages\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -194,6 +199,8 @@ msgid ""
 "<i class=\"fa fa-envelope\" role=\"img\" aria-label=\"Domain Alias\" "
 "title=\"Domain Alias\"/>"
 msgstr ""
+"<i class=\"fa fa-envelope\" role=\"img\" aria-label=\"Domain Alias\" "
+"title=\"Domain Alias\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.rating_index
@@ -206,6 +213,8 @@ msgid ""
 "<i class=\"fa fa-smile-o\" role=\"img\" aria-label=\"Percentage of "
 "satisfaction\" title=\"Percentage of satisfaction\"/>"
 msgstr ""
+"<i class=\"fa fa-smile-o\" role=\"img\" aria-label=\"Percentage of "
+"satisfaction\" title=\"Percentage of satisfaction\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -230,13 +239,15 @@ msgid ""
 "<p class=\"o_view_nocontent_smiling_face\">\n"
 "                    Create a new project</p>"
 msgstr ""
+"<p class=\"o_view_nocontent_smiling_face\">\n"
+"                    Creare proiect nou</p>"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/tour.js:66
 #, python-format
 msgid "<p>Once your task is ready, you can save it.</p>"
-msgstr ""
+msgstr "<p>După ce sarcina dvs. este gata, o puteți salva.</p>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_project
@@ -246,17 +257,17 @@ msgstr "<small class=\"text-muted\">Proiect - </small>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<small class=\"text-right\">Status:</small>"
-msgstr ""
+msgstr "<small class=\"text-right\">Stare:</small>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_project
 msgid "<span class=\"fa fa-tasks\" role=\"img\" aria-label=\"Tasks\" title=\"Tasks\"/>"
-msgstr ""
+msgstr "<span class=\"fa fa-tasks\" role=\"img\" aria-label=\"Tasks\" title=\"Tasks\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<strong class=\"d-block mb-2\">Attachments</strong>"
-msgstr ""
+msgstr "<strong class=\"d-block mb-2\">Fișiere Atașate</strong>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -266,7 +277,7 @@ msgstr "<strong class=\"d-block mb-2\">Descriere</strong>"
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_0
 msgid "<strong style=\"font-size: 16px;\">Try the mail gateway</strong>"
-msgstr ""
+msgstr "<strong style=\"font-size: 16px;\">Încearcă Mail Gateway</strong>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -296,7 +307,7 @@ msgstr "<strong>Proiect:</strong>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_popover
 msgid "<strong>Rated by: </strong>"
-msgstr ""
+msgstr "<strong>Evaluat de:</strong>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -365,6 +376,8 @@ msgid ""
 "Add columns to configure <b>stages for your tasks</b>.<br/><i>e.g. New - In "
 "Progress - Done</i>"
 msgstr ""
+"Adăugare coloane pentru configurare <b>stadii pentru sarcinile "
+"tale</b>.<br/><i>de exemplu. Nou - în Desfășurare - fFnalizat</i>"
 
 #. module: project
 #: model:project.task.type,name:project.project_stage_data_2
@@ -430,7 +443,7 @@ msgstr "Arhivat"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Assign to Me"
-msgstr ""
+msgstr "Atribuire Mie"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__date_start
@@ -487,7 +500,7 @@ msgstr "Număr atașamente"
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__attachment_ids
 msgid "Attachment that don't come from message."
-msgstr ""
+msgstr "Atașament care nu provine din mesaj."
 
 #. module: project
 #: code:addons/project/models/project.py:114
@@ -498,7 +511,7 @@ msgstr "Atașamente"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__auto_validation_kanban_state
 msgid "Automatic kanban status"
-msgstr ""
+msgstr "Stare automată kanban"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_type__auto_validation_kanban_state
@@ -507,6 +520,9 @@ msgid ""
 " * A good feedback from the customer will update the kanban state to 'ready for the new stage' (green bullet).\n"
 " * A medium or a bad feedback will set the kanban state to 'blocked' (red bullet).\n"
 msgstr ""
+"Modificați automat starea kanban atunci când clientul răspunde la feedback pentru acest stadiu.\n"
+" * Un feedback bun din partea clienților va actualiza starea kanban pentru a fi „gata pentru un nou stadiu” (buletinul verde).\n"
+" * Un mesaj mediu sau un feedback necorespunzător va seta starea de kanban pe „blocat” (glonț roșu).\n"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_progressbar
@@ -519,7 +535,7 @@ msgstr "Medie"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:35
 #, python-format
 msgid "Backlog"
-msgstr ""
+msgstr "Comenzi Nerezolvate"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_progressbar
@@ -564,7 +580,7 @@ msgstr "Blocat(ă)"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:61
 #, python-format
 msgid "Brainstorm"
-msgstr ""
+msgstr "Furtună de Idei"
 
 #. module: project
 #: model:project.task,legend_done:project.project_task_10
@@ -598,18 +614,20 @@ msgid ""
 "Choose a <b>project name</b>. (e.g. Website Launch, Product Development, "
 "Office Party, etc.)"
 msgstr ""
+"Alege un <b>nume de proiect</b>. (de exemplu, Lansare Site Web, Dezvoltare "
+"Produse, Office Party etc."
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/tour.js:61
 #, python-format
 msgid "Choose a <b>task name</b>. (e.g. Website Design, Purchase Goods etc.)"
-msgstr ""
+msgstr "Choose a <b>task name</b>. (e.g. Website Design, Purchase Goods etc.)"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified
 msgid "Choose a Project Email"
-msgstr ""
+msgstr "Alegeți un e-mail al proiectului"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__subtask_project_id
@@ -644,6 +662,8 @@ msgid ""
 "Click on the card to write more information about it and collaborate with "
 "your coworkers."
 msgstr ""
+"Faceți clic pe card pentru a scrie mai multe informații despre aceasta și "
+"pentru a colabora cu colegii de serviciu."
 
 #. module: project
 #. openerp-web
@@ -684,6 +704,9 @@ msgid ""
 "Computed using sum of hours planned of all subtasks created from main task. "
 "Usually these hours are less or equal to the Planned Hours (of main task)."
 msgstr ""
+"Calculat folosind suma de ore planificate din toate sub sarcinile create din"
+" sarcina principală. De obicei aceste ore sunt mai mici sau egale cu Orele "
+"planificate (ale sarcinii principale)"
 
 #. module: project
 #: model:ir.model,name:project.model_res_config_settings
@@ -718,12 +741,12 @@ msgstr "Contact"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:64
 #, python-format
 msgid "Copywriting"
-msgstr ""
+msgstr "Copywriting"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__displayed_image_id
 msgid "Cover Image"
-msgstr ""
+msgstr "Imagine Copertă"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified
@@ -739,27 +762,27 @@ msgstr "- Creează un proiect"
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all_config
 msgid "Create a new project"
-msgstr ""
+msgstr "Creare Proiect Nou"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_task_type_form
 msgid "Create a new stage in the task pipeline"
-msgstr ""
+msgstr "Creați o nouă etapă în conducta de sarcini"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_tags_action
 msgid "Create a new tag"
-msgstr ""
+msgstr "Creați o etichetă nouă"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.action_view_task
 msgid "Create a new task"
-msgstr ""
+msgstr "Creare Sarcină Nouă "
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__create_date
 msgid "Created On"
-msgstr ""
+msgstr "Creat În"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__create_uid
@@ -825,13 +848,13 @@ msgstr "E-mail client"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:44
 #, python-format
 msgid "Customer Feedback"
-msgstr ""
+msgstr "Feedback Clienți"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__access_url
 #: model:ir.model.fields,help:project.field_project_task__access_url
 msgid "Customer Portal URL"
-msgstr ""
+msgstr "URL Portal Clienți"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.rating_rating_action_project_report
@@ -849,6 +872,8 @@ msgid ""
 "Customer ratings on tasks. If you have no rating, change your project "
 "Settings to activate it."
 msgstr ""
+"Evaluările clienților la sarcini. Dacă nu aveți niciun rating, modificați "
+"Setările proiectului pentru a-l activa."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_status
@@ -944,7 +969,7 @@ msgstr "Rezumat"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:38
 #, python-format
 msgid "Digital Marketing"
-msgstr ""
+msgstr "Digital Marketing"
 
 #. module: project
 #. openerp-web
@@ -968,6 +993,8 @@ msgstr "Nume afișat"
 #, python-format
 msgid "Do not have access, skip this data for user's digest email"
 msgstr ""
+"Nu aveți acces, săriți aceste date pentru e-mail-ul de digerare al "
+"utilizatorului"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -996,7 +1023,7 @@ msgstr "Ciornă"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Dropdown menu"
-msgstr ""
+msgstr "Meniul derulant"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -1014,13 +1041,15 @@ msgid ""
 "Edit project's stages and set an email template on the stages on which you "
 "want to activate the rating."
 msgstr ""
+"Editați stadiul proiectului și setați un șablon de e-mail pe etapele pe care"
+" doriți să activați ratingul."
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:39
 #, python-format
 msgid "Editing"
-msgstr ""
+msgstr "Editare"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__email_from
@@ -1052,7 +1081,7 @@ msgstr "Dată sfârșit"
 #: code:addons/project/models/project.py:631
 #, python-format
 msgid "Error! You cannot create recursive hierarchy of task(s)."
-msgstr ""
+msgstr "Eroare! Nu puteți crea o ierarhie recursivă a sarcini(lor)"
 
 #. module: project
 #: sql_constraint:project.project:0
@@ -1109,7 +1138,7 @@ msgstr ""
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:61
 #, python-format
 msgid "Final Document"
-msgstr ""
+msgstr "Document Final"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__fold
@@ -1193,17 +1222,17 @@ msgstr "Verde"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__legend_done
 msgid "Green Kanban Label"
-msgstr ""
+msgstr "Eticheta Kanban Verde"
 
 #. module: project
 #: selection:project.task,kanban_state:0
 msgid "Grey"
-msgstr ""
+msgstr "Gri"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__legend_normal
 msgid "Grey Kanban Label"
-msgstr ""
+msgstr "Eticheta Kanban Gri"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
@@ -1215,7 +1244,7 @@ msgstr "Grupează după"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_progressbar
 msgid "Happy"
-msgstr ""
+msgstr "Fericit"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__percentage_satisfaction_project
@@ -1231,7 +1260,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_partner_stat
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Happy face"
-msgstr ""
+msgstr "Față fericită"
 
 #. module: project
 #: selection:report.project.task.user,priority:0
@@ -1285,6 +1314,8 @@ msgid ""
 "ID of the parent record holding the alias (example: project holding the task"
 " creation alias)"
 msgstr ""
+"ID al înregistrării părinte care deține alias (exemplu: proiect care deține "
+"alias de creare a sarcinilor)"
 
 #. module: project
 #. openerp-web
@@ -1327,6 +1358,9 @@ msgid ""
 "stage', then an email will be sent to the customer when the task reaches "
 "this step."
 msgstr ""
+"Dacă este setat și dacă configurația de evaluare a proiectului este "
+"„Evaluare la schimbarea etapei”, atunci un e-mail va fi trimis clientului "
+"atunci când sarcina atinge acest pas."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__active
@@ -1390,7 +1424,7 @@ msgstr "În desfășurare"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:45
 #, python-format
 msgid "In development"
-msgstr ""
+msgstr "în dezvoltare"
 
 #. module: project
 #. openerp-web
@@ -1406,6 +1440,9 @@ msgid ""
 "automatically synchronized with Tasks (or optionally Issues if the Issue "
 "Tracker module is installed)."
 msgstr ""
+"E-mail intern asociat cu acest proiect. E-mailurile primite sunt "
+"sincronizate automat cu Sarcini (sau opțional Probleme dacă este instalat "
+"modulul Tracker Issue)."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__message_is_follower
@@ -1424,16 +1461,19 @@ msgid ""
 "It is the time planned to achieve the task. If this document has sub-tasks, "
 "it means the time needed to achieve this tasks and its childs."
 msgstr ""
+"Este timpul planificat pentru realizarea sarcinii. Dacă acest document are "
+"sub-sarcini, înseamnă timpul necesar pentru realizarea acestor sarcini și a "
+"copiilor săi."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__legend_blocked
 msgid "Kanban Blocked Explanation"
-msgstr ""
+msgstr "Explicație Blocată Kanban"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__legend_normal
 msgid "Kanban Ongoing Explanation"
-msgstr ""
+msgstr "Explicație Kanban în curs"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__kanban_state
@@ -1444,12 +1484,12 @@ msgstr "Starea Kanban"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__kanban_state_label
 msgid "Kanban State Label"
-msgstr ""
+msgstr "Stare Etichetă Kanban"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__legend_done
 msgid "Kanban Valid Explanation"
-msgstr ""
+msgstr "Explicație Valabilă Kanban"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_digest_digest__kpi_project_task_opened_value
@@ -1491,7 +1531,7 @@ msgstr "Ultima etapă actualizată"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__write_date
 msgid "Last Updated On"
-msgstr ""
+msgstr "Ultima Actualizare În"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__write_uid
@@ -1545,7 +1585,7 @@ msgstr "Creați primul proiect"
 #: code:addons/project/static/src/js/tour.js:55
 #, python-format
 msgid "Let's create your first task."
-msgstr ""
+msgstr "Să creăm prima ta sarcină."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -1553,32 +1593,35 @@ msgid ""
 "Lets the company customize which Pad installation should be used to link to "
 "new pads (for example: http://etherpad.com/)."
 msgstr ""
+"Permite companiei să personalizeze instalarea Tabelul trebuie să fie folosit"
+" pentru o față legătura cu tampoane de noile (de exemplu: "
+"http://etherpad.com/)."
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:64
 #, python-format
 msgid "Live"
-msgstr ""
+msgstr "Live"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Log time on tasks"
-msgstr ""
+msgstr "Jurnal de timp pe sarcini"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:67
 #, python-format
 msgid "Logo Design"
-msgstr ""
+msgstr "Desing Logo"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:51
 #, python-format
 msgid "Long Term"
-msgstr ""
+msgstr "Termen Lung"
 
 #. module: project
 #: selection:project.task,priority:0
@@ -1590,12 +1633,12 @@ msgstr "Scăzut"
 #: model:ir.model.fields,field_description:project.field_project_project__message_main_attachment_id
 #: model:ir.model.fields,field_description:project.field_project_task__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
+msgstr "Atașament principal"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__attachment_ids
 msgid "Main Attachments"
-msgstr ""
+msgstr "Atașamente Principale"
 
 #. module: project
 #: model:res.groups,name:project.group_project_manager
@@ -1611,7 +1654,7 @@ msgstr "Membri"
 #: model:ir.model.fields,field_description:project.field_project_project__message_has_error
 #: model:ir.model.fields,field_description:project.field_project_task__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "Eroare livrare mesaj"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__message_ids
@@ -1671,7 +1714,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_partner_stat
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Neutral face"
-msgstr ""
+msgstr "Fața neutră"
 
 #. module: project
 #. openerp-web
@@ -1687,14 +1730,14 @@ msgstr "Nou(ă)"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:67
 #, python-format
 msgid "New Orders"
-msgstr ""
+msgstr "Comenzi noi"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:58
 #, python-format
 msgid "New Projects"
-msgstr ""
+msgstr "Proiecte Noi"
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_0
@@ -1702,6 +1745,8 @@ msgid ""
 "New tasks can be generated from incoming emails. You just need to set email "
 "aliases on your projects.<br>"
 msgstr ""
+"Noi sarcini pot fi generate din e-mailurile primite. Trebuie doar să setați "
+"aliasuri de e-mail pe proiectele dvs.<br>"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:41
@@ -1718,7 +1763,7 @@ msgstr "Următoarele activități"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr ""
+msgstr "Data limită pentru următoarea activitate"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__activity_summary
@@ -1740,12 +1785,12 @@ msgstr "Fără subiect"
 #: model_terms:ir.actions.act_window,help:project.rating_rating_action_project_report
 #: model_terms:ir.actions.act_window,help:project.rating_rating_action_task
 msgid "No customer ratings yet"
-msgstr ""
+msgstr "Nu există încă evaluări ale clienților"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.rating_index
 msgid "No project rating published for now."
-msgstr ""
+msgstr "Nu a fost publicată deocamdată o evaluare a proiectului."
 
 #. module: project
 #: selection:project.project,rating_status:0
@@ -1789,12 +1834,12 @@ msgstr "Număr de acțiuni"
 #. module: project
 #: model:ir.model.fields,help:project.field_report_project_task_user__working_days_open
 msgid "Number of Working Days to Open the task"
-msgstr ""
+msgstr "Număr de zile lucrătoare pentru a deschide sarcina"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_report_project_task_user__working_days_close
 msgid "Number of Working Days to close the task"
-msgstr ""
+msgstr "Număr de zile lucrătoare pentru a închide sarcina"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__doc_count
@@ -1805,7 +1850,7 @@ msgstr "Num[r de documente atașate"
 #: model:ir.model.fields,field_description:project.field_project_project__message_has_error_counter
 #: model:ir.model.fields,field_description:project.field_project_task__message_has_error_counter
 msgid "Number of error"
-msgstr ""
+msgstr "Numărul erorii"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__message_needaction_counter
@@ -1831,6 +1876,8 @@ msgid ""
 "Odoo's project management allows you to manage the pipeline of your tasks efficiently.<br>\n"
 "                    You can track progress, discuss on tasks, attach documents, etc."
 msgstr ""
+"Managementul de proiect al Odoo vă permite să gestionați eficient conducta sarcinilor.<br>\n"
+"                    Puteți urmări progresul, discuta despre sarcini, atașa documente etc."
 
 #. module: project
 #: selection:project.project,privacy_visibility:0
@@ -1855,7 +1902,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_digest_digest__kpi_project_task_opened
 msgid "Open Tasks"
-msgstr ""
+msgstr "Sarcini deschise"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_force_thread_id
@@ -1905,6 +1952,8 @@ msgid ""
 "Override the default value displayed for the blocked state for kanban "
 "selection, when the task or issue is in that stage."
 msgstr ""
+"Înlocuiți valoarea implicită afișată pentru starea blocată pentru selecția "
+"kanban, atunci când sarcina sau problema este în același stagiu."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__legend_done
@@ -1913,6 +1962,8 @@ msgid ""
 "Override the default value displayed for the done state for kanban "
 "selection, when the task or issue is in that stage."
 msgstr ""
+"Înlocuiți valoarea implicită afișată pentru starea făcută pentru selecția "
+"kanban, atunci când sarcina sau problema este în acel stagiu."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__legend_normal
@@ -1921,6 +1972,8 @@ msgid ""
 "Override the default value displayed for the normal state for kanban "
 "selection, when the task or issue is in that stage."
 msgstr ""
+"Înlocuiți valoarea implicită afișată pentru starea normală de selecție "
+"kanban, atunci când sarcina sau problema este în acel stagiu."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_user_id
@@ -1932,7 +1985,7 @@ msgstr "Proprietar"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:64
 #, python-format
 msgid "Page Ideas"
-msgstr ""
+msgstr "Idei Pagină"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_parent_model_id
@@ -1959,6 +2012,9 @@ msgid ""
 " necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
 msgstr ""
+"Modelul părinte care deține aliasul. Modelul care deține referința alias nu "
+"este neapărat modelul dat de alias_model_id (example: project (parent_model)"
+" and task (model))"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -1966,6 +2022,8 @@ msgid ""
 "Percentage of happy ratings over the past 30 days. Get rating details from "
 "the More menu."
 msgstr ""
+"Procentul de evaluări fericite în ultimele 30 de zile. Obțineți detalii "
+"despre rating de la mai multe persoane"
 
 #. module: project
 #: selection:project.project,rating_status:0
@@ -1976,7 +2034,7 @@ msgstr "Evaluare periodică"
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_partner_stat
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_popover
 msgid "Placeholder"
-msgstr ""
+msgstr "Substitut"
 
 #. module: project
 #: selection:project.task,activity_state:0
@@ -1996,12 +2054,16 @@ msgid ""
 "- partners: only authenticated partners\n"
 "- followers: only followers of the related document or members of following channels\n"
 msgstr ""
+"Politica de a posta un mesaj pe document folosind mailgateway.\n"
+"- toată lumea: toată lumea poate posta\n"
+"- parteneri: numai parteneri autentificați\n"
+"- adepți: numai adepți ai documentului aferent sau membri ai canalelor următoare\n"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__access_url
 #: model:ir.model.fields,field_description:project.field_project_task__access_url
 msgid "Portal Access URL"
-msgstr ""
+msgstr "Adresă URL Portal"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__priority
@@ -2054,12 +2116,12 @@ msgstr "Nume proiect"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.rating_index
 msgid "Project Satisfaction"
-msgstr ""
+msgstr "Satisfacție Proiect"
 
 #. module: project
 #: model:ir.model,name:project.model_project_tags
 msgid "Project Tags"
-msgstr ""
+msgstr "Etichete Proiect"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_graph
@@ -2075,14 +2137,14 @@ msgstr "Sarcini proiect"
 #. module: project
 #: model:ir.actions.server,name:project.ir_actions_server_project_sample
 msgid "Project: Activate Sample Project"
-msgstr ""
+msgstr "Proiect: Activare Model Proiect "
 
 #. module: project
 #: model:ir.actions.server,name:project.ir_cron_rating_project_ir_actions_server
 #: model:ir.cron,cron_name:project.ir_cron_rating_project
 #: model:ir.cron,name:project.ir_cron_rating_project
 msgid "Project: Send rating"
-msgstr ""
+msgstr "Proiect: Trimite rating"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.open_view_project_all
@@ -2112,12 +2174,12 @@ msgstr "Trimestrial"
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_partner_stat
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_popover
 msgid "Rated partner"
-msgstr ""
+msgstr "Partener evaluat"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Rated tasks"
-msgstr ""
+msgstr "Sarcini Evaluate"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.rating_rating_action_view_project_rating
@@ -2139,12 +2201,12 @@ msgstr "Frecvență evaluare"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_last_feedback
 msgid "Rating Last Feedback"
-msgstr ""
+msgstr "Evaluare Ultimul feedback"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_last_image
 msgid "Rating Last Image"
-msgstr ""
+msgstr "Evaluare ultima imagine"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_last_value
@@ -2154,17 +2216,17 @@ msgstr "Ultima valoare evaluare"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_request_deadline
 msgid "Rating Request Deadline"
-msgstr ""
+msgstr "Data limită pentru solicitarea de evaluare"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_count
 msgid "Rating count"
-msgstr ""
+msgstr "Numărul de evaluări"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__portal_show_rating
 msgid "Rating visible publicly"
-msgstr ""
+msgstr "Evaluare vizibilă publicului"
 
 #. module: project
 #: selection:project.project,rating_status:0
@@ -2180,7 +2242,7 @@ msgstr "Evaluări"
 #: code:addons/project/models/project.py:388
 #, python-format
 msgid "Ratings of %s"
-msgstr ""
+msgstr "Evaluări de%s"
 
 #. module: project
 #: code:addons/project/models/project.py:32
@@ -2228,7 +2290,7 @@ msgstr "Pregătit(ă) de redeschidere"
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__rating_last_feedback
 msgid "Reason of the rating"
-msgstr ""
+msgstr "Motivul evaluării"
 
 #. module: project
 #: model:mail.template,subject:project.mail_template_data_project_task
@@ -2248,7 +2310,7 @@ msgstr "Rosu"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__legend_blocked
 msgid "Red Kanban Label"
-msgstr ""
+msgstr "Eticheta Kanban Roșie"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_tasks
@@ -2267,7 +2329,7 @@ msgstr "Respins"
 #: code:addons/project/static/src/js/project.js:74
 #, python-format
 msgid "Remove Cover Image"
-msgstr ""
+msgstr "Eliminați Imagine Copertă"
 
 #. module: project
 #: model:ir.ui.menu,name:project.menu_project_report
@@ -2279,28 +2341,28 @@ msgstr "Raportare"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:61
 #, python-format
 msgid "Research"
-msgstr ""
+msgstr "Cercetare "
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:60
 #, python-format
 msgid "Research Project"
-msgstr ""
+msgstr "Proiect Cercetare"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:39
 #, python-format
 msgid "Researching"
-msgstr ""
+msgstr "Cercetare"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:58
 #, python-format
 msgid "Resources Allocation"
-msgstr ""
+msgstr "Alocare Resurse"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__activity_user_id
@@ -2311,19 +2373,19 @@ msgstr "Utilizator responsabil"
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_partner_stat
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Sad face"
-msgstr ""
+msgstr "Față tristă"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid ""
 "Schedule your teams across projects and estimate deadlines more accurately."
-msgstr ""
+msgstr "Programează-ți echipele pe proiecte și estimează termenele mai exact."
 
 #. module: project
 #: code:addons/project/controllers/portal.py:114
 #, python-format
 msgid "Search <span class=\"nolabel\"> (in Content)</span>"
-msgstr ""
+msgstr "Căutare<span class=\"nolabel\"> (în Conținut)</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
@@ -2334,25 +2396,25 @@ msgstr "Caută proiect"
 #: code:addons/project/controllers/portal.py:118
 #, python-format
 msgid "Search in All"
-msgstr ""
+msgstr "Căutare totală"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:116
 #, python-format
 msgid "Search in Customer"
-msgstr ""
+msgstr "Căutare în clienți"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:115
 #, python-format
 msgid "Search in Messages"
-msgstr ""
+msgstr "Căutare în mesaje"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:117
 #, python-format
 msgid "Search in Stages"
-msgstr ""
+msgstr "Căutare in Stadii"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__access_token
@@ -2377,24 +2439,24 @@ msgstr "Secvență"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Set Cover Image"
-msgstr ""
+msgstr "Setare imagine copertă"
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_0
 msgid "Set Email Aliases"
-msgstr ""
+msgstr "Setați aliasuri de e-mail"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Set Email Template to Stages"
-msgstr ""
+msgstr "Setați șablonul de e-mail pe stadiu"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project.js:64
 #, python-format
 msgid "Set a Cover Image"
-msgstr ""
+msgstr "Setare Imagine Copertă"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_config_settings_action
@@ -2427,19 +2489,19 @@ msgstr ""
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:28
 #, python-format
 msgid "Software Development"
-msgstr ""
+msgstr "Dezvoltare Software"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:29
 #, python-format
 msgid "Specifications"
-msgstr ""
+msgstr "Specificații "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Split your tasks to organize your work into sub-milestones"
-msgstr ""
+msgstr "Împărțiți-vă sarcinile pentru a vă organiza munca în sub-repere"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:107
@@ -2515,12 +2577,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_project__subtask_project_id
 #: model:ir.model.fields,field_description:project.field_project_task__subtask_project_id
 msgid "Sub-task Project"
-msgstr ""
+msgstr "Proiect Sub-sarcini"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__subtask_count
 msgid "Sub-task count"
-msgstr ""
+msgstr "Număr Sub-Sarcini"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_task_action_sub_task
@@ -2533,19 +2595,19 @@ msgstr "Subsarcini"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__subtask_planned_hours
 msgid "Subtasks"
-msgstr ""
+msgstr "Sub-Sarcini"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:66
 #, python-format
 msgid "T-shirt Printing"
-msgstr ""
+msgstr "Imprimare Tricou"
 
 #. module: project
 #: sql_constraint:project.tags:0
 msgid "Tag name already exists!"
-msgstr ""
+msgstr "Nume etichetă existent deja!"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_tags_action
@@ -2567,7 +2629,7 @@ msgstr "Sarcină"
 #: code:addons/project/models/project.py:616
 #, python-format
 msgid "Task %s cannot have several subtask levels."
-msgstr ""
+msgstr "Sarcina %s nu poate avea mai multe niveluri de sub-sarcini"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__tasks
@@ -2583,24 +2645,24 @@ msgstr "Sarcină blocată"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__task_count
 msgid "Task Count"
-msgstr ""
+msgstr "Număr Sarcini"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_new
 #: model:mail.message.subtype,name:project.mt_project_task_new
 #: model:mail.message.subtype,name:project.mt_task_new
 msgid "Task Created"
-msgstr ""
+msgstr "Sarcină creată"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_config_settings__module_hr_timesheet
 msgid "Task Logs"
-msgstr ""
+msgstr "Jurnale Sarcini"
 
 #. module: project
 #: model:ir.filters,name:project.filter_task_report_task_pipe
 msgid "Task Pipe"
-msgstr ""
+msgstr "Conductă Sarcină"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_rating
@@ -2612,7 +2674,7 @@ msgstr "Evaluare sarcină"
 #: model:mail.message.subtype,name:project.mt_project_task_ready
 #: model:mail.message.subtype,name:project.mt_task_ready
 msgid "Task Ready"
-msgstr ""
+msgstr "Sarcină Pregatită"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_type
@@ -2646,11 +2708,13 @@ msgstr "Sarcină blocată"
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "Task in progress. Click to block or set as done."
 msgstr ""
+"Sarcină în curs. Click aici pentru a bloca sau a seta ca și finalizat."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "Task is blocked. Click to unblock or set as done."
 msgstr ""
+"Sarcina este blocată. Click aici pentru a debloca sau seta ca și finalizat."
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_ready
@@ -2692,7 +2756,7 @@ msgstr "Analiza Sarcinilor"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Tasks Management"
-msgstr ""
+msgstr "Management Sarcină "
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__type_ids
@@ -2721,6 +2785,9 @@ msgid ""
 " email that does not reply to an existing record will cause the creation of "
 "a new record of this model (e.g. a Project Task)"
 msgstr ""
+"Modelul (tipul de document Odoo) căruia îi corespunde acest alias. Orice "
+"e-mail care nu răspunde la o înregistrare existentă va determina crearea "
+"unei noi înregistrări a acestui model (de exemplu, o sarcină de proiect)"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_name
@@ -2728,6 +2795,8 @@ msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
 msgstr ""
+"Numele aliasului de e-mail, de ex. „locuri de muncă” dacă doriți să primiți "
+"e-mailuri pentru <jobs@example.odoo.com>"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_user_id
@@ -2751,6 +2820,10 @@ msgid ""
 "the project is too restricted. Set the privacy to 'Visible by following "
 "customers' in order to make it accessible by the recipient(s)."
 msgstr ""
+"Proiectul nu poate fi partajat cu destinatarul (i), deoarece "
+"confidențialitatea proiectului este prea restrânsă. Setați "
+"confidențialitatea la „Vizibil urmând clienții” pentru a o face accesibilă "
+"de către destinatar (i)."
 
 #. module: project
 #: code:addons/project/models/project.py:571
@@ -2760,6 +2833,10 @@ msgid ""
 "project is too restricted. Set the privacy of the project to 'Visible by "
 "following customers' in order to make it accessible by the recipient(s)."
 msgstr ""
+"Sarcina nu poate fi partajată cu destinatarul (i), deoarece "
+"confidențialitatea proiectului este prea restrânsă. Setați "
+"confidențialitatea proiectului la „Vizibil urmând clienții” pentru a-l face "
+"accesibil de către destinatar (i)."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_projects
@@ -2776,7 +2853,7 @@ msgstr "Nu există sarcini"
 #: code:addons/project/static/src/xml/project.xml:11
 #, python-format
 msgid "There is no available image to be set as cover."
-msgstr ""
+msgstr "Nu există nicio imagine disponibilă care să fie setată ca copertă."
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.rating_rating_action_view_project_rating
@@ -2832,7 +2909,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "This step is done. Click to block or set in progress."
-msgstr ""
+msgstr "Acest pas este făcut. Click aici pentru a blocare sau setare în curs."
 
 #. module: project
 #. openerp-web
@@ -2840,11 +2917,12 @@ msgstr ""
 #, python-format
 msgid "This will create a new project and redirect us to its stages."
 msgstr ""
+"Acest lucru va crea un proiect nou și ne va redirecționa către etapele sale."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Time Management"
-msgstr ""
+msgstr "Gestionare a timpului"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -2873,7 +2951,7 @@ msgstr "De făcut"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:67
 #, python-format
 msgid "To Print"
-msgstr ""
+msgstr "De Imprimat"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.act_project_project_2_project_task_all
@@ -2900,12 +2978,12 @@ msgstr "Activitățile de astăzi"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_partner_stat
 msgid "Top 5 partner ratings of last 15 days."
-msgstr ""
+msgstr "Top 5 evaluări ale partenerilor din ultimele 15 zile."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Track customer satisfaction on tasks"
-msgstr ""
+msgstr "Urmărește satisfacția clienților pe sarcini"
 
 #. module: project
 #: selection:project.project,rating_status_period:0
@@ -2937,7 +3015,7 @@ msgstr "Contor mesaje necitite"
 #: code:addons/project/static/src/js/project.js:72
 #, python-format
 msgid "Upload and Set"
-msgstr ""
+msgstr "Încărcare și setare"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_config_settings__group_project_rating
@@ -2953,7 +3031,7 @@ msgstr "Folosiți subsarcini"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__label_tasks
 msgid "Use Tasks as"
-msgstr ""
+msgstr "Utilizați Sarcini ca"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -3007,6 +3085,8 @@ msgstr ""
 msgid ""
 "Want a better way to <b>manage your projects</b>? <i>It starts here.</i>"
 msgstr ""
+"Doriți o cale mai ușoară de <b> vă gestiona proiectele</b>?<i>Începe "
+"aici.</i>"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__email_cc
@@ -3024,7 +3104,7 @@ msgstr "Mesaje Website"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:63
 #, python-format
 msgid "Website Redesign"
-msgstr ""
+msgstr "Redesignare Website"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__website_message_ids
@@ -3050,32 +3130,32 @@ msgstr "Program de lucru"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Working Time to Assign"
-msgstr ""
+msgstr "Timp de lucru de atribuit"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Working Time to Close"
-msgstr ""
+msgstr "Timpul de lucru pentru închidere"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__working_days_open
 msgid "Working days to assign"
-msgstr ""
+msgstr "Zile lucrătoare pentru atribuire"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__working_days_close
 msgid "Working days to close"
-msgstr ""
+msgstr "Zile lucrătoare pentru închidere"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__working_hours_open
 msgid "Working hours to assign"
-msgstr ""
+msgstr "Ore de lucru de atribuit"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__working_hours_close
 msgid "Working hours to close"
-msgstr ""
+msgstr "Ore lucrătoare pentru atribuire"
 
 #. module: project
 #: model:ir.filters,name:project.filter_task_report_workload
@@ -3087,7 +3167,7 @@ msgstr "Volumul de muncă"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:39
 #, python-format
 msgid "Writing"
-msgstr ""
+msgstr "Scriere "
 
 #. module: project
 #: selection:project.project,rating_status_period:0
@@ -3119,6 +3199,8 @@ msgid ""
 "You cannot delete a project containing tasks. You can either archive it or "
 "first delete all of its tasks."
 msgstr ""
+"Nu puteți șterge un proiect care conține sarcini. Puteți să îl arhivați sau "
+"să ștergeți mai întâi toate sarcinile sale."
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all
@@ -3128,27 +3210,27 @@ msgstr "activați un proiect de probă"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_partner_stat
 msgid "average"
-msgstr ""
+msgstr "mediu"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_partner_stat
 msgid "bad"
-msgstr ""
+msgstr "Rău"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified
 msgid "e.g. Office Party"
-msgstr ""
+msgstr "de exemplu : Office Party"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_tasks
 msgid "for project:"
-msgstr ""
+msgstr "pentru proiect:"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_partner_stat
 msgid "happy"
-msgstr ""
+msgstr "fericit"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
@@ -3159,7 +3241,7 @@ msgstr "oe_kanban_text_red"
 #: code:addons/project/models/project.py:635
 #, python-format
 msgid "task"
-msgstr ""
+msgstr "sarcină"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all

@@ -10,7 +10,7 @@
 # Matus Krnac <matus.krnac@gmail.com>, 2018
 # gebri <gebri@inmail.sk>, 2018
 # Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2018
-# Jan Prokop, 2019
+# Jan Prokop, 2020
 # 
 msgid ""
 msgstr ""
@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-14 07:33+0000\n"
 "PO-Revision-Date: 2018-08-24 09:25+0000\n"
-"Last-Translator: Jan Prokop, 2019\n"
+"Last-Translator: Jan Prokop, 2020\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -718,6 +718,12 @@ msgstr "Dostupné"
 #: model_terms:ir.ui.view,arch_db:stock.stock_product_search_form_view
 msgid "Available Products"
 msgstr "Dostupné Produkty"
+
+#. module: stock
+#: code:addons/stock/models/product.py:581
+#, python-format
+msgid "Available quantity should be set to zero before changing type"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__backorder_id
@@ -5359,7 +5365,7 @@ msgstr "Zobraz kontrolu dostupnosti"
 #: model:ir.model.fields,field_description:stock.field_stock_move__show_operations
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__show_operations
 msgid "Show Detailed Operations"
-msgstr "Zobraz detailné operácia"
+msgstr "Zobraz detaily operácie"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_level__show_lots_m2o
@@ -6792,12 +6798,8 @@ msgstr "Vážený produkt"
 #: model:ir.model.fields,help:stock.field_stock_location_route__warehouse_selectable
 msgid ""
 "When a warehouse is selected for this route, this route should be seen as "
-"the default route when products pass through this warehouse.  This behaviour"
-" can be overridden by the routes on the Product/Product Categories or by the"
-" Preferred Routes on the Procurement"
+"the default route when products pass through this warehouse."
 msgstr ""
-"Keď je zvolené skladisko pre túto trasu, táto trasa by mala byť braná ako predvolená keď produkty prechádzajú týmto skladiskom. Toto správanie môže byť nahradené trasami\n"
-"na Produkt/Kategórie produktov alebo Preferovanými trasami na Obstarávaní"
 
 #. module: stock
 #: selection:stock.picking,move_type:0
@@ -6808,19 +6810,13 @@ msgstr "Keď sú pripravené všetky produkty"
 #: model:ir.model.fields,help:stock.field_stock_location_route__product_selectable
 msgid ""
 "When checked, the route will be selectable in the Inventory tab of the "
-"Product form.  It will take priority over the Warehouse route. "
+"Product form."
 msgstr ""
-"Keď je zaškrtnuté, trasa bude zvoliťelná v záložke Zásob na formulári "
-"Produktu. Bude mať vyššiu prioritu ako trasa Skladiska."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_route__product_categ_selectable
-msgid ""
-"When checked, the route will be selectable on the Product Category.  It will"
-" take priority over the Warehouse route. "
+msgid "When checked, the route will be selectable on the Product Category."
 msgstr ""
-"Keď je zaškrtnuté, trasa bude zvoliťelná na formulári Produktu. Bude mať "
-"vyššiu prioritu ako trasa Skladiska"
 
 #. module: stock
 #: code:addons/stock/models/stock_rule.py:113
@@ -7336,3 +7332,9 @@ msgstr "spracované namiesto"
 #: model_terms:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "⇒ Set quantities to 0"
 msgstr "⇒ Nastaviť množstvá na 0"
+
+#. module: stock
+#: code:addons/stock/models/stock_move_line.py:223
+#, python-format
+msgid "Changing the product is only allowed in 'Draft' state."
+msgstr ""

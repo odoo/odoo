@@ -925,7 +925,7 @@ var SearchView = Widget.extend({
         this.filters.forEach(function (group) {
             var groupId = _.uniqueId('__group__');
             group.filters.forEach(function (filter) {
-                if (!filter.attrs.invisible) {
+                if (!filter.attrs.modifiers.invisible) {
                     var filterId = _.uniqueId('__filter__');
                     var isPeriod = filter.attrs.isPeriod;
                     var defaultPeriod = filter.attrs.default_period;
@@ -967,7 +967,7 @@ var SearchView = Widget.extend({
         this.groupbys.forEach(function (group) {
             var groupId = _.uniqueId('__group__');
             group.filters.forEach(function (groupby) {
-                if (!groupby.attrs.invisible) {
+                if (!groupby.attrs.modifiers.invisible) {
                     var groupbyId = _.uniqueId('__groupby__');
                     var fieldName = groupby.attrs.fieldName;
                     var isDate = groupby.attrs.isDate;

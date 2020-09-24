@@ -52,9 +52,8 @@ class ServerActions(models.Model):
 
     @api.onchange('template_id')
     def on_change_template_id(self):
-        """ Render the raw template in the server action fields. """
-        if self.template_id and not self.template_id.email_from:
-            raise UserError(_('Your template should define email_from'))
+        # TODO: remove in master
+        pass
 
     @api.constrains('state', 'model_id')
     def _check_mail_thread(self):
@@ -131,6 +130,7 @@ class ServerActions(models.Model):
         if action.activity_date_deadline_range > 0:
             vals['date_deadline'] = fields.Date.context_today(action) + relativedelta(**{action.activity_date_deadline_range_type: action.activity_date_deadline_range})
         for record in records:
+            user = False
             if action.activity_user_type == 'specific':
                 user = action.activity_user_id
             elif action.activity_user_type == 'generic' and action.activity_user_field_name in record:

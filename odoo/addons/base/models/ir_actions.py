@@ -250,7 +250,7 @@ class IrActionsActWindow(models.Model):
             # mark missing records in cache with a failed value
             exc = MissingError(
                 _("Record does not exist or has been deleted.")
-                + '\n\n({} {}, {} {})'.format(_('Records:'), (self - existing).ids[:6], _('User:'), self._uid)
+                + '\n\n({} {}, {} {})'.format(_('Records:'), (self - existing)[:6], _('User:'), self._uid)
             )
             for record in (self - existing):
                 record._cache.set_failed(self._fields, exc)
@@ -567,7 +567,7 @@ class IrActionsServer(models.Model):
                     # call the single method related to the action: run_action_<STATE>
                     func = getattr(run_self, 'run_action_%s' % action.state)
                     res = func(action, eval_context=eval_context)
-        return res
+        return res or False
 
     @api.model
     def _run_actions(self, ids):

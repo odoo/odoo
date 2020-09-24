@@ -10,7 +10,9 @@
 # gebri <gebri@inmail.sk>, 2018
 # Matus Krnac <matus.krnac@gmail.com>, 2019
 # Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2019
-# Jan Prokop, 2019
+# Jan Prokop, 2020
+# Alexandra Brencicova <alexandra.brencicova@gmail.com>, 2020
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2020
 # 
 msgid ""
 msgstr ""
@@ -18,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-14 07:34+0000\n"
 "PO-Revision-Date: 2018-08-24 09:20+0000\n"
-"Last-Translator: Jan Prokop, 2019\n"
+"Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2020\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -405,6 +407,8 @@ msgstr ""
 #, python-format
 msgid "A next activity can only be planned on models that use the chatter"
 msgstr ""
+"Ďalšiu aktivitu je možné naplánovať iba na modeloch, ktoré používajú "
+"chatovanie"
 
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.mail_shortcode_action
@@ -977,7 +981,7 @@ msgstr "Automatizované aktivity"
 #. module: mail
 #: model:ir.model,name:mail.model_ir_autovacuum
 msgid "Automatic Vacuum"
-msgstr ""
+msgstr "Automatické Vákuum"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__moderation_notify
@@ -1130,7 +1134,7 @@ msgstr "Príjemcovia Cc (môže tu byť použitý dočasný prvok)"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_company__catchall
 msgid "Catchall Email"
-msgstr ""
+msgstr "Catchall Email"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity__activity_category
@@ -2835,7 +2839,7 @@ msgstr "Je prihlásený na odber"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__is_chat
 msgid "Is a chat"
-msgstr ""
+msgstr "Je chat"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__is_member
@@ -3840,7 +3844,7 @@ msgstr ""
 #: code:addons/mail/wizard/mail_resend_message.py:51
 #, python-format
 msgid "No message_id found in context"
-msgstr ""
+msgstr "V kontexte sa nenašiel žiadna správa_id"
 
 #. module: mail
 #. openerp-web
@@ -3868,7 +3872,7 @@ msgstr "Poznámka"
 #: code:addons/mail/static/src/xml/thread.xml:304
 #, python-format
 msgid "Note by"
-msgstr "Poznačiť"
+msgstr "Záznam"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
@@ -4037,6 +4041,7 @@ msgstr "Online"
 msgid ""
 "Only an administrator or a moderator can send guidelines to channel members!"
 msgstr ""
+"Členom kanálu môže zaslať návody len administrátor alebo moderátor kanálu!"
 
 #. module: mail
 #: code:addons/mail/models/ir_model.py:53
@@ -5255,7 +5260,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,help:mail.field_ir_actions_server__activity_user_field_name
 msgid "Technical name of the user on the record"
-msgstr ""
+msgstr "Technické meno používateľa v zázname"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.wizard_email_template_preview
@@ -5358,13 +5363,13 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_shortcode__source
 msgid "The shortcut which must be replaced in the Chat Messages"
-msgstr ""
+msgstr "Skratka, ktorá sa musí nahradiť v správach chatu"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview__model_id
 #: model:ir.model.fields,help:mail.field_mail_template__model_id
 msgid "The type of document this template can be used with"
-msgstr ""
+msgstr "Typ dokumentu, s ktorým je možné túto šablónu použiť"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_origin_link
@@ -5549,6 +5554,14 @@ msgid ""
 "- 'Add Followers': add followers to a record (Discuss)\n"
 "- 'Create Next Activity': create an activity (Discuss)"
 msgstr ""
+"Typ akcie servera. K dispozícii sú nasledujúce hodnoty:\n"
+"- 'Execute Python Code': blok pythonového kódu, ktorý bude vykonaný\n"
+"- „Vytvoriť“: vytvorenie nového záznamu s novými hodnotami\n"
+"- „Aktualizovať záznam“: aktualizovať hodnoty záznamu\n"
+"- „Vykonať niekoľko akcií“: definuje akciu, ktorá spustí niekoľko ďalších akcií servera\n"
+"- „Poslať e-mail“: automaticky odošle e-mail (Diskusia)\n"
+"- „Pridať sledovateľov“: pridajte sledovateľov do záznamu (Diskusia)\n"
+"- „Vytvoriť ďalšiu aktivitu“: vytvoriť aktivitu (Diskusia)"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__uuid
@@ -5565,13 +5578,14 @@ msgstr "Nemožno sa pripojiť na SMTP server"
 #: code:addons/mail/models/mail_thread.py:2207
 #, python-format
 msgid "Unable to log message, please configure the sender's email address."
-msgstr ""
+msgstr "Nemožno logovať email, prosím nastavte emailovú adresu odosielateľa."
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:2172
 #, python-format
 msgid "Unable to notify message, please configure the sender's email address."
 msgstr ""
+"Na správu sa nedá upozorniť, prosím nastavte e-mailovú adresu odosielateľa."
 
 #. module: mail
 #: code:addons/mail/models/mail_message.py:34
@@ -5730,6 +5744,10 @@ msgid ""
 " 'Generic User From Record' to specify the field name of the user to choose "
 "on the record."
 msgstr ""
+"Použite 'Špecifického používateľa' pre priradenie toho istého používateľa "
+"pri ďalšej aktivite. Pomocou položky „Generic User From Record“ (Všeobecný "
+"používateľ zo záznamu) môžete určiť názov poľa, ktoré má užívateľ zvoliť v "
+"zázname."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__use_active_domain
@@ -5864,6 +5882,7 @@ msgid ""
 "Want to <b>get in touch</b> with your contacts? <i>Discuss with them "
 "here.</i>"
 msgstr ""
+"Chcete sa <b>spojiť</b> so svojimi kontaktmi? <i>Diskutujte s nimi tu.</i>"
 
 #. module: mail
 #. openerp-web
@@ -5881,6 +5900,8 @@ msgid ""
 " If you remove a follower, he won't be notified of any email or discussion on this document.\n"
 " Do you really want to remove this follower ?"
 msgstr ""
+"Upozornenie!\n"
+"Pokiaľ odstránite sledujúceho, sledujúci nebude notifikovaný ohľadom žiadneho emailu alebo diskusie tohto dokumentu. Naozaj si želáte odstrániť tohto sledujúceho?"
 
 #. module: mail
 #: selection:ir.actions.server,activity_date_deadline_range_type:0
@@ -6041,6 +6062,14 @@ msgid ""
 msgstr ""
 "Nemôžete odstrániť túto skupinu, pretož skupina Celá spoločnosť je "
 "vyžadovaná ostatnými modulmi."
+
+#. module: mail
+#: code:addons/mail/models/mail_alias.py:89
+#, python-format
+msgid ""
+"You cannot use anything else than unaccented latin characters in the alias "
+"address."
+msgstr ""
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:257
@@ -6472,7 +6501,7 @@ msgstr "neznámy cieľový model %s"
 #: code:addons/mail/static/src/js/models/messages/abstract_message.js:52
 #, python-format
 msgid "unnamed"
-msgstr ""
+msgstr "nepomenovaný"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_notification_email

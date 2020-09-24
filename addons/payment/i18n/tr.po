@@ -9,7 +9,6 @@
 # Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2018
 # Martin Trigaux, 2018
 # Levent Karakaş <levent@mektup.at>, 2018
-# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2018
 # Doğan Altunbay <doganaltunbay@gmail.com>, 2018
 # Buket Şeker <buket_skr@hotmail.com>, 2018
 # Murat Kaplan <muratk@projetgrup.com>, 2018
@@ -17,6 +16,8 @@
 # Ediz Duman <neps1192@gmail.com>, 2019
 # Umur Akın <umura@projetgrup.com>, 2019
 # ANIL TAN SAĞIR <anils@projetgrup.com>, 2019
+# Murat Durmuş <muratd@projetgrup.com>, 2020
+# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -24,7 +25,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-14 07:34+0000\n"
 "PO-Revision-Date: 2018-08-24 09:21+0000\n"
-"Last-Translator: ANIL TAN SAĞIR <anils@projetgrup.com>, 2019\n"
+"Last-Translator: Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2020\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -159,7 +160,7 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_onboarding_wizard_form
 msgid "<span class=\"fa fa-arrow-right\"> Get my Stripe keys</span>"
-msgstr ""
+msgstr "<span class=\"fa fa-arrow-right\"> Stripe anahtarlarımı al</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.view_partners_form_payment_defaultcreditcard
@@ -284,31 +285,33 @@ msgstr "Bir ödeme işlemi zaten var."
 #: code:addons/payment/models/account_payment.py:57
 #, python-format
 msgid "A token is required to create a new payment transaction."
-msgstr ""
+msgstr "Yeni bir ödeme işlemi oluşturmak için bir token gereklidir."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:657
 #, python-format
 msgid "A transaction %s with %s initiated using %s credit card."
-msgstr ""
+msgstr "Bir işlem %s ile %s kullanılarak başlatıldı %s kredi kartı."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:663
 #, python-format
 msgid "A transaction %s with %s initiated."
-msgstr ""
+msgstr "Bir işlem %s ile %s başlatılan."
 
 #. module: payment
 #: code:addons/payment/models/account_invoice.py:36
 #, python-format
 msgid "A transaction can't be linked to invoices having different currencies."
 msgstr ""
+"Bir işlem, farklı para birimlerine sahip faturalarla ilişkilendirilemez."
 
 #. module: payment
 #: code:addons/payment/models/account_invoice.py:41
 #, python-format
 msgid "A transaction can't be linked to invoices having different partners."
 msgstr ""
+"Bir işlem, farklı iş ortaklarına sahip faturalarla ilişkilendirilemez."
 
 #. module: payment
 #: code:addons/payment/wizards/payment_acquirer_onboarding_wizard.py:34
@@ -400,7 +403,7 @@ msgstr "Tutar"
 #: code:addons/payment/static/src/xml/payment_processing.xml:17
 #, python-format
 msgid "An error occured during the processing of this payment."
-msgstr ""
+msgstr "Bu ödemenin işleme koyulması sırasında bir hata oluştu."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_onboarding_wizard_form
@@ -647,7 +650,7 @@ msgstr "Ödeme simgesi oluşturun"
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.payment_token_action
 msgid "Create a saved payment data"
-msgstr ""
+msgstr "Kayıtlı bir ödeme verisi oluşturma"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__create_uid
@@ -840,7 +843,7 @@ msgstr "HTTP Yönlendirme"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__is_processed
 msgid "Has the payment been post processed"
-msgstr ""
+msgstr "Ödeme postayla işleme koyuldu mu?"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__pre_msg
@@ -914,13 +917,13 @@ msgstr "İç Sunucu Hatası"
 #: code:addons/payment/models/account_invoice.py:55
 #, python-format
 msgid "Invalid token found! Token acquirer %s != %s"
-msgstr ""
+msgstr "Geçersiz simge bulundu! Jeton alıcısı %s != %s"
 
 #. module: payment
 #: code:addons/payment/models/account_invoice.py:58
 #, python-format
 msgid "Invalid token found! Token partner %s != %s"
-msgstr ""
+msgstr "Geçersiz simge bulundu! Jeton ortağı %s != %s"
 
 #. module: payment
 #: model:ir.model,name:payment.model_account_invoice
@@ -1125,6 +1128,8 @@ msgid ""
 "No manual payment method could be found for this company. Please create one "
 "from the Payment Acquirer menu."
 msgstr ""
+"Bu şirket için manuel ödeme yöntemi bulunamadı. Lütfen Ödeme Alıcı "
+"menüsünden bir tane oluşturun."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
@@ -1191,44 +1196,44 @@ msgstr "Bu verilere yalnızca yöneticiler erişebilir."
 #: code:addons/payment/models/payment_acquirer.py:723
 #, python-format
 msgid "Only draft transaction can be authorized."
-msgstr ""
+msgstr "Yalnızca taslak işleme izin verilebilir."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:714
 #: code:addons/payment/models/payment_acquirer.py:775
 #, python-format
 msgid "Only draft transaction can be processed."
-msgstr ""
+msgstr "Yalnızca taslak işlem gerçekleştirilebilir."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:763
 #, python-format
 msgid "Only draft/authorized transaction can be cancelled."
-msgstr ""
+msgstr "Yalnızca taslak/onaylı işlem iptal edilebilir."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:732
 #, python-format
 msgid "Only draft/authorized transaction can be posted."
-msgstr ""
+msgstr "Sadece taslak/onaylı işlem kaydedilebilir."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:1018
 #, python-format
 msgid "Only transactions having the capture status can be captured."
-msgstr ""
+msgstr "Yalnızca yakalama durumuna sahip işlemler yakalanabilir."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:1025
 #, python-format
 msgid "Only transactions having the capture status can be voided."
-msgstr ""
+msgstr "Yalnızca yakalama durumuna sahip işlemler iptal edilebilir."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.confirm
 #: model_terms:ir.ui.view,arch_db:payment.payment_confirmation_status
 msgid "Or scan me with your banking app."
-msgstr ""
+msgstr "Ya da bankacılık uygulamanızla beni tarayın."
 
 #. module: payment
 #: selection:res.company,payment_onboarding_payment_method:0
@@ -1368,7 +1373,7 @@ msgstr "Ödeme İşlemleri"
 #. module: payment
 #: model:ir.model,name:payment.model_payment_acquirer_onboarding_wizard
 msgid "Payment acquire onboarding wizard"
-msgstr ""
+msgstr "Ödeme alıcısı sihirbaz paneli"
 
 #. module: payment
 #: selection:payment.acquirer,payment_flow:0
@@ -1378,7 +1383,7 @@ msgstr "Odoo'dan Ödeme"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.onboarding_payment_acquirer_step
 msgid "Payment method set!"
-msgstr ""
+msgstr "Ödeme yöntemi ayarlandı!"
 
 #. module: payment
 #: model:ir.model,name:payment.model_account_payment
@@ -1505,7 +1510,7 @@ msgstr "Lütfen bekleyin ..."
 #: model:ir.cron,cron_name:payment.cron_post_process_payment_tx
 #: model:ir.cron,name:payment.cron_post_process_payment_tx
 msgid "Post process payment transactions"
-msgstr ""
+msgstr "İşlem sonrası ödeme işlemleri"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.confirm
@@ -1574,7 +1579,7 @@ msgstr "Zorunlu alanlar doldurulmamış"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__return_url
 msgid "Return URL after payment"
-msgstr ""
+msgstr "Ödeme yapıldıktan sonra iade URL'i"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__registration_view_template_id
@@ -1610,7 +1615,7 @@ msgstr "Kaydedilen Kart Bilgisi desteklendi"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_company__payment_onboarding_payment_method
 msgid "Selected onboarding payment method"
-msgstr ""
+msgstr "Seçilen işe alım ödeme yöntemi"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__sequence
@@ -1689,7 +1694,7 @@ msgstr "Özel Ülkeler"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_company__payment_acquirer_onboarding_state
 msgid "State of the onboarding payment acquirer step"
-msgstr ""
+msgstr "Ödeme alıcısı dinamik yapılandırma adımının durumu"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__state
@@ -1743,13 +1748,13 @@ msgstr "Ödeme %s alıcılarının manuel çekim moduna geçmesine izin verilmiy
 #: model_terms:ir.ui.view,arch_db:payment.confirm
 #: model_terms:ir.ui.view,arch_db:payment.payment_confirmation_status
 msgid "The SEPA QR Code informations are not set correctly."
-msgstr ""
+msgstr "SEPA QR Kodu bilgileri doğru ayarlanmamış."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:660
 #, python-format
 msgid "The customer has selected %s to pay this document."
-msgstr ""
+msgstr "Müşteri bu dokümanı ödemek için %s öğesini seçti."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:677
@@ -1758,6 +1763,7 @@ msgid ""
 "The transaction %s with %s for %s has been authorized. Waiting for "
 "capture..."
 msgstr ""
+"Bu işlemi %s ile %s için %s işlemi yetkilendirildi. Yakalama bekleniyor ..."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:682
@@ -1765,13 +1771,13 @@ msgstr ""
 msgid ""
 "The transaction %s with %s for %s has been cancelled with the following "
 "message: %s"
-msgstr ""
+msgstr "Bu işlemi %s ile %s için %s işlemi şu mesajla iptal edildi: %s"
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:685
 #, python-format
 msgid "The transaction %s with %s for %s has been cancelled."
-msgstr ""
+msgstr "Bu işlem %s ile %s için %s iptal edildi."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:679
@@ -1779,13 +1785,13 @@ msgstr ""
 msgid ""
 "The transaction %s with %s for %s has been confirmed. The related payment is"
 " posted: %s"
-msgstr ""
+msgstr "Bu işlem %s ile %s için %s onaylandı. İlgili ödeme kaydedildi: %s"
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:675
 #, python-format
 msgid "The transaction %s with %s for %s is pending."
-msgstr ""
+msgstr "Bu işlem %s ile %s için %s beklemede."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_icon__image
@@ -1839,7 +1845,7 @@ msgstr ""
 #: code:addons/payment/static/src/xml/payment_processing.xml:117
 #, python-format
 msgid "This transaction has been cancelled."
-msgstr ""
+msgstr "Bu işlem iptal edildi."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_account_invoice__transaction_ids
@@ -1862,12 +1868,12 @@ msgstr "Tür"
 #: code:addons/payment/static/src/xml/payment_processing.xml:138
 #, python-format
 msgid "Unable to contact the Odoo server."
-msgstr ""
+msgstr "Odoo sunucusuyla iletişim kurulamıyor."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__qr_code
 msgid "Use SEPA QR Code"
-msgstr ""
+msgstr "SEPA QR Kodunu Kullan"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__date
@@ -1952,7 +1958,7 @@ msgstr "Şuanda ödeme metodunuzu silemiyoruz."
 #: code:addons/payment/static/src/xml/payment_processing.xml:130
 #, python-format
 msgid "We are not able to find your payment, but don't worry."
-msgstr ""
+msgstr "Ödemenizi bulamıyoruz, ancak endişelenmeyin."
 
 #. module: payment
 #. openerp-web
@@ -1980,7 +1986,7 @@ msgstr ""
 #: code:addons/payment/static/src/xml/payment_processing.xml:99
 #, python-format
 msgid "We are waiting for the payment acquirer to confirm the payment."
-msgstr ""
+msgstr "Ödeme alıcısının ödemeyi onaylamasını bekliyoruz."
 
 #. module: payment
 #. openerp-web
@@ -2000,34 +2006,34 @@ msgstr "Manuel Transfer"
 #: code:addons/payment/static/src/xml/payment_processing.xml:59
 #, python-format
 msgid "You can click here to be redirected to the confirmation page."
-msgstr ""
+msgstr "Onay sayfasına yönlendirilmek için burayı tıklayabilirsiniz."
 
 #. module: payment
 #: code:addons/payment/wizards/payment_acquirer_onboarding_wizard.py:135
 #, python-format
 msgid "You have to set a journal for your payment acquirer %s."
-msgstr ""
+msgstr "Ödeme alıcınız için bir yevmiye ayarlamanız gerekir %s."
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/xml/payment_processing.xml:131
 #, python-format
 msgid "You should receive an email confirming your payment in a few minutes."
-msgstr ""
+msgstr "Birkaç dakika içinde ödemenizi onaylayan bir e-posta almalısınız."
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/xml/payment_processing.xml:77
 #, python-format
 msgid "You will be notified when the payment is confirmed."
-msgstr ""
+msgstr "Ödeme onaylandığında size bildirilecektir."
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/xml/payment_processing.xml:58
 #, python-format
 msgid "You will be notified when the payment is fully confirmed."
-msgstr ""
+msgstr "Ödeme tamamen onaylandığında size bildirilecektir."
 
 #. module: payment
 #: model_terms:payment.acquirer,pre_msg:payment.payment_acquirer_stripe
@@ -2096,14 +2102,14 @@ msgstr ""
 #: code:addons/payment/static/src/xml/payment_processing.xml:39
 #, python-format
 msgid "Your order has been processed."
-msgstr ""
+msgstr "Siparişiniz işleme koyuldu."
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/xml/payment_processing.xml:36
 #, python-format
 msgid "Your order is being processed, please wait ..."
-msgstr ""
+msgstr "Siparişiniz işleme koyuluyor, lütfen bekleyin ..."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_confirmation_status
@@ -2115,14 +2121,14 @@ msgstr "Ödemeniz onaylandı."
 #: code:addons/payment/static/src/xml/payment_processing.xml:76
 #, python-format
 msgid "Your payment has been received but need to be confirmed manually."
-msgstr ""
+msgstr "Ödemeniz alındı, ancak manuel olarak onaylanması gerekiyor."
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/xml/payment_processing.xml:57
 #, python-format
 msgid "Your payment is in pending state."
-msgstr ""
+msgstr "Ödemeniz beklemede."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.transaction_form

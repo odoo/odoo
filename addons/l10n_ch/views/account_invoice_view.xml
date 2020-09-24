@@ -38,6 +38,25 @@
                                                     ('l10n_ch_currency_name', 'not in', ['EUR', 'CHF'])]}"
                         groups="base.group_user"
                         />
+                    <button
+                        name="print_ch_qr_bill"
+                        string="Print QR-bill"
+                        type="object"
+                        attrs="{'invisible':['|', ('state', '!=', 'open'),
+                                             '|', ('l10n_ch_isr_sent', '=', True),
+                                             ('l10n_ch_currency_name', 'not in', ['EUR', 'CHF'])]}"
+                        groups="base.group_user"
+                        class="oe_highlight"
+                        />
+                    <button
+                        name="print_ch_qr_bill"
+                        string="Print QR-bill"
+                        type="object"
+                        attrs="{'invisible':['|', ('state', '!=', 'open'),
+                                             '|', ('l10n_ch_isr_sent', '=', False),
+                                             ('l10n_ch_currency_name', 'not in', ['EUR', 'CHF'])]}"
+                        groups="base.group_user"
+                        />
                 </xpath>
             </field>
         </record>

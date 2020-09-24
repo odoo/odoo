@@ -240,7 +240,10 @@ GROUP BY fol.id%s""" % (
             new, upd = self._add_default_followers(res_model, res_ids, partner_ids, channel_ids, customer_ids=customer_ids)
         else:
             new, upd = self._add_followers(res_model, res_ids, partner_ids, partner_subtypes, channel_ids, channel_subtypes, check_existing=check_existing, existing_policy=existing_policy)
-        sudo_self.create([
+        ctx = dict(self.env.context)
+        if channel_ids and 'default_partner_id' in self.env.context:
+            ctx.pop('default_partner_id', None)
+        sudo_self.with_context(ctx).create([
             dict(values, res_id=res_id)
             for res_id, values_list in new.items()
             for values in values_list

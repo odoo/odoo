@@ -5,11 +5,9 @@
 # Translators:
 # Martin Trigaux, 2018
 # Luigi Di Naro <gigidn@gmail.com>, 2018
-# Simone Bernini <simone@aperturelabs.it>, 2018
 # Paolo Valier, 2018
 # Niccolò Lubello <nlubello@gmail.com>, 2018
-# Léonie Bouchat <lbo@odoo.com>, 2019
-# Sergio Zanchetta <primes2h@gmail.com>, 2019
+# Sergio Zanchetta <primes2h@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -17,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-18 09:49+0000\n"
 "PO-Revision-Date: 2018-08-24 09:33+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2019\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2020\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,27 +26,27 @@ msgstr ""
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__active
 msgid "Active"
-msgstr "Attivo"
+msgstr "Attiva"
 
 #. module: uom
 #: model_terms:ir.actions.act_window,help:uom.product_uom_form_action
 msgid "Add a new unit of measure"
-msgstr "Aggiungere una nuova unità di misura"
+msgstr "Aggiungi una nuova unità di misura"
 
 #. module: uom
 #: model_terms:ir.actions.act_window,help:uom.product_uom_categ_form_action
 msgid "Add a new unit of measure category"
-msgstr "Aggiungere una nuova categoria di unità di misura"
+msgstr "Aggiungi una nuova categoria per l'unità di misura"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__factor_inv
 msgid "Bigger Ratio"
-msgstr "Maggior Percentuale"
+msgstr "Rapporto maggiore"
 
 #. module: uom
 #: selection:uom.uom,uom_type:0
 msgid "Bigger than the reference Unit of Measure"
-msgstr "Più grande dell'unità di misura di riferimento"
+msgstr "Maggiore dell'unità di misura di riferimento"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__category_id
@@ -61,9 +59,9 @@ msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
 "same category. The conversion will be made based on the ratios."
 msgstr ""
-"Conversioni tra diverse unità di misura sono permesse solo se appartengono "
-"alla stessa categoria. La conversione sarà effettuata utilizzando i rapporti"
-" di conversione delle unità di misura."
+"Le conversioni tra unità di misura possono avvenire solo se appartengono "
+"alla stessa categoria. La conversione verrà effettuata in base alle "
+"proporzioni."
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__create_uid
@@ -104,8 +102,9 @@ msgid ""
 "How many times this Unit of Measure is bigger than the reference Unit of "
 "Measure in this category: 1 * (this unit) = ratio * (reference unit)"
 msgstr ""
-"Quante volte quest'unità di misura è più grande dell'unità di misura di riferimento per questa categoria:\n"
-"1 * (questa unità) = rapporto * (unità di riferimento)"
+"Quante volte l'unità di misura è maggiore dell'unità di misura di "
+"riferimento per questa categoria: 1 * (unità) = rapporto * (unità di "
+"riferimento)"
 
 #. module: uom
 #: model:ir.model.fields,help:uom.field_uom_uom__factor
@@ -113,8 +112,9 @@ msgid ""
 "How much bigger or smaller this unit is compared to the reference Unit of "
 "Measure for this category: 1 * (reference unit) = ratio * (this unit)"
 msgstr ""
-"Quanto è più grande/piccola questa unità di misura comparandola a quella di riferimento per questa categoria:\n"
-"1 * (unità di riferimento) = rapporto * (questa unità)"
+"Quanto l'unità di misura è maggiore/minore dell'unità di misura di "
+"riferimento per questa categoria: 1 * (unità di riferimento) = rapporto * "
+"(unità)"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__id
@@ -188,7 +188,7 @@ msgstr "Precisione arrotondamento"
 #. module: uom
 #: selection:uom.uom,uom_type:0
 msgid "Smaller than the reference Unit of Measure"
-msgstr "Più piccola dell'unità di misura di riferimento"
+msgstr "Minore dell'unità di misura di riferimento"
 
 #. module: uom
 #: model:ir.model.fields,help:uom.field_uom_uom__rounding
@@ -196,13 +196,13 @@ msgid ""
 "The computed quantity will be a multiple of this value. Use 1.0 for a Unit "
 "of Measure that cannot be further split, such as a piece."
 msgstr ""
-"La quantità calcolata sarà un multiplo di questo valore. Usa 1.0 per "
-"un'unità di misura che non potrà essere suddivisa, come un pezzo."
+"La quantità calcolata sarà un multiplo di questo valore. Usare 1.0 per "
+"un'unità di misura non ulteriormente divisibile, ad esempio un pezzo."
 
 #. module: uom
 #: sql_constraint:uom.uom:0
 msgid "The conversion ratio for a unit of measure cannot be 0!"
-msgstr "Il rapporto di conversione per una unità di misura non può essere 0!"
+msgstr "Il rapporto di conversione per un'unità di misura non può essere 0."
 
 #. module: uom
 #: sql_constraint:uom.uom:0
@@ -223,6 +223,10 @@ msgid ""
 "the unit of measure defined on the order line or on the product, they should"
 " belong to the same category."
 msgstr ""
+"L'unità di misura %s definita nella riga d'ordine non appartiene alla stessa"
+" categoria dell'unità di misura %s definita nel prodotto. Correggere la riga"
+" d'ordine o il prodotto, la loro unità di misura deve appartenere alla "
+"stessa categoria."
 
 #. module: uom
 #: selection:uom.category,measure_type:0
@@ -249,7 +253,7 @@ msgstr "Tipo di categoria della misura"
 msgid ""
 "Uncheck the active field to disable a unit of measure without deleting it."
 msgstr ""
-"Deselezionare il campo attivo per disattivare un'unità di misura senza "
+"Deselezionare il campo attivo per disabilitare un'unità di misura senza "
 "eliminarla."
 
 #. module: uom
@@ -275,7 +279,7 @@ msgstr "Categoria unità di misura"
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_unit
 msgid "Unit(s)"
-msgstr "unità"
+msgstr "Unità"
 
 #. module: uom
 #: selection:uom.category,measure_type:0
@@ -302,9 +306,10 @@ msgid ""
 "            <i>'Time'</i>, you will have the following units of measure:\n"
 "            Hours, Days."
 msgstr ""
-"Le unità di misura della stessa categoria possono essere convertite fra loro. Ad esempio, nella categoria <i>\"Tempo\"</i>, \n"
-"è possibile avere le seguenti unità di misura:\n"
-"ore, giorni."
+"Le unità di misura che appartengono alla stessa categoria\n"
+"            possono essere convertite fra loro. Ad esempio, nella categoria\n"
+"            <i>\"Periodo\"</i>, sono presenti le seguenti unità di misura:\n"
+"            ore, giorni."
 
 #. module: uom
 #: code:addons/uom/models/uom_uom.py:93
@@ -313,12 +318,15 @@ msgid ""
 "UoM category %s should have a reference unit of measure. If you just created"
 " a new category, please record the 'reference' unit first."
 msgstr ""
+"La categoria UdM %s deve avere un'unità di misura di riferimento. Dopo la "
+"creazione di una nuova categoria, registrare l'unità di \"riferimento\"."
 
 #. module: uom
 #: code:addons/uom/models/uom_uom.py:95
 #, python-format
 msgid "UoM category %s should only have one reference unit of measure."
 msgstr ""
+"La categoria UdM %s deve avere una sola unità di misura di riferimento."
 
 #. module: uom
 #: selection:uom.category,measure_type:0
@@ -335,18 +343,19 @@ msgstr "Peso"
 #. module: uom
 #: model:uom.category,name:uom.uom_categ_wtime
 msgid "Working Time"
-msgstr "Orario lavorativo"
+msgstr "Orario di lavoro"
 
 #. module: uom
 #: sql_constraint:uom.category:0
 msgid "You can have only one category per measurement type."
-msgstr ""
+msgstr "È possibile avere una sola categora per tipo di misurazione."
 
 #. module: uom
 #: code:addons/uom/models/uom_uom.py:28
 #, python-format
 msgid "You cannot delete this UoM Category as it is used by the system."
 msgstr ""
+"Impossibile eliminare questa categoria UdM perché è utilizzata dal sistema."
 
 #. module: uom
 #: code:addons/uom/models/uom_uom.py:115
@@ -355,6 +364,8 @@ msgid ""
 "You cannot delete this UoM as it is used by the system. You should rather "
 "archive it."
 msgstr ""
+"Impossibile eliminare questa UdM perché è utilizzata dal sistema. È "
+"preferibile archiviarla."
 
 #. module: uom
 #: model_terms:ir.actions.act_window,help:uom.product_uom_form_action
@@ -362,8 +373,8 @@ msgid ""
 "You must define a conversion rate between several Units of\n"
 "            Measure within the same category."
 msgstr ""
-"Definire un tasso di conversione tra le diverse unità di\n"
-"misura appartenenti alla stessa categoria."
+"Deve essere definito un tasso di conversione tra le diverse\n"
+"            unità di misura della stessa categoria."
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_cm
@@ -373,27 +384,27 @@ msgstr "cm"
 #. module: uom
 #: model_terms:ir.ui.view,arch_db:uom.product_uom_form_view
 msgid "e.g: 1 * (reference unit) = ratio * (this unit)"
-msgstr "es: 1 * (unità di riferimento) = ratio * (questa unità)"
+msgstr "es: 1 * (unità di riferimento) = rapporto * (unità)"
 
 #. module: uom
 #: model_terms:ir.ui.view,arch_db:uom.product_uom_form_view
 msgid "e.g: 1 * (this unit) = ratio * (reference unit)"
-msgstr "es: 1 * (questa unità) = rapporto * (riferimento unità)"
+msgstr "es: 1 * (unità) = rapporto * (unità di riferimento)"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_floz
 msgid "fl oz"
-msgstr "oncia liquida"
+msgstr "oncia fluida"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_foot
 msgid "foot(ft)"
-msgstr "piede(i)"
+msgstr "piede/i"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_gal
 msgid "gal(s)"
-msgstr "gallone(i)"
+msgstr "gallone/i"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_inch
@@ -413,7 +424,7 @@ msgstr "km"
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_lb
 msgid "lb(s)"
-msgstr "libbra(e)"
+msgstr "libbra/e"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_mile
@@ -423,9 +434,9 @@ msgstr "miglia"
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_oz
 msgid "oz(s)"
-msgstr "once"
+msgstr "oncia/e"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_qt
 msgid "qt"
-msgstr "qt"
+msgstr "quarto"

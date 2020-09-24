@@ -12,6 +12,7 @@ import pytz
 from werkzeug import urls
 
 from odoo import api, fields, models, tools, _
+from odoo.osv import expression
 from odoo.tools import exception_to_unicode
 
 _logger = logging.getLogger(__name__)
@@ -224,12 +225,12 @@ class GoogleCalendar(models.AbstractModel):
             "start": {
                 type: start_date,
                 vstype: None,
-                'timeZone': self.env.context.get('tz') or 'UTC',
+                'timeZone': self.env.context.get('tz') or self.env.user.tz or 'UTC',
             },
             "end": {
                 type: final_date,
                 vstype: None,
-                'timeZone': self.env.context.get('tz') or 'UTC',
+                'timeZone': self.env.context.get('tz') or self.env.user.tz or 'UTC',
             },
             "attendees": attendee_list,
             "reminders": {
@@ -444,7 +445,7 @@ class GoogleCalendar(models.AbstractModel):
                 partner_email = google_attendee.get('email')
                 if type == "write":
                     for oe_attendee in event['attendee_ids']:
-                        if oe_attendee.email == google_attendee['email']:
+                        if oe_attendee.email == partner_email or oe_attendee.partner_id.user_ids.google_calendar_cal_id == partner_email:
                             oe_attendee.write({'state': google_attendee['responseStatus'], 'google_internal_event_id': single_event_dict.get('id')})
                             google_attendee['found'] = True
                             continue
@@ -452,9 +453,11 @@ class GoogleCalendar(models.AbstractModel):
                 if google_attendee.get('found'):
                     continue
 
-                attendee = ResPartner.search([('email', '=ilike', google_attendee['email']), ('user_ids', '!=', False)], limit=1)
+                attendee = ResPartner.search([('user_ids.google_calendar_cal_id', '=ilike', partner_email)], limit=1)
                 if not attendee:
-                    attendee = ResPartner.search([('email', '=ilike', google_attendee['email'])], limit=1)
+                    attendee = ResPartner.search([('email', '=ilike', partner_email), ('user_ids', '!=', False)], limit=1)
+                if not attendee:
+                    attendee = ResPartner.search([('email', '=ilike', partner_email)], limit=1)
                 if not attendee:
                     data = {
                         'email': partner_email,
@@ -551,7 +554,15 @@ class GoogleCalendar(models.AbstractModel):
     @api.model
     def synchronize_events_cron(self):
         """ Call by the cron. """
-        users = self.env['res.users'].search([('google_calendar_last_sync_date', '!=', False)])
+        domain = [('google_calendar_last_sync_date', '!=', False)]
+        if self.env.context.get('last_sync_hours'):
+            last_sync_hours = self.env.context['last_sync_hours']
+            last_sync_date = datetime.now() - timedelta(hours=last_sync_hours)
+            domain = expression.AND([
+                domain,
+                [('google_calendar_last_sync_date', '<=', fields.Datetime.to_string(last_sync_date))]
+            ])
+        users = self.env['res.users'].search(domain, order='google_calendar_last_sync_date')
         _logger.info("Calendar Synchro - Started by cron")
 
         for user_to_sync in users.ids:

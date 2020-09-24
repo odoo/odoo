@@ -15,7 +15,8 @@
 # Pernille Kristensen <pernillekristensen1994@gmail.com>, 2019
 # Joe Hansen <joedalton2@yahoo.dk>, 2019
 # lhmflexerp <lhm@flexerp.dk>, 2019
-# Sanne Kristensen <sanne@vkdata.dk>, 2019
+# Sanne Kristensen <sanne@vkdata.dk>, 2020
+# Mads Søndergaard, 2020
 # 
 msgid ""
 msgstr ""
@@ -23,7 +24,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-14 07:33+0000\n"
 "PO-Revision-Date: 2018-08-24 09:23+0000\n"
-"Last-Translator: Sanne Kristensen <sanne@vkdata.dk>, 2019\n"
+"Last-Translator: Mads Søndergaard, 2020\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -51,12 +52,12 @@ msgstr "${object.company_id.name} Ordre (Ref ${object.name or 'n/a' })"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "3-way matching"
-msgstr ""
+msgstr "3-vejs matching"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__module_account_3way_match
 msgid "3-way matching: purchases, receptions and bills"
-msgstr ""
+msgstr "3-vejs matching: køb, modtagelser, og regninger"
 
 #. module: purchase
 #: model:mail.template,body_html:purchase.email_template_edi_purchase_done
@@ -123,6 +124,24 @@ msgid ""
 "    </p>\n"
 "</div>"
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Kære ${object.partner_id.name}\n"
+"        % if object.partner_id.parent_id:\n"
+"            (${object.partner_id.parent_id.name})\n"
+"        % endif\n"
+"        <br/><br/>\n"
+"        Her vedhæftes en anmodning om tilbud <strong>${object.name}</strong>\n"
+"        % if object.partner_ref:\n"
+"            med reference: ${object.partner_ref}\n"
+"        % endif\n"
+"        fra ${object.company_id.name}.\n"
+"        <br/><br/>\n"
+"        Tøv ikke med at kontakte os, hvis du har spørgsmål.\n"
+"        <br/><br/>\n"
+"        Venlig hilsen,\n"
+"    </p>\n"
+"</div>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -137,6 +156,8 @@ msgid ""
 "<i class=\"fa fa-fw fa-shopping-cart\" role=\"img\" aria-label=\"Shopping "
 "cart\" title=\"Shopping cart\"/>"
 msgstr ""
+"<i class=\"fa fa-fw fa-shopping-cart\" role=\"img\" aria-"
+"label=\"Indkøbskurv\" title=\"Indkøbskurv\"/> "
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
@@ -284,6 +305,9 @@ msgid ""
 "A consumable product is a product for which stock is not managed.\n"
 "A service is a non-material product you provide."
 msgstr ""
+"Et opbevaringsvare er et produkt for hvilket du kan administrere lager. Inventar appliktionen skal være installeret.\n"
+"En forbrugsvare er et produkt hvor lageret ikke er administreret.\n"
+"En tjeneste er et ikke-materielt produkt du tilbyder."
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_warning_purchase
@@ -369,7 +393,7 @@ msgstr "Antal vedhæftninger"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_account_invoice__vendor_bill_purchase_id
 msgid "Auto-Complete"
-msgstr ""
+msgstr "Automatisk udførelse"
 
 #. module: purchase
 #: model:ir.filters,name:purchase.filter_purchase_order_average_delivery_time
@@ -448,6 +472,10 @@ msgid ""
 "product if you directly do a Request for Quotation to one vendor or if you "
 "want a Call for Tenders to compare offers from several vendors."
 msgstr ""
+"Udbud brges når du vil generere anmodninger om tilbud til flere forhandlere "
+"for et givent sæt af produkter. Du kan konfigurere per produkt, hvis du "
+"udfører en direkte anmodning om tilbud til én forhandler, eller hvis du "
+"ønsker udbud til at sammenligne tilbud fra flere forhandlere."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -667,7 +695,7 @@ msgstr "Udført"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_company__po_double_validation_amount
 msgid "Double validation amount"
-msgstr ""
+msgstr "Dobbelt godkendelse mængde"
 
 #. module: purchase
 #: selection:purchase.report,state:0
@@ -778,6 +806,8 @@ msgid ""
 "If enabled, activates 3-way matching on vendor bills : the items must be "
 "received in order to pay the invoice."
 msgstr ""
+"Hvis aktiveret, aktiveres 3-vejs matching på leverandørregninger : varene "
+"skal være modtaget for at fakturaen kan betales."
 
 #. module: purchase
 #: code:addons/purchase/models/product.py:38
@@ -920,7 +950,7 @@ msgstr "Administrer leverandørpriser"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Manage your purchase agreements (call for tenders, blanket orders)"
-msgstr ""
+msgstr "Administrer dine købsaftaler (udbud, rammeordre)"
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_purchase_manager
@@ -945,6 +975,9 @@ msgid ""
 "Orders for procuring products, they will be scheduled that many days earlier"
 " to cope with unexpected vendor delays."
 msgstr ""
+"Fejlmargin på leverandør lede tider. Når et system generere købsordre for "
+"indkøb af produkter, vil de blive planlægt så mange dage tidligere, for at "
+"håndtere uventede leverandør forsinkelser."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_config_settings__use_po_lead
@@ -953,6 +986,9 @@ msgid ""
 "Orders for reordering products,they will be scheduled that many days earlier"
 " to cope with unexpected vendor delays."
 msgstr ""
+"Fejlmargin for leverandør lede tider. Når systemet generere købsordre for "
+"genbestilling af produkter, vil de blive planlagt så mange dage tidligere, "
+"for at håndtere uventede leverandør forsinkelser."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_has_error
@@ -985,7 +1021,7 @@ msgstr "Minimumsbeløb"
 #: model:ir.model.fields,help:purchase.field_res_company__po_double_validation_amount
 #: model:ir.model.fields,help:purchase.field_res_config_settings__po_double_validation_amount
 msgid "Minimum amount for which a double validation is required"
-msgstr ""
+msgstr "Minimum mængde hvorfor en dobbelt godkendelse påkræves"
 
 #. module: purchase
 #: model:ir.filters,name:purchase.filter_purchase_order_monthly_purchases
@@ -1011,7 +1047,7 @@ msgstr "Navn"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Name, TIN, Email, or Reference"
-msgstr ""
+msgstr "Navn, TIN, email, eller reference"
 
 #. module: purchase
 #: code:addons/purchase/controllers/portal.py:40
@@ -1104,6 +1140,8 @@ msgid ""
 "On ordered quantities: Control bills based on ordered quantities.\n"
 "On received quantities: Control bills based on received quantities."
 msgstr ""
+"På bestilte kvantiteter: Kontroller regninger baseret på bestilt kvantitet.\n"
+"På modtaget kvantiteter: Kontroller regninger baseret på modtaget kvantitet."
 
 #. module: purchase
 #: selection:product.template,purchase_method:0
@@ -1282,7 +1320,7 @@ msgstr "Produktværdi"
 #: model:ir.model.fields,help:purchase.field_res_company__po_double_validation
 #: model:ir.model.fields,help:purchase.field_res_config_settings__po_double_validation
 msgid "Provide a double validation mechanism for purchases"
-msgstr ""
+msgstr "Gør en dobbelt bekræftelse mekanisme anvendelig for køb"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_procurement_management
@@ -1308,6 +1346,9 @@ msgid ""
 "purchase history and performance. From this menu you can track your "
 "negotiation performance, the delivery performance of your vendors, etc."
 msgstr ""
+"Købsanalyse gør det muligt for dig nemt at tjekke og analysere din "
+"virksomheds købshistorik og præstation. Fra denne menu kan du spore din "
+"forhandlings præstation, leverings præstationen for dine leverandører, osv."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_company__po_lead
@@ -1393,6 +1434,8 @@ msgid ""
 "Purchase Order Modification used when you want to purchase order editable "
 "after confirm"
 msgstr ""
+"Købsordre modificering brugt når du vil gøre købsordre redigerbare efter "
+"bekræftelse"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.purchase_form_action
@@ -1476,7 +1519,7 @@ msgstr "Indkøb"
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_bill_union
 msgid "Purchases & Bills Union"
-msgstr ""
+msgstr "Køb og Regninger forening"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__dest_address_id
@@ -1556,7 +1599,7 @@ msgstr "Modtaget antal:"
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.act_res_partner_2_supplier_invoices
 msgid "Record a new vendor bill"
-msgstr ""
+msgstr "Registrer en ny leverandørregning"
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.purchase_open_invoice
@@ -1574,7 +1617,7 @@ msgstr "Reference"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_bill_union_tree
 msgid "Reference Document"
-msgstr ""
+msgstr "Reference dokument"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__product_uom
@@ -1597,6 +1640,9 @@ msgid ""
 "matching when you receive the products as this reference is usually written "
 "on the delivery order sent by your vendor."
 msgstr ""
+"Reference af salgsordren eller bud sendt af leverandør. Bruges til "
+"sammenligning når du modtager produkterne, eftersom denne reference normalt "
+"er skrevet på leveringsordren sendt fra din leverandør."
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.purchase_report
@@ -1643,12 +1689,12 @@ msgstr "Søg indkøbsordre"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_bill_union_filter
 msgid "Search Reference Document"
-msgstr ""
+msgstr "Søg reference dokument"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__use_po_lead
 msgid "Security Lead Time for Purchase"
-msgstr ""
+msgstr "Sikkerheds ledetid for køb"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__access_token
@@ -1801,6 +1847,9 @@ msgid ""
 "                    converted into a purchase order, you will be able to control the receipt\n"
 "                    of the products and the vendor bill."
 msgstr ""
+"Anmodningen om tilbud er første skridt i købs flowet. Når det er\n"
+"                   konverteret til en købsordre, vil du være i stand til at kontrollere modtagelsen\n"
+"                   af produkterne og leverandørregninen."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_product_product__property_account_creditor_price_difference
@@ -1810,6 +1859,9 @@ msgid ""
 "difference between a purchase order and its related vendor bill when "
 "validating this vendor bill."
 msgstr ""
+"Denne konto bruges i en automatiseret inventar vurdering til at registrere "
+"prisforskellen mellem købsordre og dens relaterede leverandørregning, ved "
+"godkendelse af denne leverandørregning."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_product_category__property_account_creditor_price_difference_categ
@@ -1817,6 +1869,8 @@ msgid ""
 "This account will be used to value price difference between purchase price "
 "and accounting cost."
 msgstr ""
+"Denne konto vil blive brugt til at værdisætte pris forskellen mellem "
+"købspris og regnskabs omkostninger."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1840,6 +1894,8 @@ msgid ""
 "This default value is applied to any new product created. This can be "
 "changed in the product detail form."
 msgstr ""
+"Standard værdien anvendes på alle nye produkter der oprettes. Dette kan "
+"ændres i produkt detalje formularen."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
@@ -2040,6 +2096,9 @@ msgid ""
 "                    you receive from your vendor according to the draft\n"
 "                    document in Odoo."
 msgstr ""
+"Leverandørregninger kan forud-genereres baseret på købsordre eller kvitteringer. Dette gør dig i stand til at kontrollere regninger\n"
+"                      du modtager fra din leverandør, ud fra kladde\n"
+"                      dokumentet i Odoo."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__volume
@@ -2104,6 +2163,7 @@ msgstr ""
 #: model:ir.model.fields,help:purchase.field_purchase_order_line__partner_id
 msgid "You can find a vendor by its Name, TIN, Email or Internal Reference."
 msgstr ""
+"Du kan finde en leverandør ud fra navn, TIN, email, eller intern reference."
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.product_product_action

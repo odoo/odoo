@@ -7,16 +7,17 @@
 # Marc Tormo i Bochaca <mtbochaca@gmail.com>, 2018
 # RGB Consulting <odoo@rgbconsulting.com>, 2018
 # Quim - eccit <quim@eccit.com>, 2018
-# Manel Fernandez <manelfera@outlook.com>, 2018
 # Arnau Ros, 2019
+# Manel Fernandez Ramirez <manelfera@outlook.com>, 2020
+# Carles Antoli <carlesantoli@hotmail.com>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-11-14 07:34+0000\n"
+"POT-Creation-Date: 2020-02-06 19:08+0000\n"
 "PO-Revision-Date: 2018-08-24 09:18+0000\n"
-"Last-Translator: Arnau Ros, 2019\n"
+"Last-Translator: Carles Antoli <carlesantoli@hotmail.com>, 2020\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -293,6 +294,11 @@ msgid "Followers (Partners)"
 msgstr "Seguidors (Clients)"
 
 #. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+msgid "Future Activities"
+msgstr "Activitats Futures"
+
+#. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract_type__sequence
 msgid "Gives the sequence when displaying a list of Contract."
 msgstr "Dona la seqüència quan es mostra una llista de contracte."
@@ -381,6 +387,11 @@ msgstr "Última actualització per"
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type__write_date
 msgid "Last Updated on"
 msgstr "Última actualització el"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+msgid "Late Activities"
+msgstr "Darreres Activitats"
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_employee__contract_id
@@ -515,6 +526,12 @@ msgid "Sequence"
 msgstr "Seqüència"
 
 #. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+msgid "Show all records which have a next action date before today"
+msgstr ""
+"Mostra tots els registres que tenen una data d’acció següent abans d’avui"
+
+#. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__reported_to_secretariat
 msgid "Social Secretariat"
 msgstr "Secretaria Social"
@@ -580,6 +597,11 @@ msgid "Today"
 msgstr "Avui"
 
 #. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+msgid "Today Activities"
+msgstr "Activitats d'avui"
+
+#. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_unread
 msgid "Unread Messages"
 msgstr "Missatges pendents de llegir"
@@ -622,7 +644,7 @@ msgstr "Número de permís de treball"
 #. module: hr_contract
 #: model:hr.contract.type,name:hr_contract.hr_contract_type_wrkr
 msgid "Worker"
-msgstr ""
+msgstr "Treballador"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__resource_calendar_id

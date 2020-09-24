@@ -96,6 +96,7 @@ class AccountInvoiceRefund(models.TransientModel):
                             'date': date,
                             'origin': inv.origin,
                             'fiscal_position_id': inv.fiscal_position_id.id,
+                            'partner_bank_id': inv.partner_bank_id.id,
                         })
                         for field in inv_obj._get_refund_common_fields():
                             if inv_obj._fields[field].type == 'many2one':

@@ -28,3 +28,4 @@ Benjamin Willig benjamin.willig@acsone.eu https://github.com/benwillig
 François Honoré francois.honore@acsone.eu https://github.com/acsonefho
 Denis Robinet denis.robinet@acsone.eu https://github.com/RobinetDenisAcsone
 Benoit Aimont benoit.aimont@acsone.eu https://github.com/baimont
+Bejaoui Souheil souheil.bejaoui@acsone.eu https://github.com/sbejaoui

@@ -14,6 +14,7 @@
 # Joe Hansen <joedalton2@yahoo.dk>, 2019
 # Pernille Kristensen <pernillekristensen1994@gmail.com>, 2019
 # Sanne Kristensen <sanne@vkdata.dk>, 2019
+# Mads Søndergaard, 2020
 # 
 msgid ""
 msgstr ""
@@ -21,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-09 10:32+0000\n"
 "PO-Revision-Date: 2018-08-24 09:20+0000\n"
-"Last-Translator: Sanne Kristensen <sanne@vkdata.dk>, 2019\n"
+"Last-Translator: Mads Søndergaard, 2020\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -35,6 +36,8 @@ msgid ""
 "<i class=\"fa fa-check\" role=\"img\" aria-label=\"Receive button\" "
 "title=\"Receive button\"/>"
 msgstr ""
+"<i class=\"fa fa-check\" role=\"img\" aria-label=\"Modtag knap\" "
+"title=\"Modtag knap\"/> "
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_line_view_kanban
@@ -45,12 +48,12 @@ msgstr "<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Date\" title=\"Date
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.view_lunch_cashmove_kanban
 msgid "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Amount\" title=\"Amount\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Mængde\" title=\"Mængde\"/> "
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_line_view_kanban
 msgid "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Money\" title=\"Money\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Penge\" title=\"Penge\"/> "
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_line_view_kanban
@@ -58,6 +61,8 @@ msgid ""
 "<i class=\"fa fa-phone\" role=\"img\" aria-label=\"Order button\" "
 "title=\"Order button\"/>"
 msgstr ""
+"<i class=\"fa fa-phone\" role=\"img\" aria-label=\"Bestil knap\" "
+"title=\"Bestil knap\"/> "
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_line_view_kanban
@@ -65,6 +70,8 @@ msgid ""
 "<i class=\"fa fa-times\" role=\"img\" aria-label=\"Cancel button\" "
 "title=\"Cancel button\"/>"
 msgstr ""
+"<i class=\"fa fa-times\" role=\"img\" aria-label=\"Annuller knap\" "
+"title=\"Annuller knap\"/> "
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_form
@@ -358,7 +365,7 @@ msgstr "Kontrol konti"
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_order_line_action_control_suppliers
 msgid "Control Vendors"
-msgstr ""
+msgstr "Kontroller forhandlere"
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_alert_action
@@ -373,12 +380,12 @@ msgstr ""
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_cashmove_action_control_accounts
 msgid "Create a new payment"
-msgstr ""
+msgstr "Opret en ny betaling"
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_product_action
 msgid "Create a new product for lunch"
-msgstr ""
+msgstr "Opret et nyt frokost produkt"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__create_uid
@@ -449,7 +456,7 @@ msgstr "Vis navn"
 #: code:addons/lunch/static/src/xml/lunch.xml:7
 #, python-format
 msgid "Don't forget the alerts displayed in the reddish area"
-msgstr ""
+msgstr "Glem ikke advarslerne vist i det rødlige område"
 
 #. module: lunch
 #: model:ir.ui.menu,name:lunch.lunch_cashmove_menu_payment
@@ -503,11 +510,14 @@ msgid ""
 "Helps you handle your lunch needs, if you are a manager you will be able to "
 "create new products, cashmoves and to confirm or cancel orders."
 msgstr ""
+"Hjælper dig med at administrere dine frokost behov, hvis du er leder, vil du"
+" være i stand til at oprette nye produkter, kontant bevægelser, samt "
+"godkende eller annullere ordre."
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_product_category_action
 msgid "Here you can access all categories for the lunch products."
-msgstr ""
+msgstr "Her kan du tilgå alle kategorier for frokost produkterne."
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_order_line_action_by_supplier
@@ -612,7 +622,7 @@ msgstr "Frokost alarm"
 #: model:ir.model,name:lunch.model_lunch_cashmove
 #, python-format
 msgid "Lunch Cashmove"
-msgstr ""
+msgstr "Frokost kontant bevægelse"
 
 #. module: lunch
 #: code:addons/lunch/models/lunch.py:67
@@ -641,12 +651,12 @@ msgstr ""
 #. module: lunch
 #: model:ir.model,name:lunch.model_lunch_product
 msgid "Lunch Product"
-msgstr ""
+msgstr "Frokost produkt"
 
 #. module: lunch
 #: model:ir.model,name:lunch.model_lunch_product_category
 msgid "Lunch Product Category"
-msgstr ""
+msgstr "Frokost produkt kategori"
 
 #. module: lunch
 #: model:ir.actions.server,name:lunch.action_server_lunch_archive_product
@@ -656,7 +666,7 @@ msgstr ""
 #. module: lunch
 #: model:ir.actions.server,name:lunch.lunch_order_line_action_cancel
 msgid "Lunch: Cancel meals"
-msgstr ""
+msgstr "Frokost: Annuller måltider"
 
 #. module: lunch
 #: model:ir.actions.server,name:lunch.lunch_order_line_action_order
@@ -666,7 +676,7 @@ msgstr "Frokost: Bestil måltider"
 #. module: lunch
 #: model:ir.actions.server,name:lunch.lunch_order_line_action_confirm
 msgid "Lunch: Receive meals"
-msgstr ""
+msgstr "Frokost: Modtag måltider"
 
 #. module: lunch
 #: model:ir.ui.menu,name:lunch.menu_lunch_admin
@@ -693,7 +703,7 @@ msgstr "Mandag"
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_view_search
 msgid "My Account grouped"
-msgstr ""
+msgstr "Min konto grupperet"
 
 #. module: lunch
 #: model:ir.ui.menu,name:lunch.menu_lunch_title
@@ -724,17 +734,17 @@ msgstr "Ny ordre"
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_cashmove_action_account
 msgid "No cash move yet"
-msgstr ""
+msgstr "Ingen kontant bevægelse endnu"
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_order_line_action_control_suppliers
 msgid "No lunch order yet"
-msgstr ""
+msgstr "Ingen frokost bestilling endnu"
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_order_line_action
 msgid "No previous order found"
-msgstr ""
+msgstr "Ingen forrige ordre fundet"
 
 #. module: lunch
 #: code:addons/lunch/wizard/lucky_order.py:40
@@ -755,7 +765,7 @@ msgstr "Notat"
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_order_line_action_by_supplier
 msgid "Nothing to order today"
-msgstr ""
+msgstr "Intet at bestille i dag"
 
 #. module: lunch
 #: code:addons/lunch/models/lunch.py:318
@@ -793,7 +803,7 @@ msgstr "Ordredato"
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_line_view_tree
 msgid "Order lines Tree"
-msgstr ""
+msgstr "Bestillingslinjer træ"
 
 #. module: lunch
 #: selection:lunch.order.line,state:0
@@ -819,7 +829,7 @@ msgstr "Ordre efter leverandør"
 #. module: lunch
 #: model:mail.template,subject:lunch.lunch_order_mail_supplier
 msgid "Orders for ${ctx['order']['company_name']}"
-msgstr ""
+msgstr "Bestillinger for ${ctx['order']['company_name']}"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_view_search
@@ -833,6 +843,8 @@ msgid ""
 "Payments are used to register liquidity movements. You can process those "
 "payments by your own means or by using installed facilities."
 msgstr ""
+"Betalinger bruges til at registrere likviditetsbevægelser. Du kan behandle "
+"disse betalinger på egen hånd, eller ved at bruge installeret funktioner."
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__previous_order_ids
@@ -909,12 +921,12 @@ msgstr "Varer"
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_product_category_view_form
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_form
 msgid "Products Form"
-msgstr ""
+msgstr "Produkter formular"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_tree
 msgid "Products Tree"
-msgstr ""
+msgstr "Produkter træ"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_alert_view_form
@@ -1110,7 +1122,7 @@ msgstr "Leverandør"
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_line_view_search
 msgid "Vendor Orders by Date"
-msgstr ""
+msgstr "Forhandler bestillinger per dato"
 
 #. module: lunch
 #: code:addons/lunch/models/lunch.py:192
@@ -1153,20 +1165,20 @@ msgstr "Dine favorit måltider vil blive lavet baseret på dine seneste ordrer."
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_view_form
 msgid "cashmove form"
-msgstr ""
+msgstr "kontant bevægelse formular"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_view_tree
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_view_tree_2
 msgid "cashmove tree"
-msgstr ""
+msgstr "kontant bevægelse træ"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_view_search_2
 msgid "lunch cashmove"
-msgstr ""
+msgstr "frokost kontant bevægelse"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_view_search
 msgid "lunch employee payment"
-msgstr ""
+msgstr "frokost medarbejder betaling"

@@ -23,7 +23,7 @@ class ResConfigSettings(models.TransientModel):
     def get_values(self):
         res = super(ResConfigSettings, self).get_values()
         google_provider = self.env.ref('auth_oauth.provider_google', False)
-        res.update(
+        google_provider and res.update(
             auth_oauth_google_enabled=google_provider.enabled,
             auth_oauth_google_client_id=google_provider.client_id,
             server_uri_google=self.get_uri(),
@@ -33,7 +33,7 @@ class ResConfigSettings(models.TransientModel):
     def set_values(self):
         super(ResConfigSettings, self).set_values()
         google_provider = self.env.ref('auth_oauth.provider_google', False)
-        google_provider.write({
+        google_provider and google_provider.write({
             'enabled': self.auth_oauth_google_enabled,
             'client_id': self.auth_oauth_google_client_id,
         })

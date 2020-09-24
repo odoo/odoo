@@ -5,6 +5,7 @@
 # Translators:
 # Martin Trigaux, 2018
 # Dorin Hongu <dhongu@gmail.com>, 2019
+# Foldi Robert <foldirobert@nexterp.ro>, 2020
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-09 10:31+0000\n"
 "PO-Revision-Date: 2018-08-24 09:18+0000\n"
-"Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2019\n"
+"Last-Translator: Foldi Robert <foldirobert@nexterp.ro>, 2020\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -144,7 +145,7 @@ msgstr "Disponibil"
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__barcode
 msgid "Badge ID"
-msgstr ""
+msgstr "ID Ecuson"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_attendance.py:82
@@ -454,7 +455,7 @@ msgstr "ID"
 #. module: hr_attendance
 #: model:ir.model.fields,help:hr_attendance.field_hr_employee__barcode
 msgid "ID used for employee identification."
-msgstr ""
+msgstr "ID utilizat pentru identificarea angajatului."
 
 #. module: hr_attendance
 #. openerp-web
@@ -545,7 +546,7 @@ msgstr ""
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
 msgid "Not available"
-msgstr ""
+msgstr "Nu este disponibil"
 
 #. module: hr_attendance
 #. openerp-web
@@ -568,6 +569,8 @@ msgstr "PIN"
 #: model:ir.model.fields,help:hr_attendance.field_hr_employee__pin
 msgid "PIN used to Check In/Out in Kiosk Mode (if enabled in Configuration)."
 msgstr ""
+"PIN folosit pentru check / out în modul chioșc (dacă este activat în "
+"configurare)"
 
 #. module: hr_attendance
 #. openerp-web
@@ -637,7 +640,7 @@ msgstr "Iesire"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_filter_inherit_hr_attendance
 msgid "Signed In"
-msgstr ""
+msgstr "Logat"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_filter_inherit_hr_attendance
@@ -648,7 +651,7 @@ msgstr ""
 #: code:addons/hr_attendance/models/hr_employee.py:155
 #, python-format
 msgid "Such grouping is not allowed."
-msgstr ""
+msgstr "O astfel de grupare nu este permisă."
 
 #. module: hr_attendance
 #: sql_constraint:hr.employee:0
@@ -656,12 +659,14 @@ msgid ""
 "The Badge ID must be unique, this one is already assigned to another "
 "employee."
 msgstr ""
+"ID-ul de Ecuson trebuie să fie unic, acesta este deja atribuit unui alt "
+"angajat."
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_employee.py:64
 #, python-format
 msgid "The PIN must be a sequence of digits."
-msgstr ""
+msgstr "PIN-ul trebuie să fie o secvență de cifre."
 
 #. module: hr_attendance
 #: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_action
@@ -761,7 +766,7 @@ msgstr ""
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.print_employee_badge
 msgid "barcode"
-msgstr ""
+msgstr "Cod de bare"
 
 #. module: hr_attendance
 #. openerp-web

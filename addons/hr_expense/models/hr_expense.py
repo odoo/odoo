@@ -112,7 +112,7 @@ class HrExpense(models.Model):
                 date_expense = expense.date
                 amount = expense.currency_id._convert(
                     expense.total_amount, expense.company_currency_id,
-                    expense.company_id, date_expense or fields.Date.today())
+                    expense.company_id or expense.sheet_id.company_id, date_expense or fields.Date.today())
             expense.total_amount_company = amount
 
     @api.multi
@@ -338,6 +338,8 @@ class HrExpense(models.Model):
                     'expense_id': expense.id,
                     'partner_id': partner_id,
                     'currency_id': expense.currency_id.id if different_currency else False,
+                    'analytic_account_id': expense.analytic_account_id.id if tax['analytic'] else False,
+                    'analytic_tag_ids': [(6, 0, expense.analytic_tag_ids.ids)] if tax['analytic'] else False,
                 }
                 total_amount -= amount
                 total_amount_currency -= move_line_tax_values['amount_currency'] or amount
@@ -485,6 +487,7 @@ class HrExpense(models.Model):
             'quantity': 1,
             'unit_amount': price,
             'company_id': employee.company_id.id,
+            'currency_id': employee.company_id.currency_id.id,
         })
         if account:
             custom_values['account_id'] = account.id

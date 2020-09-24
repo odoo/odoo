@@ -10,9 +10,9 @@
 # fanha99 <fanha99@hotmail.com>, 2018
 # Minh Nguyen <ndminh210994@gmail.com>, 2018
 # khoibv Mr <kendev2009@gmail.com>, 2018
-# thanhnguyen.icsc <thanhnguyen.icsc@gmail.com>, 2019
+# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2019
 # Dung Nguyen Thi <dungnt@trobz.com>, 2019
-# Duy BQ <duybq86@gmail.com>, 2019
+# Duy BQ <duybq86@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -20,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-14 07:33+0000\n"
 "PO-Revision-Date: 2018-08-24 09:25+0000\n"
-"Last-Translator: Duy BQ <duybq86@gmail.com>, 2019\n"
+"Last-Translator: Duy BQ <duybq86@gmail.com>, 2020\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -244,7 +244,7 @@ msgstr "<span class=\"o_stat_text\">Tồn kho</span>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "<span class=\"o_stat_text\">Operations</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Hoạt động</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_mrp_line
@@ -724,6 +724,12 @@ msgstr "Khả dụng"
 #: model_terms:ir.ui.view,arch_db:stock.stock_product_search_form_view
 msgid "Available Products"
 msgstr "Sản phẩm khả dụng"
+
+#. module: stock
+#: code:addons/stock/models/product.py:581
+#, python-format
+msgid "Available quantity should be set to zero before changing type"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__backorder_id
@@ -2997,7 +3003,7 @@ msgstr "Danh sách xem chi tiết"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "List view of operations"
-msgstr ""
+msgstr "Hiển thị danh mục hoạt động"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_form
@@ -6790,14 +6796,8 @@ msgstr "Sản phẩm"
 #: model:ir.model.fields,help:stock.field_stock_location_route__warehouse_selectable
 msgid ""
 "When a warehouse is selected for this route, this route should be seen as "
-"the default route when products pass through this warehouse.  This behaviour"
-" can be overridden by the routes on the Product/Product Categories or by the"
-" Preferred Routes on the Procurement"
+"the default route when products pass through this warehouse."
 msgstr ""
-"Khi một nhà kho được chọn cho tuyến đường này, tuyến đường này sẽ được xem "
-"là tuyến đường mặc định khi các sản phẩm đi qua nhà kho này. Hành vi này có "
-"thể bị ghi đè bởi các tuyến đường trên danh mục sản phẩm/sản phẩm hoặc bằng "
-"các tuyến đường ưa thích trên cung ứng"
 
 #. module: stock
 #: selection:stock.picking,move_type:0
@@ -6808,19 +6808,13 @@ msgstr "Khi tất cả sản phẩm đã sẵn sàng"
 #: model:ir.model.fields,help:stock.field_stock_location_route__product_selectable
 msgid ""
 "When checked, the route will be selectable in the Inventory tab of the "
-"Product form.  It will take priority over the Warehouse route. "
+"Product form."
 msgstr ""
-"Khi được chọn, tuyến đường sẽ được chọn trong tab tồn kho của sản phẩm mẫu. "
-"Nó sẽ được ưu tiên hơn các tuyến đường kho."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_route__product_categ_selectable
-msgid ""
-"When checked, the route will be selectable on the Product Category.  It will"
-" take priority over the Warehouse route. "
+msgid "When checked, the route will be selectable on the Product Category."
 msgstr ""
-"Khi được chọn, tuyến đường sẽ được chọn trên danh mục sản phẩm. Nó sẽ được "
-"ưu tiên hơn các tuyến đường kho."
 
 #. module: stock
 #: code:addons/stock/models/stock_rule.py:113
@@ -7253,7 +7247,7 @@ msgstr "Đầu tiên bạn phải cấu hình số lượng bạn sẽ đóng tr
 #: code:addons/stock/models/stock_picking.py:712
 #, python-format
 msgid "You need to supply a Lot/Serial number for product %s."
-msgstr "Bạn cần cung cấp số lô/sê-ri của sản phẩm"
+msgstr "Bạn cần cung cấp số lô/sê-ri của sản phẩm %s."
 
 #. module: stock
 #: code:addons/stock/models/product.py:394
@@ -7351,3 +7345,9 @@ msgstr "đã được xử lý thay vì"
 #: model_terms:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "⇒ Set quantities to 0"
 msgstr "⇒ Đặt số lượng về 0"
+
+#. module: stock
+#: code:addons/stock/models/stock_move_line.py:223
+#, python-format
+msgid "Changing the product is only allowed in 'Draft' state."
+msgstr "Chỉ cho phép thay đổi sản phẩm ở trạng thái 'Nháp'."

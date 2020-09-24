@@ -54,8 +54,8 @@
         <field name="model">purchase.report</field>
         <field name="arch" type="xml">
             <search string="Purchase Orders">
-                <filter string="Quotations" name="quotes" domain="[('state','=','draft')]"/>
-                <filter string="Orders" name="orders" domain="[('state','!=','draft'),('state','!=','cancel')]"/>
+                <filter string="Quotations" name="quotes" domain="[('state','in',('draft','sent'))]"/>
+                <filter string="Orders" name="orders" domain="[('state','!=','draft'), ('state','!=','sent'), ('state','!=','cancel')]"/>
                 <filter string="Purchased Last 365 Days" name="last_year_purchase"
                         domain="[('date_order', '&gt;', (context_today() - relativedelta(days=365)).strftime('%Y-%m-%d'))]"/>
                 <field name="partner_id"/>

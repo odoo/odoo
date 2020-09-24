@@ -477,7 +477,7 @@ class Challenge(models.Model):
                 ('state', '!=', 'draft'),
             ]
             if restrict_goals:
-                domain.append(('ids', 'in', restrict_goals.ids))
+                domain.append(('id', 'in', restrict_goals.ids))
             else:
                 # if no subset goals, use the dates for restriction
                 if start_date:

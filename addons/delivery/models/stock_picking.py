@@ -101,6 +101,13 @@ class StockPicking(models.Model):
         for picking in self:
             picking.weight_uom_id = weight_uom_id
 
+    def get_multiple_carrier_tracking(self):
+        self.ensure_one()
+        try:
+            return json.loads(self.carrier_tracking_url)
+        except ValueError:
+            return False
+
     @api.depends('move_lines', 'move_ids_without_package')
     def _cal_weight(self):
         for picking in self:
@@ -182,7 +189,8 @@ class StockPicking(models.Model):
         self.ensure_one()
         sale_order = self.sale_id
         if sale_order.invoice_shipping_on_delivery:
-            sale_order._create_delivery_line(self.carrier_id, self.carrier_price)
+            carrier_price = self.carrier_price * (1.0 + (float(self.carrier_id.margin) / 100.0))
+            sale_order._create_delivery_line(self.carrier_id, carrier_price)
 
     @api.multi
     def open_website_url(self):

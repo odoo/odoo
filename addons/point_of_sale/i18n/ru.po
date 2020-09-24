@@ -11,7 +11,7 @@
 # Oleg Kuryan <oleg@ventor.tech>, 2019
 # Vasiliy Korobatov <korobatov@gmail.com>, 2019
 # Sergey Vilizhanin, 2019
-# Ivan Yelizariev <yelizariev@it-projects.info>, 2019
+# Ivan Yelizariev <yelizariev@it-projects.info>, 2020
 # 
 msgid ""
 msgstr ""
@@ -19,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-14 07:33+0000\n"
 "PO-Revision-Date: 2018-08-24 09:22+0000\n"
-"Last-Translator: Ivan Yelizariev <yelizariev@it-projects.info>, 2019\n"
+"Last-Translator: Ivan Yelizariev <yelizariev@it-projects.info>, 2020\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2151,7 +2151,7 @@ msgid ""
 "Make sure you are using IoT Box v18.12 or higher. Navigate to %s to accept "
 "the certificate of your IoT Box."
 msgstr ""
-"Убедитесь, что вы используете IoT Box v18.12 или выше. Перейдите к% s для "
+"Убедитесь, что вы используете IoT Box v18.12 или выше. Перейдите к %s для "
 "подтверждения сертификата вашего IoT Box."
 
 #. module: point_of_sale
@@ -2576,7 +2576,7 @@ msgstr "Журналы ТП"
 #: code:addons/point_of_sale/models/pos_config.py:348
 #, python-format
 msgid "POS Order %s"
-msgstr "Заказ ТП %s"
+msgstr "Заказ ТП %s "
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_line_form
@@ -2613,7 +2613,7 @@ msgstr "Продажи ТП"
 #: code:addons/point_of_sale/models/pos_config.py:357
 #, python-format
 msgid "POS order line %s"
-msgstr "Линия заказа ТП %s"
+msgstr "Линия заказа ТП %s "
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement_line__pos_statement_id
@@ -4120,6 +4120,15 @@ msgstr ""
 "заказа: "
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/pos.xml:715
+#, python-format
+msgid ""
+"The order has been synchronized earlier. To print the invoice please refer "
+"to the order in the backend"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_precompute_cash
 msgid ""
 "The payment input will behave similarily to bank payment input, and will be "
@@ -4363,7 +4372,7 @@ msgid ""
 "data-oe-model=pos.order data-oe-id=%d>%s</a>"
 msgstr ""
 "Этот счет был создан с момента продажи: <a href=# data-oe-model=pos.order "
-"data-oe-id=%d>%s</a>"
+"data-oe-id=%d> %s </a>"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__fiscal_position_ids
@@ -4434,7 +4443,7 @@ msgid ""
 "data-oe-model=pos.order data-oe-id=%d>%s</a>"
 msgstr ""
 "Эта передача была создана с момента продажи: <a href=# data-oe-"
-"model=pos.order data-oe-id=%d>%s</a>"
+"model=pos.order data-oe-id=%d> %s </a>"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4771,8 +4780,8 @@ msgid ""
 "{reference} is in state {state}, total amount: {total}, paid: {paid}"
 msgstr ""
 "Вы не можете подтвердить все заказы этой сессии, поскольку они не имеют "
-"&quot;платного&quot; статуса. {Reference} находится в состоянии {state}, "
-"общая сумма {total} оплачена {paid}"
+"`платного` статуса. {Reference} находится в состоянии {state}, общая сумма "
+"{total} оплачена {paid}"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:152
@@ -4800,7 +4809,7 @@ msgid ""
 "Please first close this one to use this point of sale."
 msgstr ""
 "Вы не можете использовать сессию других пользователей. Этот сеанс "
-"принадлежит компании% s. Пожалуйста, сначала закройте, чтобы использовать "
+"принадлежит компании %s. Пожалуйста, сначала закройте, чтобы использовать "
 "эту точку продажи."
 
 #. module: point_of_sale
@@ -4847,7 +4856,7 @@ msgstr "Вы должны выбрать прайс-лист в форме пр�
 #: code:addons/point_of_sale/models/pos_session.py:27
 #, python-format
 msgid "You have to set a Sale Journal for the POS:%s"
-msgstr "Вы должны установить журнал продаж для POS:%s"
+msgstr "Вы должны установить журнал продаж для POS:%s "
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/wizard/pos_details.py:48

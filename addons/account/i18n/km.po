@@ -581,6 +581,11 @@ msgid "<span>Quantity</span>"
 msgstr "<span>គុណតម្លៃ</span>"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
+msgid "<span>Reference</span>"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>Reporting</span>"
 msgstr "<span>រាយការណ៍</span>"
@@ -10046,10 +10051,9 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_payment__multi
 #: model:ir.model.fields,help:account.field_account_register_payments__multi
 msgid ""
-"Technical field indicating if the user selected invoices from multiple "
-"partners or from different types."
+"Technical field indicating if the registering payment will generate multiple"
+" payments or not."
 msgstr ""
-"បច្ចេកទេសដែលបង្ហាញថាតើអ្នកប្រើជ្រើសវិក័យប័ត្រពីដៃគូច្រើនឬពីប្រភេទផ្សេងគ្នា។"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_refund__refund_only
@@ -12348,6 +12352,12 @@ msgid ""
 msgstr ""
 "អ្នកគួរតែកំណត់ 'គណនីអត្រាការបាត់បង់អត្រាប្តូរប្រាក់' "
 "នៅក្នុងការកំណត់គណនេយ្យ,ដើម្បីគ្រប់គ្រងការកក់បញ្ជីគណនេយ្យដោយស្វ័យប្រវត្តិដែលទាក់ទងនឹងភាពខុសគ្នារវាងអត្រាប្តូរប្រាក់។"
+
+#. module: account
+#: code:addons/account/models/account_cash_rounding.py:33
+#, python-format
+msgid "Please set a positive rounding value."
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_refund

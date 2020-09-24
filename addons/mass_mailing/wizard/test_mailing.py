@@ -21,8 +21,8 @@ class TestMassMailing(models.TransientModel):
         mass_mail_layout = self.env.ref('mass_mailing.mass_mailing_mail_layout')
         for test_mail in test_emails:
             # Convert links in absolute URLs before the application of the shortener
-            mailing.write({'body_html': self.env['mail.thread']._replace_local_links(mailing.body_html)})
-            body = tools.html_sanitize(mailing.body_html, sanitize_attributes=True, sanitize_style=True)
+            body = self.env['mail.thread']._replace_local_links(mailing.body_html)
+            body = tools.html_sanitize(body, sanitize_attributes=True, sanitize_style=True)
             mail_values = {
                 'email_from': mailing.email_from,
                 'reply_to': mailing.reply_to,
@@ -33,6 +33,7 @@ class TestMassMailing(models.TransientModel):
                 'mailing_id': mailing.id,
                 'attachment_ids': [(4, attachment.id) for attachment in mailing.attachment_ids],
                 'auto_delete': True,
+                'mail_server_id': mailing.mail_server_id.id,
             }
             mail = self.env['mail.mail'].create(mail_values)
             mails |= mail

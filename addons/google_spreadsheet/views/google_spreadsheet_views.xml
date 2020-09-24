@@ -6,6 +6,7 @@
         <record id="view_ir_attachment_google_spreadsheet_tree" model="ir.ui.view">
             <field name="name">ir.attachment.google.spreadsheet.tree</field>
             <field name="model">ir.attachment</field>
+            <field name="priority">100</field>
             <field name="arch" type="xml">
                 <tree string="Google Spreadsheets">
                     <field name="name" string="Name"/>
@@ -17,6 +18,7 @@
         <record id="view_ir_attachment_google_spreadsheet_form" model="ir.ui.view">
             <field name="name">ir.attachment.google.spreadsheet.form</field>
             <field name="model">ir.attachment</field>
+            <field name="priority">100</field>
             <field name="arch" type="xml">
                 <form string="Google Spreadsheets">
                     <sheet>

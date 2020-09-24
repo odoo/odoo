@@ -4,7 +4,8 @@
             <field name="name">Payroll</field>
             <field name="res_model">ir.module.module</field>
             <field name="view_mode">kanban,tree,form</field>
-            <field name="context" eval="{'search_default_category_id': ref('base.module_category_localization'), 'search_default_name': 'Payroll'}"/>
+            <field name="context">{}</field>
+            <field name="domain">[('name', '=like', 'l10n_%_hr_payroll')]</field>
             <field name="search_view_id" ref="base.view_module_filter"/>
         </record>
 

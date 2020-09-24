@@ -152,7 +152,7 @@
                                 </div>
                                 <div class="o_payment_acquirer_bottom">
                                     <t t-if="installed">
-                                        <field name="environment" widget="label_selection" options="{'classes': {'test': 'warning', 'production': 'success'}}"/>
+                                        <field name="environment" widget="label_selection" options="{'classes': {'test': 'warning', 'production': 'success'}}" attrs="{'invisible': [('provider', '=', 'transfer')]}"/>
                                     </t>
                                     <button t-if="!installed" type="object" class="btn btn-secondary float-right" name="button_immediate_install">Install</button>
                                     <button t-if="installed and !record.website_published.raw_value" type="edit" class="btn btn-primary float-right">Activate</button>

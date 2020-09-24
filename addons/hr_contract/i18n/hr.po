@@ -5,24 +5,25 @@
 # Translators:
 # Martin Trigaux, 2019
 # Vladimir Olujić <olujic.vladimir@storm.hr>, 2019
-# Đurđica Žarković <durdica.zarkovic@storm.hr>, 2019
 # Karolina Tonković <karolina.tonkovic@storm.hr>, 2019
 # KRISTINA PALAŠ <kristina.palas@storm.hr>, 2019
 # Marko Carević <marko.carevic@live.com>, 2019
 # Mario Jureša <mario.juresa@uvid.hr>, 2019
 # Tina Milas, 2019
 # Stjepan Lovasić <stjepan.lovasic@gmail.com>, 2019
-# Bole <bole@dajmi5.com>, 2019
 # Ana-Maria Olujić <ana-maria.olujic@slobodni-programi.hr>, 2019
 # Milan Tribuson <one.mile.code@gmail.com>, 2019
+# Ivan Marijanović <ivanm101@yahoo.com>, 2020
+# Bole <bole@dajmi5.com>, 2020
+# Đurđica Žarković <durdica.zarkovic@storm.hr>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-11-14 07:34+0000\n"
+"POT-Creation-Date: 2020-02-06 19:08+0000\n"
 "PO-Revision-Date: 2018-08-24 09:18+0000\n"
-"Last-Translator: Milan Tribuson <one.mile.code@gmail.com>, 2019\n"
+"Last-Translator: Đurđica Žarković <durdica.zarkovic@storm.hr>, 2020\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -299,6 +300,11 @@ msgid "Followers (Partners)"
 msgstr "Pratitelji (Partneri)"
 
 #. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+msgid "Future Activities"
+msgstr "Buduće aktivnosti"
+
+#. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract_type__sequence
 msgid "Gives the sequence when displaying a list of Contract."
 msgstr "Daje redoslijed sekvence kod prikaza liste ugovora"
@@ -385,6 +391,11 @@ msgstr "Promijenio"
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type__write_date
 msgid "Last Updated on"
 msgstr "Vrijeme promjene"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+msgid "Late Activities"
+msgstr "Zakažnjele aktivnosti"
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_employee__contract_id
@@ -519,6 +530,11 @@ msgid "Sequence"
 msgstr "Sekvenca"
 
 #. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+msgid "Show all records which have a next action date before today"
+msgstr ""
+
+#. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__reported_to_secretariat
 msgid "Social Secretariat"
 msgstr ""
@@ -564,7 +580,7 @@ msgstr "Status ugovora"
 #. module: hr_contract
 #: model:hr.contract.type,name:hr_contract.hr_contract_type_sub
 msgid "Subcontractor"
-msgstr ""
+msgstr "Podizvođač"
 
 #. module: hr_contract
 #: selection:hr.contract,state:0
@@ -582,6 +598,11 @@ msgstr ""
 #: selection:hr.contract,activity_state:0
 msgid "Today"
 msgstr "Danas"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+msgid "Today Activities"
+msgstr "Današnje aktivnosti"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_unread

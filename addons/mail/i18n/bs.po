@@ -8,6 +8,7 @@
 # Martin Trigaux, 2019
 # Anto Matic <anto.matic@invent.ba>, 2019
 # Igor Krizanovic <krizanovic.igor@gmail.com>, 2019
+# Ranko Bojic <bojicr.bl@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -15,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-14 07:34+0000\n"
 "PO-Revision-Date: 2018-08-24 09:20+0000\n"
-"Last-Translator: Igor Krizanovic <krizanovic.igor@gmail.com>, 2019\n"
+"Last-Translator: Ranko Bojic <bojicr.bl@gmail.com>, 2020\n"
 "Language-Team: Bosnian (https://www.transifex.com/odoo/teams/41243/bs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -5064,6 +5065,10 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
+"Status na osnovu aktivnosti\n"
+"Kašnjenje: Rok je već prošao\n"
+"Danas: Datum aktivnosti je današnji\n"
+"Planirano: Buduće aktivnosti."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview__sub_model_object_field
@@ -5936,6 +5941,14 @@ msgid ""
 msgstr ""
 "Ne možete da obrišete ove grupe, jer je grupa Cijela Kompanija potrebna "
 "drugim modulima."
+
+#. module: mail
+#: code:addons/mail/models/mail_alias.py:89
+#, python-format
+msgid ""
+"You cannot use anything else than unaccented latin characters in the alias "
+"address."
+msgstr ""
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:257

@@ -182,7 +182,7 @@ class Lead(models.Model):
     def _compute_day_open(self):
         """ Compute difference between create date and open date """
         for lead in self.filtered(lambda l: l.date_open and l.create_date):
-            date_create = fields.Datetime.from_string(lead.create_date)
+            date_create = fields.Datetime.from_string(lead.create_date).replace(microsecond=0)
             date_open = fields.Datetime.from_string(lead.date_open)
             lead.day_open = abs((date_open - date_create).days)
 
@@ -302,7 +302,9 @@ class Lead(models.Model):
 
     @api.model
     def create(self, vals):
-        # set up context used to find the lead's Sales Team which is needed
+        if vals.get('website'):
+            vals['website'] = self.env['res.partner']._clean_website(vals['website'])
+        # set up context used to find the lead's sales channel which is needed
         # to correctly set the default stage_id
         context = dict(self._context or {})
         if vals.get('type') and not self._context.get('default_type'):
@@ -323,6 +325,8 @@ class Lead(models.Model):
 
     @api.multi
     def write(self, vals):
+        if vals.get('website'):
+            vals['website'] = self.env['res.partner']._clean_website(vals['website'])
         # stage change: update date_last_stage_update
         if 'stage_id' in vals:
             vals['date_last_stage_update'] = fields.Datetime.now()
@@ -1164,8 +1168,8 @@ class Lead(models.Model):
 
     @api.multi
     def get_formview_id(self, access_uid=None):
-        if self.type == 'opportunity':
-            view_id = self.env.ref('crm.crm_case_form_view_oppor').id
+        if self.type == 'lead':
+            view_id = self.env.ref('crm.crm_case_form_view_leads').id
         else:
             view_id = super(Lead, self).get_formview_id()
         return view_id

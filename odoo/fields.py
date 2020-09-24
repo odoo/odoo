@@ -598,6 +598,7 @@ class Field(MetaField('DummyField', (object,), {})):
         # copy the cache of draft records into others' cache
         if records.env.in_onchange and records.env != others.env:
             copy_cache(records - records.filtered('id'), others.env)
+            others.env._protected = records.env._protected
         #
         # Traverse fields one by one for all records, in order to take advantage
         # of prefetching for each field access. In order to clarify the impact
@@ -792,7 +793,7 @@ class Field(MetaField('DummyField', (object,), {})):
 
     @property
     def _description_sortable(self):
-        return self.store or (self.inherited and self.related_field._description_sortable)
+        return (self.column_type and self.store) or (self.inherited and self.related_field._description_sortable)
 
     def _description_string(self, env):
         if self.string and env.lang:
@@ -940,10 +941,17 @@ class Field(MetaField('DummyField', (object,), {})):
             if model._table_has_rows():
                 model._init_column(self.name)
 
-        if self.required and not has_notnull:
-            sql.set_not_null(model._cr, model._table, self.name)
-        elif not self.required and has_notnull:
-            sql.drop_not_null(model._cr, model._table, self.name)
+        if self.required:
+            if not has_notnull:
+                err_msg = sql.set_not_null(model._cr, model._table, self.name)
+                if err_msg:
+                    model.pool._notnull_errors.setdefault((model._table, self.name), err_msg)
+        else:
+            if has_notnull:
+                sql.drop_not_null(model._cr, model._table, self.name)
+            # the NOT NULL constraint should not be there, so make sure to not
+            # log an error message about its absence
+            model.pool._notnull_errors.pop((model._table, self.name), None)
 
     def update_db_index(self, model, column):
         """ Add or remove the index corresponding to ``self``.
@@ -1796,6 +1804,12 @@ class Binary(Field):
     @property
     def column_type(self):
         return None if self.attachment else ('bytea', 'bytea')
+
+    def _get_attrs(self, model, name):
+        attrs = super(Binary, self)._get_attrs(model, name)
+        if not attrs.get('store', True):
+            attrs['attachment'] = False
+        return attrs
 
     _description_attachment = property(attrgetter('attachment'))
 
@@ -2778,21 +2792,20 @@ class Many2many(_RelationalMulti):
             return
 
         cr = records.env.cr
-        comodel = records.env[self.comodel_name]
+        comodel = records.env[self.comodel_name].with_context(**self.context)
 
         # determine old links (set of pairs (id1, id2))
-        clauses, params, tables = comodel.env['ir.rule'].domain_get(comodel._name)
-        if '"%s"' % self.relation not in tables:
-            tables.append('"%s"' % self.relation)
+        domain = self.domain if isinstance(self.domain, list) else []
+        wquery = comodel._where_calc(domain)
+        comodel._apply_ir_rules(wquery, 'read')
+        from_clause, where_clause, where_params = wquery.get_sql()
         query = """
-            SELECT {rel}.{id1}, {rel}.{id2} FROM {tables}
-            WHERE {rel}.{id1} IN %s AND {rel}.{id2}={table}.id AND {cond}
-        """.format(
-            rel=self.relation, id1=self.column1, id2=self.column2,
-            table=comodel._table, tables=",".join(tables),
-            cond=" AND ".join(clauses) if clauses else "1=1",
-        )
-        cr.execute(query, [tuple(records.ids)] + params)
+            SELECT {rel}.{id1}, {rel}.{id2} FROM {rel}, {from_clause}
+            WHERE {where_clause} AND {rel}.{id1} IN %s AND {rel}.{id2} = {table}.id
+        """.format(rel=self.relation, id1=self.column1, id2=self.column2,
+                   table=comodel._table, from_clause=from_clause,
+                   where_clause=where_clause or '1=1')
+        cr.execute(query, where_params + [tuple(records.ids)])
         old_links = set(cr.fetchall())
 
         # determine new links (set of pairs (id1, id2))

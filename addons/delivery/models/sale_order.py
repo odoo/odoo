@@ -21,11 +21,11 @@ class SaleOrder(models.Model):
         delivery_cost = sum([l.price_total for l in self.order_line if l.is_delivery])
         return self.amount_total - delivery_cost
 
-    @api.depends('partner_id')
+    @api.depends('partner_shipping_id')
     def _compute_available_carrier(self):
         carriers = self.env['delivery.carrier'].search([])
         for rec in self:
-            rec.available_carrier_ids = carriers.available_carriers(rec.partner_shipping_id) if rec.partner_id else carriers
+            rec.available_carrier_ids = carriers.available_carriers(rec.partner_shipping_id) if rec.partner_shipping_id else carriers
 
     def get_delivery_price(self):
         for order in self.filtered(lambda o: o.state in ('draft', 'sent') and len(o.order_line) > 0):

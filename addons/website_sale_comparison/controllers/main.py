@@ -19,12 +19,12 @@ class WebsiteSaleProductComparison(WebsiteSale):
         values['products'] = products.with_context(display_default_code=False)
 
         res = OrderedDict()
-        attrs = products.mapped('product_tmpl_id.valid_product_template_attribute_line_ids.attribute_id').filtered(lambda x: x.create_variant)
+        attrs = products.mapped('product_tmpl_id.valid_product_template_attribute_line_ids.attribute_id').filtered(lambda x: x.create_variant != 'no_variant')
         for attr in attrs.sorted(lambda att: (att.category_id.sequence, att.sequence)):
             cat_name = attr.category_id.name or _('Uncategorized')
             res.setdefault(cat_name, OrderedDict()).setdefault(attr.name, [' - '] * len(products))
         for num, product in enumerate(products):
-            for var in product.product_tmpl_id.valid_product_template_attribute_line_ids.filtered(lambda x: x.attribute_id.create_variant):
+            for var in product.product_tmpl_id.valid_product_template_attribute_line_ids.filtered(lambda x: x.attribute_id.create_variant != 'no_variant'):
                 cat_name = var.attribute_id.category_id.name or _('Uncategorized')
                 att_name = var.attribute_id.name
                 val = product.attribute_value_ids.filtered(lambda x: x.attribute_id == var.attribute_id)

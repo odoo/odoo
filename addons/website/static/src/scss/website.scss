@@ -1031,6 +1031,18 @@ table.table_desc tr td {
     }
 }
 
+// Navbar Dropdown Menu
+header > .navbar > * .dropdown-menu {
+    max-height: 60vh;
+    overflow-y: auto;
+}
+
+header.o_affix_enabled > .navbar > * .dropdown-menu {
+    @include media-breakpoint-down(md) {
+        max-height: 100%;
+    }
+}
+
 // Copyright
 .o_footer_copyright {
     padding: 8px;
@@ -1055,16 +1067,15 @@ table.table_desc tr td {
         > .navbar {
             background-color: transparent !important;
             border-color: transparent;
+            color: inherit;
 
             .nav-item {
                 > .nav-link {
                     background-color: transparent;
                     color: inherit;
-                }
-                &.show, &.active {
-                    > .nav-link {
-                        background-color: white;
-                        color: black;
+
+                    &.active {
+                        font-weight: bolder;
                     }
                 }
             }
@@ -1081,4 +1092,9 @@ table.table_desc tr td {
 // TODO: Will be handled properly in master/saas-12.2, temp fix for website_event.registration_attendee_details
 .modal-footer > .float-left {
     margin-right: auto;
+}
+
+// Fixing job perks icons in website_hr_recruitement by making them full-width
+.o_perk span {
+    display: block;
 }

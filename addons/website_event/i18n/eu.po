@@ -10,6 +10,7 @@
 # Gorka Toledo <gorka.toledo@gmail.com>, 2019
 # Mikel Lizarralde <mikellizarralde@gmail.com>, 2019
 # Naomi Hidalgo <naomihid96@gmail.com>, 2019
+# Maialen Rodriguez <maialenrodriguez98@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -17,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-14 07:35+0000\n"
 "PO-Revision-Date: 2018-08-24 09:34+0000\n"
-"Last-Translator: Naomi Hidalgo <naomihid96@gmail.com>, 2019\n"
+"Last-Translator: Maialen Rodriguez <maialenrodriguez98@gmail.com>, 2020\n"
 "Language-Team: Basque (https://www.transifex.com/odoo/teams/41243/eu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -36,6 +37,8 @@ msgid ""
 ".\n"
 "            Try the"
 msgstr ""
+".\n"
+"Saiatu"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
@@ -55,7 +58,7 @@ msgstr ""
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
 msgid "<b>Ticket Type</b>"
-msgstr ""
+msgstr "<b>Sarrera mota</b>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.country_events_list
@@ -182,7 +185,7 @@ msgstr ""
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
 msgid "<span itemprop=\"name\">Event Registration</span>"
-msgstr ""
+msgstr "<span itemprop=\"name\">Ekintza erregistroa</span>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
@@ -195,12 +198,19 @@ msgstr ""
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_location
 msgid "<span>Online Events</span>"
-msgstr ""
+msgstr "<span>Ekitaldiak linean</span>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
 msgid "<span>Unlimited</span>"
 msgstr "<span>Muga gabe</span>"
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
+msgid "<strong> You ordered more tickets than available seats</strong>"
+msgstr ""
+"<strong> Eskuragarri dauden eserleku kopurua baino gehiago eskatu dituzu "
+"</strong>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
@@ -263,6 +273,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
 msgid "Attendee #%s"
 msgstr "Partaidea #%s"
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.registration_template
+msgid "Available seats: "
+msgstr "Eserleku eskuragarriak:"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
@@ -336,7 +351,7 @@ msgstr ""
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__website_menu
 msgid "Dedicated Menu"
-msgstr ""
+msgstr "Menu dedikatua"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_type__website_menu
@@ -368,7 +383,7 @@ msgstr "Gertakizuna"
 #. module: website_event
 #: model:ir.model,name:website_event.model_event_type
 msgid "Event Category"
-msgstr ""
+msgstr "Ekintzaren kategoria"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_complete
@@ -395,7 +410,7 @@ msgstr "Ekitaldiaren menua"
 #: code:addons/website_event/static/src/js/website_event.editor.js:31
 #, python-format
 msgid "Event Name"
-msgstr ""
+msgstr "Ekitaldiaren izena"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.404
@@ -472,7 +487,7 @@ msgstr "Parte hartzen ari da "
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__is_published
 msgid "Is published"
-msgstr ""
+msgstr "Argitaratuta"
 
 #. module: website_event
 #: code:addons/website_event/models/event.py:71
@@ -562,13 +577,13 @@ msgstr "Gure gertakizunak "
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_right_photos
 msgid "Our Trainings"
-msgstr ""
+msgstr "Gure entrenamenduak"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_details
 #: model_terms:ir.ui.view,arch_db:website_event.index
 msgid "Participating"
-msgstr ""
+msgstr "Parte hartzen"
 
 #. module: website_event
 #: code:addons/website_event/controllers/main.py:60
@@ -706,7 +721,7 @@ msgstr ""
 #. module: website_event
 #: model:ir.actions.act_url,name:website_event.action_open_website
 msgid "Website Home"
-msgstr ""
+msgstr "Webgunearen hasiera "
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form_inherit_website

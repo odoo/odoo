@@ -273,7 +273,7 @@ class PurchaseOrderLine(models.Model):
                     activity._onchange_activity_type_id()
 
                 # If the user increased quantity of existing line or created a new line
-                pickings = line.order_id.picking_ids.filtered(lambda x: x.state not in ('done', 'cancel') and x.location_dest_id.usage in ('internal', 'transit'))
+                pickings = line.order_id.picking_ids.filtered(lambda x: x.state not in ('done', 'cancel') and x.location_dest_id.usage in ('internal', 'transit', 'customer'))
                 picking = pickings and pickings[0] or False
                 if not picking:
                     res = line.order_id._prepare_picking()
@@ -364,7 +364,9 @@ class PurchaseOrderLine(models.Model):
     def _update_received_qty(self):
         for line in self:
             total = 0.0
-            for move in line.move_ids:
+            # In case of a BOM in kit, the products delivered do not correspond to the products in
+            # the PO. Therefore, we can skip them since they will be handled later on.
+            for move in line.move_ids.filtered(lambda m: m.product_id == line.product_id):
                 if move.state == 'done':
                     if move.location_dest_id.usage == "supplier":
                         if move.to_refund:

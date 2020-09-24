@@ -51,10 +51,11 @@ class SaleOrder(models.Model):
     def _action_confirm(self):
         """ On SO confirmation, some lines should generate a task or a project. """
         result = super(SaleOrder, self)._action_confirm()
-        self.mapped('order_line').sudo().with_context(
-            default_company_id=self.company_id.id,
-            force_company=self.company_id.id,
-        )._timesheet_service_generation()
+        for order in self:
+            order.mapped('order_line').sudo().with_context(
+                default_company_id=order.company_id.id,
+                force_company=order.company_id.id,
+            )._timesheet_service_generation()
         return result
 
     @api.multi
@@ -111,9 +112,7 @@ class SaleOrder(models.Model):
     def action_view_timesheet(self):
         self.ensure_one()
         action = self.env.ref('hr_timesheet.timesheet_action_all').read()[0]
-        ctx = dict(self.env.context or {})
-        ctx.pop('group_by', None)
-        action['context'] = ctx  # erase default filters
+        action['context'] = {}  # erase default filters
 
         if self.timesheet_count > 0:
             action['domain'] = [('so_line', 'in', self.order_line.ids)]

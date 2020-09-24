@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime
+import pytz
 from uuid import uuid4
 
 from odoo import api, fields, models, _
@@ -49,7 +50,7 @@ class PosConfig(models.Model):
         return self.env['account.journal'].search([('type', '=', 'sale'), ('company_id', '=', self.env.user.company_id.id)], limit=1)
 
     def _default_pricelist(self):
-        return self.env['product.pricelist'].search([('currency_id', '=', self.env.user.company_id.currency_id.id)], limit=1)
+        return self.env['product.pricelist'].search([('company_id', 'in', (False, self.env.user.company_id.id)), ('currency_id', '=', self.env.user.company_id.currency_id.id)], limit=1)
 
     def _get_default_location(self):
         return self.env['stock.warehouse'].search([('company_id', '=', self.env.user.company_id.id)], limit=1).lot_stock_id
@@ -196,7 +197,9 @@ class PosConfig(models.Model):
                 order="stop_at desc", limit=1)
             if session:
                 pos_config.last_session_closing_cash = session[0]['cash_register_balance_end_real']
-                pos_config.last_session_closing_date = session[0]['stop_at'].date()
+                utc = pytz.timezone('UTC')
+                timezone = pytz.timezone(self._context.get('tz') or self.env.user.tz or 'UTC')
+                pos_config.last_session_closing_date = utc.localize(session[0]['stop_at']).astimezone(timezone).date()
             else:
                 pos_config.last_session_closing_cash = 0
                 pos_config.last_session_closing_date = False

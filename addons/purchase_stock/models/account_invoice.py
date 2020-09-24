@@ -151,3 +151,12 @@ class AccountInvoice(models.Model):
         for invoice in self.filtered(lambda x: x.type == 'in_refund'):
             rslt += invoice.mapped('invoice_line_ids.purchase_line_id.move_ids').filtered(lambda x: x.state == 'done' and x.location_dest_id.usage == 'supplier')
         return rslt
+
+
+class AccountInvoiceLine(models.Model):
+    _inherit = "account.invoice.line"
+
+    def _get_purchase_move_owner(self):
+        purchase_line = self._context.get('purchase_line_id')
+        owner = purchase_line and self.env['stock.move.line'].search_read([('move_id.purchase_line_id', '=', purchase_line)],['owner_id'])
+        return owner and owner[0].get('owner_id')

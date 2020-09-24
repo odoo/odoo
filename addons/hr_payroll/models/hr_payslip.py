@@ -189,7 +189,7 @@ class HrPayslip(models.Model):
             tz = timezone(calendar.tz)
             day_leave_intervals = contract.employee_id.list_leaves(day_from, day_to, calendar=contract.resource_calendar_id)
             for day, hours, leave in day_leave_intervals:
-                holiday = leave.holiday_id
+                holiday = leave[:1].holiday_id
                 current_leave_struct = leaves.setdefault(holiday.holiday_status_id, {
                     'name': holiday.holiday_status_id.name or _('Global Leaves'),
                     'sequence': 5,
@@ -246,7 +246,12 @@ class HrPayslip(models.Model):
         def _sum_salary_rule_category(localdict, category, amount):
             if category.parent_id:
                 localdict = _sum_salary_rule_category(localdict, category.parent_id, amount)
-            localdict['categories'].dict[category.code] = category.code in localdict['categories'].dict and localdict['categories'].dict[category.code] + amount or amount
+
+            if category.code in localdict['categories'].dict:
+                localdict['categories'].dict[category.code] += amount
+            else:
+                localdict['categories'].dict[category.code] = amount
+
             return localdict
 
         class BrowsableObject(object):
@@ -596,3 +601,11 @@ class HrPayslipRun(models.Model):
     @api.multi
     def close_payslip_run(self):
         return self.write({'state': 'close'})
+    
+    @api.multi
+    def unlink(self):
+        if any(self.filtered(lambda payslip_run: payslip_run.state not in ('draft'))):
+            raise UserError(_('You cannot delete a payslip batch which is not draft!'))
+        if any(self.mapped('slip_ids').filtered(lambda payslip: payslip.state not in ('draft','cancel'))):
+            raise UserError(_('You cannot delete a payslip which is not draft or cancelled!'))
+        return super(HrPayslipRun, self).unlink()

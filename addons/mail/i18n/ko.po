@@ -9,7 +9,7 @@
 # Seongseok Shin <shinss61@hotmail.com>, 2018
 # nle_odoo, 2018
 # Linkup <link-up@naver.com>, 2019
-# JH CHOI <hwangtog@gmail.com>, 2019
+# JH CHOI <hwangtog@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -17,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-14 07:34+0000\n"
 "PO-Revision-Date: 2018-08-24 09:20+0000\n"
-"Last-Translator: JH CHOI <hwangtog@gmail.com>, 2019\n"
+"Last-Translator: JH CHOI <hwangtog@gmail.com>, 2020\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3449,7 +3449,7 @@ msgstr "중재한 채널"
 #: code:addons/mail/models/mail_channel.py:170
 #, python-format
 msgid "Moderated channels must have moderators."
-msgstr ""
+msgstr "중재된 채널에는 중재자가 있어야 합니다."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__moderation_count
@@ -3500,13 +3500,13 @@ msgstr "중재자"
 #: code:addons/mail/models/mail_channel.py:154
 #, python-format
 msgid "Moderators must have an email address."
-msgstr ""
+msgstr "중재자는 이메일 주소가 있어야 합니다."
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:160
 #, python-format
 msgid "Moderators should be members of the channel they moderate."
-msgstr ""
+msgstr "중재자는 중재하는 채널의 구성원이어야 합니다."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_form
@@ -3761,7 +3761,7 @@ msgstr "귀하의 검색과 일치하는 메시지가 없습니다. 검색 필�
 #: code:addons/mail/wizard/mail_resend_message.py:51
 #, python-format
 msgid "No message_id found in context"
-msgstr ""
+msgstr "컨텍스트에 message_id가 없습니다."
 
 #. module: mail
 #. openerp-web
@@ -3955,7 +3955,7 @@ msgstr "온라인"
 #, python-format
 msgid ""
 "Only an administrator or a moderator can send guidelines to channel members!"
-msgstr ""
+msgstr "관리자 나 중재자만 채널 회원에게 지침을 보낼 수 있습니다!"
 
 #. module: mail
 #: code:addons/mail/models/ir_model.py:53
@@ -3967,7 +3967,7 @@ msgstr "사용자 정의 모델만 수정할 수 있습니다."
 #: code:addons/mail/models/mail_channel.py:165
 #, python-format
 msgid "Only mailing lists can be moderated."
-msgstr ""
+msgstr "메일링 목록만 조정할 수 있습니다."
 
 #. module: mail
 #: selection:mail.channel.partner,fold_state:0
@@ -5442,6 +5442,14 @@ msgid ""
 "- 'Add Followers': add followers to a record (Discuss)\n"
 "- 'Create Next Activity': create an activity (Discuss)"
 msgstr ""
+"서버 작업 유형입니다. 다음 값을 사용할 수 있습니다.\n"
+"- 'Python 코드 실행' : 실행될 Python 코드 블록입니다.\n"
+"- '작성 ': 새 값으로 새 레코드를 만듭니다.\n"
+"- '기록 업데이트' : 레코드의 값을 업데이트합니다.\n"
+"- '여러 작업 실행' : 여러 다른 서버 작업을 트리거하는 작업을 정의합니다.\n"
+"- '이메일 보내기' : 자동으로 이메일을 보냅니다(토론).\n"
+"- '팔로워 추가' : 레코드에 팔로워를 추가합니다(토론).\n"
+"- '다음 활동 만들기' : 활동을 만듭니다(토론)."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__uuid
@@ -5721,6 +5729,8 @@ msgid ""
 "View \"mail.mail_channel_send_guidelines\" was not found. No email has been "
 "sent. Please contact an administrator to fix this issue."
 msgstr ""
+"\"mail.mail_channel_send_guidelines\" 화면을 찾을 수 없습니다. 이메일이 전송되지 않았습니다. 이 문제를 "
+"해결하려면 관리자에게 문의하십시오."
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:752
@@ -5931,12 +5941,20 @@ msgid ""
 msgstr "전체 그룹은 다른 모듈에서 필요하므로 이러한 그룹을 삭제할 수 없습니다."
 
 #. module: mail
+#: code:addons/mail/models/mail_alias.py:89
+#, python-format
+msgid ""
+"You cannot use anything else than unaccented latin characters in the alias "
+"address."
+msgstr "별칭 주소에 채워지지 않은 라틴 문자를 사용할 수 없습니다."
+
+#. module: mail
 #: code:addons/mail/models/mail_channel.py:257
 #, python-format
 msgid ""
 "You do not have the rights to modify fields related to moderation on one of "
 "the channels you are modifying."
-msgstr ""
+msgstr "수정하려는 채널 중 하나에서 중재와 관련된 필드를 수정할 권한이 없습니다."
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:2365
@@ -6355,7 +6373,7 @@ msgstr "알 수없는 대상 모델 %s"
 #: code:addons/mail/static/src/js/models/messages/abstract_message.js:52
 #, python-format
 msgid "unnamed"
-msgstr ""
+msgstr "이름 없음"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_notification_email

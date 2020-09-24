@@ -30,7 +30,6 @@
 # 老窦 北京 <2662059195@qq.com>, 2018
 # Lisa Zhang <lzh@odoo.com>, 2018
 # Shane Tsoi <sso@odoo.com>, 2018
-# Henry Zhou <zhouhenry@live.com>, 2018
 # ChinaMaker <liuct@chinamaker.net>, 2018
 # KWOKYUK CHEUNG <cheungkwokyuk@gmail.com>, 2018
 # 海飞 Lu <330472962@qq.com>, 2018
@@ -68,7 +67,9 @@
 # Felix Yuen <fyu@odoo.com>, 2019
 # Jeffery CHEN Fan <jeffery9@gmail.com>, 2019
 # Jerry Pan <panjianyu@inspur.com>, 2019
-# liAnGjiA <liangjia@qq.com>, 2019
+# liAnGjiA <liangjia@qq.com>, 2020
+# as co02 <asco02@163.com>, 2020
+# Henry Zhou <zhouhenry@live.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -76,7 +77,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-10 14:44+0000\n"
 "PO-Revision-Date: 2018-08-24 09:14+0000\n"
-"Last-Translator: liAnGjiA <liangjia@qq.com>, 2019\n"
+"Last-Translator: Henry Zhou <zhouhenry@live.com>, 2020\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -11578,7 +11579,7 @@ msgstr "公司属性"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__company_registry
 msgid "Company Registry"
-msgstr "公司注册"
+msgstr "营业执照"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__report_header
@@ -18289,7 +18290,7 @@ msgstr "消息与社交"
 msgid ""
 "Methods that start with `get_default_` are deprecated. Override `get_values`"
 " instead(Method %s)"
-msgstr "以\"get_default_\"开头的方法已被弃用。使用“get_values”覆盖（方法 %s）"
+msgstr "以 `get_default_` 开头的方法已被弃用。使用 `get_values` 代替(方法 %s)"
 
 #. module: base
 #: code:addons/base/models/res_config.py:605
@@ -18297,7 +18298,7 @@ msgstr "以\"get_default_\"开头的方法已被弃用。使用“get_values”�
 msgid ""
 "Methods that start with `set_` are deprecated. Override `set_values` instead"
 " (Method %s)"
-msgstr "以\"set_\"开头的方法已被弃用。使用“set_values”覆盖（方法 %s）"
+msgstr "以 `set_` 开头的方法已被弃用。 使用 `set_values` 代替 (方法 %s)"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_mx_edi
@@ -18955,14 +18956,7 @@ msgstr "浏览数量"
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.open_module_tree
 msgid "No website module found!"
-msgstr ""
-"红尘来呀来\n"
-"\n"
-"去呀去 都是一场梦\n"
-"\n"
-"红尘来呀来\n"
-"\n"
-"去呀去也空！"
+msgstr "没发现网站模块！"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_data__noupdate
@@ -24687,7 +24681,7 @@ msgstr "在线开发工具"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_studio_customization
 msgid "Studio customizations"
-msgstr ""
+msgstr "Studio 定制"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.edit_menu_access
@@ -26427,6 +26421,14 @@ msgid "The list of models that extends the current model."
 msgstr "扩展当前模型清单。"
 
 #. module: base
+#: code:addons/base/models/ir_model.py:522
+#, python-format
+msgid ""
+"The m2o field %s is required but declares its ondelete policy as being 'set "
+"null'. Only 'restrict' and 'cascade' make sense."
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,help:base.field_ir_filters__action_id
 msgid ""
 "The menu action this filter applies to. When left empty the filter applies "
@@ -26600,7 +26602,7 @@ msgstr "服务器繁忙，模块操作此时无法完成，请稍后再试。"
 #, python-format
 msgid ""
 "The server refused the sender address (%(email_from)s) with error %(repl)s"
-msgstr "服务器无法发送地址 (%(email_from)s)，错误 (%(repl)s)"
+msgstr "服务器发不到这个邮箱地址 (%(email_from)s) 错误信息是 %(repl)s"
 
 #. module: base
 #: code:addons/base/models/ir_mail_server.py:190
@@ -27280,6 +27282,14 @@ msgid ""
 "- 'Add Followers': add followers to a record (Discuss)\n"
 "- 'Create Next Activity': create an activity (Discuss)"
 msgstr ""
+"服务器操作的类型。 提供以下值：\n"
+"-“执行Python代码”：将要执行的python代码块\n"
+"-'创建'：使用新值创建新记录\n"
+"-“更新记录”：更新记录的值\n"
+"-“执行多个动作”：定义一个触发其他几个服务器动作的动作\n"
+"-“发送电子邮件”：自动发送电子邮件（讨论）\n"
+"-“添加关注者”：将关注者添加到记录中（讨论）\n"
+"-“创建下一个活动”：创建活动（讨论）"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_constraint__type

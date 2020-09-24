@@ -9,10 +9,10 @@
 # Leandro Noijovich <eliel.sorcerer@gmail.com>, 2018
 # Yihya Hugirat <hugirat@gmail.com>, 2018
 # שהאב חוסיין <shhab89@gmail.com>, 2018
-# Amit Spilman <amit@laylinetech.com>, 2019
 # Martin Trigaux, 2019
 # דודי מלכה <Dudimalka6@gmail.com>, 2019
-# ZVI BLONDER <ZVIBLONDER@gmail.com>, 2019
+# ZVI BLONDER <ZVIBLONDER@gmail.com>, 2020
+# Amit Spilman <amit@laylinetech.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -20,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-14 07:34+0000\n"
 "PO-Revision-Date: 2018-08-24 09:21+0000\n"
-"Last-Translator: ZVI BLONDER <ZVIBLONDER@gmail.com>, 2019\n"
+"Last-Translator: Amit Spilman <amit@laylinetech.com>, 2020\n"
 "Language-Team: Hebrew (https://www.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -69,6 +69,8 @@ msgid ""
 "<i class=\"fa fa-check text-success\" title=\"This payment method is "
 "verified by our system.\" role=\"img\" aria-label=\"Ok\"/>"
 msgstr ""
+"<i class=\"fa fa-check text-success\" title=\"This payment method is "
+"verified by our system.\" role=\"img\" aria-label=\"Ok\"/>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_tokens_list
@@ -80,7 +82,7 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay_methods
 msgid "<i class=\"fa fa-home\" role=\"img\" aria-label=\"Home\" title=\"Home\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-home\" role=\"img\" aria-label=\"Home\" title=\"Home\"/>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_tokens_list
@@ -266,13 +268,13 @@ msgstr "נדרש אסימון ליצירת עסקת תשלום חדשה."
 #: code:addons/payment/models/payment_acquirer.py:657
 #, python-format
 msgid "A transaction %s with %s initiated using %s credit card."
-msgstr ""
+msgstr "עסקה %s עם %s נפתחה בשימוש %s כרטיס אשראי."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:663
 #, python-format
 msgid "A transaction %s with %s initiated."
-msgstr ""
+msgstr "עסקה %s עם %s נפתחה."
 
 #. module: payment
 #: code:addons/payment/models/account_invoice.py:36
@@ -306,32 +308,32 @@ msgstr "מספר חשבון"
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__acquirer_id
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_kanban
 msgid "Acquirer"
-msgstr ""
+msgstr "רוכש"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token__acquirer_id
 msgid "Acquirer Account"
-msgstr ""
+msgstr "חשבון שירות תשלומים מקוונים"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token__acquirer_ref
 msgid "Acquirer Ref."
-msgstr ""
+msgstr "מזהה שירות תשלומים מקוונים"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__acquirer_reference
 msgid "Acquirer Reference"
-msgstr ""
+msgstr "מזהה שירות תשלומים מקוונים"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_icon__acquirer_ids
 msgid "Acquirers"
-msgstr ""
+msgstr "שירותי תשלומים מקוונים"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_icon_form_view
 msgid "Acquirers list"
-msgstr ""
+msgstr "רשימת שירותי תשלומים מקוונים"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_kanban
@@ -376,7 +378,7 @@ msgstr "סכום"
 #: code:addons/payment/static/src/xml/payment_processing.xml:17
 #, python-format
 msgid "An error occured during the processing of this payment."
-msgstr ""
+msgstr "אירעה שגיאה במהלך עיבוד תשלום זה."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_onboarding_wizard_form
@@ -389,7 +391,7 @@ msgstr "החל"
 msgid ""
 "Are you sure you want to void the authorized transaction? This action can't "
 "be undone."
-msgstr ""
+msgstr "האם אתה בטוח שברצונך לבטל את העסקה המורשית? לא ניתן לבטל פעולה זו."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__authorize_implemented
@@ -438,12 +440,12 @@ msgstr "Buckaroo"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__callback_res_id
 msgid "Callback Document ID"
-msgstr ""
+msgstr "מזהה מסמך שיחה חוזרת"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__callback_model_id
 msgid "Callback Document Model"
-msgstr ""
+msgstr "מודל מסמך שיחה חוזרת"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__callback_hash
@@ -453,7 +455,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__callback_method
 msgid "Callback Method"
-msgstr ""
+msgstr "שיטת שיחה חוזרת"
 
 #. module: payment
 #. openerp-web
@@ -606,7 +608,7 @@ msgstr "ארץ"
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_acquirer
 msgid "Create a new payment acquirer"
-msgstr ""
+msgstr "צור ספק תשלומים מקוון חדש"
 
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_transaction
@@ -644,7 +646,7 @@ msgstr "נוצר ב-"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_form
 msgid "Credentials"
-msgstr ""
+msgstr "אישורים"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__currency_id
@@ -679,7 +681,7 @@ msgstr "קבע את סדר התצוגה"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_confirmation_status
 msgid "Dismiss"
-msgstr ""
+msgstr "שחרר"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__display_name
@@ -699,7 +701,7 @@ msgstr "בוצע"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__done_msg
 msgid "Done Message"
-msgstr ""
+msgstr "הודעת ביצוע"
 
 #. module: payment
 #: selection:payment.transaction,state:0
@@ -758,21 +760,22 @@ msgstr "חישוב עמלות נתמך"
 #: model:ir.model.fields,help:payment.field_payment_transaction__fees
 msgid "Fees amount; set by the system because depends on the acquirer"
 msgstr ""
+"סכום העמלות; מוגדר על ידי המערכת מכיוון שתלוי בספק שירות תשלומים מקוון"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__state_message
 msgid "Field used to store error and/or validation messages for information"
-msgstr ""
+msgstr "שדה המשמש לאחסון הודעות שגיאה ו / או אימות למידע"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__fees_dom_fixed
 msgid "Fixed domestic fees"
-msgstr ""
+msgstr "עמלות מקומיות קבועות"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__fees_int_fixed
 msgid "Fixed international fees"
-msgstr ""
+msgstr "עמלות בינלאומיות קבועות"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__inbound_payment_method_ids
@@ -787,12 +790,12 @@ msgstr "טופס"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__view_template_id
 msgid "Form Button Template"
-msgstr ""
+msgstr "תבנית כפתור טופס"
 
 #. module: payment
 #: selection:payment.transaction,type:0
 msgid "Form with tokenization"
-msgstr ""
+msgstr "טופס עם אסימון"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.confirm
@@ -867,7 +870,7 @@ msgstr "התקן"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__module_state
 msgid "Installation State"
-msgstr ""
+msgstr "מצב התקנה"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__reference
@@ -955,7 +958,7 @@ msgstr "תן ללקוח להחליט"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_icon__acquirer_ids
 msgid "List of Acquirers supporting this payment icon."
-msgstr ""
+msgstr "רשימת ספקי שירות תשלומים מקוון התומכים בסמל תשלום זה."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__website_published
@@ -1017,7 +1020,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__pre_msg
 msgid "Message displayed to explain and help the payment process."
-msgstr ""
+msgstr "הודעה מוצגת כדי להסביר ולעזור לתהליך התשלום."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__error_msg
@@ -1027,21 +1030,21 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__cancel_msg
 msgid "Message displayed, if order is cancel during the payment process."
-msgstr ""
+msgstr "ההודעה מוצגת, אם ההזמנה מבוטלת בתהליך התשלום."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__done_msg
 msgid ""
 "Message displayed, if order is done successfully after having done the "
 "payment process."
-msgstr ""
+msgstr "הודעה מוצגת, אם ההזמנה נעשית בהצלחה לאחר ביצוע תהליך התשלום."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__pending_msg
 msgid ""
 "Message displayed, if order is in pending state after having done the "
 "payment process."
-msgstr ""
+msgstr "ההודעה מוצגת, אם ההזמנה במצב ממתין לאחר ביצוע תהליך התשלום."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_form
@@ -1057,7 +1060,7 @@ msgstr "שיטה"
 #: code:addons/payment/models/payment_acquirer.py:469
 #, python-format
 msgid "Missing partner reference when trying to create a new payment token"
-msgstr ""
+msgstr "מזהה לקוח/ספק חסר כשמנסים ליצור אסימון תשלום חדש"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__name
@@ -1072,7 +1075,7 @@ msgstr "שם"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_token__name
 msgid "Name of the payment token"
-msgstr ""
+msgstr "שם אסימון התשלום"
 
 #. module: payment
 #: selection:payment.acquirer,save_token:0
@@ -1086,18 +1089,20 @@ msgid ""
 "No manual payment method could be found for this company. Please create one "
 "from the Payment Acquirer menu."
 msgstr ""
+"לא נמצא אמצעי תשלום ידני עבור חברה זו. אנא צור אחד מתפריט 'ספקי שירות "
+"תשלומים מקוון'."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
 msgid "No payment acquirer found."
-msgstr ""
+msgstr "לא נמצא ספק שירות תשלומים מקוון."
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/xml/payment_processing.xml:118
 #, python-format
 msgid "No payment has been processed."
-msgstr ""
+msgstr "לא בוצע תשלום."
 
 #. module: payment
 #. openerp-web
@@ -1125,6 +1130,7 @@ msgid ""
 "Note: Subscriptions does not take this field in account, it uses server to "
 "server by default."
 msgstr ""
+"הערה: המנויים אינם לוקחים שדה זה בחשבון, הוא משתמש בשרת לשרת כברירת מחדל."
 
 #. module: payment
 #: selection:payment.acquirer,provider:0
@@ -1185,7 +1191,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment.confirm
 #: model_terms:ir.ui.view,arch_db:payment.payment_confirmation_status
 msgid "Or scan me with your banking app."
-msgstr ""
+msgstr "או סרוק אותי עם היישום הבנקאי שלך."
 
 #. module: payment
 #: selection:res.company,payment_onboarding_payment_method:0
@@ -1244,19 +1250,19 @@ msgstr "תשלום"
 #: model:ir.model,name:payment.model_payment_acquirer
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_form
 msgid "Payment Acquirer"
-msgstr ""
+msgstr "שירות תשלום"
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.action_payment_acquirer
 #: model:ir.ui.menu,name:payment.payment_acquirer_menu
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_list
 msgid "Payment Acquirers"
-msgstr ""
+msgstr "שירותי תשלום"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__payment_flow
 msgid "Payment Flow"
-msgstr ""
+msgstr "תהליך תשלום"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_icon
@@ -1295,7 +1301,7 @@ msgstr "אמצעי תשלום"
 #: model:ir.model,name:payment.model_payment_token
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__payment_token_id
 msgid "Payment Token"
-msgstr ""
+msgstr "אסימון תשלום"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_partner__payment_token_ids
@@ -1304,7 +1310,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment.payment_token_tree_view
 #: model_terms:ir.ui.view,arch_db:payment.payment_token_view_search
 msgid "Payment Tokens"
-msgstr ""
+msgstr "אסימוני תשלום"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_transaction
@@ -1335,7 +1341,7 @@ msgstr "תשלום מ Odoo"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.onboarding_payment_acquirer_step
 msgid "Payment method set!"
-msgstr ""
+msgstr "אמצעי תשלום הוגדר!"
 
 #. module: payment
 #: model:ir.model,name:payment.model_account_payment
@@ -1356,7 +1362,7 @@ msgstr "תשלומים נכשלו"
 #: code:addons/payment/static/src/xml/payment_processing.xml:26
 #, python-format
 msgid "Payments received"
-msgstr ""
+msgstr "תשלומים התקבלו"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__journal_id
@@ -1394,7 +1400,7 @@ msgstr "ממתינה"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__pending_msg
 msgid "Pending Message"
-msgstr ""
+msgstr "הודעה ממתינה"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_phone
@@ -1404,7 +1410,7 @@ msgstr "טלפון"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
 msgid "Please configure a payment acquirer."
-msgstr ""
+msgstr "אנא הגדר ספק שירות תשלומים מקוון."
 
 #. module: payment
 #: code:addons/payment/wizards/payment_acquirer_onboarding_wizard.py:33
@@ -1426,7 +1432,7 @@ msgstr "אנא בחר שיטת תשלום."
 #: code:addons/payment/static/src/js/payment_form.js:311
 #, python-format
 msgid "Please select the option to add a new payment method."
-msgstr ""
+msgstr "אנא בחר באפשרות להוסיף אמצעי תשלום חדש."
 
 #. module: payment
 #: model_terms:payment.acquirer,post_msg:payment.payment_acquirer_custom
@@ -1452,12 +1458,12 @@ msgstr "אנא המתן..."
 #: model:ir.cron,cron_name:payment.cron_post_process_payment_tx
 #: model:ir.cron,name:payment.cron_post_process_payment_tx
 msgid "Post process payment transactions"
-msgstr ""
+msgstr "פרסם עסקאות תשלום בתהליך"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.confirm
 msgid "Processed by"
-msgstr ""
+msgstr "מעובד ע\"י"
 
 #. module: payment
 #: selection:payment.acquirer,environment:0
@@ -1495,7 +1501,7 @@ msgstr "סיבה:"
 #. module: payment
 #: selection:payment.acquirer,payment_flow:0
 msgid "Redirection to the acquirer website"
-msgstr ""
+msgstr "הפניה לאתר ספק שירות תשלומים מקוון"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__reference
@@ -1506,7 +1512,7 @@ msgstr "מזהה"
 #. module: payment
 #: sql_constraint:payment.transaction:0
 msgid "Reference must be unique!"
-msgstr ""
+msgstr "מזהה חייב להיות ייחודי!"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__acquirer_reference
@@ -1521,22 +1527,22 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__return_url
 msgid "Return URL after payment"
-msgstr ""
+msgstr "החזר את כתובת אתר האינטרנט לאחר התשלום"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__registration_view_template_id
 msgid "S2S Form Template"
-msgstr ""
+msgstr "תבנית טופס שרת לשרת"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__save_token
 msgid "Save Cards"
-msgstr ""
+msgstr "שמור כרטיסים"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_tokens_list
 msgid "Save my payment data"
-msgstr ""
+msgstr "שמור את נתוני התשלום שלי"
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.payment_token_action
@@ -1547,12 +1553,12 @@ msgstr "נתוני תשלום שמורים"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_account_payment__payment_token_id
 msgid "Saved payment token"
-msgstr ""
+msgstr "אסימון תשלום שנשמר"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__token_implemented
 msgid "Saving Card Data supported"
-msgstr ""
+msgstr "שמירת נתוני כרטיס נתמכת"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_company__payment_onboarding_payment_method
@@ -1665,7 +1671,7 @@ msgstr "סמלי תשלום נתמכים"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__registration_view_template_id
 msgid "Template for method registration"
-msgstr ""
+msgstr "תבנית לרישום שיטות"
 
 #. module: payment
 #: selection:payment.acquirer,environment:0
@@ -1687,13 +1693,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment.confirm
 #: model_terms:ir.ui.view,arch_db:payment.payment_confirmation_status
 msgid "The SEPA QR Code informations are not set correctly."
-msgstr ""
+msgstr "נתוני קוד ה- SEPA QR אינם מוגדרים כראוי."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:660
 #, python-format
 msgid "The customer has selected %s to pay this document."
-msgstr ""
+msgstr "הלקוח בחר %s לשלם מסמך זה."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:677
@@ -1709,13 +1715,13 @@ msgstr ""
 msgid ""
 "The transaction %s with %s for %s has been cancelled with the following "
 "message: %s"
-msgstr ""
+msgstr "העסקה %s עם %s עבור %s בוטלה עם ההודעה הבאה: %s"
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:685
 #, python-format
 msgid "The transaction %s with %s for %s has been cancelled."
-msgstr ""
+msgstr "העסקה %s עם %s ל %s בוטלה."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:679
@@ -1723,13 +1729,13 @@ msgstr ""
 msgid ""
 "The transaction %s with %s for %s has been confirmed. The related payment is"
 " posted: %s"
-msgstr ""
+msgstr "העסקה %s עם %s ל %s אושרה. התשלום הקשור נרשם: %s"
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:675
 #, python-format
 msgid "The transaction %s with %s for %s is pending."
-msgstr ""
+msgstr "העסקה %s עם %s ל %s ממתינה."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_icon__image
@@ -1737,6 +1743,7 @@ msgid ""
 "This field holds the image used for this payment icon, limited to "
 "1024x1024px"
 msgstr ""
+"שדה זה מכיל את התמונה המשמשת לסמל תשלום זה, מוגבל ל- 1024x1024 פיקסלים"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__image
@@ -1752,6 +1759,9 @@ msgid ""
 " invoicing), you need it to automatically charge the customer when you issue"
 " an invoice."
 msgstr ""
+"אפשרות זו מאפשרת ללקוחות לשמור את כרטיס האשראי שלהם כאסימון תשלום ולעשות "
+"שימוש חוזר בו לרכישה מאוחרת יותר. אם אתה מנהל מנויים (חיוב חוזר), אתה צריך "
+"אותה כדי לחייב את הלקוח באופן אוטומטי בעת הנפקת חשבונית."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__country_ids
@@ -1759,6 +1769,8 @@ msgid ""
 "This payment gateway is available for selected countries. If none is "
 "selected it is available for all countries."
 msgstr ""
+"שער תשלום זה זמין עבור ארצות נבחרות. אם לא נבחרה אף אחת מהן, היא זמינה לכל "
+"הארצות."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_form
@@ -1800,7 +1812,7 @@ msgstr "לא ניתן ליצור קשר עם שרת Odoo."
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__qr_code
 msgid "Use SEPA QR Code"
-msgstr ""
+msgstr "השתמש בקוד QR של SEPA"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__date
@@ -1810,17 +1822,17 @@ msgstr "תאריך אימות"
 #. module: payment
 #: selection:payment.transaction,type:0
 msgid "Validation of the bank card"
-msgstr ""
+msgstr "אימות כרטיס חיוב"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__fees_dom_var
 msgid "Variable domestic fees (in percents)"
-msgstr ""
+msgstr "עמלות מקומיות משתנות (באחוזים)"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__fees_int_var
 msgid "Variable international fees (in percents)"
-msgstr ""
+msgstr "עמלות בינלאומיות משתנות (באחוזים)"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token__verified
@@ -1870,7 +1882,7 @@ msgstr "איננו יכולים להוסיף את אמצעי התשלום שלך
 #: code:addons/payment/static/src/js/payment_form.js:303
 #, python-format
 msgid "We are not able to add your payment method at the moment.</p>"
-msgstr ""
+msgstr "איננו יכולים להוסיף את אמצעי התשלום שלך כרגע.</p>"
 
 #. module: payment
 #. openerp-web
@@ -1913,7 +1925,7 @@ msgstr "אנו מעבדים את התשלומים שלך, אנא המתן ..."
 #: code:addons/payment/static/src/xml/payment_processing.xml:99
 #, python-format
 msgid "We are waiting for the payment acquirer to confirm the payment."
-msgstr ""
+msgstr "אנו מחכים שספק שירות התשלומים המקוון יאשר את התשלום."
 
 #. module: payment
 #. openerp-web
@@ -1939,7 +1951,7 @@ msgstr "אתה יכול ללחוץ כאן להפניה לדף האישור."
 #: code:addons/payment/wizards/payment_acquirer_onboarding_wizard.py:135
 #, python-format
 msgid "You have to set a journal for your payment acquirer %s."
-msgstr ""
+msgstr "עליך להגדיר יומן לספק שירות התשלומים המקוון שלך %s."
 
 #. module: payment
 #. openerp-web
@@ -2039,7 +2051,7 @@ msgstr "התשלום שלך אושר."
 #: code:addons/payment/static/src/xml/payment_processing.xml:76
 #, python-format
 msgid "Your payment has been received but need to be confirmed manually."
-msgstr ""
+msgstr "התשלום שלך התקבל אך יש לאשר אותו באופן ידני."
 
 #. module: payment
 #. openerp-web

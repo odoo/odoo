@@ -6,8 +6,9 @@
 # Martin Trigaux, 2018
 # RGB Consulting <odoo@rgbconsulting.com>, 2018
 # Quim - eccit <quim@eccit.com>, 2018
-# Manel Fernandez <manelfera@outlook.com>, 2018
+# Manel Fernandez Ramirez <manelfera@outlook.com>, 2018
 # M Palau <mpalau@tda.ad>, 2019
+# Carles Antoli <carlesantoli@hotmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -15,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-09 10:31+0000\n"
 "PO-Revision-Date: 2018-08-24 09:18+0000\n"
-"Last-Translator: M Palau <mpalau@tda.ad>, 2019\n"
+"Last-Translator: Carles Antoli <carlesantoli@hotmail.com>, 2020\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -49,21 +50,23 @@ msgid ""
 "<b>Warning! Last check in was over 12 hours ago.</b><br/>If this isn't "
 "right, please contact Human Resource staff"
 msgstr ""
+"<b>Avís! L'última entrada es va fer fa més de 12 hores.</b><br/>Si això no "
+"és correcte, contacteu amb el personal de Recursos Humans"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_hr_attendance_kanban
 msgid "<i class=\"fa fa-calendar\" aria-label=\"Period\" role=\"img\" title=\"Period\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-calendar\" aria-label=\"Period\" role=\"img\" title=\"Period\"/>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Employee PIN</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label\">PIN de l’empleat</span>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
 msgid "<span class=\"o_stat_text\">Attendance</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Assistència</span>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_employees_view_kanban
@@ -73,6 +76,9 @@ msgid ""
 "oe_hr_attendance_status_green\" role=\"img\" aria-label=\"Available\" "
 "title=\"Available\"/>"
 msgstr ""
+"<span id=\"oe_hr_attendance_status\" class=\"fa fa-circle "
+"oe_hr_attendance_status_green\" role=\"img\" aria-label=\"Available\" "
+"title=\"Available\"/>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_employees_view_kanban
@@ -82,6 +88,9 @@ msgid ""
 "oe_hr_attendance_status_red\" role=\"img\" aria-label=\"Not available\" "
 "title=\"Not available\"/>"
 msgstr ""
+"<span id=\"oe_hr_attendance_status\" class=\"fa fa-circle "
+"oe_hr_attendance_status_red\" role=\"img\" aria-label=\"Not available\" "
+"title=\"Not available\"/>"
 
 #. module: hr_attendance
 #: model_terms:ir.actions.act_window,help:hr_attendance.hr_employee_attendance_action_kanban
@@ -89,6 +98,8 @@ msgid ""
 "Add a few employees to be able to select an employee here and perform his check in / check out.\n"
 "                To create employees go to the Employees menu."
 msgstr ""
+"Afegiu uns quants empleats per poder seleccionar un empleat aquí i realitzar la seva entrada/sortida.\n"
+"                Per crear empleats, aneu al menú Empleats."
 
 #. module: hr_attendance
 #. openerp-web
@@ -123,7 +134,7 @@ msgstr "Anàlisis d'assistències"
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__attendance_state
 msgid "Attendance Status"
-msgstr ""
+msgstr "Estat d’assistència"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.hr_attendance_action
@@ -196,12 +207,12 @@ msgstr "Entrada"
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_my_attendances
 msgid "Check In / Check Out"
-msgstr ""
+msgstr "Entrada / Sortida"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 msgid "Check In Date"
-msgstr ""
+msgstr "La data d'entrada"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__check_out
@@ -211,12 +222,12 @@ msgstr "Sortida"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 msgid "Check Out Date"
-msgstr ""
+msgstr "La data de sortida"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Check-In/Out"
-msgstr ""
+msgstr "Registre d'entrada / sortida"
 
 #. module: hr_attendance
 #: selection:hr.employee,attendance_state:0
@@ -248,7 +259,7 @@ msgstr "Sortida registrada a les"
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:75
 #, python-format
 msgid "Click to"
-msgstr ""
+msgstr "Feu clic a"
 
 #. module: hr_attendance
 #. openerp-web
@@ -271,7 +282,7 @@ msgstr "Configuració"
 #. module: hr_attendance
 #: model_terms:ir.actions.act_window,help:hr_attendance.hr_employee_attendance_action_kanban
 msgid "Create a new employee"
-msgstr ""
+msgstr "Crea un nou empleat"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__create_uid
@@ -375,7 +386,7 @@ msgstr "M'alegra veure't de tornada, ha passat temps!"
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:137
 #, python-format
 msgid "Go back"
-msgstr ""
+msgstr "Tornar enrere"
 
 #. module: hr_attendance
 #. openerp-web
@@ -484,7 +495,7 @@ msgstr "Mode quiosc"
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__last_attendance_id
 msgid "Last Attendance"
-msgstr ""
+msgstr "Última assistència"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance____last_update
@@ -535,12 +546,12 @@ msgstr "No hi ha registre de sortida"
 #. module: hr_attendance
 #: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_action
 msgid "No attendance records found"
-msgstr ""
+msgstr "No s’han trobat registres d’assistència"
 
 #. module: hr_attendance
 #: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_action_employee
 msgid "No attendance records to display"
-msgstr ""
+msgstr "No hi ha registres d'assistència a mostrar"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_employee.py:73
@@ -551,7 +562,7 @@ msgstr "El codi %(barcode)s no correspon a cap empleat"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
 msgid "Not available"
-msgstr ""
+msgstr "No disponible"
 
 #. module: hr_attendance
 #. openerp-web
@@ -582,7 +593,7 @@ msgstr ""
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:78
 #, python-format
 msgid "Please enter your PIN to"
-msgstr ""
+msgstr "Introduïu el vostre PIN a"
 
 #. module: hr_attendance
 #. openerp-web
@@ -619,6 +630,8 @@ msgstr "Seleccionar Empleat"
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Set PIN codes in the employee detail form (in HR Settings tab)."
 msgstr ""
+"Definiu els codis PIN al formulari de detalls de l'empleat (a la pestanya "
+"Configuració de recursos humans)."
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_settings
@@ -645,18 +658,18 @@ msgstr "Registra sortida"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_filter_inherit_hr_attendance
 msgid "Signed In"
-msgstr ""
+msgstr "Iniciar sessió"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_filter_inherit_hr_attendance
 msgid "Signed Out"
-msgstr ""
+msgstr "Tancar sessió"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_employee.py:155
 #, python-format
 msgid "Such grouping is not allowed."
-msgstr ""
+msgstr "Aquest grup no està permès."
 
 #. module: hr_attendance
 #: sql_constraint:hr.employee:0
@@ -716,7 +729,7 @@ msgstr ""
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Use PIN codes to check in in Kiosk Mode"
-msgstr ""
+msgstr "Utilitzeu els codis PIN per registrar al mode Quiosk"
 
 #. module: hr_attendance
 #. openerp-web
@@ -724,7 +737,7 @@ msgstr ""
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:71
 #, python-format
 msgid "Want to check out?"
-msgstr ""
+msgstr "Voleu sortir?"
 
 #. module: hr_attendance
 #. openerp-web
@@ -734,6 +747,8 @@ msgid ""
 "Warning : Your user should be linked to an employee to use attendance. "
 "Please contact your administrator."
 msgstr ""
+"Avís: el vostre usuari hauria de vincular-se a un empleat per utilitzar "
+"l'assistència. Poseu-vos en contacte amb l'administrador."
 
 #. module: hr_attendance
 #. openerp-web
@@ -755,7 +770,7 @@ msgstr "Benvingut a"
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:71
 #, python-format
 msgid "Welcome!"
-msgstr ""
+msgstr "Benvingut!"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__worked_hours
@@ -777,7 +792,7 @@ msgstr "No pots duplicar un registre d'assistència."
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.print_employee_badge
 msgid "barcode"
-msgstr ""
+msgstr "codi de barres"
 
 #. module: hr_attendance
 #. openerp-web
@@ -786,7 +801,7 @@ msgstr ""
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:78
 #, python-format
 msgid "check in"
-msgstr ""
+msgstr "entrada"
 
 #. module: hr_attendance
 #. openerp-web
@@ -795,7 +810,7 @@ msgstr ""
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:78
 #, python-format
 msgid "check out"
-msgstr ""
+msgstr "sortida"
 
 #. module: hr_attendance
 #: model:ir.model.fields,help:hr_attendance.field_hr_employee__attendance_ids

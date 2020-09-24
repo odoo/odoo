@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import hashlib
 import hmac
 
 from werkzeug import urls
@@ -21,9 +22,9 @@ class MailGroup(models.Model):
         except Exception:
             headers = {}
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
-        headers['List-Archive'] = '<%s/groups/%s>' % (base_url, slug(self)),
-        headers['List-Subscribe'] = '<%s/groups>' % (base_url),
-        headers['List-Unsubscribe'] = '<%s/groups?unsubscribe>' % (base_url,),
+        headers['List-Archive'] = '<%s/groups/%s>' % (base_url, slug(self))
+        headers['List-Subscribe'] = '<%s/groups>' % (base_url)
+        headers['List-Unsubscribe'] = '<%s/groups?unsubscribe>' % (base_url,)
         res['headers'] = repr(headers)
         return res
 
@@ -63,4 +64,4 @@ class MailGroup(models.Model):
                 str(self.id),
                 str(partner_id),
                 action])
-        return hmac.new(secret.encode('utf-8'), data.encode('utf-8')).hexdigest()
+        return hmac.new(secret.encode('utf-8'), data.encode('utf-8'), hashlib.md5).hexdigest()

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record model="ir.ui.view" id="membership_products_form">
+        <field name="name">product.template.product.website_membership.form</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="membership.membership_products_form"/>
+        <field name="arch" type="xml">
+            <field name="active" position="after">
+                <field name="website_published"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>

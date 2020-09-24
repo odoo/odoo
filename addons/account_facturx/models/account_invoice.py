@@ -41,7 +41,49 @@ class AccountInvoice(models.Model):
             'record': self,
             'format_date': format_date,
             'format_monetary': format_monetary,
+            'invoice_line_values': [],
         }
+
+        # Tax lines.
+        aggregated_taxes_details = {line.tax_id.id: {
+            'line': line,
+            'tax_amount': line.amount,
+            'tax_base_amount': 0.0,
+        } for line in self.tax_line_ids}
+
+        # Invoice lines.
+        for i, line in enumerate(self.invoice_line_ids.filtered(lambda l: not l.display_type)):
+            price_unit_with_discount = line.price_unit * (1 - (line.discount / 100.0))
+            taxes_res = line.invoice_line_tax_ids.compute_all(
+                price_unit_with_discount,
+                currency=line.currency_id,
+                quantity=line.quantity,
+                product=line.product_id,
+                partner=self.partner_id,
+            )
+
+            line_template_values = {
+                'line': line,
+                'index': i + 1,
+                'tax_details': [],
+                'net_price_subtotal': taxes_res['total_excluded'],
+            }
+
+            for tax_res in taxes_res['taxes']:
+                tax = self.env['account.tax'].browse(tax_res['id'])
+                line_template_values['tax_details'].append({
+                    'tax': tax,
+                    'tax_amount': tax_res['amount'],
+                    'tax_base_amount': tax_res['base'],
+                })
+
+                if tax.id in aggregated_taxes_details:
+                    aggregated_taxes_details[tax.id]['tax_base_amount'] += tax_res['base']
+
+            template_values['invoice_line_values'].append(line_template_values)
+
+        template_values['tax_details'] = list(aggregated_taxes_details.values())
+
         content = self.env.ref('account_facturx.account_invoice_facturx_export').render(template_values)
         return b"<?xml version='1.0' encoding='UTF-8'?>" + content
 
@@ -131,7 +173,10 @@ class AccountInvoice(models.Model):
             if elements:
                 date_str = elements[0].text
                 date_obj = datetime.strptime(date_str, DEFAULT_FACTURX_DATE_FORMAT)
-                invoice_form.date_due = date_obj.strftime(DEFAULT_SERVER_DATE_FORMAT)
+                date_due = date_obj.strftime(DEFAULT_SERVER_DATE_FORMAT)
+                if date_due:
+                    invoice_form.payment_term_id = self.env['account.payment.term']
+                    invoice_form.date_due = date_due
 
             # Invoice lines.
             elements = tree.xpath('//ram:IncludedSupplyChainTradeLineItem', namespaces=tree.nsmap)

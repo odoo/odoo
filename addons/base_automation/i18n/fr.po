@@ -9,7 +9,10 @@
 # e2f <projects@e2f.com>, 2018
 # bb76cd9ac0cb7e20167a14728edb858b, 2018
 # Martin Trigaux, 2019
-# Cécile Collart <cco@odoo.com>, 2019
+# Alexandra Jubert <aju@odoo.com>, 2020
+# Cécile Collart <cco@odoo.com>, 2020
+# Vallen Delobel <edv@odoo.com>, 2020
+# Julien Goergen <jgo@odoo.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -17,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-14 07:34+0000\n"
 "PO-Revision-Date: 2018-08-24 09:16+0000\n"
-"Last-Translator: Cécile Collart <cco@odoo.com>, 2019\n"
+"Last-Translator: Julien Goergen <jgo@odoo.com>, 2020\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,7 +31,7 @@ msgstr ""
 #. module: base_automation
 #: model:mail.template,body_html:base_automation.test_mail_template_automation
 msgid "<div>Email automation</div>"
-msgstr ""
+msgstr "<div>Automation des e-mails</div>"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__help
@@ -101,12 +104,12 @@ msgstr "Actions automatisées"
 #. module: base_automation
 #: model:ir.model,name:base_automation.model_base_automation_line_test
 msgid "Automated Rule Line Test"
-msgstr ""
+msgstr "Test de ligne de règle automatisé"
 
 #. module: base_automation
 #: model:ir.model,name:base_automation.model_base_automation_lead_test
 msgid "Automated Rule Test"
-msgstr ""
+msgstr "Test de règle automatisé"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_tree
@@ -162,7 +165,7 @@ msgstr ""
 #: model:base.automation,name:base_automation.test_rule_on_write_recompute_send_email
 #: model:ir.actions.server,name:base_automation.test_rule_on_write_recompute_send_email_ir_actions_server
 msgid "Base Automation: test send an email"
-msgstr ""
+msgstr "Automatisation de la base : test envoyer un courriel"
 
 #. module: base_automation
 #: selection:base.automation,trigger:0
@@ -606,6 +609,14 @@ msgid ""
 "- 'Add Followers': add followers to a record (Discuss)\n"
 "- 'Create Next Activity': create an activity (Discuss)"
 msgstr ""
+"Type d'action serveur. Les valeurs suivantes sont disponibles:\n"
+"- 'Executer du code Python': un bloc de code python qui sera exécuté\n"
+"- 'Créer': créer un nouvel enregistrement avec de nouvelles valeurs\n"
+"- 'Mettre à jour un enregistrement': mettre à jour les valeurs d'un enregistrement\n"
+"- 'Executer plusieurs actions': définir une action qui déclenche plusieurs autres actions serveur\n"
+"- 'Envoyer E-Mail': envoyer un e-mail automatiquement (Discutez)\n"
+"- 'Ajouter Abonnés': ajouter des abonnés à un enregistrement (Discutez)\n"
+"- 'Créer une Nouvelle Activité': créer une activité (Discutez)"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__usage

@@ -123,9 +123,15 @@ class ReportAgedPartnerBalance(models.AbstractModel):
                     ORDER BY COALESCE(l.date_maturity, l.date)'''
             cr.execute(query, args_list)
             partners_amount = {}
-            aml_ids = cr.fetchall()
-            aml_ids = aml_ids and [x[0] for x in aml_ids] or []
-            for line in self.env['account.move.line'].browse(aml_ids).with_context(prefetch_fields=False):
+            aml_ids = [x[0] for x in cr.fetchall()]
+            # prefetch the fields that will be used; this avoid cache misses,
+            # which look up the cache to determine the records to read, and has
+            # quadratic complexity when the number of records is large...
+            move_lines = self.env['account.move.line'].browse(aml_ids)
+            move_lines.read(['partner_id', 'company_id', 'balance', 'matched_debit_ids', 'matched_credit_ids'])
+            move_lines.mapped('matched_debit_ids').read(['max_date', 'company_id', 'amount'])
+            move_lines.mapped('matched_credit_ids').read(['max_date', 'company_id', 'amount'])
+            for line in move_lines:
                 partner_id = line.partner_id.id or False
                 if partner_id not in partners_amount:
                     partners_amount[partner_id] = 0.0
@@ -216,7 +222,7 @@ class ReportAgedPartnerBalance(models.AbstractModel):
             if partner['partner_id']:
                 #browse the partner name and trust field in sudo, as we may not have full access to the record (but we still have to see it in the report)
                 browsed_partner = self.env['res.partner'].sudo().browse(partner['partner_id'])
-                values['name'] = browsed_partner.name and len(browsed_partner.name) >= 45 and browsed_partner.name[0:40] + '...' or browsed_partner.name
+                values['name'] = browsed_partner.name and len(browsed_partner.name) >= 45 and not self.env.context.get('no_format') and browsed_partner.name[0:41] + '...' or browsed_partner.name
                 values['trust'] = browsed_partner.trust
             else:
                 values['name'] = _('Unknown Partner')

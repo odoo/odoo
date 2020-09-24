@@ -59,7 +59,7 @@
             <li id="my_cart" t-attf-class="nav-item#{'' if website_sale_order and website_sale_order.cart_quantity else ' d-none'}">
                 <a href="/shop/cart" class="nav-link">
                     <i class="fa fa-shopping-cart"></i>
-                    My Cart <sup t-attf-class="my_cart_quantity badge badge-primary" t-esc="website_sale_order and website_sale_order.cart_quantity or ''" />
+                    My Cart <sup t-attf-class="my_cart_quantity badge badge-primary" t-esc="website_sale_order and website_sale_order.cart_quantity or ''" t-att-data-order-id="website_sale_order and website_sale_order.id or ''"/>
                 </a>
             </li>
         </xpath>
@@ -722,7 +722,9 @@
                             </t>
                         </div>
                         <div class="col-12 col-xl-auto order-xl-2 d-none d-xl-block">
-                            <t t-call="website_sale.cart_summary"/>
+                            <t t-call="website_sale.cart_summary">
+                                <t t-set="redirect">/shop/extra_info</t>
+                            </t>
                         </div>
                         <div class="col-12 col-xl order-xl-1 oe_cart">
                             <div class="row">
@@ -979,7 +981,7 @@
             <table t-if="suggested_products" id="suggested_products" class="js_cart_lines table table-striped table-sm">
                 <tbody>
                     <tr t-foreach="suggested_products" t-as="product">
-                        <t t-set="combination_info" t-value="product._get_combination_info_variant()"/>
+                        <t t-set="combination_info" t-value="product._get_combination_info_variant(pricelist=website_sale_order.pricelist_id)"/>
                         <td class='td-img'>
                             <a t-attf-href="/shop/product/#{ slug(product.product_tmpl_id) }">
                                 <span t-field="product.image_small" t-options="{'widget': 'image', 'class': 'rounded'}" />
@@ -1041,7 +1043,9 @@
                             </t>
                         </div>
                         <div class="col-12 col-xl-auto order-xl-2 d-none d-xl-block">
-                            <t t-call="website_sale.cart_summary"/>
+                            <t t-call="website_sale.cart_summary">
+                                <t t-set="redirect">/shop/checkout</t>
+                            </t>
                         </div>
                         <div class="col-12 col-xl order-xl-1 oe_cart">
                             <div class="row">
@@ -1149,7 +1153,10 @@
                     </div>
                     <div class="row">
                         <div class="col-12 col-xl-auto order-xl-2 d-none d-xl-block">
-                            <t t-call="website_sale.cart_summary"/>
+                            <t t-call="website_sale.cart_summary">
+                                <t t-set="hide_coupon">True</t>
+                                <t t-set="redirect">/shop/address</t>
+                            </t>
                         </div>
                         <div class="col-12 col-xl order-xl-1 oe_cart">
                             <div>
@@ -1445,7 +1452,7 @@
                         </tbody>
                     </table>
                     <t t-call="website_sale.total">
-                        <t t-set='redirect'>/shop/payment</t>
+                        <t t-set='redirect' t-value="redirect or '/shop/payment'"></t>
                     </t>
                 </div>
             </div>
@@ -1481,7 +1488,7 @@
                                         </h2>
                                     </div>
                                 </t>
-                                <t t-if="request.env['ir.config_parameter'].sudo().get_param('auth_signup.invitation_scope', 'b2b') == 'b2c' and request.website.is_public_user()">
+                                <t t-if="request.env['res.users']._get_signup_invitation_scope() == 'b2c' and request.website.is_public_user()">
                                     <p class="alert alert-info mt-3" role="status">
                                         <a role="button" t-att-href='order.partner_id.signup_prepare() and order.partner_id.signup_url' class='btn btn-primary'>Sign Up</a>
                                          to follow your order.

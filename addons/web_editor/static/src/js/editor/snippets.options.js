@@ -416,6 +416,9 @@ registry.sizing = SnippetOption.extend({
         this.$handles.on('mousedown', function (ev) {
             ev.preventDefault();
 
+            // First update size values as some element sizes may not have been
+            // initialized on option start (hidden slides, etc)
+            resizeValues = self._getSize();
             var $handle = $(ev.currentTarget);
 
             var compass = false;
@@ -874,7 +877,6 @@ registry.background = SnippetOption.extend({
         var $editable = this.$target.closest('.o_editable');
         var _editor = new weWidgets.MediaDialog(this, {
             onlyImages: true,
-            firstFilters: ['background'],
             res_model: $editable.data('oe-model'),
             res_id: $editable.data('oe-id'),
         }, null, $image[0]).open();

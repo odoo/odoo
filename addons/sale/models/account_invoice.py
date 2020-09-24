@@ -25,18 +25,18 @@ class AccountInvoice(models.Model):
         states={'draft': [('readonly', False)]},
         help="Delivery address for current invoice.")
 
-    @api.onchange('partner_shipping_id')
+    @api.onchange('partner_shipping_id', 'company_id')
     def _onchange_partner_shipping_id(self):
         """
         Trigger the change of fiscal position when the shipping address is modified.
         """
-        fiscal_position = self.env['account.fiscal.position'].get_fiscal_position(self.partner_id.id, self.partner_shipping_id.id)
+        fiscal_position = self.env['account.fiscal.position'].with_context(force_company=self.company_id.id).get_fiscal_position(self.partner_id.id, self.partner_shipping_id.id)
         if fiscal_position:
             self.fiscal_position_id = fiscal_position
 
     @api.multi
     def unlink(self):
-        downpayment_lines = self.mapped('invoice_line_ids.sale_line_ids').filtered(lambda line: line.is_downpayment)
+        downpayment_lines = self.mapped('invoice_line_ids.sale_line_ids').filtered(lambda line: line.is_downpayment and line.invoice_lines <= self.mapped('invoice_line_ids'))
         res = super(AccountInvoice, self).unlink()
         if downpayment_lines:
             downpayment_lines.unlink()

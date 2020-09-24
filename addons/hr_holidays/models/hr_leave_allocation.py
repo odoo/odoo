@@ -209,7 +209,7 @@ class HolidaysAllocation(models.Model):
             if allocation.parent_id and allocation.parent_id.type_request_unit == "hour":
                 allocation.number_of_hours_display = allocation.number_of_days * HOURS_PER_DAY
             else:
-                allocation.number_of_hours_display = allocation.number_of_days * (allocation.employee_id.resource_calendar_id.hours_per_day or HOURS_PER_DAY)
+                allocation.number_of_hours_display = allocation.number_of_days * (allocation.employee_id.sudo().resource_id.calendar_id.hours_per_day or HOURS_PER_DAY)
 
     @api.multi
     @api.depends('number_of_hours_display', 'number_of_days_display')
@@ -320,12 +320,12 @@ class HolidaysAllocation(models.Model):
             elif allocation.holiday_type == 'category':
                 target = allocation.category_id.name
             else:
-                target = allocation.employee_id.name
+                target = allocation.employee_id.sudo().name
 
             res.append(
                 (allocation.id,
                  _("Allocation of %s : %.2f %s to %s") %
-                 (allocation.holiday_status_id.name,
+                 (allocation.holiday_status_id.sudo().name,
                   allocation.number_of_hours_display if allocation.type_request_unit == 'hour' else allocation.number_of_days,
                   _('hours') if allocation.type_request_unit == 'hour' else _('days'),
                   target))
@@ -506,7 +506,7 @@ class HolidaysAllocation(models.Model):
         is_officer = self.env.user.has_group('hr_holidays.group_hr_holidays_user')
         is_manager = self.env.user.has_group('hr_holidays.group_hr_holidays_manager')
         for holiday in self:
-            val_type = holiday.holiday_status_id.validation_type
+            val_type = holiday.holiday_status_id.sudo().validation_type
             if state == 'confirm':
                 continue
 

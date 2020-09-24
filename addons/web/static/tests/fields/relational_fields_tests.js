@@ -9778,8 +9778,8 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
-    QUnit.test('propagate context to sub views', function (assert) {
-        assert.expect(5);
+    QUnit.test('propagate context to sub views without default_* keys', function (assert) {
+        assert.expect(7);
 
         var form = createView({
             View: FormView,
@@ -9797,9 +9797,18 @@ QUnit.module('relational_fields', {
             mockRPC: function (route, args) {
                 assert.strictEqual(args.kwargs.context.flutter, 'shy',
                     'view context key should be used for every rpcs');
+                if (args.method === 'default_get') {
+                    if (args.model === 'partner') {
+                        assert.strictEqual(args.kwargs.context.default_flutter, 'why',
+                            "should have default_* values in context for form view RPCs");
+                    } else if (args.model === 'turtle') {
+                        assert.notOk(args.kwargs.context.default_flutter,
+                            "should not have default_* values in context for subview RPCs");
+                    }
+                }
                 return this._super.apply(this, arguments);
             },
-            viewOptions: {context: {flutter: 'shy'}},
+            viewOptions: {context: {flutter: 'shy', default_flutter: 'why'}},
         });
         form.$('.o_field_x2many_list_row_add a').click();
         form.$('input[name="turtle_foo"]').val('pinky pie').trigger('input');
@@ -13175,6 +13184,32 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('many2many_tags loads records according to limit defined on widget prototype', async function (assert) {
+        assert.expect(1);
+
+        const M2M_LIMIT = relationalFields.FieldMany2ManyTags.prototype.limit;
+        relationalFields.FieldMany2ManyTags.prototype.limit = 30;
+        this.data.partner.fields.partner_ids = {string: "Partner", type: "many2many", relation: 'partner'};
+        this.data.partner.records[0].partner_ids = [];
+        for (var i = 15; i < 50; i++) {
+            this.data.partner.records.push({id: i, display_name: 'walter' + i});
+            this.data.partner.records[0].partner_ids.push(i);
+        }
+        const form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form><field name="partner_ids" widget="many2many_tags"/></form>',
+            res_id: 1,
+        });
+
+        assert.strictEqual(form.$('.o_field_widget[name="partner_ids"] .badge').length, 30,
+            'should have rendered 30 tags even though 35 records linked');
+
+        relationalFields.FieldMany2ManyTags.prototype.limit = M2M_LIMIT;
+        form.destroy();
+    });
+
     QUnit.test('field many2many_tags keeps focus when being edited', function (assert) {
         assert.expect(7);
 
@@ -13726,6 +13761,35 @@ QUnit.module('relational_fields', {
             "first checkbox should not be checked");
         assert.notOk(form.$('div.o_field_widget div.custom-checkbox input').eq(1).prop('checked'),
             "second checkbox should not be checked");
+
+        form.destroy();
+    });
+
+    QUnit.test('widget many2many_checkboxes: values are updated when domain changes', function (assert) {
+        assert.expect(5);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<field name="int_field"/>' +
+                    '<field name="timmy" widget="many2many_checkboxes" domain="[[\'id\', \'>\', int_field]]"/>' +
+                '</form>',
+            res_id: 1,
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        assert.strictEqual(form.$('.o_field_widget[name=int_field]').val(), '10');
+        assert.strictEqual(form.$('.o_field_widget[name=timmy] .custom-checkbox').length, 2);
+        assert.strictEqual(form.$('.o_field_widget[name=timmy] .o_form_label').text(), 'goldsilver');
+
+        form.$('.o_field_widget[name=int_field]').val('13').trigger('input');
+
+        assert.strictEqual(form.$('.o_field_widget[name=timmy] .custom-checkbox').length, 1);
+        assert.strictEqual(form.$('.o_field_widget[name=timmy] .o_form_label').text(), 'silver');
 
         form.destroy();
     });

@@ -11,7 +11,7 @@
                 <header>
                     <button string="Configure Variants" type="action"
                         name="%(product_attribute_value_action)d"
-                        attrs="{'invisible': [('attribute_line_ids', '&lt;=', 0)]}"
+                        attrs="{'invisible': ['|', ('attribute_line_ids', '&lt;=', 0), ('is_product_variant', '=', True)]}"
                         groups="product.group_product_variant"/>
                 </header>
                 <sheet>
@@ -148,13 +148,13 @@
                         <page string="Inventory" name="inventory" groups="product.group_stock_packaging" attrs="{'invisible':[('type', '=', 'service')]}">
                             <group name="inventory">
                                 <group name="group_lots_and_weight" string="Logistics" attrs="{'invisible': [('type', 'not in', ['product', 'consu'])]}">
-                                    <label for="weight"/>
-                                    <div class="o_row" name="weight">
+                                    <label for="weight" attrs="{'invisible':[('product_variant_count', '>', 1), ('is_product_variant', '=', False)]}"/>
+                                    <div class="o_row" name="weight" attrs="{'invisible':[('product_variant_count', '>', 1), ('is_product_variant', '=', False)]}">
                                         <field name="weight"/>
                                         <span><field name="weight_uom_name"/></span>
                                     </div>
-                                    <label for="volume"/>
-                                    <div class="o_row" name="volume">
+                                    <label for="volume" attrs="{'invisible':[('product_variant_count', '>', 1), ('is_product_variant', '=', False)]}"/>
+                                    <div class="o_row" name="volume" attrs="{'invisible':[('product_variant_count', '>', 1), ('is_product_variant', '=', False)]}">
                                         <field name="volume" string="Volume"/>
                                         <span>m³</span>
                                     </div>
@@ -162,7 +162,7 @@
                             </group>
                             <group name="packaging" string="Packaging"
                                 colspan="4"
-                                attrs="{'invisible':['|', ('type', 'not in', ['product', 'consu']), ('product_variant_count', '>', 1)]}"
+                                attrs="{'invisible':['|', ('type', 'not in', ['product', 'consu']), ('product_variant_count', '>', 1), ('is_product_variant', '=', False)]}"
                                 groups="product.group_stock_packaging">
                                 <field name="packaging_ids" nolabel="1" context="{'tree_view_ref':'product.product_packaging_tree_view2', 'form_view_ref':'product.product_packaging_form_view2'}"/>
                             </group>
@@ -183,7 +183,7 @@
         <field name="model">product.template</field>
         <field name="arch" type="xml">
             <search string="Product">
-                <field name="name" string="Product" filter_domain="['|', '|', ('product_variant_ids.default_code', 'ilike', self),('name', 'ilike', self), ('barcode', 'ilike', self)]"/>
+                <field name="name" string="Product" filter_domain="['|', '|', '|', ('default_code', 'ilike', self), ('product_variant_ids.default_code', 'ilike', self),('name', 'ilike', self), ('barcode', 'ilike', self)]"/>
                 <field name="categ_id" filter_domain="[('categ_id', 'child_of', raw_value)]"/>
                 <separator/>
                 <filter string="Services" name="services" domain="[('type','=','service')]"/>

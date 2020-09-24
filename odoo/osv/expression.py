@@ -440,14 +440,14 @@ def select_from_where(cr, select_field, from_table, where_field, where_ids, wher
     res = []
     if where_ids:
         if where_operator in ['<', '>', '>=', '<=']:
-            cr.execute('SELECT "%s" FROM "%s" WHERE "%s" %s %%s' % \
+            cr.execute('SELECT DISTINCT "%s" FROM "%s" WHERE "%s" %s %%s' % \
                 (select_field, from_table, where_field, where_operator),
                 (where_ids[0],))  # TODO shouldn't this be min/max(where_ids) ?
             res = [r[0] for r in cr.fetchall()]
         else:  # TODO where_operator is supposed to be 'in'? It is called with child_of...
             for i in range(0, len(where_ids), cr.IN_MAX):
                 subids = where_ids[i:i + cr.IN_MAX]
-                cr.execute('SELECT "%s" FROM "%s" WHERE "%s" IN %%s' % \
+                cr.execute('SELECT DISTINCT "%s" FROM "%s" WHERE "%s" IN %%s' % \
                     (select_field, from_table, where_field), (tuple(subids),))
                 res.extend([r[0] for r in cr.fetchall()])
     return res
@@ -928,12 +928,9 @@ class expression(object):
                         operator = 'in'
                     domain = field.determine_domain(model, operator, right)
 
-                if not domain:
-                    leaf.leaf = TRUE_LEAF
-                    push(leaf)
-                else:
-                    for elem in reversed(domain):
-                        push(create_substitution_leaf(leaf, elem, model, internal=True))
+                # replace current leaf by normalized domain
+                for elem in reversed(normalize_domain(domain)):
+                    push(create_substitution_leaf(leaf, elem, model, internal=True))
 
             # -------------------------------------------------
             # RELATIONAL FIELDS
@@ -1211,8 +1208,12 @@ class expression(object):
                     query = '(%s."%s" IS NULL)' % (table_alias, left)
                 params = []
             elif isinstance(right, (list, tuple)):
-                params = [it for it in right if it != False]
-                check_null = len(params) < len(right)
+                if model._fields[left].type == "boolean":
+                    params = [it for it in (True, False) if it in right]
+                    check_null = False in right
+                else:
+                    params = [it for it in right if it != False]
+                    check_null = len(params) < len(right)
                 if params:
                     if left == 'id':
                         instr = ','.join(['%s'] * len(params))

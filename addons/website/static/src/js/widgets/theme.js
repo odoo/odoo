@@ -296,7 +296,7 @@ var ThemeCustomizeDialog = Dialog.extend({
 
         var def = $.Deferred();
         var $image = $('<img/>');
-        var editor = new widgets.MediaDialog(this, {onlyImages: true, firstFilters: ['background']}, null, $image[0]);
+        var editor = new widgets.MediaDialog(this, {onlyImages: true}, null, $image[0]);
 
         editor.on('save', this, function (media) { // TODO use scss customization instead (like for user colors)
             var src = $(media).attr('src');

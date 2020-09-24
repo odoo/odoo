@@ -1,0 +1,137 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * pos_cash_rounding
+# 
+# Translators:
+# Martin Trigaux, 2020
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2020
+# dpms <pieter.van.de.wygaert@telenet.be>, 2020
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2020
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 12.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-02-25 08:38+0000\n"
+"PO-Revision-Date: 2020-05-14 12:49+0000\n"
+"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2020\n"
+"Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: nl\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: pos_cash_rounding
+#: model:ir.model,name:pos_cash_rounding.model_account_cash_rounding
+msgid "Account Cash Rounding"
+msgstr "Kasrekening afronding"
+
+#. module: pos_cash_rounding
+#: model:ir.model.fields,field_description:pos_cash_rounding.field_pos_config__cash_rounding
+msgid "Cash Rounding"
+msgstr "Kas afronding"
+
+#. module: pos_cash_rounding
+#: model_terms:ir.ui.view,arch_db:pos_cash_rounding.res_config_view_form_inherit_pos_cash_rounding
+msgid "Cash Roundings"
+msgstr "Kas afrondingen"
+
+#. module: pos_cash_rounding
+#: model:ir.model.fields,field_description:pos_cash_rounding.field_pos_config__rounding_method
+msgid "Cash rounding"
+msgstr "Cash afronding"
+
+#. module: pos_cash_rounding
+#: code:addons/pos_cash_rounding/models/pos_config.py:19
+#, python-format
+msgid "Cash rounding strategy must be: 'Add a rounding line'"
+msgstr "Cash afrondigsstrategie moet 'Voeg een afrondingslijn toe' zijn"
+
+#. module: pos_cash_rounding
+#: model_terms:ir.ui.view,arch_db:pos_cash_rounding.pos_config_view_form_inherit_cash_rounding
+msgid "Define the smallest coinage of the currency used to pay"
+msgstr "Definieer de kleinste munteenheid van de valuta waarmee u betaald"
+
+#. module: pos_cash_rounding
+#: model_terms:ir.ui.view,arch_db:pos_cash_rounding.res_config_view_form_inherit_pos_cash_rounding
+msgid "Define the smallest coinage of the currency used to pay by cash"
+msgstr ""
+"Definieer de kleinste munteenheid van de valuta waarmee cash betaald kan "
+"worden"
+
+#. module: pos_cash_rounding
+#: model:ir.model.fields,field_description:pos_cash_rounding.field_account_cash_rounding__loss_account_id
+msgid "Loss Account"
+msgstr "Verliesrekening"
+
+#. module: pos_cash_rounding
+#: model:ir.model.fields,field_description:pos_cash_rounding.field_pos_config__only_round_cash_method
+msgid "Only apply rounding on cash"
+msgstr "Alleen afronden op cash betalingen"
+
+#. module: pos_cash_rounding
+#: model_terms:ir.ui.view,arch_db:pos_cash_rounding.res_config_view_form_inherit_pos_cash_rounding
+msgid "Payments"
+msgstr "Betalingen"
+
+#. module: pos_cash_rounding
+#: model:ir.model,name:pos_cash_rounding.model_pos_config
+msgid "Point of Sale Configuration"
+msgstr "Kassa instellingen"
+
+#. module: pos_cash_rounding
+#: model:ir.model,name:pos_cash_rounding.model_pos_order
+msgid "Point of Sale Orders"
+msgstr "Kassa orders"
+
+#. module: pos_cash_rounding
+#: model:ir.model,name:pos_cash_rounding.model_pos_session
+msgid "Point of Sale Session"
+msgstr "Kassa sessie"
+
+#. module: pos_cash_rounding
+#: model_terms:ir.ui.view,arch_db:pos_cash_rounding.pos_rounding_form_view_inherited
+msgid "Profit Account"
+msgstr "Winst & verlies rekening"
+
+#. module: pos_cash_rounding
+#. openerp-web
+#: code:addons/pos_cash_rounding/static/src/xml/pos.xml:19
+#, python-format
+msgid "ROUNDED"
+msgstr "AFGEROND"
+
+#. module: pos_cash_rounding
+#. openerp-web
+#: code:addons/pos_cash_rounding/static/src/xml/pos.xml:7
+#, python-format
+msgid "ROUNDED:"
+msgstr "AFGEROND:"
+
+#. module: pos_cash_rounding
+#: model_terms:ir.ui.view,arch_db:pos_cash_rounding.pos_config_view_form_inherit_cash_rounding
+msgid "Rounding Method"
+msgstr "Afrondingsmethode"
+
+#. module: pos_cash_rounding
+#: model_terms:ir.ui.view,arch_db:pos_cash_rounding.pos_rounding_form_view_inherited
+msgid ""
+"The Point of Sale only support the \"add a rounding line\" rounding "
+"strategy."
+msgstr "De kassa ondersteunt alleen de \"voeg een afrondingslijn toe\" strategie."
+
+#. module: pos_cash_rounding
+#: model_terms:ir.ui.view,arch_db:pos_cash_rounding.pos_order_view_form_inherit_cash_rounding
+msgid "Total Paid (with rounding)"
+msgstr "Totaal betaald (met afronding)"
+
+#. module: pos_cash_rounding
+#: code:addons/pos_cash_rounding/models/account_cash_rounding.py:20
+#, python-format
+msgid ""
+"You are not allowed to change the cash rounding configuration while a pos "
+"session using it is already opened."
+msgstr ""
+"U mag de afrondingsmethode niet wijzigen terwijl een kassa sessie die "
+"geopend is deze gebruikt."

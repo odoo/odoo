@@ -11,9 +11,11 @@
 # Ejner Sønniksen <ejner@vkdata.dk>, 2018
 # Martin Trigaux, 2019
 # Hans Henrik Gabelgaard <hhg@gabelgaard.org>, 2019
-# Sanne Kristensen <sanne@vkdata.dk>, 2019
 # Pernille Kristensen <pernillekristensen1994@gmail.com>, 2019
 # lhmflexerp <lhm@flexerp.dk>, 2019
+# Sanne Kristensen <sanne@vkdata.dk>, 2020
+# Preben Lisby <preben.lisby@gmail.com>, 2020
+# Mads Søndergaard, 2020
 # 
 msgid ""
 msgstr ""
@@ -21,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-03-29 10:10+0000\n"
 "PO-Revision-Date: 2018-08-24 09:25+0000\n"
-"Last-Translator: lhmflexerp <lhm@flexerp.dk>, 2019\n"
+"Last-Translator: Mads Søndergaard, 2020\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -37,7 +39,7 @@ msgstr "#Spørgsmål"
 #. module: survey
 #: model:mail.template,subject:survey.email_template_survey
 msgid "${object.title}: Survey"
-msgstr ""
+msgstr "${object.title}: Undersøgelse"
 
 #. module: survey
 #: code:addons/survey/models/survey.py:122
@@ -77,11 +79,24 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Hej<br/><br/>\n"
+"        Vi er i gang med en undersøgelse, og din deltagelse ville være yderst værdsat.\n"
+"        <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"            <a href=\"__URL__\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                Deltag i undersøgelse\n"
+"            </a>\n"
+"        </div>\n"
+"        Tak for din deltagelse!\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "<i class=\"fa fa-2x\" role=\"img\" aria-label=\"Numeric\" title=\"Numeric\">123..</i>"
-msgstr ""
+msgstr "<i class=\"fa fa-2x\" role=\"img\" aria-label=\"Numeric\" title=\"Numeric\">123..</i>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -89,6 +104,8 @@ msgid ""
 "<i class=\"fa fa-align-justify fa-4x\" role=\"img\" aria-label=\"Multiple "
 "lines\" title=\"Multiple Lines\"/>"
 msgstr ""
+"<i class=\"fa fa-align-justify fa-4x\" role=\"img\" aria-label=\"Multiple "
+"lines\" title=\"Multiple Lines\"/>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.result_matrix
@@ -125,6 +142,8 @@ msgid ""
 "<i class=\"fa fa-circle-o fa-lg\" role=\"img\" aria-label=\"Not checked\" "
 "title=\"Not checked\"/>"
 msgstr ""
+"<i class=\"fa fa-circle-o fa-lg\" role=\"img\" aria-label=\"Not checked\" "
+"title=\"Not checked\"/>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -132,6 +151,8 @@ msgid ""
 "<i class=\"fa fa-dot-circle-o fa-lg\" role=\"img\" aria-label=\"Checked\" "
 "title=\"Checked\"/>"
 msgstr ""
+"<i class=\"fa fa-dot-circle-o fa-lg\" role=\"img\" aria-label=\"Checked\" "
+"title=\"Checked\"/>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -176,6 +197,8 @@ msgid ""
 "<i class=\"fa fa-minus fa-4x\" role=\"img\" aria-label=\"Single Line\" "
 "title=\"Single Line\"/>"
 msgstr ""
+"<i class=\"fa fa-minus fa-4x\" role=\"img\" aria-label=\"Single Line\" "
+"title=\"Single Line\"/>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -194,6 +217,9 @@ msgid ""
 "surveys</span><span class=\"badge badge-secondary only_right_radius filter-"
 "finished\">Finished surveys</span>"
 msgstr ""
+"<span class=\"badge badge-primary only_left_radius filter-all\">All "
+"undersøgelser</span><span class=\"badge badge-secondary only_right_radius "
+"filter-finished\">Afsluttede undersøgelser</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.result
@@ -201,6 +227,8 @@ msgid ""
 "<span class=\"badge badge-primary only_left_radius\"><i class=\"fa fa-"
 "filter\" role=\"img\" aria-label=\"Filter\" title=\"Filter\"/></span>"
 msgstr ""
+"<span class=\"badge badge-primary only_left_radius\"><i class=\"fa fa-"
+"filter\" role=\"img\" aria-label=\"Filter\" title=\"Filter\"/></span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.result
@@ -209,26 +237,29 @@ msgid ""
 "surveys</span><span class=\"badge badge-primary only_right_radius filter-"
 "finished\">Finished surveys</span>"
 msgstr ""
+"<span class=\"badge badge-secondary only_left_radius filter-all\">Alle "
+"undersøgelser</span><span class=\"badge badge-primary only_right_radius "
+"filter-finished\">Afsluttede undersøgelser</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.result_number
 msgid "<span class=\"badge badge-secondary only_left_radius\">Average </span>"
-msgstr ""
+msgstr "<span class=\"badge badge-secondary only_left_radius\">Gennemsnit </span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.result_number
 msgid "<span class=\"badge badge-secondary only_left_radius\">Maximum </span>"
-msgstr ""
+msgstr "<span class=\"badge badge-secondary only_left_radius\">Maksimum </span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.result_number
 msgid "<span class=\"badge badge-secondary only_left_radius\">Minimum </span>"
-msgstr ""
+msgstr "<span class=\"badge badge-secondary only_left_radius\">Minimum </span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.result_number
 msgid "<span class=\"badge badge-secondary only_left_radius\">Sum </span>"
-msgstr ""
+msgstr "<span class=\"badge badge-secondary only_left_radius\">Sum </span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.result
@@ -241,6 +272,8 @@ msgid ""
 "<span style=\"font-size:1.5em;\" class=\"fa fa-bar-chart-o float-right \" "
 "role=\"img\" aria-label=\"Chart\" title=\"Chart\"/>"
 msgstr ""
+"<span style=\"font-size\\:1.5em;\" class=\"fa fa-bar-chart-o float-right \" "
+"role=\"img\" aria-label=\"Plan\" title=\"Plan\"/>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.no_result
@@ -250,12 +283,15 @@ msgid ""
 "                        </span>\n"
 "                        Sorry, No one answered this survey yet"
 msgstr ""
+"<span> <i style=\"font-size\\:1.8em\" class=\"fa fa-users float-right\" "
+"role=\"img\" aria-label=\"Intet svar\" title=\"Intet svar\"/> </span> "
+"Desværre, ingen har besvaret denne undersøgelse endnu"
 
 #. module: survey
 #: code:addons/survey/models/survey.py:688
 #, python-format
 msgid "A label must be attached to only one question."
-msgstr ""
+msgstr "Et mærkat må kun være vedhæftet ét spørgsmål."
 
 #. module: survey
 #: sql_constraint:survey.question:0
@@ -284,7 +320,7 @@ msgstr "Der er opstået et problem"
 #. module: survey
 #: model:survey.label,value:survey.frow_2_2_4
 msgid "A process is defined for all enterprise flows"
-msgstr ""
+msgstr "En process er defineret for alle enterprise flow"
 
 #. module: survey
 #: sql_constraint:survey.user_input:0
@@ -329,7 +365,7 @@ msgstr "Aktivitetstilstand"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__add_sign
 msgid "Add Sign"
-msgstr ""
+msgstr "Tilføj signatur"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_email_compose_message
@@ -343,7 +379,7 @@ msgstr ""
 #. module: survey
 #: model_terms:ir.actions.act_window,help:survey.action_survey_form
 msgid "Add a new survey"
-msgstr ""
+msgstr "Tilføj en ny undersøgelse"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_email_compose_message
@@ -405,6 +441,8 @@ msgid ""
 "Answers do not go in the original document discussion thread. This has an "
 "impact on the generated message-id."
 msgstr ""
+"Svar hører ikke til i den originale dokument diskussions tråd. Dette har en "
+"indvirkning på det genererede besked-id."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_search
@@ -432,6 +470,8 @@ msgid ""
 "Attachments are linked to a document through model / res_id and to the "
 "message through this field."
 msgstr ""
+"Vedhæftninger er linket til et dokument via model / res_id samt til beskeden"
+" via dette felt."
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__author_id
@@ -444,11 +484,13 @@ msgid ""
 "Author of the message. If not set, email_from may hold an email address that"
 " did not match any partner."
 msgstr ""
+"Forfatter af beskeden. Hvis ikke angivet, kan email_from indeholde en mail-"
+"addresse der ikke stemte overens med nogen partner."
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__author_avatar
 msgid "Author's avatar"
-msgstr ""
+msgstr "Forfatters avatar"
 
 #. module: survey
 #: model:ir.model,name:survey.model_ir_autovacuum
@@ -559,7 +601,7 @@ msgstr "Opret e-mail"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__composition_mode
 msgid "Composition mode"
-msgstr ""
+msgstr "Kompositions tilstand"
 
 #. module: survey
 #: model:ir.ui.menu,name:survey.menu_surveys_configuration
@@ -569,7 +611,7 @@ msgstr "Konfiguration"
 #. module: survey
 #: model:survey.label,value:survey.frow_2_7_2
 msgid "Configuration wizard exists for each important setting"
-msgstr ""
+msgstr "Konfigurations guide eksisterer for hver vigtig indstilling"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -597,7 +639,7 @@ msgstr "Kopier, indsæt og del weblinket nedenfor til dit publikum."
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.layout
 msgid "Copyright &amp;copy;"
-msgstr ""
+msgstr "Ophavsrat &amp;copy;"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line__date_create
@@ -607,7 +649,7 @@ msgstr "Oprettelsesdato"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.layout
 msgid "Create a"
-msgstr ""
+msgstr "Opret en"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_label__create_uid
@@ -642,6 +684,8 @@ msgstr "Oprettelses dato"
 #: model:ir.model.fields,help:survey.field_survey_mail_compose_message__starred
 msgid "Current user has a starred notification linked to this message"
 msgstr ""
+"Nuværende bruger har en stjerne-markeret notifikation linket til denne "
+"besked"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__date
@@ -757,6 +801,8 @@ msgid ""
 "Do not keep a copy of the email in the document communication history (mass "
 "mailing only)"
 msgstr ""
+"Behold ikke en kopi af emailen, i dokument kommunikations historikken (kun "
+"masse emails)"
 
 #. module: survey
 #: model:survey.question,question:survey.feedback_3_3
@@ -815,6 +861,8 @@ msgid ""
 "Email address of the sender. This field is set when no matching partner is "
 "found and replaces the author_id field in the chatter."
 msgstr ""
+"Email adresse tilhørende afsender. Dette felt er sat når ingen matchende "
+"partner kan findes, og erstatter author_id feltet i chatter'en."
 
 #. module: survey
 #: model:ir.model,name:survey.model_survey_mail_compose_message
@@ -839,7 +887,7 @@ msgstr "Eksisterende kontakter"
 #. module: survey
 #: model:survey.label,value:survey.frow_2_7_3
 msgid "Extra modules proposed are relevant"
-msgstr ""
+msgstr "Ekstra foreslåede moduler er relevante"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__starred_partner_ids
@@ -849,12 +897,12 @@ msgstr "Favoriseret af"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.result_choice
 msgid "Filter question"
-msgstr ""
+msgstr "Filtrer spørgsmål"
 
 #. module: survey
 #: model:survey.label,value:survey.choice_1_2_3
 msgid "Financial Management"
-msgstr ""
+msgstr "Finans administration"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_stage__fold
@@ -889,7 +937,7 @@ msgstr "Fri tekst"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line__value_free_text
 msgid "Free Text answer"
-msgstr ""
+msgstr "Fritekst besvarelse"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__email_from
@@ -913,7 +961,7 @@ msgstr "Indeholder fejl"
 #. module: survey
 #: model:survey.question,question:survey.feedback_3_1
 msgid "How do you contribute or plan to contribute to Odoo?"
-msgstr ""
+msgstr "Hvordan vil du bidrage eller planlægger du at bidrage til Odoo?"
 
 #. module: survey
 #: model:survey.label,value:survey.choice_1_2_6
@@ -923,27 +971,27 @@ msgstr "Personale (HR)"
 #. module: survey
 #: model:survey.label,value:survey.choice_3_1_3
 msgid "I develop new features"
-msgstr ""
+msgstr "Jeg udvikler nye funktioner"
 
 #. module: survey
 #: model:survey.label,value:survey.choice_4_1_4
 msgid "I do not publish my developments"
-msgstr ""
+msgstr "Jeg udgiver ikke mine udviklinger"
 
 #. module: survey
 #: model:survey.label,value:survey.choice_3_1_4
 msgid "I help to translate"
-msgstr ""
+msgstr "Jeg hjælper med at oversætte"
 
 #. module: survey
 #: model:survey.label,value:survey.choice_4_1_3
 msgid "I host them on my own website"
-msgstr ""
+msgstr "Jeg hoster dem på min egen hjemmeside"
 
 #. module: survey
 #: model:survey.label,value:survey.choice_3_1_1
 msgid "I participate to discussion and forums"
-msgstr ""
+msgstr "Jeg deltager i diskussioner og fora"
 
 #. module: survey
 #: model:survey.label,value:survey.choice_4_1_1
@@ -958,7 +1006,7 @@ msgstr "Jeg anvender et andet repository system (SourceForge...)"
 #. module: survey
 #: model:survey.label,value:survey.frow_2_1_3
 msgid "I use the contextual help in Odoo"
-msgstr ""
+msgstr "Jeg anvender den kontekstuelle hjælp i Odoo"
 
 #. module: survey
 #: model:survey.label,value:survey.choice_3_1_5
@@ -985,7 +1033,7 @@ msgstr "ID"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__token
 msgid "Identification token"
-msgstr ""
+msgstr "Identifikations token"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__message_unread
@@ -1058,7 +1106,7 @@ msgstr "Forkert e-mail adresse: %s"
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_mail_compose_message__parent_id
 msgid "Initial thread message."
-msgstr ""
+msgstr "Første tråd besked."
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__validation_email
@@ -1118,7 +1166,7 @@ msgstr "Det er nemt at finde den process du har brug for"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_label__sequence
 msgid "Label Sequence order"
-msgstr ""
+msgstr "Mærkat sekvens rækkefølge"
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.action_survey_label_form
@@ -1206,7 +1254,7 @@ msgstr "Logo"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__mail_activity_type_id
 msgid "Mail Activity Type"
-msgstr ""
+msgstr "Mail aktivitetstype"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__message_main_attachment_id
@@ -1232,17 +1280,17 @@ msgstr "Manuelt"
 #. module: survey
 #: selection:survey.question,type:0
 msgid "Matrix"
-msgstr ""
+msgstr "Matriks"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__matrix_subtype
 msgid "Matrix Type"
-msgstr ""
+msgstr "Matriks type"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.result
 msgid "Matrix:"
-msgstr ""
+msgstr "Matriks:"
 
 #. module: survey
 #: sql_constraint:survey.question:0
@@ -1262,22 +1310,22 @@ msgstr "Max værdi kan ikke være mindre end minimum værdi!"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__validation_max_date
 msgid "Maximum Date"
-msgstr ""
+msgstr "Maksimum dato"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__validation_length_max
 msgid "Maximum Text Length"
-msgstr ""
+msgstr "Maksimum tekst længde"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__validation_max_float_value
 msgid "Maximum value"
-msgstr ""
+msgstr "Maksimum værdi"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.403
 msgid "Maybe you were looking for"
-msgstr ""
+msgstr "Måske var du på udkig efter"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__message_has_error
@@ -1287,7 +1335,7 @@ msgstr "Besked leveringsfejl"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__record_name
 msgid "Message Record Name"
-msgstr ""
+msgstr "Besked datasæt navn"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_mail_compose_message__description
@@ -1307,7 +1355,7 @@ msgstr ""
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_mail_compose_message__message_id
 msgid "Message unique identifier"
-msgstr ""
+msgstr "Besked unik IF"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__message_id
@@ -1322,7 +1370,7 @@ msgstr "Beskeder"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__validation_min_date
 msgid "Minimum Date"
-msgstr ""
+msgstr "Minimum dato"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__validation_length_min
@@ -1337,12 +1385,12 @@ msgstr "Minimumsværdi"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__moderator_id
 msgid "Moderated By"
-msgstr ""
+msgstr "Modereret af"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__moderation_status
 msgid "Moderation Status"
-msgstr ""
+msgstr "Modereringsstatus"
 
 #. module: survey
 #: selection:survey.question,type:0
@@ -1352,12 +1400,12 @@ msgstr "Boks med flere linjer "
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Multiple choice with multiple answers"
-msgstr ""
+msgstr "Flere valg med flere svar"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Multiple choice with one answer"
-msgstr ""
+msgstr "Flere valg med ét svar"
 
 #. module: survey
 #: selection:survey.question,type:0
@@ -1387,7 +1435,7 @@ msgstr "Navn"
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_mail_compose_message__record_name
 msgid "Name get of the related document."
-msgstr ""
+msgstr "Hent navn for relateret dokument."
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__needaction
@@ -1398,7 +1446,7 @@ msgstr "Kræver handling"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__need_moderation
 msgid "Need moderation"
-msgstr ""
+msgstr "Behov for moderering"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_user_input_search
@@ -1428,17 +1476,17 @@ msgstr "Næste side"
 #. module: survey
 #: model_terms:ir.actions.act_window,help:survey.action_survey_page_form
 msgid "No pages found"
-msgstr ""
+msgstr "Ingen sider fundet"
 
 #. module: survey
 #: model_terms:ir.actions.act_window,help:survey.action_survey_question_form
 msgid "No questions found"
-msgstr ""
+msgstr "Ingen spørgsmål fundet"
 
 #. module: survey
 #: model_terms:ir.actions.act_window,help:survey.action_survey_label_form
 msgid "No survey labels found"
-msgstr ""
+msgstr "Ingen undersøgelse mærkater fundet"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__no_auto_thread
@@ -1448,7 +1496,7 @@ msgstr "Ingen tråd til svar"
 #. module: survey
 #: model_terms:ir.actions.act_window,help:survey.action_survey_user_input_line
 msgid "No user input lines found"
-msgstr ""
+msgstr "Ingen bruger input linjer fundet"
 
 #. module: survey
 #: model:survey.label,value:survey.choice_1_1_4
@@ -1459,7 +1507,7 @@ msgstr "Nej, jeg har lige testet det"
 #: model_terms:ir.actions.act_window,help:survey.action_selected_survey_user_input
 #: model_terms:ir.actions.act_window,help:survey.action_survey_user_input
 msgid "Nobody has replied to your surveys yet"
-msgstr ""
+msgstr "Ingen har besvaret dine undersøgelser endnu"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.notopen
@@ -1618,7 +1666,7 @@ msgstr "Forældre besked"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_user_input_search
 msgid "Partially Completed"
-msgstr ""
+msgstr "Delvist gennemført"
 
 #. module: survey
 #: selection:survey.user_input,state:0
@@ -1634,12 +1682,12 @@ msgstr "Kontakt"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__needaction_partner_ids
 msgid "Partners with Need Action"
-msgstr ""
+msgstr "Partnere med Kræver handling"
 
 #. module: survey
 #: selection:survey.mail.compose.message,moderation_status:0
 msgid "Pending Moderation"
-msgstr ""
+msgstr "Afventende moderation"
 
 #. module: survey
 #: model:survey.stage,name:survey.stage_permanent
@@ -1720,7 +1768,7 @@ msgstr "Udgivet"
 #. module: survey
 #: model:survey.label,value:survey.choice_1_2_2
 msgid "Purchases Management"
-msgstr ""
+msgstr "Købs administration"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_label__question_id
@@ -1763,7 +1811,7 @@ msgstr "Spørgsmål til udviklere"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__quizz_mode
 msgid "Quizz Mode"
-msgstr ""
+msgstr "Quizz tilstand"
 
 #. module: survey
 #: selection:survey.question,display_mode:0
@@ -1773,7 +1821,7 @@ msgstr "Radio Buttons"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__rating_value
 msgid "Rating Value"
-msgstr ""
+msgstr "Bedømmelse værdi"
 
 #. module: survey
 #: selection:survey.mail.compose.message,moderation_status:0
@@ -1783,7 +1831,7 @@ msgstr "Afvist"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__res_id
 msgid "Related Document ID"
-msgstr ""
+msgstr "Relateret dokument ID"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__model
@@ -1793,7 +1841,7 @@ msgstr "Relateret dokument model"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__rating_ids
 msgid "Related ratings"
-msgstr ""
+msgstr "Relaterede bedømmelser"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_mail_compose_message__reply_to
@@ -1801,6 +1849,8 @@ msgid ""
 "Reply email address. Setting the reply_to bypasses the automatic thread "
 "creation."
 msgstr ""
+"Besvarelses email adresse. Angivelsen af reply_to forbigår den automatiske "
+"tråd oprettelse."
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__reply_to
@@ -1815,7 +1865,7 @@ msgstr "Ansvarlig bruger"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__result_url
 msgid "Results link"
-msgstr ""
+msgstr "Resultater link"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line__value_suggested_row
@@ -1825,17 +1875,17 @@ msgstr "Svar for rækken "
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Row1"
-msgstr ""
+msgstr "Række1"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Row2"
-msgstr ""
+msgstr "Række2"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Row3"
-msgstr ""
+msgstr "Række3"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -1845,12 +1895,12 @@ msgstr "Rækker"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__labels_ids_2
 msgid "Rows of the Matrix"
-msgstr ""
+msgstr "Rækker i matrikset"
 
 #. module: survey
 #: model:survey.label,value:survey.frow_2_7_4
 msgid "Running the configuration wizards is a good way to spare time"
-msgstr ""
+msgstr "Afvikling af konfigurations guiden er en god måde at spare tid på"
 
 #. module: survey
 #: model:survey.label,value:survey.choice_1_2_1
@@ -1885,7 +1935,7 @@ msgstr "Score tildelt for dette valg "
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_label_search
 msgid "Search Label"
-msgstr ""
+msgstr "Søg mærkat"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_search
@@ -1895,12 +1945,12 @@ msgstr "Søg side"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_search
 msgid "Search Question"
-msgstr ""
+msgstr "Søg spørgsmål"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_user_input_search
 msgid "Search Survey"
-msgstr ""
+msgstr "Søg undersøgelse"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_response_line_search
@@ -1945,7 +1995,7 @@ msgstr "Rækkefølge"
 #. module: survey
 #: sql_constraint:survey.stage:0
 msgid "Sequence number MUST be a natural"
-msgstr ""
+msgstr "Sekvensnummeret skal være et naturligt tal"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_kanban
@@ -1965,7 +2015,7 @@ msgstr "Del muligheder"
 #. module: survey
 #: selection:survey.mail.compose.message,public:0
 msgid "Share the public web link to your audience."
-msgstr ""
+msgstr "Del det offentlige web link til dit publikum."
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__comments_allowed
@@ -1995,6 +2045,9 @@ msgid ""
 "image, with aspect ratio preserved. Use this field anywhere a small image is"
 " required."
 msgstr ""
+"Lille billede størrelse for denne kontakt. Det omformes automatisk til et "
+"64x64px billede, med billedforholdet bibeholdt. Brug dette felt hvor end et "
+"lille billede påkræves."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.page
@@ -2003,6 +2056,9 @@ msgid ""
 "danger\">Your answers have probably not been recorded.</strong> Try "
 "refreshing."
 msgstr ""
+"Noget gik galt under kontaktoprettelse til undersøgelses serveren. <strong "
+"class=\"text-danger\">Dine svar er formentlig ikke blevet gemt.</strong> "
+"Prøv at opdatere siden."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.result
@@ -2066,7 +2122,7 @@ msgstr "Indsend undersøgelse"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__subtype_id
 msgid "Subtype"
-msgstr ""
+msgstr "Undertype"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line__value_suggested
@@ -2109,26 +2165,26 @@ msgstr "Svar linje for undersøgelse "
 #: model:ir.model,name:survey.model_survey_label
 #: model_terms:ir.ui.view,arch_db:survey.survey_label_tree
 msgid "Survey Label"
-msgstr ""
+msgstr "Undersøgelse mærkat"
 
 #. module: survey
 #: model:ir.model,name:survey.model_survey_page
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_form
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_tree
 msgid "Survey Page"
-msgstr ""
+msgstr "Undersøgelse side"
 
 #. module: survey
 #: model:ir.model,name:survey.model_survey_question
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_tree
 msgid "Survey Question"
-msgstr ""
+msgstr "Undersøgelse spørgsmål"
 
 #. module: survey
 #: model:ir.model,name:survey.model_survey_stage
 msgid "Survey Stage"
-msgstr ""
+msgstr "Undersøgelse stadie"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_form
@@ -2164,7 +2220,7 @@ msgstr "Undersøgelse - bruger-input"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.result_matrix
 msgid "Survey filter"
-msgstr ""
+msgstr "Undersøgelse filter"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__page_id
@@ -2196,12 +2252,12 @@ msgstr "Test"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_user_input_search
 msgid "Test Entries"
-msgstr ""
+msgstr "Test input"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__test_entry
 msgid "Test Entry"
-msgstr ""
+msgstr "Test input"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_form
@@ -2216,7 +2272,7 @@ msgstr "Tekst"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line__value_text
 msgid "Text answer"
-msgstr ""
+msgstr "Tekst besvarelse"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.sfinished
@@ -2231,12 +2287,12 @@ msgstr "Takke besked"
 #. module: survey
 #: model:survey.label,value:survey.frow_2_5_3
 msgid "The 'Usability/Extended View' group helps in daily work"
-msgstr ""
+msgstr "Brugbarheden/Udvidet visning grupperne hjælper i daglig arbejde"
 
 #. module: survey
 #: model:survey.label,value:survey.frow_2_5_4
 msgid "The 'Usability/Extended View' group hides only optional fields"
-msgstr ""
+msgstr "Brugbarheden/Udvidet visning grupper skjuler kun valgfrie felter"
 
 #. module: survey
 #: code:addons/survey/models/survey.py:819
@@ -2270,6 +2326,8 @@ msgid ""
 "The content of the text don't contain '__URL__'.                     __URL__"
 " is automaticaly converted into the special url of the survey."
 msgstr ""
+"Indholdet af teksten indeholder ikke '__URL__'.                   __URL__ "
+"konverteres automatisk til den særlige URL brugt til undersøgelsen."
 
 #. module: survey
 #: model:survey.label,value:survey.choice_2_4_1
@@ -2279,7 +2337,7 @@ msgstr "Den nuværende struktur i menuen er god"
 #. module: survey
 #: model:survey.label,value:survey.frow_2_5_5
 msgid "The groups set on menu items are relevant"
-msgstr ""
+msgstr "Grupperne angivet på menu artiklerne er relevante"
 
 #. module: survey
 #: model:survey.label,value:survey.choice_2_6_3
@@ -2319,6 +2377,8 @@ msgid ""
 "These questions relate to the ergonomy and ease of use of Odoo. Try to remind your firsts days on Odoo and\n"
 "what have been your difficulties."
 msgstr ""
+"Disse spørgsmål relaterer til ergonomi og brugervenlighed af Odoo. Prøv at mindes dine første dage med Odoo, og\n"
+"hvad du har haft svært ved."
 
 #. module: survey
 #: model:survey.label,value:survey.frow_2_2_2
@@ -2362,6 +2422,8 @@ msgid ""
 "This list of emails of recipients will not be converted in contacts.        "
 "Emails must be separated by commas, semicolons or newline."
 msgstr ""
+"Denne list over modtagerers emails vil ikke blive omdannet til kontakter."
+"    Emails skal være separeret med kommaer, semikoloner, eller newline."
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__thank_you_message
@@ -2372,7 +2434,7 @@ msgstr "Denne besked vil blive vist, når undersøgelsen er afsluttet"
 #: code:addons/survey/models/survey.py:806
 #, python-format
 msgid "This question cannot be unanswered or skipped."
-msgstr ""
+msgstr "Dette spørgsmål kan ikke være ubesvaret eller springes over."
 
 #. module: survey
 #: code:addons/survey/models/survey.py:489
@@ -2419,6 +2481,8 @@ msgid ""
 "Those security rules are standard and can be used out-of-the-box in most "
 "cases"
 msgstr ""
+"Disse sikkerheds regler er standard og kan bruges som det er, i de fleste "
+"tilfælde"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__title
@@ -2458,11 +2522,13 @@ msgid ""
 "Tracked values are stored in a separate model. This field allow to "
 "reconstruct the tracking and to generate statistics on the model."
 msgstr ""
+"Sporede værdier opbevares i en separat model. Dette felt gør det muligt at "
+"genoprettet sporingen, samt at generere statistikker for modellen."
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__tracking_value_ids
 msgid "Tracking values"
-msgstr ""
+msgstr "Sporingsværdier"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__message_type
@@ -2498,7 +2564,7 @@ msgstr "Ulæste besked tæller"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_search
 msgid "Upcoming Activities"
-msgstr ""
+msgstr "Kommende aktiviteter"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__use_active_domain
@@ -2553,7 +2619,7 @@ msgstr "Brugeren kan vende tilbage til forrige side"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_user_input_line_form
 msgid "User input line details"
-msgstr ""
+msgstr "Bruger input linje detaljer"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__user_input_ids
@@ -2577,12 +2643,12 @@ msgstr ""
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__validation_required
 msgid "Validate entry"
-msgstr ""
+msgstr "Godkendt deltagelse"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__validation_error_msg
 msgid "Validation Error message"
-msgstr ""
+msgstr "Godkendelses fejlbesked"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_user_input_form
@@ -2617,7 +2683,7 @@ msgstr "Website kommunikations historik"
 #. module: survey
 #: model:survey.question,question:survey.feedback_2_7
 msgid "What do you think about configuration wizards?"
-msgstr ""
+msgstr "Hvad synes du om konfigurations guiderne?"
 
 #. module: survey
 #: model:survey.question,question:survey.feedback_2_1
@@ -2635,6 +2701,7 @@ msgid ""
 "What do you think about the process views of Odoo, available in the web "
 "client ?"
 msgstr ""
+"Hvad synes du om process visningen fra Odoo, tilgængelig i web klienten ?"
 
 #. module: survey
 #: model:survey.question,question:survey.feedback_2_4
@@ -2645,12 +2712,12 @@ msgstr "Hvad synes du om menustrukturen?"
 #. module: survey
 #: model:survey.question,question:survey.feedback_4_1
 msgid "Where do you develop your new features?"
-msgstr ""
+msgstr "Hvor udvikler du dine nye funktioner?"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_mail_compose_message__is_log
 msgid "Whether the message is an internal note (comment mode only)"
-msgstr ""
+msgstr "Hvorvidt beskeden er en intern note (kun kommentar tilstand)"
 
 #. module: survey
 #: model:survey.question,question:survey.feedback_1_2
@@ -2663,6 +2730,8 @@ msgid ""
 "YYYY-MM-DD\n"
 "                                            <i class=\"fa fa-calendar fa-2x\" role=\"img\" aria-label=\"Calendar\" title=\"Calendar\"/>"
 msgstr ""
+"ÅÅÅÅ-MM-DD\n"
+"                                           <i class=\"fa fa-calendar fa-2x\" role=\"img\" aria-label=\"Kalender\" title=\"Kalender\"/> "
 
 #. module: survey
 #: model:survey.label,value:survey.choice_1_1_1
@@ -2686,6 +2755,9 @@ msgid ""
 "feedback, recruitment interviews, employee's periodical evaluations, "
 "marketing campaigns, etc."
 msgstr ""
+"Du kan oprette undersøgelser til forskellige formål: kundeundersøgelser, "
+"tilbagemeldinger om tjenester, ansættelses interviews, ansattes periodiske "
+"evalueringer, marketing kampagner, osv."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_email_compose_message
@@ -2717,12 +2789,12 @@ msgstr "Du kan ikke sende invitationer til lukkede undersøgelser."
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.sfinished
 msgid "You scored"
-msgstr ""
+msgstr "Du scorede"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "ans"
-msgstr ""
+msgstr "ans"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.layout
@@ -2752,9 +2824,9 @@ msgstr "gennemgå dine svar"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.403
 msgid "this page"
-msgstr ""
+msgstr "denne side"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.layout
 msgid "with"
-msgstr ""
+msgstr "med"

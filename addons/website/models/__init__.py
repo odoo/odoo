@@ -8,6 +8,7 @@ from . import ir_qweb
 from . import ir_qweb_fields
 from . import website
 from . import ir_rule
+from . import ir_translation
 from . import ir_ui_view
 from . import res_company
 from . import res_partner

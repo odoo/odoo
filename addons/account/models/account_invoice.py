@@ -53,7 +53,7 @@ class AccountInvoice(models.Model):
 
     @api.one
     @api.depends('invoice_line_ids.price_subtotal', 'tax_line_ids.amount', 'tax_line_ids.amount_rounding',
-                 'currency_id', 'company_id', 'date_invoice', 'type')
+                 'currency_id', 'company_id', 'date_invoice', 'type', 'date')
     def _compute_amount(self):
         round_curr = self.currency_id.round
         self.amount_untaxed = sum(line.price_subtotal for line in self.invoice_line_ids)
@@ -63,8 +63,9 @@ class AccountInvoice(models.Model):
         amount_untaxed_signed = self.amount_untaxed
         if self.currency_id and self.company_id and self.currency_id != self.company_id.currency_id:
             currency_id = self.currency_id
-            amount_total_company_signed = currency_id._convert(self.amount_total, self.company_id.currency_id, self.company_id, self.date_invoice or fields.Date.today())
-            amount_untaxed_signed = currency_id._convert(self.amount_untaxed, self.company_id.currency_id, self.company_id, self.date_invoice or fields.Date.today())
+            rate_date = self._get_currency_rate_date() or fields.Date.today()
+            amount_total_company_signed = currency_id._convert(self.amount_total, self.company_id.currency_id, self.company_id, rate_date)
+            amount_untaxed_signed = currency_id._convert(self.amount_untaxed, self.company_id.currency_id, self.company_id, rate_date)
         sign = self.type in ['in_refund', 'out_refund'] and -1 or 1
         self.amount_total_company_signed = amount_total_company_signed * sign
         self.amount_total_signed = self.amount_total * sign
@@ -75,12 +76,6 @@ class AccountInvoice(models.Model):
             sign = invoice.type in ['in_refund', 'out_refund'] and -1 or 1
             invoice.amount_untaxed_invoice_signed = invoice.amount_untaxed * sign
             invoice.amount_tax_signed = invoice.amount_tax * sign
-
-    @api.onchange('amount_total')
-    def _onchange_amount_total(self):
-        for inv in self:
-            if float_compare(inv.amount_total, 0.0, precision_rounding=inv.currency_id.rounding) == -1:
-                raise Warning(_('You cannot validate an invoice with a negative total amount. You should create a credit note instead.'))
 
     @api.model
     def _default_journal(self):
@@ -147,6 +142,7 @@ class AccountInvoice(models.Model):
             domain = [('account_id', '=', self.account_id.id),
                       ('partner_id', '=', self.env['res.partner']._find_accounting_partner(self.partner_id).id),
                       ('reconciled', '=', False),
+                      ('move_id.state', '=', 'posted'),
                       '|',
                         '&', ('amount_residual_currency', '!=', 0.0), ('currency_id','!=', None),
                         '&', ('amount_residual_currency', '=', 0.0), '&', ('currency_id','=', None), ('amount_residual', '!=', 0.0)]
@@ -220,8 +216,11 @@ class AccountInvoice(models.Model):
             if float_is_zero(amount_to_show, precision_rounding=self.currency_id.rounding):
                 continue
             payment_ref = payment.move_id.name
+            invoice_view_id = None
             if payment.move_id.ref:
                 payment_ref += ' (' + payment.move_id.ref + ')'
+            if payment.invoice_id:
+                invoice_view_id = payment.invoice_id.get_formview_id()
             payment_vals.append({
                 'name': payment.name,
                 'journal_name': payment.journal_id.name,
@@ -233,6 +232,7 @@ class AccountInvoice(models.Model):
                 'payment_id': payment.id,
                 'account_payment_id': payment.payment_id.id,
                 'invoice_id': payment.invoice_id.id,
+                'invoice_view_id': invoice_view_id,
                 'move_id': payment.move_id.id,
                 'ref': payment_ref,
             })
@@ -435,10 +435,12 @@ class AccountInvoice(models.Model):
                 ran_num = str(uuid.uuid4().int)
                 identification_number = int(ran_num[:5] + ran_num[-5:])
             prefix = self.number
-        else:
-            #self.company_id.invoice_reference_type == 'partner'
+        elif self.company_id.invoice_reference_type == 'partner':
             identification_number = self.partner_id.id
             prefix = 'CUST'
+        else:
+            return ''
+
         return '%s/%s' % (prefix, str(identification_number % 97).rjust(2, '0'))
 
     # Load all Vendor Bill lines
@@ -475,7 +477,7 @@ class AccountInvoice(models.Model):
         for invoice in self:
             invoice.access_url = '/my/invoices/%s' % (invoice.id)
 
-    @api.depends('state', 'journal_id', 'date_invoice')
+    @api.depends('state', 'journal_id', 'date', 'date_invoice')
     def _get_sequence_prefix(self):
         """ computes the prefix of the number that will be assigned to the first invoice/bill/refund of a journal, in order to
         let the user manually change it.
@@ -487,9 +489,10 @@ class AccountInvoice(models.Model):
             return
         for invoice in self:
             journal_sequence, domain = invoice._get_seq_number_next_stuff()
+            sequence_date = invoice.date or invoice.date_invoice
             if (invoice.state == 'draft') and not self.search(domain, limit=1):
-                prefix, dummy = journal_sequence.with_context(ir_sequence_date=invoice.date_invoice,
-                                                              ir_sequence_date_range=invoice.date_invoice)._get_prefix_suffix()
+                prefix, dummy = journal_sequence.with_context(ir_sequence_date=sequence_date,
+                                                              ir_sequence_date_range=sequence_date)._get_prefix_suffix()
                 invoice.sequence_number_next_prefix = prefix
             else:
                 invoice.sequence_number_next_prefix = False
@@ -502,7 +505,8 @@ class AccountInvoice(models.Model):
         for invoice in self:
             journal_sequence, domain = invoice._get_seq_number_next_stuff()
             if (invoice.state == 'draft') and not self.search(domain, limit=1):
-                number_next = journal_sequence._get_current_sequence().number_next_actual
+                sequence_date = invoice.date or invoice.date_invoice
+                number_next = journal_sequence._get_current_sequence(sequence_date=sequence_date).number_next_actual
                 invoice.sequence_number_next = '%%0%sd' % journal_sequence.padding % number_next
             else:
                 invoice.sequence_number_next = ''
@@ -518,7 +522,8 @@ class AccountInvoice(models.Model):
         result = re.match("(0*)([0-9]+)", nxt)
         if result and journal_sequence:
             # use _get_current_sequence to manage the date range sequences
-            sequence = journal_sequence._get_current_sequence()
+            sequence_date = self.date or self.date_invoice
+            sequence = journal_sequence._get_current_sequence(sequence_date=sequence_date)
             sequence.number_next = int(result.group(2))
 
     @api.multi
@@ -863,7 +868,8 @@ class AccountInvoice(models.Model):
                     self.partner_id = False
 
         self.account_id = account_id
-        self.payment_term_id = payment_term_id
+        if payment_term_id:
+            self.payment_term_id = payment_term_id
         self.date_due = False
         self.fiscal_position_id = fiscal_position
 
@@ -930,6 +936,10 @@ class AccountInvoice(models.Model):
                             biggest_tax_line = tax_line
                     biggest_tax_line.amount_rounding += rounding_amount
                 elif self.cash_rounding_id.strategy == 'add_invoice_line':
+                    if rounding_amount > 0.0:
+                        account_id = self.cash_rounding_id._get_loss_account_id().id
+                    else:
+                        account_id = self.cash_rounding_id._get_profit_account_id().id
                     # Create a new invoice line to perform the rounding
                     rounding_line = self.env['account.invoice.line'].new({
                         'name': self.cash_rounding_id.name,
@@ -1062,7 +1072,7 @@ class AccountInvoice(models.Model):
         tax_grouped = {}
         round_curr = self.currency_id.round
         for line in self.invoice_line_ids:
-            if not line.account_id:
+            if not line.account_id or line.display_type:
                 continue
             price_unit = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
             taxes = line.invoice_line_tax_ids.compute_all(price_unit, self.currency_id, line.quantity, line.product_id, self.partner_id)['taxes']
@@ -1425,6 +1435,8 @@ class AccountInvoice(models.Model):
         if name:
             invoice_ids = self._search([('number', '=', name)] + args, limit=limit, access_rights_uid=name_get_uid)
         if not invoice_ids:
+            invoice_ids = self._search([('number', operator, name)] + args, limit=limit, access_rights_uid=name_get_uid)
+        if not invoice_ids:
             invoice_ids = self._search([('name', operator, name)] + args, limit=limit, access_rights_uid=name_get_uid)
         return self.browse(invoice_ids).name_get()
 
@@ -1533,13 +1545,16 @@ class AccountInvoice(models.Model):
         values['state'] = 'draft'
         values['number'] = False
         values['origin'] = invoice.number
-        values['payment_term_id'] = False
         values['refund_invoice_id'] = invoice.id
+        values['reference'] = False
 
         if values['type'] == 'in_refund':
+            values['payment_term_id'] = invoice.partner_id.property_supplier_payment_term_id.id
             partner_bank_result = self._get_partner_bank_id(values['company_id'])
             if partner_bank_result:
                 values['partner_bank_id'] = partner_bank_result.id
+        else:
+            values['payment_term_id'] = invoice.partner_id.property_payment_term_id.id
 
         if date:
             values['date'] = date
@@ -1687,8 +1702,9 @@ class AccountInvoiceLine(models.Model):
 
     @api.model
     def _default_account(self):
-        if self._context.get('journal_id'):
-            journal = self.env['account.journal'].browse(self._context.get('journal_id'))
+        journal_id = self._context.get('journal_id') or self._context.get('default_journal_id')
+        if journal_id:
+            journal = self.env['account.journal'].browse(journal_id)
             if self._context.get('type') in ('out_invoice', 'in_refund'):
                 return journal.default_credit_account_id.id
             return journal.default_debit_account_id.id
@@ -1822,6 +1838,8 @@ class AccountInvoiceLine(models.Model):
             if type not in ('in_invoice', 'in_refund'):
                 self.price_unit = 0.0
             domain['uom_id'] = []
+            if fpos:
+                self.account_id = fpos.map_account(self.account_id)
         else:
             self_lang = self
             if part.lang:

@@ -30,12 +30,11 @@
 # Cris Martin <cristina.marrod@gmail.com>, 2018
 # Pilar Marín <pilar@odooperu.pe>, 2018
 # Rodrigo Aragon <conectacoatepec@gmail.com>, 2018
-# Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2018
 # cc53a0412107de288f77ae97a300f6b0, 2019
 # Jhonsons Jimenez <jhonson1195@gmail.com>, 2019
 # Luis Marin <marin.guadarrama@gmail.com>, 2019
-# Edilianny Sánchez <esanchez@vauxoo.com>, 2019
-# Gabriel Umana <gabriel.umana@delfixcr.com>, 2019
+# Edilianny Sanchez - https://www.vauxoo.com/ <esanchez@vauxoo.com>, 2019
+# gabriumaa <gabriel.umana@delfixcr.com>, 2019
 # Hector Hernandez <info@ronandez.com>, 2019
 # Angel Moya - PESOL <angel.moya@pesol.es>, 2019
 # Christian García <shopificame@gmail.com>, 2019
@@ -51,7 +50,14 @@
 # Sébastien BÜHL <buhlsebastien@gmail.com>, 2019
 # Francisco de la Peña <fran@fran.cr>, 2019
 # Jon Perez <jop@odoo.com>, 2019
-# Pedro M. Baeza <pedro.baeza@gmail.com>, 2019
+# Hugo Santos <hugo.santos@factorlibre.com>, 2020
+# Sergio Lop Sanz <slop@sdi.es>, 2020
+# Gelo Joga Landoo <gj@landoo.es>, 2020
+# Nelson Ramírez Sánchez <info@konos.cl>, 2020
+# Carlos Dauden <carlos.dauden@tecnativa.com>, 2020
+# Haider Ilich López Areiza <hlopez@itsoluciones.com.co>, 2020
+# Pedro M. Baeza <pedro.baeza@gmail.com>, 2020
+# Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2020
 # 
 msgid ""
 msgstr ""
@@ -59,7 +65,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-14 07:33+0000\n"
 "PO-Revision-Date: 2018-08-24 09:14+0000\n"
-"Last-Translator: Pedro M. Baeza <pedro.baeza@gmail.com>, 2019\n"
+"Last-Translator: Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2020\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -621,6 +627,11 @@ msgid "<span>Quantity</span>"
 msgstr "<span>Cantidad</span>"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
+msgid "<span>Reference</span>"
+msgstr "<span>Referencia</span>"
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>Reporting</span>"
 msgstr "<span>Informes</span>"
@@ -676,7 +687,7 @@ msgstr "<strong class=\"text-muted\">Su Contacto</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document_with_payments
 msgid "<strong>Amount Due</strong>"
-msgstr "<strong>Importe vencido</strong>"
+msgstr "<strong>Importe adeudado</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_journal
@@ -2189,7 +2200,7 @@ msgstr "Deudor Malo"
 #: selection:account.payment.term.line,value:0
 #: model:ir.model.fields,field_description:account.field_account_move_line__balance
 msgid "Balance"
-msgstr "Saldo pendiente"
+msgstr "Saldo"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__balance_cash_basis
@@ -2451,7 +2462,7 @@ msgstr "Pertenece a los usuarios actuales de la empresa"
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #: model_terms:ir.ui.view,arch_db:account.invoice_supplier_form
 msgid "Bill"
-msgstr "Cuenta"
+msgstr "Factura"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.invoice_supplier_form
@@ -2924,7 +2935,7 @@ msgid ""
 " credit notes made from this journal"
 msgstr ""
 "Marque esta casilla si no desea compartir la misma secuencia de facturas y "
-"notas de crédito de este diario"
+"facturas rectificativas de este diario"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__update_posted
@@ -4265,7 +4276,7 @@ msgstr "Diferencia entre el saldo final calculado y el especificado."
 #: code:addons/account/models/account_move.py:408
 #, python-format
 msgid "Difference debit - credit: "
-msgstr ""
+msgstr "Diferencia debe - haber:"
 
 #. module: account
 #: model:ir.model,name:account.model_digest_digest
@@ -5187,7 +5198,7 @@ msgstr "Tiene Cuenta por Pagar"
 #: model:ir.model.fields,field_description:account.field_res_partner__has_unreconciled_entries
 #: model:ir.model.fields,field_description:account.field_res_users__has_unreconciled_entries
 msgid "Has Unreconciled Entries"
-msgstr "Tiene entradas no conciliadas"
+msgstr "Tiene apuntes no conciliados"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__qr_code_valid
@@ -6816,9 +6827,9 @@ msgid ""
 "Electronic: Get paid automatically through a payment acquirer by requesting a transaction on a card saved by the customer when buying or subscribing online (payment token).\n"
 "Batch Deposit: Encase several customer checks at once by generating a batch deposit to submit to your bank. When encoding the bank statement in Odoo,you are suggested to reconcile the transaction with the batch deposit. Enable this option from the settings."
 msgstr ""
-"Manual: se les paga en efectivo, con cheque o cualquier otro método fuera de Odoo.\n"
-"Electrónico: se le paga automáticamente a través de un adquirente de pagos al solicitar una transacción en una tarjeta guardada por el cliente al comprar o suscribirse en línea (token de pago).\n"
-"Depósito por lotes: realiza varios cheques de clientes a la vez al generar un depósito por lotes para enviar a su banco. Al codificar el extracto bancario en Odoo, se sugiere conciliar la transacción con el depósito por lotes. Habilite esta opción desde la configuración."
+"Manual: sea pagado en efectivo, con cheque o cualquier otro método fuera de Odoo.\n"
+"Electrónico: sea pagado automáticamente a través de un medio de pagos al solicitar una transacción en una tarjeta guardada por el cliente al comprar o suscribirse en línea (token de pago).\n"
+"Remesa: realice varios pagos de cliente a la vez al generar una remesa para enviar a su banco. Al codificar el extracto bancario en Odoo, se sugiere conciliar la transacción con la remesa. Habilite esta opción desde la configuración (solo enterprise)."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_abstract_payment__payment_method_id
@@ -6832,10 +6843,10 @@ msgid ""
 "SEPA Credit Transfer: Pay bill from a SEPA Credit Transfer file you submit to your bank. To enable sepa credit transfer, module account_sepa must be installed "
 msgstr ""
 "Manual: Reciba pagos en efectivo, cheque o cualquier otro método fuera de Odoo.\n"
-"Electrónico: Reciba el pago automáticamente a través de un adquirente de pagos solicitando una transacción de una tarjeta guardada por el cliente al comprar o suscribirse en línea (token de pago).\n"
+"Electrónico: Reciba el pago automáticamente a través de un medio de pagos solicitando una transacción de una tarjeta guardada por el cliente al comprar o suscribirse en línea (token de pago).\n"
 "Cheque: Pague una factura con un cheque e imprímalo desde Odoo.\n"
-"Depósito por lotes: Encierre varios cheques de clientes a la vez generando un depósito por lotes para enviar a su banco. Al codificar los estados de cuenta en Odoo, se sugiere conciliar la transacción con el depósito por lotes. Para habilitar el depósito por lotes, el módulo account_batch_payment debe estar instalado.\n"
-"Transferencia de crédito SEPA: Pague la factura de un archivo de transferencia de crédito SEPA que envíe a su banco. Para habilitar la transferencia de crédito SEPA, el módulo account_sepa debe estar instalado."
+"Remesa: Agrupe varios cheques de clientes a la vez generando una remesa para enviar a su banco. Al codificar los estados de cuenta en Odoo, se sugiere conciliar la transacción con la remesa. Para habilitar la remesa, el módulo account_batch_payment (enterprise) debe estar instalado.\n"
+"Transferencia de crédito SEPA: Pague la factura de un archivo de transferencia de crédito SEPA que envíe a su banco. Para habilitar la transferencia de crédito SEPA, el módulo account_sepa (enterprise) debe estar instalado."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__outbound_payment_method_ids
@@ -7661,7 +7672,7 @@ msgstr "Emisor del pago"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__tax_line_id
 msgid "Originator tax"
-msgstr "Creador de Impuesto"
+msgstr "Impuesto (cuota)"
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_other_income
@@ -8755,12 +8766,12 @@ msgstr "Valoraciones relacionadas"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice__residual_company_signed
 msgid "Remaining amount due in the currency of the company."
-msgstr "Importe restante debido a la divisa de la compañía."
+msgstr "Importe adeudado en la divisa de la compañía."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice__residual_signed
 msgid "Remaining amount due in the currency of the invoice."
-msgstr "Importe restante debido a la divisa de la factura."
+msgstr "Importe adeudado en la divisa de la factura."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice__residual
@@ -8916,7 +8927,7 @@ msgstr "Asiento de reversión"
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_reversal
 #, python-format
 msgid "Reverse Moves"
-msgstr "Movimientos de reversión"
+msgstr "Revertir asiento(s)"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -9593,37 +9604,37 @@ msgstr "Estado del panel de control de la cuenta."
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_invoice_onboarding_state
 msgid "State of the account invoice onboarding panel"
-msgstr ""
+msgstr "Estado del panel de incorporación de la factura"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_setup_bank_data_state
 msgid "State of the onboarding bank data step"
-msgstr ""
+msgstr "Estado del paso de datos bancarios de incorporación"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_setup_coa_state
 msgid "State of the onboarding charts of account step"
-msgstr ""
+msgstr "Estado de los gráficos de incorporación del paso de cuenta"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_setup_fy_data_state
 msgid "State of the onboarding fiscal year step"
-msgstr ""
+msgstr "Estado del paso del año fiscal de incorporación"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_onboarding_invoice_layout_state
 msgid "State of the onboarding invoice layout step"
-msgstr ""
+msgstr "State of the onboarding invoice layout step"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_onboarding_sale_tax_state
 msgid "State of the onboarding sale tax step"
-msgstr ""
+msgstr "Estado del paso del impuesto de venta de incorporación"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_onboarding_sample_invoice_state
 msgid "State of the onboarding sample invoice step"
-msgstr ""
+msgstr "Estado del paso de factura de muestra de incorporación"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__parent_state
@@ -9909,12 +9920,12 @@ msgstr "Mapeo de impuestos"
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_tax_template
 msgid "Tax Mapping Template of Fiscal Position"
-msgstr ""
+msgstr "Plantilla de mapeo de impuestos de la posición fiscal"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_tax
 msgid "Tax Mapping of Fiscal Position"
-msgstr ""
+msgstr "Mapeo de impuestos de la posición fiscal"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__name
@@ -9982,7 +9993,7 @@ msgstr "Impuesto B2C"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice__amount_tax_signed
 msgid "Tax in Invoice Currency"
-msgstr ""
+msgstr "Impuesto en la moneda de la factura"
 
 #. module: account
 #: sql_constraint:account.tax:0 sql_constraint:account.tax.template:0
@@ -10042,7 +10053,7 @@ msgstr "Mapeo de impuestos"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__tax_ids
 msgid "Taxes that apply on the base amount"
-msgstr ""
+msgstr "Impuestos que aplican sobre el importe base"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_template_search
@@ -10126,11 +10137,9 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_payment__multi
 #: model:ir.model.fields,help:account.field_account_register_payments__multi
 msgid ""
-"Technical field indicating if the user selected invoices from multiple "
-"partners or from different types."
+"Technical field indicating if the registering payment will generate multiple"
+" payments or not."
 msgstr ""
-"Campo técnico que indica si el usuario seleccionó facturas de múltiples "
-"socios o de diferentes tipos."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_refund__refund_only
@@ -10410,6 +10419,8 @@ msgid ""
 "The application scope of taxes in a group must be either the same as the "
 "group or left empty."
 msgstr ""
+"El alcance de la aplicación de impuestos en un grupo debe ser el mismo que "
+"el grupo o dejarse vacío."
 
 #. module: account
 #: code:addons/account/models/account.py:551
@@ -11528,7 +11539,7 @@ msgstr "Empresa desconocida"
 #: model:ir.actions.act_window,name:account.act_account_journal_2_account_invoice_opened
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Unpaid Invoices"
-msgstr "Facturas por pagar"
+msgstr "Facturas por cobrar"
 
 #. module: account
 #: selection:account.move,state:0
@@ -11572,7 +11583,7 @@ msgstr "Romper conciliación"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_unreconcile
 msgid "Unreconcile Entries"
-msgstr "Asientos no conciliados"
+msgstr "Romper conciliación"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_unreconcile_view
@@ -12515,6 +12526,12 @@ msgstr ""
 "relacionados con diferencias entre tipos de cambio."
 
 #. module: account
+#: code:addons/account/models/account_cash_rounding.py:33
+#, python-format
+msgid "Please set a positive rounding value."
+msgstr "Establezca un valor de redondeo positivo."
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_refund
 msgid ""
 "You will be able to edit and validate this\n"
@@ -12614,7 +12631,7 @@ msgstr "Se han conciliado automáticamente. "
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__invoice_without_email
 msgid "invoice(s) that will not be sent"
-msgstr ""
+msgstr "factura(s) que no van a ser enviadas"
 
 #. module: account
 #. openerp-web

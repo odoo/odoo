@@ -36,7 +36,7 @@ class account_abstract_payment(models.AbstractModel):
 
     invoice_ids = fields.Many2many('account.invoice', string='Invoices', copy=False)
     multi = fields.Boolean(string='Multi',
-                           help='Technical field indicating if the user selected invoices from multiple partners or from different types.')
+                           help='Technical field indicating if the registering payment will generate multiple payments or not.')
 
     payment_type = fields.Selection([('outbound', 'Send Money'), ('inbound', 'Receive Money')], string='Payment Type', required=True)
     payment_method_id = fields.Many2one('account.payment.method', string='Payment Method Type', required=True, oldname="payment_method",
@@ -70,6 +70,15 @@ class account_abstract_payment(models.AbstractModel):
     show_partner_bank_account = fields.Boolean(compute='_compute_show_partner_bank', help='Technical field used to know whether the field `partner_bank_account_id` needs to be displayed or not in the payments form views')
 
     @api.model
+    def is_multi(self, invoices):
+        multi = any(inv.commercial_partner_id != invoices[0].commercial_partner_id
+            or MAP_INVOICE_TYPE_PARTNER_TYPE[inv.type] != MAP_INVOICE_TYPE_PARTNER_TYPE[invoices[0].type]
+            or inv.account_id != invoices[0].account_id
+            or inv.partner_bank_id != invoices[0].partner_bank_id
+            for inv in invoices)
+        return multi
+
+    @api.model
     def default_get(self, fields):
         rec = super(account_abstract_payment, self).default_get(fields)
         active_ids = self._context.get('active_ids')
@@ -99,11 +108,7 @@ class account_abstract_payment(models.AbstractModel):
                     raise UserError(_("You cannot register payments for customer invoices and credit notes at the same time."))
 
         # Look if we are mixin multiple commercial_partner or customer invoices with vendor bills
-        multi = any(inv.commercial_partner_id != invoices[0].commercial_partner_id
-            or MAP_INVOICE_TYPE_PARTNER_TYPE[inv.type] != MAP_INVOICE_TYPE_PARTNER_TYPE[invoices[0].type]
-            or inv.account_id != invoices[0].account_id
-            or inv.partner_bank_id != invoices[0].partner_bank_id
-            for inv in invoices)
+        multi = self.is_multi(invoices)
 
         currency = invoices[0].currency_id
 
@@ -117,7 +122,7 @@ class account_abstract_payment(models.AbstractModel):
             'partner_type': False if multi else MAP_INVOICE_TYPE_PARTNER_TYPE[invoices[0].type],
             'communication': ' '.join([ref for ref in invoices.mapped('reference') if ref])[:2000],
             'invoice_ids': [(6, 0, invoices.ids)],
-            'multi': multi,
+            'multi': multi or (len(invoices.mapped('partner_id')) == 1 and len(invoices) > 1),
         })
         return rec
 
@@ -291,6 +296,12 @@ class account_register_payments(models.TransientModel):
             record.show_communication_field = len(record.invoice_ids) == 1 \
                                               or record.group_invoices and len(record.mapped('invoice_ids.partner_id.commercial_partner_id')) == 1
 
+    @api.onchange('group_invoices')
+    def _onchange_group_invoices(self):
+        multi = self.is_multi(self.invoice_ids)
+        # Only one payment is made when grouping several invoices for the same partner
+        self.multi = multi or ((len(self.invoice_ids.mapped('partner_id')) == 1 and len(self.invoice_ids) > 1) and not self.group_invoices)
+
     @api.onchange('journal_id')
     def _onchange_journal(self):
         res = super(account_register_payments, self)._onchange_journal()
@@ -308,6 +319,17 @@ class account_register_payments(models.TransientModel):
             raise UserError(_("Programming error: wizard action executed without active_ids in context."))
 
         return rec
+
+    def _get_payment_group_key(self, inv):
+        """Define group key to group invoices in payments."""
+        if inv.partner_id.type == 'invoice':
+            partner_id = inv.partner_id.id
+        else:
+            partner_id = inv.commercial_partner_id.id
+        account_id = inv.account_id.id
+        invoice_type = MAP_INVOICE_TYPE_PARTNER_TYPE[inv.type]
+        recipient_account = inv.partner_bank_id
+        return (partner_id, account_id, invoice_type, recipient_account)
 
     @api.multi
     def _groupby_invoices(self):
@@ -327,18 +349,19 @@ class account_register_payments(models.TransientModel):
         results = {}
         # Create a dict dispatching invoices according to their commercial_partner_id, account_id, invoice_type and partner_bank_id
         for inv in self.invoice_ids:
-            if inv.partner_id.type == 'invoice':
-                partner_id = inv.partner_id.id
-            else:
-                partner_id = inv.commercial_partner_id.id
-            account_id = inv.account_id.id
-            invoice_type = MAP_INVOICE_TYPE_PARTNER_TYPE[inv.type]
-            recipient_account =  inv.partner_bank_id
-            key = (partner_id, account_id, invoice_type, recipient_account)
+            key = self._get_payment_group_key(inv)
             if not key in results:
                 results[key] = self.env['account.invoice']
             results[key] += inv
         return results
+
+    def _prepare_communication(self, invoices):
+        '''Define the value for communication field
+        Append all invoice's references together.
+        '''
+        return self.show_communication_field and self.communication \
+                or self.group_invoices and ' '.join([inv.reference or inv.number for inv in invoices]) \
+                or invoices[0].reference # in this case, invoices contains only one element, since group_invoices is False
 
     @api.multi
     def _prepare_payment_vals(self, invoices):
@@ -350,9 +373,7 @@ class account_register_payments(models.TransientModel):
         amount = self._compute_payment_amount(invoices=invoices) if self.multi else self.amount
         payment_type = ('inbound' if amount > 0 else 'outbound') if self.multi else self.payment_type
         bank_account = self.multi and invoices[0].partner_bank_id or self.partner_bank_account_id
-        pmt_communication = self.show_communication_field and self.communication \
-                            or self.group_invoices and ' '.join([inv.reference or inv.number for inv in invoices]) \
-                            or invoices[0].reference # in this case, invoices contains only one element, since group_invoices is False
+        pmt_communication = self._prepare_communication(invoices)
 
         if invoices[0].partner_id.type == 'invoice':
             partner_id = invoices[0].partner_id
@@ -498,15 +519,16 @@ class account_payment(models.Model):
                 raise UserError(_('There is no Transfer Account defined in the accounting settings. Please define one to be able to confirm this transfer.'))
             self.destination_account_id = self.company_id.transfer_account_id.id
         elif self.partner_id:
+            partner = self.partner_id.with_context(force_company=self.company_id.id)
             if self.partner_type == 'customer':
-                self.destination_account_id = self.partner_id.property_account_receivable_id.id
+                self.destination_account_id = partner.property_account_receivable_id.id
             else:
-                self.destination_account_id = self.partner_id.property_account_payable_id.id
+                self.destination_account_id = partner.property_account_payable_id.id
         elif self.partner_type == 'customer':
-            default_account = self.env['ir.property'].get('property_account_receivable_id', 'res.partner')
+            default_account = self.env['ir.property'].with_context(force_company=self.company_id.id).get('property_account_receivable_id', 'res.partner')
             self.destination_account_id = default_account.id
         elif self.partner_type == 'supplier':
-            default_account = self.env['ir.property'].get('property_account_payable_id', 'res.partner')
+            default_account = self.env['ir.property'].with_context(force_company=self.company_id.id).get('property_account_payable_id', 'res.partner')
             self.destination_account_id = default_account.id
 
     @api.depends('move_line_ids.matched_debit_ids', 'move_line_ids.matched_credit_ids')

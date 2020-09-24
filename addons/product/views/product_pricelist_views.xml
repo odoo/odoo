@@ -45,7 +45,7 @@
                                 <field name="compute_price" widget="radio"/>
                                 <field name="currency_id" invisible="1"/>
                                 <div attrs="{'invisible':[('compute_price', '!=', 'fixed')]}">
-                                    <field name="fixed_price" nolabel= "1" widget='monetary' options="{'currency_field': 'currency_id'}"/></div>
+                                    <field name="fixed_price" nolabel= "1" widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}"/></div>
                                 <div attrs="{'invisible':[('compute_price', '!=', 'percentage')]}">
                                     <field name="percent_price" nolabel="1" class="oe_inline"/>%%
                                 </div>

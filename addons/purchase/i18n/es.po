@@ -13,9 +13,11 @@
 # Carlos Lopez <celm1990@hotmail.com>, 2019
 # Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2019
 # Miguel Orueta <mo@landoo.es>, 2019
-# Pedro M. Baeza <pedro.baeza@gmail.com>, 2019
 # Jon Perez <jop@odoo.com>, 2019
 # Sergio Lop Sanz <slop@sdi.es>, 2019
+# Ana Margarita Gutiérrez Rodríguez <ana.gutierrez@jarsa.com.mx>, 2020
+# Jesus Vicente Alcala Rodriguez <jesus.alcala@jarsa.com.mx>, 2020
+# Pedro M. Baeza <pedro.baeza@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -23,7 +25,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-14 07:33+0000\n"
 "PO-Revision-Date: 2018-08-24 09:23+0000\n"
-"Last-Translator: Sergio Lop Sanz <slop@sdi.es>, 2019\n"
+"Last-Translator: Pedro M. Baeza <pedro.baeza@gmail.com>, 2020\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -123,6 +125,24 @@ msgid ""
 "    </p>\n"
 "</div>"
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Querido ${object.partner_id.name}\n"
+"        % if object.partner_id.parent_id:\n"
+"            (${object.partner_id.parent_id.name})\n"
+"        % endif\n"
+"        <br/><br/>\n"
+"        Aquí está adjunto una solicitud de cotización <strong>${object.name}</strong>\n"
+"        % if object.partner_ref:\n"
+"            con referencia: ${object.partner_ref}\n"
+"        % endif\n"
+"        de ${object.company_id.name}.\n"
+"        <br/><br/>\n"
+"        Si tiene alguna pregunta, no dude en contactarnos.\n"
+"        <br/><br/>\n"
+"        Saludos Cordiales,\n"
+"    </p>\n"
+"</div>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -130,6 +150,8 @@ msgid ""
 "<i class=\"fa fa-arrow-right\"/>\n"
 "                                            How to import"
 msgstr ""
+"<i class=\"fa fa-arrow-right\"/>\n"
+"                                            Cómo importar"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_partner_kanban_view
@@ -395,7 +417,7 @@ msgstr "Control de Factura"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__invoice_count
 msgid "Bill Count"
-msgstr ""
+msgstr "Nº de facturas"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__invoice_lines
@@ -1043,7 +1065,7 @@ msgstr "Nombre"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Name, TIN, Email, or Reference"
-msgstr ""
+msgstr "Nombre, NIF, correo electrónico o referencia."
 
 #. module: purchase
 #: code:addons/purchase/controllers/portal.py:40
@@ -1138,6 +1160,8 @@ msgid ""
 "On ordered quantities: Control bills based on ordered quantities.\n"
 "On received quantities: Control bills based on received quantities."
 msgstr ""
+"Sobre cantidades pedidas: Control de facturas basado en cantidades pedidas.\n"
+"Sobre cantidades recibidas: Control de facturas basado en cantidades recibidas."
 
 #. module: purchase
 #: selection:product.template,purchase_method:0
@@ -1391,7 +1415,7 @@ msgstr "Confirmación pedido de compra #"
 #: model:ir.model.fields,field_description:purchase.field_res_partner__purchase_order_count
 #: model:ir.model.fields,field_description:purchase.field_res_users__purchase_order_count
 msgid "Purchase Order Count"
-msgstr ""
+msgstr "Nº de pedidos de compra"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
@@ -1472,7 +1496,7 @@ msgstr "Representante del Proveedor"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__group_warning_purchase
 msgid "Purchase Warnings"
-msgstr ""
+msgstr "Advertencias de Compra"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
@@ -1514,7 +1538,7 @@ msgstr "Compras"
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_bill_union
 msgid "Purchases & Bills Union"
-msgstr ""
+msgstr "Unión de compras y facturas "
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__dest_address_id
@@ -1579,7 +1603,7 @@ msgstr "PdO y compras"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Re-Send by Email"
-msgstr ""
+msgstr "Reenviar por correo electrónico"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_received
@@ -1685,7 +1709,7 @@ msgstr "Buscar pedido de compra"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_bill_union_filter
 msgid "Search Reference Document"
-msgstr ""
+msgstr "Buscar referencia de documento"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__use_po_lead
@@ -1700,7 +1724,7 @@ msgstr "Token de seguridad"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_invoice_supplier_purchase_form
 msgid "Select a purchase order or an old bill"
-msgstr ""
+msgstr "Seleccionar un pedido de compra o factura antiguos"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_product_product__purchase_line_warn
@@ -1835,6 +1859,7 @@ msgid ""
 "The quotation contains the history of the discussion\n"
 "                you had with your vendor."
 msgstr ""
+"El presupuesto contiene los mensajes que ha intercambiado con el vendedor."
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order
@@ -1855,6 +1880,9 @@ msgid ""
 "difference between a purchase order and its related vendor bill when "
 "validating this vendor bill."
 msgstr ""
+"Esta cuenta se utiliza en la valoración de inventario automatizada para "
+"registrar la diferencia de precio entre un pedido de compra y su factura de "
+"proveedor relacionada al validar esta factura de proveedor."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_product_category__property_account_creditor_price_difference_categ
@@ -1912,6 +1940,8 @@ msgstr "Esta factura de proveedor ha sido modificada desde: %s"
 #: model_terms:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order
 msgid "This vendor has no purchase order. Create a new RfQ"
 msgstr ""
+"Este vendedor no tiene ningún pedido de compra. Cree una nueva solicitud de "
+"presupuesto."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
@@ -1965,6 +1995,8 @@ msgid ""
 "Unable to cancel this purchase order. You must first cancel the related "
 "vendor bills."
 msgstr ""
+"No se puede cancelar este pedido de compra. Primero debe cancelar las "
+"facturas de proveedor relacionadas."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__price_unit
@@ -2159,6 +2191,8 @@ msgstr ""
 #: model:ir.model.fields,help:purchase.field_purchase_order_line__partner_id
 msgid "You can find a vendor by its Name, TIN, Email or Internal Reference."
 msgstr ""
+"Puede encontrar un vendedor por su nombre, NIF, correo electrónico o "
+"referencia interna."
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.product_product_action
@@ -2166,6 +2200,8 @@ msgid ""
 "You must define a product for everything you purchase,\n"
 "                whether it's a physical product, a consumable or services."
 msgstr ""
+"Debe definir un producto para todo lo que compre,\n"
+"no importa si es un producto físico, un consumible o servicios."
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.product_normal_action_puchased
@@ -2173,3 +2209,5 @@ msgid ""
 "You must define a product for everything you purchase,\n"
 "            whether it's a physical product, a consumable or services."
 msgstr ""
+"Debe definir un producto para todo lo que compre,\n"
+"no importa si es un producto físico, un consumible o servicios."

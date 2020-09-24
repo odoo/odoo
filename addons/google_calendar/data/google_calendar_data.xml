@@ -5,7 +5,13 @@
             <field name="name">Google Calendar: synchronization</field>
             <field name="model_id" ref="model_google_calendar"/>
             <field name="state">code</field>
-            <field name="code">model.synchronize_events_cron()</field>
+            <field name="code">
+# The context key 'last_sync_hours' allows specifying the minimum delay between consecutive syncs.
+# Indeed, in case there are many users / events to sync, the cron might time out. In this case, the
+# solution is to force the last_sync_hours to the expected synchronization interval expected. This
+# will avoid the synchronization of users that succeeded in the previous failing cron.
+model.synchronize_events_cron()
+            </field>
             <field name="user_id" ref="base.user_root" />
             <field name="interval_number">12</field>
             <field name="interval_type">hours</field>

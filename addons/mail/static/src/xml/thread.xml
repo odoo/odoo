@@ -56,7 +56,7 @@
                         <i class="fa fa-circle-o-notch fa-spin text-gray-light fa-3x fa-fw" role="img" aria-label="Loading" title="Loading"/>
                     </div>
                     <img t-if="widget.activeAttachment.type == 'image'" class="o_viewer_img" t-attf-src="/web/image/#{widget.activeAttachment.id}?unique=1&amp;signature=#{widget.activeAttachment.checksum}" alt="Viewer"/>
-                    <iframe class="mt32 o_viewer_pdf" t-if="widget.activeAttachment.type == 'application/pdf'" t-attf-src="/web/static/lib/pdfjs/web/viewer.html?file=/web/content/#{widget.activeAttachment.id}" />
+                    <iframe class="mt32 o_viewer_pdf" t-if="widget.activeAttachment.type == 'application/pdf'" t-attf-src="/web/static/lib/pdfjs/web/viewer.html?file=/web/content/#{widget.activeAttachment.id}%3Ffilename%3D#{window.encodeURIComponent(widget.activeAttachment.name)}" />
                     <iframe class="mt32 o_viewer_text" t-if="(widget.activeAttachment.type || '').indexOf('text') !== -1" t-attf-src="/web/content/#{widget.activeAttachment.id}" />
                     <iframe class="mt32 o_viewer_text" t-if="widget.activeAttachment.type == 'youtu'" allow="autoplay; encrypted-media" width="560" height="315" t-attf-src="https://www.youtube.com/embed/#{widget.activeAttachment.youtube}"/>
                     <video t-if="widget.activeAttachment.type == 'video'" class="o_viewer_video" controls="controls">

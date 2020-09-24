@@ -139,7 +139,8 @@ class AccountBankStatement(models.Model):
     balance_start = fields.Monetary(string='Starting Balance', states={'confirm': [('readonly', True)]}, default=_default_opening_balance)
     balance_end_real = fields.Monetary('Ending Balance', states={'confirm': [('readonly', True)]})
     accounting_date = fields.Date(string="Accounting Date", help="If set, the accounting entries created during the bank statement reconciliation process will be created at this date.\n"
-        "This is useful if the accounting period in which the entries should normally be booked is already closed.")
+        "This is useful if the accounting period in which the entries should normally be booked is already closed.",
+        states={'open': [('readonly', False)]}, readonly=True)
     state = fields.Selection([('open', 'New'), ('confirm', 'Validated')], string='Status', required=True, readonly=True, copy=False, default='open')
     currency_id = fields.Many2one('res.currency', compute='_compute_currency', oldname='currency', string="Currency")
     journal_id = fields.Many2one('account.journal', string='Journal', required=True, states={'confirm': [('readonly', True)]}, default=_default_journal)
@@ -687,7 +688,7 @@ class AccountBankStatementLine(models.Model):
 
             # Create counterpart move lines and reconcile them
             for aml_dict in counterpart_aml_dicts:
-                if aml_dict['move_line'].payment_id:
+                if aml_dict['move_line'].payment_id and not aml_dict['move_line'].statement_line_id:
                     aml_dict['move_line'].write({'statement_line_id': self.id})
                 if aml_dict['move_line'].partner_id.id:
                     aml_dict['partner_id'] = aml_dict['move_line'].partner_id.id
@@ -707,6 +708,7 @@ class AccountBankStatementLine(models.Model):
             aml_dict['payment_id'] = payment and payment.id or False
             aml_obj.with_context(check_move_validity=False).create(aml_dict)
 
+            move.update_lines_tax_exigibility() # Needs to be called manually as lines were created 1 by 1
             move.post()
             #record the move name on the statement line to be able to retrieve it in case of unreconciliation
             self.write({'move_name': move.name})

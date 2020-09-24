@@ -19,7 +19,7 @@ var createViewer = function (params) {
     var viewer = new DocumentViewer(parent, params.attachments, params.attachmentID);
 
     var mockRPC = function (route) {
-        if (route === '/web/static/lib/pdfjs/web/viewer.html?file=/web/content/1') {
+        if (route === '/web/static/lib/pdfjs/web/viewer.html?file=/web/content/1%3Ffilename%3DfilePdf.pdf') {
             return $.when();
         }
         if (route === 'https://www.youtube.com/embed/FYqW0Gdwbzk') {
@@ -64,7 +64,7 @@ var createViewer = function (params) {
 QUnit.module('DocumentViewer', {
     beforeEach: function () {
         this.attachments = [
-            {id: 1, datas_fname: 'filePdf.pdf', type: 'binary', mimetype: 'application/pdf', datas:'R0lGOP////ywAADs='},
+            {id: 1, name: 'filePdf.pdf', datas_fname: 'filePdf.pdf', type: 'binary', mimetype: 'application/pdf', datas:'R0lGOP////ywAADs='},
             {id: 2, name: 'urlYoutubeName', type: 'url', mimetype: '', url: 'https://youtu.be/FYqW0Gdwbzk', datas_fname: 'urlYoutube'},
             {id: 3, name: 'urlGoogle', type: 'url', mimetype: '', url: 'https://www.google.com', datas_fname: 'urlRandom'},
             {id: 4, name: 'text.html', datas_fname: 'text.html', type: 'binary', mimetype: 'text/html', datas:'testee'},

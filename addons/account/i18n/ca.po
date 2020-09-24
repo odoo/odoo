@@ -13,7 +13,10 @@
 # M Palau <mpalau@tda.ad>, 2019
 # Jesus Ramoneda <chusamo@gmail.com>, 2019
 # Arnau Ros, 2019
-# Carles Antoli <carlesantoli@hotmail.com>, 2019
+# Carles Antoli <carlesantoli@hotmail.com>, 2020
+# César López Ramírez <cesar.lopez@coopdevs.org>, 2020
+# Josep Sànchez <papapep@gmx.com>, 2020
+# Eugeni Chafert <eugeni@chafer.cat>, 2020
 # 
 msgid ""
 msgstr ""
@@ -21,7 +24,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-14 07:33+0000\n"
 "PO-Revision-Date: 2018-08-24 09:14+0000\n"
-"Last-Translator: Carles Antoli <carlesantoli@hotmail.com>, 2019\n"
+"Last-Translator: Eugeni Chafert <eugeni@chafer.cat>, 2020\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -489,7 +492,7 @@ msgstr "<span role=\"separator\">Vuere</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span title=\"Balance in Odoo\">Balance in General Ledger</span>"
-msgstr ""
+msgstr "Balanç al llibre major general"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -529,17 +532,17 @@ msgstr "<span>Desc.(%)</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>Import Bills</span>"
-msgstr ""
+msgstr "Importar factures"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "<span>Invoice Date</span>"
-msgstr ""
+msgstr "Data de factura"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "<span>Invoice Number</span>"
-msgstr ""
+msgstr "Número de factura"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -569,12 +572,17 @@ msgstr "<span>Operacions</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "<span>Original Amount</span>"
-msgstr ""
+msgstr "Import original"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<span>Quantity</span>"
-msgstr ""
+msgstr "<span>Quantitat</span>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
+msgid "<span>Reference</span>"
+msgstr "Referència"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -584,17 +592,17 @@ msgstr "<span>Informes</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<span>Source Document</span>"
-msgstr ""
+msgstr "Document original"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<span>Taxes</span>"
-msgstr ""
+msgstr "<span>Impostos</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<span>Unit Price</span>"
-msgstr ""
+msgstr "<span>Preu unitari</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -3175,7 +3183,7 @@ msgstr "Configura"
 #: code:addons/account/static/src/js/section_and_note_fields_backend.js:102
 #, python-format
 msgid "Configure a product"
-msgstr ""
+msgstr "Configurar un producte"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_open_account_onboarding_invoice_layout
@@ -4714,7 +4722,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.actions_account_fiscal_year
 #: model:ir.model.fields,field_description:account.field_res_config_settings__group_fiscal_year
 msgid "Fiscal Years"
-msgstr ""
+msgstr "Exercici fiscal"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_financial_year_op__fiscalyear_last_day
@@ -6563,7 +6571,7 @@ msgstr "Registrar una nota interna"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_invoice_layout_step
 msgid "Looks great!"
-msgstr ""
+msgstr "Es veu molt bé!"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:175
@@ -6596,7 +6604,7 @@ msgstr "Tipus d'activitat de correu electrònic"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__mailing_list_ids
 msgid "Mailing List"
-msgstr ""
+msgstr "Llista d'enviament"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__message_main_attachment_id
@@ -6697,12 +6705,12 @@ msgstr "Enviament massiu de correus "
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__mass_mailing_campaign_id
 msgid "Mass Mailing Campaign"
-msgstr ""
+msgstr "Campanya de correu massiu"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__mass_mailing_name
 msgid "Mass Mailing Name"
-msgstr ""
+msgstr "Nom de correu massiu"
 
 #. module: account
 #: selection:account.reconcile.model,match_label:0
@@ -7777,7 +7785,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice__reference
 msgid "Payment Ref."
-msgstr ""
+msgstr "Ref. pagament"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__payment_reference
@@ -8166,7 +8174,7 @@ msgstr "Imatge de Producte"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__product_qty
 msgid "Product Quantity"
-msgstr "Quantitat producte"
+msgstr "Quantitat de producte"
 
 #. module: account
 #: model:ir.model,name:account.model_product_template
@@ -8601,12 +8609,12 @@ msgstr "Pendent"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__amount_residual
 msgid "Residual Amount"
-msgstr "Import residual"
+msgstr "Import pendent d'amortitzar"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__amount_residual_currency
 msgid "Residual Amount in Currency"
-msgstr "Import residual en la moneda"
+msgstr "Import pendent d'amortitzar en divisa"
 
 #. module: account
 #: code:addons/account/models/account_journal_dashboard.py:32
@@ -9886,8 +9894,8 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_payment__multi
 #: model:ir.model.fields,help:account.field_account_register_payments__multi
 msgid ""
-"Technical field indicating if the user selected invoices from multiple "
-"partners or from different types."
+"Technical field indicating if the registering payment will generate multiple"
+" payments or not."
 msgstr ""
 
 #. module: account
@@ -12107,6 +12115,12 @@ msgstr ""
 "Haurà de configurar 'Pèrdua per diferència de canvi' en la configuració de "
 "comptabilitat per gestionar automàticament els assentaments al llibre "
 "comptable associades a les diferències relacionades amb el canvi de moneda."
+
+#. module: account
+#: code:addons/account/models/account_cash_rounding.py:33
+#, python-format
+msgid "Please set a positive rounding value."
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_refund

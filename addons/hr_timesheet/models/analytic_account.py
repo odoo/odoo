@@ -44,3 +44,9 @@ class AccountAnalyticAccount(models.Model):
             result['views'] = [(False, "form")]
             result['res_id'] = self.project_ids.id
         return result
+
+    @api.constrains('company_id')
+    def _check_company_id(self):
+        for record in self:
+            if record.project_ids:
+                raise UserError(_('You cannot change the company of an analytical account if it is related to a project.'))

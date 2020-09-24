@@ -878,6 +878,27 @@ class TestTemplating(ViewCase):
             )
         )
 
+    def test_branding_attribute_groups(self):
+        view = self.View.create({
+            'name': "Base View",
+            'type': 'qweb',
+            'arch': """<root>
+                <item groups="base.group_no_one"/>
+            </root>""",
+        })
+
+        arch_string = view.with_context(inherit_branding=True).read_combined(['arch'])['arch']
+        arch = etree.fromstring(arch_string)
+        self.View.distribute_branding(arch)
+
+        self.assertEqual(arch, E.root(E.item({
+            'groups': 'base.group_no_one',
+            'data-oe-model': 'ir.ui.view',
+            'data-oe-id': str(view.id),
+            'data-oe-field': 'arch',
+            'data-oe-xpath': '/root[1]/item[1]',
+        })))
+
     def test_call_no_branding(self):
         view = self.View.create({
             'name': "Base View",
@@ -1717,6 +1738,41 @@ class TestViews(ViewCase):
                 'model': 'ir.ui.view',
                 'arch': arch % ('', '<field name="model"/>'),
             })
+
+    @mute_logger('odoo.addons.base.models.ir_ui_view')
+    def test_check_xml_on_reenable(self):
+        view1 = self.View.create({
+            'name': 'valid _check_xml',
+            'model': 'ir.ui.view',
+            'arch': """
+                <form string="View">
+                    <field name="name"/>
+                </form>
+            """,
+        })
+        view2 = self.View.create({
+            'name': 'valid _check_xml',
+            'model': 'ir.ui.view',
+            'inherit_id': view1.id,
+            'active': False,
+            'arch': """
+                <field name="foo" position="after">
+                    <field name="bar"/>
+                </field>
+            """
+        })
+        with self.assertRaises(ValidationError):
+            view2.active = True
+
+        # Re-enabling the view and correcting it at the same time should not raise the `_check_xml` constraint.
+        view2.write({
+            'active': True,
+            'arch': """
+                <field name="name" position="after">
+                    <span>bar</span>
+                </field>
+            """,
+        })
 
 
 class ViewModeField(ViewCase):

@@ -3,13 +3,13 @@
 # * account
 # 
 # Translators:
-# sejun huang <sejun.huang@gmail.com>, 2018
 # bluce Lan <bluce.lan@gmail.com>, 2018
 # Ying <acc.tou@gmail.com>, 2019
 # Martin Trigaux, 2019
 # Jeanphy <hzh0292@qq.com>, 2019
 # Michael Yeung, 2019
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2019
+# sejun huang <sejun.huang@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -17,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-14 07:33+0000\n"
 "PO-Revision-Date: 2018-08-24 09:14+0000\n"
-"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2019\n"
+"Last-Translator: sejun huang <sejun.huang@gmail.com>, 2020\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -566,6 +566,11 @@ msgstr "<span>原始金額</span>"
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<span>Quantity</span>"
 msgstr "<span>數量</span>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
+msgid "<span>Reference</span>"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -4090,7 +4095,7 @@ msgstr "計算出來的期末餘額和專門的期末餘額之前的差異."
 #: code:addons/account/models/account_move.py:408
 #, python-format
 msgid "Difference debit - credit: "
-msgstr ""
+msgstr "區別 借方 - 信用: "
 
 #. module: account
 #: model:ir.model,name:account.model_digest_digest
@@ -4601,6 +4606,7 @@ msgstr "會計期間"
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__fiscal_position_id
 #: model:ir.model.fields,field_description:account.field_res_partner__property_account_position_id
 #: model:ir.model.fields,field_description:account.field_res_users__property_account_position_id
+#: model_terms:ir.ui.view,arch_db:account.view_account_position_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_template_search
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_template_tree
@@ -9747,9 +9753,9 @@ msgstr "技術字段保留賦予日記帳分錄的編號，在對帳後自動設
 #: model:ir.model.fields,help:account.field_account_payment__multi
 #: model:ir.model.fields,help:account.field_account_register_payments__multi
 msgid ""
-"Technical field indicating if the user selected invoices from multiple "
-"partners or from different types."
-msgstr "技術領域，指示使用者從多個合作夥伴或不同類型選擇憑單。"
+"Technical field indicating if the registering payment will generate multiple"
+" payments or not."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_refund__refund_only
@@ -11856,6 +11862,12 @@ msgid ""
 "settings, to manage automatically the booking of accounting entries related "
 "to differences between exchange rates."
 msgstr "您應該在會計配置配置 '匯率損失科目' ，自動管理與匯率之間的差額的會計分錄的預訂."
+
+#. module: account
+#: code:addons/account/models/account_cash_rounding.py:33
+#, python-format
+msgid "Please set a positive rounding value."
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_refund

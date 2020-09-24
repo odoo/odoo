@@ -155,8 +155,8 @@
                                 <field name="journal_id" widget="selection" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="destination_journal_id" widget="selection" attrs="{'required': [('payment_type', '=', 'transfer')], 'invisible': [('payment_type', '!=', 'transfer')], 'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="hide_payment_method" invisible="1"/>
-                                <field name="payment_method_id" string=" " widget="radio" attrs="{'invisible': [('hide_payment_method', '=', True)], 'readonly': [('state', '!=', 'draft')]}"/>
-                                <field name="partner_bank_account_id" attrs="{'invisible': [('show_partner_bank_account', '!=', True)], 'required': [('show_partner_bank_account', '=', True)], 'readonly': [('state', '!=', 'draft')]}" context="{'default_partner_id': partner_id}"/>
+                                <field name="payment_method_id" string=" " widget="radio" attrs="{'invisible': [('hide_payment_method', '=', True)], 'readonly': [('state', '!=', 'draft')]}" domain="[('payment_type', '=', payment_type)]"/>
+                                <field name="partner_bank_account_id" attrs="{'invisible': [('show_partner_bank_account', '!=', True)], 'required': [('show_partner_bank_account', '=', True), ('state', '=', 'draft')], 'readonly': [('state', '!=', 'draft')]}" context="{'default_partner_id': partner_id}"/>
                                 <field name="show_partner_bank_account" invisible="1"/>
                                 <field name="payment_method_code" invisible="1"/>
                             </group>
@@ -276,11 +276,11 @@
                                     <field name="payment_difference_handling" widget="radio" nolabel="1"/>
                                     <div attrs="{'invisible': [('payment_difference_handling','=','open')]}">
                                         <label for="writeoff_account_id" class="oe_edit_only" string="Post Difference In"/>
-                                        <field name="writeoff_account_id" string="Post Difference In" attrs="{'required': [('payment_difference_handling', '=', 'reconcile')]}"/>
+                                        <field name="writeoff_account_id" string="Post Difference In" attrs="{'required': [('payment_difference_handling', '=', 'reconcile'), ('payment_difference', '!=', 0.0)]}"/>
                                         <label for="journal_id" string="Journal" attrs="{'invisible': [('amount', '!=', 0)]}"/>
                                         <field name="journal_id" string="Journal" widget="selection" attrs="{'invisible': [('amount', '!=', 0)]}"/>
                                         <label for="writeoff_label" class="oe_edit_only" string="Label"/>
-                                        <field name="writeoff_label" attrs="{'required': [('payment_difference_handling', '=', 'reconcile')]}"/>
+                                        <field name="writeoff_label" attrs="{'required': [('payment_difference_handling', '=', 'reconcile'), ('payment_difference', '!=', 0.0)]}"/>
                                     </div>
                                 </div>
                             </group>

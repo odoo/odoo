@@ -6,10 +6,10 @@
 # Martin Trigaux, 2019
 # matjaz k <matjaz@mentis.si>, 2019
 # Boris Kodelja <boris@hbs.si>, 2019
-# Matjaz Mozetic <m.mozetic@matmoz.si>, 2019
 # Tadej Lupšina <tadej@hbs.si>, 2019
 # Jasmina Macur <jasmina@hbs.si>, 2019
 # jl2035 <jaka.luthar@gmail.com>, 2019
+# Matjaz Mozetic <m.mozetic@matmoz.si>, 2020
 # 
 msgid ""
 msgstr ""
@@ -17,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-14 07:33+0000\n"
 "PO-Revision-Date: 2018-08-24 09:24+0000\n"
-"Last-Translator: jl2035 <jaka.luthar@gmail.com>, 2019\n"
+"Last-Translator: Matjaz Mozetic <m.mozetic@matmoz.si>, 2020\n"
 "Language-Team: Slovenian (https://www.transifex.com/odoo/teams/41243/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -105,7 +105,7 @@ msgstr ""
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_res_config_settings__module_stock_dropshipping
 msgid "Dropshipping"
-msgstr ""
+msgstr "Dropship"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
@@ -265,7 +265,7 @@ msgstr ""
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
 msgid "Receipt"
-msgstr "Prejemek"
+msgstr "Prejemnice"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
@@ -354,6 +354,10 @@ msgid ""
 "on-demand flow. The requested delivery address will be the customer delivery"
 " address and not your warehouse."
 msgstr ""
+"To proizvodom doda drop-ship progo, da lahko od dobaviteljev zahtevate "
+"dostavo neposredno kupcem. Tak proizvod ob potrditvi prodajnega naloga "
+"generira zahtevo po nabavnem predračunu. To je delotok na zahtevo. Zahtevani"
+" naslov za dostavo bo kupčev naslov za dostavo in ne vaše skladišče."
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order__picking_type_id
@@ -392,7 +396,7 @@ msgid ""
 "created to fulfill the need."
 msgstr ""
 "Ko so izdelki potrebni v  <b>%s</b>, <br/> se za izpolnitev potrebe ustvari "
-"zahteva za ponudbo."
+"zahtevek po predračunu."
 
 #. module: purchase_stock
 #: code:addons/purchase_stock/models/purchase.py:257

@@ -14,7 +14,7 @@
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2019
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
 # Martin Trigaux, 2019
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2020
 # 
 msgid ""
 msgstr ""
@@ -22,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-10 14:44+0000\n"
 "PO-Revision-Date: 2018-08-24 09:14+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2019\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2020\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -12243,7 +12243,7 @@ msgid ""
 "Create and manage the companies that will be managed by Odoo from here. "
 "Shops or subsidiaries can be created and maintained from here."
 msgstr ""
-"Maak en beheer de bedrijven welke worden beheert door Odoo, hier aan. "
+"Maak en beheer de bedrijven welke worden beheerd door Odoo, hier aan. "
 "Winkels en dochterondernemingen kunnen vanaf hier worden aangemaakt en "
 "beheert."
 
@@ -13525,8 +13525,8 @@ msgstr "Dropdown menu"
 msgid ""
 "Duplicating a company is not allowed. Please create a new company instead."
 msgstr ""
-"Een bedrijf dupliceren is niet toegestaan. U dient een nieuw bedrijf aan te "
-"maken in de plaats van het te dupliceren."
+"Een bedrijf dupliceren is niet toegestaan. Maak een nieuw bedrijf aan in de "
+"plaats van het te dupliceren."
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_E
@@ -22989,9 +22989,8 @@ msgid ""
 "Please configure an email on the current user to simulate sending an email "
 "message via this outgoing server"
 msgstr ""
-"Gelieve een e-mail te configureren voor de huidige gebruiker om het "
-"verzenden van een e-mail bericht te simuleren via deze uitgaande email "
-"server."
+"Configureer een e-mail van de huidige gebruiker om het verzenden van een "
+"e-mailbericht via deze uitgaande server te simuleren"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
@@ -27202,6 +27201,14 @@ msgstr "De interne gebruiker verantwoordelijk voor dit contract."
 #: model:ir.model.fields,help:base.field_ir_model__inherited_model_ids
 msgid "The list of models that extends the current model."
 msgstr "De lijst met modellen welke het huidige module uitbreiden"
+
+#. module: base
+#: code:addons/base/models/ir_model.py:522
+#, python-format
+msgid ""
+"The m2o field %s is required but declares its ondelete policy as being 'set "
+"null'. Only 'restrict' and 'cascade' make sense."
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_filters__action_id

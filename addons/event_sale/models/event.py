@@ -59,7 +59,13 @@ class Event(models.Model):
         self.ensure_one()
         if not self.event_ticket_ids:
             return True
-        return all(self.event_ticket_ids.with_context(active_test=False).mapped(lambda t: t.product_id.active))
+        return bool(
+            self.event_ticket_ids.with_context(active_test=False).filtered(
+                lambda t: t.product_id.active
+                and not t.is_expired
+                and (not t.seats_max or t.seats_available)
+            )
+        )
 
 class EventTicket(models.Model):
     _name = 'event.event.ticket'

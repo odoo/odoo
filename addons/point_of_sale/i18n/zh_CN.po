@@ -14,10 +14,10 @@
 # inspur qiuguodong <qiuguodong@inspur.com>, 2018
 # r <263737@qq.com>, 2019
 # John An <johnxan@163.com>, 2019
-# Jeffery CHEN <jeffery9@gmail.com>, 2019
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2019
 # Manga Tsang <mts@odoo.com>, 2019
-# liAnGjiA <liangjia@qq.com>, 2019
 # Gary Wei <Gary.wei@elico-corp.com>, 2019
+# liAnGjiA <liangjia@qq.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -25,7 +25,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-14 07:33+0000\n"
 "PO-Revision-Date: 2018-08-24 09:22+0000\n"
-"Last-Translator: Gary Wei <Gary.wei@elico-corp.com>, 2019\n"
+"Last-Translator: liAnGjiA <liangjia@qq.com>, 2020\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1473,7 +1473,7 @@ msgstr "下载错误"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:550
 #, python-format
 msgid "Due"
-msgstr "截止"
+msgstr "应收金额"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2115,7 +2115,7 @@ msgstr "中等尺寸的类别图像.它将保持长宽比,并自动调整为128x
 #: code:addons/point_of_sale/static/src/xml/pos.xml:553
 #, python-format
 msgid "Method"
-msgstr "方法"
+msgstr "付款方式"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.pos_category_miscellaneous
@@ -2618,7 +2618,7 @@ msgstr "付款日期"
 #: model:ir.ui.menu,name:point_of_sale.menu_action_account_journal_form_open
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Payment Methods"
-msgstr "付款方法"
+msgstr "付款方式"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_make_payment__journal_id
@@ -3558,7 +3558,7 @@ msgstr "会话"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.customer_facing_display_snippets
 msgid "Set Custom Image..."
-msgstr ""
+msgstr "设定自定义图像..."
 
 #. module: point_of_sale
 #. openerp-web
@@ -3800,7 +3800,7 @@ msgstr "小计总计"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "Summary by Payment Methods"
-msgstr "汇总，按付款方法"
+msgstr "汇总，按付款方式"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3925,7 +3925,7 @@ msgstr "电话:"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:551
 #, python-format
 msgid "Tendered"
-msgstr "投标"
+msgstr "实收金额"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:351
@@ -4016,6 +4016,15 @@ msgid ""
 "The order has been synchronized earlier. Please make the invoice from the "
 "backend for the order: "
 msgstr "订单已提前同步。请从后台为订单开具发票："
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/pos.xml:715
+#, python-format
+msgid ""
+"The order has been synchronized earlier. To print the invoice please refer "
+"to the order in the backend"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_precompute_cash

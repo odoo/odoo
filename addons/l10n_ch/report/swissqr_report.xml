@@ -1,48 +1,106 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <template id="l10n_ch_swissqr_template" inherit_id="account.report_invoice_document">
-            <xpath expr="//div[@id='qrcode']" position="after">
-                <link type="text/css" rel="stylesheet" href="/l10n_ch/static/src/scss/report_swissqr.css"/>
-                <div class="swissqr_content" t-if="o.display_swiss_qr_code()">
-                    <div class="swissqr_body" t-if="o.partner_bank_id.validate_swiss_code_arguments(o.partner_bank_id.currency_id, o.partner_id) and ((o.currency_id.name == 'EUR') or (o.currency_id.name == 'CHF'))">
+
+        <report id="l10n_ch_qr_report"
+            model="account.invoice"
+            report_type="qweb-pdf"
+            string="QR-bill"
+            name="l10n_ch.qr_report_main"
+            file="l10n_ch.qr_report_main"
+            attachment="'QR-bill-' + object.number + '.pdf'"
+            menu="False"
+            print_report_name="'QR-bill-%s' % object.number"
+            paperformat="l10n_ch.paperformat_euro_no_margin"/>
+
+        <template id="assets_common_qr" inherit_id="web.report_assets_common">
+            <xpath expr="." position="inside">
+                <link type="text/scss" rel="stylesheet" href="/l10n_ch/static/src/scss/report_swissqr.scss"/>
+            </xpath>
+        </template>
+
+        <template id="l10n_ch_swissqr_template">
+            <t t-call="web.external_layout">
+                <!-- add class to body tag -->
+                <script>document.body.className += " l10n_ch_qr";</script>
+                <!-- add default margin for header (matching A4 European margin) -->
+                <t t-set="report_header_style">padding-top:6.2mm; padding-left:8.2mm; padding-right:8.2mm;</t>
+
+                <t t-set="formated_amount" t-value="('%.2f' % (o.residual)).split(' ')[0].replace(',',' ')"/>
+
+                <div class="swissqr_title">
+                    <h1>QR-bill for invoice <t t-esc="invoice.number"/></h1>
+                </div>
+
+                <div class="swissqr_content">
+
+                    <div class="swissqr_receipt" t-if="o.partner_bank_id.validate_swiss_code_arguments(o.partner_bank_id.currency_id, o.partner_id, o.reference) and ((o.currency_id.name == 'EUR') or (o.currency_id.name == 'CHF'))">
                         <div id="title_zone" class="swissqr_column_left title_zone">
-                            <span class="swissqr_text title title_zone">QR-bill payment part</span><br/>
+                            <span class="swissqr_text title title_zone">Receipt</span><br/>
+
+                            <span class="swissqr_text title">Payable to</span><br/>
+                            <span class="swissqr_text content" t-field="o.partner_bank_id.acc_number"/><br/>
+                            <span class="swissqr_text content" t-field="o.company_id.name"/><br/>
+                            <span class="swissqr_text content" t-field="o.company_id.country_id.code"/>
+                            <span class="swissqr_text content" t-field="o.company_id.zip"/>
+                            <span class="swissqr_text content" t-field="o.company_id.city"/><br/>
+
+                            <t t-if="o.partner_bank_id._is_qr_iban()">
+                                <span class="swissqr_text title">Reference</span><br/>
+                                <span class="swissqr_text content" t-esc="o.space_qrr_reference(o.reference)"/><br/>
+                            </t>
+
+                            <span class="swissqr_text title">Payable by</span><br/>
+                            <span class="swissqr_text content" t-field="o.partner_id.name"/><br/>
+                            <span class="swissqr_text content" t-field="o.partner_id.country_id.code"/>
+                            <span class="swissqr_text content" t-field="o.partner_id.zip"/>
+                            <span class="swissqr_text content" t-field="o.partner_id.city"/><br/>
+
+                            <div id="receipt_amount_zone" class="receipt_amount_zone">
+                                <div class="column">
+                                    <span class="swissqr_text title">Currency</span><br/>
+                                    <span class="swissqr_text content" t-field="o.currency_id.name"/>
+                                </div>
+                                <div class="column">
+                                    <span class="swissqr_text title">Amount</span><br/>
+                                    <span class="swissqr_text content" t-esc="formated_amount"/>
+                                </div>
+                            </div>
+
+                            <div id="receipt_acceptance_point_zone" class="receipt_acceptance_point_zone">
+                                <span class="swissqr_text title">Acceptance point</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="swissqr_body" t-if="o.partner_bank_id.validate_swiss_code_arguments(o.partner_bank_id.currency_id, o.partner_id, o.reference) and ((o.currency_id.name == 'EUR') or (o.currency_id.name == 'CHF'))">
+                        <div id="title_zone" class="swissqr_column_left title_zone">
+                            <span class="swissqr_text title title_zone">Payment part</span><br/>
                         </div>
 
-                        <div id="procedure_zone" class="swissqr_column_left procedure_zone">
-                            <span class="swissqr_text title">Supports</span><br/>
-                            <span class="swissqr_text content">Credit transfer</span>
-                        </div>
-
-                        <img class="swissqr" t-att-src="o.partner_bank_id.build_swiss_code_url(o.residual, o.currency_id.name, o.date_due, o.partner_id, 'QRR',
-                        (o.partner_bank_id.bank_id.l10n_ch_postal_eur) if (o.partner_bank_id.currency_id.name == 'EUR') else o.partner_bank_id.bank_id.l10n_ch_postal_chf,
-                        (o.reference) if (o.reference) else o.number)"/>
+                        <img class="swissqr" t-att-src="o.partner_bank_id.build_swiss_code_url(o.residual, o.currency_id.name, None, o.partner_id, None, o.reference, o.name or o.number)"/>
                         <img class="ch_cross" src="/l10n_ch/static/src/img/CH-Cross_7mm.png"/>
 
                         <div id="indications_zone" class="swissqr_column_right indication_zone">
-                            <span class="swissqr_text title">Account</span><br/>
+                            <span class="swissqr_text title">Payable to</span><br/>
                             <span class="swissqr_text content" t-field="o.partner_bank_id.acc_number"/><br/>
-
-                            <span class="swissqr_text title">Creditor</span><br/>
                             <span class="swissqr_text content" t-field="o.company_id.name"/><br/>
                             <span class="swissqr_text content" t-field="o.company_id.street"/><br/>
                             <span class="swissqr_text content" t-field="o.company_id.country_id.code"/>
                             <span class="swissqr_text content" t-field="o.company_id.zip"/>
                             <span class="swissqr_text content" t-field="o.company_id.city"/><br/>
 
-                            <span class="swissqr_text title">Reference number</span><br/>
-                            <t t-if="o.partner_bank_id.currency_id.name == 'EUR'">
-                                <span class="swissqr_text content" t-field="o.partner_bank_id.bank_id.l10n_ch_postal_eur"/><br/>
-                            </t>
-                            <t t-if="o.partner_bank_id.currency_id.name == 'CHF'">
-                                <span class="swissqr_text content" t-field="o.partner_bank_id.bank_id.l10n_ch_postal_chf"/><br/>
+                            <t t-if="o.partner_bank_id._is_qr_iban()">
+                                <span class="swissqr_text title">Reference</span><br/>
+                                <span class="swissqr_text content" t-esc="o.space_qrr_reference(o.reference)"/><br/>
                             </t>
 
                             <span class="swissqr_text title">Additional information</span><br/>
-                            <span class="swissqr_text content" t-field="o.reference"/><br/>
+                            <span class="swissqr_text content" t-esc="o.reference or o.name or o.number" t-if="not o.partner_bank_id._is_qr_iban()"/>
+                            <span class="swissqr_text content" t-esc="o.name or o.number" t-if="o.partner_bank_id._is_qr_iban()"/>
+                            <br/>
 
-                            <span class="swissqr_text title">Debtor</span><br/>
+                            <span class="swissqr_text title">Payable by</span><br/>
                             <span class="swissqr_text content" t-field="o.partner_id.name"/><br/>
                             <span class="swissqr_text content" t-field="o.partner_id.street"> </span>
                             <span class="swissqr_text content" t-field="o.partner_id.street2"/><br/>
@@ -53,36 +111,29 @@
                             <span class="swissqr_text title">Due date</span><br/>
                             <span class="swissqr_text content" t-field="o.date_due"/><br/>
                         </div>
-
                         <div id="amount_zone" class="swissqr_column_left amount_zone">
-                            <span class="swissqr_text title">Currency</span><br/>
-                            <span class="swissqr_text content" t-field="o.currency_id.name"/>
+                            <div class="column">
+                                <span class="swissqr_text title">Currency</span><br/>
+                                <span class="swissqr_text content" t-field="o.currency_id.name"/>
+                            </div>
+                            <div class="column">
+                                <span class="swissqr_text title">Amount</span><br/>
+                                <span class="swissqr_text content" t-esc="formated_amount"/>
+                            </div>
                         </div>
+                    </div>
 
-                        <div class="amount_zone amount">
-                            <span class="swissqr_text title">Amount</span><br/>
-                            <t t-set="formated_amount" t-value="('%.2f' % (o.residual)).split(' ')[0].replace(',',' ')"/>
-                            <span class="swissqr_text content" t-esc="formated_amount"/>
-                        </div>
-                    </div>
-                    <div class="swissqr_body" t-if="(o.partner_bank_id.validate_swiss_code_arguments(o.partner_bank_id.currency_id, o.partner_id) == False) and ((o.currency_id.name == 'EUR') or (o.currency_id.name == 'CHF'))">
-                        <div class="swissqr_column_left procedure_zone">
-                            <span>Some pieces of this information are not set correctly to display the Swiss QR Code.<br/>
-                            -Bank > CHF ISR reference<br/>
-                            -Bank > EUR ISR reference<br/>
-                            -Your company > Street with number<br/>
-                            -Your company > City<br/>
-                            -Your company > Zip<br/>
-                            -Your company > Country<br/>
-                            -Debtor > Street with number<br/>
-                            -Debtor > City<br/>
-                            -Debtor > Zip<br/>
-                            -Debtor > Country
-                            </span>
-                        </div>
-                    </div>
                 </div>
-            </xpath>
+            </t>
+        </template>
+
+        <template id="l10n_ch.qr_report_main">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="invoice">
+                    <t t-set="o" t-value="invoice"/>
+                    <t t-call="l10n_ch.l10n_ch_swissqr_template"/>
+                </t>
+            </t>
         </template>
     </data>
 </odoo>

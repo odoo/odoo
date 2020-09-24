@@ -35,12 +35,26 @@ otherwise.
     the current view
 ``inherit_id``
     the current view's parent view, see :ref:`reference/views/inheritance`,
-    unset by default
+    unset by default. Specify the parent using the `ref` attribute:
+
+    .. code-block:: xml
+
+        <field name="inherit_id" ref="library.view_book_form"/>
 ``mode``
     inheritance mode, see :ref:`reference/views/inheritance`. If
     ``inherit_id`` is unset the ``mode`` can only be ``primary``. If
     ``inherit_id`` is set, ``extension`` by default but can be explicitly set
-    to ``primary``
+    to ``primary``.
+
+    An example of where you would want to do that is delegation inheritance.
+    In that case your derived model will be separate from its parent and views
+    matching with one won't match with the other. Suppose you inherit from a view
+    associated with the parent model and want to customize the derived view to
+    show data from the derived model. The ``mode`` of the derived view needs to
+    be set to ``primary``, because it's the base (and maybe only) view for that
+    derived model. Otherwise the :ref:`view matching <reference/views/inheritance/view-matching>`
+    rules won't apply.
+
 ``application``
     website feature defining togglable views. By default, views are always
     applied
@@ -88,6 +102,8 @@ otherwise.
 
 Inheritance
 ===========
+
+.. _reference/views/inheritance/view-matching:
 
 View matching
 -------------
@@ -299,9 +315,6 @@ Possible children elements of the list view are:
             unexpected results as domains are combined with a logical AND.
     ``context``
         merged into the view's context when performing the button's Odoo call
-    ``confirm``
-        confirmation message to display (and for the user to accept) before
-        performing the button's Odoo call
 
     .. declared but unused: help
 
@@ -480,6 +493,9 @@ system. Available semantic components are:
   ``special``
     for form views opened in dialogs: ``save`` to save the record and close the
     dialog, ``cancel`` to close the dialog without saving.
+  ``confirm``
+    confirmation message to display (and for the user to accept) before
+    performing the button's Odoo call (also works in Kanban views).
 
 ``field``
   renders (and allow edition of, possibly) a single field of the current

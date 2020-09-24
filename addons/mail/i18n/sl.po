@@ -11,9 +11,9 @@
 # Boris Kodelja <boris@hbs.si>, 2019
 # Grega Vavtar <grega@hbs.si>, 2019
 # Martin Trigaux, 2019
-# Matjaz Mozetic <m.mozetic@matmoz.si>, 2019
 # Tadej Lupšina <tadej@hbs.si>, 2019
-# Jasmina Macur <jasmina@hbs.si>, 2019
+# Jasmina Macur <jasmina@hbs.si>, 2020
+# Matjaz Mozetic <m.mozetic@matmoz.si>, 2020
 # 
 msgid ""
 msgstr ""
@@ -21,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-14 07:34+0000\n"
 "PO-Revision-Date: 2018-08-24 09:20+0000\n"
-"Last-Translator: Jasmina Macur <jasmina@hbs.si>, 2019\n"
+"Last-Translator: Matjaz Mozetic <m.mozetic@matmoz.si>, 2020\n"
 "Language-Team: Slovenian (https://www.transifex.com/odoo/teams/41243/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -73,13 +73,13 @@ msgstr "%s (kopija)"
 #: code:addons/mail/static/src/js/models/threads/thread_typing_mixin/thread_typing_mixin.js:133
 #, python-format
 msgid "%s and %s are typing..."
-msgstr ""
+msgstr "%s in %s pišeta..."
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:278
 #, python-format
 msgid "%s created"
-msgstr "%s kreirano"
+msgstr "Dokument %s ustvarjen"
 
 #. module: mail
 #. openerp-web
@@ -93,7 +93,7 @@ msgstr "%s piše..."
 #: code:addons/mail/static/src/js/models/threads/thread_typing_mixin/thread_typing_mixin.js:137
 #, python-format
 msgid "%s, %s and more are typing..."
-msgstr ""
+msgstr "%s, %s in drugi pišejo..."
 
 #. module: mail
 #: code:addons/mail/models/mail_activity.py:341
@@ -111,7 +111,7 @@ msgstr "&amp;nbsp;"
 #: code:addons/mail/static/src/xml/discuss.xml:285
 #, python-format
 msgid "&nbsp;("
-msgstr ""
+msgstr "&nbsp;("
 
 #. module: mail
 #. openerp-web
@@ -1716,7 +1716,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_wizard_invite__display_name
 #: model:ir.model.fields,field_description:mail.field_publisher_warranty_contract__display_name
 msgid "Display Name"
-msgstr "Prikazni naziv"
+msgstr "Prikazani naziv"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -2903,7 +2903,7 @@ msgstr "Zadnjič posodobljeno"
 #: code:addons/mail/static/src/xml/systray.xml:94
 #, python-format
 msgid "Late"
-msgstr "Kasni"
+msgstr "Zamuja"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
@@ -2921,7 +2921,7 @@ msgstr "Postavitev"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_view_kanban
 msgid "Leave"
-msgstr "Odsotnost"
+msgstr "Zapusti"
 
 #. module: mail
 #. openerp-web
@@ -2929,7 +2929,7 @@ msgstr "Odsotnost"
 #: code:addons/mail/static/src/xml/discuss.xml:147
 #, python-format
 msgid "Leave this channel"
-msgstr "Zapusti izbrani kanal"
+msgstr "Zapusti ta kanal"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_wizard_invite__channel_ids
@@ -3180,7 +3180,7 @@ msgstr "Označi kot prebrano"
 #: code:addons/mail/static/src/xml/thread.xml:340
 #, python-format
 msgid "Mark as Todo"
-msgstr "Označi kot opravilo"
+msgstr "Označi za obdelavo"
 
 #. module: mail
 #. openerp-web
@@ -3535,7 +3535,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model,name:mail.model_base_module_uninstall
 msgid "Module Uninstall"
-msgstr ""
+msgstr "Odstrani modul"
 
 #. module: mail
 #: selection:ir.actions.server,activity_date_deadline_range_type:0
@@ -5289,7 +5289,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_origin_link
 msgid "This"
-msgstr ""
+msgstr "Ta"
 
 #. module: mail
 #. openerp-web
@@ -5956,6 +5956,14 @@ msgstr ""
 " drugih modulov."
 
 #. module: mail
+#: code:addons/mail/models/mail_alias.py:89
+#, python-format
+msgid ""
+"You cannot use anything else than unaccented latin characters in the alias "
+"address."
+msgstr ""
+
+#. module: mail
 #: code:addons/mail/models/mail_channel.py:257
 #, python-format
 msgid ""
@@ -6000,8 +6008,8 @@ msgid ""
 "You may attach files to this template, to be added to all emails created "
 "from this template"
 msgstr ""
-"K predlogi lahko pripnete datoteke, da bodo dodane elektronskemu sporočilu, "
-"kreiranem na osnovi te predloge"
+"Tej predlogi lahko pripnete datoteke, ki bodo dodane vsej e-pošti nastali iz"
+" te predloge"
 
 #. module: mail
 #. openerp-web
@@ -6183,7 +6191,7 @@ msgstr "splošno"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_origin_link
 msgid "has been"
-msgstr "je bilo"
+msgstr "je"
 
 #. module: mail
 #: code:addons/mail/models/mail_alias.py:272

@@ -14,6 +14,7 @@
 # Joe Hansen <joedalton2@yahoo.dk>, 2019
 # Ejner Sønniksen <ejner@vkdata.dk>, 2019
 # Sanne Kristensen <sanne@vkdata.dk>, 2019
+# Mads Søndergaard, 2020
 # 
 msgid ""
 msgstr ""
@@ -21,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-08-08 13:50+0000\n"
 "PO-Revision-Date: 2018-08-24 09:24+0000\n"
-"Last-Translator: Sanne Kristensen <sanne@vkdata.dk>, 2019\n"
+"Last-Translator: Mads Søndergaard, 2020\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -38,7 +39,7 @@ msgstr "% rabat"
 #. module: sale_management
 #: model:sale.order.template.line,name:sale_management.sale_order_template_line_1
 msgid "4 Person Desk"
-msgstr ""
+msgstr "4-persons skrivebord"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_portal_content_inherit_sale_management
@@ -89,7 +90,7 @@ msgstr "Tilføj til ordrelinjer"
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_digest_digest__kpi_all_sale_total
 msgid "All Sales"
-msgstr ""
+msgstr "Alle salg"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_search
@@ -113,6 +114,8 @@ msgid ""
 "Before archiving \"%s\" please select another default template in the "
 "settings."
 msgstr ""
+"Før arkivering af \"%s\" bedes du venligst vælge en anden standard skabelon "
+"i indstililngerne."
 
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_res_config_settings
@@ -137,12 +140,12 @@ msgstr "Dan faktura"
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.res_config_settings_view_form
 msgid "Create standardized offers with default products"
-msgstr ""
+msgstr "Opret standardiseret tilbud med standard produkter"
 
 #. module: sale_management
 #: model_terms:ir.actions.act_window,help:sale_management.sale_order_template_action
 msgid "Create your quotation template"
-msgstr ""
+msgstr "Opret din tilbuds skabelon"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__create_uid
@@ -180,6 +183,10 @@ msgid ""
 "Design your quotation templates using building blocks<br/>\n"
 "                            <em attrs=\"{'invisible': [('module_sale_quotation_builder','=',False)]}\">Warning: this option will install the Website app.</em>"
 msgstr ""
+"Design din tilbuds skabelon via byggeklodser<br/> <em "
+"attrs=\"{'invisible'\\: "
+"[('module_sale_quotation_builder','=',False)]}\">Advarsel: Denne indstilling"
+" vil installere Website applikationen</em>  "
 
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_digest_digest
@@ -219,16 +226,20 @@ msgid ""
 "Forbidden product, unit price, quantity, and UoM on non-accountable sale "
 "quote line"
 msgstr ""
+"Forbudt produkt, enhedspris, kvantitet, og måleenhed på ikke-regnskabsførbar"
+" salgs tilbuds linje."
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_option__sequence
 msgid "Gives the sequence order when displaying a list of optional products."
 msgstr ""
+"Angiver sekvens rækkefølgen ved visning af en liste over valgfrie produkter."
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template_line__sequence
 msgid "Gives the sequence order when displaying a list of sale quote lines."
 msgstr ""
+"angiver sekvens rækkefølgen ved visning af en liste og salgs tilbud linjer."
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__id
@@ -244,11 +255,13 @@ msgid ""
 "If unchecked, it will allow you to hide the quotation template without "
 "removing it."
 msgstr ""
+"Hvis ikke markeret, vil du være i stand til at skjule tilbuds skabelonen, "
+"uden at gemme den."
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_digest_digest__kpi_all_sale_total_value
 msgid "Kpi All Sale Total Value"
-msgstr ""
+msgstr "KPI Alle salg samlet værdi"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option____last_update
@@ -289,6 +302,7 @@ msgstr "Linjer"
 #: sql_constraint:sale.order.template.line:0
 msgid "Missing required product and UoM on accountable sale quote line."
 msgstr ""
+"Mangler påkrævet produkt og måleenhed på ansvarlig salgs tilbud linje."
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
@@ -299,7 +313,7 @@ msgstr "Notat"
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__number_of_days
 msgid "Number of days for the validity date computation of the quotation"
-msgstr ""
+msgstr "Antal dage for validerings dato udregningen på tilbuddet"
 
 #. module: sale_management
 #: model:sale.order.template.option,name:sale_management.sale_order_template_option_1
@@ -328,7 +342,7 @@ msgstr "Valgfrie produkter"
 #: model:ir.model.fields,field_description:sale_management.field_sale_order__sale_order_option_ids
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_line__sale_order_option_ids
 msgid "Optional Products Lines"
-msgstr ""
+msgstr "Valgfrie produkt linjer"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_portal_content_inherit_sale_management
@@ -358,12 +372,12 @@ msgstr "Antal"
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_res_config_settings__module_sale_quotation_builder
 msgid "Quotation Builder"
-msgstr ""
+msgstr "Tilbudsbygger"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__number_of_days
 msgid "Quotation Duration"
-msgstr ""
+msgstr "Tilbud varighed"
 
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_sale_order_template
@@ -377,7 +391,7 @@ msgstr "Tilbudsskabelon"
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_sale_order_template_line
 msgid "Quotation Template Line"
-msgstr ""
+msgstr "Tilbud skabelon linje"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
@@ -387,7 +401,7 @@ msgstr "Tilbudsskabelon linjer"
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_sale_order_template_option
 msgid "Quotation Template Option"
-msgstr ""
+msgstr "Tilbud skabelon indstilling"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__sale_order_template_id
@@ -424,19 +438,19 @@ msgstr "Fjern én"
 msgid ""
 "Request a online signature to the customer in order to confirm orders "
 "automatically."
-msgstr ""
+msgstr "Anmod kunden om en online signatur, for at godkende ordre automatisk."
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__require_payment
 msgid ""
 "Request an online payment to the customer in order to confirm orders "
 "automatically."
-msgstr ""
+msgstr "Anmod kunden om en online betaling, for automatisk at godkende ordre."
 
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_sale_order_option
 msgid "Sale Options"
-msgstr ""
+msgstr "Salgs indstillinger"
 
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_sale_order
@@ -483,7 +497,7 @@ msgstr "Rækkefølge"
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template_line__display_type
 msgid "Technical field for UX purpose."
-msgstr ""
+msgstr "Teknisk felt til UX øjemed."
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__note
@@ -496,6 +510,9 @@ msgid ""
 "The Administrator can set default Terms & Conditions in Sales Settings. "
 "Terms set here will show up instead if you select this quotation template."
 msgstr ""
+"Administratoren kan angive standard Vilkår & Betingelser i Salg "
+"indstillingerne. Vilkår angivet her vil vises i stedet, hvis du vælger denne"
+" tilbuds skabelon."
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__mail_template_id
@@ -532,12 +549,15 @@ msgid ""
 "                Send these quotes by email and let your customers sign online.\n"
 "                Use cross-selling and discounts to push and boost your sales."
 msgstr ""
+"Brug skabelon til at oprette finpudsede, professionelle tilbud på få minutter.\n"
+"               Send disse tilbud per email og lad din kunde skrive under online.\n"
+"               Brug kryds-salg og rabatter til at sætte skub i dit salg."
 
 #. module: sale_management
 #: code:addons/sale_management/models/sale_order.py:198
 #, python-format
 msgid "You cannot add options to a confirmed order."
-msgstr ""
+msgstr "Du kan ikke tilføje muligheder til en bekræftet ordre."
 
 #. module: sale_management
 #: code:addons/sale_management/models/sale_order_template.py:90
@@ -546,6 +566,8 @@ msgid ""
 "You cannot change the type of a sale quote line. Instead you should delete "
 "the current line and create a new line of the proper type."
 msgstr ""
+"Du kan ikke ændre typen på salgs tilbuds linjen. I stedet bør du slette de "
+"nuværende linje, og oprette en ny linje tilhørende den korrekte type."
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form

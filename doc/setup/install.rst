@@ -436,11 +436,12 @@ A typical way to run the server would be:
 
 .. code-block:: doscon
 
-    C:\YourOdooCommunityPath> python3 odoo-bin -r dbuser -w dbpassword --addons-path=addons,../mymodules --db-filter=mydb$
+    C:\YourOdooCommunityPath> python3 odoo-bin -r dbuser -w dbpassword --addons-path=addons -d mydb
 
 Where `YourOdooCommunityPath` is the path of the Odoo Community installation, `dbuser` is the
-PostgreSQL login, `dbpassword` is the PostgreSQL password, `../mymodules` is a directory with
-additional addons and `mydb` is the default database to serve on `localhost:8069`.
+PostgreSQL login, `dbpassword` is the PostgreSQL password
+and `mydb` is the default database to serve on `localhost:8069`. You can add other
+directory paths separated by a comma to ``addons`` at the end of the addons-path option.
 
 Linux
 -----
@@ -593,10 +594,11 @@ A typical way to run the server would be:
 
 .. code-block:: console
 
-    /YourOdooCommunityPath$ python3 odoo-bin --addons-path=addons,../mymodules --db-filter=mydb$
+    /YourOdooCommunityPath$ python3 odoo-bin --addons-path=addons -d mydb
 
-Where `YourOdooCommunityPath` is the path of the Odoo Community installation, `../mymodules` is a
-directory with additional addons and `mydb` is the default database to serve on `localhost:8069`.
+Where `YourOdooCommunityPath` is the path of the Odoo Community installation
+`mydb` is the default database to serve on `localhost:8069`. You can add other
+directory paths separated by a comma to ``addons`` at the end of the addons-path option.
 
 Mac OS
 ------

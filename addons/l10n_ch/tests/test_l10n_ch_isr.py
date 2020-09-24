@@ -43,9 +43,12 @@ class ISRTest(AccountingTestCase):
 
     def create_account(self, number):
         """ Generates a test res.partner.bank. """
-        return self.env['res.partner.bank'].create({
-            'acc_number': number
+        rslt = self.env['res.partner.bank'].create({
+            'acc_number': number,
+            'partner_id': self.env.ref("base.res_partner_2").id,
         })
+        rslt._onchange_set_l10n_ch_postal()
+        return rslt
 
     def print_isr(self, invoice):
         try:
@@ -82,7 +85,7 @@ class ISRTest(AccountingTestCase):
         #A non-swiss IBAN must not allow the computation of a postal reference
         account_test_iban_wrong = self.create_account('GR1601101250000000012300695')
         self.assertEqual(account_test_iban_wrong.acc_type, 'iban', "The IBAN must be valid")
-        self.assertFalse(account_test_iban_wrong.l10n_ch_postal, "A valid swiss IBAN should set the postal reference")
+        self.assertFalse(account_test_iban_wrong.l10n_ch_postal, "Only a valid swiss IBAN should set the postal reference")
 
     def test_isr(self):
         #Let us test the generation of an ISR for an invoice, first by showing an

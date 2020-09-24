@@ -187,7 +187,7 @@ class MaintenanceEquipment(models.Model):
                 if next_date < date_now:
                     next_date = date_now
             else:
-                next_date = self.effective_date + timedelta(days=equipment.period)
+                next_date = equipment.effective_date + timedelta(days=equipment.period)
             equipment.next_action_date = next_date
 
     @api.one
@@ -238,6 +238,7 @@ class MaintenanceEquipment(models.Model):
             'user_id': self.technician_user_id.id,
             'maintenance_team_id': self.maintenance_team_id.id,
             'duration': self.maintenance_duration,
+            'company_id': self.company_id.id,
             })
 
     @api.model

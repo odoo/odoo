@@ -19,7 +19,7 @@
 # Андрей Гусев <gaussgss@gmail.com>, 2019
 # Konstantin Korovin <korovin74@gmail.com>, 2019
 # Anton Ilchenko <anton.wmt@gmail.com>, 2019
-# Ivan Yelizariev <yelizariev@it-projects.info>, 2019
+# Ivan Yelizariev <yelizariev@it-projects.info>, 2020
 # 
 msgid ""
 msgstr ""
@@ -27,7 +27,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-14 07:34+0000\n"
 "PO-Revision-Date: 2018-08-24 09:24+0000\n"
-"Last-Translator: Ivan Yelizariev <yelizariev@it-projects.info>, 2019\n"
+"Last-Translator: Ivan Yelizariev <yelizariev@it-projects.info>, 2020\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -79,7 +79,7 @@ msgstr "&amp;nbsp;<span>on</span>&amp;nbsp;"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "&amp;times;"
-msgstr "&amp;раз;"
+msgstr "&amp;times;"
 
 #. module: sale
 #: model:product.product,description_sale:sale.product_product_4e
@@ -123,17 +123,30 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
-"<div style=\"margin: 0px; padding: 0px;\"><p style=\"margin: 0px; padding: "
-"0px; font-size: 13px;\"> % Set doc_name = &#39;quotation&#39; if "
-"object.state in ( &#39;draft &quot;,&quot; sent&#39;) else &#39;order&#39; "
-"Уважаемый $ {object.partner_id.name}% if object.partner_id.parent_id: ($ "
-"{object.partner_id.parent_id .name})% endif <br/><br/> В этом% if ctx.get ( "
-"&#39;proforma&#39;) прикреплении находится ваша проформа счета-фактуры% else"
-" $ {doc_name} <strong>$ {object.name}%</strong> endif% if object.origin: "
-"(with reference: $ {object.origin}) % endif в сумме <strong>$ {format_amount"
-" (object.amount_total, object.pricelist_id.currency_id)}</strong> от $ "
-"{object.company_id.name}. <br/><br/> Не стесняйтесь связаться с нами, если у"
-" вас возникли вопросы. </p></div>"
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        % set doc_name = 'quotation' if object.state in ('draft', 'sent') else 'order'\n"
+"        Dear ${object.partner_id.name}\n"
+"        % if object.partner_id.parent_id:\n"
+"            (${object.partner_id.parent_id.name})\n"
+"        % endif\n"
+"        <br/><br/>\n"
+"        Here is\n"
+"        % if ctx.get('proforma')\n"
+"            in attachment your pro-forma invoice\n"
+"        % else\n"
+"            the ${doc_name} <strong>${object.name}</strong>\n"
+"        % endif\n"
+"        % if object.origin:\n"
+"            (with reference: ${object.origin} )\n"
+"        % endif\n"
+"        amounting in <strong>${format_amount(object.amount_total, object.pricelist_id.currency_id)}</strong>\n"
+"        from ${object.company_id.name}.\n"
+"        <br/><br/>\n"
+"        Do not hesitate to contact us if you have any question.\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -454,7 +467,7 @@ msgstr "<strong>Ваша ссылка:</strong>"
 #: code:addons/sale/models/sale.py:811
 #, python-format
 msgid "A journal must be specified of the acquirer %s."
-msgstr "Журнал должен быть указан эквайером% s."
+msgstr "Журнал должен быть указан эквайером %s."
 
 #. module: sale
 #: code:addons/sale/models/sale.py:804
@@ -610,7 +623,7 @@ msgstr "Адреса в заказах продаж"
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:165
 #, python-format
 msgid "Advance: %s"
-msgstr "Продвижение: %s"
+msgstr "Продвижение: %s "
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_attribute_value__is_custom
@@ -644,7 +657,7 @@ msgstr "Сумма без скидки"
 #: code:addons/sale/models/payment.py:90
 #, python-format
 msgid "Amount Mismatch (%s)"
-msgstr "Несоответствие количества (% s)"
+msgstr "Несоответствие количества (%s)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__quotations_amount
@@ -1378,7 +1391,7 @@ msgstr "Авансовый платеж (в процентах)"
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:84
 #, python-format
 msgid "Down payment of %s%%"
-msgstr "Авансовый платеж %s%%"
+msgstr "Авансовый платеж %s %%"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line__is_downpayment
@@ -1535,7 +1548,7 @@ msgid ""
 "        attribute type is 'Color'."
 msgstr ""
 "Здесь вы можете установить конкретный индекс цвета HTML (например. # Ff0000)"
-" для отображения цвета, если тип атрибута &#39;Цвет&#39;."
+" для отображения цвета, если тип атрибута 'Цвет'."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__hide_expense_policy
@@ -1643,13 +1656,13 @@ msgstr "Неверный заказ"
 #: code:addons/sale/models/sale.py:794
 #, python-format
 msgid "Invalid token found! Token acquirer %s != %s"
-msgstr "Найдено недействителен токен! Эквайер токена% s! =% S"
+msgstr "Найдено недействителен токен! Эквайер токена %s ! = %s "
 
 #. module: sale
 #: code:addons/sale/models/sale.py:797
 #, python-format
 msgid "Invalid token found! Token partner %s != %s"
-msgstr "Найдено недействителен токен! Партнер токена% s! =% S"
+msgstr "Найдено недействителен токен! Партнер токена %s ! = %s "
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_invoice
@@ -1878,13 +1891,13 @@ msgid ""
 "%s"
 msgstr ""
 "В заблокированном заказе запрещено редактировать следующие поля:\n"
-"%s"
+" %s "
 
 #. module: sale
 #: code:addons/sale/models/sale.py:667
 #, python-format
 msgid "It is not allowed to confirm an order in the following states: %s"
-msgstr "Запрещается подтверждать заказ на следующих этапах:% s"
+msgstr "Запрещается подтверждать заказ на следующих этапах:%s "
 
 #. module: sale
 #: selection:res.company,sale_onboarding_order_confirmation_state:0
@@ -2364,7 +2377,7 @@ msgstr "Заказ не находится в состоянии, требует
 #: code:addons/sale/controllers/portal.py:215
 #, python-format
 msgid "Order signed by %s"
-msgstr "Заказ подписан %s"
+msgstr "Заказ подписан %s "
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
@@ -3705,8 +3718,8 @@ msgid ""
 "The order was not confirmed despite response from the acquirer (%s): order "
 "total is %r but acquirer replied with %r."
 msgstr ""
-"Заказ не подтвержден, несмотря ответа эквайера (% s): сумма заказа% r но "
-"эквайер ответил с% r."
+"Заказ не подтвержден, несмотря ответа эквайера (%s): сумма заказа %r но "
+"эквайер ответил с %r."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__reference
@@ -3924,8 +3937,8 @@ msgid ""
 "menu *Action*."
 msgstr ""
 "Чтобы отправить приглашение в режиме B2B, откройте контакт или выберите "
-"несколько в списке и нажмите на &quot;Управление доступом к порталу&quot; в "
-"выпадающем меню * Действие *."
+"несколько в списке и нажмите на `Управление доступом к порталу` в выпадающем"
+" меню * Действие *."
 
 #. module: sale
 #: selection:sale.order,activity_state:0
@@ -4091,8 +4104,8 @@ msgid ""
 "Upsell <a href='#' data-oe-model='%s' data-oe-id='%d'>%s</a> for customer <a"
 " href='#' data-oe-model='%s' data-oe-id='%s'>%s</a>"
 msgstr ""
-"Допродажа <a href='#' data-oe-model='%s' data-oe-id='%d'>% s</a> для клиента"
-" <a href='#' data-oe-model='%s' data-oe-id='%s'>% s</a>"
+"Допродажа <a href='#' data-oe-model='%s' data-oe-id='%d'> %s </a> для "
+"клиента <a href='#' data-oe-model='%s' data-oe-id='%s'> %s </a>"
 
 #. module: sale
 #: selection:sale.order,invoice_status:0
@@ -4166,7 +4179,7 @@ msgstr "Предупреждение"
 #: code:addons/sale/models/sale.py:1417
 #, python-format
 msgid "Warning for %s"
-msgstr "Предупреждение для %s"
+msgstr "Предупреждение для %s "
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_partner_view_buttons
