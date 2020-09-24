@@ -3,6 +3,8 @@ importScripts("/website_event_track/static/lib/idb-keyval/idb-keyval.js");
 const PREFIX = "odoo-event";
 const SYNCABLE_ROUTES = ["/event/track/toggle_reminder"];
 const CACHABLE_ROUTES = ["/web/webclient/version_info"];
+const MAX_CACHE_SIZE = 512 * 1024 * 1024; // 500 MB
+const MAX_CACHE_QUOTA = 0.5;
 
 const { Store, set, get, del } = idbKeyval;
 const pendingRequestsQueueName = `${PREFIX}-pending-requests`;
@@ -43,6 +45,18 @@ const isSyncableURL = canHandleRoutes(SYNCABLE_ROUTES);
  * @returns {Function}
  */
 const isCachableURL = canHandleRoutes(CACHABLE_ROUTES);
+
+/**
+ *
+ * @returns {boolean} true if navigator has a quota we can read and we reached it
+ */
+const isCacheFull = async () => {
+    if (!("storage" in navigator && "estimate" in navigator.storage)) {
+        return false;
+    }
+    const { usage, quota } = await navigator.storage.estimate();
+    return usage / quota > MAX_CACHE_QUOTA || usage > MAX_CACHE_SIZE;
+};
 
 /**
  *
@@ -133,6 +147,26 @@ const buildEmptyResponse = () => new Response(JSON.stringify({ jsonrpc: "2.0", i
  * @returns {Promise}
  */
 const cacheRequest = async (request, response) => {
+    // don't even attempt to cache:
+    //  - error pages (why cache that?)
+    //  - non-"basic" response types, which include tracker 1-time opaque requests
+    //    that are consuming cache space for no reason (namely due to padding MBs accounted for
+    //    each opaque request)
+    if (!response || !response.ok || response.type !== "basic") {
+        console.error(`ignoring cache for ${request.url} => ${response.type}, mode: ${request.mode}, cache: ${request.cache}`);
+        return;
+    }
+
+    // never blow up cache quota, as it will break things, and the space
+    // is shared with cookies and localStorage
+    if (await isCacheFull()) {
+        // TODO: clear some part of the cache to free older/less-relevant content
+        console.log("Cache full, not caching!");
+        return;
+    }
+
+    console.log(`grant cache for ${request.url} => ${response.type}, mode: ${request.mode}, cache: ${request.cache},
+                    isGet: ${isGET(request)}, isCachable: ${isCachableURL(request.url)}`);
     if (isGET(request)) {
         const cache = await caches.open(cacheName);
         await cache.put(request, response.clone());
