@@ -1452,7 +1452,12 @@ class MrpProduction(models.Model):
         })
 
         for production in self:
-            production.write({'date_finished': fields.Datetime.now(), 'product_qty': production.qty_produced, 'priority': '0'})
+            production.write({
+                'date_finished': fields.Datetime.now(),
+                'product_qty': production.qty_produced,
+                'priority': '0',
+                'is_locked': True,
+            })
 
         for workorder in self.workorder_ids.filtered(lambda w: w.state not in ('done', 'cancel')):
             workorder.duration_expected = workorder._get_duration_expected()
