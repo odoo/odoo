@@ -1225,6 +1225,11 @@ class StockMove(models.Model):
         self.ensure_one()
         return self.location_id.should_bypass_reservation() or self.product_id.type != 'product'
 
+    # necessary hook to be able to override move reservation to a restrict lot, owner, pack, location...
+    def _get_available_quantity(self, location_id, lot_id=None, package_id=None, owner_id=None, strict=False, allow_negative=False):
+        self.ensure_one()
+        return self.env['stock.quant']._get_available_quantity(self.product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=strict, allow_negative=allow_negative)
+
     def _action_assign(self):
         """ Reserve stock moves by creating their stock move lines. A stock move is
         considered reserved once the sum of `product_qty` for all its move lines is
@@ -1273,7 +1278,7 @@ class StockMove(models.Model):
                         continue
                     # Reserve new quants and create move lines accordingly.
                     forced_package_id = move.package_level_id.package_id or None
-                    available_quantity = self.env['stock.quant']._get_available_quantity(move.product_id, move.location_id, package_id=forced_package_id)
+                    available_quantity = move._get_available_quantity(move.location_id, package_id=forced_package_id)
                     if available_quantity <= 0:
                         continue
                     taken_quantity = move._update_reserved_quantity(need, available_quantity, move.location_id, package_id=forced_package_id, strict=False)
@@ -1340,8 +1345,7 @@ class StockMove(models.Model):
                         # partially `quantity`. When this happens, we chose to reserve the maximum
                         # still available. This situation could not happen on MTS move, because in
                         # this case `quantity` is directly the quantity on the quants themselves.
-                        available_quantity = self.env['stock.quant']._get_available_quantity(
-                            move.product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=True)
+                        available_quantity = move._get_available_quantity(location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=True)
                         if float_is_zero(available_quantity, precision_rounding=rounding):
                             continue
                         taken_quantity = move._update_reserved_quantity(need, min(quantity, available_quantity), location_id, lot_id, package_id, owner_id)
