@@ -75,11 +75,12 @@ class AccountTaxReport(models.Model):
             lines_to_treat = list(to_yield.children_line_ids.sorted(lambda x: x.sequence)) + lines_to_treat[1:]
             yield to_yield
 
-    def get_checks_to_perform(self, d):
+    def get_checks_to_perform(self, amounts, carried_over):
         """ To override in localizations
         If value is a float, it will be formatted with format_value
         The line is not displayed if it is falsy (0, 0.0, False, ...)
-        :param d: the mapping dictionay between codes and values
+        :param amounts: the mapping dictionary between codes and values
+        :param carried_over: the mapping dictionary between codes and whether they are carried over
         :return: iterable of tuple (name, value)
         """
         self.ensure_one()
@@ -107,12 +108,33 @@ class AccountTaxReportLine(models.Model):
     parent_path = fields.Char(index=True)
     report_id = fields.Many2one(string="Tax Report", required=True, comodel_name='account.tax.report', ondelete='cascade', help="The parent tax report of this line")
 
-    #helper to create tags (positive and negative) on report line creation
+    # helper to create tags (positive and negative) on report line creation
     tag_name = fields.Char(string="Tag Name", help="Short name for the tax grid corresponding to this report line. Leave empty if this report line should not correspond to any such grid.")
 
-    #fields used in specific localization reports, where a report line isn't simply the given by the sum of account.move.line with selected tags
+    # fields used in specific localization reports, where a report line isn't simply the given by the sum of account.move.line with selected tags
     code = fields.Char(string="Code", help="Optional unique code to refer to this line in total formulas")
     formula = fields.Char(string="Formula", help="Python expression used to compute the value of a total line. This field is mutually exclusive with tag_name, setting it turns the line to a total line. Tax report line codes can be used as variables in this expression to refer to the balance of the corresponding lines in the report. A formula cannot refer to another line using a formula.")
+
+    # fields used to carry over amounts between periods
+
+    # The selection should be filled in localizations using the system
+    carry_over_condition_method = fields.Selection(
+        selection=[('no_negative_amount_carry_over_condition', 'No negative amount')],
+        string="Carry over method",
+        help="The method used to determine if this line should be carried over."
+    )
+    carry_over_destination_line_id = fields.Many2one(
+        string="Carry over to",
+        comodel_name="account.tax.report.line",
+        domain=[('tag_name', '!=', False)],
+        help="The line to which the value of this line will be carried over to if needed."
+             " If left empty the line will carry over to itself."
+    )
+    carryover_line_ids = fields.One2many(
+        string="Carryover lines",
+        comodel_name='account.tax.carryover.line',
+        inverse_name='tax_report_line_id',
+    )
 
     @api.model
     def create(self, vals):
@@ -264,3 +286,32 @@ class AccountTaxReportLine(models.Model):
 
             if neg_tags.name != '-'+record.tag_name or pos_tags.name != '+'+record.tag_name:
                 raise ValidationError(_("The tags linked to a tax report line should always match its tag name."))
+
+    def _get_carryover_bounds(self, options, line_amount, carried_over_amount):
+        """
+        Check if the line will be carried over, by checking the condition method set on the line.
+        Do not override this method, but instead set your condition methods on each lines.
+        :param options: The options of the reports
+        :param line_amount: The amount on the line
+        :param carried_over_amount: The amount carried over for this line
+        :return: A tuple containing the lower and upper bounds from which the line will be carried over.
+        E.g. (0, 42) : Lines which value is below 0 or above 42 will be carried over.
+        E.g. (0, None) : Only lines which value is below 0 will be carried over.
+        E.g. None : This line will never be carried over.
+        """
+        self.ensure_one()
+        # Carry over is disabled by default, but if there is a carry over condition  method on the line we are
+        # calling it first. That way we can have a default carryover condition for the whole report (carryover_bounds)
+        # and specialized condition for specific lines if needed
+        if self.carry_over_condition_method:
+            condition_method = getattr(self, self.carry_over_condition_method, False)
+            if condition_method:
+                return condition_method(options, line_amount, carried_over_amount)
+
+        return None
+
+    def no_negative_amount_carry_over_condition(self, options, line_amount, carried_over_amount):
+        # The bounds are (0, None).
+        # Lines below 0 will be set to 0 and reduce the balance of the carryover.
+        # Lines above 0 will never be carried over
+        return (0, None)
