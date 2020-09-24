@@ -96,6 +96,24 @@ $.fn.scrollspy.Constructor.prototype.refresh = function () {
     }
 };
 
+/* Bootstrap modal scrollbar compensation on non-body */
+const bsSetScrollbarFunction = $.fn.modal.Constructor.prototype._setScrollbar;
+$.fn.modal.Constructor.prototype._setScrollbar = function () {
+    const $scrollable = $().getScrollingElement();
+    if (document.body.contains($scrollable[0])) {
+        $scrollable.compensateScrollbar(true);
+    }
+    return bsSetScrollbarFunction.apply(this, arguments);
+};
+const bsResetScrollbarFunction = $.fn.modal.Constructor.prototype._resetScrollbar;
+$.fn.modal.Constructor.prototype._resetScrollbar = function () {
+    const $scrollable = $().getScrollingElement();
+    if (document.body.contains($scrollable[0])) {
+        $scrollable.compensateScrollbar(false);
+    }
+    return bsResetScrollbarFunction.apply(this, arguments);
+};
+
 return {
     makeExtendedSanitizeWhiteList: makeExtendedSanitizeWhiteList,
 };
