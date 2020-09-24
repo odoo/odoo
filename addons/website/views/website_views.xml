@@ -76,7 +76,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//form" position="inside">
                     <footer>
-                        <button name="create_and_redirect_to_theme" type="object" string="Choose a theme" class="btn btn-primary" icon="fa-paint-brush"/>
+                        <button name="create_and_redirect_to_theme" type="object" string="Pick a Theme" class="btn btn-primary" icon="fa-paint-brush"/>
                         <button string="Cancel" class="btn btn-secondary" special="cancel"/>
                     </footer>
                 </xpath>
@@ -420,7 +420,7 @@
         </record>
 
         <record id="theme_install_kanban_action" model="ir.actions.act_window">
-            <field name="name">Choose a theme for your website</field>
+            <field name="name">Pick a Theme</field>
             <field name="res_model">ir.module.module</field>
             <field name="view_mode">kanban,form</field>
             <field name="view_id" ref="website.theme_view_kanban" />
