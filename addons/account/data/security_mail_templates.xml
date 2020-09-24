@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <template id="security_scammer_generic">
+            <p>
+                If you don't remember doing such action, you may be victim of a scammer. Scammer might be:
+                <ul>
+                    <li>Someone remote who managed to get your user credentials.</li>
+                    <li>Someone who had physical access to your machine as you were still logged.</li>
+                </ul>
+            </p>
+            <p>
+                Most common scam schemes are:
+                <ul>
+                    <li>Changing the footer of your document layout to invite your customers to pay invoices on a scam bank account.</li>
+                    <li>Changing the bank account(s) of the company (same purpose).</li>
+                    <li>Changing the bank account(s) of your vendors, so that you pay your bills on a scam bank account.</li>
+                    <li>Changing the email address of a user.</li>
+                </ul>
+            </p>
+            <p>You will receive warning mails like this one every time one of those actions is performed, to prevent scammers from going under the radar.</p>
+        </template>
+
+        <template id="partner_bank_account_changed_template" >
+            <p>Dear <t t-esc="user_name" />,<br/><br/>
+                You receive this email because we would like to be sure that you are the person who changed the bank account 
+                of partner <t t-esc="partner.name" />
+                <t t-if="partner.company_id">
+                    in <t t-esc="partner.company_id.name" />
+                </t>
+                at <t t-esc="timestamp" /> (<t t-esc="', '.join(operations)"/>; you can check for more informations on the chatter of the partner).
+            </p>
+            <t t-call="account.security_scammer_generic" />
+            <p>If you think you are victim of a scam:
+                <ul>
+                    <li>Take security measures (change password, lock screen when away...) to avoid this issue in the future.</li>
+                    <li>Log in
+                        <t t-if="partner.company_id">
+                            company <t t-esc="partner.company_id.name" />
+                        </t>
+                        and have a look at partner <t t-esc="partner.name" />. If the bank account for this vendor is incorrect, fix it. Then check no bills were created (or worse, paid) between
+                        <t t-esc="timestamp" /> and now.</li>
+                </ul>
+            </p>
+            <p>
+                Regards,
+            </p>
+            <p>Odoo</p>
+        </template>
+
+        <template id="user_email_changed_template">
+            <p>Dear <t t-esc="changed_user.name" />,<br/><br/>
+                Your email was modified at <t t-esc="timestamp" /> by user <t t-esc="user.name" />.
+                <t t-esc="changed_user.email"/> --> <t t-esc="new_email" />.
+            </p>
+            <t t-call="account.security_scammer_generic" />
+            <p>If you think you are victim of a scam:
+                <ul>
+                    <li>Take security measures (change password, lock screen when away...) to avoid this issue in the future.</li>
+                </ul>
+            </p>
+            <p>
+                Regards,
+            </p>
+            <p>Odoo</p>
+        </template>
+
+        <template id="document_layout_changed_template">
+            <p>Dear <t t-esc="user_name"/>,<br/><br/>
+            You receive this email because we would like to be sure that you are the person who changed the document 
+            template of company <t t-esc="company_name" /> at <t t-esc="timestamp" />.
+            </p>
+            <t t-call="account.security_scammer_generic" />
+            <p>If you think you are victim of a scam:
+                <ul>
+                    <li>Take security measures (change password, lock screen when away...) to prevent this issue in the future.</li>
+                    <li>Log in company <t t-esc="company_name" /> and have a look at the document layout in the general settings.
+                        Check if everything is correct with a particular focus on bank accounts.</li>
+                    <li>Verify no sales invoices were sent between <t t-esc="timestamp" /> and now. Contact your customers if necessary.</li>
+                </ul>
+            </p>
+            <p>
+                Regards,
+            </p>
+            <p>Odoo</p>
+        </template>
+
+    </data>
+</odoo>

@@ -205,12 +205,18 @@ class AccountMove(models.Model):
     statement_line_id = fields.Many2one(
         comodel_name='account.bank.statement.line',
         string="Statement Line", copy=False, check_company=True)
+<<<<<<< HEAD
     statement_id = fields.Many2one(
         related='statement_line_id.statement_id',
         copy=False,
         readonly=True,
         help="Technical field used to open the linked bank statement from the edit button in a group by view,"
              " or via the smart button on journal entries.")
+=======
+    imported_bank_id = fields.Many2one('res.partner.bank', string='Imported Bank Account',
+        help='When the invoice is imported, if the bank account number detected is different that the one of the partner, you can choose to keep it or discard it.')
+    imported_bank_acc_number = fields.Char(related='imported_bank_id.acc_number')
+>>>>>>> [IMP] base: send security emails when changing sensitive data
 
     # === Amount fields ===
     amount_untaxed = fields.Monetary(string='Untaxed Amount', store=True, readonly=True, tracking=True,
@@ -2968,6 +2974,19 @@ class AccountMove(models.Model):
         :returns:       A list of tuples (priority, method) where method takes an attachment as parameter.
         """
         return []
+    def action_add_imported_bank(self):
+        '''Make the imported bank account this move's bank account (and make it active if necessary).
+        '''
+        self.ensure_one()
+        self.imported_bank_id.active = True
+        self.imported_bank_id = False
+
+    def action_discard_imported_bank(self):
+        '''Discard the imported bank account on this move.
+        '''
+        self.ensure_one()
+        self.imported_bank_id = False
+
 
 class AccountMoveLine(models.Model):
     _name = "account.move.line"

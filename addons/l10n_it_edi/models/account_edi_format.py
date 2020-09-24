@@ -172,6 +172,13 @@ class AccountEdiFormat(models.Model):
                         invoice._compose_info_message(
                             tree, './/CedentePrestatore')))
 
+                # Bank Account
+                acc_number = self._find_value(self, '//DettaglioPagamento/IBAN', tree, namespaces=tree.nsmap)
+                if acc_number:
+                    bank_account = self._retrieve_bank_account(acc_number, invoice_form.partner_id, create=True)
+                    if not bank_account.active:
+                        invoice_form.imported_bank_id = bank_account
+
                 # Numbering attributed by the transmitter. <1.1.2>
                 elements = tree.xpath('//ProgressivoInvio')
                 if elements:

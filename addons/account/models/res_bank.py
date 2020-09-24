@@ -2,9 +2,35 @@
 
 from odoo import api, models, fields, _
 from odoo.exceptions import UserError
+from odoo.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
+
+from datetime import datetime
+
 
 class ResPartnerBank(models.Model):
     _inherit = 'res.partner.bank'
+
+    def write(self, vals):
+        # bank account of partner changed, warn self.env.user
+        for acc in self:
+            if 'acc_number' in vals:
+                mail_template = self.env.ref('account.partner_bank_account_changed_template')
+                ctx = {
+                    'user_name': self.env.user.name,
+                    'partner': acc.partner_id,
+                    'timestamp': fields.Datetime.context_timestamp(self, datetime.now()).strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+                    'operations': [_('an account was edited')]
+                }
+                kwargs = {
+                    'subject': _('Warning: bank account of %s modified', acc.partner_id.name),
+                    'partner_ids': self.env.user.partner_id.ids,
+                    'body': mail_template._render(ctx, engine='ir.qweb', minimal_qcontext=True),
+                    'notify_by_email': True,
+                }
+                self.env['mail.thread'].with_context(mail_notify_author=True).message_notify(**kwargs)
+
+                acc.partner_id.message_post(body=_('<ul><li>Bank account number: %s <div class="fa fa-long-arrow-right"/> %s</ul></li>', acc.acc_number, vals['acc_number']))
+        return super().write(vals)
 
     def build_qr_code_url(self, amount, free_communication, structured_communication, currency, debtor_partner, qr_method=None, silent_errors=True):
         """ Returns the QR-code report URL to pay to this account with the given parameters,

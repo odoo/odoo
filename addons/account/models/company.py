@@ -3,6 +3,7 @@
 from datetime import timedelta, datetime, date
 import calendar
 from dateutil.relativedelta import relativedelta
+from odoo.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
 
 from odoo import fields, models, api, _
 from odoo.exceptions import ValidationError, UserError, RedirectWarning
@@ -268,6 +269,32 @@ class ResCompany(models.Model):
                 if self.env['account.move.line'].search([('company_id', '=', company.id)]):
                     raise UserError(_('You cannot change the currency of the company since some journal items already exist'))
 
+            # warn the user (only if at least one invoice is posted)
+            # this is triggered when changing the value in res.config.settings
+            template_changed = 'external_report_layout_id' in values and company.external_report_layout_id and company.external_report_layout_id.id != values['external_report_layout_id']
+            template_value_changed = ('logo' in values and company.logo != values['logo']) or \
+                                     ('report_header' in values and company.report_header != values['report_header']) or \
+                                     ('report_footer' in values and company.report_footer != values['report_footer'])
+            if company.external_report_layout_id and (template_changed or template_value_changed):
+                posted_move = self.env['account.move'].search([
+                    ('state', '=', 'posted'),
+                    ('move_type', 'in', ['out_invoice', 'out_receipt', 'in_refund']),
+                    ('company_id', '=', company.id)
+                ], limit=1)
+                if posted_move:
+                    mail_template = self.env.ref('account.document_layout_changed_template')
+                    ctx = {
+                        'user_name': self.env.user.name,
+                        'company_name': company.name,
+                        'timestamp': fields.Datetime.context_timestamp(self, datetime.now()).strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+                    }
+                    kwargs = {
+                        'subject': _('Warning: document template of %s - %s has been modified', self._cr.dbname, company.name),
+                        'partner_ids': self.env.user.partner_id.ids,
+                        'body': mail_template._render(ctx, engine='ir.qweb', minimal_qcontext=True),
+                        'notify_by_email': True,
+                    }
+                    self.env['mail.thread'].with_context(mail_notify_author=True).message_notify(**kwargs)
         return super(ResCompany, self).write(values)
 
     @api.model

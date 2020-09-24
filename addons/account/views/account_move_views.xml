@@ -613,6 +613,13 @@
                          attrs="{'invisible': ['|', ('display_inactive_currency_warning', '=', False), ('move_type', 'not in', ('out_invoice', 'out_refund', 'out_receipt'))]}">
                         In order to validate this invoice, you must <button class="oe_link" type="object" name="action_activate_currency" style="padding: 0; vertical-align: baseline;">activate the currency of the invoice</button>. The journal entries need to be computed by Odoo before being posted in your company's currency.
                     </div>
+                    <!-- Bank account mismatch when importing invoice -->
+                    <div class="alert alert-warning" role="alert" style="margin-bottom:0px;"
+                         attrs="{'invisible':['|', ('state', '!=', 'draft'), ('imported_bank_id', '=', False)]}">
+                        The bank account present in the imported file is different from the partner's bank accounts: <field name="imported_bank_acc_number" />
+                        <button name="action_add_imported_bank" type="object" class="oe_link oe_inline" string="Add the bank account" />
+                        <button name="action_discard_imported_bank" type="object" class="oe_link oe_inline" string="Discard" /> 
+                    </div>
                     <sheet>
                         <div name="button_box" class="oe_button_box">
                             <button name="open_bank_statement_view"
@@ -676,6 +683,7 @@
                         <field name="display_inactive_currency_warning" invisible="1"/>
                         <field name="statement_id" invisible="1"/>
                         <field name="payment_id" invisible="1"/>
+                        <field name="imported_bank_id" invisible="1"/>
 
                         <div class="oe_title">
                             <!-- Invoice draft header -->

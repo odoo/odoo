@@ -27,10 +27,10 @@ class BaseDocumentLayout(models.TransientModel):
     company_id = fields.Many2one(
         'res.company', default=lambda self: self.env.company, required=True)
 
-    logo = fields.Binary(related='company_id.logo', readonly=False)
+    logo = fields.Binary(compute='_compute_document_elements', inverse='_inverse_document_elements', readonly=False)
     preview_logo = fields.Binary(related='logo', string="Preview logo")
-    report_header = fields.Text(related='company_id.report_header', readonly=False)
-    report_footer = fields.Text(related='company_id.report_footer', readonly=False)
+    report_header = fields.Text(compute='_compute_document_elements', inverse='_inverse_document_elements', readonly=False)
+    report_footer = fields.Text(compute='_compute_document_elements', inverse='_inverse_document_elements', readonly=False)
 
     # The paper format changes won't be reflected in the preview.
     paperformat_id = fields.Many2one(related='company_id.paperformat_id', readonly=False)
@@ -65,6 +65,24 @@ class BaseDocumentLayout(models.TransientModel):
     vat = fields.Char(related='company_id.vat', readonly=True)
     name = fields.Char(related='company_id.name', readonly=True)
     country_id = fields.Many2one(related="company_id.country_id", readonly=True)
+
+    @api.depends('company_id.logo', 'company_id.report_header', 'company_id.report_footer')
+    def _compute_document_elements(self):
+        # We use computed fields instead of related because when changing more than one values,
+        # write is triggered mutliple times with related fields. Since we send an email when changing
+        # this sensitive data, this would send multiple emails.
+        for wizard in self:
+            wizard.logo = wizard.company_id.logo
+            wizard.report_header = wizard.company_id.report_header
+            wizard.report_footer = wizard.company_id.report_footer
+
+    def _inverse_document_elements(self):
+        for wizard in self:
+            wizard.company_id.write({
+                'logo': wizard.logo,
+                'report_header': wizard.report_header,
+                'report_footer': wizard.report_footer
+            })
 
     @api.depends('logo_primary_color', 'logo_secondary_color', 'primary_color', 'secondary_color',)
     def _compute_custom_colors(self):

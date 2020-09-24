@@ -3,6 +3,7 @@
 
 import time
 import logging
+from datetime import datetime
 
 from psycopg2 import sql, DatabaseError
 
@@ -235,6 +236,60 @@ class AccountFiscalPositionAccount(models.Model):
 class ResPartner(models.Model):
     _name = 'res.partner'
     _inherit = 'res.partner'
+
+    def write(self, vals):
+        # Send an email if email address of user were changed.
+        if 'email' in vals:
+            for partner in self.filtered(lambda p: p.user_ids and p.email != vals['email']):
+                mail_template = self.env.ref('account.user_email_changed_template')
+                ctx = {
+                    'changed_user': partner,
+                    'user': self.env.user,
+                    'timestamp': fields.Datetime.context_timestamp(self, datetime.now()).strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+                    'new_email': vals['email'],
+                }
+                kwargs = {
+                    'subject': _('Warning: your mail was modified'),
+                    'partner_ids': partner.ids,
+                    'body': mail_template._render(ctx, engine='ir.qweb', minimal_qcontext=True),
+                    'notify_by_email': True,
+                }
+                self.env['mail.thread'].with_context(mail_notify_author=True).message_notify(**kwargs)
+
+        # Send an email if bank_accounts of partner were changed.
+        before_banks = {partner: {'records': partner.bank_ids, 'before_acc_nb': {b: b.acc_number for b in partner.bank_ids}} for partner in self}
+
+        res = super().write(vals)
+
+        for partner in self:
+            operations = []
+            before = before_banks[partner]
+            bank_added = partner.bank_ids - before['records']
+            if bank_added:
+                operations.append(_('an account was added'))
+                partner.message_post(body=_('<ul><li>New bank account number: %s</li></ul>', ', '.join([a.acc_number for a in bank_added])))
+            bank_removed = before['records'] - partner.bank_ids
+            if bank_removed:
+                operations.append(_('an account was removed'))
+                partner.message_post(body=_('<ul><li>Bank account removed: %s</li></ul>', ', '.join([before['before_acc_nb'][a] for a in bank_removed])))
+
+            if operations:
+                mail_template = self.env.ref('account.partner_bank_account_changed_template')
+                ctx = {
+                    'user_name': self.env.user.name,
+                    'partner': partner,
+                    'timestamp': fields.Datetime.context_timestamp(self, datetime.now()).strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+                    'operations': operations,
+                }
+                kwargs = {
+                    'subject': _('Warning: bank account of %s modified', partner.name),
+                    'partner_ids': self.env.user.partner_id.ids,
+                    'body': mail_template._render(ctx, engine='ir.qweb', minimal_qcontext=True),
+                    'notify_by_email': True,
+                }
+                self.env['mail.thread'].with_context(mail_notify_author=True).message_notify(**kwargs)
+
+        return res
 
     @api.depends_context('company')
     def _credit_debit_get(self):

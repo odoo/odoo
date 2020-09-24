@@ -478,6 +478,30 @@ class AccountEdiFormat(models.Model):
         '''
         return self.env['res.currency'].search([('name', '=', code.upper())], limit=1)
 
+    def _retrieve_bank_account(self, acc_number, partner, create):
+        '''Search all bank accounts and find one that matches the acc_number.
+        If the bank account is not found and create is True, an INACTIVE bank account is created
+        on the partner. It should not be set active or used until the user has explicitly validated it.
+
+        :param acc_number: The account number to find.
+        :param partner:    The partner to wich this account belongs.
+        :returns:          The bank account or an empty recordset if not found and create is False.
+        '''
+        bank_account = self.env['res.partner.bank'].with_context(active_test=False).search([
+            ('acc_number', '=', acc_number),
+            ('partner_id', '=', partner.id),
+        ])
+
+        if not bank_account and create:
+            bank_account = self.env['res.partner.bank'].create(
+                {
+                    'acc_number': acc_number,
+                    'partner_id': partner.id,
+                    'active': False,
+                })
+
+        return bank_account
+
     ####################################################
     # Other helpers
     ####################################################

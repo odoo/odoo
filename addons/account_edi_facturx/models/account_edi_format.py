@@ -186,6 +186,13 @@ class AccountEdiFormat(models.Model):
                 vat=_find_value('//ram:' + partner_type + '/ram:SpecifiedTaxRegistration/ram:ID'),
             )
 
+            # Bank Account
+            acc_number = _find_value('//ram:PayeePartyCreditorFinancialAccount/ram:IBANID')
+            if acc_number:
+                bank_account = self._retrieve_bank_account(acc_number, invoice_form.partner_id, create=True)
+                if not bank_account.active:
+                    invoice_form.imported_bank_id = bank_account
+
             # Reference.
             elements = tree.xpath('//rsm:ExchangedDocument/ram:ID', namespaces=tree.nsmap)
             if elements:
