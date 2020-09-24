@@ -1785,6 +1785,9 @@ var SnippetsMenu = Widget.extend({
      */
     _getScrollOptions(options = {}) {
         return Object.assign({}, options, {
+            scrollBoundaries: Object.assign({
+                right: false,
+            }, options.scrollBoundaries),
             jQueryDraggableOptions: Object.assign({
                 appendTo: this.$body,
                 cursor: 'move',
