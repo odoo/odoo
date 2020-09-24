@@ -204,6 +204,10 @@ class Survey(http.Controller):
          * a token linked to a survey;
          * a token linked to an answer or generate a new token if access is allowed;
         """
+        # Get the current answer token from cookie
+        if not answer_token:
+            answer_token = request.httprequest.cookies.get('survey_%s' % survey_token)
+
         access_data = self._get_access_data(survey_token, answer_token, ensure_token=False)
         if access_data['validity_code'] is not True:
             return self._redirect_with_error(access_data, access_data['validity_code'])
