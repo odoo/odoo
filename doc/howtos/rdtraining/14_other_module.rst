@@ -1,10 +1,10 @@
-.. _howto/rdtraining/other_module:
+.. _howto/rdtraining/14_other_module:
 
-===========================
-Interact With Other Modules
-===========================
+====================================
+Part 14: Interact With Other Modules
+====================================
 
-In the :ref:`previous chapter <howto/rdtraining/inheritance>`, we used inheritance to modify
+In the :ref:`previous chapter <howto/rdtraining/13_inheritance>`, we used inheritance to modify
 the behavior of a module. In our real estate scenario, we would like to go a step further
 and be able to generate invoices for our customers. Odoo provides an Invoicing module, so it
 would be neat to create an invoice directly from our real estate module: once a property
@@ -20,7 +20,7 @@ Concrete Example: Account Move
     - A new module ``estate_account`` is created
     - When a property is sold, an invoice is issued for the buyer
 
-    .. image:: other_module/media/create_inv.gif
+    .. image:: 14_other_module/media/create_inv.gif
         :align: center
         :alt: Invoice creation
 
@@ -42,7 +42,7 @@ independently. When both are installed, the link module provides the new feature
     For now, it will be an empty shell.
 
     Tip: you already did this at the
-    :ref:`beginning of the tutorial <howto/rdtraining/newapp>`. The process is very similar.
+    :ref:`beginning of the tutorial <howto/rdtraining/03_newapp>`. The process is very similar.
 
 When the ``estate_account`` module appears in the list, go on and install it! You'll notice that
 the Invoicing application is installed as well. This is expected since your module depends on it.
@@ -54,11 +54,11 @@ Invoice Creation
 It's now time to generate the invoice. We want to add a functionality to the
 ``estate.property`` model: when a property is sold, we need to add some logic. Does that sound
 familiar? If not, it's a good idea to go back to the
-:ref:`previous chapter <howto/rdtraining/inheritance>` since you might have missed something ;-)
+:ref:`previous chapter <howto/rdtraining/13_inheritance>` since you might have missed something ;-)
 
 As a first step, we need to extend the action called when pressing the
-:ref:`'Sold' button <howto/rdtraining/actions>` on a property. To do so, we need to create a
-:ref:`model inheritance <howto/rdtraining/inheritance>` in the ``estate_account`` module
+:ref:`'Sold' button <howto/rdtraining/10_actions>` on a property. To do so, we need to create a
+:ref:`model inheritance <howto/rdtraining/13_inheritance>` in the ``estate_account`` module
 for the ``estate.property`` model. For now, the action overridden will simply return the ``super``
 call. Maybe an example will make things clearer::
 
@@ -166,5 +166,5 @@ a One2many field ``line_ids`` at creation of a ``test.model``::
     For each line, we need a ``name``, ``quantity`` and ``price_unit``.
 
 This chapter might be one of the most difficult that was covered up to now, but it is the closest
-to what Odoo development will be in practice. In the :ref:`next one <howto/rdtraining/qwebintro>`,
+to what Odoo development will be in practice. In the :ref:`next one <howto/rdtraining/15_qwebintro>`,
 we will introduce the templating mechanism used in Odoo.

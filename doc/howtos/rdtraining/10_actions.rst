@@ -1,11 +1,11 @@
-.. _howto/rdtraining/actions:
+.. _howto/rdtraining/10_actions:
 
-======================
-Ready For Some Action?
-======================
+===============================
+Part 10: Ready For Some Action?
+===============================
 
 Up to now, we mostly built our module by declaring fields and views. We only introduced business
-logic in the :ref:`previous chapter <howto/rdtraining/compute_onchange>` thanks to computed fields
+logic in the :ref:`previous chapter <howto/rdtraining/09_compute_onchange>` thanks to computed fields
 and onchanges. In any real business scenario, we want to link some business logic to action buttons.
 In our real estate example, we would like to be able to:
 
@@ -28,7 +28,7 @@ Action Type
 
     - You can cancel or set a property to sold:
 
-    .. image:: actions/media/property.gif
+    .. image:: 10_actions/media/property.gif
         :align: center
         :alt: Cancel and set to sold
     
@@ -37,13 +37,13 @@ Action Type
 
     - You can accept or refuse an offer:
 
-    .. image:: actions/media/offer_01.gif
+    .. image:: 10_actions/media/offer_01.gif
         :align: center
         :alt: Accept or refuse an offer
 
     - Once an offer is accepted, the selling price and the buyer is set:
 
-    .. image:: actions/media/offer_02.gif
+    .. image:: 10_actions/media/offer_02.gif
         :align: center
         :alt: Accept an offer
 
@@ -125,7 +125,7 @@ and the
 Object Type
 ===========
 
-In the :ref:`howto/rdtraining/firstui` chapter, we created an action that was linked to a menu.
+In the :ref:`howto/rdtraining/06_firstui` chapter, we created an action that was linked to a menu.
 You might be wondering if it is possible to link such action to any button. Good news, it is! A
 way to do it would be:
 
@@ -135,5 +135,5 @@ way to do it would be:
 
 We use ``type="action"``, and we refer to the :term:`external identifier` in the ``name``.
 
-In the :ref:`next chapter <howto/rdtraining/constraints>`, we'll see how we can prevent encoding
+In the :ref:`next chapter <howto/rdtraining/11_constraints>`, we'll see how we can prevent encoding
 incorrect data in Odoo.

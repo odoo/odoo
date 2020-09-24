@@ -1,10 +1,10 @@
-.. _howto/rdtraining/compute_onchange:
+.. _howto/rdtraining/09_compute_onchange:
 
-=============================
-Computed Fields And Onchanges
-=============================
+=====================================
+Part 9: Computed Fields And Onchanges
+=====================================
 
-The :ref:`relations between models <howto/rdtraining/relations>` is a key component of any Odoo
+The :ref:`relations between models <howto/rdtraining/08_relations>` is a key component of any Odoo
 module. It is necessary to the modelization of any business case: models are linked one to another.
 However, we might want links between the fields inside of a given model. Sometimes because the
 value of a field is determined from the value of other fields, sometimes to help the user encoding.
@@ -25,13 +25,13 @@ Computed Fields
 
     - On the property model, the total area and the best offer are computed:
 
-    .. image:: compute_onchange/media/compute.gif
+    .. image:: 09_compute_onchange/media/compute.gif
         :align: center
         :alt: Compute fields
 
     - On the property offer model, the validity date is computed and has an inverse:
 
-    .. image:: compute_onchange/media/compute_inverse.gif
+    .. image:: 09_compute_onchange/media/compute_inverse.gif
         :align: center
         :alt: Compute field with inverse
 
@@ -51,7 +51,7 @@ method should simply set the value of the field to compute on every record in
 
 By convention, :attr:`~odoo.fields.Field.compute` are private methods, meaning that they cannot
 be called from the presentation tier, only from the business tier (see
-:ref:`howto/rdtraining/architecture`). Such methods have a name starting with an underscore ``_``.
+:ref:`howto/rdtraining/01_architecture`). Such methods have a name starting with an underscore ``_``.
 
 Dependencies
 ------------
@@ -225,7 +225,7 @@ Onchanges
     **Goal**: at the end of this section, enabling the garden will set a default area of 10 and
     an orientation to North. 
 
-    .. image:: compute_onchange/media/onchange.gif
+    .. image:: 09_compute_onchange/media/onchange.gif
         :align: center
         :alt: Onchange
 
@@ -294,5 +294,5 @@ When using stored computed fields, pay close attention to the dependencies. When
 depend on other computed fields, changing a value can trigger a large number of recomputations.
 This leads to bad performances.
 
-In the :ref:`next chapter<howto/rdtraining/actions>`, we'll see how we can trigger some business
+In the :ref:`next chapter<howto/rdtraining/10_actions>`, we'll see how we can trigger some business
 logic when clicking on buttons.

@@ -1,8 +1,8 @@
-.. _howto/rdtraining/qwebintro:
+.. _howto/rdtraining/15_qwebintro:
 
-=======================
-A Brief History Of QWeb
-=======================
+================================
+Part 15: A Brief History Of QWeb
+================================
 
 Up to now, the design of the interface of our real estate module was rather limited. Building
 a list view is straightforward since only the list of fields is necessary. The same holds true
@@ -31,7 +31,7 @@ Concrete Example: A Kanban View
 
     **Goal**: at the end of this section a Kanban view of the properties is created:
 
-    .. image:: qwebintro/media/kanban.png
+    .. image:: 15_qwebintro/media/kanban.png
         :align: center
         :alt: Kanban view
 
@@ -125,7 +125,7 @@ view and fine tune it instead of starting from scratch. There are many options a
 available, so... read and learn!
 
 It is now time to give the
-:ref:`final touch to our application and submit it on GitHub <howto/rdtraining/guidelines_pr>`!
+:ref:`final touch to our application and submit it on GitHub <howto/rdtraining/16_guidelines_pr>`!
 
 .. _templating:
     https://en.wikipedia.org/wiki/Template_processor

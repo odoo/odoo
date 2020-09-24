@@ -1,8 +1,8 @@
-.. _howto/rdtraining/inheritance:
+.. _howto/rdtraining/13_inheritance:
 
-===========
-Inheritance
-===========
+====================
+Part 13: Inheritance
+====================
 
 A powerful aspect of Odoo is its modularity. A module is dedicated to a business need, but moreover
 modules can interact one with another. This is useful to extend the functionality of an existing
@@ -21,14 +21,14 @@ Python Inheritance
 
     - It is not possible to delete a property which is not new or canceled.
 
-    .. image:: inheritance/media/unlink.gif
+    .. image:: 13_inheritance/media/unlink.gif
         :align: center
         :alt: Unlink
 
     - When an offer is created, the property state changes to 'Offer Received'
     - It is not possible to create an offer with a lower price than an existing offer
 
-    .. image:: inheritance/media/create.gif
+    .. image:: 13_inheritance/media/create.gif
         :align: center
         :alt: Create
 
@@ -119,7 +119,7 @@ The second inheritance mechanism (delegation) allows to link every record of a
 model to a record in a parent model, and provides transparent access to the
 fields of the parent record.
 
-.. image:: inheritance/media/inheritance_methods.png
+.. image:: 13_inheritance/media/inheritance_methods.png
     :align: center
     :alt: Inheritance Methods
 
@@ -166,7 +166,7 @@ View Inheritance
 
     The list of available properties linked to a salesperson is displayed on the user form view
 
-    .. image:: inheritance/media/users.png
+    .. image:: 13_inheritance/media/users.png
         :align: center
         :alt: Users
 
@@ -238,7 +238,7 @@ The view part inheritance from the previous practical example can be found
 Inheritance is extensively used in Odoo due to its modular conception. Do not hesitate to read
 the corresponding documentation for more info!
 
-In the :ref:`next chapter <howto/rdtraining/other_module>`, we will learn how to interact with
+In the :ref:`next chapter <howto/rdtraining/14_other_module>`, we will learn how to interact with
 other modules.
 
 .. _XPath: http://w3.org/TR/xpath

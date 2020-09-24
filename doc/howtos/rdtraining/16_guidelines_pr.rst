@@ -1,8 +1,8 @@
-.. _howto/rdtraining/guidelines_pr:
+.. _howto/rdtraining/16_guidelines_pr:
 
-================================
-Make It Shine And Submit Your PR
-================================
+=========================================
+Part 16: Make It Shine And Submit Your PR
+=========================================
 
 In the previous chapters we saw how to create a fully functional business application. Now we will
 prepare our code, to be shared and learn how to share it.
@@ -56,7 +56,7 @@ folder to be able to commit your work.
     $ git branch master training/master
     $ git checkout master #Two new files will be downloaded README.md and .gitignore
 
-Note that if your work is already in a :ref:`Git and GitHub configured folder <howto/rdtraining/setup/development_repository>`
+Note that if your work is already in a :ref:`Git and GitHub configured folder <howto/rdtraining/02_setup/development_repository>`
 the previous steps are not needed. This is going to be the case when you will start working in the
 'odoo' or 'enterprise' folders.
 
@@ -132,13 +132,13 @@ There are two ways to create the PR:
 - Open a browser in your development repository `https://github.com/xyz-odoo/technical-training-sandbox`.
   A button will suggest you to create a new pull request.
 
-  .. image:: guidelines_pr/media/pr_from_branch.png
+  .. image:: 16_guidelines_pr/media/pr_from_branch.png
 
 You will notice that your commit message is used as pull request message, this occurs if you have only 1 commit.
 If you have multiple commits, you can make a summary of the commit as PR message. Or, if you have few
 commits, just copy/paste your commit messagges as the PR message.
 
-.. image:: guidelines_pr/media/pr_message.png
+.. image:: 16_guidelines_pr/media/pr_message.png
 
 
 Test on the runbot

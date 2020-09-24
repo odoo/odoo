@@ -1,8 +1,8 @@
-.. _howto/rdtraining/newapp:
+.. _howto/rdtraining/03_newapp:
 
-=================
-A New Application
-=================
+=========================
+Part 3: A New Application
+=========================
 
 The purpose of this chapter is to lay the basis for the creation of a completely new Odoo module.
 We will start from scratch with the minimum necessary to have our module recognized by Odoo.
@@ -18,7 +18,7 @@ to answer the specific business needs.
 
 Here is an overview of the main list view containing some advertisements:
 
-.. image:: newapp/media/overview_list_view_01.png
+.. image:: 03_newapp/media/overview_list_view_01.png
    :align: center
    :alt: List view 01
 
@@ -26,14 +26,14 @@ The top area of the form view summarizes important information for the property,
 the property type, the postcode and so on. The first tab contains information describing the 
 property: bedrooms, living area, garage, garden...
 
-.. image:: newapp/media/overview_form_view_01.png
+.. image:: 03_newapp/media/overview_form_view_01.png
    :align: center
    :alt: Form view 01
 
 The second tab lists the offers for the property. Indeed, potential buyers may offer more or
 less than the expected selling price. It is up to the seller to accept an offer.
 
-.. image:: newapp/media/overview_form_view_02.png
+.. image:: 03_newapp/media/overview_form_view_02.png
    :align: center
    :alt: Form view 02
 
@@ -52,7 +52,7 @@ Prepare the addon directory
    **Goal**: the goal of this section is to have Odoo recognize our new module, which will still
    be an empty shell. It will be listed in the Apps:
 
-   .. image:: newapp/media/app_in_list.png
+   .. image:: 03_newapp/media/app_in_list.png
       :align: center
       :alt: The new module appears in the list
 
@@ -100,4 +100,4 @@ No, it doesn't appear? Maybe try to remove the default 'Apps' filter ;-)
 
 You can even install the module! But obviously it's an empty shell, so no menu will appear.
 
-It's all good? If so, let's :ref:`create our first table <howto/rdtraining/basicmodel>`!
+It's all good? If so, let's :ref:`create our first table <howto/rdtraining/04_basicmodel>`!

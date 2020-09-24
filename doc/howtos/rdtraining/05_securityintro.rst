@@ -1,10 +1,10 @@
-.. _howto/rdtraining/securityintro:
+.. _howto/rdtraining/05_securityintro:
 
-===============================
-Security - A Brief Introduction
-===============================
+=======================================
+Part 5: Security - A Brief Introduction
+=======================================
 
-In the :ref:`previous chapter <howto/rdtraining/basicmodel>`, we created our first table intended
+In the :ref:`previous chapter <howto/rdtraining/04_basicmodel>`, we created our first table intended
 to store business data. In a business application such as Odoo, one of the first question to raise
 is to know who\ [#who]_ can access the data. Odoo provides a security mechanism to allow access
 to the data to some groups of users.
@@ -119,7 +119,7 @@ Here is an example for our former ``test.model``:
 
 Restart the server, and the warning message should have disappeared!
 
-It's now time to finally :ref:`interact with the UI <howto/rdtraining/firstui>`!
+It's now time to finally :ref:`interact with the UI <howto/rdtraining/06_firstui>`!
 
 .. [#who] 'who' means which Odoo user
 

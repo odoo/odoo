@@ -1,8 +1,8 @@
-.. _howto/rdtraining/setup:
+.. _howto/rdtraining/02_setup:
 
-==============================
-Development Environment Set-up
-==============================
+======================================
+Part 2: Development Environment Set-up
+======================================
 
 There are multiple ways to install Odoo depending on the intended use case.
 
@@ -63,20 +63,20 @@ On Github:
 
 - In the upper-right corner of any page, click your profile photo, then click Settings
 
-  .. image:: setup/media/userbar-account-settings.png
+  .. image:: 02_setup/media/userbar-account-settings.png
 
 - In the user settings sidebar, click SSH and GPG keys.
 
-  .. image:: setup/media/settings-sidebar-ssh-keys.png
+  .. image:: 02_setup/media/settings-sidebar-ssh-keys.png
 
 - Click New SSH key or Add SSH key.
 
-  .. image:: setup/media/ssh-add-ssh-key.png
+  .. image:: 02_setup/media/ssh-add-ssh-key.png
 
 - In the "Title" field, add a descriptive label for the new key.
 - Paste your key into the "Key" field.
 
-  .. image:: setup/media/ssh-key-paste.png
+  .. image:: 02_setup/media/ssh-key-paste.png
 
 - Click Add SSH key.
 
@@ -97,7 +97,7 @@ All the Odoo sources will be located in `$HOME/src/`
 
 .. tip:: You may need to ask your manager read rights to fetch the enterprise repository.
 
-.. _howto/rdtraining/setup/development_repository:
+.. _howto/rdtraining/02_setup/development_repository:
 
 Configure development repository
 --------------------------------
@@ -217,7 +217,7 @@ In order to support right-to-left (RTL) languages, we need `rtlcss` to convert t
 Install PostgreSQL
 ------------------
 
-As seen in :ref:`howto/rdtraining/architecture`, Odoo uses PostgreSQL as a RDBM. In the context of a
+As seen in :ref:`howto/rdtraining/01_architecture`, Odoo uses PostgreSQL as a RDBM. In the context of a
 development machine, the easiest way is to install it locally. Then, we can create a PostgreSQL user
 corresponding to our current user:
 

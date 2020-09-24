@@ -1,10 +1,10 @@
-.. _howto/rdtraining/basicmodel:
+.. _howto/rdtraining/04_basicmodel:
 
-=======================
-Models And Basic Fields
-=======================
+===============================
+Part 4: Models And Basic Fields
+===============================
 
-At the end of the :ref:`previous chapter <howto/rdtraining/newapp>`, we were able to create an Odoo
+At the end of the :ref:`previous chapter <howto/rdtraining/03_newapp>`, we were able to create an Odoo
 module. However, at this point it is still an empty shell which doesn't allow us to store any data.
 In our real estate module, we want to store the information related to the properties
 (name, description, price, living area...) in a database. The Odoo framework provides tools to
@@ -282,7 +282,7 @@ useful or necessary:
 
 
 Now that we have created our first table, let's
-:ref:`add some security <howto/rdtraining/securityintro>`!
+:ref:`add some security <howto/rdtraining/05_securityintro>`!
 
 
 .. [#autofields] it is possible to :ref:`disable the automatic creation of some

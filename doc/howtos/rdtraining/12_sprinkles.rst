@@ -1,13 +1,13 @@
-.. _howto/rdtraining/sprinkles:
+.. _howto/rdtraining/12_sprinkles:
 
-================
-Add The Spinkles
-================
+=========================
+Part 12: Add The Spinkles
+=========================
 
 Our real estate module now makes sense from a business persective: we created
-:ref:`specific views <howto/rdtraining/basicviews>`, added several
-:ref:`action buttons <howto/rdtraining/actions>` and
-:ref:`constraints <howto/rdtraining/constraints>`. However, our user interface is still a bit
+:ref:`specific views <howto/rdtraining/07_basicviews>`, added several
+:ref:`action buttons <howto/rdtraining/10_actions>` and
+:ref:`constraints <howto/rdtraining/11_constraints>`. However, our user interface is still a bit
 rough. We would like to add some colors in the list views or make some fields and buttons disappear
 conditionally. For example, the 'Sold' and 'Cancel' button should disappear when the property
 is sold or canceled since it is not allowed to change the state in this case.
@@ -26,7 +26,7 @@ Inline Views
     **Goal**: at the end of this section, a specific list of properties is added in the property
     type view:
 
-    .. image:: sprinkles/media/inline_view.png
+    .. image:: 12_sprinkles/media/inline_view.png
       :align: center
       :alt: Inline list view
 
@@ -101,7 +101,7 @@ Widgets
     **Goal**: at the end of this section, the state of the property is displayed thanks to a
     specific widget:
 
-    .. image:: sprinkles/media/widget.png
+    .. image:: 12_sprinkles/media/widget.png
       :align: center
       :alt: Statusbar widget
 
@@ -234,7 +234,7 @@ Form
     - Conditional display of buttons and fields
     - Tag colors
 
-    .. image:: sprinkles/media/form.gif
+    .. image:: 12_sprinkles/media/form.gif
       :align: center
       :alt: Form view with sprinkles
 
@@ -261,7 +261,7 @@ widgets take the ``options`` attribute in to customize their behavior.
     Have a look at the :ref:`FieldMany2ManyTags widget documentation <reference/js/widgets>`
     for more info.
 
-In the :ref:`howto/rdtraining/firstui` chapter, we saw that reserved fields was used for
+In the :ref:`howto/rdtraining/06_firstui` chapter, we saw that reserved fields was used for
 specific behaviors. For example, the ``active`` field is used to automatically filter out
 inactive records. We added the ``state`` as a reserved field as well. It's now time to use it!
 A ``state`` field is used in combination with a ``states`` attribute in the view to display
@@ -315,11 +315,11 @@ List
     Moreover, offers and tags are editable directly in the list, and the availability date is
     hidden by default.
 
-    .. image:: sprinkles/media/decoration.png
+    .. image:: 12_sprinkles/media/decoration.png
       :align: center
       :alt: List view with decorations and optional field
 
-    .. image:: sprinkles/media/editable_list.gif
+    .. image:: 12_sprinkles/media/editable_list.gif
       :align: center
       :alt: Editable list
 
@@ -385,7 +385,7 @@ Search
     Moreover, searching on the living area returns results where the area is larger than the given
     number.
 
-    .. image:: sprinkles/media/search.gif
+    .. image:: 12_sprinkles/media/search.gif
       :align: center
       :alt: Default filters and domains
 
@@ -434,7 +434,7 @@ Stat Buttons
     **Goal**: at the end of this section, a stat button on the property type which gives the list
     of all offers related to properties of the given type.
 
-    .. image:: sprinkles/media/stat_button.gif
+    .. image:: 12_sprinkles/media/stat_button.gif
       :align: center
       :alt: Stat button
 
@@ -499,7 +499,7 @@ Every time the partner name is changed, the description is modified.
 
     - Create a stat button on ``estate.property.type`` pointing to the ``estate.property.offer``
       action. It means you should use the ``type="action"`` attribute (go back to the end of
-      :ref:`howto/rdtraining/actions` for a refresh).
+      :ref:`howto/rdtraining/10_actions` for a refresh).
 
     At this point, clicking on the stat button should display all offers. We need to filter out the
     offers.
@@ -508,7 +508,7 @@ Every time the partner name is changed, the description is modified.
       should be equal to the ``active_id`` (= the current record,
       `example <https://github.com/odoo/odoo/blob/df37ce50e847e3489eb43d1ef6fc1bac6d6af333/addons/event/views/event_views.xml#L162>`__)
 
-Looking good? If not, no worry, the :ref:`next chapter <howto/rdtraining/inheritance>` doesn't
+Looking good? If not, no worry, the :ref:`next chapter <howto/rdtraining/13_inheritance>` doesn't
 require stat buttons ;-)
 
 .. _order_by:

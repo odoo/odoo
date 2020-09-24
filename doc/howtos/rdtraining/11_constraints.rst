@@ -1,10 +1,10 @@
-.. _howto/rdtraining/constraints:
+.. _howto/rdtraining/11_constraints:
 
-===========
-Constraints
-===========
+====================
+Part 11: Constraints
+====================
 
-The :ref:`previous chapter <howto/rdtraining/actions>` introduced the possibility to add some
+The :ref:`previous chapter <howto/rdtraining/10_actions>` introduced the possibility to add some
 business logic to our model. We can now link buttons to business code. But how can we prevent
 users from encoding incorrect data? For example, in our real estate module, nothing prevents the
 user to set a negative expected price.
@@ -25,13 +25,13 @@ SQL
 
     - Amounts should be (strictly) positive
 
-    .. image:: constraints/media/sql_01.gif
+    .. image:: 11_constraints/media/sql_01.gif
         :align: center
         :alt: Constraints on amounts
 
     - Property types and tags have a unique name
 
-    .. image:: constraints/media/sql_02.gif
+    .. image:: 11_constraints/media/sql_02.gif
         :align: center
         :alt: Constraints on names
 
@@ -76,7 +76,7 @@ Python
     **Goal**: at the end of this section, it is not possible to accept an offer with a price
     lower than 90% of the expected price.
 
-    .. image:: constraints/media/python.gif
+    .. image:: 11_constraints/media/python.gif
         :align: center
         :alt: Python constraint
 
@@ -122,7 +122,7 @@ prefer SQL over Python constrains.
 
 Our real estate module is starting to look good: we added some business logic, and now we make sure
 the data is consistent. However, the user interface is still a bit rough. Let's see how we can
-improve it in the :ref:`next chapter <howto/rdtraining/sprinkles>`.
+improve it in the :ref:`next chapter <howto/rdtraining/12_sprinkles>`.
 
 .. _PostgreSQL's documentation:
 .. _table_constraint:

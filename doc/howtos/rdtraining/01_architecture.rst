@@ -1,8 +1,8 @@
-.. _howto/rdtraining/architecture:
+.. _howto/rdtraining/01_architecture:
 
-=====================
-Architecture Overview
-=====================
+=============================
+Part 1: Architecture Overview
+=============================
 
 Multitier application
 =====================
@@ -11,7 +11,7 @@ Odoo follows a `multitier architecture`_, meaning that the presentation, the bus
 logic and the data storage are separated. More specifically, it uses a three-tier architecture
 (image from Wikipedia):
 
-.. image:: architecture/media/three_tier.svg
+.. image:: 01_architecture/media/three_tier.svg
     :align: center
     :alt: Three-tier architecture
 
@@ -98,7 +98,7 @@ functionalities to Odoo. From a technical point-of-view, these functionalities a
 new modules installed on top of the modules provided by the Community version.
 
 Ready to start? Before writing actual code, let's go to the
-:ref:`next chapter <howto/rdtraining/setup>` to review the Odoo installation process. Even if
+:ref:`next chapter <howto/rdtraining/02_setup>` to review the Odoo installation process. Even if
 Odoo is already running on your system, we strongly suggest you go through this chapter
 to make sure we are on the same page to start the development of our new application.
 

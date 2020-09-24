@@ -30,22 +30,22 @@ Ready? So let's start go!
     :caption: Core Training
     :maxdepth: 1
 
-    rdtraining/architecture
-    rdtraining/setup
-    rdtraining/newapp
-    rdtraining/basicmodel
-    rdtraining/securityintro
-    rdtraining/firstui
-    rdtraining/basicviews
-    rdtraining/relations
-    rdtraining/compute_onchange
-    rdtraining/actions
-    rdtraining/constraints
-    rdtraining/sprinkles
-    rdtraining/inheritance
-    rdtraining/other_module
-    rdtraining/qwebintro
-    rdtraining/guidelines_pr
+    rdtraining/01_architecture
+    rdtraining/02_setup
+    rdtraining/03_newapp
+    rdtraining/04_basicmodel
+    rdtraining/05_securityintro
+    rdtraining/06_firstui
+    rdtraining/07_basicviews
+    rdtraining/08_relations
+    rdtraining/09_compute_onchange
+    rdtraining/10_actions
+    rdtraining/11_constraints
+    rdtraining/12_sprinkles
+    rdtraining/13_inheritance
+    rdtraining/14_other_module
+    rdtraining/15_qwebintro
+    rdtraining/16_guidelines_pr
 
 .. toctree::
     :caption: Advanced Topics

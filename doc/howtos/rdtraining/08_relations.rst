@@ -1,10 +1,10 @@
-.. _howto/rdtraining/relations:
+.. _howto/rdtraining/08_relations:
 
-========================
-Relations Between Models
-========================
+================================
+Part 8: Relations Between Models
+================================
 
-The :ref:`previous chapter <howto/rdtraining/basicviews>` covered the creation of custom views
+The :ref:`previous chapter <howto/rdtraining/07_basicviews>` covered the creation of custom views
 for a model containing basic fields. However, in any real business scenario we need more than
 one model. Moreover, links between models are necessary. One can easily imagine a model containing
 the customers, or another one containing the list of users. You might need to refer to a customer
@@ -30,13 +30,13 @@ Many2one
     
     - a new ``estate.property.type`` model is created with the corresponding menu, action and views.
 
-    .. image:: relations/media/property_type.png
+    .. image:: 08_relations/media/property_type.png
         :align: center
         :alt: Property type
 
     - 3 Many2one fields are added to the ``estate.property`` model: property type, buyer and seller.
 
-    .. image:: relations/media/property_many2one.png
+    .. image:: 08_relations/media/property_many2one.png
         :align: center
         :alt: Property
 
@@ -76,10 +76,10 @@ simply::
       and search views
 
     This excercise is a good recap of the previous chapters: you need to create a
-    :ref:`model <howto/rdtraining/basicmodel>`, set the
-    :ref:`model <howto/rdtraining/securityintro>`, add an
-    :ref:`action and a menu <howto/rdtraining/firstui>`, then
-    :ref:`create a view <howto/rdtraining/basicviews>`.
+    :ref:`model <howto/rdtraining/04_basicmodel>`, set the
+    :ref:`model <howto/rdtraining/05_securityintro>`, add an
+    :ref:`action and a menu <howto/rdtraining/06_firstui>`, then
+    :ref:`create a view <howto/rdtraining/07_basicviews>`.
 
     Tip: do not forget to import any new Python file in ``__init__.py``, add new data files in
     ``__manifest.py__``  and add the access rights ;-)
@@ -135,13 +135,13 @@ Many2many
     
     - a new ``estate.property.tag`` model is created with the corresponding menu and action.
 
-    .. image:: relations/media/property_tag.png
+    .. image:: 08_relations/media/property_tag.png
         :align: center
         :alt: Property tag
 
     - Tags are added to the ``estate.property`` model:
 
-    .. image:: relations/media/property_many2many.png
+    .. image:: 08_relations/media/property_many2many.png
         :align: center
         :alt: Property
 
@@ -179,7 +179,7 @@ done in a loop::
 
     Tip: in the view, use the ``widget="many2many_tags"`` attribute as done
     `here <https://github.com/odoo/odoo/blob/5bb8b927524d062be32f92eb326ef64091301de1/addons/crm_iap_lead_website/views/crm_reveal_views.xml#L36>`__.
-    We well cover :ref:`later <howto/rdtraining/sprinkles>` the ``widget`` attribute in more
+    We well cover :ref:`later <howto/rdtraining/12_sprinkles>` the ``widget`` attribute in more
     details. For now, you can try to add or remove it and see the result ;-)
 
 One2many
@@ -195,7 +195,7 @@ One2many
     - A new ``estate.property.offer`` model is created with the corresponding form and tree view.
     - Offers are added to the ``estate.property`` model:
 
-    .. image:: relations/media/property_offer.png
+    .. image:: 08_relations/media/property_offer.png
         :align: center
         :alt: Property offers
 
@@ -255,4 +255,4 @@ magic of using the Odoo framework: sometimes, things are defined implicitly.
 
 Still alive? This chapter is surely not the easiest one. It introduced a couple of new concepts
 while relying on everything that was introduced before. The
-:ref:`next chapter <howto/rdtraining/compute_onchange>` will be lighter, don't worry ;-)
+:ref:`next chapter <howto/rdtraining/09_compute_onchange>` will be lighter, don't worry ;-)

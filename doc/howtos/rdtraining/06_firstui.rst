@@ -1,11 +1,11 @@
-.. _howto/rdtraining/firstui:
+.. _howto/rdtraining/06_firstui:
 
-=============================
-Finally, Some UI To Play With
-=============================
+=====================================
+Part 6: Finally, Some UI To Play With
+=====================================
 
-After the creation of a new :ref:`model <howto/rdtraining/basicmodel>` and its corresponding
-:ref:`access rights <howto/rdtraining/securityintro>`, it is now time to be able to interact in
+After the creation of a new :ref:`model <howto/rdtraining/04_basicmodel>` and its corresponding
+:ref:`access rights <howto/rdtraining/05_securityintro>`, it is now time to be able to interact in
 the user interface.
 
 At the end of this chapter, a couple of menus will be created in order to access a default list
@@ -17,7 +17,7 @@ Data Files (XML)
 **Reference**: the documentation related to this topic can be found in
 :ref:`reference/data`.
 
-In the :ref:`howto/rdtraining/securityintro` chapter, we added data through a CSV file. The CSV
+In the :ref:`howto/rdtraining/05_securityintro` chapter, we added data through a CSV file. The CSV
 format is convenient when the data to load has a simple format. If the format is more complex
 (e.g. load the structure of a view or an email template), we use the XML format. For example,
 this
@@ -55,7 +55,7 @@ Actions can be triggered in three ways:
 3. as contextual actions on object
 
 We will only cover the first case in this chapter. The second case will be covered in an
-:ref:`upcoming chapter <howto/rdtraining/actions>` while the last one is the topic of an appendix.
+:ref:`upcoming chapter <howto/rdtraining/10_actions>` while the last one is the topic of an appendix.
 In our Real Estate example, we would like to link a menu to the ``estate.property`` model, so we
 are able to create a new record. The action can be seen as the link between the menu and
 the model.
@@ -76,7 +76,7 @@ A minimal action for our ``test.model`` would look like:
 - ``name`` is the name of the action.
 - ``res_model`` is the model to which the action applies.
 - ``view_mode`` are the views which will be available, in this case the list (tree) and form views.
-  We'll see :ref:`later <howto/rdtraining/qwebintro>` that there can be other view modes.
+  We'll see :ref:`later <howto/rdtraining/15_qwebintro>` that there can be other view modes.
 
 Examples can be found everywhere in Odoo, but
 `this one <https://github.com/odoo/odoo/blob/09c59012bf80d2ccbafe21c39e604d6cfda72924/addons/crm/views/crm_lost_reason_views.xml#L57-L70>`__
@@ -103,15 +103,15 @@ Menus
     **Goal**: at the end of this section, three menus should be created and the default view is
     displayed:
 
-    .. image:: firstui/media/estate_menu_root.png
+    .. image:: 06_firstui/media/estate_menu_root.png
       :align: center
       :alt: Root menus
 
-    .. image:: firstui/media/estate_menu_action.png
+    .. image:: 06_firstui/media/estate_menu_action.png
       :align: center
       :alt: First level and action menus
 
-    .. image:: firstui/media/estate_form_default.png
+    .. image:: 06_firstui/media/estate_form_default.png
       :align: center
       :alt: Default form view
 
@@ -135,11 +135,11 @@ However, menus always follow an architecture; in practice, there are three level
 2. The first level menu, displayed in the top bar
 3. The action menus
 
-   .. image:: firstui/media/menu_01.png
+   .. image:: 06_firstui/media/menu_01.png
       :align: center
       :alt: Root menus
 
-   .. image:: firstui/media/menu_02.png
+   .. image:: 06_firstui/media/menu_02.png
       :align: center
       :alt: First level and action menus
 
@@ -176,7 +176,7 @@ Fields, Attributes And View
     of bedrooms and the availability date is set by default. The latter is not copied when the
     record is duplicated
 
-    .. image:: firstui/media/attribute_and_default.gif
+    .. image:: 06_firstui/media/attribute_and_default.gif
       :align: center
       :alt: Interaction between model and view
     
@@ -257,7 +257,7 @@ not be listed! ``active`` is the example of such a reserved field with a specifi
 a record has ``active=False``, it is automatically removed from any search. To display the
 property created, you need to specifically search for inactive records.
 
-.. image:: firstui/media/inactive.gif
+.. image:: 06_firstui/media/inactive.gif
   :align: center
   :alt: Inactive records
 
@@ -278,4 +278,4 @@ Note that the default ``active=False`` value was assigned to all existing record
 The ``state`` will be used later on for several UI enhancements.
 
 Now that we have are to interact with the UI thanks to the default views, the next step is
-obvious: we want to define :ref:`our own views <howto/rdtraining/basicviews>`.
+obvious: we want to define :ref:`our own views <howto/rdtraining/07_basicviews>`.
