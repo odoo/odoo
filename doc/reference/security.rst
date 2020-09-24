@@ -53,8 +53,12 @@ A record rule has:
   the rule is *global*
 * a :ref:`domain <reference/orm/domains>` used to check whether a given record
   matches the rule (and is accessible) or does not (and is not accessible).
-  The domain is evaluated with two variables in context: ``user`` is the
-  current user's record and ``time`` is the `time module`_
+  The domain is evaluated with four variables in context:
+    - ``user`` is the current user's record
+    - ``time`` is the `time module`_
+    - ``company_ids`` contains the ids of the activated companies 
+      by the user with the switch company menu. These companies are filtered and trusted.
+    - ``company_id`` is the id of the company selected in the switch company menu
 
 Global rules and group rules (rules restricted to specific groups versus
 groups applying to all users) are used quite differently:
