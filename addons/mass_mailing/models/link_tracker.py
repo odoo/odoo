@@ -9,6 +9,27 @@ class LinkTracker(models.Model):
 
     mass_mailing_id = fields.Many2one('mailing.mailing', string='Mass Mailing')
 
+    def _search_and_update(self, vals):
+        """ We override this method as searching with mass_mailing_id will not find the linked record.
+            If the linked record is found, we then update its mass_mailing_id.
+        """
+        search_vals = vals.copy()
+        has_mass_mailing = 'mass_mailing_id' in vals
+
+        if has_mass_mailing:
+            mass_mailing_id = search_vals.pop('mass_mailing_id')
+
+        search_domain = []
+        for fname, value in search_vals.items():
+            search_domain.append((fname, '=', value))
+
+        result = self.search(search_domain, limit=1)
+
+        if result and has_mass_mailing:
+            result.write({'mass_mailing_id': mass_mailing_id})
+
+        return result
+
 
 class LinkTrackerClick(models.Model):
     _inherit = "link.tracker.click"

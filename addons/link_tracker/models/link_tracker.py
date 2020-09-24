@@ -120,11 +120,7 @@ class LinkTracker(models.Model):
         else:
             create_vals['url'] = VALIDATE_URL(vals['url'])
 
-        search_domain = []
-        for fname, value in create_vals.items():
-            search_domain.append((fname, '=', value))
-
-        result = self.search(search_domain, limit=1)
+        result = self._search_and_update(create_vals)
 
         if result:
             return result
@@ -184,6 +180,15 @@ class LinkTracker(models.Model):
                 body = body.replace(original_url, shortened_url, 1)
 
         return body
+
+    def _search_and_update(self, vals):
+        """ Could update a record in case of uniqueness conflict in mass_mailing
+        """
+        search_domain = []
+        for fname, value in vals.items():
+            search_domain.append((fname, '=', value))
+
+        return self.search(search_domain, limit=1)
 
     def action_view_statistics(self):
         action = self.env['ir.actions.act_window'].for_xml_id('link_tracker', 'link_tracker_click_action_statistics')
