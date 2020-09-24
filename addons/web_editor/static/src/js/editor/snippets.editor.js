@@ -170,7 +170,7 @@ var SnippetEditor = Widget.extend({
                     self.dropped = false;
                 },
             });
-            this.draggableComponent = new SmoothScrollOnDrag(this, this.$el, this.$editor, smoothScrollOptions);
+            this.draggableComponent = new SmoothScrollOnDrag(this, this.$editable.find('#wrapwrap').addBack().last(), this.$editor, smoothScrollOptions);
         } else {
             this.$('.o_overlay_move_options').addClass('d-none');
             $customize.find('.oe_snippet_clone').addClass('d-none');
@@ -2068,7 +2068,7 @@ var SnippetsMenu = Widget.extend({
                 }
             },
         });
-        this.draggableComponent = new SmoothScrollOnDrag(this, $snippets, this.$editor, smoothScrollOptions);
+        this.draggableComponent = new SmoothScrollOnDrag(this, $snippets, this.$editor.find('#wrapwrap').addBack().last(), smoothScrollOptions);
     },
     /**
      * Adds the 'o_default_snippet_text' class on nodes which contain only

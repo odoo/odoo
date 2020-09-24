@@ -55,7 +55,7 @@ const SmoothScrollOnDrag = Class.extend(mixins.ParentedMixin, {
      * @constructor
      * @param {Object} parent The parent widget that uses this class.
      * @param {jQuery} $element The element the smooth scroll on drag has to be set on.
-     * @param {jQuery} $target Container for drop element. $scrollTarget is this closest
+     * @param {jQuery} $container Container for drop element. $scrollTarget is this closest
      *        scrollable parent element.
      * @param {Object} [options={}]
      * @param {Object} [options.jQueryDraggableOptions={}] The configuration to be passed to
@@ -91,18 +91,18 @@ const SmoothScrollOnDrag = Class.extend(mixins.ParentedMixin, {
      * @param {jQuery} [options.offsetElements.$left] Visible left offset element which width
      *        will be taken into account when triggering scroll at the left side of the
      *        $scrollTarget.
-    * @param {Function<jQuery>} [options.dropzones] Function must return a JQuery list of dropzone elements.
-    * @param {Function<ui, droppable>} [options.over] Callback triggered when the draggable element is
-    *         over a dropzone (requiered with options.dropzones).
-    * @param {Function<ui, droppable>} [options.out] Callback triggered when the draggable element is
-    *         no longer above the dropzone (requiered with options.dropzones).
+     * @param {Function<jQuery>} [options.dropzones] Function must return a JQuery list of dropzone elements.
+     * @param {Function<ui, droppable>} [options.over] Callback triggered when the draggable element is
+     *         over a dropzone (requiered with options.dropzones).
+     * @param {Function<ui, droppable>} [options.out] Callback triggered when the draggable element is
+     *         no longer above the dropzone (requiered with options.dropzones).
      */
-    init(parent, $element, $target, options = {}) {
+    init(parent, $element, $container, options = {}) {
         mixins.ParentedMixin.init.call(this);
         this.setParent(parent);
 
         this.$element = $element;
-        this.$target = $target;
+        this.$container = $container;
         this.options = options;
 
         // Setting optional options to their default value if not provided
@@ -392,12 +392,11 @@ const SmoothScrollOnDrag = Class.extend(mixins.ParentedMixin, {
             left: ev.pageX - elementOffset.left,
         };
 
-        let scrollTarget = this.$target[0];
-        while (scrollTarget && scrollTarget.scrollHeight <= scrollTarget.clientHeight &&
-                ['scroll', 'auto'].includes(scrollTarget.ownerDocument.defaultView.getComputedStyle(scrollTarget).overflow)) {
+        let scrollTarget = this.$container[0];
+        while (scrollTarget && scrollTarget.scrollHeight <= scrollTarget.clientHeight) {
             scrollTarget = scrollTarget.parentNode;
         }
-        this.$scrollTarget = scrollTarget ? $(scrollTarget) : this.$target;
+        this.$scrollTarget = scrollTarget && scrollTarget.nodeType === 1 ? $(scrollTarget) : this.$container;
 
         this.scrollTargetIsDocument = this.$scrollTarget.is('html');
         this.scrollTargetIsParent = this.$scrollTarget.get(0).contains(this.$element.get(0));
