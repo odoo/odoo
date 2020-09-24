@@ -39,6 +39,7 @@ QUnit.module('relational_fields', {
                     user_id: {string: "User", type: 'many2one', relation: 'user'},
                     reference: {string: "Reference Field", type: 'reference', selection: [
                         ["product", "Product"], ["partner_type", "Partner Type"], ["partner", "Partner"]]},
+                    model_id: {string: "Model", type:'many2one', relation:'ir.model'}
                 },
                 records: [{
                     id: 1,
@@ -147,6 +148,25 @@ QUnit.module('relational_fields', {
                     id: 19,
                     name: "Christine",
                 }]
+            },
+            'ir.model': {
+                fields: {
+                    model: {string: "Model", type: "char"},
+                },
+                records: [{
+                    id: 17,
+                    name: "Partner",
+                    model: 'partner',
+                }, {
+                    id: 20,
+                    name: "Product",
+                    model: 'product',
+                }, {
+                    id: 21,
+                    name: "Partner Type",
+                    model: 'partner_type',
+                }],
+                onchanges: {},
             },
         };
     },
@@ -2989,6 +3009,81 @@ QUnit.module('relational_fields', {
             'select of second data row should be selected');
 
         list.destroy();
+    });
+
+    QUnit.test('widget reference with model_field option', async function (assert) {
+        assert.expect(5);
+        this.data.partner.records[0].reference = false;
+        this.data.partner.records[0].model_id = 20;
+        this.data.partner.records[1].display_name = "John Smith";
+        this.data.product.records[0].display_name = "Product 1";
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `<form string="Partners">
+                        <field name="model_id"/>
+                        <field name="reference"  options='{"model_field": "model_id"}'/>
+                   </form>`,
+            res_id: 1,
+        });
+
+        await testUtils.form.clickEdit(form);
+        assert.containsNone(form.$('select'), 'the selection list of the reference field should not exist.');
+        assert.strictEqual(form.$('.o_field_many2one[name="reference"] input').val(), '',
+            'no record should be selected in the reference field');
+
+        await testUtils.fields.editInput(form.$('.o_field_many2one[name="reference"] input'), 'Product 1');
+        await testUtils.dom.click($('.ui-autocomplete .ui-menu-item:first-child'));
+        assert.strictEqual(form.$('.o_field_many2one[name="reference"] input').val(), 'Product 1',
+            'the Product 1 record should be selected in the reference field');
+
+        await testUtils.fields.editInput(form.$('.o_field_many2one[name="model_id"] input'), 'Partner');
+        await testUtils.dom.click($('.ui-autocomplete .ui-menu-item:first-child'));
+        assert.strictEqual(form.$('.o_field_many2one[name="reference"] input').val(), '',
+            'no record should be selected in the reference field');
+
+        await testUtils.fields.editInput(form.$('.o_field_many2one[name="reference"] input'), 'John');
+        await testUtils.dom.click($('.ui-autocomplete .ui-menu-item:first-child'));
+        assert.strictEqual(form.$('.o_field_many2one[name="reference"] input').val(), 'John Smith',
+            'the John Smith record should be selected in the reference field');
+
+        form.destroy();
+    });
+
+    QUnit.test('widget reference with model_field option (model_field not synchronized with reference)', async function (assert) {
+        // Checks that the data is not modified even though it is not synchronized.
+        // Not synchronized = model_id contains a different model than the one used in reference.
+        assert.expect(5);
+        this.data.partner.records[0].reference = 'partner,1';
+        this.data.partner.records[0].model_id = 20;
+        this.data.partner.records[0].display_name = "John Smith";
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `<form string="Partners">
+                        <field name="model_id"/>
+                        <field name="reference"  options='{"model_field": "model_id"}'/>
+                   </form>`,
+            res_id: 1,
+        });
+
+        assert.containsNone(form.$('select'), 'the selection list of the reference field should not exist.');
+        assert.strictEqual(form.$('.o_field_widget[name="model_id"] span').text(), 'Product',
+            'the value of model_id field should be Product');
+        assert.strictEqual(form.$('.o_field_widget[name="reference"] span').text(), 'John Smith',
+            'the value of model_id field should be John Smith');
+
+        await testUtils.form.clickEdit(form);
+        assert.strictEqual(form.$('.o_field_many2one[name="model_id"] input').val(), 'Product',
+            'the Product model should be selected in the model_id field');
+        assert.strictEqual(form.$('.o_field_many2one[name="reference"] input').val(), 'John Smith',
+            'the John Smith record should be selected in the reference field');
+
+        form.destroy();
     });
 
     QUnit.test('one2many with extra field from server not in form', async function (assert) {

@@ -3268,13 +3268,17 @@ var FieldReference = FieldMany2One.extend({
         // needs to be copied as it is an unmutable object
         this.field = _.extend({}, this.field);
 
-        this._setState();
+        this.resetOnAnyFieldChange = this.resetOnAnyFieldChange || this.nodeOptions.model_field;
+        this._setState(false);
     },
     /**
      * @override
      */
     start: function () {
-        this.$('select').val(this.field.relation);
+        this.modelName = this.field.relation;
+        if (this.el.querySelector('select')) {
+            this.el.querySelector('select').value = this.modelName;
+        }
         return this._super.apply(this, arguments);
     },
 
@@ -3311,7 +3315,21 @@ var FieldReference = FieldMany2One.extend({
         }
         return value && value.data && value.data.display_name || '';
     },
-
+    /**
+     * Apply the model contained in the option model_field
+     * and re-initialize the record if the model change.
+     * @param {boolean} initRecord :true, re-initialize the record if the model changes.
+     *                              Necessary for wizards.
+     */
+    _applyModelField: function (initRecord) {
+        let resourceRef = this.record.specialData[this.name];
+        if (resourceRef) {
+            if (initRecord && resourceRef.hasChanged) {
+                this.reinitialize(false);
+            }
+            this.modelName = resourceRef.modelName;
+        }
+    },
     /**
      * Add a select in edit mode (for the model).
      *
@@ -3320,15 +3338,16 @@ var FieldReference = FieldMany2One.extend({
     _renderEdit: function () {
         this._super.apply(this, arguments);
 
-        if (this.$('select').val()) {
+        if (this.modelName) {
             this.$('.o_input_dropdown').show();
-            this.$el.addClass('o_row'); // this class is used to display the two
-                                        // components (select & input) on the same line
+            if (!this.nodeOptions.model_field) {
+                // this class is used to display the two components (select & input) on the same line
+                this.$el.addClass('o_row');
+            }
         } else {
             // hide the many2one if the selection is empty
             this.$('.o_input_dropdown').hide();
         }
-
     },
     /**
      * @override
@@ -3336,9 +3355,10 @@ var FieldReference = FieldMany2One.extend({
      */
     _reset: function () {
         this._super.apply(this, arguments);
-        var value = this.$('select').val();
-        this._setState();
-        this.$('select').val(this.value && this.value.model || value);
+        this._setState(true);
+        if (this.el.querySelector('select')) {
+            this.el.querySelector('select').value = this.modelName;
+        }
     },
     /**
      * Set `relation` key in field properties.
@@ -3353,14 +3373,18 @@ var FieldReference = FieldMany2One.extend({
     /**
      * @private
      */
-    _setState: function () {
+    _setState: function (initRecord) {
         if (this.field.type === 'char') {
             // in this case, the value is stored in specialData instead
             this.value = this.record.specialData[this.name];
         }
-
-        if (this.value) {
-            this._setRelation(this.value.model);
+        if (this.nodeOptions.model_field) {
+            this._applyModelField(initRecord);
+        } else if (this.value && this.value.model) {
+            this.modelName = this.value.model;
+        }
+        if (this.modelName) {
+            this._setRelation(this.modelName);
         }
     },
     /**
@@ -3371,7 +3395,7 @@ var FieldReference = FieldMany2One.extend({
         value = value || {};
         // we need to specify the model for the change in basic_model
         // the value is then now a dict with id, display_name and model
-        value.model = this.$('select').val();
+        value.model = this.modelName;
         return this._super(value, options);
     },
 
@@ -3385,9 +3409,9 @@ var FieldReference = FieldMany2One.extend({
      * @private
      */
     _onSelectionChange: function () {
-        var value = this.$('select').val();
+        this.modelName = this.el.querySelector('select').value || '';
         this.reinitialize(false);
-        this._setRelation(value);
+        this._setRelation(this.modelName);
     },
 });
 

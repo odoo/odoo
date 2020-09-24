@@ -1273,10 +1273,12 @@
 
 <t t-name="FieldReference" t-extend="FieldMany2One">
     <t t-jquery=".o_input_dropdown" t-operation="before">
-        <select t-att-class="'o_input o_field_widget' + (widget.nodeOptions.hide_model and ' d-none' or '')">
-            <option/>
-            <option t-foreach="widget.field.selection" t-as="model" t-att-value="model[0]"><t t-esc="model[1]"/></option>
-        </select>
+        <t t-if="!widget.nodeOptions.model_field">
+            <select t-att-class="'o_input o_field_widget' + (widget.nodeOptions.hide_model and ' d-none' or '')">
+                <option/>
+                <option t-foreach="widget.field.selection" t-as="model" t-att-value="model[0]"><t t-esc="model[1]"/></option>
+            </select>
+        </t>
     </t>
 </t>
 <t t-name="FieldMany2ManyTag">
