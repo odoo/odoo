@@ -18,7 +18,7 @@ class WebsiteEventController(WebsiteEventController):
                 date_begin = format_datetime(event.with_context(tz=event.date_tz).date_begin, format="medium")
 
                 values["toast_message"] = (
-                    _('The event %s starts at %s (%s). \nJoin us there to meet %s !')
+                    _('The event %s starts on %s (%s). \nJoin us there to meet %s !')
                     % (event.name, date_begin, event.date_tz, sponsor.partner_name)
                 )
 

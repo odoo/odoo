@@ -177,13 +177,12 @@ class AccountMove(models.Model):
         for rec in self.filtered(lambda x: x.journal_id and x.l10n_latam_use_documents and x.partner_id):
             rec.l10n_latam_available_document_type_ids = self.env['l10n_latam.document.type'].search(rec._get_l10n_latam_documents_domain())
 
-    @api.depends('l10n_latam_available_document_type_ids')
-    @api.depends_context('internal_type')
+    @api.depends('l10n_latam_available_document_type_ids', 'debit_origin_id')
     def _compute_l10n_latam_document_type(self):
-        internal_type = self._context.get('internal_type', False)
+        debit_note = self.debit_origin_id
         for rec in self.filtered(lambda x: x.state == 'draft'):
             document_types = rec.l10n_latam_available_document_type_ids._origin
-            document_types = internal_type and document_types.filtered(lambda x: x.internal_type == internal_type) or document_types
+            document_types = debit_note and document_types.filtered(lambda x: x.internal_type == 'debit_note') or document_types
             rec.l10n_latam_document_type_id = document_types and document_types[0].id
 
     def _compute_invoice_taxes_by_group(self):

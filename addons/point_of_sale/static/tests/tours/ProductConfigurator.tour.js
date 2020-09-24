@@ -62,5 +62,5 @@ odoo.define('point_of_sale.tour.ProductConfigurator', function (require) {
     ProductConfigurator.do.confirmAttributes();
     ProductScreen.check.selectedOrderlineHas('Configurable Chair (Blue, Metal, Leather)', '1.0', '10.0');
 
-    Tour.register('ProductConfiguratorTour', { test: true, url: '/pos/web' }, getSteps());
+    Tour.register('ProductConfiguratorTour', { test: true, url: '/pos/ui' }, getSteps());
 });

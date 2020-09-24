@@ -34,6 +34,10 @@
     align-items: baseline;
 }
 
+.o_Activity_note p {
+    margin-bottom: 0;
+}
+
 .o_Activity_sidebar {
     display: flex;
     flex: 0 0 36px;
@@ -60,6 +64,15 @@
 .o_Activity_userAvatar {
     height: map-get($sizes, 100);
     width: map-get($sizes, 100);
+}
+
+// From python template
+.o_mail_note_title {
+    margin-top: map-get($spacers, 2);
+}
+
+.o_mail_note_title + div p {
+    margin-bottom: 0;
 }
 
 // ------------------------------------------------------------------
@@ -171,4 +184,3 @@ a:not([href]):not([tabindex]).o_Activity_detailsButton {
 .o_Activity_userName {
     color: gray('500');
 }
-

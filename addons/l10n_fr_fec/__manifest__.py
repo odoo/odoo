@@ -5,7 +5,7 @@
 
 {
     'name': 'France - FEC',
-    'category': 'Accounting/Accounting',
+    'category': 'Accounting/Localizations/Reporting',
     'summary': "Fichier d'Échange Informatisé (FEC) for France",
     'author': "Akretion,Odoo Community Association (OCA)",
     'depends': ['l10n_fr', 'account'],

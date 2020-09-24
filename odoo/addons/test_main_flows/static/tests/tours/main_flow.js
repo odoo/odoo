@@ -775,7 +775,7 @@ tour.stepUtils.openBuggerMenu("li.breadcrumb-item.active:contains('OP/')"),
     position: 'bottom',
 },
 ...tour.stepUtils.statusbarButtonsSteps('Create Bill', _t('go to Vendor Bills'), ".o_statusbar_status .btn.dropdown-toggle:contains('Purchase Order')"),
-...tour.stepUtils.statusbarButtonsSteps('Validate', _t("Try to send it to email"), ".o_statusbar_status .btn.dropdown-toggle:contains('Draft')"),
+...tour.stepUtils.statusbarButtonsSteps('Confirm', _t("Try to send it to email"), ".o_statusbar_status .btn.dropdown-toggle:contains('Draft')"),
 ...tour.stepUtils.statusbarButtonsSteps('Register Payment', _t("Register Payment"), ".o_statusbar_status .btn.dropdown-toggle:contains('Posted')"),
 {
     trigger: ".modal-footer .btn-primary",
@@ -940,7 +940,7 @@ tour.stepUtils.mobileModifier(tour.stepUtils.autoExpandMoreButtons('.o_control_p
     content: _t("Create and View Invoices"),
     position: "bottom",
 },
-...tour.stepUtils.statusbarButtonsSteps('Validate', _t("Validate"), ".breadcrumb-item.active:contains('Draft Invoice')"),
+...tour.stepUtils.statusbarButtonsSteps('Confirm', _t("Validate"), ".breadcrumb-item.active:contains('Draft Invoice')"),
 ...tour.stepUtils.statusbarButtonsSteps('Register Payment', _t("Register Payment"), ".breadcrumb-item.active:contains('INV/')"),
 {
     trigger: ".modal-footer .btn-primary",
@@ -1024,13 +1024,9 @@ tour.stepUtils.mobileModifier(tour.stepUtils.autoExpandMoreButtons('.o_control_p
     trigger: ".o_selected_row .o_field_widget[name=partner_id] input",
     content: _t("Write the name of your customer."),
     position: "bottom",
-}, {
-    mobile: true,
-    trigger: ".o_kanban_record .o_kanban_record_title :contains('the_flow.customer')",
-    extra_trigger: ".modal:not(.o_inactive_modal) .modal-title:contains('Partner')",
-    content: _t('Save'),
-    position: 'right',
-}, {
+},
+...tour.stepUtils.mobileKanbanSearchMany2X('Partner', 'the_flow.customer'),
+{
     edition: "enterprise",
     trigger: ".o_selected_row .o_field_widget[name=payment_ref]",
     content: _t("Let's enter a name."),

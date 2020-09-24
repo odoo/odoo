@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, models
-from odoo.addons.iap.models import iap
+from odoo.addons.iap.tools import iap_tools
 
 DEFAULT_ENDPOINT = 'https://iap-sms.odoo.com'
 
@@ -17,7 +17,7 @@ class SmsApi(models.AbstractModel):
         params['account_token'] = account.account_token
         endpoint = self.env['ir.config_parameter'].sudo().get_param('sms.endpoint', DEFAULT_ENDPOINT)
         # TODO PRO, the default timeout is 15, do we have to increase it ?
-        return iap.jsonrpc(endpoint + local_endpoint, params=params)
+        return iap_tools.iap_jsonrpc(endpoint + local_endpoint, params=params)
 
     @api.model
     def _send_sms(self, numbers, message):

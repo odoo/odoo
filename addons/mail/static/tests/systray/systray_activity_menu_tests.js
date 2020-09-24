@@ -2,7 +2,9 @@ odoo.define('mail.systray.ActivityMenuTests', function (require) {
 "use strict";
 
 const {
+    afterEach,
     afterNextRender,
+    beforeEach,
     start,
 } = require('mail/static/src/utils/test_utils.js');
 var ActivityMenu = require('mail.systray.ActivityMenu');
@@ -11,8 +13,10 @@ var testUtils = require('web.test_utils');
 
 QUnit.module('mail', {}, function () {
 QUnit.module('ActivityMenu', {
-    beforeEach: function () {
-        this.data = {
+    beforeEach() {
+        beforeEach(this);
+
+        Object.assign(this.data, {
             'mail.activity.menu': {
                 fields: {
                     name: { type: "char" },
@@ -75,10 +79,13 @@ QUnit.module('ActivityMenu', {
                     }
                 ],
             },
-        };
+        });
         this.session = {
             uid: 10,
         };
+    },
+    afterEach() {
+        afterEach(this);
     },
 });
 
@@ -86,6 +93,7 @@ QUnit.test('activity menu widget: menu with no records', async function (assert)
     assert.expect(1);
 
     const { widget } = await start({
+        data: this.data,
         mockRPC: function (route, args) {
             if (args.method === 'systray_get_activities') {
                 return Promise.resolve([]);
@@ -105,6 +113,7 @@ QUnit.test('activity menu widget: activity menu with 3 records', async function 
     var self = this;
 
     const { widget } = await start({
+        data: this.data,
         mockRPC: function (route, args) {
             if (args.method === 'systray_get_activities') {
                 return Promise.resolve(self.data['mail.activity.menu']['records']);
@@ -166,13 +175,14 @@ QUnit.test('activity menu widget: activity view icon', async function (assert) {
     var self = this;
 
     const { widget } = await start({
-        session: this.session,
+        data: this.data,
         mockRPC: function (route, args) {
             if (args.method === 'systray_get_activities') {
                 return Promise.resolve(self.data['mail.activity.menu'].records);
             }
             return this._super(route, args);
         },
+        session: this.session,
     });
     var activityMenu = new ActivityMenu(widget);
     await activityMenu.appendTo($('#qunit-fixture'));
@@ -226,6 +236,7 @@ QUnit.test('activity menu widget: close on messaging menu click', async function
     assert.expect(2);
 
     const { widget } = await start({
+        data: this.data,
         hasMessagingMenu: true,
         async mockRPC(route, args) {
             if (args.method === 'message_fetch') {

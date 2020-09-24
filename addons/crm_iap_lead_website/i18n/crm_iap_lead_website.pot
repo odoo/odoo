@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2019-08-26 08:16+0000\n"
+"POT-Creation-Date: 2020-09-01 07:28+0000\n"
+"PO-Revision-Date: 2020-09-01 07:28+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -120,8 +120,10 @@ msgid "Data Tracking"
 msgstr ""
 
 #. module: crm_iap_lead_website
+#: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_lead__display_name
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__display_name
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_view__display_name
+#: model:ir.model.fields,field_description:crm_iap_lead_website.field_ir_http__display_name
 msgid "Display Name"
 msgstr ""
 
@@ -172,8 +174,10 @@ msgid "IAP Credits"
 msgstr ""
 
 #. module: crm_iap_lead_website
+#: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_lead__id
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__id
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_view__id
+#: model:ir.model.fields,field_description:crm_iap_lead_website.field_ir_http__id
 msgid "ID"
 msgstr ""
 
@@ -189,8 +193,10 @@ msgid "Industries"
 msgstr ""
 
 #. module: crm_iap_lead_website
+#: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_lead____last_update
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule____last_update
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_view____last_update
+#: model:ir.model.fields,field_description:crm_iap_lead_website.field_ir_http____last_update
 msgid "Last Modified on"
 msgstr ""
 
@@ -297,7 +303,7 @@ msgid "Number of Contacts"
 msgstr ""
 
 #. module: crm_iap_lead_website
-#: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__leads_count
+#: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__lead_count
 msgid "Number of Generated Leads"
 msgstr ""
 
@@ -333,6 +339,12 @@ msgstr ""
 #. module: crm_iap_lead_website
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead_website.crm_reveal_rule_form
 msgid "Opportunity Generation Conditions"
+msgstr ""
+
+#. module: crm_iap_lead_website
+#: code:addons/crm_iap_lead_website/models/crm_reveal_rule.py:0
+#, python-format
+msgid "Opportunity created by Odoo Lead Generation"
 msgstr ""
 
 #. module: crm_iap_lead_website

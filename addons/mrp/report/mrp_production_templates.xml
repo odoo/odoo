@@ -75,7 +75,7 @@
                     </h3>
 
                     <table class="table table-sm" t-if="o.move_raw_ids">
-                        <t t-set="has_product_barcode" t-value="any(o.move_raw_ids.filtered(lambda x: x.product_id.barcode))"/>
+                        <t t-set="has_product_barcode" t-value="any(m.product_id.barcode for m in o.move_raw_ids)"/>
                         <thead>
                             <tr>
                                 <th>Product</th>

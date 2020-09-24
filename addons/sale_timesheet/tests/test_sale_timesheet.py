@@ -269,7 +269,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
             'employee_id': self.employee_user.id,
         })
         self.assertTrue(float_is_zero(so_line_deliver_only_project.qty_delivered, precision_digits=2), "Timesheeting on project should not incremented the delivered quantity on the SO line")
-        self.assertEqual(sale_order.invoice_status, 'no', 'Sale Timesheet: "invoice on delivery" timesheets should be invoiced completely by now')
+        self.assertEqual(sale_order.invoice_status, 'to invoice', 'Sale Timesheet: "invoice on delivery" timesheets should have quantity to invoice')
         self.assertEqual(timesheet3.timesheet_invoice_type, 'non_billable_project', "Timesheets without task shoulbe be 'no project found'")
         self.assertFalse(timesheet3.timesheet_invoice_id, "The timesheet3 should not be linked to the invoice yet")
 
@@ -392,6 +392,12 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
             'partner_invoice_id': self.partner_a.id,
             'partner_shipping_id': self.partner_a.id,
             'pricelist_id': self.company_data['default_pricelist'].id,
+        })
+        # Section Line
+        so_line_ordered_project_only = self.env['sale.order.line'].create({
+            'name': "Section Name",
+            'order_id': sale_order.id,
+            'display_type': 'line_section',
         })
         so_line_deliver_global_project = self.env['sale.order.line'].create({
             'name': self.product_delivery_timesheet2.name,

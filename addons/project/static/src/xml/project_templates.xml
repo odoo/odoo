@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="day_of_week_widget">
+        <table class="o_dow_widget">
+            <thead>
+                <tr>
+                    <th t-foreach="widget.labels" t-as="label">
+                        <t t-esc="label"/>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="o_dow_days" />
+            </tbody>
+        </table>
+    </t>
+</templates>

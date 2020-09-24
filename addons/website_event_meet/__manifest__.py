@@ -11,11 +11,7 @@
     'website': 'https://www.odoo.com/page/events',
     'description': "",
     'depends': [
-        # STD-TODO: remove 'website_event_track_online' we just need it to be
-        # able to use 'website.event.menu' which is defined in 'website_event_track'
-        # as well as even form view defined in track_online
-        'website_event_online',
-        'website_event_track_online',
+        'website_event',
         'website_jitsi',
     ],
     'demo': ['data/website_event_meet_demo.xml'],

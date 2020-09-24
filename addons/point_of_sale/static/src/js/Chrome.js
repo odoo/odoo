@@ -372,7 +372,7 @@ odoo.define('point_of_sale.Chrome', function(require) {
             }
 
             if (this.env.pos.config.iface_big_scrollbars) {
-                this.state.uiState.hasBigScrollBars = true;
+                this.state.hasBigScrollBars = true;
             }
 
             this._disableBackspaceBack();

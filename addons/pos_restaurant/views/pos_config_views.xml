@@ -62,6 +62,13 @@
                     </div>
                 </div>
             </div>
+            <div id="tip_product" position="after">
+                <div attrs="{'invisible': ['|', ('module_pos_restaurant', '=', False), ('iface_tipproduct', '=', False)]}">
+                    <field name="set_tip_after_payment" class="oe_inline"/>
+                    <label class="font-weight-normal" for="set_tip_after_payment" string="Add tip after payment (North America specific)"/>
+                    <span class="fa fa-lg fa-cutlery" title="For bars and restaurants" role="img" aria-label="For bars and restaurants"/>
+                </div>
+            </div>
             <div id="category_reference" position="before">
                 <div class="col-12 col-lg-6 o_setting_box"
                      id="is_table_management"

@@ -4,7 +4,7 @@ odoo.define('mail/static/src/components/composer_text_input/composer_text_input.
 const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
 
 const components = {
-    PartnerMentionSuggestion: require('mail/static/src/components/partner_mention_suggestion/partner_mention_suggestion.js'),
+    ComposerSuggestionList: require('mail/static/src/components/composer_suggestion_list/composer_suggestion_list.js'),
 };
 const { markEventHandled } = require('mail/static/src/utils/utils.js');
 
@@ -82,6 +82,10 @@ class ComposerTextInput extends Component {
         return this.env._t("Write something...");
     }
 
+    focus() {
+        this._textareaRef.el.focus();
+    }
+
     focusout() {
         this.saveStateInStore();
         this._textareaRef.el.blur();
@@ -155,10 +159,6 @@ class ComposerTextInput extends Component {
             this.composer.textInputCursorEnd
         );
         this._updateHeight();
-        if (this.composer.isDoFocus) {
-            this._textareaRef.el.focus();
-            this.composer.update({ isDoFocus: false });
-        }
     }
 
     /**
@@ -208,10 +208,10 @@ class ComposerTextInput extends Component {
     _onKeydownTextarea(ev) {
         switch (ev.key) {
             case 'Escape':
-                if (this.composer.hasSuggestedPartners) {
+                if (this.composer.hasSuggestions) {
                     ev.preventDefault();
-                    this.composer.closeMentionSuggestions();
-                    markEventHandled(ev, 'ComposerTextInput.closeMentionSuggestions');
+                    this.composer.closeSuggestions();
+                    markEventHandled(ev, 'ComposerTextInput.closeSuggestions');
                 }
                 break;
             // UP, DOWN, TAB: prevent moving cursor if navigation in mention suggestions
@@ -222,7 +222,7 @@ class ComposerTextInput extends Component {
             case 'Home':
             case 'End':
             case 'Tab':
-                if (this.composer.hasSuggestedPartners) {
+                if (this.composer.hasSuggestions) {
                     // We use preventDefault here to avoid keys native actions but actions are handled in keyUp
                     ev.preventDefault();
                 }
@@ -239,20 +239,43 @@ class ComposerTextInput extends Component {
      * @param {KeyboardEvent} ev
      */
     _onKeydownTextareaEnter(ev) {
-        if (this.composer.hasSuggestedPartners) {
+        if (this.composer.hasSuggestions) {
             ev.preventDefault();
-        } else {
-            if (!this.props.hasSendOnEnterEnabled) {
-                return;
-            }
-            if (ev.shiftKey) {
-                return;
-            }
-            if (this.env.messaging.device.isMobile) {
-                return;
-            }
-            this.trigger('o-keydown-enter');
+            return;
+        }
+        if (
+            this.props.sendShortcuts.includes('ctrl-enter') &&
+            !ev.altKey &&
+            ev.ctrlKey &&
+            !ev.metaKey &&
+            !ev.shiftKey
+        ) {
+            this.trigger('o-composer-text-input-send-shortcut');
             ev.preventDefault();
+            return;
+        }
+        if (
+            this.props.sendShortcuts.includes('enter') &&
+            !ev.altKey &&
+            !ev.ctrlKey &&
+            !ev.metaKey &&
+            !ev.shiftKey &&
+            !this.env.messaging.device.isMobile
+        ) {
+            this.trigger('o-composer-text-input-send-shortcut');
+            ev.preventDefault();
+            return;
+        }
+        if (
+            this.props.sendShortcuts.includes('meta-enter') &&
+            !ev.altKey &&
+            !ev.ctrlKey &&
+            ev.metaKey &&
+            !ev.shiftKey
+        ) {
+            this.trigger('o-composer-text-input-send-shortcut');
+            ev.preventDefault();
+            return;
         }
     }
 
@@ -269,70 +292,48 @@ class ComposerTextInput extends Component {
                 break;
             // ENTER, HOME, END, UP, DOWN, PAGE UP, PAGE DOWN, TAB: check if navigation in mention suggestions
             case 'Enter':
-                if (this.composer.hasSuggestedPartners) {
-                    if (this.composer.activeSuggestedPartner) {
-                        this.composer.insertMentionedPartner(this.composer.activeSuggestedPartner);
-                        this.composer.closeMentionSuggestions();
-                        this.composer.focus();
-                    }
+                if (this.composer.hasSuggestions) {
+                    this.composer.insertSuggestion();
+                    this.composer.closeSuggestions();
+                    this.focus();
                 }
                 break;
             case 'ArrowUp':
             case 'PageUp':
-                if (this.composer.hasSuggestedPartners) {
-                    this.composer.setPreviousSuggestedPartnerActive();
+                if (this.composer.hasSuggestions) {
+                    this.composer.setPreviousSuggestionActive();
                 }
                 break;
             case 'ArrowDown':
             case 'PageDown':
-                if (this.composer.hasSuggestedPartners) {
-                    this.composer.setNextSuggestedPartnerActive();
+                if (this.composer.hasSuggestions) {
+                    this.composer.setNextSuggestionActive();
                 }
                 break;
             case 'Home':
-                if (this.composer.hasSuggestedPartners) {
-                    this.composer.setFirstSuggestedPartnerActive();
+                if (this.composer.hasSuggestions) {
+                    this.composer.setFirstSuggestionActive();
                 }
                 break;
             case 'End':
-                if (this.composer.hasSuggestedPartners) {
-                    this.composer.setLastSuggestedPartnerActive();
+                if (this.composer.hasSuggestions) {
+                    this.composer.setLastSuggestionActive();
                 }
                 break;
             case 'Tab':
-                if (this.composer.hasSuggestedPartners) {
+                if (this.composer.hasSuggestions) {
                     if (ev.shiftKey) {
-                        this.composer.setPreviousSuggestedPartnerActive();
+                        this.composer.setPreviousSuggestionActive();
                     } else {
-                        this.composer.setNextSuggestedPartnerActive();
+                        this.composer.setNextSuggestionActive();
                     }
                 }
                 break;
             // Otherwise, check if a mention is typed
             default:
                 this.saveStateInStore();
-                this.composer._detectDelimiter();
+                this.composer.detectSuggestionDelimiter();
         }
-    }
-
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onPartnerMentionSuggestionClicked(ev) {
-        this.composer.insertMentionedPartner(ev.detail.partner);
-        this.composer.closeMentionSuggestions();
-        this.composer.focus();
-    }
-
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onPartnerMentionSuggestionMouseOver(ev) {
-        this.composer.update({
-            activeSuggestedPartner: [['link', ev.detail.partner]],
-        });
     }
 
 }
@@ -341,13 +342,27 @@ Object.assign(ComposerTextInput, {
     components,
     defaultProps: {
         hasMentionSuggestionsBelowPosition: false,
-        hasSendOnEnterEnabled: true,
+        sendShortcuts: [],
     },
     props: {
         composerLocalId: String,
         hasMentionSuggestionsBelowPosition: Boolean,
-        hasSendOnEnterEnabled: Boolean,
         isCompact: Boolean,
+        /**
+         * Keyboard shortcuts from text input to send message.
+         */
+        sendShortcuts: {
+            type: Array,
+            element: String,
+            validate: prop => {
+                for (const shortcut of prop) {
+                    if (!['ctrl-enter', 'enter', 'meta-enter'].includes(shortcut)) {
+                        return false;
+                    }
+                }
+                return true;
+            },
+        },
     },
     template: 'mail.ComposerTextInput',
 });

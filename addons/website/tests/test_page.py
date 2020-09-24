@@ -222,6 +222,7 @@ class WithContext(HttpCase):
         specific_page = self.page.copy({'website_id': self.env['website'].get_current_website().id})
         specific_page.write({'is_published': False, 'arch': self.page.arch.replace('I am a generic page', 'I am a specific page')})
 
+        self.authenticate(None, None)
         r = self.url_open(specific_page.url)
         self.assertEqual(r.status_code, 404, "Restricted users should see a 404 and not the generic one as we unpublished the specific one")
 

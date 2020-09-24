@@ -5,7 +5,7 @@
     'version' : '1.0',
     'author': 'XCLUDE',
     'website': 'https://www.xclude.se',
-    'category': 'Localization',
+    'category': 'Accounting/Localizations',
     'description': """
 Add Structured Communication to Customer Invoices and Vendor Bill.
 ------------------------------------------------------------------
@@ -15,7 +15,7 @@ Using OCR structured communication simplifies the reconciliation between invoice
 For Customer Invoicing support for OCR level 1 to 4. The OCR number can be based on partner or
 the invoice.
 
-For Vendor Bill support for Default Vendor Specific OCR is added and validation for OCR.
+For Vendor Bill support, Default Vendor Specific OCR and validation for OCR are added.
     """,
     'depends': ['l10n_se'],
     'data': [

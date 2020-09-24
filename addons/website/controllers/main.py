@@ -95,16 +95,21 @@ class Website(Home):
     # while portal users are redirected to the frontend by default
     # ------------------------------------------------------
 
-    @http.route(website=True, auth="public", sitemap=False)
-    def web_login(self, redirect=None, *args, **kw):
-        response = super(Website, self).web_login(redirect=redirect, *args, **kw)
-        if not redirect and request.params['login_success']:
-            if request.env['res.users'].browse(request.uid).has_group('base.group_user'):
+    def _login_redirect(self, uid, redirect=None):
+        """ Redirect regular users (employees) to the backend) and others to
+        the frontend
+        """
+        if not redirect and request.params.get('login_success'):
+            if request.env['res.users'].browse(uid).has_group('base.group_user'):
                 redirect = b'/web?' + request.httprequest.query_string
             else:
                 redirect = '/my'
-            return http.redirect_with_hash(redirect)
-        return response
+        return super()._login_redirect(uid, redirect=redirect)
+
+    # Force website=True + auth='public', required for login form layout
+    @http.route(website=True, auth="public", sitemap=False)
+    def web_login(self, *args, **kw):
+        return super().web_login(*args, **kw)
 
     # ------------------------------------------------------
     # Business
@@ -264,6 +269,21 @@ class Website(Home):
             ]
         }
 
+    @http.route('/website/snippet/filters', type='json', auth='public', website=True)
+    def get_dynamic_filter(self, filter_id, template_key, limit=None, search_domain=None):
+        dynamic_filter = request.env['website.snippet.filter'].sudo().search(
+            [('id', '=', filter_id)] + request.website.website_domain()
+        )
+        return dynamic_filter and dynamic_filter.render(template_key, limit, search_domain) or ''
+
+    @http.route('/website/snippet/filter_templates', type='json', auth='public', website=True)
+    def get_dynamic_snippet_templates(self, filter_id=False):
+        # todo: if filter_id.model -> filter template
+        templates = request.env['ir.ui.view'].sudo().search_read(
+            [['key', 'ilike', '.dynamic_filter_template_'], ['type', '=', 'qweb']], ['key', 'name']
+        )
+        return templates
+
     # ------------------------------------------------------
     # Edit
     # ------------------------------------------------------
@@ -366,8 +386,9 @@ class Website(Home):
         values = {}
         if 'website_published' in Model._fields:
             values['website_published'] = not record.website_published
-        record.write(values)
-        return bool(record.website_published)
+            record.write(values)
+            return bool(record.website_published)
+        return False
 
     @http.route(['/website/seo_suggest'], type='json', auth="user", website=True)
     def seo_suggest(self, keywords=None, lang=None):

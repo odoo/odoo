@@ -22,7 +22,7 @@ class PosPaymentMethod(models.Model):
     def _get_payment_terminal_selection(self):
         return []
 
-    name = fields.Char(string="Payment Method", required=True)
+    name = fields.Char(string="Payment Method", required=True, translate=True)
     receivable_account_id = fields.Many2one('account.account',
         string='Intermediary Account',
         required=True,

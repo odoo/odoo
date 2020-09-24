@@ -6,6 +6,7 @@ from dateutil.relativedelta import relativedelta
 from unittest.mock import patch
 
 from odoo import exceptions, fields
+from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.tests import common
 
 
@@ -14,26 +15,24 @@ class TestKarmaTrackingCommon(common.SavepointCase):
     @classmethod
     def setUpClass(cls):
         super(TestKarmaTrackingCommon, cls).setUpClass()
-        cls.test_user = cls.env['res.users'].with_context(no_reset_password=True, mail_create_nosubscribe=True).create({
-            'name': 'Test User',
-            'login': 'test',
-            'email': 'test@example.com',
-            'karma': 0,
-            'groups_id': [(4, cls.env.ref('base.group_user').id)]
-        })
-        cls.test_user_2 = cls.env['res.users'].with_context(no_reset_password=True, mail_create_nosubscribe=True).create({
-            'name': 'Test User 2',
-            'login': 'test2',
-            'email': 'test2@example.com',
-            'karma': 0,
-            'groups_id': [(4, cls.env.ref('base.group_user').id)]
-        })
+        cls.test_user = mail_new_test_user(
+            cls.env, login='test',
+            name='Test User', email='test@example.com',
+            karma=0,
+            groups='base.group_user',
+        )
+        cls.test_user_2 = mail_new_test_user(
+            cls.env, login='test2',
+            name='Test User 2', email='test2@example.com',
+            karma=0,
+            groups='base.group_user',
+        )
         cls.env['gamification.karma.tracking'].search([]).unlink()
 
         cls.test_date = fields.Date.today() + relativedelta(month=4, day=1)
 
     @classmethod
-    def _create_trackings(cls, user, karma, steps, date, days_delta=1):
+    def _create_trackings(cls, user, karma, steps, track_date, days_delta=1):
         old_value = user.karma
         for step in range(steps):
             new_value = old_value + karma
@@ -42,10 +41,10 @@ class TestKarmaTrackingCommon(common.SavepointCase):
                 'old_value': old_value,
                 'new_value': new_value,
                 'consolidated': False,
-                'tracking_date': fields.Date.to_string(date)
+                'tracking_date': fields.Date.to_string(track_date)
             }])
             old_value = new_value
-            date = date + relativedelta(days=days_delta)
+            track_date = track_date + relativedelta(days=days_delta)
 
     def test_computation_gain(self):
         self._create_trackings(self.test_user, 20, 2, self.test_date, days_delta=30)
@@ -209,11 +208,12 @@ class TestComputeRankCommon(common.SavepointCase):
 
         cls.users = cls.env['res.users']
         for k in range(-5, 1030, 30):
-            cls.users += cls.env['res.users'].with_context(no_reset_password=True, mail_create_nosubscribe=True).create({
-                'name': str(k),
-                'login': "test_recompute_rank_%s" % k,
-                'karma': k,
-            })
+            cls.users += mail_new_test_user(
+                cls.env,
+                name=str(k),
+                login="test_recompute_rank_%s" % k,
+                karma=k,
+            )
 
         cls.env['gamification.karma.rank'].search([]).unlink()
 

@@ -10,7 +10,7 @@ const components = {
     ModerationDiscardDialog: require('mail/static/src/components/moderation_discard_dialog/moderation_discard_dialog.js'),
     ModerationRejectDialog: require('mail/static/src/components/moderation_reject_dialog/moderation_reject_dialog.js'),
     NotificationList: require('mail/static/src/components/notification_list/notification_list.js'),
-    ThreadViewer: require('mail/static/src/components/thread_viewer/thread_viewer.js'),
+    ThreadView: require('mail/static/src/components/thread_view/thread_view.js'),
 };
 const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
 
@@ -25,17 +25,18 @@ class Discuss extends Component {
     constructor(...args) {
         super(...args);
         useStore(props => {
-            const discuss = this.env.messaging.discuss;
+            const discuss = this.env.messaging && this.env.messaging.discuss;
+            const threadView = discuss && discuss.threadView;
             return {
-                checkedMessages: discuss.threadViewer.checkedMessages.map(message => message.__state),
-                discuss: discuss.__state,
-                isDeviceMobile: this.env.messaging.device.isMobile,
-                isMessagingInitialized: this.env.messaging.isInitialized,
-                thread: discuss.thread ? discuss.thread.__state : undefined,
-                threadCache: discuss.threadViewer.threadCache
-                    ? discuss.threadViewer.threadCache.__state
+                checkedMessages: threadView ? threadView.checkedMessages.map(message => message.__state) : [],
+                discuss: discuss ? discuss.__state : undefined,
+                isDeviceMobile: this.env.messaging && this.env.messaging.device.isMobile,
+                isMessagingInitialized: this.env.isMessagingInitialized(),
+                thread: discuss && discuss.thread ? discuss.thread.__state : undefined,
+                threadCache: (threadView && threadView.threadCache)
+                    ? threadView.threadCache.__state
                     : undefined,
-                uncheckedMessages: discuss.threadViewer.uncheckedMessages.map(message => message.__state),
+                uncheckedMessages: threadView ? threadView.uncheckedMessages.map(message => message.__state) : [],
             };
         }, {
             compareDepth: {
@@ -45,12 +46,13 @@ class Discuss extends Component {
         });
         this._updateLocalStoreProps();
         /**
-         * Reference of the thread. Useful to update scroll position correctly
-         * on patch. AKU TODO: this made sense when composer was outside of
-         * thread, but this may no longer be necessary??
+         * Reference of the composer. Useful to focus it.
          */
-        this._threadRef = useRef('thread');
-
+        this._composerRef = useRef('composer');
+        /**
+         * Reference of the ThreadView. Useful to focus it.
+         */
+        this._threadViewRef = useRef('threadView');
         // bind since passed as props
         this._onMobileAddItemHeaderInputSelect = this._onMobileAddItemHeaderInputSelect.bind(this);
         this._onMobileAddItemHeaderInputSource = this._onMobileAddItemHeaderInputSource.bind(this);
@@ -64,6 +66,7 @@ class Discuss extends Component {
             this.discuss.openInitThread();
         }
         this._updateLocalStoreProps();
+        this._update();
     }
 
     patched() {
@@ -74,13 +77,15 @@ class Discuss extends Component {
         if (
             this.discuss.thread &&
             this.discuss.thread === this.env.messaging.inbox &&
-            this._lastThreadCache === this.discuss.threadViewer.threadCache.localId &&
+            this.discuss.threadView &&
+            this._lastThreadCache === this.discuss.threadView.threadCache.localId &&
             this._lastThreadCounter > 0 && this.discuss.thread.counter === 0
         ) {
             this.trigger('o-show-rainbow-man');
         }
-        this._activeThreadCache = this.discuss.threadViewer.threadCache;
+        this._activeThreadCache = this.discuss.threadView && this.discuss.threadView.threadCache;
         this._updateLocalStoreProps();
+        this._update();
     }
 
     willUnmount() {
@@ -140,6 +145,24 @@ class Discuss extends Component {
     /**
      * @private
      */
+    _update() {
+        if (this.discuss.isDoFocus) {
+            this.discuss.update({ isDoFocus: false });
+            const composer = this._composerRef.comp;
+            if (composer) {
+                composer.focus();
+            } else {
+                const threadView = this._threadViewRef.comp;
+                if (threadView) {
+                    threadView.focus();
+                }
+            }
+        }
+    }
+
+    /**
+     * @private
+     */
     _updateLocalStoreProps() {
         /**
          * Locally tracked store props `activeThreadCache`.
@@ -147,8 +170,9 @@ class Discuss extends Component {
          * rainbox man on inbox.
          */
         this._lastThreadCache = (
-            this.discuss.threadViewer.threadCache &&
-            this.discuss.threadViewer.threadCache.localId
+            this.discuss.threadView &&
+            this.discuss.threadView.threadCache &&
+            this.discuss.threadView.threadCache.localId
         );
         /**
          * Locally tracked store props `threadCounter`.
@@ -244,16 +268,6 @@ class Discuss extends Component {
         }
         this.discuss.clearReplyingToMessage();
         this.discuss.update({ activeMobileNavbarTabId: ev.detail.tabId });
-    }
-
-    /**
-     * @private
-     * @param {CustomEvent} ev
-     * @param {Object} ev.detail
-     * @param {mail.thread} ev.detail.thread
-     */
-    _onSelectThread(ev) {
-        this.discuss.threadViewer.update({ thread: [['link', ev.detail.thread]] });
     }
 
     /**

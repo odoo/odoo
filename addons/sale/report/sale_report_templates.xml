@@ -61,7 +61,7 @@
             </div>
 
             <!-- Is there a discount on at least one line? -->
-            <t t-set="display_discount" t-value="any([l.discount for l in doc.order_line])"/>
+            <t t-set="display_discount" t-value="any(l.discount for l in doc.order_line)"/>
 
             <table class="table table-sm o_main_table">
                 <!-- In case we want to repeat the header, remove "display: table-row-group" -->

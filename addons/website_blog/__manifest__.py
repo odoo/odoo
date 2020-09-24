@@ -4,7 +4,7 @@
 {
     'name': 'Blogs',
     'category': 'Website/Website',
-    'sequence': 140,
+    'sequence': 200,
     'website': 'https://www.odoo.com/page/blog-engine',
     'summary': 'Publish blog posts, announces, news',
     'version': '1.0',

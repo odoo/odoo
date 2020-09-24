@@ -20,10 +20,11 @@
 }
 
 // EDITOR TOP BAR AND POPOVER
-#web_editor-top-edit .o_we_website_top_actions {
-    @include o-position-absolute($top: 0, $left: 0);
-    z-index: $zindex-popover + 5;
+.o_we_website_top_actions {
+    @include o-position-absolute($top: 0, $right: 0);
+    z-index: ($zindex-fixed + $zindex-modal-backdrop) / 2 + 2; // $o-we-zindex
     display: flex;
+    justify-content: flex-end;
     width: $o-we-sidebar-width;
     height: $o-we-sidebar-top-height;
     background-color: $o-we-sidebar-tabs-bg;
@@ -35,8 +36,9 @@
     .btn {
         border: none;
         border-radius: 0;
-        font-size: $o-we-sidebar-font-size;
-        font-weight: 700;
+        font-size: $o-we-font-size;
+        font-family: $o-we-font-family;
+        font-weight: 400;
         line-height: 1;
 
         &.btn-primary {
@@ -59,10 +61,6 @@
 
 #oe_snippets {
     top: $o-we-sidebar-top-height;
-
-    .o_color_combinations_edition {
-        margin-top: $o-we-sidebar-content-field-spacing;
-    }
 }
 
 .note-statusbar {
@@ -103,30 +101,103 @@ $i: 1;
     border-top: 1px solid currentColor !important;
 }
 
-#oe_snippets > .o_we_customize_panel .o_we_user_value_widget.o_palette_color_preview_button {
-    > div {
-        display: flex;
-        flex: 1 1 auto;
-        align-items: stretch;
+#oe_snippets > .o_we_customize_panel {
+    .o_we_user_value_widget.o_palette_color_preview_button {
+        > div {
+            display: flex;
+            flex: 1 1 auto;
+            align-items: stretch;
+        }
+        .o_palette_color_preview {
+            flex: 1 0 0;
+            margin: 1px 0;
+            transition: flex 150ms ease 0s;
+        }
+        &:not(:hover) .o_palette_color_preview {
+            &:nth-child(4), &:nth-child(5) {
+                flex: 0 0 0;
+            }
+        }
     }
-    .o_palette_color_preview {
-        flex: 1 0 0;
-        margin: 1px 0;
-        transition: flex 150ms ease 0s;
+
+    we-select.o_scroll_effects_selector we-button {
+        padding-top: $o-we-item-spacing;
+        padding-bottom: $o-we-item-spacing;
+
+        img {
+            max-height: 80px;
+            width: auto;
+            margin-right: $o-we-item-spacing;
+            margin-left: $o-we-item-spacing * .5;
+        }
     }
-    &:not(:hover) .o_palette_color_preview {
-        &:nth-child(4), &:nth-child(5) {
-            flex: 0 0 0;
+
+    //----------------------------------------------------------------------
+    // 'Options' Tab Specific Components
+    //----------------------------------------------------------------------
+
+    // Theme Colors Editor
+    .o_we_theme_colors_selector {
+
+        > we-title {
+            display: none
+        }
+        .o_we_so_color_palette.o_we_user_value_widget {
+
+            + .o_we_so_color_palette {
+                margin-left: 10px;
+            }
+            .o_we_color_preview {
+                width: $o-we-sidebar-content-field-colorpicker-size-large;
+                height: $o-we-sidebar-content-field-colorpicker-size-large;
+            }
+        }
+        > div, we-select.o_we_theme_colors_select, we-toggler {
+            display: flex;
+        }
+        > div {
+            align-items: stretch;
+            width: 100%;
+        }
+        we-select.o_we_theme_colors_select {
+            justify-content: flex-end;
+            margin-left: auto;
+
+            > div, we-toggler {
+                height: 100%;
+            }
+        }
+        we-toggler {
+            align-items: center;
+            padding: 0 0.4rem;
+            font-size: 1.5em;
+
+            &:after {
+                content: none;
+            }
+        }
+    }
+
+    // Palettes Dropdown
+    .o_palette_color_preview_button > div {
+        min-height: 24px;
+    }
+
+    // CC Edition
+    .o_we_cc_preview_wrapper {
+        // Use box-shadow rather than border-bottom in order to
+        // avoid misalignments in the 'Options' tab.
+        border: 1px solid;
+        border-color: rgba($o-we-item-standup-color-light, .2) $o-we-sidebar-content-field-dropdown-border-color transparent;
+        box-shadow: 0 1px 0 $o-we-item-standup-color-dark;
+
+        + .o_we_collapse_toggler {
+            height: 35px; // FIXME hardcoded...
         }
     }
 }
 
 // SNIPPET OPTIONS
-we-collapse {
-    position: relative;
-    padding: 0.3em 0.3em 0.3em 1em;
-}
-
 .o_we_border_preview {
     display: inline-block;
     width: 999px;

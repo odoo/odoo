@@ -35,12 +35,12 @@ class AccountMove(models.Model):
                 'split_method': 'equal',
             }) for l in landed_costs_lines],
         })
-        action = self.env.ref('stock_landed_costs.action_stock_landed_cost').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("stock_landed_costs.action_stock_landed_cost")
         return dict(action, view_mode='form', res_id=landed_costs.id, views=[(False, 'form')])
 
     def action_view_landed_costs(self):
         self.ensure_one()
-        action = self.env.ref('stock_landed_costs.action_stock_landed_cost').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("stock_landed_costs.action_stock_landed_cost")
         domain = [('id', 'in', self.landed_costs_ids.ids)]
         context = dict(self.env.context, default_vendor_bill_id=self.id)
         views = [(self.env.ref('stock_landed_costs.view_stock_landed_cost_tree2').id, 'tree'), (False, 'form'), (False, 'kanban')]

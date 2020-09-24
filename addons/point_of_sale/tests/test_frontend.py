@@ -43,8 +43,8 @@ class TestPointOfSaleHttpCommon(odoo.tests.HttpCase):
         # Archive all existing product to avoid noise during the tours
         all_pos_product = self.env['product.product'].search([('available_in_pos', '=', True)])
         discount = self.env.ref('point_of_sale.product_product_consumable')
-        tip = self.env.ref('point_of_sale.product_product_tip')
-        (all_pos_product - discount - tip)._write({'active': False})
+        self.tip = self.env.ref('point_of_sale.product_product_tip')
+        (all_pos_product - discount - self.tip)._write({'active': False})
 
         # In DESKS categ: Desk Pad
         pos_categ_desks = env.ref('point_of_sale.pos_category_desks')
@@ -475,7 +475,12 @@ class TestPointOfSaleHttpCommon(odoo.tests.HttpCase):
 class TestUi(TestPointOfSaleHttpCommon):
     def test_01_pos_basic_order(self):
 
-        # open a session, the /pos/web controller will redirect to it
+        self.main_pos_config.write({
+            'iface_tipproduct': True,
+            'tip_product_id': self.tip.id,
+        })
+
+        # open a session, the /pos/ui controller will redirect to it
         self.main_pos_config.open_session_cb(check_coa=False)
 
         # needed because tests are run before the module is marked as
@@ -484,18 +489,22 @@ class TestUi(TestPointOfSaleHttpCommon):
         # this you end up with js, css but no qweb.
         self.env['ir.module.module'].search([('name', '=', 'point_of_sale')], limit=1).state = 'installed'
 
-        self.start_tour("/pos/web?config_id=%d" % self.main_pos_config.id, 'pos_pricelist', login="admin", step_delay=50)
-        self.start_tour("/pos/web?config_id=%d" % self.main_pos_config.id, 'pos_basic_order', login="admin", step_delay=50)
-        self.start_tour("/pos/web?config_id=%d" % self.main_pos_config.id, 'ProductScreenTour', login="admin", step_delay=50)
-        self.start_tour("/pos/web?config_id=%d" % self.main_pos_config.id, 'PaymentScreenTour', login="admin", step_delay=50)
-        self.start_tour("/pos/web?config_id=%d" % self.main_pos_config.id, 'ReceiptScreenTour', login="admin", step_delay=50)
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'pos_pricelist', login="admin")
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'pos_basic_order', login="admin")
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'ProductScreenTour', login="admin")
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PaymentScreenTour', login="admin")
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'ReceiptScreenTour', login="admin")
 
         for order in self.env['pos.order'].search([]):
             self.assertEqual(order.state, 'paid', "Validated order has payment of " + str(order.amount_paid) + " and total of " + str(order.amount_total))
 
+        # check if email from ReceiptScreenTour is properly sent
+        email_count = self.env['mail.mail'].search_count([('email_to', '=', 'test@receiptscreen.com')])
+        self.assertEqual(email_count, 1)
+
     def test_02_pos_with_invoiced(self):
         self.main_pos_config.open_session_cb(check_coa=False)
-        self.start_tour("/pos/web?config_id=%d" % self.main_pos_config.id, 'ChromeTour', login="admin", step_delay=50)
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'ChromeTour', login="admin")
         n_invoiced = self.env['pos.order'].search_count([('state', '=', 'invoiced')])
         n_paid = self.env['pos.order'].search_count([('state', '=', 'paid')])
         self.assertEqual(n_invoiced, 1, 'There should be 1 invoiced order.')
@@ -504,13 +513,13 @@ class TestUi(TestPointOfSaleHttpCommon):
     def test_03_order_management(self):
         self.main_pos_config.write({ 'manage_orders': True, 'module_account': True })
         self.main_pos_config.open_session_cb(check_coa=False)
-        self.start_tour("/pos/web?config_id=%d" % self.main_pos_config.id, 'OrderManagementScreenTour', login="admin", step_delay=50)
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'OrderManagementScreenTour', login="admin")
 
     def test_04_product_configurator(self):
         self.main_pos_config.write({ 'product_configurator': True })
         self.main_pos_config.open_session_cb(check_coa=False)
-        self.start_tour("/pos/web?config_id=%d" % self.main_pos_config, 'ProductConfiguratorTour', login="admin", step_delay=50)
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config, 'ProductConfiguratorTour', login="admin")
 
     def test_05_ticket_screen(self):
         self.main_pos_config.open_session_cb(check_coa=False)
-        self.start_tour("/pos/web?config_id=%d" % self.main_pos_config.id, 'TicketScreenTour', login="admin", step_delay=50)
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'TicketScreenTour', login="admin")

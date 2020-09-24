@@ -3,6 +3,7 @@ odoo.define('mail/static/src/components/notification_list/notification_list.js',
 
 const components = {
     NotificationGroup: require('mail/static/src/components/notification_group/notification_group.js'),
+    NotificationRequest: require('mail/static/src/components/notification_request/notification_request.js'),
     ThreadNeedactionPreview: require('mail/static/src/components/thread_needaction_preview/thread_needaction_preview.js'),
     ThreadPreview: require('mail/static/src/components/thread_preview/thread_preview.js'),
 };
@@ -98,10 +99,10 @@ class NotificationList extends Component {
         // thread notifications
         const threadNotifications = threads
             .sort((t1, t2) => {
-                if (t1.message_unread_counter > 0 && t2.message_unread_counter === 0) {
+                if (t1.localMessageUnreadCounter > 0 && t2.localMessageUnreadCounter === 0) {
                     return -1;
                 }
-                if (t1.message_unread_counter === 0 && t2.message_unread_counter > 0) {
+                if (t1.localMessageUnreadCounter === 0 && t2.localMessageUnreadCounter > 0) {
                     return 1;
                 }
                 if (t1.lastMessage && t2.lastMessage) {
@@ -134,6 +135,13 @@ class NotificationList extends Component {
                         uniqueId: notificationGroup.localId,
                     };
                 }).concat(notifications);
+        }
+        // native notification request
+        if (props.filter === 'all' && this.env.messaging.isNotificationPermissionDefault()) {
+            notifications.unshift({
+                type: 'odoobotRequest',
+                uniqueId: 'odoobotRequest',
+            });
         }
         return {
             isDeviceMobile: this.env.messaging.device.isMobile,
@@ -179,7 +187,7 @@ class NotificationList extends Component {
         } else if (props.filter === 'chat') {
             return this.env.models['mail.thread']
                 .all(thread =>
-                    thread.channel_type === 'chat' &&
+                    thread.isChatChannel &&
                     thread.isPinned &&
                     thread.model === 'mail.channel'
                 )

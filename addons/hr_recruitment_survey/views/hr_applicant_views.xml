@@ -32,12 +32,12 @@
                 </button>
                 <button name="action_print_survey"
                     class="oe_stat_button"
-                    icon="fa-print"
+                    icon="fa-pencil-square-o"
                     type="object"
-                    help="Print interview report"
-                    attrs="{'invisible':[('survey_id','=',False)]}">
+                    help="See interview report"
+                    attrs="{'invisible':['|',('survey_id','=',False),('response_id','=',False)]}">
                     <div class="o_field_widget o_stat_info">
-                        <span class="o_stat_text">Print</span>
+                        <span class="o_stat_text">Consult</span>
                         <span class="o_stat_text">Interview</span>
                     </div>
                 </button>

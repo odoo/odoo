@@ -11,16 +11,16 @@ registerInstancePatchModel('mail.messaging_notification_handler', 'im_livechat/s
 
     /**
      * @override
-     * @param {Object} param0
-     * @param {integer} param0.channelId
-     * @param {integer} param0.partner_id
      */
-    _handleNotificationChannelTypingStatus(data) {
-        const { channelId, partner_id } = data;
-        const channel = this.env.models['mail.thread'].insert({
+    _handleNotificationChannelTypingStatus(channelId, data) {
+        const { partner_id } = data;
+        const channel = this.env.models['mail.thread'].findFromIdentifyingData({
             id: channelId,
             model: 'mail.channel',
         });
+        if (!channel) {
+            return;
+        }
         let partnerId;
         if (partner_id === this.env.messaging.publicPartner.id) {
             // Some shenanigans that this is a typing notification
@@ -29,7 +29,7 @@ registerInstancePatchModel('mail.messaging_notification_handler', 'im_livechat/s
         } else {
             partnerId = partner_id;
         }
-        this._super(Object.assign(data, {
+        this._super(channelId, Object.assign(data, {
             partner_id: partnerId,
         }));
     },

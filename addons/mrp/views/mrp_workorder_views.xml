@@ -14,13 +14,6 @@
                 <filter string="Late" name="late" domain="[('date_planned_start','&lt;=',time.strftime('%%Y-%%m-%%d'))]"/>
                 <separator/>
                 <filter string="Start Date" name="date_start_filter" date="date_start"/>
-                <filter invisible="1" string="Late Activities" name="activities_overdue"
-                    domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
-                    help="Show all records which has next action date is before today"/>
-                <filter invisible="1" string="Today Activities" name="activities_today"
-                    domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
-                <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
-                    domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
             </search>
         </field>
     </record>
@@ -34,11 +27,10 @@
         <field name="search_view_id" ref="view_mrp_production_work_order_search"/>
         <field name="domain">[('operation_id.bom_id', '=', active_id), ('state', '=', 'done')]</field>
         <field name="help" type="html">
-            <p class="o_view_nocontent_empty_folder">
-              No data to display
+            <p class="o_view_nocontent_smiling_face">
+                No data yet!
             </p><p>
-              You will get here statistics about the
-              work orders duration related to this routing.
+                Get statistics about the work orders duration related to this routing.
             </p>
         </field>
     </record>
@@ -51,12 +43,11 @@
         <field name="domain">[('production_id', '=', active_id)]</field>
         <field name="help" type="html">
           <p class="o_view_nocontent_smiling_face">
-            Start a new work order
+            No work orders to do!
           </p><p>
-            Work Orders are operations to be processed at a Work Center to realize a
-            Manufacturing Order. Work Orders are trigerred by Manufacturing Orders,
-            they are based on the Routing defined on these ones
-            </p>
+            Work orders are operations to do as part of a manufacturing order.
+            Operations are defined in the bill of materials or added in the manufacturing order directly.
+          </p>
         </field>
     </record>
 
@@ -87,7 +78,7 @@
                 <field name="duration_expected" widget="float_time"/>
                 <field name="duration" widget="mrp_time_counter"
                   attrs="{'invisible': [('production_state','=', 'draft')], 'readonly': [('is_user_working', '=', True)]}"/>
-                <field name="state" widget="badge" decoration-success="state == 'done'" decoration-info="state not in ('done', 'cancel')"/>
+                <field name="state" widget="badge" decoration-success="state == 'done'" decoration-info="state not in ('done', 'cancel')" attrs="{'invisible': [('production_state', 'in', ('draft', 'done'))]}"/>
                 <button name="button_start" type="object" string="Start" class="btn-success"
                   attrs="{'invisible': ['|', '|', '|', ('production_state','in', ('draft', 'done')), ('working_state', '=', 'blocked'), ('state', '=', 'done'), ('is_user_working', '!=', False)]}"/>
                 <button name="button_pending" type="object" string="Pause" class="btn-warning"
@@ -101,7 +92,7 @@
                 <button name="action_open_wizard" type="object" icon="fa-external-link" class="oe_edit_only"
                     context="{'default_workcenter_id': workcenter_id}"/>
                 <field name="show_json_popover" invisible="1"/>
-                <field name="json_popover" widget="mrp_workorder_popover" string=" " attrs="{'invisible': [('show_json_popover', '=', False)]}"/>
+                <field name="json_popover" widget="mrp_workorder_popover" string=" " width="0.1" attrs="{'invisible': [('show_json_popover', '=', False)]}"/>
             </tree>
         </field>
     </record>
@@ -145,7 +136,6 @@
                 <field name="workcenter_id" invisible="1"/>
                 <field name="company_id" invisible="1"/>
                 <field name="product_tracking" invisible="1"/>
-                <field name="production_id" invisible="1"/>
                 <field name="product_id" invisible="1"/>
                 <field name="finished_lot_id" invisible="1"/>
                 <field name="qty_producing" invisible="1"/>
@@ -241,13 +231,6 @@
                 <separator/>
                 <filter string="Late" name="late" domain="['&amp;', ('date_planned_start', '&lt;', current_date), ('state', '=', 'ready')]"
                     help="Production started late"/>
-                <filter invisible="1" string="Late Activities" name="activities_overdue"
-                    domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
-                    help="Show all records which has next action date is before today"/>
-                <filter invisible="1" string="Today Activities" name="activities_today"
-                    domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
-                <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
-                    domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
                 <group expand="0" string="Group By">
                     <filter string="Work Center" name="work_center" domain="[]" context="{'group_by': 'workcenter_id'}"/>
                     <filter string="Manufacturing Order" name="production" domain="[]" context="{'group_by': 'production_id'}"/>
@@ -274,7 +257,7 @@
         <field name="name">mrp.production.work.order.graph</field>
         <field name="model">mrp.workorder</field>
         <field name="arch" type="xml">
-            <graph string="Operations">
+            <graph string="Operations" sample="1">
                 <field name="production_id"/>
                 <field name="duration" type="measure"/>
             </graph>
@@ -285,7 +268,7 @@
         <field name="name">mrp.production.work.order.pivot</field>
         <field name="model">mrp.workorder</field>
         <field name="arch" type="xml">
-            <pivot string="Operations">
+            <pivot string="Operations" sample="1">
                 <field name="date_start"/>
                 <field name="operation_id"/>
                 <field name="duration" type="measure"/>
@@ -342,7 +325,7 @@
                 decoration-warning="state == 'cancel' or (json_popover and 'text-warning' in json_popover)"
                 color="production_id"
                 display_unavailability="1"
-                form_view_id="mrp_production_workorder_form_view_inherit_gantt">
+                form_view_id="mrp_production_workorder_form_view_inherit">
 
                 <field name="date_planned_start"/>
                 <field name="state"/>
@@ -429,12 +412,11 @@
         <field name="context">{'search_default_work_center': True, 'search_default_ready': True, 'search_default_progress': True, 'search_default_pending': True}</field>
         <field name="help" type="html">
           <p class="o_view_nocontent_smiling_face">
-            Start a new work order
+            No work orders to do!
           </p><p>
-            Work Orders are operations to be processed at a Work Center to realize a
-            Manufacturing Order. Work Orders are trigerred by Manufacturing Orders,
-            they are based on the Routing defined on these ones
-            </p>
+            Work orders are operations to do as part of a manufacturing order.
+            Operations are defined in the bill of materials or added in the manufacturing order directly.
+          </p>
         </field>
     </record>
 
@@ -449,13 +431,10 @@
         <field name="context">{'search_default_production': True, 'search_default_ready': True, 'search_default_progress': True, 'search_default_pending': True}</field>
         <field name="help" type="html">
           <p class="o_view_nocontent_smiling_face">
-            Start a new work order
+            No work orders to do!
           </p><p>
-            To manufacture or assemble products, and use components and
-            finished products you must also handle manufacturing operations.
-            Manufacturing operations are often called Work Orders. The various
-            operations will have different impacts on the costs of
-            manufacturing and planning depending on the available workload.
+            Work orders are operations to do as part of a manufacturing order.
+            Operations are defined in the bill of materials or added in the manufacturing order directly.
           </p>
         </field>
     </record>
@@ -490,7 +469,7 @@
         <field name="name">report.workcenter.load.pivot</field>
         <field name="model">mrp.workorder</field>
         <field name="arch" type="xml">
-            <pivot string="Work Center Loads">
+            <pivot string="Work Center Loads" sample="1">
                 <field name="duration_expected" type="measure"/>
                 <field name="workcenter_id" type="row"/>
                 <field name="production_date" type="row" interval="day"/>
@@ -502,7 +481,7 @@
         <field name="name">report.workcenter.load.graph</field>
         <field name="model">mrp.workorder</field>
         <field name="arch" type="xml">
-            <graph string="Work Center load" type="bar">
+            <graph string="Work Center load" type="bar" sample="1">
                 <field name="production_date" interval="day"/>
                 <field name="workcenter_id"/>
                 <field name="duration_expected" type="measure"/>
@@ -516,6 +495,11 @@
         <field name="res_model">mrp.workorder</field>
         <field name="view_mode">graph,pivot</field>
         <field name="view_id" ref="view_workcenter_load_pivot"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No data yet!
+            </p>
+        </field>
     </record>
 
     <record id="action_mrp_workcenter_load_report_pivot" model="ir.actions.act_window.view">

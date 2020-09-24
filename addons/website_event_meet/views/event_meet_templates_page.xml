@@ -38,12 +38,12 @@
                     t-options="{'widget': 'duration', 'digital': True, 'unit': 'minute', 'round': 'minute'}"/>.
             </span>
             <span class="my-0" t-else="meeting_room.event_id.start_today">
-                starts at
+                starts on
                 <span t-field="meeting_room.event_id.with_context(tz=meeting_room.event_id.date_tz).date_begin"
                     t-options="{'format': 'medium'}"/> (<t t-esc="meeting_room.event_id.date_tz"/>).
             </span>
             <br/>
-            <span>Join us there to chat about "<b t-esc="meeting_room.name"/> !</span>
+            <span>Join us there to chat about <b t-esc="meeting_room.name"/> !</span>
         </div>
         <!-- ROOM CONTENT -->
         <div class="d-flex flex-column">
@@ -66,6 +66,7 @@
                         <t t-set="attach_to" t-value="'#o_wemeet_jitsi_iframe'"/>
                         <t t-set="check_full" t-value="is_event_manager"/>
                         <t t-set="default_username" t-value="default_username"/>
+                        <t t-set="jitsi_server_domain" t-value="meeting_room.chat_room_id.jitsi_server_domain"/>
                     </t>
                 </div>
             </div>

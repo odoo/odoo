@@ -11,7 +11,7 @@ if (!$signupForm.length) { return; }
 // hook in password strength meter
 // * requirement is the password field's minlength
 // * recommendations are from the module
-var $password = $signupForm.find('#password');
+var $password = $('[type=password][minlength]');
 var minlength = Number($password.attr('minlength'));
 if (isNaN(minlength)) { return; }
 

@@ -66,7 +66,12 @@ class MassMailing(models.Model):
             return False
 
     active = fields.Boolean(default=True, tracking=True)
-    subject = fields.Char('Subject', help='Subject of emails to send', required=True, translate=True)
+    subject = fields.Char('Subject', help='Subject of your Mailing', required=True, translate=True)
+    preview = fields.Char(
+        'Preview', translate=True,
+        help='Catchy preview sentence that encourages recipients to open this email.\n'
+             'In most inboxes, this is displayed next to the subject.\n'
+             'Keep it empty if you prefer the first characters of your email content to appear instead.')
     email_from = fields.Char(string='Send From', required=True,
         default=lambda self: self.env.user.email_formatted)
     sent_date = fields.Datetime(string='Sent Date', copy=False)
@@ -143,7 +148,10 @@ class MassMailing(models.Model):
 
     def _compute_total(self):
         for mass_mailing in self:
-            mass_mailing.total = len(mass_mailing.sudo()._get_recipients())
+            total = self.env[mass_mailing.mailing_model_real].search_count(mass_mailing._parse_mailing_domain())
+            if mass_mailing.contact_ab_pc < 100:
+                total = int(total / 100.0 * mass_mailing.contact_ab_pc)
+            mass_mailing.total = total
 
     def _compute_clicks_ratio(self):
         self.env.cr.execute("""
@@ -152,8 +160,7 @@ class MassMailing(models.Model):
             LEFT OUTER JOIN link_tracker_click AS clicks ON clicks.mailing_trace_id = stats.id
             WHERE stats.mass_mailing_id IN %s
             GROUP BY stats.mass_mailing_id
-        """, (tuple(self.ids), ))
-
+        """, [tuple(self.ids) or (None,)])
         mass_mailing_data = self.env.cr.dictfetchall()
         mapped_data = dict([(m['id'], 100 * m['nb_clicks'] / m['nb_mails']) for m in mass_mailing_data])
         for mass_mailing in self:
@@ -161,6 +168,14 @@ class MassMailing(models.Model):
 
     def _compute_statistics(self):
         """ Compute statistics of the mass mailing """
+        for key in (
+            'scheduled', 'expected', 'ignored', 'sent', 'delivered', 'opened',
+            'clicked', 'replied', 'bounced', 'failed', 'received_ratio',
+            'opened_ratio', 'replied_ratio', 'bounced_ratio', 'clicks_ratio',
+        ):
+            self[key] = False
+        if not self.ids:
+            return
         self.env.cr.execute("""
             SELECT
                 m.id as mailing_id,
@@ -300,7 +315,7 @@ class MassMailing(models.Model):
 
     def action_schedule(self):
         self.ensure_one()
-        action = self.env.ref('mass_mailing.mailing_mailing_schedule_date_action').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("mass_mailing.mailing_mailing_schedule_date_action")
         action['context'] = dict(self.env.context, default_mass_mailing_id=self.id)
         return action
 
@@ -332,7 +347,7 @@ class MassMailing(models.Model):
         return self._action_view_traces_filtered('sent')
 
     def _action_view_traces_filtered(self, view_filter):
-        action = self.env.ref('mass_mailing.mailing_trace_action').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("mass_mailing.mailing_trace_action")
         action['name'] = _('%s Traces') % (self.name)
         action['context'] = {'search_default_mass_mailing_id': self.id,}
         filter_key = 'search_default_filter_%s' % (view_filter)
@@ -498,13 +513,8 @@ class MassMailing(models.Model):
         }
 
     def _get_recipients(self):
-        try:
-            mailing_domain = literal_eval(self.mailing_domain)
-        except:
-            res_ids = []
-            mailing_domain = [('id', 'in', res_ids)]
-        else:
-            res_ids = self.env[self.mailing_model_real].search(mailing_domain).ids
+        mailing_domain = self._parse_mailing_domain()
+        res_ids = self.env[self.mailing_model_real].search(mailing_domain).ids
 
         # randomly choose a fragment
         if self.contact_ab_pc < 100:
@@ -526,7 +536,7 @@ class MassMailing(models.Model):
             ('model', '=', self.mailing_model_real),
             ('res_id', 'in', res_ids),
             ('mass_mailing_id', '=', self.id)], ['res_id'])
-        done_res_ids = [record['res_id'] for record in already_mailed]
+        done_res_ids = {record['res_id'] for record in already_mailed}
         return [rid for rid in res_ids if rid not in done_res_ids]
 
     def _get_unsubscribe_url(self, email_to, res_id):
@@ -569,7 +579,7 @@ class MassMailing(models.Model):
             composer_values = {
                 'author_id': author_id,
                 'attachment_ids': [(4, attachment.id) for attachment in mailing.attachment_ids],
-                'body': self._prepend_preview(self.body_html),
+                'body': self._prepend_preview(self.body_html, self.preview),
                 'subject': mailing.subject,
                 'model': mailing.mailing_model_real,
                 'email_from': mailing.email_from,
@@ -764,6 +774,14 @@ class MassMailing(models.Model):
         if self.mailing_type == 'mail' and 'opt_out' in self.env[self.mailing_model_name]._fields:
             mailing_domain = expression.AND([[('opt_out', '=', False)], mailing_domain])
 
+        return mailing_domain
+
+    def _parse_mailing_domain(self):
+        self.ensure_one()
+        try:
+            mailing_domain = literal_eval(self.mailing_domain)
+        except Exception:
+            mailing_domain = [('id', 'in', [])]
         return mailing_domain
 
     def _unsubscribe_token(self, res_id, email):

@@ -3,6 +3,7 @@
 {
     'name': 'Buckaroo Payment Acquirer',
     'category': 'Accounting/Payment Acquirers',
+    'sequence': 355,
     'summary': 'Payment Acquirer: Buckaroo Implementation',
     'version': '1.0',
     'description': """Buckaroo Payment Acquirer""",

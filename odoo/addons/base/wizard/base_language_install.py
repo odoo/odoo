@@ -20,7 +20,7 @@ class BaseLanguageInstall(models.TransientModel):
 
     @api.model
     def _get_languages(self):
-        return [[code, name] for code, _, name in self.env['res.lang'].get_available()]
+        return [[code, name] for code, _, name, *_ in self.env['res.lang'].get_available()]
 
     lang = fields.Selection(_get_languages, string='Language', required=True,
                             default=_default_language)

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="mail_client_extension.app_auth" name="Accept app">
+        <t t-call="web.login_layout">
+            <t t-set="disable_database_manager" t-value="1"/>
+            <form class="oe_login_form" role="form" method="post" action="/mail_client_extension/auth/confirm">
+                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                <input type="hidden" name="redirect" t-att-value="redirect"/>
+                <input type="hidden" name="scope" t-att-value="scope"/>
+                <input type="hidden" name="friendlyname" t-att-value="friendlyname"/>
+                <p class="text-center">
+                    Let <t t-esc="friendlyname" /> access your Odoo database?
+                </p>
+                <p class="text-center">
+                    <button type="submit" name="do" value="1" class="btn btn-link btn-sm">Allow</button>
+                    <button type="submit" name="do" class="btn btn-link btn-sm">Deny</button>
+                </p>
+            </form>
+        </t>
+    </template>
+</odoo>

@@ -10,6 +10,7 @@ from odoo.addons.test_mail.models.test_mail_models import MailTestSimple
 from odoo.addons.test_mail.tests.common import TestMailCommon, TestRecipients
 from odoo.exceptions import AccessError
 from odoo.tools import mute_logger, formataddr
+from odoo.api import call_kw
 
 
 class TestMessagePost(TestMailCommon, TestRecipients):
@@ -294,3 +295,13 @@ class TestMessagePost(TestMailCommon, TestRecipients):
                 subject='About %s' % test_record.name,
                 body_content=test_record.name,
                 attachments=[('first.txt', b'My first attachment', 'text/plain'), ('second.txt', b'My second attachment', 'text/plain')])
+
+    # This method should be run inside a post_install class to ensure that all
+    # message_post overrides are tested.
+    def test_message_post_return(self):
+        test_channel = self.env['mail.channel'].create({
+            'name': 'Test',
+        })
+        # Use call_kw as shortcut to simulate a RPC call.
+        messageId = call_kw(self.env['mail.channel'], 'message_post', [test_channel.id], {'body': 'test'})
+        self.assertTrue(isinstance(messageId, int))

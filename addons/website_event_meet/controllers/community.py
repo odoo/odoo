@@ -8,13 +8,13 @@ from werkzeug.utils import redirect
 from odoo import exceptions, http
 from odoo.http import request
 from odoo.addons.http_routing.models.ir_http import slug
-from odoo.addons.website_event_track_online.controllers.community import WebsiteEventCommunityController
+from odoo.addons.website_event.controllers.community import EventCommunityController
 from odoo.osv import expression
 
 _logger = logging.getLogger(__name__)
 
 
-class WebsiteEventMeetController(WebsiteEventCommunityController):
+class WebsiteEventMeetController(EventCommunityController):
 
     def _get_event_rooms_base_domain(self, event):
         search_domain_base = [('event_id', '=', event.id), ('is_published', '=', True)]
@@ -77,7 +77,7 @@ class WebsiteEventMeetController(WebsiteEventCommunityController):
     @http.route("/event/<model('event.event'):event>/meeting_room_create",
                 type="http", auth="public", methods=["POST"], website=True)
     def create_meeting_room(self, event, **post):
-        if not event or not event.can_access_from_current_website() or not event.is_published or not event.meeting_room_allow_creation:
+        if not event or not event.can_access_from_current_website() or (not event.is_published and not request.env.user.user_has_groups('base.group_user')) or not event.meeting_room_allow_creation:
             raise Forbidden()
 
         name = post.get("name")
@@ -114,7 +114,7 @@ class WebsiteEventMeetController(WebsiteEventCommunityController):
     # ROOM PAGE VIEW
     # ------------------------------------------------------------
 
-    @http.route("/event/<model('event.event'):event>/meeting_room/<model('event.meeting.room'):meeting_room>",
+    @http.route('''/event/<model('event.event', "[('community_menu', '=', True)]"):event>/meeting_room/<model("event.meeting.room","[('event_id','=',event.id)]"):meeting_room>''',
                 type="http", auth="public", website=True, sitemap=True)
     def event_meeting_room_page(self, event, meeting_room, **post):
         """Display the meeting room frontend view.

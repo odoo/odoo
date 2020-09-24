@@ -93,12 +93,22 @@
                 <attribute name="attrs">{'invisible': ['|',('mailing_type', '!=', 'mail'),('state', 'in', ('draft','test'))]}</attribute>
             </xpath>
             <!-- Form -->
+            <xpath expr="//field[@name='subject']" position="attributes">
+                <attribute name="attrs">{'invisible': [('mailing_type', '!=', 'mail')], 'readonly': [('state', 'in', ('sending', 'done'))], 'required': [('mailing_type', '=', 'mail')]}</attribute>
+                <!-- overrided in xml view to prevent remaining helper changes (on mass_mailing module) when mass_mailing_sms uninstalled-->
+                <attribute name="help">For an Email, Subject your Recipients will see in their inbox.
+                    For an SMS Text Message, internal Title of the Message.</attribute>
+            </xpath>
+            <xpath expr="//field[@name='subject']" position="after">
+                <field name="sms_subject" string="Title" attrs="{'invisible': [('mailing_type', '!=', 'sms')], 'readonly': [('state', 'in', ('sending', 'done'))], 'required': [('mailing_type', '=', 'sms')]}"/>
+            </xpath>
             <xpath expr="//page[@name='mail_body']" position="attributes">
                 <attribute name="attrs">{'invisible': [('mailing_type', '!=', 'mail')]}</attribute>
             </xpath>
             <xpath expr="//page[@name='mail_body']" position="after">
                 <page string="SMS Content" name="sms_body" attrs="{'invisible': [('mailing_type', '!=', 'sms')]}">
-                    <field name="body_plaintext" widget="sms_widget" attrs="{'required': [('mailing_type', '=', 'sms')]}"/>
+                    <field name="body_plaintext" widget="sms_widget" attrs="{'required': [('mailing_type', '=', 'sms')]}" 
+                        options='{"enable_emojis": True}'/>
                     <group>
                         <field name="sms_force_send" invisible="1"/>
                     </group>

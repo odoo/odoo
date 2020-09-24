@@ -2,16 +2,16 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from ast import literal_eval
-from random import randint
+from random import randint, sample
 from werkzeug.exceptions import NotFound, Forbidden
 
 from odoo import exceptions, http
-from odoo.addons.website_event_track.controllers.main import WebsiteEventTrackController
+from odoo.addons.website_event_track.controllers.event_track import EventTrackController
 from odoo.http import request
 from odoo.osv import expression
 
 
-class ExhibitorController(WebsiteEventTrackController):
+class ExhibitorController(EventTrackController):
 
     def _get_event_sponsors_base_domain(self, event):
         search_domain_base = [
@@ -72,7 +72,7 @@ class ExhibitorController(WebsiteEventTrackController):
         sponsors = request.env['event.sponsor'].sudo().search(search_domain)
         sponsors_all = request.env['event.sponsor'].sudo().search(search_domain_base)
         sponsor_types = sponsors_all.mapped('sponsor_type_id')
-        sponsor_countries = sponsors_all.mapped('partner_id.country_id')
+        sponsor_countries = sponsors_all.mapped('partner_id.country_id').sorted('name')
         # organize sponsors into categories to help display
         sponsor_categories = dict()
         for sponsor in sponsors:
@@ -82,7 +82,7 @@ class ExhibitorController(WebsiteEventTrackController):
         sponsor_categories = [
             dict({
                 'sponsorship': sponsor_category,
-                'sponsors': sponsors,
+                'sponsors': sample(sponsors, len(sponsors)),
             }) for sponsor_category, sponsors in sponsor_categories.items()]
 
         # return rendering values
@@ -108,7 +108,8 @@ class ExhibitorController(WebsiteEventTrackController):
     # FRONTEND FORM
     # ------------------------------------------------------------
 
-    @http.route(['/event/<model("event.event"):event>/exhibitor/<model("event.sponsor"):sponsor>'], type='http', auth="public", website=True, sitemap=False)
+    @http.route(['''/event/<model("event.event", "[('exhibitor_menu', '=', True)]"):event>/exhibitor/<model("event.sponsor", "[('event_id', '=', event.id)]"):sponsor>'''],
+                type='http', auth="public", website=True, sitemap=True)
     def event_exhibitor(self, event, sponsor, **options):
         if not event.can_access_from_current_website():
             raise NotFound()
@@ -135,10 +136,10 @@ class ExhibitorController(WebsiteEventTrackController):
             [('id', '!=', sponsor.id)]
         ])
         sponsors_other = request.env['event.sponsor'].sudo().search(search_domain_base)
-        sponsors_other = sponsors_other.filtered(lambda sponsor: sponsor.is_in_opening_hours)
         current_country = sponsor.partner_id.country_id
 
         sponsors_other = sponsors_other.sorted(key=lambda sponsor: (
+            sponsor.is_in_opening_hours,
             sponsor.partner_id.country_id == current_country,
             -1 * sponsor.sponsor_type_id.sequence,
             randint(0, 20)
@@ -154,7 +155,7 @@ class ExhibitorController(WebsiteEventTrackController):
             'sponsor': sponsor,
             'hide_sponsors': True,
             # sidebar
-            'sponsors_other': sponsors_other,
+            'sponsors_other': sponsors_other[:30],
             # options
             'option_widescreen': option_widescreen,
             'option_can_edit': request.env.user.has_group('event.group_event_manager'),

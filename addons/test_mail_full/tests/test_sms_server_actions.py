@@ -25,6 +25,7 @@ class TestServerAction(TestMailFullCommon, TestRecipients):
             'model_id': cls.env['ir.model']._get('mail.test.sms').id,
             'state': 'sms',
             'sms_template_id': cls.sms_template.id,
+            'groups_id': cls.env.ref('base.group_user'),
         })
 
     def test_action_sms(self):

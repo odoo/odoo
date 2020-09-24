@@ -1,6 +1,7 @@
 odoo.define('website_forum.website_forum', function (require) {
 'use strict';
 
+const dom = require('web.dom');
 var core = require('web.core');
 var weDefaultOptions = require('web_editor.wysiwyg.default_options');
 var wysiwygLoader = require('web_editor.loader');
@@ -166,9 +167,11 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
         });
 
         this.$('#post_reply').on('shown.bs.collapse', function (e) {
-            $('html').animate({
-                scrollTop: $('#post_reply').offset().top - ($(window).innerHeight() - $('#post_reply').innerHeight())
-            }, 500);
+            const replyEl = document.querySelector('#post_reply');
+            const scrollingElement = dom.closestScrollable(replyEl.parentNode);
+            dom.scrollTo(replyEl, {
+                forcedOffset: $(scrollingElement).innerHeight() - $(replyEl).innerHeight(),
+            });
         });
 
         return this._super.apply(this, arguments);

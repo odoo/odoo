@@ -188,24 +188,37 @@ class HolidaysType(models.Model):
 
         return [('id', 'in', valid_leave_types.ids)]
 
+    # YTI TODO: Remove me in master
     def get_days(self, employee_id):
-        # need to use `dict` constructor to create a dict per id
-        result = dict((id, dict(max_leaves=0, leaves_taken=0, remaining_leaves=0, virtual_remaining_leaves=0, virtual_leaves_taken=0)) for id in self.ids)
+        return self.get_employees_days([employee_id])[employee_id]
+
+    def get_employees_days(self, employee_ids):
+        result = {
+            employee_id: {
+                leave_type.id: {
+                    'max_leaves': 0,
+                    'leaves_taken': 0,
+                    'remaining_leaves': 0,
+                    'virtual_remaining_leaves': 0,
+                    'virtual_leaves_taken': 0,
+                } for leave_type in self
+            } for employee_id in employee_ids
+        }
 
         requests = self.env['hr.leave'].search([
-            ('employee_id', '=', employee_id),
+            ('employee_id', 'in', employee_ids),
             ('state', 'in', ['confirm', 'validate1', 'validate']),
             ('holiday_status_id', 'in', self.ids)
         ])
 
         allocations = self.env['hr.leave.allocation'].search([
-            ('employee_id', '=', employee_id),
+            ('employee_id', 'in', employee_ids),
             ('state', 'in', ['confirm', 'validate1', 'validate']),
             ('holiday_status_id', 'in', self.ids)
         ])
 
         for request in requests:
-            status_dict = result[request.holiday_status_id.id]
+            status_dict = result[request.employee_id.id][request.holiday_status_id.id]
             status_dict['virtual_remaining_leaves'] -= (request.number_of_hours_display
                                                     if request.leave_type_request_unit == 'hour'
                                                     else request.number_of_days)
@@ -221,7 +234,7 @@ class HolidaysType(models.Model):
                                                 else request.number_of_days)
 
         for allocation in allocations.sudo():
-            status_dict = result[allocation.holiday_status_id.id]
+            status_dict = result[allocation.employee_id.id][allocation.holiday_status_id.id]
             if allocation.state == 'validate':
                 # note: add only validated allocation even for the virtual
                 # count; otherwise pending then refused allocation allow
@@ -235,7 +248,6 @@ class HolidaysType(models.Model):
                 status_dict['remaining_leaves'] += (allocation.number_of_hours_display
                                                   if allocation.type_request_unit == 'hour'
                                                   else allocation.number_of_days)
-
         return result
 
     @api.model
@@ -265,7 +277,7 @@ class HolidaysType(models.Model):
         employee_id = self._get_contextual_employee_id()
 
         if employee_id:
-            data_days = self.get_days(employee_id)
+            data_days = self.get_employees_days([employee_id])[employee_id]
 
         for holiday_status in self:
             result = data_days.get(holiday_status.id, {})
@@ -347,7 +359,7 @@ class HolidaysType(models.Model):
 
     def action_see_days_allocated(self):
         self.ensure_one()
-        action = self.env.ref('hr_holidays.hr_leave_allocation_action_all').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("hr_holidays.hr_leave_allocation_action_all")
         domain = [
             ('holiday_status_id', 'in', self.ids),
             ('holiday_type', '!=', 'employee'),
@@ -366,7 +378,7 @@ class HolidaysType(models.Model):
 
     def action_see_group_leaves(self):
         self.ensure_one()
-        action = self.env.ref('hr_holidays.hr_leave_action_all').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("hr_holidays.hr_leave_action_action_approve_department")
         action['domain'] = [
             ('holiday_status_id', '=', self.ids[0]),
             ('date_from', '>=', fields.Datetime.to_string(datetime.datetime.now().replace(month=1, day=1, hour=0, minute=0, second=0, microsecond=0)))

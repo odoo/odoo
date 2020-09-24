@@ -29,6 +29,9 @@ from odoo.exceptions import CacheMiss
 DATE_LENGTH = len(date.today().strftime(DATE_FORMAT))
 DATETIME_LENGTH = len(datetime.now().strftime(DATETIME_FORMAT))
 
+# hacky-ish way to prevent access to a field through the ORM (except for sudo mode)
+NO_ACCESS='.'
+
 IR_MODELS = (
     'ir.model', 'ir.model.data', 'ir.model.fields', 'ir.model.fields.selection',
     'ir.model.relation', 'ir.model.constraint', 'ir.module.module',
@@ -219,8 +222,8 @@ class Field(MetaField('DummyField', (object,), {})):
     index = False                       # whether the field is indexed in database
     manual = False                      # whether the field is a custom field
     copy = True                         # whether the field is copied over by BaseModel.copy()
-    depends = None                      # collection of field dependencies
-    depends_context = None              # collection of context key dependencies
+    _depends = None                     # collection of field dependencies
+    _depends_context = None             # collection of context key dependencies
     recursive = False                   # whether self depends on itself
     compute = None                      # compute(recs) computes field on recs
     compute_sudo = False                # whether field should be recomputed as superuser
@@ -341,8 +344,13 @@ class Field(MetaField('DummyField', (object,), {})):
         if attrs.get('translate'):
             # by default, translatable fields are context-dependent
             attrs['depends_context'] = attrs.get('depends_context', ()) + ('lang',)
+
+        # parameters 'depends' and 'depends_context' are stored in attributes
+        # '_depends' and '_depends_context', respectively
         if 'depends' in attrs:
-            attrs['depends'] = tuple(attrs['depends'])
+            attrs['_depends'] = tuple(attrs.pop('depends'))
+        if 'depends_context' in attrs:
+            attrs['_depends_context'] = tuple(attrs.pop('depends_context'))
 
         return attrs
 
@@ -404,7 +412,10 @@ class Field(MetaField('DummyField', (object,), {})):
 
     def _setup_regular_full(self, model):
         """ Determine the dependencies and inverse field(s) of ``self``. """
-        if self.depends is not None:
+        if self._depends is not None:
+            # the parameter 'depends' has priority over 'depends' on compute
+            self.depends = self._depends
+            self.depends_context = self._depends_context or ()
             return
 
         # determine the functions implementing self.compute
@@ -417,7 +428,7 @@ class Field(MetaField('DummyField', (object,), {})):
 
         # collect depends and depends_context
         depends = []
-        depends_context = list(self.depends_context or ())
+        depends_context = list(self._depends_context or ())
         for func in funcs:
             deps = getattr(func, '_depends', ())
             depends.extend(deps(model) if callable(deps) else deps)
@@ -457,7 +468,9 @@ class Field(MetaField('DummyField', (object,), {})):
             raise TypeError("Type of related field %s is inconsistent with %s" % (self, field))
 
         # determine dependencies, compute, inverse, and search
-        if self.depends is None:
+        if self._depends is not None:
+            self.depends = self._depends
+        else:
             self.depends = ('.'.join(self.related),)
         self.compute = self._compute_related
         if self.inherited or not (self.readonly or field.readonly):
@@ -483,7 +496,9 @@ class Field(MetaField('DummyField', (object,), {})):
                 self.required = True
             self._modules.update(field._modules)
 
-        if field.depends_context:
+        if self._depends_context is not None:
+            self.depends_context = self._depends_context
+        else:
             self.depends_context = field.depends_context
 
     def traverse_related(self, record):
@@ -960,7 +975,14 @@ class Field(MetaField('DummyField', (object,), {})):
                         self.compute_value(recs)
                     except (AccessError, MissingError):
                         self.compute_value(record)
-                    value = env.cache.get(record, self)
+                    try:
+                        value = env.cache.get(record, self)
+                    except CacheMiss:
+                        if self.readonly and not self.store:
+                            raise ValueError("Compute method failed to assign %s.%s" % (record, self.name))
+                        # fallback to null value if compute gives nothing
+                        value = self.convert_to_cache(False, record, validate=False)
+                        env.cache.set(record, self, value)
 
             elif self.type == 'many2one' and self.delegate and not record.id:
                 # parent record of a new record: new record, with the same
@@ -1589,7 +1611,7 @@ class Html(_String):
         (only a white list of attributes is accepted, default: ``True``)
     :param bool sanitize_attributes: whether to sanitize attributes
         (only a white list of attributes is accepted, default: ``True``)
-    :param bool sanitize_style: whether to sanitize style attributes (default: ``True``)
+    :param bool sanitize_style: whether to sanitize style attributes (default: ``False``)
     :param bool strip_style: whether to strip style attributes
         (removed and therefore not sanitized, default: ``False``)
     :param bool strip_classes: whether to strip classes attributes (default: ``False``)
@@ -1873,12 +1895,18 @@ class Binary(Field):
     type = 'binary'
 
     prefetch = False                    # not prefetched by default
-    depends_context = ('bin_size',)     # depends on context (content or size)
+    _depends_context = ('bin_size',)    # depends on context (content or size)
     attachment = True                   # whether value is stored in attachment
 
     @property
     def column_type(self):
         return None if self.attachment else ('bytea', 'bytea')
+
+    def _get_attrs(self, model, name):
+        attrs = super(Binary, self)._get_attrs(model, name)
+        if not attrs.get('store', True):
+            attrs['attachment'] = False
+        return attrs
 
     _description_attachment = property(attrgetter('attachment'))
 

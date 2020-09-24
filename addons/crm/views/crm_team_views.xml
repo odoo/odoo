@@ -135,7 +135,6 @@
                     <field name="alias_contact"
                         string="Accept Emails From"
                         attrs="{'invisible': [('use_leads', '=', False), ('use_opportunities', '=', False)]}"/>
-                    <field name="alias_user_id" string="Assign to"/>
                 </xpath>
             </field>
         </record>
@@ -215,7 +214,7 @@
                                 </a>
                             </div>
                             <div class="col-4 text-right text-truncate">
-                                <field name="opportunities_amount" widget="monetary"/>
+                                <field name="opportunities_amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                             </div>
                         </div>
                         <div class="row" t-if="record.opportunities_overdue_count.raw_value">
@@ -227,7 +226,7 @@
                                 </a>
                             </div>
                              <div class="col-4 text-right text-truncate">
-                                <field name="opportunities_overdue_amount" widget="monetary"/>
+                                <field name="opportunities_overdue_amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                             </div>
                         </div>
                     </xpath>

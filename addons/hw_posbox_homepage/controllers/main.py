@@ -1,26 +1,23 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import logging
 import json
 import jinja2
-import subprocess
-import socket
-import sys
-import netifaces
-import odoo
-from odoo import http
+import logging
 import os
-from odoo.tools import misc
 from pathlib import Path
+import socket
+import subprocess
+import sys
 import threading
 
-from odoo.addons.hw_proxy.controllers import main as hw_proxy
-from odoo.addons.web.controllers import main as web
-from odoo.modules.module import get_resource_path
-from odoo.addons.hw_drivers.tools import helpers
-from odoo.addons.hw_drivers.controllers.driver import iot_devices
+from odoo import http
 from odoo.http import Response
+from odoo.modules.module import get_resource_path
+
+from odoo.addons.hw_drivers.main import iot_devices
+from odoo.addons.hw_drivers.tools import helpers
+from odoo.addons.web.controllers import main as web
 
 _logger = logging.getLogger(__name__)
 
@@ -80,7 +77,7 @@ class IoTboxHomepage(web.Home):
             iot_device.append({
                 'name': iot_devices[device].device_name + ' : ' + str(iot_devices[device].data['value']),
                 'type': iot_devices[device].device_type.replace('_', ' '),
-                'message': iot_devices[device].device_identifier + iot_devices[device].get_message()
+                'identifier': iot_devices[device].device_identifier,
             })
 
         return {

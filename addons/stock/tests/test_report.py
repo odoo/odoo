@@ -96,7 +96,7 @@ class TestReports(TestReportsCommon):
         # Delivery of 20.0 units tomorrow
         move_out = self.env['stock.move'].create({
             'name': 'Move Out 20',
-            'date_expected': datetime.now() + timedelta(days=1),
+            'date': datetime.now() + timedelta(days=1),
             'location_id': stock.id,
             'location_dest_id': self.env.ref('stock.stock_location_customers').id,
             'product_id': product.id,
@@ -123,7 +123,7 @@ class TestReports(TestReportsCommon):
         # Receipt of 10.0 units tomorrow
         move_in = self.env['stock.move'].create({
             'name': 'Move In 10',
-            'date_expected': datetime.now() + timedelta(days=1),
+            'date': datetime.now() + timedelta(days=1),
             'location_id': self.env.ref('stock.stock_location_suppliers').id,
             'location_dest_id': stock.id,
             'product_id': product.id,
@@ -146,7 +146,7 @@ class TestReports(TestReportsCommon):
         # Delivery of 20.0 units tomorrow
         move_out = self.env['stock.move'].create({
             'name': 'Move Out 30 - Day-1',
-            'date_expected': datetime.now() - timedelta(days=1),
+            'date': datetime.now() - timedelta(days=1),
             'location_id': stock.id,
             'location_dest_id': self.env.ref('stock.stock_location_customers').id,
             'product_id': product.id,

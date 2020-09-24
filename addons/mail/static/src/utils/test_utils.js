@@ -7,11 +7,13 @@ const {
     addMessagingToEnv,
     addTimeControlToEnv,
 } = require('mail/static/src/env/test_env.js');
+const ModelManager = require('mail/static/src/model/model_manager.js');
 const ChatWindowService = require('mail/static/src/services/chat_window_service/chat_window_service.js');
 const DialogService = require('mail/static/src/services/dialog_service/dialog_service.js');
 const { nextTick } = require('mail/static/src/utils/utils.js');
 const DiscussWidget = require('mail/static/src/widgets/discuss/discuss.js');
 const MessagingMenuWidget = require('mail/static/src/widgets/messaging_menu/messaging_menu.js');
+const MockModels = require('mail/static/tests/helpers/mock_models.js');
 
 const AbstractStorageService = require('web.AbstractStorageService');
 const NotificationService = require('web.NotificationService');
@@ -66,9 +68,9 @@ function _useChatWindow(callbacks) {
         destroy: prevDestroy,
     } = callbacks;
     return Object.assign({}, callbacks, {
-        mount: prevMount.concat(() => {
+        mount: prevMount.concat(async () => {
             // trigger mounting of chat window manager
-            Component.env.services['chat_window']._onWebClientReady();
+            await Component.env.services['chat_window']._onWebClientReady();
         }),
         destroy: prevDestroy.concat(() => {
             Component.env.services['chat_window'].destroy();
@@ -91,9 +93,9 @@ function _useDialog(callbacks) {
         destroy: prevDestroy,
     } = callbacks;
     return Object.assign({}, callbacks, {
-        mount: prevMount.concat(() => {
+        mount: prevMount.concat(async () => {
             // trigger mounting of dialog manager
-            Component.env.services['dialog']._onWebClientReady();
+            await Component.env.services['dialog']._onWebClientReady();
         }),
         destroy: prevDestroy.concat(() => {
             Component.env.services['dialog'].destroy();
@@ -137,7 +139,7 @@ function _useDiscuss(callbacks) {
             discussWidget = new DiscussWidget(widget, state.discussData);
             await discussWidget.appendTo($(selector));
             if (state.autoOpenDiscuss) {
-                discussWidget.on_attach_callback();
+                await discussWidget.on_attach_callback();
             }
         }),
         return: prevReturn.concat(result => {
@@ -165,7 +167,7 @@ function _useMessagingMenu(callbacks) {
         mount: prevMount.concat(async ({ selector, widget }) => {
             messagingMenuWidget = new MessagingMenuWidget(widget, {});
             await messagingMenuWidget.appendTo($(selector));
-            messagingMenuWidget.on_attach_callback();
+            await messagingMenuWidget.on_attach_callback();
         }),
         return: prevReturn.concat(result => {
             Object.assign(result, { messagingMenuWidget });
@@ -256,328 +258,111 @@ const afterNextRender = (function () {
 //------------------------------------------------------------------------------
 
 function beforeEach(self) {
-    const data = {
-        initMessaging: {
-            channel_slots: {},
-            commands: [],
-            is_moderator: false,
-            mail_failures: [],
-            mention_partner_suggestions: [],
-            menu_id: false,
-            moderation_counter: 0,
-            moderation_channel_ids: [],
-            needaction_inbox_counter: 0,
-            partner_root: {
-                active: false,
-                display_name: "OdooBot",
-                id: 2,
-            },
-            public_partner: {
-                active: false,
-                display_name: "Public user",
-                id: 4,
-            },
-            shortcodes: [],
-            starred_counter: 0,
-        },
-        'ir.attachment': {
-            fields: {
-                name: { type: 'char', string: "attachment name", required: true },
-                res_model: { type: 'char', string: "res model" },
-                res_id: { type: 'integer', string: "res id" },
-                url: { type: 'char', string: 'url' },
-                type: { type: 'selection', selection: [['url', "URL"], ['binary', "BINARY"]] },
-                mimetype: { type: 'char', string: "mimetype" },
-            },
-        },
-        'mail.activity': {
-            fields: {
-                can_write: {
-                    type: 'boolean',
-                },
-                icon: {
-                    type: 'string',
-                },
-                id: {
-                    type: 'integer',
-                },
-                res_id: {
-                    type: 'integer',
-                },
-                res_model: {
-                    type: 'string',
-                },
-            },
-        },
-        'mail.channel': {
-            fields: {
-                channel_type: {
-                    string: "Channel Type",
-                    type: "selection",
-                },
-                id: {
-                    string: "Id",
-                    type: 'integer',
-                },
-                is_minimized: {
-                    // In python this belongs to mail.channel.partner. Here for simplicity.
-                    string: "isMinimized",
-                    type: "boolean",
-                },
-                is_pinned: {
-                    // In python this belongs to mail.channel.partner. Here for simplicity.
-                    string: "isPinned",
-                    type: "boolean",
-                },
-                message_unread_counter: {
-                    string: "# unread messages",
-                    type: 'integer',
-                },
-                name: {
-                    string: "Name",
-                    type: "char",
-                    required: true,
-                },
-                state: {
-                    // In python this belongs to mail.channel.partner. Here for simplicity.
-                    string: "FoldState",
-                    type: "char",
-                },
-                uuid: {
-                    string: "UUID",
-                    type: "char",
-                    required: true,
-                },
-            },
-            records: [],
-        },
-        'mail.followers': {
-            fields: {
-                channel_id: {
-                    type: 'integer',
-                },
-                email: {
-                    type: 'string',
-                },
-                id: {
-                    type: 'integer',
-                },
-                is_active: {
-                    type: 'boolean',
-                },
-                is_editable: {
-                    type: 'boolean',
-                },
-                name: {
-                    type: 'string',
-                },
-                partner_id: {
-                    type: 'integer',
-                },
-            },
-        },
-        'mail.message': {
-            fields: {
-                attachment_ids: {
-                    string: "Attachments",
-                    type: 'many2many',
-                    relation: 'ir.attachment',
-                    default: [],
-                },
-                author_id: {
-                    string: "Author",
-                    relation: 'res.partner',
-                },
-                body: {
-                    string: "Contents",
-                    type: 'html',
-                },
-                channel_ids: {
-                    string: "Channels",
-                    type: 'many2many',
-                    relation: 'mail.channel',
-                },
-                date: {
-                    string: "Date",
-                    type: 'datetime',
-                },
-                history_partner_ids: {
-                    string: "Partners with History",
-                    type: 'many2many',
-                    relation: 'res.partner',
-                },
-                id: {
-                    string: "Id",
-                    type: 'integer',
-                },
-                is_discussion: {
-                    string: "Discussion",
-                    type: 'boolean',
-                },
-                is_note: {
-                    string: "Note",
-                    type: 'boolean',
-                },
-                is_notification: {
-                    string: "Notification",
-                    type: 'boolean',
-                },
-                is_starred: {
-                    string: "Starred",
-                    type: 'boolean',
-                },
-                message_type: {
-                    string: "Type",
-                    type: 'selection',
-                },
-                model: {
-                    string: "Related Document model",
-                    type: 'char',
-                },
-                needaction: {
-                    string: "Need Action",
-                    type: 'boolean',
-                },
-                needaction_partner_ids: {
-                    string: "Partners with Need Action",
-                    type: 'many2many',
-                    relation: 'res.partner',
-                },
-                record_name: {
-                    string: "Name",
-                    type: 'string',
-                },
-                res_id: {
-                    string: "Related Document ID",
-                    type: 'integer',
-                },
-                starred: {
-                    string: "Starred",
-                    type: 'boolean',
-                },
-                starred_partner_ids: {
-                    string: "Favorited By",
-                    type: 'many2many',
-                    relation: 'res.partner',
-                },
-            },
-        },
-        'mail.notification': {
-            fields: {
-                is_read: {
-                    string: "Is Read",
-                    type: 'boolean',
-                },
-                mail_message_id: {
-                    string: "Message",
-                    type: 'many2one',
-                    relation: 'mail.message',
-                },
-                res_partner_id: {
-                    string: "Needaction Recipient",
-                    type: 'many2one',
-                    relation: 'res.partner',
-                },
-            },
-        },
-        'res.partner': {
-            fields: {
-                activity_ids: {
-                    string: "Activities",
-                    type: 'one2many',
-                    relation: 'mail.activity',
-                },
-                description: {
-                    string: 'description',
-                    type: 'text',
-                },
-                display_name: { string: "Displayed name", type: "char" },
-                im_status: {
-                    string: "status",
-                    type: 'char',
-                },
-                message_follower_ids: {
-                    relation: 'mail.followers',
-                    string: "Followers",
-                    type: "one2many",
-                },
-                message_attachment_count: {
-                    string: 'Attachment count',
-                    type: 'integer',
-                },
-                message_ids: {
-                    string: "Messages",
-                    type: 'one2many',
-                    relation: 'mail.message',
-                },
-                name: {
-                    string: "Name",
-                    type: 'char',
-                },
-            },
-            records: [],
-        },
-        'res.users': {
-            fields: {
-                partner_id: {
-                    string: "Related partners",
-                    type: 'many2one',
-                    relation: 'res.partner',
-                },
-            },
-        },
-    };
+    const data = MockModels.generateData();
+
+    data.partnerRootId = 2;
+    data['res.partner'].records.push({
+        active: false,
+        display_name: "OdooBot",
+        id: data.partnerRootId,
+    });
+
+    data.currentPartnerId = 3;
+    data['res.partner'].records.push({
+        display_name: "Your Company, Mitchell Admin",
+        id: data.currentPartnerId,
+        name: "Mitchell Admin",
+    });
+    data.currentUserId = 2;
+    data['res.users'].records.push({
+        display_name: "Your Company, Mitchell Admin",
+        id: data.currentUserId,
+        name: "Mitchell Admin",
+        partner_id: data.currentPartnerId,
+    });
+
+    data.publicPartnerId = 4;
+    data['res.partner'].records.push({
+        active: false,
+        display_name: "Public user",
+        id: data.publicPartnerId,
+    });
+    data.publicUserId = 3;
+    data['res.users'].records.push({
+        active: false,
+        display_name: "Public user",
+        id: data.publicUserId,
+        name: "Public user",
+        partner_id: data.publicPartnerId,
+    });
 
     const originals = {
         '_.debounce': _.debounce,
         '_.throttle': _.throttle,
-        'window.fetch': window.fetch,
     };
 
     (function patch() {
         // patch _.debounce and _.throttle to be fast and synchronous
         _.debounce = _.identity;
         _.throttle = _.identity;
-        let uploadedAttachmentsCount = 1;
-        window.fetch = async function (route, form) {
-            const formData = form.body;
-            return {
-                async text() {
-                    const ufiles = formData.getAll('ufile');
-                    const files = ufiles.map(ufile => JSON.stringify({
-                        filename: ufile.name,
-                        id: uploadedAttachmentsCount,
-                        mimetype: ufile.type,
-                        name: ufile.name,
-                    }));
-                    const callback = formData.get('callback');
-                    uploadedAttachmentsCount++;
-                    return `
-                        <script language="javascript" type="text/javascript">
-                            var win = window.top.window;
-                            win.jQuery(win).trigger('${callback}', ${files.join(', ')});
-                        </script>`;
-                }
-            };
-        };
     })();
 
     function unpatch() {
         _.debounce = originals['_.debounce'];
         _.throttle = originals['_.throttle'];
-        window.fetch = originals['window.fetch'];
     }
 
-    Object.assign(self, { data, unpatch });
-
-    return {
+    Object.assign(self, {
+        components: [],
         data,
         unpatch,
-    };
+        widget: undefined
+    });
 }
 
 function afterEach(self) {
+    if (self.env) {
+        self.env.bus.off('hide_home_menu', null);
+        self.env.bus.off('show_home_menu', null);
+        self.env.bus.off('will_hide_home_menu', null);
+        self.env.bus.off('will_show_home_menu', null);
+    }
+    // The components must be destroyed before the widget, because the
+    // widget might destroy the models before destroying the components,
+    // and the components might still rely on messaging (or other) record(s).
+    while (self.components.length > 0) {
+        const component = self.components.pop();
+        component.destroy();
+    }
+    if (self.widget) {
+        self.widget.destroy();
+        self.widget = undefined;
+    }
+    self.env = undefined;
     self.unpatch();
+}
+
+/**
+ * Creates and returns a new root Component with the given props and mounts it
+ * on target.
+ * Assumes that self.env is set to the correct value.
+ * Components created this way are automatically registered for clean up after
+ * the test, which will happen when `afterEach` is called.
+ *
+ * @param {Object} self the current QUnit instance
+ * @param {Class} Component the component class to create
+ * @param {Object} param2
+ * @param {Object} [param2.props={}] forwarded to component constructor
+ * @param {DOM.Element} param2.target mount target for the component
+ * @returns {owl.Component} the new component instance
+ */
+async function createRootComponent(self, Component, { props = {}, target }) {
+    Component.env = self.env;
+    const component = new Component(null, props);
+    delete Component.env;
+    self.components.push(component);
+    await afterNextRender(() => component.mount(target));
+    return component;
 }
 
 /**
@@ -597,6 +382,7 @@ function afterEach(self) {
  *   is set: provide data that is passed to discuss widget (= client action) as
  *   2nd positional argument.
  * @param {Object} [param0.env={}]
+ * @param {function} [param0.mockFetch]
  * @param {function} [param0.mockRPC]
  * @param {boolean} [param0.hasActionManager=false] if set, use
  *   createActionManager.
@@ -611,6 +397,9 @@ function afterEach(self) {
  *     `env.testUtils`.
  * @param {boolean} [param0.hasView=false] if set, use createView to create a
  *   view instead of a generic widget.
+ * @param {Deferred|Promise} [param0.messagingBeforeCreationDeferred=Promise.resolve()]
+ *   Deferred that let tests block messaging creation and simulate resolution.
+ *   Useful for testing working components when messaging is not yet created.
  * @param {string} [param0.model] makes only sense when `param0.hasView` is set:
  *   the model to use in createView.
  * @param {integer} [param0.res_id] makes only sense when `param0.hasView` is set:
@@ -621,8 +410,26 @@ function afterEach(self) {
  *   the View class to use in createView.
  * @param {Object} [param0.viewOptions] makes only sense when `param0.hasView`
  *   is set: the view options to use in createView.
- * @param {boolean} [param0.waitUntilMessagingInitialized=true]
+ * @param {Object} [param0.waitUntilEvent]
+ * @param {String} [param0.waitUntilEvent.eventName]
+ * @param {String} [param0.waitUntilEvent.message]
+ * @param {function} [param0.waitUntilEvent.predicate]
+ * @param {integer} [param0.waitUntilEvent.timeoutDelay]
+ * @param {string} [param0.waitUntilMessagingCondition='initialized'] Determines
+ *   the condition of messaging when this function is resolved.
+ *   Supported values: ['none', 'created', 'initialized'].
+ *   - 'none': the function resolves regardless of whether messaging is created.
+ *   - 'created': the function resolves when messaging is created, but
+ *     regardless of whether messaging is initialized.
+ *   - 'initialized' (default): the function resolves when messaging is
+ *     initialized.
+ *   To guarantee messaging is not created, test should pass a pending deferred
+ *   as param of `messagingBeforeCreationDeferred`. To make sure messaging is
+ *   not initialized, test should mock RPC `mail/init_messaging` and block its
+ *   resolution.
  * @param {...Object} [param0.kwargs]
+ * @throws {Error} in case some provided parameters are wrong, such as
+ *   `waitUntilMessagingCondition`.
  * @returns {Object}
  */
 async function start(param0 = {}) {
@@ -633,6 +440,7 @@ async function start(param0 = {}) {
         return: [],
     };
     const {
+        env: providedEnv,
         hasActionManager = false,
         hasChatWindow = false,
         hasDialog = false,
@@ -640,8 +448,14 @@ async function start(param0 = {}) {
         hasMessagingMenu = false,
         hasTimeControl = false,
         hasView = false,
-        waitUntilMessagingInitialized = true,
+        messagingBeforeCreationDeferred = Promise.resolve(),
+        waitUntilEvent,
+        waitUntilMessagingCondition = 'initialized',
     } = param0;
+    if (!['none', 'created', 'initialized'].includes(waitUntilMessagingCondition)) {
+        throw Error(`Unknown parameter value ${waitUntilMessagingCondition} for 'waitUntilMessaging'.`);
+    }
+    delete param0.env;
     delete param0.hasActionManager;
     delete param0.hasChatWindow;
     delete param0.hasDiscuss;
@@ -669,7 +483,15 @@ async function start(param0 = {}) {
     const { debug = false } = param0;
     initCallbacks.forEach(callback => callback(param0));
 
-    let env = addMessagingToEnv(param0.env, { debug });
+    let env = Object.assign(providedEnv || {});
+    env.session = Object.assign(
+        {
+            is_bound: Promise.resolve(),
+            url: s => s,
+        },
+        env.session
+    );
+    env = addMessagingToEnv(env);
     if (hasTimeControl) {
         env = addTimeControlToEnv(env);
     }
@@ -715,8 +537,8 @@ async function start(param0 = {}) {
         widget = await createView(kwargs);
         legacyPatch(widget, {
             destroy() {
-                this._super(...arguments);
                 destroyCallbacks.forEach(callback => callback({ widget }));
+                this._super(...arguments);
                 legacyUnpatch(widget);
                 if (testEnv) {
                     testEnv.destroyMessaging();
@@ -727,8 +549,8 @@ async function start(param0 = {}) {
         widget = await createActionManager(kwargs);
         legacyPatch(widget, {
             destroy() {
-                this._super(...arguments);
                 destroyCallbacks.forEach(callback => callback({ widget }));
+                this._super(...arguments);
                 legacyUnpatch(widget);
                 if (testEnv) {
                     testEnv.destroyMessaging();
@@ -783,28 +605,96 @@ async function start(param0 = {}) {
         null,
         () => testEnv.messagingBus.trigger('will_show_home_menu')
     );
-    testEnv.modelManager.start(testEnv);
+
     /**
-     * Create the messaging singleton record.
+     * Returns a promise resolved after the expected event is received.
+     *
+     * @param {Object} param0
+     * @param {string} param0.eventName event to wait
+     * @param {function} param0.func function which, when called, is expected to
+     *  trigger the event
+     * @param {string} [param0.message] assertion message
+     * @param {function} [param0.predicate] predicate called with event data.
+     *  If not provided, only the event name has to match.
+     * @param {number} [param0.timeoutDelay=5000] how long to wait at most in ms
+     * @returns {Promise}
      */
-    testEnv.messaging = testEnv.models['mail.messaging'].create();
-    testEnv.messaging.start().then(() =>
-        testEnv.messagingInitializedDeferred.resolve()
-    );
-
-    const result = { env: testEnv, mockServer, widget };
-
-    if (waitUntilMessagingInitialized) {
-        // env key only accessible after MessagingService has started
-        await testEnv.messagingInitializedDeferred;
-    }
-
-    if (mountCallbacks.length > 0) {
-        await afterNextRender(async () => {
-            await Promise.all(mountCallbacks.map(callback => callback({ selector, widget })));
+    const afterEvent = (async ({ eventName, func, message, predicate, timeoutDelay = 5000 }) => {
+        // Set up the timeout to reject if the event is not triggered.
+        let timeoutNoEvent;
+        const timeoutProm = new Promise((resolve, reject) => {
+            timeoutNoEvent = setTimeout(() => {
+                let error = message
+                    ? new Error(message)
+                    : new Error(`Timeout: the event ${eventName} was not triggered.`);
+                console.error(error);
+                reject(error);
+            }, timeoutDelay);
         });
+        // Set up the promise to resolve if the event is triggered.
+        const eventProm = new Promise(resolve => {
+            testEnv.messagingBus.on(eventName, null, data => {
+                if (!predicate || predicate(data)) {
+                    resolve();
+                }
+            });
+        });
+        // Start the function expected to trigger the event after the
+        // promise has been registered to not miss any potential event.
+        const funcRes = func();
+        // Make them race (first to resolve/reject wins).
+        await Promise.race([eventProm, timeoutProm]);
+        clearTimeout(timeoutNoEvent);
+        // If the event is triggered before the end of the async function,
+        // ensure the function finishes its job before returning.
+        await funcRes;
+    });
+
+    const result = {
+        afterEvent,
+        env: testEnv,
+        mockServer,
+        widget,
+    };
+
+    const start = async () => {
+        messagingBeforeCreationDeferred.then(async () => {
+            /**
+             * Some models require session data, like locale text direction
+             * (depends on fully loaded translation).
+             */
+            await env.session.is_bound;
+
+            testEnv.modelManager = new ModelManager(testEnv);
+            testEnv.modelManager.start();
+            /**
+             * Create the messaging singleton record.
+             */
+            testEnv.messaging = testEnv.models['mail.messaging'].create();
+            testEnv.messaging.start().then(() =>
+                testEnv.messagingInitializedDeferred.resolve()
+            );
+            testEnv.messagingCreatedPromise.resolve();
+        });
+        if (waitUntilMessagingCondition === 'created') {
+            await testEnv.messagingCreatedPromise;
+        }
+        if (waitUntilMessagingCondition === 'initialized') {
+            await testEnv.messagingInitializedDeferred;
+        }
+
+        if (mountCallbacks.length > 0) {
+            await afterNextRender(async () => {
+                await Promise.all(mountCallbacks.map(callback => callback({ selector, widget })));
+            });
+        }
+        returnCallbacks.forEach(callback => callback(result));
+    };
+    if (waitUntilEvent) {
+        await afterEvent(Object.assign({ func: start }, waitUntilEvent));
+    } else {
+        await start();
     }
-    returnCallbacks.forEach(callback => callback(result));
     return result;
 }
 
@@ -843,32 +733,6 @@ function dropFiles(el, files) {
 }
 
 /**
- * Set files in a file input
- *
- * @param {DOM.Element} el
- * @param {Object[]} files must have been created beforehand
- *   @see testUtils.file.createFile
- */
-function inputFiles(el, files) {
-    const dataTransfer = new window.DataTransfer();
-    for (const file of files) {
-        dataTransfer.items.add(file);
-    }
-    el.files = dataTransfer.files;
-    /**
-     * Changing files programatically is not supposed to trigger the event but
-     * it does in Chrome versions before 73 (which is on runbot), so in that
-     * case there is no need to make a manual dispatch, because it would lead to
-     * the files being added twice.
-     */
-    const versionRaw = navigator.userAgent.match(/Chrom(e|ium)\/([0-9]+)\./);
-    const chromeVersion = versionRaw ? parseInt(versionRaw[2], 10) : false;
-    if (!chromeVersion || chromeVersion >= 73) {
-        el.dispatchEvent(new Event('change'));
-    }
-}
-
-/**
  * Paste some files on a DOM element
  *
  * @param {DOM.Element} el
@@ -891,9 +755,9 @@ return {
     afterEach,
     afterNextRender,
     beforeEach,
+    createRootComponent,
     dragenterFiles,
     dropFiles,
-    inputFiles,
     nextAnimationFrame,
     nextTick,
     pasteFiles,

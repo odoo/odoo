@@ -13,8 +13,8 @@ class AccountReconcileModelPartnerMapping(models.Model):
     _name = 'account.reconcile.model.partner.mapping'
     _description = 'Partner mapping for reconciliation models'
 
-    model_id = fields.Many2one(comodel_name='account.reconcile.model', readonly=True, required=True)
-    partner_id = fields.Many2one(comodel_name='res.partner', string="Partner", required=True)
+    model_id = fields.Many2one(comodel_name='account.reconcile.model', readonly=True, required=True, ondelete='cascade')
+    partner_id = fields.Many2one(comodel_name='res.partner', string="Partner", required=True, ondelete='cascade')
     payment_ref_regex = fields.Char(string="Find Text in Label")
     narration_regex = fields.Char(string="Find Text in Notes")
 
@@ -38,7 +38,7 @@ class AccountReconcileModelLine(models.Model):
     company_id = fields.Many2one(related='model_id.company_id', store=True, default=lambda self: self.env.company)
     sequence = fields.Integer(required=True, default=10)
     account_id = fields.Many2one('account.account', string='Account', ondelete='cascade',
-        domain="[('deprecated', '=', False), ('company_id', '=', company_id)]",
+        domain="[('deprecated', '=', False), ('company_id', '=', company_id), ('is_off_balance', '=', False)]",
         required=True, check_company=True)
     journal_id = fields.Many2one('account.journal', string='Journal', ondelete='cascade',
         domain="[('type', '=', 'general'), ('company_id', '=', company_id)]",
@@ -110,6 +110,7 @@ class AccountReconcileModel(models.Model):
     _check_company_auto = True
 
     # Base fields.
+    active = fields.Boolean(default=True)
     name = fields.Char(string='Name', required=True)
     sequence = fields.Integer(required=True, default=10)
     company_id = fields.Many2one(
@@ -125,8 +126,28 @@ class AccountReconcileModel(models.Model):
     auto_reconcile = fields.Boolean(string='Auto-validate',
         help='Validate the statement line automatically (reconciliation based on your rule).')
     to_check = fields.Boolean(string='To Check', default=False, help='This matching rule is used when the user is not certain of all the informations of the counterpart.')
+    matching_order = fields.Selection(
+        selection=[
+            ('old_first', 'Oldest first'),
+            ('new_first', 'Newest first'),
+        ],
+        required=True,
+        default='old_first',
+    )
 
     # ===== Conditions =====
+    match_text_location_label = fields.Boolean(
+        default=True,
+        help="Search in the Statement's Label to find the Invoice/Payment's reference",
+    )
+    match_text_location_note = fields.Boolean(
+        default=False,
+        help="Search in the Statement's Note to find the Invoice/Payment's reference",
+    )
+    match_text_location_reference = fields.Boolean(
+        default=False,
+        help="Search in the Statement's Reference to find the Invoice/Payment's reference",
+    )
     match_journal_ids = fields.Many2many('account.journal', string='Journals',
         domain="[('type', 'in', ('bank', 'cash')), ('company_id', '=', company_id)]",
         check_company=True,
@@ -205,7 +226,7 @@ class AccountReconcileModel(models.Model):
 
     def action_reconcile_stat(self):
         self.ensure_one()
-        action = self.env.ref('account.action_move_journal_line').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("account.action_move_journal_line")
         self._cr.execute('''
             SELECT ARRAY_AGG(DISTINCT move_id)
             FROM account_move_line
@@ -252,12 +273,15 @@ class AccountReconcileModel(models.Model):
         new_aml_dicts = []
         for tax_res in res['taxes']:
             tax = self.env['account.tax'].browse(tax_res['id'])
+            balance = tax_res['amount']
 
             new_aml_dicts.append({
                 'account_id': tax_res['account_id'] or base_line_dict['account_id'],
                 'name': tax_res['name'],
                 'partner_id': base_line_dict.get('partner_id'),
-                'balance': tax_res['amount'],
+                'balance': balance,
+                'debit': balance > 0 and balance or 0,
+                'credit': balance < 0 and -balance or 0,
                 'analytic_account_id': tax.analytic and base_line_dict['analytic_account_id'],
                 'analytic_tag_ids': tax.analytic and base_line_dict['analytic_tag_ids'],
                 'tax_exigible': tax_res['tax_exigibility'],
@@ -269,7 +293,13 @@ class AccountReconcileModel(models.Model):
             })
 
             # Handle price included taxes.
-            base_line_dict['balance'] = tax_res['base']
+            base_balance = tax_res['base']
+            base_line_dict.update({
+                'balance': base_balance,
+                'debit': base_balance > 0 and base_balance or 0,
+                'credit': base_balance < 0 and -base_balance or 0,
+            })
+
         base_line_dict['tax_tag_ids'] = [(6, 0, res['base_tags'])]
         return new_aml_dicts
 
@@ -306,6 +336,8 @@ class AccountReconcileModel(models.Model):
             writeoff_line = {
                 'name': line.label or st_line.payment_ref,
                 'balance': balance,
+                'debit': balance > 0 and balance or 0,
+                'credit': balance < 0 and -balance or 0,
                 'account_id': line.account_id.id,
                 'currency_id': False,
                 'analytic_account_id': line.analytic_account_id.id,
@@ -406,19 +438,23 @@ class AccountReconcileModel(models.Model):
 
         results = {line.id: {'aml_ids': []} for line in st_lines}
 
-        available_models = self.filtered(lambda m: m.rule_type != 'writeoff_button').sorted(key=lambda m: (m.sequence, m.id))
+        available_models = self.filtered(lambda m: m.rule_type != 'writeoff_button').sorted()
         aml_ids_to_exclude = set() # Keep track of already processed amls.
         reconciled_amls_ids = set() # Keep track of already reconciled amls.
 
         # First associate with each rec models all the statement lines for which it is applicable
         lines_with_partner_per_model = defaultdict(lambda: [])
         for st_line in st_lines:
-            partner = (partner_map and partner_map.get(st_line.id) and self.env['res.partner'].browse(partner_map[st_line.id])) or st_line.partner_id
+
+            # Statement lines created in old versions could have a residual amount of zero. In that case, don't try to
+            # match anything.
+            if not st_line.amount_residual:
+                continue
+
+            mapped_partner = (partner_map and partner_map.get(st_line.id) and self.env['res.partner'].browse(partner_map[st_line.id])) or st_line.partner_id
 
             for rec_model in available_models:
-                if not partner:
-                    # The function takes care of returning something only for the rules supporting partner mapping
-                    partner = rec_model._get_partner_from_mapping(st_line)
+                partner = mapped_partner or rec_model._get_partner_from_mapping(st_line)
 
                 if rec_model._is_applicable_for(st_line, partner):
                     lines_with_partner_per_model[rec_model].append((st_line, partner))
@@ -442,6 +478,9 @@ class AccountReconcileModel(models.Model):
                     model_rslt, new_reconciled_aml_ids, new_treated_aml_ids = rec_model._get_rule_result(st_line, candidates, aml_ids_to_exclude, reconciled_amls_ids, partner)
 
                     if model_rslt:
+                        # We inject the selected partner (possibly coming from the rec model)
+                        model_rslt['partner']= partner
+
                         results[st_line.id] = model_rslt
                         reconciled_amls_ids |= new_reconciled_aml_ids
                         aml_ids_to_exclude |= new_treated_aml_ids
@@ -527,22 +566,16 @@ class AccountReconcileModel(models.Model):
         # (higher priority) from invoice matching using the partner (lower priority).
         query = r'''
         SELECT
-            %(sequence)s                        AS sequence,
-            %(model_id)s                        AS model_id,
             st_line.id                          AS id,
             aml.id                              AS aml_id,
             aml.currency_id                     AS aml_currency_id,
             aml.date_maturity                   AS aml_date_maturity,
             aml.amount_residual                 AS aml_amount_residual,
             aml.amount_residual_currency        AS aml_amount_residual_currency,
-            aml.balance                         AS aml_balance,
-            aml.amount_currency                 AS aml_amount_currency,
-            account.internal_type               AS account_internal_type,
-
-            ''' + self._get_select_communication_flag() + r''', ''' + self._get_select_payment_reference_flag() + r'''
+            ''' + self._get_select_communication_flag() + r''' AS communication_flag,
+            ''' + self._get_select_payment_reference_flag() + r''' AS payment_reference_flag
         FROM account_bank_statement_line st_line
         JOIN account_move st_line_move          ON st_line_move.id = st_line.move_id
-        JOIN account_journal journal            ON journal.id = st_line_move.journal_id
         JOIN res_company company                ON company.id = st_line_move.company_id
         , account_move_line aml
         LEFT JOIN account_move move             ON move.id = aml.move_id AND move.state = 'posted'
@@ -573,35 +606,12 @@ class AccountReconcileModel(models.Model):
                 st_line_subquery += r"""
                     AND
                     (
-                        substring(REGEXP_REPLACE(st_line.payment_ref, '[^0-9|^\s]', '', 'g'), '\S(?:.*\S)*') != ''
+                        substring(REGEXP_REPLACE(st_line.payment_ref, '[^0-9\s]', '', 'g'), '\S(?:.*\S)*') != ''
                         AND
                         (
-                            (
-                                aml.name IS NOT NULL
-                                AND
-                                substring(REGEXP_REPLACE(aml.name, '[^0-9|^\s]', '', 'g'), '\S(?:.*\S)*') != ''
-                                AND
-                                    regexp_split_to_array(substring(REGEXP_REPLACE(aml.name, '[^0-9|^\s]', '', 'g'), '\S(?:.*\S)*'),'\s+')
-                                    && regexp_split_to_array(substring(REGEXP_REPLACE(st_line.payment_ref, '[^0-9|^\s]', '', 'g'), '\S(?:.*\S)*'), '\s+')
-                            )
+                            (""" + self._get_select_communication_flag() + """)
                             OR
-                                regexp_split_to_array(substring(REGEXP_REPLACE(move.name, '[^0-9|^\s]', '', 'g'), '\S(?:.*\S)*'),'\s+')
-                                && regexp_split_to_array(substring(REGEXP_REPLACE(st_line.payment_ref, '[^0-9|^\s]', '', 'g'), '\S(?:.*\S)*'), '\s+')
-                            OR
-                            (
-                                move.ref IS NOT NULL
-                                AND
-                                substring(REGEXP_REPLACE(move.ref, '[^0-9|^\s]', '', 'g'), '\S(?:.*\S)*') != ''
-                                AND
-                                    regexp_split_to_array(substring(REGEXP_REPLACE(move.ref, '[^0-9|^\s]', '', 'g'), '\S(?:.*\S)*'),'\s+')
-                                    && regexp_split_to_array(substring(REGEXP_REPLACE(st_line.payment_ref, '[^0-9|^\s]', '', 'g'), '\S(?:.*\S)*'), '\s+')
-                            )
-                            OR
-                            (
-                                move.payment_reference IS NOT NULL
-                                AND
-                                regexp_replace(move.payment_reference, '\s+', '', 'g') = regexp_replace(st_line.payment_ref, '\s+', '', 'g')
-                            )
+                            (""" + self._get_select_payment_reference_flag() + """)
                         )
                     )
                     OR
@@ -619,10 +629,7 @@ class AccountReconcileModel(models.Model):
 
         query += r" AND (%s) " % " OR ".join(st_lines_queries)
 
-        params = {
-            'sequence': self.sequence,
-            'model_id': self.id,
-        }
+        params = {}
 
         # If this reconciliation model defines a past_months_limit, we add a condition
         # to the query to only search on move lines that are younger than this limit.
@@ -636,56 +643,79 @@ class AccountReconcileModel(models.Model):
             query += 'AND aml.id NOT IN %(excluded_aml_ids)s'
             params['excluded_aml_ids'] = tuple(excluded_ids)
 
-        # Oldest due dates come first.
-        query += ' ORDER BY aml_date_maturity, aml_id'
+        if self.matching_order == 'new_first':
+            query += ' ORDER BY aml_date_maturity DESC, aml_id DESC'
+        else:
+            query += ' ORDER BY aml_date_maturity ASC, aml_id ASC'
 
         return query, params
 
     def _get_select_communication_flag(self):
-        return r'''
-            -- Determine a matching or not with the statement line communication using the aml.name, move.name or move.ref.
-            (
-                aml.name IS NOT NULL
-                AND
-                substring(REGEXP_REPLACE(aml.name, '[^0-9|^\s]', '', 'g'), '\S(?:.*\S)*') != ''
-                AND
-                    regexp_split_to_array(substring(REGEXP_REPLACE(aml.name, '[^0-9|^\s]', '', 'g'), '\S(?:.*\S)*'),'\s+')
-                    && regexp_split_to_array(substring(REGEXP_REPLACE(st_line.payment_ref, '[^0-9|^\s]', '', 'g'), '\S(?:.*\S)*'), '\s+')
-            )
-            OR
-                regexp_split_to_array(substring(REGEXP_REPLACE(move.name, '[^0-9|^\s]', '', 'g'), '\S(?:.*\S)*'),'\s+')
-                && regexp_split_to_array(substring(REGEXP_REPLACE(st_line.payment_ref, '[^0-9|^\s]', '', 'g'), '\S(?:.*\S)*'), '\s+')
-            OR
-            (
-                move.ref IS NOT NULL
-                AND
-                substring(REGEXP_REPLACE(move.ref, '[^0-9|^\s]', '', 'g'), '\S(?:.*\S)*') != ''
-                AND
-                    regexp_split_to_array(substring(REGEXP_REPLACE(move.ref, '[^0-9|^\s]', '', 'g'), '\S(?:.*\S)*'),'\s+')
-                    && regexp_split_to_array(substring(REGEXP_REPLACE(st_line.payment_ref, '[^0-9|^\s]', '', 'g'), '\S(?:.*\S)*'), '\s+')
-            )                                   AS communication_flag
-        '''
+        self.ensure_one()
+        # Determine a matching or not with the statement line communication using the aml.name, move.name or move.ref.
+        st_ref_list = []
+        if self.match_text_location_label:
+            st_ref_list += ['st_line.payment_ref']
+        if self.match_text_location_note:
+            st_ref_list += ['st_line_move.narration']
+        if self.match_text_location_reference:
+            st_ref_list += ['st_line_move.ref']
+
+        st_ref = " || ' ' || ".join(
+            "COALESCE(%s, '')" % st_ref_name
+            for st_ref_name in st_ref_list
+        )
+        if not st_ref:
+            return "FALSE"
+
+        statement_compare = r"""(
+                {move_field} IS NOT NULL AND substring(REGEXP_REPLACE({move_field}, '[^0-9\s]', '', 'g'), '\S(?:.*\S)*') != ''
+                AND (
+                    regexp_split_to_array(substring(REGEXP_REPLACE({move_field}, '[^0-9\s]', '', 'g'), '\S(?:.*\S)*'),'\s+')
+                    && regexp_split_to_array(substring(REGEXP_REPLACE({st_ref}, '[^0-9\s]', '', 'g'), '\S(?:.*\S)*'), '\s+')
+                )
+            )"""
+        return " OR ".join(
+            statement_compare.format(move_field=field, st_ref=st_ref)
+            for field in ['aml.name', 'move.name', 'move.ref']
+        )
 
     def _get_select_payment_reference_flag(self):
-        return r'''
-            -- Determine a matching or not with the statement line communication using the move.payment_reference.
-            (
-                move.payment_reference IS NOT NULL
-                AND
-                regexp_replace(move.payment_reference, '\s+', '', 'g') = regexp_replace(st_line.payment_ref, '\s+', '', 'g')
-            )                                   AS payment_reference_flag
-        '''
+        # Determine a matching or not with the statement line communication using the move.payment_reference.
+        st_ref_list = []
+        if self.match_text_location_label:
+            st_ref_list += ['st_line.payment_ref']
+        if self.match_text_location_note:
+            st_ref_list += ['st_line_move.narration']
+        if self.match_text_location_reference:
+            st_ref_list += ['st_line_move.ref']
+        if not st_ref_list:
+            return "FALSE"
+        return r'''(move.payment_reference IS NOT NULL AND ({}))'''.format(
+            ' OR '.join(
+                rf"regexp_replace(move.payment_reference, '\s+', '', 'g') = regexp_replace({st_ref}, '\s+', '', 'g')"
+                for st_ref in st_ref_list
+            )
+        )
 
     def _get_partner_from_mapping(self, st_line):
-        """ For invoice matching rules, matches the statement line against
-        each regex defined in partner mapping, and returns the partner corresponding to
-        the first one matching.
+        """Find partner with mapping defined on model.
+
+        For invoice matching rules, matches the statement line against each
+        regex defined in partner mapping, and returns the partner corresponding
+        to the first one matching.
+
+        :param st_line (Model<account.bank.statement.line>):
+            The statement line that needs a partner to be found
+        :return Model<res.partner>:
+            The partner found from the mapping. Can be empty an empty recordset
+            if there was nothing found from the mapping or if the function is
+            not applicable.
         """
         self.ensure_one()
 
-        if self.rule_type != 'invoice_matching':
-            # Only invoice_matching rules support this option
-            return None
+        if self.rule_type not in ('invoice_matching', 'writeoff_suggestion'):
+            return self.env['res.partner']
 
         for partner_mapping in self.partner_mapping_line_ids:
             match_payment_ref = re.match(partner_mapping.payment_ref_regex, st_line.payment_ref) if partner_mapping.payment_ref_regex else True
@@ -693,7 +723,7 @@ class AccountReconcileModel(models.Model):
 
             if match_payment_ref and match_narration:
                 return partner_mapping.partner_id
-        return None
+        return self.env['res.partner']
 
     def _get_writeoff_suggestion_query(self, st_lines_with_partner, excluded_ids=None):
         ''' Returns the query applying the current writeoff_suggestion reconciliation
@@ -712,18 +742,11 @@ class AccountReconcileModel(models.Model):
 
         query = '''
             SELECT
-                %(sequence)s                        AS sequence,
-                %(model_id)s                        AS model_id,
                 st_line.id                          AS id
             FROM account_bank_statement_line st_line
-            JOIN account_move st_line_move          ON st_line_move.id = st_line.move_id
-            LEFT JOIN account_journal journal       ON journal.id = st_line_move.journal_id
-            LEFT JOIN res_company company           ON company.id = st_line_move.company_id
             WHERE st_line.id IN %(st_line_ids)s
         '''
         params = {
-            'sequence': self.sequence,
-            'model_id': self.id,
             'st_line_ids': tuple(st_line.id for (st_line, partner) in st_lines_with_partner),
         }
 
@@ -885,14 +908,15 @@ class AccountReconcileModel(models.Model):
         return candidates_by_priority
 
     def _get_writeoff_suggestion_rule_result(self, st_line, partner):
+        # Create write-off lines.
+        lines_vals_list = self._prepare_reconciliation(st_line, partner=partner)
+
         rslt = {
             'model': self,
             'status': 'write_off',
             'aml_ids': [],
+            'write_off_vals': lines_vals_list,
         }
-
-        # Create write-off lines.
-        lines_vals_list = self._prepare_reconciliation(st_line, partner=partner)
 
         # Process auto-reconciliation.
         if lines_vals_list and self.auto_reconcile:

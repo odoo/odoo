@@ -5,12 +5,13 @@ const components = {
     AttachmentBox: require('mail/static/src/components/attachment_box/attachment_box.js'),
 };
 const {
-    afterEach: utilsAfterEach,
+    afterEach,
     afterNextRender,
-    beforeEach: utilsBeforeEach,
+    beforeEach,
+    createRootComponent,
     dragenterFiles,
     dropFiles,
-    start: utilsStart,
+    start,
 } = require('mail/static/src/utils/test_utils.js');
 
 const { file: { createFile } } = require('web.test_utils');
@@ -20,22 +21,18 @@ QUnit.module('components', {}, function () {
 QUnit.module('attachment_box', {}, function () {
 QUnit.module('attachment_box_tests.js', {
     beforeEach() {
-        utilsBeforeEach(this);
+        beforeEach(this);
 
         this.createAttachmentBoxComponent = async (thread, otherProps) => {
-            const AttachmentBoxComponent = components.AttachmentBox;
-            AttachmentBoxComponent.env = this.env;
-            this.component = new AttachmentBoxComponent(null, Object.assign({
-                threadLocalId: thread.localId,
-            }, otherProps));
-            await this.component.mount(this.widget.el);
+            const props = Object.assign({ threadLocalId: thread.localId }, otherProps);
+            await createRootComponent(this, components.AttachmentBox, {
+                props,
+                target: this.widget.el,
+            });
         };
 
         this.start = async params => {
-            if (this.widget) {
-                this.widget.destroy();
-            }
-             let { env, widget } = await utilsStart(Object.assign({}, params, {
+            const { env, widget } = await start(Object.assign({}, params, {
                 data: this.data,
             }));
             this.env = env;
@@ -43,15 +40,7 @@ QUnit.module('attachment_box_tests.js', {
         };
     },
     afterEach() {
-        utilsAfterEach(this);
-        if (this.component) {
-            this.component.destroy();
-        }
-        if (this.widget) {
-            this.widget.destroy();
-        }
-        delete components.AttachmentBox.env;
-        this.env = undefined;
+        afterEach(this);
     },
 });
 
@@ -89,24 +78,27 @@ QUnit.test('base empty rendering', async function (assert) {
 QUnit.test('base non-empty rendering', async function (assert) {
     assert.expect(6);
 
+    this.data['ir.attachment'].records.push(
+        {
+            mimetype: 'text/plain',
+            name: 'Blah.txt',
+            res_id: 100,
+            res_model: 'res.partner',
+        },
+        {
+            mimetype: 'text/plain',
+            name: 'Blu.txt',
+            res_id: 100,
+            res_model: 'res.partner',
+        }
+    );
     await this.start({
         async mockRPC(route, args) {
             if (route.includes('ir.attachment/search_read')) {
                 assert.step('ir.attachment/search_read');
-                return [{
-                    id: 143,
-                    filename: 'Blah.txt',
-                    mimetype: 'text/plain',
-                    name: 'Blah.txt'
-                }, {
-                    id: 144,
-                    filename: 'Blu.txt',
-                    mimetype: 'text/plain',
-                    name: 'Blu.txt'
-                }];
             }
             return this._super(...arguments);
-        }
+        },
     });
     const thread = this.env.models['mail.thread'].create({
         id: 100,
@@ -143,14 +135,7 @@ QUnit.test('base non-empty rendering', async function (assert) {
 QUnit.test('attachment box: drop attachments', async function (assert) {
     assert.expect(5);
 
-    await this.start({
-        async mockRPC(route, args) {
-            if (route.includes('ir.attachment/search_read')) {
-                return [];
-            }
-            return this._super(...arguments);
-        }
-    });
+    await this.start();
     const thread = this.env.models['mail.thread'].create({
         id: 100,
         model: 'res.partner',
@@ -231,13 +216,11 @@ QUnit.test('view attachments', async function (assert) {
         attachments: [
             ['insert', {
                 id: 143,
-                filename: 'Blah.txt',
                 mimetype: 'text/plain',
                 name: 'Blah.txt'
             }],
             ['insert', {
                 id: 144,
-                filename: 'Blu.txt',
                 mimetype: 'text/plain',
                 name: 'Blu.txt'
             }]
@@ -253,7 +236,7 @@ QUnit.test('view attachments', async function (assert) {
     await afterNextRender(() =>
         document.querySelector(`
             .o_Attachment[data-attachment-local-id="${firstAttachment.localId}"]
-            .o_Attachment_image 
+            .o_Attachment_image
         `).click()
     );
     assert.containsOnce(
@@ -300,7 +283,6 @@ QUnit.test('view attachments', async function (assert) {
         "attachment viewer iframe should point anew to first attachment",
     );
 });
-
 
 });
 });

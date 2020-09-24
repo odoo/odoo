@@ -96,10 +96,11 @@ function autocompleteWithPages(self, $input) {
 
 /**
  * @param {jQuery} $element
+ * @param {jQuery} [$excluded]
  */
-function onceAllImagesLoaded($element) {
+function onceAllImagesLoaded($element, $excluded) {
     var defs = _.map($element.find('img').addBack('img'), function (img) {
-        if (img.complete) {
+        if (img.complete || $excluded && ($excluded.is(img) || $excluded.has(img).length)) {
             return; // Already loaded
         }
         var def = new Promise(function (resolve, reject) {

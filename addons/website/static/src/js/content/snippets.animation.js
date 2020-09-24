@@ -8,6 +8,7 @@ odoo.define('website.content.snippets.animation', function (require) {
 var Class = require('web.Class');
 var config = require('web.config');
 var core = require('web.core');
+const dom = require('web.dom');
 var mixins = require('web.mixins');
 var publicWidget = require('web.public.widget');
 var utils = require('web.utils');
@@ -123,12 +124,13 @@ var AnimationEffect = Class.extend(mixins.ParentedMixin, {
         // Initialize the animation startEvents, startTarget, endEvents, endTarget and callbacks
         this._updateCallback = updateCallback;
         this.startEvents = startEvents || 'scroll';
-        this.$startTarget = $($startTarget || window);
+        this.$startTarget = $($startTarget ? $startTarget : this.startEvents === 'scroll' ? $().getScrollingElement()[0] : window);
         if (options.getStateCallback) {
             this._getStateCallback = options.getStateCallback;
-        } else if (this.startEvents === 'scroll' && this.$startTarget[0] === window) {
+        } else if (this.startEvents === 'scroll' && this.$startTarget[0] === $().getScrollingElement()[0]) {
+            const $scrollable = this.$startTarget;
             this._getStateCallback = function () {
-                return window.pageYOffset;
+                return $scrollable.scrollTop();
             };
         } else if (this.startEvents === 'resize' && this.$startTarget[0] === window) {
             this._getStateCallback = function () {
@@ -494,7 +496,7 @@ registry.slider = publicWidget.Widget.extend({
     },
 });
 
-registry.parallax = Animation.extend({
+registry.Parallax = Animation.extend({
     selector: '.parallax',
     disabledInEditableMode: false,
     effects: [{
@@ -530,27 +532,13 @@ registry.parallax = Animation.extend({
      */
     _rebuild: function () {
         // Add/find bg DOM element to hold the parallax bg (support old v10.0 parallax)
-        if (!this.$bg || !this.$bg.length) {
-            this.$bg = this.$('> .s_parallax_bg');
-            if (!this.$bg.length) {
-                this.$bg = $('<span/>', {
-                    class: 's_parallax_bg',
-                }).prependTo(this.$target);
-            }
-        }
-        var urlTarget = this.$target.css('background-image');
-        if (urlTarget !== 'none') {
-            this.$bg.css('background-image', urlTarget);
-        }
-        this.$target.css('background-image', 'none');
+        this.$bg = this.$('> .s_parallax_bg');
 
         // Get parallax speed
         this.speed = parseFloat(this.$target.attr('data-scroll-background-ratio') || 0);
 
         // Reset offset if parallax effect will not be performed and leave
-        this.$target.toggleClass('s_parallax_is_fixed', this.speed === 1);
         var noParallaxSpeed = (this.speed === 0 || this.speed === 1);
-        this.$target.toggleClass('s_parallax_no_overflow_hidden', noParallaxSpeed);
         if (noParallaxSpeed) {
             this.$bg.css({
                 transform: '',
@@ -567,9 +555,10 @@ registry.parallax = Animation.extend({
         this.ratio = this.speed * (this.viewport / 10);
 
         // Provide a "safe-area" to limit parallax
+        const absoluteRatio = Math.abs(this.ratio);
         this.$bg.css({
-            top: -this.ratio,
-            bottom: -this.ratio,
+            top: -absoluteRatio,
+            bottom: -absoluteRatio,
         });
     },
 
@@ -867,7 +856,7 @@ registry.socialShare = publicWidget.Widget.extend({
         var socialNetworks = {
             'facebook': 'https://www.facebook.com/sharer/sharer.php?u=' + url,
             'twitter': 'https://twitter.com/intent/tweet?original_referer=' + url + '&text=' + encodeURIComponent(title + hashtags + ' - ') + url,
-            'linkedin': 'https://www.linkedin.com/shareArticle?mini=true&url=' + url + '&title=' + encodeURIComponent(title),
+            'linkedin': 'https://www.linkedin.com/sharing/share-offsite/?url=' + url,
         };
         if (!_.contains(_.keys(socialNetworks), social)) {
             return;
@@ -911,22 +900,19 @@ registry.anchorSlide = publicWidget.Widget.extend({
      * @private
      * @param {jQuery} $el the element to scroll to.
      * @param {string} [scrollValue='true'] scroll value
+     * @returns {Promise}
      */
-    _scrollTo: function ($el, scrollValue = 'true') {
-        const headerHeight = this._computeHeaderHeight();
-        const offset = $el.css('position') !== 'fixed' ? $el.offset().top : $el.position().top;
-        $('html, body').animate({
-            scrollTop: offset - headerHeight,
-        }, scrollValue === 'true' ? 500 : 0);
+    async _scrollTo($el, scrollValue = 'true') {
+        return dom.scrollTo($el[0], {
+            duration: scrollValue === 'true' ? 500 : 0,
+            extraOffset: this._computeExtraOffset(),
+        });
     },
     /**
      * @private
      */
-    _computeHeaderHeight: function () {
-        let headerHeight = 0;
-        const $navbarFixed = $('.o_top_fixed_element');
-        _.each($navbarFixed, el => headerHeight += $(el).outerHeight());
-        return headerHeight;
+    _computeExtraOffset() {
+        return 0;
     },
 
     //--------------------------------------------------------------------------
@@ -951,6 +937,55 @@ registry.anchorSlide = publicWidget.Widget.extend({
         }
         ev.preventDefault();
         this._scrollTo($anchor, scrollValue);
+    },
+});
+
+registry.FullScreenHeight = publicWidget.Widget.extend({
+    selector: '.o_full_screen_height',
+    disabledInEditableMode: false,
+
+    /**
+     * @override
+     */
+    start() {
+        if (this.$el.outerHeight() > this._computeIdealHeight()) {
+            // Only initialize if taller than the ideal height as some extra css
+            // rules may alter the full-screen-height class behavior in some
+            // cases (blog...).
+            this._adaptSize();
+            $(window).on('resize.FullScreenHeight', _.debounce(() => this._adaptSize(), 250));
+        }
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    destroy() {
+        this._super(...arguments);
+        $(window).off('.FullScreenHeight');
+        this.el.style.setProperty('min-height', '');
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _adaptSize() {
+        const height = this._computeIdealHeight();
+        this.el.style.setProperty('min-height', `${height}px`, 'important');
+    },
+    /**
+     * @private
+     */
+    _computeIdealHeight() {
+        const windowHeight = $(window).outerHeight();
+        // Doing it that way allows to considerer fixed headers, hidden headers,
+        // connected users, ...
+        const mainTopPos = $('#wrapwrap > main')[0].getBoundingClientRect().top;
+        return (windowHeight - mainTopPos);
     },
 });
 
@@ -988,6 +1023,25 @@ registry.FooterSlideout = publicWidget.Widget.extend({
     destroy() {
         this._super(...arguments);
         this.el.classList.remove('o_footer_effect_enable');
+    },
+});
+
+registry.HeaderHamburgerFull = publicWidget.Widget.extend({
+    selector: 'header:has(.o_header_hamburger_full_toggler):not(:has(.o_offcanvas_menu_toggler))',
+    events: {
+        'click .o_header_hamburger_full_toggler': '_onToggleClick',
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _onToggleClick() {
+        document.body.classList.add('overflow-hidden');
+        setTimeout(() => $(window).trigger('scroll'), 100);
     },
 });
 

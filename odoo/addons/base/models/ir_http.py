@@ -108,7 +108,10 @@ class IrHttp(models.AbstractModel):
             request.uid = request.session.uid
 
     @classmethod
-    def _authenticate(cls, auth_method='user'):
+    def _authenticate(cls, endpoint):
+        auth_method = endpoint.routing["auth"]
+        if request._is_cors_preflight(endpoint):
+            auth_method = 'none'
         try:
             if request.session.uid:
                 try:
@@ -220,7 +223,7 @@ class IrHttp(models.AbstractModel):
 
         # check authentication level
         try:
-            auth_method = cls._authenticate(func.routing["auth"])
+            auth_method = cls._authenticate(func)
         except Exception as e:
             return cls._handle_exception(e)
 

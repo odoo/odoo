@@ -49,6 +49,8 @@ class PosOrder(models.Model):
             'amount_return':  ui_order['amount_return'],
             'company_id': self.env['pos.session'].browse(ui_order['pos_session_id']).company_id.id,
             'to_invoice': ui_order['to_invoice'] if "to_invoice" in ui_order else False,
+            'is_tipped': ui_order.get('is_tipped', False),
+            'tip_amount': ui_order.get('tip_amount', 0),
         }
 
     @api.model
@@ -58,6 +60,7 @@ class PosOrder(models.Model):
             'payment_date': ui_paymentline['name'],
             'payment_method_id': ui_paymentline['payment_method_id'],
             'card_type': ui_paymentline.get('card_type'),
+            'cardholder_name': ui_paymentline.get('cardholder_name'),
             'transaction_id': ui_paymentline.get('transaction_id'),
             'payment_status': ui_paymentline.get('payment_status'),
             'pos_order_id': order.id,
@@ -253,6 +256,8 @@ class PosOrder(models.Model):
     session_move_id = fields.Many2one('account.move', string='Session Journal Entry', related='session_id.move_id', readonly=True, copy=False)
     to_invoice = fields.Boolean('To invoice')
     is_invoiced = fields.Boolean('Is Invoiced', compute='_compute_is_invoiced')
+    is_tipped = fields.Boolean('Is this already tipped?', readonly=True)
+    tip_amount = fields.Float(string='Tip Amount', digits=0, readonly=True)
 
     @api.depends('account_move')
     def _compute_is_invoiced(self):
@@ -378,6 +383,27 @@ class PosOrder(models.Model):
 
         return True
 
+    def _prepare_invoice_vals(self):
+        self.ensure_one()
+        timezone = pytz.timezone(self._context.get('tz') or self.env.user.tz or 'UTC')
+        vals = {
+            'payment_reference': self.name,
+            'invoice_origin': self.name,
+            'journal_id': self.session_id.config_id.invoice_journal_id.id,
+            'move_type': 'out_invoice' if self.amount_total >= 0 else 'out_refund',
+            'ref': self.name,
+            'partner_id': self.partner_id.id,
+            'narration': self.note or '',
+            # considering partner's sale pricelist's currency
+            'currency_id': self.pricelist_id.currency_id.id,
+            'invoice_user_id': self.user_id.id,
+            'invoice_date': self.date_order.astimezone(timezone).date(),
+            'fiscal_position_id': self.fiscal_position_id.id,
+            'invoice_line_ids': [(0, None, self._prepare_invoice_line(line)) for line in self.lines],
+            'invoice_cash_rounding_id': self.config_id.rounding_method.id if self.config_id.cash_rounding else False
+        }
+        return vals
+
     def action_pos_order_invoice(self):
         moves = self.env['account.move']
 
@@ -390,23 +416,7 @@ class PosOrder(models.Model):
             if not order.partner_id:
                 raise UserError(_('Please provide a partner for the sale.'))
 
-            timezone = pytz.timezone(self._context.get('tz') or self.env.user.tz or 'UTC')
-            move_vals = {
-                'payment_reference': order.name,
-                'invoice_origin': order.name,
-                'journal_id': order.session_id.config_id.invoice_journal_id.id,
-                'move_type': 'out_invoice' if order.amount_total >= 0 else 'out_refund',
-                'ref': order.name,
-                'partner_id': order.partner_id.id,
-                'narration': order.note or '',
-                # considering partner's sale pricelist's currency
-                'currency_id': order.pricelist_id.currency_id.id,
-                'invoice_user_id': order.user_id.id,
-                'invoice_date': order.date_order.astimezone(timezone).date(),
-                'fiscal_position_id': order.fiscal_position_id.id,
-                'invoice_line_ids': [(0, None, order._prepare_invoice_line(line)) for line in order.lines],
-                'invoice_cash_rounding_id': order.config_id.rounding_method.id if order.config_id.cash_rounding else False
-            }
+            move_vals = order._prepare_invoice_vals()
             new_move = moves.sudo()\
                             .with_company(order.company_id)\
                             .with_context(default_move_type=move_vals['move_type'])\
@@ -480,6 +490,19 @@ class PosOrder(models.Model):
         self.env['pos.payment'].create(data)
         self.amount_paid = sum(self.payment_ids.mapped('amount'))
 
+    def _prepare_refund_values(self, current_session):
+        self.ensure_one()
+        return {
+            'name': self.name + _(' REFUND'),
+            'session_id': current_session.id,
+            'date_order': fields.Datetime.now(),
+            'pos_reference': self.pos_reference,
+            'lines': False,
+            'amount_tax': -self.amount_tax,
+            'amount_total': -self.amount_total,
+            'amount_paid': 0,
+        }
+
     def refund(self):
         """Create a copy of order  for refund order"""
         refund_orders = self.env['pos.order']
@@ -489,28 +512,14 @@ class PosOrder(models.Model):
             current_session = order.session_id.config_id.current_session_id
             if not current_session:
                 raise UserError(_('To return product(s), you need to open a session in the POS %s', order.session_id.config_id.display_name))
-            refund_order = order.copy({
-                'name': order.name + _(' REFUND'),
-                'session_id': current_session.id,
-                'date_order': fields.Datetime.now(),
-                'pos_reference': order.pos_reference,
-                'lines': False,
-                'amount_tax': -order.amount_tax,
-                'amount_total': -order.amount_total,
-                'amount_paid': 0,
-            })
+            refund_order = order.copy(
+                order._prepare_refund_values(current_session)
+            )
             for line in order.lines:
                 PosOrderLineLot = self.env['pos.pack.operation.lot']
                 for pack_lot in line.pack_lot_ids:
                     PosOrderLineLot += pack_lot.copy()
-                line.copy({
-                    'name': line.name + _(' REFUND'),
-                    'qty': -line.qty,
-                    'order_id': refund_order.id,
-                    'price_subtotal': -line.price_subtotal,
-                    'price_subtotal_incl': -line.price_subtotal_incl,
-                    'pack_lot_ids': PosOrderLineLot,
-                    })
+                line.copy(line._prepare_refund_data(refund_order, PosOrderLineLot))
             refund_orders |= refund_order
 
         return {
@@ -564,7 +573,7 @@ class PosOrder(models.Model):
             })
             mail_values['attachment_ids'] += [(4, attachment.id)]
 
-        mail = self.env['mail.mail'].create(mail_values)
+        mail = self.env['mail.mail'].sudo().create(mail_values)
         mail.send()
 
     @api.model
@@ -615,6 +624,8 @@ class PosOrder(models.Model):
             'state': order.state,
             'account_move': order.account_move.id,
             'id': order.id,
+            'is_tipped': order.is_tipped,
+            'tip_amount': order.tip_amount,
         }
 
     def export_for_ui(self):
@@ -668,25 +679,28 @@ class PosOrderLine(models.Model):
     currency_id = fields.Many2one('res.currency', related='order_id.currency_id')
     full_product_name = fields.Char('Full Product Name')
 
-    @api.model
-    def _prepare_refund_data(self, refund_order_id):
+    def _prepare_refund_data(self, refund_order, PosOrderLineLot):
         """
         This prepares data for refund order line. Inheritance may inject more data here
 
-        @param refund_order_id: the pre-created refund order
-        @type refund_order_id: pos.order
+        @param refund_order: the pre-created refund order
+        @type refund_order: pos.order
+
+        @param PosOrderLineLot: the pre-created Pack operation Lot
+        @type PosOrderLineLot: pos.pack.operation.lot
 
         @return: dictionary of data which is for creating a refund order line from the original line
         @rtype: dict
         """
+        self.ensure_one()
         return {
-            # required=True, copy=False
             'name': self.name + _(' REFUND'),
             'qty': -self.qty,
-            'order_id': refund_order_id.id,
+            'order_id': refund_order.id,
             'price_subtotal': -self.price_subtotal,
             'price_subtotal_incl': -self.price_subtotal_incl,
-            }
+            'pack_lot_ids': PosOrderLineLot,
+        }
 
     @api.model
     def create(self, values):

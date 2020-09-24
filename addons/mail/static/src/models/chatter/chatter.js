@@ -27,14 +27,18 @@ function factory(dependencies) {
         /**
          * @override
          */
-        delete() {
+        _willDelete() {
             this._stopAttachmentsLoading();
-            super.delete();
+            return super._willDelete(...arguments);
         }
 
         //----------------------------------------------------------------------
         // Public
         //----------------------------------------------------------------------
+
+        focus() {
+            this.update({ isDoFocus: true });
+        }
 
         async refresh() {
             const thread = this.thread;
@@ -50,6 +54,13 @@ function factory(dependencies) {
         }
 
         async refreshActivities() {
+            if (!this.hasActivities) {
+                return;
+            }
+            if (!this.thread || this.thread.isTemporary) {
+                this.update({ activities: [['unlink-all']] });
+                return;
+            }
             // A bit "extreme", may be improved
             const [{ activity_ids: newActivityIds }] = await this.async(() => this.env.services.rpc({
                 model: this.thread.model,
@@ -69,18 +80,14 @@ function factory(dependencies) {
 
         showLogNote() {
             this.update({ isComposerVisible: true });
-            this.thread.composer.update({
-                isDoFocus: true,
-                isLog: true,
-            });
+            this.thread.composer.update({ isLog: true });
+            this.focus();
         }
 
         showSendMessage() {
             this.update({ isComposerVisible: true });
-            this.thread.composer.update({
-                isDoFocus: true,
-                isLog: false,
-            });
+            this.thread.composer.update({ isLog: false });
+            this.focus();
         }
 
         toggleActivityBoxVisibility() {
@@ -97,6 +104,14 @@ function factory(dependencies) {
          */
         _computeFutureActivities() {
             return [['replace', this.activities.filter(activity => activity.state === 'planned')]];
+        }
+
+        /**
+         * @private
+         * @returns {boolean}
+         */
+        _computeHasThreadView() {
+            return this.thread && this.hasMessageList;
         }
 
         /**
@@ -129,7 +144,7 @@ function factory(dependencies) {
         _prepareAttachmentsLoading() {
             this._isPreparingAttachmentsLoading = true;
             this._attachmentsLoaderTimeout = this.env.browser.setTimeout(() => {
-                this.update({isShowingAttachmentsLoading: true});
+                this.update({ isShowingAttachmentsLoading: true });
                 this._isPreparingAttachmentsLoading = false;
             }, this.env.loadingBaseDelayDuration);
         }
@@ -140,7 +155,7 @@ function factory(dependencies) {
         _stopAttachmentsLoading() {
             this.env.browser.clearTimeout(this._attachmentsLoaderTimeout);
             this._attachmentsLoaderTimeout = null;
-            this.update({isShowingAttachmentsLoading: false});
+            this.update({ isShowingAttachmentsLoading: false });
             this._isPreparingAttachmentsLoading = false;
         }
 
@@ -166,18 +181,25 @@ function factory(dependencies) {
                 }
             }
 
-            if (previous.activityIds.join(',') !== this.activityIds.join(',')) {
+            if (
+                !previous.activityIds ||
+                previous.activityIds.join(',') !== this.activityIds.join(',')
+            ) {
                 this.refreshActivities();
             }
             if (
-                previous.followerIds.join(',') !== this.followerIds.join(',') &&
-                !this.thread.isTemporary
+                !previous.followerIds ||
+                previous.followerIds.join(',') !== this.followerIds.join(',')
             ) {
-                this.thread.refreshFollowers();
+                if (this.thread) {
+                    this.thread.refreshFollowers();
+                    this.thread.fetchAndUpdateSuggestedRecipients();
+                }
             }
             if (
+                !previous.messageIds ||
                 previous.thread !== this.thread ||
-                (this.thread && this.messageIds.join(',') !== previous.messageIds.join(','))
+                this.messageIds.join(',') !== previous.messageIds.join(',')
             ) {
                 this.refresh();
             }
@@ -219,7 +241,7 @@ function factory(dependencies) {
                     id: getMessageNextTemporaryId(),
                     isTemporary: true,
                 });
-                this.threadViewer.update({ thread: [['link', thread]] });
+                this.update({ thread: [['link', thread]] });
                 for (const cache of thread.caches) {
                     cache.update({ messages: [['link', message]] });
                 }
@@ -229,7 +251,7 @@ function factory(dependencies) {
                     id: this.threadId,
                     model: this.threadModel,
                 });
-                this.threadViewer.update({ thread: [['link', thread]] });
+                this.update({ thread: [['link', thread]] });
             }
         }
 
@@ -268,6 +290,12 @@ function factory(dependencies) {
             default: true,
         }),
         /**
+         * Determines whether `this` should display a message list.
+         */
+        hasMessageList: attr({
+            default: true,
+        }),
+        /**
          * Whether the message list should manage its scroll.
          * In particular, when the chatter is on the form view's side,
          * then the scroll is managed by the message list.
@@ -277,8 +305,15 @@ function factory(dependencies) {
         hasMessageListScrollAdjust: attr({
             default: false,
         }),
-        hasThread: attr({
-            default: true,
+        /**
+         * Determines whether `this.thread` should be displayed.
+         */
+        hasThreadView: attr({
+            compute: '_computeHasThreadView',
+            dependencies: [
+                'hasMessageList',
+                'thread',
+            ],
         }),
         hasTopbarCloseButton: attr({
             default: false,
@@ -297,6 +332,12 @@ function factory(dependencies) {
             default: false,
             dependencies: ['threadId'],
         }),
+        /**
+         * Determine whether this chatter should be focused at next render.
+         */
+        isDoFocus: attr({
+            default: false,
+        }),
         isShowingAttachmentsLoading: attr({
             default: false,
         }),
@@ -307,16 +348,28 @@ function factory(dependencies) {
             compute: '_computeOverdueActivities',
             dependencies: ['activitiesState'],
         }),
-        thread: many2one('mail.thread', {
-            related: 'threadViewer.thread',
-        }),
+        /**
+         * Determines the `mail.thread` that should be displayed by `this`.
+         */
+        thread: many2one('mail.thread'),
         threadAttachmentCount: attr({
             default: 0,
         }),
         threadId: attr(),
         threadModel: attr(),
+        /**
+         * States the `mail.thread_view` displaying `this.thread`.
+         */
+        threadView: one2one('mail.thread_view', {
+            related: 'threadViewer.threadView',
+        }),
+        /**
+         * Determines the `mail.thread_viewer` managing the display of `this.thread`.
+         */
         threadViewer: one2one('mail.thread_viewer', {
-            autocreate: true,
+            default: [['create']],
+            inverse: 'chatter',
+            isCausal: true,
         }),
         todayActivities: one2many('mail.activity', {
             compute: '_computeTodayActivities',

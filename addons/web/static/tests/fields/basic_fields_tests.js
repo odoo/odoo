@@ -24,6 +24,9 @@ var _t = core._t;
 // Base64 images for testing purpose
 const MY_IMAGE = 'iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==';
 const PRODUCT_IMAGE = 'R0lGODlhDAAMAKIFAF5LAP/zxAAAANyuAP/gaP///wAAAAAAACH5BAEAAAUALAAAAAAMAAwAAAMlWLPcGjDKFYi9lxKBOaGcF35DhWHamZUW0K4mAbiwWtuf0uxFAgA7';
+const FR_FLAG_URL = '/base/static/img/country_flags/fr.png';
+const EN_FLAG_URL = '/base/static/img/country_flags/gb.png';
+
 
 QUnit.module('fields', {}, function () {
 
@@ -89,8 +92,8 @@ QUnit.module('basic_fields', {
                     qux: false,
                     selection: 'done',
                 },
-                {id: 3, bar: true, foo: "gnap", int_field: 80, qux: -3.89859, m2o: 1, m2m: []},
-                {id: 5, bar: false, foo: "blop", int_field: -4, qux: 9.1, m2o: 1, m2m: [1], currency_id: 1}],
+                {id: 3, bar: true, foo: "gnap", int_field: 80, qux: -3.89859},
+                {id: 5, bar: false, foo: "blop", int_field: -4, qux: 9.1, currency_id: 1}],
                 onchanges: {},
             },
             product: {
@@ -117,6 +120,7 @@ QUnit.module('basic_fields', {
             },
             currency: {
                 fields: {
+                    digits: { string: "Digits" },
                     symbol: {string: "Currency Sumbol", type: "char", searchable: true},
                     position: {string: "Currency Position", type: "char", searchable: true},
                 },
@@ -2888,6 +2892,131 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    /**
+     * Same tests than for Image fields, but for Char fields with image_url widget.
+     */
+    QUnit.module('FieldChar-ImageUrlWidget', {
+        beforeEach: function () {
+            // specific sixth partner data for image_url widget tests
+            this.data.partner.records.push({id: 6, bar: false, foo: FR_FLAG_URL, int_field: 5, qux: 0.0, timmy: []});
+        },
+    });
+
+    QUnit.test('image fields are correctly rendered', async function (assert) {
+        assert.expect(6);
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="foo" widget="image_url" options="{\'size\': [90, 90]}"/> ' +
+                '</form>',
+            res_id: 6,
+            async mockRPC(route, args) {
+                if (route === FR_FLAG_URL) {
+                    assert.ok(true, "the correct route should have been called.");
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        assert.hasClass(form.$('div[name="foo"]'), 'o_field_image',
+            "the widget should have the correct class");
+        assert.containsOnce(form, 'div[name="foo"] > img',
+            "the widget should contain an image");
+        assert.hasClass(form.$('div[name="foo"] > img'), 'img-fluid',
+            "the image should have the correct class");
+        assert.hasAttrValue(form.$('div[name="foo"] > img'), 'width', "90",
+            "the image should correctly set its attributes");
+        assert.strictEqual(form.$('div[name="foo"] > img').css('max-width'), "90px",
+            "the image should correctly set its attributes");
+        form.destroy();
+    });
+
+    QUnit.test('image_url widget in subviews are loaded correctly', async function (assert) {
+        assert.expect(6);
+
+        this.data.partner_type.fields.image = {name: 'image', type: 'char'};
+        this.data.partner_type.records[0].image = EN_FLAG_URL;
+        this.data.partner.records[5].timmy = [12];
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="foo" widget="image_url" options="{\'size\': [90, 90]}"/>' +
+                    '<field name="timmy" widget="many2many">' +
+                        '<tree>' +
+                            '<field name="display_name"/>' +
+                        '</tree>' +
+                        '<form>' +
+                            '<field name="image" widget="image_url"/>' +
+                        '</form>' +
+                    '</field>' +
+                '</form>',
+            res_id: 6,
+            async mockRPC(route) {
+                if (route === FR_FLAG_URL) {
+                    assert.step("The view's image should have been fetched");
+                    return 'wow';
+                }
+                if (route === EN_FLAG_URL) {
+                    assert.step("The dialog's image should have been fetched");
+                    return;
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+        assert.verifySteps(["The view's image should have been fetched"]);
+
+        assert.containsOnce(form, 'tr.o_data_row',
+            'There should be one record in the many2many');
+
+        // Actual flow: click on an element of the m2m to get its form view
+        await testUtils.dom.click(form.$('tbody td:contains(gold)'));
+        assert.strictEqual($('.modal').length, 1,
+            'The modal should have opened');
+        assert.verifySteps(["The dialog's image should have been fetched"]);
+
+        form.destroy();
+    });
+
+    QUnit.test('image fields in x2many list are loaded correctly', async function (assert) {
+        assert.expect(2);
+
+        this.data.partner_type.fields.image = {name: 'image', type: 'char'};
+        this.data.partner_type.records[0].image = EN_FLAG_URL;
+        this.data.partner.records[5].timmy = [12];
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="timmy" widget="many2many">' +
+                        '<tree>' +
+                            '<field name="image" widget="image_url"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+            res_id: 6,
+            async mockRPC(route) {
+                if (route === EN_FLAG_URL) {
+                    assert.ok(true, "The list's image should have been fetched");
+                    return;
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        assert.containsOnce(form, 'tr.o_data_row',
+            'There should be one record in the many2many');
+
+        form.destroy();
+    });
+
     QUnit.module('JournalDashboardGraph', {
         beforeEach: function () {
             _.extend(this.data.partner.fields, {
@@ -3891,6 +4020,36 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.test('date field: hit enter should update value', async function (assert) {
+        assert.expect(2);
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners"><field name="date"/></form>',
+            res_id: 1,
+            translateParameters: {  // Avoid issues due to localization formats
+                date_format: '%m/%d/%Y',
+            },
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        const year = (new Date()).getFullYear();
+
+        await testUtils.fields.editInput(form.el.querySelector('input[name="date"]'), '01/08');
+        await testUtils.fields.triggerKeydown(form.el.querySelector('input[name="date"]'), 'enter');
+        assert.strictEqual(form.el.querySelector('input[name="date"]').value, '01/08/' + year);
+
+        await testUtils.fields.editInput(form.el.querySelector('input[name="date"]'), '08/01');
+        await testUtils.fields.triggerKeydown(form.el.querySelector('input[name="date"]'), 'enter');
+        assert.strictEqual(form.el.querySelector('input[name="date"]').value, '08/01/' + year);
+
+        form.destroy();
+    });
+
     QUnit.module('FieldDatetime');
 
     QUnit.test('datetime field in form view', async function (assert) {
@@ -4428,7 +4587,7 @@ QUnit.module('basic_fields', {
             { id: 5, datetime: '2017-10-05 04:00:00' }, // - 3 days
             { id: 6, datetime: '2018-02-08 04:00:00' }, // + 4 months (diff >= 100 days)
             { id: 7, datetime: '2017-06-08 04:00:00' }, // - 4 months (diff >= 100 days)
-            { id: 6, datetime: false },
+            { id: 8, datetime: false },
         ];
 
         const list = await createView({
@@ -7447,7 +7606,7 @@ QUnit.module('basic_fields', {
     });
 
     QUnit.test('FieldBadge component with decoration-xxx attributes', async function (assert) {
-        assert.expect(3);
+        assert.expect(6);
 
         const list = await createView({
             View: ListView,
@@ -7459,6 +7618,12 @@ QUnit.module('basic_fields', {
                     <field name="foo" widget="badge" decoration-danger="selection == 'done'" decoration-warning="selection == 'blocked'"/>
                 </list>`,
         });
+
+        assert.containsN(list, '.o_field_badge[name="foo"]', 5);
+        assert.containsOnce(list, '.o_field_badge[name="foo"].bg-danger-light');
+        assert.containsOnce(list, '.o_field_badge[name="foo"].bg-warning-light');
+
+        await list.reload();
 
         assert.containsN(list, '.o_field_badge[name="foo"]', 5);
         assert.containsOnce(list, '.o_field_badge[name="foo"].bg-danger-light');

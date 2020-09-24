@@ -325,6 +325,7 @@ var PivotModel = AbstractModel.extend({
     closeGroup: function (groupId, type) {
         var groupBys;
         var expandedGroupBys;
+        let keyPart;
         var group;
         var tree;
         if (type === 'row') {
@@ -332,12 +333,35 @@ var PivotModel = AbstractModel.extend({
             expandedGroupBys = this.data.expandedRowGroupBys;
             tree = this.rowGroupTree;
             group = this._findGroup(this.rowGroupTree, groupId[0]);
+            keyPart = 0;
         } else {
             groupBys = this.data.colGroupBys;
             expandedGroupBys = this.data.expandedColGroupBys;
             tree = this.colGroupTree;
             group = this._findGroup(this.colGroupTree, groupId[1]);
+            keyPart = 1;
         }
+
+        const groupIdPart = groupId[keyPart];
+        const range = groupIdPart.map((_, index) => index);
+        function keep(key) {
+            const idPart = JSON.parse(key)[keyPart];
+            return range.some(index => groupIdPart[index] !== idPart[index]) ||
+                    idPart.length ===  groupIdPart.length;
+        }
+        function omitKeys(object) {
+            const newObject = {};
+            for (const key in object) {
+                if (keep(key)) {
+                    newObject[key] = object[key];
+                }
+            }
+            return newObject;
+        }
+        this.measurements = omitKeys(this.measurements);
+        this.counts = omitKeys(this.counts);
+        this.groupDomains = omitKeys(this.groupDomains);
+
         group.directSubTrees.clear();
         delete group.sortedKeys;
         var newGroupBysLength = this._getTreeHeight(tree) - 1;
@@ -507,6 +531,7 @@ var PivotModel = AbstractModel.extend({
             domain: this.data.domain,
             fields: this.fields,
             hasData: this._hasData(),
+            isSample: this.isSampleModel,
             measures: this.data.measures,
             origins: this.data.origins,
             rowGroupBys: groupBys.rowGroupBys,
@@ -554,6 +579,8 @@ var PivotModel = AbstractModel.extend({
         this.fields = params.fields;
         this.modelName = params.modelName;
         this.groupableFields = params.groupableFields;
+        const measures = this._processMeasures(params.context.pivot_measures) ||
+                            params.measures.map(m => m);
         this.data = {
             expandedRowGroupBys: [],
             expandedColGroupBys: [],
@@ -561,7 +588,7 @@ var PivotModel = AbstractModel.extend({
             context: _.extend({}, session.user_context, params.context),
             groupedBy: params.context.pivot_row_groupby || params.groupedBy,
             colGroupBys: params.context.pivot_column_groupby || params.colGroupBys,
-            measures: this._processMeasures(params.context.pivot_measures) || params.measures,
+            measures,
             timeRanges: params.timeRanges,
         };
         this._computeDerivedParams();
@@ -625,6 +652,11 @@ var PivotModel = AbstractModel.extend({
         if (!_.isEqual(oldColGroupBys, self.data.colGroupBys)) {
             this.data.expandedColGroupBys = [];
         }
+
+        if ('measure' in params) {
+            return this._toggleMeasure(params.measure);
+        }
+
         if (!this._hasData()) {
             return this._loadData();
         }
@@ -667,25 +699,6 @@ var PivotModel = AbstractModel.extend({
         };
 
         this._sortTree(sortFunction, this.rowGroupTree);
-    },
-    /**
-     * Toggle the active state for a given measure, then reload the data
-     * if this turns out to be necessary.
-     *
-     * @param {string} fieldName
-     * @returns {Promise}
-     */
-    toggleMeasure: function (fieldName) {
-        var index = this.data.measures.indexOf(fieldName);
-        if (index !== -1) {
-            this.data.measures.splice(index, 1);
-            // in this case, we already have all data in memory, no need to
-            // actually reload a lesser amount of information
-            return Promise.resolve();
-        } else {
-            this.data.measures.push(fieldName);
-        }
-        return this._loadData();
     },
 
     //--------------------------------------------------------------------------
@@ -1247,6 +1260,12 @@ var PivotModel = AbstractModel.extend({
         });
     },
     /**
+     * @override
+     */
+    _isEmpty() {
+        return !this._hasData();
+    },
+    /**
      * Initilize/Reinitialize this.rowGroupTree, colGroupTree, measurements,
      * counts and subdivide the group 'Total' as many times it is necessary.
      * A first subdivision with no groupBy (divisors.slice(0, 1)) is made in
@@ -1429,6 +1448,25 @@ var PivotModel = AbstractModel.extend({
                 self._pruneTree(subTree, oldSubTree);
             }
         });
+    },
+    /**
+     * Toggle the active state for a given measure, then reload the data
+     * if this turns out to be necessary.
+     *
+     * @param {string} fieldName
+     * @returns {Promise}
+     */
+    _toggleMeasure: function (fieldName) {
+        var index = this.data.measures.indexOf(fieldName);
+        if (index !== -1) {
+            this.data.measures.splice(index, 1);
+            // in this case, we already have all data in memory, no need to
+            // actually reload a lesser amount of information
+            return Promise.resolve();
+        } else {
+            this.data.measures.push(fieldName);
+        }
+        return this._loadData();
     },
     /**
      * Extract from a groupBy value a label.

@@ -130,15 +130,12 @@ class StockWarehouse(models.Model):
                     'company_id': self.company_id.id,
                     'route_id': self._find_global_route('purchase_stock.route_warehouse0_buy', _('Buy')).id,
                     'propagate_cancel': self.reception_steps != 'one_step',
-                    'delay_alert': True,
-                    'propagate_date': self.reception_steps != 'one_step',
                 },
                 'update_values': {
                     'active': self.buy_to_resupply,
                     'name': self._format_rulename(location_id, False, 'Buy'),
                     'location_id': location_id.id,
                     'propagate_cancel': self.reception_steps != 'one_step',
-                    'propagate_date': self.reception_steps != 'one_step',
                 }
             }
         })
@@ -186,6 +183,11 @@ class Orderpoint(models.Model):
         'product.supplierinfo', string='Vendor', check_company=True,
         domain="['|', ('product_id', '=', product_id), '&', ('product_id', '=', False), ('product_tmpl_id', '=', product_tmpl_id)]")
 
+    @api.depends('product_id.purchase_order_line_ids', 'product_id.purchase_order_line_ids.state')
+    def _compute_qty(self):
+        """ Extend to add more depends values """
+        return super()._compute_qty()
+
     @api.depends('route_id')
     def _compute_show_suppplier(self):
         buy_route = []
@@ -222,7 +224,11 @@ class Orderpoint(models.Model):
                 'tag': 'display_notification',
                 'params': {
                     'title': _('The following replenishment order has been generated'),
-                    'message': '<a href="#action=%d&id=%d&model=purchase.order" target="_blank">%s</a>' % (action.id, order.id, order.display_name),
+                    'message': '%s',
+                    'links': [{
+                        'label': order.display_name,
+                        'url': f'#action={action.id}&id={order.id}&model=purchase.order',
+                    }],
                     'sticky': False,
                 }
             }
@@ -272,7 +278,7 @@ class ProductionLot(models.Model):
 
     def action_view_po(self):
         self.ensure_one()
-        action = self.env.ref('purchase.purchase_form_action').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("purchase.purchase_form_action")
         action['domain'] = [('id', 'in', self.mapped('purchase_order_ids.id'))]
         action['context'] = dict(self._context, create=False)
         return action

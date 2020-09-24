@@ -5,6 +5,7 @@
         <xpath expr="." position="inside">
             <link rel="stylesheet" type="text/scss" href="/sale_timesheet/static/src/scss/sale_timesheet.scss"/>
                 <script type="text/javascript" src="/sale_timesheet/static/src/js/project_overview.js"></script>
+                <script type="text/javascript" src="/sale_timesheet/static/src/js/sale_project_kanban_controller.js"/>
         </xpath>
     </template>
 
@@ -140,6 +141,27 @@
                                                         </a>
                                                     </td>
                                                 </tr>
+                                                <tr t-if="dashboard['time']['non_billable_timesheet'] > 0">
+                                                    <td class="o_timesheet_plan_dashboard_cell">
+                                                        <t t-if="is_uom_day" t-esc="dashboard['time']['non_billable_timesheet']" t-options="{'widget': 'timesheet_uom'}"/>
+                                                        <t t-else="" t-esc="dashboard['time']['non_billable_timesheet']" t-options="{'widget': 'float_time'}"/>
+                                                    </td>
+                                                    <td class="o_timesheet_plan_dashboard_cell">
+                                                        (<t t-esc="dashboard['rates']['non_billable_timesheet']"/> %)
+                                                    </td>
+                                                    <td>
+                                                        <a type="action"
+                                                            data-model="account.analytic.line"
+                                                            data-views='[[false, "list"], [false, "form"]]'
+                                                            t-att-data-domain="json.dumps(timesheet_domain + [('timesheet_invoice_type','=','non_billable_timesheet')])"
+                                                        >
+                                                            <span class="btn-link"
+                                                                  style="font-weight:normal;">
+                                                                Non Billable Timesheets
+                                                            </span>
+                                                        </a>
+                                                    </td>
+                                                </tr>
                                                 <tr t-if="dashboard['time']['canceled'] > 0">
                                                     <td class="o_timesheet_plan_dashboard_cell">
                                                         <t t-if="is_uom_day" t-esc="dashboard['time']['canceled']" t-options="{'widget': 'timesheet_uom'}"/>
@@ -262,6 +284,9 @@
                                                         <span t-if="dashboard['time']['non_billable_project'] != 0" class="badge badge-pill o_progress_non_billable_project">
                                                             <a type="action" data-model="account.analytic.line" t-att-data-domain="json.dumps(timesheet_domain + [('timesheet_invoice_type','=','non_billable_project')])" tabindex="-1">No task found</a>
                                                         </span>
+                                                        <span t-if="dashboard['time']['non_billable_timesheet'] != 0" class="badge badge-pill o_progress_non_billable_timesheet">
+                                                            <a type="action" data-model="account.analytic.line" t-att-data-domain="json.dumps(timesheet_domain + [('timesheet_invoice_type','=','non_billable_timesheet')])" tabindex="-1">Non billable timesheets</a>
+                                                        </span>
                                                         <span class="badge badge-pill o_progress_non_billable">
                                                             <a type="action" data-model="account.analytic.line" t-att-data-domain="json.dumps(timesheet_domain + [('timesheet_invoice_type','=','non_billable')])" tabindex="-1">Non billable tasks</a>
                                                         </span>
@@ -307,6 +332,10 @@
                                                                 <t t-call="sale_timesheet.progressbar">
                                                                     <t t-set="label">No task found</t>
                                                                     <t t-set="key" t-translation="off">non_billable_project</t>
+                                                                </t>
+                                                                <t t-call="sale_timesheet.progressbar">
+                                                                    <t t-set="label">Non billable timesheets</t>
+                                                                    <t t-set="key" t-translation="off">non_billable_timesheet</t>
                                                                 </t>
                                                                 <t t-call="sale_timesheet.progressbar">
                                                                     <t t-set="label">Non billable tasks</t>

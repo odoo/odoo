@@ -18,7 +18,7 @@ class Partner(models.Model):
     def default_get(self, fields):
         rec = super(Partner, self).default_get(fields)
         active_model = self.env.context.get('active_model')
-        if active_model == 'crm.lead':
+        if active_model == 'crm.lead' and len(self.env.context.get('active_ids', [])) <= 1:
             lead = self.env[active_model].browse(self.env.context.get('active_id')).exists()
             if lead:
                 rec.update(
@@ -77,8 +77,20 @@ class Partner(models.Model):
     def schedule_meeting(self):
         partner_ids = self.ids
         partner_ids.append(self.env.user.partner_id.id)
-        action = self.env.ref('calendar.action_calendar_event').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("calendar.action_calendar_event")
         action['context'] = {
             'default_partner_ids': partner_ids,
         }
+        action['domain'] = [('id', 'in', self.meeting_ids.ids)]
+        return action
+
+    def action_view_opportunity(self):
+        '''
+        This function returns an action that displays the opportunities from partner.
+        '''
+        action = self.env.ref('crm.crm_lead_opportunities').read()[0]
+        if self.is_company:
+            action['domain'] = [('partner_id.commercial_partner_id.id', '=', self.id)]
+        else:
+            action['domain'] = [('partner_id.id', '=', self.id)]
         return action

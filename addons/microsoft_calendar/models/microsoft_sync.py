@@ -32,6 +32,8 @@ def after_commit(func):
         dbname = self.env.cr.dbname
         context = self.env.context
         uid = self.env.uid
+
+        @self.env.cr.postcommit.add
         def called_after():
             db_registry = registry(dbname)
             with api.Environment.manage(), db_registry.cursor() as cr:
@@ -41,7 +43,7 @@ def after_commit(func):
                 except Exception as e:
                     _logger.warning("Could not sync record now: %s" % self)
                     _logger.exception(e)
-        self.env.cr.after('commit', called_after)
+
     return wrapped
 
 @contextmanager
@@ -110,7 +112,7 @@ class MicrosoftSync(models.AbstractModel):
             synced.write({self._active_name: False})
             self = self - synced
         elif synced:
-            raise UserError(_("You cannot delete a record synchronized with Microsoft Calendar, archive it instead."))
+            raise UserError(_("You cannot delete a record synchronized with Outlook Calendar, archive it instead."))
         return super().unlink()
 
     @api.model

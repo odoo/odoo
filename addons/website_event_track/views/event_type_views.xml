@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="event_type_view_form_inherit_track" model="ir.ui.view">
+        <field name="name">event.type.view.form.inherit.track</field>
+        <field name="model">event.type</field>
+        <field name="inherit_id" ref="website_event.event_type_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='website_menu']" position='after'>
+                <div class="row mt16" attrs="{'invisible': [('website_menu', '=', False)]}">
+                    <label class="col-lg-4" for="website_track"/> <field name="website_track"/>
+                </div>
+                <div class="row mt16" attrs="{'invisible': [('website_menu', '=', False)]}">
+                    <label class="col-lg-4" for="website_track_proposal"/> <field name="website_track_proposal"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

@@ -32,6 +32,8 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
     def test_01_portal_attachment(self):
         """Test the portal chatter attachment route."""
 
+        self.authenticate(None, None)
+
         # Test public user can't create attachment without token of document
         res = self.url_open(
             url='%s/portal/attachment/add' % self.base_url,

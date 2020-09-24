@@ -4,7 +4,7 @@ odoo.define('mail/static/src/models/message/message.js', function (require) {
 const emojis = require('mail.emojis');
 const { registerNewModel } = require('mail/static/src/model/model_core.js');
 const { attr, many2many, many2one, one2many } = require('mail/static/src/model/model_field.js');
-const { addLink, parseAndTransform } = require('mail.utils');
+const { addLink, htmlToTextContentInline, parseAndTransform } = require('mail.utils');
 
 const { str_to_datetime } = require('web.time');
 
@@ -63,16 +63,14 @@ function factory(dependencies) {
                 data2.body = data.body;
             }
             if ('channel_ids' in data && data.channel_ids) {
-                // AKU FIXME: side-effect of calling convert...
-                const channelList = [];
-                for (const channelId of data.channel_ids) {
-                    const channel = this.env.models['mail.thread'].insert({
-                        id: channelId,
-                        model: 'mail.channel',
-                    });
-                    channelList.push(channel);
-                }
-                data2.serverChannels = [['replace', channelList]];
+                const channels = data.channel_ids
+                    .map(channelId =>
+                        this.env.models['mail.thread'].findFromIdentifyingData({
+                            id: channelId,
+                            model: 'mail.channel',
+                        })
+                    ).filter(channel => !!channel);
+                data2.serverChannels = [['replace', channels]];
             }
             if ('date' in data && data.date) {
                 data2.date = moment(str_to_datetime(data.date));
@@ -198,6 +196,46 @@ function factory(dependencies) {
                 args: [messageIds, decision],
                 kwargs: kwargs,
             });
+        }
+        /**
+         * Performs the `message_fetch` RPC on `mail.message`.
+         *
+         * @static
+         * @param {Array[]} domain
+         * @param {integer} [limit]
+         * @param {integer[]} [moderated_channel_ids]
+         * @param {Object} [context]
+         * @returns {mail.message[]}
+         */
+        static async performRpcMessageFetch(domain, limit, moderated_channel_ids, context) {
+            const messagesData = await this.env.services.rpc({
+                model: 'mail.message',
+                method: 'message_fetch',
+                kwargs: {
+                    context,
+                    domain,
+                    limit,
+                    moderated_channel_ids,
+                },
+            }, { shadow: true });
+            const messages = this.env.models['mail.message'].insert(messagesData.map(
+                messageData => this.env.models['mail.message'].convertData(messageData)
+            ));
+            // compute seen indicators (if applicable)
+            for (const message of messages) {
+                for (const thread of message.threads) {
+                    if (thread.model !== 'mail.channel' || thread.channel_type === 'channel') {
+                        // disabled on non-channel threads and
+                        // on `channel` channels for performance reasons
+                        continue;
+                    }
+                    this.env.models['mail.message_seen_indicator'].insert({
+                        messageId: message.id,
+                        threadId: thread.id,
+                    });
+                }
+            }
+            return messages;
         }
 
         /**
@@ -344,11 +382,23 @@ function factory(dependencies) {
          * @returns {boolean}
          */
         _computeIsCurrentPartnerAuthor() {
-            return (
+            return !!(
                 this.author &&
                 this.messagingCurrentPartner &&
                 this.messagingCurrentPartner === this.author
             );
+        }
+
+        /**
+         * @private
+         * @returns {boolean}
+         */
+        _computeIsBodyEqualSubtypeDescription() {
+            if (!this.body || !this.subtype_description) {
+                return false;
+            }
+            const inlineBody = htmlToTextContentInline(this.body);
+            return inlineBody.toLowerCase() === this.subtype_description.toLowerCase();
         }
 
         /**
@@ -482,6 +532,34 @@ function factory(dependencies) {
                 'messagingCurrentPartner',
             ],
         }),
+        /**
+         * States whether `body` and `subtype_description` contain similar
+         * values.
+         *
+         * This is necessary to avoid displaying both of them together when they
+         * contain duplicate information. This will especially happen with
+         * messages that are posted automatically at the creation of a record
+         * (messages that serve as tracking messages). They do have hard-coded
+         * "record created" body while being assigned a subtype with a
+         * description that states the same information.
+         *
+         * Fixing newer messages is possible by not assigning them a duplicate
+         * body content, but the check here is still necessary to handle
+         * existing messages.
+         *
+         * Limitations:
+         * - A translated subtype description might not match a non-translatable
+         *   body created by a user with a different language.
+         * - Their content might be mostly but not exactly the same.
+         */
+        isBodyEqualSubtypeDescription: attr({
+            compute: '_computeIsBodyEqualSubtypeDescription',
+            default: false,
+            dependencies: [
+                'body',
+                'subtype_description',
+            ],
+        }),
         isModeratedByCurrentPartner: attr({
             compute: '_computeIsModeratedByCurrentPartner',
             default: false,
@@ -609,12 +687,13 @@ function factory(dependencies) {
         tracking_value_ids: attr({
             default: [],
         }),
-
         /**
-         * All channels that this message is linked to (from server message
-         * format).
+         * All channels containing this message on the server.
+         * Equivalent of python field `channel_ids`.
          */
-        serverChannels: many2many('mail.thread'),
+        serverChannels: many2many('mail.thread', {
+            inverse: 'messagesAsServerChannel',
+        }),
     };
 
     Message.modelName = 'mail.message';

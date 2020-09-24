@@ -78,16 +78,13 @@ class ChangeProductionQty(models.TransientModel):
 
             for wo in production.workorder_ids:
                 operation = wo.operation_id
-                wo._onchange_expected_duration()
+                wo.duration_expected = wo._get_duration_expected(ratio=new_production_qty / old_production_qty)
                 quantity = wo.qty_production - wo.qty_produced
                 if production.product_id.tracking == 'serial':
                     quantity = 1.0 if not float_is_zero(quantity, precision_digits=precision) else 0.0
                 else:
-                    quantity = quantity if (quantity > 0) else 0
-                if float_is_zero(quantity, precision_digits=precision):
-                    wo.check_ids.unlink()
-                else:
-                    wo.qty_producing = quantity
+                    quantity = quantity if (quantity > 0 and not float_is_zero(quantity, precision_digits=precision)) else 0
+                wo._update_qty_producing(quantity)
                 if wo.qty_produced < wo.qty_production and wo.state == 'done':
                     wo.state = 'progress'
                 if wo.qty_produced == wo.qty_production and wo.state == 'progress':

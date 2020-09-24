@@ -5,11 +5,11 @@ import math
 
 from odoo import http
 from odoo.addons.http_routing.models.ir_http import slug
-from odoo.addons.website_event_track_online.controllers.community import WebsiteEventCommunityController
+from odoo.addons.website_event.controllers.community import EventCommunityController
 from odoo.http import request
 
 
-class WebsiteEventTrackQuizCommunityController(WebsiteEventCommunityController):
+class WebsiteEventTrackQuizCommunityController(EventCommunityController):
 
     _visitors_per_page = 30
     _pager_max_pages = 5
@@ -81,7 +81,7 @@ class WebsiteEventTrackQuizCommunityController(WebsiteEventCommunityController):
             position = position + 1
 
         return {
-            'top3_visitors': leaderboard[:3] if len(leaderboard) >= 3 else False,
+            'top3_visitors': leaderboard[:3],
             'visitors': leaderboard,
             'current_visitor_position': current_visitor_position,
             'current_visitor': current_visitor,

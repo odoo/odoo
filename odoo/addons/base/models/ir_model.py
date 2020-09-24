@@ -257,8 +257,7 @@ class IrModel(models.Model):
         if args is None:
             args = []
         domain = args + ['|', ('model', operator, name), ('name', operator, name)]
-        model_ids = self._search(domain, limit=limit, access_rights_uid=name_get_uid)
-        return models.lazy_name_get(self.browse(model_ids).with_user(name_get_uid))
+        return self._search(domain, limit=limit, access_rights_uid=name_get_uid)
 
     def _drop_table(self):
         for model in self:
@@ -1628,7 +1627,7 @@ class IrModelAccess(models.Model):
     name = fields.Char(required=True, index=True)
     active = fields.Boolean(default=True, help='If you uncheck the active field, it will disable the ACL without deleting it (if you delete a native ACL, it will be re-created when you reload the module).')
     model_id = fields.Many2one('ir.model', string='Model', required=True, index=True, ondelete='cascade')
-    group_id = fields.Many2one('res.groups', string='Group', ondelete='cascade', index=True)
+    group_id = fields.Many2one('res.groups', string='Group', ondelete='restrict', index=True)
     perm_read = fields.Boolean(string='Read Access')
     perm_write = fields.Boolean(string='Write Access')
     perm_create = fields.Boolean(string='Create Access')
@@ -2078,18 +2077,23 @@ class IrModelData(models.Model):
 
             # special case for ir.model.fields
             if records._name == 'ir.model.fields':
+                missing = records - records.exists()
+                if missing:
+                    # delete orphan external ids right now;
+                    # an orphan ir.model.data can happen if the ir.model.field is deleted via
+                    # an ONDELETE CASCADE, in which case we must verify that the records we're
+                    # processing exist in the database otherwise a MissingError will be raised
+                    orphans = ref_data.filtered(lambda r: r.res_id in missing._ids)
+                    _logger.info('Deleting orphan ir_model_data %s', orphans)
+                    orphans.unlink()
+                    # /!\ this must go before any field accesses on `records`
+                    records -= missing
                 # do not remove LOG_ACCESS_COLUMNS unless _log_access is False
                 # on the model
                 records -= records.filtered(lambda f: f.name == 'id' or (
                     f.name in models.LOG_ACCESS_COLUMNS and
                     f.model in self.env and self.env[f.model]._log_access
                 ))
-                # delete orphan external ids right now
-                missing_ids = set(records.ids) - set(records.exists().ids)
-                orphans = ref_data.filtered(lambda r: r.res_id in missing_ids)
-                if orphans:
-                    _logger.info('Deleting orphan ir_model_data %s', orphans)
-                    orphans.unlink()
 
             # now delete the records
             _logger.info('Deleting %s', records)

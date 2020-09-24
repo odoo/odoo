@@ -1,23 +1,27 @@
-odoo.define('point_of_sale.NumpadWidget', function(require) {
+odoo.define('point_of_sale.NumpadWidget', function (require) {
     'use strict';
 
-    const { useState } = owl;
     const PosComponent = require('point_of_sale.PosComponent');
     const Registries = require('point_of_sale.Registries');
 
     /**
+     * @prop {'quantiy' | 'price' | 'discount'} activeMode
+     * @event set-numpad-mode - triggered when mode button is clicked
+     * @event numpad-click-input - triggered when numpad button is clicked
+     *
      * IMPROVEMENT: Whenever new-orderline-selected is triggered,
-     * numpad mode should be set to 'quantity'.
+     * numpad mode should be set to 'quantity'. Now that the mode state
+     * is lifted to the parent component, this improvement can be done in
+     * the parent component.
      */
     class NumpadWidget extends PosComponent {
-        constructor() {
-            super(...arguments);
-            this.state = useState({ mode: 'quantity' });
-        }
         mounted() {
+            // IMPROVEMENT: This listener shouldn't be here because in core point_of_sale
+            // there is no way of changing the cashier. Only when pos_hr is installed
+            // that this listener makes sense.
             this.env.pos.on('change:cashier', () => {
-                if (!this.hasPriceControlRights && this.state.mode === 'price') {
-                    this.state.mode = 'quantity';
+                if (!this.hasPriceControlRights && this.props.activeMode === 'price') {
+                    this.trigger('set-numpad-mode', { mode: 'quantity' });
                 }
             });
         }
@@ -38,7 +42,6 @@ odoo.define('point_of_sale.NumpadWidget', function(require) {
             if (!this.hasManualDiscount && mode === 'discount') {
                 return;
             }
-            this.state.mode = mode;
             this.trigger('set-numpad-mode', { mode });
         }
         sendInput(key) {

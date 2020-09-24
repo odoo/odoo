@@ -6,29 +6,31 @@ const components = {
 };
 
 const {
-    afterEach: utilsAfterEach,
+    afterEach,
     afterNextRender,
-    beforeEach: utilsBeforeEach,
-    start: utilsStart,
+    beforeEach,
+    createRootComponent,
+    start,
 } = require('mail/static/src/utils/test_utils.js');
+
+const Bus = require('web.Bus');
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
 QUnit.module('thread_needaction_preview', {}, function () {
 QUnit.module('thread_needaction_preview_tests.js', {
     beforeEach() {
-        utilsBeforeEach(this);
+        beforeEach(this);
 
         this.createThreadNeedactionPreviewComponent = async props => {
-            const ThreadNeedactionPreviewComponent = components.ThreadNeedactionPreview;
-            ThreadNeedactionPreviewComponent.env = this.env;
-            this.component = new ThreadNeedactionPreviewComponent(null, props);
-            delete ThreadNeedactionPreviewComponent.env;
-            await afterNextRender(() => this.component.mount(this.widget.el));
+            await createRootComponent(this, components.ThreadNeedactionPreview, {
+                props,
+                target: this.widget.el
+            });
         };
 
         this.start = async params => {
-            let { env, widget } = await utilsStart(Object.assign({}, params, {
+            const { env, widget } = await start(Object.assign({}, params, {
                 data: this.data,
             }));
             this.env = env;
@@ -36,16 +38,7 @@ QUnit.module('thread_needaction_preview_tests.js', {
         };
     },
     afterEach() {
-        utilsAfterEach(this);
-        if (this.component) {
-            this.component.destroy();
-            this.component = undefined;
-        }
-        if (this.widget) {
-            this.widget.destroy();
-            this.widget = undefined;
-        }
-        this.env = undefined;
+        afterEach(this);
     },
 });
 
@@ -90,6 +83,121 @@ QUnit.test('mark as read', async function (assert) {
         document.body,
         '.o_ChatWindow',
         "should not have opened the thread"
+    );
+});
+
+QUnit.test('click on preview should mark as read and open the thread', async function (assert) {
+    assert.expect(5);
+
+    await this.start({
+        hasChatWindow: true,
+        async mockRPC(route, args) {
+            if (route.includes('set_message_done')) {
+                assert.step('set_message_done');
+            }
+            return this._super(...arguments);
+        },
+    });
+    const thread = this.env.models['mail.thread'].create({
+        id: 11,
+        model: 'mail.channel',
+    });
+    this.env.models['mail.message'].create({
+        id: 21,
+        isNeedaction: true,
+        originThread: [['link', thread]],
+    });
+    await this.createThreadNeedactionPreviewComponent({
+        threadLocalId: thread.localId,
+    });
+    assert.containsOnce(
+        document.body,
+        '.o_ThreadNeedactionPreview',
+        "should have a preview initially"
+    );
+    assert.containsNone(
+        document.body,
+        '.o_ChatWindow',
+        "should have no chat window initially"
+    );
+
+    await afterNextRender(() =>
+        document.querySelector('.o_ThreadNeedactionPreview').click()
+    );
+    assert.verifySteps(
+        ['set_message_done'],
+        "should have marked the message as read on clicking on the preview"
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_ChatWindow',
+        "should have opened the thread on clicking on the preview"
+    );
+});
+
+QUnit.test('click on expand from chat window should close the chat window and open the form view', async function (assert) {
+    assert.expect(8);
+
+    const bus = new Bus();
+    bus.on('do-action', null, payload => {
+        assert.step('do_action');
+        assert.strictEqual(
+            payload.action.res_id,
+            11,
+            "should redirect to the id of the thread"
+        );
+        assert.strictEqual(
+            payload.action.res_model,
+            'res.partner',
+            "should redirect to the model of the thread"
+        );
+    });
+    await this.start({
+        env: { bus },
+        hasChatWindow: true,
+    });
+    const thread = this.env.models['mail.thread'].create({
+        id: 11,
+        model: 'res.partner',
+    });
+    this.env.models['mail.message'].create({
+        id: 21,
+        isNeedaction: true,
+        originThread: [['link', thread]],
+    });
+    await this.createThreadNeedactionPreviewComponent({
+        threadLocalId: thread.localId,
+    });
+    assert.containsOnce(
+        document.body,
+        '.o_ThreadNeedactionPreview',
+        "should have a preview initially"
+    );
+    await afterNextRender(() =>
+        document.querySelector('.o_ThreadNeedactionPreview').click()
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_ChatWindow',
+        "should have opened the thread on clicking on the preview"
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_ChatWindowHeader_commandExpand',
+        "should have an expand button"
+    );
+
+    await afterNextRender(() =>
+        document.querySelector('.o_ChatWindowHeader_commandExpand').click()
+    );
+    assert.containsNone(
+        document.body,
+        '.o_ChatWindow',
+        "should have closed the chat window on clicking expand"
+    );
+    assert.verifySteps(
+        ['do_action'],
+        "should have done an action to open the form view"
     );
 });
 

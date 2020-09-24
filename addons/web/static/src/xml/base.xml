@@ -277,7 +277,7 @@
             t-ref="fallback-focus"
             t-on-click="state.open = !state.open"
             >
-            <t>Save Current Search</t>
+            <t>Save current search</t>
         </button>
         <div t-if="state.open" class="dropdown-item-text">
             <div role="menuitem" class="dropdown-item-text">
@@ -496,7 +496,7 @@
 </t>
 
 <t t-name="Popover" owl="1">
-    <div t-att-class="{ 'o_is_open': state.displayed }" t-on-click="_onClick" t-on-o-popover-close="_onPopoverClose">
+    <div t-att-class="{ 'o_is_open': state.displayed }" t-on-click="_onClick" t-on-o-popover-compute="_onPopoverCompute" t-on-o-popover-close="_onPopoverClose">
         <t t-slot="default"/>
         <Portal t-if="state.displayed" target="'body'">
             <div role="tooltip" class="o_popover" t-ref="popover">
@@ -803,17 +803,9 @@
     </div>
 </div>
 
-<div t-name="View.NoContentHelper" class="o_view_nocontent" role="alert">
+<div t-name="web.ActionHelper" class="o_view_nocontent" owl="1">
     <div class="o_nocontent_help">
-        <p class="o_view_nocontent_empty_folder">
-            <t t-if="title" t-esc="title"/>
-            <t t-else="1">No data to display</t>
-        </p>
-        <p>
-            <t t-if="description" t-esc="description"/>
-            <t t-else="1">Try to add some records, or make sure that there is no
-                active filter in the search bar.</t>
-        </p>
+        <t t-raw="noContentHelp"/>
     </div>
 </div>
 
@@ -1265,7 +1257,7 @@
 <t t-name="FieldRadio.button">
     <div class="custom-control custom-radio o_radio_item" aria-atomic="true">
         <input type="radio" class="custom-control-input o_radio_input" t-att-checked="checked ? true : undefined"
-            t-att-data-value="value[0]" t-att-data-index="index" t-att-id="id"/>
+            t-att-name="name" t-att-data-value="value[0]" t-att-data-index="index" t-att-id="id"/>
         <label class="custom-control-label o_form_label" t-att-for="id"><t t-esc="value[1]"/></label>
     </div>
 </t>
@@ -1394,15 +1386,18 @@
 </t>
 <t t-name="FieldStatus.content.button">
     <t t-set="disabled" t-value="!clickable"/>
-    <button type="button" t-att-data-value="i.id" disabled="disabled" title="Current state" aria-pressed="true"
+    <button type="button" t-att-data-value="i.id" disabled="disabled" title="Current state" aria-checked="true"
+        t-att-role="is_dropdown ? 'menuitemradio': 'radio'"
         t-attf-class="btn o_arrow_button btn-primary disabled #{is_dropdown ? 'dropdown-item bg-primary text-white': ''}" t-if="i.selected" aria-current="step">
         <t t-esc="i.display_name" role="img" t-attf-aria-label="#{i.display_name} is current state"/>
     </button>
-    <button type="button" t-att-data-value="i.id" disabled="disabled" title="Not active state" aria-pressed="false"
+    <button type="button" t-att-data-value="i.id" disabled="disabled" title="Not active state" aria-checked="false"
+        t-att-role="is_dropdown ? 'menuitemradio': 'radio'"
         t-attf-class="btn o_arrow_button btn-secondary disabled #{is_dropdown ? 'dropdown-item': ''}" t-if="!i.selected and disabled">
         <t t-esc="i.display_name" role="img" t-attf-aria-label="#{i.display_name} is not current state"/>
     </button>
-    <button type="button" t-att-data-value="i.id" title="Not active state, click to change it" aria-pressed="false"
+    <button type="button" t-att-data-value="i.id" title="Not active state, click to change it" aria-checked="false"
+        t-att-role="is_dropdown ? 'menuitemradio': 'radio'"
         t-attf-class="btn o_arrow_button btn-secondary #{is_dropdown ? 'dropdown-item': ''}" t-if="!i.selected and !disabled">
         <t t-esc="i.display_name" role="img" t-attf-aria-label="Click to change current state to #{i.display_name}"/>
     </button>
@@ -1858,6 +1853,14 @@
     <button t-attf-class="btn o_sign_button #{widget.node.attrs.highlight?'btn-primary':'btn-secondary'}">
         <span class="o_sign_label"><t t-esc="widget.node.attrs.string"/></span>
     </button>
+</t>
+
+<t t-name="web.IframeWrapper">
+    <div class="o_preview_iframe_wrapper">
+        <i class="o_iframe_wrapper_spinner fa fa-spinner fa-spin fa-4x" style="color: #875a7b; z-index: 2"/>
+        <!--suppress CheckTagEmptyBody -->
+        <iframe src="about:blank" class="o_preview_iframe" style="display:none"></iframe>
+    </div>
 </t>
 
 </templates>

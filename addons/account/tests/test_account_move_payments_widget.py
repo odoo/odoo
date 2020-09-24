@@ -29,8 +29,8 @@ class TestAccountMovePaymentsWidget(AccountTestInvoicingCommon):
         cls.payment_2016_curr_1 = cls.env['account.move'].create({
             'date': '2016-01-01',
             'line_ids': [
-                (0, 0, {'debit': 0.0,       'credit': 500.0,    'amount_currency': 0.0,     'currency_id': False,           'account_id': cls.receivable_account.id,    'partner_id': cls.partner_a.id}),
-                (0, 0, {'debit': 500.0,     'credit': 0.0,      'amount_currency': 0.0,     'currency_id': False,           'account_id': cls.payable_account.id,       'partner_id': cls.partner_a.id}),
+                (0, 0, {'debit': 0.0,       'credit': 500.0,    'amount_currency': -500.0,  'currency_id': cls.curr_1.id,   'account_id': cls.receivable_account.id,    'partner_id': cls.partner_a.id}),
+                (0, 0, {'debit': 500.0,     'credit': 0.0,      'amount_currency': 500.0,   'currency_id': cls.curr_1.id,   'account_id': cls.payable_account.id,       'partner_id': cls.partner_a.id}),
             ],
         })
         cls.payment_2016_curr_1.action_post()

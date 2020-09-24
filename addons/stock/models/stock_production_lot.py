@@ -84,7 +84,7 @@ class ProductionLot(models.Model):
             for lot in self:
                 if lot.company_id.id != vals['company_id']:
                     raise UserError(_("Changing the company of this record is forbidden at this point, you should rather archive it and create a new one."))
-        if 'product_id' in vals and any([vals['product_id'] != lot.product_id.id for lot in self]):
+        if 'product_id' in vals and any(vals['product_id'] != lot.product_id.id for lot in self):
             move_lines = self.env['stock.move.line'].search([('lot_id', 'in', self.ids), ('product_id', '!=', vals['product_id'])])
             if move_lines:
                 raise UserError(_(

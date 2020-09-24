@@ -10,11 +10,19 @@ $yiq-contrasted-threshold: false !default;
 $yiq-text-dark: o-color('900') !default;
 $yiq-text-light: o-color('white') !default;
 
+// Spacing
+//
+// Control the default styling of most Bootstrap elements by modifying these
+// variables. Mostly focused on spacing.
+// You can add more entries to the $spacers map, should you need more variation.
+
+$spacer: 1rem !default; // Need to predefine as used below
+
 // Body
 //
 // Settings for the `<body>` element.
 
-$body-bg: if($o-theme-layout == 'full', o-color('o-cc1-bg'), o-color('body')) !default;
+$body-bg: if(o-website-value('layout') != 'full', o-color('body'), o-color('o-cc1-bg')) !default;
 $body-color: o-color('o-cc1-text') or color-yiq(o-color('o-cc1-bg')) !default;
 
 // Links
@@ -54,6 +62,55 @@ $headings-color: o-color('o-cc1-headings') !default;
 
 $text-muted: mute-color($body-color) !default;
 
+// Buttons
+//
+// For each of Bootstrap's buttons, define text, background, and border color.
+
+$btn-padding-y: o-website-value('btn-padding-y') !default;
+$btn-padding-x: o-website-value('btn-padding-x') !default;
+$btn-font-size: o-website-value('btn-font-size') !default;
+
+$btn-padding-y-sm: o-website-value('btn-padding-y-sm') !default;
+$btn-padding-x-sm: o-website-value('btn-padding-x-sm') !default;
+$btn-font-size-sm: o-website-value('btn-font-size-sm') !default;
+
+$btn-padding-y-lg: o-website-value('btn-padding-y-lg') !default;
+$btn-padding-x-lg: o-website-value('btn-padding-x-lg') !default;
+$btn-font-size-lg: o-website-value('btn-font-size-lg') !default;
+
+$btn-border-width: o-website-value('btn-border-width') !default;
+
+$btn-border-radius: o-website-value('btn-border-radius') !default;
+$btn-border-radius-lg: o-website-value('btn-border-radius-lg') !default;
+$btn-border-radius-sm: o-website-value('btn-border-radius-sm') !default;
+
+// Forms
+
+$input-padding-y: o-website-value('input-padding-y') !default;
+$input-padding-x: o-website-value('input-padding-x') !default;
+$input-font-size: o-website-value('input-font-size') !default;
+
+$input-padding-y-sm: o-website-value('input-padding-y-sm') !default;
+$input-padding-x-sm: o-website-value('input-padding-x-sm') !default;
+$input-font-size-sm: o-website-value('input-font-size-sm') !default;
+
+$input-padding-y-lg: o-website-value('input-padding-y-lg') !default;
+$input-padding-x-lg: o-website-value('input-padding-x-lg') !default;
+$input-font-size-lg: o-website-value('input-font-size-lg') !default;
+
+$input-border-width: o-website-value('input-border-width') !default;
+
+$input-border-radius: o-website-value('input-border-radius') !default;
+$input-border-radius-lg: o-website-value('input-border-radius-lg') !default;
+$input-border-radius-sm: o-website-value('input-border-radius-sm') !default;
+
+// Navbar
+
+// Increase default navbar padding for some navbar styles
+$navbar-padding-y: if(index(('fill', 'pills', 'outline'), o-website-value('header-links-style')), ($spacer / 2) * 1.25, null) !default;
+$navbar-nav-link-padding-x: if(index(('outline', 'block'), o-website-value('header-links-style')), .5rem * 3, null) !default;
+$navbar-nav-link-padding-x: if(o-website-value('header-links-style') == 'border-bottom', .5rem * 2, null) !default;
+
 // Jumbotron
 
 $jumbotron-bg: transparent !default;
@@ -66,3 +123,7 @@ $o-btn-outline-defaults: () !default;
         $o-btn-outline-defaults: append($o-btn-outline-defaults, $color);
     }
 }
+
+// Increase default navbar pills padding for 'pills' mode and add big radius
+$o-navbar-nav-pills-link-padding-x: if(o-website-value('header-links-style') == 'pills', 1rem * 1.5, null) !default;
+$o-navbar-nav-pills-link-border-radius: if(o-website-value('header-links-style') == 'pills', 10rem, null) !default;

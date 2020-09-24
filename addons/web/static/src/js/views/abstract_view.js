@@ -95,6 +95,7 @@ var AbstractView = Factory.extend({
      * @param {Array[]} [params.searchQuery.domain=[]]
      * @param {string[]} [params.searchQuery.groupBy=[]]
      * @param {Object} [params.userContext={}]
+     * @param {boolean} [params.useSampleModel]
      * @param {boolean} [params.withControlPanel=AbstractView.prototype.withControlPanel]
      * @param {boolean} [params.withSearchPanel=AbstractView.prototype.withSearchPanel]
      */
@@ -125,10 +126,15 @@ var AbstractView = Factory.extend({
         // button when the graph view is embedded.
         var isEmbedded = params.isEmbedded || false;
 
+        // The noContentHelper's message can be empty, i.e. either a real empty string
+        // or an empty html tag. In both cases, we consider the helper empty.
+        var help = params.noContentHelp || "";
+        var htmlHelp = document.createElement("div");
+        htmlHelp.innerHTML = help;
         this.rendererParams = {
             arch: this.arch,
             isEmbedded: isEmbedded,
-            noContentHelp: params.noContentHelp,
+            noContentHelp: htmlHelp.innerText.trim() ? help : "",
         };
 
         this.controllerParams = {
@@ -159,12 +165,16 @@ var AbstractView = Factory.extend({
             res_ids: controllerState.resIds || params.ids || (currentId ? [currentId] : undefined),
         };
 
+        const useSampleModel = 'useSampleModel' in params ?
+                                params.useSampleModel :
+                                !!(this.arch.attrs.sample && JSON.parse(this.arch.attrs.sample));
+
         this.modelParams = {
             fields: this.fields,
             modelName: params.modelName,
-            useSampleModel: !!(this.arch.attrs.sample && JSON.parse(this.arch.attrs.sample))
+            useSampleModel,
         };
-        if (this.modelParams.useSampleModel) {
+        if (useSampleModel) {
             this.modelParams.SampleModel = this.config.Model;
         }
 
@@ -241,7 +251,7 @@ var AbstractView = Factory.extend({
             const controlPanelProps = {
                 action: params.action,
                 breadcrumbs: params.breadcrumbs,
-                fields: this.fields,
+                fields,
                 searchMenuTypes: params.searchMenuTypes,
                 view: this.fieldsView,
                 views: params.action.views && params.action.views.filter(
@@ -354,13 +364,14 @@ var AbstractView = Factory.extend({
      * @param {string} [action.name]
      * @param {string} [action.res_model]
      * @param {string} [action.target]
+     * @param {boolean} [action.useSampleModel]
      * @returns {Object}
      */
     _extractParamsFromAction: function (action) {
         action = action || {};
         var context = action.context || {};
         var inline = action.target === 'inline';
-        return {
+        const params = {
             actionId: action.id || false,
             actionViews: action.views || [],
             activateDefaultFavorite: !context.active_id && !context.active_ids,
@@ -378,6 +389,10 @@ var AbstractView = Factory.extend({
             withSearchBar: inline ? false : this.withSearchBar,
             withSearchPanel: this.withSearchPanel,
         };
+        if ('useSampleModel' in action) {
+            params.useSampleModel = action.useSampleModel;
+        }
+        return params;
     },
     /**
      * Processes a fieldsView. In particular, parses its arch.

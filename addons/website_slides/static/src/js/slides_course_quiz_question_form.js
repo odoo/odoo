@@ -116,14 +116,12 @@ var QuestionFormWidget = publicWidget.Widget.extend({
     },
 
     /**
-     * Handler when user click on 'Save & New', 'Save & Close'
-     * or 'Update' buttons.
+     * Handler when user click on 'Save' or 'Update' buttons.
      * @param ev
      * @private
      */
     _validateQuestion: function (ev) {
         this._createOrUpdateQuestion({
-            save_and_new: $(ev.currentTarget).hasClass('o_wslides_js_quiz_create_next'),
             update: $(ev.currentTarget).hasClass('o_wslides_js_quiz_update'),
         });
     },
@@ -169,7 +167,6 @@ var QuestionFormWidget = publicWidget.Widget.extend({
                 } else {
                     self.trigger_up('display_created_question', {
                         newQuestionRenderedTemplate: renderedQuestion,
-                        save_and_new: options.save_and_new,
                         questionFormWidget: self
                     });
                 }

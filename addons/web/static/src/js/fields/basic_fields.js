@@ -262,7 +262,7 @@ var InputField = DebouncedField.extend({
         var inputAttrs = { placeholder: this.attrs.placeholder || "" };
         var inputVal;
         if (this.nodeOptions.isPassword) {
-            inputAttrs = _.extend(inputAttrs, { type: 'password', autocomplete: 'new-password' });
+            inputAttrs = _.extend(inputAttrs, { type: 'password', autocomplete: this.attrs.autocomplete || 'new-password' });
             inputVal = this.value || '';
         } else {
             inputAttrs = _.extend(inputAttrs, { type: 'text', autocomplete: this.attrs.autocomplete || 'none'});
@@ -862,6 +862,25 @@ var FieldDate = InputField.extend({
     _renderEdit: function () {
         this.datewidget.setValue(this.value);
         this.$input = this.datewidget.$input;
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Confirm the value on hit enter and re-render
+     *
+     * @private
+     * @override
+     * @param {KeyboardEvent} ev
+     */
+    async _onKeydown(ev) {
+        this._super(...arguments);
+        if (ev.which === $.ui.keyCode.ENTER) {
+            await this._setValue(this.$input.val());
+            this._render();
+        }
     },
 });
 
@@ -1925,6 +1944,7 @@ var FieldBinaryImage = AbstractFieldBinary.extend({
                             this.hide();
                         }
                         core.bus.on('keydown', this, this.hide);
+                        core.bus.on('click', this, this.hide);
                     },
                     beforeAttach: function () {
                         this.$flyout.css({ width: '512px', height: '512px' });
@@ -1936,11 +1956,61 @@ var FieldBinaryImage = AbstractFieldBinary.extend({
     },
 });
 
+var CharImageUrl = AbstractField.extend({
+    className: 'o_field_image',
+    description: _lt("Image"),
+    supportedFieldTypes: ['char'],
+    placeholder: "/web/static/src/img/placeholder.png",
+
+    _renderReadonly: function () {
+        var self = this;
+        const url = this.value;
+        if (url) {
+            var $img = $(qweb.render("FieldBinaryImage-img", {widget: this, url: url}));
+            // override css size attributes (could have been defined in css files)
+            // if specified on the widget
+            const width = this.nodeOptions.size ? this.nodeOptions.size[0] : this.attrs.width;
+            const height = this.nodeOptions.size ? this.nodeOptions.size[1] : this.attrs.height;
+            if (width) {
+                $img.attr('width', width);
+                $img.css('max-width', width + 'px');
+            }
+            if (height) {
+                $img.attr('height', height);
+                $img.css('max-height', height + 'px');
+            }
+            this.$('> img').remove();
+            this.$el.prepend($img);
+
+            $img.one('error', function () {
+                $img.attr('src', self.placeholder);
+                self.displayNotification({
+                    type: 'info',
+                    message: _t("Could not display the specified image url."),
+                });
+            });
+        }
+
+        return this._super.apply(this, arguments);
+    },
+});
+
 var KanbanFieldBinaryImage = FieldBinaryImage.extend({
     // In kanban views, there is a weird logic to determine whether or not a
     // click on a card should open the record in a form view.  This logic checks
     // if the clicked element has click handlers bound on it, and if so, does
     // not open the record (assuming that the click will be handle by someone
+    // else).  In the case of this widget, there are clicks handler but they
+    // only apply in edit mode, which is never the case in kanban views, so we
+    // simply remove them.
+    events: {},
+});
+
+var KanbanCharImageUrl = CharImageUrl.extend({
+    // In kanban views, there is a weird logic to determine whether or not a
+    // click on a card should open the record in a form view.  This logic checks
+    // if the clicked element has click handlers bound on it, and if so, does
+    // not open the record (assuming that the click will be handled by someone
     // else).  In the case of this widget, there are clicks handler but they
     // only apply in edit mode, which is never the case in kanban views, so we
     // simply remove them.
@@ -2145,10 +2215,14 @@ var PriorityWidget = AbstractField.extend({
     // the current implementation of this widget makes it
     // only usable for fields of type selection
     className: "o_priority",
+    attributes: {
+        'role': 'radiogroup',
+    },
     events: {
         'mouseover > a': '_onMouseOver',
         'mouseout > a': '_onMouseOut',
         'click > a': '_onClick',
+        'keydown > a': '_onKeydown',
     },
     supportedFieldTypes: ['selection'],
 
@@ -2164,6 +2238,17 @@ var PriorityWidget = AbstractField.extend({
      */
     isSet: function () {
         return true;
+    },
+
+    /**
+     * Returns the currently-checked star, or the first one if no star is
+     * checked.
+     *
+     * @override
+     */
+    getFocusableElement: function () {
+        var checked = this.$("[aria-checked='true']");
+        return checked.length ? checked : this.$("[data-index='1']");
     },
 
     //--------------------------------------------------------------------------
@@ -2183,8 +2268,9 @@ var PriorityWidget = AbstractField.extend({
         }) : 0;
         this.$el.empty();
         this.empty_value = this.field.selection[0][0];
+        this.$el.attr('aria-label', this.string);
         _.each(this.field.selection.slice(1), function (choice, index) {
-            self.$el.append(self._renderStar('<a href="#">', index_value >= index+1, index+1, choice[1]));
+            self.$el.append(self._renderStar('<a href="#">', index_value >= index+1, index+1, choice[1], index_value));
         });
     },
 
@@ -2195,12 +2281,18 @@ var PriorityWidget = AbstractField.extend({
      * @param {boolean} isFull whether the star is a full star or not
      * @param {integer} index the index of the star in the series
      * @param {string} tip tooltip for this star's meaning
+     * @param {integer} indexValue the index of the last full star or 0
      * @private
      */
-    _renderStar: function (tag, isFull, index, tip) {
+    _renderStar: function (tag, isFull, index, tip, indexValue) {
+        var isChecked = indexValue === index;
+        var defaultFocus = indexValue === 0 && index === 1;
         return $(tag)
+            .attr('role', 'radio')
+            .attr('aria-checked', isChecked)
             .attr('title', tip)
             .attr('aria-label', tip)
+            .attr('tabindex', isChecked || defaultFocus ? 0 : -1)
             .attr('data-index', index)
             .addClass('o_priority_star fa')
             .toggleClass('fa-star', isFull)
@@ -2252,6 +2344,36 @@ var PriorityWidget = AbstractField.extend({
         this.$('.o_priority_star').removeClass('fa-star-o').addClass('fa-star');
         $(event.currentTarget).nextAll().removeClass('fa-star').addClass('fa-star-o');
     },
+
+    /**
+     * Runs the default behavior when <enter> is pressed over a star
+     * (the same as if it was clicked); otherwise forwards event to the widget.
+     *
+     * @param {KeydownEvent} event
+     * @private
+     */
+    _onKeydown: function (event) {
+        if (event.which === $.ui.keyCode.ENTER) {
+            return;
+        }
+        this._super.apply(this, arguments);
+    },
+
+    _onNavigationMove: function (ev) {
+        var $curControl = this.$('a:focus');
+        var $nextControl;
+        if (ev.data.direction === 'right' || ev.data.direction === 'down') {
+            $nextControl = $curControl.next('a');
+        } else if (ev.data.direction === 'left' || ev.data.direction === 'up') {
+            $nextControl = $curControl.prev('a');
+        }
+        if ($nextControl && $nextControl.length) {
+            ev.stopPropagation();
+            $nextControl.focus();
+            return;
+        }
+        this._super.apply(this, arguments);
+    },
 });
 
 var AttachmentImage = AbstractField.extend({
@@ -2283,6 +2405,19 @@ var StateSelectionWidget = AbstractField.extend({
         'click .dropdown-item': '_setSelection',
     },
     supportedFieldTypes: ['selection'],
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * Returns the drop down button.
+     *
+     * @override
+     */
+    getFocusableElement: function () {
+        return this.$("a[data-toggle='dropdown']");
+    },
 
     //--------------------------------------------------------------------------
     // Private
@@ -3520,6 +3655,8 @@ return {
     AbstractFieldBinary: AbstractFieldBinary,
     FieldBinaryImage: FieldBinaryImage,
     KanbanFieldBinaryImage: KanbanFieldBinaryImage,
+    CharImageUrl: CharImageUrl,
+    KanbanCharImageUrl: KanbanCharImageUrl,
     FieldBoolean: FieldBoolean,
     BooleanToggle: BooleanToggle,
     FieldChar: FieldChar,

@@ -13,12 +13,12 @@
     </xpath>
   </template>
 
-  <template id="portal_my_home_purchase" name="Portal My Home : purchase entry" inherit_id="portal.portal_my_home" priority="25">
+  <template id="portal_my_home_purchase" name="Show Purchase Orders" customize_show="True" inherit_id="portal.portal_my_home" priority="25">
     <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
-        <t t-if="purchase_count" t-call="portal.portal_docs_entry">
+        <t t-call="portal.portal_docs_entry">
             <t t-set="title">Purchase Orders</t>
             <t t-set="url" t-value="'/my/purchase'"/>
-            <t t-set="count" t-value="purchase_count"/>
+            <t t-set="placeholder_count" t-value="'purchase_count'"/>
         </t>
     </xpath>
   </template>
@@ -132,6 +132,8 @@
               </div>
               <div class="card-body">
                 <div class="mb-4">
+                  <strong class="d-block mb-1">From:</strong>
+                  <address t-field="order.company_id.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
                   <strong>Confirmation Date:</strong> <span t-field="order.date_approve" t-options='{"widget": "date"}'/><br/>
                   <div t-att-class="'d-inline' if order.date_planned else 'd-none'">
                     <strong>Receipt Date:</strong><span class="ml-1" t-field="order.date_planned" t-options='{"widget": "date"}'/>

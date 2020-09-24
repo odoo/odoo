@@ -7,6 +7,7 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
     const { useListener } = require('web.custom_hooks');
     const Registries = require('point_of_sale.Registries');
     const { onChangeOrder, useBarcodeReader } = require('point_of_sale.custom_hooks');
+    const { useState } = owl.hooks;
 
     class ProductScreen extends ControlButtonsMixin(PosComponent) {
         constructor() {
@@ -31,7 +32,8 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
                 triggerAtInput: 'update-selected-orderline',
                 useWithBarcode: true,
             });
-            this.numpadMode = 'quantity';
+            let status = this.showCashBoxOpening()
+            this.state = useState({ cashControl: status, numpadMode: 'quantity' });
             this.mobile_pane = this.props.mobile_pane || 'right';
         }
         mounted() {
@@ -53,6 +55,11 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
         }
         get currentOrder() {
             return this.env.pos.get_order();
+        }
+        showCashBoxOpening() {
+            if(this.env.pos.config.cash_control && this.env.pos.pos_session.state == 'opening_control')
+                return true;
+            return false;
         }
         async _clickProduct(event) {
             if (!this.currentOrder) {
@@ -143,13 +150,14 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
 
             NumberBuffer.reset();
         }
-        async _setNumpadMode(event) {
+        _setNumpadMode(event) {
             const { mode } = event.detail;
-            this.numpadMode = mode;
+            NumberBuffer.capture();
             NumberBuffer.reset();
+            this.state.numpadMode = mode;
         }
         async _updateSelectedOrderline(event) {
-            if(this.numpadMode === 'quantity' && this.env.pos.disallowLineQuantityChange()) {
+            if(this.state.numpadMode === 'quantity' && this.env.pos.disallowLineQuantityChange()) {
                 let order = this.env.pos.get_order();
                 let selectedLine = order.get_selected_orderline();
                 let lastId = order.orderlines.last().cid;
@@ -179,11 +187,11 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
         }
         _setValue(val) {
             if (this.currentOrder.get_selected_orderline()) {
-                if (this.numpadMode === 'quantity') {
+                if (this.state.numpadMode === 'quantity') {
                     this.currentOrder.get_selected_orderline().set_quantity(val);
-                } else if (this.numpadMode === 'discount') {
+                } else if (this.state.numpadMode === 'discount') {
                     this.currentOrder.get_selected_orderline().set_discount(val);
-                } else if (this.numpadMode === 'price') {
+                } else if (this.state.numpadMode === 'price') {
                     var selected_orderline = this.currentOrder.get_selected_orderline();
                     selected_orderline.price_manually_set = true;
                     selected_orderline.set_unit_price(val);
@@ -259,7 +267,7 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
                     let decreasedQuantity = currentQuantity - newQuantity
                     newLine.order = order;
 
-                    newLine.set_quantity( - decreasedQuantity);
+                    newLine.set_quantity( - decreasedQuantity, true);
                     order.add_orderline(newLine);
                 }
             }

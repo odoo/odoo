@@ -115,7 +115,7 @@ var PartnerAutocompleteMixin = {
         var self = this;
 
         var removeUselessFields = function (company) {
-            var fields = 'label,description,domain,logo,legal_name,ignored'.split(',');
+            var fields = 'label,description,domain,logo,legal_name,ignored,email'.split(',');
             fields.forEach(function (field) {
                 delete company[field];
             });
@@ -136,13 +136,21 @@ var PartnerAutocompleteMixin = {
                 var company_data = result[0];
                 var logo_data = result[1];
 
-                if (company_data.error && company_data.error_message === 'Insufficient Credit') {
-                    self._notifyNoCredits();
-                    company_data = company;
+                // The vat should be returned for free. This is the reason why
+                // we add it into the data of 'company' even if an error such as
+                // an insufficient credit error is raised. 
+                if (company_data.error && company_data.vat) {
+                    company.vat = company_data.vat;
                 }
 
-                if (company_data.error && company_data.error_message === 'No Account Token') {
-                    self._notifyAccountToken();
+                if (company_data.error) {
+                    if (company_data.error_message === 'Insufficient Credit') {
+                        self._notifyNoCredits();
+                    } else if (company_data.error_message === 'No Account Token') {
+                        self._notifyAccountToken();
+                    } else {
+                        self.do_notify(false, company_data.error_message);
+                    }
                     company_data = company;
                 }
 

@@ -14,24 +14,22 @@ from odoo.osv import expression
 
 class CustomerPortal(CustomerPortal):
 
-    def _prepare_home_portal_values(self):
-        values = super(CustomerPortal, self)._prepare_home_portal_values()
+    def _prepare_home_portal_values(self, counters):
+        values = super()._prepare_home_portal_values(counters)
         partner = request.env.user.partner_id
 
         SaleOrder = request.env['sale.order']
-        quotation_count = SaleOrder.search_count([
-            ('message_partner_ids', 'child_of', [partner.commercial_partner_id.id]),
-            ('state', 'in', ['sent', 'cancel'])
-        ])
-        order_count = SaleOrder.search_count([
-            ('message_partner_ids', 'child_of', [partner.commercial_partner_id.id]),
-            ('state', 'in', ['sale', 'done'])
-        ])
+        if 'quotation_count' in counters:
+            values['quotation_count'] = SaleOrder.search_count([
+                ('message_partner_ids', 'child_of', [partner.commercial_partner_id.id]),
+                ('state', 'in', ['sent', 'cancel'])
+            ])
+        if 'order_count' in counters:
+            values['order_count'] = SaleOrder.search_count([
+                ('message_partner_ids', 'child_of', [partner.commercial_partner_id.id]),
+                ('state', 'in', ['sale', 'done'])
+            ])
 
-        values.update({
-            'quotation_count': quotation_count,
-            'order_count': order_count,
-        })
         return values
 
     #
@@ -60,7 +58,6 @@ class CustomerPortal(CustomerPortal):
             sortby = 'date'
         sort_order = searchbar_sortings[sortby]['order']
 
-        archive_groups = self._get_archive_groups('sale.order', domain) if values.get('my_details') else []
         if date_begin and date_end:
             domain += [('create_date', '>', date_begin), ('create_date', '<=', date_end)]
 
@@ -83,7 +80,6 @@ class CustomerPortal(CustomerPortal):
             'quotations': quotations.sudo(),
             'page_name': 'quote',
             'pager': pager,
-            'archive_groups': archive_groups,
             'default_url': '/my/quotes',
             'searchbar_sortings': searchbar_sortings,
             'sortby': sortby,
@@ -111,7 +107,6 @@ class CustomerPortal(CustomerPortal):
             sortby = 'date'
         sort_order = searchbar_sortings[sortby]['order']
 
-        archive_groups = self._get_archive_groups('sale.order', domain) if values.get('my_details') else []
         if date_begin and date_end:
             domain += [('create_date', '>', date_begin), ('create_date', '<=', date_end)]
 
@@ -125,7 +120,7 @@ class CustomerPortal(CustomerPortal):
             page=page,
             step=self._items_per_page
         )
-        # content according to pager and archive selected
+        # content according to pager
         orders = SaleOrder.search(domain, order=sort_order, limit=self._items_per_page, offset=pager['offset'])
         request.session['my_orders_history'] = orders.ids[:100]
 
@@ -134,7 +129,6 @@ class CustomerPortal(CustomerPortal):
             'orders': orders.sudo(),
             'page_name': 'order',
             'pager': pager,
-            'archive_groups': archive_groups,
             'default_url': '/my/orders',
             'searchbar_sortings': searchbar_sortings,
             'sortby': sortby,
@@ -265,7 +259,7 @@ class CustomerPortal(CustomerPortal):
 
         return request.redirect(order_sudo.get_portal_url(query_string=query_string))
 
-    # note dbo: website_sale code
+    # note: website_sale code
     @http.route(['/my/orders/<int:order_id>/transaction/'], type='json', auth="public", website=True)
     def payment_transaction_token(self, acquirer_id, order_id, save_token=False, access_token=None, **kwargs):
         """ Json method that creates a payment.transaction, used to create a

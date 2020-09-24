@@ -6,27 +6,7 @@ const { many2one, one2one } = require('mail/static/src/model/model_field.js');
 
 function factory(dependencies) {
 
-    class Dialog extends dependencies['mail.model'] {
-
-        /**
-         * @override
-         */
-        delete() {
-            if (this.manager) {
-                this.manager.unregister(this);
-            }
-            super.delete();
-        }
-
-        //----------------------------------------------------------------------
-        // Public
-        //----------------------------------------------------------------------
-
-        close() {
-            this.delete();
-        }
-
-    }
+    class Dialog extends dependencies['mail.model'] {}
 
     Dialog.fields = {
         manager: many2one('mail.dialog_manager', {

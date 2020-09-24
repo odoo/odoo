@@ -26,6 +26,10 @@ class ActivityMarkDonePopover extends Component {
     // Public
     //--------------------------------------------------------------------------
 
+    mounted() {
+        this._feedbackTextareaRef.el.focus();
+    }
+
     /**
      * @returns {mail.activity}
      */
@@ -41,6 +45,17 @@ class ActivityMarkDonePopover extends Component {
     }
 
     //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _close() {
+        this.trigger('o-popover-close');
+    }
+
+    //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
 
@@ -48,7 +63,7 @@ class ActivityMarkDonePopover extends Component {
      * @private
      */
     _onClickDiscard() {
-        this.trigger('o-popover-close');
+        this._close();
     }
 
     /**
@@ -67,6 +82,15 @@ class ActivityMarkDonePopover extends Component {
         this.activity.markAsDoneAndScheduleNext({
             feedback: this._feedbackTextareaRef.el.value,
         });
+    }
+
+    /**
+     * @private
+     */
+    _onKeydown(ev) {
+        if (ev.key === 'Escape') {
+            this._close();
+        }
     }
 
 }

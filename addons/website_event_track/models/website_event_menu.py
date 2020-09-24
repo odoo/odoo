@@ -5,12 +5,8 @@ from odoo import fields, models
 
 
 class EventMenu(models.Model):
-    _name = "website.event.menu"
-    _description = "Website Event Menu"
+    _inherit = "website.event.menu"
 
-    menu_id = fields.Many2one('website.menu', string='Menu', ondelete='cascade')
-    event_id = fields.Many2one('event.event', string='Event', ondelete='cascade')
-    menu_type = fields.Selection([
-        ('track', 'Event Tracks Menus'),
-        ('track_proposal', 'Event Proposals Menus'),
-    ])
+    menu_type = fields.Selection(
+        selection_add=[('track', 'Event Tracks Menus'), ('track_proposal', 'Event Proposals Menus')],
+        ondelete={'track': 'cascade', 'track_proposal': 'cascade'})

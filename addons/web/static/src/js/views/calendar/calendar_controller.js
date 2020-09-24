@@ -44,6 +44,7 @@ var CalendarController = AbstractController.extend({
         'click button.o_calendar_button_day': '_onButtonScale',
         'click button.o_calendar_button_week': '_onButtonScale',
         'click button.o_calendar_button_month': '_onButtonScale',
+        'click button.o_calendar_button_year': '_onButtonScale',
     }),
     /**
      * @override
@@ -67,6 +68,7 @@ var CalendarController = AbstractController.extend({
         this.previousOpen = null;
         // The quickCreating attribute ensures that we don't do several create
         this.quickCreating = false;
+        this.scales = params.scales;
     },
 
     //--------------------------------------------------------------------------
@@ -132,7 +134,9 @@ var CalendarController = AbstractController.extend({
      * @return {{}}
      */
     _renderButtonsParameters() {
-        return {};
+        return {
+            scales: this.scales,
+        };
     },
     /**
      * @override
@@ -277,7 +281,7 @@ var CalendarController = AbstractController.extend({
      */
     _onOpenCreate: function (event) {
         var self = this;
-        if (this.model.get().scale === "month") {
+        if (["year", "month"].includes(this.model.get().scale)) {
             event.data.allDay = true;
         }
         var data = this.model.calendarEventToRecord(event.data);

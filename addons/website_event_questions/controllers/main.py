@@ -23,14 +23,14 @@ class WebsiteEvent(WebsiteEventController):
         for key, value in form_details.items():
             if 'question_answer' in key and value:
                 dummy, registration_index, question_id = key.split('-')
-                question = request.env['event.question'].browse(int(question_id))
+                question_sudo = request.env['event.question'].browse(int(question_id))
                 answer_values = None
-                if question.question_type == 'simple_choice':
+                if question_sudo.question_type == 'simple_choice':
                     answer_values = {
                         'question_id': int(question_id),
                         'value_answer_id': int(value)
                     }
-                elif question.question_type == 'text_box':
+                elif question_sudo.question_type == 'text_box':
                     answer_values = {
                         'question_id': int(question_id),
                         'value_text_box': value

@@ -4,7 +4,7 @@
     'name' : 'Invoicing',
     'version' : '1.1',
     'summary': 'Invoices & Payments',
-    'sequence': 15,
+    'sequence': 10,
     'description': """
 Invoicing & Payments
 ====================
@@ -48,11 +48,9 @@ You could use this simplified accounting in case you work with an (external) acc
         'views/account_report.xml',
         'data/mail_template_data.xml',
         'wizard/account_validate_move_view.xml',
-        'views/account_end_fy.xml',
         'views/res_company_views.xml',
         'views/product_view.xml',
         'views/account_analytic_view.xml',
-        'views/account_tip_data.xml',
         'views/account.xml',
         'views/report_invoice.xml',
         'report/account_invoice_report_view.xml',
@@ -77,6 +75,7 @@ You could use this simplified accounting in case you work with an (external) acc
         'views/res_currency.xml',
         'views/account_menuitem.xml',
         'views/account_analytic_default_view.xml',
+        'wizard/account_tour_upload_bill.xml',
     ],
     'demo': [
         'demo/account_demo.xml',
@@ -93,5 +92,5 @@ You could use this simplified accounting in case you work with an (external) acc
     'installable': True,
     'application': True,
     'auto_install': False,
-    'post_init_hook': '_auto_install_l10n',
+    'post_init_hook': '_account_post_init',
 }

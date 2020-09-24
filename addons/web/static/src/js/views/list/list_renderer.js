@@ -1090,16 +1090,16 @@ var ListRenderer = BasicRenderer.extend({
 
         // append the table (if any) to the main element
         if (tableWrapper) {
-            dom.append(this.el, tableWrapper, {
-                callbacks: [{ widget: this }],
-                in_DOM: document.body.contains(this.el),
-            });
+            this.el.appendChild(tableWrapper);
+            if (document.body.contains(this.el)) {
+                this.pagers.forEach(pager => pager.on_attach_callback());
+            }
             if (this.optionalColumns.length) {
                 this.el.classList.add('o_list_optional_columns');
                 this.$('table').append(
                     $('<i class="o_optional_columns_dropdown_toggle fa fa-ellipsis-v"/>')
                 );
-                this.$el.append(this._renderOptionalColumnsDropdown());
+                this.$('table').append(this._renderOptionalColumnsDropdown());
             }
             if (this.selection.length) {
                 const $checked_rows = this.$('tr').filter(
@@ -1114,7 +1114,7 @@ var ListRenderer = BasicRenderer.extend({
 
         // display the no content helper if necessary
         if (!this._hasContent() && !!this.noContentHelp) {
-            this.$el.append(this._renderNoContentHelper());
+            this._renderNoContentHelper();
         }
     },
     /**

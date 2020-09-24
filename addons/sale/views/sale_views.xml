@@ -134,7 +134,7 @@
             <field name="name">sale.order.graph</field>
             <field name="model">sale.order</field>
             <field name="arch" type="xml">
-                <graph string="Sales Orders">
+                <graph string="Sales Orders" sample="1">
                     <field name="partner_id"/>
                     <field name="amount_total" type="measure"/>
                 </graph>
@@ -144,7 +144,7 @@
             <field name="name">sale.order.pivot</field>
             <field name="model">sale.order</field>
             <field name="arch" type="xml">
-                <pivot string="Sales Orders">
+                <pivot string="Sales Orders" sample="1">
                     <field name="date_order" type="row"/>
                     <field name="amount_total" type="measure"/>
                 </pivot>
@@ -553,7 +553,7 @@
                                     <field
                                         name="customer_lead"
                                         optional="hide"
-                                        attrs="{'readonly': [('parent.state', 'not in', ['draft', 'sent'])]}"
+                                        attrs="{'readonly': [('parent.state', 'not in', ['draft', 'sent', 'sale'])]}"
                                     />
                                     <field
                                         name="price_unit"
@@ -905,15 +905,13 @@
             <field name="search_view_id" ref="view_sales_order_filter"/>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
-                No orders to upsell found
+                No orders to upsell found.
               </p><p>
-                You can upsell an order when you have delivered more quantities
-                than initially ordered, with an invoicing policy based on
-                ordered quantities.
+                An order is to upsell when delivered quantities are above initially
+                ordered quantities, and the invoicing policy is based on ordered quantities.
               </p><p>
-                A typical example is the pre-paid hours of service,
-                when you want to sell extra hours because the initial
-                hours have already been used.
+                As an example, if you sell pre-paid hours of services, Odoo recommends you
+                to sell extra hours when all ordered hours have been consumed.
               </p>
             </field>
         </record>
@@ -1017,6 +1015,7 @@
                     <field name="qty_to_invoice"/>
                     <field name="product_uom" string="Unit of Measure" groups="uom.group_uom"/>
                     <field name="price_subtotal" sum="Total" widget="monetary"/>
+                    <field name="currency_id" invisible="1"/>
                 </tree>
             </field>
         </record>

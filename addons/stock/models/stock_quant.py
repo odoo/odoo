@@ -146,7 +146,7 @@ class StockQuant(models.Model):
         """
         if self._is_inventory_mode() and 'inventory_quantity' in vals:
             allowed_fields = self._get_inventory_fields_create()
-            if any([field for field in vals.keys() if field not in allowed_fields]):
+            if any(field for field in vals.keys() if field not in allowed_fields):
                 raise UserError(_("Quant's creation is restricted, you can't do this operation."))
             inventory_quantity = vals.pop('inventory_quantity')
 
@@ -190,11 +190,11 @@ class StockQuant(models.Model):
     def write(self, vals):
         """ Override to handle the "inventory mode" and create the inventory move. """
         allowed_fields = self._get_inventory_fields_write()
-        if self._is_inventory_mode() and any([field for field in allowed_fields if field in vals.keys()]):
+        if self._is_inventory_mode() and any(field for field in allowed_fields if field in vals.keys()):
             if any(quant.location_id.usage == 'inventory' for quant in self):
                 # Do nothing when user tries to modify manually a inventory loss
                 return
-            if any([field for field in vals.keys() if field not in allowed_fields]):
+            if any(field for field in vals.keys() if field not in allowed_fields):
                 raise UserError(_("Quant's editing is restricted, you can't do this operation."))
             self = self.sudo()
             return super(StockQuant, self).write(vals)
@@ -202,7 +202,7 @@ class StockQuant(models.Model):
 
     def action_view_stock_moves(self):
         self.ensure_one()
-        action = self.env.ref('stock.stock_move_line_action').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("stock.stock_move_line_action")
         action['domain'] = [
             ('product_id', '=', self.product_id.id),
             '|',
@@ -607,7 +607,7 @@ class StockQuant(models.Model):
         action = {
             'name': _('Stock On Hand'),
             'view_type': 'tree',
-            'view_mode': 'list',
+            'view_mode': 'list,form',
             'res_model': 'stock.quant',
             'type': 'ir.actions.act_window',
             'context': ctx,
@@ -621,22 +621,22 @@ class StockQuant(models.Model):
 
         if self._is_inventory_mode():
             action['view_id'] = self.env.ref('stock.view_stock_quant_tree_editable').id
+            form_view = self.env.ref('stock.view_stock_quant_form_editable').id
         else:
             action['view_id'] = self.env.ref('stock.view_stock_quant_tree').id
-            # Enables form view in readonly list
-            action.update({
-                'view_mode': 'tree,form',
-                'views': [
-                    (action['view_id'], 'list'),
-                    (self.env.ref('stock.view_stock_quant_form').id, 'form'),
-                ],
-            })
+            form_view = self.env.ref('stock.view_stock_quant_form').id
+        action.update({
+            'views': [
+                (action['view_id'], 'list'),
+                (form_view, 'form'),
+            ],
+        })
         if extend:
             action.update({
                 'view_mode': 'tree,form,pivot,graph',
                 'views': [
                     (action['view_id'], 'list'),
-                    (self.env.ref('stock.view_stock_quant_form').id, 'form'),
+                    (form_view, 'form'),
                     (self.env.ref('stock.view_stock_quant_pivot').id, 'pivot'),
                     (self.env.ref('stock.stock_quant_view_graph').id, 'graph'),
                 ],
@@ -718,7 +718,7 @@ class QuantPackage(models.Model):
         self.env['stock.quant']._unlink_zero_quants()
 
     def action_view_picking(self):
-        action = self.env.ref('stock.action_picking_tree_all').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("stock.action_picking_tree_all")
         domain = ['|', ('result_package_id', 'in', self.ids), ('package_id', 'in', self.ids)]
         pickings = self.env['stock.move.line'].search(domain).mapped('picking_id')
         action['domain'] = [('id', 'in', pickings.ids)]

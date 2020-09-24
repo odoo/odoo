@@ -8,8 +8,8 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='service_type']" position="after">
                 <field name="service_tracking" widget="radio" attrs="{'invisible': [('type','!=','service')]}"/>
-                <field name="project_id" attrs="{'invisible':[('service_tracking','!=','task_global_project')], 'required':[('service_tracking','==','task_global_project')]}"/>
-                <field name="project_template_id" context="{'active_test': False}" attrs="{'invisible':[('service_tracking','not in',['task_in_project', 'project_only'])]}"/>
+                <field name="project_id" context="{'default_allow_billable': True, 'default_bill_type': 'customer_task'}" attrs="{'invisible':[('service_tracking','!=','task_global_project')], 'required':[('service_tracking','==','task_global_project')]}"/>
+                <field name="project_template_id" context="{'active_test': False, 'default_allow_billable': True, 'default_bill_type': 'customer_project', 'default_pricing_type': 'fixed_rate'}" attrs="{'invisible':[('service_tracking','not in',['task_in_project', 'project_only'])]}"/>
             </xpath>
         </field>
     </record>

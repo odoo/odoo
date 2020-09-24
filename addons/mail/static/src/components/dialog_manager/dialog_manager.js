@@ -16,8 +16,9 @@ class DialogManager extends Component {
     constructor(...args) {
         super(...args);
         useStore(props => {
+            const dialogManager = this.env.messaging && this.env.messaging.dialogManager;
             return {
-                dialogManager: this.env.messaging.dialogManager.__state,
+                dialogManager: dialogManager ? dialogManager.__state : undefined,
             };
         });
     }
@@ -38,6 +39,14 @@ class DialogManager extends Component {
      * @private
      */
     _checkDialogOpen() {
+        if (!this.env.messaging) {
+            /**
+             * Messaging not created, which means essential models like
+             * dialog manager are not ready, so open status of dialog in DOM
+             * is omitted during this (short) period of time.
+             */
+            return;
+        }
         if (this.env.messaging.dialogManager.dialogs.length > 0) {
             document.body.classList.add('modal-open');
         } else {

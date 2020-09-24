@@ -148,6 +148,21 @@
 }
 
 .o_wevent_event {
+    // Multi-line event title, even in mobile mode
+    nav > div > a.navbar-brand {
+        text-overflow: revert;
+        white-space: normal;
+        overflow: hidden;
+        max-width: calc(100% - 80px);
+    }
+
+    // Ensure menu labels are not split
+    #o_wevent_event_submenu {
+        li.nav-item {
+            white-space: nowrap;
+        }
+    }
+
     .o_wevent_event_title {
         margin: 3rem 0;
 
@@ -159,6 +174,12 @@
         .o_wevent_event_subtitle {
             font-weight: $lead-font-weight;
             @include font-size($lead-font-size);
+        }
+    }
+
+    .o_wevent_registration_single {
+        .o_wevent_nowrap {
+            white-space: nowrap;
         }
     }
 

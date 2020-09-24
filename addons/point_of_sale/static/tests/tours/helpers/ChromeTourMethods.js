@@ -28,7 +28,7 @@ odoo.define('point_of_sale.tour.ChromeTourMethods', function (require) {
         clickTicketButton() {
             return [
                 {
-                    trigger: '.pos-topheader .ticket-button > div:contains("Tickets")',
+                    trigger: '.pos-topheader .ticket-button',
                 },
                 {
                     trigger: '.subwindow .ticket-screen',

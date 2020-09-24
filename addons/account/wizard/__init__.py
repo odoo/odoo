@@ -16,3 +16,4 @@ from . import wizard_tax_adjustments
 from . import account_invoice_send
 from . import base_document_layout
 from . import account_payment_register
+from . import account_tour_upload_bill

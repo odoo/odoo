@@ -57,8 +57,8 @@ of your website (a new blog post, a page modification, product descriptions,
 Fine Tune Your Catalog
 ----------------------
 
-Get a full control on how you display your products in the catalog page:
-promotional ribbons, related sized of products, discounts, variants, grid/list
+Get full control on how you display your products in the catalog page:
+promotional ribbons, related size of products, discounts, variants, grid/list
 view, etc.
 
 Edit any product inline to make your website evolve with your customer need.

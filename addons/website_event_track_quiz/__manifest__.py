@@ -12,7 +12,7 @@
     'description': "",
     'depends': [
         'website_profile',
-        'website_event_track_session',
+        'website_event_track',
     ],
     'data': [
         'security/ir.model.access.csv',
@@ -21,9 +21,11 @@
         'views/event_quiz_views.xml',
         'views/event_quiz_question_views.xml',
         'views/event_track_views.xml',
+        'views/event_track_visitor_views.xml',
         'views/event_menus.xml',
         'views/event_quiz_templates.xml',
         'views/event_track_templates_page.xml',
+        'views/event_event_views.xml',
         'views/event_type_views.xml'
     ],
     'demo': [

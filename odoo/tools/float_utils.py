@@ -76,7 +76,7 @@ def float_round(value, precision_digits=None, precision_rounding=None, rounding_
 
     # TIE-BREAKING: UP/DOWN (for ceiling[resp. flooring] operations)
     # When rounding the value up[resp. down], we instead subtract[resp. add] the epsilon value
-    # as the the approximation of the real value may be slightly *above* the
+    # as the approximation of the real value may be slightly *above* the
     # tie limit, this would result in incorrectly rounding up[resp. down] to the next number
     # The math.ceil[resp. math.floor] operation is applied on the absolute value in order to
     # round "away from zero" and not "towards infinity", then the sign is

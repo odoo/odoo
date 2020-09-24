@@ -43,7 +43,7 @@ var GraphView = AbstractView.extend({
         let measure;
         const measures = {};
         const measureStrings = {};
-        const groupBys = [];
+        let groupBys = [];
         const groupableFields = {};
         this.fields.__count__ = { string: _t("Count"), type: 'integer' };
 
@@ -99,6 +99,20 @@ var GraphView = AbstractView.extend({
                 measures[name].description = measureStrings[name];
             }
         }
+
+        // Remove invisible fields from the measures
+        this.arch.children.forEach(field => {
+            let fieldName = field.attrs.name;
+            if (field.attrs.invisible && py.eval(field.attrs.invisible)) {
+                groupBys = groupBys.filter(groupBy => groupBy !== fieldName);
+                if (fieldName in groupableFields) {
+                    delete groupableFields[fieldName];
+                }
+                if (!additionalMeasures.includes(fieldName)) {
+                    delete measures[fieldName];
+                }
+            }
+        });
 
         const sortedMeasures = Object.values(measures).sort((a, b) => {
                 const descA = a.description.toLowerCase();

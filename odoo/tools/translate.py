@@ -990,7 +990,7 @@ class TranslationModuleReader:
         model = next(iter(records)).model
         if model not in self.env:
             _logger.error("Unable to find object %r", model)
-            return self.browse()
+            return self.env["_unknown"].browse()
 
         if not self.env[model]._translate:
             return self.env[model].browse()

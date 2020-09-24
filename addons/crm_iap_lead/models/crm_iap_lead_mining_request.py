@@ -4,8 +4,7 @@
 import logging
 
 from odoo import api, fields, models, _
-from odoo.exceptions import ValidationError
-from odoo.addons.iap import jsonrpc, InsufficientCreditError
+from odoo.addons.iap.tools import iap_tools
 
 _logger = logging.getLogger(__name__)
 
@@ -180,9 +179,9 @@ class CRMLeadMiningRequest(models.Model):
             'data': server_payload
         }
         try:
-            response = jsonrpc(endpoint, params=params, timeout=300)
+            response = iap_tools.iap_jsonrpc(endpoint, params=params, timeout=300)
             return response['data']
-        except InsufficientCreditError as e:
+        except iap_tools.InsufficientCreditError as e:
             self.error = 'Insufficient credits. Recharge your account and retry.'
             self.state = 'error'
             self._cr.commit()
@@ -205,7 +204,7 @@ class CRMLeadMiningRequest(models.Model):
         leads = self.env['crm.lead'].create(lead_vals_list)
         for lead in leads:
             if messages_to_post.get(lead.reveal_id):
-                lead.message_post_with_view('partner_autocomplete.enrich_service_information', values=messages_to_post[lead.reveal_id], subtype_id=self.env.ref('mail.mt_note').id)
+                lead.message_post_with_view('iap_mail.enrich_company', values=messages_to_post[lead.reveal_id], subtype_id=self.env.ref('mail.mt_note').id)
 
     # Methods responsible for format response data into valid odoo lead data
     @api.model
@@ -243,7 +242,7 @@ class CRMLeadMiningRequest(models.Model):
 
     def action_get_lead_action(self):
         self.ensure_one()
-        action = self.env.ref('crm.crm_lead_all_leads').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("crm.crm_lead_all_leads")
         action['domain'] = [('id', 'in', self.lead_ids.ids), ('type', '=', 'lead')]
         action['help'] = _("""<p class="o_view_nocontent_empty_folder">
             No leads found
@@ -254,7 +253,7 @@ class CRMLeadMiningRequest(models.Model):
 
     def action_get_opportunity_action(self):
         self.ensure_one()
-        action = self.env.ref('crm.crm_lead_opportunities').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("crm.crm_lead_opportunities")
         action['domain'] = [('id', 'in', self.lead_ids.ids), ('type', '=', 'opportunity')]
         action['help'] = _("""<p class="o_view_nocontent_empty_folder">
             No opportunities found

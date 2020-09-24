@@ -18,6 +18,7 @@ This module provides the core of the Odoo Web Client.
         'security/ir.model.access.csv',
         'views/webclient_templates.xml',
         'views/report_templates.xml',
+        'views/base_document_layout_views.xml',
         'data/report_layout.xml',
     ],
     'qweb': [

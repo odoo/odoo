@@ -19,7 +19,8 @@ def uninstall_hook(cr, registry):
                 ('name', '=', 'website_id'),
                 ('model', '=', 'res.config.settings'),
             ]).unlink()
-    cr.after('commit', partial(rem_website_id_null, cr.dbname))
+
+    cr.postcommit.add(partial(rem_website_id_null, cr.dbname))
 
 
 def post_init_hook(cr, registry):

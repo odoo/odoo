@@ -1,24 +1,17 @@
 odoo.define('mail/static/src/models/thread/thread_tests.js', function (require) {
 'use strict';
 
-const {
-    afterEach: utilsAfterEach,
-    beforeEach: utilsBeforeEach,
-    start: utilsStart,
-} = require('mail/static/src/utils/test_utils.js');
+const { afterEach, beforeEach, start } = require('mail/static/src/utils/test_utils.js');
 
 QUnit.module('mail', {}, function () {
 QUnit.module('models', {}, function () {
 QUnit.module('thread', {}, function () {
 QUnit.module('thread_tests.js', {
     beforeEach() {
-        utilsBeforeEach(this);
+        beforeEach(this);
 
         this.start = async params => {
-            if (this.widget) {
-                this.widget.destroy();
-            }
-            let { env, widget } = await utilsStart(Object.assign({}, params, {
+            const { env, widget } = await start(Object.assign({}, params, {
                 data: this.data,
             }));
             this.env = env;
@@ -26,12 +19,7 @@ QUnit.module('thread_tests.js', {
         };
     },
     afterEach() {
-        utilsAfterEach(this);
-        this.env = undefined;
-        if (this.widget) {
-            this.widget.destroy();
-            this.widget = undefined;
-        }
+        afterEach(this);
     },
 });
 
@@ -77,10 +65,10 @@ QUnit.test('create (channel)', async function (assert) {
             name: "Fred",
         }]]],
         message_needaction_counter: 6,
-        message_unread_counter: 5,
         model: 'mail.channel',
         name: "General",
         public: 'public',
+        serverMessageUnreadCounter: 5,
     });
     assert.ok(thread);
     assert.ok(this.env.models['mail.partner'].find(partner => partner.id === 9));
@@ -101,9 +89,9 @@ QUnit.test('create (channel)', async function (assert) {
     assert.ok(thread.members.includes(partner9));
     assert.ok(thread.members.includes(partner10));
     assert.strictEqual(thread.message_needaction_counter, 6);
-    assert.strictEqual(thread.message_unread_counter, 5);
     assert.strictEqual(thread.name, "General");
     assert.strictEqual(thread.public, 'public');
+    assert.strictEqual(thread.serverMessageUnreadCounter, 5);
     assert.strictEqual(partner9.email, "john@example.com");
     assert.strictEqual(partner9.id, 9);
     assert.strictEqual(partner9.name, "John");
@@ -124,13 +112,13 @@ QUnit.test('create (chat)', async function (assert) {
 
     const channel = this.env.models['mail.thread'].create({
         channel_type: 'chat',
-        correspondent: [['insert', {
+        id: 200,
+        members: [['insert', {
             email: "demo@example.com",
             id: 5,
             im_status: 'online',
             name: "Demo",
         }]],
-        id: 200,
         model: 'mail.channel',
     });
     assert.ok(channel);

@@ -23,6 +23,24 @@ class TestSlidesManagement(slides_common.SlidesCase):
         self.assertEqual(categorized_slides[2]['total_slides'], 0)
         self.assertEqual(categorized_slides[2]['category'], new_category)
 
+    @users('user_manager')
+    def test_archive(self):
+        self.assertTrue(self.channel.active)
+        self.assertTrue(self.channel.is_published)
+        for slide in self.channel.slide_ids:
+            self.assertTrue(slide.active, "All slide should be archived when a channel is archived")
+            self.assertTrue(slide.is_published, "All slide should be unpublished when a channel is archived")
+
+        self.channel.toggle_active()
+        self.assertFalse(self.channel.active)
+        self.assertFalse(self.channel.is_published)
+
+        for slide in self.channel.slide_ids:
+            self.assertFalse(slide.active, "All slides should be archived when a channel is archived")
+            if not slide.is_category:
+                self.assertFalse(slide.is_published, "All slides should be unpublished when a channel is archived, except categories")
+            else:
+                self.assertTrue(slide.is_published, "All slides should be unpublished when a channel is archived, except categories")
 
 class TestSequencing(slides_common.SlidesCase):
 

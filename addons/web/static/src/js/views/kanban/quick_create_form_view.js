@@ -10,6 +10,7 @@ var BasicModel = require('web.BasicModel');
 var FormController = require('web.FormController');
 var FormRenderer = require('web.FormRenderer');
 var FormView = require('web.FormView');
+const { qweb } = require("web.core");
 
 var QuickCreateFormRenderer = FormRenderer.extend({
     /**
@@ -20,6 +21,17 @@ var QuickCreateFormRenderer = FormRenderer.extend({
         this.$el.addClass('o_xxs_form_view');
         this.$el.removeClass('o_xxl_form_view');
     },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Override to do nothing so that the renderer won't resize on window resize
+     *
+     * @override
+     */
+    _applyFormSizeClass() {},
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -80,6 +92,21 @@ var QuickCreateFormController = FormController.extend({
     getChanges: function () {
         return this.model.getChanges(this.handle);
     },
+
+    /**
+     * @override
+     */
+    renderButtons($node) {
+        this.$buttons = $(qweb.render('KanbanView.RecordQuickCreate.buttons'));
+        if ($node) {
+            this.$buttons.appendTo($node);
+        }
+    },
+
+    /**
+     * @override
+     */
+    updateButtons() {/* No need to update the buttons */},
 });
 
 var QuickCreateFormView = FormView.extend({

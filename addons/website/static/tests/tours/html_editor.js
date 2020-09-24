@@ -22,7 +22,7 @@ tour.register('html_editor_multiple_templates', {
         {
             content: "save the page",
             extra_trigger: '#oe_structure_test_ui.o_dirty',
-            trigger: "#web_editor-top-edit button[data-action=save]",
+            trigger: "button[data-action=save]",
         },
         // 2. Edit generic view
         {
@@ -46,7 +46,7 @@ tour.register('html_editor_multiple_templates', {
             content: "select oe_structure specific view",
             trigger: 'div.ace_line .ace_xml:contains("somenewcontent")',
             run: function () {
-                var viewId = $('#ace-view-list option:contains("oe_structure")').val();
+                var viewId = $('#ace-view-list option:contains("oe_structure_test_ui")').val();
                 $('#ace-view-list').val(viewId).trigger('change');
             },
         },

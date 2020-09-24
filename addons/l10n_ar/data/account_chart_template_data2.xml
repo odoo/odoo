@@ -15,10 +15,14 @@
 
     <record id="l10nar_ex_chart_template" model="account.chart.template">
         <field name="default_pos_receivable_account_id" ref="base_deudores_por_ventas_pos"/>
+        <field name="expense_currency_exchange_account_id" ref="base_diferencias_de_cambio"/>
+        <field name="income_currency_exchange_account_id" ref="base_diferencias_de_cambio"/>
     </record>
 
     <record id="l10nar_ri_chart_template" model="account.chart.template">
         <field name="default_pos_receivable_account_id" ref="base_deudores_por_ventas_pos"/>
+        <field name="expense_currency_exchange_account_id" ref="base_diferencias_de_cambio"/>
+        <field name="income_currency_exchange_account_id" ref="base_diferencias_de_cambio"/>
     </record>
 
 </odoo>

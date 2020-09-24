@@ -42,7 +42,6 @@
                 <field name="active" invisible="1"/>
                 <field name="allowed_route_ids" invisible="1"/>
                 <field name="product_category_id" invisible="1"/>
-                <field name="warehouse_id" invisible="1"/>
                 <field name="product_tmpl_id" invisible="1"/>
                 <field name="product_id" attrs="{'readonly': [('product_id', '!=', False)]}" invisible="context.get('default_product_id')" force_save="1"/>
                 <field name="location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations"/>
@@ -54,15 +53,15 @@
                 <field name="product_min_qty" optional="show"/>
                 <field name="product_max_qty" optional="show"/>
                 <field name="qty_multiple" optional="hide"/>
-                <field name="json_lead_days_popover" optional="show" nolabel="1" string="Forecast Description" widget="popover_widget" attrs="{'invisible': [('id', '=', False)]}"/>
+                <field name="json_lead_days_popover" optional="show" nolabel="1" string="Forecast Description" width="10px" widget="popover_widget" attrs="{'invisible': [('id', '=', False)]}"/>
                 <field name="qty_to_order"/>
                 <field name="product_uom_name" string="UoM" groups="uom.group_uom"/>
                 <field name="company_id" optional="hide" readonly="1" groups="base.group_multi_company"/>
-                <button name="action_replenish" string="Order Once" type="object" class="btn-secondary pt-0 pb-0 o_replenish_buttons"
+                <button name="action_replenish" string="Order Once" type="object" class="o_replenish_buttons" icon="fa-truck"
                     attrs="{'invisible': [('qty_to_order', '&lt;', 1.0)]}"/>
-                <button name="action_replenish_auto" string="Automate Orders" type="object" class="btn-secondary pt-0 pb-0 o_replenish_buttons"
+                <button name="action_replenish_auto" string="Automate Orders" type="object" class="o_replenish_buttons" icon="fa-refresh"
                     attrs="{'invisible': ['|', ('qty_to_order', '&lt;', 1.0), ('trigger', '=', 'auto')]}"/>
-                <button name="%(action_orderpoint_snooze)d" string="Snooze" type="action" class="btn-secondary pt-0 pb-0"
+                <button name="%(action_orderpoint_snooze)d" string="Snooze" type="action" class="text-warning" icon="fa-bell-slash"
                     attrs="{'invisible': [('trigger', '!=', 'manual')]}" context="{'default_orderpoint_ids': [id]}"/>
             </tree>
         </field>
@@ -84,7 +83,7 @@
                 <field name="product_min_qty" optional="show"/>
                 <field name="product_max_qty" optional="show"/>
                 <field name="qty_multiple" optional="show"/>
-                <field name="json_lead_days_popover" optional="show" string=" " widget="popover_widget" attrs="{'invisible': [('id', '=', False)]}"/>
+                <field name="json_lead_days_popover" optional="show" nolabel="1" string="Forecast Description" width="10px" widget="popover_widget" attrs="{'invisible': [('id', '=', False)]}"/>
                 <field name="product_uom_name" string="UoM" groups="uom.group_uom"/>
                 <field name="company_id" optional="hide" readonly="1" groups="base.group_multi_company"/>
             </tree>
@@ -212,7 +211,7 @@
         <field name="context">{'search_default_trigger': 'auto'}</field>
         <field name="help" type="html">
           <p class="o_view_nocontent_smiling_face">
-            Create a reordering rule
+            No reordering rule found
           </p><p>
             Define a minimum stock rule so that Odoo creates automatically requests for quotations or draft manufacturing orders to resupply your stock.
           </p>

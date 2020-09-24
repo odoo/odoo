@@ -97,16 +97,17 @@ QUnit.module('Views', {
                     product_id: {string: "Product", type: "many2one", relation: 'product', store: true},
                     color_id: {string: "Color", type: "many2one", relation: 'color'},
                     date: {string: "Date", type: 'date', store: true, sortable: true},
+                    revenue: {string: "Revenue", type: 'integer', store: true},
                 },
                 records: [
-                    {id: 1, foo: 3, bar: true, product_id: 37, date: "2016-01-01"},
-                    {id: 2, foo: 53, bar: true, product_id: 37, color_id: 7, date: "2016-01-03"},
-                    {id: 3, foo: 2, bar: true, product_id: 37, date: "2016-03-04"},
-                    {id: 4, foo: 24, bar: false, product_id: 37, date: "2016-03-07"},
-                    {id: 5, foo: 4, bar: false, product_id: 41, date: "2016-05-01"},
+                    {id: 1, foo: 3, bar: true, product_id: 37, date: "2016-01-01", revenue: 1},
+                    {id: 2, foo: 53, bar: true, product_id: 37, color_id: 7, date: "2016-01-03", revenue: 2},
+                    {id: 3, foo: 2, bar: true, product_id: 37, date: "2016-03-04", revenue: 3},
+                    {id: 4, foo: 24, bar: false, product_id: 37, date: "2016-03-07", revenue: 4},
+                    {id: 5, foo: 4, bar: false, product_id: 41, date: "2016-05-01", revenue: 5},
                     {id: 6, foo: 63, bar: false, product_id: 41},
                     {id: 7, foo: 42, bar: false, product_id: 41},
-                    {id: 8, foo: 48, bar: false, product_id: 41, date: "2016-04-01"},
+                    {id: 8, foo: 48, bar: false, product_id: 41, date: "2016-04-01", revenue: 8},
                 ]
             },
             product: {
@@ -338,43 +339,53 @@ QUnit.module('Views', {
     });
 
     QUnit.test('no content helper (bar chart)', async function (assert) {
-        assert.expect(2);
+        assert.expect(3);
         this.data.foo.records = [];
 
         var graph = await createView({
             View: GraphView,
             model: "foo",
             data: this.data,
-            arch: '<graph string="Gloups">' +
-                        '<field name="product_id"/>' +
-                '</graph>',
+            arch: `
+                <graph string="Gloups">
+                    <field name="product_id"/>
+                </graph>`,
+            viewOptions: {
+                action: {
+                    help: '<p class="abc">This helper should not be displayed in graph views</p>'
+                }
+            },
         });
 
-        assert.containsNone(graph, 'div.o_graph_canvas_container canvas',
-                    "should not contain a div with a canvas element");
-        assert.containsOnce(graph, 'div.o_view_nocontent',
-            "should display the no content helper");
+        assert.containsOnce(graph, 'div.o_graph_canvas_container canvas');
+        assert.containsNone(graph, 'div.o_view_nocontent');
+        assert.containsNone(graph, '.abc');
 
         graph.destroy();
     });
 
     QUnit.test('no content helper (pie chart)', async function (assert) {
-        assert.expect(2);
+        assert.expect(3);
         this.data.foo.records =  [];
 
         var graph = await createView({
             View: GraphView,
             model: "foo",
             data: this.data,
-            arch: '<graph type="pie">' +
-                        '<field name="product_id"/>' +
-                '</graph>',
+            arch: `
+                <graph type="pie">
+                    <field name="product_id"/>
+                </graph>`,
+            viewOptions: {
+                action: {
+                    help: '<p class="abc">This helper should not be displayed in graph views</p>'
+                }
+            },
         });
 
-        assert.containsNone(graph, 'div.o_graph_canvas_container canvas',
-            "should not contain a div with a canvas element");
-        assert.containsOnce(graph, 'div.o_view_nocontent',
-            "should display the no content helper");
+        assert.containsOnce(graph, 'div.o_graph_canvas_container canvas');
+        assert.containsNone(graph, 'div.o_view_nocontent');
+        assert.containsNone(graph, '.abc');
 
         graph.destroy();
     });
@@ -413,27 +424,33 @@ QUnit.module('Views', {
     });
 
     QUnit.test('no content helper after update', async function (assert) {
-        assert.expect(4);
+        assert.expect(6);
 
         var graph = await createView({
             View: GraphView,
             model: "foo",
             data: this.data,
-            arch: '<graph string="Gloups">' +
-                        '<field name="product_id"/>' +
-                '</graph>',
+            arch: `
+                <graph string="Gloups">
+                    <field name="product_id"/>
+                </graph>`,
+            viewOptions: {
+                action: {
+                    help: '<p class="abc">This helper should not be displayed in graph views</p>'
+                }
+            },
         });
 
-        assert.containsOnce(graph, 'div.o_graph_canvas_container canvas',
-                    "should contain a div with a canvas element");
-        assert.containsNone(graph, 'div.o_view_nocontent',
-            "should not display the no content helper");
+        assert.containsOnce(graph, 'div.o_graph_canvas_container canvas');
+        assert.containsNone(graph, 'div.o_view_nocontent');
+        assert.containsNone(graph, '.abc');
 
-        await testUtils.graph.reload(graph, {domain: [['product_id', '=', 4]]});
-        assert.containsNone(graph, 'div.o_graph_canvas_container canvas',
-                    "should not contain a div with a canvas element");
-        assert.containsOnce(graph, 'div.o_view_nocontent',
-            "should display the no content helper");
+        await testUtils.graph.reload(graph, {domain: [['product_id', '<', 0]]});
+
+        assert.containsOnce(graph, 'div.o_graph_canvas_container canvas');
+        assert.containsNone(graph, 'div.o_view_nocontent');
+        assert.containsNone(graph, '.abc');
+
         graph.destroy();
     });
 
@@ -770,6 +787,52 @@ QUnit.module('Views', {
             "should have product_id as measure");
 
         graph.destroy();
+    });
+
+    QUnit.test('measure dropdown consistency', async function (assert) {
+        assert.expect(2);
+
+        const actionManager = await testUtils.createActionManager({
+            archs: {
+                'foo,false,graph': `
+                    <graph string="Partners" type="bar">
+                        <field name="foo" type="measure"/>
+                    </graph>`,
+                'foo,false,search': `<search/>`,
+                'foo,false,kanban': `
+                    <kanban>
+                        <templates>
+                            <div t-name="kanban-box">
+                                <field name="foo"/>
+                            </div>
+                        </templates>
+                    </kanban>`,
+            },
+            data: this.data,
+        });
+        await actionManager.doAction({
+            res_model: 'foo',
+            type: 'ir.actions.act_window',
+            views: [[false, 'graph'], [false, 'kanban']],
+            flags: {
+                graph: {
+                    additionalMeasures: ['product_id'],
+                }
+            },
+        });
+
+        assert.containsOnce(actionManager, '.o_control_panel .o_graph_measures_list',
+            "Measures dropdown is present at init"
+        );
+
+        await cpHelpers.switchView(actionManager, 'kanban');
+        await cpHelpers.switchView(actionManager, 'graph');
+
+        assert.containsOnce(actionManager, '.o_control_panel .o_graph_measures_list',
+            "Measures dropdown is present after reload"
+        );
+
+        actionManager.destroy();
     });
 
     QUnit.test('graph view crash when moving from search view using Down key', async function (assert) {
@@ -1154,6 +1217,47 @@ QUnit.module('Views', {
         graph.destroy();
     });
 
+    QUnit.test('graph view without invisible attribute on field', async function (assert) {
+        assert.expect(4);
+
+        const graph = await createView({
+            View: GraphView,
+            model: "foo",
+            data: this.data,
+            arch: `<graph string="Partners"></graph>`,
+        });
+
+        await testUtils.dom.click(graph.$('.btn-group:first button'));
+        assert.containsN(graph, 'li.o_menu_item', 3,
+            "there should be three menu item in the measures dropdown (count, revenue and foo)");
+        assert.containsOnce(graph, 'li.o_menu_item a:contains("Revenue")');
+        assert.containsOnce(graph, 'li.o_menu_item a:contains("Foo")');
+        assert.containsOnce(graph, 'li.o_menu_item a:contains("Count")');
+
+        graph.destroy();
+    });
+
+    QUnit.test('graph view with invisible attribute on field', async function (assert) {
+        assert.expect(2);
+
+        const graph = await createView({
+            View: GraphView,
+            model: "foo",
+            data: this.data,
+            arch: `
+                <graph string="Partners">
+                    <field name="revenue" invisible="1"/>
+                </graph>`,
+        });
+
+        await testUtils.dom.click(graph.$('.btn-group:first button'));
+        assert.containsN(graph, 'li.o_menu_item', 2,
+            "there should be only two menu item in the measures dropdown (count and foo)");
+        assert.containsNone(graph, 'li.o_menu_item a:contains("Revenue")');
+
+        graph.destroy();
+    });
+
     QUnit.test('graph view sort by measure', async function (assert) {
         assert.expect(18);
 
@@ -1213,7 +1317,6 @@ QUnit.module('Views', {
         assert.checkDatasets(graph, 'data', { data: [4, 3, 1] });
 
         graph.destroy();
-
     });
 
     QUnit.test('graph view sort by measure for grouped data', async function (assert) {
@@ -1255,7 +1358,6 @@ QUnit.module('Views', {
         assert.checkDatasets(graph, 'data', [{ data: [3, 0, 0] }, { data: [1, 3, 1] }]);
 
         graph.destroy();
-
     });
 
     QUnit.test('graph view sort by measure for multiple grouped data', async function (assert) {
@@ -1306,6 +1408,75 @@ QUnit.module('Views', {
         assert.doesNotHaveClass(graph.$('button[data-order="desc"]'), 'active',
             "descending order button should not be active");
         assert.checkDatasets(graph, 'data', [{ data: [2, 1, 1, 2] }, { data: [0, 1, 0, 0] }, { data: [1, 0, 0, 0] }]);
+
+        graph.destroy();
+    });
+
+    QUnit.test('empty graph view with sample data', async function (assert) {
+        assert.expect(8);
+
+        const graph = await createView({
+            View: GraphView,
+            model: "foo",
+            data: this.data,
+            arch: `
+                <graph sample="1">
+                    <field name="product_id"/>
+                    <field name="date"/>
+                </graph>`,
+            domain: [['id', '<', 0]],
+            viewOptions: {
+                action: {
+                    help: '<p class="abc">click to add a foo</p>'
+                }
+            },
+        });
+
+        assert.hasClass(graph.el, 'o_view_sample_data');
+        assert.containsOnce(graph, '.o_view_nocontent');
+        assert.containsOnce(graph, '.o_graph_canvas_container canvas');
+        assert.hasClass(graph.$('.o_graph_canvas_container'), 'o_sample_data_disabled');
+
+        await graph.reload({ domain: [] });
+
+        assert.doesNotHaveClass(graph.el, 'o_view_sample_data');
+        assert.containsNone(graph, '.o_view_nocontent');
+        assert.containsOnce(graph, '.o_graph_canvas_container canvas');
+        assert.doesNotHaveClass(graph.$('.o_graph_canvas_container'), 'o_sample_data_disabled');
+
+        graph.destroy();
+    });
+
+    QUnit.test('non empty graph view with sample data', async function (assert) {
+        assert.expect(8);
+
+        const graph = await createView({
+            View: GraphView,
+            model: "foo",
+            data: this.data,
+            arch: `
+                <graph sample="1">
+                    <field name="product_id"/>
+                    <field name="date"/>
+                </graph>`,
+            viewOptions: {
+                action: {
+                    help: '<p class="abc">click to add a foo</p>'
+                }
+            },
+        })
+
+        assert.doesNotHaveClass(graph.el, 'o_view_sample_data');
+        assert.containsNone(graph, '.o_view_nocontent');
+        assert.containsOnce(graph, '.o_graph_canvas_container canvas');
+        assert.doesNotHaveClass(graph.$('.o_graph_canvas_container'), 'o_sample_data_disabled');
+
+        await graph.reload({ domain: [['id', '<', 0]] });
+
+        assert.doesNotHaveClass(graph.el, 'o_view_sample_data');
+        assert.containsOnce(graph, '.o_graph_canvas_container canvas');
+        assert.doesNotHaveClass(graph.$('.o_graph_canvas_container'), 'o_sample_data_disabled');
+        assert.containsNone(graph, '.o_view_nocontent');
 
         graph.destroy();
     });

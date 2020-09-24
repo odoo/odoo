@@ -48,8 +48,7 @@ class Bank(models.Model):
             domain = ['|', ('bic', '=ilike', name + '%'), ('name', operator, name)]
             if operator in expression.NEGATIVE_TERM_OPERATORS:
                 domain = ['&'] + domain
-        bank_ids = self._search(domain + args, limit=limit, access_rights_uid=name_get_uid)
-        return models.lazy_name_get(self.browse(bank_ids).with_user(name_get_uid))
+        return self._search(domain + args, limit=limit, access_rights_uid=name_get_uid)
 
     @api.onchange('country')
     def _onchange_country_id(self):
@@ -87,7 +86,7 @@ class ResPartnerBank(models.Model):
     bank_bic = fields.Char(related='bank_id.bic', readonly=False)
     sequence = fields.Integer(default=10)
     currency_id = fields.Many2one('res.currency', string='Currency')
-    company_id = fields.Many2one('res.company', 'Company', default=lambda self: self.env.company, ondelete='cascade')
+    company_id = fields.Many2one('res.company', 'Company', default=lambda self: self.env.company, ondelete='cascade', readonly=True)
 
     _sql_constraints = [
         ('unique_number', 'unique(sanitized_acc_number, company_id)', 'Account Number must be unique'),

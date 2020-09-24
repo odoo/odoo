@@ -24,9 +24,11 @@
             <rng:optional><rng:attribute name="hide_date"/></rng:optional>
             <rng:optional><rng:attribute name="create"/></rng:optional>
             <rng:optional><rng:attribute name="delete"/></rng:optional>
+            <rng:optional><rng:attribute name="scales"/></rng:optional>
             <rng:optional>
                 <rng:attribute name="mode">
                     <rng:choice>
+                        <rng:value>year</rng:value>
                         <rng:value>month</rng:value>
                         <rng:value>week</rng:value>
                         <rng:value>day</rng:value>

@@ -157,5 +157,5 @@ class PaymentWizard(models.TransientModel):
 
     def action_onboarding_other_payment_acquirer(self):
         self._set_payment_acquirer_onboarding_step_done()
-        action = self.env.ref('payment.action_payment_acquirer').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("payment.action_payment_acquirer")
         return action

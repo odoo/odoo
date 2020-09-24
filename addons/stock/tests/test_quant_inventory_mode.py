@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.tests.common import SavepointCase
 from odoo.exceptions import AccessError, UserError
 
@@ -197,12 +198,13 @@ class TestEditableQuant(SavepointCase):
         """ Try to edit a record without the inventory mode.
         Must raise an error.
         """
-        self.demo_user = self.env['res.users'].with_context({'no_reset_password': True, 'mail_create_nosubscribe': True}).create({
-            'name': 'Pauline Poivraisselle',
-            'login': 'pauline',
-            'email': 'p.p@example.com',
-            'groups_id': [(6, 0, [self.env.ref('base.group_user').id])]
-        })
+        self.demo_user = mail_new_test_user(
+            self.env,
+            name='Pauline Poivraisselle',
+            login='pauline',
+            email='p.p@example.com',
+            groups='base.group_user',
+        )
         user_admin = self.env.ref('base.user_admin')
         quant = self.Quant.create({
             'product_id': self.product.id,

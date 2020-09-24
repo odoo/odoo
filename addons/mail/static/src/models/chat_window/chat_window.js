@@ -3,6 +3,7 @@ odoo.define('mail/static/src/models/chat_window/chat_window.js', function (requi
 
 const { registerNewModel } = require('mail/static/src/model/model_core.js');
 const { attr, many2one, one2many, one2one } = require('mail/static/src/model/model_field.js');
+const { clear } = require('mail/static/src/model/model_field_command.js');
 
 function factory(dependencies) {
 
@@ -11,31 +12,23 @@ function factory(dependencies) {
         /**
          * @override
          */
-        static create(data) {
-            const chatWindow = super.create(data);
-            chatWindow._onShowHomeMenu.bind(chatWindow);
-            chatWindow._onHideHomeMenu.bind(chatWindow)
+        _created() {
+            const res = super._created(...arguments);
+            this._onShowHomeMenu.bind(this);
+            this._onHideHomeMenu.bind(this);
 
-            chatWindow.env.messagingBus.on(
-                'hide_home_menu',
-                chatWindow,
-                chatWindow._onHideHomeMenu
-            );
-            chatWindow.env.messagingBus.on(
-                'show_home_menu',
-                chatWindow,
-                chatWindow._onShowHomeMenu
-            );
-            return chatWindow;
+            this.env.messagingBus.on('hide_home_menu', this, this._onHideHomeMenu);
+            this.env.messagingBus.on('show_home_menu', this, this._onShowHomeMenu);
+            return res;
         }
 
         /**
          * @override
          */
-        delete() {
+        _willDelete() {
             this.env.messagingBus.off('hide_home_menu', this, this._onHideHomeMenu);
             this.env.messagingBus.off('show_home_menu', this, this._onShowHomeMenu);
-            super.delete();
+            return super._willDelete(...arguments);
         }
 
         //----------------------------------------------------------------------
@@ -44,18 +37,24 @@ function factory(dependencies) {
 
         /**
          * Close this chat window.
+         *
+         * @param {Object} [param0={}]
+         * @param {boolean} [param0.notifyServer=true]
          */
-        close() {
+        close({ notifyServer = true } = {}) {
             const thread = this.thread;
             this.delete();
-            if (thread) {
-                thread.update({ pendingFoldState: 'closed' });
+            // Flux specific: 'closed' fold state should only be saved on the
+            // server when manually closing the chat window. Delete at destroy
+            // or sync from server value for example should not save the value.
+            if (thread && notifyServer) {
+                thread.notifyFoldStateToServer('closed');
             }
         }
 
         expand() {
             if (this.thread) {
-                this.thread.openExpanded();
+                this.thread.open({ expanded: true });
             }
         }
 
@@ -81,18 +80,39 @@ function factory(dependencies) {
             }
         }
 
-        fold() {
-            if (this.thread) {
-                this.thread.update({ pendingFoldState: 'folded' });
-            } else {
-                this.update({ _isFolded: true });
+        /**
+         * @param {Object} [param0={}]
+         * @param {boolean} [param0.notifyServer=true]
+         */
+        fold({ notifyServer = true } = {}) {
+            this.update({ isFolded: true });
+            // Flux specific: manually folding the chat window should save the
+            // new state on the server.
+            if (this.thread && notifyServer) {
+                this.thread.notifyFoldStateToServer('folded');
             }
         }
 
         /**
-         * Assume that this chat window was hidden before-hand.
+         * Makes this chat window active, which consists of making it visible,
+         * unfolding it, and focusing it.
+         *
+         * @param {Object} [options]
+         */
+        makeActive(options) {
+            this.makeVisible();
+            this.unfold(options);
+            this.focus();
+        }
+
+        /**
+         * Makes this chat window visible by swapping it with the last visible
+         * chat window, or do nothing if it is already visible.
          */
         makeVisible() {
+            if (this.isVisible) {
+                return;
+            }
             const lastVisible = this.manager.lastVisible;
             this.manager.swap(this, lastVisible);
         }
@@ -111,18 +131,30 @@ function factory(dependencies) {
             this.manager.shiftRight(this);
         }
 
-        unfold() {
-            if (this.thread) {
-                this.thread.update({ pendingFoldState: 'open' });
-                this.threadViewer.addComponentHint('chat-window-unfolded');
-            } else {
-                this.update({ _isFolded: false });
+        /**
+         * @param {Object} [param0={}]
+         * @param {boolean} [param0.notifyServer=true]
+         */
+        unfold({ notifyServer = true } = {}) {
+            this.update({ isFolded: false });
+            // Flux specific: manually opening the chat window should save the
+            // new state on the server.
+            if (this.thread && notifyServer) {
+                this.thread.notifyFoldStateToServer('open');
             }
         }
 
         //----------------------------------------------------------------------
         // Private
         //----------------------------------------------------------------------
+
+        /**
+         * @private
+         * @returns {boolean}
+         */
+        _computeHasNewMessageForm() {
+            return this.isVisible && !this.isFolded && !this.thread;
+        }
 
         /**
          * @private
@@ -159,12 +191,31 @@ function factory(dependencies) {
          * @private
          * @returns {boolean}
          */
+        _computeHasThreadView() {
+            return this.isVisible && !this.isFolded && this.thread;
+        }
+
+        /**
+         * @private
+         * @returns {boolean}
+         */
         _computeIsFolded() {
             const thread = this.thread;
             if (thread) {
                 return thread.foldState === 'folded';
             }
-            return this._isFolded;
+            return this.isFolded;
+        }
+
+        /**
+         * @private
+         * @returns {boolean}
+         */
+        _computeIsVisible() {
+            if (!this.manager) {
+                return false;
+            }
+            return this.manager.allOrderedVisible.includes(this);
         }
 
         /**
@@ -176,6 +227,22 @@ function factory(dependencies) {
                 return this.thread.displayName;
             }
             return this.env._t("New message");
+        }
+
+        /**
+         * @private
+         * @returns {integer|undefined}
+         */
+        _computeVisibleIndex() {
+            if (!this.manager) {
+                return clear();
+            }
+            const visible = this.manager.visual.visible;
+            const index = visible.findIndex(visible => visible.chatWindowLocalId === this.localId);
+            if (index === -1) {
+                return clear();
+            }
+            return index;
         }
 
         /**
@@ -245,49 +312,35 @@ function factory(dependencies) {
          * @private
          */
         async _onHideHomeMenu() {
-            if (!this.threadViewer) {
+            if (!this.threadView) {
                 return;
             }
-            this.threadViewer.addComponentHint('home-menu-hidden');
+            this.threadView.addComponentHint('home-menu-hidden');
         }
 
         /**
          * @private
          */
         async _onShowHomeMenu() {
-            if (!this.threadViewer) {
+            if (!this.threadView) {
                 return;
             }
-            this.threadViewer.addComponentHint('home-menu-shown');
+            this.threadView.addComponentHint('home-menu-shown');
         }
 
-        /**
-         * @private
-         * @returns {integer|undefined}
-         */
-        _computeVisibleIndex() {
-            if (!this.manager) {
-                return undefined;
-            }
-            const visible = this.manager.visual.visible;
-            const index = visible.findIndex(visible => visible.chatWindowLocalId === this.localId);
-            if (index === -1) {
-                return undefined;
-            }
-            return index;
-        }
     }
 
     ChatWindow.fields = {
         /**
-         * Determine whether the chat window is folded or not, when not
-         * linked to a thread.
-         * Note: this value only make sense for chat window not linked
-         * to a thread. State of chat window of a thread is entirely
-         * based on thread.foldState. @see isFolded .
+         * Determines whether "new message form" should be displayed.
          */
-        _isFolded: attr({
-            default: false,
+        hasNewMessageForm: attr({
+            compute: '_computeHasNewMessageForm',
+            dependencies: [
+                'isFolded',
+                'isVisible',
+                'thread',
+            ],
         }),
         hasShiftLeft: attr({
             compute: '_computeHasShiftLeft',
@@ -300,6 +353,17 @@ function factory(dependencies) {
             default: false,
         }),
         /**
+         * Determines whether `this.thread` should be displayed.
+         */
+        hasThreadView: attr({
+            compute: '_computeHasThreadView',
+            dependencies: [
+                'isFolded',
+                'isVisible',
+                'thread',
+            ],
+        }),
+        /**
          * Determine whether the chat window should be programmatically
          * focused by observed component of chat window. Those components
          * are responsible to unmark this record afterwards, otherwise
@@ -309,20 +373,27 @@ function factory(dependencies) {
             default: false,
         }),
         /**
-         * Determine whether the chat window is focused or not. Useful for
-         * visual clue.
+         * States whether `this` is focused. Useful for visual clue.
          */
         isFocused: attr({
             default: false,
         }),
+        /**
+         * Determines whether `this` is folded.
+         */
         isFolded: attr({
-            compute: '_computeIsFolded',
-            dependencies: [
-                'thread',
-                'threadFoldState',
-                '_isFolded',
-            ],
             default: false,
+        }),
+        /**
+         * States whether `this` is visible or not. Should be considered
+         * read-only. Setting this value manually will not make it visible.
+         * @see `makeVisible`
+         */
+        isVisible: attr({
+            compute: '_computeIsVisible',
+            dependencies: [
+                'managerAllOrderedVisible',
+            ],
         }),
         manager: many2one('mail.chat_window_manager', {
             inverse: 'chatWindows',
@@ -340,17 +411,29 @@ function factory(dependencies) {
                 'threadDisplayName',
             ],
         }),
-        thread: many2one('mail.thread', {
-            related: 'threadViewer.thread',
+        /**
+         * Determines the `mail.thread` that should be displayed by `this`.
+         * If no `mail.thread` is linked, `this` is considered "new message".
+         */
+        thread: one2one('mail.thread', {
+            inverse: 'chatWindow',
         }),
         threadDisplayName: attr({
             related: 'thread.displayName',
         }),
-        threadFoldState: attr({
-            related: 'thread.foldState',
+        /**
+         * States the `mail.thread_view` displaying `this.thread`.
+         */
+        threadView: one2one('mail.thread_view', {
+            related: 'threadViewer.threadView',
         }),
+        /**
+         * Determines the `mail.thread_viewer` managing the display of `this.thread`.
+         */
         threadViewer: one2one('mail.thread_viewer', {
+            default: [['create']],
             inverse: 'chatWindow',
+            isCausal: true,
         }),
         /**
          * This field handle the "order" (index) of the visible chatWindow inside the UI.

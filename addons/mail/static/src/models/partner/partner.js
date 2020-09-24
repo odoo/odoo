@@ -8,8 +8,6 @@ const utils = require('web.utils');
 
 function factory(dependencies) {
 
-    let nextPublicId = -1;
-
     class Partner extends dependencies['mail.model'] {
 
         //----------------------------------------------------------------------
@@ -58,19 +56,13 @@ function factory(dependencies) {
                     data2.user = [
                         ['insert', {
                             id: data.user_id[0],
-                            partnerDisplayName: data.user_id[1],
+                            display_name: data.user_id[1],
                         }],
                     ];
                 }
             }
 
             return data2;
-        }
-
-        static getNextPublicId() {
-            const id = nextPublicId;
-            nextPublicId -= 1;
-            return id;
         }
 
         /**
@@ -125,31 +117,73 @@ function factory(dependencies) {
             this._loopFetchImStatus();
         }
 
+        /**
+         * Checks whether this partner has a related user and links them if
+         * applicable.
+         */
         async checkIsUser() {
             const userIds = await this.async(() => this.env.services.rpc({
                 model: 'res.users',
                 method: 'search',
                 args: [[['partner_id', '=', this.id]]],
+                kwargs: {
+                    context: { active_test: false },
+                },
             }));
-            if (userIds.length) {
+            this.update({ hasCheckedUser: true });
+            if (userIds.length > 0) {
                 this.update({ user: [['insert', { id: userIds[0] }]] });
             }
         }
 
         /**
-         * Opens an existing or new chat.
+         * Gets the chat between the user of this partner and the current user.
+         *
+         * If a chat is not appropriate, a notification is displayed instead.
+         *
+         * @returns {mail.thread|undefined}
          */
-        openChat() {
-            const chat = this.correspondentThreads.find(thread => thread.channel_type === 'chat');
-            if (chat) {
-                chat.open();
-            } else {
-                this.env.models['mail.thread'].createChannel({
-                    autoselect: true,
-                    partnerId: this.id,
-                    type: 'chat',
-                });
+        async getChat() {
+            if (!this.user && !this.hasCheckedUser) {
+                await this.async(() => this.checkIsUser());
             }
+            // prevent chatting with non-users
+            if (!this.user) {
+                this.env.services['notification'].notify({
+                    message: this.env._t("You can only chat with partners that have a dedicated user."),
+                    type: 'info',
+                });
+                return;
+            }
+            return this.user.getChat();
+        }
+
+        /**
+         * Opens a chat between the user of this partner and the current user
+         * and returns it.
+         *
+         * If a chat is not appropriate, a notification is displayed instead.
+         *
+         * @param {Object} [options] forwarded to @see `mail.thread:open()`
+         * @returns {mail.thread|undefined}
+         */
+        async openChat(options) {
+            const chat = await this.async(() => this.getChat());
+            if (!chat) {
+                return;
+            }
+            await this.async(() => chat.open(options));
+            return chat;
+        }
+
+        /**
+         * Opens the most appropriate view that is a profile for this partner.
+         */
+        async openProfile() {
+            return this.env.messaging.openDocument({
+                id: this.id,
+                model: 'res.partner',
+            });
         }
 
         //----------------------------------------------------------------------
@@ -212,7 +246,15 @@ function factory(dependencies) {
 
         /**
          * @private
-         * @returns {string}
+         * @returns {string|undefined}
+         */
+        _computeDisplayName() {
+            return this.display_name || this.user && this.user.display_name;
+        }
+
+        /**
+         * @private
+         * @returns {string|undefined}
          */
         _computeNameOrDisplayName() {
             return this.name || this.display_name;
@@ -229,11 +271,23 @@ function factory(dependencies) {
         }),
         country: many2one('mail.country'),
         display_name: attr({
+            compute: '_computeDisplayName',
             default: "",
+            dependencies: [
+                'display_name',
+                'userDisplayName',
+            ],
         }),
         email: attr(),
         failureNotifications: one2many('mail.notification', {
             related: 'messagesAsAuthor.failureNotifications',
+        }),
+        /**
+         * Whether an attempt was already made to fetch the user corresponding
+         * to this partner. This prevents doing the same RPC multiple times.
+         */
+        hasCheckedUser: attr({
+            default: false,
         }),
         id: attr(),
         im_status: attr(),
@@ -246,8 +300,11 @@ function factory(dependencies) {
         model: attr({
             default: 'res.partner',
         }),
-        moderatedChannelIds: attr({
-            default: [],
+        /**
+         * Channels that are moderated by this partner.
+         */
+        moderatedChannels: many2many('mail.thread', {
+            inverse: 'moderators',
         }),
         name: attr(),
         nameOrDisplayName: attr({
@@ -259,6 +316,12 @@ function factory(dependencies) {
         }),
         user: one2one('mail.user', {
             inverse: 'partner',
+        }),
+        /**
+         * Serves as compute dependency.
+         */
+        userDisplayName: attr({
+            related: 'user.display_name',
         }),
     };
 

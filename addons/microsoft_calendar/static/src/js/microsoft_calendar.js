@@ -16,6 +16,23 @@ const MicrosoftCalendarModel = CalendarModel.include({
 
     /**
      * @override
+     */
+    init: function () {
+        this._super.apply(this, arguments);
+        this.microsoft_is_sync = true;
+    },
+
+    /**
+     * @override
+     */
+    __get: function () {
+        var result = this._super.apply(this, arguments);
+        result.microsoft_is_sync = this.microsoft_is_sync;
+        return result;
+    },
+
+    /**
+     * @override
      * @returns {Promise}
      */
     async _loadCalendar() {
@@ -29,19 +46,27 @@ const MicrosoftCalendarModel = CalendarModel.include({
             if (error.event) {
                 error.event.preventDefault();
             }
-            console.error("Could not synchronize Microsoft events now.", error);
+            console.error("Could not synchronize Outlook events now.", error);
         }
         return _super(...arguments);
     },
 
     _syncMicrosoftCalendar(shadow = false) {
+        var self = this;
         return this._rpc({
             route: '/microsoft_calendar/sync_data',
             params: {
                 model: this.modelName,
                 fromurl: window.location.href,
             }
-        }, {shadow});
+        }, {shadow}).then(function (result) {
+            if (result.status === "need_config_from_admin" || result.status === "need_auth") {
+                self.microsoft_is_sync = false;
+            } else if (result.status === "no_new_event_from_microsoft" || result.status === "need_refresh") {
+                self.microsoft_is_sync = true;
+            }
+            return result
+        });
     },
 });
 
@@ -68,7 +93,7 @@ const MicrosoftCalendarController = CalendarController.include({
 
         return this.model._syncMicrosoftCalendar().then(function (o) {
             if (o.status === "need_auth") {
-                Dialog.alert(self, _t("You will be redirected to Microsoft to authorize the access to your calendar."), {
+                Dialog.alert(self, _t("You will be redirected to Outlook to authorize the access to your calendar."), {
                     confirm_callback: function() {
                         framework.redirect(o.url);
                     },
@@ -76,14 +101,14 @@ const MicrosoftCalendarController = CalendarController.include({
                 });
             } else if (o.status === "need_config_from_admin") {
                 if (!_.isUndefined(o.action) && parseInt(o.action)) {
-                    Dialog.confirm(self, _t("The Microsoft Synchronization needs to be configured before you can use it, do you want to do it now?"), {
+                    Dialog.confirm(self, _t("The Outlook Synchronization needs to be configured before you can use it, do you want to do it now?"), {
                         confirm_callback: function() {
                             self.do_action(o.action);
                         },
                         title: _t('Configuration'),
                     });
                 } else {
-                    Dialog.alert(self, _t("An administrator needs to configure Microsoft Synchronization before you can use it!"), {
+                    Dialog.alert(self, _t("An administrator needs to configure Outlook Synchronization before you can use it!"), {
                         title: _t('Configuration'),
                     });
                 }
@@ -104,7 +129,7 @@ const MicrosoftCalendarRenderer = CalendarRenderer.include({
     //--------------------------------------------------------------------------
 
     /**
-     * Adds the Sync with Microsoft button in the sidebar
+     * Adds the Sync with Outlook button in the sidebar
      *
      * @private
      */
@@ -113,12 +138,16 @@ const MicrosoftCalendarRenderer = CalendarRenderer.include({
         this._super.apply(this, arguments);
         this.$microsoftButton = $();
         if (this.model === "calendar.event") {
-            this.$microsoftButton = $('<button/>', {type: 'button', html: _t("Sync with <b>Microsoft</b>")})
-                                .addClass('o_microsoft_sync_button oe_button btn btn-secondary')
-                                .prepend($('<img/>', {
-                                    src: "/microsoft_calendar/static/src/img/calendar_outlook_32.png",
-                                }))
+            if (this.state.microsoft_is_sync) {
+                this.$microsoftButton = $('<span/>', {html: _t("Synched with Outlook")})
+                                .addClass('o_microsoft_sync badge badge-pill badge-success')
+                                .prepend($('<i/>', {class: "fa mr-2 fa-check"}))
                                 .appendTo(self.$sidebar);
+            } else {
+                this.$microsoftButton = $('<button/>', {type: 'button', html: _t("Sync with <b>Outlook</b>")})
+                                .addClass('o_microsoft_sync_button oe_button btn btn-secondary')
+                                .appendTo(self.$sidebar);
+            }
         }
     },
 

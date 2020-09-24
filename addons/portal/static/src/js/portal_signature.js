@@ -162,6 +162,7 @@ publicWidget.registry.SignatureForm = publicWidget.Widget.extend({
             mode: this.$el.data('mode'),
             displaySignatureRatio: this.$el.data('signature-ratio'),
             signatureType: this.$el.data('signature-type'),
+            fontColor: this.$el.data('font-color')  || 'black',
         };
         var sendLabel = this.$el.data('send-label');
 

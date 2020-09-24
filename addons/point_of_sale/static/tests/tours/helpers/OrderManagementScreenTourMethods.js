@@ -12,11 +12,15 @@ odoo.define('point_of_sale.tour.OrderManagementScreenTourMethods', function (req
                 },
             ];
         }
-        clickOrder(name) {
+        clickOrder(name, [otherCol, otherColVal] = [null, null]) {
+            let trigger = `.order-management-screen .order-list .order-row .item.name:contains("${name}")`;
+            if (otherCol) {
+                trigger = `${trigger} ~ .item.${otherCol}:contains("${otherColVal}")`;
+            }
             return [
                 {
                     content: `clicking order '${name}' from orderlist`,
-                    trigger: `.order-management-screen .order-list .order-row .item:contains("${name}")`,
+                    trigger,
                 },
             ];
         }

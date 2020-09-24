@@ -27,13 +27,17 @@ odoo.define("website_blog.tour", function (require) {
         position: "top",
         run: "text",
     }, {
-        trigger: "we-button:has(.fa-camera)",
+        trigger: "we-button[data-background]:nth(1)",
         extra_trigger: "#wrap div[data-oe-expression=\"blog_post.name\"]:not(:containsExact(\"\"))",
         content: _t("Set a blog post <b>cover</b>."),
         position: "right",
     }, {
-        trigger: ".o_select_media_dialog .o_existing_attachment_cell:nth(1) img",
-        extra_trigger: '.modal:has(.o_existing_attachment_cell:nth(1))',
+        trigger: ".o_select_media_dialog .o_we_search",
+        content: _t("Search for an image. (eg: type \"business\")"),
+        position: "top",
+    }, {
+        trigger: ".o_select_media_dialog .o_existing_attachment_cell:first img",
+        extra_trigger: '.modal:has(.o_existing_attachment_cell:first)',
         content: _t("Choose an image from the library."),
         position: "top",
     }, {

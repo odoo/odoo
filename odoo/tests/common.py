@@ -132,7 +132,7 @@ def new_test_user(env, login='', groups='base.group_user', context=None, **kwarg
     if context is None:
         context = {}
 
-    groups_id = [(6, 0, [env.ref(g).id for g in groups.split(',')])]
+    groups_id = [(6, 0, [env.ref(g.strip()).id for g in groups.split(',')])]
     create_values = dict(kwargs, login=login, groups_id=groups_id)
     if not create_values.get('name'):
         create_values['name'] = '%s (%s)' % (login, groups)
@@ -398,14 +398,14 @@ class BaseCase(TreeCase, MetaCase('DummyCase', (object,), {})):
 
         if flush:
             self.env.user.flush()
-            self.env.cr.precommit()
+            self.env.cr.precommit.run()
 
         with patch('odoo.sql_db.Cursor.execute', execute):
             with patch('odoo.osv.expression.get_unaccent_wrapper', get_unaccent_wrapper):
                 yield actual_queries
                 if flush:
                     self.env.user.flush()
-                    self.env.cr.precommit()
+                    self.env.cr.precommit.run()
 
         self.assertEqual(
             len(actual_queries), len(expected),
@@ -438,12 +438,12 @@ class BaseCase(TreeCase, MetaCase('DummyCase', (object,), {})):
                 expected = counters.get(login, default)
                 if flush:
                     self.env.user.flush()
-                    self.env.cr.precommit()
+                    self.env.cr.precommit.run()
                 count0 = self.cr.sql_log_count
                 yield
                 if flush:
                     self.env.user.flush()
-                    self.env.cr.precommit()
+                    self.env.cr.precommit.run()
                 count = self.cr.sql_log_count - count0
                 if count != expected:
                     # add some info on caller to allow semi-automatic update of query count
@@ -462,11 +462,11 @@ class BaseCase(TreeCase, MetaCase('DummyCase', (object,), {})):
             # same operations, otherwise the caches might not be ready!
             if flush:
                 self.env.user.flush()
-                self.env.cr.precommit()
+                self.env.cr.precommit.run()
             yield
             if flush:
                 self.env.user.flush()
-                self.env.cr.precommit()
+                self.env.cr.precommit.run()
 
     def assertRecordValues(self, records, expected_values):
         ''' Compare a recordset with a list of dictionaries representing the expected results.
@@ -1047,9 +1047,17 @@ class ChromeBrowser():
             ffmpeg_path = None
 
         if ffmpeg_path:
-            framerate = int(len(self.screencast_frames) / (self.screencast_frames[-1].get('timestamp') - self.screencast_frames[0].get('timestamp')))
-            r = subprocess.run([ffmpeg_path, '-framerate', str(framerate), '-i', '%s/frame_%%05d.png' % self.screencasts_frames_dir, outfile])
-            self._logger.runbot('Screencast in: %s', outfile)
+            nb_frames = len(self.screencast_frames)
+            concat_script_path = os.path.join(self.screencasts_dir, fname.replace('.mp4', '.txt'))
+            with open(concat_script_path, 'w') as concat_file:
+                for i in range(nb_frames):
+                    frame_file_path = os.path.join(self.screencasts_frames_dir, self.screencast_frames[i]['file_path'])
+                    end_time = time.time() if i == nb_frames - 1 else self.screencast_frames[i+1]['timestamp']
+                    duration = end_time - self.screencast_frames[i]['timestamp']
+                    concat_file.write("file '%s'\nduration %s\n" % (frame_file_path, duration))
+                concat_file.write("file '%s'" % frame_file_path)  # needed by the concat plugin
+            r = subprocess.run([ffmpeg_path, '-intra', '-f', 'concat','-safe', '0', '-i', concat_script_path, '-pix_fmt', 'yuv420p', outfile])
+            self._logger.log(25, 'Screencast in: %s', outfile)
         else:
             outfile = outfile.strip('.mp4')
             shutil.move(self.screencasts_frames_dir, outfile)
@@ -1060,7 +1068,7 @@ class ChromeBrowser():
             os.makedirs(self.screencasts_dir, exist_ok=True)
             self.screencasts_frames_dir = os.path.join(self.screencasts_dir, 'frames')
             os.makedirs(self.screencasts_frames_dir, exist_ok=True)
-        self._websocket_send('Page.startScreencast', params={'maxWidth': 1024, 'maxHeight': 576})
+        self._websocket_send('Page.startScreencast')
 
     def set_cookie(self, name, value, path, domain):
         params = {'name': name, 'value': value, 'path': path, 'domain': domain}
@@ -1130,6 +1138,7 @@ class ChromeBrowser():
             elif res:
                 self._logger.debug('chrome devtools protocol event: %s', res)
         self.take_screenshot()
+        self._save_screencast()
         raise ChromeBrowserException('Script timeout exceeded : %s' % (time.time() - start_time))
 
 
@@ -1255,14 +1264,8 @@ class HttpCaseCommon(BaseCase):
         if self.registry_test_mode:
             self.registry.enter_test_mode(self.cr)
             self.addCleanup(self.registry.leave_test_mode)
-        # setup a magic session_id that will be rollbacked
-        self.session = odoo.http.root.session_store.new()
-        self.session_id = self.session.sid
-        self.session.db = get_db_name()
-        odoo.http.root.session_store.save(self.session)
         # setup an url opener helper
         self.opener = requests.Session()
-        self.opener.cookies['session_id'] = self.session_id
 
     @classmethod
     def start_browser(cls):
@@ -1311,34 +1314,44 @@ class HttpCaseCommon(BaseCase):
         odoo.http.root.session_store.save(self.session)
 
     def authenticate(self, user, password):
-        # stay non-authenticated
-        if user is None:
-            if self.session:
-                odoo.http.root.session_store.delete(self.session)
-            self.browser.delete_cookie('session_id', domain=HOST)
-            return
-
         db = get_db_name()
-        uid = self.registry['res.users'].authenticate(db, user, password, None)
-        env = api.Environment(self.cr, uid, {})
+        if getattr(self, 'session', None):
+            odoo.http.root.session_store.delete(self.session)
 
-        # self.session.authenticate(db, user, password, uid=uid)
-        # OpenERPSession.authenticate accesses the current request, which we
-        # don't have, so reimplement it manually...
-        session = self.session
-
+        self.session = session  = odoo.http.root.session_store.new()
         session.db = db
-        session.uid = uid
-        session.login = user
-        session.session_token = uid and security.compute_session_token(session, env)
-        session.context = dict(env['res.users'].context_get() or {})
-        session.context['uid'] = uid
-        session._fix_lang(session.context)
+
+        if user: # if authenticated
+            uid = self.registry['res.users'].authenticate(db, user, password, {'interactive': False})
+            env = api.Environment(self.cr, uid, {})
+            session.uid = uid
+            session.login = user
+            session.session_token = uid and security.compute_session_token(session, env)
+            session.context = dict(env['res.users'].context_get() or {})
+            session.context['uid'] = uid
+            session._fix_lang(session.context)
 
         odoo.http.root.session_store.save(session)
+        # Reset the opener: turns out when we set cookies['foo'] we're really
+        # setting a cookie on domain='' path='/'.
+        #
+        # But then our friendly neighborhood server might set a cookie for
+        # domain='localhost' path='/' (with the same value) which is considered
+        # a *different* cookie following ours rather than the same.
+        #
+        # When we update our cookie, it's done in-place, so the server-set
+        # cookie is still present and (as it follows ours and is more precise)
+        # very likely to still be used, therefore our session change is ignored.
+        #
+        # An alternative would be to set the cookie to None (unsetting it
+        # completely) or clear-ing session.cookies.
+        self.opener = requests.Session()
+        self.opener.cookies['session_id'] = session.sid
         if self.browser:
             self._logger.info('Setting session cookie in browser')
-            self.browser.set_cookie('session_id', self.session_id, '/', HOST)
+            self.browser.set_cookie('session_id', session.sid, '/', HOST)
+
+        return session
 
     def browser_js(self, url_path, code, ready='', login=None, timeout=60, **kw):
         """ Test js code running in the browser
@@ -1672,7 +1685,7 @@ class Form(object):
             order.append(fname)
 
             modifiers[fname] = {
-                modifier: domain if isinstance(domain, bool) else normalize_domain(domain)
+                modifier: bool(domain) if isinstance(domain, int) else normalize_domain(domain)
                 for modifier, domain in json.loads(f.get('modifiers', '{}')).items()
             }
             ctx = f.get('context')
@@ -1691,42 +1704,21 @@ class Form(object):
 
     def _init_from_defaults(self, model):
         vals = self._values
-        fields = self._view['fields']
-        def cleanup(k, v):
-            if fields[k]['type'] == 'one2many':
-                return [
-                    # use None as "empty" value for UPDATE instead of {}
-                    (1, c[1], None) if c[0] == 1 and not c[2] else c
-                    for c in v
-                    if c[0] != 6 # o2m default gets a (6) at the start, nonsensical
-                ]
-            elif fields[k]['type'] == 'datetime' and isinstance(v, datetime):
-                return odoo.fields.Datetime.to_string(v)
-            elif fields[k]['type'] == 'date' and isinstance(v, date):
-                return odoo.fields.Datetime.to_string(v)
+        vals.clear()
+        vals['id'] = False
 
-            return v
-        defaults = {
-            k: cleanup(k, v)
-            for k, v in model.default_get(list(fields)).items()
-            if k in fields
-        }
-        vals.update(defaults)
-        # m2m should all be rep'd as command list
-        for k, v in vals.items():
-            if not v:
-                type_ = fields[k]['type']
-                if type_ == 'many2many':
-                    vals[k] = [(6, False, [])]
-                elif type_ == 'one2many':
-                    vals[k] = []
-                elif type_ in ('integer', 'float'):
-                    vals[k] = 0
-
-        # on creation, every field is considered changed by the client
-        # apparently
-        # and fields should be sent in view order, not whatever fields_view_get['fields'].keys() is
-        self._perform_onchange(self._view['fields_ordered'])
+        # call onchange with an empty list of fields; this retrieves default
+        # values, applies onchanges and return the result
+        self._perform_onchange([])
+        # fill in whatever fields are still missing with falsy values
+        vals.update(
+            (f, _cleanup_from_default(descr['type'], False))
+            for f, descr in self._view['fields'].items()
+            if f not in vals
+        )
+        # mark all fields as modified (though maybe this should be done on
+        # save when creating for better reliability?)
+        self._changed.update(self._view['fields'])
 
     def _init_from_values(self, values):
         self._values.update(
@@ -1925,6 +1917,9 @@ class Form(object):
         """
         values = {}
         for f in fields:
+            if f == 'id':
+                continue
+
             get_modifier = functools.partial(
                 self._get_modifier,
                 f, modmap=view['modifiers'],
@@ -1937,8 +1932,8 @@ class Form(object):
                 if get_modifier('required'):
                     raise AssertionError("{} is a required field ({})".format(f, view['modifiers'][f]))
 
-            # skip unmodified fields unless all_fields (also always ignore id)
-            if f == 'id' or not (all_fields or f in changed):
+            # skip unmodified fields unless all_fields
+            if not (all_fields or f in changed):
                 continue
 
             if get_modifier('readonly'):
@@ -1993,7 +1988,7 @@ class Form(object):
         # skip calling onchange() if there's no trigger on any of the changed
         # fields
         spec = self._view['onchange']
-        if not any(spec[f] for f in fields):
+        if fields and not any(spec[f] for f in fields):
             return
 
         record = self._model.browse(self._values.get('id'))
@@ -2004,11 +1999,11 @@ class Form(object):
             _logger.getChild('onchange').warning("%(title)s %(message)s" % result.get('warning'))
         values = result.get('value', {})
         # mark onchange output as changed
-        self._changed.update(values.keys())
+        self._changed.update(values.keys() & self._view['fields'].keys())
         self._values.update(
             (k, self._cleanup_onchange(
                 self._view['fields'][k],
-                v, self._values[k],
+                v, self._values.get(k),
             ))
             for k, v in values.items()
             if k in self._view['fields']
@@ -2408,16 +2403,21 @@ class M2MProxy(X2MProxy, collections.Sequence):
 
 def record_to_values(fields, record):
     r = {}
-    for f, descr in fields.items():
-        v = record[f]
+    # don't read the id explicitly, not sure why but if any of the "magic" hr
+    # field is read alongside `id` then it blows up e.g.
+    # james.read(['barcode']) works fine but james.read(['id', 'barcode'])
+    # triggers an ACL error on barcode, likewise km_home_work or
+    # emergency_contact or whatever. Since we always get the id anyway, just
+    # remove it from the fields to read
+    to_read = list(fields.keys() - {'id'})
+    for f, v in record.read(to_read)[0].items():
+        descr = fields[f]
         if descr['type'] == 'many2one':
-            assert v._name == descr['relation']
-            v = v.id
+            v = v and v[0]
         elif descr['type'] == 'many2many':
-            assert v._name == descr['relation']
-            v = [(6, 0, v.ids)]
+            v = [(6, 0, v or [])]
         elif descr['type'] == 'one2many':
-            v = [(1, r.id, None) for r in v]
+            v = [(1, r, None) for r in v or []]
         elif descr['type'] == 'datetime' and isinstance(v, datetime):
             v = odoo.fields.Datetime.to_string(v)
         elif descr['type'] == 'date' and isinstance(v, date):

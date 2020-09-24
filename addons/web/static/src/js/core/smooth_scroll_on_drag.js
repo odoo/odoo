@@ -66,18 +66,28 @@ const SmoothScrollOnDrag = Class.extend(mixins.ParentedMixin, {
      * @param {Number} [options.scrollStep=20] (Integer) The step of the scroll.
      * @param {Number} [options.scrollTimerInterval=5] (Integer) The interval (in ms) the
      *        scrollStep will be applied.
+     * @param {Object} [options.scrollBoundaries = {}] Specifies whether scroll can still be triggered
+     *        when dragging $element outside of target.
+     * @param {Object} [options.scrollBoundaries.top = true] Specifies whether scroll can still be triggered
+     *        when dragging $element above the top edge of target.
+     * @param {Object} [options.scrollBoundaries.right = true] Specifies whether scroll can still be triggered
+     *        when dragging $element after the right edge of target.
+     * @param {Object} [options.scrollBoundaries.bottom = true] Specifies whether scroll can still be triggered
+     *        when dragging $element bellow the bottom edge of target.
+     * @param {Object} [options.scrollBoundaries.left = true] Specifies whether scroll can still be triggered
+     *        when dragging $element before the left edge of target.
      * @param {Object} [options.offsetElements={}] Visible elements in $scrollTarget that
-     *        reduce $scrollTarget drag visible area (scroll will be triggered sooner that
-     *        normally). A selector is passed so that elements such automatically hidden
+     *        reduce $scrollTarget drag visible area (scroll will be triggered sooner than
+     *        normally). A selector is passed so that elements such as automatically hidden
      *        menu can then be correctly handled.
-     * @param {jQuery} [options.offsetElements.$top={}] Visible top element which height will
+     * @param {jQuery} [options.offsetElements.$top] Visible top offset element which height will
      *        be taken into account when triggering scroll at the top of the $scrollTarget.
-     * @param {jQuery} [options.offsetElements.$right={}] Visible right element which width
+     * @param {jQuery} [options.offsetElements.$right] Visible right offset element which width
      *        will be taken into account when triggering scroll at the right side of the
      *        $scrollTarget.
-     * @param {jQuery} [options.offsetElements.$bottom={}] Visible bottom element which height
+     * @param {jQuery} [options.offsetElements.$bottom] Visible bottom offset element which height
      *        will be taken into account when triggering scroll at bottom of the $scrollTarget.
-     * @param {jQuery} [options.offsetElements.$left={}] Visible right element which width
+     * @param {jQuery} [options.offsetElements.$left] Visible left offset element which width
      *        will be taken into account when triggering scroll at the left side of the
      *        $scrollTarget.
      */
@@ -99,6 +109,12 @@ const SmoothScrollOnDrag = Class.extend(mixins.ParentedMixin, {
         this.options.scrollTimerInterval = this.options.scrollTimerInterval || 5;
         this.options.offsetElements = this.options.offsetElements || {};
         this.options.offsetElementsManager = new OffsetElementsHelper(this.options.offsetElements);
+        this.options.scrollBoundaries = Object.assign({
+            top: true,
+            right: true,
+            bottom: true,
+            left: true
+        }, this.options.scrollBoundaries);
 
         this.autoScrollHandler = null;
 
@@ -255,28 +271,37 @@ const SmoothScrollOnDrag = Class.extend(mixins.ParentedMixin, {
             horizontal: this.scrollStepDirectionEnum.right,
         };
 
-        // Manage vertical scroll
-        if (visibleOffset.bottom <= this.options.scrollOffsetThreshold) {
-            scrollDecelerator.vertical = Math.max(0, visibleOffset.bottom)
-                                       / this.options.scrollOffsetThreshold;
-        } else if (visibleOffset.top <= this.options.scrollOffsetThreshold) {
-            scrollDecelerator.vertical = Math.max(0, visibleOffset.top)
-                                       / this.options.scrollOffsetThreshold;
-            scrollStepDirection.vertical = this.scrollStepDirectionEnum.up;
+        // Prevent scroll if outside of scroll boundaries
+        if ((!this.options.scrollBoundaries.top && visibleOffset.top < 0) ||
+            (!this.options.scrollBoundaries.right && visibleOffset.right < 0) ||
+            (!this.options.scrollBoundaries.bottom && visibleOffset.bottom < 0) ||
+            (!this.options.scrollBoundaries.left && visibleOffset.left < 0)) {
+                scrollDecelerator.horizontal = 1;
+                scrollDecelerator.vertical = 1;
         } else {
-            scrollDecelerator.vertical = 1;
-        }
+            // Manage vertical scroll
+            if (visibleOffset.bottom <= this.options.scrollOffsetThreshold) {
+                scrollDecelerator.vertical = Math.max(0, visibleOffset.bottom)
+                                           / this.options.scrollOffsetThreshold;
+            } else if (visibleOffset.top <= this.options.scrollOffsetThreshold) {
+                scrollDecelerator.vertical = Math.max(0, visibleOffset.top)
+                                           / this.options.scrollOffsetThreshold;
+                scrollStepDirection.vertical = this.scrollStepDirectionEnum.up;
+            } else {
+                scrollDecelerator.vertical = 1;
+            }
 
-        // Manage horizontal scroll
-        if (visibleOffset.right <= this.options.scrollOffsetThreshold) {
-            scrollDecelerator.horizontal = Math.max(0, visibleOffset.right)
-                                         / this.options.scrollOffsetThreshold;
-        } else if (visibleOffset.left <= this.options.scrollOffsetThreshold) {
-            scrollDecelerator.horizontal = Math.max(0, visibleOffset.left)
-                                         / this.options.scrollOffsetThreshold;
-            scrollStepDirection.horizontal = this.scrollStepDirectionEnum.left;
-        } else {
-            scrollDecelerator.horizontal = 1;
+            // Manage horizontal scroll
+            if (visibleOffset.right <= this.options.scrollOffsetThreshold) {
+                scrollDecelerator.horizontal = Math.max(0, visibleOffset.right)
+                                             / this.options.scrollOffsetThreshold;
+            } else if (visibleOffset.left <= this.options.scrollOffsetThreshold) {
+                scrollDecelerator.horizontal = Math.max(0, visibleOffset.left)
+                                             / this.options.scrollOffsetThreshold;
+                scrollStepDirection.horizontal = this.scrollStepDirectionEnum.left;
+            } else {
+                scrollDecelerator.horizontal = 1;
+            }
         }
 
         this.verticalDelta = Math.ceil(scrollStepDirection.vertical *

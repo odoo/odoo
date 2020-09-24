@@ -105,7 +105,11 @@ class ThreadNeedactionPreview extends Component {
             // handled in `_onClickMarkAsRead`
             return;
         }
-        this.trigger('o-select-thread', { thread: this.thread });
+        this.thread.markNeedactionMessagesAsRead();
+        this.thread.open();
+        if (!this.env.messaging.device.isMobile) {
+            this.env.messaging.messagingMenu.close();
+        }
     }
 
     /**

@@ -38,6 +38,16 @@ odoo.define("web/static/src/js/views/search_panel_model_extension.js", function 
     }
 
     /**
+     * Returns a serialised array of the given map with its values being the
+     * shallow copies of the original values.
+     * @param {Map<any, Object>} map
+     * @return {Array[]}
+     */
+    function serialiseMap(map) {
+        return [...map].map(([key, val]) => [key, Object.assign({}, val)]);
+    }
+
+    /**
      * @typedef Section
      * @prop {string} color
      * @prop {string} description
@@ -118,14 +128,14 @@ odoo.define("web/static/src/js/views/search_panel_model_extension.js", function 
          * @override
          */
         exportState() {
-            const state = super.exportState();
-            state.sections = [...state.sections];
+            const state = Object.assign({}, super.exportState());
+            state.sections = serialiseMap(state.sections);
             for (const [id, section] of state.sections) {
-                section.values = [...section.values];
+                section.values = serialiseMap(section.values);
                 if (section.groups) {
-                    section.groups = [...section.groups];
+                    section.groups = serialiseMap(section.groups);
                     for (const [id, group] of section.groups) {
-                        group.values = [...group.values];
+                        group.values = serialiseMap(group.values);
                     }
                 }
             }
@@ -400,6 +410,8 @@ odoo.define("web/static/src/js/views/search_panel_model_extension.js", function 
          * @private
          */
         _createSectionsFromArch() {
+            let hasCategoryWithCounters = false;
+            let hasFilterWithDomain = false;
             this.config.archNodes.forEach(({ attrs, tag }, index) => {
                 if (tag !== "field" || attrs.invisible === "1") {
                     return;
@@ -434,13 +446,33 @@ odoo.define("web/static/src/js/views/search_panel_model_extension.js", function 
                         bold: true,
                         parentId: false,
                     });
+                    hasCategoryWithCounters = hasCategoryWithCounters || section.enableCounters;
                 } else {
                     section.domain = attrs.domain || "[]";
                     section.groupBy = attrs.groupby;
                     section.icon = section.icon || "fa-filter";
+                    hasFilterWithDomain = hasFilterWithDomain || section.domain !== "[]";
                 }
                 this.state.sections.set(section.id, section);
             });
+            /**
+             * Category counters are automatically disabled if a filter domain is found
+             * to avoid inconsistencies with the counters. The underlying problem could
+             * actually be solved by reworking the search panel and the way the
+             * counters are computed, though this is not the current priority
+             * considering the time it would take, hence this quick "fix".
+             */
+            if (hasCategoryWithCounters && hasFilterWithDomain) {
+                // If incompatibilities are found -> disables all category counters
+                for (const category of this.categories) {
+                    category.enableCounters = false;
+                }
+                // ... and triggers a warning
+                console.warn(
+                    "Warning: categories with counters are incompatible with filters having a domain attribute.",
+                    "All category counters have been disabled to avoid inconsistencies.",
+                );
+            }
         }
 
         /**

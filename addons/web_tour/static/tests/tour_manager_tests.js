@@ -114,5 +114,38 @@ odoo.define('web_tour.tour_manager_tests', async function (require) {
 
             tourManager.destroy();
         });
+
+        QUnit.test("Step anchor replaced", async function (assert) {
+            assert.expect(3);
+
+            const tourManager = await createTourManager({
+                observe: true,
+                template: `<input class="anchor"/>`,
+                tours: [{
+                    name: "Tour",
+                    options: { rainbowMan: false },
+                    steps: [{ trigger: "input.anchor" }],
+                }],
+            });
+
+            assert.containsOnce(document.body, '.o_tooltip:visible');
+
+
+            const $anchor = $(".anchor");
+            const $parent = $anchor.parent();
+            $parent.empty();
+            $parent.append($anchor);
+            // Simulates the observer picking up the mutation and triggering an update
+            tourManager.update();
+            await testUtils.nextTick();
+
+            assert.containsOnce(document.body, '.o_tooltip:visible');
+
+            await testUtils.fields.editInput($('.anchor'), "AAA");
+
+            assert.containsNone(document.body, '.o_tooltip:visible');
+
+            tourManager.destroy();
+        });
     });
 });

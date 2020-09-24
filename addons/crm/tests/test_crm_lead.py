@@ -59,24 +59,74 @@ class TestCRMLead(TestCrmCommon):
         self.assertEqual(lead.zip, self.contact_1.zip)
         self.assertEqual(lead.country_id, self.contact_1.country_id)
 
-    def test_crm_lead_creation_partner_no_info(self):
+    def test_crm_lead_creation_partner_address(self):
+        """ Test that an address erases all lead address fields (avoid mixed addresses) """
+        other_country = self.env.ref('base.fr')
         empty_partner = self.env['res.partner'].create({
             'name': 'Empty partner',
-            'is_company': True
+            'country_id': other_country.id,
         })
         lead_data = {
             'name': 'Test',
+            'street': 'My street',
+            'street2': 'My street',
+            'city': 'My city',
+            'zip': 'test@odoo.com',
+            'state_id': self.env['res.country.state'].create({
+                'name': 'My state',
+                'country_id': self.country_ref.id,
+                'code': 'MST',
+            }).id,
             'country_id': self.country_ref.id,
-            'email_from': self.test_email,
-            'phone': self.test_phone,
         }
         lead = self.env['crm.lead'].create(lead_data)
         lead.partner_id = empty_partner
-        self.assertEqual(lead.country_id, self.env['res.country'], "Country should be empty")
-        self.assertEqual(lead.contact_name, False, "Contact name should be empty")
-        self.assertEqual(lead.email_from, self.test_email, "Email From should keep its initial value")
-        self.assertEqual(lead.phone, self.test_phone, "Phone should keep its initial value")
+        # PARTNER_ADDRESS_FIELDS_TO_SYNC
+        self.assertEqual(lead.street, empty_partner.street, "Street should be sync from the Partner")
+        self.assertEqual(lead.street2, empty_partner.street2, "Street 2 should be sync from the Partner")
+        self.assertEqual(lead.city, empty_partner.city, "City should be sync from the Partner")
+        self.assertEqual(lead.zip, empty_partner.zip, "Zip should be sync from the Partner")
+        self.assertEqual(lead.state_id, empty_partner.state_id, "State should be sync from the Partner")
+        self.assertEqual(lead.country_id, empty_partner.country_id, "Country should be sync from the Partner")
+
+    def test_crm_lead_creation_partner_no_address(self):
+        """ Test that an empty address on partner does not void its lead values """
+        empty_partner = self.env['res.partner'].create({
+            'name': 'Empty partner',
+            'is_company': True,
+            'mobile': '123456789',
+            'title': self.env.ref('base.res_partner_title_mister').id,
+            'function': 'My function',
+        })
+        lead_data = {
+            'name': 'Test',
+            'contact_name': 'Test',
+            'street': 'My street',
+            'country_id': self.country_ref.id,
+            'email_from': self.test_email,
+            'phone': self.test_phone,
+            'mobile': '987654321',
+            'website': 'http://mywebsite.org',
+        }
+        lead = self.env['crm.lead'].create(lead_data)
+        lead.partner_id = empty_partner
+        # SPECIFIC FIELDS
+        self.assertEqual(lead.contact_name, lead_data['contact_name'], "Contact should remain")
+        self.assertEqual(lead.email_from, lead_data['email_from'], "Email From should keep its initial value")
         self.assertEqual(lead.partner_name, empty_partner.name, "Partner name should be set as contact is a company")
+        # PARTNER_ADDRESS_FIELDS_TO_SYNC
+        self.assertEqual(lead.street, lead_data['street'], "Street should remain since partner has no address field set")
+        self.assertEqual(lead.street2, False, "Street2 should remain since partner has no address field set")
+        self.assertEqual(lead.country_id, self.country_ref, "Country should remain since partner has no address field set")
+        self.assertEqual(lead.city, False, "City should remain since partner has no address field set")
+        self.assertEqual(lead.zip, False, "Zip should remain since partner has no address field set")
+        self.assertEqual(lead.state_id, self.env['res.country.state'], "State should remain since partner has no address field set")
+        # PARTNER_FIELDS_TO_SYNC
+        self.assertEqual(lead.phone, lead_data['phone'], "Phone should keep its initial value")
+        self.assertEqual(lead.mobile, empty_partner.mobile, "Mobile from partner should be set on the lead")
+        self.assertEqual(lead.title, empty_partner.title, "Title from partner should be set on the lead")
+        self.assertEqual(lead.function, empty_partner.function, "Function from partner should be set on the lead")
+        self.assertEqual(lead.website, lead_data['website'], "Website should keep its initial value")
 
     @users('user_sales_manager')
     def test_crm_lead_partner_sync(self):

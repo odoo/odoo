@@ -251,7 +251,13 @@ class Slide(models.Model):
     @api.depends('slide_partner_ids.vote')
     @api.depends_context('uid')
     def _compute_user_info(self):
-        slide_data = dict.fromkeys(self.ids, dict({'likes': 0, 'dislikes': 0, 'user_vote': False}))
+        default_stats = {'likes': 0, 'dislikes': 0, 'user_vote': False}
+
+        if not self.ids:
+            self.update(default_stats)
+            return
+
+        slide_data = dict.fromkeys(self.ids, default_stats)
         slide_partners = self.env['slide.slide.partner'].sudo().search([
             ('slide_id', 'in', self.ids)
         ])
@@ -466,6 +472,14 @@ class Slide(models.Model):
             category.channel_id._move_category_slides(category, False)
         super(Slide, self).unlink()
 
+    def toggle_active(self):
+        # archiving/unarchiving a channel does it on its slides, too
+        to_archive = self.filtered(lambda slide: slide.active)
+        res = super(Slide, self).toggle_active()
+        if to_archive:
+            to_archive.filtered(lambda slide: not slide.is_category).is_published = False
+        return res
+
     # ---------------------------------------------------------
     # Mail/Rating
     # ---------------------------------------------------------
@@ -603,7 +617,7 @@ class Slide(models.Model):
             self.env.user.add_karma(karma_to_add)
 
     def action_set_viewed(self, quiz_attempts_inc=False):
-        if not all(slide.channel_id.is_member for slide in self):
+        if any(not slide.channel_id.is_member for slide in self):
             raise UserError(_('You cannot mark a slide as viewed if you are not among its members.'))
 
         return bool(self._action_set_viewed(self.env.user.partner_id, quiz_attempts_inc=quiz_attempts_inc))
@@ -630,7 +644,7 @@ class Slide(models.Model):
             'vote': 0} for new_slide in new_slides])
 
     def action_set_completed(self):
-        if not all(slide.channel_id.is_member for slide in self):
+        if any(not slide.channel_id.is_member for slide in self):
             raise UserError(_('You cannot mark a slide as completed if you are not among its members.'))
 
         return self._action_set_completed(self.env.user.partner_id)
@@ -655,7 +669,7 @@ class Slide(models.Model):
         return True
 
     def _action_set_quiz_done(self):
-        if not all(slide.channel_id.is_member for slide in self):
+        if any(not slide.channel_id.is_member for slide in self):
             raise UserError(_('You cannot mark a slide quiz as completed if you are not among its members.'))
 
         points = 0

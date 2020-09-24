@@ -18,21 +18,10 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
     }
 }
 
-.editor_enable {
-    padding-top: var(--o-we-toolbar-height) !important;
-
-    .note-popover .popover .popover-body {
-        height: var(--o-we-toolbar-height);
-    }
-    .note-popover .popover  {
-        transform: none;
-    }
-}
-
 #web_editor-top-edit {
     @include o-position-absolute(0, 0, auto, 0);
     position: fixed;
-    z-index: $o-we-zindex;
+    z-index: $o-we-zindex + 1;
     height: var(--o-we-toolbar-height);
     background-color: $o-we-bg;
 
@@ -42,6 +31,10 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
         right: 0 !important;
         border: none !important;
         max-width: none;
+        transform: none;
+    }
+    .note-popover .popover .popover-body {
+        height: var(--o-we-toolbar-height);
     }
 }
 
@@ -394,6 +387,15 @@ img.o_we_selected_image {
 img::selection {
     background: transparent;
 }
+.o_we_media_author {
+    font-size: 11px;
+    @include o-position-absolute($bottom: 0, $left: 0, $right: 0);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: center;
+    background-color: rgba(255, 255, 255, .7);
+}
 
 @include media-breakpoint-down(md) {
     #web_editor-top-edit {
@@ -420,7 +422,7 @@ img::selection {
         top: 40px;
         right: 0;
         bottom: 0;
-        left: $o-we-sidebar-width;
+        right: $o-we-sidebar-width;
         width: auto;
         height: auto;
 

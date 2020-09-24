@@ -5,7 +5,7 @@
     'name': 'Purchase',
     'version': '1.2',
     'category': 'Inventory/Purchase',
-    'sequence': 60,
+    'sequence': 35,
     'summary': 'Purchase orders, tenders and agreements',
     'description': "",
     'website': 'https://www.odoo.com/page/purchase',
@@ -13,6 +13,7 @@
     'data': [
         'security/purchase_security.xml',
         'security/ir.model.access.csv',
+        'data/digest_data.xml',
         'views/assets.xml',
         'views/account_move_views.xml',
         'data/purchase_data.xml',

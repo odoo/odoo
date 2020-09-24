@@ -30,7 +30,7 @@ class CrmLead(models.Model):
         fields += ['partner_latitude', 'partner_longitude', 'partner_assigned_id', 'date_partner_assign']
         return super(CrmLead, self)._merge_data(fields)
 
-    @api.onchange("partner_assigned_id")
+    @api.depends("partner_assigned_id")
     def _compute_date_partner_assign(self):
         for lead in self:
             if not lead.partner_assigned_id:
@@ -208,7 +208,7 @@ class CrmLead(models.Model):
         self.check_access_rights('write')
         for lead in self:
             lead_values = {
-                'planned_revenue': values['planned_revenue'],
+                'expected_revenue': values['expected_revenue'],
                 'probability': values['probability'],
                 'priority': values['priority'],
                 'date_deadline': values['date_deadline'] or False,

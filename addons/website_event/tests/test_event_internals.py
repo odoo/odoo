@@ -17,6 +17,7 @@ class TestEventWebsite(TestWebsiteEventCommon):
             'date_begin': fields.Datetime.to_string(datetime.today() + timedelta(days=1)),
             'date_end': fields.Datetime.to_string(datetime.today() + timedelta(days=15)),
             'website_menu': True,
+            'community_menu': False,
         })
         self._assert_website_menus(event)
 
@@ -27,6 +28,7 @@ class TestEventWebsite(TestWebsiteEventCommon):
             'date_begin': fields.Datetime.to_string(datetime.today() + timedelta(days=1)),
             'date_end': fields.Datetime.to_string(datetime.today() + timedelta(days=15)),
             'website_menu': True,
+            'community_menu': False,
         })
         self.assertTrue(event.website_menu)
         self._assert_website_menus(event)

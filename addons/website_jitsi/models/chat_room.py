@@ -1,12 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import re
-
 from uuid import uuid4
 
 from odoo import api, fields, models
-from odoo.tools import remove_accents
 
 
 class ChatRoom(models.Model):
@@ -22,13 +19,16 @@ class ChatRoom(models.Model):
     _name = "chat.room"
     _description = "Chat Room"
 
-    def _default_name(self):
-        return "odoo-room-%s" % str(uuid4())[:8]
+    def _default_name(self, objname='room'):
+        return "odoo-%s-%s" % (objname, str(uuid4())[:8])
 
     name = fields.Char(
         "Room Name", required=True, copy=False,
         default=lambda self: self._default_name())
     is_full = fields.Boolean("Full", compute="_compute_is_full")
+    jitsi_server_domain = fields.Char(
+        'Jitsi Server Domain', compute='_compute_jitsi_server_domain',
+        help='The Jitsi server domain can be customized through the settings to use a different server than the default "meet.jit.si"')
     lang_id = fields.Many2one(
         "res.lang", "Language",
         default=lambda self: self.env["res.lang"].search([("code", "=", self.env.user.lang)], limit=1))
@@ -53,5 +53,9 @@ class ChatRoom(models.Model):
             else:
                 room.is_full = room.participant_count >= int(room.max_capacity)
 
-    def _jitsi_sanitize_name(self, name):
-        return re.sub(r'[^\w+.]+', '-', remove_accents(name).lower())
+    def _compute_jitsi_server_domain(self):
+        jitsi_server_domain = self.env['ir.config_parameter'].sudo().get_param(
+            'website_jitsi.jitsi_server_domain', 'meet.jit.si')
+
+        for room in self:
+            room.jitsi_server_domain = jitsi_server_domain

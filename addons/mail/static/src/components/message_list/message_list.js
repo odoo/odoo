@@ -18,9 +18,9 @@ class MessageList extends Component {
     constructor(...args) {
         super(...args);
         useStore(props => {
-            const threadViewer = this.env.models['mail.thread_viewer'].get(props.threadViewerLocalId);
-            const thread = threadViewer ? threadViewer.thread : undefined;
-            const threadCache = threadViewer ? threadViewer.threadCache : undefined;
+            const threadView = this.env.models['mail.thread_view'].get(props.threadViewLocalId);
+            const thread = threadView ? threadView.thread : undefined;
+            const threadCache = threadView ? threadView.threadCache : undefined;
             return {
                 isDeviceMobile: this.env.messaging.device.isMobile,
                 messages: threadCache
@@ -28,7 +28,7 @@ class MessageList extends Component {
                     : [],
                 thread: thread ? thread.__state : undefined,
                 threadCache: threadCache ? threadCache.__state : undefined,
-                threadViewer: threadViewer ? threadViewer.__state : undefined,
+                threadView: threadView ? threadView.__state : undefined,
             };
         }, {
             compareDepth: {
@@ -51,17 +51,6 @@ class MessageList extends Component {
          * on scroll when it becomes visible.
          */
         this._loadMoreRef = useRef('loadMore');
-        /**
-         * Tracked last thread cache rendered. Useful to determine scroll
-         * position on patch if it is on the same thread cache or not.
-         */
-        this._renderedThreadCache = null;
-        /**
-         * Tracked last selected message. Useful to determine when patch comes
-         * from a message selection on a given thread cache, so that it
-         * auto-scroll to that message.
-         */
-        this._selectedMessage = null;
         /**
          * Snapshot computed during willPatch, which is used by patched.
          */
@@ -116,18 +105,18 @@ class MessageList extends Component {
      * +----------+
      *
      * Because of this, the scroll position must be changed when whole UI
-     * is rendered. To make this simpler, this is done when <ThreadViewer/>
-     * component is patched. This is acceptable when <ThreadViewer/> has a
+     * is rendered. To make this simpler, this is done when <ThreadView/>
+     * component is patched. This is acceptable when <ThreadView/> has a
      * fixed height, which is the case for the moment.
      */
     async adjustFromComponentHints() {
-        for (const hint of this.threadViewer.componentHintList) {
+        if (!this.threadView) {
+            return;
+        }
+        for (const hint of this.threadView.componentHintList) {
             switch (hint.type) {
                 case 'change-of-thread-cache':
                     this._adjustFromChangeOfThreadCache(hint);
-                    break;
-                case 'chat-window-unfolded':
-                    this._adjustFromChatWindowUnfolded(hint);
                     break;
                 case 'current-partner-just-posted-message':
                     this._adjustFromCurrentPartnerJustPostedMessage(hint);
@@ -140,9 +129,6 @@ class MessageList extends Component {
                     break;
                 case 'more-messages-loaded':
                     this._adjustFromMoreMessagesLoaded(hint);
-                    break;
-                default:
-                    this.threadViewer.markComponentHintProcessed(hint);
                     break;
             }
         }
@@ -239,7 +225,7 @@ class MessageList extends Component {
      * @returns {mail.message[]}
      */
     get orderedMessages() {
-        const threadCache = this.threadViewer.threadCache;
+        const threadCache = this.threadView.threadCache;
         if (this.props.order === 'desc') {
             return [...threadCache.orderedMessages].reverse();
         }
@@ -308,10 +294,10 @@ class MessageList extends Component {
     }
 
     /**
-     * @returns {mail.thread_viewer}
+     * @returns {mail.thread_view}
      */
-    get threadViewer() {
-        return this.env.models['mail.thread_viewer'].get(this.props.threadViewerLocalId);
+    get threadView() {
+        return this.env.models['mail.thread_view'].get(this.props.threadViewLocalId);
     }
 
     //--------------------------------------------------------------------------
@@ -323,15 +309,15 @@ class MessageList extends Component {
      * @param {Object} hint
      */
     async _adjustFromChangeOfThreadCache(hint) {
-        const threadCache = this.threadViewer.threadCache;
+        const threadCache = this.threadView.threadCache;
         if (!threadCache.isLoaded) {
             return;
         }
         let isProcessed = false;
         if (threadCache.messages.length > 0) {
-            if (this.threadViewer.threadCacheInitialScrollPosition !== undefined) {
+            if (this.threadView.threadCacheInitialScrollPosition !== undefined) {
                 if (this.props.hasScrollAdjust) {
-                    this.el.scrollTop = this.threadViewer.threadCacheInitialScrollPosition;
+                    this.el.scrollTop = this.threadView.threadCacheInitialScrollPosition;
                 }
                 isProcessed = true;
             } else {
@@ -347,7 +333,10 @@ class MessageList extends Component {
             isProcessed = true;
         }
         if (isProcessed) {
-            this.threadViewer.markComponentHintProcessed(hint);
+            this.env.messagingBus.trigger('o-component-message-list-thread-cache-changed', {
+                threadViewer: this.threadView.threadViewer,
+            });
+            this.threadView.markComponentHintProcessed(hint);
         }
     }
 
@@ -357,7 +346,7 @@ class MessageList extends Component {
      */
     _adjustFromChatWindowUnfolded(hint) {
         this._adjustScrollFromModel();
-        this.threadViewer.markComponentHintProcessed(hint);
+        this.threadView.markComponentHintProcessed(hint);
     }
 
     /**
@@ -367,15 +356,15 @@ class MessageList extends Component {
      * @param {integer} hint.data.messageId
      */
     async _adjustFromCurrentPartnerJustPostedMessage(hint) {
-        const threadCache = this.threadViewer.threadCache;
-        const { messageId } = hint.data;
-        if (threadCache.isLoaded) {
+        const threadCache = this.threadView.threadCache;
+        if (threadCache.isLoaded && hint.data) {
+            const { messageId } = hint.data;
             const threadCacheMessageIds = threadCache.messages.map(message => message.id);
             if (threadCacheMessageIds.includes(messageId) && this.messageRefFromId(messageId)) {
                 if (this.props.hasScrollAdjust) {
                     await this._scrollToMessage(messageId);
                 }
-                this.threadViewer.markComponentHintProcessed(hint);
+                this.threadView.markComponentHintProcessed(hint);
             }
         }
     }
@@ -386,7 +375,7 @@ class MessageList extends Component {
      */
     _adjustFromHomeMenuHidden(hint) {
         this._adjustScrollFromModel();
-        this.threadViewer.markComponentHintProcessed(hint);
+        this.threadView.markComponentHintProcessed(hint);
     }
 
     /**
@@ -395,7 +384,7 @@ class MessageList extends Component {
      */
     _adjustFromHomeMenuShown(hint) {
         this._adjustScrollFromModel();
-        this.threadViewer.markComponentHintProcessed(hint);
+        this.threadView.markComponentHintProcessed(hint);
     }
 
     /**
@@ -404,14 +393,17 @@ class MessageList extends Component {
      */
     _adjustFromMoreMessagesLoaded(hint) {
         if (!this._willPatchSnapshot) {
-            this.threadViewer.markComponentHintProcessed(hint);
+            this.threadView.markComponentHintProcessed(hint);
             return;
         }
         const { scrollHeight, scrollTop } = this._willPatchSnapshot;
         if (this.props.order === 'asc' && this.props.hasScrollAdjust) {
             this.el.scrollTop = this.el.scrollHeight - scrollHeight + scrollTop;
         }
-        this.threadViewer.markComponentHintProcessed(hint);
+        this.env.messagingBus.trigger('o-component-message-list-more-messages-loaded', {
+            threadViewer: this.threadView.threadViewer,
+        });
+        this.threadView.markComponentHintProcessed(hint);
     }
 
     /**
@@ -419,10 +411,10 @@ class MessageList extends Component {
      */
     _adjustScrollFromModel() {
         if (
-            this.threadViewer.threadCacheInitialScrollPosition !== undefined &&
+            this.threadView.threadCacheInitialScrollPosition !== undefined &&
             this.props.hasScrollAdjust
         ) {
-            this.el.scrollTop = this.threadViewer.threadCacheInitialScrollPosition;
+            this.el.scrollTop = this.threadView.threadCacheInitialScrollPosition;
         }
     }
 
@@ -430,8 +422,11 @@ class MessageList extends Component {
      * @private
      */
     _checkMostRecentMessageIsVisible() {
-        const thread = this.threadViewer.thread;
-        const threadCache = this.threadViewer.threadCache;
+        if (!this.threadView) {
+            return;
+        }
+        const thread = this.threadView.thread;
+        const threadCache = this.threadView.threadCache;
         const lastMessageIsVisible =
             threadCache &&
             threadCache.messages.length > 0 &&
@@ -439,7 +434,7 @@ class MessageList extends Component {
             threadCache === thread.mainCache &&
             this.mostRecentMessageRef.isPartiallyVisible();
         if (lastMessageIsVisible) {
-            this.threadViewer.handleVisibleMessage(this.mostRecentMessageRef.message);
+            this.threadView.handleVisibleMessage(this.mostRecentMessageRef.message);
         }
     }
 
@@ -462,7 +457,7 @@ class MessageList extends Component {
      * @private
      */
     _loadMore() {
-        this.threadViewer.threadCache.loadMoreMessages();
+        this.threadView.threadCache.loadMoreMessages();
     }
 
     /**
@@ -534,7 +529,15 @@ class MessageList extends Component {
             // could be unmounted in the meantime (due to throttled behavior)
             return;
         }
-        this.threadViewer.saveThreadCacheScrollPositionsAsInitial(this.el.scrollTop);
+        if (!this.threadView || !this.threadView.threadViewer) {
+            return;
+        }
+        const scrollTop = this.el.scrollTop;
+        this.env.messagingBus.trigger('o-component-message-list-scrolled', {
+            scrollTop,
+            threadViewer: this.threadView.threadViewer,
+        });
+        this.threadView.threadViewer.saveThreadCacheScrollPositionsAsInitial(scrollTop);
         if (!this._isAutoLoadOnScrollActive) {
             return;
         }
@@ -552,7 +555,6 @@ Object.assign(MessageList, {
         hasMessageCheckbox: false,
         hasScrollAdjust: true,
         hasSquashCloseMessages: false,
-        haveMessagesAuthorRedirect: false,
         haveMessagesMarkAsReadIcon: false,
         haveMessagesReplyIcon: false,
         order: 'asc',
@@ -560,7 +562,6 @@ Object.assign(MessageList, {
     props: {
         hasMessageCheckbox: Boolean,
         hasSquashCloseMessages: Boolean,
-        haveMessagesAuthorRedirect: Boolean,
         haveMessagesMarkAsReadIcon: Boolean,
         haveMessagesReplyIcon: Boolean,
         hasScrollAdjust: Boolean,
@@ -572,7 +573,7 @@ Object.assign(MessageList, {
             type: String,
             optional: true,
         },
-        threadViewerLocalId: String,
+        threadViewLocalId: String,
     },
     template: 'mail.MessageList',
 });

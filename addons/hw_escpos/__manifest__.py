@@ -16,7 +16,6 @@ to open ESC/POS controlled cashdrawers in the point of sale and other modules
 that would need such functionality.
 
 """,
-    'depends': ['hw_proxy'],
     'external_dependencies': {
         'python' : ['pyusb','pyserial','qrcode'],
     },

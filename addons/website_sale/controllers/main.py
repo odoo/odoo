@@ -838,8 +838,9 @@ class WebsiteSale(http.Controller):
         values['access_token'] = order.access_token
         values['acquirers'] = [acq for acq in acquirers if (acq.payment_flow == 'form' and acq.view_template_id) or
                                     (acq.payment_flow == 's2s' and acq.registration_view_template_id)]
-        values['tokens'] = request.env['payment.token'].search(
-            [('acquirer_id', 'in', acquirers.ids)])
+        values['tokens'] = request.env['payment.token'].search([
+            ('acquirer_id', 'in', acquirers.ids),
+            ('partner_id', 'child_of', order.partner_id.commercial_partner_id.id)])
 
         if order:
             values['acq_extra_fees'] = acquirers.get_acquirer_extra_fees(order.amount_total, order.currency_id, order.partner_id.country_id.id)
@@ -1213,7 +1214,7 @@ class WebsiteSale(http.Controller):
         if visitor:
             excluded_products = request.website.sale_get_order().mapped('order_line.product_id.id')
             products = request.env['website.track'].sudo().read_group(
-                [('visitor_id', '=', visitor.id), ('product_id', '!=', False), ('product_id', 'not in', excluded_products)],
+                [('visitor_id', '=', visitor.id), ('product_id', '!=', False), ('product_id.website_published', '=', True), ('product_id', 'not in', excluded_products)],
                 ['product_id', 'visit_datetime:max'], ['product_id'], limit=max_number_of_product_for_carousel, orderby='visit_datetime DESC')
             products_ids = [product['product_id'][0] for product in products]
             if products_ids:

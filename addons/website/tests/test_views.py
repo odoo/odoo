@@ -1024,7 +1024,7 @@ class Crawler(HttpCase):
         })
         self.inherit_view.write({'name': 'Main layout', 'key': '_website.layout'})
 
-        self.inherit_view.copy({'name': 'Show Sign In', 'customize_show': True, 'key': '_portal.portal_show_sign_in'})
+        self.inherit_view.copy({'name': 'Sign In', 'customize_show': True, 'key': '_portal.user_sign_in'})
         view_logo = self.inherit_view.copy({
             'name': 'Show Logo',
             'inherit_id': self.inherit_view.id,
@@ -1078,7 +1078,7 @@ class Crawler(HttpCase):
 
         self.assertEqual(
             [v['name'] for v in res],
-            ['Show Sign In', 'Affix Top Menu', 'Show Logo', 'Filters', 'Photos', 'Quotes', 'Filter by Category', 'Filter by Country'],
+            ['Sign In', 'Affix Top Menu', 'Show Logo', 'Filters', 'Photos', 'Quotes', 'Filter by Category', 'Filter by Country'],
             "Sequence should not be taken into account for customize menu",
         )
         self.assertEqual(
@@ -1117,7 +1117,7 @@ class Crawler(HttpCase):
         res = response.json()['result']
         self.assertEqual(
             [v['name'] for v in res],
-            ['Show Sign In', 'Affix Top Menu', 'Show Logo', 'Filters', 'Photos', 'Quotes', 'Filter by Category', 'Filter by Country'],
+            ['Sign In', 'Affix Top Menu', 'Show Logo', 'Filters', 'Photos', 'Quotes', 'Filter by Category', 'Filter by Country'],
             "multi-website COW should not impact customize views order (COW view will have a bigger ID and should not be last)",
         )
         self.assertEqual(
@@ -1152,7 +1152,7 @@ class Crawler(HttpCase):
         res = response.json()['result']
         self.assertEqual(
             [v['name'] for v in res],
-            ['Show Sign In', 'Affix Top Menu', 'Show Logo', 'Filters', 'Photos', 'Quotes', 'Filter by Category', 'Filter by Country'],
+            ['Sign In', 'Affix Top Menu', 'Show Logo', 'Filters', 'Photos', 'Quotes', 'Filter by Category', 'Filter by Country'],
             "multi-website COW should not impact customize views order (COW view will have a bigger ID and should not be last) (2)",
         )
         self.assertEqual(

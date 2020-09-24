@@ -28,7 +28,7 @@ class TestPrintCheck(AccountTestInvoicingCommon):
 
         self.company_data['default_journal_bank'].write({
             'check_manual_sequencing': True,
-            'check_next_number': 42,
+            'check_next_number': '00042',
         })
 
         # Create 10 customer invoices.
@@ -69,7 +69,7 @@ class TestPrintCheck(AccountTestInvoicingCommon):
 
         self.company_data['default_journal_bank'].write({
             'check_manual_sequencing': True,
-            'check_next_number': 42,
+            'check_next_number': '00042',
         })
 
         # Create 10 refunds.

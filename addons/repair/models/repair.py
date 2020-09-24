@@ -79,6 +79,7 @@ class Repair(models.Model):
         'product.pricelist', 'Pricelist',
         default=lambda self: self.env['product.pricelist'].search([('company_id', 'in', [self.env.company.id, False])], limit=1).id,
         help='Pricelist of the selected partner.', check_company=True)
+    currency_id = fields.Many2one(related='pricelist_id.currency_id')
     partner_invoice_id = fields.Many2one('res.partner', 'Invoicing Address', check_company=True)
     invoice_method = fields.Selection([
         ("none", "No Invoice"),
@@ -205,8 +206,12 @@ class Repair(models.Model):
 
     @api.model
     def create(self, vals):
-        if vals.get('name', '/') == '/':
-            vals['name'] = self.env['ir.sequence'].next_by_code('repair.order') or '/'
+        # To avoid consuming a sequence number when clicking on 'Create', we preprend it if the
+        # the name starts with '/'.
+        vals['name'] = vals.get('name') or '/'
+        if vals['name'].startswith('/'):
+            vals['name'] = (self.env['ir.sequence'].next_by_code('repair.order') or '/') + vals['name']
+            vals['name'] = vals['name'][:-1] if vals['name'].endswith('/') and vals['name'] != '/' else vals['name']
         return super(Repair, self).create(vals)
 
     def button_dummy(self):
@@ -602,9 +607,11 @@ class RepairLine(models.Model):
         index=True, ondelete='cascade', check_company=True)
     company_id = fields.Many2one(
         related='repair_id.company_id', store=True, index=True)
+    currency_id = fields.Many2one(
+        related='repair_id.currency_id')
     type = fields.Selection([
         ('add', 'Add'),
-        ('remove', 'Remove')], 'Type', required=True)
+        ('remove', 'Remove')], 'Type', default='add', required=True)
     product_id = fields.Many2one(
         'product.product', 'Product', required=True, check_company=True,
         domain="[('type', 'in', ['product', 'consu']), '|', ('company_id', '=', company_id), ('company_id', '=', False)]")
@@ -737,6 +744,8 @@ class RepairFee(models.Model):
         index=True, ondelete='cascade', required=True)
     company_id = fields.Many2one(
         related="repair_id.company_id", index=True, store=True)
+    currency_id = fields.Many2one(
+        related="repair_id.currency_id")
     name = fields.Text('Description', index=True, required=True)
     product_id = fields.Many2one(
         'product.product', 'Product', check_company=True,

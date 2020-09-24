@@ -65,7 +65,7 @@ class TestPacking(TestPackingCommon):
             'location_dest_id': self.customer_location.id
         })
         picking_ship.action_confirm()
-        pack_action = picking_ship.put_in_pack()
+        pack_action = picking_ship.action_put_in_pack()
         pack_action_ctx = pack_action['context']
         pack_action_model = pack_action['res_model']
 

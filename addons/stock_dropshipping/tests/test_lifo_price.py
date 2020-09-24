@@ -19,6 +19,7 @@ class TestLifoPrice(ValuationReconciliationTestCommon):
             'property_cost_method': 'fifo',
         })
         res_partner_3 = self.env['res.partner'].create({'name': 'My Test Partner'})
+        self.company_data['default_warehouse'].out_type_id.show_operations = False
 
         # Set a product as using lifo price
         product_form = Form(self.env['product.product'])
@@ -76,13 +77,14 @@ class TestLifoPrice(ValuationReconciliationTestCommon):
         purchase_order_lifo2.picking_ids[0].button_validate()
 
         # Let us send some goods
+        self.company_data['default_warehouse'].out_type_id.show_operations = False
         out_form = Form(self.env['stock.picking'])
         out_form.picking_type_id = self.company_data['default_warehouse'].out_type_id
         out_form.immediate_transfer = True
         with out_form.move_ids_without_package.new() as move:
             move.product_id = product_lifo_icecream
             move.quantity_done = 20.0
-            move.date_expected = fields.Datetime.now()
+            move.date = fields.Datetime.now()
         outgoing_lifo_shipment = out_form.save()
 
         # I assign this outgoing shipment

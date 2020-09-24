@@ -3,6 +3,7 @@ odoo.define('mail/static/src/components/composer/composer.js', function (require
 
 const components = {
     AttachmentList: require('mail/static/src/components/attachment_list/attachment_list.js'),
+    ComposerSuggestedRecipientList: require('mail/static/src/components/composer_suggested_recipient_list/composer_suggested_recipient_list.js'),
     DropZone: require('mail/static/src/components/drop_zone/drop_zone.js'),
     EmojisPopover: require('mail/static/src/components/emojis_popover/emojis_popover.js'),
     FileUploader: require('mail/static/src/components/file_uploader/file_uploader.js'),
@@ -104,10 +105,10 @@ class Composer extends Component {
      * @returns {string}
      */
     get currentPartnerAvatar() {
-        const avatar = this.env.session.uid > 0
+        const avatar = this.env.messaging.currentUser
             ? this.env.session.url('/web/image', {
                     field: 'image_128',
-                    id: this.env.session.uid,
+                    id: this.env.messaging.currentUser.id,
                     model: 'res.users',
                 })
             : '/web/static/src/img/user_menu_avatar.png';
@@ -121,7 +122,7 @@ class Composer extends Component {
         if (this.env.messaging.device.isMobile) {
             this.el.scrollIntoView();
         }
-        this.composer.focus();
+        this._textInputRef.comp.focus();
     }
 
     /**
@@ -175,10 +176,21 @@ class Composer extends Component {
     /**
      * Post a message in the composer on related thread.
      *
+     * Posting of the message could be aborted if it cannot be posted like if there are attachments
+     * currently uploading or if there is no text content and no attachments.
+     *
      * @private
      */
     async _postMessage() {
-        // TODO: take suggested recipients into account (task-2283356)
+        if (!this.composer.canPostMessage) {
+            if (this.composer.hasUploadingAttachment) {
+                this.env.services['notification'].notify({
+                    message: this.env._t("Please wait while the file is uploading."),
+                    type: 'warning',
+                });
+            }
+            return;
+        }
         await this.composer.postMessage();
         // TODO: we might need to remove trigger and use the store to wait for the post rpc to be done
         // task-2252858
@@ -246,9 +258,20 @@ class Composer extends Component {
      * @private
      */
     _onClickSend() {
-        if (!this.composer.canPostMessage) {
-            return;
-        }
+        this._postMessage();
+    }
+
+    /**
+     * @private
+     */
+    _onComposerSuggestionClicked() {
+        this.focus();
+    }
+
+    /**
+     * @private
+     */
+    _onComposerTextInputSendShortcut() {
         this._postMessage();
     }
 
@@ -279,7 +302,7 @@ class Composer extends Component {
         ev.stopPropagation();
         this._textInputRef.comp.saveStateInStore();
         this.composer.insertIntoTextInput(ev.detail.unicode);
-        this.composer.focus();
+        this.focus();
     }
 
     /**
@@ -295,7 +318,7 @@ class Composer extends Component {
      */
     _onKeydown(ev) {
         if (ev.key === 'Escape') {
-            if (isEventHandled(ev, 'ComposerTextInput.closeMentionSuggestions')) {
+            if (isEventHandled(ev, 'ComposerTextInput.closeSuggestions')) {
                 return;
             }
             if (isEventHandled(ev, 'Composer.closeEmojisPopover')) {
@@ -314,7 +337,7 @@ class Composer extends Component {
         if (ev.key === 'Escape') {
             if (this._emojisPopoverRef.comp) {
                 this._emojisPopoverRef.comp.close();
-                this.composer.focus();
+                this.focus();
                 markEventHandled(ev, 'Composer.closeEmojisPopover');
             }
         }
@@ -331,16 +354,6 @@ class Composer extends Component {
         await this._fileUploaderRef.comp.uploadFiles(ev.clipboardData.files);
     }
 
-    /**
-     * @private
-     */
-    _onTextInputKeydownEnter() {
-        if (!this.composer.canPostMessage) {
-            return;
-        }
-        this._postMessage();
-    }
-
 }
 
 Object.assign(Composer, {
@@ -351,7 +364,6 @@ Object.assign(Composer, {
         hasDiscardButton: false,
         hasFollowers: false,
         hasSendButton: true,
-        hasTextInputSendOnEnterEnabled: true,
         hasThreadName: false,
         hasThreadTyping: false,
         isCompact: true,
@@ -375,7 +387,6 @@ Object.assign(Composer, {
             optional: true,
         },
         hasSendButton: Boolean,
-        hasTextInputSendOnEnterEnabled: Boolean,
         hasThreadName: Boolean,
         hasThreadTyping: Boolean,
         showAttachmentsExtensions: {
@@ -397,6 +408,15 @@ Object.assign(Composer, {
         },
         isCompact: Boolean,
         isExpandable: Boolean,
+        /**
+         * If set, keyboard shortcuts from text input to send message.
+         * If not set, will use default values from `ComposerTextInput`.
+         */
+        textInputSendShortcuts: {
+            type: Array,
+            element: String,
+            optional: true,
+        },
     },
     template: 'mail.Composer',
 });

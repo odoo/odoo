@@ -267,8 +267,7 @@ class PaymentAcquirer(models.Model):
             'sequence': 999,
             'type': 'bank',
             'company_id': self.company_id.id,
-            'default_debit_account_id': account.id,
-            'default_credit_account_id': account.id,
+            'default_account_id': account.id,
             # Show the journal on dashboard if the acquirer is published on the website.
             'show_on_dashboard': self.state == 'enabled',
             # Don't show payment methods in the backend.
@@ -1091,13 +1090,13 @@ class PaymentTransaction(models.Model):
         return res
 
     def action_capture(self):
-        if any([t.state != 'authorized' for t in self]):
-            raise ValidationError(_('Only transactions having the capture status can be captured.'))
+        if any(t.state != 'authorized' for t in self):
+            raise ValidationError(_('Only transactions having the authorized status can be captured.'))
         for tx in self:
             tx.s2s_capture_transaction()
 
     def action_void(self):
-        if any([t.state != 'authorized' for t in self]):
+        if any(t.state != 'authorized' for t in self):
             raise ValidationError(_('Only transactions having the capture status can be voided.'))
         for tx in self:
             tx.s2s_void_transaction()
@@ -1135,7 +1134,6 @@ class PaymentToken(models.Model):
     """
         @TBE: stolen shamelessly from there https://www.paypal.com/us/selfhelp/article/why-is-there-a-$1.95-charge-on-my-card-statement-faq554
         Most of them are ~1.50€s
-        TODO: See this with @AL & @DBO
     """
     VALIDATION_AMOUNTS = {
         'CAD': 2.45,

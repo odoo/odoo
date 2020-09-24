@@ -34,7 +34,7 @@ class Activity extends Component {
                 assigneeNameOrDisplayName: (
                     activity &&
                     activity.assignee &&
-                    activity.assignee.nameOrDisplayName()
+                    activity.assignee.nameOrDisplayName
                 ),
             };
         });
@@ -60,7 +60,7 @@ class Activity extends Component {
      * @returns {string}
      */
     get assignedUserText() {
-        return _.str.sprintf(this.env._t("for %s"), this.activity.assignee.nameOrDisplayName());
+        return _.str.sprintf(this.env._t("for %s"), this.activity.assignee.nameOrDisplayName);
     }
 
     /**
@@ -128,6 +128,25 @@ class Activity extends Component {
      */
     _onAttachmentCreated(ev) {
         this.activity.markAsDone({ attachments: [ev.detail.attachment] });
+    }
+
+    /**
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onClick(ev) {
+        if (
+            ev.target.tagName === 'A' &&
+            ev.target.dataset.oeId &&
+            ev.target.dataset.oeModel
+        ) {
+            this.env.messaging.openProfile({
+                id: Number(ev.target.dataset.oeId),
+                model: ev.target.dataset.oeModel,
+            });
+            // avoid following dummy href
+            ev.preventDefault();
+        }
     }
 
     /**

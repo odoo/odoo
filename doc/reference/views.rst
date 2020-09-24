@@ -125,7 +125,7 @@ an impact on all view types.
      ``info``, ``warning``, ``danger`` and ``secondary`` displays. The list view supports ``bf``,
      ``it``, ``success``, ``info``, ``warning``, ``danger``, ``muted`` and ``primary`` displays.
 
-* ``sample`` (``kanban`` & ``list`` & ``gantt``)
+* ``sample`` (``kanban`` & ``list`` & ``gantt`` & ``graph`` & ``pivot`` & ``cohort`` & ``dashboard``)
 
   Populate the view with a set of sample records if none are found for the current model.
   This attribute is false by default.
@@ -192,12 +192,29 @@ inherited views.
 
 * ``inherit_id`` :class:`~odoo.fields.Many2one`
 
-  the current view's parent view, unset by default
+  the current view's parent view, unset by default. Specify the parent using
+  the `ref` attribute:
+
+  .. code-block:: xml
+
+      <field name="inherit_id" ref="library.view_book_form"/>
 
 * ``mode`` :class:`~odoo.fields.Selection`: `extension / primary`
 
   inheritance mode, ``extension`` by default if ``inherit_id`` is set,
   ``primary`` otherwise.
+
+  An example of where you would want to override ``mode`` while using
+  ``inherit_id`` is delegation inheritance.
+  In that case your derived model will be separate from its parent and views
+  matching with one won't match with the other. Suppose you inherit from a view
+  associated with the parent model and want to customize the derived view to
+  show data from the derived model. The ``mode`` of the derived view needs to
+  be set to ``primary``, because it's the base (and maybe only) view for that
+  derived model. Otherwise the :ref:`view matching <reference/views/inheritance/view-matching>`
+  rules won't apply.
+
+.. _reference/views/inheritance/view-matching:
 
 View matching
 -------------
@@ -375,7 +392,7 @@ Possible children of the view element are:
 Calendar
 --------
 
-Calendar views display records as events in a daily, weekly or monthly
+Calendar views display records as events in a daily, weekly, monthly or yearly
 calendar. Their root element is ``<calendar>``. Available attributes on the
 calendar view are:
 
@@ -410,7 +427,10 @@ calendar view are:
     event is flagged as day-long (and duration is irrelevant)
 ``mode``
     Default display mode when loading the calendar.
-    Possible attributes are: ``day``, ``week``, ``month``
+    Possible attributes are: ``day``, ``week``, ``month``, ``year``
+``scales``
+    Comma-separated list of scales to provide. By default, all scales are
+    available. See mode for possible scale values.
 
 ``<field>``
   declares fields to aggregate or to use in kanban *logic*. If the field is
@@ -493,6 +513,20 @@ attributes:
 - ``measure`` (optional)
     A field that can be aggregated.  This field will be used to compute the values
     for each cell.  If not set, the cohort view will count the number of occurrences.
+
+``<field>`` (optional)
+  allows to specify a particular field in order to manage it from the available measures, it's
+  main use is for hiding a field from the selectable measures:
+
+- ``name`` (required)
+    the name of the field to use in the view.
+- ``string`` (optional)
+    the name that would be used to display the field in the cohort view, overrides the
+    default python String attribute of the field.
+- ``invisible`` (optional)
+    if true, the field will not appear either in the active measures nor in the selectable
+    measures (useful for fields that do not make sense aggregated, such as fields in different
+    units, e.g. € and $).
 
 .. _reference/views/dashboard:
 
@@ -1106,6 +1140,10 @@ following attributes:
 ``title`` (optional)
   string displayed on the top of the graph.
 
+``invisible`` (optional)
+  if true, the field will not appear either in the active measures nor in the
+  selectable measures.
+
 ``type``
   indicates whether the field should be used as a grouping criteria or as an
   aggregated value within a group. Possible values are:
@@ -1644,6 +1682,8 @@ The ``<map>`` element can contain multiple ``<field>`` elements. Each ``<field>`
     The field to display.
 ``string``
     This string will be displayed before the field's content. It Can be used as a description.
+``limit``
+    The size of a page (default: 80). It must be a positive integer.
 
 No attribute or element is mandatory but as stated above if no res.partner many2one is provided the view won't be able to locate records.
 
@@ -2035,6 +2075,8 @@ Possible children elements of the search view are:
 
   A domain might be used to express a dependency on another field (with select="one")
   of the search panel. Consider
+  /!\ This attribute is incompatible with a select="one" with enabled counters; if a select="multi"
+  has a `domain` attribute, all select="one" will have their counters disabled.
 
   .. code-block:: xml
 

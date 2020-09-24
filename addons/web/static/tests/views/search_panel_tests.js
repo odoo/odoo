@@ -3,6 +3,7 @@ odoo.define("web/static/tests/views/search_panel_tests.js", function (require) {
 
 const FormView = require('web.FormView');
 const KanbanView = require('web.KanbanView');
+const ListView = require('web.ListView');
 const testUtils = require('web.test_utils');
 const SearchPanel = require("web/static/src/js/views/search_panel.js");
 
@@ -95,9 +96,11 @@ QUnit.module('Views', {
             'partner,false,list': '<tree><field name="foo"/></tree>',
             'partner,false,kanban':
                 `<kanban>
-                    <templates><t t-name="kanban-box">
-                        <div><field name="foo"/></div>
-                    </t></templates>
+                    <templates>
+                        <div t-name="kanban-box" class="oe_kanban_global_click">
+                            <field name="foo"/>
+                        </div>
+                    </templates>
                 </kanban>`,
             'partner,false,form':
                 `<form>
@@ -119,14 +122,16 @@ QUnit.module('Views', {
     QUnit.module('SearchPanel');
 
     QUnit.test('basic rendering', async function (assert) {
-        assert.expect(17);
+        assert.expect(16);
 
         var kanban = await createView({
             View: KanbanView,
             model: 'partner',
             data: this.data,
             mockRPC: function (route, args) {
-                assert.step((args.method || route) + (args.model ? (' on ' + args.model) : ''));
+                if (args.method && args.method.includes('search_panel_')) {
+                    assert.step(args.method + ' on ' + args.model);
+                }
                 return this._super.apply(this, arguments);
             },
             arch: `
@@ -175,7 +180,6 @@ QUnit.module('Views', {
         assert.verifySteps([
             'search_panel_select_range on partner',
             'search_panel_select_multi_range on partner',
-            '/web/dataset/search_read on partner',
         ]);
 
         kanban.destroy();
@@ -220,7 +224,7 @@ QUnit.module('Views', {
     QUnit.test('sections with attr invisible="1" are ignored', async function (assert) {
         // 'groups' attributes are converted server-side into invisible="1" when the user doesn't
         // belong to the given group
-        assert.expect(4);
+        assert.expect(3);
 
         var kanban = await createView({
             View: KanbanView,
@@ -245,7 +249,9 @@ QUnit.module('Views', {
                     </search>`,
             },
             mockRPC: function (route, args) {
-                assert.step(args.method || route);
+                if (args.method && args.method.includes('search_panel_')) {
+                    assert.step(args.method || route);
+                }
                 return this._super.apply(this, arguments);
             },
         });
@@ -254,7 +260,6 @@ QUnit.module('Views', {
 
         assert.verifySteps([
             'search_panel_select_range',
-            '/web/dataset/search_read',
         ]);
 
         kanban.destroy();
@@ -300,10 +305,10 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
-    QUnit.test('specify active category value in context', async function (assert) {
-        assert.expect(1);
+    QUnit.test('specify active category value in context and manually change category', async function (assert) {
+        assert.expect(5);
 
-        var kanban = await createView({
+        const kanban = await createView({
             View: KanbanView,
             model: 'partner',
             data: this.data,
@@ -328,7 +333,7 @@ QUnit.module('Views', {
             },
             mockRPC: function (route, args) {
                 if (route === '/web/dataset/search_read') {
-                    assert.deepEqual(args.domain, [["state", "=", "ghi"]]);
+                    assert.step(JSON.stringify(args.domain));
                 }
                 return this._super.apply(this, arguments);
             },
@@ -338,6 +343,26 @@ QUnit.module('Views', {
             },
         });
 
+        assert.deepEqual(
+            [...kanban.el.querySelectorAll('.o_search_panel_category_value header.active label')].map(
+                el => el.innerText
+            ),
+            ['All', 'GHI']
+        );
+
+        // select 'ABC' in the category 'state'
+        await testUtils.dom.click(kanban.el.querySelectorAll('.o_search_panel_category_value header')[4]);
+        assert.deepEqual(
+            [...kanban.el.querySelectorAll('.o_search_panel_category_value header.active label')].map(
+                el => el.innerText
+            ),
+            ['All', 'ABC']
+        );
+
+        assert.verifySteps([
+            '[["state","=","ghi"]]',
+            '[["state","=","abc"]]'
+        ]);
         kanban.destroy();
     });
 
@@ -1482,14 +1507,16 @@ QUnit.module('Views', {
     });
 
     QUnit.test("only reload categories and filters when domains change (counters disabled, selection)", async function (assert) {
-        assert.expect(12);
+        assert.expect(8);
 
         const kanban = await createView({
             View: KanbanView,
             model: 'partner',
             data: this.data,
             mockRPC: function (route, args) {
-                assert.step(args.method || route);
+                if (args.method && args.method.includes('search_panel_')) {
+                    assert.step(args.method);
+                }
                 return this._super.apply(this, arguments);
             },
             arch: `
@@ -1520,15 +1547,12 @@ QUnit.module('Views', {
         assert.verifySteps([
             'search_panel_select_range',
             'search_panel_select_multi_range',
-            '/web/dataset/search_read',
         ]);
 
         // go to page 2 (the domain doesn't change, so the filters should not be reloaded)
         await cpHelpers.pagerNext(kanban);
 
-        assert.verifySteps([
-            '/web/dataset/search_read',
-        ]);
+        assert.verifySteps([]);
 
         // reload with another domain, so the filters should be reloaded
         await cpHelpers.toggleFilterMenu(kanban);
@@ -1536,7 +1560,6 @@ QUnit.module('Views', {
 
         assert.verifySteps([
             'search_panel_select_multi_range',
-            '/web/dataset/search_read',
         ]);
 
         // change category value, so the filters should be reloaded
@@ -1544,21 +1567,22 @@ QUnit.module('Views', {
 
         assert.verifySteps([
             'search_panel_select_multi_range',
-            '/web/dataset/search_read',
         ]);
 
         kanban.destroy();
     });
 
     QUnit.test("only reload categories and filters when domains change (counters disabled, many2one)", async function (assert) {
-        assert.expect(12);
+        assert.expect(8);
 
         const kanban = await createView({
             View: KanbanView,
             model: 'partner',
             data: this.data,
             mockRPC: function (route, args) {
-                assert.step(args.method || route);
+                if (args.method && args.method.includes('search_panel_')) {
+                    assert.step(args.method);
+                }
                 return this._super.apply(this, arguments);
             },
             arch: `
@@ -1589,15 +1613,12 @@ QUnit.module('Views', {
         assert.verifySteps([
             'search_panel_select_range',
             'search_panel_select_multi_range',
-            '/web/dataset/search_read',
         ]);
 
         // go to page 2 (the domain doesn't change, so the filters should not be reloaded)
         await cpHelpers.pagerNext(kanban);
 
-        assert.verifySteps([
-            '/web/dataset/search_read',
-        ]);
+        assert.verifySteps([]);
 
         // reload with another domain, so the filters should be reloaded
         await cpHelpers.toggleFilterMenu(kanban);
@@ -1605,7 +1626,6 @@ QUnit.module('Views', {
 
         assert.verifySteps([
             'search_panel_select_multi_range',
-            '/web/dataset/search_read',
         ]);
 
         // change category value, so the filters should be reloaded
@@ -1613,21 +1633,22 @@ QUnit.module('Views', {
 
         assert.verifySteps([
             'search_panel_select_multi_range',
-            '/web/dataset/search_read',
         ]);
 
         kanban.destroy();
     });
 
     QUnit.test('category counters', async function (assert) {
-        assert.expect(20);
+        assert.expect(16);
 
         var kanban = await createView({
             View: KanbanView,
             model: 'partner',
             data: this.data,
             mockRPC: function (route, args) {
-                assert.step(args.method || route);
+                if (args.method && args.method.includes('search_panel_')) {
+                    assert.step(args.method);
+                }
                 if (route === "/web/dataset/call_kw/partner/search_panel_select_range") {
                     assert.step(args.args[0]);
                 }
@@ -1663,7 +1684,6 @@ QUnit.module('Views', {
             'state',
             'search_panel_select_range',
             'company_id',
-            '/web/dataset/search_read',
         ]);
 
         assert.deepEqual(
@@ -1676,9 +1696,7 @@ QUnit.module('Views', {
         // go to page 2 (the domain doesn't change, so the categories should not be reloaded)
         await cpHelpers.pagerNext(kanban);
 
-        assert.verifySteps([
-            '/web/dataset/search_read',
-        ]);
+        assert.verifySteps([]);
 
         assert.deepEqual(
             [...kanban.el.querySelectorAll('.o_search_panel_category_value')].map(
@@ -1694,7 +1712,6 @@ QUnit.module('Views', {
         assert.verifySteps([
             'search_panel_select_range',
             'state',
-            '/web/dataset/search_read',
         ]);
 
         assert.deepEqual(
@@ -1717,21 +1734,22 @@ QUnit.module('Views', {
         assert.verifySteps([
             'search_panel_select_range',
             'state',
-            '/web/dataset/search_read',
         ]);
 
         kanban.destroy();
     });
 
     QUnit.test('category selection without counters', async function (assert) {
-        assert.expect(14);
+        assert.expect(10);
 
         var kanban = await createView({
             View: KanbanView,
             model: 'partner',
             data: this.data,
             mockRPC: function (route, args) {
-                assert.step(args.method || route);
+                if (args.method && args.method.includes('search_panel_')) {
+                    assert.step(args.method);
+                }
                 if (route === "/web/dataset/call_kw/partner/search_panel_select_range") {
                     assert.step(args.args[0]);
                 }
@@ -1764,7 +1782,6 @@ QUnit.module('Views', {
         assert.verifySteps([
             'search_panel_select_range',
             'state',
-            '/web/dataset/search_read',
         ]);
 
         assert.deepEqual(
@@ -1777,9 +1794,7 @@ QUnit.module('Views', {
         // go to page 2 (the domain doesn't change, so the categories should not be reloaded)
         await cpHelpers.pagerNext(kanban);
 
-        assert.verifySteps([
-            '/web/dataset/search_read',
-        ]);
+        assert.verifySteps([]);
 
         assert.deepEqual(
             [...kanban.el.querySelectorAll('.o_search_panel_category_value')].map(
@@ -1792,9 +1807,7 @@ QUnit.module('Views', {
         await cpHelpers.toggleFilterMenu(kanban);
         await cpHelpers.toggleMenuItem(kanban, 0);
 
-        assert.verifySteps([
-            '/web/dataset/search_read',
-        ]);
+        assert.verifySteps([]);
 
         assert.deepEqual(
             [...kanban.el.querySelectorAll('.o_search_panel_category_value')].map(
@@ -1813,9 +1826,7 @@ QUnit.module('Views', {
             [  "All", "ABC", "DEF", "GHI"]
         );
 
-        assert.verifySteps([
-            '/web/dataset/search_read',
-        ]);
+        assert.verifySteps([]);
 
         kanban.destroy();
     });
@@ -2417,9 +2428,9 @@ QUnit.module('Views', {
     });
 
     QUnit.test('search panel filters are kept between switch views', async function (assert) {
-        assert.expect(16);
+        assert.expect(17);
 
-        var actionManager = await createActionManager({
+        const actionManager = await createActionManager({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
@@ -2453,12 +2464,16 @@ QUnit.module('Views', {
         assert.containsN(actionManager, '.o_search_panel_filter_value input:checked', 2);
         assert.containsN(actionManager, '.o_kanban_record:not(.o_kanban_ghost)', 4);
 
+        await testUtils.dom.click(actionManager.$(".o_kanban_record:nth(0)"));
+        await testUtils.dom.click(actionManager.$(".breadcrumb-item:nth(0)"));
+
         assert.verifySteps([
             '[]', // initial search_read
             '[["category_id","in",[6]]]', // kanban, after selecting the gold filter
             '[["category_id","in",[6]]]', // list
             '[["category_id","in",[6,7]]]', // list, after selecting the silver filter
             '[["category_id","in",[6,7]]]', // kanban
+            '[["category_id","in",[6,7]]]', // kanban, after switching back from form view
         ]);
 
         actionManager.destroy();
@@ -2541,14 +2556,16 @@ QUnit.module('Views', {
     });
 
     QUnit.test('categories and filters are not reloaded when switching between views', async function (assert) {
-        assert.expect(8);
+        assert.expect(3);
 
         var actionManager = await createActionManager({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
             mockRPC: function (route, args) {
-                assert.step(args.method || route);
+                if (args.method && args.method.includes('search_panel_')) {
+                    assert.step(args.method);
+                }
                 return this._super.apply(this, arguments);
             },
         });
@@ -2558,13 +2575,8 @@ QUnit.module('Views', {
         await cpHelpers.switchView(actionManager, 'kanban');
 
         assert.verifySteps([
-            '/web/action/load',
-            'load_views',
             'search_panel_select_range', // kanban: categories
             'search_panel_select_multi_range', // kanban: filters
-            '/web/dataset/search_read', // kanban: records
-            '/web/dataset/search_read', // list: records
-            '/web/dataset/search_read', // kanban: records
         ]);
 
         actionManager.destroy();
@@ -2655,14 +2667,16 @@ QUnit.module('Views', {
 
 
     QUnit.test("Reload categories with counters when filter values are selected", async function (assert) {
-        assert.expect(10);
+        assert.expect(8);
 
         const kanban = await createView({
             View: KanbanView,
             model: 'partner',
             data: this.data,
             mockRPC: function (route, args) {
-                assert.step(args.method || route);
+                if (args.method && args.method.includes('search_panel_')) {
+                    assert.step(args.method);
+                }
                 return this._super.apply(this, arguments);
             },
             arch: `
@@ -2689,7 +2703,6 @@ QUnit.module('Views', {
         assert.verifySteps([
             'search_panel_select_range',
             "search_panel_select_multi_range",
-            '/web/dataset/search_read',
         ]);
 
         assert.deepEqual(getCounters(kanban), [
@@ -2707,7 +2720,6 @@ QUnit.module('Views', {
         assert.verifySteps([
             'search_panel_select_range',
             "search_panel_select_multi_range",
-            '/web/dataset/search_read',
         ]);
 
         kanban.destroy();
@@ -3993,14 +4005,16 @@ QUnit.module('Views', {
     });
 
     QUnit.test("a selected value becomming invalid should no more impact the view", async function (assert) {
-        assert.expect(16);
+        assert.expect(13);
 
         const kanban = await createView({
             View: KanbanView,
             model: 'partner',
             data: this.data,
             mockRPC: function (route, args) {
-                assert.step(args.method || route);
+                if (args.method && args.method.includes('search_panel_')) {
+                    assert.step(args.method);
+                }
                 return this._super.apply(this, arguments);
             },
             arch: `
@@ -4026,17 +4040,15 @@ QUnit.module('Views', {
 
         assert.verifySteps([
             'search_panel_select_range',
-            '/web/dataset/search_read',
         ]);
 
-        await assert.containsN(kanban, '.o_kanban_record span', 4);
+        assert.containsN(kanban, '.o_kanban_record span', 4);
 
         // select 'ABC' in search panel
         await testUtils.dom.click(kanban.$('.o_search_panel_category_value:nth(1) header'));
 
         assert.verifySteps([
             'search_panel_select_range',
-            '/web/dataset/search_read',
         ]);
 
         assert.containsOnce(kanban, '.o_kanban_record span');
@@ -4048,7 +4060,6 @@ QUnit.module('Views', {
 
         assert.verifySteps([
             'search_panel_select_range',
-            '/web/dataset/search_read',
         ]);
 
         const firstCategoryValue = kanban.el.querySelector('.o_search_panel_category_value header');
@@ -4064,14 +4075,16 @@ QUnit.module('Views', {
     });
 
     QUnit.test("Categories with default attributes should be udpated when external domain changes", async function (assert) {
-        assert.expect(11);
+        assert.expect(8);
 
         const kanban = await createView({
             View: KanbanView,
             model: 'partner',
             data: this.data,
             mockRPC: function (route, args) {
-                assert.step(args.method || route);
+                if (args.method && args.method.includes('search_panel_')) {
+                    assert.step(args.method);
+                }
                 return this._super.apply(this, arguments);
             },
             arch: `
@@ -4097,7 +4110,6 @@ QUnit.module('Views', {
 
         assert.verifySteps([
             'search_panel_select_range',
-            '/web/dataset/search_read',
         ]);
         assert.deepEqual(
             [...kanban.el.querySelectorAll('.o_search_panel_category_value header label')].map(el => el.innerText),
@@ -4107,9 +4119,7 @@ QUnit.module('Views', {
         // select 'ABC' in search panel --> no need to update the category value
         await testUtils.dom.click(kanban.$('.o_search_panel_category_value:nth(1) header'));
 
-        assert.verifySteps([
-            '/web/dataset/search_read',
-        ]);
+        assert.verifySteps([]);
         assert.deepEqual(
             [...kanban.el.querySelectorAll('.o_search_panel_category_value header label')].map(el => el.innerText),
             ['All', 'ABC', 'DEF', 'GHI']
@@ -4121,7 +4131,6 @@ QUnit.module('Views', {
 
         assert.verifySteps([
             'search_panel_select_range',
-            '/web/dataset/search_read',
         ]);
         assert.deepEqual(
             [...kanban.el.querySelectorAll('.o_search_panel_category_value header label')].map(el => el.innerText),
@@ -4129,6 +4138,36 @@ QUnit.module('Views', {
         );
 
         kanban.destroy();
+    });
+
+    QUnit.test("Category with counters and filter with domain", async function (assert) {
+        assert.expect(2);
+
+        const list = await createView({
+            arch: '<tree><field name="foo"/></tree>',
+            archs: {
+                'partner,false,search': `
+                    <search>
+                        <searchpanel>
+                            <field name="category_id" enable_counters="1"/>
+                            <field name="company_id" select="multi" domain="[['category_id', '=', category_id]]"/>
+                        </searchpanel>
+                    </search>`,
+            },
+            data: this.data,
+            model: "partner",
+            services: this.services,
+            View: ListView,
+        });
+
+        assert.containsN(list, ".o_data_row", 4);
+        assert.strictEqual(
+            list.$(".o_search_panel_category_value").text().replace(/\s/g, ""),
+            "Allgoldsilver",
+            "Category counters should be empty if a filter has a domain attribute"
+        );
+
+        list.destroy();
     });
 });
 });

@@ -36,7 +36,7 @@
                             <field name="is_pinned"/>
                         </group>
                         <group>
-                            <field name="chat_room_id"/>
+                            <field name="chat_room_id" required="0"/>
                             <field name="room_participant_count" readonly="1"/>
                             <field name="room_max_capacity" widget="radio" options="{'horizontal': true}"/>
                             <field name="room_lang_id" options="{'no_create': True}"/>
@@ -58,14 +58,14 @@
         <field name="name">event.meeting.room.tree</field>
         <field name="model">event.meeting.room</field>
         <field name="arch" type="xml">
-            <tree string="Meeting Room">
+            <tree string="Meeting Room" multi_edit="1">
                 <field name="name"/>
                 <field name="summary"/>
                 <field name="target_audience"/>
                 <field name="is_published"/>
                 <field name="is_pinned"/>
-                <field name="room_is_full"/>
-                <field name="room_participant_count"/>
+                <field name="room_is_full" readonly="1"/>
+                <field name="room_participant_count" readonly="1"/>
                 <field name="room_max_capacity"/>
                 <field name="room_lang_id"/>
             </tree>

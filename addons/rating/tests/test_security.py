@@ -1,13 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.exceptions import AccessError
 from odoo.tests import tagged, common, new_test_user
 from odoo.tools import mute_logger
-
-from functools import partial
-
-rating_new_test_user = partial(new_test_user, context={'mail_create_nolog': True, 'mail_create_nosubscribe': True, 'mail_notrack': True, 'no_reset_password': True})
 
 
 @tagged('security')
@@ -17,22 +14,22 @@ class TestAccessRating(common.SavepointCase):
     def setUpClass(cls):
         super(TestAccessRating, cls).setUpClass()
 
-        cls.user_manager_partner = rating_new_test_user(
+        cls.user_manager_partner = mail_new_test_user(
             cls.env, name='Jean Admin', login='user_mana', email='admin@example.com',
             groups='base.group_partner_manager,base.group_system'
         )
 
-        cls.user_emp = rating_new_test_user(
+        cls.user_emp = mail_new_test_user(
             cls.env, name='Eglantine Employee', login='user_emp', email='employee@example.com',
             groups='base.group_user'
         )
 
-        cls.user_portal = rating_new_test_user(
+        cls.user_portal = mail_new_test_user(
             cls.env, name='Patrick Portal', login='user_portal', email='portal@example.com',
             groups='base.group_portal'
         )
 
-        cls.user_public = rating_new_test_user(
+        cls.user_public = mail_new_test_user(
             cls.env, name='Pauline Public', login='user_public', email='public@example.com',
             groups='base.group_public'
         )

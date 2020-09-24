@@ -7,6 +7,7 @@ import pytz
 
 from datetime import datetime
 from psycopg2 import IntegrityError
+from werkzeug.exceptions import BadRequest
 
 from odoo import http, SUPERUSER_ID, _
 from odoo.http import request
@@ -19,8 +20,16 @@ from odoo.addons.base.models.ir_qweb_fields import nl2br
 class WebsiteForm(http.Controller):
 
     # Check and insert values from the form on the model <model>
-    @http.route('/website_form/<string:model_name>', type='http', auth="public", methods=['POST'], website=True)
+    @http.route('/website_form/<string:model_name>', type='http', auth="public", methods=['POST'], website=True, csrf=False)
     def website_form(self, model_name, **kwargs):
+        # Partial CSRF check, only performed when session is authenticated, as there
+        # is no real risk for unauthenticated sessions here. It's a common case for
+        # embedded forms now: SameSite policy rejects the cookies, so the session
+        # is lost, and the CSRF check fails, breaking the post for no good reason.
+        csrf_token = request.params.pop('csrf_token', None)
+        if request.session.uid and not request.validate_csrf(csrf_token):
+            raise BadRequest('Session expired (invalid CSRF token)')
+
         try:
             if request.env['ir.http']._verify_request_recaptcha_token('website_form'):
                 return self._handle_website_form(model_name, **kwargs)
@@ -84,17 +93,6 @@ class WebsiteForm(http.Controller):
     def boolean(self, field_label, field_input):
         return bool(field_input)
 
-    def date(self, field_label, field_input):
-        lang = request.env['ir.qweb.field'].user_lang()
-        return datetime.strptime(field_input, lang.date_format).strftime(DEFAULT_SERVER_DATE_FORMAT)
-
-    def datetime(self, field_label, field_input):
-        lang = request.env['ir.qweb.field'].user_lang()
-        strftime_format = (u"%s %s" % (lang.date_format, lang.time_format))
-        user_tz = pytz.timezone(request.context.get('tz') or request.env.user.tz or 'UTC')
-        dt = user_tz.localize(datetime.strptime(field_input, strftime_format)).astimezone(pytz.utc)
-        return dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
-
     def binary(self, field_label, field_input):
         return base64.b64encode(field_input.read())
 
@@ -108,8 +106,8 @@ class WebsiteForm(http.Controller):
         'char': identity,
         'text': identity,
         'html': identity,
-        'date': date,
-        'datetime': datetime,
+        'date': identity,
+        'datetime': identity,
         'many2one': integer,
         'one2many': one2many,
         'many2many':many2many,

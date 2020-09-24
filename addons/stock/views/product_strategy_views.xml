@@ -4,7 +4,7 @@
         <field name="name">stock.putaway.rule.tree</field>
         <field name="model">stock.putaway.rule</field>
         <field name="arch" type="xml">
-            <tree string="Putaway Rules" editable="bottom">
+            <tree string="Putaway Rules" editable="bottom" sample='1'>
                 <field name="sequence" widget="handle"
                        invisible="context.get('invisible_handle', False)"/>
                 <field name="product_id"
@@ -46,6 +46,13 @@
         <field name="type">ir.actions.act_window</field>
         <field name="view_mode">tree</field>
         <field name="view_id" ref="stock_putaway_list"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No putaway rule found. Let's create one!
+            </p><p>
+                Create new putaway rules to dispatch automatically specific products to their appropriate destination location upon receptions.
+            </p>
+        </field>
     </record>
 
     <record id="view_putaway_search" model="ir.ui.view">

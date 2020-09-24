@@ -143,7 +143,7 @@ class PosConfig(models.Model):
         help="The product categories will be displayed with pictures.")
     restrict_price_control = fields.Boolean(string='Restrict Price Modifications to Managers',
         help="Only users with Manager access rights for PoS app can modify the product prices on orders.")
-    cash_control = fields.Boolean(string='Cash Control', help="Check the amount of the cashbox at opening and closing.")
+    cash_control = fields.Boolean(string='Advanced Cash Control', help="Check the amount of the cashbox at opening and closing.")
     receipt_header = fields.Text(string='Receipt Header', help="A short text that will be inserted as a header in the printed receipt.")
     receipt_footer = fields.Text(string='Receipt Footer', help="A short text that will be inserted as a footer in the printed receipt.")
     proxy_ip = fields.Char(string='IP Address', size=45,
@@ -296,7 +296,7 @@ class PosConfig(models.Model):
     @api.depends('session_ids')
     def _compute_current_session_user(self):
         for pos_config in self:
-            session = pos_config.session_ids.filtered(lambda s: s.state in ['new_session', 'opening_control', 'opened', 'closing_control'] and not s.rescue)
+            session = pos_config.session_ids.filtered(lambda s: s.state in ['opening_control', 'opened', 'closing_control'] and not s.rescue)
             if session:
                 pos_config.pos_session_username = session[0].user_id.sudo().name
                 pos_config.pos_session_state = session[0].state
@@ -565,6 +565,12 @@ class PosConfig(models.Model):
              'params': {'wait': True}
          }
 
+    def _force_http(self):
+        return False
+
+    def _get_pos_base_url(self):
+        return '/pos/web' if self._force_http() else '/pos/ui'
+
     # Methods to open the POS
     def open_ui(self):
         """Open the pos interface with config_id as an extra argument.
@@ -579,7 +585,7 @@ class PosConfig(models.Model):
         self._validate_fields(set(self._fields) - {"cash_control"})
         return {
             'type': 'ir.actions.act_url',
-            'url':   '/pos/web?config_id=%d' % self.id,
+            'url': self._get_pos_base_url() + '?config_id=%d' % self.id,
             'target': 'self',
         }
 
@@ -601,9 +607,7 @@ class PosConfig(models.Model):
                 'user_id': self.env.uid,
                 'config_id': self.id
             })
-            if self.current_session_id.state == 'opened':
-                return self.open_ui()
-        return self._open_session(self.current_session_id.id)
+        return self.open_ui()
 
     def open_existing_session_cb(self):
         """ close session button

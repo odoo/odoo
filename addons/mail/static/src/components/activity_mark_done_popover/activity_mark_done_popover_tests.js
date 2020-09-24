@@ -6,9 +6,10 @@ const components = {
 };
 
 const {
-    afterEach: utilsAfterEach,
-    beforeEach: utilsBeforeEach,
-    start: utilsStart,
+    afterEach,
+    beforeEach,
+    createRootComponent,
+    start,
 } = require('mail/static/src/utils/test_utils.js');
 
 QUnit.module('mail', {}, function () {
@@ -16,19 +17,17 @@ QUnit.module('components', {}, function () {
 QUnit.module('activity_mark_done_popover', {}, function () {
 QUnit.module('activity_mark_done_popover_tests.js', {
     beforeEach() {
-        utilsBeforeEach(this);
+        beforeEach(this);
 
         this.createActivityMarkDonePopoverComponent = async activity => {
-            const ActivityMarkDonePopoverComponent = components.ActivityMarkDonePopover;
-            ActivityMarkDonePopoverComponent.env = this.env;
-            this.component = new ActivityMarkDonePopoverComponent(null, {
-                activityLocalId: activity.localId,
+            await createRootComponent(this, components.ActivityMarkDonePopover, {
+                props: { activityLocalId: activity.localId },
+                target: this.widget.el,
             });
-            await this.component.mount(this.widget.el);
         };
 
         this.start = async params => {
-            let { env, widget } = await utilsStart(Object.assign({}, params, {
+            const { env, widget } = await start(Object.assign({}, params, {
                 data: this.data,
             }));
             this.env = env;
@@ -36,14 +35,7 @@ QUnit.module('activity_mark_done_popover_tests.js', {
         };
     },
     afterEach() {
-        utilsAfterEach(this);
-        if (this.component) {
-            this.component.destroy();
-        }
-        if (this.widget) {
-            this.widget.destroy();
-        }
-        this.env = undefined;
+        afterEach(this);
     },
 });
 
@@ -132,37 +124,6 @@ QUnit.test('activity with force next mark done popover simplest layout', async f
         '.o_ActivityMarkDonePopover_discardButton',
         "Popover component should NOT contain the discard button"
     );
-});
-
-QUnit.test('activity mark done popover click on discard', async function (assert) {
-    assert.expect(4);
-
-    await this.start();
-    const activity = this.env.models['mail.activity'].create({
-        canWrite: true,
-        category: 'not_upload_file',
-        id: 12,
-    });
-    await this.createActivityMarkDonePopoverComponent(activity);
-    function onPopoverClose(ev) {
-        assert.step('event_triggered');
-    }
-    document.addEventListener('o-popover-close', onPopoverClose);
-
-    assert.containsOnce(
-        document.body,
-        '.o_ActivityMarkDonePopover',
-        "Popover component should be present"
-    );
-    assert.containsOnce(
-        document.body,
-        '.o_ActivityMarkDonePopover_discardButton',
-        "Popover component should contain the discard button"
-    );
-    document.querySelector('.o_ActivityMarkDonePopover_discardButton').click();
-    assert.verifySteps(['event_triggered'], 'Discard clicked should trigger the right event');
-
-    document.removeEventListener('o-popover-close', onPopoverClose);
 });
 
 QUnit.test('activity mark done popover mark done without feedback', async function (assert) {

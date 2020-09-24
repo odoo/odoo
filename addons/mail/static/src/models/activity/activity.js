@@ -3,6 +3,7 @@ odoo.define('mail/static/src/models/activity/activity/js', function (require) {
 
 const { registerNewModel } = require('mail/static/src/model/model_core.js');
 const { attr, many2many, many2one } = require('mail/static/src/model/model_field.js');
+const { clear } = require('mail/static/src/model/model_field_command.js');
 
 function factory(dependencies) {
 
@@ -93,7 +94,7 @@ function factory(dependencies) {
                     data2.creator = [
                         ['insert', {
                             id: data.create_uid[0],
-                            partnerDisplayName: data.create_uid[1],
+                            display_name: data.create_uid[1],
                         }],
                     ];
                 }
@@ -108,7 +109,7 @@ function factory(dependencies) {
                     data2.assignee = [
                         ['insert', {
                             id: data.user_id[0],
-                            partnerDisplayName: data.user_id[1],
+                            display_name: data.user_id[1],
                         }],
                     ];
                 }
@@ -234,6 +235,21 @@ function factory(dependencies) {
         _computeMessaging() {
             return [['link', this.env.messaging]];
         }
+
+        /**
+         * Wysiwyg editor put `<p><br></p>` even without a note on the activity.
+         * This compute replaces this almost empty value by an actual empty
+         * value, to reduce the size the empty note takes on the UI.
+         *
+         * @private
+         * @returns {string|undefined}
+         */
+        _computeNote() {
+            if (this.note === '<p><br></p>') {
+                return clear();
+            }
+            return this.note;
+        }
     }
 
     Activity.fields = {
@@ -282,7 +298,12 @@ function factory(dependencies) {
          * Do not use this value in a 't-raw' if the activity has been created
          * directly from user input and not from server data as it's not escaped.
          */
-        note: attr(),
+        note: attr({
+            compute: '_computeNote',
+            dependencies: [
+                'note',
+            ],
+        }),
         res_id: attr(),
         res_model: attr(),
         state: attr(),

@@ -152,12 +152,13 @@
 }
 
 .o_Message_trackingValues {
-    margin-top: map-get($spacers, 3);
+    margin-top: map-get($spacers, 2);
 }
 
 .o_Message_trackingValue {
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
 }
 
 .o_Message_trackingValueItem {
@@ -173,12 +174,8 @@
 
     &:hover, &.o-clicked {
 
-        .o_Message_command {
-            display: flex;
-        }
-
         .o_Message_commands {
-            display: flex;
+            opacity: 1;
         }
 
         .o_Message_sidebarItem.o-message-squashed {
@@ -240,8 +237,6 @@
     color: gray('400');
 
     &:not(.o-mobile) {
-        display: none;
-
         &:hover {
             filter: brightness(0.8);
         }
@@ -289,7 +284,7 @@
 }
 
 .o_Message_headerCommands:not(.o-mobile) {
-    display: none;
+    opacity: 0;
 }
 
 .o_Message_originThread {
@@ -340,7 +335,7 @@
     }
 }
 
-.o_Message_notificationIconContainer {
+.o_Message_notificationIconClickable {
     color: gray('600');
     cursor: pointer;
 
@@ -354,5 +349,16 @@
 }
 
 .o_Message_sidebarItem.o-message-squashed {
+    display: none;
+}
+
+.o_Message_subject {
+    font-style: italic;
+}
+
+// Used to hide buttons on rating emails in chatter
+// FIXME: should use a better approach for not having such buttons
+// in chatter of such messages, but keep having them in emails.
+.o_Message_content [summary~="o_mail_notification"] {
     display: none;
 }

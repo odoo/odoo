@@ -60,7 +60,7 @@ class MassMailingList(models.Model):
         return [(list.id, "%s (%s)" % (list.name, list.contact_nbr)) for list in self]
 
     def action_view_contacts(self):
-        action = self.env.ref('mass_mailing.action_view_mass_mailing_contacts').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("mass_mailing.action_view_mass_mailing_contacts")
         action['domain'] = [('list_ids', 'in', self.ids)]
         context = dict(self.env.context, search_default_filter_valid_email_recipient=1, default_list_ids=self.ids)
         action['context'] = context

@@ -8,18 +8,51 @@ class ProjectProductEmployeeMap(models.Model):
     _name = 'project.sale.line.employee.map'
     _description = 'Project Sales line, employee mapping'
 
-    @api.model
-    def _default_project_id(self):
-        if self._context.get('active_id'):
-            return self._context['active_id']
-        return False
-
-    project_id = fields.Many2one('project.project', "Project", domain=[('billable_type', '!=', 'no')], required=True, default=_default_project_id)
+    project_id = fields.Many2one('project.project', "Project", required=True)
     employee_id = fields.Many2one('hr.employee', "Employee", required=True)
-    sale_line_id = fields.Many2one('sale.order.line', "Sale Order Item", domain=[('is_service', '=', True)], required=True)
-    price_unit = fields.Float(related='sale_line_id.price_unit', readonly=True)
-    currency_id = fields.Many2one(related="sale_line_id.currency_id")
+    sale_line_id = fields.Many2one('sale.order.line', "Sale Order Item", domain=[('is_service', '=', True)])
+    company_id = fields.Many2one('res.company', string='Company', related='project_id.company_id')
+    timesheet_product_id = fields.Many2one(
+        'product.product', string='Service',
+        domain="""[
+            ('type', '=', 'service'),
+            ('invoice_policy', '=', 'delivery'),
+            ('service_type', '=', 'timesheet'),
+            '|', ('company_id', '=', False), ('company_id', '=', company_id)]""")
+    price_unit = fields.Float("Unit Price", compute='_compute_price_unit', store=True, readonly=False)
+    currency_id = fields.Many2one('res.currency', string="Currency", compute='_compute_price_unit', store=True, readonly=False)
 
     _sql_constraints = [
         ('uniqueness_employee', 'UNIQUE(project_id,employee_id)', 'An employee cannot be selected more than once in the mapping. Please remove duplicate(s) and try again.'),
     ]
+
+    @api.depends('sale_line_id', 'sale_line_id.price_unit', 'timesheet_product_id')
+    def _compute_price_unit(self):
+        for line in self:
+            if line.sale_line_id:
+                line.price_unit = line.sale_line_id.price_unit
+                line.currency_id = line.sale_line_id.currency_id
+            elif line.timesheet_product_id:
+                line.price_unit = line.timesheet_product_id.lst_price
+                line.currency_id = line.timesheet_product_id.currency_id
+            else:
+                line.price_unit = 0
+                line.currency_id = False
+
+    @api.onchange('timesheet_product_id')
+    def _onchange_timesheet_product_id(self):
+        if self.timesheet_product_id:
+            self.price_unit = self.timesheet_product_id.lst_price
+        else:
+            self.price_unit = 0.0
+
+    @api.model
+    def create(self, values):
+        res = super(ProjectProductEmployeeMap, self).create(values)
+        for project_id in res.filtered(lambda l: l.sale_line_id).project_id:
+            if project_id.allow_timesheets and project_id.allow_billable and project_id.task_ids._get_timesheet():
+                timesheet_ids = project_id.task_ids._get_timesheet()
+                for employee_id in res.filtered(lambda l: l.project_id == project_id).employee_id:
+                    sale_line_id = res.filtered(lambda l: l.project_id == project_id and l.employee_id == employee_id).sale_line_id
+                    timesheet_ids.filtered(lambda t: t.employee_id == employee_id).so_line = sale_line_id
+        return res

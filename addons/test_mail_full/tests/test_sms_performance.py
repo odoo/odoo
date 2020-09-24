@@ -51,7 +51,7 @@ class TestSMSPerformance(BaseMailPerformance, sms_common.SMSCase):
     def test_message_sms_record_1_partner(self):
         record = self.test_record.with_user(self.env.user)
         pids = self.customer.ids
-        with self.mockSMSGateway(), self.assertQueryCount(employee=25):  # test_mail_enterprise: 25
+        with self.mockSMSGateway(), self.assertQueryCount(employee=23):  # test_mail_enterprise: 25
             messages = record._message_sms(
                 body='Performance Test',
                 partner_ids=pids,
@@ -66,7 +66,7 @@ class TestSMSPerformance(BaseMailPerformance, sms_common.SMSCase):
     def test_message_sms_record_10_partners(self):
         record = self.test_record.with_user(self.env.user)
         pids = self.partners.ids
-        with self.mockSMSGateway(), self.assertQueryCount(employee=43):  # test_mail_enterprise: 43
+        with self.mockSMSGateway(), self.assertQueryCount(employee=41):  # test_mail_enterprise: 43
             messages = record._message_sms(
                 body='Performance Test',
                 partner_ids=pids,
@@ -80,7 +80,7 @@ class TestSMSPerformance(BaseMailPerformance, sms_common.SMSCase):
     @warmup
     def test_message_sms_record_default(self):
         record = self.test_record.with_user(self.env.user)
-        with self.mockSMSGateway(), self.assertQueryCount(employee=28):  # test_mail_enterprise: 28
+        with self.mockSMSGateway(), self.assertQueryCount(employee=26):  # test_mail_enterprise: 28
             messages = record._message_sms(
                 body='Performance Test',
             )

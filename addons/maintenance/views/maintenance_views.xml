@@ -198,7 +198,7 @@
         <field name="name">equipment.request.graph</field>
         <field name="model">maintenance.request</field>
         <field name="arch" type="xml">
-            <graph string="maintenance Request">
+            <graph string="maintenance Request" sample="1">
                 <field name="user_id"/>
                 <field name="stage_id"/>
             </graph>
@@ -209,7 +209,7 @@
         <field name="name">equipment.request.pivot</field>
         <field name="model">maintenance.request</field>
         <field name="arch" type="xml">
-            <pivot string="maintenance Request">
+            <pivot string="maintenance Request" sample="1">
                 <field name="user_id"/>
                 <field name="stage_id"/>
                 <field name="color" invisible="1"/>
@@ -422,7 +422,6 @@
                 <field name="maintenance_ids"/>
                 <field name="maintenance_open_count"/>
                 <field name="next_action_date"/>
-                <field name="technician_user_id"/>
                 <field name="activity_ids" />
                 <field name="activity_state" />
                 <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}'/>

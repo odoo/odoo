@@ -50,8 +50,7 @@ class L10nLatamDocumentType(models.Model):
             domain = []
         else:
             domain = ['|', ('name', 'ilike', name), ('code', 'ilike', name)]
-        ids = self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
-        return self.browse(ids).name_get()
+        return self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
 
     def _filter_taxes_included(self, taxes):
         """ This method is to be inherited by different localizations and must return filter the given taxes recordset

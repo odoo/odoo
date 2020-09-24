@@ -16,6 +16,7 @@ import sys
 import threading
 import time
 import unittest
+from itertools import chain
 
 import psutil
 import werkzeug.serving
@@ -53,11 +54,11 @@ except ImportError:
 
 import odoo
 from odoo.modules import get_modules
-from odoo.modules.module import run_unit_tests, get_test_modules
 from odoo.modules.registry import Registry
 from odoo.release import nt_service_name
 from odoo.tools import config
 from odoo.tools import stripped_sys_argv, dumpstacks, log_ormcache_stats
+from ..tests import loader, runner
 
 _logger = logging.getLogger(__name__)
 
@@ -511,13 +512,14 @@ class ThreadedServer(CommonServer):
 
         if stop:
             if config['test_enable']:
+                logger = odoo.tests.runner._logger
                 with Registry.registries._lock:
                     for db, registry in Registry.registries.d.items():
                         report = registry._assertion_report
-                        log = _logger.error if report.failures \
-                         else _logger.warning if not report.successes \
-                         else _logger.info
-                        log("%d / %d tests failed when loading %s", report.failures, report.successes + report.failures, db)
+                        log = logger.error if not report.wasSuccessful() \
+                         else logger.warning if not report.testsRun \
+                         else logger.info
+                        log("%s when loading database %r", report, db)
             self.stop()
             return rc
 
@@ -952,7 +954,7 @@ class Worker(object):
         r = resource.getrusage(resource.RUSAGE_SELF)
         cpu_time = r.ru_utime + r.ru_stime
         soft, hard = resource.getrlimit(resource.RLIMIT_CPU)
-        resource.setrlimit(resource.RLIMIT_CPU, (cpu_time + config['limit_time_cpu'], hard))
+        resource.setrlimit(resource.RLIMIT_CPU, (int(cpu_time + config['limit_time_cpu']), hard))
 
     def process_work(self):
         pass
@@ -1171,18 +1173,15 @@ def load_test_file_py(registry, test_file):
     try:
         test_path, _ = os.path.splitext(os.path.abspath(test_file))
         for mod in [m for m in get_modules() if '/%s/' % m in test_file]:
-            for mod_mod in get_test_modules(mod):
+            for mod_mod in loader.get_test_modules(mod):
                 mod_path, _ = os.path.splitext(getattr(mod_mod, '__file__', ''))
                 if test_path == mod_path:
-                    tests = odoo.modules.module.unwrap_suite(
+                    tests = loader.unwrap_suite(
                         unittest.TestLoader().loadTestsFromModule(mod_mod))
                     suite = OdooSuite(tests)
                     _logger.log(logging.INFO, 'running tests %s.', mod_mod.__name__)
-                    result = odoo.modules.module.OdooTestRunner().run(suite)
-                    success = result.wasSuccessful()
-                    if hasattr(registry._assertion_report,'report_result'):
-                        registry._assertion_report.report_result(success)
-                    if not success:
+                    suite(registry._assertion_report)
+                    if not registry._assertion_report.wasSuccessful():
                         _logger.error('%s: at least one error occurred in a test', test_file)
                     return
     finally:
@@ -1217,14 +1216,17 @@ def preload_registries(dbnames):
                 module_names = (registry.updated_modules if update_module else
                                 registry._init_modules)
                 _logger.info("Starting post tests")
+                tests_before = registry._assertion_report.testsRun
                 with odoo.api.Environment.manage():
                     for module_name in module_names:
-                        result = run_unit_tests(module_name, position='post_install')
-                        registry._assertion_report.record_result(result)
-                _logger.info("All post-tested in %.2fs, %s queries",
-                             time.time() - t0, odoo.sql_db.sql_counter - t0_sql)
+                        result = loader.run_suite(loader.make_suite(module_name, 'post_install'), module_name)
+                        registry._assertion_report.update(result)
+                _logger.info("%d post-tests in %.2fs, %s queries",
+                             registry._assertion_report.testsRun - tests_before,
+                             time.time() - t0,
+                             odoo.sql_db.sql_counter - t0_sql)
 
-            if registry._assertion_report.failures:
+            if not registry._assertion_report.wasSuccessful():
                 rc += 1
         except Exception:
             _logger.critical('Failed to initialize database `%s`.', dbname, exc_info=True)

@@ -143,27 +143,11 @@ class Product(models.Model):
             domain_move_in_done = list(domain_move_in)
             domain_move_out_done = list(domain_move_out)
         if from_date:
-            date_date_expected_domain_from = [
-                '|',
-                    '&',
-                        ('state', '=', 'done'),
-                        ('date', '<=', from_date),
-                    '&',
-                        ('state', '!=', 'done'),
-                        ('date_expected', '<=', from_date),
-            ]
+            date_date_expected_domain_from = [('date', '<=', from_date)]
             domain_move_in += date_date_expected_domain_from
             domain_move_out += date_date_expected_domain_from
         if to_date:
-            date_date_expected_domain_to = [
-                '|',
-                    '&',
-                        ('state', '=', 'done'),
-                        ('date', '<=', to_date),
-                    '&',
-                        ('state', '!=', 'done'),
-                        ('date_expected', '<=', to_date),
-            ]
+            date_date_expected_domain_to = [('date', '<=', to_date)]
             domain_move_in += date_date_expected_domain_to
             domain_move_out += date_date_expected_domain_to
 
@@ -431,7 +415,7 @@ class Product(models.Model):
         return res
 
     def action_view_orderpoints(self):
-        action = self.env.ref('stock.action_orderpoint').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("stock.action_orderpoint")
         action['context'] = literal_eval(action.get('context'))
         action['context'].pop('search_default_trigger', False)
         action['context'].update({
@@ -451,7 +435,7 @@ class Product(models.Model):
 
     def action_view_stock_move_lines(self):
         self.ensure_one()
-        action = self.env.ref('stock.stock_move_line_action').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("stock.stock_move_line_action")
         action['domain'] = [('product_id', '=', self.id)]
         return action
 
@@ -466,7 +450,7 @@ class Product(models.Model):
 
     def action_open_product_lot(self):
         self.ensure_one()
-        action = self.env.ref('stock.action_production_lot_form').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("stock.action_production_lot_form")
         action['domain'] = [('product_id', '=', self.id)]
         action['context'] = {
             'default_product_id': self.id,
@@ -479,7 +463,7 @@ class Product(models.Model):
     def action_open_quants(self):
         domain = [('product_id', 'in', self.ids)]
         hide_location = not self.user_has_groups('stock.group_stock_multi_locations')
-        hide_lot = all([product.tracking == 'none' for product in self])
+        hide_lot = all(product.tracking == 'none' for product in self)
         self = self.with_context(
             hide_location=hide_location, hide_lot=hide_lot,
             no_at_date=True, search_default_on_hand=True,
@@ -513,7 +497,7 @@ class Product(models.Model):
 
     def action_product_forecast_report(self):
         self.ensure_one()
-        action = self.env.ref('stock.stock_replenishment_product_product_action').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("stock.stock_replenishment_product_product_action")
         return action
 
     @api.model
@@ -603,7 +587,8 @@ class ProductTemplate(models.Model):
     location_id = fields.Many2one('stock.location', 'Location', store=False)
     warehouse_id = fields.Many2one('stock.warehouse', 'Warehouse', store=False)
     has_available_route_ids = fields.Boolean(
-        'Routes can be selected on this product', compute='_compute_has_available_route_ids')
+        'Routes can be selected on this product', compute='_compute_has_available_route_ids',
+        default=lambda self: self.env['stock.location.route'].search_count([('product_selectable', '=', True)]))
     route_ids = fields.Many2many(
         'stock.location.route', 'stock_route_product', 'product_id', 'route_id', 'Routes',
         domain=[('product_selectable', '=', True)],
@@ -757,7 +742,7 @@ class ProductTemplate(models.Model):
             return self.action_open_quants()
         else:
             default_product_id = len(self.product_variant_ids) == 1 and self.product_variant_id.id
-            action = self.env.ref('stock.action_change_product_quantity').read()[0]
+            action = self.env["ir.actions.actions"]._for_xml_id("stock.action_change_product_quantity")
             action['context'] = dict(
                 self.env.context,
                 default_product_id=default_product_id,
@@ -779,13 +764,13 @@ class ProductTemplate(models.Model):
 
     def action_view_stock_move_lines(self):
         self.ensure_one()
-        action = self.env.ref('stock.stock_move_line_action').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("stock.stock_move_line_action")
         action['domain'] = [('product_id.product_tmpl_id', 'in', self.ids)]
         return action
 
     def action_open_product_lot(self):
         self.ensure_one()
-        action = self.env.ref('stock.action_production_lot_form').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("stock.action_production_lot_form")
         action['domain'] = [('product_id.product_tmpl_id', '=', self.id)]
         action['context'] = {
             'default_product_tmpl_id': self.id,
@@ -810,13 +795,13 @@ class ProductTemplate(models.Model):
                 'product_id': products.id,
                 'warehouse_ids': warehouse.ids,
             }, config=False)
-        action = self.env.ref('stock.action_stock_rules_report').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("stock.action_stock_rules_report")
         action['context'] = self.env.context
         return action
 
     def action_product_tmpl_forecast_report(self):
         self.ensure_one()
-        action = self.env.ref('stock.stock_replenishment_product_product_action').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id('stock.stock_replenishment_product_product_action')
         return action
 
 class ProductCategory(models.Model):

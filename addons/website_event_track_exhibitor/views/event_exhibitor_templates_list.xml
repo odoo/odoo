@@ -1,12 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-<template id="event_layout" inherit_id="website_event.layout">
-    <xpath expr="//div[@id='wrap']" position="attributes">
-        <attribute name="t-attf-class">o_wevent_event js_event #{'o_wevent_hide_sponsors' if hide_sponsors else ''}</attribute>
-    </xpath>
-</template>
-
 <template id="event_exhibitors" name="Event Exhibitors">
     <t t-call="website_event.layout">
         <div class="o_wevent_online o_wevent_online_bg o_wesponsor_index">
@@ -24,7 +18,7 @@
                 </div>
             </div>
             <!-- Drag/Drop Area -->
-            <div id="oe_structure_wesponsor_index_2" class="oe_structure"/>
+            <div id="oe_structure_wesponsor_index_2" class="oe_structure mb-5"/>
         </div>
     </t>
 </template>
@@ -100,7 +94,7 @@
             <div class="dropdown-menu">
                 <a t-att-href="'/event/%s/exhibitors?%s' % (slug(event), keep_query('*', sponsorships=''))"
                     t-attf-class="dropdown-item d-flex align-items-center justify-content-between #{'active' if not search_sponsorships else ''}">
-                    All Countries
+                    All Sponsorships
                 </a>
                 <t t-foreach="sponsor_types" t-as="sponsor_type">
                     <a t-att-href="'/event/%s/exhibitors?%s' % (
@@ -142,7 +136,7 @@
 <template id="exhibitors_display_cards" name="Exhibitors Cards">
     <div t-foreach="sponsor_categories" t-as="sponsor_category" class="row mb-3">
         <div class="col-12">
-            <h5 class="m-0" t-esc="sponsor_category['sponsorship'].name"/>
+            <h2 class="m-0" t-esc="sponsor_category['sponsorship'].name"/>
             <hr class="mt-2 pb-1 mb-1"/>
         </div>
         <div t-foreach="sponsor_category['sponsors']" t-as="sponsor" class="col-md-6 col-lg-3 mb-4">
@@ -160,7 +154,7 @@
         itemscope="itemscope" itemtype="http://schema.org/Event">
         <div class="h-100 row no-gutters">
             <t t-set="sponsor_image_url" t-value="sponsor.website_image_url"/>
-            <header t-att-class="'overflow-hidden col-12 rounded-top position-static %s' % ('bg-secondary' if not sponsor_image_url else 'bg-light')">
+            <header t-att-class="'overflow-hidden col-12 rounded-top position-static %s' % ('bg-secondary' if not sponsor_image_url else '')">
 
                 <small t-if="not sponsor.is_published" class="o_wesponsor_card_header_badge bg-danger">
                     <i class="fa fa-ban mr-2"/>Unpublished
@@ -176,18 +170,28 @@
                     <div t-if="sponsor_image_url" class="card-img-top position-static o_wesponsor_bg_image"
                         t-attf-style="padding-top: 50%; background-image: url(#{sponsor_image_url});">
                         <div class="o_wesponsor_connect_button">
-                            <a href="#" class="btn btn-primary h3">Connect</a>
+                            <a href="#" class="btn btn-primary h3">
+                                <t t-if="not user_event_manager and not sponsor.event_id.is_ongoing and not event.is_participating">
+                                    Register
+                                </t>
+                                <t t-else="">Connect</t>
+                            </a>
                         </div>
                         <img class="position-absolute mr-2 mt-2"
                             style="right: 0; top: 0; max-height: 20px;"
                             t-if="sponsor.partner_id.country_id"
-                            t-att-src="website.image_url(sponsor.partner_id.country_id, 'image')"
+                            t-att-src="sponsor.partner_id.country_id.image_url"
                             t-att-alt="sponsor.partner_id.country_id.name"/>
                     </div>
                     <div t-else="" class="o_wesponsor_gradient card-img-top position-relative"
                         style="padding-top: 50%">
                         <div class="o_wesponsor_connect_button">
-                            <a href="#" class="btn btn-primary h3">Connect</a>
+                            <a href="#" class="btn btn-primary h3">
+                                <t t-if="not user_event_manager and not sponsor.event_id.is_ongoing and not event.is_participating">
+                                    Register
+                                </t>
+                                <t t-else="">Connect</t>
+                            </a>
                         </div>
                     </div>
                 </div>

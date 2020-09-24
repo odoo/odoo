@@ -114,7 +114,7 @@ class PurchaseRequisition(models.Model):
 
     def action_in_progress(self):
         self.ensure_one()
-        if not all(obj.line_ids for obj in self):
+        if not self.line_ids:
             raise UserError(_("You cannot confirm agreement '%s' because there is no product line.", self.name))
         if self.type_id.quantity_copy == 'none' and self.vendor_id:
             for requisition_line in self.line_ids:
@@ -187,7 +187,7 @@ class PurchaseRequisitionLine(models.Model):
                 ('product_id', '=', vals.get('product_id')),
                 ('name', '=', res.requisition_id.vendor_id.id),
             ])
-            if not any([s.purchase_requisition_id for s in supplier_infos]):
+            if not any(s.purchase_requisition_id for s in supplier_infos):
                 res.create_supplier_info()
             if vals['price_unit'] <= 0.0:
                 raise UserError(_('You cannot confirm the blanket order without price.'))

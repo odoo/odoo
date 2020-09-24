@@ -2,12 +2,14 @@
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged, new_test_user
 from odoo.tests.common import Form
-from odoo import fields
-from odoo.exceptions import ValidationError, UserError
+from odoo import fields, api, SUPERUSER_ID
+from odoo.exceptions import ValidationError, UserError, RedirectWarning
+from odoo.tools import mute_logger
 
 from dateutil.relativedelta import relativedelta
 from functools import reduce
 import json
+import psycopg2
 
 
 @tagged('post_install', '-at_install')
@@ -156,7 +158,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
         statement.button_post()
 
         # You can't lock the fiscal year if there is some unreconciled statement.
-        with self.assertRaises(ValidationError), self.cr.savepoint():
+        with self.assertRaises(RedirectWarning), self.cr.savepoint():
             self.test_move.company_id.fiscalyear_lock_date = fields.Date.from_string('2017-01-01')
 
     def test_misc_tax_lock_date_1(self):
@@ -246,7 +248,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
         with self.assertRaises(UserError), self.cr.savepoint():
             self.test_move.button_draft()
 
-        copy_move = self.test_move.copy()
+        copy_move = self.test_move.copy({'date': self.test_move.date})
 
         # /!\ The date is changed automatically to the next available one during the post.
         copy_move.action_post()
@@ -366,12 +368,12 @@ class TestAccountMove(AccountTestInvoicingCommon):
         self.test_move.action_post()
         self.assertEqual(self.test_move.name, 'MISC/2016/01/0001')
 
-        copy1 = self.test_move.copy()
+        copy1 = self.test_move.copy({'date': self.test_move.date})
         self.assertEqual(copy1.name, '/')
         copy1.action_post()
         self.assertEqual(copy1.name, 'MISC/2016/01/0002')
 
-        copy2 = self.test_move.copy()
+        copy2 = self.test_move.copy({'date': self.test_move.date})
         new_journal = self.test_move.journal_id.copy()
         new_journal.code = "MISC2"
         copy2.journal_id = new_journal
@@ -381,7 +383,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
         copy2.action_post()
         self.assertEqual(copy2.name, 'MyMISC/2099/0001')
 
-        copy3 = copy2.copy()
+        copy3 = copy2.copy({'date': copy2.date})
         self.assertEqual(copy3.name, '/')
         with self.assertRaises(AssertionError):
             with Form(copy2) as move_form:  # It is not editable in the form
@@ -390,17 +392,17 @@ class TestAccountMove(AccountTestInvoicingCommon):
         self.assertEqual(copy3.name, 'MyMISC/2099/0002')
         copy3.name = 'MISC2/2016/00002'
 
-        copy4 = copy2.copy()
+        copy4 = copy2.copy({'date': copy2.date})
         copy4.action_post()
         self.assertEqual(copy4.name, 'MISC2/2016/00003')
 
-        copy5 = copy2.copy()
+        copy5 = copy2.copy({'date': copy2.date})
         copy5.date = '2021-02-02'
         copy5.action_post()
         self.assertEqual(copy5.name, 'MISC2/2021/00001')
         copy5.name = 'N\'importe quoi?'
 
-        copy6 = copy5.copy()
+        copy6 = copy5.copy({'date': copy5.date})
         copy6.action_post()
         self.assertEqual(copy6.name, 'N\'importe quoi?1')
 
@@ -434,21 +436,22 @@ class TestAccountMove(AccountTestInvoicingCommon):
             init_move.name = sequence_init
             next_moves.name = False
             next_moves._compute_name()
-            self.assertEqual(next_move.name, sequence_next)
-            self.assertEqual(next_move_month.name, sequence_next_month)
-            self.assertEqual(next_move_year.name, sequence_next_year)
+            self.assertEqual(
+                [next_move.name, next_move_month.name, next_move_year.name],
+                [sequence_next, sequence_next_month, sequence_next_year],
+            )
 
     def test_journal_next_sequence(self):
         prefix = "TEST_ORDER/2016/"
         self.test_move.name = f"{prefix}1"
         for c in range(2, 25):
-            copy = self.test_move.copy()
+            copy = self.test_move.copy({'date': self.test_move.date})
             copy.name = "/"
             copy.action_post()
             self.assertEqual(copy.name, f"{prefix}{c}")
 
     def test_journal_sequence_multiple_type(self):
-        entry, entry2, invoice, invoice2, refund, refund2 = (self.test_move.copy() for i in range(6))
+        entry, entry2, invoice, invoice2, refund, refund2 = (self.test_move.copy({'date': self.test_move.date}) for i in range(6))
         (invoice + invoice2 + refund + refund2).write({
             'journal_id': self.company_data['default_journal_sale'],
             'partner_id': 1,
@@ -470,7 +473,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
         other_moves = self.env['account.move'].search([('journal_id', '=', self.test_move.journal_id.id)]) - self.test_move
         other_moves.unlink()  # Do not interfere when trying to get the highest name for new periods
         self.test_move.name = '00000876-G 0002/2020'
-        next = self.test_move.copy()
+        next = self.test_move.copy({'date': self.test_move.date})
         next.action_post()
         self.assertEqual(next.name, '00000876-G 0002/2021')  # Wait, I didn't want this!
 
@@ -479,14 +482,14 @@ class TestAccountMove(AccountTestInvoicingCommon):
         next._compute_name()
         self.assertEqual(next.name, '00000877-G 0002/2020')  # Pfew, better!
 
-        next = next = self.test_move.copy()
+        next = next = self.test_move.copy({'date': self.test_move.date})
         next.date = "2017-05-02"
         next.action_post()
         self.assertEqual(next.name, '00000001-G 0002/2017')
 
     def test_journal_sequence_ordering(self):
         self.test_move.name = 'XMISC/2016/00001'
-        copies = reduce((lambda x, y: x+y), [self.test_move.copy() for i in range(6)])
+        copies = reduce((lambda x, y: x+y), [self.test_move.copy({'date': self.test_move.date}) for i in range(6)])
 
         copies[0].date = '2019-03-05'
         copies[1].date = '2019-03-06'
@@ -546,6 +549,53 @@ class TestAccountMove(AccountTestInvoicingCommon):
         self.assertEqual(copies[3].state, 'posted')
         self.assertEqual(copies[5].name, 'XMISC/2019/10005')
         self.assertEqual(copies[5].state, 'draft')
+
+    def test_sequence_concurency(self):
+        with self.env.registry.cursor() as cr0,\
+                self.env.registry.cursor() as cr1,\
+                self.env.registry.cursor() as cr2:
+            env0 = api.Environment(cr0, SUPERUSER_ID, {})
+            env1 = api.Environment(cr1, SUPERUSER_ID, {})
+            env2 = api.Environment(cr2, SUPERUSER_ID, {})
+
+            journal = env0['account.journal'].create({
+                'name': 'concurency_test',
+                'code': 'CT',
+                'type': 'general',
+            })
+            account = env0['account.account'].create({
+                'code': 'CT',
+                'name': 'CT',
+                'user_type_id': env0.ref('account.data_account_type_fixed_assets').id,
+            })
+            moves = env0['account.move'].create([{
+                'journal_id': journal.id,
+                'date': fields.Date.from_string('2016-01-01'),
+                'line_ids': [(0, 0, {'name': 'name', 'account_id': account.id})]
+            }] * 3)
+            moves.name = '/'
+            moves[0].action_post()
+            self.assertEqual(moves.mapped('name'), ['CT/2016/01/0001', '/', '/'])
+            env0.cr.commit()
+
+            # start the transactions here on cr2 to simulate concurency with cr1
+            env2.cr.execute('SELECT 1')
+
+            move = env1['account.move'].browse(moves[1].id)
+            move.action_post()
+            env1.cr.commit()
+
+            move = env2['account.move'].browse(moves[2].id)
+            with self.assertRaises(psycopg2.OperationalError), env2.cr.savepoint(), mute_logger('odoo.sql_db'):
+                move.action_post()
+
+            self.assertEqual(moves.mapped('name'), ['CT/2016/01/0001', 'CT/2016/01/0002', '/'])
+            moves.button_draft()
+            moves.posted_before = False
+            moves.unlink()
+            journal.unlink()
+            account.unlink()
+            env0.cr.commit()
 
     def test_add_followers_on_post(self):
         # Add some existing partners, some from another company

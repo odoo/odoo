@@ -74,6 +74,7 @@ class TestPartnerAssign(TransactionCase):
         self.assertEqual(lead.partner_assigned_id, partner_uk, "Opportuniy is not assigned nearest partner")
         self.assertTrue(50 < lead.partner_latitude < 55, "Latitude is wrong: 50 < %s < 55" % lead.partner_latitude)
         self.assertTrue(-4 < lead.partner_longitude < -1, "Longitude is wrong: -4 < %s < -1" % lead.partner_longitude)
+        self.assertTrue(lead.date_partner_assign, "Partner Assignment Date should be set")
 
         # I forward this opportunity to its nearest partner.
         context = dict(self.env.context, default_model='crm.lead', default_res_id=lead.id, active_ids=lead.ids)

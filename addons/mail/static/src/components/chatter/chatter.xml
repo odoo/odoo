@@ -8,15 +8,16 @@
                     class="o_Chatter_topbar"
                     chatterLocalId="chatter.localId"
                 />
-                <t t-if="chatter.hasThread and chatter.thread and chatter.isComposerVisible">
+                <t t-if="chatter.threadView and chatter.isComposerVisible">
                     <Composer
                         class="o_Chatter_composer"
                         t-att-class="{ 'o-bordered': chatter.hasExternalBorder }"
                         composerLocalId="chatter.thread.composer.localId"
+                        hasFollowers="true"
                         hasMentionSuggestionsBelowPosition="true"
-                        hasTextInputSendOnEnterEnabled="false"
                         isCompact="false"
                         isExpandable="true"
+                        textInputSendShortcuts="['ctrl-enter', 'meta-enter']"
                         t-on-o-message-posted="_onComposerMessagePosted"
                         t-ref="composer"
                     />
@@ -27,24 +28,21 @@
                         threadLocalId="chatter.thread.localId"
                     />
                 </t>
-                <t t-if="chatter.thread">
-                    <t t-if="chatter.hasActivities and chatter.activities.length > 0">
-                        <ActivityBox
-                            class="o_Chatter_activityBox"
-                            chatterLocalId="chatter.localId"
-                        />
-                    </t>
-                    <t t-if="chatter.hasThread">
-                        <ThreadViewer
-                            class="o_Chatter_thread"
-                            hasComposer="false"
-                            hasScrollAdjust="chatter.hasMessageListScrollAdjust"
-                            haveMessagesAuthorRedirect="true"
-                            order="'desc'"
-                            threadViewerLocalId="chatter.threadViewer.localId"
-                            t-ref="thread"
-                        />
-                    </t>
+                <t t-if="chatter.thread and chatter.hasActivities and chatter.activities.length > 0">
+                    <ActivityBox
+                        class="o_Chatter_activityBox"
+                        chatterLocalId="chatter.localId"
+                    />
+                </t>
+                <t t-if="chatter.threadView">
+                    <ThreadView
+                        class="o_Chatter_thread"
+                        hasComposer="false"
+                        hasScrollAdjust="chatter.hasMessageListScrollAdjust"
+                        order="'desc'"
+                        threadViewLocalId="chatter.threadView.localId"
+                        t-ref="thread"
+                    />
                 </t>
             </t>
         </div>

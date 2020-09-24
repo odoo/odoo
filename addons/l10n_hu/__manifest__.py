@@ -6,7 +6,7 @@
 {
     'name': 'Hungarian - Accounting',
     'version': '2.0',
-    'category': 'Accounting/Localizations',
+    'category': 'Accounting/Localizations/Account Charts',
     'description': """
 
 Base module for Hungarian localization

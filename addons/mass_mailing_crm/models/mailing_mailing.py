@@ -28,7 +28,7 @@ class MassMailing(models.Model):
 
     def action_redirect_to_leads_and_opportunities(self):
         view = 'crm.crm_lead_all_leads' if self.use_leads else 'crm.crm_lead_opportunities'
-        action = self.env.ref(view).read()[0]
+        action = self.env.ref(view).sudo().read()[0]
         action['view_mode'] = 'tree,kanban,graph,pivot,form,calendar'
         action['domain'] = [('source_id', 'in', self.source_id.ids)]
         action['context'] = {'active_test': False, 'create': False}

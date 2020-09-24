@@ -59,10 +59,10 @@ class ImBus(models.Model):
             # awakened and will fetch the notification in the bus table. If the
             # transaction is not commited yet, there will be nothing to fetch,
             # and the longpolling will return no notification.
+            @self.env.cr.postcommit.add
             def notify():
                 with odoo.sql_db.db_connect('postgres').cursor() as cr:
                     cr.execute("notify imbus, %s", (json_dump(list(channels)),))
-            self._cr.after('commit', notify)
 
     @api.model
     def sendone(self, channel, message):

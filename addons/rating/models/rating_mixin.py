@@ -44,7 +44,7 @@ class RatingParentMixin(models.AbstractModel):
 
         # compute percentage per parent
         for record in self:
-            repartition = grades_per_parent.get(record.id)
+            repartition = grades_per_parent.get(record.id, default_grades)
             record.rating_percentage_satisfaction = repartition['great'] * 100 / sum(repartition.values()) if sum(repartition.values()) else -1
 
 
@@ -258,7 +258,7 @@ class RatingMixin(models.AbstractModel):
         """ get the statistics of the rating repatition
             :param domain : optional domain of the rating to include/exclude in statistic computation
             :return dictionnary where
-                - key is the the name of the information (stat name)
+                - key is the name of the information (stat name)
                 - value is statistic value : 'percent' contains the repartition in percentage, 'avg' is the average rate
                   and 'total' is the number of rating
         """

@@ -80,8 +80,8 @@ var MediaDialog = Dialog.extend({
             this.activeWidget = this.videoWidget;
         } else if (this.iconWidget && $media.is('span, i')) {
             this.activeWidget = this.iconWidget;
-        } else if (this.imageWidget) {
-            this.activeWidget = this.imageWidget;
+        } else {
+            this.activeWidget = [this.imageWidget, this.documentWidget, this.videoWidget, this.iconWidget].find(w => !!w);
         }
     },
     /**

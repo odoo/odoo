@@ -35,7 +35,7 @@ class TestSaleProject(TestReporting):
         task = self.env['project.task'].create({
             'name': 'Task',
             'project_id': project_so.id,
-            'billable_type': 'no',
+            'allow_billable': False,
             'sale_line_id': False
         })
         timesheet5 = self._log_timesheet_user(project_so, 5, task)

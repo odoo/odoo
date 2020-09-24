@@ -35,7 +35,7 @@ class AccountAccountType(models.Model):
 class AccountAccount(models.Model):
     _name = "account.account"
     _description = "Account"
-    _order = "code, company_id"
+    _order = "is_off_balance, code, company_id"
     _check_company_auto = True
 
     @api.constrains('internal_type', 'reconcile')
@@ -84,6 +84,8 @@ class AccountAccount(models.Model):
     opening_credit = fields.Monetary(string="Opening Credit", compute='_compute_opening_debit_credit', inverse='_set_opening_credit', help="Opening credit value for this account.")
     opening_balance = fields.Monetary(string="Opening Balance", compute='_compute_opening_debit_credit', help="Opening balance value for this account.")
 
+    is_off_balance = fields.Boolean(compute='_compute_is_off_balance', default=False, store=True, readonly=True)
+
     _sql_constraints = [
         ('code_company_uniq', 'unique (code,company_id)', 'The code of the account must be unique per company !')
     ]
@@ -123,8 +125,7 @@ class AccountAccount(models.Model):
         self.env['account.account'].flush(['currency_id'])
         self.env['account.journal'].flush([
             'currency_id',
-            'default_debit_account_id',
-            'default_credit_account_id',
+            'default_account_id',
             'payment_debit_account_id',
             'payment_credit_account_id',
             'suspense_account_id',
@@ -134,9 +135,7 @@ class AccountAccount(models.Model):
             FROM account_account account
             JOIN res_company company ON company.id = account.company_id
             JOIN account_journal journal ON
-                journal.default_debit_account_id = account.id
-                OR
-                journal.default_credit_account_id = account.id
+                journal.default_account_id = account.id
             WHERE account.id IN %s
             AND journal.type IN ('bank', 'cash')
             AND journal.currency_id IS NOT NULL
@@ -179,7 +178,7 @@ class AccountAccount(models.Model):
             SELECT account.id
             FROM account_account account
             JOIN account_account_type acc_type ON account.user_type_id = acc_type.id
-            JOIN account_journal journal ON journal.default_credit_account_id = account.id OR journal.default_debit_account_id = account.id
+            JOIN account_journal journal ON journal.default_account_id = account.id
             WHERE account.id IN %s
             AND acc_type.type IN ('receivable', 'payable')
             AND journal.type IN ('sale', 'purchase')
@@ -244,6 +243,11 @@ class AccountAccount(models.Model):
             record.opening_debit = res['debit']
             record.opening_credit = res['credit']
             record.opening_balance = res['balance']
+
+    @api.depends('internal_group')
+    def _compute_is_off_balance(self):
+        for account in self:
+            account.is_off_balance = account.internal_group == "off_balance"
 
     def _set_opening_debit(self):
         self._set_opening_debit_credit(self.opening_debit, 'debit')
@@ -327,8 +331,7 @@ class AccountAccount(models.Model):
             domain = ['|', ('code', '=ilike', name.split(' ')[0] + '%'), ('name', operator, name)]
             if operator in expression.NEGATIVE_TERM_OPERATORS:
                 domain = ['&', '!'] + domain[1:]
-        account_ids = self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
-        return models.lazy_name_get(self.browse(account_ids).with_user(name_get_uid))
+        return self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
 
     @api.onchange('user_type_id')
     def _onchange_user_type_id(self):
@@ -520,8 +523,7 @@ class AccountGroup(models.Model):
         else:
             criteria_operator = ['|'] if operator not in expression.NEGATIVE_TERM_OPERATORS else ['&', '!']
             domain = criteria_operator + [('code_prefix_start', '=ilike', name + '%'), ('name', operator, name)]
-        group_ids = self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
-        return models.lazy_name_get(self.browse(group_ids).with_user(name_get_uid))
+        return self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
 
     @api.constrains('code_prefix_start', 'code_prefix_end')
     def _constraint_prefix_overlap(self):

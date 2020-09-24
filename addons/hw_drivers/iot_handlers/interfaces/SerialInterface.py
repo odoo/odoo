@@ -1,6 +1,9 @@
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 from glob import glob
 
-from odoo.addons.hw_drivers.controllers.driver import Interface
+from odoo.addons.hw_drivers.interface import Interface
 
 
 class SerialInterface(Interface):

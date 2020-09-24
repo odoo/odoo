@@ -129,10 +129,13 @@
         <script type="text/javascript" src="/web/static/src/js/libs/download.js"></script>
         <script type="text/javascript" src="/web/static/src/js/libs/content-disposition.js"></script>
         <script type="text/javascript" src="/web/static/src/js/libs/underscore.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/libs/fullcalendar.js"></script>
 
+        <script type="text/javascript" src="/web/static/src/js/chrome/keyboard_navigation_mixin.js"></script>
         <script type="text/javascript" src="/web/static/src/js/core/abstract_service.js"></script>
         <script type="text/javascript" src="/web/static/src/js/core/abstract_storage_service.js"></script>
         <script type="text/javascript" src="/web/static/src/js/core/ajax.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/core/browser_detection.js"></script>
         <script type="text/javascript" src="/web/static/src/js/core/bus.js"></script>
         <script type="text/javascript" src="/web/static/src/js/core/custom_hooks.js"></script>
         <script type="text/javascript" src="/web/static/src/js/core/class.js"></script>
@@ -228,6 +231,7 @@
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/attachment_preview.scss"/>
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/notification.scss"/>
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/base_document_layout.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/special_fields.scss"/>
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/ribbon.scss"/>
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/base_settings.scss"/>
         <script type="text/javascript" src="/base/static/src/js/res_config_settings.js"></script>
@@ -252,8 +256,6 @@
         <script type="text/javascript" src="/web/static/src/js/chrome/action_manager_act_window.js"></script>
         <script type="text/javascript" src="/web/static/src/js/chrome/action_manager_report.js"/>
         <script type="text/javascript" src="/web/static/src/js/chrome/action_mixin.js"/>
-        <script type="text/javascript" src="/web/static/src/js/core/browser_detection.js"></script>
-        <script type="text/javascript" src="/web/static/src/js/chrome/keyboard_navigation_mixin.js"></script>
         <script type="text/javascript" src="/web/static/src/js/chrome/abstract_web_client.js"></script>
         <script type="text/javascript" src="/web/static/src/js/chrome/web_client.js"></script>
         <script type="text/javascript" src="/web/static/src/js/chrome/root_widget.js"></script>
@@ -429,6 +431,7 @@
 
     <!-- Do not direcly call this template, call 'conditional_assets_tests' instead -->
     <template id="assets_tests" name="Tests Assets">
+        <script type="text/javascript" src="/web/static/tests/helpers/test_utils_file.js"/>
     </template>
 
     <template id="conditional_assets_tests" name="Tests Assets Bundle">
@@ -470,6 +473,10 @@
         <xpath expr="//head/script" position="after">
             <script type="text/javascript">
                 odoo.session_info = <t t-raw="json.dumps(request.env['ir.http'].get_frontend_session_info())"/>;
+                if (!/(^|;\s)tz=/.test(document.cookie)) {
+                    const userTZ = Intl.DateTimeFormat().resolvedOptions().timeZone;
+                    document.cookie = `tz=${userTZ}; path=/`;
+                }
             </script>
             <t t-call-assets="web.assets_common_minimal_js" t-css="false" defer_load="True"/>
             <t t-call-assets="web.assets_frontend_minimal_js" t-css="false" defer_load="True"/>
@@ -494,7 +501,7 @@
                             <div class="row">
                                 <div class="col-sm text-center text-sm-left text-muted">
                                     <t t-call="web.debug_icon"/>
-                                    <span class="o_footer_copyright_name">Copyright &amp;copy; Company name</span>
+                                    <span class="o_footer_copyright_name mr-2">Copyright &amp;copy; Company name</span>
                                 </div>
                                 <div class="col-sm text-center text-sm-right">
                                     <t t-call="web.brand_promotion"/>

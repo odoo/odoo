@@ -94,7 +94,7 @@
 
 <!-- Options -->
 <template id="s_latest_posts_options" inherit_id="website.snippet_options">
-    <xpath expr="//div[@data-js='parallax']" position="before">
+    <xpath expr="//div[@data-js='Box']" position="before">
         <div data-js="js_get_posts_selectBlog" data-selector=".s_latest_posts" data-target=".js_get_posts" data-no-check="true">
             <we-select string="Choose a blog" data-no-preview="true" name="blog_selection" data-attribute-name="filterByBlogId">
                 <we-button data-select-data-attribute="0">All blogs</we-button>
@@ -104,7 +104,7 @@
                 <we-button data-select-data-attribute="published_date desc">Latest</we-button>
                 <we-button data-select-data-attribute="visits desc">Most viewed</we-button>
             </we-select>
-            <we-select string="Layout" data-no-preview="true" data-attribute-name="template" class="o_we_inline">
+            <we-select string="Layout" data-attribute-name="template">
                 <we-button data-select-data-attribute="website_blog.s_latest_posts_list_template" data-select-class="s_latest_posts_list">List</we-button>
                 <we-button data-select-data-attribute="website_blog.s_latest_posts_big_picture_template"
                     data-select-class="s_latest_posts_big_picture"

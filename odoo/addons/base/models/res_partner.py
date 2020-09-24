@@ -117,8 +117,7 @@ class PartnerCategory(models.Model):
             # Be sure name_search is symetric to name_get
             name = name.split(' / ')[-1]
             args = [('name', operator, name)] + args
-        partner_category_ids = self._search(args, limit=limit, access_rights_uid=name_get_uid)
-        return models.lazy_name_get(self.browse(partner_category_ids).with_user(name_get_uid))
+        return self._search(args, limit=limit, access_rights_uid=name_get_uid)
 
 
 class PartnerTitle(models.Model):
@@ -192,6 +191,7 @@ class Partner(models.Model):
         ], string='Address Type',
         default='contact',
         help="Invoice & Delivery addresses are used in sales orders. Private addresses are only visible by authorized users.")
+    # address fields
     street = fields.Char()
     street2 = fields.Char()
     zip = fields.Char(change_default=True)
@@ -268,15 +268,21 @@ class Partner(models.Model):
         for partner in self - super_partner:
             partner.partner_share = not partner.user_ids or not any(not user.share for user in partner.user_ids)
 
-    @api.depends('vat')
+    @api.depends('vat', 'company_id')
     def _compute_same_vat_partner_id(self):
         for partner in self:
             # use _origin to deal with onchange()
             partner_id = partner._origin.id
-            domain = [('vat', '=', partner.vat)]
+            #active_test = False because if a partner has been deactivated you still want to raise the error,
+            #so that you can reactivate it instead of creating a new one, which would loose its history.
+            Partner = self.with_context(active_test=False).sudo()
+            domain = [
+                ('vat', '=', partner.vat),
+                ('company_id', 'in', [False, partner.company_id.id]),
+            ]
             if partner_id:
                 domain += [('id', '!=', partner_id), '!', ('id', 'child_of', partner_id)]
-            partner.same_vat_partner_id = bool(partner.vat) and not partner.parent_id and self.env['res.partner'].search(domain, limit=1)
+            partner.same_vat_partner_id = bool(partner.vat) and not partner.parent_id and Partner.search(domain, limit=1)
 
     @api.depends(lambda self: self._display_address_depends())
     def _compute_contact_address(self):
@@ -797,12 +803,8 @@ class Partner(models.Model):
                 query += ' limit %s'
                 where_clause_params.append(limit)
             self.env.cr.execute(query, where_clause_params)
-            partner_ids = [row[0] for row in self.env.cr.fetchall()]
+            return [row[0] for row in self.env.cr.fetchall()]
 
-            if partner_ids:
-                return models.lazy_name_get(self.browse(partner_ids))
-            else:
-                return []
         return super(Partner, self)._name_search(name, args, operator=operator, limit=limit, name_get_uid=name_get_uid)
 
     @api.model

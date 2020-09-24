@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.2\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-02-13 08:34+0000\n"
-"PO-Revision-Date: 2020-02-13 08:34+0000\n"
+"POT-Creation-Date: 2020-09-01 07:29+0000\n"
+"PO-Revision-Date: 2020-09-01 07:29+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -169,6 +169,13 @@ msgid "Certification attempts"
 msgstr ""
 
 #. module: website_slides_survey
+#. openerp-web
+#: code:addons/website_slides_survey/static/src/js/slides_certification_upload_toast.js:0
+#, python-format
+msgid "Certification created"
+msgstr ""
+
+#. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.o_wss_certification_icon
 msgid "Certification icon"
 msgstr ""
@@ -185,17 +192,8 @@ msgstr ""
 #: model:ir.actions.act_window,name:website_slides_survey.survey_survey_action_slides_report
 #: model:ir.ui.menu,name:website_slides_survey.website_slides_menu_courses_certification
 #: model:ir.ui.menu,name:website_slides_survey.website_slides_menu_report_certification
-#: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_channel_view_form
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.user_profile_content
 msgid "Certifications"
-msgstr ""
-
-#. module: website_slides_survey
-#. openerp-web
-#: code:addons/website_slides_survey/static/src/xml/website_slide_upload.xml:0
-#: code:addons/website_slides_survey/static/src/xml/website_slide_upload.xml:0
-#, python-format
-msgid "Content Preview"
 msgstr ""
 
 #. module: website_slides_survey
@@ -216,14 +214,17 @@ msgid "Courses Count"
 msgstr ""
 
 #. module: website_slides_survey
-#. openerp-web
-#: code:addons/website_slides_survey/static/src/xml/website_slide_upload.xml:0
-#, python-format
-msgid "Cover Image File"
+#: model:ir.model.fields,field_description:website_slides_survey.field_slide_channel__display_name
+#: model:ir.model.fields,field_description:website_slides_survey.field_slide_slide__display_name
+#: model:ir.model.fields,field_description:website_slides_survey.field_slide_slide_partner__display_name
+#: model:ir.model.fields,field_description:website_slides_survey.field_survey_survey__display_name
+#: model:ir.model.fields,field_description:website_slides_survey.field_survey_user_input__display_name
+msgid "Display Name"
 msgstr ""
 
 #. module: website_slides_survey
 #. openerp-web
+#: code:addons/website_slides_survey/static/src/xml/website_slides_fullscreen.xml:0
 #: code:addons/website_slides_survey/static/src/xml/website_slides_fullscreen.xml:0
 #: code:addons/website_slides_survey/static/src/xml/website_slides_fullscreen.xml:0
 #, python-format
@@ -231,8 +232,42 @@ msgid "Download certification"
 msgstr ""
 
 #. module: website_slides_survey
+#. openerp-web
+#: code:addons/website_slides_survey/static/src/js/slides_certification_upload_toast.js:0
+#, python-format
+msgid ""
+"Follow this link to add questions to your certification. <a href=\"%s\">Edit"
+" certification</a>"
+msgstr ""
+
+#. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.survey_fill_form_done_inherit_website_slides
 msgid "Go back to course"
+msgstr ""
+
+#. module: website_slides_survey
+#. openerp-web
+#: code:addons/website_slides_survey/static/src/xml/website_slide_upload.xml:0
+#, python-format
+msgid "How to upload a certification on your course?"
+msgstr ""
+
+#. module: website_slides_survey
+#: model:ir.model.fields,field_description:website_slides_survey.field_slide_channel__id
+#: model:ir.model.fields,field_description:website_slides_survey.field_slide_slide__id
+#: model:ir.model.fields,field_description:website_slides_survey.field_slide_slide_partner__id
+#: model:ir.model.fields,field_description:website_slides_survey.field_survey_survey__id
+#: model:ir.model.fields,field_description:website_slides_survey.field_survey_user_input__id
+msgid "ID"
+msgstr ""
+
+#. module: website_slides_survey
+#: model:ir.model.fields,field_description:website_slides_survey.field_slide_channel____last_update
+#: model:ir.model.fields,field_description:website_slides_survey.field_slide_slide____last_update
+#: model:ir.model.fields,field_description:website_slides_survey.field_slide_slide_partner____last_update
+#: model:ir.model.fields,field_description:website_slides_survey.field_survey_survey____last_update
+#: model:ir.model.fields,field_description:website_slides_survey.field_survey_user_input____last_update
+msgid "Last Modified on"
 msgstr ""
 
 #. module: website_slides_survey
@@ -327,6 +362,27 @@ msgstr ""
 #. module: website_slides_survey
 #: model:ir.model.fields,field_description:website_slides_survey.field_slide_slide__slide_type
 msgid "Type"
+msgstr ""
+
+#. module: website_slides_survey
+#: code:addons/website_slides_survey/controllers/slides.py:0
+#, python-format
+msgid "You are not allowed to create a survey."
+msgstr ""
+
+#. module: website_slides_survey
+#: code:addons/website_slides_survey/controllers/slides.py:0
+#, python-format
+msgid "You are not allowed to link a certification."
+msgstr ""
+
+#. module: website_slides_survey
+#. openerp-web
+#: code:addons/website_slides_survey/static/src/xml/website_slide_upload.xml:0
+#, python-format
+msgid ""
+"You can create your certification from here or use an existing one. Once "
+"your certification is created, you can still edit it in backend."
 msgstr ""
 
 #. module: website_slides_survey

@@ -3,7 +3,7 @@
 from datetime import datetime, timedelta
 import logging
 import pytz
-from psycopg2 import sql
+from psycopg2 import sql, OperationalError, errorcodes
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
@@ -53,8 +53,14 @@ def _select_nextval(cr, seq_name):
 
 def _update_nogap(self, number_increment):
     number_next = self.number_next
-    self._cr.execute("SELECT number_next FROM %s WHERE id=%%s FOR UPDATE NOWAIT" % self._table, [self.id])
-    self._cr.execute("UPDATE %s SET number_next=number_next+%%s WHERE id=%%s " % self._table, (number_increment, self.id))
+    try:
+        self._cr.execute("SELECT number_next FROM %s WHERE id=%%s FOR UPDATE NOWAIT" % self._table, [self.id])
+        self._cr.execute("UPDATE %s SET number_next=number_next+%%s WHERE id=%%s " % self._table, (number_increment, self.id))
+    except OperationalError as e:
+        if e.pgcode == errorcodes.LOCK_NOT_AVAILABLE:
+            raise UserError(_("This transaction wasn't executed because another transaction is already using the same no-gap sequence. Please try again later."))
+        else:
+            raise
     self.invalidate_cache(['number_next'], [self.id])
     return number_next
 
@@ -69,7 +75,7 @@ def _predict_nextval(self, seq_id):
                        WHERE sequencename = %s),
                       is_called
                FROM {}""")
-    params = []
+    params = [seqname]
     if self.env.cr._cnx.server_version < 100000:
         query = sql.SQL("SELECT last_value, increment_by, is_called FROM {}")
         params = []
@@ -97,7 +103,9 @@ class IrSequence(models.Model):
         '''Return number from ir_sequence row when no_gap implementation,
         and number from postgres sequence when standard implementation.'''
         for seq in self:
-            if seq.implementation != 'standard':
+            if not seq.id:
+                seq.number_next_actual = 0
+            elif seq.implementation != 'standard':
                 seq.number_next_actual = seq.number_next
             else:
                 seq_id = "%03d" % seq.id

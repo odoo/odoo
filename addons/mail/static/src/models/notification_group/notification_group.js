@@ -2,7 +2,7 @@ odoo.define('mail/static/src/models/notification_group/notification_group.js', f
 'use strict';
 
 const { registerNewModel } = require('mail/static/src/model/model_core.js');
-const { attr, one2many } = require('mail/static/src/model/model_field.js');
+const { attr, many2one, one2many } = require('mail/static/src/model/model_field.js');
 
 function factory(dependencies) {
 
@@ -16,21 +16,18 @@ function factory(dependencies) {
          * Opens the view that allows to cancel all notifications of the group.
          */
         openCancelAction() {
-            const device = this.env.messaging.device;
-            if (this.notification_type === 'email') {
-                this.env.bus.trigger('do-action', {
-                    action: 'mail.mail_resend_cancel_action',
-                    options: {
-                        additional_context: {
-                            default_model: this.res_model,
-                            unread_counter: this.notifications.length,
-                        },
+            if (this.notification_type !== 'email') {
+                return;
+            }
+            this.env.bus.trigger('do-action', {
+                action: 'mail.mail_resend_cancel_action',
+                options: {
+                    additional_context: {
+                        default_model: this.res_model,
+                        unread_counter: this.notifications.length,
                     },
-                });
-            }
-            if (!device.isMobile) {
-                this.env.messaging.messagingMenu.close();
-            }
+                },
+            });
         }
 
         /**
@@ -38,19 +35,8 @@ function factory(dependencies) {
          * all the records in the group.
          */
         openDocuments() {
-            if (this.res_id) {
-                if (this.res_model === 'mail.channel') {
-                    const channel = this.env.models['mail.thread'].insert({
-                        id: this.res_id,
-                        model: this.res_model,
-                    });
-                    channel.open();
-                } else {
-                    this.env.messaging.openDocument({
-                        id: this.res_id,
-                        model: this.res_model,
-                    });
-                }
+            if (this.thread) {
+                this.thread.open();
             } else {
                 this._openDocuments();
             }
@@ -59,6 +45,20 @@ function factory(dependencies) {
         //----------------------------------------------------------------------
         // Private
         //----------------------------------------------------------------------
+
+        /**
+         * @private
+         * @returns {mail.thread|undefined}
+         */
+        _computeThread() {
+            if (this.res_id) {
+                return [['insert', {
+                    id: this.res_id,
+                    model: this.res_model,
+                }]];
+            }
+            return [['unlink']];
+        }
 
         /**
          * @override
@@ -73,21 +73,23 @@ function factory(dependencies) {
          * @private
          */
         _openDocuments() {
-            const device = this.env.messaging.device;
-            if (this.notification_type === 'email') {
-                this.env.bus.trigger('do-action', {
-                    action: {
-                        name: this.env._t("Mail Failures"),
-                        type: 'ir.actions.act_window',
-                        view_mode: 'kanban,list,form',
-                        views: [[false, 'kanban'], [false, 'list'], [false, 'form']],
-                        target: 'current',
-                        res_model: this.res_model,
-                        domain: [['message_has_error', '=', true]],
-                    },
-                });
+            if (this.notification_type !== 'email') {
+                return;
             }
-            if (!device.isMobile) {
+            this.env.bus.trigger('do-action', {
+                action: {
+                    name: this.env._t("Mail Failures"),
+                    type: 'ir.actions.act_window',
+                    view_mode: 'kanban,list,form',
+                    views: [[false, 'kanban'], [false, 'list'], [false, 'form']],
+                    target: 'current',
+                    res_model: this.res_model,
+                    domain: [['message_has_error', '=', true]],
+                },
+            });
+            if (this.env.messaging.device.isMobile) {
+                // messaging menu has a higher z-index than views so it must
+                // be closed to ensure the visibility of the view
                 this.env.messaging.messagingMenu.close();
             }
         }
@@ -102,6 +104,16 @@ function factory(dependencies) {
         res_id: attr(),
         res_model: attr(),
         res_model_name: attr(),
+        /**
+         * Related thread when the notification group concerns a single thread.
+         */
+        thread: many2one('mail.thread', {
+            compute: '_computeThread',
+            dependencies: [
+                'res_id',
+                'res_model',
+            ],
+        })
     };
 
     NotificationGroup.modelName = 'mail.notification_group';

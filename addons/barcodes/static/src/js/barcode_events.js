@@ -186,7 +186,7 @@ var BarcodeEvents = core.Class.extend(mixins.PropertiesMixin, {
         e.preventDefault();
         e.stopImmediatePropagation();
 
-        // Handle buffered keys immediately if the the keypress marks the end
+        // Handle buffered keys immediately if the keypress marks the end
         // of a barcode or after x milliseconds without a new keypress
         clearTimeout(this.timeout);
         if (String.fromCharCode(e.which).match(this.suffix)) {

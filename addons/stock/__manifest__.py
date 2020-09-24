@@ -7,9 +7,9 @@
     'summary': 'Manage your stock and logistics activities',
     'description': "",
     'website': 'https://www.odoo.com/page/warehouse',
-    'depends': ['product', 'barcodes'],
+    'depends': ['product', 'barcodes', 'digest'],
     'category': 'Inventory/Inventory',
-    'sequence': 13,
+    'sequence': 25,
     'demo': [
         'data/stock_demo_pre.xml',
         'data/procurement_demo.xml',
@@ -22,6 +22,7 @@
     'data': [
         'security/stock_security.xml',
         'security/ir.model.access.csv',
+        'data/digest_data.xml',
         'views/stock_menu_views.xml',
         'data/stock_traceability_report_data.xml',
         'data/procurement_data.xml',

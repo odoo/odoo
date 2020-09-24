@@ -9,6 +9,8 @@ from odoo import fields
 class TestStockFlow(TestStockCommon):
     def setUp(cls):
         super(TestStockFlow, cls).setUp()
+        decimal_product_uom = cls.env.ref('product.decimal_product_uom')
+        decimal_product_uom.digits = 3
         cls.partner_company2 = cls.env['res.partner'].create({
             'name': 'My Company (Chicago)-demo',
             'email': 'chicago@yourcompany.com',
@@ -1328,7 +1330,7 @@ class TestStockFlow(TestStockCommon):
         # Set the quantity done on the pack operation
         move_in.move_line_ids.qty_done = 3.0
         # Put in a pack
-        picking_in.put_in_pack()
+        picking_in.action_put_in_pack()
         # Get the new package
         picking_in_package = move_in.move_line_ids.result_package_id
         # Validate picking

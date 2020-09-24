@@ -148,11 +148,11 @@ class StockPicking(models.Model):
             current_package_carrier_type=self.carrier_id.delivery_type,
             default_picking_id=self.id
         )
-        # As we pass the `delivery_type` ('fixed' by default) in a key who correspond
-        # to the `package_carrier_type` ('none' to default), we make a conversion.
+        # As we pass the `delivery_type` ('fixed' or 'base_on_rule' by default) in a key who
+        # correspond to the `package_carrier_type` ('none' to default), we make a conversion.
         # No need conversion for other carriers as the `delivery_type` and
         #`package_carrier_type` will be the same in these cases.
-        if context['current_package_carrier_type'] == 'fixed':
+        if context['current_package_carrier_type'] in ['fixed', 'base_on_rule']:
             context['current_package_carrier_type'] = 'none'
         return {
             'name': _('Package Details'),
@@ -219,7 +219,7 @@ class StockPicking(models.Model):
             for tracker in carrier_trackers:
                 msg += '<a href=' + tracker[1] + '>' + tracker[0] + '</a><br/>'
             self.message_post(body=msg)
-            return self.env.ref('delivery.act_delivery_trackers_url').read()[0]
+            return self.env["ir.actions.actions"]._for_xml_id("delivery.act_delivery_trackers_url")
 
         client_action = {
             'type': 'ir.actions.act_url',

@@ -3,7 +3,7 @@
 <template id="report_saleorder_document_inherit_sale_management" inherit_id="sale.report_saleorder_document">
     <xpath expr="//div[@name='signature']" position="after">
         <div t-if="doc.sale_order_option_ids and doc.state in ['draft', 'sent']">
-            <t t-set="has_option_discount" t-value="any(doc.sale_order_option_ids.filtered(lambda o: o.discount != 0.0))" />
+            <t t-set="has_option_discount" t-value="any(option.discount != 0.0 for option in doc.sale_order_option_ids)" />
             <h4>
                 <span>Options</span>
             </h4>

@@ -98,7 +98,7 @@ class ReturnPicking(models.TransientModel):
             'product_uom': return_line.product_id.uom_id.id,
             'picking_id': new_picking.id,
             'state': 'draft',
-            'date_expected': fields.Datetime.now(),
+            'date': fields.Datetime.now(),
             'location_id': return_line.move_id.location_dest_id.id,
             'location_dest_id': self.location_id.id or return_line.move_id.location_id.id,
             'picking_type_id': new_picking.picking_type_id.id,
@@ -179,7 +179,7 @@ class ReturnPicking(models.TransientModel):
             'search_default_assigned': False,
             'search_default_confirmed': False,
             'search_default_ready': False,
-            'search_default_late': False,
+            'search_default_planning_issues': False,
             'search_default_available': False,
         })
         return {

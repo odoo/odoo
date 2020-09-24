@@ -5,7 +5,7 @@
     'name': 'Colombian - Point of Sale',
     'version': '1.0',
     'description': """Colombian - Point of Sale""",
-    'category': 'Accounting/Localizations',
+    'category': 'Accounting/Localizations/Point of Sale',
     'auto_install': True,
     'depends': [
         'l10n_co',

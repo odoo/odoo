@@ -89,7 +89,7 @@ class AccountPaymentRegister(models.TransientModel):
         compute='_compute_payment_difference')
     payment_difference_handling = fields.Selection([
         ('open', 'Keep open'),
-        ('reconcile', 'Mark invoice as fully paid'),
+        ('reconcile', 'Mark as fully paid'),
     ], default='open', string="Payment Difference Handling")
     writeoff_account_id = fields.Many2one('account.account', string="Difference Account", copy=False,
         domain="[('deprecated', '=', False), ('company_id', '=', company_id)]")
@@ -103,6 +103,7 @@ class AccountPaymentRegister(models.TransientModel):
     require_partner_bank_account = fields.Boolean(
         compute='_compute_show_require_partner_bank',
         help="Technical field used to know whether the field `partner_bank_id` needs to be required or not in the payments form views")
+    country_code = fields.Char(related='company_id.country_id.code', readonly=True)
 
     # -------------------------------------------------------------------------
     # HELPERS

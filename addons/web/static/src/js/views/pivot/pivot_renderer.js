@@ -32,9 +32,9 @@ odoo.define('web.PivotRenderer', function (require) {
          * @param {boolean} props.disableLinking Disallow opening records by clicking on a cell
          * @param {Object} props.widgets Widgets defined in the arch
          */
-        constructor(parent, props) {
+        constructor() {
             super(...arguments);
-
+            this.sampleDataTargets = ['table'];
             this.state = useState({
                 activeNodeHeader: {
                     groupId: false,

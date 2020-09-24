@@ -78,7 +78,7 @@
                                     <label for="tag_ids" string="Tags"/>
                                     <div class="row">
                                         <div class="col-12 mt16">
-                                            <field name="tag_ids" widget="many2many_tags" options="{'no_quick_create': True}"/>
+                                            <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_quick_create': True}"/>
                                         </div>
                                     </div>
                                 </div>
@@ -232,7 +232,7 @@
                                 </div>
                                 <field name="date_tz"/>
                                 <field name="event_type_id" string="Template" options="{'no_create':True}"/>
-                                <field name="tag_ids" widget="many2many_tags" options="{'no_quick_create': True}"/>
+                                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_quick_create': True}"/>
                             </group>
                             <group>
                                 <field name="organizer_id"/>
@@ -456,7 +456,7 @@
             <field name="name">event.event.view.pivot</field>
             <field name="model">event.event</field>
             <field name="arch" type="xml">
-                <pivot string="Event">
+                <pivot string="Event" sample="1">
                     <field name="name" type="row"/>
                     <field name="seats_reserved" type="measure"/>
                 </pivot>
@@ -467,7 +467,7 @@
             <field name="name">event.event.view.graph</field>
             <field name="model">event.event</field>
             <field name="arch" type="xml">
-                <graph string="Events">
+                <graph string="Events" sample="1">
                     <field name="name" type="row"/>
                     <field name="seats_available" type="measure"/>
                 </graph>
@@ -666,7 +666,7 @@
             <field name="name">event.registration.pivot</field>
             <field name="model">event.registration</field>
             <field name="arch" type="xml">
-                <pivot string="Registration" display_quantity="True">
+                <pivot string="Registration" display_quantity="True" sample="1">
                     <field name="event_id" type="row"/>
                 </pivot>
             </field>
@@ -676,7 +676,7 @@
             <field name="name">event.registration.graph</field>
             <field name="model">event.registration</field>
             <field name="arch" type="xml">
-                <graph string="Registration">
+                <graph string="Registration" sample="1">
                     <field name="event_id"/>
                 </graph>
             </field>

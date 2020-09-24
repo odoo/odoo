@@ -124,7 +124,6 @@ class TestBom(common.TransactionCase):
                     'workcenter_id': workcenter_1.id,
                     'time_mode': 'manual',
                     'time_cycle_manual': 20,
-                    'batch': 'no',
                     'sequence': 1,
                 }),
                 (0, 0, {
@@ -132,7 +131,6 @@ class TestBom(common.TransactionCase):
                     'workcenter_id': workcenter_1.id,
                     'time_mode': 'manual',
                     'time_cycle_manual': 25,
-                    'batch': 'no',
                     'sequence': 2,
                 }),
                 (0, 0, {
@@ -140,7 +138,6 @@ class TestBom(common.TransactionCase):
                     'workcenter_id': workcenter_1.id,
                     'time_mode': 'manual',
                     'time_cycle_manual': 30,
-                    'batch': 'no',
                     'sequence': 3,
                 }),
             ],
@@ -152,7 +149,6 @@ class TestBom(common.TransactionCase):
                     'workcenter_id': workcenter_1.id,
                     'time_mode': 'manual',
                     'time_cycle_manual': 20,
-                    'batch': 'no',
                     'sequence': 1,
                 }),
                 (0, 0, {
@@ -160,7 +156,6 @@ class TestBom(common.TransactionCase):
                     'workcenter_id': workcenter_1.id,
                     'time_mode': 'manual',
                     'time_cycle_manual': 25,
-                    'batch': 'no',
                     'sequence': 2,
                 }),
                 (0, 0, {
@@ -168,7 +163,6 @@ class TestBom(common.TransactionCase):
                     'workcenter_id': workcenter_1.id,
                     'time_mode': 'manual',
                     'time_cycle_manual': 30,
-                    'batch': 'no',
                     'sequence': 3,
                 }),
             ],

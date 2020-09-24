@@ -260,7 +260,7 @@ class Company(models.Model):
     @api.model
     def action_open_base_onboarding_company(self):
         """ Onboarding step for company basic information. """
-        action = self.env.ref('base.action_open_base_onboarding_company').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("base.action_open_base_onboarding_company")
         action['res_id'] = self.env.company.id
         return action
 

@@ -130,7 +130,7 @@ class CrmTeam(models.Model):
 
     def action_primary_channel_button(self):
         if self._context.get('in_sales_app'):
-            return self.env.ref('sale.action_order_report_so_salesteam').read()[0]
+            return self.env["ir.actions.actions"]._for_xml_id("sale.action_order_report_so_salesteam")
         return super(CrmTeam, self).action_primary_channel_button()
 
     def update_invoiced_target(self, value):

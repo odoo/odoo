@@ -12,9 +12,6 @@ registerInstancePatchModel('mail.messaging_initializer', 'mail_bot/static/src/mo
      * @private
      */
     async _initializeOdooBot() {
-        await this.async(() => new Promise(resolve =>
-            this.env.browser.setTimeout(resolve, 2 * 60 * 1000)
-        ));
         const data = await this.async(() => this.env.services.rpc({
             model: 'mail.channel',
             method: 'init_odoobot',

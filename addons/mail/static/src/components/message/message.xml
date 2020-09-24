@@ -18,7 +18,7 @@
                 <div class="o_Message_sidebar" t-att-class="{ 'o-message-squashed': props.isSquashed }">
                     <t t-if="!props.isSquashed">
                         <div class="o_Message_authorAvatarContainer o_Message_sidebarItem">
-                            <img class="o_Message_authorAvatar rounded-circle" t-att-class="{ o_Message_authorRedirect: hasAuthorRedirect, o_redirect: hasAuthorRedirect }" t-att-src="avatar" t-on-click="_onClickAuthor" t-att-title="hasAuthorRedirect ? 'Open chat' : ''" alt=""/>
+                            <img class="o_Message_authorAvatar rounded-circle" t-att-class="{ o_Message_authorRedirect: hasAuthorOpenChat, o_redirect: hasAuthorOpenChat }" t-att-src="avatar" t-on-click="_onClickAuthorAvatar" t-att-title="hasAuthorOpenChat ? OPEN_CHAT : ''" alt="Avatar"/>
                             <t t-if="message.author and message.author.im_status">
                                 <PartnerImStatusIcon
                                     class="o_Message_partnerImStatusIcon"
@@ -27,6 +27,7 @@
                                         'o-message-selected': props.isSelected,
                                         'o_Message_partnerImStatusIcon-mobile': env.messaging.device.isMobile,
                                     }"
+                                    hasOpenChat="hasAuthorOpenChat"
                                     partnerLocalId="message.author.localId"
                                 />
                             </t>
@@ -49,8 +50,8 @@
                                 />
                             </t>
                         </div>
-                        <t t-if="message.isCurrentPartnerAuthor and threadViewer and threadViewer.thread and threadViewer.thread.hasSeenIndicators">
-                            <MessageSeenIndicator class="o_Message_seenIndicator o-message-squashed" messageLocalId="message.localId" threadLocalId="threadViewer.thread.localId"/>
+                        <t t-if="message.isCurrentPartnerAuthor and threadView and threadView.thread and threadView.thread.hasSeenIndicators">
+                            <MessageSeenIndicator class="o_Message_seenIndicator o-message-squashed" messageLocalId="message.localId" threadLocalId="threadView.thread.localId"/>
                         </t>
                     </t>
                 </div>
@@ -58,7 +59,7 @@
                     <t t-if="!props.isSquashed">
                         <div class="o_Message_header">
                             <t t-if="message.author">
-                                <div class="o_Message_authorName" t-att-class="hasAuthorRedirect ? 'o_Message_authorRedirect o_redirect' : ''" t-on-click="_onClickAuthor" t-att-title="hasAuthorRedirect ? 'Open chat' : ''">
+                                <div class="o_Message_authorName o_Message_authorRedirect o_redirect" t-on-click="_onClickAuthorName" title="Open profile">
                                     <t t-esc="message.author.nameOrDisplayName"/>
                                 </div>
                             </t>
@@ -75,10 +76,10 @@
                             <div class="o_Message_date o_Message_headerDate" t-att-class="{ 'o-message-selected': props.isSelected }" t-att-title="datetime">
                                 - <t t-esc="state.timeElapsed"/>
                             </div>
-                            <t t-if="message.isCurrentPartnerAuthor and threadViewer and threadViewer.thread">
-                                <MessageSeenIndicator class="o_Message_seenIndicator" messageLocalId="message.localId" threadLocalId="threadViewer.thread.localId"/>
+                            <t t-if="message.isCurrentPartnerAuthor and threadView and threadView.thread">
+                                <MessageSeenIndicator class="o_Message_seenIndicator" messageLocalId="message.localId" threadLocalId="threadView.thread.localId"/>
                             </t>
-                            <t t-if="threadViewer and message.originThread and message.originThread !== threadViewer.thread">
+                            <t t-if="threadView and message.originThread and message.originThread !== threadView.thread">
                                 <div class="o_Message_originThread" t-att-class="{ 'o-message-selected': props.isSelected }">
                                     <t t-if="message.originThread.model === 'mail.channel'">
                                         (from <a class="o_Message_originThreadLink" href="#" t-on-click="_onClickOriginThread">#<t t-esc="message.originThread.name"/></a>)
@@ -91,15 +92,15 @@
                             <t t-if="message.moderation_status === 'pending_moderation' and !message.isModeratedByCurrentPartner">
                                 <span class="o_Message_moderationPending o-author" title="Your message is pending moderation.">Pending moderation</span>
                             </t>
-                            <t t-if="threadViewer and message.originThread and message.originThread === threadViewer.thread and message.notifications.length > 0">
+                            <t t-if="threadView and message.originThread and message.originThread === threadView.thread and message.notifications.length > 0">
                                 <t t-if="message.failureNotifications.length > 0">
-                                    <span class="o_Message_notificationIconContainer o-error" t-on-click="_onClickFailure">
+                                    <span class="o_Message_notificationIconClickable o-error" t-on-click="_onClickFailure">
                                         <i name="failureIcon" class="o_Message_notificationIcon fa fa-envelope"/>
                                     </span>
                                 </t>
                                 <t t-else="">
                                     <Popover>
-                                        <span class="o_Message_notificationIconContainer">
+                                        <span class="o_Message_notificationIconClickable">
                                             <i name="notificationIcon" class="o_Message_notificationIcon fa fa-envelope-o"/>
                                         </span>
                                         <t t-set="opened">
@@ -142,8 +143,8 @@
                         </div>
                         <t t-if="message.isModeratedByCurrentPartner">
                             <div class="o_Message_moderationSubHeader">
-                                <t t-if="threadViewer and props.hasCheckbox and message.hasCheckbox">
-                                    <input class="o_Message_checkbox" type="checkbox" t-att-checked="message.isChecked(threadViewer.thread, threadViewer.stringifiedDomain) ? 'checked': ''" t-on-change="_onChangeCheckbox" t-ref="checkbox"/>
+                                <t t-if="threadView and props.hasCheckbox and message.hasCheckbox">
+                                    <input class="o_Message_checkbox" type="checkbox" t-att-checked="message.isChecked(threadView.thread, threadView.stringifiedDomain) ? 'checked': ''" t-on-change="_onChangeCheckbox" t-ref="checkbox"/>
                                 </t>
                                 <span class="o_Message_moderationPending">Pending moderation:</span>
                                 <a class="o_Message_moderationAction o-accept" href="#" title="Accept" t-on-click="_onClickModerationAccept">Accept</a>
@@ -156,7 +157,7 @@
                     </t>
                     <div class="o_Message_content" t-ref="content">
                         <t t-raw="message.prettyBody"/>
-                        <t t-if="message.subtype_description">
+                        <t t-if="message.subtype_description and !message.isBodyEqualSubtypeDescription">
                             <p t-esc="message.subtype_description"/>
                         </t>
                         <t t-if="trackingValues.length > 0">
@@ -164,15 +165,11 @@
                                 <t t-foreach="trackingValues" t-as="value" t-key="value.id">
                                     <li>
                                         <div class="o_Message_trackingValue">
-                                            <div class="o_Message_trackingValueItem" t-esc="value.changed_field"/>
-                                            <t t-if="value.old_value">
-                                                <div class="o_Message_trackingValueItem" t-esc="value.old_value || ((value.field_type !== 'boolean') and '')"/>
-                                                <t t-if="value.old_value !== value.new_value">
-                                                    <div class="o_Message_trackingValueItem fa fa-long-arrow-right" title="Changed" role="img"/>
-                                                </t>
-                                            </t>
+                                            <div class="o_Message_trackingValueFieldName o_Message_trackingValueItem" t-esc="value.changed_field"/>
+                                            <div class="o_Message_trackingValueOldValue o_Message_trackingValueItem" t-esc="value.old_value"/>
                                             <t t-if="value.old_value !== value.new_value">
-                                                <div class="o_Message_trackingValueItem" t-esc="value.new_value || ((value.field_type !== 'boolean') and '')"/>
+                                                <div class="o_Message_trackingValueSeparator o_Message_trackingValueItem fa fa-long-arrow-right" title="Changed" role="img"/>
+                                                <div class="o_Message_trackingValueNewValue o_Message_trackingValueItem" t-esc="value.new_value"/>
                                             </t>
                                         </div>
                                     </li>
@@ -180,7 +177,7 @@
                             </ul>
                         </t>
                     </div>
-                    <t t-if="message.subject and threadViewer and threadViewer.thread and (threadViewer.thread.mass_mailing or [env.messaging.inbox, env.messaging.history].includes(threadViewer.thread))">
+                    <t t-if="message.subject and threadView and threadView.thread and (threadView.thread.mass_mailing or [env.messaging.inbox, env.messaging.history].includes(threadView.thread))">
                         <p class="o_Message_subject">Subject: <t t-esc="message.subject"/></p>
                     </t>
                     <t t-if="message.attachments and message.attachments.length > 0">

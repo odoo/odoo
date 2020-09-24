@@ -13,7 +13,7 @@ var SlideUnsubscribeDialog = Dialog.extend({
     template: 'slides.course.unsubscribe.modal',
     _texts: {
         titleSubscribe: _t("Subscribe"),
-        titleUnsubscribe: _t("Unsubscribe"),
+        titleUnsubscribe: _t("Notifications"),
         titleLeaveCourse: _t("Leave the course")
     },
 
@@ -60,7 +60,7 @@ var SlideUnsubscribeDialog = Dialog.extend({
         if (state === '_subscription') {
             btnList.push({text: _t("Save"), classes: "btn-primary", click: this._onClickSubscriptionSubmit.bind(this)});
             btnList.push({text: _t("Discard"), close: true});
-            btnList.push({text: _t("Leave the course"), classes: "btn-danger ml-auto", click: this._onClickLeaveCourse.bind(this)});
+            btnList.push({text: _t("or Leave the course"), classes: "btn-danger ml-auto", click: this._onClickLeaveCourse.bind(this)});
         } else if (state === '_leave') {
             btnList.push({text: _t("Leave the course"), classes: "btn-danger", click: this._onClickLeaveCourseSubmit.bind(this)});
             btnList.push({text: _t("Discard"), click: this._onClickLeaveCourseCancel.bind(this)});

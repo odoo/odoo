@@ -12,23 +12,25 @@ class Lead(models.Model):
 
     @api.depends('visitor_ids.page_ids')
     def _compute_visitor_page_count(self):
-        self.flush(['visitor_ids'])
-        sql = """ SELECT l.id as lead_id, count(*) as page_view_count
-                    FROM crm_lead l
-                    JOIN crm_lead_website_visitor_rel lv ON l.id = lv.crm_lead_id
-                    JOIN website_visitor v ON v.id = lv.website_visitor_id
-                    JOIN website_track p ON p.visitor_id = v.id
-                    WHERE l.id in %s
-                    GROUP BY l.id"""
-        self.env.cr.execute(sql, (tuple(self.ids),))
-        page_data = self.env.cr.dictfetchall()
-        mapped_data = {data['lead_id']: data['page_view_count'] for data in page_data}
+        mapped_data = {}
+        if self.ids:
+            self.flush(['visitor_ids'])
+            sql = """ SELECT l.id as lead_id, count(*) as page_view_count
+                        FROM crm_lead l
+                        JOIN crm_lead_website_visitor_rel lv ON l.id = lv.crm_lead_id
+                        JOIN website_visitor v ON v.id = lv.website_visitor_id
+                        JOIN website_track p ON p.visitor_id = v.id
+                        WHERE l.id in %s
+                        GROUP BY l.id"""
+            self.env.cr.execute(sql, (tuple(self.ids),))
+            page_data = self.env.cr.dictfetchall()
+            mapped_data = {data['lead_id']: data['page_view_count'] for data in page_data}
         for lead in self:
             lead.visitor_page_count = mapped_data.get(lead.id, 0)
 
     def action_redirect_to_page_views(self):
         visitors = self.visitor_ids
-        action = self.env.ref('website.website_visitor_page_action').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("website.website_visitor_page_action")
         action['domain'] = [('visitor_id', 'in', visitors.ids)]
         # avoid grouping if only few records
         if len(visitors.website_track_ids.ids) > 15 and len(visitors.page_ids.ids) > 1:

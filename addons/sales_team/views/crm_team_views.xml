@@ -72,16 +72,17 @@
         </field>
     </record>
 
+    <!-- SALES TEAMS TREE VIEW + MUTI_EDIT -->
     <record id="crm_team_view_tree" model="ir.ui.view">
         <field name="name">crm.team.tree</field>
         <field name="model">crm.team</field>
         <field name="field_parent">child_ids</field>
         <field name="arch" type="xml">
-            <tree string="Sales Team" sample="1">
+            <tree string="Sales Team" sample="1" multi_edit="1">
                 <field name="sequence" widget="handle"/>
-                <field name="name"/>
+                <field name="name" readonly="1"/>
                 <field name="active" invisible="1"/>
-                <field name="user_id"/>
+                <field name="user_id" domain="[('share', '=', False)]"/>
                 <field name="company_id" groups="base.group_multi_company"/>
             </tree>
         </field>

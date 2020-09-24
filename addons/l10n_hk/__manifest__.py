@@ -4,7 +4,7 @@
 {
     'name': 'Hong Kong - Accounting',
     'version': '1.0',
-    'category': 'Accounting/Localizations',
+    'category': 'Accounting/Localizations/Account Charts',
     'description': """ This is the base module to manage chart of accounting and localization for Hong Kong """,
     'author': 'Odoo SA',
     'depends': ['account'],

@@ -183,7 +183,7 @@ class SaleOrderLine(models.Model):
         if self.product_id and self.order_id.sale_order_template_id:
             for line in self.order_id.sale_order_template_id.sale_order_template_line_ids:
                 if line.product_id == self.product_id:
-                    self.name = line.with_context(lang=self.order_id.partner_id.lang).name
+                    self.name = line.with_context(lang=self.order_id.partner_id.lang).name + self._get_sale_order_line_multiline_description_variants()
                     break
         return domain
 
@@ -227,7 +227,7 @@ class SaleOrderOption(models.Model):
         product = self.product_id.with_context(lang=self.order_id.partner_id.lang)
         self.name = product.get_product_multiline_description_sale()
         self.uom_id = self.uom_id or product.uom_id
-        # To compute the dicount a so line is created in cache
+        # To compute the discount a so line is created in cache
         values = self._get_values_to_add_to_order()
         new_sol = self.env['sale.order.line'].new(values)
         new_sol._onchange_discount()
@@ -250,6 +250,9 @@ class SaleOrderOption(models.Model):
         order_line._compute_tax_id()
 
         self.write({'line_id': order_line.id})
+        if sale_order:
+            sale_order.add_option_to_order_with_taxcloud()
+
 
     def _get_values_to_add_to_order(self):
         self.ensure_one()

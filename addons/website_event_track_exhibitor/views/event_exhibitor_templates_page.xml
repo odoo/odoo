@@ -38,7 +38,7 @@
                     t-options="{'widget': 'duration', 'digital': True, 'unit': 'minute', 'round': 'minute'}"/>.
             </span>
             <span class="my-0" t-else="">
-                starts at
+                starts on
                 <span t-field="sponsor.event_id.with_context(tz=sponsor.event_id.date_tz).date_begin"
                     t-options="{'format': 'medium'}"/> (<t t-esc="sponsor.event_id.date_tz"/>).
             </span>
@@ -74,6 +74,7 @@
                         <t t-set="auto_open" t-value="1"/>
                         <t t-set="attach_to" t-value="'#o_wsponsor_jitsi_iframe'"/>
                         <t t-set="check_full" t-value="option_can_edit"/>
+                        <t t-set="jitsi_server_domain" t-value="sponsor.chat_room_id.jitsi_server_domain"/>
                     </t>
                 </div>
             </t>
@@ -84,17 +85,16 @@
         <div class="ml-3">
             <div class="float-left pt-3">
                 <span t-if="sponsor.image_512" t-field="sponsor.image_512" class="o_wevent_online_page_avatar"
-                    t-options="{'widget': 'image', 'class': 'rounded-circle', 'max-width': '96'}"/>
+                    t-options="{'widget': 'image', 'max-width': '96'}"/>
                 <span t-elif="sponsor.partner_id.image_512" t-field="sponsor.partner_id.image_512" class="o_wevent_online_page_avatar"
-                    t-options="{'widget': 'image', 'class': 'rounded-circle', 'max-width': '96'}"/>
+                    t-options="{'widget': 'image', 'max-width': '96'}"/>
             </div>
-            <div class="px-3 pt-3 d-flex flex-row justify-content-between position-relative">
+            <div class="o_wevent_sponsor px-3 pt-3 d-flex flex-row justify-content-between position-relative">
                 <div class="d-flex flex-column">
                     <div class="d-flex align-items-center">
                         <span t-field="sponsor.name" class="h4 mb-0"/>
-                        <div t-if="sponsor.sponsor_type_id.display_ribbon_style and sponsor.sponsor_type_id.display_ribbon_style != 'no_ribbon'" class="ribbon-wrapper">
-                            <div t-field="sponsor.sponsor_type_id" t-attf-class="ribbon ribbon_#{sponsor.sponsor_type_id.name}"/>
-                        </div>
+                        <span t-if="sponsor.sponsor_type_id.display_ribbon_style and sponsor.sponsor_type_id.display_ribbon_style != 'no_ribbon'"
+                              t-field="sponsor.sponsor_type_id" t-attf-class="o_ribbon o_ribbon_right ribbon_#{sponsor.sponsor_type_id.name}"/>
                     </div>
                     <span t-field="sponsor.subtitle" class="text-muted mb-3"/>
                     <div t-if="sponsor.url" class="d-flex text-break align-items-baseline">
@@ -115,7 +115,7 @@
                     t-attf-class="text-right d-none d-md-block #{'mr-5' if sponsor.sponsor_type_id.display_ribbon_style and sponsor.sponsor_type_id.display_ribbon_style != 'no_ribbon' else ''}">
                     <img class="img"
                         style="max-height: 36px;"
-                        t-att-src="website.image_url(sponsor.partner_id.country_id, 'image')"
+                        t-att-src="sponsor.partner_id.country_id.image_url"
                         t-att-alt="sponsor.partner_id.country_id.name"/>
                 </a>
             </div>
@@ -142,15 +142,23 @@
                 <li t-foreach="sponsors_other" t-as="sponsor_other">
                     <a class="d-flex w-100 h-100 px-2 pt-2 pb-1 text-decoration-none"
                         t-att-href="sponsor_other.website_url">
-                        <img t-if="sponsor_other.partner_id.country_id"
-                            class="mr-2 o_wesponsor_aside_logo"
-                            t-att-src="website.image_url(sponsor_other.partner_id.country_id, 'image')"
+                        <div class="d-flex flex-column align-items-center">
+                            <img t-if="sponsor_other.partner_id.country_id"
+                            class="mr-2 mb-1 o_wesponsor_aside_logo"
+                            t-att-src="sponsor_other.partner_id.country_id.image_url"
                             t-att-alt="sponsor_other.partner_id.country_id.name"/>
+                            <span t-if="sponsor_other.sponsor_type_id.display_ribbon_style not in [False, 'no_ribbon']"
+                                t-att-class="'badge badge-light mr-2 ribbon_%s' % sponsor_other.sponsor_type_id.display_ribbon_style"
+                                t-esc="sponsor_other.sponsor_type_id.name"/>
+                            <span t-else="" class="badge badge-light mr-2"
+                                t-esc="sponsor_other.sponsor_type_id.name"/>
+                        </div>
                         <div class="flex-grow-1 overflow-auto">
                             <span class="d-flex align-items-baseline o_wesponsor_sponsor_name">
                                 <span class="d-inline-block text-truncate" t-esc="sponsor_other.name"/>
-                                <span class="badge badge-light ml-auto" t-esc="sponsor_other.sponsor_type_id.name"/>
+
                             </span>
+
                             <small class="text-muted" t-esc="sponsor_other.subtitle"/>
                         </div>
                     </a>

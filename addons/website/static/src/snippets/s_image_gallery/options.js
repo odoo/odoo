@@ -9,7 +9,7 @@ var _t = core._t;
 var qweb = core.qweb;
 
 options.registry.gallery = options.Class.extend({
-    xmlDependencies: ['/website/static/src/xml/website.gallery.xml'],
+    xmlDependencies: ['/website/static/src/snippets/s_image_gallery/000.xml'],
 
     /**
      * @override
@@ -57,7 +57,9 @@ options.registry.gallery = options.Class.extend({
      * @override
      */
     onBuilt: function () {
-        this.addImages(false);
+        if (this.$target.find('.o_add_images').length) {
+            this.addImages(false);
+        }
         // TODO should consider the async parts
         this._adaptNavigationIDs();
     },

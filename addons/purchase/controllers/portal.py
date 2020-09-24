@@ -16,11 +16,12 @@ from odoo.addons.web.controllers.main import Binary
 
 class CustomerPortal(CustomerPortal):
 
-    def _prepare_home_portal_values(self):
-        values = super(CustomerPortal, self)._prepare_home_portal_values()
-        values['purchase_count'] = request.env['purchase.order'].search_count([
-            ('state', 'in', ['purchase', 'done', 'cancel'])
-        ])
+    def _prepare_home_portal_values(self, counters):
+        values = super()._prepare_home_portal_values(counters)
+        if 'purchase_count' in counters:
+            values['purchase_count'] = request.env['purchase.order'].search_count([
+                ('state', 'in', ['purchase', 'done', 'cancel'])
+            ])
         return values
 
     def _purchase_order_get_page_view_values(self, order, access_token, **kwargs):
@@ -39,12 +40,10 @@ class CustomerPortal(CustomerPortal):
     @http.route(['/my/purchase', '/my/purchase/page/<int:page>'], type='http', auth="user", website=True)
     def portal_my_purchase_orders(self, page=1, date_begin=None, date_end=None, sortby=None, filterby=None, **kw):
         values = self._prepare_portal_layout_values()
-        partner = request.env.user.partner_id
         PurchaseOrder = request.env['purchase.order']
 
         domain = []
 
-        archive_groups = self._get_archive_groups('purchase.order', domain) if values.get('my_details') else []
         if date_begin and date_end:
             domain += [('create_date', '>', date_begin), ('create_date', '<=', date_end)]
 
@@ -93,7 +92,6 @@ class CustomerPortal(CustomerPortal):
             'orders': orders,
             'page_name': 'purchase',
             'pager': pager,
-            'archive_groups': archive_groups,
             'searchbar_sortings': searchbar_sortings,
             'sortby': sortby,
             'searchbar_filters': OrderedDict(sorted(searchbar_filters.items())),
@@ -145,7 +143,7 @@ class CustomerPortal(CustomerPortal):
                 return request.redirect(order_sudo.get_portal_url())
 
             try:
-                updated_date = line._convert_to_last_minute_of_day(datetime.strptime(date_str, '%Y-%m-%d'))
+                updated_date = line._convert_to_middle_of_day(datetime.strptime(date_str, '%Y-%m-%d'))
             except ValueError:
                 continue
 

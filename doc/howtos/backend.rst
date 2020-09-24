@@ -87,7 +87,6 @@ option.
     file <reference/cmdline/config>`
 
 An Odoo module is declared by its :ref:`manifest <reference/module/manifest>`.
-See the :ref:`manifest documentation <reference/module/manifest>` about it.
 
 A module is also a
 `Python package <http://docs.python.org/2/tutorial/modules.html#packages>`_
@@ -1376,10 +1375,8 @@ and reuse all its existing mechanisms, with the following particularities:
 - Wizard records are not meant to be persistent; they are automatically deleted
   from the database after a certain time. This is why they are called
   *transient*.
-- Wizard models do not require explicit access rights: users have all
-  permissions on wizard records.
-- Wizard records may refer to regular records or wizard records through many2one
-  fields, but regular records *cannot* refer to wizard records through a
+- Wizard records may refer to regular records or wizard records through relational
+  fields(many2one or many2many), but regular records *cannot* refer to wizard records through a
   many2one field.
 
 We want to create a wizard that allow users to create attendees for a particular

@@ -170,6 +170,7 @@ class Message(models.Model):
         if operator not in ('=', '!=', '<', '<=', '>', '>=', 'in', 'not in'):
             return []
         # retrieve all the messages that match with a specific SQL query
+        self.flush(['body'])
         query = """SELECT id FROM "%s" WHERE char_length("body") %s %%s""" % \
                 (self._table, operator)
         self.env.cr.execute(query, (value,))
@@ -244,7 +245,7 @@ class MultiLine(models.Model):
 
     multi = fields.Many2one('test_new_api.multi', ondelete='cascade')
     name = fields.Char()
-    partner = fields.Many2one('res.partner')
+    partner = fields.Many2one(related='multi.partner', store=True)
     tags = fields.Many2many('test_new_api.multi.tag')
 
 
@@ -592,6 +593,54 @@ class ComputeOnchangeLine(models.Model):
     foo = fields.Char()
     record_id = fields.Many2one('test_new_api.compute.onchange',
                                 required=True, ondelete='cascade')
+
+
+class ComputeDynamicDepends(models.Model):
+    _name = 'test_new_api.compute.dynamic.depends'
+    _description = "Computed field with dynamic dependencies"
+
+    name1 = fields.Char()
+    name2 = fields.Char()
+    name3 = fields.Char()
+    full_name = fields.Char(compute='_compute_full_name')
+
+    def _get_full_name_fields(self):
+        # the fields to use are stored in a config parameter
+        depends = self.env['ir.config_parameter'].get_param('test_new_api.full_name', '')
+        return depends.split(',') if depends else []
+
+    @api.depends(lambda self: self._get_full_name_fields())
+    def _compute_full_name(self):
+        fnames = self._get_full_name_fields()
+        for record in self:
+            record.full_name = ", ".join(filter(None, (record[fname] for fname in fnames)))
+
+
+class ComputeUnassigned(models.Model):
+    _name = 'test_new_api.compute.unassigned'
+    _description = "Model with computed fields left unassigned"
+
+    foo = fields.Char()
+    bar = fields.Char(compute='_compute_bar')
+    bare = fields.Char(compute='_compute_bare', readonly=False)
+    bars = fields.Char(compute='_compute_bars', store=True)
+    bares = fields.Char(compute='_compute_bares', readonly=False, store=True)
+
+    @api.depends('foo')
+    def _compute_bar(self):
+        pass
+
+    @api.depends('foo')
+    def _compute_bare(self):
+        pass
+
+    @api.depends('foo')
+    def _compute_bars(self):
+        pass
+
+    @api.depends('foo')
+    def _compute_bares(self):
+        pass
 
 
 class ModelBinary(models.Model):

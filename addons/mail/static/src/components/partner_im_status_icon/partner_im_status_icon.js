@@ -2,6 +2,7 @@ odoo.define('mail/static/src/components/partner_im_status_icon/partner_im_status
 'use strict';
 
 const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
+const { markEventHandled } = require('mail/static/src/utils/utils.js');
 
 const { Component } = owl;
 
@@ -34,15 +35,37 @@ class PartnerImStatusIcon extends Component {
         return this.env.models['mail.partner'].get(this.props.partnerLocalId);
     }
 
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onClick(ev) {
+        if (!this.props.hasOpenChat) {
+            return;
+        }
+        markEventHandled(ev, 'PartnerImStatusIcon.openChat');
+        this.partner.openChat();
+    }
+
 }
 
 Object.assign(PartnerImStatusIcon, {
     defaultProps: {
-        hasBackground: true
+        hasBackground: true,
+        hasOpenChat: false,
     },
     props: {
         partnerLocalId: String,
         hasBackground: Boolean,
+        /**
+         * Determines whether a click on `this` should open a chat with
+         * `this.partner`.
+         */
+        hasOpenChat: Boolean,
     },
     template: 'mail.PartnerImStatusIcon',
 });

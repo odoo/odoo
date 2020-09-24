@@ -5,10 +5,11 @@ const components = {
     Message: require('mail/static/src/components/message/message.js'),
 };
 const {
-    afterEach: utilsAfterEach,
+    afterEach,
     afterNextRender,
-    beforeEach: utilsBeforeEach,
-    start: utilsStart,
+    beforeEach,
+    createRootComponent,
+    start,
 } = require('mail/static/src/utils/test_utils.js');
 
 const Bus = require('web.Bus');
@@ -18,20 +19,18 @@ QUnit.module('components', {}, function () {
 QUnit.module('message', {}, function () {
 QUnit.module('message_tests.js', {
     beforeEach() {
-        utilsBeforeEach(this);
+        beforeEach(this);
 
         this.createMessageComponent = async (message, otherProps) => {
-            const MessageComponent = components.Message;
-            MessageComponent.env = this.env;
-            this.component = new MessageComponent(null, Object.assign({
-                messageLocalId: message.localId,
-            }, otherProps));
-            delete MessageComponent.env;
-            await this.component.mount(this.widget.el);
+            const props = Object.assign({ messageLocalId: message.localId }, otherProps);
+            await createRootComponent(this, components.Message, {
+                props,
+                target: this.widget.el,
+            });
         };
 
         this.start = async params => {
-            let { env, widget } = await utilsStart(Object.assign({}, params, {
+            const { env, widget } = await start(Object.assign({}, params, {
                 data: this.data,
             }));
             this.env = env;
@@ -39,17 +38,7 @@ QUnit.module('message_tests.js', {
         };
     },
     afterEach() {
-        utilsAfterEach(this);
-        if (this.component) {
-            // The component must be destroyed before the widget, because the
-            // widget might destroy the models before destroying the component,
-            // and the Message component is relying on messaging.
-            this.component.destroy();
-        }
-        if (this.widget) {
-            this.widget.destroy();
-        }
-        this.env = undefined;
+        afterEach(this);
     },
 });
 
@@ -58,6 +47,7 @@ QUnit.test('Notification Sent', async function (assert) {
 
     await this.start();
     const threadViewer = this.env.models['mail.thread_viewer'].create({
+        hasThreadView: true,
         thread: [['create', {
             id: 11,
             model: 'mail.channel',
@@ -75,7 +65,7 @@ QUnit.test('Notification Sent', async function (assert) {
         originThread: [['link', threadViewer.thread]]
     });
     await this.createMessageComponent(message, {
-        threadViewerLocalId: threadViewer.localId
+        threadViewLocalId: threadViewer.threadView.localId
     });
 
     assert.containsOnce(
@@ -85,7 +75,7 @@ QUnit.test('Notification Sent', async function (assert) {
     );
     assert.containsOnce(
         document.body,
-        '.o_Message_notificationIconContainer',
+        '.o_Message_notificationIconClickable',
         "should display the notification icon container"
     );
     assert.containsOnce(
@@ -100,7 +90,7 @@ QUnit.test('Notification Sent', async function (assert) {
     );
 
     await afterNextRender(() => {
-        document.querySelector('.o_Message_notificationIconContainer').click();
+        document.querySelector('.o_Message_notificationIconClickable').click();
     });
     assert.containsOnce(
         document.body,
@@ -149,6 +139,7 @@ QUnit.test('Notification Error', async function (assert) {
 
     await this.start({ env: { bus } });
     const threadViewer = this.env.models['mail.thread_viewer'].create({
+        hasThreadView: true,
         thread: [['create', {
             id: 11,
             model: 'mail.channel',
@@ -165,7 +156,7 @@ QUnit.test('Notification Error', async function (assert) {
         originThread: [['link', threadViewer.thread]]
     });
     await this.createMessageComponent(message, {
-        threadViewerLocalId: threadViewer.localId
+        threadViewLocalId: threadViewer.threadView.localId
     });
 
     assert.containsOnce(
@@ -175,7 +166,7 @@ QUnit.test('Notification Error', async function (assert) {
     );
     assert.containsOnce(
         document.body,
-        '.o_Message_notificationIconContainer',
+        '.o_Message_notificationIconClickable',
         "should display the notification icon container"
     );
     assert.containsOnce(
@@ -190,7 +181,7 @@ QUnit.test('Notification Error', async function (assert) {
     );
 
     await afterNextRender(() => {
-        document.querySelector('.o_Message_notificationIconContainer').click();
+        document.querySelector('.o_Message_notificationIconClickable').click();
     });
     assert.verifySteps(
         ['do_action'],

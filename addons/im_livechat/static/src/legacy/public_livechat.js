@@ -110,6 +110,13 @@ var LivechatButton = Widget.extend({
         if (this.options.button_text_color) {
             this.$el.css('color', this.options.button_text_color);
         }
+
+        // If website_event_track installed, put the livechat banner above the PWA banner.
+        var pwaBannerHeight = $('.o_pwa_install_banner').outerHeight(true);
+        if (pwaBannerHeight) {
+            this.$el.css('bottom', pwaBannerHeight + 'px');
+        }
+
         return this._super();
     },
 
@@ -170,25 +177,26 @@ var LivechatButton = Widget.extend({
      * @param {Array} notification
      */
     _handleNotification: function (notification) {
-        if (this._livechat && (notification[0] === this._livechat.getUUID())) {
-            if (notification[1]._type === 'history_command') { // history request
-                var cookie = utils.get_cookie(LIVECHAT_COOKIE_HISTORY);
-                var history = cookie ? JSON.parse(cookie) : [];
+        const [livechatUUID, notificationData] = notification;
+        if (this._livechat && (livechatUUID === this._livechat.getUUID())) {
+            if (notificationData._type === 'history_command') { // history request
+                const cookie = utils.get_cookie(LIVECHAT_COOKIE_HISTORY);
+                const history = cookie ? JSON.parse(cookie) : [];
                 session.rpc('/im_livechat/history', {
                     pid: this._livechat.getOperatorPID()[0],
                     channel_uuid: this._livechat.getUUID(),
                     page_history: history,
                 });
-            } else { // normal message
+            } else if ('body' in notificationData) { // normal message
                 // If message from notif is already in chatter messages, stop handling
-                if (this._messages.some(message => message.getID() === notification[1].id)) {
+                if (this._messages.some(message => message.getID() === notificationData.id)) {
                     return;
                 }
-                this._addMessage(notification[1]);
-                this._renderMessages();
+                this._addMessage(notificationData);
                 if (this._chatWindow.isFolded() || !this._chatWindow.isAtBottom()) {
                     this._livechat.incrementUnreadCounter();
                 }
+                this._renderMessages();
             }
         }
     },
@@ -226,10 +234,21 @@ var LivechatButton = Widget.extend({
         }
         def.then(function (livechatData) {
             if (!livechatData || !livechatData.operator_pid) {
-                self.displayNotification({
-                    message: _t("No available collaborator, please try again later."),
-                    sticky: true
-                });
+                try {
+                    self.displayNotification({
+                        message: _t("No available collaborator, please try again later."),
+                        sticky: true,
+                    });
+                } catch (err) {
+                    /**
+                     * Failure in displaying notification happens when
+                     * notification service doesn't exist, which is the case in
+                     * external lib. We don't want notifications in external
+                     * lib at the moment because they use bootstrap toast and
+                     * we don't want to include boostrap in external lib.
+                     */
+                    console.warn(_t("No available collaborator, please try again later."));
+                }
             } else {
                 self._livechat = new WebsiteLivechat({
                     parent: self,
@@ -321,10 +340,22 @@ var LivechatButton = Widget.extend({
             .rpc('/mail/chat_post', { uuid: this._livechat.getUUID(), message_content: message.content })
             .then(function (messageId) {
                 if (!messageId) {
-                    self.displayNotification({
-                        message: _t("Session expired... Please refresh and try again."),
-                        sticky: true
-                    });
+                    try {
+                        self.displayNotification({
+                            message: _t("Session expired... Please refresh and try again."),
+                            sticky: true,
+                        });
+                    } catch (err) {
+                        /**
+                         * Failure in displaying notification happens when
+                         * notification service doesn't exist, which is the case
+                         * in external lib. We don't want notifications in
+                         * external lib at the moment because they use bootstrap
+                         * toast and we don't want to include boostrap in
+                         * external lib.
+                         */
+                        console.warn(_t("Session expired... Please refresh and try again."));
+                    }
                     self._closeChat();
                 }
                 self._chatWindow.scrollToBottom();

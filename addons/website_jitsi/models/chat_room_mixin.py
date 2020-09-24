@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+import re
 
+from odoo import api, fields, models
+from odoo.tools import remove_accents
 
 class ChatRoomMixin(models.AbstractModel):
     """Add the chat room configuration (`chat.room`) on the needed models.
@@ -28,30 +30,48 @@ class ChatRoomMixin(models.AbstractModel):
     room_max_capacity = fields.Selection(string="Max capacity", related="chat_room_id.max_capacity", readonly=False, required=True)
     room_participant_count = fields.Integer("Participant count", related="chat_room_id.participant_count", readonly=False)
     room_last_activity = fields.Datetime("Last activity", related="chat_room_id.last_activity")
-    room_max_participant_reached = fields.Integer("Max participant reached", related="chat_room_id.max_participant_reached")
+    room_max_participant_reached = fields.Integer("Peak participants", related="chat_room_id.max_participant_reached")
 
     @api.model_create_multi
     def create(self, values_list):
         for values in values_list:
             if any(values.get(fmatch[0]) for fmatch in self.ROOM_CONFIG_FIELDS) and not values.get('chat_room_id'):
-                room_values = dict((fmatch[1], values[fmatch[0]]) for fmatch in self.ROOM_CONFIG_FIELDS if values.get(fmatch[0]))
+                if values.get('room_name'):
+                    values['room_name'] = self._jitsi_sanitize_name(values['room_name'])
+                room_values = dict((fmatch[1], values.pop(fmatch[0])) for fmatch in self.ROOM_CONFIG_FIELDS if values.get(fmatch[0]))
                 values['chat_room_id'] = self.env['chat.room'].create(room_values).id
         return super(ChatRoomMixin, self).create(values_list)
 
     def write(self, values):
         if any(values.get(fmatch[0]) for fmatch in self.ROOM_CONFIG_FIELDS):
+            if values.get('room_name'):
+                values['room_name'] = self._jitsi_sanitize_name(values['room_name'])
             for document in self.filtered(lambda doc: not doc.chat_room_id):
                 room_values = dict((fmatch[1], values[fmatch[0]]) for fmatch in self.ROOM_CONFIG_FIELDS if values.get(fmatch[0]))
                 document.chat_room_id = self.env['chat.room'].create(room_values).id
         return super(ChatRoomMixin, self).write(values)
 
-    def copy(self, default=None):
+    def copy_data(self, default=None):
+        if default is None:
+            default = {}
         if self.chat_room_id:
-            chat_room_id = self.chat_room_id.copy()
-            default = dict(default or {}, chat_room_id=chat_room_id.id)
-        return super(ChatRoomMixin, self).copy(default)
+            chat_room_default = {}
+            if 'room_name' not in default:
+                chat_room_default['name'] = self._jitsi_sanitize_name(self.chat_room_id.name)
+            default['chat_room_id'] = self.chat_room_id.copy(default=chat_room_default).id
+        return super(ChatRoomMixin, self).copy_data(default=default)
 
     def unlink(self):
-        if self.chat_room_id:
-            self.chat_room_id.unlink()
-        return super(ChatRoomMixin, self).unlink()
+        rooms = self.chat_room_id
+        res = super(ChatRoomMixin, self).unlink()
+        rooms.unlink()
+        return res
+
+    def _jitsi_sanitize_name(self, name):
+        sanitized = re.sub(r'[^\w+.]+', '-', remove_accents(name).lower())
+        counter, sanitized_suffixed = 1, sanitized
+        existing = self.env['chat.room'].search([('name', '=like', '%s%%' % sanitized)]).mapped('name')
+        while sanitized_suffixed in existing:
+            sanitized_suffixed = '%s-%d' % (sanitized, counter)
+            counter += 1
+        return sanitized_suffixed

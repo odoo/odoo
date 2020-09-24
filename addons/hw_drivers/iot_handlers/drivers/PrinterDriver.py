@@ -4,21 +4,24 @@
 from base64 import b64decode
 from cups import IPPError, IPP_PRINTER_IDLE, IPP_PRINTER_PROCESSING, IPP_PRINTER_STOPPED
 import dbus
+import io
 import logging
 import netifaces as ni
 import os
-import io
-import base64
+from PIL import Image, ImageOps
 import re
 import subprocess
 import tempfile
-from PIL import Image, ImageOps
+from uuid import getnode as get_mac
 
-from odoo import http, _
-from odoo.addons.hw_drivers.controllers.driver import event_manager, Driver, iot_devices, cm
+from odoo import http
+from odoo.addons.hw_drivers.connection_manager import connection_manager
+from odoo.addons.hw_drivers.controllers.proxy import proxy_drivers
+from odoo.addons.hw_drivers.driver import Driver
+from odoo.addons.hw_drivers.event_manager import event_manager
 from odoo.addons.hw_drivers.iot_handlers.interfaces.PrinterInterface import PPDs, conn, cups_lock
+from odoo.addons.hw_drivers.main import iot_devices
 from odoo.addons.hw_drivers.tools import helpers
-from odoo.addons.hw_proxy.controllers.main import drivers as old_drivers
 
 _logger = logging.getLogger(__name__)
 
@@ -48,15 +51,15 @@ def print_star_error(deviceId):
     process = subprocess.Popen(["lp", "-d", deviceId], stdin=subprocess.PIPE)
     process.communicate(error_page.encode("utf-8"))
 
-def cups_notification_handler(message, uri, device_id, state, reason, accepting_jobs):
-    if device_id in iot_devices:
+def cups_notification_handler(message, uri, device_identifier, state, reason, accepting_jobs):
+    if device_identifier in iot_devices:
         reason = reason if reason != 'none' else None
         state_value = {
             IPP_PRINTER_IDLE: 'connected',
             IPP_PRINTER_PROCESSING: 'processing',
             IPP_PRINTER_STOPPED: 'stopped'
         }
-        iot_devices[device_id].update_status(state_value[state], message, reason)
+        iot_devices[device_identifier].update_status(state_value[state], message, reason)
 
 # Create a Cups subscription if it doesn't exist yet
 try:
@@ -76,25 +79,25 @@ bus.add_signal_receiver(cups_notification_handler, signal_name="PrinterStateChan
 class PrinterDriver(Driver):
     connection_type = 'printer'
 
-    def __init__(self, device):
-        super(PrinterDriver, self).__init__(device)
-        self._device_type = 'printer'
-        self._device_connection = self.dev['device-class'].lower()
-        self._device_name = self.dev['device-make-and-model']
+    def __init__(self, identifier, device):
+        super(PrinterDriver, self).__init__(identifier, device)
+        self.device_type = 'printer'
+        self.device_connection = device['device-class'].lower()
+        self.device_name = device['device-make-and-model']
         self.state = {
             'status': 'connecting',
             'message': 'Connecting to printer',
             'reason': None,
         }
         self.send_status()
-        if 'direct' in self._device_connection and 'CMD:ESC/POS;' in self.dev['device-id']:
+        if 'direct' in self.device_connection and 'CMD:ESC/POS;' in device['device-id']:
             self.print_status()
 
     @classmethod
     def supported(cls, device):
         if device.get('supported', False):
             return True
-        protocol = ['dnssd', 'lpd']
+        protocol = ['dnssd', 'lpd', 'socket']
         if any(x in device['url'] for x in protocol) and device['device-make-and-model'] != 'Unknown' or 'direct' in device['device-class']:
             model = cls.get_device_model(device)
             ppdFile = ''
@@ -137,15 +140,11 @@ class PrinterDriver(Driver):
         status = 'connected' if any(iot_devices[d].device_type == "printer" and iot_devices[d].device_connection == 'direct' for d in iot_devices) else 'disconnected'
         return {'status': status, 'messages': ''}
 
-    @property
-    def device_identifier(self):
-        return self.dev['identifier']
-
     def action(self, data):
         if data.get('action') == 'cashbox':
             self.open_cashbox()
         elif data.get('action') == 'print_receipt':
-            self.print_receipt(base64.b64decode(data['receipt']))
+            self.print_receipt(b64decode(data['receipt']))
         else:
             self.print_raw(b64decode(data['document']))
 
@@ -207,11 +206,23 @@ class PrinterDriver(Driver):
                 - 2: 90dpi x 180 dpi
                 - 3: 90dpi x 90 dpi
             - x: Length in X direction, in bytes, represented as 2 bytes in little endian
+                --> Must be <= 255
             - y: Length in Y direction, in dots, represented as 2 bytes in little endian
         '''
         width_pixels, height_pixels = im.size
         width_bytes = int((width_pixels + 7) / 8)
         print_command = b"\x1d\x76\x30" + b'\x00' + (width_bytes).to_bytes(2, 'little') + height_pixels.to_bytes(2, 'little')
+
+        # There is a height limit when printing images, so we split the image
+        # into slices and print each slice with a separate command.
+        blobs = []
+        slice_offset = 0
+        while slice_offset < height_pixels:
+            slice_height_pixels = min(255, height_pixels - slice_offset)
+            im_slice = im.crop((0, slice_offset, width_pixels, slice_offset + slice_height_pixels))
+            print_command = b"\x1d\x76\x30" + b'\x00' + (width_bytes).to_bytes(2, 'little') + slice_height_pixels.to_bytes(2, 'little')
+            blobs += [print_command + im_slice.tobytes()]
+            slice_offset += slice_height_pixels
 
         '''GS V m
             - GS V: Cut, in hex: "1D 56"
@@ -223,7 +234,7 @@ class PrinterDriver(Driver):
         '''
         cut = b'\x1d\x56' + b'\x41'
 
-        self.print_raw(center + print_command + im.tobytes() + cut + b'\n')
+        self.print_raw(center + b"".join(blobs) + cut + b'\n')
 
     def print_status(self):
         """Prints the status ticket of the IoTBox on the current printer."""
@@ -257,7 +268,7 @@ class PrinterDriver(Driver):
             mac = '\nMAC Address:\n%s\n' % helpers.get_mac_address()
             homepage = '\nHomepage:\nhttp://%s:8069\n\n' % main_ips
 
-        code = cm.pairing_code
+        code = connection_manager.pairing_code
         if code:
             pairing_code = '\nPairing Code:\n%s\n' % code
 
@@ -286,4 +297,4 @@ class PrinterController(http.Controller):
             return True
         return False
 
-old_drivers['printer'] = PrinterDriver
+proxy_drivers['printer'] = PrinterDriver
