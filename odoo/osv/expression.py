@@ -944,7 +944,7 @@ class expression(object):
             # Applying recursivity on field(one2many)
             elif field.type == 'one2many' and operator in HIERARCHY_FUNCS:
                 ids2 = to_ids(right, comodel, leaf.leaf)
-                if field.comodel_name != model._name:
+                if field.comodel_name != field.model_name:
                     dom = HIERARCHY_FUNCS[operator](left, ids2, comodel, prefix=field.comodel_name)
                 else:
                     dom = HIERARCHY_FUNCS[operator]('id', ids2, model, parent=left)
