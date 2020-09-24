@@ -12,29 +12,14 @@ tour.register("snippet_version", {
 }, {
     content: "Drop s_test_snip snippet",
     trigger: '#oe_snippets .oe_snippet:has(.s_test_snip) .oe_snippet_thumbnail',
-    run: async (action_helper) => {
-        action_helper.drag_and_drop('#wrap');
-        // wait the last operation of the editor before saving.
-        $('#wrap').addClass('action-loading');
-        await new Promise(r => setTimeout(r, 0));
-        await new Promise(r => setTimeout(r, 0));
-        $('#wrap').removeClass('action-loading');
-    },
+    run: "drag_and_drop #wrap",
 }, {
     content: "Drop s_text_image snippet",
-    extra_trigger: '#wrap:not(.action-loading)',
     trigger: '#oe_snippets .oe_snippet:has(.s_text_image) .oe_snippet_thumbnail:not(.o_we_already_dragging)',
-    run: async (action_helper) => {
-        action_helper.drag_and_drop('#wrap');
-        // wait the last operation of the editor before saving.
-        $('#wrap').addClass('action-loading');
-        await new Promise(r => setTimeout(r, 0));
-        await new Promise(r => setTimeout(r, 0));
-        $('#wrap').removeClass('action-loading');
-    },
+    run: "drag_and_drop #wrap",
 }, {
     content: "Test t-snippet and t-snippet-call: snippets have data-snippet set",
-    extra_trigger: '#wrap:not(.action-loading)',
+    extra_trigger: "#oe_snippets .oe_snippet:has(.s_text_image) .oe_snippet_thumbnail:not(.o_we_already_dragging)",
     trigger: '#oe_snippets .o_panel_body > .oe_snippet.ui-draggable',
     run: function () {
         // Tests done here as all these are not visible on the page

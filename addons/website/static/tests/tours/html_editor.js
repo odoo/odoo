@@ -17,19 +17,23 @@ tour.register('html_editor_multiple_templates', {
             content: "drop a snippet",
             trigger: '#oe_snippets .oe_snippet:has(.s_cover) .oe_snippet_thumbnail',
             // id starting by 'oe_structure..' will actually create an inherited view
-            run: async (action_helper) => {
-                action_helper.drag_and_drop('#oe_structure_test_ui');
-                // wait the last operation of the editor before saving.
-                $('.o_we_website_top_actions').addClass('action-loading');
-                await new Promise(r => setTimeout(r, 0));
-                await new Promise(r => setTimeout(r, 0));
-                $('.o_we_website_top_actions').removeClass('action-loading');
+            run: 'drag_and_drop #oe_structure_test_ui',
+        },
+        {
+            content: "check if the section is dirty",
+            trigger: '#oe_snippets .oe_snippet:has(.s_cover) .oe_snippet_thumbnail:not(.o_we_already_dragging)',
+            run: () => {
+                const wysiwyg = $('#wrapwrap').data('wysiwyg');
+                const node = wysiwyg.editorHelpers.getNodes(document.querySelector('#oe_structure_test_ui'))[0];
+                if (node.dirty) {
+                    $('#oe_structure_test_ui').addClass('o_dirty');
+                }
             },
         },
         {
             content: "save the page",
             extra_trigger: '#oe_structure_test_ui.o_dirty',
-            trigger: ".o_we_website_top_actions:not('.action-loading') button[name=save]",
+            trigger: ".o_we_website_top_actions button[name=save]",
         },
         // 2. Edit generic view
         {
