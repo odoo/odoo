@@ -1,10 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import logging
 
 from odoo import api, exceptions, fields, models, _
 from odoo.exceptions import UserError
 from odoo.tools import float_compare, float_round
 from odoo.addons import decimal_precision as dp
+
+_logger = logging.getLogger(__name__)
 
 
 class StockMoveLine(models.Model):
@@ -74,6 +77,7 @@ class StockMove(models.Model):
     finished_lots_exist = fields.Boolean('Finished Lots Exist', compute='_compute_order_finished_lot_ids')
 
     def _unreserve_initial_demand(self, new_move):
+        _logger.warning('method _unreserve_initial_demand shall not be used as _action_done is refactored')
         # If you were already putting stock.move.lots on the next one in the work order, transfer those to the new move
         self.filtered(lambda m: m.production_id or m.raw_material_production_id)\
         .mapped('move_line_ids')\
