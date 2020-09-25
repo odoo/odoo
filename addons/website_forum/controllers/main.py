@@ -260,7 +260,7 @@ class WebsiteForum(WebsiteProfile):
             values['back_button_url'] = request.httprequest.referrer
 
         # increment view counter
-        question.sudo().set_viewed()
+        question.sudo()._set_viewed()
 
         return request.render("website_forum.post_description_full", values)
 
