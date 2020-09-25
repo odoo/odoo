@@ -906,7 +906,7 @@ class ProductTemplate(models.Model):
         for pav in attribute_values:
             domain = expression.AND([[('attribute_value_ids', 'in', pav.id)], domain])
 
-        res = self.env['product.product'].with_context(active_test=False).search(domain, order='active DESC')
+        res = self.env['product.product'].with_context(active_test=False).search(domain, order='active DESC, id ASC')
 
         # The domain above is checking for the `product.attribute.value`, but we
         # need to make sure it's the same `product.template.attribute.value`.
