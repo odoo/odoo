@@ -242,6 +242,8 @@ class configmanager(object):
                          help="specify the maximum number of physical connections to PostgreSQL")
         group.add_option("--db-template", dest="db_template", my_default="template0",
                          help="specify a custom database template to create a new database")
+        group.add_option("--preselected_db", dest="preselected_db", my_default=False,
+                         help="specify a database to be preselected for the users")
         parser.add_option_group(group)
 
         group = optparse.OptionGroup(parser, "Internationalisation options. ",
@@ -428,7 +430,8 @@ class configmanager(object):
                 'db_maxconn', 'import_partial', 'addons_path', 'upgrade_path',
                 'syslog', 'without_demo', 'screencasts', 'screenshots',
                 'dbfilter', 'log_level', 'log_db',
-                'log_db_level', 'geoip_database', 'dev_mode', 'shell_interface'
+                'log_db_level', 'geoip_database', 'dev_mode', 'shell_interface',
+                'preselected_db'
         ]
 
         for arg in keys:

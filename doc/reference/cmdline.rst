@@ -170,6 +170,11 @@ Database
     'verify-ca' or 'verify-full'
     Default value is 'prefer'
 
+.. option:: --preselected_db
+
+    Name of the database which will be preselected for the users in the web client.
+
+
 .. _reference/cmdline/server/emails:
 
 Emails

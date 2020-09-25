@@ -167,6 +167,12 @@ def ensure_db(redirect='/web/database/selector'):
     if not db and request.session.db and http.db_filter([request.session.db]):
         db = request.session.db
 
+    # if no db, use the preselected one if any
+    if not db and odoo.tools.config['preselected_db']:
+        if http.db_filter([odoo.tools.config['preselected_db']]):
+            db = odoo.tools.config['preselected_db']
+            request.session.db = db
+
     # if no database provided and no database in session, use monodb
     if not db:
         db = db_monodb(request.httprequest)
