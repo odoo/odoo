@@ -9,7 +9,7 @@ from datetime import datetime
 
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.exceptions import UserError, ValidationError, AccessError
-from odoo.tools import misc
+from odoo.tools import misc, sql
 from odoo.tools.translate import html_translate
 from odoo.addons.http_routing.models.ir_http import slug
 
@@ -856,10 +856,9 @@ class Post(models.Model):
             result.append(comment.unlink())
         return result
 
-    def set_viewed(self):
+    def _set_viewed(self):
         self.ensure_one()
-        self._cr.execute("""UPDATE forum_post SET views = views+1 WHERE views = %s and id = %s""", (self.views, self.id,))
-        return True
+        return sql.increment_field_skiplock(self, 'views')
 
     def get_access_action(self, access_uid=None):
         """ Instead of the classic form view, redirect to the post on the website directly """

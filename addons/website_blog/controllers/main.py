@@ -15,6 +15,7 @@ from odoo.http import request
 from odoo.osv import expression
 from odoo.tools import html2plaintext
 from odoo.tools.misc import get_lang
+from odoo.tools import sql
 
 
 class WebsiteBlog(http.Controller):
@@ -272,17 +273,11 @@ class WebsiteBlog(http.Controller):
         response = request.render("website_blog.blog_post_complete", values)
 
         if blog_post.id not in request.session.get('posts_viewed', []):
-            if not request.session.get('posts_viewed'):
-                request.session['posts_viewed'] = []
-
-            request.session['posts_viewed'].append(blog_post.id)
-            request.session.modified = True
-
-            # Increase counter
-            blog_post.sudo()._write({
-                'visits': blog_post.visits + 1,
-                'write_date': blog_post.write_date,
-            })
+            if sql.increment_field_skiplock(blog_post, 'visits'):
+                if not request.session.get('posts_viewed'):
+                    request.session['posts_viewed'] = []
+                request.session['posts_viewed'].append(blog_post.id)
+                request.session.modified = True
         return response
 
     @http.route('/blog/<int:blog_id>/post/new', type='http', auth="user", website=True)
