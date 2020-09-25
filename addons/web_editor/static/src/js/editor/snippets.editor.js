@@ -1034,9 +1034,26 @@ var SnippetsMenu = Widget.extend({
         this._activateSnippet($autoFocusEls.length ? $autoFocusEls.first() : false);
         this._textToolsSwitchingEnabled = true;
 
+        // Add tooltips on we-title elements whose text overflows
+        this.$el.tooltip({
+            selector: 'we-title',
+            placement: 'bottom',
+            delay: 100,
+            title: function () {
+                const el = this;
+                // On Firefox, el.scrollWidth is equal to el.clientWidth when
+                // overflow: hidden, so we need to update the style before to
+                // get the right values.
+                el.style.setProperty('overflow', 'scroll', 'important');
+                const tipContent = el.scrollWidth > el.clientWidth ? el.innerHTML : '';
+                el.style.removeProperty('overflow');
+                return tipContent;
+            },
+        });
+
         return Promise.all(defs).then(() => {
             this.$('[data-title]').tooltip({
-                delay: 0,
+                delay: 100,
                 title: function () {
                     return this.classList.contains('active') ? false : this.dataset.title;
                 },
