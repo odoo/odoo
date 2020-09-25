@@ -184,6 +184,11 @@ class MailClientExtensionController(http.Controller):
 
         new_company_info['iap_enrich_info'] = json.dumps(iap_data)
         new_company = request.env['res.partner'].create(new_company_info)
+        new_company.message_post_with_view(
+            'iap_mail.enrich_company',
+            values=iap_data,
+            subtype_id=request.env.ref('mail.mt_note').id,
+        )
 
         return new_company, {'type': 'company_created'}
 
