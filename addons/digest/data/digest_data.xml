@@ -375,7 +375,8 @@
                 <t t-raw="preference"/>
             </div>
             <div class="by_odoo">
-                Sent by <a href="https://www.odoo.com" target="_blank" class="odoo_link"><span class="odoo_link_text">Odoo</span></a> – <a href="/web#view_type=form&amp;model=digest.digest&amp;id=${object.id}" target="_blank" style="text-decoration: none;"><span style="color: #8f8f8f;">Unsubscribe</span></a>
+                Sent by <a href="https://www.odoo.com" target="_blank" class="odoo_link"><span class="odoo_link_text">Odoo</span></a> –
+                <a t-att-href="'/web#view_type=form&amp;model=digest.digest&amp;id=%s' % object.id" target="_blank" style="text-decoration: none;"><span style="color: #8f8f8f;">Unsubscribe</span></a>
             </div>
         </div>
     </div>
@@ -385,7 +386,7 @@
 <div t-if="display_mobile_banner" t-call="digest.digest_section_mobile" />
 
 <div class="global_layout" id="footer">
-    <p style="font-weight: bold;">My Company (San Francisco)</p>
+    <p style="font-weight: bold;" t-esc="company.name"/>
     <p class="by_odoo" id="powered">
         Powered by <a href="https://www.odoo.com" target="_blank" class="odoo_link"><span class="odoo_link_text">Odoo</span></a>
     </p>
