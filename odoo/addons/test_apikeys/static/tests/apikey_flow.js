@@ -24,7 +24,7 @@ tour.register('apikeys_tour_setup', {
     trigger: 'button:contains("New API Key")',
 }, {
     content: "Check that we have to enter enhanced security mode",
-    trigger: '.card-title:contains("confirm your password")',
+    trigger: 'div:contains("confirm your password")',
     run: () => {},
 }, {
     content: "Input password",

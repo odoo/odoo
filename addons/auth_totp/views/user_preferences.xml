@@ -55,7 +55,7 @@
             <form>
                 <sheet>
                     <div class="row container">
-                        <div class="col-lg-6 offset-lg-3 mb-3">
+                        <div class="mb-3">
                             <h3 class="font-weight-bold">Scan this barcode with your app</h3>
                             <div>
                                 Scan the image below with the authenticator app on your phone.<br/>
@@ -72,7 +72,7 @@
                                     </li>
                                 </ul>
                                 <!-- code outside list to have more horiz space on mobile -->
-                                <div class="collapse" id="collapseTotpSecret">
+                                <div class="collapse col-12 col-md-6" id="collapseTotpSecret">
                                   <div class="card card-body">
                                     <h3>Your two-factor secret:</h3>
                                     <code class="text-center"><field name="secret"/></code>
@@ -80,24 +80,27 @@
                                 </div>
                             </div>
 
-                            <field class="offset-1 offset-lg-2" name="qrcode" readonly="True" widget="image"/>
+                            <field class="offset-1" name="qrcode" readonly="True" widget="image"/>
 
                             <h3 class="font-weight-bold">Enter the 6-digit code from your app</h3>
-                            <div class="text-justify">
+                            <div class="text-justify col-10 col-lg-6 px-0">
                                 After scanning the barcode, the app will display a 6-digit code that you
                                 should enter below. Don't worry if the code changes in the app,
                                 it stays valid a bit longer.
                             </div>
                             <div class="mt-2">
-                                <label for="code">Verification Code</label>
-                                <field required="True" name="code"/>
+                                <label for="code" class="col-4 col-md-12 px-0">Verification Code</label>
+                                <field required="True" name="code" class="col-10 col-md-6 px-0"/>
                             </div>
-                            <button type="object" name="enable" class="btn btn-primary"
-                                    string="Enable two-factor authentication"/>
+
                         </div>
                     </div>
                 </sheet>
-                <footer><!-- no buttons --></footer>
+                <footer>
+                    <button type="object" name="enable" class="btn btn-primary"
+                            string="Enable two-factor authentication"/>
+                    <button string="Cancel" special="cancel"/>
+                </footer>
             </form>
         </field>
     </record>
