@@ -38,7 +38,7 @@
                                 <b class="text-muted">To: </b>
                                 <em class="text-muted">Followers of </em>
                                 <b>
-                                    <t t-if="composer.thread">
+                                    <t t-if="composer.thread and composer.thread.name">
                                         &#32;&quot;<t t-esc="composer.thread.name"/>&quot;
                                     </t>
                                     <t t-else="">
