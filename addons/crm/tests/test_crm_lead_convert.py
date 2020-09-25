@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import SUPERUSER_ID
 from odoo.addons.crm.tests import common as crm_common
 from odoo.fields import Datetime
 from odoo.tests.common import tagged, users
@@ -205,6 +206,31 @@ class TestLeadConvert(crm_common.TestLeadConvertCommon):
         self.assertEqual(self.lead_1.team_id, self.sales_team_1)
         self.assertEqual(self.lead_1.stage_id, self.stage_team1_1)
         self.assertEqual(self.lead_1.partner_id, self.env['res.partner'])
+
+    @users('user_sales_manager')
+    def test_lead_convert_contact_mutlicompany(self):
+        """ Check the wizard convert to opp don't find contact
+        You are not able to see because they belong to another company """
+        # Use superuser_id because creating a company with a user add directly
+        # the company in company_ids of the user.
+        company_2 = self.env['res.company'].with_user(SUPERUSER_ID).create({'name': 'Company 2'})
+        partner_company_2 = self.env['res.partner'].with_user(SUPERUSER_ID).create({
+            'name': 'Contact in other company',
+            'email': 'test@company2.com',
+            'company_id': company_2.id,
+        })
+        lead = self.env['crm.lead'].create({
+            'name': 'LEAD',
+            'type': 'lead',
+            'email_from': 'test@company2.com',
+        })
+        convert = self.env['crm.lead2opportunity.partner'].with_context({
+            'active_model': 'crm.lead',
+            'active_id': lead.id,
+            'active_ids': lead.ids,
+        }).create({'name': 'convert', 'action': 'exist'})
+        self.assertNotEqual(convert.partner_id, partner_company_2,
+            "Conversion wizard should not be able to find the partner from another company")
 
     @users('user_sales_manager')
     def test_lead_convert_same_partner(self):

@@ -24,25 +24,25 @@ class Lead2OpportunityPartner(models.TransientModel):
     name = fields.Selection([
         ('convert', 'Convert to opportunity'),
         ('merge', 'Merge with existing opportunities')
-    ], 'Conversion Action', compute='_compute_name', readonly=False, store=True)
+    ], 'Conversion Action', compute='_compute_name', readonly=False, store=True, compute_sudo=False)
     action = fields.Selection([
         ('create', 'Create a new customer'),
         ('exist', 'Link to an existing customer'),
         ('nothing', 'Do not link to a customer')
-    ], string='Related Customer', compute='_compute_action', readonly=False, store=True)
+    ], string='Related Customer', compute='_compute_action', readonly=False, store=True, compute_sudo=False)
     lead_id = fields.Many2one('crm.lead', 'Associated Lead', required=True)
     duplicated_lead_ids = fields.Many2many(
         'crm.lead', string='Opportunities', context={'active_test': False},
-        compute='_compute_duplicated_lead_ids', readonly=False, store=True)
+        compute='_compute_duplicated_lead_ids', readonly=False, store=True, compute_sudo=False)
     partner_id = fields.Many2one(
         'res.partner', 'Customer',
-        compute='_compute_partner_id', readonly=False, store=True)
+        compute='_compute_partner_id', readonly=False, store=True, compute_sudo=False)
     user_id = fields.Many2one(
         'res.users', 'Salesperson',
-        compute='_compute_user_id', readonly=False, store=True)
+        compute='_compute_user_id', readonly=False, store=True, compute_sudo=False)
     team_id = fields.Many2one(
         'crm.team', 'Sales Team',
-        compute='_compute_team_id', readonly=False, store=True)
+        compute='_compute_team_id', readonly=False, store=True, compute_sudo=False)
     force_assignment = fields.Boolean(
         'Force assignment', default=True,
         help='If checked, forces salesman to be updated on updated opportunities even if already set.')
