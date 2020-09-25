@@ -109,13 +109,6 @@ class StockMove(models.Model):
     order_finished_lot_ids = fields.Many2many('stock.production.lot', string="Finished Lot/Serial Number", compute='_compute_order_finished_lot_ids')
     should_consume_qty = fields.Float('Quantity To Consume', compute='_compute_should_consume_qty', digits='Product Unit of Measure')
 
-    def _unreserve_initial_demand(self, new_move):
-        # If you were already putting stock.move.lots on the next one in the work order, transfer those to the new move
-        self.filtered(lambda m: m.production_id or m.raw_material_production_id)\
-        .mapped('move_line_ids')\
-        .filtered(lambda ml: ml.qty_done == 0.0)\
-        .write({'move_id': new_move, 'product_uom_qty': 0})
-
     @api.depends('raw_material_production_id.priority')
     def _compute_priority(self):
         super()._compute_priority()
