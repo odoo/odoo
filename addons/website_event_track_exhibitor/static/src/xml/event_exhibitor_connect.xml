@@ -30,9 +30,9 @@
                     <span t-esc="widget.sponsorData.name" class="font-weight-bold"/> is not available right now.<br />
                     Come back between
                     <strong>
-                        <t t-esc="widget.sponsorData.hour_from" t-options="{'widget': 'float_time'}"/>
+                        <t t-esc="widget.sponsorData.hour_from_str"/>
                         -
-                        <t t-esc="widget.sponsorData.hour_to" t-options="{'widget': 'float_time'}"/>
+                        <t t-esc="widget.sponsorData.hour_to_str"/>
                     </strong> (<span t-esc="widget.sponsorData.event_date_tz"/>)
                     to meet them !
                 </div>
