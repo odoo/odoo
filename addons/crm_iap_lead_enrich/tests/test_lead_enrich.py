@@ -11,6 +11,7 @@ class TestLeadEnrich(TestCrmCommon, MockIAPEnrich):
     @classmethod
     def setUpClass(cls):
         super(TestLeadEnrich, cls).setUpClass()
+        cls.registry.enter_test_mode(cls.cr)
 
         cls.leads = cls.env['crm.lead']
         for x in range(0, 4):
@@ -18,6 +19,11 @@ class TestLeadEnrich(TestCrmCommon, MockIAPEnrich):
                 'name': 'Test %s' % x,
                 'email_from': 'test_mail_%s@example.com' % x
             })
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.registry.leave_test_mode()
+        super().tearDownClass()
 
     @users('user_sales_manager')
     def test_enrich_internals(self):
