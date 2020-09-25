@@ -1,8 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <template xml:space="preserve">
-    <t t-extend="UserMenu.Actions">
-        <t t-jquery="a[data-menu='settings']" t-operation='inner'>
-            My Profile
-        </t>
+    <t
+        t-name="UserMenu.Actions.hr"
+        t-inherit="web.UserMenu.Actions"
+        t-inherit-mode="extension"
+        owl="1">
+        <xpath expr="//a[contains(@data-menu, 'settings')]" position='replace'>
+            <a
+                role="menuitem"
+                href="#"
+                data-menu="settings"
+                class="dropdown-item"
+                t-on-click.prevent="_onClickMenu">My Profile</a>
+        </xpath>
     </t>
 </template>

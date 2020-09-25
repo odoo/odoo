@@ -1746,13 +1746,13 @@
         href="#"
         data-menu="documentation"
         class="dropdown-item"
-        t-on-click="_onClickMenu">Documentation</a>
+        t-on-click.prevent="_onClickMenu">Documentation</a>
     <a
         role="menuitem"
         href="#"
         data-menu="support"
         class="dropdown-item"
-        t-on-click="_onClickMenu">Support</a>
+        t-on-click.prevent="_onClickMenu">Support</a>
     <div role="separator" class="dropdown-divider"/>
     <a
         role="menuitem"
@@ -1765,13 +1765,13 @@
         href="#"
         data-menu="account"
         class="dropdown-item"
-        t-on-click="_onClickMenu">My Odoo.com account</a>
+        t-on-click.prevent="_onClickMenu">My Odoo.com account</a>
     <a
         role="menuitem"
         href="#"
         data-menu="logout"
         class="dropdown-item"
-        t-on-click="_onClickMenu">Log out</a>
+        t-on-click.prevent="_onClickMenu">Log out</a>
 </t>
 
 <t t-name="SwitchCompanyMenu">
