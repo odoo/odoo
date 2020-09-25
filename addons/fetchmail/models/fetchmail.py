@@ -173,6 +173,7 @@ class FetchmailServer(models.Model):
                     result, data = imap_server.search(None, '(UNSEEN)')
                     for num in data[0].split():
                         res_id = None
+                        is_failed = False
                         result, data = imap_server.fetch(num, '(RFC822)')
                         imap_server.store(num, '-FLAGS', '\\Seen')
                         try:
@@ -180,6 +181,7 @@ class FetchmailServer(models.Model):
                         except Exception:
                             _logger.info('Failed to process mail from %s server %s.', server.type, server.name, exc_info=True)
                             failed += 1
+                            is_failed = True
                         if res_id and server.action_id:
                             server.action_id.with_context({
                                 'active_id': res_id,
@@ -187,7 +189,8 @@ class FetchmailServer(models.Model):
                                 'active_model': self.env.context.get("thread_model", server.object_id.model)
                             }).run()
                         self._cr.commit()
-                        imap_server.store(num, '+FLAGS', '\\Seen')
+                        if not is_failed:
+                            imap_server.store(num, '+FLAGS', '\\Seen')
                         count += 1
                     _logger.info("Fetched %d email(s) on %s server %s; %d succeeded, %d failed.", count, server.type, server.name, (count - failed), failed)
                 except Exception:
