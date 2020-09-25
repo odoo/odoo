@@ -982,16 +982,25 @@ var Wysiwyg = Widget.extend({
      * @private
      */
     _setupTranslation: function () {
-        const attrs = ['placeholder', 'title', 'alt'];
+        const attributeNames = ['placeholder', 'title', 'alt'];
         const nodesToTranslateAttributes = this.zoneMain.descendants(node => {
             const attributes = node.modifiers.find(JWEditorLib.Attributes);
-            return attributes && attributes.keys().some(key => attrs.includes(key));
+            return attributes && attributes.keys().some(key => {
+                if (attributeNames.includes(key)) {
+                    const div = document.createElement('div');
+                    div.innerHTML = attributes.get(key);
+                    // The attribute is translatable if its value is the HTML
+                    // of a node with attributes that include
+                    // data-oe-translation-state.
+                    return div.querySelector('[data-oe-translation-state]');
+                }
+            });
         });
         const domNodesToTranslateAttributes = nodesToTranslateAttributes.flatMap(nodeToTranslateAttributes => {
             return this.editorHelpers.getDomNodes(nodeToTranslateAttributes)[0];
         });
         this.$nodesToTranslateAttributes = $(domNodesToTranslateAttributes);
-        for (const attr of attrs) {
+        for (const attr of attributeNames) {
             this.$nodesToTranslateAttributes.each(function () {
                 var $node = $(this);
                 var translation = $node.data('translation') || {};
