@@ -51,4 +51,5 @@
         'static/src/xml/*.xml',
     ],
     'application': True,
+    'post_init_hook': 'update_admin_contact',
 }
