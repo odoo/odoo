@@ -1043,6 +1043,9 @@ const InputUserValueWidget = UnitUserValueWidget.extend({
         var unitEl = document.createElement('span');
         unitEl.textContent = unit;
         this.containerEl.appendChild(unitEl);
+        if (unit.length > 3) {
+            this.el.classList.add('o_we_large_input');
+        }
     },
 
     //--------------------------------------------------------------------------
