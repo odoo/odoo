@@ -127,6 +127,9 @@ $o-original-color-palette-number: $o-color-palette-number;
 $o-color-palette-number: length($o-color-palettes);
 $o-theme-color-palette-number: length($o-theme-color-palettes);
 
+$o-we-auto-contrast-exclusions: () !default;
+$o-we-auto-contrast-exclusions: join($o-we-auto-contrast-exclusions, map-keys(o-map-omit($o-user-color-palette)));
+
 //------------------------------------------------------------------------------
 // Fonts
 //------------------------------------------------------------------------------
