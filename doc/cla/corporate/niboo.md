@@ -15,7 +15,7 @@ List of contributors:
 Samuel Lefever sam@niboo.be https://github.com/samuellefever
 Pierre Faniel pierre@niboo.be https://github.com/PierreFaniel
 Jerome Guerriat jerome@niboo.be https://github.com/jguerriat
-Jeremy Van Driessche jeremy@niboo.be https://github.com/jvandri
+Jeremy Van Driessche jva@niboo.com https://github.com/jvandri
 Gael Rabier gael@niboo.be https://github.com/gaelrabier
 Tobias Zehntner tobias@niboo.be https://github.com/twobeers83
 Alexandre Dutry alexandre@nboo.be https://github.com/AlexandreDz
