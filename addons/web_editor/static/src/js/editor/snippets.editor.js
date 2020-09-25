@@ -2058,7 +2058,6 @@ var SnippetsMenu = Widget.extend({
                     dropped = true;
                     scrollValue = $(droppable).offset().top;
                     const $snippetToInsert = this.data('to-insert');
-                    debugger;
                     $(droppable).after($snippetToInsert).addClass('d-none');
                     $snippetToInsert.removeClass('oe_snippet_body');
                 }
