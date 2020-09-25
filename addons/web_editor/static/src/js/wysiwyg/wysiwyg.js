@@ -205,16 +205,20 @@ var Wysiwyg = Widget.extend({
         const $snippetManipulators = $('<div id="oe_manipulators" />');
 
         const customCommands = {
-            openMedia: { handler: this.openMediaDialog.bind(this) },
             openTextColorPicker: { handler: this.toggleTextColorPicker.bind(this) },
             openBackgroundColorPicker: { handler: this.toggleBackgroundColorPicker.bind(this) },
-            openLinkDialog: { handler: this.openLinkDialog.bind(this) },
             discardOdoo: { handler: this.discardEditions.bind(this) },
             saveOdoo: { handler: this.saveContent.bind(this) },
-            cropImage: { handler: this.cropImage.bind(this) },
-            transformImage: { handler: this.transformImage.bind(this) },
-            describeImage: { handler: this.describeImage.bind(this) },
         };
+        if (!this.options.enableTranslation) {
+            Object.assign(customCommands, {
+                openMedia: { handler: this.openMediaDialog.bind(this) },
+                openLinkDialog: { handler: this.openLinkDialog.bind(this) },
+                cropImage: { handler: this.cropImage.bind(this) },
+                transformImage: { handler: this.transformImage.bind(this) },
+                describeImage: { handler: this.describeImage.bind(this) },
+            });
+        }
         this.editor = new JWEditorLib.OdooWebsiteEditor(Object.assign({}, this.options, {
             snippetMenuElement: $mainSidebar[0],
             snippetManipulators: $snippetManipulators[0],
