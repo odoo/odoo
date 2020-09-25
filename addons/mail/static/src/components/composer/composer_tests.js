@@ -1842,6 +1842,23 @@ QUnit.test('remove an uploading attachment aborts upload', async function (asser
     });
 });
 
+QUnit.test("basic rendering when sending a message to the followers and thread doesn't have a name", async function (assert) {
+    assert.expect(1);
+
+    await this.start();
+    const thread = this.env.models['mail.thread'].create({
+        composer: [['create', { isLog: false }]],
+        id: 20,
+        model: 'res.partner',
+    });
+    await this.createComposerComponent(thread.composer, { hasFollowers: true });
+    assert.strictEqual(
+        document.querySelector('.o_Composer_followers').textContent.replace(/\s+/g, ''),
+        "To:Followersofthisdocument",
+        "Composer should display \"To: Followers of this document\" if the thread as no name."
+    );
+});
+
 });
 });
 });
