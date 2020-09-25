@@ -1067,15 +1067,18 @@ var FormRenderer = BasicRenderer.extend({
         var self = this;
 
         // Set the new content of the form view, and toggle classnames
-        this.$el.html($newContent);
+        this.el.innerHTML = "";
         this.$el.toggleClass('o_form_nosheet', !this.has_sheet);
-        if (this.has_sheet) {
-            this.$el.children().not('.o_FormRenderer_chatterContainer')
-                .wrapAll($('<div/>', {class: 'o_form_sheet_bg'}));
-        }
         this.$el.toggleClass('o_form_editable', this.mode === 'edit');
         this.$el.toggleClass('o_form_readonly', this.mode === 'readonly');
 
+        const $content = this.has_sheet ?
+            $(this._wrapFormContents(...$newContent)) :
+            $newContent;
+        dom.append(this.$el, $content, {
+            in_DOM: this._isInDom,
+            callbacks: [{ widget: this }],
+        });
         // Attach the tooltips on the fields' label
         _.each(this.allFieldWidgets[this.state.id], function (widget) {
             const idForLabel = self.idsForLabels[widget[symbol]];
@@ -1097,6 +1100,20 @@ var FormRenderer = BasicRenderer.extend({
      */
     _setIDForLabel: function (widget, idForLabel) {
         widget.setIDForLabel(idForLabel);
+    },
+    /**
+     * Wraps the given element inside a "form sheet BG" div element.
+     * @private
+     * @param {HTMLElement} el
+     * @returns {HTMLElement[]}
+     */
+    _wrapFormContents(...els) {
+        const wrapper = document.createElement("div");
+        wrapper.className = "o_form_sheet_bg";
+        for (const el of els) {
+            wrapper.append(el);
+        }
+        return [wrapper];
     },
 
     //--------------------------------------------------------------------------

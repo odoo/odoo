@@ -167,6 +167,22 @@ FormRenderer.include({
             }
         }
     },
+    /**
+     * @override
+     */
+    _wrapFormContents(...els) {
+        const chatterElIndex = els.findIndex(
+            el => el.classList.contains("o_FormRenderer_chatterContainer")
+        );
+        if (chatterElIndex < 0) {
+            return this._super(...els);
+        } else {
+            const [chatterEl] = els.splice(chatterElIndex, 1);
+            const wrapped = this._super(...els);
+            wrapped.splice(chatterElIndex, 0, chatterEl);
+            return wrapped;
+        }
+    },
 
     //--------------------------------------------------------------------------
     // Handlers

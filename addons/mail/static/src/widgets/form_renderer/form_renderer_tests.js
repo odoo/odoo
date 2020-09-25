@@ -13,6 +13,7 @@ const {
 const config = require('web.config');
 const FormView = require('web.FormView');
 const {
+    controlPanel: { pagerNext },
     dom: { triggerEvent },
 } = require('web.test_utils');
 
@@ -510,7 +511,7 @@ QUnit.test('chatter updating', async function (assert) {
     );
 
     await afterNextRender(async () => {
-        document.querySelector('.o_pager_next').click();
+        await pagerNext(document);
         // wait until messages are fetched, ignore other renders that are too early
         await messageFetchChannelDef;
     });
@@ -834,7 +835,7 @@ QUnit.test('Form view not scrolled when switching record', async function (asser
     );
 
     await afterNextRender(() =>
-        document.querySelector('.o_pager_next').click()
+        pagerNext(document)
     );
     assert.strictEqual(
         document.querySelector('.breadcrumb-item.active').textContent,
@@ -908,7 +909,7 @@ QUnit.test('Attachments that have been unlinked from server should be visually u
     // The attachment links are updated on (re)load,
     // so using pager is a way to reload the record "Partner1".
     await afterNextRender(() =>
-        document.querySelector('.o_pager_next').click()
+        pagerNext(document)
     );
     // Simulate unlinking attachment 12 from Partner 1.
     this.data['ir.attachment'].records.find(a => a.id === 11).res_id = 0;
