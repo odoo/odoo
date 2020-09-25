@@ -11,6 +11,7 @@ class AccountFiscalPosition(models.Model):
         string='AFIP Responsibility Types', help='List of AFIP responsibilities where this fiscal position '
         'should be auto-detected')
 
+    @api.model
     def get_fiscal_position(self, partner_id, delivery_id=None):
         """ Take into account the partner afip responsibility in order to auto-detect the fiscal position """
         company = self.env['res.company'].browse(self._context.get('force_company', self.env.company.id))
