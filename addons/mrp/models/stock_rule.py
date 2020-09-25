@@ -174,7 +174,7 @@ class ProcurementGroup(models.Model):
                 procurements_without_kit.append(procurement)
         return super(ProcurementGroup, self).run(procurements_without_kit, raise_user_error=raise_user_error)
 
-    def _get_moves_to_assign_domain(self):
-        domain = super(ProcurementGroup, self)._get_moves_to_assign_domain()
+    def _get_moves_to_assign_domain(self, company_id):
+        domain = super(ProcurementGroup, self)._get_moves_to_assign_domain(company_id)
         domain = expression.AND([domain, [('production_id', '=', False)]])
         return domain
