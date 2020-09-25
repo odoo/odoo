@@ -395,6 +395,14 @@ class IrHttp(models.AbstractModel):
                 context = dict(request.context)
                 context['edit_translations'] = False
                 request.context = context
+        # sometimes the lang configured in the browser is retrieved and stored in the context
+        # therefore it can happen that context contains a lang that is not supported by Odoo
+        # which could cause undesired behaviors
+        elif request.context.get('lang'):
+            langs = [code for code, _ in request.env['res.lang'].get_installed()]
+            if request.context.get('lang') not in langs:
+                lang = request.env.user.lang or request.env.user.company_id.partner_id.lang or langs[0]
+                request.context = dict(request.context, lang=lang)
 
         if routing_error:
             return cls._handle_exception(routing_error)
