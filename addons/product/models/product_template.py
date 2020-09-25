@@ -970,7 +970,7 @@ class ProductTemplate(models.Model):
         else:
             domain = expression.AND([domain, [('combination_indices', 'in', ['', False])]])
 
-        return self.env['product.product'].sudo().with_context(active_test=False).search(domain, order='active DESC', limit=1).id
+        return self.env['product.product'].sudo().with_context(active_test=False).search(domain, order='active DESC, id ASC', limit=1).id
 
     @tools.ormcache('self.id')
     def _get_first_possible_variant_id(self):
