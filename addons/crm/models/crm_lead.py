@@ -322,11 +322,6 @@ class Lead(models.Model):
             if lead.partner_id.phone and lead.phone != lead.partner_id.phone:
                 lead.phone = lead.partner_id.phone
 
-    def _phone_get_country(self):
-        if self.partner_id.country_id:
-            return self.partner_id.country_id
-        return super()._phone_get_country()
-
     def _inverse_phone(self):
         for lead in self:
             if lead.partner_id and lead.phone != lead.partner_id.phone:
