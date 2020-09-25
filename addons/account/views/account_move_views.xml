@@ -568,7 +568,7 @@
                     <div groups="account.group_account_invoice,account.group_account_readonly"
                          class="alert alert-info" role="alert" style="margin-bottom:0px;"
                          attrs="{'invisible': ['|', '|', ('move_type', 'not in', ('in_invoice', 'in_refund')), ('invoice_has_outstanding', '=', False), ('payment_state', 'not in', ('not_paid', 'partial'))]}">
-                        You have <bold><a class="alert-link" href="#outstanding" role="button">outstanding debits</a></bold> for this supplier. You can allocate them to mark this bill as paid.
+                        You have <bold><a class="alert-link" href="#outstanding" role="button">outstanding debits</a></bold> for this vendor. You can allocate them to mark this bill as paid.
                     </div>
                     <div class="alert alert-info" role="alert" style="margin-bottom:0px;"
                          attrs="{'invisible': ['|', ('state', '!=', 'draft'), ('auto_post', '=', False)]}">
