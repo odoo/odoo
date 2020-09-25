@@ -197,7 +197,7 @@ class AutomaticEntryWizard(models.TransientModel):
 
             move_data['new_date']['line_ids'] += [
                 (0, 0, {
-                    'name': aml.name,
+                    'name': aml.name or '',
                     'debit': reported_debit,
                     'credit': reported_credit,
                     'amount_currency': reported_amount_currency,
@@ -217,7 +217,7 @@ class AutomaticEntryWizard(models.TransientModel):
             ]
             move_data[aml.move_id.date]['line_ids'] += [
                 (0, 0, {
-                    'name': aml.name,
+                    'name': aml.name or '',
                     'debit': reported_credit,
                     'credit': reported_debit,
                     'amount_currency': -reported_amount_currency,
