@@ -12,7 +12,7 @@ tour.register('totportal_tour_setup', {
     trigger: 'button#auth_totp_portal_enable',
 }, {
     content: "Check that we have to enter enhanced security mode",
-    trigger: '.card-title:contains("confirm your password")',
+    trigger: 'div:contains("confirm your password")',
     run: () => {},
 }, {
     content: "Input password",
@@ -84,7 +84,7 @@ tour.register('totportal_login_enabled', {
     trigger: 'button#auth_totp_portal_disable',
 }, {
     content: "Check that we have to enter enhanced security mode",
-    trigger: '.card-title:contains("confirm your password")',
+    trigger: 'div:contains("confirm your password")',
     run: () => {},
 }, {
     content: "Input password",
