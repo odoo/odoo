@@ -2480,7 +2480,7 @@ var SnippetsMenu = Widget.extend({
      * @private
      */
     _onReloadSnippetTemplate: async function (ev) {
-        await this._enableLastEdito();
+        await this._enableLastEditor();
         await this._loadSnippetsTemplates(true);
     },
     /**
