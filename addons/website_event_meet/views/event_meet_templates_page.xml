@@ -64,7 +64,8 @@
                         <t t-set="chat_room_id" t-value="meeting_room.chat_room_id.id"/>
                         <t t-set="auto_open" t-value="1"/>
                         <t t-set="attach_to" t-value="'#o_wemeet_jitsi_iframe'"/>
-                        <t t-set="check_full" t-value="is_event_manager"/>
+                        <t t-set="max_capacity" t-value="meeting_room.room_max_capacity"/>
+                        <t t-set="check_full" t-value="int(not is_event_manager)"/>
                         <t t-set="default_username" t-value="default_username"/>
                         <t t-set="jitsi_server_domain" t-value="meeting_room.chat_room_id.jitsi_server_domain"/>
                     </t>
