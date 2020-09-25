@@ -193,6 +193,7 @@ class ExhibitorController(EventTrackController):
             sponsor_data['sponsor_type_id'] = False
         sponsor_data['event_name'] = sponsor.event_id.name
         sponsor_data['event_is_ongoing'] = sponsor.event_id.is_ongoing
+        sponsor_data['event_is_done'] = sponsor.event_id.is_done
         sponsor_data['event_start_today'] = sponsor.event_id.start_today
         sponsor_data['event_start_remaining'] = sponsor.event_id.start_remaining
         sponsor_data['event_date_begin_located'] = sponsor.event_id.date_begin_located

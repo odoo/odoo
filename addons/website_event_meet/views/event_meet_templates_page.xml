@@ -30,21 +30,28 @@
 <template id="meeting_room_main" name="Meeting Room: Main Content">
     <div t-att-class="'col-12 o_wevent_online_page_main o_wemeet_room_main bg-white p-0 %s' % ('col-md-9 col-lg-10' if option_widescreen else 'col-md-8 col-lg-9')">
         <!-- EVENT NOT STARTED ALERTS -->
-        <div t-if="not meeting_room.event_id.is_ongoing" class="alert alert-warning text-center">
-            The event <span t-esc="meeting_room.event_id.name" class="font-weight-bold"/>
-            <span t-if="meeting_room.event_id.start_today">
-                starts in
-                <span t-esc="meeting_room.event_id.start_remaining"
-                    t-options="{'widget': 'duration', 'digital': True, 'unit': 'minute', 'round': 'minute'}"/>.
-            </span>
-            <span class="my-0" t-else="meeting_room.event_id.start_today">
-                starts on
-                <span t-field="meeting_room.event_id.with_context(tz=meeting_room.event_id.date_tz).date_begin"
-                    t-options="{'format': 'medium'}"/> (<t t-esc="meeting_room.event_id.date_tz"/>).
-            </span>
-            <br/>
-            <span>Join us there to chat about <b t-esc="meeting_room.name"/> !</span>
-        </div>
+        <t t-if="not meeting_room.event_id.is_ongoing">
+            <div t-if="meeting_room.event_id.is_done" class="alert alert-warning text-center">
+                The event <span t-esc="meeting_room.event_id.name" class="font-weight-bold"/> is over.
+                <br/>
+                <span>Join us next time to chat about <b t-esc="meeting_room.name"/>!</span>
+            </div>
+            <div t-else="" class="alert alert-warning text-center">
+                The event <span t-esc="meeting_room.event_id.name" class="font-weight-bold"/>
+                <span t-if="meeting_room.event_id.start_today">
+                    starts in
+                    <span t-esc="meeting_room.event_id.start_remaining"
+                        t-options="{'widget': 'duration', 'digital': True, 'unit': 'minute', 'round': 'minute'}"/>.
+                </span>
+                <span class="my-0" t-else="meeting_room.event_id.start_today">
+                    starts on
+                    <span t-field="meeting_room.event_id.with_context(tz=meeting_room.event_id.date_tz).date_begin"
+                        t-options="{'format': 'medium'}"/> (<t t-esc="meeting_room.event_id.date_tz"/>).
+                </span>
+                <br/>
+                <span>Join us there to chat about <b t-esc="meeting_room.name"/> !</span>
+            </div>
+        </t>
         <!-- ROOM CONTENT -->
         <div class="d-flex flex-column">
             <div t-if="meeting_room.room_is_full and not is_event_manager" class="alert alert-warning text-center">
