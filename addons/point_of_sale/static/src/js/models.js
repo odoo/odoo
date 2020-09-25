@@ -311,7 +311,13 @@ exports.PosModel = Backbone.Model.extend({
         loaded: function(self, pricelists){
             _.map(pricelists, function (pricelist) { pricelist.items = []; });
             self.default_pricelist = _.findWhere(pricelists, {id: self.config.pricelist_id[0]});
-            self.pricelists = _.findWhere(pricelists, {id: self.config.available_pricelist_ids});
+            var available_pricelists = [];
+            _.each(pricelists, function (pricelist) {
+                if (pricelists.id in self.config.available_pricelist_ids) {
+                    available_pricelists.push(pricelists)
+                }
+            });
+            self.pricelists = available_pricelists;
             self.allpricelists = pricelists;
         },
     },{
