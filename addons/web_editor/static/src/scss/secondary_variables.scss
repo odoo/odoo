@@ -124,3 +124,14 @@ $o-color-system-initialized: false;
     // If not initialized, search the css color value in selected color palettes
     @return o-related-color($name, $max-recursions: 10, $use-cc-bg: true);
 }
+
+// Same as 'increase-contrast' except that the color is not changed if the given
+// related color name is part of the given exclusion list (default to a global
+// exclusion list which can be extended by other apps).
+$o-we-auto-contrast-exclusions: () !default;
+@function auto-contrast($color1, $color2, $color1-name, $exclude: $o-we-auto-contrast-exclusions) {
+    @if index($exclude, $color1-name) {
+        @return $color1;
+    }
+    @return increase-contrast($color1, $color2);
+}

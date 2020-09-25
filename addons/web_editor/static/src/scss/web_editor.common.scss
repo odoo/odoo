@@ -10,6 +10,8 @@
     // Most of the keys of the color combination color should be null. We have
     // to indicate their fallback values.
     @for $index from 1 through length($o-color-combinations) {
+        $-bg-color: o-color(color('o-cc#{$index}-bg'));
+
         $-text: color('o-cc#{$index}-text') or color-yiq(o-color('o-cc#{$index}-bg'));
         $-headings: color('o-cc#{$index}-headings') or $-text;
         $-h2: color('o-cc#{$index}-h2') or $-headings;
@@ -40,9 +42,9 @@
             @include print-variable('o-cc#{$index}-h6', $-h6);
         }
 
-        @if not color('o-cc#{$index}-link') {
-            @include print-variable('o-cc#{$index}-link', theme-color('primary'));
-        }
+        $-link: color('o-cc#{$index}-link');
+        $-link-color: if($-link, o-color($-link), theme-color('primary'));
+        @include print-variable('o-cc#{$index}-link', auto-contrast($-link-color, $-bg-color, 'o-cc#{$index}-link'));
 
         $-btn-primary: color('o-cc#{$index}-btn-primary');
         @if not $-btn-primary {
@@ -644,7 +646,8 @@ blockquote {
     // bg and text utility classes. **
     .o_cc#{$index} {
         // Background & Text
-        @include o-bg-color(o-color($-bg), o-color($-text), $important: false, $yiq-min-opacity-threshold: 0);
+        $-bg-color: o-color($-bg);
+        @include o-bg-color($-bg-color, o-color($-text), $important: false, $yiq-min-opacity-threshold: 0);
 
         #{$o-color-extras-nesting-selector} {
             // Headings
@@ -672,10 +675,10 @@ blockquote {
             $-link-color: if($-link, o-color($-link), theme-color('primary'));
             $-link-hover-color: darken($-link-color, 15%);
             a:not(.btn), .btn-link {
-                color: $-link-color;
+                color: auto-contrast($-link-color, $-bg-color, 'o-cc#{$index}-link');
 
                 @include hover {
-                    color: $-link-hover-color;
+                    color: auto-contrast($-link-hover-color, $-bg-color, 'o-cc#{$index}-link');
                 }
             }
 

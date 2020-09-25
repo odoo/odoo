@@ -576,6 +576,36 @@ $o-color-extras-nesting-selector: '&, .o_colored_level &';
     }
 }
 
+// Function which returns if a color has contrast enough in comparaison to
+// another given color.
+@function has-enough-contrast($color1, $color2) {
+    $r: (max(red($color1), red($color2))) - (min(red($color1), red($color2)));
+    $g: (max(green($color1), green($color2))) - (min(green($color1), green($color2)));
+    $b: (max(blue($color1), blue($color2))) - (min(blue($color1), blue($color2)));
+    $sum-rgb: $r + $g + $b;
+    @return ($sum-rgb >= 500);
+}
+
+// Function which transforms a color to increase its contrast in comparison to
+// another given color.
+@function increase-contrast($color1, $color2) {
+    @if not $color1 or not $color2 {
+        @return null;
+    }
+    $luma-c1: luma($color1);
+    $luma-c2: luma($color2);
+    $lightness-c1: lightness($color1);
+    $lightness-inc: if($luma-c1 < $luma-c2, -1%, 1%);
+    $i: 0;
+    // Max 15% lightness change even if not contrasted enough
+    @while ($lightness-c1 > 0.1% and $lightness-c1 < 99.9% and $i < 15 and not has-enough-contrast($color1, $color2)) {
+        $color1: adjust-color($color1, $lightness: $lightness-inc);
+        $lightness-c1: $lightness-c1 + $lightness-inc;
+        $i: $i + 1;
+    }
+    @return $color1;
+}
+
 // Print a document property the right way (depending on the type of the printed
 // variable).
 @mixin print-variable($key, $value) {
