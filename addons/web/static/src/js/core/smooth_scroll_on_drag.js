@@ -338,7 +338,13 @@ const SmoothScrollOnDrag = Class.extend(mixins.ParentedMixin, {
 
         if (this.options.dropzones) {
             if (!this.$dropzones) {
-                this.$dropzones = this.options.dropzones.call(ui.helper, ev, ui);
+                this.$dropzones = this.options.dropzones.call(ui.helper, ev, ui).filter(function () {
+                    if (ui.helper[0].contains(this)) {
+                        console.warn('One drop zone is include inside the draggable item.');
+                    } else {
+                        return true;
+                    }
+                });
             }
             if (!this.$dropzones.length) {
                 return;
