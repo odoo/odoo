@@ -10,6 +10,7 @@ class TestLeadEnrich(crm_iap_lead_enrich_common.CrmCase, crm_iap_lead_enrich_com
     @classmethod
     def setUpClass(cls):
         super(TestLeadEnrich, cls).setUpClass()
+        cls.registry.enter_test_mode(cls.cr)
 
         cls.leads = cls.env['crm.lead']
         for x in range(0, 4):
@@ -18,6 +19,11 @@ class TestLeadEnrich(crm_iap_lead_enrich_common.CrmCase, crm_iap_lead_enrich_com
                 'email_from': 'test_mail_%s@example.com' % x
             })
 
+    @classmethod
+    def tearDownClass(cls):
+        cls.registry.leave_test_mode()
+        super().tearDownClass()
+    
     @users('sales_manager')
     def test_enrich_internals(self):
         leads = self.env['crm.lead'].browse(self.leads.ids)
