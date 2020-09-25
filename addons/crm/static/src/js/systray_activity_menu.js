@@ -46,7 +46,8 @@ ActivityMenu.include({
             // So, duplicates are faking the count and "Load more" doesn't show up
             context['force_search_count'] = 1;
             this.do_action('crm.crm_lead_action_my_activities', {
-                additional_context: context
+                additional_context: context,
+                clear_breadcrumbs: true,
             });
         } else {
             this._super.apply(this, arguments);
