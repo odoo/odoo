@@ -215,7 +215,6 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
                 'BoldButton',
                 'ItalicButton',
                 'UnderlineButton',
-                'RemoveFormatButton',
             ],
             ['AlignLeftButton', 'AlignCenterButton', 'AlignRightButton', 'AlignJustifyButton'],
             [

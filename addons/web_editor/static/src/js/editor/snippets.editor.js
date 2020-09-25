@@ -2140,8 +2140,21 @@ var SnippetsMenu = Widget.extend({
         const $toolbar = this.wysiwyg.$toolbar;
         const titleText = isImage ? _t("Image Formatting") : _t("Text Formatting");
         const customizeBlock = $('<WE-CUSTOMIZEBLOCK-OPTIONS />');
-        const title = "<we-title><span>" + titleText + "</span></we-title>";
-        customizeBlock.append(title);
+        const $title = $("<we-title><span>" + titleText + "</span></we-title>");
+        if (!isImage) {
+            const $removeFormatButton = $('<we-button/>', {
+                class: 'fa fa-fw fa-eraser o_we_link o_we_hover_danger',
+                title: 'Clear Formatting',
+            })
+            $removeFormatButton.on('click', () => {
+                console.log('click');
+                this.wysiwyg.editor.execCommand('removeFormat');
+            });
+            const $group = $('<we-top-button-group>');
+            $group.append($removeFormatButton);
+            $title.append($group);
+        }
+        customizeBlock.append($title);
         customizeBlock.append($toolbar);
         $(this.customizePanel).append(customizeBlock);
     },
