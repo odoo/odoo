@@ -79,4 +79,5 @@
         ],
     },
     'license': 'LGPL-3',
+    'post_init_hook': '_init_update_admin_contact',
 }
