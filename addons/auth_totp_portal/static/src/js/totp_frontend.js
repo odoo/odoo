@@ -13,7 +13,7 @@ function fromField(f, record) {
     switch (f.getAttribute('name')) {
     case 'qrcode':
         const qrcode = document.createElement('img');
-        qrcode.setAttribute('class', 'img img-fluid offset-1 offset-lg-2');
+        qrcode.setAttribute('class', 'img img-fluid offset-1');
         qrcode.setAttribute('src', 'data:image/png;base64,' + record['qrcode']);
         return qrcode;
     case 'url':
@@ -24,7 +24,7 @@ function fromField(f, record) {
     case 'code':
         const code = document.createElement('input');
         code.setAttribute('name', 'code');
-        code.setAttribute('class', 'form-control');
+        code.setAttribute('class', 'form-control col-10 col-md-6');
         code.setAttribute('placeholder', '6-digit code');
         code.required = true;
         code.maxLength = 6;
@@ -108,10 +108,6 @@ class Button {
             // because Dialog doesnt' call() click on the descriptor object
             this.click = this._click.bind(this);
         }
-        if (!button_node.closest('footer')) {
-            // remove non-footer buttons, otherwise they will appear twice
-            button_node.parentNode.removeChild(button_node);
-        }
     }
     async _click() {
         if (!this.input.reportValidity()) {
@@ -191,7 +187,7 @@ publicWidget.registry.TOTPButton = publicWidget.Widget.extend({
         codeInput.addEventListener('input', () => codeInput.setCustomValidity(''));
 
         const buttons = [];
-        for(const button of body.querySelectorAll('button')) {
+        for(const button of doc.querySelectorAll('footer button')) {
             buttons.push(new Button(this, model, record.id, codeInput, button));
         }
 

@@ -1,27 +1,12 @@
 <templates xml:space="preserve">
     <t t-name="portal.identitycheck">
-        <form>
-            <div class="row container">
-                <div class="col-10 offset-1">
-                  <div class="card bg-dark my-b mx-5">
-                    <div class="card-header">
-                        <i class="fa fa-bell mx-2"/>
-                        <span class="text-uppercase">Security Control</span>
-                    </div>
-                    <div class="card-body">
-                      <a href="/web/reset_password/" class="float-right">Forgot password?</a>
-                      <h4 class="card-title">Please confirm your password to continue</h4>
-                      <p class="card-text">
-                        This is necessary for security-related changes. The authorization will last for a few minutes.
-                      </p>
-                      <div>
-                        <label for="password">Password</label>
-                        <input class="form-control" autocomplete="current-password"
-                               name="password" type="password" required="required"/>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+        <form string="Security Control">
+            <h3><strong>Please confirm your password to continue</strong></h3>
+            <p>This is necessary for security-related changes. The authorization will last for a few minutes.</p>
+            <div>
+                <label for="password" class="col-4 col-md-12 px-0">Password</label>
+                <input class="form-control col-10 col-md-6" autocomplete="current-password"
+                       name="password" type="password" required="required"/>
             </div>
         </form>
     </t>

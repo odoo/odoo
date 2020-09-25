@@ -40,32 +40,19 @@
             <field name="model">res.users.identitycheck</field>
             <field name="arch" type="xml">
                 <form string="Security Control">
-                    <sheet>
-                        <div class="row container">
-                            <div class="col-8 offset-2">
-                              <div class="card bg-dark my-b mx-5">
-                                <div class="card-header">
-                                    <span class="fa fa-bell mx-2" t-translation="off">&amp;nbsp;</span>
-                                    <span class="text-uppercase">Security Control</span>
-                                </div>
-                                <div class="card-body">
-                                  <a href="/web/reset_password/" class="float-right">Forgot password?</a>
-                                  <h4 class="card-title">Please confirm your password to continue</h4>
-                                  <p class="card-text">
-                                    This is necessary for security-related changes. The authorization will last for a few minutes.
-                                  </p>
-                                  <div>
-                                    <label for="password"/>
-                                    <field class="col-4" name="password" autocomplete="current-password"
-                                           required="True" password="True"/>
-                                  </div>
-                                  <button string="Confirm Password" type="object" name="run_check" class="btn btn-primary mt-3"/>
-                                </div>
-                              </div>
-                            </div>
+                    <sheet clas="bg-primary">
+                        <h3><strong>Please confirm your password to continue</strong></h3>
+                        <p>This is necessary for security-related changes. The authorization will last for a few minutes.</p>
+                        <div>
+                            <label for="password" class="col-4 col-md-12 px-0"/>
+                            <field class="col-10 col-md-6 px-0" name="password" autocomplete="current-password" required="True" password="True"/>
                         </div>
-                        <footer><!-- no buttons --></footer>
                     </sheet>
+                    <footer>
+                        <button string="Confirm Password" type="object" name="run_check" class="btn btn-primary"/>
+                        <button string="Cancel" special="cancel" class="btn btn-secondary"/>
+                        <a href="/web/reset_password/" class="btn btn-link" role="button">Forgot password?</a>
+                    </footer>
                 </form>
             </field>
         </record>
