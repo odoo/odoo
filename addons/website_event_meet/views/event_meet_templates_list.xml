@@ -67,10 +67,17 @@
                         </div>
                     </nav>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">&amp;times;</button>
-                    <span>This room is not open right now!</span><br />
-                    Join us here on the
-                    <strong itemprop="startDate" t-field="event.with_context(tz=event.date_tz).date_begin" t-options="{'format': 'medium'}"/>
-                    to have a chat with us!
+                    <t t-if="not event.is_done">
+                        <span>This room is not open right now!</span><br />
+                        Join us here on the
+                        <strong itemprop="startDate" t-field="event.with_context(tz=event.date_tz).date_begin" t-options="{'format': 'medium'}"/>
+                        to have a chat with us!
+                    </t>
+                    <t t-else="">
+                        Event <span t-esc="event.name" class="font-weight-bold"/> is over.
+                        <br/>
+                        <span>Join us next time to chat about <b t-esc="meeting_room.name"/>!</span>
+                    </t>
                 </div>
 
                 <div class="modal-body row">

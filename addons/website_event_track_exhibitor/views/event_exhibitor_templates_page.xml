@@ -30,21 +30,28 @@
 <template id="exhibitor_main" name="Exhibitor: Main Content">
     <div t-att-class="'col-12 o_wevent_online_page_main o_wesponsor_exhibitor_main bg-white p-0 %s' % ('col-md-9 col-lg-10' if option_widescreen else 'col-md-8 col-lg-9')">
         <!-- EVENT NOT STARTED ALERTS -->
-        <div t-if="not sponsor.event_id.is_ongoing" class="alert alert-warning rounded-0 text-center" role="alert">
-            Event <span t-esc="sponsor.event_id.name" class="font-weight-bold"/>
-            <span t-if="sponsor.event_id.start_today">
-                starts in
-                <span t-esc="sponsor.event_id.start_remaining"
-                    t-options="{'widget': 'duration', 'digital': True, 'unit': 'minute', 'round': 'minute'}"/>.
-            </span>
-            <span class="my-0" t-else="">
-                starts on
-                <span t-field="sponsor.event_id.with_context(tz=sponsor.event_id.date_tz).date_begin"
-                    t-options="{'format': 'medium'}"/> (<t t-esc="sponsor.event_id.date_tz"/>).
-            </span>
-            <br/>
-            <span>Join us there to meet <b t-esc="sponsor.partner_name"/> !</span>
-        </div>
+        <t t-if="not sponsor.event_id.is_ongoing">
+            <div t-if="sponsor.event_id.is_done" class="alert alert-warning rounded-0 text-center" role="alert">
+                Event <span t-esc="sponsor.event_id.name" class="font-weight-bold"/> is over.
+                <br/>
+                <span>Join us next time to meet <b t-esc="sponsor.partner_name"/>!</span>
+            </div>
+            <div t-else="" class="alert alert-warning rounded-0 text-center" role="alert">
+                Event <span t-esc="sponsor.event_id.name" class="font-weight-bold"/>
+                <span t-if="sponsor.event_id.start_today">
+                    starts in
+                    <span t-esc="sponsor.event_id.start_remaining"
+                        t-options="{'widget': 'duration', 'digital': True, 'unit': 'minute', 'round': 'minute'}"/>.
+                </span>
+                <span class="my-0" t-else="">
+                    starts on
+                    <span t-field="sponsor.event_id.with_context(tz=sponsor.event_id.date_tz).date_begin"
+                        t-options="{'format': 'medium'}"/> (<t t-esc="sponsor.event_id.date_tz"/>).
+                </span>
+                <br/>
+                <span>Join us there to meet <b t-esc="sponsor.partner_name"/> !</span>
+            </div>
+        </t>
         <!-- SPONSOR JITSI + CLOSED/FULL ALERTS -->
         <div t-if="sponsor.event_id.is_ongoing and sponsor.chat_room_id" class="d-flex flex-column">
             <t t-if="not sponsor.is_in_opening_hours">

@@ -4,18 +4,27 @@
     <t t-name="exhibitor.connect.closed.modal">
         <div class="o_wesponsor_js_connect_modal_main container">
             <div class="row mt-2">
-                <div class="col-12 alert alert-warning text-center" role="alert"
-                    t-if="! widget.sponsorData.event_is_ongoing">
-                    <span t-esc="widget.sponsorData.name" class="font-weight-bold"/> is not available right now.<br />
-                    Event <span t-esc="widget.sponsorData.event_name" class="font-weight-bold"/>
-                    <span t-if="widget.sponsorData.event_start_today">
-                        starts in
-                        <span t-esc="widget.sponsorData.event_start_remaining"/> minutes
-                    </span>
-                    <span class="my-0" t-else="">
-                        starts on <span t-esc="widget.sponsorData.event_date_begin_located"/>
-                    </span>
-                </div>
+                <t t-if="! widget.sponsorData.event_is_ongoing">
+                    <div class="col-12 alert alert-warning text-center" role="alert"
+                        t-if="widget.sponsorData.event_is_done">
+                        Event <span t-esc="widget.sponsorData.event_name" class="font-weight-bold"/> is over.
+
+                        <br/>
+                        <span>Join us next time to meet <b t-esc="widget.sponsorData.name"/>!</span>
+                    </div>
+                    <div class="col-12 alert alert-warning text-center" role="alert"
+                        t-else="">
+                        <span t-esc="widget.sponsorData.name" class="font-weight-bold"/> is not available right now.<br />
+                        Event <span t-esc="widget.sponsorData.event_name" class="font-weight-bold"/>
+                        <span t-if="widget.sponsorData.event_start_today">
+                            starts in
+                            <span t-esc="widget.sponsorData.event_start_remaining"/> minutes
+                        </span>
+                        <span class="my-0" t-else="">
+                            starts on <span t-esc="widget.sponsorData.event_date_begin_located"/>
+                        </span>
+                    </div>
+                </t>
                 <div class="col-12 alert alert-warning text-center" role="alert"
                     t-else="">
                     <span t-esc="widget.sponsorData.name" class="font-weight-bold"/> is not available right now.<br />
