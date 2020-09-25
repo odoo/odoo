@@ -422,27 +422,6 @@ function factory(dependencies) {
         }
 
         /**
-         * @private
-         * @returns {mail.thread[]}
-         */
-        _computeNonOriginThreads() {
-            const nonOriginThreads = this.serverChannels.filter(thread => thread !== this.originThread);
-            if (this.isHistory) {
-                nonOriginThreads.push(this.env.messaging.history);
-            }
-            if (this.isNeedaction) {
-                nonOriginThreads.push(this.env.messaging.inbox);
-            }
-            if (this.isStarred) {
-                nonOriginThreads.push(this.env.messaging.starred);
-            }
-            if (this.env.messaging.moderation && this.isModeratedByCurrentPartner) {
-                nonOriginThreads.push(this.env.messaging.moderation);
-            }
-            return [['replace', nonOriginThreads]];
-        }
-
-        /**
          * This value is meant to be based on field body which is
          * returned by the server (and has been sanitized before stored into db).
          * Do not use this value in a 't-raw' if the message has been created
@@ -482,7 +461,19 @@ function factory(dependencies) {
          * @returns {mail.thread[]}
          */
         _computeThreads() {
-            const threads = [...this.nonOriginThreads];
+            const threads = [...this.serverChannels];
+            if (this.isHistory) {
+                threads.push(this.env.messaging.history);
+            }
+            if (this.isNeedaction) {
+                threads.push(this.env.messaging.inbox);
+            }
+            if (this.isStarred) {
+                threads.push(this.env.messaging.starred);
+            }
+            if (this.env.messaging.moderation && this.isModeratedByCurrentPartner) {
+                threads.push(this.env.messaging.moderation);
+            }
             if (this.originThread) {
                 threads.push(this.originThread);
             }
@@ -625,25 +616,6 @@ function factory(dependencies) {
             related: 'messaging.starred',
         }),
         moderation_status: attr(),
-        /**
-         * List of non-origin threads that this message is linked to. This field
-         * is read-only.
-         */
-        nonOriginThreads: many2many('mail.thread', {
-            compute: '_computeNonOriginThreads',
-            dependencies: [
-                'isHistory',
-                'isModeratedByCurrentPartner',
-                'isNeedaction',
-                'isStarred',
-                'messagingHistory',
-                'messagingInbox',
-                'messagingModeration',
-                'messagingStarred',
-                'originThread',
-                'serverChannels',
-            ],
-        }),
         notifications: one2many('mail.notification', {
             inverse: 'message',
             isCausal: true,
@@ -679,8 +651,16 @@ function factory(dependencies) {
         threads: many2many('mail.thread', {
             compute: '_computeThreads',
             dependencies: [
+                'isHistory',
+                'isModeratedByCurrentPartner',
+                'isNeedaction',
+                'isStarred',
+                'messagingHistory',
+                'messagingInbox',
+                'messagingModeration',
+                'messagingStarred',
                 'originThread',
-                'nonOriginThreads',
+                'serverChannels',
             ],
             inverse: 'messages',
         }),
