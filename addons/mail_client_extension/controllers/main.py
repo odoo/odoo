@@ -6,6 +6,7 @@ import hmac
 import json
 import logging
 import odoo
+import requests
 import werkzeug
 
 import odoo.addons.iap.tools.iap_tools
@@ -170,6 +171,13 @@ class MailClientExtensionController(http.Controller):
             'website': iap_data.get("domain"),
             'email': iap_data.get('email', [''])[0]
         }
+
+        logo_url = iap_data.get('logo')
+        if logo_url:
+            response = requests.get(logo_url)
+            if response.ok:
+                new_company_info['image_1920'] = base64.b64encode(response.content)
+
         if iap_data.get('country_code'):
             country = request.env['res.country'].search([('code', '=', iap_data['country_code'].upper())])
             if country:
