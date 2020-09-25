@@ -308,18 +308,18 @@ exports.PosModel = Backbone.Model.extend({
     },{
         model:  'product.pricelist',
         fields: ['name', 'display_name'],
-        domain: function(self) { return [['id', 'in', self.config.available_pricelist_ids]]; },
         loaded: function(self, pricelists){
             _.map(pricelists, function (pricelist) { pricelist.items = []; });
             self.default_pricelist = _.findWhere(pricelists, {id: self.config.pricelist_id[0]});
-            self.pricelists = pricelists;
+            self.pricelists = _.findWhere(pricelists, {id: self.config.available_pricelist_ids});
+            self.allpricelists = pricelists;
         },
     },{
         model:  'product.pricelist.item',
         domain: function(self) { return [['pricelist_id', 'in', _.pluck(self.pricelists, 'id')]]; },
         loaded: function(self, pricelist_items){
             var pricelist_by_id = {};
-            _.each(self.pricelists, function (pricelist) {
+            _.each(self.allpricelists, function (pricelist) {
                 pricelist_by_id[pricelist.id] = pricelist;
             });
 
