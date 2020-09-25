@@ -186,8 +186,8 @@ class FetchmailServer(models.Model):
                                 'active_ids': [res_id],
                                 'active_model': self.env.context.get("thread_model", server.object_id.model)
                             }).run()
-                        imap_server.store(num, '+FLAGS', '\\Seen')
                         self._cr.commit()
+                        imap_server.store(num, '+FLAGS', '\\Seen')
                         count += 1
                     _logger.info("Fetched %d email(s) on %s server %s; %d succeeded, %d failed.", count, server.type, server.name, (count - failed), failed)
                 except Exception:
