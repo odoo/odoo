@@ -1438,7 +1438,7 @@ class IrModelConstraint(models.Model):
         for data in self.sorted(key='id', reverse=True):
             name = tools.ustr(data.name)
             if data.model.model in self.env:
-                table = self.env[data.model.model]._table    
+                table = self.env[data.model.model]._table
             else:
                 table = data.model.model.replace('.', '_')
             typ = data.type
@@ -1817,6 +1817,9 @@ class IrModelData(models.Model):
     module = fields.Char(default='', required=True)
     res_id = fields.Many2oneReference(string='Record ID', help="ID of the target record in the database", model_field='model')
     noupdate = fields.Boolean(string='Non Updatable', default=False)
+    nodelete = fields.Boolean(
+        string="Non deletable", default=False,
+        help="Specify a record as undeletable.  This doesn't restrict direct raw SQL queries!")
     reference = fields.Char(string='Reference', compute='_compute_reference', readonly=True, store=False)
 
     _sql_constraints = [
@@ -1891,7 +1894,7 @@ class IrModelData(models.Model):
 
     @api.model
     def xmlid_to_object(self, xmlid, raise_if_not_found=False):
-        """ Return a Model object, or ``None`` if ``raise_if_not_found`` is 
+        """ Return a Model object, or ``None`` if ``raise_if_not_found`` is
         set
         """
         t = self.xmlid_to_res_model_res_id(xmlid, raise_if_not_found)
@@ -1941,7 +1944,11 @@ class IrModelData(models.Model):
         return super(IrModelData, self).unlink()
 
     def _lookup_xmlids(self, xml_ids, model):
-        """ Look up the given XML ids of the given model. """
+        """Look up the given XML ids of the given model.
+
+        :returns: values of found xml_ids.
+        :rtype: list(list)
+        """
         if not xml_ids:
             return []
 
@@ -1956,8 +1963,9 @@ class IrModelData(models.Model):
         cr = self.env.cr
         for prefix, suffixes in bymodule.items():
             query = """
-                SELECT d.id, d.module, d.name, d.model, d.res_id, d.noupdate, r.id
-                FROM ir_model_data d LEFT JOIN "{}" r on d.res_id=r.id
+                SELECT d.id, d.module, d.name, d.model, d.res_id, d.noupdate, d.nodelete, r.id
+                FROM ir_model_data d
+                LEFT JOIN "{}" r ON d.res_id = r.id
                 WHERE d.module=%s AND d.name IN %s
             """.format(model._table)
             for subsuffixes in cr.split_for_in_conditions(suffixes):
@@ -1970,8 +1978,11 @@ class IrModelData(models.Model):
     def _update_xmlids(self, data_list, update=False):
         """ Create or update the given XML ids.
 
-            :param data_list: list of dicts with keys `xml_id` (XMLID to
-                assign), `noupdate` (flag on XMLID), `record` (target record).
+            :param data_list: list of dicts with keys:
+                `xml_id` (XMLID to assign),
+                `noupdate` (flag on XMLID),
+                `nodelete` (flag on XMLID),
+                `record` (target record).
             :param update: should be ``True`` when upgrading a module
         """
         if not data_list:
@@ -1982,7 +1993,8 @@ class IrModelData(models.Model):
             prefix, suffix = data['xml_id'].split('.', 1)
             record = data['record']
             noupdate = bool(data.get('noupdate'))
-            rows.add((prefix, suffix, record._name, record.id, noupdate))
+            nodelete = bool(data.get('nodelete'))
+            rows.add((prefix, suffix, record._name, record.id, noupdate, nodelete))
 
         for sub_rows in self.env.cr.split_for_in_conditions(rows):
             # insert rows or update them
@@ -1999,9 +2011,9 @@ class IrModelData(models.Model):
     # NOTE: this method is overriden in web_studio; if you need to make another
     #  override, make sure it is compatible with the one that is there.
     def _build_update_xmlids_query(self, sub_rows, update):
-        rowf = "(%s, %s, %s, %s, %s)"
+        rowf = "(%s, %s, %s, %s, %s, %s)"
         return """
-            INSERT INTO ir_model_data (module, name, model, res_id, noupdate)
+            INSERT INTO ir_model_data (module, name, model, res_id, noupdate, nodelete)
             VALUES {rows}
             ON CONFLICT (module, name)
             DO UPDATE SET write_date=(now() at time zone 'UTC') {where}

@@ -717,6 +717,8 @@ class Module(models.Model):
             'module': 'base',
             'res_id': new.id,
             'noupdate': True,
+            # VFE nodelete:True ?
+            # or users already do not have sufficient access for this ?
         }
         self.env['ir.model.data'].create(module_metadata)
         return new

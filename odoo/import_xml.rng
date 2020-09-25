@@ -310,7 +310,8 @@
                 <rng:name>openerp</rng:name>
                 <rng:name>data</rng:name>
             </rng:choice>
-            <rng:optional><rng:attribute name="noupdate" /></rng:optional>
+            <rng:optional><rng:attribute name="noupdate"/></rng:optional>
+            <rng:optional><rng:attribute name="nodelete"/></rng:optional>
             <rng:ref name="env"/>
             <rng:zeroOrMore>
                 <rng:choice>
