@@ -18,7 +18,6 @@
 # Léonie Bouchat <lbo@odoo.com>, 2019
 # Stefano Consolaro <stefano.consolaro@mymage.it>, 2019
 # Mario Riva <mario.riva@gmail.com>, 2019
-# Davide Speranza <dsp@odoo.com>, 2019
 # Giovanni <giovanni@gslab.it>, 2019
 # Iacopo Simonelli <lsi@odoo.com>, 2020
 # Jonathan Quique <jqu@odoo.com>, 2020
@@ -357,7 +356,7 @@ msgstr "Attività"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "Eccezione"
+msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_state
@@ -585,7 +584,7 @@ msgstr "Azienda"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__company_currency_id
 msgid "Company Currency"
-msgstr "Valuta azienda"
+msgstr "Valuta aziendale"
 
 #. module: purchase
 #: code:addons/purchase/models/purchase.py:0
@@ -642,9 +641,9 @@ msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
 "same category. The conversion will be made based on the ratios."
 msgstr ""
-"Conversioni tra diverse unità di misura sono permesse solo se appartengono "
-"alla stessa categoria. La conversione sarà effettuata utilizzando i rapporti"
-" di conversione delle unità di misura."
+"Le conversioni tra unità di misura possono avvenire solo se appartengono "
+"alla stessa categoria. La conversione verrà effettuata in base alle "
+"proporzioni."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1635,7 +1634,7 @@ msgstr "RdP_${(object.name or '').replace('/','_')}"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "RFQs"
-msgstr ""
+msgstr "RdP"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.act_res_partner_2_purchase_order

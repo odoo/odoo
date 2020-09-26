@@ -19,7 +19,6 @@
 # Paolo Valier, 2019
 # maiolif <maiolif@mgftools.com>, 2019
 # Stefano Consolaro <stefano.consolaro@mymage.it>, 2019
-# Davide Speranza <dsp@odoo.com>, 2019
 # Léonie Bouchat <lbo@odoo.com>, 2019
 # Iacopo Simonelli <lsi@odoo.com>, 2020
 # David Minneci <david@numeko.it>, 2020
@@ -112,7 +111,7 @@ msgstr "%s (copia)"
 #: code:addons/stock/wizard/stock_picking_responsible.py:0
 #, python-format
 msgid "%s has a restricted access to %s"
-msgstr ""
+msgstr "%s ha accesso limitato a %s"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0
@@ -436,7 +435,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
 msgid "<strong>Counted Quantity</strong>"
-msgstr ""
+msgstr "<strong>Quantità inclusa</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
@@ -472,7 +471,7 @@ msgstr "<strong>Q.tà minima:</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
 msgid "<strong>On Hand Quantity</strong>"
-msgstr ""
+msgstr "<strong>Quantità disponibile</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -612,7 +611,7 @@ msgstr "Attività"
 #: model:ir.model.fields,field_description:stock.field_stock_picking__activity_exception_decoration
 #: model:ir.model.fields,field_description:stock.field_stock_production_lot__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "Eccezione"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__activity_state
@@ -1334,9 +1333,9 @@ msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
 "same category. The conversion will be made based on the ratios."
 msgstr ""
-"Conversioni tra diverse unità di misura sono permesse solo se appartengono "
-"alla stessa categoria. La conversione sarà effettuata utilizzando i rapporti"
-" di conversione delle unità di misura."
+"Le conversioni tra unità di misura possono avvenire solo se appartengono "
+"alla stessa categoria. La conversione verrà effettuata in base alle "
+"proporzioni."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__posx
@@ -1391,7 +1390,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory__prefill_counted_quantity
 msgid "Counted Quantities"
-msgstr ""
+msgstr "Quantità incluse"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_line__product_qty
@@ -1568,12 +1567,12 @@ msgstr "Data di creazione"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__date
 msgid "Creation Date, usually the time of the order"
-msgstr "Data di creazione, solitamente l’ora dell’ordine"
+msgstr "Data di creazione, solitamente l’orario dell’ordine"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_tree_receipt_picking
 msgid "Creation date"
-msgstr "Data di creazione"
+msgstr "Data creazione"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0
@@ -2243,7 +2242,7 @@ msgstr "Fisso"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__group_id
 msgid "Fixed Procurement Group"
-msgstr "Gruppo approvvigionamento fissato"
+msgstr "Gruppo approvvigionamento fisso"
 
 #. module: stock
 #. openerp-web
@@ -3829,7 +3828,7 @@ msgstr "Disponibile"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_editable
 msgid "On Hand Quantity"
-msgstr ""
+msgstr "Quantità disponibile"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_template_kanban_stock_view
@@ -4486,7 +4485,7 @@ msgstr "Imballaggi prodotto"
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Product Quantity Updated"
-msgstr ""
+msgstr "Quantità prodotto aggiornata"
 
 #. module: stock
 #: model:ir.model,name:stock.model_product_replenish
@@ -4540,7 +4539,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__product_uom_name
 msgid "Product unit of measure label"
-msgstr ""
+msgstr "Etichetta unità di misura prodotto"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__has_tracking
@@ -6999,7 +6998,7 @@ msgstr "Numero magazzini"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_route__warehouse_domain_ids
 msgid "Warehouse Domain"
-msgstr ""
+msgstr "Dominio magazzino"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_warehouse_config

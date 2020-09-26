@@ -10,12 +10,11 @@
 # maiolif <maiolif@mgftools.com>, 2019
 # Christian <chris@effeci.info>, 2019
 # Paolo Valier, 2019
+# 0a243ede81e8afa909e1e8a5469f6f0f_33e3ca1 <267506ad346947b5e4eba05b50cb5ef9_478623>, 2019
 # Martin Trigaux, 2019
-# Davide Speranza <dsp@odoo.com>, 2019
 # Federico Zanuttini <fza@odoo.com>, 2019
 # Francesco Garganese <francesco.garganese@aeromnia.aero>, 2019
 # Simone Bernini <simone@aperturelabs.it>, 2019
-# 0a243ede81e8afa909e1e8a5469f6f0f_33e3ca1 <267506ad346947b5e4eba05b50cb5ef9_478623>, 2019
 # Léonie Bouchat <lbo@odoo.com>, 2019
 # Stefano Consolaro <stefano.consolaro@mymage.it>, 2019
 # Iacopo Simonelli <lsi@odoo.com>, 2020
@@ -51,6 +50,8 @@ msgstr "%s (copia)"
 msgid ""
 "'Registration Event - %s' % (object.name or 'Attendee').replace('/','')"
 msgstr ""
+"'Registrazione evento - %s' % (object.name or "
+"'Partecipante').replace('/','')"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_report_template_badge
@@ -157,6 +158,8 @@ msgid ""
 "<i class=\"fa fa-info-circle mr-2\"></i>This event and all the conferences "
 "are in <b>English</b>!"
 msgstr ""
+"<i class=\"fa fa-info-circle mr-2\"></i>Questo evento e tutte le conferenze "
+"sono in <b>inglese</b>!"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
@@ -208,6 +211,8 @@ msgid ""
 "<span class=\"badge badge-secondary o_wevent_badge float-"
 "right\">SPEAKER</span>"
 msgstr ""
+"<span class=\"badge badge-secondary o_wevent_badge float-"
+"right\">RELATORE</span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -628,7 +633,7 @@ msgstr "Attività"
 #: model:ir.model.fields,field_description:event.field_event_event__activity_exception_decoration
 #: model:ir.model.fields,field_description:event.field_event_registration__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "Eccezione"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__activity_state
@@ -642,8 +647,8 @@ msgid ""
 "Add a navigation menu to your event web pages with schedule, tracks, a track"
 " proposal form, etc."
 msgstr ""
-"Aggiungere un menu di navigazione alla pagina web dell'evento con orario, "
-"percorsi, un modulo proposta percorso, ecc."
+"Aggiunge un menù di navigazione alle pagine web dell'evento con orari, "
+"sessioni, un modulo di proposta sessioni ecc."
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.act_event_registration_from_event
@@ -664,7 +669,7 @@ msgstr "Amministratore"
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_type__after_sub
 #: model:ir.model.fields.selection,name:event.selection__event_type_mail__interval_type__after_sub
 msgid "After each registration"
-msgstr "Dopo ogni iscrizione"
+msgstr "Dopo ogni registrazione"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_type__after_event
@@ -689,7 +694,8 @@ msgid ""
 "Are you sure you want to cancel this event? All the linked attendees will be"
 " cancelled as well."
 msgstr ""
-"Annullare veramente questo evento? Tutti gli iscritti verranno cancellati."
+"Annullare veramente questo evento? Verranno cancellati anche tutti i "
+"partecipanti collegati."
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -728,7 +734,7 @@ msgstr "Data partecipazione"
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_tree
 msgid "Attended the Event"
-msgstr "Partecipa all'evento"
+msgstr "Ha partecipato all'evento"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_registration__registration_id
@@ -775,22 +781,22 @@ msgstr "Posti disponibili"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__badge_back
 msgid "Badge Back"
-msgstr "Retro del badge"
+msgstr "Retro del tesserino"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__badge_front
 msgid "Badge Front"
-msgstr "Fronte del badge"
+msgstr "Fronte del tesserino"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__badge_innerleft
 msgid "Badge Inner Left"
-msgstr "Parte interna sinistra del badge"
+msgstr "Interno sinistro del tesserino"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__badge_innerright
 msgid "Badge Inner Right"
-msgstr "Parte interna destra del badge"
+msgstr "Interno destro del tesserino"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_event_barcode
@@ -849,6 +855,8 @@ msgid ""
 "Chamber Works reserves the right to cancel, re-name or re-locate the event "
 "or change the dates on which it is held."
 msgstr ""
+"Chamber Works si riserva il diritto di annullare, rinominare o trasferire "
+"l'evento oppure cambiare le date di svolgimento dello stesso."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
@@ -1003,7 +1011,7 @@ msgstr "Descrizione"
 #. module: event
 #: model:event.event,name:event.event_0
 msgid "Design Fair Los Angeles"
-msgstr "Fiera del design Los Angeles"
+msgstr "Fiera del design di Los Angeles"
 
 #. module: event
 #: model:event.event,subtitle:event.event_4
@@ -1042,9 +1050,8 @@ msgid ""
 "During this conference, our team will give a detailed overview of our "
 "business applications. You’ll know all the benefits of using it."
 msgstr ""
-"In questa conferenza, il nostro gruppo presenterà una visione dettagliata "
-"delle nostre applicazioni aziendali. Si apprenderanno tutti i benefici del "
-"loro utilizzo. "
+"Durante questa conferenza forniremo una panoramica dettagliata delle nostre "
+"applicazioni aziendali e scoprirete tutti i vantaggi del loro utilizzo."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__email
@@ -1091,7 +1098,7 @@ msgstr "Messaggi automatici dell'evento"
 #. module: event
 #: model:ir.actions.report,name:event.report_event_event_badge
 msgid "Event Badge"
-msgstr "Badge evento"
+msgstr "Tesserino evento"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_type
@@ -1119,7 +1126,7 @@ msgstr "Conferma evento"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__event_end_date
 msgid "Event End Date"
-msgstr "Data di fine evento"
+msgstr "Data fine evento"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
@@ -1263,6 +1270,10 @@ msgid ""
 "of future versions, achievements of the software, workshops, training "
 "sessions, etc...."
 msgstr ""
+"Ogni anno invitiamo la nostra comunità, i partner e gli utenti finali a "
+"venire a trovarci. È l'evento ideale per stare insieme e per presentare le "
+"nuove funzionalità, il piano d'azione per le versioni future, i "
+"miglioramenti al software, i laboratori, le sessioni di formazione ecc..."
 
 #. module: event
 #: model:event.type,name:event.event_type_1
@@ -1272,7 +1283,7 @@ msgstr "Mostra"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Expected"
-msgstr "Atteso"
+msgstr "Attesi"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
@@ -1287,7 +1298,7 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Finish Event"
-msgstr "Completa evento"
+msgstr "Termina evento"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_follower_ids
@@ -1311,7 +1322,7 @@ msgstr "Chi sta seguendo (partner)"
 #: model_terms:event.event,description:event.event_0
 #: model_terms:event.event,description:event.event_2
 msgid "For any additional information, please contact us at"
-msgstr "Per ogni altra informazione, contattare all'indirizzo"
+msgstr "Per ogni ulteriore informazione, contattarci all'indirizzo"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__seats_max
@@ -1364,8 +1375,8 @@ msgstr "Raggruppa per"
 #: model_terms:event.event,description:event.event_2
 msgid "Having attended this conference, participants should be able to:"
 msgstr ""
-"Dopo aver partecipato a questa conferenza, i partecipanti dovrebbero essere "
-"in grado di:"
+"Dopo aver partecipato a questa conferenza, i partecipanti saranno in grado "
+"di:"
 
 #. module: event
 #: model:event.event,name:event.event_5
@@ -1472,15 +1483,15 @@ msgstr ""
 #: model:ir.model.fields,help:event.field_event_type__default_registration_max
 msgid "It will select this default maximum value when you choose this event"
 msgstr ""
-"Verrà selezionato questo valore predefinito massimo quando si sceglie questo"
-" evento."
+"Quando viene scelto l'evento, come massimo predefinito viene selezionato "
+"questo valore."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_type__default_registration_min
 msgid "It will select this default minimum value when you choose this event"
 msgstr ""
-"Verrà selezionato questo valore predefinito minimo quando si sceglie questo "
-"evento."
+"Quando viene scelto l'evento, come minimo predefinito viene selezionato "
+"questo valore."
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -1490,7 +1501,7 @@ msgstr "Mario ROSSI"
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid "Join us for this 3-day Event"
-msgstr ""
+msgstr "Partecipa a questa 3 giorni di evento"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__color
@@ -1614,7 +1625,7 @@ msgstr "Allegato principale"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Manage &amp; publish a schedule with tracks"
-msgstr "Gestire e pubblicare un programma con i percorsi"
+msgstr "Gestione e pubblicazione di un programma con sessioni"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_availability
@@ -1834,9 +1845,7 @@ msgstr "Evento fisico"
 #. module: event
 #: model_terms:event.event,description:event.event_2
 msgid "Point of Sale (POS), Introduction to report customization."
-msgstr ""
-"Punto vendita (POS Point Of Sale), introduzione alla personalizzazione dei "
-"resoconti."
+msgstr "Punto vendita (POS), introduzione ai resoconti personalizzati."
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -1860,8 +1869,8 @@ msgid ""
 "Reference of the document that created the registration, for example a sales"
 " order"
 msgstr ""
-"Riferimento al documento che ha creato l'iscrizione, per esempio un ordine "
-"di vendita"
+"Riferimento al documento che ha generato la registrazione, per esempio un "
+"ordine di vendita"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
@@ -1880,7 +1889,7 @@ msgstr "Registrazione"
 #. module: event
 #: model:ir.actions.report,name:event.report_event_registration_badge
 msgid "Registration Badge"
-msgstr "Badge iscrizione"
+msgstr "Tesserino di registrazione"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__date_open
@@ -1944,12 +1953,12 @@ msgstr "Errore di consegna SMS"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Scan badges to confirm attendances"
-msgstr "Lettura badge per conferma partecipanti"
+msgstr "Lettura tesserino per conferma partecipanti"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Schedule & Tracks"
-msgstr "Programma e percorsi"
+msgstr "Orari e sessioni"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_event_view
@@ -1957,8 +1966,8 @@ msgid ""
 "Schedule and organize your events efficiently:\n"
 "                track registrations and participations, automate the confirmation emails, sell tickets, etc."
 msgstr ""
-"Programmare e organizzare gli eventi in modo efficiente:\n"
-"                monitorare iscrizioni e presenze, automatizzare le e-mail di conferma, vendere biglietti ecc."
+"Programma e organizza gli eventi in modo efficiente:\n"
+"                monitora registrazioni e presenze, automatizza e-mail di conferma, vendita di biglietti ecc."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__scheduled_date
@@ -1968,12 +1977,12 @@ msgstr "Messaggi programmati spediti"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_registration__scheduled_date
 msgid "Scheduled Time"
-msgstr "Ora programmata"
+msgstr "Orario programmato"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Sell tickets on your website"
-msgstr "Vendita biglietti sul sito web"
+msgstr "Vendita biglietti nel sito web"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -2141,7 +2150,7 @@ msgstr "Totale"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_website_event_track
 msgid "Tracks and Agenda"
-msgstr "Percorsi e agenda"
+msgstr "Sessioni e programma"
 
 #. module: event
 #: model:event.type,name:event.event_type_4
@@ -2292,12 +2301,12 @@ msgstr "Azione eseguibile solo dopo l'inizio dell'evento."
 #. module: event
 #: model:mail.template,subject:event.event_registration_mail_template_badge
 msgid "Your badge for ${object.event_id.name}"
-msgstr "Badge per ${object.event_id.name}"
+msgstr "Tesserino per ${object.event_id.name}"
 
 #. module: event
 #: model:mail.template,subject:event.event_subscription
 msgid "Your registration at ${object.event_id.name}"
-msgstr "Iscrizione a ${object.event_id.name}"
+msgstr "Registrazione per ${object.event_id.name}"
 
 #. module: event
 #: model:mail.template,report_name:event.event_registration_mail_template_badge
@@ -2312,13 +2321,13 @@ msgstr "events@odoo.com"
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid "events@yourcompany.com"
-msgstr ""
+msgstr "events@yourcompany.com"
 
 #. module: event
 #: code:addons/event/models/event.py:0
 #, python-format
 msgid "in %d days"
-msgstr "in %d giorni"
+msgstr "fra %d giorni"
 
 #. module: event
 #: code:addons/event/models/event.py:0

@@ -7,16 +7,13 @@
 # Martin Trigaux, 2019
 # Luigi Di Naro <gigidn@gmail.com>, 2019
 # Simone Bernini <simone@aperturelabs.it>, 2019
-# Luca Tralli, 2019
 # SebastianoPistore <SebastianoPistore.info@protonmail.ch>, 2019
 # Christian <chris@effeci.info>, 2019
 # Paolo Valier, 2019
-# Tiziano Zambelli <zstiziano@gmail.com>, 2019
 # Paolo Caruccio <paolo.caruccio66@gmail.com>, 2019
 # efraimbiffi <eab@odoo.com>, 2019
 # Léonie Bouchat <lbo@odoo.com>, 2019
 # Stefano Consolaro <stefano.consolaro@mymage.it>, 2019
-# Davide Speranza <dsp@odoo.com>, 2019
 # Iacopo Simonelli <lsi@odoo.com>, 2020
 # Sergio Zanchetta <primes2h@gmail.com>, 2020
 # 
@@ -45,21 +42,19 @@ msgstr "Importare un modello per gli estratti conto"
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:0
 #, python-format
 msgid "%d transactions had already been imported and were ignored."
-msgstr "%d transazioni ignorate perchè già importate in precedenza "
+msgstr "%d transazioni sono state ignorate perché già importate."
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:0
 #, python-format
 msgid "1 transaction had already been imported and was ignored."
-msgstr ""
-"1 transazione è già stata importata in precedenza ed è stata ignorata."
+msgstr "1 transazione è stata ignorata perché già importata."
 
 #. module: account_bank_statement_import
 #: model:ir.model.constraint,message:account_bank_statement_import.constraint_account_bank_statement_line_unique_import_id
 msgid "A bank account transactions can be imported only once !"
 msgstr ""
-"Le singole transazioni su conto corrente possono essere importate una sola "
-"volta !"
+"Le transazioni di un conto bancario possono essere importate una sola volta."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__company_partner_id
@@ -74,12 +69,12 @@ msgstr "Numero conto"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__type_control_ids
 msgid "Account Types Allowed"
-msgstr "Tipi conto ammessi"
+msgstr "Tipi di conto autorizzati"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__account_control_ids
 msgid "Accounts Allowed"
-msgstr "Conti consentiti"
+msgstr "Conti autorizzati"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_needaction
@@ -99,7 +94,7 @@ msgstr "Attività"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "Eccezione"
+msgstr ""
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__activity_state
@@ -130,7 +125,7 @@ msgstr "Voci già importate"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__at_least_one_inbound
 msgid "At Least One Inbound"
-msgstr "Almeno uno in ingresso"
+msgstr "Almeno uno in entrata"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__at_least_one_outbound
@@ -232,7 +227,7 @@ msgid ""
 "Did you install the module to support this type of file ?"
 msgstr ""
 "Impossibile leggere il file caricato.\n"
-"Hai installato il supporto per questo formato di file ?"
+"Verificare l'installazione del supporto per questo tipo di file."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import__create_uid
@@ -279,7 +274,7 @@ msgstr "Conto dare predefinito"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__bank_statements_source
 msgid "Defines how the bank statements will be registered"
-msgstr "Definisce come verrà registrato l'estratto conto bancario"
+msgstr "Indica come viene registrato l'estratto conto bancario"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import__display_name
@@ -388,7 +383,7 @@ msgstr "Importa estratto conto bancario"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_line__unique_import_id
 msgid "Import ID"
-msgstr "ID Importazione"
+msgstr "ID importazione"
 
 #. module: account_bank_statement_import
 #: model_terms:ir.ui.view,arch_db:account_bank_statement_import.journal_dashboard_view_inherit
@@ -709,20 +704,19 @@ msgstr "La valuta utilizzata per inserire l'estratto conto"
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__code
 msgid "The journal entries of this journal will be named using this prefix."
 msgstr ""
-"Le registrazioni contabili di questo registro verranno identificate usando "
+"Le registrazioni contabili per il registro vengono identificate usando "
 "questo prefisso."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__refund_sequence_number_next
 msgid "The next sequence number will be used for the next credit note."
 msgstr ""
-"Per la prossima nota di credito verrà utilizzato il seguente numero di "
-"sequenza."
+"Per la prossima nota di credito verrà usato questo numero di sequenza."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__sequence_number_next
 msgid "The next sequence number will be used for the next invoice."
-msgstr "Per la prossima fattura verrà usato il successivo numero di sequenza."
+msgstr "Per la prossima fattura verrà usato questo numero di sequenza."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__refund_sequence_id
@@ -865,4 +859,4 @@ msgstr ""
 #. module: account_bank_statement_import
 #: model_terms:ir.ui.view,arch_db:account_bank_statement_import.journal_dashboard_view_inherit
 msgid "or"
-msgstr "/"
+msgstr "o"
