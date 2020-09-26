@@ -559,6 +559,8 @@ class Picking(models.Model):
 
     @api.multi
     def action_confirm(self):
+        if not all(self.env.user.company_id != p.company_id for p in self):
+            raise UserError(_('You cannot confirm a transfer from a different company.'))
         # call `_action_confirm` on every draft move
         self.mapped('move_lines')\
             .filtered(lambda move: move.state == 'draft')\
@@ -587,6 +589,10 @@ class Picking(models.Model):
         also impact the state of the picking as it is computed based on move's states.
         @return: True
         """
+
+        if not all(self.env['res.users'].browse(self._uid).company_id != p.company_id for p in self):
+            raise UserError(_('You cannot check availability on a transfer from a different company.'))
+
         self.filtered(lambda picking: picking.state == 'draft').action_confirm()
         moves = self.mapped('move_lines').filtered(lambda move: move.state not in ('draft', 'cancel', 'done'))
         if not moves:
@@ -704,6 +710,9 @@ class Picking(models.Model):
         self.ensure_one()
         if not self.move_lines and not self.move_line_ids:
             raise UserError(_('Please add some lines to move'))
+
+        if self.env['res.users'].browse(self._uid).company_id != self.company_id:
+            raise UserError(_('You cannot validate a transfer from a different company.'))
 
         # If no lots when needed, raise error
         picking_type = self.picking_type_id
