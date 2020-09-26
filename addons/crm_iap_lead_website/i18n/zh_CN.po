@@ -3,25 +3,26 @@
 # 	* crm_iap_lead_website
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Jeffery CHEN <jeffery9@gmail.com>, 2019
-# liAnGjiA <liangjia@qq.com>, 2019
-# zpq001 <zpq001@live.com>, 2019
-# guohuadeng <guohuadeng@hotmail.com>, 2019
-# ChinaMaker <liuct@chinamaker.net>, 2019
-# Shane Tsoi <sso@odoo.com>, 2019
-# inspur qiuguodong <qiuguodong@inspur.com>, 2019
-# Joe Hu <loadzzz@126.com>, 2019
-# Jeanphy <hzh0292@qq.com>, 2019
-# Felix Yuen <fyu@odoo.com>, 2019
+# Martin Trigaux, 2020
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2020
+# liAnGjiA <liangjia@qq.com>, 2020
+# zpq001 <zpq001@live.com>, 2020
+# guohuadeng <guohuadeng@hotmail.com>, 2020
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2020
+# ChinaMaker <liuct@chinamaker.net>, 2020
+# Felix Yuen <fyu@odoo.com>, 2020
+# Shane Tsoi <sso@odoo.com>, 2020
+# Jeanphy <hzh0292@qq.com>, 2020
+# Joe Hu <loadzzz@126.com>, 2020
+# Felix Yang - Elico Corp <felixyangsh@aliyun.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: Felix Yuen <fyu@odoo.com>, 2019\n"
+"POT-Creation-Date: 2020-09-01 07:28+0000\n"
+"PO-Revision-Date: 2020-09-07 08:11+0000\n"
+"Last-Translator: Felix Yang - Elico Corp <felixyangsh@aliyun.com>, 2020\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -49,7 +50,7 @@ msgstr "<span class=\"o_stat_text\">商机</span>"
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__active
 msgid "Active"
-msgstr "有效"
+msgstr "启用"
 
 #. module: crm_iap_lead_website
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead_website.crm_reveal_rule_view_search
@@ -99,7 +100,7 @@ msgstr ""
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__country_ids
 msgid "Countries"
-msgstr "国家/地区"
+msgstr "国家"
 
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_view__create_date
@@ -121,7 +122,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__create_uid
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_view__create_uid
 msgid "Created by"
-msgstr "创建者"
+msgstr "创建人"
 
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__create_date
@@ -134,8 +135,10 @@ msgid "Data Tracking"
 msgstr ""
 
 #. module: crm_iap_lead_website
+#: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_lead__display_name
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__display_name
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_view__display_name
+#: model:ir.model.fields,field_description:crm_iap_lead_website.field_ir_http__display_name
 msgid "Display Name"
 msgstr "显示名称"
 
@@ -143,7 +146,7 @@ msgstr "显示名称"
 #: code:addons/crm_iap_lead_website/models/crm_reveal_rule.py:0
 #, python-format
 msgid "Enter Valid Regex."
-msgstr ""
+msgstr "输入有效正则表达式。"
 
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__contact_filter_type
@@ -163,7 +166,7 @@ msgstr "根据规模过滤"
 #. module: crm_iap_lead_website
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead_website.crm_reveal_rule_form
 msgid "From"
-msgstr "来自"
+msgstr "从"
 
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__lead_ids
@@ -186,8 +189,10 @@ msgid "IAP Credits"
 msgstr ""
 
 #. module: crm_iap_lead_website
+#: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_lead__id
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__id
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_view__id
+#: model:ir.model.fields,field_description:crm_iap_lead_website.field_ir_http__id
 msgid "ID"
 msgstr "ID"
 
@@ -203,22 +208,24 @@ msgid "Industries"
 msgstr "工业"
 
 #. module: crm_iap_lead_website
+#: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_lead____last_update
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule____last_update
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_view____last_update
+#: model:ir.model.fields,field_description:crm_iap_lead_website.field_ir_http____last_update
 msgid "Last Modified on"
-msgstr "最后更改日"
+msgstr "最后修改日"
 
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__write_uid
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_view__write_uid
 msgid "Last Updated by"
-msgstr "最后更新者"
+msgstr "最后更新人"
 
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__write_date
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_view__write_date
 msgid "Last Updated on"
-msgstr "更新时间"
+msgstr "最后更新时间"
 
 #. module: crm_iap_lead_website
 #: model:ir.model.fields.selection,name:crm_iap_lead_website.selection__crm_reveal_rule__lead_type__lead
@@ -228,7 +235,7 @@ msgstr "线索"
 #. module: crm_iap_lead_website
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead_website.crm_reveal_rule_form
 msgid "Lead Data"
-msgstr ""
+msgstr "线索数据"
 
 #. module: crm_iap_lead_website
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead_website.crm_reveal_lead_opportunity_form
@@ -282,7 +289,7 @@ msgstr "低"
 msgid ""
 "Make sure you know if you have to be GDPR compliant for storing personal "
 "data."
-msgstr "确保你知道是否必须符合GDPR才能存储个人数据。"
+msgstr "請你确保你是符合GDPR合規才能存储个人数据。"
 
 #. module: crm_iap_lead_website
 #: model:ir.model.constraint,message:crm_iap_lead_website.constraint_crm_reveal_rule_limit_extra_contacts
@@ -298,12 +305,12 @@ msgstr "媒介"
 #: code:addons/crm_iap_lead_website/models/crm_reveal_rule.py:0
 #, python-format
 msgid "Missing Library"
-msgstr ""
+msgstr "缺失库"
 
 #. module: crm_iap_lead_website
 #: model:ir.model.fields.selection,name:crm_iap_lead_website.selection__crm_reveal_view__reveal_state__not_found
 msgid "Not Found"
-msgstr ""
+msgstr "没有找到"
 
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__extra_contacts
@@ -311,7 +318,7 @@ msgid "Number of Contacts"
 msgstr "联系人人数"
 
 #. module: crm_iap_lead_website
-#: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__leads_count
+#: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__lead_count
 msgid "Number of Generated Leads"
 msgstr "生成线索的数量"
 
@@ -342,12 +349,18 @@ msgstr "商机"
 #. module: crm_iap_lead_website
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead_website.crm_reveal_rule_form
 msgid "Opportunity Data"
-msgstr ""
+msgstr "商机数据"
 
 #. module: crm_iap_lead_website
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead_website.crm_reveal_rule_form
 msgid "Opportunity Generation Conditions"
 msgstr ""
+
+#. module: crm_iap_lead_website
+#: code:addons/crm_iap_lead_website/models/crm_reveal_rule.py:0
+#, python-format
+msgid "Opportunity created by Odoo Lead Generation"
+msgstr "由Odoo线索生成产生的商机"
 
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__other_role_ids
@@ -411,7 +424,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__seniority_id
 #: model:ir.model.fields.selection,name:crm_iap_lead_website.selection__crm_reveal_rule__contact_filter_type__seniority
 msgid "Seniority"
-msgstr "Seniority"
+msgstr "资历 "
 
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__sequence
@@ -421,12 +434,12 @@ msgstr "单号规则"
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_view__reveal_state
 msgid "State"
-msgstr "状态"
+msgstr "省/ 州"
 
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__state_ids
 msgid "States"
-msgstr "状态"
+msgstr "省/ 州"
 
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__suffix
@@ -524,4 +537,4 @@ msgstr "雇员"
 #. module: crm_iap_lead_website
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead_website.crm_reveal_rule_form
 msgid "to"
-msgstr "到"
+msgstr "按"

@@ -1,0 +1,101 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* account_lock
+# 
+# Translators:
+# Martin Trigaux, 2020
+# Morten Schou <ms@msteknik.dk>, 2020
+# Jesper Carstensen <jc@danodoo.dk>, 2020
+# Mads Søndergaard, 2020
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~13.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-09-01 07:28+0000\n"
+"PO-Revision-Date: 2020-09-07 08:10+0000\n"
+"Last-Translator: Mads Søndergaard, 2020\n"
+"Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: da\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: account_lock
+#: model:ir.model,name:account_lock.model_res_company
+msgid "Companies"
+msgstr "Virksomheder"
+
+#. module: account_lock
+#: model:ir.model.fields,field_description:account_lock.field_res_company__display_name
+msgid "Display Name"
+msgstr "Vis navn"
+
+#. module: account_lock
+#: model:ir.model.fields,field_description:account_lock.field_res_company__id
+msgid "ID"
+msgstr "ID"
+
+#. module: account_lock
+#: model:ir.model.fields,field_description:account_lock.field_res_company____last_update
+msgid "Last Modified on"
+msgstr "Sidst ændret den"
+
+#. module: account_lock
+#: code:addons/account_lock/models/res_company.py:0
+#, python-format
+msgid "The lock date for advisors is irreversible and can't be removed."
+msgstr "Låse datoen for rådgivere er uigenkaldelig, og kan ikke fjernes."
+
+#. module: account_lock
+#: code:addons/account_lock/models/res_company.py:0
+#, python-format
+msgid ""
+"The new lock date for advisors must be set after the previous lock date."
+msgstr ""
+"Den nye låse dato for rådgivere skal sættes til efter den forrige låse dato."
+
+#. module: account_lock
+#: code:addons/account_lock/models/res_company.py:0
+#, python-format
+msgid "The new tax lock date must be set after the previous lock date."
+msgstr "Den nye moms låse dato skal sættes til efter den forrige låse dato."
+
+#. module: account_lock
+#: code:addons/account_lock/models/res_company.py:0
+#, python-format
+msgid "The tax lock date is irreversible and can't be removed."
+msgstr "Moms låse datoen er uigenkaldelig og kan ikke fjernes."
+
+#. module: account_lock
+#: code:addons/account_lock/models/res_company.py:0
+#, python-format
+msgid ""
+"You cannot define stricter conditions on advisors than on users. Please make"
+" sure that the lock date on advisor is set before the lock date for users."
+msgstr ""
+"Du kan ikke definere strengere krav for rådgivere end for brugere. Tjek "
+"venligst at låse datoen for rådgivere er sat til før låse datoen for "
+"brugere."
+
+#. module: account_lock
+#: code:addons/account_lock/models/res_company.py:0
+#, python-format
+msgid ""
+"You cannot lock a period that is not finished yet. Please make sure that the"
+" lock date for advisors is not set after the last day of the previous month."
+msgstr ""
+"Du kan ikke låse en periode som ikke er defineret endnu. Tjek venligst at "
+"låse datoen for rådgivere ikke er sat til efter den sidste dag i forrige "
+"måned."
+
+#. module: account_lock
+#: code:addons/account_lock/models/res_company.py:0
+#, python-format
+msgid ""
+"You cannot lock a period that is not finished yet. Please make sure that the"
+" tax lock date is not set after the last day of the previous month."
+msgstr ""
+"Du kan ikke låse en periode der endnu ikke er afsluttet. Tjek venligst at "
+"moms låse datoen ikke er sat til efter den sidste dag i forrige måned."

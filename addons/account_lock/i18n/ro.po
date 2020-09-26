@@ -1,0 +1,106 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* account_lock
+# 
+# Translators:
+# Martin Trigaux, 2020
+# Fekete Mihai <mihai.fekete@forestandbiomass.ro>, 2020
+# Foldi Robert <foldirobert@nexterp.ro>, 2020
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~13.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-09-01 07:28+0000\n"
+"PO-Revision-Date: 2020-09-07 08:10+0000\n"
+"Last-Translator: Foldi Robert <foldirobert@nexterp.ro>, 2020\n"
+"Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ro\n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
+
+#. module: account_lock
+#: model:ir.model,name:account_lock.model_res_company
+msgid "Companies"
+msgstr "Companii"
+
+#. module: account_lock
+#: model:ir.model.fields,field_description:account_lock.field_res_company__display_name
+msgid "Display Name"
+msgstr "Nume afișat"
+
+#. module: account_lock
+#: model:ir.model.fields,field_description:account_lock.field_res_company__id
+msgid "ID"
+msgstr "ID"
+
+#. module: account_lock
+#: model:ir.model.fields,field_description:account_lock.field_res_company____last_update
+msgid "Last Modified on"
+msgstr "Ultima modificare la"
+
+#. module: account_lock
+#: code:addons/account_lock/models/res_company.py:0
+#, python-format
+msgid "The lock date for advisors is irreversible and can't be removed."
+msgstr ""
+"Data de blocare a auditorilor este ireversibilă și nu poate fi eliminată."
+
+#. module: account_lock
+#: code:addons/account_lock/models/res_company.py:0
+#, python-format
+msgid ""
+"The new lock date for advisors must be set after the previous lock date."
+msgstr ""
+"Noua dată de blocare a auditorilor trebuie să fie stabilită după data "
+"anterioară de blocare."
+
+#. module: account_lock
+#: code:addons/account_lock/models/res_company.py:0
+#, python-format
+msgid "The new tax lock date must be set after the previous lock date."
+msgstr ""
+"Noua dată de blocare a impozitului trebuie stabilită după data anterioară de"
+" blocare"
+
+#. module: account_lock
+#: code:addons/account_lock/models/res_company.py:0
+#, python-format
+msgid "The tax lock date is irreversible and can't be removed."
+msgstr ""
+"Data de blocare a impozitului este ireversibilă și nu poate fi eliminată"
+
+#. module: account_lock
+#: code:addons/account_lock/models/res_company.py:0
+#, python-format
+msgid ""
+"You cannot define stricter conditions on advisors than on users. Please make"
+" sure that the lock date on advisor is set before the lock date for users."
+msgstr ""
+"Nu puteți defini condiții mai stricte pentru auditori decât pentru "
+"utilizatori. Vă rugăm să vă asigurați că data de blocare la auditor este "
+"setată înainte de data de blocare pentru utilizatori."
+
+#. module: account_lock
+#: code:addons/account_lock/models/res_company.py:0
+#, python-format
+msgid ""
+"You cannot lock a period that is not finished yet. Please make sure that the"
+" lock date for advisors is not set after the last day of the previous month."
+msgstr ""
+"Nu puteți bloca o perioadă care nu este încă terminată. Vă rugăm să vă "
+"asigurați că data de blocare a auditorilor nu este stabilită după ultima zi "
+"a lunii precedente."
+
+#. module: account_lock
+#: code:addons/account_lock/models/res_company.py:0
+#, python-format
+msgid ""
+"You cannot lock a period that is not finished yet. Please make sure that the"
+" tax lock date is not set after the last day of the previous month."
+msgstr ""
+"Nu puteți bloca o perioadă care nu este încă terminată. Vă rugăm să vă "
+"asigurați că data de blocare a taxelor nu este stabilită după ultima zi a "
+"lunii precedente."

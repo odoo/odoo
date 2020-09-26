@@ -3,17 +3,18 @@
 # 	* sale_expense
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Levent Karakaş <levent@mektup.at>, 2019
-# Murat Kaplan <muratk@projetgrup.com>, 2019
+# Martin Trigaux, 2020
+# Levent Karakaş <levent@mektup.at>, 2020
+# Murat Kaplan <muratk@projetgrup.com>, 2020
+# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:17+0000\n"
-"PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Murat Kaplan <muratk@projetgrup.com>, 2019\n"
+"POT-Creation-Date: 2020-09-01 07:29+0000\n"
+"PO-Revision-Date: 2020-09-07 08:18+0000\n"
+"Last-Translator: Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2020\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,34 +25,50 @@ msgstr ""
 #. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_sale_order__expense_count
 msgid "# of Expenses"
-msgstr ""
+msgstr "# Masraf Sayısı"
 
 #. module: sale_expense
-#: model_terms:digest.tip,tip_description:sale_expense.digest_tip_sale_expense_0
-msgid "<strong style=\"font-size: 16px;\">Submit expenses by email</strong>"
-msgstr ""
-
-#. module: sale_expense
-#: model_terms:digest.tip,tip_description:sale_expense.digest_tip_sale_expense_0
-msgid "Activate Expense Emails"
-msgstr ""
+#: model:ir.model.fields,field_description:sale_expense.field_hr_expense__analytic_account_id
+msgid "Analytic Account"
+msgstr "Analitik Hesap"
 
 #. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_hr_expense__can_be_reinvoiced
 msgid "Can be reinvoiced"
+msgstr "Yeniden faturalandırılabilir"
+
+#. module: sale_expense
+#: model:ir.model.fields,field_description:sale_expense.field_hr_expense__sale_order_id
+msgid "Customer to Reinvoice"
 msgstr ""
+
+#. module: sale_expense
+#: model:ir.model.fields,field_description:sale_expense.field_account_move_line__display_name
+#: model:ir.model.fields,field_description:sale_expense.field_hr_expense__display_name
+#: model:ir.model.fields,field_description:sale_expense.field_product_template__display_name
+#: model:ir.model.fields,field_description:sale_expense.field_sale_order__display_name
+msgid "Display Name"
+msgstr "Görünüm Adı"
 
 #. module: sale_expense
 #: model:ir.model,name:sale_expense.model_hr_expense
 msgid "Expense"
-msgstr "Masraf"
+msgstr "Gider"
 
 #. module: sale_expense
 #: model:ir.actions.act_window,name:sale_expense.hr_expense_action_from_sale_order
 #: model:ir.model.fields,field_description:sale_expense.field_sale_order__expense_ids
 #: model_terms:ir.ui.view,arch_db:sale_expense.sale_order_form_view_inherit
 msgid "Expenses"
-msgstr "Masraflar"
+msgstr "Giderler"
+
+#. module: sale_expense
+#: model:ir.model.fields,field_description:sale_expense.field_account_move_line__id
+#: model:ir.model.fields,field_description:sale_expense.field_hr_expense__id
+#: model:ir.model.fields,field_description:sale_expense.field_product_template__id
+#: model:ir.model.fields,field_description:sale_expense.field_sale_order__id
+msgid "ID"
+msgstr "ID"
 
 #. module: sale_expense
 #: model:ir.model.fields,help:sale_expense.field_hr_expense__sale_order_id
@@ -59,6 +76,8 @@ msgid ""
 "If the product has an expense policy, it will be reinvoiced on this sales "
 "order"
 msgstr ""
+"Ürünün bir masraf politikası varsa, bu müşteri siparişinde yeniden "
+"faturalandırılacaktır"
 
 #. module: sale_expense
 #: model_terms:ir.ui.view,arch_db:sale_expense.product_product_view_form_inherit_sale_expense
@@ -68,7 +87,15 @@ msgstr "Faturalama"
 #. module: sale_expense
 #: model:ir.model,name:sale_expense.model_account_move_line
 msgid "Journal Item"
-msgstr "Yevmiye Kalemleri"
+msgstr "Yevmiye Kalemi"
+
+#. module: sale_expense
+#: model:ir.model.fields,field_description:sale_expense.field_account_move_line____last_update
+#: model:ir.model.fields,field_description:sale_expense.field_hr_expense____last_update
+#: model:ir.model.fields,field_description:sale_expense.field_product_template____last_update
+#: model:ir.model.fields,field_description:sale_expense.field_sale_order____last_update
+msgid "Last Modified on"
+msgstr "Son Düzenleme"
 
 #. module: sale_expense
 #: model:ir.model,name:sale_expense.model_product_template
@@ -76,17 +103,6 @@ msgid "Product Template"
 msgstr "Ürün Şablonu"
 
 #. module: sale_expense
-#: model:ir.model.fields,field_description:sale_expense.field_hr_expense__sale_order_id
-msgid "Reinvoice Customer"
-msgstr ""
-
-#. module: sale_expense
 #: model:ir.model,name:sale_expense.model_sale_order
 msgid "Sales Order"
 msgstr "Satış Siparişi"
-
-#. module: sale_expense
-#: model_terms:digest.tip,tip_description:sale_expense.digest_tip_sale_expense_0
-msgid ""
-"Take a snapshot of your expenses and submit your expenses by email.<br>"
-msgstr ""

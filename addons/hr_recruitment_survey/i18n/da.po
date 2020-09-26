@@ -3,20 +3,22 @@
 # 	* hr_recruitment_survey
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Hans Henrik Gabelgaard <hhg@gabelgaard.org>, 2019
-# jonas jensen <j.jensen@tcomp.dk>, 2019
-# Pernille Kristensen <pernillekristensen1994@gmail.com>, 2019
-# Sanne Kristensen <sanne@vkdata.dk>, 2019
-# lhmflexerp <lhm@flexerp.dk>, 2019
+# Martin Trigaux, 2020
+# Hans Henrik Gabelgaard <hhg@gabelgaard.org>, 2020
+# jonas jensen <j.jensen@tcomp.dk>, 2020
+# Morten Schou <ms@msteknik.dk>, 2020
+# Jesper Carstensen <jc@danodoo.dk>, 2020
+# Pernille Kristensen <pernillekristensen1994@gmail.com>, 2020
+# Sanne Kristensen <sanne@vkdata.dk>, 2020
+# lhmflexerp <lhm@flexerp.dk>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-23 13:49+0000\n"
-"PO-Revision-Date: 2019-08-26 09:10+0000\n"
-"Last-Translator: lhmflexerp <lhm@flexerp.dk>, 2019\n"
+"POT-Creation-Date: 2020-09-01 07:29+0000\n"
+"PO-Revision-Date: 2020-09-07 08:13+0000\n"
+"Last-Translator: lhmflexerp <lhm@flexerp.dk>, 2020\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,11 +29,9 @@ msgstr ""
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.hr_applicant_view_form_inherit
 msgid ""
-"<span class=\"o_stat_text\">Print</span>\n"
+"<span class=\"o_stat_text\">Consult</span>\n"
 "                        <span class=\"o_stat_text\">Interview</span>"
 msgstr ""
-"<span class=\"o_stat_text\">Print</span>\n"
-"                        <span class=\"o_stat_text\">interview</span>"
 
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.hr_applicant_view_form_inherit
@@ -53,19 +53,6 @@ msgid "Applicant"
 msgstr "Ansøger"
 
 #. module: hr_recruitment_survey
-#: model:ir.model.fields,field_description:hr_recruitment_survey.field_survey_survey__category
-msgid "Category"
-msgstr "Kategori"
-
-#. module: hr_recruitment_survey
-#: model:ir.model.fields,help:hr_recruitment_survey.field_survey_survey__category
-msgid ""
-"Category is used to know in which context the survey is used. Various apps "
-"may define their own categories when they use survey like jobs recruitment "
-"or employee appraisal surveys."
-msgstr ""
-
-#. module: hr_recruitment_survey
 #: model:ir.model.fields,help:hr_recruitment_survey.field_hr_applicant__survey_id
 #: model:ir.model.fields,help:hr_recruitment_survey.field_hr_job__survey_id
 msgid ""
@@ -76,16 +63,38 @@ msgstr ""
 " denne for alle ansøgere til stillingen"
 
 #. module: hr_recruitment_survey
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.view_hr_job_kanban_inherit
+msgid "Create Interview Form"
+msgstr ""
+
+#. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.hr_job_survey_inherit
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.view_hr_job_kanban_inherit
 msgid "Display Interview Form"
 msgstr "Vis interview skema"
 
 #. module: hr_recruitment_survey
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_applicant__display_name
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_job__display_name
+msgid "Display Name"
+msgstr "Vis navn"
+
+#. module: hr_recruitment_survey
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_applicant__id
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_job__id
+msgid "ID"
+msgstr "ID"
+
+#. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_job__survey_id
-#: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.view_hr_job_kanban_inherit
 msgid "Interview Form"
 msgstr "Samtaleskema"
+
+#. module: hr_recruitment_survey
+#: code:addons/hr_recruitment_survey/models/hr_job.py:0
+#, python-format
+msgid "Interview Form : %s"
+msgstr ""
 
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.res_config_settings_view_form
@@ -98,19 +107,15 @@ msgid "Job Position"
 msgstr "Stilling"
 
 #. module: hr_recruitment_survey
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_applicant____last_update
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_job____last_update
+msgid "Last Modified on"
+msgstr "Sidst ændret den"
+
+#. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.view_hr_job_kanban_inherit
-msgid "No Interview Form"
-msgstr "Intet interview skema"
-
-#. module: hr_recruitment_survey
-#: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.hr_applicant_view_form_inherit
-msgid "Print interview report"
-msgstr "Udskriv interview rapport"
-
-#. module: hr_recruitment_survey
-#: model:ir.model.fields.selection,name:hr_recruitment_survey.selection__survey_survey__category__hr_recruitment
-msgid "Recruitment"
-msgstr "Ansættelse"
+msgid "Preview Interview"
+msgstr ""
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_applicant__response_id
@@ -118,7 +123,13 @@ msgid "Response"
 msgstr "Besvarelse"
 
 #. module: hr_recruitment_survey
-#: model:ir.model,name:hr_recruitment_survey.model_survey_survey
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.hr_applicant_view_form_inherit
+msgid "See interview report"
+msgstr ""
+
+#. module: hr_recruitment_survey
+#: code:addons/hr_recruitment_survey/models/hr_job.py:0
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_applicant__survey_id
+#, python-format
 msgid "Survey"
 msgstr "Undersøgelse"
