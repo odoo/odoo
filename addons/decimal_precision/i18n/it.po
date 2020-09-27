@@ -6,8 +6,8 @@
 # Francesco Garganese <francesco.garganese@aeromnia.aero>, 2018
 # Martin Trigaux, 2018
 # Giacomo Grasso <giacomo.grasso.82@gmail.com>, 2018
-# Paolo Valier, 2018
 # Sergio Zanchetta <primes2h@gmail.com>, 2020
+# Paolo Valier, 2020
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-09-20 09:53+0000\n"
 "PO-Revision-Date: 2017-09-20 10:16+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2020\n"
+"Last-Translator: Paolo Valier, 2020\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -106,6 +106,22 @@ msgstr "Solo un valore può essere definito per ogni utilizzo dato!"
 #: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_name
 msgid "Usage"
 msgstr "Utilizzo"
+
+#. module: decimal_precision
+#: code:addons/decimal_precision/models/decimal_precision.py:23
+#, python-format
+msgid "Warning!"
+msgstr "Attenzione!"
+
+#. module: decimal_precision
+#: code:addons/decimal_precision/models/decimal_precision.py:25
+#, python-format
+msgid ""
+"You are setting a Decimal Accuracy less precise than the UOM:\n"
+" %s \n"
+"This may cause inconsistencies in reservations.\n"
+"Please increase the rounding of this unit of measure and the global decimal precision."
+msgstr ""
 
 #. module: decimal_precision
 #: model:ir.model,name:decimal_precision.model_decimal_precision

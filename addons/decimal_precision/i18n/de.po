@@ -3,21 +3,22 @@
 # * decimal_precision
 # 
 # Translators:
-# Tina Rittmüller <tr@ife.de>, 2017
 # Henry Mineehen <info@mineehen.de>, 2017
-# Niki Waibel <niki.waibel@gmail.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# Niki Waibel, 2017
 # Thomas Neu <t.neu@runbox.com>, 2017
-# darenkster <inactive+darenkster@transifex.com>, 2017
-# Wolfgang Taferner <wolfgang.transifex@service.wt-io-it.at>, 2017
+# Tina Rittmüller <tr@ife.de>, 2017
+# Wolfgang Taferner, 2017
 # Anja Funk <anja.funk@afimage.de>, 2017
+# f91684c3ff9ec3e650d5c8461e534581_686eae3 <449b96d9f63071f94d89e129677b83de_366193>, 2017
+# Martin Trigaux, 2020
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: Anja Funk <anja.funk@afimage.de>, 2017\n"
+"PO-Revision-Date: 2017-09-20 10:16+0000\n"
+"Last-Translator: Martin Trigaux, 2020\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -108,6 +109,22 @@ msgstr "Es kann nur ein Wert für alle Anwendungsfälle hinterlegt werden"
 #: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_name
 msgid "Usage"
 msgstr "Verwendung"
+
+#. module: decimal_precision
+#: code:addons/decimal_precision/models/decimal_precision.py:23
+#, python-format
+msgid "Warning!"
+msgstr "Warnung!"
+
+#. module: decimal_precision
+#: code:addons/decimal_precision/models/decimal_precision.py:25
+#, python-format
+msgid ""
+"You are setting a Decimal Accuracy less precise than the UOM:\n"
+" %s \n"
+"This may cause inconsistencies in reservations.\n"
+"Please increase the rounding of this unit of measure and the global decimal precision."
+msgstr ""
 
 #. module: decimal_precision
 #: model:ir.model,name:decimal_precision.model_decimal_precision

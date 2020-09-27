@@ -3,18 +3,19 @@
 # * decimal_precision
 # 
 # Translators:
+# Collex100, 2017
 # Максим Дронь <dronmax@gmail.com>, 2017
-# Эдуард Манятовский <manyatovskiy@gmail.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
-# SV <sv@grimmette.ru>, 2017
+# Sergey Vilizhanin, 2017
 # Max Belyanin <maxbelyanin@gmail.com>, 2017
+# Martin Trigaux, 2020
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: Max Belyanin <maxbelyanin@gmail.com>, 2017\n"
+"PO-Revision-Date: 2017-09-20 10:16+0000\n"
+"Last-Translator: Martin Trigaux, 2020\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -105,6 +106,22 @@ msgstr "Только одно значение может быть опреде�
 #: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_name
 msgid "Usage"
 msgstr "Использование"
+
+#. module: decimal_precision
+#: code:addons/decimal_precision/models/decimal_precision.py:23
+#, python-format
+msgid "Warning!"
+msgstr "Предупреждение!"
+
+#. module: decimal_precision
+#: code:addons/decimal_precision/models/decimal_precision.py:25
+#, python-format
+msgid ""
+"You are setting a Decimal Accuracy less precise than the UOM:\n"
+" %s \n"
+"This may cause inconsistencies in reservations.\n"
+"Please increase the rounding of this unit of measure and the global decimal precision."
+msgstr ""
 
 #. module: decimal_precision
 #: model:ir.model,name:decimal_precision.model_decimal_precision
