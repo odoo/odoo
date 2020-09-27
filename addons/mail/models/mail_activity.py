@@ -99,6 +99,7 @@ class MailActivity(models.Model):
     _description = 'Activity'
     _order = 'date_deadline ASC'
     _rec_name = 'summary'
+    _mail_post_access = 'read'
 
     @api.model
     def default_get(self, fields):
