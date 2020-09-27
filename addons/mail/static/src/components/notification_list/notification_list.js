@@ -187,7 +187,7 @@ class NotificationList extends Component {
         } else if (props.filter === 'chat') {
             return this.env.models['mail.thread']
                 .all(thread =>
-                    thread.channel_type === 'chat' &&
+                    thread.isChatChannel &&
                     thread.isPinned &&
                     thread.model === 'mail.channel'
                 )

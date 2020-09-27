@@ -276,14 +276,9 @@ class StockMove(models.Model):
 
     @api.depends('product_id', 'product_uom', 'product_uom_qty')
     def _compute_product_qty(self):
-        # DLE FIXME: `stock/tests/test_move2.py`
-        # `product_qty` is a STORED compute field which depends on the context :/
-        # I asked SLE to change this, task: 2041971
-        # In the mean time I cheat and force the rouding to half-up, it seems it works for all tests.
-        rounding_method = 'HALF-UP'
         for move in self:
             move.product_qty = move.product_uom._compute_quantity(
-                move.product_uom_qty, move.product_id.uom_id, rounding_method=rounding_method)
+                move.product_uom_qty, move.product_id.uom_id, rounding_method='HALF-UP')
 
     def _get_move_lines(self):
         """ This will return the move lines to consider when applying _quantity_done_compute on a stock.move.
@@ -1563,7 +1558,7 @@ class StockMove(models.Model):
         # TDE CLEANME: remove context key + add as parameter
         if self.env.context.get('source_location_id'):
             defaults['location_id'] = self.env.context['source_location_id']
-        new_move = self.with_context(rounding_method='HALF-UP').copy(defaults)
+        new_move = self.copy(defaults)
 
         # FIXME: pim fix your crap
         # Update the original `product_qty` of the move. Use the general product's decimal
@@ -1571,7 +1566,7 @@ class StockMove(models.Model):
         # compatible with the move's UOM.
         new_product_qty = self.product_id.uom_id._compute_quantity(self.product_qty - qty, self.product_uom, round=False)
         new_product_qty = float_round(new_product_qty, precision_digits=self.env['decimal.precision'].precision_get('Product Unit of Measure'))
-        self.with_context(do_not_unreserve=True, rounding_method='HALF-UP').write({'product_uom_qty': new_product_qty})
+        self.with_context(do_not_unreserve=True).write({'product_uom_qty': new_product_qty})
         new_move = new_move._action_confirm(merge=False)
         return new_move.id
 

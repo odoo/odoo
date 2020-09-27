@@ -148,6 +148,13 @@ var dom = {
         return $(el).closestScrollable()[0];
     },
     /**
+     * @param {HTMLElement} el
+     * @see $.compensateScrollbar
+     */
+    compensateScrollbar(el, ...rest) {
+        $(el).compensateScrollbar(...rest);
+    },
+    /**
      * jQuery find function behavior is::
      *
      *      $('A').find('A B') <=> $('A A B')
@@ -511,7 +518,13 @@ var dom = {
         const isTopScroll = $scrollable.is($topLevelScrollable);
 
         function _computeScrollTop() {
-            const elPosition = $scrollable[0].scrollTop + ($el.offset().top - $scrollable.offset().top);
+            let offsetTop = $el.offset().top;
+            if (el.classList.contains('d-none')) {
+                el.classList.remove('d-none');
+                offsetTop = $el.offset().top;
+                el.classList.add('d-none');
+            }
+            const elPosition = $scrollable[0].scrollTop + (offsetTop - $scrollable.offset().top);
             let offset = options.forcedOffset;
             if (offset === undefined) {
                 offset = (isTopScroll ? dom.scrollFixedOffset() : 0) + (options.extraOffset || 0);

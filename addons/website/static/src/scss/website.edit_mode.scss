@@ -159,8 +159,8 @@ body.editor_enable.editor_has_snippets {
 
     .s_popup .modal {
         // s_popup in edit mode
-        top: var(--o-we-toolbar-height);
         background-color: transparent;
+
         &.fade .modal-dialog {
             transform: none;
         }
@@ -185,11 +185,16 @@ body.editor_enable.editor_has_snippets {
             }
         }
     }
-    @if o-website-value('hamburger-type') == 'off-canvas' {
-        #top_menu_collapse {
-            &.collapsing, &.show {
-                right: $o-we-sidebar-width;
-            }
+}
+
+//s_dynamic_snippet
+body.editor_enable {
+    .s_dynamic {
+        > * {
+            pointer-events: none;
+        }
+        [data-url] {
+            cursor: inherit;
         }
     }
 }

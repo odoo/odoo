@@ -59,16 +59,4 @@
         </field>
     </record>
 
-    <!-- To invoice batch action -->
-    <record id="project_task_server_action_batch_invoice" model="ir.actions.server">
-        <field name="name">Create invoice</field>
-        <field name="model_id" ref="project.model_project_task"/>
-        <field name="binding_model_id" ref="project.model_project_task"/>
-        <field name="state">code</field>
-        <field name="code">
-            if records:
-                action = records.action_create_invoice()
-        </field>
-    </record>
-
 </odoo>

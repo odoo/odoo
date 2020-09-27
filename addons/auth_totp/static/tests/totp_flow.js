@@ -42,7 +42,7 @@ tour.register('totp_tour_setup', {
     trigger: 'button[name=totp_enable_wizard]',
 }, {
     content: "Check that we have to enter enhanced security mode",
-    trigger: '.card-title:contains("confirm your password")',
+    trigger: 'div:contains("confirm your password")',
     run: () => {},
 }, {
     content: "Input password",
@@ -126,7 +126,7 @@ tour.register('totp_login_enabled', {
     trigger: 'button[name=totp_disable]',
 }, {
     content: "Check that we have to enter enhanced security mode",
-    trigger: '.card-title:contains("confirm your password")',
+    trigger: 'div:contains("confirm your password")',
     run: () => {},
 }, {
     content: "Input password",
@@ -225,7 +225,7 @@ tour.register('totp_admin_disables', {
     trigger: 'a.dropdown-item:contains(Disable TOTP on users)'
 }, { // enhanced security yo
     content: "Check that we have to enter enhanced security mode",
-trigger: '.card-title:contains("confirm your password")',
+trigger: 'div:contains("confirm your password")',
     run: () => {},
 }, {
     content: "Input password",

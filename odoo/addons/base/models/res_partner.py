@@ -268,15 +268,21 @@ class Partner(models.Model):
         for partner in self - super_partner:
             partner.partner_share = not partner.user_ids or not any(not user.share for user in partner.user_ids)
 
-    @api.depends('vat')
+    @api.depends('vat', 'company_id')
     def _compute_same_vat_partner_id(self):
         for partner in self:
             # use _origin to deal with onchange()
             partner_id = partner._origin.id
-            domain = [('vat', '=', partner.vat)]
+            #active_test = False because if a partner has been deactivated you still want to raise the error,
+            #so that you can reactivate it instead of creating a new one, which would loose its history.
+            Partner = self.with_context(active_test=False).sudo()
+            domain = [
+                ('vat', '=', partner.vat),
+                ('company_id', 'in', [False, partner.company_id.id]),
+            ]
             if partner_id:
                 domain += [('id', '!=', partner_id), '!', ('id', 'child_of', partner_id)]
-            partner.same_vat_partner_id = bool(partner.vat) and not partner.parent_id and self.env['res.partner'].search(domain, limit=1)
+            partner.same_vat_partner_id = bool(partner.vat) and not partner.parent_id and Partner.search(domain, limit=1)
 
     @api.depends(lambda self: self._display_address_depends())
     def _compute_contact_address(self):

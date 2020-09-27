@@ -72,6 +72,7 @@ var SnippetEditor = Widget.extend({
 
         this.isTargetParentEditable = this.$target.parent().is(':o_editable');
         this.isTargetMovable = this.isTargetParentEditable && this.isTargetMovable;
+        this.isTargetRemovable = this.isTargetParentEditable && !this.$target.parent().is('[data-oe-type="image"]');
 
         // Initialize move/clone/remove buttons
         if (this.isTargetMovable) {
@@ -106,7 +107,7 @@ var SnippetEditor = Widget.extend({
             $customize.find('.oe_snippet_clone').addClass('d-none');
         }
 
-        if (!this.isTargetParentEditable) {
+        if (!this.isTargetRemovable) {
             this.$el.add($customize).find('.oe_snippet_remove').addClass('d-none');
         }
 
@@ -1784,6 +1785,9 @@ var SnippetsMenu = Widget.extend({
      */
     _getScrollOptions(options = {}) {
         return Object.assign({}, options, {
+            scrollBoundaries: Object.assign({
+                right: false,
+            }, options.scrollBoundaries),
             jQueryDraggableOptions: Object.assign({
                 appendTo: this.$body,
                 cursor: 'move',
@@ -1821,7 +1825,6 @@ var SnippetsMenu = Widget.extend({
     _makeSnippetDraggable: function ($snippets) {
         var self = this;
         var $toInsert, dropped, $snippet;
-        let scrollValue;
 
         let dragAndDropResolve;
 
@@ -1876,7 +1879,6 @@ var SnippetsMenu = Widget.extend({
                         over: function () {
                             if (!dropped) {
                                 dropped = true;
-                                scrollValue = $(this).first().offset().top;
                                 $(this).first().after($toInsert).addClass('d-none');
                                 $toInsert.removeClass('oe_snippet_body');
                             }
@@ -1901,7 +1903,6 @@ var SnippetsMenu = Widget.extend({
                     if (!dropped && ui.position.top > 3 && ui.position.left + ui.helper.outerHeight() < self.el.getBoundingClientRect().left) {
                         var $el = $.nearest({x: ui.position.left, y: ui.position.top}, '.oe_drop_zone', {container: document.body}).first();
                         if ($el.length) {
-                            scrollValue = $el.offset().top;
                             $el.after($toInsert);
                             dropped = true;
                         }
@@ -1929,7 +1930,7 @@ var SnippetsMenu = Widget.extend({
                         }
 
                         var $target = $toInsert;
-                        await self._scrollToSnippet($target, scrollValue);
+                        await self._scrollToSnippet($target);
 
                         _.defer(async function () {
                             self.trigger_up('snippet_dropped', {$target: $target});

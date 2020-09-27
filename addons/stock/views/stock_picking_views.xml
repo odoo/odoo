@@ -90,23 +90,6 @@
             </field>
         </record>
 
-        <record model="ir.ui.view" id="view_picking_type_list">
-            <field name="name">stock.picking.type.list</field>
-            <field name="model">stock.picking.type</field>
-            <field name="arch" type="xml">
-                <tree string="Operation Types">
-                    <field name="name"/>
-                    <field name="sequence_id"/>
-                    <field name="warehouse_id"/>
-                    <field name="code"/>
-                    <field name="return_picking_type_id"/>
-                    <field name="company_id" groups="base.group_multi_company"/>
-                    <field name="default_location_src_id" attrs="{'required': [('code', '=', 'internal')]}"/>
-                    <field name="default_location_dest_id" attrs="{'required': [('code', 'in', ('internal', 'incoming'))]}"/>
-                </tree>
-            </field>
-        </record>
-
         <record id="action_picking_type_list" model="ir.actions.act_window">
             <field name="name">Operations Types</field>
             <field name="res_model">stock.picking.type</field>
