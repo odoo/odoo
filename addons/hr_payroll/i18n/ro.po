@@ -7,8 +7,8 @@
 # nle_odoo, 2018
 # Dorin Hongu <dhongu@gmail.com>, 2019
 # Martin Trigaux, 2019
-# Foldi Robert <foldirobert@nexterp.ro>, 2020
 # Hongu Cosmin <cosmin513@gmail.com>, 2020
+# Foldi Robert <foldirobert@nexterp.ro>, 2020
 # 
 msgid ""
 msgstr ""
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-14 07:33+0000\n"
 "PO-Revision-Date: 2018-08-24 09:19+0000\n"
-"Last-Translator: Hongu Cosmin <cosmin513@gmail.com>, 2020\n"
+"Last-Translator: Foldi Robert <foldirobert@nexterp.ro>, 2020\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -41,6 +41,13 @@ msgid ""
 "                \n"
 "* When user cancel payslip the status is 'Rejected'."
 msgstr ""
+"* Când se creează fișa de plată, starea este 'Draft'\n"
+"                \n"
+"* Dacă fișa de plată este în curs de verificare, starea este 'Waiting'.\n"
+"                \n"
+"* Dacă fișa de plată este confirmată, atunci starea este setată la  'Done'.\n"
+"                \n"
+"* Când utilizatorul anulează fișa de plată, starea este 'Rejected'."
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.res_config_settings_view_form
@@ -54,6 +61,9 @@ msgid ""
 " selected employee(s) based on the dates and credit note specified on "
 "Payslips Run.</span>"
 msgstr ""
+"<span colspan=\"4\" nolabel=\"1\">Acest vrăjitor va genera fișe de plată "
+"pentru toți angajați (i) selectați pe baza datelor și a notei de credit "
+"specificate în Foaia de plată.</span>"
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslip

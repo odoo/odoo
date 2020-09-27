@@ -78,7 +78,7 @@ msgstr "Fattura ${object.company_id.name} (Rif. ${object.number or 'n/d'})"
 msgid ""
 "${object.company_id.name} Payment Receipt (Ref ${object.name or 'n/a' })"
 msgstr ""
-"Ricevuta di pagamento ${object.company_id.name} (Rif. ${object.name or 'n/d'"
+"Ricevuta di pagamento ${object.company_id.name} (rif. ${object.name or 'n/d'"
 " })"
 
 #. module: account
@@ -779,7 +779,7 @@ msgstr ""
 #: code:addons/account/models/account_invoice.py:1895
 #, python-format
 msgid "A Payment Term should have only one line of type Balance."
-msgstr "Un termine di pagamento dovrebbe avere una sola riga di tipo saldo."
+msgstr "Un termine di pagamento deve avere una sola riga di tipo saldo."
 
 #. module: account
 #: code:addons/account/models/account.py:854
@@ -1143,7 +1143,7 @@ msgstr "Tipi conto"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__type_control_ids
 msgid "Account Types Allowed"
-msgstr "Tipi conto ammessi"
+msgstr "Tipi di conto autorizzati"
 
 #. module: account
 #: model:ir.model,name:account.model_account_unreconcile
@@ -1263,7 +1263,7 @@ msgstr "Opzioni applicazione contabilità"
 #: model:ir.model.fields,field_description:account.field_account_invoice__date
 #: model:ir.model.fields,field_description:account.field_account_invoice_refund__date
 msgid "Accounting Date"
-msgstr "Data registrazione"
+msgstr "Data contabile"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
@@ -1296,7 +1296,7 @@ msgstr "Conti"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__account_control_ids
 msgid "Accounts Allowed"
-msgstr "Conti consentiti"
+msgstr "Conti autorizzati"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_template_form
@@ -1468,17 +1468,17 @@ msgstr "Note aggiuntive..."
 #: selection:account.tax,type_tax_use:0
 #: selection:account.tax.template,type_tax_use:0
 msgid "Adjustment"
-msgstr "Compensazione"
+msgstr "Rettifica"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard__tax_id
 msgid "Adjustment Tax"
-msgstr "Imposta di compensazione"
+msgstr "Imposta di rettifica"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard__adjustment_type
 msgid "Adjustment Type"
-msgstr "Tipo di compensazione"
+msgstr "Tipo di rettifica"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_template_form
@@ -2028,7 +2028,7 @@ msgstr "Modelli di conto associati"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__at_least_one_inbound
 msgid "At Least One Inbound"
-msgstr "Almeno uno in ingresso"
+msgstr "Almeno uno in entrata"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__at_least_one_outbound
@@ -3165,7 +3165,7 @@ msgstr "Azienda"
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__company_currency_id
 #: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard__company_currency_id
 msgid "Company Currency"
-msgstr "Valuta azienda"
+msgstr "Valuta aziendale"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__has_chart_of_accounts
@@ -4130,7 +4130,7 @@ msgstr "Indica le date di apertura e chiusura degli anni fiscali."
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__bank_statements_source
 msgid "Defines how the bank statements will be registered"
-msgstr "Definisce come verrà registrato l'estratto conto bancario"
+msgstr "Indica come viene registrato l'estratto conto bancario"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice__cash_rounding_id
@@ -4365,7 +4365,7 @@ msgstr "Visualizza sulle fatture"
 #, python-format
 msgid "Do not have access, skip this data for user's digest email"
 msgstr ""
-"Accesso non consentito, non utilizzare questi dati nell'e-mail di riepilogo "
+"Accesso non consentito, saltare questi dati nell'e-mail di riepilogo "
 "dell'utente"
 
 #. module: account
@@ -9794,7 +9794,7 @@ msgstr "Conto imposta su rimborsi"
 #: model:ir.actions.act_window,name:account.tax_adjustments_form
 #: model:ir.ui.menu,name:account.menu_action_tax_adjustment
 msgid "Tax Adjustments"
-msgstr "Compensazioni fiscali"
+msgstr "Rettifiche imposta"
 
 #. module: account
 #: model:ir.model,name:account.model_tax_adjustments_wizard
@@ -11379,7 +11379,7 @@ msgstr "Importo totale da pagare a questo fornitore."
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice__amount_total_company_signed
 msgid "Total in Company Currency"
-msgstr "Totale nella valuta dell'azienda"
+msgstr "Totale in valuta aziendale"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice__amount_total_signed
