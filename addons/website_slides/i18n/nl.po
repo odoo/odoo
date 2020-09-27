@@ -14,6 +14,7 @@
 # Martin Trigaux, 2020
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2020
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2020
+# Odoo Experts Consultants <consultants@odooexperts.nl>, 2020
 # 
 msgid ""
 msgstr ""
@@ -21,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-08-21 13:09+0000\n"
 "PO-Revision-Date: 2016-08-05 13:14+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2020\n"
+"Last-Translator: Odoo Experts Consultants <consultants@odooexperts.nl>, 2020\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -71,7 +72,7 @@ msgstr "(leeg)"
 #: code:addons/website_slides/models/slide_channel.py:0
 #, python-format
 msgid "<b>%s</b> is requesting access to this course."
-msgstr ""
+msgstr "<b>%s</b>vraagt toegang tot deze cursus."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list
@@ -133,6 +134,24 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                     <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"                         Hallo<br/><br/>\n"
+"                         ${user.name} deelt de ${object.slide_type} <strong>${object.name}</strong>met jou!\n"
+"                         <div style=\"margin: 16px 8px 16px 8px; text-align: center;\">\n"
+"                              <a href=\"${(object.website_url + '?fullscreen=1') if ctx['fullscreen'] else object.website_url | safe}\">\n"
+"                                   <img alt=\"${object.name}\" src=\"${ctx['base_url']}/web/image/slide.slide/${object.id}/image_1024\" style=\"height:auto; width:150px; margin: 16px;\"/>\n"
+"                               </a>\n"
+"                             </div>\n"
+"                              <div style=\"margin: 16px 8px 16px 8px; text-align: center;\">\n"
+"                                  <a href=\"${(object.website_url + '?fullscreen=1') if ctx['fullscreen'] else object.website_url | safe}\" style=\"background-color: #875a7b; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">Zie<strong>${object.name}</a>\n"
+"                               </div>\n"
+"                                % if user.signature\n"
+"                                    <br/>\n"
+"                                     ${user.signature | safe}\n"
+"                                 % endif\n"
+"                              </p>\n"
+"                           </div>"
 
 #. module: website_slides
 #: model:mail.template,body_html:website_slides.slide_template_published
@@ -161,6 +180,28 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                         <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"                             Hallo<br/><br/>\n"
+"                             Er is iets nieuws in de cursus<strong>${object.channel_id.name}</strong>die jij volgt<br/><br/>\n"
+"                            <center><strong>${object.name}</strong></center>\n"
+"                            % if object.image_1024\n"
+"                            <div style=\"margin: 16px 8px 16px 8px; text-align: center;\">\n"
+"                                <a href=\"${object.website_url}\">\n"
+"                                    <img alt=\"${object.name}\" src=\"${ctx['base_url']}/web/image/slide.slide/${object.id}/image_1024\" style=\"height:auto; width:150px; margin: 16px;\"/>\n"
+"                                  </a>\n"
+"                                </div>\n"
+"                                % endif\n"
+"                                <div style=\"margin: 16px 8px 16px 8px; text-align: center;\">\n"
+"                                   <a href=\"${object.website_url}\" style=\"background-color: #875a7b; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">Zie inhoud</a>\n"
+"                                 </div>\n"
+"                                  Veel plezier hiermee!\n"
+"                                  % if user.signature\n"
+"                                       <br/>\n"
+"                                        ${user.signature | safe}\n"
+"                                   % endif \n"
+"                                 </p>\n"
+"                              </div>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.user_profile_content
@@ -198,7 +239,7 @@ msgstr "<i class=\"fa fa-circle-o-notch fa-spin mr-2\"/><b>Laden...</b>"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.rating_rating_view_kanban_slide_channel
 msgid "<i class=\"fa fa-clock-o mr-2\" aria-label=\"Create date\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-clock-o mr-2\" aria-label=\"Create date\"/>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
@@ -321,7 +362,7 @@ msgstr "<i class=\"fa fa-flag-checkered text-warning mr-2\"/>Quiz"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.rating_rating_view_kanban_slide_channel
 msgid "<i class=\"fa fa-folder mr-2\" aria-label=\"Open folder\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-folder mr-2\" aria-label=\"Open folder\"/>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list
@@ -402,7 +443,7 @@ msgstr "<i class=\"fa fa-plus mr-1\"/><span>Inhoud toevoegen</span>"
 #: model_terms:ir.ui.view,arch_db:website_slides.course_main
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
 msgid "<i class=\"fa fa-plus mr-1\"/><span>Add Tag</span>"
-msgstr ""
+msgstr "<i class=\"fa fa-plus mr-1\"/><span>Voeg een tag toe</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.lesson_content_quiz_add_buttons
@@ -419,6 +460,8 @@ msgid ""
 "<i class=\"fa fa-plus mr-2\"/>\n"
 "            <span>Add Quiz</span>"
 msgstr ""
+"<i class=\"fa fa-plus mr-2\"/>\n"
+"            <span>Voeg een quiz toe</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
@@ -466,7 +509,7 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.rating_rating_view_kanban_slide_channel
 msgid "<i class=\"fa fa-star text-black-25\" aria-label=\"A star\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-star text-black-25\" aria-label=\"A star\"/>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.rating_rating_view_kanban_slide_channel
@@ -476,7 +519,7 @@ msgstr "<i class=\"fa fa-star\" aria-label=\"Een ster\" role=\"img\"/>"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.rating_rating_view_kanban_slide_channel
 msgid "<i class=\"fa fa-star-half-o\" aria-label=\"Half a star\" role=\"img\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-star-half-o\" aria-label=\"Half a star\" role=\"img\"/>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_all
@@ -512,6 +555,9 @@ msgid ""
 "                                Request already sent\n"
 "                            </small>"
 msgstr ""
+"<small class=\"text-success\">\n"
+"                               Verzoek is al verzonden\n"
+"                            </small>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_main
@@ -720,7 +766,7 @@ msgstr "API-code"
 #: code:addons/website_slides/models/slide_channel.py:0
 #, python-format
 msgid "Access Granted"
-msgstr ""
+msgstr "Toegang verleend"
 
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_res_groups
@@ -731,17 +777,17 @@ msgstr "Toegangsgroepen"
 #: code:addons/website_slides/models/slide_channel.py:0
 #, python-format
 msgid "Access Refused"
-msgstr ""
+msgstr "Toegang geweigerd"
 
 #. module: website_slides
 #: model:mail.activity.type,name:website_slides.mail_activity_data_access_request
 msgid "Access Request"
-msgstr ""
+msgstr "Verzoek tot toegang"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__has_requested_access
 msgid "Access Requested"
-msgstr ""
+msgstr "Toegang gevraagd"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
@@ -870,18 +916,18 @@ msgstr ""
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__slide_resource_ids
 msgid "Additional Resource for this slide"
-msgstr ""
+msgstr "Extra bron voor deze slide."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 msgid "Additional Resources"
-msgstr ""
+msgstr "Extra bronnen"
 
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_slide_slide_resource
 msgid "Additional resource for a particular slide"
-msgstr ""
+msgstr "Extra bron voor een specifieke slide."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_all
@@ -948,7 +994,7 @@ msgstr "Sta opmerking toe"
 #: code:addons/website_slides/models/slide_channel.py:0
 #, python-format
 msgid "Already Requested"
-msgstr ""
+msgstr "Al aangevraagd"
 
 #. module: website_slides
 #. openerp-web
@@ -961,7 +1007,7 @@ msgstr "Reeds \"%s\" aan het installeren."
 #: code:addons/website_slides/models/slide_channel.py:0
 #, python-format
 msgid "Already member"
-msgstr ""
+msgstr "Reeds lid"
 
 #. module: website_slides
 #. openerp-web
@@ -1240,6 +1286,8 @@ msgid ""
 "Click here to send a verification email allowing you to participate to the "
 "eLearning."
 msgstr ""
+"Klik hier om een e-mailverificatie te sturen waarmee u kunt deelnemen aan de"
+" e-Learning."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_all
@@ -1270,7 +1318,7 @@ msgstr "Kleurindex"
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel_tag__color
 msgid "Color to apply to this tag (including in website)."
-msgstr ""
+msgstr "Kleur die op deze tag moet worden toegepast (ook op de website)."
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_answer__comment
@@ -1370,7 +1418,7 @@ msgstr "Contact"
 #: code:addons/website_slides/models/slide_channel.py:0
 #, python-format
 msgid "Contact Responsible"
-msgstr ""
+msgstr "Verantwoordelijk contactpersoon"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
@@ -1383,6 +1431,7 @@ msgstr "Neem via bulkmail contact op met alle leden van een cursus"
 #, python-format
 msgid "Contact the responsible to enroll."
 msgstr ""
+"Neem contact op met de verantwoordelijke persoon om je in te schrijven."
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__total_slides
@@ -1516,7 +1565,7 @@ msgstr "Opleiding voltooid"
 #: code:addons/website_slides/models/slide_channel.py:0
 #, python-format
 msgid "Course not published yet"
-msgstr ""
+msgstr "De cursus is nog niet gepubliceerd."
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__karma_gen_channel_rank
@@ -1717,7 +1766,7 @@ msgstr "Wilt u de \"%s\" applicatie installeren?"
 #: code:addons/website_slides/static/src/xml/slide_course_join.xml:0
 #, python-format
 msgid "Do you want to request access to this course ?"
-msgstr ""
+msgstr "Wil je toegang tot deze cursus aanvragen?"
 
 #. module: website_slides
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_slide__slide_type__document
@@ -1882,7 +1931,7 @@ msgstr "Geschatte doorlooptijd slide"
 #: code:addons/website_slides/controllers/main.py:0
 #, python-format
 msgid "Evaluate and certify your students."
-msgstr ""
+msgstr "Evalueer en certificeer je studenten."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
@@ -2052,7 +2101,7 @@ msgstr "Google Drive API sleutel"
 #: code:addons/website_slides/static/src/xml/activity.xml:0
 #, python-format
 msgid "Grant Access"
-msgstr ""
+msgstr "Toegang verlenen"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_graph
@@ -2309,6 +2358,7 @@ msgstr "Word lid van opleiding"
 #, python-format
 msgid "Join the course to take the quiz and verify your answers!"
 msgstr ""
+"Doe mee met de cursus om de quiz te maken en je antwoorden te controleren."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
@@ -2564,7 +2614,7 @@ msgstr "Minuten"
 #: code:addons/website_slides/controllers/main.py:0
 #, python-format
 msgid "Missing \"Tag Group\" for creating a new \"Tag\"."
-msgstr ""
+msgstr "Ontbrekende \"Tag-groep\" voor het maken van een nieuwe \"Tag\"."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_nav
@@ -3044,13 +3094,14 @@ msgstr "Vraag"
 #: code:addons/website_slides/models/slide_question.py:0
 #, python-format
 msgid "Question \"%s\" must have 1 correct answer"
-msgstr ""
+msgstr "Vraag \"%s\" moet 1 juist antwoord hebben."
 
 #. module: website_slides
 #: code:addons/website_slides/models/slide_question.py:0
 #, python-format
 msgid "Question \"%s\" must have 1 correct answer and at least 1 invalid answer"
 msgstr ""
+"Vraag \"%s\" moet 1 juist antwoord hebben en minstens 1 ongeldig antwoord."
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_question__question
@@ -3169,7 +3220,7 @@ msgstr "Ontvangers"
 #: code:addons/website_slides/static/src/xml/activity.xml:0
 #, python-format
 msgid "Refuse Access"
-msgstr ""
+msgstr "Weiger toegang"
 
 #. module: website_slides
 #: model:gamification.badge,description:website_slides.badge_data_register
@@ -3211,14 +3262,14 @@ msgstr "Rapportages"
 #: code:addons/website_slides/static/src/js/slides_course_enroll_email.js:0
 #, python-format
 msgid "Request Access."
-msgstr ""
+msgstr "Vraag toegang aan"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/js/slides_course_enroll_email.js:0
 #, python-format
 msgid "Request sent !"
-msgstr ""
+msgstr "Verzoek verzonden!"
 
 #. module: website_slides
 #. openerp-web
@@ -3253,7 +3304,7 @@ msgstr "Verantwoordelijke gebruiker"
 #: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
 #, python-format
 msgid "Responsible already contacted."
-msgstr ""
+msgstr "De verantwoordelijke heeft al contact opgenomen."
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__website_id
@@ -3550,7 +3601,7 @@ msgstr "Aanmelden"
 #: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
 #, python-format
 msgid "Sign in and join the course to verify your answers!"
-msgstr ""
+msgstr "Meld je aan en doe mee aan de cursus om je antwoorden te controleren!"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
@@ -3581,7 +3632,7 @@ msgstr "Slide / Partner decorated m2m"
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_slide_answer
 msgid "Slide Question's Answer"
-msgstr ""
+msgstr "Dia met antwoord van de vraag."
 
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_slide_tag
@@ -3738,14 +3789,14 @@ msgstr "Label"
 #: code:addons/website_slides/static/src/xml/website_slides_channel_tag.xml:0
 #, python-format
 msgid "Tag Group"
-msgstr ""
+msgstr "Tag een groep"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/js/slides_course_tag_add.js:0
 #, python-format
 msgid "Tag Group (required for new tags)"
-msgstr ""
+msgstr "Tag een groep (vereist voor nieuwe tags)."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_tag_group_view_form
@@ -3785,7 +3836,7 @@ msgstr ""
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__description_short
 msgid "The description that is displayed on the course card"
-msgstr ""
+msgstr "De beschrijving die op de cursuskaart wordt weergegeven."
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__description
@@ -3793,6 +3844,8 @@ msgid ""
 "The description that is displayed on top of the course page, just below the "
 "title"
 msgstr ""
+"De beschrijving die bovenaan de cursuspagina wordt weergegeven, net onder de"
+" titel."
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_slide__slide_type
@@ -3991,7 +4044,7 @@ msgstr "Onbekende fout"
 #: code:addons/website_slides/static/src/js/slides_course_enroll_email.js:0
 #, python-format
 msgid "Unknown error, try again."
-msgstr ""
+msgstr "Onbekende fout, probeer het opnieuw."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_card
@@ -4351,7 +4404,7 @@ msgstr "U bent uitgenodigd om deel te nemen aan ${object.channel_id.name}"
 #: code:addons/website_slides/models/slide_channel.py:0
 #, python-format
 msgid "You have to sign in before"
-msgstr ""
+msgstr "Je moet je eerst aanmelden."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_all
@@ -4385,6 +4438,8 @@ msgid ""
 "Your Google API key is invalid, please update it into your settings.\n"
 "Settings > Website > Features > API Key"
 msgstr ""
+"Je Google API-sleutel is ongeldig. Werk deze bij in je instellingen.\n"
+"Instellingen> Website> Functies> API-sleutel."
 
 #. module: website_slides
 #. openerp-web
@@ -4495,7 +4550,7 @@ msgstr "stappen"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_sidebar
 msgid "to contact responsible."
-msgstr ""
+msgstr "contact opnemen met de verantwoordelijke."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.join_course_link
