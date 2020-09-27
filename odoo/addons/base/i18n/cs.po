@@ -4280,10 +4280,10 @@ msgid ""
 "        "
 msgstr ""
 "\n"
-"Propojení potenciální zákazník k  tiketům\n"
+"Propojení potenciální zákazník k tiketům\n"
 "===============\n"
 "\n"
-"Propojení modulu mapování zájmu k tiketům"
+"Propojení modulu mapování potenciální zákazník k tiketům"
 
 #. module: base
 #: model:ir.module.module,description:base.module_board
@@ -7866,6 +7866,8 @@ msgstr " - %r v %s=%r"
 msgid ""
 " Adds a stat button on lead form view to access their livechat sessions."
 msgstr ""
+"Přidá tlačítko stat do zobrazení formuláře pro zájemce pro přístup k jejich "
+"relacím živý chat."
 
 #. module: base
 #: model:ir.module.module,description:base.module_inter_company_rules
@@ -12184,7 +12186,7 @@ msgstr "Vytvářejte zprávy pro pracovníky terénních služeb"
 #. module: base
 #: model:ir.module.module,summary:base.module_crm_helpdesk
 msgid "Create Tickets from Leads"
-msgstr "Vytvořit požadavek z potenciálního zákazníka"
+msgstr "Vytvořit požadavek z potenciální zákazník"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_menu_create
@@ -12277,14 +12279,14 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_crm_livechat
 msgid "Create lead from livechat conversation"
-msgstr "Vytvořit potenciálního zákazníka z konverzace živého chatu"
+msgstr "Vytvořit potenciální zákazník z konverzace živého chatu"
 
 #. module: base
 #: model:ir.module.module,description:base.module_crm_livechat
 msgid "Create new lead with using /lead command in the channel"
 msgstr ""
-"Vytvořit nového potenciálního zákazníka pomocí příkazu /potenciální zákazník"
-" v kanálu"
+"Vytvořit nový potenciální zákazník pomocí příkazu /potenciální zákazník v "
+"kanálu"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_survey
@@ -16820,7 +16822,7 @@ msgstr "Faktury a platby"
 #. module: base
 #: model:ir.module.module,summary:base.module_documents_account
 msgid "Invoices from Documents"
-msgstr "Faktury z Dokumentů"
+msgstr "Faktury z dokumentů"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account
@@ -17469,7 +17471,7 @@ msgstr "Potenciální zákazník obohacení"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_crm_iap_lead
 msgid "Lead Generation"
-msgstr "Vytváření potenciálního zákazníka"
+msgstr "Vytváření potenciální zákazník"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_crm_iap_lead_website
@@ -25877,6 +25879,14 @@ msgstr "Tento modul spustí odinstalování níže uvedených modulů."
 msgid ""
 "This operation is allowed for the groups:\n"
 "%(groups_list)s"
+msgstr ""
+
+#. module: base
+#: code:addons/base/ir/ir_sequence.py:56
+#, python-format
+msgid ""
+"This transaction wasn't executed because another transaction is already "
+"using the same no-gap sequence. Please try again later."
 msgstr ""
 
 #. module: base

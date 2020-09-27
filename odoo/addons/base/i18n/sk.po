@@ -4458,6 +4458,13 @@ msgid ""
 "(N+1, N+2, direct subordinates)\n"
 "        "
 msgstr ""
+"\n"
+"Organizačná štruktúra pre HR\n"
+"=======================\n"
+"\n"
+"Tento modul rozširuje formulár zamestnancov o organizačnú schému.\n"
+"(N+1, N+2, priami podriadení)\n"
+"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_event
@@ -4890,6 +4897,12 @@ msgid ""
 "This module introduces skills and resumé management for employees.\n"
 "        "
 msgstr ""
+"\n"
+"Zručnosti a životopis pre HR\n"
+"========================\n"
+"\n"
+"Tento modul predstavuje pre zamestnancov riadenie zručností a životopisu.\n"
+"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_es
@@ -5860,6 +5873,10 @@ msgid ""
 "On a simple click, your visitors can subscribe to mailing lists managed in the Email Marketing app.\n"
 "    "
 msgstr ""
+"\n"
+"Tento modul prináša nový stavebný blok s prepojením na mailový zoznam, ktorý je možné umiestniť na ľubovoľnú stránku vášho webu. \n"
+"Návštevníci sa môžu jednoduchým kliknutím prihlásiť na odber mailových zoznamov spravovaných v aplikácii email marketing.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale
@@ -6600,7 +6617,7 @@ msgstr "%S - Sekundy [00,61].\""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
 msgid "%Y - Year with century.\""
-msgstr "%Y - Rok so storočím\""
+msgstr "%R - Rok so storočím\""
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
@@ -6902,6 +6919,12 @@ msgid ""
 "                                <b attrs=\"{'invisible': [('type', '!=', 'private')]}\">Private Address</b>\n"
 "                                <b attrs=\"{'invisible': [('type', '!=', False)]}\">Address</b>"
 msgstr ""
+"<b attrs=\"{'invisible': [('type', '!=', 'contact')]}\">Adresa firmy</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', 'invoice')]}\">Fakturačná adresa</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', 'delivery')]}\">Adresa dodania</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', 'other')]}\">Iná adresa</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', 'private')]}\">Súkromná adresa</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', False)]}\">Adresa</b>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_short_form
@@ -6973,6 +6996,8 @@ msgid ""
 "<code>records</code>: recordset of all records on which the action is "
 "triggered in multi mode; may be void"
 msgstr ""
+"<code>záznamy</code>: sada záznamov všetkých záznamov, pri ktorých sa spustí"
+" akcia v režime viacerých režimov; môže byť neplatný"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_fields_form
@@ -8058,6 +8083,8 @@ msgstr "Pridá 'Tlač' ponuku"
 #: model:ir.module.module,summary:base.module_mass_mailing_crm
 msgid "Add lead / opportunities UTM info on mass mailing"
 msgstr ""
+"Pridajte informácie o potenciálnych zákazníkoch / príležitostiach UTM pri "
+"hromadnom zasielaní"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_im_livechat_mail_bot
@@ -8073,6 +8100,7 @@ msgstr ""
 #: model:ir.module.module,summary:base.module_mass_mailing_sale
 msgid "Add sale order UTM info on mass mailing"
 msgstr ""
+"Pridajte informácie o objednávke UTM na predaj pri hromadnom zasielaní"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_product_matrix
@@ -8215,12 +8243,12 @@ msgstr "Na odinštalovanie modulu je potrebný prístup administrátora"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_country_form
 msgid "Advanced Address Formatting"
-msgstr "Pokročilé Formátovanie Adresy"
+msgstr "Pokročilé formátovanie adresy"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_track
 msgid "Advanced Events"
-msgstr "Pokročilé Udalosti"
+msgstr "Pokročilé udalosti"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_track_gantt
@@ -8242,7 +8270,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_model_fields_form
 #: model_terms:ir.ui.view,arch_db:base.view_model_form
 msgid "Advanced Properties"
-msgstr "Pokročilé Vlastnosti"
+msgstr "Pokročilé vlastnosti"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_crm_enterprise
@@ -8829,7 +8857,7 @@ msgstr "Dochádzky"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_mass_mailing
 msgid "Attract visitors to subscribe to mailing lists"
-msgstr "Prilákajte návštevníkov, aby sa prihlásili na odber mailing listov"
+msgstr "Prilákajte návštevníkov, aby sa prihlásili na odber mailový zoznam"
 
 #. module: base
 #: model:res.country,name:base.au
@@ -9245,7 +9273,7 @@ msgstr "Základný pohľad"
 #: model:ir.cron,cron_name:base.autovacuum_job
 #: model:ir.cron,name:base.autovacuum_job
 msgid "Base: Auto-vacuum internal data"
-msgstr "Základňa: Automatcko-vákuové interné údaje"
+msgstr "Základňa: automatcko-vákuové interné údaje"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_web_grid
@@ -14251,6 +14279,8 @@ msgid ""
 "Helps you manage your mass mailing to design\n"
 "professional emails and reuse templates."
 msgstr ""
+"Pomáha vám spravovať hromadnú poštu podľa návrhu\n"
+"profesionálne e-maily a opätovné použitie šablón."
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_human_resources_payroll
@@ -14304,7 +14334,7 @@ msgstr "Tu je exportovaný prekladový súbor:"
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Hide badges"
-msgstr ""
+msgstr "Skryť odznaky"
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:0
@@ -15340,7 +15370,7 @@ msgstr "Neplatné kritérium hľadania"
 #: code:addons/template_inheritance.py:0
 #, python-format
 msgid "Invalid specification for moved nodes: '%s'"
-msgstr ""
+msgstr "Neplatná špecifikácia pre presunuté uzly: '%s'"
 
 #. module: base
 #: code:addons/base/models/ir_property.py:0
@@ -16854,12 +16884,12 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_mass_mailing
 msgid "Mass Mail Tests"
-msgstr ""
+msgstr "Testy hromadnej pošty"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_test_mass_mailing
 msgid "Mass Mail Tests: feature and performance tests for mass mailing"
-msgstr ""
+msgstr "Testy hromadnej pošty: testy funkcií a výkonu hromadnej pošty"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mass_mailing_themes
@@ -16869,27 +16899,28 @@ msgstr "Témy hromadných mailov"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mass_mailing_event
 msgid "Mass mailing on attendees"
-msgstr ""
+msgstr "Hromadné zasielanie pošty na účastníkov"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mass_mailing_slides
 msgid "Mass mailing on course members"
-msgstr ""
+msgstr "Hromadné zasielanie pošty členom kurzu"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mass_mailing_crm
 msgid "Mass mailing on lead / opportunities"
 msgstr ""
+"Hromadné zasielanie informácií o potenciálnych zákazníkoch / príležitostí"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mass_mailing_sale
 msgid "Mass mailing on sale orders"
-msgstr ""
+msgstr "Hromadné zasielanie objednávok na predaj"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mass_mailing_event_track
 msgid "Mass mailing on track speakers"
-msgstr ""
+msgstr "Hromadné zasielanie pošty na stopové reproduktory"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_mps
@@ -19332,7 +19363,7 @@ msgstr "Operácie"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_crm
 msgid "Opportunity to Quotation"
-msgstr "Obchodný prípad na cenovú ponuku"
+msgstr "Obchodná príležitosť na cenovú ponuku"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__base_partner_merge_automatic_wizard__state__option
@@ -22406,7 +22437,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_skills
 msgid "Skills Management"
-msgstr ""
+msgstr "Manažment zručností"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_skills_slides
@@ -23987,6 +24018,9 @@ msgid ""
 "are contained in a separate module to use specific test models defined in\n"
 "test_mail. "
 msgstr ""
+"Tento modul obsahuje testy týkajúce sa hromadnej pošty. Tých\n"
+"sú obsiahnuté v samostatnom module na použitie špecifických testovacích modelov definovaných v\n"
+"test_mail."
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_mail_full
@@ -24047,6 +24081,14 @@ msgstr "Tento modul spustí odinštalovanie nasledujúcich modulov."
 msgid ""
 "This operation is allowed for the groups:\n"
 "%(groups_list)s"
+msgstr ""
+
+#. module: base
+#: code:addons/base/ir/ir_sequence.py:56
+#, python-format
+msgid ""
+"This transaction wasn't executed because another transaction is already "
+"using the same no-gap sequence. Please try again later."
 msgstr ""
 
 #. module: base
@@ -24607,7 +24649,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,description:base.module_mass_mailing_sale
 msgid "UTM and mass mailing on sale orders"
-msgstr ""
+msgstr "UTM a hromadné zasielanie objednávok na predaj"
 
 #. module: base
 #: model:ir.module.module,description:base.module_social_sale
