@@ -336,8 +336,22 @@
                 </div>
             </div>
             <div class="row mb-3">
-                <div class="col-lg-8">
+                <div class="col">
                     <p><b>Start</b> <span itemprop="startDate" t-esc="event.date_begin_located"/><br/> <b>End</b> <span itemprop="endDate" t-esc="event.date_end_located"/></p>
+                    <div class="mt-4">
+                        <h5 t-field="event.address_id" class="text-secondary font-weight-bold" t-options='{
+                            "widget": "contact",
+                            "fields": ["name"]
+                            }'/>
+                        <a itemprop="location" t-att-href="event.google_map_link()" target="_BLANK" temprop="location" t-field="event.address_id" t-options='{
+                            "widget": "contact",
+                            "fields": ["address"]
+                            }'/>
+                        <div itemprop="location" t-field="event.address_id" t-options='{
+                            "widget": "contact",
+                            "fields": ["phone", "mobile", "email"]
+                            }'/>
+                    </div>
                     <div id="add_to_calendar" class="mt-4 d-flex flex-column flex-md-row">
                         <a role="button" class="btn btn-primary" t-att-href="iCal_url">
                             <i class="fa fa-fw fa-calendar"/> Add to iCal/Outlook
@@ -346,20 +360,6 @@
                             <i class="fa fa-fw fa-calendar"/> Add to Google Calendar
                         </a>
                     </div>
-                </div>
-                <div class="col-lg-4 mt-4 mt-lg-0">
-                    <h4 t-field="event.address_id" class="text-secondary font-weight-bold" t-options='{
-                        "widget": "contact",
-                        "fields": ["name"]
-                        }'/>
-                    <a itemprop="location" t-att-href="event.google_map_link()" target="_BLANK" temprop="location" t-field="event.address_id" t-options='{
-                        "widget": "contact",
-                        "fields": ["address"]
-                        }'/>
-                    <div itemprop="location" t-field="event.address_id" t-options='{
-                        "widget": "contact",
-                        "fields": ["phone", "mobile", "email"]
-                        }'/>
                 </div>
             </div>
         </div>
