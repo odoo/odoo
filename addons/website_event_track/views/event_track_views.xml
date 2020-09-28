@@ -169,15 +169,21 @@
                     </group>
                     <notebook>
                         <page string="Speakers" name="speakers">
+                            <group class="display-flex justify-content-between">
+                                <group>
+                                    <field name="partner_id"
+                                        domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]"
+                                        context="{'default_phone': partner_phone, 'default_email': partner_email}"/>
+                                    <field name="partner_name"/>
+                                    <field name="partner_email"/>
+                                    <field name="partner_phone" class="o_force_ltr"/>
+                                </group>
+                                <group>
+                                    <field name="image" nolabel="1" widget="image" class="oe_avatar"/>
+                                </group>
+                            </group>
                             <group>
-                                <field name="partner_id"
-                                    domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]"
-                                    context="{'default_phone': partner_phone, 'default_email': partner_email}"/>
-                                <field name="partner_name"/>
-                                <field name="partner_email"/>
-                                <field name="partner_phone" class="o_force_ltr"/>
                                 <field name="partner_biography"/>
-                                <field name="image" widget="image" class="oe_avatar float-left"/>
                             </group>
                         </page>
                         <page string="Description" name="description">
