@@ -1614,7 +1614,7 @@ class APIKeys(models.Model):
             key varchar not null,
             create_date timestamp without time zone DEFAULT (now() at time zone 'utc')
         );
-        CREATE INDEX ON {table} (user_id, index);
+        CREATE INDEX IF NOT EXISTS res_users_apikeys_user_id_index_idx ON {table} (user_id, index);
         """.format(table=self._table, index_size=INDEX_SIZE))
 
     @check_identity
