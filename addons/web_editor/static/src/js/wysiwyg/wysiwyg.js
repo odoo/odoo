@@ -427,7 +427,7 @@ var Wysiwyg = Widget.extend({
             await this.saveToServer(context);
         }
     },
-    _setColor(colorpicker, setCommandId, unsetCommandId, color, $dropDownToToggle = undefined) {
+    _setColor(colorpicker, setCommandId, unsetCommandId, color, $dropDownToToggle, closeColorPicker = false) {
         if(color === "") {
             this.editor.execCommand(unsetCommandId);
         } else {
@@ -437,10 +437,10 @@ var Wysiwyg = Widget.extend({
             }
             this.editor.execCommand(setCommandId, {color: color});
         }
-        if($dropDownToToggle !== undefined) {
-            const $jwButton = $dropDownToToggle.find(".dropdown-toggle")
+        const $jwButton = $dropDownToToggle.find(".dropdown-toggle")
+        $jwButton.css("background-color", color);
+        if(closeColorPicker) {
             $jwButton.dropdown("toggle");
-            $jwButton.css("background-color", color);
         }
     },
     async initColorPicker($dropdownNode, setCommandId, unsetCommandId) {
@@ -458,10 +458,10 @@ var Wysiwyg = Widget.extend({
             await colorpicker.appendTo($dropdownNode.find('.dropdown-menu'));
             // Events listeners to trigger color changes
             colorpicker.on('custom_color_picked', this, (e) => {
-                this._setColor(colorpicker, setCommandId, unsetCommandId, e.data.color);
+                this._setColor(colorpicker, setCommandId, unsetCommandId, e.data.color, $dropdownNode);
             });
             colorpicker.on('color_picked', this, (e) => {
-                this._setColor(colorpicker, setCommandId, unsetCommandId, e.data.color, $dropdownNode);
+                this._setColor(colorpicker, setCommandId, unsetCommandId, e.data.color, $dropdownNode, true);
             });
         }
     },
