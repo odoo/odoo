@@ -3,12 +3,11 @@
 
 import ast
 import logging
-import time
 from datetime import date, datetime, timedelta
 
 from odoo import api, fields, models, _, exceptions
 from odoo.osv import expression
-from odoo.tools.safe_eval import safe_eval
+from odoo.tools.safe_eval import safe_eval, time
 
 _logger = logging.getLogger(__name__)
 
