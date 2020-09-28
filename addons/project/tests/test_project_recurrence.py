@@ -4,7 +4,6 @@
 from odoo.tests.common import SavepointCase, Form
 from odoo.exceptions import ValidationError
 from odoo import fields
-
 from datetime import date, datetime
 from dateutil.rrule import MO, TU, WE, TH, FR, SA, SU
 
@@ -37,7 +36,7 @@ class TestProjectrecurrence(SavepointCase):
                 form.name = 'test recurring task'
                 form.project_id = self.project_recurring
 
-                form.recurring_task = True
+                form.recurring_event = True
                 form.repeat_interval = 5
                 form.repeat_unit = 'month'
                 form.repeat_type = 'after'
@@ -53,7 +52,7 @@ class TestProjectrecurrence(SavepointCase):
             self.assertEqual(task.recurrence_id.recurrence_left, 11)
             self.assertEqual(task.recurrence_id.next_recurrence_date, date(2020, 2, 29))
 
-            task.recurring_task = False
+            task.recurring_event = False
             self.assertFalse(bool(task.recurrence_id), 'the recurrence should be deleted')
 
     def test_recurrence_cron(self):
@@ -64,7 +63,7 @@ class TestProjectrecurrence(SavepointCase):
             form.project_id = self.project_recurring
             form.date_deadline = datetime(2020, 2, 1)
 
-            form.recurring_task = True
+            form.recurring_event = True
             form.repeat_interval = 1
             form.repeat_unit = 'month'
             form.repeat_type = 'after'
@@ -76,18 +75,18 @@ class TestProjectrecurrence(SavepointCase):
 
             self.assertEqual(task.recurrence_id.next_recurrence_date, date(2020, 1, 15))
             self.assertEqual(self.env['project.task'].search_count([('project_id', '=', self.project_recurring.id)]), 1)
-            self.env['project.task.recurrence']._cron_create_recurring_tasks()
+            self.env['project.task']._cron_create_recurring_events()
             self.assertEqual(self.env['project.task'].search_count([('project_id', '=', self.project_recurring.id)]), 1, 'no extra task should be created')
             self.assertEqual(task.recurrence_id.recurrence_left, 2)
 
         with patch.object(fields.Date, 'today', lambda: datetime(2020, 1, 15)):
             self.assertEqual(self.env['project.task'].search_count([('project_id', '=', self.project_recurring.id)]), 1)
-            self.env['project.task.recurrence']._cron_create_recurring_tasks()
+            self.env['project.task']._cron_create_recurring_events()
             self.assertEqual(self.env['project.task'].search_count([('project_id', '=', self.project_recurring.id)]), 2)
             self.assertEqual(task.recurrence_id.recurrence_left, 1)
 
         with patch.object(fields.Date, 'today', lambda: datetime(2020, 2, 15)):
-            self.env['project.task.recurrence']._cron_create_recurring_tasks()
+            self.env['project.task']._cron_create_recurring_events()
             self.assertEqual(task.recurrence_id.recurrence_left, 0)
 
         tasks = self.env['project.task'].search([('project_id', '=', self.project_recurring.id)])
@@ -96,7 +95,7 @@ class TestProjectrecurrence(SavepointCase):
         self.assertTrue(bool(tasks[2].date_deadline))
         self.assertFalse(tasks[1].date_deadline, "Deadline should not be copied")
 
-        for f in self.env['project.task.recurrence']._get_recurring_fields():
+        for f in self.env['project.task']._get_recurring_fields():
             self.assertTrue(tasks[0][f] == tasks[1][f] == tasks[2][f], "Field %s should have been copied" % f)
 
     def test_recurrence_update_task(self):
@@ -104,7 +103,7 @@ class TestProjectrecurrence(SavepointCase):
             task = self.env['project.task'].create({
                     'name': 'test recurring task',
                     'project_id': self.project_recurring.id,
-                    'recurring_task': True,
+                'recurring_event': True,
                     'repeat_interval': 1,
                     'repeat_unit': 'week',
                     'repeat_type': 'after',
@@ -113,10 +112,10 @@ class TestProjectrecurrence(SavepointCase):
                 })
 
         with patch.object(fields.Date, 'today', lambda: datetime(2020, 1, 6)):
-            self.env['project.task.recurrence']._cron_create_recurring_tasks()
+            self.env['project.task']._cron_create_recurring_events()
 
         with patch.object(fields.Date, 'today', lambda: datetime(2020, 1, 13)):
-            self.env['project.task.recurrence']._cron_create_recurring_tasks()
+            self.env['project.task']._cron_create_recurring_events()
 
         task_c, task_b, task_a = self.env['project.task'].search([('project_id', '=', self.project_recurring.id)])
 
@@ -157,7 +156,7 @@ class TestProjectrecurrence(SavepointCase):
 
         form.name = 'test recurring task'
         form.project_id = self.project_recurring
-        form.recurring_task = True
+        form.recurring_event = True
 
         form.repeat_unit = 'week'
         self.assertTrue(form.repeat_show_dow)
@@ -193,7 +192,7 @@ class TestProjectrecurrence(SavepointCase):
         self.assertTrue(form.repeat_show_week)
         self.assertTrue(form.repeat_show_month)
 
-        form.recurring_task = False
+        form.recurring_event = False
         self.assertFalse(form.repeat_show_dow)
         self.assertFalse(form.repeat_show_day)
         self.assertFalse(form.repeat_show_week)
@@ -204,7 +203,7 @@ class TestProjectrecurrence(SavepointCase):
 
         form.name = 'test recurring task'
         form.project_id = self.project_recurring
-        form.recurring_task = True
+        form.recurring_event = True
         form.repeat_unit = 'week'
 
         form.mon = False
@@ -219,7 +218,7 @@ class TestProjectrecurrence(SavepointCase):
             form.save()
 
     def test_recurrence_next_dates_week(self):
-        dates = self.env['project.task.recurrence']._get_next_recurring_dates(
+        dates = self.env['recurrency.recurrency']._get_next_recurring_dates(
             date_start=date(2020, 1, 1),
             repeat_interval=1,
             repeat_unit='week',
@@ -239,7 +238,7 @@ class TestProjectrecurrence(SavepointCase):
         self.assertEqual(dates[3], datetime(2020, 1, 27, 0, 0))
         self.assertEqual(dates[4], datetime(2020, 2, 3, 0, 0))
 
-        dates = self.env['project.task.recurrence']._get_next_recurring_dates(
+        dates = self.env['recurrency.recurrency']._get_next_recurring_dates(
             date_start=date(2020, 1, 1),
             repeat_interval=3,
             repeat_unit='week',
@@ -259,7 +258,7 @@ class TestProjectrecurrence(SavepointCase):
         self.assertEqual(dates[2], datetime(2020, 1, 24, 0, 0))
 
     def test_recurrence_next_dates_month(self):
-        dates = self.env['project.task.recurrence']._get_next_recurring_dates(
+        dates = self.env['recurrency.recurrency']._get_next_recurring_dates(
             date_start=date(2020, 1, 15),
             repeat_interval=1,
             repeat_unit='month',
@@ -287,7 +286,7 @@ class TestProjectrecurrence(SavepointCase):
         self.assertEqual(dates[10], date(2020, 11, 30))
         self.assertEqual(dates[11], date(2020, 12, 31))
 
-        dates = self.env['project.task.recurrence']._get_next_recurring_dates(
+        dates = self.env['recurrency.recurrency']._get_next_recurring_dates(
             date_start=date(2020, 2, 20),
             repeat_interval=3,
             repeat_unit='month',
@@ -307,7 +306,7 @@ class TestProjectrecurrence(SavepointCase):
         self.assertEqual(dates[3], date(2020, 11, 29))
         self.assertEqual(dates[4], date(2021, 2, 28))
 
-        dates = self.env['project.task.recurrence']._get_next_recurring_dates(
+        dates = self.env['recurrency.recurrency']._get_next_recurring_dates(
             date_start=date(2020, 1, 10),
             repeat_interval=1,
             repeat_unit='month',
@@ -329,7 +328,7 @@ class TestProjectrecurrence(SavepointCase):
         self.assertEqual(dates[4], datetime(2020, 5, 23))
 
     def test_recurrence_next_dates_year(self):
-        dates = self.env['project.task.recurrence']._get_next_recurring_dates(
+        dates = self.env['recurrency.recurrency']._get_next_recurring_dates(
             date_start=date(2020, 12, 1),
             repeat_interval=1,
             repeat_unit='year',

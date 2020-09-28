@@ -328,15 +328,7 @@
                                     <field name="privacy_visibility" widget="radio"/>
                                     <field name="allowed_internal_user_ids" widget="many2many_tags" attrs="{'invisible': [('privacy_visibility', '!=', 'followers')]}"/>
                                     <field name="allowed_portal_user_ids" widget="many2many_tags" options="{'no_create': True}" attrs="{'invisible': [('privacy_visibility', '!=', 'portal')]}"/>
-                                    <span colspan="2" class="oe_edit_only text-muted"
-                                          attrs="{'invisible': [('privacy_visibility', '!=', 'portal')]}">
-                                        <dl class="o_project_portal_warning_dl">
-                                            <dt class="o_project_portal_warning_dt" aria-hidden="True">
-                                                <i class="fa fa-exclamation-triangle fa-sm"/>&amp;nbsp;</dt>
-                                            <dd class="o_project_portal_warning_dd">Allowed Portal Users will see all the tasks of this project without distinction.<br/>
-                                                Leave empty to restrict the access to the portal users' own tasks.</dd>
-                                        </dl>
-                                    </span>
+
                                     <field name="company_id" groups="base.group_multi_company"/>
                                 </group>
                                 <group name="extra_settings">
@@ -631,7 +623,7 @@
                     <div class="text-center alert alert-primary" role="alert" attrs="{'invisible': ['|', ('ribbon_message', '=', False), ('ribbon_message', '=', '')]}">
                         <field name="ribbon_message"/>
                     </div>
-                    <div class="alert alert-info oe_edit_only" role="status" attrs="{'invisible': ['|', ('recurring_task', '=', False), ('recurrence_id', '=', False)]}">
+                    <div class="alert alert-info oe_edit_only" role="status" attrs="{'invisible': ['|', ('recurrence_id', '=', False), ('recurring_event', '=', False) ], }">
                         <p>Edit recurring task</p>
                         <field name="recurrence_update" widget="radio"/>
                     </div>
@@ -644,7 +636,7 @@
                         <button name="%(rating_rating_action_task)d" type="action" attrs="{'invisible': [('rating_count', '=', 0)]}" class="oe_stat_button" icon="fa-smile-o" groups="project.group_project_rating">
                             <field name="rating_count" string="Rating" widget="statinfo"/>
                         </button>
-                        <button name="action_recurring_tasks" type="object" attrs="{'invisible': [('recurrence_id', '=', False)]}" class="oe_stat_button" icon="fa-repeat" groups="project.group_project_recurring_tasks">
+                        <button name="action_recurring_tasks" type="object" attrs="{'invisible': ['|', ('recurrence_id', '=', False), ('recurring_event', '=', False)]}" class="oe_stat_button" icon="fa-repeat" groups="project.group_project_recurring_tasks">
                             <div class="o_field_widget o_stat_info">
                                 <span class="o_stat_value">
                                     <field name="recurring_count" widget="statinfo" nolabel="1" />
@@ -666,8 +658,8 @@
                         <group>
                             <field name="active" invisible="1"/>
                             <field name="partner_id" class="o_task_customer_field"/>
-                            <field name="partner_email" widget="email" attrs="{'invisible': [('partner_id', '=', False)]}"/>
                             <field name="partner_phone" widget="phone" attrs="{'invisible': [('partner_id', '=', False)]}"/>
+                            <field name="partner_email" widget="email" attrs="{'invisible': [('partner_id', '=', False)]}"/>
                             <field name="legend_blocked" invisible="1"/>
                             <field name="legend_normal" invisible="1"/>
                             <field name="legend_done" invisible="1"/>
@@ -683,7 +675,7 @@
                                 class="o_task_user_field"
                                 domain="[('share', '=', False)]"/>
                             <field name="date_deadline" widget="remaining_days" attrs="{'invisible': [('is_closed', '=', True)]}"/>
-                            <field name="recurring_task" attrs="{'invisible': [('allow_recurring_tasks', '=', False)]}" />
+                            <field name="recurring_event" attrs="{'invisible': [('allow_recurring_tasks', '=', False)]}" />
                             <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
                         </group>
                     </group>
@@ -692,13 +684,13 @@
                             <field name="description" type="html"/>
                             <div class="oe_clear"/>
                         </page>
-                        <page name="recurrence" string="Recurrence" attrs="{'invisible': [('recurring_task', '=', False)]}">
+                        <page name="recurrence" string="Recurrence" attrs="{'invisible': [('recurring_event', '=', False)]}">
                             <group>
                                 <group>
                                     <label for="repeat_interval" />
                                     <div class="o_row">
-                                        <field name="repeat_interval" attrs="{'required': [('recurring_task', '=', True)]}" />
-                                        <field name="repeat_unit" attrs="{'required': [('recurring_task', '=', True)]}" />
+                                        <field name="repeat_interval" attrs="{'required': [('recurring_event', '=', True)]}" />
+                                        <field name="repeat_unit" attrs="{'required': [('recurring_event', '=', True)]}" />
                                     </div>
 
                                     <label for="repeat_on_month" string="Repeat On" attrs="{'invisible': [('repeat_unit', 'not in', ('month', 'year'))]}" />
@@ -724,13 +716,13 @@
 
                                     <label for="repeat_type" />
                                     <div class="o_row">
-                                        <field name="repeat_type" attrs="{'required': [('recurring_task', '=', True)]}" />
+                                        <field name="repeat_type" attrs="{'required': [('recurring_event', '=', True)]}" />
                                         <field name="repeat_until" attrs="{'invisible': [('repeat_type', '!=', 'until')], 'required': [('repeat_type', '=', 'until')]}" />
                                         <field name="repeat_number" attrs="{'invisible': [('repeat_type', '!=', 'after')], 'required': [('repeat_type', '=', 'after')]}" />
                                     </div>
                                 </group>
                             </group>
-                            <group attrs="{'invisible': ['|', ('recurring_task', '=', False), ('recurrence_message', '=', False)]}">
+                            <group attrs="{'invisible': ['|', ('recurring_event', '=', False), ('recurrence_message', '=', False)]}">
                                 <div class="alert alert-success o_form_project_recurrence_message" role="status">
                                     <p><span class="fa fa-check-circle"></span> Next Occurrences:</p>
                                     <field name="recurrence_message" widget="html" class="mb-0" />
