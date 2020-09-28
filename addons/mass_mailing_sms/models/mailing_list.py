@@ -8,7 +8,7 @@ class MailingList(models.Model):
     _inherit = 'mailing.list'
 
     def _compute_contact_nbr(self):
-        if self.env.context.get('mailing_sms'):
+        if self.env.context.get('mailing_sms') and self.ids:
             self.env.cr.execute('''
 select list_id, count(*)
 from mailing_contact_list_rel r

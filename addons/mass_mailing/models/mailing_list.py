@@ -24,24 +24,27 @@ class MassMailingList(models.Model):
 
     # Compute number of contacts non opt-out, non blacklisted and valid email recipient for a mailing list
     def _compute_contact_nbr(self):
-        self.env.cr.execute('''
-            select
-                list_id, count(*)
-            from
-                mailing_contact_list_rel r
-                left join mailing_contact c on (r.contact_id=c.id)
-                left join mail_blacklist bl on c.email_normalized = bl.email and bl.active
-            where
-                list_id in %s
-                AND COALESCE(r.opt_out,FALSE) = FALSE
-                AND c.email_normalized IS NOT NULL
-                AND bl.id IS NULL
-            group by
-                list_id
-        ''', (tuple(self.ids), ))
-        data = dict(self.env.cr.fetchall())
-        for mailing_list in self:
-            mailing_list.contact_nbr = data.get(mailing_list.id, 0)
+        if self.ids:
+            self.env.cr.execute('''
+                select
+                    list_id, count(*)
+                from
+                    mailing_contact_list_rel r
+                    left join mailing_contact c on (r.contact_id=c.id)
+                    left join mail_blacklist bl on c.email_normalized = bl.email and bl.active
+                where
+                    list_id in %s
+                    AND COALESCE(r.opt_out,FALSE) = FALSE
+                    AND c.email_normalized IS NOT NULL
+                    AND bl.id IS NULL
+                group by
+                    list_id
+            ''', (tuple(self.ids), ))
+            data = dict(self.env.cr.fetchall())
+            for mailing_list in self:
+                mailing_list.contact_nbr = data.get(mailing_list.id, 0)
+        else:
+            self.contact_nbr = 0
 
     def write(self, vals):
         # Prevent archiving used mailing list
