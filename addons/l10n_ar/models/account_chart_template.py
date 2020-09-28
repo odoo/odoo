@@ -17,13 +17,20 @@ class AccountChartTemplate(models.Model):
         return res
 
     def _prepare_all_journals(self, acc_template_ref, company, journals_dict=None):
-        """ If Argentinean chart, we don't create sales journal as we need more
-        data to create it properly """
+        """ In case of an Argentinean CoA, we modify the default values of the sales journal to be a preprinted journal"""
         res = super()._prepare_all_journals(acc_template_ref, company, journals_dict=journals_dict)
         if company.country_id == self.env.ref('base.ar'):
             for vals in res:
                 if vals['type'] == 'sale':
-                    res.remove(vals)
+                    vals.update({
+                        "name": "Ventas Preimpreso",
+                        "code": "0001",
+                        "l10n_ar_afip_pos_number": 1,
+                        "l10n_ar_afip_pos_partner_id": company.partner_id.id,
+                        "l10n_ar_afip_pos_system": 'II_IM',
+                        "l10n_ar_share_sequences": True,
+                        "refund_sequence": False
+                    })
         return res
 
     @api.model
@@ -48,10 +55,6 @@ class AccountChartTemplate(models.Model):
         coa_responsibility = self._get_ar_responsibility_match(self.id)
         if coa_responsibility:
             company_responsibility = company.l10n_ar_afip_responsibility_type_id
-            if company_responsibility and company_responsibility != coa_responsibility:
-                raise UserError(_(
-                    'You are trying to install a chart of account for the %s responsibility but your company is'
-                    ' configured as %s type', coa_responsibility.name, company_responsibility.name))
             company.write({
                 'l10n_ar_afip_responsibility_type_id': coa_responsibility.id,
                 'country_id': self.env.ref('base.ar').id,
