@@ -10,9 +10,11 @@ const {
     start,
 } = require('mail/static/src/utils/test_utils.js');
 
+const Bus = require('web.Bus');
 const {
     file: { createFile, inputFiles },
     dom: { triggerEvent },
+    makeTestPromise,
 } = require('web.test_utils');
 
 QUnit.module('mail', {}, function () {
@@ -2021,6 +2023,62 @@ QUnit.test('focusing a chat window of a chat should make new message separator d
         document.body,
         '.o_MessageList_separatorNewMessages',
         "new message separator should no longer be shown, after focus on composer text input of chat window"
+    );
+});
+
+QUnit.test('chat window: click on correspondent name in chat header redirects to user form', async function (assert) {
+    assert.expect(4);
+
+    this.data['res.partner'].records.push({ id: 7, name: "Demo" });
+    this.data['mail.channel'].records.push({
+        channel_type: "chat",
+        is_minimized: true,
+        members: [this.data.currentPartnerId, 7],
+    });
+    const partnerFormDeferred = makeTestPromise();
+    const bus = new Bus();
+    bus.on('do-action', null, payload => {
+        assert.step('action_open_partner_form');
+        assert.deepEqual(payload.action, {
+            res_id: 7,
+            res_model: "res.partner",
+            type: "ir.actions.act_window",
+            views: [[false, "form"]]
+        }, "opened form view should be the form view displaying the clicked correspondent (partner 7)");
+        partnerFormDeferred.resolve();
+    });
+    await this.start({ env: { bus } });
+    const chatWindowHeaderName = document.querySelector('.o_ChatWindowHeader_name');
+    assert.hasClass(
+        chatWindowHeaderName,
+        'o-clickable',
+        "name of thread in header part of chat window should be clickable when thread has a single correspondent"
+    );
+
+    await chatWindowHeaderName.click();
+    await partnerFormDeferred;
+    assert.verifySteps(
+        ['action_open_partner_form'],
+        "should open partner form on click of chat header name when the thread has single correspondent"
+    );
+});
+
+QUnit.test('chat window: chat header should not be clickable when thread has multiple correspondents', async function (assert) {
+    assert.expect(1);
+
+    this.data['res.partner'].records.push({ id: 7, name: "Demo" }, { id: 8, name: "Portal" });
+    this.data['mail.channel'].records.push({
+        channel_type: "channel",
+        is_minimized: true,
+        members: [this.data.currentPartnerId, 7, 8],
+    });
+    await this.start();
+
+    const chatWindowHeader = document.querySelector('.o_ChatWindowHeader_name');
+    assert.doesNotHaveClass(
+        chatWindowHeader,
+        'o-clickable',
+        "name of thread in header part of chat window should not be clickable when thread has multiple correspondents"
     );
 });
 
