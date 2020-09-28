@@ -15,7 +15,7 @@
                         threadLocalId="chatWindow.thread.localId"
                     />
                 </t>
-                <div class="o_ChatWindowHeader_item o_ChatWindowHeader_name" t-att-title="chatWindow.name">
+                <div class="o_ChatWindowHeader_item o_ChatWindowHeader_name" t-att-title="chatWindow.name" t-att-class="{'o-clickable': chatWindow.thread and chatWindow.thread.correspondent}" t-on-click="_onClickName">
                     <t t-esc="chatWindow.name"/>
                 </div>
                 <t t-if="chatWindow.thread and chatWindow.thread.mass_mailing">
