@@ -128,6 +128,10 @@ take extra options. An exhaustive list can be found in :ref:`reference/js/widget
     Tip: a simple example can be found
     `here <https://github.com/odoo/odoo/blob/0e12fa135882cd5095dbf15fe2f64231c6a84336/addons/account/views/account_bank_statement_views.xml#L136>`__.
 
+.. warning:: Same field multiple times in a view
+
+    Always add a field only **once** in a view. Adding it multiple times is simply not supported.
+
 List Order
 ==========
 
@@ -231,6 +235,7 @@ Form
 .. note::
 
     **Goal**: at the end of this section, the property form view has:
+
     - Conditional display of buttons and fields
     - Tag colors
 
@@ -270,7 +275,7 @@ buttons conditionally.
 .. exercise:: Conditional display of buttons
 
     Use the ``states`` attribute to display the header buttons conditionally as depicted
-    in the **Goal**.
+    in the **Goal** (look at how the 'Sold' and 'Cancel' buttons change when the state is modified).
 
     Tip: do not hesitate to search for ``states=`` in the Odoo XML files to get some examples.
 
