@@ -45,38 +45,22 @@
         </we-title>
     </div>
 
-    <t t-set="filter_label">Filter</t>
-    <we-select t-att-string="indent and (' ⌙ %s' % filter_label) or filter_label">
-        <we-button data-gl-filter="">None</we-button>
-        <we-button data-gl-filter="blur">Blur</we-button>
-        <we-button data-gl-filter="1977">1977</we-button>
-        <we-button data-gl-filter="aden">Aden</we-button>
-        <we-button data-gl-filter="brannan">Brannan</we-button>
-        <we-button data-gl-filter="earlybird">EarlyBird</we-button>
-        <we-button data-gl-filter="inkwell">Inkwell</we-button>
-        <we-button data-gl-filter="maven">Maven</we-button>
-        <we-button data-gl-filter="toaster">Toaster</we-button>
-        <we-button data-gl-filter="walden">Walden</we-button>
-        <we-button data-gl-filter="valencia">Valencia</we-button>
-        <we-button data-gl-filter="xpro">Xpro</we-button>
-        <we-button data-gl-filter="custom" data-name="custom_glfilter_opt">Custom</we-button>
-    </we-select>
-    <t t-set="color_label">Color</t>
-    <t t-set="saturation_label">Saturation</t>
-    <t t-set="contrast_label">Contrast</t>
-    <t t-set="brightness_label">Brightness</t>
-    <t t-set="sepia_label">Sepia</t>
-    <t t-set="blur_label">Blur</t>
-    <we-row t-att-string="indent and ('  ⌙ %s' % color_label) or ('⌙ %s' % color_label)">
-        <we-select data-filter-property="blend" data-dependencies="custom_glfilter_opt">
-            <we-button data-custom-filter="normal">Normal</we-button>
-            <we-button data-custom-filter="overlay">overlay</we-button>
-            <we-button data-custom-filter="screen">screen</we-button>
-            <we-button data-custom-filter="multiply">multiply</we-button>
-            <we-button data-custom-filter="lighter">add</we-button>
-            <we-button data-custom-filter="exclusion">exclusion</we-button>
-            <we-button data-custom-filter="darken">darken</we-button>
-            <we-button data-custom-filter="lighten">lighten</we-button>
+    <we-collapse>
+        <t t-set="filter_label">Filter</t>
+        <we-select t-att-string="indent and (' ⌙ %s' % filter_label) or filter_label">
+            <we-button data-gl-filter="">None</we-button>
+            <we-button data-gl-filter="blur">Blur</we-button>
+            <we-button data-gl-filter="1977">1977</we-button>
+            <we-button data-gl-filter="aden">Aden</we-button>
+            <we-button data-gl-filter="brannan">Brannan</we-button>
+            <we-button data-gl-filter="earlybird">EarlyBird</we-button>
+            <we-button data-gl-filter="inkwell">Inkwell</we-button>
+            <we-button data-gl-filter="maven">Maven</we-button>
+            <we-button data-gl-filter="toaster">Toaster</we-button>
+            <we-button data-gl-filter="walden">Walden</we-button>
+            <we-button data-gl-filter="valencia">Valencia</we-button>
+            <we-button data-gl-filter="xpro">Xpro</we-button>
+            <we-button data-gl-filter="custom" data-name="custom_glfilter_opt">Custom</we-button>
         </we-select>
         <we-colorpicker data-dependencies="custom_glfilter_opt" data-custom-filter="" data-filter-property="filterColor" data-excluded="common, theme"/>
     </we-row>
@@ -110,11 +94,13 @@
             data-max="2000"
             data-step="100"/>
 
-    <t t-set="width_label">Width</t>
-    <we-select t-att-string="indent and (' ⌙ %s' % width_label) or width_label" data-name="width_select_opt"/>
+    <we-collapse>
+        <t t-set="width_label">Width</t>
+        <we-select t-att-string="indent and (' ⌙ %s' % width_label) or width_label" data-name="width_select_opt"/>
 
-    <t t-set="quality_label">Quality</t>
-    <we-range t-att-string="indent and (' ⌙ %s' % quality_label) or quality_label" data-set-quality=""/>
+        <t t-set="quality_label">Quality</t>
+        <we-range t-att-string="indent and (' ⌙ %s' % quality_label) or quality_label" data-set-quality=""/>
+    </we-collapse>
 
     <div class="o_we_image_weight d-none"><small/><b/></div>
 </template>
@@ -177,20 +163,22 @@
              t-att-data-selector="selector"
              t-att-data-exclude="exclude"
              t-att-data-target="target">
-            <we-row string=" ⌙ Position"><!-- &emsp; -->
-                <we-select data-no-preview="true">
-                    <we-button data-background-type="cover">Cover</we-button>
-                    <we-button data-background-type="repeat-pattern" data-name="background_repeat_opt">Repeat pattern</we-button>
-                </we-select>
-                <we-button title="Background Position" data-background-position-overlay="true" data-no-preview="true">
-                    <i class="fa fa-fw fa-crosshairs"/>
-                </we-button>
-            </we-row>
-            <we-multi data-css-property="background-size" data-dependencies="background_repeat_opt">
-                <!-- &emsp; -->
-                <we-input string="  ⌙ Width" data-select-style="auto" placeholder="auto" data-unit="px"/>
-                <we-input string="  ⌙ Height" data-select-style="auto" placeholder="auto" data-unit="px"/>
-            </we-multi>
+            <we-collapse>
+                <we-row string=" ⌙ Position"><!-- &emsp; -->
+                    <we-select data-no-preview="true">
+                        <we-button data-background-type="cover">Cover</we-button>
+                        <we-button data-background-type="repeat-pattern" data-name="background_repeat_opt">Repeat pattern</we-button>
+                    </we-select>
+                    <we-button title="Background Position" data-background-position-overlay="true" data-no-preview="true">
+                        <i class="fa fa-fw fa-crosshairs"/>
+                    </we-button>
+                </we-row>
+                <we-multi data-css-property="background-size" data-dependencies="background_repeat_opt">
+                    <!-- &emsp; -->
+                    <we-input string="  ⌙ Width" data-select-style="auto" placeholder="auto" data-unit="px"/>
+                    <we-input string="  ⌙ Height" data-select-style="auto" placeholder="auto" data-unit="px"/>
+                </we-multi>
+            </we-collapse>
         </div>
 
         <div data-js="BackgroundOptimize"

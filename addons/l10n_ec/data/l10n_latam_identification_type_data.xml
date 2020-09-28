@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<!-- DATA ON MODULE l10n_latam_base 
+	id						name	sequence	is_vat
+	l10n_latam_base.it_vat	VAT			80		TRUE    #RUC
+	l10n_latam_base.it_pass	Passport	90				#Pasaporte
+	l10n_latam_base.it_fid	Foreign ID	100				#Identificacion del Exterior
+	-->
+    <record id='ec_ruc' model='l10n_latam.identification.type'>
+        <field name='name'>RUC</field>
+        <field name='description'>REGISTRO UNICO DE CONTRIBUYENTE</field>
+        <field name='country_id' ref='base.ec'/>
+        <field name='is_vat' eval='True'/>
+        <field name='sequence'>10</field>
+    </record>
+    <record id='ec_dni' model='l10n_latam.identification.type'>
+        <field name='name'>Ced</field>
+        <field name='description'>Cédula de Ciudadanía o Cédula de Identidad</field>
+        <field name='country_id' ref='base.ec'/>
+        <field name='is_vat' eval='True'/>
+        <field name='sequence'>20</field>
+    </record>
+    <record id='ec_unknown' model='l10n_latam.identification.type'>
+        <field name='name'>Unknown</field>
+        <field name='description'>Por identificar, util para registro rápido de ventas</field>
+        <field name='country_id' ref='base.ec'/>
+        <field name='sequence'>110</field>
+    </record>
+</odoo>
