@@ -341,6 +341,15 @@ eventHandler.modules.popover.update = function ($popover, oStyle, isAirMode) {
     } else {
         $airPopover.show();
     }
+
+    const $externalHistoryButtons = $('.o_we_external_history_buttons');
+    if ($externalHistoryButtons.length) {
+        const $noteHistory = $('.note-history');
+        $noteHistory.addClass('d-none');
+        $externalHistoryButtons.find(':first-child').prop('disabled', $noteHistory.find('[data-event=undo]').prop('disabled'));
+        $externalHistoryButtons.find(':last-child').prop('disabled', $noteHistory.find('[data-event=redo]').prop('disabled'));
+    }
+    $popover.trigger('summernote_popover_update_call');
 };
 
 var fn_handle_update = eventHandler.modules.handle.update;

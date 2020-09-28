@@ -19,6 +19,8 @@ var EditorMenu = Widget.extend({
     template: 'website.editorbar',
     xmlDependencies: ['/website/static/src/xml/website.editor.xml'],
     events: {
+        'click button[data-action=undo]': '_onUndoClick',
+        'click button[data-action=redo]': '_onRedoClick',
         'click button[data-action=save]': '_onSaveClick',
         'click button[data-action=cancel]': '_onCancelClick',
     },
@@ -233,6 +235,18 @@ var EditorMenu = Widget.extend({
      */
     _onSaveClick: function () {
         this.save();
+    },
+    /**
+     * @private
+     */
+    _onUndoClick() {
+        $('.note-history [data-event=undo]').first().click();
+    },
+    /**
+     * @private
+     */
+    _onRedoClick() {
+        $('.note-history [data-event=redo]').first().click();
     },
 });
 
