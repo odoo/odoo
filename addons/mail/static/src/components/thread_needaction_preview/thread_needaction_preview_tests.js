@@ -201,6 +201,56 @@ QUnit.test('click on expand from chat window should close the chat window and op
     );
 });
 
+QUnit.test('[technical] opening a non-channel chat window should not call channel_fold', async function (assert) {
+    // channel_fold should not be called when opening non-channels in chat
+    // window, because there is no server sync of fold state for them.
+    assert.expect(3);
+
+    await this.start({
+        hasChatWindow: true,
+        async mockRPC(route, args) {
+            if (route.includes('channel_fold')) {
+                const message = "should not call channel_fold when opening a non-channel chat window";
+                assert.step(message);
+                console.error(message);
+                throw Error(message);
+            }
+            return this._super(...arguments);
+        },
+    });
+    const thread = this.env.models['mail.thread'].create({
+        id: 11,
+        model: 'mail.channel',
+    });
+    this.env.models['mail.message'].create({
+        id: 21,
+        isNeedaction: true,
+        originThread: [['link', thread]],
+    });
+    await this.createThreadNeedactionPreviewComponent({
+        threadLocalId: thread.localId,
+    });
+    assert.containsOnce(
+        document.body,
+        '.o_ThreadNeedactionPreview',
+        "should have a preview initially"
+    );
+    assert.containsNone(
+        document.body,
+        '.o_ChatWindow',
+        "should have no chat window initially"
+    );
+
+    await afterNextRender(() =>
+        document.querySelector('.o_ThreadNeedactionPreview').click()
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_ChatWindow',
+        "should have opened the chat window on clicking on the preview"
+    );
+});
+
 });
 });
 });
