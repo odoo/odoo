@@ -3,16 +3,16 @@
 
 import babel
 import copy
-import datetime
-import dateutil.relativedelta as relativedelta
 import functools
 import logging
 import re
 
+import dateutil.relativedelta as relativedelta
 from werkzeug import urls
 
 from odoo import _, api, fields, models, tools
 from odoo.exceptions import UserError
+from odoo.tools import safe_eval
 
 _logger = logging.getLogger(__name__)
 
@@ -55,7 +55,7 @@ try:
         'str': str,
         'quote': urls.url_quote,
         'urlencode': urls.url_encode,
-        'datetime': datetime,
+        'datetime': safe_eval.datetime,
         'len': len,
         'abs': abs,
         'min': min,
@@ -326,6 +326,7 @@ class MailRenderMixin(models.AbstractModel):
         variables = self._render_jinja_eval_context()
         if add_context:
             variables.update(**add_context)
+        safe_eval.check_values(variables)
 
         # TDE CHECKME
         # records = self.env[model].browse(it for it in res_ids if it)  # filter to avoid browsing [None]

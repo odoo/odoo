@@ -18,7 +18,6 @@ import os
 import re
 import sys
 import tempfile
-import time
 
 import werkzeug
 import werkzeug.exceptions
@@ -39,7 +38,7 @@ from odoo.tools import image_process, topological_sort, html_escape, pycompat, u
 from odoo.tools.mimetypes import guess_mimetype
 from odoo.tools.translate import _
 from odoo.tools.misc import str2bool, xlsxwriter, file_open
-from odoo.tools.safe_eval import safe_eval
+from odoo.tools.safe_eval import safe_eval, time
 from odoo import http, tools
 from odoo.http import content_disposition, dispatch_rpc, request, serialize_exception as _serialize_exception, Response
 from odoo.exceptions import AccessError, UserError, AccessDenied

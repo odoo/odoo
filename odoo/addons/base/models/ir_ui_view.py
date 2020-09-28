@@ -27,7 +27,7 @@ from odoo.modules.module import get_resource_from_path, get_resource_path
 from odoo.tools import config, ConstantMapping, get_diff, pycompat, apply_inheritance_specs, locate_node
 from odoo.tools.convert import _fix_multiple_roots
 from odoo.tools.json import scriptsafe as json_scriptsafe
-from odoo.tools.safe_eval import safe_eval
+from odoo.tools import safe_eval
 from odoo.tools.view_validation import valid_view, get_variable_names, get_domain_identifiers, get_dict_asts
 from odoo.tools.translate import xml_translate, TRANSLATED_ATTRS
 from odoo.tools.image import image_data_uri
@@ -74,7 +74,7 @@ def transfer_node_to_modifiers(node, modifiers, context=None, current_node_path=
 
     for a in ('invisible', 'readonly', 'required'):
         if node.get(a):
-            v = bool(safe_eval(node.get(a), {'context': context or {}}))
+            v = bool(safe_eval.safe_eval(node.get(a), {'context': context or {}}))
             node_path = current_node_path or ()
             if 'tree' in node_path and 'header' not in node_path and a == 'invisible':
                 # Invisible in a tree view has a specific meaning, make it a
@@ -1091,7 +1091,7 @@ actual arch.
         for attribute in ('invisible', 'readonly', 'required'):
             val = node.get(attribute)
             if val:
-                res = safe_eval(val, {'context': self._context})
+                res = safe_eval.safe_eval(val, {'context': self._context})
                 if res not in (1, 0, True, False, None):
                     msg = _(
                         'Attribute %(attribute)s evaluation expects a boolean, got %(value)s',
@@ -1716,8 +1716,8 @@ actual arch.
             test_mode_enabled=bool(config['test_enable'] or config['test_file']),
             json=json_scriptsafe,
             quote_plus=werkzeug.urls.url_quote_plus,
-            time=time,
-            datetime=datetime,
+            time=safe_eval.time,
+            datetime=safe_eval.datetime,
             relativedelta=relativedelta,
             xmlid=self.sudo().key,
             viewid=self.id,

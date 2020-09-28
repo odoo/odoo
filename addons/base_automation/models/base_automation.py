@@ -3,17 +3,14 @@
 
 import datetime
 import logging
-import time
 import traceback
 from collections import defaultdict
 
-import dateutil
 from dateutil.relativedelta import relativedelta
 
 from odoo import _, api, fields, models, SUPERUSER_ID
-from odoo.modules.registry import Registry
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
-from odoo.tools.safe_eval import safe_eval
+from odoo.tools import safe_eval
 
 _logger = logging.getLogger(__name__)
 
@@ -172,9 +169,9 @@ class BaseAutomation(models.Model):
             :returns: dict -- evaluation context given to safe_eval
         """
         return {
-            'datetime': datetime,
-            'dateutil': dateutil,
-            'time': time,
+            'datetime': safe_eval.datetime,
+            'dateutil': safe_eval.dateutil,
+            'time': safe_eval.time,
             'uid': self.env.uid,
             'user': self.env.user,
         }
@@ -198,7 +195,7 @@ class BaseAutomation(models.Model):
     def _filter_pre(self, records):
         """ Filter the records that satisfy the precondition of action ``self``. """
         if self.filter_pre_domain and records:
-            domain = [('id', 'in', records.ids)] + safe_eval(self.filter_pre_domain, self._get_eval_context())
+            domain = [('id', 'in', records.ids)] + safe_eval.safe_eval(self.filter_pre_domain, self._get_eval_context())
             return records.sudo().search(domain).with_env(records.env)
         else:
             return records
@@ -209,7 +206,7 @@ class BaseAutomation(models.Model):
     def _filter_post_export_domain(self, records):
         """ Filter the records that satisfy the postcondition of action ``self``. """
         if self.filter_domain and records:
-            domain = [('id', 'in', records.ids)] + safe_eval(self.filter_domain, self._get_eval_context())
+            domain = [('id', 'in', records.ids)] + safe_eval.safe_eval(self.filter_domain, self._get_eval_context())
             return records.sudo().search(domain).with_env(records.env), domain
         else:
             return records, None

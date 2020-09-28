@@ -15,13 +15,14 @@ condition/math builtins.
 #  - safe_eval in lp:~xrg/openobject-server/optimize-5.0
 #  - safe_eval in tryton http://hg.tryton.org/hgwebdir.cgi/trytond/rev/bbb5f73319ad
 import dis
-from opcode import HAVE_ARGUMENT, opmap, opname
-
 import functools
-from psycopg2 import OperationalError
-from types import CodeType
 import logging
+import types
+from opcode import HAVE_ARGUMENT, opmap, opname
+from types import CodeType
+
 import werkzeug
+from psycopg2 import OperationalError
 
 from .misc import ustr
 
@@ -306,6 +307,9 @@ def safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval", nocopy=Fal
         if locals_dict is not None:
             locals_dict = dict(locals_dict)
 
+    check_values(globals_dict)
+    check_values(locals_dict)
+
     if globals_dict is None:
         globals_dict = {}
 
@@ -350,3 +354,59 @@ def test_python_expr(expr, mode="eval"):
             msg = ustr(err)
         return msg
     return False
+
+
+def check_values(d):
+    if not d:
+        return d
+    for v in d.values():
+        if isinstance(v, types.ModuleType):
+            raise TypeError(f"""Module {v} can not be used in evaluation contexts
+
+Prefer providing only the items necessary for your intended use.
+
+If a "module" is necessary for backwards compatibility, use
+`odoo.tools.safe_eval.wrap_module` to generate a wrapper recursively
+whitelisting allowed attributes.
+
+Pre-wrapped modules are provided as attributes of `odoo.tools.safe_eval`.
+""")
+    return d
+
+class wrap_module:
+    def __init__(self, module, attributes):
+        """Helper for wrapping a package/module to expose selected attributes
+
+        :param module: the actual package/module to wrap, as returned by ``import <module>``
+        :param iterable attributes: attributes to expose / whitelist. If a dict,
+                                    the keys are the attributes and the values
+                                    are used as an ``attributes`` in case the
+                                    corresponding item is a submodule
+        """
+        # builtin modules don't have a __file__ at all
+        modfile = getattr(module, '__file__', '(built-in)')
+        self._repr = f"<wrapped {module.__name__!r} ({modfile})>"
+        for attrib in attributes:
+            target = getattr(module, attrib)
+            if isinstance(target, types.ModuleType):
+                target = wrap_module(target, attributes[attrib])
+            setattr(self, attrib, target)
+
+    def __repr__(self):
+        return self._repr
+
+# dateutil submodules are lazy so need to import them for them to "exist"
+import dateutil
+mods = ['parser', 'relativedelta', 'rrule', 'tz']
+for mod in mods:
+    __import__('dateutil.%s' % mod)
+datetime = wrap_module(__import__('datetime'), ['date', 'datetime', 'time', 'timedelta', 'timezone', 'tzinfo', 'MAXYEAR', 'MINYEAR'])
+dateutil = wrap_module(dateutil, {
+    mod: getattr(dateutil, mod).__all__
+    for mod in mods
+})
+json = wrap_module(__import__('json'), ['loads', 'dumps'])
+time = wrap_module(__import__('time'), ['time', 'strptime', 'strftime'])
+pytz = wrap_module(__import__('pytz'), [
+    'utc', 'UTC', 'timezone',
+])

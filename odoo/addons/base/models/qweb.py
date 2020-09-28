@@ -18,6 +18,7 @@ import werkzeug
 from werkzeug.utils import escape as _escape
 
 from odoo.tools import pycompat, freehash
+from odoo.tools.safe_eval import check_values
 
 import builtins
 builtin_defaults = {name: getattr(builtins, name) for name in dir(builtins)}
@@ -325,6 +326,7 @@ class QWeb(object):
             log = {'last_path_node': None}
             new = self.default_values()
             new.update(values)
+            check_values(new)
             try:
                 return compiled(self, append, new, options, log)
             except (QWebException, TransactionRollbackError) as e:
