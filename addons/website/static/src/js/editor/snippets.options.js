@@ -1637,62 +1637,6 @@ options.registry.Parallax = options.Class.extend({
     },
 });
 
-options.registry.ul = options.Class.extend({
-    /**
-     * @override
-     */
-    start: function () {
-        var self = this;
-        this.$target.on('mouseup', '.o_ul_toggle_self, .o_ul_toggle_next', function () {
-            self.trigger_up('cover_update');
-        });
-        return this._super.apply(this, arguments);
-    },
-    /**
-     * @override
-     */
-    cleanForSave: function () {
-        this._super();
-        if (!this.$target.hasClass('o_ul_folded')) {
-            this.$target.find('.o_close').removeClass('o_close');
-            this.$target.find('li').css('list-style', '');
-        }
-    },
-
-    //--------------------------------------------------------------------------
-    // Options
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     */
-    selectClass: async function () {
-        await this._super.apply(this, arguments);
-
-        this.trigger_up('widgets_stop_request', {
-            $target: this.$target,
-        });
-
-        this.$target.find('.o_ul_toggle_self, .o_ul_toggle_next').remove();
-        this.$target.find('li:has(>ul,>ol)').map(function () {
-            // get if the li contain a text label
-            var texts = _.filter(_.toArray(this.childNodes), a => (a.nodeType === 3));
-            if (!texts.length || !texts.reduce((a, b) => (a.textContent + b.textContent)).match(/\S/)) {
-                return;
-            }
-            $(this).children('ul,ol').addClass('o_close');
-            return $(this).children(':not(ul,ol)')[0] || this;
-        })
-        .prepend('<a href="#" class="o_ul_toggle_self fa" />');
-        var $li = this.$target.find('li:has(+li:not(>.o_ul_toggle_self)>ul, +li:not(>.o_ul_toggle_self)>ol)');
-        $li.css('list-style', this.$target.hasClass('o_ul_folded') ? 'none' : '');
-        $li.map((i, el) => ($(el).children()[0] || el))
-            .prepend('<a href="#" class="o_ul_toggle_next fa" />');
-        $li.removeClass('o_open').next().addClass('o_close');
-        this.$target.find('li').removeClass('o_open');
-    },
-});
-
 options.registry.collapse = options.Class.extend({
     /**
      * @override

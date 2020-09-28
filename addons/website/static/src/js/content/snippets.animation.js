@@ -769,41 +769,6 @@ registry.backgroundVideo = publicWidget.Widget.extend({
     },
 });
 
-registry.ul = publicWidget.Widget.extend({
-    selector: 'ul.o_ul_folded, ol.o_ul_folded',
-    events: {
-        'click .o_ul_toggle_next': '_onToggleNextClick',
-        'click .o_ul_toggle_self': '_onToggleSelfClick',
-    },
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * Called when a "toggle next" ul is clicked.
-     *
-     * @private
-     */
-    _onToggleNextClick: function (ev) {
-        ev.preventDefault();
-        var $target = $(ev.currentTarget);
-        $target.toggleClass('o_open');
-        $target.closest('li').next().toggleClass('o_close');
-    },
-    /**
-     * Called when a "toggle self" ul is clicked.
-     *
-     * @private
-     */
-    _onToggleSelfClick: function (ev) {
-        ev.preventDefault();
-        var $target = $(ev.currentTarget);
-        $target.toggleClass('o_open');
-        $target.closest('li').find('ul,ol').toggleClass('o_close');
-    },
-});
-
 registry.socialShare = publicWidget.Widget.extend({
     selector: '.oe_social_share',
     xmlDependencies: ['/website/static/src/xml/website.share.xml'],
