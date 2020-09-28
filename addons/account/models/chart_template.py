@@ -868,6 +868,10 @@ class AccountTaxTemplate(models.Model):
         help="Check this if the price you use on the product and invoices includes this tax.")
     include_base_amount = fields.Boolean(string='Affect Subsequent Taxes', default=False,
         help="If set, taxes which are computed after this one will be computed based on the price tax included.")
+    is_affected_former_tax = fields.Boolean(
+        string="Is Affected by Former Tax",
+        default=True,
+        help="If set, taxes are affected by previous one that affect the base.")
     analytic = fields.Boolean(string="Analytic Cost", help="If set, the amount computed by this tax will be assigned to the same analytic account as the invoice line (if any)")
     invoice_repartition_line_ids = fields.One2many(string="Repartition for Invoices", comodel_name="account.tax.repartition.line.template", inverse_name="invoice_tax_id", copy=True, help="Repartition when the tax is used on an invoice")
     refund_repartition_line_ids = fields.One2many(string="Repartition for Refund Invoices", comodel_name="account.tax.repartition.line.template", inverse_name="refund_tax_id", copy=True, help="Repartition when the tax is used on a refund")
@@ -917,6 +921,7 @@ class AccountTaxTemplate(models.Model):
             'description': self.description,
             'price_include': self.price_include,
             'include_base_amount': self.include_base_amount,
+            'is_affected_former_tax': self.is_affected_former_tax,
             'analytic': self.analytic,
             'children_tax_ids': [(6, 0, children_ids)],
             'tax_exigibility': self.tax_exigibility,

@@ -74,6 +74,10 @@ class AccountTax(models.Model):
         help="Check this if the price you use on the product and invoices includes this tax.")
     include_base_amount = fields.Boolean(string='Affect Base of Subsequent Taxes', default=False,
         help="If set, taxes which are computed after this one will be computed based on the price tax included.")
+    is_affected_former_tax = fields.Boolean(
+        string="Is Affected by Former Tax",
+        default=True,
+        help="If set, taxes are affected by previous one that affect the base.")
     analytic = fields.Boolean(string="Include in Analytic Cost", help="If set, the amount computed by this tax will be assigned to the same analytic account as the invoice line (if any)")
     tax_group_id = fields.Many2one('account.tax.group', string="Tax Group", default=_default_tax_group, required=True)
     # Technical field to make the 'tax_exigibility' field invisible if the same named field is set to false in 'res.company' model
@@ -363,15 +367,24 @@ class AccountTax(models.Model):
         # 2) Avoid mixing taxes having price_include=False && include_base_amount=True
         # with taxes having price_include=True. This use case is not supported as the
         # computation of the total_excluded would be impossible.
-        base_excluded_flag = False  # price_include=False && include_base_amount=True
-        included_flag = False  # price_include=True
+        include_base_amount_price_include = False # price_include=True && include_base_amount=True
+        include_base_amount_price_exclude = False # price_include=False && include_base_amount=True
+        allow_not_affected_tax = False
         for tax in taxes:
-            if tax.price_include:
-                included_flag = True
-            elif tax.include_base_amount:
-                base_excluded_flag = True
-            if base_excluded_flag and included_flag:
-                raise UserError(_('Unable to mix any taxes being price included with taxes affecting the base amount but not included in price.'))
+            if tax.price_include and tax.include_base_amount:
+                include_base_amount_price_include = True
+            elif not tax.price_include and tax.include_base_amount:
+                include_base_amount_price_exclude = True
+            if tax.include_base_amount and tax.is_affected_former_tax:
+                allow_not_affected_tax = True
+            elif tax.include_base_amount and not tax.is_affected_former_tax:
+                if not allow_not_affected_tax:
+                    raise UserError(_("Unable to use not affected by former taxes option if not following a tax affecting the base amount."))
+            else:
+                allow_not_affected_tax = False
+
+        if include_base_amount_price_include and include_base_amount_price_exclude:
+            raise UserError(_('Unable to mix any taxes being price included with taxes affecting the base amount but not included in price.'))
 
         # 3) Deal with the rounding methods
         if not currency:
@@ -456,118 +469,173 @@ class AccountTax(models.Model):
             base = -base
             sign = -1
 
-        # Store the totals to reach when using price_include taxes (only the last price included in row)
-        total_included_checkpoints = {}
-        i = len(taxes) - 1
-        store_included_tax_total = True
+        if is_refund:
+            tax_rep_field = 'refund_repartition_line_ids'
+        else:
+            tax_rep_field = 'invoice_repartition_line_ids'
+
+        collected_tax_vals_list = []
+
         # Keep track of the accumulated included fixed/percent amount.
         incl_fixed_amount = incl_percent_amount = incl_division_amount = 0
-        # Store the tax amounts we compute while searching for the total_excluded
-        cached_tax_amounts = {}
-        if handle_price_include:
-            for tax in reversed(taxes):
-                tax_repartition_lines = (
-                    is_refund
-                    and tax.refund_repartition_line_ids
-                    or tax.invoice_repartition_line_ids
-                ).filtered(lambda x: x.repartition_type == "tax")
-                sum_repartition_factor = sum(tax_repartition_lines.mapped("factor"))
+        collected_subsequent_taxes = self.env['account.tax']
+        collected_not_affected_subsequent_taxes = self.env['account.tax']
+        first_encountered_price_include_tax = True
+        is_in_include_base_amount_group = False
+        for i, tax in enumerate(reversed(taxes)):
 
-                if tax.include_base_amount:
-                    base = recompute_base(base, incl_fixed_amount, incl_percent_amount, incl_division_amount)
+            # Collect data about the current tax to avoid performing multiple times the same things and then, causing
+            # some inconsistencies.
+            collected_tax_vals = {
+                'tax_repartition_lines': tax[tax_rep_field].filtered(lambda x: x.repartition_type == 'tax'),
+                'price_include': tax.price_include or self._context.get('force_price_include'),
+            }
+            collected_tax_vals['factor'] = sum(collected_tax_vals['tax_repartition_lines'].mapped('factor'))
+
+            # Without 'handle_price_include', all taxes must be considered as not included in price in the first
+            # reversal descent only.
+            price_include = collected_tax_vals['price_include'] and handle_price_include
+
+            # Compute manually the amount of taxes that must give zero as result.
+            # This is done like this to avoid an amount != 0 is set to avoid rounding issues when such tax is the last
+            # before the next computation base.
+            if not tax.amount and tax.amount_type in ('percent', 'division', 'fixed'):
+                collected_tax_vals['tax_amount'] = collected_tax_vals['factorized_tax_amount'] = 0.0
+
+            if tax.include_base_amount and not is_in_include_base_amount_group:
+                # Enter one of multiple taxes having include_base_amount=True but some could have
+                # is_affected_former_tax=False.
+                is_in_include_base_amount_group = True
+
+                # At this point, we have a new computation base. Keep track of them in order to fix rounding issues
+                # later.
+                if collected_tax_vals_list:
+                    base = round(recompute_base(base, incl_fixed_amount, incl_percent_amount, incl_division_amount), prec)
                     incl_fixed_amount = incl_percent_amount = incl_division_amount = 0
-                    store_included_tax_total = True
-                if tax.price_include or self._context.get('force_price_include'):
-                    if tax.amount_type == 'percent':
-                        incl_percent_amount += tax.amount * sum_repartition_factor
-                    elif tax.amount_type == 'division':
-                        incl_division_amount += tax.amount * sum_repartition_factor
-                    elif tax.amount_type == 'fixed':
-                        incl_fixed_amount += quantity * tax.amount * sum_repartition_factor
-                    else:
-                        # tax.amount_type == other (python)
-                        tax_amount = tax._compute_amount(base, sign * price_unit, quantity, product, partner) * sum_repartition_factor
-                        incl_fixed_amount += tax_amount
-                        # Avoid unecessary re-computation
-                        cached_tax_amounts[i] = tax_amount
-                    # In case of a zero tax, do not store the base amount since the tax amount will
-                    # be zero anyway. Group and Python taxes have an amount of zero, so do not take
-                    # them into account.
-                    if store_included_tax_total and (
-                        tax.amount or tax.amount_type not in ("percent", "division", "fixed")
-                    ):
-                        total_included_checkpoints[i] = base
-                        store_included_tax_total = False
-                i -= 1
 
-        total_excluded = currency.round(recompute_base(base, incl_fixed_amount, incl_percent_amount, incl_division_amount))
+                    if price_include:
+                        collected_tax_vals_list[-1]['base'] = base
+
+            if price_include:
+                factorized_tax_amount = tax.amount * collected_tax_vals['factor']
+                if tax.amount_type == 'percent':
+                    incl_percent_amount += factorized_tax_amount
+                elif tax.amount_type == 'division':
+                    incl_division_amount += factorized_tax_amount
+                elif tax.amount_type == 'fixed':
+                    incl_fixed_amount += quantity * factorized_tax_amount
+                else: # tax.amount_type == other (python)
+                    collected_tax_vals['tax_amount'] = tax._compute_amount(base, sign * price_unit, quantity, product, partner)
+                    factorized_tax_amount = round(collected_tax_vals['tax_amount'] * collected_tax_vals['factor'], prec)
+                    collected_tax_vals['factorized_tax_amount'] = factorized_tax_amount
+                    incl_fixed_amount += factorized_tax_amount
+
+                if first_encountered_price_include_tax and 'tax_amount' not in collected_tax_vals:
+                    collected_tax_vals['initial_base'] = base
+                    first_encountered_price_include_tax = False
+
+            if tax.include_base_amount:
+
+                if tax.is_affected_former_tax:
+                    # Exit the group of taxes affecting the base of subsequent ones.
+                    is_in_include_base_amount_group = False
+                    base = round(recompute_base(base, incl_fixed_amount, incl_percent_amount, incl_division_amount), prec)
+                    incl_fixed_amount = incl_percent_amount = incl_division_amount = 0
+                    if price_include:
+                        collected_tax_vals['base'] = base
+                    collected_tax_vals['subsequent_taxes'] = collected_subsequent_taxes
+                    collected_tax_vals['subsequent_tags'] = collected_subsequent_taxes.get_tax_tags(is_refund, 'base')
+                    collected_subsequent_taxes += collected_not_affected_subsequent_taxes
+                    collected_not_affected_subsequent_taxes = self.env['account.tax']
+                else:
+                    collected_not_affected_subsequent_taxes |= tax
+
+            if tax.is_affected_former_tax:
+                collected_subsequent_taxes |= tax
+
+            # The first base (total_excluded) must always be rounded using the decimal precision of the currency
+            # even with round_globally.
+            if i == len(taxes) - 1:
+                base = currency.round(recompute_base(base, incl_fixed_amount, incl_percent_amount, incl_division_amount))
+                collected_tax_vals['base'] = base
+                incl_fixed_amount = incl_percent_amount = incl_division_amount = 0
+
+            collected_tax_vals_list.append(collected_tax_vals)
+
+        collected_tax_vals_list = list(reversed(collected_tax_vals_list))
 
         # 5) Iterate the taxes in the sequence order to compute missing tax amounts.
         # Start the computation of accumulated amounts at the total_excluded value.
-        base = total_included = total_void = total_excluded
+        total_included = total_void = total_excluded = base
 
         taxes_vals = []
-        i = 0
         cumulated_tax_included_amount = 0
-        for tax in taxes:
-            tax_repartition_lines = (is_refund and tax.refund_repartition_line_ids or tax.invoice_repartition_line_ids).filtered(lambda x: x.repartition_type == 'tax')
-            sum_repartition_factor = sum(tax_repartition_lines.mapped('factor'))
+        cumutated_base_amount = 0
+        is_in_include_base_amount_group = False
+        for i, tax in enumerate(taxes.with_context(force_price_include=False)):
+            collected_tax_vals = collected_tax_vals_list[i]
 
-            price_include = self._context.get('force_price_include', tax.price_include)
+            if tax.include_base_amount and not collected_tax_vals['price_include'] and not is_in_include_base_amount_group:
+                is_in_include_base_amount_group = True
+            if not tax.include_base_amount and is_in_include_base_amount_group:
+                is_in_include_base_amount_group = False
+                base += cumutated_base_amount
+                cumutated_base_amount = 0
 
-            #compute the tax_amount
-            if price_include and total_included_checkpoints.get(i):
-                # We know the total to reach for that tax, so we make a substraction to avoid any rounding issues
-                tax_amount = total_included_checkpoints[i] - (base + cumulated_tax_included_amount)
+            if 'base' in collected_tax_vals:
+                base = collected_tax_vals['base']
                 cumulated_tax_included_amount = 0
             else:
-                tax_amount = tax.with_context(force_price_include=False)._compute_amount(
-                    base, sign * price_unit, quantity, product, partner)
+                collected_tax_vals['base'] = base
 
-            # Round the tax_amount multiplied by the computed repartition lines factor.
-            tax_amount = round(tax_amount, prec)
-            factorized_tax_amount = round(tax_amount * sum_repartition_factor, prec)
+            if 'tax_amount' not in collected_tax_vals:
+                if 'initial_base' in collected_tax_vals:
+                    next_base = collected_tax_vals['initial_base']
+                elif collected_tax_vals['price_include'] and i + 1 < len(collected_tax_vals_list) and 'base' in collected_tax_vals_list[i + 1]:
+                    next_base = collected_tax_vals_list[i + 1]['base']
+                else:
+                    next_base = None
 
-            if price_include and not total_included_checkpoints.get(i):
-                cumulated_tax_included_amount += factorized_tax_amount
+                if next_base is None:
+                    tax_amount = tax._compute_amount(collected_tax_vals['base'], sign * price_unit, quantity, product, partner)
+                    collected_tax_vals['tax_amount'] = tax_amount
+                    collected_tax_vals['factorized_tax_amount'] = round(tax_amount * collected_tax_vals['factor'], prec)
+                else:
+                    collected_tax_vals['factorized_tax_amount'] = next_base - collected_tax_vals['base'] - cumulated_tax_included_amount
+                    collected_tax_vals['tax_amount'] = collected_tax_vals['factorized_tax_amount'] / collected_tax_vals['factor']
 
-            # If the tax affects the base of subsequent taxes, its tax move lines must
-            # receive the base tags and tag_ids of these taxes, so that the tax report computes
-            # the right total
-            subsequent_taxes = self.env['account.tax']
-            subsequent_tags = self.env['account.account.tag']
-            if tax.include_base_amount:
-                subsequent_taxes = taxes[i+1:]
-                subsequent_tags = subsequent_taxes.get_tax_tags(is_refund, 'base')
+            if collected_tax_vals['price_include']:
+                cumulated_tax_included_amount += collected_tax_vals['factorized_tax_amount']
+            elif tax.include_base_amount:
+                cumutated_base_amount += collected_tax_vals['factorized_tax_amount']
 
-            # Compute the tax line amounts by multiplying each factor with the tax amount.
-            # Then, spread the tax rounding to ensure the consistency of each line independently with the factorized
-            # amount. E.g:
-            #
-            # Suppose a tax having 4 x 50% repartition line applied on a tax amount of 0.03 with 2 decimal places.
-            # The factorized_tax_amount will be 0.06 (200% x 0.03). However, each line taken independently will compute
-            # 50% * 0.03 = 0.01 with rounding. It means there is 0.06 - 0.04 = 0.02 as total_rounding_error to dispatch
-            # in lines as 2 x 0.01.
-            repartition_line_amounts = [round(tax_amount * line.factor, prec) for line in tax_repartition_lines]
-            total_rounding_error = round(factorized_tax_amount - sum(repartition_line_amounts), prec)
+            # Manage the repartition lines.
+
+            repartition_line_amounts = [round(collected_tax_vals['tax_amount'] * line.factor, prec)
+                                        for line in collected_tax_vals['tax_repartition_lines']]
+            total_rounding_error = round(collected_tax_vals['factorized_tax_amount'] - sum(repartition_line_amounts), prec)
             nber_rounding_steps = int(abs(total_rounding_error / currency.rounding))
-            rounding_error = round(nber_rounding_steps and total_rounding_error / nber_rounding_steps or 0.0, prec)
+            rounding_error = round(total_rounding_error / nber_rounding_steps, prec) if nber_rounding_steps else 0.0
 
-            for repartition_line, line_amount in zip(tax_repartition_lines, repartition_line_amounts):
+            for repartition_line, line_amount in zip(collected_tax_vals['tax_repartition_lines'], repartition_line_amounts):
 
                 if nber_rounding_steps:
                     line_amount += rounding_error
                     nber_rounding_steps -= 1
 
+                account = tax.cash_basis_transition_account_id if tax.tax_exigibility == 'on_payment' else repartition_line.account_id
+                subsequent_tags = collected_tax_vals.get('subsequent_tags', self.env['account.account.tag'])
+                subsequent_taxes = collected_tax_vals.get('subsequent_taxes', self.env['account.tax'])
+
                 taxes_vals.append({
                     'id': tax.id,
                     'name': partner and tax.with_context(lang=partner.lang).name or tax.name,
                     'amount': sign * line_amount,
-                    'base': round(sign * base, prec),
+                    'base': round(sign * collected_tax_vals['base'], prec),
                     'sequence': tax.sequence,
-                    'account_id': tax.cash_basis_transition_account_id.id if tax.tax_exigibility == 'on_payment' else repartition_line.account_id.id,
+                    'account_id': account.id,
                     'analytic': tax.analytic,
-                    'price_include': price_include,
+                    'price_include': collected_tax_vals['price_include'],
                     'tax_exigibility': tax.tax_exigibility,
                     'tax_repartition_line_id': repartition_line.id,
                     'tag_ids': (repartition_line.tag_ids + subsequent_tags).ids,
@@ -577,15 +645,10 @@ class AccountTax(models.Model):
                 if not repartition_line.account_id:
                     total_void += line_amount
 
-            # Affect subsequent taxes
-            if tax.include_base_amount:
-                base += factorized_tax_amount
-
-            total_included += factorized_tax_amount
-            i += 1
+            total_included += collected_tax_vals['factorized_tax_amount']
 
         return {
-            'base_tags': taxes.mapped(is_refund and 'refund_repartition_line_ids' or 'invoice_repartition_line_ids').filtered(lambda x: x.repartition_type == 'base').mapped('tag_ids').ids,
+            'base_tags': taxes.mapped(tax_rep_field).filtered(lambda x: x.repartition_type == 'base').mapped('tag_ids').ids,
             'taxes': taxes_vals,
             'total_excluded': sign * total_excluded,
             'total_included': sign * currency.round(total_included),

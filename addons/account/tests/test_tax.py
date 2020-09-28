@@ -166,17 +166,15 @@ class TestTaxCommon(AccountTestInvoicingCommon):
     def _check_compute_all_results(self, total_included, total_excluded, taxes, res):
         self.assertAlmostEqual(res['total_included'], total_included)
         self.assertAlmostEqual(res['total_excluded'], total_excluded)
-        for i in range(0, len(taxes)):
-            self.assertAlmostEqual(res['taxes'][i]['base'], taxes[i][0])
-            self.assertAlmostEqual(res['taxes'][i]['amount'], taxes[i][1])
+        for exp_tax_res, tax_res in zip(taxes, res['taxes']):
+            self.assertAlmostEqual(tax_res['base'], exp_tax_res[0])
+            self.assertAlmostEqual(tax_res['amount'], exp_tax_res[1])
+            if len(exp_tax_res) > 2:
+                self.assertEqual(tax_res['tax_ids'], exp_tax_res[2])
 
 
 @tagged('post_install', '-at_install')
 class TestTax(TestTaxCommon):
-
-    @classmethod
-    def setUpClass(cls):
-        super(TestTax, cls).setUpClass()
 
     def test_tax_group_of_group_tax(self):
         self.fixed_tax.include_base_amount = True
@@ -944,4 +942,41 @@ class TestTax(TestTaxCommon):
                 # ---------------
             ],
             res2
+        )
+
+    def test_tax_include_base_amount_not_affected(self):
+        taxes = self.env['account.tax'].create([{
+            'name': 'test_invoice_taxes_%s' % i,
+            'amount_type': 'percent',
+            'amount': amount,
+            'is_affected_former_tax': is_affected_former_tax,
+            'include_base_amount': include_base_amount,
+            'price_include': price_include,
+            'sequence': i,
+        } for i, amount, is_affected_former_tax, include_base_amount, price_include in [
+            (0, 10, True, True, True),
+            (1, 10, False, True, True),
+            (2, 10, False, True, True),
+            (3, 20, True, False, False),
+            (4, 10, True, True, True),
+            (5, 10, False, True, True),
+            (6, 30, True, False, False),
+        ]])
+
+        self._check_compute_all_results(
+            228.8,      # 'total_included'
+            100.0,      # 'total_excluded'
+            [
+                # base,     amount, taxes
+                # -------------------------
+                (100.0,     10.0,   (taxes[6] + taxes[5] + taxes[4] + taxes[3]).ids),
+                (100.0,     10.0,   []),
+                (100.0,     10.0,   []),
+                (130.0,     26.0,   []),
+                (130.0,     13.0,   taxes[6].ids),
+                (130.0,     13.0,   []),
+                (156.0,     46.8,   []),
+                # -------------------------
+            ],
+            taxes.compute_all(156.0),
         )
