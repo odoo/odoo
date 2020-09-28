@@ -53,17 +53,15 @@ const ForecastWidgetField = AbstractField.extend({
     _onOpenReport: function (ev) {
         ev.preventDefault();
         ev.stopPropagation();
-        const productId = this.recordData.product_id.res_id;
-        const resModel = 'product.product';
         this._rpc({
-            model: resModel,
+            model: 'stock.move',
             method: 'action_product_forecast_report',
-            args: [productId],
+            args: [this.recordData.id],
         }).then(action => {
-            action.context = {
-                active_model: resModel,
-                active_id: productId,
-            };
+            action.context = Object.assign(action.context || {}, {
+                active_model: 'product.product',
+                active_id: this.recordData.product_id.res_id,
+            });
             this.do_action(action);
         });
     },
