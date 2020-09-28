@@ -312,7 +312,27 @@ class WebsiteEventController(http.Controller):
                 availability_check = False
         if not tickets:
             return False
-        return request.env['ir.ui.view']._render_template("website_event.registration_attendee_details", {'tickets': tickets, 'event': event, 'availability_check': availability_check})
+        default_first_attendee = {}
+        if not request.env.user._is_public():
+            default_first_attendee = {
+                "name": request.env.user.name,
+                "email": request.env.user.email,
+                "phone": request.env.user.mobile or request.env.user.phone,
+            }
+        else:
+            visitor = request.env['website.visitor']._get_visitor_from_request()
+            if visitor.email:
+                default_first_attendee = {
+                    "name": visitor.name,
+                    "email": visitor.email,
+                    "phone": visitor.mobile,
+                }
+        return request.env['ir.ui.view']._render_template("website_event.registration_attendee_details", {
+            'tickets': tickets,
+            'event': event,
+            'availability_check': availability_check,
+            'default_first_attendee': default_first_attendee,
+        })
 
     def _process_attendees_form(self, event, form_details):
         """ Process data posted from the attendee details form.
