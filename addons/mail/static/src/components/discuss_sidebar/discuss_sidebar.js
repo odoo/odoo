@@ -55,6 +55,13 @@ class DiscussSidebar extends Component {
     }
 
     /**
+     * @returns {string}
+     */
+    get FIND_OR_CREATE_CHANNEL() {
+        return this.env._t("Find or create a channel...");
+    }
+
+    /**
      * @returns {mail.thread[]}
      */
     get orderedMailboxes() {
