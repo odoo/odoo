@@ -96,8 +96,16 @@ body.editor_enable.editor_has_snippets {
             .note-back-color-preview {
                 margin-left: $-text-tools-gap;
             }
-            .btn:after {
-                display: none;
+            .btn {
+
+                > .caret {
+                    display: block;
+                    @include o-position-absolute(auto, 0, 0, 0);
+                    border-bottom: 2px solid transparent;
+                }
+                &::after {
+                    display: none;
+                }
             }
         }
         &.note-style {

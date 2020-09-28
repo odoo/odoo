@@ -245,8 +245,8 @@ eventHandler.modules.popover.button.update = function ($container, oStyle) {
         $(oStyle.image).addClass('o_we_selected_image');
 
         if (dom.isImgFont(oStyle.image)) {
-            $container.find('.note-fore-color-preview > button').css('border-bottom-color', $(oStyle.image).css('color'));
-            $container.find('.note-back-color-preview > button').css('border-bottom-color', $(oStyle.image).css('background-color'));
+            $container.find('.note-fore-color-preview > button > .caret').css('border-bottom-color', $(oStyle.image).css('color'));
+            $container.find('.note-back-color-preview > button > .caret').css('border-bottom-color', $(oStyle.image).css('background-color'));
 
             $container.find('.btn-group:not(.only_fa):has(button[data-event="resize"],button[data-value="img-thumbnail"])').addClass('d-none');
             $container.find('.only_fa').removeClass('d-none');
@@ -287,8 +287,8 @@ eventHandler.modules.popover.button.update = function ($container, oStyle) {
 
         $(oStyle.image).trigger('attributes_change');
     } else {
-        $container.find('.note-fore-color-preview > button').css('border-bottom-color', oStyle.color);
-        $container.find('.note-back-color-preview > button').css('border-bottom-color', oStyle['background-color']);
+        $container.find('.note-fore-color-preview > button > .caret').css('border-bottom-color', oStyle.color);
+        $container.find('.note-back-color-preview > button > .caret').css('border-bottom-color', oStyle['background-color']);
     }
 };
 
