@@ -616,6 +616,13 @@ function factory(dependencies) {
          * @param {string} state
          */
         async notifyFoldStateToServer(state) {
+            if (this.model !== 'mail.channel') {
+                // Server sync of fold state is only supported for channels.
+                return;
+            }
+            if (!this.uuid) {
+                return;
+            }
             return this.env.models['mail.thread'].performRpcChannelFold(this.uuid, state);
         }
 
