@@ -44,11 +44,11 @@
         .o_wesession_track_main {
             // Force side panel min-width to account for potential Youtube chat
             // And adapt main panel max-width accordingly.
-            @include media-breakpoint-up(xl) {
+            @include media-breakpoint-up(md) {
                 max-width: calc(100% - 22rem);
             }
 
-            @media screen and (min-width: 1400px) {
+            @media screen and (min-width: 1900px) {
                 // return to bootstrap value for col-lg-9 / 10 breakpoint if screen is big enough
                 &.col-lg-9 {
                     max-width: 75%;
@@ -63,11 +63,11 @@
         // Left panel: other tracks
         .o_wesession_track_aside {
             // Force side panel min-width to account for potential Youtube chat
-            @include media-breakpoint-up(xl) {
+            @include media-breakpoint-up(md) {
                 min-width: 22rem;
             }
 
-            @media screen and (min-width: 1400px) {
+            @media screen and (min-width: 1900px) {
                 min-width: auto;
             }
 
