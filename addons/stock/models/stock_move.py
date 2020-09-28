@@ -643,6 +643,12 @@ class StockMove(models.Model):
         }
         return action
 
+    def action_product_forecast_report(self):
+        self.ensure_one()
+        action = self.product_id.action_product_forecast_report()
+        action['context'] = {'warehouse': (self.picking_type_id or self.picking_id.picking_type_id).warehouse_id.id,}
+        return action
+
     def _do_unreserve(self):
         moves_to_unreserve = self.env['stock.move']
         moves_not_to_recompute = self.env['stock.move']
