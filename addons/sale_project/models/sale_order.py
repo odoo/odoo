@@ -75,7 +75,9 @@ class SaleOrder(models.Model):
             if action.get('context'):
                 eval_context = self.env['ir.actions.actions']._get_eval_context()
                 eval_context.update({'active_id': task_projects.id})
-                action['context'] = safe_eval(action['context'], eval_context)
+                action_context = safe_eval(action['context'], eval_context)
+                action_context.update(eval_context)
+                action['context'] = action_context
         else:
             action = self.env["ir.actions.actions"]._for_xml_id("project.action_view_task")
             action['context'] = {}  # erase default context to avoid default filter
@@ -202,6 +204,7 @@ class SaleOrderLine(models.Model):
             # duplicating a project doesn't set the SO on sub-tasks
             project.tasks.filtered(lambda task: task.parent_id != False).write({
                 'sale_line_id': self.id,
+                'sale_order_id': self.order_id,
             })
         else:
             project = self.env['project.project'].create(values)
