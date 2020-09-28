@@ -22,9 +22,12 @@ tour.register('mail_tour', {
         actions.text("SomeChannel_" + t, this.$anchor);
     },
 }, {
-    trigger: ".ui-autocomplete .ui-menu-item > a:contains(Create):has(.fa-lock)",
-    content: _t("<p> Create a private channel.</p>"),
-    position: 'bottom',
+    trigger: ".o_DiscussSidebar_newChannelAutocompleteSuggestions",
+    content: _t("<p>Create a public or private channel.</p>"),
+    position: 'right',
+    run() {
+        this.$consumeEventAnchors.find('li:first').click();
+    },
 }, {
     trigger: '.o_Discuss_thread .o_ComposerTextInput_textarea',
     content: _t("<p><b>Write a message</b> to the members of the channel here.</p> <p>You can notify someone with <i>'@'</i> or link another channel with <i>'#'</i>. Start your message with <i>'/'</i> to get the list of possible commands.</p>"),
