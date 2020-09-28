@@ -226,7 +226,7 @@ class WebsiteForum(WebsiteProfile):
                 type='http', auth="public", website=True, sitemap=False)
     def old_question(self, forum, question, **post):
         # Compatibility pre-v14
-        return request.redirect(_build_url_w_params("/forum/%s/question/%s" % (slug(forum), slug(question)), request.params), code=301)
+        return request.redirect(_build_url_w_params("/forum/%s/%s" % (slug(forum), slug(question)), request.params), code=301)
 
     @http.route(['''/forum/<model("forum.forum"):forum>/<model("forum.post", "[('forum_id','=',forum.id),('parent_id','=',False),('can_view', '=', True)]"):question>'''],
                 type='http', auth="public", website=True, sitemap=True)
