@@ -109,7 +109,7 @@ class ReplenishmentReport(models.AbstractModel):
         res['lines'] = self._get_report_lines(product_template_ids, product_variant_ids, wh_location_ids)
         return res
 
-    def _prepare_report_line(self, quantity, move_out=None, move_in=None, replenishment_filled=True, product=False):
+    def _prepare_report_line(self, quantity, move_out=None, move_in=None, replenishment_filled=True, product=False, reservation=False):
         timezone = self._context.get('tz')
         product = product or (move_out.product_id if move_out else move_in.product_id)
         is_late = move_out.date < move_in.date if (move_out and move_in) else False
@@ -124,12 +124,11 @@ class ReplenishmentReport(models.AbstractModel):
             'uom_id': product.uom_id,
             'receipt_date': format_datetime(self.env, move_in.date, timezone, 'medium') if move_in else False,
             'delivery_date': format_datetime(self.env, move_out.date, timezone, 'medium') if move_out else False,
-            'receipt_date_short': format_date(self.env, move_in.date) if move_in else False,
-            'delivery_date_short': format_date(self.env, move_out.date) if move_out else False,
             'is_late': is_late,
             'quantity': quantity,
             'move_out': move_out,
             'move_in': move_in,
+            'reservation': reservation,
         }
 
     def _get_report_lines(self, product_template_ids, product_variant_ids, wh_location_ids):
@@ -149,9 +148,20 @@ class ReplenishmentReport(models.AbstractModel):
         lines = []
         for product in (ins | outs).product_id:
             for out in outs_per_product[product.id]:
+                if out.state not in ('partially_available', 'assigned'):
+                    continue
+                current = currents[out.product_id.id]
+                reserved = out.product_uom._compute_quantity(out.reserved_availability, product.uom_id)
+                currents[product.id] -= reserved
+                lines.append(self._prepare_report_line(reserved, move_out=out, reservation=True))
+
+            for out in outs_per_product[product.id]:
                 # Reconcile with the current stock.
                 current = currents[out.product_id.id]
-                demand = out.product_qty
+                reserved = 0.0
+                if out.state in ('partially_available', 'assigned'):
+                    reserved = out.product_uom._compute_quantity(out.reserved_availability, product.uom_id)
+                demand = out.product_qty - reserved
                 taken_from_stock = min(demand, current)
                 if not float_is_zero(taken_from_stock, precision_rounding=product.uom_id.rounding):
                     currents[product.id] -= taken_from_stock
@@ -168,10 +178,10 @@ class ReplenishmentReport(models.AbstractModel):
                         lines.append(self._prepare_report_line(taken_from_in, move_in=in_[1], move_out=out))
                         ins_per_product[out.product_id.id][index][0] -= taken_from_in
                         if ins_per_product[out.product_id.id][index][0] <= 0:
-                            index_to_remove.insert(0, index)
+                            index_to_remove.append(index)
                         if float_is_zero(demand, precision_rounding=product.uom_id.rounding):
                             break
-                    for index in index_to_remove:
+                    for index in index_to_remove[::-1]:
                         ins_per_product[out.product_id.id].pop(index)
                 # Not reconciled.
                 if not float_is_zero(demand, precision_rounding=product.uom_id.rounding):

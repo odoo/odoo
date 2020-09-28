@@ -10,6 +10,7 @@ var options = require('web_editor.snippets.options');
 var Wysiwyg = require('web_editor.wysiwyg');
 const {ColorPaletteWidget} = require('web_editor.ColorPalette');
 const SmoothScrollOnDrag = require('web/static/src/js/core/smooth_scroll_on_drag.js');
+const {getCSSVariableValue} = require('web_editor.utils');
 
 var _t = core._t;
 
@@ -71,6 +72,7 @@ var SnippetEditor = Widget.extend({
 
         this.isTargetParentEditable = this.$target.parent().is(':o_editable');
         this.isTargetMovable = this.isTargetParentEditable && this.isTargetMovable;
+        this.isTargetRemovable = this.isTargetParentEditable && !this.$target.parent().is('[data-oe-type="image"]');
 
         // Initialize move/clone/remove buttons
         if (this.isTargetMovable) {
@@ -99,13 +101,13 @@ var SnippetEditor = Widget.extend({
                     },
                 },
             });
-            this.draggableComponent = new SmoothScrollOnDrag(this, this.$el, $('html'), smoothScrollOptions);
+            this.draggableComponent = new SmoothScrollOnDrag(this, this.$el, $().getScrollingElement(), smoothScrollOptions);
         } else {
             this.$('.o_overlay_move_options').addClass('d-none');
             $customize.find('.oe_snippet_clone').addClass('d-none');
         }
 
-        if (!this.isTargetParentEditable) {
+        if (!this.isTargetRemovable) {
             this.$el.add($customize).find('.oe_snippet_remove').addClass('d-none');
         }
 
@@ -887,6 +889,7 @@ var SnippetsMenu = Widget.extend({
 
         this._notActivableElementsSelector = [
             '#web_editor-top-edit',
+            '.o_we_website_top_actions',
             '#oe_snippets',
             '#oe_manipulators',
             '.o_technical_modal',
@@ -897,6 +900,9 @@ var SnippetsMenu = Widget.extend({
             '.modal .close',
             '.o_we_crop_widget',
         ].join(', ');
+
+        this.loadingTimers = {};
+        this.loadingElements = {};
     },
     /**
      * @override
@@ -912,7 +918,7 @@ var SnippetsMenu = Widget.extend({
     /**
      * @override
      */
-    start: function () {
+    async start() {
         var defs = [this._super.apply(this, arguments)];
         this.ownerDocument = this.$el[0].ownerDocument;
         this.$document = $(this.ownerDocument);
@@ -921,6 +927,9 @@ var SnippetsMenu = Widget.extend({
 
         this.customizePanel = document.createElement('div');
         this.customizePanel.classList.add('o_we_customize_panel', 'd-none');
+
+        this.textEditorPanelEl = document.createElement('div');
+        this.textEditorPanelEl.classList.add('o_we_snippet_text_tools');
 
         this.invisibleDOMPanelEl = document.createElement('div');
         this.invisibleDOMPanelEl.classList.add('o_we_invisible_el_panel');
@@ -931,14 +940,13 @@ var SnippetsMenu = Widget.extend({
             })[0]
         );
 
-        this._addTabLoading(this.tabs.BLOCKS);
-
         this.options.getScrollOptions = this._getScrollOptions.bind(this);
 
         // Fetch snippet templates and compute it
-        defs.push(this._loadSnippetsTemplates().then(() => {
-            return this._updateInvisibleDOM();
-        }));
+        defs.push((async () => {
+            await this._loadSnippetsTemplates();
+            await this._updateInvisibleDOM();
+        })());
 
         // Prepare snippets editor environment
         this.$snippetEditorArea = $('<div/>', {
@@ -994,8 +1002,8 @@ var SnippetsMenu = Widget.extend({
 
         // Hide the active overlay when scrolling.
         // Show it again and recompute all the overlays after the scroll.
-        // TODO: current limitation, suppose that this is the body which scrolls
-        this.$document.on('scroll.snippets_menu', _.throttle(() => {
+        this.$scrollingElement = $().getScrollingElement();
+        this.$scrollingElement.on('scroll.snippets_menu', _.throttle(() => {
             for (const editor of this.snippetEditors) {
                 editor.toggleOverlayVisibility(false);
             }
@@ -1051,6 +1059,7 @@ var SnippetsMenu = Widget.extend({
             this.$snippetEditorArea.remove();
             this.$window.off('.snippets_menu');
             this.$document.off('.snippets_menu');
+            this.$scrollingElement.off('.snippets_menu');
         }
         core.bus.off('deactivate_snippet', this, this._onDeactivateSnippet);
         delete this.cacheSnippetTemplate[this.options.snippets];
@@ -1280,21 +1289,6 @@ var SnippetsMenu = Widget.extend({
         });
     },
     /**
-     * @private
-     * @param {this.tabs.VALUE} [tab='OPTIONS'] - the tab to select
-     */
-    _addTabLoading: function (tab) {
-        const loadingEl = document.createElement('div');
-        loadingEl.classList.add('o_we_ui_loading', 'text-center', 'pt-5');
-        const loadingIconEl = document.createElement('i');
-        loadingIconEl.classList.add('fa', 'fa-circle-o-notch', 'fa-spin', 'fa-3x');
-        loadingEl.appendChild(loadingIconEl);
-        this._updateLeftPanelContent({
-            content: loadingEl,
-            tab: tab || this.tabs.OPTIONS,
-        });
-    },
-    /**
      * Adds an entry for every invisible snippet in the left panel box.
      * The entries will contains an 'Edit' button to activate their snippet.
      *
@@ -1302,7 +1296,7 @@ var SnippetsMenu = Widget.extend({
      * @returns {Promise}
      */
     _updateInvisibleDOM: function () {
-        return this._mutex.exec(() => {
+        return this._execWithLoadingEffect(() => {
             this.invisibleDOMMap = new Map();
             const $invisibleDOMPanelEl = $(this.invisibleDOMPanelEl);
             $invisibleDOMPanelEl.find('.o_we_invisible_entry').remove();
@@ -1320,7 +1314,7 @@ var SnippetsMenu = Widget.extend({
                 this.invisibleDOMMap.set($invisEntry[0], el);
             });
             return Promise.all(proms);
-        });
+        }, false);
     },
     /**
      * Disable the overlay editor of the active snippet and activate the new one
@@ -1345,7 +1339,10 @@ var SnippetsMenu = Widget.extend({
         if ($snippet && !$snippet.is(':visible')) {
             return;
         }
-        return this._mutex.exec(() => {
+        const exec = previewMode
+            ? action => this._mutex.exec(action)
+            : action => this._execWithLoadingEffect(action, false);
+        return exec(() => {
             return new Promise(resolve => {
                 // Take the first parent of the provided DOM (or itself) which
                 // should have an associated snippet editor and create + enable it.
@@ -1398,11 +1395,11 @@ var SnippetsMenu = Widget.extend({
      * @param {boolean} invalidateCache
      */
     _loadSnippetsTemplates: async function (invalidateCache) {
-        return this._mutex.exec(async () => {
+        return this._execWithLoadingEffect(async () => {
             await this._destroyEditors();
             const html = await this.loadSnippets(invalidateCache);
             await this._computeSnippetTemplates(html);
-        });
+        }, false);
     },
     /**
      * @private
@@ -1659,6 +1656,7 @@ var SnippetsMenu = Widget.extend({
         // Add the computed template and make elements draggable
         this.$el.html($html);
         this.$el.append(this.customizePanel);
+        this.$el.append(this.textEditorPanelEl);
         this.$el.append(this.invisibleDOMPanelEl);
         this._makeSnippetDraggable(this.$snippets);
         this._disableUndroppableSnippets();
@@ -1787,10 +1785,9 @@ var SnippetsMenu = Widget.extend({
      */
     _getScrollOptions(options = {}) {
         return Object.assign({}, options, {
-            offsetElements: Object.assign({
-                $top: $('#web_editor-top-edit'), // TODO should ideally be retrieved another way
-                $left: this.$el,
-            }, options.offsetElements),
+            scrollBoundaries: Object.assign({
+                right: false,
+            }, options.scrollBoundaries),
             jQueryDraggableOptions: Object.assign({
                 appendTo: this.$body,
                 cursor: 'move',
@@ -1828,12 +1825,13 @@ var SnippetsMenu = Widget.extend({
     _makeSnippetDraggable: function ($snippets) {
         var self = this;
         var $toInsert, dropped, $snippet;
-        let scrollValue;
+
+        let dragAndDropResolve;
 
         const smoothScrollOptions = this._getScrollOptions({
             jQueryDraggableOptions: {
                 distance: 0,
-                handle: '.oe_snippet_thumbnail',
+                handle: '.oe_snippet_thumbnail:not(.o_we_already_dragging)',
                 helper: function () {
                     const dragSnip = this.cloneNode(true);
                     dragSnip.querySelectorAll('.o_delete_btn').forEach(
@@ -1842,6 +1840,8 @@ var SnippetsMenu = Widget.extend({
                     return dragSnip;
                 },
                 start: function () {
+                    self.$el.find('.oe_snippet_thumbnail').addClass('o_we_already_dragging');
+
                     dropped = false;
                     $snippet = $(this);
                     var $baseBody = $snippet.find('.oe_snippet_body');
@@ -1860,6 +1860,12 @@ var SnippetsMenu = Widget.extend({
                     }
 
                     $toInsert = $baseBody.clone();
+                    // Color-customize dynamic SVGs in dropped snippets with current theme colors.
+                    [...$toInsert.find('img[src^="/web_editor/shape/"]')].forEach(dynamicSvg => {
+                        const colorCustomizedURL = new URL(dynamicSvg.getAttribute('src'), window.location.origin);
+                        colorCustomizedURL.searchParams.set('c1', getCSSVariableValue('o-color-1'));
+                        dynamicSvg.src = colorCustomizedURL.pathname + colorCustomizedURL.search;
+                    });
 
                     if (!$selectorSiblings.length && !$selectorChildren.length) {
                         console.warn($snippet.find('.oe_snippet_thumbnail_title').text() + " have not insert action: data-drop-near or data-drop-in");
@@ -1873,7 +1879,6 @@ var SnippetsMenu = Widget.extend({
                         over: function () {
                             if (!dropped) {
                                 dropped = true;
-                                scrollValue = $(this).first().offset().top;
                                 $(this).first().after($toInsert).addClass('d-none');
                                 $toInsert.removeClass('oe_snippet_body');
                             }
@@ -1888,14 +1893,16 @@ var SnippetsMenu = Widget.extend({
                             }
                         },
                     });
+
+                    const prom = new Promise(resolve => dragAndDropResolve = () => resolve());
+                    self._mutex.exec(() => prom);
                 },
                 stop: async function (ev, ui) {
                     $toInsert.removeClass('oe_snippet_body');
 
-                    if (!dropped && ui.position.top > 3 && ui.position.left > self.el.getBoundingClientRect().right) {
+                    if (!dropped && ui.position.top > 3 && ui.position.left + ui.helper.outerHeight() < self.el.getBoundingClientRect().left) {
                         var $el = $.nearest({x: ui.position.left, y: ui.position.top}, '.oe_drop_zone', {container: document.body}).first();
                         if ($el.length) {
-                            scrollValue = $el.offset().top;
                             $el.after($toInsert);
                             dropped = true;
                         }
@@ -1923,26 +1930,31 @@ var SnippetsMenu = Widget.extend({
                         }
 
                         var $target = $toInsert;
-                        await self._scrollToSnippet($target, scrollValue);
+                        await self._scrollToSnippet($target);
 
-                        _.defer(function () {
+                        _.defer(async function () {
                             self.trigger_up('snippet_dropped', {$target: $target});
                             self._disableUndroppableSnippets();
 
-                            self._callForEachChildSnippet($target, function (editor, $snippet) {
+                            dragAndDropResolve();
+
+                            await self._callForEachChildSnippet($target, function (editor, $snippet) {
                                 return editor.buildSnippet();
-                            }).then(function () {
-                                $target.trigger('content_changed');
-                                return self._updateInvisibleDOM();
                             });
+                            $target.trigger('content_changed');
+                            await self._updateInvisibleDOM();
+
+                            self.$el.find('.oe_snippet_thumbnail').removeClass('o_we_already_dragging');
                         });
                     } else {
                         $toInsert.remove();
+                        dragAndDropResolve();
+                        self.$el.find('.oe_snippet_thumbnail').removeClass('o_we_already_dragging');
                     }
                 },
             },
         });
-        this.draggableComponent = new SmoothScrollOnDrag(this, $snippets, $('html'), smoothScrollOptions);
+        this.draggableComponent = new SmoothScrollOnDrag(this, $snippets, $().getScrollingElement(), smoothScrollOptions);
     },
     /**
      * Adds the 'o_default_snippet_text' class on nodes which contain only
@@ -1993,29 +2005,77 @@ var SnippetsMenu = Widget.extend({
                                              .prop('disabled', tab !== this.tabs.OPTIONS);
     },
     /**
-     * Scroll to the dropped snippet.
+     * Scrolls to given snippet.
      *
      * @private
-     * @param {jQuery} [$el] - dropped snippet
-     * @param {integer} [scrollValue] - scrollValue
+     * @param {jQuery} $el - snippet to scroll to
+     * @return {Promise}
      */
-    _scrollToSnippet: function ($el, scrollValue) {
-        // return if it's an inner snippet or if it's dropped in a modal
-        if ($el.get(0).tagName.toLowerCase() !== 'section' || $el.parent().find("[class^='modal-']").length) {
-            return Promise.resolve();
+    async _scrollToSnippet($el) {
+        return dom.scrollTo($el[0], {extraOffset: 50});
+    },
+    /**
+     * @private
+     * @returns {HTMLElement}
+     */
+    _createLoadingElement() {
+        const loaderContainer = document.createElement('div');
+        const loader = document.createElement('i');
+        const loaderContainerClassList = [
+            'o_we_ui_loading',
+            'd-flex',
+            'justify-content-center',
+            'align-items-center',
+        ];
+        const loaderClassList = [
+            'fa',
+            'fa-circle-o-notch',
+            'fa-spin',
+            'fa-4x',
+        ];
+        loaderContainer.classList.add(...loaderContainerClassList);
+        loader.classList.add(...loaderClassList);
+        loaderContainer.appendChild(loader);
+        return loaderContainer;
+    },
+    /**
+     * Adds the action to the mutex queue and sets a loading effect over the
+     * editor to appear if the action takes too much time.
+     * As soon as the mutex is unlocked, the loading effect will be removed.
+     *
+     * @private
+     * @param {function} action
+     * @param {boolean} [contentLoading=true]
+     * @param {number} [delay=500]
+     * @returns {Promise}
+     */
+    async _execWithLoadingEffect(action, contentLoading = true, delay = 500) {
+        const mutexExecResult = this._mutex.exec(action);
+        if (!this.loadingTimers[contentLoading]) {
+            this.loadingTimers[contentLoading] = setTimeout(() => {
+                this.loadingElements[contentLoading] = this._createLoadingElement();
+                if (contentLoading) {
+                    this.$snippetEditorArea.append(this.loadingElements[contentLoading]);
+                } else {
+                    this.el.appendChild(this.loadingElements[contentLoading]);
+                }
+            }, delay);
+            this._mutex.getUnlockedDef().then(() => {
+                // Note: we remove the loading element at the end of the
+                // execution queue *even if subsequent actions are content
+                // related or not*. This is a limitation of the loading feature,
+                // the goal is still to limit the number of elements in that
+                // queue anyway.
+                clearTimeout(this.loadingTimers[contentLoading]);
+                this.loadingTimers[contentLoading] = undefined;
+
+                if (this.loadingElements[contentLoading]) {
+                    this.loadingElements[contentLoading].remove();
+                    this.loadingElements[contentLoading] = null;
+                }
+            });
         }
-        let headerHeight = 0;
-        _.each($('.o_top_fixed_element'), el => headerHeight += $(el).outerHeight());
-        return new Promise(resolve => {
-          $('html, body').animate(
-              {
-                  scrollTop: scrollValue - headerHeight - 50,
-              },
-              700,
-              'swing',
-              resolve,
-          );
-        });
+        return mutexExecResult;
     },
 
     //--------------------------------------------------------------------------
@@ -2174,10 +2234,10 @@ var SnippetsMenu = Widget.extend({
     _onInvisibleEntryClick: async function (ev) {
         ev.preventDefault();
         const $snippet = $(this.invisibleDOMMap.get(ev.currentTarget));
-        const isVisible = await this._mutex.exec(async () => {
+        const isVisible = await this._execWithLoadingEffect(async () => {
             const editor = await this._createSnippetEditor($snippet);
             return editor.toggleTargetVisibility();
-        });
+        }, true);
         $(ev.currentTarget).find('.fa')
             .toggleClass('fa-eye', isVisible)
             .toggleClass('fa-eye-slash', !isVisible);
@@ -2298,7 +2358,7 @@ var SnippetsMenu = Widget.extend({
         }
         delete data._toMutex;
         ev.stopPropagation();
-        this._mutex.exec(() => {
+        this._execWithLoadingEffect(() => {
             if (data.reloadEditor) {
                 data.reload = false;
                 const oldOnSuccess = data.onSuccess;
@@ -2310,7 +2370,7 @@ var SnippetsMenu = Widget.extend({
                 };
             }
             this.trigger_up('request_save', data);
-        });
+        }, true);
     },
     /**
      * @private
@@ -2319,7 +2379,7 @@ var SnippetsMenu = Widget.extend({
      * @param {function} ev.data.exec
      */
     _onSnippetEditionRequest: function (ev) {
-        this._mutex.exec(ev.data.exec);
+        this._execWithLoadingEffect(ev.data.exec, true);
     },
     /**
      * @private

@@ -72,13 +72,18 @@ const BaseAnimatedHeader = animations.Animation.extend({
     /**
      * @private
      */
+    _adaptFixedHeaderPosition() {
+        dom.compensateScrollbar(this.el, this.fixedHeader, false, 'right');
+    },
+    /**
+     * @private
+     */
     _adaptToHeaderChange: function () {
         this._updateMainPaddingTop();
+        this.el.classList.toggle('o_top_fixed_element', this.fixedHeader && this._isShown());
 
-        const bottom = this.el.getBoundingClientRect().bottom
-            || (this.el.nextElementSibling.getBoundingClientRect().top + window.scrollY);
         for (const callback of extraMenuUpdateCallbacks) {
-            callback(bottom);
+            callback();
         }
     },
     /**
@@ -118,12 +123,18 @@ const BaseAnimatedHeader = animations.Animation.extend({
     },
     /**
      * @private
+     */
+    _isShown() {
+        return true;
+    },
+    /**
+     * @private
      * @param {boolean} [useFixed=true]
      */
     _toggleFixedHeader: function (useFixed = true) {
         this.fixedHeader = useFixed;
         this.el.classList.toggle('o_header_affixed', useFixed);
-        this.el.classList.toggle('o_top_fixed_element', useFixed);
+        this._adaptFixedHeaderPosition();
         this._adaptToHeaderChange();
     },
     /**
@@ -179,6 +190,7 @@ const BaseAnimatedHeader = animations.Animation.extend({
      * @private
      */
     _updateHeaderOnResize: function () {
+        this._adaptFixedHeaderPosition();
         if (document.body.classList.contains('overflow-hidden')
                 && config.device.size_class > config.device.SIZES.SM) {
             document.body.classList.remove('overflow-hidden');
@@ -211,6 +223,12 @@ publicWidget.registry.StandardAffixedHeader = BaseAnimatedHeader.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * @override
+     */
+    _isShown() {
+        return !this.fixedHeader || this.fixedHeaderShow;
+    },
+    /**
      * Called when the window is scrolled
      *
      * @private
@@ -232,6 +250,7 @@ publicWidget.registry.StandardAffixedHeader = BaseAnimatedHeader.extend({
         if (this.fixedHeaderShow !== reachPosScrolled) {
             this.$el.css('transform', reachPosScrolled ? `translate(0, -${this.topGap}px)` : 'translate(0, -100%)');
             this.fixedHeaderShow = reachPosScrolled;
+            this._adaptToHeaderChange();
         }
     },
 });
@@ -294,6 +313,12 @@ const BaseDisappearingHeader = publicWidget.registry.FixedHeader.extend({
      */
     _hideHeader: function () {
         this.$el.trigger('odoo-transitionstart');
+    },
+    /**
+     * @override
+     */
+    _isShown() {
+        return !this.fixedHeader || !this.hiddenHeader;
     },
     /**
      * @private

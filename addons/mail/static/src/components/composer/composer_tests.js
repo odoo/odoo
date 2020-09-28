@@ -40,9 +40,10 @@ QUnit.module('composer_tests.js', {
         };
 
         this.start = async params => {
-            const { env, widget } = await start(Object.assign({}, params, {
+            const { afterEvent, env, widget } = await start(Object.assign({}, params, {
                 data: this.data,
             }));
+            this.afterEvent = afterEvent;
             this.env = env;
             this.widget = widget;
         };
@@ -273,56 +274,56 @@ QUnit.test('add emoji replaces (keyboard) text selection', async function (asser
     await nextAnimationFrame();
 });
 
-QUnit.test('display partner mention suggestions on typing "@"', async function (assert) {
+QUnit.test('display canned response suggestions on typing ":"', async function (assert) {
     assert.expect(2);
 
-    this.data['res.partner'].records.push({
-        email: "testpartnert@odoo.com",
+    this.data['mail.shortcode'].records.push({
         id: 11,
-        name: "TestPartner",
+        source: "hello",
+        substitution: "Hello! How are you?",
     });
-    this.data['res.users'].records.push({ partner_id: 11 });
+
     await this.start();
     const composer = this.env.models['mail.composer'].create();
     await this.createComposerComponent(composer);
 
     assert.containsNone(
         document.body,
-        '.o_ComposerTextInput_mentionDropdownPropositionList',
-        "mention suggestions list should not be present"
+        '.o_ComposerSuggestionList_list',
+        "Canned responses suggestions list should not be present"
     );
     await afterNextRender(() => {
         document.querySelector(`.o_ComposerTextInput_textarea`).focus();
-        document.execCommand('insertText', false, "@");
+        document.execCommand('insertText', false, ":");
         document.querySelector(`.o_ComposerTextInput_textarea`)
             .dispatchEvent(new window.KeyboardEvent('keydown'));
         document.querySelector(`.o_ComposerTextInput_textarea`)
             .dispatchEvent(new window.KeyboardEvent('keyup'));
     });
     assert.hasClass(
-        document.querySelector('.o_ComposerTextInput_mentionDropdownPropositionList'),
+        document.querySelector('.o_ComposerSuggestionList_list'),
         'show',
-        "should display mention suggestions on typing '@'"
+        "should display canned response suggestions on typing ':'"
     );
 });
 
-QUnit.test('mention a partner', async function (assert) {
+QUnit.test('use a canned response', async function (assert) {
     assert.expect(4);
 
-    this.data['res.partner'].records.push({
-        email: "testpartnert@odoo.com",
+    this.data['mail.shortcode'].records.push({
         id: 11,
-        name: "TestPartner",
+        source: "hello",
+        substitution: "Hello! How are you?",
     });
-    this.data['res.users'].records.push({ partner_id: 11 });
+
     await this.start();
     const composer = this.env.models['mail.composer'].create();
     await this.createComposerComponent(composer);
 
     assert.containsNone(
         document.body,
-        '.o_ComposerTextInput_mentionDropdownPropositionList',
-        "mention suggestions list should not be present"
+        '.o_ComposerSuggestionList_list',
+        "canned response suggestions list should not be present"
     );
     assert.strictEqual(
         document.querySelector(`.o_ComposerTextInput_textarea`).value,
@@ -331,7 +332,7 @@ QUnit.test('mention a partner', async function (assert) {
     );
     await afterNextRender(() => {
         document.querySelector(`.o_ComposerTextInput_textarea`).focus();
-        document.execCommand('insertText', false, "@Test");
+        document.execCommand('insertText', false, ":");
     });
     await afterNextRender(() => {
         document.querySelector(`.o_ComposerTextInput_textarea`)
@@ -341,36 +342,36 @@ QUnit.test('mention a partner', async function (assert) {
     });
     assert.containsOnce(
         document.body,
-        '.o_PartnerMentionSuggestion',
-        "should have a mention suggestion"
+        '.o_ComposerSuggestion',
+        "should have a canned response suggestion"
     );
     await afterNextRender(() =>
-        document.querySelector('.o_PartnerMentionSuggestion').click()
+        document.querySelector('.o_ComposerSuggestion').click()
     );
     assert.strictEqual(
         document.querySelector(`.o_ComposerTextInput_textarea`).value.replace(/\s/, " "),
-        "@TestPartner ",
-        "text content of composer should have mentioned partner + additional whitespace afterwards"
+        "Hello! How are you? ",
+        "text content of composer should have canned response + additional whitespace afterwards"
     );
 });
 
-QUnit.test('mention a partner after some text', async function (assert) {
+QUnit.test('use a canned response some text', async function (assert) {
     assert.expect(5);
 
-    this.data['res.partner'].records.push({
-        email: "testpartnert@odoo.com",
+    this.data['mail.shortcode'].records.push({
         id: 11,
-        name: "TestPartner",
+        source: "hello",
+        substitution: "Hello! How are you?",
     });
-    this.data['res.users'].records.push({ partner_id: 11 });
+
     await this.start();
     const composer = this.env.models['mail.composer'].create();
     await this.createComposerComponent(composer);
 
     assert.containsNone(
         document.body,
-        '.o_ComposerTextInput_mentionDropdownPropositionList',
-        "mention suggestions list should not be present"
+        '.o_ComposerSuggestion',
+        "canned response suggestions list should not be present"
     );
     assert.strictEqual(
         document.querySelector(`.o_ComposerTextInput_textarea`).value,
@@ -387,7 +388,7 @@ QUnit.test('mention a partner after some text', async function (assert) {
         "text content of composer should have content"
     );
     await afterNextRender(() =>
-        document.execCommand('insertText', false, "@Test")
+        document.execCommand('insertText', false, ":")
     );
     await afterNextRender(() => {
         document.querySelector(`.o_ComposerTextInput_textarea`)
@@ -397,11 +398,609 @@ QUnit.test('mention a partner after some text', async function (assert) {
     });
     assert.containsOnce(
         document.body,
-        '.o_PartnerMentionSuggestion',
+        '.o_ComposerSuggestion',
+        "should have a canned response suggestion"
+    );
+    await afterNextRender(() =>
+        document.querySelector('.o_ComposerSuggestion').click()
+    );
+    assert.strictEqual(
+        document.querySelector(`.o_ComposerTextInput_textarea`).value.replace(/\s/, " "),
+        "bluhbluh Hello! How are you? ",
+        "text content of composer should have previous content + canned response substitution + additional whitespace afterwards"
+    );
+});
+
+QUnit.test('add an emoji after a canned response', async function (assert) {
+    assert.expect(5);
+
+    this.data['mail.shortcode'].records.push({
+        id: 11,
+        source: "hello",
+        substitution: "Hello! How are you?",
+    });
+
+    await this.start();
+    const composer = this.env.models['mail.composer'].create();
+    await this.createComposerComponent(composer);
+
+    assert.containsNone(
+        document.body,
+        '.o_ComposerSuggestion',
+        "canned response suggestions list should not be present"
+    );
+    assert.strictEqual(
+        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        "",
+        "text content of composer should be empty initially"
+    );
+    await afterNextRender(() => {
+        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
+        document.execCommand('insertText', false, ":");
+    });
+    await afterNextRender(() => {
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keydown'));
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keyup'));
+    });
+    assert.containsOnce(
+        document.body,
+        '.o_ComposerSuggestion',
+        "should have a canned response suggestion"
+    );
+    await afterNextRender(() =>
+        document.querySelector('.o_ComposerSuggestion').click()
+    );
+    assert.strictEqual(
+        document.querySelector(`.o_ComposerTextInput_textarea`).value.replace(/\s/, " "),
+        "Hello! How are you? ",
+        "text content of composer should have previous content + canned response substitution + additional whitespace afterwards"
+    );
+
+    // select emoji
+    await afterNextRender(() =>
+        document.querySelector('.o_Composer_buttonEmojis').click()
+    );
+    await afterNextRender(() =>
+        document.querySelector('.o_EmojisPopover_emoji[data-unicode="😊"]').click()
+    );
+    assert.strictEqual(
+        document.querySelector(`.o_ComposerTextInput_textarea`).value.replace(/\s/, " "),
+        "Hello! How are you? 😊",
+        "text content of composer should have previous canned response substitution and selected emoji just after"
+    );
+    // ensure popover is closed
+    await nextAnimationFrame();
+});
+
+QUnit.test('display channel mention suggestions on typing "#"', async function (assert) {
+    assert.expect(2);
+
+    this.data['mail.channel'].records.push({
+        id: 7,
+        name: "General",
+        public: "groups",
+    });
+    await this.start();
+    const composer = this.env.models['mail.composer'].create();
+    await this.createComposerComponent(composer);
+
+    assert.containsNone(
+        document.body,
+        '.o_ComposerSuggestionList_list',
+        "channel mention suggestions list should not be present"
+    );
+    await afterNextRender(() => {
+        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
+        document.execCommand('insertText', false, "#");
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keydown'));
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keyup'));
+    });
+    assert.hasClass(
+        document.querySelector('.o_ComposerSuggestionList_list'),
+        'show',
+        "should display channel mention suggestions on typing '#'"
+    );
+});
+
+QUnit.test('mention a channel', async function (assert) {
+    assert.expect(4);
+
+    this.data['mail.channel'].records.push({
+        id: 7,
+        name: "General",
+        public: "groups",
+    });
+    await this.start();
+    const composer = this.env.models['mail.composer'].create();
+    await this.createComposerComponent(composer);
+
+    assert.containsNone(
+        document.body,
+        '.o_ComposerSuggestionList_list',
+        "channel mention suggestions list should not be present"
+    );
+    assert.strictEqual(
+        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        "",
+        "text content of composer should be empty initially"
+    );
+    await afterNextRender(() => {
+        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
+        document.execCommand('insertText', false, "#");
+    });
+    await afterNextRender(() => {
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keydown'));
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keyup'));
+    });
+    assert.containsOnce(
+        document.body,
+        '.o_ComposerSuggestion',
+        "should have a channel mention suggestion"
+    );
+    await afterNextRender(() =>
+        document.querySelector('.o_ComposerSuggestion').click()
+    );
+    assert.strictEqual(
+        document.querySelector(`.o_ComposerTextInput_textarea`).value.replace(/\s/, " "),
+        "#General ",
+        "text content of composer should have mentioned channel + additional whitespace afterwards"
+    );
+});
+
+QUnit.test('mention a channel after some text', async function (assert) {
+    assert.expect(5);
+
+    this.data['mail.channel'].records.push({
+        id: 7,
+        name: "General",
+        public: "groups",
+    });
+    await this.start();
+    const composer = this.env.models['mail.composer'].create();
+    await this.createComposerComponent(composer);
+
+    assert.containsNone(
+        document.body,
+        '.o_ComposerSuggestion',
+        "channel mention suggestions list should not be present"
+    );
+    assert.strictEqual(
+        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        "",
+        "text content of composer should be empty initially"
+    );
+    document.querySelector(`.o_ComposerTextInput_textarea`).focus();
+    await afterNextRender(() =>
+        document.execCommand('insertText', false, "bluhbluh ")
+    );
+    assert.strictEqual(
+        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        "bluhbluh ",
+        "text content of composer should have content"
+    );
+    await afterNextRender(() =>
+        document.execCommand('insertText', false, "#")
+    );
+    await afterNextRender(() => {
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keydown'));
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keyup'));
+    });
+    assert.containsOnce(
+        document.body,
+        '.o_ComposerSuggestion',
+        "should have a channel mention suggestion"
+    );
+    await afterNextRender(() =>
+        document.querySelector('.o_ComposerSuggestion').click()
+    );
+    assert.strictEqual(
+        document.querySelector(`.o_ComposerTextInput_textarea`).value.replace(/\s/, " "),
+        "bluhbluh #General ",
+        "text content of composer should have previous content + mentioned channel + additional whitespace afterwards"
+    );
+});
+
+QUnit.test('add an emoji after a channel mention', async function (assert) {
+    assert.expect(5);
+
+    this.data['mail.channel'].records.push({
+        id: 7,
+        name: "General",
+        public: "groups",
+    });
+    await this.start();
+    const composer = this.env.models['mail.composer'].create();
+    await this.createComposerComponent(composer);
+
+    assert.containsNone(
+        document.body,
+        '.o_ComposerSuggestion',
+        "mention suggestions list should not be present"
+    );
+    assert.strictEqual(
+        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        "",
+        "text content of composer should be empty initially"
+    );
+    await afterNextRender(() => {
+        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
+        document.execCommand('insertText', false, "#");
+    });
+    await afterNextRender(() => {
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keydown'));
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keyup'));
+    });
+    assert.containsOnce(
+        document.body,
+        '.o_ComposerSuggestion',
+        "should have a channel mention suggestion"
+    );
+    await afterNextRender(() =>
+        document.querySelector('.o_ComposerSuggestion').click()
+    );
+    assert.strictEqual(
+        document.querySelector(`.o_ComposerTextInput_textarea`).value.replace(/\s/, " "),
+        "#General ",
+        "text content of composer should have previous content + mentioned channel + additional whitespace afterwards"
+    );
+
+    // select emoji
+    await afterNextRender(() =>
+        document.querySelector('.o_Composer_buttonEmojis').click()
+    );
+    await afterNextRender(() =>
+        document.querySelector('.o_EmojisPopover_emoji[data-unicode="😊"]').click()
+    );
+    assert.strictEqual(
+        document.querySelector(`.o_ComposerTextInput_textarea`).value.replace(/\s/, " "),
+        "#General 😊",
+        "text content of composer should have previous channel mention and selected emoji just after"
+    );
+    // ensure popover is closed
+    await nextAnimationFrame();
+});
+
+QUnit.test('display command suggestions on typing "/"', async function (assert) {
+    assert.expect(2);
+
+    await this.start();
+    const composer = this.env.models['mail.composer'].create();
+    await this.createComposerComponent(composer);
+
+    assert.containsNone(
+        document.body,
+        '.o_ComposerSuggestionList_list',
+        "command suggestions list should not be present"
+    );
+    await afterNextRender(() => {
+        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
+        document.execCommand('insertText', false, "/");
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keydown'));
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keyup'));
+    });
+    assert.hasClass(
+        document.querySelector('.o_ComposerSuggestionList_list'),
+        'show',
+        "should display command suggestions on typing '/'"
+    );
+});
+
+QUnit.test('use a command', async function (assert) {
+    assert.expect(4);
+
+    await this.start();
+    const composer = this.env.models['mail.composer'].create();
+    await this.createComposerComponent(composer);
+
+    assert.containsNone(
+        document.body,
+        '.o_ComposerSuggestionList_list',
+        "command suggestions list should not be present"
+    );
+    assert.strictEqual(
+        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        "",
+        "text content of composer should be empty initially"
+    );
+    await afterNextRender(() => {
+        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
+        document.execCommand('insertText', false, "/");
+    });
+    await afterNextRender(() => {
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keydown'));
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keyup'));
+    });
+    assert.containsOnce(
+        document.body,
+        '.o_ComposerSuggestion',
+        "should have a command suggestion"
+    );
+    await afterNextRender(() =>
+        document.querySelector('.o_ComposerSuggestion').click()
+    );
+    assert.strictEqual(
+        document.querySelector(`.o_ComposerTextInput_textarea`).value.replace(/\s/, " "),
+        "/who ",
+        "text content of composer should have used command + additional whitespace afterwards"
+    );
+});
+
+QUnit.test('use a command after some text', async function (assert) {
+    assert.expect(5);
+
+    await this.start();
+    const composer = this.env.models['mail.composer'].create();
+    await this.createComposerComponent(composer);
+
+    assert.containsNone(
+        document.body,
+        '.o_ComposerSuggestion',
+        "command suggestions list should not be present"
+    );
+    assert.strictEqual(
+        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        "",
+        "text content of composer should be empty initially"
+    );
+    document.querySelector(`.o_ComposerTextInput_textarea`).focus();
+    await afterNextRender(() =>
+        document.execCommand('insertText', false, "bluhbluh ")
+    );
+    assert.strictEqual(
+        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        "bluhbluh ",
+        "text content of composer should have content"
+    );
+    await afterNextRender(() =>
+        document.execCommand('insertText', false, "/")
+    );
+    await afterNextRender(() => {
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keydown'));
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keyup'));
+    });
+    assert.containsOnce(
+        document.body,
+        '.o_ComposerSuggestion',
+        "should have a command suggestion"
+    );
+    await afterNextRender(() =>
+        document.querySelector('.o_ComposerSuggestion').click()
+    );
+    assert.strictEqual(
+        document.querySelector(`.o_ComposerTextInput_textarea`).value.replace(/\s/, " "),
+        "bluhbluh /who ",
+        "text content of composer should have previous content + used command + additional whitespace afterwards"
+    );
+});
+
+QUnit.test('add an emoji after a command', async function (assert) {
+    assert.expect(5);
+
+    await this.start();
+    const composer = this.env.models['mail.composer'].create();
+    await this.createComposerComponent(composer);
+
+    assert.containsNone(
+        document.body,
+        '.o_ComposerSuggestion',
+        "command suggestions list should not be present"
+    );
+    assert.strictEqual(
+        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        "",
+        "text content of composer should be empty initially"
+    );
+    await afterNextRender(() => {
+        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
+        document.execCommand('insertText', false, "/");
+    });
+    await afterNextRender(() => {
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keydown'));
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keyup'));
+    });
+    assert.containsOnce(
+        document.body,
+        '.o_ComposerSuggestion',
+        "should have a command suggestion"
+    );
+    await afterNextRender(() =>
+        document.querySelector('.o_ComposerSuggestion').click()
+    );
+    assert.strictEqual(
+        document.querySelector(`.o_ComposerTextInput_textarea`).value.replace(/\s/, " "),
+        "/who ",
+        "text content of composer should have previous content + used command + additional whitespace afterwards"
+    );
+
+    // select emoji
+    await afterNextRender(() =>
+        document.querySelector('.o_Composer_buttonEmojis').click()
+    );
+    await afterNextRender(() =>
+        document.querySelector('.o_EmojisPopover_emoji[data-unicode="😊"]').click()
+    );
+    assert.strictEqual(
+        document.querySelector(`.o_ComposerTextInput_textarea`).value.replace(/\s/, " "),
+        "/who 😊",
+        "text content of composer should have previous command and selected emoji just after"
+    );
+    // ensure popover is closed
+    await nextAnimationFrame();
+});
+
+QUnit.test('display partner mention suggestions on typing "@"', async function (assert) {
+    assert.expect(3);
+
+    this.data['res.partner'].records.push({
+        id: 11,
+        email: "testpartner@odoo.com",
+        name: "TestPartner",
+    });
+    this.data['res.partner'].records.push({
+        id: 12,
+        email: "testpartner2@odoo.com",
+        name: "TestPartner2",
+    });
+    this.data['res.users'].records.push({
+        partner_id: 11,
+    });
+
+    await this.start();
+    const composer = this.env.models['mail.composer'].create();
+    await this.createComposerComponent(composer);
+
+    assert.containsNone(
+        document.body,
+        '.o_ComposerSuggestionList_list',
+        "mention suggestions list should not be present"
+    );
+    await afterNextRender(() => {
+        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
+        document.execCommand('insertText', false, "@");
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keydown'));
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keyup'));
+    });
+    assert.hasClass(
+        document.querySelector('.o_ComposerSuggestionList_list'),
+        'show',
+        "should display mention suggestions on typing '@'"
+    );
+    assert.containsOnce(
+        document.body,
+        '.dropdown-divider',
+        "should have a separator"
+    );
+});
+
+QUnit.test('mention a partner', async function (assert) {
+    assert.expect(4);
+
+    this.data['res.partner'].records.push({
+        email: "testpartner@odoo.com",
+        name: "TestPartner",
+    });
+    await this.start();
+    const composer = this.env.models['mail.composer'].create();
+    await this.createComposerComponent(composer);
+
+    assert.containsNone(
+        document.body,
+        '.o_ComposerSuggestionList_list',
+        "mention suggestions list should not be present"
+    );
+    assert.strictEqual(
+        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        "",
+        "text content of composer should be empty initially"
+    );
+    await afterNextRender(() => {
+        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
+        document.execCommand('insertText', false, "@");
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keydown'));
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keyup'));
+        document.execCommand('insertText', false, "T");
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keydown'));
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keyup'));
+        document.execCommand('insertText', false, "e");
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keydown'));
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keyup'));
+    });
+    assert.containsOnce(
+        document.body,
+        '.o_ComposerSuggestion',
         "should have a mention suggestion"
     );
     await afterNextRender(() =>
-        document.querySelector('.o_PartnerMentionSuggestion').click()
+        document.querySelector('.o_ComposerSuggestion').click()
+    );
+    assert.strictEqual(
+        document.querySelector(`.o_ComposerTextInput_textarea`).value.replace(/\s/, " "),
+        "@TestPartner ",
+        "text content of composer should have mentioned partner + additional whitespace afterwards"
+    );
+});
+
+QUnit.test('mention a partner after some text', async function (assert) {
+    assert.expect(5);
+
+    this.data['res.partner'].records.push({
+        email: "testpartner@odoo.com",
+        name: "TestPartner",
+    });
+    await this.start();
+    const composer = this.env.models['mail.composer'].create();
+    await this.createComposerComponent(composer);
+
+    assert.containsNone(
+        document.body,
+        '.o_ComposerSuggestion',
+        "mention suggestions list should not be present"
+    );
+    assert.strictEqual(
+        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        "",
+        "text content of composer should be empty initially"
+    );
+    document.querySelector(`.o_ComposerTextInput_textarea`).focus();
+    await afterNextRender(() =>
+        document.execCommand('insertText', false, "bluhbluh ")
+    );
+    assert.strictEqual(
+        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        "bluhbluh ",
+        "text content of composer should have content"
+    );
+    await afterNextRender(() => {
+        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
+        document.execCommand('insertText', false, "@");
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keydown'));
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keyup'));
+        document.execCommand('insertText', false, "T");
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keydown'));
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keyup'));
+        document.execCommand('insertText', false, "e");
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keydown'));
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keyup'));
+    });
+    assert.containsOnce(
+        document.body,
+        '.o_ComposerSuggestion',
+        "should have a mention suggestion"
+    );
+    await afterNextRender(() =>
+        document.querySelector('.o_ComposerSuggestion').click()
     );
     assert.strictEqual(
         document.querySelector(`.o_ComposerTextInput_textarea`).value.replace(/\s/, " "),
@@ -414,18 +1013,16 @@ QUnit.test('add an emoji after a partner mention', async function (assert) {
     assert.expect(5);
 
     this.data['res.partner'].records.push({
-        email: "testpartnert@odoo.com",
-        id: 11,
+        email: "testpartner@odoo.com",
         name: "TestPartner",
     });
-    this.data['res.users'].records.push({ partner_id: 11 });
     await this.start();
     const composer = this.env.models['mail.composer'].create();
     await this.createComposerComponent(composer);
 
     assert.containsNone(
         document.body,
-        '.o_ComposerTextInput_mentionDropdownPropositionList',
+        '.o_ComposerSuggestion',
         "mention suggestions list should not be present"
     );
     assert.strictEqual(
@@ -435,9 +1032,17 @@ QUnit.test('add an emoji after a partner mention', async function (assert) {
     );
     await afterNextRender(() => {
         document.querySelector(`.o_ComposerTextInput_textarea`).focus();
-        document.execCommand('insertText', false, "@Test");
-    });
-    await afterNextRender(() => {
+        document.execCommand('insertText', false, "@");
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keydown'));
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keyup'));
+        document.execCommand('insertText', false, "T");
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keydown'));
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keyup'));
+        document.execCommand('insertText', false, "e");
         document.querySelector(`.o_ComposerTextInput_textarea`)
             .dispatchEvent(new window.KeyboardEvent('keydown'));
         document.querySelector(`.o_ComposerTextInput_textarea`)
@@ -445,11 +1050,11 @@ QUnit.test('add an emoji after a partner mention', async function (assert) {
     });
     assert.containsOnce(
         document.body,
-        '.o_PartnerMentionSuggestion',
+        '.o_ComposerSuggestion',
         "should have a mention suggestion"
     );
     await afterNextRender(() =>
-        document.querySelector('.o_PartnerMentionSuggestion').click()
+        document.querySelector('.o_ComposerSuggestion').click()
     );
     assert.strictEqual(
         document.querySelector(`.o_ComposerTextInput_textarea`).value.replace(/\s/, " "),
@@ -1139,6 +1744,102 @@ QUnit.test('warning on send with shortcut when attempting to post message with s
         ['notification'],
         "should have triggered a notification for inability to post message at the moment (some attachments are still being uploaded)"
     );
+});
+
+QUnit.test('remove an uploading attachment', async function (assert) {
+    assert.expect(4);
+
+    await this.start({
+        async mockFetch(resource, init) {
+            const res = this._super(...arguments);
+            if (resource === '/web/binary/upload_attachment') {
+                // simulates uploading indefinitely
+                await new Promise(() => {});
+            }
+            return res;
+        }
+    });
+    const composer = this.env.models['mail.composer'].create();
+    await this.createComposerComponent(composer);
+    const file = await createFile({
+        content: 'hello, world',
+        contentType: 'text/plain',
+        name: 'text.txt',
+    });
+    await afterNextRender(() =>
+        inputFiles(
+            document.querySelector('.o_FileUploader_input'),
+            [file]
+        )
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_Composer_attachmentList',
+        "should have an attachment list"
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_Composer .o_Attachment',
+        "should have only one attachment"
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_Composer .o_Attachment.o-temporary',
+        "should have an uploading attachment"
+    );
+
+    await afterNextRender(() =>
+        document.querySelector('.o_Attachment_asideItemUnlink').click());
+    assert.containsNone(
+        document.body,
+        '.o_Composer .o_Attachment',
+        "should not have any attachment left after unlinking temporary one"
+    );
+});
+
+QUnit.test('remove an uploading attachment aborts upload', async function (assert) {
+    assert.expect(1);
+
+    await this.start({
+        async mockFetch(resource, init) {
+            const res = this._super(...arguments);
+            if (resource === '/web/binary/upload_attachment') {
+                // simulates uploading indefinitely
+                await new Promise(() => {});
+            }
+            return res;
+        }
+    });
+    const composer = this.env.models['mail.composer'].create();
+    await this.createComposerComponent(composer);
+    const file = await createFile({
+        content: 'hello, world',
+        contentType: 'text/plain',
+        name: 'text.txt',
+    });
+    await afterNextRender(() =>
+        inputFiles(
+            document.querySelector('.o_FileUploader_input'),
+            [file]
+        )
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_Attachment',
+        "should contain an attachment"
+    );
+    const attachmentLocalId = document.querySelector('.o_Attachment').dataset.attachmentLocalId;
+
+    await this.afterEvent({
+        eventName: 'o-attachment-upload-abort',
+        func: () => {
+            document.querySelector('.o_Attachment_asideItemUnlink').click();
+        },
+        message: "attachment upload request should have been aborted",
+        predicate: ({ attachment }) => {
+            return attachment.localId === attachmentLocalId;
+        },
+    });
 });
 
 });

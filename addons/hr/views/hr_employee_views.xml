@@ -75,7 +75,7 @@
                         <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <field name="image_1920" widget='image' class="oe_avatar" options='{"zoom": true, "preview_image":"image_128"}'/>
                         <div class="oe_title">
-                            <h1>
+                            <h1 class="d-flex">
                                 <field name="name" placeholder="Employee's Name" required="True"/>
                                 <a title="Chat" icon="fa-comments" href="#" class="ml8 o_employee_chat_btn" invisible="not context.get('chat_icon')" attrs="{'invisible': [('user_id','=', False)]}" role="button"><i class="fa fa-comments"/></a>
                             </h1>
@@ -135,7 +135,7 @@
                                         <field name="phone" class="o_force_ltr" groups="hr.group_hr_user" string="Phone"/>
                                         <field name="bank_account_id" context="{'default_partner_id': address_home_id}"/>
                                         <label for="km_home_work"/>
-                                        <div class="o_row">
+                                        <div class="o_row" name="div_km_home_work">
                                             <field name="km_home_work" groups="hr.group_hr_user"/>
                                             <span>Km</span>
                                         </div>

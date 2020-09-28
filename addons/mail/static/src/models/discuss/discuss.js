@@ -3,6 +3,7 @@ odoo.define('mail/static/src/models/discuss.discuss.js', function (require) {
 
 const { registerNewModel } = require('mail/static/src/model/model_core.js');
 const { attr, many2one, one2many, one2one } = require('mail/static/src/model/model_field.js');
+const { clear } = require('mail/static/src/model/model_field_command.js');
 
 function factory(dependencies) {
 
@@ -150,7 +151,9 @@ function factory(dependencies) {
          * is not yet initialized.
          */
         openInitThread() {
-            const [model, id] = this.initActiveId.split('_');
+            const [model, id] = typeof this.initActiveId === 'number'
+                ? ['mail.channel', this.initActiveId]
+                : this.initActiveId.split('_');
             const thread = this.env.models['mail.thread'].findFromIdentifyingData({
                 id: model !== 'mail.box' ? Number(id) : id,
                 model,
@@ -159,6 +162,9 @@ function factory(dependencies) {
                 return;
             }
             thread.open();
+            if (this.env.messaging.device.isMobile && thread.channel_type) {
+                this.update({ activeMobileNavbarTabId: thread.channel_type });
+            }
         }
 
 
@@ -235,7 +241,7 @@ function factory(dependencies) {
          */
         _computeActiveId() {
             if (!this.thread) {
-                return undefined;
+                return clear();
             }
             return this.threadToActiveId(this.thread);
         }
@@ -323,6 +329,18 @@ function factory(dependencies) {
          */
         _computeThread() {
             let thread = this.thread;
+            if (this.env.messaging &&
+                this.env.messaging.inbox &&
+                this.env.messaging.device.isMobile &&
+                this.activeMobileNavbarTabId === 'mailbox' &&
+                this.initActiveId !== 'mail.box_inbox' &&
+                !thread
+            ) {
+                // After loading Discuss from an arbitrary tab other then 'mailbox',
+                // switching to 'mailbox' requires to also set its inner-tab ;
+                // by default the 'inbox'.
+                return [['replace', this.env.messaging.inbox]];
+            }
             if (!thread || !thread.isPinned) {
                 return [['unlink']];
             }
@@ -395,7 +413,9 @@ function factory(dependencies) {
          * Formatted init thread on opening discuss for the first time,
          * when no active thread is defined. Useful to set a thread to
          * open without knowing its local id in advance.
-         * format: <threadModel>_<threadId>
+         * Support two formats:
+         *    {string} <threadModel>_<threadId>
+         *    {int} <channelId> with default model of 'mail.channel'
          */
         initActiveId: attr({
             default: 'mail.box_inbox',
@@ -449,6 +469,9 @@ function factory(dependencies) {
         messaging: one2one('mail.messaging', {
             inverse: 'discuss',
         }),
+        messagingInbox: many2one('mail.thread', {
+            related: 'messaging.inbox',
+        }),
         renamingThreads: one2many('mail.thread'),
         /**
          * The message that is currently selected as being replied to in Inbox.
@@ -496,8 +519,13 @@ function factory(dependencies) {
         thread: many2one('mail.thread', {
             compute: '_computeThread',
             dependencies: [
+                'activeMobileNavbarTabId',
+                'deviceIsMobile',
                 'isThreadPinned',
+                'messaging',
+                'messagingInbox',
                 'thread',
+                'threadModel',
             ],
         }),
         threadId: attr({

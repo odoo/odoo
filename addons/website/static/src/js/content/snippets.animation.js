@@ -8,6 +8,7 @@ odoo.define('website.content.snippets.animation', function (require) {
 var Class = require('web.Class');
 var config = require('web.config');
 var core = require('web.core');
+const dom = require('web.dom');
 var mixins = require('web.mixins');
 var publicWidget = require('web.public.widget');
 var utils = require('web.utils');
@@ -123,12 +124,13 @@ var AnimationEffect = Class.extend(mixins.ParentedMixin, {
         // Initialize the animation startEvents, startTarget, endEvents, endTarget and callbacks
         this._updateCallback = updateCallback;
         this.startEvents = startEvents || 'scroll';
-        this.$startTarget = $($startTarget || window);
+        this.$startTarget = $($startTarget ? $startTarget : this.startEvents === 'scroll' ? $().getScrollingElement()[0] : window);
         if (options.getStateCallback) {
             this._getStateCallback = options.getStateCallback;
-        } else if (this.startEvents === 'scroll' && this.$startTarget[0] === window) {
+        } else if (this.startEvents === 'scroll' && this.$startTarget[0] === $().getScrollingElement()[0]) {
+            const $scrollable = this.$startTarget;
             this._getStateCallback = function () {
-                return window.pageYOffset;
+                return $scrollable.scrollTop();
             };
         } else if (this.startEvents === 'resize' && this.$startTarget[0] === window) {
             this._getStateCallback = function () {
@@ -898,22 +900,19 @@ registry.anchorSlide = publicWidget.Widget.extend({
      * @private
      * @param {jQuery} $el the element to scroll to.
      * @param {string} [scrollValue='true'] scroll value
+     * @returns {Promise}
      */
-    _scrollTo: function ($el, scrollValue = 'true') {
-        const headerHeight = this._computeHeaderHeight();
-        const offset = $el.css('position') !== 'fixed' ? $el.offset().top : $el.position().top;
-        $('html, body').animate({
-            scrollTop: offset - headerHeight,
-        }, scrollValue === 'true' ? 500 : 0);
+    async _scrollTo($el, scrollValue = 'true') {
+        return dom.scrollTo($el[0], {
+            duration: scrollValue === 'true' ? 500 : 0,
+            extraOffset: this._computeExtraOffset(),
+        });
     },
     /**
      * @private
      */
-    _computeHeaderHeight: function () {
-        let headerHeight = 0;
-        const $navbarFixed = $('.o_top_fixed_element');
-        _.each($navbarFixed, el => headerHeight += $(el).outerHeight());
-        return headerHeight;
+    _computeExtraOffset() {
+        return 0;
     },
 
     //--------------------------------------------------------------------------
@@ -938,6 +937,55 @@ registry.anchorSlide = publicWidget.Widget.extend({
         }
         ev.preventDefault();
         this._scrollTo($anchor, scrollValue);
+    },
+});
+
+registry.FullScreenHeight = publicWidget.Widget.extend({
+    selector: '.o_full_screen_height',
+    disabledInEditableMode: false,
+
+    /**
+     * @override
+     */
+    start() {
+        if (this.$el.outerHeight() > this._computeIdealHeight()) {
+            // Only initialize if taller than the ideal height as some extra css
+            // rules may alter the full-screen-height class behavior in some
+            // cases (blog...).
+            this._adaptSize();
+            $(window).on('resize.FullScreenHeight', _.debounce(() => this._adaptSize(), 250));
+        }
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    destroy() {
+        this._super(...arguments);
+        $(window).off('.FullScreenHeight');
+        this.el.style.setProperty('min-height', '');
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _adaptSize() {
+        const height = this._computeIdealHeight();
+        this.el.style.setProperty('min-height', `${height}px`, 'important');
+    },
+    /**
+     * @private
+     */
+    _computeIdealHeight() {
+        const windowHeight = $(window).outerHeight();
+        // Doing it that way allows to considerer fixed headers, hidden headers,
+        // connected users, ...
+        const mainTopPos = $('#wrapwrap > main')[0].getBoundingClientRect().top;
+        return (windowHeight - mainTopPos);
     },
 });
 

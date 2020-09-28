@@ -3,8 +3,10 @@ odoo.define('mail/static/src/models/thread/thread.js', function (require) {
 
 const { registerNewModel } = require('mail/static/src/model/model_core.js');
 const { attr, many2many, many2one, one2many, one2one } = require('mail/static/src/model/model_field.js');
+const { clear } = require('mail/static/src/model/model_field_command.js');
 const throttle = require('mail/static/src/utils/throttle/throttle.js');
 const Timer = require('mail/static/src/utils/timer/timer.js');
+const mailUtils = require('mail.utils');
 
 function factory(dependencies) {
 
@@ -132,7 +134,9 @@ function factory(dependencies) {
          * @return {Object}
          */
         static convertData(data) {
-            const data2 = {};
+            const data2 = {
+                messagesAsServerChannel: [],
+            };
             if ('model' in data) {
                 data2.model = data.model;
             }
@@ -168,6 +172,14 @@ function factory(dependencies) {
                     data2.isServerPinned = true;
                 }
             }
+            if ('last_message' in data && data.last_message) {
+                data2.messagesAsServerChannel.push(['insert', { id: data.last_message.id }]);
+                data2.serverLastMessageId = data.last_message.id;
+            }
+            if ('last_message_id' in data && data.last_message_id) {
+                data2.messagesAsServerChannel.push(['insert', { id: data.last_message_id }]);
+                data2.serverLastMessageId = data.last_message_id;
+            }
             if ('mass_mailing' in data) {
                 data2.mass_mailing = data.mass_mailing;
             }
@@ -178,7 +190,7 @@ function factory(dependencies) {
                 data2.message_needaction_counter = data.message_needaction_counter;
             }
             if ('message_unread_counter' in data) {
-                data2.message_unread_counter = data.message_unread_counter;
+                data2.serverMessageUnreadCounter = data.message_unread_counter;
             }
             if ('name' in data) {
                 data2.name = data.name;
@@ -187,7 +199,7 @@ function factory(dependencies) {
                 data2.public = data.public;
             }
             if ('seen_message_id' in data) {
-                data2.seen_message_id = data.seen_message_id;
+                data2.lastSeenByCurrentPartnerMessageId = data.seen_message_id;
             }
             if ('uuid' in data) {
                 data2.uuid = data.uuid;
@@ -209,21 +221,27 @@ function factory(dependencies) {
                 if (!data.seen_partners_info) {
                     data2.partnerSeenInfos = [['unlink-all']];
                 } else {
+                    /*
+                     * FIXME: not optimal to write on relation given the fact that the relation
+                     * will be (re)computed based on given fields.
+                     * (here channelId will compute partnerSeenInfo.thread))
+                     * task-2336946
+                     */
                     data2.partnerSeenInfos = [
                         ['insert-and-replace',
                             data.seen_partners_info.map(
-                                ({ fetched_message_id, id, partner_id, seen_message_id}) => {
+                                ({ fetched_message_id, partner_id, seen_message_id }) => {
                                     return {
-                                        id,
-                                        lastFetchedMessage: [seen_message_id ? ['insert', {id: seen_message_id}] : ['unlink-all']],
-                                        lastSeenMessage: [fetched_message_id ? ['insert', {id: fetched_message_id}] : ['unlink-all']],
-                                        partner: [['insert', {id: partner_id}]],
+                                        channelId: data2.id,
+                                        lastFetchedMessage: [fetched_message_id ? ['insert', { id: fetched_message_id }] : ['unlink-all']],
+                                        lastSeenMessage: [seen_message_id ? ['insert', { id: seen_message_id }] : ['unlink-all']],
+                                        partnerId: partner_id,
                                     };
                                 })
                         ]
                     ];
                     if (data.id || this.id) {
-                        const messageIds = data.seen_partners_info.reduce((currentSet, { fetched_message_id, seen_message_id}) => {
+                        const messageIds = data.seen_partners_info.reduce((currentSet, { fetched_message_id, seen_message_id }) => {
                             if (fetched_message_id) {
                                 currentSet.add(fetched_message_id);
                             }
@@ -233,12 +251,18 @@ function factory(dependencies) {
                             return currentSet;
                         }, new Set());
                         if (messageIds.size > 0) {
+                            /*
+                             * FIXME: not optimal to write on relation given the fact that the relation
+                             * will be (re)computed based on given fields.
+                             * (here channelId will compute messageSeenIndicator.thread))
+                             * task-2336946
+                             */
                             data2.messageSeenIndicators = [
                                 ['insert',
                                     [...messageIds].map(messageId => {
                                        return {
-                                           id: this.env.models['mail.message_seen_indicator'].computeId(messageId, data.id || this.id),
-                                           message: [['insert', {id: messageId}]],
+                                           channelId: data.id || this.id,
+                                           messageId,
                                        };
                                     })
                                 ]
@@ -275,6 +299,25 @@ function factory(dependencies) {
             ));
         }
 
+
+        /**
+         * Performs the `channel_fold` RPC on `mail.channel`.
+         *
+         * @static
+         * @param {string} uuid
+         * @param {string} state
+         */
+        static async performRpcChannelFold(uuid, state) {
+            return this.env.services.rpc({
+                model: 'mail.channel',
+                method: 'channel_fold',
+                kwargs: {
+                    state,
+                    uuid,
+                }
+            }, { shadow: true });
+        }
+
         /**
          * Performs the `channel_info` RPC on `mail.channel`.
          *
@@ -295,6 +338,26 @@ function factory(dependencies) {
             // manually force recompute of counter
             this.env.messaging.messagingMenu.update();
             return channels;
+        }
+
+
+        /**
+         * Performs the `channel_seen` RPC on `mail.channel`.
+         *
+         * @static
+         * @param {Object} param0
+         * @param {integer[]} param0.ids list of id of channels
+         * @param {integer[]} param0.lastMessageId
+         */
+        static async performRpcChannelSeen({ ids, lastMessageId }) {
+            return this.env.services.rpc({
+                model: 'mail.channel',
+                method: 'channel_seen',
+                args: [ids],
+                kwargs: {
+                    last_message_id: lastMessageId,
+                },
+            }, { shadow: true });
         }
 
         /**
@@ -389,6 +452,41 @@ function factory(dependencies) {
         }
 
         /**
+         * Performs RPC on the route `/mail/get_suggested_recipients`.
+         *
+         * @static
+         * @param {Object} param0
+         * @param {string} param0.model
+         * @param {integer[]} param0.res_id
+         */
+        static async performRpcMailGetSuggestedRecipients({ model, res_ids }) {
+            const data = await this.env.services.rpc({
+                route: '/mail/get_suggested_recipients',
+                params: {
+                    model,
+                    res_ids,
+                },
+            });
+            for (const id in data) {
+                const recipientInfoList = data[id].map(recipientInfoData => {
+                    const [partner_id, emailInfo, reason] = recipientInfoData;
+                    const [name, email] = emailInfo && mailUtils.parseEmail(emailInfo);
+                    return {
+                        email,
+                        name,
+                        partner: [partner_id ? ['insert', { id: partner_id }] : ['unlink']],
+                        reason,
+                    };
+                });
+                this.insert({
+                    id: parseInt(id),
+                    model,
+                    suggestedRecipientInfoList: [['insert-and-replace', recipientInfoList]],
+                });
+            }
+        }
+
+        /**
          * @param {string} [stringifiedDomain='[]']
          * @returns {mail.thread_cache}
          */
@@ -418,12 +516,27 @@ function factory(dependencies) {
                 fields: ['id', 'name', 'mimetype'],
                 orderBy: [{ name: 'id', asc: false }],
             }));
-            for (const attachmentData of attachmentsData) {
-                this.env.models['mail.attachment'].insert(Object.assign({
-                    originThread: [['link', this]],
-                }, this.env.models['mail.attachment'].convertData(attachmentData)));
-            }
+            this.update({
+                originThreadAttachments: [['insert-and-replace',
+                    attachmentsData.map(data =>
+                        this.env.models['mail.attachment'].convertData(data)
+                    )
+                ]],
+            });
             this.update({ areAttachmentsLoaded: true });
+        }
+
+        /**
+         * Fetches suggested recipients.
+         */
+        async fetchAndUpdateSuggestedRecipients() {
+            if (this.isTemporary) {
+                return;
+            }
+            return this.env.models['mail.thread'].performRpcMailGetSuggestedRecipients({
+                model: this.model,
+                res_ids: [this.id],
+            });
         }
 
         /**
@@ -440,6 +553,7 @@ function factory(dependencies) {
                 },
             }));
             this.refreshFollowers();
+            this.fetchAndUpdateSuggestedRecipients();
         }
 
         /**
@@ -462,20 +576,28 @@ function factory(dependencies) {
 
         /**
          * Mark the specified conversation as read/seen.
+         *
+         * @param {integer} messageId the message to be considered as last seen
          */
-        async markAsSeen() {
-            if (this.message_unread_counter === 0) {
+        async markAsSeen(messageId) {
+            if (this.model !== 'mail.channel') {
                 return;
             }
-            if (this.model === 'mail.channel') {
-                const seen_message_id = await this.async(() => this.env.services.rpc({
-                    model: 'mail.channel',
-                    method: 'channel_seen',
-                    args: [[this.id]]
-                }, { shadow: true }));
-                this.update({ seen_message_id });
+            if (this.pendingSeenMessageId && messageId <= this.pendingSeenMessageId) {
+                return;
             }
-            this.update({ message_unread_counter: 0 });
+            if (
+                this.lastSeenByCurrentPartnerMessageId &&
+                messageId <= this.lastSeenByCurrentPartnerMessageId
+            ) {
+                return;
+            }
+            this.update({ pendingSeenMessageId: messageId });
+            return this.env.models['mail.thread'].performRpcChannelSeen({
+                ids: [this.id],
+                // commands have fake message id that is not integer
+                lastMessageId: Math.floor(messageId),
+            });
         }
 
         /**
@@ -488,21 +610,13 @@ function factory(dependencies) {
         }
 
         /**
-         * Notify server the fold state of this thread. Useful for cross-tab
-         * and cross-device chat window state synchronization.
+         * Notifies the server of new fold state. Useful for initial,
+         * cross-tab, and cross-device chat window state synchronization.
          *
-         * Only makes sense if pendingFoldState is set to the desired value.
+         * @param {string} state
          */
-        notifyFoldStateToServer() {
-            // method is called from _updateAfter so it cannot be async
-            this.env.services.rpc({
-                model: 'mail.channel',
-                method: 'channel_fold',
-                kwargs: {
-                    uuid: this.uuid,
-                    state: this.pendingFoldState,
-                }
-            }, { shadow: true });
+        async notifyFoldStateToServer(state) {
+            return this.env.models['mail.thread'].performRpcChannelFold(this.uuid, state);
         }
 
         /**
@@ -540,16 +654,22 @@ function factory(dependencies) {
          * @param {boolean} [param0.expanded=false]
          */
         async open({ expanded = false } = {}) {
+            const discuss = this.env.messaging.discuss;
             // check if thread must be opened in form view
             if (!['mail.box', 'mail.channel'].includes(this.model)) {
-                return this.env.messaging.openDocument({
-                    id: this.id,
-                    model: this.model,
-                });
+                if (expanded || discuss.isOpen) {
+                    // Close chat window because having the same thread opened
+                    // both in chat window and as main document does not look
+                    // good.
+                    this.env.messaging.chatWindowManager.closeThread(this);
+                    return this.env.messaging.openDocument({
+                        id: this.id,
+                        model: this.model,
+                    });
+                }
             }
             // check if thread must be opened in discuss
             const device = this.env.messaging.device;
-            const discuss = this.env.messaging.discuss;
             if (
                 (!device.isMobile && (discuss.isOpen || expanded)) ||
                 this.model === 'mail.box'
@@ -758,10 +878,8 @@ function factory(dependencies) {
          * Unsubscribe current user from provided channel.
          */
         unsubscribe() {
-            this.update({
-                pendingFoldState: 'closed',
-                isPendingPinned: false,
-            });
+            this.env.messaging.chatWindowManager.closeThread(this);
+            this.update({ isPendingPinned: false });
         }
 
         //----------------------------------------------------------------------
@@ -786,7 +904,17 @@ function factory(dependencies) {
          */
         _computeAllAttachments() {
             const allAttachments = [...new Set(this.originThreadAttachments.concat(this.attachments))]
-                .sort((a1, a2) => a1.id < a2.id ? 1 : -1);
+                .sort((a1, a2) => {
+                    // "uploading" before "uploaded" attachments.
+                    if (!a1.isTemporary && a2.isTemporary) {
+                        return 1;
+                    }
+                    if (a1.isTemporary && !a2.isTemporary) {
+                        return -1;
+                    }
+                    // "most-recent" before "oldest" attachments.
+                    return Math.abs(a2.id) - Math.abs(a1.id);
+                });
             return [['replace', allAttachments]];
         }
 
@@ -825,14 +953,6 @@ function factory(dependencies) {
 
         /**
          * @private
-         * @returns {string}
-         */
-        _computeFoldState() {
-            return this.pendingFoldState || this.serverFoldState;
-        }
-
-        /**
-         * @private
          */
         _computeHasSeenIndicators() {
             if (this.model !== 'mail.channel') {
@@ -842,6 +962,14 @@ function factory(dependencies) {
                 return false;
             }
             return ['chat', 'livechat'].includes(this.channel_type);
+        }
+
+        /**
+         * @private
+         * @returns {boolean}
+         */
+        _computeIsChatChannel() {
+            return this.channel_type === 'chat';
         }
 
         /**
@@ -958,6 +1086,43 @@ function factory(dependencies) {
 
         /**
          * @private
+         * @returns {integer}
+         */
+        _computeLocalMessageUnreadCounter() {
+            // the only situations where serverMessageUnreadCounter can/have to be
+            // trusted are:
+            // - we have no last message (and then no messages at all)
+            // - the message it used to compute is the last message we know
+            if (this.orderedMessages.length === 0) {
+                return this.serverMessageUnreadCounter;
+            }
+            // from here serverLastMessageId is not undefined because
+            // orderedMessages contain at least one message.
+            if (!this.lastSeenByCurrentPartnerMessageId) {
+                return this.serverMessageUnreadCounter;
+            }
+            const firstMessage = this.orderedMessages[0];
+            // if the lastSeenByCurrentPartnerMessageId is not known (not fetched), then we
+            // need to rely on server value to determine the amount of unread
+            // messages until the last message it knew when computing the
+            // serverMessageUnreadCounter
+            if (this.lastSeenByCurrentPartnerMessageId < firstMessage.id) {
+                const fetchedNotSeenMessages = this.orderedMessages.filter(message =>
+                    message.id > this.serverLastMessageId
+                );
+                return this.serverMessageUnreadCounter + fetchedNotSeenMessages.length;
+            }
+            // lastSeenByCurrentPartnerMessageId is a known message,
+            // then we can forget serverMessageUnreadCounter
+            const maxId = Math.max(this.serverLastMessageId, this.lastSeenByCurrentPartnerMessageId);
+            return this.orderedMessages.reduce(
+                (acc, message) => acc + (message.id > maxId ? 1 : 0),
+                0
+            );
+        }
+
+        /**
+         * @private
          * @returns {mail.messaging}
          */
         _computeMessaging() {
@@ -1061,6 +1226,29 @@ function factory(dependencies) {
         }
 
         /**
+         * Handles change of fold state coming from the server. Useful to
+         * synchronize corresponding chat window.
+         *
+         * @private
+         */
+        _onServerFoldStateChanged() {
+            if (!this.env.messaging.chatWindowManager) {
+                // avoid crash during destroy
+                return;
+            }
+            if (this.serverFoldState === 'closed') {
+                this.env.messaging.chatWindowManager.closeThread(this, {
+                    notifyServer: false,
+                });
+            } else {
+                this.env.messaging.chatWindowManager.openThread(this, {
+                    isFolded: this.serverFoldState === 'folded',
+                    notifyServer: false,
+                });
+            }
+        }
+
+        /**
          * @private
          * @param {Object} [param0={}]
          * @param {boolean} [param0.mail_invite_follower_channel_only=false]
@@ -1096,19 +1284,8 @@ function factory(dependencies) {
          */
         _updateAfter(previous) {
             if (this.model !== 'mail.channel') {
-                // fold state only makes sense on channels
+                // pin state only makes sense on channels
                 return;
-            }
-            if (
-                this.pendingFoldState &&
-                previous.pendingFoldState !== this.pendingFoldState
-            ) {
-                this.notifyFoldStateToServer();
-            }
-            if (
-                this.serverFoldState === this.pendingFoldState
-            ) {
-                this.update({ pendingFoldState: undefined });
             }
             if (
                 this.isPendingPinned !== undefined &&
@@ -1116,31 +1293,8 @@ function factory(dependencies) {
             ) {
                 this.notifyPinStateToServer();
             }
-            if (
-                this.isServerPinned === this.isPendingPinned
-            ) {
-                this.update({ isPendingPinned: undefined });
-            }
-
-            // TODO FIXME prevent to open/close a channel on mobile when you
-            // open/close it on desktop (task-2267593)
-
-            // chat window
-            if (previous.foldState === this.foldState) {
-                // avoid updating chatWindows when not changing foldState
-                // important to avoid issues when thread is in progress of being
-                // opened, because the foldState is updated only at the end of
-                // the process
-                return;
-            }
-            if (!this.env.messaging.chatWindowManager) {
-                // avoid crash during destroy
-                return;
-            }
-            if (this.foldState !== 'closed') {
-                this.env.messaging.chatWindowManager.openThread(this);
-            } else {
-                this.env.messaging.chatWindowManager.closeThread(this);
+            if (this.isServerPinned === this.isPendingPinned) {
+                this.update({ isPendingPinned: clear() });
             }
         }
 
@@ -1149,9 +1303,7 @@ function factory(dependencies) {
          */
         _updateBefore() {
             return {
-                foldState: this.foldState,
                 isPendingPinned: this.isPendingPinned,
-                pendingFoldState: this.pendingFoldState,
             };
         }
 
@@ -1213,6 +1365,20 @@ function factory(dependencies) {
             isCausal: true,
         }),
         channel_type: attr(),
+        /**
+         * States the `mail.chat_window` related to `this`. Serves as compute
+         * dependency. It is computed from the inverse relation and it should
+         * otherwise be considered read-only.
+         */
+        chatWindow: one2one('mail.chat_window', {
+            inverse: 'thread',
+        }),
+        /**
+         * Serves as compute dependency.
+         */
+        chatWindowIsFolded: attr({
+            related: 'chatWindow.isFolded',
+        }),
         composer: one2one('mail.composer', {
             default: [['create']],
             inverse: 'thread',
@@ -1245,22 +1411,6 @@ function factory(dependencies) {
                 'name',
             ],
         }),
-        /**
-         * Determine the fold state of the channel on the web client.
-         *
-         * If there is a pending fold state change, it is immediately applied on
-         * the interface to avoid a feeling of unresponsiveness. Otherwise the
-         * last known fold state of the server is used.
-         *
-         * This field must be considered read only.
-         */
-        foldState: attr({
-            compute: '_computeFoldState',
-            dependencies: [
-                'pendingFoldState',
-                'serverFoldState',
-            ],
-        }),
         followersPartner: many2many('mail.partner', {
             related: 'followers.partner',
         }),
@@ -1284,6 +1434,19 @@ function factory(dependencies) {
             ],
         }),
         id: attr(),
+        /**
+         * States whether this thread is a `mail.channel` qualified as chat.
+         *
+         * Useful to list chat channels, like in messaging menu with the filter
+         * 'chat'.
+         */
+        isChatChannel: attr({
+            compute: '_computeIsChatChannel',
+            dependencies: [
+                'channel_type',
+            ],
+            default: false,
+        }),
         isCurrentPartnerFollowing: attr({
             compute: '_computeIsCurrentPartnerFollowing',
             default: false,
@@ -1353,6 +1516,32 @@ function factory(dependencies) {
             compute: '_computeLastNeedactionMessage',
             dependencies: ['needactionMessages'],
         }),
+        /**
+         * Last seen message id of the channel by current partner.
+         *
+         * If there is a pending seen message id change, it is immediately applied
+         * on the interface to avoid a feeling of unresponsiveness. Otherwise the
+         * last known message id of the server is used.
+         *
+         * Also, it needs to be kept as an id because it's considered like a "date" and could stay
+         * even if corresponding message is deleted. It is basically used to know which
+         * messages are before or after it.
+         */
+        lastSeenByCurrentPartnerMessageId: attr(),
+        /**
+         * Local value of message unread counter, that means it is based on initial server value and
+         * updated with interface updates.
+         */
+        localMessageUnreadCounter: attr({
+            compute: '_computeLocalMessageUnreadCounter',
+            dependencies: [
+                'lastMessage',
+                'lastSeenByCurrentPartnerMessageId',
+                'orderedMessages',
+                'serverLastMessageId',
+                'serverMessageUnreadCounter',
+            ],
+        }),
         mainCache: one2one('mail.thread_cache', {
             compute: '_computeMainCache',
         }),
@@ -1363,9 +1552,6 @@ function factory(dependencies) {
             inverse: 'memberThreads',
         }),
         message_needaction_counter: attr({
-            default: 0,
-        }),
-        message_unread_counter: attr({
             default: 0,
         }),
         /**
@@ -1410,6 +1596,16 @@ function factory(dependencies) {
             compute: '_computeNeedactionMessages',
             dependencies: ['messages'],
         }),
+        /**
+         * Not a real field, used to trigger `_onServerFoldStateChanged` when one of
+         * the dependencies changes.
+         */
+        onServerFoldStateChanged: attr({
+            compute: '_onServerFoldStateChanged',
+            dependencies: [
+                'serverFoldState',
+            ],
+        }),
         orderedMessages: many2many('mail.message', {
             compute: '_computeOrderedMessages',
             dependencies: ['messages'],
@@ -1447,16 +1643,12 @@ function factory(dependencies) {
             isCausal: true,
         }),
         /**
-         * Determine if there is a pending fold state change, which is a change
-         * of fold state requested by the client but not yet confirmed by the
+         * Determine if there is a pending seen message change, which is a change
+         * of seen message requested by the client but not yet confirmed by the
          * server.
-         *
-         * This field can be updated to immediately change the fold state on the
-         * interface and to notify the server of the new state.
          */
-        pendingFoldState: attr(),
+        pendingSeenMessageId: attr(),
         public: attr(),
-        seen_message_id: attr(),
         /**
          * Determine the last fold state known by the server, which is the fold
          * state displayed after initialization or when the last pending
@@ -1468,6 +1660,35 @@ function factory(dependencies) {
          */
         serverFoldState: attr({
             default: 'closed',
+        }),
+        /**
+         * Last message id considered by the server.
+         *
+         * Useful to compute localMessageUnreadCounter field.
+         *
+         * @see localMessageUnreadCounter
+         */
+        serverLastMessageId: attr({
+            default: 0,
+        }),
+        /**
+         * Message unread counter coming from server.
+         *
+         * Value of this field is unreliable, due to dynamic nature of
+         * messaging. So likely outdated/unsync with server. Should use
+         * localMessageUnreadCounter instead, which smartly guess the actual
+         * message unread counter at all time.
+         *
+         * @see localMessageUnreadCounter
+         */
+        serverMessageUnreadCounter: attr({
+            default: 0,
+        }),
+        /**
+         * Determines the `mail.suggested_recipient_info` concerning `this`.
+         */
+        suggestedRecipientInfoList: one2many('mail.suggested_recipient_info', {
+            inverse: 'thread',
         }),
         /**
          * Members that are currently typing something in the composer of this

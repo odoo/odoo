@@ -97,14 +97,26 @@ class FileUploader extends Component {
      */
     async _performUpload(files) {
         for (const file of files) {
-            const response = await this.env.browser.fetch('/web/binary/upload_attachment', {
-                method: 'POST',
-                body: this._createFormData(file),
-            });
-            let html = await response.text();
-            const template = document.createElement('template');
-            template.innerHTML = html.trim();
-            window.eval(template.content.firstChild.textContent);
+            const uploadingAttachment = this.env.models['mail.attachment'].find(attachment =>
+                attachment.isTemporary &&
+                attachment.filename === file.name
+            );
+
+            try {
+                const response = await this.env.browser.fetch('/web/binary/upload_attachment', {
+                    method: 'POST',
+                    body: this._createFormData(file),
+                    signal: uploadingAttachment.uploadingAbortController.signal,
+                });
+                let html = await response.text();
+                const template = document.createElement('template');
+                template.innerHTML = html.trim();
+                window.eval(template.content.firstChild.textContent);
+            } catch (e) {
+                if (e.name !== 'AbortError') {
+                    throw e;
+                }
+            }
         }
     }
 

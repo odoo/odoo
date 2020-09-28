@@ -91,6 +91,38 @@ QUnit.test('select another mailbox', async function (assert) {
     );
 });
 
+QUnit.test('auto-select "Inbox" when discuss had channel as active thread', async function (assert) {
+    assert.expect(3);
+
+    this.data['mail.channel'].records.push({ id: 20 });
+    await this.start({
+        discuss: {
+            context: {
+                active_id: 20,
+            },
+        }
+    });
+    assert.hasClass(
+        document.querySelector('.o_MobileMessagingNavbar_tab[data-tab-id="channel"]'),
+        'o-active',
+        "'channel' tab should be active initially when loading discuss with channel id as active_id"
+    );
+
+    await afterNextRender(() => document.querySelector('.o_MobileMessagingNavbar_tab[data-tab-id="mailbox"]').click());
+    assert.hasClass(
+        document.querySelector('.o_MobileMessagingNavbar_tab[data-tab-id="mailbox"]'),
+        'o-active',
+        "'mailbox' tab should be selected after click on mailbox tab"
+    );
+    assert.hasClass(
+        document.querySelector(`.o_DiscussMobileMailboxSelection_button[data-mailbox-local-id="${
+            this.env.messaging.inbox.localId
+        }"]`),
+        'o-active',
+        "'Inbox' mailbox should be auto-selected after click on mailbox tab"
+    );
+});
+
 });
 });
 });

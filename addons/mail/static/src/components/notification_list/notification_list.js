@@ -99,10 +99,10 @@ class NotificationList extends Component {
         // thread notifications
         const threadNotifications = threads
             .sort((t1, t2) => {
-                if (t1.message_unread_counter > 0 && t2.message_unread_counter === 0) {
+                if (t1.localMessageUnreadCounter > 0 && t2.localMessageUnreadCounter === 0) {
                     return -1;
                 }
-                if (t1.message_unread_counter === 0 && t2.message_unread_counter > 0) {
+                if (t1.localMessageUnreadCounter === 0 && t2.localMessageUnreadCounter > 0) {
                     return 1;
                 }
                 if (t1.lastMessage && t2.lastMessage) {
@@ -187,7 +187,7 @@ class NotificationList extends Component {
         } else if (props.filter === 'chat') {
             return this.env.models['mail.thread']
                 .all(thread =>
-                    thread.channel_type === 'chat' &&
+                    thread.isChatChannel &&
                     thread.isPinned &&
                     thread.model === 'mail.channel'
                 )

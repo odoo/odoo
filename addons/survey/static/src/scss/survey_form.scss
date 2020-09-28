@@ -241,11 +241,11 @@ nav#oe_main_menu_navbar {
 
 .o_survey_session_manage {
     h1 {
-        font-size: 4rem;
+        font-size: 3rem;
     }
 
     h2 {
-        font-size: 3.2rem;
+        font-size: 2.5rem;
     }
 
     .o_survey_session_navigation {
@@ -263,20 +263,28 @@ nav#oe_main_menu_navbar {
         }
     }
 
-    .o_survey_session_link_reminder {
-        position: absolute;
-        right: 2rem;
-        top: 2rem;
-    }
-
     .o_survey_manage_fontsize_14 {
         font-size: 1.4rem;
     }
 
-    .o_survey_session_manage_container {
-        height: 100vh;
-        width: 85vw;
+    .o_survey_question_header {
+        top: 1em;
+        > div {
+            width: 400px;
+        }
+        .progress {
+            height: 2rem;
+            border-radius: 0.6rem;
+            font-size: 1.2rem;
+            background-color: #cfcfcf;
+            .progress-bar {
+                width: 0%;
+                transition: width 1s ease;
+            }
+        }
+    }
 
+    .o_survey_session_manage_container {
         .o_survey_choice_key {
             display: none;
         }
@@ -290,17 +298,6 @@ nav#oe_main_menu_navbar {
 
             .mb-6 {
                 margin-bottom: 6rem;
-            }
-
-            .progress {
-                height: 2rem;
-                border-radius: 0.6rem;
-                font-size: 1.2rem;
-                background-color: #cfcfcf;
-                .progress-bar {
-                    width: 0%;
-                    transition: width 1s ease;
-                }
             }
 
             .o_survey_session_text_answer {

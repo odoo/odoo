@@ -128,20 +128,12 @@ function factory(dependencies) {
 
         /**
          * @private
-         * @param {Object[]} shortcodes
+         * @param {Object[]} cannedResponsesData
          */
-        _initCannedResponses(shortcodes) {
-            const messaging = this.messaging;
-            const cannedResponses = shortcodes
-                .map(s => {
-                    const { id, source, substitution } = s;
-                    return { id, source, substitution };
-                })
-                .reduce((obj, cr) => {
-                    obj[cr.id] = cr;
-                    return obj;
-                }, {});
-            messaging.update({ cannedResponses });
+        _initCannedResponses(cannedResponsesData) {
+            this.messaging.update({
+                cannedResponses: [['insert', cannedResponsesData]],
+            });
         }
 
         /**
@@ -172,18 +164,9 @@ function factory(dependencies) {
          * @param {Object[]} commandsData
          */
         _initCommands(commandsData) {
-            const messaging = this.messaging;
-            const commands = commandsData
-                .map(command => {
-                    return Object.assign({
-                        id: command.name,
-                    }, command);
-                })
-                .reduce((obj, command) => {
-                    obj[command.id] = command;
-                    return obj;
-                }, {});
-            messaging.update({ commands });
+            this.messaging.update({
+                commands: [['insert', commandsData]],
+            });
         }
 
         /**

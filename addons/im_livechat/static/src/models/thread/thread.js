@@ -17,12 +17,6 @@ registerClassPatchModel('mail.thread', 'im_livechat/static/src/models/thread/thr
      */
     convertData(data) {
         const data2 = this._super(data);
-        if ('last_message_id' in data) {
-            if (!data2.messagesAsServerChannel) {
-                data2.messagesAsServerChannel = [];
-            }
-            data2.messagesAsServerChannel.push(['insert', { id: data.last_message_id }]);
-        }
         if ('livechat_visitor' in data && data.livechat_visitor) {
             if (!data2.members) {
                 data2.members = [];
@@ -91,6 +85,12 @@ registerInstancePatchModel('mail.thread', 'im_livechat/static/src/models/thread/
             return this.correspondent.nameOrDisplayName;
         }
         return this._super();
+    },
+    /**
+     * @override
+     */
+    _computeIsChatChannel() {
+        return this.channel_type === 'livechat' || this._super();
     },
 });
 

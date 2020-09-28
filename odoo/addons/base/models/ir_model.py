@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import datetime
 import itertools
 import logging
 import re
@@ -10,14 +9,13 @@ from collections import defaultdict
 from collections.abc import Mapping
 from operator import itemgetter
 
-import dateutil
 from psycopg2 import sql
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.osv import expression
 from odoo.tools import pycompat, unique
-from odoo.tools.safe_eval import safe_eval
+from odoo.tools.safe_eval import safe_eval, datetime, dateutil
 
 _logger = logging.getLogger(__name__)
 
@@ -275,10 +273,7 @@ class IrModel(models.Model):
                         WHERE type IN ('model', 'model_terms') AND name LIKE %s
                     """, [model.model + ',%'])
             else:
-                # do not warn in the case of a test module
-                module = self.env.context.get('module', '')
-                if not module.startswith('test_'):
-                    _logger.warning('The model %s could not be dropped because it did not exist in the registry.', model.model)
+                _logger.runbot('The model %s could not be dropped because it did not exist in the registry.', model.model)
         return True
 
     def unlink(self):
@@ -1627,7 +1622,7 @@ class IrModelAccess(models.Model):
     name = fields.Char(required=True, index=True)
     active = fields.Boolean(default=True, help='If you uncheck the active field, it will disable the ACL without deleting it (if you delete a native ACL, it will be re-created when you reload the module).')
     model_id = fields.Many2one('ir.model', string='Model', required=True, index=True, ondelete='cascade')
-    group_id = fields.Many2one('res.groups', string='Group', ondelete='cascade', index=True)
+    group_id = fields.Many2one('res.groups', string='Group', ondelete='restrict', index=True)
     perm_read = fields.Boolean(string='Read Access')
     perm_write = fields.Boolean(string='Write Access')
     perm_create = fields.Boolean(string='Create Access')

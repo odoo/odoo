@@ -50,8 +50,13 @@ class SaleOrder(models.Model):
     def _action_confirm(self):
         """ On SO confirmation, some lines should generate a task or a project. """
         result = super()._action_confirm()
-        self.mapped('order_line').sudo() \
-            .with_company(self.company_id)._timesheet_service_generation()
+        if len(self.company_id) == 1:
+            # All orders are in the same company
+            self.order_line.sudo().with_company(self.company_id)._timesheet_service_generation()
+        else:
+            # Orders from different companies are confirmed together
+            for order in self:
+                order.order_line.sudo().with_company(order.company_id)._timesheet_service_generation()
         return result
 
     def action_view_task(self):
@@ -147,7 +152,7 @@ class SaleOrderLine(models.Model):
         # changing the ordered quantity should change the planned hours on the
         # task, whatever the SO state. It will be blocked by the super in case
         # of a locked sale order.
-        if 'product_uom_qty' in values:
+        if 'product_uom_qty' in values and not self.env.context.get('no_update_planned_hours', False):
             for line in self:
                 if line.task_id:
                     planned_hours = line._convert_qty_company_hours(line.task_id.company_id)

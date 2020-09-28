@@ -69,7 +69,7 @@ class ProjectCreateSalesOrder(models.TransientModel):
             tasks = line.project_id.tasks.filtered(lambda t: not t.non_allow_billable)
             domain = self.env['sale.order.line']._timesheet_compute_delivered_quantity_domain()
             timesheet = self.env['account.analytic.line'].read_group(domain + [('task_id', 'in', tasks.ids), ('so_line', '=', False), ('timesheet_invoice_id', '=', False)], ['unit_amount'], ['task_id'])
-            unit_amount = round(timesheet[0].get('unit_amount', 0), 2) if timesheet else 0
+            unit_amount = round(sum(t.get('unit_amount', 0) for t in timesheet), 2) if timesheet else 0
             if not unit_amount:
                 line.info_invoice = False
                 continue
@@ -79,10 +79,8 @@ class ProjectCreateSalesOrder(models.TransientModel):
                 label = _("days")
             if line.link_selection == 'create':
                 line.info_invoice = _("%(amount)s %(label)s will be added to the new Sales Order.", amount=unit_amount, label=label)
-            elif line.sale_order_id:
-                line.info_invoice = _("%(amount)s %(label)s will be added to the selected Sales Order.", amount=unit_amount, label=label)
             else:
-                line.info_invoice = False
+                line.info_invoice = _("%(amount)s %(label)s will be added to the selected Sales Order.", amount=unit_amount, label=label)
 
     @api.onchange('partner_id')
     def _onchange_partner_id(self):
@@ -224,6 +222,9 @@ class ProjectCreateSalesOrder(models.TransientModel):
             self.env['account.analytic.line'].search([('task_id', 'in', task_ids.ids), ('so_line', '=', False)]).write({
                 'so_line': sale_order_line.id
             })
+            sale_order_line.with_context({'no_update_planned_hours': True}).write({
+                'product_uom_qty': sale_order_line.qty_delivered
+            })
 
         # link the project to the SO line
         self.project_id.write({
@@ -297,6 +298,9 @@ class ProjectCreateSalesOrder(models.TransientModel):
         for map_entry in map_entries:
             self.env['account.analytic.line'].search([('task_id', 'in', tasks.ids), ('employee_id', '=', map_entry.employee_id.id), ('so_line', '=', False)]).write({
                 'so_line': map_entry.sale_line_id.id
+            })
+            map_entry.sale_line_id.with_context({'no_update_planned_hours': True}).write({
+                'product_uom_qty': map_entry.sale_line_id.qty_delivered
             })
 
         return map_entries

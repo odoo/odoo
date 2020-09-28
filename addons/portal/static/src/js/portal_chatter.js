@@ -2,6 +2,7 @@ odoo.define('portal.chatter', function (require) {
 'use strict';
 
 var core = require('web.core');
+const dom = require('web.dom');
 var publicWidget = require('web.public.widget');
 var time = require('web.time');
 var portalComposer = require('portal.composer');
@@ -278,8 +279,7 @@ var PortalChatter = publicWidget.Widget.extend({
             if (result === true) {
                 $elem.addClass('o_portal_message_internal_on');
                 $elem.removeClass('o_portal_message_internal_off');
-            }
-            else {
+            } else {
                 $elem.addClass('o_portal_message_internal_off');
                 $elem.removeClass('o_portal_message_internal_on');
             }
@@ -293,17 +293,15 @@ publicWidget.registry.portalChatter = publicWidget.Widget.extend({
     /**
      * @override
      */
-    start: function () {
-        var self = this;
-        var defs = [this._super.apply(this, arguments)];
-        var chatter = new PortalChatter(this, this.$el.data());
-        defs.push(chatter.appendTo(this.$el));
-        return Promise.all(defs).then(function () {
-            // scroll to the right place after chatter loaded
-            if (window.location.hash === '#' + self.$el.attr('id')) {
-                $('html, body').scrollTop(self.$el.offset().top);
-            }
-        });
+    async start() {
+        const proms = [this._super.apply(this, arguments)];
+        const chatter = new PortalChatter(this, this.$el.data());
+        proms.push(chatter.appendTo(this.$el));
+        await Promise.all(proms);
+        // scroll to the right place after chatter loaded
+        if (window.location.hash === `#${this.el.id}`) {
+            dom.scrollTo(this.el, {duration: 0});
+        }
     },
 });
 

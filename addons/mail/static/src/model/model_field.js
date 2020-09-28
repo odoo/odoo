@@ -1,6 +1,8 @@
 odoo.define('mail/static/src/model/model_field.js', function (require) {
 'use strict';
 
+const { FieldCommand } = require('mail/static/src/model/model_field_command.js');
+
 /**
  * Class whose instances represent field on a model.
  * These field definitions are generated from declared fields in static prop
@@ -216,6 +218,30 @@ class ModelField {
     }
 
     /**
+     * Clears the value of this field on the given record. It consists of
+     * setting this to its default value. In particular, using `clear` is the
+     * only way to write `undefined` on a field, as long as `undefined` is its
+     * default value. Relational fields are always unlinked before the default
+     * is applied.
+     *
+     * @param {mail.model} record
+     * @param {options} [options]
+     * @returns {boolean} whether the value changed for the current field
+     */
+    clear(record, options) {
+        let hasChanged = false;
+        if (this.fieldType === 'relation') {
+            if (this.parseAndExecuteCommands(record, [['unlink-all']], options)) {
+                hasChanged = true;
+            }
+        }
+        if (this.parseAndExecuteCommands(record, this.default, options)) {
+            hasChanged = true;
+        }
+        return hasChanged;
+    }
+
+    /**
      * Combine current field definition with provided field definition and
      * return the combined field definition. Useful to track list of hashes of
      * a given field, which is necessary for the working of dependent fields
@@ -301,6 +327,33 @@ class ModelField {
             return [...this.read(record)];
         }
         throw new Error(`cannot get field with unsupported type ${this.fieldType}.`);
+    }
+
+    /**
+     * Parses newVal for command(s) and executes them.
+     *
+     * @param {mail.model} record
+     * @param {any} newVal
+     * @param {Object} [options]
+     * @returns {boolean} whether the value changed for the current field
+     */
+    parseAndExecuteCommands(record, newVal, options) {
+        if (newVal instanceof FieldCommand) {
+            // single command given
+            return newVal.execute(this, record, options);
+        }
+        if (typeof newVal instanceof Array && newVal[0] instanceof FieldCommand) {
+            // multi command given
+            let hasChanged = false;
+            for (const command of newVal) {
+                if (command.execute(this, record, options)) {
+                    hasChanged = true;
+                }
+            }
+            return hasChanged;
+        }
+        // not a command
+        return this.set(record, newVal, options);
     }
 
     /**

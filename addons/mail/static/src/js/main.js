@@ -71,6 +71,13 @@ Object.assign(env, {
         }
         return this.messaging.isInitialized;
     },
+    /**
+     * States whether the environment is in QUnit test or not.
+     *
+     * Useful to prevent some behaviour in QUnit tests, like applying
+     * style of attachment that uses url.
+     */
+    isQUnitTest: false,
     loadingBaseDelayDuration: 400,
     messaging: undefined,
     messagingBus: new EventBus(),

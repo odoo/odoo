@@ -469,6 +469,31 @@ a.o_underline {
     }
 }
 
+.o_we_search_prompt {
+    position: relative;
+    min-height: 250px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    & > h2 {
+        max-width: 500px;
+        text-align: center;
+    }
+
+    &::before {
+        content: "";
+        @include o-position-absolute($top: 0, $right: 50px);
+        width: 100px;
+        height: 150px;
+        opacity: .5;
+        background-image: url('/web_editor/static/src/img/curved_arrow.svg');
+        background-size: 100%;
+        background-repeat: no-repeat;
+    }
+}
+
 @include media-breakpoint-down(sm) {
     odoo-wysiwyg-container {
         .panel-heading.note-toolbar {
@@ -696,6 +721,15 @@ blockquote {
                     }
                 }
             }
+            a.list-group-item {
+                color: $-btn-primary-color;
+
+                &.active {
+                    background-color: $-btn-primary-color;
+                    color: color-yiq($-btn-primary-color);
+                    border-color: $-btn-primary-color;
+                }
+            }
         }
     }
 }
@@ -726,6 +760,7 @@ blockquote {
 }
 %o-we-background-layer {
     @include o-position-absolute(0, 0, 0, 0);
+    position: absolute !important;
     display: block;
     overflow: hidden;
     background-repeat: no-repeat;

@@ -109,11 +109,11 @@ class AccountAnalyticLine(models.Model):
     def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
         """ Set the correct label for `unit_amount`, depending on company UoM """
         result = super(AccountAnalyticLine, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
-        result['arch'] = self._apply_timesheet_label(result['arch'])
+        result['arch'] = self._apply_timesheet_label(result['arch'], view_type=view_type)
         return result
 
     @api.model
-    def _apply_timesheet_label(self, view_arch):
+    def _apply_timesheet_label(self, view_arch, view_type='form'):
         doc = etree.XML(view_arch)
         encoding_uom = self.env.company.timesheet_encode_uom_id
         # Here, we select only the unit_amount field having no string set to give priority to

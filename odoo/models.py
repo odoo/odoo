@@ -55,7 +55,7 @@ from .exceptions import AccessError, MissingError, ValidationError, UserError
 from .osv.query import Query
 from .tools import frozendict, lazy_classproperty, ormcache, \
                    Collector, LastOrderedSet, OrderedSet, IterableGenerator, \
-                   groupby, unique
+                   groupby
 from .tools.config import config
 from .tools.func import frame_codeinfo
 from .tools.misc import CountingStream, clean_context, DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT, get_lang
@@ -219,6 +219,19 @@ def origin_ids(ids):
     return ((id_ or id_.origin) for id_ in ids if (id_ or getattr(id_, "origin", None)))
 
 
+def expand_ids(id0, ids):
+    """ Return an iterator of unique ids from the concatenation of ``[id0]`` and
+        ``ids``, and of the same kind (all real or all new).
+    """
+    yield id0
+    seen = {id0}
+    kind = bool(id0)
+    for id_ in ids:
+        if id_ not in seen and bool(id_) == kind:
+            yield id_
+            seen.add(id_)
+
+
 IdType = (int, str, NewId)
 
 
@@ -348,6 +361,14 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
     """On write and create, call ``_check_company`` to ensure companies
     consistency on the relational fields having ``check_company=True``
     as attribute.
+    """
+
+    _depends = {}
+    """dependencies of models backed up by SQL views
+    ``{model_name: field_names}``, where ``field_names`` is an iterable.
+    This is only used to determine the changes to flush to database before
+    executing ``search()`` or ``read_group()``. It won't be used for cache
+    invalidation or recomputing fields.
     """
 
     # default values for _transient_vacuum()
@@ -609,6 +630,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         cls._sequence = None
         cls._log_access = cls._auto
         cls._inherits = {}
+        cls._depends = {}
         cls._sql_constraints = {}
 
         for base in reversed(cls.__bases__):
@@ -623,6 +645,9 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 cls._log_access = getattr(base, '_log_access', cls._log_access)
 
             cls._inherits.update(base._inherits)
+
+            for mname, fnames in base._depends.items():
+                cls._depends.setdefault(mname, []).extend(fnames)
 
             for cons in base._sql_constraints:
                 cls._sql_constraints[cons[0]] = cons
@@ -2556,9 +2581,11 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             if fields_to_compute:
                 @self.pool.post_init
                 def mark_fields_to_compute():
-                    recs = self.with_context(active_test=False).search([])
+                    recs = self.with_context(active_test=False).search([], order='id')
+                    if not recs:
+                        return
                     for field in fields_to_compute:
-                        _logger.info("Storing computed values of %s", field)
+                        _logger.info("Storing computed values of %s.%s", recs._name, field)
                         self.env.add_to_compute(recs._fields[field], recs)
 
         if self._auto:
@@ -4389,6 +4416,15 @@ Fields:
         if self._active_name:
             to_flush[self._name].add(self._active_name)
 
+        # flush model dependencies (recursively)
+        if self._depends:
+            models = [self]
+            while models:
+                model = models.pop()
+                for model_name, field_names in model._depends.items():
+                    to_flush[model_name].update(field_names)
+                    models.append(self.env[model_name])
+
         for model_name, field_names in to_flush.items():
             self.env[model_name].flush(field_names)
 
@@ -5273,20 +5309,24 @@ Fields:
                     elif comparator == 'not in':
                         ok = all(map(lambda x: x not in data, value))
                     elif comparator == 'not ilike':
+                        data = [(x or "") for x in data]
                         ok = all(map(lambda x: value.lower() not in x.lower(), data))
                     elif comparator == 'ilike':
-                        data = [x.lower() for x in data]
+                        data = [(x or "").lower() for x in data]
                         ok = bool(fnmatch.filter(data, '*'+(value_esc or '').lower()+'*'))
                     elif comparator == 'not like':
+                        data = [(x or "") for x in data]
                         ok = all(map(lambda x: value not in x, data))
                     elif comparator == 'like':
+                        data = [(x or "") for x in data]
                         ok = bool(fnmatch.filter(data, value and '*'+value_esc+'*'))
                     elif comparator == '=?':
                         ok = (value in data) or not value
                     elif comparator in ('=like'):
+                        data = [(x or "") for x in data]
                         ok = bool(fnmatch.filter(data, value_esc))
                     elif comparator in ('=ilike'):
-                        data = [x.lower() for x in data]
+                        data = [(x or "").lower() for x in data]
                         ok = bool(fnmatch.filter(data, value and value_esc.lower()))
                     else:
                         raise ValueError
@@ -5326,9 +5366,13 @@ Fields:
 
     @api.model
     def flush(self, fnames=None, records=None):
-        """ Process all the pending recomputations (or at least the given field
-            names `fnames` if present) and flush the pending updates to the
-            database.
+        """ Process all the pending computations (on all models), and flush all
+        the pending updates to the database.
+
+        :param fnames (list<str>): list of field names to flush.  If given,
+            limit the processing to the given fields of the current model.
+        :param records (Model): if given (together with ``fnames``), limit the
+            processing to the given records.
         """
         def process(model, id_vals):
             # group record ids by vals, to update in batch when possible
@@ -5590,27 +5634,20 @@ Fields:
         """ Return the cache of ``self``, mapping field names to values. """
         return RecordCache(self)
 
-    @api.model
     def _in_cache_without(self, field, limit=PREFETCH_MAX):
         """ Return records to prefetch that have no value in cache for ``field``
             (:class:`Field` instance), including ``self``.
             Return at most ``limit`` records.
         """
-        # This method returns records that are either all real, or all new.
+        ids = expand_ids(self.id, self._prefetch_ids)
+        ids = self.env.cache.get_missing_ids(self.browse(ids), field)
+        if limit:
+            ids = itertools.islice(ids, limit)
         # Those records are aimed at being either fetched, or computed.  But the
         # method '_fetch_field' is not correct with new records: it considers
         # them as forbidden records, and clears their cache!  On the other hand,
         # compute methods are not invoked with a mix of real and new records for
         # the sake of code simplicity.
-        kind = bool(self.id)
-        recs = self.browse(unique(self._prefetch_ids))
-        ids = [self.id]
-        for record_id in self.env.cache.get_missing_ids(recs - self, field):
-            if bool(record_id) != kind:
-                continue
-            ids.append(record_id)
-            if limit and limit <= len(ids):
-                break
         return self.browse(ids)
 
     @api.model
@@ -5986,6 +6023,14 @@ Fields:
                     else:
                         # x2many fields: serialize value as commands
                         result[name] = commands = [(5,)]
+                        # The purpose of the following line is to enable the prefetching.
+                        # In the loop below, line._prefetch_ids actually depends on the
+                        # value of record[name] in cache (see prefetch_ids on x2many
+                        # fields).  But the cache has been invalidated before calling
+                        # diff(), therefore evaluating line._prefetch_ids with an empty
+                        # cache simply returns nothing, which discards the prefetching
+                        # optimization!
+                        record[name]
                         for line_snapshot in self[name]:
                             line = line_snapshot['<record>']
                             line = line._origin or line

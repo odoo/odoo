@@ -10618,7 +10618,7 @@ QUnit.module('Views', {
 
     QUnit.test('list view with field component: mounted and willUnmount calls', async function (assert) {
         // this test could be removed as soon as the list view will be written in Owl
-        assert.expect(3);
+        assert.expect(7);
 
         let mountedCalls = 0;
         let willUnmountCalls = 0;
@@ -10641,10 +10641,16 @@ QUnit.module('Views', {
         });
 
         assert.containsN(list, '.o_data_row', 4);
-        list.destroy();
-
         assert.strictEqual(mountedCalls, 4);
+        assert.strictEqual(willUnmountCalls, 0);
+
+        await list.reload();
+        assert.strictEqual(mountedCalls, 8);
         assert.strictEqual(willUnmountCalls, 4);
+
+        list.destroy();
+        assert.strictEqual(mountedCalls, 8);
+        assert.strictEqual(willUnmountCalls, 8);
     });
 
     QUnit.test('editable list view: multi edition of owl field component', async function (assert) {

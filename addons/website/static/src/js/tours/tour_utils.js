@@ -163,7 +163,6 @@ function clickOnText(snippet, element, position = "bottom") {
         position: position,
         run: "text",
         consumeEvent: "input",
-        optional: "true",
     };
 }
 
@@ -174,10 +173,10 @@ function clickOnText(snippet, element, position = "bottom") {
  */
 function dragNDrop(snippet, position = "bottom") {
     return {
-        trigger: `#oe_snippets .oe_snippet[name="${snippet.name}"] .oe_snippet_thumbnail`,
+        trigger: `#oe_snippets .oe_snippet[name="${snippet.name}"] .oe_snippet_thumbnail:not(.o_we_already_dragging)`,
         extra_trigger: "body.editor_enable.editor_has_snippets",
         moveTrigger: '.oe_drop_zone',
-        content: _t(`Drag the <b>${snippet.name}</b> building block and drop it just after the previous one.`),
+        content: _t(`Drag the <b>${snippet.name}</b> building block and drop it in your page.`),
         position: position,
         run: "drag_and_drop #wrap",
     };
@@ -186,7 +185,7 @@ function dragNDrop(snippet, position = "bottom") {
 function goBackToBlocks(position = "bottom") {
     return {
         trigger: '.o_we_add_snippet_btn',
-        content: _t("Go back to the Blocks tab."),
+        content: _t("Click here to go back to block tab."),
         position: position,
         run: "click",
     };

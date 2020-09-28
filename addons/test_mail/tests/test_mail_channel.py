@@ -257,6 +257,31 @@ class TestChannelFeatures(TestMailCommon):
         same_solo_channel_info = current_user.env['mail.channel'].channel_get(partners_to=current_partner.ids)
         self.assertEqual(same_solo_channel_info['id'], solo_channel_info['id'])
 
+    def test_channel_seen(self):
+        """
+        In case of concurrent channel_seen RPC, ensure the oldest call has no effect.
+        """
+        self.test_channel.write({'channel_type': 'chat'})
+        self.test_channel.action_follow()
+        msg_1 = self._add_messages(self.test_channel, 'Body1', author=self.user_employee.partner_id,
+            channel_ids=[self.test_channel.id])
+        msg_2 = self._add_messages(self.test_channel, 'Body2', author=self.user_employee.partner_id,
+            channel_ids=[self.test_channel.id])
+        ChannelAsUser = self.test_channel.with_user(self.user_employee).browse(self.test_channel.id)
+
+        self.test_channel.channel_seen(msg_2.id)
+        self.assertEqual(
+            ChannelAsUser.channel_info()[0]['seen_partners_info'][0]['seen_message_id'],
+            msg_2.id,
+            "Last message id should have been updated"
+        )
+
+        self.test_channel.channel_seen(msg_1.id)
+        self.assertEqual(
+            ChannelAsUser.channel_info()[0]['seen_partners_info'][0]['seen_message_id'],
+            msg_2.id,
+            "Last message id should stay the same after mark channel as seen with an older message"
+        )
 
 @tagged('moderation')
 class TestChannelModeration(TestMailCommon):

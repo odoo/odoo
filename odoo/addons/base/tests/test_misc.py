@@ -321,6 +321,28 @@ class TestCallbacks(BaseCase):
         callbacks.run()
         self.assertEqual(log, [[1, 2, 3]])
 
+    def test_reentrant(self):
+        log = []
+        callbacks = misc.Callbacks()
+
+        # register foo that runs callbacks
+        @callbacks.add
+        def foo():
+            log.append("foo1")
+            callbacks.run()
+            log.append("foo2")
+
+        @callbacks.add
+        def bar():
+            log.append("bar")
+
+        # both foo() and bar() are called once
+        callbacks.run()
+        self.assertEqual(log, ["foo1", "bar", "foo2"])
+
+        callbacks.run()
+        self.assertEqual(log, ["foo1", "bar", "foo2"])
+
 
 class TestRemoveAccents(BaseCase):
     def test_empty_string(self):

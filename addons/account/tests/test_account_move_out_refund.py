@@ -12,7 +12,7 @@ class TestAccountMoveOutRefundOnchanges(AccountTestInvoicingCommon):
     def setUpClass(cls, chart_template_ref=None):
         super().setUpClass(chart_template_ref=chart_template_ref)
 
-        cls.invoice = cls.init_invoice('out_refund')
+        cls.invoice = cls.init_invoice('out_refund', products=cls.product_a+cls.product_b)
 
         cls.product_line_vals_1 = {
             'name': cls.product_a.name,
@@ -481,7 +481,7 @@ class TestAccountMoveOutRefundOnchanges(AccountTestInvoicingCommon):
                 'debit': 80.0,
                 'credit': 0.0,
                 'date_maturity': False,
-                'tax_exigible': True,
+                'tax_exigible': False,
             },
             {
                 'name': child_tax_1.name,
@@ -501,7 +501,7 @@ class TestAccountMoveOutRefundOnchanges(AccountTestInvoicingCommon):
                 'debit': 120.0,
                 'credit': 0.0,
                 'date_maturity': False,
-                'tax_exigible': True,
+                'tax_exigible': False,
             },
             {
                 'name': child_tax_2.name,

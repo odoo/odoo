@@ -984,12 +984,12 @@ renderer.tplButtonInfo.color = function (lang, options) {
         value: '{"backColor":"#B35E9B"}'
     });
     var foreColorButton = renderer.getTemplate().button(foreColorButtonLabel, {
-        className: 'note-fore-color-preview mx-1',
+        className: 'note-fore-color-preview',
         title: lang.color.foreground,
         dropdown: renderer.getTemplate().dropdown('<li><div data-event-name="foreColor" class="colorPalette"/></li>'),
     });
     var backColorButton = renderer.getTemplate().button(backColorButtonLabel, {
-        className: 'note-back-color-preview mx-1',
+        className: 'note-back-color-preview',
         title: lang.color.background,
         dropdown: renderer.getTemplate().dropdown('<li><div data-event-name="backColor" class="colorPalette"/></li>'),
     });

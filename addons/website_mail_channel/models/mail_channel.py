@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import hmac
-
 from werkzeug import urls
 
-from odoo import models
+from odoo import models, tools
 from odoo.addons.http_routing.models.ir_http import slug
 
 
@@ -49,9 +47,8 @@ class MailGroup(models.Model):
 
     def _generate_action_token(self, partner_id, action='unsubscribe'):
         self.ensure_one()
-        secret = self.env['ir.config_parameter'].sudo().get_param('database.secret')
         data = '$'.join([
                 str(self.id),
                 str(partner_id),
                 action])
-        return hmac.new(secret.encode('utf-8'), data.encode('utf-8')).hexdigest()
+        return tools.hmac(self.env(su=True), 'website_mail_channel-email-subscription', data)

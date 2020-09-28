@@ -44,7 +44,7 @@ class DiscussSidebarItem extends Component {
         } else if (this.thread.channel_type === 'channel') {
             return this.thread.message_needaction_counter;
         } else if (this.thread.channel_type === 'chat') {
-            return this.thread.message_unread_counter;
+            return this.thread.localMessageUnreadCounter;
         }
         return 0;
     }

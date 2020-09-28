@@ -229,14 +229,9 @@ function factory(dependencies) {
                         // on `channel` channels for performance reasons
                         continue;
                     }
-                    thread.update({
-                        messageSeenIndicators: [[
-                            'insert',
-                            {
-                                id: this.env.models['mail.message_seen_indicator'].computeId(message.id, thread.id),
-                                message: [['link', message]],
-                            },
-                        ]],
+                    this.env.models['mail.message_seen_indicator'].insert({
+                        messageId: message.id,
+                        threadId: thread.id,
                     });
                 }
             }
@@ -387,7 +382,7 @@ function factory(dependencies) {
          * @returns {boolean}
          */
         _computeIsCurrentPartnerAuthor() {
-            return (
+            return !!(
                 this.author &&
                 this.messagingCurrentPartner &&
                 this.messagingCurrentPartner === this.author

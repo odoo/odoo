@@ -219,7 +219,7 @@ QUnit.test('Notification Sent', async function (assert) {
     );
     assert.containsOnce(
         document.body,
-        '.o_Message_notificationIconContainer',
+        '.o_Message_notificationIconClickable',
         "should display the notification icon container"
     );
     assert.containsOnce(
@@ -234,7 +234,7 @@ QUnit.test('Notification Sent', async function (assert) {
     );
 
     await afterNextRender(() => {
-        document.querySelector('.o_Message_notificationIconContainer').click();
+        document.querySelector('.o_Message_notificationIconClickable').click();
     });
     assert.containsOnce(
         document.body,
@@ -310,7 +310,7 @@ QUnit.test('Notification Error', async function (assert) {
     );
     assert.containsOnce(
         document.body,
-        '.o_Message_notificationIconContainer',
+        '.o_Message_notificationIconClickable',
         "should display the notification icon container"
     );
     assert.containsOnce(
@@ -325,7 +325,7 @@ QUnit.test('Notification Error', async function (assert) {
     );
 
     await afterNextRender(() => {
-        document.querySelector('.o_Message_notificationIconContainer').click();
+        document.querySelector('.o_Message_notificationIconClickable').click();
     });
     assert.verifySteps(
         ['do_action'],
@@ -543,14 +543,14 @@ QUnit.test('do not show messaging seen indicator if not authored by me', async f
         id: 11,
         partnerSeenInfos: [['create', [
             {
-                id: this.env.session.partner_id,
+                channelId: 11,
                 lastFetchedMessage: [['insert', { id: 100 }]],
-                partner: [['insert', { id: this.env.messaging.currentPartner.id }]],
+                partnerId: this.env.messaging.currentPartner.id,
             },
             {
-                id: 100,
+                channelId: 11,
                 lastFetchedMessage: [['insert', { id: 100 }]],
-                partner: [['link', author]],
+                partnerId: author.id,
             },
         ]]],
         model: 'mail.channel',
@@ -590,8 +590,8 @@ QUnit.test('do not show messaging seen indicator if before last seen by all mess
     const thread = this.env.models['mail.thread'].create({
         id: 11,
         messageSeenIndicators: [['insert', {
-            id: this.env.models['mail.message_seen_indicator'].computeId(99, 11),
-            message: [['insert', { id: 99 }]],
+            channelId: 11,
+            messageId: 99,
         }]],
         model: 'mail.channel',
     });
@@ -614,14 +614,14 @@ QUnit.test('do not show messaging seen indicator if before last seen by all mess
     thread.update({
        partnerSeenInfos: [['create', [
             {
-                id: currentPartner.id,
+                channelId: 11,
                 lastSeenMessage: [['link', lastSeenMessage]],
-                partner: [['link', currentPartner]],
+                partnerId: this.env.messaging.currentPartner.id,
             },
             {
-                id: 100,
+                channelId: 11,
                 lastSeenMessage: [['link', lastSeenMessage]],
-                partner: [['insert', { id: 100 }]],
+                partnerId: 100,
             },
         ]]],
     });
@@ -658,20 +658,20 @@ QUnit.test('only show messaging seen indicator if authored by me, after last see
         id: 11,
         partnerSeenInfos: [['create', [
             {
-                id: currentPartner.id,
+                channelId: 11,
                 lastSeenMessage: [['insert', { id: 100 }]],
-                partner: [['link', currentPartner]],
+                partnerId: this.env.messaging.currentPartner.id,
             },
             {
-                id: 100,
-                partner: [['insert', { id: 100 }]],
+                channelId: 11,
                 lastFetchedMessage: [['insert', { id: 100 }]],
                 lastSeenMessage: [['insert', { id: 99 }]],
+                partnerId: 100,
             },
         ]]],
         messageSeenIndicators: [['insert', {
-            id: this.env.models['mail.message_seen_indicator'].computeId(100, 11),
-            message: [['insert', { id: 100 }]],
+            channelId: 11,
+            messageId: 100,
         }]],
         model: 'mail.channel',
     });
@@ -957,11 +957,12 @@ QUnit.test('open chat with author on avatar click should be disabled when curren
         id: 10,
     });
     const thread = await correspondent.getChat();
-    const threadView = this.env.models['mail.thread_view'].create({
+    const threadViewer = this.env.models['mail.thread_viewer'].create({
+        hasThreadView: true,
         thread: [['link', thread]],
     });
     await this.createMessageComponent(message, {
-        threadViewLocalId: threadView.localId,
+        threadViewLocalId: threadViewer.threadView.localId,
     });
     assert.containsOnce(
         document.body,
@@ -980,6 +981,195 @@ QUnit.test('open chat with author on avatar click should be disabled when curren
         document.body,
         '.o_ChatWindow',
         "should have no thread opened after clicking on author avatar when currently chatting with the author"
+    );
+});
+
+QUnit.test('basic rendering of tracking value (float type)', async function (assert) {
+    assert.expect(8);
+
+    await this.start();
+    const message = this.env.models['mail.message'].create({
+        id: 11,
+        tracking_value_ids: [{
+            changed_field: "Total",
+            field_type: "float",
+            id: 6,
+            new_value: 45.67,
+            old_value: 12.3,
+        }],
+    });
+    await this.createMessageComponent(message);
+    assert.containsOnce(
+        document.body,
+        '.o_Message_trackingValue',
+        "should display a tracking value"
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_Message_trackingValueFieldName',
+        "should display the name of the tracked field"
+    );
+    assert.strictEqual(
+        document.querySelector('.o_Message_trackingValueFieldName').textContent,
+        "Total:",
+        "should display the correct tracked field name (Total)",
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_Message_trackingValueOldValue',
+        "should display the old value"
+    );
+    assert.strictEqual(
+        document.querySelector('.o_Message_trackingValueOldValue').textContent,
+        "12.3",
+        "should display the correct old value (12.3)",
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_Message_trackingValueSeparator',
+        "should display the separator"
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_Message_trackingValueNewValue',
+        "should display the new value"
+    );
+    assert.strictEqual(
+        document.querySelector('.o_Message_trackingValueNewValue').textContent,
+        "45.67",
+        "should display the correct new value (45.67)",
+    );
+});
+
+QUnit.test('rendering of tracked field with change of value from non-0 to 0', async function (assert) {
+    assert.expect(1);
+
+    await this.start();
+    const message = this.env.models['mail.message'].create({
+        id: 11,
+        tracking_value_ids: [{
+            changed_field: "Total",
+            field_type: "float",
+            id: 6,
+            new_value: 0,
+            old_value: 1,
+        }],
+    });
+    await this.createMessageComponent(message);
+    assert.strictEqual(
+        document.querySelector('.o_Message_trackingValue').textContent,
+        "Total:10",
+        "should display the correct content of tracked field with change of value from non-0 to 0 (Total: 1 -> 0)"
+    );
+});
+
+QUnit.test('rendering of tracked field with change of value from 0 to non-0', async function (assert) {
+    assert.expect(1);
+
+    await this.start();
+    const message = this.env.models['mail.message'].create({
+        id: 11,
+        tracking_value_ids: [{
+            changed_field: "Total",
+            field_type: "float",
+            id: 6,
+            new_value: 1,
+            old_value: 0,
+        }],
+    });
+    await this.createMessageComponent(message);
+    assert.strictEqual(
+        document.querySelector('.o_Message_trackingValue').textContent,
+        "Total:01",
+        "should display the correct content of tracked field with change of value from 0 to non-0 (Total: 0 -> 1)"
+    );
+});
+
+QUnit.test('rendering of tracked field with change of value from true to false', async function (assert) {
+    assert.expect(1);
+
+    await this.start();
+    const message = this.env.models['mail.message'].create({
+        id: 11,
+        tracking_value_ids: [{
+            changed_field: "Is Ready",
+            field_type: "boolean",
+            id: 6,
+            new_value: false,
+            old_value: true,
+        }],
+    });
+    await this.createMessageComponent(message);
+    assert.strictEqual(
+        document.querySelector('.o_Message_trackingValue').textContent,
+        "Is Ready:truefalse",
+        "should display the correct content of tracked field with change of value from true to false (Is Ready: true -> false)"
+    );
+});
+
+QUnit.test('rendering of tracked field with change of value from false to true', async function (assert) {
+    assert.expect(1);
+
+    await this.start();
+    const message = this.env.models['mail.message'].create({
+        id: 11,
+        tracking_value_ids: [{
+            changed_field: "Is Ready",
+            field_type: "boolean",
+            id: 6,
+            new_value: true,
+            old_value: false,
+        }],
+    });
+    await this.createMessageComponent(message);
+    assert.strictEqual(
+        document.querySelector('.o_Message_trackingValue').textContent,
+        "Is Ready:falsetrue",
+        "should display the correct content of tracked field with change of value from false to true (Is Ready: false -> true)"
+    );
+});
+
+QUnit.test('rendering of tracked field with change of value from string to empty', async function (assert) {
+    assert.expect(1);
+
+    await this.start();
+    const message = this.env.models['mail.message'].create({
+        id: 11,
+        tracking_value_ids: [{
+            changed_field: "Name",
+            field_type: "char",
+            id: 6,
+            new_value: "",
+            old_value: "Marc",
+        }],
+    });
+    await this.createMessageComponent(message);
+    assert.strictEqual(
+        document.querySelector('.o_Message_trackingValue').textContent,
+        "Name:Marc",
+        "should display the correct content of tracked field with change of value from string to empty (Total: Marc ->)"
+    );
+});
+
+QUnit.test('rendering of tracked field with change of value from empty to string', async function (assert) {
+    assert.expect(1);
+
+    await this.start();
+    const message = this.env.models['mail.message'].create({
+        id: 11,
+        tracking_value_ids: [{
+            changed_field: "Name",
+            field_type: "char",
+            id: 6,
+            new_value: "Marc",
+            old_value: "",
+        }],
+    });
+    await this.createMessageComponent(message);
+    assert.strictEqual(
+        document.querySelector('.o_Message_trackingValue').textContent,
+        "Name:Marc",
+        "should display the correct content of tracked field with change of value from empty to string (Total: -> Marc)"
     );
 });
 

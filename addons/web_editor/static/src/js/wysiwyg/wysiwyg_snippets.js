@@ -36,11 +36,17 @@ Wysiwyg.include({
      * @private
      */
     _relocateEditorBar: function () {
+        if (!this.options.toolbarHandler.length) {
+            this.options.toolbarHandler = $('.o_we_snippet_text_tools');
+        }
         this.options.toolbarHandler.append(this.editor.$el);
+
         // TODO the next four lines are a huge hack: since the editor.$el
         // is repositioned, the snippetsMenu elements are not at the
-        // correct position anymore... the whole logic has to be refactored.
-        if (this.editor.snippetsMenu) {
+        // correct position anymore if it was repositioned outside of it...
+        // the whole logic has to be refactored... hopefully not needed anymore
+        // with editor team changes
+        if (this.editor.snippetsMenu && !this.editor.snippetsMenu.$el.has(this.options.toolbarHandler).length) {
             this.editor.snippetsMenu.$el.insertAfter(this.options.toolbarHandler);
             this.editor.snippetsMenu.$snippetEditorArea.insertAfter(this.editor.snippetsMenu.$el);
         }

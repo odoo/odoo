@@ -71,7 +71,7 @@ class TestSaleMrpLeadTime(TestStockCommon):
         self.assertAlmostEqual(
             order.picking_ids[0].date_deadline, deadline_picking,
             delta=timedelta(seconds=1),
-            msg='Deadline date of picking should be equal to: Order date + Customer Lead Time - Sales Safety Days.'
+            msg='Deadline date of picking should be equal to: Order date + Customer Lead Time.'
         )
 
         # Check schedule date and deadline of manufacturing order
