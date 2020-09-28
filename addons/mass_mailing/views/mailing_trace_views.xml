@@ -108,7 +108,7 @@
         <field name="name">Mail Statistics Graph</field>
         <field name="model">mailing.trace</field>
         <field name="arch" type="xml">
-            <graph string="Mail Statistics" type="bar" stacked="True" interval="day" sample="1">
+            <graph string="Mail Statistics" type="bar" stacked="True" sample="1">
                 <field name="state_update" type="row" interval="day"/>
                 <field name="state" type="row"/>
             </graph>
