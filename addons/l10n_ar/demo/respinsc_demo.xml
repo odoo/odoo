@@ -45,19 +45,6 @@
 
     <data noupdate="1">
 
-        <record id="sale_journal_ri" model="account.journal">
-            <field name='name'>Sales Journal</field>
-            <field name='company_id' ref="l10n_ar.company_ri"/>
-            <field name='type'>sale</field>
-            <field name='code'>S0001</field>
-            <field name='l10n_latam_use_documents' eval="True"/>
-            <field name='l10n_ar_afip_pos_number'>1</field>
-            <field name='l10n_ar_afip_pos_partner_id' ref="l10n_ar.partner_ri"/>
-            <field name='l10n_ar_afip_pos_system'>II_IM</field>
-            <field name='l10n_ar_share_sequences' eval="True"/>
-            <field name='refund_sequence' eval="False"/>
-        </record>
-
         <record id="sale_expo_journal_ri" model="account.journal">
             <field name='name'>Expo Sales Journal</field>
             <field name='company_id' ref="l10n_ar.company_ri"/>
