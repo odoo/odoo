@@ -20,3 +20,21 @@ class ResPartner(models.Model):
             elif self.l10n_latam_identification_type_id.name == 'RUC' and vat != '9999999999999':
                 return ruc.is_valid(vat)
         return True
+
+    def _get_complete_address(self):
+        self.ensure_one()
+        partner_id = self
+        address = ""
+        if partner_id.street:
+            address += partner_id.street + ", "
+        if partner_id.street2:
+            address += partner_id.street2 + ", "
+        if partner_id.city:
+            address += partner_id.city + ", "
+        if partner_id.state_id:
+            address += partner_id.state_id.name + ", "
+        if partner_id.zip:
+            address += "(" + partner_id.zip + ") "
+        if partner_id.country_id:
+            address += partner_id.country_id.name
+        return address
