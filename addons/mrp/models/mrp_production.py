@@ -1367,16 +1367,19 @@ class MrpProduction(models.Model):
                     'production_id': backorder_mo.id,
                 })
             else:
+                new_moves_vals = []
                 for move in production.move_raw_ids | production.move_finished_ids:
                     if not move.additional:
                         qty_to_split = move.product_uom_qty - move.unit_factor * production.qty_producing
-                        new_move = self.env['stock.move'].browse(move._split(qty_to_split))
+                        move_vals = move._split(qty_to_split)
+                        if not move_vals:
+                            continue
                         if move.raw_material_production_id:
-                            new_move.raw_material_production_id = backorder_mo.id
+                            move_vals[0]['raw_material_production_id'] = backorder_mo.id
                         else:
-                            new_move.production_id = backorder_mo.id
-                        (move | new_move)._do_unreserve()
-                        (move | new_move)._action_assign()
+                            move_vals[0]['production_id'] = backorder_mo.id
+                        new_moves_vals.append(move_vals[0])
+                new_moves = self.env['stock.move'].create(new_moves_vals)
             backorders |= backorder_mo
             for wo in backorder_mo.workorder_ids:
                 wo.qty_produced = 0
@@ -1395,8 +1398,14 @@ class MrpProduction(models.Model):
                 workorder.duration_expected = workorder.duration_expected * ratio
             for workorder in backorder_mo.workorder_ids:
                 workorder.duration_expected = workorder.duration_expected * (1 - ratio)
+
+        # As we have split the moves before validating them, we need to 'remove' the excess reservation
+        if not close_mo:
+            self.move_raw_ids.filtered(lambda m: not m.additional)._do_unreserve()
+            self.move_raw_ids.filtered(lambda m: not m.additional)._action_assign()
         # Confirm only productions with remaining components
         backorders.filtered(lambda mo: mo.move_raw_ids).action_confirm()
+        backorders.filtered(lambda mo: mo.move_raw_ids).action_assign()
 
         # Remove the serial move line without reserved quantity. Post inventory will assigned all the non done moves
         # So those move lines are duplicated.
@@ -1440,7 +1449,12 @@ class MrpProduction(models.Model):
         })
 
         for production in self:
-            production.write({'date_finished': fields.Datetime.now(), 'product_qty': production.qty_produced, 'priority': '0'})
+            production.write({
+                'date_finished': fields.Datetime.now(),
+                'product_qty': production.qty_produced,
+                'priority': '0',
+                'is_locked': True,
+            })
 
         for workorder in self.workorder_ids.filtered(lambda w: w.state not in ('done', 'cancel')):
             workorder.duration_expected = workorder._get_duration_expected()

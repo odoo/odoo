@@ -1442,9 +1442,6 @@ class StockMove(models.Model):
                         break
         return extra_move | self
 
-    def _unreserve_initial_demand(self, new_move):
-        pass
-
     def _action_done(self, cancel_backorder=False):
         self.filtered(lambda move: move.state == 'draft')._action_confirm()  # MRP allows scrapping draft moves
         moves = self.exists().filtered(lambda x: x.state not in ('done', 'cancel'))
@@ -1466,6 +1463,7 @@ class StockMove(models.Model):
 
         moves_todo._check_company()
         # Split moves where necessary and move quants
+        backorder_moves_vals = []
         for move in moves_todo:
             # To know whether we need to create a backorder or not, round to the general product's
             # decimal precision and not the product's UOM.
@@ -1473,10 +1471,12 @@ class StockMove(models.Model):
             if float_compare(move.quantity_done, move.product_uom_qty, precision_digits=rounding) < 0:
                 # Need to do some kind of conversion here
                 qty_split = move.product_uom._compute_quantity(move.product_uom_qty - move.quantity_done, move.product_id.uom_id, rounding_method='HALF-UP')
-                new_move = move._split(qty_split)
-                move._unreserve_initial_demand(new_move)
-                if cancel_backorder:
-                    self.env['stock.move'].browse(new_move).with_context(moves_todo=moves_todo)._action_cancel()
+                new_move_vals = move._split(qty_split)
+                backorder_moves_vals += new_move_vals
+        backorder_moves = self.env['stock.move'].create(backorder_moves_vals)
+        backorder_moves._action_confirm(merge=False)
+        if cancel_backorder:
+            backorder_moves.with_context(moves_todo=moves_todo)._action_cancel()
         moves_todo.mapped('move_line_ids').sorted()._action_done()
         # Check the consistency of the result packages; there should be an unique location across
         # the contained quants.
@@ -1524,13 +1524,12 @@ class StockMove(models.Model):
         return vals
 
     def _split(self, qty, restrict_partner_id=False):
-        """ Splits qty from move move into a new move
+        """ Splits `self` quantity and return values for a new moves to be created afterwards
 
         :param qty: float. quantity to split (given in product UoM)
         :param restrict_partner_id: optional partner that can be given in order to force the new move to restrict its choice of quants to the ones belonging to this partner.
-        :param context: dictionay. can contains the special key 'source_location_id' in order to force the source location when copying the move
-        :returns: id of the backorder move created """
-        self = self.with_prefetch() # This makes the ORM only look for one record and not 300 at a time, which improves performance
+        :returns: list of dict. stock move values """
+        self.ensure_one()
         if self.state in ('done', 'cancel'):
             raise UserError(_('You cannot split a stock move that has been set to \'Done\'.'))
         elif self.state == 'draft':
@@ -1538,7 +1537,7 @@ class StockMove(models.Model):
             # case of phantom bom (with mrp module). And we don't want to deal with this complexity by copying the product that will explode.
             raise UserError(_('You cannot split a draft move. It needs to be confirmed first.'))
         if float_is_zero(qty, precision_rounding=self.product_id.uom_id.rounding) or self.product_qty <= qty:
-            return self.id
+            return []
 
         decimal_precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
 
@@ -1558,17 +1557,15 @@ class StockMove(models.Model):
         # TDE CLEANME: remove context key + add as parameter
         if self.env.context.get('source_location_id'):
             defaults['location_id'] = self.env.context['source_location_id']
-        new_move = self.copy(defaults)
+        new_move_vals = self.copy_data(defaults)
 
-        # FIXME: pim fix your crap
         # Update the original `product_qty` of the move. Use the general product's decimal
         # precision and not the move's UOM to handle case where the `quantity_done` is not
         # compatible with the move's UOM.
         new_product_qty = self.product_id.uom_id._compute_quantity(self.product_qty - qty, self.product_uom, round=False)
         new_product_qty = float_round(new_product_qty, precision_digits=self.env['decimal.precision'].precision_get('Product Unit of Measure'))
         self.with_context(do_not_unreserve=True).write({'product_uom_qty': new_product_qty})
-        new_move = new_move._action_confirm(merge=False)
-        return new_move.id
+        return new_move_vals
 
     def _recompute_state(self):
         for move in self:
