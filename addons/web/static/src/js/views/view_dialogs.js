@@ -335,7 +335,7 @@ var SelectCreateDialog = ViewDialog.extend({
         var _super = this._super.bind(this);
         var viewRefID = this.viewType === 'kanban' ?
             (this.options.kanban_view_ref && JSON.parse(this.options.kanban_view_ref) || false) : false;
-        return this.loadViews(this.res_model, this.context, [[viewRefID, this.viewType], [false, 'search']], {})
+        return this.loadViews(this.res_model, this.context, [[viewRefID, this.viewType], [false, 'search']], {load_filters: true})
             .then(this.setup.bind(this))
             .then(function (fragment) {
                 self.opened().then(function () {
