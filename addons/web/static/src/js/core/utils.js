@@ -268,6 +268,33 @@ var utils = {
         return Math.max(min, Math.min(max, val));
     },
     /**
+     * Wraps a given callback into a debounced version of itself, meaning that
+     * it will only be called once every given amount of time.match
+     * This time can be defined either by a number (being the amount of
+     * milliseconds to wait before the next valid call) or by a function taking
+     * a "resolver" as its first argument and calling it when ready for the
+     * next call.
+     *
+     * @param {Function} callback
+     * @param {number | Function} delayOrFunction
+     * @returns {Function}
+     */
+    debounce(callback, delayOrFunction) {
+        let debounced = false;
+        return function() {
+            if (debounced) {
+                return;
+            }
+            debounced = true;
+            if (typeof delayOrFunction === "function") {
+                new Promise(delayOrFunction).then(() => debounced = false);
+            } else {
+                setTimeout(() => debounced = false, delayOrFunction);
+            }
+            return callback();
+        };
+    },
+    /**
      * @param {number} value
      * @param {integer} decimals
      * @returns {boolean}
