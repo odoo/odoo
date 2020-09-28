@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from odoo import fields, models, api
 
 
 class L10nLatamDocumentType(models.Model):
@@ -12,6 +12,8 @@ class L10nLatamDocumentType(models.Model):
         ('out_refund', 'Customer Refund'),
         ('in_refund', 'Supplier Refund'),
         ('out_waybill', 'Issued Waybill'),
+        ('out_withhold', 'Customer Withhold'),
+        ('in_withhold', 'Supplier Withhold'),
         ('hr_advance', 'Employee Advance'),
         ('other', 'Others'),
     ]
@@ -24,13 +26,8 @@ class L10nLatamDocumentType(models.Model):
 
     l10n_ec_type = fields.Selection(
         _EC_TYPE, 
-        string='Type',
+        string='Ecuadorian Type',
         help='Indicates the aplicability of the document',
-        )
-    l10n_ec_validate_number = fields.Boolean(
-        string='Validate Number Format', 
-        track_visibility='onchange',
-        help='Validate the document number is of the form ###-###-########## (example 001-001-0001234567)',
         )
     l10n_ec_require_vat = fields.Boolean(
         string='Require Vat Number', 
@@ -41,5 +38,5 @@ class L10nLatamDocumentType(models.Model):
         _EC_AUTHORIZATION,
         default='none',
         string='Authorization',
-        help='',
+        help='Ecuadorian tax authority requires an authorization for certain documents',
         )
