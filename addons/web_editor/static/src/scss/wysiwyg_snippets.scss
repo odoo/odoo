@@ -45,7 +45,7 @@ body.editor_enable.editor_has_snippets {
 // Ugly hack to force ugly rules... while waiting for new editor
 #oe_snippets#oe_snippets .o_we_snippet_text_tools {
     padding: $o-we-sidebar-content-field-spacing $o-we-sidebar-content-padding-base 0 $o-we-sidebar-content-indent;
-    box-shadow: $o-we-item-standup-top rgba($o-we-item-standup-color-light, .2), $o-we-item-standup-bottom rgba($o-we-item-standup-color-dark, .5);
+    box-shadow: $o-we-item-standup-top rgba($o-we-item-standup-color-light, .2);
     z-index: $o-we-zindex;
 
     .popover {
@@ -57,6 +57,7 @@ body.editor_enable.editor_has_snippets {
     }
     .popover-body {
         padding: 0 !important;
+        border: none !important;
 
         > * {
             margin-bottom: $o-we-sidebar-content-field-spacing;
@@ -81,10 +82,12 @@ body.editor_enable.editor_has_snippets {
           margin-bottom: $dropdown-spacer;
         }
     }
-}
-#o_scroll:not(.d-none) ~ .o_we_snippet_text_tools {
-    padding-right: $o-we-sidebar-blocks-content-spacing;
-    padding-left: $o-we-sidebar-blocks-content-spacing;
+    .note-popover ~ .note-popover,
+    .note-handle ~ .note-handle,
+    .note-dialog ~ .note-dialog {
+        // Prevent flickering of summernote when switching text tools...
+        display: none;
+    }
 }
 
 .oe_snippet {

@@ -821,6 +821,7 @@ var SnippetsMenu = Widget.extend({
         'mousedown': '_onMouseDown',
         'input .o_snippet_search_filter_input': '_onSnippetSearchInput',
         'click .o_snippet_search_filter_reset': '_onSnippetSearchResetClick',
+        'summernote_popover_update_call .o_we_snippet_text_tools': '_onSummernoteToolsUpdate',
     },
     custom_events: {
         'activate_insertion_zones': '_onActivateInsertionZones',
@@ -929,7 +930,7 @@ var SnippetsMenu = Widget.extend({
         this.customizePanel.classList.add('o_we_customize_panel', 'd-none');
 
         this.textEditorPanelEl = document.createElement('div');
-        this.textEditorPanelEl.classList.add('o_we_snippet_text_tools');
+        this.textEditorPanelEl.classList.add('o_we_snippet_text_tools', 'd-none');
 
         this.invisibleDOMPanelEl = document.createElement('div');
         this.invisibleDOMPanelEl.classList.add('o_we_invisible_el_panel');
@@ -1030,9 +1031,8 @@ var SnippetsMenu = Widget.extend({
         });
 
         const $autoFocusEls = $('.o_we_snippet_autofocus');
-        if ($autoFocusEls.length) {
-            this._activateSnippet($autoFocusEls.first());
-        }
+        this._activateSnippet($autoFocusEls.length ? $autoFocusEls.first() : false);
+        this._textToolsSwitchingEnabled = true;
 
         return Promise.all(defs).then(() => {
             this.$('[data-title]').tooltip({
@@ -1985,6 +1985,7 @@ var SnippetsMenu = Widget.extend({
      * @param {this.tabs.VALUE} [tab='blocks'] - the tab to select
      */
     _updateLeftPanelContent: function ({content, tab}) {
+        clearTimeout(this._textToolsSwitchingTimeout);
         this._closeWidgets();
 
         tab = tab || this.tabs.BLOCKS;
@@ -1999,10 +2000,12 @@ var SnippetsMenu = Widget.extend({
         this.$('.o_snippet_search_filter').toggleClass('d-none', tab !== this.tabs.BLOCKS);
         this.$('#o_scroll').toggleClass('d-none', tab !== this.tabs.BLOCKS);
         this.customizePanel.classList.toggle('d-none', tab === this.tabs.BLOCKS);
+        this.textEditorPanelEl.classList.toggle('d-none', tab !== this.tabs.OPTIONS);
 
         this.$('.o_we_add_snippet_btn').toggleClass('active', tab === this.tabs.BLOCKS);
         this.$('.o_we_customize_snippet_btn').toggleClass('active', tab === this.tabs.OPTIONS)
                                              .prop('disabled', tab !== this.tabs.OPTIONS);
+
     },
     /**
      * Scrolls to given snippet.
@@ -2423,6 +2426,33 @@ var SnippetsMenu = Widget.extend({
     _onSnippetThumbnailURLRequest(ev) {
         const $snippet = this.$snippets.has(`[data-snippet="${ev.data.key}"]`);
         ev.data.onSuccess($snippet.length ? $snippet[0].dataset.oeThumbnail : '');
+    },
+    /**
+     * @private
+     */
+    _onSummernoteToolsUpdate(ev) {
+        if (!this._textToolsSwitchingEnabled) {
+            return;
+        }
+        if (!$.summernote.core.range.create()) {
+            // Sometimes not enough...
+            return;
+        }
+        this.textEditorPanelEl.classList.add('d-block');
+        const hasVisibleButtons = !!$(this.textEditorPanelEl).find('.btn:visible').length;
+        this.textEditorPanelEl.classList.remove('d-block');
+        if (!hasVisibleButtons) {
+            // Ugly way to detect that summernote was updated but there is no
+            // visible text tools.
+            return;
+        }
+        // Only switch tab without changing content (_updateLeftPanelContent
+        // make text tools visible only on that specific tab). Also do it with
+        // a slight delay to avoid flickering doing it twice.
+        clearTimeout(this._textToolsSwitchingTimeout);
+        this._textToolsSwitchingTimeout = setTimeout(() => {
+            this._updateLeftPanelContent({tab: this.tabs.OPTIONS});
+        }, 250);
     },
     /**
      * @private
