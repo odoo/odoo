@@ -89,7 +89,6 @@ class AutocompleteInput extends Component {
      * @param {Object} ui
      */
     _onAutocompleteSelect(ev, ui) {
-        ev.stopPropagation();
         if (this.props.select) {
             this.props.select(ev, ui);
         }
