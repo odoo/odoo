@@ -44,6 +44,15 @@ publicWidget.registry.websiteEventTrackLive = publicWidget.Widget.extend({
     },
 
     _onVideoEnded: function () {
+        if (this.$el.data('hasNextSuggestion')) {
+            // if we have an upcoming suggestion, add a covering block to avoid
+            // showing Youtube suggestions while we fetch the appropriate suggestion
+            // using a rpc. This allows avoiding a 'flicker' effect.
+            this.$el.append($('<div/>', {
+                class:'owevent_track_suggestion_loading position-absolute w-100'
+            }));
+        }
+
         var self = this;
         this._rpc({
             route: '/event_track/get_track_suggestion',
@@ -59,6 +68,7 @@ publicWidget.registry.websiteEventTrackLive = publicWidget.Widget.extend({
     _onReplay: function () {
         this.youtubePlayer.seekTo(0);
         this.youtubePlayer.playVideo();
+        this.$('.owevent_track_suggestion_loading').remove();
         if (this.trackSuggestion) {
             delete this.trackSuggestion;
         }
