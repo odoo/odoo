@@ -5,6 +5,7 @@ const components = {
     Chatter: require('mail/static/src/components/chatter/chatter.js'),
 };
 const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
+const { clear } = require('mail/static/src/model/model_field_command.js');
 
 const { Component } = owl;
 
@@ -59,7 +60,11 @@ class ChatterContainer extends Component {
      */
     _update() {
         if (this.chatter) {
-            this.chatter.update(this.props);
+            const values = Object.assign({}, this.props);
+            if (values.threadId === undefined) {
+                values.threadId = clear();
+            }
+            this.chatter.update(values);
         }
     }
 
