@@ -117,12 +117,12 @@
             <field name="res_model">mail.compose.message</field>
             <field name="view_mode">form</field>
             <field name="target">new</field>
-            <field name="context">{
-                            'default_composition_mode': 'mass_mail',
-                            'default_partner_to': '${object.id or \'\'}',
-                            'default_use_template': True,
-                            'default_template_id': ref('email_template_partner'),
-                        }</field>
+            <field name="context" eval="{
+                'default_composition_mode': 'mass_mail',
+                'default_partner_to': '${object.id or \'\'}',
+                'default_use_template': True,
+                'default_template_id': ref('email_template_partner'),
+            }"/>
             <field name="binding_model_id" ref="base.model_res_partner"/>
             <field name="binding_view_types">list</field>
         </record>

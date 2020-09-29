@@ -37,16 +37,13 @@
             <field name="res_model">mail.compose.message</field>
             <field name="view_mode">form</field>
             <field name="target">new</field>
-            <field name="context">{
-                'default_model': 'account.payment',
+            <field name="context" eval="{
                 'mail_post_autofollow': True,
                 'default_composition_mode': 'comment',
                 'default_use_template': True,
-                'default_res_id': active_id,
                 'default_template_id': ref('account.mail_template_data_payment_receipt'),
-                'force_email': True,
                 'custom_layout': 'mail.mail_notification_light',
-            }</field>
+            }"/>
             <field name="binding_model_id" ref="model_account_payment"/>
             <field name="binding_view_types">form</field>
             <field name="groups_id" eval="[(4, ref('account.group_account_invoice'))]"/>
@@ -57,16 +54,13 @@
             <field name="res_model">mail.compose.message</field>
             <field name="view_mode">form</field>
             <field name="target">new</field>
-            <field name="context">{
-                'default_model': 'account.payment',
+            <field name="context" eval="{
                 'mail_post_autofollow': True,
                 'default_composition_mode': 'mass_mail',
                 'default_use_template': True,
-                'default_res_id': active_id,
                 'default_template_id': ref('account.mail_template_data_payment_receipt'),
-                'force_email': True,
                 'custom_layout': 'mail.mail_notification_light',
-            }</field>
+            }"/>
             <field name="binding_model_id" ref="model_account_payment"/>
             <field name="binding_view_types">list</field>
         </record>
