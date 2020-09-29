@@ -3142,7 +3142,7 @@
   			this.pushFailure("Expected at least one assertion, but none were run - call " + "expect(0) to accept zero assertions.", this.stack);
   		}
 
-        emit("OdooAfterTestHook"); // Odoo customization
+        emit("OdooAfterTestHook", { moduleName: this.module.name, testName: this.testName }); // Odoo customization
 
   		var i,
   		    module = this.module,
