@@ -1,4 +1,4 @@
-odoo.define('web_tour.Tip', function(require) {
+odoo.define('web_tour.Tip', function (require) {
 "use strict";
 
 var config = require('web.config');
@@ -71,7 +71,7 @@ var Tip = Widget.extend({
         // to compute its dimensions and reposition it if required.
         return this.appendTo(document.body);
     },
-    start: function() {
+    start() {
         this.$tooltip_overlay = this.$(".o_tooltip_overlay");
         this.$tooltip_content = this.$(".o_tooltip_content");
         this.init_width = this.$el.innerWidth();
@@ -90,15 +90,15 @@ var Tip = Widget.extend({
             height: "100%",
         });
 
-        _.each(this.info.event_handlers, (function(data) {
+        _.each(this.info.event_handlers, data => {
             this.$tooltip_content.on(data.event, data.selector, data.handler);
-        }).bind(this));
+        });
 
         this._bind_anchor_events();
         this._updatePosition(true);
 
         this.$el.toggleClass('d-none', !!this.info.hidden);
-        this.$el.css("opacity", 1);
+        this.el.style.setProperty('opacity', '1', 'important');
         core.bus.on("resize", this, _.debounce(function () {
             if (this.tip_opened) {
                 this._to_bubble_mode(true);
@@ -285,9 +285,9 @@ var Tip = Widget.extend({
         // Get the correct tip's position depending of the tip's state
         let $parent = this.$ideal_location;
         if ($parent.is('html,body') && this.viewPortState !== "in") {
-            this.$el.css({position: 'fixed'});
+            this.el.style.setProperty('position', 'fixed', 'important');
         } else {
-            this.$el.css({position: ''});
+            this.el.style.removeProperty('position');
         }
 
         if (this.viewPortState === 'in') {
@@ -296,6 +296,10 @@ var Tip = Widget.extend({
                 at: appendAt,
                 of: this.$anchor,
                 collision: "none",
+                using: props => {
+                    this.el.style.setProperty('top', `${props.top}px`, 'important');
+                    this.el.style.setProperty('left', `${props.left}px`, 'important');
+                },
             });
         } else {
             const paddingTop = parseInt($parent.css('padding-top'));
@@ -309,7 +313,8 @@ var Tip = Widget.extend({
             } else {
                 top = topPosition + $parent.innerHeight() - this.$el.innerHeight() * 2;
             }
-            this.$el.css({top: top, left: center});
+            this.el.style.setProperty('top', `${top}px`, 'important');
+            this.el.style.setProperty('left', `${center}px`, 'important');
         }
 
         // Reverse overlay if direction is right to left
@@ -422,7 +427,8 @@ var Tip = Widget.extend({
 
         if (this.$el.parent()[0] !== this.$el[0].ownerDocument.body) {
             this.$el.detach();
-            this.$el.css(offset);
+            this.el.style.setProperty('top', `${offset.top}px`, 'important');
+            this.el.style.setProperty('left', `${offset.left}px`, 'important');
             this.$el.appendTo(this.$el[0].ownerDocument.body);
         }
 
@@ -448,12 +454,10 @@ var Tip = Widget.extend({
             : [this.scrollContentWidth, this.scrollContentHeight];
         this.$el.toggleClass("inverse", overflow);
         this.$el.removeClass("o_animated").addClass("active");
-        this.$el.css({
-            width: contentWidth,
-            height: contentHeight,
-            "margin-left": mbLeft,
-            "margin-top": mbTop,
-        });
+        this.el.style.setProperty('width', `${contentWidth}px`, 'important');
+        this.el.style.setProperty('height', `${contentHeight}px`, 'important');
+        this.el.style.setProperty('margin-left', `${mbLeft}px`, 'important');
+        this.el.style.setProperty('margin-top', `${mbTop}px`, 'important');
 
         this._transitionEndTimer = setTimeout(() => this._onTransitionEnd(), 400);
     },
@@ -480,11 +484,9 @@ var Tip = Widget.extend({
         this.tip_opened = false;
 
         this.$el.removeClass("active").addClass("o_animated");
-        this.$el.css({
-            width: this.init_width,
-            height: this.init_height,
-            margin: 0,
-        });
+        this.el.style.setProperty('width', `${this.init_width}px`, 'important');
+        this.el.style.setProperty('height', `${this.init_height}px`, 'important');
+        this.el.style.setProperty('margin', '0', 'important');
 
         this._transitionEndTimer = setTimeout(() => this._onTransitionEnd(), 400);
     },
