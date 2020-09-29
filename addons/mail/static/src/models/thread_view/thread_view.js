@@ -47,8 +47,8 @@ function factory(dependencies) {
         markComponentHintProcessed(hint) {
             let filterFun;
             switch (hint.type) {
-                case 'current-partner-just-posted-message':
-                    filterFun = h => h.type !== hint.type && h.messageId !== hint.data.messageId;
+                case 'message-received':
+                    filterFun = h => h.type !== hint.type && h.message !== hint.data.message;
                     break;
                 default:
                     filterFun = h => h.type !== hint.type;
@@ -56,6 +56,10 @@ function factory(dependencies) {
             }
             this.update({
                 componentHintList: this.componentHintList.filter(filterFun),
+            });
+            this.env.messagingBus.trigger('o-thread-view-hint-processed', {
+                hint,
+                threadViewer: this.threadViewer,
             });
         }
 
@@ -197,6 +201,12 @@ function factory(dependencies) {
         isPreparingLoading: attr({
             default: false,
         }),
+        /**
+         * Determines whether `this` should automatically scroll on receiving
+         * a new message. Detection of new message is done through the component
+         * hint `message-received`.
+         */
+        hasAutoScrollOnMessageReceived: attr(),
         lastMessage: many2one('mail.message', {
             related: 'thread.lastMessage',
         }),

@@ -291,7 +291,8 @@ function factory(dependencies) {
                 thread.loadNewMessages();
             }
             for (const threadView of this.thread.threadViews) {
-                threadView.addComponentHint('current-partner-just-posted-message', { messageId });
+                // Reset auto scroll to be able to see the newly posted message.
+                threadView.update({ hasAutoScrollOnMessageReceived: true });
             }
             thread.refreshFollowers();
             thread.fetchAndUpdateSuggestedRecipients();

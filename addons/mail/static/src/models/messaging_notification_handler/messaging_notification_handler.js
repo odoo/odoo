@@ -207,6 +207,7 @@ function factory(dependencies) {
             }
 
             const message = this.env.models['mail.message'].insert(convertedData);
+            this._notifyThreadViewsMessageReceived(message);
 
             // If the message was already known: nothing else should be done,
             // except if it was pending moderation by the current partner, then
@@ -299,7 +300,7 @@ function factory(dependencies) {
                 // knowledge of the channel
                 return;
             }
-            const lastMessage = this.env.models['mail.message'].insert({id: last_message_id});
+            const lastMessage = this.env.models['mail.message'].insert({ id: last_message_id });
             // restrict computation of seen indicator for "non-channel" channels
             // for performance reasons
             const shouldComputeSeenIndicators = channel.channel_type !== 'channel';
@@ -631,7 +632,7 @@ function factory(dependencies) {
                 starredMailbox.update({
                     counter: starred
                         ? starredMailbox.counter + 1
-                        : starredMailbox.counter -1,
+                        : starredMailbox.counter - 1,
                 });
             }
         }
@@ -648,11 +649,12 @@ function factory(dependencies) {
             const convertedData = this.env.models['mail.message'].convertData(data);
             const messageIds = this.env.models['mail.message'].all().map(message => message.id);
             const partnerRoot = this.env.messaging.partnerRoot;
-            this.env.models['mail.message'].create(Object.assign(convertedData, {
+            const message = this.env.models['mail.message'].create(Object.assign(convertedData, {
                 author: [['link', partnerRoot]],
                 id: (messageIds ? Math.max(...messageIds) : 0) + 0.01,
                 isTransient: true,
             }));
+            this._notifyThreadViewsMessageReceived(message);
         }
 
         /**
@@ -754,6 +756,21 @@ function factory(dependencies) {
                 part: '_chat',
                 title: _.str.sprintf(titlePattern, messaging.outOfFocusUnreadMessageCounter),
             });
+        }
+
+        /**
+         * Notifies threadViews about the given message being just received.
+         * This can allow them adjust their scroll position if applicable.
+         *
+         * @private
+         * @param {mail.message}
+         */
+        _notifyThreadViewsMessageReceived(message) {
+            for (const thread of message.threads) {
+                for (const threadView of thread.threadViews) {
+                    threadView.addComponentHint('message-received', { message });
+                }
+            }
         }
 
     }
