@@ -117,6 +117,7 @@ options.registry.countdown = options.Class.extend({
         this.showEndMessage = !this.showEndMessage;
         this.$el.find(".toggle-edit-message")
             .toggleClass('text-primary', this.showEndMessage);
+        this.$target[0].dataset.endMessageVisibility = this.showEndMessage;
         this.updateUIEndMessage();
         this.trigger_up('cover_update');
     },

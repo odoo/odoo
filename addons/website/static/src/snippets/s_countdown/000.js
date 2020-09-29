@@ -41,6 +41,15 @@ const CountdownWidget = publicWidget.Widget.extend({
         }
         this._initTimeDiff();
 
+        // Set ending message visibility depending on the option value when the
+        // widget starts in edit mode.
+        // The message should be hidden if this.editableMode === false.
+        if (this.editableMode && this.el.dataset.endMessageVisibility === 'true') {
+            this.$('.s_countdown_end_message').removeClass("d-none");
+        } else if (!this.editableMode) {
+            this.el.dataset.endMessageVisibility = false;
+        }
+
         this._render();
 
         this.setInterval = setInterval(this._render.bind(this), 1000);
