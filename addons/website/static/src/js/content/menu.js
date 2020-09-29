@@ -133,9 +133,9 @@ const BaseAnimatedHeader = animations.Animation.extend({
      */
     _toggleFixedHeader: function (useFixed = true) {
         this.fixedHeader = useFixed;
+        this._adaptToHeaderChange();
         this.el.classList.toggle('o_header_affixed', useFixed);
         this._adaptFixedHeaderPosition();
-        this._adaptToHeaderChange();
     },
     /**
      * @private
@@ -147,8 +147,7 @@ const BaseAnimatedHeader = animations.Animation.extend({
         if (this.isOverlayHeader) {
             return;
         }
-        const headerSize = this.el.classList.contains('o_header_affixed');
-        this.$main.css('padding-top', headerSize ? this.headerHeight : '');
+        this.$main.css('padding-top', this.fixedHeader ? this.headerHeight : '');
     },
 
     //--------------------------------------------------------------------------
