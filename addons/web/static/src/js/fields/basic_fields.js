@@ -3215,6 +3215,10 @@ var FieldDomain = AbstractField.extend({
             });
             def = this.domainSelector.prependTo(this.$el);
         } else {
+            // allows field selector to overflow
+            if (this.el.offsetParent) {
+                this.el.offsetParent.style.overflow = 'visible';
+            }
             def = this.domainSelector.setDomain(value);
         }
         // ... then replace the other content (matched records, etc)
