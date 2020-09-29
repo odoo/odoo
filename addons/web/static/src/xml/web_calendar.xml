@@ -11,6 +11,13 @@
         </div>
     </div>
 
+    <t t-name="CalendarMobileView.mobile_view_button">
+        <div class="mobile_view text-center card-footer border-top">
+            <button class="mobile_today_button btn btn-sm btn-link">TODAY</button>
+            <button class="btn btn-primary mobile_quick_create">CREATE</button>
+        </div>
+    </t>
+
     <t t-name="calendar-box">
         <div t-att-style="typeof color === 'string' ? ('background-color:' + color) + ';' : ''" t-attf-class="#{record.is_highlighted ? 'o_event_hightlight' : ''} #{typeof color === 'number' ? _.str.sprintf('o_calendar_color_%s', color) : 'o_calendar_color_1'} #{record.is_hatched ? 'o_calendar_hatched o_calendar_hatched_' + (typeof color === 'number' ? color : 1): ''}">
             <span t-if="showTime" class="fc-time"/>

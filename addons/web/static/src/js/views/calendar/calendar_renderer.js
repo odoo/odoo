@@ -10,6 +10,7 @@ var FieldManagerMixin = require('web.FieldManagerMixin');
 var relational_fields = require('web.relational_fields');
 var session = require('web.session');
 var Widget = require('web.Widget');
+var config = require('web.config');
 const { createYearCalendarView } = require('/web/static/src/js/libs/fullcalendar.js');
 
 var _t = core._t;
@@ -652,6 +653,12 @@ return AbstractRenderer.extend({
             this._renderEvents();
         }
 
+        if (config.device.isMobile) {
+            if (!this.el.querySelector('.mobile_view')) {
+                this.mobilebutton = $(qweb.render('CalendarMobileView.mobile_view_button'));
+                this.mobilebutton.appendTo(this.el.querySelector('.o_calendar_view'));
+            }
+        }
         this._unselectEvent();
         // this._scrollToScrollTime();
     },

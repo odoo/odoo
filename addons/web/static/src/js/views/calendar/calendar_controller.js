@@ -45,6 +45,8 @@ var CalendarController = AbstractController.extend({
         'click button.o_calendar_button_week': '_onButtonScale',
         'click button.o_calendar_button_month': '_onButtonScale',
         'click button.o_calendar_button_year': '_onButtonScale',
+        'click button.mobile_quick_create': '_mobileQuickCreate',
+        'click button.mobile_today_button': '_mobileTodayButton'
     }),
     /**
      * @override
@@ -94,11 +96,53 @@ var CalendarController = AbstractController.extend({
             this.$('.o_calendar_buttons').replaceWith(this.$buttons);
         }
     },
+    _mobileQuickCreate: function (info) {
+        var self = this;
 
+        const start = new Date();
+        const end = new Date(start);
+
+        end.setDate(end.getDate() + 1);
+
+        var data = {start: start, end: end, allDay: false};
+        self.trigger_up('openCreate', self._convertEventToFC3Event(data));
+    },
+    _mobileTodayButton: function (event) {
+        var self = this;
+        self.trigger_up('today_button_click');
+    },
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
 
+    /**
+     * Convert the new format of Event from FullCalendar V4 to a Event FullCalendar V3
+     * @param fc4Event
+     * @return {Object} FullCalendar V3 Object Event
+     * @private
+     */
+    _convertEventToFC3Event: function (fc4Event) {
+        var event = fc4Event;
+        if (!moment.isMoment(fc4Event.start)) {
+            event = {
+                id: fc4Event.id,
+                title: fc4Event.title,
+                start: moment(fc4Event.start).utcOffset(0, true),
+                end: fc4Event.end && moment(fc4Event.end).utcOffset(0, true),
+                allDay: fc4Event.allDay,
+                color: fc4Event.color,
+            };
+            if (fc4Event.extendedProps) {
+                event = Object.assign({}, event, {
+                    r_start: fc4Event.extendedProps.r_start && moment(fc4Event.extendedProps.r_start).utcOffset(0, true),
+                    r_end: fc4Event.extendedProps.r_end && moment(fc4Event.extendedProps.r_end).utcOffset(0, true),
+                    record: fc4Event.extendedProps.record,
+                    attendees: fc4Event.extendedProps.attendees,
+                });
+            }
+        }
+        return event;
+    },
     /**
      * Find a className in an array using the start of this class and
      * return the last part of a string

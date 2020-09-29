@@ -77,3 +77,26 @@
 .o_cw_body .o_clipboard_button {
     padding-top: 0px !important;
 }
+
+.modal.o_technical_modal .modal-content {
+    .modal-body {
+        @include media-breakpoint-down(sm) { 
+            padding-top: 100px;
+        }
+    }
+    .modal-footer {
+        @include media-breakpoint-down(sm) {
+            flex-wrap: revert;
+        }
+    }
+}
+
+.o_calendar_view {
+    @include media-breakpoint-down(sm) {
+        flex: 1 1 auto;
+        min-width: 0;
+        height: 83%;
+        position: absolute;
+        margin-top: 30px;
+    }
+}
