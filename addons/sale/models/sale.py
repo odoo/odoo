@@ -745,7 +745,13 @@ class SaleOrder(models.Model):
             'state': 'sale',
             'confirmation_date': fields.Datetime.now()
         })
-        self._action_confirm()
+
+        # Context key 'default_name' is sometimes propagated up to here.
+        # We don't need it and it creates issues in the creation of linked records.
+        context = self._context.copy()
+        context.pop('default_name', None)
+
+        self.with_context(context)._action_confirm()
         if self.env['ir.config_parameter'].sudo().get_param('sale.auto_done_setting'):
             self.action_done()
         return True
