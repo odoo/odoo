@@ -159,8 +159,10 @@ QUnit.moduleDone(function(result) {
  * After each test, we check that there is no leftover in the DOM.
  *
  * Note: this event is not QUnit standard, we added it for this specific use case.
+ * As a payload, an object with keys 'moduleName' and 'testName' is provided. It
+ * is used to indicate the test that left elements in the DOM, when it happens.
  */
-QUnit.on('OdooAfterTestHook', function () {
+QUnit.on('OdooAfterTestHook', function (info) {
     const toRemove = [];
     // check for leftover elements in the body
     for (const bodyChild of document.body.children) {
@@ -168,9 +170,9 @@ QUnit.on('OdooAfterTestHook', function () {
             e.tagName === bodyChild.tagName && bodyChild[e.attr] === e.value
         );
         if (!tolerated) {
+            console.error(`Test ${info.moduleName} > ${info.testName}`);
             console.error('Body still contains undesirable elements:' +
-                '\nInvalid element:\n' + bodyChild.outerHTML +
-                '\nBody HTML: \n' + $('body').html());
+                '\nInvalid element:\n' + bodyChild.outerHTML);
             QUnit.pushFailure(`Body still contains undesirable elements`);
         }
         if (!tolerated || !tolerated.keep) {

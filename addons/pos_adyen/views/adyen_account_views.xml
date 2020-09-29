@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="adyen_account_view_form" model="ir.ui.view">
+        <field name="name">adyen.account.view.form.inherit.pos.adyen</field>
+        <field name="model">adyen.account</field>
+        <field name="inherit_id" ref="adyen_platforms.adyen_account_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="action_order_terminal" string="Order a Terminal" class="oe_highlight" type="object" attrs="{'invisible': [('adyen_uuid', '=', False)]}"/>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page string="Stores">
+                    <field name="store_ids">
+                        <tree>
+                            <field name="name"/>
+                            <field name="store_uuid"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+
+    <record id="adyen_store_view_form" model="ir.ui.view">
+        <field name="name">adyen.store.view.form</field>
+        <field name="model">adyen.store</field>
+        <field name="arch" type="xml">
+            <form string="Adyen Store">
+                <sheet>
+                    <group>
+                        <field name="store_uuid" attrs="{'invisible': [('id', '=', False)]}"/>
+                        <field name="name" attrs="{'readonly': [('id', '!=', False)]}"/>
+                        <field name="phone_number" attrs="{'readonly': [('id', '!=', False)]}"/>
+                        <label for="street" string="Address"/>
+                        <div class="o_address_format">
+                            <field name="street" placeholder="Street" class="o_address_street" attrs="{'readonly': [('id', '!=', False)]}"/>
+                            <field name="house_number_or_name" placeholder="House number or name" class="o_address_street" attrs="{'readonly': [('id', '!=', False)]}"/>
+                            <field name="city" placeholder="City" class="o_address_city" attrs="{'readonly': [('id', '!=', False)]}"/>
+                            <field name="state_id" class="o_address_state" placeholder="State" options="{'no_open': True, 'no_quick_create': True}"
+                                attrs="{'required': [('country_code', 'in', ['AU', 'CA', 'IT', 'US'])], 'readonly': [('id', '!=', False)]}"/>
+                            <field name="zip" placeholder="ZIP" class="o_address_zip" attrs="{'readonly': [('id', '!=', False)]}"/>
+                            <field name="country_id" placeholder="Country" class="o_address_country" options="{'no_open': True, 'no_create': True}" attrs="{'readonly': [('id', '!=', False)]}"/>
+                            <field name="country_code" invisible="1"/>
+                            <field name="terminal_ids" attrs="{'invisible': [('terminal_ids', '=', [])]}"/>
+                        </div>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_pos_adyen_account" model="ir.actions.server">
+        <field name="name">Adyen Account</field>
+        <field name="model_id" ref="model_adyen_account"/>
+        <field name="state">code</field>
+        <field name="code">
+            action = model.action_create_redirect()
+        </field>
+    </record>
+
+    <menuitem id="menu_pos_adyen_account"
+        parent="point_of_sale.menu_point_config_product"
+        action="action_pos_adyen_account"
+        sequence="5"
+        groups="point_of_sale.group_pos_manager,point_of_sale.group_pos_user"/>
+
+</odoo>
