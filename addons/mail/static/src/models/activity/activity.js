@@ -283,7 +283,9 @@ function factory(dependencies) {
             default: false,
         }),
         icon: attr(),
-        id: attr(),
+        id: attr({
+            required: true,
+        }),
         isCurrentPartnerAssignee: attr({
             compute: '_computeIsCurrentPartnerAssignee',
             default: false,

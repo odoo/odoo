@@ -311,7 +311,9 @@ function factory(dependencies) {
         hasCheckedUser: attr({
             default: false,
         }),
-        id: attr(),
+        id: attr({
+            required: true,
+        }),
         im_status: attr(),
         memberThreads: many2many('mail.thread', {
             inverse: 'members',

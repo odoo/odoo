@@ -1644,7 +1644,9 @@ function factory(dependencies) {
                 'model',
             ],
         }),
-        id: attr(),
+        id: attr({
+            required: true,
+        }),
         /**
          * States whether this thread is a `mail.channel` qualified as chat.
          *
@@ -1825,7 +1827,9 @@ function factory(dependencies) {
         messagingCurrentPartner: many2one('mail.partner', {
             related: 'messaging.currentPartner',
         }),
-        model: attr(),
+        model: attr({
+            required: true,
+        }),
         model_name: attr(),
         moderation: attr({
             default: false,

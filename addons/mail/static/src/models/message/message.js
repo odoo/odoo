@@ -526,7 +526,9 @@ function factory(dependencies) {
             default: false,
             dependencies: ['isModeratedByCurrentPartner'],
         }),
-        id: attr(),
+        id: attr({
+            required: true,
+        }),
         isCurrentPartnerAuthor: attr({
             compute: '_computeIsCurrentPartnerAuthor',
             default: false,

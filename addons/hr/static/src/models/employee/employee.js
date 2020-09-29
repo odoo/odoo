@@ -178,7 +178,9 @@ function factory(dependencies) {
         /**
          * Unique identifier for this employee.
          */
-        id: attr(),
+        id: attr({
+            required: true,
+        }),
         /**
          * Partner related to this employee.
          */
