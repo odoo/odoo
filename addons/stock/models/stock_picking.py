@@ -4,10 +4,11 @@
 from ast import literal_eval
 from datetime import date
 from itertools import groupby
+import functools
 from operator import itemgetter
 import time
 
-from odoo import api, fields, models, SUPERUSER_ID, _
+from odoo import api, fields, models, SUPERUSER_ID, _, registry
 from odoo.osv import expression
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.tools.float_utils import float_compare, float_is_zero, float_round
@@ -729,10 +730,29 @@ class Picking(models.Model):
         self._send_confirmation_email()
         return True
 
+    @staticmethod
+    def _send_confirmation_email_after_commit(dbname, context, picking_id, template_id):
+        db_registry = registry(dbname)
+        with api.Environment.manage(), db_registry.cursor() as cr:
+            env = api.Environment(cr, SUPERUSER_ID, context)
+            picking = env["stock.picking"].browse(picking_id)
+            picking.with_context(force_send=True).message_post_with_template(
+                template_id,
+                email_layout_xmlid='mail.mail_notification_light'
+            )
+
     def _send_confirmation_email(self):
         for stock_pick in self.filtered(lambda p: p.company_id.stock_move_email_validation and p.picking_type_id.code == 'outgoing'):
             delivery_template_id = stock_pick.company_id.stock_mail_confirmation_template_id.id
-            stock_pick.with_context(force_send=True).message_post_with_template(delivery_template_id, email_layout_xmlid='mail.mail_notification_light')
+            self.env.cr.after(
+                'commit',
+                functools.partial(
+                    self._send_confirmation_email_after_commit,
+                    self.env.cr.dbname,
+                    self._context,
+                    stock_pick.id, delivery_template_id
+                )
+            )
 
     @api.depends('state', 'move_lines', 'move_lines.state', 'move_lines.package_level_id', 'move_lines.move_line_ids.package_level_id')
     def _compute_move_without_package(self):
