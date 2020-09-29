@@ -78,7 +78,6 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
         background: $o-we-sidebar-content-field-clickable-bg;
         color: inherit;
         font-size: $o-we-font-size !important;
-        border-bottom-color: transparent; // See caret design below
 
         &.active,
         &:focus, &:active, &:focus:active {
@@ -92,8 +91,7 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
         > .caret {
             display: block;
             @include o-position-absolute(auto, 0, 0, 0);
-            border-bottom: 3px solid transparent;
-            border-bottom-color: inherit;
+            border-bottom: 2px solid transparent;
         }
     }
     .btn-group.show {
