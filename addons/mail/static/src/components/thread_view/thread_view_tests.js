@@ -786,6 +786,157 @@ QUnit.test('basic rendering of canceled notification', async function (assert) {
     );
 });
 
+QUnit.test('should scroll to bottom on receiving new message if the list is initially scrolled to bottom (asc order)', async function (assert) {
+    assert.expect(2);
+
+    // Needed partner & user to allow simulation of message reception
+    this.data['res.partner'].records.push({
+        id: 11,
+        name: "Foreigner partner",
+    });
+    this.data['res.users'].records.push({
+        id: 42,
+        name: "Foreigner user",
+        partner_id: 11,
+    });
+    this.data['mail.channel'].records.push({ id: 20 });
+    for (let i = 0; i <= 10; i++) {
+        this.data['mail.message'].records.push({
+            channel_ids: [20],
+        });
+    }
+    await this.start();
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel'
+    });
+    const threadViewer = this.env.models['mail.thread_viewer'].create({
+        hasThreadView: true,
+        thread: [['link', thread]],
+    });
+    await this.afterEvent({
+        eventName: 'o-component-message-list-scrolled',
+        func: () => this.createThreadViewComponent(
+            threadViewer.threadView,
+            { order: 'asc' },
+            { isFixedSize: true },
+        ),
+        message: "should wait until channel 20 scrolled initially",
+        predicate: data => threadViewer === data.threadViewer,
+    });
+    const initialMessageList = document.querySelector('.o_ThreadView_messageList');
+    assert.strictEqual(
+        initialMessageList.scrollTop,
+        initialMessageList.scrollHeight - initialMessageList.clientHeight,
+        "should have scrolled to bottom of channel 20 initially"
+    );
+
+    // simulate receiving a message
+    await this.afterEvent({
+        eventName: 'o-component-message-list-scrolled',
+        func: () =>
+            this.env.services.rpc({
+                route: '/mail/chat_post',
+                params: {
+                    context: {
+                        mockedUserId: 42,
+                    },
+                    uuid: thread.uuid,
+                    message_content: "hello",
+                },
+            }),
+        message: "should wait until channel 20 scrolled after receiving a message",
+        predicate: data => threadViewer === data.threadViewer,
+    });
+    const messageList = document.querySelector('.o_ThreadView_messageList');
+    assert.strictEqual(
+        messageList.scrollTop,
+        messageList.scrollHeight - messageList.clientHeight,
+        "should scroll to bottom on receiving new message because the list is initially scrolled to bottom"
+    );
+});
+
+QUnit.test('should not scroll on receiving new message if the list is initially scrolled anywhere else than bottom (asc order)', async function (assert) {
+    assert.expect(3);
+
+    // Needed partner & user to allow simulation of message reception
+    this.data['res.partner'].records.push({
+        id: 11,
+        name: "Foreigner partner",
+    });
+    this.data['res.users'].records.push({
+        id: 42,
+        name: "Foreigner user",
+        partner_id: 11,
+    });
+    this.data['mail.channel'].records.push({ id: 20 });
+    for (let i = 0; i <= 10; i++) {
+        this.data['mail.message'].records.push({
+            channel_ids: [20],
+        });
+    }
+    await this.start();
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel'
+    });
+    const threadViewer = this.env.models['mail.thread_viewer'].create({
+        hasThreadView: true,
+        thread: [['link', thread]],
+    });
+    await this.afterEvent({
+        eventName: 'o-component-message-list-scrolled',
+        func: () => this.createThreadViewComponent(
+            threadViewer.threadView,
+            { order: 'asc' },
+            { isFixedSize: true },
+        ),
+        message: "should wait until channel 20 scrolled initially",
+        predicate: data => threadViewer === data.threadViewer,
+    });
+    const initialMessageList = document.querySelector('.o_ThreadView_messageList');
+    assert.strictEqual(
+        initialMessageList.scrollTop,
+        initialMessageList.scrollHeight - initialMessageList.clientHeight,
+        "should have scrolled to bottom of channel 20 initially"
+    );
+
+    await this.afterEvent({
+        eventName: 'o-component-message-list-scrolled',
+        func: () => initialMessageList.scrollTop = 0,
+        message: "should wait until channel 20 processed manual scroll",
+        predicate: data => threadViewer === data.threadViewer,
+    });
+    assert.strictEqual(
+        initialMessageList.scrollTop,
+        0,
+        "should have scrolled to the top of channel 20 manually"
+    );
+
+    // simulate receiving a message
+    await this.afterEvent({
+        eventName: 'o-thread-view-hint-processed',
+        func: () =>
+            this.env.services.rpc({
+                route: '/mail/chat_post',
+                params: {
+                    context: {
+                        mockedUserId: 42,
+                    },
+                    uuid: thread.uuid,
+                    message_content: "hello",
+                },
+            }),
+        message: "should wait until channel 20 processed new message hint",
+        predicate: data => threadViewer === data.threadViewer && data.hint.type === 'message-received',
+    });
+    assert.strictEqual(
+        document.querySelector('.o_ThreadView_messageList').scrollTop,
+        0,
+        "should not scroll on receiving new message because the list is initially scrolled anywhere else than bottom"
+    );
+});
+
 });
 });
 });
