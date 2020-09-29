@@ -27,6 +27,7 @@ class ModelField {
         isCausal = false,
         related,
         relationType,
+        required = false,
         to,
     } = {}) {
         const id = _.uniqueId('field_');
@@ -151,6 +152,13 @@ class ModelField {
          * and 'many2many'.
          */
         this.relationType = relationType;
+        /**
+         * Determine whether the field is required or not.
+         *
+         * Empty value is systematically undefined.
+         * null or empty string are NOT considered empty value, meaning these values meet the requirement.
+        */
+        this.required = required;
         /**
          * This prop only makes sense in a relational field. Determine which
          * model name this relation refers to.
