@@ -795,24 +795,21 @@ MockServer.include({
         if (!channel_id) {
             throw new Error('Should only be one channel in channel_seen mock params');
         }
+        const channel = this._getRecords('mail.channel', [['id', '=', channel_id]])[0];
         const messagesBeforeGivenLastMessage = this._getRecords('mail.message', [
-            ['channel_ids', 'in', [channel_id]],
-            ['id', '<=', last_message_id]
+            ['channel_ids', 'in', [channel.id]],
+            ['id', '<=', last_message_id],
         ]);
         if (!messagesBeforeGivenLastMessage || messagesBeforeGivenLastMessage.length === 0) {
             return;
         }
-        const channel = this._getRecords('mail.channel', [['id', '=', channel_id]])[0];
         if (!channel) {
             return;
         }
         if (channel.seen_message_id && channel.seen_message_id >= last_message_id) {
             return;
         }
-        this._mockWrite('mail.channel', [[channel.id], {
-            fetched_message_id: last_message_id,
-            seen_message_id: last_message_id,
-        }]);
+        this._mockMailChannel_SetLastSeenMessage([channel.id], last_message_id);
 
         // Send notification
         const payload = {
@@ -960,6 +957,9 @@ MockServer.include({
             }),
             context,
         );
+        if (kwargs.author_id === this.currentPartnerId) {
+            this._mockMailChannel_SetLastSeenMessage([channel.id], messageId);
+        }
         return messageId;
     },
     /**
@@ -1017,6 +1017,19 @@ MockServer.include({
             partnerInfos[partner.id] = partnerInfo;
         }
         return partnerInfos;
+    },
+    /**
+     * Simulates the `_set_last_seen_message` method of `mail.channel`.
+     *
+     * @private
+     * @param {integer[]} ids
+     * @param {integer} message_id
+     */
+    _mockMailChannel_SetLastSeenMessage(ids, message_id) {
+        this._mockWrite('mail.channel', [ids, {
+            fetched_message_id: message_id,
+            seen_message_id: message_id,
+        }]);
     },
     /**
      * Simulates `mark_all_as_read` on `mail.message`.
@@ -1210,20 +1223,13 @@ MockServer.include({
             this._widget.call('bus_service', 'trigger', 'notification', [notification]);
         } else if (decision === 'accept') {
             // simulate notification back (new accepted message in channel)
-            const messages = _.filter(model.records, function (rec) {
-                return _.contains(messageIDs, rec.id);
-            });
-
-            const notifications = [];
-            _.each(messages, function (message) {
-                const dbName = undefined; // useless for tests
-                const messageData = message;
-                message.moderation_status = 'accepted';
-                const metaData = [dbName, 'mail.channel', message.res_id];
-                const notification = [metaData, messageData];
-                notifications.push(notification);
-            });
-            this._widget.call('bus_service', 'trigger', 'notification', notifications);
+            const messages = this._getRecords('mail.message', [['id', 'in', messageIDs]]);
+            for (const message of messages) {
+                this._mockWrite('mail.message', [[message.id], {
+                    moderation_status: 'accepted',
+                }]);
+                this._mockMailThread_NotifyThread(model, message.channel_ids, message.id);
+            }
         }
     },
     /**
@@ -1513,7 +1519,7 @@ MockServer.include({
         });
         delete values.subtype_xmlid;
         const messageId = this._mockCreate('mail.message', values);
-        this._mockMailThread_NotifyThread(model, ids, messageId, values);
+        this._mockMailThread_NotifyThread(model, ids, messageId);
         return messageId;
     },
     /**
