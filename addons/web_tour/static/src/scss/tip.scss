@@ -1,6 +1,6 @@
 
 .o_tooltip_parent {
-    position: relative!important;
+    position: relative !important;
 
     // Tooltips are placed in the <body/> element with z-index 1070 because this
     // is the only way to position them above everything else. However, for
@@ -17,7 +17,7 @@
     // home menu (this is especially useful in the website where most tooltips
     // are placed in the body and need to be placed above elements with z-index
     // like the navbar).
-    opacity: 0.999;
+    opacity: 0.999 !important;
 }
 
 .o_tooltip {
@@ -48,35 +48,38 @@
     $o-tip-arrow-duration-out: floor($o-tip-duration-out / 2);
     $o-tip-arrow-delay-out: floor($o-tip-duration-out / 2);
 
-    box-sizing: content-box;
+    box-sizing: content-box !important;
     /*rtl:begin:ignore*/
-    @include o-position-absolute($top: 50%, $left: 50%);
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
     /*rtl:end:ignore*/
-    opacity: 0;
-    width: $o-tip-size;
-    height: $o-tip-size;
-    border: $o-tip-border-width solid $o-tip-color;
-    border-radius: 50%;
-    padding: 0; // ! Cannot be changed ! Javascript rely on this.
-    z-index: $zindex-tooltip; // See comment on 'o_tooltip_parent' class
-    background-color: $o-tip-color;
-    box-shadow: 0 2px 2px 1px rgba(150, 150, 150, 0.3);
+    opacity: 0 !important;
+    width: $o-tip-size !important;
+    height: $o-tip-size !important;
+    margin: 0 !important;
+    border: $o-tip-border-width solid $o-tip-color !important;
+    border-radius: 50% !important;
+    padding: 0 !important; // ! Cannot be changed ! Javascript rely on this.
+    z-index: $zindex-tooltip !important; // See comment on 'o_tooltip_parent' class
+    background-color: $o-tip-color !important;
+    box-shadow: 0 2px 2px 1px rgba(150, 150, 150, 0.3) !important;
 
     transition:
         width $o-tip-size-duration-out ease $o-tip-size-delay-out,
         height $o-tip-size-duration-out ease $o-tip-size-delay-out,
         margin $o-tip-size-duration-out ease $o-tip-size-delay-out,
-        border-radius $o-tip-border-radius-duration-out ease $o-tip-border-radius-delay-out;
+        border-radius $o-tip-border-radius-duration-out ease $o-tip-border-radius-delay-out !important;
 
     &.o_animated {
-        animation: move-bottom-top 500ms ease-in 0ms infinite alternate;
+        animation: move-bottom-top 500ms ease-in 0ms infinite alternate !important;
         &.right, &.left {
-            animation-name: move-left-right;
+            animation-name: move-left-right !important;
         }
     }
 
     &.o_tooltip_fixed {
-        position: fixed;
+        position: fixed !important;
     }
 
     &::before {
@@ -152,15 +155,15 @@
     }
 
     &.active {
-        border-radius: 0;
-        background-color: white;
+        border-radius: 0 !important;
+        background-color: white !important;
 
         transition:
             width $o-tip-size-duration-in ease $o-tip-size-delay-in,
             height $o-tip-size-duration-in ease $o-tip-size-delay-in,
             margin $o-tip-size-duration-in ease $o-tip-size-delay-in,
             border-radius $o-tip-border-radius-duration-in ease $o-tip-border-radius-delay-in,
-            background-color $o-tip-bg-color-duration-in ease $o-tip-bg-color-delay-in;
+            background-color $o-tip-bg-color-duration-in ease $o-tip-bg-color-delay-in !important;
 
         &::before {
             transition: all $o-tip-arrow-duration-in ease $o-tip-arrow-delay-in;
@@ -251,6 +254,6 @@
 
 @media print {
     .o_tooltip {
-        display: none;
+        display: none !important;
     }
 }
