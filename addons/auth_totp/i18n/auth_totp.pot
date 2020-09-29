@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.5\n"
+"Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-01 07:28+0000\n"
-"PO-Revision-Date: 2020-09-01 07:28+0000\n"
+"POT-Creation-Date: 2020-09-29 13:45+0000\n"
+"PO-Revision-Date: 2020-09-29 13:45+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -22,25 +22,42 @@ msgstr ""
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
-msgid "6-digit code"
+msgid ""
+"<i class=\"fa fa-2x fa-mobile pull-left\"/>\n"
+"                        Open the two-factor authentication app on your\n"
+"                        device to obtain a code and verify your identity"
 msgstr ""
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
+msgid ""
+"<i class=\"fa fa-check-circle\"/>\n"
+"                                Two-factor authentication enabled"
+msgstr ""
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
+msgid ""
+"<i class=\"fa fa-warning\"/>\n"
+"                                Two-factor authentication not enabled"
+msgstr ""
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
 msgid ""
 "<span class=\"alert alert-info\" role=\"status\">\n"
-"                                <i class=\"fa fa-warning\"/>\n"
-"                                Two-factor authentication not enabled\n"
-"                            </span>"
+"                            <i class=\"fa fa-warning\"/>\n"
+"                            Two-factor authentication not enabled\n"
+"                        </span>"
 msgstr ""
 
 #. module: auth_totp
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
 msgid ""
 "<span class=\"text-success\">\n"
-"                                <i class=\"fa fa-check-circle\"/>\n"
-"                                Two-factor authentication enabled\n"
-"                            </span>"
+"                            <i class=\"fa fa-check-circle\"/>\n"
+"                            Two-factor authentication enabled\n"
+"                        </span>"
 msgstr ""
 
 #. module: auth_totp
@@ -53,11 +70,12 @@ msgstr ""
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
-msgid "Authentication Code"
+msgid "Authentication Code (6 digits)"
 msgstr ""
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid "Cancel"
 msgstr ""
 
@@ -163,11 +181,6 @@ msgid "Secret"
 msgstr ""
 
 #. module: auth_totp
-#: model:ir.model.fields,field_description:auth_totp.field_res_users__totp_enabled
-msgid "TOTP enabled"
-msgstr ""
-
-#. module: auth_totp
 #: code:addons/auth_totp/models/res_users.py:0
 #, python-format
 msgid "The verification code should only contain numbers"
@@ -189,6 +202,11 @@ msgid "Two-factor Authentication"
 msgstr ""
 
 #. module: auth_totp
+#: model:ir.model.fields,field_description:auth_totp.field_res_users__totp_enabled
+msgid "Two-factor authentication"
+msgstr ""
+
+#. module: auth_totp
 #: code:addons/auth_totp/models/res_users.py:0
 #, python-format
 msgid "Two-factor authentication already enabled"
@@ -198,6 +216,18 @@ msgstr ""
 #: code:addons/auth_totp/models/res_users.py:0
 #, python-format
 msgid "Two-factor authentication can only be enabled for yourself"
+msgstr ""
+
+#. module: auth_totp
+#: code:addons/auth_totp/models/res_users.py:0
+#, python-format
+msgid "Two-factor authentication disabled for user(s) %s"
+msgstr ""
+
+#. module: auth_totp
+#: code:addons/auth_totp/models/res_users.py:0
+#, python-format
+msgid "Two-factor authentication is now enabled."
 msgstr ""
 
 #. module: auth_totp
@@ -231,6 +261,11 @@ msgstr ""
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
 msgid "Verify"
+msgstr ""
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
+msgid "What is this?"
 msgstr ""
 
 #. module: auth_totp

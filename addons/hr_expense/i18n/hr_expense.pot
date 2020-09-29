@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.5\n"
+"Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-01 07:28+0000\n"
-"PO-Revision-Date: 2020-09-01 07:28+0000\n"
+"POT-Creation-Date: 2020-09-29 13:45+0000\n"
+"PO-Revision-Date: 2020-09-29 13:45+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -172,6 +172,12 @@ msgid "Administrator"
 msgstr ""
 
 #. module: hr_expense
+#: model:product.product,name:hr_expense.air_ticket
+#: model:product.template,name:hr_expense.air_ticket_product_template
+msgid "Air Flight"
+msgstr ""
+
+#. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Alias"
 msgstr ""
@@ -182,14 +188,8 @@ msgid "All Approver"
 msgstr ""
 
 #. module: hr_expense
-#: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_all
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_all_all
 msgid "All Expense Reports"
-msgstr ""
-
-#. module: hr_expense
-#: model:ir.actions.act_window,name:hr_expense.hr_expense_actions_all
-msgid "All Expenses"
 msgstr ""
 
 #. module: hr_expense
@@ -199,6 +199,7 @@ msgid "All My Expenses"
 msgstr ""
 
 #. module: hr_expense
+#: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_all
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_sheet_all
 msgid "All Reports"
 msgstr ""
@@ -294,7 +295,7 @@ msgid "Attachment Count"
 msgstr ""
 
 #. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.view_expenses_tree
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_expenses_analysis_tree
 msgid "Attachments"
 msgstr ""
 
@@ -322,6 +323,12 @@ msgstr ""
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
 msgid "Cancel"
+msgstr ""
+
+#. module: hr_expense
+#: model:product.product,name:hr_expense.car_travel
+#: model:product.template,name:hr_expense.car_travel_product_template
+msgid "Car Travel Expenses"
 msgstr ""
 
 #. module: hr_expense
@@ -367,14 +374,9 @@ msgstr ""
 
 #. module: hr_expense
 #: model:ir.actions.server,name:hr_expense.hr_expense_submit_action_server
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_expenses_analysis_tree
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
-#: model_terms:ir.ui.view,arch_db:hr_expense.view_expenses_tree
 msgid "Create Report"
-msgstr ""
-
-#. module: hr_expense
-#: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_actions_all
-msgid "Create a new expense"
 msgstr ""
 
 #. module: hr_expense
@@ -386,6 +388,11 @@ msgstr ""
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Create expenses from incoming emails"
+msgstr ""
+
+#. module: hr_expense
+#: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_actions_all
+msgid "Create new expenses to get statistics."
 msgstr ""
 
 #. module: hr_expense
@@ -614,6 +621,11 @@ msgid "Expense Reports to Approve"
 msgstr ""
 
 #. module: hr_expense
+#: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_product
+msgid "Expense products can be reinvoiced to your customers."
+msgstr ""
+
+#. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
 msgid "Expense refuse reason"
 msgstr ""
@@ -634,6 +646,12 @@ msgid "Expense report refused"
 msgstr ""
 
 #. module: hr_expense
+#: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all
+msgid ""
+"Expense reports regroup all the expenses incurred during a specific event."
+msgstr ""
+
+#. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_account_move_line__expense_id
 msgid "Expense where the move line come from"
 msgstr ""
@@ -645,13 +663,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_department_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_activity
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_activity
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_expenses_analysis_tree
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
-#: model_terms:ir.ui.view,arch_db:hr_expense.view_expenses_tree
 msgid "Expenses"
 msgstr ""
 
 #. module: hr_expense
+#: model:ir.actions.act_window,name:hr_expense.hr_expense_actions_all
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_all_expenses
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_graph
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_pivot
@@ -918,19 +937,6 @@ msgid "Let your employees record expenses by email"
 msgstr ""
 
 #. module: hr_expense
-#: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_product
-msgid ""
-"Let's create one! Expense products can be reinvoiced to your customers."
-msgstr ""
-
-#. module: hr_expense
-#: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_my_all
-msgid ""
-"Let's create one! Once you have created your expense, submit it to your "
-"manager who will validate it."
-msgstr ""
-
-#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_main_attachment_id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__message_main_attachment_id
 msgid "Main Attachment"
@@ -1043,25 +1049,30 @@ msgstr ""
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_department_filtered
+#: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_actions_all
 msgid "No data yet!"
 msgstr ""
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_product
-msgid "No expense products found."
+msgid "No expense products found. Let's create one!"
 msgstr ""
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_my_all
-msgid "No expense report found."
+msgid "No expense report found. Let's create one!"
+msgstr ""
+
+#. module: hr_expense
+#: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all_to_approve
+#: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all_to_pay
+#: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all_to_post
+msgid "No expense reports found"
 msgstr ""
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all
-#: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all_to_approve
-#: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all_to_pay
-#: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all_to_post
-msgid "No expense reports found."
+msgid "No expense reports found. Let's create one!"
 msgstr ""
 
 #. module: hr_expense
@@ -1114,6 +1125,7 @@ msgstr ""
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_account
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all_all
+#: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_my_all
 msgid ""
 "Once you have created your expense, submit it to your manager who will "
 "validate it."
@@ -1598,7 +1610,7 @@ msgstr ""
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__total_amount
-#: model_terms:ir.ui.view,arch_db:hr_expense.view_expenses_tree
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_expenses_analysis_tree
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_tree
 msgid "Total Amount"
 msgstr ""
@@ -1621,7 +1633,9 @@ msgid "Unit of Measure"
 msgstr ""
 
 #. module: hr_expense
+#: model:product.product,uom_name:hr_expense.air_ticket
 #: model:product.product,uom_name:hr_expense.product_product_fixed_cost
+#: model:product.template,uom_name:hr_expense.air_ticket_product_template
 #: model:product.template,uom_name:hr_expense.product_product_fixed_cost_product_template
 msgid "Units"
 msgstr ""
@@ -1817,6 +1831,12 @@ msgstr ""
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_refuse_reason
 msgid "has been refused"
+msgstr ""
+
+#. module: hr_expense
+#: model:product.product,uom_name:hr_expense.car_travel
+#: model:product.template,uom_name:hr_expense.car_travel_product_template
+msgid "km"
 msgstr ""
 
 #. module: hr_expense
