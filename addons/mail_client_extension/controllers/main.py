@@ -6,6 +6,7 @@ import hmac
 import json
 import logging
 import odoo
+import requests
 import werkzeug
 
 import odoo.addons.iap.tools.iap_tools
@@ -172,6 +173,16 @@ class MailClientExtensionController(http.Controller):
             'website': iap_data.get("domain"),
             'email': emails[0] if emails else None
         }
+
+        logo_url = iap_data.get('logo')
+        if logo_url:
+            try:
+                response = requests.get(logo_url, timeout=2)
+                if response.ok:
+                    new_company_info['image_1920'] = base64.b64encode(response.content)
+            except Exception as e:
+                _logger.warning('Download of image for new company %r failed, error %r' % (new_company_info.name, e))
+
         if iap_data.get('country_code'):
             country = request.env['res.country'].search([('code', '=', iap_data['country_code'].upper())])
             if country:
