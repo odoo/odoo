@@ -984,7 +984,8 @@ registry.FullScreenHeight = publicWidget.Widget.extend({
         const windowHeight = $(window).outerHeight();
         // Doing it that way allows to considerer fixed headers, hidden headers,
         // connected users, ...
-        const mainTopPos = $('#wrapwrap > main')[0].getBoundingClientRect().top;
+        const firstContentEl = $('#wrapwrap > main > :first-child')[0]; // first child to consider the padding-top of main
+        const mainTopPos = firstContentEl.getBoundingClientRect().top + dom.closestScrollable(firstContentEl.parentNode).scrollTop;
         return (windowHeight - mainTopPos);
     },
 });
