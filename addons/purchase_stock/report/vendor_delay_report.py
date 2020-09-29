@@ -31,7 +31,7 @@ SELECT m.id                     AS id,
        Min(po.partner_id)       AS partner_id,
        Sum(pol.product_uom_qty) AS qty_total,
        Sum(CASE
-             WHEN pol.date_planned >= m.date THEN ml.qty_done
+             WHEN (pol.date_planned::date >= m.date::date) THEN ml.qty_done
              ELSE 0
            END)                 AS qty_on_time
 FROM   stock_move m

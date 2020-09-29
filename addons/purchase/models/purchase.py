@@ -1170,8 +1170,8 @@ class PurchaseOrderLine(models.Model):
         }
 
     def _convert_to_middle_of_day(self, date):
-        """Return a datetime which is the last minute of the input date(time)
-        according to order user's time zone, convert to UTC time.
+        """Return a datetime which is the noon of the input date(time) according
+        to order user's time zone, convert to UTC time.
         """
         return timezone(self.order_id.user_id.tz or self.company_id.partner_id.tz or 'UTC').localize(datetime.combine(date, time(12))).astimezone(UTC).replace(tzinfo=None)
 
