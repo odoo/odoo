@@ -21,13 +21,14 @@ class UserInputSession(http.Controller):
 
     def _fetch_from_session_code(self, session_code):
         """ Matches a survey against a passed session_code.
-        We force the session_state to be reachable (ready / in_progress) to avoid people
-        using this route to access other (private) surveys.
+        We don't limit the session_state to be reachable (ready / in_progress) here because
+        in some cases, we want closed session as well (where session_state = False).
+        Instead, when necessary, the reachability is forced in routes calling this method to
+        avoid people using those routes to access other (private) surveys.
         We limit to sessions opened within the last 7 days to avoid potential abuses. """
         if session_code:
             matching_survey = request.env['survey.survey'].sudo().search([
                 ('state', '=', 'open'),
-                ('session_state', 'in', ['ready', 'in_progress']),
                 ('session_start_time', '>', fields.Datetime.now() - relativedelta(days=7)),
                 ('session_code', '=', session_code),
             ], limit=1)
@@ -169,7 +170,7 @@ class UserInputSession(http.Controller):
         This route is used in survey sessions where we need short links for people to type. """
 
         survey = self._fetch_from_session_code(session_code)
-        if survey:
+        if survey and survey.session_state in ['ready', 'in_progress']:
             return werkzeug.utils.redirect("/survey/start/%s" % survey.access_token)
 
         return werkzeug.utils.redirect("/s")
@@ -181,7 +182,10 @@ class UserInputSession(http.Controller):
         If not, return error. The user is invited to type again the code. """
         survey = self._fetch_from_session_code(session_code)
         if survey:
-            return {"survey_url": "/survey/start/%s" % survey.access_token}
+            if survey.session_state in ['ready', 'in_progress']:
+                return {"survey_url": "/survey/start/%s" % survey.access_token}
+            else:
+                return {"error": "survey_session_closed"}
 
         return {"error": "survey_wrong"}
 
