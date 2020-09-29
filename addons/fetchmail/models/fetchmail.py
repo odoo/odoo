@@ -169,14 +169,18 @@ odoo_mailgate: "|/path/to/odoo-mailgate.py --host=localhost -u %(uid)d -p PASSWO
                         try:
                             res_id = MailThread.with_context(**additionnal_context).message_process(server.object_id.model, data[0][1], save_original=server.original, strip_attachments=(not server.attach))
                         except Exception:
-                            _logger.info('Failed to process mail from %s server %s.', server.server_type, server.name, exc_info=True)
+                            _logger.warning('Failed to process mail from %s server %s.', server.server_type, server.name, exc_info=True)
                             failed += 1
                         self._cr.commit()
-                        imap_server.store(num, '+FLAGS', '\\Seen')
-                        count += 1
+                        if res_id:
+                            imap_server.store(num, '+FLAGS', '\\Seen')
+                            count += 1
+                        else:
+                            _logger.warning('Message process returned False processing mail from %s server %s.', server.server_type, server.name, exc_info=True)
+                            failed += 1
                     _logger.info("Fetched %d email(s) on %s server %s; %d succeeded, %d failed.", count, server.server_type, server.name, (count - failed), failed)
                 except Exception:
-                    _logger.info("General failure when trying to fetch mail from %s server %s.", server.server_type, server.name, exc_info=True)
+                    _logger.warning("General failure when trying to fetch mail from %s server %s.", server.server_type, server.name, exc_info=True)
                 finally:
                     if imap_server:
                         imap_server.close()

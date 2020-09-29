@@ -1131,7 +1131,7 @@ class MailThread(models.AbstractModel):
         if existing_msg_ids:
             _logger.info('Ignored mail from %s to %s with Message-Id %s: found duplicated Message-Id during processing',
                          msg_dict.get('email_from'), msg_dict.get('to'), msg_dict.get('message_id'))
-            return False
+            return existing_msg_ids
 
         # find possible routes for the message
         routes = self.message_route(message, msg_dict, model, thread_id, custom_values)
