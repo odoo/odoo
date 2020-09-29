@@ -20,4 +20,5 @@ with the street name, the house number, and room number.
         'data/base_address_extended_data.xml',
     ],
     'depends': ['base'],
+    'post_init_hook': '_update_street_format',
 }
