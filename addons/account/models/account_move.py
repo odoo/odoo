@@ -3256,9 +3256,15 @@ class AccountMoveLine(models.Model):
             if account.deprecated:
                 raise UserError(_('The account %s (%s) is deprecated.') % (account.name, account.code))
 
-            control_type_failed = journal.type_control_ids and account.user_type_id not in journal.type_control_ids
-            control_account_failed = journal.account_control_ids and account not in journal.account_control_ids
-            if control_type_failed or control_account_failed:
+            failed_check = False
+            if journal.type_control_ids or journal.account_control_ids:
+                failed_check = True
+                if journal.type_control_ids:
+                    failed_check = account.user_type_id not in journal.type_control_ids
+                if failed_check and journal.account_control_ids:
+                    failed_check = account not in journal.account_control_ids
+
+            if failed_check:
                 raise UserError(_('You cannot use this general account in this journal, check the tab \'Entry Controls\' on the related journal.'))
 
     @api.constrains('account_id', 'tax_ids', 'tax_line_id', 'reconciled')
