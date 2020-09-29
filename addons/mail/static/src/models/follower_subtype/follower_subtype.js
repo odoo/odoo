@@ -57,7 +57,9 @@ function factory(dependencies) {
     }
 
     FollowerSubtype.fields = {
-        id: attr(),
+        id: attr({
+            required: true,
+        }),
         isDefault: attr({
             default: false,
         }),

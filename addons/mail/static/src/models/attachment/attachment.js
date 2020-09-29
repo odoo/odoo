@@ -321,7 +321,9 @@ function factory(dependencies) {
                 'url',
             ],
         }),
-        id: attr(),
+        id: attr({
+            required: true,
+        }),
         isLinkedToComposer: attr({
             compute: '_computeIsLinkedToComposer',
             dependencies: ['composers'],

@@ -61,7 +61,9 @@ function factory(dependencies) {
 
     Notification.fields = {
         failure_type: attr(),
-        id: attr(),
+        id: attr({
+            required: true,
+        }),
         message: many2one('mail.message', {
             inverse: 'notifications',
         }),

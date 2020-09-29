@@ -26,7 +26,9 @@ function factory(dependencies) {
             inverse: 'type',
         }),
         displayName: attr(),
-        id: attr(),
+        id: attr({
+            required: true,
+        }),
     };
 
     ActivityType.modelName = 'mail.activity_type';
