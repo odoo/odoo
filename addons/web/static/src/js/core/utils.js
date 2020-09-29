@@ -281,7 +281,7 @@ var utils = {
      */
     debounce(callback, delayOrFunction) {
         let debounced = false;
-        return function() {
+        return function (...args) {
             if (debounced) {
                 return;
             }
@@ -291,7 +291,7 @@ var utils = {
             } else {
                 setTimeout(() => debounced = false, delayOrFunction);
             }
-            return callback();
+            return callback(...args);
         };
     },
     /**
