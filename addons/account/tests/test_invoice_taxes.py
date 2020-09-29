@@ -432,3 +432,48 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
             {'balance': -100.0,     'tax_ids': [],              'tax_tag_ids': self.tax_tag_pos.ids},
             {'balance': 1100.0,     'tax_ids': [],              'tax_tag_ids': []},
         ])
+
+    def test_tax_calculation_foreign_currency_large_quantity(self):
+        ''' Test:
+        Foreign currency with rate of 1.1726 and tax of 21%
+        price_unit | Quantity  | Taxes
+        ------------------
+        2.82       | 20000     | 21% not incl
+        '''
+        self.env['res.currency.rate'].search([]).unlink()
+        self.currency_usd_id = self.env.ref("base.USD")
+        self.currency_chf_id = self.env.ref("base.CHF")
+        # make sure that we have USD as base...
+        self.cr.execute("UPDATE res_company SET currency_id = %s WHERE id = %s", 
+            [self.currency_usd_id.id, self.env.company.id])
+        self.env['res.currency.rate'].create({
+            'currency_id': self.currency_chf_id.id,
+            'rate': 1.1726,
+            'name': '2001-01-01'})
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'currency_id': self.currency_chf_id.id,
+            'invoice_line_ids': [(0, 0, {
+                'name': 'xxxx',
+                'quantity': 20000,
+                'price_unit': 2.82,
+                'tax_ids': [(6, 0, self.percent_tax_1.ids)],
+            })]
+        })
+        # don't post!  Post will write() which will cause the amount to recalculate.
+        # but we want to make sure that the calculation is correct when it is made on 
+        # the fly, from a user editing it in the web UI
+        # invoice.post()
+        # make sure the tax is calculated in the foreign currency correctly
+        self.assertRecordValues(invoice.line_ids.filtered('tax_line_id'), [
+            {
+                'name': self.percent_tax_1.name,
+                # 20000 * 2.82 / 1.1726
+                'tax_base_amount': 48098.24,
+                'price_unit': 11844,
+                # tax_base_amount * 21%
+                'credit': 10100.63,
+                'tax_ids': []
+            },
+        ])
