@@ -18,6 +18,12 @@ nav#oe_main_menu_navbar {
     min-height: 100%;
 }
 
+// Safari(v 7.1+) specific fix (min-height given above doesn't work with safari)
+// see https://stackoverflow.com/a/25975282 for info on safari specific css
+_::-webkit-full-page-media, _:future, :root .o_survey_wrap {
+    min-height: 90vh;
+}
+
 .o_survey_progress_wrapper {
     min-width: 11rem;
     max-width: 15rem;
@@ -166,6 +172,15 @@ nav#oe_main_menu_navbar {
                 border-bottom-right-radius: .25rem;
             }
         }
+    }
+}
+
+.o_survey_quick_access {
+    .o_survey_error {
+        min-height: 2rem;
+    }
+    #session_code {
+        font-size: 4rem;
     }
 }
 
