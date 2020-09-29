@@ -160,15 +160,17 @@ class MailClientExtensionController(http.Controller):
         if 'enrichment_info' in iap_data:
             return None, iap_data['enrichment_info']
 
+        phone_numbers = iap_data.get('phone_numbers')
+        emails = iap_data.get('email')
         new_company_info = {
             'is_company': True,
             'name': iap_data.get("name"),
             'street': iap_data.get("street_name"),
             'city': iap_data.get("city"),
             'zip': iap_data.get("postal_code"),
-            'phone': iap_data.get('phone_numbers', [''])[0],
+            'phone': phone_numbers[0] if phone_numbers else None,
             'website': iap_data.get("domain"),
-            'email': iap_data.get('email', [''])[0]
+            'email': emails[0] if emails else None
         }
         if iap_data.get('country_code'):
             country = request.env['res.country'].search([('code', '=', iap_data['country_code'].upper())])
