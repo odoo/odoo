@@ -485,7 +485,7 @@ class BaseAutomation(models.Model):
             domain = []
             context = dict(self._context)
             if action.filter_domain:
-                domain = safe_eval(action.filter_domain, eval_context)
+                domain = safe_eval.safe_eval(action.filter_domain, eval_context)
             records = self.env[action.model_name].with_context(context).search(domain)
 
             # determine when action should occur for the records
