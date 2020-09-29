@@ -122,12 +122,7 @@ class AccountMove(models.Model):
                     .get_product_accounts(fiscal_pos=move.fiscal_position_id)
                 )
                 debit_interim_account = accounts['stock_output']
-                credit_expense_account = accounts['expense']
-                if not credit_expense_account:
-                    if self.type == 'out_refund':
-                        credit_expense_account = self.journal_id.default_credit_account_id
-                    else: # out_invoice/out_receipt
-                        credit_expense_account = self.journal_id.default_debit_account_id
+                credit_expense_account = accounts['expense'] or self.journal_id.default_account_id
                 if not debit_interim_account or not credit_expense_account:
                     continue
 
