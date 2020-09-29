@@ -385,6 +385,13 @@ class Channel(models.Model):
             })
         return message
 
+    def _message_post_after_hook(self, message, msg_vals):
+        """
+        Automatically set the message posted by the current user as seen for himself.
+        """
+        self._set_last_seen_message(message)
+        return super()._message_post_after_hook(message=message, msg_vals=msg_vals)
+
     def _alias_get_error_message(self, message, message_dict, alias):
         if alias.alias_contact == 'followers' and self.ids:
             author = self.env['res.partner'].browse(message_dict.get('author_id', False))
@@ -744,21 +751,7 @@ class Channel(models.Model):
         if not last_message:
             return
 
-        channel_partner_domain = expression.AND([
-            [('channel_id', 'in', self.ids)],
-            [('partner_id', '=', self.env.user.partner_id.id)],
-            expression.OR([
-                [('seen_message_id', '=', False)],
-                [('seen_message_id', '<', last_message.id)]
-            ])
-        ])
-        channel_partner = self.env['mail.channel.partner'].search(channel_partner_domain, limit=1)
-        if not channel_partner:
-            return
-        channel_partner.write({
-            'fetched_message_id': last_message.id,
-            'seen_message_id': last_message.id,
-        })
+        self._set_last_seen_message(last_message)
 
         data = {
             'info': 'channel_seen',
@@ -771,6 +764,25 @@ class Channel(models.Model):
             data['channel_id'] = self.id
             self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', self.env.user.partner_id.id), data)
         return last_message.id
+
+    def _set_last_seen_message(self, last_message):
+        """
+        Set last seen message of `self` channels for the current user.
+        :param last_message: the message to set as last seen message
+        """
+        channel_partner_domain = expression.AND([
+            [('channel_id', 'in', self.ids)],
+            [('partner_id', '=', self.env.user.partner_id.id)],
+            expression.OR([
+                [('seen_message_id', '=', False)],
+                [('seen_message_id', '<', last_message.id)]
+            ])
+        ])
+        channel_partner = self.env['mail.channel.partner'].search(channel_partner_domain)
+        channel_partner.write({
+            'fetched_message_id': last_message.id,
+            'seen_message_id': last_message.id,
+        })
 
     def channel_fetched(self):
         """ Broadcast the channel_fetched notification to channel members
