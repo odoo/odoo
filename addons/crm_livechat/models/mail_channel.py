@@ -8,7 +8,10 @@ class MailChannel(models.Model):
     _inherit = 'mail.channel'
 
     def _define_command_lead(self):
-        return {'help': _('Create a new lead (/lead lead title)')}
+        return {
+            'channel_types': ['livechat'],
+            'help': _('Create a new lead (/lead lead title)'),
+        }
 
     def _execute_command_lead(self, **kwargs):
         partner = self.env.user.partner_id
