@@ -239,7 +239,9 @@ function factory(dependencies) {
         followedThread: many2one('mail.thread', {
             inverse: 'followers',
         }),
-        id: attr(),
+        id: attr({
+            required: true,
+        }),
         isActive: attr({
             default: true,
         }),

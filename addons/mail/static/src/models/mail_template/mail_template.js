@@ -69,7 +69,9 @@ function factory(dependencies) {
         activities: many2many('mail.activity', {
             inverse: 'mailTemplates',
         }),
-        id: attr(),
+        id: attr({
+            required: true,
+        }),
         name: attr(),
     };
 

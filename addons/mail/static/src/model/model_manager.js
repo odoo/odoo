@@ -307,6 +307,7 @@ class ModelManager {
                             'dependencies',
                             'fieldType',
                             'related',
+                            'required',
                         ].includes(key)
                     );
                     if (invalidKeys.length > 0) {
@@ -324,6 +325,7 @@ class ModelManager {
                             'isCausal',
                             'related',
                             'relationType',
+                            'required',
                             'to',
                         ].includes(key)
                     );
@@ -335,6 +337,9 @@ class ModelManager {
                     }
                     if (field.isCausal && !(['one2many', 'one2one'].includes(field.relationType))) {
                         throw new Error(`Relational field "${Model.modelName}/${fieldName}" has "isCausal" true with a relation of type "${field.relationType}" but "isCausal" is only supported for "one2many" and "one2one".`);
+                    }
+                    if (field.required && !(['one2one', 'many2one'].includes(field.relationType))) {
+                        throw new Error(`Relational field "${Model.modelName}/${fieldName}" has "required" true with a relation of type "${field.relationType}" but "required" is only supported for "one2one" and "many2one".`);
                     }
                 }
                 // 3. Computed field.
@@ -708,6 +713,16 @@ class ModelManager {
         for (const record of this._updatedRecords) {
             record.__state++;
         }
+
+        // handle required field.
+        for (const record of this._updatedRecords) {
+            for (const required of record.constructor.__requiredFieldsList) {
+                if (record[required.fieldName] === undefined) {
+                    throw Error(`Field ${required.fieldName} of ${record.localId} is required.`);
+                }
+            }
+        }
+
         this._updatedRecords.clear();
 
         // Trigger at most one useStore call per update cycle
@@ -977,6 +992,9 @@ class ModelManager {
             Model.__fieldMap = Model.__combinedFields;
             // List of all fields, for iterating.
             Model.__fieldList = Object.values(Model.__fieldMap);
+            Model.__requiredFieldsList = Model.__fieldList.filter(
+                field => field.required
+            );
             // Add field accessors.
             for (const field of Model.__fieldList) {
                 Object.defineProperty(Model.prototype, field.fieldName, {
