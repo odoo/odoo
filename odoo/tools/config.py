@@ -386,7 +386,7 @@ class configmanager(object):
             "The config file '%s' selected with -c/--config doesn't exist or is not readable, "\
             "use -s/--save if you want to generate it"% opt.config)
 
-        die(bool(opt.osv_memory_age_limit) and bool(opt.transient_memory_age_limit),
+        die(bool(opt.osv_memory_age_limit) and bool(opt.transient_age_limit),
             "the osv-memory-count-limit option cannot be used with the "
             "transient-age-limit option, please only use the latter.")
 
