@@ -64,6 +64,7 @@
         'static/src/components/activity_mark_done_popover/activity_mark_done_popover.xml',
         'static/src/components/attachment/attachment.xml',
         'static/src/components/attachment_box/attachment_box.xml',
+        'static/src/components/attachment_delete_confirm_dialog/attachment_delete_confirm_dialog.xml',
         'static/src/components/attachment_list/attachment_list.xml',
         'static/src/components/attachment_viewer/attachment_viewer.xml',
         'static/src/components/autocomplete_input/autocomplete_input.xml',
