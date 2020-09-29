@@ -22,8 +22,13 @@
                                     <span t-esc="i.name"/>
                                 </a>
                                 <div class="small d-lg-inline-block ml-3">Date:
+<<<<<<< HEAD
                                     <span class="text-muted" t-field="i.date_done" t-options="{'date_only': True}"/>
                                     <span t-if="i.state in ['draft', 'waiting', 'confirmed', 'assigned']" class="text-muted" t-field="i.scheduled_date" t-options="{'date_only': True}"/>
+=======
+                                    <span t-if="i.state == 'done'" class="text-muted" t-field="i.date_done" t-options="{'date_only': True}"/>
+                                    <span t-if="i.state != 'done'" class="text-muted" t-field="i.scheduled_date" t-options="{'date_only': True}"/>
+>>>>>>> 7d1a3bdbe0a... temp
                                 </div>
                             </div>
                             <span t-if="i.state == 'done'" class="small badge badge-success orders_label_text_align"><i class="fa fa-fw fa-truck"/> <b>Shipped</b></span>
