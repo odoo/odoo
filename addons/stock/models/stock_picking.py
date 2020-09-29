@@ -404,11 +404,11 @@ class Picking(models.Model):
         for picking in pickings:
             forecast_date = max(picking.move_lines.filtered('forecast_expected_date').mapped('forecast_expected_date'), default=False)
             if any(float_compare(move.forecast_availability, move.product_qty, move.product_id.uom_id.rounding) == -1 for move in picking.move_lines):
-                picking.components_availability = _('Not Available')
-                picking.components_availability_state = 'late'
+                picking.products_availability = _('Not Available')
+                picking.products_availability_state = 'late'
             elif forecast_date:
-                picking.components_availability = _('Exp %s', format_date(self.env, forecast_date))
-                picking.components_availability_state = 'late' if picking.date_deadline < forecast_date else 'expected'
+                picking.products_availability = _('Exp %s', format_date(self.env, forecast_date))
+                picking.products_availability_state = 'late' if picking.date_deadline < forecast_date else 'expected'
 
     @api.depends('picking_type_id.show_operations')
     def _compute_show_operations(self):
