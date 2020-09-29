@@ -411,10 +411,7 @@ function factory(dependencies) {
             } else if (type === 'author') {
                 return this._handleNotificationPartnerAuthor(data);
             } else if (info === 'channel_seen') {
-                return this._handleNotificationChannelSeen(data.channel_id, {
-                    last_message_id: data.last_message_id,
-                    partner_id: this.env.messaging.currentPartner.id,
-                });
+                return this._handleNotificationChannelSeen(data.channel_id, data);
             } else if (type === 'deletion') {
                 return this._handleNotificationPartnerDeletion(data);
             } else if (type === 'message_notification_update') {
