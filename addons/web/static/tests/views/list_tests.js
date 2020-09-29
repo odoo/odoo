@@ -245,8 +245,40 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('export feature in list for users not in base.group_allow_export', async function (assert) {
+        assert.expect(5);
+
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            viewOptions: { hasActionMenus: true },
+            arch: '<tree><field name="foo"/></tree>',
+            session: {
+                async user_has_group(group) {
+                    if (group === 'base.group_allow_export') {
+                        return false;
+                    }
+                    return this._super(...arguments);
+                },
+            },
+        });
+
+        assert.containsNone(list.el, 'div.o_control_panel .o_cp_action_menus');
+        assert.ok(list.$('tbody td.o_list_record_selector').length, 'should have at least one record');
+        assert.containsNone(list.el, 'div.o_control_panel .o_cp_buttons .o_list_export_xlsx');
+
+        await testUtils.dom.click(list.$('tbody td.o_list_record_selector:first input'));
+        assert.containsOnce(list.el, 'div.o_control_panel .o_cp_action_menus');
+        await cpHelpers.toggleActionMenu(list);
+        assert.deepEqual(cpHelpers.getMenuItemTexts(list), ['Delete'],
+            'action menu should not contain the Export button');
+
+        list.destroy();
+    });
+
     QUnit.test('list with export button', async function (assert) {
-        assert.expect(4);
+        assert.expect(5);
 
         const list = await createView({
             View: ListView,
@@ -266,6 +298,7 @@ QUnit.module('Views', {
 
         assert.containsNone(list.el, 'div.o_control_panel .o_cp_action_menus');
         assert.ok(list.$('tbody td.o_list_record_selector').length, 'should have at least one record');
+        assert.containsOnce(list.el, 'div.o_control_panel .o_cp_buttons .o_list_export_xlsx');
 
         await testUtils.dom.click(list.$('tbody td.o_list_record_selector:first input'));
         assert.containsOnce(list.el, 'div.o_control_panel .o_cp_action_menus');
@@ -287,6 +320,14 @@ QUnit.module('Views', {
             model: 'foo',
             data: this.data,
             arch: '<tree><field name="foo"/></tree>',
+            session: {
+                async user_has_group(group) {
+                    if (group === 'base.group_allow_export') {
+                        return true;
+                    }
+                    return this._super(...arguments);
+                },
+            },
         });
 
         assert.containsN(list, '.o_data_row', 4);
@@ -312,6 +353,14 @@ QUnit.module('Views', {
             data: this.data,
             arch: '<tree><field name="foo"/></tree>',
             domain: [["id", "<", 0]], // such that no record matches the domain
+            session: {
+                async user_has_group(group) {
+                    if (group === 'base.group_allow_export') {
+                        return true;
+                    }
+                    return this._super(...arguments);
+                },
+            },
         });
 
         assert.isNotVisible(list.el.querySelector('.o_list_export_xlsx'));
