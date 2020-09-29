@@ -890,7 +890,7 @@ class AccountMove(models.Model):
             :return:                        A list <to_pay_company_currency, to_pay_invoice_currency, due_date>.
             '''
             if self.invoice_payment_term_id:
-                to_compute = self.invoice_payment_term_id.compute(total_balance, date_ref=date, currency=self.currency_id)
+                to_compute = self.invoice_payment_term_id.compute(total_balance, date_ref=date, currency=self.company_id.currency_id)
                 if self.currency_id == self.company_id.currency_id:
                     # Single-currency.
                     return [(b[0], b[1], b[1]) for b in to_compute]
