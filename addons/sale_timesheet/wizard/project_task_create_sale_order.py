@@ -58,8 +58,6 @@ class ProjectTaskCreateSalesOrder(models.TransientModel):
         if self.task_id.sale_line_id:
             raise UserError(_("The task is already linked to a sales order item."))
 
-        timesheet_with_so_line = self.env['account.analytic.line'].search([('task_id', '=', self.task_id.id), ('so_line', '!=', False), ('project_id', '!=', False)])
-
         # create SO
         sale_order = self.env['sale.order'].create({
             'partner_id': self.partner_id.id,
@@ -72,13 +70,17 @@ class ProjectTaskCreateSalesOrder(models.TransientModel):
         sale_order.write({'user_id': self.task_id.user_id.id})
         sale_order.onchange_user_id()
 
+        qty = 0
+        for timesheet in self.task_id.timesheet_ids:
+            qty += timesheet.product_uom_id._compute_quantity(timesheet.unit_amount, self.product_id.uom_id, rounding_method='HALF-UP', raise_if_failure=False)
+
         sale_order_line = self.env['sale.order.line'].create({
             'order_id': sale_order.id,
             'product_id': self.product_id.id,
             'price_unit': self.price_unit,
             'project_id': self.task_id.project_id.id,  # prevent to re-create a project on confirmation
             'task_id': self.task_id.id,
-            'product_uom_qty': self.task_id.total_hours_spent - round(sum(timesheet_with_so_line.mapped('unit_amount')), 2),
+            'product_uom_qty': qty,
         })
 
         # link task to SOL
