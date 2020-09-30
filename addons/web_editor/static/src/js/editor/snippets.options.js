@@ -1131,7 +1131,13 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
     _updateUI: async function (color) {
         await this._super(...arguments);
 
-        const classes = weUtils.computeColorClasses(this.colorPalette.getColorNames());
+        const colorNames = this.colorPalette.getColorNames();
+        // FIXME: this 'return" avoids rendering the color palette if colorNames is
+        // undefined.
+        if (!colorNames) {
+            return;
+        }
+        const classes = weUtils.computeColorClasses(colorNames);
         this.colorPreviewEl.classList.remove(...classes);
         this.colorPreviewEl.style.removeProperty('background-color');
 
