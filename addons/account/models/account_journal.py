@@ -555,7 +555,7 @@ class AccountJournal(models.Model):
 
         # === Fill missing alias name ===
         if journal_type in ('sale', 'purchase') and 'alias_name' not in vals:
-            vals['alias_name'] = '%s.%s' % (company.name, vals.get('code'))
+            vals['alias_name'] = '%s-%s' % (company.name, vals.get('code'))
 
     @api.model
     def create(self, vals):
