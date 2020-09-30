@@ -459,9 +459,9 @@ class TestStockValuationLCFIFOVB(TestStockValuationLC):
         self.assertEqual(lc.cost_lines.price_unit, 50)
         self.assertEqual(lc.cost_lines.product_id, self.productlc1)
 
-        input_aml = self._get_stock_input_move_lines()[-1]
-        self.assertEqual(input_aml.debit, 0)
-        self.assertEqual(input_aml.credit, 50)
+        expense_aml = self._get_expense_move_lines()[-1]
+        self.assertEqual(expense_aml.debit, 0)
+        self.assertEqual(expense_aml.credit, 50)
         valuation_aml = self._get_stock_valuation_move_lines()[-1]
         self.assertEqual(valuation_aml.debit, 50)
         self.assertEqual(valuation_aml.credit, 0)
