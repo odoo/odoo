@@ -121,13 +121,21 @@ class ProjectTaskCreateSalesOrder(models.TransientModel):
         sale_order.write({'user_id': self.task_id.user_id.id})
         sale_order.onchange_user_id()
 
+        qty = 0
+        for timesheet in self.task_id.timesheet_ids:
+            qty += timesheet.product_uom_id._compute_quantity(timesheet.unit_amount, self.product_id.uom_id, rounding_method='HALF-UP', raise_if_failure=False)
+
         sale_order_line = self.env['sale.order.line'].create({
             'order_id': sale_order.id,
             'product_id': self.product_id.id,
             'price_unit': self.price_unit,
             'project_id': self.task_id.project_id.id,  # prevent to re-create a project on confirmation
             'task_id': self.task_id.id,
+<<<<<<< HEAD
             'product_uom_qty': round(sum(self.task_id.timesheet_ids.filtered(lambda t: not t.non_allow_billable and not t.so_line).mapped('unit_amount')), 2),
+=======
+            'product_uom_qty': qty,
+>>>>>>> aa95f2df847... temp
         })
 
         # link task to SOL
