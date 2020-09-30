@@ -107,9 +107,7 @@ class PosSession(models.Model):
             cash_payment_method = session.payment_method_ids.filtered('is_cash_count')[:1]
             if cash_payment_method:
                 total_cash_payment = sum(session.order_ids.mapped('payment_ids').filtered(lambda payment: payment.payment_method_id == cash_payment_method).mapped('amount'))
-                session.cash_register_total_entry_encoding = session.cash_register_id.total_entry_encoding + (
-                    0.0 if session.state == 'closed' else total_cash_payment
-                )
+                session.cash_register_total_entry_encoding = session.cash_register_id.total_entry_encoding + total_cash_payment
                 session.cash_register_balance_end = session.cash_register_balance_start + session.cash_register_total_entry_encoding
                 session.cash_register_difference = session.cash_register_balance_end_real - session.cash_register_balance_end
             else:
