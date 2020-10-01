@@ -65,11 +65,6 @@ Get your website translated in multiple languages with no effort. Odoo proposes
 and propagates translations automatically across pages, following what you edit
 on the master page.
 
-Benefit from professional translators to translate all your contents
-automatically with the [Gengo](http://gengo.com) integration. Update any part
-of your website and the translated versions are pushed automatically in a few
-hours.
-
 Designer-Friendly Templates
 ---------------------------
 
