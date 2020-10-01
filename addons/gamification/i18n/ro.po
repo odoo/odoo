@@ -3,16 +3,20 @@
 # * gamification
 # 
 # Translators:
-# Dorin Hongu <dhongu@gmail.com>, 2016
-# Cozmin Candea <office@terrabit.ro>, 2016
 # Martin Trigaux, 2016
+# Cozmin Candea <office@terrabit.ro>, 2016
+# Dorin Hongu <dhongu@gmail.com>, 2017
+# banica <banica.marian@gmail.com>, 2019
+# Foldi Robert <foldirobert@nexterp.ro>, 2020
+# Hongu Cosmin <cosmin513@gmail.com>, 2020
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-03-08 13:58+0000\n"
-"PO-Revision-Date: 2018-03-08 13:58+0000\n"
-"Last-Translator: Martin Trigaux, 2016\n"
+"PO-Revision-Date: 2016-09-07 09:19+0000\n"
+"Last-Translator: Hongu Cosmin <cosmin513@gmail.com>, 2020\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -215,13 +219,13 @@ msgstr ""
 #: code:addons/gamification/models/challenge.py:591
 #, python-format
 msgid "%s has joined the challenge"
-msgstr ""
+msgstr "%ss-a alăturat provocării"
 
 #. module: gamification
 #: code:addons/gamification/models/challenge.py:600
 #, python-format
 msgid "%s has refused the challenge"
-msgstr ""
+msgstr "%sa refuzat provocarea"
 
 #. module: gamification
 #: code:addons/gamification/models/challenge.py:657
@@ -236,6 +240,8 @@ msgid ""
 "<br/>Nobody has succeeded to reach every goal, no badge is rewarded for this"
 " challenge."
 msgstr ""
+"<br/>Nimeni nu a reușit să atingă fiecare obiectiv, nici o insignă nu este "
+"recompensată pentru această provocare."
 
 #. module: gamification
 #: code:addons/gamification/models/challenge.py:652
@@ -250,6 +256,8 @@ msgid ""
 "<br/>Special rewards were sent to the top competing users. The ranking for "
 "this challenge is :"
 msgstr ""
+"Recompense speciale au fost trimise utilizatorilor concurenți de top. "
+"Clasamentul pentru această provocare este:"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.challenge_form_view
@@ -275,6 +283,8 @@ msgid ""
 "A goal definition is a technical model of goal defining a condition to reach.\n"
 "                The dates, values to reach or users are defined in goal instance."
 msgstr ""
+"Recompense speciale au fost trimise utilizatorilor concurenți de top. \n"
+"Clasamentul pentru această provocare este:"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge_line_condition
@@ -293,6 +303,8 @@ msgid ""
 "A goal is defined by a user and a goal definition.\n"
 "                Goals can be created automatically by using challenges."
 msgstr ""
+"Un obiectiv este definit de un utilizator și o definiție a obiectivului.\n"
+"Obiectivele pot fi create automat folosind provocări."
 
 #. module: gamification
 #: selection:gamification.badge,rule_auth:0
@@ -430,7 +442,7 @@ msgstr "Nu se poate acorda"
 #: code:addons/gamification/models/goal.py:409
 #, python-format
 msgid "Can not modify the configuration of a started goal"
-msgstr ""
+msgstr "Nu se poate modifica configurația unui obiectiv început"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.view_badge_wizard_grant
@@ -480,6 +492,8 @@ msgid ""
 "Challenge that generated the goal, assign challenge to users to generate "
 "goals with a value in this field."
 msgstr ""
+"Provocare care a generat obiectivul, atribuiți utilizatorilor provocarea de "
+"a genera obiective cu o valoare în acest domeniu."
 
 #. module: gamification
 #: model:ir.actions.act_window,name:gamification.challenge_list_action
@@ -492,6 +506,8 @@ msgstr "Provocări"
 #: model:ir.model.fields,help:gamification.field_gamification_badge_rule_max
 msgid "Check to set a monthly limit per person of sending this badge"
 msgstr ""
+"Bifați pentru a seta o limită lunară pe persoană pentru trimiterea acestei "
+"ecusoane"
 
 #. module: gamification
 #: model:ir.actions.act_window,help:gamification.badge_list_action
@@ -625,7 +641,7 @@ msgstr "Câmp de dată"
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge_category
 msgid "Define the visibility of the challenge through menus"
-msgstr ""
+msgstr "Definiți vizibilitate provocare prin meniuri"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_computation_mode
@@ -634,6 +650,8 @@ msgid ""
 "Defined how will be computed the goals. The result of the operation will be "
 "stored in the field 'Current'."
 msgstr ""
+"S-a definit cum vor fi calculate obiectivele. Rezultatul operației va fi "
+"stocat în câmpul „Curent”."
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_description_3077
@@ -650,12 +668,12 @@ msgstr ""
 #: model:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid ""
 "Describe the challenge: what is does, who it targets, why it matters..."
-msgstr ""
+msgstr "Descrieți provocarea: ce este, cine vizează, de ce contează ..."
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.view_badge_wizard_grant
 msgid "Describe what they did and why it matters (will be public)"
-msgstr ""
+msgstr "Descrieți ce au făcut și de ce contează (va fi public)"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_description
@@ -776,7 +794,7 @@ msgstr "Pentru al treilea utilizator"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_reward_id
 msgid "For Every Succeeding User"
-msgstr ""
+msgstr "Pentru fiecare utilizator care are succes"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_definition_form_view
@@ -939,7 +957,7 @@ msgstr "Grupează după"
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge_report_message_group_id
 msgid "Group that will receive a copy of the report in addition to the user"
-msgstr ""
+msgstr "Grup care va primi o copie a raportului în plus față de utilizator"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.challenge_search_view
@@ -959,7 +977,7 @@ msgstr "Cum se calculează obiectivul?"
 #. module: gamification
 #: selection:gamification.challenge,category:0
 msgid "Human Resources / Engagement"
-msgstr ""
+msgstr "Resurse umane / Angajament"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_id
@@ -981,7 +999,7 @@ msgstr "Câmp pt. ID utilizator"
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge_remaining_sending
 msgid "If a maximum is set"
-msgstr ""
+msgstr "Dacă maximul este un set"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge_user_challenge_id
@@ -1114,7 +1132,7 @@ msgstr "Lista obiectivelor ce vor fi setate"
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge_user_ids
 msgid "List of users participating to the challenge"
-msgstr ""
+msgstr "Lista utilizatorilor care participă la provocare"
 
 #. module: gamification
 #: model:gamification.goal.definition,name:gamification.definition_nbr_following

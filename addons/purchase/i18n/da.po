@@ -3,24 +3,26 @@
 # * purchase
 # 
 # Translators:
-# Martin Trigaux, 2016
-# Sanne Kristensen <sanne@vkdata.dk>, 2016
-# Ejner Sønniksen <ejner@vkdata.dk>, 2016
 # peso <peer.sommerlund@gmail.com>, 2016
+# Jesper Carstensen <jc@danodoo.dk>, 2016
 # Jesper Carstensen <info@danodoo.dk>, 2016
 # Morten Schou <ms@msteknik.dk>, 2016
-# Jesper Carstensen <jc@danodoo.dk>, 2016
-# Pernille Kristensen <pernillekristensen1994@gmail.com>, 2016
+# Pernille Kristensen <pernillekristensen1994@gmail.com>, 2017
 # Kenneth Hansen <kenneth@vkdata.dk>, 2017
 # Hans Henrik Gabelgaard <hhg@gabelgaard.org>, 2017
-# lhmflexerp <lhm@flexerp.dk>, 2017
+# Ejner Sønniksen <ejner@vkdata.dk>, 2017
+# Martin Trigaux, 2017
+# Sanne Kristensen <sanne@vkdata.dk>, 2018
+# lhmflexerp <lhm@flexerp.dk>, 2019
+# Mads Søndergaard, 2020
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-06-23 13:27+0000\n"
-"PO-Revision-Date: 2017-06-23 13:27+0000\n"
-"Last-Translator: lhmflexerp <lhm@flexerp.dk>, 2017\n"
+"PO-Revision-Date: 2016-09-07 09:27+0000\n"
+"Last-Translator: Mads Søndergaard, 2020\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -427,7 +429,7 @@ msgstr "Køb"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_stock_warehouse_buy_pull_id
 msgid "Buy rule"
-msgstr ""
+msgstr "Indkøbsregel"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_calendar
@@ -667,7 +669,7 @@ msgstr "Udført"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_company_po_double_validation_amount
 msgid "Double validation amount"
-msgstr ""
+msgstr "Dobbelt godkendelse mængde"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_config_settings_po_double_validation_amount
@@ -884,6 +886,9 @@ msgid ""
 "Orders for procuring products, they will be scheduled that many days earlier"
 " to cope with unexpected vendor delays."
 msgstr ""
+"Fejlmargin på leverandør lede tider. Når et system generere købsordre for "
+"indkøb af produkter, vil de blive planlægt så mange dage tidligere, for at "
+"håndtere uventede leverandør forsinkelser."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_partner_purchase_warn_msg
@@ -901,7 +906,7 @@ msgstr "Note på indkøbsordrelinie"
 #: model:ir.model.fields,help:purchase.field_purchase_config_settings_po_double_validation_amount
 #: model:ir.model.fields,help:purchase.field_res_company_po_double_validation_amount
 msgid "Minimum amount for which a double validation is required"
-msgstr ""
+msgstr "Minimum mængde hvorfor en dobbelt godkendelse påkræves"
 
 #. module: purchase
 #: model:ir.filters,name:purchase.filter_purchase_order_monthly_purchases
@@ -1157,7 +1162,7 @@ msgstr "Produkter har kun en måleenhed (det er lettere)"
 #: model:ir.model.fields,help:purchase.field_purchase_config_settings_po_double_validation
 #: model:ir.model.fields,help:purchase.field_res_company_po_double_validation
 msgid "Provide a double validation mechanism for purchases"
-msgstr ""
+msgstr "Gør en dobbelt bekræftelse mekanisme anvendelig for køb"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_normal_action_puchased
@@ -1181,6 +1186,9 @@ msgid ""
 "purchase history and performance. From this menu you can track your "
 "negotiation performance, the delivery performance of your vendors, etc."
 msgstr ""
+"Købsanalyse gør det muligt for dig nemt at tjekke og analysere din "
+"virksomheds købshistorik og præstation. Fra denne menu kan du spore din "
+"forhandlings præstation, leverings præstationen for dine leverandører, osv."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_company_po_lead
@@ -1254,6 +1262,8 @@ msgid ""
 "Purchase Order Modification used when you want to purchase order editable "
 "after confirm"
 msgstr ""
+"Købsordre modificering brugt når du vil gøre købsordre redigerbare efter "
+"bekræftelse"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.purchase_form_action
@@ -1425,6 +1435,9 @@ msgid ""
 "matching when you receive the products as this reference is usually written "
 "on the delivery order sent by your vendor."
 msgstr ""
+"Reference af salgsordren eller bud sendt af leverandør. Bruges til "
+"sammenligning når du modtager produkterne, eftersom denne reference normalt "
+"er skrevet på leveringsordren sendt fra din leverandør."
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.purchase_report
@@ -1638,6 +1651,9 @@ msgid ""
 "                    converted into a purchase order, you will be able to control the receipt\n"
 "                    of the products and the vendor bill."
 msgstr ""
+"Anmodningen om tilbud er første skridt i købs flowet. Når det er\n"
+"                   konverteret til en købsordre, vil du være i stand til at kontrollere modtagelsen\n"
+"                   af produkterne og leverandørregninen."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_product_category_property_account_creditor_price_difference_categ
@@ -1645,6 +1661,8 @@ msgid ""
 "This account will be used to value price difference between purchase price "
 "and accounting cost."
 msgstr ""
+"Denne konto vil blive brugt til at værdisætte pris forskellen mellem "
+"købspris og regnskabs omkostninger."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_product_product_property_account_creditor_price_difference
@@ -1756,6 +1774,8 @@ msgid ""
 "Unable to cancel purchase order %s as some receptions have already been "
 "done."
 msgstr ""
+"Kan ikke annullere købsordre %s eftersom visse modtagelser allerede er "
+"fuldført."
 
 #. module: purchase
 #: code:addons/purchase/models/purchase.py:348
@@ -1900,6 +1920,9 @@ msgid ""
 "                    you receive from your vendor according to the draft\n"
 "                    document in Odoo."
 msgstr ""
+"Leverandørregninger kan forud-genereres baseret på købsordre eller kvitteringer. Dette gør dig i stand til at kontrollere regninger\n"
+"                      du modtager fra din leverandør, ud fra kladde\n"
+"                      dokumentet i Odoo."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_volume

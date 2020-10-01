@@ -9,7 +9,8 @@
 # Martin Trigaux, 2016
 # Jaroslav Helemik Nemec <nemec@helemik.cz>, 2016
 # Michal Veselý <michal@veselyberanek.net>, 2018
-# trendspotter <j.podhorecky@volny.cz>, 2019
+# trendspotter <j.podhorecky@volny.cz>, 2020
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2020
 # 
 msgid ""
 msgstr ""
@@ -17,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:56+0000\n"
 "PO-Revision-Date: 2016-09-07 09:18+0000\n"
-"Last-Translator: trendspotter <j.podhorecky@volny.cz>, 2019\n"
+"Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2020\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -602,6 +603,8 @@ msgstr "Účet nákladů"
 #: model:ir.model.fields,help:delivery.field_sale_order_carrier_id
 msgid "Fill this field if you plan to invoice the shipping based on picking."
 msgstr ""
+"Vyplňte toto pole, pokud máte v úmyslu fakturovat přepravu na základě "
+"vyzvednutí."
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -646,6 +649,10 @@ msgid ""
 "In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
 "Otherwise, this includes goods stored in any Stock Location with 'internal' type."
 msgstr ""
+"Prognóza množství (vypočteno jako množství po ruce - odchozí + příchozí)\n"
+"V souvislosti s jediným umístěním na skladě to zahrnuje zboží uložené v tomto umístění nebo jakékoli jeho děti.\n"
+"V souvislosti s jediným skladem se jedná o zboží uložené na skladovém místě tohoto skladu nebo kterékoli z jeho podřazených skladů.\n"
+"V opačném případě to zahrnuje zboží uložené na jakémkoli místě skladu s „interním“ typem."
 
 #. module: delivery
 #: model:delivery.carrier,name:delivery.free_delivery_carrier
@@ -1411,6 +1418,8 @@ msgstr ""
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_prod_environment
 msgid "Set to True if your credentials are certified for production."
 msgstr ""
+"Pokud jsou vaše přihlašovací údaje certifikovány pro výrobu, nastavte na "
+"true."
 
 #. module: delivery
 #: code:addons/delivery/models/stock_picking.py:147
@@ -1428,7 +1437,7 @@ msgstr "Cena dopravy"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_quant_package_shipping_weight
 msgid "Shipping Weight"
-msgstr ""
+msgstr "Přepravní váha"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_image_small
@@ -1585,6 +1594,9 @@ msgid ""
 "                according to your settings; on the sales order (based on the\n"
 "                quotation) or the invoice (based on the delivery orders)."
 msgstr ""
+"Tyto metody umožňují automaticky vypočítat cenu za dodání\n"
+"podle vašich nastavení; na prodejní objednávce (na základě\n"
+"nabídky) nebo faktury (na základě dodacích objednávek)."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_account_expense_id
@@ -1630,7 +1642,7 @@ msgstr "Toto je součet extra ceny všech atributů"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_margin
 msgid "This percentage will be added to the shipping price."
-msgstr ""
+msgstr "Toto procento bude připočteno k přepravní ceně."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_stock_production
@@ -1752,7 +1764,7 @@ msgstr "Počítadlo nepřečtených zpráv"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_valuation
 msgid "Valuation"
-msgstr ""
+msgstr "Ocenění"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_variable
@@ -1918,6 +1930,8 @@ msgid ""
 "Your delivery method has no redirect on courier provider's website to track "
 "this order."
 msgstr ""
+"Váš způsob doručení nemá přesměrování na webu kurýrního poskytovatele, který"
+" by sledoval tuto objednávku."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_zip_from

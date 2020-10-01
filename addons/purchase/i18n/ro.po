@@ -5,7 +5,9 @@
 # Translators:
 # Martin Trigaux, 2016
 # Cozmin Candea <office@terrabit.ro>, 2017
-# Dorin Hongu <dhongu@gmail.com>, 2019
+# Dorin Hongu <dhongu@gmail.com>, 2020
+# Foldi Robert <foldirobert@nexterp.ro>, 2020
+# Hongu Cosmin <cosmin513@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -13,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-06-23 13:27+0000\n"
 "PO-Revision-Date: 2016-09-07 09:27+0000\n"
-"Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2019\n"
+"Last-Translator: Hongu Cosmin <cosmin513@gmail.com>, 2020\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -386,7 +388,7 @@ msgstr "Cant facturată"
 #: code:addons/purchase/models/purchase.py:581
 #, python-format
 msgid "Billed Quantity"
-msgstr ""
+msgstr "Cantitate facturată"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_invoice_status
@@ -630,6 +632,8 @@ msgid ""
 "Depicts the date where the Quotation should be validated and converted into "
 "a purchase order."
 msgstr ""
+"Înfățișează data la care oferta trebuie validată și convertită într-o "
+"comandă deachiziție."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_name
@@ -662,7 +666,7 @@ msgstr "Efectuat"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_company_po_double_validation_amount
 msgid "Double validation amount"
-msgstr ""
+msgstr "Validare Dublă Valoare"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_config_settings_po_double_validation_amount
@@ -682,7 +686,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_config_settings_module_stock_dropshipping
 msgid "Dropshipping"
-msgstr ""
+msgstr "Dropshipping"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_mail_compose_message
@@ -710,7 +714,7 @@ msgstr "Filtre extinse"
 #: code:addons/purchase/models/purchase.py:559
 #, python-format
 msgid "Extra line with %s "
-msgstr ""
+msgstr "Linie Extra cu %s"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_fiscal_position_id
@@ -723,6 +727,7 @@ msgstr "Poziție fiscală"
 #: selection:res.company,po_double_validation:0
 msgid "Get 2 levels of approvals to confirm a purchase order"
 msgstr ""
+"Obțineți 2 niveluri de aprobări pentru a confirma o comandă de achiziție. "
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_weight
@@ -880,6 +885,10 @@ msgid ""
 "Orders for procuring products, they will be scheduled that many days earlier"
 " to cope with unexpected vendor delays."
 msgstr ""
+"Marja de eroare pentru termenele de plată ale vânzătorilor. Când sistemul "
+"generează comenzi de achiziție pentru achiziționarea de produse, acestea vor"
+" fi programate cu multe zile mai devreme, să facă față întârzierilor "
+"neașteptate ale vânzătorilor."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_partner_purchase_warn_msg
@@ -897,7 +906,7 @@ msgstr "Mesaj pentru linia comenzii de achiziție"
 #: model:ir.model.fields,help:purchase.field_purchase_config_settings_po_double_validation_amount
 #: model:ir.model.fields,help:purchase.field_res_company_po_double_validation_amount
 msgid "Minimum amount for which a double validation is required"
-msgstr ""
+msgstr "Valoare minimă pentru care este necesară o dublă validare"
 
 #. module: purchase
 #: model:ir.filters,name:purchase.filter_purchase_order_monthly_purchases
@@ -1151,7 +1160,7 @@ msgstr "Produsele au o singură unitate de măsură"
 #: model:ir.model.fields,help:purchase.field_purchase_config_settings_po_double_validation
 #: model:ir.model.fields,help:purchase.field_res_company_po_double_validation
 msgid "Provide a double validation mechanism for purchases"
-msgstr ""
+msgstr "Oferiți un mecanism de validare dublă pentru achiziții"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_normal_action_puchased
@@ -1175,6 +1184,10 @@ msgid ""
 "purchase history and performance. From this menu you can track your "
 "negotiation performance, the delivery performance of your vendors, etc."
 msgstr ""
+"Analiza achizițiilor vă permite să verificați și să analizați cu ușurință "
+"istoricul și performanța achizițiilor companiei. Din acest meniu puteți "
+"urmări performanțele dvs. de negociere, performanța de livrare a "
+"furnizorilor dvs. etc."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_company_po_lead
@@ -1248,6 +1261,8 @@ msgid ""
 "Purchase Order Modification used when you want to purchase order editable "
 "after confirm"
 msgstr ""
+"Modificare comandă de cumpărare utilizată atunci când doriți să cumpărați "
+"comanda modificabilă după confirmare"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.purchase_form_action
@@ -1274,7 +1289,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Purchase orders that have been invoiced."
-msgstr ""
+msgstr "Comenzi de achiziție care au fost facturate."
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
@@ -1317,6 +1332,8 @@ msgid ""
 "Put an address if you want to deliver directly from the vendor to the "
 "customer. Otherwise, keep empty to deliver to your own company."
 msgstr ""
+"Puneți o adresă dacă doriți să livrați direct de la furnizor către client. "
+"În caz contrar, păstrați-vă gol pentru a vă livra companiei."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_product_qty
@@ -1383,7 +1400,7 @@ msgstr "Cantitatea primită"
 #: code:addons/purchase/models/purchase.py:580
 #, python-format
 msgid "Received Quantity"
-msgstr ""
+msgstr "Cantitate primită"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.purchase_open_picking
@@ -1417,6 +1434,10 @@ msgid ""
 "matching when you receive the products as this reference is usually written "
 "on the delivery order sent by your vendor."
 msgstr ""
+"Referința comenzii de vânzare sau a ofertei trimise de vânzător. Este "
+"folosit pentru a face potrivirea când primiți produsele, deoarece această "
+"referință este scrisă de obicei pe comanda de livrare trimisă de către "
+"furnizor."
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.purchase_report
@@ -1581,7 +1602,7 @@ msgstr "Taxe"
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_default_location_dest_id_usage
 msgid "Technical field used to display the Drop Ship Address"
-msgstr ""
+msgstr "Câmpul tehnic utilizat pentru afișarea adresei de expediție"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_notes
@@ -1629,6 +1650,9 @@ msgid ""
 "                    converted into a purchase order, you will be able to control the receipt\n"
 "                    of the products and the vendor bill."
 msgstr ""
+"Cererea de ofertă este primul pas al fluxului de achiziții. Odată convertită"
+" într-o comandă de cumpărare, veți putea controla primirea produselor și a "
+"facturii furnizorului."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_product_category_property_account_creditor_price_difference_categ
@@ -1636,6 +1660,8 @@ msgid ""
 "This account will be used to value price difference between purchase price "
 "and accounting cost."
 msgstr ""
+"Acest cont va fi utilizat pentru a evalua diferența de preț între prețul de "
+"achiziție și costul contabil."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_product_product_property_account_creditor_price_difference
@@ -1659,6 +1685,8 @@ msgid ""
 "This currency will be used, instead of the default one, for purchases from "
 "the current partner"
 msgstr ""
+"Această monedă va fi utilizată, în locul celei implicite, pentru achizițiile"
+" de la partenerul curent"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
@@ -1830,7 +1858,7 @@ msgstr "Utilizator"
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_config_settings_company_currency_id
 msgid "Utility field to express amount currency"
-msgstr ""
+msgstr "Câmpul de utilitate pentru a exprima moneda sumei"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -1892,6 +1920,10 @@ msgid ""
 "                    you receive from your vendor according to the draft\n"
 "                    document in Odoo."
 msgstr ""
+"Facturile furnizorilor pot fi generate în prealabil pe baza comenzilor\n"
+"                    e achiziție sau a chitanțelor. Acest lucru vă permite să controlați facturile\n"
+"                    pe care le primiți de la furnizor în conformitate cu proiectul \n"
+"                   de document in Odoo."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_volume
@@ -1990,7 +2022,7 @@ msgstr ""
 #: code:addons/purchase/models/purchase.py:389
 #, python-format
 msgid "You must set a Vendor Location for this partner %s"
-msgstr ""
+msgstr "Trebuie să setați un Punct de Vânzare pentru acest partener %s"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_account_config_settings

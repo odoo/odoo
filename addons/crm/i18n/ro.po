@@ -6,8 +6,10 @@
 # Adrian Munteanu <adrian.munteanu@itconstruction.ro>, 2016
 # Simonel Criste <simi@erpsystems.ro>, 2016
 # Cozmin Candea <office@terrabit.ro>, 2017
-# Dorin Hongu <dhongu@gmail.com>, 2017
 # Martin Trigaux, 2019
+# Dorin Hongu <dhongu@gmail.com>, 2019
+# Foldi Robert <foldirobert@nexterp.ro>, 2020
+# Hongu Cosmin <cosmin513@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -15,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-06-23 13:26+0000\n"
 "PO-Revision-Date: 2016-09-07 09:18+0000\n"
-"Last-Translator: Martin Trigaux, 2019\n"
+"Last-Translator: Hongu Cosmin <cosmin513@gmail.com>, 2020\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1341,7 +1343,7 @@ msgstr "Actiunea de conversie"
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_date_conversion
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 msgid "Conversion Date"
-msgstr ""
+msgstr "Dată conversie"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
@@ -1382,7 +1384,7 @@ msgstr "Transformă în oportunitate"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead_message_bounce
 msgid "Counter of the number of bounced emails for this contact"
-msgstr ""
+msgstr "Contrare a numărului de e-mailuri rebote pentru acest contact"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report_country_id
@@ -1866,7 +1868,7 @@ msgstr "Șablon Excel"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 msgid "Exclude Opt Out"
-msgstr ""
+msgstr "Excludere renunțare"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.base_partner_merge_automatic_wizard_form
@@ -2125,7 +2127,7 @@ msgstr "Ascuns"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_activity_hidden
 msgid "Hide the subtype in the follower options"
-msgstr ""
+msgstr "Ascundeți subtipul în opțiunile de urmărire"
 
 #. module: crm
 #: selection:crm.lead,priority:0 selection:crm.opportunity.report,priority:0
@@ -2157,6 +2159,8 @@ msgid ""
 "ID of the parent record holding the alias (example: project holding the task"
 " creation alias)"
 msgstr ""
+"ID al înregistrării părinte care deține alias (exemplu: proiect care deține "
+"alias de creare a sarcinilor)"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_line_aggr_ids
@@ -2288,7 +2292,7 @@ msgstr "Jurnalul de articole conexe la contact"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "KPIs"
-msgstr ""
+msgstr "KPIs"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_date_action_last
@@ -2639,7 +2643,7 @@ msgstr "Pista in comun in Partener Oportunitate"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_automatic_wizard_maximum_group
 msgid "Maximum of Group of Contacts"
-msgstr ""
+msgstr "Maxim de grup de contacte"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_medium_id
@@ -2793,6 +2797,8 @@ msgid ""
 "Messages with internal subtypes will be visible only by employees, aka "
 "members of base_user group"
 msgstr ""
+"Mesajele cu subtipuri interne vor fi vizibile numai de angajați, de asemenea"
+" membrii grupului base_user"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_line_min_id
@@ -3086,6 +3092,9 @@ msgid ""
 " ask the Administrator if you need to merge several contacts linked to "
 "existing Journal Items."
 msgstr ""
+"Doar contactul de destinație poate fi legat de articolele din jurnal "
+"existente. Vă rugăm să întrebați administratorul dacă trebuie să îmbinați "
+"mai multe contacte legate de articole de jurnal existente."
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_case_form_view_salesteams_opportunity
@@ -3231,12 +3240,12 @@ msgstr "Altul"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Overdue Activities"
-msgstr ""
+msgstr "Activități restante"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Overdue Opportunities"
-msgstr ""
+msgstr "Oportunități întârziate"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_delay_expected
@@ -3289,6 +3298,9 @@ msgid ""
 " necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
 msgstr ""
+"Modelul părinte care deține aliasul. Modelul care deține referința alias nu "
+"este neapărat modelul dat de alias_model_id (example: project (parent_model)"
+" and task (model))"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_activity_parent_id
@@ -3297,6 +3309,9 @@ msgid ""
 " named. For example on a project, the parent_id of project subtypes refers "
 "to task-related subtypes."
 msgstr ""
+"Subtipul părinte, utilizat pentru abonament automat. Acest câmp nu este "
+"denumit corect. De exemplu pe un proiect, parent_id al subtipurilor de "
+"proiect se referă la subtipuri legate de sarcini."
 
 #. module: crm
 #: model:ir.model,name:crm.model_res_partner
@@ -3407,11 +3422,15 @@ msgid ""
 "- partners: only authenticated partners\n"
 "- followers: only followers of the related document or members of following channels\n"
 msgstr ""
+"Politica de a posta un mesaj pe document folosind mailgateway.\n"
+"- toată lumea: toată lumea poate posta\n"
+"- parteneri: numai parteneri autentificați\n"
+"- adepți: numai adepți ai documentului aferent sau membri ai canalelor următoare\n"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_preceding_activity_ids
 msgid "Preceding Activities"
-msgstr ""
+msgstr "Activități anterioare"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_log_last_activity_id
@@ -3708,7 +3727,7 @@ msgstr "Caută oportunități"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.base_partner_merge_automatic_wizard_form
 msgid "Search duplicates based on duplicated data in"
-msgstr ""
+msgstr "Căutați duplicate pe baza datelor duplicate în"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.merge_opportunity_form
@@ -3824,6 +3843,8 @@ msgstr ""
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Show all opportunities for which the next action date is before today"
 msgstr ""
+"Afișați toate oportunitățile pentru care data următoarei acțiuni este "
+"înainte de astăzi"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
@@ -3852,7 +3873,7 @@ msgstr "Omite aceste contacte"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Slides"
-msgstr ""
+msgstr "Diapozitive"
 
 #. module: crm
 #: model:crm.lead.tag,name:crm.categ_oppor2
@@ -3870,6 +3891,8 @@ msgid ""
 "Some examples of lost reasons: \"We don't have people/skill\", \"Price too "
 "high\""
 msgstr ""
+"Câteva exemple de motive pierdute: \"Nu avem oameni / abilități”, \"Preț "
+"prea mare”"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_source_id
@@ -3884,6 +3907,8 @@ msgid ""
 "Specific team that uses this stage. Other teams will not be able to see or "
 "use this stage."
 msgstr ""
+"Echipa specifică care folosește acest stagiu. Alte echipe nu vor putea vedea"
+" sau utiliza acest stagiu."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report_stage_id
@@ -3974,7 +3999,7 @@ msgstr "Trimite"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Subscription Management"
-msgstr ""
+msgstr "Managementul abonamentului"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_log_title_action
@@ -4075,6 +4100,9 @@ msgid ""
 " email that does not reply to an existing record will cause the creation of "
 "a new record of this model (e.g. a Project Task)"
 msgstr ""
+"Modelul (tipul de document Odoo) căruia îi corespunde acest alias. Orice "
+"e-mail care nu răspunde la o înregistrare existentă va determina crearea "
+"unei noi înregistrări a acestui model (de exemplu, o sarcină de proiect)"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team_alias_name
@@ -4082,6 +4110,8 @@ msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
 msgstr ""
+"Numele aliasului de e-mail, de ex. „locuri de muncă” dacă doriți să primiți "
+"e-mailuri pentru <jobs@example.odoo.com>"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead_partner_name
@@ -4354,6 +4384,7 @@ msgstr ""
 #: model:ir.actions.act_window,help:crm.crm_lost_reason_action
 msgid "Use lost reasons to explain why an opportunity is lost."
 msgstr ""
+"Folosiți motive pierdute pentru a explica de ce se pierde o oportunitate."
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.relate_partner_opportunities
@@ -4496,7 +4527,7 @@ msgstr ""
 #. module: crm
 #: model:crm.lost.reason,name:crm.lost_reason_2
 msgid "We don't have people/skills"
-msgstr ""
+msgstr "Nu avem oameni / abilități"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4597,7 +4628,7 @@ msgstr ""
 #: code:addons/crm/wizard/base_partner_merge.py:306
 #, python-format
 msgid "You cannot merge a contact with one of his parent."
-msgstr ""
+msgstr "Nu puteți îmbina un contact cu unul dintre părinții săi."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4735,7 +4766,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:crm.crm_activity_log_view_form_schedule
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 msgid "e.g. Discuss proposal"
-msgstr ""
+msgstr "de exemplu. Discutați propunerea"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor

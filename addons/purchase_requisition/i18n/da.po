@@ -3,23 +3,25 @@
 # * purchase_requisition
 # 
 # Translators:
-# Martin Trigaux, 2016
-# Ejner Sønniksen <ejner@vkdata.dk>, 2016
-# Sanne Kristensen <sanne@vkdata.dk>, 2016
-# Morten Schou <ms@msteknik.dk>, 2016
 # Jesper Carstensen <info@danodoo.dk>, 2016
+# Morten Schou <ms@msteknik.dk>, 2016
 # Jesper Carstensen <jc@danodoo.dk>, 2016
+# Martin Trigaux, 2016
 # Pernille Kristensen <pernillekristensen1994@gmail.com>, 2017
 # Kenneth Hansen <kenneth@vkdata.dk>, 2017
+# Ejner Sønniksen <ejner@vkdata.dk>, 2017
 # JonathanStein <jstein@image.dk>, 2017
 # lhmflexerp <lhm@flexerp.dk>, 2017
+# Sanne Kristensen <sanne@vkdata.dk>, 2018
+# Mads Søndergaard, 2020
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-11-14 15:54+0000\n"
-"PO-Revision-Date: 2016-11-14 15:54+0000\n"
-"Last-Translator: lhmflexerp <lhm@flexerp.dk>, 2017\n"
+"PO-Revision-Date: 2016-09-07 09:27+0000\n"
+"Last-Translator: Mads Søndergaard, 2020\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -70,7 +72,7 @@ msgstr "<strong>Planlagt bestillingsdato:</strong><br/>"
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "<strong>Selection Type:</strong><br/>"
-msgstr ""
+msgstr "<strong>Valg type:</strong><br/>"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
@@ -95,14 +97,14 @@ msgstr "Aftalereference"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_exclusive
 msgid "Agreement Selection Type"
-msgstr ""
+msgstr "Aftale valg type"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_id_10833
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_name
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_type_form
 msgid "Agreement Type"
-msgstr ""
+msgstr "Aftale type"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_account_analytic_id
@@ -118,13 +120,13 @@ msgstr "Valg af bud"
 #. module: purchase_requisition
 #: model:purchase.requisition.type,name:purchase_requisition.type_single
 msgid "Blanket Order"
-msgstr ""
+msgstr "Rammeordre"
 
 #. module: purchase_requisition
 #: model:ir.actions.report.xml,name:purchase_requisition.action_report_purchase_requisitions
 #: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "Call for Tenders"
-msgstr ""
+msgstr "Indkaldelse af bud"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
@@ -140,7 +142,7 @@ msgstr "Annulleret"
 #: code:addons/purchase_requisition/models/purchase_requisition.py:76
 #, python-format
 msgid "Cancelled by the agreement associated to this quotation."
-msgstr ""
+msgstr "Annulleret af aftalen associeret med dette tilbud."
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
@@ -208,7 +210,7 @@ msgstr "Vis navn"
 #. module: purchase_requisition
 #: selection:purchase.requisition.type,line_copy:0
 msgid "Do not create RfQ lines automatically"
-msgstr ""
+msgstr "Opret ikke RfQ linjer automatisk"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -233,6 +235,7 @@ msgstr "Slut måned"
 msgid ""
 "Example of purchase agreements include call for tenders and blanket orders."
 msgstr ""
+"Eksempel på købsaftaler inkludere indkaldelse af tilbud og rammeordre."
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
@@ -241,6 +244,9 @@ msgid ""
 "            (e.g. a year) and you order products within this agreement, benefiting\n"
 "            from the negociated prices."
 msgstr ""
+"For en rammeordre kan du registrere en aftale for en specifik periode\n"
+"             (f.eks. et år) og du bestiller produkter indenfor denne aftale, med\n"
+"             fordelen af priser du har forhandlet dig frem til."
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -262,6 +268,10 @@ msgid ""
 "            been registered, you can review and compare them and you can\n"
 "            validate some and cancel others."
 msgstr ""
+"I indkaldelse af udbud kan du registrere produkterne du skal købe,\n"
+"           og generere oprettelsen af RfQ'er til leveranddøre. Når udbudene er\n"
+"           blevet registreret, kan det gennemgå og sammenligne dem, og du kan \n"
+"           godkende visse og annullere andre."
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -371,7 +381,7 @@ msgstr "Varer der skal købes"
 #. module: purchase_requisition
 #: selection:product.template,purchase_requisition:0
 msgid "Propose a call for tenders"
-msgstr ""
+msgstr "Foreslå en indkaldelse om udbud"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order_requisition_id
@@ -390,7 +400,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_type_form
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_type_tree
 msgid "Purchase Agreement Types"
-msgstr ""
+msgstr "Købs aftale typer"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition
@@ -460,7 +470,7 @@ msgstr "Antal"
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "RFQs/Orders"
-msgstr ""
+msgstr "RFQ'er/Ordre"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition_to_so
@@ -520,6 +530,9 @@ msgid ""
 "\n"
 "                    Select multiple RFQ: allows multiple purchase orders. On confirmation of a purchase order it does not cancel the remaining orders"
 msgstr ""
+"Vælg kun én RFQ (udelukkende): Når en købsordre bekræftes, annuller den tilbageværende købsordre.\n"
+"\n"
+"                     vælg flere RFQ: Muliggør flere købsordre. Ved godkendelse af købsordre, annulleres resterende ordre ikke"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_sequence
@@ -577,12 +590,12 @@ msgstr "Enhedspris"
 #. module: purchase_requisition
 #: selection:purchase.requisition.type,line_copy:0
 msgid "Use lines of agreement"
-msgstr ""
+msgstr "Brug linjer i aftale"
 
 #. module: purchase_requisition
 #: selection:purchase.requisition.type,quantity_copy:0
 msgid "Use quantities of agreement"
-msgstr ""
+msgstr "Brug mængder i aftale"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
@@ -612,6 +625,8 @@ msgid ""
 "You have to cancel or validate every RfQ before closing the purchase "
 "requisition."
 msgstr ""
+"Du skal annullere eller godkende enhver RfQ før lukning af købs "
+"rekvisitionen."
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form

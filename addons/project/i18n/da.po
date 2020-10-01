@@ -14,6 +14,7 @@
 # Sanne Kristensen <sanne@vkdata.dk>, 2018
 # Morten Schou <ms@msteknik.dk>, 2018
 # lhmflexerp <lhm@flexerp.dk>, 2019
+# Mads Søndergaard, 2020
 # 
 msgid ""
 msgstr ""
@@ -21,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-06-23 13:26+0000\n"
 "PO-Revision-Date: 2016-09-07 09:27+0000\n"
-"Last-Translator: lhmflexerp <lhm@flexerp.dk>, 2019\n"
+"Last-Translator: Mads Søndergaard, 2020\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1155,7 +1156,7 @@ msgstr ""
 #: code:addons/project/static/src/js/web_planner_project.js:63
 #, python-format
 msgid "Backlog"
-msgstr ""
+msgstr "Restordre"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_balance
@@ -1211,7 +1212,7 @@ msgstr ""
 #: model:project.task,legend_done:project.project_task_7
 #: model:project.task.type,legend_done:project.project_stage_1
 msgid "Buzz or set as done"
-msgstr ""
+msgstr "Buzz eller angiv som fuldført"
 
 #. module: project
 #: model:ir.filters,name:project.filter_task_report_responsible
@@ -1254,6 +1255,8 @@ msgid ""
 "Choose a <b>project name</b>. (e.g. Website Launch, Product Development, "
 "Office Party, etc.)"
 msgstr ""
+"Vælg et <b>projekt navn</b>. (f.eks. Website opstart, produkt udvikling, "
+"firmafest, osv.)"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_project_view_form_simplified
@@ -1588,6 +1591,10 @@ msgid ""
 "                You will use these stages in order to track the progress in\n"
 "                solving a task or an issue."
 msgstr ""
+"Definér de trin der vil blive brugt i projektet fra\n"
+"                 oprettelsen af opgaven, op til afslutning på den eller problemet.\n"
+"                 Du vil bruge disse stadier for at spore fremskridt ift løsning af\n"
+"                 opgaven eller problemet"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_kanban
@@ -2180,6 +2187,9 @@ msgid ""
 "automatically synchronized with Tasks (or optionally Issues if the Issue "
 "Tracker module is installed)."
 msgstr ""
+"Intern email associeret med dette projekt. Indgående emails synkroniseres "
+"automatisk med Opgaver (eller eventuelt Problemer, hvis Problem sporings "
+"modulet er installeret)."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2264,13 +2274,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task_legend_blocked
 #: model:ir.model.fields,field_description:project.field_project_task_type_legend_blocked
 msgid "Kanban Blocked Explanation"
-msgstr ""
+msgstr "Kanban blokeret forklaring"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_legend_normal
 #: model:ir.model.fields,field_description:project.field_project_task_type_legend_normal
 msgid "Kanban Ongoing Explanation"
-msgstr ""
+msgstr "Kanban igang forklaring"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2292,7 +2302,7 @@ msgstr "Kanban status"
 #: model:ir.model.fields,field_description:project.field_project_task_legend_done
 #: model:ir.model.fields,field_description:project.field_project_task_type_legend_done
 msgid "Kanban Valid Explanation"
-msgstr ""
+msgstr "Kanban gyldig forklaring"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2625,6 +2635,8 @@ msgid ""
 "Organize your activities (plan tasks, track issues, invoice timesheets) for "
 "internal, personal or customer projects."
 msgstr ""
+"Organiser dine aktiviteter (planlæg opgaver, spor problemer, fakturer "
+"timesedler) for interne-, personlige-, eller kundeprojekter."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2646,6 +2658,8 @@ msgid ""
 "Override the default value displayed for the blocked state for kanban "
 "selection, when the task or issue is in that stage."
 msgstr ""
+"Overskriv standard værdien vist for den blokerede tilstand for kanban "
+"udvælgelse, når sagen er i det stadie."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_legend_done
@@ -2654,6 +2668,8 @@ msgid ""
 "Override the default value displayed for the done state for kanban "
 "selection, when the task or issue is in that stage."
 msgstr ""
+"Overskriv standard værdien vist for fuldført stadiet for kanban udvælgelse, "
+"når sagen er på det stadie."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_legend_normal
@@ -2662,6 +2678,8 @@ msgid ""
 "Override the default value displayed for the normal state for kanban "
 "selection, when the task or issue is in that stage."
 msgstr ""
+"Overskriv standard værdien vist for normal tilstanden for kanban udvælgelse,"
+" når sagen er på det stadie."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_user_id
@@ -2944,7 +2962,7 @@ msgstr "Tilbageværende timer"
 #: code:addons/project/static/src/js/project.js:48
 #, python-format
 msgid "Remove Cover Image"
-msgstr ""
+msgstr "Fjern coverbillede"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3046,14 +3064,14 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Set Cover Image"
-msgstr ""
+msgstr "Angiv coverbillede"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project.js:45
 #, python-format
 msgid "Set a Cover Image"
-msgstr ""
+msgstr "Angiv et coverbillede"
 
 #. module: project
 #: model:ir.ui.menu,name:project.menu_project_general_settings
@@ -3213,7 +3231,7 @@ msgstr "Opgave Åbnet"
 #. module: project
 #: model:ir.filters,name:project.filter_task_report_task_pipe
 msgid "Task Pipe"
-msgstr ""
+msgstr "Opgave pipe"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_ready
@@ -3622,7 +3640,7 @@ msgstr ""
 #: code:addons/project/static/src/js/tour.js:88
 #, python-format
 msgid "Use the breadcrumbs to <b>go back to your tasks pipeline</b>."
-msgstr ""
+msgstr "Brug brødkrummer for at <b>gå tilbage til dine opgavers pipeline</b>."
 
 #. module: project
 #: model:project.task.type,legend_priority:project.project_stage_0
