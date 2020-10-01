@@ -573,7 +573,7 @@ return AbstractModel.extend({
                         var f = _.find(filter.filters, function (f) {return f.value === value;});
                         me = {
                             'value': value,
-                            'label': session.name + _t(" [Me]"),
+                            'label': session.name,
                             'active': !f || f.active,
                         };
                     }

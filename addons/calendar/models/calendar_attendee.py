@@ -28,11 +28,12 @@ class Attendee(models.Model):
 
     event_id = fields.Many2one(
         'calendar.event', 'Meeting linked', required=True, ondelete='cascade')
-    partner_id = fields.Many2one('res.partner', 'Contact', required=True, readonly=True)
+    partner_id = fields.Many2one('res.partner', 'Attendee', required=True, readonly=True)
     state = fields.Selection(STATE_SELECTION, string='Status', readonly=True, default='needsAction',
                              help="Status of the attendee's participation")
     common_name = fields.Char('Common name', compute='_compute_common_name', store=True)
     email = fields.Char('Email', related='partner_id.email', help="Email of Invited Person")
+    phone = fields.Char('Phone', related='partner_id.phone', help="Phone number of Invited Person")
     availability = fields.Selection(
         [('free', 'Free'), ('busy', 'Busy')], 'Free/Busy', readonly=True)
     access_token = fields.Char('Invitation Token', default=_default_access_token)

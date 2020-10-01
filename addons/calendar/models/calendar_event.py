@@ -201,14 +201,20 @@ class Meeting(models.Model):
     duration = fields.Float('Duration', compute='_compute_duration', store=True, readonly=False)
     description = fields.Text('Description')
     privacy = fields.Selection(
-        [('public', 'Everyone'),
-         ('private', 'Only me'),
+        [('public', 'Public'),
+         ('private', 'Private'),
          ('confidential', 'Only internal users')],
-        'Privacy', default='public', required=True)
+        'Privacy', default='public', required=True,
+        help="People to whom this event will be visible.")
     location = fields.Char('Location', tracking=True, help="Location of Event")
     show_as = fields.Selection(
         [('free', 'Free'),
-         ('busy', 'Busy')], 'Show Time as', default='busy', required=True)
+         ('busy', 'Busy')], 'Show as', default='busy', required=True,
+        help="If the time is shown as 'busy', this event will be visible to other people with either the full \
+        information or simply 'busy' written depending on its privacy. Use this option to let other people know \
+        that you are unavailable during that period of time. \n If the time is shown as 'free', this event won't \
+        be visible to other people at all. Use this option to let other people know that you are available during \
+        that period of time.")
 
     # linked document
     # LUL TODO use fields.Reference ?
@@ -236,12 +242,13 @@ class Meeting(models.Model):
         string='Attendees', default=_default_partners)
     alarm_ids = fields.Many2many(
         'calendar.alarm', 'calendar_alarm_calendar_event_rel',
-        string='Reminders', ondelete="restrict")
+        string='Reminders', ondelete="restrict",
+        help="Notifications sent to all attendees to remind of the meeting.")
     is_highlighted = fields.Boolean(
         compute='_compute_is_highlighted', string='Is the Event Highlighted')
 
     # RECURRENCE FIELD
-    recurrency = fields.Boolean('Recurrent', help="Recurrent Event")
+    recurrency = fields.Boolean('Recurrent')
     recurrence_id = fields.Many2one(
         'calendar.recurrence', string="Recurrence Rule", index=True)
     follow_recurrence = fields.Boolean(default=False) # Indicates if an event follows the recurrence, i.e. is not an exception

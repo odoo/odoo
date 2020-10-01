@@ -10,6 +10,7 @@ class MeetingType(models.Model):
     _description = 'Event Meeting Type'
 
     name = fields.Char('Name', required=True)
+    color = fields.Integer('Color', default=5)
 
     _sql_constraints = [
         ('name_uniq', 'unique (name)', "Tag name already exists !"),

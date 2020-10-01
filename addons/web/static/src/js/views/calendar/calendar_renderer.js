@@ -141,23 +141,19 @@ var SidebarFilter = Widget.extend(FieldManagerMixin, {
     _onFilterRemove: function (e) {
         var self = this;
         var $filter = $(e.currentTarget).closest('.o_calendar_filter_item');
-        Dialog.confirm(this, _t("Do you really want to delete this filter from favorites ?"), {
-            confirm_callback: function () {
-                self._rpc({
-                        model: self.write_model,
-                        method: 'unlink',
-                        args: [[$filter.data('id')]],
-                    })
-                    .then(function () {
-                        self.trigger_up('changeFilter', {
-                            'fieldName': self.fieldName,
-                            'id': $filter.data('id'),
-                            'active': false,
-                            'value': $filter.data('value'),
-                        });
-                    });
-            },
-        });
+        self._rpc({
+                model: self.write_model,
+                method: 'unlink',
+                args: [[$filter.data('id')]],
+            })
+            .then(function () {
+                self.trigger_up('changeFilter', {
+                    'fieldName': self.fieldName,
+                    'id': $filter.data('id'),
+                    'active': false,
+                    'value': $filter.data('value'),
+                });
+            });
     },
 });
 
