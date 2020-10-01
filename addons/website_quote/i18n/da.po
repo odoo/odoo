@@ -3,25 +3,28 @@
 # * website_quote
 # 
 # Translators:
-# Martin Trigaux, 2016
-# Morten Schou <ms@msteknik.dk>, 2016
 # jonas jensen <j.jensen@tcomp.dk>, 2016
-# Per Rasmussen <perhgrasmussen@gmail.com>, 2016
 # Jesper Carstensen <info@danodoo.dk>, 2016
 # Jesper Carstensen <jc@danodoo.dk>, 2016
-# Visti Kristensen <visti@vkdata.dk>, 2016
-# Sanne Kristensen <sanne@vkdata.dk>, 2016
+# Per Rasmussen <perhgrasmussen@gmail.com>, 2016
+# Morten Schou <ms@msteknik.dk>, 2016
+# Visti Kristensen <visti@vkdata.dk>, 2017
 # Pernille Kristensen <pernillekristensen1994@gmail.com>, 2017
-# Ejner Sønniksen <ejner@vkdata.dk>, 2017
 # JonathanStein <jstein@image.dk>, 2017
+# Martin Trigaux, 2017
 # lhmflexerp <lhm@flexerp.dk>, 2017
+# Sanne Kristensen <sanne@vkdata.dk>, 2018
+# Ejner Sønniksen <ejner@vkdata.dk>, 2018
+# Simon Andersen <simon@vkdata.dk>, 2020
+# Mads Søndergaard, 2020
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-06-23 13:28+0000\n"
-"PO-Revision-Date: 2017-06-23 13:28+0000\n"
-"Last-Translator: lhmflexerp <lhm@flexerp.dk>, 2017\n"
+"PO-Revision-Date: 2016-09-07 09:33+0000\n"
+"Last-Translator: Mads Søndergaard, 2020\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -474,7 +477,7 @@ msgstr "Avancet JQuery"
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_order_amount_undiscounted
 msgid "Amount Before Discount"
-msgstr ""
+msgstr "Beløb før rabat"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_form
@@ -867,6 +870,7 @@ msgstr ""
 #: model:ir.model.fields,help:website_quote.field_sale_quote_line_sequence
 msgid "Gives the sequence order when displaying a list of sale quote lines."
 msgstr ""
+"angiver sekvens rækkefølgen ved visning af en liste og salgs tilbud linjer."
 
 #. module: website_quote
 #: model:ir.model.fields,help:website_quote.field_sale_order_option_sequence
@@ -882,6 +886,11 @@ msgid ""
 "                                your references, your methodology or\n"
 "                                guarantees, your team, SLA, terms and conditions, etc."
 msgstr ""
+"Gode tilbuds skabeloner vil \n"
+"                                   <strong>booste din succes rate markant</strong>. Den \n"
+"                                    første sektion er typisk om dit firma,\n"
+"                                    dine referencer, din metodik, eller\n"
+"                                    garantier, dit hld, SLA, betingelser og vilkår, osv."
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
@@ -968,7 +977,7 @@ msgstr ""
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "Incl. tax)"
-msgstr ""
+msgstr "Inkl. moms)"
 
 #. module: website_quote
 #: model:sale.quote.option,website_description:website_quote.website_sale_option_line_1
@@ -1178,7 +1187,7 @@ msgstr ""
 #. module: website_quote
 #: model:ir.model.fields,help:website_quote.field_sale_quote_template_number_of_days
 msgid "Number of days for the validity date computation of the quotation"
-msgstr ""
+msgstr "Antal dage for validerings dato udregningen på tilbuddet"
 
 #. module: website_quote
 #: model:sale.quote.option,website_description:website_quote.website_sale_option_line_1
@@ -1251,7 +1260,7 @@ msgstr "Valgfrit Produkt:"
 #: model:ir.model.fields,field_description:website_quote.field_sale_order_options
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_template_options
 msgid "Optional Products Lines"
-msgstr ""
+msgstr "Valgfrie produkt linjer"
 
 #. module: website_quote
 #: code:addons/website_quote/models/sale_order.py:169
@@ -1454,7 +1463,7 @@ msgstr "Tilbud"
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_template_number_of_days
 msgid "Quotation Duration"
-msgstr ""
+msgstr "Tilbud varighed"
 
 #. module: website_quote
 #: model:ir.model,name:website_quote.model_sale_quote_option
@@ -1540,7 +1549,7 @@ msgstr "Krav"
 #. module: website_quote
 #: model:ir.model,name:website_quote.model_sale_order_option
 msgid "Sale Options"
-msgstr ""
+msgstr "Salgs indstillinger"
 
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_order_option_order_id
@@ -1886,12 +1895,17 @@ msgid ""
 "                        on the left is generated automatically using the styles you\n"
 "                        used in your description (heading 1, heading 2, ...)"
 msgstr ""
+"Du kan <strong>angive en beskrivelse per produkt</strong>. Odoo vil\n"
+"                         automatisk oprette et tilbud der anvender beskrivelser\n"
+"                         fra alle produkter i tilbuddet. Indholdsfortegnelsen\n"
+"                         til venstre er genereret automatisk ud fra de stile du\n"
+"                         brugte i din beskrivelse (titel 1, titel 2, ...)"
 
 #. module: website_quote
 #: code:addons/website_quote/controllers/main.py:134
 #, python-format
 msgid "You cannot add options to a confirmed order."
-msgstr ""
+msgstr "Du kan ikke tilføje muligheder til en bekræftet ordre."
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation_content

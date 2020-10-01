@@ -18,7 +18,8 @@
 # Tim Siu Lai <tl@roomsfor.hk>, 2017
 # 前園義博 <yoshihiro.maezono@pro-spire.co.jp>, 2018
 # Takuya Sawada <takuya@tuntunkun.com>, 2018
-# Yoshi Tashiro <tashiro@roomsfor.hk>, 2019
+# Hau Dao <hau@quartile.co>, 2020
+# Yoshi Tashiro <tashiro@roomsfor.hk>, 2020
 # 
 msgid ""
 msgstr ""
@@ -26,7 +27,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-05-26 08:44+0000\n"
 "PO-Revision-Date: 2016-09-07 09:15+0000\n"
-"Last-Translator: Yoshi Tashiro <tashiro@roomsfor.hk>, 2019\n"
+"Last-Translator: Yoshi Tashiro <tashiro@roomsfor.hk>, 2020\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2382,7 +2383,7 @@ msgstr "異なる会社の口座には、資金移動できません。"
 #: code:addons/account/models/account_move.py:205
 #, python-format
 msgid "Cannot create unbalanced journal entry."
-msgstr ""
+msgstr "貸借不一致の仕訳は作成できません。"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:477
@@ -3931,7 +3932,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:884
 #, python-format
 msgid "Either pass both debit and credit or none."
-msgstr ""
+msgstr "借方と貸方の両方を渡すか、どれも渡さない。"
 
 #. module: account
 #: model:ir.model,name:account.model_mail_compose_message
@@ -5268,7 +5269,7 @@ msgid ""
 "It is not allowed to delete a payment that already created a journal entry "
 "since it would create a gap in the numbering. You should create the journal "
 "entry again and cancel it thanks to a regular revert."
-msgstr ""
+msgstr "仕訳が作成された支払は削除できません(番号の隙間を防ぐため)。必要に応じて仕訳を再作成の上逆仕訳を作成することで取り消してください。"
 
 #. module: account
 #. openerp-web
@@ -6451,7 +6452,7 @@ msgid ""
 "                        to modify them. The invoices will receive a unique\n"
 "                        number and journal items will be created in your chart\n"
 "                        of accounts."
-msgstr ""
+msgstr "ドラフト請求書を確認後、請求書を修正することはできません。請求書には一意の番号が振られ、会計仕訳が生成されます。"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_config_settings
@@ -6678,7 +6679,7 @@ msgstr "督促メッセージ *"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "Overdue invoices, maturity date passed"
-msgstr ""
+msgstr "延滞した請求書、及び満期日が過ぎました"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_legal_statement
@@ -8959,7 +8960,7 @@ msgstr ""
 msgid ""
 "There are still unposted entries in the period you want to lock. You should "
 "either post or delete them."
-msgstr ""
+msgstr "ロックしようとしている期間に未記帳の会計仕訳が存在します。先にこれらを記帳または削除してください。"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:172
@@ -10078,7 +10079,7 @@ msgstr ""
 #, python-format
 msgid ""
 "You cannot add/modify entries prior to and inclusive of the lock date %s"
-msgstr ""
+msgstr "ロック日 %s 以前の日付で仕訳を作成/修正することはできません。"
 
 #. module: account
 #: code:addons/account/models/account_move.py:187
@@ -10087,6 +10088,7 @@ msgid ""
 "You cannot add/modify entries prior to and inclusive of the lock date %s. "
 "Check the company settings or ask someone with the 'Adviser' role"
 msgstr ""
+"ロック日 %s 以前の日付で仕訳を作成/修正することはできません。会社設定を確認するか、「請求マネジャー」権限を持つユーザにご相談ください。"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:938
@@ -10166,6 +10168,8 @@ msgid ""
 "You cannot do this modification on a reconciled entry. You can just change some non legal fields or you must unreconcile first.\n"
 "%s."
 msgstr ""
+"この操作は消込済の仕訳では受け付けられません。会計実績に影響する項目を調整するには、まず消込を取り消してください。\n"
+"%s"
 
 #. module: account
 #: code:addons/account/models/account.py:366
