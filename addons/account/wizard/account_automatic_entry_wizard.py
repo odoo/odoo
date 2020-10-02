@@ -41,7 +41,8 @@ class AutomaticEntryWizard(models.TransientModel):
 
     # change account
     destination_account_id = fields.Many2one(string="To", comodel_name='account.account', help="Account to transfer to.")
-    display_currency_helper = fields.Boolean(string="Currency Conversion Helper", compute='_compute_display_currency_helper', help="Technical field used to indicate whether or not to display the tooltip informing a currency conversion will be performed with the transfer")
+    display_currency_helper = fields.Boolean(string="Currency Conversion Helper", compute='_compute_display_currency_helper',
+        help="Technical field. Used to indicate whether or not to display the currency conversion tooltip. The tooltip informs a currency conversion will be performed with the transfer.")
 
     @api.constrains('percentage', 'action')
     def _constraint_percentage(self):
