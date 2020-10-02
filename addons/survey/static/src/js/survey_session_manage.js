@@ -385,7 +385,7 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend({
                 self.attendeesCount = questionResults.attendees_count;
 
                 if (self.resultsChart && questionResults.question_statistics_graph) {
-                    self.resultsChart.updateChart(JSON.parse(questionResults.question_statistics_graph), self.attendeesCount);
+                    self.resultsChart.updateChart(JSON.parse(questionResults.question_statistics_graph));
                 } else if (self.textAnswers) {
                     self.textAnswers.updateTextAnswers(questionResults.input_line_values);
                 }
@@ -452,7 +452,6 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend({
 
         if (!this.isStartScreen && this.showBarChart) {
             this.resultsChart = new SurveySessionChart(this, {
-                attendeesCount: this.attendeesCount,
                 questionType: this.$el.data('questionType'),
                 answersValidity: this.$el.data('answersValidity'),
                 hasCorrectAnswers: this.hasCorrectAnswers,
