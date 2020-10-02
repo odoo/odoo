@@ -426,7 +426,8 @@ QUnit.test('show message subject if thread is mailing channel', async function (
     );
 });
 
-QUnit.test('new messages separator on posting message', async function (assert) {
+QUnit.test('[technical] new messages separator on posting message', async function (assert) {
+    // technical as we need to remove focus from text input to avoid `channel_seen` call
     assert.expect(4);
 
     this.data['mail.channel'].records = [{
@@ -434,8 +435,14 @@ QUnit.test('new messages separator on posting message', async function (assert) 
         id: 20,
         is_pinned: true,
         message_unread_counter: 0,
+        seen_message_id: 10,
         name: "General",
     }];
+    this.data['mail.message'].records.push({
+        body: "first message",
+        channel_ids: [20],
+        id: 10,
+    });
     await this.start();
     const thread = this.env.models['mail.thread'].findFromIdentifyingData({
         id: 20,
@@ -447,10 +454,10 @@ QUnit.test('new messages separator on posting message', async function (assert) 
     });
     await this.createThreadViewComponent(threadViewer.threadView, { hasComposer: true });
 
-    assert.containsNone(
+    assert.containsOnce(
         document.body,
-        '.o_MessageList_message',
-        "should have no messages"
+        '.o_Message',
+        "should display one message in thread initially"
     );
     assert.containsNone(
         document.body,
@@ -460,13 +467,17 @@ QUnit.test('new messages separator on posting message', async function (assert) 
 
     document.querySelector('.o_ComposerTextInput_textarea').focus();
     await afterNextRender(() => document.execCommand('insertText', false, "hey !"));
-    await afterNextRender(() =>
-        document.querySelector('.o_Composer_buttonSend').click()
-    );
-    assert.containsOnce(
+    await afterNextRender(() => {
+        // need to remove focus from text area to avoid channel_seen
+        document.querySelector('.o_Composer_buttonSend').focus();
+        document.querySelector('.o_Composer_buttonSend').click();
+
+    });
+    assert.containsN(
         document.body,
         '.o_Message',
-        "should have the message current partner just posted"
+        2,
+        "should display 2 messages (initial & newly posted), after posting a message"
     );
     assert.containsNone(
         document.body,

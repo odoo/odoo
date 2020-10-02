@@ -959,6 +959,11 @@ MockServer.include({
         );
         if (kwargs.author_id === this.currentPartnerId) {
             this._mockMailChannel_SetLastSeenMessage([channel.id], messageId);
+        } else {
+            this._mockWrite('mail.channel', [
+                [channel.id],
+                { message_unread_counter: (channel.message_unread_counter || 0) + 1 },
+            ])
         }
         return messageId;
     },

@@ -1868,6 +1868,116 @@ QUnit.test('chat window does not fetch messages if hidden', async function (asse
     );
 });
 
+QUnit.test('new message separator is shown in a chat window of a chat on receiving new message', async function (assert) {
+    assert.expect(6);
+
+    this.data['res.partner'].records.push({ id: 10, name: "Demo" });
+    this.data['res.users'].records.push({
+        id: 42,
+        name: "Foreigner user",
+        partner_id: 10,
+    });
+    this.data['mail.channel'].records = [
+        {
+            id: 10,
+            channel_type: "chat",
+            is_minimized: true,
+            is_pinned: false,
+            members: [this.data.currentPartnerId, 10],
+            message_unread_counter: 0,
+            uuid: 'channel-10-uuid',
+        },
+    ];
+    await this.start({
+        mockRPC(route, args) {
+            if (args.method === 'channel_fold') {
+                const channel_uuid = args.kwargs.uuid;
+                assert.strictEqual(channel_uuid, 'channel-10-uuid', "chat window fold state should have been sent to server");
+                assert.step(`rpc:channel_fold:${channel_uuid}`);
+            }
+            return this._super(...arguments);
+        },
+    });
+
+    // simulate receiving a message
+    await afterNextRender(async () => this.env.services.rpc({
+        route: '/mail/chat_post',
+        params: {
+            context: {
+                mockedUserId: 42,
+            },
+            uuid: 'channel-10-uuid',
+            message_content: "hu",
+        },
+    }));
+    assert.containsOnce(
+        document.body,
+        '.o_ChatWindow',
+        "a chat window should be visible after receiving a new message from a chat"
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_Message',
+        "chat window should have a single message (the newly received one)"
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_MessageList_separatorNewMessages',
+        "should display 'new messages' separator in the conversation, from reception of new messages"
+    );
+    assert.verifySteps(
+        ['rpc:channel_fold:channel-10-uuid'],
+        "fold state of chat window of chat should have been updated to server"
+    );
+});
+
+QUnit.test('focusing a chat window of a chat should make new message separator disappear [REQUIRE FOCUS]', async function (assert) {
+    assert.expect(2);
+
+    this.data['res.partner'].records.push({ id: 10, name: "Demo" });
+    this.data['res.users'].records.push({
+        id: 42,
+        name: "Foreigner user",
+        partner_id: 10,
+    });
+    this.data['mail.channel'].records = [
+        {
+            id: 10,
+            channel_type: "chat",
+            is_minimized: true,
+            is_pinned: false,
+            members: [this.data.currentPartnerId, 10],
+            message_unread_counter: 0,
+            uuid: 'channel-10-uuid',
+        },
+    ];
+    await this.start();
+
+    // simulate receiving a message
+    await afterNextRender(async () => this.env.services.rpc({
+        route: '/mail/chat_post',
+        params: {
+            context: {
+                mockedUserId: 42,
+            },
+            uuid: 'channel-10-uuid',
+            message_content: "hu",
+        },
+    }));
+    assert.containsOnce(
+        document.body,
+        '.o_MessageList_separatorNewMessages',
+        "should display 'new messages' separator in the conversation, from reception of new messages"
+    );
+
+    await afterNextRender(() => document.querySelector('.o_ComposerTextInput_textarea').focus());
+    assert.containsNone(
+        document.body,
+        '.o_MessageList_separatorNewMessages',
+        "new message separator should no longer be shown, after focus on composer text input of chat window"
+    );
+});
+
 });
 });
 });
