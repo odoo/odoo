@@ -11,7 +11,6 @@ publicWidget.registry.SurveySessionChart = publicWidget.Widget.extend({
         this.questionType = options.questionType;
         this.answersValidity = options.answersValidity;
         this.hasCorrectAnswers = options.hasCorrectAnswers;
-        this.attendeesCount = options.attendeesCount || 0;
         this.questionStatistics = this._processQuestionStatistics(options.questionStatistics);
         this.showInputs = options.showInputs;
         this.showAnswers = false;
@@ -35,6 +34,7 @@ publicWidget.registry.SurveySessionChart = publicWidget.Widget.extend({
      * that will automatically add animations to show the new number.
      *
      * @param {Object} questionStatistics object containing chart data (counts / labels / ...)
+     * @param {Integer} newAttendeesCount: max height of chart, not used anymore (deprecated)
      */
     updateChart: function (questionStatistics, newAttendeesCount) {
         if (questionStatistics) {
@@ -50,10 +50,6 @@ publicWidget.registry.SurveySessionChart = publicWidget.Widget.extend({
                     value = this.questionStatistics[i].count;
                 }
                 this.chart.data.datasets[0].data[i] = value;
-            }
-
-            if (newAttendeesCount) {
-                this.chart.config.options.scales.yAxes[0].ticks.max = newAttendeesCount + 1;
             }
 
             this.chart.update();
@@ -102,7 +98,7 @@ publicWidget.registry.SurveySessionChart = publicWidget.Widget.extend({
      *   (see _getBackgroundColor for details)
      * - The ticks are bigger and bolded to be able to see them better on a big screen (projector)
      * - We don't use tooltips to keep it as simple as possible
-     * - We use a "suggestedMax" being the attendeesCount +1
+     * - We don't set a suggestedMin or Max so that Chart will adapt automatically himself based on the given data
      *   The '+1' part is a small trick to avoid the datalabels to be clipped in height
      * - We use a custom 'datalabels' plugin to be able to display the number value on top of the
      *   associated bar of the chart.
@@ -140,8 +136,6 @@ publicWidget.registry.SurveySessionChart = publicWidget.Widget.extend({
                     yAxes: [{
                         ticks: {
                             display: false,
-                            suggestedMin: 0,
-                            suggestedMax: this.attendeesCount + 1,
                         },
                         gridLines: {
                             display: false
@@ -167,7 +161,7 @@ publicWidget.registry.SurveySessionChart = publicWidget.Widget.extend({
                     padding: {
                         left: 0,
                         right: 0,
-                        top: 50,
+                        top: 70,
                         bottom: 0
                     }
                 }
