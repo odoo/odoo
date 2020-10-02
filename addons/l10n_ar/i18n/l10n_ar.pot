@@ -163,7 +163,9 @@ msgid "<strong>VAT Cond: </strong>"
 msgstr ""
 
 #. module: l10n_ar
+#: model:ir.model.fields,help:l10n_ar.field_account_bank_statement_line__l10n_ar_afip_concept
 #: model:ir.model.fields,help:l10n_ar.field_account_move__l10n_ar_afip_concept
+#: model:ir.model.fields,help:l10n_ar.field_account_payment__l10n_ar_afip_concept
 msgid ""
 "A concept is suggested regarding the type of the products on the invoice but"
 " it is allowed to force a different type if required."
@@ -184,7 +186,9 @@ msgid "AFIP Code"
 msgstr ""
 
 #. module: l10n_ar
+#: model:ir.model.fields,field_description:l10n_ar.field_account_bank_statement_line__l10n_ar_afip_concept
 #: model:ir.model.fields,field_description:l10n_ar.field_account_move__l10n_ar_afip_concept
+#: model:ir.model.fields,field_description:l10n_ar.field_account_payment__l10n_ar_afip_concept
 msgid "AFIP Concept"
 msgstr ""
 
@@ -210,7 +214,9 @@ msgstr ""
 
 #. module: l10n_ar
 #: model:ir.model,name:l10n_ar.model_l10n_ar_afip_responsibility_type
+#: model:ir.model.fields,field_description:l10n_ar.field_account_bank_statement_line__l10n_ar_afip_responsibility_type_id
 #: model:ir.model.fields,field_description:l10n_ar.field_account_move__l10n_ar_afip_responsibility_type_id
+#: model:ir.model.fields,field_description:l10n_ar.field_account_payment__l10n_ar_afip_responsibility_type_id
 #: model:ir.model.fields,field_description:l10n_ar.field_res_company__l10n_ar_afip_responsibility_type_id
 #: model:ir.model.fields,field_description:l10n_ar.field_res_partner__l10n_ar_afip_responsibility_type_id
 #: model:ir.model.fields,field_description:l10n_ar.field_res_users__l10n_ar_afip_responsibility_type_id
@@ -229,12 +235,16 @@ msgid "AFIP Responsibility Types"
 msgstr ""
 
 #. module: l10n_ar
+#: model:ir.model.fields,field_description:l10n_ar.field_account_bank_statement_line__l10n_ar_afip_service_end
 #: model:ir.model.fields,field_description:l10n_ar.field_account_move__l10n_ar_afip_service_end
+#: model:ir.model.fields,field_description:l10n_ar.field_account_payment__l10n_ar_afip_service_end
 msgid "AFIP Service End Date"
 msgstr ""
 
 #. module: l10n_ar
+#: model:ir.model.fields,field_description:l10n_ar.field_account_bank_statement_line__l10n_ar_afip_service_start
 #: model:ir.model.fields,field_description:l10n_ar.field_account_move__l10n_ar_afip_service_start
+#: model:ir.model.fields,field_description:l10n_ar.field_account_payment__l10n_ar_afip_service_start
 msgid "AFIP Service Start Date"
 msgstr ""
 
@@ -531,7 +541,9 @@ msgid "Currency"
 msgstr ""
 
 #. module: l10n_ar
+#: model:ir.model.fields,field_description:l10n_ar.field_account_bank_statement_line__l10n_ar_currency_rate
 #: model:ir.model.fields,field_description:l10n_ar.field_account_move__l10n_ar_currency_rate
+#: model:ir.model.fields,field_description:l10n_ar.field_account_payment__l10n_ar_currency_rate
 msgid "Currency Rate"
 msgstr ""
 
@@ -546,7 +558,9 @@ msgid "Date:"
 msgstr ""
 
 #. module: l10n_ar
+#: model:ir.model.fields,help:l10n_ar.field_account_bank_statement_line__l10n_ar_afip_responsibility_type_id
 #: model:ir.model.fields,help:l10n_ar.field_account_move__l10n_ar_afip_responsibility_type_id
+#: model:ir.model.fields,help:l10n_ar.field_account_payment__l10n_ar_afip_responsibility_type_id
 #: model:ir.model.fields,help:l10n_ar.field_res_company__l10n_ar_afip_responsibility_type_id
 #: model:ir.model.fields,help:l10n_ar.field_res_partner__l10n_ar_afip_responsibility_type_id
 #: model:ir.model.fields,help:l10n_ar.field_res_users__l10n_ar_afip_responsibility_type_id
@@ -557,7 +571,22 @@ msgid ""
 msgstr ""
 
 #. module: l10n_ar
+#: model:ir.model.fields,field_description:l10n_ar.field_account_chart_template__display_name
+#: model:ir.model.fields,field_description:l10n_ar.field_account_fiscal_position__display_name
+#: model:ir.model.fields,field_description:l10n_ar.field_account_fiscal_position_template__display_name
+#: model:ir.model.fields,field_description:l10n_ar.field_account_invoice_report__display_name
+#: model:ir.model.fields,field_description:l10n_ar.field_account_journal__display_name
+#: model:ir.model.fields,field_description:l10n_ar.field_account_move__display_name
+#: model:ir.model.fields,field_description:l10n_ar.field_account_tax_group__display_name
 #: model:ir.model.fields,field_description:l10n_ar.field_l10n_ar_afip_responsibility_type__display_name
+#: model:ir.model.fields,field_description:l10n_ar.field_l10n_latam_document_type__display_name
+#: model:ir.model.fields,field_description:l10n_ar.field_l10n_latam_identification_type__display_name
+#: model:ir.model.fields,field_description:l10n_ar.field_res_company__display_name
+#: model:ir.model.fields,field_description:l10n_ar.field_res_country__display_name
+#: model:ir.model.fields,field_description:l10n_ar.field_res_currency__display_name
+#: model:ir.model.fields,field_description:l10n_ar.field_res_partner__display_name
+#: model:ir.model.fields,field_description:l10n_ar.field_res_partner_bank__display_name
+#: model:ir.model.fields,field_description:l10n_ar.field_uom_uom__display_name
 msgid "Display Name"
 msgstr ""
 
@@ -672,7 +701,22 @@ msgid "Guard Service"
 msgstr ""
 
 #. module: l10n_ar
+#: model:ir.model.fields,field_description:l10n_ar.field_account_chart_template__id
+#: model:ir.model.fields,field_description:l10n_ar.field_account_fiscal_position__id
+#: model:ir.model.fields,field_description:l10n_ar.field_account_fiscal_position_template__id
+#: model:ir.model.fields,field_description:l10n_ar.field_account_invoice_report__id
+#: model:ir.model.fields,field_description:l10n_ar.field_account_journal__id
+#: model:ir.model.fields,field_description:l10n_ar.field_account_move__id
+#: model:ir.model.fields,field_description:l10n_ar.field_account_tax_group__id
 #: model:ir.model.fields,field_description:l10n_ar.field_l10n_ar_afip_responsibility_type__id
+#: model:ir.model.fields,field_description:l10n_ar.field_l10n_latam_document_type__id
+#: model:ir.model.fields,field_description:l10n_ar.field_l10n_latam_identification_type__id
+#: model:ir.model.fields,field_description:l10n_ar.field_res_company__id
+#: model:ir.model.fields,field_description:l10n_ar.field_res_country__id
+#: model:ir.model.fields,field_description:l10n_ar.field_res_currency__id
+#: model:ir.model.fields,field_description:l10n_ar.field_res_partner__id
+#: model:ir.model.fields,field_description:l10n_ar.field_res_partner_bank__id
+#: model:ir.model.fields,field_description:l10n_ar.field_uom_uom__id
 msgid "ID"
 msgstr ""
 
@@ -740,7 +784,7 @@ msgstr ""
 
 #. module: l10n_ar
 #: model:ir.model,name:l10n_ar.model_account_move
-msgid "Journal Entries"
+msgid "Journal Entry"
 msgstr ""
 
 #. module: l10n_ar
@@ -754,7 +798,22 @@ msgid "LE"
 msgstr ""
 
 #. module: l10n_ar
+#: model:ir.model.fields,field_description:l10n_ar.field_account_chart_template____last_update
+#: model:ir.model.fields,field_description:l10n_ar.field_account_fiscal_position____last_update
+#: model:ir.model.fields,field_description:l10n_ar.field_account_fiscal_position_template____last_update
+#: model:ir.model.fields,field_description:l10n_ar.field_account_invoice_report____last_update
+#: model:ir.model.fields,field_description:l10n_ar.field_account_journal____last_update
+#: model:ir.model.fields,field_description:l10n_ar.field_account_move____last_update
+#: model:ir.model.fields,field_description:l10n_ar.field_account_tax_group____last_update
 #: model:ir.model.fields,field_description:l10n_ar.field_l10n_ar_afip_responsibility_type____last_update
+#: model:ir.model.fields,field_description:l10n_ar.field_l10n_latam_document_type____last_update
+#: model:ir.model.fields,field_description:l10n_ar.field_l10n_latam_identification_type____last_update
+#: model:ir.model.fields,field_description:l10n_ar.field_res_company____last_update
+#: model:ir.model.fields,field_description:l10n_ar.field_res_country____last_update
+#: model:ir.model.fields,field_description:l10n_ar.field_res_currency____last_update
+#: model:ir.model.fields,field_description:l10n_ar.field_res_partner____last_update
+#: model:ir.model.fields,field_description:l10n_ar.field_res_partner_bank____last_update
+#: model:ir.model.fields,field_description:l10n_ar.field_uom_uom____last_update
 msgid "Last Modified on"
 msgstr ""
 
@@ -915,13 +974,13 @@ msgid "Other VAT"
 msgstr ""
 
 #. module: l10n_ar
-#: model:ir.model.fields,field_description:l10n_ar.field_account_journal__company_partner
-msgid "Partner"
+#: model_terms:ir.ui.view,arch_db:l10n_ar.report_invoice_document
+msgid "Page: <span class=\"page\"/> / <span class=\"topage\"/>"
 msgstr ""
 
 #. module: l10n_ar
-#: model_terms:ir.ui.view,arch_db:l10n_ar.report_invoice_document
-msgid "Page: <span class=\"page\"/> / <span class=\"topage\"/>"
+#: model:ir.model.fields,field_description:l10n_ar.field_account_journal__company_partner
+msgid "Partner"
 msgstr ""
 
 #. module: l10n_ar
@@ -1040,6 +1099,14 @@ msgid "Template for Fiscal Position"
 msgstr ""
 
 #. module: l10n_ar
+#: code:addons/l10n_ar/models/account_move.py:0
+#, python-format
+msgid ""
+"The document number can not be changed for this journal, you can only modify"
+" the POS number if there is not posted (or posted before) invoices"
+msgstr ""
+
+#. module: l10n_ar
 #: code:addons/l10n_ar/models/l10n_latam_document_type.py:0
 #, python-format
 msgid ""
@@ -1114,6 +1181,26 @@ msgstr ""
 #. module: l10n_ar
 #: model:ir.model.fields,field_description:l10n_ar.field_account_journal__l10n_ar_share_sequences
 msgid "Unified Book"
+msgstr ""
+
+#. module: l10n_ar
+#: model:product.product,uom_name:l10n_ar.product_product_arancel
+#: model:product.product,uom_name:l10n_ar.product_product_cero
+#: model:product.product,uom_name:l10n_ar.product_product_exento
+#: model:product.product,uom_name:l10n_ar.product_product_no_gravado
+#: model:product.product,uom_name:l10n_ar.product_product_quote_despacho
+#: model:product.product,uom_name:l10n_ar.product_product_servicio_de_guarda
+#: model:product.product,uom_name:l10n_ar.product_product_tasa_estadistica
+#: model:product.product,uom_name:l10n_ar.product_product_telefonia
+#: model:product.template,uom_name:l10n_ar.product_product_arancel_product_template
+#: model:product.template,uom_name:l10n_ar.product_product_cero_product_template
+#: model:product.template,uom_name:l10n_ar.product_product_exento_product_template
+#: model:product.template,uom_name:l10n_ar.product_product_no_gravado_product_template
+#: model:product.template,uom_name:l10n_ar.product_product_quote_despacho_product_template
+#: model:product.template,uom_name:l10n_ar.product_product_servicio_de_guarda_product_template
+#: model:product.template,uom_name:l10n_ar.product_product_tasa_estadistica_product_template
+#: model:product.template,uom_name:l10n_ar.product_product_telefonia_product_template
+msgid "Units"
 msgstr ""
 
 #. module: l10n_ar
@@ -1213,7 +1300,16 @@ msgstr ""
 #: code:addons/l10n_ar/models/account_move.py:0
 #, python-format
 msgid ""
-"You are trying to create an invoice for %s but you dont have an %s journal"
+"You are trying to create an invoice for domestic partner but you don't have "
+"a domestic market journal"
+msgstr ""
+
+#. module: l10n_ar
+#: code:addons/l10n_ar/models/account_move.py:0
+#, python-format
+msgid ""
+"You are trying to create an invoice for foreign partner but you don't have "
+"an exportation journal"
 msgstr ""
 
 #. module: l10n_ar
@@ -1225,7 +1321,13 @@ msgid ""
 msgstr ""
 
 #. module: l10n_ar
-#: code:addons/l10n_ar/models/account_journal.py:0
+#, python-format
+msgid ""
+"You can not change the journal's configuration if it already has validated "
+"invoices"
+msgstr ""
+
+#. module: l10n_ar
 #, python-format
 msgid ""
 "You can not change the journal's configuration if journal already have "
@@ -1235,30 +1337,6 @@ msgstr ""
 #. module: l10n_ar
 #: model:ir.model.fields.selection,name:l10n_ar.selection__l10n_latam_document_type__purchase_aliquots__zero
 msgid "Zero"
-msgstr ""
-
-#. module: l10n_ar
-#: code:addons/l10n_ar/models/account_move.py:0
-#, python-format
-msgid "domestic market"
-msgstr ""
-
-#. module: l10n_ar
-#: code:addons/l10n_ar/models/account_move.py:0
-#, python-format
-msgid "domestic partner"
-msgstr ""
-
-#. module: l10n_ar
-#: code:addons/l10n_ar/models/account_move.py:0
-#, python-format
-msgid "exportation"
-msgstr ""
-
-#. module: l10n_ar
-#: code:addons/l10n_ar/models/account_move.py:0
-#, python-format
-msgid "foreign partner"
 msgstr ""
 
 #. module: l10n_ar
