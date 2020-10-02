@@ -8,7 +8,7 @@
     'sequence': 9876,
     'summary': 'Website Test, mainly for module install/uninstall tests',
     'description': """This module contains tests related to website. Those are
-contained in a separate module as we are testing module install/uninstall/upgrade
+present in a separate module as we are testing module install/uninstall/upgrade
 and we don't want to reload the website module every time, including it's possible
 dependencies. Neither we want to add in website module some routes, views and
 models which only purpose is to run tests.""",

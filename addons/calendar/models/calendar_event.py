@@ -135,7 +135,7 @@ class Meeting(models.Model):
         time_str = to_text(date.strftime(format_time))
 
         if zallday:
-            display_time = _("AllDay , %(day)s", day=date_str)
+            display_time = _("All Day, %(day)s", day=date_str)
         elif zduration < 24:
             duration = date + timedelta(minutes=round(zduration*60))
             duration_time = to_text(duration.strftime(format_time))

@@ -11,7 +11,9 @@ class AccountInvoiceSend(models.TransientModel):
     _description = 'Account Invoice Send'
 
     partner_id = fields.Many2one('res.partner', compute='_get_partner', string='Partner')
-    snailmail_is_letter = fields.Boolean('Send by Post', help='Allows to send the document by Snailmail (coventional posting delivery service)', default=lambda self: self.env.company.invoice_is_snailmail)
+    snailmail_is_letter = fields.Boolean('Send by Post',
+        help='Allows to send the document by Snailmail (conventional posting delivery service)',
+        default=lambda self: self.env.company.invoice_is_snailmail)
     snailmail_cost = fields.Float(string='Stamp(s)', compute='_compute_snailmail_cost', readonly=True)
     invalid_addresses = fields.Integer('Invalid Addresses Count', compute='_compute_invalid_addresses')
     invalid_invoice_ids = fields.Many2many('account.move', string='Invalid Addresses', compute='_compute_invalid_addresses')

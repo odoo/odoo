@@ -142,8 +142,8 @@ class TestCreatePicking(common.TestProductCommon):
         # Check purchase order line data.
         purchase_order_line = purchase_order.order_line
         self.assertEqual(purchase_order_line.product_id, product, 'The product on the purchase order line is not correct.')
-        self.assertEqual(purchase_order_line.price_unit, seller.price, 'The purchase order line price should be the same than the seller.')
-        self.assertEqual(purchase_order_line.product_qty, customer_move.product_uom_qty, 'The purchase order line qty should be the same than the move.')
+        self.assertEqual(purchase_order_line.price_unit, seller.price, 'The purchase order line price should be the same as the seller.')
+        self.assertEqual(purchase_order_line.product_qty, customer_move.product_uom_qty, 'The purchase order line qty should be the same as the move.')
         self.assertEqual(purchase_order_line.price_subtotal, 1200.0, 'The purchase order line subtotal should be equal to the move qty * seller price.')
 
         purchase_order.button_cancel()
@@ -283,8 +283,8 @@ class TestCreatePicking(common.TestProductCommon):
         # Check purchase order line data.
         purchase_order_line = purchase_order.order_line
         self.assertEqual(purchase_order_line.product_id, product, 'The product on the purchase order line is not correct.')
-        self.assertEqual(purchase_order_line.price_unit, seller.price, 'The purchase order line price should be the same than the seller.')
-        self.assertEqual(purchase_order_line.product_qty, customer_move.product_uom_qty, 'The purchase order line qty should be the same than the move.')
+        self.assertEqual(purchase_order_line.price_unit, seller.price, 'The purchase order line price should be the same as the seller.')
+        self.assertEqual(purchase_order_line.product_qty, customer_move.product_uom_qty, 'The purchase order line qty should be the same as the move.')
 
         purchase_order.button_confirm()
 

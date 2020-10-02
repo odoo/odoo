@@ -78,7 +78,7 @@ class MassMailing(models.Model):
     schedule_date = fields.Datetime(string='Scheduled for', tracking=True)
     # don't translate 'body_arch', the translations are only on 'body_html'
     body_arch = fields.Html(string='Body', translate=False)
-    body_html = fields.Html(string='Body converted to be send by mail', sanitize_attributes=False)
+    body_html = fields.Html(string='Body converted to be sent by mail', sanitize_attributes=False)
     attachment_ids = fields.Many2many('ir.attachment', 'mass_mailing_ir_attachments_rel',
         'mass_mailing_id', 'attachment_id', string='Attachments')
     keep_archives = fields.Boolean(string='Keep Archives')

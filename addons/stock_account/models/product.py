@@ -718,7 +718,7 @@ class ProductCategory(models.Model):
             valuation_account = category.property_stock_valuation_account_id
             input_and_output_accounts = category.property_stock_account_input_categ_id | category.property_stock_account_output_categ_id
             if valuation_account and valuation_account in input_and_output_accounts:
-                raise ValidationError(_('The Stock Input and/or Output accounts cannot be the same than the Stock Valuation account.'))
+                raise ValidationError(_('The Stock Input and/or Output accounts cannot be the same as the Stock Valuation account.'))
 
     @api.onchange('property_cost_method')
     def onchange_property_valuation(self):

@@ -4965,7 +4965,7 @@ QUnit.module('Views', {
         assert.strictEqual(form.$('button .o_field_widget').children().length, 2,
             "the field widget should have 2 children, the text and the value");
         assert.strictEqual(parseInt(form.$('button .o_field_widget .o_stat_value').text()), 9,
-            "the value rendered should be the same than the field value");
+            "the value rendered should be the same as the field value");
         form.destroy();
     });
 

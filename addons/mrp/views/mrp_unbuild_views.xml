@@ -33,7 +33,7 @@
                             help="Show all records which has next action date is before today"/>
                         <filter invisible="1" string="Today Activities" name="activities_today"
                             domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
-                        <filter invisible="1" string="Future Activitie" name="activities_upcoming_all"
+                        <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
                             domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
                     </group>
                     <group expand='0' string='Group by...'>

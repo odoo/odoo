@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-29 14:03+0000\n"
-"PO-Revision-Date: 2020-09-29 14:03+0000\n"
+"POT-Creation-Date: 2020-10-02 14:25+0000\n"
+"PO-Revision-Date: 2020-10-02 14:25+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -1866,22 +1866,6 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,description:base.module_base_gengo
-msgid ""
-"\n"
-"Automated Translations through Gengo API\n"
-"========================================\n"
-"\n"
-"This module will install passive scheduler job for automated translations \n"
-"using the Gengo API. To activate it, you must\n"
-"1) Configure your Gengo authentication parameters under `Settings > Companies > Gengo Parameters`\n"
-"2) Launch the wizard under `Settings > Application Terms > Gengo: Manual Request of Translation` and follow the wizard.\n"
-"\n"
-"This wizard will activate the CRON job and the Scheduler and will start the automatic translation via Gengo Services for all the terms where you requested it.\n"
-"    "
-msgstr ""
-
-#. module: base
 #: model:ir.module.module,description:base.module_l10n_et
 msgid ""
 "\n"
@@ -2441,6 +2425,24 @@ msgid ""
 "\n"
 "This module add completed courses to resumé for employees.\n"
 "        "
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_cl_edi
+msgid ""
+"\n"
+"EDI Chilean Localization\n"
+"========================\n"
+"This code allows to generate the DTE document for Chilean invoicing.\n"
+"- DTE (Electronic Taxable Document) format in XML\n"
+"- Direct Communication with SII (Servicio de Impuestos Internos) to send invoices and other tax documents related to sales.\n"
+"- Communication with Customers to send sale DTEs.\n"
+"- Communication with Suppliers (vendors) to accept DTEs from them.\n"
+"- Direct Communication with SII informing the acceptance or rejection of vendor bills or other DTEs.\n"
+"\n"
+" In order to see the barcode on the invoice, you need the pdf417gen library.\n"
+"\n"
+"    "
 msgstr ""
 
 #. module: base
@@ -5053,14 +5055,6 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,description:base.module_website_gengo
-msgid ""
-"\n"
-"This module allows to send website content to Gengo translation service in a single click. Gengo then gives back the translated terms in the destination language.\n"
-"    "
-msgstr ""
-
-#. module: base
 #: model:ir.module.module,description:base.module_mrp_landed_costs
 msgid ""
 "\n"
@@ -5862,7 +5856,7 @@ msgstr ""
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
-msgid "%w - Weekday number [0(Sunday),6].\""
+msgid "%w - Day of the week number [0(Sunday),6].\""
 msgstr ""
 
 #. module: base
@@ -6811,6 +6805,11 @@ msgid "Access to unauthorized or invalid companies."
 msgstr ""
 
 #. module: base
+#: model:ir.module.category,name:base.module_category_account
+msgid "Account"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_account_auto_transfer
 msgid "Account Automatic Transfers"
 msgstr ""
@@ -7485,6 +7484,11 @@ msgstr ""
 #: model:ir.module.module,description:base.module_payment_adyen
 #: model:ir.module.module,shortdesc:base.module_payment_adyen
 msgid "Adyen Payment Acquirer"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_adyen_platforms
+msgid "Adyen for Platforms"
 msgstr ""
 
 #. module: base
@@ -8171,11 +8175,6 @@ msgid "Automated Action based on Employee Contracts"
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_base_gengo
-msgid "Automated Translations through Gengo API"
-msgstr ""
-
-#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module__auto_install
 msgid "Automatic Installation"
 msgstr ""
@@ -8453,6 +8452,16 @@ msgstr ""
 #: code:addons/base/models/res_lang.py:0
 #, python-format
 msgid "Base Language 'en_US' can not be deleted."
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_adyen_platforms
+msgid "Base Module for Adyen for Platforms"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_adyen_platforms
+msgid "Base Module for Adyen for Platforms, used in eCommerce and PoS"
 msgstr ""
 
 #. module: base
@@ -9294,6 +9303,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_cl_reports
 msgid "Chile - Accounting Reports"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_cl_edi
+msgid "Chile - E-invoicing"
 msgstr ""
 
 #. module: base
@@ -13232,11 +13246,6 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_website_gengo
-msgid "Gengo Translator"
-msgstr ""
-
-#. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__partner_latitude
 #: model:ir.model.fields,field_description:base.field_res_users__partner_latitude
 msgid "Geo Latitude"
@@ -15932,6 +15941,11 @@ msgid "Localization"
 msgstr ""
 
 #. module: base
+#: model:ir.module.category,name:base.module_category_account_localizations
+msgid "Localizations"
+msgstr ""
+
+#. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_logging_form_view
 msgid "Log"
 msgstr ""
@@ -18262,6 +18276,16 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_payment_odoo_by_adyen
+msgid "Odoo Payments by Adyen"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_payment_odoo_by_adyen
+msgid "Odoo Payments by Adyen Payment Acquirer"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_point_of_sale
 msgid ""
 "Odoo Point of Sale\n"
@@ -18517,11 +18541,6 @@ msgid ""
 "Get your website translated in multiple languages with no effort. Odoo proposes\n"
 "and propagates translations automatically across pages, following what you edit\n"
 "on the master page.\n"
-"\n"
-"Benefit from professional translators to translate all your contents\n"
-"automatically with the [Gengo](http://gengo.com) integration. Update any part\n"
-"of your website and the translated versions are pushed automatically in a few\n"
-"hours.\n"
 "\n"
 "Designer-Friendly Templates\n"
 "---------------------------\n"
@@ -19648,6 +19667,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_ingenico
 msgid "Payment Acquirer: Ingenico Implementation"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_payment_odoo_by_adyen
+msgid "Payment Acquirer: Odoo Payments by Adyen"
 msgstr ""
 
 #. module: base
@@ -22632,8 +22656,18 @@ msgid "Submit, validate and reinvoice employee expenses"
 msgstr ""
 
 #. module: base
+#: model:ir.module.category,name:base.module_category_sales_subscription
+msgid "Subscription"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_subscription_sepa_direct_debit
 msgid "Subscription SEPA Direct Debit"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_sale_subscription_timesheet
+msgid "Subscription and Timesheet"
 msgstr ""
 
 #. module: base
@@ -22770,6 +22804,11 @@ msgid "Synchronization with the external timesheet application"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,summary:base.module_sale_subscription_timesheet
+msgid "Synchronize data between timesheet and subscriptions"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.sy
 msgid "Syria"
 msgstr ""
@@ -22817,13 +22856,6 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.wizard_lang_export
 msgid "TGZ format: bundles multiple PO(T) files as a single archive"
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,description:base.module_website_event_track_gantt
-msgid ""
-"THis module helps analyzing and organizing event tracks.\n"
-"For that purpose it adds a gantt view on event tracks."
 msgstr ""
 
 #. module: base
@@ -23722,7 +23754,7 @@ msgstr ""
 #: model:ir.module.module,description:base.module_test_base_automation
 msgid ""
 "This module contains tests related to base automation. Those are\n"
-"contained in a separate module as it contains models used only to perform\n"
+"present in a separate module as it contains models used only to perform\n"
 "tests independently to functional aspects of other models."
 msgstr ""
 
@@ -23730,7 +23762,7 @@ msgstr ""
 #: model:ir.module.module,description:base.module_test_mail
 msgid ""
 "This module contains tests related to mail. Those are\n"
-"contained in a separate module as it contains models used only to perform\n"
+"present in a separate module as it contains models used only to perform\n"
 "tests independently to functional aspects of other models. "
 msgstr ""
 
@@ -23738,7 +23770,7 @@ msgstr ""
 #: model:ir.module.module,description:base.module_test_mail_enterprise
 msgid ""
 "This module contains tests related to mail. Those are\n"
-"contained in a separate module as it contains models used only to perform\n"
+"present in a separate module as it contains models used only to perform\n"
 "tests independently to functional aspects of other models. Moreover most of\n"
 "modules build on mail (sms, snailmail, mail_enterprise) are set as dependencies\n"
 "in order to test the whole mail codebase. "
@@ -23748,7 +23780,7 @@ msgstr ""
 #: model:ir.module.module,description:base.module_test_mass_mailing
 msgid ""
 "This module contains tests related to mass mailing. Those\n"
-"are contained in a separate module to use specific test models defined in\n"
+"are present in a separate module to use specific test models defined in\n"
 "test_mail. "
 msgstr ""
 
@@ -23756,7 +23788,7 @@ msgstr ""
 #: model:ir.module.module,description:base.module_test_web_grid
 msgid ""
 "This module contains tests related to the web grid view. Those are\n"
-"contained in a separate module as it contains models used only to perform\n"
+"present in a separate module as it contains models used only to perform\n"
 "tests independently to functional aspects of other models. "
 msgstr ""
 
@@ -23764,7 +23796,7 @@ msgstr ""
 #: model:ir.module.module,description:base.module_test_timer
 msgid ""
 "This module contains tests related to timer. Those are\n"
-"contained in a separate module as it contains models used only to perform\n"
+"present in a separate module as it contains models used only to perform\n"
 "tests independently to functional aspects of other models. "
 msgstr ""
 
@@ -23772,7 +23804,7 @@ msgstr ""
 #: model:ir.module.module,description:base.module_test_mail_full
 msgid ""
 "This module contains tests related to various mail features\n"
-"and mail-related sub modules. Those tests are contained in a separate module as it\n"
+"and mail-related sub modules. Those tests are present in a separate module as it\n"
 "contains models used only to perform tests independently to functional aspects of\n"
 "real applications. "
 msgstr ""
@@ -23781,7 +23813,7 @@ msgstr ""
 #: model:ir.module.module,description:base.module_test_web_cohort
 msgid ""
 "This module contains tests related to web cohort. Those are\n"
-"contained in a separate module as it contains models used only to perform\n"
+"present in a separate module as it contains models used only to perform\n"
 "tests independently to functional aspects of other models. "
 msgstr ""
 
@@ -23789,10 +23821,17 @@ msgstr ""
 #: model:ir.module.module,description:base.module_test_website
 msgid ""
 "This module contains tests related to website. Those are\n"
-"contained in a separate module as we are testing module install/uninstall/upgrade\n"
+"present in a separate module as we are testing module install/uninstall/upgrade\n"
 "and we don't want to reload the website module every time, including it's possible\n"
 "dependencies. Neither we want to add in website module some routes, views and\n"
 "models which only purpose is to run tests."
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_sale_subscription_timesheet
+msgid ""
+"This module ensure that data (such as analytic accounts) defined on the sale"
+" order via timesheet app are correctly set also on subscriptions"
 msgstr ""
 
 #. module: base
@@ -23807,6 +23846,13 @@ msgstr ""
 msgid ""
 "This module ensures that when delivery price is computed online, and taxes are computed with TaxCloud, the tax computation is done correctly on both the order and delivery.\n"
 "    "
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_website_event_track_gantt
+msgid ""
+"This module helps analyzing and organizing event tracks.\n"
+"For that purpose it adds a gantt view on event tracks."
 msgstr ""
 
 #. module: base
@@ -24151,11 +24197,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_model_fields_search
 #, python-format
 msgid "Translate"
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,summary:base.module_website_gengo
-msgid "Translate website in one-click"
 msgstr ""
 
 #. module: base

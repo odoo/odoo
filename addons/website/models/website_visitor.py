@@ -137,7 +137,7 @@ class WebsiteVisitor(models.Model):
     def action_send_mail(self):
         self.ensure_one()
         if not self._check_for_message_composer():
-            raise UserError(_("There is no contact and/or no email linked this visitor."))
+            raise UserError(_("There are no contact and/or no email linked to this visitor."))
         visitor_composer_ctx = self._prepare_message_composer_context()
         compose_form = self.env.ref('mail.email_compose_message_wizard_form', False)
         compose_ctx = dict(

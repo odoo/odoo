@@ -8,7 +8,8 @@ from odoo.exceptions import UserError
 class ResCurrency(models.Model):
     _inherit = 'res.currency'
 
-    display_rounding_warning = fields.Boolean(string="Display Rounding Warning", compute='_compute_display_rounding_warning', help="Technical field used to tell whether or not to display the warning informing a rounding factor change might be dangerous on res.currency's form view.")
+    display_rounding_warning = fields.Boolean(string="Display Rounding Warning", compute='_compute_display_rounding_warning',
+        help="Technical field. Used to tell whether or not to display the rounding warning. The warning informs a rounding factor change might be dangerous on res.currency's form view.")
 
 
     @api.depends('rounding')
