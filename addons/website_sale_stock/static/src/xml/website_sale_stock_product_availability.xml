@@ -6,12 +6,12 @@
         <t t-if="product_type == 'product' and _.contains(['always', 'threshold'], inventory_availability)">
             <t t-if="virtual_available gt 0">
                 <div t-if="inventory_availability == 'always'" t-attf-class="availability_message_#{product_template} text-success mt16">
-                    <t t-esc="virtual_available" /> <t t-esc="uom_name" /> available
+                    <t t-esc="virtual_available_formatted" /> <t t-esc="uom_name" /> available
                 </div>
                 <t t-if="inventory_availability == 'threshold'">
                     <div t-if="virtual_available lte available_threshold" t-attf-class="availability_message_#{product_template} text-warning mt16">
                         <i class="fa fa-exclamation-triangle" title="Warning" role="img" aria-label="Warning"/>
-                        <t t-esc="virtual_available" /> <t t-esc="uom_name" /> available
+                        <t t-esc="virtual_available_formatted" /> <t t-esc="uom_name" /> available
                     </div>
                     <div t-if="virtual_available gt available_threshold" t-attf-class="availability_message_#{product_template} text-success mt16">In stock</div>
                 </t>
