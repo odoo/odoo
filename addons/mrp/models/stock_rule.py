@@ -72,6 +72,26 @@ class StockRule(models.Model):
                                                       subtype_id=self.env.ref('mail.mt_note').id)
         return True
 
+    @api.model
+    def _run_pull(self, procurements):
+        # Override to correctly assign the move generated from the pull
+        # in its production order (pbm_sam only)
+        for procurement, rule in procurements:
+            warehouse_id = rule.warehouse_id
+            if not warehouse_id:
+                warehouse_id = rule.location_id.get_warehouse()
+            if rule.picking_type_id == warehouse_id.sam_type_id:
+                manu_type_id = warehouse_id.manu_type_id
+                if manu_type_id:
+                    name = manu_type_id.sequence_id.next_by_id()
+                else:
+                    name = self.env['ir.sequence'].next_by_code('mrp.production') or _('New')
+                # Create now the procurement group that will be assigned to the new MO
+                # This ensure that the outgoing move PostProduction -> Stock is linked to its MO
+                # rather than the original record (MO or SO)
+                procurement.values['group_id'] = self.env["procurement.group"].create({'name': name})
+        return super()._run_pull(procurements)
+
     def _get_custom_move_fields(self):
         fields = super(StockRule, self)._get_custom_move_fields()
         fields += ['bom_line_id']
@@ -86,7 +106,7 @@ class StockRule(models.Model):
     def _prepare_mo_vals(self, product_id, product_qty, product_uom, location_id, name, origin, company_id, values, bom):
         date_planned = self._get_date_planned(product_id, company_id, values)
         date_deadline = values.get('date_deadline') or date_planned + relativedelta(days=company_id.manufacturing_lead) + relativedelta(days=product_id.produce_delay)
-        return {
+        mo_values = {
             'origin': origin,
             'product_id': product_id.id,
             'product_description_variants': values.get('product_description_variants'),
@@ -105,6 +125,16 @@ class StockRule(models.Model):
             'move_dest_ids': values.get('move_dest_ids') and [(4, x.id) for x in values['move_dest_ids']] or False,
             'user_id': False,
         }
+        # Use the procurement group created in _run_pull mrp override
+        # Preserve the origin from the original stock move, if available
+        if location_id.get_warehouse().manufacture_steps == 'pbm_sam' and values.get('move_dest_ids') and values.get('group_id') and values['move_dest_ids'][0].origin != values['group_id'].name:
+            origin = values['move_dest_ids'][0].origin
+            mo_values.update({
+                'name': values['group_id'].name,
+                'procurement_group_id': values['group_id'].id,
+                'origin': origin,
+            })
+        return mo_values
 
     def _get_date_planned(self, product_id, company_id, values):
         format_date_planned = fields.Datetime.from_string(values['date_planned'])
