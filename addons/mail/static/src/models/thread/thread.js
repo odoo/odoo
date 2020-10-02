@@ -164,13 +164,6 @@ function factory(dependencies) {
             }
             if ('is_pinned' in data) {
                 data2.isServerPinned = data.is_pinned;
-                // FIXME: The following is admittedly odd.
-                // Fixing it should entail a deeper reflexion on the group_based_subscription
-                // and is_pinned functionalities, especially in python.
-                // task-2284357
-                if ('group_based_subscription' in data && data.group_based_subscription) {
-                    data2.isServerPinned = true;
-                }
             }
             if ('last_message' in data && data.last_message) {
                 data2.messagesAsServerChannel.push(['insert', { id: data.last_message.id }]);
