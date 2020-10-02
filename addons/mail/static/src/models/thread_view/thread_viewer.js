@@ -19,6 +19,12 @@ function factory(dependencies) {
             if (!this.threadCache) {
                 return;
             }
+            if (this.chatter) {
+                // Initial scroll position is disabled for chatter because it is
+                // too complex to handle correctly and less important
+                // functionally.
+                return;
+            }
             this.update({
                 threadCacheInitialScrollPositions: Object.assign({}, this.threadCacheInitialScrollPositions, {
                     [this.threadCache.localId]: scrollTop,
