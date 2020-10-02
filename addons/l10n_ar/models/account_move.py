@@ -137,7 +137,7 @@ class AccountMove(models.Model):
             elif res_code not in ['9', '10'] and rec.journal_id.l10n_ar_afip_pos_system in expo_journals:
                 # if partner is NOT foregin and journal is for expo, we try to change to local journal
                 journal = journal.search(domain + [('l10n_ar_afip_pos_system', 'not in', expo_journals)], limit=1)
-                msg = _('You are trying to create an invoice for domestic partner but you don\'t have an domestic market journal')
+                msg = _('You are trying to create an invoice for domestic partner but you don\'t have a domestic market journal')
             if journal:
                 rec.journal_id = journal.id
             elif msg:
