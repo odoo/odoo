@@ -1,11 +1,9 @@
-Description of the issue/feature this PR addresses:
+# Descrição
 
-Current behavior before PR:
+Descrição do PR
 
-Desired behavior after PR is merged:
+# Informações adicionais
 
+Dados da tarefa: [code](link)
 
-
-
---
-I confirm I have signed the CLA and read the PR guidelines at www.odoo.com/submit-pr
+PR(s) relacionado(s) (se houver):
