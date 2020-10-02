@@ -25,6 +25,19 @@ odoo.define('web.web_client', function (require) {
         window.addEventListener("resize", updateEnv);
     }
 
+    async function registerPosServiceWorker() {
+        if (!('serviceWorker' in navigator)) {
+            console.warn('serviceWorker is not available in your browser.');
+            return;
+        }
+        try {
+            const registration = await navigator.serviceWorker.register('/pos-service-worker', { scope: '/pos/' });
+            console.log('serviceWorker registration successful with scope:', registration.scope);
+        } catch (error) {
+            console.error('serviceWorker registration failed.', error);
+        }
+    }
+
     setupResponsivePlugin(owl.Component.env);
 
     async function startPosApp(webClient) {
@@ -36,6 +49,7 @@ odoo.define('web.web_client', function (require) {
         await webClient.setElement(document.body);
         await webClient.start();
         webClient.isStarted = true;
+        await registerPosServiceWorker();
         const chrome = new (Registries.Component.get(Chrome))(null, { webClient });
         await chrome.mount(document.querySelector('.o_action_manager'));
         await chrome.start();

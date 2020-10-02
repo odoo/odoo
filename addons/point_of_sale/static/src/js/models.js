@@ -104,9 +104,30 @@ exports.PosModel = Backbone.Model.extend({
         // We fetch the backend data on the server asynchronously. this is done only when the pos user interface is launched,
         // Any change on this data made on the server is thus not reflected on the point of sale until it is relaunched.
         // when all the data has loaded, we compute some stuff, and declare the Pos ready to be used.
-        this.ready = this.load_server_data().then(function(){
-            return self.after_load_server_data();
-        });
+        // While fetching data from the server, we allow the data to be cached in IndexedDB. We, however, only allow a
+        // time window for when the data are cached. We do this using the state variable `stopCaching`. Basically,
+        // when `stopCaching` is false, POST requests are continuously cached in IDB. And once data loading is done,
+        // we set `stopCaching` to true which stops the POST request caching in the serviceWorker. See `cacheTheRequest`
+        // in pos-service-worker.js for more info.
+        this.ready = new Promise(async (resolve) => {
+            if (!(await this._allowCaching())) {
+                await this._invalidateCaches();
+                await this.load_server_data();
+            } else {
+                // We keep track of the pos_session_id.
+                // If the newly opened pos.session differs from the previously used pos.session,
+                // we invalidate the cache. This makes sure that the indexeddb cache is regularly cleared.
+                if (await PosIDB.get('pos_session_id') !== odoo.pos_session_id) {
+                    await this._invalidateCaches();
+                    await PosIDB.set('pos_session_id', odoo.pos_session_id);
+                }
+                await PosIDB.set('stopCaching', false);
+                await this.load_server_data();
+            }
+            // We make sure to stop the caching of POST request when server data is loaded.
+            await PosIDB.set('stopCaching', true);
+            resolve(self.after_load_server_data());
+        })
     },
     after_load_server_data: function(){
         this.load_orders();
@@ -119,6 +140,28 @@ exports.PosModel = Backbone.Model.extend({
             return this.connect_to_proxy();
         }
         return Promise.resolve();
+    },
+    _allowCaching: async function() {
+        const swRegistration =
+                ('serviceWorker' in navigator && (await navigator.serviceWorker.getRegistration('/pos/'))) || false;
+        return (
+            swRegistration &&
+            swRegistration.active &&
+            swRegistration.active.state === 'activated'
+        );
+    },
+    /**
+     * Clear both the IndexedDB and CacheStorage used in caching.
+     */
+    _invalidateCaches: async function() {
+        await PosIDB.clear();
+        try {
+            // It is possible that there is no serviceWorker.
+            // If that's the case, using `caches` will result to `ReferenceError`.
+            await caches.delete('POS-ASSETS');
+        } catch (error) {
+            console.warn(error);
+        }
     },
     // releases ressources holds by the model at the end of life of the posmodel
     destroy: function(){
@@ -186,7 +229,7 @@ exports.PosModel = Backbone.Model.extend({
 
     },{
         model:  'res.company',
-        fields: [ 'currency_id', 'email', 'website', 'company_registry', 'vat', 'name', 'phone', 'partner_id' , 'country_id', 'state_id', 'tax_calculation_rounding_method'],
+        fields: [ 'currency_id', 'email', 'website', 'company_registry', 'vat', 'name', 'phone', 'partner_id' , 'country_id', 'state_id', 'tax_calculation_rounding_method', 'write_date'],
         ids:    function(self){ return [self.session.user_context.allowed_company_ids[0]]; },
         loaded: function(self,companies){ self.company = companies[0]; },
     },{
@@ -601,7 +644,7 @@ exports.PosModel = Backbone.Model.extend({
                     reject();
                 };
                 self.company_logo.crossOrigin = "anonymous";
-                self.company_logo.src = '/web/binary/company_logo' + '?dbname=' + self.session.db + '&company=' + self.company.id + '&_' + Math.random();
+                self.company_logo.src = '/web/binary/company_logo' + '?dbname=' + self.session.db + '&company=' + self.company.id + '&write_date=' + self.company.write_date;
             });
         },
     }, {

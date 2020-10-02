@@ -40,6 +40,7 @@
         <meta name="apple-mobile-web-app-capable" content="yes"/>
         <meta name="mobile-web-app-capable" content="yes"/>
 
+        <link rel="manifest" href="/pos/manifest.webmanifest" crossorigin="use-credentials"/>
         <link rel="shortcut icon"    sizes="196x196" href="/point_of_sale/static/src/img/touch-icon-196.png"/>
         <link rel="shortcut icon"    sizes="128x128" href="/point_of_sale/static/src/img/touch-icon-128.png"/>
         <link rel="apple-touch-icon"                 href="/point_of_sale/static/src/img/touch-icon-iphone.png"/>
@@ -57,6 +58,7 @@
                 'session_info': session_info,
                 'login_number': login_number,
                 'debug': debug,
+                'pos_session_id': pos_session_id,
             })"/>;
         </script>
 
