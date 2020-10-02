@@ -387,7 +387,7 @@ notifications.
 
 The solutions to support livechat/motifications in a WSGI application are:
 
-* Deploy a threaded version of Odoo (instread of a process-based preforking
+* Deploy a threaded version of Odoo (instead of a process-based preforking
   one) and redirect only requests to URLs starting with ``/longpolling/`` to
   that Odoo, this is the simplest and the longpolling URL can double up as
   the cron instance.
