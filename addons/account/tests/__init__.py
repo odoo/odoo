@@ -15,6 +15,7 @@ from . import test_account_move_name_sequencing
 from . import test_account_move_switch_invoice_to_refund
 from . import test_account_move_misc
 from . import test_account_move_reversal_wizard
+from . import test_account_move_storno_accounting
 from . import test_account_journal
 from . import test_account_account
 from . import test_account_tax

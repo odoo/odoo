@@ -72,6 +72,7 @@ class ResCompany(models.Model):
         domain=lambda self: "[('internal_type', '=', 'other'), ('deprecated', '=', False), ('company_id', '=', id), \
                              ('user_type_id', '=', %s)]" % self.env.ref('account.data_account_type_expenses').id)
     anglo_saxon_accounting = fields.Boolean(string="Use anglo-saxon accounting")
+    use_storno_accounting = fields.Boolean(string="Use Storno Accounting")
     property_stock_account_input_categ_id = fields.Many2one('account.account', string="Input Account for Stock Valuation")
     property_stock_account_output_categ_id = fields.Many2one('account.account', string="Output Account for Stock Valuation")
     property_stock_valuation_account_id = fields.Many2one('account.account', string="Account Template for Stock Valuation")

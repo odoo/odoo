@@ -158,6 +158,10 @@ class AccountMove(models.Model):
     statement_line_id = fields.Many2one(
         comodel_name='account.bank.statement.line',
         string="Statement Line", copy=False, check_company=True)
+    use_storno_accounting = fields.Boolean(
+        string="Use Storno Accounting",
+        store=True, readonly=False,
+        compute='_compute_use_storno_accounting')
 
     # === Amount fields ===
     amount_untaxed = fields.Monetary(string='Untaxed Amount', store=True, readonly=True, tracking=True,
@@ -299,6 +303,23 @@ class AccountMove(models.Model):
     string_to_hash = fields.Char(compute='_compute_string_to_hash', readonly=True)
 
     # -------------------------------------------------------------------------
+    # HELPERS
+    # -------------------------------------------------------------------------
+
+    def _convert_to_debit_credit(self, balance):
+        self.ensure_one()
+        if self.use_storno_accounting:
+            return {
+                'debit': balance if balance < 0.0 else 0.0,
+                'credit': -balance if balance > 0.0 else 0.0,
+            }
+        else:
+            return {
+                'debit': balance if balance > 0.0 else 0.0,
+                'credit': -balance if balance < 0.0 else 0.0,
+            }
+
+    # -------------------------------------------------------------------------
     # DYNAMIC LINES
     # -------------------------------------------------------------------------
 
@@ -379,7 +400,7 @@ class AccountMove(models.Model):
                 handle_price_include = False
                 quantity = 1.0
                 tax_type = base_line.tax_ids[0].type_tax_use if base_line.tax_ids else None
-                is_refund = (tax_type == 'sale' and base_line.debit) or (tax_type == 'purchase' and base_line.credit)
+                is_refund = (tax_type == 'sale' and base_line.balance > 0.0) or (tax_type == 'purchase' and base_line.balance < 0.0)
                 price_unit_wo_discount = base_line.amount_currency
 
             balance_taxes_res = base_line.tax_ids._origin.compute_all(
@@ -491,9 +512,8 @@ class AccountMove(models.Model):
             )
             to_write_line.update({
                 **taxes_map_entry['grouping_dict'],
+                **self._convert_to_debit_credit(balance),
                 'amount_currency': taxes_map_entry['amount'],
-                'debit': balance > 0.0 and balance or 0.0,
-                'credit': balance < 0.0 and -balance or 0.0,
                 'tax_base_amount': tax_base_amount,
             })
 
@@ -556,8 +576,7 @@ class AccountMove(models.Model):
             :return:                        The newly created rounding line.
             '''
             rounding_line_vals = {
-                'debit': diff_balance > 0.0 and diff_balance or 0.0,
-                'credit': diff_balance < 0.0 and -diff_balance or 0.0,
+                **self._convert_to_debit_credit(diff_balance),
                 'quantity': 1.0,
                 'amount_currency': diff_amount_currency,
                 'move_id': self.id,
@@ -722,17 +741,15 @@ class AccountMove(models.Model):
                     candidate = existing_terms_lines[existing_terms_lines_index]
                     existing_terms_lines_index += 1
                     to_write['line_ids'].append((1, candidate.id, {
+                        **self._convert_to_debit_credit(-balance),
                         'date_maturity': date_maturity,
                         'amount_currency': -amount_currency,
-                        'debit': balance < 0.0 and -balance or 0.0,
-                        'credit': balance > 0.0 and balance or 0.0,
                     }))
                 else:
                     # Create new line.
                     to_write['line_ids'].append((0, 0, {
+                        **self._convert_to_debit_credit(-balance),
                         'name': self.payment_reference or '',
-                        'debit': balance < 0.0 and -balance or 0.0,
-                        'credit': balance > 0.0 and balance or 0.0,
                         'quantity': 1.0,
                         'amount_currency': -amount_currency,
                         'date_maturity': date_maturity,
@@ -774,8 +791,7 @@ class AccountMove(models.Model):
 
             balance = currency._convert(line.amount_currency, line.company_currency_id, line.company_id, date)
             to_write['line_ids'].append((1, line.id, {
-                'debit': balance > 0.0 and balance or 0.0,
-                'credit': balance < 0.0 and -balance or 0.0,
+                **self._convert_to_debit_credit(balance),
                 'currency_id': currency.id,
             }))
 
@@ -1177,6 +1193,16 @@ class AccountMove(models.Model):
             else:
                 move.bank_partner_id = move.company_id.partner_id
 
+    @api.depends('move_type', 'company_id', 'tax_cash_basis_move_id')
+    def _compute_use_storno_accounting(self):
+        for move in self:
+            if move.move_type in ('out_refund', 'in_refund'):
+                move.use_storno_accounting = move.company_id.use_storno_accounting
+            elif move.tax_cash_basis_move_id:
+                move.use_storno_accounting = move.tax_cash_basis_move_id.use_storno_accounting
+            else:
+                move.use_storno_accounting = move.use_storno_accounting
+
     @api.model
     def _get_invoice_in_payment_state(self):
         ''' Hook to give the state when the invoice becomes fully paid. This is necessary because the users working
@@ -1244,7 +1270,7 @@ class AccountMove(models.Model):
                         total_residual_currency += line.amount_residual_currency
                 else:
                     # === Miscellaneous journal entry ===
-                    if line.debit:
+                    if line.balance > 0.0:
                         total += line.balance
                         total_currency += line.amount_currency
 
@@ -2202,6 +2228,10 @@ class AccountMove(models.Model):
 
         move_vals = self.with_context(include_business_fields=True).copy_data(default=default_values)[0]
 
+        # Fill the 'use_storno_accounting' field. Then, the debit/credit will be inversed if necessary during the
+        # creating of account.move.line.
+        move_vals['use_storno_accounting'] = move_vals['move_type'] in ('out_refund', 'in_refund') and self.company_id.use_storno_accounting
+
         tax_repartition_lines_mapping = compute_tax_repartition_lines_mapping(move_vals)
 
         for line_command in move_vals.get('line_ids', []):
@@ -3016,14 +3046,8 @@ class AccountMoveLine(models.Model):
     _sql_constraints = [
         (
             'check_credit_debit',
-            'CHECK(credit + debit>=0 AND credit * debit=0)',
+            'CHECK(credit * debit=0)',
             'Wrong credit or debit value in accounting entry !'
-        ),
-        (
-            'check_amount_currency_balance_sign',
-            '''CHECK((debit - credit <= 0 AND amount_currency <= 0) OR (debit - credit >= 0 AND amount_currency >= 0))''',
-            "The amount expressed in the secondary currency must be positive when account is debited and negative when "
-            "account is credited."
         ),
     ]
 
@@ -3121,8 +3145,7 @@ class AccountMoveLine(models.Model):
 
             to_write.update({
                 'amount_currency': new_amount_currency,
-                'debit': balance > 0.0 and balance or 0.0,
-                'credit': balance < 0.0 and -balance or 0.0,
+                **move._convert_to_debit_credit(balance),
             })
 
         if self != self._origin:
@@ -3284,10 +3307,7 @@ class AccountMoveLine(models.Model):
             self.move_id.date or fields.Date.context_today(self),
         )
 
-        to_write = {
-            'debit': balance > 0.0 and balance or 0.0,
-            'credit': balance < 0.0 and -balance or 0.0,
-        }
+        to_write = self.move_id._convert_to_debit_credit(balance)
 
         if self != self._origin:
             self.update(to_write)
@@ -3313,8 +3333,7 @@ class AccountMoveLine(models.Model):
                 # Recompute 'debit' / 'credit' from 'amount_currency'.
 
                 balance = line.currency_id._convert(line.amount_currency, line.company_currency_id, line.company_id, line.date or fields.Date.context_today(line))
-                line.debit = balance > 0.0 and balance or 0.0
-                line.credit = balance < 0.0 and -balance or 0.0
+                (line.update if line != line._origin else line.write)(move._convert_to_debit_credit(balance))
 
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
@@ -3651,6 +3670,14 @@ class AccountMoveLine(models.Model):
             elif not line.account_id:
                 raise ValidationError("Missing required account on accountable invoice line.")
 
+    @api.constrains('debit', 'credit', 'amount_currency', 'currency_id')
+    def _check_debit_credit_sign(self):
+        for line in self:
+            if line.move_id.use_storno_accounting and (line.debit or line.credit) > 0.0:
+                raise ValidationError(_("Debit / Credit must be negative when dealing with Storno accounting."))
+            elif not line.move_id.use_storno_accounting and (line.debit or line.credit) < 0.0:
+                raise ValidationError(_("Debit / Credit must be positive."))
+
     @api.constrains('currency_id')
     def _check_required_currency(self):
         ''''currency_id' is a required field but can be expressed with required=True on field because it's a
@@ -3778,6 +3805,11 @@ class AccountMoveLine(models.Model):
                     if 'amount_currency' not in vals:
                         vals['amount_currency'] = vals.get('debit', 0.0) - vals.get('credit', 0.0)
 
+            # Fix when using storno.
+            if 'debit' in vals or 'credit' in vals:
+                balance = vals.get('debit', 0.0) - vals.get('credit', 0.0)
+                vals.update(move._convert_to_debit_credit(balance))
+
         # ===================================================================================================
         # Create
         # ===================================================================================================
@@ -3841,6 +3873,12 @@ class AccountMoveLine(models.Model):
         # ===================================================================================================
 
         if not self._context.get('write_recursion'):
+
+            for line, cleaned_vals in zip(self, vals_list):
+                # Fix debit/credit when dealing with storno accounting.
+                if 'debit' in cleaned_vals or 'credit' in cleaned_vals:
+                    balance = vals.get('debit', 0.0) - vals.get('credit', 0.0)
+                    cleaned_vals.update(line.move_id._convert_to_debit_credit(balance))
 
             # Get all tracked fields (without related fields because these fields must be manage on their own model)
             tracking_fields = []
@@ -4091,8 +4129,8 @@ class AccountMoveLine(models.Model):
 
         :return: A recordset of account.partial.reconcile.
         '''
-        debit_lines = iter(self.filtered('debit'))
-        credit_lines = iter(self.filtered('credit'))
+        debit_lines = iter(self.filtered(lambda line: line.balance > 0.0))
+        credit_lines = iter(self.filtered(lambda line: line.balance < 0.0))
         debit_line = None
         credit_line = None
 
@@ -4629,7 +4667,7 @@ class AccountMoveLine(models.Model):
         """
         result = []
         for move_line in self:
-            amount = (move_line.credit or 0.0) - (move_line.debit or 0.0)
+            amount = -move_line.balance
             default_name = move_line.name or (move_line.ref or '/' + ' -- ' + (move_line.partner_id and move_line.partner_id.name or '/'))
             result.append({
                 'name': default_name,
