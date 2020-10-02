@@ -123,7 +123,7 @@ class Inventory(models.Model):
                 negative.product_qty
             ))
         self.action_check()
-        self.write({'state': 'done'})
+        self.write({'state': 'done', 'date': fields.Datetime.now()})
         self.post_inventory()
         return True
 
