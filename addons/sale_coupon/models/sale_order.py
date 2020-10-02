@@ -256,24 +256,29 @@ class SaleOrder(models.Model):
                         email_layout_xmlid='mail.mail_notification_light',
                     )
 
-    def _get_applicable_programs(self):
+    def _get_applicable_programs(self, ids_in=False):
         """
         This method is used to return the valid applicable programs on given order.
         param: order - The sale order for which method will get applicable programs.
         """
         self.ensure_one()
-        programs = self.env['sale.coupon.program'].search([
-        ])._filter_programs_from_common_rules(self)
+        domain = []
+        if ids_in:
+            domain.append(("id", "in", ids_in))
+        programs = self.env['sale.coupon.program'].search(domain)._filter_programs_from_common_rules(self)
         if self.promo_code:
             programs._filter_promo_programs_with_code(self)
         return programs
 
-    def _get_applicable_no_code_promo_program(self):
+    def _get_applicable_no_code_promo_program(self, ids_in=False):
         self.ensure_one()
-        programs = self.env['sale.coupon.program'].search([
+        domain = [
             ('promo_code_usage', '=', 'no_code_needed'),
-            '|', ('company_id', '=', self.company_id.id), ('company_id', '=', False),
-        ])._filter_programs_from_common_rules(self)
+            '|', ('company_id', '=', self.company_id.id), ('company_id', '=', False)
+        ]
+        if ids_in:
+            domain.append(("id", "in", ids_in))
+        programs = self.env['sale.coupon.program'].search(domain)._filter_programs_from_common_rules(self)
         return programs
 
     def _get_applied_coupon_program_coming_from_another_so(self):
@@ -363,9 +368,11 @@ class SaleOrder(models.Model):
         self.ensure_one()
         order = self
 
-        applicable_programs = order._get_applicable_no_code_promo_program() + order._get_applicable_programs() + order._get_valid_applied_coupon_program()
-        applicable_programs = applicable_programs._keep_only_most_interesting_auto_applied_global_discount_program()
         applied_programs = order._get_applied_programs_with_rewards_on_current_order() + order._get_applied_programs_with_rewards_on_next_order()
+        applicable_programs = self.env['sale.coupon.program']
+        if applied_programs:
+            applicable_programs = order._get_applicable_no_code_promo_program(applied_programs.ids) + order._get_applicable_programs(applied_programs.ids) + order._get_valid_applied_coupon_program()
+            applicable_programs = applicable_programs._keep_only_most_interesting_auto_applied_global_discount_program()
         programs_to_remove = applied_programs - applicable_programs
         products_to_remove = programs_to_remove.mapped('discount_line_product_id')
 

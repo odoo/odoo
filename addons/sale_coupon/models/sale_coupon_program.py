@@ -196,13 +196,12 @@ class SaleCouponProgram(models.Model):
 
     @api.model
     def _filter_on_mimimum_amount(self, order):
-        filtered_programs = self.env['sale.coupon.program']
-
         no_effect_lines = order._get_no_effect_on_threshold_lines()
         order_amount = {
             'amount_untaxed' : order.amount_untaxed - sum([line.price_subtotal for line in no_effect_lines]),
             'amount_tax' : order.amount_tax - sum([line.price_tax for line in no_effect_lines])
         }
+        program_ids = set()
         for program in self:
             lines = order.order_line.filtered(lambda line:
                 program.reward_type == 'discount' and
@@ -214,9 +213,9 @@ class SaleCouponProgram(models.Model):
             tax_amount = order_amount['amount_tax'] - sum([line.price_tax for line in lines])
             program_amount = program._compute_program_amount('rule_minimum_amount', order.currency_id)
             if program.rule_minimum_amount_tax_inclusion == 'tax_included' and program_amount <= (untaxed_amount + tax_amount) or program.rule_minimum_amount_tax_inclusion == 'tax_excluded' and program_amount <= untaxed_amount:
-                filtered_programs |= program
+                program_ids.add(program.id)
 
-        return filtered_programs
+        return self.env['sale.coupon.program'].browse(program_ids)
 
     @api.model
     def _filter_on_validity_dates(self, order):
@@ -252,8 +251,8 @@ class SaleCouponProgram(models.Model):
             valid_products = program._get_valid_products(products)
             ordered_rule_products_qty = sum(products_qties[product] for product in valid_products)
             # Avoid program if 1 ordered foo on a program '1 foo, 1 free foo'
-            if program.promo_applicability == 'on_current_order' and \
-               program.reward_type == 'product' and program._get_valid_products(program.reward_product_id):
+            if valid_products and program.promo_applicability == 'on_current_order' and \
+               program.reward_type == 'product' and program.reward_product_id in valid_products:
                 ordered_rule_products_qty -= program.reward_product_quantity
             if ordered_rule_products_qty >= program.rule_min_quantity:
                 valid_programs |= program
