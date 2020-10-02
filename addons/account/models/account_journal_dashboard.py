@@ -315,6 +315,7 @@ class account_journal(models.Model):
             'bank_statements_source': self.bank_statements_source,
             'title': title,
             'is_sample_data': is_sample_data,
+            'company_count': len(self.env.companies)
         }
 
     def _get_open_bills_to_pay_query(self):

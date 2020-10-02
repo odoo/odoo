@@ -87,6 +87,7 @@ Master Data:
         'data/res_partner_data.xml',
         'data/res.currency.csv',
         'data/res.country.csv',
+        'views/l10n_ar.xml',
         'views/account_move_view.xml',
         'views/res_partner_view.xml',
         'views/res_company_view.xml',
@@ -100,6 +101,7 @@ Master Data:
         'views/l10n_latam_document_type_view.xml',
         'views/report_invoice.xml',
         'report/invoice_report_view.xml',
+        'data/account_chart_template_configure_data.xml',
     ],
     'demo': [
         # we create demo data on different companies (not main_company) to

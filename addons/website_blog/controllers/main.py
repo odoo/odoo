@@ -15,6 +15,7 @@ from odoo.http import request
 from odoo.osv import expression
 from odoo.tools import html2plaintext
 from odoo.tools.misc import get_lang
+from odoo.tools import sql
 
 
 class WebsiteBlog(http.Controller):
@@ -201,7 +202,7 @@ class WebsiteBlog(http.Controller):
     ], type='http', auth="public", website=True, sitemap=False)
     def old_blog_post(self, blog, blog_post, tag_id=None, page=1, enable_editor=None, **post):
         # Compatibility pre-v14
-        return request.redirect(_build_url_w_params("/blog/%s/post/%s" % (slug(blog), slug(blog_post)), request.params), code=301)
+        return request.redirect(_build_url_w_params("/blog/%s/%s" % (slug(blog), slug(blog_post)), request.params), code=301)
 
     @http.route([
         '''/blog/<model("blog.blog"):blog>/<model("blog.post", "[('blog_id','=',blog.id)]"):blog_post>''',
@@ -272,17 +273,11 @@ class WebsiteBlog(http.Controller):
         response = request.render("website_blog.blog_post_complete", values)
 
         if blog_post.id not in request.session.get('posts_viewed', []):
-            if not request.session.get('posts_viewed'):
-                request.session['posts_viewed'] = []
-
-            request.session['posts_viewed'].append(blog_post.id)
-            request.session.modified = True
-
-            # Increase counter
-            blog_post.sudo()._write({
-                'visits': blog_post.visits + 1,
-                'write_date': blog_post.write_date,
-            })
+            if sql.increment_field_skiplock(blog_post, 'visits'):
+                if not request.session.get('posts_viewed'):
+                    request.session['posts_viewed'] = []
+                request.session['posts_viewed'].append(blog_post.id)
+                request.session.modified = True
         return response
 
     @http.route('/blog/<int:blog_id>/post/new', type='http', auth="user", website=True)

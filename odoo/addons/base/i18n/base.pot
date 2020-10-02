@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.5\n"
+"Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-07 07:52+0000\n"
-"PO-Revision-Date: 2020-09-07 07:52+0000\n"
+"POT-Creation-Date: 2020-09-29 14:03+0000\n"
+"PO-Revision-Date: 2020-09-29 14:03+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -4234,6 +4234,19 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_ch_qriban
+msgid ""
+"\n"
+"Swiss localization\n"
+"==================\n"
+"Added a QR-IBAN field on bank account.\n"
+"If this field is empty, but the bank account number itself is a valid QR-IBAN number, it will still be used as QR-IBAN as before.  \n"
+"But if you fill in the new QR-IBAN field, that one will be used as the QR-IBAN.  This should help for reconciliation as \n"
+"on the bank statements, the old IBAN code is still used.  \n"
+"    "
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_l10n_ch
 msgid ""
 "\n"
@@ -6151,6 +6164,13 @@ msgid "<i class=\"fa fa-envelope\" role=\"img\" aria-label=\"Login\"/>"
 msgstr ""
 
 #. module: base
+#: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
+msgid ""
+"<i class=\"fa fa-fw o_button_icon fa-arrow-right\"/>\n"
+"                                    <span>Documentation</span>"
+msgstr ""
+
+#. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_rule_form
 msgid ""
 "<i class=\"fa fa-info fa-3x text-info float-left\" role=\"img\" aria-"
@@ -6214,11 +6234,6 @@ msgstr ""
 msgid ""
 "<span class=\"searchIcon\"><i class=\"fa fa-search\" role=\"img\" aria-"
 "label=\"Search\" title=\"Search\"/></span>"
-msgstr ""
-
-#. module: base
-#: model_terms:ir.ui.view,arch_db:base.identity_check_wizard
-msgid "<span class=\"text-uppercase\">Security Control</span>"
 msgstr ""
 
 #. module: base
@@ -6353,6 +6368,11 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_res_company_kanban
 msgid "<strong>Phone</strong>"
+msgstr ""
+
+#. module: base
+#: model_terms:ir.ui.view,arch_db:base.identity_check_wizard
+msgid "<strong>Please confirm your password to continue</strong>"
 msgstr ""
 
 #. module: base
@@ -7248,6 +7268,19 @@ msgid "Add views and tweaks on event"
 msgstr ""
 
 #. module: base
+#: model:res.partner,website_short_description:base.res_partner_address_31
+msgid "Addison Olson is a mighty sales representative at Deco Addict."
+msgstr ""
+
+#. module: base
+#: model_terms:res.partner,website_description:base.res_partner_address_31
+msgid ""
+"Addison Olson works in IT sector <b>since 10 years</b>. He is known\n"
+"    notably for selling mouse traps. With that trick he cut\n"
+"    IT budget by almost half within the last 2 years."
+msgstr ""
+
+#. module: base
 #: code:addons/base/models/ir_qweb_fields.py:0
 #: model_terms:ir.ui.view,arch_db:base.contact
 #: model_terms:ir.ui.view,arch_db:base.res_partner_view_form_private
@@ -7958,6 +7991,16 @@ msgid "Aruba"
 msgstr ""
 
 #. module: base
+#: model_terms:res.partner,website_description:base.res_partner_1
+#: model_terms:res.partner,website_description:base.res_partner_10
+#: model_terms:res.partner,website_description:base.res_partner_12
+#: model_terms:res.partner,website_description:base.res_partner_2
+#: model_terms:res.partner,website_description:base.res_partner_3
+#: model_terms:res.partner,website_description:base.res_partner_4
+msgid "As a team, we are happy to contribute to this event."
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_hr_appraisal
 msgid "Assess your employees"
 msgstr ""
@@ -8186,6 +8229,13 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.az
 msgid "Azerbaijan"
+msgstr ""
+
+#. module: base
+#: model:res.partner,website_short_description:base.res_partner_12
+msgid ""
+"Azure Interior brings honesty and seriousness to wood industry while helping"
+" customers deal with trees, flowers and fungi."
 msgstr ""
 
 #. module: base
@@ -8684,6 +8734,14 @@ msgid "Bouvet Island"
 msgstr ""
 
 #. module: base
+#: model_terms:res.partner,website_description:base.res_partner_address_15
+msgid ""
+"Brandon works in IT sector <b>since 10 years</b>. He is known\n"
+"                notably for selling mouse traps. With that trick he cut\n"
+"                IT budget by almost half within the last 2 years."
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.br
 msgid "Brazil"
 msgstr ""
@@ -8960,6 +9018,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.base_partner_merge_automatic_wizard_form
 #: model_terms:ir.ui.view,arch_db:base.change_password_wizard_view
 #: model_terms:ir.ui.view,arch_db:base.form_res_users_key_description
+#: model_terms:ir.ui.view,arch_db:base.identity_check_wizard
 #: model_terms:ir.ui.view,arch_db:base.res_config_view_base
 #: model_terms:ir.ui.view,arch_db:base.reset_view_arch_wizard_view
 #: model_terms:ir.ui.view,arch_db:base.view_base_import_language
@@ -9354,6 +9413,14 @@ msgid "Collect payments from your customers through SEPA direct debit."
 msgstr ""
 
 #. module: base
+#: model_terms:res.partner,website_description:base.res_partner_address_28
+msgid ""
+"Colleen Diaz works in IT sector <b>since 10 years</b>. He is known\n"
+"                notably for selling mouse traps. With that trick he cut\n"
+"                IT budget by almost half within the last 2 years."
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.co
 msgid "Colombia"
 msgstr ""
@@ -9410,6 +9477,16 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields__column1
 msgid "Column referring to the record in the model table"
+msgstr ""
+
+#. module: base
+#: model_terms:res.partner,website_description:base.res_partner_1
+#: model_terms:res.partner,website_description:base.res_partner_10
+#: model_terms:res.partner,website_description:base.res_partner_12
+#: model_terms:res.partner,website_description:base.res_partner_2
+#: model_terms:res.partner,website_description:base.res_partner_3
+#: model_terms:res.partner,website_description:base.res_partner_4
+msgid "Come see us live, we hope to meet you !"
 msgstr ""
 
 #. module: base
@@ -9779,6 +9856,11 @@ msgstr ""
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_F
 msgid "Construction"
+msgstr ""
+
+#. module: base
+#: model:res.partner.category,name:base.res_partner_category_8
+msgid "Consulting Services"
 msgstr ""
 
 #. module: base
@@ -10763,6 +10845,13 @@ msgid "Decimal Separator"
 msgstr ""
 
 #. module: base
+#: model:res.partner,website_short_description:base.res_partner_2
+msgid ""
+"Deco Addict brings honesty and seriousness to wood industry while helping "
+"customers deal with trees, flowers and fungi."
+msgstr ""
+
+#. module: base
 #: model:ir.actions.act_window,name:base.action_partner_deduplicate
 msgid "Deduplicate Contacts"
 msgstr ""
@@ -10974,6 +11063,11 @@ msgid "Design, send and track emails"
 msgstr ""
 
 #. module: base
+#: model:res.partner.category,name:base.res_partner_category_14
+msgid "Desk Manufacturers"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_automatic_wizard__dst_partner_id
 msgid "Destination Contact"
 msgstr ""
@@ -11056,6 +11150,16 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.onboarding_container
 #: model_terms:ir.ui.view,arch_db:base.res_config_settings_view_form
 msgid "Discard"
+msgstr ""
+
+#. module: base
+#: model_terms:res.partner,website_description:base.res_partner_1
+#: model_terms:res.partner,website_description:base.res_partner_10
+#: model_terms:res.partner,website_description:base.res_partner_12
+#: model_terms:res.partner,website_description:base.res_partner_2
+#: model_terms:res.partner,website_description:base.res_partner_3
+#: model_terms:res.partner,website_description:base.res_partner_4
+msgid "Discover more"
 msgstr ""
 
 #. module: base
@@ -11439,6 +11543,19 @@ msgid "Done!"
 msgstr ""
 
 #. module: base
+#: model:res.partner,website_short_description:base.res_partner_address_3
+msgid "Douglas Fletcher is a mighty functional consultant at Deco Addict"
+msgstr ""
+
+#. module: base
+#: model_terms:res.partner,website_description:base.res_partner_address_3
+msgid ""
+"Douglas Fletcher works in IT sector <b>since 10 years</b>. He is known\n"
+"    notably for selling mouse traps. With that trick he cut\n"
+"    IT budget by almost half within the last 2 years."
+msgstr ""
+
+#. module: base
 #: model:res.partner.title,shortcut:base.res_partner_title_doctor
 msgid "Dr."
 msgstr ""
@@ -11714,6 +11831,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,name:base.module_category_human_resources_employees
 #: model:ir.module.module,shortdesc:base.module_hr
+#: model:res.partner.category,name:base.res_partner_category_3
 msgid "Employees"
 msgstr ""
 
@@ -12725,6 +12843,19 @@ msgid "Float"
 msgstr ""
 
 #. module: base
+#: model:res.partner,website_short_description:base.res_partner_address_4
+msgid "Floyd Steward is a mighty analyst at Deco Addict."
+msgstr ""
+
+#. module: base
+#: model_terms:res.partner,website_description:base.res_partner_address_4
+msgid ""
+"Floyd Steward works in IT sector <b>since 10 years</b>. He is known\n"
+"    notably for selling mouse traps. With that trick he cut\n"
+"    IT budget by almost half within the last 2 years."
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields.selection,name:base.selection__report_paperformat__format__folio
 msgid "Folio 27  210 x 330 mm"
 msgstr ""
@@ -13021,6 +13152,13 @@ msgid "Gauge Widget for Kanban"
 msgstr ""
 
 #. module: base
+#: model:res.partner,website_short_description:base.res_partner_3
+msgid ""
+"Gemini Furniture brings honesty and seriousness to wood industry while "
+"helping customers deal with trees, flowers and fungi."
+msgstr ""
+
+#. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_rule_form
 msgid "General"
 msgstr ""
@@ -13241,6 +13379,15 @@ msgid "Google reCAPTCHA integration"
 msgstr ""
 
 #. module: base
+#: model_terms:res.partner,website_description:base.res_partner_address_18
+msgid ""
+"Gordon Owens works in IT sector <b>since 10 years</b>. He is known\n"
+"                notably for selling mouse traps. With that trick he cut\n"
+"                IT budget by almost half within the last 2 years.\n"
+"                Famous Senior Consultant."
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_act_window_view__view_mode__graph
 #: model:ir.model.fields.selection,name:base.selection__ir_ui_view__type__graph
 msgid "Graph"
@@ -13431,6 +13578,16 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_lunch
 msgid "Handle lunch orders of your employees"
+msgstr ""
+
+#. module: base
+#: model_terms:res.partner,website_description:base.res_partner_1
+#: model_terms:res.partner,website_description:base.res_partner_10
+#: model_terms:res.partner,website_description:base.res_partner_12
+#: model_terms:res.partner,website_description:base.res_partner_2
+#: model_terms:res.partner,website_description:base.res_partner_3
+#: model_terms:res.partner,website_description:base.res_partner_4
+msgid "Happy to be Sponsor"
 msgstr ""
 
 #. module: base
@@ -15769,6 +15926,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting_localizations
+#: model:ir.module.category,name:base.module_category_localization
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
 msgid "Localization"
 msgstr ""
@@ -17202,6 +17360,23 @@ msgid "Nice work! Your configuration is done."
 msgstr ""
 
 #. module: base
+#: model_terms:res.partner,website_description:base.res_partner_address_16
+msgid ""
+"Nicole is <b>author of several books</b>, including Amazon best seller\n"
+"                \"How Azure and Odoo will change the business world!\"."
+msgstr ""
+
+#. module: base
+#: model_terms:res.partner,website_description:base.res_partner_address_16
+msgid ""
+"Nicole works in IT sector <b>since 20 years</b>. She\n"
+"                develops software to help develop websites.  She sold her\n"
+"                first company at 30 years old and manage to grow Azure Interior\n"
+"                from 1 to 55 employees mostly by reselling services on\n"
+"                Odoo."
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.ne
 msgid "Niger"
 msgstr ""
@@ -18596,6 +18771,11 @@ msgid "OdooBot for livechat"
 msgstr ""
 
 #. module: base
+#: model:res.partner.category,name:base.res_partner_category_12
+msgid "Office Supplies"
+msgstr ""
+
+#. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_failures_dialog
 msgid "Ok"
 msgstr ""
@@ -19631,11 +19811,6 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: model_terms:ir.ui.view,arch_db:base.identity_check_wizard
-msgid "Please confirm your password to continue"
-msgstr ""
-
-#. module: base
 #: code:addons/base/models/ir_mail_server.py:0
 #, python-format
 msgid ""
@@ -20058,6 +20233,11 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:res.partner.category,name:base.res_partner_category_2
+msgid "Prospects"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_server__link_field_id
 #: model:ir.model.fields,help:base.field_ir_cron__link_field_id
 msgid ""
@@ -20449,6 +20629,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__readonly
 #: model_terms:ir.ui.view,arch_db:base.view_model_fields_search
 msgid "Readonly"
+msgstr ""
+
+#. module: base
+#: model:res.partner,website_short_description:base.res_partner_4
+msgid ""
+"Ready Mat brings honesty and seriousness to wood industry while helping "
+"customers deal with trees, flowers and fungi."
 msgstr ""
 
 #. module: base
@@ -21774,6 +21961,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_services
+#: model:res.partner.category,name:base.res_partner_category_11
 #: model_terms:ir.ui.view,arch_db:base.user_groups_view
 msgid "Services"
 msgstr ""
@@ -22562,6 +22750,11 @@ msgid "Switzerland - Accounting Reports"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_ch_qriban
+msgid "Switzerland - QR-IBAN"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_res_currency__symbol
 msgid "Symbol"
 msgstr ""
@@ -22913,6 +23106,13 @@ msgstr ""
 msgid ""
 "The ISO country code in two chars. \n"
 "You can use this field for quick search."
+msgstr ""
+
+#. module: base
+#: model:res.partner,website_short_description:base.res_partner_10
+msgid ""
+"The Jackson Group brings honesty and seriousness to wood industry while "
+"helping customers deal with trees, flowers and fungi."
 msgstr ""
 
 #. module: base
@@ -23650,6 +23850,14 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: code:addons/base/models/ir_sequence.py:0
+#, python-format
+msgid ""
+"This transaction wasn't executed because another transaction is already "
+"using the same no-gap sequence. Please try again later."
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_res_lang__thousands_sep
 msgid "Thousands Separator"
 msgstr ""
@@ -23818,6 +24026,15 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.to
 msgid "Tonga"
+msgstr ""
+
+#. module: base
+#: model_terms:res.partner,website_description:base.res_partner_address_17
+msgid ""
+"Toni Rhodes works in IT sector <b>since 10 years</b>. He is known\n"
+"                notably for selling mouse traps. With that trick he cut\n"
+"                IT budget by almost half within the last 2 years.\n"
+"                Famous Managing Partner."
 msgstr ""
 
 #. module: base
@@ -24892,6 +25109,11 @@ msgid "Vat Label"
 msgstr ""
 
 #. module: base
+#: model:res.partner.category,name:base.res_partner_category_0
+msgid "Vendor"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_account_3way_match
 msgid "Vendor Bill: Release to Pay"
 msgstr ""
@@ -25091,6 +25313,22 @@ msgstr ""
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_E
 msgid "Water supply"
+msgstr ""
+
+#. module: base
+#: model:res.partner,website_short_description:base.res_partner_18
+msgid ""
+"We are a technology consulting & strategic advisory firm that creates value "
+"enhancing solutions through the use of advanced software for our clients "
+"worldwide. At Lumber Inc we bring operational experience combined..."
+msgstr ""
+
+#. module: base
+#: model_terms:res.partner,website_description:base.res_partner_18
+msgid ""
+"We are a technology consulting &amp; strategic advisory firm that creates value enhancing solutions through the use of advanced software for our clients worldwide.\n"
+" <br> <br>\n"
+"At Lumber Inc we bring operational experience combined with technological acumen. We understand that any software that supports business operations needs to be designed in such a way that facilitates the execution of critical operational processes, and serves as a tool to the users rather than a barrier. Our approach is focused on the process first, ensuring that it contributes to the goals of the company, we then optimize it, and design the software solutions to best support it."
 msgstr ""
 
 #. module: base
@@ -25411,6 +25649,13 @@ msgstr ""
 #: code:addons/base/models/ir_actions_report.py:0
 #, python-format
 msgid "Wkhtmltopdf failed (error code: %s). Message: %s"
+msgstr ""
+
+#. module: base
+#: model:res.partner,website_short_description:base.res_partner_1
+msgid ""
+"Wood Corner brings honesty and seriousness to wood industry while helping "
+"customers deal with trees, flowers and fungi."
 msgstr ""
 
 #. module: base
@@ -26171,6 +26416,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_snailmail_account
 msgid "snailmail_account"
+msgstr ""
+
+#. module: base
+#: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
+msgid "test"
 msgstr ""
 
 #. module: base

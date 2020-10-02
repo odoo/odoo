@@ -861,7 +861,8 @@ const SelectUserValueWidget = BaseSelectionUserValueWidget.extend({
         let textContent = '';
         const activeWidget = this._userValueWidgets.find(widget => !widget.isPreviewed() && widget.isActive());
         if (activeWidget) {
-            const value = (activeWidget.el.dataset.selectLabel || activeWidget.el.textContent.trim());
+            const svgTag = activeWidget.el.querySelector('svg'); // useful to avoid searching text content in svg element
+            const value = (activeWidget.el.dataset.selectLabel || (!svgTag && activeWidget.el.textContent.trim()));
             const imgSrc = activeWidget.el.dataset.img;
             if (value) {
                 textContent = value;
@@ -1043,6 +1044,9 @@ const InputUserValueWidget = UnitUserValueWidget.extend({
         var unitEl = document.createElement('span');
         unitEl.textContent = unit;
         this.containerEl.appendChild(unitEl);
+        if (unit.length > 3) {
+            this.el.classList.add('o_we_large_input');
+        }
     },
 
     //--------------------------------------------------------------------------

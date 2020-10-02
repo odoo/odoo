@@ -616,6 +616,13 @@ function factory(dependencies) {
          * @param {string} state
          */
         async notifyFoldStateToServer(state) {
+            if (this.model !== 'mail.channel') {
+                // Server sync of fold state is only supported for channels.
+                return;
+            }
+            if (!this.uuid) {
+                return;
+            }
             return this.env.models['mail.thread'].performRpcChannelFold(this.uuid, state);
         }
 
@@ -1101,6 +1108,11 @@ function factory(dependencies) {
             if (!this.lastSeenByCurrentPartnerMessageId) {
                 return this.serverMessageUnreadCounter;
             }
+            // if server knows more messages than the client knows then we just
+            // need to trust him
+            if (this.serverLastMessageId > this.lastSeenByCurrentPartnerMessageId) {
+                return this.serverMessageUnreadCounter;
+            }
             const firstMessage = this.orderedMessages[0];
             // if the lastSeenByCurrentPartnerMessageId is not known (not fetched), then we
             // need to rely on server value to determine the amount of unread
@@ -1108,15 +1120,15 @@ function factory(dependencies) {
             // serverMessageUnreadCounter
             if (this.lastSeenByCurrentPartnerMessageId < firstMessage.id) {
                 const fetchedNotSeenMessages = this.orderedMessages.filter(message =>
-                    message.id > this.serverLastMessageId
+                    message.id > this.serverLastMessageId && message.author !== this.env.messaging.currentPartner
                 );
                 return this.serverMessageUnreadCounter + fetchedNotSeenMessages.length;
             }
             // lastSeenByCurrentPartnerMessageId is a known message,
             // then we can forget serverMessageUnreadCounter
-            const maxId = Math.max(this.serverLastMessageId, this.lastSeenByCurrentPartnerMessageId);
+            const maxId = this.lastSeenByCurrentPartnerMessageId;
             return this.orderedMessages.reduce(
-                (acc, message) => acc + (message.id > maxId ? 1 : 0),
+                (acc, message) => acc + ((message.id > maxId && message.author !== this.env.messaging.currentPartner) ? 1 : 0),
                 0
             );
         }
@@ -1537,6 +1549,7 @@ function factory(dependencies) {
             dependencies: [
                 'lastMessage',
                 'lastSeenByCurrentPartnerMessageId',
+                'messagingCurrentPartner',
                 'orderedMessages',
                 'serverLastMessageId',
                 'serverMessageUnreadCounter',

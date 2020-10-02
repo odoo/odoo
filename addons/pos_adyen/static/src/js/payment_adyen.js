@@ -43,12 +43,11 @@ var PaymentAdyen = PaymentInterface.extend({
         return Promise.reject(data); // prevent subsequent onFullFilled's from being called
     },
 
-    _call_adyen: function (data, test_endpoint, live_endpoint) {
-        var self = this;
+    _call_adyen: function (data, operation) {
         return rpc.query({
             model: 'pos.payment.method',
             method: 'proxy_adyen_request',
-            args: [data, this.payment_method.adyen_test_mode, this.payment_method.adyen_api_key, test_endpoint, live_endpoint],
+            args: [[this.payment_method.id], data, operation],
         }, {
             // When a payment terminal is disconnected it takes Adyen
             // a while to return an error (~6s). So wait 10 seconds
@@ -121,6 +120,7 @@ var PaymentAdyen = PaymentInterface.extend({
     },
 
     _adyen_cancel: function (ignore_error) {
+        var self = this;
         var previous_service_id = this.most_recent_service_id;
         var header = _.extend(this._adyen_common_message_header(), {
             'MessageCategory': 'Abort',
@@ -133,7 +133,6 @@ var PaymentAdyen = PaymentInterface.extend({
                     'AbortReason': 'MerchantAbort',
                     'MessageReference': {
                         'MessageCategory': 'Payment',
-                        'SaleID': header.SaleID,
                         'ServiceID': previous_service_id,
                     }
                 },
@@ -144,7 +143,7 @@ var PaymentAdyen = PaymentInterface.extend({
 
             // Only valid response is a 200 OK HTTP response which is
             // represented by true.
-            if (! ignore_error && data !== true) {
+            if (! ignore_error && data !== "ok") {
                 self._show_error(_('Cancelling the payment failed. Please cancel it manually on the payment terminal.'));
             }
         });
@@ -174,11 +173,7 @@ var PaymentAdyen = PaymentInterface.extend({
         return rpc.query({
             model: 'pos.payment.method',
             method: 'get_latest_adyen_status',
-            args: [this.payment_method.id,
-                   this._adyen_get_sale_id(),
-                   this.payment_method.adyen_terminal_identifier,
-                   this.payment_method.adyen_test_mode,
-                   this.payment_method.adyen_api_key],
+            args: [[this.payment_method.id], this._adyen_get_sale_id()],
         }, {
             timeout: 5000,
             shadow: true,
@@ -242,7 +237,7 @@ var PaymentAdyen = PaymentInterface.extend({
                     if (message.startsWith('108 ')) {
                         resolve(false);
                     } else {
-                        line.set_payment_status('force_done');
+                        line.set_payment_status('retry');
                         reject();
                     }
                 }

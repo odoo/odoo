@@ -1809,7 +1809,20 @@ QUnit.test('new messages separator [REQUIRE FOCUS]', async function (assert) {
         "should not display 'new messages' separator"
     );
     // scroll to top
-    document.querySelector(`.o_Discuss_thread .o_ThreadView_messageList`).scrollTop = 0;
+    await this.afterEvent({
+        eventName: 'o-component-message-list-scrolled',
+        func: () => {
+            document.querySelector(`.o_Discuss_thread .o_ThreadView_messageList`).scrollTop = 0;
+        },
+        message: "should wait until channel scrolled to top",
+        predicate: ({ scrollTop, threadViewer }) => {
+            return (
+                threadViewer.thread.model === 'mail.channel' &&
+                threadViewer.thread.id === 20 &&
+                scrollTop === 0
+            );
+        },
+    });
     // composer is focused by default, we remove that focus
     document.querySelector('.o_ComposerTextInput_textarea').blur();
     // simulate receiving a message
@@ -1835,9 +1848,21 @@ QUnit.test('new messages separator [REQUIRE FOCUS]', async function (assert) {
         '.o_MessageList_separatorNewMessages',
         "should display 'new messages' separator"
     );
-    await afterNextRender(() => {
-        document.querySelector(`.o_Discuss_thread .o_ThreadView_messageList`).scrollTop =
-            document.querySelector(`.o_Discuss_thread .o_ThreadView_messageList`).scrollHeight;
+    await this.afterEvent({
+        eventName: 'o-component-message-list-scrolled',
+        func: () => {
+            const messageList = document.querySelector(`.o_Discuss_thread .o_ThreadView_messageList`);
+            messageList.scrollTop = messageList.scrollHeight - messageList.clientHeight;
+        },
+        message: "should wait until channel scrolled to bottom",
+        predicate: ({ scrollTop, threadViewer }) => {
+            const messageList = document.querySelector(`.o_Discuss_thread .o_ThreadView_messageList`);
+            return (
+                threadViewer.thread.model === 'mail.channel' &&
+                threadViewer.thread.id === 20 &&
+                scrollTop === messageList.scrollHeight - messageList.clientHeight
+            );
+        },
     });
     assert.containsOnce(
         document.body,
@@ -3211,20 +3236,20 @@ QUnit.test('mark channel as seen on last message visible [REQUIRE FOCUS]', async
     assert.containsOnce(
         document.body,
         `.o_DiscussSidebar_item[data-thread-local-id="${
-            this.env.models['mail.thread'].find(thread =>
-                thread.id === 10 &&
-                thread.model === 'mail.channel'
-            ).localId
+            this.env.models['mail.thread'].findFromIdentifyingData({
+                id: 10,
+                model: 'mail.channel',
+            }).localId
         }"]`,
         "should have discuss sidebar item with the channel"
     );
     assert.hasClass(
         document.querySelector(`
             .o_DiscussSidebar_item[data-thread-local-id="${
-                this.env.models['mail.thread'].find(thread =>
-                    thread.id === 10 &&
-                    thread.model === 'mail.channel'
-                ).localId
+                this.env.models['mail.thread'].findFromIdentifyingData({
+                    id: 10,
+                    model: 'mail.channel',
+                }).localId
             }"]
         `),
         'o-unread',
@@ -3234,20 +3259,20 @@ QUnit.test('mark channel as seen on last message visible [REQUIRE FOCUS]', async
     await afterNextRender(() =>
         document.querySelector(`
             .o_DiscussSidebar_item[data-thread-local-id="${
-                this.env.models['mail.thread'].find(thread =>
-                    thread.id === 10 &&
-                    thread.model === 'mail.channel'
-                ).localId
+                this.env.models['mail.thread'].findFromIdentifyingData({
+                    id: 10,
+                    model: 'mail.channel',
+                }).localId
             }"]
         `).click()
     );
     assert.doesNotHaveClass(
         document.querySelector(`
             .o_DiscussSidebar_item[data-thread-local-id="${
-                this.env.models['mail.thread'].find(thread =>
-                    thread.id === 10 &&
-                    thread.model === 'mail.channel'
-                ).localId
+                this.env.models['mail.thread'].findFromIdentifyingData({
+                    id: 10,
+                    model: 'mail.channel',
+                }).localId
             }"]
         `),
         'o-unread',
