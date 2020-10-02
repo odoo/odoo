@@ -90,16 +90,7 @@ publicWidget.registry.ChatRoom = publicWidget.Widget.extend({
             $parentNode.find("iframe").trigger("empty");
             $parentNode.empty();
 
-            let jitsiRoom = await this._joinJitsiRoom($parentNode);
-
-            $(jitsiRoom._frame).on("empty", async () => {
-                // we opened an other Jitsi room on the same parent node
-                await this._updatePartitipantCountIfEmpty();
-            });
-
-            jitsiRoom.addEventListener('videoConferenceLeft', async () => {
-                await this._updatePartitipantCountIfEmpty();
-            });
+            await this._joinJitsiRoom($parentNode);
         } else {
             // create a model and append the Jitsi iframe in it
             let $jitsiModal = $(QWeb.render('chat_room_modal', {}));
@@ -117,7 +108,6 @@ publicWidget.registry.ChatRoom = publicWidget.Widget.extend({
             $jitsiModal.on('hidden.bs.modal', async () => {
                 jitsiRoom.dispose();
                 $(".o_wjitsi_room_modal").remove();
-                await this._updatePartitipantCountIfEmpty();
             });
         }
     },
@@ -200,19 +190,6 @@ publicWidget.registry.ChatRoom = publicWidget.Widget.extend({
         });
 
         return jitsiRoom;
-    },
-
-    /**
-      * If we are the last participant in the room, we are the only one who can send the
-      * "zero participant" update to the server.
-      *
-      * @private
-      */
-    _updatePartitipantCountIfEmpty: async function () {
-        if (this.allParticipantIds && this.allParticipantIds.length === 1 && this.allParticipantIds[0] === this.participantId) {
-          // we are the last participant in the room and we left it
-          await this._updateParticipantCount(0, false);
-        }
     },
 
     /**
