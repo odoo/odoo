@@ -1868,6 +1868,82 @@ QUnit.test('chat window does not fetch messages if hidden', async function (asse
     );
 });
 
+QUnit.test('chat window of a chat new message separator behaviour on receiving new message [REQUIRE FOCUS]', async function (assert) {
+    assert.expect(7);
+
+    this.data['res.partner'].records.push({ id: 10, name: "Demo" });
+    this.data['res.users'].records.push({
+        id: 42,
+        name: "Foreigner user",
+        partner_id: 10,
+    });
+    this.data['mail.channel'].records = [
+        {
+            id: 10,
+            channel_type: "chat",
+            is_minimized: true,
+            is_pinned: false,
+            members: [this.data.currentPartnerId, 10],
+            message_unread_counter: 0,
+            uuid: 'randomuuid',
+        },
+    ];
+    await this.start({
+        env: {
+            browser: {
+                innerWidth: 900,
+            },
+        },
+        mockRPC(route, args) {
+            if (args.method === 'channel_fold') {
+                const channel_uuid = args.kwargs.uuid;
+                assert.strictEqual(channel_uuid, 'randomuuid', "chat window fold state should have been sent to server");
+                assert.step(`rpc:channel_fold:${channel_uuid}`);
+            }
+            return this._super(...arguments);
+        },
+    });
+
+    // simulate receiving a message
+    document.querySelector('body').focus();
+    await afterNextRender(async () => this.env.services.rpc({
+        route: '/mail/chat_post',
+        params: {
+            context: {
+                mockedUserId: 42,
+            },
+            uuid: 'randomuuid',
+            message_content: "hu",
+        },
+    }));
+    assert.containsOnce(
+        document.body,
+        '.o_ChatWindow',
+        "a chat window should be visible"
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_Message',
+        "the received message should be shown"
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_MessageList_separatorNewMessages',
+        "new message separator should be shown"
+    );
+    assert.verifySteps(
+        ['rpc:channel_fold:randomuuid'],
+        "channel should have been unfolded (even if still opened)"
+    );
+
+    await afterNextRender(() => document.querySelector('.o_ComposerTextInput_textarea').focus());
+    assert.containsNone(
+        document.body,
+        '.o_MessageList_separatorNewMessages',
+        "new message separator should no longer be shown"
+    );
+});
+
 });
 });
 });

@@ -434,8 +434,14 @@ QUnit.test('new messages separator on posting message', async function (assert) 
         id: 20,
         is_pinned: true,
         message_unread_counter: 0,
+        seen_message_id: 10,
         name: "General",
     }];
+    this.data['mail.message'].records.push({
+        body: "first message",
+        channel_ids: [20],
+        id: 10,
+    });
     await this.start();
     const thread = this.env.models['mail.thread'].findFromIdentifyingData({
         id: 20,
@@ -447,10 +453,12 @@ QUnit.test('new messages separator on posting message', async function (assert) 
     });
     await this.createThreadViewComponent(threadViewer.threadView, { hasComposer: true });
 
-    assert.containsNone(
+    window.env = this.env;
+    window.t = threadViewer.thread;
+    assert.containsOnce(
         document.body,
         '.o_MessageList_message',
-        "should have no messages"
+        "should have the initial message"
     );
     assert.containsNone(
         document.body,
@@ -460,12 +468,16 @@ QUnit.test('new messages separator on posting message', async function (assert) 
 
     document.querySelector('.o_ComposerTextInput_textarea').focus();
     await afterNextRender(() => document.execCommand('insertText', false, "hey !"));
-    await afterNextRender(() =>
-        document.querySelector('.o_Composer_buttonSend').click()
-    );
-    assert.containsOnce(
+    await afterNextRender(() => {
+        // need to remove focus from text area to avoid channel_seen
+        document.querySelector('.o_Composer_buttonSend').focus();
+        document.querySelector('.o_Composer_buttonSend').click();
+
+    });
+    assert.containsN(
         document.body,
         '.o_Message',
+        2,
         "should have the message current partner just posted"
     );
     assert.containsNone(
