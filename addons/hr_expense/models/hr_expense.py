@@ -1004,7 +1004,7 @@ class HrExpenseSheet(models.Model):
                 'hr_expense.mail_act_expense_approval',
                 user_id=expense_report.sudo()._get_responsible_for_approval().id or self.env.user.id)
         self.filtered(lambda hol: hol.state == 'approve').activity_feedback(['hr_expense.mail_act_expense_approval'])
-        self.filtered(lambda hol: hol.state == 'cancel').activity_unlink(['hr_expense.mail_act_expense_approval'])
+        self.filtered(lambda hol: hol.state in ('draft', 'cancel')).activity_unlink(['hr_expense.mail_act_expense_approval'])
 
     def action_register_payment(self):
         ''' Open the account.payment.register wizard to pay the selected journal entries.
