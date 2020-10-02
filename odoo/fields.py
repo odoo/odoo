@@ -3055,6 +3055,15 @@ class One2many(_RelationalMulti):
             domain = domain + [(inverse_field.model_field, '=', records._name)]
         return domain
 
+    def __get__(self, records, owner):
+        if records is not None and self.inverse_name is not None:
+            # force the computation of the inverse field to ensure that the
+            # cache value of self is consistent
+            inverse_field = records.pool[self.comodel_name]._fields[self.inverse_name]
+            if inverse_field.compute:
+                records.env[self.comodel_name].recompute([self.inverse_name])
+        return super().__get__(records, owner)
+
     def read(self, records):
         # retrieve the lines in the comodel
         context = {'active_test': False}
