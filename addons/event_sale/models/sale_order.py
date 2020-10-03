@@ -24,6 +24,15 @@ class SaleOrder(models.Model):
                     .for_xml_id('event_sale', 'action_sale_order_event_registration')
         return res
 
+    @api.multi
+    def action_cancel(self):
+        Registration = self.env['event.registration'].sudo()
+        SaleOrderLines = self.order_line
+        registrations = Registration.search([('sale_order_line_id', 'in', SaleOrderLines.ids)])
+        for registration in registrations:
+            registration.button_reg_cancel()
+        super(SaleOrder, self).action_cancel()
+
 
 class SaleOrderLine(models.Model):
 

@@ -197,6 +197,13 @@ class EventRegistration(models.Model):
     sale_order_id = fields.Many2one('sale.order', string='Source Sales Order', ondelete='cascade')
     sale_order_line_id = fields.Many2one('sale.order.line', string='Sales Order Line', ondelete='cascade')
 
+    # if the registration is attended, we should not cancel it
+    @api.one
+    def button_reg_cancel(self):
+        if self.state == 'done':
+            raise UserError(_("You cannot cancel an attended registration, you should put it back in draft before."))
+        super(EventRegistration, self).button_reg_cancel()
+
     @api.onchange('event_id')
     def _onchange_event_id(self):
         # We reset the ticket when keeping it would lead to an inconstitent state.
