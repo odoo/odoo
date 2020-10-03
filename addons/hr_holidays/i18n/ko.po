@@ -553,6 +553,16 @@ msgid ""
 "                    </span>\n"
 "                    ("
 msgstr ""
+"<span attrs=\"{'invisible': [('holiday_type', '!=', 'employee')]}\">\n"
+"                        직원의 시간대가 귀하와 다릅니다! 여기서 날짜와 시간은 직원의 시간대로 표시됩니다.\n"
+"                    </span>\n"
+"                    <span attrs=\"{'invisible': [('holiday_type', '!=', 'department')]}\">\n"
+"                        회사 부서의 시간대가 귀하와 다릅니다! 여기서 날짜와 시간은 회사의 시간대로 표시됩니다.\n"
+"                    </span>\n"
+"                    <span attrs=\"{'invisible': [('holiday_type', '!=', 'company')]}\">\n"
+"                        회사의 시간대가 귀하와 다릅니다! 여기서 날짜와 시간은 회사의 시간대로 표시됩니다.\n"
+"                    </span>\n"
+"                    ("
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
