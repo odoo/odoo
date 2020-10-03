@@ -7,9 +7,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.5\n"
+"Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-01 07:28+0000\n"
+"POT-Creation-Date: 2020-10-02 14:11+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
 "Last-Translator: Haval Abdulkarim <haval.abdulkarim@gmail.com>, 2020\n"
 "Language-Team: Central Kurdish (https://www.transifex.com/odoo/teams/41243/ckb/)\n"
@@ -155,6 +155,11 @@ msgstr ""
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_30days
 msgid "30 Days"
+msgstr ""
+
+#. module: account
+#: model:account.payment.term,name:account.account_payment_term_advance
+msgid "30% Advance End of Following Month"
 msgstr ""
 
 #. module: account
@@ -371,6 +376,9 @@ msgid ""
 "specific.\" aria-label=\"Values set here are company-specific.\" "
 "groups=\"base.group_multi_company\" role=\"img\"/>"
 msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" aria-label=\"Values set here are company-specific.\" "
+"groups=\"base.group_multi_company\" role=\"img\"/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -453,25 +461,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid ""
 "<span class=\"oe_inline o_form_label mr-3 ml-5 oe_edit_only\" "
-"groups=\"account.group_account_readonly,base.group_multi_currency\"> in "
-"</span>"
+"groups=\"base.group_multi_currency\"> in </span>"
 msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid ""
 "<span class=\"oe_inline o_form_label mx-3 oe_read_only\" "
-"groups=\"account.group_account_readonly,base.group_multi_currency\"> in "
-"</span>"
-msgstr ""
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_move_reversal
-msgid ""
-"<span class=\"text-muted\" attrs=\"{'invisible': [('move_type', 'not in', "
-"('out_invoice', 'in_invoice', 'some_invoice'))]}\">Invoices/&gt;Bills won't "
-"be reversed but credit notes will be created instead: the tax tags will be "
-"adapted accordingly.</span>"
+"groups=\"base.group_multi_currency\"> in </span>"
 msgstr ""
 
 #. module: account
@@ -1359,6 +1356,11 @@ msgid "Activate Other Currencies"
 msgstr ""
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+msgid "Activate to create purchase receipt"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__active
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__active
 #: model:ir.model.fields,field_description:account.field_account_incoterms__active
@@ -1381,11 +1383,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__active_domain
 #: model:ir.model.fields,field_description:account.field_account_tour_upload_bill__active_domain
 msgid "Active domain"
-msgstr ""
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
-msgid "Active to create purchase receipt"
 msgstr ""
 
 #. module: account
@@ -2085,13 +2082,13 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__country_group_id
 #: model:ir.model.fields,help:account.field_account_fiscal_position_template__country_group_id
-msgid "Apply only if delivery or invoicing country match the group."
+msgid "Apply only if delivery country matches the group."
 msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__country_id
 #: model:ir.model.fields,help:account.field_account_fiscal_position_template__country_id
-msgid "Apply only if delivery or invoicing country match."
+msgid "Apply only if delivery country matches."
 msgstr ""
 
 #. module: account
@@ -2254,11 +2251,6 @@ msgid "Automatic sequence"
 msgstr ""
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_tour_upload_bill__composer_id
-msgid "Automatically created field to link to parent mail.compose.message"
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__available_payment_method_ids
 #: model:ir.model.fields,field_description:account.field_account_payment_register__available_payment_method_ids
 msgid "Available Payment Method"
@@ -2320,7 +2312,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__account_number
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Bank Account Number"
-msgstr ""
+msgstr "ژمارەی هەژماری بانک"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__partner_bank_id
@@ -3132,7 +3124,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_payment_method__code
 #: model:ir.model.fields,field_description:account.field_account_tax_report_line__code
 msgid "Code"
-msgstr ""
+msgstr "کۆد"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_group_form
@@ -3172,7 +3164,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_account_tag__color
 #: model:ir.model.fields,field_description:account.field_account_journal__color
 msgid "Color Index"
-msgstr ""
+msgstr "نیشاندەری ڕەنگ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__commercial_partner_id
@@ -3292,6 +3284,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__composer_id
+#: model:ir.model.fields,field_description:account.field_account_tour_upload_bill__composer_id
 msgid "Composer"
 msgstr ""
 
@@ -3331,7 +3324,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "شێوەپێدانی ڕێکخستنەکان"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_configuration
@@ -3356,6 +3349,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.view_account_bnk_stmt_check
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_tree
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
 #, python-format
 msgid "Confirm"
 msgstr "پشتڕاستکردنەوە"
@@ -3951,7 +3945,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.view_invoice_tree
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Customer"
-msgstr ""
+msgstr "کڕیار"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__move_type__out_refund
@@ -4798,7 +4792,7 @@ msgstr "دەستکاری"
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__amount_by_group
 #: model:ir.model.fields,help:account.field_account_move__amount_by_group
 #: model:ir.model.fields,help:account.field_account_payment__amount_by_group
-msgid "Edit Tax amounts if you encounter rouding issues."
+msgid "Edit Tax amounts if you encounter rounding issues."
 msgstr ""
 
 #. module: account
@@ -5318,7 +5312,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_report_line__formula
 msgid "Formula"
-msgstr ""
+msgstr "هاوکێشە"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_journal__invoice_reference_type__none
@@ -7039,7 +7033,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__layout
 #: model:ir.model.fields,field_description:account.field_account_tour_upload_bill__layout
 msgid "Layout"
-msgstr ""
+msgstr "ڕووکار"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__sale_activity_user_id
@@ -7404,7 +7398,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_move__message_has_error
 #: model:ir.model.fields,field_description:account.field_account_payment__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "هەڵەی گەیشتنی نامە"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__record_name
@@ -7460,6 +7454,12 @@ msgstr "هەمەڕەنگ"
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Miscellaneous Operations"
+msgstr ""
+
+#. module: account
+#: code:addons/account/wizard/account_validate_account_move.py:0
+#, python-format
+msgid "Missing 'active_model' in context."
 msgstr ""
 
 #. module: account
@@ -7522,7 +7522,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Multi-Currencies"
-msgstr ""
+msgstr "فرە دراو"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -7701,7 +7701,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:account.selection__account_tax__type_tax_use__none
 #: model:ir.model.fields.selection,name:account.selection__account_tax_template__type_tax_use__none
 msgid "None"
-msgstr ""
+msgstr "هیچ"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_partner__trust__normal
@@ -7742,7 +7742,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:account.selection__res_company__account_setup_coa_state__not_done
 #: model:ir.model.fields.selection,name:account.selection__res_company__account_setup_fy_data_state__not_done
 msgid "Not done"
-msgstr ""
+msgstr "تەواو نەبووە"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_template__note
@@ -7897,20 +7897,20 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_journal__invoice_reference_model__odoo
 msgid "Odoo"
-msgstr ""
-
-#. module: account
-#: model_terms:ir.actions.act_window,help:account.action_bank_statement_tree
-msgid ""
-"Odoo allows you to reconcile a statement line directly with\n"
-"                the related sale or puchase invoices."
-msgstr ""
+msgstr "ئۆدۆ"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_bank_statement_line
 msgid ""
 "Odoo allows you to reconcile a statement line directly with\n"
 "                the related sale or purchase invoice(s)."
+msgstr ""
+
+#. module: account
+#: model_terms:ir.actions.act_window,help:account.action_bank_statement_tree
+msgid ""
+"Odoo allows you to reconcile a statement line directly with\n"
+"                the related sale or purchase invoices."
 msgstr ""
 
 #. module: account
@@ -7976,7 +7976,7 @@ msgstr ""
 #. openerp-web
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
-msgid "Once your invoice is ready, validate."
+msgid "Once your invoice is ready, press CONFIRM."
 msgstr ""
 
 #. module: account
@@ -8628,6 +8628,11 @@ msgstr ""
 #. module: account
 #: model:account.payment.term,note:account.account_payment_term_30days
 msgid "Payment terms: 30 Days"
+msgstr ""
+
+#. module: account
+#: model:account.payment.term,note:account.account_payment_term_advance
+msgid "Payment terms: 30% Advance End of Following Month"
 msgstr ""
 
 #. module: account
@@ -10225,7 +10230,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:account.selection__account_tax__tax_scope__service
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
 msgid "Services"
-msgstr ""
+msgstr "خزمەتگوزارییەکان"
 
 #. module: account
 #. openerp-web
@@ -11271,13 +11276,6 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: model:ir.model.fields,help:account.field_account_automatic_entry_wizard__display_currency_helper
-msgid ""
-"Technical field used to indicate whether or not to display the tooltip "
-"informing a currency conversion will be performed with the transfer"
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__tax_cash_basis_rec_id
 #: model:ir.model.fields,help:account.field_account_move__tax_cash_basis_rec_id
 #: model:ir.model.fields,help:account.field_account_payment__tax_cash_basis_rec_id
@@ -11348,10 +11346,19 @@ msgid ""
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,help:account.field_account_automatic_entry_wizard__display_currency_helper
+msgid ""
+"Technical field. Used to indicate whether or not to display the currency "
+"conversion tooltip. The tooltip informs a currency conversion will be "
+"performed with the transfer."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_res_currency__display_rounding_warning
 msgid ""
-"Technical field used to tell whether or not to display the warning informing"
-" a rounding factor change might be dangerous on res.currency's form view."
+"Technical field. Used to tell whether or not to display the rounding "
+"warning. The warning informs a rounding factor change might be dangerous on "
+"res.currency's form view."
 msgstr ""
 
 #. module: account
@@ -12985,7 +12992,6 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_form
-#: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Validate"
 msgstr ""
 
@@ -13110,14 +13116,14 @@ msgstr ""
 #: model:ir.ui.menu,name:account.menu_finance_payables
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
 msgid "Vendors"
-msgstr ""
+msgstr "فرۆشیارەکان"
 
 #. module: account
 #. openerp-web
 #: code:addons/account/static/src/xml/account_payment.xml:0
 #, python-format
 msgid "View"
-msgstr ""
+msgstr "بینین"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
@@ -13127,7 +13133,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_partner__invoice_warn__warning
 msgid "Warning"
-msgstr ""
+msgstr "ئاگاداری"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -13143,7 +13149,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Warnings"
-msgstr ""
+msgstr "ئاگادارییەکان"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__group_warning_account
@@ -13803,6 +13809,11 @@ msgid "code"
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_payment_term_line__option__after_invoice_month
+msgid "days after the end of the invoice month"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_term_line__option__day_after_invoice_date
 msgid "days after the invoice date"
 msgstr ""
@@ -13844,7 +13855,7 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
-msgid "for this supplier. You can allocate them to mark this bill as paid."
+msgid "for this vendor. You can allocate them to mark this bill as paid."
 msgstr ""
 
 #. module: account
@@ -13856,7 +13867,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.account_tax_view_tree
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
 msgid "name"
-msgstr ""
+msgstr "ناو"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax_repartition_line__repartition_type__tax
@@ -13877,7 +13888,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "on"
-msgstr ""
+msgstr "کارا"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
