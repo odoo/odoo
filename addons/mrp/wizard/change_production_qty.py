@@ -46,6 +46,10 @@ class ChangeProductionQty(models.TransientModel):
         for wizard in self:
             production = wizard.mo_id
             produced = sum(production.move_finished_ids.filtered(lambda m: m.product_id == production.product_id).mapped('quantity_done'))
+
+            # memorize initial MO bom movement rows not added manually (origin not null)
+            mo_ini_bom_move_ids = production.move_raw_ids.filtered(lambda x: x.origin)
+
             if wizard.product_qty < produced:
                 format_qty = '%.{precision}f'.format(precision=precision)
                 raise UserError(_("You have already processed %s. Please input a quantity higher than %s ") % (format_qty % produced, format_qty % produced))
@@ -56,11 +60,14 @@ class ChangeProductionQty(models.TransientModel):
             factor = production.product_uom_id._compute_quantity(production.product_qty - qty_produced, production.bom_id.product_uom_id) / production.bom_id.product_qty
             boms, lines = production.bom_id.explode(production.product_id, factor, picking_type=production.bom_id.picking_type_id)
             documents = {}
+            mo_act_bom_move_ids = []
             for line, line_data in lines:
                 move = production.move_raw_ids.filtered(lambda x: x.bom_line_id.id == line.id and x.state not in ('done', 'cancel'))
                 if move:
                     move = move[0]
                     old_qty = move.product_uom_qty
+                    # memorize actual MO bom movement rows
+                    mo_act_bom_move_ids.append(move)
                 else:
                     old_qty = 0
                 iterate_key = production._get_document_iterate_key(move)
@@ -73,6 +80,18 @@ class ChangeProductionQty(models.TransientModel):
                             documents[key] = [value]
 
                 production._update_raw_move(line, line_data)
+            # nota: non elimina la riga da stock_move quando elimino l'elemento dalla distinta
+            # delete initial MO bom rows not present in actual bom
+            if False and production.state not in ('done', 'cancel'):
+                for mo_ini_move_id in mo_ini_bom_move_ids:
+                    if mo_ini_move_id not in mo_act_bom_move_ids:
+                        mo_ini_move_id.state = 'draft'
+                        mo_ini_move_id.unlink()
+            
+            for mo_ini_move_id in mo_ini_bom_move_ids:
+                if mo_ini_move_id not in mo_act_bom_move_ids:
+                    mo_ini_move_id.product_uom_qty = 0
+                    mo_ini_move_id.raw_material_production_id = False
 
             production._log_manufacture_exception(documents)
             operation_bom_qty = {}
@@ -114,4 +133,5 @@ class ChangeProductionQty(models.TransientModel):
                 (moves_finished + moves_raw).write({'workorder_id': wo.id})
                 if quantity > 0 and wo.move_raw_ids.filtered(lambda x: x.product_id.tracking != 'none') and not wo.active_move_line_ids:
                     wo._generate_lot_ids()
+
         return {}
