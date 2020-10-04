@@ -3,10 +3,10 @@
 # * product
 # 
 # Translators:
-# Martin Trigaux, 2018
 # Cozmin Candea <office@terrabit.ro>, 2018
 # Dorin Hongu <dhongu@gmail.com>, 2020
 # Foldi Robert <foldirobert@nexterp.ro>, 2020
+# Martin Trigaux, 2020
 # Hongu Cosmin <cosmin513@gmail.com>, 2020
 # 
 msgid ""
@@ -377,7 +377,7 @@ msgstr "Negru"
 #: model:product.product,name:product.product_product_10
 #: model:product.template,name:product.product_product_10_product_template
 msgid "Cabinet with Doors"
-msgstr ""
+msgstr "Dulap cu Uși"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.view_product_price_list
@@ -767,7 +767,7 @@ msgstr "Nume afișat"
 #: model:product.product,name:product.product_product_27
 #: model:product.template,name:product.product_product_27_product_template
 msgid "Drawer"
-msgstr ""
+msgstr "Sertar"
 
 #. module: product
 #: model:product.product,name:product.product_product_16
@@ -1113,7 +1113,7 @@ msgstr ""
 #: model:product.product,name:product.product_product_8
 #: model:product.template,name:product.product_product_8_product_template
 msgid "Large Desk"
-msgstr ""
+msgstr "Birou mare"
 
 #. module: product
 #: model:product.product,name:product.consu_delivery_02
@@ -1195,7 +1195,7 @@ msgstr ""
 #. module: product
 #: model:product.attribute,name:product.product_attribute_1
 msgid "Legs"
-msgstr ""
+msgstr "Picioare"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__attribute_line_ids
@@ -1374,7 +1374,7 @@ msgstr ""
 #: model:product.product,name:product.product_product_12
 #: model:product.template,name:product.product_product_12_product_template
 msgid "Office Chair Black"
-msgstr ""
+msgstr "Scaun de birou negru"
 
 #. module: product
 #: model:product.product,name:product.product_order_01
@@ -2320,6 +2320,16 @@ msgstr ""
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__product_code
+#: code:addons/product/models/product_uom.py:63
+#, python-format
+msgid ""
+"This rounding precision is higher than the Decimal Accuracy (%s digits).\n"
+"This may cause inconsistencies in reservations.\n"
+"Please set a precision between %s and 1."
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_supplierinfo_product_code
 msgid ""
 "This vendor's product code will be used when printing a request for "
 "quotation. Keep empty to use the internal one."
@@ -2637,6 +2647,15 @@ msgstr "Istoric comunicare website"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__weight
 #: model:ir.model.fields,field_description:product.field_product_template__weight
+#: code:addons/product/models/product_uom.py:63
+#, python-format
+msgid "Warning!"
+msgstr "Atenție!"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product_weight
+#: model:ir.model.fields,field_description:product.field_product_template_weight
+#: model:product.uom.categ,name:product.product_uom_categ_kgm
 msgid "Weight"
 msgstr "Masă"
 
