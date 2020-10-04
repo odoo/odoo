@@ -33,9 +33,9 @@ msgid ""
 "Quotation - %s' % (object.name) or                 'Purchase Order - %s' % "
 "(object.name))"
 msgstr ""
-"                 (object.state у ('чернетці', 'відправлено') та 'Запит на "
-"комерційну пропозицію - %s' % (object.name) або                 'Замовлення "
-"на купівлю - %s' % (object.name))"
+"                 (object.state in ('draft', 'sent') and 'Request for "
+"Quotation - %s' % (object.name) or                 'Purchase Order - %s' % "
+"(object.name))"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_partner__supplier_invoice_count
