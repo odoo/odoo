@@ -5,14 +5,16 @@
 # Translators:
 # Martin Trigaux, 2018
 # Ricardo Martins <ricardo.nbs.martins@gmail.com>, 2018
-# MS, 2018
+# Manuela Silva <manuelarodsilva@gmail.com>, 2018
+# Nuno Silva <nuno.silva@arxi.pt>, 2020
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: MS, 2018\n"
+"PO-Revision-Date: 2018-08-24 09:17+0000\n"
+"Last-Translator: Nuno Silva <nuno.silva@arxi.pt>, 2020\n"
 "Language-Team: Portuguese (https://www.transifex.com/odoo/teams/41243/pt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -114,3 +116,19 @@ msgstr ""
 #: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision__name
 msgid "Usage"
 msgstr "Utilização"
+
+#. module: decimal_precision
+#: code:addons/decimal_precision/models/decimal_precision.py:24
+#, python-format
+msgid "Warning!"
+msgstr "Aviso!"
+
+#. module: decimal_precision
+#: code:addons/decimal_precision/models/decimal_precision.py:26
+#, python-format
+msgid ""
+"You are setting a Decimal Accuracy less precise than the UOM:\n"
+" %s \n"
+"This may cause inconsistencies in reservations.\n"
+"Please increase the rounding of this unit of measure and the global decimal precision."
+msgstr ""

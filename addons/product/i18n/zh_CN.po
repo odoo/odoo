@@ -7,7 +7,6 @@
 # ChinaMaker <liuct@chinamaker.net>, 2018
 # 老窦 北京 <2662059195@qq.com>, 2018
 # JZH-Odoo <jzh@odoo.com>, 2018
-# guohuadeng <guohuadeng@hotmail.com>, 2018
 # bower Guo <124358678@qq.com>, 2018
 # roye w <159820@qq.com>, 2018
 # diaojiaolou <124412206@qq.com>, 2018
@@ -20,11 +19,12 @@
 # inspur qiuguodong <qiuguodong@inspur.com>, 2018
 # Martin Trigaux, 2018
 # 苏州远鼎 <tiexinliu@126.com>, 2018
-# Jeffery CHEN <jeffery9@gmail.com>, 2019
 # liAnGjiA <liangjia@qq.com>, 2019
 # Maie <m@maie.name>, 2019
 # F4NNIU <sparkamax@gmail.com>, 2019
 # Jerry Pan <panjianyu@inspur.com>, 2019
+# guohuadeng <guohuadeng@hotmail.com>, 2020
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -32,7 +32,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-03-29 10:09+0000\n"
 "PO-Revision-Date: 2018-08-24 09:23+0000\n"
-"Last-Translator: Jerry Pan <panjianyu@inspur.com>, 2019\n"
+"Last-Translator: Jeffery CHEN Fan <jeffery9@gmail.com>, 2020\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2210,19 +2210,19 @@ msgstr "以Kg(公斤)表示内容物重量，不包含任何包装等。"
 #: code:addons/product/models/product_template.py:1010
 #, python-format
 msgid "There are no possible combination."
-msgstr ""
+msgstr "没有可用的组合"
 
 #. module: product
 #: code:addons/product/models/product_template.py:1005
 #, python-format
 msgid "There are no remaining closest combination."
-msgstr ""
+msgstr "没有接近的组合"
 
 #. module: product
 #: code:addons/product/models/product_template.py:963
 #, python-format
 msgid "There are no remaining possible combination."
-msgstr ""
+msgstr "没有可用的组合"
 
 #. module: product
 #: sql_constraint:product.attribute.value:0
@@ -2273,6 +2273,16 @@ msgstr "这价格表将会被使用,取代默认值,用之出售给当前伙伴.
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__product_code
+#: code:addons/product/models/product_uom.py:63
+#, python-format
+msgid ""
+"This rounding precision is higher than the Decimal Accuracy (%s digits).\n"
+"This may cause inconsistencies in reservations.\n"
+"Please set a precision between %s and 1."
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_supplierinfo_product_code
 msgid ""
 "This vendor's product code will be used when printing a request for "
 "quotation. Keep empty to use the internal one."
@@ -2415,7 +2425,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_product__valid_product_template_attribute_line_ids
 #: model:ir.model.fields,field_description:product.field_product_template__valid_product_template_attribute_line_ids
 msgid "Valid Product Attribute Lines"
-msgstr ""
+msgstr "验证产品规格值"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__valid_product_template_attribute_line_wnva_ids
@@ -2586,6 +2596,15 @@ msgstr "网站沟通记录"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__weight
 #: model:ir.model.fields,field_description:product.field_product_template__weight
+#: code:addons/product/models/product_uom.py:63
+#, python-format
+msgid "Warning!"
+msgstr "警告!"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product_weight
+#: model:ir.model.fields,field_description:product.field_product_template_weight
+#: model:product.uom.categ,name:product.product_uom_categ_kgm
 msgid "Weight"
 msgstr "重量"
 
