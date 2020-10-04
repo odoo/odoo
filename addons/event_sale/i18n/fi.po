@@ -6,13 +6,13 @@
 # Martin Trigaux, 2019
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2019
 # Miku Laitinen <miku.laitinen@gmail.com>, 2019
-# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2019
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2019
 # Veikko Väätäjä <veikko.vaataja@gmail.com>, 2019
 # Pekko Tuomisto <pekko.tuomisto@web-veistamo.fi>, 2019
 # Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2019
 # Jenni Heikkilä <jenni.heikkila@sv-oy.fi>, 2019
 # Henri Komulainen <henri.komulainen@web-veistamo.fi>, 2019
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -20,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-10-07 07:12+0000\n"
 "PO-Revision-Date: 2019-08-26 09:10+0000\n"
-"Last-Translator: Henri Komulainen <henri.komulainen@web-veistamo.fi>, 2019\n"
+"Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2020\n"
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -83,7 +83,7 @@ msgstr "Yritys"
 #. module: event_sale
 #: model:ir.actions.act_window,name:event_sale.event_configurator_action
 msgid "Configure an event"
-msgstr ""
+msgstr "Konfiguroi tapahtuma"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_configurator__create_uid
@@ -157,7 +157,7 @@ msgstr "Tapahtumaryhmä"
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_event_event_configurator
 msgid "Event Configurator"
-msgstr ""
+msgstr "Tapahtuman konfiguraattori"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_ticket_form_view
@@ -239,7 +239,7 @@ msgstr "Vanhentunut"
 #: model:ir.model.fields,field_description:event_sale.field_product_template__event_ok
 #: model:ir.model.fields,field_description:event_sale.field_sale_order_line__event_ok
 msgid "Is an Event Ticket"
-msgstr ""
+msgstr "On tapahtuman lippu"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_account_move
@@ -313,7 +313,7 @@ msgstr "Ei vapaita paikkoja tälle lipulle"
 #: code:addons/event_sale/models/event.py:0
 #, python-format
 msgid "No more available seats for this ticket type."
-msgstr ""
+msgstr "Tälle lipputyypille ei ole saatavilla paikkoja."
 
 #. module: event_sale
 #: code:addons/event_sale/models/event.py:0
@@ -393,7 +393,7 @@ msgstr "Rekisteröinti"
 #: code:addons/event_sale/models/event.py:0
 #, python-format
 msgid "Registration for %s"
-msgstr ""
+msgstr "Rekisteröitynyt %s"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__registration_ids
@@ -431,12 +431,12 @@ msgstr "Myyntitilausrivi"
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__seats_used
 msgid "Seats Used"
-msgstr ""
+msgstr "Paikkoja käytetty"
 
 #. module: event_sale
 #: model:event.type,name:event_sale.event_type_data_sale
 msgid "Sell Online"
-msgstr ""
+msgstr "Myy verkossa"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
@@ -451,7 +451,7 @@ msgstr "Lähde"
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_registration__sale_order_id
 msgid "Source Sales Order"
-msgstr ""
+msgstr "Lähteenä oleva myyntitilaus"
 
 #. module: event_sale
 #: model:event.event.ticket,name:event_sale.event_0_ticket_1
@@ -463,7 +463,7 @@ msgstr "Normaali"
 #: code:addons/event_sale/models/event.py:0
 #, python-format
 msgid "The registration must be paid"
-msgstr ""
+msgstr "Rekisteröityminen pitää maksaa"
 
 #. module: event_sale
 #: model:ir.model.fields,help:event_sale.field_event_registration__campaign_id
@@ -504,6 +504,7 @@ msgstr "Tikettityyppi"
 #, python-format
 msgid "Ticket cannot belong to both the event category and the event itself."
 msgstr ""
+"Lippu ei voi kuulua sekä tapahtumakategoriaan että tapahtumaan itseensä."
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_type__use_ticketing
@@ -553,9 +554,9 @@ msgstr "anna lisätietoja rekisteröitymisistä"
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.view_event_form_inherit_ticket
 msgid "reserved +"
-msgstr ""
+msgstr "varattu +"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.view_event_form_inherit_ticket
 msgid "unconfirmed"
-msgstr ""
+msgstr "vahvistamaton"

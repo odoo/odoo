@@ -92,6 +92,7 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
         border-right: 1px solid transparent;
         color: var(--o-we-color);
         font-size: $o-we-font-size !important;
+        border-bottom-color: transparent; // See caret design below
 
         &.active {
             background-color: var(--o-we-bg-color-dark);
@@ -104,6 +105,17 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
 
         &:focus, &:active, &:focus:active {
             @extend %we-active-button;
+        }
+
+        // This element should have been removed but still exists in 13.0 by
+        // mistake. This takes advantage of it to restore the color preview
+        // feature which disappeared and cannot be fixed as in 12.0.
+        // TODO fix the right way in 14.0.
+        > .caret {
+            display: block;
+            @include o-position-absolute(auto, 0, 0, 0);
+            border-bottom: 3px solid transparent;
+            border-bottom-color: inherit;
         }
     }
     .btn-group.show {

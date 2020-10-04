@@ -16,7 +16,6 @@
 # Peter Dovicovic <dovicovic@gmail.com>, 2020
 # Michal Matus <misko.matus@gmail.com>, 2020
 # Alexandra Brencicova <alexandra.brencicova@gmail.com>, 2020
-# Filip Boskovič <filip.boskovic@26house.com>, 2020
 # Rastislav Brencic <rastislav.brencic@azet.sk>, 2020
 # 
 msgid ""
@@ -474,7 +473,7 @@ msgstr ""
 "            % if object.origin:\n"
 "                (with reference: ${object.origin} )\n"
 "            % endif\n"
-"            vo výške <strong>${format_amount(object.amount_total, object.pricelist_id.currency_id)}</strong> je k dispozícii.\n"
+"            vo výške <strong>${format_amount(object.amount_total, object.pricelist_id.currency_id)}</strong> je k dispozícii v prílohe.\n"
 "        % else:\n"
 "            ${doc_name} <strong>${object.name}</strong>\n"
 "            % if object.origin:\n"
@@ -483,7 +482,7 @@ msgstr ""
 "            vo výške <strong>${format_amount(object.amount_total, object.pricelist_id.currency_id)}</strong> je pripravená na kontrolu.\n"
 "        % endif\n"
 "        <br/><br/>\n"
-"        V prípade akýchkoľvek otázok nás neváhajte kontaktovať.\n"
+"        V prípade akýchkoľvek otázok, nás neváhajte kontaktovať.\n"
 "        <br/>\n"
 "    </p>\n"
 "</div>\n"
@@ -497,7 +496,9 @@ msgstr "<i class=\"fa fa-clock-o\" aria-label=\"Dates\" title=\"Dates\"/>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<i class=\"fa fa-comment\"/> Contact us to get a new quotation."
-msgstr "<i class=\"fa fa-comment\"/> Pre vyžiadanie novej ponuky nás kontaktujte."
+msgstr ""
+"<i class=\"fa fa-comment\"/> Pre vyžiadanie novej cenovej ponuky nás "
+"kontaktujte."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -534,7 +535,7 @@ msgstr "<i class=\"fa fa-fw fa-clock-o\"/> <b>Čakajúca platba</b>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
 msgid "<i class=\"fa fa-fw fa-clock-o\"/> Expired"
-msgstr "<i class=\"fa fa-fw fa-clock-o\"/> Expirované"
+msgstr "<i class=\"fa fa-fw fa-clock-o\"/> Ukončená platnosť"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
@@ -722,7 +723,7 @@ msgstr "<strong>Dátum objednávky:</strong>"
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<strong>Quotation Date:</strong>"
-msgstr "<strong>Dátum vystavenia:</strong>"
+msgstr "<strong>Dátum cenovej ponuky:</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -760,7 +761,7 @@ msgstr "<strong>Platnosť ponuky vypršala!</strong>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<strong>This quotation has been canceled.</strong>"
-msgstr "<strong>Ponuka zrušená.</strong>"
+msgstr "<strong>Táto cenová ponuka bola zrušená.</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -851,7 +852,7 @@ msgstr "Akceptácia &amp; Platba"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mail_notification_paynow_online
 msgid "Accept &amp; Pay Quotation"
-msgstr "Prijať &amp; Platba Cenovej ponuky"
+msgstr "Prijať &amp; platba cenovej ponuky"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -861,7 +862,7 @@ msgstr "Prijať &amp; Podpis"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mail_notification_paynow_online
 msgid "Accept &amp; Sign Quotation"
-msgstr "Prijať &amp; Podpísať Cenovú ponuku"
+msgstr "Prijať &amp; podpísať cenovú ponuku"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__access_warning
@@ -989,7 +990,7 @@ msgstr "Nesúlad sumy (%s)"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__quotations_amount
 msgid "Amount of quotations to invoice"
-msgstr "Suma ponuky na fakturáciu"
+msgstr "Suma cenovej ponuky na fakturáciu"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales__analytic_account_id
@@ -1150,7 +1151,7 @@ msgstr ""
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_open_sale_onboarding_payment_acquirer_wizard
 msgid "Choose how to confirm quotations"
-msgstr "Vyberte spôsob potvrdenia ponúk"
+msgstr "Vyberte spôsob potvrdenia cenových ponúk"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_onboarding_order_confirmation_step
@@ -1469,7 +1470,7 @@ msgstr "Prispôsobiť"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.onboarding_quotation_layout_step
 msgid "Customize the look of your quotations."
-msgstr "Prispôsobte výzor vašich ponúk."
+msgstr "Prispôsobte výzor vašich cenových ponúk."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_dhl
@@ -1520,7 +1521,7 @@ msgstr "Predvolená platnosť ponuky"
 #: model:ir.model.fields,field_description:sale.field_res_company__quotation_validity_days
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__quotation_validity_days
 msgid "Default Quotation Validity (Days)"
-msgstr "Predvolená platnosť ponuky (dní)"
+msgstr "Predvolená platnosť cenovej ponuky (dní)"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__deposit_default_product_id
@@ -2193,7 +2194,7 @@ msgstr "Je výdavok"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__is_expired
 msgid "Is expired"
-msgstr "Je vypršané"
+msgstr "Je ukončená platnosť"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line__is_expense
@@ -2580,8 +2581,8 @@ msgid ""
 "Once the quotation is confirmed by the customer, it becomes a sales "
 "order.<br> You will be able to create an invoice and collect the payment."
 msgstr ""
-"Keď je ponuka schválená zákazníkom, stáva sa objednávkou. <br>Bude možné "
-"vytvoriť faktúru a obdržať platbu."
+"Keď je cenová ponuka schválená zákazníkom, stáva sa objednávkou. <br>Bude "
+"možné vytvoriť faktúru a obdržať platbu."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders
@@ -2597,7 +2598,8 @@ msgstr ""
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Once your quotation is ready, you can save, print or send it by email."
-msgstr "Keď je ponuka hotová, možno ju uložiť, vytlačiť alebo zaslať mailom."
+msgstr ""
+"Keď je cenová ponuka hotová, možno ju uložiť, vytlačiť alebo zaslať mailom."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__portal_confirmation_pay
@@ -3080,18 +3082,18 @@ msgstr "Cenová ponuka #"
 #. module: sale
 #: model:ir.actions.report,name:sale.action_report_saleorder
 msgid "Quotation / Order"
-msgstr "Cenová ponuka / Objednávka"
+msgstr "Cenová ponuka / objednávka"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_utm_campaign__quotation_count
 msgid "Quotation Count"
-msgstr "Počet Cenových ponúk"
+msgstr "Počet cenových ponúk"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Quotation Date"
-msgstr "Dátum vystavenia"
+msgstr "Dátum cenovej ponuky"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.onboarding_quotation_layout_step
@@ -3112,7 +3114,7 @@ msgstr "Cenová ponuka poslaná"
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_res_company_check_quotation_validity_days
 msgid "Quotation Validity is required and must be greater than 0."
-msgstr "Platnosť ponuky je povinná a väčšia ako 0."
+msgstr "Platnosť cenovej ponuky je povinná a väčšia ako 0."
 
 #. module: sale
 #: model:mail.message.subtype,description:sale.mt_order_confirmed
@@ -3130,7 +3132,7 @@ msgstr "Cenová ponuka poslaná"
 #: code:addons/sale/controllers/portal.py:0
 #, python-format
 msgid "Quotation viewed by customer %s"
-msgstr "Ponuka zobrazená zákazníkom%s"
+msgstr "Cenová ponuka zobrazená zákazníkom%s"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_quotations
@@ -3152,7 +3154,7 @@ msgstr "Cenové ponuky"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Quotations &amp; Orders"
-msgstr "Cenové ponuky &amp; Objednávky"
+msgstr "Cenové ponuky &amp; objednávky"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_quotation_salesteam
@@ -3162,7 +3164,7 @@ msgstr "Analýza cenových ponúk"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.act_res_partner_2_sale_order
 msgid "Quotations and Sales"
-msgstr "Cenové ponuky a Predaje"
+msgstr "Cenové ponuky a predaj"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_attribute__display_type__radio
@@ -3201,7 +3203,7 @@ msgstr "Pravidelná faktúra"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Reject This Quotation"
-msgstr "Zamietnuť ponuku"
+msgstr "Zamietnuť cenovú ponuku"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__remaining_validity_days
@@ -3501,7 +3503,7 @@ msgstr "Vzorový produkt"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_onboarding_sample_quotation_step
 msgid "Sample Quotation"
-msgstr "Vzorová ponuka"
+msgstr "Vzorová cenová ponuka"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -3588,12 +3590,12 @@ msgstr "Zaslať produktovo špecifický mail akonáhle je faktúra overená"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_onboarding_sample_quotation_step
 msgid "Send a quotation to test the customer portal."
-msgstr "Zašlite ponuku na test zákazníckeho portálu."
+msgstr "Zašlite cenovú ponuku na test zákazníckeho portálu."
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_open_sale_onboarding_sample_quotation
 msgid "Send a sample quotation"
-msgstr "Pošlite ukážkovú ponuku"
+msgstr "Pošlite ukážkovú cenovú ponuku"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -3646,7 +3648,7 @@ msgstr "Nastaviť platby"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Set to Quotation"
-msgstr "Nastaviť na Cenovú ponuku"
+msgstr "Nastaviť na cenovú ponuku"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_sale_config_settings
@@ -3687,7 +3689,7 @@ msgstr "Podpisať &amp; Platbu"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mail_notification_paynow_online
 msgid "Sign &amp; Pay Quotation"
-msgstr "Podpísať &amp; zaplatiť ponuku"
+msgstr "Podpísať &amp; zaplatiť cenovú ponuku"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_company__sale_onboarding_payment_method__digital_signature
@@ -3764,7 +3766,7 @@ msgstr "Stav kroku potvrdenia objednávky "
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_onboarding_sample_quotation_state
 msgid "State of the onboarding sample quotation step"
-msgstr "Stav príkladu ponuky "
+msgstr "Stav kroku začatej cenovej ponuky "
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_quotation_onboarding_state
@@ -3845,8 +3847,8 @@ msgid ""
 "Tell us why you are refusing this quotation, this will help us improve our "
 "services."
 msgstr ""
-"Povedzte nám, prečo odmietate túto cenovú ponuku, pomôže nám to zlepšovať "
-"naše služby."
+"Prosím povedzte nám, prečo odmietate túto cenovú ponuku, pomôže nám to "
+"zlepšovať naše služby."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -4374,7 +4376,7 @@ msgstr "Variant Grid Entry"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mail_notification_paynow_online
 msgid "View Quotation"
-msgstr "Zobraziť Cenovú ponuku"
+msgstr "Zobraziť cenovú ponuku"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -4539,8 +4541,8 @@ msgid ""
 "Your quotation contains products from company %s whereas your quotation belongs to company %s. \n"
 " Please change the company of your quotation or remove the products from other companies (%s)."
 msgstr ""
-"Vaša ponuka obsahuje produkty od spoločnosti %s zatiaľ čo vaša Cenová ponuka patrí spoločnosti %s. \n"
-" Zmeňte spoločnosť v Cenovej ponuke alebo odstráňte produkty od iných spoločností (%s)."
+"Vaša cenová ponuka obsahuje produkty od spoločnosti %s zatiaľ čo vaša cenová ponuka patrí spoločnosti %s. \n"
+" Zmeňte spoločnosť v cenovej ponuke alebo odstráňte produkty od iných spoločností (%s)."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_bpost

@@ -38,3 +38,4 @@ Alexandre Saunier alexandre.saunier@camptocamp.com https://github.com/asaunier
 Frédéric Junod frederic.junod@camptocamp.com https://github.com/fredj
 Sébastien Alix sebastien.alix@camptocamp.com https://github.com/sebalix
 Thomas Nowicki thomas.nowicki@camptocamp.com https://github.com/Tonow-c2c
+Thierry Ducrest thierry.ducrest@camptocamp.com https://github.com/TDu

@@ -989,10 +989,8 @@ class Field(MetaField('DummyField', (object,), {})):
             if self.recursive:
                 recs = record
             else:
-                recs = env.records_to_compute(self)
-                # compute the field on real records only (if 'record' is real)
-                # or new records only (if 'record' is new)
-                recs = recs.filtered(lambda rec: bool(rec.id) == bool(record.id))
+                ids = expand_ids(record.id, env.all.tocompute[self])
+                recs = record.browse(itertools.islice(ids, PREFETCH_MAX))
             try:
                 self.compute_value(recs)
             except (AccessError, MissingError):
@@ -2944,6 +2942,15 @@ class One2many(_RelationalMulti):
             domain = domain + [(inverse_field.model_field, '=', records._name)]
         return domain
 
+    def __get__(self, records, owner):
+        if records is not None and self.inverse_name is not None:
+            # force the computation of the inverse field to ensure that the
+            # cache value of self is consistent
+            inverse_field = records.pool[self.comodel_name]._fields[self.inverse_name]
+            if inverse_field.compute:
+                records.env[self.comodel_name].recompute([self.inverse_name])
+        return super().__get__(records, owner)
+
     def read(self, records):
         # retrieve the lines in the comodel
         context = {'active_test': False}
@@ -3651,4 +3658,4 @@ def apply_required(model, field_name):
 
 # imported here to avoid dependency cycle issues
 from .exceptions import AccessError, MissingError, UserError
-from .models import check_pg_name, BaseModel, NewId, IdType
+from .models import check_pg_name, BaseModel, NewId, IdType, expand_ids, PREFETCH_MAX
