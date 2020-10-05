@@ -227,7 +227,7 @@ class Http(models.AbstractModel):
                 values.update(qweb_exception=exception)
 
                 # retro compatibility to remove in 12.2
-                exception.qweb = dict(message=exception.message, expression=exception.html)
+                exception.qweb = dict(message=exception.message, expression=exception.html) # pylint: disable=exception-message-attribute
 
                 if type(exception.error) == odoo.exceptions.AccessError:
                     code = 403
