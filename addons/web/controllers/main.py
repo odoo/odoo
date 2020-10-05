@@ -1892,13 +1892,16 @@ class ExportFormat(object):
         model, fields, ids, domain, import_compat = \
             operator.itemgetter('model', 'fields', 'ids', 'domain', 'import_compat')(params)
 
+        Model = request.env[model].with_context(**params.get('context', {}))
+        if not Model._is_an_ordinary_table():
+            fields = [field for field in fields if field['name'] != 'id']
+
         field_names = [f['name'] for f in fields]
         if import_compat:
             columns_headers = field_names
         else:
             columns_headers = [val['label'].strip() for val in fields]
 
-        Model = request.env[model].with_context(**params.get('context', {}))
         groupby = params.get('groupby')
         if not import_compat and groupby:
             groupby_type = [Model._fields[x.split(':')[0]].type for x in groupby]
@@ -1916,11 +1919,9 @@ class ExportFormat(object):
             Model = Model.with_context(import_compat=import_compat)
             records = Model.browse(ids) if ids else Model.search(domain, offset=0, limit=False, order=False)
 
-            if not Model._is_an_ordinary_table():
-                fields = [field for field in fields if field['name'] != 'id']
-
             export_data = records.export_data(field_names).get('datas',[])
             response_data = self.from_data(columns_headers, export_data)
+
         return request.make_response(response_data,
             headers=[('Content-Disposition',
                             content_disposition(self.filename(model))),
