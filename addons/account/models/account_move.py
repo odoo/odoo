@@ -4219,6 +4219,7 @@ class AccountMoveLine(models.Model):
 class AccountPartialReconcile(models.Model):
     _name = "account.partial.reconcile"
     _description = "Partial Reconcile"
+    _rec_name = "id"
 
     debit_move_id = fields.Many2one('account.move.line', index=True, required=True)
     credit_move_id = fields.Many2one('account.move.line', index=True, required=True)
