@@ -186,6 +186,9 @@ $-seen-urls: ();
         font-family: $o-theme-navbar-font;
     }
 
+    .navbar-collapse {
+        min-width: 0; // Allows it to shrink during loading
+    }
     .nav-item {
         transition: opacity 1000ms ease 0s;
     }
@@ -195,10 +198,13 @@ $-seen-urls: ();
         // the header does not flicker during loading.
         white-space: nowrap;
     }
-    .o_menu_loading .nav-item {
-        height: 0 !important;
+    .o_menu_loading {
+        flex-wrap: nowrap !important;
         overflow: hidden !important;
-        opacity: 0 !important;
+
+        .nav-item {
+            opacity: 0 !important;
+        }
     }
 }
 
