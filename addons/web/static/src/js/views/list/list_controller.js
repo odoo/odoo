@@ -8,6 +8,7 @@ odoo.define('web.ListController', function (require) {
  */
 
 var core = require('web.core');
+const { ComponentWrapper, WidgetAdapterMixin } = require("web.OwlCompatibility");
 var BasicController = require('web.BasicController');
 var DataExport = require('web.DataExport');
 var Dialog = require('web.Dialog');
@@ -18,7 +19,7 @@ const viewUtils = require('web.viewUtils');
 var _t = core._t;
 var qweb = core.qweb;
 
-var ListController = BasicController.extend({
+var ListController = BasicController.extend(WidgetAdapterMixin, {
     /**
      * This key contains the name of the buttons template to render on top of
      * the list view. It can be overridden to add buttons in specific child views.
@@ -71,6 +72,18 @@ var ListController = BasicController.extend({
             this.isExportEnable = hasGroup;
         });
         return Promise.all([sup, acl]);
+    },
+    destroy() {
+        this._super(...arguments);
+        WidgetAdapterMixin.destroy.call(this);
+    },
+    on_attach_callback() {
+        this._super(...arguments);
+        WidgetAdapterMixin.on_attach_callback.call(this);
+    },
+    on_detach_callback() {
+        this._super(...arguments);
+        WidgetAdapterMixin.on_detach_callback.call(this);
     },
 
     //--------------------------------------------------------------------------
@@ -383,17 +396,37 @@ var ListController = BasicController.extend({
             },
         });
     },
+    _getExportDialog() {
+        let state = this.model.get(this.handle);
+        let defaultExportFields = this.renderer.columns
+            .filter((field) => field.tag === "field")
+            .map((field) => field.attrs.name);
+        let groupedBy = this.renderer.state.groupedBy;
+        const domain = this.isDomainSelected && state.getDomain();
+        return new DataExport(null, {
+            record: state,
+            defaultExportFields,
+            groupedBy,
+            activeDomain: domain,
+            idsToExport: this.getSelectedIds(),
+        });
+    },
     /**
-     * @returns {DataExport} the export dialog widget
+     * @returns {ComponentWrapper} the export dialog Component i.e. DataExport
      * @private
      */
-    _getExportDialogWidget() {
+    _getExportDialogComponent() {
         let state = this.model.get(this.handle);
         let defaultExportFields = this.renderer.columns.filter(field => field.tag === 'field').map(field => field.attrs.name);
         let groupedBy = this.renderer.state.groupedBy;
         const domain = this.isDomainSelected && state.getDomain();
-        return new DataExport(this, state, defaultExportFields, groupedBy,
-            domain, this.getSelectedIds());
+        return new ComponentWrapper(this, DataExport, {
+            record: state,
+            defaultExportFields,
+            groupedBy,
+            activeDomain: domain,
+            idsToExport: this.getSelectedIds(),
+        });
     },
     /**
      * Only display the pager when there are data to display.
@@ -773,7 +806,7 @@ var ListController = BasicController.extend({
      * @private
      */
     _onExportData: function () {
-        this._getExportDialogWidget().open();
+        this._getExportDialogComponent().mount(document.querySelector("body"));
     },
     /**
      * Export Records in a xls file
@@ -783,11 +816,11 @@ var ListController = BasicController.extend({
     _onDirectExportData() {
         // access rights check before exporting data
         return this._rpc({
-            model: 'ir.exports',
-            method: 'search_read',
-            args: [[], ['id']],
+            model: "ir.exports",
+            method: "search_read",
+            args: [[], ["id"]],
             limit: 1,
-        }).then(() => this._getExportDialogWidget().export())
+        }).then(() => this._getExportDialog().export());
     },
     /**
      * Opens the related form view.
