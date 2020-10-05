@@ -176,7 +176,7 @@ function factory(dependencies) {
             const recipients = [...this.mentionedPartners];
             if (this.thread) {
                 for (const recipient of this.thread.suggestedRecipientInfoList) {
-                    if (recipient.isSelected) {
+                    if (recipient.partner && recipient.isSelected) {
                         recipients.push(recipient.partner);
                     }
                 }

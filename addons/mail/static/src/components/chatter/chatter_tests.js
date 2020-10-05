@@ -3,6 +3,7 @@ odoo.define('mail/static/src/components/chatter/chatter_tests', function (requir
 
 const components = {
     Chatter: require('mail/static/src/components/chatter/chatter.js'),
+    Composer: require('mail/static/src/components/composer/composer.js'),
 };
 const {
     afterEach,
@@ -23,6 +24,14 @@ QUnit.module('chatter_tests.js', {
         this.createChatterComponent = async ({ chatter }, otherProps) => {
             const props = Object.assign({ chatterLocalId: chatter.localId }, otherProps);
             await createRootComponent(this, components.Chatter, {
+                props,
+                target: this.widget.el,
+            });
+        };
+
+        this.createComposerComponent = async (composer, otherProps) => {
+            const props = Object.assign({ composerLocalId: composer.localId }, otherProps);
+            await createRootComponent(this, components.Composer, {
                 props,
                 target: this.widget.el,
             });
@@ -450,6 +459,160 @@ QUnit.test('do not post message with "Enter" keyboard shortcut', async function 
         document.body,
         '.o_Message',
         "should still not have any message in mailing channel after pressing 'Enter' in text input of composer"
+    );
+});
+
+QUnit.test("Display suggested recipients list", async function (assert) {
+    assert.expect(3);
+
+    this.data['res.partner'].records.push({ id: 100, email: 'john@jane.be', display_name: 'John Jane' });
+    this.data['res.fake'].records.push({
+        id: 10,
+        email_cc: "john@test.be",
+        partner_ids: [100],
+    });
+    await this.start ();
+    const chatter = this.env.models['mail.chatter'].create({
+        threadId: 10,
+        threadModel: 'res.fake',
+    });
+    await this.createChatterComponent({ chatter });
+
+    await afterNextRender(() =>
+        document.querySelector(`.o_ChatterTopbar_buttonSendMessage`).click()
+    );
+
+    assert.containsOnce(
+        document.body,
+        '.o_ComposerSuggestedRecipientList',
+        "Should display a list of suggested recipients after opening the composer from 'Send message' button"
+    );
+    assert.containsN(
+        document.body,
+        '.o_ComposerSuggestedRecipient',
+        3,
+        "There should be 3 suggested recipients"
+    );
+
+    assert.containsNone(
+        document.body,
+        '.o_ComposerSuggestedRecipientList_showMore',
+        "suggested recipient list should not containt a \"show more\" button."
+    );
+
+});
+
+QUnit.test("suggested recipients reason should be displayed as title", async function (assert) {
+    assert.expect(1);
+
+    this.data['res.fake'].records.push({
+        id: 10,
+        email_cc: "john@test.be",
+    });
+    await this.start ();
+    const chatter = this.env.models['mail.chatter'].create({
+        threadId: 10,
+        threadModel: 'res.fake',
+    });
+    await this.createChatterComponent({ chatter });
+
+    await afterNextRender(() =>
+        document.querySelector(`.o_ChatterTopbar_buttonSendMessage`).click()
+    );
+
+    const title = document.querySelector('.o_ComposerSuggestedRecipient:not([data-partner-id])').getAttribute('title');
+    assert.strictEqual(
+        title,
+        "Add as recipient and follower (reason: CC email)",
+        "reason must be present in the suggested recipient title",
+    );
+});
+
+QUnit.test("suggested recipients should be checked when there is a partner and unchecked if there is no partner", async function (assert) {
+    assert.expect(2);
+
+    this.data['res.fake'].records.push({
+        id: 10,
+        email_cc: "john@test.be",
+    });
+    await this.start ();
+    const chatter = this.env.models['mail.chatter'].create({
+        threadId: 10,
+        threadModel: 'res.fake',
+    });
+    await this.createChatterComponent({ chatter });
+
+    await afterNextRender(() =>
+        document.querySelector(`.o_ChatterTopbar_buttonSendMessage`).click()
+    );
+
+    const checkboxUnchecked = document.querySelector('.o_ComposerSuggestedRecipient:not([data-partner-id]) input[type=checkbox]');
+    assert.notOk(
+        checkboxUnchecked.checked,
+        "suggested recipient without a partner should not be checked by default",
+    );
+    const checkboxChecked = document.querySelector('.o_ComposerSuggestedRecipient[data-partner-id] input[type=checkbox]');
+    assert.ok(
+        checkboxChecked.checked,
+        "suggested recipient with a partner should be checked by default.",
+    );
+});
+
+QUnit.test("suggested recipients list should have a show more and show less button", async function (assert) {
+    assert.expect(5);
+
+    this.data['res.partner'].records.push({ id: 100, email: 'john@jane.be', display_name: 'John Jane' });
+    this.data['res.partner'].records.push({ id: 1000, email: 'jack@jone.be', display_name: 'Jack Jone' });
+    this.data['res.fake'].records.push({
+        id: 10,
+        email_cc: "john@test.be",
+        partner_ids: [100, 1000],
+    });
+    await this.start ();
+    const chatter = this.env.models['mail.chatter'].create({
+        threadId: 10,
+        threadModel: 'res.fake',
+    });
+    await this.createChatterComponent({ chatter });
+
+    await afterNextRender(() =>
+        document.querySelector(`.o_ChatterTopbar_buttonSendMessage`).click()
+    );
+
+    assert.containsOnce(
+        document.body,
+        '.o_ComposerSuggestedRecipientList_showMore',
+        "suggested recipient list should containt a \"show more\" button."
+    );
+
+    await afterNextRender(() =>
+        document.querySelector(`.o_ComposerSuggestedRecipientList_showMore`).click()
+    );
+    assert.containsN(
+        document.body,
+        '.o_ComposerSuggestedRecipient',
+        4,
+        "suggested recipient list should display all the suggested recipients."
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_ComposerSuggestedRecipientList_showLess',
+        "suggested recipient list should containt a \"show less\" button."
+    );
+
+    await afterNextRender(() =>
+        document.querySelector(`.o_ComposerSuggestedRecipientList_showLess`).click()
+    );
+    assert.containsN(
+        document.body,
+        '.o_ComposerSuggestedRecipient',
+        3,
+        "suggested recipient list should display 3 suggested recipients after clicking on \"show less\"."
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_ComposerSuggestedRecipientList_showMore',
+        "suggested recipient list should containt a \"show More\" button after clicking on \"show less\"."
     );
 });
 
