@@ -521,6 +521,12 @@ class ProcurementGroup(models.Model):
         if use_new_cursor:
             self._cr.commit()
 
+        # Run cyclic inventories
+        self.env['stock.inventory']._run_inventory_tasks(company_id)
+
+        if use_new_cursor:
+            self._cr.commit()
+
     @api.model
     def run_scheduler(self, use_new_cursor=False, company_id=False):
         """ Call the scheduler in order to check the running procurements (super method), to check the minimum stock rules

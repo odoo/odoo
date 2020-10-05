@@ -125,6 +125,9 @@ class Inventory(models.Model):
         self.action_check()
         self.write({'state': 'done', 'date': fields.Datetime.now()})
         self.post_inventory()
+        if self.user_has_groups('stock.group_stock_multi_locations') and not self.product_ids and self.location_ids:
+            locations = self.env['stock.location'].with_context(active_test=False).search([('id', 'child_of', self.location_ids.ids), ('usage', 'in', ['internal', 'transit'])])
+            locations.last_inventory_date = fields.Datetime.now()
         return True
 
     def post_inventory(self):
@@ -318,6 +321,47 @@ class Inventory(models.Model):
         if self.exhausted:
             vals += self._get_exhausted_inventory_lines_vals({(l['product_id'], l['location_id']) for l in vals})
         return vals
+
+    @api.model
+    def _run_inventory_tasks(self, company_id=False):
+        """ Generate and clean up cyclic inventories for locations as follows:
+            - [to create]: - The location has a cyclic count set (i.e. inventory every XX days) and has a next_inventory_date of today or earlier
+                           - The location is not a descendant of another location that is having a cyclic inventory created
+                           - The location doesn't already have an in progress inventory specific to (i.e. only for) it
+            - [to delete]: - Existing draft cyclic inventory that was created before today (i.e. still draft) [new one created afterwards]
+                           - Existing draft location inventory that is a descendant of a location that has a next_inventory_date of today or earlier
+        """
+        domain = [('next_inventory_date', '<=', fields.Date.today())]
+        if company_id:
+            # manually triggered => only apply to user's companies
+            domain = expression.AND([[('company_id', '=', company_id)], domain])
+        else:
+            # cron triggered => apply to all companies
+            domain = expression.AND([[('company_id', '!=', False)], domain])
+        locations = self.env['stock.location'].search(domain)
+        if locations:
+            # ignore any locations that are children of other locations that should have an inventory done
+            locations = locations.filtered(lambda l: not any(int(location_id) in locations.ids for location_id in l.parent_path.split('/')[:-2]))
+            existing_loc_invs = self.search([('state', 'in', ['draft', 'confirm']), ('product_ids', '=', False), ('location_ids', '!=', False)])
+            invs_to_unlink = self.env['stock.inventory']
+            existing_cyclic_inv = self.env['stock.inventory']
+            for inventory in existing_loc_invs:
+                # assume inventories with more than 1 location were manually created and should be untouched
+                if len(inventory.location_ids) == 1:
+                    if inventory.state == 'draft' \
+                        and (any(int(location_id) in locations.ids for location_id in inventory.location_ids[0].parent_path.split('/')[:-2])
+                             or (inventory.location_ids[0] in locations and inventory.create_date < fields.Datetime.today())):
+                        invs_to_unlink |= inventory
+                    elif inventory.location_ids[0] in locations:
+                        existing_cyclic_inv |= inventory
+            invs_to_unlink.unlink()
+            locations -= existing_cyclic_inv.mapped('location_ids')
+            location_vals = []
+            for location in locations:
+                location_vals.append({'name': "Reoccuring Inventory for: " + str(location.name),
+                                      'company_id': location.company_id.id,
+                                      'location_ids': location})
+            self.create(location_vals)
 
 
 class InventoryLine(models.Model):
