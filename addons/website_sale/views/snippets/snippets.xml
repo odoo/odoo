@@ -60,7 +60,7 @@
             </div>
 
             <we-row data-name="ribbon_options">
-                <we-select string="Ribbon" data-no-preview="true" class="o_wsale_ribbon_select">
+                <we-select string="Ribbon" class="o_wsale_ribbon_select">
                     <we-button data-set-ribbon="" data-name="no_ribbon_opt">None</we-button>
                     <!-- Ribbons are filled in JS -->
                 </we-select>
@@ -69,12 +69,12 @@
             </we-row>
             <div class="d-none" data-name="ribbon_customize_opt">
                 <we-row string="Ribbon">
-                    <we-input data-set-ribbon-html="" class="o_we_large_input" data-apply-to=".o_wsale_ribbon_dummy" data-no-preview="true"/>
+                    <we-input data-set-ribbon-html="" class="o_we_large_input" data-apply-to=".o_wsale_ribbon_dummy"/>
                     <we-button class="fa fa-check" data-save-ribbon="" title="Validate" data-no-preview="true"/>
                     <we-button class="fa fa-trash" data-delete-ribbon="" title="Delete" data-no-preview="true"/>
                 </we-row>
-                <we-colorpicker string="⌙ Background" title="" data-select-style="" data-apply-to=".o_wsale_ribbon_dummy" data-css-property="background-color" data-color-prefix="bg-" data-no-preview="true"/>
-                <we-colorpicker string="⌙ Text" title="" data-select-style="" data-apply-to=".o_wsale_ribbon_dummy" data-css-property="color" data-no-preview="true"/>
+                <we-colorpicker string="⌙ Background" title="" data-select-style="" data-apply-to=".o_wsale_ribbon_dummy" data-css-property="background-color" data-color-prefix="bg-"/>
+                <we-colorpicker string="⌙ Text" title="" data-select-style="" data-apply-to=".o_wsale_ribbon_dummy" data-css-property="color"/>
                 <we-select string="⌙ Mode">
                     <we-button data-set-ribbon-mode="ribbon">Slanted</we-button>
                     <we-button data-set-ribbon-mode="tag">Tag</we-button>
