@@ -277,11 +277,11 @@ var ListController = BasicController.extend({
         if (archive) {
             return this.model
                 .actionArchive(ids, this.handle)
-                .then(this.update.bind(this, {}, {reload: false}));
+                .then(this._searchPanel ? this._searchPanel._notifyDomainUpdated() : this.update.bind(this, {}, {reload: false}));
         } else {
             return this.model
                 .actionUnarchive(ids, this.handle)
-                .then(this.update.bind(this, {}, {reload: false}));
+                .then(this._searchPanel ? this._searchPanel._notifyDomainUpdated() : this.update.bind(this, {}, {reload: false}));
         }
     },
     /**
