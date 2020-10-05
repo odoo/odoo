@@ -564,6 +564,10 @@ var DomainSelector = DomainTree.extend({
      * node
      */
     _onAddFirstButtonClick: function () {
+        // allows field selector to overflow
+        if (this.$el.closest('.modal-body').length) {
+            this.$el.closest('.modal-body').css('overflow', 'visible');
+        }
         this._addChild(this.options.default || [["id", "=", 1]]);
     },
     /**
