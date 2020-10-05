@@ -2539,7 +2539,6 @@
             <field name="l10n_ec_code_applied">394</field>
             <field name="l10n_ec_code_base">3440</field>
             <field name="l10n_ec_code_ats">3440</field>
-            <field name="active">False</field>
             <field name="chart_template_id" ref="l10n_ec_ifrs"/>
             <field name="tax_group_id" ref="ec_tax_group_withhold_income"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
@@ -2641,6 +2640,43 @@
                     'repartition_type': 'tax',
                     'account_id': ref('ret_ir_10x100'),
                     'tag_ids': [ref('tax_tag_396')],
+                })]"/>
+        </record>
+        <record id="tax_withhold_profit_346" model="account.tax.template">
+            <field name="name">346 1.75% MICROEMPRESAS (OTRAS RETENCIONES APLICABLES A OTROS PORCENTAJES)</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="amount_type">percent</field>
+            <field name="sequence">70</field>
+            <field name="amount">-1.75</field>
+            <field name="description">346</field>
+            <field name="l10n_ec_code_applied">396</field>
+            <field name="l10n_ec_code_base">346</field>
+            <field name="l10n_ec_code_ats">346</field>
+            <field name="chart_template_id" ref="l10n_ec_ifrs"/>
+            <field name="tax_group_id" ref="ec_tax_group_withhold_income"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'tag_ids': [ref('tax_tag_396')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('ret_ir_1_75x100'),
+                    'tag_ids': [ref('tax_tag_346')],
+                })]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'tag_ids': [ref('tax_tag_396')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('ret_ir_1_75x100'),
+                    'tag_ids': [ref('tax_tag_346')],
                 })]"/>
         </record>
         <record id="tax_withhold_profit_347_346" model="account.tax.template">

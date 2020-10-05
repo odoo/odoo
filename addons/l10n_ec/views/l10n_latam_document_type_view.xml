@@ -7,11 +7,10 @@
         <field name="inherit_id" ref="l10n_latam_invoice_document.view_document_type_form"/>
         <field name="arch" type="xml">
         	<xpath expr="//group" position="after">
-				<group string="Ecuador Configuration" col="2" colspan="2">
+				<group string="Ecuadorian Configuration" col="2" colspan="2">
 					<field name="l10n_ec_type"/>
-					<field name="l10n_ec_validate_number"/>
-					<field name="l10n_ec_require_vat"/>
 					<field name="l10n_ec_authorization"/>
+					<field name="l10n_ec_require_vat"/>
 			    </group>
 			</xpath>
         </field>

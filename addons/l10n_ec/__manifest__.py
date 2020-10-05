@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
-    'name': 'Ecuadorian Accounting by Trescloud',
-    'version': '3.0',
+    'name': 'Ecuadorian Accounting',
+    'version': '3.3',
     'description': '''
 Functional
 ----------
@@ -37,15 +37,14 @@ Authors:
     Ing. Andres Calle <andres.calle@trescloud.com>
     Ing. José Miguel Rivero <jose.rivero@trescloud.com>
     ''',
-    'author': 'TRESCLOUD',
+    'author': 'OPA CONSULTING & TRESCLOUD',
     'category': 'Localization',
-    'maintainer': 'TRESCLOUD CIA. LTDA.',
-    'website': 'http://www.trescloud.com',
+    'maintainer': 'OPA CONSULTING',
+    'website': 'https://opa-consulting.com',
     'license': 'OEEL-1',
     'depends': [
         'l10n_latam_invoice_document',
         'l10n_latam_base',
-        'account_tax_python',
     ],   
     'data': [
         #Chart of Accounts
@@ -63,7 +62,7 @@ Authors:
         'data/account_chart_template_configure_data.xml',
         'data/res_country.xml', #TODO move into Odoo core
         #Partners data
-        'data/res.country.state.csv',
+        'data/res_country_state_data.xml',
         'data/res_bank_data.xml',
         'data/l10n_latam_identification_type_data.xml',
         'data/res_partner_data.xml',
