@@ -60,7 +60,14 @@ class ResCompany(models.Model):
     @api.model
     def create_missing_dropship_picking_type(self):
         company_ids  = self.env['res.company'].search([])
-        company_has_dropship_picking_type = self.env['stock.picking.type'].search([('name', '=', 'Dropship')]).mapped('company_id')
+        company_has_dropship_picking_type = (
+            self.env['stock.picking.type']
+            .search([
+                ('default_location_src_id.usage', '=', 'supplier'),
+                ('default_location_dest_id.usage', '=', 'customer'),
+            ])
+            .mapped('company_id')
+        )
         company_todo_picking_type = company_ids - company_has_dropship_picking_type
         company_todo_picking_type._create_dropship_picking_type()
 
