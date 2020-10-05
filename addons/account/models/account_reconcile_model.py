@@ -521,7 +521,6 @@ class AccountReconcileModel(models.Model):
             LEFT JOIN account_account account       ON account.id = aml.account_id
             WHERE st_line.id IN %s
                 AND aml.company_id = st_line.company_id
-                AND move.state = 'posted'
                 AND (
                         -- the field match_partner of the rule might enforce the second part of
                         -- the OR condition, later in _apply_conditions()
@@ -591,11 +590,17 @@ class AccountReconcileModel(models.Model):
                         aml.date > company.account_bank_reconciliation_start
                         )
                     )
+                    AND (
+                        move.state = 'posted'
+                        OR
+                        ((move.state = 'draft' OR move.state IS NULL) AND journal.post_at = 'bank_rec')
+                    )
                     OR
                     (
                     -- black lines appearance conditions
                     account.reconcile IS TRUE
                     AND aml.reconciled IS NOT TRUE
+                    AND move.state = 'posted'
                     )
                 )
             '''
