@@ -1125,11 +1125,11 @@ class Lead(models.Model):
             domain.append(('email_normalized', '=', normalized_email))
         if partner:
             domain.append(('partner_id', '=', partner.id))
-        domain = ['|'] * (len(domain) - 1) + domain
 
         if not domain:
             return self.env['crm.lead']
 
+        domain = ['|'] * (len(domain) - 1) + domain
         if include_lost:
             domain += ['|', ('type', '=', 'opportunity'), ('active', '=', True)]
         else:
