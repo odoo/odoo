@@ -4,17 +4,17 @@
 # 
 # Translators:
 # Martin Trigaux, 2020
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2020
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2020
 # dpms <pieter.van.de.wygaert@telenet.be>, 2020
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.2\n"
+"Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-02-13 08:34+0000\n"
+"POT-Creation-Date: 2020-09-29 13:46+0000\n"
 "PO-Revision-Date: 2020-09-07 08:18+0000\n"
-"Last-Translator: dpms <pieter.van.de.wygaert@telenet.be>, 2020\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2020\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -70,6 +70,11 @@ msgid "Cancel"
 msgstr "Annuleren"
 
 #. module: sale_product_configurator
+#: model:product.template,name:sale_product_configurator.product_product_1_product_template
+msgid "Chair floor protection"
+msgstr "Stoel vloerbescherming"
+
+#. module: sale_product_configurator
 #. openerp-web
 #: code:addons/sale_product_configurator/static/src/js/product_configurator_controller.js:0
 #, python-format
@@ -104,6 +109,8 @@ msgid "Custom Values"
 msgstr "Aangepaste waardes"
 
 #. module: sale_product_configurator
+#: model:ir.model.fields,field_description:sale_product_configurator.field_product_template__display_name
+#: model:ir.model.fields,field_description:sale_product_configurator.field_sale_order_line__display_name
 #: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__display_name
 msgid "Display Name"
 msgstr "Schermnaam"
@@ -114,6 +121,8 @@ msgid "Extra Values"
 msgstr "Extra waardes"
 
 #. module: sale_product_configurator
+#: model:ir.model.fields,field_description:sale_product_configurator.field_product_template__id
+#: model:ir.model.fields,field_description:sale_product_configurator.field_sale_order_line__id
 #: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__id
 msgid "ID"
 msgstr "ID"
@@ -124,6 +133,8 @@ msgid "Is the product configurable?"
 msgstr "Is het product configureerbaar?"
 
 #. module: sale_product_configurator
+#: model:ir.model.fields,field_description:sale_product_configurator.field_product_template____last_update
+#: model:ir.model.fields,field_description:sale_product_configurator.field_sale_order_line____last_update
 #: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator____last_update
 msgid "Last Modified on"
 msgstr "Laatst gewijzigd op"
@@ -137,6 +148,11 @@ msgstr "Laatst bijgewerkt door"
 #: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__write_date
 msgid "Last Updated on"
 msgstr "Laatst bijgewerkt op"
+
+#. module: sale_product_configurator
+#: model:product.template,description_sale:sale_product_configurator.product_product_1_product_template
+msgid "Office chairs can harm your floor: protect it."
+msgstr "Kantoorstoelen kunnen uw vloer beschadigingen: Bescherm deze."
 
 #. module: sale_product_configurator
 #: model_terms:ir.ui.view,arch_db:sale_product_configurator.optional_product_items
@@ -235,3 +251,8 @@ msgstr "Deze combinatie bestaat niet."
 #: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure
 msgid "This product has no valid combination."
 msgstr "Dit product heeft geen geldige combinatie."
+
+#. module: sale_product_configurator
+#: model:product.template,uom_name:sale_product_configurator.product_product_1_product_template
+msgid "Units"
+msgstr "Stuks"

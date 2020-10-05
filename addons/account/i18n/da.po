@@ -12181,12 +12181,16 @@ msgid ""
 " its move lines' balance), expressed in its currency. This is a technical "
 "field use to speedup the application of reconciliation models."
 msgstr ""
+"Den tilbageværende mængde der skal afstemmes på denne udtogs linje (angivet "
+"i overensstemmelse med linjens saldo), angivet i det valuta. Dette er et "
+"teknisk felt brugt til at gøre anvendelsen af afstemnings modeller "
+"hurtigere."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
 #, python-format
 msgid "The amount of a statement line can't be equal to zero."
-msgstr ""
+msgstr "Mængden på en udtogs linje kan ikke være lig nul."
 
 #. module: account
 #: code:addons/account/models/account_tax.py:0
@@ -12220,7 +12224,7 @@ msgstr "Oversigtsskabelonen for virksomheden (hvis nogen)"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "The chosen QR-code type is not eligible for this invoice."
-msgstr ""
+msgstr "Den valgte QR-kode type er ikke valgbar for denne faktura."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_bnk_stmt_check
@@ -12250,13 +12254,13 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__company_id
 msgid "The company this distribution line belongs to."
-msgstr ""
+msgstr "Virksomheden denne distributions linje tilhører."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__tax_fiscal_country_id
 #: model:ir.model.fields,help:account.field_res_company__account_tax_fiscal_country_id
 msgid "The country to use the tax reports from for this company"
-msgstr ""
+msgstr "Landet hvis momsrapport skal bruges for denne virksomhed"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_reversal
@@ -12286,7 +12290,7 @@ msgstr "Valuta bruges til at indtaste kontoudtoget"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "The current highest number is"
-msgstr ""
+msgstr "Det i øjeblikket højeste tal er"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement__state
@@ -12297,6 +12301,10 @@ msgid ""
 "entries, ready for the reconciliation.- Validated: All lines are reconciled."
 " There is nothing left to process."
 msgstr ""
+"Den nuværende status for din kontoudtog:- Ny: Fuldt ud redigerbar med kladde"
+" Journal Postering.- Behandler: Ikke længere redigerbar med posterede "
+"journal posteringer klar til afstemning.- Valideret: Alle linjer er afstemt."
+" Der er ikke mere at behandle."
 
 #. module: account
 #: code:addons/account/models/account_payment_term.py:0
@@ -12319,6 +12327,8 @@ msgid ""
 "The ending balance is incorrect !\n"
 "The expected balance (%(real_balance)s) is different from the computed one (%(computed_balance)s)."
 msgstr ""
+"Den afsluttende saldo er ukorrekt !\n"
+"Den forventede saldo (%(real_balance)s) er forskellig fra den udregnede (%(computed_balance)s)."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_product_category__property_account_expense_categ_id
@@ -12363,7 +12373,7 @@ msgstr "Skattepositionen afgør moms/konti brugt for denne kontakt."
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
 msgid "The following Journal Entries will be generated"
-msgstr ""
+msgstr "De følgende Journalposteringer vil blive genereret"
 
 #. module: account
 #: code:addons/account/models/res_bank.py:0
@@ -12372,6 +12382,8 @@ msgid ""
 "The following error prevented '%s' QR-code to be generated though it was "
 "detected as eligible: "
 msgstr ""
+"Den følgende fejl forhindrede '%s' QR-kode i at blive genereret, til trods "
+"for den blive anset som valgbar:"
 
 #. module: account
 #: code:addons/account/wizard/account_invoice_send.py:0
@@ -12391,12 +12403,15 @@ msgid ""
 "though they don't generate any tag: %s . This probably means you forgot to "
 "set a tag_name on these lines."
 msgstr ""
+"De følgende momsrapport linjer bruges som moms distribution skabelon, selv "
+"om de ikke generere noget tag: %s . Dette betyder formentligt, at du glemte "
+"at angive et tag_name på disse linjer."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
 #, python-format
 msgid "The foreign currency must be different than the journal one: %s"
-msgstr ""
+msgstr "Den udenlandske valuta skal være forskellig fra journalens valuta: %s"
 
 #. module: account
 #: code:addons/account/models/account_account.py:0
@@ -12405,6 +12420,8 @@ msgid ""
 "The foreign currency set on the journal '%(journal)s' and the account "
 "'%(account)s' must be the same."
 msgstr ""
+"Den udenlandske valuta angivet på journalen '%(journal)s' og kontoen "
+"'%(account)s' skal være forskellig."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
@@ -12429,6 +12446,8 @@ msgid ""
 "The journal entry %s reached an invalid state regarding its related statement line.\n"
 "To be consistent, the journal entry must always have exactly one journal item involving the bank/cash account."
 msgstr ""
+"Journalposteringen %s nåede en ugyldig tilstand i forhold til dens relaterede kontoudtogs linje.\n"
+"For at være konsistent, skal journalposteringen altid have nøjagtig én journalartikel som involverer bank/kontant kontoen."
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
@@ -12437,6 +12456,8 @@ msgid ""
 "The journal entry %s reached an invalid state relative to its payment.\n"
 "To be consistent, all the write-off journal items must share the same account."
 msgstr ""
+"Journalposteringen %s nåede en ugyldig tilstand relativ til dens betaling.\n"
+"For at være konsistent, skal alle afskrevne journalartikler dele den samme konto. "
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
@@ -12449,6 +12470,12 @@ msgid ""
 "- optional journal items, all sharing the same account.\n"
 "\n"
 msgstr ""
+"Journalposteringen %s nåede en ugyldig tilstand relativ til dens betaling.\n"
+"For at være konsistent, skal journalposteringen altid indeholde:\n"
+"- en journalartikel der involverer udestående betalings/kvitterings kontoen.\n"
+"- en journalartikel der involverer en tilgodehavende/betalbar konto.\n"
+"- valgfri journalartikler, som alle deler samme konto.\n"
+"\n"
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
@@ -12457,6 +12484,8 @@ msgid ""
 "The journal entry %s reached an invalid state relative to its payment.\n"
 "To be consistent, the journal items must share the same currency."
 msgstr ""
+"Journalposteringen %s nåede en ugyldig tilstand relativ til dens betaling.\n"
+"For at være konsistent, skal journalartiklerne dele samme valuta."
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
