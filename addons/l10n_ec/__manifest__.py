@@ -49,7 +49,7 @@ Authors:
     'data': [
         #Chart of Accounts
         'data/account_chart_template_data.xml',
-        'data/account_group_data.xml',
+        'data/account_group_template_data.xml',
         'data/account.account.template.csv',
         'data/account_chart_template_setup_accounts.xml',
         #Taxes
