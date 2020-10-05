@@ -3,7 +3,6 @@
 # 	* sale_product_configurator
 # 
 # Translators:
-# Ediz Duman <neps1192@gmail.com>, 2020
 # Martin Trigaux, 2020
 # Levent Karakaş <levent@mektup.at>, 2020
 # Murat Kaplan <muratk@projetgrup.com>, 2020
@@ -14,14 +13,15 @@
 # Umur Akın <umura@projetgrup.com>, 2020
 # Ugur Yilmaz <ugurlu2001@hotmail.com>, 2020
 # abc Def <hdogan1974@gmail.com>, 2020
+# Ediz Duman <neps1192@gmail.com>, 2020
 # Tugay Hatıl <tugayh@projetgrup.com>, 2020
 # Murat Durmuş <muratd@projetgrup.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.2\n"
+"Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-02-13 08:34+0000\n"
+"POT-Creation-Date: 2020-09-29 13:46+0000\n"
 "PO-Revision-Date: 2020-09-07 08:18+0000\n"
 "Last-Translator: Murat Durmuş <muratd@projetgrup.com>, 2020\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
@@ -77,6 +77,11 @@ msgid "Cancel"
 msgstr "İptal et"
 
 #. module: sale_product_configurator
+#: model:product.template,name:sale_product_configurator.product_product_1_product_template
+msgid "Chair floor protection"
+msgstr "Sandalye zemini koruması"
+
+#. module: sale_product_configurator
 #. openerp-web
 #: code:addons/sale_product_configurator/static/src/js/product_configurator_controller.js:0
 #, python-format
@@ -111,6 +116,8 @@ msgid "Custom Values"
 msgstr "Özel Değerler"
 
 #. module: sale_product_configurator
+#: model:ir.model.fields,field_description:sale_product_configurator.field_product_template__display_name
+#: model:ir.model.fields,field_description:sale_product_configurator.field_sale_order_line__display_name
 #: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__display_name
 msgid "Display Name"
 msgstr "Görünüm Adı"
@@ -121,6 +128,8 @@ msgid "Extra Values"
 msgstr "Ekstra Değerler"
 
 #. module: sale_product_configurator
+#: model:ir.model.fields,field_description:sale_product_configurator.field_product_template__id
+#: model:ir.model.fields,field_description:sale_product_configurator.field_sale_order_line__id
 #: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__id
 msgid "ID"
 msgstr "ID"
@@ -131,6 +140,8 @@ msgid "Is the product configurable?"
 msgstr "Ürün yapılandırılabilir mi?"
 
 #. module: sale_product_configurator
+#: model:ir.model.fields,field_description:sale_product_configurator.field_product_template____last_update
+#: model:ir.model.fields,field_description:sale_product_configurator.field_sale_order_line____last_update
 #: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator____last_update
 msgid "Last Modified on"
 msgstr "Son Düzenleme"
@@ -144,6 +155,11 @@ msgstr "Son Güncelleyen"
 #: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__write_date
 msgid "Last Updated on"
 msgstr "Son Güncelleme"
+
+#. module: sale_product_configurator
+#: model:product.template,description_sale:sale_product_configurator.product_product_1_product_template
+msgid "Office chairs can harm your floor: protect it."
+msgstr "Ofis koltukları zemine zarar verebilir: koruyun."
 
 #. module: sale_product_configurator
 #: model_terms:ir.ui.view,arch_db:sale_product_configurator.optional_product_items
@@ -242,3 +258,8 @@ msgstr "Bu kombinasyon mevcut değil."
 #: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure
 msgid "This product has no valid combination."
 msgstr "Bu ürünün geçerli bir kombinasyonu yok."
+
+#. module: sale_product_configurator
+#: model:product.template,uom_name:sale_product_configurator.product_product_1_product_template
+msgid "Units"
+msgstr "Adet"

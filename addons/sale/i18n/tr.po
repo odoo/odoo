@@ -14,26 +14,26 @@
 # Mehmet Demirel <mdemirell@gmail.com>, 2020
 # Erdem Keskin <erdemkeskines@gmail.com>, 2020
 # ANIL TAN SAĞIR <anils@projetgrup.com>, 2020
-# Yedigen, 2020
 # Tugay Hatıl <tugayh@projetgrup.com>, 2020
-# Ediz Duman <neps1192@gmail.com>, 2020
 # Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2020
 # Martin Trigaux, 2020
-# Murat Kaplan <muratk@projetgrup.com>, 2020
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2020
 # Abdullah Onur Uğur <aonurugur@outlook.com>, 2020
 # cagri erarslan <cagri.erarslan@mechsoft.com.tr>, 2020
 # Umur Akın <umura@projetgrup.com>, 2020
 # Buket Şeker <buket_skr@hotmail.com>, 2020
-# Ugur Yilmaz <ugurlu2001@hotmail.com>, 2020
 # abc Def <hdogan1974@gmail.com>, 2020
+# Ediz Duman <neps1192@gmail.com>, 2020
+# Murat Kaplan <muratk@projetgrup.com>, 2020
+# Ugur Yilmaz <ugurlu2001@hotmail.com>, 2020
+# Yedigen, 2020
 # Murat Durmuş <muratd@projetgrup.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.5\n"
+"Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-07 07:33+0000\n"
+"POT-Creation-Date: 2020-09-29 13:46+0000\n"
 "PO-Revision-Date: 2020-09-07 08:17+0000\n"
 "Last-Translator: Murat Durmuş <muratd@projetgrup.com>, 2020\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
@@ -112,6 +112,12 @@ msgid ""
 msgstr ""
 "(object.state in ('draft', 'sent') and 'Quotation - %s' % (object.name)) or "
 "'Order - %s' % (object.name)"
+
+#. module: sale
+#: model:product.product,description_sale:sale.product_product_4e
+#: model:product.product,description_sale:sale.product_product_4f
+msgid "160x80cm, with large legs."
+msgstr "160x80cm, geniş bacak."
 
 #. module: sale
 #. openerp-web
@@ -1236,6 +1242,12 @@ msgid "Currency Rate"
 msgstr "Para Birimi Çevrim Oranı"
 
 #. module: sale
+#: model:product.attribute.value,name:sale.product_attribute_value_7
+#: model:product.template.attribute.value,name:sale.product_4_attribute_1_value_3
+msgid "Custom"
+msgstr "Özel"
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_custom_attribute_value_ids
 msgid "Custom Values"
 msgstr "Özel Değerler"
@@ -1305,6 +1317,12 @@ msgstr "Müşteri Vergileri"
 #: model:ir.ui.menu,name:sale.res_partner_menu
 msgid "Customers"
 msgstr "Müşteriler"
+
+#. module: sale
+#: model:product.product,name:sale.product_product_4e
+#: model:product.product,name:sale.product_product_4f
+msgid "Customizable Desk (CONFIG)"
+msgstr "Özelleştirilebilir Masa (CONFIG)"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.onboarding_quotation_layout_step
@@ -1448,6 +1466,12 @@ msgstr ""
 " müşteriye söz verebileceğiniz teslim tarihi. Sevkiyat durumunda, sipariş "
 "hatlarının minimum veya maksimum teslim süresini kullanmak için siparişin "
 "gönderim politikası dikkate alınacaktır."
+
+#. module: sale
+#: model:product.product,name:sale.advance_product_0
+#: model:product.template,name:sale.advance_product_0_product_template
+msgid "Deposit"
+msgstr "Depozito"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__deposit_default_product_id
@@ -3238,6 +3262,11 @@ msgid "Sale Payment acquire onboarding wizard"
 msgstr "Satış Ödeme satın alma sihirbazı"
 
 #. module: sale
+#: model:utm.source,name:sale.utm_source_sale_order_0
+msgid "Sale Promotion 1"
+msgstr "Satış Promosyonu 1"
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Sale Warnings"
 msgstr "Satış Uyarıları"
@@ -4203,6 +4232,14 @@ msgstr "Birim Fiyat:"
 #: model_terms:ir.ui.view,arch_db:sale.view_order_line_tree
 msgid "Unit of Measure"
 msgstr "Ölçü Birimi"
+
+#. module: sale
+#: model:product.product,uom_name:sale.advance_product_0
+#: model:product.product,uom_name:sale.product_product_4e
+#: model:product.product,uom_name:sale.product_product_4f
+#: model:product.template,uom_name:sale.advance_product_0_product_template
+msgid "Units"
+msgstr "Adet"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_product_uom_form_action

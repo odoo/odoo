@@ -4,17 +4,17 @@
 # 
 # Translators:
 # Martin Trigaux, 2020
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2020
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2020
 # Cas Vissers <casvissers@brahoo.nl>, 2020
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.5\n"
+"Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-01 07:28+0000\n"
+"POT-Creation-Date: 2020-10-02 14:11+0000\n"
 "PO-Revision-Date: 2020-09-07 08:19+0000\n"
-"Last-Translator: Cas Vissers <casvissers@brahoo.nl>, 2020\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2020\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -65,11 +65,6 @@ msgstr "Rekeningstelsel sjabloon"
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__account_move_ids
 msgid "Account Move"
 msgstr "Boeking"
-
-#. module: stock_account
-#: model:ir.model,name:stock_account.model_account_move_reversal
-msgid "Account Move Reversal"
-msgstr "Tegenboeking rekening"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
@@ -280,7 +275,6 @@ msgstr "Omschrijving"
 #: model:ir.model.fields,field_description:stock_account.field_account_chart_template__display_name
 #: model:ir.model.fields,field_description:stock_account.field_account_move__display_name
 #: model:ir.model.fields,field_description:stock_account.field_account_move_line__display_name
-#: model:ir.model.fields,field_description:stock_account.field_account_move_reversal__display_name
 #: model:ir.model.fields,field_description:stock_account.field_product_category__display_name
 #: model:ir.model.fields,field_description:stock_account.field_product_product__display_name
 #: model:ir.model.fields,field_description:stock_account.field_product_template__display_name
@@ -335,7 +329,6 @@ msgstr "Heeft boekingen"
 #: model:ir.model.fields,field_description:stock_account.field_account_chart_template__id
 #: model:ir.model.fields,field_description:stock_account.field_account_move__id
 #: model:ir.model.fields,field_description:stock_account.field_account_move_line__id
-#: model:ir.model.fields,field_description:stock_account.field_account_move_reversal__id
 #: model:ir.model.fields,field_description:stock_account.field_product_category__id
 #: model:ir.model.fields,field_description:stock_account.field_product_product__id
 #: model:ir.model.fields,field_description:stock_account.field_product_template__id
@@ -399,7 +392,7 @@ msgstr "Boeking"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_move_line
 msgid "Journal Item"
-msgstr "Boeking"
+msgstr "Boekingsregel"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_res_config_settings__module_stock_landed_costs
@@ -410,7 +403,6 @@ msgstr "Totale kosten"
 #: model:ir.model.fields,field_description:stock_account.field_account_chart_template____last_update
 #: model:ir.model.fields,field_description:stock_account.field_account_move____last_update
 #: model:ir.model.fields,field_description:stock_account.field_account_move_line____last_update
-#: model:ir.model.fields,field_description:stock_account.field_account_move_reversal____last_update
 #: model:ir.model.fields,field_description:stock_account.field_product_category____last_update
 #: model:ir.model.fields,field_description:stock_account.field_product_product____last_update
 #: model:ir.model.fields,field_description:stock_account.field_product_template____last_update
@@ -706,11 +698,9 @@ msgstr ""
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid ""
-"The Stock Input and/or Output accounts cannot be the same than the Stock "
+"The Stock Input and/or Output accounts cannot be the same as the Stock "
 "Valuation account."
 msgstr ""
-"De voorraadtoename- en voorraadafnamerekening kunnen niet hetzelfde zijn als"
-" de voorraadwaarderingsrekening."
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:0
@@ -765,7 +755,7 @@ msgid ""
 "There is no valuation layers. Valuation layers are created when some product"
 " moves should impact the valuation of the stock."
 msgstr ""
-"Er zijn geen waarderingslagen. Waarderingslagen worden gecreëerd wanneer "
+"Er zijn geen waarderingslagen. Waarderingslagen worden aangemaakt wanneer "
 "sommige productbewegingen de waardering van de voorraad zouden moeten "
 "beïnvloeden."
 

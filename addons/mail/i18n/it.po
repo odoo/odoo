@@ -13,19 +13,19 @@
 # Francesco Garganese <francesco.garganese@aeromnia.aero>, 2020
 # Martin Trigaux, 2020
 # Giovanni Perteghella <giovanni@perteghella.org>, 2020
-# Simone Bernini <simone@aperturelabs.it>, 2020
 # Paolo Valier, 2020
 # efraimbiffi <eab@odoo.com>, 2020
 # Léonie Bouchat <lbo@odoo.com>, 2020
 # Luigia Cimmino Caserta <lcc@odoo.com>, 2020
 # Iacopo Simonelli <lsi@odoo.com>, 2020
+# Simone Bernini <simone@aperturelabs.it>, 2020
 # Sergio Zanchetta <primes2h@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.5\n"
+"Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-01 07:28+0000\n"
+"POT-Creation-Date: 2020-09-29 13:45+0000\n"
 "PO-Revision-Date: 2020-09-07 08:14+0000\n"
 "Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2020\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
@@ -129,6 +129,8 @@ msgid ""
 "<b attrs=\"{'invisible': [('no_record', '=', False)]}\" class=\"text-"
 "warning\">No record for this model</b>"
 msgstr ""
+"<b attrs=\"{'invisible': [('no_record', '=', False)]}\" class=\"text-"
+"warning\">Nessun record per questo modello</b>"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:0
@@ -187,7 +189,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_document_file_kanban
 msgid "<i class=\"fa fa-globe\" aria-label=\"Document url\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-globe\" aria-label=\"URL documento\"/>"
 
 #. module: mail
 #. openerp-web
@@ -243,6 +245,13 @@ msgstr ""
 #, python-format
 msgid "<p>Create a channel here.</p>"
 msgstr "<p>Crea un canale qui.</p>"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/js/tours/mail.js:0
+#, python-format
+msgid "<p>Create a public or private channel.</p>"
+msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -516,7 +525,7 @@ msgstr "Tipo di attività"
 #: model:ir.model.fields,field_description:mail.field_res_partner__activity_type_icon
 #: model:ir.model.fields,field_description:mail.field_res_users__activity_type_icon
 msgid "Activity Type Icon"
-msgstr ""
+msgstr "Icona tipo di attività"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_activity_type_action
@@ -714,7 +723,7 @@ msgstr "Applicato a"
 #: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_view_search
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_view_search
 msgid "Archived"
-msgstr "Archiviati"
+msgstr "Archiviata"
 
 #. module: mail
 #: code:addons/mail/wizard/mail_resend_cancel.py:0
@@ -1115,7 +1124,7 @@ msgstr "Indirizzi destinatario separati da virgola (ammessi segnaposto)"
 #: model:ir.model.fields.selection,name:mail.selection__mail_message__message_type__comment
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
 msgid "Comment"
-msgstr "Commenta"
+msgstr "Commento"
 
 #. module: mail
 #: model:ir.model,name:mail.model_res_company
@@ -1331,7 +1340,7 @@ msgstr "Data"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__ir_actions_server__activity_date_deadline_range_type__days
 msgid "Days"
-msgstr "giorni"
+msgstr "Giorni"
 
 #. module: mail
 #. openerp-web
@@ -1439,7 +1448,7 @@ msgstr "Elimina"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__auto_delete
 msgid "Delete Emails"
-msgstr "Eliminare le e-mail"
+msgstr "Elimina e-mail"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__auto_delete_message
@@ -2146,7 +2155,7 @@ msgstr "Da"
 #: code:addons/mail/static/src/xml/systray.xml:0
 #, python-format
 msgid "Future"
-msgstr "Future"
+msgstr "in futuro"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
@@ -2850,7 +2859,7 @@ msgstr "In ascolto su un canale"
 #: code:addons/mail/static/src/xml/thread.xml:0
 #, python-format
 msgid "Loading"
-msgstr "Caricamento"
+msgstr "Caricamento in corso"
 
 #. module: mail
 #. openerp-web
@@ -3004,7 +3013,7 @@ msgstr "Segna completata"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
 msgid "Mark as Done"
-msgstr "Segna completato"
+msgstr "Segna completata"
 
 #. module: mail
 #. openerp-web
@@ -3012,7 +3021,7 @@ msgstr "Segna completato"
 #: code:addons/mail/static/src/xml/web_kanban_activity.xml:0
 #, python-format
 msgid "Mark as done"
-msgstr "Segna completato"
+msgstr "Segna completata"
 
 #. module: mail
 #: model:mail.activity.type,name:mail.mail_activity_data_meeting
@@ -4815,7 +4824,7 @@ msgstr "Grazie!"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_bounce_catchall
 msgid "The"
-msgstr "Le ultime"
+msgstr "Il team di"
 
 #. module: mail
 #: code:addons/mail/models/ir_actions.py:0
@@ -5109,7 +5118,7 @@ msgstr ""
 "- \"Esegui codice python\": esegue un blocco di codice python\n"
 "- \"Crea\": crea un nuovo record con nuovi valori\n"
 "- \"Aggiorna record\": aggiorna i valori di un record\n"
-"- \"Esegui alcune azioni\": definisce un'azione che attiva diverse altre azioni server\n"
+"- \"Esegui alcune azioni\": definisce un'azione che attiva altre azioni server\n"
 "- \"Invia e-mail\": invia una e-mail in modo automatico (Comunicazioni)\n"
 "- \"Aggiungi follower\": aggiunge follower a un record (Comunicazioni)\n"
 "- \"Crea prossima attività\": crea un'attività (Comunicazioni)"
@@ -5366,7 +5375,7 @@ msgstr "Avviso"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__ir_actions_server__activity_date_deadline_range_type__weeks
 msgid "Weeks"
-msgstr "settimane"
+msgstr "Settimane"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_render_mixin__sub_model_object_field
@@ -5571,6 +5580,11 @@ msgid "assigned you an activity"
 msgstr "ti ha assegnato un'attività"
 
 #. module: mail
+#: model:mail.channel,name:mail.channel_2
+msgid "board-meetings"
+msgstr "riunioni-cda"
+
+#. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/activity.xml:0
 #: model_terms:ir.ui.view,arch_db:mail.message_notification_email
@@ -5692,6 +5706,11 @@ msgid "or"
 msgstr "o"
 
 #. module: mail
+#: model:mail.channel,name:mail.channel_3
+msgid "rd"
+msgstr "rs"
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_template_preview_view_form
 msgid "record:"
 msgstr "record:"
@@ -5729,6 +5748,11 @@ msgstr "limitato a chi sta seguendo"
 #, python-format
 msgid "restricted to known authors"
 msgstr "limitato agli autori conosciuti"
+
+#. module: mail
+#: model:mail.channel,name:mail.channel_1
+msgid "sales"
+msgstr "vendite"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:0

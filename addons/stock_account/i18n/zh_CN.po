@@ -20,9 +20,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.5\n"
+"Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-01 07:28+0000\n"
+"POT-Creation-Date: 2020-10-02 14:11+0000\n"
 "PO-Revision-Date: 2020-09-07 08:19+0000\n"
 "Last-Translator: Jeffery CHEN Fan <jeffery9@gmail.com>, 2020\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
@@ -75,11 +75,6 @@ msgstr "科目表模版"
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__account_move_ids
 msgid "Account Move"
 msgstr "会计凭证"
-
-#. module: stock_account
-#: model:ir.model,name:stock_account.model_account_move_reversal
-msgid "Account Move Reversal"
-msgstr "会计凭证冲销"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
@@ -273,7 +268,6 @@ msgstr "说明"
 #: model:ir.model.fields,field_description:stock_account.field_account_chart_template__display_name
 #: model:ir.model.fields,field_description:stock_account.field_account_move__display_name
 #: model:ir.model.fields,field_description:stock_account.field_account_move_line__display_name
-#: model:ir.model.fields,field_description:stock_account.field_account_move_reversal__display_name
 #: model:ir.model.fields,field_description:stock_account.field_product_category__display_name
 #: model:ir.model.fields,field_description:stock_account.field_product_product__display_name
 #: model:ir.model.fields,field_description:stock_account.field_product_template__display_name
@@ -326,7 +320,6 @@ msgstr "有会计凭证"
 #: model:ir.model.fields,field_description:stock_account.field_account_chart_template__id
 #: model:ir.model.fields,field_description:stock_account.field_account_move__id
 #: model:ir.model.fields,field_description:stock_account.field_account_move_line__id
-#: model:ir.model.fields,field_description:stock_account.field_account_move_reversal__id
 #: model:ir.model.fields,field_description:stock_account.field_product_category__id
 #: model:ir.model.fields,field_description:stock_account.field_product_product__id
 #: model:ir.model.fields,field_description:stock_account.field_product_template__id
@@ -401,7 +394,6 @@ msgstr "到岸成本"
 #: model:ir.model.fields,field_description:stock_account.field_account_chart_template____last_update
 #: model:ir.model.fields,field_description:stock_account.field_account_move____last_update
 #: model:ir.model.fields,field_description:stock_account.field_account_move_line____last_update
-#: model:ir.model.fields,field_description:stock_account.field_account_move_reversal____last_update
 #: model:ir.model.fields,field_description:stock_account.field_product_category____last_update
 #: model:ir.model.fields,field_description:stock_account.field_product_product____last_update
 #: model:ir.model.fields,field_description:stock_account.field_product_template____last_update
@@ -693,9 +685,9 @@ msgstr "技术字段用于检索昂格鲁-撒克逊明细行"
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid ""
-"The Stock Input and/or Output accounts cannot be the same than the Stock "
+"The Stock Input and/or Output accounts cannot be the same as the Stock "
 "Valuation account."
-msgstr "库存进货和/或出货科目不能与库存计价科目相同。"
+msgstr ""
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:0

@@ -9,16 +9,16 @@
 # Артём Инжиянц <artem.inzhyyants@gmail.com>, 2020
 # Zoriana Zaiats, 2020
 # Oleksandr Paziuk <o.paziuk@mobilunity.com>, 2020
-# Martin Trigaux, 2020
 # Bohdan Lisnenko, 2020
 # ТАрас <tratatuta@i.ua>, 2020
+# Martin Trigaux, 2020
 # Alina Lisnenko <alinasemeniuk1@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.5\n"
+"Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-07 07:52+0000\n"
+"POT-Creation-Date: 2020-10-02 14:25+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
 "Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2020\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
@@ -1428,20 +1428,12 @@ msgid ""
 "\n"
 "    Manage discounts with deliveries in taxclouds computations.\n"
 "    This module follows the same logic as \"Account Taxcloud - Sale (coupon)\".\n"
-"    More information can be found there on how dicount computations are made for TaxCloud.\n"
+"    More information can be found there on how discount computations are made for TaxCloud.\n"
 "\n"
 "    There is an added option for discount (free shipping) on deliveries.\n"
 "    With Sale coupon delivery, the discount computation does not apply on delivery lines.\n"
 "    "
 msgstr ""
-"\n"
-"    Керуйте зныжками на доставках з обчисленням taxclouds.\n"
-"    Цей модуль слыдуэ за тыэю ж логыкою, що й \"Бухоблік Taxcloud - Продажі (купон)\".\n"
-"    Більше інформації ви можете дізнатися у \"як обчислюється знижка для TaxCloud\".\n"
-"\n"
-"    Тут є додана функція для знижки на доставках (безкоштовна доставка).\n"
-"    З купоном продажу на доставку, обчислення знижки не застосовується на рядки доставки.\n"
-"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_timesheet_attendance
@@ -2007,20 +1999,9 @@ msgid ""
 "For Customer Invoicing support for OCR level 1 to 4. The OCR number can be based on partner or\n"
 "the invoice.\n"
 "\n"
-"For Vendor Bill support for Default Vendor Specific OCR is added and validation for OCR.\n"
+"For Vendor Bill support, Default Vendor Specific OCR and validation for OCR are added.\n"
 "    "
 msgstr ""
-"\n"
-"Додайте структуровану комунікацію до рахунків клієнтів та постачальників.\n"
-"------------------------------------------------------------------\n"
-"\n"
-"Використання структурованої комунікації OCR спрощує узгодження рахунків та платежів.\n"
-"\n"
-"Підтримка виставлення клієнтських рахунків для рівня OCR від 1 до 4. Номер OCR може базуватися на партнері чи\n"
-"рахунку.\n"
-"\n"
-"Підтримка рахунків постачальника додається для конкретного OCR постачальника за замовчуванням та валідація OCR.\n"
-"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_contract_reports
@@ -2679,32 +2660,6 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,description:base.module_base_gengo
-msgid ""
-"\n"
-"Automated Translations through Gengo API\n"
-"========================================\n"
-"\n"
-"This module will install passive scheduler job for automated translations \n"
-"using the Gengo API. To activate it, you must\n"
-"1) Configure your Gengo authentication parameters under `Settings > Companies > Gengo Parameters`\n"
-"2) Launch the wizard under `Settings > Application Terms > Gengo: Manual Request of Translation` and follow the wizard.\n"
-"\n"
-"This wizard will activate the CRON job and the Scheduler and will start the automatic translation via Gengo Services for all the terms where you requested it.\n"
-"    "
-msgstr ""
-"\n"
-"Автоматизовані переклади через API Gengo\n"
-"==============================\n"
-"\n"
-"Цей модуль встановить пасивну роботу планувальника для автоматизованих перекладів\n"
-"використовуючи API Gengo. Щоб його активувати, потрібно\n"
-"1) Налаштувати параметри автентифікації Gengo в розділі `Налаштування > Компанії> Параметри Gengo`\n"
-"2) Запустити майстер у розділі `Налаштування > Умови застосування> Gengo: Ручний запит на переклад` та дотримуватися підказок.\n"
-"\n"
-"Цей майстер активізує роботу CRON та планувальник, і почне автоматичний переклад за допомогою служб Gengo Services для всіх умов, де ви зазначили."
-
-#. module: base
 #: model:ir.module.module,description:base.module_l10n_et
 msgid ""
 "\n"
@@ -3149,17 +3104,9 @@ msgid ""
 "Compare timesheets and plannings\n"
 "================================\n"
 "\n"
-"Better plan your futur plannings by observing the number of hours pressed\n"
-"on old plannings.\n"
+"Better plan your future schedules by considering time effectively spent on old plannings\n"
 "\n"
 msgstr ""
-"\n"
-"Порівняйте табелі та планування\n"
-"================================\n"
-"\n"
-"Краще плануйте ваші майбутні планування, спостерігаючи, за кількістю встановлених годин \n"
-"на старому плануванні.\n"
-"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_taxcloud
@@ -3535,6 +3482,24 @@ msgstr ""
 "\n"
 "Цей модуль додає завершені курси до резюме співробітників.\n"
 "        "
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_cl_edi
+msgid ""
+"\n"
+"EDI Chilean Localization\n"
+"========================\n"
+"This code allows to generate the DTE document for Chilean invoicing.\n"
+"- DTE (Electronic Taxable Document) format in XML\n"
+"- Direct Communication with SII (Servicio de Impuestos Internos) to send invoices and other tax documents related to sales.\n"
+"- Communication with Customers to send sale DTEs.\n"
+"- Communication with Suppliers (vendors) to accept DTEs from them.\n"
+"- Direct Communication with SII informing the acceptance or rejection of vendor bills or other DTEs.\n"
+"\n"
+" In order to see the barcode on the invoice, you need the pdf417gen library.\n"
+"\n"
+"    "
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mx_edi
@@ -5281,25 +5246,10 @@ msgid ""
 "------------------------------------------------------------------------------------------------------\n"
 "    Payment Follow-Up / Send Email and letters\n"
 "\n"
-"It will generate a PDF / send emails / set manual actions according to the the different levels\n"
+"It will generate a PDF / send emails / set manual actions according to the different levels\n"
 "of recall defined. You can define different policies for different companies.\n"
 "\n"
 msgstr ""
-"\n"
-"Модуль для автоматизації листів для неоплачених рахунків, з повторними викликами у кілька рівнів.\n"
-"=========================================================================\n"
-"\n"
-"Ви можете визначити ваші кілька рівнів повторного виклику через меню:\n"
-"---------------------------------------------------------------\n"
-"    Налаштування / Нагадування / Рівні нагадувань\n"
-"\n"
-"Після визначення, ви можете автоматично виконувати повторні нагадування щодня через просте натискання на меню:\n"
-"------------------------------------------------------------------------------------------------------\n"
-"    Нагадування про оплату / Надіслати електронний лист та поштовий лист\n"
-"\n"
-"Це створить PDF / надішле електронні листи / встановить ручні дії відповідно до різних рівнів\n"
-"визначених нагадувань. Ви можете визначити різну політику для різних компаній.\n"
-"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_bank_statement_import_camt
@@ -6393,6 +6343,19 @@ msgstr ""
 "Цей аддон дозволяє користувачеві відображати всі форми веб-сайтів, пов'язані з певною\n"
 "моделлю. Крім того, ви можете створити нову форму веб-сайту або відредагувати існуючу.\n"
 "\n"
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_ch_qriban
+msgid ""
+"\n"
+"Swiss localization\n"
+"==================\n"
+"Added a QR-IBAN field on bank account.\n"
+"If this field is empty, but the bank account number itself is a valid QR-IBAN number, it will still be used as QR-IBAN as before.  \n"
+"But if you fill in the new QR-IBAN field, that one will be used as the QR-IBAN.  This should help for reconciliation as \n"
+"on the bank statements, the old IBAN code is still used.  \n"
+"    "
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ch
@@ -7640,17 +7603,6 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,description:base.module_website_gengo
-msgid ""
-"\n"
-"This module allows to send website content to Gengo translation service in a single click. Gengo then gives back the translated terms in the destination language.\n"
-"    "
-msgstr ""
-"\n"
-"Цей модуль дозволяє відправляти вміст сайту до служби перекладів Gengo одним натисканням миші. Потім Gengo повертає перекладені терміни мовою призначення.\n"
-"    "
-
-#. module: base
 #: model:ir.module.module,description:base.module_mrp_landed_costs
 msgid ""
 "\n"
@@ -8743,8 +8695,8 @@ msgstr "%s (копія)"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
-msgid "%w - Weekday number [0(Sunday),6].\""
-msgstr "%w - Номер тижня [0(Sunday),6].\""
+msgid "%w - Day of the week number [0(Sunday),6].\""
+msgstr ""
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
@@ -9068,6 +9020,13 @@ msgid "<i class=\"fa fa-envelope\" role=\"img\" aria-label=\"Login\"/>"
 msgstr "<i class=\"fa fa-envelope\" role=\"img\" aria-label=\"Login\"/>"
 
 #. module: base
+#: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
+msgid ""
+"<i class=\"fa fa-fw o_button_icon fa-arrow-right\"/>\n"
+"                                    <span>Documentation</span>"
+msgstr ""
+
+#. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_rule_form
 msgid ""
 "<i class=\"fa fa-info fa-3x text-info float-left\" role=\"img\" aria-"
@@ -9142,11 +9101,6 @@ msgid ""
 msgstr ""
 "<span class=\"searchIcon\"><i class=\"fa fa-search\" role=\"img\" aria-"
 "label=\"Search\" title=\"Search\"/></span>"
-
-#. module: base
-#: model_terms:ir.ui.view,arch_db:base.identity_check_wizard
-msgid "<span class=\"text-uppercase\">Security Control</span>"
-msgstr ""
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
@@ -9292,6 +9246,11 @@ msgstr "<strong>Телефон:</strong>"
 #: model_terms:ir.ui.view,arch_db:base.view_res_company_kanban
 msgid "<strong>Phone</strong>"
 msgstr "<strong>Телефон</strong>"
+
+#. module: base
+#: model_terms:ir.ui.view,arch_db:base.identity_check_wizard
+msgid "<strong>Please confirm your password to continue</strong>"
+msgstr ""
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodulereference
@@ -9818,6 +9777,11 @@ msgid "Access to unauthorized or invalid companies."
 msgstr "Доступ до неавторизованих чи недійсних компаній."
 
 #. module: base
+#: model:ir.module.category,name:base.module_category_account
+msgid "Account"
+msgstr "Рахунок"
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_account_auto_transfer
 msgid "Account Automatic Transfers"
 msgstr "Автоматичні переміщення рахунку"
@@ -10298,6 +10262,19 @@ msgid "Add views and tweaks on event"
 msgstr ""
 
 #. module: base
+#: model:res.partner,website_short_description:base.res_partner_address_31
+msgid "Addison Olson is a mighty sales representative at Deco Addict."
+msgstr ""
+
+#. module: base
+#: model_terms:res.partner,website_description:base.res_partner_address_31
+msgid ""
+"Addison Olson works in IT sector <b>since 10 years</b>. He is known\n"
+"    notably for selling mouse traps. With that trick he cut\n"
+"    IT budget by almost half within the last 2 years."
+msgstr ""
+
+#. module: base
 #: code:addons/base/models/ir_qweb_fields.py:0
 #: model_terms:ir.ui.view,arch_db:base.contact
 #: model_terms:ir.ui.view,arch_db:base.res_partner_view_form_private
@@ -10568,6 +10545,11 @@ msgstr "Розширені функції для stock_account"
 #: model:ir.module.module,shortdesc:base.module_payment_adyen
 msgid "Adyen Payment Acquirer"
 msgstr "Платіжний еквайєр Adyen"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_adyen_platforms
+msgid "Adyen for Platforms"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_module_module__license__agpl-3
@@ -11096,6 +11078,16 @@ msgid "Aruba"
 msgstr "Аруба"
 
 #. module: base
+#: model_terms:res.partner,website_description:base.res_partner_1
+#: model_terms:res.partner,website_description:base.res_partner_10
+#: model_terms:res.partner,website_description:base.res_partner_12
+#: model_terms:res.partner,website_description:base.res_partner_2
+#: model_terms:res.partner,website_description:base.res_partner_3
+#: model_terms:res.partner,website_description:base.res_partner_4
+msgid "As a team, we are happy to contribute to this event."
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_hr_appraisal
 msgid "Assess your employees"
 msgstr "Оцініть своїх співробітників"
@@ -11266,11 +11258,6 @@ msgid "Automated Action based on Employee Contracts"
 msgstr "Автоматизовані дії на основі контрактів працівників"
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_base_gengo
-msgid "Automated Translations through Gengo API"
-msgstr "Автоматичний переклад через Gengo API"
-
-#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module__auto_install
 msgid "Automatic Installation"
 msgstr "Початок встановлення"
@@ -11329,6 +11316,13 @@ msgstr "Аватар"
 #: model:res.country,name:base.az
 msgid "Azerbaijan"
 msgstr "Азербайджан"
+
+#. module: base
+#: model:res.partner,website_short_description:base.res_partner_12
+msgid ""
+"Azure Interior brings honesty and seriousness to wood industry while helping"
+" customers deal with trees, flowers and fungi."
+msgstr ""
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_B
@@ -11548,6 +11542,16 @@ msgstr "Базове поле"
 #, python-format
 msgid "Base Language 'en_US' can not be deleted."
 msgstr "Базову мову 'en_US' не можна видалити."
+
+#. module: base
+#: model:ir.module.module,summary:base.module_adyen_platforms
+msgid "Base Module for Adyen for Platforms"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_adyen_platforms
+msgid "Base Module for Adyen for Platforms, used in eCommerce and PoS"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_payment
@@ -11828,6 +11832,14 @@ msgstr "Нижнє поле (мм)"
 #: model:res.country,name:base.bv
 msgid "Bouvet Island"
 msgstr "Острів Буве"
+
+#. module: base
+#: model_terms:res.partner,website_description:base.res_partner_address_15
+msgid ""
+"Brandon works in IT sector <b>since 10 years</b>. He is known\n"
+"                notably for selling mouse traps. With that trick he cut\n"
+"                IT budget by almost half within the last 2 years."
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.br
@@ -12111,6 +12123,7 @@ msgstr "Канадійський шаблон чеку"
 #: model_terms:ir.ui.view,arch_db:base.base_partner_merge_automatic_wizard_form
 #: model_terms:ir.ui.view,arch_db:base.change_password_wizard_view
 #: model_terms:ir.ui.view,arch_db:base.form_res_users_key_description
+#: model_terms:ir.ui.view,arch_db:base.identity_check_wizard
 #: model_terms:ir.ui.view,arch_db:base.res_config_view_base
 #: model_terms:ir.ui.view,arch_db:base.reset_view_arch_wizard_view
 #: model_terms:ir.ui.view,arch_db:base.view_base_import_language
@@ -12400,6 +12413,11 @@ msgid "Chile - Accounting Reports"
 msgstr "Чилі - Бухгалтерські звіти"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_cl_edi
+msgid "Chile - E-invoicing"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.cn
 msgid "China"
 msgstr "Китай"
@@ -12529,6 +12547,14 @@ msgid "Collect payments from your customers through SEPA direct debit."
 msgstr "Збирайте платежі від своїх клієнтів через прямий дебет SEPA."
 
 #. module: base
+#: model_terms:res.partner,website_description:base.res_partner_address_28
+msgid ""
+"Colleen Diaz works in IT sector <b>since 10 years</b>. He is known\n"
+"                notably for selling mouse traps. With that trick he cut\n"
+"                IT budget by almost half within the last 2 years."
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.co
 msgid "Colombia"
 msgstr "Колумбія"
@@ -12586,6 +12612,16 @@ msgstr "Колонка, що відноситься до запису в ком�
 #: model:ir.model.fields,help:base.field_ir_model_fields__column1
 msgid "Column referring to the record in the model table"
 msgstr "Колонка з посиланням на запис у таблицю моделей"
+
+#. module: base
+#: model_terms:res.partner,website_description:base.res_partner_1
+#: model_terms:res.partner,website_description:base.res_partner_10
+#: model_terms:res.partner,website_description:base.res_partner_12
+#: model_terms:res.partner,website_description:base.res_partner_2
+#: model_terms:res.partner,website_description:base.res_partner_3
+#: model_terms:res.partner,website_description:base.res_partner_4
+msgid "Come see us live, we hope to meet you !"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__report_paperformat__format__comm10e
@@ -12965,6 +13001,11 @@ msgstr "Обмеження з таким самим ім'ям унікальні
 #: model:res.partner.industry,name:base.res_partner_industry_F
 msgid "Construction"
 msgstr "Будівництво"
+
+#. module: base
+#: model:res.partner.category,name:base.res_partner_category_8
+msgid "Consulting Services"
+msgstr "Консультаційні послуги"
 
 #. module: base
 #: model:ir.model,name:base.model_res_partner
@@ -13969,6 +14010,13 @@ msgid "Decimal Separator"
 msgstr "Десятковий Роздільник"
 
 #. module: base
+#: model:res.partner,website_short_description:base.res_partner_2
+msgid ""
+"Deco Addict brings honesty and seriousness to wood industry while helping "
+"customers deal with trees, flowers and fungi."
+msgstr ""
+
+#. module: base
 #: model:ir.actions.act_window,name:base.action_partner_deduplicate
 msgid "Deduplicate Contacts"
 msgstr "Вилучити дублікати контактів"
@@ -14187,6 +14235,11 @@ msgid "Design, send and track emails"
 msgstr "Оформляйте, надсилайте та відслідковуйте пошту"
 
 #. module: base
+#: model:res.partner.category,name:base.res_partner_category_14
+msgid "Desk Manufacturers"
+msgstr "Виробники столів"
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_automatic_wizard__dst_partner_id
 msgid "Destination Contact"
 msgstr "Кінцевий контакт"
@@ -14275,6 +14328,16 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.res_config_settings_view_form
 msgid "Discard"
 msgstr "Відмінити"
+
+#. module: base
+#: model_terms:res.partner,website_description:base.res_partner_1
+#: model_terms:res.partner,website_description:base.res_partner_10
+#: model_terms:res.partner,website_description:base.res_partner_12
+#: model_terms:res.partner,website_description:base.res_partner_2
+#: model_terms:res.partner,website_description:base.res_partner_3
+#: model_terms:res.partner,website_description:base.res_partner_4
+msgid "Discover more"
+msgstr "Відкрити більше"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_productivity_discuss
@@ -14670,6 +14733,19 @@ msgid "Done!"
 msgstr ""
 
 #. module: base
+#: model:res.partner,website_short_description:base.res_partner_address_3
+msgid "Douglas Fletcher is a mighty functional consultant at Deco Addict"
+msgstr ""
+
+#. module: base
+#: model_terms:res.partner,website_description:base.res_partner_address_3
+msgid ""
+"Douglas Fletcher works in IT sector <b>since 10 years</b>. He is known\n"
+"    notably for selling mouse traps. With that trick he cut\n"
+"    IT budget by almost half within the last 2 years."
+msgstr ""
+
+#. module: base
 #: model:res.partner.title,shortcut:base.res_partner_title_doctor
 msgid "Dr."
 msgstr "Доктор"
@@ -14991,6 +15067,7 @@ msgstr "Рекомендації співробітника"
 #. module: base
 #: model:ir.module.category,name:base.module_category_human_resources_employees
 #: model:ir.module.module,shortdesc:base.module_hr
+#: model:res.partner.category,name:base.res_partner_category_3
 msgid "Employees"
 msgstr "Співробітники"
 
@@ -16096,6 +16173,19 @@ msgid "Float"
 msgstr "Число з комою"
 
 #. module: base
+#: model:res.partner,website_short_description:base.res_partner_address_4
+msgid "Floyd Steward is a mighty analyst at Deco Addict."
+msgstr ""
+
+#. module: base
+#: model_terms:res.partner,website_description:base.res_partner_address_4
+msgid ""
+"Floyd Steward works in IT sector <b>since 10 years</b>. He is known\n"
+"    notably for selling mouse traps. With that trick he cut\n"
+"    IT budget by almost half within the last 2 years."
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields.selection,name:base.selection__report_paperformat__format__folio
 msgid "Folio 27  210 x 330 mm"
 msgstr "Фоліант 27 210 x 330 мм"
@@ -16402,6 +16492,13 @@ msgid "Gauge Widget for Kanban"
 msgstr "Калібрувальний віджет для канбану"
 
 #. module: base
+#: model:res.partner,website_short_description:base.res_partner_3
+msgid ""
+"Gemini Furniture brings honesty and seriousness to wood industry while "
+"helping customers deal with trees, flowers and fungi."
+msgstr ""
+
+#. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_rule_form
 msgid "General"
 msgstr "Загальне"
@@ -16478,11 +16575,6 @@ msgstr ""
 "(Цей модуль не містить жодного формату імпорту.)\n"
 "\n"
 "Імпорт OFX та QIF доступний у версії Enterprise."
-
-#. module: base
-#: model:ir.module.module,shortdesc:base.module_website_gengo
-msgid "Gengo Translator"
-msgstr "Перекладач Gengo "
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__partner_latitude
@@ -16629,6 +16721,15 @@ msgstr "Користувачі Google "
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_google_recaptcha
 msgid "Google reCAPTCHA integration"
+msgstr ""
+
+#. module: base
+#: model_terms:res.partner,website_description:base.res_partner_address_18
+msgid ""
+"Gordon Owens works in IT sector <b>since 10 years</b>. He is known\n"
+"                notably for selling mouse traps. With that trick he cut\n"
+"                IT budget by almost half within the last 2 years.\n"
+"                Famous Senior Consultant."
 msgstr ""
 
 #. module: base
@@ -16826,6 +16927,16 @@ msgstr "Гаїті"
 #: model:ir.module.module,summary:base.module_lunch
 msgid "Handle lunch orders of your employees"
 msgstr "Обробляйте замовлення на обід ваших співробітників"
+
+#. module: base
+#: model_terms:res.partner,website_description:base.res_partner_1
+#: model_terms:res.partner,website_description:base.res_partner_10
+#: model_terms:res.partner,website_description:base.res_partner_12
+#: model_terms:res.partner,website_description:base.res_partner_2
+#: model_terms:res.partner,website_description:base.res_partner_3
+#: model_terms:res.partner,website_description:base.res_partner_4
+msgid "Happy to be Sponsor"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hw_escpos
@@ -19239,9 +19350,15 @@ msgstr "Код області"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting_localizations
+#: model:ir.module.category,name:base.module_category_localization
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
 msgid "Localization"
 msgstr "Розташування"
+
+#. module: base
+#: model:ir.module.category,name:base.module_category_account_localizations
+msgid "Localizations"
+msgstr "Локалізації"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_logging_form_view
@@ -20734,6 +20851,23 @@ msgid "Nice work! Your configuration is done."
 msgstr "Гарна робота! Ваше налаштування завершене."
 
 #. module: base
+#: model_terms:res.partner,website_description:base.res_partner_address_16
+msgid ""
+"Nicole is <b>author of several books</b>, including Amazon best seller\n"
+"                \"How Azure and Odoo will change the business world!\"."
+msgstr ""
+
+#. module: base
+#: model_terms:res.partner,website_description:base.res_partner_address_16
+msgid ""
+"Nicole works in IT sector <b>since 20 years</b>. She\n"
+"                develops software to help develop websites.  She sold her\n"
+"                first company at 30 years old and manage to grow Azure Interior\n"
+"                from 1 to 55 employees mostly by reselling services on\n"
+"                Odoo."
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.ne
 msgid "Niger"
 msgstr "Респу́бліка Ні́гер"
@@ -22120,6 +22254,16 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_payment_odoo_by_adyen
+msgid "Odoo Payments by Adyen"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_payment_odoo_by_adyen
+msgid "Odoo Payments by Adyen Payment Acquirer"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_point_of_sale
 msgid ""
 "Odoo Point of Sale\n"
@@ -22509,7 +22653,7 @@ msgid ""
 "with traditional WYSIWYG page editors.\n"
 "\n"
 "Whether it's for products descriptions, blogs or static pages, you don't need\n"
-"to be a professioanl designer to create clean contents. Just drag and drop and\n"
+"to be a professional designer to create clean contents. Just drag and drop and\n"
 "customize predefined building blocks.\n"
 "\n"
 "Enterprise-Ready, out-of-the-box\n"
@@ -22546,11 +22690,6 @@ msgid ""
 "Get your website translated in multiple languages with no effort. Odoo proposes\n"
 "and propagates translations automatically across pages, following what you edit\n"
 "on the master page.\n"
-"\n"
-"Benefit from professional translators to translate all your contents\n"
-"automatically with the [Gengo](http://gengo.com) integration. Update any part\n"
-"of your website and the translated versions are pushed automatically in a few\n"
-"hours.\n"
 "\n"
 "Designer-Friendly Templates\n"
 "---------------------------\n"
@@ -22598,123 +22737,6 @@ msgid ""
 "\n"
 "Schedule, organize, promote or sell events online; conferences, trainings, webinars, etc.\n"
 msgstr ""
-"Конструктор веб-сайтів Odoo\n"
-"--------------------\n"
-"\n"
-"Отримайте чудовий та <a href=\"https://www.odoo.com/page/website-builder\">безкоштовний веб-сайт</a>,\n"
-"легко налаштований з Odoo <a href=\"https://www.odoo.com/page/website-builder\">конструктором веб-сайтів</a>.\n"
-"\n"
-"Створіть класний веб-сайт з нашим супер простим конструктором. Використайте готові\n"
-"дизайнерські блоки конструктора та редагуйте будь-що в середині.\n"
-"\n"
-"Скористайтеся перевагами бездротових бізнес-функцій; електронна комерція, події, блоги, робочі місця,\n"
-"анонси, посилання клієнтів, заклики до дій та ін.\n"
-"\n"
-"Редагуйте будь-що вбудовуючи\n"
-"--------------------\n"
-"\n"
-"Створюйте чудові веб-сайти без технічних знань. Унікальний підхід Odoo *'редагувати\n"
-"вбудовано'* робить створення сайту несподівано простим. Простий\n"
-"бекенд; просто натисніть будь-де, щоб змінити будь-який вміст.\n"
-"\n"
-"\"Хочете змінити ціну товару?\", Або помістити його жирним шрифтом? Хочете змінити\n"
-"назву блогу?\" Просто натисніть і змініть. Що ви бачите, це те, що ви отримуєте.\n"
-"\n"
-"Чудово. Гарно.\n"
-"---------------------------------\n"
-"\n"
-"Блоки конструктора Odoo дозволяють створювати сучасні веб-сайти, які неможливі\n"
-"з традиційними редакторами WYSIWYG сторінок.\n"
-"\n"
-"Неважливо для опису товарів, блогів або статичних сторінок\n"
-"бути професіоналом-дизайнером для створення чистого вмісту. Просто перетягніть і\n"
-"налаштуйте заздалегідь визначені блоки.\n"
-"\n"
-"Готовий Enterprise, із коробки\n"
-"--------------------------------\n"
-"\n"
-"Активація готових до використання платних функцій в один клік; електронна комерція\n"
-"заклики до дій, сторінка вакансій, події, посилання клієнтів, блоги тощо.\n"
-"\n"
-"Традиційна електронна комерція та CMS мають погано розроблені резервні копії, оскільки це не їх\n"
-"основний фокус. Завдяки інтеграції Odoo ви отримаєте переваги від найкращого управління\n"
-"програмним забезпеченням для відстеження ваших замовлень, претендентів на роботу, ваших клієнтів тощо.\n"
-"\n"
-"Великий мобільний досвід\n"
-"-------------------------\n"
-"\n"
-"Отримайте сайт для мобільних пристроїв завдяки нашому адаптивному дизайну на основі\n"
-"бутстрапу. Усі ваші сторінки адаптуються автоматично до розміру екрана. (мобільний\n"
-"телефон, планшети, настільні комп'ютери) Вам не потрібно турбуватися про мобільний вміст, це\n"
-"працює за замовчуванням.\n"
-"\n"
-"Інструменти SEO на кінчиках ваших пальців\n"
-"-----------------------------\n"
-"\n"
-"Інструмент *Рекламувати* пропонує ключові слова відповідно до самих пошукових термінів Google.\n"
-"Інструменти оптимізації пошукової системи готові до використання, без належного\n"
-"налаштування.\n"
-"\n"
-"Google Analytics відстежує ваші дії по кошику для покупок за замовчуванням. Карта сайту та\n"
-"структурований вміст створюється автоматично для індексації Google.\n"
-"\n"
-"Багато мов з легкістю\n"
-"-------------------------\n"
-"\n"
-"Отримайте переклад веб-сайту на декількох мовах без зусиль. Odoo пропонує\n"
-"і автоматично розповсюджує переклади на всіх сторінках після того, як ви редагуєте\n"
-"на сторінці майстра.\n"
-"\n"
-"Скористайтеся професійними перекладачами для перекладу всього вмісту\n"
-"автоматично з інтеграцією [Gengo] (http://gengo.com). Оновіть будь-яку частину\n"
-"вашого веб-сайту та перекладені версії автоматично оновлюються за кілька\n"
-"годин.\n"
-"\n"
-"Дизайнерські шаблони\n"
-"---------------------------\n"
-"\n"
-"Шаблони чудові та прості у розробці. Вам не потрібно розробляти створення\n"
-"нової сторінки, теми або блока конструктора. Ми використовуємо чисту HTML-структуру,\n"
-"[bootstrap](http://getbootstrap.com/) CSS.\n"
-"\n"
-"Налаштуйте кожну сторінку на льоту за допомогою вбудованого редактора шаблонів. Надавайте\n"
-"вашу роботу легко, як модуль Odoo.\n"
-"\n"
-"Макетування рідких сіток\n"
-"--------------------\n"
-"\n"
-"Дизайн ідеальних сторінок шляхом перетягування блоків. Перемістіть і масштабуйте їх,\n"
-"щоб відповідати макету, який ви шукаєте.\n"
-"\n"
-"Блоки засновані на чутливій, мобільній рідкій системі сітки,\n"
-"що відповідно збільшує до 12 стовпчиків, як розмір пристрою або області перегляду.\n"
-"\n"
-"\n"
-"Професійні теми\n"
-"-------------------\n"
-"\n"
-"Design a custom theme or reuse pre-defined themes to customize the look and\n"
-"feel of your website.\n"
-"\n"
-"Перевірте нову кольорову схему легко; ви можете змінити свою тему будь-коли в будь-який час\n"
-"лише в один клік.\n"
-"\n"
-"Інтегровано з додатками Odoo\n"
-"-------------------------\n"
-"\n"
-"### Електронна комерція\n"
-"\n"
-"Рекламуйте товари, продавайте онлайн, оптимізуйте покупки.\n"
-"\n"
-"\n"
-"### Блоги\n"
-"\n"
-"Напишіть новини, залучіть нових відвідувачів, створюйте лояльність клієнтів.\n"
-"\n"
-"\n"
-"### Події онлайн\n"
-"\n"
-"Плануйте, організовуйте, просувайте або продавайте події онлайн; конференції, тренінги, вебінари тощо.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale
@@ -22778,8 +22800,8 @@ msgid ""
 "Fine Tune Your Catalog\n"
 "----------------------\n"
 "\n"
-"Get a full control on how you display your products in the catalog page:\n"
-"promotional ribbons, related sized of products, discounts, variants, grid/list\n"
+"Get full control on how you display your products in the catalog page:\n"
+"promotional ribbons, related size of products, discounts, variants, grid/list\n"
 "view, etc.\n"
 "\n"
 "Edit any product inline to make your website evolve with your customer need.\n"
@@ -22918,6 +22940,11 @@ msgstr "OdooBot"
 #: model:ir.module.module,shortdesc:base.module_im_livechat_mail_bot
 msgid "OdooBot for livechat"
 msgstr "OdooBot для живого чату"
+
+#. module: base
+#: model:res.partner.category,name:base.res_partner_category_12
+msgid "Office Supplies"
+msgstr "Офісне постачання"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_failures_dialog
@@ -23864,6 +23891,11 @@ msgid "Payment Acquirer: Ingenico Implementation"
 msgstr "Платіжний еквайєр: впровадження Ingenico"
 
 #. module: base
+#: model:ir.module.module,summary:base.module_payment_odoo_by_adyen
+msgid "Payment Acquirer: Odoo Payments by Adyen"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_payment_paypal
 msgid "Payment Acquirer: Paypal Implementation"
 msgstr "Одержувач платежу: впровадження Paypal"
@@ -24027,11 +24059,6 @@ msgid ""
 msgstr ""
 "Підтвердіть, що хочете <b>незворотно</b> зробити цю базу даних "
 "демонстраційною базою даних."
-
-#. module: base
-#: model_terms:ir.ui.view,arch_db:base.identity_check_wizard
-msgid "Please confirm your password to continue"
-msgstr ""
 
 #. module: base
 #: code:addons/base/models/ir_mail_server.py:0
@@ -24365,7 +24392,7 @@ msgid ""
 "\n"
 "### Real time chats, document sharing, email integration\n"
 "\n"
-"Use open chatter to communicate with your team or customers and share comments\n"
+"Use the chatter to communicate with your team or customers and share comments\n"
 "and documents on tasks and issues. Integrate discussion fast with the email\n"
 "integration.\n"
 "\n"
@@ -24405,74 +24432,6 @@ msgid ""
 "accurate reports on your team's performance.\n"
 "\n"
 msgstr ""
-"Управління проектом\n"
-"------------------\n"
-"\n"
-"### Безмежно гнучкий. Неймовірно простий у використанні.\n"
-"\n"
-"\n"
-"Спільне і реальне Odoo <a href=\"https://www.odoo.com/page/project-management\">управління проектом з відкритим кодом</a>\n"
-"допомагає вашій команді виконати роботу. Слідкуйте за всім, від великої картинки\n"
-"до докладних деталей, від контракту з клієнтом до виставлення рахунку.\n"
-"\n"
-"Розроблений відповідно до вашого власного процесу\n"
-"--------------------------------\n"
-"\n"
-"Організуйте проекти навколо власних процесів. Робота над завданнями та проблемами, що використовують\n"
-"вигляд канбану, графік завдань із використанням діаграми Ганта і контроль термінів у\n"
-"календарному режимі. У кожному проекті можуть бути власні етапи, які дозволяють командам\n"
-"оптимізувати свою роботу.\n"
-"\n"
-"Легкий у використанні\n"
-"-----------\n"
-"\n"
-"Організовуйте так швидко, як ви думаєте. Простий у використанні інтерфейс не займе часу,\n"
-"щоб навчитися, і кожна дія миттєва, тому нічого не заважає\n"
-"між вами і вашим солодким продуктивним процесом.\n"
-"\n"
-"Працюйте разом\n"
-"-------------\n"
-"\n"
-"### Чати в реальному часі, обмін документами, інтеграція з email \n"
-"\n"
-"Використовуйте чати для спілкування з вашою командою або клієнтами та обмінюйтеся коментарями\n"
-"і документи про завдання та проблеми. Інтеграція дискусії швидка з електронною поштою.\n"
-"\n"
-"Поговоріть з іншими користувачами чи клієнтами, використовуючи функцію живого чату веб-сайту.\n"
-"\n"
-"Співпраця\n"
-"---------------------\n"
-"\n"
-"### Потужність ефірної панелі, всередині ваших завдань\n"
-"\n"
-"Спільно редагуйте ті самі специфікації або протоколи зустрічі прямо всередині\n"
-"заявки. Вбудована ефірна панель дозволяє декільком людям\n"
-"працювати над тими ж завданнями одночасно.\n"
-"\n"
-"Це дуже ефективно для скрам-зустрічей, хвилинних зустрічей або зустрічей\n"
-"специфікації. Кожен користувач має свій власний колір, і ви можете повторити\n"
-"створення вмісту.\n"
-"\n"
-"Отримайте завершення роботи\n"
-"-------------\n"
-"\n"
-"Отримуйте сповіщення про наступні події, щоби бути в курсі того, що вас цікавить. Використовуйте\n"
-"миттєві зелені/червоні візуальні індикатори, щоб просканувати, що було зроблено і що\n"
-"вимагає вашої уваги.\n"
-"\n"
-"Табелі, Контракти та Рахунки\n"
-"---------------------------------\n"
-"\n"
-"Проекти автоматично інтегруються з контрактами клієнта, що дозволяють вам\n"
-"рахунок-фактуру на основі часу та матеріалів, а також записує часові показники легко.\n"
-"\n"
-"Відстеження проблем\n"
-"------------\n"
-"\n"
-"Окремі питання, які виникають у проекті, щоб отримати кращий фокус\n"
-"їх вирішення. Інтеграція взаємодії з клієнтами по кожному випуску та отримання\n"
-"точних звітів про ефективність вашої команди.\n"
-"\n"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_forecast
@@ -24535,6 +24494,11 @@ msgid ""
 msgstr ""
 "Властивості основних полів не можуть бути змінені таким чином! Будь-ласка, "
 "змініть їх через код Python, бажано через спеціальний додаток!"
+
+#. module: base
+#: model:res.partner.category,name:base.res_partner_category_2
+msgid "Prospects"
+msgstr "Потенційні клієнти"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_server__link_field_id
@@ -24933,6 +24897,13 @@ msgstr "Права доступу для читання"
 #: model_terms:ir.ui.view,arch_db:base.view_model_fields_search
 msgid "Readonly"
 msgstr "Лише читання"
+
+#. module: base
+#: model:res.partner,website_short_description:base.res_partner_4
+msgid ""
+"Ready Mat brings honesty and seriousness to wood industry while helping "
+"customers deal with trees, flowers and fungi."
+msgstr ""
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_L
@@ -26275,6 +26246,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_services
+#: model:res.partner.category,name:base.res_partner_category_11
 #: model_terms:ir.ui.view,arch_db:base.user_groups_view
 msgid "Services"
 msgstr "Послуги"
@@ -26952,9 +26924,19 @@ msgstr ""
 "Відправляйте, перевіряйте та повторно визначайте витрати співробітників"
 
 #. module: base
+#: model:ir.module.category,name:base.module_category_sales_subscription
+msgid "Subscription"
+msgstr "Підписка"
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_subscription_sepa_direct_debit
 msgid "Subscription SEPA Direct Debit"
 msgstr "Прямий дебет SEPA підписки"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_sale_subscription_timesheet
+msgid "Subscription and Timesheet"
+msgstr ""
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_sales_subscriptions
@@ -27070,6 +27052,11 @@ msgid "Switzerland - Accounting Reports"
 msgstr "Швейцарія - Бухгалтерський облік"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_ch_qriban
+msgid "Switzerland - QR-IBAN"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_res_currency__symbol
 msgid "Symbol"
 msgstr "Символ"
@@ -27083,6 +27070,11 @@ msgstr "Розміщення символу"
 #: model:ir.module.module,shortdesc:base.module_project_timesheet_synchro
 msgid "Synchronization with the external timesheet application"
 msgstr "Синхронізація з зовнішнім додатком табелю"
+
+#. module: base
+#: model:ir.module.module,summary:base.module_sale_subscription_timesheet
+msgid "Synchronize data between timesheet and subscriptions"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.sy
@@ -27135,13 +27127,6 @@ msgstr "Архів TGZ"
 #: model_terms:ir.ui.view,arch_db:base.wizard_lang_export
 msgid "TGZ format: bundles multiple PO(T) files as a single archive"
 msgstr "Формат TGZ: розшаровує декілька файлів PO(T) як єдиний архів"
-
-#. module: base
-#: model:ir.module.module,description:base.module_website_event_track_gantt
-msgid ""
-"THis module helps analyzing and organizing event tracks.\n"
-"For that purpose it adds a gantt view on event tracks."
-msgstr ""
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_mail_server__smtp_encryption__starttls
@@ -27426,6 +27411,13 @@ msgid ""
 msgstr ""
 "Код країни ISO у двох символах.\n"
 "Ви можете використовувати це поле для швидкого пошуку."
+
+#. module: base
+#: model:res.partner,website_short_description:base.res_partner_10
+msgid ""
+"The Jackson Group brings honesty and seriousness to wood industry while "
+"helping customers deal with trees, flowers and fungi."
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_lang__url_code
@@ -28132,7 +28124,7 @@ msgstr ""
 #: model:ir.module.module,description:base.module_test_base_automation
 msgid ""
 "This module contains tests related to base automation. Those are\n"
-"contained in a separate module as it contains models used only to perform\n"
+"present in a separate module as it contains models used only to perform\n"
 "tests independently to functional aspects of other models."
 msgstr ""
 
@@ -28140,44 +28132,33 @@ msgstr ""
 #: model:ir.module.module,description:base.module_test_mail
 msgid ""
 "This module contains tests related to mail. Those are\n"
-"contained in a separate module as it contains models used only to perform\n"
+"present in a separate module as it contains models used only to perform\n"
 "tests independently to functional aspects of other models. "
 msgstr ""
-"Цей модуль містить тести, пов'язані з поштою. Вони містяться в\n"
-" окремому модулі, оскільки він містить моделі, які використовуються тільки для виконання\n"
-" тестів незалежно від функціональних аспектів інших моделей."
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_mail_enterprise
 msgid ""
 "This module contains tests related to mail. Those are\n"
-"contained in a separate module as it contains models used only to perform\n"
+"present in a separate module as it contains models used only to perform\n"
 "tests independently to functional aspects of other models. Moreover most of\n"
 "modules build on mail (sms, snailmail, mail_enterprise) are set as dependencies\n"
 "in order to test the whole mail codebase. "
 msgstr ""
-"Цей модуль містить тести, пов’язані з поштою. Вони\n"
-" містяться в окремому модулі, оскільки він містить моделі, які використовуються лише для незалежного\n"
-" тестування функціональних аспектів інших моделей. Більше того, \n"
-"більшість модулів, побудованих на пошті (sms, snailmail, mail_enterprise), встановлюються як залежності,\n"
-" щоб перевірити всю поштову кодову базу."
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_mass_mailing
 msgid ""
 "This module contains tests related to mass mailing. Those\n"
-"are contained in a separate module to use specific test models defined in\n"
+"are present in a separate module to use specific test models defined in\n"
 "test_mail. "
 msgstr ""
-"Цей модуль містить тести, пов'язані з масовою розсилкою. Вони\n"
-" містяться в окремому модулі для використання конкретних тестових моделей, \n"
-"визначених у test_mail."
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_web_grid
 msgid ""
 "This module contains tests related to the web grid view. Those are\n"
-"contained in a separate module as it contains models used only to perform\n"
+"present in a separate module as it contains models used only to perform\n"
 "tests independently to functional aspects of other models. "
 msgstr ""
 
@@ -28185,7 +28166,7 @@ msgstr ""
 #: model:ir.module.module,description:base.module_test_timer
 msgid ""
 "This module contains tests related to timer. Those are\n"
-"contained in a separate module as it contains models used only to perform\n"
+"present in a separate module as it contains models used only to perform\n"
 "tests independently to functional aspects of other models. "
 msgstr ""
 
@@ -28193,40 +28174,35 @@ msgstr ""
 #: model:ir.module.module,description:base.module_test_mail_full
 msgid ""
 "This module contains tests related to various mail features\n"
-"and mail-related sub modules. Those tests are contained in a separate module as it\n"
+"and mail-related sub modules. Those tests are present in a separate module as it\n"
 "contains models used only to perform tests independently to functional aspects of\n"
 "real applications. "
 msgstr ""
-"Цей модуль містить тести, пов’язані з різними функціями\n"
-" пошти та допоміжними модулями, що стосуються пошти. Ці тести містяться в окремому модулі, \n"
-"оскільки він містить моделі, які використовуються лише для незалежного тестування функціональних аспектів\n"
-" реальних модулей."
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_web_cohort
 msgid ""
 "This module contains tests related to web cohort. Those are\n"
-"contained in a separate module as it contains models used only to perform\n"
+"present in a separate module as it contains models used only to perform\n"
 "tests independently to functional aspects of other models. "
 msgstr ""
-"Цей модуль містить тести, пов'язані з веб-когортою. Ті\n"
-"містяться у роздільному модулі, що включає модулі, що використовуються лише для виконання\n"
-"тестів незалежно від функціональних аспектів інших модулів."
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_website
 msgid ""
 "This module contains tests related to website. Those are\n"
-"contained in a separate module as we are testing module install/uninstall/upgrade\n"
+"present in a separate module as we are testing module install/uninstall/upgrade\n"
 "and we don't want to reload the website module every time, including it's possible\n"
 "dependencies. Neither we want to add in website module some routes, views and\n"
 "models which only purpose is to run tests."
 msgstr ""
-"Цей модуль містить тести, пов'язані з веб-сайтом. Вони\n"
-"містяться в окремому модулі, оскільки ми тестуємо встановлення/видалення/оновлення модуля,\n"
-"і ми не хочемо щоразу перезавантажувати модуль веб-сайту, включаючи можливі \n"
-"залежності. Ми не хочемо додавати в модуль веб-сайту деякі маршрути, перегляди та\n"
-" моделі, єдиною метою яких є виконання тестів."
+
+#. module: base
+#: model:ir.module.module,description:base.module_sale_subscription_timesheet
+msgid ""
+"This module ensure that data (such as analytic accounts) defined on the sale"
+" order via timesheet app are correctly set also on subscriptions"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_subscription_taxcloud
@@ -28245,6 +28221,13 @@ msgid ""
 msgstr ""
 "Цей модуль гарантує, що, коли вартість доставки обчислюється в режимі онлайн, а податки розраховуються за допомогою TaxCloud, обчислення податків відбувається правильно як на замовлення, так і на доставку.\n"
 "    "
+
+#. module: base
+#: model:ir.module.module,description:base.module_website_event_track_gantt
+msgid ""
+"This module helps analyzing and organizing event tracks.\n"
+"For that purpose it adds a gantt view on event tracks."
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_event_enterprise
@@ -28286,6 +28269,14 @@ msgstr ""
 msgid ""
 "This restriction is due to the following rules:\n"
 "%s"
+msgstr ""
+
+#. module: base
+#: code:addons/base/models/ir_sequence.py:0
+#, python-format
+msgid ""
+"This transaction wasn't executed because another transaction is already "
+"using the same no-gap sequence. Please try again later."
 msgstr ""
 
 #. module: base
@@ -28462,6 +28453,15 @@ msgid "Tonga"
 msgstr "Тонга"
 
 #. module: base
+#: model_terms:res.partner,website_description:base.res_partner_address_17
+msgid ""
+"Toni Rhodes works in IT sector <b>since 10 years</b>. He is known\n"
+"                notably for selling mouse traps. With that trick he cut\n"
+"                IT budget by almost half within the last 2 years.\n"
+"                Famous Managing Partner."
+msgstr ""
+
+#. module: base
 #: code:addons/base/models/res_users.py:0
 #, python-format
 msgid "Too many login failures, please wait a bit before trying again."
@@ -28578,11 +28578,6 @@ msgstr "Перекладається"
 #, python-format
 msgid "Translate"
 msgstr "Перекласти"
-
-#. module: base
-#: model:ir.module.module,summary:base.module_website_gengo
-msgid "Translate website in one-click"
-msgstr "Перекладіть веб-сайт в один клік"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_translation__state__translated
@@ -29576,6 +29571,11 @@ msgid "Vat Label"
 msgstr "Мітка Пдв"
 
 #. module: base
+#: model:res.partner.category,name:base.res_partner_category_0
+msgid "Vendor"
+msgstr "Постачальник"
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_account_3way_match
 msgid "Vendor Bill: Release to Pay"
 msgstr "Рахунок постачальника: готовий до оплати"
@@ -29779,6 +29779,29 @@ msgstr "Попередження"
 #: model:res.partner.industry,name:base.res_partner_industry_E
 msgid "Water supply"
 msgstr "Постачання води"
+
+#. module: base
+#: model:res.partner,website_short_description:base.res_partner_18
+msgid ""
+"We are a technology consulting & strategic advisory firm that creates value "
+"enhancing solutions through the use of advanced software for our clients "
+"worldwide. At Lumber Inc we bring operational experience combined..."
+msgstr ""
+"Ми - консалтингова та стратегічна консультативна фірма, яка створює рішення "
+"для підвищення цінності за допомогою використання сучасного програмного "
+"забезпечення для наших клієнтів у всьому світі. У компанії Lumber Inc ми "
+"поєднуємо досвід роботи разом..."
+
+#. module: base
+#: model_terms:res.partner,website_description:base.res_partner_18
+msgid ""
+"We are a technology consulting &amp; strategic advisory firm that creates value enhancing solutions through the use of advanced software for our clients worldwide.\n"
+" <br> <br>\n"
+"At Lumber Inc we bring operational experience combined with technological acumen. We understand that any software that supports business operations needs to be designed in such a way that facilitates the execution of critical operational processes, and serves as a tool to the users rather than a barrier. Our approach is focused on the process first, ensuring that it contributes to the goals of the company, we then optimize it, and design the software solutions to best support it."
+msgstr ""
+"Ми - стратегічна консультативна компанія, що займається технологією, що створює рішення для підвищення оцінювання за допомогою використання сучасного програмного забезпечення для наших клієнтів у всьому світі.\n"
+" <br> <br>\n"
+"Компанія Lumber Inc приносить досвід роботи в поєднанні з технологічним досвідом. Ми розуміємо, що будь-яке програмне забезпечення, яке підтримує бізнес-операції, повинно бути розроблене таким чином, щоби полегшити виконання критичних операційних процесів і слугувати як інструмент для користувачів, а не бар'єр. Наш підхід орієнтований спочатку на процес, гарантуючи, що він сприяє досягненню цілей компанії, потім ми оптимізуємо його та розробляємо програмні рішення, щоби найкраще його підтримувати."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web
@@ -30113,6 +30136,13 @@ msgstr ""
 #, python-format
 msgid "Wkhtmltopdf failed (error code: %s). Message: %s"
 msgstr "Помилка Wkhtmltopdf (код помилки: %s). Повідомлення: %s"
+
+#. module: base
+#: model:res.partner,website_short_description:base.res_partner_1
+msgid ""
+"Wood Corner brings honesty and seriousness to wood industry while helping "
+"customers deal with trees, flowers and fungi."
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_work_entry
@@ -30903,6 +30933,11 @@ msgstr "вибір"
 #: model:ir.module.module,shortdesc:base.module_snailmail_account
 msgid "snailmail_account"
 msgstr "snailmail_account"
+
+#. module: base
+#: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
+msgid "test"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_mimetypes
