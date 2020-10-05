@@ -531,6 +531,17 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
             return this._rerenderXML();
         }
     },
+    /**
+     * @override
+     */
+    updateUIVisibility: async function () {
+        // Main updateUIVisibility will remove the d-none class because there are visible widgets
+        // inside of it. TODO: update this once updateUIVisibility can be used to compute visibility
+        // of arbitrary DOM elements and not just widgets.
+        const isEditing = this.$el.find('[data-name="ribbon_options"]').hasClass('d-none');
+        await this._super(...arguments);
+        this._toggleEditingUI(isEditing);
+    },
 
     //--------------------------------------------------------------------------
     // Private
