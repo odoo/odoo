@@ -159,7 +159,7 @@ class EventEvent(models.Model):
         store=True, readonly=True, compute='_compute_seats')
     seats_expected = fields.Integer(
         string='Number of Expected Attendees',
-        compute_sudo=True, readonly=True, compute='_compute_seats')
+        compute_sudo=True, readonly=True, compute='_compute_seats_expected')
     # Registration fields
     auto_confirm = fields.Boolean(
         string='Autoconfirmation', compute='_compute_from_event_type', readonly=False, store=True,
@@ -241,8 +241,11 @@ class EventEvent(models.Model):
             event.update(results.get(event._origin.id or event.id, base_vals))
             if event.seats_max > 0:
                 event.seats_available = event.seats_max - (event.seats_reserved + event.seats_used)
-            seats_expected = event.seats_unconfirmed + event.seats_reserved + event.seats_used
-            event.seats_expected = seats_expected
+
+    @api.depends('seats_unconfirmed', 'seats_reserved', 'seats_used')
+    def _compute_seats_expected(self):
+        for event in self:
+            event.seats_expected = event.seats_unconfirmed + event.seats_reserved + event.seats_used
 
     @api.depends('date_tz', 'start_sale_date', 'date_end', 'seats_available', 'seats_limited', 'event_ticket_ids.sale_available')
     def _compute_event_registrations_open(self):
