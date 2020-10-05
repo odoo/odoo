@@ -47,21 +47,28 @@ class AdyenIDMixin(models.AbstractModel):
 
     def write(self, vals):
         res = super(AdyenIDMixin, self).write(vals)
-        if vals.get('id_front'):
-            document_type = self.id_type
-            if self.id_type in ['ID_CARD', 'DRIVING_LICENSE']:
-                document_type += '_FRONT'
-            self._check_file_requirements(self.id_front, self.id_front_filename)
-            self._upload_photo_id(document_type, self.id_front, self.id_front_filename)
-        if vals.get('id_back'):
-            document_type = self.id_type + '_BACK'
-            self._check_file_requirements(self.id_back, self.id_back_filename)
-            self._upload_photo_id(document_type, self.id_back, self.id_back_filename)
-        return res
 
+        # Check file formats
+        if vals.get('id_front'):
+            self._check_file_requirements(vals.get('id_front'), vals.get('id_front_filename'))
+        if vals.get('id_back'):
+            self._check_file_requirements(vals.get('id_back'), vals.get('id_back_filename'))
+
+        for adyen_account in self:
+            if vals.get('id_front'):
+                document_type = adyen_account.id_type
+                if adyen_account.id_type in ['ID_CARD', 'DRIVING_LICENSE']:
+                    document_type += '_FRONT'
+                adyen_account._upload_photo_id(document_type, adyen_account.id_front, adyen_account.id_front_filename)
+            if vals.get('id_back') and adyen_account.id_type in ['ID_CARD', 'DRIVING_LICENSE']:
+                document_type = adyen_account.id_type + '_BACK'
+                adyen_account._upload_photo_id(document_type, adyen_account.id_back, adyen_account.id_back_filename)
+            return res
+
+    @api.model
     def _check_file_requirements(self, content, filename):
         file_extension = os.path.splitext(filename)[1]
-        file_size = len(content)
+        file_size = int(len(content) * 3/4) # Compute file_size in bytes
         if file_extension not in ['.jpeg', '.jpg', '.pdf', '.png']:
             raise ValidationError(_('Allowed file formats for photo IDs are jpeg, jpg, pdf or png'))
         if file_size >> 20 > 4 or (file_size >> 10 < 1 and file_extension == '.pdf') or (file_size >> 10 < 100 and file_extension != '.pdf') :
@@ -222,7 +229,7 @@ class AdyenAccount(models.Model):
                 'documentType': document_type,
                 'filename': filename,
             },
-            'documentContent': content,
+            'documentContent': content.decode(),
         })
 
     def _format_data(self):
@@ -471,7 +478,7 @@ class AdyenShareholder(models.Model):
                 'documentType': document_type,
                 'filename': filename,
             },
-            'documentContent': content,
+            'documentContent': content.decode(),
         })
 
     def _format_data(self):
