@@ -64,7 +64,7 @@ class AccountAnalyticLine(models.Model):
     code = fields.Char(size=8)
     ref = fields.Char(string='Ref.')
 
-    amount = fields.Monetary(compute='_compute_unit_amount', store=True, readonly=False)
+    amount = fields.Monetary(compute='_compute_amount', store=True, readonly=False)
     product_uom_id = fields.Many2one(compute='_compute_product_uom_id', store=True, readonly=False)
 
     @api.depends('product_id', 'company_id')
