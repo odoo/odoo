@@ -39,6 +39,11 @@
                             <field name="scrap_location" attrs="{'invisible': [('usage', 'not in', ('inventory', 'internal'))]}"/>
                             <field name="return_location"/>
                         </group>
+                        <group string="Cyclic Inventory" attrs="{'invisible': ['|', ('usage', 'not in', ('internal', 'transit')), ('company_id', '=', False)]}">
+                            <field name="cyclic_inventory_frequency"/>
+                            <field name="last_inventory_date"/>
+                            <field name="next_inventory_date" attrs="{'invisible': [('active', '=', False)]}"/>
+                        </group>
                         <group string="Logistics" groups="stock.group_adv_location">
                             <field name="removal_strategy_id" options="{'no_create': True}"/>
                         </group>

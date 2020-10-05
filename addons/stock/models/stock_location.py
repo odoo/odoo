@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import timedelta
+
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.osv import expression
@@ -60,8 +62,12 @@ class Location(models.Model):
     putaway_rule_ids = fields.One2many('stock.putaway.rule', 'location_in_id', 'Putaway Rules')
     barcode = fields.Char('Barcode', copy=False)
     quant_ids = fields.One2many('stock.quant', 'location_id')
+    cyclic_inventory_frequency = fields.Integer("Inventory Frequency (Days)", default=0, help=" When different than 0, inventory adjustments for products stored at this location will be created automatically at the defined frequency.")
+    last_inventory_date = fields.Datetime("Last Effective Inventory", readonly=True, help="Date of the last inventory at this location.")
+    next_inventory_date = fields.Date("Next Expected Inventory", compute="_compute_next_inventory_date", store=True, help="Date for next planned inventory based on cyclic schedule.")
 
-    _sql_constraints = [('barcode_company_uniq', 'unique (barcode,company_id)', 'The barcode for a location must be unique per company !')]
+    _sql_constraints = [('barcode_company_uniq', 'unique (barcode,company_id)', 'The barcode for a location must be unique per company !'),
+                        ('inventory_freq_nonneg', 'check(cyclic_inventory_frequency >= 0)', 'The inventory frequency (days) for a location must be non-negative')]
 
     @api.depends('name', 'location_id.complete_name')
     def _compute_complete_name(self):
@@ -70,6 +76,24 @@ class Location(models.Model):
                 location.complete_name = '%s/%s' % (location.location_id.complete_name, location.name)
             else:
                 location.complete_name = location.name
+
+    @api.depends('cyclic_inventory_frequency', 'last_inventory_date', 'usage', 'company_id')
+    def _compute_next_inventory_date(self):
+        for location in self:
+            if location.company_id and location.usage in ['internal', 'transit'] and location.cyclic_inventory_frequency > 0:
+                try:
+                    if location.last_inventory_date:
+                        days_until_next_inventory = location.cyclic_inventory_frequency - (fields.Date.today() - location.last_inventory_date.date()).days
+                        if days_until_next_inventory <= 0:
+                            location.next_inventory_date = fields.Date.today() + timedelta(days=1)
+                        else:
+                            location.next_inventory_date = location.last_inventory_date + timedelta(days=days_until_next_inventory)
+                    else:
+                        location.next_inventory_date = fields.Date.today() + timedelta(days=location.cyclic_inventory_frequency)
+                except OverflowError:
+                    raise UserError(_("The selected Inventory Frequency (Days) creates a date too far into the future."))
+            else:
+                location.next_inventory_date = False
 
     @api.onchange('usage')
     def _onchange_usage(self):
