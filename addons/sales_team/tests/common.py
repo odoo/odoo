@@ -11,6 +11,21 @@ class TestSalesCommon(SavepointCase):
     def setUpClass(cls):
         super(TestSalesCommon, cls).setUpClass()
 
+        # Salesmen organization
+        # ------------------------------------------------------------
+        # Role: M (team member) R (team manager)
+        # SALESMAN---------------sales_team_1
+        # admin------------------M-----------
+        # user_sales_manager-----R-----------
+        # user_sales_leads-------M-----------
+        # user_sales_salesman----/-----------
+
+        # Sales teams organization
+        # ------------------------------------------------------------
+        # SALESTEAM-----------SEQU-----COMPANY
+        # sales_team_1--------5--------False
+        # data----------------9999-----??
+
         cls.company_main = cls.env.user.company_id
         cls.user_sales_manager = mail_new_test_user(
             cls.env, login='user_sales_manager',
@@ -33,6 +48,7 @@ class TestSalesCommon(SavepointCase):
             notification_type='inbox',
             groups='sales_team.group_sale_salesman',
         )
+        cls.user_admin = cls.env.ref('base.user_admin')
 
         cls.env['crm.team'].search([]).write({'sequence': 9999})
         cls.sales_team_1 = cls.env['crm.team'].create({
@@ -40,7 +56,7 @@ class TestSalesCommon(SavepointCase):
             'sequence': 5,
             'company_id': False,
             'user_id': cls.user_sales_manager.id,
-            'member_ids': [(4, cls.user_sales_leads.id), (4, cls.env.ref('base.user_admin').id)],
+            'member_ids': [(4, cls.user_sales_leads.id), (4, cls.user_admin.id)],
         })
 
 

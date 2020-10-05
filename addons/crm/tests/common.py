@@ -6,6 +6,7 @@ from unittest.mock import patch
 from odoo.addons.mail.tests.common import MailCase, mail_new_test_user
 from odoo.addons.sales_team.tests.common import TestSalesCommon
 from odoo.fields import Datetime
+from odoo import tools
 
 INCOMING_EMAIL = """Return-Path: {return_path}
 X-Original-To: {to}
@@ -150,7 +151,7 @@ class TestCrmCommon(TestSalesCommon, MailCase):
             'zip': '97648',
         })
 
-    def _create_leads_batch(self, lead_type='lead', count=10):
+    def _create_leads_batch(self, lead_type='lead', count=10, partner_ids=None, user_ids=None):
         """ Helper tool method creating a batch of leads, useful when dealing
         with batch processes. Please update me.
 
@@ -158,13 +159,27 @@ class TestCrmCommon(TestSalesCommon, MailCase):
           None (depends on configuration);
         """
         types = ['lead', 'opportunity']
-        partners = [self.contact_1.id, self.contact_2.id, False]
         leads_data = [{
             'name': 'TestLead_%02d' % (x),
             'type': lead_type if lead_type else types[x % 2],
-            'partner_id': partners[x % 3],
             'priority': '%s' % (x % 3),
         } for x in range(count)]
+
+        # customer information
+        if partner_ids:
+            for idx, lead_data in enumerate(leads_data):
+                lead_data['partner_id'] = partner_ids[idx % len(partner_ids)]
+        else:
+            for idx, lead_data in enumerate(leads_data):
+                lead_data['email_from'] = tools.formataddr((
+                    'TestCustomer_%02d' % (idx),
+                    'customer_email_%02d@example.com' % (idx)
+                ))
+
+        # salesteam information
+        if user_ids:
+            for idx, lead_data in enumerate(leads_data):
+                lead_data['user_id'] = user_ids[idx % len(user_ids)]
 
         return self.env['crm.lead'].create(leads_data)
 
@@ -247,6 +262,7 @@ class TestLeadConvertCommon(TestCrmCommon):
 
         cls.sales_team_convert = cls.env['crm.team'].create({
             'name': 'Convert Sales Team',
+            'sequence': 10,
             'alias_name': False,
             'use_leads': True,
             'use_opportunities': True,
