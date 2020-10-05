@@ -5,7 +5,9 @@ from odoo.tools.misc import format_date, formatLang
 
 from collections import defaultdict
 from itertools import groupby
+from dateutil.relativedelta import relativedelta
 import json
+
 
 class AutomaticEntryWizard(models.TransientModel):
     _name = 'account.automatic.entry.wizard'
@@ -16,18 +18,21 @@ class AutomaticEntryWizard(models.TransientModel):
     move_data = fields.Text(compute="_compute_move_data", help="JSON value of the moves to be created")
     preview_move_data = fields.Text(compute="_compute_preview_move_data", help="JSON value of the data to be displayed in the previewer")
     move_line_ids = fields.Many2many('account.move.line')
-    date = fields.Date(required=True, default=lambda self: fields.Date.context_today(self))
     company_id = fields.Many2one('res.company', required=True, readonly=True)
     company_currency_id = fields.Many2one('res.currency', related='company_id.currency_id')
-    percentage = fields.Float("Percentage", compute='_compute_percentage', readonly=False, store=True, help="Percentage of each line to execute the action on.")
-    total_amount = fields.Monetary(compute='_compute_total_amount', store=True, readonly=False, currency_field='company_currency_id', help="Total amount impacted by the automatic entry.")
+    total_amount = fields.Monetary(
+        compute='_compute_from_move_line_ids',
+        currency_field='company_currency_id',
+        help="Total amount impacted by the automatic entry.")
     journal_id = fields.Many2one('account.journal', required=True, readonly=False, string="Journal",
         domain="[('company_id', '=', company_id), ('type', '=', 'general')]",
         related="company_id.automatic_entry_default_journal_id",
         help="Journal where to create the entry.")
 
     # change period
-    account_type = fields.Selection([('income', 'Revenue'), ('expense', 'Expense')], compute='_compute_account_type', store=True)
+    account_type = fields.Selection(
+        selection=[('income', 'Revenue'), ('expense', 'Expense')],
+        compute='_compute_from_move_line_ids')
     expense_accrual_account = fields.Many2one('account.account', readonly=False,
         domain="[('company_id', '=', company_id),"
                "('internal_type', 'not in', ('receivable', 'payable')),"
@@ -38,38 +43,105 @@ class AutomaticEntryWizard(models.TransientModel):
                "('internal_type', 'not in', ('receivable', 'payable')),"
                "('is_off_balance', '=', False)]",
         related="company_id.revenue_accrual_account_id")
+    chg_period_date_from = fields.Date(
+        string="Date from",
+        default=lambda self: fields.Date.context_today(self),
+        help="Date at which the smoothing of the balance will start.")
+    chg_period_date_to = fields.Date(
+        string="Date to",
+        default=lambda self: fields.Date.context_today(self),
+        help="Date at which the smoothing of the balance will end.")
+    chg_period_time_division = fields.Boolean(
+        string="Time Division",
+        help="Allocate the balance to different periods considering their number of days.")
+    chg_period_percentage = fields.Float(string="Percentage", default=100.0)
+    chg_period_line_ids = fields.One2many(
+        comodel_name='account.automatic.entry.wizard.line',
+        inverse_name='wizard_id',
+        string='Lines',
+        store=True, readonly=False,
+        compute='_compute_chg_period_line_ids')
+    chg_period_warning_message = fields.Text(
+        string="Warning",
+        compute='_compute_chg_period_warning_message')
 
     # change account
+    date = fields.Date(string="Transfer Date", default=lambda self: fields.Date.context_today(self))
     destination_account_id = fields.Many2one(string="To", comodel_name='account.account', help="Account to transfer to.")
     display_currency_helper = fields.Boolean(string="Currency Conversion Helper", compute='_compute_display_currency_helper',
         help="Technical field. Used to indicate whether or not to display the currency conversion tooltip. The tooltip informs a currency conversion will be performed with the transfer.")
 
-    @api.constrains('percentage', 'action')
-    def _constraint_percentage(self):
-        for record in self:
-            if not (0.0 < record.percentage <= 100.0):
-                raise UserError(_("Percentage must be between 0 and 100"))
-            if record.percentage != 100 and record.action != 'change_period':
-                raise UserError(_("Percentage can only be set for Change Period method"))
+    def _get_total_balance(self):
+        self.ensure_one()
+        return sum(line.amount_residual if line.account_id.reconcile else line.balance for line in self.move_line_ids)
 
-    @api.depends('percentage', 'move_line_ids')
-    def _compute_total_amount(self):
-        for record in self:
-            record.total_amount = (record.percentage or 100) * sum(record.move_line_ids.mapped('balance')) / 100
+    @api.depends('chg_period_date_from', 'chg_period_date_to', 'chg_period_time_division', 'chg_period_percentage')
+    def _compute_chg_period_line_ids(self):
+        ''' Create the lines representing the way the balance will be smoothed per period. '''
+        for wizard in self:
+            one2many_commands = [(5, 0)]
 
-    @api.depends('total_amount', 'move_line_ids')
-    def _compute_percentage(self):
-        for record in self:
-            total = (sum(record.move_line_ids.mapped('balance')) or record.total_amount)
-            if total != 0:
-                record.percentage = (record.total_amount / total) * 100
+            date_from = wizard.chg_period_date_from
+            date_to = wizard.chg_period_date_to
+            percentage = (wizard.chg_period_percentage or 0.0) / 100.0
+
+            if date_from and date_to and percentage:
+                total_balance = wizard.company_currency_id.round(wizard._get_total_balance() * percentage)
+                total_days = 0.0
+                date_distribution = []
+                while date_from <= date_to:
+                    next_month_date = (date_from + relativedelta(months=1)).replace(day=1)
+                    period_date = next_month_date - relativedelta(days=1)
+                    period_days = (period_date - date_from).days
+                    date_distribution.append((period_date, period_days))
+                    date_from = next_month_date
+                    total_days += period_days
+
+                total_reported_balance = 0.0
+                for period_date, nb_days in date_distribution:
+                    if wizard.chg_period_time_division:
+                        period_balance = wizard.company_currency_id.round(total_balance * nb_days / total_days)
+                    else:
+                        period_balance = wizard.company_currency_id.round(total_balance / len(date_distribution))
+                    one2many_commands.append((0, 0, {
+                        'wizard_id': wizard.id,
+                        'date': period_date,
+                        'balance': period_balance,
+                    }))
+                    total_reported_balance += period_balance
+
+                # When the percentage is 100%, ensure the full balance is dispatched into the periods.
+                # To avoid a huge gap in the last line, we ensure the rounding error is also smoothed.
+                # For example: smoothing 100 into 12 months:
+                # 12 lines of 8.33 are generated at this point. Since 8.33 * 12 = 99.96, the error of 0.04 will be
+                # smoothed by adding 0.01 to the last 4 periods.
+                if wizard.chg_period_percentage == 100.0:
+                    total_rounding_error = wizard.company_currency_id.round(total_balance - total_reported_balance)
+                    nber_rounding_steps = int(abs(total_rounding_error / wizard.company_currency_id.rounding))
+                    rounding_error = round(
+                        nber_rounding_steps and total_rounding_error / nber_rounding_steps or 0.0,
+                        wizard.company_currency_id.decimal_places,
+                    )
+                    nber_periods = len(one2many_commands) - 1
+                    if len(one2many_commands) > nber_rounding_steps:
+                        for i in range(nber_rounding_steps):
+                            one2many_commands[nber_periods - i][2]['balance'] += rounding_error
+
+            wizard.chg_period_line_ids = one2many_commands
+
+    @api.depends('chg_period_date_from', 'chg_period_date_to')
+    def _compute_chg_period_warning_message(self):
+        for wizard in self:
+            if wizard.chg_period_date_from and wizard.chg_period_date_to and wizard.chg_period_date_from > wizard.chg_period_date_to:
+                wizard.chg_period_warning_message = _("Check the dates. The period cannot start later than its own end.")
             else:
-                record.percentage = 100
+                wizard.chg_period_warning_message = False
 
-    @api.depends('move_line_ids')
-    def _compute_account_type(self):
-        for record in self:
-            record.account_type = 'income' if sum(record.move_line_ids.mapped('balance')) < 0 else 'expense'
+    @api.depends('move_line_ids.balance')
+    def _compute_from_move_line_ids(self):
+        for wizard in self:
+            wizard.total_amount = wizard._get_total_balance()
+            wizard.account_type = 'income' if wizard.total_amount < 0.0 else 'expense'
 
     @api.depends('destination_account_id')
     def _compute_display_currency_helper(self):
@@ -167,80 +239,113 @@ class AutomaticEntryWizard(models.TransientModel):
     def _get_move_dict_vals_change_period(self):
         # set the change_period account on the selected journal items
         accrual_account = self.revenue_accrual_account if self.account_type == 'income' else self.expense_accrual_account
+        total_percentage = sum(self.chg_period_line_ids.mapped('percentage'))
 
-        move_data = {'new_date': {
-            'currency_id': self.journal_id.currency_id.id or self.journal_id.company_id.currency_id.id,
-            'move_type': 'entry',
-            'line_ids': [],
-            'ref': _('Adjusting Entry'),
-            'date': fields.Date.to_string(self.date),
-            'journal_id': self.journal_id.id,
-        }}
-        # complete the account.move data
-        for date, grouped_lines in groupby(self.move_line_ids, lambda m: m.move_id.date):
+        move_data = {
+            'original_dates': {},
+            'new_dates': {},
+        }
+
+        # ==== Prepare journal entries (account.move) ====
+
+        for date, grouped_lines in groupby(self.move_line_ids, lambda line: line.date):
             grouped_lines = list(grouped_lines)
             amount = sum(l.balance for l in grouped_lines)
-            move_data[date] = {
-                'currency_id': self.journal_id.currency_id.id or self.journal_id.company_id.currency_id.id,
+            move_data['original_dates'][date] = {
                 'move_type': 'entry',
-                'line_ids': [],
                 'ref': self._format_strings(_('Adjusting Entry of {date} ({percent:f}% recognized on {new_date})'), grouped_lines[0].move_id, amount),
                 'date': fields.Date.to_string(date),
                 'journal_id': self.journal_id.id,
+                'line_ids': [],
             }
 
-        # compute the account.move.lines and the total amount per move
+        for line in self.chg_period_line_ids:
+            ref = _("Adjusting Entry made on {date} ({percent:f}%)").format(
+                date=format_date(self.env, line.date),
+                percent=line.percentage,
+            )
+            move_data['new_dates'][line.date] = {
+                'move_type': 'entry',
+                'ref': ref,
+                'date': fields.Date.to_string(line.date),
+                'journal_id': self.journal_id.id,
+                'line_ids': [],
+            }
+
+        # ==== Prepare journal items (account.move.line) ====
+
         for aml in self.move_line_ids:
-            # account.move.line data
-            reported_debit = aml.company_id.currency_id.round((self.percentage / 100) * aml.debit)
-            reported_credit = aml.company_id.currency_id.round((self.percentage / 100) * aml.credit)
-            reported_amount_currency = aml.currency_id.round((self.percentage / 100) * aml.amount_currency)
 
-            move_data['new_date']['line_ids'] += [
+            total_reported_balance = 0.0
+            total_reported_amount_currency = 0.0
+
+            # Avoid rounding issues with 100%.
+            if round(total_percentage, 2) == 100.0:
+                total_balance_to_report = aml.balance
+                total_amount_currency_to_report = aml.amount_currency
+            else:
+                total_balance_to_report = aml.company_currency_id.round((total_percentage / 100) * aml.balance)
+                total_amount_currency_to_report = aml.currency_id.round((total_percentage / 100) * aml.amount_currency)
+
+            for i, line in enumerate(self.chg_period_line_ids):
+                # Avoid rounding issue on the last line.
+                if i == len(self.chg_period_line_ids) - 1:
+                    reported_balance = total_balance_to_report - total_reported_balance
+                    reported_amount_currency = total_amount_currency_to_report - total_reported_amount_currency
+                else:
+                    reported_balance = aml.company_currency_id.round((line.percentage / 100) * aml.balance)
+                    reported_amount_currency = aml.currency_id.round((line.percentage / 100) * aml.amount_currency)
+
+                total_reported_balance += reported_balance
+                total_reported_amount_currency += reported_amount_currency
+
+                move_data['new_dates'][line.date]['line_ids'] += [
+                    (0, 0, {
+                        'name': aml.name or '',
+                        'currency_id': aml.currency_id.id,
+                        'account_id': aml.account_id.id,
+                        'partner_id': aml.partner_id.id,
+                        'debit': reported_balance if reported_balance > 0.0 else 0.0,
+                        'credit': -reported_balance if reported_balance < 0.0 else 0.0,
+                        'amount_currency': reported_amount_currency,
+                    }),
+                    (0, 0, {
+                        'name': _('Adjusting Entry'),
+                        'currency_id': aml.currency_id.id,
+                        'account_id': accrual_account.id,
+                        'partner_id': aml.partner_id.id,
+                        'debit': -reported_balance if reported_balance < 0.0 else 0.0,
+                        'credit': reported_balance if reported_balance > 0.0 else 0.0,
+                        'amount_currency': -reported_amount_currency,
+                    }),
+                ]
+
+            move_data['original_dates'][aml.date]['line_ids'] += [
                 (0, 0, {
                     'name': aml.name or '',
-                    'debit': reported_debit,
-                    'credit': reported_credit,
-                    'amount_currency': reported_amount_currency,
                     'currency_id': aml.currency_id.id,
                     'account_id': aml.account_id.id,
                     'partner_id': aml.partner_id.id,
+                    'debit': -total_reported_balance if total_reported_balance < 0.0 else 0.0,
+                    'credit': total_reported_balance if total_reported_balance > 0.0 else 0.0,
+                    'amount_currency': -total_reported_amount_currency,
                 }),
                 (0, 0, {
                     'name': _('Adjusting Entry'),
-                    'debit': reported_credit,
-                    'credit': reported_debit,
-                    'amount_currency': -reported_amount_currency,
                     'currency_id': aml.currency_id.id,
                     'account_id': accrual_account.id,
                     'partner_id': aml.partner_id.id,
-                }),
-            ]
-            move_data[aml.move_id.date]['line_ids'] += [
-                (0, 0, {
-                    'name': aml.name or '',
-                    'debit': reported_credit,
-                    'credit': reported_debit,
-                    'amount_currency': -reported_amount_currency,
-                    'currency_id': aml.currency_id.id,
-                    'account_id': aml.account_id.id,
-                    'partner_id': aml.partner_id.id,
-                }),
-                (0, 0, {
-                    'name': _('Adjusting Entry'),
-                    'debit': reported_debit,
-                    'credit': reported_credit,
-                    'amount_currency': reported_amount_currency,
-                    'currency_id': aml.currency_id.id,
-                    'account_id': accrual_account.id,
-                    'partner_id': aml.partner_id.id,
+                    'debit': total_reported_balance if total_reported_balance > 0.0 else 0.0,
+                    'credit': -total_reported_balance if total_reported_balance < 0.0 else 0.0,
+                    'amount_currency': total_reported_amount_currency,
                 }),
             ]
 
-        move_vals = [m for m in move_data.values()]
-        return move_vals
+        return list(move_data['original_dates'].values()) + list(move_data['new_dates'].values())
 
-    @api.depends('move_line_ids', 'journal_id', 'revenue_accrual_account', 'expense_accrual_account', 'percentage', 'date', 'account_type', 'action', 'destination_account_id')
+    @api.depends('move_line_ids', 'journal_id', 'revenue_accrual_account', 'expense_accrual_account',
+                 'date', 'account_type', 'action', 'destination_account_id',
+                 'chg_period_line_ids')
     def _compute_move_data(self):
         for record in self:
             if record.action == 'change_period':
@@ -287,28 +392,44 @@ class AutomaticEntryWizard(models.TransientModel):
     def _do_action_change_period(self, move_vals):
         accrual_account = self.revenue_accrual_account if self.account_type == 'income' else self.expense_accrual_account
 
+        # ==== Create new journal entries ====
+
         created_moves = self.env['account.move'].create(move_vals)
         created_moves._post()
 
+        # ==== Manage chatters ====
+
         destination_move = created_moves[0]
-        destination_messages = []
+        accrual_moves = created_moves[1:]
+
+        messages_from = [_("<li>%(link)s</li>", link=self._format_move_link(move)) for move in self.move_line_ids.move_id]
+        messages_from = ''.join([_("Adjusting Entry generated for these journal entries:<ul>")] + messages_from + ["</ul>"])
+
+        messages_to = [_("Adjusting Entries created:<ul>")]
+        messages_to.append(self._format_strings(
+            _("<li>%(link)s cancelling {percent:f}%% of {amount}</li>", link=self._format_move_link(destination_move)),
+            destination_move, self.total_amount,
+        ))
+        for accrual_move in accrual_moves:
+            messages_to.append(self._format_strings(
+                _("<li>%(link)s postponing it to {new_date}</li>", link=self._format_move_link(accrual_move)),
+                accrual_move, 0.0,
+            ))
+        messages_to = ''.join(messages_to + ["</ul>"])
+
         for move in self.move_line_ids.move_id:
-            amount = sum((self.move_line_ids._origin & move.line_ids).mapped('balance'))
-            accrual_move = created_moves[1:].filtered(lambda m: m.date == move.date)
+            move.message_post(body=messages_to)
+        destination_move.message_post(body=messages_from)
+        for accrual_move in accrual_moves:
+            accrual_move.message_post(body=messages_from)
 
-            if accrual_account.reconcile:
-                to_reconcile = (accrual_move + destination_move).mapped('line_ids').filtered(lambda line: line.account_id == accrual_account)
-                to_reconcile.reconcile()
-            move.message_post(body=self._format_strings(_('Adjusting Entries have been created for this invoice:<ul><li>%(link1)s cancelling '
-                                                          '{percent:f}%% of {amount}</li><li>%(link0)s postponing it to {new_date}</li></ul>',
-                                                          link0=self._format_move_link(destination_move),
-                                                          link1=self._format_move_link(accrual_move),
-                                                          ), move, amount))
-            destination_messages += [self._format_strings(_('Adjusting Entry {link}: {percent:f}% of {amount} recognized from {date}'), move, amount)]
-            accrual_move.message_post(body=self._format_strings(_('Adjusting Entry for {link}: {percent:f}% of {amount} recognized on {new_date}'), move, amount))
-        destination_move.message_post(body='<br/>\n'.join(destination_messages))
+        # ==== Reconcile ====
 
-        # open the generated entries
+        if accrual_account.reconcile and all(move.state == 'posted' for move in created_moves):
+            created_moves.line_ids.filtered(lambda line: line.account_id == accrual_account and not line.reconciled).reconcile()
+
+        # ==== Redirect ====
+
         action = {
             'name': _('Generated Entries'),
             'domain': [('id', 'in', created_moves.ids)],
@@ -389,7 +510,7 @@ class AutomaticEntryWizard(models.TransientModel):
 
     def _format_strings(self, string, move, amount):
         return string.format(
-            percent=self.percentage,
+            percent=sum(self.chg_period_line_ids.mapped('percentage')),
             name=move.name,
             id=move.id,
             amount=formatLang(self.env, abs(amount), currency_obj=self.company_id.currency_id),
@@ -399,3 +520,43 @@ class AutomaticEntryWizard(models.TransientModel):
             new_date=self.date and format_date(self.env, self.date) or _('[Not set]'),
             account_target_name=self.destination_account_id.display_name,
         )
+
+
+class AutomaticEntryWizardLine(models.TransientModel):
+    _name = "account.automatic.entry.wizard.line"
+    _description = "Create Automatic Entries Line"
+
+    wizard_id = fields.Many2one(
+        comodel_name='account.automatic.entry.wizard',
+        required=True, readonly=True, ondelete='cascade')
+    date = fields.Date(
+        string="Date",
+        required=True,
+        default=lambda self: fields.Date.context_today(self))
+    percentage = fields.Float(
+        string="Percentage",
+        store=True, readonly=False,
+        compute='_compute_percentage',
+        help="Percentage of each line to execute the action on.")
+    balance = fields.Monetary(
+        string="Amount",
+        store=True, readonly=False,
+        compute='_compute_balance',
+        currency_field='company_currency_id',
+        help="Total amount impacted by the automatic entry.")
+
+    # ==== Display purpose fields ====
+    company_currency_id = fields.Many2one(
+        comodel_name='res.currency',
+        related='wizard_id.company_id.currency_id')
+
+    @api.depends('balance')
+    def _compute_percentage(self):
+        for line in self:
+            total = abs(line.wizard_id._get_total_balance())
+            line.percentage = total and (abs(line.balance) / total) * 100.0 or 0.0
+
+    @api.depends('percentage')
+    def _compute_balance(self):
+        for line in self:
+            line.balance = line.company_currency_id.round((line.percentage / 100.0) * line.wizard_id._get_total_balance())
