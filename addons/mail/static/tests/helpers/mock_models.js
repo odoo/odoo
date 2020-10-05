@@ -224,6 +224,17 @@ class MockModels {
                 },
                 records: [],
             },
+            'res.fake': {
+                fields: {
+                    email_cc: { type: 'char' },
+                    partner_ids: {
+                        string: "Related partners",
+                        type: 'many2one',
+                        relation: 'res.partner'
+                    },
+                },
+                records: [],
+            },
         };
     }
 
