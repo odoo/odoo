@@ -243,6 +243,7 @@ class AccountBankStatement(models.Model):
     is_valid_balance_start = fields.Boolean(string="Is Valid Balance Start", store=True,
         compute="_compute_is_valid_balance_start",
         help="Technical field to display a warning message in case starting balance is different than previous ending balance")
+    country_code = fields.Char(related='company_id.country_id.code')
 
     def write(self, values):
         res = super(AccountBankStatement, self).write(values)
