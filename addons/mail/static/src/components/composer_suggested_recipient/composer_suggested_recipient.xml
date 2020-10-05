@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="mail.ComposerSuggestedRecipient" owl="1">
-        <div class="o_ComposerSuggestedRecipient" t-att-title="ADD_AS_RECIPIENT_AND_FOLLOWER_REASON">
+        <div class="o_ComposerSuggestedRecipient" t-att-data-partner-id="suggestedRecipientInfo.partner and suggestedRecipientInfo.partner.id ? suggestedRecipientInfo.partner.id : false" t-att-title="ADD_AS_RECIPIENT_AND_FOLLOWER_REASON">
             <t t-if="suggestedRecipientInfo">
                 <div class="custom-control custom-checkbox">
                     <input t-attf-id="{{ id }}_checkbox" class="custom-control-input" type="checkbox" t-att-checked="suggestedRecipientInfo.isSelected ? 'checked' : undefined" t-on-change="_onChangeCheckbox" t-ref="checkbox" />
