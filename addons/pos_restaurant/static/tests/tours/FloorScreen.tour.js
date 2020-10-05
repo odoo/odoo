@@ -101,9 +101,9 @@ odoo.define('pos_restaurant.tour.FloorScreen', function (require) {
 
     // Opening product screen in second floor should go back to second floor
     FloorScreen.do.clickFloor('Second Floor');
-    FloorScreen.check.hasTable('T1');
-    FloorScreen.do.clickTable('T1');
-    Chrome.check.backToFloorTextIs('Second Floor', 'T1');
+    FloorScreen.check.hasTable('T3');
+    FloorScreen.do.clickTable('T3');
+    Chrome.check.backToFloorTextIs('Second Floor', 'T3');
 
     Tour.register('FloorScreenTour', { test: true, url: '/pos/ui' }, getSteps());
 });
