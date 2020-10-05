@@ -189,6 +189,12 @@ $-seen-urls: ();
     .nav-item {
         transition: opacity 1000ms ease 0s;
     }
+    .btn {
+        // This was a default bootstrap style before but it was removed from
+        // the library at some point. It seems important in the header so that
+        // the header does not flicker during loading.
+        white-space: nowrap;
+    }
     .o_menu_loading .nav-item {
         height: 0 !important;
         overflow: hidden !important;
