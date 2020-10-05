@@ -57,6 +57,9 @@
                             <t t-if="invoice.state == 'open'">
                                 <span class="badge badge-pill badge-info"><i class="fa fa-fw fa-clock-o" aria-label="Opened" title="Opened" role="img"></i><span class="d-none d-md-inline"> Waiting for Payment</span></span>
                             </t>
+                            <t t-if="invoice.state == 'in_payment'">
+                                <span class="badge badge-pill badge-secondary"><i class="fa fa-fw fa-spinner" aria-label="In payment process" title="In payment process" role="img"></i><span class="d-none d-md-inline"> In payment process</span></span>
+                            </t>
                             <t t-if="invoice.state == 'paid'">
                                 <span class="badge badge-pill badge-success"><i class="fa fa-fw fa-check" aria-label="Paid" title="Paid" role="img"></i><span class="d-none d-md-inline"> Paid</span></span>
                             </t>
