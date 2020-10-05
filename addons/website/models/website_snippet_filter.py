@@ -5,7 +5,6 @@ from collections import OrderedDict
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
 from odoo.osv import expression
-from odoo.tools import html_escape as escape
 from lxml import etree as ET
 
 
@@ -45,6 +44,13 @@ class WebsiteSnippetFilter(models.Model):
             for field_name in record.field_names.split(","):
                 if not field_name.strip():
                     raise ValidationError(_("Empty field name in %r") % (record.field_names))
+
+    @api.model
+    def search_read(self, domain=None, fields=None, offset=0, limit=None, order=None):
+        website_id = self.env.context.get("website_id")
+        if (website_id):
+            domain = [('website_id', '=', website_id)] + domain
+        return super(WebsiteSnippetFilter, self).search_read(domain, fields, offset, limit, order)
 
     def render(self, template_key, limit, search_domain=[]):
         """Renders the website dynamic snippet items"""
