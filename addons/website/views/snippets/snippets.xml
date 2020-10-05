@@ -319,7 +319,9 @@
             data-select-style="true"
             data-css-property="background-color"
             data-color-prefix="bg-"/>
-        <t t-call="website.snippet_options_border_widgets"/>
+        <t t-call="website.snippet_options_border_widgets">
+            <t t-set="so_rounded_no_dependencies" t-value="True"/>
+        </t>
         <t t-call="website.snippet_options_shadow_widgets"/>
     </div>
 
