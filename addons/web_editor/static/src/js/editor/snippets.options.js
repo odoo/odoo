@@ -3420,9 +3420,9 @@ registry.BackgroundOptimize = ImageHandlerOption.extend({
         Object.entries(this.$target[0].dataset).forEach(([key, value]) => {
             this.img.dataset[key] = value;
         });
-        const src = new URL(getBgImageURL(this.$target[0]), window.location.origin);
-        // Make URL relative because that is how image urls are stored in the database.
-        this.img.src = src.origin === window.location.origin && src.pathname;
+        const src = getBgImageURL(this.$target[0]);
+        // Don't set the src if not relative (ie, not local image: cannot be modified)
+        this.img.src = src.startsWith('/') ? src : '';
         return await this._super(...arguments);
     },
 
