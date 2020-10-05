@@ -341,7 +341,6 @@ function factory(dependencies) {
             return channels;
         }
 
-
         /**
          * Performs the `channel_seen` RPC on `mail.channel`.
          *
@@ -357,6 +356,23 @@ function factory(dependencies) {
                 args: [ids],
                 kwargs: {
                     last_message_id: lastMessageId,
+                },
+            }, { shadow: true });
+        }
+
+        /**
+         * Performs the `channel_pin` RPC on `mail.channel`.
+         *
+         * @static
+         * @param {string} uuid
+         */
+        static async performRpcChannelPin(uuid) {
+            return this.env.services.rpc({
+                model: 'mail.channel',
+                method: 'channel_pin',
+                kwargs: {
+                    uuid,
+                    pinned: true,
                 },
             }, { shadow: true });
         }
@@ -450,6 +466,22 @@ function factory(dependencies) {
             return this.env.models['mail.thread'].insert(
                 this.env.models['mail.thread'].convertData(data)
             );
+        }
+
+        /**
+         * Performs the `execute_command` RPC on `mail.channel`.
+         *
+         * @static
+         * @param {Object} param0
+         * @param {integer[]} param0.ids list of id of channels
+         * @param {string} param0.command the commadn to execute
+         */
+        static async performRpcExecuteCommand({ ids, command }) {
+            return this.env.services.rpc({
+                model: 'mail.channel',
+                method: 'execute_command',
+                args: [ids, command]
+            }, { shadow: true });
         }
 
         /**
@@ -633,24 +665,14 @@ function factory(dependencies) {
          *
          * Only makes sense if isPendingPinned is set to the desired value.
          */
-        notifyPinStateToServer() {
-            // method is called from _updateAfter so it cannot be async
+        async notifyPinStateToServer() {
             if (this.isPendingPinned) {
-                this.env.services.rpc({
-                    model: 'mail.channel',
-                    method: 'channel_pin',
-                    kwargs: {
-                        uuid: this.uuid,
-                        pinned: true,
-                    },
-                }, { shadow: true });
-            } else {
-                this.env.services.rpc({
-                    model: 'mail.channel',
-                    method: 'execute_command',
-                    args: [[this.id], 'leave']
-                }, { shadow: true });
+                return this.env.models['mail.thread'].performRpcChannelPin(this.uuid);
             }
+            return this.env.models['mail.thread'].performRpcExecuteCommand({
+                ids: [this.id],
+                command: 'leave',
+            });
         }
 
         /**
@@ -858,6 +880,15 @@ function factory(dependencies) {
         }
 
         /**
+         * Change the pinned state of this thread and notify server of the change.
+         * @param {boolean} isPinned the new pinned state
+         */
+        async setIsPinned(isPinned) {
+            this.update({ isPendingPinned: isPinned });
+            return this.notifyPinStateToServer();
+        }
+
+        /**
          * Unfollow current partner from this thread.
          */
         async unfollow() {
@@ -921,7 +952,7 @@ function factory(dependencies) {
          */
         unsubscribe() {
             this.env.messaging.chatWindowManager.closeThread(this);
-            this.update({ isPendingPinned: false });
+            this.setIsPinned(false);
         }
 
         //----------------------------------------------------------------------
@@ -1297,6 +1328,19 @@ function factory(dependencies) {
         }
 
         /**
+         * Handles change of pinned state coming from the server. Useful to
+         * clear pending state once server acknowledged the change.
+         *
+         * @private
+         * @see isPendingPinned
+         */
+        _onIsServerPinnedChanged() {
+            if (this.isServerPinned === this.isPendingPinned) {
+                this.update({ isPendingPinned: clear() });
+            }
+        }
+
+        /**
          * Handles change of fold state coming from the server. Useful to
          * synchronize corresponding chat window.
          *
@@ -1344,34 +1388,6 @@ function factory(dependencies) {
                     on_close: () => this.refreshFollowers(),
                 },
             });
-        }
-
-        /**
-         * @override
-         */
-        _updateAfter(previous) {
-            if (this.model !== 'mail.channel') {
-                // pin state only makes sense on channels
-                return;
-            }
-            if (
-                this.isPendingPinned !== undefined &&
-                previous.isPendingPinned !== this.isPendingPinned
-            ) {
-                this.notifyPinStateToServer();
-            }
-            if (this.isServerPinned === this.isPendingPinned) {
-                this.update({ isPendingPinned: clear() });
-            }
-        }
-
-        /**
-         * @override
-         */
-        _updateBefore() {
-            return {
-                isPendingPinned: this.isPendingPinned,
-            };
         }
 
         //----------------------------------------------------------------------
@@ -1696,6 +1712,16 @@ function factory(dependencies) {
         needactionMessages: many2many('mail.message', {
             compute: '_computeNeedactionMessages',
             dependencies: ['messages'],
+        }),
+        /**
+         * Not a real field, used to trigger `_onIsServerPinnedChanged` when one of
+         * the dependencies changes.
+         */
+        onIsServerPinnedChanged: attr({
+            compute: '_onIsServerPinnedChanged',
+            dependencies: [
+                'isServerPinned',
+            ],
         }),
         /**
          * Not a real field, used to trigger `_onServerFoldStateChanged` when one of

@@ -113,7 +113,7 @@ function factory(dependencies) {
                 thread.model === 'mail.channel' &&
                 thread.public === 'private'
             );
-            if (!chat) {
+            if (!chat ||!chat.isPinned) {
                 chat = await this.async(() =>
                     this.env.models['mail.thread'].performRpcCreateChat({
                         partnerIds: [this.partner.id],
