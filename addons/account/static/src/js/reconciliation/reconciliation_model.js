@@ -393,7 +393,9 @@ var StatementModel = BasicModel.extend({
             args: [ids, excluded_ids],
             context: self.context,
         })
-        .then(self._formatLine.bind(self));
+        .then(function(res){
+            return self._formatLine(res['lines']);
+        })
     },
     /**
      * Reload all data
