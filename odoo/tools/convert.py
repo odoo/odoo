@@ -1,13 +1,17 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+__all__ = [
+    'convert_file', 'convert_sql_import',
+    'convert_csv_import', 'convert_xml_import'
+]
+
 import base64
 import io
 import logging
 import os.path
 import re
 import subprocess
-import sys
-import time
 import warnings
 
 from datetime import datetime, timedelta
@@ -29,7 +33,7 @@ from odoo import SUPERUSER_ID, api
 
 _logger = logging.getLogger(__name__)
 
-from .safe_eval import safe_eval as s_eval
+from .safe_eval import safe_eval as s_eval, pytz, time
 safe_eval = lambda expr, ctx={}: s_eval(expr, ctx, nocopy=True)
 
 class ParseError(Exception):

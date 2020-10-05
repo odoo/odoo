@@ -23,7 +23,7 @@ import traceback
 import types
 import unicodedata
 import zipfile
-from collections import defaultdict, OrderedDict
+from collections import OrderedDict
 from collections.abc import Iterable, Mapping, MutableMapping, MutableSet
 from contextlib import contextmanager
 from difflib import HtmlDiff
@@ -1499,26 +1499,6 @@ pickle.load = _pickle_load
 pickle.loads = lambda text, encoding='ASCII': _pickle_load(io.BytesIO(text), encoding=encoding)
 pickle.dump = pickle_.dump
 pickle.dumps = pickle_.dumps
-
-def wrap_module(module, attr_list):
-    """Helper for wrapping a package/module to expose selected attributes
-
-       :param Module module: the actual package/module to wrap, as returned by ``import <module>``
-       :param iterable attr_list: a global list of attributes to expose, usually the top-level
-            attributes and their own main attributes. No support for hiding attributes in case
-            of name collision at different levels.
-    """
-    attr_list = set(attr_list)
-    class WrappedModule(object):
-        def __getattr__(self, attrib):
-            if attrib in attr_list:
-                target = getattr(module, attrib)
-                if isinstance(target, types.ModuleType):
-                    return wrap_module(target, attr_list)
-                return target
-            raise AttributeError(attrib)
-    # module and attr_list are in the closure
-    return WrappedModule()
 
 
 class DotDict(dict):

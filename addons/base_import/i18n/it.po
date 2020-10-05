@@ -3,23 +3,22 @@
 # 	* base_import
 # 
 # Translators:
-# Francesco Garganese <francesco.garganese@aeromnia.aero>, 2019
-# Martin Trigaux, 2019
-# SebastianoPistore <SebastianoPistore.info@protonmail.ch>, 2019
-# Paolo Valier, 2019
-# Pietro Della Notte <pdellanotte@gmail.com>, 2019
-# Léonie Bouchat <lbo@odoo.com>, 2019
-# mymage <stefano.consolaro@mymage.it>, 2019
-# Petra <bop@odoo.com>, 2019
-# Sergio Zanchetta <primes2h@gmail.com>, 2019
+# Martin Trigaux, 2020
+# Lorenzo Battistini <lb@takobi.online>, 2020
+# SebastianoPistore <SebastianoPistore.info@protonmail.ch>, 2020
+# Paolo Valier, 2020
+# Léonie Bouchat <lbo@odoo.com>, 2020
+# Petra <bop@odoo.com>, 2020
+# Iacopo Simonelli <lsi@odoo.com>, 2020
+# Sergio Zanchetta <primes2h@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-23 11:32+0000\n"
-"PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2019\n"
+"POT-Creation-Date: 2020-09-01 07:28+0000\n"
+"PO-Revision-Date: 2020-09-07 08:10+0000\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2020\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31,22 +30,22 @@ msgstr ""
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
-msgid "%d records successfully imported..."
+msgid "%d records successfully imported"
 msgstr ""
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/js/import_action.js:0
+#, python-format
+msgid "%d records successfully imported..."
+msgstr "%d record importati con successo..."
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "%d records tested..."
-msgstr ""
-
-#. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:0
-#, python-format
-msgid "%d records were successfully imported"
-msgstr "Sono stati importati con successo %d record"
+msgstr "%d record testati..."
 
 #. module: base_import
 #. openerp-web
@@ -63,8 +62,8 @@ msgid ""
 "A single column was found in the file, this often means the file separator "
 "is incorrect"
 msgstr ""
-"Nel file è stata trovata una sola colonna. Di solito questo significa che il"
-" separatore del file non è corretto"
+"Nel file è stata trovata una sola colonna. Di solito significa che il "
+"separatore del file non è corretto"
 
 #. module: base_import
 #. openerp-web
@@ -85,7 +84,7 @@ msgstr ""
 #. module: base_import
 #: model:ir.model,name:base_import.model_base
 msgid "Base"
-msgstr "Imponibile"
+msgstr "Base"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_import
@@ -102,14 +101,14 @@ msgstr "Mappatura importazione di base"
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Batch limit"
-msgstr ""
+msgstr "Limite raggruppamento"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "Between rows %d and %d"
-msgstr ""
+msgstr "Tra le righe %d e %d"
 
 #. module: base_import
 #. openerp-web
@@ -124,6 +123,8 @@ msgstr "Annulla"
 #, python-format
 msgid "Click 'Resume' to proceed with the import, resuming at line"
 msgstr ""
+"Fai clic su \"Riprendi\" per procedere con l'importazione, riprendendo dalla"
+" riga"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
@@ -157,7 +158,7 @@ msgid ""
 "Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: "
 "%(error)s"
 msgstr ""
-"Non è stato possibile recuperare l'URL: %(url)s[%(field_name)s: "
+"Impossibile raggiungere l'URL: %(url)s[%(field_name)s: "
 "L%(line_number)d]:%(error)s"
 
 #. module: base_import
@@ -248,7 +249,7 @@ msgstr "Formato data:"
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "Datetime Format:"
-msgstr "Formato date e ora:"
+msgstr "Formato data e ora:"
 
 #. module: base_import
 #. openerp-web
@@ -275,6 +276,7 @@ msgstr "Separatore decimale:"
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m__display_name
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child__display_name
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview__display_name
+#: model:ir.model.fields,field_description:base_import.field_res_users__display_name
 msgid "Display Name"
 msgstr "Nome visualizzato"
 
@@ -295,6 +297,7 @@ msgstr "Punto"
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:0
+#: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Download"
 msgstr "Scarica"
@@ -309,7 +312,7 @@ msgstr "Dt"
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Due to its large size, the file will be imported by batches."
-msgstr ""
+msgstr "A causa delle grandi dimensioni, il file verrà diviso in gruppi."
 
 #. module: base_import
 #. openerp-web
@@ -400,13 +403,15 @@ msgid ""
 "Found invalid image data, images should be imported as either URLs or "
 "base64-encoded data."
 msgstr ""
+"Trovati dati immagine non validi, le immagini devono essere importate come "
+"URL o come dati con codifica base64."
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Here is the start of the file we could not import:"
-msgstr "Questo è l'inizio del file che potremmo non importare:"
+msgstr "Questo è l'inizio del file che potrebbe non essere importato:"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__id
@@ -426,6 +431,7 @@ msgstr "Questo è l'inizio del file che potremmo non importare:"
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m__id
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child__id
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview__id
+#: model:ir.model.fields,field_description:base_import.field_res_users__id
 msgid "ID"
 msgstr "ID"
 
@@ -452,10 +458,13 @@ msgid ""
 "If the model uses openchatter, history tracking will set up subscriptions "
 "and send notifications during the import, but lead to a slower import."
 msgstr ""
+"Se il modello è dotato di una cronologia delle conversazioni,"
+"                            esso registrerà le modifiche apportate durante "
+"l'importazione, terrà conto delle sottoscrizioni automatiche e invierà le "
+"notifiche corrispondenti. Ciò potrebbe rallentare l'importazione. "
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:0
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Import"
@@ -466,21 +475,21 @@ msgstr "Importa"
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Import FAQ"
-msgstr "Importare FAQ"
+msgstr "Importa FAQ"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/xml/base_import.xml:0
+#, python-format
+msgid "Import Records"
+msgstr ""
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "Import a File"
-msgstr "Importa un File"
-
-#. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:0
-#, python-format
-msgid "Import completed"
-msgstr "Importazione completata"
+msgstr "Importa un file"
 
 #. module: base_import
 #. openerp-web
@@ -507,6 +516,7 @@ msgstr ""
 #, python-format
 msgid "Invalid cell value at row %(row)s, column %(col)s: %(cell_value)s"
 msgstr ""
+"Valore cella non valido alla riga %(row)s, colonna %(col)s: %(cell_value)s"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import____last_update
@@ -526,6 +536,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m____last_update
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child____last_update
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview____last_update
+#: model:ir.model.fields,field_description:base_import.field_res_users____last_update
 msgid "Last Modified on"
 msgstr "Ultima modifica il"
 
@@ -615,7 +626,7 @@ msgstr "Bisogno di aiuto?"
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "No Separator"
-msgstr "Nessun Separatore"
+msgstr "Nessun separatore"
 
 #. module: base_import
 #. openerp-web
@@ -632,7 +643,7 @@ msgstr "Altra variabile"
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child__parent_id
 msgid "Parent"
-msgstr "Principale"
+msgstr "Padre"
 
 #. module: base_import
 #. openerp-web
@@ -640,13 +651,6 @@ msgstr "Principale"
 #, python-format
 msgid "Relation Fields"
 msgstr "Campi relazione"
-
-#. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:0
-#, python-format
-msgid "Reload File"
-msgstr "Ricarica File"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__res_model
@@ -658,14 +662,14 @@ msgstr "Modello res"
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Resume"
-msgstr "Riprendi"
+msgstr "Curriculum"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "Row %d%s"
-msgstr ""
+msgstr "Riga %d%s"
 
 #. module: base_import
 #. openerp-web
@@ -673,7 +677,7 @@ msgstr ""
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "See possible values"
-msgstr ""
+msgstr "Visualizzare tutti i valori possibili"
 
 #. module: base_import
 #. openerp-web
@@ -681,6 +685,14 @@ msgstr ""
 #, python-format
 msgid "Select a CSV or Excel file to import."
 msgstr "Seleziona un file CSV o Excel da importare."
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/js/import_action.js:0
+#: code:addons/base_import/static/src/xml/base_import.xml:0
+#, python-format
+msgid "Selected Sheet:"
+msgstr ""
 
 #. module: base_import
 #. openerp-web
@@ -706,7 +718,7 @@ msgstr "Visualizzare i campi di relazione (avanzato)"
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview__somevalue
 msgid "Some Value"
-msgstr "Qualche valore"
+msgstr "Alcuni valori"
 
 #. module: base_import
 #. openerp-web
@@ -720,14 +732,14 @@ msgstr "Spazio"
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Start at line"
-msgstr ""
+msgstr "Inizia alla riga"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "Tab"
-msgstr "Tab"
+msgstr "Tabulazione"
 
 #. module: base_import
 #. openerp-web
@@ -744,52 +756,53 @@ msgstr "Test: anteprima modello importazione di base"
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char
 msgid "Tests : Base Import Model, Character"
-msgstr ""
+msgstr "Test : modello importazione di base, carattere"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_noreadonly
 msgid "Tests : Base Import Model, Character No readonly"
-msgstr ""
+msgstr "Test : Modello importazione base, carattere non in sola lettura"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_readonly
 msgid "Tests : Base Import Model, Character readonly"
-msgstr ""
+msgstr "Test : Modello importazione base, carattere in sola lettura"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_required
 msgid "Tests : Base Import Model, Character required"
-msgstr ""
+msgstr "Test : Modello importazione base, carattere obbligatorio"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_states
 msgid "Tests : Base Import Model, Character states"
-msgstr ""
+msgstr "Test : modello importazione di base, stato carattere"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_stillreadonly
 msgid "Tests : Base Import Model, Character still readonly"
-msgstr ""
+msgstr "Test : Modello importazione base, carattere ancora in sola lettura"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_m2o
 msgid "Tests : Base Import Model, Many to One"
-msgstr "Test: modello importazione di base, molti a uno"
+msgstr "Test: modello importazione base, molti a uno"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_m2o_related
 msgid "Tests : Base Import Model, Many to One related"
-msgstr ""
+msgstr "Test: modello importazione di base, relazione molti a uno"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_m2o_required
 msgid "Tests : Base Import Model, Many to One required"
-msgstr ""
+msgstr "Test: modello importazione base, molti a uno obbligatorio"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_m2o_required_related
 msgid "Tests : Base Import Model, Many to One required related"
 msgstr ""
+"Test: modello importazione di base, relazione molti a uno obbligatoria"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_o2m
@@ -804,12 +817,12 @@ msgstr ""
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_complex
 msgid "Tests: Base Import Model Complex"
-msgstr ""
+msgstr "Test: modello importazione di base, complesso"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_float
 msgid "Tests: Base Import Model Float"
-msgstr ""
+msgstr "Test: modello importazione di base, virgola mobile"
 
 #. module: base_import
 #. openerp-web
@@ -826,12 +839,21 @@ msgid ""
 "The first row\n"
 "                         contains the label of the column"
 msgstr ""
+"La prima riga\n"
+"                 contiene l'etichetta della colonna"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "This file has been successfully imported up to line %d."
+msgstr "File importato con successo fino alla riga %d."
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/xml/base_import.xml:0
+#, python-format
+msgid "This is a preview of the first 10 rows of your file"
 msgstr ""
 
 #. module: base_import
@@ -900,6 +922,8 @@ msgid ""
 "Warning: ignores the labels line, empty lines and"
 "                             lines composed only of empty cells"
 msgstr ""
+"Attenzione: ignora la linea delle etichette, le linee vuote e le linee "
+"composte solo da celle vuote"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
@@ -917,6 +941,7 @@ msgstr ""
 #, python-format
 msgid "You can test or reload your file before resuming the import."
 msgstr ""
+"È possibile testare o ricaricare il file prima di riprendere l'importazione."
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
@@ -929,14 +954,14 @@ msgstr "Deve essere configurato almeno un campo da importare"
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "at %d different rows:"
-msgstr ""
+msgstr "Alla %d righe diverse:"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "at row %d%s"
-msgstr ""
+msgstr "alla riga %d%s"
 
 #. module: base_import
 #. openerp-web
@@ -949,4 +974,4 @@ msgstr "tra le righe %d e %d"
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "unknown error code %s"
-msgstr ""
+msgstr "codice errore sconosciuto %s"

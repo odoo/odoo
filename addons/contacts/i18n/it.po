@@ -1,21 +1,18 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * contacts
+# 	* contacts
 # 
 # Translators:
-# Sergio Zanchetta <primes2h@gmail.com>, 2019
-# Paolo Valier, 2019
-# Cécile Collart <cco@odoo.com>, 2019
-# Pietro Della Notte <pdellanotte@gmail.com>, 2019
-# Petra <bop@odoo.com>, 2019
+# Sergio Zanchetta <primes2h@gmail.com>, 2020
+# Paolo Valier, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: Petra <bop@odoo.com>, 2019\n"
+"POT-Creation-Date: 2020-09-01 07:28+0000\n"
+"PO-Revision-Date: 2020-09-07 08:11+0000\n"
+"Last-Translator: Paolo Valier, 2020\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -51,7 +48,6 @@ msgstr "Qualifiche contatto"
 
 #. module: contacts
 #: model:ir.actions.act_window,name:contacts.action_contacts
-#: model:ir.actions.act_window,name:contacts.action_contacts_summary
 #: model:ir.ui.menu,name:contacts.menu_contacts
 #: model:ir.ui.menu,name:contacts.res_partner_menu_contacts
 msgid "Contacts"
@@ -65,18 +61,37 @@ msgstr "Nazioni"
 #. module: contacts
 #: model:ir.ui.menu,name:contacts.menu_country_group
 msgid "Country Group"
-msgstr "Gruppo nazione"
+msgstr "Raggruppamento nazioni"
 
 #. module: contacts
 #: model_terms:ir.actions.act_window,help:contacts.action_contacts
-#: model_terms:ir.actions.act_window,help:contacts.action_contacts_summary
 msgid "Create a contact in your address book"
 msgstr "Crea un contatto nella rubrica"
 
 #. module: contacts
+#: model:ir.model.fields,field_description:contacts.field_res_users__display_name
+msgid "Display Name"
+msgstr "Nome visualizzato"
+
+#. module: contacts
 #: model:ir.ui.menu,name:contacts.menu_country_state_partner
 msgid "Fed. States"
-msgstr "Regioni/Stati Federali"
+msgstr "Stati federali"
+
+#. module: contacts
+#: model:ir.model.fields,field_description:contacts.field_res_users__id
+msgid "ID"
+msgstr "ID"
+
+#. module: contacts
+#: model:ir.ui.menu,name:contacts.res_partner_industry_menu
+msgid "Industries"
+msgstr "Settori"
+
+#. module: contacts
+#: model:ir.model.fields,field_description:contacts.field_res_users____last_update
+msgid "Last Modified on"
+msgstr "Ultima modifica il"
 
 #. module: contacts
 #: model:ir.ui.menu,name:contacts.menu_localisation
@@ -85,15 +100,10 @@ msgstr "Localizzazione"
 
 #. module: contacts
 #: model_terms:ir.actions.act_window,help:contacts.action_contacts
-#: model_terms:ir.actions.act_window,help:contacts.action_contacts_summary
 msgid "Odoo helps you to easily track all activities related to a customer."
 msgstr ""
-"Odoo ti aiuta a tenere traccia di tutte le attività relative al cliente"
-
-#. module: contacts
-#: model:ir.ui.menu,name:contacts.res_partner_industry_menu
-msgid "Sectors of Activity"
-msgstr "Settori di attività"
+"Odoo aiuta a tenere traccia facilmente di tutte le attività relative a un "
+"cliente."
 
 #. module: contacts
 #: model:ir.model,name:contacts.model_res_users

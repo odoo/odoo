@@ -3,18 +3,20 @@
 # 	* base_gengo
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2019
-# Cristopher Cravioto <ccr@odoo.com>, 2019
-# Jon Perez <jop@odoo.com>, 2019
+# Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2020
+# Martin Trigaux, 2020
+# Pedro M. Baeza <pedro.baeza@gmail.com>, 2020
+# Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2020
+# Jon Perez <jop@odoo.com>, 2020
+# Osiris Román <osiris.roman@yachaytech.edu.ec>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: Jon Perez <jop@odoo.com>, 2019\n"
+"POT-Creation-Date: 2019-11-22 08:19+0000\n"
+"PO-Revision-Date: 2020-09-07 08:10+0000\n"
+"Last-Translator: Osiris Román <osiris.roman@yachaytech.edu.ec>, 2020\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,6 +30,8 @@ msgid ""
 "<span class=\"o_form_label\">Gengo Public or Private keys are wrong or "
 "missing.</span>"
 msgstr ""
+"<span class=\"o_form_label\">Las claves públicas o privadas de Gengo son "
+"incorrectas o faltan.</span>"
 
 #. module: base_gengo
 #: model_terms:ir.ui.view,arch_db:base_gengo.view_ir_translation_inherit_base_gengo_form
@@ -37,6 +41,10 @@ msgid ""
 "in this system. You are supposed to do that directly by using your Gengo "
 "Account</span>"
 msgstr ""
+"<span class=\"o_form_label\">Nota: Si el estado de traducción está 'En "
+"progreso', significa que la traducción tiene que ser aprobada para ser "
+"actualizada en este sistema. Se supone que usted lo realizará directamente "
+"usando su cuenta Gengo.</span>"
 
 #. module: base_gengo
 #: model_terms:ir.ui.view,arch_db:base_gengo.res_config_settings_view_form
@@ -118,7 +126,7 @@ msgstr "Compañías"
 #. module: base_gengo
 #: model:ir.model,name:base_gengo.model_res_config_settings
 msgid "Config Settings"
-msgstr "Opciones de Configuración"
+msgstr "Opciones de configuración"
 
 #. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_base_gengo_translations__create_uid
@@ -193,6 +201,15 @@ msgstr ""
 "``%s``"
 
 #. module: base_gengo
+#: code:addons/base_gengo/wizard/base_gengo_translations.py:0
+#, python-format
+msgid ""
+"Gengo library not installed. Contact your system administrator to use it."
+msgstr ""
+"Biblioteca Gengo no instalada. Póngase en contacto con el administrador del "
+"sistema para usarlo."
+
+#. module: base_gengo
 #: model:ir.actions.act_window,name:base_gengo.action_wizard_base_gengo_translations
 #: model:ir.ui.menu,name:base_gengo.menu_action_wizard_base_gengo_translations
 msgid "Gengo: Manual Request of Translation"
@@ -231,7 +248,7 @@ msgstr "Idioma"
 #. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_base_gengo_translations____last_update
 msgid "Last Modified on"
-msgstr "Última modificación en"
+msgstr "Última modificación el"
 
 #. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_base_gengo_translations__write_uid

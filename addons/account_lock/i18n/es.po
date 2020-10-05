@@ -1,0 +1,108 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* account_lock
+# 
+# Translators:
+# Martin Trigaux, 2020
+# Cris Martin <cristina.marrod@gmail.com>, 2020
+# Jimmy Ramos <jimmybanegas93@gmail.com>, 2020
+# Victoria Quesada <victoria.quesada@nybblegroup.com>, 2020
+# Osiris Román <osiris.roman@yachaytech.edu.ec>, 2020
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~13.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-09-01 07:28+0000\n"
+"PO-Revision-Date: 2020-09-07 08:10+0000\n"
+"Last-Translator: Osiris Román <osiris.roman@yachaytech.edu.ec>, 2020\n"
+"Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: es\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: account_lock
+#: model:ir.model,name:account_lock.model_res_company
+msgid "Companies"
+msgstr "Compañías"
+
+#. module: account_lock
+#: model:ir.model.fields,field_description:account_lock.field_res_company__display_name
+msgid "Display Name"
+msgstr "Nombre mostrado"
+
+#. module: account_lock
+#: model:ir.model.fields,field_description:account_lock.field_res_company__id
+msgid "ID"
+msgstr "ID"
+
+#. module: account_lock
+#: model:ir.model.fields,field_description:account_lock.field_res_company____last_update
+msgid "Last Modified on"
+msgstr "Última modificación el"
+
+#. module: account_lock
+#: code:addons/account_lock/models/res_company.py:0
+#, python-format
+msgid "The lock date for advisors is irreversible and can't be removed."
+msgstr ""
+"El bloqueo de fecha para asesores es irreversible y no puede ser eliminado."
+
+#. module: account_lock
+#: code:addons/account_lock/models/res_company.py:0
+#, python-format
+msgid ""
+"The new lock date for advisors must be set after the previous lock date."
+msgstr ""
+"La nueva fecha de bloqueo para los asesores se debe establecer después de la"
+" fecha de bloqueo anterior."
+
+#. module: account_lock
+#: code:addons/account_lock/models/res_company.py:0
+#, python-format
+msgid "The new tax lock date must be set after the previous lock date."
+msgstr ""
+"La nueva fecha de bloqueo para el impuesto tiene que fijarse después de la "
+"fecha de bloqueo anterior."
+
+#. module: account_lock
+#: code:addons/account_lock/models/res_company.py:0
+#, python-format
+msgid "The tax lock date is irreversible and can't be removed."
+msgstr ""
+"La fecha de bloqueo del impuesto es irreversible y no se puede quitar. "
+
+#. module: account_lock
+#: code:addons/account_lock/models/res_company.py:0
+#, python-format
+msgid ""
+"You cannot define stricter conditions on advisors than on users. Please make"
+" sure that the lock date on advisor is set before the lock date for users."
+msgstr ""
+"No puede definir condiciones más estrictas en los asesores que en los "
+"usuarios. Asegúrese de que la fecha de bloqueo en el asesor esté configurada"
+" antes de la fecha de bloqueo para los usuarios."
+
+#. module: account_lock
+#: code:addons/account_lock/models/res_company.py:0
+#, python-format
+msgid ""
+"You cannot lock a period that is not finished yet. Please make sure that the"
+" lock date for advisors is not set after the last day of the previous month."
+msgstr ""
+"No se puede bloquear un periodo que no ha transcurrido todavía. Por favor, "
+"asegúrate de que la fecha bloqueada no es anterior al último día del mes "
+"anterior. "
+
+#. module: account_lock
+#: code:addons/account_lock/models/res_company.py:0
+#, python-format
+msgid ""
+"You cannot lock a period that is not finished yet. Please make sure that the"
+" tax lock date is not set after the last day of the previous month."
+msgstr ""
+"No se puede bloquear un periodo si el mismo no se ha terminado. Por favor "
+"asegúrese de no fijar la fecha de bloqueo del impuesto después del último "
+"día del mes anterior. "

@@ -794,10 +794,12 @@ $-hamburger-left: o-website-value('hamburger-position') == 'left';
 $-hamburger-center: o-website-value('hamburger-position') == 'center';
 $-hamburger-right: o-website-value('hamburger-position') == 'right';
 
+$zindex-website-header: $zindex-modal - 20;
+
 header {
     &#top {
         // We need this z-index for the shadow option of the header
-        z-index: $zindex-modal - 20;
+        z-index: $zindex-website-header;
     }
     &:not(.o_header_no_transition) {
         #top_menu_container {
@@ -861,9 +863,13 @@ header {
     #top_menu_collapse {
 
         &.collapsing, &.show {
+            // Note: position relatively to the header instead of the viewport
+            // because fixed position cannot work inside an element whose CSS
+            // transform is different to none, which the header element is
+            // because of header effects.
             @include o-position-absolute(0, 0, 0, 0);
-            position: fixed;
             z-index: $zindex-sticky;
+            height: 100vh;
             transition: none;
             transform: none;
 
@@ -948,9 +954,9 @@ header {
                 }
             }
 
-            .o_connected_user:not(.editor_has_snippets) header:not(.o_header_is_scrolled) &,
-            .o_connected_user:not(.editor_has_snippets) header.o_header_affixed & {
-                padding-top: $o-navbar-height !important;
+            .o_connected_user:not(.editor_has_snippets) header & {
+                top: -$o-navbar-height;
+                padding-top: $o-navbar-height;
             }
         }
         &.collapsing #top_menu {

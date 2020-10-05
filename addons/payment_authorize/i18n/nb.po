@@ -2,16 +2,12 @@
 # This file contains the translation of the following modules:
 # 	* payment_authorize
 # 
-# Translators:
-# Martin Trigaux, 2019
-# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Martin Trigaux, 2019\n"
+"POT-Creation-Date: 2020-09-01 07:28+0000\n"
+"PO-Revision-Date: 2020-09-07 08:15+0000\n"
 "Language-Team: Norwegian Bokmål (https://www.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -35,7 +31,7 @@ msgstr ""
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__authorize_login
 msgid "API Login Id"
-msgstr "ID for API-innlogging"
+msgstr ""
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__authorize_signature_key
@@ -45,12 +41,12 @@ msgstr ""
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__authorize_transaction_key
 msgid "API Transaction Key"
-msgstr "API-transaksjonsnøkkel"
+msgstr ""
 
 #. module: payment_authorize
 #: model:ir.model.fields.selection,name:payment_authorize.selection__payment_acquirer__provider__authorize
 msgid "Authorize.Net"
-msgstr "Authorize.Net"
+msgstr ""
 
 #. module: payment_authorize
 #: code:addons/payment_authorize/models/authorize_request.py:0
@@ -64,7 +60,7 @@ msgstr ""
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_token__authorize_profile
 msgid "Authorize.net Profile ID"
-msgstr "Authorize.net profil-ID"
+msgstr ""
 
 #. module: payment_authorize
 #: code:addons/payment_authorize/models/payment.py:0
@@ -73,8 +69,13 @@ msgid ""
 "Authorize: received data with missing reference (%s) or trans_id (%s) or "
 "fingerprint (%s)"
 msgstr ""
-"Authorize: Mottatt data med manglende referanse (%s) eller trans_id (%s) "
-"eller fingeravtrykk (%s)"
+
+#. module: payment_authorize
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__display_name
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_token__display_name
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_transaction__display_name
+msgid "Display Name"
+msgstr ""
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.acquirer_form_authorize
@@ -84,7 +85,14 @@ msgstr ""
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.acquirer_form_authorize
 msgid "How to get paid with Authorize.Net"
-msgstr "Hvordan få betalt med Authorize.Net"
+msgstr ""
+
+#. module: payment_authorize
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__id
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_token__id
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_transaction__id
+msgid "ID"
+msgstr ""
 
 #. module: payment_authorize
 #: code:addons/payment_authorize/models/payment.py:0
@@ -95,9 +103,16 @@ msgid ""
 msgstr ""
 
 #. module: payment_authorize
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer____last_update
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_token____last_update
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_transaction____last_update
+msgid "Last Modified on"
+msgstr ""
+
+#. module: payment_authorize
 #: model:ir.model,name:payment_authorize.model_payment_acquirer
 msgid "Payment Acquirer"
-msgstr "Betalingsløsning"
+msgstr ""
 
 #. module: payment_authorize
 #: model:ir.model,name:payment_authorize.model_payment_token
@@ -107,7 +122,7 @@ msgstr ""
 #. module: payment_authorize
 #: model:ir.model,name:payment_authorize.model_payment_transaction
 msgid "Payment Transaction"
-msgstr "Betalingstransaksjon"
+msgstr ""
 
 #. module: payment_authorize
 #: code:addons/payment_authorize/controllers/main.py:0
@@ -125,12 +140,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__provider
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_token__provider
 msgid "Provider"
-msgstr "Tilbyder"
+msgstr ""
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_token__save_token
 msgid "Save Cards"
-msgstr "Lagre kort"
+msgstr ""
 
 #. module: payment_authorize
 #. openerp-web
@@ -138,13 +153,13 @@ msgstr "Lagre kort"
 #: code:addons/payment_authorize/static/src/js/payment_form.js:0
 #, python-format
 msgid "Server Error"
-msgstr "Serverfeil"
+msgstr ""
 
 #. module: payment_authorize
 #: code:addons/payment_authorize/models/payment.py:0
 #, python-format
 msgid "The Customer Profile creation in Authorize.NET failed."
-msgstr "Opprettelse av kundeprofil i Authorize.NET mislyktes."
+msgstr ""
 
 #. module: payment_authorize
 #: code:addons/payment_authorize/controllers/main.py:0
@@ -182,7 +197,7 @@ msgstr ""
 #: code:addons/payment_authorize/models/payment.py:0
 #, python-format
 msgid "Warning"
-msgstr "Advarsel"
+msgstr ""
 
 #. module: payment_authorize
 #. openerp-web

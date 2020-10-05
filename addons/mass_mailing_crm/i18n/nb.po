@@ -2,16 +2,12 @@
 # This file contains the translation of the following modules:
 # 	* mass_mailing_crm
 # 
-# Translators:
-# Martin Trigaux, 2019
-# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2019-08-26 09:11+0000\n"
-"Last-Translator: Martin Trigaux, 2019\n"
+"POT-Creation-Date: 2020-09-01 07:29+0000\n"
+"PO-Revision-Date: 2020-09-07 08:14+0000\n"
 "Language-Team: Norwegian Bokmål (https://www.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,31 +16,44 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: mass_mailing_crm
-#: model:ir.model.fields,field_description:mass_mailing_crm.field_mailing_mailing__crm_lead_count
-msgid "Lead Count"
+#: model_terms:ir.ui.view,arch_db:mass_mailing_crm.mailing_mailing_view_form
+msgid ""
+"<span class=\"o_stat_text\" attrs=\"{'invisible': [('use_leads', '=', False)]}\">Leads</span>\n"
+"                        <span class=\"o_stat_text\" attrs=\"{'invisible': [('use_leads', '=', True)]}\">Opportunities</span>"
 msgstr ""
 
 #. module: mass_mailing_crm
-#: model_terms:ir.ui.view,arch_db:mass_mailing_crm.mailing_mailing_view_form
-msgid "Leads"
-msgstr "Leads"
+#: model:ir.model.fields,field_description:mass_mailing_crm.field_mailing_mailing__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: mass_mailing_crm
+#: model:ir.model.fields,field_description:mass_mailing_crm.field_mailing_mailing__id
+msgid "ID"
+msgstr ""
+
+#. module: mass_mailing_crm
+#: code:addons/mass_mailing_crm/models/mailing_mailing.py:0
+#, python-format
+msgid "LEADS"
+msgstr ""
+
+#. module: mass_mailing_crm
+#: model:ir.model.fields,field_description:mass_mailing_crm.field_mailing_mailing____last_update
+msgid "Last Modified on"
+msgstr ""
+
+#. module: mass_mailing_crm
+#: model:ir.model.fields,field_description:mass_mailing_crm.field_mailing_mailing__crm_lead_count
+msgid "Leads/Opportunities Count"
+msgstr ""
 
 #. module: mass_mailing_crm
 #: model:ir.model,name:mass_mailing_crm.model_mailing_mailing
 msgid "Mass Mailing"
-msgstr "Masseutsendelser"
-
-#. module: mass_mailing_crm
-#: model_terms:ir.ui.view,arch_db:mass_mailing_crm.mailing_mailing_view_form
-msgid "Opportunities"
-msgstr "Salgsmuligheter"
-
-#. module: mass_mailing_crm
-#: model:ir.model.fields,field_description:mass_mailing_crm.field_mailing_mailing__crm_opportunities_count
-msgid "Opportunities Count"
 msgstr ""
 
 #. module: mass_mailing_crm
-#: model:ir.model.fields,field_description:mass_mailing_crm.field_mailing_mailing__crm_lead_activated
+#: model:ir.model.fields,field_description:mass_mailing_crm.field_mailing_mailing__use_leads
 msgid "Use Leads"
 msgstr ""

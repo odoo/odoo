@@ -4,6 +4,7 @@
 import json
 import datetime
 import math
+import operator as py_operator
 import re
 
 from collections import defaultdict
@@ -230,8 +231,7 @@ class MrpProduction(models.Model):
     scrap_ids = fields.One2many('stock.scrap', 'production_id', 'Scraps')
     scrap_count = fields.Integer(compute='_compute_scrap_move_count', string='Scrap Move')
     is_locked = fields.Boolean('Is Locked', default=_get_default_is_locked, copy=False)
-    is_planned = fields.Boolean('Its Operations are Planned', compute="_compute_is_planned")
-    is_partially_planned = fields.Boolean('One operation is Planned', compute="_compute_is_planned")
+    is_planned = fields.Boolean('Its Operations are Planned', compute='_compute_is_planned', search='_search_is_planned')
 
     show_final_lots = fields.Boolean('Show Final Lots', compute='_compute_show_lots')
     production_location_id = fields.Many2one('stock.location', "Production Location", compute="_compute_production_location", store=True)
@@ -314,14 +314,27 @@ class MrpProduction(models.Model):
         for production in self:
             production.move_finished_ids.date_deadline = production.date_deadline
 
+    @api.depends("workorder_ids.date_planned_start", "workorder_ids.date_planned_finished")
     def _compute_is_planned(self):
         for production in self:
             if production.workorder_ids:
-                production.is_planned = all(wo.date_planned_start and wo.date_planned_finished for wo in production.workorder_ids)
-                production.is_partially_planned = any(wo.date_planned_start and wo.date_planned_finished for wo in production.workorder_ids if production.state != 'draft')
+                production.is_planned = any(wo.date_planned_start and wo.date_planned_finished for wo in production.workorder_ids if wo.state != 'done')
             else:
                 production.is_planned = False
-                production.is_partially_planned = False
+
+    def _search_is_planned(self, operator, value):
+        if operator not in ('=', '!='):
+            raise UserError(_('Invalid domain operator %s', operator))
+
+        if value not in (False, True):
+            raise UserError(_('Invalid domain right operand %s', value))
+        ops = {'=': py_operator.eq, '!=': py_operator.ne}
+        ids = []
+        for mo in self.search([]):
+            if ops[operator](value, mo.is_planned):
+                ids.append(mo.id)
+
+        return [('id', 'in', ids)]
 
     @api.depends('move_raw_ids.delay_alert_date')
     def _compute_delay_alert_date(self):
@@ -487,7 +500,7 @@ class MrpProduction(models.Model):
             any_quantity_done = any(m.quantity_done > 0 for m in order.move_raw_ids)
 
             order.unreserve_visible = not any_quantity_done and already_reserved
-            order.reserve_visible = (order.is_planned or order.state in ('confirmed', 'progress', 'to_close')) and any(move.product_uom_qty and move.state in ['confirmed', 'partially_available'] for move in order.move_raw_ids)
+            order.reserve_visible = order.state in ('confirmed', 'progress', 'to_close') and any(move.product_uom_qty and move.state in ['confirmed', 'partially_available'] for move in order.move_raw_ids)
 
     @api.depends('workorder_ids.state', 'move_finished_ids', 'move_finished_ids.quantity_done')
     def _get_produced_qty(self):
@@ -701,8 +714,8 @@ class MrpProduction(models.Model):
             if 'date_planned_start' in vals and not self.env.context.get('force_date', False):
                 if production.state in ['done', 'cancel']:
                     raise UserError(_('You cannot move a manufacturing order once it is cancelled or done.'))
-                if production.is_partially_planned:
-                    raise UserError(_('You cannot move a manufacturing order once it has a planned workorder, move related workorder(s) instead.'))
+                if production.is_planned:
+                    production.button_unplan()
             if vals.get('date_planned_start'):
                 production.move_raw_ids.write({'date': production.date_planned_start, 'date_deadline': production.date_planned_start})
             if vals.get('date_planned_finished'):
@@ -1379,16 +1392,19 @@ class MrpProduction(models.Model):
                     'production_id': backorder_mo.id,
                 })
             else:
+                new_moves_vals = []
                 for move in production.move_raw_ids | production.move_finished_ids:
                     if not move.additional:
                         qty_to_split = move.product_uom_qty - move.unit_factor * production.qty_producing
-                        new_move = self.env['stock.move'].browse(move._split(qty_to_split))
+                        move_vals = move._split(qty_to_split)
+                        if not move_vals:
+                            continue
                         if move.raw_material_production_id:
-                            new_move.raw_material_production_id = backorder_mo.id
+                            move_vals[0]['raw_material_production_id'] = backorder_mo.id
                         else:
-                            new_move.production_id = backorder_mo.id
-                        (move | new_move)._do_unreserve()
-                        (move | new_move)._action_assign()
+                            move_vals[0]['production_id'] = backorder_mo.id
+                        new_moves_vals.append(move_vals[0])
+                new_moves = self.env['stock.move'].create(new_moves_vals)
             backorders |= backorder_mo
             for wo in backorder_mo.workorder_ids:
                 wo.qty_produced = 0
@@ -1407,8 +1423,14 @@ class MrpProduction(models.Model):
                 workorder.duration_expected = workorder.duration_expected * ratio
             for workorder in backorder_mo.workorder_ids:
                 workorder.duration_expected = workorder.duration_expected * (1 - ratio)
+
+        # As we have split the moves before validating them, we need to 'remove' the excess reservation
+        if not close_mo:
+            self.move_raw_ids.filtered(lambda m: not m.additional)._do_unreserve()
+            self.move_raw_ids.filtered(lambda m: not m.additional)._action_assign()
         # Confirm only productions with remaining components
         backorders.filtered(lambda mo: mo.move_raw_ids).action_confirm()
+        backorders.filtered(lambda mo: mo.move_raw_ids).action_assign()
 
         # Remove the serial move line without reserved quantity. Post inventory will assigned all the non done moves
         # So those move lines are duplicated.
@@ -1452,7 +1474,12 @@ class MrpProduction(models.Model):
         })
 
         for production in self:
-            production.write({'date_finished': fields.Datetime.now(), 'product_qty': production.qty_produced, 'priority': '0'})
+            production.write({
+                'date_finished': fields.Datetime.now(),
+                'product_qty': production.qty_produced,
+                'priority': '0',
+                'is_locked': True,
+            })
 
         for workorder in self.workorder_ids.filtered(lambda w: w.state not in ('done', 'cancel')):
             workorder.duration_expected = workorder._get_duration_expected()

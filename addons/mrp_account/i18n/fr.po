@@ -3,17 +3,21 @@
 # 	* mrp_account
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Eloïse Stilmant <est@odoo.com>, 2019
-# Thomas Dobbelsteyn <tdo@odoo.com>, 2019
+# Martin Trigaux, 2020
+# Aurélien Pillevesse <aurelienpillevesse@hotmail.fr>, 2020
+# Cécile Collart <cco@odoo.com>, 2020
+# Antoine Gilard <ang@odoo.com>, 2020
+# omaodoo <oma@odoo.com>, 2020
+# Gilles Mangin <gilles.mangin@phidias.fr>, 2020
+# Vallen Delobel <edv@odoo.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.4\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-12 11:32+0000\n"
-"PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Thomas Dobbelsteyn <tdo@odoo.com>, 2019\n"
+"POT-Creation-Date: 2020-09-01 07:29+0000\n"
+"PO-Revision-Date: 2020-09-07 08:15+0000\n"
+"Last-Translator: Vallen Delobel <edv@odoo.com>, 2020\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,7 +37,7 @@ msgstr "Compte analytique"
 #: model_terms:ir.ui.view,arch_db:mrp_account.product_product_view_form_normal_inherit_extended
 #: model_terms:ir.ui.view,arch_db:mrp_account.product_variant_easy_edit_view_bom_inherit
 msgid "Compute Price from BoM"
-msgstr "Calculer le Prix depuis la Nomenclature"
+msgstr "Calculer le coût sur base de la nomenclature"
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.product_product_ext_form_view2
@@ -52,14 +56,23 @@ msgid "Cost Recorded"
 msgstr "Coût enregistré"
 
 #. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_production__display_name
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter__display_name
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter_productivity__display_name
+#: model:ir.model.fields,field_description:mrp_account.field_product_product__display_name
+#: model:ir.model.fields,field_description:mrp_account.field_product_template__display_name
+msgid "Display Name"
+msgstr "Nom affiché"
+
+#. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_production__extra_cost
 msgid "Extra Cost"
-msgstr ""
+msgstr "Coût extra"
 
 #. module: mrp_account
 #: model:ir.model.fields,help:mrp_account.field_mrp_production__extra_cost
 msgid "Extra cost per produced unit"
-msgstr ""
+msgstr "Coût extra par unité produite"
 
 #. module: mrp_account
 #: model:ir.model.fields,help:mrp_account.field_mrp_workcenter__costs_hour_account_id
@@ -69,6 +82,24 @@ msgid ""
 msgstr ""
 "Remplissez uniquement si vous souhaitez des écritures de comptabilité "
 "analytique automatiques sur les ordres de fabrication."
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_production__id
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter__id
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter_productivity__id
+#: model:ir.model.fields,field_description:mrp_account.field_product_product__id
+#: model:ir.model.fields,field_description:mrp_account.field_product_template__id
+msgid "ID"
+msgstr "ID"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_production____last_update
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter____last_update
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter_productivity____last_update
+#: model:ir.model.fields,field_description:mrp_account.field_product_product____last_update
+#: model:ir.model.fields,field_description:mrp_account.field_product_template____last_update
+msgid "Last Modified on"
+msgstr "Dernière modification le"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_product_product
@@ -86,6 +117,11 @@ msgid "Production Order"
 msgstr "Ordre de fabrication"
 
 #. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_production__show_valuation
+msgid "Show Valuation"
+msgstr "Montrer la valorisation"
+
+#. module: mrp_account
 #: model:ir.model.fields,help:mrp_account.field_mrp_workcenter_productivity__cost_already_recorded
 msgid ""
 "Technical field automatically checked when a ongoing production posts "
@@ -98,16 +134,6 @@ msgstr ""
 "peut enregistrer le coût d'une production à plusieurs reprises et ne prendre"
 " en compte que les nouvelles pièces dans les calendriers des postes de "
 "charge."
-
-#. module: mrp_account
-#: code:addons/mrp_account/models/product.py:40
-#, python-format
-msgid ""
-"The inventory valuation of some products %s is automated. You can only "
-"update their cost from the product form."
-msgstr ""
-"L'évaluation d'inventaire de certains articles %s est automatisé. Vous "
-"pouvez uniquement mettre à jour leurs coûts depuis la fiche produit."
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.mrp_production_form_view_inherited
