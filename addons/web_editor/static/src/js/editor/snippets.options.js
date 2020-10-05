@@ -2677,10 +2677,18 @@ const SnippetOptionWidget = Widget.extend({
             requiresReload = !!reloadMessage;
             if (requiresReload) {
                 const save = await new Promise(resolve => {
-                    Dialog.confirm(this, _t("This change needs to reload the page, this will save all your changes and reload the page, are you sure you want to proceed?") + ' '
+                    Dialog.confirm(this, _t("To apply this change, we need to save all your previous modifications and reload the page.") + ' '
                             + (typeof reloadMessage === 'string' ? reloadMessage : ''), {
-                        confirm_callback: () => resolve(true),
-                        cancel_callback: () => resolve(false),
+                        buttons: [{
+                            text: _t('Save and Reload'),
+                            classes: 'btn-primary',
+                            close: true,
+                            click: () => resolve(true),
+                        }, {
+                            text: _t("Cancel"),
+                            close: true,
+                            click: () => resolve(false)
+                        }],
                     });
                 });
                 if (!save) {
