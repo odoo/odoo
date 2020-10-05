@@ -8,6 +8,7 @@ from datetime import date
 class AccountPartialReconcile(models.Model):
     _name = "account.partial.reconcile"
     _description = "Partial Reconcile"
+    _rec_name = "id"
 
     # ==== Reconciliation fields ====
     debit_move_id = fields.Many2one(
