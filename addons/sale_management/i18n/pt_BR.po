@@ -122,7 +122,8 @@ msgid ""
 "Before archiving \"%s\" please select another default template in the "
 "settings."
 msgstr ""
-"Antes de arquivar \"%s\", selecione outro modelo padrão nas configurações."
+"Antes de arquivar \"%s\" selecione outro modelo padrão nas "
+"configurações."
 
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_res_config_settings
@@ -137,7 +138,7 @@ msgstr "Confirmação"
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__mail_template_id
 msgid "Confirmation Mail"
-msgstr "Emails de confirmação"
+msgstr "E-mail de Confirmação"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_view_form
@@ -152,7 +153,7 @@ msgstr "Crie ofertas padronizadas com produtos padrão"
 #. module: sale_management
 #: model_terms:ir.actions.act_window,help:sale_management.sale_order_template_action
 msgid "Create your quotation template"
-msgstr "Crie o seu modelo de cotação"
+msgstr "Crie o seu modelo de orçamento"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__create_uid
@@ -190,8 +191,8 @@ msgid ""
 "Design your quotation templates using building blocks<br/>\n"
 "                            <em attrs=\"{'invisible': [('module_sale_quotation_builder','=',False)]}\">Warning: this option will install the Website app.</em>"
 msgstr ""
-"Projete seus modelos de cotação usando blocos de construção<br/>\n"
-"<em attrs=\"{'invisible': [('module_sale_quotation_builder','=',False)]}\">Aviso: esta opção irá instalar o aplicativo do site.</em>"
+"Projete seus modelos de orçamento usando blocos de construção<br/>\n"
+"                            <em attrs=\"{'invisible': [('module_sale_quotation_builder','=',False)]}\">Aviso: esta opção irá instalar o aplicativo do site.</em>"
 
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_digest_digest
@@ -232,14 +233,13 @@ msgid ""
 "Forbidden product, unit price, quantity, and UoM on non-accountable sale "
 "quote line"
 msgstr ""
-"Produto proibido, preço unitário, quantidade e UoM na linha de cotação de "
-"venda não responsável"
+"Produto proibido, preço unitário, quantidade e Unidade na venda não contabilizada "
+"na linha da venda"
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_option__sequence
 msgid "Gives the sequence order when displaying a list of optional products."
-msgstr ""
-"Fornece a ordem da sequência ao exibir uma lista de produtos opcionais."
+msgstr "Fornece a ordem da sequência ao exibir uma lista de produtos opcionais."
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template_line__sequence
@@ -262,7 +262,8 @@ msgid ""
 "If unchecked, it will allow you to hide the quotation template without "
 "removing it."
 msgstr ""
-"Se desmarcado, permitirá que você oculte o modelo de cotação sem removê-lo."
+"Se desmarcado, permitirá que você oculte o modelo de orçamento sem "
+"remove-lo."
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_digest_digest__kpi_all_sale_total_value
@@ -307,9 +308,7 @@ msgstr "Linhas"
 #. module: sale_management
 #: sql_constraint:sale.order.template.line:0
 msgid "Missing required product and UoM on accountable sale quote line."
-msgstr ""
-"Falta o produto obrigatório e a UoM na linha de cotação de venda "
-"responsável."
+msgstr "Falta o produto obrigatório e a UM na linha da venda responsável."
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
@@ -428,7 +427,7 @@ msgstr "Modelos de cotação"
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "Quotation expires after"
-msgstr "A cotação expira após"
+msgstr "O Orçamento expira após"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_portal_content_inherit_sale_management
@@ -481,7 +480,7 @@ msgstr "Linha do Pedido de Vendas"
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__order_id
 msgid "Sales Order Reference"
-msgstr "Referência pedido de venda"
+msgstr "Referência do Pedido de Venda"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_form_quote
@@ -491,7 +490,7 @@ msgstr "Linhas de Modelo de Cotação de Vendas"
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_search
 msgid "Search Quotation Template"
-msgstr "Pesquisa modelo de cotação "
+msgstr "Modelo de orçamento de pesquisa"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
@@ -521,9 +520,8 @@ msgid ""
 "The Administrator can set default Terms & Conditions in Sales Settings. "
 "Terms set here will show up instead if you select this quotation template."
 msgstr ""
-"O administrador pode definir termos e condições padrão nas configurações de "
-"vendas. Os termos definidos aqui serão exibidos se você selecionar este "
-"modelo de cotação."
+"O administrador pode definir termos e condições padrão nas configurações de vendas. "
+"Os termos definidos aqui serão exibidos se você selecionar este modelo de cotação."
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__mail_template_id
@@ -560,9 +558,9 @@ msgid ""
 "                Send these quotes by email and let your customers sign online.\n"
 "                Use cross-selling and discounts to push and boost your sales."
 msgstr ""
-"Use modelos para criar, cotações profissionais em minutos.\n"
-"Envie estas cotações por e-mail e deixe seus clientes assinar online.\n"
-"Use venda cruzada e descontos para empurrar e aumentar suas vendas."
+"Use modelos para criar orçamentos sofisticados e profissionais em minutos.\n"
+"                Envie esses orçamentos por e-mail e deixe seus clientes assinarem online.\n"
+"                Use vendas cruzadas e descontos para impulsionar e aumentar suas vendas."
 
 #. module: sale_management
 #: code:addons/sale_management/models/sale_order.py:198
@@ -577,8 +575,8 @@ msgid ""
 "You cannot change the type of a sale quote line. Instead you should delete "
 "the current line and create a new line of the proper type."
 msgstr ""
-"Você não pode mudar o tipo de linha do pedido de venda. Em vez disso, você "
-"deve excluir a linha atual e criar uma nova linha do tipo adequado."
+"Você não pode alterar o tipo de linha da venda. Em vez disso, você deve excluir "
+"a linha atual e criar uma nova linha do tipo apropriado."
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
