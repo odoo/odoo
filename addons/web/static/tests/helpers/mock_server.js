@@ -1693,6 +1693,13 @@ var MockServer = Class.extend({
         var fields = args.fields && args.fields.length ? args.fields : _.keys(this.data[args.model].fields);
         var nbRecords = records.length;
         var offset = args.offset || 0;
+        if (args.sort) {
+            // warning: only consider first level of sort
+            args.sort = args.sort.split(',')[0];
+            var fieldName = args.sort.split(' ')[0];
+            var order = args.sort.split(' ')[1];
+            records = this._sortByField(records, args.model, fieldName, order);
+        }
         records = records.slice(offset, args.limit ? (offset + args.limit) : nbRecords);
         var processedRecords = _.map(records, function (r) {
             var result = {};
@@ -1710,13 +1717,6 @@ var MockServer = Class.extend({
             });
             return result;
         });
-        if (args.sort) {
-            // warning: only consider first level of sort
-            args.sort = args.sort.split(',')[0];
-            var fieldName = args.sort.split(' ')[0];
-            var order = args.sort.split(' ')[1];
-            processedRecords = this._sortByField(processedRecords, args.model, fieldName, order);
-        }
         var result = {
             length: nbRecords,
             records: processedRecords,
