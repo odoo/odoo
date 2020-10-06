@@ -1080,7 +1080,11 @@ class Task(models.Model):
                 rec_values['next_recurrence_date'] = fields.Datetime.today()
                 recurrence = self.env['project.task.recurrence'].create(rec_values)
                 vals['recurrence_id'] = recurrence.id
-        return super().create(vals_list)
+        tasks = super().create(vals_list)
+        for task in tasks:
+            if task.project_id.privacy_visibility == 'portal':
+                task._portal_ensure_token()
+        return tasks
 
     def write(self, vals):
         now = fields.Datetime.now()
