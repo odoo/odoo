@@ -553,6 +553,10 @@ body.editor_enable.editor_has_snippets {
                 font-size: $o-we-sidebar-content-main-title-font-size;
 
                 > span {
+                    @include o-text-overflow();
+                    flex: 1 1 auto; // Make it full-width so that it is easier to click on
+                    cursor: pointer;
+
                     color: $o-we-sidebar-content-main-title-color !important;
                     line-height: $o-we-sidebar-content-main-title-height;
                 }

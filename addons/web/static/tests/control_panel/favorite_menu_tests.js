@@ -580,5 +580,46 @@ odoo.define('web.favorite_menu_tests', function (require) {
 
             form.destroy();
         });
+
+        QUnit.test('modal loads saved search filters', async function (assert) {
+            assert.expect(1);
+            const data = {
+                partner: {
+                    fields: {
+                        bar: { string: "Bar", type: "many2one", relation: 'partner' },
+                    },
+                    // 10 records so that the Search button shows
+                    records: Array.apply(null, Array(10)).map(function(_, i) {
+                        return { id: i, display_name: "Record " + i, bar: 1 };
+                    })
+                },
+            };
+            const form = await createView({
+                arch: `
+                <form string="Partners">
+                    <sheet>
+                        <group>
+                            <field name="bar"/>
+                        </group>
+                    </sheet>
+                </form>`,
+                data,
+                model: 'partner',
+                res_id: 1,
+                View: FormView,
+                interceptsPropagate: {
+                    load_views: function (ev) {
+                        assert.ok(ev.data.options.load_filters, "opening dialog should load the filters");
+                    },
+                },
+            });
+
+            await testUtils.form.clickEdit(form);
+
+            await testUtils.fields.many2one.clickOpenDropdown('bar');
+            await testUtils.fields.many2one.clickItem('bar', 'Search');
+
+            form.destroy();
+        });
     });
 });
