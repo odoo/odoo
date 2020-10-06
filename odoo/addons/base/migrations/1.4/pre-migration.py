@@ -8,4 +8,4 @@ from openupgradelib import openupgrade
 @openupgrade.migrate()
 def migrate(cr, installed_version):
 	openupgrade.update_module_names(cr, [('iho_security','iho')], True)
-	# env.cr.execute('DELETE FROM res_partner_bank WHERE partner_id IS NULL;')
+	#  env.cr.execute('DELETE FROM res_partner_bank WHERE partner_id IS NULL;')
