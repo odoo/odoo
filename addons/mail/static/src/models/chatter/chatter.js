@@ -2,7 +2,7 @@ odoo.define('mail/static/src/models/chatter/chatter.js', function (require) {
 'use strict';
 
 const { registerNewModel } = require('mail/static/src/model/model_core.js');
-const { attr, many2one, one2many, one2one } = require('mail/static/src/model/model_field.js');
+const { attr, many2one, one2one } = require('mail/static/src/model/model_field.js');
 
 function factory(dependencies) {
 
@@ -41,41 +41,16 @@ function factory(dependencies) {
         }
 
         async refresh() {
-            const thread = this.thread;
-            if (!thread || thread.isTemporary) {
-                return;
+            if (this.hasActivities) {
+                this.thread.refreshActivities();
             }
-            thread.loadNewMessages();
-            if (!this._isPreparingAttachmentsLoading && !this.isShowingAttachmentsLoading) {
-                this._prepareAttachmentsLoading();
+            if (this.hasFollowers) {
+                this.thread.refreshFollowers();
+                this.thread.fetchAndUpdateSuggestedRecipients();
             }
-            await thread.fetchAttachments();
-            this._stopAttachmentsLoading();
-        }
-
-        async refreshActivities() {
-            if (!this.hasActivities) {
-                return;
+            if (this.hasMessageList) {
+                this.thread.refresh();
             }
-            if (!this.thread || this.thread.isTemporary) {
-                this.update({ activities: [['unlink-all']] });
-                return;
-            }
-            // A bit "extreme", may be improved
-            const [{ activity_ids: newActivityIds }] = await this.async(() => this.env.services.rpc({
-                model: this.thread.model,
-                method: 'read',
-                args: [this.thread.id, ['activity_ids']]
-            }));
-            const activitiesData = await this.async(() => this.env.services.rpc({
-                model: 'mail.activity',
-                method: 'activity_format',
-                args: [newActivityIds]
-            }));
-            const activities = this.env.models['mail.activity'].insert(activitiesData.map(
-                activityData => this.env.models['mail.activity'].convertData(activityData)
-            ));
-            this.update({ activities: [['replace', activities]] });
         }
 
         showLogNote() {
@@ -100,14 +75,6 @@ function factory(dependencies) {
 
         /**
          * @private
-         * @returns {mail.activity[]}
-         */
-        _computeFutureActivities() {
-            return [['replace', this.activities.filter(activity => activity.state === 'planned')]];
-        }
-
-        /**
-         * @private
          * @returns {boolean}
          */
         _computeHasThreadView() {
@@ -119,23 +86,73 @@ function factory(dependencies) {
          * @returns {boolean}
          */
         _computeIsDisabled() {
-            return !this.threadId;
+            return !this.thread || this.thread.isTemporary;
         }
 
         /**
          * @private
-         * @returns {mail.activity[]}
          */
-        _computeOverdueActivities() {
-            return [['replace', this.activities.filter(activity => activity.state === 'overdue')]];
+        _onThreadIdOrThreadModelChanged() {
+            if (this.threadId) {
+                if (this.thread && this.thread.isTemporary) {
+                    this.thread.delete();
+                }
+                this.update({
+                    isAttachmentBoxVisible: this.isAttachmentBoxVisibleInitially,
+                    thread: [['insert', {
+                        // If the thread was considered to have the activity
+                        // mixin once, it will have it forever.
+                        hasActivities: this.hasActivities ? true : undefined,
+                        id: this.threadId,
+                        model: this.threadModel,
+                    }]],
+                });
+                if (this.hasActivities) {
+                    this.thread.refreshActivities();
+                }
+                if (this.hasFollowers) {
+                    this.thread.refreshFollowers();
+                    this.thread.fetchAndUpdateSuggestedRecipients();
+                }
+                if (this.hasMessageList) {
+                    this.thread.refresh();
+                }
+            } else if (!this.thread || !this.thread.isTemporary) {
+                const currentPartner = this.env.messaging.currentPartner;
+                const message = this.env.models['mail.message'].create({
+                    author: [['link', currentPartner]],
+                    body: this.env._t("Creating a new record..."),
+                    id: getMessageNextTemporaryId(),
+                    isTemporary: true,
+                });
+                const nextId = getThreadNextTemporaryId();
+                this.update({
+                    isAttachmentBoxVisible: false,
+                    thread: [['insert', {
+                        areAttachmentsLoaded: true,
+                        id: nextId,
+                        isTemporary: true,
+                        model: this.threadModel,
+                    }]],
+                });
+                for (const cache of this.thread.caches) {
+                    cache.update({ messages: [['link', message]] });
+                }
+            }
         }
 
         /**
          * @private
-         * @returns {mail.activity[]}
          */
-        _computeTodayActivities() {
-            return [['replace', this.activities.filter(activity => activity.state === 'today')]];
+        _onThreadIsLoadingAttachmentsChanged() {
+            if (!this.thread.isLoadingAttachments) {
+                this._stopAttachmentsLoading();
+                return;
+            }
+            if (this._isPreparingAttachmentsLoading || this.isShowingAttachmentsLoading) {
+                return;
+            }
+            this._prepareAttachmentsLoading();
         }
 
         /**
@@ -159,133 +176,27 @@ function factory(dependencies) {
             this._isPreparingAttachmentsLoading = false;
         }
 
-        /**
-         * @override
-         */
-        _updateAfter(previous) {
-            // thread
-            if (
-                this.threadModel !== previous.threadModel ||
-                this.threadId !== previous.threadId
-            ) {
-                // change of thread
-                this._updateRelationThread();
-                if (previous.thread && previous.thread.isTemporary) {
-                    // AKU FIXME: make dedicated models for "temporary" threads,
-                    // so that it auto-handles causality of messages for deletion
-                    // automatically
-                    const oldMainThreadCache = previous.thread.mainCache;
-                    const message = oldMainThreadCache.messages[0];
-                    message.delete();
-                    previous.thread.delete();
-                }
-            }
-
-            if (
-                !previous.activityIds ||
-                previous.activityIds.join(',') !== this.activityIds.join(',')
-            ) {
-                this.refreshActivities();
-            }
-            if (
-                !previous.followerIds ||
-                previous.followerIds.join(',') !== this.followerIds.join(',')
-            ) {
-                if (this.thread) {
-                    this.thread.refreshFollowers();
-                    this.thread.fetchAndUpdateSuggestedRecipients();
-                }
-            }
-            if (
-                !previous.messageIds ||
-                previous.thread !== this.thread ||
-                this.messageIds.join(',') !== previous.messageIds.join(',')
-            ) {
-                this.refresh();
-            }
-        }
-
-        /**
-         * @override
-         */
-        _updateBefore() {
-            return {
-                activityIds: this.activityIds,
-                followerIds: this.followerIds,
-                messageIds: this.messageIds,
-                threadModel: this.threadModel,
-                threadId: this.threadId,
-                thread: this.thread,
-            };
-        }
-
-        /**
-         * @private
-         */
-        _updateRelationThread() {
-            if (!this.threadId) {
-                if (this.thread && this.thread.isTemporary) {
-                    return;
-                }
-                const nextId = getThreadNextTemporaryId();
-                const thread = this.env.models['mail.thread'].create({
-                    areAttachmentsLoaded: true,
-                    id: nextId,
-                    isTemporary: true,
-                    model: this.threadModel,
-                });
-                const currentPartner = this.env.messaging.currentPartner;
-                const message = this.env.models['mail.message'].create({
-                    author: [['link', currentPartner]],
-                    body: this.env._t("Creating a new record..."),
-                    id: getMessageNextTemporaryId(),
-                    isTemporary: true,
-                });
-                this.update({ thread: [['link', thread]] });
-                for (const cache of thread.caches) {
-                    cache.update({ messages: [['link', message]] });
-                }
-            } else {
-                // thread id and model
-                const thread = this.env.models['mail.thread'].insert({
-                    id: this.threadId,
-                    model: this.threadModel,
-                });
-                this.update({ thread: [['link', thread]] });
-            }
-        }
-
     }
 
     Chatter.fields = {
-        activities: one2many('mail.activity', {
-            inverse: 'chatter',
-        }),
-        activityIds: attr({
-            default: [],
-        }),
-        activitiesState: attr({
-            related: 'activities.state',
-        }),
         composer: many2one('mail.composer', {
             related: 'thread.composer',
         }),
         context: attr({
             default: {},
         }),
-        followerIds: attr({
-            default: [],
-        }),
-        futureActivities: one2many('mail.activity', {
-            compute: '_computeFutureActivities',
-            dependencies: ['activitiesState'],
-        }),
+        /**
+         * Determines whether `this` should display an activity box.
+         */
         hasActivities: attr({
             default: true,
         }),
         hasExternalBorder: attr({
             default: true,
         }),
+        /**
+         * Determines whether `this` should display followers menu.
+         */
         hasFollowers: attr({
             default: true,
         }),
@@ -321,7 +232,16 @@ function factory(dependencies) {
         isActivityBoxVisible: attr({
             default: true,
         }),
+        /**
+         * Determiners whether the attachment box is currently visible.
+         */
         isAttachmentBoxVisible: attr({
+            default: false,
+        }),
+        /**
+         * Determiners whether the attachment box is visible initially.
+         */
+        isAttachmentBoxVisibleInitially: attr({
             default: false,
         }),
         isComposerVisible: attr({
@@ -330,7 +250,9 @@ function factory(dependencies) {
         isDisabled: attr({
             compute: '_computeIsDisabled',
             default: false,
-            dependencies: ['threadId'],
+            dependencies: [
+                'threadIsTemporary',
+            ],
         }),
         /**
          * Determine whether this chatter should be focused at next render.
@@ -341,21 +263,50 @@ function factory(dependencies) {
         isShowingAttachmentsLoading: attr({
             default: false,
         }),
-        messageIds: attr({
-            default: [],
+        /**
+         * Not a real field, used to trigger its compute method when one of the
+         * dependencies changes.
+         */
+        onThreadIdOrThreadModelChanged: attr({
+            compute: '_onThreadIdOrThreadModelChanged',
+            dependencies: [
+                'threadId',
+                'threadModel',
+            ],
         }),
-        overdueActivities: one2many('mail.activity', {
-            compute: '_computeOverdueActivities',
-            dependencies: ['activitiesState'],
+        /**
+         * Not a real field, used to trigger its compute method when one of the
+         * dependencies changes.
+         */
+        onThreadIsLoadingAttachmentsChanged: attr({
+            compute: '_onThreadIsLoadingAttachmentsChanged',
+            dependencies: [
+                'threadIsLoadingAttachments',
+            ],
         }),
         /**
          * Determines the `mail.thread` that should be displayed by `this`.
          */
         thread: many2one('mail.thread'),
-        threadAttachmentCount: attr({
-            default: 0,
-        }),
+        /**
+         * Determines the id of the thread that will be displayed by `this`.
+         */
         threadId: attr(),
+        /**
+         * Serves as compute dependency.
+         */
+        threadIsLoadingAttachments: attr({
+            related: 'thread.isLoadingAttachments',
+        }),
+        /**
+         * Serves as compute dependency.
+         */
+        threadIsTemporary: attr({
+            related: 'thread.isTemporary',
+        }),
+        /**
+         * Determines the model of the thread that will be displayed by `this`.
+         */
         threadModel: attr(),
         /**
          * States the `mail.thread_view` displaying `this.thread`.
@@ -370,10 +321,6 @@ function factory(dependencies) {
             default: [['create']],
             inverse: 'chatter',
             isCausal: true,
-        }),
-        todayActivities: one2many('mail.activity', {
-            compute: '_computeTodayActivities',
-            dependencies: ['activitiesState'],
         }),
     };
 
