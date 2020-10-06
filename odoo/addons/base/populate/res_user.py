@@ -11,7 +11,7 @@ _logger = logging.getLogger(__name__)
 class Users(models.Model):
     _inherit = "res.users"
 
-    _populate_sizes = {"small": 10, "medium": 2000, "large": 10000}
+    _populate_sizes = {"small": 10, "medium": 1000, "large": 10000}
 
     _populate_dependencies = ["res.partner"]
 
