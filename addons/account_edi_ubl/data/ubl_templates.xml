@@ -69,6 +69,7 @@
         Render an invoice's line to be added to the UBL xml document.
         -->
         <template id="export_ubl_invoice_line">
+            <t t-set="line" t-value="line_values['line']"/>
             <cac:InvoiceLine
                 xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
                 xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
@@ -78,13 +79,23 @@
                 <cbc:InvoicedQuantity t-esc="line.quantity"/>
                 <cbc:LineExtensionAmount
                     t-att-currencyID="line.currency_id.name or invoice.currency_id.name"
-                    t-esc="format_monetary(line.price_subtotal)"/>
+                    t-esc="format_monetary(line.price_subtotal, currency)"/>
                 <cac:TaxTotal
                     t-foreach="line.tax_ids.compute_all(line.price_unit, quantity=line.quantity, product=line.product_id, partner=invoice.partner_id)['taxes']"
                     t-as="tax">
                     <cbc:TaxAmount
                         t-att-currencyID="line.currency_id.name or invoice.currency_id.name"
-                        t-esc="format_monetary(tax['amount'])"/>
+                        t-esc="format_monetary(tax['amount'], currency)"/>
+                        <t t-foreach="line_values['taxes']" t-as="taxes">
+                            <cac:TaxSubtotal>
+                                <cbc:TaxAmount
+                                    t-esc="taxes['tax_amount']"/>
+                                <cbc:TaxableAmount
+                                    t-esc="taxes['tax_base_amount']"/>
+                                <cbc:Percent
+                                    t-esc="taxes['tax'].amount"/>
+                            </cac:TaxSubtotal>
+                        </t>
                 </cac:TaxTotal>
                 <cac:Item>
                     <cbc:Description t-if="line.name" t-esc="line.name.replace('\n', ', ')"/>
@@ -96,7 +107,7 @@
                 <cac:Price>
                     <cbc:PriceAmount
                         t-att-currencyID="line.currency_id.name or invoice.currency_id.name"
-                        t-esc="format_monetary(line.price_unit)"/>
+                        t-esc="format_monetary(line.price_unit, currency)"/>
                 </cac:Price>
             </cac:InvoiceLine>
         </template>
@@ -105,6 +116,7 @@
         Render an invoice to be added to the UBL xml document.
         -->
         <template id="export_ubl_invoice">
+            <t t-set="currency" t-value="invoice.currency_id or invoice.company_currency_id"/>
             <Invoice
                 xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
                 xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
@@ -114,7 +126,7 @@
                 <cbc:IssueDate t-esc="invoice.invoice_date"/>
                 <cbc:InvoiceTypeCode t-esc="type_code"/>
                 <cbc:Note t-esc="invoice.narration"/>
-                <cbc:DocumentCurrencyCode t-esc="invoice.currency_id.name"/>
+                <cbc:DocumentCurrencyCode t-esc="currency.name"/>
                 <cac:AccountingSupplierParty t-call="account_edi_ubl.export_ubl_invoice_partner">
                     <t t-set="partner" t-value="invoice.company_id.partner_id.commercial_partner_id"/>
                 </cac:AccountingSupplierParty>
@@ -136,31 +148,45 @@
                 <cac:PaymentTerms t-if="invoice.invoice_payment_term_id">
                     <cbc:Note t-esc="invoice.invoice_payment_term_id.name"/>
                 </cac:PaymentTerms>
-                <cac:TaxTotal t-if="not invoice.currency_id.is_zero(invoice.amount_tax)">
+                <cac:TaxTotal t-if="not currency.is_zero(invoice.amount_tax)">
                     <cbc:TaxAmount
-                        t-att-currencyID="invoice.currency_id.name"
-                        t-esc="format_monetary(invoice.amount_tax)"/>
+                        t-att-currencyID="currency.name"
+                        t-esc="format_monetary(invoice.amount_tax, currency)"/>
+                    <t t-foreach="tax_details" t-as="tax_vals">
+                        <t t-set="tax_line" t-value="tax_vals['line']"/>
+                        <cac:TaxSubtotal>
+                            <cbc:TaxAmount
+                                t-att-currencyID="currency.name"
+                                t-esc="format_monetary(tax_vals['tax_amount'], currency)"/>
+                            <cbc:TaxableAmount
+                                t-att-currencyID="currency.name"
+                                t-esc="format_monetary(tax_vals['tax_base_amount'], currency)"/>
+                            <cbc:Percent
+                                t-if="tax_line.tax_line_id.amount_type == 'percent'"
+                                t-esc="tax_line.tax_line_id.amount"/>
+                        </cac:TaxSubtotal>
+                    </t>
                 </cac:TaxTotal>
                 <cac:LegalMonetaryTotal>
                     <cbc:LineExtensionAmount
                         t-att-currencyID="invoice.currency_id.name"
-                        t-esc="format_monetary(invoice.amount_untaxed)"/>
+                        t-esc="format_monetary(invoice.amount_untaxed, currency)"/>
                     <cbc:TaxExclusiveAmount
                         t-att-currencyID="invoice.currency_id.name"
-                        t-esc="format_monetary(invoice.amount_untaxed)"/>
+                        t-esc="format_monetary(invoice.amount_untaxed, currency)"/>
                     <cbc:TaxInclusiveAmount
                         t-att-currencyID="invoice.currency_id.name"
-                        t-esc="format_monetary(invoice.amount_total)"/>
+                        t-esc="format_monetary(invoice.amount_total, currency)"/>
                     <cbc:PrepaidAmount
                         t-att-currencyID="invoice.currency_id.name"
-                        t-esc="format_monetary(invoice.amount_total - invoice.amount_residual)"/>
+                        t-esc="format_monetary(invoice.amount_total - invoice.amount_residual, currency)"/>
                     <cbc:PayableAmount
                         t-att-currencyID="invoice.currency_id.name"
-                        t-esc="format_monetary(invoice.amount_residual)"/>
+                        t-esc="format_monetary(invoice.amount_residual, currency)"/>
                 </cac:LegalMonetaryTotal>
                 <t t-call="account_edi_ubl.export_ubl_invoice_line"
-                   t-foreach="invoice.invoice_line_ids"
-                   t-as="line"/>
+                   t-foreach="invoice_line_values"
+                   t-as="line_values"/>
             </Invoice>
         </template>
     </data>
