@@ -43,14 +43,14 @@ odoo.define('website_form_editor.tour', function (require) {
             testText += '.s_website_form_required';
             ret.push({
                 content: "Mark the field as required",
-                trigger: 'we-button[data-name="required_opt"]',
+                trigger: 'we-button[data-name="required_opt"] we-checkbox',
             });
         }
         if (hidden) {
             testText += '.s_website_form_field_hidden';
             ret.push({
                 content: "Mark the field as hidden",
-                trigger: 'we-button[data-name="hidden_opt"]',
+                trigger: 'we-button[data-name="hidden_opt"] we-checkbox',
             });
         }
         if (label) {
@@ -176,7 +176,7 @@ odoo.define('website_form_editor.tour', function (require) {
             run: 'text Management Service',
         }, {
             content: "Mark the field as not required",
-            trigger: 'we-button[data-name="required_opt"]',
+            trigger: 'we-button[data-name="required_opt"] we-checkbox',
         }, {
             content: "Check the resulting field",
             trigger: ".s_website_form_field.s_website_form_custom:not(.s_website_form_required)" +
