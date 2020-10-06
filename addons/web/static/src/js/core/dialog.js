@@ -402,7 +402,13 @@ Dialog.confirm = function (owner, message, options) {
             text: _t("Ok"),
             classes: 'btn-primary',
             close: true,
-            click: options && options.confirm_callback,
+            click: function (event) {
+                if (options) {
+                    event.currentTarget.classList.add("disabled");
+                    options.confirm_callback();
+                    event.currentTarget.classList.remove("disabled");
+                }
+            },
         },
         {
             text: _t("Cancel"),
