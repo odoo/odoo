@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import defaultdict
+
 from odoo import _, api, fields, models
 from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
 from odoo.exceptions import UserError, ValidationError
@@ -63,6 +65,8 @@ class Inventory(models.Model):
         'Include Exhausted Products', readonly=True,
         states={'draft': [('readonly', False)]},
         help="Include also products with quantity of 0")
+    is_conflict_inventory = fields.Boolean(string="Is Auto-generated From Conflict", readonly=True,
+        help="Technical flag to indicate this inventory was auto-generated due to a conflicting inventory. This allows us to auto-add/remove products when inventory is still in draft.")
 
     @api.onchange('company_id')
     def _onchange_company_id(self):
@@ -239,11 +243,13 @@ class Inventory(models.Model):
         locations_ids = [l['id'] for l in self.env['stock.location'].search_read(domain_loc, ['id'])]
 
         domain = [('company_id', '=', self.company_id.id),
-                  ('quantity', '!=', '0'),
                   ('location_id', 'in', locations_ids)]
         if self.prefill_counted_quantity == 'zero':
             domain.append(('product_id.active', '=', True))
-
+        if self.is_conflict_inventory:
+            domain.append(('quantity', '<', 0))
+        else:
+            domain.append(('quantity', '!=', 0))
         if self.product_ids:
             domain = expression.AND([domain, [('product_id', 'in', self.product_ids.ids)]])
 
@@ -324,20 +330,21 @@ class Inventory(models.Model):
 
     @api.model
     def _run_inventory_tasks(self, company_id=False):
-        """ Generate and clean up cyclic inventories for locations as follows:
+        """ Run conflict inventory tasks and generate/clean up cyclic inventories for locations as follows:
             - [to create]: - The location has a cyclic count set (i.e. inventory every XX days) and has a next_inventory_date of today or earlier
                            - The location is not a descendant of another location that is having a cyclic inventory created
                            - The location doesn't already have an in progress inventory specific to (i.e. only for) it
             - [to delete]: - Existing draft cyclic inventory that was created before today (i.e. still draft) [new one created afterwards]
                            - Existing draft location inventory that is a descendant of a location that has a next_inventory_date of today or earlier
         """
-        domain = [('next_inventory_date', '<=', fields.Date.today())]
+        # if cron triggered => apply to all companies
+        company_domain = [('company_id', '!=', False)]
         if company_id:
-            # manually triggered => only apply to user's companies
-            domain = expression.AND([[('company_id', '=', company_id)], domain])
-        else:
-            # cron triggered => apply to all companies
-            domain = expression.AND([[('company_id', '!=', False)], domain])
+            # if manually triggered => only apply to user's companies
+            company_domain = [('company_id', '=', company_id)]
+
+        # cyclic location inventories
+        domain = expression.AND([[('next_inventory_date', '<=', fields.Date.today())], company_domain])
         locations = self.env['stock.location'].search(domain)
         if locations:
             # ignore any locations that are children of other locations that should have an inventory done
@@ -362,6 +369,70 @@ class Inventory(models.Model):
                                       'company_id': location.company_id.id,
                                       'location_ids': location})
             self.create(location_vals)
+        # conflict inventories handled in separate function so inventories can also be updated when user opens inventory menuitem
+        self._run_conflict_inventory_tasks(company_id=company_id)
+
+    @api.model
+    def _run_conflict_inventory_tasks(self, company_id=False):
+        """ Updates/creates/deletes conflict inventories. Conflict inventories include:
+                - negative quantities values, created per warehouse
+            Note that an in progress inventory will prevent an update/unlink when its
+            corresponding values are out of date.
+        """
+        company_domain = [('company_id', '!=', False)]
+        if company_id:
+            # if manually triggered => only apply to user's companies
+            company_domain = [('company_id', '=', company_id)]
+        # negative quantity check
+        inventory_vals_to_create = []
+        updated_neg_invs = self.env['stock.inventory']
+        existing_conflict_invs = self.search(expression.AND([
+            [
+                ('state', 'in', ['draft', 'confirm']),
+                ('is_conflict_inventory', '=', True)
+            ], company_domain]))
+        neg_quants = self.env['stock.quant'].search(expression.AND([
+            [
+                ('quantity', '<', 0.0),
+                ('location_id.usage', 'in', ['internal', 'transit'])
+            ], company_domain]))
+        company_ids = neg_quants.mapped('company_id')
+        warehouse_ids = self.env['stock.warehouse'].search([('company_id', 'in', company_ids.ids)])
+        warehouse_locations = self.env['stock.location'].search([('id', 'child_of', warehouse_ids.mapped('view_location_id').ids)])
+        company_to_warehouses = defaultdict(lambda: self.env['stock.warehouse'])
+        warehouse_to_locations = defaultdict(lambda: self.env['stock.location'])
+        for warehouse in warehouse_ids:
+            company_to_warehouses[warehouse.company_id] |= warehouse
+            warehouse_to_locations[warehouse] = warehouse_locations.filtered(lambda l: any(int(location_id) == warehouse.view_location_id.id for location_id in l.parent_path.split('/')[:-2]))
+        for company_id in company_ids:
+            # separate auto-generated inventories by warehouse
+            for warehouse in company_to_warehouses[company_id]:
+                # avoid conflicting inventories! Wait until the next time this is run after the previous neg qty inventory is completed
+                if existing_conflict_invs.filtered(lambda i: i.state == 'confirm' and i.company_id == company_id and i.location_ids & warehouse_to_locations[warehouse]):
+                    continue
+                warehouse_quants = neg_quants.filtered(lambda q: q.location_id in warehouse_to_locations[warehouse])
+                if warehouse_quants:
+                    draft_inv = existing_conflict_invs.filtered(lambda i: i.state == 'draft' and i.company_id == company_id and i.location_ids & warehouse_to_locations[warehouse])
+                    if draft_inv:
+                        # only write in in first draft in case there are duplicates due to function being called while its already
+                        draft_inv[0].write({'product_ids': warehouse_quants.mapped('product_id')})
+                        updated_neg_invs |= draft_inv[0]
+                    else:
+                        inventory_vals_to_create.append({
+                            'name': "Negative Quantity Inventory: " + warehouse.name,
+                            'company_id': company_id.id,
+                            'product_ids': warehouse_quants.mapped('product_id'),
+                            'is_conflict_inventory': True,
+                            'location_ids': warehouse.view_location_id.child_ids
+                        })
+        self.create(inventory_vals_to_create)
+        # remove all obsolete conflict inventories
+        (existing_conflict_invs.filtered(lambda i: i.state == 'draft') - updated_neg_invs).unlink()
+
+    @api.model
+    def action_open_inventory_view(self):
+        self._run_conflict_inventory_tasks()
+        return self.env["ir.actions.actions"]._for_xml_id("stock.action_inventory_form")
 
 
 class InventoryLine(models.Model):

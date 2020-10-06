@@ -851,3 +851,42 @@ class TestInventory(SavepointCase):
         cyclic_inventories._action_done()
         self.assertEqual(new_loc.next_inventory_date, today + timedelta(days=2))
         self.assertEqual(new_loc.last_inventory_date.date(), today)
+
+    def test_neg_qty_conflict_inventory(self):
+        """ Check that auto-created negative quantity stock inventories work correctly."""
+
+        Inventory = self.env['stock.inventory']
+        # check that neg qty will generate inventory
+        self.env['stock.quant']._update_available_quantity(self.product1, self.stock_location, -1)
+        Inventory._run_conflict_inventory_tasks()
+        neg_qty_inventories = Inventory.search([('is_conflict_inventory', '=', True)])
+        self.assertEqual(len(neg_qty_inventories), 1)
+        self.assertEqual(neg_qty_inventories.product_ids[0], self.product1)
+
+        # check that inventory auto-updates correctly when still in draft
+        self.env['stock.quant']._update_available_quantity(self.product2, self.stock_location, -1)
+        self.env['stock.quant']._update_available_quantity(self.product2, self.pack_location, -1)
+        Inventory._run_conflict_inventory_tasks()
+        self.assertEqual(len(neg_qty_inventories.product_ids), 2, "New negative quantity product should be auto-added to existing draft inventory")
+        self.env['stock.quant']._update_available_quantity(self.product2, self.pack_location, 1)
+        Inventory._run_conflict_inventory_tasks()
+        self.assertEqual(len(neg_qty_inventories.product_ids), 2, "Only remove 1 of 2 neg quants shouldn't remove product from inventory")
+        self.env['stock.quant']._update_available_quantity(self.product2, self.stock_location, 1)
+        Inventory._run_conflict_inventory_tasks()
+        self.assertEqual(len(neg_qty_inventories.product_ids), 1, "Previously neg quantity product should be auto-removed from existing draft inventory")
+
+        # check that inventory does not auto-update/auto-generate when neg qty inventory is in progress
+        neg_qty_inventories.action_start()
+        self.env['stock.quant']._update_available_quantity(self.product2, self.stock_location, -1)
+        Inventory._run_conflict_inventory_tasks()
+        neg_qty_inventories = Inventory.search([('is_conflict_inventory', '=', True)])
+        self.assertEqual(len(neg_qty_inventories), 1)
+        self.assertEqual(len(neg_qty_inventories.product_ids), 1)
+
+        # check that inventory auto-deletes when no more neg qtys
+        neg_qty_inventories.action_cancel_draft()
+        self.env['stock.quant']._update_available_quantity(self.product1, self.stock_location, 1)
+        self.env['stock.quant']._update_available_quantity(self.product2, self.stock_location, 1)
+        Inventory._run_conflict_inventory_tasks()
+        neg_qty_inventories = Inventory.search([('is_conflict_inventory', '=', True)])
+        self.assertEqual(len(neg_qty_inventories), 0)
