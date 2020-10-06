@@ -28,7 +28,7 @@
                         threadLocalId="chatter.thread.localId"
                     />
                 </t>
-                <t t-if="chatter.thread and chatter.hasActivities and chatter.activities.length > 0">
+                <t t-if="chatter.thread and chatter.hasActivities and chatter.thread.activities.length > 0">
                     <ActivityBox
                         class="o_Chatter_activityBox"
                         chatterLocalId="chatter.localId"
