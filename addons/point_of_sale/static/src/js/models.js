@@ -2342,7 +2342,7 @@ exports.Order = Backbone.Model.extend({
 
     add_product: function(product, options){
         if(this._printed){
-            this.destroy();
+            this.pos.add_new_order();
             return this.pos.get_order().add_product(product, options);
         }
         this.assert_editable();
