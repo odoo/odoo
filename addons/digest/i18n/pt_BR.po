@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * digest
-# 
+#
 # Translators:
 # Rodrigo de Almeida Sottomaior Macedo <rmsolucoeseminformatica@protonmail.com>, 2018
 # Martin Trigaux, 2018
@@ -12,7 +12,7 @@
 # Silmar <pinheirosilmar@gmail.com>, 2018
 # Ramiro Pereira de Magalhães <ramiro.p.magalhaes@gmail.com>, 2019
 # Fernando Colus <fcolus1@gmail.com>, 2020
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
@@ -195,7 +195,7 @@ msgstr ""
 "            <table style=\"width: 100%; max-width: 600px; border-spacing: 0; border: 1px solid #e7e7e7; border-bottom: none; color: #6e7172; line-height: 23px; text-align: left;\">\n"
 "                <tr>\n"
 "                    <td style=\"border-collapse: collapse; padding: 10px 40px; text-align: left;\">\n"
-"                        <strong style=\"margin-left: -22px; color: #000000; font-size: 22px; line-height: 32px;\">${company.name} at a glance</strong>\n"
+"                        <strong style=\"margin-left: -22px; color: #000000; font-size: 22px; line-height: 32px;\">${company.name} - Resumo:</strong>\n"
 "                        <div style=\"color: #000000; font-size: 15px; margin-left:-22px;\">${datetime.date.today().strftime('%B %d, %Y')}</div>\n"
 "                    </td>\n"
 "                    <td style=\"text-align: right; padding: 10px 40px\">\n"
@@ -247,7 +247,7 @@ msgstr ""
 "                                            <tr>\n"
 "                                                <td style=\"border-collapse: collapse; padding: 20px; text-align: center;\">\n"
 "                                                    <span style=\"color: #9a5b82; font-size: 35px; font-weight: bold; text-decoration: none; line-height: 36px;\">${data['lastweek'][kpi][kpi]}</span><br/>\n"
-"                                                    <span style=\"color: #888888; display: inline-block; font-size: 12px; line-height: 18px; text-transform: uppercase;\">Últimos 7 Dias</span>\n"
+"                                                    <span style=\"color: #888888; display: inline-block; font-size: 12px; line-height: 18px; text-transform: uppercase;\">Últimos 7 dias</span>\n"
 "                                                    % if data['lastweek'][kpi]['margin'] != 0.0:\n"
 "                                                        <span style=\"color: #888888; display: block; font-size: 12px; line-height: 18px; text-transform: uppercase;\">\n"
 "                                                            % if data['lastweek'][kpi]['margin'] > 0.0:\n"
@@ -267,7 +267,7 @@ msgstr ""
 "                                            <tr>\n"
 "                                                <td style=\"border-collapse: collapse; margin: 0; padding: 20; text-align: center;\">\n"
 "                                                    <span style=\"color: #56b3b5; font-size: 35px; font-weight: bold; text-decoration: none; line-height: 36px\">${data['lastmonth'][kpi][kpi]}</span><br/>\n"
-"                                                    <span style=\"color: #888888; display: inline-block; font-size: 12px; line-height: 18px; text-transform: uppercase;\">Últimos 30 Dias</span>\n"
+"                                                    <span style=\"color: #888888; display: inline-block; font-size: 12px; line-height: 18px; text-transform: uppercase;\">Últimos 30 dias</span>\n"
 "                                                    % if data['lastmonth'][kpi]['margin'] != 0.0:\n"
 "                                                        <span style=\"color: #888888; display: block; font-size: 12px; line-height: 18px; text-transform: uppercase;\">\n"
 "                                                             % if data['lastmonth'][kpi]['margin'] > 0.0:\n"
@@ -300,13 +300,7 @@ msgstr ""
 "            <table style=\"width: 100%; max-width: 600px; margin-top: 5px; border: 1px solid #e7e7e7;\">\n"
 "                <tr>\n"
 "                    <td style=\"border-collapse: collapse; background-color: #ffffff; line-height: 21px; padding: 0 20px 10px 20px; text-align: center;\"><br/>\n"
-"                        <div style=\"color: #3d466e; font-size: 16px; font-weight: 600; line-height: 23px;\">Gerencie seu negócio de qualquer lugar usando o Odoo Mobile.</div>\n"
-"                    </td>\n"
-"                </tr>\n"
-"                <tr>\n"
-"                    <td>\n"
-"                        <div style=\"text-align: center;\"><a href=\"https://play.google.com/store/apps/details?id=com.odoo.mobile\" target=\"_blank\"><img src=\"/digest/static/src/img/google_play.png\" style=\"display: inline-block; height: 30px; margin-left: auto; margin-right: 12px;\"/></a><a href=\"https://itunes.apple.com/us/app/odoo/id1272543640\" target=\"_blank\"><img src=\"/digest/static/src/img/app_store.png\" style=\"display: inline-block; height: 30px; margin-left: 12px; margin-right: auto;\"/></a>\n"
-"                        </div>\n"
+"                        <div style=\"color: #3d466e; font-size: 16px; font-weight: 600; line-height: 23px;\">Administre seu negócio de qualquer lugar com MultiERP.</div>\n"
 "                    </td>\n"
 "                </tr>\n"
 "            </table>\n"
@@ -315,15 +309,15 @@ msgstr ""
 "                    <td style=\"border-collapse: collapse; margin: 0; padding: 10px 20px;\">\n"
 "                        % if user.has_group('base.group_system'):\n"
 "                            <div style=\"margin-top: 20px;\"> \n"
-"                                Quer personalizar seu e-mail?\n"
-"                                <a href=\"/web#view_type=form&amp;model=digest.digest&amp;id=${object.id}\" target=\"_blank\" style=\"color: #875A7B;\">Escolha as métricas que importam</a>\n"
+"                                Quer personalizar o e-mail?\n"
+"                                <a href=\"/web#view_type=form&amp;model=digest.digest&amp;id=${object.id}\" target=\"_blank\" style=\"color: #875A7B;\">Escolha as métricas de seu interesse</a>\n"
 "                            </div>\n"
 "                            <br />\n"
 "                        % endif\n"
 "                        <p style=\"font-size: 11px; margin-top: 10px;\">\n"
 "                            <strong>\n"
-"                                Enviado por\n"
-"                                <a href=\"https://www.odoo.com\" style=\"text-decoration: none; color: #875A7B;\">Odoo</a> - <a href=\"/web#view_type=form&amp;model=digest.digest&amp;id=${object.id}\" target=\"_blank\" style=\"color: #888888;\">Cancelar Inscrição</a>\n"
+"                                Enviado por: MultiERP \n"
+"                                <a href=\"/web#view_type=form&amp;model=digest.digest&amp;id=${object.id}\" target=\"_blank\" style=\"color: #888888;\">Cancelar Envio</a>\n"
 "                            </strong>\n"
 "                        </p>\n"
 "                    </td>\n"
@@ -355,7 +349,7 @@ msgstr ""
 msgid ""
 "<strong style=\"font-size: 16px;\">Get things done with activities</strong>"
 msgstr ""
-"<strong style=\"font-size: 16px;\">Faça tudo através de atividades</strong>"
+"<strong style=\"font-size: 16px;\">Realize tarefas com atividades</strong>"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
@@ -370,9 +364,7 @@ msgstr "Ativado"
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.res_config_settings_view_form
 msgid "Add new users as recipient of a periodic email with key metrics"
-msgstr ""
-"Adicionar novos usuários como destinatários de um e-mail periódico com as "
-"principais métricas"
+msgstr "Adicionar novos usuários como destinatários de um e-mail periódico com as principais métricas"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_tip__group_id
@@ -397,7 +389,7 @@ msgstr "Ajuste de configurações"
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.res_config_settings_view_form
 msgid "Configure Digest Emails"
-msgstr "Configurar e-mails com resumo"
+msgstr "Configurar E-mails"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__kpi_res_users_connected
@@ -410,8 +402,8 @@ msgid ""
 "Create or edit the mail template: you may get computed KPI's value using "
 "these fields:"
 msgstr ""
-"Crie ou edite o modelo de e-mail: você pode obter o valor do KPI calculado "
-"usando estes campos:"
+"Crie ou edite o modelo de e-mail: você pode obter o valor de KPIs calculados usando "
+"esses campos:"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__create_uid
@@ -433,12 +425,12 @@ msgstr "Moeda"
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
 msgid "Deactivate for everyone"
-msgstr "Desativar para todos"
+msgstr "Desative para todos"
 
 #. module: digest
 #: selection:digest.digest,state:0
 msgid "Deactivated"
-msgstr "Desativados"
+msgstr "Desativado"
 
 #. module: digest
 #: model:ir.model,name:digest.model_digest_digest
@@ -459,17 +451,17 @@ msgstr "E-mail Resumo"
 #: model:ir.model.fields,field_description:digest.field_res_config_settings__digest_emails
 #: model:ir.ui.menu,name:digest.digest_menu
 msgid "Digest Emails"
-msgstr "E-mails Compilados"
+msgstr "Resumo do Sistema por E-mail"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.portal_digest_unsubscribed
 msgid "Digest Subscriptions"
-msgstr "Inscrição para receber o e-mail com o resumo"
+msgstr "Assinaturas"
 
 #. module: digest
 #: model:ir.model,name:digest.model_digest_tip
 msgid "Digest Tips"
-msgstr "Dicas para o e-mail com o resumo"
+msgstr "Dicas"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__display_name
@@ -495,7 +487,7 @@ msgstr "Agrupar por"
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
 msgid "How to customize your digest?"
-msgstr "Como personalizar o seu e-mail com o resumo"
+msgstr "Como personalizar seu resumo?"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__id
@@ -506,18 +498,18 @@ msgstr "ID"
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
 msgid "In order to build your customized digest, follow these steps:"
-msgstr "Para construir o seu e-mail com resumo, siga estes passos:"
+msgstr "Para criar seu resumo personalizado, siga estas etapas:"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__is_subscribed
 msgid "Is user subscribed"
-msgstr "O usuário está cadastrado"
+msgstr "O usuário está inscrito"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_tree
 msgid "KPI Digest"
-msgstr "Resumo do KPI"
+msgstr "KPI Resumo"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
@@ -527,12 +519,12 @@ msgstr "KPIs"
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__kpi_mail_message_total_value
 msgid "Kpi Mail Message Total Value"
-msgstr "Mensagem de e-mail com o valor total do KPI"
+msgstr "KPI: Valor total da mensagem de e-mail"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__kpi_res_users_connected_value
 msgid "Kpi Res Users Connected Value"
-msgstr "Valor conectado de usuários do KPI"
+msgstr "KPI: Usuários conectados"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest____last_update
@@ -573,8 +565,8 @@ msgid ""
 "New users are automatically added as recipient of the following digest "
 "email."
 msgstr ""
-"Novos usuários serão automaticamente adicionados como destinatário do "
-"seguinte e-mail com o resumo."
+"Novos usuários são adicionados automaticamente como destinatários de e-mail "
+"do seguinte resumo."
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__next_run_date
@@ -626,7 +618,7 @@ msgstr "Inscrever"
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_tip__tip_description
 msgid "Tip description"
-msgstr "Descrição da Dica"
+msgstr "Descrição da dica"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
@@ -636,8 +628,7 @@ msgstr "Cancelar minha inscrição"
 #. module: digest
 #: model:ir.model.fields,help:digest.field_digest_tip__sequence
 msgid "Used to display digest tip in email template base on order"
-msgstr ""
-"Usado para exibir dicas de resumo no modelo de e-mail com base no pedido"
+msgstr "Usado para exibir dicas de resumo no modelo de e-mail com base no pedido"
 
 #. module: digest
 #: model:ir.model,name:digest.model_res_users
@@ -657,7 +648,7 @@ msgstr "Semanalmente"
 #. module: digest
 #: model:digest.digest,name:digest.digest_digest_default
 msgid "Weekly Digest"
-msgstr "Resumo da Semana"
+msgstr "Resumo Semanal"
 
 #. module: digest
 #: model_terms:digest.tip,tip_description:digest.digest_tip_mail_0
@@ -665,8 +656,8 @@ msgid ""
 "You can ping colleagues by tagging them in your messages using \"@\". They "
 "will be instantly notified.<br>"
 msgstr ""
-"Você pode enviar ping aos colegas marcando-os em suas mensagens usando "
-"\"@\". Eles serão notificados instantaneamente.<br>"
+"Você pode enviar um ping aos colegas marcando-os em suas mensagens usando \"@\". "
+"Eles serão notificados instantaneamente.<br>"
 
 #. module: digest
 #: model_terms:digest.tip,tip_description:digest.digest_tip_mail_1
@@ -675,22 +666,22 @@ msgid ""
 "document to schedule meetings, calls and todos."
 msgstr ""
 "Você não tem nenhuma atividade programada. Use atividades em qualquer "
-"documento de negócios para agendar reuniões, chamadas e tarefas."
+"documento para agendar reuniões, chamadas e tarefas."
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.portal_digest_unsubscribed
 msgid "You have been successfully unsubscribed from"
-msgstr "Você cancelou sua inscrição"
+msgstr "Você foi cancelado com sucesso em"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
 msgid "You may want to add new computed fields with Odoo Studio:"
-msgstr "Você pode querer adicionar novos campos calculados com o Odoo Studio:"
+msgstr "Você pode adicionar novos campos computados com MultiERP Studio:"
 
 #. module: digest
 #: model_terms:digest.tip,tip_description:digest.digest_tip_mail_0
 msgid "company's discussion channel."
-msgstr "Canal de discussão da empresa"
+msgstr "canal de discussão da empresa."
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
