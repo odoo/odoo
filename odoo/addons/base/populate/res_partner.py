@@ -13,7 +13,7 @@ class Partner(models.Model):
     _populate_dependencies = ["res.company", "res.partner.industry"]
 
     _populate_sizes = {
-        'small': 10,
+        'small': 100,
         'medium': 2000,
         'large': 100000,
     }
