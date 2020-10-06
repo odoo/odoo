@@ -20,9 +20,6 @@ var BillScreenWidget = screens.ReceiptScreenWidget.extend({
         this.$('.receipt-paymentlines').remove();
         this.$('.receipt-change').remove();
     },
-    print_web: function(){
-        window.print();
-    },
 });
 
 gui.define_screen({name:'bill', widget: BillScreenWidget});
