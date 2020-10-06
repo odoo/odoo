@@ -64,7 +64,8 @@ var KanbanColumn = Widget.extend({
         this.recordsDraggable = options.recordsDraggable;
         this.relation = options.relation;
         this.offset = 0;
-        this.remaining = data.count - this.data_records.length;
+        this.loadMoreCount = data.loadMoreCount;
+        this.loadMoreOffset = data.loadMoreOffset;
         this.canBeFolded = this.folded;
 
         if (options.hasProgressBar) {
@@ -162,7 +163,7 @@ var KanbanColumn = Widget.extend({
         if (this.tooltipInfo) {
             this.$header.find('.o_kanban_header_title').tooltip({}).attr('data-original-title', this.tooltipInfo);
         }
-        if (!this.remaining) {
+        if (!this.loadMoreCount) {
             this.$('.o_kanban_load_more').remove();
         } else {
             this.$('.o_kanban_load_more').html(QWeb.render('KanbanView.LoadMore', {widget: this}));
@@ -349,7 +350,7 @@ var KanbanColumn = Widget.extend({
      */
     _onLoadMore: function (event) {
         event.preventDefault();
-        this.trigger_up('kanban_load_more');
+        this.trigger_up('kanban_load_column_records', { loadMoreOffset: this.loadMoreOffset });
     },
     /**
      * @private

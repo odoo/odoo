@@ -32,14 +32,14 @@
                 <span t-if="widget.quick_create" class="o_kanban_quick_add"><i class="fa fa-plus" role="img" aria-label="Quick add" title="Quick add"/></span>
             </div>
         </div>
-        <div t-if="widget.remaining > 0" class="o_kanban_load_more">
+        <div t-if="widget.loadMoreCount > 0" class="o_kanban_load_more">
             <t t-call="KanbanView.LoadMore"/>
         </div>
     </div>
 </t>
 
 <t t-name="KanbanView.LoadMore">
-    <a href="#">Load more... (<t t-esc="widget.remaining"/> remaining)</a>
+    <a href="#">Load more... (<t t-esc="widget.loadMoreCount"/> remaining)</a>
 </t>
 
 <t t-name="KanbanView.ColumnQuickCreate">
