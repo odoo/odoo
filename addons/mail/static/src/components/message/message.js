@@ -105,13 +105,6 @@ class Message extends Component {
     _constructor() {}
 
     mounted() {
-        // Remove all readmore before if any before reinsert them with _insertReadMoreLess.
-        // This is needed because _insertReadMoreLess is working with direct DOM mutations
-        // which are not sync with Owl.
-        for (const el of [...this._contentRef.el.querySelectorAll(':scope .o_Message_readMoreLess')]) {
-            el.remove();
-        }
-        this._insertReadMoreLess($(this._contentRef.el));
         this._update();
     }
 
@@ -396,6 +389,15 @@ class Message extends Component {
      * @private
      */
     _update() {
+        // Remove all readmore before if any before reinsert them with _insertReadMoreLess.
+        // This is needed because _insertReadMoreLess is working with direct DOM mutations
+        // which are not sync with Owl.
+        if (this._contentRef.el) {
+            for (const el of [...this._contentRef.el.querySelectorAll(':scope .o_Message_readMoreLess')]) {
+                el.remove();
+            }
+            this._insertReadMoreLess($(this._contentRef.el));
+        }
         this._wasSelected = this.props.isSelected;
         if (!this.state.timeElapsed) {
             this.state.timeElapsed = timeFromNow(this.message.date);

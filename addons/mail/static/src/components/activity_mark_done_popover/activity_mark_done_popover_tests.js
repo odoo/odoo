@@ -47,6 +47,7 @@ QUnit.test('activity mark done popover simplest layout', async function (assert)
         canWrite: true,
         category: 'not_upload_file',
         id: 12,
+        thread: [['insert', { id: 42, model: 'res.partner' }]],
     });
     await this.createActivityMarkDonePopoverComponent(activity);
 
@@ -91,6 +92,7 @@ QUnit.test('activity with force next mark done popover simplest layout', async f
         category: 'not_upload_file',
         force_next: true,
         id: 12,
+        thread: [['insert', { id: 42, model: 'res.partner' }]],
     });
     await this.createActivityMarkDonePopoverComponent(activity);
 
@@ -151,6 +153,7 @@ QUnit.test('activity mark done popover mark done without feedback', async functi
         canWrite: true,
         category: 'not_upload_file',
         id: 12,
+        thread: [['insert', { id: 42, model: 'res.partner' }]],
     });
     await this.createActivityMarkDonePopoverComponent(activity);
 
@@ -186,6 +189,7 @@ QUnit.test('activity mark done popover mark done with feedback', async function 
         canWrite: true,
         category: 'not_upload_file',
         id: 12,
+        thread: [['insert', { id: 42, model: 'res.partner' }]],
     });
     await this.createActivityMarkDonePopoverComponent(activity);
 
@@ -223,6 +227,7 @@ QUnit.test('activity mark done popover mark done and schedule next', async funct
         canWrite: true,
         category: 'not_upload_file',
         id: 12,
+        thread: [['insert', { id: 42, model: 'res.partner' }]],
     });
     await this.createActivityMarkDonePopoverComponent(activity);
 

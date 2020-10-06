@@ -108,6 +108,11 @@ function factory(dependencies) {
             for (const timer of this._otherMembersLongTypingTimers.values()) {
                 timer.clear();
             }
+            if (this.isTemporary) {
+                for (const message of this.messages) {
+                    message.delete();
+                }
+            }
             return super._willDelete(...arguments);
         }
 
@@ -706,6 +711,40 @@ function factory(dependencies) {
             this._promptAddFollower({ mail_invite_follower_channel_only: false });
         }
 
+        async refresh() {
+            if (this.isTemporary) {
+                return;
+            }
+            this.loadNewMessages();
+            this.update({ isLoadingAttachments: true });
+            await this.async(() => this.fetchAttachments());
+            this.update({ isLoadingAttachments: false });
+        }
+
+        async refreshActivities() {
+            if (!this.hasActivities) {
+                return;
+            }
+            if (this.isTemporary) {
+                return;
+            }
+            // A bit "extreme", may be improved
+            const [{ activity_ids: newActivityIds }] = await this.async(() => this.env.services.rpc({
+                model: this.model,
+                method: 'read',
+                args: [this.id, ['activity_ids']]
+            }));
+            const activitiesData = await this.async(() => this.env.services.rpc({
+                model: 'mail.activity',
+                method: 'activity_format',
+                args: [newActivityIds]
+            }));
+            const activities = this.env.models['mail.activity'].insert(activitiesData.map(
+                activityData => this.env.models['mail.activity'].convertData(activityData)
+            ));
+            this.update({ activities: [['replace', activities]] });
+        }
+
         /**
          * Refresh followers information from server.
          */
@@ -953,6 +992,14 @@ function factory(dependencies) {
 
         /**
          * @private
+         * @returns {mail.activity[]}
+         */
+        _computeFutureActivities() {
+            return [['replace', this.activities.filter(activity => activity.state === 'planned')]];
+        }
+
+        /**
+         * @private
          */
         _computeHasSeenIndicators() {
             if (this.model !== 'mail.channel') {
@@ -1178,6 +1225,22 @@ function factory(dependencies) {
 
         /**
          * @private
+         * @returns {mail.activity[]}
+         */
+        _computeOverdueActivities() {
+            return [['replace', this.activities.filter(activity => activity.state === 'overdue')]];
+        }
+
+        /**
+         * @private
+         * @returns {mail.activity[]}
+         */
+        _computeTodayActivities() {
+            return [['replace', this.activities.filter(activity => activity.state === 'today')]];
+        }
+
+        /**
+         * @private
          * @returns {string}
          */
         _computeTypingStatusText() {
@@ -1352,6 +1415,19 @@ function factory(dependencies) {
     }
 
     Thread.fields = {
+        /**
+         * Determines the `mail.activity` that belong to `this`, assuming `this`
+         * has activities (@see hasActivities).
+         */
+        activities: one2many('mail.activity', {
+            inverse: 'thread',
+        }),
+        /**
+         * Serves as compute dependency.
+         */
+        activitiesState: attr({
+            related: 'activities.state',
+        }),
         allAttachments: many2many('mail.attachment', {
             compute: '_computeAllAttachments',
             dependencies: [
@@ -1422,7 +1498,21 @@ function factory(dependencies) {
         followers: one2many('mail.follower', {
             inverse: 'followedThread',
         }),
+        /**
+         * States the `mail.activity` that belongs to `this` and that are
+         * planned in the future (due later than today).
+         */
+        futureActivities: one2many('mail.activity', {
+            compute: '_computeFutureActivities',
+            dependencies: ['activitiesState'],
+        }),
         group_based_subscription: attr({
+            default: false,
+        }),
+        /**
+         * States whether `this` has activities (`mail.activity.mixin` server side).
+         */
+        hasActivities: attr({
             default: false,
         }),
         /**
@@ -1459,6 +1549,12 @@ function factory(dependencies) {
                 'followersPartner',
                 'messagingCurrentPartner',
             ],
+        }),
+        /**
+         * States whether `this` is currently loading attachments.
+         */
+        isLoadingAttachments: attr({
+            default: false,
         }),
         isModeratedByCurrentPartner: attr({
             compute: '_computeIsModeratedByCurrentPartner',
@@ -1644,6 +1740,14 @@ function factory(dependencies) {
         originThreadAttachments: one2many('mail.attachment', {
             inverse: 'originThread',
         }),
+        /**
+         * States the `mail.activity` that belongs to `this` and that are
+         * overdue (due earlier than today).
+         */
+        overdueActivities: one2many('mail.activity', {
+            compute: '_computeOverdueActivities',
+            dependencies: ['activitiesState'],
+        }),
         partnerSeenInfos: one2many('mail.thread_partner_seen_info', {
             inverse: 'thread',
             isCausal: true,
@@ -1695,6 +1799,14 @@ function factory(dependencies) {
          */
         suggestedRecipientInfoList: one2many('mail.suggested_recipient_info', {
             inverse: 'thread',
+        }),
+        /**
+         * States the `mail.activity` that belongs to `this` and that are due
+         * specifically today.
+         */
+        todayActivities: one2many('mail.activity', {
+            compute: '_computeTodayActivities',
+            dependencies: ['activitiesState'],
         }),
         /**
          * Members that are currently typing something in the composer of this

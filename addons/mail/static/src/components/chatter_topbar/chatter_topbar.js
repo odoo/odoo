@@ -90,8 +90,8 @@ class ChatterTopbar extends Component {
             views: [[false, 'form']],
             target: 'new',
             context: {
-                default_res_id: this.chatter.threadId,
-                default_res_model: this.chatter.threadModel,
+                default_res_id: this.chatter.thread.id,
+                default_res_model: this.chatter.thread.model,
             },
             res_id: false,
         };
@@ -99,8 +99,8 @@ class ChatterTopbar extends Component {
             action,
             options: {
                 on_close: () => {
-                    this.chatter.refreshActivities();
-                    this.chatter.refresh();
+                    this.chatter.thread.refreshActivities();
+                    this.chatter.thread.refresh();
                 },
             },
         });

@@ -61,12 +61,6 @@ function factory(dependencies) {
             if ('note' in data) {
                 data2.note = data.note;
             }
-            if ('res_id' in data) {
-                data2.res_id = data.res_id;
-            }
-            if ('res_model' in data) {
-                data2.res_model = data.res_model;
-            }
             if ('state' in data) {
                 data2.state = data.state;
             }
@@ -102,6 +96,12 @@ function factory(dependencies) {
             if ('mail_template_ids' in data) {
                 data2.mailTemplates = [['insert', data.mail_template_ids]];
             }
+            if ('res_id' in data && 'res_model' in data) {
+                data2.thread = [['insert', {
+                    id: data.res_id,
+                    model: data.res_model,
+                }]];
+            }
             if ('user_id' in data) {
                 if (!data.user_id) {
                     data2.assignee = [['unlink-all']];
@@ -131,8 +131,8 @@ function factory(dependencies) {
                 views: [[false, 'form']],
                 target: 'new',
                 context: {
-                    default_res_id: this.res_id,
-                    default_res_model: this.res_model,
+                    default_res_id: this.thread.id,
+                    default_res_model: this.thread.model,
                 },
                 res_id: this.id,
             };
@@ -149,9 +149,7 @@ function factory(dependencies) {
                 args: [this.id],
             }));
             this.update(this.constructor.convertData(data));
-            if (this.chatter) {
-                this.chatter.refresh();
-            }
+            this.thread.refresh();
         }
 
         /**
@@ -169,11 +167,8 @@ function factory(dependencies) {
                     attachment_ids: attachmentIds,
                     feedback,
                 },
-                context: this.chatter ? this.chatter.context : {},
             }));
-            if (this.chatter) {
-                this.chatter.refresh();
-            }
+            this.thread.refresh();
             this.delete();
         }
 
@@ -189,18 +184,14 @@ function factory(dependencies) {
                 args: [[this.id]],
                 kwargs: { feedback },
             }));
-            const chatter = this.chatter;
-            if (chatter) {
-                this.chatter.refresh();
-            }
+            this.thread.refresh();
+            const thread = this.thread;
             this.delete();
             this.env.bus.trigger('do-action', {
                 action,
                 options: {
                     on_close: () => {
-                        if (chatter) {
-                            chatter.refreshActivities();
-                        }
+                        thread.refreshActivities();
                     },
                 },
             });
@@ -264,9 +255,6 @@ function factory(dependencies) {
             default: false,
         }),
         category: attr(),
-        chatter: many2one('mail.chatter', {
-            inverse: 'activities',
-        }),
         creator: many2one('mail.user'),
         dateCreate: attr(),
         dateDeadline: attr(),
@@ -304,10 +292,15 @@ function factory(dependencies) {
                 'note',
             ],
         }),
-        res_id: attr(),
-        res_model: attr(),
         state: attr(),
         summary: attr(),
+        /**
+         * Determines to which "thread" (using `mail.activity.mixin` on the
+         * server) `this` belongs to.
+         */
+        thread: many2one('mail.thread', {
+            inverse: 'activities',
+        }),
         type: many2one('mail.activity_type', {
             inverse: 'activities',
         }),
