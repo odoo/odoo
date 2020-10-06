@@ -682,6 +682,15 @@ var FieldDateRange = InputField.extend({
         }
         this._super.apply(this, arguments);
     },
+    /**
+     * Return the date written in the input, in UTC.
+     *
+     * @private
+     * @returns {Moment|false}
+     */
+    _getValue: function () {
+        return field_utils.parse[this.formatType](this.$input.val(), this.field, { timezone: true });
+    },
 
     //--------------------------------------------------------------------------
     // Private
