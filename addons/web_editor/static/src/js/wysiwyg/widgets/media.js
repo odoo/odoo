@@ -904,7 +904,25 @@ var ImageWidget = FileWidget.extend({
                 console.error('CORS is misconfigured on the API server, image will be treated as non-dynamic.');
             }
         }
-        const aspectRatio = img.naturalWidth / img.naturalHeight;
+        let aspectRatio = img.naturalWidth / img.naturalHeight;
+        // Special case for SVGs with no instrinsic sizes on firefox
+        // See https://github.com/whatwg/html/issues/3510#issuecomment-369982529
+        if (img.naturalHeight === 0) {
+            img.width = 1000;
+            // Position fixed so that the image doesn't affect layout while rendering
+            img.style.position = 'fixed';
+            // Make invisible so the image doesn't briefly appear on the screen
+            img.style.opacity = '0';
+            // Image needs to be in the DOM for dimensions to be correct after render
+            const originalParent = img.parentElement;
+            document.body.appendChild(img);
+
+            aspectRatio = img.width / img.height;
+            originalParent.appendChild(img);
+            img.removeAttribute('width');
+            img.style.removeProperty('position');
+            img.style.removeProperty('opacity');
+        }
         const width = aspectRatio * this.MIN_ROW_HEIGHT;
         cell.style.flexGrow = width;
         cell.style.flexBasis = `${width}px`;
