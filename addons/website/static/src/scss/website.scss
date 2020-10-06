@@ -82,6 +82,14 @@ $-font-numbers: (
 .navbar {
     @if ($o-theme-navbar-font != $o-theme-font) {
         font-family: $o-theme-navbar-font;
+
+        h1, h2, h3, h4, h5, h6,
+        .h1, .h2, .h3, .h4, .h5, .h6 {
+            font-family: $headings-font-family;
+        }
+        .btn {
+            font-family: $o-theme-buttons-font;
+        }
     }
 
     .nav-item {
