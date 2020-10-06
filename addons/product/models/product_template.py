@@ -7,6 +7,7 @@ import logging
 from odoo import api, fields, models, tools, _, SUPERUSER_ID
 from odoo.exceptions import ValidationError, RedirectWarning, UserError
 from odoo.osv import expression
+from odoo.addons.stock.models.product import OPERATORS
 
 _logger = logging.getLogger(__name__)
 
@@ -126,7 +127,7 @@ class ProductTemplate(models.Model):
     product_variant_id = fields.Many2one('product.product', 'Product', compute='_compute_product_variant_id')
 
     product_variant_count = fields.Integer(
-        '# Product Variants', compute='_compute_product_variant_count')
+        '# Product Variants', compute='_compute_product_variant_count', search="_search_product_variant_count")
 
     # related to display product product information if is_product_variant
     barcode = fields.Char('Barcode', compute='_compute_barcode', inverse='_set_barcode', search='_search_barcode')
@@ -341,6 +342,26 @@ class ProductTemplate(models.Model):
         for template in self:
             # do not pollute variants to be prefetched when counting variants
             template.product_variant_count = len(template.with_prefetch().product_variant_ids)
+
+    @api.model
+    def _search_product_variant_count(self, operator, value):
+        if operator not in OPERATORS:
+            raise UserError(_('Invalid domain operator %s') % operator)
+        if not isinstance(value, (float, int)):
+            raise UserError(_('Invalid domain right operand %s') % value)
+        self.env["product.product"].flush(["active", "product_tmpl_id"])
+        self.env.cr.execute(
+            r"""SELECT pt.id, count(pp.id)
+            FROM product_template pt
+            LEFT JOIN product_product pp ON pt.id = pp.product_tmpl_id
+            AND pp.active = TRUE
+            GROUP BY pt.id;"""
+        )
+        query_res = self.env.cr.fetchall()
+        res = [
+            tpl[0] for tpl in query_res if OPERATORS[operator](tpl[1], value)
+        ]
+        return [('id', 'in', res)]
 
     @api.depends('product_variant_ids', 'product_variant_ids.default_code')
     def _compute_default_code(self):
