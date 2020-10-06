@@ -863,7 +863,7 @@ class AccountMove(models.Model):
             :return:                        A list <to_pay_company_currency, to_pay_invoice_currency, due_date>.
             '''
             if self.invoice_payment_term_id:
-                to_compute = self.invoice_payment_term_id.compute(total_balance, date_ref=date, currency=self.currency_id)
+                to_compute = self.invoice_payment_term_id.compute(total_balance, date_ref=date, currency=self.company_id.currency_id)
                 if self.currency_id != self.company_id.currency_id:
                     # Multi-currencies.
                     to_compute_currency = self.invoice_payment_term_id.compute(total_amount_currency, date_ref=date, currency=self.currency_id)
@@ -4219,6 +4219,7 @@ class AccountMoveLine(models.Model):
 class AccountPartialReconcile(models.Model):
     _name = "account.partial.reconcile"
     _description = "Partial Reconcile"
+    _rec_name = "id"
 
     debit_move_id = fields.Many2one('account.move.line', index=True, required=True)
     credit_move_id = fields.Many2one('account.move.line', index=True, required=True)

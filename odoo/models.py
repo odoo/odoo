@@ -5550,8 +5550,13 @@ Fields:
 
     def __iter__(self):
         """ Return an iterator over ``self``. """
-        for id in self._ids:
-            yield self._browse(self.env, (id,), self._prefetch_ids)
+        if len(self._ids) > PREFETCH_MAX and self._prefetch_ids is self._ids:
+            for ids in self.env.cr.split_for_in_conditions(self._ids):
+                for id_ in ids:
+                    yield self._browse(self.env, (id_,), ids)
+        else:
+            for id in self._ids:
+                yield self._browse(self.env, (id,), self._prefetch_ids)
 
     def __contains__(self, item):
         """ Test whether ``item`` (record or field name) is an element of ``self``.

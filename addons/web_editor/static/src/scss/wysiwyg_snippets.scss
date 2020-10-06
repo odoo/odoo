@@ -594,7 +594,8 @@ body.editor_enable.editor_has_snippets {
                 @include o-position-absolute($o-we-handles-offset-to-hide, $left: 50%);
                 transform: translate(-50%, -110%);
                 padding: 2px 4px;
-                border: 1px solid $o-we-color-text-normal;
+                // box-shadow instead of border due to incorrect border rendering when using css transform in Firefox
+                box-shadow: 0px 0px 0px 1px $o-we-color-text-normal;
                 border-radius: 20%;
                 color: $o-we-color-text-normal;
                 opacity: 0.5;

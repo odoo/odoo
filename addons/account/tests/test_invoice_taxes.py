@@ -32,6 +32,14 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
             'amount': 12,
             'sequence': 30,
         })
+        cls.percent_tax_3_incl = cls.env['account.tax'].create({
+            'name': '5% incl',
+            'amount_type': 'percent',
+            'amount': 5,
+            'price_include': True,
+            'include_base_amount': True,
+            'sequence': 40,
+        })
         cls.group_tax = cls.env['account.tax'].create({
             'name': 'group 12% + 21%',
             'amount_type': 'group',
@@ -60,12 +68,12 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
         cls.base_tag_pos = cls.base_tax_report_line.tag_ids.filtered(lambda x: not x.tax_negate)
         cls.base_tag_neg = cls.base_tax_report_line.tag_ids.filtered(lambda x: x.tax_negate)
 
-    def _create_invoice(self, taxes_per_line, inv_type='out_invoice'):
+    def _create_invoice(self, taxes_per_line, inv_type='out_invoice', currency_id=False, invoice_payment_term_id=False):
         ''' Create an invoice on the fly.
 
         :param taxes_per_line: A list of tuple (price_unit, account.tax recordset)
         '''
-        return self.env['account.move'].create({
+        vals = {
             'type': inv_type,
             'partner_id': self.partner_a.id,
             'invoice_line_ids': [(0, 0, {
@@ -74,7 +82,12 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
                 'price_unit': amount,
                 'tax_ids': [(6, 0, taxes.ids)],
             }) for amount, taxes in taxes_per_line],
-        })
+        }
+        if currency_id:
+            vals['currency_id'] = currency_id.id
+        if invoice_payment_term_id:
+            vals['invoice_payment_term_id'] = invoice_payment_term_id.id
+        return self.env['account.move'].create(vals)
 
     def test_one_tax_per_line(self):
         ''' Test:
@@ -472,3 +485,33 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
                 'tax_ids': []
             },
         ])
+
+    def test_foreign_currency_01(self):
+        ''' Test:
+        Foreign currency with rate of 0.654065014 with currency rounding set to 0.05.
+
+        price_unit | Taxes
+        ------------------
+        5          | 5% incl
+        10         | 5% incl
+        50         | 5% incl
+
+        '''
+        company = self.env.ref('base.main_company')
+        currency_usd_id = self.env.ref("base.USD")
+        currency_chf_id = self.env.ref("base.CHF")
+        self.cr.execute("UPDATE res_company SET currency_id = %s WHERE id = %s", [currency_usd_id.id, company.id])
+        currency_chf_id.rounding = 0.05
+        
+        self.env['res.currency.rate'].search([]).unlink()
+        self.env['res.currency.rate'].create({
+            'currency_id': currency_chf_id.id,
+            'rate': 0.654065014,
+            'name': '2001-01-01'})
+
+        invoice = self._create_invoice([
+            (5, self.percent_tax_3_incl),
+            (10, self.percent_tax_3_incl),
+            (50, self.percent_tax_3_incl),
+        ], currency_id=currency_chf_id, invoice_payment_term_id=self.pay_terms_a)
+        invoice.post()
