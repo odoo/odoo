@@ -19,7 +19,7 @@ class WebsiteSnippetFilter(models.Model):
     field_names = fields.Char(help="A list of comma-separated field names", required=True)
     filter_id = fields.Many2one('ir.filters', 'Filter', ondelete='cascade')
     limit = fields.Integer(help='The limit is the maximum number of records retrieved', required=True)
-    website_id = fields.Many2one('website', string='Website', ondelete='cascade', required=True)
+    website_id = fields.Many2one('website', string='Website', ondelete='cascade')
 
     @api.constrains('action_server_id', 'filter_id')
     def _check_data_source_is_provided(self):
@@ -45,7 +45,7 @@ class WebsiteSnippetFilter(models.Model):
     def search_read(self, domain=None, fields=None, offset=0, limit=None, order=None):
         website_id = self.env.context.get("website_id")
         if (website_id):
-            domain = [('website_id', '=', website_id)] + domain
+            domain = self.env['website'].website_domain(website_id) + (domain or ())
         return super(WebsiteSnippetFilter, self).search_read(domain, fields, offset, limit, order)
 
     def render(self, template_key, limit, search_domain=[]):
@@ -53,7 +53,7 @@ class WebsiteSnippetFilter(models.Model):
         self.ensure_one()
         assert '.dynamic_filter_template_' in template_key, _("You can only use template prefixed by dynamic_filter_template_ ")
 
-        if self.env['website'].get_current_website() != self.website_id:
+        if self.website_id and self.env['website'].get_current_website() != self.website_id:
             return ''
 
         records = self._prepare_values(limit, search_domain)
