@@ -31,7 +31,7 @@ var KanbanController = BasicController.extend({
         kanban_column_delete: '_onDeleteColumn',
         kanban_column_add_record: '_onAddRecordToColumn',
         kanban_column_resequence: '_onColumnResequence',
-        kanban_load_more: '_onLoadMore',
+        kanban_load_column_records: '_onLoadColumnRecords',
         column_toggle_fold: '_onToggleColumn',
         kanban_column_records_toggle_active: '_onToggleActiveRecords',
     }),
@@ -389,14 +389,15 @@ var KanbanController = BasicController.extend({
     /**
      * @private
      * @param {OdooEvent} ev
+     * @param {Object} ev.data see model.reload options
      */
-    _onLoadMore: function (ev) {
-        var self = this;
-        var column = ev.target;
-        this.model.loadMore(column.db_id).then(function (db_id) {
-            var data = self.model.get(db_id);
-            self.renderer.updateColumn(db_id, data);
-        });
+    async _onLoadColumnRecords(ev) {
+        const column = ev.target;
+        const id = column.columnID || column.db_id;
+        const options = ev.data;
+        const dbID = await this.model.reload(id, options);
+        const data = this.model.get(dbID);
+        return this.renderer.updateColumn(dbID, data);
     },
     /**
      * @private
@@ -520,9 +521,11 @@ var KanbanController = BasicController.extend({
               this.model.actionArchive(recordIds, column.db_id) :
               this.model.actionUnarchive(recordIds, column.db_id);
             prom.then(function (dbID) {
-                var data = self.model.get(dbID);
+                let data = self.model.get(dbID);
                 if (data) {  // Could be null if a wizard is returned for example
                     self.model.reload(self.handle).then(function () {
+                        // Retrieve fresher data as the reload may have changed it.
+                        data = self.model.get(dbID);
                         const state = self.model.get(self.handle);
                         self.renderer.updateColumn(dbID, data, { state });
                     });

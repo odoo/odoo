@@ -11,7 +11,6 @@ const _t = core._t;
 var KanbanColumnProgressBar = Widget.extend({
     template: 'KanbanView.ColumnProgressBar',
     events: {
-        'click .o_kanban_counter_progress': '_onProgressBarParentClick',
         'click .progress-bar': '_onProgressBarClick',
     },
     /**
@@ -28,6 +27,7 @@ var KanbanColumnProgressBar = Widget.extend({
 
         this.columnID = options.columnID;
         this.columnState = columnState;
+        this.activeFilter = {};
 
         // <progressbar/> attributes
         this.fieldName = columnState.progressBarValues.field;
@@ -90,16 +90,13 @@ var KanbanColumnProgressBar = Widget.extend({
      */
     computeCounters() {
         const subgroupCounts = {};
-        let allSubgroupCount = 0;
         for (const key of Object.keys(this.colors)) {
             const subgroupCount = this.columnState.progressBarValues.counts[key] || 0;
-            if (this.activeFilter === key && subgroupCount === 0) {
-                this.activeFilter = false;
+            if (this.activeFilter.value === key && subgroupCount === 0) {
+                this.activeFilter = {};
             }
             subgroupCounts[key] = subgroupCount;
-            allSubgroupCount += subgroupCount;
-        };
-        subgroupCounts.__false = this.columnState.count - allSubgroupCount;
+        }
 
         this.groupCount = this.columnState.count;
         this.subgroupCounts = subgroupCounts;
@@ -127,8 +124,8 @@ var KanbanColumnProgressBar = Widget.extend({
                 _.each(self.colors, function (val, key) {
                     $el.removeClass('o_kanban_group_show_' + val);
                 });
-                if (self.activeFilter) {
-                    $el.addClass('o_kanban_group_show o_kanban_group_show_' + self.colors[self.activeFilter]);
+                if (self.activeFilter.value) {
+                    $el.addClass('o_kanban_group_show o_kanban_group_show_' + self.colors[self.activeFilter.value]);
                 }
             },
         });
@@ -171,7 +168,7 @@ var KanbanColumnProgressBar = Widget.extend({
             });
 
             // Adapt active state
-            $bar.toggleClass('progress-bar-animated progress-bar-striped', key === self.activeFilter);
+            $bar.toggleClass('progress-bar-animated progress-bar-striped', key === self.activeFilter.value);
 
             // Adapt width
             $bar.removeClass('o_bar_has_records transition-off');
@@ -198,24 +195,24 @@ var KanbanColumnProgressBar = Widget.extend({
         var start = this.prevTotalCounterValue;
         var end = this.totalCounterValue;
 
-        if (this.activeFilter) {
+        if (this.activeFilter.value) {
             if (this.sumField) {
                 end = 0;
                 _.each(self.columnState.data, function (record) {
                     var recordData = record.data;
-                    if (self.activeFilter === recordData[self.fieldName] ||
-                        (self.activeFilter === '__false' && !recordData[self.fieldName])) {
+                    if (self.activeFilter.value === recordData[self.fieldName] ||
+                        (self.activeFilter.value === '__false' && !recordData[self.fieldName])) {
                         end += parseFloat(recordData[self.sumField]);
                     }
                 });
             } else {
-                end = this.subgroupCounts[this.activeFilter];
+                end = this.subgroupCounts[this.activeFilter.value];
             }
         }
         this.prevTotalCounterValue = end;
         var animationClass = start > 999 ? 'o_kanban_grow' : 'o_kanban_grow_huge';
 
-        if (start !== undefined && (end > start || this.activeFilter) && this.ANIMATE) {
+        if (start !== undefined && (end > start || this.activeFilter.value) && this.ANIMATE) {
             $({currentValue: start}).animate({currentValue: end}, {
                 duration: 1000,
                 start: function () {
@@ -255,33 +252,47 @@ var KanbanColumnProgressBar = Widget.extend({
             },
         });
     },
+    /**
+     * Toggles the active filter on this progressbar.
+     * It also computes the corresponding domain extension.
+     *
+     * @private
+     * @param {string} value
+     */
+    _toggleActiveFilter(value) {
+        const activeFilter = Object.assign({}, this.activeFilter);
+        if (activeFilter.value === value) {
+            // If the filter was active and we click again on the same one, deactivate.
+            activeFilter.domain = [];
+            activeFilter.value = false;
+        } else {
+            const field = this.fieldName;
+            if (value === '__false') {
+                const values = Object.keys(this.colors).filter(el => el !== value);
+                activeFilter.domain = ['!', [field, 'in', values]];
+            } else {
+                activeFilter.domain = [[field, '=', value]];
+            }
+            activeFilter.value = value;
+        }
+        this.activeFilter = activeFilter;
+    },
 
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
-
     /**
      * @private
      * @param {Event} ev
      */
     _onProgressBarClick: function (ev) {
         this.$clickedBar = $(ev.currentTarget);
-        var filter = this.$clickedBar.data('filter');
-        this.activeFilter = (this.activeFilter === filter ? false : filter);
+        const filterValue = this.$clickedBar.data('filter');
+        this._toggleActiveFilter(filterValue);
         this._notifyState();
-        this._render();
-    },
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onProgressBarParentClick: function (ev) {
-        if (ev.target !== ev.currentTarget) {
-            return;
-        }
-        this.activeFilter = false;
-        this._notifyState();
-        this._render();
+        this.trigger_up('kanban_load_column_records', {
+            activeFilter: this.activeFilter
+        });
     },
 });
 return KanbanColumnProgressBar;
