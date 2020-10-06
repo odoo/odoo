@@ -64,13 +64,18 @@ def flush_env(cr, *, clear=True):
     """ Retrieve and flush an environment corresponding to the given cursor.
         Also clear the environment if ``clear`` is true.
     """
+    env_to_flush = None
     for env in list(Environment.envs):
         # don't flush() on another cursor or with a RequestUID
         if env.cr is cr and (isinstance(env.uid, int) or env.uid is None):
-            env['base'].flush()
-            if clear:
-                env.clear()         # clear remaining new records to compute
-            break
+            env_to_flush = env
+            if env.uid is not None:
+                break               # prefer an environment with a real uid
+
+    if env_to_flush is not None:
+        env_to_flush['base'].flush()
+        if clear:
+            env_to_flush.clear()    # clear remaining new records to compute
 
 def clear_env(cr):
     """ Retrieve and clear an environment corresponding to the given cursor """
