@@ -28,11 +28,14 @@ class ChatterContainer extends Component {
         this._wasMessagingInitialized = false;
         useStore(props => {
             const isMessagingInitialized = this.env.isMessagingInitialized();
+            // Delay creation of chatter record until messaging is initialized.
+            // Ideally should observe models directly to detect change instead
+            // of using `useStore`.
             if (!this._wasMessagingInitialized && isMessagingInitialized) {
                 this._wasMessagingInitialized = true;
-                this.chatter = this.env.models['mail.chatter'].create(props);
+                this._insertFromProps(props);
             }
-            return { isMessagingInitialized };
+            return { chatter: this.chatter };
         });
     }
 
@@ -40,10 +43,23 @@ class ChatterContainer extends Component {
         this._update();
     }
 
+    /**
+     * @override
+     */
+    willUpdateProps(nextProps) {
+        if (this.env.isMessagingInitialized()) {
+            this._insertFromProps(nextProps);
+        }
+        return super.willUpdateProps(...arguments);
+    }
+
     patched() {
         this._update();
     }
 
+    /**
+     * @override
+     */
     destroy() {
         super.destroy();
         if (this.chatter) {
@@ -58,13 +74,24 @@ class ChatterContainer extends Component {
     /**
      * @private
      */
+    _insertFromProps(props) {
+        const values = Object.assign({}, props);
+        if (values.threadId === undefined) {
+            values.threadId = clear();
+        }
+        if (!this.chatter) {
+            this.chatter = this.env.models['mail.chatter'].create(values);
+        } else {
+            this.chatter.update(values);
+        }
+    }
+
+    /**
+     * @private
+     */
     _update() {
         if (this.chatter) {
-            const values = Object.assign({}, this.props);
-            if (values.threadId === undefined) {
-                values.threadId = clear();
-            }
-            this.chatter.update(values);
+            this.chatter.refresh();
         }
     }
 
@@ -72,10 +99,41 @@ class ChatterContainer extends Component {
 
 Object.assign(ChatterContainer, {
     components,
-    /**
-     * No props validation because this component simply forwards props to
-     * chatter record as its data.
-     */
+    props: {
+        hasActivities: {
+            type: Boolean,
+            optional: true,
+        },
+        hasExternalBorder: {
+            type: Boolean,
+            optional: true,
+        },
+        hasFollowers: {
+            type: Boolean,
+            optional: true,
+        },
+        hasMessageList: {
+            type: Boolean,
+            optional: true,
+        },
+        hasMessageListScrollAdjust: {
+            type: Boolean,
+            optional: true,
+        },
+        hasTopbarCloseButton: {
+            type: Boolean,
+            optional: true,
+        },
+        isAttachmentBoxVisibleInitially: {
+            type: Boolean,
+            optional: true,
+        },
+        threadId: {
+            type: Number,
+            optional: true,
+        },
+        threadModel: String,
+    },
     template: 'mail.ChatterContainer',
 });
 
