@@ -143,8 +143,10 @@ var KanbanModel = BasicModel.extend({
      * Add the following (kanban specific) keys when performing a `get`:
      *
      * - tooltipData
-     * - progressBarValues
      * - isGroupedByM2ONoColumn
+     * - progressBarValues
+     * - loadMoreCount
+     * - loadMoreOffset
      *
      * @override
      * @see _readTooltipFields
@@ -154,18 +156,47 @@ var KanbanModel = BasicModel.extend({
         var result = this._super.apply(this, arguments);
         var dp = result && this.localData[result.id];
         if (dp) {
+            // Add tooltipData key
             if (dp.tooltipData) {
                 result.tooltipData = $.extend(true, {}, dp.tooltipData);
             }
-            if (dp.progressBarValues) {
-                result.progressBarValues = $.extend(true, {}, dp.progressBarValues);
-            }
+            // Add isGroupedByM2ONoColumn key
             if (dp.fields[dp.groupedBy[0]]) {
                 var groupedByM2O = dp.fields[dp.groupedBy[0]].type === 'many2one';
                 result.isGroupedByM2ONoColumn = !dp.data.length && groupedByM2O;
             } else {
                 result.isGroupedByM2ONoColumn = false;
             }
+            // Add progressBarValues, loadMoreCount and loadMoreOffset key
+            let loadMoreCount = result.count - result.data.length;
+            let loadMoreOffset = result.data.length;
+            if (dp.progressBarValues) {
+                result.progressBarValues = $.extend(true, {}, dp.progressBarValues);
+                if (dp.activeFilter && dp.activeFilter.value) {
+                    // A progressbar filter is in an activated state?
+                    // Then set loadMoreCount and loadMoreOffset accordingly.
+                    // These computations are needed because there might be
+                    // records that doesn't match the current filter, e.g.:
+                    // - newly created records
+                    // - records dragged in the column
+                    const barValues = dp.progressBarValues;
+                    const barField = barValues.field;
+                    const definedBarFieldValues = Object.keys(barValues.colors);
+                    const filterValue = dp.activeFilter.value;
+
+                    const filteredRecordsTotal = barValues.counts[filterValue];
+                    const filteredRecords = result.data.filter(element => {
+                        const elementBarFieldValue = element.data[barField];
+                        return (filterValue === elementBarFieldValue)
+                            || (filterValue === '__false'
+                                && !definedBarFieldValues.includes(elementBarFieldValue));
+                    });
+                    loadMoreCount = filteredRecordsTotal - filteredRecords.length;
+                    loadMoreOffset = filteredRecords.length;
+                }
+            }
+            result.loadMoreCount = loadMoreCount;
+            result.loadMoreOffset = loadMoreOffset;
         }
         return result;
     },
@@ -189,19 +220,6 @@ var KanbanModel = BasicModel.extend({
         this.defaultGroupedBy = params.groupBy || [];
         params.groupedBy = (params.groupedBy && params.groupedBy.length) ? params.groupedBy : this.defaultGroupedBy;
         return this._super(params);
-    },
-    /**
-     * Load more records in a group.
-     *
-     * @param {string} groupID localID of the group
-     * @returns {Promise<string>} resolves to the localID of the group
-     */
-    loadMore: function (groupID) {
-        var group = this.localData[groupID];
-        var offset = group.loadMoreOffset + group.limit;
-        return this.reload(group.id, {
-            loadMoreOffset: offset,
-        });
     },
     /**
      * Moves a record from a group to another.
@@ -262,8 +280,24 @@ var KanbanModel = BasicModel.extend({
     },
     /**
      * @override
+     * @param {Object} options.activeFilter
      */
     reload: function (id, options) {
+        const element = this.localData[id];
+        // Reset the limit right before reloading a group as a reload
+        // of a kanban view may update the limit of a group. @see BasicModel._readGroup()
+        // (e.g. if we are coming back to the kanban view from a form view)
+        // As this mechanism may only affect grouped kanban views, only reset
+        // the limit if the current element is a group (and thus, has a parent).
+        if (element.parentID) {
+            element.limit = this.loadParams.limit;
+        }
+        // Register the domain extension in the element.
+        if (options && options.activeFilter) {
+            element.activeFilter = options.activeFilter || element.activeFilter;
+            // Cleanup as this option is not used further
+            delete options.activeFilter;
+        }
         // if the groupBy is given in the options and if it is an empty array,
         // fallback on the default groupBy
         if (options && options.groupBy && !options.groupBy.length) {
@@ -293,6 +327,23 @@ var KanbanModel = BasicModel.extend({
     // Private
     //--------------------------------------------------------------------------
 
+    /**
+     * @override
+     */
+    _getGroupedListPropsToKeep(list, options) {
+        const propsToKeep = this._super(...arguments);
+        if (list.activeFilter) {
+            propsToKeep.activeFilter = list.activeFilter;
+        }
+        return propsToKeep;
+    },
+    /**
+     * @override
+     */
+    _getUngroupedListDomain(list) {
+        const domainExtension = (list.activeFilter && list.activeFilter.domain) || [];
+        return [...this._super(...arguments), ...domainExtension];
+    },
     /**
      * @override
      */
@@ -334,10 +385,36 @@ var KanbanModel = BasicModel.extend({
      * @param {Object} dataPoint
      * @returns {Promise<Object>}
      */
-    _readProgressBarGroup: function (list, options) {
-        var self = this;
-        var groupsDef = this._readGroup(list, options);
-        var progressBarDef = this._rpc({
+    async _readProgressBarGroup(list, options) {
+        const groupsDef = this._readGroup(list, options);
+        const progressBarDef = this._readProgressBar(list);
+        const [groups, progressBar] = await Promise.all([groupsDef, progressBarDef]);
+        list.data.forEach(groupId => {
+            const group = this.localData[groupId];
+
+            const valuesCount = progressBar[group.value] || {};
+            const valuesCountTotal = Object.keys(valuesCount).reduce((sum, key) => {
+                return sum + valuesCount[key];
+            }, 0);
+
+            // Compute records count for progressbar field values
+            // not specified in the progressbar attributes
+            const counts = Object.assign({
+                __false: group.count - valuesCountTotal
+            }, valuesCount);
+
+            group.progressBarValues = Object.assign({
+                counts,
+            }, list.progressBar);
+        });
+        return list;
+    },
+    /**
+     * @param {Object} list valid resource object
+     * @returns {Promise}
+     */
+    _readProgressBar: function (list) {
+        return this._rpc({
             model: list.model,
             method: 'read_progress_bar',
             kwargs: {
@@ -346,16 +423,6 @@ var KanbanModel = BasicModel.extend({
                 progress_bar: list.progressBar,
                 context: list.context,
             },
-        });
-        return Promise.all([groupsDef, progressBarDef]).then(function (results) {
-            var data = results[1];
-            _.each(list.data, function (groupID) {
-                var group = self.localData[groupID];
-                group.progressBarValues = _.extend({
-                    counts: data[group.value] || {},
-                }, list.progressBar);
-            });
-            return list;
         });
     },
     /**
@@ -407,34 +474,37 @@ var KanbanModel = BasicModel.extend({
     },
     /**
      * Reloads all progressbar data. This is done after given promise and
-     * insures that the given promise's result is not lost.
+     * ensures that the given promise's result is not lost.
      *
      * @private
      * @param {string} recordID
      * @param {Promise} def
      * @returns {Promise}
      */
-    _reloadProgressBarGroupFromRecord: function (recordID, def) {
-        var element = this.localData[recordID];
-        if (element.type === 'list' && !element.parentID) {
-            // we are reloading the whole view, so there is no need to manually
-            // reload the progressbars
-            return def;
-        }
-
+   async  _reloadProgressBarGroupFromRecord(recordID, def) {
+       let element = this.localData[recordID];
+       if (element.type === 'list') {
+           if (!element.parentID) {
+               // we are reloading the whole view, so there is no need to manually
+               // reload the progressbars
+               return def;
+           }
+           if (element.activeFilter) {
+               // We must not read_group when an active filter (and thus
+               // a domain extension) is applied to the list datapoint.
+               return def;
+           }
+       }
         // If we updated a record, then we must potentially update columns'
         // progressbars, so we need to load groups info again
-        var self = this;
         while (element) {
             if (element.progressBar) {
-                return def.then(function (data) {
-                    return self._load(element, {
-                        keepEmptyGroups: true,
-                        onlyGroups: true,
-                    }).then(function () {
-                        return data;
-                    });
+                const data = await def;
+                await this._load(element, {
+                    keepEmptyGroups: true,
+                    onlyGroups: true,
                 });
+                return data;
             }
             element = this.localData[element.parentID];
         }
