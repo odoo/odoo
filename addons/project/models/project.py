@@ -761,6 +761,8 @@ class Task(models.Model):
             vals.update(self.update_date_end(vals['stage_id']))
             vals['date_last_stage_update'] = fields.Datetime.now()
         task = super(Task, self.with_context(context)).create(vals)
+        if task.project_id.privacy_visibility == 'portal':
+            task._portal_ensure_token()
         return task
 
     def write(self, vals):
