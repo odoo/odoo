@@ -91,6 +91,9 @@
 
     <t t-name="CalendarView.buttons">
         <div class="o_calendar_buttons">
+            <span class="o_calendar_add_button">
+                <t t-call="CalendarView.navigation_add_button" />
+            </span>
             <span class="o_calendar_navigation_buttons">
                 <t t-call="CalendarView.navigation_buttons" />
             </span>
@@ -100,6 +103,10 @@
                 </span>
             </t>
         </div>
+    </t>
+
+    <t t-name="CalendarView.navigation_add_button">
+        <button class="o_calendar_button_new btn btn-primary">Add</button>
     </t>
 
     <t t-name="CalendarView.navigation_buttons">

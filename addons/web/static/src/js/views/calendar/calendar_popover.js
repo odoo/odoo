@@ -140,6 +140,18 @@ var CalendarPopover = Widget.extend(WidgetAdapterMixin, StandaloneFieldManagerMi
                 value: self.event.extendedProps.record[fieldName],
                 type: fieldInfo.type,
             };
+            if(field.name === 'description' && !field.value) {
+                continue;
+            }
+            if(field.name === 'location' && !field.value) {
+                continue;
+            }
+            if(field.name === 'alarm_ids' && !field.value) {
+                continue;
+            }
+            if(field.name === 'categ_ids' && !field.value) {
+                continue;
+            }
             if (field.type === 'selection') {
                 field.selection = fieldInfo.selection;
             }

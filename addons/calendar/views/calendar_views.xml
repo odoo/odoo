@@ -262,12 +262,15 @@
                 event_open_popup="true"
                 event_limit="5"
                 color="user_id">
-                <field name="attendee_status"/>
+                <field name="location"/>
+                <field name="attendee_status" invisible="1"/>
                 <field name="user_id" string="Responsible" filters="1" widget="many2one_avatar_user"/>
                 <field name="partner_ids" widget="many2manyattendee" write_model="calendar.contacts" write_field="partner_id" avatar_field="image_128"/>
                 <field name="is_highlighted" invisible="1"/>
                 <field name="description"/>
                 <field name="privacy"/>
+                <field name="show_as"/>
+                <field name="alarm_ids"/>
                 <!-- For recurrence update Dialog -->
                 <field name="recurrency" invisible="1"/>
                 <field name="recurrence_update" invisible="1"/>

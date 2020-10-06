@@ -311,7 +311,7 @@ var CalendarController = AbstractController.extend({
 
         var options = _.extend({}, this.options, event.options, {
             context: context,
-            title: _.str.sprintf(_t('Create: %s'), (this.displayName || this.renderer.arch.attrs.string))
+            title: _.str.sprintf(_t('New Event'))
         });
 
         if (this.quick != null) {
@@ -328,10 +328,7 @@ var CalendarController = AbstractController.extend({
             return;
         }
 
-        var title = _t("Create");
-        if (this.renderer.arch.attrs.string) {
-            title += ': ' + this.renderer.arch.attrs.string;
-        }
+        var title = _t('New Event')
         if (this.eventOpenPopup) {
             if (this.previousOpen) { this.previousOpen.close(); }
             this.previousOpen = new dialogs.FormViewDialog(self, {
