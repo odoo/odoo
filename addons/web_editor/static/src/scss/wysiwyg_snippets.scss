@@ -671,13 +671,16 @@ body.editor_enable.editor_has_snippets {
             padding: 0;
             border: none;
             background: none;
+            cursor: default;
 
+            > we-title {
+                cursor: pointer;
+            }
             > div {
                 display: flex;
                 min-height: $o-we-sidebar-content-field-height;
                 line-height: $o-we-sidebar-content-field-height;
             }
-
             we-checkbox {
                 flex: 0 0 auto;
                 display: flex;
@@ -686,6 +689,7 @@ body.editor_enable.editor_has_snippets {
                 height: $o-we-sidebar-content-field-toggle-height;
                 background-color: $o-we-sidebar-content-field-toggle-bg;
                 border-radius: 10rem;
+                cursor: pointer;
 
                 &::after {
                     content: "";
@@ -697,10 +701,12 @@ body.editor_enable.editor_has_snippets {
                     box-shadow: $o-we-sidebar-content-field-toggle-control-shadow;
                 }
             }
-
             &.active we-checkbox {
                 background-color: $o-we-sidebar-content-field-toggle-active-bg;
                 justify-content: flex-end;
+            }
+            &.active, &:hover {
+                color: $o-we-sidebar-content-field-clickable-color;
             }
         }
 

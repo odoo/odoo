@@ -705,6 +705,21 @@ const CheckboxUserValueWidget = ButtonUserValueWidget.extend({
 
         return this._super(...arguments);
     },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    _onButtonClick(ev) {
+        if (!ev.target.closest('we-title, we-checkbox')) {
+            // Only consider clicks on the label and the checkbox control itself
+            return;
+        }
+        return this._super(...arguments);
+    },
 });
 
 const BaseSelectionUserValueWidget = UserValueWidget.extend({
