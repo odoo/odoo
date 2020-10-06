@@ -23,8 +23,8 @@ function factory(dependencies) {
                 views: [[false, 'form']],
                 target: 'new',
                 context: {
-                    default_res_id: activity.res_id,
-                    default_model: activity.res_model,
+                    default_res_id: activity.thread.id,
+                    default_model: activity.thread.model,
                     default_use_template: true,
                     default_template_id: this.id,
                     force_email: true,
@@ -34,9 +34,7 @@ function factory(dependencies) {
                 action,
                 options: {
                     on_close: () => {
-                        if (activity.chatter) {
-                            activity.chatter.refresh();
-                        }
+                        activity.thread.refresh();
                     },
                 },
             });
@@ -47,13 +45,11 @@ function factory(dependencies) {
          */
         async send(activity) {
             await this.async(() => this.env.services.rpc({
-                model: activity.res_model,
+                model: activity.thread.model,
                 method: 'activity_send_mail',
-                args: [[activity.res_id], this.id],
+                args: [[activity.thread.id], this.id],
             }));
-            if (activity.chatter) {
-                activity.chatter.refresh();
-            }
+            activity.thread.refresh();
         }
 
         //----------------------------------------------------------------------
