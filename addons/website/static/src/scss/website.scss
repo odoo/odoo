@@ -1078,31 +1078,7 @@ header {
                             position: absolute;
                         }
                     }
-                    &:not(.o_header_affixed) {
-                        position: sticky;
-                        top: 0;
-                        right: 0;
-                        bottom: auto;
-                        left: 0;
-                        z-index: $zindex-fixed;
-                    }
-                    &.o_header_affixed {
-                        transform: none !important;
-                    }
                 }
-                > main {
-                    > :first-child:not(#wrap), #wrap > :first-child {
-                        &::before {
-                            content: "";
-                            display: block;
-                            width: 100%;
-                            margin-top: $o-hamburger-full-navbar-height;
-                        }
-                    }
-                }
-            }
-            #oe_main_menu_navbar ~ #wrapwrap > header {
-                top: $o-navbar-height;
             }
         }
     }
