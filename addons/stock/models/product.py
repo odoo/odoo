@@ -191,9 +191,6 @@ class Product(models.Model):
 
         return res
 
-    def get_components(self):
-        return self.ids
-
     def _get_description(self, picking_type_id):
         """ return product receipt/delivery/picking description depending on
         picking type passed as argument.
