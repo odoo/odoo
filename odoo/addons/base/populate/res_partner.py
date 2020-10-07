@@ -11,7 +11,6 @@ _logger = logging.getLogger(__name__)
 class Partner(models.Model):
     _inherit = "res.partner"
     _populate_dependencies = ["res.company", "res.partner.industry"]
-
     _populate_sizes = {
         'small': 10,
         'medium': 2000,
@@ -53,6 +52,10 @@ class Partner(models.Model):
             ]
         ]
 
+        forename_groups = populate.randomize(['Norbert', 'Jacqueline', 'Gretta', 'Atul'])
+        middlename_groups = populate.randomize(['', 'Ugly Panda', 'Waiting Tyrant'])
+        surname_groups = populate.randomize(['Poilvache', 'Tartopoils', 'Boitaclous'])
+
         def generate_address(iterator, *args):
             address_generators = [populate.chain_factories(address_factories, self._name) for address_factories in address_factories_groups]
             # first, exhaust all address_generators
@@ -83,9 +86,11 @@ class Partner(models.Model):
             return random.choice([False] + states_per_country[country_id])
 
         def get_name(values=None, counter=0, **kwargs):
+            print(values, counter, kwargs)
+            print(forename_groups())
             is_company = values['is_company']
             complete = values['__complete']
-            return  '%s_%s_%s' % ('company' if is_company else 'partner', int(complete), counter)
+            return  '%s_%s_%s' % ('c' if is_company else 'p', int(complete), counter)
 
         industry_ids = self.env.registry.populated_models['res.partner.industry']
         company_ids = self.env.registry.populated_models['res.company']
@@ -104,8 +109,19 @@ class Partner(models.Model):
             ('mobile', populate.randomize([False, '', '+32412345678', '0032412345678', '412345678'])),
             ('title', populate.randomize(self.env['res.partner.title'].search([]).ids)),
             ('function', populate.randomize(
-                [False, '', 'President of Sales', 'Senior Consultant', 'Product owner', 'Functional Consultant', 'Chief Executive Officer'],
-                [50, 10, 2, 20, 5, 10, 1])),
+                [False,
+                 '',
+                 'Chief Execution Officer',
+                 'Señor Consultant',
+                 'Self-thinking demo data',
+                 'Kung-Fu Master',
+                 'Chief Coffee Officer',
+                 'Coffee Machine used by CCO',
+                 'President of Internet (auto-elected)',
+                 'President of Internet (another one)',
+                 'President of everything (except internet, already taken)',
+                ],
+                [50, 10, 2, 20, 10, 3, 5, 1, 2, 1, 1])),
             ('tz', populate.randomize([tz for tz in self.env['res.partner']._fields['tz'].get_values(self.env)])),
             ('website', populate.randomize([False, '', 'http://www.example.com'])),
             ('credit_limit', populate.randomize(
