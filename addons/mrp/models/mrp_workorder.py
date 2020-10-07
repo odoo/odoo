@@ -95,7 +95,7 @@ class MrpWorkorder(models.Model):
         help="Expected duration (in minutes)")
     duration = fields.Float(
         'Real Duration', compute='_compute_duration', inverse='_set_duration',
-        readonly=False, store=True)
+        readonly=False, store=True, copy=False)
     duration_unit = fields.Float(
         'Duration Per Unit', compute='_compute_duration',
         readonly=True, store=True)
@@ -762,7 +762,9 @@ class MrpWorkorder(models.Model):
             lambda move: move.product_id == self.product_id and
             move.state not in ('done', 'cancel')
         )
-        if production_move and production_move.product_id.tracking != 'none':
+        if not production_move:
+            return
+        if production_move.product_id.tracking != 'none':
             if not self.finished_lot_id:
                 raise UserError(_('You need to provide a lot for the finished product.'))
             move_line = production_move.move_line_ids.filtered(
