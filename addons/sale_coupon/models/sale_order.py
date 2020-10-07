@@ -65,9 +65,9 @@ class SaleOrder(models.Model):
 
     def _is_reward_in_order_lines(self, program):
         self.ensure_one()
-        return self.order_line.filtered(lambda line:
-            line.product_id == program.reward_product_id and
-            line.product_uom_qty >= program.reward_product_quantity)
+        order_quantity = sum(self.order_line.filtered(lambda line:
+            line.product_id == program.reward_product_id).mapped('product_uom_qty'))
+        return order_quantity >= program.reward_product_quantity
 
     def _is_global_discount_already_applied(self):
         applied_programs = self.no_code_promo_program_ids + \
@@ -80,6 +80,7 @@ class SaleOrder(models.Model):
 
         order_lines = (self.order_line - self._get_reward_lines()).filtered(lambda x: program._get_valid_products(x.product_id))
         max_product_qty = sum(order_lines.mapped('product_uom_qty')) or 1
+        total_qty = sum(self.order_line.filtered(lambda x: x.product_id == program.reward_product_id).mapped('product_uom_qty'))
         # Remove needed quantity from reward quantity if same reward and rule product
         if program._get_valid_products(program.reward_product_id):
             # number of times the program should be applied
@@ -87,12 +88,12 @@ class SaleOrder(models.Model):
             # multipled by the reward qty
             reward_product_qty = program.reward_product_quantity * program_in_order
             # do not give more free reward than products
-            reward_product_qty = min(reward_product_qty, self.order_line.filtered(lambda x: x.product_id == program.reward_product_id).product_uom_qty)
+            reward_product_qty = min(reward_product_qty, total_qty)
             if program.rule_minimum_amount:
                 order_total = sum(order_lines.mapped('price_total')) - (program.reward_product_quantity * program.reward_product_id.lst_price)
                 reward_product_qty = min(reward_product_qty, order_total // program.rule_minimum_amount)
         else:
-            reward_product_qty = min(max_product_qty, self.order_line.filtered(lambda x: x.product_id == program.reward_product_id).product_uom_qty)
+            reward_product_qty = min(max_product_qty, total_qty)
 
         reward_qty = min(int(int(max_product_qty / program.rule_min_quantity) * program.reward_product_quantity), reward_product_qty)
         # Take the default taxes on the reward product, mapped with the fiscal position
