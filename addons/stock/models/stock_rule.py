@@ -368,7 +368,7 @@ class ProcurementGroup(models.Model):
         actions_to_run = defaultdict(list)
         errors = []
         for procurement in procurements:
-            procurement.values.setdefault('company_id', self.env.company)
+            procurement.values.setdefault('company_id', procurement.location_id.company_id)
             procurement.values.setdefault('priority', '1')
             procurement.values.setdefault('date_planned', fields.Datetime.now())
             if (
@@ -437,7 +437,14 @@ class ProcurementGroup(models.Model):
 
     @api.model
     def _get_rule_domain(self, location, values):
-        return [('location_id', '=', location.id), ('action', '!=', 'push')]
+        domain = ['&', ('location_id', '=', location.id), ('action', '!=', 'push')]
+        # In case the method is called by the superuser, we need to restrict the rules to the
+        # ones of the company. This is not useful as a regular user since there is a record
+        # rule to filter out the rules based on the company.
+        if self.env.su and values.get('company_id'):
+            domain_company = ['|', ('company_id', '=', False), ('company_id', 'child_of', values['company_id'].ids)]
+            domain = expression.AND([domain, domain_company])
+        return domain
 
     def _merge_domain(self, values, rule, group_id):
         return [
