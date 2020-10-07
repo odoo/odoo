@@ -277,16 +277,25 @@ class SaleOrderLine(models.Model):
     is_mto = fields.Boolean(compute='_compute_is_mto')
     display_qty_widget = fields.Boolean(compute='_compute_qty_to_deliver')
 
+<<<<<<< HEAD
     @api.depends('product_type', 'product_uom_qty', 'qty_delivered', 'state', 'move_ids')
+=======
+    @api.depends('product_id', 'product_uom_qty', 'qty_delivered', 'state', 'product_uom')
+>>>>>>> f23f1b6c568... temp
     def _compute_qty_to_deliver(self):
         """Compute the visibility of the inventory widget."""
         for line in self:
             line.qty_to_deliver = line.product_uom_qty - line.qty_delivered
+<<<<<<< HEAD
             if line.state in ('draft', 'sent', 'sale') and line.product_type == 'product' and line.qty_to_deliver > 0:
                 if line.state == 'sale' and not line.move_ids:
                     line.display_qty_widget = False
                 else:
                     line.display_qty_widget = True
+=======
+            if line.state == 'draft' and line.product_type == 'product' and line.product_uom and line.qty_to_deliver > 0:
+                line.display_qty_widget = True
+>>>>>>> f23f1b6c568... temp
             else:
                 line.display_qty_widget = False
 
