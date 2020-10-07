@@ -287,6 +287,9 @@ function factory(dependencies) {
                 }
                 return list;
             }, []);
+            if (channelIds.length === 0) {
+                return;
+            }
             const channelPreviews = await this.env.services.rpc({
                 model: 'mail.channel',
                 method: 'channel_fetch_preview',

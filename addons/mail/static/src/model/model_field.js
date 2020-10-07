@@ -414,11 +414,7 @@ class ModelField {
                         }
                         break;
                     case 'replace':
-                        // TODO IMP replace should not unlink-all (task-2270780)
-                        if (this._setRelationUnlink(record, currentValue, options)) {
-                            hasChanged = true;
-                        }
-                        if (this._setRelationLink(record, val[1], options)) {
+                        if (this._setRelationReplace(record, val[1], options)) {
                             hasChanged = true;
                         }
                         break;
@@ -528,20 +524,9 @@ class ModelField {
      * @returns {boolean} whether the value changed for the current field
      */
     _setRelationInsertAndReplace(record, data, options) {
-        // unlink must be done before insert:
-        // because unlink might trigger delete due to causality and new data
-        // shouldn't be deleted just after being inserted
-        // TODO IMP insert-and-replace should not unlink-all (task-2270780)
-        let hasChanged = false;
-        if (this._setRelationUnlink(record, this.read(record), options)) {
-            hasChanged = true;
-        }
         const OtherModel = this.env.models[this.to];
-        const other = this.env.modelManager._insert(OtherModel, data);
-        if (this._setRelationLink(record, other, options)) {
-            hasChanged = true;
-        }
-        return hasChanged;
+        const newValue = this.env.modelManager._insert(OtherModel, data);
+        return this._setRelationReplace(record, newValue, options);
     }
 
     /**
@@ -634,6 +619,70 @@ class ModelField {
             );
         }
         return true;
+    }
+
+    /**
+     * Set a 'replace' operation on this relational field.
+     *
+     * @private
+     * @param {mail.model} record
+     * @param {mail.model|mail.model[]} newValue
+     * @param {Object} [options]
+     * @returns {boolean} whether the value changed for the current field
+     */
+    _setRelationReplace(record, newValue, options) {
+        if (['one2one', 'many2one'].includes(this.relationType)) {
+            // for x2one replace is just link
+            return this._setRelationLinkX2One(record, newValue, options);
+        }
+
+        // for x2many: smart process to avoid unnecessary unlink/link
+        let hasChanged = false;
+        let hasToReorder = false;
+        const otherRecordsSet = this.read(record);
+        const otherRecordsList = [...otherRecordsSet];
+        const recordsToReplaceList = [...this._convertX2ManyValue(newValue)];
+        const recordsToReplaceSet = new Set(recordsToReplaceList);
+
+        // records to link
+        const recordsToLink = [];
+        for (let i = 0; i < recordsToReplaceList.length; i++) {
+            const recordToReplace = recordsToReplaceList[i];
+            if (!otherRecordsSet.has(recordToReplace)) {
+                recordsToLink.push(recordToReplace);
+            }
+            if (otherRecordsList[i] !== recordToReplace) {
+                hasToReorder = true;
+            }
+        }
+        if (this._setRelationLinkX2Many(record, recordsToLink, options)) {
+            hasChanged = true;
+        }
+
+        // records to unlink
+        const recordsToUnlink = [];
+        for (let i = 0; i < otherRecordsList.length; i++) {
+            const otherRecord = otherRecordsList[i];
+            if (!recordsToReplaceSet.has(otherRecord)) {
+                recordsToUnlink.push(otherRecord);
+            }
+            if (recordsToReplaceList[i] !== otherRecord) {
+                hasToReorder = true;
+            }
+        }
+        if (this._setRelationUnlinkX2Many(record, recordsToUnlink, options)) {
+            hasChanged = true;
+        }
+
+        // reorder result
+        if (hasToReorder) {
+            otherRecordsSet.clear();
+            for (const record of recordsToReplaceList) {
+                otherRecordsSet.add(record);
+            }
+            hasChanged = true;
+        }
+        return hasChanged;
     }
 
     /**
