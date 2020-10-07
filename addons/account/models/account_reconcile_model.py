@@ -713,7 +713,24 @@ class AccountReconcileModel(models.Model):
 
                             new_aml_dicts = reconciliation_results['new_aml_dicts']
                             if reconciliation_results['open_balance_dict']:
-                                new_aml_dicts.append(reconciliation_results['open_balance_dict'])
+                                open_balance_amount = reconciliation_results['open_balance_dict']['debit']
+                                if open_balance_amount:
+                                    # it's partial payment case
+                                    new_counterpart_aml_dicts = []
+                                    for aml in reconciliation_results['counterpart_aml_dicts']:
+                                        if not open_balance_amount or not aml['credit']:
+                                            new_counterpart_aml_dicts.append(aml)
+                                            continue
+
+                                        if aml['credit'] < open_balance_amount:
+                                            open_balance_amount -= aml['credit']
+                                        else:
+                                            aml['credit'] -= open_balance_amount
+                                            open_balance_amount = 0
+                                            new_counterpart_aml_dicts.append(aml)
+                                    reconciliation_results['counterpart_aml_dicts'] = new_counterpart_aml_dicts
+                                else:
+                                    new_aml_dicts.append(reconciliation_results['open_balance_dict'])
                             if not line.partner_id and partner:
                                 line.partner_id = partner
                             counterpart_moves = line.process_reconciliation(
