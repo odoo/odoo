@@ -254,8 +254,12 @@ class SaleOrder(models.Model):
         This method is used to return the valid applicable programs on given order.
         """
         self.ensure_one()
-        programs = self.env['coupon.program'].search([
-            ('company_id', 'in', [self.company_id.id, False])
+        programs = self.env['coupon.program'].with_context(
+            no_outdated_coupons=True,
+        ).search([
+            ('company_id', 'in', [self.company_id.id, False]),
+            '|', ('rule_date_from', '=', False), ('rule_date_from', '<=', self.date_order),
+            '|', ('rule_date_to', '=', False), ('rule_date_to', '>=', self.date_order),
         ], order="id")._filter_programs_from_common_rules(self)
         # no impact code...
         # should be programs = programs.filtered if we really want to filter...
@@ -265,8 +269,13 @@ class SaleOrder(models.Model):
 
     def _get_applicable_no_code_promo_program(self):
         self.ensure_one()
-        programs = self.env['coupon.program'].search([
+        programs = self.env['coupon.program'].with_context(
+            no_outdated_coupons=True,
+            applicable_coupon=True,
+        ).search([
             ('promo_code_usage', '=', 'no_code_needed'),
+            '|', ('rule_date_from', '=', False), ('rule_date_from', '<=', self.date_order),
+            '|', ('rule_date_to', '=', False), ('rule_date_to', '>=', self.date_order),
             '|', ('company_id', '=', self.company_id.id), ('company_id', '=', False),
         ])._filter_programs_from_common_rules(self)
         return programs
@@ -288,6 +297,9 @@ class SaleOrder(models.Model):
         programs = order._get_applicable_no_code_promo_program()
         programs = programs._keep_only_most_interesting_auto_applied_global_discount_program()
         for program in programs:
+            # VFE REF in master _get_applicable_no_code_programs already filters programs
+            # why do we need to reapply this bunch of checks in _check_promo_code ????
+            # We should only apply a little part of the checks in _check_promo_code...
             error_status = program._check_promo_code(order, False)
             if not error_status.get('error'):
                 if program.promo_applicability == 'on_next_order':
