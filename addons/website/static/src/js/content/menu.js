@@ -608,6 +608,31 @@ publicWidget.registry.hoverableDropdown = animations.Animation.extend({
     },
 });
 
+publicWidget.registry.HeaderMainCollapse = publicWidget.Widget.extend({
+    selector: 'header#top',
+    events: {
+        'show.bs.collapse #top_menu_collapse': '_onCollapseShow',
+        'hidden.bs.collapse #top_menu_collapse': '_onCollapseHidden',
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _onCollapseShow() {
+        this.el.classList.add('o_top_menu_collapse_shown');
+    },
+    /**
+     * @private
+     */
+    _onCollapseHidden() {
+        this.el.classList.remove('o_top_menu_collapse_shown');
+    },
+});
+
 return {
     extraMenuUpdateCallbacks: extraMenuUpdateCallbacks,
 };
