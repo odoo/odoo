@@ -252,14 +252,15 @@ class SaleOrder(models.Model):
     def _get_applicable_programs(self):
         """
         This method is used to return the valid applicable programs on given order.
-        param: order - The sale order for which method will get applicable programs.
         """
         self.ensure_one()
         programs = self.env['coupon.program'].search([
             ('company_id', 'in', [self.company_id.id, False])
-        ])._filter_programs_from_common_rules(self)
-        if self.promo_code:
-            programs._filter_promo_programs_with_code(self)
+        ], order="id")._filter_programs_from_common_rules(self)
+        # no impact code...
+        # should be programs = programs.filtered if we really want to filter...
+        # if self.promo_code:
+        #     programs._filter_promo_programs_with_code(self)
         return programs
 
     def _get_applicable_no_code_promo_program(self):
@@ -356,7 +357,7 @@ class SaleOrder(models.Model):
         applied_programs = order._get_applied_programs()
         applicable_programs = self.env['coupon.program']
         if applied_programs:
-            applicable_programs = order._get_applicable_no_code_promo_program() + order._get_applicable_programs() + order._get_valid_applied_coupon_program()
+            applicable_programs = order._get_applicable_programs() + order._get_valid_applied_coupon_program()
             applicable_programs = applicable_programs._keep_only_most_interesting_auto_applied_global_discount_program()
         programs_to_remove = applied_programs - applicable_programs
 
