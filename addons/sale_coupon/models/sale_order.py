@@ -361,8 +361,9 @@ class SaleOrder(models.Model):
             applicable_programs = applicable_programs._keep_only_most_interesting_auto_applied_global_discount_program()
         programs_to_remove = applied_programs - applicable_programs
 
+        reward_product_ids = applied_programs.discount_line_product_id.ids
         # delete reward line coming from an archived coupon (it will never be updated/removed when recomputing the order)
-        invalid_lines = order.order_line.filtered(lambda line: line.is_reward_line and line.product_id.id not in (applied_programs).mapped('discount_line_product_id').ids)
+        invalid_lines = order.order_line.filtered(lambda line: line.is_reward_line and line.product_id.id not in reward_product_ids)
 
         if programs_to_remove:
             product_ids_to_remove = programs_to_remove.discount_line_product_id.ids
