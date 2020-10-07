@@ -715,6 +715,11 @@ class AccountReconcileModel(models.Model):
 
                             new_aml_dicts = reconciliation_results['new_aml_dicts']
                             if reconciliation_results['open_balance_dict']:
+                                open_balance_debit = reconciliation_results['open_balance_dict']['debit']
+                                open_balance_credit = reconciliation_results['open_balance_dict']['credit']
+                                if open_balance_debit or open_balance_credit:
+                                    # TODO: add partial payment support
+                                    break
                                 new_aml_dicts.append(reconciliation_results['open_balance_dict'])
                             if not line.partner_id and partner:
                                 line.partner_id = partner
