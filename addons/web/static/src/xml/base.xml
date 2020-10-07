@@ -1339,6 +1339,7 @@
     </select>
 </t>
 
+<<<<<<< HEAD
 <t t-name="MobileControlPanel">
     <div class="o_control_panel">
         <ol class="breadcrumb" role="navigation"/>
@@ -1378,6 +1379,17 @@
     <button type="button" class="dropdown-item o_generator_menu o_add_favorite o_menu_header">Save Current Search</button>
     <div t-if="widget.isOpen" class="dropdown-item-text o_generator_menu">
         <div role="menuitem" class="dropdown-item-text o_favorite_name">
+=======
+<div t-name="SearchView.FavoriteMenu" class="btn-group o_dropdown">
+    <button t-attf-class="o_dropdown_toggler_btn btn btn-secondary dropdown-toggle#{widget.isMobile ? ' o-no-caret' : ''}" data-toggle="dropdown" aria-expanded="false" tabindex="-1" data-boundary="viewport" aria-label="Favorites" title="Favorites">
+        <span class="fa fa-star"/> Favorites <span t-if="widget.isMobile" class="fa fa-chevron-right float-right mt4"/>
+    </button>
+    <div class="dropdown-menu o_favorites_menu" role="menu">
+        <div role="separator" class="dropdown-divider user_filter"/>
+        <div role="separator" class="dropdown-divider shared_filter"/>
+        <a role="button" href="#" class="dropdown-item o_save_search o_closed_menu" aria-expanded="false">Save current search</a>
+        <div role="menuitem" class="dropdown-item-text o_save_name">
+>>>>>>> 43e32cf6d98... temp
             <input type="text" class="o_input"></input>
         </div>
         <t t-set="favId" t-value="_.uniqueId('_checkbox_')" />
