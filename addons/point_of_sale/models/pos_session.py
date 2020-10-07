@@ -75,6 +75,11 @@ class PosSession(models.Model):
         string="Theoretical Closing Balance",
         help="Sum of opening balance and transactions.",
         readonly=True)
+    cash_register_balance_end_to_show = fields.Monetary(
+        compute='_compute_cash_balance',
+        string="Theoretical Closing Balance to show",
+        help="Sum of opening balance and transactions.",
+        readonly=True)
     cash_register_difference = fields.Monetary(
         compute='_compute_cash_balance',
         string='Difference',
@@ -107,14 +112,18 @@ class PosSession(models.Model):
             cash_payment_method = session.payment_method_ids.filtered('is_cash_count')[:1]
             if cash_payment_method:
                 total_cash_payment = sum(session.order_ids.mapped('payment_ids').filtered(lambda payment: payment.payment_method_id == cash_payment_method).mapped('amount'))
-                session.cash_register_total_entry_encoding = session.cash_register_id.total_entry_encoding + (
+                cash_register_total_entry_encoding = session.cash_register_id.total_entry_encoding + (
                     0.0 if session.state == 'closed' else total_cash_payment
                 )
-                session.cash_register_balance_end = session.cash_register_balance_start + session.cash_register_total_entry_encoding
-                session.cash_register_difference = session.cash_register_balance_end_real - session.cash_register_balance_end
+                session.cash_register_total_entry_encoding = session.cash_register_id.total_entry_encoding + total_cash_payment
+                session.cash_register_balance_end = session.cash_register_balance_start + cash_register_total_entry_encoding
+                # Just to show the right end balance in the view
+                session.cash_register_balance_end_to_show = session.cash_register_balance_start + session.cash_register_total_entry_encoding
+                session.cash_register_difference = session.cash_register_balance_end_real - session.cash_register_balance_end_to_show
             else:
                 session.cash_register_total_entry_encoding = 0.0
                 session.cash_register_balance_end = 0.0
+                session.cash_register_balance_end_to_show = 0.0
                 session.cash_register_difference = 0.0
 
     @api.depends('order_ids.payment_ids.amount')

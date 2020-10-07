@@ -79,7 +79,7 @@
                                             <field style="text-align:right;margin:0;padding:0;" name="cash_register_total_entry_encoding" widget="monetary" options="{'currency_field': 'currency_id'}" string="+ Transactions"/>
                                         </group>
                                         <group style="margin:0;padding:0;" attrs="{'invisible' : [('state', 'in', ['new_session', 'opening_control'])]}">
-                                            <field style="text-align:right;margin:0;padding:0;" name="cash_register_balance_end" widget="monetary" options="{'currency_field': 'currency_id'}" string="= Expected in Cash"/>
+                                            <field style="text-align:right;margin:0;padding:0;" name="cash_register_balance_end_to_show" widget="monetary" options="{'currency_field': 'currency_id'}" string="= Expected in Cash"/>
                                         </group>
                                         <group style="margin:0;padding:0;" attrs="{'invisible' : [('state', 'in', ['new_session', 'opening_control'])]}">
                                             <field style="text-align:right;margin:0;padding:0;" name="cash_register_balance_end_real" widget="monetary" options="{'currency_field': 'currency_id'}" string="Actual in Cash"/>
