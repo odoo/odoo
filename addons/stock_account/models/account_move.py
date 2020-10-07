@@ -210,6 +210,9 @@ class AccountMove(models.Model):
                     # Reconcile.
                     product_account_moves.reconcile()
 
+    def _get_invoiced_lot_values(self):
+        return []
+
 
 class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'
