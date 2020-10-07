@@ -89,9 +89,10 @@ class CouponProgram(models.Model):
     @api.model
     def _filter_on_validity_dates(self, order):
         return self.filtered(lambda program:
-            program.rule_date_from and program.rule_date_to and
-            program.rule_date_from <= order.date_order and program.rule_date_to >= order.date_order or
-            not program.rule_date_from or not program.rule_date_to)
+            (not program.rule_date_from or program.rule_date_from <= order.date_order)
+            and
+            (not program.rule_date_to or program.rule_date_to >= order.date_order)
+        )
 
     @api.model
     def _filter_promo_programs_with_code(self, order):
