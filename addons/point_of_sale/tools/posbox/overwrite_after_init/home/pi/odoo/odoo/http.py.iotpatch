@@ -1,6 +1,6 @@
---- http_old.py	2020-08-24 10:12:59.962991214 +0200
-+++ http_new.py	2020-08-24 10:18:12.747156571 +0200
-@@ -761,7 +761,7 @@
+--- http_old.py	2020-10-07 15:25:08.432430021 +0200
++++ http_new.py	2020-10-07 15:26:05.088492713 +0200
+@@ -764,7 +764,7 @@
          if self._is_cors_preflight(request.endpoint):
              headers = {
                  'Access-Control-Max-Age': 60 * 60 * 24,
@@ -9,7 +9,7 @@
              }
              return Response(status=200, headers=headers)
  
-@@ -1507,7 +1507,7 @@
+@@ -1510,7 +1510,7 @@
      """
      httprequest = httprequest or request.httprequest
  
