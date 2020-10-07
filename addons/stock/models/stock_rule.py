@@ -344,7 +344,14 @@ class ProcurementGroup(models.Model):
         result = False
         location = location_id
         while (not result) and location:
-            result = self._search_rule(values.get('route_ids', False), product_id, values.get('warehouse_id', False), [('location_id', '=', location.id), ('action', '!=', 'push')])
+            domain = ['&', ('location_id', '=', location.id), ('action', '!=', 'push')]
+            # In case the method is called by the superuser, we need to restrict the rules to the
+            # ones of the company. This is not useful as a regular user since there is a record
+            # rule to filter out the rules based on the company.
+            if self.env.user._is_superuser() and values.get('company_id'):
+                domain_company = ['|', ('company_id', '=', False), ('company_id', 'child_of', values['company_id'].ids)]
+                domain = expression.AND([domain, domain_company])
+            result = self._search_rule(values.get('route_ids', False), product_id, values.get('warehouse_id', False), domain)
             location = location.location_id
         return result
 
