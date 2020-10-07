@@ -1300,11 +1300,12 @@ MockServer.include({
                     ),
                 },
             ]);
+            // NOTE server is sending grouped notifications per channel_ids but
+            // this optimization is not needed here.
+            const data = { type: 'mark_as_read', message_ids: [message.id], channel_ids: message.channel_ids };
+            const busNotifications = [[[false, 'res.partner', this.currentPartnerId], data]];
+            this._widget.call('bus_service', 'trigger', 'notification', busNotifications);
         }
-        // NOTE: server is also sending channel_ids, not done here for simplicity.
-        const data = { type: 'mark_as_read', message_ids: ids };
-        const busNotifications = [[[false, 'res.partner', this.currentPartnerId], data]];
-        this._widget.call('bus_service', 'trigger', 'notification', busNotifications);
     },
     /**
      * Simulates `toggle_message_starred` on `mail.message`.
