@@ -66,19 +66,19 @@
         <field name="model">calendar.event</field>
         <field name="arch" type="xml">
             <tree string="Meetings" multi_edit="1" sample="1" editable="bottom">
-                <field name="name" string="Subject" decoration-bf="1" attrs='{"readonly": [["recurrency", "=", True]]}'/>
+                <field name="name" string="Subject" decoration-bf="1" attrs='{"readonly": ["|", ("recurrency", "=", True), ("privacy", "=", "private")]}'/>
                 <field name="start" string="Start Date" readonly="1"/>
                 <field name="stop" string="End Date" readonly="1"/>
-                <field name="user_id" widget="many2one_avatar_user" attrs='{"readonly": [["recurrency", "=", True]]}' optional="hide"/>
-                <field name="partner_ids" widget="many2many_tags" attrs='{"readonly": [["recurrency", "=", True]]}' optional="show"/>
-                <field name="alarm_ids" attrs='{"readonly": [["recurrency", "=", True]]}' optional="hide"/>
-                <field name="categ_ids" attrs='{"readonly": [["recurrency", "=", True]]}' optional="hide"/>
+                <field name="user_id" widget="many2one_avatar_user" attrs='{"readonly": ["|", ("recurrency", "=", True), ("privacy", "=", "private")]}' optional="hide"/>
+                <field name="partner_ids" widget="many2many_tags" attrs='{"readonly": ["|", ("recurrency", "=", True), ("privacy", "=", "private")]}' optional="show"/>
+                <field name="alarm_ids" attrs='{"readonly": ["|", ("recurrency", "=", True), ("privacy", "=", "private")]}' optional="hide"/>
+                <field name="categ_ids" attrs='{"readonly": ["|", ("recurrency", "=", True), ("privacy", "=", "private")]}' optional="hide"/>
                 <field name="recurrency" readonly="1" optional="hide"/>
-                <field name="privacy" attrs='{"readonly": [["recurrency", "=", True]]}' optional="hide"/>
-                <field name="show_as" attrs='{"readonly": [["recurrency", "=", True]]}' optional="hide"/>
-                <field name="location" attrs='{"readonly": [["recurrency", "=", True]]}' optional="show"/>
+                <field name="privacy" attrs='{"readonly": ["|", ("recurrency", "=", True), ("privacy", "=", "private")]}' optional="hide"/>
+                <field name="show_as" attrs='{"readonly": ["|", ("recurrency", "=", True), ("privacy", "=", "private")]}' optional="hide"/>
+                <field name="location" attrs='{"readonly": ["|", ("recurrency", "=", True), ("privacy", "=", "private")]}' optional="show"/>
                 <field name="duration" widget="float_time" readonly="1"/>
-                <field name="description" attrs='{"readonly": [["recurrency", "=", True]]}' optional="hide"/>
+                <field name="description" attrs='{"readonly": ["|", ("recurrency", "=", True), ("privacy", "=", "private")]}' optional="hide"/>
                 <field name="allday" invisible="True"/>
                 <field name="message_needaction" invisible="1"/>
             </tree>
@@ -373,6 +373,21 @@
         action="action_calendar_event"
         web_icon="calendar,static/description/icon.png"
         groups="base.group_user"/>
+
+    <menuitem
+        id="calendar_menu_config"
+        parent="calendar.mail_menu_calendar"
+        name="Configuration"
+        sequence="40"
+        action="calendar.action_calendar_event"
+        groups="base.group_no_one"/>
+
+    <menuitem
+        id="calendar_submenu_reminders"
+        parent="calendar_menu_config"
+        name="Reminders"
+        action="action_calendar_alarm"
+        groups="base.group_no_one"/>
 
     <menuitem
         id="menu_calendar_configuration"
