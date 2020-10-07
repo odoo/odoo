@@ -79,10 +79,18 @@ function factory(dependencies) {
             const value = req.term;
             const escapedValue = owl.utils.escape(value);
             this.update({ addingChannelValue: value });
+            const domain = [
+                ['channel_type', '=', 'channel'],
+                ['name', 'ilike', value],
+            ];
+            const fields = ['channel_type', 'name', 'public', 'uuid'];
             const result = await this.async(() => this.env.services.rpc({
-                model: 'mail.channel',
-                method: 'channel_search_to_join',
-                args: [value],
+                model: "mail.channel",
+                method: "search_read",
+                kwargs: {
+                    domain,
+                    fields,
+                },
             }));
             const items = result.map(data => {
                 let escapedName = owl.utils.escape(data.name);
