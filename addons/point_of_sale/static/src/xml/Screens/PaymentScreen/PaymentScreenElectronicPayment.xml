@@ -40,7 +40,7 @@
                     Request sent
                 </div>
                 <div>
-                    <i class="fa fa-spinner fa-spin" role="img" />
+                    <i class="fa fa-circle-o-notch fa-spin" role="img" />
                 </div>
             </t>
             <t t-elif="props.line.payment_status == 'reversing'">
@@ -48,7 +48,7 @@
                     Reversal request sent to terminal
                 </div>
                 <div>
-                    <i class="fa fa-spinner fa-spin" role="img" />
+                    <i class="fa fa-circle-o-notch fa-spin" role="img" />
                 </div>
             </t>
             <t t-elif="props.line.payment_status == 'done'">

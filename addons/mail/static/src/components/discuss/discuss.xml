@@ -9,7 +9,7 @@
             }"
         >
             <t t-if="!env.isMessagingInitialized()">
-                <div class="o_Discuss_messagingNotInitialized"><i class="o_Discuss_messagingNotInitializedIcon fa fa-spinner fa-spin"/>Please wait...</div>
+                <div class="o_Discuss_messagingNotInitialized"><i class="o_Discuss_messagingNotInitializedIcon fa fa-circle-o-notch fa-spin"/>Please wait...</div>
             </t>
             <t t-else="">
                 <t t-if="!env.messaging.device.isMobile">
