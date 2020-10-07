@@ -43,7 +43,7 @@
                                     <span class="o_ChatterTopbar_buttonCount o_ChatterTopbar_buttonAttachmentsCount" t-esc="chatter.thread ? chatter.thread.allAttachments.length : 0"/>
                                 </t>
                                 <t t-else="">
-                                    <i class="o_ChatterTopbar_buttonAttachmentsCountLoader fa fa-spinner fa-spin" aria-label="Attachment counter loading..."/>
+                                    <i class="o_ChatterTopbar_buttonAttachmentsCountLoader fa fa-circle-o-notch fa-spin" aria-label="Attachment counter loading..."/>
                                 </t>
                             </button>
                             <t t-if="chatter.hasFollowers and chatter.thread">

@@ -305,7 +305,7 @@ var PublicRoot = publicWidget.RootWidget.extend({
         var $buttons = $(ev.currentTarget).find('button[type="submit"], a.a-submit');
         _.each($buttons, function (btn) {
             var $btn = $(btn);
-            $btn.html('<i class="fa fa-spinner fa-spin"></i> ' + $btn.text());
+            $btn.prepend('<i class="fa fa-circle-o-notch fa-spin"></i> ');
             $btn.prop('disabled', true);
         });
     },

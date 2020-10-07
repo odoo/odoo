@@ -2638,7 +2638,7 @@ var SnippetsMenu = Widget.extend({
                 },
             }, {
                 text: _t("Install in progress"),
-                icon: 'fa-spin fa-spinner fa-pulse mr8',
+                icon: 'fa-spin fa-circle-o-notch fa-spin mr8',
                 classes: 'btn-primary disabled o_hidden',
             }, {
                 text: _t("Cancel"),

@@ -113,7 +113,7 @@
 
     <!-- Rendering of thread when messaging not yet ready -->
     <div t-name="im_livechat.legacy.mail.widget.ThreadLoading" class="o_mail_thread_loading">
-        <i class="o_mail_thread_loading_icon fa fa-spinner fa-spin"/>
+        <i class="o_mail_thread_loading_icon fa fa-circle-o-notch fa-spin"/>
         <span>Please wait...</span>
     </div>
 
@@ -636,7 +636,7 @@
      <t t-name="im_livechat.legacy.mail.widget.Thread.LoadMore">
         <div class="o_thread_show_more">
             <t t-if="options.loadMoreOnScroll">
-                <span><i class="fa fa-spinner fa-spin" role="img" aria-label="Please wait" title="Please wait"/> Loading older messages... </span>
+                <span><i class="fa fa-circle-o-notch fa-spin" role="img" aria-label="Please wait" title="Please wait"/> Loading older messages... </span>
             </t>
             <t t-else="">
                 <button class="btn btn-link">-------- Show older messages --------</button>
