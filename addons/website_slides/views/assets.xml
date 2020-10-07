@@ -65,6 +65,11 @@
             <script type="text/javascript" src="/website_slides/static/src/js/slides_embed.js"></script>
         </template>
 
+        <template id="website_slides_tests" name="eLearning tests" inherit_id="web.qunit_suite_tests">
+            <xpath expr="//script[last()]" position="after">
+                <script type="text/javascript" src="/website_slides/static/src/components/activity/activity_tests.js"/>
+            </xpath>
+        </template>
 
     </data>
 </odoo>
