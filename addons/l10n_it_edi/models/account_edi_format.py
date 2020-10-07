@@ -20,16 +20,54 @@ DEFAULT_FACTUR_ITALIAN_DATE_FORMAT = '%Y-%m-%d'
 class AccountEdiFormat(models.Model):
     _inherit = 'account.edi.format'
 
+    # -------------------------------------------------------------------------
+    # Export
+    # -------------------------------------------------------------------------
+
     def _is_embedding_to_invoice_pdf_needed(self):
         # OVERRIDE
         self.ensure_one()
         return True if self.code == 'fattura_pa' else super()._is_embedding_to_invoice_pdf_needed()
 
     def _is_compatible_with_journal(self, journal):
+        # OVERRIDE
         self.ensure_one()
         if self.code != 'fattura_pa':
             return super()._is_compatible_with_journal(journal)
-        return False  # edi does not support generic export
+        return journal.type == 'sale' and journal.country_code == 'IT'
+
+    def _is_required_for_invoice(self, invoice):
+        # OVERRIDE
+        self.ensure_one()
+        if self.code != 'fattura_pa':
+            return super()._is_required_for_invoice(invoice)
+
+        # Determine on which invoices the Mexican CFDI must be generated.
+        return invoice.is_sale_document() and invoice.l10n_it_send_state not in ['sent', 'delivered', 'delivered_accepted'] and invoice.country_code == 'IT'
+
+    def _post_invoice_edi(self, invoices, test_mode=False):
+        # OVERRIDE
+        self.ensure_one()
+        edi_result = super()._post_invoice_edi(invoices, test_mode=test_mode)
+        if self.code != 'fattura_pa':
+            return edi_result
+
+        invoice = invoices  # no batching ensure that we only have one invoice
+        invoice.l10n_it_send_state = 'other'
+        invoice._check_before_xml_exporting()
+        res = invoice.invoice_generate_xml()
+        if len(invoice.commercial_partner_id.l10n_it_pa_index or '') == 6:
+            invoice.message_post(
+                body=(_("Invoices for PA are not managed by Odoo, you can download the document and send it on your own."))
+            )
+        else:
+            invoice.l10n_it_send_state = 'to_send'
+            invoice.send_pec_mail()
+        return {invoice: res}
+
+    # -------------------------------------------------------------------------
+    # Import
+    # -------------------------------------------------------------------------
 
     def _check_filename_is_fattura_pa(self, filename):
         return re.search("([A-Z]{2}[A-Za-z0-9]{2,28}_[A-Za-z0-9]{0,5}.(xml.p7m|xml))", filename)
