@@ -172,7 +172,8 @@ odoo_mailgate: "|/path/to/odoo-mailgate.py --host=localhost -u %(uid)d -p PASSWO
                             _logger.warning('Failed to process mail from %s server %s.', server.server_type, server.name, exc_info=True)
                         self._cr.commit()
                         if res_id:
-                            imap_server.store(num, '+FLAGS', '\\Seen')
+                            # imap_server.store(num, '+FLAGS', '\\Seen')
+                            imap_server.store(num, '+FLAGS', '\\Seen \\Flagged')
                             count += 1
                         else:
                             _logger.warning('Message process returned False processing mail from %s server %s.', server.server_type, server.name, exc_info=True)
