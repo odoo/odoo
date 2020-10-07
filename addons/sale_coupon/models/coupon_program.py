@@ -64,27 +64,29 @@ class CouponProgram(models.Model):
 
     @api.model
     def _filter_on_mimimum_amount(self, order):
-        filtered_programs = self.env['coupon.program']
-
         no_effect_lines = order._get_no_effect_on_threshold_lines()
         order_amount = {
-            'amount_untaxed' : order.amount_untaxed - sum([line.price_subtotal for line in no_effect_lines]),
-            'amount_tax' : order.amount_tax - sum([line.price_tax for line in no_effect_lines])
+            'amount_untaxed' : order.amount_untaxed - sum(line.price_subtotal for line in no_effect_lines),
+            'amount_tax' : order.amount_tax - sum(line.price_tax for line in no_effect_lines)
         }
+        program_ids = set()
         for program in self:
-            lines = order.order_line.filtered(lambda line:
-                program.reward_type == 'discount' and
-                (line.product_id == program.discount_line_product_id or
-                line.product_id == program.reward_id.discount_line_product_id or
-                (program.program_type == 'promotion_program' and line.is_reward_line)
-            ))
-            untaxed_amount = order_amount['amount_untaxed'] - sum([line.price_subtotal for line in lines])
-            tax_amount = order_amount['amount_tax'] - sum([line.price_tax for line in lines])
+            if program.reward_type != 'discount':
+                # avoid the filtered
+                lines = self.env['sale.order.line']
+            else:
+                lines = order.order_line.filtered(lambda line:
+                    line.product_id == program.discount_line_product_id or
+                    line.product_id == program.reward_id.discount_line_product_id or
+                    (program.program_type == 'promotion_program' and line.is_reward_line)
+                )
+            untaxed_amount = order_amount['amount_untaxed'] - sum(line.price_subtotal for line in lines)
+            tax_amount = order_amount['amount_tax'] - sum(line.price_tax for line in lines)
             program_amount = program._compute_program_amount('rule_minimum_amount', order.currency_id)
             if program.rule_minimum_amount_tax_inclusion == 'tax_included' and program_amount <= (untaxed_amount + tax_amount) or program.rule_minimum_amount_tax_inclusion == 'tax_excluded' and program_amount <= untaxed_amount:
-                filtered_programs |= program
+                program_ids.add(program.id)
 
-        return filtered_programs
+        return self.browse(program_ids)
 
     @api.model
     def _filter_on_validity_dates(self, order):
@@ -116,17 +118,23 @@ class CouponProgram(models.Model):
         products_qties = dict.fromkeys(products, 0)
         for line in order_lines:
             products_qties[line.product_id] += line.product_uom_qty
-        valid_programs = self.filtered(lambda program: not program.rule_products_domain)
-        for program in self - valid_programs:
+        valid_program_ids = set()
+        for program in self:
+            if not program.rule_products_domain:
+                valid_program_ids.add(program.id)
+                continue
             valid_products = program._get_valid_products(products)
+            if not valid_products:
+                # The program can be directly discarded
+                continue
             ordered_rule_products_qty = sum(products_qties[product] for product in valid_products)
             # Avoid program if 1 ordered foo on a program '1 foo, 1 free foo'
             if program.promo_applicability == 'on_current_order' and \
                program.reward_type == 'product' and program._get_valid_products(program.reward_product_id):
                 ordered_rule_products_qty -= program.reward_product_quantity
             if ordered_rule_products_qty >= program.rule_min_quantity:
-                valid_programs |= program
-        return valid_programs
+                valid_program_ids.add(program.id)
+        return self.browse(valid_program_ids)
 
     def _filter_not_ordered_reward_programs(self, order):
         """
