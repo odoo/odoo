@@ -731,8 +731,7 @@ class Channel(models.Model):
         self.ensure_one()
         channel_partners = self.env['mail.channel.partner'].search(
             [('partner_id', '=', self.env.user.partner_id.id), ('channel_id', '=', self.id)])
-        if not pinned:
-            self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', self.env.user.partner_id.id), self.channel_info('unsubscribe')[0])
+        self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', self.env.user.partner_id.id), self.channel_info('unsubscribe' if not pinned else False)[0])
         if channel_partners:
             channel_partners.write({'is_pinned': pinned})
 
