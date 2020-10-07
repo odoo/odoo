@@ -125,9 +125,9 @@ class ValidationError(UserError):
 # Warning.
 
 class except_orm(UserError):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, name, value=None):
         warnings.warn("except_orm is a deprecated alias to UserError.", DeprecationWarning)
-        super().__init__(*args, **kwargs)
+        super().__init__(f"{name}: {value}")
 
 class Warning(UserError):
     def __init__(self, *args, **kwargs):
