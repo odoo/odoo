@@ -151,8 +151,11 @@ class IrModule(models.Model):
         # one. The rationale behind this is that an imported module *cannot* be
         # reinstalled anyway, as it requires the data files. Any attempt to
         # install it again will simply fail without trace.
-        res = super().module_uninstall()
+        # /!\ modules_to_delete must be calculated before calling super().module_uninstall(),
+        # because when uninstalling `base_import_module` the `imported` column will no longer be
+        # in the database but we'll still have an old registry that runs this code.
         modules_to_delete = self.filtered('imported')
+        res = super().module_uninstall()
         if modules_to_delete:
             _logger.info("deleting imported modules upon uninstallation: %s",
                          ", ".join(modules_to_delete.mapped('name')))
