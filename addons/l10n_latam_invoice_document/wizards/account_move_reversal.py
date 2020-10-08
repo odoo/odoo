@@ -64,6 +64,21 @@ class AccountMoveReversal(models.TransientModel):
         })
         return res
 
+<<<<<<< HEAD
+=======
+    @api.depends('l10n_latam_document_type_id')
+    def _compute_l10n_latam_sequence(self):
+        for rec in self:
+            refund = rec.move_id.new({
+                'type': self._reverse_type_map(rec.move_id.type),
+                'journal_id': rec.move_id.journal_id.id,
+                'partner_id': rec.move_id.partner_id.id,
+                'company_id': rec.move_id.company_id.id,
+                'l10n_latam_document_type_id': rec.l10n_latam_document_type_id.id,
+            })
+            rec.l10n_latam_sequence_id = refund._get_document_type_sequence()[:1]
+
+>>>>>>> 4816ef3a460... temp
     @api.onchange('l10n_latam_document_number', 'l10n_latam_document_type_id')
     def _onchange_l10n_latam_document_number(self):
         if self.l10n_latam_document_type_id:

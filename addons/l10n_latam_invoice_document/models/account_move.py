@@ -74,6 +74,7 @@ class AccountMove(models.Model):
                     rec.l10n_latam_document_number = l10n_latam_document_number
                 rec.name = "%s %s" % (rec.l10n_latam_document_type_id.doc_code_prefix, l10n_latam_document_number)
 
+<<<<<<< HEAD
     @api.depends('journal_id', 'l10n_latam_document_type_id')
     def _compute_highest_name(self):
         manual_records = self.filtered('l10n_latam_manual_document_number')
@@ -94,6 +95,15 @@ class AccountMove(models.Model):
             return ""
 
         return super(AccountMove, self)._get_starting_sequence()
+=======
+    @api.depends('l10n_latam_document_type_id', 'journal_id')
+    def _compute_l10n_latam_sequence(self):
+        recs_with_journal_id = self.filtered('journal_id')
+        for rec in recs_with_journal_id:
+            rec.l10n_latam_sequence_id = rec._get_document_type_sequence()[:1]
+        remaining = self - recs_with_journal_id
+        remaining.l10n_latam_sequence_id = False
+>>>>>>> 4816ef3a460... temp
 
     def _compute_l10n_latam_amount_and_taxes(self):
         recs_invoice = self.filtered(lambda x: x.is_invoice())
