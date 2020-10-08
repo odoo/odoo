@@ -17,15 +17,48 @@ class Partner(models.Model):
         'large': 100000,
     }
 
-    p_forename_groups = ['Norbert', 'Jacqueline', 'Gretta', 'Atul']
-    p_middlename_groups = ['', 'Ugly Panda', 'Waiting Tyrant']
-    p_surname_groups = ['Poilvache', 'Tartopoils', 'Boitaclous']
+    p_forename_groups = [
+        'Norbert', 'Jacqueline', 'Bastien', 'Monique',
+        'Gretta', 'Juan Carlos', 'Ramon', 'Inrietta',
+        'John', 'David', 'Luke', 'Beverly', 'Hillary', 'Christina',
+        'Atul', 'Harshad', 'Hiral', 'Drhuti',
+    ]
+    p_middlename_groups = [
+        'Ugly Panda', 'Butterfly',
+        'Neo-Tyrant', 'The Beast',
+        'La Chignole', 'Le Cave',
+    ]
+    p_surname_groups = [
+        'Poilvache', 'Tartopoils', 'Boitaclous', 'Boustifaille',
+        'Campbell', 'Wonnegain',
+        'McShire', 'Scott', 'Doe',
+        'Mhodi', 'Gajjar',
+    ]
 
-    c_forename_groups = ['Norbert', 'Jacqueline', 'Gretta', 'Atul']
-    c_middlename_groups = ['', 'Ugly Panda', 'Waiting Tyrant']
-    c_surname_groups = ['Poilvache', 'Tartopoils', 'Boitaclous']
+    c_name_groups = [
+        'Woody', 'Tree', 'Flower',
+        'Furniture', 'Kitchen', 'Desk',
+    ]
+    c_surname_groups = [
+        'Dealer', 'Sellers',
+        'Carpenters', 'Foundry',
+    ]
 
     def _populate_factories(self):
+        # state based on country
+        states = self.env['res.country.state'].search([])
+        states_per_country = collections.defaultdict(list)
+        for state in states:
+            states_per_country[state.country_id.id].append(state.id)
+
+        # phone based on country
+        country_be, country_us, country_in = self.env.ref('base.be'), self.env.ref('base.us'), self.env.ref('base.in')
+        phones_per_country = {
+            country_be.id: [False, '+32456555432', '+32456555675', '+32456555627'],
+            country_us.id: [False, '+15555564246', '+15558455343', '+15557129033'],
+            country_in.id: [False, '+919755538077', '+917555765232', '+918555199309'],
+            False: [False, '', '+3212345678', '003212345678', '12345678'],
+        }
 
         # example of more complex generator composed of multiple sub generators
         # this define one subgenerator per "country"
@@ -36,15 +69,15 @@ class Partner(models.Model):
                 ('city', populate.iterate([False, ''])),
                 ('zip', populate.iterate([False, ''])),
                 ('country_id', populate.iterate([False])),
-            ], [  # BE, 1 record
-                ('street', populate.iterate(['Boulevard Tintin {counter}'])),
-                ('city', populate.iterate(['Brussels'])),
-                ('zip', populate.iterate([1020])),
+            ], [  # BE, 2 records
+                ('street', populate.iterate(['Rue des Bourlottes {counter}', 'Rue Pinckaers {counter}'])),
+                ('city', populate.iterate(['Brussels', 'Ramillies'])),
+                ('zip', populate.iterate([1020, 1367])),
                 ('country_id', populate.iterate([self.env.ref('base.be').id])),
             ], [  # US, 3 records
                 ('street', populate.iterate(['Main street', '3th street {counter}', False])),
                 ('street2', populate.iterate([False, '', 'Behind the tree {counter}'], [90, 5, 5])),
-                ('city', populate.randomize(['Sans Fransisco', 'Los Angeles', '', False])),
+                ('city', populate.randomize(['San Fransisco', 'Los Angeles', '', False])),
                 ('zip', populate.iterate([False, '', '50231'])),
                 ('country_id', populate.iterate([self.env.ref('base.us').id])),
             ], [  # IN, 2 records
@@ -52,10 +85,10 @@ class Partner(models.Model):
                 ('city', populate.iterate(['ગાંધીનગર (Gandhinagar)'])),
                 ('zip', populate.randomize(['382002', '382008'])),
                 ('country_id', populate.randomize([self.env.ref('base.in').id])),
-            ], [  # other corner cases, 4 records
-                ('street', populate.iterate(['万泉寺村', 'საბჭოს სკვერი {counter}', '10th Street {counter}'])),
-                ('city', populate.iterate(['北京市', 'თბილისი', 'دبي'])),
-                ('zip', populate.iterate([False, 'UF47', '0', '10201'])),
+            ], [  # other corner cases, 2 records
+                ('street', populate.iterate(['万泉寺村', 'საბჭოს სკვერი {counter}'])),
+                ('city', populate.iterate(['北京市', 'თბილისი'])),
+                ('zip', populate.iterate([False, 'UF47'])),
                 ('country_id', populate.randomize([False] + self.env['res.country'].search([]).ids)),
             ]
         ]
@@ -77,29 +110,36 @@ class Partner(models.Model):
                 adress_values = next(adress_generator)
                 yield {**adress_values, **values}
 
-        # state based on country
-        states = self.env['res.country.state'].search([])
-        states_per_country = collections.defaultdict(list)
-        for state in states:
-            states_per_country[state.country_id.id].append(state.id)
-
         def get_state(values=None, random=None, **kwargs):
             country_id = values['country_id']
             if not country_id:
                 return False
             return random.choice([False] + states_per_country[country_id])
 
+        def get_phone_number(values=None, random=None, **kwargs):
+            country_id = values['country_id']
+            if country_id not in phones_per_country.keys():
+                country_id = False
+            return random.choice(phones_per_country[country_id])
+
         def get_name(values=None, counter=0, **kwargs):
             is_company = values['is_company']
             complete = values['__complete']
+            if is_company:
+                nn = kwargs['random'].choice(self.c_name_groups)
+                sn = kwargs['random'].choice(self.c_surname_groups)
+                return '%s %s (%d_%s)' % (nn, sn, int(complete), counter)
+
             fn = kwargs['random'].choice(self.p_forename_groups)
-            mn = kwargs['random'].choice(self.p_middlename_groups)
+            mn = kwargs['random'].choices(
+                [False] + self.p_middlename_groups,
+                weights=[1] + [1 / (len(self.p_middlename_groups) or 1)] * len(self.p_middlename_groups)
+            )[0]
             sn = kwargs['random'].choice(self.p_surname_groups)
-            return  '%s%s %s %s_%s_%s' % (
+            return  '%s%s %s (%s_%s)' % (
                 fn,
                 ' "%s"' % mn if mn else '',
                 sn,
-                'c' if is_company else 'p',
                 int(complete),
                 counter
             )
@@ -112,13 +152,15 @@ class Partner(models.Model):
             ('active', populate.cartesian([True, False], [0.9, 0.1])),
             ('employee', populate.cartesian([True, False], [0.1, 0.9])),
             ('email', populate.iterate(
-                [False, '', 'email{counter}@example.com', '<contact 万> contact{counter}@anotherexample.com', 'invalid_email'])),
+                [False, 'email_{counter}@example.com', '"contact 万" contact_{counter}@anotherexample.com', 'invalid'],
+                [0.1, 0.5, 0.3, 0.1]
+            )),
             ('type', populate.constant('contact')),  # todo add more logic, manage 'invoice', 'delivery', 'other', 'private'
-            ('is_company', populate.iterate([True, False], [0.05, 0.95])),
+            ('is_company', populate.iterate([True, False], [0.2, 0.8])),
             ('_address', generate_address),
             ('state_id', populate.compute(get_state)),
-            ('phone', populate.randomize([False, '', '+3212345678', '003212345678', '12345678'])),
-            ('mobile', populate.randomize([False, '', '+32412345678', '0032412345678', '412345678'])),
+            ('phone', populate.compute(get_phone_number)),
+            ('mobile', populate.compute(get_phone_number)),
             ('title', populate.randomize(self.env['res.partner.title'].search([]).ids)),
             ('function', populate.randomize(
                 [False,
@@ -133,9 +175,12 @@ class Partner(models.Model):
                  'President of Internet (another one)',
                  'President of everything (except internet, already taken)',
                 ],
-                [50, 10, 2, 20, 10, 3, 5, 1, 2, 1, 1])),
+                [20, 10, 2, 20, 10, 3, 5, 1, 2, 1, 1])),
             ('tz', populate.randomize([tz for tz in self.env['res.partner']._fields['tz'].get_values(self.env)])),
-            ('website', populate.randomize([False, '', 'http://www.example.com'])),
+            ('website', populate.randomize(
+                [False, 'http://www.example.com', 'www.example.com', 'https://subdomain.example.com', 'invalid'],
+                [0.1, 0.3, 0.1, 0.2, 0.1]
+            )),
             ('credit_limit', populate.randomize(
                 [False, 0, 500, 2500, 5000, 10000],
                 [50, 30, 5, 5, 5, 5])),
