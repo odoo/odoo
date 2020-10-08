@@ -448,8 +448,9 @@
             <field name="name">mrp.production.graph</field>
             <field name="model">mrp.production</field>
             <field name="arch" type="xml">
-                <graph string="Manufacturing Orders" type="line" sample="1">
+                <graph string="Manufacturing Orders" type="bar" stacked="False" sample="1">
                     <field name="date_planned_finished"/>
+                    <field name="product_uom_qty" type="measure" />                    
                 </graph>
             </field>
         </record>
@@ -555,6 +556,7 @@
             <field name="res_model">mrp.production</field>
             <field name="view_mode">graph,pivot,form</field>
             <field name="target">current</field>
+            <field name="context">{'search_default_scheduled_date': 1, 'search_default_product': 2, 'default_company_id': allowed_company_ids[0]}</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
                     No data yet!
