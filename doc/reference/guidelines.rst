@@ -1063,6 +1063,7 @@ Tag and module name
 
 Tags are used to prefix your commit. They should be one of the following
 
+- **[CI]** for new tests; mostly made for known bugs right before the fix commit
 - **[FIX]** for bug fixes: mostly used in stable version but also valid if you
   are fixing a recent bug in development version;
 - **[REF]** for refactoring: when a feature is heavily rewritten;
