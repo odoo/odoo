@@ -713,6 +713,15 @@ class ResourceCalendar(models.Model):
         else:
             return revert(day_dt)
 
+    def _get_max_number_of_hours(self, start, end):
+        self.ensure_one()
+        if not self.attendance_ids:
+            return 0
+        mapped_data = defaultdict(lambda: 0)
+        for attendance in self.attendance_ids.filtered(lambda a: (not a.date_from or not a.date_to) or (a.date_from <= end and a.date_to >= start)):
+            mapped_data[(attendance.week_type, attendance.dayofweek)] += attendance.hour_to - attendance.hour_from
+        return max(mapped_data.values())
+
 
 class ResourceCalendarAttendance(models.Model):
     _name = "resource.calendar.attendance"
