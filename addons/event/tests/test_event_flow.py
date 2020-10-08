@@ -58,8 +58,9 @@ class TestEventFlow(TestEventCommon):
         self.assertEqual(test_reg1.state, 'done', 'Event: wrong state of attended registration')
         self.assertEqual(test_event.seats_used, 2, 'Event: incorrect number of attendees after closing registration')
 
-        # EventUser closes the event
-        test_event.button_done()
+        # EventUser closes -> not possible when attendees not done or cancelled
+        with self.assertRaises(UserError):
+            test_event.button_done()
 
         # EventUser cancels -> not possible when having attendees
         with self.assertRaises(UserError):

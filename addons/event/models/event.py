@@ -321,6 +321,8 @@ class EventEvent(models.Model):
 
     @api.one
     def button_done(self):
+        if any('draft' in event.mapped('registration_ids.state') for event in self) or any('open' in event.mapped('registration_ids.state') for event in self):
+            raise UserError(_("You should mark all attendees as Attended or Cancelled before ending this event."))
         self.state = 'done'
 
     @api.one
