@@ -177,6 +177,8 @@ class SaleCouponProgram(models.Model):
             message = {'error': _('Promo code is expired')}
         elif order.promo_code and self.promo_code_usage == 'code_needed':
             message = {'error': _('Promotionals codes are not cumulative.')}
+        elif self.reward_type == 'free_shipping' and order.applied_coupon_ids.filtered(lambda c: c.program_id.reward_type == 'free_shipping'):
+            message = {'error': _('Free shipping has already been applied.')}
         elif self._is_global_discount_program() and order._is_global_discount_already_applied():
             message = {'error': _('Global discounts are not cumulative.')}
         elif self.promo_applicability == 'on_current_order' and self.reward_type == 'product' and not order._is_reward_in_order_lines(self):
