@@ -14,6 +14,7 @@ from dateutil import relativedelta
 from odoo import SUPERUSER_ID, _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.osv import expression
+from odoo.tools import OrderedSet
 from odoo.tools.float_utils import float_compare, float_is_zero, float_repr, float_round
 from odoo.tools.misc import format_date
 
@@ -719,6 +720,7 @@ class StockMove(models.Model):
         return True
 
     def _push_apply(self):
+        new_moves = []
         for move in self:
             # if the move is already chained, there is no need to check push rules
             if move.move_dest_ids:
@@ -729,12 +731,15 @@ class StockMove(models.Model):
             # first priority goes to the preferred routes defined on the move itself (e.g. coming from a SO line)
             warehouse_id = move.warehouse_id or move.picking_id.picking_type_id.warehouse_id
             if move.location_dest_id.company_id == self.env.company:
-                rules = self.env['procurement.group']._search_rule(move.route_ids, move.product_id, warehouse_id, domain)
+                rule = self.env['procurement.group']._search_rule(move.route_ids, move.product_id, warehouse_id, domain)
             else:
-                rules = self.sudo().env['procurement.group']._search_rule(move.route_ids, move.product_id, warehouse_id, domain)
+                rule = self.sudo().env['procurement.group']._search_rule(move.route_ids, move.product_id, warehouse_id, domain)
             # Make sure it is not returning the return
-            if rules and (not move.origin_returned_move_id or move.origin_returned_move_id.location_dest_id.id != rules.location_id.id):
-                rules._run_push(move)
+            if rule and (not move.origin_returned_move_id or move.origin_returned_move_id.location_dest_id.id != rule.location_id.id):
+                new_move = rule._run_push(move)
+                if new_move:
+                    new_moves.append(new_move)
+        return self.env['stock.move'].concat(*new_moves)
 
     def _merge_moves_fields(self):
         """ This method will return a dict of stock move’s values that represent the values of all moves in `self` merged. """
@@ -763,7 +768,7 @@ class StockMove(models.Model):
         return [
             move.product_id.id, move.price_unit, move.procure_method, move.location_id, move.location_dest_id,
             move.product_uom.id, move.restrict_partner_id.id, move.scrapped, move.origin_returned_move_id.id,
-            move.package_level_id.id, move.propagate_cancel, move.description_picking
+            move.package_level_id.id, move.propagate_cancel, move.description_picking or ""
         ]
 
     def _clean_merged(self):
@@ -1070,27 +1075,25 @@ class StockMove(models.Model):
         :param: merge: According to this boolean, a newly confirmed move will be merged
         in another move of the same picking sharing its characteristics.
         """
-        move_create_proc = self.env['stock.move']
-        move_to_confirm = self.env['stock.move']
-        move_waiting = self.env['stock.move']
-
-        to_assign = {}
+        # Use OrderedSet of id (instead of recordset + |= ) for performance
+        move_create_proc, move_to_confirm, move_waiting = OrderedSet(), OrderedSet(), OrderedSet()
+        to_assign = defaultdict(OrderedSet)
         for move in self:
             if move.state != 'draft':
                 continue
-            # if the move is preceeded, then it's waiting (if preceeding move is done, then action_assign has been called already and its state is already available)
+            # if the move is preceded, then it's waiting (if preceding move is done, then action_assign has been called already and its state is already available)
             if move.move_orig_ids:
-                move_waiting |= move
+                move_waiting.add(move.id)
             else:
                 if move.procure_method == 'make_to_order':
-                    move_create_proc |= move
+                    move_create_proc.add(move.id)
                 else:
-                    move_to_confirm |= move
+                    move_to_confirm.add(move.id)
             if move._should_be_assigned():
                 key = (move.group_id.id, move.location_id.id, move.location_dest_id.id)
-                if key not in to_assign:
-                    to_assign[key] = self.env['stock.move']
-                to_assign[key] |= move
+                to_assign[key].add(move.id)
+
+        move_create_proc, move_to_confirm, move_waiting = self.browse(move_create_proc), self.browse(move_to_confirm), self.browse(move_waiting)
 
         # create procurements for make to order moves
         procurement_requests = []
@@ -1107,15 +1110,20 @@ class StockMove(models.Model):
         (move_waiting | move_create_proc).write({'state': 'waiting'})
 
         # assign picking in batch for all confirmed move that share the same details
-        for moves in to_assign.values():
-            moves._assign_picking()
-        self._push_apply()
+        for moves_ids in to_assign.values():
+            self.browse(moves_ids)._assign_picking()
+        new_push_moves = self._push_apply()
         self._check_company()
         moves = self
         if merge:
             moves = self._merge_moves(merge_into=merge_into)
+
         # call `_action_assign` on every confirmed move which location_id bypasses the reservation
         moves.filtered(lambda move: not move.picking_id.immediate_transfer and move._should_bypass_reservation() and move.state == 'confirmed')._action_assign()
+
+        if new_push_moves:
+            new_push_moves._action_confirm()
+
         return moves
 
     def _prepare_procurement_values(self):
