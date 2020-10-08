@@ -53,6 +53,7 @@
             <field name="state">code</field>
             <field name="code">
 ProductProduct = model.env['product.product']
+FieldText = model.env['ir.qweb.field.text']
 FieldMonetary = model.env['ir.qweb.field.monetary']
 
 website = request.website.get_current_website()
@@ -80,13 +81,15 @@ for product in products:
     res_product['list_price'] = FieldMonetary.value_to_html(res_product['price'], monetary_options)
     data = get_rendering_data_structure()
     for field_name in dynamic_filter.field_names.split(","):
+        if field_name in ['list_price']: # already rendered
+            data['fields'][field_name] = res_product[field_name]
+            continue
         field = ProductProduct._fields.get(field_name)
         if field and field.type == 'binary':
             res_product[field_name] = website.image_url(product, field_name)
-            data_type = 'image_fields'
+            data['image_fields'][field_name] = res_product[field_name]
         else:
-            data_type = 'fields'
-        data[data_type][field_name] = res_product[field_name]
+            data['fields'][field_name] = FieldText.value_to_html(res_product[field_name], {})
     data['fields']['call_to_action_url'] = product['website_url']
     res_products.append(data)
 

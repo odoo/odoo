@@ -5,6 +5,7 @@ from collections import OrderedDict
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
 from odoo.osv import expression
+from odoo.tools import html_escape as escape
 from lxml import etree as ET
 
 
@@ -148,7 +149,7 @@ class WebsiteSnippetFilter(models.Model):
                 elif ('ir.qweb.field.%s' % field_widget) in self.env:
                     data['fields'][field_name] = self.env[('ir.qweb.field.%s' % field_widget)].record_to_html(record, field_name, {})
                 else:
-                    data['fields'][field_name] = record[field_name]
+                    data['fields'][field_name] = escape(record[field_name])
 
             data['fields']['call_to_action_url'] = 'website_url' in record and record['website_url']
             values.append(data)
