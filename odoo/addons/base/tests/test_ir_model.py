@@ -4,7 +4,7 @@
 from psycopg2 import IntegrityError
 
 from odoo.exceptions import ValidationError
-from odoo.tests.common import TransactionCase, SavepointCase
+from odoo.tests.common import TransactionCase, SavepointCase, tagged
 from odoo.tools import mute_logger
 
 
@@ -310,3 +310,20 @@ class TestIrModel(SavepointCase):
             '__domain': [('x_ripeness_id', '=', self.ripeness_gone[0])],
         }]
         self.assertEqual(groups, expected, 'should include 2 empty ripeness stages')
+
+
+@tagged('test_eval_context')
+class TestEvalContext(TransactionCase):
+
+    def test_module_usage(self):
+        self.env['ir.model.fields'].create({
+            'name': 'x_foo_bar_baz',
+            'model_id': self.env['ir.model'].search([('model', '=', 'res.partner')]).id,
+            'field_description': 'foo',
+            'ttype': 'integer',
+            'store': False,
+            'depends': 'name',
+            'compute': ("time.time()\ndatetime.datetime.now()\n"
+                        "dateutil.relativedelta.relativedelta(hours=1)")
+        })
+        self.env['res.partner'].create({'name': 'foo'}).x_foo_bar_baz
