@@ -164,6 +164,7 @@ class StockRule(models.Model):
         Care this function is not call by method run. It is called explicitely
         in stock_move.py inside the method _push_apply
         """
+        self.ensure_one()
         new_date = fields.Datetime.to_string(move.date + relativedelta(days=self.delay))
         if self.auto == 'transparent':
             old_dest_location = move.location_dest_id
@@ -171,7 +172,7 @@ class StockRule(models.Model):
             # avoid looping if a push rule is not well configured; otherwise call again push_apply to see if a next step is defined
             if self.location_id != old_dest_location:
                 # TDE FIXME: should probably be done in the move model IMO
-                move._push_apply()
+                return move._push_apply()[:1]
         else:
             new_move_vals = self._push_prepare_move_copy_values(move, new_date)
             new_move = move.sudo().copy(new_move_vals)
@@ -179,7 +180,7 @@ class StockRule(models.Model):
                 new_move.write({'procure_method': 'make_to_stock'})
             if not new_move.location_id.should_bypass_reservation():
                 move.write({'move_dest_ids': [(4, new_move.id)]})
-            new_move._action_confirm()
+            return new_move
 
     def _push_prepare_move_copy_values(self, move_to_copy, new_date):
         company_id = self.company_id.id
