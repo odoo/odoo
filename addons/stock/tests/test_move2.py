@@ -1703,6 +1703,70 @@ class TestSinglePicking(TestStockCommon):
         self.assertEqual(len(qc_move), 1)
         self.assertTrue(qc_move.move_orig_ids == input_move, 'Move between QC and stock should only have the input move as origin')
 
+    def test_merge_chained_moves_multi_confirm(self):
+        """ Imagine multiple step delivery. A receipt picking for the same product should by add to
+        a existing picking from input to QC and another from QC to stock.
+        This existing picking is confirm in the same time (not possible in stock, but can be with batch picking)
+        and have some move to merge.
+        """
+        warehouse = self.env['stock.warehouse'].create({
+            'name': 'TEST WAREHOUSE',
+            'code': 'TEST1',
+            'reception_steps': 'three_steps',
+        })
+        receipt1 = self.env['stock.picking'].create({
+            'location_id': self.supplier_location,
+            'location_dest_id': warehouse.wh_input_stock_loc_id.id,
+            'picking_type_id': warehouse.in_type_id.id,
+        })
+        move_receipt_1 = self.MoveObj.create({
+            'name': self.productA.name,
+            'product_id': self.productA.id,
+            'product_uom_qty': 5,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': receipt1.id,
+            'location_id': self.supplier_location,
+            'location_dest_id': warehouse.wh_input_stock_loc_id.id,
+        })
+        receipt2 = self.env['stock.picking'].create({
+            'location_id': warehouse.wh_input_stock_loc_id.id,
+            'location_dest_id': warehouse.wh_qc_stock_loc_id.id,
+            'picking_type_id': warehouse.int_type_id.id,
+        })
+        move1_receipt_2 = self.MoveObj.create({
+            'name': self.productB.name,
+            'product_id': self.productB.id,
+            'product_uom_qty': 1,
+            'product_uom': self.productB.uom_id.id,
+            'picking_id': receipt2.id,
+            'location_id': warehouse.wh_input_stock_loc_id.id,
+            'location_dest_id':  warehouse.wh_qc_stock_loc_id.id,
+        })
+        move2_receipt_2 = self.MoveObj.create({
+            'name': self.productB.name,
+            'product_id': self.productB.id,
+            'product_uom_qty': 2,
+            'product_uom': self.productB.uom_id.id,
+            'picking_id': receipt2.id,
+            'location_id': warehouse.wh_input_stock_loc_id.id,
+            'location_dest_id': warehouse.wh_qc_stock_loc_id.id,
+        })
+        (receipt1 | receipt2).action_confirm()
+
+        # Check following move has been created
+        self.assertTrue(move_receipt_1.move_dest_ids, 'No move created from push rules')
+        self.assertTrue((move1_receipt_2 | move2_receipt_2).exists().move_dest_ids, 'No move created from push rules')
+        self.assertEqual(len((move1_receipt_2 | move2_receipt_2).exists()), 1, 'Move has been merged with the other one')
+        self.assertEqual(move_receipt_1.move_dest_ids.picking_id, receipt2, 'Dest Move of receipt1 should be in the receipt2')
+
+        # Check no move is still in draft
+        self.assertTrue("draft" not in (receipt1 | receipt2).move_lines.mapped("state"))
+
+        # Check the content of the pickings
+        self.assertEqual(receipt1.move_lines.mapped("product_uom_qty"), [5])
+        self.assertEqual(receipt2.move_lines.filtered(lambda m: m.product_id == self.productB).mapped("product_uom_qty"), [3])
+        self.assertEqual(receipt2.move_lines.filtered(lambda m: m.product_id == self.productA).mapped("product_uom_qty"), [5])
+
     def test_empty_moves_validation_1(self):
         """ Use button validate on a picking that contains only moves
         without initial demand and without quantity done should be
