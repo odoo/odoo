@@ -1060,7 +1060,7 @@ options.registry.menu_data = options.Class.extend({
                         },
                     });
                 }},
-                {text: _t("Edit the menu"), classes: 'btn-primary', click: function () {
+                {text: _t("Edit the menu"), classes: 'btn-primary', close: true, click: function () {
                     this.trigger_up('action_demand', {
                         actionName: 'edit_menu',
                         params: [
