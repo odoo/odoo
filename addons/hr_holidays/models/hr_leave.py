@@ -555,7 +555,7 @@ class HolidaysRequest(models.Model):
         if leaves:
             raise ValidationError(_('The following employees are not supposed to work during that period:\n %s') % ','.join(leaves.mapped('employee_id.name')))
 
-    @api.constrains('date_from', 'date_to', 'state', 'employee_id')
+    @api.constrains('date_from', 'date_to', 'employee_id')
     def _check_date(self):
         for holiday in self.filtered('employee_id'):
             domain = [
