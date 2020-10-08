@@ -15,4 +15,5 @@ class MailChannel(models.Model):
         visitor_sudo = self.livechat_visitor_id.sudo()
         if visitor_sudo:
             visitor_sudo.write({'lead_ids': [(4, lead.id)]})
+            lead.country_id = lead.country_id or visitor_sudo.country_id
         return lead
