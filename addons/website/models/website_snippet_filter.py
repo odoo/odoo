@@ -42,13 +42,6 @@ class WebsiteSnippetFilter(models.Model):
                 if not field_name.strip():
                     raise ValidationError(_("Empty field name in %r") % (record.field_names))
 
-    @api.model
-    def search_read(self, domain=None, fields=None, offset=0, limit=None, order=None):
-        website_id = self.env.context.get("website_id")
-        if (website_id):
-            domain = self.env['website'].website_domain(website_id) + (domain or [])
-        return super(WebsiteSnippetFilter, self).search_read(domain, fields, offset, limit, order)
-
     def render(self, template_key, limit, search_domain=[]):
         """Renders the website dynamic snippet items"""
         self.ensure_one()
