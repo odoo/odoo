@@ -3367,7 +3367,7 @@ class AccountMoveLine(models.Model):
                         taxes,
                         move.type,
                     ))
-                    if move.type in ['out_invoice','out_refund'] and vals.get('product_id') and not vals.get('name'):
+                    if not vals.get('name') and move.type in ['out_invoice','out_refund'] and vals.get('product_id'):
                         vals['name'] = self.env['product.product'].browse(vals.get('product_id')).name
                 elif any(vals.get(field) for field in BUSINESS_FIELDS):
                     vals.update(self._get_price_total_and_subtotal_model(
