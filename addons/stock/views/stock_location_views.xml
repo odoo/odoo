@@ -34,6 +34,7 @@
                         <group string="Additional Information" name="additional_info">
                             <field name="active" invisible="1"/>
                             <field name="usage"/>
+                            <field name="location_category_id" attrs="{'invisible': [('usage', '!=', 'internal')]}"/>
                             <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                             <field name="scrap_location" attrs="{'invisible': [('usage', 'not in', ('inventory', 'internal'))]}"/>
                             <field name="return_location"/>
@@ -82,10 +83,11 @@
         <field name="model">stock.location</field>
         <field name="priority" eval="2"/>
         <field name="arch" type="xml">
-            <tree string="Stock Location" decoration-info="usage=='view'" decoration-danger="usage=='internal'" create="false">
+            <tree string="Stock Location" decoration-info="usage=='view'" decoration-danger="usage=='internal'" create="false" multi_edit="1">
                 <field name="active" invisible="1"/>
                 <field name="complete_name" string="Location"/>
                 <field name="usage"/>
+                <field name="location_category_id" attrs="{'readonly': [('usage', '!=', 'internal')]}"/>
                 <field name="company_id" groups="base.group_multi_company"/>
             </tree>
         </field>
@@ -240,6 +242,59 @@
             </field>
         </record>
 
-        <menuitem id="menu_routes_config" action="action_routes_form" name="Routes" parent="menu_warehouse_config" sequence="3" groups="stock.group_adv_location"/>
+        <menuitem id="menu_routes_config" action="action_routes_form" name="Routes" parent="menu_warehouse_config" sequence="5" groups="stock.group_adv_location"/>
+
+        <record id="stock_location_category_form_view" model="ir.ui.view">
+            <field name="name">stock.location.category.form</field>
+            <field name="model">stock.location.category</field>
+            <field name="arch" type="xml">
+                <form string="Location Category">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <label for="max_weight"/>
+                                <div class="o_row">
+                                    <field name="max_weight"/>
+                                    <span>kg</span>
+                                </div>
+                                <field name="mix_products"/>
+                                <field name="empty_only"/>
+                                <field name="description"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="stock_location_category_tree" model="ir.ui.view">
+            <field name="name">stock.location.category.tree</field>
+            <field name="model">stock.location.category</field>
+            <field name="arch" type="xml">
+                <tree string="Location Categories" multi_edit="1">
+                    <field name="name"/>
+                    <field name="mix_products"/>
+                    <field name="empty_only"/>
+                    <field name="max_weight" string="Max Weight (kg)"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_location_category" model="ir.actions.act_window">
+            <field name="name">Location Categories</field>
+            <field name="res_model">stock.location.category</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="stock_location_category_tree"/>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Add a new location category
+              </p><p>
+              </p>
+            </field>
+        </record>
+
+        <menuitem id="menu_location_categoty_config" action="action_location_category" name="Location Categories" parent="menu_warehouse_config" sequence="3" groups="stock.group_stock_multi_locations"/>
 
 </odoo>

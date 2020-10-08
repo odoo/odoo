@@ -20,7 +20,8 @@
                 <field name="location_in_id"
                        options="{'no_create': True}"
                        readonly="context.get('fixed_location', False)"/>
-                <field name="location_out_id" attrs="{'readonly': [('location_in_id', '=', False)]}"
+                <field name="automatic"/>
+                <field name="location_out_id" attrs="{'readonly': ['|', ('automatic', '=', True), ('location_in_id', '=', False)]}"
                        options="{'no_create': True}"/>
                 <field name="company_id" groups="stock.group_stock_multi_locations" force_save="1" readonly="context.get('fixed_location', False)" options="{'no_create': True}"/>
             </tree>
@@ -96,5 +97,5 @@
     </record>
 
     <menuitem id="menu_putaway" name="Putaway Rules" parent="stock.menu_warehouse_config"
-        action="action_putaway_tree" sequence="5" groups="stock.group_stock_multi_locations"/>
+        action="action_putaway_tree" sequence="7" groups="stock.group_stock_multi_locations"/>
 </odoo>

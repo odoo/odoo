@@ -60,6 +60,7 @@ class Location(models.Model):
     putaway_rule_ids = fields.One2many('stock.putaway.rule', 'location_in_id', 'Putaway Rules')
     barcode = fields.Char('Barcode', copy=False)
     quant_ids = fields.One2many('stock.quant', 'location_id')
+    location_category_id = fields.Many2one('stock.location.category', string='Location Category')
 
     _sql_constraints = [('barcode_company_uniq', 'unique (barcode,company_id)', 'The barcode for a location must be unique per company !')]
 
@@ -132,20 +133,23 @@ class Location(models.Model):
             domain = ['|', ('barcode', operator, name), ('complete_name', operator, name)]
         return self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
 
-    def _get_putaway_strategy(self, product):
-        ''' Returns the location where the product has to be put, if any compliant putaway strategy is found. Otherwise returns None.'''
+    def _get_putaway_strategy(self, product, quantity=0):
+        '''Returns the location where the product has to be put, if any compliant
+        putaway strategy is found. Otherwise returns None.
+        The quantity should be in the default UOM of the product.
+        '''
         putaway_location = self.env['stock.location']
         # Looking for a putaway about the product.
         putaway_rules = self.putaway_rule_ids.filtered(lambda x: x.product_id == product)
         if putaway_rules:
-            putaway_location = putaway_rules[0].location_out_id
+            putaway_location = putaway_rules._get_putaway_location(product, quantity)
         # If not product putaway found, we're looking with category so.
         else:
             categ = product.categ_id
             while categ:
                 putaway_rules = self.putaway_rule_ids.filtered(lambda x: x.category_id == categ)
                 if putaway_rules:
-                    putaway_location = putaway_rules[0].location_out_id
+                    putaway_location = putaway_rules._get_putaway_location(product, quantity)
                     break
                 categ = categ.parent_id
         return putaway_location
@@ -160,6 +164,25 @@ class Location(models.Model):
         self.ensure_one()
         return self.usage in ('supplier', 'customer', 'inventory', 'production') or self.scrap_location or (self.usage == 'transit' and not self.company_id)
 
+    def _check_can_be_used(self, product, quantity):
+        self.ensure_one()
+        if self.location_category_id:
+            location_category = self.location_category_id
+            # check weight
+            if location_category.max_weight < product.weight:
+                return False
+            # check if only empty
+            if location_category.empty_only and self.quant_ids:
+                return False
+            # check if not mix product
+            if not location_category.mix_products and self.quant_ids and self.quant_ids.mapped('product_id') != product:
+                return False
+            # check if not enough space
+            product_loc_cat = product.product_loc_cat_ids.filtered(lambda plc: plc.location_category_id == location_category)
+            if product_loc_cat and product_loc_cat.max_quantity != 0:
+                if sum(self.quant_ids.mapped('quantity')) + quantity > product_loc_cat.max_quantity:
+                    return False
+        return True
 
 class Route(models.Model):
     _name = 'stock.location.route'
@@ -209,3 +232,19 @@ class Route(models.Model):
         for route in self:
             route.with_context(active_test=False).rule_ids.filtered(lambda ru: ru.active == route.active).toggle_active()
         super(Route, self).toggle_active()
+
+
+class LocationCategory(models.Model):
+    _name = 'stock.location.category'
+    _description = "Inventory Location Category"
+
+    name = fields.Char('Location Category', required=True)
+    active = fields.Boolean('Active', default=True)
+    max_weight = fields.Float('Max Weight', digits='Stock Weight')
+    description = fields.Text('Description')
+    mix_products = fields.Boolean("Mix Products",
+        help="When this option is checked and some products are received, they can be redirected to this location even if one or several different products are already stored there.")
+    empty_only = fields.Boolean("Empty Only",
+        help="When this option is checked and some products are received, they cannot be redirected to this location unless it's empty.\n"
+             "Example: one pallet of product A is stored on location X, if you receive some additional A, you don't want to store it on this pallet but in another location, to avoid mixing lots.")
+    location_ids = fields.One2many('stock.location', 'location_category_id')

@@ -1000,7 +1000,7 @@ class StockMove(models.Model):
         if origin_move_line:
             location_dest = origin_move_line.location_dest_id
         else:
-            location_dest = self.location_dest_id._get_putaway_strategy(self.product_id)
+            location_dest = self.location_dest_id._get_putaway_strategy(self.product_id, quantity=1)
         move_line_vals = {
             'picking_id': self.picking_id.id,
             'location_dest_id': location_dest.id or self.location_dest_id.id,
@@ -1145,7 +1145,8 @@ class StockMove(models.Model):
     def _prepare_move_line_vals(self, quantity=None, reserved_quant=None):
         self.ensure_one()
         # apply putaway
-        location_dest_id = self.location_dest_id._get_putaway_strategy(self.product_id).id or self.location_dest_id.id
+        putaway_location = self.location_dest_id._get_putaway_strategy(self.product_id, quantity=quantity or 0)
+        location_dest_id = putaway_location and putaway_location.id or self.location_dest_id.id
         vals = {
             'move_id': self.id,
             'product_id': self.product_id.id,

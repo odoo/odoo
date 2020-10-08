@@ -18,8 +18,28 @@
                         <field name="route_ids" widget="many2many_tags" groups="stock.group_adv_location"/>
                         <field name="total_route_ids" widget="many2many_tags" groups="stock.group_adv_location" attrs="{'invisible': [('parent_id', '=', False)]}"/>
                         <field name="removal_strategy_id" options="{'no_create': True}"/>
+                        <field name="product_cat_loc_cat_ids" context="{'default_product_category_id': id}">
+                            <tree string="Location Categories" editable="bottom" class="col-4">
+                                <field name='sequence' widget='handle'/>
+                                <field name='location_category_id' nolabel="1"/>
+                            </tree>
+                        </field>
                     </group>
                 </group>
+            </field>
+        </record>
+
+        <record id="view_product_location_category_tree_editable" model="ir.ui.view">
+            <field name="name">product.location.category.tree.editable</field>
+            <field name="model">product.location.category</field>
+            <field name="arch" type="xml">
+                <tree string="Location Categories" editable="bottom">
+                    <field name='product_id' invisible='1'/>
+                    <field name='sequence' widget='handle'/>
+                    <field name='location_category_id'/>
+                    <field name='max_quantity' width='1'/>
+                    <field name="product_uom_id" groups="uom.group_uom"/>
+                </tree>
             </field>
         </record>
 
@@ -129,6 +149,9 @@
                     </group>
                 </xpath>
                 <page name="inventory" position="inside">
+                    <group string="Location Category" attrs="{'invisible': ['|',('product_variant_count', '>', 1), ('type', '!=', 'product')]}" groups="stock.group_stock_multi_locations">
+                        <field name="product_loc_cat_ids" nolabel='1' mode="tree" context="{'tree_view_ref': 'stock.view_product_location_category_tree_editable', 'default_product_id': product_variant_id}"/>
+                    </group>
                     <group string="Description for Delivery Orders">
                         <field name="description_pickingout" nolabel="1" placeholder="This note is added to delivery orders."/>
                     </group>
@@ -202,6 +225,19 @@
         </record>
 
         <!-- view used for product.product only -->
+        <record model="ir.ui.view" id="product_form_view_location_category_inherit">
+            <field name="name">product.location.category.inherit</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='product_loc_cat_ids']/.." position="replace">
+                    <group string="Location Category" attrs="{'invisible': [('type', '!=', 'product')]}" groups="stock.group_stock_multi_locations">
+                        <field name="product_loc_cat_ids" nolabel='1' mode="tree" context="{'tree_view_ref': 'stock.view_product_location_category_tree_editable', 'default_product_id': id}"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
         <record model="ir.ui.view" id="product_form_view_procurement_button">
             <field name="name">product.product.procurement</field>
             <field name="model">product.product</field>

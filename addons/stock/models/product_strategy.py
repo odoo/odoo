@@ -63,11 +63,32 @@ class StockPutawayRule(models.Model):
     location_out_id = fields.Many2one(
         'stock.location', 'Store to', check_company=True,
         domain="[('id', 'child_of', location_in_id), ('id', '!=', location_in_id), '|', ('company_id', '=', False), ('company_id', '=', company_id)]",
-        required=True, ondelete='cascade')
+        ondelete='cascade')
+    automatic = fields.Boolean('Automatic', help="Automatically find a putaway location.")
     sequence = fields.Integer('Priority', help="Give to the more specialized category, a higher priority to have them in top of the list.")
     company_id = fields.Many2one(
         'res.company', 'Company', required=True,
         default=lambda s: s.env.company.id, index=True)
+
+    @api.onchange('automatic', 'product_id', 'category_id')
+    def _on_change_automatic(self):
+        """When automatic is checked, set location_out_id to None, and check if
+        the product or product.category is properly setted.
+        """
+        if self.automatic:
+            self.location_out_id = None
+            message = False
+            if self.product_id and not self.product_id.product_loc_cat_ids:
+                    message = _("This putway rule be ignored because there is no location category defined for this product.")
+            elif self.category_id and not self.category_id.product_cat_loc_cat_ids:
+                    message = _("This putway rule be ignored because there is no location category defined for this product category.")
+            if message:
+                return {
+                    'warning': {
+                        'title': _('No location category defined.'),
+                        'message': message,
+                    }
+                }
 
     @api.onchange('location_in_id')
     def _onchange_location_in(self):
@@ -86,3 +107,31 @@ class StockPutawayRule(models.Model):
                 if rule.company_id.id != vals['company_id']:
                     raise UserError(_("Changing the company of this record is forbidden at this point, you should rather archive it and create a new one."))
         return super(StockPutawayRule, self).write(vals)
+
+    def _get_putaway_location(self, product, quantity):
+        self.ensure_one()
+        if not self.automatic and self.location_out_id:
+            if self.location_out_id._check_can_be_used(product, quantity):
+                return self.location_out_id
+            return None
+
+        child_locations = self.env['stock.location'].search([('id', 'child_of', self.location_in_id.id), ('id', '!=', self.location_in_id.id)])
+        # check previous locations
+        previous_locations = product.stock_quant_ids.filtered(lambda q: q.location_id in child_locations).sorted(lambda q: q.in_date).mapped('location_id')
+        for location in previous_locations:
+            if location._check_can_be_used(product, quantity):
+                return location
+            child_locations -= location
+
+        location_category = self.env['stock.location.category']
+        # check product location category
+        if product.product_loc_cat_ids:
+            location_category = product.product_loc_cat_ids.location_category_id
+        # check product category location category
+        elif product.product_category_id.product_cat_loc_cat_ids:
+            location_category = product.product_category_id.product_cat_loc_cat_ids.location_category_id
+        for location in location_category.location_ids:
+            if location in child_locations:
+                if location._check_can_be_used(product, quantity):
+                    return location
+        return None
