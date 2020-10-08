@@ -1,16 +1,15 @@
 odoo.define('web.data_export_tests', function (require) {
 "use strict";
 
-const AbstractStorageService = require('web.AbstractStorageService');
+const AbstractStorageService = require('web.AbstractStorageService')
 const BusService = require('bus.BusService');
 const CrashManager = require('web.CrashManager').CrashManager;
 const data = require('web.data');
 const framework = require('web.framework');
 const ListView = require('web.ListView');
-const LocalStorageService = require('web.LocalStorageService');
 const RamStorage = require('web.RamStorage');
 const testUtils = require('web.test_utils');
-const {AsyncJobService} = require('bus.AsyncJobService');
+const AsyncJobService = require('bus.AsyncJobService');
 
 const cpHelpers = testUtils.controlPanel;
 const createView = testUtils.createView;
@@ -20,13 +19,17 @@ const TestBusService = BusService.extend({
     MASTER_TAB_HEARTBEAT_PERIOD: 1,
 });
 
-let LocalStorageServiceMock;
+let LocalStorageServiceMock
 
 QUnit.module('widgets', {
     beforeEach: function () {
+        /* The longpolling bus is mocked in a way that every request to the bus feed the
+           `pollPromise` attribute with a new TestPromise. Asynchrounous capable endpoints are
+           mocked so they resolve that TestPromise. This effectively simulating that an
+           asynchronous worker did send some web notifications. */
         LocalStorageServiceMock = AbstractStorageService.extend({storage: new RamStorage()});
-        var self = this;
         this.pollPromise = null;
+
         this.data = {
             'partner': {
                 fields: {
@@ -76,9 +79,9 @@ QUnit.module('widgets', {
     QUnit.test('exporting all data in list view', async function (assert) {
         assert.expect(8);
 
-        var self = this;
-        var blockUI = framework.blockUI;
-        var unblockUI = framework.unblockUI;
+        const self = this;
+        const blockUI = framework.blockUI;
+        const unblockUI = framework.unblockUI;
         framework.blockUI = function () {
             assert.step('block UI');
         };
@@ -86,7 +89,7 @@ QUnit.module('widgets', {
             assert.step('unblock UI');
         };
 
-        var list = await createView({
+        const list = await createView({
             View: ListView,
             model: 'partner',
             data: this.data,
@@ -94,18 +97,17 @@ QUnit.module('widgets', {
             viewOptions: {
                 hasActionMenus: true,
             },
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 if (route === '/web/dataset/call_kw/ir.async/search_read') {
                     return Promise.resolve([]);
-                }
-                if (route === '/longpolling/poll') {
+                } else if (route === '/longpolling/poll') {
                     self.pollPromise = testUtils.makeTestPromise();
                     self.pollPromise.abort = () => {self.pollPromise.resolve([], $.Event())};
                     return self.pollPromise;
                 }
                 if (route.startsWith('/web/async_export/')) {
                     assert.step(route);
-                    let fakeJobId = -_.uniqueId();
+                    let fakeJobId = _.uniqueId('fakeid_');
                     self.pollPromise.resolve([{
                         id: _.uniqueId(),
                         channel: 'asyncTest',
@@ -119,24 +121,22 @@ QUnit.module('widgets', {
                     return Promise.resolve({
                         'asyncJobId': fakeJobId
                     });
-                }
-                if (route === '/web/export/formats') {
+                } else if (route === '/web/export/formats') {
                     return Promise.resolve([
                         {tag: 'csv', label: 'CSV'},
                         {tag: 'xls', label: 'Excel'},
                     ]);
-                }
-                if (route === '/web/export/get_fields') {
+                } else if (route === '/web/export/get_fields') {
                     return Promise.resolve([
                         {
+                            children: true,
                             field_type: "one2many",
-                            string: "Activities",
-                            required: false,
-                            value: "activity_ids/id",
                             id: "activity_ids",
                             params: {"model": "mail.activity", "prefix": "activity_ids", "name": "Activities"},
                             relation_field: "res_id",
-                            children: true,
+                            required: false,
+                            string: "Activities",
+                            value: "activity_ids/id",
                         }, {
                             children: false,
                             field_type: 'char',
@@ -152,13 +152,15 @@ QUnit.module('widgets', {
             },
             session: this.mockSession,
             services: {
-                'async_job': AsyncJobService,
-                'bus_service': TestBusService,
-                'crash_manager': CrashManager,
-                'local_storage': LocalStorageServiceMock,
+                async_job: AsyncJobService,
+                bus_service: TestBusService,
+                crash_manager: CrashManager,
+                local_storage: LocalStorageServiceMock,
             },
         });
 
+        /* Make the bus listen on a new asyncTest channel, in this test file we send fake
+           notifications on that channel. Those notifications are required for asyncRpc to work */
         list.call('bus_service', 'addChannel', 'asyncTest');
 
 
@@ -201,11 +203,10 @@ QUnit.module('widgets', {
             viewOptions: {
                 hasActionMenus: true,
             },
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 if (route === '/web/dataset/call_kw/ir.async/search_read') {
                     return Promise.resolve([]);
-                }
-                if (route === '/longpolling/poll') {
+                } else if (route === '/longpolling/poll') {
                     self.pollPromise = testUtils.makeTestPromise();
                     self.pollPromise.abort = () => {self.pollPromise.resolve([], $.Event())};
                     return self.pollPromise;
@@ -213,7 +214,7 @@ QUnit.module('widgets', {
                 if (route.startsWith('/web/async_export/')) {
                     const data = JSON.parse(args.data);
                     assert.deepEqual({ids: data.ids, domain: data.domain}, expectedData);
-                    let fakeJobId = -_.uniqueId();
+                    let fakeJobId = _.uniqueId('fakeid_');
                     self.pollPromise.resolve([{
                         id: _.uniqueId(),
                         channel: 'asyncTest',
@@ -227,14 +228,12 @@ QUnit.module('widgets', {
                     return Promise.resolve({
                         'asyncJobId': fakeJobId
                     });
-                }
-                if (route === '/web/export/formats') {
+                } else if (route === '/web/export/formats') {
                     return Promise.resolve([
                         {tag: 'csv', label: 'CSV'},
                         {tag: 'xls', label: 'Excel'},
                     ]);
-                }
-                if (route === '/web/export/get_fields') {
+                } else if (route === '/web/export/get_fields') {
                     return Promise.resolve([
                         {
                             field_type: "one2many",
@@ -260,10 +259,10 @@ QUnit.module('widgets', {
             },
             session: this.mockSession,
             services: {
-                'async_job': AsyncJobService,
-                'bus_service': TestBusService,
-                'crash_manager': CrashManager,
-                'local_storage': LocalStorageServiceMock,
+                async_job: AsyncJobService,
+                bus_service: TestBusService,
+                crash_manager: CrashManager,
+                local_storage: LocalStorageServiceMock,
             },
         });
         list.call('bus_service', 'addChannel', 'asyncTest');
@@ -304,14 +303,14 @@ QUnit.module('widgets', {
     QUnit.test('saving fields list when exporting data', async function (assert) {
         assert.expect(4);
 
-        var create = data.DataSet.prototype.create;
+        const create = data.DataSet.prototype.create;
 
         data.DataSet.prototype.create = function () {
             assert.step('create');
             return Promise.resolve([]);
         };
 
-        var list = await createView({
+        const list = await createView({
             View: ListView,
             model: 'partner',
             data: this.data,
@@ -320,14 +319,13 @@ QUnit.module('widgets', {
                 hasActionMenus: true,
             },
             session: this.mockSession,
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 if (route === '/web/export/formats') {
                     return Promise.resolve([
                         {tag: 'csv', label: 'CSV'},
                         {tag: 'xls', label: 'Excel'},
                     ]);
-                }
-                if (route === '/web/export/get_fields') {
+                } else if (route === '/web/export/get_fields') {
                     return Promise.resolve([
                         {
                             field_type: "one2many",
@@ -383,7 +381,7 @@ QUnit.module('widgets', {
 
     QUnit.test('Export dialog UI test', async function (assert) {
         assert.expect(5);
-        var list = await createView({
+        const list = await createView({
             View: ListView,
             model: 'partner',
             data: this.data,
@@ -392,14 +390,13 @@ QUnit.module('widgets', {
                 hasActionMenus: true,
             },
             session: this.mockSession,
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 if (route === '/web/export/formats') {
                     return Promise.resolve([
                         {tag: 'csv', label: 'CSV'},
                         {tag: 'xls', label: 'Excel'},
                     ]);
-                }
-                if (route === '/web/export/get_fields') {
+                } else if (route === '/web/export/get_fields') {
                     return Promise.resolve([
                         {
                             field_type: "one2many",
@@ -474,7 +471,7 @@ QUnit.module('widgets', {
                     <field name="bar"/>
                 </tree>`,
             domain: [['bar', '!=', 'glou']],
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 if (route === '/web/dataset/call_kw/ir.async/search_read') {
                     return Promise.resolve([]);
                 }
@@ -496,7 +493,7 @@ QUnit.module('widgets', {
                             label: 'Bar',
                         }]
                     }, "should be called with correct params");
-                    let fakeJobId = -_.uniqueId();
+                    let fakeJobId = _.uniqueId('fakeid_');
                     self.pollPromise.resolve([{
                         id: _.uniqueId(),
                         channel: 'asyncTest',
@@ -510,19 +507,16 @@ QUnit.module('widgets', {
                     return Promise.resolve({
                         'asyncJobId': fakeJobId
                     });
-                }
-                if (route === '/longpolling/poll') {
+                } else if (route === '/longpolling/poll') {
                     self.pollPromise = testUtils.makeTestPromise();
                     self.pollPromise.abort = () => {self.pollPromise.resolve([], $.Event())};
                     return self.pollPromise;
-                }
-                if (route === '/web/export/formats') {
+                } else if (route === '/web/export/formats') {
                     return Promise.resolve([
                         {tag: 'csv', label: 'CSV'},
                         {tag: 'xls', label: 'Excel'},
                     ]);
-                }
-                if (route === '/web/export/get_fields') {
+                } else if (route === '/web/export/get_fields') {
                     return Promise.resolve([
                         {
                             field_type: "one2many",
@@ -548,10 +542,10 @@ QUnit.module('widgets', {
             },
             session: this.mockSession,
             services: {
-                'async_job': AsyncJobService,
-                'bus_service': TestBusService,
-                'crash_manager': CrashManager,
-                'local_storage': LocalStorageServiceMock,
+                async_job: AsyncJobService,
+                bus_service: TestBusService,
+                crash_manager: CrashManager,
+                local_storage: LocalStorageServiceMock,
             },
         });
         list.call('bus_service', 'addChannel', 'asyncTest');
@@ -576,11 +570,10 @@ QUnit.module('widgets', {
                 </tree>`,
             groupBy: ['foo', 'bar'],
             domain: [['bar', '!=', 'glou']],
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 if (route === '/web/dataset/call_kw/ir.async/search_read') {
                     return Promise.resolve([]);
-                }
-                if (route.startsWith('/web/async_export/')) {
+                } else if (route.startsWith('/web/async_export/')) {
                     let data = JSON.parse(args.data);
                     assert.strictEqual(route, '/web/async_export/xlsx', "should call get_file with the correct url");
                     assert.deepEqual(data, {
@@ -598,7 +591,7 @@ QUnit.module('widgets', {
                             label: 'Bar',
                         }]
                     }, "should be called with correct params");
-                    let fakeJobId = -_.uniqueId();
+                    let fakeJobId = _.uniqueId('fakeid_');
                     self.pollPromise.resolve([{
                         id: _.uniqueId(),
                         channel: 'asyncTest',
@@ -612,19 +605,16 @@ QUnit.module('widgets', {
                     return Promise.resolve({
                         'asyncJobId': fakeJobId
                     });
-                }
-                if (route === '/longpolling/poll') {
+                } else if (route === '/longpolling/poll') {
                     self.pollPromise = testUtils.makeTestPromise();
                     self.pollPromise.abort = () => {self.pollPromise.resolve([], $.Event())};
                     return self.pollPromise;
-                }
-                if (route === '/web/export/formats') {
+                } else if (route === '/web/export/formats') {
                     return Promise.resolve([
                         {tag: 'csv', label: 'CSV'},
                         {tag: 'xls', label: 'Excel'},
                     ]);
-                }
-                if (route === '/web/export/get_fields') {
+                } else if (route === '/web/export/get_fields') {
                     return Promise.resolve([
                         {
                             field_type: "one2many",
@@ -650,10 +640,10 @@ QUnit.module('widgets', {
             },
             session: this.mockSession,
             services: {
-                'async_job': AsyncJobService,
-                'bus_service': TestBusService,
-                'crash_manager': CrashManager,
-                'local_storage': LocalStorageServiceMock,
+                async_job: AsyncJobService,
+                bus_service: TestBusService,
+                crash_manager: CrashManager,
+                local_storage: LocalStorageServiceMock,
             },
         });
         list.call('bus_service', 'addChannel', 'asyncTest');

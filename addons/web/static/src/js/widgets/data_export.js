@@ -176,7 +176,7 @@ var DataExport = Dialog.extend({
             }
         }).then((job) => {
             if (job.state === 'succeded') {
-                this.do_action(job.payload.result).then(()=>{
+                this.do_action(job.payload.result).then(() => {
                     this._rpc({model: 'ir.async', method: 'complete', args: [job.id]});
                 });
             }
