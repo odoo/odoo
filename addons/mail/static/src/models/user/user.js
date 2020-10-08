@@ -113,6 +113,8 @@ function factory(dependencies) {
                 thread.model === 'mail.channel' &&
                 thread.public === 'private'
             );
+            // if chat is already known but not pinned, then it means current user just left it
+            // so it's needed here to repin it and the called RPC do that as a side effect
             if (!chat ||!chat.isPinned) {
                 chat = await this.async(() =>
                     this.env.models['mail.thread'].performRpcCreateChat({

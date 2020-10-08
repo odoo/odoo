@@ -203,7 +203,7 @@ function factory(dependencies) {
                 ))[0];
             }
             if (!channel.isPinned) {
-                channel.setIsPinned(true);
+                channel.pin();
             }
 
             const message = this.env.models['mail.message'].insert(convertedData);

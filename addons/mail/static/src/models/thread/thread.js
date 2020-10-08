@@ -724,6 +724,14 @@ function factory(dependencies) {
         }
 
         /**
+         * Pin this thread and notify server of the change.
+         */
+        async pin() {
+            this.update({ isPendingPinned: true });
+            return this.notifyPinStateToServer();
+        }
+
+        /**
          * Open a dialog to add channels as followers.
          */
         promptAddChannelFollower() {
@@ -881,16 +889,6 @@ function factory(dependencies) {
         }
 
         /**
-         * Change the pinned state of this thread and notify server of the change.
-         *
-         * @param {boolean} isPinned the new pinned state
-         */
-        async setIsPinned(isPinned) {
-            this.update({ isPendingPinned: isPinned });
-            return this.notifyPinStateToServer();
-        }
-
-        /**
          * Unfollow current partner from this thread.
          */
         async unfollow() {
@@ -898,6 +896,14 @@ function factory(dependencies) {
                 follower => follower.partner === this.env.messaging.currentPartner
             );
             await this.async(() => currentPartnerFollower.remove());
+        }
+
+        /**
+         * Unpin this thread and notify server of the change.
+         */
+        async unpin() {
+            this.update({ isPendingPinned: false });
+            return this.notifyPinStateToServer();
         }
 
         /**
@@ -954,7 +960,7 @@ function factory(dependencies) {
          */
         unsubscribe() {
             this.env.messaging.chatWindowManager.closeThread(this);
-            this.setIsPinned(false);
+            this.unpin();
         }
 
         //----------------------------------------------------------------------
