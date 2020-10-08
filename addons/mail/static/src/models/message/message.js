@@ -230,8 +230,8 @@ function factory(dependencies) {
                         continue;
                     }
                     this.env.models['mail.message_seen_indicator'].insert({
+                        channelId: thread.id,
                         messageId: message.id,
-                        threadId: thread.id,
                     });
                 }
             }
