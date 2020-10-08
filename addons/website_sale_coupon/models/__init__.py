@@ -2,5 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from . import ir_autovacuum
+from . import sale_coupon
 from . import sale_coupon_program
 from . import sale_order
