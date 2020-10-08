@@ -15,7 +15,17 @@ class ResCompany(models.Model):
         """
         pos_session_model = self.env['pos.session'].sudo()
         for record in self:
-            sessions_in_period = pos_session_model.search([('state', '!=', 'closed'), '|', ('start_at', '<=', record.period_lock_date), ('start_at', '<=', record.fiscalyear_lock_date)])
+            sessions_in_period = pos_session_model.search(
+                [
+                    "&",
+                    "&",
+                    ("company_id", "=", record.id),
+                    ("state", "!=", "closed"),
+                    "|",
+                    ("start_at", "<=", record.period_lock_date),
+                    ("start_at", "<=", record.fiscalyear_lock_date),
+                ]
+            )
             if sessions_in_period:
                 sessions_str = ', '.join(sessions_in_period.mapped('name'))
                 raise ValidationError(_("Please close all the point of sale sessions in this period before closing it. Open sessions are: %s ") % (sessions_str))
