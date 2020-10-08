@@ -3833,10 +3833,10 @@ registry.BackgroundImage = SnippetOptionWidget.extend({
     _setBackground($target, backgroundURL) {
         if (backgroundURL) {
             $target.css('background-image', `url('${backgroundURL}')`);
-            $target.addClass('oe_img_bg');
+            $target.addClass('oe_img_bg o_bg_img_center');
         } else {
             $target.css('background-image', '');
-            $target.removeClass('oe_img_bg');
+            $target.removeClass('oe_img_bg o_bg_img_center');
         }
     },
 });
