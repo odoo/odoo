@@ -1168,6 +1168,7 @@ var ListRenderer = BasicRenderer.extend({
      * @private
      */
     _updateSelection: function () {
+        const previousSelection = JSON.stringify(this.selection);
         this.selection = [];
         var self = this;
         var $inputs = this.$('tbody .o_list_record_selector input:visible:not(:disabled)');
@@ -1180,7 +1181,9 @@ var ListRenderer = BasicRenderer.extend({
             }
         });
         this.$('thead .o_list_record_selector input').prop('checked', allChecked);
-        this.trigger_up('selection_changed', { allChecked, selection: this.selection });
+        if (JSON.stringify(this.selection) !== previousSelection) {
+            this.trigger_up('selection_changed', { allChecked, selection: this.selection });
+        }
         this._updateFooter();
     },
 
