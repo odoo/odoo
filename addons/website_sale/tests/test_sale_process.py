@@ -49,7 +49,6 @@ class TestUi(HttpCaseWithUserDemo):
             'name': 'Chair floor protection',
             'list_price': 12.0,
         })
-        self.product_product_11_product_template.optional_product_ids = [(6, 0, [self.product_product_1_product_template.id])]
 
         cash_journal = self.env['account.journal'].create({'name': 'Cash - Test', 'type': 'cash', 'code': 'CASH - Test'})
         self.env.ref('payment.payment_acquirer_transfer').journal_id = cash_journal
