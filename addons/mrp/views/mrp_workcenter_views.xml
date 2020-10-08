@@ -72,7 +72,7 @@
             <field name="arch" type="xml">
                 <graph string="Workcenter Productivity" type="pie" sample="1">
                     <field name="loss_id"/>
-                    <field name="duration" type="measure"/>
+                    <field name="duration" type="measure" string="Duration (minutes)"/>
                 </graph>
             </field>
         </record>
@@ -125,7 +125,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.workorder</field>
             <field name="domain">[]</field>
-            <field name="context">{'search_default_done': True}</field>
+            <field name="context">{'search_default_workcenter': 1, 'search_default_product': 2}</field>
             <field name="view_mode">graph,pivot,tree,form,gantt</field>
             <field name="search_view_id" ref="view_mrp_production_work_order_search"/>
             <field name="help" type="html">
@@ -566,7 +566,7 @@
             <graph string="Workcenter Productivity" sample="1">
                 <field name="workcenter_id"/>
                 <field name="loss_id"/>
-                <field name="duration" type="measure"/>
+                <field name="duration" type="measure" string="Duration (minutes)"/>
             </graph>
         </field>
     </record>
@@ -578,7 +578,7 @@
             <pivot string="Workcenter Productivity" sample="1">
                 <field name="date_start" type="row" interval="day"/>
                 <field name="loss_type" type="col"/>
-                <field name="duration" type="measure"/>
+                <field name="duration" type="measure" string="Duration (minutes)"/>
             </pivot>
         </field>
     </record>
@@ -589,7 +589,7 @@
         <field name="res_model">mrp.workcenter.productivity</field>
         <field name="view_mode">graph,pivot,tree,form</field>
         <field name="domain">[]</field>
-        <field name="context">{'search_default_workcenter_group': 1, 'search_default_thismonth':True, 'create':False,'edit':False}</field>
+        <field name="context">{'search_default_workcenter_group': 1, 'search_default_loss_group': 2, 'create':False,'edit':False}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Overall Equipment Effectiveness: no working or blocked time
