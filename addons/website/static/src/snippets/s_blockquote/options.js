@@ -22,8 +22,7 @@ snippetOptions.registry.Blockquote = snippetOptions.SnippetOptionWidget.extend({
         const $blockquote = this.$target.find('.s_blockquote_content');
         if (widgetValue === 'cover') {
             $blockquote.css({"background-image": "url('/web/image/website.s_blockquote_cover_default_image')"});
-            $blockquote.css({"background-position": "50% 50%"});
-            $blockquote.addClass('oe_img_bg');
+            $blockquote.addClass('oe_img_bg o_bg_img_center');
             if (!$blockquote.find('.o_we_bg_filter').length) {
                 const bgFilterEl = document.createElement('div');
                 bgFilterEl.classList.add('o_we_bg_filter', 'bg-white-50');
@@ -32,7 +31,7 @@ snippetOptions.registry.Blockquote = snippetOptions.SnippetOptionWidget.extend({
         } else {
             $blockquote.css({"background-image": ""});
             $blockquote.css({"background-position": ""});
-            $blockquote.removeClass('oe_img_bg');
+            $blockquote.removeClass('oe_img_bg o_bg_img_center');
             $blockquote.find('.o_we_bg_filter').remove();
             $blockquote.find('.s_blockquote_filter').contents().unwrap(); // Compatibility
         }
