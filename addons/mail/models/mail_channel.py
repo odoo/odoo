@@ -679,6 +679,7 @@ class Channel(models.Model):
             })
             # broadcast the channel header to the other partner (not me)
             channel._broadcast(partners_to)
+        channel._broadcast(self.env.user.partner_id.ids)
         return channel.channel_info()[0]
 
     @api.model

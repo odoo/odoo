@@ -365,14 +365,15 @@ function factory(dependencies) {
          *
          * @static
          * @param {string} uuid
+         * @param {boolean} [pinned=false]
          */
-        static async performRpcChannelPin(uuid) {
+        static async performRpcChannelPin(uuid, pinned=false) {
             return this.env.services.rpc({
                 model: 'mail.channel',
                 method: 'channel_pin',
                 kwargs: {
                     uuid,
-                    pinned: true,
+                    pinned,
                 },
             }, { shadow: true });
         }
@@ -667,7 +668,7 @@ function factory(dependencies) {
          */
         async notifyPinStateToServer() {
             if (this.isPendingPinned) {
-                return this.env.models['mail.thread'].performRpcChannelPin(this.uuid);
+                return this.env.models['mail.thread'].performRpcChannelPin(this.uuid, true);
             }
             return this.env.models['mail.thread'].performRpcExecuteCommand({
                 ids: [this.id],
@@ -881,6 +882,7 @@ function factory(dependencies) {
 
         /**
          * Change the pinned state of this thread and notify server of the change.
+         *
          * @param {boolean} isPinned the new pinned state
          */
         async setIsPinned(isPinned) {
