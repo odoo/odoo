@@ -56,12 +56,18 @@ function factory(dependencies) {
                 if (!data.user_id) {
                     data2.user = [['unlink-all']];
                 } else {
-                    data2.user = [
-                        ['insert', {
+                    let user = {};
+                    if (Array.isArray(data.user_id)) {
+                        user = {
                             id: data.user_id[0],
                             display_name: data.user_id[1],
-                        }],
-                    ];
+                        };
+                    } else {
+                        user = {
+                            id: data.user_id,
+                        };
+                    }
+                    data2.user = [['insert', user]];
                 }
             }
 
