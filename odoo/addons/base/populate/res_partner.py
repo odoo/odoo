@@ -17,6 +17,14 @@ class Partner(models.Model):
         'large': 100000,
     }
 
+    p_forename_groups = ['Norbert', 'Jacqueline', 'Gretta', 'Atul']
+    p_middlename_groups = ['', 'Ugly Panda', 'Waiting Tyrant']
+    p_surname_groups = ['Poilvache', 'Tartopoils', 'Boitaclous']
+
+    c_forename_groups = ['Norbert', 'Jacqueline', 'Gretta', 'Atul']
+    c_middlename_groups = ['', 'Ugly Panda', 'Waiting Tyrant']
+    c_surname_groups = ['Poilvache', 'Tartopoils', 'Boitaclous']
+
     def _populate_factories(self):
 
         # example of more complex generator composed of multiple sub generators
@@ -52,10 +60,6 @@ class Partner(models.Model):
             ]
         ]
 
-        forename_groups = populate.randomize(['Norbert', 'Jacqueline', 'Gretta', 'Atul'])
-        middlename_groups = populate.randomize(['', 'Ugly Panda', 'Waiting Tyrant'])
-        surname_groups = populate.randomize(['Poilvache', 'Tartopoils', 'Boitaclous'])
-
         def generate_address(iterator, *args):
             address_generators = [populate.chain_factories(address_factories, self._name) for address_factories in address_factories_groups]
             # first, exhaust all address_generators
@@ -86,11 +90,19 @@ class Partner(models.Model):
             return random.choice([False] + states_per_country[country_id])
 
         def get_name(values=None, counter=0, **kwargs):
-            print(values, counter, kwargs)
-            print(forename_groups())
             is_company = values['is_company']
             complete = values['__complete']
-            return  '%s_%s_%s' % ('c' if is_company else 'p', int(complete), counter)
+            fn = kwargs['random'].choice(self.p_forename_groups)
+            mn = kwargs['random'].choice(self.p_middlename_groups)
+            sn = kwargs['random'].choice(self.p_surname_groups)
+            return  '%s%s %s %s_%s_%s' % (
+                fn,
+                ' "%s"' % mn if mn else '',
+                sn,
+                'c' if is_company else 'p',
+                int(complete),
+                counter
+            )
 
         industry_ids = self.env.registry.populated_models['res.partner.industry']
         company_ids = self.env.registry.populated_models['res.company']
