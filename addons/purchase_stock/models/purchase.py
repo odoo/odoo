@@ -320,6 +320,7 @@ class PurchaseOrderLine(models.Model):
                             total -= move.product_uom._compute_quantity(move.product_uom_qty, line.product_uom)
                         else:
                             total += move.product_uom._compute_quantity(move.product_uom_qty, line.product_uom)
+                line._track_qty_received(total)
                 line.qty_received = total
 
     @api.model_create_multi

@@ -928,10 +928,7 @@ class PurchaseOrderLine(models.Model):
                                                          subtype_id=self.env.ref('mail.mt_note').id)
         if 'qty_received' in values:
             for line in self:
-                if values['qty_received'] != line.qty_received and line.order_id.state == 'purchase':
-                    line.order_id.message_post_with_view('purchase.track_po_line_qty_received_template',
-                                                         values={'line': line, 'qty_received': values['qty_received']},
-                                                         subtype_id=self.env.ref('mail.mt_note').id)
+                line._track_qty_received(values['qty_received'])
         return super(PurchaseOrderLine, self).write(values)
 
     def unlink(self):
@@ -1177,3 +1174,12 @@ class PurchaseOrderLine(models.Model):
 
     def _update_date_planned(self, updated_date):
         self.date_planned = updated_date
+
+    def _track_qty_received(self, new_qty):
+        self.ensure_one()
+        if new_qty != self.qty_received and self.order_id.state == 'purchase':
+            self.order_id.message_post_with_view(
+                'purchase.track_po_line_qty_received_template',
+                values={'line': self, 'qty_received': new_qty},
+                subtype_id=self.env.ref('mail.mt_note').id
+            )
