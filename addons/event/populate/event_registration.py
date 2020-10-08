@@ -1,35 +1,30 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime, timedelta
-
 from odoo import models
 from odoo.tools import populate
 
 
-class Eventevent(models.Model):
+class EventRegistration(models.Model):
     _inherit = 'event.registration'
-    _populate_sizes = {'small': 5*5, 'medium': 150*5, 'large': 400*5}
-    _populate_dependencies = ['event.event']
+    _populate_sizes = {
+        'small': 5*5,
+        'medium': 150*5,
+        'large': 400*5
+    }
+    _populate_dependencies = [
+        'event.event',
+        'res.partner',  # customer
+    ]
 
     def _populate_factories(self):
-        company_ids = self.env.registry.populated_models['event.event']
-
-        def _get_date_begin(random=None, **kwargs):
-            delta = random.randint(-364, 364)
-            return datetime.now() + timedelta(days=delta)
-
-        def _get_date_end(random=None, values=None, counter=0, **kwargs):
-            date_begin = values['date_begin']
-            delta = random.randint(0, 10)
-            return date_begin + timedelta(days=delta)
+        event_ids = self.env.registry.populated_models['res.company']
+        partner_ids = self.env.registry.populated_models['res.partner']
 
         return [
-            ('name', populate.constant('event_{counter}')),
-            ('company_id', populate.iterate(
-                [False, self.env.ref('base.main_company').id] + company_ids,
-                [1, 1] + [2/(len(company_ids) or 1)]*len(company_ids))
+            ('event_id', populate.randomize(event_ids)),
+            ('partner_id', populate.iterate(
+                [False] + partner_ids,
+                [1] + [1/(len(partner_ids) or 1)]*len(partner_ids))
              ),
-            ('date_begin', populate.compute(_get_date_begin)),
-            ('date_end', populate.compute(_get_date_end)),
         ]

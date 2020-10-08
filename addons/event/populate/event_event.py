@@ -21,6 +21,7 @@ class Eventevent(models.Model):
 
     def _populate_factories(self):
         company_ids = self.env.registry.populated_models['res.company']
+        partner_ids = self.env.registry.populated_models['res.partner']
 
         def _get_date_begin(random=None, **kwargs):
             delta = random.randint(-364, 364)
@@ -39,7 +40,8 @@ class Eventevent(models.Model):
              ),
             ('date_begin', populate.compute(_get_date_begin)),
             ('date_end', populate.compute(_get_date_end)),
-            # ('organizer_id', populate.randomize(
-            #     [False] + self.env['res.partner.title'].search([]).ids)
-            #  ),
+            ('organizer_id', populate.iterate(
+                [False] + partner_ids,
+                [1] + [1/(len(partner_ids) or 1)]*len(partner_ids))
+             ),
         ]
