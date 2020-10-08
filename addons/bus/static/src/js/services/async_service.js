@@ -3,21 +3,14 @@ odoo.define('bus.AsyncJobService', function (require) {
 
 const AbstractService = require('web.AbstractService');
 const { serviceRegistry, bus, _lt, _t } = require('web.core');
-const framework = require("web.framework");
+const framework = require('web.framework');
 const session = require('web.session');
+const {CREATED, PROCESSING, FAILED, SUCCEEDED, DONE} = require('bus.AsyncJobStates')
 
-/**
- * @typedef jobstate
- * @enum {string}
- */
-const CREATED = 'created';        // the task has been enqueued for later processing
-const PROCESSING = 'processing';  // a worker begins to process the task
-const SUCCEEDED = 'succeeded';    // the task succeeded with a result the user must process
-const DONE = 'done';              // the task succeeded without result or the user processed it
-const FAILED = 'failed';          // the task failed with an error
-const STATE_ORDER = [CREATED, PROCESSING, SUCCEEDED, FAILED, DONE];
+/* A status change should always go torward DONE, this list helps ensuring it. */
+const STATE_ORDER = [CREATED, PROCESSING, FAILED, SUCCEEDED, DONE];
 
-
+/* A few notification template messages */
 const TASK_CREATED_TITLE = _lt("Background task created");
 const TASK_CREATED_CONTENT = _lt("The task %s has been scheduled for processing and will start shortly.");
 const TASK_DONE_TITLE = _lt("Background task completed");
@@ -26,26 +19,36 @@ const TASK_SUCCEEDED_CONTENT = _lt("The task %s is ready, you can resume its exe
 const TASK_FAILED_CONTENT = _lt("The task %s failed, you can show the error via the task list.");
 const TASK_DONE_CONTENT = _lt("The task %s has been completed by the server.");
 
+
 /**
- * Async service help, watch the longpolling bus for notifications sent
- * by ir.async upon job creation, processing and termination. Keep an
- * internal database of all known jobs plus send events on the ``async_job``
- * core bus.
+ * The AsyncJobService is the frontend service companion to the backend ir.async model. It keeps
+ * track of the backend asynchronous jobs created for this user by listening for web notifications
+ * and relay those notifications to the core bus.
+ *
+ * This service also offers the asyncRpc function that acts like _rpc but resolves when the
+ * background asynchronous task finishes instead of when the initial HTTP request responses.
  */
 const AsyncJobService = AbstractService.extend({
-    dependencies: ['bus_service', 'ajax', 'crash_manager'],
+    dependencies: ['ajax', 'bus_service', 'crash_manager'],
 
     /**
      * @override
-     *
-     * _jobs is a map jobid -> job object
-     * _watchedJobs is a set containing all jobids we should automatically
-     *     run when the job succeed or fail
      */
     init() {
+        this._super(...arguments);
+
+        /**
+         * Internal map listing all known asynchronous background job, indexed by jobid.
+         */
         this._jobs = {};
+
+        /**
+         * Internal map linking jobs created via asyncRpc to an object triple {resolve, reject,
+         * UIBlocked}. The two first elements are used to resolve or reject the promise returned,
+         * by asyncRpc, the third element describe the framework.blockUI() status (whether it is
+         * block or unblock as-per this service).
+         */
         this._watchedJobs = {};
-        return this._super(...arguments);
     },
 
     /**
@@ -54,7 +57,7 @@ const AsyncJobService = AbstractService.extend({
     start() {
         this._super(...arguments);
         this.call('bus_service', 'onNotification', this, this._onNotification);
-        this.dlJobs();
+        this._fetchJobs();
     },
 
 
@@ -64,62 +67,86 @@ const AsyncJobService = AbstractService.extend({
 
     /**
      * Call an asynchronous capable endpoint, blocking the UI up to 5 seconds
-     * for the asynchronous task to completes. Resolves when the asynchronous
-     * background task completes.
+     * to give a chance fast async task to complete like if they were executed
+     * the normal "_rpc"-like way. Resolves when the asynchronous background
+     * task succeed. Rejects when the asynchronous background task fails.
      * 
-     * @param {object} params ajax rpc params
-     * @param {object} options ajac rpc options
+     * @param {Object} params ajax rpc params
+     * @param {Object} options ajac rpc options
      * @return {promise} resolved when the background task completes
      */
     asyncRpc(params, options) {
-        // We take control of the blockUI
         options = options || {}
+
+        // We take control of the blockUI unless options.shadow is set
+        let UIBlocked = false;
+        if (!options.shadow) {
+            UIBlocked = true;
+            framework.blockUI()
+        }
         options.shadow = true;
-        framework.blockUI();
 
         return new Promise((resolve, reject) => {
 
-            // Call the async HTTP endpoint, he must return the asyncJobId
+            // Call an async HTTP endpoint, he must return an asyncJobId
             this._rpc(params, options).then(({asyncJobId}) => {
+
                 if (asyncJobId === undefined) {
                     framework.unblockUI();
                     console.error("Missing asyncJobId");
+                    reject();
                     return;
                 }
-                let UIBlocked = true;
                 this._watchedJobs[asyncJobId] = {resolve, reject, UIBlocked};
 
-                // We keep the UI blocked up to 5 seconds
-                setTimeout(() => {
-                    const job = this._jobs[asyncJobId];
-                    const watchedJob = this._watchedJobs[asyncJobId];
-                    if (watchedJob && watchedJob[2]) {
-                        framework.unblockUI();
-                        this.do_notify(TASK_CREATED_TITLE, _.str.sprintf(TASK_PROCESSING_CONTENT.toString(), job.name));
-                        this._watchedJobs[asyncJobId][2] = false;
-                    }
-                }, 5000);
-
-                // In case the async job was so fast we got the response before
-                // the HTTP result.
-                if (asyncJobId in this._jobs) {
-                    this._resumeWatchedJob(this._jobs[asyncJobId]);
+                // We keep the UI blocked maximum 5 seconds
+                if (UIBlocked) {
+                    setTimeout(() => {
+                        const job = this._jobs[asyncJobId];
+                        const watchedJob = this._watchedJobs[asyncJobId];
+                        if (watchedJob && watchedJob.UIBlocked) {
+                            framework.unblockUI();
+                            this.do_notify(TASK_CREATED_TITLE, _.str.sprintf(TASK_PROCESSING_CONTENT.toString(), job.name));
+                            watchedJob.UIBlocked = false;
+                        }
+                    }, 5000);
                 }
+
+                /* The _jobs mapping is populated and updated in _onNotification for every job
+                   update. There is a chance the asynchronous job finished before the HTTP
+                   request. In such case we should resume the job right now. */
+                const job = this._jobs[asyncJobId];
+                if (job && STATE_ORDER.indexOf(job.state) > STATE_ORDER.indexOf(PROCESSING)) {
+                    this._resumeWatchedJob(job);
+                }
+
             }).catch(error => {
                 framework.unblockUI();
-                if (error.error)
+                if (error.error) {
                     this.call('crash_manager', 'rpc_error', error.error);
+                }
                 reject(error);
             });
         });
     },
 
+    /**
+     * @return {object} map listing all known asynchronous background job, indexed by jobid
+     */
+    getJobs() {
+        return this._jobs;
+    },
+
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
 
     /**
-     * Update the internal job list
+     * Fetch the async jobs of current user.
      */
-    dlJobs() {
-        this._rpc({
+    async _fetchJobs() {
+        const jobs = await this._rpc({
             model: 'ir.async',
             method: 'search_read',
             kwargs: {
@@ -130,26 +157,13 @@ const AsyncJobService = AbstractService.extend({
                 ],
                 fields: ['id', 'name', 'state', 'payload'],
             }
-        }).then(jobs => {
-            for (let job of jobs) {
-                if (job.payload)
-                    job.payload = JSON.parse(job.payload);
-                this._jobs[job.id] = job;
-            }
         })
+        for (let job of jobs) {
+            if (job.payload)
+                job.payload = JSON.parse(job.payload);
+            this._jobs[job.id] = job;
+        }
     },
-
-    /**
-     * @return {object} job map id -> job
-     */
-    getJobs() {
-        return this._jobs;
-    },
-
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
 
     /**
      * Shows a notification for newly created jobs and when jobs are done
@@ -164,8 +178,9 @@ const AsyncJobService = AbstractService.extend({
             this.do_notify(TASK_CREATED_TITLE, _.str.sprintf(TASK_CREATED_CONTENT.toString(), job.name));
         }
 
-        if (oldState !== PROCESSING)
+        if (oldState !== PROCESSING) {
             return;
+        }
 
         switch (job.state) {
             case SUCCEEDED:
@@ -184,14 +199,9 @@ const AsyncJobService = AbstractService.extend({
      * Resolve/reject the asyncRpc promise when 
      *
      * @private
-     * @param {Job} new job
-     * @param {jobState} oldState
+     * @param {job} job that is either failed, succeeded, or done
      */
     _resumeWatchedJob(job) {
-        if (STATE_ORDER.indexOf(job.state) < STATE_ORDER.indexOf(SUCCEEDED)) {
-            return
-        }
-
         const {resolve, reject, UIBlocked} = this._watchedJobs[job.id];
         delete this._watchedJobs[job.id];
 
@@ -243,8 +253,9 @@ const AsyncJobService = AbstractService.extend({
 
             // Discard jobs that are in a previous stage
             const oldJob = this._jobs[job.id] || {};
-            if (STATE_ORDER.indexOf(job.state) < STATE_ORDER.indexOf(oldJob.state))
+            if (STATE_ORDER.indexOf(job.state) < STATE_ORDER.indexOf(oldJob.state)) {
                 continue;
+            }
 
             // Update internal jobs db and relay the event
             this._jobs[job.id] = job;
@@ -259,9 +270,6 @@ const AsyncJobService = AbstractService.extend({
 });
 
 serviceRegistry.add('async_job', AsyncJobService);
-return {
-    'AsyncJobService': AsyncJobService,
-    'asyncJobState': {CREATED, PROCESSING, SUCCEEDED, FAILED, DONE}
-};
+return AsyncJobService;
 
 });

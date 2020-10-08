@@ -1,29 +1,30 @@
-odoo.define('bus.systray.AsyncSpinner', function (require) {
+odoo.define('bus.systray.AsyncJobSystrayMenu', function (require) {
 "use strict";
 
 const {bus, qweb, _lt, _t} = require('web.core');
 const SystrayMenu = require('web.SystrayMenu');
 const Widget = require('web.Widget');
-const {AsyncJobService, asyncJobState} = require('bus.AsyncJobService');
+const AsyncJobService = require('bus.AsyncJobService');
+const {CREATED, PROCESSING, FAILED, SUCCEEDED, DONE} = require('bus.AsyncJobStates')
 
 const STATE_DATA = {
-    [asyncJobState.CREATED]: {
+    [CREATED]: {
         icon: 'fa fa-arrow-circle-right',
         tooltip: _lt('The task has been scheduled for processing and will start shortly.'),
     },
-    [asyncJobState.PROCESSING]: {
+    [PROCESSING]: {
         icon: 'fa fa-spinner fa-spin',
         tooltip: _lt('The task is processing.'),
     },
-    [asyncJobState.SUCCEEDED]: {
+    [SUCCEEDED]: {
         icon: 'fa fa-check-circle',
         tooltip: _lt('The task has been processed, click to resume the execution.'),
     },
-    [asyncJobState.FAILED]: {
+    [FAILED]: {
         icon: 'fa fa-exclamation-circle text-danger',
         tooltip: _lt('The task failed due to an error, click to reveal it.'),
     },
-    [asyncJobState.DONE]: {
+    [DONE]: {
         icon: 'fa fa-check-circle text-success',
         tooltip: _lt('The task has be completely executed, re-click to re-execute it.'),
     },
@@ -46,13 +47,16 @@ const AsyncJobSystrayMenu = Widget.extend({
      */
     init() {
         this._super(...arguments);
+        this.jobs = this.call('async_job', 'getJobs');
         this.isOpen = false;
         this.STATE_DATA = STATE_DATA;
         bus.on('async_job', this, this._onJobUpdate);
     },
 
     start() {
+        const res = this._super.apply(this, arguments);
         document.addEventListener('click', this._onClickCaptureGlobal.bind(this), true);
+        return res;
     },
 
     //--------------------------------------------------------------------------
@@ -60,13 +64,15 @@ const AsyncJobSystrayMenu = Widget.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * Used to select what spinner to show on the systray icon
+     *
      * @return {string} aggregated state from the current job list
      */
-    aggreatedState() {
-        const jobList = Object.values(this.call('async_job', 'getJobs'));
-        if (jobList.some(job => job.state === asyncJobState.PROCESSING)) {
+    aggregatedState() {
+        const jobList = Object.values(this.jobs);
+        if (jobList.some(job => job.state === PROCESSING)) {
             return 'processing';
-        } else if (jobList.some(job => job.state === asyncJobState.CREATED)) {
+        } else if (jobList.some(job => job.state === CREATED)) {
             return 'pending';
         } else {
             return 'finished';
@@ -76,11 +82,26 @@ const AsyncJobSystrayMenu = Widget.extend({
     /**
      * @return {int} count of SUCCEEDED jobs waiting user action
      */
-    actionNeededCount() {
-        return Object.values(this.call('async_job', 'getJobs')).filter(job => {
-            return job.state === asyncJobState.SUCCEEDED
-                   && (job.payload.result["type"] || "").startsWith("ir.action")
+    countTaskRequiringUserAttention() {
+        return Object.values(this.jobs).filter(job => {
+            return (
+                job.state === SUCCEEDED &&
+                (job.payload.result["type"] || "").startsWith("ir.action")
+            );
         }).length;
+    },
+
+    /**
+     * Close the menu if the user clicked away
+     * 
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onClickCaptureGlobal(ev) {
+        if (!this.isOpen || this.el.contains(ev.target))
+            return;
+        this.isOpen = false;
+        this.renderElement();
     },
 
     //--------------------------------------------------------------------------
@@ -88,30 +109,27 @@ const AsyncJobSystrayMenu = Widget.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Update the internal state and re-render the task list
-     *
-     * @param {AsyncJobService.Job} job
-     */
-    _onJobUpdate(job) {
-        this.renderElement();
-    },
-
-    /**
      * Execution the action contained in a S_READY job or show the error
      * contained in a S_FAILED one.
      * 
      * @param {MouseEvent} ev
      */
-    _onClickSucceededFailed(ev) {
+    async _onClickSucceededFailed(ev) {
         const jobId = $(ev.currentTarget).data("job-id");
-        const job = this.call('async_job', 'getJobs')[jobId];
-        if (job.state === asyncJobState.FAILED) {
-            this.call('crash_manager', 'rpc_error', job.payload.error);
-        } else if (job.state === asyncJobState.SUCCEEDED
-                   && (job.payload.result.type || '').startsWith('ir.actions')) {
-            this.do_action(job.payload.result).then(() => {
-                this.call('async_job', 'complete', job.id);
-            });
+        const job = this.jobs[jobId];
+
+        switch (job.state) {
+            case SUCCEEDED:
+                if ((job.payload.result.type || '').startsWith('ir.actions')) {
+                    await this.do_action(job.payload.result);
+                    this._rpc({model: 'ir.async', method: 'complete', args: [job.id]});
+                }
+                break;
+
+            case FAILED:
+                this.call('crash_manager', 'rpc_error', job.payload.error);
+                break;
+
         }
     },
 
@@ -127,15 +145,11 @@ const AsyncJobSystrayMenu = Widget.extend({
     },
 
     /**
-     * Close the menu if the user clicked away
-     * 
-     * @private
-     * @param {MouseEvent} ev
+     * Update the internal state and re-render the task list
+     *
+     * @param {AsyncJobService.Job} job
      */
-    _onClickCaptureGlobal(ev) {
-        if (!this.isOpen || this.el.contains(ev.target))
-            return;
-        this.isOpen = false;
+    _onJobUpdate(job) {
         this.renderElement();
     },
 });
