@@ -46,6 +46,8 @@
             <field name="website_id" eval="False"/>
         </record>
 
+    </data>
+    <data>
         <!-- Action Server for Dynamic Filter -->
         <record id="dynamic_snippet_products_action" model="ir.actions.server">
             <field name="name">Products Dynamic Snippet</field>
@@ -60,6 +62,7 @@ dynamic_filter = model.env.context.get('dynamic_filter')
 limit = model.env.context.get('limit')
 search_domain = model.env.context.get('search_domain')
 get_rendering_data_structure = model.env.context.get('get_rendering_data_structure')
+escape = dynamic_filter.escape_falsy_as_empty
 
 domain = [('website_published', '=', True)] + website.website_domain() + (search_domain or [])
 products = ProductProduct.search(domain, limit=limit)
@@ -82,12 +85,12 @@ for product in products:
     for field_name in dynamic_filter.field_names.split(","):
         field = ProductProduct._fields.get(field_name)
         if field and field.type == 'binary':
-            res_product[field_name] = website.image_url(product, field_name)
-            data_type = 'image_fields'
+            data['image_fields'][field_name] = escape(website.image_url(product, field_name))
+        elif field_name == 'list_price':
+            data['fields'][field_name] = res_product[field_name]
         else:
-            data_type = 'fields'
-        data[data_type][field_name] = res_product[field_name]
-    data['fields']['call_to_action_url'] = product['website_url']
+            data['fields'][field_name] = escape(res_product[field_name])
+    data['fields']['call_to_action_url'] = escape(product['website_url'])
     res_products.append(data)
 
 response = res_products
@@ -101,8 +104,6 @@ response = res_products
             <field name="name">Products</field>
             <field name="website_id" ref="website.default_website"/>
         </record>
-    </data>
-    <data>
         <function model="ir.model.fields" name="formbuilder_whitelist">
             <value>sale.order</value>
             <value eval="[

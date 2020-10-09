@@ -5,6 +5,7 @@ from collections import OrderedDict
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
 from odoo.osv import expression
+from odoo.tools import html_escape as escape
 from lxml import etree as ET
 
 
@@ -20,6 +21,10 @@ class WebsiteSnippetFilter(models.Model):
     filter_id = fields.Many2one('ir.filters', 'Filter', ondelete='cascade')
     limit = fields.Integer(help='The limit is the maximum number of records retrieved', required=True)
     website_id = fields.Many2one('website', string='Website', ondelete='cascade', required=True)
+
+    @api.model
+    def escape_falsy_as_empty(self, s):
+        return escape(s) if s else ''
 
     @api.constrains('action_server_id', 'filter_id')
     def _check_data_source_is_provided(self):
@@ -115,9 +120,9 @@ class WebsiteSnippetFilter(models.Model):
                 field = model._fields.get(field_name)
                 field_widget = field_widget or field.type
                 if field.type == 'binary':
-                    data['image_fields'][field_name] = Website.image_url(record, field_name)
+                    data['image_fields'][field_name] = self.escape_falsy_as_empty(Website.image_url(record, field_name))
                 elif field_widget == 'image':
-                    data['image_fields'][field_name] = record[field_name]
+                    data['image_fields'][field_name] = self.escape_falsy_as_empty(record[field_name])
                 elif field_widget == 'monetary':
                     FieldMonetary = self.env['ir.qweb.field.monetary']
                     model_currency = None
@@ -137,11 +142,11 @@ class WebsiteSnippetFilter(models.Model):
                             {'display_currency': website_currency}
                         )
                     else:
-                        data['fields'][field_name] = record[field_name]
+                        data['fields'][field_name] = self.escape_falsy_as_empty(record[field_name])
                 elif ('ir.qweb.field.%s' % field_widget) in self.env:
                     data['fields'][field_name] = self.env[('ir.qweb.field.%s' % field_widget)].record_to_html(record, field_name, {})
                 else:
-                    data['fields'][field_name] = record[field_name]
+                    data['fields'][field_name] = self.escape_falsy_as_empty(record[field_name])
 
             data['fields']['call_to_action_url'] = 'website_url' in record and record['website_url']
             values.append(data)
