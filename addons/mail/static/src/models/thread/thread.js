@@ -1799,6 +1799,9 @@ function factory(dependencies) {
         suggestedRecipientInfoList: one2many('mail.suggested_recipient_info', {
             inverse: 'thread',
         }),
+        threadViews: one2many('mail.thread_view', {
+            inverse: 'thread',
+        }),
         /**
          * States the `mail.activity` that belongs to `this` and that are due
          * specifically today.
@@ -1821,9 +1824,6 @@ function factory(dependencies) {
             dependencies: ['orderedOtherTypingMembers'],
         }),
         uuid: attr(),
-        threadViews: one2many('mail.thread_view', {
-            inverse: 'thread',
-        }),
     };
 
     Thread.modelName = 'mail.thread';
