@@ -395,8 +395,8 @@ class MessageList extends Component {
             return;
         }
         if (
-            this.threadView.lastVisibleMessage &&
-            (message.id < this.threadView.lastVisibleMessage.id)
+            this.threadView.lastVisibleMessageOfThreadCache &&
+            (message.id < this.threadView.lastVisibleMessageOfThreadCache.id)
         ) {
             this.threadView.markComponentHintProcessed(hint);
             return;

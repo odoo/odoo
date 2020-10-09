@@ -67,8 +67,8 @@ function factory(dependencies) {
          * @param {mail.message} message
          */
         handleVisibleMessage(message) {
-            if (!this.lastVisibleMessage || this.lastVisibleMessage.id < message.id) {
-                this.update({ lastVisibleMessage: [['link', message]] });
+            if (!this.lastVisibleMessageOfThreadCache || this.lastVisibleMessageOfThreadCache.id < message.id) {
+                this.update({ lastVisibleMessageOfThreadCache: [['link', message]] });
             }
         }
 
@@ -101,8 +101,8 @@ function factory(dependencies) {
         _computeThreadShouldBeSetAsSeen() {
             // FIXME condition should not be on "composer is focused" but "threadView is active"
             // See task-2277543
-            const lastMessageIsVisible = this.lastVisibleMessage &&
-                this.lastVisibleMessage === this.lastMessage;
+            const lastMessageIsVisible = this.lastVisibleMessageOfThreadCache &&
+                this.lastVisibleMessageOfThreadCache === this.lastMessage;
             if (lastMessageIsVisible && this.hasComposerFocus && this.thread) {
                 this.thread.markAsSeen(this.lastMessage.id).catch(e => {
                     // prevent crash when executing compute during destroy
@@ -111,6 +111,16 @@ function factory(dependencies) {
                     }
                 });
             }
+        }
+
+        /**
+         * Last visible message is scoped to the thread cache, it's needed to be reseted when
+         * threadCache changes.
+         *
+         * @private
+         */
+        _computeLastVisibleMessageOfThreadCache() {
+            return [['unlink']];
         }
 
         /**
@@ -217,7 +227,12 @@ function factory(dependencies) {
          * Most recent message in this ThreadView that has been shown to the
          * current partner.
          */
-        lastVisibleMessage: many2one('mail.message'),
+        lastVisibleMessageOfThreadCache: many2one('mail.message', {
+            compute: '_computeLastVisibleMessageOfThreadCache',
+            dependencies: [
+                'threadCache',
+            ]
+        }),
         messages: many2many('mail.message', {
             related: 'threadCache.messages',
         }),
@@ -293,7 +308,7 @@ function factory(dependencies) {
             dependencies: [
                 'hasComposerFocus',
                 'lastMessage',
-                'lastVisibleMessage',
+                'lastVisibleMessageOfThreadCache',
                 'threadCache',
             ],
         }),

@@ -103,6 +103,20 @@ function factory(dependencies) {
         }
 
         /**
+         * Focus a specific composer and remove focus from all others.
+         * @param {mail.composer} composer
+         */
+        static focus(composer) {
+            const allComposers = this.env.models['mail.composer'].all();
+            for (const otherComposer of allComposers) {
+                if (otherComposer !== composer && otherComposer.hasFocus) {
+                    otherComposer.update({ hasFocus: false });
+                }
+            }
+            composer.update({ hasFocus: true });
+        }
+
+        /**
          * Inserts text content in text input based on selection.
          *
          * @param {string} content

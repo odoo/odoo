@@ -4212,6 +4212,125 @@ QUnit.test('auto-focus composer on opening thread', async function (assert) {
     );
 });
 
+QUnit.test('mark channel as seen if last message visible when switching channels [REQUIRE FOCUS]', async function (assert) {
+    assert.expect(6);
+
+    // channel expected to be found in the sidebar, with the expected message_unread_counter
+    // and a random unique id that will be referenced in the test
+    this.data['mail.channel'].records.push(
+        { id: 10, message_unread_counter: 1, name: 'Bla' },
+        { id: 11, message_unread_counter: 1, name: 'Blu' },
+    );
+    this.data['mail.message'].records.push({
+        body: 'oldest message',
+        channel_ids: [10],
+        id: 10,
+    }, {
+        body: 'newest message',
+        channel_ids: [11],
+        id: 11,
+    });
+    await this.start();
+    assert.containsOnce(
+        document.body,
+        `.o_DiscussSidebar_item[data-thread-local-id="${
+            this.env.models['mail.thread'].findFromIdentifyingData({
+                id: 10,
+                model: 'mail.channel',
+            }).localId
+        }"]`,
+        "should have discuss sidebar item with the channel #10"
+    );
+    assert.containsOnce(
+        document.body,
+        `.o_DiscussSidebar_item[data-thread-local-id="${
+            this.env.models['mail.thread'].findFromIdentifyingData({
+                id: 11,
+                model: 'mail.channel',
+            }).localId
+        }"]`,
+        "should have discuss sidebar item with the channel #11"
+    );
+    assert.hasClass(
+        document.querySelector(`
+            .o_DiscussSidebar_item[data-thread-local-id="${
+                this.env.models['mail.thread'].findFromIdentifyingData({
+                    id: 10,
+                    model: 'mail.channel',
+                }).localId
+            }"]
+        `),
+        'o-unread',
+        "sidebar item of channel #10 should be unread"
+    );
+    assert.hasClass(
+        document.querySelector(`
+            .o_DiscussSidebar_item[data-thread-local-id="${
+                this.env.models['mail.thread'].findFromIdentifyingData({
+                    id: 11,
+                    model: 'mail.channel',
+                }).localId
+            }"]
+        `),
+        'o-unread',
+        "sidebar item of channel #11 should be unread"
+    );
+
+    await afterNextRender(() =>
+        document.querySelector(`
+            .o_DiscussSidebar_item[data-thread-local-id="${
+                this.env.models['mail.thread'].findFromIdentifyingData({
+                    id: 11,
+                    model: 'mail.channel',
+                }).localId
+            }"]
+        `).click()
+    );
+    assert.doesNotHaveClass(
+        document.querySelector(`
+            .o_DiscussSidebar_item[data-thread-local-id="${
+                this.env.models['mail.thread'].findFromIdentifyingData({
+                    id: 11,
+                    model: 'mail.channel',
+                }).localId
+            }"]
+        `),
+        'o-unread',
+        "sidebar item of channel ID 11 should not longer be unread"
+    );
+
+    await afterNextRender(() => {
+        document.querySelector(`
+            .o_DiscussSidebar_item[data-thread-local-id="${
+                this.env.models['mail.thread'].findFromIdentifyingData({
+                    id: 10,
+                    model: 'mail.channel',
+                }).localId
+            }"]
+        `).focus();
+        document.querySelector(`
+            .o_DiscussSidebar_item[data-thread-local-id="${
+                this.env.models['mail.thread'].findFromIdentifyingData({
+                    id: 10,
+                    model: 'mail.channel',
+                }).localId
+            }"]
+        `).click();
+    });
+    assert.doesNotHaveClass(
+        document.querySelector(`
+            .o_DiscussSidebar_item[data-thread-local-id="${
+                this.env.models['mail.thread'].findFromIdentifyingData({
+                    id: 10,
+                    model: 'mail.channel',
+                }).localId
+            }"]
+        `),
+        'o-unread',
+        "sidebar item of channel ID 10 should not longer be unread"
+    );
+});
+
 });
 });
 });
