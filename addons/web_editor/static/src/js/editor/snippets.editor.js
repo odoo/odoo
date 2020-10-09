@@ -2047,6 +2047,9 @@ var SnippetsMenu = Widget.extend({
                     return dragSnip;
                 },
                 start: function () {
+                    const prom = new Promise(resolve => dragAndDropResolve = () => resolve());
+                    self._mutex.exec(() => prom);
+
                     self.$el.find('.oe_snippet_thumbnail').addClass('o_we_already_dragging');
 
                     dropped = false;
@@ -2112,9 +2115,6 @@ var SnippetsMenu = Widget.extend({
                     self.draggableComponent.$scrollTarget.on('scroll.scrolling_element', function () {
                         self.$el.trigger('scroll');
                     });
-
-                    const prom = new Promise(resolve => dragAndDropResolve = () => resolve());
-                    self._mutex.exec(() => prom);
                 },
                 stop: async function (ev, ui) {
                     $toInsert.removeClass('oe_snippet_body');
