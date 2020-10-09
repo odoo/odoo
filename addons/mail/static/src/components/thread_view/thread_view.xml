@@ -23,6 +23,9 @@
                         t-ref="messageList"
                     />
                 </t>
+                <t t-elif="props.hasComposer">
+                    <div class="o-autogrow"/>
+                </t>
                 <t t-if="props.hasComposer">
                     <Composer
                         class="o_ThreadView_composer"
