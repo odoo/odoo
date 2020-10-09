@@ -48,10 +48,11 @@ class TestSyncGoogle2Odoo(SavepointCase):
         self.assertEqual(event.description, values.get('description'))
         self.assertEqual(event.start, datetime(2020, 1, 13, 15, 55))
         self.assertEqual(event.stop, datetime(2020, 1, 13, 18, 55))
-        self.assertEqual('admin@yourcompany.example.com', event.attendee_ids.email)
-        self.assertEqual('Mitchell Admin', event.attendee_ids.partner_id.name)
+        admin_attendee = event.attendee_ids.filtered(lambda e: e.email == 'admin@yourcompany.example.com')
+        self.assertEqual('admin@yourcompany.example.com', admin_attendee.email)
+        self.assertEqual('Mitchell Admin', admin_attendee.partner_id.name)
         self.assertEqual(event.partner_ids, event.attendee_ids.partner_id)
-        self.assertEqual('needsAction', event.attendee_ids.state)
+        self.assertEqual('needsAction', admin_attendee.state)
 
     def test_cancelled(self):
         google_id = 'oj44nep1ldf8a3ll02uip0c9aa'
@@ -122,8 +123,9 @@ class TestSyncGoogle2Odoo(SavepointCase):
         self.assertEqual(event.partner_ids, user.partner_id)
         self.assertEqual(event.attendee_ids.partner_id, user.partner_id)
         self.sync(gevent)
-        self.assertFalse(event.attendee_ids, "The attendee should have been removed")
-        self.assertFalse(event.partner_ids, "The partner should have been removed")
+        # User attendee removed but gevent owner might be added after synch.
+        self.assertNotEqual(event.attendee_ids.partner_id, user.partner_id)
+        self.assertNotEqual(event.partner_ids, user.partner_id)
 
     def test_recurrence(self):
         recurrence_id = 'oj44nep1ldf8a3ll02uip0c9aa'
