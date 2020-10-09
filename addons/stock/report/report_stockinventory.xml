@@ -28,7 +28,7 @@
                             </tbody>
                             </table>
 
-                            <t t-set="locations" t-value="o.line_ids.mapped('location_id')"/>
+                            <t t-set="locations" t-value="o.line_ids.mapped('location_id').sorted(key=lambda loc: loc.complete_name)"/>
                             <table class="table table-sm">
                                 <thead>
                                     <tr>
@@ -47,7 +47,7 @@
                                             <td groups="stock.group_tracking_lot"></td>
                                             <td></td>
                                         </tr>
-                                        <tr t-foreach="o.line_ids.filtered(lambda line: line.location_id.id == location.id)" t-as="line">
+                                        <tr t-foreach="o.line_ids.filtered(lambda line: line.location_id.id == location.id).sorted(key=lambda line: line.product_id.display_name)" t-as="line">
                                             <td groups="stock.group_stock_multi_locations"></td>
                                             <td><span t-field="line.product_id"/></td>
                                             <td groups="stock.group_production_lot"><span t-field="line.prod_lot_id"/></td>
