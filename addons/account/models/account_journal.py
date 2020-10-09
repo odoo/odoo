@@ -209,7 +209,7 @@ class AccountJournal(models.Model):
         readonly=True, copy=False)
 
     _sql_constraints = [
-        ('code_company_uniq', 'unique (code, name, company_id)', 'The code and name of the journal must be unique per company !'),
+        ('code_company_uniq', 'unique (code, company_id)', 'Journal codes must be unique per company.'),
     ]
 
     @api.depends('type')
@@ -403,9 +403,29 @@ class AccountJournal(models.Model):
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         default = dict(default or {})
+
+        # Find a unique code for the copied journal
+        read_codes = self.env['account.journal'].with_context(active_test=False).search_read([('company_id', '=', self.company_id.id)], ['code'])
+        all_journal_codes = {code_data['code'] for code_data in read_codes}
+
+        copy_code = self.code
+        code_prefix = re.sub(r'\d+', '', self.code).strip()
+        counter = 1
+        while counter <= len(all_journal_codes) and  copy_code in all_journal_codes:
+            counter_str = str(counter)
+            copy_prefix = code_prefix[:self._fields['code'].size - len(counter_str)]
+            copy_code = ("%s%s" % (copy_prefix, counter_str))
+
+            counter += 1
+
+        if counter > len(all_journal_codes):
+            # Should never happen, but put there just in case.
+            raise UserError(_("Could not compute any code for the copy automatically. Please create it manually."))
+
         default.update(
-            code=_("%s (copy)") % (self.code or ''),
+            code=copy_code,
             name=_("%s (copy)") % (self.name or ''))
+
         return super(AccountJournal, self).copy(default)
 
     def _update_mail_alias(self, vals):
