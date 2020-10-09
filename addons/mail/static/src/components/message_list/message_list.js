@@ -107,7 +107,7 @@ class MessageList extends Component {
      * Because of this, the scroll position must be changed when whole UI
      * is rendered. To make this simpler, this is done when <ThreadView/>
      * component is patched. This is acceptable when <ThreadView/> has a
-     * fixed height, which is the case for the moment.
+     * fixed height, which is the case for the moment. task-2358066
      */
     async adjustFromComponentHints() {
         if (!this.threadView) {
@@ -124,11 +124,17 @@ class MessageList extends Component {
                 case 'home-menu-shown':
                     this._adjustFromHomeMenuShown(hint);
                     break;
+                case 'messages-loaded':
+                    this.threadView.markComponentHintProcessed(hint);
+                    break;
                 case 'message-received':
                     this._adjustFromMessageReceived(hint);
                     break;
                 case 'more-messages-loaded':
                     this._adjustFromMoreMessagesLoaded(hint);
+                    break;
+                case 'new-messages-loaded':
+                    this.threadView.markComponentHintProcessed(hint);
                     break;
             }
         }
@@ -333,9 +339,6 @@ class MessageList extends Component {
             isProcessed = true;
         }
         if (isProcessed) {
-            this.env.messagingBus.trigger('o-component-message-list-thread-cache-changed', {
-                threadViewer: this.threadView.threadViewer,
-            });
             this.threadView.markComponentHintProcessed(hint);
         }
     }
@@ -415,9 +418,6 @@ class MessageList extends Component {
         if (this.props.order === 'asc' && this.props.hasScrollAdjust) {
             this.el.scrollTop = this.el.scrollHeight - scrollHeight + scrollTop;
         }
-        this.env.messagingBus.trigger('o-component-message-list-more-messages-loaded', {
-            threadViewer: this.threadView.threadViewer,
-        });
         this.threadView.markComponentHintProcessed(hint);
     }
 
