@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models, _
-from odoo.exceptions import UserError
+from odoo import fields, models
 
 
 class PosDetails(models.TransientModel):
@@ -14,8 +13,6 @@ class PosDetails(models.TransientModel):
 
     def generate_report(self):
         data = {'date_start': self.start_date, 'date_stop': self.end_date, 'config_ids': self.pos_config_ids.ids, 'include_products': self.include_products}
-        if self.country_code == 'CO' and any(code != 'CO' for code in self.pos_config_ids.mapped('company_id.country_id.code')):
-            raise UserError(_("You are trying to Print non Colombian company's report from Colombian company."))
-        elif self.country_code == 'CO':
+        if self.country_code == 'CO' and len(self.pos_config_ids.ids) == 1:
             return self.env.ref('l10n_co_pos_report.sale_details_report').report_action([], data=data)
         return self.env.ref('point_of_sale.sale_details_report').report_action([], data=data)
