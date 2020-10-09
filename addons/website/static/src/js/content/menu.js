@@ -418,6 +418,7 @@ publicWidget.registry.FadeOutHeader = BaseDisappearingHeader.extend({
  */
 publicWidget.registry.autohideMenu = publicWidget.Widget.extend({
     selector: 'header#top',
+    disabledInEditableMode: false,
 
     /**
      * @override
