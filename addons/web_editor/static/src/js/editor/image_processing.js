@@ -201,7 +201,7 @@ async function applyModifications(img) {
     const data = Object.assign({
         glFilter: '',
         filter: '#0000',
-        quality: '95',
+        quality: '75',
     }, img.dataset);
     let {
         width,
