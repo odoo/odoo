@@ -277,6 +277,9 @@ class IrActionsActWindow(models.Model):
             "context", "domain", "filter", "groups_id", "limit", "res_id",
             "res_model", "search_view", "search_view_id", "target", "view_id",
             "view_mode", "views",
+            # `flags` is not a real field of ir.actions.act_window but is used
+            # to give the parameters to generate the action
+            "flags"
         }
 
 
