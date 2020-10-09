@@ -49,36 +49,38 @@
                     </div>
                 </t>
                 <t t-foreach="orderedMessages" t-as="message" t-key="message.localId">
-                    <t t-set="message_day" t-value="getDateDay(message)"/>
-                    <t t-if="current_day !== message_day">
-                        <div class="o_MessageList_separator o_MessageList_separatorDate o_MessageList_item">
-                            <hr class="o_MessageList_separatorLine"/><span class="o_MessageList_separatorLabel o_MessageList_separatorLabelDate"><t t-esc="message_day"/></span><hr class="o_MessageList_separatorLine"/>
-                            <t t-set="current_day" t-value="message_day"/>
-                            <t t-set="isMessageSquashed" t-value="false"/>
-                        </div>
-                    </t>
-                    <t t-else="">
-                        <t t-set="isMessageSquashed" t-value="shouldMessageBeSquashed(prev_message, message)"/>
-                    </t>
-                    <Message
-                        class="o_MessageList_item o_MessageList_message"
-                        t-att-class="{
-                            'o-has-message-selection': props.selectedMessageLocalId,
-                        }"
-                        hasMarkAsReadIcon="props.haveMessagesMarkAsReadIcon"
-                        hasCheckbox="props.hasMessageCheckbox"
-                        hasReplyIcon="props.haveMessagesReplyIcon"
-                        isSelected="props.selectedMessageLocalId === message.localId"
-                        isSquashed="isMessageSquashed"
-                        messageLocalId="message.localId"
-                        threadViewLocalId="threadView.localId"
-                        t-ref="{{ message.localId }}"
-                    />
-                    <t t-set="prev_message" t-value="message"/>
-                    <t t-if="threadView.thread.model === 'mail.channel' and threadView.thread.localMessageUnreadCounter > 0 and threadView.thread.lastSeenByCurrentPartnerMessageId === message.id">
-                        <div class="o_MessageList_separator o_MessageList_separatorNewMessages o_MessageList_item" t-att-class="{ 'o-disable-animation': env.disableAnimation }" t-transition="fade">
-                            <hr class="o_MessageList_separatorLine o_MessageList_separatorLineNewMessages"/><span class="o_MessageList_separatorLabel o_MessageList_separatorLabelNewMessages">New messages</span>
-                        </div>
+                    <t t-if="!message.isEmpty">
+                        <t t-set="message_day" t-value="getDateDay(message)"/>
+                        <t t-if="current_day !== message_day">
+                            <div class="o_MessageList_separator o_MessageList_separatorDate o_MessageList_item">
+                                <hr class="o_MessageList_separatorLine"/><span class="o_MessageList_separatorLabel o_MessageList_separatorLabelDate"><t t-esc="message_day"/></span><hr class="o_MessageList_separatorLine"/>
+                                <t t-set="current_day" t-value="message_day"/>
+                                <t t-set="isMessageSquashed" t-value="false"/>
+                            </div>
+                        </t>
+                        <t t-else="">
+                            <t t-set="isMessageSquashed" t-value="shouldMessageBeSquashed(prev_message, message)"/>
+                        </t>
+                        <Message
+                            class="o_MessageList_item o_MessageList_message"
+                            t-att-class="{
+                                'o-has-message-selection': props.selectedMessageLocalId,
+                            }"
+                            hasMarkAsReadIcon="props.haveMessagesMarkAsReadIcon"
+                            hasCheckbox="props.hasMessageCheckbox"
+                            hasReplyIcon="props.haveMessagesReplyIcon"
+                            isSelected="props.selectedMessageLocalId === message.localId"
+                            isSquashed="isMessageSquashed"
+                            messageLocalId="message.localId"
+                            threadViewLocalId="threadView.localId"
+                            t-ref="{{ message.localId }}"
+                        />
+                        <t t-set="prev_message" t-value="message"/>
+                        <t t-if="threadView.thread.model === 'mail.channel' and threadView.thread.localMessageUnreadCounter > 0 and threadView.thread.lastSeenByCurrentPartnerMessageId === message.id">
+                            <div class="o_MessageList_separator o_MessageList_separatorNewMessages o_MessageList_item" t-att-class="{ 'o-disable-animation': env.disableAnimation }" t-transition="fade">
+                                <hr class="o_MessageList_separatorLine o_MessageList_separatorLineNewMessages"/><span class="o_MessageList_separatorLabel o_MessageList_separatorLabelNewMessages">New messages</span>
+                            </div>
+                        </t>
                     </t>
                 </t>
                 <!-- LOADING (if order desc)-->

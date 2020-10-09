@@ -708,7 +708,7 @@ QUnit.test('only show messaging seen indicator if authored by me, after last see
 });
 
 QUnit.test('allow attachment delete on authored message', async function (assert) {
-    assert.expect(3);
+    assert.expect(5);
 
     await this.start();
     const message = this.env.models['mail.message'].create({
@@ -735,6 +735,20 @@ QUnit.test('allow attachment delete on authored message', async function (assert
     );
 
     await afterNextRender(() => document.querySelector('.o_Attachment_asideItemUnlink').click());
+    assert.containsOnce(
+        document.body,
+        '.o_AttachmentDeleteConfirmDialog',
+        "An attachment delete confirmation dialog should have been opened"
+    );
+    assert.strictEqual(
+        document.querySelector('.o_AttachmentDeleteConfirmDialog_mainText').textContent,
+        `Do you really want to delete "BLAH"?`,
+        "Confirmation dialog should contain the attachment delete confirmation text"
+    );
+
+    await afterNextRender(() =>
+        document.querySelector('.o_AttachmentDeleteConfirmDialog_confirmButton').click()
+    );
     assert.containsNone(
         document.body,
         '.o_Attachment',

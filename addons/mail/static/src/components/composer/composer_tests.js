@@ -1746,6 +1746,44 @@ QUnit.test('warning on send with shortcut when attempting to post message with s
     );
 });
 
+QUnit.test('remove an attachment from composer does not need any confirmation', async function (assert) {
+    assert.expect(3);
+
+    await this.start();
+    const composer = this.env.models['mail.composer'].create();
+    await this.createComposerComponent(composer);
+    const file = await createFile({
+        content: 'hello, world',
+        contentType: 'text/plain',
+        name: 'text.txt',
+    });
+    await afterNextRender(() =>
+        inputFiles(
+            document.querySelector('.o_FileUploader_input'),
+            [file]
+        )
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_Composer_attachmentList',
+        "should have an attachment list"
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_Composer .o_Attachment',
+        "should have only one attachment"
+    );
+
+    await afterNextRender(() =>
+        document.querySelector('.o_Attachment_asideItemUnlink').click()
+    );
+    assert.containsNone(
+        document.body,
+        '.o_Composer .o_Attachment',
+        "should not have any attachment left after unlinking the only one"
+    );
+});
+
 QUnit.test('remove an uploading attachment', async function (assert) {
     assert.expect(4);
 

@@ -284,6 +284,54 @@ QUnit.test('view attachments', async function (assert) {
     );
 });
 
+QUnit.test('remove attachment should ask for confirmation', async function (assert) {
+    assert.expect(5);
+
+    await this.start();
+    const thread = this.env.models['mail.thread'].create({
+        attachments: [
+            ['insert', {
+                id: 143,
+                mimetype: 'text/plain',
+                name: 'Blah.txt'
+            }],
+        ],
+        id: 100,
+        model: 'res.partner',
+    });
+    await this.createAttachmentBoxComponent(thread);
+    assert.containsOnce(
+        document.body,
+        '.o_Attachment',
+        "should have an attachment",
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_Attachment_actionUnlink',
+        "attachment should have a delete button"
+    );
+
+    await afterNextRender(() => document.querySelector('.o_Attachment_actionUnlink').click());
+    assert.containsOnce(
+        document.body,
+        '.o_AttachmentDeleteConfirmDialog',
+        "A confirmation dialog should have been opened"
+    );
+    assert.strictEqual(
+        document.querySelector('.o_AttachmentDeleteConfirmDialog_mainText').textContent,
+        `Do you really want to delete "Blah.txt"?`,
+        "Confirmation dialog should contain the attachment delete confirmation text"
+    );
+
+    // Confirm the deletion
+    await afterNextRender(() => document.querySelector('.o_AttachmentDeleteConfirmDialog_confirmButton').click());
+    assert.containsNone(
+        document.body,
+        '.o_Attachment',
+        "should no longer have an attachment",
+    );
+});
+
 });
 });
 });
