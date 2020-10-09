@@ -622,7 +622,10 @@ class TestReconciliationExec(TestAccountReconciliationCommon):
         self.assertAlmostEqual(inv2.amount_residual, 0)
 
         # Unreconcile one invoice at a time and check residual
-        credit_aml.remove_move_reconcile()
+        credit_aml.with_context(move_id=inv1.id).remove_move_reconcile()
+        self.assertAlmostEqual(inv1.amount_residual, 10)
+        self.assertAlmostEqual(inv2.amount_residual, 0)
+        credit_aml.with_context(move_id=inv2.id).remove_move_reconcile()
         self.assertAlmostEqual(inv1.amount_residual, 10)
         self.assertAlmostEqual(inv2.amount_residual, 20)
 
