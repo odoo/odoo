@@ -72,6 +72,7 @@
             t-att-data-question-type="question.question_type"
             t-att-data-has-correct-answers="any(answer.is_correct for answer in question.suggested_answer_ids)"
             t-att-data-answers-validity="answers_validity"
+            t-att-data-is-first-question="is_first_question"
             t-att-data-is-last-question="is_last_question"
             t-att-data-current-screen="'question' if is_scored_question else 'userInputs'"
             t-att-data-show-bar-chart="show_bar_chart"
@@ -100,7 +101,7 @@
                 <a role="button"
                     class="font-weight-bold fa fa-chevron-right o_survey_session_navigation o_survey_session_navigation_next p-3" />
                 <a role="button"
-                    class="font-weight-bold fa fa-chevron-left o_survey_session_navigation o_survey_session_navigation_previous p-3 d-none" />
+                    class="font-weight-bold fa fa-chevron-left o_survey_session_navigation o_survey_session_navigation_previous p-3" />
                 <div class="o_survey_session_results flex-column flex-grow-1">
                     <div class="row">
                         <div class="col-lg-12"><h1 t-esc="question.title"></h1></div>

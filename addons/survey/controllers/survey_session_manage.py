@@ -72,7 +72,7 @@ class UserInputSession(http.Controller):
             return request.render('survey.user_input_session_manage', template_values)
 
     @http.route('/survey/session/next_question/<string:survey_token>', type='json', auth='user', website=True)
-    def survey_session_next_question(self, survey_token, **kwargs):
+    def survey_session_next_question(self, survey_token, go_back=False, **kwargs):
         """ This route is called when the host goes to the next question of the session.
 
         It's not a regular 'request.render' route because we handle the transition between
@@ -99,7 +99,7 @@ class UserInputSession(http.Controller):
         if survey.session_state == 'ready':
             survey._session_open()
 
-        next_question = survey._get_session_next_question()
+        next_question = survey._get_session_next_question(go_back)
 
         # using datetime.datetime because we want the millis portion
         if next_question:
@@ -196,14 +196,16 @@ class UserInputSession(http.Controller):
         return {"error": "survey_wrong"}
 
     def _prepare_manage_session_values(self, survey):
-        is_last_question = False
+        is_first_question, is_last_question = False, False
         if survey.question_ids:
             most_voted_answers = survey._get_session_most_voted_answers()
+            is_first_question = survey._is_first_page_or_question(survey.session_question_id)
             is_last_question = survey._is_last_page_or_question(most_voted_answers, survey.session_question_id)
 
         values = {
             'survey': survey,
             'is_last_question': is_last_question,
+            'is_first_question': is_first_question,
         }
 
         values.update(self._prepare_question_results_values(survey, request.env['survey.user_input.line']))
