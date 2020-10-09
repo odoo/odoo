@@ -20,7 +20,7 @@ function factory(dependencies) {
                 return;
             }
             if (!this.isLoaded) {
-                this.update({ hasToLoadMessages: true });
+                this.update({ isCacheRefreshRequested: true });
                 return;
             }
             this.update({ isLoadingMore: true });
@@ -31,7 +31,7 @@ function factory(dependencies) {
                 limit,
             }));
             for (const threadView of this.threadViews) {
-                threadView.addComponentHint('more-messages-loaded');
+                threadView.addComponentHint('more-messages-loaded', { fetchedMessages });
             }
             this.update({ isLoadingMore: false });
             if (fetchedMessages.length < limit) {
@@ -48,14 +48,18 @@ function factory(dependencies) {
                 return;
             }
             if (!this.isLoaded) {
-                this.update({ hasToLoadMessages: true });
+                this.update({ isCacheRefreshRequested: true });
                 return;
             }
             const messageIds = this.fetchedMessages.map(message => message.id);
-            return this._loadMessages({
+            const fetchedMessages = this._loadMessages({
                 extraDomain: [['id', '>', Math.max(...messageIds)]],
                 limit: false,
             });
+            for (const threadView of this.threadViews) {
+                threadView.addComponentHint('new-messages-loaded', { fetchedMessages });
+            }
+            return fetchedMessages;
         }
 
         //----------------------------------------------------------------------
@@ -140,8 +144,6 @@ function factory(dependencies) {
             }
             let messages = this.fetchedMessages;
             if (this.stringifiedDomain !== '[]') {
-                // AKU TODO: flag for invalidation if there are newer messages
-                // in thread. task-2171873
                 return [['replace', messages]];
             }
             // main cache: adjust with newer messages
@@ -178,13 +180,34 @@ function factory(dependencies) {
          * @returns {boolean}
          */
         _computeHasToLoadMessages() {
-            return (
-                this.thread &&
-                !this.thread.isTemporary &&
-                this.threadViews.length > 0 &&
-                !this.isLoaded &&
-                !this.isLoading
-            );
+            if (!this.thread) {
+                // happens during destroy or compute executed in wrong order
+                return false;
+            }
+            const wasCacheRefreshRequested = this.isCacheRefreshRequested;
+            // mark hint as processed
+            this.update({ isCacheRefreshRequested: false });
+            if (this.thread.isTemporary) {
+                // temporary threads don't exist on the server
+                return false;
+            }
+            if (!wasCacheRefreshRequested && this.threadViews.length === 0) {
+                // don't load message that won't be used
+                return false;
+                }
+            if (!wasCacheRefreshRequested && (this.isLoaded || this.isLoading)) {
+                // avoid duplicate RPC
+                return false;
+            }
+            const isMainCache = this.thread.mainCache === this;
+            if (isMainCache && (this.isLoaded || this.isLoading)) {
+                // Ignore request on the main cache if it is already loaded or
+                // loading. Indeed the main cache is automatically sync with
+                // server updates already, so there is never a need to refresh
+                // it past the first time.
+                return false;
+            }
+            return true;
         }
 
         /**
@@ -279,7 +302,31 @@ function factory(dependencies) {
             if (!this.hasToLoadMessages) {
                 return;
             }
-            this._loadMessages();
+            this._loadMessages().then(fetchedMessages => {
+                for (const threadView of this.threadViews) {
+                    threadView.addComponentHint('messages-loaded', { fetchedMessages });
+                }
+            });
+        }
+
+        /**
+         * Handles change of messages on this thread cache. This is useful to
+         * refresh non-main caches that are currently displayed when the main
+         * cache receives updates. This is necessary because only the main cache
+         * is aware of changes in real time.
+         */
+        _onMessagesChanged() {
+            if (!this.thread) {
+                return;
+            }
+            if (this.thread.mainCache !== this) {
+                return;
+            }
+            for (const threadView of this.thread.threadViews) {
+                if (threadView.threadCache) {
+                    threadView.threadCache.update({ isCacheRefreshRequested: true });
+                }
+            }
         }
 
     }
@@ -315,15 +362,19 @@ function factory(dependencies) {
             dependencies: ['threadMessages'],
         }),
         /**
-         * Determines whether `this` should load initial messages.
+         * Determines whether `this` should load initial messages. This field is
+         * computed and should be considered read-only.
+         * @see `isCacheRefreshRequested` to request manual refresh of messages.
          */
         hasToLoadMessages: attr({
             compute: '_computeHasToLoadMessages',
             dependencies: [
+                'isCacheRefreshRequested',
                 'isLoaded',
                 'isLoading',
                 'thread',
                 'threadIsTemporary',
+                'threadMainCache',
                 'threadViews',
             ],
         }),
@@ -337,6 +388,14 @@ function factory(dependencies) {
             default: false,
         }),
         isLoadingMore: attr({
+            default: false,
+        }),
+        /**
+         * Determines whether `this` should consider refreshing its messages.
+         * This field is a hint that may or may not lead to an actual refresh.
+         * @see `hasToLoadMessages`
+         */
+        isCacheRefreshRequested: attr({
             default: false,
         }),
         /**
@@ -379,6 +438,18 @@ function factory(dependencies) {
             ],
         }),
         /**
+         * Not a real field, used to trigger `_onMessagesChanged` when one of
+         * the dependencies changes.
+         */
+        onMessagesChanged: attr({
+            compute: '_onMessagesChanged',
+            dependencies: [
+                'messages',
+                'thread',
+                'threadMainCache',
+            ],
+        }),
+        /**
          * Ordered list of messages that have been fetched by this cache.
          *
          * This DOES NOT necessarily includes all messages linked to this thread
@@ -407,6 +478,12 @@ function factory(dependencies) {
          */
         threadIsTemporary: attr({
             related: 'thread.isTemporary',
+        }),
+        /**
+         * Serves as compute dependency.
+         */
+        threadMainCache: many2one('mail.thread_cache', {
+            related: 'thread.mainCache',
         }),
         threadMessages: many2many('mail.message', {
             related: 'thread.messages',
