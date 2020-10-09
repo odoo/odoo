@@ -543,8 +543,8 @@ publicWidget.registry.hoverableDropdown = animations.Animation.extend({
         update: '_dropdownHover',
     }],
     events: {
-        'mouseenter .dropdown:not(.position-static)': '_onMouseEnter',
-        'mouseleave .dropdown:not(.position-static)': '_onMouseLeave',
+        'mouseenter .dropdown': '_onMouseEnter',
+        'mouseleave .dropdown': '_onMouseLeave',
     },
 
     /**
