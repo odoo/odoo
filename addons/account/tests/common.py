@@ -569,8 +569,8 @@ class TestAccountReconciliationCommon(AccountTestInvoicingCommon):
         # Journals
         cls.purchase_journal = cls.company_data['default_journal_purchase']
         cls.cash_basis_journal = cls.env['account.journal'].create({
-            'name': 'CABA',
-            'code': 'CABA',
+            'name': 'Test CABA',
+            'code': 'tCABA',
             'type': 'general',
         })
         cls.general_journal = cls.company_data['default_journal_misc']
