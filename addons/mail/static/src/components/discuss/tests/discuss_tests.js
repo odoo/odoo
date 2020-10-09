@@ -4206,6 +4206,53 @@ QUnit.test('auto-focus composer on opening thread', async function (assert) {
     );
 });
 
+QUnit.test('mark channel as seen if last message is visible when switching channels when the previous channel had a more recent last message than the current channel', async function (assert) {
+    assert.expect(1);
+
+    this.data['mail.channel'].records.push(
+        { id: 10, message_unread_counter: 1, name: 'Bla' },
+        { id: 11, message_unread_counter: 1, name: 'Blu' },
+    );
+    this.data['mail.message'].records.push({
+        body: 'oldest message',
+        channel_ids: [10],
+        id: 10,
+    }, {
+        body: 'newest message',
+        channel_ids: [11],
+        id: 11,
+    });
+    await this.start({
+        discuss: {
+            context: {
+                active_id:  'mail.channel_11',
+            },
+        },
+    });
+    await afterNextRender(() => {
+        document.querySelector(`
+            .o_DiscussSidebar_item[data-thread-local-id="${
+                this.env.models['mail.thread'].findFromIdentifyingData({
+                    id: 10,
+                    model: 'mail.channel',
+                }).localId
+            }"]
+        `).click();
+    });
+    assert.doesNotHaveClass(
+        document.querySelector(`
+            .o_DiscussSidebar_item[data-thread-local-id="${
+                this.env.models['mail.thread'].findFromIdentifyingData({
+                    id: 10,
+                    model: 'mail.channel',
+                }).localId
+            }"]
+        `),
+        'o-unread',
+        "sidebar item of channel ID 10 should no longer be unread"
+    );
+});
+
 });
 });
 });
