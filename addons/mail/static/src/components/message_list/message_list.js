@@ -124,11 +124,17 @@ class MessageList extends Component {
                 case 'home-menu-shown':
                     this._adjustFromHomeMenuShown(hint);
                     break;
+                case 'messages-loaded':
+                    this.threadView.markComponentHintProcessed(hint);
+                    break;
                 case 'message-received':
                     this._adjustFromMessageReceived(hint);
                     break;
                 case 'more-messages-loaded':
                     this._adjustFromMoreMessagesLoaded(hint);
+                    break;
+                case 'new-messages-loaded':
+                    this.threadView.markComponentHintProcessed(hint);
                     break;
             }
         }
@@ -333,9 +339,6 @@ class MessageList extends Component {
             isProcessed = true;
         }
         if (isProcessed) {
-            this.env.messagingBus.trigger('o-component-message-list-thread-cache-changed', {
-                threadViewer: this.threadView.threadViewer,
-            });
             this.threadView.markComponentHintProcessed(hint);
         }
     }
