@@ -4,7 +4,7 @@
         <field name="name">coupon.generate.wizard.form</field>
         <field name="model">coupon.generate.wizard</field>
         <field name="arch" type="xml">
-            <form string="Generate Coupons">
+            <form string="Generate Coupons" js_class="coupons_generate_form">
                 <group>
                     <field name="has_partner_email" invisible="1"/>
                     <field name="generation_type" widget="radio"/>
