@@ -463,7 +463,7 @@ QUnit.test('basic chatter rendering without messages', async function (assert) {
 QUnit.test('chatter updating', async function (assert) {
     assert.expect(3);
 
-    this.data['mail.message'].records.push({ model: 'res.partner', res_id: 12 });
+    this.data['mail.message'].records.push({ body: "not empty", model: 'res.partner', res_id: 12 });
     this.data['res.partner'].records.push(
         { display_name: "first partner", id: 11 },
         { display_name: "second partner", id: 12 }
