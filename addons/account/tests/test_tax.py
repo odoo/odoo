@@ -123,6 +123,12 @@ class TestTax(AccountTestUsers):
             'amount': 0,
         })
 
+        self.tax_5_percent = self.tax_model.create({
+            'name': "test_5_percent",
+            'amount_type': 'percent',
+            'amount': 5,
+        })
+
         self.tax_8_percent = self.tax_model.create({
             'name': "test_8_percent",
             'amount_type': 'percent',
@@ -829,6 +835,53 @@ class TestTax(AccountTestUsers):
             res2
         )
 
+    def test_rounding_tax_included_round_per_line_04(self):
+        ''' Test the rounding of a 5% price included tax.
+        The decimal precision is set to 0.05.
+        '''
+        self.tax_5_percent.price_include = True
+        self.tax_5_percent.company_id.currency_id.rounding = 0.05
+        self.tax_5_percent.company_id.tax_calculation_rounding_method = 'round_per_line'
+
+        res1 = self.tax_5_percent.compute_all(5)
+        self._check_compute_all_results(
+            5,      # 'total_included'
+            4.75,      # 'total_excluded'
+            [
+                # base , amount
+                # ---------------
+                (4.75, 0.25),
+                # ---------------
+            ],
+            res1
+        )
+
+        res2 = self.tax_5_percent.compute_all(10)
+        self._check_compute_all_results(
+            10,      # 'total_included'
+            9.5,      # 'total_excluded'
+            [
+                # base , amount
+                # ---------------
+                (9.5, 0.5),
+                # ---------------
+            ],
+            res2
+        )
+
+        res3 = self.tax_5_percent.compute_all(50)
+        self._check_compute_all_results(
+            50,      # 'total_included'
+            47.6,      # 'total_excluded'
+            [
+                # base , amount
+                # ---------------
+                (47.6, 2.4),
+                # ---------------
+            ],
+            res3
+        )
+
     def test_rounding_tax_included_round_globally_01(self):
         ''' Test the rounding of a 21% price included tax in an invoice having 11.90 and 2.80 as lines.
         The decimal precision is set to 2.
@@ -861,4 +914,51 @@ class TestTax(AccountTestUsers):
                 # ---------------
             ],
             res2
+        )
+
+    def test_rounding_tax_included_round_globally_02(self):
+        ''' Test the rounding of a 5% price included tax.
+        The decimal precision is set to 0.05.
+        '''
+        self.tax_5_percent.price_include = True
+        self.tax_5_percent.company_id.currency_id.rounding = 0.05
+        self.tax_5_percent.company_id.tax_calculation_rounding_method = 'round_globally'
+
+        res1 = self.tax_5_percent.compute_all(5)
+        self._check_compute_all_results(
+            5,      # 'total_included'
+            4.75,      # 'total_excluded'
+            [
+                # base , amount
+                # ---------------
+                (4.7619050, 0.2380950),
+                # ---------------
+            ],
+            res1
+        )
+
+        res2 = self.tax_5_percent.compute_all(10)
+        self._check_compute_all_results(
+            10,      # 'total_included'
+            9.5,      # 'total_excluded'
+            [
+                # base , amount
+                # ---------------
+                (9.52380950, 0.47619050),
+                # ---------------
+            ],
+            res2
+        )
+
+        res3 = self.tax_5_percent.compute_all(50)
+        self._check_compute_all_results(
+            50,      # 'total_included'
+            47.6,      # 'total_excluded'
+            [
+                # base , amount
+                # ---------------
+                (47.61904750, 2.38095250),
+                # ---------------
+            ],
+            res3
         )

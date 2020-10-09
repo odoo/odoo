@@ -622,6 +622,15 @@ var FieldDateRange = InputField.extend({
         }
         this._super.apply(this, arguments);
     },
+    /**
+     * Return the date written in the input, in UTC.
+     *
+     * @private
+     * @returns {Moment|false}
+     */
+    _getValue: function () {
+        return field_utils.parse[this.formatType](this.$input.val(), this.field, { timezone: true });
+    },
 
     //--------------------------------------------------------------------------
     // Private
@@ -2169,8 +2178,10 @@ var PriorityWidget = AbstractField.extend({
         this.$el.empty();
         this.empty_value = this.field.selection[0][0];
         this.$el.attr('aria-label', this.string);
+        const isReadonly = this.record.evalModifiers(this.attrs.modifiers).readonly;
         _.each(this.field.selection.slice(1), function (choice, index) {
-            self.$el.append(self._renderStar('<a href="#">', index_value >= index+1, index+1, choice[1], index_value));
+            const tag = isReadonly ? '<span>' : '<a href="#">';
+            self.$el.append(self._renderStar(tag, index_value >= index + 1, index + 1, choice[1], index_value));
         });
     },
 

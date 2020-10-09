@@ -67,6 +67,8 @@ class SaleCoupon(models.Model):
             message = {'error': _('Invalid partner.')}
         elif self.program_id in order.applied_coupon_ids.mapped('program_id'):
             message = {'error': _('A Coupon is already applied for the same reward')}
+        elif order.code_promo_program_id.reward_type == self.program_id.reward_type == 'free_shipping':
+            message = {'error': _('Free shipping has already been applied.')}
         elif self.program_id._is_global_discount_program() and order._is_global_discount_already_applied():
             message = {'error': _('Global discounts are not cumulable.')}
         elif self.program_id.reward_type == 'product' and not order._is_reward_in_order_lines(self.program_id):

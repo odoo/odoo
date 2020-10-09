@@ -856,15 +856,15 @@ class Lead(models.Model):
             partner_match_domain.append(('email_from', '=ilike', email))
         if partner_id:
             partner_match_domain.append(('partner_id', '=', partner_id))
-        partner_match_domain = ['|'] * (len(partner_match_domain) - 1) + partner_match_domain
         if not partner_match_domain:
             return self.env['crm.lead']
-        domain = partner_match_domain
+
+        partner_match_domain = ['|'] * (len(partner_match_domain) - 1) + partner_match_domain
         if not include_lost:
-            domain += ['&', ('active', '=', True), ('probability', '<', 100)]
+            partner_match_domain += ['&', ('active', '=', True), ('probability', '<', 100)]
         else:
-            domain += ['|', '&', ('type', '=', 'lead'), ('active', '=', True), ('type', '=', 'opportunity')]
-        return self.search(domain)
+            partner_match_domain += ['|', '&', ('type', '=', 'lead'), ('active', '=', True), ('type', '=', 'opportunity')]
+        return self.search(partner_match_domain)
 
     def _convert_opportunity_data(self, customer, team_id=False):
         """ Extract the data from a lead to create the opportunity

@@ -55,7 +55,7 @@ class AccountMove(models.Model):
     def _compute_l10n_latam_sequence(self):
         recs_with_journal_id = self.filtered('journal_id')
         for rec in recs_with_journal_id:
-            rec.l10n_latam_sequence_id = rec._get_document_type_sequence()
+            rec.l10n_latam_sequence_id = rec._get_document_type_sequence()[:1]
         remaining = self - recs_with_journal_id
         remaining.l10n_latam_sequence_id = False
 
