@@ -102,6 +102,12 @@
                         </t>
                     </div>
                 </t>
+                <t t-if="state.hasDeleteConfirmDialog">
+                    <AttachmentDeleteConfirmDialog
+                        attachmentLocalId="props.attachmentLocalId"
+                        t-on-dialog-closed="_onDeleteConfirmDialogClosed"
+                    />
+                </t>
             </t>
         </div>
     </t>

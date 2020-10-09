@@ -403,6 +403,17 @@ function factory(dependencies) {
 
         /**
          * @private
+         */
+        _computeIsEmpty() {
+            return (
+                (!this.body || htmlToTextContentInline(this.body) === '') &&
+                this.attachments.length === 0 &&
+                this.tracking_value_ids.length === 0
+            );
+        }
+
+        /**
+         * @private
          * @returns {boolean}
          */
         _computeIsModeratedByCurrentPartner() {
@@ -549,6 +560,19 @@ function factory(dependencies) {
             dependencies: [
                 'body',
                 'subtype_description',
+            ],
+        }),
+        /**
+         * Determine whether the message has to be considered empty or not.
+         *
+         * An empty message has no text, no attachment and no tracking value.
+         */
+        isEmpty: attr({
+            compute: '_computeIsEmpty',
+            dependencies: [
+                'attachments',
+                'body',
+                'tracking_value_ids',
             ],
         }),
         isModeratedByCurrentPartner: attr({
