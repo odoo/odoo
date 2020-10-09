@@ -124,7 +124,7 @@ class PosSession(models.Model):
 
     def _get_payment_methods_balance(self, payment_method_ids):
         self.ensure_one()
-        return sum(session.order_ids.mapped('payment_ids').filtered(lambda payment: payment.payment_method_id.id in payment_method_ids.ids).mapped('amount'))
+        return sum(self.order_ids.mapped('payment_ids').filtered(lambda payment: payment.payment_method_id.id in payment_method_ids.ids).mapped('amount'))
 
     @api.depends('order_ids.payment_ids.amount')
     def _compute_total_payments_amount(self):
