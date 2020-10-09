@@ -2464,6 +2464,10 @@ class AccountMove(models.Model):
         return action
 
     def action_post(self):
+        if self.env.context.get('default_move_type'):
+            context = dict(self.env.context)
+            del context['default_move_type']
+            self = self.with_context(context)
         return self.post()
 
     def js_assign_outstanding_line(self, line_id):
