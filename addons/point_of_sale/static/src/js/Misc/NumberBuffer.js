@@ -228,9 +228,9 @@ odoo.define('point_of_sale.NumberBuffer', function(require) {
             let isFirstInput = isEmpty(this.state.buffer);
             if (input === this.decimalPoint) {
                 if (isFirstInput) {
-                    this.state.buffer = '0.';
+                    this.state.buffer = '0' + this.decimalPoint;
                 } else if (!this.state.buffer.length || this.state.buffer === '-') {
-                    this.state.buffer += '0.';
+                    this.state.buffer += '0' + this.decimalPoint;
                 } else if (this.state.buffer.indexOf(this.decimalPoint) < 0) {
                     this.state.buffer = this.state.buffer + this.decimalPoint;
                 }
