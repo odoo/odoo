@@ -3,7 +3,9 @@ odoo.define('mail/static/src/components/moderation_reject_dialog/moderation_reje
 
 const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
 
-const Dialog = require('web.OwlDialog');
+const components = {
+    Dialog: require('web.OwlDialog'),
+};
 
 const { Component, useState } = owl;
 const { useRef } = owl.hooks;
@@ -81,7 +83,7 @@ class ModerationRejectDialog extends Component {
 }
 
 Object.assign(ModerationRejectDialog, {
-    components: { Dialog },
+    components,
     props: {
         messageLocalIds: {
             type: Array,

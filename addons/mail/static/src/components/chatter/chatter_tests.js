@@ -47,6 +47,7 @@ QUnit.test('base rendering when chatter has no attachment', async function (asse
     this.data['res.partner'].records.push({ id: 100 });
     for (let i = 0; i < 60; i++) {
         this.data['mail.message'].records.push({
+            body: "not empty",
             model: 'res.partner',
             res_id: 100,
         });
