@@ -10,6 +10,14 @@
         <xpath expr="//div[hasclass('receipt-change')]" position="attributes">
             <attribute name="t-if">!props.isBill</attribute>
         </xpath>
+        <xpath expr="//div[hasclass('cashier')]" position="after">
+            <t t-if="receipt.table">
+                at table <t t-esc="receipt.table" />
+            </t>
+            <t t-if="receipt.table and receipt.customer_count">
+                <div>Guests: <t t-esc="receipt.customer_count" /></div>
+            </t>
+        </xpath>
         <xpath expr="//div[hasclass('before-footer')]" position="after">
             <t t-if="props.isBill and env.pos.config.set_tip_after_payment">
                 <div class="tip-form">
