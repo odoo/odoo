@@ -1235,15 +1235,23 @@ header {
 }
 
 // Language selector
-.js_language_selector .dropdown-menu {
-    min-width: 0;
+.js_language_selector {
+    .dropdown-menu {
+        min-width: 0;
+    }
+    a.list-inline-item {
+        padding: 3px 0;
+
+        > * {
+            vertical-align: middle;
+        }
+    }
 }
 .o_lang_flag {
     width: 1.5em;
     height: 1.5em;
     margin-right: 0.2em;
     border-radius: $rounded-pill;
-    vertical-align: top;
 }
 
 // Footer scrolltop button
