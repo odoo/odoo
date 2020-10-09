@@ -175,7 +175,6 @@ function factory(dependencies) {
          */
         async openThread(thread) {
             this.update({
-                stringifiedDomain: '[]',
                 thread: [['link', thread]],
             });
             this.focus();
@@ -509,6 +508,7 @@ function factory(dependencies) {
         }),
         /**
          * Determines the domain to apply when fetching messages for `this.thread`.
+         * This value should only be written by the control panel.
          */
         stringifiedDomain: attr({
             default: '[]',

@@ -50,16 +50,11 @@ function factory(dependencies) {
                 return;
             }
             const inbox = this.env.messaging.inbox;
-            if (
-                !inbox ||
-                !inbox.mainCache ||
-                inbox.mainCache.isLoaded ||
-                inbox.mainCache.isLoading
-            ) {
+            if (!inbox || !inbox.mainCache) {
                 return;
             }
             // populate some needaction messages on threads.
-            inbox.mainCache.update({ hasToLoadMessages: true });
+            inbox.mainCache.update({ isCacheRefreshRequested: true });
         }
 
         /**
@@ -127,8 +122,6 @@ function factory(dependencies) {
                 'isOpen',
                 'messagingInbox',
                 'messagingInboxMainCache',
-                'messagingInboxMainCacheIsLoaded',
-                'messagingInboxMainCacheIsLoading',
             ],
         }),
         /**
@@ -151,12 +144,6 @@ function factory(dependencies) {
         }),
         messagingInboxMainCache: one2one('mail.thread_cache', {
             related: 'messagingInbox.mainCache',
-        }),
-        messagingInboxMainCacheIsLoaded: attr({
-            related: 'messagingInboxMainCache.isLoaded',
-        }),
-        messagingInboxMainCacheIsLoading: attr({
-            related: 'messagingInboxMainCache.isLoading',
         }),
     };
 

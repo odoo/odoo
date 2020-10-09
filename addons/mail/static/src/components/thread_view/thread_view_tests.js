@@ -741,13 +741,17 @@ QUnit.test('basic rendering of canceled notification', async function (assert) {
         }]],
     });
     await this.afterEvent({
-        eventName: 'o-component-message-list-thread-cache-changed',
+        eventName: 'o-thread-view-hint-processed',
         func: () => {
             this.createThreadViewComponent(threadViewer.threadView);
         },
         message: "thread become loaded with messages",
-        predicate: ({ threadViewer }) => {
-            return threadViewer.thread.model === 'mail.channel' && threadViewer.thread.id === 11;
+        predicate: ({ hint, threadViewer }) => {
+            return (
+                hint.type === 'messages-loaded' &&
+                threadViewer.thread.model === 'mail.channel' &&
+                threadViewer.thread.id === 11
+            );
         },
     });
 

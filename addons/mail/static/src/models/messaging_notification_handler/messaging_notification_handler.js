@@ -551,8 +551,6 @@ function factory(dependencies) {
             const inboxMailbox = this.env.messaging.inbox;
 
             // 1. move messages from inbox to history
-            // AKU TODO: flag other caches to invalidate
-            // task-2171873
             for (const message_id of message_ids) {
                 // We need to ignore all not yet known messages because we don't want them
                 // to be shown partially as they would be linked directly to mainCache
@@ -625,10 +623,6 @@ function factory(dependencies) {
                     continue;
                 }
                 message.update({ isStarred: starred });
-                if (!starred) {
-                    // AKU TODO: flag starred other caches for invalidation
-                    // task-2171873
-                }
                 starredMailbox.update({
                     counter: starred
                         ? starredMailbox.counter + 1

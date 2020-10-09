@@ -361,7 +361,7 @@ const DiscussWidget = AbstractAction.extend({
     _onClickSelectAll() {
         this.env.models['mail.message'].checkAll(
             this.discuss.thread,
-            this.discuss.threadStringifiedDomain
+            this.discuss.stringifiedDomain
         );
     },
     /**
@@ -370,7 +370,7 @@ const DiscussWidget = AbstractAction.extend({
     _onClickUnselectAll() {
         this.env.models['mail.message'].uncheckAll(
             this.discuss.thread,
-            this.discuss.threadStringifiedDomain
+            this.discuss.stringifiedDomain
         );
     },
     /**

@@ -118,6 +118,9 @@ function factory(dependencies) {
          */
         _onThreadCacheChanged() {
             this.addComponentHint('change-of-thread-cache');
+            if (this.threadCache) {
+                this.threadCache.update({ isCacheRefreshRequested: true });
+            }
         }
 
         /**
