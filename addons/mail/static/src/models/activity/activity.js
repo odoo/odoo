@@ -160,8 +160,13 @@ function factory(dependencies) {
                 method: 'activity_format',
                 args: [this.id],
             }, { shadow: true }));
-            this.update(this.constructor.convertData(data));
-            this.thread.refresh();
+            if (data) {
+                this.update(this.constructor.convertData(data));
+                this.thread.refresh();
+            } else {
+                this.thread.refresh();
+                this.delete();
+            }
         }
 
         /**
