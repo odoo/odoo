@@ -101,6 +101,7 @@ QUnit.test('message list desc order', async function (assert) {
 
     for (let i = 0; i <= 60; i++) {
         this.data['mail.message'].records.push({
+            body: "not empty",
             channel_ids: [100],
             model: 'mail.channel',
             res_id: 100,
@@ -172,6 +173,7 @@ QUnit.test('message list asc order', async function (assert) {
 
     for (let i = 0; i <= 60; i++) {
         this.data['mail.message'].records.push({
+            body: "not empty",
             channel_ids: [100],
             model: 'mail.channel',
             res_id: 100,
@@ -389,6 +391,7 @@ QUnit.test('show message subject if thread is mailing channel', async function (
     assert.expect(3);
 
     this.data['mail.message'].records.push({
+        body: "not empty",
         channel_ids: [100],
         model: 'mail.channel',
         res_id: 100,
@@ -717,6 +720,7 @@ QUnit.test('basic rendering of canceled notification', async function (assert) {
     this.data['mail.channel'].records.push({ id: 11 });
     this.data['res.partner'].records.push({ id: 12, name: "Someone" });
     this.data['mail.message'].records.push({
+        body: "not empty",
         channel_ids: [11],
         id: 10,
         message_type: 'email',
@@ -817,6 +821,7 @@ QUnit.test('should scroll to bottom on receiving new message if the list is init
     this.data['mail.channel'].records.push({ id: 20 });
     for (let i = 0; i <= 10; i++) {
         this.data['mail.message'].records.push({
+            body: "not empty",
             channel_ids: [20],
         });
     }
@@ -887,6 +892,7 @@ QUnit.test('should not scroll on receiving new message if the list is initially 
     this.data['mail.channel'].records.push({ id: 20 });
     for (let i = 0; i <= 10; i++) {
         this.data['mail.message'].records.push({
+            body: "not empty",
             channel_ids: [20],
         });
     }
@@ -949,6 +955,186 @@ QUnit.test('should not scroll on receiving new message if the list is initially 
         document.querySelector('.o_ThreadView_messageList').scrollTop,
         0,
         "should not scroll on receiving new message because the list is initially scrolled anywhere else than bottom"
+    );
+});
+
+QUnit.test("delete all attachments of message without content should no longer display the message", async function (assert) {
+    assert.expect(2);
+
+    this.data['ir.attachment'].records.push({
+        id: 143,
+        mimetype: 'text/plain',
+        name: "Blah.txt",
+    });
+    this.data['mail.channel'].records.push({ id: 11 });
+    this.data['mail.message'].records.push(
+        {
+            attachment_ids: [143],
+            channel_ids: [11],
+            id: 101,
+        }
+    );
+    await this.start();
+    const threadViewer = this.env.models['mail.thread_viewer'].create({
+        hasThreadView: true,
+        thread: [['insert', { id: 11, model: 'mail.channel' }]],
+    });
+    // wait for messages of the thread to be loaded
+    await this.afterEvent({
+        eventName: 'o-thread-view-hint-processed',
+        func: () => {
+            this.createThreadViewComponent(threadViewer.threadView);
+        },
+        message: "thread become loaded with messages",
+        predicate: ({ hint, threadViewer }) => {
+            return (
+                hint.type === 'messages-loaded' &&
+                threadViewer.thread.model === 'mail.channel' &&
+                threadViewer.thread.id === 11
+            );
+        },
+    });
+    assert.containsOnce(
+        document.body,
+        '.o_Message',
+        "there should be 1 message displayed initially"
+    );
+
+    await afterNextRender(() => {
+        document.querySelector(`.o_Attachment[data-attachment-local-id="${
+            this.env.models['mail.attachment'].findFromIdentifyingData({ id: 143 }).localId
+        }"] .o_Attachment_asideItemUnlink`).click();
+    });
+    await afterNextRender(() =>
+        document.querySelector('.o_AttachmentDeleteConfirmDialog_confirmButton').click()
+    );
+    assert.containsNone(
+        document.body,
+        '.o_Message',
+        "message should no longer be displayed after removing all its attachments (empty content)"
+    );
+});
+
+QUnit.test('delete all attachments of a message with some text content should still keep it displayed', async function (assert) {
+    assert.expect(2);
+
+    this.data['ir.attachment'].records.push({
+        id: 143,
+        mimetype: 'text/plain',
+        name: "Blah.txt",
+    });
+    this.data['mail.channel'].records.push({ id: 11 });
+    this.data['mail.message'].records.push(
+        {
+            attachment_ids: [143],
+            body: "Some content",
+            channel_ids: [11],
+            id: 101,
+        },
+    );
+    await this.start();
+    const threadViewer = this.env.models['mail.thread_viewer'].create({
+        hasThreadView: true,
+        thread: [['insert', { id: 11, model: 'mail.channel' }]],
+    });
+    // wait for messages of the thread to be loaded
+    await this.afterEvent({
+        eventName: 'o-thread-view-hint-processed',
+        func: () => {
+            this.createThreadViewComponent(threadViewer.threadView);
+        },
+        message: "thread become loaded with messages",
+        predicate: ({ hint, threadViewer }) => {
+            return (
+                hint.type === 'messages-loaded' &&
+                threadViewer.thread.model === 'mail.channel' &&
+                threadViewer.thread.id === 11
+            );
+        },
+    });
+    assert.containsOnce(
+        document.body,
+        '.o_Message',
+        "there should be 1 message displayed initially"
+    );
+
+    await afterNextRender(() => {
+        document.querySelector(`.o_Attachment[data-attachment-local-id="${
+            this.env.models['mail.attachment'].findFromIdentifyingData({ id: 143 }).localId
+        }"] .o_Attachment_asideItemUnlink`).click();
+    });
+    await afterNextRender(() =>
+        document.querySelector('.o_AttachmentDeleteConfirmDialog_confirmButton').click()
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_Message',
+        "message should still be displayed after removing its attachments (non-empty content)"
+    );
+});
+
+QUnit.test('delete all attachments of a message with tracking fields should still keep it displayed', async function (assert) {
+    assert.expect(2);
+
+    this.data['ir.attachment'].records.push({
+        id: 143,
+        mimetype: 'text/plain',
+        name: "Blah.txt",
+    });
+    this.data['mail.channel'].records.push({ id: 11 });
+    this.data['mail.message'].records.push(
+        {
+            attachment_ids: [143],
+            channel_ids: [11],
+            id: 101,
+            tracking_value_ids: [6]
+        },
+    );
+    this.data['mail.tracking.value'].records.push({
+        changed_field: "Name",
+        field_type: "char",
+        id: 6,
+        new_value: "New name",
+        old_value: "Old name",
+    });
+    await this.start();
+    const threadViewer = this.env.models['mail.thread_viewer'].create({
+        hasThreadView: true,
+        thread: [['insert', { id: 11, model: 'mail.channel' }]],
+    });
+    // wait for messages of the thread to be loaded
+    await this.afterEvent({
+        eventName: 'o-thread-view-hint-processed',
+        func: () => {
+            this.createThreadViewComponent(threadViewer.threadView);
+        },
+        message: "thread become loaded with messages",
+        predicate: ({ hint, threadViewer }) => {
+            return (
+                hint.type === 'messages-loaded' &&
+                threadViewer.thread.model === 'mail.channel' &&
+                threadViewer.thread.id === 11
+            );
+        },
+    });
+    assert.containsOnce(
+        document.body,
+        '.o_Message',
+        "there should be 1 message displayed initially"
+    );
+
+    await afterNextRender(() => {
+        document.querySelector(`.o_Attachment[data-attachment-local-id="${
+            this.env.models['mail.attachment'].findFromIdentifyingData({ id: 143 }).localId
+        }"] .o_Attachment_asideItemUnlink`).click();
+    });
+    await afterNextRender(() =>
+        document.querySelector('.o_AttachmentDeleteConfirmDialog_confirmButton').click()
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_Message',
+        "message should still be displayed after removing its attachments (non-empty content)"
     );
 });
 
