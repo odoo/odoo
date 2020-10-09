@@ -19,6 +19,7 @@ const untrackedClassnames = ["o_tooltip", "o_tooltip_content", "o_tooltip_overla
  * @property {Array} _log
  */
 return session.is_bound.then(function () {
+    const duration = 750; // DOM mutation event collapsing duration
     var defs = [];
     // Load the list of consumed tours and the tip template only if we are admin, in the frontend,
     // tours being only available for the admin. For the backend, the list of consumed is directly
@@ -123,18 +124,19 @@ return session.is_bound.then(function () {
             }
         }
 
-        // Use a MutationObserver to detect DOM changes. When a mutation occurs,
-        // only add it to the list of mutations to process and delay the
-        // mutation processing. We have to record them all and not in a
+        // Use a MutationObserver to detect DOM changes.
+        // When mutations occur too fast, collect them until a given time has passed.
+        // Flush all mutations collected during the time interval in one go.
+        // This avoids being continuously delayed by a long incoming stream of events.
+        // We have to record them all and not in a
         // debounced way otherwise we may ignore tracked ones in a serie of
         // 10 tracked mutations followed by an untracked one. Most of them
         // will trigger a tip check anyway so, most of the time, processing the
         // first ones will be enough to ensure that a tip update has to be done.
-        let mutationTimer;
+        const throttledProcessMutations = _.throttle(_processMutations, duration, {leading: false});
         const observer = new MutationObserver(mutations => {
-            clearTimeout(mutationTimer);
             currentMutations.push(...mutations);
-            mutationTimer = setTimeout(() => _processMutations(), 750);
+            throttledProcessMutations();
         });
 
         // Now that the observer is configured, we have to start it when needed.

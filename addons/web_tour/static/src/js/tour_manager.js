@@ -236,7 +236,7 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
             setTimeout(function () {
                 self._check_for_tooltip(self.active_tooltips[tour_name], tour_name);
             });
-        } else {
+        } else if (this.active_tooltips) {
             const sortedTooltips = Object.keys(this.active_tooltips).sort(
                 (a, b) => this.tours[a].sequence - this.tours[b].sequence
             );

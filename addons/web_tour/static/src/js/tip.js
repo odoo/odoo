@@ -191,7 +191,7 @@ var Tip = Widget.extend({
      * @param {boolean} [forceReposition=false]
      */
     _updatePosition: function (forceReposition = false) {
-        if (this.info.hidden) {
+        if (this.info.hidden || this.isDestroyed()) {
             return;
         }
         let halfHeight = 0;
@@ -487,6 +487,9 @@ var Tip = Widget.extend({
         }
     },
     _build_bubble_mode: function () {
+        if (this.isDestroyed()) {
+            return;
+        }
         clearTimeout(this.timerOut);
         this.timerOut = undefined;
 
