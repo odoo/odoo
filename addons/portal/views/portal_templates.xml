@@ -68,7 +68,7 @@
 
     <template id="user_dropdown" name="Portal User Dropdown">
         <t t-set="is_connected" t-value="not user_id._is_public()"/>
-        <li t-if="is_connected" t-attf-class="#{_item_class}">
+        <li t-if="is_connected" t-attf-class="#{_item_class} o_no_autohide_item">
             <a href="#" role="button" data-toggle="dropdown" t-attf-class="dropdown-toggle #{_link_class}">
                 <img t-if="_avatar" t-att-src="image_data_uri(user_id.image_256)" t-attf-class="rounded-circle #{_avatar_class}" width="24" height="24" alt="" loading="eager"/>
                 <i t-if="_icon" t-attf-class="fa fa-1x fa-fw fa-user-circle-o #{_icon_class}"/>
@@ -147,7 +147,7 @@
 
     <template id="user_sign_in" name="User Sign In" inherit_id="portal.placeholder_user_sign_in">
         <xpath expr="." position="inside">
-            <li groups="base.group_public" t-attf-class="#{_item_class}">
+            <li groups="base.group_public" t-attf-class="#{_item_class} o_no_autohide_item">
                 <a t-attf-href="/web/login" t-attf-class="#{_link_class}">Sign in</a>
             </li>
         </xpath>
