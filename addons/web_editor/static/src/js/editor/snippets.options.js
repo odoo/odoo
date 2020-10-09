@@ -3184,7 +3184,7 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
             case 'glFilter':
                 return img.dataset.glFilter || "";
             case 'setQuality':
-                return img.dataset.quality || 95;
+                return img.dataset.quality || 75;
             case 'customFilter': {
                 const {filterProperty} = params;
                 const options = JSON.parse(img.dataset.filterOptions || "{}");
@@ -3279,6 +3279,18 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
         this.originalSrc = img.dataset.originalSrc;
     },
     /**
+     * Sets the image's width to its suggested size.
+     *
+     * @private
+     */
+    async _autoOptimizeImage() {
+        await this._loadImageInfo();
+        await this._rerenderXML();
+        this._getImg().dataset.resizeWidth = this.optimizedWidth;
+        await this._applyOptions();
+        await this.updateUI();
+    },
+    /**
      * Returns the image that is currently being modified.
      *
      * @private
@@ -3358,11 +3370,7 @@ registry.ImageOptimize = ImageHandlerOption.extend({
      */
     async _onImageChanged(ev) {
         this.trigger_up('snippet_edition_request', {exec: async () => {
-            await this._loadImageInfo();
-            await this._rerenderXML();
-            this._getImg().dataset.resizeWidth = this.optimizedWidth;
-            await this._applyOptions();
-            await this.updateUI();
+            await this._autoOptimizeImage();
             this.trigger_up('cover_update');
         }});
     },
@@ -3463,8 +3471,7 @@ registry.BackgroundOptimize = ImageHandlerOption.extend({
     async _onBackgroundChanged(ev, previewMode) {
         if (!previewMode) {
             this.trigger_up('snippet_edition_request', {exec: async () => {
-                await this._loadImageInfo();
-                await this._rerenderXML();
+                await this._autoOptimizeImage();
             }});
         }
     },
