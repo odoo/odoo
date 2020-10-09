@@ -573,6 +573,17 @@ class Survey(models.Model):
                     return section
             return Question
 
+    def _is_first_page_or_question(self, page_or_question):
+        """ This method checks if the given question or page is the first one to display.
+            If the first section of the survey as a description, this will be the first screen to display.
+            else, the first question will be the first screen to be displayed.
+            This methods is used for survey session management where the host should not be able to go back on the
+            first page or question."""
+        first_section_has_description = self.page_ids and not is_html_empty(self.page_ids[0].description)
+        is_first_page_or_question = (first_section_has_description and page_or_question == self.page_ids[0]) or \
+            (not first_section_has_description and page_or_question == self.question_ids[0])
+        return is_first_page_or_question
+
     def _is_last_page_or_question(self, user_input, page_or_question):
         """ This method checks if the given question or page is the last one.
         This includes conditional questions configuration. If the given question is normally not the last one but
@@ -681,7 +692,7 @@ class Survey(models.Model):
             self.sudo().write({'session_state': 'in_progress'})
             self.sudo().flush(['session_state'])
 
-    def _get_session_next_question(self):
+    def _get_session_next_question(self, go_back):
         self.ensure_one()
 
         if not self.question_ids or not self.env.user.has_group('survey.group_survey_user'):
@@ -690,7 +701,7 @@ class Survey(models.Model):
         most_voted_answers = self._get_session_most_voted_answers()
         return self._get_next_page_or_question(
             most_voted_answers,
-            self.session_question_id.id if self.session_question_id else 0)
+            self.session_question_id.id if self.session_question_id else 0, go_back=go_back)
 
     def _get_session_most_voted_answers(self):
         """ In sessions of survey that has conditional questions, as the survey is passed at the same time by

@@ -131,6 +131,36 @@ tour.register('test_survey_session_manage_tour', {
     run: function () {} // check attendee 2 answer is displayed
 }, {
     trigger: 'h1',
+    run: previousScreen
+}, {
+    trigger: 'h1:contains("Text Question")',
+    run: function () {} // check text question is displayed
+}, {
+    trigger: '.o_survey_session_progress_small:contains("3 / 3")',
+    run: function () {} // check we have 3 answers
+}, {
+    trigger: '.o_survey_session_text_answer_container:contains("Attendee 1 is the best")',
+    run: function () {} // check attendee 1 answer is displayed
+}, {
+    trigger: '.o_survey_session_text_answer_container:contains("Attendee 2 rulez")',
+    run: function () {} // check attendee 2 answer is displayed
+}, {
+    trigger: '.o_survey_session_text_answer_container:contains("Attendee 3 will crush you")',
+    run: function () {} // check attendee 3 answer is displayed
+}, {
+    trigger: 'h1',
+    run: nextScreen
+}, {
+    trigger: '.o_survey_session_progress_small:contains("2 / 3")',
+    run: function () {} // check we have 2 answers
+}, {
+    trigger: '.o_survey_session_text_answer_container:contains("10/10/2010")',
+    run: function () {} // check attendee 1 answer is displayed
+}, {
+    trigger: '.o_survey_session_text_answer_container:contains("11/11/2011")',
+    run: function () {} // check attendee 2 answer is displayed
+}, {
+    trigger: 'h1',
     run: nextScreen
 }, {
     trigger: '.o_survey_session_progress_small:contains("2 / 3")',
