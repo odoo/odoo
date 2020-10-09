@@ -2065,7 +2065,7 @@ class TestRoutes(TestStockCommon):
 
         # create and get back the pick ship route
         self.wh.write({'delivery_steps': 'pick_ship'})
-        
+
         self.pick_ship_route = self.wh.route_ids.filtered(lambda r: '(pick + ship)' in r.name)
     def test_pick_ship_1(self):
         """ Enable the pick ship route, force a procurement group on the
@@ -2076,7 +2076,7 @@ class TestRoutes(TestStockCommon):
 
         # create a procurement group and set in on the pick stock rule
         procurement_group0 = self.env['procurement.group'].create({})
-        pick_rule = self.pick_ship_route.rule_ids.filtered(lambda rule: 'Stock → Output' in rule.name)
+        pick_rule = self.pick_ship_route.rule_ids.filtered(lambda rule: 'Estoque → Saída' in rule.name)
         push_rule = self.pick_ship_route.rule_ids - pick_rule
         pick_rule.write({
             'group_propagation_option': 'fixed',
