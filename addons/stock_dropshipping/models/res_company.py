@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import api, models
 
 
 class ResCompany(models.Model):
@@ -25,7 +25,7 @@ class ResCompany(models.Model):
 
     @api.model
     def create_missing_dropship_sequence(self):
-        company_ids  = self.env['res.company'].search([])
+        company_ids = self.env['res.company'].search([])
         company_has_dropship_seq = self.env['ir.sequence'].search([('code', '=', 'stock.dropshipping')]).mapped('company_id')
         company_todo_sequence = company_ids - company_has_dropship_seq
         company_todo_sequence._create_dropship_sequence()
@@ -59,7 +59,7 @@ class ResCompany(models.Model):
 
     @api.model
     def create_missing_dropship_picking_type(self):
-        company_ids  = self.env['res.company'].search([])
+        company_ids = self.env['res.company'].search([])
         company_has_dropship_picking_type = (
             self.env['stock.picking.type']
             .search([
@@ -86,8 +86,9 @@ class ResCompany(models.Model):
         dropship_vals = []
         for company in self:
             dropship_picking_type = self.env['stock.picking.type'].search([
-                ('name', '=', 'Dropship'),
                 ('company_id', '=', company.id),
+                ('default_location_src_id.usage', '=', 'supplier'),
+                ('default_location_dest_id.usage', '=', 'customer'),
             ])
             dropship_vals.append({
                 'name': '%s → %s' % (supplier_location.name, customer_location.name),
@@ -106,7 +107,7 @@ class ResCompany(models.Model):
     def create_missing_dropship_rule(self):
         dropship_route = self.env.ref('stock_dropshipping.route_drop_shipping')
 
-        company_ids  = self.env['res.company'].search([])
+        company_ids = self.env['res.company'].search([])
         company_has_dropship_rule = self.env['stock.rule'].search([('route_id', '=', dropship_route.id)]).mapped('company_id')
         company_todo_rule = company_ids - company_has_dropship_rule
         company_todo_rule._create_dropship_rule()
