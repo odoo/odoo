@@ -718,8 +718,6 @@ class TestAccountMove(AccountTestInvoicingCommon):
             debit_line.tax_ids.clear()
             debit_line.tax_ids.add(self.included_percent_tax)
 
-            self.assertTrue(debit_line.recompute_tax_line)
-
         # Create a third account.move.line with credit amount.
         with move_form.line_ids.new() as credit_line:
             credit_line.name = 'credit_line_1'

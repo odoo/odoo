@@ -26,7 +26,7 @@ class TestAccountMoveTaxes(AccountTestInvoicingCommon):
                 'amount_currency': -240.0,
                 'debit': 0.0,
                 'credit': 120.0,
-                'tax_exigible': True,
+                'tax_exigible': False,
             },
             {
                 'tax_ids': [],
@@ -44,7 +44,7 @@ class TestAccountMoveTaxes(AccountTestInvoicingCommon):
                 'amount_currency': -160.0,
                 'debit': 0.0,
                 'credit': 80.0,
-                'tax_exigible': True,
+                'tax_exigible': False,
             },
             {
                 'tax_ids': [],
@@ -301,9 +301,16 @@ class TestAccountMoveTaxes(AccountTestInvoicingCommon):
         invoice.write({'line_ids': [(1, tax_line.id, {'credit': 160.0, 'name': 'blubliblou'})]})
         self.assertRecordValues(tax_line, [{'debit': 0.0, 'credit': 160.0, 'name': 'blubliblou'}])
 
-        # Manual edition of taxes should be lost when editing the label.
+        # Manual edition of taxes should not be lost when editing the label.
         invoice.write({'invoice_line_ids': [(1, invoice.invoice_line_ids.id, {'name': 'blablabla'})]})
         self.assertRecordValues(tax_line, [{'debit': 0.0, 'credit': 160.0, 'name': 'blubliblou'}])
+
+        # Remove taxes of base line.
+        invoice.write({'invoice_line_ids': [(1, invoice.invoice_line_ids.id, {'tax_ids': [(6, 0, [])]})]})
+        self.assertRecordValues(invoice.line_ids.sorted('balance'), [
+            {'debit': 0.0, 'credit': 1000.0},
+            {'debit': 1000.0, 'credit': 0.0},
+        ])
 
     def test_invoice_onchange_trigger_tax_recomputation(self):
         move_form = Form(self.env['account.move'].with_context(default_move_type='out_invoice'))
@@ -332,6 +339,15 @@ class TestAccountMoveTaxes(AccountTestInvoicingCommon):
                 line_form.name = 'blablabla'
 
         self.assertRecordValues(tax_line, [{'debit': 0.0, 'credit': 160.0, 'name': 'blubliblou'}])
+
+        # Remove taxes of base line.
+        with Form(invoice) as move_form:
+            with move_form.invoice_line_ids.edit(0) as line_form:
+                line_form.tax_ids.clear()
+        self.assertRecordValues(invoice.line_ids.sorted('balance'), [
+            {'debit': 0.0, 'credit': 1000.0},
+            {'debit': 1000.0, 'credit': 0.0},
+        ])
 
     def test_misc_operation_onchange_tax_recomputation(self):
         ''' Test the taxes computation when encoding a misc. journal entry. '''

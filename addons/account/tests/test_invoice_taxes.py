@@ -463,7 +463,6 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
                 'name': self.percent_tax_1.name,
                 # 20000 * 2.82 / 1.1726
                 'tax_base_amount': 48098.24,
-                'price_unit': 11844,
                 # tax_base_amount * 21%
                 'credit': 10100.63,
                 'tax_ids': []

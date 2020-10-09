@@ -5982,28 +5982,35 @@ Fields:
                         if self[name] != record[name]:
                             return True
                     else:
-                        if self.x2many_has_changed(name, names=[trailing_names] if trailing_names else []):
+                        sub_names = self['<tree>'][name]
+                        x2many_changed = self.get_x2many_changed(name)
+                        if x2many_changed['added'] or x2many_changed['removed']:
+                            return True
+                        if any(sub_snapshot.any_has_changed(sub_names) for sub_snapshot in x2many_changed['edited']):
                             return True
                 return False
 
-            def x2many_has_changed(self, field, names=[], filter=None):
-                if field in self['<force_changed_fields>']:
-                    return True
-                if field not in self:
-                    return True
+            def get_x2many_changed(self, field):
+                record = self['<record>']
 
-                x2many_snapshots = [sub_snapshot
-                                    for sub_snapshot in self[field]
-                                    if not filter or filter(sub_snapshot)]
-                records = self['<record>'][field].filtered(filter) if filter else self['<record>'][field]
-                names = names or self['<tree>'][field]
-                if len(x2many_snapshots) != len(records):
-                    return True
-                if set(sub_snapshot['<record>'].id for sub_snapshot in x2many_snapshots) != set(records._ids):
-                    return True
-                if not records:
-                    return False
-                return any(sub_snapshot.any_has_changed(names) for sub_snapshot in x2many_snapshots)
+                res = {
+                    'added': None,      # recordset of added records
+                    'removed': [],      # snapshots of removed records
+                    'edited': [],       # snapshots of edited records
+                }
+
+                existing_records = record[field]
+                existing_records_with_snapshots = existing_records.browse()
+                for sub_snapshot in self[field]:
+                    sub_record = sub_snapshot['<record>']
+                    if sub_record in existing_records:
+                        res['edited'].append(sub_snapshot)
+                        existing_records_with_snapshots |= sub_record
+                    else:
+                        res['removed'].append(sub_snapshot)
+                res['added'] = existing_records - existing_records_with_snapshots
+
+                return res
 
             def force_has_changed(self, dotnames):
                 for dotname in dotnames:

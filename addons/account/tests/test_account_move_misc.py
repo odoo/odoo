@@ -511,7 +511,7 @@ class TestAccountMoveMisc(AccountTestInvoicingCommon):
             'line_ids': [
                 (1, lines[0].id, {'credit': lines[0].credit + 100.0}),
                 (0, None, {
-                    'name': 'revenue line 1',
+                    'name': 'revenue line 3',
                     'account_id': self.company_data['default_account_revenue'].id,
                     'debit': 100.0,
                     'credit': 0.0,

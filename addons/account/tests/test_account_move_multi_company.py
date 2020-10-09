@@ -82,6 +82,10 @@ class TestAccountMoveMultiCompany(AccountTestInvoicingCommon):
         move_form.invoice_date = fields.Date.from_string('2017-01-01')
         with move_form.invoice_line_ids.new() as line_form:
             line_form.product_id = self.product
+        # This part is done in two steps because the form view emulator doesn't work like the "real" form view.
+        # Indeed, 'onchange' on account.move is called only when exiting the context manager instead of at each
+        # assignation.
+        with move_form.invoice_line_ids.edit(0) as line_form:
             line_form.tax_ids.clear()
         invoice = move_form.save()
         self._test_invoice_multi_company(invoice)

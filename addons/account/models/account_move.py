@@ -438,17 +438,12 @@ class AccountMove(models.Model):
             to_write_line['tax_tag_ids'] = [(6, 0, compute_all_vals['base_tags'])]
             to_write_line['price_total'] = sign * compute_all_vals['total_included']
 
-            tax_exigible = True
             for tax_vals in compute_all_vals['taxes']:
                 grouping_dict = self._get_tax_grouping_key_from_base_line(line, tax_vals)
                 grouping_key = _serialize_tax_grouping_key(grouping_dict)
 
                 tax_repartition_line = self.env['account.tax.repartition.line'].browse(tax_vals['tax_repartition_line_id'])
                 tax = tax_repartition_line.invoice_tax_id or tax_repartition_line.refund_tax_id
-
-                if tax.tax_exigibility == 'on_payment':
-                    tax_exigible = False
-
                 taxes_map_entry = taxes_map.setdefault(grouping_key, {
                     'tax_line': None,
                     'amount': 0.0,
@@ -459,7 +454,6 @@ class AccountMove(models.Model):
                 taxes_map_entry['tax_base_amount'] += tax_vals['base']
                 taxes_map_entry['grouping_dict'] = grouping_dict
 
-            to_write_line['tax_exigible'] = tax_exigible
             to_write['line_ids'].append((1, line.id, to_write_line))
 
         # ==== Process taxes_map ====
@@ -516,7 +510,6 @@ class AccountMove(models.Model):
                     'move_id': self.id,
                     'company_currency_id': self.company_currency_id.id,
                     'exclude_from_invoice_tab': True,
-                    'tax_exigible': tax.tax_exigibility == 'on_invoice',
                 }))
 
         OrmUtils(self).write(to_write)
@@ -593,7 +586,6 @@ class AccountMove(models.Model):
                     'name': _('%s (rounding)', biggest_tax_line.name),
                     'account_id': biggest_tax_line.account_id.id,
                     'tax_repartition_line_id': biggest_tax_line.tax_repartition_line_id.id,
-                    'tax_exigible': biggest_tax_line.tax_exigible,
                     'tax_base_amount': biggest_tax_line.tax_base_amount,
                     'exclude_from_invoice_tab': True,
                 })
@@ -763,15 +755,14 @@ class AccountMove(models.Model):
         total_balance = sum(others_lines.mapped(lambda l: company_currency_id.round(l.balance)))
         total_amount_currency = sum(others_lines.mapped('amount_currency'))
 
-        if not others_lines:
+        if others_lines:
+            computation_date = _get_payment_terms_computation_date(self)
+            account = _get_payment_terms_account(self, existing_terms_lines)
+            to_compute = _compute_payment_terms(self, computation_date, total_balance, total_amount_currency)
+            _compute_diff_payment_terms_lines(self, existing_terms_lines, account, to_compute)
+        else:
             for line in existing_terms_lines:
                 to_write['line_ids'].append((2, line.id))
-            return
-
-        computation_date = _get_payment_terms_computation_date(self)
-        account = _get_payment_terms_account(self, existing_terms_lines)
-        to_compute = _compute_payment_terms(self, computation_date, total_balance, total_amount_currency)
-        _compute_diff_payment_terms_lines(self, existing_terms_lines, account, to_compute)
 
         OrmUtils(self).write(to_write)
 
@@ -837,37 +828,47 @@ class AccountMove(models.Model):
             self._recompute_rate_changed()
 
         # Recompute taxes.
-        in_draft_mode = self != self._origin
-        recompute_taxes = False
-        if in_draft_mode:
-            # Since the JS-framework doesn't send enough to know exactly what has changed in
-            # the one2many field, we use the 'recompute_tax_line' field when performing the
-            # onchange to know in which case we need to recompute the taxes.
-            for line in self.line_ids:
-                if line.recompute_tax_line:
-                    line.recompute_tax_line = False
-                    recompute_taxes = True
-        else:
-            # When performing a write, try to detect if the computation of taxes is already
-            # made (e.g. by onchange) or not to decide if we need to recompute the taxes.
-            tax_tracked_fields = [
-                'tax_ids', 'tax_tag_ids', 'amount_currency', 'account_id', 'partner_id', 'currency_id',
-                'analytic_account_id', 'analytic_tag_ids',
-            ]
-            base_line_changed = snapshot0.x2many_has_changed(
-                'line_ids',
-                names=tax_tracked_fields,
-                filter=lambda line: line['tax_ids'] and not line['tax_repartition_line_id'],
-            )
-            tax_line_changed = snapshot0.x2many_has_changed(
-                'line_ids',
-                names=tax_tracked_fields,
-                filter=lambda line: line['tax_repartition_line_id'],
-            )
+        # When performing a write, try to detect if the computation of taxes is already
+        # made (e.g. by onchange) or not to decide if we need to recompute the taxes.
+        affecting_tax_fields = [
+            'tax_ids', 'tax_tag_ids', 'balance', 'amount_currency', 'account_id', 'partner_id', 'currency_id',
+            'analytic_account_id', 'analytic_tag_ids',
+        ]
 
-            recompute_taxes = base_line_changed and not tax_line_changed
+        line_ids_changed = snapshot0.get_x2many_changed('line_ids')
+        base_line_changed = False
+        tax_line_changed = False
+        accounting_balance_changed = False
 
-        if recompute_taxes:
+        for sub_snapshot in line_ids_changed['removed']:
+            if sub_snapshot['tax_repartition_line_id']:
+                # A tax line has been removed.
+                tax_line_changed = True
+            else:
+                # A base line affecting taxes has been removed.
+                base_line_changed |= bool(sub_snapshot['tax_ids'])
+            accounting_balance_changed = True
+
+        for sub_snapshot in line_ids_changed['added']:
+            if sub_snapshot['tax_repartition_line_id']:
+                # A tax line has been added.
+                tax_line_changed = True
+            else:
+                # A base line affecting taxes has been added.
+                base_line_changed |= bool(sub_snapshot['tax_ids'])
+            accounting_balance_changed = True
+
+        for sub_snapshot in line_ids_changed['edited']:
+            if sub_snapshot['tax_repartition_line_id']:
+                # A tax line has been edited.
+                tax_line_changed = sub_snapshot.any_has_changed(affecting_tax_fields)
+            else:
+                # A base line affecting taxes has been edited.
+                base_line_changed |= sub_snapshot.any_has_changed(affecting_tax_fields)
+            accounting_balance_changed |= sub_snapshot.any_has_changed(['balance', 'amount_currency'])
+
+        recompute_tax_line = base_line_changed and not tax_line_changed
+        if recompute_tax_line:
             self._recompute_tax_lines()
 
         # Recompute invoice payment terms / cash rounding.
@@ -881,8 +882,7 @@ class AccountMove(models.Model):
 
             move_need_auto_balance = snapshot0.any_has_changed(
                 ['invoice_payment_term_id', 'invoice_date', 'invoice_date_due', 'invoice_cash_rounding_id'])
-            lines_need_auto_balance = snapshot0.x2many_has_changed('line_ids', names=['balance', 'amount_currency'])
-            if move_need_auto_balance or lines_need_auto_balance:
+            if move_need_auto_balance or recompute_tax_line or accounting_balance_changed:
                 self._recompute_cash_rounding_lines()
                 self._recompute_payment_terms_lines()
 
@@ -959,7 +959,7 @@ class AccountMove(models.Model):
         for move in self:
             use_invoice_terms = self.env['ir.config_parameter'].sudo().get_param('account.use_invoice_terms')
             if move.is_sale_document(include_receipts=True) and use_invoice_terms:
-                move.narration = (move.company_id or self.env.company).with_context(lang=self.partner_id.lang).invoice_terms
+                move.narration = (move.company_id or self.env.company).with_context(lang=move.partner_id.lang).invoice_terms
             else:
                 move.narration = move.narration
 
@@ -973,7 +973,7 @@ class AccountMove(models.Model):
     @api.depends('partner_id')
     def _compute_invoice_payment_term_id(self):
         for move in self:
-            # move = move.with_company(move.company_id or self.env.company)
+            move = move.with_company(move.company_id or self.env.company)
             if move.is_sale_document(include_receipts=True) and move.partner_id.property_payment_term_id:
                 move.invoice_payment_term_id = move.partner_id.property_payment_term_id
             elif move.is_purchase_document(include_receipts=True) and move.partner_id.property_supplier_payment_term_id:
@@ -1682,12 +1682,69 @@ class AccountMove(models.Model):
         return [
             'invoice_date', 'date', 'state', 'currency_id', 'partner_id', 'journal_id', 'payment_reference',
             'invoice_payment_term_id', 'invoice_date_due', 'invoice_cash_rounding_id',
-        ] + [
-            'line_ids.%s' % field for field in (
-                'tax_repartition_line_id', 'tax_ids', 'tax_tag_ids', 'balance', 'amount_currency',
-                'account_id', 'partner_id', 'currency_id', 'analytic_account_id', 'analytic_tag_ids',
-            )
-        ]
+        ] + ['line_ids.%s' % field_name for field_name in self.env['account.move.line']._get_snapshot_technical_tracked_fields()]
+
+    def _hook_pre_onchange(self, changed_fields):
+        # OVERRIDE
+
+        # Synchronize 'line_ids' regarding 'invoice_line_ids'.
+        removed_line_detected = False
+        if 'invoice_line_ids' in changed_fields:
+            current_invoice_lines = self.line_ids.filtered(lambda line: not line.exclude_from_invoice_tab)
+            others_lines = self.line_ids - current_invoice_lines
+            if others_lines and current_invoice_lines - self.invoice_line_ids:
+                # A line has been removed but there is absolutely no information given by the client so
+                # we are forced to detect this manually.
+                removed_line_detected = True
+            self.line_ids = others_lines + self.invoice_line_ids
+
+        snapshot0 = self.sudo()._create_snapshot(fields=self._get_snapshot_technical_tracked_fields())
+
+        # Mark fields passed to the 'onchange' method as changed except one2many.
+        snapshot0.force_has_changed([field_name
+                                     for field_name in changed_fields
+                                     if self._fields[field_name].type != 'one2many'])
+
+        # Marks fields coming from an onchange in the one2many field.
+        if 'line_ids' in changed_fields or 'invoice_line_ids' in changed_fields:
+            for sub_snapshot in snapshot0['line_ids']:
+                line = sub_snapshot['<record>']
+                if line.last_onchange_fields:
+                    sub_snapshot.force_has_changed(line.last_onchange_fields.split('-'))
+                    line.last_onchange_fields = False
+                if removed_line_detected and not line.exclude_from_invoice_tab:
+                    # Force computation of taxes.
+                    sub_snapshot.force_has_changed(['tax_ids'])
+                    removed_line_detected = False
+
+        # Load an old vendor bill.
+        if self.invoice_vendor_bill_id:
+            # Copy invoice lines.
+            for line in self.invoice_vendor_bill_id.invoice_line_ids:
+                self.env['account.move.line'].new({
+                    **line.copy_data()[0],
+                    'currency_id': self.currency_id.id,
+                    'move_id': self.id,
+                })
+
+            # Copy payment terms.
+            self.invoice_payment_term_id = self.invoice_vendor_bill_id.invoice_payment_term_id
+
+            # Copy currency.
+            if self.currency_id != self.invoice_vendor_bill_id.currency_id:
+                self.currency_id = self.invoice_vendor_bill_id.currency_id
+
+            # Reset
+            self.invoice_vendor_bill_id = False
+
+        return snapshot0
+
+    def _hook_post_onchange(self, snapshot0):
+        # OVERRIDE
+        self._recompute_dynamic_lines(snapshot0)
+
+        # Synchronize 'line_ids' & 'invoice_line_ids'.
+        self.invoice_line_ids = self.line_ids.filtered(lambda line: not line.exclude_from_invoice_tab)
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -1834,55 +1891,6 @@ class AccountMove(models.Model):
                 self._check_balanced()
 
         return res
-
-    def _hook_pre_onchange(self, changed_fields):
-        # OVERRIDE
-        snapshot0 = self.sudo()._create_snapshot(fields=self._get_snapshot_technical_tracked_fields())
-
-        # Mark fields passed to the 'onchange' method as changed except 'line_ids' because we don't want to recompute
-        # all taxes in all cases.
-        changed_fields_copy = list(changed_fields)
-        if 'line_ids' in changed_fields_copy:
-            changed_fields_copy.remove('line_ids')
-        snapshot0.force_has_changed(changed_fields_copy)
-
-        # Synchronize 'line_ids' regarding 'invoice_line_ids'.
-        if 'invoice_line_ids' in changed_fields:
-            current_invoice_lines = self.line_ids.filtered(lambda line: not line.exclude_from_invoice_tab)
-            others_lines = self.line_ids - current_invoice_lines
-            if others_lines and current_invoice_lines - self.invoice_line_ids:
-                others_lines[0].recompute_tax_line = True
-            self.line_ids = others_lines + self.invoice_line_ids
-
-        # Load an old vendor bill.
-        if self.invoice_vendor_bill_id:
-            # Copy invoice lines.
-            for line in self.invoice_vendor_bill_id.invoice_line_ids:
-                self.env['account.move.line'].new({
-                    **line.copy_data()[0],
-                    'currency_id': self.currency_id.id,
-                    'move_id': self.id,
-                    'recompute_tax_line': True,
-                })
-
-            # Copy payment terms.
-            self.invoice_payment_term_id = self.invoice_vendor_bill_id.invoice_payment_term_id
-
-            # Copy currency.
-            if self.currency_id != self.invoice_vendor_bill_id.currency_id:
-                self.currency_id = self.invoice_vendor_bill_id.currency_id
-
-            # Reset
-            self.invoice_vendor_bill_id = False
-
-        return snapshot0
-
-    def _hook_post_onchange(self, snapshot0):
-        # OVERRIDE
-        self._recompute_dynamic_lines(snapshot0)
-
-        # Synchronize 'line_ids' & 'invoice_line_ids'.
-        self.invoice_line_ids = self.line_ids.filtered(lambda line: not line.exclude_from_invoice_tab)
 
     def unlink(self):
         for move in self:
@@ -3018,6 +3026,7 @@ class AccountMoveLine(models.Model):
     # ==== Onchange / display purpose fields ====
     recompute_tax_line = fields.Boolean(store=False, readonly=True,
         help="Technical field used to know on which lines the taxes must be recomputed.")
+    last_onchange_fields = fields.Char(store=False)
     display_type = fields.Selection([
         ('line_section', 'Section'),
         ('line_note', 'Note'),
@@ -3215,24 +3224,6 @@ class AccountMoveLine(models.Model):
     # -------------------------------------------------------------------------
     # ONCHANGE METHODS
     # -------------------------------------------------------------------------
-
-    @api.onchange('amount_currency', 'currency_id', 'debit', 'credit', 'tax_ids', 'account_id')
-    def _onchange_mark_recompute_taxes(self):
-        ''' Recompute the dynamic onchange based on taxes.
-        If the edited line is a tax line, don't recompute anything as the user must be able to
-        set a custom value.
-        '''
-        for line in self:
-            if not line.tax_repartition_line_id:
-                line.recompute_tax_line = True
-
-    @api.onchange('analytic_account_id', 'analytic_tag_ids')
-    def _onchange_mark_recompute_taxes_analytic(self):
-        ''' Trigger tax recomputation only when some taxes with analytics
-        '''
-        for line in self:
-            if not line.tax_repartition_line_id and any(tax.analytic for tax in line.tax_ids):
-                line.recompute_tax_line = True
 
     @api.onchange('product_id')
     def _onchange_product_id(self):
@@ -3759,6 +3750,29 @@ class AccountMoveLine(models.Model):
         if not cr.fetchone():
             cr.execute('CREATE INDEX account_move_line_partner_id_ref_idx ON account_move_line (partner_id, ref)')
 
+    def _get_snapshot_technical_tracked_fields(self):
+        return [
+            'tax_repartition_line_id', 'tax_ids', 'tax_tag_ids', 'balance', 'amount_currency',
+            'account_id', 'partner_id', 'currency_id', 'analytic_account_id', 'analytic_tag_ids',
+        ]
+
+    def _hook_pre_onchange(self, changed_fields):
+        # OVERRIDE
+        snapshot0 = self.sudo()._create_snapshot(fields=self._get_snapshot_technical_tracked_fields())
+
+        # Mark fields passed to the 'onchange' method as changed except one2many.
+        snapshot0.force_has_changed([field_name
+                                     for field_name in changed_fields
+                                     if self._fields[field_name].type != 'one2many'])
+
+        return snapshot0
+
+    def _hook_post_onchange(self, snapshot0):
+        changed_fields = [field_name
+                          for field_name in self._get_snapshot_technical_tracked_fields()
+                          if snapshot0.has_changed(field_name)]
+        self.last_onchange_fields = '-'.join(changed_fields)
+
     @api.model
     def new(self, values={}, origin=None, ref=None):
         # OVERRIDE
@@ -3846,6 +3860,7 @@ class AccountMoveLine(models.Model):
             + PROTECTED_FIELDS_LOCK_DATE
             + PROTECTED_FIELDS_RECONCILIATION
             + INTEGRITY_HASH_LINE_FIELDS
+            + ['price_subtotal']
         ))
 
         # Track some fields before/after writing.
@@ -3966,14 +3981,15 @@ class AccountMoveLine(models.Model):
                                 or (account_type != 'payable' and previous_account.user_type_id.type == 'payable'):
                             raise UserError(_("You can only set an account having the payable type on payment terms lines for vendor bill."))
 
-                is_amount_currency_changed = snapshot0.has_changed('amount_currency')
-                is_balance_changed = snapshot0.has_changed('balance') or any(field in vals for field in ('debit', 'credit'))
+                has_amount_currency_changed = snapshot0.has_changed('amount_currency')
+                has_balance_changed = snapshot0.has_changed('balance') or any(field in vals for field in ('debit', 'credit'))
+                has_price_subtotal_changed = snapshot0.has_changed('price_subtotal')
                 is_invoice_line = line.move_id.is_invoice(include_receipts=True) and not line.exclude_from_invoice_tab
-                if is_amount_currency_changed and not is_balance_changed:
+                if has_amount_currency_changed and not has_balance_changed:
                     line._onchange_amount_currency()
-                if not is_amount_currency_changed and is_balance_changed:
+                elif not has_amount_currency_changed and has_balance_changed:
                     line._onchange_balance()
-                elif not is_amount_currency_changed and not is_balance_changed and is_invoice_line:
+                elif not has_amount_currency_changed and not has_balance_changed and has_price_subtotal_changed and is_invoice_line:
                     # Synchronize business fields with accounting fields on invoice lines.
                     line._onchange_price_subtotal()
 

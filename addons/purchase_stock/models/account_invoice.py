@@ -114,7 +114,6 @@ class AccountMove(models.Model):
                         move.company_id, fields.Date.today(), round=False
                     )
 
-
                 price_unit = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
                 if line.tax_ids:
                     # We do not want to round the price unit since :
@@ -147,7 +146,7 @@ class AccountMove(models.Model):
                 ):
 
                     # Add price difference account line.
-                    vals = {
+                    lines_vals_list.append({
                         'name': line.name[:64],
                         'move_id': move.id,
                         'currency_id': line.currency_id.id,
@@ -155,7 +154,7 @@ class AccountMove(models.Model):
                         'product_uom_id': line.product_uom_id.id,
                         'quantity': line.quantity,
                         'price_unit': price_unit_val_dif,
-                        'price_subtotal': line.quantity * price_unit_val_dif,
+                        'price_subtotal': price_subtotal,
                         'account_id': debit_pdiff_account.id,
                         'analytic_account_id': line.analytic_account_id.id,
                         'analytic_tag_ids': [(6, 0, line.analytic_tag_ids.ids)],
@@ -164,12 +163,10 @@ class AccountMove(models.Model):
                         'amount_currency': amount_currency,
                         'debit': balance if balance > 0.0 else 0.0,
                         'credit': -balance if balance < 0.0 else 0.0,
-                    }
-                    vals.update(line._get_fields_onchange_subtotal(price_subtotal=vals['price_subtotal']))
-                    lines_vals_list.append(vals)
+                    })
 
                     # Correct the amount of the current line.
-                    vals = {
+                    lines_vals_list.append({
                         'name': line.name[:64],
                         'move_id': move.id,
                         'currency_id': line.currency_id.id,
@@ -177,7 +174,7 @@ class AccountMove(models.Model):
                         'product_uom_id': line.product_uom_id.id,
                         'quantity': line.quantity,
                         'price_unit': -price_unit_val_dif,
-                        'price_subtotal': line.quantity * -price_unit_val_dif,
+                        'price_subtotal': -price_subtotal,
                         'account_id': line.account_id.id,
                         'analytic_account_id': line.analytic_account_id.id,
                         'analytic_tag_ids': [(6, 0, line.analytic_tag_ids.ids)],
@@ -186,9 +183,7 @@ class AccountMove(models.Model):
                         'amount_currency': -amount_currency,
                         'debit': -balance if balance < 0.0 else 0.0,
                         'credit': balance if balance > 0.0 else 0.0,
-                    }
-                    vals.update(line._get_fields_onchange_subtotal(price_subtotal=vals['price_subtotal']))
-                    lines_vals_list.append(vals)
+                    })
         return lines_vals_list
 
     def _post(self, soft=True):

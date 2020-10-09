@@ -268,6 +268,10 @@ class TestAccountMovePaymentTerms(AccountTestInvoicingCommon):
         with move_form.invoice_line_ids.new() as line_form:
             line_form.name = 'whatever'
             line_form.price_unit = 1000.0
+        # This part is done in two steps because the form view emulator doesn't work like the "real" form view.
+        # Indeed, 'onchange' on account.move is called only when exiting the context manager instead of at each
+        # assignation.
+        with move_form.invoice_line_ids.edit(0) as line_form:
             line_form.tax_ids.clear()
             line_form.tax_ids.add(self.zero_percent_tax)
         invoice = move_form.save()
@@ -317,6 +321,10 @@ class TestAccountMovePaymentTerms(AccountTestInvoicingCommon):
         move_form.invoice_date = fields.Date.from_string('2019-01-01')
         with move_form.invoice_line_ids.new() as line_form:
             line_form.product_id = self.product_a
+        # This part is done in two steps because the form view emulator doesn't work like the "real" form view.
+        # Indeed, 'onchange' on account.move is called only when exiting the context manager instead of at each
+        # assignation.
+        with move_form.invoice_line_ids.edit(0) as line_form:
             line_form.tax_ids.clear()
         invoice = move_form.save()
 

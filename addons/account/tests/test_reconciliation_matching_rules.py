@@ -169,6 +169,10 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
             invoice_line_form.name = 'xxxx'
             invoice_line_form.quantity = 1
             invoice_line_form.price_unit = amount
+        # This part is done in two steps because the form view emulator doesn't work like the "real" form view.
+        # Indeed, 'onchange' on account.move is called only when exiting the context manager instead of at each
+        # assignation.
+        with invoice_form.invoice_line_ids.edit(0) as invoice_line_form:
             invoice_line_form.tax_ids.clear()
         invoice = invoice_form.save()
         invoice.action_post()

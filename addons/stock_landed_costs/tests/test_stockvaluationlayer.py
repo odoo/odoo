@@ -497,7 +497,9 @@ class TestStockValuationLCFIFOVB(TestStockValuationLCCommon):
         lcvb.partner_id = self.vendor2
         with lcvb.invoice_line_ids.new() as inv_line:
             inv_line.product_id = self.productlc1
+        with lcvb.invoice_line_ids.edit(0) as inv_line:
             inv_line.price_unit = 50
+        with lcvb.invoice_line_ids.edit(0) as inv_line:
             inv_line.is_landed_costs_line = True
         with lcvb.invoice_line_ids.edit(0) as inv_line:
             inv_line.tax_ids.clear()
