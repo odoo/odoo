@@ -444,31 +444,31 @@ class Warehouse(models.Model):
         company_id = vals.get('company_id', self.default_get(['company_id'])['company_id'])
         sub_locations = {
             'lot_stock_id': {
-                'name': _('Stock'),
+                'name': _('Estoque'),
                 'active': True,
                 'usage': 'internal',
                 'barcode': self._valid_barcode(code + '-STOCK', company_id)
             },
             'wh_input_stock_loc_id': {
-                'name': _('Input'),
+                'name': _('Entrada'),
                 'active': reception_steps != 'one_step',
                 'usage': 'internal',
                 'barcode': self._valid_barcode(code + '-INPUT', company_id)
             },
             'wh_qc_stock_loc_id': {
-                'name': _('Quality Control'),
+                'name': _('Controle de Qualidade'),
                 'active': reception_steps == 'three_steps',
                 'usage': 'internal',
                 'barcode': self._valid_barcode(code + '-QUALITY', company_id)
             },
             'wh_output_stock_loc_id': {
-                'name': _('Output'),
+                'name': _('Saída'),
                 'active': delivery_steps != 'ship_only',
                 'usage': 'internal',
                 'barcode': self._valid_barcode(code + '-OUTPUT', company_id)
             },
             'wh_pack_stock_loc_id': {
-                'name': _('Packing Zone'),
+                'name': _('Zona de Empacotamento'),
                 'active': delivery_steps == 'pick_pack_ship',
                 'usage': 'internal',
                 'barcode': self._valid_barcode(code + '-PACKING', company_id)
