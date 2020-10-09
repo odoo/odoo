@@ -9,7 +9,7 @@ import traceback
 import threading
 import odoo
 import odoo.exceptions
-from odoo import models, fields, api
+from odoo import api, fields, models
 from odoo.http import serialize_exception
 
 _logger = logging.getLogger(__name__)
@@ -36,7 +36,7 @@ class IrAsync(models.Model):
     context = fields.Text()
     super_user = fields.Boolean()
     traceback = fields.Text()
-    payload = fields.Text(default=False)
+    payload = fields.Text()
 
     def call(self, method, *args, **kwargs):
         """
@@ -51,7 +51,7 @@ class IrAsync(models.Model):
         """
         recs = getattr(method, '__self__', None)
         if not isinstance(recs, models.BaseModel):
-            raise TypeError("You can only create an async task on a recordset")
+            raise TypeError("You can only create an async task on a recordset.")
         model = recs.__class__
         context = recs.env.context.copy()
         context.pop('async_traceback', '')
@@ -67,7 +67,7 @@ class IrAsync(models.Model):
             'args': json.dumps(args),
             'kwargs': json.dumps(kwargs),
             'user_id': int(recs.env.uid),
-            'context': json.dumps(recs.env.context),
+            'context': json.dumps(context),
             'super_user': recs.env.su,
 
             # on a call from a regular request, this captures the current stack
