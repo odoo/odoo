@@ -805,9 +805,8 @@ QUnit.test('[technical] chat window: scroll conservation on toggle home menu', a
     this.data['mail.channel'].records.push({ id: 20 });
     for (let i = 0; i < 10; i++) {
         this.data['mail.message'].records.push({
+            body: "not empty",
             channel_ids: [20],
-            model: 'mail.channel',
-            res_id: 20,
         });
     }
     await this.start();
@@ -1546,9 +1545,8 @@ QUnit.test('chat window with a thread: keep scroll position in message list on f
     this.data['mail.channel'].records.push({ id: 20 });
     for (let i = 0; i < 10; i++) {
         this.data['mail.message'].records.push({
+            body: "not empty",
             channel_ids: [20],
-            model: 'mail.channel',
-            res_id: 20,
         });
     }
     await this.start();
@@ -1591,9 +1589,8 @@ QUnit.test('chat window should scroll to the newly posted message just after pos
     });
     for (let i = 0; i < 10; i++) {
         this.data['mail.message'].records.push({
+            body: "not empty",
             channel_ids: [20],
-            model: 'mail.channel',
-            res_id: 20,
         });
     }
     await this.start();
@@ -1713,9 +1710,8 @@ QUnit.test('[technical] chat window with a thread: keep scroll position in messa
     this.data['mail.channel'].records.push({ id: 20 });
     for (let i = 0; i < 10; i++) {
         this.data['mail.message'].records.push({
+            body: "not empty",
             channel_ids: [20],
-            model: 'mail.channel',
-            res_id: 20,
         });
     }
     await this.start();
